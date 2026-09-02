@@ -1,0 +1,78 @@
+{
+  "receipt_id": "genrec-pass18-count-population-disclosure-20260811",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/count-population-disclosure.yml",
+    "contracts/evidence/count_population_disclosure.md",
+    "docs/intake/exploratory/pass-18-count-population-disclosure-source-map.md",
+    "fixtures/contracts/v1/evidence/count_population_disclosure/cases.json",
+    "schemas/contracts/v1/evidence/count_population_disclosure.schema.json",
+    "tests/validators/evidence/test_validate_count_population_disclosure.py",
+    "tools/validators/evidence/validate_count_population_disclosure.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/count-population-disclosure.yml": "sha256:ef803ade9971f60ded4ffec2cff2d74ed97302057ec7ac5b7ee0666b7742eb6c",
+    "contracts/evidence/count_population_disclosure.md": "sha256:cfff0b9e385322c0a42d6a091347c9756167db89975c9fc4b336468732c244be",
+    "docs/intake/exploratory/pass-18-count-population-disclosure-source-map.md": "sha256:c09ff2f0abe9f7f5b2d4ffffba7fc07c313ddf4d0778c04cad277caa313e1dfb",
+    "fixtures/contracts/v1/evidence/count_population_disclosure/cases.json": "sha256:20e78d0099592ea750040c90c9e1163ca327c801efe723ea30dba58b63d7cb1e",
+    "schemas/contracts/v1/evidence/count_population_disclosure.schema.json": "sha256:94e8455a97f0b6385c4235fafb52dd8babd2d0f7dfc1f5ff7a9db7b2c10b24de",
+    "tests/validators/evidence/test_validate_count_population_disclosure.py": "sha256:532266009e10a742775c819c0b37a46a2e7cd2e9ee48bd3052f972f4875d6d78",
+    "tools/validators/evidence/validate_count_population_disclosure.py": "sha256:d9367cd575f4424fcb76a13b8d81a9ec4298135efbbc369d49936f58bc9002be"
+  },
+  "model_identity": {"provider": "OpenAI", "model": "GPT-5", "version": "2026-08-11"},
+  "prompt_or_contract": "sha256:cfff0b9e385322c0a42d6a091347c9756167db89975c9fc4b336468732c244be",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": ["Google Drive connected-corpus discovery", "GitHub connected repository inspection and publication", "local PDF rendering and deterministic validation"]
+  },
+  "inputs": {
+    "evidence_hashes": ["sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9"],
+    "attached_docs": ["KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"],
+    "evidence_refs": [
+      "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#physical-page=236&printed-page=233&card=KFM-P18-INV-157",
+      "gdrive://1ww-h3abQkxXeBvSxO5YV6_yvsZ9Wn1P5#title=KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf",
+      "gdrive://1sdiLNDLFr2cVD3Q8h3ZvHO4D96WLJ6V7vf5neNzEyTM#title=Kansas-Frontier-Matrix-Connected-Dots-Architecture-Brief",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b67b98cff3a8dbc7d0cc5548a26ae97d00c92847/contracts/evidence/indicator_definition.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b67b98cff3a8dbc7d0cc5548a26ae97d00c92847/contracts/common/aggregate_statistic.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b67b98cff3a8dbc7d0cc5548a26ae97d00c92847/docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/count-population-disclosure.yml": "CONFIRMED",
+    "contracts/evidence/count_population_disclosure.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-count-population-disclosure-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/evidence/count_population_disclosure/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/evidence/count_population_disclosure.schema.json": "PROPOSED",
+    "tests/validators/evidence/test_validate_count_population_disclosure.py": "CONFIRMED",
+    "tools/validators/evidence/validate_count_population_disclosure.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {"gate": "source-page-visual-review", "outcome": "PASS", "reason": "Physical page 236 / printed page 233 was rendered and visually verified."},
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "workflow-yaml-parse", "outcome": "PASS"},
+    {"gate": "focused-unittest-suite", "outcome": "PASS", "reason": "Nine deterministic count-population disclosure tests passed."},
+    {"gate": "exact-fixture-replay", "outcome": "PASS", "reason": "Eighteen exact PASS, ABSTAIN, DENY, and ERROR cases matched reviewed outcomes and codes."},
+    {"gate": "no-network-boundary", "outcome": "PASS"},
+    {"gate": "documentation-metadata-and-link-qa", "outcome": "PASS", "reason": "Both changed Markdown files passed explicit no-network metadata and local-link checks; two missing registry entries were emitted as review-only warnings."},
+    {"gate": "adjacent-validator-suite", "outcome": "PASS", "reason": "Thirty-three indicator-definition, analytic-output disclosure, and aggregate-statistic tests passed."},
+    {"gate": "repository-wide-validation", "outcome": "PASS", "reason": "Eight aggregate validators, 427 schema/contract tests, and 29 subtests passed; the validator registry reported REGISTRY_VALID."},
+    {"gate": "hosted-exact-head-ci", "outcome": "SKIPPED", "reason": "Requires the pushed pull-request head."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Pending on the draft pull request."}
+  ],
+  "policy_decisions": ["docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"],
+  "citations": [
+    {"id": "pass18-count-population-card", "validated": true, "evidence_ref": "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#physical-page=236&printed-page=233&card=KFM-P18-INV-157"},
+    {"id": "drive-connected-dots-architecture", "validated": true, "evidence_ref": "gdrive://1sdiLNDLFr2cVD3Q8h3ZvHO4D96WLJ6V7vf5neNzEyTM#title=Kansas-Frontier-Matrix-Connected-Dots-Architecture-Brief"},
+    {"id": "accepted-directory-rules", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/b67b98cff3a8dbc7d0cc5548a26ae97d00c92847/docs/doctrine/directory-rules.md"}
+  ],
+  "human_review": {"reviewer_ids": [], "state": "pending", "timestamp": null},
+  "override_record": null,
+  "created_at": "2026-08-11T16:14:20Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub and Google Drive connectors",
+  "links": {"pr_number": null, "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md", "drift_register_entry": null},
+  "notes": "Additive, inactive, fixture-only CountPopulationDisclosureCandidate packet. It validates declared row, non-null, distinct, grouped, filter, population-note, and review-reference coherence without executing SQL, inspecting rows, resolving references, computing a value, deciding metric/evidence/policy/review state, promoting, releasing, deploying, publishing, or authorizing public use."
+}

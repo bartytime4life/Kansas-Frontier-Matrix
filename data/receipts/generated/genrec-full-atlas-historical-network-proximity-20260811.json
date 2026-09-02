@@ -1,0 +1,165 @@
+{
+  "receipt_id": "genrec-full-atlas-historical-network-proximity-20260811",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/historical-network-proximity-assessment.yml",
+    "contracts/joins/README.md",
+    "contracts/joins/historical_network_proximity_assessment.md",
+    "docs/intake/exploratory/full-atlas-historical-network-proximity-source-map.md",
+    "fixtures/contracts/v1/joins/historical_network_proximity_assessment/README.md",
+    "fixtures/contracts/v1/joins/historical_network_proximity_assessment/cases.json",
+    "schemas/contracts/v1/joins/historical_network_proximity_assessment.schema.json",
+    "tests/joins/test_historical_network_proximity.py",
+    "tools/joins/historical_network_proximity.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/historical-network-proximity-assessment.yml": "sha256:dbb15e6c874f2fe74a4815b2981a138b5edd9d2278aa33cdcbd4236559a95f30",
+    "contracts/joins/README.md": "sha256:b975d562eb61aed6eb39bdbb245d76668e58ceb3f6a44a1848bbe4838aba5178",
+    "contracts/joins/historical_network_proximity_assessment.md": "sha256:a3dd11df4ee69818a78ccac37b0825178a2faf473c3bec00f14539f7b4616946",
+    "docs/intake/exploratory/full-atlas-historical-network-proximity-source-map.md": "sha256:9575175e59d68e7ef0a8916ec95770ee0ad2a777e7c043c7e16d9f409fea8bc6",
+    "fixtures/contracts/v1/joins/historical_network_proximity_assessment/README.md": "sha256:d479e702b6839c65b1bf55d401a5acdf1ab1ff08b1b71bf393ca8f1440ee18a2",
+    "fixtures/contracts/v1/joins/historical_network_proximity_assessment/cases.json": "sha256:72eda8b91da39da4779058c385d02f72c16ff444987eb44df31e1d4c9926243b",
+    "schemas/contracts/v1/joins/historical_network_proximity_assessment.schema.json": "sha256:2045bf105ac86684c8fe6ade77ca69091bd02c9f0b7ac8ef182693865592a0f3",
+    "tests/joins/test_historical_network_proximity.py": "sha256:b89c6ff213b787eb816c32c997312d1e06837f1185d0bedd1ce43b3ebe4c9cf7",
+    "tools/joins/historical_network_proximity.py": "sha256:6a074a59348b6f1c3bd9dad8a1624ff84d88e190a8d740a1bdfc1dc673a4beda"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-11"
+  },
+  "prompt_or_contract": "sha256:a3dd11df4ee69818a78ccac37b0825178a2faf473c3bec00f14539f7b4616946",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository inspection and mutation",
+      "local deterministic Markdown, JSON, YAML, and Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:07c7765576df1997e0be88141bd3cd213930e7281d490a8ae62afd78abe8f445",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7"
+    ],
+    "attached_docs": [
+      "KFM_Full_Atlas_seed_cards",
+      "Kansas Frontier Matrix — AI Build Operating Contract"
+    ],
+    "evidence_refs": [
+      "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#KFM-TRIAD-041",
+      "repo:docs/kfm_full_atlas_seed_cards.md@f2ef6741430f93270eb38a4ee9170f8a3726e5b3#KFM-TRIAD-041",
+      "repo:docs/intake/exploratory/new-ideas-4-16-source-map.md@f2ef6741430f93270eb38a4ee9170f8a3726e5b3",
+      "repo:contracts/joins/cross_lane_join_assessment.md@f2ef6741430f93270eb38a4ee9170f8a3726e5b3",
+      "repo:docs/doctrine/directory-rules.md@f2ef6741430f93270eb38a4ee9170f8a3726e5b3"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/historical-network-proximity-assessment.yml": "PROPOSED",
+    "contracts/joins/README.md": "PROPOSED",
+    "contracts/joins/historical_network_proximity_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/full-atlas-historical-network-proximity-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/joins/historical_network_proximity_assessment/README.md": "CONFIRMED",
+    "fixtures/contracts/v1/joins/historical_network_proximity_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/joins/historical_network_proximity_assessment.schema.json": "PROPOSED",
+    "tests/joins/test_historical_network_proximity.py": "CONFIRMED",
+    "tools/joins/historical_network_proximity.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS",
+      "reason": "Ten deterministic historical-network proximity tests passed."
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS",
+      "reason": "Twenty exact PASS, DENY, and ERROR cases matched their declared outcomes."
+    },
+    {
+      "gate": "existing-cross-lane-join-regression-suite",
+      "outcome": "PASS",
+      "reason": "All ten pre-existing generic join-candidate tests passed."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "network-and-write-surface-scan",
+      "outcome": "PASS",
+      "reason": "Focused tests found no network client import or helper file-write path."
+    },
+    {
+      "gate": "real-source-geometry-policy-and-release-adoption",
+      "outcome": "SKIPPED",
+      "reason": "The fixture-only assessment adopts no real source, geometry, policy, lifecycle, release, tile, or publication path."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed draft pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Join, participating-domain, evidence, sensitivity, policy, and release review remain pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "gdrive:full-atlas-triad-041",
+      "validated": true,
+      "evidence_ref": "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#KFM-TRIAD-041"
+    },
+    {
+      "id": "repo:full-atlas-mirror-triad-041",
+      "validated": true,
+      "evidence_ref": "repo:docs/kfm_full_atlas_seed_cards.md@f2ef6741430f93270eb38a4ee9170f8a3726e5b3#KFM-TRIAD-041"
+    },
+    {
+      "id": "repo:new-ideas-4-16-proximity-warning",
+      "validated": true,
+      "evidence_ref": "repo:docs/intake/exploratory/new-ideas-4-16-source-map.md@f2ef6741430f93270eb38a4ee9170f8a3726e5b3"
+    },
+    {
+      "id": "repo:existing-generic-join-assessment",
+      "validated": true,
+      "evidence_ref": "repo:contracts/joins/cross_lane_join_assessment.md@f2ef6741430f93270eb38a4ee9170f8a3726e5b3"
+    },
+    {
+      "id": "repo:accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@f2ef6741430f93270eb38a4ee9170f8a3726e5b3"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T18:50:27Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT Work GitHub and Google Drive connectors",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Additive inactive fixture-only historical place/route proximity assessment derived from Full Atlas KFM-TRIAD-041. A CANDIDATE conclusion means qualified proximity only. The slice does not resolve sources or evidence, calculate real geometry, infer causality, service, route use, network membership, or historical relationship, decide policy or review, release, render, publish, or authorize public use."
+}

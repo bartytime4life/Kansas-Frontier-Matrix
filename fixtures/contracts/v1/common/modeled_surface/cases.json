@@ -1,0 +1,252 @@
+{
+  "schema_version": "kfm.modeled-surface-fixtures.v1",
+  "profile": "kfm.common.modeled-surface.v1",
+  "description": "Synthetic modeled-surface cases for model support, resolution, uncertainty, temporal, lineage, anti-collapse, and authority boundaries.",
+  "bases": {
+    "current": {
+      "profile": "kfm.common.modeled-surface.v1",
+      "status": "PROPOSED_INACTIVE",
+      "version": "1.0.0",
+      "surface_family": "ENVIRONMENTAL_INTERPOLATION",
+      "product_ref": "kfm://product/synthetic-modeled-surface/v1",
+      "source_ref": "kfm://source/synthetic-model-provider",
+      "source_native_id": "surface:synthetic:2026-08-02",
+      "producing_authority_ref": "kfm://authority/synthetic-model-provider",
+      "source_role": "MODEL",
+      "support_type": "MODELED_ESTIMATE",
+      "source_snapshot_refs": [
+        "kfm:source-snapshot:4444444444444444444444444444444444444444444444444444444444444444"
+      ],
+      "temporal_authority_ref": "kfm://temporal-authority/modeled-surface/synthetic/2026-08-02",
+      "times": {
+        "training_data_cutoff_at": "2026-08-01T00:00:00Z",
+        "modeled_at": "2026-08-02T00:00:00Z",
+        "valid_from": "2020-01-01T00:00:00Z",
+        "valid_to": "2025-12-31T23:59:59Z",
+        "retrieved_at": "2026-08-02T00:15:00Z",
+        "corrected_at": null,
+        "superseded_at": null,
+        "native_timezone": "America/Chicago"
+      },
+      "space": {
+        "geography_ref": "kfm://geography/synthetic/central-region",
+        "scale": "GRID",
+        "geometry_role": "INDICATIVE",
+        "geometry_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "geometry_confidence": "MEDIUM",
+        "horizontal_crs_ref": "kfm://crs/epsg/5070",
+        "resolution_value": 1000,
+        "resolution_unit": "METER"
+      },
+      "model": {
+        "model_ref": "kfm://model/synthetic-environmental-interpolator",
+        "model_version": "2026.08-test",
+        "method_ref": "kfm://method/synthetic-spatial-interpolation/v1",
+        "training_dataset_refs": [
+          "kfm://dataset/synthetic-training/a",
+          "kfm://dataset/synthetic-training/b"
+        ],
+        "training_support_summary_ref": "kfm://support-summary/synthetic-model/2026-08",
+        "training_extent_ref": "kfm://extent/synthetic-training/central-region",
+        "training_time_ref": "kfm://temporal-window/synthetic-training/2020-2025",
+        "parameter_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "variable_id": "synthetic_environmental_index",
+        "unit": "index",
+        "extrapolation_state": "INSIDE_SUPPORT"
+      },
+      "uncertainty": {
+        "kind": "VALIDATION_METRIC",
+        "value_ref": "kfm://uncertainty/synthetic-model/2026-08",
+        "confidence": "MEDIUM"
+      },
+      "modeled_artifact_refs": [
+        "kfm://artifact/modeled-surface/synthetic/2026-08-02/grid"
+      ],
+      "content_digests": [
+        "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+      ],
+      "evidence_refs": [
+        "kfm://evidence-ref/modeled-surface/synthetic/source-snapshot"
+      ],
+      "lineage": {
+        "state": "CURRENT",
+        "corrects": [],
+        "superseded_by": [],
+        "conflict_refs": []
+      },
+      "release_state": "UNRELEASED",
+      "release_ref": null,
+      "derived_only": true,
+      "field_truth_allowed": false,
+      "limitations": [
+        "Synthetic fixture; modeled estimate is not observation or field truth."
+      ],
+      "public_use_allowed": false,
+      "effects": {
+        "source_activated": false,
+        "evidence_resolved": false,
+        "policy_evaluated": false,
+        "promoted": false,
+        "released": false,
+        "published": false
+      }
+    }
+  },
+  "cases": [
+    {
+      "name": "valid_inside_support_current",
+      "base": "current",
+      "mutations": [],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "valid_partial_extrapolation_low_confidence",
+      "base": "current",
+      "mutations": [
+        {"path": "/model/extrapolation_state", "value": "PARTIAL_EXTRAPOLATION"},
+        {"path": "/uncertainty/confidence", "value": "LOW"}
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "valid_uncertainty_not_provided",
+      "base": "current",
+      "mutations": [
+        {"path": "/uncertainty/kind", "value": "NOT_PROVIDED"},
+        {"path": "/uncertainty/value_ref", "value": null},
+        {"path": "/uncertainty/confidence", "value": "UNKNOWN"}
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "valid_corrected_lineage",
+      "base": "current",
+      "mutations": [
+        {"path": "/times/corrected_at", "value": "2026-08-03T00:00:00Z"},
+        {"path": "/lineage/state", "value": "CORRECTED"},
+        {"path": "/lineage/corrects", "value": ["kfm://modeled-surface/synthetic/prior"]}
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "source_role_collapse",
+      "base": "current",
+      "mutations": [{"path": "/source_role", "value": "OBSERVATION"}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["SOURCE_ROLE_COLLAPSE"]
+    },
+    {
+      "name": "support_type_collapse",
+      "base": "current",
+      "mutations": [{"path": "/support_type", "value": "DIRECT_MEASUREMENT"}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["SUPPORT_TYPE_COLLAPSE"]
+    },
+    {
+      "name": "derived_only_missing",
+      "base": "current",
+      "mutations": [{"path": "/derived_only", "value": false}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["DERIVED_ONLY_REQUIRED"]
+    },
+    {
+      "name": "field_truth_overclaim",
+      "base": "current",
+      "mutations": [{"path": "/field_truth_allowed", "value": true}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["FIELD_TRUTH_OVERCLAIM"]
+    },
+    {
+      "name": "model_version_missing",
+      "base": "current",
+      "mutations": [{"path": "/model/model_version", "value": null}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["MODEL_CONTEXT_INCOMPLETE"]
+    },
+    {
+      "name": "training_support_missing",
+      "base": "current",
+      "mutations": [{"path": "/model/training_dataset_refs", "value": []}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["TRAINING_SUPPORT_INCOMPLETE"]
+    },
+    {
+      "name": "grid_resolution_missing",
+      "base": "current",
+      "mutations": [{"path": "/space/resolution_value", "value": null}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["GRID_RESOLUTION_REQUIRED"]
+    },
+    {
+      "name": "outside_support_confidence_overclaim",
+      "base": "current",
+      "mutations": [
+        {"path": "/model/extrapolation_state", "value": "OUTSIDE_SUPPORT"},
+        {"path": "/uncertainty/confidence", "value": "HIGH"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["SUPPORT_CONFIDENCE_OVERCLAIM"]
+    },
+    {
+      "name": "uncertainty_reference_missing",
+      "base": "current",
+      "mutations": [{"path": "/uncertainty/value_ref", "value": null}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["UNCERTAINTY_REFERENCE_REQUIRED"]
+    },
+    {
+      "name": "training_cutoff_after_model_run",
+      "base": "current",
+      "mutations": [{"path": "/times/training_data_cutoff_at", "value": "2026-08-03T00:00:00Z"}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["TRAINING_CUTOFF_AFTER_MODEL_RUN"]
+    },
+    {
+      "name": "validity_interval_inverted",
+      "base": "current",
+      "mutations": [{"path": "/times/valid_to", "value": "2019-12-31T00:00:00Z"}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["VALIDITY_INTERVAL_INVALID"]
+    },
+    {
+      "name": "unresolved_geometry_overclaim",
+      "base": "current",
+      "mutations": [{"path": "/space/geometry_role", "value": "UNRESOLVED"}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["UNRESOLVED_GEOMETRY_OVERCLAIM"]
+    },
+    {
+      "name": "release_overclaim",
+      "base": "current",
+      "mutations": [{"path": "/release_state", "value": "RELEASED"}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["RELEASE_OVERCLAIM"]
+    },
+    {
+      "name": "public_use_overclaim",
+      "base": "current",
+      "mutations": [{"path": "/public_use_allowed", "value": true}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["PUBLIC_USE_OVERCLAIM"]
+    },
+    {
+      "name": "effect_overclaim",
+      "base": "current",
+      "mutations": [{"path": "/effects/published", "value": true}],
+      "expected_outcome": "DENY",
+      "expected_findings": ["EFFECT_OVERCLAIM"]
+    },
+    {
+      "name": "spec_hash_mismatch",
+      "base": "current",
+      "mutations": [],
+      "identity_mode": "MISMATCH_SPEC_HASH",
+      "expected_outcome": "ERROR",
+      "expected_findings": ["SPEC_HASH_MISMATCH"]
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kansasfrontiermatrix.org/schemas/contracts/v1/domains/soil/catalog_closure_assessment.schema.json",
+  "title": "Soil CatalogClosureAssessment",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["profile", "assessment_id", "candidate_id", "dimensions", "outcome", "effects"],
+  "properties": {
+    "profile": {"const": "kfm.domains.soil.catalog-closure-assessment.v1"},
+    "assessment_id": {"type": "string", "pattern": "^kfm:soil-catalog-closure:[0-9a-f]{64}$"},
+    "candidate_id": {"type": "string", "minLength": 1, "maxLength": 256},
+    "dimensions": {
+      "type": "array", "minItems": 11, "maxItems": 11,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["name", "state", "ref"],
+        "properties": {
+          "name": {"enum": ["semantic_contract", "schema", "source_descriptor", "support_type_profile", "deterministic_identity", "evidence_bundle", "validation_report", "rights_decision", "sensitivity_decision", "correction_target", "rollback_target"]},
+          "state": {"enum": ["SATISFIED", "UNRESOLVED", "DENIED"]},
+          "ref": {"type": ["string", "null"], "minLength": 1, "maxLength": 512}
+        }
+      }
+    },
+    "outcome": {"enum": ["READY_FOR_REVIEW", "HOLD", "ERROR"]},
+    "effects": {
+      "type": "object", "additionalProperties": false,
+      "required": ["catalog_written", "triplet_written", "promoted", "released", "deployed", "published", "public_use_authorized"],
+      "properties": {
+        "catalog_written": {"const": false}, "triplet_written": {"const": false}, "promoted": {"const": false}, "released": {"const": false}, "deployed": {"const": false}, "published": {"const": false}, "public_use_authorized": {"const": false}
+      }
+    }
+  }
+}

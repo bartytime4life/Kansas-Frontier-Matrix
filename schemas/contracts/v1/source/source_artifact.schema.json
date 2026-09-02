@@ -1,0 +1,258 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/source/source_artifact.schema.json",
+  "title": "source_artifact",
+  "description": "Fixture-first metadata profile for one exact captured source byte stream. Shape validity does not admit a source, establish truth, resolve evidence, promote lifecycle state, release, or publish.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "artifact_id",
+    "source_descriptor_ref",
+    "ingest_receipt_ref",
+    "source_locator",
+    "retrieved_at",
+    "source_reported_at",
+    "retrieval_outcome",
+    "status_code",
+    "media_type",
+    "byte_length",
+    "content_digest",
+    "immutable_storage_ref",
+    "request_context",
+    "rights_snapshot",
+    "parser",
+    "source_surface_type",
+    "lineage",
+    "governance"
+  ],
+  "properties": {
+    "object_type": {"const": "SourceArtifact"},
+    "schema_version": {"const": "1.0.0"},
+    "artifact_id": {"$ref": "#/$defs/artifact_ref"},
+    "source_descriptor_ref": {"$ref": "#/$defs/nonempty_ref"},
+    "ingest_receipt_ref": {"$ref": "#/$defs/nonempty_ref"},
+    "source_locator": {"$ref": "#/$defs/source_locator"},
+    "retrieved_at": {"$ref": "#/$defs/aware_datetime"},
+    "source_reported_at": {"$ref": "#/$defs/nullable_datetime"},
+    "retrieval_outcome": {
+      "type": "string",
+      "enum": ["FETCHED", "MALFORMED", "SOURCE_CONFLICT"]
+    },
+    "status_code": {
+      "oneOf": [
+        {"type": "integer", "minimum": 100, "maximum": 599},
+        {"type": "null"}
+      ]
+    },
+    "media_type": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 160,
+      "pattern": "^[A-Za-z0-9!#$&^_.+-]+/[A-Za-z0-9!#$&^_.+;-]+(?:[ ]*;[ ]*[A-Za-z0-9!#$&^_.+-]+=[A-Za-z0-9!#$&^_.+:-]+)*$"
+    },
+    "byte_length": {"type": "integer", "minimum": 1, "maximum": 52428800},
+    "content_digest": {"$ref": "#/$defs/sha256_digest"},
+    "immutable_storage_ref": {"$ref": "#/$defs/cas_ref"},
+    "request_context": {"$ref": "#/$defs/request_context"},
+    "rights_snapshot": {"$ref": "#/$defs/rights_snapshot"},
+    "parser": {"$ref": "#/$defs/parser"},
+    "source_surface_type": {
+      "type": "string",
+      "enum": [
+        "api_record",
+        "current_table",
+        "pdf_document",
+        "gis_package",
+        "repository_object",
+        "structured_file",
+        "other_binary"
+      ]
+    },
+    "lineage": {"$ref": "#/$defs/lineage"},
+    "governance": {"$ref": "#/$defs/governance"}
+  },
+  "$defs": {
+    "nonempty_ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 640,
+      "pattern": "\\S"
+    },
+    "nullable_ref": {
+      "oneOf": [
+        {"$ref": "#/$defs/nonempty_ref"},
+        {"type": "null"}
+      ]
+    },
+    "sha256_digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "artifact_ref": {
+      "type": "string",
+      "pattern": "^source-artifact:sha256:[a-f0-9]{64}$"
+    },
+    "cas_ref": {
+      "type": "string",
+      "pattern": "^cas:sha256:[a-f0-9]{64}$"
+    },
+    "aware_datetime": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "nullable_datetime": {
+      "oneOf": [
+        {"$ref": "#/$defs/aware_datetime"},
+        {"type": "null"}
+      ]
+    },
+    "string_array": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1, "maxLength": 160},
+      "uniqueItems": true
+    },
+    "source_locator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "value", "first_party_authority", "locator_digest"],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["https_url", "api_record", "repository_object", "file_reference"]
+        },
+        "value": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2048,
+          "pattern": "\\S"
+        },
+        "first_party_authority": {"type": "boolean"},
+        "locator_digest": {"$ref": "#/$defs/sha256_digest"}
+      }
+    },
+    "request_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "method",
+        "profile_id",
+        "parameter_names",
+        "header_names",
+        "body_digest",
+        "secrets_embedded"
+      ],
+      "properties": {
+        "method": {
+          "type": "string",
+          "enum": ["GET", "POST", "HEAD", "FILE", "REPOSITORY"]
+        },
+        "profile_id": {"$ref": "#/$defs/nonempty_ref"},
+        "parameter_names": {"$ref": "#/$defs/string_array"},
+        "header_names": {"$ref": "#/$defs/string_array"},
+        "body_digest": {
+          "oneOf": [
+            {"$ref": "#/$defs/sha256_digest"},
+            {"type": "null"}
+          ]
+        },
+        "secrets_embedded": {"const": false}
+      }
+    },
+    "rights_snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "captured_at",
+        "license_id",
+        "terms_ref",
+        "access_class",
+        "redistribution_status",
+        "review_state"
+      ],
+      "properties": {
+        "captured_at": {"$ref": "#/$defs/aware_datetime"},
+        "license_id": {
+          "oneOf": [
+            {"type": "string", "minLength": 1, "maxLength": 160},
+            {"type": "null"}
+          ]
+        },
+        "terms_ref": {"$ref": "#/$defs/nullable_ref"},
+        "access_class": {
+          "type": "string",
+          "enum": ["public", "restricted", "controlled", "unknown"]
+        },
+        "redistribution_status": {
+          "type": "string",
+          "enum": ["allowed", "restricted", "denied", "unknown"]
+        },
+        "review_state": {
+          "type": "string",
+          "enum": ["pending", "reviewed", "unknown"]
+        }
+      }
+    },
+    "parser": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["parser_id", "version", "spec_digest"],
+      "properties": {
+        "parser_id": {"$ref": "#/$defs/nonempty_ref"},
+        "version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "spec_digest": {"$ref": "#/$defs/sha256_digest"}
+      }
+    },
+    "lineage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "supersedes_artifact_ref",
+        "correction_refs",
+        "conflict_group_ref"
+      ],
+      "properties": {
+        "supersedes_artifact_ref": {"$ref": "#/$defs/nullable_ref"},
+        "correction_refs": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/nonempty_ref"},
+          "uniqueItems": true
+        },
+        "conflict_group_ref": {"$ref": "#/$defs/nullable_ref"}
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["public_use_allowed", "authority_created", "release_ref", "spec_hash"],
+      "properties": {
+        "public_use_allowed": {"const": false},
+        "authority_created": {"const": false},
+        "release_ref": {"type": "null"},
+        "spec_hash": {"$ref": "#/$defs/sha256_digest"}
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED",
+    "contract_doc": "contracts/source/source_artifact.md",
+    "fixtures_root": "fixtures/contracts/v1/source/source_artifact/",
+    "validator": "tools/validators/validate_source_artifact.py",
+    "tests": "tests/validators/test_validate_source_artifact.py",
+    "store_helper": "tools/source_artifacts/content_addressed_store.py",
+    "authority": "fixture_first_exact_byte_binding_only",
+    "non_effects": [
+      "does_not_admit_or_activate_source",
+      "does_not_establish_source_truth",
+      "does_not_resolve_evidence",
+      "does_not_write_lifecycle_state",
+      "does_not_release_or_publish"
+    ]
+  }
+}

@@ -1,0 +1,75 @@
+[
+  {
+    "name": "pass_coherent_triage_snapshot",
+    "mutations": [],
+    "expected_outcome": "PASS",
+    "expected_findings": []
+  },
+  {
+    "name": "abstain_active_owner_unknown",
+    "mutations": [{"path": "/entries/1/owner_roles", "value": []}],
+    "expected_outcome": "ABSTAIN",
+    "expected_findings": [{"code": "TRIAGE_OWNER_UNKNOWN", "path": "/entries/1/owner_roles"}]
+  },
+  {
+    "name": "abstain_next_review_unknown",
+    "mutations": [{"path": "/entries/0/next_review_at", "value": null}],
+    "expected_outcome": "ABSTAIN",
+    "expected_findings": [{"code": "NEXT_REVIEW_UNKNOWN", "path": "/entries/0/next_review_at"}]
+  },
+  {
+    "name": "abstain_review_pending",
+    "mutations": [{"path": "/review/state", "value": "PENDING"}],
+    "expected_outcome": "ABSTAIN",
+    "expected_findings": [{"code": "REVIEW_PENDING", "path": "/review/state"}]
+  },
+  {
+    "name": "deny_unsafe_affected_path",
+    "mutations": [{"path": "/entries/0/affected_paths", "value": ["/docs/architecture/fixture.md"]}],
+    "expected_outcome": "DENY",
+    "expected_findings": [{"code": "AFFECTED_PATH_UNSAFE", "path": "/entries/0/affected_paths/0"}]
+  },
+  {
+    "name": "deny_noncanonical_affected_paths",
+    "mutations": [{"path": "/entries/0/affected_paths", "value": ["z/fixture.md", "a/fixture.md"]}],
+    "expected_outcome": "DENY",
+    "expected_findings": [{"code": "AFFECTED_PATHS_NOT_CANONICAL", "path": "/entries/0/affected_paths"}]
+  },
+  {
+    "name": "deny_blocked_without_adr",
+    "mutations": [{"path": "/entries/1/candidate_adr_ref", "value": null}],
+    "expected_outcome": "DENY",
+    "expected_findings": [{"code": "BLOCKED_ADR_REFERENCE_REQUIRED", "path": "/entries/1/candidate_adr_ref"}]
+  },
+  {
+    "name": "deny_correction_without_correction_ref",
+    "mutations": [{"path": "/entries/2/correction_ref", "value": null}],
+    "expected_outcome": "DENY",
+    "expected_findings": [{"code": "CORRECTION_REFERENCE_REQUIRED", "path": "/entries/2/correction_ref"}]
+  },
+  {
+    "name": "deny_resolved_without_resolution_ref",
+    "mutations": [{"path": "/entries/3/resolution_ref", "value": null}],
+    "expected_outcome": "DENY",
+    "expected_findings": [{"code": "RESOLUTION_REFERENCE_REQUIRED", "path": "/entries/3/resolution_ref"}]
+  },
+  {
+    "name": "deny_authority_overreach",
+    "mutations": [{"path": "/effects/resolves_drift", "value": true}],
+    "expected_outcome": "DENY",
+    "expected_findings": [{"code": "AUTHORITY_OVERREACH", "path": "/effects"}]
+  },
+  {
+    "name": "error_identity_drift",
+    "mutations": [{"path": "/assessment_id", "value": "kfm:drift-register-triage:0000000000000000000000000000000000000000000000000000000000000000"}],
+    "preserve_identity": true,
+    "expected_outcome": "ERROR",
+    "expected_findings": [{"code": "ASSESSMENT_ID_MISMATCH", "path": "/assessment_id"}]
+  },
+  {
+    "name": "error_invalid_state_vocabulary",
+    "mutations": [{"path": "/entries/0/state", "value": "REMEDIATED"}],
+    "expected_outcome": "ERROR",
+    "expected_findings": [{"code": "SCHEMA_INVALID", "path": "/entries/0/state"}]
+  }
+]

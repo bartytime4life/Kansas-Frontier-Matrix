@@ -1,0 +1,116 @@
+{
+  "authority_boundary": "Fixture replay proves deterministic schema and semantic findings only; it does not admit, release, or publish fauna data.",
+  "cases": [
+    {
+      "expected_findings": [
+        {
+          "code": "obs.source_role_mismatch",
+          "path": "/observation/basis_of_record"
+        },
+        {
+          "code": "schema.pass_gate_failed",
+          "path": "/validation/validator_result"
+        }
+      ],
+      "expected_outcome": "ERROR",
+      "path": "semantic_invalid/modeled_as_observed.json"
+    },
+    {
+      "expected_findings": [
+        {
+          "code": "prov.raw_artifact_ref_required",
+          "path": "/provenance/raw_artifact_ref"
+        },
+        {
+          "code": "schema.pass_gate_failed",
+          "path": "/validation/validator_result"
+        },
+        {
+          "code": "schema.validation_check_mismatch",
+          "path": "/validation/checks/provenance_complete"
+        }
+      ],
+      "expected_outcome": "ERROR",
+      "path": "semantic_invalid/observed_without_raw_artifact.json"
+    },
+    {
+      "expected_findings": [
+        {
+          "code": "rights.unresolved",
+          "path": "/rights"
+        },
+        {
+          "code": "schema.pass_gate_failed",
+          "path": "/validation/validator_result"
+        },
+        {
+          "code": "schema.validation_check_mismatch",
+          "path": "/validation/checks/rights_resolved"
+        }
+      ],
+      "expected_outcome": "ERROR",
+      "path": "semantic_invalid/rights_unresolved_pass.json"
+    },
+    {
+      "expected_findings": [
+        {
+          "code": "geom.public_safe_precision_invalid",
+          "path": "/geometry/public_safe_geometry/precision_class"
+        },
+        {
+          "code": "schema.pass_gate_failed",
+          "path": "/validation/validator_result"
+        },
+        {
+          "code": "schema.validation_check_mismatch",
+          "path": "/validation/checks/geometry_public_safe"
+        },
+        {
+          "code": "sens.review_reason_required",
+          "path": "/validation/reason_codes"
+        }
+      ],
+      "expected_outcome": "ERROR",
+      "path": "semantic_invalid/sensitive_exact_without_generalization.json"
+    },
+    {
+      "expected_findings": [
+        {
+          "code": "identity.occurrence_id_mismatch",
+          "path": "/occurrence_evidence_id"
+        },
+        {
+          "code": "identity.spec_hash_mismatch",
+          "path": "/spec_hash"
+        },
+        {
+          "code": "schema.pass_gate_failed",
+          "path": "/validation/validator_result"
+        },
+        {
+          "code": "schema.validation_check_mismatch",
+          "path": "/validation/checks/spec_hash_stable"
+        }
+      ],
+      "expected_outcome": "ERROR",
+      "path": "semantic_invalid/spec_hash_mismatch.json"
+    },
+    {
+      "expected_findings": [],
+      "expected_outcome": "PASS",
+      "path": "valid/valid_modeled_context.json"
+    },
+    {
+      "expected_findings": [],
+      "expected_outcome": "PASS",
+      "path": "valid/valid_observed_open.json"
+    },
+    {
+      "expected_findings": [],
+      "expected_outcome": "PASS",
+      "path": "valid/valid_sensitive_withheld_quarantine.json"
+    }
+  ],
+  "schema_version": "1.0.0",
+  "scope": "fauna-occurrence-evidence-draft-v1"
+}

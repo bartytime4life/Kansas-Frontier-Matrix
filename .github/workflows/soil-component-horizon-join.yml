@@ -1,0 +1,48 @@
+name: soil-component-horizon-join
+
+on:
+  pull_request:
+    paths:
+      - 'schemas/contracts/v1/domains/soil/component_horizon_join.schema.json'
+      - 'fixtures/domains/soil/component_horizon_join/**'
+      - 'tools/validators/domains/soil/validate_component_horizon_join.py'
+      - 'tests/validators/domains/soil/test_component_horizon_join.py'
+      - '.github/workflows/soil-component-horizon-join.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  KFM_NO_NETWORK: '1'
+  PYTHONHASHSEED: '0'
+  TZ: UTC
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.11'
+      - name: Compile focused code
+        run: |
+          python -m py_compile tools/validators/domains/soil/validate_component_horizon_join.py
+          python -m py_compile tests/validators/domains/soil/test_component_horizon_join.py
+      - name: Replay exact fixtures
+        run: python tools/validators/domains/soil/validate_component_horizon_join.py --fixtures
+      - name: Run deterministic tests
+        run: python -m unittest -q tests.validators.domains.soil.test_component_horizon_join
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo '### Soil ComponentHorizonJoin candidate profile'
+            echo
+            echo '- Fixture-only and no-network.'
+            echo '- A PASS proves lineage-candidate coherence only; it does not persist a join, resolve evidence, approve policy/review, release, publish, or authorize public use.'
+          } >> "$GITHUB_STEP_SUMMARY"

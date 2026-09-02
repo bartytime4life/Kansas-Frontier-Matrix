@@ -1,0 +1,98 @@
+{
+  "artifact_hashes": {
+    "tests/runtime_proof/test_envelope_finite_outcomes.py": "sha256:8ca5a24f82ec556a70c364f803b4c237b528ac0d797caf4ac8f962c04445f7dc"
+  },
+  "artifact_paths": [
+    "tests/runtime_proof/test_envelope_finite_outcomes.py"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "repo:.github/workflows/focus-mock-test.yml@f5be961b716203a96632463dced9f9da4ee2d1eb",
+      "id": "repository:focus-mock-standard-library-contract",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:data/receipts/generated/genrec-finite-runtime-envelope-f59e6650.json@f5be961b716203a96632463dced9f9da4ee2d1eb",
+      "id": "repository:finite-runtime-envelope-lineage",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@f5be961b716203a96632463dced9f9da4ee2d1eb",
+      "id": "repository:directory-governance",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-08T17:42:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "repo:.github/workflows/focus-mock-test.yml@f5be961b716203a96632463dced9f9da4ee2d1eb",
+      "repo:tests/runtime_proof/test_envelope_finite_outcomes.py@f5be961b716203a96632463dced9f9da4ee2d1eb",
+      "run:github-actions/focus-mock-test/31269576680",
+      "run:github-actions/focus-finite-envelope-stdlib-probe/31270018467"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-08-08"
+  },
+  "notes": "Current-state extension receipt for the dependency-free finite-envelope proof. The original genrec-finite-runtime-envelope-f59e6650.json remains unchanged as historical process memory. This repair removes an undeclared jsonschema import from the standard-library focus-mock proof without changing the canonical schema or jsonschema-based validator.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "hosted branch-local deterministic validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:6497074e4495153439fb711737c4a5614e4beb56f32dcdee862e1bf4c4aa10d4",
+  "receipt_id": "genrec-finite-runtime-envelope-stdlib-proof-20260808",
+  "truth_labels": {
+    "tests/runtime_proof/test_envelope_finite_outcomes.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "dependency-free-unit-tests",
+      "outcome": "PASS",
+      "reason": "Six standard-library finite-envelope tests passed on GitHub-hosted Python 3.11 without installing repository dependencies."
+    },
+    {
+      "gate": "syntax-compilation",
+      "outcome": "PASS",
+      "reason": "The repaired proof compiled successfully with py_compile."
+    },
+    {
+      "gate": "branch-local-probe",
+      "outcome": "PASS",
+      "reason": "GitHub Actions run 31270018467 passed and emitted the exact committed SHA-256 recorded here."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pull-request head after the temporary probe workflow is removed."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ]
+}

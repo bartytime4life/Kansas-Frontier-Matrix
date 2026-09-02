@@ -1,0 +1,41 @@
+{
+  "profile": "kfm.explorer.layer-lineage.public-safe.v1",
+  "timeline_id": "kfm:layer-lineage:synthetic:layer-001",
+  "outcome": "ANSWER",
+  "reason_code": "LINEAGE_AVAILABLE",
+  "layer_ref": "kfm://layer/synthetic/environmental-001",
+  "current_release_ref": "kfm://release/synthetic/release-003",
+  "current_state": "ROLLED_BACK",
+  "entries": [
+    {
+      "sequence": 1,
+      "event_type": "RELEASED",
+      "occurred_at": "2026-05-01T12:00:00Z",
+      "artifact_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "release_ref": "kfm://release/synthetic/release-001",
+      "correction_receipt_ref": null,
+      "rollback_target_ref": null,
+      "supersedes_digest": null
+    },
+    {
+      "sequence": 2,
+      "event_type": "CORRECTED",
+      "occurred_at": "2026-06-01T12:00:00Z",
+      "artifact_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "release_ref": "kfm://release/synthetic/release-002",
+      "correction_receipt_ref": "kfm://receipt/correction/synthetic/correction-001",
+      "rollback_target_ref": null,
+      "supersedes_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    {
+      "sequence": 3,
+      "event_type": "ROLLED_BACK",
+      "occurred_at": "2026-06-02T12:00:00Z",
+      "artifact_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "release_ref": "kfm://release/synthetic/release-003",
+      "correction_receipt_ref": null,
+      "rollback_target_ref": "kfm://release/synthetic/release-001",
+      "supersedes_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    }
+  ]
+}

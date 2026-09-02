@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/hazards/source_state_hash.schema.json",
+  "title": "source_state_hash",
+  "type": "object",
+  "description": "KFM v1 contract schema stub for source_state_hash. Greenfield placeholder; fields to be defined per the contract document and ADR.",
+  "x-kfm": {
+    "contract_doc": "contracts/domains/hazards/source_state_hash.md",
+    "fixtures_root": "fixtures/domains/hazards/source_state_hash/",
+    "validator": "tools/validators/domains/hazards/validate_source_state_hash.py",
+    "policy": "policy/domains/hazards/",
+    "status": "PROPOSED"
+  },
+  "properties": {
+    "spec_hash": {
+      "type": "string",
+      "description": "Deterministic content hash."
+    },
+    "id": {
+      "type": "string",
+      "description": "Canonical identifier."
+    },
+    "version": {
+      "type": "string",
+      "description": "Contract or object version."
+    }
+  },
+  "required": [
+    "id"
+  ],
+  "additionalProperties": true
+}

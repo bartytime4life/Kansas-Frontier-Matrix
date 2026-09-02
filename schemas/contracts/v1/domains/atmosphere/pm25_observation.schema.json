@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kfm://schemas/contracts/v1/domains/atmosphere/pm25_observation.schema.json",
+  "title": "Pm25 Observation",
+  "description": "PROPOSED scaffold created from the current docs/domains markdown inventory.",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {},
+  "x-kfm": {
+    "status": "PROPOSED",
+    "path": "schemas/contracts/v1/domains/atmosphere/pm25_observation.schema.json",
+    "source_docs": [
+      "docs/domains/atmosphere/MISSING_OR_PLANNED_FILES.md"
+    ],
+    "contract_doc": "contracts/domains/atmosphere/pm25_observation.md"
+  }
+}

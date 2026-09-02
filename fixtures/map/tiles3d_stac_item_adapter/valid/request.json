@@ -1,0 +1,59 @@
+{
+  "bbox": [
+    -100,
+    38,
+    -99,
+    39
+  ],
+  "collection": "kfm-map-tiles3d-candidates",
+  "created": "2026-08-08T00:00:00Z",
+  "datetime": "2026-08-08T00:00:00Z",
+  "evidence_bundle_ref": "urn:kfm:bundle:synthetic-tiles3d-fixture",
+  "evidence_ref": "urn:kfm:evidence:synthetic-tiles3d-fixture",
+  "geometry": {
+    "coordinates": [
+      [
+        [
+          -100,
+          38
+        ],
+        [
+          -99,
+          38
+        ],
+        [
+          -99,
+          39
+        ],
+        [
+          -100,
+          39
+        ],
+        [
+          -100,
+          38
+        ]
+      ]
+    ],
+    "type": "Polygon"
+  },
+  "item_id": "kfm-tiles3d-synthetic-fixture",
+  "license": "CC0-1.0",
+  "object_type": "Tiles3DStacItemAdapterRequest",
+  "providers": [
+    {
+      "name": "KFM synthetic fixture",
+      "roles": [
+        "producer"
+      ]
+    }
+  ],
+  "representation_receipt_ref": "urn:kfm:representation:synthetic-tiles3d-fixture",
+  "rights_status": "public",
+  "run_receipt_ref": "urn:kfm:run:synthetic-tiles3d-adapter",
+  "schema_version": "1.0.0",
+  "sensitivity": "public",
+  "source_role": "derived",
+  "tree_commit": "3a7cc9bcaf6f6dfc64ca6e1e756914ea29138ee4",
+  "updated": "2026-08-08T00:00:00Z"
+}

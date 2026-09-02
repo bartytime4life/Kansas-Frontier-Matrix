@@ -1,0 +1,11 @@
+{
+  "case_id": "tile-manifest-tile-format-header-mismatch",
+  "expected": {
+    "issue_codes": [
+      "TILE_MANIFEST_TILE_FORMAT_MISMATCH"
+    ],
+    "status": "DENY"
+  },
+  "fixture_profile": "kfm.pmtiles.tile-artifact-manifest.compat.v1",
+  "mutation": "manifest_tile_format_header_mismatch"
+}

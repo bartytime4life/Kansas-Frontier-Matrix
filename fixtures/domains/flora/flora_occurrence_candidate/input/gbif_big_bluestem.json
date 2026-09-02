@@ -1,0 +1,17 @@
+{
+  "key": 123456789,
+  "institutionCode": "SYNTH",
+  "collectionCode": "OBS",
+  "catalogNumber": "SYNTH-0001",
+  "scientificName": "Andropogon gerardii",
+  "taxonKey": 2703851,
+  "taxonRank": "SPECIES",
+  "basisOfRecord": "HUMAN_OBSERVATION",
+  "eventDate": "2024-06-15",
+  "occurrenceStatus": "present",
+  "decimalLongitude": -98.123456,
+  "decimalLatitude": 38.123456,
+  "coordinateUncertaintyInMeters": 50,
+  "license": "CC-BY-4.0",
+  "rightsHolder": "Synthetic Prairie Observer"
+}

@@ -1,0 +1,161 @@
+{
+  "$id": "https://schemas.kfm.local/contracts/v1/governance/dependency_origin_policy.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Proposed static repository dependency-origin guard. Conformance proves no installation, registry identity, signature, attestation, release, deployment, publication, or public-use authority.",
+  "properties": {
+    "authority": {
+      "const": "NONE"
+    },
+    "expected_package_manager": {
+      "pattern": "^pnpm@[0-9]+\\.[0-9]+\\.[0-9]+$",
+      "type": "string"
+    },
+    "forbidden_lockfiles": {
+      "items": {
+        "pattern": "^[A-Za-z0-9._/-]{3,128}$",
+        "type": "string"
+      },
+      "maxItems": 8,
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "non_effects": {
+      "const": [
+        "does_not_install_or_resolve_dependencies",
+        "does_not_prove_registry_or_publisher_identity",
+        "does_not_verify_package_signatures_attestations_or_vulnerabilities",
+        "does_not_authorize_source_evidence_policy_review_or_release",
+        "does_not_deploy_publish_or_create_public_use_authority"
+      ]
+    },
+    "npm": {
+      "additionalProperties": false,
+      "properties": {
+        "allowed_registry_hosts": {
+          "items": {
+            "pattern": "^[a-z0-9.-]+$",
+            "type": "string"
+          },
+          "maxItems": 16,
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "forbidden_direct_specifier_prefixes": {
+          "items": {
+            "enum": [
+              "file:",
+              "git+",
+              "http:",
+              "https:"
+            ]
+          },
+          "maxItems": 16,
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "internal_scopes": {
+          "items": {
+            "pattern": "^@[a-z0-9][a-z0-9._-]*/$",
+            "type": "string"
+          },
+          "maxItems": 16,
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "internal_specifier_prefixes": {
+          "items": {
+            "enum": [
+              "workspace:",
+              "link:"
+            ]
+          },
+          "maxItems": 8,
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "lockfile_version": {
+          "const": "9.0"
+        },
+        "require_integrity": {
+          "const": true
+        }
+      },
+      "required": [
+        "lockfile_version",
+        "allowed_registry_hosts",
+        "internal_scopes",
+        "internal_specifier_prefixes",
+        "forbidden_direct_specifier_prefixes",
+        "require_integrity"
+      ],
+      "type": "object"
+    },
+    "outcomes": {
+      "const": [
+        "PASS",
+        "DENY",
+        "ERROR"
+      ]
+    },
+    "profile": {
+      "const": "kfm.governance.dependency-origin-policy.v1"
+    },
+    "profile_status": {
+      "const": "PROPOSED_STATIC_GUARD"
+    },
+    "python": {
+      "additionalProperties": false,
+      "properties": {
+        "allow_editable_local": {
+          "const": true
+        },
+        "forbidden_direct_reference_schemes": {
+          "items": {
+            "enum": [
+              "file:",
+              "git+",
+              "http:",
+              "https:"
+            ]
+          },
+          "maxItems": 16,
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "forbidden_direct_reference_schemes",
+        "allow_editable_local"
+      ],
+      "type": "object"
+    },
+    "required_lockfile": {
+      "const": "pnpm-lock.yaml"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    }
+  },
+  "required": [
+    "schema_version",
+    "profile",
+    "profile_status",
+    "authority",
+    "expected_package_manager",
+    "required_lockfile",
+    "forbidden_lockfiles",
+    "npm",
+    "python",
+    "outcomes",
+    "non_effects"
+  ],
+  "title": "DependencyOriginPolicy",
+  "type": "object"
+}

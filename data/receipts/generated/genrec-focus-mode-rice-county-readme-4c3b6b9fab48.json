@@ -1,0 +1,99 @@
+{
+  "receipt_id": "genrec-focus-mode-rice-county-readme-4c3b6b9fab48",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/focus-mode/counties/rice_county/README.md"
+  ],
+  "artifact_hashes": {
+    "docs/focus-mode/counties/rice_county/README.md": "sha256:00000000000000000000000000000000"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Sol",
+    "version": "exact serving revision not exposed"
+  },
+  "prompt_or_contract": "sha256:00000000000000000000000000000000",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "current-repository inspection",
+      "same-path Markdown modernization",
+      "remote diff verification"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [],
+    "attached_docs": [],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/131b605163bfbca1880014a10d9f41cd00ff564f",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/131b605163bfbca1880014a10d9f41cd00ff564f/docs/focus-mode/counties/rice_county/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/131b605163bfbca1880014a10d9f41cd00ff564f/docs/focus-mode/counties/rice_county/rice_county_focus_mode_build_plan.md"
+    ]
+  },
+  "truth_labels": {
+    "docs/focus-mode/counties/rice_county/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-target-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Current main was pinned at 131b605163bfbca1880014a10d9f41cd00ff564f. Exact open-PR and branch searches found no overlapping Rice README task before branch creation."
+    },
+    {
+      "gate": "same-path-placement-review",
+      "outcome": "PASS",
+      "reason": "The tracked README remains under docs/focus-mode/counties/rice_county/. No move, rename, new root, or parallel county authority is introduced."
+    },
+    {
+      "gate": "linked-build-plan-reconciliation",
+      "outcome": "PASS",
+      "reason": "The linked Rice build plan was inspected and remains byte-unchanged. Its external-source facts and proposed repository paths remain dated planning lineage rather than current implementation proof."
+    },
+    {
+      "gate": "public-safety-and-sensitivity-boundary",
+      "outcome": "PASS",
+      "reason": "The README explicitly withholds current flood/emergency conclusions, well-specific groundwater safety, title/owner inference, infrastructure vulnerability, and exact archaeological/sacred/burial locations."
+    },
+    {
+      "gate": "exact-sha256-artifact-binding",
+      "outcome": "SKIPPED",
+      "reason": "No independent byte-digest primitive was exposed in this connector-only run; placeholder schema-valid values are not integrity proof and require replacement before relying on the receipt."
+    },
+    {
+      "gate": "repository-native-generated-receipt-validator",
+      "outcome": "SKIPPED",
+      "reason": "Repository-native validator execution was not available in this connector-only run."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pinned-current-main",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/131b605163bfbca1880014a10d9f41cd00ff564f"
+    },
+    {
+      "id": "prior-rice-readme",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/131b605163bfbca1880014a10d9f41cd00ff564f/docs/focus-mode/counties/rice_county/README.md"
+    },
+    {
+      "id": "linked-rice-build-plan",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/131b605163bfbca1880014a10d9f41cd00ff564f/docs/focus-mode/counties/rice_county/rice_county_focus_mode_build_plan.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-22T04:27:00Z",
+  "emitter": "ChatGPT GitHub connector",
+  "notes": "Documentation/provenance-only change. Exact SHA-256 binding and repository-native receipt validation were not performed in this connector-only run. This receipt is process memory only and does not prove truth, policy approval, release, publication, or mergeability."
+}

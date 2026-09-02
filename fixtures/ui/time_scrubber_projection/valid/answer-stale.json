@@ -1,0 +1,18 @@
+{
+  "outcome": "ANSWER",
+  "reason_code": "SUPPORTED",
+  "time": {
+    "minimum": "1850-06-01T00:00:00Z",
+    "maximum": "1850-06-01T00:10:00Z",
+    "selected": "1850-06-01T00:05:00Z",
+    "kind": "SELECTED_TIME",
+    "precision": "SECOND",
+    "timezone": "UTC"
+  },
+  "trust_state": {
+    "policy": "ALLOW",
+    "release": "RELEASED",
+    "freshness": "STALE",
+    "temporal_conflict": false
+  }
+}

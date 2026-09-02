@@ -1,0 +1,213 @@
+{
+  "receipt_id": "genrec-pipeline-specs-fauna-watchers-readme-2edd08cf",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "pipeline_specs/fauna/watchers/README.md"
+  ],
+  "artifact_hashes": {
+    "pipeline_specs/fauna/watchers/README.md": "sha256:2edd08cf034a2905e984769b0363afe70bea7c612468e82d8f10be9c18e3ee68"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-15-session"
+  },
+  "prompt_or_contract": "sha256:cc91c382a03f670ec8fd5ff23414893c26fed546b46b71ef1ff32364938b4ede",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "container"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "Directory Rules.pdf",
+      "Kansas Frontier Matrix — AI Build Operating Contract.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/8af224617684d8e708c7550510a1f27d314e585a",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8af224617684d8e708c7550510a1f27d314e585a/pipeline_specs/fauna/watchers/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8af224617684d8e708c7550510a1f27d314e585a/pipeline_specs/fauna/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8af224617684d8e708c7550510a1f27d314e585a/pipeline_specs/watchers/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8af224617684d8e708c7550510a1f27d314e585a/pipelines/watchers/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8af224617684d8e708c7550510a1f27d314e585a/pipelines/domains/fauna/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8af224617684d8e708c7550510a1f27d314e585a/data/registry/sources/fauna/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8af224617684d8e708c7550510a1f27d314e585a/docs/domains/fauna/SENSITIVITY.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8af224617684d8e708c7550510a1f27d314e585a/policy/domains/fauna/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8af224617684d8e708c7550510a1f27d314e585a/policy/sensitivity/fauna/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8af224617684d8e708c7550510a1f27d314e585a/tests/domains/fauna/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8af224617684d8e708c7550510a1f27d314e585a/fixtures/domains/fauna/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8af224617684d8e708c7550510a1f27d314e585a/.github/workflows/domain-fauna.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8af224617684d8e708c7550510a1f27d314e585a/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8af224617684d8e708c7550510a1f27d314e585a/.github/PULL_REQUEST_TEMPLATE.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8af224617684d8e708c7550510a1f27d314e585a/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8af224617684d8e708c7550510a1f27d314e585a/docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    "pipeline_specs/fauna/watchers/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-preflight",
+      "outcome": "PASS",
+      "reason": "Repository identity, latest main commit, target blob, parent/shared watcher contracts, branch/PR duplication state, workflow, ownership, and adjacent Fauna authority surfaces were inspected."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The existing path remains under pipeline_specs/ as declarative intent; the generated receipt uses the established data/receipts/generated/ lane. No new authority or lifecycle home is introduced."
+    },
+    {
+      "gate": "bounded-watcher-inventory",
+      "outcome": "PASS",
+      "reason": "Searches for the direct lane, fauna.watchers identifiers, proposed schema ID, and spec-specific tests surfaced no concrete watcher profile beyond the README. The document labels the result as bounded."
+    },
+    {
+      "gate": "what-versus-how-boundary",
+      "outcome": "PASS",
+      "reason": "The README keeps declarative watcher intent separate from executable pipelines, connectors, source admission, lifecycle writers, policy, evidence, catalog, release, and public clients."
+    },
+    {
+      "gate": "fauna-sensitivity-no-leak",
+      "outcome": "PASS",
+      "reason": "No exact coordinates, sensitive site identifiers, generalization radii, fuzzing parameters, real payloads, private endpoints, credentials, or reconstructive examples were introduced."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "Final newline, heading hierarchy, balanced fences, unique headings, internal anchors, Mermaid boundaries, and KFM meta block were checked."
+    },
+    {
+      "gate": "illustrative-yaml",
+      "outcome": "PASS",
+      "reason": "The single YAML example parsed successfully and is explicitly labeled incomplete, non-canonical, inactive, and unsafe for production."
+    },
+    {
+      "gate": "secret-pattern-scan",
+      "outcome": "PASS",
+      "reason": "Common private-key, GitHub token, AWS key, Slack token, bearer token, and private-network endpoint patterns were not found."
+    },
+    {
+      "gate": "executable-watcher-tests",
+      "outcome": "SKIPPED",
+      "reason": "No active watcher specification, parser, scheduler, consumer, source binding, or executable watcher implementation changed."
+    },
+    {
+      "gate": "live-source-or-network-validation",
+      "outcome": "SKIPPED",
+      "reason": "No source activation or live access was authorized; watcher tests should be no-network by default."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review is pending; this receipt does not authorize merge or activation."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "EVIDENCE-01",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/8af224617684d8e708c7550510a1f27d314e585a"
+    },
+    {
+      "id": "EVIDENCE-02",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/8af224617684d8e708c7550510a1f27d314e585a/pipeline_specs/fauna/watchers/README.md"
+    },
+    {
+      "id": "EVIDENCE-03",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/8af224617684d8e708c7550510a1f27d314e585a/pipeline_specs/fauna/README.md"
+    },
+    {
+      "id": "EVIDENCE-04",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/8af224617684d8e708c7550510a1f27d314e585a/pipeline_specs/watchers/README.md"
+    },
+    {
+      "id": "EVIDENCE-05",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/8af224617684d8e708c7550510a1f27d314e585a/pipelines/watchers/README.md"
+    },
+    {
+      "id": "EVIDENCE-06",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/8af224617684d8e708c7550510a1f27d314e585a/pipelines/domains/fauna/README.md"
+    },
+    {
+      "id": "EVIDENCE-07",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/8af224617684d8e708c7550510a1f27d314e585a/data/registry/sources/fauna/README.md"
+    },
+    {
+      "id": "EVIDENCE-08",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/8af224617684d8e708c7550510a1f27d314e585a/docs/domains/fauna/SENSITIVITY.md"
+    },
+    {
+      "id": "EVIDENCE-09",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/8af224617684d8e708c7550510a1f27d314e585a/policy/domains/fauna/README.md"
+    },
+    {
+      "id": "EVIDENCE-10",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/8af224617684d8e708c7550510a1f27d314e585a/policy/sensitivity/fauna/README.md"
+    },
+    {
+      "id": "EVIDENCE-11",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/8af224617684d8e708c7550510a1f27d314e585a/tests/domains/fauna/README.md"
+    },
+    {
+      "id": "EVIDENCE-12",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/8af224617684d8e708c7550510a1f27d314e585a/fixtures/domains/fauna/README.md"
+    },
+    {
+      "id": "EVIDENCE-13",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/8af224617684d8e708c7550510a1f27d314e585a/.github/workflows/domain-fauna.yml"
+    },
+    {
+      "id": "EVIDENCE-14",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/8af224617684d8e708c7550510a1f27d314e585a/.github/CODEOWNERS"
+    },
+    {
+      "id": "EVIDENCE-15",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/8af224617684d8e708c7550510a1f27d314e585a/.github/PULL_REQUEST_TEMPLATE.md"
+    },
+    {
+      "id": "EVIDENCE-16",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/8af224617684d8e708c7550510a1f27d314e585a/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    },
+    {
+      "id": "EVIDENCE-17",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/8af224617684d8e708c7550510a1f27d314e585a/docs/doctrine/directory-rules.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-15T17:37:31Z",
+  "emitter": "OpenAI GPT-5.6 Thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Generated for a documentation-only update. The receipt records authorship and validation context; it is process provenance, not evidence, policy approval, source admission, watcher activation, release approval, or merge authorization. Fauna watcher and sensitivity implementation remain unverified, and human review is pending."
+}

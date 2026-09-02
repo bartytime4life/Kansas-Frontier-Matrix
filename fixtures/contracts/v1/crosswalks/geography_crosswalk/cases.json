@@ -1,0 +1,169 @@
+{
+  "profile": "kfm.geography-crosswalk.fixture-suite.v1",
+  "base": {
+    "object_type": "GeographyCrosswalk",
+    "schema_version": "1.0.0",
+    "profile": "kfm.geography-crosswalk.fixture.v1",
+    "crosswalk_id": "kfm:geography-crosswalk:000000000000000000000000",
+    "scope": {
+      "source_geography_version_ref": "kfm://geography-version/synthetic-county-v1@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "target_geography_version_ref": "kfm://geography-version/synthetic-county-v2@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "direction": "SOURCE_TO_TARGET",
+      "method_profile_ref": "kfm://method/geography-crosswalk/synthetic-overlay-v1@sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "valid_from": "2021-01-01",
+      "valid_to": null
+    },
+    "mappings": [
+      {
+        "source_feature_id_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "relation": "EXACT",
+        "targets": [
+          {
+            "target_feature_id_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+            "weight_millionths": 1000000
+          }
+        ],
+        "reason_code": null
+      }
+    ],
+    "support": {
+      "source_role_preserved": true,
+      "evidence_state": "REFERENCED_NOT_RESOLVED",
+      "evidence_refs": [
+        "kfm://evidence-ref/geography-crosswalk/method@sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+        "kfm://evidence-ref/geography-crosswalk/review@sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+      ],
+      "rights_state": "REFERENCED_NOT_EVALUATED",
+      "sensitivity_state": "REFERENCED_NOT_EVALUATED",
+      "review_state": "PENDING"
+    },
+    "disclosure": {
+      "interpretation_limits": [
+        "NO_IDENTITY_EQUIVALENCE_INFERENCE",
+        "NO_PUBLICATION_AUTHORITY",
+        "NO_REVERSE_JOIN_INFERENCE",
+        "SOURCE_ROLE_PRESERVED",
+        "WEIGHTS_ARE_DECLARATIONS_NOT_MEASUREMENTS"
+      ]
+    },
+    "governance": {
+      "execution_mode": "FIXTURE_ONLY",
+      "network_attempted": false,
+      "geographies_resolved": false,
+      "mapping_executed": false,
+      "evidence_resolved": false,
+      "rights_evaluated": false,
+      "sensitivity_evaluated": false,
+      "policy_evaluated": false,
+      "review_approved": false,
+      "promotion_authorized": false,
+      "release_authorized": false,
+      "public_use_allowed": false,
+      "publication_authorized": false
+    },
+    "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "variants": {
+    "exact": [],
+    "split": [
+      {
+        "path": "/mappings/0/relation",
+        "value": "SPLIT"
+      },
+      {
+        "path": "/mappings/0/targets",
+        "value": [
+          {
+            "target_feature_id_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+            "weight_millionths": 400000
+          },
+          {
+            "target_feature_id_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+            "weight_millionths": 600000
+          }
+        ]
+      }
+    ],
+    "merge": [
+      {
+        "path": "/mappings",
+        "value": [
+          {
+            "source_feature_id_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+            "relation": "MERGE",
+            "targets": [
+              {
+                "target_feature_id_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+                "weight_millionths": 1000000
+              }
+            ],
+            "reason_code": null
+          },
+          {
+            "source_feature_id_digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+            "relation": "MERGE",
+            "targets": [
+              {
+                "target_feature_id_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+                "weight_millionths": 1000000
+              }
+            ],
+            "reason_code": null
+          }
+        ]
+      }
+    ],
+    "partial": [
+      {
+        "path": "/mappings/0/relation",
+        "value": "PARTIAL_OVERLAP"
+      },
+      {
+        "path": "/mappings/0/targets/0/weight_millionths",
+        "value": 650000
+      }
+    ],
+    "unmapped": [
+      {
+        "path": "/mappings/0/relation",
+        "value": "UNMAPPED"
+      },
+      {
+        "path": "/mappings/0/targets",
+        "value": []
+      },
+      {
+        "path": "/mappings/0/reason_code",
+        "value": "NO_SUPPORTED_TARGET"
+      }
+    ]
+  },
+  "cases": [
+    {"case_id": "exact_valid", "base": "exact", "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "split_valid", "base": "split", "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "merge_valid", "base": "merge", "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "partial_overlap_valid", "base": "partial", "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "unmapped_valid", "base": "unmapped", "expected_outcome": "PASS", "expected_findings": []},
+
+    {"case_id": "same_geography_versions", "base": "exact", "mutations": [{"path": "/scope/target_geography_version_ref", "value": "kfm://geography-version/synthetic-county-v1@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}], "expected_outcome": "DENY", "expected_findings": [{"code": "CROSSWALK_VERSION_PAIR_INVALID", "path": "/scope/target_geography_version_ref"}]},
+    {"case_id": "valid_interval_inverted", "base": "exact", "mutations": [{"path": "/scope/valid_to", "value": "2020-12-31"}], "expected_outcome": "DENY", "expected_findings": [{"code": "CROSSWALK_VALID_INTERVAL_INVALID", "path": "/scope/valid_to"}]},
+    {"case_id": "row_order_invalid", "base": "merge", "mutations": [{"path": "/mappings", "value": [{"source_feature_id_digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444", "relation": "MERGE", "targets": [{"target_feature_id_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222", "weight_millionths": 1000000}], "reason_code": null}, {"source_feature_id_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111", "relation": "MERGE", "targets": [{"target_feature_id_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222", "weight_millionths": 1000000}], "reason_code": null}]}], "expected_outcome": "DENY", "expected_findings": [{"code": "CROSSWALK_ROW_ORDER_INVALID", "path": "/mappings"}]},
+    {"case_id": "source_digest_duplicate", "base": "exact", "mutations": [{"path": "/mappings", "value": [{"source_feature_id_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111", "relation": "EXACT", "targets": [{"target_feature_id_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222", "weight_millionths": 1000000}], "reason_code": null}, {"source_feature_id_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111", "relation": "EXACT", "targets": [{"target_feature_id_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333", "weight_millionths": 1000000}], "reason_code": null}]}], "expected_outcome": "DENY", "expected_findings": [{"code": "CROSSWALK_SOURCE_DUPLICATE", "path": "/mappings"}]},
+    {"case_id": "target_order_invalid", "base": "split", "mutations": [{"path": "/mappings/0/targets", "value": [{"target_feature_id_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333", "weight_millionths": 600000}, {"target_feature_id_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222", "weight_millionths": 400000}]}], "expected_outcome": "DENY", "expected_findings": [{"code": "CROSSWALK_TARGET_ORDER_INVALID", "path": "/mappings/0/targets"}]},
+    {"case_id": "target_digest_duplicate", "base": "split", "mutations": [{"path": "/mappings/0/targets/1/target_feature_id_digest", "value": "sha256:2222222222222222222222222222222222222222222222222222222222222222"}], "expected_outcome": "DENY", "expected_findings": [{"code": "CROSSWALK_TARGET_DUPLICATE", "path": "/mappings/0/targets"}]},
+    {"case_id": "exact_shape_invalid", "base": "exact", "mutations": [{"path": "/mappings/0/targets/0/weight_millionths", "value": 999999}], "expected_outcome": "DENY", "expected_findings": [{"code": "CROSSWALK_EXACT_SHAPE_INVALID", "path": "/mappings/0"}]},
+    {"case_id": "split_shape_invalid", "base": "split", "mutations": [{"path": "/mappings/0/targets", "value": [{"target_feature_id_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222", "weight_millionths": 1000000}]}], "expected_outcome": "DENY", "expected_findings": [{"code": "CROSSWALK_SPLIT_SHAPE_INVALID", "path": "/mappings/0"}]},
+    {"case_id": "split_weight_invalid", "base": "split", "mutations": [{"path": "/mappings/0/targets/1/weight_millionths", "value": 500000}], "expected_outcome": "DENY", "expected_findings": [{"code": "CROSSWALK_SPLIT_WEIGHT_INVALID", "path": "/mappings/0/targets"}]},
+    {"case_id": "partial_weight_invalid", "base": "partial", "mutations": [{"path": "/mappings/0/targets/0/weight_millionths", "value": 1000000}], "expected_outcome": "DENY", "expected_findings": [{"code": "CROSSWALK_PARTIAL_WEIGHT_INVALID", "path": "/mappings/0/targets"}]},
+    {"case_id": "unmapped_target_invalid", "base": "unmapped", "mutations": [{"path": "/mappings/0/targets", "value": [{"target_feature_id_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222", "weight_millionths": 1000000}]}], "expected_outcome": "DENY", "expected_findings": [{"code": "CROSSWALK_UNMAPPED_SHAPE_INVALID", "path": "/mappings/0"}]},
+    {"case_id": "unmapped_reason_missing", "base": "unmapped", "mutations": [{"path": "/mappings/0/reason_code", "value": null}], "expected_outcome": "DENY", "expected_findings": [{"code": "CROSSWALK_UNMAPPED_SHAPE_INVALID", "path": "/mappings/0"}]},
+    {"case_id": "mapped_reason_unexpected", "base": "exact", "mutations": [{"path": "/mappings/0/reason_code", "value": "NO_SUPPORTED_TARGET"}], "expected_outcome": "DENY", "expected_findings": [{"code": "CROSSWALK_REASON_UNEXPECTED", "path": "/mappings/0/reason_code"}]},
+    {"case_id": "merge_singleton_invalid", "base": "exact", "mutations": [{"path": "/mappings/0/relation", "value": "MERGE"}], "expected_outcome": "DENY", "expected_findings": [{"code": "CROSSWALK_MERGE_GROUP_INVALID", "path": "/mappings"}]},
+    {"case_id": "target_collision_nonmerge", "base": "merge", "mutations": [{"path": "/mappings/1/relation", "value": "EXACT"}], "expected_outcome": "DENY", "expected_findings": [{"code": "CROSSWALK_TARGET_COLLISION_INVALID", "path": "/mappings"}]},
+    {"case_id": "evidence_order_invalid", "base": "exact", "mutations": [{"path": "/support/evidence_refs", "value": ["kfm://evidence-ref/geography-crosswalk/review@sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", "kfm://evidence-ref/geography-crosswalk/method@sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"]}], "expected_outcome": "DENY", "expected_findings": [{"code": "CROSSWALK_EVIDENCE_ORDER_INVALID", "path": "/support/evidence_refs"}]},
+    {"case_id": "required_limit_missing", "base": "exact", "mutations": [{"path": "/disclosure/interpretation_limits", "value": ["NO_IDENTITY_EQUIVALENCE_INFERENCE", "NO_PUBLICATION_AUTHORITY", "NO_REVERSE_JOIN_INFERENCE", "SOURCE_ROLE_PRESERVED"]}], "expected_outcome": "DENY", "expected_findings": [{"code": "CROSSWALK_REQUIRED_LIMIT_MISSING", "path": "/disclosure/interpretation_limits"}]},
+    {"case_id": "spec_hash_mismatch", "base": "exact", "spec_hash_override": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", "expected_outcome": "DENY", "expected_findings": [{"code": "CROSSWALK_SPEC_HASH_MISMATCH", "path": "/spec_hash"}]},
+    {"case_id": "crosswalk_id_mismatch", "base": "exact", "crosswalk_id_override": "kfm:geography-crosswalk:ffffffffffffffffffffffff", "expected_outcome": "DENY", "expected_findings": [{"code": "CROSSWALK_ID_MISMATCH", "path": "/crosswalk_id"}]},
+    {"case_id": "release_authority_denied", "base": "exact", "mutations": [{"path": "/governance/release_authorized", "value": true}], "expected_outcome": "DENY", "expected_findings": [{"code": "CROSSWALK_SCHEMA_INVALID", "path": "/governance/release_authorized"}]}
+  ]
+}

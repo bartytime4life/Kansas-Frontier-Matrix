@@ -1,0 +1,1 @@
+{"contains": "MAYBE", "field": "/closure_summary/outcome", "keyword": "enum", "kind": "schema"}

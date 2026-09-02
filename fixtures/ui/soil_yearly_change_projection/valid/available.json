@@ -1,0 +1,48 @@
+{
+  "profile": "kfm.explorer.ssurgo-yearly-change.fixture.v1",
+  "comparison_id": "kfm:ssurgo-yearly-change:synthetic-2025-2026",
+  "outcome": "ANSWER",
+  "reason_code": "DIFF_AVAILABLE",
+  "status": "PROPOSED_INACTIVE",
+  "execution_mode": "FIXTURE_ONLY",
+  "source_family": "SSURGO",
+  "support_type": "AUTHORITATIVE_STATIC_SOIL_SURVEY",
+  "source_descriptor_ref": "data/registry/sources/soil/nrcs-ssurgo.yaml",
+  "previous_snapshot": {
+    "dataset_year": 2025,
+    "artifact_ref": "artifact:soil/ssurgo/2025/synthetic-snapshot",
+    "artifact_sha256": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "stac_item_ref": "stac://kfm/soil/ssurgo/2025-synthetic",
+    "prov_entity_ref": "kfm://prov/entity/soil-ssurgo-2025-synthetic",
+    "snapshot_receipt_ref": "kfm://receipt/source-snapshot/soil-ssurgo-2025-synthetic",
+    "validation_receipt_ref": "kfm://receipt/validation/soil-ssurgo-2025-synthetic"
+  },
+  "current_snapshot": {
+    "dataset_year": 2026,
+    "artifact_ref": "artifact:soil/ssurgo/2026/synthetic-snapshot",
+    "artifact_sha256": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "stac_item_ref": "stac://kfm/soil/ssurgo/2026-synthetic",
+    "prov_entity_ref": "kfm://prov/entity/soil-ssurgo-2026-synthetic",
+    "snapshot_receipt_ref": "kfm://receipt/source-snapshot/soil-ssurgo-2026-synthetic",
+    "validation_receipt_ref": "kfm://receipt/validation/soil-ssurgo-2026-synthetic"
+  },
+  "diff": {
+    "computation_profile": "SSURGO_KEYED_RECORD_DIFF_V1",
+    "diff_artifact_ref": "artifact:soil/ssurgo/2025-2026/synthetic-record-diff",
+    "diff_artifact_sha256": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "added_records": 1,
+    "removed_records": 1,
+    "modified_records": 1,
+    "changed_property_names": [
+      "representative_slope_pct",
+      "texture_class"
+    ],
+    "observed_property_relabelled": false
+  },
+  "provenance": {
+    "fetch_activity_ref": "kfm://prov/activity/fetch/soil-ssurgo-2026",
+    "validation_activity_ref": "kfm://prov/activity/validation/soil-ssurgo-2026",
+    "diff_activity_ref": "kfm://prov/activity/diff/soil-ssurgo-2025-2026"
+  },
+  "publication_authorized": false
+}

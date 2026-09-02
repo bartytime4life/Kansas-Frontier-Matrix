@@ -1,0 +1,17 @@
+{
+  "profile": "kfm.explorer.county-environmental-cadence.fixture.v1",
+  "calendar_id": "kfm:county-environmental-cadence:synthetic-invalid",
+  "outcome": "ABSTAIN",
+  "reason_code": "CALENDAR_MISSING",
+  "status": "PROPOSED_INACTIVE",
+  "execution_mode": "FIXTURE_ONLY",
+  "county": null,
+  "week": null,
+  "source_availability_watchlist_ref": null,
+  "lanes": [],
+  "summary": null,
+  "interpretation_authorized": false,
+  "publication_authorized": false,
+  "public_use_allowed": false,
+  "debug_context": "CADENCE_INTERNAL_CANARY_36ad0e"
+}

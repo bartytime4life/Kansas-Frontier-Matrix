@@ -1,0 +1,124 @@
+{
+  "_fixture_meta": {
+    "fixture_id": "kfm://fixtures/synthetic/kcds/road_reference_feature_stub",
+    "fixture_type": "synthetic",
+    "simulates": "ArcGIS FeatureServer road-reference geometry record (KCDS road-reference layer)",
+    "real_data": false,
+    "pii": false,
+    "crash_data": false,
+    "crash_incident_data": false,
+    "road_geometry_only": true,
+    "purpose": "Schema-shape validation and no-network documentation testing only",
+    "caution": "This fixture does not represent real road geometry, real KCDS data, or evidence that the FeatureServer is activated or authorized for ingestion.",
+    "discovery_doc": "docs/sources/catalog/kansas/kcds.md",
+    "created": "2026-07-28",
+    "terms_verified": false
+  },
+  "objectIdFieldName": "OBJECTID",
+  "uniqueIdField": {
+    "name": "OBJECTID",
+    "isSystemMaintained": true
+  },
+  "globalIdFieldName": "",
+  "geometryType": "esriGeometryPolyline",
+  "spatialReference": {
+    "wkid": 4326,
+    "latestWkid": 4326,
+    "_note": "CRS NEEDS VERIFICATION against actual FeatureServer metadata"
+  },
+  "fields": [
+    {
+      "name": "OBJECTID",
+      "type": "esriFieldTypeOID",
+      "alias": "OBJECTID",
+      "_classification": "PUBLIC",
+      "_note": "ArcGIS internal record ID; not a crash ID"
+    },
+    {
+      "name": "ROUTE_ID",
+      "type": "esriFieldTypeString",
+      "alias": "Route ID",
+      "length": 50,
+      "_classification": "PUBLIC",
+      "_note": "PROPOSED field name; NEEDS VERIFICATION against actual FeatureServer schema"
+    },
+    {
+      "name": "ROUTE_NAME",
+      "type": "esriFieldTypeString",
+      "alias": "Route Name",
+      "length": 100,
+      "_classification": "PUBLIC",
+      "_note": "PROPOSED field name; NEEDS VERIFICATION"
+    },
+    {
+      "name": "COUNTY_CODE",
+      "type": "esriFieldTypeString",
+      "alias": "County Code",
+      "length": 3,
+      "_classification": "PUBLIC",
+      "_note": "PROPOSED field name; NEEDS VERIFICATION"
+    },
+    {
+      "name": "COUNTY_NAME",
+      "type": "esriFieldTypeString",
+      "alias": "County Name",
+      "length": 50,
+      "_classification": "PUBLIC",
+      "_note": "PROPOSED field name; NEEDS VERIFICATION"
+    },
+    {
+      "name": "BEGIN_MP",
+      "type": "esriFieldTypeDouble",
+      "alias": "Begin Milepost",
+      "_classification": "PUBLIC",
+      "_note": "PROPOSED — LRS milepost; NEEDS VERIFICATION"
+    },
+    {
+      "name": "END_MP",
+      "type": "esriFieldTypeDouble",
+      "alias": "End Milepost",
+      "_classification": "PUBLIC",
+      "_note": "PROPOSED — LRS milepost; NEEDS VERIFICATION"
+    },
+    {
+      "name": "ROAD_CLASS",
+      "type": "esriFieldTypeString",
+      "alias": "Road Classification",
+      "length": 25,
+      "_classification": "PUBLIC",
+      "_note": "PROPOSED field name; NEEDS VERIFICATION"
+    }
+  ],
+  "features": [
+    {
+      "_note": "SYNTHETIC RECORD — not real road geometry",
+      "attributes": {
+        "OBJECTID": 1,
+        "ROUTE_ID": "SYNTHETIC-K-0050-N",
+        "ROUTE_NAME": "SYNTHETIC STATE HIGHWAY 50",
+        "COUNTY_CODE": "SYNTHETIC-999",
+        "COUNTY_NAME": "SYNTHETIC COUNTY",
+        "BEGIN_MP": 0.0,
+        "END_MP": 1.0,
+        "ROAD_CLASS": "SYNTHETIC-STATE"
+      },
+      "geometry": {
+        "paths": [
+          [
+            [-98.0, 38.0],
+            [-97.9, 38.0]
+          ]
+        ],
+        "_note": "SYNTHETIC coordinates; not real; used for geometry-type validation only"
+      }
+    }
+  ],
+  "exceededTransferLimit": false,
+  "_kfm_notes": {
+    "not_crash_data": "This fixture simulates road-reference geometry only. The KCDS road-reference FeatureServer does not return crash records.",
+    "field_verification": "All field names are PROPOSED. Real field schema must be verified from official FeatureServer metadata (/layers endpoint) before any production use.",
+    "terms_status": "FeatureServer terms of reuse are NEEDS VERIFICATION. Do not consume at scale without verified terms.",
+    "lrs_note": "KCDS uses Linear Referencing System (LRS) milepost-based crash placement. LRS-derived coordinates carry uncertainty and must be stamped with geometry_source=lrs_derived and the LRS reference version.",
+    "crs_note": "Coordinate reference system NEEDS VERIFICATION against actual FeatureServer metadata. This fixture assumes EPSG:4326 as a placeholder."
+  }
+}

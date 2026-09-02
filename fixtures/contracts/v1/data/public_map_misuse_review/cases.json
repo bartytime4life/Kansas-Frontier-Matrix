@@ -1,0 +1,53 @@
+{
+  "fixture_version": "1.0.0",
+  "profile": "kfm.data.public-map-misuse-review.fixture.v1",
+  "base_candidate": {
+    "object_type": "PublicMapMisuseReviewCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.data.public-map-misuse-review.fixture.v1",
+    "profile_spec_hash": "0962926c63d32a03d1b40fd1e533d28fd1e90195c6feecaf4d301160f1354840",
+    "source_card": "KFM-P18-INV-352",
+    "observed_at": "2026-08-11T18:30:00Z",
+    "candidate_id": "pmr_kansas-frontier-review-001",
+    "map_candidate": {
+      "ref": "kfm://map-candidate/kansas-frontier-001",
+      "digest": "1111111111111111111111111111111111111111111111111111111111111111",
+      "purpose": {"ref": "kfm://purpose/public-learning", "digest": "2222222222222222222222222222222222222222222222222222222222222222", "resolution": "RESOLVED"},
+      "evidence_scope": {"ref": "kfm://evidence-scope/frontier-counties", "digest": "3333333333333333333333333333333333333333333333333333333333333333", "resolution": "RESOLVED"},
+      "audience": "PUBLIC_GENERAL",
+      "consequence_tier": "HIGH"
+    },
+    "dependency_refs": {
+      "representation_fitness_assessment": {"ref": "kfm://assessment/representation-fitness-001", "digest": "4444444444444444444444444444444444444444444444444444444444444444", "resolution": "RESOLVED"},
+      "cartographic_omission_disclosure": {"ref": "kfm://disclosure/cartographic-omission-001", "digest": "5555555555555555555555555555555555555555555555555555555555555555", "resolution": "RESOLVED"},
+      "layer_legend_disclosure": {"ref": "kfm://disclosure/layer-legend-001", "digest": "6666666666666666666666666666666666666666666666666666666666666666", "resolution": "RESOLVED"}
+    },
+    "checks": [
+      {"check_id": "check-01-selectivity", "dimension": "SELECTIVITY", "state": "CLEAR", "materiality": "NON_MATERIAL", "finding_code": "NONE", "disclosure_surface": "NONE", "evidence_refs": ["kfm://evidence/map-selection-001"], "review_refs": ["kfm://review/cartography-001"], "remediation_ref": null},
+      {"check_id": "check-02-framing", "dimension": "FRAMING", "state": "CLEAR", "materiality": "NON_MATERIAL", "finding_code": "NONE", "disclosure_surface": "NONE", "evidence_refs": ["kfm://evidence/map-framing-001"], "review_refs": ["kfm://review/cartography-001"], "remediation_ref": null},
+      {"check_id": "check-03-scale-precision", "dimension": "SCALE_PRECISION", "state": "CLEAR", "materiality": "NON_MATERIAL", "finding_code": "NONE", "disclosure_surface": "NONE", "evidence_refs": ["kfm://evidence/map-scale-001"], "review_refs": ["kfm://review/cartography-001"], "remediation_ref": null},
+      {"check_id": "check-04-symbology", "dimension": "SYMBOLOGY", "state": "CLEAR", "materiality": "NON_MATERIAL", "finding_code": "NONE", "disclosure_surface": "NONE", "evidence_refs": ["kfm://evidence/map-symbology-001"], "review_refs": ["kfm://review/cartography-001"], "remediation_ref": null},
+      {"check_id": "check-05-omission", "dimension": "OMISSION", "state": "CLEAR", "materiality": "NON_MATERIAL", "finding_code": "NONE", "disclosure_surface": "NONE", "evidence_refs": ["kfm://evidence/map-omission-001"], "review_refs": ["kfm://review/cartography-001"], "remediation_ref": null}
+    ],
+    "conclusion": {"completeness": "COMPLETE", "declared_outcome": "READY_FOR_REVIEW"},
+    "correction_ref": null,
+    "rollback_ref": "kfm://rollback/map-candidate-001",
+    "authority_claims": {"map_mutation": false, "evidence": false, "policy": false, "review": false, "release": false, "deployment": false, "publication": false, "public_use": false}
+  },
+  "cases": [
+    {"case_id": "pass-complete-high-consequence-review", "expected_outcome": "PASS"},
+    {"case_id": "pass-moderate-consequence", "expected_outcome": "PASS", "set": {"/map_candidate/consequence_tier": "MODERATE", "/checks/0/review_refs": [], "/checks/1/review_refs": [], "/checks/2/review_refs": [], "/checks/3/review_refs": [], "/checks/4/review_refs": []}},
+    {"case_id": "abstain-unresolved-purpose", "expected_outcome": "ABSTAIN", "set": {"/map_candidate/purpose/resolution": "UNRESOLVED", "/conclusion/completeness": "INCOMPLETE", "/conclusion/declared_outcome": "HOLD"}},
+    {"case_id": "abstain-unresolved-omission-disclosure", "expected_outcome": "ABSTAIN", "set": {"/dependency_refs/cartographic_omission_disclosure/resolution": "UNRESOLVED", "/conclusion/completeness": "INCOMPLETE", "/conclusion/declared_outcome": "HOLD"}},
+    {"case_id": "abstain-unknown-symbology", "expected_outcome": "ABSTAIN", "set": {"/checks/3/state": "UNKNOWN", "/checks/3/materiality": "UNKNOWN", "/conclusion/completeness": "UNKNOWN", "/conclusion/declared_outcome": "HOLD"}},
+    {"case_id": "deny-material-concern-undisclosed", "expected_outcome": "DENY", "set": {"/checks/2/state": "CONCERN", "/checks/2/materiality": "MATERIAL", "/checks/2/finding_code": "PRECISION_OVERSTATED", "/checks/2/review_refs": [], "/conclusion/declared_outcome": "DENY"}},
+    {"case_id": "deny-material-concern-even-when-mitigated", "expected_outcome": "DENY", "set": {"/checks/4/state": "CONCERN", "/checks/4/materiality": "MATERIAL", "/checks/4/finding_code": "COMPLETENESS_OVERSTATED", "/checks/4/disclosure_surface": "LAYER_NOTE", "/checks/4/remediation_ref": "kfm://remediation/map-omission-001", "/conclusion/declared_outcome": "DENY"}},
+    {"case_id": "deny-noncanonical-check-order", "expected_outcome": "DENY", "set": {"/checks/0/check_id": "check-09-selectivity"}},
+    {"case_id": "deny-high-consequence-review-missing", "expected_outcome": "DENY", "set": {"/checks/1/review_refs": [], "/conclusion/declared_outcome": "DENY"}},
+    {"case_id": "deny-clear-check-has-finding", "expected_outcome": "DENY", "set": {"/checks/0/finding_code": "CONTEXT_WITHHELD", "/conclusion/declared_outcome": "DENY"}},
+    {"case_id": "deny-ready-declaration-on-unresolved-input", "expected_outcome": "DENY", "set": {"/map_candidate/evidence_scope/resolution": "UNRESOLVED"}},
+    {"case_id": "error-authority-overclaim", "expected_outcome": "ERROR", "set": {"/authority_claims/publication": true}},
+    {"case_id": "error-wrong-source-card", "expected_outcome": "ERROR", "set": {"/source_card": "KFM-P18-INV-999"}},
+    {"case_id": "error-missing-map-digest", "expected_outcome": "ERROR", "delete": ["/map_candidate/digest"]}
+  ]
+}

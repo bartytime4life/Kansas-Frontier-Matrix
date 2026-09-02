@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kfm://schemas/contracts/v1/domains/soil/soil_moisture_dedupe_key.schema.json",
+  "title": "Soil Moisture Dedupe Key",
+  "description": "PROPOSED scaffold created from the current docs/domains markdown inventory.",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {},
+  "x-kfm": {
+    "status": "PROPOSED",
+    "path": "schemas/contracts/v1/domains/soil/soil_moisture_dedupe_key.schema.json",
+    "source_docs": [
+      "docs/domains/soil/CONTINUITY_INVENTORY.md",
+      "docs/domains/soil/DATA_LIFECYCLE.md"
+    ],
+    "contract_doc": "contracts/domains/soil/soil_moisture_dedupe_key.md"
+  }
+}

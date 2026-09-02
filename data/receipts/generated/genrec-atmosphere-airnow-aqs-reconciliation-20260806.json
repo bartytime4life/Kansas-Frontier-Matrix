@@ -1,0 +1,150 @@
+{
+  "receipt_id": "genrec-atmosphere-airnow-aqs-reconciliation-20260806",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/atmosphere-airnow-aqs-reconciliation.yml",
+    "contracts/domains/atmosphere/airnow_aqs_reconciliation.md",
+    "fixtures/domains/atmosphere/airnow_aqs_reconciliation/valid/certified_replacement.json",
+    "fixtures/domains/atmosphere/airnow_aqs_reconciliation/valid/nowcast_derived.json",
+    "fixtures/domains/atmosphere/airnow_aqs_reconciliation/valid/pending_certification.json",
+    "fixtures/domains/atmosphere/airnow_aqs_reconciliation/valid/provisional_context_only.json",
+    "fixtures/domains/atmosphere/airnow_aqs_reconciliation/valid/regulatory_without_aqs.json",
+    "schemas/contracts/v1/domains/atmosphere/airnow_aqs_reconciliation_candidate.schema.json",
+    "schemas/contracts/v1/domains/atmosphere/airnow_aqs_reconciliation_report.schema.json",
+    "tests/validators/domains/atmosphere/airnow_aqs_reconciliation/test_validate_reconciliation.py",
+    "tools/validators/domains/atmosphere/airnow_aqs_reconciliation/README.md",
+    "tools/validators/domains/atmosphere/airnow_aqs_reconciliation/validate_reconciliation.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/atmosphere-airnow-aqs-reconciliation.yml": "sha256:f8858bcdea5be4f7eac39d77ae08cfd4c165d6341ce6dbbed24221e582dfd39a",
+    "contracts/domains/atmosphere/airnow_aqs_reconciliation.md": "sha256:70a97eacb1e3e66373f6d84620d169596b3cc71d78682f2da592fea1ba968936",
+    "fixtures/domains/atmosphere/airnow_aqs_reconciliation/valid/certified_replacement.json": "sha256:14631a289454d7a2d2fa21ea24e0b985cfb5e53215ea7ef92d1a1c1cd6621905",
+    "fixtures/domains/atmosphere/airnow_aqs_reconciliation/valid/nowcast_derived.json": "sha256:6e7a1ea4f7d59d51aadc8d1ad5282e5f4d1a26295be8cded14c3e0fcefb01377",
+    "fixtures/domains/atmosphere/airnow_aqs_reconciliation/valid/pending_certification.json": "sha256:3a3165a845ce019c49cdc840cc99a90c21d5d21e3ff51b23dfebe0ed6555d489",
+    "fixtures/domains/atmosphere/airnow_aqs_reconciliation/valid/provisional_context_only.json": "sha256:5876cd861a778fb9aec95db8aabbae902f66c0ea2c42b88abc86cd75a1cece5f",
+    "fixtures/domains/atmosphere/airnow_aqs_reconciliation/valid/regulatory_without_aqs.json": "sha256:b29f7729460bfedb5c9608e3712e23c94047cc2eca2574663ba3abfcd1ff9dc8",
+    "schemas/contracts/v1/domains/atmosphere/airnow_aqs_reconciliation_candidate.schema.json": "sha256:2b8329b637c895c99e02682d9ede9909d2be370161a38ebb1933a43351706ec4",
+    "schemas/contracts/v1/domains/atmosphere/airnow_aqs_reconciliation_report.schema.json": "sha256:458b46332d668be32b20b038704f05c35913b947ad9e44a5f048ff6765a7d6ff",
+    "tests/validators/domains/atmosphere/airnow_aqs_reconciliation/test_validate_reconciliation.py": "sha256:deeca5d60806a774305fa67c12a7a2faaaacaa60e11a6a00800a579595cb4b43",
+    "tools/validators/domains/atmosphere/airnow_aqs_reconciliation/README.md": "sha256:a901caea2e1ac58aa2e6935a2045be087d8f6083af867070f89922665d1adbe4",
+    "tools/validators/domains/atmosphere/airnow_aqs_reconciliation/validate_reconciliation.py": "sha256:819c284445b03f47a80b67c1afca029c8199cfba6ed219cb3dd8758e0e4a851b"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-06"
+  },
+  "prompt_or_contract": "sha256:c9add354d6caf79ac60339de2a3456585792404271b99ef700c544ecbaa7d43e",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "New Ideas 4-2-26.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:New Ideas 4-2-26.pdf#airnow-aqs-authority-reconciliation",
+      "repo:docs/sources/catalog/epa/airnow-api.md@0cb3dcf2e0369b607d473f4ee042437dd7a670c2",
+      "repo:tools/validators/domains/atmosphere/README.md@0cb3dcf2e0369b607d473f4ee042437dd7a670c2",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@0cb3dcf2e0369b607d473f4ee042437dd7a670c2"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/atmosphere-airnow-aqs-reconciliation.yml": "PROPOSED",
+    "contracts/domains/atmosphere/airnow_aqs_reconciliation.md": "PROPOSED",
+    "fixtures/domains/atmosphere/airnow_aqs_reconciliation/valid/certified_replacement.json": "PROPOSED",
+    "fixtures/domains/atmosphere/airnow_aqs_reconciliation/valid/nowcast_derived.json": "PROPOSED",
+    "fixtures/domains/atmosphere/airnow_aqs_reconciliation/valid/pending_certification.json": "PROPOSED",
+    "fixtures/domains/atmosphere/airnow_aqs_reconciliation/valid/provisional_context_only.json": "PROPOSED",
+    "fixtures/domains/atmosphere/airnow_aqs_reconciliation/valid/regulatory_without_aqs.json": "PROPOSED",
+    "schemas/contracts/v1/domains/atmosphere/airnow_aqs_reconciliation_candidate.schema.json": "PROPOSED",
+    "schemas/contracts/v1/domains/atmosphere/airnow_aqs_reconciliation_report.schema.json": "PROPOSED",
+    "tests/validators/domains/atmosphere/airnow_aqs_reconciliation/test_validate_reconciliation.py": "PROPOSED",
+    "tools/validators/domains/atmosphere/airnow_aqs_reconciliation/README.md": "PROPOSED",
+    "tools/validators/domains/atmosphere/airnow_aqs_reconciliation/validate_reconciliation.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-pytest",
+      "outcome": "PASS",
+      "reason": "Nine deterministic AirNow-to-AQS reconciliation tests passed locally."
+    },
+    {
+      "gate": "python-bytecode-compile",
+      "outcome": "PASS",
+      "reason": "The evaluator and focused tests compile without syntax errors."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The read-only workflow parses as YAML."
+    },
+    {
+      "gate": "fixture-cli-certified-replacement",
+      "outcome": "PASS",
+      "reason": "The CLI emits the expected proposed-work result for a matching validated and certified AQS fixture."
+    },
+    {
+      "gate": "receipt-byte-binding",
+      "outcome": "PASS",
+      "reason": "SHA-256 values bind every authored artifact except this receipt, which cannot self-bind."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:new-ideas-airnow-aqs-reconciliation",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas 4-2-26.pdf#airnow-aqs-authority-reconciliation"
+    },
+    {
+      "id": "repository:airnow-source-doc",
+      "validated": true,
+      "evidence_ref": "repo:docs/sources/catalog/epa/airnow-api.md@0cb3dcf2e0369b607d473f4ee042437dd7a670c2"
+    },
+    {
+      "id": "repository:atmosphere-validator-boundary",
+      "validated": true,
+      "evidence_ref": "repo:tools/validators/domains/atmosphere/README.md@0cb3dcf2e0369b607d473f4ee042437dd7a670c2"
+    },
+    {
+      "id": "repository:directory-governance-adr",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@0cb3dcf2e0369b607d473f4ee042437dd7a670c2"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-06T20:05:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Adds a fixture-only AirNow-to-AQS source-authority reconciliation gate. It preserves provisional AirNow lineage, requires matching validated and certified AQS concentration records before proposing supersession, and performs no live source access, regulatory certification, lifecycle write, alerting, promotion, release, or publication."
+}

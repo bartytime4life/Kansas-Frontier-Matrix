@@ -1,0 +1,47 @@
+{
+  "artifact_ref": "artifact:soil/ssurgo/2026/synthetic-snapshot",
+  "artifact_sha256": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "dataset_year": 2026,
+  "fixture_only": true,
+  "network_mode": "DENY",
+  "normalization": {
+    "attributes_changed": false,
+    "geometry_changed": false,
+    "transform_receipt_refs": []
+  },
+  "object_type": "SoilSyntheticSnapshotManifest",
+  "prov_entity_ref": "kfm://prov/entity/soil-ssurgo-2026-synthetic",
+  "records": [
+    {
+      "properties": {
+        "hydrologic_group": "B",
+        "representative_slope_pct": 3,
+        "texture_class": "loam"
+      },
+      "record_key": "mapunit-001"
+    },
+    {
+      "properties": {
+        "hydrologic_group": "A",
+        "representative_slope_pct": 1,
+        "texture_class": "sand"
+      },
+      "record_key": "mapunit-003"
+    },
+    {
+      "properties": {
+        "hydrologic_group": "D",
+        "representative_slope_pct": 7,
+        "texture_class": "clay"
+      },
+      "record_key": "mapunit-004"
+    }
+  ],
+  "schema_version": "1.0.0",
+  "snapshot_receipt_ref": "kfm://receipt/source-snapshot/soil-ssurgo-2026-synthetic",
+  "source_descriptor_ref": "data/registry/sources/soil/nrcs-ssurgo.yaml",
+  "source_family": "SSURGO",
+  "stac_item_ref": "stac://kfm/soil/ssurgo/2026-synthetic",
+  "support_type": "AUTHORITATIVE_STATIC_SOIL_SURVEY",
+  "validation_receipt_ref": "kfm://receipt/validation/soil-ssurgo-2026-synthetic"
+}

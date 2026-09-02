@@ -1,0 +1,226 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/governance/responsibility_layer_impact_assessment.schema.json",
+  "title": "ResponsibilityLayerImpactAssessmentCandidate",
+  "description": "Fixture-only change-impact declaration across KFM responsibility layers without placement, policy, review, release, deployment, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "assessment_id",
+    "profile_spec_hash",
+    "source_card",
+    "observed_at",
+    "layer_model_ref",
+    "change_ref",
+    "change_kind",
+    "artifacts",
+    "layer_impacts",
+    "cross_layer_seams",
+    "review",
+    "limitations",
+    "authority_claims"
+  ],
+  "properties": {
+    "object_type": {"const": "ResponsibilityLayerImpactAssessmentCandidate"},
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.governance.responsibility-layer-impact-assessment.fixture.v1"},
+    "assessment_id": {
+      "type": "string",
+      "pattern": "^kfm:responsibility-layer-impact:[a-f0-9]{24}$"
+    },
+    "profile_spec_hash": {"$ref": "#/$defs/sha256"},
+    "source_card": {"const": "KFM-P18-INV-396"},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "layer_model_ref": {"$ref": "#/$defs/ref"},
+    "change_ref": {"$ref": "#/$defs/ref"},
+    "change_kind": {
+      "enum": [
+        "CONTRACT",
+        "DATA_OR_CATALOG",
+        "DOCUMENTATION",
+        "POLICY",
+        "PUBLIC_SURFACE",
+        "RELEASE_OR_OPERATIONS",
+        "SCHEMA_OR_VALIDATOR"
+      ]
+    },
+    "artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/artifact"}
+    },
+    "layer_impacts": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 8,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/layer_impact"}
+    },
+    "cross_layer_seams": {
+      "type": "array",
+      "maxItems": 56,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/seam"}
+    },
+    "review": {"$ref": "#/$defs/review"},
+    "limitations": {
+      "const": [
+        "ASSESSMENT_ONLY",
+        "NO_DIRECTORY_PLACEMENT_OR_OWNERSHIP_AUTHORITY",
+        "NO_POLICY_OR_REVIEW_AUTHORITY",
+        "NO_RELEASE_DEPLOYMENT_OR_PUBLICATION_AUTHORITY",
+        "NO_RUNTIME_OR_DATA_MUTATION"
+      ]
+    },
+    "authority_claims": {"$ref": "#/$defs/authority_claims"}
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "ref": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 512,
+      "pattern": "^kfm://[a-z0-9][a-z0-9._~:/-]+$"
+    },
+    "nullable_ref": {
+      "anyOf": [
+        {"$ref": "#/$defs/ref"},
+        {"type": "null"}
+      ]
+    },
+    "canonical_refs": {
+      "type": "array",
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/ref"}
+    },
+    "layer": {
+      "enum": [
+        "AI",
+        "API",
+        "CATALOG",
+        "EVIDENCE",
+        "OPERATIONS",
+        "POLICY",
+        "RELEASE",
+        "UI"
+      ]
+    },
+    "owning_root": {
+      "enum": [
+        ".github/",
+        "apps/",
+        "contracts/",
+        "data/",
+        "docs/",
+        "fixtures/",
+        "ops/",
+        "packages/",
+        "policy/",
+        "release/",
+        "schemas/",
+        "tests/",
+        "tools/"
+      ]
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "owning_root", "primary_layer", "related_layers"],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 512,
+          "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9._/-]+$"
+        },
+        "owning_root": {"$ref": "#/$defs/owning_root"},
+        "primary_layer": {"$ref": "#/$defs/layer"},
+        "related_layers": {
+          "type": "array",
+          "maxItems": 7,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/layer"}
+        }
+      }
+    },
+    "layer_impact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "layer",
+        "impact_kind",
+        "decision_ref",
+        "validation_refs",
+        "rollback_ref"
+      ],
+      "properties": {
+        "layer": {"$ref": "#/$defs/layer"},
+        "impact_kind": {"enum": ["DIRECT", "RELATED"]},
+        "decision_ref": {"$ref": "#/$defs/nullable_ref"},
+        "validation_refs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 32,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/ref"}
+        },
+        "rollback_ref": {"$ref": "#/$defs/nullable_ref"}
+      }
+    },
+    "seam": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["from_layer", "to_layer", "contract_ref", "status"],
+      "properties": {
+        "from_layer": {"$ref": "#/$defs/layer"},
+        "to_layer": {"$ref": "#/$defs/layer"},
+        "contract_ref": {"$ref": "#/$defs/ref"},
+        "status": {"enum": ["DECLARED", "UNRESOLVED"]}
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "record_refs"],
+      "properties": {
+        "state": {"enum": ["COMPLETE_FOR_DECLARED_SCOPE", "PENDING", "UNKNOWN"]},
+        "record_refs": {"$ref": "#/$defs/canonical_refs"}
+      }
+    },
+    "authority_claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "directory_placement_authority",
+        "ownership_authority",
+        "policy_authority",
+        "review_authority",
+        "runtime_authority",
+        "data_mutation_authority",
+        "release_authority",
+        "deployment_authority",
+        "publication_authority"
+      ],
+      "properties": {
+        "directory_placement_authority": {"const": false},
+        "ownership_authority": {"const": false},
+        "policy_authority": {"const": false},
+        "review_authority": {"const": false},
+        "runtime_authority": {"const": false},
+        "data_mutation_authority": {"const": false},
+        "release_authority": {"const": false},
+        "deployment_authority": {"const": false},
+        "publication_authority": {"const": false}
+      }
+    }
+  }
+}

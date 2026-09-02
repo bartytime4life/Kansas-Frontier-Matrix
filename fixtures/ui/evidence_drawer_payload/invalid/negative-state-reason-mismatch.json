@@ -1,0 +1,34 @@
+{
+  "profile": "kfm.explorer.evidence-drawer.public-safe.v1",
+  "id": "kfm:ui:evidence-drawer:invalid-state-reason-001",
+  "outcome": "ABSTAIN",
+  "reason_code": "SUPERSEDED_EVIDENCE",
+  "title": "Synthetic superseded observation",
+  "summary": "SUPERSEDED_SUMMARY_MUST_NOT_RENDER_AS_CURRENT",
+  "evidence_refs": [],
+  "citations": [],
+  "limitations": [
+    "Historical evidence remains visible for audit only."
+  ],
+  "trust_state": {
+    "source_role": "official",
+    "policy": "ABSTAIN",
+    "review": "REVIEWED",
+    "release": "WITHDRAWN",
+    "freshness": "UNKNOWN",
+    "correction": "SUPERSEDED"
+  },
+  "history": {
+    "negative_outcomes": [
+      {
+        "evidence_ref": "kfm:evidence:synthetic:superseded-001",
+        "state": "SUPERSEDED",
+        "reason_code": "HELD_EVIDENCE",
+        "recorded_at": "2026-08-02T00:00:00Z",
+        "visible_in_runtime": true,
+        "resolvable_as_current": false
+      }
+    ],
+    "corrections": []
+  }
+}

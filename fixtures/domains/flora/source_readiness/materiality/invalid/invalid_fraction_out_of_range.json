@@ -1,0 +1,53 @@
+{
+  "assessment_id": "material-change:flora-source-readiness-example-20260805",
+  "subject_ref": "kfm://source/flora/example-occurrence-dataset",
+  "baseline_ref": "fixture://flora/source-readiness/baseline",
+  "candidate_ref": "fixture://flora/source-readiness/candidate",
+  "baseline_digest": "sha256:3833ac101196a3a34e2fac2e62932e3eb93bf7bf2c0d3ff793ce8ea933db355a",
+  "candidate_digest": "sha256:a5f6bf154223c814f0a9551cbef9dc44f2b539b269678ba61a8d4d7d94b8cd6e",
+  "semantic_changed": true,
+  "analysis_unit_kind": "occurrence_dataset",
+  "metrics": {
+    "baseline": {
+      "georeferenced_fraction": 0.8,
+      "specimen_backed_fraction": 0.5,
+      "license_resolved_fraction": 1.0,
+      "coordinate_uncertainty_p95_km": 8.0,
+      "freshness_age_days": 30,
+      "api_accessible": true,
+      "sensitivity_posture": "controlled"
+    },
+    "candidate": {
+      "georeferenced_fraction": 1.2,
+      "specimen_backed_fraction": 0.5,
+      "license_resolved_fraction": 1.0,
+      "coordinate_uncertainty_p95_km": 8.0,
+      "freshness_age_days": 30,
+      "api_accessible": true,
+      "sensitivity_posture": "controlled"
+    }
+  },
+  "evidence": {
+    "diff_report_ref": "fixture://flora/source-readiness/diff",
+    "validation_report_refs": [
+      "fixture://flora/source-readiness/validation"
+    ],
+    "source_refs": [
+      "fixture://flora/source-readiness/source-descriptor"
+    ],
+    "criterion_evidence_refs": [
+      "fixture://flora/source-readiness/criterion/access",
+      "fixture://flora/source-readiness/criterion/freshness",
+      "fixture://flora/source-readiness/criterion/georeference",
+      "fixture://flora/source-readiness/criterion/license",
+      "fixture://flora/source-readiness/criterion/sensitivity",
+      "fixture://flora/source-readiness/criterion/specimen",
+      "fixture://flora/source-readiness/criterion/uncertainty"
+    ]
+  },
+  "timing": {
+    "assessed_at": "2026-08-05T12:00:00Z",
+    "baseline_as_of": "2026-07-01T00:00:00Z",
+    "candidate_as_of": "2026-08-01T00:00:00Z"
+  }
+}

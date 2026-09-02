@@ -1,0 +1,15 @@
+{
+  "candidate_feature_id": "arc-candidate-synthetic-empty-confidence",
+  "object_type": "CandidateFeature",
+  "truth_state": "CANDIDATE",
+  "candidate_type": "ANOMALY",
+  "origin_method": "REMOTE_SENSING",
+  "source_refs": [
+    "kfm://source/synthetic/empty-confidence"
+  ],
+  "review_state": "NEEDS_REVIEW",
+  "sensitivity_class": "WITHHELD",
+  "spatial_precision_class": "WITHHELD",
+  "lifecycle_state": "WORK",
+  "confidence_statement": ""
+}

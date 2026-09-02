@@ -1,0 +1,146 @@
+# Regenerate the bounded PyArrow carrier pair, then run one pinned GDAL consumer.
+name: geoparquet-2-rc-gdal-consumer-probe
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/geoparquet-2-rc-gdal-consumer-probe.yml"
+      - "contracts/release/geoparquet_2_rc_gdal_consumer_probe.md"
+      - "schemas/contracts/v1/release/geoparquet_2_rc_gdal_consumer_probe.schema.json"
+      - "tools/experiments/geoparquet/generate_pyarrow_25_carriers.py"
+      - "tools/experiments/geoparquet/run_gdal_3_13_2_consumer_probe.py"
+      - "tools/validators/release/validate_geoparquet_2_rc_pyarrow_carriers.py"
+      - "tools/validators/release/validate_geoparquet_2_rc_gdal_consumer_probe.py"
+      - "tests/release/test_geoparquet_2_rc_pyarrow_carriers.py"
+      - "tests/release/test_geoparquet_2_rc_gdal_consumer_probe.py"
+      - "tools/ci/geoparquet-pyarrow-25.lock"
+      - "tools/ci/install_python_ci.py"
+      - "data/receipts/generated/genrec-geoparquet-2-rc-gdal-consumer-*.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/geoparquet-2-rc-gdal-consumer-probe.yml"
+      - "contracts/release/geoparquet_2_rc_gdal_consumer_probe.md"
+      - "schemas/contracts/v1/release/geoparquet_2_rc_gdal_consumer_probe.schema.json"
+      - "tools/experiments/geoparquet/generate_pyarrow_25_carriers.py"
+      - "tools/experiments/geoparquet/run_gdal_3_13_2_consumer_probe.py"
+      - "tools/validators/release/validate_geoparquet_2_rc_pyarrow_carriers.py"
+      - "tools/validators/release/validate_geoparquet_2_rc_gdal_consumer_probe.py"
+      - "tests/release/test_geoparquet_2_rc_pyarrow_carriers.py"
+      - "tests/release/test_geoparquet_2_rc_gdal_consumer_probe.py"
+      - "tools/ci/geoparquet-pyarrow-25.lock"
+      - "tools/ci/install_python_ci.py"
+      - "data/receipts/generated/genrec-geoparquet-2-rc-gdal-consumer-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: geoparquet-2-rc-gdal-consumer-probe-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  probe:
+    name: pyarrow-25-producer-to-gdal-3.13.2-consumer
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up exact Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+
+      - name: Install declared schema and test dependencies
+        run: python tools/ci/install_python_ci.py project-test
+
+      - name: Install exact PyArrow wheel with hash verification
+        run: |
+          set -euo pipefail
+          python tools/ci/install_python_ci.py geoparquet-pyarrow-25
+          python -c 'import pyarrow; assert pyarrow.__version__ == "25.0.0"'
+
+      - name: Regenerate actual synthetic carrier bytes
+        env:
+          KFM_NO_NETWORK: "1"
+        run: |
+          set -euo pipefail
+          rm -rf artifacts/qa/geoparquet-2-rc-gdal-consumer-probe
+          python tools/experiments/geoparquet/generate_pyarrow_25_carriers.py \
+            --output artifacts/qa/geoparquet-2-rc-gdal-consumer-probe
+
+      - name: Validate source carrier bytes and finite PARTIAL result
+        env:
+          KFM_NO_NETWORK: "1"
+        run: |
+          set -euo pipefail
+          python -m tools.validators.release.validate_geoparquet_2_rc_pyarrow_carriers \
+            --root artifacts/qa/geoparquet-2-rc-gdal-consumer-probe \
+            --manifest artifacts/qa/geoparquet-2-rc-gdal-consumer-probe/manifest.json
+
+      - name: Run pinned GDAL 3.13.2 consumer-read lane
+        run: |
+          set -euo pipefail
+          python -m tools.experiments.geoparquet.run_gdal_3_13_2_consumer_probe \
+            --root artifacts/qa/geoparquet-2-rc-gdal-consumer-probe \
+            --manifest artifacts/qa/geoparquet-2-rc-gdal-consumer-probe/manifest.json \
+            --output artifacts/qa/geoparquet-2-rc-gdal-consumer-probe/gdal-consumer
+
+      - name: Validate finite GDAL consumer result
+        env:
+          KFM_NO_NETWORK: "1"
+        run: |
+          set -euo pipefail
+          python -m tools.validators.release.validate_geoparquet_2_rc_gdal_consumer_probe \
+            --root artifacts/qa/geoparquet-2-rc-gdal-consumer-probe \
+            --packet artifacts/qa/geoparquet-2-rc-gdal-consumer-probe/gdal-consumer/manifest.json
+
+      - name: Run source and consumer focused negative tests
+        env:
+          KFM_NO_NETWORK: "1"
+        run: |
+          set -euo pipefail
+          python -m pytest -q \
+            tests/release/test_geoparquet_2_rc_pyarrow_carriers.py \
+            tests/release/test_geoparquet_2_rc_gdal_consumer_probe.py \
+            --strict-config --strict-markers
+
+      - name: Upload bounded consumer review packet
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: geoparquet-2-rc-gdal-consumer-probe
+          path: artifacts/qa/geoparquet-2-rc-gdal-consumer-probe/
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Record trust boundary
+        if: always()
+        run: |
+          GDAL_OUTCOME="UNAVAILABLE"
+          RESULT_PATH="artifacts/qa/geoparquet-2-rc-gdal-consumer-probe/gdal-consumer/manifest.json"
+          if [[ -f "${RESULT_PATH}" ]]; then
+            GDAL_OUTCOME="$(python -c 'import json,sys; print(json.load(open(sys.argv[1], encoding="utf-8"))["outcome"])' "${RESULT_PATH}")"
+          fi
+          {
+            echo "### GeoParquet 2.0 RC GDAL consumer probe"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: retained synthetic carrier pair under exact PyArrow 25.0.0, then one pinned GDAL 3.13.2 consumer-read lane."
+            echo "- GDAL consumer outcome: ${GDAL_OUTCOME}."
+            echo "- Finite posture: PARTIAL or HOLD only for supported execution; no full cross-engine, GDAL producer, or pruning claim."
+            echo "- Boundary: GeoParquet 1.1.0 remains the KFM default; no ADR acceptance, adoption, migration, release, deployment, publication, or public-use authority is created."
+          } >> "$GITHUB_STEP_SUMMARY"

@@ -1,0 +1,71 @@
+{
+  "determinism": {
+    "canonicalization_profile": "kfm-jcs-sha256-v1",
+    "dataset_version_seed": [
+      "spec_hash",
+      "source_head",
+      "partition_key",
+      "transform_digest"
+    ],
+    "partition_keys": [
+      "date",
+      "space"
+    ],
+    "spec_hash": "sha256:bf1ca7c65c30631d9380961a5c0558dbdbbab9d0124c80b0382296ab4b3cba92",
+    "transform_digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444"
+  },
+  "fixture_only": true,
+  "governance": {
+    "authority_created": false,
+    "network_execution_authorized": false,
+    "promotion_authorized": false,
+    "public_use_allowed": false,
+    "release_state": "HOLD",
+    "rights_review": "NEEDS_VERIFICATION",
+    "sensitivity_review": "NEEDS_VERIFICATION",
+    "source_activation_allowed": false
+  },
+  "lane": {
+    "checkpointing": false,
+    "cost_guardrail": {
+      "max_units": 10000,
+      "unit": "SYNTHETIC_UNITS"
+    },
+    "kind": "SCHEDULED_ETL",
+    "partition_plan": {
+      "dimensions": [
+        "date",
+        "space"
+      ],
+      "partial_rerun": false
+    },
+    "resumable_temp_artifacts": true,
+    "schedule": "MONTHLY"
+  },
+  "object_type": "SourceIngestionPlanCandidate",
+  "plan_id": "kfm://candidate/source-ingestion/synthetic.bulk-corpus/bf1ca7c65c30631d9380961a5c0558dbdbbab9d0124c80b0382296ab4b3cba92",
+  "receipt_requirements": {
+    "artifact_attestation_required_before_release": true,
+    "input_digests_required": true,
+    "offsets_or_validators_required": true,
+    "run_receipt_required": true,
+    "source_head_required": true
+  },
+  "schema_version": "kfm.source.ingestion-plan.v1",
+  "selection": {
+    "full_refresh_allowed": true,
+    "latency_target": "MONTHLY",
+    "mode": "SCHEDULED_ETL",
+    "public_output_requested": false,
+    "reason_codes": [
+      "BACKFILL_AND_PARTITION_REBUILD_REQUIRED",
+      "SLOW_CHANGING_CORPUS"
+    ]
+  },
+  "source": {
+    "control_class": "BULK_CORPUS",
+    "credentials_embedded": false,
+    "source_descriptor_ref": "kfm://source/geology/synthetic-bulk-corpus@synthetic-2026-03-19",
+    "source_id": "synthetic.bulk-corpus"
+  }
+}

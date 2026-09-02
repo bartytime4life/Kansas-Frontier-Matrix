@@ -1,0 +1,330 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/source/source_terms_drift_disposition.schema.json",
+  "title": "SourceTermsDriftDisposition",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile_version",
+    "assessment_id",
+    "spec_hash",
+    "source_descriptor_ref",
+    "descriptor_spec_hash",
+    "assessed_at",
+    "assessment_state",
+    "prior_snapshot",
+    "current_snapshot",
+    "drift",
+    "downstream_dependencies",
+    "disposition",
+    "boundary"
+  ],
+  "properties": {
+    "profile_version": {
+      "const": "kfm.source-terms-drift-disposition.fixture.v1"
+    },
+    "assessment_id": {
+      "type": "string",
+      "pattern": "^kfm:source-terms-drift:[a-f0-9]{24}$"
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/digest"
+    },
+    "source_descriptor_ref": {
+      "type": "string",
+      "pattern": "^kfm://source/[a-z0-9][a-z0-9._:-]{2,127}$"
+    },
+    "descriptor_spec_hash": {
+      "$ref": "#/$defs/digest"
+    },
+    "assessed_at": {
+      "$ref": "#/$defs/date_time"
+    },
+    "assessment_state": {
+      "enum": ["COMPLETE", "ERROR"]
+    },
+    "prior_snapshot": {
+      "$ref": "#/$defs/terms_snapshot"
+    },
+    "current_snapshot": {
+      "$ref": "#/$defs/terms_snapshot"
+    },
+    "drift": {
+      "$ref": "#/$defs/drift"
+    },
+    "downstream_dependencies": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "items": {
+        "$ref": "#/$defs/dependency"
+      }
+    },
+    "disposition": {
+      "$ref": "#/$defs/disposition"
+    },
+    "boundary": {
+      "$ref": "#/$defs/boundary"
+    }
+  },
+  "$defs": {
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "date_time": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "reference": {
+      "type": "string",
+      "pattern": "^kfm:[a-z0-9][a-z0-9._:/-]{5,220}$"
+    },
+    "use_posture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "attribution",
+        "redistribution",
+        "commercial_use",
+        "derivative_use",
+        "retention",
+        "access"
+      ],
+      "properties": {
+        "attribution": {
+          "enum": ["NOT_REQUIRED", "REQUIRED", "UNKNOWN"]
+        },
+        "redistribution": {
+          "enum": ["ALLOWED", "RESTRICTED", "PROHIBITED", "UNKNOWN"]
+        },
+        "commercial_use": {
+          "enum": ["ALLOWED", "RESTRICTED", "PROHIBITED", "UNKNOWN"]
+        },
+        "derivative_use": {
+          "enum": ["ALLOWED", "RESTRICTED", "PROHIBITED", "UNKNOWN"]
+        },
+        "retention": {
+          "enum": ["ALLOWED", "RESTRICTED", "PROHIBITED", "UNKNOWN"]
+        },
+        "access": {
+          "enum": ["PUBLIC", "KEYED", "AGREEMENT_REQUIRED", "RESTRICTED", "UNKNOWN"]
+        }
+      }
+    },
+    "terms_snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "snapshot_ref",
+        "snapshot_hash",
+        "captured_at",
+        "effective_from",
+        "expires_at",
+        "verification_state",
+        "terms_uri",
+        "terms_content_hash",
+        "license_id",
+        "scope_hash",
+        "use_posture",
+        "obligation_refs"
+      ],
+      "properties": {
+        "snapshot_ref": {
+          "type": "string",
+          "pattern": "^kfm:source-terms-snapshot:[a-z0-9][a-z0-9._:-]{2,159}$"
+        },
+        "snapshot_hash": {
+          "$ref": "#/$defs/digest"
+        },
+        "captured_at": {
+          "$ref": "#/$defs/date_time"
+        },
+        "effective_from": {
+          "$ref": "#/$defs/date_time"
+        },
+        "expires_at": {
+          "oneOf": [
+            {"$ref": "#/$defs/date_time"},
+            {"type": "null"}
+          ]
+        },
+        "verification_state": {
+          "enum": ["VERIFIED", "UNVERIFIED", "UNAVAILABLE"]
+        },
+        "terms_uri": {
+          "type": "string",
+          "format": "uri",
+          "maxLength": 512
+        },
+        "terms_content_hash": {
+          "$ref": "#/$defs/digest"
+        },
+        "license_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "scope_hash": {
+          "$ref": "#/$defs/digest"
+        },
+        "use_posture": {
+          "$ref": "#/$defs/use_posture"
+        },
+        "obligation_refs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/reference"
+          }
+        }
+      }
+    },
+    "drift": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "classification",
+        "changed_fields",
+        "scope_match",
+        "evidence_complete"
+      ],
+      "properties": {
+        "classification": {
+          "enum": [
+            "NO_CHANGE",
+            "NON_RESTRICTIVE_CHANGE",
+            "RESTRICTIVE_CHANGE",
+            "UNRESOLVED"
+          ]
+        },
+        "changed_fields": {
+          "type": "array",
+          "maxItems": 10,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "TERMS_CONTENT",
+              "LICENSE_ID",
+              "SCOPE",
+              "ATTRIBUTION",
+              "REDISTRIBUTION",
+              "COMMERCIAL_USE",
+              "DERIVATIVE_USE",
+              "RETENTION",
+              "ACCESS",
+              "EXPIRY"
+            ]
+          }
+        },
+        "scope_match": {
+          "type": "boolean"
+        },
+        "evidence_complete": {
+          "type": "boolean"
+        }
+      }
+    },
+    "dependency": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "dependency_ref",
+        "dependency_kind",
+        "obligation_propagated",
+        "proposed_action"
+      ],
+      "properties": {
+        "dependency_ref": {
+          "$ref": "#/$defs/reference"
+        },
+        "dependency_kind": {
+          "enum": [
+            "DATASET",
+            "EVIDENCE_BUNDLE",
+            "CATALOG_ENTRY",
+            "RELEASE",
+            "CACHE",
+            "PUBLIC_ARTIFACT"
+          ]
+        },
+        "obligation_propagated": {
+          "type": "boolean"
+        },
+        "proposed_action": {
+          "enum": [
+            "NO_ACTION",
+            "REASSESS",
+            "RECOMPUTE_REVIEW",
+            "HOLD",
+            "WITHDRAWAL_REVIEW"
+          ]
+        }
+      }
+    },
+    "disposition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "reason_codes"],
+      "properties": {
+        "status": {
+          "enum": ["NO_ACTION", "REASSESS", "HOLD", "ERROR"]
+        },
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "NO_TERMS_CHANGE",
+              "TERMS_CHANGE_REQUIRES_REASSESSMENT",
+              "RESTRICTIVE_TERMS_CHANGE",
+              "TERMS_EVIDENCE_UNRESOLVED",
+              "RIGHTS_SCOPE_MISMATCH",
+              "TERMS_EXPIRED",
+              "DOWNSTREAM_OBLIGATION_UNPROPAGATED",
+              "ASSESSMENT_ERROR"
+            ]
+          }
+        }
+      }
+    },
+    "boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fixture_only",
+        "network_attempted",
+        "legal_determination_made",
+        "source_activation_authorized",
+        "lifecycle_write_performed",
+        "hold_executed",
+        "recomputation_executed",
+        "withdrawal_executed",
+        "release_authorized",
+        "publication_authorized"
+      ],
+      "properties": {
+        "fixture_only": {"const": true},
+        "network_attempted": {"const": false},
+        "legal_determination_made": {"const": false},
+        "source_activation_authorized": {"const": false},
+        "lifecycle_write_performed": {"const": false},
+        "hold_executed": {"const": false},
+        "recomputation_executed": {"const": false},
+        "withdrawal_executed": {"const": false},
+        "release_authorized": {"const": false},
+        "publication_authorized": {"const": false}
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "contract_doc": "contracts/source/source_terms_drift_disposition.md",
+    "authority": "NONE"
+  }
+}

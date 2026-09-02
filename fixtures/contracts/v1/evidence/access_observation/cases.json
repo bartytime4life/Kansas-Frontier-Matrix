@@ -1,0 +1,469 @@
+{
+  "profile": "kfm.access-observation.fixture-suite.v1",
+  "base": {
+    "object_type": "AccessObservation",
+    "profile": "kfm.access-observation.fixture.v1",
+    "observation_id": "kfm:access-observation:000000000000000000000000",
+    "subject": {
+      "geography_version_ref": "kfm://common/geography-version/synthetic@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "geography_version_profile": "kfm.geography-version.fixture.v1",
+      "geography_feature_key": "20001",
+      "unit_level": "COUNTY",
+      "jurisdiction_code": "US-KS",
+      "identity_scope": "VERSION_LOCAL"
+    },
+    "temporal": {
+      "reference_period_kind": "CALENDAR_YEAR",
+      "reference_year": 2023,
+      "reference_period_start": "2023-01-01",
+      "reference_period_end": "2023-12-31",
+      "source_released_at": "2024-06-01T00:00:00Z",
+      "retrieved_at": "2024-06-15T00:00:00Z",
+      "corrected_at": null
+    },
+    "measure": {
+      "measure_key": "healthcare_travel_time",
+      "measure_family": "TRAVEL_TIME",
+      "unit": "MINUTES",
+      "service_domain": "HEALTHCARE",
+      "source_service_ref": null,
+      "result_state": "OBSERVED",
+      "value": 42.5,
+      "missing_reason": "NOT_APPLICABLE"
+    },
+    "method": {
+      "method_ref": "kfm://method/synthetic-network-travel-time@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "method_family": "NETWORK_TRAVEL_TIME",
+      "origin_scope": "POPULATION_WEIGHTED",
+      "destination_scope": "NEAREST_SERVICE",
+      "aggregation_method": "MEDIAN",
+      "threshold_ref": null,
+      "network_or_model_ref": "kfm://network/synthetic-road-network@sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    },
+    "suppression": {
+      "status": "NOT_APPLICABLE",
+      "reason": null,
+      "method_ref": null
+    },
+    "source": {
+      "source_descriptor_ref": "kfm://source/synthetic-service-access@sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "dataset_version_ref": "kfm://dataset/synthetic-service-access-2023@sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "source_table_ref": "kfm://source-table/synthetic-county-access@sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "source_variable_ref": "kfm://source-variable/synthetic-healthcare-travel-time@sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "source_role": "OFFICIAL_ACCESS_OR_SERVICE_AGGREGATE",
+      "source_state": "REFERENCED_NOT_RESOLVED",
+      "evidence_refs": [
+        "kfm://evidence/access/source@sha256:2222222222222222222222222222222222222222222222222222222222222222",
+        "kfm://evidence/access/table@sha256:3333333333333333333333333333333333333333333333333333333333333333"
+      ],
+      "rights_state": "REFERENCED_NOT_EVALUATED",
+      "sensitivity_state": "REFERENCED_NOT_EVALUATED"
+    },
+    "lineage": {
+      "correction_state": "ORIGINAL",
+      "predecessor_ref": null,
+      "correction_record_ref": null
+    },
+    "disclosure": {
+      "interpretation_limits": [
+        "AGGREGATE_ONLY",
+        "METHOD_BOUND",
+        "NO_CAUSAL_CLAIM",
+        "NO_PROVIDER_ELIGIBILITY_GUARANTEE",
+        "NO_PUBLICATION_AUTHORITY",
+        "NO_ROUTING_OR_EMERGENCY_GUIDANCE",
+        "SOURCE_ROLE_PRESERVED",
+        "VERSION_BOUND"
+      ]
+    },
+    "governance": {
+      "execution_mode": "FIXTURE_ONLY",
+      "network_attempted": false,
+      "source_data_accessed": false,
+      "geography_resolved": false,
+      "evidence_resolved": false,
+      "method_executed": false,
+      "provider_identity_resolved": false,
+      "route_computed": false,
+      "rights_evaluated": false,
+      "sensitivity_evaluated": false,
+      "policy_evaluated": false,
+      "review_approved": false,
+      "promotion_authorized": false,
+      "release_authorized": false,
+      "public_use_allowed": false,
+      "publication_authorized": false
+    },
+    "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "variants": {
+    "travel_time": [],
+    "distance": [
+      { "path": "/measure/measure_key", "value": "grocery_distance" },
+      { "path": "/measure/measure_family", "value": "DISTANCE" },
+      { "path": "/measure/unit", "value": "KILOMETRES" },
+      { "path": "/measure/service_domain", "value": "GROCERY" },
+      { "path": "/measure/value", "value": 31.2 },
+      { "path": "/method/method_ref", "value": "kfm://method/synthetic-straight-line-distance@sha256:4444444444444444444444444444444444444444444444444444444444444444" },
+      { "path": "/method/method_family", "value": "STRAIGHT_LINE_DISTANCE" },
+      { "path": "/method/origin_scope", "value": "COUNTY_REPRESENTATIVE_POINT" },
+      { "path": "/method/aggregation_method", "value": "MINIMUM" },
+      { "path": "/method/network_or_model_ref", "value": null }
+    ],
+    "provider_count": [
+      { "path": "/measure/measure_key", "value": "healthcare_provider_count" },
+      { "path": "/measure/measure_family", "value": "PROVIDER_COUNT" },
+      { "path": "/measure/unit", "value": "COUNT" },
+      { "path": "/measure/value", "value": 4 },
+      { "path": "/method/method_ref", "value": "kfm://method/synthetic-provider-inventory@sha256:5555555555555555555555555555555555555555555555555555555555555555" },
+      { "path": "/method/method_family", "value": "PROVIDER_INVENTORY" },
+      { "path": "/method/origin_scope", "value": "COUNTY_AGGREGATE" },
+      { "path": "/method/destination_scope", "value": "ALL_MATCHING_SERVICES" },
+      { "path": "/method/aggregation_method", "value": "COUNT" },
+      { "path": "/method/network_or_model_ref", "value": null }
+    ],
+    "coverage": [
+      { "path": "/measure/measure_key", "value": "broadband_service_coverage" },
+      { "path": "/measure/measure_family", "value": "SERVICE_COVERAGE" },
+      { "path": "/measure/unit", "value": "PERCENT" },
+      { "path": "/measure/service_domain", "value": "BROADBAND" },
+      { "path": "/measure/value", "value": 86.4 },
+      { "path": "/method/method_ref", "value": "kfm://method/synthetic-coverage-estimate@sha256:6666666666666666666666666666666666666666666666666666666666666666" },
+      { "path": "/method/method_family", "value": "COVERAGE_ESTIMATE" },
+      { "path": "/method/origin_scope", "value": "COUNTY_AGGREGATE" },
+      { "path": "/method/destination_scope", "value": "COUNTY_AGGREGATE" },
+      { "path": "/method/aggregation_method", "value": "PERCENT" },
+      { "path": "/method/threshold_ref", "value": "kfm://threshold/synthetic-broadband-service@sha256:7777777777777777777777777777777777777777777777777777777777777777" },
+      { "path": "/method/network_or_model_ref", "value": "kfm://model/synthetic-coverage-estimate@sha256:8888888888888888888888888888888888888888888888888888888888888888" }
+    ],
+    "source_defined_service": [
+      { "path": "/measure/measure_key", "value": "source_defined_provider_count" },
+      { "path": "/measure/measure_family", "value": "PROVIDER_COUNT" },
+      { "path": "/measure/unit", "value": "COUNT" },
+      { "path": "/measure/service_domain", "value": "SOURCE_DEFINED" },
+      { "path": "/measure/source_service_ref", "value": "kfm://service/synthetic-source-category@sha256:9999999999999999999999999999999999999999999999999999999999999999" },
+      { "path": "/measure/value", "value": 2 },
+      { "path": "/method/method_ref", "value": "kfm://method/synthetic-provider-inventory@sha256:5555555555555555555555555555555555555555555555555555555555555555" },
+      { "path": "/method/method_family", "value": "PROVIDER_INVENTORY" },
+      { "path": "/method/origin_scope", "value": "COUNTY_AGGREGATE" },
+      { "path": "/method/destination_scope", "value": "ALL_MATCHING_SERVICES" },
+      { "path": "/method/aggregation_method", "value": "COUNT" },
+      { "path": "/method/network_or_model_ref", "value": null }
+    ],
+    "emergency_travel_time": [
+      { "path": "/measure/measure_key", "value": "emergency_service_travel_time" },
+      { "path": "/measure/service_domain", "value": "EMERGENCY_SERVICES" },
+      { "path": "/measure/value", "value": 27.8 }
+    ],
+    "observed_zero": [
+      { "path": "/measure/measure_key", "value": "healthcare_provider_count" },
+      { "path": "/measure/measure_family", "value": "PROVIDER_COUNT" },
+      { "path": "/measure/unit", "value": "COUNT" },
+      { "path": "/measure/value", "value": 0 },
+      { "path": "/method/method_ref", "value": "kfm://method/synthetic-provider-inventory@sha256:5555555555555555555555555555555555555555555555555555555555555555" },
+      { "path": "/method/method_family", "value": "PROVIDER_INVENTORY" },
+      { "path": "/method/origin_scope", "value": "COUNTY_AGGREGATE" },
+      { "path": "/method/destination_scope", "value": "ALL_MATCHING_SERVICES" },
+      { "path": "/method/aggregation_method", "value": "COUNT" },
+      { "path": "/method/network_or_model_ref", "value": null }
+    ],
+    "suppressed": [
+      { "path": "/measure/result_state", "value": "SUPPRESSED" },
+      { "path": "/measure/value", "value": null },
+      { "path": "/measure/missing_reason", "value": "SOURCE_SUPPRESSED" },
+      { "path": "/suppression/status", "value": "SOURCE_SUPPRESSED" },
+      { "path": "/suppression/reason", "value": "Synthetic source disclosure rule" },
+      { "path": "/suppression/method_ref", "value": "kfm://method/synthetic-suppression@sha256:abababababababababababababababababababababababababababababababab" }
+    ],
+    "missing": [
+      { "path": "/measure/result_state", "value": "MISSING" },
+      { "path": "/measure/value", "value": null },
+      { "path": "/measure/missing_reason", "value": "SOURCE_MISSING" }
+    ],
+    "corrected": [
+      { "path": "/temporal/corrected_at", "value": "2024-07-01T00:00:00Z" },
+      { "path": "/lineage/correction_state", "value": "CORRECTED" },
+      { "path": "/lineage/predecessor_ref", "value": "kfm://observation/access/prior@sha256:bcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbc" },
+      { "path": "/lineage/correction_record_ref", "value": "kfm://correction/access/synthetic@sha256:cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd" }
+    ]
+  },
+  "cases": [
+    { "case_id": "valid-travel-time", "base": "travel_time", "expected_outcome": "PASS", "expected_findings": [] },
+    { "case_id": "valid-distance", "base": "distance", "expected_outcome": "PASS", "expected_findings": [] },
+    { "case_id": "valid-provider-count", "base": "provider_count", "expected_outcome": "PASS", "expected_findings": [] },
+    { "case_id": "valid-service-coverage", "base": "coverage", "expected_outcome": "PASS", "expected_findings": [] },
+    { "case_id": "valid-source-defined-service", "base": "source_defined_service", "expected_outcome": "PASS", "expected_findings": [] },
+    { "case_id": "valid-emergency-service-aggregate", "base": "emergency_travel_time", "expected_outcome": "PASS", "expected_findings": [] },
+    { "case_id": "valid-observed-zero", "base": "observed_zero", "expected_outcome": "PASS", "expected_findings": [] },
+    { "case_id": "valid-source-suppressed", "base": "suppressed", "expected_outcome": "PASS", "expected_findings": [] },
+    { "case_id": "valid-source-missing", "base": "missing", "expected_outcome": "PASS", "expected_findings": [] },
+    { "case_id": "valid-corrected", "base": "corrected", "expected_outcome": "PASS", "expected_findings": [] },
+    {
+      "case_id": "deny-period-start-drift",
+      "base": "travel_time",
+      "mutations": [{ "path": "/temporal/reference_period_start", "value": "2023-02-01" }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "ACCESS_PERIOD_START_INVALID", "path": "/temporal/reference_period_start" }]
+    },
+    {
+      "case_id": "deny-period-end-drift",
+      "base": "travel_time",
+      "mutations": [{ "path": "/temporal/reference_period_end", "value": "2023-12-30" }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "ACCESS_PERIOD_END_INVALID", "path": "/temporal/reference_period_end" }]
+    },
+    {
+      "case_id": "deny-release-precedes-period",
+      "base": "travel_time",
+      "mutations": [{ "path": "/temporal/source_released_at", "value": "2023-12-01T00:00:00Z" }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "ACCESS_RELEASE_PRECEDES_PERIOD", "path": "/temporal/source_released_at" }]
+    },
+    {
+      "case_id": "deny-retrieval-precedes-release",
+      "base": "travel_time",
+      "mutations": [{ "path": "/temporal/retrieved_at", "value": "2024-05-01T00:00:00Z" }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "ACCESS_RETRIEVAL_PRECEDES_RELEASE", "path": "/temporal/retrieved_at" }]
+    },
+    {
+      "case_id": "deny-correction-precedes-release",
+      "base": "corrected",
+      "mutations": [{ "path": "/temporal/corrected_at", "value": "2024-05-01T00:00:00Z" }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "ACCESS_CORRECTION_PRECEDES_RELEASE", "path": "/temporal/corrected_at" }]
+    },
+    {
+      "case_id": "deny-observed-without-value",
+      "base": "travel_time",
+      "mutations": [{ "path": "/measure/value", "value": null }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "ACCESS_OBSERVED_VALUE_REQUIRED", "path": "/measure/value" }]
+    },
+    {
+      "case_id": "deny-observed-with-missing-reason",
+      "base": "travel_time",
+      "mutations": [{ "path": "/measure/missing_reason", "value": "SOURCE_MISSING" }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "ACCESS_OBSERVED_MISSING_REASON_INVALID", "path": "/measure/missing_reason" }]
+    },
+    {
+      "case_id": "deny-suppressed-with-value",
+      "base": "suppressed",
+      "mutations": [{ "path": "/measure/value", "value": 1 }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "ACCESS_SUPPRESSED_VALUE_DENIED", "path": "/measure/value" }]
+    },
+    {
+      "case_id": "deny-suppressed-without-reason-state",
+      "base": "suppressed",
+      "mutations": [{ "path": "/measure/missing_reason", "value": "NOT_APPLICABLE" }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "ACCESS_SUPPRESSION_REASON_REQUIRED", "path": "/measure/missing_reason" }]
+    },
+    {
+      "case_id": "deny-suppression-block-incomplete",
+      "base": "suppressed",
+      "mutations": [{ "path": "/suppression/method_ref", "value": null }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "ACCESS_SUPPRESSION_BLOCK_REQUIRED", "path": "/suppression" }]
+    },
+    {
+      "case_id": "deny-missing-with-value",
+      "base": "missing",
+      "mutations": [{ "path": "/measure/value", "value": 1 }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "ACCESS_MISSING_VALUE_DENIED", "path": "/measure/value" }]
+    },
+    {
+      "case_id": "deny-missing-with-suppression-reason",
+      "base": "missing",
+      "mutations": [{ "path": "/measure/missing_reason", "value": "SOURCE_SUPPRESSED" }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "ACCESS_MISSING_REASON_INVALID", "path": "/measure/missing_reason" }]
+    },
+    {
+      "case_id": "deny-nonsuppressed-carries-suppression",
+      "base": "travel_time",
+      "mutations": [{ "path": "/suppression/status", "value": "SOURCE_SUPPRESSED" }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "ACCESS_SUPPRESSION_BLOCK_DENIED", "path": "/suppression" }]
+    },
+    {
+      "case_id": "deny-family-unit-mismatch",
+      "base": "travel_time",
+      "mutations": [{ "path": "/measure/unit", "value": "KILOMETRES" }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "ACCESS_UNIT_MISMATCH", "path": "/measure/unit" }]
+    },
+    {
+      "case_id": "deny-method-family-mismatch",
+      "base": "travel_time",
+      "mutations": [{ "path": "/method/method_family", "value": "STRAIGHT_LINE_DISTANCE" }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "ACCESS_METHOD_FAMILY_MISMATCH", "path": "/method/method_family" }]
+    },
+    {
+      "case_id": "deny-aggregation-mismatch",
+      "base": "provider_count",
+      "mutations": [{ "path": "/method/aggregation_method", "value": "MEAN" }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "ACCESS_AGGREGATION_MISMATCH", "path": "/method/aggregation_method" }]
+    },
+    {
+      "case_id": "deny-travel-time-without-network",
+      "base": "travel_time",
+      "mutations": [{ "path": "/method/network_or_model_ref", "value": null }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "ACCESS_NETWORK_OR_MODEL_REQUIRED", "path": "/method/network_or_model_ref" }]
+    },
+    {
+      "case_id": "deny-distance-carries-network",
+      "base": "distance",
+      "mutations": [{ "path": "/method/network_or_model_ref", "value": "kfm://network/synthetic-road-network@sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc" }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "ACCESS_NETWORK_OR_MODEL_DENIED", "path": "/method/network_or_model_ref" }]
+    },
+    {
+      "case_id": "deny-coverage-without-threshold",
+      "base": "coverage",
+      "mutations": [{ "path": "/method/threshold_ref", "value": null }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "ACCESS_THRESHOLD_REQUIRED", "path": "/method/threshold_ref" }]
+    },
+    {
+      "case_id": "deny-noncoverage-carries-threshold",
+      "base": "travel_time",
+      "mutations": [{ "path": "/method/threshold_ref", "value": "kfm://threshold/synthetic-travel@sha256:1212121212121212121212121212121212121212121212121212121212121212" }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "ACCESS_THRESHOLD_DENIED", "path": "/method/threshold_ref" }]
+    },
+    {
+      "case_id": "deny-source-defined-service-without-reference",
+      "base": "source_defined_service",
+      "mutations": [{ "path": "/measure/source_service_ref", "value": null }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "ACCESS_SOURCE_SERVICE_REQUIRED", "path": "/measure/source_service_ref" }]
+    },
+    {
+      "case_id": "deny-named-service-carries-source-reference",
+      "base": "travel_time",
+      "mutations": [{ "path": "/measure/source_service_ref", "value": "kfm://service/synthetic-healthcare@sha256:efefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefef" }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "ACCESS_SOURCE_SERVICE_DENIED", "path": "/measure/source_service_ref" }]
+    },
+    {
+      "case_id": "deny-coverage-over-100",
+      "base": "coverage",
+      "mutations": [{ "path": "/measure/value", "value": 100.1 }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "ACCESS_PERCENT_RANGE_INVALID", "path": "/measure/value" }]
+    },
+    {
+      "case_id": "deny-evidence-order-drift",
+      "base": "travel_time",
+      "mutations": [{
+        "path": "/source/evidence_refs",
+        "value": [
+          "kfm://evidence/access/table@sha256:3333333333333333333333333333333333333333333333333333333333333333",
+          "kfm://evidence/access/source@sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        ]
+      }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "ACCESS_EVIDENCE_ORDER_INVALID", "path": "/source/evidence_refs" }]
+    },
+    {
+      "case_id": "deny-original-carries-predecessor",
+      "base": "travel_time",
+      "mutations": [{ "path": "/lineage/predecessor_ref", "value": "kfm://observation/access/prior@sha256:bcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbc" }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "ACCESS_ORIGINAL_LINEAGE_INVALID", "path": "/lineage" }]
+    },
+    {
+      "case_id": "deny-corrected-missing-predecessor",
+      "base": "corrected",
+      "mutations": [{ "path": "/lineage/predecessor_ref", "value": null }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "ACCESS_CORRECTED_LINEAGE_INCOMPLETE", "path": "/lineage" }]
+    },
+    {
+      "case_id": "deny-limit-order-drift",
+      "base": "travel_time",
+      "mutations": [{
+        "path": "/disclosure/interpretation_limits",
+        "value": [
+          "VERSION_BOUND",
+          "SOURCE_ROLE_PRESERVED",
+          "NO_ROUTING_OR_EMERGENCY_GUIDANCE",
+          "NO_PUBLICATION_AUTHORITY",
+          "NO_PROVIDER_ELIGIBILITY_GUARANTEE",
+          "NO_CAUSAL_CLAIM",
+          "METHOD_BOUND",
+          "AGGREGATE_ONLY"
+        ]
+      }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "ACCESS_LIMIT_ORDER_INVALID", "path": "/disclosure/interpretation_limits" }]
+    },
+    {
+      "case_id": "deny-stored-spec-hash-drift",
+      "base": "travel_time",
+      "spec_hash_override": "sha256:9999999999999999999999999999999999999999999999999999999999999999",
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "ACCESS_SPEC_HASH_MISMATCH", "path": "/spec_hash" }]
+    },
+    {
+      "case_id": "deny-stored-observation-id-drift",
+      "base": "travel_time",
+      "observation_id_override": "kfm:access-observation:999999999999999999999999",
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "ACCESS_OBSERVATION_ID_MISMATCH", "path": "/observation_id" }]
+    },
+    {
+      "case_id": "deny-nondigest-method-reference",
+      "base": "travel_time",
+      "mutations": [{ "path": "/method/method_ref", "value": "kfm://method/synthetic-network-travel-time" }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "ACCESS_SCHEMA_INVALID", "path": "/method/method_ref" }]
+    },
+    {
+      "case_id": "deny-negative-value",
+      "base": "travel_time",
+      "mutations": [{ "path": "/measure/value", "value": -1 }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "ACCESS_SCHEMA_INVALID", "path": "/measure/value" }]
+    },
+    {
+      "case_id": "deny-public-use-authority",
+      "base": "travel_time",
+      "mutations": [{ "path": "/governance/public_use_allowed", "value": true }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "ACCESS_SCHEMA_INVALID", "path": "/governance/public_use_allowed" }]
+    },
+    {
+      "case_id": "deny-extra-route-geometry",
+      "base": "travel_time",
+      "mutations": [{ "path": "/route_geometry", "value": "forbidden" }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "ACCESS_SCHEMA_INVALID", "path": "/" }]
+    },
+    {
+      "case_id": "deny-incomplete-limit-set",
+      "base": "travel_time",
+      "mutations": [{
+        "path": "/disclosure/interpretation_limits",
+        "value": [
+          "AGGREGATE_ONLY",
+          "METHOD_BOUND",
+          "NO_CAUSAL_CLAIM",
+          "NO_PROVIDER_ELIGIBILITY_GUARANTEE",
+          "NO_PUBLICATION_AUTHORITY",
+          "SOURCE_ROLE_PRESERVED",
+          "VERSION_BOUND"
+        ]
+      }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "ACCESS_SCHEMA_INVALID", "path": "/disclosure/interpretation_limits" }]
+    }
+  ]
+}

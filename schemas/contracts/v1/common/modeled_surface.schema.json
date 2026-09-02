@@ -1,0 +1,231 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/common/modeled_surface.schema.json",
+  "title": "ModeledSurface candidate profile",
+  "description": "Closed fixture-only modeled-surface candidate preserving model version, training/support limits, resolution, uncertainty, lineage, and derived-only authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile", "status", "modeled_surface_id", "version", "spec_hash",
+    "surface_family", "product_ref", "source_ref", "source_native_id",
+    "producing_authority_ref", "source_role", "support_type",
+    "source_snapshot_refs", "temporal_authority_ref", "times", "space",
+    "model", "uncertainty", "modeled_artifact_refs", "content_digests",
+    "evidence_refs", "lineage", "release_state", "release_ref",
+    "derived_only", "field_truth_allowed", "limitations",
+    "public_use_allowed", "effects"
+  ],
+  "$defs": {
+    "ref": {
+      "type": "string", "minLength": 1, "maxLength": 1024,
+      "pattern": "^\\S+$"
+    },
+    "nullable_ref": {
+      "oneOf": [{"$ref": "#/$defs/ref"}, {"type": "null"}]
+    },
+    "nullable_string": {
+      "oneOf": [
+        {"type": "string", "minLength": 1, "maxLength": 128, "pattern": "\\S"},
+        {"type": "null"}
+      ]
+    },
+    "sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "aware_datetime": {
+      "type": "string", "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "nullable_datetime": {
+      "oneOf": [{"$ref": "#/$defs/aware_datetime"}, {"type": "null"}]
+    },
+    "ref_array": {
+      "type": "array", "maxItems": 64, "uniqueItems": true,
+      "items": {"$ref": "#/$defs/ref"}
+    },
+    "required_ref_array": {
+      "type": "array", "minItems": 1, "maxItems": 64,
+      "uniqueItems": true, "items": {"$ref": "#/$defs/ref"}
+    }
+  },
+  "properties": {
+    "profile": {"const": "kfm.common.modeled-surface.v1"},
+    "status": {"const": "PROPOSED_INACTIVE"},
+    "modeled_surface_id": {
+      "type": "string", "pattern": "^modeled-surface:[a-f0-9]{24}$"
+    },
+    "version": {"const": "1.0.0"},
+    "spec_hash": {"$ref": "#/$defs/sha256"},
+    "surface_family": {
+      "enum": [
+        "ENVIRONMENTAL_INTERPOLATION", "REMOTE_SENSING_DERIVED",
+        "STATISTICAL_SURFACE", "PROCESS_MODEL_OUTPUT", "OTHER"
+      ]
+    },
+    "product_ref": {"$ref": "#/$defs/ref"},
+    "source_ref": {"$ref": "#/$defs/ref"},
+    "source_native_id": {"$ref": "#/$defs/ref"},
+    "producing_authority_ref": {"$ref": "#/$defs/ref"},
+    "source_role": {
+      "enum": ["MODEL", "OBSERVATION", "FORECAST", "CLASSIFICATION", "SURVEY", "CONTEXT"]
+    },
+    "support_type": {
+      "enum": [
+        "MODELED_ESTIMATE", "DIRECT_MEASUREMENT", "PREDICTION",
+        "DERIVED_CLASSIFICATION", "SURVEY_PRODUCT", "AGGREGATE_STATISTIC",
+        "CONTEXT_ONLY"
+      ]
+    },
+    "source_snapshot_refs": {
+      "type": "array", "minItems": 1, "maxItems": 16,
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^kfm:source-snapshot:[a-f0-9]{64}$"}
+    },
+    "temporal_authority_ref": {"$ref": "#/$defs/ref"},
+    "times": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "training_data_cutoff_at", "modeled_at", "valid_from", "valid_to",
+        "retrieved_at", "corrected_at", "superseded_at", "native_timezone"
+      ],
+      "properties": {
+        "training_data_cutoff_at": {"$ref": "#/$defs/aware_datetime"},
+        "modeled_at": {"$ref": "#/$defs/aware_datetime"},
+        "valid_from": {"$ref": "#/$defs/aware_datetime"},
+        "valid_to": {"$ref": "#/$defs/aware_datetime"},
+        "retrieved_at": {"$ref": "#/$defs/aware_datetime"},
+        "corrected_at": {"$ref": "#/$defs/nullable_datetime"},
+        "superseded_at": {"$ref": "#/$defs/nullable_datetime"},
+        "native_timezone": {
+          "type": "string", "minLength": 1, "maxLength": 128,
+          "pattern": "^[A-Za-z][A-Za-z0-9_+\\-/]{1,127}$"
+        }
+      }
+    },
+    "space": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "geography_ref", "scale", "geometry_role", "geometry_digest",
+        "geometry_confidence", "horizontal_crs_ref", "resolution_value",
+        "resolution_unit"
+      ],
+      "properties": {
+        "geography_ref": {"$ref": "#/$defs/nullable_ref"},
+        "scale": {
+          "enum": ["POINT", "GRID", "POLYGON_SET", "REGIONAL", "STATEWIDE", "NATIONAL"]
+        },
+        "geometry_role": {
+          "enum": ["AUTHORITATIVE", "OPERATIONAL", "INDICATIVE", "APPROXIMATE", "DISPLAY_ONLY", "UNRESOLVED"]
+        },
+        "geometry_digest": {
+          "oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]
+        },
+        "geometry_confidence": {
+          "enum": ["CONFIRMED", "HIGH", "MEDIUM", "LOW", "UNRESOLVED"]
+        },
+        "horizontal_crs_ref": {"$ref": "#/$defs/nullable_ref"},
+        "resolution_value": {
+          "oneOf": [
+            {"type": "number", "exclusiveMinimum": 0, "maximum": 1000000000},
+            {"type": "null"}
+          ]
+        },
+        "resolution_unit": {
+          "oneOf": [
+            {"enum": ["METER", "KILOMETER", "DEGREE", "OTHER"]},
+            {"type": "null"}
+          ]
+        }
+      }
+    },
+    "model": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "model_ref", "model_version", "method_ref", "training_dataset_refs",
+        "training_support_summary_ref", "training_extent_ref",
+        "training_time_ref", "parameter_digest", "variable_id", "unit",
+        "extrapolation_state"
+      ],
+      "properties": {
+        "model_ref": {"$ref": "#/$defs/ref"},
+        "model_version": {"$ref": "#/$defs/nullable_string"},
+        "method_ref": {"$ref": "#/$defs/ref"},
+        "training_dataset_refs": {"$ref": "#/$defs/ref_array"},
+        "training_support_summary_ref": {"$ref": "#/$defs/nullable_ref"},
+        "training_extent_ref": {"$ref": "#/$defs/nullable_ref"},
+        "training_time_ref": {"$ref": "#/$defs/nullable_ref"},
+        "parameter_digest": {"$ref": "#/$defs/sha256"},
+        "variable_id": {
+          "type": "string", "minLength": 1, "maxLength": 128,
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$"
+        },
+        "unit": {"type": "string", "minLength": 1, "maxLength": 64, "pattern": "\\S"},
+        "extrapolation_state": {
+          "enum": ["INSIDE_SUPPORT", "PARTIAL_EXTRAPOLATION", "OUTSIDE_SUPPORT", "UNKNOWN"]
+        }
+      }
+    },
+    "uncertainty": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "value_ref", "confidence"],
+      "properties": {
+        "kind": {
+          "enum": [
+            "STANDARD_ERROR", "CONFIDENCE_INTERVAL", "PREDICTION_INTERVAL",
+            "ENSEMBLE_SPREAD", "VALIDATION_METRIC", "NOT_PROVIDED"
+          ]
+        },
+        "value_ref": {"$ref": "#/$defs/nullable_ref"},
+        "confidence": {"enum": ["CONFIRMED", "HIGH", "MEDIUM", "LOW", "UNKNOWN"]}
+      }
+    },
+    "modeled_artifact_refs": {"$ref": "#/$defs/required_ref_array"},
+    "content_digests": {
+      "type": "array", "minItems": 1, "maxItems": 32,
+      "uniqueItems": true, "items": {"$ref": "#/$defs/sha256"}
+    },
+    "evidence_refs": {"$ref": "#/$defs/required_ref_array"},
+    "lineage": {
+      "type": "object", "additionalProperties": false,
+      "required": ["state", "corrects", "superseded_by", "conflict_refs"],
+      "properties": {
+        "state": {"enum": ["CURRENT", "CORRECTED", "SUPERSEDED", "CONFLICTED"]},
+        "corrects": {"$ref": "#/$defs/ref_array"},
+        "superseded_by": {"$ref": "#/$defs/ref_array"},
+        "conflict_refs": {"$ref": "#/$defs/ref_array"}
+      }
+    },
+    "release_state": {"enum": ["UNRELEASED", "RELEASED"]},
+    "release_ref": {"$ref": "#/$defs/nullable_ref"},
+    "derived_only": {"type": "boolean"},
+    "field_truth_allowed": {"type": "boolean"},
+    "limitations": {
+      "type": "array", "minItems": 1, "maxItems": 32,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1, "maxLength": 240, "pattern": "\\S"}
+    },
+    "public_use_allowed": {"type": "boolean"},
+    "effects": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "source_activated", "evidence_resolved", "policy_evaluated",
+        "promoted", "released", "published"
+      ],
+      "properties": {
+        "source_activated": {"type": "boolean"},
+        "evidence_resolved": {"type": "boolean"},
+        "policy_evaluated": {"type": "boolean"},
+        "promoted": {"type": "boolean"},
+        "released": {"type": "boolean"},
+        "published": {"type": "boolean"}
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "contract_doc": "contracts/common/modeled_surface.md",
+    "fixtures_root": "fixtures/contracts/v1/common/modeled_surface/",
+    "validator": "tools/validators/validate_modeled_surface.py",
+    "tests": "tests/validators/test_validate_modeled_surface.py",
+    "authority": "fixture_candidate_only",
+    "public_release_authority": false
+  }
+}

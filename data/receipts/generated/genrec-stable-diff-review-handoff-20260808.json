@@ -1,0 +1,140 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/stable-diff-review-handoff.yml": "sha256:faeb726793457267d6d8e1764f5bbfaf17269e715f0545ab71087aaf67c18808",
+    "docs/runbooks/STABLE_DIFF_REVIEW_HANDOFF.md": "sha256:73817d0155ef229659f983c01894ba4eb21ec2475c42f7fe28f46b096f43ca93",
+    "tests/diff/test_build_stable_diff_review_handoff.py": "sha256:79f224372c3c548d8182c8b6e5b696a98890780d3d43a03347fe421c5cac2489",
+    "tools/ci/build_stable_diff_review_handoff.py": "sha256:c1e7ac6764cb689c01163c453b72180dd8a7c0fa20f9d40819d3333f9b2b43cf"
+  },
+  "artifact_paths": [
+    ".github/workflows/stable-diff-review-handoff.yml",
+    "docs/runbooks/STABLE_DIFF_REVIEW_HANDOFF.md",
+    "tests/diff/test_build_stable_diff_review_handoff.py",
+    "tools/ci/build_stable_diff_review_handoff.py"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "attachment:KFM_Pass_6_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P6-PROG-0012",
+      "id": "attachment:pass6-ordered-review-artifacts",
+      "validated": true
+    },
+    {
+      "evidence_ref": "attachment:KFM_Pass_6_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P6-FEAT-0002",
+      "id": "attachment:pass6-review-handoff-renderers",
+      "validated": true
+    },
+    {
+      "evidence_ref": "attachment:KFM_Pass_6_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P6-FEAT-0003",
+      "id": "attachment:pass6-open-review-binding",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:tools/diff/stable_diff.py@39a82b04c4c8932e11d6b5decafa085c37998837",
+      "id": "repository:stable-diff-contract",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:tools/ci/render_stable_diff_summary.py@39a82b04c4c8932e11d6b5decafa085c37998837",
+      "id": "repository:stable-diff-summary-renderer",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:contracts/governance/ReviewRecord.md@39a82b04c4c8932e11d6b5decafa085c37998837",
+      "id": "repository:review-record-contract",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:contracts/governance/review_authority_binding.md@39a82b04c4c8932e11d6b5decafa085c37998837",
+      "id": "repository:review-authority-binding",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@39a82b04c4c8932e11d6b5decafa085c37998837",
+      "id": "repository:directory-governance",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-08T17:31:29Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Pass_6_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_6_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P6-PROG-0012",
+      "attachment:KFM_Pass_6_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P6-FEAT-0002",
+      "attachment:KFM_Pass_6_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P6-FEAT-0003",
+      "repo:tools/diff/stable_diff.py@39a82b04c4c8932e11d6b5decafa085c37998837",
+      "repo:tools/ci/render_stable_diff_summary.py@39a82b04c4c8932e11d6b5decafa085c37998837",
+      "repo:contracts/governance/ReviewRecord.md@39a82b04c4c8932e11d6b5decafa085c37998837",
+      "repo:contracts/governance/review_authority_binding.md@39a82b04c4c8932e11d6b5decafa085c37998837",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@39a82b04c4c8932e11d6b5decafa085c37998837"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-08-08"
+  },
+  "notes": "Exact-input binding for the existing stable-diff report and deterministic Markdown summary, with declaration-based policy-impact triage and a ReviewRecord subject handoff. It creates no evidence, policy, authenticated review, proof, promotion, release, publication, or public-use authority.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:5b9a1ebbe19cbb5ce557c0536c26e2100252837bda9a3e1445286efdf13b5b3a",
+  "receipt_id": "genrec-stable-diff-review-handoff-20260808",
+  "truth_labels": {
+    ".github/workflows/stable-diff-review-handoff.yml": "CONFIRMED",
+    "docs/runbooks/STABLE_DIFF_REVIEW_HANDOFF.md": "CONFIRMED",
+    "tests/diff/test_build_stable_diff_review_handoff.py": "CONFIRMED",
+    "tools/ci/build_stable_diff_review_handoff.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-unit-tests",
+      "outcome": "PASS",
+      "reason": "Ten deterministic review-handoff tests passed locally with no source-network access."
+    },
+    {
+      "gate": "syntax-and-workflow-parse",
+      "outcome": "PASS",
+      "reason": "Python compilation and local YAML parsing passed for the authored implementation packet."
+    },
+    {
+      "gate": "exact-input-binding-smoke",
+      "outcome": "PASS",
+      "reason": "A local changed-artifact smoke run bound exact artifact, report, summary, and context hashes and produced REVIEW_REQUIRED with POTENTIAL policy impact."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ]
+}

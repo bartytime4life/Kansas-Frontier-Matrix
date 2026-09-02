@@ -1,0 +1,10 @@
+{
+  "status": "PROPOSED",
+  "path": "fixtures/domains/roads-rail-trade/valid/historic_route_claim/chisholm_trail.json",
+  "source_docs": [
+    "docs/domains/roads-rail-trade/MISSING_OR_PLANNED_FILES.md"
+  ],
+  "notes": [
+    "Placeholder created from the current docs/domains markdown inventory."
+  ]
+}

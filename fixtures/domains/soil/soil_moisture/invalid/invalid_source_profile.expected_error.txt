@@ -1,0 +1,4 @@
+GOVERNANCE_STATE_INVALID	$.governance.promotion_eligible
+SOURCE_ROLE_INVALID	$.source_role
+SUPPORT_TYPE_INVALID	$.support_type
+UNDECLARED_GOVERNANCE_FIELD	$.governance.approval_state

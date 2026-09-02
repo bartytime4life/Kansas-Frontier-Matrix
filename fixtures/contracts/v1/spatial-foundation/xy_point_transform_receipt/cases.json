@@ -1,0 +1,98 @@
+{
+  "object_type": "XYPointTransformReceiptFixtureManifest",
+  "schema_version": "1.0.0",
+  "profile": "kfm.spatial-foundation.xy-point-transform-receipt.fixture.v1",
+  "base_candidate": {
+    "object_type": "XYPointTransformReceiptCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.spatial-foundation.xy-point-transform-receipt.fixture.v1",
+    "profile_spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_card": "KFM-P18-INV-174",
+    "observed_at": "2026-08-10T18:30:00Z",
+    "transform_ref": "kfm:xy-point-transform:synthetic:001",
+    "source_table": {
+      "artifact_ref": "kfm:source-table:synthetic-coordinate-table:001",
+      "artifact_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "resolution": "RESOLVED",
+      "source_role": "SYNTHETIC_TEST",
+      "row_count": 100
+    },
+    "axis_mapping": {
+      "x": {"field_name": "longitude_value", "semantic_role": "LONGITUDE"},
+      "y": {"field_name": "latitude_value", "semantic_role": "LATITUDE"}
+    },
+    "coordinate_reference_system": {
+      "crs_ref": "kfm:crs:synthetic-geographic:001",
+      "crs_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "resolution": "RESOLVED",
+      "coordinate_space": "GEOGRAPHIC",
+      "axis_order": "LONGITUDE_LATITUDE",
+      "unit": "DEGREE"
+    },
+    "precision": {
+      "declared_max_decimal_places": 6,
+      "observed_x_decimal_places": 5,
+      "observed_y_decimal_places": 6
+    },
+    "declared_valid_bounds": {"min_x": -180, "min_y": -90, "max_x": 180, "max_y": 90},
+    "observed_coordinate_bounds": {"min_x": -10.25, "min_y": -5.5, "max_x": 12.75, "max_y": 8.125},
+    "validation_summary": {
+      "total_rows": 100,
+      "created_points": 95,
+      "rejected_rows": 5,
+      "missing_coordinate_rows": 2,
+      "out_of_range_rows": 2,
+      "non_finite_rows": 1,
+      "other_invalid_rows": 0,
+      "axis_swap_check": "PASS"
+    },
+    "output_point_set": {
+      "artifact_ref": "kfm:point-set:synthetic-coordinate-table:001",
+      "artifact_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+      "geometry_type": "POINT",
+      "feature_count": 95,
+      "crs_ref": "kfm:crs:synthetic-geographic:001",
+      "crs_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+    },
+    "evidence_refs": [
+      "kfm:evidence-bundle:synthetic-coordinate-source:001",
+      "kfm:evidence-bundle:synthetic-coordinate-validation:001"
+    ],
+    "limitations": [
+      "Synthetic counts and envelopes do not establish the accuracy of any real coordinate source.",
+      "The referenced CRS is opaque to this validator and is not parsed or authenticated."
+    ],
+    "authority_claims": {
+      "observation_authority": false,
+      "coordinate_truth_authority": false,
+      "evidence_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "promotion_authority": false,
+      "release_authority": false,
+      "publication_authority": false,
+      "public_use_authority": false
+    }
+  },
+  "cases": [
+    {"name": "pass_geographic_xy_receipt", "patch": {}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_projected_xy_receipt", "patch": {"axis_mapping": {"x": {"field_name": "east_m", "semantic_role": "EASTING"}, "y": {"field_name": "north_m", "semantic_role": "NORTHING"}}, "coordinate_reference_system": {"crs_ref": "kfm:crs:synthetic-projected:001", "crs_digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444", "coordinate_space": "PROJECTED", "axis_order": "EASTING_NORTHING", "unit": "METRE"}, "declared_valid_bounds": {"min_x": 0, "min_y": 0, "max_x": 1000000, "max_y": 1000000}, "observed_coordinate_bounds": {"min_x": 1000, "min_y": 2000, "max_x": 900000, "max_y": 800000}, "output_point_set": {"crs_ref": "kfm:crs:synthetic-projected:001", "crs_digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444"}}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "abstain_source_table_unresolved", "patch": {"source_table": {"resolution": "UNRESOLVED"}}, "expected": {"outcome": "ABSTAIN", "codes": ["SOURCE_TABLE_UNRESOLVED"]}},
+    {"name": "abstain_crs_unresolved", "patch": {"coordinate_reference_system": {"resolution": "UNRESOLVED"}}, "expected": {"outcome": "ABSTAIN", "codes": ["CRS_UNRESOLVED"]}},
+    {"name": "deny_axis_swap", "patch": {"axis_mapping": {"x": {"semantic_role": "LATITUDE"}, "y": {"semantic_role": "LONGITUDE"}}, "validation_summary": {"axis_swap_check": "FAIL"}}, "expected": {"outcome": "DENY", "codes": ["AXIS_ROLE_PAIR_INVALID"]}},
+    {"name": "deny_axis_fields_not_distinct", "patch": {"axis_mapping": {"y": {"field_name": "longitude_value"}}}, "expected": {"outcome": "DENY", "codes": ["AXIS_FIELDS_NOT_DISTINCT"]}},
+    {"name": "deny_axis_check_inconsistent", "patch": {"validation_summary": {"axis_swap_check": "FAIL"}}, "expected": {"outcome": "DENY", "codes": ["AXIS_SWAP_CHECK_INCONSISTENT"]}},
+    {"name": "deny_out_of_range_coordinates", "patch": {"observed_coordinate_bounds": {"max_x": 181}}, "expected": {"outcome": "DENY", "codes": ["COORDINATE_RANGE_VIOLATION"]}},
+    {"name": "deny_invalid_declared_bounds", "patch": {"declared_valid_bounds": {"min_x": 180}}, "expected": {"outcome": "DENY", "codes": ["BOUNDS_ORDER_INVALID"]}},
+    {"name": "deny_precision_exceeded", "patch": {"precision": {"observed_x_decimal_places": 7}}, "expected": {"outcome": "DENY", "codes": ["PRECISION_EXCEEDED"]}},
+    {"name": "deny_source_row_count_mismatch", "patch": {"validation_summary": {"created_points": 94}, "output_point_set": {"feature_count": 94}}, "expected": {"outcome": "DENY", "codes": ["ROW_COUNT_MISMATCH"]}},
+    {"name": "deny_rejection_reason_count_mismatch", "patch": {"validation_summary": {"other_invalid_rows": 1}}, "expected": {"outcome": "DENY", "codes": ["REJECTION_COUNT_MISMATCH"]}},
+    {"name": "deny_output_count_mismatch", "patch": {"output_point_set": {"feature_count": 94}}, "expected": {"outcome": "DENY", "codes": ["OUTPUT_COUNT_MISMATCH"]}},
+    {"name": "deny_output_crs_mismatch", "patch": {"output_point_set": {"crs_ref": "kfm:crs:synthetic-other:001"}}, "expected": {"outcome": "DENY", "codes": ["OUTPUT_CRS_MISMATCH"]}},
+    {"name": "deny_noncanonical_evidence_refs", "patch": {"evidence_refs": ["kfm:evidence-bundle:synthetic-coordinate-validation:001", "kfm:evidence-bundle:synthetic-coordinate-source:001"]}, "expected": {"outcome": "DENY", "codes": ["EVIDENCE_REFS_NOT_CANONICAL"]}},
+    {"name": "deny_non_utc_timestamp", "patch": {"observed_at": "2026-08-10T18:30:00+00:00"}, "expected": {"outcome": "DENY", "codes": ["UTC_TIMESTAMP_REQUIRED"]}},
+    {"name": "deny_profile_hash_tamper", "patch": {}, "tamper": "profile_hash", "expected": {"outcome": "DENY", "codes": ["PROFILE_SPEC_HASH_MISMATCH"]}},
+    {"name": "error_missing_crs", "patch": {"coordinate_reference_system": null}, "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}},
+    {"name": "error_unknown_field", "patch": {"coordinate_payload": [1, 2]}, "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}}
+  ]
+}

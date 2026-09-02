@@ -1,0 +1,196 @@
+{
+  "receipt_id": "genrec-schemas-readme-c0498cf8",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "schemas/README.md"
+  ],
+  "artifact_hashes": {
+    "schemas/README.md": "sha256:c0498cf831007acbeae9a91df50340f8ae8633cb555466838b9c98fbfc5b714e"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-07-23-session"
+  },
+  "prompt_or_contract": "sha256:2fed671fcafb138abd1482b81de823fbc6b1b4edbd1ed0c462459bfe1d9297e3",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "file_search",
+      "Python validation",
+      "container validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM Markdown Modernization & GitHub Documentation Implementation Agent v4.0.0",
+      "Directory Rules.pdf",
+      "Kansas Frontier Matrix — AI Build Operating Contract.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/0ca82aaaf6aac8e7fe5e1a91892c2ffb2132d050",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0ca82aaaf6aac8e7fe5e1a91892c2ffb2132d050/schemas/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0ca82aaaf6aac8e7fe5e1a91892c2ffb2132d050/schemas/contracts/v1/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0ca82aaaf6aac8e7fe5e1a91892c2ffb2132d050/schemas/policy/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0ca82aaaf6aac8e7fe5e1a91892c2ffb2132d050/schemas/tests/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0ca82aaaf6aac8e7fe5e1a91892c2ffb2132d050/schemas/evidence/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0ca82aaaf6aac8e7fe5e1a91892c2ffb2132d050/schemas/governance/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0ca82aaaf6aac8e7fe5e1a91892c2ffb2132d050/schemas/maplibre/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0ca82aaaf6aac8e7fe5e1a91892c2ffb2132d050/schemas/people-dna-land/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0ca82aaaf6aac8e7fe5e1a91892c2ffb2132d050/docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0ca82aaaf6aac8e7fe5e1a91892c2ffb2132d050/docs/adr/ADR-0002-contracts-vs-schemas-split.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0ca82aaaf6aac8e7fe5e1a91892c2ffb2132d050/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0ca82aaaf6aac8e7fe5e1a91892c2ffb2132d050/.github/workflows/schema-validation.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0ca82aaaf6aac8e7fe5e1a91892c2ffb2132d050/.github/workflows/validator-suite.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0ca82aaaf6aac8e7fe5e1a91892c2ffb2132d050/tools/validators/_common/run_all.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/agent/modernize-schemas-readme-20260723/schemas/README.md",
+      "attached://KFM-Markdown-Modernization-Agent-v4.0.0"
+    ]
+  },
+  "truth_labels": {
+    "schemas/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-preflight",
+      "outcome": "PASS",
+      "reason": "Repository identity, permissions, default branch, current base, target blob, schema home, child and compatibility lanes, ADRs, workflows, commands, validator runner, CODEOWNERS, Directory Rules, drift register, and generated-receipt contract were inspected."
+    },
+    {
+      "gate": "complete-baseline-read",
+      "outcome": "PASS",
+      "reason": "All 195 lines of the v0.3 target were read, including metadata, headings, badges, tables, commands, links, open questions, and final line."
+    },
+    {
+      "gate": "base-target-and-overlap-concurrency",
+      "outcome": "PASS",
+      "reason": "Main remained 0ca82aaaf6aac8e7fe5e1a91892c2ffb2132d050, the target remained blob 43c989a3bead8289bdbaba1a645980f95b0baf3a before mutation, and no overlapping open PR or branch was surfaced."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The existing canonical schemas/ root README was updated in place. No root, schema family, contract, policy, fixture, validator, lifecycle phase, proof, release, or public path was created, moved, renamed, or canonized."
+    },
+    {
+      "gate": "current-evidence-refresh",
+      "outcome": "PASS",
+      "reason": "The README was reconciled against current canonical-v1 workflow checks, six aggregate validators, proposed ADR status, CODEOWNERS routing, and inspected compatibility lanes."
+    },
+    {
+      "gate": "directory-rules-readme-order",
+      "outcome": "PASS",
+      "reason": "The first twelve H2 sections exactly match Purpose, Authority level, Status, What belongs here, What does NOT belong here, Inputs, Outputs, Validation, Review burden, Related folders, ADRs, and Last reviewed."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "MarkdownIt parsed 3,565 tokens; one H1 and twenty-four H2 sections were found; fenced blocks are balanced."
+    },
+    {
+      "gate": "anchors-links-and-navigation",
+      "outcome": "PASS",
+      "reason": "Forty-three internal fragments resolve; sixteen custom anchors are unique; legacy fragments are retained; twenty-two repository-relative destinations were inspected."
+    },
+    {
+      "gate": "badge-and-presentation-admission",
+      "outcome": "PASS",
+      "reason": "Six static Shields badge URLs link to evidence-bearing sections. No dynamic CI, release, coverage, registry, or maturity badge was added."
+    },
+    {
+      "gate": "badge-endpoint-network",
+      "outcome": "SKIPPED",
+      "reason": "Badge endpoint reachability was not required to verify the repository content and was not claimed."
+    },
+    {
+      "gate": "no-loss-ledger",
+      "outcome": "PASS",
+      "reason": "Stable identity, root purpose, authority split, child lanes, authoring rules, alias strictness, fixture polarity, ID guidance, versioning, change planning, open questions, and legacy fragments were preserved."
+    },
+    {
+      "gate": "secret-and-sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "No private key block, common GitHub/OpenAI/AWS token pattern, credential, private endpoint, protected payload, sensitive location, living-person record, or genomic record was introduced."
+    },
+    {
+      "gate": "remote-readback",
+      "outcome": "PASS",
+      "reason": "GitHub returned blob 15c84131862c00584664dfafa497c012ae765d33, matching the locally computed Git blob for the validated 49,382-byte README."
+    },
+    {
+      "gate": "generated-receipt-structure",
+      "outcome": "PASS",
+      "reason": "Required fields, allowed truth labels, validation outcomes, artifact/hash closure, model metadata, citations, timestamps, and pending human-review state were checked against the inspected generated-receipt contract."
+    },
+    {
+      "gate": "runtime-and-executable-tests",
+      "outcome": "SKIPPED",
+      "reason": "Documentation/provenance-only change; no schema, contract, fixture, validator, test, policy, workflow, package, runtime, release, or public behavior changed."
+    },
+    {
+      "gate": "repository-native-ci",
+      "outcome": "SKIPPED",
+      "reason": "Repository checks run after draft pull-request creation and were unavailable at receipt emission time."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "KFM-MARKDOWN-MODERNIZATION-V4",
+      "validated": true,
+      "evidence_ref": "attached://KFM-Markdown-Modernization-Agent-v4.0.0"
+    },
+    {
+      "id": "KFM-DIRECTORY-RULES",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/0ca82aaaf6aac8e7fe5e1a91892c2ffb2132d050/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "SCHEMAS-README-PRIOR",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/0ca82aaaf6aac8e7fe5e1a91892c2ffb2132d050/schemas/README.md"
+    },
+    {
+      "id": "SCHEMA-HOME-ADR",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/0ca82aaaf6aac8e7fe5e1a91892c2ffb2132d050/docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md"
+    },
+    {
+      "id": "SCHEMA-VALIDATION-WORKFLOW",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/0ca82aaaf6aac8e7fe5e1a91892c2ffb2132d050/.github/workflows/schema-validation.yml"
+    },
+    {
+      "id": "VALIDATOR-SUITE-WORKFLOW",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/0ca82aaaf6aac8e7fe5e1a91892c2ffb2132d050/.github/workflows/validator-suite.yml"
+    },
+    {
+      "id": "AGGREGATE-RUNNER",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/0ca82aaaf6aac8e7fe5e1a91892c2ffb2132d050/tools/validators/_common/run_all.py"
+    },
+    {
+      "id": "GENERATED-RECEIPT-SCHEMA",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/0ca82aaaf6aac8e7fe5e1a91892c2ffb2132d050/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-23T18:21:12Z",
+  "emitter": "ai-builder/openai-gpt-5.6-pro",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored documentation-only modernization on a scoped review branch. The schemas root README is upgraded in place, reconciled to the current six-validator and workflow surface, and reordered to the required root README contract. It preserves the machine-shape boundary, records proposed ADR status and compatibility debt, and makes no executable, schema, contract, fixture, validator, policy, lifecycle, release, deployment, or public-surface change. Human review remains pending; this receipt is process provenance, not approval, schema proof, release authority, or publication authority."
+}

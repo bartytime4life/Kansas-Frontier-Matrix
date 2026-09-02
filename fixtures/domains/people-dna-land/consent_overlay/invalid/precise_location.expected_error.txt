@@ -1,0 +1,2 @@
+SENSITIVE_LOCATION_DENIED	$.events[0].place_bucket.coordinates
+UNDECLARED_PLACE_FIELD	$.events[0].place_bucket.coordinates

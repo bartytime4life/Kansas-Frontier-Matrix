@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/hydrology/nhdplus_waterbody_crosswalk.schema.json",
+  "title": "NHDPlus waterbody identifier crosswalk",
+  "description": "Closed fixture-only KFM profile for the USGS NHDPlusHR Permanent Identifier to NHDPlusV2 COMID waterbody crosswalk.",
+  "type": "object",
+  "additionalProperties": false,
+  "x-kfm": {
+    "status": "PROPOSED",
+    "contract_doc": "contracts/domains/hydrology/nhdplus_waterbody_crosswalk.md",
+    "fixtures_root": "fixtures/domains/hydrology/nhdplus_waterbody_crosswalk/",
+    "validator": "tools/validators/domains/hydrology/validate_nhdplus_waterbody_crosswalk.py",
+    "source_release": "https://doi.org/10.5066/P13N85SW",
+    "source_bytes_included": false
+  },
+  "required": [
+    "schema_version",
+    "data_class",
+    "source_release",
+    "crosswalk_scope",
+    "records",
+    "spec_hash"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "data_class": {
+      "const": "synthetic_fixture"
+    },
+    "source_release": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["publisher", "doi", "release_date", "source_file", "rights"],
+      "properties": {
+        "publisher": {"const": "U.S. Geological Survey"},
+        "doi": {"const": "10.5066/P13N85SW"},
+        "release_date": {"const": "2026-02-26"},
+        "source_file": {"const": "NHDPlusHR_NHDPlusV2.csv"},
+        "rights": {"const": "CC0-1.0"}
+      }
+    },
+    "crosswalk_scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_system",
+        "source_identifier",
+        "target_system",
+        "target_identifier",
+        "feature_type",
+        "relation_basis"
+      ],
+      "properties": {
+        "source_system": {"const": "NHDPlusHR"},
+        "source_identifier": {"const": "Permanent Identifier"},
+        "target_system": {"const": "NHDPlusV2"},
+        "target_identifier": {"const": "COMID"},
+        "feature_type": {"const": "waterbody"},
+        "relation_basis": {"const": "spatial_overlap"}
+      }
+    },
+    "records": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 512,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "nhdplus_hr_permanent_identifier",
+          "nhdplus_v2_comid",
+          "nhdplus_hr_area_m2",
+          "nhdplus_v2_area_m2",
+          "shared_area_m2",
+          "relationship_type",
+          "outcome"
+        ],
+        "properties": {
+          "nhdplus_hr_permanent_identifier": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9:._-]*$"
+          },
+          "nhdplus_v2_comid": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9223372036854775807
+          },
+          "nhdplus_hr_area_m2": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "nhdplus_v2_area_m2": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "shared_area_m2": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "relationship_type": {
+            "enum": ["exact", "split", "merge", "complex"]
+          },
+          "outcome": {
+            "enum": ["ANSWER", "ABSTAIN"]
+          }
+        }
+      }
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    }
+  }
+}

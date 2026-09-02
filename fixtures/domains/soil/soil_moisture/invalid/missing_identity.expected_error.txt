@@ -1,0 +1,7 @@
+EVIDENCE_REFS_INVALID	$.evidence_refs
+RECORD_ID_MISSING	$.record_id
+RUN_RECEIPT_REF_MISSING	$.run_receipt_ref
+SCHEMA_VERSION_INVALID	$.schema_version
+SOURCE_DESCRIPTOR_REF_MISSING	$.source_descriptor_ref
+SOURCE_ROLE_INVALID	$.source_role
+SPEC_HASH_INVALID	$.spec_hash

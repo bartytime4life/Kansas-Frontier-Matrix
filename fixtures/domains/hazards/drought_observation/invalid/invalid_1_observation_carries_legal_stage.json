@@ -1,0 +1,29 @@
+{
+  "_fixture_meta": {
+    "fixture_label": "invalid_observation_carries_legal_stage",
+    "fault": "observation_carries_legal_stage",
+    "notes": "DroughtObservation must never carry a legal stage. The 'legal_stage' field is forbidden."
+  },
+  "object_type": "DroughtObservation",
+  "schema_version": "v1",
+  "observation_id": "obs:usdm:kansas:2026-07-29",
+  "profile_version": "0.1.0",
+  "source_ref": "src:usdm-weekly",
+  "source_resolution_status": "bound",
+  "observed_at": "2026-07-29T08:00:00Z",
+  "observed_interval_end": null,
+  "retrieved_at": "2026-08-03T12:00:00Z",
+  "publication_time": null,
+  "geometry_ref": "kfm://geometry/usdm/kansas/2026-07-29",
+  "geometry_resolution_status": "bound",
+  "geometry_version": null,
+  "classification_vocabulary": "usdm_d0_d4",
+  "source_native_severity": "D2",
+  "method_ref": null,
+  "superseded_by": null,
+  "correction_of": null,
+  "rights_status": "unknown",
+  "sensitivity": "public",
+  "release_posture": "not_released",
+  "legal_stage": "emergency"
+}

@@ -1,0 +1,198 @@
+{
+  "receipt_id": "genrec-policy-opa-readme-d2a3493f",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "policy/opa/README.md"
+  ],
+  "artifact_hashes": {
+    "policy/opa/README.md": "sha256:d2a3493ff9002efdd30aef1277f6a1418661fa32cf74d26125c4b755dc081df6"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-08-13"
+  },
+  "prompt_or_contract": "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local git",
+      "repository-native deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+      "sha256:b767cdd3321d1f21bf5444938c339c07b30dbf3e2c16c2c745b5c5017a2096e3",
+      "sha256:3d99a89751cc2668eda343e14700b674b251dbbf7f8d97e33d66b35d520bc183",
+      "sha256:a178f15f024d911dc2b9520c66bde46f94e327d3444a5569f0ef884ab6ddab71",
+      "sha256:19e8d376e9e1aa9193af7d2318a27453a380e27c768f1916ba77a97b238b370d",
+      "sha256:af7c6fff7deadc37d76b9792ff39b917a4a19aced180152d1c1d999cbdce0dfa",
+      "sha256:cc4a93ba8deb9f1d44febe579a4384762d25d5b10e0504dbbd624e4775caca66",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:231f2f09adb227070f1e54fb02ff36f5382f049bd0a56310115d2ab422e96ced"
+    ],
+    "attached_docs": [
+      "Pasted text(20260813-131005).txt"
+    ],
+    "evidence_refs": [
+      "repo:commit@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:policy/opa/README.md@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:policy/opa/.gitkeep@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:policy/README.md@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:policy/rego/README.md@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:policy/bundles/README.md@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:policy/runtime/README.md@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:policy/promotion/README.md@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:packages/policy-runtime/README.md@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:contracts/policy/policy_input_bundle.md@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:contracts/policy/policy_decision.md@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:schemas/contracts/v1/policy/README.md@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:.github/workflows/policy-test.yml@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:.github/workflows/pass12-release-policy-v1.yml@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:docs/standards/RUN_RECEIPT.md@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:docs/domains/flora/FILE_SYSTEM_PLAN.md@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:docs/doctrine/directory-rules.md@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:control_plane/root_registry.yaml@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:.github/CODEOWNERS@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:CONTRIBUTING.md@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:tools/validators/validate_generated_receipt.py@ad31275429d715ad92002f8f2e160299193c9f50"
+    ]
+  },
+  "truth_labels": {
+    "policy/opa/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Current main and target blobs, complete policy/opa tree, target history, open pull-request overlap, accepted Directory Rules and ADR-0029, parent policy authority, root registry projection, contribution contract, adjacent Rego, bundle, runtime-policy and policy-runtime boundaries, OPA workflow definitions, draft OPA path references, and generated-receipt requirements were inspected before authoring."
+    },
+    {
+      "gate": "opa-path-convergence-boundary",
+      "outcome": "PASS",
+      "reason": "The README records the exact placeholder-only tree, surfaces the proposed but absent policy/opa/promotion path, preserves the general evaluator hold, and prohibits parallel rule-source, bundle, evaluator, configuration, decision, release, and publication writers without selecting this path's final disposition."
+    },
+    {
+      "gate": "markdown-structure-and-metadata",
+      "outcome": "PASS",
+      "reason": "The final README has one H1, logical heading progression, balanced language-tagged fences, no tabs or diff whitespace errors, UTF-8-compatible text, a final newline, and one valid KFM_META_BLOCK_V2 envelope. The metadata validator reports only the expected review-only registry-add candidate when registry comparison is enabled."
+    },
+    {
+      "gate": "local-links-and-fragments",
+      "outcome": "PASS",
+      "reason": "The repository-native no-network link checker resolved all 66 local README targets and fragments after sparse-checkout materialization of tracked contract targets; no external URL was added or checked."
+    },
+    {
+      "gate": "documentation-validator-suites",
+      "outcome": "PASS",
+      "reason": "All 18 bounded local-link validator tests and all 24 metadata-block validator tests passed with no network access."
+    },
+    {
+      "gate": "placeholder-tree-and-reference-review",
+      "outcome": "PASS",
+      "reason": "The tracked policy/opa directory contains only README.md and a zero-byte .gitkeep; bounded search found no operational payload or consumer and found only the disclosed draft policy/opa references."
+    },
+    {
+      "gate": "generated-receipt-schema-and-hash",
+      "outcome": "PASS",
+      "reason": "The receipt parses without duplicate keys, conforms to GENERATED_RECEIPT contract version 3.0.0 and cross-field rules, and binds the final README SHA-256 digest."
+    },
+    {
+      "gate": "sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "The authored artifacts contain no credentials, private endpoints, signing material, production policy data, protected payloads, personal records, exact sensitive locations, harmful precision, hidden reasoning, or actor-authority claims."
+    },
+    {
+      "gate": "opa-policy-runtime-and-public-behavior",
+      "outcome": "SKIPPED",
+      "reason": "Documentation and provenance only; no Rego, bundle, manifest, selector, OPA binary, evaluator, adapter, config, contract, schema, fixture, test, workflow, consumer, decision, receipt instance beyond authoring provenance, release, deployment, publication, or public behavior changes."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "The draft remains pending authorized human review; no OPA-path decision, evaluator adoption, bundle activation, independent approval, merge authority, release, deployment, publication, or public-use authority is created."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "policy/README.md"
+  ],
+  "citations": [
+    {
+      "id": "opa-placeholder-tree",
+      "validated": true,
+      "evidence_ref": "repo:policy/opa/README.md@ad31275429d715ad92002f8f2e160299193c9f50"
+    },
+    {
+      "id": "parent-policy-authority-and-opa-hold",
+      "validated": true,
+      "evidence_ref": "repo:policy/README.md@ad31275429d715ad92002f8f2e160299193c9f50"
+    },
+    {
+      "id": "current-rego-source-lane",
+      "validated": true,
+      "evidence_ref": "repo:policy/rego/README.md@ad31275429d715ad92002f8f2e160299193c9f50"
+    },
+    {
+      "id": "separate-policy-bundle-boundary",
+      "validated": true,
+      "evidence_ref": "repo:policy/bundles/README.md@ad31275429d715ad92002f8f2e160299193c9f50"
+    },
+    {
+      "id": "placeholder-policy-runtime-package",
+      "validated": true,
+      "evidence_ref": "repo:packages/policy-runtime/README.md@ad31275429d715ad92002f8f2e160299193c9f50"
+    },
+    {
+      "id": "general-opa-readiness-hold",
+      "validated": true,
+      "evidence_ref": "repo:.github/workflows/policy-test.yml@ad31275429d715ad92002f8f2e160299193c9f50"
+    },
+    {
+      "id": "bounded-checksum-pinned-opa-execution",
+      "validated": true,
+      "evidence_ref": "repo:.github/workflows/pass12-release-policy-v1.yml@ad31275429d715ad92002f8f2e160299193c9f50"
+    },
+    {
+      "id": "proposed-opa-promotion-path-reference",
+      "validated": true,
+      "evidence_ref": "repo:docs/standards/RUN_RECEIPT.md@ad31275429d715ad92002f8f2e160299193c9f50"
+    },
+    {
+      "id": "directory-placement-and-no-parallel-authority",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@ad31275429d715ad92002f8f2e160299193c9f50"
+    },
+    {
+      "id": "generated-receipt-machine-shape",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@ad31275429d715ad92002f8f2e160299193c9f50"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-13T14:42:29Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-led modernization of the one-newline policy/opa README. The update records the exact placeholder-only tree, the proposed but absent policy/opa/promotion reference, the existing Rego source and bundle packaging lanes, the placeholder evaluator package, the bounded OPA workflow, the general evaluator hold, and a no-parallel-writers contributor contract. It changes no policy rule, package, bundle, manifest, selector, evaluator, configuration, contract, schema, fixture, test, workflow, consumer, decision, release, deployment, publication, or public behavior. This receipt is provenance and process memory rather than approval, proof, policy acceptance, OPA adoption, path authority, independent review, release authority, or publication authority; authorized human review remains pending."
+}

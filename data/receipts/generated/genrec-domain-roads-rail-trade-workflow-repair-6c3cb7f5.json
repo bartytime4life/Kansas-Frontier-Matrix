@@ -1,0 +1,73 @@
+{
+  "receipt_id": "genrec-domain-roads-rail-trade-workflow-repair-6c3cb7f5",
+  "contract_version": "3.0.0",
+  "receipt_type": "GenerationReceipt",
+  "status": "PROPOSED",
+  "generated_at": "2026-07-18T00:00:00-05:00",
+  "repository": "bartytime4life/Kansas-Frontier-Matrix",
+  "base_commit": "527ac01444c23046f0406dbb9e4cf5b2a74cd4cc",
+  "branch": "agent/domain-roads-rail-trade-workflow-repair-20260718",
+  "target_path": ".github/workflows/domain-roads-rail-trade.yml",
+  "previous_blob": "1fdf27da8b88678429b3a7c5bb4ac7e950d8d348",
+  "new_blob": "6c3cb7f522fc58082f1858f4038a667c954f3ac9",
+  "supersedes_receipt": "data/receipts/generated/genrec-domain-roads-rail-trade-workflow-1fdf27da.json",
+  "content_digest": {
+    "algorithm": "git-blob-sha1",
+    "value": "6c3cb7f522fc58082f1858f4038a667c954f3ac9"
+  },
+  "correction_basis": {
+    "workflow_run_id": 29654753617,
+    "job_id": 88106985021,
+    "finding": "The initial readiness detector treated the repository's known test_placeholder function, whose only statement is assert True, as substantive domain test coverage and failed the validation job.",
+    "resolution": "Recognize only that exact assert-True smoke scaffold as non-semantic placeholder coverage; continue to fail closed when any other test function, test class, or changed smoke body appears."
+  },
+  "truth_labels": {
+    "confirmed": [
+      "Merged pull request 1416 replaced the TODO-only Roads/Rail/Trade workflow with bounded readiness checks.",
+      "The first proposed-head run completed the proof and release-hold jobs successfully and failed validate-roads-rail-trade.",
+      "tests/domains/roads-rail-trade/test_roads_rail_trade_smoke.py contains test_placeholder whose only statement is assert True.",
+      "That smoke function is executable Python but does not establish semantic Roads/Rail/Trade validation coverage.",
+      "The corrected workflow preserves the workflow name and all three job ids.",
+      "The corrected workflow continues to parse current PROPOSED schemas and placeholder fixtures and continues to detect substantive tests and validator bodies."
+    ],
+    "proposed": [
+      "Recognizing the exact assert-True scaffold while failing on any substantive test is the smallest safe correction.",
+      "The historical receipt should remain in place because it accurately records the first merged workflow version; this receipt records the corrective change."
+    ],
+    "needs_verification": [
+      "Final-head GitHub Actions conclusions for the repair commit.",
+      "Accepted roads-rail-trade versus transport schema and contract topology.",
+      "Accepted semantic test suite, validator ownership, policy runtime, proof producer, release dry-run, correction, withdrawal, and rollback contracts.",
+      "Branch-protection dependencies, independent transport/safety review ownership, and immutable action pinning."
+    ]
+  },
+  "changes": [
+    "Added the known smoke-test path to required boundary checks.",
+    "Replaced blanket executable-test rejection with AST inspection that confirms the exact test_placeholder/Assert(True) scaffold.",
+    "Continued to fail closed when any other test function, test class, or changed smoke body appears.",
+    "Updated the validation summary to distinguish scaffold recognition from semantic test coverage.",
+    "Preserved schema parsing, fixture parsing, validator-body detection, policy posture, proof hold, release hold, authority boundaries, and no-network behavior."
+  ],
+  "authority_boundary": "This correction does not convert the assert-True smoke scaffold into test coverage. A green held result remains repository-readiness evidence only, not route, network, legal-access, live-closure, safe-passage, bridge-condition, rail-status, proof, release, or publication authority.",
+  "directory_rules_basis": [
+    ".github/workflows remains the existing CI orchestration location.",
+    "tests remains the enforceability root, and a placeholder test must not be represented as enforceability proof.",
+    "data/receipts/generated remains the existing generated process-memory lane.",
+    "The prior receipt remains immutable historical process memory; this new receipt records the correction instead of rewriting history."
+  ],
+  "validation": {
+    "workflow_yaml_parse": "PASS",
+    "workflow_and_job_identities_preserved": "PASS",
+    "known_assert_true_smoke_scaffold": "RECOGNIZED_NOT_TREATED_AS_COVERAGE",
+    "exact_changed_paths": [
+      ".github/workflows/domain-roads-rail-trade.yml",
+      "data/receipts/generated/genrec-domain-roads-rail-trade-workflow-repair-6c3cb7f5.json"
+    ],
+    "final_head_ci": "PENDING",
+    "human_review": "PENDING"
+  },
+  "rollback": {
+    "strategy": "Close the repair pull request without merge. If merged and an emergency rollback is required, revert the repair commit; note that doing so restores the known false-failing detector.",
+    "restores_blob": "1fdf27da8b88678429b3a7c5bb4ac7e950d8d348"
+  }
+}

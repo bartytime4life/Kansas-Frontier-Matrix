@@ -1,0 +1,1 @@
+{"assessment_id":"kfm:source-health:demo.bad","source_id":"source:demo","probed_at":"2026-08-08T00:00:00Z","last_success_at":"2026-08-07T23:00:00Z","freshness_deadline":"2026-08-09T00:00:00Z","etag":null,"last_modified":null,"result_class":"TIMEOUT","health_outcome":"HEALTHY","material_change":false,"reasons":["RETRIEVAL_FAILED"]}

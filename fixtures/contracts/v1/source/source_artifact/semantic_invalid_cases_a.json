@@ -1,0 +1,250 @@
+[
+  {
+    "expected_codes": [
+      "CONFLICT_GROUP_REQUIRED"
+    ],
+    "metadata": {
+      "artifact_id": "source-artifact:sha256:6d18edfe75b3149104038dcbca4d0096bbcb923f0f9fa4b49f4815344e75bb90",
+      "byte_length": 43,
+      "content_digest": "sha256:6d18edfe75b3149104038dcbca4d0096bbcb923f0f9fa4b49f4815344e75bb90",
+      "governance": {
+        "authority_created": false,
+        "public_use_allowed": false,
+        "release_ref": null,
+        "spec_hash": "sha256:83346b3bb0d6452bafe9b270e608daae6ab47afde406cc3edd24e802f2eec160"
+      },
+      "immutable_storage_ref": "cas:sha256:6d18edfe75b3149104038dcbca4d0096bbcb923f0f9fa4b49f4815344e75bb90",
+      "ingest_receipt_ref": "ingest-receipt:synthetic:source-artifact-fixture:20260804T080000Z",
+      "lineage": {
+        "conflict_group_ref": null,
+        "correction_refs": [],
+        "supersedes_artifact_ref": null
+      },
+      "media_type": "application/geo+json",
+      "object_type": "SourceArtifact",
+      "parser": {
+        "parser_id": "parser:synthetic-source-artifact",
+        "spec_digest": "sha256:cee38cfb93bddaaa60b09b8dd369abd9001a2671c9703998380eb81881a34959",
+        "version": "1.0.0"
+      },
+      "request_context": {
+        "body_digest": null,
+        "header_names": [
+          "accept"
+        ],
+        "method": "GET",
+        "parameter_names": [],
+        "profile_id": "request-profile:synthetic-source-artifact-v1",
+        "secrets_embedded": false
+      },
+      "retrieval_outcome": "SOURCE_CONFLICT",
+      "retrieved_at": "2026-08-04T08:00:00Z",
+      "rights_snapshot": {
+        "access_class": "public",
+        "captured_at": "2026-08-04T07:59:00Z",
+        "license_id": "CC0-1.0",
+        "redistribution_status": "allowed",
+        "review_state": "reviewed",
+        "terms_ref": "terms:synthetic-fixture-only"
+      },
+      "schema_version": "1.0.0",
+      "source_descriptor_ref": "source-descriptor:src:synthetic:source-artifact-fixture:1.0.0",
+      "source_locator": {
+        "first_party_authority": true,
+        "kind": "https_url",
+        "locator_digest": "sha256:c5883e79f275cdb214b41ee8c40f62b052aa8cd30ff70b756726c151d07f8155",
+        "value": "https://example.invalid/official/conflict/synthetic-a"
+      },
+      "source_reported_at": "2026-08-04T07:45:00Z",
+      "source_surface_type": "gis_package",
+      "status_code": 200
+    },
+    "name": "invalid_conflict_missing_group"
+  },
+  {
+    "expected_codes": [
+      "SOURCE_TIME_AFTER_RETRIEVAL"
+    ],
+    "metadata": {
+      "artifact_id": "source-artifact:sha256:6ff8d7ab948a03b4b69c1fcdb76bbab71007edfd0b0d03f09737ce99fc79dc09",
+      "byte_length": 47,
+      "content_digest": "sha256:6ff8d7ab948a03b4b69c1fcdb76bbab71007edfd0b0d03f09737ce99fc79dc09",
+      "governance": {
+        "authority_created": false,
+        "public_use_allowed": false,
+        "release_ref": null,
+        "spec_hash": "sha256:83346b3bb0d6452bafe9b270e608daae6ab47afde406cc3edd24e802f2eec160"
+      },
+      "immutable_storage_ref": "cas:sha256:6ff8d7ab948a03b4b69c1fcdb76bbab71007edfd0b0d03f09737ce99fc79dc09",
+      "ingest_receipt_ref": "ingest-receipt:synthetic:source-artifact-fixture:20260804T080000Z",
+      "lineage": {
+        "conflict_group_ref": null,
+        "correction_refs": [],
+        "supersedes_artifact_ref": null
+      },
+      "media_type": "application/json",
+      "object_type": "SourceArtifact",
+      "parser": {
+        "parser_id": "parser:synthetic-source-artifact",
+        "spec_digest": "sha256:cee38cfb93bddaaa60b09b8dd369abd9001a2671c9703998380eb81881a34959",
+        "version": "1.0.0"
+      },
+      "request_context": {
+        "body_digest": null,
+        "header_names": [
+          "accept"
+        ],
+        "method": "GET",
+        "parameter_names": [],
+        "profile_id": "request-profile:synthetic-source-artifact-v1",
+        "secrets_embedded": false
+      },
+      "retrieval_outcome": "FETCHED",
+      "retrieved_at": "2026-08-04T08:00:00Z",
+      "rights_snapshot": {
+        "access_class": "public",
+        "captured_at": "2026-08-04T07:59:00Z",
+        "license_id": "CC0-1.0",
+        "redistribution_status": "allowed",
+        "review_state": "reviewed",
+        "terms_ref": "terms:synthetic-fixture-only"
+      },
+      "schema_version": "1.0.0",
+      "source_descriptor_ref": "source-descriptor:src:synthetic:source-artifact-fixture:1.0.0",
+      "source_locator": {
+        "first_party_authority": true,
+        "kind": "api_record",
+        "locator_digest": "sha256:62f6d68ea6324ce61fa525019f68f8eeb60572154a609ce6bce317975053f9ab",
+        "value": "https://example.invalid/official/records/synthetic-001"
+      },
+      "source_reported_at": "2026-08-04T08:01:00Z",
+      "source_surface_type": "api_record",
+      "status_code": 200
+    },
+    "name": "invalid_future_source_time"
+  },
+  {
+    "expected_codes": [
+      "ARTIFACT_ID_MISMATCH"
+    ],
+    "metadata": {
+      "artifact_id": "source-artifact:sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "byte_length": 47,
+      "content_digest": "sha256:6ff8d7ab948a03b4b69c1fcdb76bbab71007edfd0b0d03f09737ce99fc79dc09",
+      "governance": {
+        "authority_created": false,
+        "public_use_allowed": false,
+        "release_ref": null,
+        "spec_hash": "sha256:83346b3bb0d6452bafe9b270e608daae6ab47afde406cc3edd24e802f2eec160"
+      },
+      "immutable_storage_ref": "cas:sha256:6ff8d7ab948a03b4b69c1fcdb76bbab71007edfd0b0d03f09737ce99fc79dc09",
+      "ingest_receipt_ref": "ingest-receipt:synthetic:source-artifact-fixture:20260804T080000Z",
+      "lineage": {
+        "conflict_group_ref": null,
+        "correction_refs": [],
+        "supersedes_artifact_ref": null
+      },
+      "media_type": "application/json",
+      "object_type": "SourceArtifact",
+      "parser": {
+        "parser_id": "parser:synthetic-source-artifact",
+        "spec_digest": "sha256:cee38cfb93bddaaa60b09b8dd369abd9001a2671c9703998380eb81881a34959",
+        "version": "1.0.0"
+      },
+      "request_context": {
+        "body_digest": null,
+        "header_names": [
+          "accept"
+        ],
+        "method": "GET",
+        "parameter_names": [],
+        "profile_id": "request-profile:synthetic-source-artifact-v1",
+        "secrets_embedded": false
+      },
+      "retrieval_outcome": "FETCHED",
+      "retrieved_at": "2026-08-04T08:00:00Z",
+      "rights_snapshot": {
+        "access_class": "public",
+        "captured_at": "2026-08-04T07:59:00Z",
+        "license_id": "CC0-1.0",
+        "redistribution_status": "allowed",
+        "review_state": "reviewed",
+        "terms_ref": "terms:synthetic-fixture-only"
+      },
+      "schema_version": "1.0.0",
+      "source_descriptor_ref": "source-descriptor:src:synthetic:source-artifact-fixture:1.0.0",
+      "source_locator": {
+        "first_party_authority": true,
+        "kind": "api_record",
+        "locator_digest": "sha256:62f6d68ea6324ce61fa525019f68f8eeb60572154a609ce6bce317975053f9ab",
+        "value": "https://example.invalid/official/records/synthetic-001"
+      },
+      "source_reported_at": "2026-08-04T07:45:00Z",
+      "source_surface_type": "api_record",
+      "status_code": 200
+    },
+    "name": "invalid_identity_mismatch"
+  },
+  {
+    "expected_codes": [
+      "LOCATOR_UNSAFE"
+    ],
+    "metadata": {
+      "artifact_id": "source-artifact:sha256:6ff8d7ab948a03b4b69c1fcdb76bbab71007edfd0b0d03f09737ce99fc79dc09",
+      "byte_length": 47,
+      "content_digest": "sha256:6ff8d7ab948a03b4b69c1fcdb76bbab71007edfd0b0d03f09737ce99fc79dc09",
+      "governance": {
+        "authority_created": false,
+        "public_use_allowed": false,
+        "release_ref": null,
+        "spec_hash": "sha256:83346b3bb0d6452bafe9b270e608daae6ab47afde406cc3edd24e802f2eec160"
+      },
+      "immutable_storage_ref": "cas:sha256:6ff8d7ab948a03b4b69c1fcdb76bbab71007edfd0b0d03f09737ce99fc79dc09",
+      "ingest_receipt_ref": "ingest-receipt:synthetic:source-artifact-fixture:20260804T080000Z",
+      "lineage": {
+        "conflict_group_ref": null,
+        "correction_refs": [],
+        "supersedes_artifact_ref": null
+      },
+      "media_type": "application/json",
+      "object_type": "SourceArtifact",
+      "parser": {
+        "parser_id": "parser:synthetic-source-artifact",
+        "spec_digest": "sha256:cee38cfb93bddaaa60b09b8dd369abd9001a2671c9703998380eb81881a34959",
+        "version": "1.0.0"
+      },
+      "request_context": {
+        "body_digest": null,
+        "header_names": [
+          "accept"
+        ],
+        "method": "GET",
+        "parameter_names": [],
+        "profile_id": "request-profile:synthetic-source-artifact-v1",
+        "secrets_embedded": false
+      },
+      "retrieval_outcome": "FETCHED",
+      "retrieved_at": "2026-08-04T08:00:00Z",
+      "rights_snapshot": {
+        "access_class": "public",
+        "captured_at": "2026-08-04T07:59:00Z",
+        "license_id": "CC0-1.0",
+        "redistribution_status": "allowed",
+        "review_state": "reviewed",
+        "terms_ref": "terms:synthetic-fixture-only"
+      },
+      "schema_version": "1.0.0",
+      "source_descriptor_ref": "source-descriptor:src:synthetic:source-artifact-fixture:1.0.0",
+      "source_locator": {
+        "first_party_authority": true,
+        "kind": "api_record",
+        "locator_digest": "sha256:7e53329307f40bbf77c874a3160febe3b99da2a2dfca48079eb01ff1de872ad5",
+        "value": "https://example.invalid/official/records/synthetic-001?token=fixture"
+      },
+      "source_reported_at": "2026-08-04T07:45:00Z",
+      "source_surface_type": "api_record",
+      "status_code": 200
+    },
+    "name": "invalid_locator_query"
+  }
+]

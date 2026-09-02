@@ -1,0 +1,342 @@
+{
+  "base": {
+    "profile_version": "kfm.object-family-domain-reference-candidate.v1",
+    "matrix_id": "kfm:object-family-domain-reference:000000000000000000000000",
+    "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_snapshot": {
+      "atlas_ref": "kfm-source:atlas-v1.1/section-24.14",
+      "narrative_register_ref": "docs/registers/OBJECT_FAMILY.md",
+      "domain_lane_register_ref": "control_plane/domain_lane_register.yaml",
+      "as_of": "2026-08-09",
+      "authority_state": "PROPOSAL_ONLY"
+    },
+    "families": [
+      {
+        "family_id": "archaeological_site",
+        "display_name": "ArchaeologicalSite",
+        "owner": {
+          "kind": "DOMAIN",
+          "domain_id": "archaeology",
+          "steward_role": null,
+          "contract_ref": "contracts/domains/archaeology/archaeological_site.md",
+          "assertion_basis": "SOURCE_REPORTED"
+        },
+        "citing_domain_ids": [
+          "settlements-infrastructure"
+        ],
+        "sensitivity_default": {
+          "tier": "T4",
+          "assertion_basis": "PROPOSED_SOURCE_DEFAULT",
+          "policy_effect": false
+        },
+        "relation_state": "CITE_ONLY",
+        "owner_change_authorized": false
+      },
+      {
+        "family_id": "evidence_bundle",
+        "display_name": "EvidenceBundle",
+        "owner": {
+          "kind": "CROSS_CUTTING",
+          "domain_id": null,
+          "steward_role": "evidence_steward",
+          "contract_ref": "contracts/evidence/evidence_bundle.md",
+          "assertion_basis": "SOURCE_REPORTED"
+        },
+        "citing_domain_ids": [
+          "agriculture",
+          "archaeology",
+          "atmosphere",
+          "fauna",
+          "flora",
+          "geology",
+          "habitat",
+          "hazards",
+          "hydrology",
+          "people-dna-land",
+          "roads-rail-trade",
+          "settlements-infrastructure",
+          "soil"
+        ],
+        "sensitivity_default": {
+          "tier": "VARIABLE",
+          "assertion_basis": "PROPOSED_SOURCE_DEFAULT",
+          "policy_effect": false
+        },
+        "relation_state": "CITE_ONLY",
+        "owner_change_authorized": false
+      },
+      {
+        "family_id": "huc_unit",
+        "display_name": "HUCUnit",
+        "owner": {
+          "kind": "DOMAIN",
+          "domain_id": "hydrology",
+          "steward_role": null,
+          "contract_ref": "contracts/domains/hydrology/huc_unit.md",
+          "assertion_basis": "SOURCE_REPORTED"
+        },
+        "citing_domain_ids": [
+          "agriculture",
+          "fauna",
+          "flora",
+          "habitat",
+          "hazards",
+          "settlements-infrastructure",
+          "soil"
+        ],
+        "sensitivity_default": {
+          "tier": "T0",
+          "assertion_basis": "PROPOSED_SOURCE_DEFAULT",
+          "policy_effect": false
+        },
+        "relation_state": "CITE_ONLY",
+        "owner_change_authorized": false
+      },
+      {
+        "family_id": "soil_map_unit",
+        "display_name": "SoilMapUnit",
+        "owner": {
+          "kind": "DOMAIN",
+          "domain_id": "soil",
+          "steward_role": null,
+          "contract_ref": "contracts/domains/soil/soil_map_unit.md",
+          "assertion_basis": "SOURCE_REPORTED"
+        },
+        "citing_domain_ids": [
+          "agriculture",
+          "habitat",
+          "hazards",
+          "settlements-infrastructure"
+        ],
+        "sensitivity_default": {
+          "tier": "T0",
+          "assertion_basis": "PROPOSED_SOURCE_DEFAULT",
+          "policy_effect": false
+        },
+        "relation_state": "CITE_ONLY",
+        "owner_change_authorized": false
+      },
+      {
+        "family_id": "source_descriptor",
+        "display_name": "SourceDescriptor",
+        "owner": {
+          "kind": "CROSS_CUTTING",
+          "domain_id": null,
+          "steward_role": "source_steward",
+          "contract_ref": "contracts/source/source_descriptor.md",
+          "assertion_basis": "SOURCE_REPORTED"
+        },
+        "citing_domain_ids": [
+          "agriculture",
+          "archaeology",
+          "atmosphere",
+          "fauna",
+          "flora",
+          "geology",
+          "habitat",
+          "hazards",
+          "hydrology",
+          "people-dna-land",
+          "roads-rail-trade",
+          "settlements-infrastructure",
+          "soil"
+        ],
+        "sensitivity_default": {
+          "tier": "VARIABLE",
+          "assertion_basis": "PROPOSED_SOURCE_DEFAULT",
+          "policy_effect": false
+        },
+        "relation_state": "CITE_ONLY",
+        "owner_change_authorized": false
+      }
+    ],
+    "summary": {
+      "family_count": 5,
+      "domain_owned_count": 3,
+      "cross_cutting_count": 2,
+      "profile_state": "REVIEW_REQUIRED",
+      "canonical_register_written": false
+    },
+    "governance": {
+      "fixture_only": true,
+      "owner_change_authorized": false,
+      "cross_domain_mutation_authorized": false,
+      "sensitivity_policy_evaluated": false,
+      "release_authorized": false,
+      "published": false,
+      "public_use_authorized": false
+    }
+  },
+  "cases": [
+    {
+      "case_id": "valid_bounded_reference_profile",
+      "expected_outcome": "PASS",
+      "expected_profile_state": "REVIEW_REQUIRED",
+      "expected_findings": []
+    },
+    {
+      "case_id": "duplicate_family_id",
+      "mutations": [
+        {"path": "/families/1/family_id", "value": "archaeological_site"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {"code": "OBJECT_FAMILY_ID_DUPLICATE", "path": "/families"}
+      ]
+    },
+    {
+      "case_id": "unsorted_family_rows",
+      "mutations": [
+        {"path": "/families/0/family_id", "value": "zeta_family"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {"code": "OBJECT_FAMILY_ORDER_INVALID", "path": "/families"}
+      ]
+    },
+    {
+      "case_id": "unknown_owner_domain",
+      "mutations": [
+        {"path": "/families/0/owner/domain_id", "value": "invented-domain"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {"code": "OBJECT_FAMILY_OWNER_DOMAIN_UNKNOWN", "path": "/families/0/owner/domain_id"}
+      ]
+    },
+    {
+      "case_id": "unknown_citing_domain",
+      "mutations": [
+        {"path": "/families/0/citing_domain_ids/0", "value": "invented-domain"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {"code": "OBJECT_FAMILY_CITING_DOMAIN_UNKNOWN", "path": "/families/0/citing_domain_ids/0"}
+      ]
+    },
+    {
+      "case_id": "owner_cited_as_consumer",
+      "mutations": [
+        {"path": "/families/0/citing_domain_ids/0", "value": "archaeology"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {"code": "OBJECT_FAMILY_OWNER_CITED_AS_CONSUMER", "path": "/families/0/citing_domain_ids"}
+      ]
+    },
+    {
+      "case_id": "unsorted_citing_domains",
+      "mutations": [
+        {
+          "path": "/families/2/citing_domain_ids",
+          "value": [
+            "soil",
+            "settlements-infrastructure",
+            "hazards",
+            "habitat",
+            "flora",
+            "fauna",
+            "agriculture"
+          ]
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {"code": "OBJECT_FAMILY_CITING_ORDER_INVALID", "path": "/families/2/citing_domain_ids"}
+      ]
+    },
+    {
+      "case_id": "missing_contract_reference",
+      "mutations": [
+        {"path": "/families/0/owner/contract_ref", "value": "contracts/domains/archaeology/missing.md"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {"code": "OBJECT_FAMILY_CONTRACT_REFERENCE_MISSING", "path": "/families/0/owner/contract_ref"}
+      ]
+    },
+    {
+      "case_id": "direct_store_reference_denied",
+      "mutations": [
+        {"path": "/families/0/owner/contract_ref", "value": "data/raw/object.json"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {"code": "OBJECT_FAMILY_CONTRACT_REFERENCE_MISSING", "path": "/families/0/owner/contract_ref"},
+        {"code": "OBJECT_FAMILY_CONTRACT_REFERENCE_OUTSIDE_CONTRACTS", "path": "/families/0/owner/contract_ref"},
+        {"code": "OBJECT_FAMILY_DIRECT_STORE_REFERENCE_DENIED", "path": "/families/0/owner/contract_ref"}
+      ]
+    },
+    {
+      "case_id": "summary_mismatch",
+      "mutations": [
+        {"path": "/summary/family_count", "value": 99}
+      ],
+      "preserve_summary": true,
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {"code": "OBJECT_FAMILY_SUMMARY_MISMATCH", "path": "/summary"}
+      ]
+    },
+    {
+      "case_id": "spec_hash_mismatch",
+      "spec_hash_override": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {"code": "OBJECT_FAMILY_SPEC_HASH_MISMATCH", "path": "/spec_hash"}
+      ]
+    },
+    {
+      "case_id": "matrix_id_mismatch",
+      "matrix_id_override": "kfm:object-family-domain-reference:ffffffffffffffffffffffff",
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {"code": "OBJECT_FAMILY_ID_MISMATCH", "path": "/matrix_id"}
+      ]
+    },
+    {
+      "case_id": "release_authority_overreach",
+      "mutations": [
+        {"path": "/governance/release_authorized", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {"code": "OBJECT_FAMILY_SCHEMA_INVALID", "path": "/governance/release_authorized"}
+      ]
+    },
+    {
+      "case_id": "sensitivity_policy_overreach",
+      "mutations": [
+        {"path": "/families/0/sensitivity_default/policy_effect", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {"code": "OBJECT_FAMILY_SCHEMA_INVALID", "path": "/families/0/sensitivity_default/policy_effect"}
+      ]
+    },
+    {
+      "case_id": "cross_cutting_owner_claims_domain",
+      "mutations": [
+        {"path": "/families/1/owner/domain_id", "value": "hydrology"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {"code": "OBJECT_FAMILY_SCHEMA_INVALID", "path": "/families/1/owner/domain_id"}
+      ]
+    }
+  ]
+}

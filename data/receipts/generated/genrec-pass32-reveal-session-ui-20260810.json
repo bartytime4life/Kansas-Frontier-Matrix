@@ -1,0 +1,163 @@
+{
+  "receipt_id": "genrec-pass32-reveal-session-ui-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/explorer-web/src/adapters/RevealSessionProjection.ts",
+    "apps/explorer-web/src/features/reveal_session/README.md",
+    "apps/explorer-web/src/features/reveal_session/index.ts",
+    "apps/explorer-web/tests/browser/reveal-session.fixture.ts",
+    "apps/explorer-web/tests/browser/reveal-session.html",
+    "apps/explorer-web/tests/browser/reveal-session.spec.ts",
+    "apps/explorer-web/tests/reveal-session.test.ts",
+    "docs/intake/exploratory/pass-32-reveal-session-ui-source-map.md",
+    "fixtures/ui/reveal_session_projection/README.md",
+    "fixtures/ui/reveal_session_projection/invalid/extra-field.json",
+    "fixtures/ui/reveal_session_projection/invalid/ttl-too-long.json",
+    "fixtures/ui/reveal_session_projection/valid/active.json",
+    "fixtures/ui/reveal_session_projection/valid/deny.json"
+  ],
+  "artifact_hashes": {
+    "apps/explorer-web/src/adapters/RevealSessionProjection.ts": "sha256:c11ca4215553424343899de0e31ee75446b79b342c6eb6662b2a2bb6213fe21c",
+    "apps/explorer-web/src/features/reveal_session/README.md": "sha256:2c37b5872f5c104987e1d2a4438271f7b065552426fb692057166625d16f507f",
+    "apps/explorer-web/src/features/reveal_session/index.ts": "sha256:5d4c25f09836ed77d01a7b10e9de5a278e7173d9d2f0af097b471162a57b3cee",
+    "apps/explorer-web/tests/browser/reveal-session.fixture.ts": "sha256:902af26d2eb5e83434f40f97e69a32a97a4a2a5ec96523a9044938d28612d4a3",
+    "apps/explorer-web/tests/browser/reveal-session.html": "sha256:0966aaaf8160373eba11b41be951bf26a7d635cc50c63a47d1bb4dcf52e61416",
+    "apps/explorer-web/tests/browser/reveal-session.spec.ts": "sha256:4af50d2e0628be4bef6beda76d2cdaeeae874fd28400ae855515ddac3f41600d",
+    "apps/explorer-web/tests/reveal-session.test.ts": "sha256:600420b3d314d6fe14492b2e279f2cf0d7200d8e67bd2c1d276165a8d52b15ed",
+    "docs/intake/exploratory/pass-32-reveal-session-ui-source-map.md": "sha256:dd37f956ecde1236b72ef20aaad7449a01f46ee47539880776a7ba4b54a1ea61",
+    "fixtures/ui/reveal_session_projection/README.md": "sha256:ed716630ce1c30111af0e1d9ff747f88f80292b660f71c591f392926e04481da",
+    "fixtures/ui/reveal_session_projection/invalid/extra-field.json": "sha256:ae8025141cf5b0c6a97869e5d55fb24a58732f78c4a3f889f6200d2a35937d4a",
+    "fixtures/ui/reveal_session_projection/invalid/ttl-too-long.json": "sha256:702a22e025f122a149bb09293eb0a8e555612f61a8d984660ed446929f673ae8",
+    "fixtures/ui/reveal_session_projection/valid/active.json": "sha256:aae377085cc9426974590e8bb91a0a35c0da8eb952f56c924a6bcac31d259756",
+    "fixtures/ui/reveal_session_projection/valid/deny.json": "sha256:3331b0b8eb9e93c2e164358a87c740721112bdcd9c5277dc2fa290b7632de5f5"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector",
+      "GitHub connector",
+      "TypeScript 7.0.2",
+      "Vitest 4.1.10",
+      "Playwright 1.62.1"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:020a1207c2a6d193dc23defca40d24d429acd1273da17c2494582116ec8e9639"
+    ],
+    "attached_docs": [
+      "KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf",
+      "New Ideas 5-17-26"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-FEAT-0010",
+      "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-IDEA-0015",
+      "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-PROG-0019",
+      "gdrive:1cDAPrrPt_AxMB3lBH4z-wQGwKmcGEUt-nOMLLsAlxQQ",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@9e76413313b8529091d01be6132d6e987e3f9fae",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "repo:apps/explorer-web/src/features/consent_card/index.ts",
+      "repo:docs/intake/exploratory/pass-32-sensitive-overlay-gatehouse-source-map.md"
+    ]
+  },
+  "truth_labels": {
+    "apps/explorer-web/src/adapters/RevealSessionProjection.ts": "PROPOSED",
+    "apps/explorer-web/src/features/reveal_session/README.md": "PROPOSED",
+    "apps/explorer-web/src/features/reveal_session/index.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/reveal-session.fixture.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/reveal-session.html": "PROPOSED",
+    "apps/explorer-web/tests/browser/reveal-session.spec.ts": "PROPOSED",
+    "apps/explorer-web/tests/reveal-session.test.ts": "PROPOSED",
+    "docs/intake/exploratory/pass-32-reveal-session-ui-source-map.md": "PROPOSED",
+    "fixtures/ui/reveal_session_projection/README.md": "PROPOSED",
+    "fixtures/ui/reveal_session_projection/invalid/extra-field.json": "PROPOSED",
+    "fixtures/ui/reveal_session_projection/invalid/ttl-too-long.json": "PROPOSED",
+    "fixtures/ui/reveal_session_projection/valid/active.json": "PROPOSED",
+    "fixtures/ui/reveal_session_projection/valid/deny.json": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-pr-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Current main and open pull requests were searched for the selected card IDs and feature terms; no implementation overlap was found."
+    },
+    {
+      "gate": "explorer-production-build",
+      "outcome": "PASS",
+      "reason": "Explorer TypeScript checking and Vite production build completed locally. The workspace Node 24 runtime emitted the expected engine warning; hosted CI uses the repository-pinned Node 22 line."
+    },
+    {
+      "gate": "explorer-full-unit-suite",
+      "outcome": "PASS",
+      "reason": "All 111 Explorer unit tests passed, including the seven reveal-session tests."
+    },
+    {
+      "gate": "browser-fixture-typecheck",
+      "outcome": "PASS",
+      "reason": "The reveal browser fixture and Playwright spec passed an isolated TypeScript no-emit check."
+    },
+    {
+      "gate": "local-playwright-browser",
+      "outcome": "SKIPPED",
+      "reason": "No Chromium executable is installed in this workspace; the existing ui-build workflow installs Chrome and must validate the pushed exact head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:pass32-reveal-session-cards",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-FEAT-0010,KFM-P32-IDEA-0015,KFM-P32-PROG-0019"
+    },
+    {
+      "id": "gdrive:new-ideas-5-17-26",
+      "validated": true,
+      "evidence_ref": "gdrive:1cDAPrrPt_AxMB3lBH4z-wQGwKmcGEUt-nOMLLsAlxQQ"
+    },
+    {
+      "id": "repository:adr-0029-directory-rules-v2",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "repository:existing-explorer-governed-ui-pattern",
+      "validated": true,
+      "evidence_ref": "repo:apps/explorer-web/src/features/consent_card/index.ts"
+    },
+    {
+      "id": "repository:sensitive-overlay-production-hold",
+      "validated": true,
+      "evidence_ref": "repo:docs/intake/exploratory/pass-32-sensitive-overlay-gatehouse-source-map.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T15:10:49Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-first implementation derived from Pass 32 reveal-session cards. It emits a public-safe browser projection, whole-second HUD, and deterministic caller-effect teardown handoff. It grants no consent, key, policy, audit, review, release, deployment, publication, or public-use authority."
+}

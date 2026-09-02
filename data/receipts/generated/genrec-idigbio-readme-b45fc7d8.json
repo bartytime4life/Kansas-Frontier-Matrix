@@ -1,0 +1,135 @@
+{
+  "receipt_id": "genrec-idigbio-readme-b45fc7d8",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "connectors/idigbio/README.md"
+  ],
+  "artifact_hashes": {
+    "connectors/idigbio/README.md": "sha256:89353b7497c65ffbd2582a5a172d52320398355ef16ba43aa6279cf3178e10f5"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-07-12-session"
+  },
+  "prompt_or_contract": "sha256:ac87dce844895e379fb41966b36c2ee749534fb461575cf759102b86f9b7eda0",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "file_search",
+      "container"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:e9f8745238e7167fef4ebd4d950fc9c952f53e9d5adfaa4a5f115b110c14298f",
+      "sha256:0eae4827efe3a1c38d317534ac9b61121babea671c6666045d3f5ad101948707",
+      "sha256:ac87dce844895e379fb41966b36c2ee749534fb461575cf759102b86f9b7eda0"
+    ],
+    "attached_docs": [
+      "KFM GitHub Repository Documentation Implementation Agent — Full Operating Prompt v3",
+      "Directory Rules.pdf"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/bed6f82b5093bcac880226603e4fc72540aad1fa",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/bed6f82b5093bcac880226603e4fc72540aad1fa/connectors/idigbio/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/bed6f82b5093bcac880226603e4fc72540aad1fa/connectors/idigbio/specimens/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/bed6f82b5093bcac880226603e4fc72540aad1fa/docs/sources/catalog/idigbio/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/bed6f82b5093bcac880226603e4fc72540aad1fa/docs/sources/catalog/idigbio/specimen-records.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/bed6f82b5093bcac880226603e4fc72540aad1fa/docs/sources/catalog/idigbio/media-records.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/bed6f82b5093bcac880226603e4fc72540aad1fa/docs/sources/catalog/idigbio/portal-dwca-downloads.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/bed6f82b5093bcac880226603e4fc72540aad1fa/docs/sources/catalog/idigbio/summary-counts.md"
+    ]
+  },
+  "truth_labels": {
+    "connectors/idigbio/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-preflight",
+      "outcome": "PASS",
+      "reason": "Repository, permissions, default branch, base commit, target blob, and open-PR/branch state inspected."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "README remains under the existing connectors/ source-admission responsibility root; no path move or parallel authority created."
+    },
+    {
+      "gate": "remote-readback",
+      "outcome": "PASS",
+      "reason": "Updated UTF-8 Markdown read back from branch agent/idigbio-readme at commit b45fc7d88b152fbebb09efe03e902253b24f38fc."
+    },
+    {
+      "gate": "base-head-scope",
+      "outcome": "PASS",
+      "reason": "Base-to-head comparison showed the requested README as the only substantive artifact before receipt emission."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "Meta block, headings, quick-jump targets, fenced Mermaid block, tables, and rollback section were inspected in remote read-back."
+    },
+    {
+      "gate": "live-source-access",
+      "outcome": "SKIPPED",
+      "reason": "No iDigBio, GBIF, IPT, media, or DwC-A source interaction was authorized or required."
+    },
+    {
+      "gate": "generated-receipt-schema",
+      "outcome": "PASS",
+      "reason": "Receipt validated locally against a compact Draft 2020-12 mirror of the inspected repository schema; repository CI remains authoritative."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "KFM-DIR-RULES",
+      "validated": true,
+      "evidence_ref": "attached://Directory Rules.pdf"
+    },
+    {
+      "id": "KFM-OPERATING-PROMPT-V3",
+      "validated": true,
+      "evidence_ref": "attached://KFM GitHub Repository Documentation Implementation Agent — Full Operating Prompt v3"
+    },
+    {
+      "id": "CONNECTORS-ROOT",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/bed6f82b5093bcac880226603e4fc72540aad1fa/connectors/README.md"
+    },
+    {
+      "id": "IDIGBIO-FAMILY-DOSSIER",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/bed6f82b5093bcac880226603e4fc72540aad1fa/docs/sources/catalog/idigbio/README.md"
+    },
+    {
+      "id": "IDIGBIO-SPECIMENS-README",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/bed6f82b5093bcac880226603e4fc72540aad1fa/connectors/idigbio/specimens/README.md"
+    },
+    {
+      "id": "IDIGBIO-PRODUCT-DOCS",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/tree/bed6f82b5093bcac880226603e4fc72540aad1fa/docs/sources/catalog/idigbio"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-12T00:19:21Z",
+  "emitter": "ai-builder/openai-gpt-5.6-pro",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored documentation update on a scoped review branch. The GitHub connector exposed exact Git blob SHA-1 identifiers but not a directly downloadable raw-byte stream in this runtime. artifact_hashes and prompt_or_contract therefore use SHA-256 over canonical strings of the form 'git-blob-sha1:<blob_sha>'; the exact Git blob and commit references still pin repository bytes. A raw-byte SHA-256 remains NEEDS VERIFICATION if repository policy later requires dual digests. No live biodiversity source was contacted. Human review is intentionally pending; this receipt is well-formed but not merge-authorizing."
+}

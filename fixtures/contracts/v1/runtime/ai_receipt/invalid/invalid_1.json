@@ -1,0 +1,10 @@
+{
+  "run_id": "run1",
+  "adapter": "mock",
+  "model_ref": "none",
+  "inputs_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "outputs_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "policy_decision_ref": "dec1",
+  "citation_validation_ref": "val1",
+  "outcome": "ABSTAIN"
+}

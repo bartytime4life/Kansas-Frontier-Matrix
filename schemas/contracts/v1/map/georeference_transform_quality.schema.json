@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kansasfrontiermatrix.org/schemas/contracts/v1/map/georeference_transform_quality.schema.json",
+  "title": "GeoreferenceTransformQualityAssessment",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["object_type", "schema_version", "profile", "fixture_only", "network_access", "assessed_at", "target_unit", "gcp_count", "gcps", "thresholds", "computed", "decision", "governance"],
+  "properties": {
+    "object_type": {"const": "GeoreferenceTransformQualityAssessment"},
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.georeference.affine-quality.v1"},
+    "fixture_only": {"const": true},
+    "network_access": {"const": "forbidden"},
+    "assessed_at": {"type": "string", "format": "date-time"},
+    "target_unit": {"type": "string", "enum": ["synthetic_meters", "synthetic_feet"]},
+    "gcp_count": {"type": "integer", "minimum": 3, "maximum": 64},
+    "gcps": {
+      "type": "array", "minItems": 3, "maxItems": 64,
+      "items": {
+        "type": "object", "additionalProperties": false, "required": ["id", "resource", "target"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1, "maxLength": 80},
+          "resource": {"$ref": "#/$defs/point"},
+          "target": {"$ref": "#/$defs/point"}
+        }
+      }
+    },
+    "thresholds": {
+      "type": "object", "additionalProperties": false,
+      "required": ["minimum_gcps", "max_rms", "max_residual", "max_loo_rms", "max_loo_residual"],
+      "properties": {
+        "minimum_gcps": {"const": 4},
+        "max_rms": {"type": "number", "exclusiveMinimum": 0},
+        "max_residual": {"type": "number", "exclusiveMinimum": 0},
+        "max_loo_rms": {"type": "number", "exclusiveMinimum": 0},
+        "max_loo_residual": {"type": "number", "exclusiveMinimum": 0}
+      }
+    },
+    "computed": {
+      "type": "object", "additionalProperties": false,
+      "required": ["affine_coefficients", "rms", "max_residual", "loo_rms", "loo_max_residual"],
+      "properties": {
+        "affine_coefficients": {"type": "array", "minItems": 6, "maxItems": 6, "items": {"type": "number"}},
+        "rms": {"type": "number", "minimum": 0},
+        "max_residual": {"type": "number", "minimum": 0},
+        "loo_rms": {"oneOf": [{"type": "number", "minimum": 0}, {"type": "null"}]},
+        "loo_max_residual": {"oneOf": [{"type": "number", "minimum": 0}, {"type": "null"}]}
+      }
+    },
+    "decision": {
+      "type": "object", "additionalProperties": false, "required": ["outcome", "reasons"],
+      "properties": {
+        "outcome": {"enum": ["READY", "HOLD", "ERROR"]},
+        "reasons": {"type": "array", "minItems": 1, "maxItems": 16, "uniqueItems": true, "items": {"type": "string", "pattern": "^[A-Z0-9_]+$"}}
+      }
+    },
+    "governance": {
+      "type": "object", "additionalProperties": false,
+      "required": ["authority_created", "policy_evaluated", "promotion_authorized", "release_authorized", "publication_authorized", "public_use_allowed", "release_ref"],
+      "properties": {
+        "authority_created": {"const": false},
+        "policy_evaluated": {"const": false},
+        "promotion_authorized": {"const": false},
+        "release_authorized": {"const": false},
+        "publication_authorized": {"const": false},
+        "public_use_allowed": {"const": false},
+        "release_ref": {"type": "null"}
+      }
+    }
+  },
+  "$defs": {
+    "point": {
+      "type": "array", "prefixItems": [{"type": "number"}, {"type": "number"}], "items": false, "minItems": 2, "maxItems": 2
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "authority": "fixture_affine_quality_only",
+    "non_effects": ["no_network", "no_warp", "no_reprojection", "no_policy", "no_release", "no_public_use"]
+  }
+}

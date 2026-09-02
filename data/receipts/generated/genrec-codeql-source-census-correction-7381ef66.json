@@ -1,0 +1,126 @@
+{
+  "receipt_id": "genrec-codeql-source-census-correction-7381ef66",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/codeql.yml"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/codeql.yml": "sha256:7381ef66aa1d14feb644a036816b30acdf394c16d1b535d4ba2048ac981c64fb"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-20"
+  },
+  "prompt_or_contract": "sha256:4c6aea33c39fbf2ee3ba0e8663be9064dd2c1cbe3b9efc7fc2dd0a5f38acb450",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "official GitHub Docs",
+      "local YAML parsing",
+      "local synthetic shell validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [],
+    "attached_docs": [],
+    "evidence_refs": [
+      "repository:bartytime4life/Kansas-Frontier-Matrix@16a0c42f37f9e11d72d94682ab967e35c765d573",
+      "pull-request:bartytime4life/Kansas-Frontier-Matrix#3167@7ddbbf1443d1c4ce069580c1fb646878a8a0dafb",
+      "workflow-run:validator-suite:32407270899@7ddbbf1443d1c4ce069580c1fb646878a8a0dafb",
+      "workflow-job:run-validators:96549178192",
+      "repo:tools/validators/governance/validate_workflow_security.py@16a0c42f37f9e11d72d94682ab967e35c765d573",
+      "external:github-docs:no-source-code-seen-during-build:accessed-2026-08-20"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/codeql.yml": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "introduced-failure-attribution",
+      "outcome": "PASS",
+      "reason": "Exact-head validator output attributed three KFM-WF-001 FAIL_INVARIANT findings to the backslash-bearing source_pattern scalars added by PR #3167 at codeql.yml lines 73, 76, and 79."
+    },
+    {
+      "gate": "smallest-correction-review",
+      "outcome": "PASS",
+      "reason": "The correction removes only the three matrix regex scalars and the SOURCE_PATTERN matrix environment binding, then selects the same patterns inside the already-reviewed shell step."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The complete corrected workflow parsed successfully with the available local YAML parser."
+    },
+    {
+      "gate": "workflow-security-structural-precheck",
+      "outcome": "PASS",
+      "reason": "No backslash remains in a non-run workflow scalar; the KFM-WF-001 cause observed at the prior exact head is absent."
+    },
+    {
+      "gate": "source-census-positive-path",
+      "outcome": "PASS",
+      "reason": "Synthetic tracked and materialized Actions, JavaScript/TypeScript, and Python source each produced SOURCE_PRESENT."
+    },
+    {
+      "gate": "source-census-no-tracked-source-negative",
+      "outcome": "PASS",
+      "reason": "A synthetic repository with no matching tracked Python source failed with exit status 1 and the expected bounded annotation."
+    },
+    {
+      "gate": "source-census-not-materialized-negative",
+      "outcome": "PASS",
+      "reason": "A synthetic tracked Python source absent from the worktree failed with exit status 1 and the expected checkout-scope annotation."
+    },
+    {
+      "gate": "source-census-unsupported-language-negative",
+      "outcome": "PASS",
+      "reason": "An unsupported language failed closed with exit status 2 rather than silently selecting a source policy."
+    },
+    {
+      "gate": "hosted-exact-head-workflow-security",
+      "outcome": "SKIPPED",
+      "reason": "Pending until the corrective draft pull request exists and GitHub schedules exact-head validation."
+    },
+    {
+      "gate": "hosted-exact-head-codeql",
+      "outcome": "SKIPPED",
+      "reason": "Pending until the corrective draft pull request exists and GitHub schedules exact-head CodeQL."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "exact-head-workflow-security-failure",
+      "validated": true,
+      "evidence_ref": "workflow-job:run-validators:96549178192"
+    },
+    {
+      "id": "repository-workflow-security-parser",
+      "validated": true,
+      "evidence_ref": "repo:tools/validators/governance/validate_workflow_security.py@16a0c42f37f9e11d72d94682ab967e35c765d573"
+    },
+    {
+      "id": "github-codeql-no-source-code-guidance",
+      "validated": true,
+      "evidence_ref": "external:github-docs:no-source-code-seen-during-build:accessed-2026-08-20"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-08-20T19:26:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Corrective provenance only. PR #3167 was merged externally while exact-head inspection was still in progress. Its CodeQL analysis succeeded, but repository workflow-security validation found three introduced KFM-WF-001 invariant violations because the parser denies escaped security-relevant scalars outside run blocks. This correction preserves the source census and moves the same regex policy into the shell run block. The prior generated receipt is retained as historical lineage; this receipt binds the corrected workflow bytes. Neither receipt is approval, proof, release, deployment, promotion, or publication authority."
+}

@@ -1,0 +1,9 @@
+{
+  "case_id": "partial-read-complete-structural-hold",
+  "expected": {
+    "issue_codes": [],
+    "status": "STRUCTURAL_HOLD"
+  },
+  "fixture_profile": "kfm.pmtiles.partial-read.compat.v1",
+  "mutation": "none"
+}

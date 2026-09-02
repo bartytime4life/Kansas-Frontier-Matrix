@@ -1,0 +1,37 @@
+{
+  "scenario_id": "confirmed-pr-1791-terminal-divergence",
+  "evidence_refs": [
+    "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/1791",
+    "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5088064638"
+  ],
+  "repository": "bartytime4life/Kansas-Frontier-Matrix",
+  "default_branch": "main",
+  "base_sha": "b85d05c37d88cf2dcd89042c9df77483fa38d2a9",
+  "head_sha": "e9faf20b4a55fe34d0dab9536d9ff2a0b71c74e4",
+  "head_branch": "agent/fix-repository-control-evaluator",
+  "pr_number": 1791,
+  "pr_state": "MERGED",
+  "merge_commit_sha": "0b0309664313543b6816e8e5dcefc9593366aba5",
+  "changed_paths": [
+    "contracts/governance/repository_control_state.md",
+    "control_plane/repository_control_state.yaml",
+    "schemas/contracts/v1/governance/repository_control_context.schema.json",
+    "tests/fixtures/governance/repository_control/README.md",
+    "tests/fixtures/governance/repository_control/context_pr_1790_terminal_divergence.json",
+    "tests/validators/test_repository_control.py",
+    "tests/validators/test_repository_control_incident_1789.py",
+    "tests/validators/test_repository_control_incident_1790.py",
+    "tools/validators/repository_control/_context.py",
+    "tools/validators/repository_control/_evaluate.py",
+    "tools/validators/repository_control/_model.py",
+    "tools/validators/repository_control/_state.py"
+  ],
+  "requested_operations": [
+    "create",
+    "update",
+    "modify_control_logic"
+  ],
+  "open_pull_requests": [],
+  "active_review_prs": [],
+  "now": "2026-07-27T05:59:06Z"
+}

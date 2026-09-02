@@ -1,0 +1,6 @@
+status: PROPOSED
+path: "data/registry/sources/agriculture/nass_quickstats.yaml"
+source_docs:
+  - "docs/domains/agriculture/VERIFICATION_BACKLOG.md"
+notes:
+  - "Placeholder created from the current docs/domains markdown inventory."

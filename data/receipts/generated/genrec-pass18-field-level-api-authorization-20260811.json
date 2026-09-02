@@ -1,0 +1,173 @@
+{
+  "receipt_id": "genrec-pass18-field-level-api-authorization-20260811",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/field-level-api-authorization-assessment.yml",
+    "contracts/release/field_level_api_authorization_assessment.md",
+    "docs/intake/exploratory/pass-18-field-level-api-authorization-source-map.md",
+    "fixtures/contracts/v1/release/field_level_api_authorization_assessment/cases.json",
+    "schemas/contracts/v1/release/field_level_api_authorization_assessment.schema.json",
+    "tests/validators/release/test_validate_field_level_api_authorization_assessment.py",
+    "tools/validators/release/validate_field_level_api_authorization_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/field-level-api-authorization-assessment.yml": "sha256:a021a0d26175be99d1cd17843614bc504b64858573cf380a493728af8a7cbf20",
+    "contracts/release/field_level_api_authorization_assessment.md": "sha256:de3cb751fedfb5b336eefd0d47c89ff993e6bafc151993acd8a8df4d425e3ce2",
+    "docs/intake/exploratory/pass-18-field-level-api-authorization-source-map.md": "sha256:e89457974e2dc21a5f9074ef7890481acd0d6634fd28cf66dcb62a17ec4befc7",
+    "fixtures/contracts/v1/release/field_level_api_authorization_assessment/cases.json": "sha256:5b4c52c41d5dd68bf5f19f5dd3ebc3b172541d5b67482c9ee1cada21626e8cad",
+    "schemas/contracts/v1/release/field_level_api_authorization_assessment.schema.json": "sha256:6fd824edda4b72d251be2b1b544e4ad4721ec01c6233c3855a18393abdf53b3d",
+    "tests/validators/release/test_validate_field_level_api_authorization_assessment.py": "sha256:f310c5f296e787a430aa5d91b6f4bc821b21531909d5cf873068a88400d83da8",
+    "tools/validators/release/validate_field_level_api_authorization_assessment.py": "sha256:d1acc3b0ed4d17bf0db856033938094047f097a946b4e50a0d3af624c4d303af"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-11"
+  },
+  "prompt_or_contract": "sha256:de3cb751fedfb5b336eefd0d47c89ff993e6bafc151993acd8a8df4d425e3ce2",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository inspection and mutation",
+      "local PDF text and visual inspection",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9",
+      "sha256:82ecee9a1e704ff65623b055a5436248866edf22b061ada47dbeb43238cf2aae",
+      "sha256:d26c1c84ece7a35f95c6844c7df754286751f25a7c8a576aa7afc59168208982",
+      "sha256:403b936738a97cea570993c0d60b14a06110f5af5650683750f374b3026dc2a3",
+      "sha256:db353849e43845d245e612b13adff3c4d0aedd90afa4197e275131dde6323008",
+      "sha256:4d76db601435321a389d3b4220e0dda5c16b8c99d1e269a85128a473beb6b1e8"
+    ],
+    "attached_docs": [
+      "KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P18-INV-151-pages-403-404",
+      "gdrive://1ww-h3abQkxXeBvSxO5YV6_yvsZ9Wn1P5",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/bd59127604f3ab7578fe43f30caaeef089c0fffc/contracts/release/api_capability_exposure_assessment.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/bd59127604f3ab7578fe43f30caaeef089c0fffc/contracts/policy/policy_decision.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/bd59127604f3ab7578fe43f30caaeef089c0fffc/contracts/policy/policy_obligation_set.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/bd59127604f3ab7578fe43f30caaeef089c0fffc/contracts/runtime/decision_envelope.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/bd59127604f3ab7578fe43f30caaeef089c0fffc/contracts/ui/evidence_drawer_payload.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/bd59127604f3ab7578fe43f30caaeef089c0fffc/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/field-level-api-authorization-assessment.yml": "CONFIRMED",
+    "contracts/release/field_level_api_authorization_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-field-level-api-authorization-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/release/field_level_api_authorization_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/release/field_level_api_authorization_assessment.schema.json": "PROPOSED",
+    "tests/validators/release/test_validate_field_level_api_authorization_assessment.py": "CONFIRMED",
+    "tools/validators/release/validate_field_level_api_authorization_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS",
+      "reason": "Validator and focused test modules compiled successfully."
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS",
+      "reason": "The closed candidate schema passed Draft 2020-12 meta-validation."
+    },
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS",
+      "reason": "Nine deterministic focused tests passed."
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS",
+      "reason": "Twenty-four exact synthetic cases matched their finite outcomes and findings."
+    },
+    {
+      "gate": "adjacent-contract-regression-suite",
+      "outcome": "PASS",
+      "reason": "Focused and adjacent capability, policy, runtime-envelope, and Evidence Drawer suites reported 61 tests and 24 subtests passing."
+    },
+    {
+      "gate": "documentation-link-profile",
+      "outcome": "PASS",
+      "reason": "Eighteen documentation-link checks passed."
+    },
+    {
+      "gate": "documentation-meta-block-profile",
+      "outcome": "PASS",
+      "reason": "Both new metadata blocks were structurally valid; expected review-only registry-add warnings remain pending human authority."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The dedicated workflow parsed as YAML and remains read-only with no persisted checkout credentials."
+    },
+    {
+      "gate": "no-network-boundary",
+      "outcome": "PASS",
+      "reason": "Focused tests deny socket creation and the candidate validator uses local repository evidence only."
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS",
+      "reason": "All listed artifact SHA-256 values were recomputed after final local edits; the receipt does not bind its own bytes."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed draft pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pass18-field-level-api-authorization-card",
+      "validated": true,
+      "evidence_ref": "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P18-INV-151-pages-403-404"
+    },
+    {
+      "id": "drive-pass18-dossier-metadata",
+      "validated": true,
+      "evidence_ref": "gdrive://1ww-h3abQkxXeBvSxO5YV6_yvsZ9Wn1P5"
+    },
+    {
+      "id": "adjacent-api-capability-exposure-assessment",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/bd59127604f3ab7578fe43f30caaeef089c0fffc/contracts/release/api_capability_exposure_assessment.md"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/bd59127604f3ab7578fe43f30caaeef089c0fffc/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T21:40:47Z",
+  "emitter": "OpenAI Codex via ChatGPT GitHub and Google Drive connectors",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only FieldLevelApiAuthorizationAssessmentCandidate derived from Pass 18 card KFM-P18-INV-151 and reconciled against current API capability, policy, runtime-envelope, and Evidence Drawer contracts. Drive metadata confirmed a matching dossier title, while the locally supplied PDF was inspected and hashed; byte identity between those objects is not asserted. The packet classifies field names and control metadata only, carries no field values, and derives projection decisions without creating a route, authenticating, executing policy, reading a store, emitting a response, releasing, deploying, publishing, or authorizing public use."
+}

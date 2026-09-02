@@ -1,0 +1,44 @@
+{
+  "object_type": "SyntheticMesonetSoilObservation",
+  "schema_version": "1.0.0",
+  "record_id": "synthetic-mesonet-soil-observation-0001",
+  "source_descriptor_ref": "src:synthetic-kansas-mesonet",
+  "source_role": "fixture_only",
+  "support_type": "station_soil_moisture",
+  "station": {
+    "station_id": "SYNTHETIC-KS-MESONET-001",
+    "station_health": "HEALTHY_FIXTURE",
+    "spatial_support": {
+      "kind": "generalized_county",
+      "county_fips": "99999"
+    }
+  },
+  "observation": {
+    "measure": "volumetric_water_content",
+    "depth_cm": 10,
+    "value": 0.24,
+    "unit": "m3/m3",
+    "observed_at": "2026-04-15T14:00:00Z",
+    "source_timezone": "America/Chicago",
+    "native_cadence_minutes": 5,
+    "output_cadence_minutes": 5,
+    "aggregation_receipt_ref": null,
+    "qc_flags": [
+      "synthetic-ok"
+    ]
+  },
+  "rights": {
+    "rights_state": "fixture_only",
+    "operator_consent_state": "fixture_only"
+  },
+  "evidence_refs": [
+    "evidence:synthetic-mesonet-soil-observation"
+  ],
+  "run_receipt_ref": "receipt:synthetic-mesonet-normalization-0001",
+  "governance": {
+    "review_state": "fixture_only",
+    "release_state": "not_released",
+    "promotion_eligible": false,
+    "public_use_allowed": false
+  }
+}

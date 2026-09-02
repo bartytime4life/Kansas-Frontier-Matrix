@@ -1,0 +1,41 @@
+{
+  "profile": "kfm.explorer.source-availability-watchlist.public-safe.v1",
+  "panel_id": "kfm:source-availability-panel:synthetic:held-001",
+  "outcome": "ANSWER",
+  "reason_code": "WATCHLIST_AVAILABLE",
+  "observed_at": "2026-08-10T17:00:00Z",
+  "watchlist_id": "kfm:source-availability-watchlist:89abcdef0123456789abcdef",
+  "state": "HOLD",
+  "summary": {
+    "source_count": 1,
+    "stable_count": 0,
+    "review_count": 0,
+    "hold_count": 1,
+    "error_count": 0
+  },
+  "entries": [
+    {
+      "source_id": "usgs-water-services",
+      "source_ref": "kfm://source/usgs-water-services",
+      "health_assessment_ref": "kfm://source-health-assessment/synthetic/usgs-water-services-001",
+      "material_change_assessment_ref": "kfm://material-change-assessment/synthetic/usgs-water-services-001",
+      "availability": "UNKNOWN",
+      "change_class": "UNDETERMINED",
+      "material_kind": "UNDETERMINED",
+      "route": "HOLD",
+      "candidate_work_ref": null,
+      "reason_codes": [
+        "AVAILABILITY_UNRESOLVED"
+      ]
+    }
+  ],
+  "governance": {
+    "network_attempted": false,
+    "source_activation_allowed": false,
+    "candidate_execution_allowed": false,
+    "lifecycle_write_allowed": false,
+    "authority_created": false,
+    "release_authorized": false,
+    "publication_allowed": false
+  }
+}

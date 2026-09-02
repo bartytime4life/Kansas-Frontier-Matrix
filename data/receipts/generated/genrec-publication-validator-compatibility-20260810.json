@@ -1,0 +1,139 @@
+{
+  "receipt_id": "genrec-publication-validator-compatibility-596b4cce0537",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/publication-validator-compatibility.yml",
+    "docs/intake/exploratory/publication-validator-compatibility-source-map.md",
+    "tests/validators/test_publication_validator_compatibility.py",
+    "tools/validators/validate_layer_manifest.py",
+    "tools/validators/validate_release_manifest.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/publication-validator-compatibility.yml": "sha256:be38076aba16fef2c5f024e191687389ceafb2484a8fa38446f28667937cdde0",
+    "docs/intake/exploratory/publication-validator-compatibility-source-map.md": "sha256:c973f12ceb76ad2a0a1393b5bb76b9460ae01fb1f9ce42b56dc5b24cd79335bf",
+    "tests/validators/test_publication_validator_compatibility.py": "sha256:607dd5347e1aedd2a6dd4b64292fdde8deaf72aa3bd25bab00351f974ee8c803",
+    "tools/validators/validate_layer_manifest.py": "sha256:fe20e5a96a5be14602f46afdfae87e197fc2c5ca48c51704b55150312aa049a7",
+    "tools/validators/validate_release_manifest.py": "sha256:6d61b3df43932d3c9d786eb4f944e4e14a757a3275ec220fa9b83660ab92d35b"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:0f9d8ba8a17619dadf6db6088df85d9841f3d8a5d88436ee26a888f911949a60",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector",
+      "repository evidence inspection",
+      "local Python syntax and delegation validation",
+      "content-hash validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:0f9d8ba8a17619dadf6db6088df85d9841f3d8a5d88436ee26a888f911949a60"
+    ],
+    "attached_docs": [
+      "GPT Markdown Prompt 4.0.pdf — KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "KFM MapLibre Operating Architecture, Governed UI, and AI Interaction Manual — Revised Working Edition",
+      "Kansas Frontier Matrix Definitive Greenfield Building Plan v1.1",
+      "Google Drive: New Ideas 5-19-26"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/ef1ba46a19e4de7c176e9d093c1285e73a0af75a",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/tools/validators/validate_layer_manifest.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/tools/validators/data/validate_layer_manifest.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/tools/validators/validate_release_manifest.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/tools/validators/release/validate_release_manifest.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/tools/validators/validate_rollback_card.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/tools/validators/validate_citation_validation.py",
+      "gdrive://document/1Gx4pU71Pqk1cG1oKb8l69B8K4yOJK7zy5KNH-Xvl4HQ"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/publication-validator-compatibility.yml": "PROPOSED",
+    "docs/intake/exploratory/publication-validator-compatibility-source-map.md": "PROPOSED",
+    "tests/validators/test_publication_validator_compatibility.py": "PROPOSED",
+    "tools/validators/validate_layer_manifest.py": "PROPOSED",
+    "tools/validators/validate_release_manifest.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-base-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Pinned main, confirmed two root manifest-validator stubs, their implemented canonical validators, the citation delegation pattern, and no open matching task before branch creation."
+    },
+    {
+      "gate": "exact-head-rollback-hold-reconciliation",
+      "outcome": "PASS",
+      "reason": "The first head incorrectly included RollbackCard; hosted rollback-drill proved that path remains an explicit repository hold, so the repair restores it byte-for-byte and narrows the slice to LayerManifest and ReleaseManifest."
+    },
+    {
+      "gate": "directory-rules-and-single-implementation-boundary",
+      "outcome": "PASS",
+      "reason": "Existing root paths remain delegation-only compatibility entrypoints while canonical semantics stay under tools/validators/data and tools/validators/release."
+    },
+    {
+      "gate": "python-compile-and-local-delegation-tests",
+      "outcome": "PASS",
+      "reason": "Wrappers and tests compile and delegation mechanics were checked locally without adding semantic logic."
+    },
+    {
+      "gate": "canonical-repository-fixture-replay",
+      "outcome": "SKIPPED",
+      "reason": "The exact-head workflow replays the real repository LayerManifest and ReleaseManifest fixture profiles after push."
+    },
+    {
+      "gate": "human-review-and-consumer-inventory",
+      "outcome": "SKIPPED",
+      "reason": "Independent review and a complete caller inventory remain NEEDS VERIFICATION; no path is removed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "layer-manifest-root-stub-and-canonical-validator",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/ef1ba46a19e4de7c176e9d093c1285e73a0af75a"
+    },
+    {
+      "id": "release-manifest-root-stub-and-canonical-validator",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/ef1ba46a19e4de7c176e9d093c1285e73a0af75a"
+    },
+    {
+      "id": "rollback-card-explicit-hold",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/.github/workflows/rollback-drill.yml"
+    },
+    {
+      "id": "existing-citation-compatibility-pattern",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/tools/validators/validate_citation_validation.py"
+    },
+    {
+      "id": "drive-publication-and-rollback-idea-source",
+      "validated": true,
+      "evidence_ref": "gdrive://document/1Gx4pU71Pqk1cG1oKb8l69B8K4yOJK7zy5KNH-Xvl4HQ"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T19:16:47Z",
+  "emitter": "openai/gpt-5.6-pro",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored compatibility repair for two existing root manifest-validator stubs. The repair preserves the separate RollbackCard hold found by exact-head CI. Wrappers delegate directly to existing canonical fixture-only validators and add no semantic, policy, review, release, rollback-execution, lifecycle, deployment, or publication behavior."
+}

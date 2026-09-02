@@ -1,0 +1,146 @@
+{
+  "receipt_id": "genrec-docs-dashboard-sensitivity-rights-26992f8ade1b",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/dashboards/governance/SENSITIVITY_RIGHTS.md"
+  ],
+  "artifact_hashes": {
+    "docs/dashboards/governance/SENSITIVITY_RIGHTS.md": "sha256:26992f8ade1b311018d85dab3a8f4bb21ff82dd3579e77c8773ae1f4f01c8795"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "exact serving revision not exposed"
+  },
+  "prompt_or_contract": "sha256:1eb8f2cfa181b46b7d4029bb3f9617e6d9f885db0732cbcdc3b5560a10802df2",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "current-repository inspection",
+      "same-path Markdown modernization",
+      "Python SHA-256 and Git-blob replay",
+      "Python structural validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [],
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    ],
+    "evidence_refs": [
+      "repo:bartytime4life/Kansas-Frontier-Matrix@f86fcddb553217f7ffadafd80f20e95d635180b1",
+      "docs/dashboards/governance/SENSITIVITY_RIGHTS.md@a84b94362793082784b06dc4faf1972e27a82570",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@a4de0d7a96b78da59cfc499d1025e1508afd8dd9",
+      "contracts/shared/redaction_receipt.md@c686cdf5c79a8b99ac66d4b01cd30d2f450f645f",
+      "schemas/contracts/v1/receipts/redaction_receipt.schema.json@7806abb702accd70dd17e947858c5768cc3eddae",
+      "tools/validators/receipts/validate_redaction_receipt.py@b6d22549a8b043d89ee9c1af658f1662ada70ee5",
+      "fixtures/contracts/v1/receipts/redaction_receipt/cases.json@a13adcae4e2fbcb3fa8a42dae8aba510a6ea31e3",
+      "tests/validators/test_validate_redaction_receipt.py@ddbbf4cf49476312a6eea1c8ecf53c7f5ab1b938",
+      "contracts/governance/sensitive_location_parity_assessment.md@0740f68300075fc707b221f6ff49a000f4f9a3e9",
+      "contracts/governance/sensitive_release_review_closure.md@235ca86dd807c6842ca8c861f995371fe7758f64",
+      "apps/review-console/src/features/sensitivity_review/README.md@216feb98ebf2c4099dee61b485e539053bbd85a3",
+      "apps/governed-api/src/governed_api/routes/registry.py@3418168d0b267160d6ad6dd87f289e880ef4a024"
+    ]
+  },
+  "truth_labels": {
+    "docs/dashboards/governance/SENSITIVITY_RIGHTS.md": "NEEDS VERIFICATION"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-and-overlap-preflight",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "directory-rules-same-path-placement",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "kfm-meta-block-yaml",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "single-h1-and-legacy-anchor-preservation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "same-document-fragment-resolution",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "markdown-fences-and-table-shape",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "utf8-lf-whitespace-and-conflict-marker-check",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "relative-link-presence-review",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "exact-remote-git-blob-and-sha256-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "repository-native-markdown-link-topology-and-full-validator-suite",
+      "outcome": "SKIPPED",
+      "reason": "No mounted checkout was exposed; hosted checks remain the repository-native evidence route."
+    },
+    {
+      "gate": "hosted-exact-head-workflows",
+      "outcome": "SKIPPED",
+      "reason": "Pending until the draft pull request creates an exact-head workflow set."
+    },
+    {
+      "gate": "accountable-human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending; this receipt carries no approval, merge, release, or publication authority."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "repo-main-f86fcddb553217f7ffadafd80f20e95d635180b1",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix@f86fcddb553217f7ffadafd80f20e95d635180b1"
+    },
+    {
+      "id": "target-prior-blob",
+      "validated": true,
+      "evidence_ref": "docs/dashboards/governance/SENSITIVITY_RIGHTS.md@a84b94362793082784b06dc4faf1972e27a82570"
+    },
+    {
+      "id": "directory-rules-adr",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@a4de0d7a96b78da59cfc499d1025e1508afd8dd9"
+    },
+    {
+      "id": "redaction-receipt-packet",
+      "validated": true,
+      "evidence_ref": "schemas/contracts/v1/receipts/redaction_receipt.schema.json@7806abb702accd70dd17e947858c5768cc3eddae"
+    },
+    {
+      "id": "sensitive-location-parity",
+      "validated": true,
+      "evidence_ref": "contracts/governance/sensitive_location_parity_assessment.md@0740f68300075fc707b221f6ff49a000f4f9a3e9"
+    },
+    {
+      "id": "sensitive-release-review-closure",
+      "validated": true,
+      "evidence_ref": "contracts/governance/sensitive_release_review_closure.md@235ca86dd807c6842ca8c861f995371fe7758f64"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-08-22T18:18:11Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "notes": "Documentation/provenance only. The dashboard specification preserves the five inherited indicator families while bounding policy, rights, review, transform, telemetry, route, release, deployment, and publication claims. Human review is pending. The receipt is process memory, not sensitivity, rights, evidence, policy, review, release, or publication authority."
+}

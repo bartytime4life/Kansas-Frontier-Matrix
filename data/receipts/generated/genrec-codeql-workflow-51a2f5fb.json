@@ -1,0 +1,107 @@
+{
+  "receipt_id": "genrec-codeql-workflow-51a2f5fb",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/codeql.yml"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/codeql.yml": "sha256:51a2f5fb4ec131f671a28343554054fbd5fa6f0cfe808850e04a23c8b08b6108"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-17"
+  },
+  "prompt_or_contract": "sha256:5cf472a5795e5b7efdc21e38eced741aa0057173e1335bd11b85248a55f18ab6",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "official GitHub documentation search",
+      "workflow structure validation",
+      "remote repository verification"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM project doctrine and repository operating contract"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/a3241c8766b2b009489506a14973f8d2af2a2550",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/a3241c8766b2b009489506a14973f8d2af2a2550/.github/workflows/codeql.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs/29605334923",
+      "github://github/codeql-action/releases/tag/v4.36.0",
+      "github://actions/checkout"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/codeql.yml": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "base-target-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Verified main base, prior workflow blob, latest stub run, repository Python and JavaScript/TypeScript evidence, and no overlapping branch or pull request."
+    },
+    {
+      "gate": "workflow-identity-and-trigger-compatibility",
+      "outcome": "PASS",
+      "reason": "Preserved workflow name codeql, job id codeql-scan, pull_request trigger, and push-to-main trigger; added weekly schedule and manual dispatch."
+    },
+    {
+      "gate": "real-codeql-wiring",
+      "outcome": "PASS",
+      "reason": "Configured CodeQL Action v4 init and analyze for Python and JavaScript/TypeScript using build-mode none and security-extended queries."
+    },
+    {
+      "gate": "least-privilege-and-threat-posture",
+      "outcome": "PASS",
+      "reason": "Uses pull_request rather than pull_request_target, disables persisted checkout credentials, and grants only read scopes plus security-events write needed for code-scanning results."
+    },
+    {
+      "gate": "artifact-hash-and-remote-readback",
+      "outcome": "PASS",
+      "reason": "Computed SHA-256 51a2f5fb4ec131f671a28343554054fbd5fa6f0cfe808850e04a23c8b08b6108 and Git blob f2e3412e9de21304fb690750d93780108e41bed4; GitHub returned the same blob."
+    },
+    {
+      "gate": "github-actions-final-head-run",
+      "outcome": "SKIPPED",
+      "reason": "The proposed-head workflow run had not yet been observed when this receipt was emitted."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "prior-codeql-workflow",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/a3241c8766b2b009489506a14973f8d2af2a2550/.github/workflows/codeql.yml"
+    },
+    {
+      "id": "prior-codeql-run",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs/29605334923"
+    },
+    {
+      "id": "official-codeql-action-v4",
+      "validated": true,
+      "evidence_ref": "github://github/codeql-action/releases/tag/v4.36.0"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-18T00:00:00Z",
+  "emitter": "openai/gpt-5.6-thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored graduation of the CodeQL workflow from a TODO-only success stub to a real Python and JavaScript/TypeScript CodeQL v4 matrix. The workflow emits GitHub-managed code-scanning results but no KFM release, proof, receipt, lifecycle, catalog, triplet, or publication artifact. Human review and final-head Actions execution remain pending."
+}

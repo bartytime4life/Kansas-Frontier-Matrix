@@ -1,0 +1,4 @@
+EVIDENCE_REFS_INVALID	$.evidence_refs
+GOVERNANCE_INVALID	$.governance
+READING_NOT_OBJECT	$.readings[0]
+UNDECLARED_TOP_LEVEL_FIELD	$.station_health

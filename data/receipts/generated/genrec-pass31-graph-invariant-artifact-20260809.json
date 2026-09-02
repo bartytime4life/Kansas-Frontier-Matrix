@@ -1,0 +1,71 @@
+{
+  "receipt_id": "genrec-pass31-graph-invariant-artifact-20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/graph-invariant-artifact.yml",
+    "contracts/evidence/graph_invariant_artifact.md",
+    "docs/intake/exploratory/pass-31-graph-invariant-artifact-source-map.md",
+    "fixtures/contracts/v1/evidence/graph_invariant_artifact/cases.json",
+    "schemas/contracts/v1/evidence/graph_invariant_artifact.schema.json",
+    "tests/validators/evidence/test_graph_invariant_artifact.py",
+    "tools/validators/evidence/validate_graph_invariant_artifact.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/graph-invariant-artifact.yml": "sha256:e59b5380b71bc74f1b57e7c8639ae51023cc5c3ff2817da50a2eadf65f61cc9c",
+    "contracts/evidence/graph_invariant_artifact.md": "sha256:18c4e8798c4201a7124138c573dda698120969342ca208633c862c7e79046f36",
+    "docs/intake/exploratory/pass-31-graph-invariant-artifact-source-map.md": "sha256:cfd356c2ef313c1cd0928e63defa6e868ee108ba446a0da5bd9a660289e6415c",
+    "fixtures/contracts/v1/evidence/graph_invariant_artifact/cases.json": "sha256:1fab14dcf224619a8773d4661edfbff68550462d479a0ce101db6261217c912e",
+    "schemas/contracts/v1/evidence/graph_invariant_artifact.schema.json": "sha256:4d7b9546b5b792d161d0620585a1c68a0bdab4a108365b47b600c2815b09f4bc",
+    "tests/validators/evidence/test_graph_invariant_artifact.py": "sha256:23a61f3c5d5f7f94bc52a6c4421a8838c62c6935a308d241f4d20f42b60d7cac",
+    "tools/validators/evidence/validate_graph_invariant_artifact.py": "sha256:708d5f9c04487e4250ba46a7629c4bef669badf4679504cf3b29e3933f0f1e57"
+  },
+  "model_identity": {"provider": "OpenAI", "model": "Codex", "version": "GPT-5"},
+  "prompt_or_contract": "sha256:48b01f0bed00068e64026d0e1ed3d35071da734e223310244c04b23542cc31d7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": ["GitHub connector", "Google Drive connector", "PDF extraction and rendering", "local deterministic validation"]
+  },
+  "inputs": {
+    "evidence_hashes": ["sha256:020a1207c2a6d193dc23defca40d24d429acd1273da17c2494582116ec8e9639"],
+    "attached_docs": ["KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf"],
+    "evidence_refs": [
+      "google-drive:1w7Qrf5Na7PSvwdTuplZnFbyueToPtQaa#KFM-P31-PROG-0003",
+      "google-drive:1uTqdIEFZE2cq3gyISetoRYM6LIlnKqTc3FobtEx7Cbs",
+      "github:bartytime4life/Kansas-Frontier-Matrix@7335ed9ea0f81342ae0b1c7828a21ac74711c78b"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/graph-invariant-artifact.yml": "PROPOSED",
+    "contracts/evidence/graph_invariant_artifact.md": "PROPOSED",
+    "docs/intake/exploratory/pass-31-graph-invariant-artifact-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/evidence/graph_invariant_artifact/cases.json": "PROPOSED",
+    "schemas/contracts/v1/evidence/graph_invariant_artifact.schema.json": "PROPOSED",
+    "tests/validators/evidence/test_graph_invariant_artifact.py": "PROPOSED",
+    "tools/validators/evidence/validate_graph_invariant_artifact.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {"gate": "source-assay", "outcome": "PASS", "reason": "Card KFM-P31-PROG-0003 was resolved in the consolidated atlas with its stable specification hash."},
+    {"gate": "repository-gap-assay", "outcome": "PASS", "reason": "Exact card identity and the combined pre/post count, constraint, representative-query, and GDS comparison semantics were absent from the recorded base."},
+    {"gate": "directory-rules-placement", "outcome": "PASS", "reason": "Evidence meaning is separated from schema, fixture, validator, test, workflow, intake, receipt, and migration-mechanics responsibilities."},
+    {"gate": "draft-2020-12-meta", "outcome": "PASS"},
+    {"gate": "focused-local-tests", "outcome": "PASS", "reason": "Seven tests and fourteen positive/negative fixture cases passed without graph or network access."},
+    {"gate": "generated-receipt-integrity", "outcome": "PASS"},
+    {"gate": "hosted-exact-head-checks", "outcome": "SKIPPED", "reason": "Recorded before the draft pull request existed; GitHub Actions remains authoritative for the branch head."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Awaiting an authorized repository reviewer."}
+  ],
+  "policy_decisions": ["docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md", "docs/doctrine/directory-rules.md"],
+  "citations": [
+    {"id": "KFM-P31-PROG-0003", "validated": true, "evidence_ref": "google-drive:1w7Qrf5Na7PSvwdTuplZnFbyueToPtQaa"},
+    {"id": "KFM-P31-PROG-0003-SPEC", "validated": true, "evidence_ref": "sha256:48b01f0bed00068e64026d0e1ed3d35071da734e223310244c04b23542cc31d7"},
+    {"id": "DIRECTORY-RULES", "validated": true, "evidence_ref": "google-drive:1uTqdIEFZE2cq3gyISetoRYM6LIlnKqTc3FobtEx7Cbs"}
+  ],
+  "human_review": {"reviewer_ids": [], "state": "pending", "timestamp": null},
+  "override_record": null,
+  "created_at": "2026-08-10T01:32:54Z",
+  "emitter": "OpenAI Codex",
+  "links": {"pr_number": null, "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md", "drift_register_entry": null},
+  "notes": "Fixture-only proposed graph invariant comparison profile. It performs no graph access, query, GDS execution, migration, evidence admission, policy evaluation, approval, promotion, release, or publication effect. Rollback is deletion of the additive packet."
+}

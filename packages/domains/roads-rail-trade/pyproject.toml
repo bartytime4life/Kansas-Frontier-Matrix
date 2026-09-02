@@ -1,0 +1,4 @@
+# packages/domains/roads-rail-trade pyproject — greenfield placeholder
+[project]
+name = "kfm-domain-roads-rail-trade"
+version = "0.0.0"

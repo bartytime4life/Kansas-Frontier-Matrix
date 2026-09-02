@@ -1,0 +1,233 @@
+{
+  "receipt_id": "genrec-air-policy-readme-4b34c73e",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "policy/domains/air/README.md"
+  ],
+  "artifact_hashes": {
+    "policy/domains/air/README.md": "sha256:4b34c73e4e4e3fa3bf6059353b38820a3cbe421f46ed6d0ec58a45b1cd21ba0b"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-08-13"
+  },
+  "prompt_or_contract": "sha256:c79a411058dfe7a53217580482c5d2de9a27799a4772df1563ccde887b9674da",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "complete recursive repository-tree inspection",
+      "Air-to-Atmosphere policy and validation reconciliation",
+      "local Markdown structure, link, fact, sensitive-content, and SHA-256 validation",
+      "attached architecture-evidence inspection"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md",
+      "Unified Implementation Architecture Build Manual.md",
+      "Repository Structure Guiding Document.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f61d9df6409917610fa45d739fab55cab86f5eb2/policy/domains/air/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/tree/f61d9df6409917610fa45d739fab55cab86f5eb2/policy/domains/air",
+      "github://bartytime4life/Kansas-Frontier-Matrix/tree/f61d9df6409917610fa45d739fab55cab86f5eb2/policy/domains/atmosphere",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f61d9df6409917610fa45d739fab55cab86f5eb2/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f61d9df6409917610fa45d739fab55cab86f5eb2/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f61d9df6409917610fa45d739fab55cab86f5eb2/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f61d9df6409917610fa45d739fab55cab86f5eb2/policy/decision/vocabulary.v1.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f61d9df6409917610fa45d739fab55cab86f5eb2/policy/decision/reviewer_roles.v1.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f61d9df6409917610fa45d739fab55cab86f5eb2/contracts/policy/policy_input_bundle_profile_v1.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f61d9df6409917610fa45d739fab55cab86f5eb2/contracts/policy/policy_decision_semantics_profile_v1.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f61d9df6409917610fa45d739fab55cab86f5eb2/contracts/domains/atmosphere/AtmosphereAirDecisionEnvelope.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f61d9df6409917610fa45d739fab55cab86f5eb2/schemas/contracts/v1/domains/atmosphere/atmosphere_air_decision_envelope.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/tree/f61d9df6409917610fa45d739fab55cab86f5eb2/tests/domains/atmosphere",
+      "github://bartytime4life/Kansas-Frontier-Matrix/tree/f61d9df6409917610fa45d739fab55cab86f5eb2/tools/validators/domains/atmosphere",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f61d9df6409917610fa45d739fab55cab86f5eb2/.github/workflows/domain-atmosphere.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f61d9df6409917610fa45d739fab55cab86f5eb2/.github/workflows/policy-test.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f61d9df6409917610fa45d739fab55cab86f5eb2/packages/policy-runtime/src/policy_runtime/core.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f61d9df6409917610fa45d739fab55cab86f5eb2/policy/bundles/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f61d9df6409917610fa45d739fab55cab86f5eb2/data/receipts/generated/genrec-air-policy-readme-d1130093.json"
+    ]
+  },
+  "truth_labels": {
+    "policy/domains/air/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Pinned current main and target bytes, reviewed target history, found no open exact-target PR, confirmed the planned branch was unused, and repeated the overlap check immediately before publication."
+    },
+    {
+      "gate": "base-drift-review",
+      "outcome": "PASS",
+      "reason": "Main advanced during authoring only through policy/bundles/README.md; the Air target and all Air/Atmosphere inventory paths were unchanged, the updated bundle lane remains documentation-only, and the evidence base was re-pinned to f61d9df."
+    },
+    {
+      "gate": "accepted-directory-placement",
+      "outcome": "PASS",
+      "reason": "ADR-0029 and the accepted Directory Rules retain normative policy under singular policy/; this revision changes no root, slug decision, activation state, or authority."
+    },
+    {
+      "gate": "complete-tree-inventory",
+      "outcome": "PASS",
+      "reason": "Parsed the untruncated 16,986-entry recursive tree and confirmed the exact two-blob Air lane and fourteen-blob preferred Atmosphere policy lane."
+    },
+    {
+      "gate": "direct-air-non-activation",
+      "outcome": "PASS",
+      "reason": "The Air lane remains an empty marker plus compatibility README with no rule, bundle, selector, evaluator, test, validator, workflow, or runtime source."
+    },
+    {
+      "gate": "atmosphere-policy-maturity",
+      "outcome": "PASS",
+      "reason": "Inspected all thirteen Rego files and preserved them as PROPOSED default-only scaffolds with two deny-false and eleven allow-false defaults, duplicate concepts, and no native Rego tests."
+    },
+    {
+      "gate": "shared-policy-profile-boundary",
+      "outcome": "PASS",
+      "reason": "Reconciled the PROPOSED_INACTIVE input, vocabulary, semantics, reason, obligation, and reviewer-role profiles without treating them as evaluation or authority."
+    },
+    {
+      "gate": "adjacent-validation-boundary",
+      "outcome": "PASS",
+      "reason": "Separated ten substantive and ten placeholder validators, seven substantive and eight placeholder tests, and seven bounded workflows from policy, proof, release, deploy, and publication effects."
+    },
+    {
+      "gate": "decision-envelope-alignment",
+      "outcome": "PASS",
+      "reason": "Recorded the semantic-contract, minimal-schema, placeholder-validator, and placeholder-test gap without asserting an accepted or executable envelope."
+    },
+    {
+      "gate": "no-loss-document-reconciliation",
+      "outcome": "PASS",
+      "reason": "Preserved the prior compatibility, fail-closed, anti-collapse, public non-bypass, review, migration, correction, rollback, and official-authority boundaries while repairing stale implementation claims."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "Verified one rendered H1, 66 ordered headings, one closed KFM meta block, four balanced language-tagged code-fence pairs, no duplicate headings, and a final newline."
+    },
+    {
+      "gate": "internal-link-and-fragment-resolution",
+      "outcome": "PASS",
+      "reason": "All 51 unique repository-relative link targets and all 21 unique local fragment targets resolve against the complete pinned tree and generated heading anchors."
+    },
+    {
+      "gate": "repository-fact-assertions",
+      "outcome": "PASS",
+      "reason": "Programmatic inventory checks confirmed direct policy, contracts, schemas, tests, validators, specs, pipelines, bundle documentation, release-candidate, and runtime facts cited by the README."
+    },
+    {
+      "gate": "artifact-content-integrity",
+      "outcome": "PASS",
+      "reason": "The final README SHA-256 was recomputed from exact local bytes and bound into this receipt."
+    },
+    {
+      "gate": "sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "No credential, private payload, exact protected location, hidden reasoning, or exploit detail is present."
+    },
+    {
+      "gate": "repository-native-test-suite",
+      "outcome": "SKIPPED",
+      "reason": "No local repository checkout or gh CLI is available; no local Rego evaluator, repository validator suite, or workflow result is claimed."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks occur only after draft PR creation and are observed and reported separately from this immutable authoring receipt."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending; this receipt is provenance, not approval."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "policy/README.md",
+    "policy/domains/README.md"
+  ],
+  "citations": [
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/f61d9df6409917610fa45d739fab55cab86f5eb2/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "direct-air-compatibility-inventory",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/tree/f61d9df6409917610fa45d739fab55cab86f5eb2/policy/domains/air"
+    },
+    {
+      "id": "preferred-atmosphere-policy-inventory",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/tree/f61d9df6409917610fa45d739fab55cab86f5eb2/policy/domains/atmosphere"
+    },
+    {
+      "id": "shared-decision-vocabulary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/f61d9df6409917610fa45d739fab55cab86f5eb2/policy/decision/vocabulary.v1.json"
+    },
+    {
+      "id": "shared-reviewer-role-vocabulary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/f61d9df6409917610fa45d739fab55cab86f5eb2/policy/decision/reviewer_roles.v1.json"
+    },
+    {
+      "id": "atmosphere-decision-envelope-gap",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/f61d9df6409917610fa45d739fab55cab86f5eb2/contracts/domains/atmosphere/AtmosphereAirDecisionEnvelope.md"
+    },
+    {
+      "id": "atmosphere-tests-mixed-maturity",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/tree/f61d9df6409917610fa45d739fab55cab86f5eb2/tests/domains/atmosphere"
+    },
+    {
+      "id": "atmosphere-validators-mixed-maturity",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/tree/f61d9df6409917610fa45d739fab55cab86f5eb2/tools/validators/domains/atmosphere"
+    },
+    {
+      "id": "atmosphere-workflow-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/f61d9df6409917610fa45d739fab55cab86f5eb2/.github/workflows/domain-atmosphere.yml"
+    },
+    {
+      "id": "broad-policy-readiness-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/f61d9df6409917610fa45d739fab55cab86f5eb2/.github/workflows/policy-test.yml"
+    },
+    {
+      "id": "policy-runtime-placeholder",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/f61d9df6409917610fa45d739fab55cab86f5eb2/packages/policy-runtime/src/policy_runtime/core.py"
+    },
+    {
+      "id": "prior-air-policy-readme-receipt",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/f61d9df6409917610fa45d739fab55cab86f5eb2/data/receipts/generated/genrec-air-policy-readme-d1130093.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-13T18:35:29Z",
+  "emitter": "openai/gpt-5-codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored repository-grounded v0.3 Air compatibility reconciliation on a focused draft-review branch. Main drift during authoring was reconciled against the updated documentation-only bundle boundary. This change activates no rule, threshold, bundle, evaluator, schema, contract, fixture, test, validator, workflow, source, lifecycle transition, release, deployment, alias, or publication. Human review remains pending."
+}

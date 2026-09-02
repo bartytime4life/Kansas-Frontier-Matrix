@@ -1,0 +1,143 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/earth-observation-harvest-authority-matrix.yml": "sha256:1888fff4b6d55ebcc375e32145c7488fc6b2827733d6173dbae5342cdc773d4f",
+    "contracts/source/earth_observation_harvest_authority_matrix.md": "sha256:298052343d890bc89e7ff64931bac69218584ac5c40681f9a22353e118680008",
+    "control_plane/earth_observation_harvest_authority_matrix.json": "sha256:c5529a19bcd104f9ce271ebce67c81a3bb8ff22ec782139e00e92a7a5c5504dc",
+    "fixtures/contracts/v1/source/earth_observation_harvest_authority_matrix/README.md": "sha256:b0667bedda2c479ae2f8b06d751ff1bd91a9ca2f9212ded7a59814e24217115d",
+    "fixtures/contracts/v1/source/earth_observation_harvest_authority_matrix/expected_findings_manifest.json": "sha256:5df46fcac3ce3223b95a0c96a246ff6b6a63a995658a3867220b2445cd68605e",
+    "fixtures/contracts/v1/source/earth_observation_harvest_authority_matrix/invalid/invalid_active_without_bindings.json": "sha256:d4d436cffc134b8c11774bd81e2a9825af1ea44174e5447edd7d600daa6aa91c",
+    "fixtures/contracts/v1/source/earth_observation_harvest_authority_matrix/semantic_invalid/semantic_duplicate_authority.json": "sha256:46117132fbfedb1a2dde598227b2687d80141bc6cc6955e5f07c973868e27987",
+    "fixtures/contracts/v1/source/earth_observation_harvest_authority_matrix/semantic_invalid/semantic_missing_repo_ref.json": "sha256:c9fc470b0f2d993832376c037b18403483917ca1d473cbcd96e1e59173306226",
+    "fixtures/contracts/v1/source/earth_observation_harvest_authority_matrix/semantic_invalid/semantic_unresolved_access_surface.json": "sha256:1182a3a53aa25d2876e04466630b433b8fbd099166f0055fd37977c56a768ea1",
+    "fixtures/contracts/v1/source/earth_observation_harvest_authority_matrix/valid/valid_documented_only_matrix.json": "sha256:c5529a19bcd104f9ce271ebce67c81a3bb8ff22ec782139e00e92a7a5c5504dc",
+    "schemas/contracts/v1/source/earth_observation_harvest_authority_matrix.schema.json": "sha256:12d0801ef46426516a450c96cd851efdab47f686cb148de086c061105096f269",
+    "tests/validators/test_validate_earth_observation_harvest_authority_matrix.py": "sha256:f2cfdf6158f3404a4a2368eff9f1c82598a6e091f54d1cd260090fe2fed7019b",
+    "tools/validators/validate_earth_observation_harvest_authority_matrix.py": "sha256:9e44e7a062c60c0a199e6773265b4b049682c0fe1398b3431a9a088ca467d345"
+  },
+  "artifact_paths": [
+    ".github/workflows/earth-observation-harvest-authority-matrix.yml",
+    "contracts/source/earth_observation_harvest_authority_matrix.md",
+    "control_plane/earth_observation_harvest_authority_matrix.json",
+    "fixtures/contracts/v1/source/earth_observation_harvest_authority_matrix/README.md",
+    "fixtures/contracts/v1/source/earth_observation_harvest_authority_matrix/expected_findings_manifest.json",
+    "fixtures/contracts/v1/source/earth_observation_harvest_authority_matrix/invalid/invalid_active_without_bindings.json",
+    "fixtures/contracts/v1/source/earth_observation_harvest_authority_matrix/semantic_invalid/semantic_duplicate_authority.json",
+    "fixtures/contracts/v1/source/earth_observation_harvest_authority_matrix/semantic_invalid/semantic_missing_repo_ref.json",
+    "fixtures/contracts/v1/source/earth_observation_harvest_authority_matrix/semantic_invalid/semantic_unresolved_access_surface.json",
+    "fixtures/contracts/v1/source/earth_observation_harvest_authority_matrix/valid/valid_documented_only_matrix.json",
+    "schemas/contracts/v1/source/earth_observation_harvest_authority_matrix.schema.json",
+    "tests/validators/test_validate_earth_observation_harvest_authority_matrix.py",
+    "tools/validators/validate_earth_observation_harvest_authority_matrix.py"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "attachment:KFM_Pass_31_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P31-IDEA-0018",
+      "id": "attachment:pass31-eo-authority-matrix",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/sources/catalog/nasa/nasa-earthdata.md@7da6dd8d6b9bb510c8a85057b15e358fa2d57810",
+      "id": "repository:earthdata-source-page",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:connectors/nasa-earthdata/README.md@7da6dd8d6b9bb510c8a85057b15e358fa2d57810",
+      "id": "repository:earthdata-connector-boundary",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@7da6dd8d6b9bb510c8a85057b15e358fa2d57810",
+      "id": "repository:directory-governance",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-08T05:00:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Pass_31_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_31_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P31-IDEA-0018",
+      "repo:docs/sources/catalog/nasa/nasa-earthdata.md@7da6dd8d6b9bb510c8a85057b15e358fa2d57810",
+      "repo:connectors/nasa-earthdata/README.md@7da6dd8d6b9bb510c8a85057b15e358fa2d57810",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@7da6dd8d6b9bb510c8a85057b15e358fa2d57810"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-08-08"
+  },
+  "notes": "Inactive, repository-grounded EO harvest authority crosswalk for the documented NASA Earthdata and HLS lanes. It stores no endpoint or secret and authorizes no connector, network request, source admission, RAW write, release, or publication.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:37e2d46b2544aaeb26ea0c7024ec9538f82c7ac9dfe00807812d93ed794a6293",
+  "receipt_id": "genrec-eo-harvest-authority-matrix-20260808",
+  "truth_labels": {
+    ".github/workflows/earth-observation-harvest-authority-matrix.yml": "CONFIRMED",
+    "contracts/source/earth_observation_harvest_authority_matrix.md": "PROPOSED",
+    "control_plane/earth_observation_harvest_authority_matrix.json": "PROPOSED",
+    "fixtures/contracts/v1/source/earth_observation_harvest_authority_matrix/README.md": "CONFIRMED",
+    "fixtures/contracts/v1/source/earth_observation_harvest_authority_matrix/expected_findings_manifest.json": "CONFIRMED",
+    "fixtures/contracts/v1/source/earth_observation_harvest_authority_matrix/invalid/invalid_active_without_bindings.json": "CONFIRMED",
+    "fixtures/contracts/v1/source/earth_observation_harvest_authority_matrix/semantic_invalid/semantic_duplicate_authority.json": "CONFIRMED",
+    "fixtures/contracts/v1/source/earth_observation_harvest_authority_matrix/semantic_invalid/semantic_missing_repo_ref.json": "CONFIRMED",
+    "fixtures/contracts/v1/source/earth_observation_harvest_authority_matrix/semantic_invalid/semantic_unresolved_access_surface.json": "CONFIRMED",
+    "fixtures/contracts/v1/source/earth_observation_harvest_authority_matrix/valid/valid_documented_only_matrix.json": "CONFIRMED",
+    "schemas/contracts/v1/source/earth_observation_harvest_authority_matrix.schema.json": "PROPOSED",
+    "tests/validators/test_validate_earth_observation_harvest_authority_matrix.py": "CONFIRMED",
+    "tools/validators/validate_earth_observation_harvest_authority_matrix.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-unit-tests",
+      "outcome": "PASS",
+      "reason": "Focused deterministic unit tests passed in the local authoring workspace."
+    },
+    {
+      "gate": "fixture-manifest-polarity",
+      "outcome": "PASS",
+      "reason": "Synthetic positive and negative fixtures matched their expected finite outcomes and reason codes."
+    },
+    {
+      "gate": "schema-and-spec-hash",
+      "outcome": "PASS",
+      "reason": "Closed Draft 2020-12 schemas and canonical spec_hash values validated locally."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ]
+}

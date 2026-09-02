@@ -1,0 +1,156 @@
+{
+  "receipt_id": "genrec-pipelines-specs-compat-readme-9f3b67c9",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "pipelines/specs/README.md"
+  ],
+  "artifact_hashes": {
+    "pipelines/specs/README.md": "sha256:9f3b67c9bcae8c9325e995a9e9be4accdc7179794ae2aff0992a58120b20d70a"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Git object inspection",
+      "authenticated remote branch and commit operations",
+      "local deterministic documentation validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7"
+    ],
+    "attached_docs": [
+      "KFM GitHub Repository Documentation Implementation Agent â€” Full Operating Prompt v3.1.0 (user-supplied)"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/pipelines/specs/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/pipelines/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/pipeline_specs/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/docs/architecture/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/docs/architecture/DIRECTORY_RULES.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/docs/registers/DRIFT_REGISTER.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/docs/adr/ADR-0013-spec_hash-and-run_id-identity-grammar.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/docs/adr/ADR-0018-promotion-gate-sequence.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/docs/adr/ADR-0024-steward-separation-of-duties-for-release.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/docs/adr/ADR-0025-public-client-never-reads-canonical-internal-stores.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/CONTRIBUTING.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/.github/PULL_REQUEST_TEMPLATE.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/.github/workflows/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/.github/workflows/policy-boundary-guards.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/data/receipts/generated/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/docs/doctrine/ai-build-operating-contract.md"
+    ]
+  },
+  "truth_labels": {
+    "pipelines/specs/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "task-contract-and-capability-preflight",
+      "outcome": "PASS",
+      "reason": "Repository identity, public visibility, authenticated owner identity, admin permission, default branch, immutable base, target blob, scoped review-branch route, connector-first profile, two-file change budget, acceptance criteria, and stop conditions were resolved before mutation."
+    },
+    {
+      "gate": "directory-rules-and-placement-preflight",
+      "outcome": "PASS",
+      "reason": "All three Directory Rules artifacts were inspected. Their placement and identity conflict remains visible, while their shared pipelines versus pipeline_specs responsibility rule supports this compatibility guardrail without creating a parallel authority."
+    },
+    {
+      "gate": "adr-drift-instructions-and-authority-graph",
+      "outcome": "PASS",
+      "reason": "Applicable proposed or draft ADRs, the drift register, parent and companion READMEs, contribution guidance, CODEOWNERS, PR template, generated-receipt contract, document ID, inbound links, and generated receipt references were inspected. No AGENTS.md was present at repository root, pipelines/, or pipelines/specs/."
+    },
+    {
+      "gate": "overlapping-work-preflight",
+      "outcome": "PASS",
+      "reason": "No open pull request or matching branch for the pipelines/specs compatibility README task was found before branch creation."
+    },
+    {
+      "gate": "workflow-trigger-threat-preflight",
+      "outcome": "PASS",
+      "reason": "The target matches the read-only policy-boundary-guards path filter and broad pull-request workflows. No pull_request_target, workflow_run, self-hosted runner, direct secret reference, ordinary write scope, deployment, or publication path was observed for this diff; branch-protection status and floating action-pin hardening remain unresolved."
+    },
+    {
+      "gate": "no-loss-and-repository-grounding",
+      "outcome": "PASS",
+      "reason": "The existing compatibility boundary, KFM terminology, stable title, doc_id, anchors, migration posture, and anti-collapse rules were preserved. Stale blank-file language, speculative duplicated inventory, and unsupported evidence labels were replaced with the pinned two-file path inventory and explicit evidence limits."
+    },
+    {
+      "gate": "security-rights-and-sensitive-content",
+      "outcome": "PASS",
+      "reason": "The revision contains no credentials, private endpoints, source payloads, exact sensitive locations, living-person or DNA data, private-land joins, infrastructure vulnerability details, external tracking additions, or release/publication action."
+    },
+    {
+      "gate": "markdown-structure-anchors-links-and-hash",
+      "outcome": "PASS",
+      "reason": "The prepared README has one H1, balanced fences and metadata markers, unique heading slugs, 22 resolved internal anchors, 11 repository-relative links resolved against the pinned tree, no trailing whitespace, a final newline, 329 lines, 17,576 bytes, and SHA-256 9f3b67c9bcae8c9325e995a9e9be4accdc7179794ae2aff0992a58120b20d70a."
+    },
+    {
+      "gate": "kfm-meta-yaml-parser",
+      "outcome": "SKIPPED",
+      "reason": "No YAML parser was available in the trusted local runtime. The metadata wrapper and required values were inspected structurally; repository CI will be observed separately and this omission is not reported as a pass."
+    },
+    {
+      "gate": "repository-native-execution",
+      "outcome": "SKIPPED",
+      "reason": "Repository scripts and dependencies were not executed because this documentation-only task did not authorize running untrusted repository code. The exact remote diff and GitHub workflow results will be inspected after the branch and draft pull request exist."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "user-request",
+      "validated": true,
+      "evidence_ref": "prompt://kfm-github-repository-documentation-implementation-agent-v3.1.0"
+    },
+    {
+      "id": "target-baseline",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/pipelines/specs/README.md"
+    },
+    {
+      "id": "pipeline-responsibility-split",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/pipeline_specs/README.md"
+    },
+    {
+      "id": "workflow-trigger-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/.github/workflows/policy-boundary-guards.yml"
+    },
+    {
+      "id": "generated-receipt-machine-shape",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-22T15:18:56-05:00",
+  "emitter": "openai-codex/gpt-5",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored documentation-only revision on a scoped review branch. The README remains a compatibility guardrail, records the current repository evidence boundary, preserves unresolved Directory Rules conflict, and changes no pipeline specification, executable behavior, source activation, schema, policy, fixture, test, workflow, lifecycle object, release state, runtime behavior, or public artifact. This receipt records process provenance only; it is not factual proof, policy permission, human approval, release authority, or publication authority."
+}

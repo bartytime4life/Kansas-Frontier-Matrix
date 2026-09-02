@@ -1,0 +1,175 @@
+{
+  "receipt_id": "genrec:briefing-implementation-campaign:f2450de6190010f70ce20f07",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/briefing-implementation-campaign.yml",
+    "docs/architecture/briefing-implementation-campaign-20260806.md",
+    "fixtures/contracts/v1/data/trace_temporal_closure/artifacts/synthetic-map.json",
+    "fixtures/contracts/v1/data/trace_temporal_closure/cases.json",
+    "fixtures/domains/hazards/usdm_materiality/cases.json",
+    "fixtures/maplibre/v6_readiness/cases.json",
+    "tests/domains/hazards/test_validate_usdm_materiality.py",
+    "tests/experiments/test_temporal_slice_store.py",
+    "tests/maplibre/test_validate_v6_readiness.py",
+    "tests/validators/test_validate_trace_temporal_closure.py",
+    "tools/experiments/temporal_slice_store.py",
+    "tools/validators/domains/hazards/validate_usdm_materiality.py",
+    "tools/validators/maplibre/validate_v6_readiness.py",
+    "tools/validators/validate_trace_temporal_closure.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/briefing-implementation-campaign.yml": "sha256:2ab8be9adfc246337a758819e3d97b2d527ee79f11fb6e5f83d9e80a1658a9bf",
+    "docs/architecture/briefing-implementation-campaign-20260806.md": "sha256:94ff122ecd6aae28f2d2934a3a4c905e59749c5681ae5a5c0df273aef69092db",
+    "fixtures/contracts/v1/data/trace_temporal_closure/artifacts/synthetic-map.json": "sha256:80d25a0a78700e2fdfe78db625f1eb68c8f7411997456e2d04f2d220f35b6fc2",
+    "fixtures/contracts/v1/data/trace_temporal_closure/cases.json": "sha256:a2971890b80234a4d1fcfa7a55b5c56005f78df92ee9220cf4596c11976c3a40",
+    "fixtures/domains/hazards/usdm_materiality/cases.json": "sha256:4267809014e5e06fa0ec78fc4a95f23368300d747da06ebd5971278c3cf203d6",
+    "fixtures/maplibre/v6_readiness/cases.json": "sha256:50babbdd9c667595ee4bf6bc6c3685f311e1f06ce780d09eff63537b01c78de4",
+    "tests/domains/hazards/test_validate_usdm_materiality.py": "sha256:80f27aec4daa3d014b8de7d4d5b8d6981a3ea7c0acd3596626a9fafd28bded8e",
+    "tests/experiments/test_temporal_slice_store.py": "sha256:4beebae3339fd4443ea80f0bcea53c7c288133dc1c67c9f8dff82106f38bb6b1",
+    "tests/maplibre/test_validate_v6_readiness.py": "sha256:e7db80e3eb6a4b693d12c833919bb7a6ed6aae5aa9bcd82b2a693d4ba08f6adc",
+    "tests/validators/test_validate_trace_temporal_closure.py": "sha256:8b8b533b85c2e4f082fc829f68e70d416235b8248ae61746e433fb5bae3431af",
+    "tools/experiments/temporal_slice_store.py": "sha256:c348b1e95ddeff6774bee413f703036770ec80a5c526a9842a61b3c024a2cd4b",
+    "tools/validators/domains/hazards/validate_usdm_materiality.py": "sha256:42b912a9bfaf6d4f3274ac536de9a091daf6f12e213035019f804a32e76ee064",
+    "tools/validators/maplibre/validate_v6_readiness.py": "sha256:3fe3bf4772783e414c55f2e4f3d6bf37e5bad28381b2973e6c0576c575a22fdd",
+    "tools/validators/validate_trace_temporal_closure.py": "sha256:e36da3932a57fb83caaec9f8a8fa51abc92589f2dd6b3ce6390bb199ba9cd650"
+  },
+  "model_identity": {
+    "provider": "openai",
+    "model": "gpt-5.6-thinking",
+    "version": "2026-08-06"
+  },
+  "prompt_or_contract": "sha256:8cbf813b817da0ab4504d7f0447290c160d73ee5e3461d3235abbb109bf52fc6",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "github-connector",
+      "python",
+      "unittest",
+      "sqlite3"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:8cbf813b817da0ab4504d7f0447290c160d73ee5e3461d3235abbb109bf52fc6"
+    ],
+    "attached_docs": [
+      "Daily KFM Briefing — August 6, 2026"
+    ],
+    "evidence_refs": [
+      "git:main@0272d7293157ad14989639d6e45c9f2d51eea636",
+      "contracts/data/temporal_slice.md",
+      "contracts/telemetry/trace_receipt_link.md",
+      "contracts/data/material_change_assessment.md",
+      "docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md",
+      "docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/briefing-implementation-campaign.yml": "PROPOSED",
+    "docs/architecture/briefing-implementation-campaign-20260806.md": "PROPOSED",
+    "fixtures/contracts/v1/data/trace_temporal_closure/artifacts/synthetic-map.json": "PROPOSED",
+    "fixtures/contracts/v1/data/trace_temporal_closure/cases.json": "PROPOSED",
+    "fixtures/domains/hazards/usdm_materiality/cases.json": "PROPOSED",
+    "fixtures/maplibre/v6_readiness/cases.json": "PROPOSED",
+    "tests/domains/hazards/test_validate_usdm_materiality.py": "PROPOSED",
+    "tests/experiments/test_temporal_slice_store.py": "PROPOSED",
+    "tests/maplibre/test_validate_v6_readiness.py": "PROPOSED",
+    "tests/validators/test_validate_trace_temporal_closure.py": "PROPOSED",
+    "tools/experiments/temporal_slice_store.py": "PROPOSED",
+    "tools/validators/domains/hazards/validate_usdm_materiality.py": "PROPOSED",
+    "tools/validators/maplibre/validate_v6_readiness.py": "PROPOSED",
+    "tools/validators/validate_trace_temporal_closure.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-unittest-27",
+      "outcome": "PASS",
+      "reason": "Twenty-seven deterministic tests passed across storage, closure, MapLibre readiness, and USDM materiality."
+    },
+    {
+      "gate": "temporal-slice-store-self-test",
+      "outcome": "PASS",
+      "reason": "Expected lookup/change indexes were created; overlap failed closed before explicit supersession."
+    },
+    {
+      "gate": "trace-temporal-closure-fixture-polarity",
+      "outcome": "PASS",
+      "reason": "One valid and six single-fault invalid fixtures matched exact findings."
+    },
+    {
+      "gate": "maplibre-v6-readiness-fixture-polarity",
+      "outcome": "PASS",
+      "reason": "READY, HOLD, and ERROR fixture behavior remained finite and deterministic."
+    },
+    {
+      "gate": "usdm-materiality-fixture-polarity",
+      "outcome": "PASS",
+      "reason": "Observation materiality outcomes and all invalid cases matched exact expected findings."
+    },
+    {
+      "gate": "python-compile",
+      "outcome": "PASS",
+      "reason": "All four implementation modules compiled successfully."
+    },
+    {
+      "gate": "hosted-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pending draft pull request exact-head execution."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "TEMPORAL_SLICE_CONTRACT",
+      "validated": true,
+      "evidence_ref": "contracts/data/temporal_slice.md"
+    },
+    {
+      "id": "TRACE_RECEIPT_LINK_CONTRACT",
+      "validated": true,
+      "evidence_ref": "contracts/telemetry/trace_receipt_link.md"
+    },
+    {
+      "id": "MATERIAL_CHANGE_ASSESSMENT",
+      "validated": true,
+      "evidence_ref": "contracts/data/material_change_assessment.md"
+    },
+    {
+      "id": "MAPLIBRE_IMPORT_BOUNDARY",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md"
+    },
+    {
+      "id": "MAPLIBRE_SOLE_RENDERER",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md"
+    },
+    {
+      "id": "DIRECTORY_RULES",
+      "validated": true,
+      "evidence_ref": "docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "PULL_REQUEST_TEMPLATE",
+      "validated": true,
+      "evidence_ref": ".github/PULL_REQUEST_TEMPLATE.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-06T19:00:00Z",
+  "emitter": "openai/gpt-5.6-thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Synthetic no-network implementation of four actionable briefing items. The receipt records authorship and artifact-byte bindings only; it does not authenticate evidence, approve MapLibre v6, create production storage, activate USDM ingestion, authorize repository transitions, or grant promotion, release, deployment, publication, or public-use authority."
+}

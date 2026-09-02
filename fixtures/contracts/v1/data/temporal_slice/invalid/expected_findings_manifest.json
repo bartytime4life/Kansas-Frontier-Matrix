@@ -1,0 +1,28 @@
+{
+  "invalid_missing_evidence_bundle.json": [
+    "SCHEMA_INVALID"
+  ],
+  "semantic_invalid_catalog_without_gate.json": [
+    "CATALOG_GATE_REFERENCE_REQUIRED"
+  ],
+  "semantic_invalid_change_without_previous.json": [
+    "CHANGE_WITHOUT_PREVIOUS_SLICE",
+    "PREVIOUS_SLICE_REQUIRED"
+  ],
+  "semantic_invalid_changed_without_support.json": [
+    "CHANGE_SIGNAL_MISSING",
+    "CHANGE_SUPPORT_MISSING"
+  ],
+  "semantic_invalid_refs_not_canonical.json": [
+    "REFS_NOT_CANONICAL"
+  ],
+  "semantic_invalid_self_previous.json": [
+    "PREVIOUS_SLICE_SELF_REFERENCE"
+  ],
+  "semantic_invalid_slice_id.json": [
+    "SLICE_ID_MISMATCH"
+  ],
+  "semantic_invalid_temporal_order.json": [
+    "TEMPORAL_ORDER_INVALID"
+  ]
+}

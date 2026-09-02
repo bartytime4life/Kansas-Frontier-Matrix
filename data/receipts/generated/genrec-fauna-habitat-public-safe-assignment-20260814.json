@@ -1,0 +1,143 @@
+{
+  "receipt_id": "genrec-fauna-habitat-public-safe-assignment-20260814",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/fauna-habitat-public-safe-assignment.yml",
+    "contracts/cross_domain/fauna_habitat/public_safe_assignment_profile.md",
+    "fixtures/contracts/v1/joins/fauna_habitat_public_safe_assignment/cases.json",
+    "tests/cross_domain/fauna_habitat/test_public_safe_assignment.py",
+    "tools/validators/cross_domain/fauna_habitat/README.md",
+    "tools/validators/cross_domain/fauna_habitat/validate_public_safe_assignment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/fauna-habitat-public-safe-assignment.yml": "sha256:ae04722885e1d94418e2c6ab0d6a9174cb51b88fce4b17d1dd259a55176505f3",
+    "contracts/cross_domain/fauna_habitat/public_safe_assignment_profile.md": "sha256:6c991066607ef281e4e12e192ae4b0173f04a1e01a210db7767950bf91d66634",
+    "fixtures/contracts/v1/joins/fauna_habitat_public_safe_assignment/cases.json": "sha256:780cfba32a71f8055b2ae86272b42170cb3848bfccb593f87c42827f5487eb28",
+    "tests/cross_domain/fauna_habitat/test_public_safe_assignment.py": "sha256:be388c429f6f83aa076937857fbb2651d5ba9dfd924ee723b9a92780dc041093",
+    "tools/validators/cross_domain/fauna_habitat/README.md": "sha256:bfa5f8cf88d0a5b85a135fadf213c7089fb6091e6ab0f54d6c9712af27dd344e",
+    "tools/validators/cross_domain/fauna_habitat/validate_public_safe_assignment.py": "sha256:a8f8c59bfe3a46f92aa53433fa1f3b9912945054112773715c422aa5aab43b1a"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-14"
+  },
+  "prompt_or_contract": "sha256:f60e4479504fc5d19985260b27f8be7a5137766d0d869c197878f35514722d8e",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md",
+      "KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf",
+      "kfm_encyclopedia.pdf",
+      "KFM_Living_Compass_Working_Edition_1.0.docx"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md#KFM-IDX-APP-002",
+      "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P1-IDEA-0071",
+      "attachment:kfm_encyclopedia.pdf#page=11",
+      "gdrive:KFM_Living_Compass_Working_Edition_1.0#Trail-13-Mission-3",
+      "repo:contracts/joins/cross_lane_join_assessment.md@8bda119d223573a58035bd0ce420066c0f961640",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@8bda119d223573a58035bd0ce420066c0f961640",
+      "repo:docs/adr/ADR-habitat-fauna-thin-slice.md@8bda119d223573a58035bd0ce420066c0f961640"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/fauna-habitat-public-safe-assignment.yml": "PROPOSED",
+    "contracts/cross_domain/fauna_habitat/public_safe_assignment_profile.md": "PROPOSED",
+    "fixtures/contracts/v1/joins/fauna_habitat_public_safe_assignment/cases.json": "PROPOSED",
+    "tests/cross_domain/fauna_habitat/test_public_safe_assignment.py": "PROPOSED",
+    "tools/validators/cross_domain/fauna_habitat/README.md": "PROPOSED",
+    "tools/validators/cross_domain/fauna_habitat/validate_public_safe_assignment.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "pair-fixture-matrix",
+      "outcome": "PASS",
+      "reason": "Ten synthetic pair-profile cases produced the expected validation and finite generic outcomes locally."
+    },
+    {
+      "gate": "focused-pytest",
+      "outcome": "PASS",
+      "reason": "The pair-profile focused tests passed in the local isolated harness; exact-repository hosted execution remains required."
+    },
+    {
+      "gate": "generic-assessment-regression",
+      "outcome": "SKIPPED",
+      "reason": "The path-scoped workflow runs the repository's existing generic fixture and test suite at the exact PR head."
+    },
+    {
+      "gate": "network-and-write-surface-scan",
+      "outcome": "PASS",
+      "reason": "The pair validator imports no network client and exposes no file-write path."
+    },
+    {
+      "gate": "fixture-precision-scan",
+      "outcome": "PASS",
+      "reason": "The base fixture contains no coordinate or geometry fields and uses synthetic kfm:fixture references only."
+    },
+    {
+      "gate": "generated-receipt-integrity",
+      "outcome": "SKIPPED",
+      "reason": "The exact-head workflow validates this receipt against repository bytes."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted CI begins after the draft pull request is opened."
+    },
+    {
+      "gate": "human-domain-policy-release-review",
+      "outcome": "SKIPPED",
+      "reason": "Fauna, Habitat, evidence, sensitivity, policy, review, and release authority remain pending and are not created by this change."
+    }
+  ],
+  "policy_decisions": [
+    "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@8bda119d223573a58035bd0ce420066c0f961640"
+  ],
+  "citations": [
+    {
+      "id": "attachment:pass20-habitat-fauna-thin-slice",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md#KFM-IDX-APP-002"
+    },
+    {
+      "id": "attachment:domain-atlas-habitat-fauna",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P1-IDEA-0071"
+    },
+    {
+      "id": "repo:generic-cross-lane-assessment",
+      "validated": true,
+      "evidence_ref": "repo:contracts/joins/cross_lane_join_assessment.md@8bda119d223573a58035bd0ce420066c0f961640"
+    },
+    {
+      "id": "repo:directory-rules-adoption",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@8bda119d223573a58035bd0ce420066c0f961640"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-14T22:55:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only Fauna-Habitat public-safe assignment candidate profile. The workflow now executes the generic boundary-specific regression modules and reruns when the unresolved domain-alias register changes. ALLOW remains a non-publishing CANDIDATE_RELATION and all evidence, policy, review, lifecycle, release, publication, and public-use effects remain false."
+}

@@ -1,0 +1,113 @@
+{
+  "bases": {
+    "closed": {
+      "profile": "STAC_LINK_CLOSURE_ASSESSMENT_V1",
+      "assessment_id": "GENERATED",
+      "spec_hash": "GENERATED",
+      "assessment_state": "COMPLETE",
+      "graph_scope": "FULL_DECLARED_GRAPH",
+      "root_record_id": "catalog-root",
+      "records": [
+        {
+          "record_id": "catalog-root",
+          "record_type": "CATALOG",
+          "record_conformance_ref": "kfm:stac-profile-assessment:synthetic-catalog-root",
+          "links": [
+            {"rel": "child", "target_record_id": "collection-a", "target_record_type": "COLLECTION"}
+          ]
+        },
+        {
+          "record_id": "collection-a",
+          "record_type": "COLLECTION",
+          "record_conformance_ref": "kfm:stac-profile-assessment:synthetic-collection-a",
+          "links": [
+            {"rel": "item", "target_record_id": "item-a", "target_record_type": "ITEM"},
+            {"rel": "parent", "target_record_id": "catalog-root", "target_record_type": "CATALOG"},
+            {"rel": "root", "target_record_id": "catalog-root", "target_record_type": "CATALOG"}
+          ]
+        },
+        {
+          "record_id": "item-a",
+          "record_type": "ITEM",
+          "record_conformance_ref": "kfm:stac-profile-assessment:synthetic-item-a",
+          "links": [
+            {"rel": "collection", "target_record_id": "collection-a", "target_record_type": "COLLECTION"},
+            {"rel": "root", "target_record_id": "catalog-root", "target_record_type": "CATALOG"}
+          ]
+        }
+      ],
+      "assessment": {
+        "outcome": "LINK_GRAPH_CLOSED",
+        "reason_code": "FULL_LOCAL_CLOSURE_CONFIRMED",
+        "reachable_record_ids": ["catalog-root", "collection-a", "item-a"],
+        "missing_target_record_ids": [],
+        "nonreciprocal_edges": [],
+        "type_mismatch_edges": [],
+        "orphan_record_ids": []
+      },
+      "governance": {
+        "execution_mode": "FIXTURE_ONLY",
+        "network_attempted": false,
+        "record_content_validated": false,
+        "remote_targets_resolved": false,
+        "api_behavior_tested": false,
+        "availability_tested": false,
+        "catalog_mutated": false,
+        "evidence_resolved": false,
+        "policy_decided": false,
+        "review_approved": false,
+        "release_authorized": false,
+        "publication_authorized": false,
+        "public_use_allowed": false
+      }
+    }
+  },
+  "cases": [
+    {"case_id": "closed-pass", "base": "closed", "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "partial-abstain", "base": "closed", "mutations": [
+      {"path": "/graph_scope", "value": "PARTIAL_DECLARED_GRAPH"}
+    ], "expected_outcome": "ABSTAIN", "expected_findings": [{"code": "STAC_LINK_PARTIAL_GRAPH", "path": "/assessment/outcome"}]},
+    {"case_id": "upstream-error", "base": "closed", "mutations": [
+      {"path": "/assessment_state", "value": "ERROR"}
+    ], "expected_outcome": "ERROR", "expected_findings": [{"code": "STAC_LINK_UPSTREAM_ERROR", "path": "/assessment/outcome"}]},
+    {"case_id": "missing-target", "base": "closed", "mutations": [
+      {"path": "/records/0/links", "value": [{"rel": "child", "target_record_id": "collection-missing", "target_record_type": "COLLECTION"}]}
+    ], "expected_outcome": "DENY", "expected_findings": [{"code": "STAC_LINK_GRAPH_OPEN", "path": "/assessment/outcome"}]},
+    {"case_id": "nonreciprocal-edge", "base": "closed", "mutations": [
+      {"path": "/records/2/links", "value": [{"rel": "root", "target_record_id": "catalog-root", "target_record_type": "CATALOG"}]}
+    ], "expected_outcome": "DENY", "expected_findings": [{"code": "STAC_LINK_GRAPH_OPEN", "path": "/assessment/outcome"}]},
+    {"case_id": "target-type-mismatch", "base": "closed", "mutations": [
+      {"path": "/records/0/links/0/target_record_type", "value": "ITEM"}
+    ], "expected_outcome": "DENY", "expected_findings": [{"code": "STAC_LINK_GRAPH_OPEN", "path": "/assessment/outcome"}]},
+    {"case_id": "orphan-record", "base": "closed", "mutations": [
+      {"path": "/records/0/links", "value": []}
+    ], "expected_outcome": "DENY", "expected_findings": [{"code": "STAC_LINK_GRAPH_OPEN", "path": "/assessment/outcome"}]},
+    {"case_id": "link-order-invalid", "base": "closed", "mutations": [
+      {"path": "/records/1/links", "value": [
+        {"rel": "root", "target_record_id": "catalog-root", "target_record_type": "CATALOG"},
+        {"rel": "parent", "target_record_id": "catalog-root", "target_record_type": "CATALOG"},
+        {"rel": "item", "target_record_id": "item-a", "target_record_type": "ITEM"}
+      ]}
+    ], "expected_outcome": "DENY", "expected_findings": [{"code": "STAC_LINK_LINK_ORDER_INVALID", "path": "/records/1/links"}]},
+    {"case_id": "record-order-invalid", "base": "closed", "mutations": [
+      {"path": "/records", "value": [
+        {"record_id": "item-a", "record_type": "ITEM", "record_conformance_ref": "kfm:stac-profile-assessment:synthetic-item-a", "links": [{"rel": "collection", "target_record_id": "collection-a", "target_record_type": "COLLECTION"}, {"rel": "root", "target_record_id": "catalog-root", "target_record_type": "CATALOG"}]},
+        {"record_id": "collection-a", "record_type": "COLLECTION", "record_conformance_ref": "kfm:stac-profile-assessment:synthetic-collection-a", "links": [{"rel": "item", "target_record_id": "item-a", "target_record_type": "ITEM"}, {"rel": "parent", "target_record_id": "catalog-root", "target_record_type": "CATALOG"}, {"rel": "root", "target_record_id": "catalog-root", "target_record_type": "CATALOG"}]},
+        {"record_id": "catalog-root", "record_type": "CATALOG", "record_conformance_ref": "kfm:stac-profile-assessment:synthetic-catalog-root", "links": [{"rel": "child", "target_record_id": "collection-a", "target_record_type": "COLLECTION"}]}
+      ]}
+    ], "expected_outcome": "DENY", "expected_findings": [{"code": "STAC_LINK_RECORD_ORDER_INVALID", "path": "/records"}]},
+    {"case_id": "report-mismatch", "base": "closed", "assessment_override": {
+      "outcome": "PARTIAL_GRAPH",
+      "reason_code": "PARTIAL_GRAPH_ONLY",
+      "reachable_record_ids": ["catalog-root", "collection-a", "item-a"],
+      "missing_target_record_ids": [],
+      "nonreciprocal_edges": [],
+      "type_mismatch_edges": [],
+      "orphan_record_ids": []
+    }, "expected_outcome": "DENY", "expected_findings": [{"code": "STAC_LINK_ASSESSMENT_MISMATCH", "path": "/assessment"}]},
+    {"case_id": "identity-corrupt", "base": "closed", "spec_hash_override": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "expected_outcome": "DENY", "expected_findings": [{"code": "STAC_LINK_SPEC_HASH_MISMATCH", "path": "/spec_hash"}]},
+    {"case_id": "authority-overreach", "base": "closed", "mutations": [
+      {"path": "/governance/availability_tested", "value": true}
+    ], "expected_outcome": "DENY", "expected_findings": [{"code": "STAC_LINK_SCHEMA_INVALID", "path": "/governance/availability_tested"}]}
+  ]
+}

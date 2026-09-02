@@ -1,0 +1,175 @@
+{
+  "receipt_id": "genrec-pass18-external-service-operation-receipt-20260811",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/external-service-operation-receipt.yml",
+    "contracts/evidence/external_service_operation_receipt.md",
+    "docs/intake/exploratory/pass-18-external-service-operation-receipt-source-map.md",
+    "fixtures/contracts/v1/evidence/external_service_operation_receipt/cases.json",
+    "schemas/contracts/v1/evidence/external_service_operation_receipt.schema.json",
+    "tests/validators/evidence/test_validate_external_service_operation_receipt.py",
+    "tools/validators/evidence/validate_external_service_operation_receipt.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/external-service-operation-receipt.yml": "sha256:060172fb331546fac0e278c3c2c3ab6cc4075317c3d00e84485f62a6e6b76ee3",
+    "contracts/evidence/external_service_operation_receipt.md": "sha256:4102bb0d09a5d0fdab27b21a2079f189b331a56faec0b3e672abf75f59e595a6",
+    "docs/intake/exploratory/pass-18-external-service-operation-receipt-source-map.md": "sha256:87356a8af441cf1a2d1746f0b299e171731708c3cb10fff3945c86470993df19",
+    "fixtures/contracts/v1/evidence/external_service_operation_receipt/cases.json": "sha256:8efb9ab279681974891d9d0dc47e59cb167faa67611307d4f646b4cce9c65500",
+    "schemas/contracts/v1/evidence/external_service_operation_receipt.schema.json": "sha256:c2f341d858b8eb4d62809abcf89507d3314116dead680a0e7ab59329e88ea803",
+    "tests/validators/evidence/test_validate_external_service_operation_receipt.py": "sha256:e601dff1574bb62650ccd8609da753b1f630bf74150de27fd8640355e9f4607b",
+    "tools/validators/evidence/validate_external_service_operation_receipt.py": "sha256:cb88624260c5ec6b18b3569f587590a4ed699e71b0c99ffc65a62b9f3c1a35d4"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-11"
+  },
+  "prompt_or_contract": "sha256:4102bb0d09a5d0fdab27b21a2079f189b331a56faec0b3e672abf75f59e595a6",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive private-corpus discovery",
+      "GitHub repository inspection and draft PR publication",
+      "local PDF rendering and deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:58b4b3263def0e4edfa134ada51406337a76887f11d0ebebb79b2f731537604e",
+      "sha256:e723aecc576a052a3cd000537755265135a7ea9df4f4e878977101fa59d9414d",
+      "sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9",
+      "sha256:3e8e09e6ea2f956ea3f3bb07c0ce60abbbdf1d97b54310b375a9a03fcfccae91"
+    ],
+    "attached_docs": [
+      "Supplied Pass 18 atlas; private discovery identifier withheld"
+    ],
+    "evidence_refs": [
+      "attachment://supplied-pass18-atlas#card=KFM-P18-INV-419",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/aaf508425818749d5c5d2b9f1cf5808f018d2535/contracts/evidence/analytic_output_disclosure_assessment.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/aaf508425818749d5c5d2b9f1cf5808f018d2535/contracts/governance/query_run_record.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/aaf508425818749d5c5d2b9f1cf5808f018d2535/contracts/source/source_interface_evolution_assessment.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/aaf508425818749d5c5d2b9f1cf5808f018d2535/docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/external-service-operation-receipt.yml": "CONFIRMED",
+    "contracts/evidence/external_service_operation_receipt.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-external-service-operation-receipt-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/evidence/external_service_operation_receipt/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/evidence/external_service_operation_receipt.schema.json": "PROPOSED",
+    "tests/validators/evidence/test_validate_external_service_operation_receipt.py": "CONFIRMED",
+    "tools/validators/evidence/validate_external_service_operation_receipt.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS",
+      "reason": "Ten deterministic external-service operation receipt tests passed."
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS",
+      "reason": "Twenty-eight exact PASS, ABSTAIN, DENY, and ERROR cases matched reviewed outcomes and codes."
+    },
+    {
+      "gate": "adjacent-operation-disclosure-and-interface-regression",
+      "outcome": "PASS",
+      "reason": "Thirty-three analytic-output disclosure, query-run record, and source-interface evolution tests passed."
+    },
+    {
+      "gate": "full-evidence-validator-lane",
+      "outcome": "PASS",
+      "reason": "All 217 evidence-validator tests passed."
+    },
+    {
+      "gate": "documentation-meta-block-profile",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "local-document-link-check",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "no-network-boundary",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "git-diff-check",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pass18-external-service-operation-card",
+      "validated": true,
+      "evidence_ref": "attachment://supplied-pass18-atlas#card=KFM-P18-INV-419"
+    },
+    {
+      "id": "analytic-output-disclosure-adjacent-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/aaf508425818749d5c5d2b9f1cf5808f018d2535/contracts/evidence/analytic_output_disclosure_assessment.md"
+    },
+    {
+      "id": "query-run-record-adjacent-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/aaf508425818749d5c5d2b9f1cf5808f018d2535/contracts/governance/query_run_record.md"
+    },
+    {
+      "id": "source-interface-evolution-adjacent-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/aaf508425818749d5c5d2b9f1cf5808f018d2535/contracts/source/source_interface_evolution_assessment.md"
+    },
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/aaf508425818749d5c5d2b9f1cf5808f018d2535/docs/doctrine/directory-rules.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T16:56:28Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub and Google Drive connectors",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Additive, inactive, fixture-only external-service operation receipt. It records provider, version, operation, consumption, dependency, replay, cost-caveat, and reference coherence without contacting a provider, using credentials, authenticating billing, resolving evidence, or creating policy, review, release, deployment, publication, or public-use authority."
+}

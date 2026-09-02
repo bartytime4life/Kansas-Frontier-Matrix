@@ -1,0 +1,154 @@
+{
+  "object_type": "WindowOrderingLintFixtureManifest",
+  "schema_version": "1.0.0",
+  "profile": "kfm.validation.window-ordering-lint.fixture.v1",
+  "base_candidate": {
+    "object_type": "WindowOrderingLintCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.validation.window-ordering-lint.fixture.v1",
+    "profile_spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_card": "KFM-P18-INV-132",
+    "observed_at": "2026-08-11T18:30:00Z",
+    "query_ref": "kfm:analysis-query:synthetic-window:001",
+    "query_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "dialect": "SQL_ANSI_WINDOW_SUBSET_V1",
+    "sql": "SELECT county_id, observed_at, LAG(value) OVER (PARTITION BY county_id ORDER BY observed_at ASC, observation_id ASC) AS previous_value FROM observations",
+    "requirements": {
+      "primary_order_key": "observed_at",
+      "tie_breaker_key": "observation_id",
+      "minimum_window_count": 1,
+      "maximum_window_count": 1
+    },
+    "related_disclosure_ref": "kfm:rolling-metric-window-disclosure:synthetic-window:001",
+    "authority_claims": {
+      "sql_execution_authority": false,
+      "analytics_authority": false,
+      "metric_truth_authority": false,
+      "evidence_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "promotion_authority": false,
+      "release_authority": false,
+      "publication_authority": false,
+      "public_use_authority": false
+    }
+  },
+  "cases": [
+    {"name": "pass_lag_deterministic", "patch": {}, "expected": {"outcome": "PASS", "codes": []}},
+    {
+      "name": "pass_qualified_identifiers",
+      "patch": {
+        "sql": "SELECT ROW_NUMBER() OVER (PARTITION BY o.county_id ORDER BY o.observed_at DESC NULLS LAST, o.observation_id ASC) AS sequence_number FROM observations o",
+        "requirements": {"primary_order_key": "o.observed_at", "tie_breaker_key": "o.observation_id"}
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_two_windows",
+      "patch": {
+        "sql": "SELECT LAG(value) OVER (PARTITION BY county_id ORDER BY observed_at, observation_id) AS prior_value, ROW_NUMBER() OVER (PARTITION BY county_id ORDER BY observed_at, observation_id) AS row_number FROM observations",
+        "requirements": {"minimum_window_count": 2, "maximum_window_count": 2}
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_comments_and_strings_are_ignored",
+      "patch": {
+        "sql": "SELECT 'OVER (ORDER BY unstable)' AS note, /* OVER (ORDER BY ignored) */ LAG(value) OVER (PARTITION BY county_id ORDER BY observed_at, observation_id) AS prior_value -- OVER missing\nFROM observations"
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "abstain_named_window",
+      "patch": {"sql": "SELECT ROW_NUMBER() OVER stable_window AS row_number FROM observations WINDOW stable_window AS (PARTITION BY county_id ORDER BY observed_at, observation_id)"},
+      "expected": {"outcome": "ABSTAIN", "codes": ["NAMED_WINDOW_DEFINITION_UNRESOLVED"]}
+    },
+    {
+      "name": "abstain_computed_order_expression",
+      "patch": {"sql": "SELECT LAG(value) OVER (PARTITION BY county_id ORDER BY date_trunc('day', observed_at), observation_id) FROM observations"},
+      "expected": {"outcome": "ABSTAIN", "codes": ["ORDER_EXPRESSION_UNSUPPORTED"]}
+    },
+    {
+      "name": "deny_no_window_clause",
+      "patch": {"sql": "SELECT county_id, observed_at FROM observations ORDER BY observed_at, observation_id"},
+      "expected": {"outcome": "DENY", "codes": ["WINDOW_CLAUSE_REQUIRED", "WINDOW_COUNT_OUT_OF_RANGE"]}
+    },
+    {
+      "name": "deny_window_order_missing",
+      "patch": {"sql": "SELECT COUNT(*) OVER (PARTITION BY county_id) FROM observations"},
+      "expected": {"outcome": "DENY", "codes": ["WINDOW_ORDER_BY_REQUIRED"]}
+    },
+    {
+      "name": "deny_primary_not_first",
+      "patch": {"sql": "SELECT LAG(value) OVER (ORDER BY observation_id, observed_at) FROM observations"},
+      "expected": {"outcome": "DENY", "codes": ["PRIMARY_ORDER_KEY_NOT_FIRST", "TIE_BREAKER_NOT_LAST"]}
+    },
+    {
+      "name": "deny_tie_breaker_missing",
+      "patch": {"sql": "SELECT LAG(value) OVER (ORDER BY observed_at) FROM observations"},
+      "expected": {"outcome": "DENY", "codes": ["TIE_BREAKER_MISSING"]}
+    },
+    {
+      "name": "deny_tie_breaker_not_last",
+      "patch": {"sql": "SELECT LAG(value) OVER (ORDER BY observed_at, observation_id, source_rank) FROM observations"},
+      "expected": {"outcome": "DENY", "codes": ["TIE_BREAKER_NOT_LAST"]}
+    },
+    {
+      "name": "deny_duplicate_order_key",
+      "patch": {"sql": "SELECT LAG(value) OVER (ORDER BY observed_at, observation_id, observation_id) FROM observations"},
+      "expected": {"outcome": "DENY", "codes": ["DUPLICATE_ORDER_KEY"]}
+    },
+    {
+      "name": "deny_window_count_too_low",
+      "patch": {"requirements": {"minimum_window_count": 2, "maximum_window_count": 2}},
+      "expected": {"outcome": "DENY", "codes": ["WINDOW_COUNT_OUT_OF_RANGE"]}
+    },
+    {
+      "name": "deny_window_count_too_high",
+      "patch": {"sql": "SELECT LAG(value) OVER (ORDER BY observed_at, observation_id), LEAD(value) OVER (ORDER BY observed_at, observation_id) FROM observations"},
+      "expected": {"outcome": "DENY", "codes": ["WINDOW_COUNT_OUT_OF_RANGE"]}
+    },
+    {
+      "name": "deny_multiple_statements",
+      "patch": {"sql": "SELECT LAG(value) OVER (ORDER BY observed_at, observation_id) FROM observations; SELECT 1"},
+      "expected": {"outcome": "DENY", "codes": ["MULTIPLE_STATEMENTS_UNSUPPORTED"]}
+    },
+    {
+      "name": "deny_requirement_keys_not_distinct",
+      "patch": {"requirements": {"tie_breaker_key": "observed_at"}},
+      "expected": {"outcome": "DENY", "codes": ["REQUIREMENT_KEYS_NOT_DISTINCT"]}
+    },
+    {
+      "name": "deny_query_digest_tamper",
+      "patch": {},
+      "tamper": "query_digest",
+      "expected": {"outcome": "DENY", "codes": ["QUERY_DIGEST_MISMATCH"]}
+    },
+    {
+      "name": "deny_profile_hash_tamper",
+      "patch": {},
+      "tamper": "profile_hash",
+      "expected": {"outcome": "DENY", "codes": ["PROFILE_SPEC_HASH_MISMATCH"]}
+    },
+    {
+      "name": "error_unterminated_string",
+      "patch": {"sql": "SELECT 'unterminated, LAG(value) OVER (ORDER BY observed_at, observation_id) FROM observations"},
+      "expected": {"outcome": "ERROR", "codes": ["SQL_LEXICAL_ERROR"]}
+    },
+    {
+      "name": "error_unbalanced_parenthesis",
+      "patch": {"sql": "SELECT LAG(value) OVER (ORDER BY observed_at, observation_id FROM observations"},
+      "expected": {"outcome": "ERROR", "codes": ["SQL_PARENTHESIS_ERROR"]}
+    },
+    {
+      "name": "error_unknown_field",
+      "patch": {"execute": false},
+      "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "name": "error_unknown_dialect",
+      "patch": {"dialect": "POSTGRESQL_LIVE"},
+      "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}
+    }
+  ]
+}

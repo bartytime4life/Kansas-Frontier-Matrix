@@ -1,0 +1,103 @@
+{
+  "schema_version": "1.0.0",
+  "temporal_authority": {
+    "schema_version": "1.0.0",
+    "identity": {
+      "object_id": "kfm:advisory-object:milford-lake",
+      "object_type": "AdvisoryEventEnvelope",
+      "native_id": "kdhe-hab:81e2a107fb1472bbbb3bf251644b44947f95628079537841172fecd21d0065bb",
+      "revision_id": "kfm:revision:advisory:81e2a107fb1472bbbb3bf251644b44947f95628079537841172fecd21d0065bb"
+    },
+    "source": {
+      "source_descriptor_ref": "src:ks-kdhe-hab",
+      "source_role_ref": "src:ks-kdhe-hab#/source_role",
+      "issuing_authority_ref": "authority:ks:kdhe",
+      "authority_scope": "KDHE harmful-algal-bloom advisory snapshot fixture"
+    },
+    "time": {
+      "issued_at": "2026-07-24T15:00:00Z",
+      "effective_at": "2026-07-24T15:00:00Z",
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-07-24T16:00:00Z",
+      "retrieved_at": "2026-07-24T16:00:00Z",
+      "corrected_at": null,
+      "superseded_at": null
+    },
+    "space": {
+      "native_geography_text": "Milford Lake",
+      "geography_ref": "kfm://geometry/water-body-zone/ks/milford-lake/swim-beach-a",
+      "geometry_role": "operational",
+      "geometry_confidence": "confirmed"
+    },
+    "state": {
+      "native_state": "WARNING",
+      "normalized_state": "active_confirmed",
+      "certainty": "confirmed"
+    },
+    "lineage": {
+      "supersedes": [],
+      "superseded_by": [],
+      "correction_refs": [],
+      "withdrawal_refs": []
+    },
+    "governance": {
+      "evidence_refs": [
+        "kfm://evidence/hazards/kdhe/2026-07-24/table-1"
+      ],
+      "policy_refs": [],
+      "review_refs": [],
+      "release_ref": null,
+      "public_use_allowed": false
+    }
+  },
+  "event": {
+    "event_id": "kfm:advisory:384c12f0e311d5be5f0107a4847ed87aa485dd33ea3c6f5668a0f859b7f8ff72",
+    "profile_id": "kfm.advisory-event.hab.v1",
+    "event_family": "harmful_algal_bloom",
+    "native_event_type": "KdheHabAdvisorySnapshot",
+    "native_event_id": "kdhe-hab:81e2a107fb1472bbbb3bf251644b44947f95628079537841172fecd21d0065bb"
+  },
+  "source_surface": {
+    "semantics": "complete_snapshot",
+    "snapshot_complete": true,
+    "retrieval_status": "success",
+    "parse_status": "success",
+    "freshness_status": "current",
+    "checked_at": "2026-07-24T16:00:00Z",
+    "freshness_budget_hours": 24
+  },
+  "advisory": {
+    "native_status": "Warning",
+    "normalized_status": "ACTIVE_CONFIRMED",
+    "last_confirmed_status": "ACTIVE_CONFIRMED",
+    "severity": "Warning",
+    "certainty": "confirmed",
+    "urgency": "normal",
+    "basis": "regulatory_advisory",
+    "onset_at": "2026-07-24T15:00:00Z",
+    "expires_at": null,
+    "cancelled_at": null,
+    "rescinded_at": null
+  },
+  "scope": {
+    "affected_area_ref": "kfm://geometry/water-body-zone/ks/milford-lake/swim-beach-a",
+    "geometry_role": "administrative_zone",
+    "geometry_confidence": "confirmed",
+    "zone_scope": "zone"
+  },
+  "domain_payload": {
+    "payload_type": "KdheHabAdvisorySnapshot",
+    "payload_ref": "fixtures/domains/hazards/kdhe_hab_advisory_snapshot/valid/valid_zoned_warning.json",
+    "payload_schema_id": "https://schemas.kfm.local/contracts/v1/domains/hazards/kdhe_hab_advisory_snapshot.schema.json",
+    "payload_record_digest": "sha256:51fd79a17711ed909e852418531944742dd5e3d8a458821ab2e6e4a717ef3209",
+    "payload_source_content_digest": "sha256:9999999999999999999999999999999999999999999999999999999999999999"
+  },
+  "controls": {
+    "rescission_ref": null,
+    "public_guidance_ref": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "release_neutral": true,
+    "public_use_allowed": false,
+    "alerts_allowed": false
+  }
+}

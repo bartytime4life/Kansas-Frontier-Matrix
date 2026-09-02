@@ -1,0 +1,167 @@
+{
+  "receipt_id": "genrec-focus-mode-comanche-county-f491d15867fa",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/focus-mode/counties/comanche_county/README.md"
+  ],
+  "artifact_hashes": {
+    "docs/focus-mode/counties/comanche_county/README.md": "sha256:f491d15867fa5a88040f9446432d8fa394f50b7b308514952a84be1a5da01639"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5"
+  },
+  "prompt_or_contract": "sha256:8a2c44abdc0025ca3e2419dfa7df7ebc3b01b4f7d4f3a81fc9269be037e4bbce",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:8a2c44abdc0025ca3e2419dfa7df7ebc3b01b4f7d4f3a81fc9269be037e4bbce"
+    ],
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0 - normalized scoped task contract"
+    ],
+    "evidence_refs": [
+      "repo:commit/ae1873e62a8fa0e971aa11f8d0ebf37ad0e409be",
+      "repo:docs/focus-mode/counties/comanche_county/README.md@ae1873e62a8fa0e971aa11f8d0ebf37ad0e409be#blob=8b137891791fe96927ad78e64b0aad7bded08bdc",
+      "repo:docs/focus-mode/counties/comanche_county/comanche_county_focus_mode_build_plan.md@ae1873e62a8fa0e971aa11f8d0ebf37ad0e409be#blob=9763e92cf1a20ca62a46583889c57051d14d8cd7",
+      "repo:docs/focus-mode/counties/COUNTY_INDEX.md@ae1873e62a8fa0e971aa11f8d0ebf37ad0e409be#blob=1a83417c8a3ff7b1c9d9ea302eb5dc47fc726e36",
+      "repo:docs/focus-mode/README.md@ae1873e62a8fa0e971aa11f8d0ebf37ad0e409be#blob=8600c0ac09452b4b03e5f60b94f1eb27c072b5db",
+      "repo:docs/focus-mode/counties/README.md@ae1873e62a8fa0e971aa11f8d0ebf37ad0e409be#blob=48621badd51614db7bff0882c19096fa388234ac",
+      "repo:docs/doctrine/directory-rules.md@ae1873e62a8fa0e971aa11f8d0ebf37ad0e409be#blob=fd49a0b83e55cef52c1124281f093e263526898d",
+      "repo:docs/adr/ADR-0027-county-focus-mode-control-plane.md@ae1873e62a8fa0e971aa11f8d0ebf37ad0e409be#blob=4dfb29c963cd5662265d3cb97f98be82212d5e08",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@ae1873e62a8fa0e971aa11f8d0ebf37ad0e409be#blob=a4de0d7a96b78da59cfc499d1025e1508afd8dd9",
+      "repo:contracts/focus_mode/focus_mode_payload.md@ae1873e62a8fa0e971aa11f8d0ebf37ad0e409be#blob=7fe687d587cd60dafd6e3fa34306cd58fd125c73",
+      "repo:schemas/contracts/v1/focus/README.md@ae1873e62a8fa0e971aa11f8d0ebf37ad0e409be#blob=2b75990b53dea2841c28410f0d9dc9fb10a60f33",
+      "repo:policy/focus/README.md@ae1873e62a8fa0e971aa11f8d0ebf37ad0e409be#blob=35001e958a6b51d2f22004d5e637d72baeab49af",
+      "repo:tools/validators/validate_focus_mode_index.py@ae1873e62a8fa0e971aa11f8d0ebf37ad0e409be#blob=89391d75680e859dddf3696b9b782369f364c73e",
+      "repo:tools/validators/validator_registry.json@ae1873e62a8fa0e971aa11f8d0ebf37ad0e409be#blob=86aeadabe7104114c3f1efe60a8708ec11563bb1",
+      "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@ae1873e62a8fa0e971aa11f8d0ebf37ad0e409be#blob=fba21ed27ebccf1362fe397fe0c3ebd85e072685",
+      "repo:.github/CODEOWNERS@ae1873e62a8fa0e971aa11f8d0ebf37ad0e409be#blob=dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61",
+      "repo:CONTRIBUTING.md@ae1873e62a8fa0e971aa11f8d0ebf37ad0e409be#blob=de5bf143e601e36a794e6e5442ae8f91c6f75aad",
+      "task-contract:comanche-county-readme-v6#sha256=8a2c44abdc0025ca3e2419dfa7df7ebc3b01b4f7d4f3a81fc9269be037e4bbce"
+    ]
+  },
+  "truth_labels": {
+    "docs/focus-mode/counties/comanche_county/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-base-target-plan-index-and-overlap-inspection",
+      "outcome": "PASS",
+      "reason": "Pinned current main at ae1873e62a8fa0e971aa11f8d0ebf37ad0e409be after confirming the intervening two-commit drift changed only a Decatur County plan path; reverified the one-byte Comanche target blob, complete 1,213-line sibling plan, README_1_BYTE index row, and no matching open pull request or task branch before branch creation."
+    },
+    {
+      "gate": "same-path-directory-governance-review",
+      "outcome": "PASS",
+      "reason": "Accepted ADR-0029 makes docs/doctrine/directory-rules.md the writable Directory Rules authority; its BOUNDARY_COMPACT profile supports this same-path docs/ repair, while proposed ADR-0027 path convergence remains on HOLD."
+    },
+    {
+      "gate": "repository-grounded-plan-and-maturity-reconciliation",
+      "outcome": "PASS",
+      "reason": "The README distinguishes the tracked draft plan from current repository implementation, preserves sensitive-locality, hazard-inference, land/access, recreation-currentness, emergency, dated-cartography, and cultural-authority boundaries, and does not promote source, payload, policy, runtime, release, or publication claims."
+    },
+    {
+      "gate": "markdown-metadata-heading-anchor-fence-table-and-whitespace-checks",
+      "outcome": "PASS",
+      "reason": "One H1, one bounded KFM Meta Block, one top anchor, 17 headings, all internal fragments resolved, balanced fence and comment pairs, consistent tables, no tabs or trailing whitespace, final newline, 29,803 bytes, 399 lines, Git blob 77a0532ea6fca5ba4c7c1021a019412391573ae3, and SHA-256 f491d15867fa5a88040f9446432d8fa394f50b7b308514952a84be1a5da01639."
+    },
+    {
+      "gate": "repository-relative-link-resolution",
+      "outcome": "PASS",
+      "reason": "All 16 unique repository-relative targets were confirmed at the pinned base or are the branch-local target; all same-document fragments resolved."
+    },
+    {
+      "gate": "sensitive-content-and-non-effect-scan",
+      "outcome": "PASS",
+      "reason": "No coordinates, credentials, signed URLs, private endpoints, personal data, exact protected locations, or live operational payloads were introduced; locality, property/access, current lake, emergency, cultural, and harmful-precision requests remain fail closed."
+    },
+    {
+      "gate": "generated-receipt-shape-and-artifact-binding",
+      "outcome": "PASS",
+      "reason": "Receipt contract 3.0.0 binds the complete final README SHA-256, aligns artifact and truth-label maps, records evidence and skipped checks, and leaves human review pending."
+    },
+    {
+      "gate": "county-index-snapshot-boundary",
+      "outcome": "PASS",
+      "reason": "COUNTY_INDEX.md remains unchanged as a pinned v1.2 inventory snapshot. The README discloses that its Comanche README_1_BYTE row becomes stale and requires a separate reconciliation."
+    },
+    {
+      "gate": "repository-native-full-and-hosted-validation",
+      "outcome": "SKIPPED",
+      "reason": "No mounted full repository dependency environment was used; the current county index validator targets the unresolved plural kebab-case seven-file lane and is not registered. Hosted exact-head checks remain to be inspected after draft pull-request creation."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "repo-county-index",
+      "validated": true,
+      "evidence_ref": "repo:docs/focus-mode/counties/COUNTY_INDEX.md@ae1873e62a8fa0e971aa11f8d0ebf37ad0e409be"
+    },
+    {
+      "id": "repo-comanche-build-plan",
+      "validated": true,
+      "evidence_ref": "repo:docs/focus-mode/counties/comanche_county/comanche_county_focus_mode_build_plan.md@ae1873e62a8fa0e971aa11f8d0ebf37ad0e409be"
+    },
+    {
+      "id": "repo-focus-lane-boundary",
+      "validated": true,
+      "evidence_ref": "repo:docs/focus-mode/README.md@ae1873e62a8fa0e971aa11f8d0ebf37ad0e409be"
+    },
+    {
+      "id": "repo-directory-authority",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@ae1873e62a8fa0e971aa11f8d0ebf37ad0e409be"
+    },
+    {
+      "id": "repo-county-control-plane-proposal",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0027-county-focus-mode-control-plane.md@ae1873e62a8fa0e971aa11f8d0ebf37ad0e409be"
+    },
+    {
+      "id": "repo-focus-payload-contract",
+      "validated": true,
+      "evidence_ref": "repo:contracts/focus_mode/focus_mode_payload.md@ae1873e62a8fa0e971aa11f8d0ebf37ad0e409be"
+    },
+    {
+      "id": "repo-focus-schema-boundary",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/focus/README.md@ae1873e62a8fa0e971aa11f8d0ebf37ad0e409be"
+    },
+    {
+      "id": "repo-focus-policy-boundary",
+      "validated": true,
+      "evidence_ref": "repo:policy/focus/README.md@ae1873e62a8fa0e971aa11f8d0ebf37ad0e409be"
+    },
+    {
+      "id": "current-user-task-contract",
+      "validated": true,
+      "evidence_ref": "task-contract:comanche-county-readme-v6#sha256=8a2c44abdc0025ca3e2419dfa7df7ebc3b01b4f7d4f3a81fc9269be037e4bbce"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-21T20:44:44Z",
+  "emitter": "OpenAI Codex via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0027-county-focus-mode-control-plane.md",
+    "drift_register_entry": null
+  },
+  "notes": "Authoring provenance only. The normalized scoped task-contract hash is not a stored prompt transcript. This receipt is not evidence authority, policy approval, path-migration authority, merge approval, release, deployment, or publication authority."
+}
+

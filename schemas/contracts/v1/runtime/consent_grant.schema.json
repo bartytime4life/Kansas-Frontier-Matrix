@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kfm://schemas/contracts/v1/runtime/consent_grant.schema.json",
+  "title": "Consent Grant",
+  "description": "PROPOSED scaffold created from the current docs/domains markdown inventory.",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {},
+  "x-kfm": {
+    "status": "PROPOSED",
+    "path": "schemas/contracts/v1/runtime/consent_grant.schema.json",
+    "source_docs": [
+      "docs/domains/people-dna-land/MISSING_OR_PLANNED_FILES.md"
+    ],
+    "contract_doc": null
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "profile": "kfm.explorer.attestation-badge.public-safe.v1",
+  "badge_id": "kfm:attestation-badge:synthetic:invalid-extra",
+  "outcome": "DENY",
+  "reason_code": "CHECKS_FAILED",
+  "layer_ref": null,
+  "evaluated_at": null,
+  "attestation_ref": null,
+  "run_receipt_ref": null,
+  "evidence_bundle_ref": null,
+  "release_manifest_ref": null,
+  "internal_detail": "ATTESTATION_INTERNAL_CANARY_845ad2"
+}

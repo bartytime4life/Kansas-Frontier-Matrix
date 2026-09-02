@@ -1,0 +1,164 @@
+{
+  "receipt_id": "genrec-fauna-fixture-hardening-20260725",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "fixtures/domains/fauna/invalid/README.md",
+    "fixtures/domains/fauna/invalid/encoded_location_clue.json",
+    "tests/domains/fauna/README.md",
+    "tests/domains/fauna/test_fauna_smoke.py",
+    "tools/validators/domains/fauna/README.md",
+    "tools/validators/domains/fauna/validate_public_safe_fixture.py"
+  ],
+  "artifact_hashes": {
+    "fixtures/domains/fauna/invalid/README.md": "sha256:4e565d2fd67866c736fc24be29c13c9736c42e620c6407bec8d27f745a6ee98d",
+    "fixtures/domains/fauna/invalid/encoded_location_clue.json": "sha256:ecfd49c5a9af65d2b0d5cfd41ef5db4b96b841c74fb6af29f36f06897f2666d9",
+    "tests/domains/fauna/README.md": "sha256:aadeb9dfbd958b4d46a1a3648c37fd94c28ca4bf66fa9c462fbd7e13f2356ca6",
+    "tests/domains/fauna/test_fauna_smoke.py": "sha256:65883c05619ae3101912222109a1366757915df23fb3c131b5dd5c940abb787e",
+    "tools/validators/domains/fauna/README.md": "sha256:4f0d168466633bd9cee7f05a57fbcb7170d490effd1cc0617c2bee780946bb6a",
+    "tools/validators/domains/fauna/validate_public_safe_fixture.py": "sha256:4f541200c9361deaf9cebe076f8e48f344f35cae3265ddccf05c14a3c78dc873"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5"
+  },
+  "prompt_or_contract": "sha256:ac6a6dd1fc97f6db269571c2ac03c3deb746614c5efcb78d9611abf49db0e313",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "filesystem",
+      "git",
+      "GitHub connector"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:759de4fcb51cf0f55896089e397d9c47481d60d9fb80ac9a44d47b2f60a0a335",
+      "sha256:8e5d61b464ef6d04b8ccb881b14c1ed063784fad585a25936c27d0ef18ebdd36",
+      "sha256:fe1c7bc35ebb4d5ef7d3f55b1bb6cfa206181c220e0b24925626734665a108d0",
+      "sha256:8aa8abfc16ec49265d450a3026c159593a3f8a7faf596dbeec221a037bd92d37",
+      "sha256:d58660ab6a8a70b057934eaffa469b09db4917b83cea819b43cfcea21f52d73b",
+      "sha256:05a94ced94a8c87ed964adb7a6830a1b1db09e4003d917a1b1a406a93fc5806e",
+      "sha256:af3e7f82e6b46ae410324b45206f6d282d8c763ddb2801f8fdb0cf017f31a85f"
+    ],
+    "attached_docs": [
+      "Directory Rules.pdf"
+    ],
+    "evidence_refs": [
+      "main@01af6d30466898fb029f2f6e337f11e54d086f1a:docs/doctrine/directory-rules.md",
+      "main@01af6d30466898fb029f2f6e337f11e54d086f1a:contracts/domains/fauna/occurrence_public.md",
+      "main@01af6d30466898fb029f2f6e337f11e54d086f1a:schemas/contracts/v1/domains/fauna/occurrence_public.schema.json",
+      "main@01af6d30466898fb029f2f6e337f11e54d086f1a:policy/domains/fauna/sensitivity.rego",
+      "main@01af6d30466898fb029f2f6e337f11e54d086f1a:policy/sensitivity/fauna/deny_default.rego",
+      "main@01af6d30466898fb029f2f6e337f11e54d086f1a:.github/workflows/domain-fauna.yml",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1683",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1531"
+    ]
+  },
+  "truth_labels": {
+    "fixtures/domains/fauna/invalid/README.md": "PROPOSED",
+    "fixtures/domains/fauna/invalid/encoded_location_clue.json": "PROPOSED",
+    "tests/domains/fauna/README.md": "PROPOSED",
+    "tests/domains/fauna/test_fauna_smoke.py": "PROPOSED",
+    "tools/validators/domains/fauna/README.md": "PROPOSED",
+    "tools/validators/domains/fauna/validate_public_safe_fixture.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "directory-rules-and-fauna-evidence-inspection",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "live-main-drift-and-authorized-path-non-overlap",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "accepted-seven-test-fauna-unittest-suite",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "stable-existing-negative-findings",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "fixture-json-parse-and-public-safe-scan",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "rejected-value-non-echo",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "proof-and-release-job-byte-equivalence",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "exact-seven-path-change-scope",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-schema",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "remote-branch-and-pull-request-checks",
+      "outcome": "SKIPPED",
+      "reason": "Receipt emitted before the final remote branch update and draft pull-request creation."
+    },
+    {
+      "gate": "github-actions",
+      "outcome": "SKIPPED",
+      "reason": "No pull-request workflow run existed when this receipt was emitted."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "Directory Rules sections 6.6, 7.5, 9.1, and 12",
+      "validated": true,
+      "evidence_ref": "sha256:759de4fcb51cf0f55896089e397d9c47481d60d9fb80ac9a44d47b2f60a0a335"
+    },
+    {
+      "id": "Issue 1683 bounded Fauna corrective slice",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1683"
+    },
+    {
+      "id": "Issue 1531 mutable campaign state version 39",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1531"
+    },
+    {
+      "id": "Current Fauna fixture workflow and unchanged hold jobs",
+      "validated": true,
+      "evidence_ref": "main@01af6d30466898fb029f2f6e337f11e54d086f1a:.github/workflows/domain-fauna.yml"
+    },
+    {
+      "id": "Current Fauna public-occurrence contract and schema scaffolds",
+      "validated": true,
+      "evidence_ref": "main@01af6d30466898fb029f2f6e337f11e54d086f1a:contracts/domains/fauna/occurrence_public.md"
+    },
+    {
+      "id": "Current Fauna fail-closed policy scaffolds",
+      "validated": true,
+      "evidence_ref": "main@01af6d30466898fb029f2f6e337f11e54d086f1a:policy/sensitivity/fauna/deny_default.rego"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-25T18:16:12Z",
+  "emitter": "ai-builder/openai-codex-gpt-5",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Provenance only for the draft-only Fauna fixture hardening exception. The contract hash covers the bounded task statement used for this run. The branch remains based on 88de37a1cfcaf27911996c8c30c3b3c40d7187e4 without rebase or merge; live main drift through 01af6d30466898fb029f2f6e337f11e54d086f1a does not touch an authorized path. No real species, occurrence, place, usable coordinate, URL destination, source payload, source activation, policy decision, proof construction, release, promotion, deployment, or publication was accessed or created. Human review remains pending."
+}

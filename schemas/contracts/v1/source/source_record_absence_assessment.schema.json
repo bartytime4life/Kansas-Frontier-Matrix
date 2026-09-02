@@ -1,0 +1,298 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/source/source_record_absence_assessment.schema.json",
+  "title": "SourceRecordAbsenceAssessment",
+  "description": "Fixture-first source semantics profile for deciding what a previously present record missing from a later capture may mean. Schema validity grants no deletion, clear-state, lifecycle, policy, release, publication, or public-use authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "assessment_id",
+    "hash_profile",
+    "spec_hash",
+    "source",
+    "record",
+    "timing",
+    "decision",
+    "provenance",
+    "governance"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "SourceRecordAbsenceAssessment"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "assessment_id": {
+      "type": "string",
+      "pattern": "^urn:kfm:source-record-absence:sha256:[0-9a-f]{64}$"
+    },
+    "hash_profile": {
+      "const": "kfm-source-record-absence-v1"
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_descriptor_ref",
+        "source_contract_ref",
+        "mode",
+        "health",
+        "completeness_verified",
+        "parse_status",
+        "parse_confidence"
+      ],
+      "properties": {
+        "source_descriptor_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "source_contract_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "COMPLETE_AUTHORITATIVE_SNAPSHOT",
+            "INCREMENTAL_EVENT_FEED",
+            "PUBLICATION_PAGE",
+            "MIXED_SURFACE"
+          ]
+        },
+        "health": {
+          "type": "string",
+          "enum": [
+            "HEALTHY",
+            "DEGRADED",
+            "UNKNOWN",
+            "ERROR"
+          ]
+        },
+        "completeness_verified": {
+          "type": "boolean"
+        },
+        "parse_status": {
+          "type": "string",
+          "enum": [
+            "COMPLETE",
+            "PARTIAL",
+            "FAILED",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "parse_confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    },
+    "record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "record_key_hash",
+        "last_known_state_ref",
+        "prior_snapshot_ref",
+        "current_snapshot_ref",
+        "prior_present",
+        "current_present"
+      ],
+      "properties": {
+        "record_key_hash": {
+          "$ref": "#/$defs/sha256"
+        },
+        "last_known_state_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "prior_snapshot_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "current_snapshot_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "prior_present": {
+          "const": true
+        },
+        "current_present": {
+          "const": false
+        }
+      }
+    },
+    "timing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "prior_captured_at",
+        "current_captured_at",
+        "assessed_at"
+      ],
+      "properties": {
+        "prior_captured_at": {
+          "$ref": "#/$defs/aware_datetime"
+        },
+        "current_captured_at": {
+          "$ref": "#/$defs/aware_datetime"
+        },
+        "assessed_at": {
+          "$ref": "#/$defs/aware_datetime"
+        }
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "outcome",
+        "reason_codes",
+        "transition_candidate_ref",
+        "retain_prior_state",
+        "history_deletion_allowed"
+      ],
+      "properties": {
+        "outcome": {
+          "type": "string",
+          "enum": [
+            "REMOVAL_CANDIDATE",
+            "RETAIN_PRIOR_STATE",
+            "ABSTAIN",
+            "ERROR"
+          ]
+        },
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": [
+              "ABSENT_FROM_VERIFIED_COMPLETE_SNAPSHOT",
+              "ABSENCE_NOT_STATE_TRANSITION",
+              "SNAPSHOT_COMPLETENESS_UNVERIFIED",
+              "SOURCE_HEALTH_UNRESOLVED",
+              "SOURCE_HEALTH_DEGRADED",
+              "PARSE_INCOMPLETE",
+              "LAYOUT_OR_PARSE_DRIFT_POSSIBLE",
+              "CROSS_SURFACE_RECONCILIATION_REQUIRED",
+              "SOURCE_OR_PARSE_ERROR"
+            ]
+          }
+        },
+        "transition_candidate_ref": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ref"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "retain_prior_state": {
+          "type": "boolean"
+        },
+        "history_deletion_allowed": {
+          "type": "boolean"
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "validator_profile",
+        "input_refs",
+        "evidence_refs"
+      ],
+      "properties": {
+        "validator_profile": {
+          "const": "source-record-absence-assessment-v1"
+        },
+        "input_refs": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "evidence_refs": {
+          "$ref": "#/$defs/ref_array"
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_state_mutated",
+        "clearance_authorized",
+        "promotion_authorized",
+        "release_authorized",
+        "publication_authorized",
+        "public_use_allowed"
+      ],
+      "properties": {
+        "source_state_mutated": {
+          "type": "boolean"
+        },
+        "clearance_authorized": {
+          "type": "boolean"
+        },
+        "promotion_authorized": {
+          "type": "boolean"
+        },
+        "release_authorized": {
+          "type": "boolean"
+        },
+        "publication_authorized": {
+          "type": "boolean"
+        },
+        "public_use_allowed": {
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "ref": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 512,
+      "pattern": "^(?:kfm|urn):[A-Za-z0-9:/._#-]{6,}$"
+    },
+    "aware_datetime": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "ref_array": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/ref"
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED",
+    "contract_doc": "contracts/source/source_record_absence_assessment.md",
+    "fixtures_root": "fixtures/contracts/v1/source/source_record_absence_assessment/",
+    "validator": "tools/validators/validate_source_record_absence_assessment.py",
+    "tests": "tests/validators/test_validate_source_record_absence_assessment.py",
+    "authority": "source-absence-semantics-and-local-consistency-only",
+    "non_effects": [
+      "does_not_delete_source_history",
+      "does_not_clear_a_domain_event",
+      "does_not_mutate_source_state",
+      "does_not_evaluate_policy",
+      "does_not_promote_release_or_publish"
+    ]
+  }
+}

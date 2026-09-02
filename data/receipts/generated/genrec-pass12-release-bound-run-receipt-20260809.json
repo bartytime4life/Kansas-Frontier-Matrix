@@ -1,0 +1,90 @@
+{
+  "receipt_id": "genrec-pass12-release-bound-run-receipt-20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/release-bound-run-receipt.yml",
+    "contracts/evidence/release_bound_run_receipt.md",
+    "docs/intake/exploratory/pass12-release-bound-run-receipt-source-map.md",
+    "fixtures/contracts/v1/evidence/release_bound_run_receipt/cases.json",
+    "schemas/contracts/v1/evidence/release_bound_run_receipt.schema.json",
+    "tests/validators/test_validate_release_bound_run_receipt.py",
+    "tools/validators/evidence/validate_release_bound_run_receipt.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/release-bound-run-receipt.yml": "sha256:c318a3ce834e78d0a8e7420b07629231c25dba0485f379177f6070d507fcf0dc",
+    "contracts/evidence/release_bound_run_receipt.md": "sha256:84171992ac81a30a21645c4cce52f6764e76ed50857e54949cfcf15345398dc8",
+    "docs/intake/exploratory/pass12-release-bound-run-receipt-source-map.md": "sha256:88a69d2e6c21e3a575955528a7045b8216339d45681927675f8ebf7492339839",
+    "fixtures/contracts/v1/evidence/release_bound_run_receipt/cases.json": "sha256:4bc2061e79886a24021c8d35edcd381cd4fcb083bdf19bc2662af35a64f6b7f8",
+    "schemas/contracts/v1/evidence/release_bound_run_receipt.schema.json": "sha256:054257da28c071b26fe6c2ca8ff295b94c31e483b17859fe722094a97a77543b",
+    "tests/validators/test_validate_release_bound_run_receipt.py": "sha256:86d9378f51f4ffd5d4d123c2ea98f768938fbbf9607256486b79f79fc0e5bff9",
+    "tools/validators/evidence/validate_release_bound_run_receipt.py": "sha256:6edd7f63f2df562d311afbe240345b5c2379c6043af11fe38379f8ea665b21ef"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-08"
+  },
+  "prompt_or_contract": "sha256:58f4b4f8043c5bbda6cd745b68d4d1ce7fc07da0ff73238210cf23eba3b4246e",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "uploaded-file search",
+      "GitHub connector repository inspection and mutation",
+      "local deterministic Python validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Components_Pass_12_Idea_Index_Category_Atlas_Verification_Dossier_Expansion_Manual.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Components_Pass_12_Idea_Index_Category_Atlas_Verification_Dossier_Expansion_Manual.pdf#CON-02",
+      "attachment:KFM_Components_Pass_12_Idea_Index_Category_Atlas_Verification_Dossier_Expansion_Manual.pdf#10.2",
+      "repo:schemas/contracts/v1/runtime/run_receipt.schema.json@b415e2341ddafdfa71627303ef09156c6bd4816d",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@b415e2341ddafdfa71627303ef09156c6bd4816d"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/release-bound-run-receipt.yml": "CONFIRMED",
+    "contracts/evidence/release_bound_run_receipt.md": "PROPOSED",
+    "docs/intake/exploratory/pass12-release-bound-run-receipt-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/evidence/release_bound_run_receipt/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/evidence/release_bound_run_receipt.schema.json": "PROPOSED",
+    "tests/validators/test_validate_release_bound_run_receipt.py": "CONFIRMED",
+    "tools/validators/evidence/validate_release_bound_run_receipt.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "focused-unittest-suite", "outcome": "PASS", "reason": "Six focused tests pass."},
+    {"gate": "exact-fixture-replay", "outcome": "PASS", "reason": "Ten exact synthetic cases match their finite outcomes and reason-code sets."},
+    {"gate": "no-network-boundary", "outcome": "PASS"},
+    {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS"},
+    {"gate": "hosted-exact-head-ci", "outcome": "SKIPPED", "reason": "Requires the pushed pull-request head."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Pending on draft pull request."}
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {"id": "pass12-proof-object-backlog", "validated": true, "evidence_ref": "attachment:KFM_Components_Pass_12_Idea_Index_Category_Atlas_Verification_Dossier_Expansion_Manual.pdf#CON-02"},
+    {"id": "accepted-directory-governance", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/b415e2341ddafdfa71627303ef09156c6bd4816d/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"}
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-09T00:47:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Additive fixture-only proof profile. It does not change the canonical runtime RunReceipt schema or create evidence, policy, review, signature, promotion, release, deployment, publication, or public-use authority."
+}

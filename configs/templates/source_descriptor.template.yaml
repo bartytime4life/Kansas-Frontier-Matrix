@@ -1,0 +1,12 @@
+# Source descriptor template
+id: TBD
+domain: TBD
+role: TBD
+authority: TBD
+rights:
+  license: TBD
+  attribution_required: true
+sensitivity_floor: public
+update_cadence: TBD
+access_posture: public
+citation_template: ""

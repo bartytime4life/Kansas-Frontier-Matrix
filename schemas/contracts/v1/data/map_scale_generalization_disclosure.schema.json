@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/data/map_scale_generalization_disclosure.schema.json",
+  "title": "MapScaleGeneralizationDisclosureCandidate",
+  "description": "Fixture-only disclosure of one layer candidate's scale or zoom validity, generalization method, bounded precision posture, and caveat without authority effects.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["object_type", "schema_version", "profile", "profile_spec_hash", "source_card", "observed_at", "layer_manifest_ref", "layer_manifest_digest", "map_purpose", "evidence_scope", "intended_use", "validity_context", "generalization", "disclosure", "authority_claims"],
+  "properties": {
+    "object_type": {"const": "MapScaleGeneralizationDisclosureCandidate"},
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.data.map-scale-generalization-disclosure.fixture.v1"},
+    "profile_spec_hash": {"$ref": "#/$defs/sha256"},
+    "source_card": {"const": "KFM-P18-INV-476"},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "layer_manifest_ref": {"$ref": "#/$defs/ref"},
+    "layer_manifest_digest": {"$ref": "#/$defs/sha256"},
+    "map_purpose": {"$ref": "#/$defs/resolvable_ref"},
+    "evidence_scope": {"$ref": "#/$defs/resolvable_ref"},
+    "intended_use": {"enum": ["INTERNAL_REVIEW", "PUBLIC_MAP_CANDIDATE", "EXPORT_CANDIDATE"]},
+    "validity_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["basis", "minimum_zoom", "maximum_zoom", "minimum_scale_denominator", "maximum_scale_denominator"],
+      "properties": {
+        "basis": {"enum": ["ZOOM_RANGE", "SCALE_DENOMINATOR_RANGE", "BOTH", "UNRESOLVED"]},
+        "minimum_zoom": {"oneOf": [{"type": "integer", "minimum": 0, "maximum": 24}, {"type": "null"}]},
+        "maximum_zoom": {"oneOf": [{"type": "integer", "minimum": 0, "maximum": 24}, {"type": "null"}]},
+        "minimum_scale_denominator": {"oneOf": [{"type": "integer", "minimum": 1, "maximum": 1000000000}, {"type": "null"}]},
+        "maximum_scale_denominator": {"oneOf": [{"type": "integer", "minimum": 1, "maximum": 1000000000}, {"type": "null"}]}
+      }
+    },
+    "generalization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["method", "method_description", "transform_receipt_ref", "precision_posture", "retained_properties", "omitted_detail_classes"],
+      "properties": {
+        "method": {"enum": ["NONE", "SIMPLIFY", "AGGREGATE", "COLLAPSE", "FILTER", "SMOOTH", "MIXED", "UNRESOLVED"]},
+        "method_description": {"type": "string", "minLength": 8, "maxLength": 500},
+        "transform_receipt_ref": {"oneOf": [{"$ref": "#/$defs/ref"}, {"type": "null"}]},
+        "precision_posture": {"enum": ["SOURCE_LIMITED", "DISPLAY_ONLY", "UNKNOWN"]},
+        "retained_properties": {"$ref": "#/$defs/name_array"},
+        "omitted_detail_classes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": {"enum": ["ATTRIBUTE_DETAIL", "GEOMETRY_VERTEX_DETAIL", "LABEL_DETAIL", "MINOR_FEATURES", "NONE", "UNKNOWN"]}
+        }
+      }
+    },
+    "disclosure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "public_caveat", "details_surface", "review_record_refs"],
+      "properties": {
+        "state": {"enum": ["COMPLETE_FOR_DECLARED_SCOPE", "INCOMPLETE", "UNKNOWN"]},
+        "public_caveat": {"oneOf": [{"type": "string", "minLength": 16, "maxLength": 500}, {"type": "null"}]},
+        "details_surface": {"enum": ["NONE", "LAYER_NOTE", "LEGEND", "EVIDENCE_DRAWER"]},
+        "review_record_refs": {"$ref": "#/$defs/ref_array"}
+      }
+    },
+    "authority_claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["evidence_authority", "policy_authority", "review_authority", "promotion_authority", "release_authority", "publication_authority", "public_use_authority"],
+      "properties": {
+        "evidence_authority": {"const": false},
+        "policy_authority": {"const": false},
+        "review_authority": {"const": false},
+        "promotion_authority": {"const": false},
+        "release_authority": {"const": false},
+        "publication_authority": {"const": false},
+        "public_use_authority": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "ref": {"type": "string", "minLength": 5, "maxLength": 300, "pattern": "^kfm:[a-z0-9][a-z0-9._:/-]+$"},
+    "ref_array": {"type": "array", "maxItems": 32, "uniqueItems": true, "items": {"$ref": "#/$defs/ref"}},
+    "name_array": {"type": "array", "maxItems": 32, "uniqueItems": true, "items": {"type": "string", "minLength": 1, "maxLength": 80, "pattern": "^[a-z][a-z0-9_]*$"}},
+    "resolvable_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ref", "digest", "resolution"],
+      "properties": {
+        "ref": {"$ref": "#/$defs/ref"},
+        "digest": {"$ref": "#/$defs/sha256"},
+        "resolution": {"enum": ["RESOLVED", "UNRESOLVED"]}
+      }
+    }
+  }
+}

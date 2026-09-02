@@ -1,0 +1,221 @@
+{
+  "profile": "kfm.fauna.tile-field-allowlist.fixture.v1",
+  "cases": [
+    {
+      "case_id": "valid_public_candidate",
+      "candidate": {
+        "object_type": "FaunaTileFieldCandidate",
+        "profile": "kfm.fauna.tile-field-allowlist.fixture.v1",
+        "vector_format": "MVT",
+        "exposure": "PUBLIC_CANDIDATE",
+        "encoded_fields": [
+          "evidence_ref",
+          "feature_id",
+          "freshness_state",
+          "public_label",
+          "source_role",
+          "taxon_ref"
+        ],
+        "layer_manifest_public_field_allowlist": [
+          "evidence_ref",
+          "feature_id",
+          "freshness_state",
+          "public_label",
+          "source_role",
+          "taxon_ref"
+        ],
+        "style_only_protection": false,
+        "authority_claims": {
+          "evidence_authority": false,
+          "policy_decision_authority": false,
+          "review_authority": false,
+          "promotion_authority": false,
+          "release_authority": false,
+          "publication_authority": false,
+          "public_use_authority": false
+        }
+      },
+      "expected": {"outcome": "PASS", "finding_codes": []}
+    },
+    {
+      "case_id": "deny_precise_coordinates_even_if_manifest_declares_them",
+      "candidate": {
+        "object_type": "FaunaTileFieldCandidate",
+        "profile": "kfm.fauna.tile-field-allowlist.fixture.v1",
+        "vector_format": "PMTILES",
+        "exposure": "PUBLIC_CANDIDATE",
+        "encoded_fields": ["evidence_ref", "feature_id", "latitude", "longitude"],
+        "layer_manifest_public_field_allowlist": ["evidence_ref", "feature_id", "latitude", "longitude"],
+        "style_only_protection": false,
+        "authority_claims": {
+          "evidence_authority": false,
+          "policy_decision_authority": false,
+          "review_authority": false,
+          "promotion_authority": false,
+          "release_authority": false,
+          "publication_authority": false,
+          "public_use_authority": false
+        }
+      },
+      "expected": {
+        "outcome": "DENY",
+        "finding_codes": [
+          "ENCODED_FIELD_NOT_POLICY_ALLOWLISTED",
+          "FORBIDDEN_FIELD_DECLARED",
+          "LAYER_MANIFEST_FIELD_NOT_POLICY_ALLOWLISTED"
+        ]
+      }
+    },
+    {
+      "case_id": "deny_observer_identity",
+      "candidate": {
+        "object_type": "FaunaTileFieldCandidate",
+        "profile": "kfm.fauna.tile-field-allowlist.fixture.v1",
+        "vector_format": "MLT",
+        "exposure": "PUBLIC_CANDIDATE",
+        "encoded_fields": ["evidence_ref", "feature_id", "observer_email"],
+        "layer_manifest_public_field_allowlist": ["evidence_ref", "feature_id", "observer_email"],
+        "style_only_protection": false,
+        "authority_claims": {
+          "evidence_authority": false,
+          "policy_decision_authority": false,
+          "review_authority": false,
+          "promotion_authority": false,
+          "release_authority": false,
+          "publication_authority": false,
+          "public_use_authority": false
+        }
+      },
+      "expected": {
+        "outcome": "DENY",
+        "finding_codes": [
+          "ENCODED_FIELD_NOT_POLICY_ALLOWLISTED",
+          "FORBIDDEN_FIELD_DECLARED",
+          "LAYER_MANIFEST_FIELD_NOT_POLICY_ALLOWLISTED"
+        ]
+      }
+    },
+    {
+      "case_id": "deny_style_only_protection",
+      "candidate": {
+        "object_type": "FaunaTileFieldCandidate",
+        "profile": "kfm.fauna.tile-field-allowlist.fixture.v1",
+        "vector_format": "MVT",
+        "exposure": "PUBLIC_CANDIDATE",
+        "encoded_fields": ["evidence_ref", "feature_id"],
+        "layer_manifest_public_field_allowlist": ["evidence_ref", "feature_id"],
+        "style_only_protection": true,
+        "authority_claims": {
+          "evidence_authority": false,
+          "policy_decision_authority": false,
+          "review_authority": false,
+          "promotion_authority": false,
+          "release_authority": false,
+          "publication_authority": false,
+          "public_use_authority": false
+        }
+      },
+      "expected": {"outcome": "DENY", "finding_codes": ["STYLE_ONLY_PROTECTION_FORBIDDEN"]}
+    },
+    {
+      "case_id": "deny_missing_click_to_evidence_field",
+      "candidate": {
+        "object_type": "FaunaTileFieldCandidate",
+        "profile": "kfm.fauna.tile-field-allowlist.fixture.v1",
+        "vector_format": "MVT",
+        "exposure": "PUBLIC_CANDIDATE",
+        "encoded_fields": ["feature_id", "public_label"],
+        "layer_manifest_public_field_allowlist": ["feature_id", "public_label"],
+        "style_only_protection": false,
+        "authority_claims": {
+          "evidence_authority": false,
+          "policy_decision_authority": false,
+          "review_authority": false,
+          "promotion_authority": false,
+          "release_authority": false,
+          "publication_authority": false,
+          "public_use_authority": false
+        }
+      },
+      "expected": {
+        "outcome": "DENY",
+        "finding_codes": [
+          "REQUIRED_PUBLIC_FIELD_MISSING",
+          "REQUIRED_PUBLIC_FIELD_NOT_IN_LAYER_MANIFEST"
+        ]
+      }
+    },
+    {
+      "case_id": "deny_encoded_manifest_mismatch",
+      "candidate": {
+        "object_type": "FaunaTileFieldCandidate",
+        "profile": "kfm.fauna.tile-field-allowlist.fixture.v1",
+        "vector_format": "MVT",
+        "exposure": "PUBLIC_CANDIDATE",
+        "encoded_fields": ["evidence_ref", "feature_id", "freshness_state"],
+        "layer_manifest_public_field_allowlist": ["evidence_ref", "feature_id"],
+        "style_only_protection": false,
+        "authority_claims": {
+          "evidence_authority": false,
+          "policy_decision_authority": false,
+          "review_authority": false,
+          "promotion_authority": false,
+          "release_authority": false,
+          "publication_authority": false,
+          "public_use_authority": false
+        }
+      },
+      "expected": {"outcome": "DENY", "finding_codes": ["ENCODED_FIELD_NOT_IN_LAYER_MANIFEST"]}
+    },
+    {
+      "case_id": "deny_manifest_policy_overreach",
+      "candidate": {
+        "object_type": "FaunaTileFieldCandidate",
+        "profile": "kfm.fauna.tile-field-allowlist.fixture.v1",
+        "vector_format": "MVT",
+        "exposure": "PUBLIC_CANDIDATE",
+        "encoded_fields": ["evidence_ref", "feature_id"],
+        "layer_manifest_public_field_allowlist": ["evidence_ref", "feature_id", "signed_url"],
+        "style_only_protection": false,
+        "authority_claims": {
+          "evidence_authority": false,
+          "policy_decision_authority": false,
+          "review_authority": false,
+          "promotion_authority": false,
+          "release_authority": false,
+          "publication_authority": false,
+          "public_use_authority": false
+        }
+      },
+      "expected": {
+        "outcome": "DENY",
+        "finding_codes": [
+          "FORBIDDEN_FIELD_DECLARED",
+          "LAYER_MANIFEST_FIELD_NOT_POLICY_ALLOWLISTED"
+        ]
+      }
+    },
+    {
+      "case_id": "deny_authority_elevation",
+      "candidate": {
+        "object_type": "FaunaTileFieldCandidate",
+        "profile": "kfm.fauna.tile-field-allowlist.fixture.v1",
+        "vector_format": "MVT",
+        "exposure": "PUBLIC_CANDIDATE",
+        "encoded_fields": ["evidence_ref", "feature_id"],
+        "layer_manifest_public_field_allowlist": ["evidence_ref", "feature_id"],
+        "style_only_protection": false,
+        "authority_claims": {
+          "evidence_authority": false,
+          "policy_decision_authority": false,
+          "review_authority": false,
+          "promotion_authority": false,
+          "release_authority": true,
+          "publication_authority": false,
+          "public_use_authority": false
+        }
+      },
+      "expected": {"outcome": "DENY", "finding_codes": ["AUTHORITY_CLAIM_FORBIDDEN"]}
+    }
+  ]
+}

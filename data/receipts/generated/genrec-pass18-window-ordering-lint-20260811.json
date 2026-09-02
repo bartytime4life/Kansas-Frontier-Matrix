@@ -1,0 +1,100 @@
+{
+  "receipt_id": "genrec-pass18-window-ordering-lint-20260811",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/window-ordering-lint-profile.yml",
+    "contracts/validation/window_ordering_lint_profile.md",
+    "docs/intake/exploratory/pass-18-window-ordering-lint-source-map.md",
+    "fixtures/contracts/v1/validation/window_ordering_lint_profile/cases.json",
+    "schemas/contracts/v1/validation/window_ordering_lint_profile.schema.json",
+    "tests/validators/test_validate_window_ordering_lint_profile.py",
+    "tools/validators/validate_window_ordering_lint_profile.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/window-ordering-lint-profile.yml": "sha256:1ce7bdac7180abd016d61f3e8019b775af5fcf2b6ab914242413de0cbcb4ddd8",
+    "contracts/validation/window_ordering_lint_profile.md": "sha256:21c7ee9c33a2a02cf0922f0b0ed2df48ccd7c5ebd2028cfbe1966adca0889f9a",
+    "docs/intake/exploratory/pass-18-window-ordering-lint-source-map.md": "sha256:624f3485db5ef89de39a0ef11dfed8ac859b2d540aae836fce4526c843857543",
+    "fixtures/contracts/v1/validation/window_ordering_lint_profile/cases.json": "sha256:4a1ffb395f1bd73a394d517fa5b148e7e15dc8a0e2ddee86bd3f457f5dc874a5",
+    "schemas/contracts/v1/validation/window_ordering_lint_profile.schema.json": "sha256:27dfddf65887f2be3eb9b2dfba97dc03bb1c48b10dbc70a1ef76a65c3c5c248a",
+    "tests/validators/test_validate_window_ordering_lint_profile.py": "sha256:b88b4a5288db086c5231ff7bd92493a9c2bd1a1855c40640d03f19649887c4f8",
+    "tools/validators/validate_window_ordering_lint_profile.py": "sha256:317c45a68fed8ad4a4b3d7503f18bfabc0937c5a0fac7e733d8845b24be06c7e"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-11"
+  },
+  "prompt_or_contract": "sha256:21c7ee9c33a2a02cf0922f0b0ed2df48ccd7c5ebd2028cfbe1966adca0889f9a",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository and pull-request inspection",
+      "local PDF rendering and deterministic Markdown, JSON, YAML, and Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:bee4edd0b5f4c7131eedb0411d1481f73fdac9592bbf4b00ed7f684435e1dd42"
+    ],
+    "attached_docs": [
+      "KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#physical-page=229&printed-page=226&card=KFM-P18-INV-132",
+      "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#physical-page=230&printed-page=227&card=KFM-P18-INV-132",
+      "gdrive://1yy3IaBJm9epC578w7Oak_12gVxT59vnw6IJYn0XIHKs",
+      "gdrive://1sdiLNDLFr2cVD3Q8h3ZvHO4D96WLJ6V7vf5neNzEyTM",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/074a39c4acb8e4e72cafe4bdea4c9e237dbf2496/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/074a39c4acb8e4e72cafe4bdea4c9e237dbf2496/contracts/common/rolling_metric_window_disclosure.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/window-ordering-lint-profile.yml": "CONFIRMED",
+    "contracts/validation/window_ordering_lint_profile.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-window-ordering-lint-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/validation/window_ordering_lint_profile/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/validation/window_ordering_lint_profile.schema.json": "PROPOSED",
+    "tests/validators/test_validate_window_ordering_lint_profile.py": "CONFIRMED",
+    "tools/validators/validate_window_ordering_lint_profile.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "json-and-workflow-yaml-parse", "outcome": "PASS"},
+    {"gate": "focused-unittest-suite", "outcome": "PASS", "reason": "Nine deterministic window-ordering lint tests passed."},
+    {"gate": "exact-fixture-replay", "outcome": "PASS", "reason": "Twenty-two exact PASS, ABSTAIN, DENY, and ERROR SQL cases matched reviewed outcomes and codes."},
+    {"gate": "no-network-and-no-sql-execution-boundary", "outcome": "PASS"},
+    {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS"},
+    {"gate": "hosted-exact-head-ci", "outcome": "SKIPPED", "reason": "Requires the pushed pull-request head."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Pending on the draft pull request."}
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {"id": "pass18-window-ordering-card", "validated": true, "evidence_ref": "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#physical-page=229&printed-page=226&card=KFM-P18-INV-132"},
+    {"id": "ai-build-operating-contract", "validated": true, "evidence_ref": "gdrive://1yy3IaBJm9epC578w7Oak_12gVxT59vnw6IJYn0XIHKs"},
+    {"id": "accepted-directory-rules", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/074a39c4acb8e4e72cafe4bdea4c9e237dbf2496/docs/doctrine/directory-rules.md"},
+    {"id": "rolling-metric-adjacent-contract", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/074a39c4acb8e4e72cafe4bdea4c9e237dbf2496/contracts/common/rolling_metric_window_disclosure.md"}
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-12T01:36:43Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub and Google Drive connectors",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Additive, inactive, fixture-only WindowOrderingLintCandidate packet derived from supplied Pass 18 card KFM-P18-INV-132. It conservatively inspects inert SQL text for ordinary window clauses, explicit primary ordering, a distinct final tie-breaker, duplicate keys, bounded clause counts, and exact input identity while abstaining on named windows and complex expressions. It never executes SQL, resolves tables or columns, proves uniqueness, compares results, computes analytics, creates evidence, decides policy or review, promotes, releases, deploys, publishes, or authorizes public use."
+}

@@ -1,0 +1,472 @@
+{
+  "bases": {
+    "internal": {
+      "artifact_count": 2,
+      "artifacts": [
+        {
+          "artifact_ref": "artifact:dataset:fixture:001",
+          "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "media_type": "application/vnd.apache.parquet",
+          "role": "DATASET"
+        },
+        {
+          "artifact_ref": "evidence-bundle:fixture:001",
+          "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+          "media_type": "application/json",
+          "role": "EVIDENCE_BUNDLE"
+        }
+      ],
+      "attestation_refs": [],
+      "catalog_refs": [],
+      "evidence_bundle_refs": [
+        "evidence-bundle:fixture:001"
+      ],
+      "execution_mode": "FIXTURE_ONLY",
+      "governance": {
+        "artifacts_verified": false,
+        "policy_evaluated": false,
+        "promotion_authorized": false,
+        "public_use_allowed": false,
+        "publication_authorized": false,
+        "references_resolved": false,
+        "release_authorized": false,
+        "review_authenticated": false,
+        "signatures_verified": false
+      },
+      "id": "release-manifest:19fef5f3d6b7714340c5e770",
+      "lifecycle_state": "CANDIDATE",
+      "lineage": {
+        "correction_refs": [],
+        "previous_release_manifest_ref": null,
+        "rollback_ref": "rollback-card:fixture:001",
+        "withdrawal_ref": null
+      },
+      "object_type": "ReleaseManifest",
+      "policy_decision_refs": [],
+      "profile_status": "PROPOSED_INACTIVE",
+      "promotion_decision_refs": [],
+      "proof_refs": [],
+      "provenance": {
+        "run_receipt_ref": "run-receipt:fixture:release-build-001",
+        "validator_implementation_ref": "tools/validators/release/validate_release_manifest.py"
+      },
+      "receipt_refs": [
+        "run-receipt:fixture:release-build-001"
+      ],
+      "release_id": "release:fixture:internal:2026-08-08:001",
+      "release_scope": {
+        "audience": "INTERNAL",
+        "generalized": false,
+        "rights_status": "RESTRICTED",
+        "sensitivity_status": "RESTRICTED",
+        "transform_receipt_refs": []
+      },
+      "release_state": "CANDIDATE",
+      "release_version": "2026.08.08.1",
+      "review_record_refs": [],
+      "schema_version": "1.0.0",
+      "source_descriptor_refs": [
+        "source-descriptor:fixture:001"
+      ],
+      "spec_hash": "sha256:19fef5f3d6b7714340c5e7707f11bb8c841212fc17e810abe0eb4b6072066049",
+      "temporal": {
+        "assembled_at": "2026-08-08T20:00:00Z",
+        "effective_from": null,
+        "effective_to": null
+      },
+      "title": "Synthetic internal release candidate"
+    },
+    "legacy": {
+      "id": "legacy-release-manifest"
+    },
+    "public": {
+      "artifact_count": 4,
+      "artifacts": [
+        {
+          "artifact_ref": "artifact:dataset:fixture:public:001",
+          "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+          "media_type": "application/vnd.apache.parquet",
+          "role": "DATASET"
+        },
+        {
+          "artifact_ref": "artifact:layer-manifest:fixture:001",
+          "digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+          "media_type": "application/json",
+          "role": "LAYER_MANIFEST"
+        },
+        {
+          "artifact_ref": "artifact:pmtiles:fixture:001",
+          "digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+          "media_type": "application/vnd.pmtiles",
+          "role": "TILE_ARCHIVE"
+        },
+        {
+          "artifact_ref": "evidence-bundle:fixture:public:001",
+          "digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+          "media_type": "application/json",
+          "role": "EVIDENCE_BUNDLE"
+        }
+      ],
+      "attestation_refs": [
+        "attestation:fixture:release:001"
+      ],
+      "catalog_refs": [
+        "catalog:stac:item:fixture:001"
+      ],
+      "evidence_bundle_refs": [
+        "evidence-bundle:fixture:public:001"
+      ],
+      "execution_mode": "FIXTURE_ONLY",
+      "governance": {
+        "artifacts_verified": false,
+        "policy_evaluated": false,
+        "promotion_authorized": false,
+        "public_use_allowed": false,
+        "publication_authorized": false,
+        "references_resolved": false,
+        "release_authorized": false,
+        "review_authenticated": false,
+        "signatures_verified": false
+      },
+      "id": "release-manifest:1093a0ff80d265a4a5206131",
+      "lifecycle_state": "CANDIDATE",
+      "lineage": {
+        "correction_refs": [],
+        "previous_release_manifest_ref": null,
+        "rollback_ref": "rollback-card:fixture:public:001",
+        "withdrawal_ref": null
+      },
+      "object_type": "ReleaseManifest",
+      "policy_decision_refs": [
+        "policy-decision:fixture:release:001"
+      ],
+      "profile_status": "PROPOSED_INACTIVE",
+      "promotion_decision_refs": [
+        "promotion-decision:fixture:release:001"
+      ],
+      "proof_refs": [
+        "proof-pack:fixture:release:001"
+      ],
+      "provenance": {
+        "run_receipt_ref": "run-receipt:fixture:release-build-002",
+        "validator_implementation_ref": "tools/validators/release/validate_release_manifest.py"
+      },
+      "receipt_refs": [
+        "run-receipt:fixture:release-build-002"
+      ],
+      "release_id": "release:fixture:public:2026-08-08:001",
+      "release_scope": {
+        "audience": "PUBLIC",
+        "generalized": false,
+        "rights_status": "APPROVED",
+        "sensitivity_status": "PUBLIC_SAFE",
+        "transform_receipt_refs": []
+      },
+      "release_state": "CANDIDATE",
+      "release_version": "2026.08.08.1",
+      "review_record_refs": [
+        "review-record:fixture:release:001"
+      ],
+      "schema_version": "1.0.0",
+      "source_descriptor_refs": [
+        "source-descriptor:fixture:public:001"
+      ],
+      "spec_hash": "sha256:1093a0ff80d265a4a5206131c33afebf899ffcdaf27314847b0a9680710761c5",
+      "temporal": {
+        "assembled_at": "2026-08-08T20:05:00Z",
+        "effective_from": "2026-08-09T00:00:00Z",
+        "effective_to": "2027-08-09T00:00:00Z"
+      },
+      "title": "Synthetic public-intended release candidate"
+    }
+  },
+  "invalid": {
+    "invalid_missing_release_id": {
+      "base": "internal",
+      "expected": {
+        "findings": [
+          "SCHEMA_INVALID"
+        ],
+        "outcome": "FAIL"
+      },
+      "recompute_identity": true,
+      "remove": [
+        "/release_id"
+      ]
+    },
+    "invalid_unknown_property": {
+      "base": "internal",
+      "expected": {
+        "findings": [
+          "SCHEMA_INVALID"
+        ],
+        "outcome": "FAIL"
+      },
+      "recompute_identity": true,
+      "set": {
+        "/unexpected_authority": true
+      }
+    },
+    "semantic_invalid_artifact_count": {
+      "base": "public",
+      "expected": {
+        "findings": [
+          "ARTIFACT_COUNT_MISMATCH"
+        ],
+        "outcome": "FAIL"
+      },
+      "recompute_identity": true,
+      "set": {
+        "/artifact_count": 5
+      }
+    },
+    "semantic_invalid_artifact_order": {
+      "base": "public",
+      "expected": {
+        "findings": [
+          "ARTIFACT_ARRAY_NOT_CANONICAL"
+        ],
+        "outcome": "FAIL"
+      },
+      "recompute_identity": true,
+      "reverse": [
+        "/artifacts"
+      ]
+    },
+    "semantic_invalid_correction_lineage": {
+      "base": "public",
+      "expected": {
+        "findings": [
+          "CORRECTION_PREDECESSOR_REQUIRED"
+        ],
+        "outcome": "FAIL"
+      },
+      "recompute_identity": true,
+      "set": {
+        "/lineage/correction_refs": [
+          "correction-notice:fixture:orphan"
+        ],
+        "/lineage/previous_release_manifest_ref": null
+      }
+    },
+    "semantic_invalid_evidence_artifact_binding": {
+      "base": "public",
+      "expected": {
+        "findings": [
+          "EVIDENCE_ARTIFACT_BINDING_MISSING"
+        ],
+        "outcome": "FAIL"
+      },
+      "recompute_identity": true,
+      "set": {
+        "/evidence_bundle_refs": [
+          "evidence-bundle:fixture:missing"
+        ]
+      }
+    },
+    "semantic_invalid_floating_reference": {
+      "base": "public",
+      "expected": {
+        "findings": [
+          "FLOATING_REFERENCE_DENIED"
+        ],
+        "outcome": "FAIL"
+      },
+      "recompute_identity": true,
+      "set": {
+        "/lineage/rollback_ref": "rollback-card:latest"
+      }
+    },
+    "semantic_invalid_manifest_id_mismatch": {
+      "base": "public",
+      "expected": {
+        "findings": [
+          "MANIFEST_ID_MISMATCH"
+        ],
+        "outcome": "FAIL"
+      },
+      "override": {
+        "/id": "release-manifest:ffffffffffffffffffffffff"
+      },
+      "recompute_identity": true
+    },
+    "semantic_invalid_public_policy": {
+      "base": "public",
+      "expected": {
+        "findings": [
+          "PUBLIC_POLICY_REQUIRED"
+        ],
+        "outcome": "FAIL"
+      },
+      "recompute_identity": true,
+      "set": {
+        "/policy_decision_refs": []
+      }
+    },
+    "semantic_invalid_public_promotion": {
+      "base": "public",
+      "expected": {
+        "findings": [
+          "PUBLIC_PROMOTION_REQUIRED"
+        ],
+        "outcome": "FAIL"
+      },
+      "recompute_identity": true,
+      "set": {
+        "/promotion_decision_refs": []
+      }
+    },
+    "semantic_invalid_public_review": {
+      "base": "public",
+      "expected": {
+        "findings": [
+          "PUBLIC_REVIEW_REQUIRED"
+        ],
+        "outcome": "FAIL"
+      },
+      "recompute_identity": true,
+      "set": {
+        "/review_record_refs": []
+      }
+    },
+    "semantic_invalid_public_rights": {
+      "base": "public",
+      "expected": {
+        "findings": [
+          "PUBLIC_RIGHTS_NOT_APPROVED"
+        ],
+        "outcome": "FAIL"
+      },
+      "recompute_identity": true,
+      "set": {
+        "/release_scope/rights_status": "UNKNOWN"
+      }
+    },
+    "semantic_invalid_reference_order": {
+      "base": "public",
+      "expected": {
+        "findings": [
+          "REFERENCE_ARRAY_NOT_CANONICAL"
+        ],
+        "outcome": "FAIL"
+      },
+      "recompute_identity": true,
+      "set": {
+        "/source_descriptor_refs": [
+          "source-descriptor:fixture:z",
+          "source-descriptor:fixture:a"
+        ]
+      }
+    },
+    "semantic_invalid_reference_role_collapse": {
+      "base": "public",
+      "expected": {
+        "findings": [
+          "REFERENCE_ROLE_COLLAPSE"
+        ],
+        "outcome": "FAIL"
+      },
+      "recompute_identity": true,
+      "set": {
+        "/proof_refs": [
+          "policy-decision:fixture:release:001"
+        ]
+      }
+    },
+    "semantic_invalid_spec_hash_mismatch": {
+      "base": "public",
+      "expected": {
+        "findings": [
+          "SPEC_HASH_MISMATCH"
+        ],
+        "outcome": "FAIL"
+      },
+      "override": {
+        "/spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "recompute_identity": true
+    },
+    "semantic_invalid_temporal_window": {
+      "base": "public",
+      "expected": {
+        "findings": [
+          "TEMPORAL_WINDOW_INCOHERENT"
+        ],
+        "outcome": "FAIL"
+      },
+      "recompute_identity": true,
+      "set": {
+        "/temporal/effective_from": "2027-01-01T00:00:00Z",
+        "/temporal/effective_to": "2026-01-01T00:00:00Z"
+      }
+    },
+    "semantic_invalid_transform_evidence": {
+      "base": "public",
+      "expected": {
+        "findings": [
+          "TRANSFORM_EVIDENCE_REQUIRED"
+        ],
+        "outcome": "FAIL"
+      },
+      "recompute_identity": true,
+      "set": {
+        "/release_scope": {
+          "audience": "PUBLIC",
+          "generalized": false,
+          "rights_status": "APPROVED",
+          "sensitivity_status": "TRANSFORM_REQUIRED",
+          "transform_receipt_refs": []
+        }
+      }
+    }
+  },
+  "schema_version": "kfm.release-manifest-fixtures.v2",
+  "valid": {
+    "valid_correction_candidate": {
+      "base": "public",
+      "expected": {
+        "findings": [],
+        "outcome": "PASS"
+      },
+      "recompute_identity": true,
+      "set": {
+        "/lineage": {
+          "correction_refs": [
+            "correction-notice:fixture:001"
+          ],
+          "previous_release_manifest_ref": "release-manifest:1093a0ff80d265a4a5206131",
+          "rollback_ref": "rollback-card:fixture:public:002",
+          "withdrawal_ref": null
+        },
+        "/release_id": "release:fixture:public:2026-08-08:002",
+        "/release_version": "2026.08.08.2",
+        "/temporal/assembled_at": "2026-08-08T20:10:00Z",
+        "/title": "Synthetic corrected release candidate"
+      }
+    },
+    "valid_internal_candidate": {
+      "base": "internal",
+      "expected": {
+        "findings": [],
+        "outcome": "PASS"
+      },
+      "recompute_identity": true
+    },
+    "valid_legacy_minimal": {
+      "base": "legacy",
+      "expected": {
+        "findings": [],
+        "outcome": "PASS"
+      },
+      "recompute_identity": false
+    },
+    "valid_public_candidate": {
+      "base": "public",
+      "expected": {
+        "findings": [],
+        "outcome": "PASS"
+      },
+      "recompute_identity": true
+    }
+  }
+}

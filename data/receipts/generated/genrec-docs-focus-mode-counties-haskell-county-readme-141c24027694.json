@@ -1,0 +1,206 @@
+{
+  "receipt_id": "genrec-docs-focus-mode-counties-haskell-county-readme-141c24027694",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/focus-mode/counties/haskell_county/README.md"
+  ],
+  "artifact_hashes": {
+    "docs/focus-mode/counties/haskell_county/README.md": "sha256:141c24027694e8f6da344ca516c1e13c2abe5b7e942a568ad6d3c9d55de83292"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "exact serving revision not exposed"
+  },
+  "prompt_or_contract": "sha256:9edb4038fc4002bb33e38482f7dfebee1cdde2051219f49ae266d2b77200e9f1",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "bounded current-repository inspection",
+      "deterministic Markdown source validation",
+      "repository generated-receipt schema constraint validation",
+      "SHA-256 and Git-blob verification"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:9edb4038fc4002bb33e38482f7dfebee1cdde2051219f49ae266d2b77200e9f1",
+      "sha256:01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "sha256:141c24027694e8f6da344ca516c1e13c2abe5b7e942a568ad6d3c9d55de83292"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/9656da3c88b9a21b844179ecc97a52136bb5799d",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/8fc725ba9fc8af3d192dcc6dbb66a82dce9b90ae",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/docs/focus-mode/counties/haskell_county/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8fc725ba9fc8af3d192dcc6dbb66a82dce9b90ae/docs/focus-mode/counties/haskell_county/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/docs/focus-mode/counties/haskell_county/haskell_county_focus_mode_build_plan.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/docs/focus-mode/counties/COUNTY_INDEX.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/docs/focus-mode/counties/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/docs/focus-mode/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/docs/adr/ADR-0027-county-focus-mode-control-plane.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/contracts/focus_mode/focus_mode_payload.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/schemas/contracts/v1/focus/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/policy/focus/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ]
+  },
+  "truth_labels": {
+    "docs/focus-mode/counties/haskell_county/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-target-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Pinned main at 9656da3c88b9a21b844179ecc97a52136bb5799d; confirmed the target was the one-byte newline blob 8b137891791fe96927ad78e64b0aad7bded08bdc, inspected the complete sibling build plan and current governance references, and identified prior branch-only Haskell authoring overlap for explicit coordination."
+    },
+    {
+      "gate": "same-path-compatibility-placement",
+      "outcome": "PASS",
+      "reason": "The tracked README remains under docs/focus-mode/counties/haskell_county/ as human documentation. Accepted ADR-0029 and Directory Rules v2 support the docs/ responsibility root; proposed ADR-0027 does not authorize a plural/kebab migration. No move, rename, mirror, root, or authority change occurs."
+    },
+    {
+      "gate": "one-byte-placeholder-replacement",
+      "outcome": "PASS",
+      "reason": "The one-byte predecessor was replaced with a complete metadata block, navigation, lane responsibilities, plan reconciliation, source-role and temporal boundaries, finite outcomes, evidence requirements, correction, and rollback guidance."
+    },
+    {
+      "gate": "linked-build-plan-reconciliation",
+      "outcome": "PASS",
+      "reason": "The complete Haskell build plan was reviewed and left byte-unchanged. Its no-plan statement is superseded only for repository presence; its dated source checks, WIMAS snapshot, proof slice, cards, reason codes, fixtures, milestones, paths, reviewers, and public-product ideas remain proposed."
+    },
+    {
+      "gate": "county-index-staleness-disclosure",
+      "outcome": "PASS",
+      "reason": "The shared county index records Haskell README_1_BYTE. This leaf change makes only that size finding stale. The index is left unchanged for a separately pinned, complete 105-county reconciliation rather than a partial high-churn edit."
+    },
+    {
+      "gate": "water-right-lawful-use-and-currentness-boundary",
+      "outcome": "PASS",
+      "reason": "The README does not convert administrative records, the plan’s 2026-05-24 source checks, or its 2026-05-10 WIMAS snapshot into current standing, lawful use, current groundwater, supply, drought, emergency, or future-availability truth."
+    },
+    {
+      "gate": "privacy-aggregation-and-operational-precision-boundary",
+      "outcome": "PASS",
+      "reason": "Right-holder, diversion, well, farm, parcel, household, operation, compliance, vulnerability, and reconstruction-relevant detail remains denied, withheld, generalized, or held pending source, rights, policy, evidence, review, and release closure."
+    },
+    {
+      "gate": "finite-outcome-and-reason-code-boundary",
+      "outcome": "PASS",
+      "reason": "The README preserves exactly ANSWER, ABSTAIN, DENY, and ERROR. Haskell-specific reason codes remain plan-derived candidates and are not represented as an implemented runtime registry."
+    },
+    {
+      "gate": "markdown-structure-and-diff-hygiene",
+      "outcome": "PASS",
+      "reason": "The README has one H1, one complete KFM metadata block, 11 unique explicit anchors, resolved local fragments, consistent tables, balanced fences, LF endings, no tabs or trailing whitespace, and a final newline."
+    },
+    {
+      "gate": "repository-relative-target-closure",
+      "outcome": "PASS",
+      "reason": "All 11 distinct repository-relative references normalize to paths confirmed on the pinned main snapshot. No external URL or live-source result was added."
+    },
+    {
+      "gate": "artifact-byte-and-hash-closure",
+      "outcome": "PASS",
+      "reason": "README SHA-256 141c24027694e8f6da344ca516c1e13c2abe5b7e942a568ad6d3c9d55de83292; Git blob 4c6c2ab81730adc1ea6d67e8b15eb4f4dd885b8f; 34,979 UTF-8 bytes. Artifact paths, hash keys, and truth-label keys are identical."
+    },
+    {
+      "gate": "generated-receipt-schema-constraint-validation",
+      "outcome": "PASS",
+      "reason": "The receipt was checked against the current GENERATED_RECEIPT schema required fields, closed objects, patterns, enums, artifact-map parity, citation shape, pending-review state, and README SHA-256 binding."
+    },
+    {
+      "gate": "shared-county-index-reconciliation",
+      "outcome": "SKIPPED",
+      "reason": "A truthful index update requires a current complete county inventory recomputation. This leaf packet discloses the stale Haskell finding instead of partially editing the shared snapshot."
+    },
+    {
+      "gate": "county-focus-mode-validator",
+      "outcome": "SKIPPED",
+      "reason": "The current validator targets docs/focus-modes/, kebab-case lanes, and seven required files; it is not a valid passing gate for the singular snake_case two-file compatibility lane and was not weakened or misrepresented."
+    },
+    {
+      "gate": "hosted-exact-head-workflows",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks do not exist until the final receipt commit and draft pull request are created. Exact-head results are inspected separately and are not inferred from earlier Haskell or county work."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending. Repository routing does not establish water-administration, legal, rights, privacy, sensitivity, scientific, policy, release, or publication approval."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-user-implementation-contract",
+      "validated": true,
+      "evidence_ref": "sha256:9edb4038fc4002bb33e38482f7dfebee1cdde2051219f49ae266d2b77200e9f1"
+    },
+    {
+      "id": "pinned-current-main",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/9656da3c88b9a21b844179ecc97a52136bb5799d"
+    },
+    {
+      "id": "prior-one-byte-target",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/docs/focus-mode/counties/haskell_county/README.md"
+    },
+    {
+      "id": "modernized-remote-readback",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/8fc725ba9fc8af3d192dcc6dbb66a82dce9b90ae/docs/focus-mode/counties/haskell_county/README.md"
+    },
+    {
+      "id": "complete-haskell-build-plan",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/docs/focus-mode/counties/haskell_county/haskell_county_focus_mode_build_plan.md"
+    },
+    {
+      "id": "current-county-index",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/docs/focus-mode/counties/COUNTY_INDEX.md"
+    },
+    {
+      "id": "accepted-directory-rules-decision",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "proposed-county-control-plane",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/docs/adr/ADR-0027-county-focus-mode-control-plane.md"
+    },
+    {
+      "id": "focus-semantic-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/contracts/focus_mode/focus_mode_payload.md"
+    },
+    {
+      "id": "focus-policy-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/policy/focus/README.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-22T05:37:12Z",
+  "emitter": "OpenAI GPT-5.6 Pro through ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Planning-only documentation receipt. A passing Markdown, hash, schema, or hosted workflow check does not establish source truth, water-right standing, lawful use, scientific fitness, rights clearance, policy approval, release readiness, deployment, or publication. The shared county index remains unchanged and its Haskell one-byte finding is intentionally disclosed as stale after this leaf change."
+}

@@ -1,0 +1,257 @@
+{
+  "receipt_id": "genrec-pipeline-specs-archaeology-readme-648feb79",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "pipeline_specs/archaeology/README.md"
+  ],
+  "artifact_hashes": {
+    "pipeline_specs/archaeology/README.md": "sha256:648feb79154f36533d6560ef7c15e40233b5e87332e0fba6f9f423122ed3a20d"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-15-session"
+  },
+  "prompt_or_contract": "sha256:43d4a74c40224fa6bdc0e93e54089d741895afcccc22a8e4f3887c05ea180c02",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "container"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "Directory Rules.pdf",
+      "Kansas Frontier Matrix — AI Build Operating Contract.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/pipeline_specs/archaeology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/pipeline_specs/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/pipeline_specs/archaeology/ingest.spec.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/pipeline_specs/archaeology/normalize.spec.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/pipeline_specs/archaeology/validate.spec.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/pipeline_specs/archaeology/catalog.spec.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/pipeline_specs/archaeology/publish.spec.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/pipelines/domains/archaeology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/docs/domains/archaeology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/data/registry/sources/archaeology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/data/registry/sources/archaeology/sources.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/data/registry/sources/archaeology/source_roles.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/data/registry/sources/archaeology/state_site_inventory.source.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/contracts/domains/archaeology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/schemas/contracts/v1/domains/archaeology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/policy/domains/archaeology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/policy/domains/archaeology/review/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/tests/domains/archaeology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/fixtures/domains/archaeology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/tools/validators/archaeology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/docs/adr/ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/.github/workflows/domain-archaeology.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/.github/PULL_REQUEST_TEMPLATE.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ]
+  },
+  "truth_labels": {
+    "pipeline_specs/archaeology/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-preflight",
+      "outcome": "PASS",
+      "reason": "Repository identity, permissions, pinned main head, target blob, duplicate branch/PR state, five direct spec files, representative source-registry placeholders, and adjacent Archaeology authority surfaces were inspected."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The README remains in the existing pipeline_specs/ responsibility root; the receipt uses the established data/receipts/generated/ lane. No root, schema, contract, policy, registry, proof, or release authority home is created."
+    },
+    {
+      "gate": "evidence-boundary",
+      "outcome": "PASS",
+      "reason": "Five spec files and representative source registry files are labeled placeholders; schema, consumer, activation, review, runtime, release, and CI maturity remain bounded."
+    },
+    {
+      "gate": "sensitivity-and-cultural-review",
+      "outcome": "PASS",
+      "reason": "No exact locations, protected cultural content, human-remains detail, private-landowner detail, collection-security detail, or operational access data were introduced. T4 deny, authority, consent, revocation, CARE, review, reconstruction, and rollback boundaries are explicit."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "Final newline, balanced fences, heading hierarchy, internal anchors, Mermaid boundaries, and KFM meta block were checked locally."
+    },
+    {
+      "gate": "illustrative-yaml",
+      "outcome": "PASS",
+      "reason": "Both YAML examples parse and are explicitly labeled placeholder or inactive/non-canonical."
+    },
+    {
+      "gate": "security-scan",
+      "outcome": "PASS",
+      "reason": "No common private-key, token, credential, private endpoint, live source query, or sensitive payload pattern was introduced."
+    },
+    {
+      "gate": "remote-readback",
+      "outcome": "PASS",
+      "reason": "Remote Git blob SHA 7ca798d1482b8599942720d3e566ab2d21584f77 matches the locally calculated README blob."
+    },
+    {
+      "gate": "workflow-execution",
+      "outcome": "SKIPPED",
+      "reason": "Pull-request workflows had not run when this provenance receipt was emitted; outcomes will be recorded in the PR conversation without rewriting this receipt."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "github://bartytime4life/Kansas-Frontier-Matrix/commit/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546"
+    },
+    {
+      "id": "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/pipeline_specs/archaeology/README.md",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/pipeline_specs/archaeology/README.md"
+    },
+    {
+      "id": "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/pipeline_specs/README.md",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/pipeline_specs/README.md"
+    },
+    {
+      "id": "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/pipeline_specs/archaeology/ingest.spec.yaml",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/pipeline_specs/archaeology/ingest.spec.yaml"
+    },
+    {
+      "id": "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/pipeline_specs/archaeology/normalize.spec.yaml",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/pipeline_specs/archaeology/normalize.spec.yaml"
+    },
+    {
+      "id": "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/pipeline_specs/archaeology/validate.spec.yaml",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/pipeline_specs/archaeology/validate.spec.yaml"
+    },
+    {
+      "id": "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/pipeline_specs/archaeology/catalog.spec.yaml",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/pipeline_specs/archaeology/catalog.spec.yaml"
+    },
+    {
+      "id": "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/pipeline_specs/archaeology/publish.spec.yaml",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/pipeline_specs/archaeology/publish.spec.yaml"
+    },
+    {
+      "id": "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/pipelines/domains/archaeology/README.md",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/pipelines/domains/archaeology/README.md"
+    },
+    {
+      "id": "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/docs/domains/archaeology/README.md",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/docs/domains/archaeology/README.md"
+    },
+    {
+      "id": "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/data/registry/sources/archaeology/README.md",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/data/registry/sources/archaeology/README.md"
+    },
+    {
+      "id": "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/data/registry/sources/archaeology/sources.yaml",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/data/registry/sources/archaeology/sources.yaml"
+    },
+    {
+      "id": "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/data/registry/sources/archaeology/source_roles.yaml",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/data/registry/sources/archaeology/source_roles.yaml"
+    },
+    {
+      "id": "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/data/registry/sources/archaeology/state_site_inventory.source.yaml",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/data/registry/sources/archaeology/state_site_inventory.source.yaml"
+    },
+    {
+      "id": "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/contracts/domains/archaeology/README.md",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/contracts/domains/archaeology/README.md"
+    },
+    {
+      "id": "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/schemas/contracts/v1/domains/archaeology/README.md",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/schemas/contracts/v1/domains/archaeology/README.md"
+    },
+    {
+      "id": "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/policy/domains/archaeology/README.md",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/policy/domains/archaeology/README.md"
+    },
+    {
+      "id": "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/policy/domains/archaeology/review/README.md",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/policy/domains/archaeology/review/README.md"
+    },
+    {
+      "id": "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/tests/domains/archaeology/README.md",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/tests/domains/archaeology/README.md"
+    },
+    {
+      "id": "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/fixtures/domains/archaeology/README.md",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/fixtures/domains/archaeology/README.md"
+    },
+    {
+      "id": "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/tools/validators/archaeology/README.md",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/tools/validators/archaeology/README.md"
+    },
+    {
+      "id": "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/docs/adr/ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/docs/adr/ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md"
+    },
+    {
+      "id": "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/.github/workflows/domain-archaeology.yml",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/.github/workflows/domain-archaeology.yml"
+    },
+    {
+      "id": "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/.github/CODEOWNERS",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/.github/CODEOWNERS"
+    },
+    {
+      "id": "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/.github/PULL_REQUEST_TEMPLATE.md",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/.github/PULL_REQUEST_TEMPLATE.md"
+    },
+    {
+      "id": "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/cbc65b4bd3f7ecd7cb55cbae97da564cad5b5546/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-15T16:47:42Z",
+  "emitter": "OpenAI GPT-5.6 Thinking via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored documentation update only. The README classifies all five direct Archaeology spec files and representative source-registry files as placeholders, preserves fail-closed exact-location and cultural-review controls, and does not activate any source, spec, pipeline, review, release, or public behavior. Human review is required before merge."
+}

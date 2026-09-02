@@ -1,0 +1,270 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/water_planning/rac_county_crosswalk_registry.schema.json",
+  "title": "water_planning_rac_county_crosswalk_registry",
+  "description": "Registry shape for the deterministic positive-area crosswalk between KWO RAC regions and 2025 Census Kansas county polygons. Geometry overlap is not governance membership.",
+  "type": "object",
+  "x-kfm": {
+    "status": "PROPOSED",
+    "contract_doc": "contracts/domains/water_planning/rac_geometry_registry.md",
+    "record_root": "data/registry/crosswalks/water_planning/",
+    "validator": "tools/validators/domains/water_planning/validate_rac_registry.py"
+  },
+  "properties": {
+    "record_type": {
+      "const": "water-planning-rac-county-crosswalk"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "crosswalk_id": {
+      "const": "kfm:crosswalk:water-planning:kwo-rac-to-county:2026-06-24:tiger-2025"
+    },
+    "record_status": {
+      "const": "current"
+    },
+    "release_status": {
+      "const": "not-released"
+    },
+    "mapping_semantics": {
+      "type": "string",
+      "minLength": 1
+    },
+    "region_dataset_ref": {
+      "const": "kfm:dataset-version:water-planning:kwo-rac-regions:2026-06-24"
+    },
+    "county_source": {
+      "type": "object",
+      "properties": {
+        "descriptor_ref": {
+          "const": "kfm://source/us/census/tigerweb/state-county-2025"
+        },
+        "authority_id": {
+          "const": "census:tigerweb:state-county:2025"
+        },
+        "agency": {
+          "const": "U.S. Census Bureau"
+        },
+        "layer_name": {
+          "const": "Counties"
+        },
+        "vintage": {
+          "const": "2025-01-01"
+        },
+        "layer_url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://tigerweb\\.geo\\.census\\.gov/"
+        },
+        "query_url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://tigerweb\\.geo\\.census\\.gov/"
+        },
+        "source_geojson_sha256": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "source_observed_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "descriptor_ref",
+        "authority_id",
+        "agency",
+        "layer_name",
+        "vintage",
+        "layer_url",
+        "query_url",
+        "source_geojson_sha256",
+        "source_observed_at"
+      ],
+      "additionalProperties": false
+    },
+    "derivation": {
+      "type": "object",
+      "properties": {
+        "method": {
+          "const": "polygon-intersection"
+        },
+        "area_crs": {
+          "const": "EPSG:5070"
+        },
+        "geometry_engine": {
+          "type": "string",
+          "pattern": "^shapely-[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "projection_engine": {
+          "type": "string",
+          "pattern": "^pyproj-[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "minimum_intersection_area_sq_m": {
+          "const": 10000.0
+        },
+        "minimum_county_area_share": {
+          "const": 0.000001
+        },
+        "material_county_minimum_area_share": {
+          "const": 0.001
+        },
+        "dominant_county_minimum_area_share": {
+          "const": 0.999
+        },
+        "line_or_point_touches_included": {
+          "const": false
+        },
+        "excluded_sliver_count": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "method",
+        "area_crs",
+        "geometry_engine",
+        "projection_engine",
+        "minimum_intersection_area_sq_m",
+        "minimum_county_area_share",
+        "material_county_minimum_area_share",
+        "dominant_county_minimum_area_share",
+        "line_or_point_touches_included",
+        "excluded_sliver_count"
+      ],
+      "additionalProperties": false
+    },
+    "mapping_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "mapping_count": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "county_count": {
+      "const": 105
+    },
+    "region_count": {
+      "const": 14
+    },
+    "mappings": {
+      "type": "array",
+      "minItems": 105,
+      "items": {
+        "type": "object",
+        "properties": {
+          "county_geoid": {
+            "type": "string",
+            "pattern": "^20[0-9]{3}$"
+          },
+          "county_name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "region_ref": {
+            "type": "string",
+            "pattern": "^kwo-rac-(0[1-9]|1[0-4])$"
+          },
+          "relation": {
+            "const": "spatial-intersection"
+          },
+          "overlap_class": {
+            "enum": [
+              "dominant",
+              "material-partial",
+              "boundary-sliver"
+            ]
+          },
+          "county_area_share": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "maximum": 1
+          },
+          "region_area_share": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "maximum": 1
+          },
+          "intersection_area_sq_km": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          }
+        },
+        "required": [
+          "county_geoid",
+          "county_name",
+          "region_ref",
+          "relation",
+          "overlap_class",
+          "county_area_share",
+          "region_area_share",
+          "intersection_area_sq_km"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "correction_status": {
+      "enum": [
+        "current",
+        "corrected",
+        "superseded"
+      ]
+    },
+    "supersedes_ref": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1
+    }
+  },
+  "required": [
+    "record_type",
+    "schema_version",
+    "crosswalk_id",
+    "record_status",
+    "release_status",
+    "mapping_semantics",
+    "region_dataset_ref",
+    "county_source",
+    "derivation",
+    "mapping_digest",
+    "mapping_count",
+    "county_count",
+    "region_count",
+    "mappings",
+    "correction_status",
+    "supersedes_ref"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "correction_status": {
+            "const": "current"
+          }
+        },
+        "required": [
+          "correction_status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "supersedes_ref": {
+            "type": "null"
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "supersedes_ref": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  ],
+  "additionalProperties": false
+}

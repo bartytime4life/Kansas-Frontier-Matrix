@@ -1,0 +1,71 @@
+{
+  "receipt_id": "genrec-pass18-measurement-scale-operation-assessment-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/measurement-scale-operation-assessment.yml",
+    "contracts/evidence/measurement_scale_operation_assessment.md",
+    "docs/intake/exploratory/pass-18-measurement-scale-operation-assessment-source-map.md",
+    "fixtures/contracts/v1/evidence/measurement_scale_operation_assessment/cases.json",
+    "schemas/contracts/v1/evidence/measurement_scale_operation_assessment.schema.json",
+    "tests/validators/evidence/test_validate_measurement_scale_operation_assessment.py",
+    "tools/validators/evidence/validate_measurement_scale_operation_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/measurement-scale-operation-assessment.yml": "sha256:f1c4747b7930facdbb07f4f364953e7d63ad4749dbfe4db05c5f57773ce83cce",
+    "contracts/evidence/measurement_scale_operation_assessment.md": "sha256:474c91037300e0b35ed6e7c594d3a6df7451b0cc6ccbfcf8a86c5be649e488bd",
+    "docs/intake/exploratory/pass-18-measurement-scale-operation-assessment-source-map.md": "sha256:ff35dc7d0751d6605cdd95323487b539f10ff42154bfa535cf6725c2fbd29c55",
+    "fixtures/contracts/v1/evidence/measurement_scale_operation_assessment/cases.json": "sha256:df003cf23c4ce53133ebd437570cda2834a405cb0d0a6f65a32e9928018043b9",
+    "schemas/contracts/v1/evidence/measurement_scale_operation_assessment.schema.json": "sha256:0a9cdd64ed18ecab1a0dd7363fdc00cb9438e6392d603d632bac671b3a289c04",
+    "tests/validators/evidence/test_validate_measurement_scale_operation_assessment.py": "sha256:a906b3b52e6abee2c619644cee663273883c1dd23d5bac24261a00af0eb09a14",
+    "tools/validators/evidence/validate_measurement_scale_operation_assessment.py": "sha256:b8b3f6c344958df613907d95a39347a4b7cbbc0f5e35f18bb14c0776a67924df"
+  },
+  "model_identity": {"provider": "OpenAI", "model": "GPT-5", "version": "2026-08-10"},
+  "prompt_or_contract": "sha256:474c91037300e0b35ed6e7c594d3a6df7451b0cc6ccbfcf8a86c5be649e488bd",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": ["Google Drive private-corpus discovery", "GitHub repository inspection and connector publication", "local PDF rendering and deterministic validation"]
+  },
+  "inputs": {
+    "evidence_hashes": ["sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e", "sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9", "sha256:fab88e58f891e350cec2666d8334565d01b36959d7716ba39161aa767326f5ed"],
+    "attached_docs": ["Supplied Pass 18 atlas; private discovery identifier withheld"],
+    "evidence_refs": ["attachment://supplied-pass18-atlas#card=KFM-P18-INV-377", "github://bartytime4life/Kansas-Frontier-Matrix/blob/d14fc1a6a5e4a398d16089cb009c1e1696f7783a/contracts/evidence/representation_fitness_assessment.md", "github://bartytime4life/Kansas-Frontier-Matrix/blob/d14fc1a6a5e4a398d16089cb009c1e1696f7783a/docs/doctrine/directory-rules.md"]
+  },
+  "truth_labels": {
+    ".github/workflows/measurement-scale-operation-assessment.yml": "CONFIRMED",
+    "contracts/evidence/measurement_scale_operation_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-measurement-scale-operation-assessment-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/evidence/measurement_scale_operation_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/evidence/measurement_scale_operation_assessment.schema.json": "PROPOSED",
+    "tests/validators/evidence/test_validate_measurement_scale_operation_assessment.py": "CONFIRMED",
+    "tools/validators/evidence/validate_measurement_scale_operation_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "workflow-yaml-parse", "outcome": "PASS"},
+    {"gate": "focused-unittest-suite", "outcome": "PASS", "reason": "Six deterministic measurement-scale operation tests passed."},
+    {"gate": "exact-fixture-replay", "outcome": "PASS", "reason": "Thirteen exact PASS, ABSTAIN, DENY, and ERROR cases matched reviewed outcomes and codes."},
+    {"gate": "adjacent-representation-fitness-regression", "outcome": "PASS", "reason": "Nine adjacent representation-fitness tests passed in separate repository-native collections."},
+    {"gate": "documentation-meta-block-profile", "outcome": "PASS"},
+    {"gate": "local-document-link-check", "outcome": "PASS"},
+    {"gate": "no-network-boundary", "outcome": "PASS"},
+    {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS"},
+    {"gate": "hosted-exact-head-ci", "outcome": "SKIPPED", "reason": "Requires the pushed pull-request head."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Pending on the draft pull request."}
+  ],
+  "policy_decisions": ["docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"],
+  "citations": [
+    {"id": "pass18-measurement-scale-card", "validated": true, "evidence_ref": "attachment://supplied-pass18-atlas#card=KFM-P18-INV-377"},
+    {"id": "representation-fitness-adjacent-contract", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/d14fc1a6a5e4a398d16089cb009c1e1696f7783a/contracts/evidence/representation_fitness_assessment.md"},
+    {"id": "accepted-directory-rules", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/d14fc1a6a5e4a398d16089cb009c1e1696f7783a/docs/doctrine/directory-rules.md"}
+  ],
+  "human_review": {"reviewer_ids": [], "state": "pending", "timestamp": null},
+  "override_record": null,
+  "created_at": "2026-08-10T18:29:39Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub and Google Drive connectors",
+  "links": {"pr_number": null, "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md", "drift_register_entry": null},
+  "notes": "Additive, inactive, fixture-only measurement-scale operation assessment. Private connected-source identifiers and content are excluded. The conservative operation matrix is proposed test logic, not scientific or policy authority."
+}

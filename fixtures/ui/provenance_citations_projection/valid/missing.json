@@ -1,0 +1,11 @@
+{
+  "profile": "kfm.explorer.provenance-citations.public-safe.v1",
+  "panel_id": "kfm:provenance-citations:synthetic:missing",
+  "outcome": "ABSTAIN",
+  "reason_code": "CITATIONS_MISSING",
+  "title": null,
+  "activity_ref": null,
+  "citations": [],
+  "republication_note_code": null,
+  "release_manifest_ref": null
+}

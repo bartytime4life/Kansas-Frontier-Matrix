@@ -1,0 +1,130 @@
+{
+  "$id": "https://schemas.kfm.local/contracts/v1/governance/temporal_query_disclosure.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Proposed fixture-only companion to QueryRunRecord that discloses temporal query class and clock basis without executing a query or creating authority.",
+  "properties": {
+    "authority": {"const": "NONE"},
+    "disclosure_id": {"pattern": "^kfm:temporal-query-disclosure:[0-9a-f]{64}$", "type": "string"},
+    "evaluated_at": {"format": "date-time", "type": "string"},
+    "evidence_refs": {
+      "items": {"pattern": "^kfm:evidence-ref:[0-9a-f]{64}$", "type": "string"},
+      "maxItems": 128,
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "execution_mode": {"const": "FIXTURE_ONLY_NO_EXTERNAL_EFFECT"},
+    "non_effects": {
+      "const": [
+        "does_not_execute_or_rewrite_a_query",
+        "does_not_resolve_evidence_or_admit_sources",
+        "does_not_create_policy_review_release_or_publication_authority",
+        "does_not_replace_query_run_record_or_domain_temporal_contracts",
+        "does_not_claim_snapshot_refs_are_released_or_public_safe"
+      ]
+    },
+    "permissions": {
+      "additionalProperties": false,
+      "properties": {
+        "create_review": {"const": false},
+        "deploy": {"const": false},
+        "evaluate_policy": {"const": false},
+        "execute_query": {"const": false},
+        "promote": {"const": false},
+        "public_use": {"const": false},
+        "publish": {"const": false},
+        "release": {"const": false},
+        "resolve_evidence": {"const": false}
+      },
+      "required": [
+        "execute_query",
+        "resolve_evidence",
+        "evaluate_policy",
+        "create_review",
+        "promote",
+        "release",
+        "deploy",
+        "publish",
+        "public_use"
+      ],
+      "type": "object"
+    },
+    "profile": {"const": "kfm.governance.temporal-query-disclosure.v1"},
+    "profile_status": {"const": "PROPOSED_INACTIVE"},
+    "public_explanation_code": {
+      "enum": [
+        "CURRENT_STATE_AT_EVALUATION",
+        "PRIOR_VALID_STATE_AS_OF",
+        "TRACKING_LOG_HISTORY",
+        "TRANSACTION_HISTORY_SEQUENCE",
+        "VALID_TIME_SEQUENCE"
+      ]
+    },
+    "query_run_ref": {"pattern": "^kfm:query-run:[0-9a-f]{64}$", "type": "string"},
+    "requested_as_of": {
+      "oneOf": [
+        {"format": "date-time", "type": "string"},
+        {"type": "null"}
+      ]
+    },
+    "schema_version": {"const": "1.0.0"},
+    "snapshot_refs": {
+      "items": {"pattern": "^kfm:temporal-snapshot:[0-9a-f]{64}$", "type": "string"},
+      "maxItems": 128,
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "spec_hash": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+    "temporal_query_type": {
+      "enum": ["CURRENT_STATE", "NONSEQUENCED", "PRIOR_STATE", "SEQUENCED", "TRACKING_LOG"]
+    },
+    "time_basis": {
+      "enum": ["BITEMPORAL", "RELEASE_TIME", "TRANSACTION_TIME", "VALID_TIME"]
+    },
+    "transaction_cutoff": {
+      "oneOf": [
+        {"format": "date-time", "type": "string"},
+        {"type": "null"}
+      ]
+    },
+    "valid_interval": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "additionalProperties": false,
+          "properties": {
+            "end": {"format": "date-time", "type": "string"},
+            "start": {"format": "date-time", "type": "string"}
+          },
+          "required": ["start", "end"],
+          "type": "object"
+        }
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "profile",
+    "profile_status",
+    "execution_mode",
+    "authority",
+    "disclosure_id",
+    "query_run_ref",
+    "temporal_query_type",
+    "time_basis",
+    "evaluated_at",
+    "requested_as_of",
+    "valid_interval",
+    "transaction_cutoff",
+    "snapshot_refs",
+    "evidence_refs",
+    "public_explanation_code",
+    "permissions",
+    "non_effects",
+    "spec_hash"
+  ],
+  "title": "TemporalQueryDisclosure",
+  "type": "object"
+}

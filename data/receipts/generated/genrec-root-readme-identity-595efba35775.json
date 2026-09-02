@@ -1,0 +1,141 @@
+{
+  "receipt_id": "genrec-root-readme-identity-595efba35775",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "README.md"
+  ],
+  "artifact_hashes": {
+    "README.md": "sha256:595efba357753bc59b5a904a1f0125bf8e2db0a426391196c274900615803dd1"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5 Work Mode 2026-08-01"
+  },
+  "prompt_or_contract": "sha256:986615f27f97e9a75a2337852c6e083f4ce61234f7a6d9a82edc45ec1b76b9b3",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local repository inspection",
+      "Git",
+      "GitHub connector",
+      "deterministic Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:5e931725238786431e9424ca1582ade2a313dc78326a74c1ef81b5ea223ec4c2",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:3159ee37d25a897bf2525fd7dafbc6ca28ee74594a3b52a9c0a01fa30aed777b",
+      "sha256:bb4963d94b988cb73054f1bfff48a3a0979b2460a6cc3fae4afcf8c19e1f063d",
+      "sha256:2de0a06782407d84ca01db78fc4c630ad27fc6e11bc96b60b4cea201a216c5db",
+      "sha256:d3d75280d310c0301132320e7c1e90d5b95b8507f1c6da0ff87f38f114d79ca4",
+      "sha256:1f96f4b71fb7f2e93986130255c1ae0c11fd2966a0348d6cc344c95cc66dea33",
+      "sha256:425e998e5584a7e400e99c963aba019b33ff685f9fa26b5b474d8758a3160b2a"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/86985a48b15a3ad3a26fbfdcbfc7a09ad1779bd0",
+      "README.md@86985a48b15a3ad3a26fbfdcbfc7a09ad1779bd0",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@86985a48b15a3ad3a26fbfdcbfc7a09ad1779bd0",
+      "docs/doctrine/directory-rules.md@86985a48b15a3ad3a26fbfdcbfc7a09ad1779bd0",
+      "CONTRIBUTING.md@86985a48b15a3ad3a26fbfdcbfc7a09ad1779bd0",
+      "schemas/contracts/v1/receipts/generated_receipt.schema.json@86985a48b15a3ad3a26fbfdcbfc7a09ad1779bd0"
+    ]
+  },
+  "truth_labels": {
+    "README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "authority-base-and-open-work-overlap",
+      "outcome": "PASS",
+      "reason": "Repository identity, immutable main base, current user implementation authority, owner hold disposition, open pull requests, relevant branches, and target-path overlap were inspected before editing."
+    },
+    {
+      "gate": "directory-placement-and-dependency-closure",
+      "outcome": "PASS",
+      "reason": "The existing root README remains at its governed root-file path, preserves its stable document ID, and the new receipt uses the canonical generated-receipt lane; no parallel prompt or README authority was created."
+    },
+    {
+      "gate": "complete-baseline-and-material-no-loss-review",
+      "outcome": "PASS",
+      "reason": "The complete 2,598-line preimage and its heading inventory were read. Prompt-specific content was removed from the wrong role with Git-history recovery, while KFM invariants, uncertainty, root placement, validation, compatibility, and rollback remained visible."
+    },
+    {
+      "gate": "root-readme-structure-and-local-links",
+      "outcome": "PASS",
+      "reason": "The README has one H1, balanced fences, one complete KFM metadata block, a final newline, and 65 repository-local targets validated by the no-network link checker with no findings."
+    },
+    {
+      "gate": "repository-schema-and-contract-baseline",
+      "outcome": "PASS",
+      "reason": "Credential-scrubbed make validate completed with all configured aggregate fixture validators passing and 139 schema/contract tests passing."
+    },
+    {
+      "gate": "workflow-trigger-safety-preflight",
+      "outcome": "PASS",
+      "reason": "All 44 workflow files were scanned. The sole pull_request_target workflow checks out trusted base code with read-only permissions; no workflow_run, self-hosted runner, write permission, secret reference, OIDC, deployment action, or publication action was found."
+    },
+    {
+      "gate": "receipt-schema-and-artifact-hash-integrity",
+      "outcome": "PASS",
+      "reason": "The receipt parses, validates against the Draft 2020-12 generated-receipt schema with format checking, and its artifact path/hash/truth-label keys agree with the final README SHA-256."
+    },
+    {
+      "gate": "scope-diff-and-sensitive-content",
+      "outcome": "PASS",
+      "reason": "The base-to-worktree diff is limited to README.md and this generated receipt, passes whitespace checks, and introduces no credential, private endpoint, signed URL, personal record, production payload, or harmful-precision location."
+    },
+    {
+      "gate": "hosted-ci",
+      "outcome": "SKIPPED",
+      "reason": "PENDING: hosted checks are observable only after the draft pull-request head is published; no result is inferred."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and is not implied by this provenance receipt."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "MAIN-86985a48b15a",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/86985a48b15a3ad3a26fbfdcbfc7a09ad1779bd0"
+    },
+    {
+      "id": "ADR-0029-3159ee37d25a",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@86985a48b15a3ad3a26fbfdcbfc7a09ad1779bd0"
+    },
+    {
+      "id": "DIRECTORY-RULES-44f7e94344cb",
+      "validated": true,
+      "evidence_ref": "docs/doctrine/directory-rules.md@86985a48b15a3ad3a26fbfdcbfc7a09ad1779bd0"
+    },
+    {
+      "id": "CURRENT-USER-REQUEST-986615f27f97",
+      "validated": true,
+      "evidence_ref": "CURRENT_USER_REQUEST"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-01T15:49:28Z",
+  "emitter": "openai/codex-gpt-5-work-mode",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": "docs/doctrine/directory-rules.md#20-current-repository-convergence-map"
+  },
+  "notes": "Generated-work provenance for task kfm-root-readme-identity-20260801 at base 86985a48b15a3ad3a26fbfdcbfc7a09ad1779bd0. Canonical task contract: task_id=kfm-root-readme-identity-20260801;repository=bartytime4life/Kansas-Frontier-Matrix;base=86985a48b15a3ad3a26fbfdcbfc7a09ad1779bd0;profile=REPOSITORY_SLICE;operation=IMPLEMENT_NEXT_GAP;goal=restore README.md as the evidence-bounded project entry point required by adopted Directory Rules;delivery=DRAFT_PR;writable_manifest=README.md,data/receipts/generated/genrec-root-readme-identity-595efba35775.json. The receipt file is intentionally excluded from artifact_paths and artifact_hashes to avoid recursive self-hashing. This receipt is process memory, not human approval, semantic truth, policy approval, release authority, or publication authority."
+}

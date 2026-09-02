@@ -1,0 +1,188 @@
+{
+  "receipt_id": "genrec-pass32-redaction-preview-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/explorer-web/src/adapters/RedactionPreviewProjection.ts",
+    "apps/explorer-web/src/features/redaction_preview/README.md",
+    "apps/explorer-web/src/features/redaction_preview/index.ts",
+    "apps/explorer-web/tests/browser/redaction-preview.fixture.ts",
+    "apps/explorer-web/tests/browser/redaction-preview.html",
+    "apps/explorer-web/tests/browser/redaction-preview.spec.ts",
+    "apps/explorer-web/tests/redaction-preview.test.ts",
+    "docs/intake/exploratory/pass-32-redaction-preview-source-map.md",
+    "fixtures/ui/redaction_preview_projection/README.md",
+    "fixtures/ui/redaction_preview_projection/invalid/extra-restricted-geometry.json",
+    "fixtures/ui/redaction_preview_projection/invalid/ready-missing-receipt.json",
+    "fixtures/ui/redaction_preview_projection/valid/denied.json",
+    "fixtures/ui/redaction_preview_projection/valid/error.json",
+    "fixtures/ui/redaction_preview_projection/valid/incomplete.json",
+    "fixtures/ui/redaction_preview_projection/valid/ready.json"
+  ],
+  "artifact_hashes": {
+    "apps/explorer-web/src/adapters/RedactionPreviewProjection.ts": "sha256:fe8169a19b18d034ccbbd9ced2355b6394ff59c4bb2ea66380640c277b06b71d",
+    "apps/explorer-web/src/features/redaction_preview/README.md": "sha256:f24dde6028d6c45f72b07b11380fa1530e29fe91a8e498e2efc79e4ba7bd70c8",
+    "apps/explorer-web/src/features/redaction_preview/index.ts": "sha256:bb1e51ed4ee8c278e7e6a24924bc55b7fc0af455b676f38a82aa8fc6703dc89d",
+    "apps/explorer-web/tests/browser/redaction-preview.fixture.ts": "sha256:cd037a7ed9b16d5e16f0f97d4bfbf0ce6cde6ebac99dff3e16e4829d63382380",
+    "apps/explorer-web/tests/browser/redaction-preview.html": "sha256:5a61fe04dee321ff4d2219c755a1e4484326bb3c2fbc9927b7cc7a43bd7c81e6",
+    "apps/explorer-web/tests/browser/redaction-preview.spec.ts": "sha256:b272981d48e38a5b5b935b5c830e9688e95829608dcf8483ab05e405d5259b03",
+    "apps/explorer-web/tests/redaction-preview.test.ts": "sha256:daac823a5b83293249e1845dad8106b9e8f545786cf23462a5d61dfa003cf98f",
+    "docs/intake/exploratory/pass-32-redaction-preview-source-map.md": "sha256:cd36979121b1229b74c32774d62dc6b741b375224cd6c2afb39ba2ee9803942c",
+    "fixtures/ui/redaction_preview_projection/README.md": "sha256:295ce770f76274d1462606d82aae2c671ea33ceb9f51ce03557e1950f5413a26",
+    "fixtures/ui/redaction_preview_projection/invalid/extra-restricted-geometry.json": "sha256:5c07decf834ab11ede40998c66c5217003e78e0a13be509d93773e067cb3e5cd",
+    "fixtures/ui/redaction_preview_projection/invalid/ready-missing-receipt.json": "sha256:1192e6b1a7c21f9aaa59bf542ebb0549b65ee08751de4a39a2f0d3a6d96cbbe1",
+    "fixtures/ui/redaction_preview_projection/valid/denied.json": "sha256:e9b657a578795af1908c2480e929c8f8de66d77b9f9c890585715e5c6c4d8ff0",
+    "fixtures/ui/redaction_preview_projection/valid/error.json": "sha256:b12a68a38287b67d9f8b79a5c4118b426b34c43dfdd460b0d63764f6ad200d0b",
+    "fixtures/ui/redaction_preview_projection/valid/incomplete.json": "sha256:91cdf338e0986db6e3b7fa09172b04d6bb592bfecd38b3d360da3f0021fdf8bb",
+    "fixtures/ui/redaction_preview_projection/valid/ready.json": "sha256:2956b1818fa5de6ba532a3bcc756065b7a5a0f4596ecb2192b5aa422566c60fd"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:d6595ff8f3f1bb32ac025b8ab1fa4139324babb77494471631234ea7bc8861ed",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector",
+      "GitHub connector",
+      "TypeScript 7.0.2",
+      "Vitest 4.1.10",
+      "Playwright 1.62.1"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:020a1207c2a6d193dc23defca40d24d429acd1273da17c2494582116ec8e9639"
+    ],
+    "attached_docs": [
+      "KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf",
+      "KFM_Pass_32_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-FEAT-0012",
+      "gdrive:1nNpWLceYOifELgJDB3ihQHTtYfQUsvdN#KFM-P32-FEAT-0012",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@47fba107144e4f68851ea1265dae48878d4799ab",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "repo:contracts/shared/redaction_receipt.md",
+      "repo:policy/redaction/profiles.yaml",
+      "repo:docs/standards/REDACTION_DETERMINISM.md"
+    ]
+  },
+  "truth_labels": {
+    "apps/explorer-web/src/adapters/RedactionPreviewProjection.ts": "PROPOSED",
+    "apps/explorer-web/src/features/redaction_preview/README.md": "PROPOSED",
+    "apps/explorer-web/src/features/redaction_preview/index.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/redaction-preview.fixture.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/redaction-preview.html": "PROPOSED",
+    "apps/explorer-web/tests/browser/redaction-preview.spec.ts": "PROPOSED",
+    "apps/explorer-web/tests/redaction-preview.test.ts": "PROPOSED",
+    "docs/intake/exploratory/pass-32-redaction-preview-source-map.md": "PROPOSED",
+    "fixtures/ui/redaction_preview_projection/README.md": "PROPOSED",
+    "fixtures/ui/redaction_preview_projection/invalid/extra-restricted-geometry.json": "PROPOSED",
+    "fixtures/ui/redaction_preview_projection/invalid/ready-missing-receipt.json": "PROPOSED",
+    "fixtures/ui/redaction_preview_projection/valid/denied.json": "PROPOSED",
+    "fixtures/ui/redaction_preview_projection/valid/error.json": "PROPOSED",
+    "fixtures/ui/redaction_preview_projection/valid/incomplete.json": "PROPOSED",
+    "fixtures/ui/redaction_preview_projection/valid/ready.json": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-pr-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Current main and merged work were searched for the selected card ID, redaction-preview terms, and changed-path overlap; GitHub reported no open pull requests and no implementation collision was found."
+    },
+    {
+      "gate": "drive-source-reconciliation",
+      "outcome": "PASS",
+      "reason": "The connected Drive Pass 32 atlas and supplied consolidated atlas expose the same card ID, spec hash, and bounded reviewer-preview statement."
+    },
+    {
+      "gate": "policy-boundary-guards",
+      "outcome": "PASS",
+      "reason": "The reviewed 18-test policy and trust-membrane boundary suite passed."
+    },
+    {
+      "gate": "explorer-production-build",
+      "outcome": "PASS",
+      "reason": "Explorer TypeScript checking and Vite production build completed locally. The workspace Node 24 runtime emitted the expected engine warning; hosted CI uses the repository-pinned Node 22 line."
+    },
+    {
+      "gate": "explorer-full-unit-suite",
+      "outcome": "PASS",
+      "reason": "All 174 Explorer unit tests passed, including the redaction-preview tests."
+    },
+    {
+      "gate": "browser-fixture-typecheck",
+      "outcome": "PASS",
+      "reason": "The redaction-preview browser fixture and Playwright spec passed an isolated TypeScript no-emit check."
+    },
+    {
+      "gate": "documentation-qa",
+      "outcome": "PASS",
+      "reason": "Metadata blocks are structurally valid with only expected review-only registry-add warnings, and local-link validation passed."
+    },
+    {
+      "gate": "generated-receipt-integrity",
+      "outcome": "PASS",
+      "reason": "The generated receipt validates its contract and binds all 15 declared artifacts by SHA-256."
+    },
+    {
+      "gate": "local-playwright-browser",
+      "outcome": "SKIPPED",
+      "reason": "The workspace has no Playwright Chromium executable; the existing ui-build workflow installs Chrome and must validate the pushed exact head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human sensitivity, UI, redaction, and release review remain pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "gdrive:pass32-redaction-preview",
+      "validated": true,
+      "evidence_ref": "gdrive:1nNpWLceYOifELgJDB3ihQHTtYfQUsvdN#KFM-P32-FEAT-0012"
+    },
+    {
+      "id": "attachment:pass32-redaction-preview",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-FEAT-0012"
+    },
+    {
+      "id": "repository:adr-0029-directory-rules-v2",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "repository:shared-redaction-receipt",
+      "validated": true,
+      "evidence_ref": "repo:contracts/shared/redaction_receipt.md"
+    },
+    {
+      "id": "repository:redaction-profiles",
+      "validated": true,
+      "evidence_ref": "repo:policy/redaction/profiles.yaml"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T17:39:26Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-first implementation derived from Pass 32 card KFM-P32-FEAT-0012. The preview displays finite public-safe transform summaries and delegates receipt inspection; it accepts no protected geometry, coordinates, counts, min-n thresholds, hidden values, reversal parameters, policy authority, review approval, release authority, deployment effect, publication effect, or public-use authority."
+}

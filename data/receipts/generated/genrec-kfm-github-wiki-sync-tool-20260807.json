@@ -1,0 +1,131 @@
+{
+  "receipt_id": "genrec-kfm-github-wiki-sync-tool-20260807",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tools/docs/wiki/sync_kfm_github_wiki.ps1",
+    "tools/docs/wiki/README.md",
+    "tests/ci/test_sync_kfm_github_wiki_contract.py"
+  ],
+  "artifact_hashes": {
+    "tools/docs/wiki/sync_kfm_github_wiki.ps1": "sha256:1910f7307af39dfc9a81a3f16a5c92031fba962c6debe1ec341ed3a3558373c2",
+    "tools/docs/wiki/README.md": "sha256:dff4798e0b1527bf72765afdc63160e1d771093751e95446aa7b16fa28f660db",
+    "tests/ci/test_sync_kfm_github_wiki_contract.py": "sha256:93372440f98301e7b171b0b5eec15f04b62a0d170aefd7e7cfeee80c540c428c"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-07"
+  },
+  "prompt_or_contract": "sha256:d691ca89a577ce479c09b42a48b086a9c7392a1e6efe3f153017ca2f23170b39",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local deterministic file and hash checks",
+      "pytest static safety-contract tests"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "attachment://Sync_KFM_GitHub_Wiki.ps1#sha256:4016cd8095560ed6f8e576d1b362eb782edd2d8e113f77277ee94fff58268f1e",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/3b2c4dc05a2a30ed045e7a04a6d15d103ce83a0d",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/3b2c4dc05a2a30ed045e7a04a6d15d103ce83a0d/docs/wiki/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/3b2c4dc05a2a30ed045e7a04a6d15d103ce83a0d/docs/wiki/Wiki-Maintenance.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/3b2c4dc05a2a30ed045e7a04a6d15d103ce83a0d/tools/docs/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/3b2c4dc05a2a30ed045e7a04a6d15d103ce83a0d/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/3b2c4dc05a2a30ed045e7a04a6d15d103ce83a0d/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ]
+  },
+  "truth_labels": {
+    "tools/docs/wiki/sync_kfm_github_wiki.ps1": "PROPOSED",
+    "tools/docs/wiki/README.md": "PROPOSED",
+    "tests/ci/test_sync_kfm_github_wiki_contract.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Verified current main at 3b2c4dc05a2a30ed045e7a04a6d15d103ce83a0d and found no open wiki-sync pull request or existing sync script."
+    },
+    {
+      "gate": "directory-placement",
+      "outcome": "PASS",
+      "reason": "Placed durable documentation synchronization support under tools/docs/wiki/, while docs/wiki/ remains the content authority and the native wiki remains a derived mirror."
+    },
+    {
+      "gate": "safe-default-and-explicit-mutation",
+      "outcome": "PASS",
+      "reason": "The tool performs clone/copy/allowlist/staging validation by default and requires -Publish before commit or push."
+    },
+    {
+      "gate": "bounded-path-and-history-safety",
+      "outcome": "PASS",
+      "reason": "The page set is explicitly allowlisted; unexpected paths fail; force push, hard reset, and repository-settings changes are absent."
+    },
+    {
+      "gate": "remote-readback-contract",
+      "outcome": "PASS",
+      "reason": "Publish mode reads the target wiki branch SHA back with git ls-remote and errors on mismatch."
+    },
+    {
+      "gate": "static-pytest-contract",
+      "outcome": "PASS",
+      "reason": "Five deterministic no-network tests passed for the publish gate, source pin, allowlist, no-force posture, and remote readback."
+    },
+    {
+      "gate": "powershell-parser-or-runtime",
+      "outcome": "SKIPPED",
+      "reason": "PowerShell was not installed in the authoring container; exact runtime execution remains for an environment with pwsh or Windows PowerShell."
+    },
+    {
+      "gate": "native-wiki-publication",
+      "outcome": "SKIPPED",
+      "reason": "This repository change stores the tool only. It does not execute -Publish or mutate the separate native wiki."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "GitHub Actions evidence becomes available after branch and pull-request creation."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "wiki-source-authority",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/3b2c4dc05a2a30ed045e7a04a6d15d103ce83a0d/docs/wiki/README.md"
+    },
+    {
+      "id": "wiki-maintenance-procedure",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/3b2c4dc05a2a30ed045e7a04a6d15d103ce83a0d/docs/wiki/Wiki-Maintenance.md"
+    },
+    {
+      "id": "documentation-tooling-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/3b2c4dc05a2a30ed045e7a04a6d15d103ce83a0d/tools/docs/README.md"
+    },
+    {
+      "id": "directory-placement-authority",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/3b2c4dc05a2a30ed045e7a04a6d15d103ce83a0d/docs/doctrine/directory-rules.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-07T15:31:39.669Z",
+  "emitter": "openai/gpt-5.6-pro",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Repository delivery of the user-supplied KFM native-wiki synchronization script, hardened for the current tools/docs contract. The submitted helper preserves the reviewed source commit and page set while adding a meaningful default dry run, explicit -Publish mutation gate, unexpected-path rejection, no-force posture, and remote commit readback. It stores no secrets and does not execute a wiki publish. Human review remains pending."
+}

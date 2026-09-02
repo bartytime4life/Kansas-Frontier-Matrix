@@ -1,0 +1,142 @@
+{
+  "receipt_id": "genrec-atmosphere-aqs-site-delta-20260806",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/atmosphere-aqs-site-delta.yml",
+    "contracts/domains/atmosphere/aqs_site_metadata_delta.md",
+    "schemas/contracts/v1/domains/atmosphere/aqs_site_metadata_delta_report.schema.json",
+    "tests/ingest/aqs_watch/fixtures/current_location_shift.json",
+    "tests/ingest/aqs_watch/fixtures/current_metadata_correction.json",
+    "tests/ingest/aqs_watch/fixtures/current_method_change.json",
+    "tests/ingest/aqs_watch/fixtures/current_unchanged.json",
+    "tests/ingest/aqs_watch/fixtures/prior.json",
+    "tests/ingest/aqs_watch/test_aqs_site_delta.py",
+    "tools/ingest/aqs_watch/README.md",
+    "tools/ingest/aqs_watch/aqs_site_delta.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/atmosphere-aqs-site-delta.yml": "sha256:121c38b0dfb6adbc7befde3c59173d4e2333e30ca2b2057c2069a62904761642",
+    "contracts/domains/atmosphere/aqs_site_metadata_delta.md": "sha256:1f513ef2878d42f2fda47589774f2ceac93d627fd053364d50b972b0e6b40b06",
+    "schemas/contracts/v1/domains/atmosphere/aqs_site_metadata_delta_report.schema.json": "sha256:14f7c91cc62116522276a1314aba6ee9a341100cf0fb4d2a8cc0cffbb68bd88f",
+    "tests/ingest/aqs_watch/fixtures/current_location_shift.json": "sha256:7a615490fe8acbbb23839a744389e653441df1c43e4b47bbbe2fb57d2dd80cf7",
+    "tests/ingest/aqs_watch/fixtures/current_metadata_correction.json": "sha256:ad4224b7f67f82bb5b69ffc74caf3059a1006c5da73c8003122c69f230f6c50d",
+    "tests/ingest/aqs_watch/fixtures/current_method_change.json": "sha256:b28b9182d4d2298f90d09d95bc996d08a2df7675dfbdd64eea7fef008b30c3f0",
+    "tests/ingest/aqs_watch/fixtures/current_unchanged.json": "sha256:804a1f41a902b2a72a3dd5e3a6a5787c9c41d3388a168253f4e826c2ee729f74",
+    "tests/ingest/aqs_watch/fixtures/prior.json": "sha256:785167a4b8d39c3ffcf623dab7ffbc19fdfd7c8a9ad292ad696c8ef621ac3b40",
+    "tests/ingest/aqs_watch/test_aqs_site_delta.py": "sha256:151a8e0b71eb2cc4994746c53b10b5336c93010712a46666afa96cc3454ac050",
+    "tools/ingest/aqs_watch/README.md": "sha256:f3ea26e7729f86ca91b1a7a8b004f8b14c974be234695f38da03b24bda6c2f14",
+    "tools/ingest/aqs_watch/aqs_site_delta.py": "sha256:21910462ae81629a8cd6fdf6177a8f713bab969a41aeefea987f138e0b106799"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-06"
+  },
+  "prompt_or_contract": "sha256:c9add354d6caf79ac60339de2a3456585792404271b99ef700c544ecbaa7d43e",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "New Ideas 4-2-26.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:New Ideas 4-2-26.pdf#aqs-site-metadata-semantic-change-classification",
+      "repo:tools/ingest/README.md@0272d7293157ad14989639d6e45c9f2d51eea636",
+      "repo:docs/domains/atmosphere/SOURCE_REGISTRY.md@0272d7293157ad14989639d6e45c9f2d51eea636",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@0272d7293157ad14989639d6e45c9f2d51eea636"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/atmosphere-aqs-site-delta.yml": "PROPOSED",
+    "contracts/domains/atmosphere/aqs_site_metadata_delta.md": "PROPOSED",
+    "schemas/contracts/v1/domains/atmosphere/aqs_site_metadata_delta_report.schema.json": "PROPOSED",
+    "tests/ingest/aqs_watch/fixtures/current_location_shift.json": "PROPOSED",
+    "tests/ingest/aqs_watch/fixtures/current_metadata_correction.json": "PROPOSED",
+    "tests/ingest/aqs_watch/fixtures/current_method_change.json": "PROPOSED",
+    "tests/ingest/aqs_watch/fixtures/current_unchanged.json": "PROPOSED",
+    "tests/ingest/aqs_watch/fixtures/prior.json": "PROPOSED",
+    "tests/ingest/aqs_watch/test_aqs_site_delta.py": "PROPOSED",
+    "tools/ingest/aqs_watch/README.md": "PROPOSED",
+    "tools/ingest/aqs_watch/aqs_site_delta.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-pytest",
+      "outcome": "PASS",
+      "reason": "Eight deterministic EPA AQS site-metadata delta tests passed locally."
+    },
+    {
+      "gate": "python-bytecode-compile",
+      "outcome": "PASS",
+      "reason": "The comparator and focused tests compile without syntax errors."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The read-only workflow parses as YAML."
+    },
+    {
+      "gate": "fixture-cli-no-change",
+      "outcome": "PASS",
+      "reason": "The CLI returns NO_MATERIAL_CHANGE and exit code 0 for retrieval-only fixture drift."
+    },
+    {
+      "gate": "receipt-byte-binding",
+      "outcome": "PASS",
+      "reason": "SHA-256 values bind every authored artifact except this receipt, which cannot self-bind."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:new-ideas-aqs-semantic-change",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas 4-2-26.pdf#aqs-site-metadata-semantic-change-classification"
+    },
+    {
+      "id": "repository:tools-ingest-boundary",
+      "validated": true,
+      "evidence_ref": "repo:tools/ingest/README.md@0272d7293157ad14989639d6e45c9f2d51eea636"
+    },
+    {
+      "id": "repository:directory-governance-adr",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@0272d7293157ad14989639d6e45c9f2d51eea636"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-06T19:05:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Adds a fixture-only EPA AQS site-metadata semantic delta comparator. It classifies lifecycle, location, method, parameter, POC, and metadata changes without live source access, source admission, lifecycle writes, evidence resolution, policy approval, air-quality guidance, promotion, release, or publication."
+}

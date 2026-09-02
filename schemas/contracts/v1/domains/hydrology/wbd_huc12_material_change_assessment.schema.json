@@ -1,0 +1,333 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kansasfrontiermatrix.org/schemas/contracts/v1/domains/hydrology/wbd_huc12_material_change_assessment.schema.json",
+  "title": "WbdHuc12MaterialChangeAssessment",
+  "description": "Fixture-only deterministic WBD HUC12 feature fingerprint and material-change assessment.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "assessment_id",
+    "assessed_at",
+    "source_descriptor_ref",
+    "huc12",
+    "normalization",
+    "prior",
+    "current",
+    "decision",
+    "governance",
+    "spec_hash"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "WbdHuc12MaterialChangeAssessment"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "assessment_id": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 180
+    },
+    "assessed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "source_descriptor_ref": {
+      "const": "data/registry/hydrology/sources/wbd_huc12.yaml"
+    },
+    "huc12": {
+      "type": "string",
+      "pattern": "^[0-9]{12}$"
+    },
+    "normalization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "crs",
+        "coordinate_precision",
+        "normalize_ring_direction",
+        "sort_rings"
+      ],
+      "properties": {
+        "crs": {
+          "const": "EPSG:4326"
+        },
+        "coordinate_precision": {
+          "enum": [
+            6,
+            7
+          ]
+        },
+        "normalize_ring_direction": {
+          "const": true
+        },
+        "sort_rings": {
+          "const": true
+        }
+      }
+    },
+    "prior": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "feature",
+            "fingerprint"
+          ],
+          "properties": {
+            "feature": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "huc12",
+                "areasqkm",
+                "geometry",
+                "source_metadata"
+              ],
+              "properties": {
+                "huc12": {
+                  "type": "string",
+                  "pattern": "^[0-9]{12}$"
+                },
+                "areasqkm": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "geometry": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "type",
+                    "coordinates"
+                  ],
+                  "properties": {
+                    "type": {
+                      "enum": [
+                        "Polygon",
+                        "MultiPolygon"
+                      ]
+                    },
+                    "coordinates": {
+                      "type": "array",
+                      "minItems": 1
+                    }
+                  }
+                },
+                "source_metadata": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "load_date": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "last_edit_date": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "etag": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "load_date",
+                    "last_edit_date"
+                  ]
+                }
+              }
+            },
+            "fingerprint": {
+              "type": "string",
+              "pattern": "^sha256:[a-f0-9]{64}$"
+            }
+          }
+        }
+      ]
+    },
+    "current": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "feature",
+            "fingerprint"
+          ],
+          "properties": {
+            "feature": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "huc12",
+                "areasqkm",
+                "geometry",
+                "source_metadata"
+              ],
+              "properties": {
+                "huc12": {
+                  "type": "string",
+                  "pattern": "^[0-9]{12}$"
+                },
+                "areasqkm": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "geometry": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "type",
+                    "coordinates"
+                  ],
+                  "properties": {
+                    "type": {
+                      "enum": [
+                        "Polygon",
+                        "MultiPolygon"
+                      ]
+                    },
+                    "coordinates": {
+                      "type": "array",
+                      "minItems": 1
+                    }
+                  }
+                },
+                "source_metadata": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "load_date": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "last_edit_date": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "etag": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "load_date",
+                    "last_edit_date"
+                  ]
+                }
+              }
+            },
+            "fingerprint": {
+              "type": "string",
+              "pattern": "^sha256:[a-f0-9]{64}$"
+            }
+          }
+        }
+      ]
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "outcome",
+        "change_types"
+      ],
+      "properties": {
+        "outcome": {
+          "enum": [
+            "NO_CHANGE",
+            "MATERIAL_CHANGE",
+            "ADD",
+            "REMOVE"
+          ]
+        },
+        "change_types": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "added",
+              "area_change",
+              "geometry_change",
+              "removed"
+            ]
+          }
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fixture_only",
+        "network_fetch",
+        "source_activation",
+        "lifecycle_write",
+        "promotion_allowed",
+        "publication_allowed"
+      ],
+      "properties": {
+        "fixture_only": {
+          "const": true
+        },
+        "network_fetch": {
+          "const": false
+        },
+        "source_activation": {
+          "const": false
+        },
+        "lifecycle_write": {
+          "const": false
+        },
+        "promotion_allowed": {
+          "const": false
+        },
+        "publication_allowed": {
+          "const": false
+        }
+      }
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    }
+  },
+  "anyOf": [
+    {
+      "properties": {
+        "prior": {
+          "type": "object"
+        }
+      }
+    },
+    {
+      "properties": {
+        "current": {
+          "type": "object"
+        }
+      }
+    }
+  ]
+}

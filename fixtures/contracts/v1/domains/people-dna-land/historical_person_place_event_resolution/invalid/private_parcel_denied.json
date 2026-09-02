@@ -1,0 +1,137 @@
+{
+  "fixture_id": "fixture://historical-resolution/private-parcel",
+  "profile_id": "kfm-people-dna-land-historical-person-place-event-resolution-v1",
+  "object_family": "HistoricalPersonPlaceEventResolutionCandidate",
+  "schema_version": "1.0.0",
+  "resolution_id": "sha256:27e9b78c795b0302f585f5734682abf15c439b72b654357a4bc14cc337bc043c",
+  "candidate_scope": {
+    "synthetic_fixture": true,
+    "historical_only": true,
+    "living_person": false,
+    "public_release": false
+  },
+  "person": {
+    "person_ref": "fixture://person/alpha",
+    "primary_authority": "lcnaf",
+    "authority_matches": [
+      {
+        "authority": "lcnaf",
+        "identifier": "fixture-lcnaf-alpha",
+        "exact_match": true,
+        "source_refs": [
+          "fixture://archive/person-alpha",
+          "fixture://monograph/person-alpha"
+        ],
+        "rights_spdx": "LicenseRef-Synthetic-Fixture",
+        "scan_ids": {
+          "authority_record": "synthetic-lcnaf-alpha"
+        }
+      },
+      {
+        "authority": "viaf",
+        "identifier": "fixture-viaf-alpha",
+        "exact_match": true,
+        "source_refs": [
+          "fixture://archive/person-alpha",
+          "fixture://monograph/person-alpha"
+        ],
+        "rights_spdx": "LicenseRef-Synthetic-Fixture",
+        "scan_ids": {
+          "cluster_record": "synthetic-viaf-alpha"
+        }
+      }
+    ],
+    "parcel_id": "fixture-private-parcel"
+  },
+  "event": {
+    "event_type": "land_patent",
+    "date_iso": "1873-04-11",
+    "time_slice": "1872-1875"
+  },
+  "place": {
+    "county_fips": "99999",
+    "county_label": "Synthetic County",
+    "state_code": "KS",
+    "time_slice": "1872-1875",
+    "legal_description": {
+      "township": "T00S",
+      "range": "R00W",
+      "section": "00",
+      "synthetic_sentinel": true
+    }
+  },
+  "glo_anchor": {
+    "present": true,
+    "exact_place_block": true,
+    "patent_ref": "fixture://glo/patent-alpha",
+    "source_ref": "fixture://glo/source-alpha",
+    "rights_spdx": "LicenseRef-Synthetic-Fixture",
+    "scan_ids": {
+      "patent_id": "synthetic-patent-alpha"
+    },
+    "legal_description": {
+      "township": "T00S",
+      "range": "R00W",
+      "section": "00"
+    }
+  },
+  "co_mentions": [
+    {
+      "source_family": "newspaper",
+      "source_ref": "fixture://newspaper/alpha-page",
+      "county_fips": "99999",
+      "time_slice": "1872-1875",
+      "rights_spdx": "LicenseRef-Synthetic-Fixture",
+      "scan_ids": {
+        "page": "synthetic-newspaper-page"
+      }
+    },
+    {
+      "source_family": "county_history",
+      "source_ref": "fixture://county-history/alpha-page",
+      "county_fips": "99999",
+      "time_slice": "1872-1875",
+      "rights_spdx": "LicenseRef-Synthetic-Fixture",
+      "scan_ids": {
+        "page": "synthetic-county-history-page"
+      }
+    },
+    {
+      "source_family": "glo_patent",
+      "source_ref": "fixture://glo/patent-alpha",
+      "county_fips": "99999",
+      "time_slice": "1872-1875",
+      "rights_spdx": "LicenseRef-Synthetic-Fixture",
+      "scan_ids": {
+        "patent_id": "synthetic-patent-alpha"
+      }
+    }
+  ],
+  "negative_evidence": [],
+  "evidence_refs": [
+    "fixture://evidence/authority-alpha",
+    "fixture://evidence/glo-alpha",
+    "fixture://evidence/co-mentions-alpha"
+  ],
+  "score": 7,
+  "confidence": "high",
+  "disposition": "candidate_review",
+  "governance": {
+    "rights_state": "fixture_only",
+    "sensitivity_state": "historical_synthetic_fixture",
+    "review_state": "candidate_review",
+    "release_state": "not_released",
+    "promotion_eligible": false,
+    "public_exposure": false
+  },
+  "limitations": [
+    "synthetic_fixture_only",
+    "no_identity_adjudication",
+    "no_living_person_claim",
+    "no_title_or_boundary_claim",
+    "no_public_release",
+    "no_raw_dna",
+    "no_policy_approval"
+  ],
+  "spec_hash": "sha256:d18f9aa56ee40f0612945cc4fb40ed5d58e63b0c384c3ae96ca9e84a58edcb2a"
+}

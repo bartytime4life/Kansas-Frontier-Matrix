@@ -1,0 +1,255 @@
+{
+  "receipt_id": "genrec-pipeline-specs-fauna-readme-e456f2b1",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "pipeline_specs/fauna/README.md"
+  ],
+  "artifact_hashes": {
+    "pipeline_specs/fauna/README.md": "sha256:e456f2b1c38e1cc32d02e9ea2742a757847cf967e7df03214d209ffc1ecf35e0"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-15-session"
+  },
+  "prompt_or_contract": "sha256:ec2bf545bc6a25002afb63d588437951b276e7628c4a588685156a915b9851d9",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "container"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "Directory Rules.pdf",
+      "Kansas Frontier Matrix — AI Build Operating Contract.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/ac419b0942eb8c229b666aed147cd71dc7e9c42b",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ac419b0942eb8c229b666aed147cd71dc7e9c42b/pipeline_specs/fauna/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ac419b0942eb8c229b666aed147cd71dc7e9c42b/pipeline_specs/fauna/refresh.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ac419b0942eb8c229b666aed147cd71dc7e9c42b/pipeline_specs/fauna/watchers/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ac419b0942eb8c229b666aed147cd71dc7e9c42b/pipeline_specs/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ac419b0942eb8c229b666aed147cd71dc7e9c42b/pipeline_specs/watchers/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ac419b0942eb8c229b666aed147cd71dc7e9c42b/pipelines/domains/fauna/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ac419b0942eb8c229b666aed147cd71dc7e9c42b/pipelines/watchers/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ac419b0942eb8c229b666aed147cd71dc7e9c42b/configs/domains/fauna/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ac419b0942eb8c229b666aed147cd71dc7e9c42b/data/registry/sources/fauna/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ac419b0942eb8c229b666aed147cd71dc7e9c42b/data/receipts/fauna/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ac419b0942eb8c229b666aed147cd71dc7e9c42b/data/proofs/fauna/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ac419b0942eb8c229b666aed147cd71dc7e9c42b/docs/domains/fauna/SENSITIVITY.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ac419b0942eb8c229b666aed147cd71dc7e9c42b/schemas/contracts/v1/domains/fauna/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ac419b0942eb8c229b666aed147cd71dc7e9c42b/policy/domains/fauna/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ac419b0942eb8c229b666aed147cd71dc7e9c42b/policy/sensitivity/fauna/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ac419b0942eb8c229b666aed147cd71dc7e9c42b/tests/domains/fauna/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ac419b0942eb8c229b666aed147cd71dc7e9c42b/fixtures/domains/fauna/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ac419b0942eb8c229b666aed147cd71dc7e9c42b/release/candidates/fauna/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ac419b0942eb8c229b666aed147cd71dc7e9c42b/.github/workflows/domain-fauna.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ac419b0942eb8c229b666aed147cd71dc7e9c42b/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ac419b0942eb8c229b666aed147cd71dc7e9c42b/.github/PULL_REQUEST_TEMPLATE.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ac419b0942eb8c229b666aed147cd71dc7e9c42b/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ac419b0942eb8c229b666aed147cd71dc7e9c42b/docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    "pipeline_specs/fauna/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-preflight",
+      "outcome": "PASS",
+      "reason": "Latest main commit, target blob, duplicate branch/PR state, direct lane inventory, parent/child spec surfaces, executable documentation, registry, receipt, proof, policy, schema, test, fixture, release, workflow, and ownership surfaces were inspected."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The README remains under pipeline_specs/ as declarative intent. The generated receipt uses data/receipts/generated/. No canonical root, parallel authority home, or public path is introduced."
+    },
+    {
+      "gate": "direct-fauna-inventory",
+      "outcome": "PASS",
+      "reason": "The direct lane was bounded as README.md, a seven-line PROPOSED refresh.yaml placeholder, and watchers/README.md. The README does not claim exhaustive recursive inventory."
+    },
+    {
+      "gate": "placeholder-classification",
+      "outcome": "PASS",
+      "reason": "refresh.yaml was opened and classified as an inventory placeholder rather than a schema-valid, consumer-bound, active specification."
+    },
+    {
+      "gate": "receipt-path-correction",
+      "outcome": "PASS",
+      "reason": "data/receipts/pipeline/fauna/ was absent; data/receipts/fauna/ was verified as the Fauna receipt parent with subtype layout still needing verification."
+    },
+    {
+      "gate": "fauna-sensitivity-no-leak",
+      "outcome": "PASS",
+      "reason": "No exact coordinates, sensitive site identifiers, operational generalization radii, fuzzing parameters, private endpoints, credentials, or reconstructive examples were introduced."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "Final newline, heading hierarchy, 28 balanced fences, unique headings, 46 internal links, Mermaid boundaries, and KFM meta block were checked."
+    },
+    {
+      "gate": "illustrative-yaml",
+      "outcome": "PASS",
+      "reason": "The YAML example parsed successfully and is explicitly labeled incomplete, non-canonical, inactive, and unsafe for production."
+    },
+    {
+      "gate": "secret-scan",
+      "outcome": "PASS",
+      "reason": "Common private-key, token, API-key, and credential patterns were not found."
+    },
+    {
+      "gate": "remote-blob-verification",
+      "outcome": "PASS",
+      "reason": "The remote README Git blob SHA matched the locally calculated Git blob and the recorded raw SHA-256."
+    },
+    {
+      "gate": "executable-tests",
+      "outcome": "SKIPPED",
+      "reason": "No active spec, parser, scheduler, source activation, or executable consumer changed; substantive domain-fauna CI is TODO-only scaffolding."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "evidence-01",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/ac419b0942eb8c229b666aed147cd71dc7e9c42b"
+    },
+    {
+      "id": "evidence-02",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ac419b0942eb8c229b666aed147cd71dc7e9c42b/pipeline_specs/fauna/README.md"
+    },
+    {
+      "id": "evidence-03",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ac419b0942eb8c229b666aed147cd71dc7e9c42b/pipeline_specs/fauna/refresh.yaml"
+    },
+    {
+      "id": "evidence-04",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ac419b0942eb8c229b666aed147cd71dc7e9c42b/pipeline_specs/fauna/watchers/README.md"
+    },
+    {
+      "id": "evidence-05",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ac419b0942eb8c229b666aed147cd71dc7e9c42b/pipeline_specs/README.md"
+    },
+    {
+      "id": "evidence-06",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ac419b0942eb8c229b666aed147cd71dc7e9c42b/pipeline_specs/watchers/README.md"
+    },
+    {
+      "id": "evidence-07",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ac419b0942eb8c229b666aed147cd71dc7e9c42b/pipelines/domains/fauna/README.md"
+    },
+    {
+      "id": "evidence-08",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ac419b0942eb8c229b666aed147cd71dc7e9c42b/pipelines/watchers/README.md"
+    },
+    {
+      "id": "evidence-09",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ac419b0942eb8c229b666aed147cd71dc7e9c42b/configs/domains/fauna/README.md"
+    },
+    {
+      "id": "evidence-10",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ac419b0942eb8c229b666aed147cd71dc7e9c42b/data/registry/sources/fauna/README.md"
+    },
+    {
+      "id": "evidence-11",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ac419b0942eb8c229b666aed147cd71dc7e9c42b/data/receipts/fauna/README.md"
+    },
+    {
+      "id": "evidence-12",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ac419b0942eb8c229b666aed147cd71dc7e9c42b/data/proofs/fauna/README.md"
+    },
+    {
+      "id": "evidence-13",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ac419b0942eb8c229b666aed147cd71dc7e9c42b/docs/domains/fauna/SENSITIVITY.md"
+    },
+    {
+      "id": "evidence-14",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ac419b0942eb8c229b666aed147cd71dc7e9c42b/schemas/contracts/v1/domains/fauna/README.md"
+    },
+    {
+      "id": "evidence-15",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ac419b0942eb8c229b666aed147cd71dc7e9c42b/policy/domains/fauna/README.md"
+    },
+    {
+      "id": "evidence-16",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ac419b0942eb8c229b666aed147cd71dc7e9c42b/policy/sensitivity/fauna/README.md"
+    },
+    {
+      "id": "evidence-17",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ac419b0942eb8c229b666aed147cd71dc7e9c42b/tests/domains/fauna/README.md"
+    },
+    {
+      "id": "evidence-18",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ac419b0942eb8c229b666aed147cd71dc7e9c42b/fixtures/domains/fauna/README.md"
+    },
+    {
+      "id": "evidence-19",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ac419b0942eb8c229b666aed147cd71dc7e9c42b/release/candidates/fauna/README.md"
+    },
+    {
+      "id": "evidence-20",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ac419b0942eb8c229b666aed147cd71dc7e9c42b/.github/workflows/domain-fauna.yml"
+    },
+    {
+      "id": "evidence-21",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ac419b0942eb8c229b666aed147cd71dc7e9c42b/.github/CODEOWNERS"
+    },
+    {
+      "id": "evidence-22",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ac419b0942eb8c229b666aed147cd71dc7e9c42b/.github/PULL_REQUEST_TEMPLATE.md"
+    },
+    {
+      "id": "evidence-23",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ac419b0942eb8c229b666aed147cd71dc7e9c42b/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    },
+    {
+      "id": "evidence-24",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ac419b0942eb8c229b666aed147cd71dc7e9c42b/docs/doctrine/directory-rules.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-15T17:53:51Z",
+  "emitter": "OpenAI GPT-5.6 Thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only update. The receipt does not authorize merge, activate refresh.yaml, activate any watcher or source, establish parser or consumer behavior, approve sensitivity handling, or authorize lifecycle promotion or publication. Human review remains pending."
+}

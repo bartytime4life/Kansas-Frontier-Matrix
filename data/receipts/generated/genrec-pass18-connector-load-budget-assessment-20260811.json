@@ -1,0 +1,101 @@
+{
+  "receipt_id": "genrec-pass18-connector-load-budget-assessment-20260811",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/connector-load-budget-assessment.yml",
+    "contracts/source/connector_load_budget_assessment.md",
+    "docs/intake/exploratory/pass-18-connector-load-budget-assessment-source-map.md",
+    "fixtures/contracts/v1/source/connector_load_budget_assessment/cases.json",
+    "schemas/contracts/v1/source/connector_load_budget_assessment.schema.json",
+    "tests/validators/test_validate_connector_load_budget_assessment.py",
+    "tools/validators/source/validate_connector_load_budget_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/connector-load-budget-assessment.yml": "sha256:19ef7585db83568fbb4be00869bb1e664048e1be0b071bd3559fc0ad4dad3e15",
+    "contracts/source/connector_load_budget_assessment.md": "sha256:f5d8cb183b32cc440f5fb92a468f4b09c494fdc4644140db0ff93580ddb1aeed",
+    "docs/intake/exploratory/pass-18-connector-load-budget-assessment-source-map.md": "sha256:699e179c295a023ad3a19e5633829d554c83fb502e72e74ec72b891b5cf190e7",
+    "fixtures/contracts/v1/source/connector_load_budget_assessment/cases.json": "sha256:2389618ea88b8d53a71450121c27f7a3803592bb12c2df52c0cac8d65db7d4df",
+    "schemas/contracts/v1/source/connector_load_budget_assessment.schema.json": "sha256:9502421656b61a63309e59f08403f1b916db7018e4669b77dde467b6e37f4c9d",
+    "tests/validators/test_validate_connector_load_budget_assessment.py": "sha256:71c70469ee84e6a616e3c31f2db57303a182797bee6f4bd3ea9732fc9c913cfa",
+    "tools/validators/source/validate_connector_load_budget_assessment.py": "sha256:2c55681dd075beadd0f1e37155767c129ff445376bd2e5a7a1c7b2de7dbd8b5d"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-11"
+  },
+  "prompt_or_contract": "sha256:f5d8cb183b32cc440f5fb92a468f4b09c494fdc4644140db0ff93580ddb1aeed",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository and pull-request inspection",
+      "local PDF rendering and deterministic Markdown, JSON, YAML, and Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
+    ],
+    "attached_docs": [
+      "KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#physical-page=62&printed-page=59&card=KFM-P18-INV-217",
+      "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#physical-page=76&printed-page=73&card=KFM-P18-INV-422",
+      "gdrive://1sdiLNDLFr2cVD3Q8h3ZvHO4D96WLJ6V7vf5neNzEyTM",
+      "gdrive://1JhlatU-DMO1d6oh82HiLzZQDXgI6gA6kLtqs7Y1-jr8",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/074a39c4acb8e4e72cafe4bdea4c9e237dbf2496/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/074a39c4acb8e4e72cafe4bdea4c9e237dbf2496/docs/standards/connector-rate-limits.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/074a39c4acb8e4e72cafe4bdea4c9e237dbf2496/contracts/source/web_acquisition_conduct_assessment.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/connector-load-budget-assessment.yml": "CONFIRMED",
+    "contracts/source/connector_load_budget_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-connector-load-budget-assessment-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/source/connector_load_budget_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/source/connector_load_budget_assessment.schema.json": "PROPOSED",
+    "tests/validators/test_validate_connector_load_budget_assessment.py": "CONFIRMED",
+    "tools/validators/source/validate_connector_load_budget_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "json-and-workflow-yaml-parse", "outcome": "PASS"},
+    {"gate": "focused-unittest-suite", "outcome": "PASS", "reason": "Nine deterministic connector load-budget tests passed."},
+    {"gate": "exact-fixture-replay", "outcome": "PASS", "reason": "Twenty-three exact PASS, ABSTAIN, DENY, and ERROR cases matched reviewed outcomes and codes."},
+    {"gate": "no-network-boundary", "outcome": "PASS"},
+    {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS"},
+    {"gate": "hosted-exact-head-ci", "outcome": "SKIPPED", "reason": "Requires the pushed pull-request head."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Pending on the draft pull request."}
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {"id": "pass18-rate-and-concurrency-budget", "validated": true, "evidence_ref": "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#physical-page=62&printed-page=59&card=KFM-P18-INV-217"},
+    {"id": "pass18-distributed-source-load-budget", "validated": true, "evidence_ref": "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#physical-page=76&printed-page=73&card=KFM-P18-INV-422"},
+    {"id": "connected-dots-brief", "validated": true, "evidence_ref": "gdrive://1sdiLNDLFr2cVD3Q8h3ZvHO4D96WLJ6V7vf5neNzEyTM"},
+    {"id": "accepted-directory-rules", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/074a39c4acb8e4e72cafe4bdea4c9e237dbf2496/docs/doctrine/directory-rules.md"},
+    {"id": "existing-web-conduct-contract", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/074a39c4acb8e4e72cafe4bdea4c9e237dbf2496/contracts/source/web_acquisition_conduct_assessment.md"}
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-12T01:36:43Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub and Google Drive connectors",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Additive, inactive, fixture-only ConnectorLoadBudgetAssessmentCandidate packet derived from supplied Pass 18 cards KFM-P18-INV-217, KFM-P18-INV-372, KFM-P18-INV-422, and KFM-P18-INV-447. It validates a requested single-worker, threaded, or distributed execution against one declared per-source pace, capacity, retry, coordination, stop-condition, conduct-reference, and review-reference envelope without network access, scheduling, connector execution, source activation, lifecycle mutation, evidence or policy decisions, review approval, release, deployment, publication, or public-use authority."
+}

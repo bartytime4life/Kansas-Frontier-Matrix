@@ -1,0 +1,136 @@
+{
+  "receipt_id": "genrec-missing-readme-contracts-68d7c6e6",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "contracts/domains/habitat/land_cover/README.md",
+    "docs/atlases/README.md",
+    "docs/sources/catalog/_template/README.md",
+    "packages/domains/soil/src/soil/README.md"
+  ],
+  "artifact_hashes": {
+    "contracts/domains/habitat/land_cover/README.md": "sha256:fea50218a24b5338242cd4477f229a3d373035f2472a7ebd394b875c19c06929",
+    "docs/atlases/README.md": "sha256:516c290b02b9264f6b09fa5680d067b461b43d186dfdb122df769961ad90ab44",
+    "docs/sources/catalog/_template/README.md": "sha256:65c7558de7415818438efc51ff5b75f1adf9dd5eedd69d3ea741099384a95b70",
+    "packages/domains/soil/src/soil/README.md": "sha256:1486a6bad1a024cecf82cc177385c954f2ec70196b06ef3dc88d0ed5e931ac26"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-07-16-work-mode"
+  },
+  "prompt_or_contract": "sha256:fb88e0eff14139c9ea2be49debfec4c401ed57392e01e826575a2e7debef8cc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local git",
+      "repository validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "docs/doctrine/directory-rules.md",
+      "docs/doctrine/ai-build-operating-contract.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/9741610a833bc7112a1d42a766fae592baf8f1af",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9741610a833bc7112a1d42a766fae592baf8f1af/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9741610a833bc7112a1d42a766fae592baf8f1af/docs/atlas/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9741610a833bc7112a1d42a766fae592baf8f1af/contracts/domains/habitat/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9741610a833bc7112a1d42a766fae592baf8f1af/contracts/domains/habitat/ecoregions/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9741610a833bc7112a1d42a766fae592baf8f1af/docs/sources/catalog/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9741610a833bc7112a1d42a766fae592baf8f1af/docs/sources/catalog/_examples/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9741610a833bc7112a1d42a766fae592baf8f1af/packages/domains/soil/src/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9741610a833bc7112a1d42a766fae592baf8f1af/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9741610a833bc7112a1d42a766fae592baf8f1af/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ]
+  },
+  "truth_labels": {
+    "contracts/domains/habitat/land_cover/README.md": "PROPOSED",
+    "docs/atlases/README.md": "PROPOSED",
+    "docs/sources/catalog/_template/README.md": "PROPOSED",
+    "packages/domains/soil/src/soil/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-target-preflight",
+      "outcome": "PASS",
+      "reason": "The repository, authoritative Directory Rules, populated target directories, parent and sibling READMEs, direct file inventories, CODEOWNERS, and current enforcement surfaces were inspected at the pinned audit snapshot."
+    },
+    {
+      "gate": "missing-path-classification",
+      "outcome": "PASS",
+      "reason": "Only four unambiguous folder-contract gaps were selected; proposed runbooks, deprecated aliases, typo paths, compatibility layouts, empty leaves, and unresolved authority homes were excluded."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "Each README documents an existing populated directory inside its current responsibility root and creates no new canonical root, parallel authority home, lifecycle phase, implementation, or public path."
+    },
+    {
+      "gate": "markdown-structure-and-links",
+      "outcome": "PASS",
+      "reason": "All four artifacts have one H1, one KFM metadata block, the required section order, balanced fences, final newlines, and resolving relative Markdown links."
+    },
+    {
+      "gate": "whitespace-and-sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "New-file whitespace checks and common private-key, GitHub token, AWS key, and OpenAI token pattern scans passed."
+    },
+    {
+      "gate": "repository-native-validation",
+      "outcome": "PASS",
+      "reason": "PYTHONPATH=/tmp/kfm-validation-deps make validate completed successfully: valid schema fixtures passed, invalid fixtures were rejected as expected, and 16 schema/contract tests passed."
+    },
+    {
+      "gate": "runtime-and-executable-behavior",
+      "outcome": "SKIPPED",
+      "reason": "Documentation-only change; no package behavior, validator, schema, policy, fixture payload, pipeline, workflow, release object, runtime, or public artifact changed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "directory-readme-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9741610a833bc7112a1d42a766fae592baf8f1af/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "atlas-canonical-lane",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9741610a833bc7112a1d42a766fae592baf8f1af/docs/atlas/README.md"
+    },
+    {
+      "id": "habitat-land-cover-contract-inventory",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9741610a833bc7112a1d42a766fae592baf8f1af/contracts/domains/habitat/README.md"
+    },
+    {
+      "id": "source-catalog-template-lane",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9741610a833bc7112a1d42a766fae592baf8f1af/docs/sources/catalog/README.md"
+    },
+    {
+      "id": "soil-source-namespace",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9741610a833bc7112a1d42a766fae592baf8f1af/packages/domains/soil/src/README.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-17T03:55:10Z",
+  "emitter": "openai-codex/gpt-5",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored documentation-hygiene change on a scoped review branch. The four README files document existing repository state and responsibility boundaries without filling speculative paths or claiming unimplemented enforcement. Human review remains pending; this receipt is provenance evidence, not merge authorization, source admission, policy permission, evidence closure, release approval, or publication authority."
+}

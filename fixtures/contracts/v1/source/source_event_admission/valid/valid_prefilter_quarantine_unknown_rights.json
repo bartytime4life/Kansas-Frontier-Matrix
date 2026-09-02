@@ -1,0 +1,40 @@
+{
+  "object_type": "SourceEventPrefilterOutputCandidate",
+  "schema_version": "1.0.0",
+  "profile": "kfm.source_event_prefilter_output_candidate.v1",
+  "execution_mode": "FIXTURE_ONLY",
+  "prefilter_id": "kfm:source-prefilter:sha256:0d02ec9c51da6293796c714105c7332d3cc98c4f04249f4ee1e0cca4d5346ea9",
+  "spec_hash": "sha256:92cf02c5c17262f95e3cadf1dc3f595c168b5f68aa7b6d12646beb30727c2706",
+  "event_ref": "kfm:source-event:sha256:a18b4950b4cb130188e808c38003b696f954a705f57ce51e0e7c49cb4d693222",
+  "event_payload_spec_hash": "sha256:b2ed80543bb9f19ecd06b40abff342bac5cba272c7670a4b2fe71b781d796e28",
+  "evaluated_at": "2026-08-06T17:00:06Z",
+  "evaluator": {
+    "evaluator_id": "kfm-fixture-source-prefilter",
+    "kind": "RULE_SET",
+    "version": "1.0.0",
+    "configuration_hash": "sha256:ba01f6dcbb74d141c26da76ef9ed4e100f60b7f1de18ffbf36168e0fbd3b2c3c",
+    "deterministic": true,
+    "temperature": null,
+    "seed": null
+  },
+  "classification": "RIGHTS_UNRESOLVED",
+  "significance_score": 1,
+  "uncertainty": 1,
+  "explanation_digest": "sha256:c17b35661ebb5aff77fa8b1949e34cda82978134e53ae40c060a78a185a3369c",
+  "candidate_destination": "QUARANTINE_REVIEW",
+  "reason_codes": [
+    "RIGHTS_UNRESOLVED"
+  ],
+  "claims": {
+    "network_access_performed": false,
+    "hidden_reasoning_recorded": false,
+    "model_decides_truth": false,
+    "evidence_resolved": false,
+    "policy_evaluated": false,
+    "authority_created": false,
+    "source_activated": false,
+    "lifecycle_write_performed": false,
+    "released": false,
+    "published": false
+  }
+}

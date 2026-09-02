@@ -1,0 +1,27 @@
+{
+  "scenario_id": "synthetic-open-pr-merge-held",
+  "evidence_refs": [
+    "fixture://repository-control/expected-hold"
+  ],
+  "repository": "bartytime4life/Kansas-Frontier-Matrix",
+  "default_branch": "main",
+  "base_sha": "9f4a7218e9f29592cce3d15fb6a2b43185ac3d82",
+  "head_sha": "1111111111111111111111111111111111111111",
+  "head_branch": "agent/test-repository-control",
+  "pr_number": 9999,
+  "pr_state": "OPEN",
+  "merge_commit_sha": null,
+  "changed_paths": [
+    "docs/example.md"
+  ],
+  "requested_operations": [
+    "update"
+  ],
+  "open_pull_requests": [
+    9999
+  ],
+  "active_review_prs": [
+    9999
+  ],
+  "now": "2026-07-26T12:00:00Z"
+}

@@ -1,0 +1,132 @@
+{
+  "receipt_id": "genrec-pass22-time-series-promotion-candidate-manifest-20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/time-series-promotion-candidate-manifest.yml",
+    "contracts/data/time_series_promotion_candidate_manifest.md",
+    "docs/intake/exploratory/pass-22-time-series-promotion-candidate-manifest-source-map.md",
+    "fixtures/contracts/v1/data/time_series_promotion_candidate_manifest/cases.json",
+    "schemas/contracts/v1/data/time_series_promotion_candidate_manifest.schema.json",
+    "tests/validators/test_validate_time_series_promotion_candidate_manifest.py",
+    "tools/validators/data/validate_time_series_promotion_candidate_manifest.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/time-series-promotion-candidate-manifest.yml": "sha256:51959a091813db49e54167a033d6331630250be8f766ef2ade9a2a8cd0231a07",
+    "contracts/data/time_series_promotion_candidate_manifest.md": "sha256:4d81bd61e19f3697107ee85545722dbe9d64473f9f7dc845d2eb65c68e7c2a06",
+    "docs/intake/exploratory/pass-22-time-series-promotion-candidate-manifest-source-map.md": "sha256:3c3683dfbb3c95cf0b39ba9a114b8c14128e89d190efd802f20f25fc1e0a3dfc",
+    "fixtures/contracts/v1/data/time_series_promotion_candidate_manifest/cases.json": "sha256:61af038f1d24b0dd1ca0e2ed1f8412bf3ea6a0112c0505fac3a8edb3bf2bb994",
+    "schemas/contracts/v1/data/time_series_promotion_candidate_manifest.schema.json": "sha256:41d9c4aa0ada82f9b3b498d06f14200b461269bb769ba9ea7b0c22dc4c060ca8",
+    "tests/validators/test_validate_time_series_promotion_candidate_manifest.py": "sha256:67f1562d413090954e6b43bd2b8ae18d433baa67428842ae23fd6de52ba5d022",
+    "tools/validators/data/validate_time_series_promotion_candidate_manifest.py": "sha256:3104f5f6a42fc6e446200b6dc5d594d9d7a6c31188440d30126606b402a5d720"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5"
+  },
+  "prompt_or_contract": "sha256:e43c0f4b929e047d051e1fd3cd333a28738f5087ae6d8cf5055deca7670d17cf",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector",
+      "PDF extraction and rendering",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Pass_22_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf",
+      "KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf"
+    ],
+    "evidence_refs": [
+      "google-drive:1RSEbLpzaqCEJiYsa-qslEAipezKSjg2W#KFM-P22-PROG-0020",
+      "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#consolidated-page-403",
+      "github:bartytime4life/Kansas-Frontier-Matrix@f5efa63a3600f688cb9d6ed0255e20b9dfbac6dc",
+      "github:bartytime4life/Kansas-Frontier-Matrix@f5efa63a3600f688cb9d6ed0255e20b9dfbac6dc:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/time-series-promotion-candidate-manifest.yml": "PROPOSED",
+    "contracts/data/time_series_promotion_candidate_manifest.md": "PROPOSED",
+    "docs/intake/exploratory/pass-22-time-series-promotion-candidate-manifest-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/data/time_series_promotion_candidate_manifest/cases.json": "PROPOSED",
+    "schemas/contracts/v1/data/time_series_promotion_candidate_manifest.schema.json": "PROPOSED",
+    "tests/validators/test_validate_time_series_promotion_candidate_manifest.py": "PROPOSED",
+    "tools/validators/data/validate_time_series_promotion_candidate_manifest.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "source-assay",
+      "outcome": "PASS",
+      "reason": "Pass 22 card KFM-P22-PROG-0020 was resolved in Drive and remained unchanged in the Pass 23-Pass 32 consolidated atlas."
+    },
+    {
+      "gate": "repository-gap-assay",
+      "outcome": "PASS",
+      "reason": "Exact card ID and proposed object name were absent from current main and open pull requests at the recorded base."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "Contract, schema, fixtures, validator, tests, workflow, source map, and receipt follow the accepted responsibility-root mapping."
+    },
+    {
+      "gate": "draft-2020-12-meta",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-local-tests",
+      "outcome": "PASS",
+      "reason": "Seven tests and nine positive/negative fixture cases passed without network access."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "Recorded before the draft pull request existed; GitHub Actions remains authoritative for the branch head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Awaiting an authorized repository reviewer."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "docs/doctrine/directory-rules.md"
+  ],
+  "citations": [
+    {
+      "id": "KFM-P22-PROG-0020",
+      "validated": true,
+      "evidence_ref": "google-drive:1RSEbLpzaqCEJiYsa-qslEAipezKSjg2W"
+    },
+    {
+      "id": "KFM-P22-PROG-0020-PASS32-UNCHANGED",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#consolidated-page-403"
+    },
+    {
+      "id": "ADR-0029",
+      "validated": true,
+      "evidence_ref": "github:bartytime4life/Kansas-Frontier-Matrix@f5efa63a3600f688cb9d6ed0255e20b9dfbac6dc:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-09T20:28:00Z",
+  "emitter": "OpenAI Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only proposed profile. It performs no source access, promotion, policy evaluation, release, or publication effect. Rollback is deletion of the eight files introduced by the draft change."
+}

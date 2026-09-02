@@ -1,0 +1,225 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/runtime/replay_safe_effect_ledger.schema.json",
+  "title": "ReplaySafeEffectLedgerCandidate",
+  "description": "Fixture-only record proving bounded event identity, delivery attempts, effect reservation, and duplicate suppression. It creates no execution, lifecycle, review, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "profile",
+    "execution_mode",
+    "ledger_id",
+    "event",
+    "deliveries",
+    "effect_intent",
+    "reservation",
+    "ledger_entries",
+    "result",
+    "governance",
+    "spec_hash"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.replay_safe_effect_ledger_candidate.v1"},
+    "execution_mode": {"const": "FIXTURE_ONLY"},
+    "ledger_id": {
+      "type": "string",
+      "pattern": "^kfm://runtime/replay-safe-effect-ledger/[0-9a-f]{24}$"
+    },
+    "event": {"$ref": "#/$defs/event"},
+    "deliveries": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "items": {"$ref": "#/$defs/delivery"}
+    },
+    "effect_intent": {"$ref": "#/$defs/effect_intent"},
+    "reservation": {"$ref": "#/$defs/reservation"},
+    "ledger_entries": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "items": {"$ref": "#/$defs/ledger_entry"}
+    },
+    "result": {"$ref": "#/$defs/result"},
+    "governance": {"$ref": "#/$defs/governance"},
+    "spec_hash": {"$ref": "#/$defs/hash"}
+  },
+  "$defs": {
+    "nonempty": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "pattern": "\\S"
+    },
+    "hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "aware_datetime": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "nullable_nonempty": {
+      "oneOf": [
+        {"$ref": "#/$defs/nonempty"},
+        {"type": "null"}
+      ]
+    },
+    "nullable_hash": {
+      "oneOf": [
+        {"$ref": "#/$defs/hash"},
+        {"type": "null"}
+      ]
+    },
+    "nullable_datetime": {
+      "oneOf": [
+        {"$ref": "#/$defs/aware_datetime"},
+        {"type": "null"}
+      ]
+    },
+    "reason_codes": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 16,
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Z][A-Z0-9_]{2,95}$"
+      },
+      "uniqueItems": true
+    },
+    "event": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["event_id", "event_type", "subject_ref", "occurred_at", "payload_digest"],
+      "properties": {
+        "event_id": {
+          "type": "string",
+          "pattern": "^kfm:event:sha256:[0-9a-f]{64}$"
+        },
+        "event_type": {
+          "type": "string",
+          "enum": ["CANDIDATE_READY", "CORRECTION_READY", "WITHDRAWAL_READY"]
+        },
+        "subject_ref": {"$ref": "#/$defs/nonempty"},
+        "occurred_at": {"$ref": "#/$defs/aware_datetime"},
+        "payload_digest": {"$ref": "#/$defs/hash"}
+      }
+    },
+    "delivery": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["delivery_id", "attempt", "received_at", "outcome", "predecessor_delivery_ref"],
+      "properties": {
+        "delivery_id": {
+          "type": "string",
+          "pattern": "^delivery:[a-z0-9][a-z0-9-]{2,95}$"
+        },
+        "attempt": {"type": "integer", "minimum": 1, "maximum": 32},
+        "received_at": {"$ref": "#/$defs/aware_datetime"},
+        "outcome": {
+          "type": "string",
+          "enum": ["ACCEPTED", "DUPLICATE", "RETRYABLE_FAILURE", "TERMINAL_FAILURE"]
+        },
+        "predecessor_delivery_ref": {"$ref": "#/$defs/nullable_nonempty"}
+      }
+    },
+    "effect_intent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["intent_id", "effect_type", "idempotency_scope", "effect_key", "requested_at"],
+      "properties": {
+        "intent_id": {
+          "type": "string",
+          "pattern": "^kfm:effect-intent:sha256:[0-9a-f]{64}$"
+        },
+        "effect_type": {
+          "type": "string",
+          "enum": ["WRITE_CANDIDATE", "EMIT_NOTIFICATION", "INVALIDATE_CACHE", "RECORD_AUDIT_MARKER"]
+        },
+        "idempotency_scope": {
+          "type": "string",
+          "enum": ["EVENT", "SUBJECT_VERSION"]
+        },
+        "effect_key": {"$ref": "#/$defs/hash"},
+        "requested_at": {"$ref": "#/$defs/aware_datetime"}
+      }
+    },
+    "reservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "reservation_token_digest",
+        "reserved_by",
+        "reserved_at",
+        "effect_completed_at"
+      ],
+      "properties": {
+        "state": {
+          "type": "string",
+          "enum": ["NONE", "RESERVED", "COMPLETED", "RELEASED"]
+        },
+        "reservation_token_digest": {"$ref": "#/$defs/nullable_hash"},
+        "reserved_by": {"$ref": "#/$defs/nullable_nonempty"},
+        "reserved_at": {"$ref": "#/$defs/nullable_datetime"},
+        "effect_completed_at": {"$ref": "#/$defs/nullable_datetime"}
+      }
+    },
+    "ledger_entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["entry_id", "delivery_ref", "state", "recorded_at", "reason_codes"],
+      "properties": {
+        "entry_id": {
+          "type": "string",
+          "pattern": "^ledger-entry:[0-9]{4}$"
+        },
+        "delivery_ref": {
+          "type": "string",
+          "pattern": "^delivery:[a-z0-9][a-z0-9-]{2,95}$"
+        },
+        "state": {
+          "type": "string",
+          "enum": ["RESERVED", "COMPLETED", "DUPLICATE_SUPPRESSED", "FAILED", "COMPENSATED", "RELEASED"]
+        },
+        "recorded_at": {"$ref": "#/$defs/aware_datetime"},
+        "reason_codes": {"$ref": "#/$defs/reason_codes"}
+      }
+    },
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["outcome", "completed_effect_count", "duplicate_delivery_count", "reason_codes"],
+      "properties": {
+        "outcome": {
+          "type": "string",
+          "enum": ["EXECUTED_ONCE", "DUPLICATE_SUPPRESSED", "FAILED", "COMPENSATED"]
+        },
+        "completed_effect_count": {"type": "integer", "minimum": 0, "maximum": 1},
+        "duplicate_delivery_count": {"type": "integer", "minimum": 0, "maximum": 31},
+        "reason_codes": {"$ref": "#/$defs/reason_codes"}
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "creates_effect_authority",
+        "creates_lifecycle_write_authority",
+        "creates_review_authority",
+        "creates_release_authority",
+        "creates_publication_authority"
+      ],
+      "properties": {
+        "creates_effect_authority": {"const": false},
+        "creates_lifecycle_write_authority": {"const": false},
+        "creates_review_authority": {"const": false},
+        "creates_release_authority": {"const": false},
+        "creates_publication_authority": {"const": false}
+      }
+    }
+  }
+}

@@ -1,0 +1,189 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/cosign-attestation-verification-plan.yml": "sha256:5a68113ef50cfe464c87ffa30e9a140bcfad80f7abf0e31b1edc362d6d3488bf",
+    "contracts/release/cosign_attestation_verification_plan.md": "sha256:9c616ad6359d49c003ea88c60fe475ad80c8522a6554f7587ada8e68ec4bd49a",
+    "docs/intake/exploratory/new-ideas-4-12-26-cosign-attestation-verification-source-map.md": "sha256:9419e602201d837159ae78cce88a4759b8d4572bc67c99d55ff2dbb24087a40e",
+    "fixtures/contracts/v1/release/cosign_attestation_verification_plan/README.md": "sha256:06252dec9bf5424328f8bfc839486c61735187bc191eb5651cb0d3cb6cb22ec2",
+    "fixtures/contracts/v1/release/cosign_attestation_verification_plan/invalid/expected_findings_manifest.json": "sha256:bf2d7917a053f31bd165078b07b8a4c7fc78d5b45570ab2673bb14ea6d1f84d1",
+    "fixtures/contracts/v1/release/cosign_attestation_verification_plan/invalid/invalid_missing_subject.json": "sha256:6f35e85d822ded8b89f2f44aaa82760b8da82949500a88f0484bf566cf94eb41",
+    "fixtures/contracts/v1/release/cosign_attestation_verification_plan/invalid/invalid_unknown_field.json": "sha256:393122ff02ff8ff484eb84234b08e6a1658f52ffebc372ab952f1ce8d690a98c",
+    "fixtures/contracts/v1/release/cosign_attestation_verification_plan/invalid/semantic_invalid_claims_disabled.json": "sha256:08d72149b2f8f9d0c641902b313a9e537472b5ccb43a04da79bdfd57ff46f44b",
+    "fixtures/contracts/v1/release/cosign_attestation_verification_plan/invalid/semantic_invalid_governance_claim.json": "sha256:57629b26dc0942c5b2999403b3c4715d35b38846097da0abc909a91be40db794",
+    "fixtures/contracts/v1/release/cosign_attestation_verification_plan/invalid/semantic_invalid_keyless_identity_missing.json": "sha256:c5991ce3aaf0086d81e10ecdca568f3f075a325dcaccd287a7e658b30ea68bd4",
+    "fixtures/contracts/v1/release/cosign_attestation_verification_plan/invalid/semantic_invalid_network_allowed.json": "sha256:fcc88537b045d394d88acdfe4cbfa1b22ec601406df70b5e2658ab5aa37b62dc",
+    "fixtures/contracts/v1/release/cosign_attestation_verification_plan/invalid/semantic_invalid_spec_hash.json": "sha256:ad7fde9f71564d8a39b4ab847534325c5a1a0ecf4d3bda642b0ded29a4841607",
+    "fixtures/contracts/v1/release/cosign_attestation_verification_plan/invalid/semantic_invalid_subject_digest_mismatch.json": "sha256:2c419d949994843fc7499a2404909a5249d630072c092ec52a8399ec47bf0fea",
+    "fixtures/contracts/v1/release/cosign_attestation_verification_plan/invalid/semantic_invalid_transparency_optional.json": "sha256:6932a876e6c8eb9b070a8e6152bcbfa4fd5a9cfe5331bbf732215770de1f551f",
+    "fixtures/contracts/v1/release/cosign_attestation_verification_plan/invalid/semantic_invalid_unsafe_registry.json": "sha256:87d5d8e6f56b2b5c22ca388c1314bcfe53186739a2120cbd00bef6c94cb937fb",
+    "fixtures/contracts/v1/release/cosign_attestation_verification_plan/invalid/semantic_invalid_vulnerable_v3.json": "sha256:e51216f3fa2db5149a7f4765dfa97f027f3a00532b8637ca0867b0698b7b4c4b",
+    "fixtures/contracts/v1/release/cosign_attestation_verification_plan/invalid/semantic_invalid_wrong_command.json": "sha256:d5cb0d09f3abb7622e5676ee07d048e0c49100bdbdef9671feb3a5b6876f75ed",
+    "fixtures/contracts/v1/release/cosign_attestation_verification_plan/valid/valid_keyed_v2.json": "sha256:3525b1c8f13473a035b2679ec43dd357e77f21646951e023d1304396e1e09b22",
+    "fixtures/contracts/v1/release/cosign_attestation_verification_plan/valid/valid_keyless_v3.json": "sha256:16c0ef28189dc533e0e0ec0eb380dd5518e755512a644171c4d0a3c61ccf20a1",
+    "schemas/contracts/v1/release/cosign_attestation_verification_plan.schema.json": "sha256:8d4bea7191d7bdb827260b3fdb0218ee3f8d310e99cef0ca94e064e1f48b8b06",
+    "tests/release/test_cosign_attestation_verification_plan.py": "sha256:b54f447867ff062b98d4d26350195fc1d3fc956e2afc4f715cb7e65e0f1620c8",
+    "tools/validators/release/validate_cosign_attestation_verification_plan.py": "sha256:b465b43ef57f3b338643cf2c916ff9d5e41c4d64bad5931b46377e090b8a2e23"
+  },
+  "artifact_paths": [
+    ".github/workflows/cosign-attestation-verification-plan.yml",
+    "contracts/release/cosign_attestation_verification_plan.md",
+    "docs/intake/exploratory/new-ideas-4-12-26-cosign-attestation-verification-source-map.md",
+    "fixtures/contracts/v1/release/cosign_attestation_verification_plan/README.md",
+    "fixtures/contracts/v1/release/cosign_attestation_verification_plan/invalid/expected_findings_manifest.json",
+    "fixtures/contracts/v1/release/cosign_attestation_verification_plan/invalid/invalid_missing_subject.json",
+    "fixtures/contracts/v1/release/cosign_attestation_verification_plan/invalid/invalid_unknown_field.json",
+    "fixtures/contracts/v1/release/cosign_attestation_verification_plan/invalid/semantic_invalid_claims_disabled.json",
+    "fixtures/contracts/v1/release/cosign_attestation_verification_plan/invalid/semantic_invalid_governance_claim.json",
+    "fixtures/contracts/v1/release/cosign_attestation_verification_plan/invalid/semantic_invalid_keyless_identity_missing.json",
+    "fixtures/contracts/v1/release/cosign_attestation_verification_plan/invalid/semantic_invalid_network_allowed.json",
+    "fixtures/contracts/v1/release/cosign_attestation_verification_plan/invalid/semantic_invalid_spec_hash.json",
+    "fixtures/contracts/v1/release/cosign_attestation_verification_plan/invalid/semantic_invalid_subject_digest_mismatch.json",
+    "fixtures/contracts/v1/release/cosign_attestation_verification_plan/invalid/semantic_invalid_transparency_optional.json",
+    "fixtures/contracts/v1/release/cosign_attestation_verification_plan/invalid/semantic_invalid_unsafe_registry.json",
+    "fixtures/contracts/v1/release/cosign_attestation_verification_plan/invalid/semantic_invalid_vulnerable_v3.json",
+    "fixtures/contracts/v1/release/cosign_attestation_verification_plan/invalid/semantic_invalid_wrong_command.json",
+    "fixtures/contracts/v1/release/cosign_attestation_verification_plan/valid/valid_keyed_v2.json",
+    "fixtures/contracts/v1/release/cosign_attestation_verification_plan/valid/valid_keyless_v3.json",
+    "schemas/contracts/v1/release/cosign_attestation_verification_plan.schema.json",
+    "tests/release/test_cosign_attestation_verification_plan.py",
+    "tools/validators/release/validate_cosign_attestation_verification_plan.py"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "attachment:New Ideas 4-12-26.pdf#cosign-promotion-gate-and-attestation-sections",
+      "id": "attachment:new-ideas-4-12-cosign-promotion-gate",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:tools/validators/promotion_gate/README.md@89fef7fec1d744df5269d19380a7f7a2a91b5c57",
+      "id": "repo:promotion-gate-declared-attestation-gap",
+      "validated": true
+    },
+    {
+      "evidence_ref": "external:CVE-2026-39395",
+      "id": "external:cve-2026-39395",
+      "validated": true
+    },
+    {
+      "evidence_ref": "external:GHSA-w6c6-c85g-mmv6",
+      "id": "external:ghsa-w6c6-c85g-mmv6",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-06T21:40:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "New Ideas 4-12-26.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:New Ideas 4-12-26.pdf#cosign-promotion-gate-and-attestation-sections",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@89fef7fec1d744df5269d19380a7f7a2a91b5c57",
+      "repo:tools/validators/promotion_gate/README.md@89fef7fec1d744df5269d19380a7f7a2a91b5c57",
+      "repo:contracts/release/README.md@89fef7fec1d744df5269d19380a7f7a2a91b5c57",
+      "external:CVE-2026-39395",
+      "external:GHSA-w6c6-c85g-mmv6"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-08-06"
+  },
+  "notes": "Implements only a fixture-first invocation preflight. It intentionally does not install or run Cosign, verify cryptography, create evidence closure, evaluate policy, authenticate review, or authorize promotion, release, deployment, publication, or public use.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "authoritative web research",
+      "local deterministic validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "docs/doctrine/directory-rules.md"
+  ],
+  "prompt_or_contract": "sha256:b301f6f8f1d8921bb87cdd9e1eb95cb7a632d63ab0d2b63a811b83de0c786af2",
+  "receipt_id": "genrec-cosign-attestation-verification-plan-20260806",
+  "truth_labels": {
+    ".github/workflows/cosign-attestation-verification-plan.yml": "PROPOSED",
+    "contracts/release/cosign_attestation_verification_plan.md": "PROPOSED",
+    "docs/intake/exploratory/new-ideas-4-12-26-cosign-attestation-verification-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/release/cosign_attestation_verification_plan/README.md": "PROPOSED",
+    "fixtures/contracts/v1/release/cosign_attestation_verification_plan/invalid/expected_findings_manifest.json": "PROPOSED",
+    "fixtures/contracts/v1/release/cosign_attestation_verification_plan/invalid/invalid_missing_subject.json": "PROPOSED",
+    "fixtures/contracts/v1/release/cosign_attestation_verification_plan/invalid/invalid_unknown_field.json": "PROPOSED",
+    "fixtures/contracts/v1/release/cosign_attestation_verification_plan/invalid/semantic_invalid_claims_disabled.json": "PROPOSED",
+    "fixtures/contracts/v1/release/cosign_attestation_verification_plan/invalid/semantic_invalid_governance_claim.json": "PROPOSED",
+    "fixtures/contracts/v1/release/cosign_attestation_verification_plan/invalid/semantic_invalid_keyless_identity_missing.json": "PROPOSED",
+    "fixtures/contracts/v1/release/cosign_attestation_verification_plan/invalid/semantic_invalid_network_allowed.json": "PROPOSED",
+    "fixtures/contracts/v1/release/cosign_attestation_verification_plan/invalid/semantic_invalid_spec_hash.json": "PROPOSED",
+    "fixtures/contracts/v1/release/cosign_attestation_verification_plan/invalid/semantic_invalid_subject_digest_mismatch.json": "PROPOSED",
+    "fixtures/contracts/v1/release/cosign_attestation_verification_plan/invalid/semantic_invalid_transparency_optional.json": "PROPOSED",
+    "fixtures/contracts/v1/release/cosign_attestation_verification_plan/invalid/semantic_invalid_unsafe_registry.json": "PROPOSED",
+    "fixtures/contracts/v1/release/cosign_attestation_verification_plan/invalid/semantic_invalid_vulnerable_v3.json": "PROPOSED",
+    "fixtures/contracts/v1/release/cosign_attestation_verification_plan/invalid/semantic_invalid_wrong_command.json": "PROPOSED",
+    "fixtures/contracts/v1/release/cosign_attestation_verification_plan/valid/valid_keyed_v2.json": "PROPOSED",
+    "fixtures/contracts/v1/release/cosign_attestation_verification_plan/valid/valid_keyless_v3.json": "PROPOSED",
+    "schemas/contracts/v1/release/cosign_attestation_verification_plan.schema.json": "PROPOSED",
+    "tests/release/test_cosign_attestation_verification_plan.py": "PROPOSED",
+    "tools/validators/release/validate_cosign_attestation_verification_plan.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "source-idea-assay",
+      "outcome": "PASS",
+      "reason": "The supplied packet explicitly calls for patched Cosign versions, strict claim checks, bundled transparency material, and fail-closed attestation verification."
+    },
+    {
+      "gate": "repository-gap-assay",
+      "outcome": "PASS",
+      "reason": "Current promotion-gate documentation confirms declared attestation references are checked but DSSE/Cosign cryptography is not verified."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "Meaning, shape, fixtures, validator, tests, CI, source adaptation, and authoring receipt remain in established responsibility roots."
+    },
+    {
+      "gate": "schema-meta-validation",
+      "outcome": "PASS",
+      "reason": "The new schema passed Draft 2020-12 meta-schema validation locally."
+    },
+    {
+      "gate": "focused-no-network-tests",
+      "outcome": "PASS",
+      "reason": "Focused tests and exact fixture-code polarity passed against the authored bytes."
+    },
+    {
+      "gate": "static-integrity",
+      "outcome": "PASS",
+      "reason": "Python compiled, JSON parsed, workflow YAML parsed, and SHA-256 artifact hashes close over the final authored files."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "The branch and pull request did not yet exist when this receipt was emitted."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending; this receipt grants no security, review, promotion, release, deployment, publication, or public-use authority."
+    }
+  ]
+}

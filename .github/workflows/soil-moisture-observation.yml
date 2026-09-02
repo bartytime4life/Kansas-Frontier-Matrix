@@ -1,0 +1,108 @@
+# Validate the fixture-first SoilMoistureObservation profile.
+#
+# Its validation commands load the shared opt-in Python startup no-network
+# guard. A green result proves bounded synthetic shape and polarity only; it is
+# not runner-wide or non-Python isolation and performs no live source fetch,
+# source activation, evidence resolution, policy decision, lifecycle promotion,
+# release, deployment, or publication.
+name: soil-moisture-observation
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/soil-moisture-observation.yml"
+      - "contracts/domains/soil/soil_moisture_observation.md"
+      - "schemas/contracts/v1/domains/soil/soil_moisture_observation.schema.json"
+      - "fixtures/domains/soil/soil_moisture_observation/**"
+      - "tools/ci/kfm_no_network/sitecustomize.py"
+      - "tools/validators/domains/soil/validate_soil_moisture_observation.py"
+      - "tests/domains/soil/test_soil_moisture_observation.py"
+      - "data/receipts/generated/genrec-soil-moisture-observation-*.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/soil-moisture-observation.yml"
+      - "contracts/domains/soil/soil_moisture_observation.md"
+      - "schemas/contracts/v1/domains/soil/soil_moisture_observation.schema.json"
+      - "fixtures/domains/soil/soil_moisture_observation/**"
+      - "tools/ci/kfm_no_network/sitecustomize.py"
+      - "tools/validators/domains/soil/validate_soil_moisture_observation.py"
+      - "tests/domains/soil/test_soil_moisture_observation.py"
+      - "data/receipts/generated/genrec-soil-moisture-observation-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: soil-moisture-observation-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate-soil-moisture-observation:
+    name: validate-soil-moisture-observation
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared schema and test dependencies
+        run: python tools/ci/install_python_ci.py project-test
+
+      - name: Run focused deterministic tests under shared no-network guard
+        env:
+          PYTHONPATH: ${{ github.workspace }}/tools/ci/kfm_no_network:${{ github.workspace }}
+        run: |
+          set -euo pipefail
+          python -c 'import sitecustomize; assert sitecustomize.GUARD_ACTIVE'
+          python -m unittest \
+            tests.domains.soil.test_soil_moisture_observation \
+            --verbose
+
+      - name: Validate reviewed fixture polarity
+        env:
+          PYTHONPATH: ${{ github.workspace }}/tools/ci/kfm_no_network:${{ github.workspace }}
+        run: |
+          set -euo pipefail
+          python tools/validators/domains/soil/validate_soil_moisture_observation.py --fixtures
+
+      - name: Replay retained authoring receipt from its exact Git tree
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-soil-moisture-observation-20260807.json \
+            --repo-root . \
+            --artifact-git-ref bf79aa6eb4281a9fb13ee263a81109c05a406e6d
+
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### SoilMoistureObservation fixture profile"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: deterministic identity, station/reference/satellite support separation, depth, normalized unit/value, QC, UTC time, evidence references, finite outcomes, and explicit governance non-effects."
+            echo "- No-network proof: focused tests and fixture validation loaded the shared opt-in Python startup guard; this does not establish dependency-install, host-, runner-, operating-system-, container-, namespace-, non-Python-, or unnamed-API isolation."
+            echo "- Receipt replay: retained authoring bytes are read from exact tree bf79aa6eb4281a9fb13ee263a81109c05a406e6d; this workflow hardening does not rewrite historical process memory."
+            echo "- Boundary: fixture-only and PROPOSED_INACTIVE; no source activation, evidence resolution, policy evaluation, promotion, release, deployment, or publication."
+          } >> "$GITHUB_STEP_SUMMARY"

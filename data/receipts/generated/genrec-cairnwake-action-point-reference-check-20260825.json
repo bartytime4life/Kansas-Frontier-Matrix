@@ -1,0 +1,102 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/action-point-reference-check.yml": "sha256:d1d8e0366ee67a563b9e1eb5fca3cac274f89a5b6be34ff32dbc2edb34e74ff3",
+    "contracts/validation/action_point_reference_check.md": "sha256:9af6288661154fa4059dafbb1ae15b29d05a5a0217b340e8759179318b5cfd3d",
+    "docs/intake/exploratory/cairnwake-action-point-reference-check-source-map.md": "sha256:9d6750874c8b6b59da74004a043e1b09cdafc6d4bc362a3001061ace57d84b8e",
+    "fixtures/contracts/v1/validation/action_point_reference_check/cases.json": "sha256:d78638bcae29d53a94ed100d1391ec7fe40f54b0bc922bb75a505e3412509642",
+    "schemas/contracts/v1/validation/action_point_reference_check.schema.json": "sha256:5614f5830b7c01c8f13deb4394ee081224fae461b65c774dcae10c904aaa388b",
+    "tests/validators/test_validate_action_point_reference_check.py": "sha256:6627460970f8d682269b668b33cdf88084d23c15820659cfc783150fc73454bb",
+    "tools/generators/action_point_reference_check/build_action_point_reference_check.py": "sha256:f2ffc72ac7e5f262cc83344c0475fa9f8e73ab7b2de2c6784e62a8ac98f85103",
+    "tools/validators/validate_action_point_reference_check.py": "sha256:0e88068d1ad334d5cfbe343a7d99240ea7e1aa16c2dfbb9f0b2463d8afa973b8"
+  },
+  "artifact_paths": [
+    ".github/workflows/action-point-reference-check.yml",
+    "contracts/validation/action_point_reference_check.md",
+    "docs/intake/exploratory/cairnwake-action-point-reference-check-source-map.md",
+    "fixtures/contracts/v1/validation/action_point_reference_check/cases.json",
+    "schemas/contracts/v1/validation/action_point_reference_check.schema.json",
+    "tests/validators/test_validate_action_point_reference_check.py",
+    "tools/generators/action_point_reference_check/build_action_point_reference_check.py",
+    "tools/validators/validate_action_point_reference_check.py"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "https://cairnwake.com/2026-08-20-the-from-memory-reflex.html",
+      "id": "SRC-CAIRNWAKE-ACTION-POINT-REFLEX",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "id": "ADR-0029-directory-rules-v2",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-25T20:00:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "https://cairnwake.com/2026-08-20-the-from-memory-reflex.html",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@46d50eaa9ac2b6ef11d83c1ed7b5bd459a56f31e",
+      "repo:contracts/validation/pipeline_replay_assessment.md@46d50eaa9ac2b6ef11d83c1ed7b5bd459a56f31e"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-08-25"
+  },
+  "notes": "Authoring provenance for an additive, inactive, fixture-only ActionPointReferenceCheck candidate derived from a read-only external idea source. The receipt excludes itself from artifact hashes. The profile does not dereference a live source, execute an action, grant authority, or create a merge, release, deployment, publication, or public-use decision. Base main was 46d50eaa9ac2b6ef11d83c1ed7b5bd459a56f31e.",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": ["GitHub connector", "local deterministic validation"],
+    "top_p": null
+  },
+  "policy_decisions": ["docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"],
+  "prompt_or_contract": "sha256:bb826ac4175c32a95c6ff2b69212fb08eb08a3267fa70095d6cdb70e0ac09a75",
+  "receipt_id": "genrec-cairnwake-action-point-reference-check-20260825",
+  "truth_labels": {
+    ".github/workflows/action-point-reference-check.yml": "PROPOSED",
+    "contracts/validation/action_point_reference_check.md": "PROPOSED",
+    "docs/intake/exploratory/cairnwake-action-point-reference-check-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/validation/action_point_reference_check/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/validation/action_point_reference_check.schema.json": "PROPOSED",
+    "tests/validators/test_validate_action_point_reference_check.py": "CONFIRMED",
+    "tools/generators/action_point_reference_check/build_action_point_reference_check.py": "PROPOSED",
+    "tools/validators/validate_action_point_reference_check.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "json-shape-and-python-compile",
+      "outcome": "PASS",
+      "reason": "Schema and fixtures parsed as JSON; builder, validator, and focused test module compiled."
+    },
+    {
+      "gate": "deterministic-fixture-builder",
+      "outcome": "PASS",
+      "reason": "Representative MATCH and BLOCKED fixtures rendered deterministically and parsed as JSON."
+    },
+    {
+      "gate": "focused-jsonschema-tests",
+      "outcome": "SKIPPED",
+      "reason": "The scratch runtime does not include the repository test dependency set; the pinned read-only workflow installs it and runs the focused suite."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pending branch and draft pull-request creation."
+    }
+  ]
+}

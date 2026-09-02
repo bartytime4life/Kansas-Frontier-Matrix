@@ -1,0 +1,60 @@
+name: field-capture-evidence-handoff
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/field-capture-evidence-handoff.yml"
+      - "contracts/evidence/field_capture_evidence_handoff.md"
+      - "schemas/contracts/v1/evidence/field_capture_evidence_handoff.schema.json"
+      - "fixtures/contracts/v1/evidence/field_capture_evidence_handoff/**"
+      - "tools/validators/evidence/validate_field_capture_evidence_handoff.py"
+      - "tests/validators/evidence/test_validate_field_capture_evidence_handoff.py"
+      - "docs/intake/exploratory/field-capture-evidence-handoff-source-map.md"
+      - "contracts/evidence/evidence_bundle.md"
+      - "contracts/source/source_descriptor.md"
+      - "contracts/source/ingest_receipt.md"
+      - "contracts/map/georeference_transform_quality.md"
+      - "packages/hashing/**"
+      - "data/receipts/generated/genrec-field-capture-evidence-handoff-20260810.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install test dependencies
+        run: python tools/ci/install_python_ci.py project-test
+
+      - name: Run focused and adjacent deterministic tests
+        env:
+          KFM_NO_NETWORK: "1"
+          PYTHONDONTWRITEBYTECODE: "1"
+          PYTHONHASHSEED: "0"
+        run: |
+          python -m pytest -q -p no:cacheprovider \
+            tests/validators/evidence/test_validate_field_capture_evidence_handoff.py \
+            tests/map/test_georeference_transform_quality.py
+          python tools/validators/evidence/validate_field_capture_evidence_handoff.py --fixtures
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-field-capture-evidence-handoff-20260810.json \
+            --repo-root .
+
+      - name: Record authority boundary
+        run: |
+          echo "WORKFLOW_CHECK_EXECUTED: field-capture-evidence-handoff-fixture"
+          echo "WORKFLOW_HOLD: capture, coordinates, evidence, policy, review, lifecycle, release, and publication remain unwired"

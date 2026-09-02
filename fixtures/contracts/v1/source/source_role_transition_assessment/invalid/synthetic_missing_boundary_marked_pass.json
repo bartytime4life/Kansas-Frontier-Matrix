@@ -1,0 +1,42 @@
+{
+  "object_type": "SourceRoleTransitionAssessment",
+  "schema_version": "1.0.0",
+  "assessment_id": "kfm:source-role:synthetic-no-boundary:v1",
+  "operation": "SYNTHESIZE",
+  "inputs": [
+    {
+      "source_ref": "kfm:source:historic-map:1887",
+      "source_role": "ADMINISTRATIVE",
+      "evidence_bundle_ref": "kfm:evidence-bundle:historic-map:1887"
+    }
+  ],
+  "output": {
+    "artifact_ref": "kfm:scene:historic-reconstruction:v1",
+    "source_role": "SYNTHETIC",
+    "lineage_roles": [
+      "ADMINISTRATIVE"
+    ]
+  },
+  "receipts": {
+    "aggregation_receipt_ref": null,
+    "model_run_receipt_ref": null,
+    "representation_receipt_ref": "kfm:receipt:representation:historic-scene:v1",
+    "reality_boundary_note_ref": null
+  },
+  "outcome": "PASS",
+  "reason_codes": [],
+  "obligations": [],
+  "validator_error_ref": null,
+  "evaluated_at": "2026-08-07T23:00:00Z",
+  "governance": {
+    "fixture_only": true,
+    "lifecycle_write": false,
+    "source_activation": false,
+    "truth_authority": false,
+    "policy_authority": false,
+    "review_authority": false,
+    "release_authority": false,
+    "publication_authority": false
+  },
+  "spec_hash": "sha256:4ddf806a377f6eab89d1de5b9fe466f0dc4ed3007a3f0ef20f84caedaf7d556d"
+}

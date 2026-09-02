@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/ui/trust_badge_state.schema.json",
+  "title": "trust_badge_state",
+  "type": "object",
+  "description": "KFM v1 contract schema stub for trust_badge_state. Greenfield placeholder; fields to be defined per the contract document and ADR.",
+  "x-kfm": {
+    "contract_doc": "contracts/ui/trust_badge_state.md",
+    "fixtures_root": "fixtures/ui/trust_badge_state/",
+    "validator": "tools/validators/ui/validate_trust_badge_state.py",
+    "policy": "policy/ui/",
+    "status": "PROPOSED"
+  },
+  "properties": {
+    "spec_hash": {
+      "type": "string",
+      "description": "Deterministic content hash."
+    },
+    "id": {
+      "type": "string",
+      "description": "Canonical identifier."
+    },
+    "version": {
+      "type": "string",
+      "description": "Contract or object version."
+    }
+  },
+  "required": [
+    "id"
+  ],
+  "additionalProperties": true
+}

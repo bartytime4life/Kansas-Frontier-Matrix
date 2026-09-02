@@ -1,0 +1,187 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/soil-moisture-observation.yml": "sha256:8a2a9263dece77042946f119b02f0980ff9122fd068753eaa1761cb18821ed89",
+    "contracts/domains/soil/soil_moisture_observation.md": "sha256:7426c7b5292f4223af5caa3224fbdefb2eaab063f3b3f6a3a38e7c812fc038d9",
+    "fixtures/domains/soil/soil_moisture_observation/expected_findings_manifest.json": "sha256:cf5f338719fad7ca82dcb05a19ce0d75eb1954141c675022cd6458b5741fca8a",
+    "fixtures/domains/soil/soil_moisture_observation/invalid/answer_without_value.json": "sha256:4aef1d5f064ddbdac09f6bd4b7da37172ed2d0879d600cc6debd6752d3b32eb7",
+    "fixtures/domains/soil/soil_moisture_observation/invalid/noncanonical_evidence_refs.json": "sha256:0d0803ee5f10b43be2de74f2f29a0f2acad566b2c855e6bdbf7c3194c6ad90aa",
+    "fixtures/domains/soil/soil_moisture_observation/invalid/public_authority_claimed.json": "sha256:6fca86d023ad4eb6dea3b2960dcc645275db00c7d030d166475e0de66e6069e4",
+    "fixtures/domains/soil/soil_moisture_observation/invalid/retrieval_precedes_observation.json": "sha256:cefd59322cc0648bb26dce1586fc77f948c906b605a524e77dbf4e5626fabf18",
+    "fixtures/domains/soil/soil_moisture_observation/invalid/satellite_sensor_depth.json": "sha256:25e2fa12bd729af66f7658289c25d63f52226010909ae9ae084b0a45bed5c78b",
+    "fixtures/domains/soil/soil_moisture_observation/invalid/spec_hash_mismatch.json": "sha256:c2cc6810b17cd472a7fa940fdba8679b6f84be82a52e2a071edaf35d828a575d",
+    "fixtures/domains/soil/soil_moisture_observation/invalid/station_missing_depth.json": "sha256:60556fad3aca6db6b7d87031a8bcdee2eaefb27915c5f6a50a39cacf87ce0cd2",
+    "fixtures/domains/soil/soil_moisture_observation/invalid/support_type_role_collapse.json": "sha256:433e3c1a3f9448e642396b100a2c2b0ebc516ad7bbe676eedaeab11dd86e77e0",
+    "fixtures/domains/soil/soil_moisture_observation/valid/abstain_stale.json": "sha256:791d3d3040617d5154f8aee5fb71129112d25ddcc68b0fc83d5d51db29cee8de",
+    "fixtures/domains/soil/soil_moisture_observation/valid/answer_reference_station.json": "sha256:d500d9c6f05fc6cc38b49d512b4c1600616a62f1c9c161d1fc78decf8a94c135",
+    "fixtures/domains/soil/soil_moisture_observation/valid/answer_satellite_surface.json": "sha256:e714afabca58514da49d0212b129828a1621a6211fd046a12a90c138e1461112",
+    "fixtures/domains/soil/soil_moisture_observation/valid/answer_station.json": "sha256:5faefa736742b65367e2eecfc7716b2015d49f1a7637158a7f66e59b33c5b811",
+    "fixtures/domains/soil/soil_moisture_observation/valid/deny_private_sensor.json": "sha256:daf914d9df5dacfbefa9f33bc515c5a2c2472fcc0b5ad8e553833a120fd43d1f",
+    "fixtures/domains/soil/soil_moisture_observation/valid/error_operational.json": "sha256:65d2f81ae71881683e2e0502f50f9cb66e2a08f55b92d269ef72f9948e625769",
+    "schemas/contracts/v1/domains/soil/soil_moisture_observation.schema.json": "sha256:82993223d001864132a37fbb26b4ff7778414c9f838f0852d43343916ee25a23",
+    "tests/domains/soil/test_soil_moisture_observation.py": "sha256:cbd3a574b3584b47790a3fe8dee06521e4c4528aab524b3f47ab099b6e1082d0",
+    "tools/validators/domains/soil/validate_soil_moisture_observation.py": "sha256:3997565c563b46cdef24fee2d287147b52b14a1d725b79d28da98441ca94431c"
+  },
+  "artifact_paths": [
+    ".github/workflows/soil-moisture-observation.yml",
+    "contracts/domains/soil/soil_moisture_observation.md",
+    "fixtures/domains/soil/soil_moisture_observation/expected_findings_manifest.json",
+    "fixtures/domains/soil/soil_moisture_observation/invalid/answer_without_value.json",
+    "fixtures/domains/soil/soil_moisture_observation/invalid/noncanonical_evidence_refs.json",
+    "fixtures/domains/soil/soil_moisture_observation/invalid/public_authority_claimed.json",
+    "fixtures/domains/soil/soil_moisture_observation/invalid/retrieval_precedes_observation.json",
+    "fixtures/domains/soil/soil_moisture_observation/invalid/satellite_sensor_depth.json",
+    "fixtures/domains/soil/soil_moisture_observation/invalid/spec_hash_mismatch.json",
+    "fixtures/domains/soil/soil_moisture_observation/invalid/station_missing_depth.json",
+    "fixtures/domains/soil/soil_moisture_observation/invalid/support_type_role_collapse.json",
+    "fixtures/domains/soil/soil_moisture_observation/valid/abstain_stale.json",
+    "fixtures/domains/soil/soil_moisture_observation/valid/answer_reference_station.json",
+    "fixtures/domains/soil/soil_moisture_observation/valid/answer_satellite_surface.json",
+    "fixtures/domains/soil/soil_moisture_observation/valid/answer_station.json",
+    "fixtures/domains/soil/soil_moisture_observation/valid/deny_private_sensor.json",
+    "fixtures/domains/soil/soil_moisture_observation/valid/error_operational.json",
+    "schemas/contracts/v1/domains/soil/soil_moisture_observation.schema.json",
+    "tests/domains/soil/test_soil_moisture_observation.py",
+    "tools/validators/domains/soil/validate_soil_moisture_observation.py"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "attachment:kfm_soil_architecture_extended_pro_pdf_only_report.pdf#support-type-separation",
+      "id": "attachment:soil-architecture-support-separation",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:contracts/domains/soil/soil_moisture_observation.md@b7e8548a469f6849af97223a29c3a5e8bf646c0c",
+      "id": "repository:existing-soil-moisture-contract",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:schemas/contracts/v1/domains/soil/support_type_profile.schema.json@b7e8548a469f6849af97223a29c3a5e8bf646c0c",
+      "id": "repository:existing-support-type-profile",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@b7e8548a469f6849af97223a29c3a5e8bf646c0c",
+      "id": "repository:directory-governance",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-07T22:26:27Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "kfm_soil_architecture_extended_pro_pdf_only_report.pdf",
+      "Kansas_Frontier_Matrix_Pipeline_Living_Implementation_Manual_v0.3.pdf",
+      "KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:kfm_soil_architecture_extended_pro_pdf_only_report.pdf#support-type-and-soil-moisture-contracts",
+      "attachment:Kansas_Frontier_Matrix_Pipeline_Living_Implementation_Manual_v0.3.pdf#lifecycle-and-fixture-first-gates",
+      "repo:contracts/domains/soil/soil_moisture_observation.md@b7e8548a469f6849af97223a29c3a5e8bf646c0c",
+      "repo:schemas/contracts/v1/domains/soil/support_type_profile.schema.json@b7e8548a469f6849af97223a29c3a5e8bf646c0c",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@b7e8548a469f6849af97223a29c3a5e8bf646c0c"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-08-07"
+  },
+  "notes": "Adds a fixture-first, no-network SoilMoistureObservation schema and validator. It preserves station/reference/satellite support separation, depth, normalized units, QC, UTC time, evidence references, finite outcomes, and explicit governance non-effects without activating sources or authorizing public use.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:46ab798c5f482adcc1bdbc414cf12e4d6c3ea829c7fc2c0aea5e718d15addf26",
+  "receipt_id": "genrec-soil-moisture-observation-20260807",
+  "truth_labels": {
+    ".github/workflows/soil-moisture-observation.yml": "PROPOSED",
+    "contracts/domains/soil/soil_moisture_observation.md": "PROPOSED",
+    "fixtures/domains/soil/soil_moisture_observation/expected_findings_manifest.json": "PROPOSED",
+    "fixtures/domains/soil/soil_moisture_observation/invalid/answer_without_value.json": "PROPOSED",
+    "fixtures/domains/soil/soil_moisture_observation/invalid/noncanonical_evidence_refs.json": "PROPOSED",
+    "fixtures/domains/soil/soil_moisture_observation/invalid/public_authority_claimed.json": "PROPOSED",
+    "fixtures/domains/soil/soil_moisture_observation/invalid/retrieval_precedes_observation.json": "PROPOSED",
+    "fixtures/domains/soil/soil_moisture_observation/invalid/satellite_sensor_depth.json": "PROPOSED",
+    "fixtures/domains/soil/soil_moisture_observation/invalid/spec_hash_mismatch.json": "PROPOSED",
+    "fixtures/domains/soil/soil_moisture_observation/invalid/station_missing_depth.json": "PROPOSED",
+    "fixtures/domains/soil/soil_moisture_observation/invalid/support_type_role_collapse.json": "PROPOSED",
+    "fixtures/domains/soil/soil_moisture_observation/valid/abstain_stale.json": "PROPOSED",
+    "fixtures/domains/soil/soil_moisture_observation/valid/answer_reference_station.json": "PROPOSED",
+    "fixtures/domains/soil/soil_moisture_observation/valid/answer_satellite_surface.json": "PROPOSED",
+    "fixtures/domains/soil/soil_moisture_observation/valid/answer_station.json": "PROPOSED",
+    "fixtures/domains/soil/soil_moisture_observation/valid/deny_private_sensor.json": "PROPOSED",
+    "fixtures/domains/soil/soil_moisture_observation/valid/error_operational.json": "PROPOSED",
+    "schemas/contracts/v1/domains/soil/soil_moisture_observation.schema.json": "PROPOSED",
+    "tests/domains/soil/test_soil_moisture_observation.py": "PROPOSED",
+    "tools/validators/domains/soil/validate_soil_moisture_observation.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-unittest",
+      "outcome": "PASS",
+      "reason": "Fifteen deterministic SoilMoistureObservation tests passed locally."
+    },
+    {
+      "gate": "schema-self-check",
+      "outcome": "PASS",
+      "reason": "The Draft 2020-12 schema passed Draft202012Validator.check_schema."
+    },
+    {
+      "gate": "finite-outcome-replay",
+      "outcome": "PASS",
+      "reason": "Six valid fixtures cover ANSWER, ABSTAIN, DENY, ERROR and all three admitted support types."
+    },
+    {
+      "gate": "negative-fixture-polarity",
+      "outcome": "PASS",
+      "reason": "Eight contradictory fixtures produced exact reviewed finding codes."
+    },
+    {
+      "gate": "no-network-boundary",
+      "outcome": "PASS",
+      "reason": "The validator imports no network client and performs only local deterministic evaluation."
+    },
+    {
+      "gate": "python-bytecode-compile",
+      "outcome": "PASS",
+      "reason": "The validator and focused test module compile without syntax errors."
+    },
+    {
+      "gate": "receipt-byte-binding",
+      "outcome": "PASS",
+      "reason": "The receipt path, SHA-256, and truth-label maps close over all twenty non-receipt artifacts."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted CI starts after the draft pull request is opened."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ]
+}

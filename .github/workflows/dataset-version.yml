@@ -1,0 +1,83 @@
+# Validate the proposed DatasetVersion metadata profile.
+name: dataset-version
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/dataset-version.yml"
+      - "contracts/data/dataset_version.md"
+      - "schemas/contracts/v1/data/dataset_version.schema.json"
+      - "fixtures/contracts/v1/data/dataset_version/**"
+      - "tools/validators/data/validate_dataset_version.py"
+      - "tests/validators/data/test_validate_dataset_version.py"
+      - "docs/intake/exploratory/dataset-version-source-reconciliation.md"
+      - "data/receipts/generated/genrec-dataset-version-20260815.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/dataset-version.yml"
+      - "contracts/data/dataset_version.md"
+      - "schemas/contracts/v1/data/dataset_version.schema.json"
+      - "fixtures/contracts/v1/data/dataset_version/**"
+      - "tools/validators/data/validate_dataset_version.py"
+      - "tests/validators/data/test_validate_dataset_version.py"
+      - "docs/intake/exploratory/dataset-version-source-reconciliation.md"
+      - "data/receipts/generated/genrec-dataset-version-20260815.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dataset-version-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-dataset-version
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install declared schema and test dependencies
+        run: python tools/ci/install_python_ci.py project-test
+      - name: Run deterministic no-network unit tests
+        run: |
+          set -euo pipefail
+          python -m unittest discover             --start-directory tests/validators/data             --pattern 'test_validate_dataset_version.py'             --verbose
+      - name: Run exact fixture polarity
+        run: |
+          set -euo pipefail
+          python tools/validators/data/validate_dataset_version.py --fixtures
+      - name: Verify generated authoring receipt integrity
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py             data/receipts/generated/genrec-dataset-version-20260815.json             --repo-root .
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### DatasetVersion"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: schema shape, deterministic identity, digest syntax, temporal ordering, canonical references, and synthetic lifecycle/lineage consistency."
+            echo "- Boundary: a green result does not activate sources, resolve evidence/rights/sensitivity, evaluate policy, authorize release/publication, or permit public use."
+          } >> "$GITHUB_STEP_SUMMARY"

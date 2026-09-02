@@ -1,0 +1,124 @@
+{
+  "base": {
+    "schema_version": "1.0.0",
+    "object_type": "GraphInvariantArtifactCandidate",
+    "profile_status": "PROPOSED_INACTIVE",
+    "execution_mode": "FIXTURE_ONLY",
+    "authority": "NONE",
+    "artifact_id": "kfm:graph-invariant-artifact:000000000000000000000000",
+    "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "migration_declaration_ref": "kfm:graph-migration-declaration:111111111111111111111111",
+    "before": {
+      "captured_at": "2026-08-09T00:00:00Z",
+      "node_counts": [
+        {"name": "EVIDENCE", "count": 4},
+        {"name": "PLACE", "count": 3}
+      ],
+      "relationship_counts": [
+        {"name": "SUPPORTED_BY", "count": 4}
+      ],
+      "constraints": [
+        {"name": "ENDPOINT_INTEGRITY", "status": "SATISFIED", "detail_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},
+        {"name": "EVIDENCE_CLOSURE", "status": "SATISFIED", "detail_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"}
+      ],
+      "representative_queries": [
+        {"query_id": "EVIDENCE_BY_PLACE", "parameters_hash": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc", "result_hash": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd", "row_count": 4},
+        {"query_id": "ORPHAN_NODES", "parameters_hash": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", "result_hash": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", "row_count": 0}
+      ],
+      "gds_procedures": [
+        {"procedure_id": "COMPONENTS", "config_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111", "result_hash": "sha256:2222222222222222222222222222222222222222222222222222222222222222", "status": "COMPLETE"}
+      ]
+    },
+    "after": {
+      "captured_at": "2026-08-09T00:05:00Z",
+      "node_counts": [
+        {"name": "EVIDENCE", "count": 4},
+        {"name": "PLACE", "count": 3}
+      ],
+      "relationship_counts": [
+        {"name": "SUPPORTED_BY", "count": 4}
+      ],
+      "constraints": [
+        {"name": "ENDPOINT_INTEGRITY", "status": "SATISFIED", "detail_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},
+        {"name": "EVIDENCE_CLOSURE", "status": "SATISFIED", "detail_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"}
+      ],
+      "representative_queries": [
+        {"query_id": "EVIDENCE_BY_PLACE", "parameters_hash": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc", "result_hash": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd", "row_count": 4},
+        {"query_id": "ORPHAN_NODES", "parameters_hash": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", "result_hash": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", "row_count": 0}
+      ],
+      "gds_procedures": [
+        {"procedure_id": "COMPONENTS", "config_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111", "result_hash": "sha256:2222222222222222222222222222222222222222222222222222222222222222", "status": "COMPLETE"}
+      ]
+    },
+    "comparison": {
+      "node_count_deltas": [
+        {"name": "EVIDENCE", "delta": 0},
+        {"name": "PLACE", "delta": 0}
+      ],
+      "relationship_count_deltas": [
+        {"name": "SUPPORTED_BY", "delta": 0}
+      ],
+      "constraint_regressions": [],
+      "changed_queries": [],
+      "changed_gds_procedures": [],
+      "classification": "NO_DRIFT"
+    },
+    "controls": {
+      "fixture_only": true,
+      "live_graph_queried": false,
+      "migration_executed": false,
+      "evidence_sufficiency_claimed": false,
+      "policy_evaluated": false,
+      "review_approved": false,
+      "promotion_eligible": false,
+      "release_authorized": false,
+      "publication_authorized": false
+    },
+    "non_effects": ["NO_EVIDENCE_ADMISSION", "NO_GRAPH_ACCESS", "NO_MIGRATION_EXECUTION", "NO_POLICY_DECISION", "NO_PROMOTION", "NO_PUBLICATION", "NO_RELEASE", "NO_REVIEW_APPROVAL"]
+  },
+  "cases": [
+    {"id": "no-drift-pass", "expected": {"outcome": "PASS", "findings": []}},
+    {
+      "id": "declared-drift-review-pass",
+      "patch": {
+        "after": {
+          "captured_at": "2026-08-09T00:05:00Z",
+          "node_counts": [{"name": "EVIDENCE", "count": 5}, {"name": "PLACE", "count": 3}],
+          "relationship_counts": [{"name": "SUPPORTED_BY", "count": 5}],
+          "constraints": [
+            {"name": "ENDPOINT_INTEGRITY", "status": "SATISFIED", "detail_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},
+            {"name": "EVIDENCE_CLOSURE", "status": "VIOLATED", "detail_hash": "sha256:3333333333333333333333333333333333333333333333333333333333333333"}
+          ],
+          "representative_queries": [
+            {"query_id": "EVIDENCE_BY_PLACE", "parameters_hash": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc", "result_hash": "sha256:4444444444444444444444444444444444444444444444444444444444444444", "row_count": 5},
+            {"query_id": "ORPHAN_NODES", "parameters_hash": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", "result_hash": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", "row_count": 0}
+          ],
+          "gds_procedures": [
+            {"procedure_id": "COMPONENTS", "config_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111", "result_hash": "sha256:5555555555555555555555555555555555555555555555555555555555555555", "status": "COMPLETE"}
+          ]
+        },
+        "comparison": {
+          "node_count_deltas": [{"name": "EVIDENCE", "delta": 1}, {"name": "PLACE", "delta": 0}],
+          "relationship_count_deltas": [{"name": "SUPPORTED_BY", "delta": 1}],
+          "constraint_regressions": ["EVIDENCE_CLOSURE"],
+          "changed_queries": ["EVIDENCE_BY_PLACE"],
+          "changed_gds_procedures": ["COMPONENTS"],
+          "classification": "REVIEW_REQUIRED"
+        }
+      },
+      "expected": {"outcome": "PASS", "findings": []}
+    },
+    {"id": "snapshot-order-invalid", "patch": {"after": {"node_counts": [{"name": "PLACE", "count": 3}, {"name": "EVIDENCE", "count": 4}]}}, "expected": {"outcome": "FAIL", "findings": ["SNAPSHOT_NOT_CANONICAL"]}},
+    {"id": "snapshot-keyset-mismatch", "patch": {"after": {"node_counts": [{"name": "EVIDENCE", "count": 4}]}}, "expected": {"outcome": "FAIL", "findings": ["SNAPSHOT_KEYSET_MISMATCH"]}},
+    {"id": "node-delta-stale", "patch": {"comparison": {"node_count_deltas": [{"name": "EVIDENCE", "delta": 1}, {"name": "PLACE", "delta": 0}]}}, "expected": {"outcome": "FAIL", "findings": ["CLASSIFICATION_MISMATCH", "NODE_DELTA_MISMATCH"]}},
+    {"id": "relationship-delta-stale", "patch": {"comparison": {"relationship_count_deltas": [{"name": "SUPPORTED_BY", "delta": 1}]}}, "expected": {"outcome": "FAIL", "findings": ["CLASSIFICATION_MISMATCH", "RELATIONSHIP_DELTA_MISMATCH"]}},
+    {"id": "constraint-regression-stale", "patch": {"comparison": {"constraint_regressions": ["EVIDENCE_CLOSURE"]}}, "expected": {"outcome": "FAIL", "findings": ["CLASSIFICATION_MISMATCH", "CONSTRAINT_REGRESSION_MISMATCH"]}},
+    {"id": "query-change-stale", "patch": {"comparison": {"changed_queries": ["EVIDENCE_BY_PLACE"]}}, "expected": {"outcome": "FAIL", "findings": ["CLASSIFICATION_MISMATCH", "QUERY_CHANGE_MISMATCH"]}},
+    {"id": "gds-change-stale", "patch": {"comparison": {"changed_gds_procedures": ["COMPONENTS"]}}, "expected": {"outcome": "FAIL", "findings": ["CLASSIFICATION_MISMATCH", "GDS_CHANGE_MISMATCH"]}},
+    {"id": "comparison-order-invalid", "patch": {"comparison": {"node_count_deltas": [{"name": "PLACE", "delta": 0}, {"name": "EVIDENCE", "delta": 0}]}}, "expected": {"outcome": "FAIL", "findings": ["COMPARISON_NOT_CANONICAL"]}},
+    {"id": "classification-overclaim", "patch": {"comparison": {"classification": "REVIEW_REQUIRED"}}, "expected": {"outcome": "FAIL", "findings": ["CLASSIFICATION_MISMATCH"]}},
+    {"id": "identity-stale", "patch": {"migration_declaration_ref": "kfm:graph-migration-declaration:222222222222222222222222"}, "recompute_identity": false, "expected": {"outcome": "FAIL", "findings": ["ARTIFACT_ID_MISMATCH", "SPEC_HASH_MISMATCH"]}},
+    {"id": "live-graph-overclaim", "patch": {"controls": {"live_graph_queried": true}}, "expected": {"outcome": "FAIL", "findings": ["SCHEMA_INVALID"]}},
+    {"id": "unknown-field-denied", "patch": {"unexpected": true}, "expected": {"outcome": "FAIL", "findings": ["SCHEMA_INVALID"]}}
+  ]
+}

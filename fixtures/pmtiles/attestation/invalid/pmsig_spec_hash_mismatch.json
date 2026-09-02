@@ -1,0 +1,1 @@
+{"case_id":"pmsig-spec-hash-mismatch","expected":{"issue_codes":["PMSIG_SPEC_HASH_MISMATCH"],"status":"DENY"},"mutation":"pmsig_spec_hash_mismatch"}

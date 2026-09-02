@@ -1,0 +1,285 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kansasfrontiermatrix.org/schemas/contracts/v1/evidence/temporal_support_assessment.schema.json",
+  "title": "TemporalSupportAssessment",
+  "description": "Fixture-first assessment of whether a claim or artifact is temporally supported for one query and current correction lineage.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "assessment_id",
+    "subject_ref",
+    "query",
+    "support",
+    "release_state",
+    "outcome",
+    "reason_codes",
+    "obligations",
+    "evidence_bundle_refs",
+    "conflict_refs",
+    "evaluated_at",
+    "governance",
+    "spec_hash"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "TemporalSupportAssessment"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "assessment_id": {
+      "$ref": "#/$defs/ref"
+    },
+    "subject_ref": {
+      "$ref": "#/$defs/ref"
+    },
+    "query": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "start",
+        "end"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "CURRENT_STATE",
+            "HISTORICAL_AS_OF",
+            "VALID_DURING",
+            "OBSERVED_AT",
+            "RELEASED_AS_OF"
+          ]
+        },
+        "start": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "end": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "support": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "time_slice_manifest_ref",
+        "temporal_basis_complete",
+        "observed_at",
+        "valid_time",
+        "source_updated_at",
+        "retrieved_at",
+        "freshness_ttl_seconds",
+        "source_cadence_seconds"
+      ],
+      "properties": {
+        "time_slice_manifest_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "temporal_basis_complete": {
+          "type": "boolean"
+        },
+        "observed_at": {
+          "oneOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "valid_time": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "start",
+            "end"
+          ],
+          "properties": {
+            "start": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "end": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        },
+        "source_updated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "retrieved_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "freshness_ttl_seconds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 31536000
+        },
+        "source_cadence_seconds": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1,
+          "maximum": 31536000
+        }
+      }
+    },
+    "release_state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "release_manifest_ref",
+        "status",
+        "correction_ref",
+        "superseded_by_ref",
+        "rollback_ref"
+      ],
+      "properties": {
+        "release_manifest_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "status": {
+          "enum": [
+            "RELEASED",
+            "CORRECTED",
+            "WITHDRAWN",
+            "SUPERSEDED"
+          ]
+        },
+        "correction_ref": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ref"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "superseded_by_ref": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ref"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "rollback_ref": {
+          "$ref": "#/$defs/ref"
+        }
+      }
+    },
+    "outcome": {
+      "enum": [
+        "SUPPORTED",
+        "STALE",
+        "OUT_OF_SCOPE",
+        "CONFLICTED",
+        "UNKNOWN"
+      ]
+    },
+    "reason_codes": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/code"
+      }
+    },
+    "obligations": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/code"
+      }
+    },
+    "evidence_bundle_refs": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/ref"
+      }
+    },
+    "conflict_refs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/ref"
+      }
+    },
+    "evaluated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "governance": {
+      "$ref": "#/$defs/governance"
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/sha256"
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "ref": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 320
+    },
+    "code": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9_]{2,79}$"
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fixture_only",
+        "lifecycle_write",
+        "truth_authority",
+        "policy_authority",
+        "review_authority",
+        "release_authority",
+        "publication_authority"
+      ],
+      "properties": {
+        "fixture_only": {
+          "const": true
+        },
+        "lifecycle_write": {
+          "const": false
+        },
+        "truth_authority": {
+          "const": false
+        },
+        "policy_authority": {
+          "const": false
+        },
+        "review_authority": {
+          "const": false
+        },
+        "release_authority": {
+          "const": false
+        },
+        "publication_authority": {
+          "const": false
+        }
+      }
+    }
+  }
+}

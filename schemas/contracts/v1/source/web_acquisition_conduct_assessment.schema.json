@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/source/web_acquisition_conduct_assessment.schema.json",
+  "title": "WebAcquisitionConductAssessmentCandidate",
+  "description": "Fixture-only declaration of web-acquisition conduct without fetch, activation, legal, policy, review, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "profile_spec_hash",
+    "source_cards",
+    "observed_at",
+    "source_descriptor_ref",
+    "source_descriptor_digest",
+    "acquisition_route",
+    "terms_review",
+    "robots_review",
+    "rate_limit",
+    "identity",
+    "review",
+    "authority_claims"
+  ],
+  "properties": {
+    "object_type": {"const": "WebAcquisitionConductAssessmentCandidate"},
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.source.web-acquisition-conduct-assessment.fixture.v1"},
+    "profile_spec_hash": {"$ref": "#/$defs/sha256"},
+    "source_cards": {"const": ["KFM-P18-INV-100", "KFM-P18-INV-247", "KFM-P18-INV-423"]},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "source_descriptor_ref": {"$ref": "#/$defs/ref"},
+    "source_descriptor_digest": {"$ref": "#/$defs/sha256"},
+    "acquisition_route": {"enum": ["OFFICIAL_API", "DOCUMENTED_DOWNLOAD", "BROWSER_AUTOMATION", "HTML_SCRAPE", "UNRESOLVED"]},
+    "terms_review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "evidence_ref", "source_agreement_ref"],
+      "properties": {
+        "state": {"enum": ["PERMITS_AUTOMATION", "RESTRICTS_AUTOMATION", "PROHIBITS_AUTOMATION", "UNKNOWN"]},
+        "evidence_ref": {"oneOf": [{"$ref": "#/$defs/ref"}, {"type": "null"}]},
+        "source_agreement_ref": {"oneOf": [{"$ref": "#/$defs/ref"}, {"type": "null"}]}
+      }
+    },
+    "robots_review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "evidence_ref"],
+      "properties": {
+        "state": {"enum": ["ALLOWED", "DISALLOWED", "NOT_APPLICABLE", "UNKNOWN"]},
+        "evidence_ref": {"oneOf": [{"$ref": "#/$defs/ref"}, {"type": "null"}]}
+      }
+    },
+    "rate_limit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "max_concurrency", "minimum_delay_ms", "policy_ref"],
+      "properties": {
+        "state": {"enum": ["DECLARED", "SOURCE_DEFAULT", "UNRESOLVED"]},
+        "max_concurrency": {"oneOf": [{"type": "integer", "minimum": 1, "maximum": 32}, {"type": "null"}]},
+        "minimum_delay_ms": {"oneOf": [{"type": "integer", "minimum": 0, "maximum": 86400000}, {"type": "null"}]},
+        "policy_ref": {"oneOf": [{"$ref": "#/$defs/ref"}, {"type": "null"}]}
+      }
+    },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["user_agent_posture", "proxy_posture", "distributed_posture"],
+      "properties": {
+        "user_agent_posture": {"enum": ["DECLARED_CONTACTABLE", "DECLARED_NON_CONTACTABLE", "DISGUISED", "UNKNOWN"]},
+        "proxy_posture": {"enum": ["NONE", "SOURCE_AUTHORIZED", "ROTATING_EVASION", "UNKNOWN"]},
+        "distributed_posture": {"enum": ["DISABLED", "SOURCE_AUTHORIZED", "UNREVIEWED", "UNKNOWN"]}
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "review_record_refs"],
+      "properties": {
+        "state": {"enum": ["COMPLETE", "PENDING", "UNKNOWN"]},
+        "review_record_refs": {"$ref": "#/$defs/ref_array"}
+      }
+    },
+    "authority_claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["legal_authority", "rights_authority", "source_activation_authority", "connector_activation_authority", "lifecycle_write_authority", "evidence_authority", "policy_authority", "review_authority", "promotion_authority", "release_authority", "publication_authority", "public_use_authority"],
+      "properties": {
+        "legal_authority": {"const": false},
+        "rights_authority": {"const": false},
+        "source_activation_authority": {"const": false},
+        "connector_activation_authority": {"const": false},
+        "lifecycle_write_authority": {"const": false},
+        "evidence_authority": {"const": false},
+        "policy_authority": {"const": false},
+        "review_authority": {"const": false},
+        "promotion_authority": {"const": false},
+        "release_authority": {"const": false},
+        "publication_authority": {"const": false},
+        "public_use_authority": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "ref": {"type": "string", "minLength": 5, "maxLength": 300, "pattern": "^kfm:[a-z0-9][a-z0-9._:/-]+$"},
+    "ref_array": {"type": "array", "maxItems": 32, "uniqueItems": true, "items": {"$ref": "#/$defs/ref"}}
+  }
+}

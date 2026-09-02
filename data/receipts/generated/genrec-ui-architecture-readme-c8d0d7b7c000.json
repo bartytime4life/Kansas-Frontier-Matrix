@@ -1,0 +1,271 @@
+{
+  "artifact_hashes": {
+    "docs/architecture/ui/README.md": "sha256:c8d0d7b7c00005e70dca9e7bd16906e93faf7184d2a46e45e34afca08f620c3d"
+  },
+  "artifact_paths": [
+    "docs/architecture/ui/README.md"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "repo:docs/architecture/ui/README.md@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "id": "KFM-docs-architecture-ui-README-md-at-d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/architecture/ui/@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "id": "KFM-docs-architecture-ui-at-d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:apps/explorer-web/src/main.ts@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "id": "KFM-apps-explorer-web-src-main-ts-at-d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:apps/explorer-web/src/site/README.md@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "id": "KFM-apps-explorer-web-src-site-README-md-at-d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:apps/explorer-web/src/site/mountExplorerSite.ts@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "id": "KFM-apps-explorer-web-src-site-mountExplorerSite-ts-at-d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:apps/explorer-web/src/site/catalog.ts@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "id": "KFM-apps-explorer-web-src-site-catalog-ts-at-d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:apps/explorer-web/tests/explorer-site-catalog.test.ts@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "id": "KFM-apps-explorer-web-tests-explorer-site-catalog-test-ts-at-d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:apps/explorer-web/package.json@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "id": "KFM-apps-explorer-web-package-json-at-d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:apps/explorer-web/src/features/story_player/CURRENT_IMPLEMENTATION.md@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "id": "KFM-apps-explorer-web-src-features-story-player-CURRENT-IMPLEMENTATION-md-at-d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:apps/governed-api/src/governed_api/main.py@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "id": "KFM-apps-governed-api-src-governed-api-main-py-at-d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:apps/governed-api/src/governed_api/routes/registry.py@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "id": "KFM-apps-governed-api-src-governed-api-routes-registry-py-at-d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:apps/governed-api/src/governed_api/stub.py@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "id": "KFM-apps-governed-api-src-governed-api-stub-py-at-d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/architecture/ui/GOVERNED_SHELL.md@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "id": "KFM-docs-architecture-ui-GOVERNED-SHELL-md-at-d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/architecture/ui/LAYERING.md@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "id": "KFM-docs-architecture-ui-LAYERING-md-at-d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/architecture/ui/REVIEW_CONSOLE.md@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "id": "KFM-docs-architecture-ui-REVIEW-CONSOLE-md-at-d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/architecture/ui/STORY_PLAYER.md@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "id": "KFM-docs-architecture-ui-STORY-PLAYER-md-at-d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/architecture/ui/TELEMETRY.md@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "id": "KFM-docs-architecture-ui-TELEMETRY-md-at-d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/architecture/ui/TRUST_BADGES.md@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "id": "KFM-docs-architecture-ui-TRUST-BADGES-md-at-d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/architecture/ui/map-context-evidence-drawer-admission.md@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "id": "KFM-docs-architecture-ui-map-context-evidence-drawer-admission-md-at-d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/architecture/ui/EVIDENCE_DRAWER.md@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "id": "KFM-docs-architecture-ui-EVIDENCE-DRAWER-md-at-d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/architecture/ui/FOCUS_FLOW.md@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "id": "KFM-docs-architecture-ui-FOCUS-FLOW-md-at-d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/architecture/ui/MAP_RUNTIME_BOUNDARY.md@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "id": "KFM-docs-architecture-ui-MAP-RUNTIME-BOUNDARY-md-at-d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/adr/INDEX.md@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "id": "KFM-docs-adr-INDEX-md-at-d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "id": "KFM-docs-adr-ADR-0029-adopt-directory-governance-standard-v2-md-at-d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "id": "KFM-docs-doctrine-directory-rules-md-at-d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:.github/CODEOWNERS@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "id": "KFM-github-CODEOWNERS-at-d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:.github/workflows/ui-build.yml@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "id": "KFM-github-workflows-ui-build-yml-at-d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "validated": true
+    },
+    {
+      "evidence_ref": "attachment:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "id": "ATT-KFM-Repository-Build-Out-&-Markdown-Modernization-Implementation-Agent-v6-0-0",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-19T21:00:01Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    ],
+    "evidence_hashes": [],
+    "evidence_refs": [
+      "repo:docs/architecture/ui/README.md@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "repo:docs/architecture/ui/@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "repo:apps/explorer-web/src/main.ts@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "repo:apps/explorer-web/src/site/README.md@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "repo:apps/explorer-web/src/site/mountExplorerSite.ts@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "repo:apps/explorer-web/src/site/catalog.ts@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "repo:apps/explorer-web/tests/explorer-site-catalog.test.ts@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "repo:apps/explorer-web/package.json@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "repo:apps/explorer-web/src/features/story_player/CURRENT_IMPLEMENTATION.md@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "repo:apps/governed-api/src/governed_api/main.py@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "repo:apps/governed-api/src/governed_api/routes/registry.py@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "repo:apps/governed-api/src/governed_api/stub.py@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "repo:docs/architecture/ui/GOVERNED_SHELL.md@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "repo:docs/architecture/ui/LAYERING.md@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "repo:docs/architecture/ui/REVIEW_CONSOLE.md@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "repo:docs/architecture/ui/STORY_PLAYER.md@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "repo:docs/architecture/ui/TELEMETRY.md@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "repo:docs/architecture/ui/TRUST_BADGES.md@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "repo:docs/architecture/ui/map-context-evidence-drawer-admission.md@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "repo:docs/architecture/ui/EVIDENCE_DRAWER.md@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "repo:docs/architecture/ui/FOCUS_FLOW.md@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "repo:docs/architecture/ui/MAP_RUNTIME_BOUNDARY.md@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "repo:docs/adr/INDEX.md@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "repo:docs/doctrine/directory-rules.md@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "repo:.github/CODEOWNERS@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "repo:.github/workflows/ui-build.yml@d639f9ff40288d12244cd7bc84af538652f6dfb1",
+      "attachment:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "5.6"
+  },
+  "notes": "Same-path documentation modernization only. The README now reflects the current bounded Explorer composition, current UI sibling inventory and maturity, Governed API negative scaffold, Story Player slice, Review Console and telemetry HOLDs, MapLibre HOLD, documentation-drift register, validation burden, and rollback. No contract, schema, policy, fixture, validator, application, package, workflow, source, lifecycle, release, deployment, publication, or repository-setting behavior is changed.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local deterministic validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:01ca7eb9a562a0af9b7902dff21bee21744f2cdb2865810f57641a8718bf5192",
+  "receipt_id": "genrec-ui-architecture-readme-c8d0d7b7c000",
+  "truth_labels": {
+    "docs/architecture/ui/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-target-and-overlap-inspection",
+      "outcome": "PASS",
+      "reason": "Inspected the complete target at main@d639f9ff40288d12244cd7bc84af538652f6dfb1, the current UI sibling inventory, current Explorer composition, Governed API scaffold, relevant ADR status, and exact open pull-request overlap; no open PR owned the target path."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "Accepted ADR-0029 and adopted Directory Rules v2 support a same-path update to the existing docs/architecture/ui/ landing page; no root, path, object-family authority, move, rename, or deletion is introduced."
+    },
+    {
+      "gate": "metadata-yaml",
+      "outcome": "PASS",
+      "reason": "The single KFM_META_BLOCK_V2 payload parsed as YAML and contains the required document-control fields."
+    },
+    {
+      "gate": "markdown-commonmark-table-parse",
+      "outcome": "PASS",
+      "reason": "The complete file parsed with markdown-it-py CommonMark plus table support; one H1, balanced fences, and a final newline were confirmed."
+    },
+    {
+      "gate": "identity-anchor-and-fragment-closure",
+      "outcome": "PASS",
+      "reason": "The document path, doc_id, H1, top anchor, twenty-three numbered sections, Appendix A, and all forty-eight internal fragment links were preserved or resolved."
+    },
+    {
+      "gate": "repository-relative-link-review",
+      "outcome": "PASS",
+      "reason": "Introduced repository-relative links were checked against current pinned files or directories; inherited architecture, ADR, contract, schema, policy, app, package, test, receipt, release, and runbook relationships remain bounded to repository-present homes."
+    },
+    {
+      "gate": "artifact-byte-binding",
+      "outcome": "PASS",
+      "reason": "Final Markdown bytes bind to SHA-256 c8d0d7b7c00005e70dca9e7bd16906e93faf7184d2a46e45e34afca08f620c3d and Git blob d2b8b4a0469ce5aeeed07a3fef2f531b5cdbd1f9."
+    },
+    {
+      "gate": "hosted-exact-head-validation",
+      "outcome": "SKIPPED",
+      "reason": "Pending until the draft pull request exact head triggers repository-native documentation, metadata, link, graph, stale-reference, security, and aggregate checks."
+    },
+    {
+      "gate": "independent-human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending; this receipt records authoring provenance and does not authenticate or grant review, release, deployment, or publication authority."
+    }
+  ]
+}

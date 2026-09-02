@@ -1,0 +1,83 @@
+{
+  "cases": [
+    {
+      "case_id": "unchanged",
+      "expected_assessment": "expected/unchanged.json",
+      "expected_findings": [],
+      "expected_outcome": "NON_EVENT",
+      "input": "inputs/valid/unchanged.json"
+    },
+    {
+      "case_id": "timestamp_only",
+      "expected_assessment": "expected/timestamp_only.json",
+      "expected_findings": [],
+      "expected_outcome": "NON_EVENT",
+      "input": "inputs/valid/timestamp_only.json"
+    },
+    {
+      "case_id": "content_changed",
+      "expected_assessment": "expected/content_changed.json",
+      "expected_findings": [],
+      "expected_outcome": "PROMOTION_CANDIDATE",
+      "input": "inputs/valid/content_changed.json"
+    },
+    {
+      "case_id": "multiple_dimensions_changed",
+      "expected_assessment": "expected/multiple_dimensions_changed.json",
+      "expected_findings": [],
+      "expected_outcome": "PROMOTION_CANDIDATE",
+      "input": "inputs/valid/multiple_dimensions_changed.json"
+    },
+    {
+      "case_id": "missing_baseline_hold",
+      "expected_assessment": "expected/missing_baseline_hold.json",
+      "expected_findings": [],
+      "expected_outcome": "HOLD",
+      "input": "inputs/valid/missing_baseline_hold.json"
+    },
+    {
+      "case_id": "insufficient_evidence_hold",
+      "expected_assessment": "expected/insufficient_evidence_hold.json",
+      "expected_findings": [],
+      "expected_outcome": "HOLD",
+      "input": "inputs/valid/insufficient_evidence_hold.json"
+    },
+    {
+      "case_id": "invalid_unknown_field",
+      "expected_assessment": null,
+      "expected_findings": [
+        "INPUT_SCHEMA_INVALID"
+      ],
+      "expected_outcome": "ERROR",
+      "input": "inputs/invalid/invalid_unknown_field.json"
+    },
+    {
+      "case_id": "invalid_bad_digest",
+      "expected_assessment": null,
+      "expected_findings": [
+        "INPUT_SCHEMA_INVALID"
+      ],
+      "expected_outcome": "ERROR",
+      "input": "inputs/invalid/invalid_bad_digest.json"
+    },
+    {
+      "case_id": "invalid_time_order",
+      "expected_assessment": null,
+      "expected_findings": [
+        "BASELINE_AFTER_CANDIDATE"
+      ],
+      "expected_outcome": "ERROR",
+      "input": "inputs/invalid/invalid_time_order.json"
+    },
+    {
+      "case_id": "invalid_refs_not_canonical",
+      "expected_assessment": null,
+      "expected_findings": [
+        "REFS_NOT_CANONICAL"
+      ],
+      "expected_outcome": "ERROR",
+      "input": "inputs/invalid/invalid_refs_not_canonical.json"
+    }
+  ],
+  "profile": "kfm://materiality-profile/soil/promotion-hash-dimensions-v1"
+}

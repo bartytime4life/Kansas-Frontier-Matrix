@@ -1,0 +1,6 @@
+{
+  "valid_catalog_review_ready.json": "PASS",
+  "valid_release_review_ready.json": "PASS",
+  "valid_hold_rights_review.json": "HOLD",
+  "valid_deny_policy.json": "DENY"
+}

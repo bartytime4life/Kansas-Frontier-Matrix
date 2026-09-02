@@ -1,0 +1,147 @@
+{
+  "receipt_id": "genrec-briefing-claim-field-binding-20260808",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/claim-field-binding.yml",
+    "contracts/evidence/claim_field_binding.md",
+    "docs/intake/exploratory/briefing-claim-field-binding-source-map.md",
+    "fixtures/contracts/v1/evidence/claim_field_binding/README.md",
+    "fixtures/contracts/v1/evidence/claim_field_binding/cases.json",
+    "schemas/contracts/v1/evidence/claim_field_binding.schema.json",
+    "tests/validators/test_validate_claim_field_binding.py",
+    "tools/validators/validate_claim_field_binding.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/claim-field-binding.yml": "sha256:c9b141915f62129f5f50ace8820905637d0450d7178e63576e34e0801723a9cf",
+    "contracts/evidence/claim_field_binding.md": "sha256:9c2540beff2fb66d95c71341ef67ef0a51eda64425fba8f40bdd25af7581a4f3",
+    "docs/intake/exploratory/briefing-claim-field-binding-source-map.md": "sha256:9ab71fb30e988caeab41b10bef21caa7578316a850b1e16e1d46c499c61c1ea4",
+    "fixtures/contracts/v1/evidence/claim_field_binding/README.md": "sha256:e381099742cef9a0dad1760de5ecfe0fd05f10f36ddfaa59fc30c39544f4a39a",
+    "fixtures/contracts/v1/evidence/claim_field_binding/cases.json": "sha256:922b818687de071fefcd7b4512b667611716807945a6f88e2006e58a87d29f26",
+    "schemas/contracts/v1/evidence/claim_field_binding.schema.json": "sha256:c3aa529a3a7b9521a7968fde62c7160d4f9d7e0f2dc2ae5f9e2c60ecf81de889",
+    "tests/validators/test_validate_claim_field_binding.py": "sha256:3d38f7f8d01607369d08e7f8cc00c7edf7edcf0997edc1e022b082866cd6db26",
+    "tools/validators/validate_claim_field_binding.py": "sha256:49da4646588ff3e20c0b3ea59a01db06634f0efe61f73bb1bce99b66e6fe3925"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-08"
+  },
+  "prompt_or_contract": "sha256:d416ec18a91907a22a57ed05c33d8d4e9c104031a645d2ac87624f81e626adba",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "uploaded-file search",
+      "GitHub connector repository inspection and mutation",
+      "local deterministic Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:68872f9226c4e4a288e888b51fb9d80c4a621a4d660ee36dd6fef7edb3c34c4e",
+      "sha256:2b8db8901f893d9aabb94bb32db5cbc2e0bb0c881bf74068551e9b3b76602893"
+    ],
+    "attached_docs": [
+      "KFM_Briefing_to_System_Integration_Architecture.docx",
+      "KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Briefing_to_System_Integration_Architecture.docx#section-17.1-evidence-binding",
+      "attachment:KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf#sections-9.3-12.2",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/fb5aecfffe7a66242b0823d229be43a8629fb929",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/fb5aecfffe7a66242b0823d229be43a8629fb929/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/fb5aecfffe7a66242b0823d229be43a8629fb929/contracts/evidence/evidence_ref.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/fb5aecfffe7a66242b0823d229be43a8629fb929/contracts/evidence/evidence_bundle.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/claim-field-binding.yml": "PROPOSED",
+    "contracts/evidence/claim_field_binding.md": "PROPOSED",
+    "docs/intake/exploratory/briefing-claim-field-binding-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/evidence/claim_field_binding/README.md": "CONFIRMED",
+    "fixtures/contracts/v1/evidence/claim_field_binding/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/evidence/claim_field_binding.schema.json": "PROPOSED",
+    "tests/validators/test_validate_claim_field_binding.py": "CONFIRMED",
+    "tools/validators/validate_claim_field_binding.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unittest-suite-12-tests",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "fixture-polarity-4-pass-9-deny-1-error",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "field-pointer-transform-evidence-quality-lineage-and-authority-boundary",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "no-network-and-value-free-diagnostics",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation runs after the draft pull request is opened."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human semantic, governance, and release review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "briefing-field-level-evidence-binding",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Briefing_to_System_Integration_Architecture.docx#section-17.1-evidence-binding"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/fb5aecfffe7a66242b0823d229be43a8629fb929/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "current-evidence-ref-and-bundle-separation",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/fb5aecfffe7a66242b0823d229be43a8629fb929/contracts/evidence/evidence_ref.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-09T00:30:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Implements the briefing evidence-binding table's ClaimFieldBinding as an inactive, fixture-only evidence-plane profile. It stores digests and references, requires TransformReceipt references for non-trivial transforms, and creates no source, EvidenceBundle, policy, review, lifecycle, release, publication, or public-use authority."
+}

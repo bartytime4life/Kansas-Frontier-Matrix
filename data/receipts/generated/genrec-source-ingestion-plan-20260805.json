@@ -1,0 +1,137 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/source-ingestion-plan.yml": "sha256:bba20e437285b6aed7ceb9c821806066cfc2aff075644a7adb387f2c5b4682dc",
+    "contracts/source/source_ingestion_plan.md": "sha256:7b4be2c00b8816dcb78cdb9a57f3af24776d0406ecb71c7214299a390d644b16",
+    "fixtures/contracts/v1/source/source_ingestion_plan/README.md": "sha256:6aeb29726be187ef57e7f15caa435f5012f158a938ee893024f9aed721ef6dbf",
+    "fixtures/contracts/v1/source/source_ingestion_plan/invalid/expected_findings_manifest.json": "sha256:bdabed505da52f9fb5ede59378cf306fc6454c0fcdbc37811a0c406a2214009e",
+    "fixtures/contracts/v1/source/source_ingestion_plan/invalid/invalid_cdc_exactly_once_overclaim.json": "sha256:361ccd9bf52ed28f5e58759fd54369fe5d83ebfe6744bdaa0d5d1c33ccac03b8",
+    "fixtures/contracts/v1/source/source_ingestion_plan/invalid/invalid_cdc_not_replayable.json": "sha256:f1fd77e6326b0e3163fb024f5ea384e226adff2f0895fd5da8f4fffd667e28f4",
+    "fixtures/contracts/v1/source/source_ingestion_plan/invalid/invalid_etl_no_partial_rerun.json": "sha256:9044afc3dfe6cb532e29873d6bc0f3e65a48fb5dddf6cf00c001f0ec49f800ec",
+    "fixtures/contracts/v1/source/source_ingestion_plan/invalid/invalid_governance_overclaim.json": "sha256:d43a0a4522708602d6ebfd3cd9a29d3a8907157f8eca288d0232b3cef86960a0",
+    "fixtures/contracts/v1/source/source_ingestion_plan/invalid/invalid_http_no_validators.json": "sha256:3904d6484d4ff2ae38232e278514c7498bcc500faf980c5611c0a85e2752a4db",
+    "fixtures/contracts/v1/source/source_ingestion_plan/invalid/invalid_mode_source_mismatch.json": "sha256:e2605583dc8fd3e2caf18606caf909ca624af2efa144727a6ec18c07712f32a7",
+    "fixtures/contracts/v1/source/source_ingestion_plan/invalid/invalid_spec_hash_mismatch.json": "sha256:65fc20b8cf32e45260f516247493611c66d64cd5d6523a75b9d4b428b07e1f02",
+    "fixtures/contracts/v1/source/source_ingestion_plan/valid/valid_event_cdc.json": "sha256:7d114f4039f203fd3ab26fc5a5a2e33f1932bd7d9c9cafc3a69be56070975116",
+    "fixtures/contracts/v1/source/source_ingestion_plan/valid/valid_http_conditional.json": "sha256:c2e9c778f31b0f6114e3ecdeb06bfd984443b0d0717f0fe27962177da237e4d7",
+    "fixtures/contracts/v1/source/source_ingestion_plan/valid/valid_scheduled_etl.json": "sha256:c68acea3b758f2098da94675b475d9e2ec16ddbe956968204a51d4876a2e2c34",
+    "schemas/contracts/v1/source/source_ingestion_plan.schema.json": "sha256:4ee29a1e2ad28ad474daeb4656ce0b6eb56aa0e4fb53ef74387755f1b442491b",
+    "tests/validators/test_validate_source_ingestion_plan.py": "sha256:8f01be867099a176e82c4d83db7bbf14a373e48824d4b44255a939630e3a172d",
+    "tools/validators/validate_source_ingestion_plan.py": "sha256:4d7a019475db0d64a7006d5e5fa362e614c789928d4abab52b89ae3e856383b0"
+  },
+  "artifact_paths": [
+    ".github/workflows/source-ingestion-plan.yml",
+    "contracts/source/source_ingestion_plan.md",
+    "fixtures/contracts/v1/source/source_ingestion_plan/README.md",
+    "fixtures/contracts/v1/source/source_ingestion_plan/invalid/expected_findings_manifest.json",
+    "fixtures/contracts/v1/source/source_ingestion_plan/invalid/invalid_cdc_exactly_once_overclaim.json",
+    "fixtures/contracts/v1/source/source_ingestion_plan/invalid/invalid_cdc_not_replayable.json",
+    "fixtures/contracts/v1/source/source_ingestion_plan/invalid/invalid_etl_no_partial_rerun.json",
+    "fixtures/contracts/v1/source/source_ingestion_plan/invalid/invalid_governance_overclaim.json",
+    "fixtures/contracts/v1/source/source_ingestion_plan/invalid/invalid_http_no_validators.json",
+    "fixtures/contracts/v1/source/source_ingestion_plan/invalid/invalid_mode_source_mismatch.json",
+    "fixtures/contracts/v1/source/source_ingestion_plan/invalid/invalid_spec_hash_mismatch.json",
+    "fixtures/contracts/v1/source/source_ingestion_plan/valid/valid_event_cdc.json",
+    "fixtures/contracts/v1/source/source_ingestion_plan/valid/valid_http_conditional.json",
+    "fixtures/contracts/v1/source/source_ingestion_plan/valid/valid_scheduled_etl.json",
+    "schemas/contracts/v1/source/source_ingestion_plan.schema.json",
+    "tests/validators/test_validate_source_ingestion_plan.py",
+    "tools/validators/validate_source_ingestion_plan.py"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "attachment:New Ideas 3-19-26(1).pdf",
+      "id": "attachment:new-ideas-3-19-26",
+      "validated": true
+    },
+    {
+      "evidence_ref": "github:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "id": "repository:directory-governance",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-05T23:58:55Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "New Ideas 3-19-26(1).pdf"
+    ],
+    "evidence_hashes": [
+      "sha256:7b27eac7610da57e5235b6d0b67edb6cdcfccef08aa1e33d64bcb2ae2b8d29a4"
+    ],
+    "evidence_refs": [
+      "attachment:New Ideas 3-19-26(1).pdf",
+      "github:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github:docs/doctrine/directory-rules.md"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-08-05"
+  },
+  "notes": "Fixture-first implementation derived from New Ideas 3-19-26. It grants no source, evidence, policy, review, promotion, release, deployment, publication, or public-use authority.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector (read/write)",
+      "uploaded-file search",
+      "local Python validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:4c6c045568981737515c759903ae12b28ef3631a3b391524185590baa8c6c59e",
+  "receipt_id": "genrec-source-ingestion-plan-20260805",
+  "truth_labels": {
+    ".github/workflows/source-ingestion-plan.yml": "PROPOSED",
+    "contracts/source/source_ingestion_plan.md": "PROPOSED",
+    "fixtures/contracts/v1/source/source_ingestion_plan/README.md": "PROPOSED",
+    "fixtures/contracts/v1/source/source_ingestion_plan/invalid/expected_findings_manifest.json": "PROPOSED",
+    "fixtures/contracts/v1/source/source_ingestion_plan/invalid/invalid_cdc_exactly_once_overclaim.json": "PROPOSED",
+    "fixtures/contracts/v1/source/source_ingestion_plan/invalid/invalid_cdc_not_replayable.json": "PROPOSED",
+    "fixtures/contracts/v1/source/source_ingestion_plan/invalid/invalid_etl_no_partial_rerun.json": "PROPOSED",
+    "fixtures/contracts/v1/source/source_ingestion_plan/invalid/invalid_governance_overclaim.json": "PROPOSED",
+    "fixtures/contracts/v1/source/source_ingestion_plan/invalid/invalid_http_no_validators.json": "PROPOSED",
+    "fixtures/contracts/v1/source/source_ingestion_plan/invalid/invalid_mode_source_mismatch.json": "PROPOSED",
+    "fixtures/contracts/v1/source/source_ingestion_plan/invalid/invalid_spec_hash_mismatch.json": "PROPOSED",
+    "fixtures/contracts/v1/source/source_ingestion_plan/valid/valid_event_cdc.json": "PROPOSED",
+    "fixtures/contracts/v1/source/source_ingestion_plan/valid/valid_http_conditional.json": "PROPOSED",
+    "fixtures/contracts/v1/source/source_ingestion_plan/valid/valid_scheduled_etl.json": "PROPOSED",
+    "schemas/contracts/v1/source/source_ingestion_plan.schema.json": "PROPOSED",
+    "tests/validators/test_validate_source_ingestion_plan.py": "PROPOSED",
+    "tools/validators/validate_source_ingestion_plan.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "local-fixture-profile",
+      "outcome": "PASS",
+      "reason": "Focused deterministic no-network tests and exact fixture polarity passed against authored bytes."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted CI begins after the draft pull request is opened."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ]
+}

@@ -1,0 +1,122 @@
+{
+  "schema_version": "1.0.0",
+  "profile": "kfm.evidence-custody-handoff.v1",
+  "handoff_id": "kfm://candidate/evidence-custody/9793d7886319204dbc89702422fd128b24637c26a8ccb3f937eb800d6875e0d3",
+  "revision": 1,
+  "previous_handoff_ref": null,
+  "sender": {
+    "boundary_id": "kfm://boundary/synthetic/sender-workspace",
+    "authority_class": "PIPELINE",
+    "lifecycle_stage": "RAW",
+    "sent_at": "2026-08-05T23:40:00Z",
+    "manifest_digest": "sha256:dc5cbc286b34e8de81d31511a5b2bfacd5bfb68bdc9b060f3ad32e82e208f636"
+  },
+  "receiver": {
+    "boundary_id": "kfm://boundary/synthetic/receiver-workspace",
+    "authority_class": "ENVIRONMENT",
+    "lifecycle_stage": "RAW",
+    "received_at": "2026-08-05T23:40:30Z",
+    "reconciliation_digest": "sha256:84cdbce62623ffc64858c4e854ca61aaa21c681b36f33487ef01a74d694c3854"
+  },
+  "transfer": {
+    "transfer_id": "kfm://candidate/evidence-custody/9793d7886319204dbc89702422fd128b24637c26a8ccb3f937eb800d6875e0d3/transfer/1",
+    "transport": "LOCAL_FIXTURE",
+    "sender_receipt_ref": "kfm://receipt/synthetic/custody-sender-001",
+    "receiver_receipt_ref": "kfm://receipt/synthetic/custody-receiver-001",
+    "no_network": true,
+    "payload_bytes_transferred": false
+  },
+  "items": [
+    {
+      "item_id": "kfm://candidate/evidence-item/synthetic-020",
+      "source_ref": "kfm://source-descriptor/synthetic-custody-source@v1",
+      "evidence_ref": "kfm://evidence-ref/synthetic-020",
+      "media_type": "application/json",
+      "sender_digest": "sha256:774ac941a86f162c536208f028c72e0929402fde5cfd1ae780aa4bd7e7cab072",
+      "sender_size_bytes": 116,
+      "item_spec_hash": "sha256:49bbe4ab4a6e7a8d520f079c437b3b85e5035c27f1e0838e362b326bef2c7ada",
+      "classification": "PUBLIC_SAFE",
+      "rights_state": "KNOWN_ALLOW",
+      "sensitivity_state": "PUBLIC_SAFE"
+    },
+    {
+      "item_id": "kfm://candidate/evidence-item/synthetic-021",
+      "source_ref": "kfm://source-descriptor/synthetic-custody-source@v1",
+      "evidence_ref": "kfm://evidence-ref/synthetic-021",
+      "media_type": "application/json",
+      "sender_digest": "sha256:e8461eadfec19ab605a20ad0ac1117cfa2d0c6ab125d3e2b4761b8ccd90f1478",
+      "sender_size_bytes": 117,
+      "item_spec_hash": "sha256:41537a8a0450725e4901044af9536fc3f0a8ee2eb805aa783a0d7e74333f4931",
+      "classification": "PUBLIC_SAFE",
+      "rights_state": "KNOWN_ALLOW",
+      "sensitivity_state": "PUBLIC_SAFE"
+    },
+    {
+      "item_id": "kfm://candidate/evidence-item/synthetic-022",
+      "source_ref": "kfm://source-descriptor/synthetic-custody-source@v1",
+      "evidence_ref": "kfm://evidence-ref/synthetic-022",
+      "media_type": "application/json",
+      "sender_digest": "sha256:88ae2a9feea001cc0af26a1074a0b7a6ae44e80d9552530514a056d1ebea0884",
+      "sender_size_bytes": 118,
+      "item_spec_hash": "sha256:cd175c861a119512749face4ed92721f6eded6daf5b919a7443ab1636a3d932c",
+      "classification": "PUBLIC_SAFE",
+      "rights_state": "KNOWN_ALLOW",
+      "sensitivity_state": "PUBLIC_SAFE"
+    }
+  ],
+  "receiver_dispositions": [
+    {
+      "item_id": "kfm://candidate/evidence-item/synthetic-020",
+      "disposition": "DUPLICATE",
+      "receiver_digest": "sha256:774ac941a86f162c536208f028c72e0929402fde5cfd1ae780aa4bd7e7cab072",
+      "receiver_size_bytes": 116,
+      "existing_item_ref": "kfm://evidence-item/existing-synthetic-020",
+      "reason_codes": [
+        "IDENTICAL_CONTENT_ALREADY_PRESENT"
+      ],
+      "recorded_at": "2026-08-05T23:41:00Z"
+    },
+    {
+      "item_id": "kfm://candidate/evidence-item/synthetic-021",
+      "disposition": "DUPLICATE",
+      "receiver_digest": "sha256:e8461eadfec19ab605a20ad0ac1117cfa2d0c6ab125d3e2b4761b8ccd90f1478",
+      "receiver_size_bytes": 117,
+      "existing_item_ref": "kfm://evidence-item/existing-synthetic-021",
+      "reason_codes": [
+        "IDENTICAL_CONTENT_ALREADY_PRESENT"
+      ],
+      "recorded_at": "2026-08-05T23:41:00Z"
+    },
+    {
+      "item_id": "kfm://candidate/evidence-item/synthetic-022",
+      "disposition": "DUPLICATE",
+      "receiver_digest": "sha256:88ae2a9feea001cc0af26a1074a0b7a6ae44e80d9552530514a056d1ebea0884",
+      "receiver_size_bytes": 118,
+      "existing_item_ref": "kfm://evidence-item/existing-synthetic-022",
+      "reason_codes": [
+        "IDENTICAL_CONTENT_ALREADY_PRESENT"
+      ],
+      "recorded_at": "2026-08-05T23:41:00Z"
+    }
+  ],
+  "summary": {
+    "sent": 3,
+    "accepted": 0,
+    "rejected": 0,
+    "duplicate": 3,
+    "unresolved": 0,
+    "accounted": 3,
+    "closure_status": "CLOSED"
+  },
+  "governance": {
+    "fixture_only": true,
+    "no_network": true,
+    "evidence_resolution_performed": false,
+    "policy_decision_performed": false,
+    "lifecycle_write_performed": false,
+    "promotion_authorized": false,
+    "release_authorized": false,
+    "publication_authorized": false
+  },
+  "spec_hash": "sha256:29dbcfd7da8c6fb476bc3d66c7123c69de1d14b4016a364bbbda9cd0be29244c"
+}

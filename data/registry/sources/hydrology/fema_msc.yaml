@@ -1,0 +1,5 @@
+status: PROPOSED
+source_doc: docs/domains/hydrology/CANONICAL_PATHS.md
+path: data/registry/sources/hydrology/fema_msc.yaml
+notes:
+  - Placeholder created from docs/domains markdown inventory.

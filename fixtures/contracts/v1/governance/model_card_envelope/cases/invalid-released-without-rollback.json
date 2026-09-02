@@ -1,0 +1,1 @@
+{"case_id":"invalid-released-without-rollback","expected":{"finding_codes":["RELEASE_ROLLBACK_REQUIRED"],"outcome":"FAIL"},"mutations":[{"op":"set","path":"/governance/rollback_ref","value":null}],"rehash":true}

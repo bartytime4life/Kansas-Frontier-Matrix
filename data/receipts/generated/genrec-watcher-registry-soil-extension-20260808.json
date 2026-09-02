@@ -1,0 +1,131 @@
+{
+  "receipt_id": "genrec-watcher-registry-soil-extension-20260808",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/watcher-registry.yml",
+    "contracts/domains/soil/soil_watcher_spec.md",
+    "control_plane/watcher_registry.json",
+    "pipeline_specs/watchers/soil_ssurgo_gnatsgo.json",
+    "policy/domains/soil/watcher_spec.rego",
+    "schemas/contracts/v1/domains/soil/soil_watcher_spec.schema.json",
+    "tests/validators/domains/soil/watcher_spec/test_validate_soil_watcher_spec.py",
+    "tools/validators/domains/soil/watcher_spec/validate_soil_watcher_spec.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/watcher-registry.yml": "sha256:b5fb4db3c8a6e641b20b4ea438007f676ab0e7e377393bad32094676215b3baf",
+    "contracts/domains/soil/soil_watcher_spec.md": "sha256:48964159da4bda663dd3b6c5a6dc21b3f756d2ac505327f8a1405b038ecae97e",
+    "control_plane/watcher_registry.json": "sha256:2996b5a0509513a2120c1732bb9694a03dcee08ecb60d05404653430e2845b50",
+    "pipeline_specs/watchers/soil_ssurgo_gnatsgo.json": "sha256:c4cc2f44cf54b8c76bc05d2ed40b3475d5698ede84b8b62bff96e8c483680914",
+    "policy/domains/soil/watcher_spec.rego": "sha256:ab509c8d059ac6cd633436df59cb200ddb970a002a2000d70c3e385a1d151178",
+    "schemas/contracts/v1/domains/soil/soil_watcher_spec.schema.json": "sha256:c3f4a0c61a9f1ad72d50d0d463d727775403cf4f576d3f01751da389536804d4",
+    "tests/validators/domains/soil/watcher_spec/test_validate_soil_watcher_spec.py": "sha256:9c8a06bfdf0cf85769899cd031378795536b74c6803fffcae8ac0505102209c8",
+    "tools/validators/domains/soil/watcher_spec/validate_soil_watcher_spec.py": "sha256:40ea800e64246a2e8429d28a5cc2a8ddae328b3c54886907236a8b3ad4495adb"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-08"
+  },
+  "prompt_or_contract": "sha256:e5d94fd8e4dc280a2636548bd41a20dc6e9dfaa7b38882582e8758f2be735cec",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "hosted exact-head validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Pass_31_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf",
+      "KFM Soil Architecture Extended Pro PDF-Only Planning Report"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_31_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P31-IDEA-0019",
+      "attachment:KFM_Pass_31_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P31-PROG-0015",
+      "repo:pull/2197@b5245923358039fd30fb39ca0bd19734f7508ca5",
+      "repo:workflow-run/31243674233",
+      "repo:data/receipts/generated/genrec-watcher-registry-20260808.json@3a7cc9bcaf6f6dfc64ca6e1e756914ea29138ee4",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@3a7cc9bcaf6f6dfc64ca6e1e756914ea29138ee4"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/watcher-registry.yml": "CONFIRMED",
+    "contracts/domains/soil/soil_watcher_spec.md": "PROPOSED",
+    "control_plane/watcher_registry.json": "PROPOSED",
+    "pipeline_specs/watchers/soil_ssurgo_gnatsgo.json": "PROPOSED",
+    "policy/domains/soil/watcher_spec.rego": "PROPOSED",
+    "schemas/contracts/v1/domains/soil/soil_watcher_spec.schema.json": "PROPOSED",
+    "tests/validators/domains/soil/watcher_spec/test_validate_soil_watcher_spec.py": "CONFIRMED",
+    "tools/validators/domains/soil/watcher_spec/validate_soil_watcher_spec.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "watcher-registry-validation",
+      "outcome": "PASS",
+      "reason": "Hosted run 31243674233 passed watcher-registry unit tests, registry validation, exact spec-file binding, and fixture polarity before exposing only the historical receipt byte drift."
+    },
+    {
+      "gate": "historical-receipt-preservation",
+      "outcome": "PASS",
+      "reason": "The original genrec-watcher-registry-20260808.json remains unchanged as historical authoring process memory."
+    },
+    {
+      "gate": "current-registry-extension-byte-binding",
+      "outcome": "PASS",
+      "reason": "This receipt binds the current watcher workflow, registry projection, soil watcher spec, schema, policy, validator, and focused tests."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "A new exact-head run is required after this current-state receipt is pushed."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on draft PR #2197."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:pass31-soil-watcher",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Pass_31_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P31-IDEA-0019"
+    },
+    {
+      "id": "repository:watcher-registry-failure",
+      "validated": true,
+      "evidence_ref": "repo:workflow-run/31243674233"
+    },
+    {
+      "id": "repository:soil-watcher-pull-request",
+      "validated": true,
+      "evidence_ref": "repo:pull/2197@b5245923358039fd30fb39ca0bd19734f7508ca5"
+    },
+    {
+      "id": "repository:directory-governance",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@3a7cc9bcaf6f6dfc64ca6e1e756914ea29138ee4"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-08T06:30:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": 2197,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Current-state repair receipt for the watcher registry after PR #2197 extends the registry with an inactive soil watcher candidate. The original watcher-registry receipt is preserved unchanged. This receipt creates no source authority, endpoint, schedule, network permission, execution, RAW admission, promotion, release, publication, or notification authority."
+}

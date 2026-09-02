@@ -1,0 +1,8 @@
+{
+  "status": "PROPOSED",
+  "source_doc": "docs/domains/hydrology/MISSING_OR_PLANNED_FILES.md",
+  "path": "fixtures/domains/hydrology/valid/usgs_gauge_observation.json",
+  "notes": [
+    "Placeholder created from docs/domains markdown inventory."
+  ]
+}

@@ -1,0 +1,1 @@
+{"case_id":"invalid-identity-mismatch","expected":{"finding_codes":["DOC_UUID_MISMATCH"],"outcome":"FAIL"},"mutations":[{"op":"set","path":"/document/doc_uuid","value":"urn:kfm:modelcard:wrong-model:v11.0.0"}],"rehash":true}

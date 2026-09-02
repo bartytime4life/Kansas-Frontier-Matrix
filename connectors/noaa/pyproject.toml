@@ -1,0 +1,4 @@
+# connectors/noaa pyproject — greenfield placeholder
+[project]
+name = "kfm-connector-noaa"
+version = "0.0.0"

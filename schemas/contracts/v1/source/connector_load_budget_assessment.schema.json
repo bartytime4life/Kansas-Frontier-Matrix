@@ -1,0 +1,159 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/source/connector_load_budget_assessment.schema.json",
+  "title": "ConnectorLoadBudgetAssessmentCandidate",
+  "description": "Fixture-only comparison of requested connector concurrency with a declared per-source load budget without network, activation, scheduling, lifecycle, policy, review, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "profile_spec_hash",
+    "source_cards",
+    "observed_at",
+    "source_descriptor_ref",
+    "source_descriptor_digest",
+    "conduct_assessment",
+    "execution",
+    "budget",
+    "review",
+    "authority_claims"
+  ],
+  "properties": {
+    "object_type": {"const": "ConnectorLoadBudgetAssessmentCandidate"},
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.source.connector-load-budget-assessment.fixture.v1"},
+    "profile_spec_hash": {"$ref": "#/$defs/sha256"},
+    "source_cards": {"const": ["KFM-P18-INV-217", "KFM-P18-INV-372", "KFM-P18-INV-422", "KFM-P18-INV-447"]},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "source_descriptor_ref": {"$ref": "#/$defs/ref"},
+    "source_descriptor_digest": {"$ref": "#/$defs/sha256"},
+    "conduct_assessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ref", "digest", "outcome"],
+      "properties": {
+        "ref": {"$ref": "#/$defs/ref"},
+        "digest": {"$ref": "#/$defs/sha256"},
+        "outcome": {"enum": ["PASS", "ABSTAIN", "DENY", "UNRESOLVED"]}
+      }
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "worker_count", "requested_concurrency"],
+      "properties": {
+        "mode": {"enum": ["SINGLE_WORKER", "THREADED", "DISTRIBUTED"]},
+        "worker_count": {"type": "integer", "minimum": 1, "maximum": 10000},
+        "requested_concurrency": {"type": "integer", "minimum": 1, "maximum": 10000}
+      }
+    },
+    "budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "policy_ref",
+        "scope",
+        "max_concurrency",
+        "minimum_delay_ms",
+        "window_seconds",
+        "max_requests_per_window",
+        "distributed_share_key",
+        "retry",
+        "stop_conditions"
+      ],
+      "properties": {
+        "state": {"enum": ["DECLARED", "SOURCE_POLICY", "UNRESOLVED"]},
+        "policy_ref": {"$ref": "#/$defs/nullable_ref"},
+        "scope": {"enum": ["PER_SOURCE", "PER_WORKER", "UNRESOLVED"]},
+        "max_concurrency": {"oneOf": [{"type": "integer", "minimum": 1, "maximum": 10000}, {"type": "null"}]},
+        "minimum_delay_ms": {"oneOf": [{"type": "integer", "minimum": 1, "maximum": 86400000}, {"type": "null"}]},
+        "window_seconds": {"oneOf": [{"type": "integer", "minimum": 1, "maximum": 86400}, {"type": "null"}]},
+        "max_requests_per_window": {"oneOf": [{"type": "integer", "minimum": 1, "maximum": 1000000}, {"type": "null"}]},
+        "distributed_share_key": {"$ref": "#/$defs/nullable_ref"},
+        "retry": {
+          "oneOf": [
+            {"$ref": "#/$defs/retry"},
+            {"type": "null"}
+          ]
+        },
+        "stop_conditions": {
+          "type": "array",
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": {"enum": ["BUDGET_EXHAUSTED", "MANUAL_CANCEL", "SOURCE_THROTTLE", "TERMS_CHANGE", "TIME_BUDGET_EXHAUSTED"]}
+        }
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "review_record_refs"],
+      "properties": {
+        "state": {"enum": ["COMPLETE", "PENDING", "UNKNOWN"]},
+        "review_record_refs": {"$ref": "#/$defs/ref_array"}
+      }
+    },
+    "authority_claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_authority",
+        "connector_activation_authority",
+        "scheduling_authority",
+        "network_authority",
+        "lifecycle_write_authority",
+        "evidence_authority",
+        "policy_authority",
+        "review_authority",
+        "promotion_authority",
+        "release_authority",
+        "publication_authority",
+        "public_use_authority"
+      ],
+      "properties": {
+        "source_authority": {"const": false},
+        "connector_activation_authority": {"const": false},
+        "scheduling_authority": {"const": false},
+        "network_authority": {"const": false},
+        "lifecycle_write_authority": {"const": false},
+        "evidence_authority": {"const": false},
+        "policy_authority": {"const": false},
+        "review_authority": {"const": false},
+        "promotion_authority": {"const": false},
+        "release_authority": {"const": false},
+        "publication_authority": {"const": false},
+        "public_use_authority": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "ref": {"type": "string", "minLength": 5, "maxLength": 300, "pattern": "^kfm:[a-z0-9][a-z0-9._:/-]+$"},
+    "nullable_ref": {"oneOf": [{"$ref": "#/$defs/ref"}, {"type": "null"}]},
+    "ref_array": {"type": "array", "maxItems": 32, "uniqueItems": true, "items": {"$ref": "#/$defs/ref"}},
+    "retry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["strategy", "max_attempts", "base_delay_ms", "cap_delay_ms", "honor_retry_after"],
+      "properties": {
+        "strategy": {"enum": ["NONE", "FIXED", "EXPONENTIAL"]},
+        "max_attempts": {"type": "integer", "minimum": 0, "maximum": 20},
+        "base_delay_ms": {"type": "integer", "minimum": 0, "maximum": 86400000},
+        "cap_delay_ms": {"type": "integer", "minimum": 0, "maximum": 86400000},
+        "honor_retry_after": {"type": "boolean"}
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "contract_doc": "contracts/source/connector_load_budget_assessment.md",
+    "fixtures_root": "fixtures/contracts/v1/source/connector_load_budget_assessment/",
+    "validator": "tools/validators/source/validate_connector_load_budget_assessment.py",
+    "network": false,
+    "connector_execution": false,
+    "authority_effects": false
+  }
+}

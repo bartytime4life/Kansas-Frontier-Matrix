@@ -1,0 +1,74 @@
+{
+  "receipt_id": "genrec-pass18-api-contract-change-assessment-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/api-contract-change-assessment.yml",
+    "contracts/release/api_contract_change_assessment.md",
+    "docs/intake/exploratory/pass-18-api-contract-change-assessment-source-map.md",
+    "fixtures/contracts/v1/release/api_contract_change_assessment/cases.json",
+    "schemas/contracts/v1/release/api_contract_change_assessment.schema.json",
+    "tests/validators/release/test_validate_api_contract_change_assessment.py",
+    "tools/validators/release/validate_api_contract_change_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/api-contract-change-assessment.yml": "sha256:8efe2c9b894337ce40e9a573549373ee8e981d1e2f6472d2f81d936ce52e7bd7",
+    "contracts/release/api_contract_change_assessment.md": "sha256:9b2efd93199bfb359f6111a5d264c12f94edba1d534e7441725c1320cfaa0aa5",
+    "docs/intake/exploratory/pass-18-api-contract-change-assessment-source-map.md": "sha256:eb099fe4d691561cdb80d42bab648410c88df5e18ae1845245e5eb1ea18d5c43",
+    "fixtures/contracts/v1/release/api_contract_change_assessment/cases.json": "sha256:2afbdc547ff8f87bb15edd97433a4ec422f50486d4e0d18c2d6275ebaa069aed",
+    "schemas/contracts/v1/release/api_contract_change_assessment.schema.json": "sha256:be837333b0d7c6b3690d4b18193b24ed4297dc404ee985f43b6a0b60d587fc8d",
+    "tests/validators/release/test_validate_api_contract_change_assessment.py": "sha256:3c586c1a027da31f1c1e380470275a59dcb35c14563e01b0dee41389f757926b",
+    "tools/validators/release/validate_api_contract_change_assessment.py": "sha256:1f9ad6708f392ca77919b47931fab163ee2997b09df394e90d77349bbad3f6a2"
+  },
+  "model_identity": {"provider": "OpenAI", "model": "GPT-5", "version": "2026-08-10"},
+  "prompt_or_contract": "sha256:9b2efd93199bfb359f6111a5d264c12f94edba1d534e7441725c1320cfaa0aa5",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": ["Google Drive private-corpus discovery", "GitHub repository inspection and draft PR publication", "local PDF rendering and deterministic validation"]
+  },
+  "inputs": {
+    "evidence_hashes": ["sha256:175589456a78a78e3047162f138961a02ba5f5e1987e6030dc00c9dc7aa8d18e", "sha256:18f671f44c6d8bc8eee23ad96205ad8d84c6a67f2c114e708ad0652be18740a6", "sha256:4395db306dbd0760060daa19faf8bb1e33d0bd3f3a76f1aa84b2fe6ca1658f61", "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e", "sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9"],
+    "attached_docs": ["Supplied Pass 18 atlas; private discovery identifier withheld"],
+    "evidence_refs": ["attachment://supplied-pass18-atlas#card=KFM-P18-INV-413", "github://bartytime4life/Kansas-Frontier-Matrix/blob/97b9cb77bf57b1d1cf75c2768f8e550e399a1345/contracts/release/release_manifest.md", "github://bartytime4life/Kansas-Frontier-Matrix/blob/97b9cb77bf57b1d1cf75c2768f8e550e399a1345/contracts/release/rollback_card.md", "github://bartytime4life/Kansas-Frontier-Matrix/blob/97b9cb77bf57b1d1cf75c2768f8e550e399a1345/contracts/correction/correction_notice.md", "github://bartytime4life/Kansas-Frontier-Matrix/blob/97b9cb77bf57b1d1cf75c2768f8e550e399a1345/docs/doctrine/directory-rules.md"]
+  },
+  "truth_labels": {
+    ".github/workflows/api-contract-change-assessment.yml": "CONFIRMED",
+    "contracts/release/api_contract_change_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-api-contract-change-assessment-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/release/api_contract_change_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/release/api_contract_change_assessment.schema.json": "PROPOSED",
+    "tests/validators/release/test_validate_api_contract_change_assessment.py": "CONFIRMED",
+    "tools/validators/release/validate_api_contract_change_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "workflow-yaml-parse", "outcome": "PASS"},
+    {"gate": "focused-unittest-suite", "outcome": "PASS", "reason": "Eight deterministic API contract-change assessment tests passed."},
+    {"gate": "exact-fixture-replay", "outcome": "PASS", "reason": "Twenty-five exact PASS, ABSTAIN, DENY, and ERROR cases matched reviewed outcomes and codes."},
+    {"gate": "adjacent-release-correction-regression", "outcome": "PASS", "reason": "Twenty-three ReleaseManifest, RollbackCard, and correction-impact tests passed."},
+    {"gate": "documentation-meta-block-profile", "outcome": "PASS", "reason": "Both metadata blocks were valid; new registry entries remain review-only candidates."},
+    {"gate": "local-document-link-check", "outcome": "PASS"},
+    {"gate": "no-network-boundary", "outcome": "PASS"},
+    {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS"},
+    {"gate": "git-diff-check", "outcome": "PASS"},
+    {"gate": "hosted-exact-head-ci", "outcome": "SKIPPED", "reason": "Requires the pushed pull-request head."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Pending on the draft pull request."}
+  ],
+  "policy_decisions": ["docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"],
+  "citations": [
+    {"id": "pass18-api-contract-change-card", "validated": true, "evidence_ref": "attachment://supplied-pass18-atlas#card=KFM-P18-INV-413"},
+    {"id": "release-manifest-adjacent-contract", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/97b9cb77bf57b1d1cf75c2768f8e550e399a1345/contracts/release/release_manifest.md"},
+    {"id": "rollback-card-adjacent-contract", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/97b9cb77bf57b1d1cf75c2768f8e550e399a1345/contracts/release/rollback_card.md"},
+    {"id": "correction-notice-adjacent-contract", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/97b9cb77bf57b1d1cf75c2768f8e550e399a1345/contracts/correction/correction_notice.md"},
+    {"id": "accepted-directory-rules", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/97b9cb77bf57b1d1cf75c2768f8e550e399a1345/docs/doctrine/directory-rules.md"}
+  ],
+  "human_review": {"reviewer_ids": [], "state": "pending", "timestamp": null},
+  "override_record": null,
+  "created_at": "2026-08-11T04:05:10Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub and Google Drive connectors",
+  "links": {"pr_number": null, "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md", "drift_register_entry": null},
+  "notes": "Additive, inactive, fixture-only API contract-change assessment. It checks declared version and compatibility closure without inspecting or mutating APIs, adopting an exhaustive version policy, or creating compatibility, review, release, rollback, deployment, publication, or public-use authority."
+}

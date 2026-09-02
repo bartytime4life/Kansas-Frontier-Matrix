@@ -1,0 +1,151 @@
+{
+  "receipt_id": "genrec-source-activation-portfolio-assessment-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/source-activation-portfolio-assessment.yml",
+    "contracts/source/source_activation_portfolio_assessment.md",
+    "docs/intake/exploratory/source-activation-portfolio-assessment-source-map.md",
+    "fixtures/contracts/v1/source/source_activation_portfolio_assessment/cases.json",
+    "schemas/contracts/v1/source/source_activation_portfolio_assessment.schema.json",
+    "tests/validators/test_validate_source_activation_portfolio_assessment.py",
+    "tools/validators/source/validate_source_activation_portfolio_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/source-activation-portfolio-assessment.yml": "sha256:470a50f6dad6b52b55419dcf36df283850493b42ce41961cfe093396a235e48b",
+    "contracts/source/source_activation_portfolio_assessment.md": "sha256:32ff4e67044fb4314aa0b6e79357d44ed5ce8d335ff4e77c79b42b4429c712e5",
+    "docs/intake/exploratory/source-activation-portfolio-assessment-source-map.md": "sha256:ff27f356c772e6d8c1588cfdd4baecc6a8a1e31b2c04fadb46433325a5bd0e3d",
+    "fixtures/contracts/v1/source/source_activation_portfolio_assessment/cases.json": "sha256:cd57779206113609ff4fc890bcbc843e4e223fbe22e7bb345a7376fa6d56f87c",
+    "schemas/contracts/v1/source/source_activation_portfolio_assessment.schema.json": "sha256:ebde187ed4aa6289f760038362525a9e7b683e3c86926dbf685e7930af920cbd",
+    "tests/validators/test_validate_source_activation_portfolio_assessment.py": "sha256:90a01ed1f13040730dbd5464bf6abfcb12e2da2823788912ee609be2cc5693ab",
+    "tools/validators/source/validate_source_activation_portfolio_assessment.py": "sha256:4aabfb627890770c732db08aee6cd04fe0c16072baa553233fbfcd4be9515c9d"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:32ff4e67044fb4314aa0b6e79357d44ed5ce8d335ff4e77c79b42b4429c712e5",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery and reading",
+      "GitHub connector repository inspection and mutation",
+      "local deterministic PDF and Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:2b8db8901f893d9aabb94bb32db5cbc2e0bb0c881bf74068551e9b3b76602893"
+    ],
+    "attached_docs": [
+      "KFM_Comprehensive_Research_and_Verification_Report.docx",
+      "KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/70229e41cc434c9cb0b3b29f02742773d4a18b77/docs/intake/exploratory/comprehensive-research-verification-report-source-map.md#recommended-next-bounded-action",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/70229e41cc434c9cb0b3b29f02742773d4a18b77/contracts/source/source_activation_decision.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/70229e41cc434c9cb0b3b29f02742773d4a18b77/contracts/source/source_rights_currentness_assessment.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/70229e41cc434c9cb0b3b29f02742773d4a18b77/contracts/governance/verification_convergence_plan.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/70229e41cc434c9cb0b3b29f02742773d4a18b77/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/source-activation-portfolio-assessment.yml": "CONFIRMED",
+    "contracts/source/source_activation_portfolio_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/source-activation-portfolio-assessment-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/source/source_activation_portfolio_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/source/source_activation_portfolio_assessment.schema.json": "PROPOSED",
+    "tests/validators/test_validate_source_activation_portfolio_assessment.py": "CONFIRMED",
+    "tools/validators/source/validate_source_activation_portfolio_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS",
+      "reason": "Validated locally with jsonschema 4.25.1; the repository currently declares a newer compatible floor for hosted execution."
+    },
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS",
+      "reason": "12 deterministic tests passed in the isolated authoring directory."
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS",
+      "reason": "18 exact cases passed across PASS, ABSTAIN, DENY, and ERROR."
+    },
+    {
+      "gate": "json-and-workflow-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "documentation-metadata-validation",
+      "outcome": "PASS",
+      "reason": "Both authored Markdown files passed the required KFM metadata profile with zero warnings."
+    },
+    {
+      "gate": "no-network-no-source-no-effect-boundary",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "privacy-minimized-comprehensive-report-source-map",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/70229e41cc434c9cb0b3b29f02742773d4a18b77/docs/intake/exploratory/comprehensive-research-verification-report-source-map.md#recommended-next-bounded-action"
+    },
+    {
+      "id": "existing-per-source-activation-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/70229e41cc434c9cb0b3b29f02742773d4a18b77/contracts/source/source_activation_decision.md"
+    },
+    {
+      "id": "existing-verification-planning-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/70229e41cc434c9cb0b3b29f02742773d4a18b77/contracts/governance/verification_convergence_plan.md"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/70229e41cc434c9cb0b3b29f02742773d4a18b77/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T05:15:00Z",
+  "emitter": "OpenAI GPT-5 via Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Privacy-minimized, fixture-only adaptation of a cross-domain source-review portfolio. The receipt grants no source, policy, review, scheduling, mutation, promotion, release, deployment, publication, or public-use authority."
+}

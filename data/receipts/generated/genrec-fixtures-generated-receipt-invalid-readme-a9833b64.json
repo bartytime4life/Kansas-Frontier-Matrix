@@ -1,0 +1,137 @@
+{
+  "receipt_id": "genrec-fixtures-generated-receipt-invalid-readme-a9833b64",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "fixtures/generated_receipt/invalid/README.md"
+  ],
+  "artifact_hashes": {
+    "fixtures/generated_receipt/invalid/README.md": "sha256:a9833b64590edc95c9d1ea4a44c539b4d23aad47b2192dcb3f303b236ba060ef"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-21"
+  },
+  "prompt_or_contract": "sha256:4063312fc6b8d606b69abc881785403018d1e7e9e68cdd96d653b58ba23d07da",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Python QA"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [],
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:bartytime4life/Kansas-Frontier-Matrix:fixtures/generated_receipt/invalid/README.md@124d0d2129f7e82d78df6d3eaa3b0b28d18882f0",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:fixtures/generated_receipt/README.md@124d0d2129f7e82d78df6d3eaa3b0b28d18882f0",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:fixtures/generated_receipt/valid/README.md@124d0d2129f7e82d78df6d3eaa3b0b28d18882f0",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:schemas/contracts/v1/receipts/generated_receipt.schema.json@124d0d2129f7e82d78df6d3eaa3b0b28d18882f0",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:policy/ai_builder/operating_contract.rego@124d0d2129f7e82d78df6d3eaa3b0b28d18882f0",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:data/receipts/generated/README.md@124d0d2129f7e82d78df6d3eaa3b0b28d18882f0",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:fixtures/contracts/v1/runtime/ai_receipt/invalid/README.md@124d0d2129f7e82d78df6d3eaa3b0b28d18882f0",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/doctrine/directory-rules.md@124d0d2129f7e82d78df6d3eaa3b0b28d18882f0"
+    ]
+  },
+  "truth_labels": {
+    "fixtures/generated_receipt/invalid/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "Exactly one H1, balanced language-tagged code fences, and stable heading hierarchy were verified locally."
+    },
+    {
+      "gate": "directory-readme-contract",
+      "outcome": "PASS",
+      "reason": "Directory Rules section 15 required sections are present in the prescribed order."
+    },
+    {
+      "gate": "repository-evidence-grounding",
+      "outcome": "PASS",
+      "reason": "Claims are bounded to the pinned target, parent/sibling fixture READMEs, live GENERATED_RECEIPT schema, AI-builder policy, emitted receipt lane, separate AIReceipt fixture family, Directory Rules, and proposed ADR evidence."
+    },
+    {
+      "gate": "receipt-family-separation",
+      "outcome": "PASS",
+      "reason": "The revision separates GENERATED_RECEIPT repository-artifact provenance from runtime AIReceipt accountability and from proof, catalog, release, and publication authority."
+    },
+    {
+      "gate": "relative-link-inventory",
+      "outcome": "PASS",
+      "reason": "Every relative link in the README targets a repository path verified during this pass."
+    },
+    {
+      "gate": "generated-receipt-schema",
+      "outcome": "PASS",
+      "reason": "This companion receipt validated against schemas/contracts/v1/receipts/generated_receipt.schema.json with date-time format checking."
+    },
+    {
+      "gate": "remote-readback",
+      "outcome": "SKIPPED",
+      "reason": "Remote branch mutation and readback had not occurred when this receipt was emitted."
+    },
+    {
+      "gate": "ci",
+      "outcome": "SKIPPED",
+      "reason": "Pull-request workflows had not run when this receipt was emitted."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending; this draft receipt is not merge approval."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "repo:generated-receipt-invalid-readme-prior",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:fixtures/generated_receipt/invalid/README.md@124d0d2129f7e82d78df6d3eaa3b0b28d18882f0"
+    },
+    {
+      "id": "repo:generated-receipt-schema",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:schemas/contracts/v1/receipts/generated_receipt.schema.json@124d0d2129f7e82d78df6d3eaa3b0b28d18882f0"
+    },
+    {
+      "id": "repo:ai-builder-policy",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:policy/ai_builder/operating_contract.rego@124d0d2129f7e82d78df6d3eaa3b0b28d18882f0"
+    },
+    {
+      "id": "repo:generated-receipt-instance-lane",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:data/receipts/generated/README.md@124d0d2129f7e82d78df6d3eaa3b0b28d18882f0"
+    },
+    {
+      "id": "repo:runtime-ai-receipt-invalid-fixtures",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:fixtures/contracts/v1/runtime/ai_receipt/invalid/README.md@124d0d2129f7e82d78df6d3eaa3b0b28d18882f0"
+    },
+    {
+      "id": "repo:directory-rules",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:docs/doctrine/directory-rules.md@124d0d2129f7e82d78df6d3eaa3b0b28d18882f0"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-21T18:28:18Z",
+  "emitter": "OpenAI GPT-5.6 Thinking via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only correction of receipt-family drift. The target README now describes invalid GENERATED_RECEIPT fixtures for AI-authored repository artifact provenance, not runtime AIReceipt fixtures. Human review remains pending. This receipt is process memory, not proof, policy approval, merge approval, release approval, or publication authority."
+}

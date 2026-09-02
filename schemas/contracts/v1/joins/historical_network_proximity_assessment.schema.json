@@ -1,0 +1,315 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/joins/historical_network_proximity_assessment.schema.json",
+  "title": "HistoricalNetworkProximityAssessmentCandidate",
+  "description": "Inactive synthetic assessment of historical place/route proximity with separate valid time, uncertainty, source role, and non-authority declarations.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "profile_spec_hash",
+    "source_card",
+    "assessment_ref",
+    "evaluated_at",
+    "place_assertion",
+    "route_assertion",
+    "proximity",
+    "interpretation",
+    "conclusion",
+    "limitations",
+    "governance",
+    "authority_claims"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "HistoricalNetworkProximityAssessmentCandidate"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "profile": {
+      "const": "kfm.joins.historical-network-proximity.fixture.v1"
+    },
+    "profile_spec_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "source_card": {
+      "const": "KFM-TRIAD-041"
+    },
+    "assessment_ref": {
+      "type": "string",
+      "pattern": "^kfm:historical-network-proximity:synthetic:[a-z0-9][a-z0-9._-]{2,80}$"
+    },
+    "evaluated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "place_assertion": {
+      "$ref": "#/$defs/place_assertion"
+    },
+    "route_assertion": {
+      "$ref": "#/$defs/route_assertion"
+    },
+    "proximity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "method",
+        "distance_min_m",
+        "distance_max_m",
+        "combined_uncertainty_m",
+        "temporal_overlap"
+      ],
+      "properties": {
+        "method": {
+          "const": "SYNTHETIC_INTERVAL_DISTANCE"
+        },
+        "distance_min_m": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "distance_max_m": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000000
+        },
+        "combined_uncertainty_m": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2000000
+        },
+        "temporal_overlap": {
+          "type": "boolean"
+        }
+      }
+    },
+    "interpretation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "relation_kind",
+        "causal_relationship_claimed",
+        "service_relationship_claimed",
+        "route_use_claimed",
+        "network_membership_claimed",
+        "historical_relationship_claimed"
+      ],
+      "properties": {
+        "relation_kind": {
+          "enum": [
+            "PROXIMITY_CANDIDATE",
+            "NO_TEMPORAL_OVERLAP",
+            "AMBIGUOUS",
+            "UNSUPPORTED"
+          ]
+        },
+        "causal_relationship_claimed": {"const": false},
+        "service_relationship_claimed": {"const": false},
+        "route_use_claimed": {"const": false},
+        "network_membership_claimed": {"const": false},
+        "historical_relationship_claimed": {"const": false}
+      }
+    },
+    "conclusion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["declared_outcome", "reason_codes"],
+      "properties": {
+        "declared_outcome": {
+          "enum": ["CANDIDATE", "ABSTAIN", "DENY", "ERROR"]
+        },
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9_]{2,80}$"
+          }
+        }
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "DISTANCE_IS_NOT_RELATIONSHIP",
+          "NO_CAUSAL_OR_SERVICE_INFERENCE",
+          "NO_GEOMETRY_EXECUTION",
+          "NO_RELEASE_OR_PUBLICATION_AUTHORITY",
+          "NO_SOURCE_OR_EVIDENCE_RESOLUTION"
+        ]
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "synthetic_fixture",
+        "network_accessed",
+        "geometry_executed",
+        "source_records_resolved",
+        "real_location_data",
+        "public_release"
+      ],
+      "properties": {
+        "synthetic_fixture": {"const": true},
+        "network_accessed": {"const": false},
+        "geometry_executed": {"const": false},
+        "source_records_resolved": {"const": false},
+        "real_location_data": {"const": false},
+        "public_release": {"const": false}
+      }
+    },
+    "authority_claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "place_truth",
+        "route_truth",
+        "evidence",
+        "source_admission",
+        "causal_relationship",
+        "service_relationship",
+        "policy",
+        "review",
+        "release",
+        "publication"
+      ],
+      "properties": {
+        "place_truth": {"const": false},
+        "route_truth": {"const": false},
+        "evidence": {"const": false},
+        "source_admission": {"const": false},
+        "causal_relationship": {"const": false},
+        "service_relationship": {"const": false},
+        "policy": {"const": false},
+        "review": {"const": false},
+        "release": {"const": false},
+        "publication": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "synthetic_ref": {
+      "type": "string",
+      "pattern": "^kfm:[a-z0-9][a-z0-9._:-]{4,180}$"
+    },
+    "valid_time": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["start", "end", "bounds"],
+      "properties": {
+        "start": {"type": "string", "format": "date-time"},
+        "end": {"type": "string", "format": "date-time"},
+        "bounds": {"const": "[)"}
+      }
+    },
+    "evidence_refs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 16,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/synthetic_ref"}
+    },
+    "place_assertion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "assertion_ref",
+        "source_role",
+        "valid_time",
+        "resolution",
+        "coordinate_method",
+        "uncertainty_m",
+        "evidence_refs"
+      ],
+      "properties": {
+        "assertion_ref": {"$ref": "#/$defs/synthetic_ref"},
+        "source_role": {
+          "enum": [
+            "HISTORICAL_PRIMARY_RECORD",
+            "HISTORICAL_GAZETTEER",
+            "MODERN_REFERENCE"
+          ]
+        },
+        "valid_time": {"$ref": "#/$defs/valid_time"},
+        "resolution": {"enum": ["RESOLVED", "AMBIGUOUS", "UNRESOLVED"]},
+        "coordinate_method": {
+          "enum": [
+            "SOURCE_NATIVE_POINT",
+            "APPROXIMATE_CENTROID",
+            "UNCERTAINTY_ENVELOPE"
+          ]
+        },
+        "uncertainty_m": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "evidence_refs": {"$ref": "#/$defs/evidence_refs"}
+      }
+    },
+    "route_assertion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "assertion_ref",
+        "source_role",
+        "valid_time",
+        "resolution",
+        "alignment_method",
+        "uncertainty_m",
+        "evidence_refs"
+      ],
+      "properties": {
+        "assertion_ref": {"$ref": "#/$defs/synthetic_ref"},
+        "source_role": {
+          "enum": [
+            "HISTORICAL_ROUTE_RECORD",
+            "HISTORICAL_CARTOGRAPHY",
+            "MODERN_DESIGNATED_ALIGNMENT"
+          ]
+        },
+        "valid_time": {"$ref": "#/$defs/valid_time"},
+        "resolution": {"enum": ["RESOLVED", "AMBIGUOUS", "UNRESOLVED"]},
+        "alignment_method": {
+          "enum": [
+            "SOURCE_NATIVE_ALIGNMENT",
+            "HISTORICAL_RECONSTRUCTION",
+            "MODERN_DESIGNATED_ALIGNMENT"
+          ]
+        },
+        "uncertainty_m": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "evidence_refs": {"$ref": "#/$defs/evidence_refs"}
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "authority": "NONE",
+    "network": false,
+    "geometry_execution": false,
+    "real_location_data": false,
+    "release": false,
+    "contract_doc": "contracts/joins/historical_network_proximity_assessment.md",
+    "fixture_manifest": "fixtures/contracts/v1/joins/historical_network_proximity_assessment/cases.json",
+    "helper": "tools/joins/historical_network_proximity.py",
+    "tests": "tests/joins/test_historical_network_proximity.py"
+  }
+}

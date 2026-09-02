@@ -1,0 +1,29 @@
+{
+  "_note": "ILLUSTRATIVE ONLY — PROPOSED shape, NEEDS VERIFICATION against schemas/contracts/v1/source/",
+  "stac_version": "1.1.0",
+  "id": "kfm-noaa-storm-events-PLACEHOLDER",
+  "type": "Feature",
+  "collection": "kfm-noaa-storm-events",
+  "properties": {
+    "datetime": "2024-04-12T17:42:00Z",
+    "kfm:provenance": {
+      "spec_hash": "sha256:<placeholder>",
+      "evidence_bundle_ref": "kfm://evidence/<placeholder>",
+      "run_record_ref": "kfm://run/<placeholder>",
+      "audit_ref": "kfm://audit/<placeholder>",
+      "policy_digest": "sha256:<placeholder>"
+    }
+  },
+  "assets": {
+    "data": {
+      "href": "s3://kfm-cataloged/PLACEHOLDER/events.parquet",
+      "type": "application/vnd.apache.parquet",
+      "file:checksum": "sha256:<placeholder>",
+      "roles": ["data"]
+    }
+  },
+  "links": [
+    { "rel": "collection", "href": "../collection.json" },
+    { "rel": "attestation", "href": "kfm://evidence/<placeholder>" }
+  ]
+}

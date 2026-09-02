@@ -1,0 +1,39 @@
+{
+  "cases": [
+    {
+      "name": "complete_mixed",
+      "expected_coverage": "COMPLETE",
+      "input": {
+        "observations": [
+          {"indicator": "evidence_ref_resolution_rate", "source_family": "EVIDENCE_RESOLUTION", "source_record_ref": "resolution:1", "passed": true},
+          {"indicator": "evidence_ref_resolution_rate", "source_family": "EVIDENCE_RESOLUTION", "source_record_ref": "resolution:2", "passed": false},
+          {"indicator": "cite_or_abstain_compliance", "source_family": "CITATION_VALIDATION", "source_record_ref": "citation:1", "passed": true},
+          {"indicator": "release_with_rollback_rate", "source_family": "RELEASE_MANIFEST", "source_record_ref": "release:1", "passed": true},
+          {"indicator": "derivative_invalidation_coverage", "source_family": "CORRECTION_NOTICE", "source_record_ref": "correction:1", "passed": true},
+          {"indicator": "sensitive_lane_fail_closed_rate", "source_family": "POLICY_DECISION", "source_record_ref": "policy:1", "passed": true},
+          {"indicator": "ai_receipt_presence_rate", "source_family": "AI_RECEIPT", "source_record_ref": "ai:1", "passed": true},
+          {"indicator": "adr_completeness", "source_family": "ADR_CHANGE", "source_record_ref": "adr:1", "passed": false}
+        ],
+        "drift_entries": [
+          {"source_record_ref": "drift:1", "open": true, "age_days": 12},
+          {"source_record_ref": "drift:2", "open": false, "age_days": 30}
+        ]
+      }
+    },
+    {
+      "name": "partial",
+      "expected_coverage": "PARTIAL",
+      "input": {
+        "observations": [
+          {"indicator": "release_with_rollback_rate", "source_family": "RELEASE_MANIFEST", "source_record_ref": "release:1", "passed": false}
+        ],
+        "drift_entries": []
+      }
+    },
+    {
+      "name": "empty",
+      "expected_coverage": "EMPTY",
+      "input": {"observations": [], "drift_entries": []}
+    }
+  ]
+}

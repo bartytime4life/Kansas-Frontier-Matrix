@@ -1,0 +1,419 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/schemas/contracts/v1/domains/flora/usda_plants_distribution_snapshot.schema.json",
+  "title": "USDA PLANTS Distribution Snapshot Candidate",
+  "description": "Fixture-first, no-network profile for a source-versioned Kansas county distribution matrix. A missing source row is represented as no claim, never inferred absence. Structural validity does not activate USDA PLANTS or authorize release.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "object_type",
+    "fixture_only",
+    "snapshot_id",
+    "domain",
+    "source_role",
+    "source_ref",
+    "source_uri",
+    "snapshot_date",
+    "scope",
+    "taxa",
+    "source_rows",
+    "distribution_states",
+    "summary",
+    "missing_row_policy",
+    "provenance",
+    "review",
+    "evidence_refs",
+    "spec_hash"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "kfm.flora.usda-plants-distribution-snapshot.v1"
+    },
+    "object_type": {
+      "const": "USDAPlantsDistributionSnapshotCandidate"
+    },
+    "fixture_only": {
+      "const": true
+    },
+    "snapshot_id": {
+      "type": "string",
+      "pattern": "^kfm://candidate/flora/usda-plants/distribution/ks/[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+    },
+    "domain": {
+      "const": "flora"
+    },
+    "source_role": {
+      "const": "administrative"
+    },
+    "source_ref": {
+      "type": "string",
+      "pattern": "^kfm://source/flora/usda-plants@[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+    },
+    "source_uri": {
+      "const": "https://plants.sc.egov.usda.gov/downloads"
+    },
+    "snapshot_date": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "counties"
+      ],
+      "properties": {
+        "state": {
+          "const": "KS"
+        },
+        "counties": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 105,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "fips",
+              "name"
+            ],
+            "properties": {
+              "fips": {
+                "type": "string",
+                "pattern": "^20[0-9]{3}$"
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              }
+            }
+          }
+        }
+      }
+    },
+    "taxa": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1000,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "plants_symbol",
+          "scientific_name",
+          "family"
+        ],
+        "properties": {
+          "plants_symbol": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9]{1,9}$"
+          },
+          "scientific_name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 300
+          },
+          "family": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 120
+          }
+        }
+      }
+    },
+    "source_rows": {
+      "type": "array",
+      "maxItems": 100000,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "plants_symbol",
+          "county_fips",
+          "normalized_presence"
+        ],
+        "properties": {
+          "plants_symbol": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9]{1,9}$"
+          },
+          "county_fips": {
+            "type": "string",
+            "pattern": "^20[0-9]{3}$"
+          },
+          "normalized_presence": {
+            "enum": [
+              "present",
+              "absent"
+            ]
+          }
+        }
+      }
+    },
+    "distribution_states": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100000,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "plants_symbol",
+          "county_fips",
+          "state",
+          "source_row_present",
+          "interpretation",
+          "first_observed"
+        ],
+        "properties": {
+          "plants_symbol": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9]{1,9}$"
+          },
+          "county_fips": {
+            "type": "string",
+            "pattern": "^20[0-9]{3}$"
+          },
+          "state": {
+            "enum": [
+              "reported_present",
+              "reported_absent",
+              "not_reported",
+              "not_evaluated"
+            ]
+          },
+          "source_row_present": {
+            "type": "boolean"
+          },
+          "interpretation": {
+            "enum": [
+              "administrative_presence_claim",
+              "administrative_absence_claim",
+              "no_claim"
+            ]
+          },
+          "first_observed": {
+            "type": "null"
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "state": {
+                  "const": "reported_present"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "source_row_present": {
+                  "const": true
+                },
+                "interpretation": {
+                  "const": "administrative_presence_claim"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "state": {
+                  "const": "reported_absent"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "source_row_present": {
+                  "const": true
+                },
+                "interpretation": {
+                  "const": "administrative_absence_claim"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "state": {
+                  "enum": [
+                    "not_reported",
+                    "not_evaluated"
+                  ]
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "source_row_present": {
+                  "const": false
+                },
+                "interpretation": {
+                  "const": "no_claim"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "taxon_count",
+        "county_count",
+        "cell_count",
+        "source_row_count",
+        "reported_present",
+        "reported_absent",
+        "not_reported",
+        "not_evaluated"
+      ],
+      "properties": {
+        "taxon_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "county_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "cell_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "source_row_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "reported_present": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "reported_absent": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "not_reported": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "not_evaluated": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "missing_row_policy": {
+      "const": "NO_SOURCE_ROW_IS_NO_CLAIM_NOT_ABSENCE"
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "input_profile",
+        "normalizer",
+        "input_digests"
+      ],
+      "properties": {
+        "input_profile": {
+          "const": "kfm.synthetic.usda-plants-distribution-csv.v1"
+        },
+        "normalizer": {
+          "const": "kfm-usda-plants-distribution-normalizer@1.0.0"
+        },
+        "input_digests": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "taxa",
+            "counties",
+            "distribution"
+          ],
+          "properties": {
+            "taxa": {
+              "type": "string",
+              "pattern": "^sha256:[a-f0-9]{64}$"
+            },
+            "counties": {
+              "type": "string",
+              "pattern": "^sha256:[a-f0-9]{64}$"
+            },
+            "distribution": {
+              "type": "string",
+              "pattern": "^sha256:[a-f0-9]{64}$"
+            }
+          }
+        }
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rights",
+        "sensitivity",
+        "release",
+        "holds"
+      ],
+      "properties": {
+        "rights": {
+          "const": "NEEDS_VERIFICATION"
+        },
+        "sensitivity": {
+          "const": "NEEDS_VERIFICATION"
+        },
+        "release": {
+          "const": "HOLD"
+        },
+        "holds": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "prefixItems": [
+            {
+              "const": "SOURCE_RIGHTS_CURRENTNESS_UNVERIFIED"
+            },
+            {
+              "const": "RARE_PLANT_SENSITIVITY_UNASSESSED"
+            }
+          ]
+        }
+      }
+    },
+    "evidence_refs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 20,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^kfm://evidence/flora/usda-plants/[^@\\s]+@sha256:[a-f0-9]{64}$"
+      }
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED",
+    "fixture_only": true,
+    "source_basis": "docs/intake/exploratory/new-ideas-4-30-source-map.md",
+    "contract_doc": "contracts/domains/flora/usda_plants_distribution_snapshot.md",
+    "non_effects": [
+      "no live source access",
+      "no source activation",
+      "no botanical occurrence proof",
+      "no rights or sensitivity approval",
+      "no promotion, release, deployment, or publication"
+    ]
+  }
+}

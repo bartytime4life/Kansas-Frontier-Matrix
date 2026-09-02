@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kansasfrontiermatrix.org/schemas/contracts/v1/map/georeference_control_point_set.schema.json",
+  "title": "GeoreferenceControlPointSet",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type", "schema_version", "profile", "fixture_only", "network_access",
+    "set_id", "resource_set_hash", "target_set_hash", "resource_space",
+    "target_space", "control_point_count", "control_points", "decision", "governance"
+  ],
+  "properties": {
+    "object_type": {"const": "GeoreferenceControlPointSet"},
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.georeference.control-point-set.v1"},
+    "fixture_only": {"const": true},
+    "network_access": {"const": "forbidden"},
+    "set_id": {"type": "string", "pattern": "^kfm:georeference-gcp-set:sha256:[a-f0-9]{64}$"},
+    "resource_set_hash": {"$ref": "#/$defs/sha256"},
+    "target_set_hash": {"$ref": "#/$defs/sha256"},
+    "resource_space": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "axis_order", "width_px", "height_px"],
+      "properties": {
+        "kind": {"const": "image_pixel"},
+        "axis_order": {"const": ["x", "y"]},
+        "width_px": {"type": "integer", "minimum": 1, "maximum": 1000000},
+        "height_px": {"type": "integer", "minimum": 1, "maximum": 1000000}
+      }
+    },
+    "target_space": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "axis_order", "unit"],
+      "properties": {
+        "kind": {"const": "synthetic_planar"},
+        "axis_order": {"const": ["X", "Y"]},
+        "unit": {"enum": ["synthetic_meters", "synthetic_feet"]}
+      }
+    },
+    "control_point_count": {"type": "integer", "minimum": 3, "maximum": 256},
+    "control_points": {
+      "type": "array", "minItems": 3, "maxItems": 256,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "resource", "target"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1, "maxLength": 80, "pattern": "^[A-Za-z0-9_.:-]+$"},
+          "resource": {"$ref": "#/$defs/point"},
+          "target": {"$ref": "#/$defs/point"}
+        }
+      }
+    },
+    "decision": {
+      "type": "object", "additionalProperties": false,
+      "required": ["outcome", "reasons"],
+      "properties": {
+        "outcome": {"enum": ["VALID", "ERROR"]},
+        "reasons": {
+          "type": "array", "minItems": 1, "maxItems": 16, "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^[A-Z0-9_]+$"}
+        }
+      }
+    },
+    "governance": {
+      "type": "object", "additionalProperties": false,
+      "required": ["authority_created", "policy_evaluated", "promotion_authorized", "release_authorized", "publication_authorized", "public_use_allowed", "release_ref"],
+      "properties": {
+        "authority_created": {"const": false},
+        "policy_evaluated": {"const": false},
+        "promotion_authorized": {"const": false},
+        "release_authorized": {"const": false},
+        "publication_authorized": {"const": false},
+        "public_use_allowed": {"const": false},
+        "release_ref": {"type": "null"}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "point": {
+      "type": "array", "prefixItems": [{"type": "number"}, {"type": "number"}],
+      "items": false, "minItems": 2, "maxItems": 2
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "authority": "fixture_control_point_identity_only",
+    "non_effects": ["no_network", "no_imagery", "no_warp", "no_reprojection", "no_quality_decision", "no_policy", "no_release", "no_public_use"]
+  }
+}

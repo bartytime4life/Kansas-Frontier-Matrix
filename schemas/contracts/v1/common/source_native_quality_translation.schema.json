@@ -1,0 +1,467 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/common/source_native_quality_translation.schema.json",
+  "title": "SourceNativeQualityTranslation",
+  "description": "Fixture-first record preserving a source-native quality vocabulary and mapping decision while keeping operational health and observation validity as independent assessments. Schema validity grants no source, evidence, policy, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "translation_id",
+    "hash_profile",
+    "spec_hash",
+    "source",
+    "mapping",
+    "operational_health",
+    "observation_validity",
+    "separation",
+    "provenance",
+    "governance"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "SourceNativeQualityTranslation"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "translation_id": {
+      "type": "string",
+      "pattern": "^quality-translation:[a-z0-9][a-z0-9_.:-]{7,240}$"
+    },
+    "hash_profile": {
+      "const": "kfm-fixture-json-v1"
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "source": {
+      "$ref": "#/$defs/source"
+    },
+    "mapping": {
+      "$ref": "#/$defs/mapping"
+    },
+    "operational_health": {
+      "$ref": "#/$defs/operational_health"
+    },
+    "observation_validity": {
+      "$ref": "#/$defs/observation_validity"
+    },
+    "separation": {
+      "$ref": "#/$defs/separation"
+    },
+    "provenance": {
+      "$ref": "#/$defs/provenance"
+    },
+    "governance": {
+      "$ref": "#/$defs/governance"
+    }
+  },
+  "$defs": {
+    "ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 640,
+      "pattern": "\\S"
+    },
+    "nullable_ref": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ref"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "ref_array": {
+      "type": "array",
+      "maxItems": 128,
+      "items": {
+        "$ref": "#/$defs/ref"
+      },
+      "uniqueItems": true
+    },
+    "reason_codes": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Z][A-Z0-9_]{2,96}$"
+      },
+      "uniqueItems": true
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "aware_datetime": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "nullable_datetime": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/aware_datetime"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_descriptor_ref",
+        "source_role",
+        "vocabulary_id",
+        "vocabulary_version",
+        "vocabulary_digest",
+        "native_code",
+        "native_label",
+        "native_detail",
+        "native_value_preserved"
+      ],
+      "properties": {
+        "source_descriptor_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "source_role": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9_]{2,96}$"
+        },
+        "vocabulary_id": {
+          "type": "string",
+          "pattern": "^quality-vocabulary:[a-z0-9][a-z0-9_.:-]{4,200}$"
+        },
+        "vocabulary_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "\\S"
+        },
+        "vocabulary_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "native_code": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "\\S"
+        },
+        "native_label": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512,
+              "pattern": "\\S"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "native_detail": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2048,
+              "pattern": "\\S"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "native_value_preserved": {
+          "const": true
+        }
+      }
+    },
+    "mapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "profile_id",
+        "profile_version",
+        "profile_digest",
+        "mapping_decision_ref",
+        "outcome",
+        "normalized_quality",
+        "semantic_loss",
+        "unmapped_state",
+        "reason_codes",
+        "review_required"
+      ],
+      "properties": {
+        "profile_id": {
+          "type": "string",
+          "pattern": "^quality-mapping-profile:[a-z0-9][a-z0-9_.:-]{4,200}$"
+        },
+        "profile_version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "profile_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "mapping_decision_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "outcome": {
+          "type": "string",
+          "enum": [
+            "MAPPED",
+            "UNMAPPED",
+            "AMBIGUOUS",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "normalized_quality": {
+          "type": "string",
+          "enum": [
+            "ACCEPTED",
+            "SUSPECT",
+            "REJECTED",
+            "MISSING",
+            "UNKNOWN",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "semantic_loss": {
+          "type": "string",
+          "enum": [
+            "NONE",
+            "PARTIAL",
+            "MATERIAL",
+            "UNKNOWN"
+          ]
+        },
+        "unmapped_state": {
+          "type": "string",
+          "enum": [
+            "NOT_UNMAPPED",
+            "UNMAPPED_PRESERVED",
+            "AMBIGUOUS_PRESERVED",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "reason_codes": {
+          "$ref": "#/$defs/reason_codes"
+        },
+        "review_required": {
+          "type": "boolean"
+        }
+      }
+    },
+    "operational_health": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "assessment_id",
+        "state",
+        "observed_at",
+        "reason_codes",
+        "evidence_refs",
+        "affects_current_observation_availability",
+        "observation_validity_decided",
+        "environmental_condition_claimed"
+      ],
+      "properties": {
+        "assessment_id": {
+          "type": "string",
+          "pattern": "^health-assessment:[a-z0-9][a-z0-9_.:-]{7,240}$"
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "ONLINE",
+            "DEGRADED",
+            "OFFLINE",
+            "UNKNOWN",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "observed_at": {
+          "$ref": "#/$defs/aware_datetime"
+        },
+        "reason_codes": {
+          "$ref": "#/$defs/reason_codes"
+        },
+        "evidence_refs": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "affects_current_observation_availability": {
+          "type": "boolean"
+        },
+        "observation_validity_decided": {
+          "const": false
+        },
+        "environmental_condition_claimed": {
+          "const": false
+        }
+      }
+    },
+    "observation_validity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "assessment_id",
+        "observation_ref",
+        "state",
+        "assessed_at",
+        "reason_codes",
+        "evidence_refs",
+        "derived_from_operational_health"
+      ],
+      "properties": {
+        "assessment_id": {
+          "type": "string",
+          "pattern": "^observation-validity:[a-z0-9][a-z0-9_.:-]{7,240}$"
+        },
+        "observation_ref": {
+          "$ref": "#/$defs/nullable_ref"
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "VALID",
+            "SUSPECT",
+            "INVALID",
+            "MISSING",
+            "NOT_ASSESSED"
+          ]
+        },
+        "assessed_at": {
+          "$ref": "#/$defs/nullable_datetime"
+        },
+        "reason_codes": {
+          "$ref": "#/$defs/reason_codes"
+        },
+        "evidence_refs": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "derived_from_operational_health": {
+          "const": false
+        }
+      }
+    },
+    "separation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "health_and_validity_independent",
+        "offline_does_not_invalidate_prior_observations",
+        "no_data_is_not_environmental_condition",
+        "source_quality_is_not_source_authority"
+      ],
+      "properties": {
+        "health_and_validity_independent": {
+          "const": true
+        },
+        "offline_does_not_invalidate_prior_observations": {
+          "const": true
+        },
+        "no_data_is_not_environmental_condition": {
+          "const": true
+        },
+        "source_quality_is_not_source_authority": {
+          "const": true
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "recorded_at",
+        "run_receipt_ref",
+        "translator_id",
+        "translator_version",
+        "input_refs"
+      ],
+      "properties": {
+        "recorded_at": {
+          "$ref": "#/$defs/aware_datetime"
+        },
+        "run_receipt_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "translator_id": {
+          "$ref": "#/$defs/ref"
+        },
+        "translator_version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:[-+][A-Za-z0-9.-]+)?$"
+        },
+        "input_refs": {
+          "$ref": "#/$defs/ref_array"
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "authority_created",
+        "source_admitted",
+        "evidence_closure_claimed",
+        "policy_evaluated",
+        "promotion_authorized",
+        "release_authorized",
+        "publication_authorized",
+        "public_use_allowed",
+        "release_ref"
+      ],
+      "properties": {
+        "authority_created": {
+          "const": false
+        },
+        "source_admitted": {
+          "const": false
+        },
+        "evidence_closure_claimed": {
+          "const": false
+        },
+        "policy_evaluated": {
+          "const": false
+        },
+        "promotion_authorized": {
+          "const": false
+        },
+        "release_authorized": {
+          "const": false
+        },
+        "publication_authorized": {
+          "const": false
+        },
+        "public_use_allowed": {
+          "const": false
+        },
+        "release_ref": {
+          "type": "null"
+        }
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED",
+    "contract_doc": "contracts/common/source_native_quality_translation.md",
+    "fixtures_root": "fixtures/contracts/v1/common/source_native_quality_translation/",
+    "validator": "tools/validators/validate_source_native_quality_translation.py",
+    "tests": "tests/validators/test_validate_source_native_quality_translation.py",
+    "authority": "source_quality_translation_and_assessment_separation_only",
+    "non_effects": [
+      "does_not_admit_or_activate_sources",
+      "does_not_convert_operational_health_into_environmental_truth",
+      "does_not_convert_health_state_into_observation_validity",
+      "does_not_create_evidence_policy_release_or_publication_authority"
+    ]
+  }
+}

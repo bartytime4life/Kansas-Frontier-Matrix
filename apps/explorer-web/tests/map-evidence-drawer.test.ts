@@ -1,0 +1,475 @@
+import { describe, expect, it, vi } from "vitest";
+
+import answerFixture from "../../../fixtures/ui/evidence_drawer_payload/valid/answer-corrected.json";
+import unresolvedCitationFixture from "../../../fixtures/ui/evidence_drawer_payload/valid/abstain-invalid-provenance-reference.json";
+import staleFixture from "../../../fixtures/ui/evidence_drawer_payload/valid/abstain-stale.json";
+import supersededFixture from "../../../fixtures/ui/evidence_drawer_payload/valid/abstain-superseded.json";
+import denyFixture from "../../../fixtures/ui/evidence_drawer_payload/valid/deny-sensitive.json";
+import mapRuntimeSource from "../src/features/map_runtime/index.tsx?raw";
+import {
+  MAP_FEATURE_SELECTION_PROFILE,
+  parseMapFeatureSelection,
+  resolveMapFeatureEvidence,
+} from "../src/features/map_runtime";
+
+const matchingSelection = Object.freeze({
+  profile: MAP_FEATURE_SELECTION_PROFILE,
+  selection_id: "selection:flow-001",
+  layer_id: "layer:synthetic-streamflow",
+  feature_id: "feature:flow-001",
+  evidence_refs: ["kfm:evidence:synthetic:flow-001"],
+  history_evidence_refs: ["kfm:evidence:synthetic:flow-000"],
+});
+
+describe("Explorer map feature to Evidence Drawer bridge", () => {
+  it("strictly parses a renderer-neutral selection without retaining caller mutation", () => {
+    const input = {
+      ...matchingSelection,
+      evidence_refs: [...matchingSelection.evidence_refs],
+      history_evidence_refs: [...matchingSelection.history_evidence_refs],
+    };
+    const parsed = parseMapFeatureSelection(input);
+    input.evidence_refs[0] = "kfm:evidence:mutated";
+    input.history_evidence_refs[0] = "kfm:evidence:history-mutated";
+
+    expect(parsed).toEqual({
+      profile: MAP_FEATURE_SELECTION_PROFILE,
+      selectionId: "selection:flow-001",
+      layerId: "layer:synthetic-streamflow",
+      featureId: "feature:flow-001",
+      evidenceRefs: ["kfm:evidence:synthetic:flow-001"],
+      historyEvidenceRefs: ["kfm:evidence:synthetic:flow-000"],
+    });
+  });
+
+  it("keeps feature identity and EvidenceRef scope immutable inside the resolver", async () => {
+    const observed: string[] = [];
+    const result = await resolveMapFeatureEvidence(
+      matchingSelection,
+      async (selection) => {
+        expect(Object.isFrozen(selection)).toBe(true);
+        expect(Object.isFrozen(selection.evidenceRefs)).toBe(true);
+        expect(Object.isFrozen(selection.historyEvidenceRefs)).toBe(true);
+
+        const mutableSelection = selection as unknown as Record<string, unknown>;
+        const mutableEvidenceRefs = selection.evidenceRefs as unknown as string[];
+        const mutableHistoryEvidenceRefs =
+          selection.historyEvidenceRefs as unknown as string[];
+        expect(
+          Reflect.set(mutableSelection, "featureId", "feature:mutated"),
+        ).toBe(false);
+        expect(
+          Reflect.set(
+            mutableHistoryEvidenceRefs,
+            "0",
+            "kfm:evidence:synthetic:history-mutated",
+          ),
+        ).toBe(false);
+        expect(
+          Reflect.set(
+            mutableEvidenceRefs,
+            "0",
+            "kfm:evidence:synthetic:mutated",
+          ),
+        ).toBe(false);
+
+        observed.push(
+          selection.selectionId,
+          selection.layerId,
+          selection.featureId,
+          ...selection.evidenceRefs,
+          ...(selection.historyEvidenceRefs ?? []),
+        );
+        return answerFixture;
+      },
+    );
+
+    expect(observed).toEqual([
+      "selection:flow-001",
+      "layer:synthetic-streamflow",
+      "feature:flow-001",
+      "kfm:evidence:synthetic:flow-001",
+      "kfm:evidence:synthetic:flow-000",
+    ]);
+    expect(result).toMatchObject({
+      code: "SUPPORTED",
+      selection: {
+        featureId: "feature:flow-001",
+        evidenceRefs: ["kfm:evidence:synthetic:flow-001"],
+        historyEvidenceRefs: ["kfm:evidence:synthetic:flow-000"],
+      },
+    });
+  });
+
+  it("rejects unknown fields, duplicate refs, and unsafe identifiers", () => {
+    expect(
+      parseMapFeatureSelection({ ...matchingSelection, raw_feature: "not allowed" }),
+    ).toBeNull();
+    expect(
+      parseMapFeatureSelection({
+        ...matchingSelection,
+        evidence_refs: [
+          "kfm:evidence:synthetic:flow-001",
+          "kfm:evidence:synthetic:flow-001",
+        ],
+      }),
+    ).toBeNull();
+    expect(
+      parseMapFeatureSelection({ ...matchingSelection, feature_id: "bad feature id" }),
+    ).toBeNull();
+  });
+
+  it("resolves a supported click only when returned evidence stays inside selection scope", async () => {
+    const resolver = vi.fn(async () => answerFixture);
+    const result = await resolveMapFeatureEvidence(matchingSelection, resolver);
+
+    expect(resolver).toHaveBeenCalledTimes(1);
+    expect(result).toMatchObject({
+      code: "SUPPORTED",
+      drawer: {
+        outcome: "ANSWER",
+        code: "SUPPORTED",
+        evidenceRefs: ["kfm:evidence:synthetic:flow-001"],
+      },
+    });
+  });
+
+  it("abstains without calling the resolver when the selected feature has no governed evidence ref", async () => {
+    const resolver = vi.fn(async () => answerFixture);
+    const result = await resolveMapFeatureEvidence(
+      {
+        ...matchingSelection,
+        evidence_refs: [],
+        history_evidence_refs: [],
+      },
+      resolver,
+    );
+
+    expect(resolver).not.toHaveBeenCalled();
+    expect(result).toMatchObject({
+      code: "MISSING_EVIDENCE",
+      drawer: {
+        outcome: "ABSTAIN",
+        code: "MISSING_EVIDENCE",
+        evidenceRefs: [],
+      },
+    });
+  });
+
+  it("preserves a governed policy denial without reflecting sensitive canary text", async () => {
+    const result = await resolveMapFeatureEvidence(
+      matchingSelection,
+      async () => denyFixture,
+    );
+
+    expect(result).toMatchObject({
+      code: "SENSITIVE_DETAIL_RESTRICTED",
+      drawer: {
+        outcome: "DENY",
+        code: "SENSITIVE_DETAIL_RESTRICTED",
+        evidenceRefs: [],
+        citations: [],
+      },
+    });
+    expect(JSON.stringify(result.drawer)).not.toContain(
+      "SENSITIVE_DENIAL_CANARY_4d7ec2",
+    );
+  });
+
+  it("preserves independently scoped superseded history as audit-only", async () => {
+    const result = await resolveMapFeatureEvidence(
+      {
+        ...matchingSelection,
+        evidence_refs: [],
+        history_evidence_refs: [
+          "kfm:evidence:synthetic:superseded-001",
+        ],
+      },
+      async () => supersededFixture,
+    );
+
+    expect(result).toMatchObject({
+      code: "SUPERSEDED_EVIDENCE",
+      drawer: {
+        outcome: "ABSTAIN",
+        code: "SUPERSEDED_EVIDENCE",
+        evidenceRefs: [],
+        citations: [],
+      },
+    });
+    expect(result.drawer.historyLabels).toHaveLength(1);
+  });
+
+  it("preserves stale abstention evidence as audit-only", async () => {
+    const result = await resolveMapFeatureEvidence(
+      {
+        ...matchingSelection,
+        evidence_refs: [],
+        history_evidence_refs: ["kfm:evidence:synthetic:stale-001"],
+      },
+      async () => staleFixture,
+    );
+
+    expect(result).toMatchObject({
+      code: "STALE_EVIDENCE",
+      drawer: {
+        outcome: "ABSTAIN",
+        code: "STALE_EVIDENCE",
+        evidenceRefs: ["kfm:evidence:synthetic:stale-001"],
+        citations: [],
+      },
+    });
+    expect(JSON.stringify(result.drawer)).not.toContain(
+      "STALE_SUMMARY_MUST_NOT_RENDER_AS_A_CLAIM",
+    );
+  });
+
+  it("preserves any visible abstention evidence as audit-only", async () => {
+    const evidenceRef =
+      "kfm:evidence:synthetic:unresolved-provenance-001";
+    const unresolvedWithVisibleRef = {
+      ...unresolvedCitationFixture,
+      evidence_refs: [evidenceRef],
+    };
+
+    const result = await resolveMapFeatureEvidence(
+      {
+        ...matchingSelection,
+        evidence_refs: [],
+        history_evidence_refs: [evidenceRef],
+      },
+      async () => unresolvedWithVisibleRef,
+    );
+
+    expect(result).toMatchObject({
+      code: "CITATION_UNRESOLVED",
+      drawer: {
+        outcome: "ABSTAIN",
+        code: "CITATION_UNRESOLVED",
+        evidenceRefs: [evidenceRef],
+        evidenceRefsLabel: "Non-current evidence references",
+      },
+    });
+  });
+
+  it("fails closed when abstention evidence is carried as current support", async () => {
+    const evidenceRef =
+      "kfm:evidence:synthetic:unresolved-provenance-001";
+    const unresolvedWithVisibleRef = {
+      ...unresolvedCitationFixture,
+      evidence_refs: [evidenceRef],
+    };
+
+    const result = await resolveMapFeatureEvidence(
+      {
+        ...matchingSelection,
+        evidence_refs: [evidenceRef],
+        history_evidence_refs: [],
+      },
+      async () => unresolvedWithVisibleRef,
+    );
+
+    expect(result).toMatchObject({
+      code: "DRAWER_EVIDENCE_OUTSIDE_SELECTION",
+      drawer: {
+        outcome: "ERROR",
+        evidenceRefs: [],
+        citations: [],
+        historyLabels: [],
+      },
+    });
+  });
+
+  it("preserves abstention correction targets as audit-only history", async () => {
+    const abstentionWithCorrection = structuredClone(answerFixture);
+    abstentionWithCorrection.outcome = "ABSTAIN";
+    abstentionWithCorrection.reason_code = "CITATION_UNRESOLVED";
+    abstentionWithCorrection.evidence_refs = [];
+    abstentionWithCorrection.citations = [];
+    abstentionWithCorrection.trust_state.policy = "ABSTAIN";
+
+    const result = await resolveMapFeatureEvidence(
+      {
+        ...matchingSelection,
+        evidence_refs: [],
+        history_evidence_refs: [
+          "kfm:evidence:synthetic:flow-000",
+          "kfm:evidence:synthetic:flow-001",
+        ],
+      },
+      async () => abstentionWithCorrection,
+    );
+
+    expect(result).toMatchObject({
+      code: "CITATION_UNRESOLVED",
+      drawer: {
+        outcome: "ABSTAIN",
+        evidenceRefs: [],
+        evidenceRefsLabel: "Non-current evidence references",
+      },
+    });
+    expect(result.drawer.historyLabels).toContain(
+      "Correction lineage: kfm:evidence:synthetic:flow-000 → kfm:evidence:synthetic:flow-001 (2026-08-01T00:00:00Z)",
+    );
+  });
+
+  it("fails closed when an abstention correction target is carried as current support", async () => {
+    const abstentionWithCorrection = structuredClone(answerFixture);
+    abstentionWithCorrection.outcome = "ABSTAIN";
+    abstentionWithCorrection.reason_code = "CITATION_UNRESOLVED";
+    abstentionWithCorrection.evidence_refs = [];
+    abstentionWithCorrection.citations = [];
+    abstentionWithCorrection.trust_state.policy = "ABSTAIN";
+
+    const result = await resolveMapFeatureEvidence(
+      {
+        ...matchingSelection,
+        evidence_refs: ["kfm:evidence:synthetic:flow-001"],
+        history_evidence_refs: ["kfm:evidence:synthetic:flow-000"],
+      },
+      async () => abstentionWithCorrection,
+    );
+
+    expect(result).toMatchObject({
+      code: "DRAWER_EVIDENCE_OUTSIDE_SELECTION",
+      drawer: {
+        outcome: "ERROR",
+        evidenceRefs: [],
+        citations: [],
+        historyLabels: [],
+      },
+    });
+    expect(JSON.stringify(result.drawer)).not.toContain(
+      "kfm:evidence:synthetic:flow-001",
+    );
+  });
+
+  it("fails closed when negative-only history widens beyond the clicked selection", async () => {
+    const result = await resolveMapFeatureEvidence(
+      {
+        ...matchingSelection,
+        evidence_refs: ["kfm:evidence:synthetic:flow-001"],
+        history_evidence_refs: [],
+      },
+      async () => supersededFixture,
+    );
+
+    expect(result).toMatchObject({
+      code: "DRAWER_EVIDENCE_OUTSIDE_SELECTION",
+      drawer: {
+        outcome: "ERROR",
+        code: "UPSTREAM_ERROR",
+        evidenceRefs: [],
+        citations: [],
+        historyLabels: [],
+      },
+    });
+    expect(JSON.stringify(result.drawer)).not.toContain(
+      "kfm:evidence:synthetic:superseded-001",
+    );
+  });
+
+  it("fails closed when correction history widens beyond the clicked selection", async () => {
+    const result = await resolveMapFeatureEvidence(
+      {
+        ...matchingSelection,
+        evidence_refs: ["kfm:evidence:synthetic:flow-001"],
+        history_evidence_refs: [],
+      },
+      async () => answerFixture,
+    );
+
+    expect(result).toMatchObject({
+      code: "DRAWER_EVIDENCE_OUTSIDE_SELECTION",
+      drawer: {
+        outcome: "ERROR",
+        code: "UPSTREAM_ERROR",
+        evidenceRefs: [],
+        citations: [],
+        historyLabels: [],
+      },
+    });
+    expect(JSON.stringify(result.drawer)).not.toContain(
+      "kfm:evidence:synthetic:flow-000",
+    );
+  });
+
+  it("fails closed when an audit-only ref is returned as current support", async () => {
+    const uncorrectedPriorAnswer = structuredClone(answerFixture);
+    uncorrectedPriorAnswer.evidence_refs = [
+      "kfm:evidence:synthetic:flow-000",
+    ];
+    uncorrectedPriorAnswer.trust_state.correction = "NONE";
+    uncorrectedPriorAnswer.history = {
+      negative_outcomes: [],
+      corrections: [],
+    };
+
+    const result = await resolveMapFeatureEvidence(
+      matchingSelection,
+      async () => uncorrectedPriorAnswer,
+    );
+
+    expect(result).toMatchObject({
+      code: "DRAWER_EVIDENCE_OUTSIDE_SELECTION",
+      drawer: {
+        outcome: "ERROR",
+        code: "UPSTREAM_ERROR",
+        evidenceRefs: [],
+        citations: [],
+        historyLabels: [],
+      },
+    });
+    expect(JSON.stringify(result.drawer)).not.toContain(
+      "kfm:evidence:synthetic:flow-000",
+    );
+  });
+
+  it("fails closed when the drawer returns evidence outside the clicked selection", async () => {
+    const result = await resolveMapFeatureEvidence(
+      { ...matchingSelection, evidence_refs: ["kfm:evidence:synthetic:other"] },
+      async () => answerFixture,
+    );
+
+    expect(result).toMatchObject({
+      code: "DRAWER_EVIDENCE_OUTSIDE_SELECTION",
+      drawer: {
+        outcome: "ERROR",
+        code: "UPSTREAM_ERROR",
+        evidenceRefs: [],
+        citations: [],
+      },
+    });
+  });
+
+  it("uses fixed no-leak error copy when the governed resolver fails", async () => {
+    const result = await resolveMapFeatureEvidence(
+      matchingSelection,
+      async () => {
+        throw new Error("PRIVATE_RESOLVER_DIAGNOSTIC_16b49c");
+      },
+    );
+
+    expect(result).toMatchObject({
+      code: "GOVERNED_RESOLVER_ERROR",
+      drawer: {
+        outcome: "ERROR",
+        code: "UPSTREAM_ERROR",
+      },
+    });
+    expect(JSON.stringify(result)).not.toContain(
+      "PRIVATE_RESOLVER_DIAGNOSTIC_16b49c",
+    );
+  });
+
+  it("keeps the feature bridge renderer-neutral, no-network, and outside lifecycle stores", () => {
+    expect(mapRuntimeSource).not.toMatch(/\bfetch\s*\(/);
+    expect(mapRuntimeSource).not.toMatch(
+      /(?:from\s+|import\s*\()\s*["'](?:maplibre-gl|@maplibre\/[^"']+)["']/i,
+    );
+    expect(mapRuntimeSource).not.toMatch(
+      /data\/(?:raw|work|quarantine|processed|catalog|triplets|published)/i,
+    );
+    expect(mapRuntimeSource).not.toMatch(/(?:ollama|model[-_ ]?runtime)/i);
+  });
+});

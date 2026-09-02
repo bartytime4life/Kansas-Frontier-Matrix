@@ -1,0 +1,172 @@
+{
+  "receipt_id": "genrec-adr-0019-ai-adapter-finite-envelopes-0f366dc6",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/adr/ADR-0019-ai-adapter-contract-and-finite-envelopes.md"
+  ],
+  "artifact_hashes": {
+    "docs/adr/ADR-0019-ai-adapter-contract-and-finite-envelopes.md": "sha256:0f366dc6725b24bdb454c0f2893acfd64d3a2e092cb74667bb7513df7c2f2b18"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-14"
+  },
+  "prompt_or_contract": "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local deterministic documentation validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb"
+    ],
+    "attached_docs": [
+      "Pasted text(20260814-150503).txt"
+    ],
+    "evidence_refs": [
+      "repo:commit@f8a0466f6bd246dcf69b88e507efca267e6e5b67",
+      "repo:docs/adr/ADR-0019-ai-adapter-contract-and-finite-envelopes.md@f8a0466f6bd246dcf69b88e507efca267e6e5b67",
+      "repo:docs/adr/INDEX.md@f8a0466f6bd246dcf69b88e507efca267e6e5b67",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@f8a0466f6bd246dcf69b88e507efca267e6e5b67",
+      "repo:docs/doctrine/directory-rules.md@f8a0466f6bd246dcf69b88e507efca267e6e5b67",
+      "repo:docs/adr/ADR-0008-ollama-subordinate-to-governed-api.md@f8a0466f6bd246dcf69b88e507efca267e6e5b67",
+      "repo:runtime/model_adapters/README.md@f8a0466f6bd246dcf69b88e507efca267e6e5b67",
+      "repo:runtime/model_adapters/AdapterContract.md@f8a0466f6bd246dcf69b88e507efca267e6e5b67",
+      "repo:runtime/model_adapters/MockAdapter.py@f8a0466f6bd246dcf69b88e507efca267e6e5b67",
+      "repo:runtime/model_adapters/OllamaAdapter.py@f8a0466f6bd246dcf69b88e507efca267e6e5b67",
+      "repo:tests/runtime_proof/test_mock_adapter_finite_outcomes.py@f8a0466f6bd246dcf69b88e507efca267e6e5b67",
+      "repo:contracts/runtime/decision_envelope.md@f8a0466f6bd246dcf69b88e507efca267e6e5b67",
+      "repo:contracts/runtime/runtime_response_envelope.md@f8a0466f6bd246dcf69b88e507efca267e6e5b67",
+      "repo:contracts/runtime/precision_actually_used.md@f8a0466f6bd246dcf69b88e507efca267e6e5b67",
+      "repo:schemas/contracts/v1/runtime/runtime_response_envelope.schema.json@f8a0466f6bd246dcf69b88e507efca267e6e5b67",
+      "repo:packages/envelopes/src/envelopes/runtime_response.py@f8a0466f6bd246dcf69b88e507efca267e6e5b67",
+      "repo:tests/runtime_proof/test_envelope_finite_outcomes.py@f8a0466f6bd246dcf69b88e507efca267e6e5b67",
+      "repo:contracts/runtime/ai_receipt.md@f8a0466f6bd246dcf69b88e507efca267e6e5b67",
+      "repo:tools/validators/validate_ai_receipt.py@f8a0466f6bd246dcf69b88e507efca267e6e5b67",
+      "repo:policy/runtime/README.md@f8a0466f6bd246dcf69b88e507efca267e6e5b67",
+      "repo:.github/workflows/focus-mock-test.yml@f8a0466f6bd246dcf69b88e507efca267e6e5b67",
+      "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@f8a0466f6bd246dcf69b88e507efca267e6e5b67"
+    ]
+  },
+  "truth_labels": {
+    "docs/adr/ADR-0019-ai-adapter-contract-and-finite-envelopes.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Current main, exact target identity and bytes, canonical ADR index, accepted Directory Rules authority, adjacent ADR-0008, adapter/runtime/API/envelope/receipt/policy/test/workflow surfaces, branches, and open pull requests were inspected before authoring."
+    },
+    {
+      "gate": "markdown-structure-and-metadata",
+      "outcome": "PASS",
+      "reason": "The final ADR has one H1, logical heading hierarchy, 22 unique explicit anchors, balanced fenced blocks, parseable KFM_META_BLOCK_V2 YAML, UTF-8 text, no trailing whitespace, and a final newline."
+    },
+    {
+      "gate": "anchors-links-and-no-loss",
+      "outcome": "PASS",
+      "reason": "All prior named navigation anchors remain present, internal fragment links resolve, repository-relative references were reconciled to current paths, and the no-loss ledger preserves the proposed decision while replacing stale maturity claims."
+    },
+    {
+      "gate": "artifact-hash-binding",
+      "outcome": "PASS",
+      "reason": "The ADR is bound to SHA-256 0f366dc6725b24bdb454c0f2893acfd64d3a2e092cb74667bb7513df7c2f2b18 and Git blob 5c45cbaf0aae510638088913757634ea978c9ec3."
+    },
+    {
+      "gate": "generated-receipt-schema",
+      "outcome": "PASS",
+      "reason": "The receipt parses as JSON and validates against the pinned GENERATED_RECEIPT draft-2020-12 schema; artifact path, hash, and truth-label keys match."
+    },
+    {
+      "gate": "sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "The authored artifacts contain no credentials, private prompts, hidden reasoning, provider secrets, restricted source payloads, living-person records, exact sensitive locations, signed URLs, or production endpoints."
+    },
+    {
+      "gate": "runtime-policy-and-public-behavior",
+      "outcome": "SKIPPED",
+      "reason": "Documentation and generated provenance only; no contract, schema, policy, fixture, validator, test, workflow, package, application, provider, runtime, lifecycle state, release, deployment, or publication behavior changes."
+    },
+    {
+      "gate": "repository-native-full-validation",
+      "outcome": "SKIPPED",
+      "reason": "No mounted repository checkout or dependency environment was available. Deterministic file-level validation and pinned GitHub evidence inspection were completed without claiming make, pytest, OPA, model, or host-render results."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed draft pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "The draft remains pending authorized human review; no ADR acceptance, provider/model admission, policy activation, release authority, deployment, publication, or public-use authority is created."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "adr-identity-and-status",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/INDEX.md@f8a0466f6bd246dcf69b88e507efca267e6e5b67"
+    },
+    {
+      "id": "accepted-directory-placement",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@f8a0466f6bd246dcf69b88e507efca267e6e5b67"
+    },
+    {
+      "id": "bounded-mock-adapter",
+      "validated": true,
+      "evidence_ref": "repo:runtime/model_adapters/MockAdapter.py@f8a0466f6bd246dcf69b88e507efca267e6e5b67"
+    },
+    {
+      "id": "finite-envelope-profile",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/runtime/runtime_response_envelope.schema.json@f8a0466f6bd246dcf69b88e507efca267e6e5b67"
+    },
+    {
+      "id": "bounded-envelope-builder",
+      "validated": true,
+      "evidence_ref": "repo:packages/envelopes/src/envelopes/runtime_response.py@f8a0466f6bd246dcf69b88e507efca267e6e5b67"
+    },
+    {
+      "id": "ai-receipt-validator",
+      "validated": true,
+      "evidence_ref": "repo:tools/validators/validate_ai_receipt.py@f8a0466f6bd246dcf69b88e507efca267e6e5b67"
+    },
+    {
+      "id": "runtime-policy-scaffolds",
+      "validated": true,
+      "evidence_ref": "repo:policy/runtime/abstain_on_missing_evidence.rego@f8a0466f6bd246dcf69b88e507efca267e6e5b67"
+    },
+    {
+      "id": "focus-mock-proof-and-hold",
+      "validated": true,
+      "evidence_ref": "repo:.github/workflows/focus-mock-test.yml@f8a0466f6bd246dcf69b88e507efca267e6e5b67"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-14T16:17:38Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0019-ai-adapter-contract-and-finite-envelopes.md",
+    "drift_register_entry": null
+  },
+  "notes": "Same-path ADR evidence refresh plus generated provenance. ADR-0019 remains draft/proposed. The receipt records authorship and file-level validation only; it is not evidence authority, policy permission, provider/model admission, runtime proof, specialist review, ADR acceptance, release approval, deployment, or publication authority."
+}

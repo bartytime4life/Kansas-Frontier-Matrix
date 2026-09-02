@@ -1,0 +1,421 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kansasfrontiermatrix.org/schemas/contracts/v1/evidence/evidence_custody_handoff.schema.json",
+  "title": "KFM Evidence Custody Handoff",
+  "description": "Fixture-first, non-authoritative custody and reconciliation record for an evidence item set crossing a responsibility or environment boundary.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "profile",
+    "handoff_id",
+    "revision",
+    "previous_handoff_ref",
+    "sender",
+    "receiver",
+    "transfer",
+    "items",
+    "receiver_dispositions",
+    "summary",
+    "governance",
+    "spec_hash"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "profile": {
+      "const": "kfm.evidence-custody-handoff.v1"
+    },
+    "handoff_id": {
+      "type": "string",
+      "pattern": "^kfm://[A-Za-z0-9._~:/@+-]{8,512}$"
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 1000000
+    },
+    "previous_handoff_ref": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "string",
+          "pattern": "^kfm://[A-Za-z0-9._~:/@+-]{8,512}$"
+        }
+      ]
+    },
+    "sender": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "boundary_id",
+        "authority_class",
+        "lifecycle_stage",
+        "sent_at",
+        "manifest_digest"
+      ],
+      "properties": {
+        "boundary_id": {
+          "type": "string",
+          "pattern": "^kfm://[A-Za-z0-9._~:/@+-]{8,512}$"
+        },
+        "authority_class": {
+          "enum": [
+            "SOURCE_EDGE",
+            "PIPELINE",
+            "ENVIRONMENT",
+            "PARTNER",
+            "STEWARD"
+          ]
+        },
+        "lifecycle_stage": {
+          "enum": [
+            "RAW",
+            "WORK",
+            "QUARANTINE",
+            "PROCESSED",
+            "CATALOG"
+          ]
+        },
+        "sent_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "manifest_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        }
+      }
+    },
+    "receiver": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "boundary_id",
+        "authority_class",
+        "lifecycle_stage",
+        "received_at",
+        "reconciliation_digest"
+      ],
+      "properties": {
+        "boundary_id": {
+          "type": "string",
+          "pattern": "^kfm://[A-Za-z0-9._~:/@+-]{8,512}$"
+        },
+        "authority_class": {
+          "enum": [
+            "SOURCE_EDGE",
+            "PIPELINE",
+            "ENVIRONMENT",
+            "PARTNER",
+            "STEWARD"
+          ]
+        },
+        "lifecycle_stage": {
+          "enum": [
+            "RAW",
+            "WORK",
+            "QUARANTINE",
+            "PROCESSED",
+            "CATALOG"
+          ]
+        },
+        "received_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "reconciliation_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        }
+      }
+    },
+    "transfer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "transfer_id",
+        "transport",
+        "sender_receipt_ref",
+        "receiver_receipt_ref",
+        "no_network",
+        "payload_bytes_transferred"
+      ],
+      "properties": {
+        "transfer_id": {
+          "type": "string",
+          "pattern": "^kfm://[A-Za-z0-9._~:/@+-]{8,512}$"
+        },
+        "transport": {
+          "enum": [
+            "LOCAL_FIXTURE",
+            "OFFLINE_BUNDLE",
+            "OBJECT_STORE",
+            "QUEUE"
+          ]
+        },
+        "sender_receipt_ref": {
+          "type": "string",
+          "pattern": "^kfm://[A-Za-z0-9._~:/@+-]{8,512}$"
+        },
+        "receiver_receipt_ref": {
+          "type": "string",
+          "pattern": "^kfm://[A-Za-z0-9._~:/@+-]{8,512}$"
+        },
+        "no_network": {
+          "const": true
+        },
+        "payload_bytes_transferred": {
+          "const": false
+        }
+      }
+    },
+    "items": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 256,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "item_id",
+          "source_ref",
+          "evidence_ref",
+          "media_type",
+          "sender_digest",
+          "sender_size_bytes",
+          "item_spec_hash",
+          "classification",
+          "rights_state",
+          "sensitivity_state"
+        ],
+        "properties": {
+          "item_id": {
+            "type": "string",
+            "pattern": "^kfm://[A-Za-z0-9._~:/@+-]{8,512}$"
+          },
+          "source_ref": {
+            "type": "string",
+            "pattern": "^kfm://[A-Za-z0-9._~:/@+-]{8,512}$"
+          },
+          "evidence_ref": {
+            "type": "string",
+            "pattern": "^kfm://[A-Za-z0-9._~:/@+-]{8,512}$"
+          },
+          "media_type": {
+            "type": "string",
+            "pattern": "^[a-z0-9.+-]+/[a-z0-9.+-]+$"
+          },
+          "sender_digest": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-f]{64}$"
+          },
+          "sender_size_bytes": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 67108864
+          },
+          "item_spec_hash": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-f]{64}$"
+          },
+          "classification": {
+            "enum": [
+              "PUBLIC_SAFE",
+              "INTERNAL",
+              "RESTRICTED"
+            ]
+          },
+          "rights_state": {
+            "enum": [
+              "KNOWN_ALLOW",
+              "KNOWN_RESTRICTED",
+              "UNKNOWN"
+            ]
+          },
+          "sensitivity_state": {
+            "enum": [
+              "PUBLIC_SAFE",
+              "RESTRICTED",
+              "UNKNOWN"
+            ]
+          }
+        }
+      }
+    },
+    "receiver_dispositions": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 256,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "item_id",
+          "disposition",
+          "receiver_digest",
+          "receiver_size_bytes",
+          "existing_item_ref",
+          "reason_codes",
+          "recorded_at"
+        ],
+        "properties": {
+          "item_id": {
+            "type": "string",
+            "pattern": "^kfm://[A-Za-z0-9._~:/@+-]{8,512}$"
+          },
+          "disposition": {
+            "enum": [
+              "ACCEPTED",
+              "REJECTED",
+              "DUPLICATE",
+              "UNRESOLVED"
+            ]
+          },
+          "receiver_digest": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string",
+                "pattern": "^sha256:[0-9a-f]{64}$"
+              }
+            ]
+          },
+          "receiver_size_bytes": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 67108864
+          },
+          "existing_item_ref": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string",
+                "pattern": "^kfm://[A-Za-z0-9._~:/@+-]{8,512}$"
+              }
+            ]
+          },
+          "reason_codes": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 16,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Z][A-Z0-9_]{2,63}$"
+            }
+          },
+          "recorded_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sent",
+        "accepted",
+        "rejected",
+        "duplicate",
+        "unresolved",
+        "accounted",
+        "closure_status"
+      ],
+      "properties": {
+        "sent": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 256
+        },
+        "accepted": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 256
+        },
+        "rejected": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 256
+        },
+        "duplicate": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 256
+        },
+        "unresolved": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 256
+        },
+        "accounted": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 256
+        },
+        "closure_status": {
+          "enum": [
+            "CLOSED",
+            "OPEN"
+          ]
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fixture_only",
+        "no_network",
+        "evidence_resolution_performed",
+        "policy_decision_performed",
+        "lifecycle_write_performed",
+        "promotion_authorized",
+        "release_authorized",
+        "publication_authorized"
+      ],
+      "properties": {
+        "fixture_only": {
+          "const": true
+        },
+        "no_network": {
+          "const": true
+        },
+        "evidence_resolution_performed": {
+          "const": false
+        },
+        "policy_decision_performed": {
+          "const": false
+        },
+        "lifecycle_write_performed": {
+          "const": false
+        },
+        "promotion_authorized": {
+          "const": false
+        },
+        "release_authorized": {
+          "const": false
+        },
+        "publication_authorized": {
+          "const": false
+        }
+      }
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    }
+  }
+}

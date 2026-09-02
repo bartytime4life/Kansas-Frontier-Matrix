@@ -1,0 +1,123 @@
+{
+  "receipt_id": "genrec-geology-evidence-drawer-convergence-20260814",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/geology-evidence-drawer-convergence.yml",
+    "apps/explorer-web/src/features/domains/geology/EvidenceDrawer.tsx",
+    "schemas/contracts/v1/domains/geology/evidence_drawer_payload.schema.json",
+    "tests/validators/domains/geology/test_evidence_drawer_convergence.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/geology-evidence-drawer-convergence.yml": "sha256:8828bfe574916bd8df8e69b4434ca9202983a38eb5b37d3e466dea4cff808362",
+    "apps/explorer-web/src/features/domains/geology/EvidenceDrawer.tsx": "sha256:b870d0a7d0227e5a65ff071d4d11e09efae6d8203b86fc8f2c644a4130856155",
+    "schemas/contracts/v1/domains/geology/evidence_drawer_payload.schema.json": "sha256:f82b991c69d476c01f1c83d83a06e80dd8396c28167b8e129949459070e75bdc",
+    "tests/validators/domains/geology/test_evidence_drawer_convergence.py": "sha256:a285cfeea83c48cf71350fdb8c5f18e50785d2ea47b4b2c2caf266cc0c0f8c2e"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5"
+  },
+  "prompt_or_contract": "sha256:3af176738a4234f50bb1931018fdb6775ab5c1f218380f06e0a19836cc7d9188",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector (read-only)",
+      "local deterministic validation",
+      "PDF render and visual inspection"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf",
+      "KFM_Geology_Natural_Resources_Architecture_PDF_Only_Report_2026-04-21.pdf",
+      "KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#pdf-page-78-printed-page-67-section-J",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@160709b7986b0c89fce3d6d10ccd04be27f04992",
+      "repo:docs/doctrine/directory-rules.md@160709b7986b0c89fce3d6d10ccd04be27f04992",
+      "repo:contracts/ui/evidence_drawer_payload.md@160709b7986b0c89fce3d6d10ccd04be27f04992",
+      "repo:schemas/contracts/v1/ui/evidence_drawer_payload.schema.json@160709b7986b0c89fce3d6d10ccd04be27f04992",
+      "repo:apps/explorer-web/src/features/evidence_drawer/index.tsx@160709b7986b0c89fce3d6d10ccd04be27f04992",
+      "repo:docs/domains/geology/MAP_UI_CONTRACTS.md@160709b7986b0c89fce3d6d10ccd04be27f04992"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/geology-evidence-drawer-convergence.yml": "PROPOSED",
+    "apps/explorer-web/src/features/domains/geology/EvidenceDrawer.tsx": "PROPOSED",
+    "schemas/contracts/v1/domains/geology/evidence_drawer_payload.schema.json": "PROPOSED",
+    "tests/validators/domains/geology/test_evidence_drawer_convergence.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-standard-library-tests",
+      "outcome": "PASS",
+      "reason": "Three deterministic no-network convergence tests passed against the prepared artifact bytes and the current shared UI schema."
+    },
+    {
+      "gate": "artifact-byte-binding",
+      "outcome": "PASS",
+      "reason": "Every authored non-receipt artifact is bound to its prepared SHA-256 bytes; this receipt is excluded from self-reference."
+    },
+    {
+      "gate": "authority-preservation",
+      "outcome": "PASS",
+      "reason": "The domain path remains a field-free compatibility projection; the shared contract, closed shape, parser, renderer, policy, review, release, and publication authorities are unchanged."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted exact-head execution begins after the draft pull request is opened."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "geology-atlas-section-j",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#pdf-page-78-printed-page-67-section-J"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@160709b7986b0c89fce3d6d10ccd04be27f04992"
+    },
+    {
+      "id": "shared-evidence-drawer-contract",
+      "validated": true,
+      "evidence_ref": "repo:contracts/ui/evidence_drawer_payload.md@160709b7986b0c89fce3d6d10ccd04be27f04992"
+    },
+    {
+      "id": "geology-current-map-ui-contract",
+      "validated": true,
+      "evidence_ref": "repo:docs/domains/geology/MAP_UI_CONTRACTS.md@160709b7986b0c89fce3d6d10ccd04be27f04992"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-14T13:38:26Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Converges only the Geology compatibility component and schema identity onto the existing shared closed Evidence Drawer profile. It does not implement domain-specific payload extensions, transport, evidence resolution, policy, review, release, deployment, or publication."
+}
+

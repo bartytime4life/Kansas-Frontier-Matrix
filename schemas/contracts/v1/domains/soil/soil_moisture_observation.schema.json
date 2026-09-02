@@ -1,0 +1,429 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/soil/soil_moisture_observation.schema.json",
+  "title": "SoilMoistureObservation",
+  "description": "Fixture-first source-scoped soil moisture observation with explicit support, depth, QC, time, evidence, and finite outcome.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "observation_id",
+    "schema_version",
+    "profile_status",
+    "domain",
+    "support_type",
+    "source",
+    "subject",
+    "measurement",
+    "time",
+    "assessment",
+    "governance",
+    "spec_hash"
+  ],
+  "properties": {
+    "observation_id": {
+      "type": "string",
+      "pattern": "^soil-moisture:[a-f0-9]{24}$"
+    },
+    "schema_version": {
+      "const": "v1"
+    },
+    "profile_status": {
+      "const": "PROPOSED_INACTIVE"
+    },
+    "domain": {
+      "const": "soil"
+    },
+    "support_type": {
+      "type": "string",
+      "enum": [
+        "station_soil_moisture",
+        "reference_station_soil_climate",
+        "satellite_soil_moisture_grid"
+      ]
+    },
+    "source": {
+      "$ref": "#/$defs/source"
+    },
+    "subject": {
+      "$ref": "#/$defs/subject"
+    },
+    "measurement": {
+      "$ref": "#/$defs/measurement"
+    },
+    "time": {
+      "$ref": "#/$defs/time"
+    },
+    "assessment": {
+      "$ref": "#/$defs/assessment"
+    },
+    "governance": {
+      "$ref": "#/$defs/governance"
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/hash"
+    }
+  },
+  "$defs": {
+    "hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024,
+      "pattern": "^\\S+$"
+    },
+    "token": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9_]{2,63}$"
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_ref",
+        "source_role",
+        "source_native_id",
+        "source_native_key_family"
+      ],
+      "properties": {
+        "source_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "source_role": {
+          "type": "string",
+          "enum": [
+            "IN_SITU_OBSERVATION",
+            "REFERENCE_OBSERVATION",
+            "SATELLITE_RETRIEVAL"
+          ]
+        },
+        "source_native_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"
+        },
+        "source_native_key_family": {
+          "type": "string",
+          "enum": [
+            "STATION",
+            "GRID_CELL"
+          ]
+        }
+      }
+    },
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "subject_ref",
+        "location_ref",
+        "spatial_support",
+        "public_geometry_rule",
+        "resolution_m"
+      ],
+      "properties": {
+        "subject_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "location_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "spatial_support": {
+          "type": "string",
+          "enum": [
+            "POINT_STATION",
+            "GRID_CELL"
+          ]
+        },
+        "public_geometry_rule": {
+          "type": "string",
+          "enum": [
+            "EXACT_PUBLIC_STATION",
+            "GENERALIZED_GRID",
+            "HIDDEN",
+            "DENIED"
+          ]
+        },
+        "resolution_m": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "maximum": 100000
+            }
+          ]
+        }
+      }
+    },
+    "source_value": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "unit"
+      ],
+      "properties": {
+        "value": {
+          "type": "number"
+        },
+        "unit": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        }
+      }
+    },
+    "depth_support": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "depth_cm"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "SENSOR_DEPTH",
+            "SURFACE_LAYER",
+            "ROOT_ZONE_LAYER"
+          ]
+        },
+        "depth_cm": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 500
+            }
+          ]
+        }
+      }
+    },
+    "measurement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "measurement_type",
+        "normalized_value",
+        "normalized_unit",
+        "depth_support",
+        "qc_flags"
+      ],
+      "properties": {
+        "measurement_type": {
+          "const": "VOLUMETRIC_WATER_CONTENT"
+        },
+        "normalized_value": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          ]
+        },
+        "normalized_unit": {
+          "const": "m3_m3"
+        },
+        "depth_support": {
+          "$ref": "#/$defs/depth_support"
+        },
+        "source_value": {
+          "$ref": "#/$defs/source_value"
+        },
+        "qc_flags": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 32,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9_]{1,63}$"
+          }
+        }
+      }
+    },
+    "time": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "observed_at",
+        "source_published_at",
+        "retrieved_at",
+        "valid_start",
+        "valid_end",
+        "source_timezone",
+        "cadence_seconds"
+      ],
+      "properties": {
+        "observed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "source_published_at": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string",
+              "format": "date-time"
+            }
+          ]
+        },
+        "retrieved_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "valid_start": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "valid_end": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string",
+              "format": "date-time"
+            }
+          ]
+        },
+        "source_timezone": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "cadence_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 31536000
+        }
+      }
+    },
+    "assessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "outcome",
+        "reason_codes",
+        "evidence_refs",
+        "limitations",
+        "time_caveat_ref"
+      ],
+      "properties": {
+        "outcome": {
+          "type": "string",
+          "enum": [
+            "ANSWER",
+            "ABSTAIN",
+            "DENY",
+            "ERROR"
+          ]
+        },
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 32,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/token"
+          }
+        },
+        "evidence_refs": {
+          "type": "array",
+          "maxItems": 64,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/ref"
+          }
+        },
+        "limitations": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 32,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          }
+        },
+        "time_caveat_ref": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/ref"
+            }
+          ]
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_activated",
+        "evidence_resolved",
+        "policy_evaluated",
+        "promotion_authorized",
+        "release_authorized",
+        "public_use_allowed",
+        "release_manifest_ref"
+      ],
+      "properties": {
+        "source_activated": {
+          "const": false
+        },
+        "evidence_resolved": {
+          "const": false
+        },
+        "policy_evaluated": {
+          "const": false
+        },
+        "promotion_authorized": {
+          "const": false
+        },
+        "release_authorized": {
+          "const": false
+        },
+        "public_use_allowed": {
+          "const": false
+        },
+        "release_manifest_ref": {
+          "type": "null"
+        }
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED",
+    "profile_status": "PROPOSED_INACTIVE",
+    "contract_doc": "contracts/domains/soil/soil_moisture_observation.md",
+    "fixtures_root": "fixtures/domains/soil/soil_moisture_observation/",
+    "validator": "tools/validators/domains/soil/validate_soil_moisture_observation.py",
+    "tests": "tests/domains/soil/test_soil_moisture_observation.py",
+    "non_effects": [
+      "does_not_activate_sources",
+      "does_not_resolve_evidence",
+      "does_not_evaluate_policy",
+      "does_not_authorize_promotion_release_or_publication"
+    ]
+  }
+}

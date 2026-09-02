@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/hydrology/run_receipt.schema.json",
+  "title": "run_receipt",
+  "type": "object",
+  "description": "Hydrology domain alias of common run_receipt contract.",
+  "x-kfm": {
+    "contract_doc": "contracts/domains/hydrology/run_receipt.md",
+    "fixtures_root": "fixtures/domains/hydrology/run_receipt/",
+    "validator": "tools/validators/domains/hydrology/validate_run_receipt.py",
+    "policy": "policy/domains/hydrology/",
+    "status": "PROPOSED"
+  },
+  "allOf": [
+    {
+      "$ref": "https://schemas.kfm.local/contracts/v1/runtime/run_receipt.schema.json"
+    }
+  ],
+  "unevaluatedProperties": false
+}

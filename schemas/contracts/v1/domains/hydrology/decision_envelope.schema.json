@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/hydrology/decision_envelope.schema.json",
+  "title": "decision_envelope",
+  "type": "object",
+  "description": "Hydrology domain alias of common decision_envelope contract.",
+  "x-kfm": {
+    "contract_doc": "contracts/domains/hydrology/decision_envelope.md",
+    "fixtures_root": "fixtures/domains/hydrology/decision_envelope/",
+    "validator": "tools/validators/domains/hydrology/validate_decision_envelope.py",
+    "policy": "policy/domains/hydrology/",
+    "status": "PROPOSED"
+  },
+  "allOf": [
+    {
+      "$ref": "https://schemas.kfm.local/contracts/v1/runtime/decision_envelope.schema.json"
+    }
+  ],
+  "unevaluatedProperties": false
+}

@@ -1,0 +1,107 @@
+{
+  "receipt_id": "genrec-agriculture-observation-bounded-input-negative-20260828",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/agriculture-observation.yml",
+    "tests/validators/evidence/test_validate_agriculture_observation.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/agriculture-observation.yml": "sha256:840ae16133b834f2edace96e422ba968488c4e14cff14fe1d6f6e6fdc3395614",
+    "tests/validators/evidence/test_validate_agriculture_observation.py": "sha256:9ff1875e67d12495e001582b1c67ef4f72a81647612c8422dbd86e57ade4505b"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Sol",
+    "version": "2026-08-28"
+  },
+  "prompt_or_contract": "sha256:a06833a2a449286a91bc4288dc2dc2674e8d114a9c8560d6767ce032fd4c0e11",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector repository inspection and mutation",
+      "Notion connector coordination",
+      "Google Drive connector read-only lineage inspection"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/eab60b430fe7557142a766402dff08945d880156/tools/validators/evidence/validate_agriculture_observation.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/eab60b430fe7557142a766402dff08945d880156/tests/validators/evidence/test_validate_agriculture_observation.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/eab60b430fe7557142a766402dff08945d880156/.github/workflows/agriculture-observation.yml",
+      "drive://1TkFtqaDDtR9CiiEDdqGsyLgc2dDLX4qr"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/agriculture-observation.yml": "PROPOSED",
+    "tests/validators/evidence/test_validate_agriculture_observation.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "active-work-and-overlap-reconciliation",
+      "outcome": "PASS",
+      "reason": "No open pull request contained KFM_HOURLY_AGRICULTURE_BUILDER_V1 or KFM_HOURLY_BUILDER_V1; prior Agriculture automation branches were verified behind current main with zero commits ahead."
+    },
+    {
+      "gate": "bounded-input-proof-selection",
+      "outcome": "PASS",
+      "reason": "The AgricultureObservation reader already denies symlink inputs and files larger than MAX_BYTES, but the focused test module did not directly prove those trust-bearing branches."
+    },
+    {
+      "gate": "artifact-hash-replay",
+      "outcome": "PASS",
+      "reason": "SHA-256 digests were computed for the proposed final test bytes and the workflow bytes that validate this new receipt."
+    },
+    {
+      "gate": "local-focused-tests",
+      "outcome": "SKIPPED",
+      "reason": "No mounted repository checkout is available in this connector run; execution is delegated to hosted exact-head CI after push."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pending until the task-owned draft pull request head is created and hosted workflows run."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "The task stops at a draft pull request and does not approve or mark work ready."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "agriculture-observation-validator",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/eab60b430fe7557142a766402dff08945d880156/tools/validators/evidence/validate_agriculture_observation.py"
+    },
+    {
+      "id": "agriculture-observation-focused-tests",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/eab60b430fe7557142a766402dff08945d880156/tests/validators/evidence/test_validate_agriculture_observation.py"
+    },
+    {
+      "id": "agriculture-observation-workflow",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/eab60b430fe7557142a766402dff08945d880156/.github/workflows/agriculture-observation.yml"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-28T14:18:00Z",
+  "emitter": "OpenAI ChatGPT automation runtime",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Dependency-closure receipt for the AgricultureObservation bounded-input negative proof. It binds the focused test and workflow bytes for explicit symlink and oversized-file rejection coverage. It does not create source authority, evidence/proof authority, human review, lifecycle promotion, release, deployment, or publication authority."
+}

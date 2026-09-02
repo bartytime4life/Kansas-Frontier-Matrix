@@ -1,0 +1,151 @@
+{
+  "receipt_id": "genrec-camera-path-candidate-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/camera-path-candidate.yml",
+    "contracts/ui/camera_path.md",
+    "docs/intake/exploratory/camera-path-source-map.md",
+    "fixtures/contracts/v1/ui/camera_path/cases.json",
+    "schemas/contracts/v1/ui/camera_path.schema.json",
+    "tests/validators/ui/test_camera_path.py",
+    "tools/validators/ui/validate_camera_path.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/camera-path-candidate.yml": "sha256:eaa5ad02b056325411b22e8dd9089ec131708cfdd374d2a65f1cb39fb833d312",
+    "contracts/ui/camera_path.md": "sha256:a7f1ac23406c01ff00092065bdf845a150c863860b379089ad8e0af914d9473e",
+    "docs/intake/exploratory/camera-path-source-map.md": "sha256:d9ff883938a0103347f8129f567750f50bba0dfd1ede5ca783f392da68c296ac",
+    "fixtures/contracts/v1/ui/camera_path/cases.json": "sha256:babe946bb53b70f6e6368423ee27604c8085b431f2fa12613b96ba2091898da5",
+    "schemas/contracts/v1/ui/camera_path.schema.json": "sha256:4959043c184ac0773c2cb5d162d106fb9390f1fe6088478dbc8a08ebfb94ca61",
+    "tests/validators/ui/test_camera_path.py": "sha256:2e04d04dc23347a49f15f390c8a3b172438207b7a2311e55582a99ab4688c7c4",
+    "tools/validators/ui/validate_camera_path.py": "sha256:add8b17e2453597a2084730e8ac77583690ac3f94bd9f9b7408471062c041b89"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:a7f1ac23406c01ff00092065bdf845a150c863860b379089ad8e0af914d9473e",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository inspection and mutation",
+      "local deterministic Markdown, JSON, and Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:5148c85acaef7f299864df5b1804eb07498cb81ab4c4bcc39a9625287ee2817b"
+    ],
+    "attached_docs": [
+      "maplibre3d.md"
+    ],
+    "evidence_refs": [
+      "attachment://maplibre3d.md#section=7.4",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/docs/architecture/ui/ACCESSIBILITY.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/docs/architecture/map-master/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/docs/adr/ADR-0007%20%E2%80%94%20MapLibre%20GL%20JS%20Is%20the%20Sole%20Browser-Side%20Renderer.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/camera-path-candidate.yml": "CONFIRMED",
+    "contracts/ui/camera_path.md": "PROPOSED",
+    "docs/intake/exploratory/camera-path-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/ui/camera_path/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/ui/camera_path.schema.json": "PROPOSED",
+    "tests/validators/ui/test_camera_path.py": "CONFIRMED",
+    "tools/validators/ui/validate_camera_path.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS",
+      "reason": "Eight deterministic CameraPath tests passed in an isolated declared-dependency environment."
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS",
+      "reason": "Seventeen exact PASS and DENY cases matched reviewed findings."
+    },
+    {
+      "gate": "adjacent-renderer-capability-tests",
+      "outcome": "PASS",
+      "reason": "Nine adjacent renderer-capability tests passed."
+    },
+    {
+      "gate": "no-network-boundary",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md"
+  ],
+  "citations": [
+    {
+      "id": "camera-path-source-proposal",
+      "validated": true,
+      "evidence_ref": "attachment://maplibre3d.md#section=7.4"
+    },
+    {
+      "id": "camera-path-accessibility-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/docs/architecture/ui/ACCESSIBILITY.md"
+    },
+    {
+      "id": "camera-path-object-vocabulary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/docs/architecture/map-master/README.md"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "proposed-renderer-family-decision",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/docs/adr/ADR-0007%20%E2%80%94%20MapLibre%20GL%20JS%20Is%20the%20Sole%20Browser-Side%20Renderer.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T14:57:27Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only CameraPathCandidate packet derived from the supplied maplibre3d.md proposal and reconciled to current UI, accessibility, Directory Rules, and proposed-renderer-decision boundaries. It validates deterministic view-state motion metadata without executing playback, resolving evidence, deciding policy or admission, or authorizing release, deployment, publication, or public use."
+}

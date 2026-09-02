@@ -1,0 +1,186 @@
+{
+  "receipt_id": "genrec-tests-domains-agriculture-veg-index-readme-6072e746",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tests/domains/agriculture/veg_index/README.md"
+  ],
+  "artifact_hashes": {
+    "tests/domains/agriculture/veg_index/README.md": "sha256:6072e746765fa9390d0798237f27a326bbb32cbc73599188a38caba5b7b28709"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-16-session"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "file_search",
+      "container"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM GitHub Repository Documentation Implementation Agent — Full Operating Prompt v3.1",
+      "Directory Rules.pdf",
+      "Kansas Frontier Matrix — AI Build Operating Contract.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/0165bbf59e9c7ce85148ff254ba723ef8c116a79",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0165bbf59e9c7ce85148ff254ba723ef8c116a79/tests/domains/agriculture/veg_index/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0165bbf59e9c7ce85148ff254ba723ef8c116a79/tests/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0165bbf59e9c7ce85148ff254ba723ef8c116a79/tests/domains/agriculture/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0165bbf59e9c7ce85148ff254ba723ef8c116a79/tests/domains/agriculture/schema/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0165bbf59e9c7ce85148ff254ba723ef8c116a79/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0165bbf59e9c7ce85148ff254ba723ef8c116a79/docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0165bbf59e9c7ce85148ff254ba723ef8c116a79/docs/registers/DRIFT_REGISTER.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0165bbf59e9c7ce85148ff254ba723ef8c116a79/docs/domains/agriculture/DOMAIN.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0165bbf59e9c7ce85148ff254ba723ef8c116a79/docs/domains/agriculture/sublanes/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0165bbf59e9c7ce85148ff254ba723ef8c116a79/docs/domains/agriculture/atmosphere-stress.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0165bbf59e9c7ce85148ff254ba723ef8c116a79/policy/domains/agriculture/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0165bbf59e9c7ce85148ff254ba723ef8c116a79/fixtures/domains/agriculture/hls_vi/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0165bbf59e9c7ce85148ff254ba723ef8c116a79/connectors/nasa-hls/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0165bbf59e9c7ce85148ff254ba723ef8c116a79/tools/validators/agriculture/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0165bbf59e9c7ce85148ff254ba723ef8c116a79/.github/workflows/domain-agriculture.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0165bbf59e9c7ce85148ff254ba723ef8c116a79/.github/workflows/docs-build.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0165bbf59e9c7ce85148ff254ba723ef8c116a79/.github/workflows/link-check.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0165bbf59e9c7ce85148ff254ba723ef8c116a79/.github/workflows/citation-validation.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0165bbf59e9c7ce85148ff254ba723ef8c116a79/Makefile",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0165bbf59e9c7ce85148ff254ba723ef8c116a79/.github/PULL_REQUEST_TEMPLATE.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0165bbf59e9c7ce85148ff254ba723ef8c116a79/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0165bbf59e9c7ce85148ff254ba723ef8c116a79/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ]
+  },
+  "truth_labels": {
+    "tests/domains/agriculture/veg_index/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "task-contract",
+      "outcome": "PASS",
+      "reason": "The repository, pinned base, target path, two-file change budget, review-branch route, API-only execution profile, non-goals, validation plan, and stop conditions were resolved before mutation."
+    },
+    {
+      "gate": "repository-preflight",
+      "outcome": "PASS",
+      "reason": "Repository identity, ID, visibility, permissions, default branch, immutable base SHA, target blob, path-scoped instructions, open pull-request state, PR template, CODEOWNERS, and relevant workflow triggers were inspected."
+    },
+    {
+      "gate": "directory-rules-adr-drift",
+      "outcome": "PASS",
+      "reason": "The README remains under the canonical tests responsibility root and existing Agriculture domain segment. ADR-0001, the drift register, and schema/contract/policy/fixture separation were inspected; no new root or parallel authority is created."
+    },
+    {
+      "gate": "authority-duplicate-supersession",
+      "outcome": "PASS",
+      "reason": "The document ID search returned no duplicate, no open PR matched the target, v0.2 supersedes the prior README at the same path, and the revision does not claim authority owned by source, schema, contract, policy, evidence, data, release, API, UI, map, or AI surfaces."
+    },
+    {
+      "gate": "bounded-inventory",
+      "outcome": "PASS",
+      "reason": "Indexed search and representative path probes establish README-only direct-lane evidence while preserving UNKNOWN for differently named, unindexed, generated, external, or historical files."
+    },
+    {
+      "gate": "tests-readme-profile",
+      "outcome": "PASS",
+      "reason": "The revision covers test scope/non-scope, fixture routing, valid/invalid/denied/abstained/held/quarantined/error cases, no-network and live-test separation, deterministic commands, finite outcomes, validation layers, gaps, sensitivity, failure interpretation, limits of green tests, and maintenance rules."
+    },
+    {
+      "gate": "no-loss-revision",
+      "outcome": "PASS",
+      "reason": "The prior purpose, authority split, test responsibilities, negative cases, allowed/disallowed content, no-network posture, validation guidance, and open questions are retained and expanded."
+    },
+    {
+      "gate": "workflow-trigger-preflight",
+      "outcome": "PASS",
+      "reason": "The Agriculture, docs-build, link-check, and citation-validation workflows trigger on pull requests but contain only checkout and TODO echo steps. They expose no inspected secret or privileged write behavior, and the README does not treat their success as substantive validation."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "The UTF-8 README has one H1, a final newline, balanced code fences, unique headings, resolvable internal links under the local GitHub-slug check, and no duplicate explicit IDs."
+    },
+    {
+      "gate": "sensitivity-rights-secret-review",
+      "outcome": "PASS",
+      "reason": "No credentials, private endpoints, living-person details, real field/operator/parcel records, restricted source payloads, exact sensitive locations, or publication authorization were introduced."
+    },
+    {
+      "gate": "executable-tests",
+      "outcome": "SKIPPED",
+      "reason": "The scoped change creates no executable test or implementation, the direct lane is README-only in bounded evidence, and the current Makefile test target excludes this path."
+    },
+    {
+      "gate": "repository-native-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pull-request checks are unavailable until branch and PR creation; inspected workflows are non-substantive TODO scaffolds."
+    },
+    {
+      "gate": "generated-receipt-schema",
+      "outcome": "PASS",
+      "reason": "This receipt was validated offline against the inspected Draft 2020-12 generated receipt schema, including required fields, hash formats, truth-label values, gate outcomes, review state, citations, and link structure."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "KFM-REPOSITORY-DOC-PROMPT-V3.1",
+      "validated": true,
+      "evidence_ref": "attached://Pasted text(33).txt#sha256-b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85"
+    },
+    {
+      "id": "KFM-DIRECTORY-RULES",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/0165bbf59e9c7ce85148ff254ba723ef8c116a79/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "KFM-TESTS-ROOT",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/0165bbf59e9c7ce85148ff254ba723ef8c116a79/tests/README.md"
+    },
+    {
+      "id": "AGRICULTURE-DOMAIN-BOUNDARY",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/0165bbf59e9c7ce85148ff254ba723ef8c116a79/docs/domains/agriculture/DOMAIN.md"
+    },
+    {
+      "id": "AGRICULTURE-VEGETATION-INDEX-SUBLANE",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/0165bbf59e9c7ce85148ff254ba723ef8c116a79/docs/domains/agriculture/sublanes/README.md"
+    },
+    {
+      "id": "AGRICULTURE-HLS-VI-FIXTURE-BOUNDARY",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/0165bbf59e9c7ce85148ff254ba723ef8c116a79/fixtures/domains/agriculture/hls_vi/README.md"
+    },
+    {
+      "id": "NASA-HLS-SOURCE-BOUNDARY",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/0165bbf59e9c7ce85148ff254ba723ef8c116a79/connectors/nasa-hls/README.md"
+    },
+    {
+      "id": "GENERATED-RECEIPT-SCHEMA",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/0165bbf59e9c7ce85148ff254ba723ef8c116a79/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-16T19:00:19Z",
+  "emitter": "ai-builder/openai-gpt-5.6-thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored documentation-only revision prepared against pinned main-branch evidence under a two-file change budget. The target remains an enforceability README, not an executable test or authority surface. Human review remains pending; this receipt records provenance and validation, not merge, release, promotion, scientific fitness, source activation, or publication approval."
+}

@@ -1,0 +1,127 @@
+{
+  "assets": {
+    "content-0001": {
+      "file:checksum": "sha256:b09f4a48521eeca2cac087d6fb0c5f1acad7bc9d0e7b4dc08fb4be871a903797",
+      "file:size": 22,
+      "href": "tiles/0/0/0.glb",
+      "kfm:path": "tiles/0/0/0.glb",
+      "kfm:tree_hash": "sha256:a4893a50d2d5955ebe47d4dc4918b3118b300a94987265412e5f479b66ecf96a",
+      "roles": [
+        "data",
+        "3d-tiles",
+        "content"
+      ],
+      "title": "tiles/0/0/0.glb",
+      "type": "model/gltf-binary"
+    },
+    "subtree-0000": {
+      "file:checksum": "sha256:272b26abb1f0b46058105abaea06768309e85ef78fb0c7c8da09793c2da88396",
+      "file:size": 26,
+      "href": "subtrees/0/0/0.subtree",
+      "kfm:path": "subtrees/0/0/0.subtree",
+      "kfm:tree_hash": "sha256:a4893a50d2d5955ebe47d4dc4918b3118b300a94987265412e5f479b66ecf96a",
+      "roles": [
+        "data",
+        "3d-tiles",
+        "subtree"
+      ],
+      "title": "subtrees/0/0/0.subtree",
+      "type": "application/octet-stream"
+    },
+    "tileset-0002": {
+      "file:checksum": "sha256:90681fb3cd007fb6bde3133e943ef7d5d768cd06bb327afdaeb6e34875070217",
+      "file:size": 204,
+      "href": "tileset.json",
+      "kfm:path": "tileset.json",
+      "kfm:tree_hash": "sha256:a4893a50d2d5955ebe47d4dc4918b3118b300a94987265412e5f479b66ecf96a",
+      "roles": [
+        "metadata",
+        "3d-tiles"
+      ],
+      "title": "tileset.json",
+      "type": "application/json"
+    }
+  },
+  "bbox": [
+    -100,
+    38,
+    -99,
+    39
+  ],
+  "collection": "kfm-map-tiles3d-candidates",
+  "geometry": {
+    "coordinates": [
+      [
+        [
+          -100,
+          38
+        ],
+        [
+          -99,
+          38
+        ],
+        [
+          -99,
+          39
+        ],
+        [
+          -100,
+          39
+        ],
+        [
+          -100,
+          38
+        ]
+      ]
+    ],
+    "type": "Polygon"
+  },
+  "id": "kfm-tiles3d-synthetic-fixture",
+  "license": "CC0-1.0",
+  "links": [
+    {
+      "href": "urn:kfm:map:tiles3d-tree:a4893a50d2d5955ebe47d4dc4918b3118b300a94987265412e5f479b66ecf96a",
+      "rel": "derived_from"
+    },
+    {
+      "href": "sha256:a4893a50d2d5955ebe47d4dc4918b3118b300a94987265412e5f479b66ecf96a",
+      "rel": "checksum"
+    },
+    {
+      "href": "git:3a7cc9bcaf6f6dfc64ca6e1e756914ea29138ee4",
+      "rel": "commit"
+    },
+    {
+      "href": "urn:kfm:manifest:tiles3d-tree:97ef94d967779868290538c6fb963ceafaddcefa260c8d03d816c432fc293412",
+      "rel": "manifest_uri"
+    }
+  ],
+  "properties": {
+    "created": "2026-08-08T00:00:00Z",
+    "datetime": "2026-08-08T00:00:00Z",
+    "kfm:evidence_bundle": "urn:kfm:bundle:synthetic-tiles3d-fixture",
+    "kfm:evidence_ref": "urn:kfm:evidence:synthetic-tiles3d-fixture",
+    "kfm:manifest_spec_hash": "sha256:97ef94d967779868290538c6fb963ceafaddcefa260c8d03d816c432fc293412",
+    "kfm:release_state": "unreleased",
+    "kfm:representation_receipt": "urn:kfm:representation:synthetic-tiles3d-fixture",
+    "kfm:review_state": "draft",
+    "kfm:rights_status": "public",
+    "kfm:run_receipt": "urn:kfm:run:synthetic-tiles3d-adapter",
+    "kfm:sensitivity": "public",
+    "kfm:source_role": "derived",
+    "kfm:spec_hash": "sha256:1b321d0a13b4136f09252927fd8176173d3a2395c64c7dcd48f79041f7d54d1b",
+    "kfm:tree_hash": "sha256:a4893a50d2d5955ebe47d4dc4918b3118b300a94987265412e5f479b66ecf96a",
+    "updated": "2026-08-08T00:00:00Z"
+  },
+  "providers": [
+    {
+      "name": "KFM synthetic fixture",
+      "roles": [
+        "producer"
+      ]
+    }
+  ],
+  "stac_extensions": [],
+  "stac_version": "1.0.0",
+  "type": "Feature"
+}

@@ -1,0 +1,6 @@
+GOVERNANCE_STATE_INVALID	$.governance.promotion_eligible
+GOVERNANCE_STATE_INVALID	$.governance.release_state
+GOVERNANCE_STATE_INVALID	$.governance.review_state
+GOVERNANCE_STATE_INVALID	$.governance.rights_state
+GOVERNANCE_STATE_INVALID	$.governance.rollback_state
+GOVERNANCE_STATE_INVALID	$.governance.sensitivity_state

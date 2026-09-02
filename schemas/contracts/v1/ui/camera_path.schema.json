@@ -1,0 +1,219 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/ui/camera_path.schema.json",
+  "title": "CameraPathCandidate",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile_version",
+    "camera_path_id",
+    "spec_hash",
+    "intent",
+    "scene_ref",
+    "temporal_anchor",
+    "view_states",
+    "evidence_refs",
+    "playback",
+    "boundary"
+  ],
+  "properties": {
+    "profile_version": {
+      "const": "kfm.camera-path-candidate.v1"
+    },
+    "camera_path_id": {
+      "type": "string",
+      "pattern": "^kfm:camera-path:[a-f0-9]{24}$"
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "intent": {
+      "enum": ["CINEMATIC", "FOCUS_MODE", "INSPECTION", "STORY"]
+    },
+    "scene_ref": {
+      "type": "string",
+      "pattern": "^kfm:scene-manifest:[a-z0-9][a-z0-9._:-]{2,159}$",
+      "maxLength": 180
+    },
+    "temporal_anchor": {
+      "$ref": "#/$defs/temporal_anchor"
+    },
+    "view_states": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 64,
+      "items": {
+        "$ref": "#/$defs/view_state"
+      }
+    },
+    "evidence_refs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "items": {
+        "type": "string",
+        "pattern": "^kfm:evidence-bundle:[a-z0-9][a-z0-9._:-]{2,159}$",
+        "maxLength": 180
+      },
+      "uniqueItems": true
+    },
+    "playback": {
+      "$ref": "#/$defs/playback"
+    },
+    "boundary": {
+      "$ref": "#/$defs/boundary"
+    }
+  },
+  "$defs": {
+    "temporal_anchor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["valid_from", "valid_to"],
+      "properties": {
+        "valid_from": {
+          "type": "string",
+          "format": "date"
+        },
+        "valid_to": {
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "view_state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["t_ms", "center", "zoom", "pitch", "bearing", "projection"],
+      "properties": {
+        "t_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3600000
+        },
+        "center": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "number",
+              "minimum": -180,
+              "maximum": 180
+            },
+            {
+              "type": "number",
+              "minimum": -90,
+              "maximum": 90
+            }
+          ],
+          "items": false,
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "zoom": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 24
+        },
+        "pitch": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 85
+        },
+        "bearing": {
+          "type": "number",
+          "minimum": -180,
+          "maximum": 180
+        },
+        "projection": {
+          "enum": ["GLOBE", "MERCATOR"]
+        }
+      }
+    },
+    "playback": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "duration_ms",
+        "autoplay",
+        "loop",
+        "reduced_motion_mode",
+        "two_d_fallback_required",
+        "outcome_requires_playback"
+      ],
+      "properties": {
+        "duration_ms": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3600000
+        },
+        "autoplay": {
+          "const": false
+        },
+        "loop": {
+          "const": false
+        },
+        "reduced_motion_mode": {
+          "const": "DISCRETE_STEPS"
+        },
+        "two_d_fallback_required": {
+          "const": true
+        },
+        "outcome_requires_playback": {
+          "const": false
+        }
+      }
+    },
+    "boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fixture_only",
+        "adapter_seam_required",
+        "runtime_execution_performed",
+        "evidence_resolution_performed",
+        "policy_evaluation_performed",
+        "three_d_admission_authorized",
+        "plugin_admission_authorized",
+        "release_authorized",
+        "deployment_authorized",
+        "publication_authorized",
+        "public_use_authorized"
+      ],
+      "properties": {
+        "fixture_only": {
+          "const": true
+        },
+        "adapter_seam_required": {
+          "const": true
+        },
+        "runtime_execution_performed": {
+          "const": false
+        },
+        "evidence_resolution_performed": {
+          "const": false
+        },
+        "policy_evaluation_performed": {
+          "const": false
+        },
+        "three_d_admission_authorized": {
+          "const": false
+        },
+        "plugin_admission_authorized": {
+          "const": false
+        },
+        "release_authorized": {
+          "const": false
+        },
+        "deployment_authorized": {
+          "const": false
+        },
+        "publication_authorized": {
+          "const": false
+        },
+        "public_use_authorized": {
+          "const": false
+        }
+      }
+    }
+  }
+}

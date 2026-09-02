@@ -1,0 +1,737 @@
+{
+  "base": {
+    "profile_version": "1.0.0-proposed",
+    "report_id": "kfm:citation-validation-report:000000000000000000000000",
+    "checked_at": "2026-08-10T18:30:00Z",
+    "validator_profile_ref": "kfm:profile:citation-validation:fixture-v1@sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "subject": {
+      "subject_ref": "kfm:fixture:claim:county-context-summary",
+      "subject_type": "CLAIM_CANDIDATE",
+      "claim_scope_ref": "kfm:fixture:claim-scope:county-context-summary",
+      "surface": "INTERNAL_REVIEW",
+      "allowed_source_roles": [
+        "OBSERVED",
+        "REGULATORY"
+      ],
+      "requires_current_support": true
+    },
+    "citations": [
+      {
+        "citation_id": "kfm:fixture:citation:alpha",
+        "target_ref": "kfm:fixture:claim-target:alpha",
+        "source_record_ref": "kfm:fixture:source-record:alpha",
+        "source_role": "OBSERVED",
+        "locator": {
+          "kind": "SECTION",
+          "value": "kfm:fixture:locator:alpha-section"
+        },
+        "citation_state": "USABLE",
+        "freshness_state": "CURRENT",
+        "evidence_ref": {
+          "ref": "kfm:fixture:evidence-ref:alpha",
+          "state": "RESOLVED"
+        },
+        "evidence_bundle": {
+          "ref": "kfm:fixture:evidence-bundle:alpha",
+          "state": "CLOSED"
+        },
+        "rights_state": "CLEAR",
+        "sensitivity_state": "PUBLIC_SAFE",
+        "policy_state": "NOT_APPLICABLE",
+        "review_state": "NOT_APPLICABLE",
+        "release_state": "NOT_APPLICABLE",
+        "declared_outcome": "PASS",
+        "reason_codes": [
+          "CITATION_READY_FOR_DECLARED_SCOPE"
+        ],
+        "remediation_ref": null
+      },
+      {
+        "citation_id": "kfm:fixture:citation:beta",
+        "target_ref": "kfm:fixture:claim-target:beta",
+        "source_record_ref": "kfm:fixture:source-record:beta",
+        "source_role": "REGULATORY",
+        "locator": {
+          "kind": "PAGE",
+          "value": "kfm:fixture:locator:beta-page"
+        },
+        "citation_state": "USABLE",
+        "freshness_state": "CURRENT",
+        "evidence_ref": {
+          "ref": "kfm:fixture:evidence-ref:beta",
+          "state": "RESOLVED"
+        },
+        "evidence_bundle": {
+          "ref": "kfm:fixture:evidence-bundle:beta",
+          "state": "CLOSED"
+        },
+        "rights_state": "CLEAR",
+        "sensitivity_state": "PUBLIC_SAFE",
+        "policy_state": "NOT_APPLICABLE",
+        "review_state": "NOT_APPLICABLE",
+        "release_state": "NOT_APPLICABLE",
+        "declared_outcome": "PASS",
+        "reason_codes": [
+          "CITATION_READY_FOR_DECLARED_SCOPE"
+        ],
+        "remediation_ref": null
+      }
+    ],
+    "summary": {
+      "outcome": "PASS",
+      "blocking": false,
+      "citation_count": 2,
+      "pass_count": 2,
+      "abstain_count": 0,
+      "deny_count": 0,
+      "error_count": 0,
+      "reason_codes": [
+        "CITATION_READY_FOR_DECLARED_SCOPE"
+      ],
+      "remediation_refs": []
+    },
+    "permissions": {
+      "creates_evidence_closure": false,
+      "makes_policy_decision": false,
+      "approves_review": false,
+      "authorizes_release": false,
+      "authorizes_publication": false,
+      "authorizes_public_answer": false
+    },
+    "limitations": [
+      "declared_states_not_authenticated",
+      "no_evidence_resolution",
+      "no_policy_evaluation",
+      "no_review_authentication",
+      "no_release_verification",
+      "no_publication_authority"
+    ],
+    "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "cases": [
+    {
+      "case_id": "valid-internal-review-pass",
+      "expected_status": "PASS",
+      "expected_report_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid-public-candidate-pass",
+      "operations": [
+        {
+          "op": "set",
+          "path": "/subject/surface",
+          "value": "GOVERNED_API_CANDIDATE"
+        },
+        {
+          "op": "set",
+          "path": "/citations/0/policy_state",
+          "value": "ALLOW"
+        },
+        {
+          "op": "set",
+          "path": "/citations/0/review_state",
+          "value": "APPROVED"
+        },
+        {
+          "op": "set",
+          "path": "/citations/0/release_state",
+          "value": "RELEASED"
+        },
+        {
+          "op": "set",
+          "path": "/citations/1/policy_state",
+          "value": "ALLOW"
+        },
+        {
+          "op": "set",
+          "path": "/citations/1/review_state",
+          "value": "APPROVED"
+        },
+        {
+          "op": "set",
+          "path": "/citations/1/release_state",
+          "value": "RELEASED"
+        }
+      ],
+      "expected_status": "PASS",
+      "expected_report_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid-missing-evidence-abstains",
+      "operations": [
+        {
+          "op": "set",
+          "path": "/citations/0/citation_state",
+          "value": "MISSING"
+        },
+        {
+          "op": "set",
+          "path": "/citations/0/locator",
+          "value": {
+            "kind": "NONE",
+            "value": null
+          }
+        },
+        {
+          "op": "set",
+          "path": "/citations/0/evidence_ref",
+          "value": {
+            "ref": null,
+            "state": "NOT_APPLICABLE"
+          }
+        },
+        {
+          "op": "set",
+          "path": "/citations/0/evidence_bundle",
+          "value": {
+            "ref": null,
+            "state": "NOT_APPLICABLE"
+          }
+        },
+        {
+          "op": "set",
+          "path": "/citations/0/remediation_ref",
+          "value": "kfm:fixture:remediation:add-citation"
+        }
+      ],
+      "expected_status": "ABSTAIN",
+      "expected_report_outcome": "ABSTAIN",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid-unresolved-evidence-ref-abstains",
+      "operations": [
+        {
+          "op": "set",
+          "path": "/citations/0/evidence_ref/state",
+          "value": "UNRESOLVED"
+        },
+        {
+          "op": "set",
+          "path": "/citations/0/remediation_ref",
+          "value": "kfm:fixture:remediation:resolve-evidence-ref"
+        }
+      ],
+      "expected_status": "ABSTAIN",
+      "expected_report_outcome": "ABSTAIN",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid-incomplete-bundle-abstains",
+      "operations": [
+        {
+          "op": "set",
+          "path": "/citations/1/evidence_bundle/state",
+          "value": "INCOMPLETE"
+        },
+        {
+          "op": "set",
+          "path": "/citations/1/remediation_ref",
+          "value": "kfm:fixture:remediation:close-bundle"
+        }
+      ],
+      "expected_status": "ABSTAIN",
+      "expected_report_outcome": "ABSTAIN",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid-source-role-mismatch-abstains",
+      "operations": [
+        {
+          "op": "set",
+          "path": "/citations/0/source_role",
+          "value": "MODELED"
+        },
+        {
+          "op": "set",
+          "path": "/citations/0/remediation_ref",
+          "value": "kfm:fixture:remediation:correct-source-role"
+        }
+      ],
+      "expected_status": "ABSTAIN",
+      "expected_report_outcome": "ABSTAIN",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid-stale-citation-abstains",
+      "operations": [
+        {
+          "op": "set",
+          "path": "/citations/0/freshness_state",
+          "value": "STALE"
+        },
+        {
+          "op": "set",
+          "path": "/citations/0/remediation_ref",
+          "value": "kfm:fixture:remediation:refresh-citation"
+        }
+      ],
+      "expected_status": "ABSTAIN",
+      "expected_report_outcome": "ABSTAIN",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid-rights-denial-preserved",
+      "operations": [
+        {
+          "op": "set",
+          "path": "/citations/0/rights_state",
+          "value": "DENIED"
+        },
+        {
+          "op": "set",
+          "path": "/citations/0/remediation_ref",
+          "value": "kfm:fixture:remediation:rights-review"
+        }
+      ],
+      "expected_status": "DENY",
+      "expected_report_outcome": "DENY",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid-restricted-public-citation-denied",
+      "operations": [
+        {
+          "op": "set",
+          "path": "/subject/surface",
+          "value": "MAP_CANDIDATE"
+        },
+        {
+          "op": "set",
+          "path": "/citations/0/sensitivity_state",
+          "value": "RESTRICTED"
+        },
+        {
+          "op": "set",
+          "path": "/citations/0/policy_state",
+          "value": "ALLOW"
+        },
+        {
+          "op": "set",
+          "path": "/citations/0/review_state",
+          "value": "APPROVED"
+        },
+        {
+          "op": "set",
+          "path": "/citations/0/release_state",
+          "value": "RELEASED"
+        },
+        {
+          "op": "set",
+          "path": "/citations/0/remediation_ref",
+          "value": "kfm:fixture:remediation:public-safe-transform"
+        },
+        {
+          "op": "set",
+          "path": "/citations/1/policy_state",
+          "value": "ALLOW"
+        },
+        {
+          "op": "set",
+          "path": "/citations/1/review_state",
+          "value": "APPROVED"
+        },
+        {
+          "op": "set",
+          "path": "/citations/1/release_state",
+          "value": "RELEASED"
+        }
+      ],
+      "expected_status": "DENY",
+      "expected_report_outcome": "DENY",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid-public-unreleased-citation-abstains",
+      "operations": [
+        {
+          "op": "set",
+          "path": "/subject/surface",
+          "value": "AI_ANSWER_CANDIDATE"
+        },
+        {
+          "op": "set",
+          "path": "/citations/0/policy_state",
+          "value": "ALLOW"
+        },
+        {
+          "op": "set",
+          "path": "/citations/0/review_state",
+          "value": "APPROVED"
+        },
+        {
+          "op": "set",
+          "path": "/citations/0/release_state",
+          "value": "UNRELEASED"
+        },
+        {
+          "op": "set",
+          "path": "/citations/0/remediation_ref",
+          "value": "kfm:fixture:remediation:release-review"
+        },
+        {
+          "op": "set",
+          "path": "/citations/1/policy_state",
+          "value": "ALLOW"
+        },
+        {
+          "op": "set",
+          "path": "/citations/1/review_state",
+          "value": "APPROVED"
+        },
+        {
+          "op": "set",
+          "path": "/citations/1/release_state",
+          "value": "RELEASED"
+        }
+      ],
+      "expected_status": "ABSTAIN",
+      "expected_report_outcome": "ABSTAIN",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid-withdrawn-public-citation-denied",
+      "operations": [
+        {
+          "op": "set",
+          "path": "/subject/surface",
+          "value": "EXPORT_CANDIDATE"
+        },
+        {
+          "op": "set",
+          "path": "/citations/0/policy_state",
+          "value": "ALLOW"
+        },
+        {
+          "op": "set",
+          "path": "/citations/0/review_state",
+          "value": "APPROVED"
+        },
+        {
+          "op": "set",
+          "path": "/citations/0/release_state",
+          "value": "WITHDRAWN"
+        },
+        {
+          "op": "set",
+          "path": "/citations/0/remediation_ref",
+          "value": "kfm:fixture:remediation:withdraw-candidate"
+        },
+        {
+          "op": "set",
+          "path": "/citations/1/policy_state",
+          "value": "ALLOW"
+        },
+        {
+          "op": "set",
+          "path": "/citations/1/review_state",
+          "value": "APPROVED"
+        },
+        {
+          "op": "set",
+          "path": "/citations/1/release_state",
+          "value": "RELEASED"
+        }
+      ],
+      "expected_status": "DENY",
+      "expected_report_outcome": "DENY",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid-dependency-error-preserved",
+      "operations": [
+        {
+          "op": "set",
+          "path": "/citations/1/evidence_ref/state",
+          "value": "ERROR"
+        },
+        {
+          "op": "set",
+          "path": "/citations/1/remediation_ref",
+          "value": "kfm:fixture:remediation:repair-resolver"
+        }
+      ],
+      "expected_status": "ERROR",
+      "expected_report_outcome": "ERROR",
+      "expected_findings": []
+    },
+    {
+      "case_id": "invalid-unknown-top-level-field",
+      "operations": [
+        {
+          "op": "set",
+          "path": "/unexpected_field",
+          "value": "denied"
+        }
+      ],
+      "recompute_derived": false,
+      "expected_status": "DENY",
+      "expected_report_outcome": null,
+      "expected_findings": [
+        {
+          "code": "CITATION_REPORT_SCHEMA_INVALID",
+          "path": "/"
+        }
+      ]
+    },
+    {
+      "case_id": "invalid-publication-authority",
+      "operations": [
+        {
+          "op": "set",
+          "path": "/permissions/authorizes_publication",
+          "value": true
+        }
+      ],
+      "recompute_derived": false,
+      "expected_status": "DENY",
+      "expected_report_outcome": null,
+      "expected_findings": [
+        {
+          "code": "CITATION_REPORT_SCHEMA_INVALID",
+          "path": "/permissions/authorizes_publication"
+        }
+      ]
+    },
+    {
+      "case_id": "invalid-missing-claim-scope",
+      "operations": [
+        {
+          "op": "delete",
+          "path": "/subject/claim_scope_ref"
+        }
+      ],
+      "recompute_derived": false,
+      "expected_status": "DENY",
+      "expected_report_outcome": null,
+      "expected_findings": [
+        {
+          "code": "CITATION_REPORT_SCHEMA_INVALID",
+          "path": "/subject"
+        }
+      ]
+    },
+    {
+      "case_id": "invalid-duplicate-citation-id",
+      "operations": [
+        {
+          "op": "set",
+          "path": "/citations/1/citation_id",
+          "value": "kfm:fixture:citation:alpha"
+        }
+      ],
+      "expected_status": "DENY",
+      "expected_report_outcome": null,
+      "expected_findings": [
+        {
+          "code": "CITATION_REPORT_CITATION_ID_DUPLICATE",
+          "path": "/citations"
+        }
+      ]
+    },
+    {
+      "case_id": "invalid-citation-order",
+      "operations": [
+        {
+          "op": "swap",
+          "path": "/citations",
+          "indexes": [
+            0,
+            1
+          ]
+        }
+      ],
+      "expected_status": "DENY",
+      "expected_report_outcome": null,
+      "expected_findings": [
+        {
+          "code": "CITATION_REPORT_CITATIONS_NOT_CANONICAL",
+          "path": "/citations"
+        }
+      ]
+    },
+    {
+      "case_id": "invalid-source-role-order",
+      "operations": [
+        {
+          "op": "swap",
+          "path": "/subject/allowed_source_roles",
+          "indexes": [
+            0,
+            1
+          ]
+        }
+      ],
+      "expected_status": "DENY",
+      "expected_report_outcome": null,
+      "expected_findings": [
+        {
+          "code": "CITATION_REPORT_SOURCE_ROLES_NOT_CANONICAL",
+          "path": "/subject/allowed_source_roles"
+        }
+      ]
+    },
+    {
+      "case_id": "invalid-declared-outcome-mismatch",
+      "operations": [
+        {
+          "op": "set",
+          "path": "/citations/0/declared_outcome",
+          "value": "DENY"
+        }
+      ],
+      "recompute_derived": false,
+      "expected_status": "DENY",
+      "expected_report_outcome": null,
+      "expected_findings": [
+        {
+          "code": "CITATION_REPORT_CITATION_OUTCOME_MISMATCH",
+          "path": "/citations/0/declared_outcome"
+        }
+      ]
+    },
+    {
+      "case_id": "invalid-reason-code-mismatch",
+      "operations": [
+        {
+          "op": "set",
+          "path": "/citations/0/reason_codes",
+          "value": [
+            "CITATION_MISSING"
+          ]
+        }
+      ],
+      "recompute_derived": false,
+      "expected_status": "DENY",
+      "expected_report_outcome": null,
+      "expected_findings": [
+        {
+          "code": "CITATION_REPORT_CITATION_REASONS_MISMATCH",
+          "path": "/citations/0/reason_codes"
+        }
+      ]
+    },
+    {
+      "case_id": "invalid-blocking-remediation-missing",
+      "operations": [
+        {
+          "op": "set",
+          "path": "/citations/0/evidence_ref/state",
+          "value": "UNRESOLVED"
+        }
+      ],
+      "expected_status": "DENY",
+      "expected_report_outcome": null,
+      "expected_findings": [
+        {
+          "code": "CITATION_REPORT_BLOCKING_REMEDIATION_MISSING",
+          "path": "/citations/0/remediation_ref"
+        }
+      ]
+    },
+    {
+      "case_id": "invalid-pass-remediation-present",
+      "operations": [
+        {
+          "op": "set",
+          "path": "/citations/0/remediation_ref",
+          "value": "kfm:fixture:remediation:not-needed"
+        }
+      ],
+      "expected_status": "DENY",
+      "expected_report_outcome": null,
+      "expected_findings": [
+        {
+          "code": "CITATION_REPORT_PASS_HAS_REMEDIATION",
+          "path": "/citations/0/remediation_ref"
+        }
+      ]
+    },
+    {
+      "case_id": "invalid-resolved-binding-ref-missing",
+      "operations": [
+        {
+          "op": "set",
+          "path": "/citations/0/evidence_ref/ref",
+          "value": null
+        }
+      ],
+      "expected_status": "DENY",
+      "expected_report_outcome": null,
+      "expected_findings": [
+        {
+          "code": "CITATION_REPORT_RESOLVED_BINDING_REF_MISSING",
+          "path": "/citations/0/evidence_ref/ref"
+        }
+      ]
+    },
+    {
+      "case_id": "invalid-not-applicable-binding-ref-present",
+      "operations": [
+        {
+          "op": "set",
+          "path": "/citations/0/evidence_ref/state",
+          "value": "NOT_APPLICABLE"
+        },
+        {
+          "op": "set",
+          "path": "/citations/0/remediation_ref",
+          "value": "kfm:fixture:remediation:bind-evidence-ref"
+        }
+      ],
+      "expected_status": "DENY",
+      "expected_report_outcome": null,
+      "expected_findings": [
+        {
+          "code": "CITATION_REPORT_NOT_APPLICABLE_REF_PRESENT",
+          "path": "/citations/0/evidence_ref/ref"
+        }
+      ]
+    },
+    {
+      "case_id": "invalid-summary-mismatch",
+      "operations": [
+        {
+          "op": "set",
+          "path": "/summary/pass_count",
+          "value": 1
+        }
+      ],
+      "recompute_derived": false,
+      "expected_status": "DENY",
+      "expected_report_outcome": null,
+      "expected_findings": [
+        {
+          "code": "CITATION_REPORT_SUMMARY_MISMATCH",
+          "path": "/summary"
+        }
+      ]
+    },
+    {
+      "case_id": "invalid-spec-hash",
+      "spec_hash_override": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "expected_status": "DENY",
+      "expected_report_outcome": null,
+      "expected_findings": [
+        {
+          "code": "CITATION_REPORT_SPEC_HASH_MISMATCH",
+          "path": "/spec_hash"
+        }
+      ]
+    },
+    {
+      "case_id": "invalid-report-id",
+      "report_id_override": "kfm:citation-validation-report:000000000000000000000000",
+      "expected_status": "DENY",
+      "expected_report_outcome": null,
+      "expected_findings": [
+        {
+          "code": "CITATION_REPORT_ID_MISMATCH",
+          "path": "/report_id"
+        }
+      ]
+    }
+  ]
+}

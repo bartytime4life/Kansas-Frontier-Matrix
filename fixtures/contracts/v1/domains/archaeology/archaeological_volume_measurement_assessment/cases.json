@@ -1,0 +1,232 @@
+{
+  "object_type": "ArchaeologicalVolumeMeasurementAssessmentFixtureManifest",
+  "schema_version": "1.0.0",
+  "bases": {
+    "internal": {
+      "object_type": "ArchaeologicalVolumeMeasurementAssessmentCandidate",
+      "schema_version": "1.0.0",
+      "profile": "kfm.archaeology.volume-measurement-assessment.fixture.v1",
+      "source_card": "KFM-P18-INV-435",
+      "recorded_at": "2026-08-12T18:00:00Z",
+      "subject": {
+        "subject_ref": "fixture:archaeology-subject:sample-001",
+        "subject_kind": "SAMPLE",
+        "measurement_scope": "OBJECT"
+      },
+      "source_documentation": {
+        "three_d_documentation_ref": "fixture:three-d-documentation:ct-001",
+        "input_asset_refs": [
+          "fixture:asset:ct-volume-001",
+          "fixture:asset:segmentation-mask-001"
+        ],
+        "visual_mesh_refs": [],
+        "volumetric_input_refs": [
+          "fixture:asset:ct-volume-001",
+          "fixture:asset:segmentation-mask-001"
+        ],
+        "source_separation_statement": "The synthetic measurement record references its CT inputs without becoming or mutating a visual carrier."
+      },
+      "method": {
+        "method_class": "CT_DERIVED",
+        "method_statement": "Synthetic segmented-voxel integration records a bounded fixture-only volume estimate.",
+        "algorithm_ref": "fixture:algorithm:segmented-voxel-integration-v1",
+        "scale_basis_ref": "fixture:scale-basis:ct-001",
+        "processing_receipt_ref": "fixture:receipt:volume-processing-001",
+        "specialist_review_required": true
+      },
+      "measurement": {
+        "state": "COMPLETE",
+        "value": 12.4,
+        "unit": "CUBIC_CENTIMETRE",
+        "precision_digits": 1,
+        "measurement_receipt_ref": "fixture:receipt:volume-measurement-001"
+      },
+      "uncertainty": {
+        "state": "QUANTIFIED",
+        "lower_bound": 11.8,
+        "upper_bound": 13.0,
+        "confidence_level": 0.95,
+        "uncertainty_statement": "Synthetic interval reflects fixture segmentation and scale uncertainty only.",
+        "uncertainty_profile_ref": "fixture:uncertainty-profile:ct-volume-001"
+      },
+      "governance": {
+        "state": "COMPLETE",
+        "intended_use": "INTERNAL_REVIEW",
+        "sensitivity_state": "CONTROLLED",
+        "evidence_bundle_ref": "fixture:evidence-bundle:volume-assessment-001",
+        "rights_ref": "fixture:rights:volume-assessment-001",
+        "technical_review_ref": "fixture:review:technical-volume-001",
+        "cultural_review_ref": "fixture:review:cultural-volume-001",
+        "policy_decision_ref": "fixture:policy-decision:volume-assessment-001",
+        "publication_transform_receipt_ref": null,
+        "release_manifest_ref": null,
+        "correction_ref": null,
+        "rollback_ref": null
+      },
+      "limitations": [
+        "DECLARATION_ONLY",
+        "NO_ASSET_ACCESS_OR_MUTATION",
+        "NO_COORDINATE_OR_LOCATION_FIELDS",
+        "NO_EVIDENCE_OR_INTERPRETATION_AUTHORITY",
+        "NO_POLICY_OR_REVIEW_AUTHORITY",
+        "NO_RELEASE_OR_PUBLICATION_AUTHORITY",
+        "SYNTHETIC_REFERENCES_ONLY"
+      ],
+      "authority_claims": {
+        "asset_mutation_authority": false,
+        "measurement_truth_authority": false,
+        "evidence_authority": false,
+        "interpretation_authority": false,
+        "policy_authority": false,
+        "review_authority": false,
+        "release_authority": false,
+        "publication_authority": false,
+        "public_use_authority": false
+      }
+    },
+    "public": {
+      "extends": "internal",
+      "subject": {
+        "subject_ref": "fixture:archaeology-subject:deposit-generalized-001",
+        "subject_kind": "DEPOSIT",
+        "measurement_scope": "DEPOSIT"
+      },
+      "source_documentation": {
+        "three_d_documentation_ref": "fixture:three-d-documentation:mesh-001",
+        "input_asset_refs": ["fixture:asset:public-safe-mesh-001"],
+        "visual_mesh_refs": ["fixture:asset:public-safe-mesh-001"],
+        "volumetric_input_refs": [],
+        "source_separation_statement": "The synthetic analytical measurement remains a separate evidence candidate from the public-safe mesh carrier."
+      },
+      "method": {
+        "method_class": "MESH_DERIVED",
+        "method_statement": "Synthetic closed-surface integration estimates deposit volume from a governed mesh reference.",
+        "algorithm_ref": "fixture:algorithm:closed-surface-integration-v1",
+        "scale_basis_ref": "fixture:scale-basis:mesh-001",
+        "processing_receipt_ref": "fixture:receipt:mesh-volume-processing-001",
+        "specialist_review_required": true
+      },
+      "measurement": {
+        "state": "COMPLETE",
+        "value": 2.35,
+        "unit": "CUBIC_METRE",
+        "precision_digits": 2,
+        "measurement_receipt_ref": "fixture:receipt:mesh-volume-measurement-001"
+      },
+      "uncertainty": {
+        "state": "QUANTIFIED",
+        "lower_bound": 2.12,
+        "upper_bound": 2.58,
+        "confidence_level": 0.9,
+        "uncertainty_statement": "Synthetic interval records fixture surface closure and scale uncertainty.",
+        "uncertainty_profile_ref": "fixture:uncertainty-profile:mesh-volume-001"
+      },
+      "governance": {
+        "state": "COMPLETE",
+        "intended_use": "PUBLIC_CANDIDATE",
+        "sensitivity_state": "PUBLIC_SAFE_REVIEWED",
+        "evidence_bundle_ref": "fixture:evidence-bundle:volume-assessment-public-001",
+        "rights_ref": "fixture:rights:volume-assessment-public-001",
+        "technical_review_ref": "fixture:review:technical-volume-public-001",
+        "cultural_review_ref": "fixture:review:cultural-volume-public-001",
+        "policy_decision_ref": "fixture:policy-decision:volume-assessment-public-001",
+        "publication_transform_receipt_ref": "fixture:receipt:publication-transform-volume-001",
+        "release_manifest_ref": "fixture:release-manifest:volume-assessment-001",
+        "correction_ref": "fixture:correction:volume-assessment-001",
+        "rollback_ref": "fixture:rollback:volume-assessment-001"
+      }
+    },
+    "incomplete": {
+      "extends": "internal",
+      "method": {
+        "method_class": "CT_DERIVED",
+        "method_statement": null,
+        "algorithm_ref": null,
+        "scale_basis_ref": null,
+        "processing_receipt_ref": null,
+        "specialist_review_required": false
+      },
+      "measurement": {
+        "state": "INCOMPLETE",
+        "value": null,
+        "unit": "CUBIC_CENTIMETRE",
+        "precision_digits": 1,
+        "measurement_receipt_ref": null
+      },
+      "uncertainty": {
+        "state": "UNRESOLVED",
+        "lower_bound": null,
+        "upper_bound": null,
+        "confidence_level": null,
+        "uncertainty_statement": null,
+        "uncertainty_profile_ref": null
+      },
+      "governance": {
+        "state": "INCOMPLETE",
+        "intended_use": "UNKNOWN",
+        "sensitivity_state": "UNRESOLVED",
+        "evidence_bundle_ref": null,
+        "rights_ref": null,
+        "technical_review_ref": null,
+        "cultural_review_ref": null,
+        "policy_decision_ref": null,
+        "publication_transform_receipt_ref": null,
+        "release_manifest_ref": null,
+        "correction_ref": null,
+        "rollback_ref": null
+      }
+    },
+    "error": {
+      "extends": "incomplete",
+      "measurement": {
+        "state": "ERROR",
+        "value": null,
+        "unit": "CUBIC_CENTIMETRE",
+        "precision_digits": 1,
+        "measurement_receipt_ref": null
+      },
+      "governance": {
+        "state": "ERROR",
+        "intended_use": "UNKNOWN",
+        "sensitivity_state": "UNRESOLVED",
+        "evidence_bundle_ref": null,
+        "rights_ref": null,
+        "technical_review_ref": null,
+        "cultural_review_ref": null,
+        "policy_decision_ref": null,
+        "publication_transform_receipt_ref": null,
+        "release_manifest_ref": null,
+        "correction_ref": null,
+        "rollback_ref": null
+      }
+    }
+  },
+  "cases": [
+    {"name": "pass_internal_ct_derived", "base": "internal", "expected_outcome": "PASS", "expected_findings": []},
+    {"name": "pass_public_mesh_derived", "base": "public", "expected_outcome": "PASS", "expected_findings": []},
+    {"name": "abstain_incomplete_assessment", "base": "incomplete", "expected_outcome": "ABSTAIN", "expected_findings": ["GOVERNANCE_INCOMPLETE", "GOVERNANCE_POSTURE_UNRESOLVED", "GOVERNANCE_REFERENCE_UNRESOLVED", "MEASUREMENT_INCOMPLETE", "UNCERTAINTY_UNRESOLVED"]},
+    {"name": "error_declared", "base": "error", "expected_outcome": "ERROR", "expected_findings": ["VOLUME_MEASUREMENT_ERROR"]},
+    {"name": "deny_ct_without_volumetric_input", "base": "internal", "mutations": [{"path": "/source_documentation/volumetric_input_refs", "value": []}], "expected_outcome": "DENY", "expected_findings": ["VOLUMETRIC_INPUT_REQUIRED"]},
+    {"name": "deny_mesh_without_visual_input", "base": "public", "mutations": [{"path": "/source_documentation/visual_mesh_refs", "value": []}], "expected_outcome": "DENY", "expected_findings": ["VISUAL_MESH_INPUT_REQUIRED"]},
+    {"name": "deny_visual_input_undeclared", "base": "public", "mutations": [{"path": "/source_documentation/visual_mesh_refs", "value": ["fixture:asset:undeclared-mesh-001"]}], "expected_outcome": "DENY", "expected_findings": ["VISUAL_MESH_INPUT_UNDECLARED"]},
+    {"name": "deny_volumetric_input_undeclared", "base": "internal", "mutations": [{"path": "/source_documentation/volumetric_input_refs", "value": ["fixture:asset:undeclared-volume-001"]}], "expected_outcome": "DENY", "expected_findings": ["VOLUMETRIC_INPUT_UNDECLARED"]},
+    {"name": "deny_complete_value_missing", "base": "internal", "mutations": [{"path": "/measurement/value", "value": null}], "expected_outcome": "DENY", "expected_findings": ["MEASUREMENT_CLOSURE_REQUIRED"]},
+    {"name": "deny_complete_receipt_missing", "base": "internal", "mutations": [{"path": "/measurement/measurement_receipt_ref", "value": null}], "expected_outcome": "DENY", "expected_findings": ["MEASUREMENT_CLOSURE_REQUIRED"]},
+    {"name": "deny_scale_basis_missing", "base": "internal", "mutations": [{"path": "/method/scale_basis_ref", "value": null}], "expected_outcome": "DENY", "expected_findings": ["SCALE_BASIS_REFERENCE_REQUIRED"]},
+    {"name": "deny_processing_receipt_missing", "base": "internal", "mutations": [{"path": "/method/processing_receipt_ref", "value": null}], "expected_outcome": "DENY", "expected_findings": ["PROCESSING_RECEIPT_REQUIRED"]},
+    {"name": "deny_source_separation_missing", "base": "internal", "mutations": [{"path": "/source_documentation/source_separation_statement", "value": null}], "expected_outcome": "DENY", "expected_findings": ["SOURCE_SEPARATION_STATEMENT_REQUIRED"]},
+    {"name": "deny_quantified_profile_missing", "base": "internal", "mutations": [{"path": "/uncertainty/uncertainty_profile_ref", "value": null}], "expected_outcome": "DENY", "expected_findings": ["QUANTIFIED_UNCERTAINTY_CLOSURE_REQUIRED"]},
+    {"name": "deny_uncertainty_interval_inverted", "base": "internal", "mutations": [{"path": "/uncertainty/lower_bound", "value": 13.2}, {"path": "/uncertainty/upper_bound", "value": 12.8}], "expected_outcome": "DENY", "expected_findings": ["UNCERTAINTY_INTERVAL_INVALID"]},
+    {"name": "deny_value_outside_interval", "base": "internal", "mutations": [{"path": "/measurement/value", "value": 15.0}], "expected_outcome": "DENY", "expected_findings": ["UNCERTAINTY_INTERVAL_INVALID"]},
+    {"name": "deny_qualitative_statement_missing", "base": "internal", "mutations": [{"path": "/uncertainty/state", "value": "QUALITATIVE"}, {"path": "/uncertainty/lower_bound", "value": null}, {"path": "/uncertainty/upper_bound", "value": null}, {"path": "/uncertainty/confidence_level", "value": null}, {"path": "/uncertainty/uncertainty_statement", "value": null}], "expected_outcome": "DENY", "expected_findings": ["QUALITATIVE_UNCERTAINTY_STATEMENT_REQUIRED"]},
+    {"name": "deny_internal_release_reference", "base": "internal", "mutations": [{"path": "/governance/rollback_ref", "value": "fixture:rollback:forbidden-001"}], "expected_outcome": "DENY", "expected_findings": ["INTERNAL_RELEASE_REFERENCE_FORBIDDEN"]},
+    {"name": "deny_public_sensitivity_unresolved", "base": "public", "mutations": [{"path": "/governance/sensitivity_state", "value": "UNRESOLVED"}], "expected_outcome": "DENY", "expected_findings": ["PUBLIC_SENSITIVITY_REVIEW_REQUIRED"]},
+    {"name": "deny_public_rollback_missing", "base": "public", "mutations": [{"path": "/governance/rollback_ref", "value": null}], "expected_outcome": "DENY", "expected_findings": ["PUBLIC_RELEASE_CLOSURE_REQUIRED"]},
+    {"name": "deny_spec_hash_mismatch", "base": "internal", "spec_hash_override": "sha256:0000000000000000000000000000000000000000000000000000000000000000", "expected_outcome": "DENY", "expected_findings": ["SPEC_HASH_MISMATCH"]},
+    {"name": "deny_assessment_id_mismatch", "base": "internal", "assessment_id_override": "kfm:archaeology:volume-measurement-assessment:000000000000000000000000", "expected_outcome": "DENY", "expected_findings": ["ASSESSMENT_ID_MISMATCH"]},
+    {"name": "deny_noncanonical_input_references", "base": "internal", "mutations": [{"path": "/source_documentation/input_asset_refs", "value": ["fixture:asset:segmentation-mask-001", "fixture:asset:ct-volume-001"]}], "expected_outcome": "DENY", "expected_findings": ["REFERENCE_ARRAY_NOT_CANONICAL"]},
+    {"name": "abstain_specialist_review_missing", "base": "internal", "mutations": [{"path": "/governance/technical_review_ref", "value": null}], "expected_outcome": "ABSTAIN", "expected_findings": ["GOVERNANCE_REFERENCE_UNRESOLVED", "SPECIALIST_REVIEW_UNRESOLVED"]},
+    {"name": "abstain_uncertainty_unresolved", "base": "internal", "mutations": [{"path": "/uncertainty/state", "value": "UNRESOLVED"}, {"path": "/uncertainty/lower_bound", "value": null}, {"path": "/uncertainty/upper_bound", "value": null}, {"path": "/uncertainty/confidence_level", "value": null}, {"path": "/uncertainty/uncertainty_statement", "value": null}, {"path": "/uncertainty/uncertainty_profile_ref", "value": null}], "expected_outcome": "ABSTAIN", "expected_findings": ["UNCERTAINTY_UNRESOLVED"]},
+    {"name": "deny_authority_claim", "base": "internal", "mutations": [{"path": "/authority_claims/measurement_truth_authority", "value": true}], "expected_outcome": "DENY", "expected_findings": ["SCHEMA_INVALID"]}
+  ]
+}

@@ -1,0 +1,109 @@
+{
+  "receipt_id": "genrec-pass32-streamflow-qc-ci-coupling-20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/domain-hydrology.yml"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/domain-hydrology.yml": "sha256:603af477fd9f9a76da6734318d845b8f95aeed0ad167328497f15266368c2ada"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-09"
+  },
+  "prompt_or_contract": "sha256:b36eddf8637f86180a4cae136a99456483a36ccd6a2c5f849c3f21701f41b058",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:pull/2360@31d3bdd50f61824636bb4efdc52e634ce4a8322a",
+      "repo:workflow-run/31328524513",
+      "repo:data/receipts/generated/genrec-pass32-streamflow-qc-context-20260809.json@f01614101348b37c62c9c3af0ac7a9c2e652cf4b",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@f01614101348b37c62c9c3af0ac7a9c2e652cf4b"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/domain-hydrology.yml": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "failed-exact-head-root-cause",
+      "outcome": "PASS",
+      "reason": "Run 31328524513 failed because the existing Hydrology readiness gate correctly classified the newly merged substantive streamflow test as unreviewed inventory."
+    },
+    {
+      "gate": "domain-hydrology-readiness-step",
+      "outcome": "PASS",
+      "reason": "The updated exact inventory classified eight bounded Hydrology test modules and five semantic validators without widening the held surfaces."
+    },
+    {
+      "gate": "domain-hydrology-bounded-validation-step",
+      "outcome": "PASS",
+      "reason": "The workflow-owned bounded step passed locally with 82 pytest cases, 8 subtests, 13 direct unittest cases, schema wrappers, and expected-negative fixtures."
+    },
+    {
+      "gate": "streamflow-focused-and-adjacent-tests",
+      "outcome": "PASS",
+      "reason": "Forty-nine focused and adjacent tests plus eleven subtests passed against current main."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed exact follow-up branch head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft follow-up pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "repository:merged-streamflow-profile",
+      "validated": true,
+      "evidence_ref": "repo:pull/2360@31d3bdd50f61824636bb4efdc52e634ce4a8322a"
+    },
+    {
+      "id": "repository:domain-hydrology-inventory-failure",
+      "validated": true,
+      "evidence_ref": "repo:workflow-run/31328524513"
+    },
+    {
+      "id": "repository:original-streamflow-authoring-receipt",
+      "validated": true,
+      "evidence_ref": "repo:data/receipts/generated/genrec-pass32-streamflow-qc-context-20260809.json@f01614101348b37c62c9c3af0ac7a9c2e652cf4b"
+    },
+    {
+      "id": "repository:adr-0029-directory-rules-v2",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@f01614101348b37c62c9c3af0ac7a9c2e652cf4b"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-09T18:19:50Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Current-state CI coupling receipt emitted after PR #2360 was merged externally while checks were still running. The original authoring receipt remains unchanged as historical process memory. This follow-up only admits the substantive streamflow test and validator into the existing bounded Hydrology inventory; it grants no runtime, source, policy, review, release, deployment, publication, or public-use authority."
+}

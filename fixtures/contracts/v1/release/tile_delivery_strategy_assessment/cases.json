@@ -1,0 +1,348 @@
+{
+  "fixture_profile": "kfm.release.tile-delivery-strategy.fixture.v1",
+  "base": {
+    "object_type": "TileDeliveryStrategyAssessment",
+    "schema_version": "1.0.0",
+    "profile": "kfm.release.tile-delivery-strategy.fixture.v1",
+    "assessment_id": "kfm:tile-delivery-strategy:000000000000000000000000",
+    "assessment_state": "COMPLETE",
+    "subject_ref": "kfm://release-candidate/map/synthetic-layer-v1",
+    "subject_spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "declaration": {
+      "selected_strategy": "PMTILES_ARCHIVE",
+      "update_pattern": "IMMUTABLE_SNAPSHOT",
+      "audience": "PUBLIC",
+      "public_safe_input": true,
+      "immutable_versioned_artifact": true,
+      "range_hosting_ready": true,
+      "per_tile_invalidation_required": false,
+      "server_mediation_required": false,
+      "postgis_slicing_required": false,
+      "offline_required": false,
+      "access_control_required": false
+    },
+    "controls": {
+      "tile_artifact_manifest_ref": "kfm://manifest/tile/synthetic-layer-v1",
+      "map_service_protocol_assessment_ref": "kfm://assessment/source/map-service-protocol-synthetic",
+      "cache_policy_ref": "kfm://policy/cache/immutable-versioned-v1",
+      "rights_assessment_ref": "kfm://assessment/rights/synthetic-layer-v1",
+      "sensitivity_assessment_ref": "kfm://assessment/sensitivity/synthetic-layer-v1",
+      "correction_plan_ref": "kfm://correction-plan/map/synthetic-layer-v1"
+    },
+    "assessment": {
+      "outcome": "PASS",
+      "recommended_strategy": "PMTILES_ARCHIVE",
+      "reason_codes": ["STRATEGY_COHERENT"],
+      "review_required": true,
+      "execution_authorized": false
+    },
+    "authority": {
+      "network_attempted": false,
+      "service_activated": false,
+      "artifact_hosted": false,
+      "database_queried": false,
+      "cache_mutated": false,
+      "release_authority": false,
+      "deployment_authority": false,
+      "publication_authority": false,
+      "public_use_authority": false
+    },
+    "limitations": [
+      "fixture_only",
+      "no_network_artifact_service_or_database_verification",
+      "no_rights_sensitivity_policy_or_review_authority",
+      "no_hosting_cache_release_or_deployment_effect",
+      "no_publication_or_public_use"
+    ],
+    "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "cases": [
+    {
+      "case_id": "pass_pmtiles_immutable_public_archive",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "pass_xyz_partial_mutation_service",
+      "mutations": [
+        {"path": "/declaration/selected_strategy", "value": "XYZ_SERVICE"},
+        {"path": "/declaration/update_pattern", "value": "PARTIAL_MUTATION"},
+        {"path": "/declaration/immutable_versioned_artifact", "value": false},
+        {"path": "/declaration/range_hosting_ready", "value": false},
+        {"path": "/declaration/per_tile_invalidation_required", "value": true},
+        {"path": "/controls/tile_artifact_manifest_ref", "value": null}
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "pass_martin_dynamic_steward_mediation",
+      "mutations": [
+        {"path": "/declaration/selected_strategy", "value": "MARTIN_POSTGIS"},
+        {"path": "/declaration/update_pattern", "value": "DYNAMIC_QUERY"},
+        {"path": "/declaration/audience", "value": "STEWARD"},
+        {"path": "/declaration/public_safe_input", "value": false},
+        {"path": "/declaration/immutable_versioned_artifact", "value": false},
+        {"path": "/declaration/range_hosting_ready", "value": false},
+        {"path": "/declaration/server_mediation_required", "value": true},
+        {"path": "/declaration/postgis_slicing_required", "value": true},
+        {"path": "/declaration/access_control_required", "value": true},
+        {"path": "/controls/tile_artifact_manifest_ref", "value": null},
+        {"path": "/controls/cache_policy_ref", "value": null}
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "pass_mbtiles_local_offline_package",
+      "mutations": [
+        {"path": "/declaration/selected_strategy", "value": "MBTILES_LOCAL"},
+        {"path": "/declaration/audience", "value": "LOCAL"},
+        {"path": "/declaration/public_safe_input", "value": false},
+        {"path": "/declaration/range_hosting_ready", "value": false},
+        {"path": "/declaration/offline_required", "value": true},
+        {"path": "/controls/map_service_protocol_assessment_ref", "value": null},
+        {"path": "/controls/cache_policy_ref", "value": null}
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "hold_pmtiles_manifest_missing",
+      "mutations": [
+        {"path": "/controls/tile_artifact_manifest_ref", "value": null}
+      ],
+      "expected_outcome": "HOLD",
+      "expected_findings": [
+        {
+          "code": "TILE_ARTIFACT_MANIFEST_REQUIRED",
+          "path": "/assessment/reason_codes"
+        }
+      ]
+    },
+    {
+      "case_id": "hold_pmtiles_range_hosting_unready",
+      "mutations": [
+        {"path": "/declaration/range_hosting_ready", "value": false}
+      ],
+      "expected_outcome": "HOLD",
+      "expected_findings": [
+        {
+          "code": "PMTILES_RANGE_HOSTING_UNREADY",
+          "path": "/assessment/reason_codes"
+        }
+      ]
+    },
+    {
+      "case_id": "hold_pmtiles_not_immutable",
+      "mutations": [
+        {"path": "/declaration/immutable_versioned_artifact", "value": false}
+      ],
+      "expected_outcome": "HOLD",
+      "expected_findings": [
+        {
+          "code": "PMTILES_IMMUTABILITY_REQUIRED",
+          "path": "/assessment/reason_codes"
+        }
+      ]
+    },
+    {
+      "case_id": "hold_xyz_protocol_assessment_missing",
+      "mutations": [
+        {"path": "/declaration/selected_strategy", "value": "XYZ_SERVICE"},
+        {"path": "/declaration/update_pattern", "value": "PARTIAL_MUTATION"},
+        {"path": "/declaration/immutable_versioned_artifact", "value": false},
+        {"path": "/declaration/range_hosting_ready", "value": false},
+        {"path": "/declaration/per_tile_invalidation_required", "value": true},
+        {"path": "/controls/tile_artifact_manifest_ref", "value": null},
+        {"path": "/controls/map_service_protocol_assessment_ref", "value": null}
+      ],
+      "expected_outcome": "HOLD",
+      "expected_findings": [
+        {
+          "code": "SERVICE_PROTOCOL_ASSESSMENT_REQUIRED",
+          "path": "/assessment/reason_codes"
+        }
+      ]
+    },
+    {
+      "case_id": "hold_xyz_invalidation_missing",
+      "mutations": [
+        {"path": "/declaration/selected_strategy", "value": "XYZ_SERVICE"},
+        {"path": "/declaration/update_pattern", "value": "PARTIAL_MUTATION"},
+        {"path": "/declaration/immutable_versioned_artifact", "value": false},
+        {"path": "/declaration/range_hosting_ready", "value": false},
+        {"path": "/controls/tile_artifact_manifest_ref", "value": null}
+      ],
+      "expected_outcome": "HOLD",
+      "expected_findings": [
+        {
+          "code": "XYZ_INVALIDATION_REQUIREMENT_MISSING",
+          "path": "/assessment/reason_codes"
+        }
+      ]
+    },
+    {
+      "case_id": "hold_martin_without_mediation_need",
+      "mutations": [
+        {"path": "/declaration/selected_strategy", "value": "MARTIN_POSTGIS"},
+        {"path": "/controls/tile_artifact_manifest_ref", "value": null},
+        {"path": "/controls/cache_policy_ref", "value": null}
+      ],
+      "expected_outcome": "HOLD",
+      "expected_findings": [
+        {
+          "code": "MARTIN_MEDIATION_NEED_REQUIRED",
+          "path": "/assessment/reason_codes"
+        }
+      ]
+    },
+    {
+      "case_id": "hold_mbtiles_local_requirements_missing",
+      "mutations": [
+        {"path": "/declaration/selected_strategy", "value": "MBTILES_LOCAL"},
+        {"path": "/declaration/audience", "value": "LOCAL"},
+        {"path": "/declaration/public_safe_input", "value": false},
+        {"path": "/controls/map_service_protocol_assessment_ref", "value": null},
+        {"path": "/controls/cache_policy_ref", "value": null}
+      ],
+      "expected_outcome": "HOLD",
+      "expected_findings": [
+        {
+          "code": "MBTILES_LOCAL_REQUIREMENTS_MISSING",
+          "path": "/assessment/reason_codes"
+        }
+      ]
+    },
+    {
+      "case_id": "hold_selected_strategy_mismatch",
+      "mutations": [
+        {"path": "/declaration/selected_strategy", "value": "MARTIN_POSTGIS"},
+        {"path": "/declaration/update_pattern", "value": "DYNAMIC_QUERY"},
+        {"path": "/declaration/audience", "value": "LOCAL"},
+        {"path": "/declaration/public_safe_input", "value": false},
+        {"path": "/declaration/immutable_versioned_artifact", "value": false},
+        {"path": "/declaration/range_hosting_ready", "value": false},
+        {"path": "/declaration/server_mediation_required", "value": true},
+        {"path": "/declaration/offline_required", "value": true},
+        {"path": "/controls/tile_artifact_manifest_ref", "value": null},
+        {"path": "/controls/cache_policy_ref", "value": null}
+      ],
+      "expected_outcome": "HOLD",
+      "expected_findings": [
+        {
+          "code": "STRATEGY_MISMATCH",
+          "path": "/assessment/reason_codes"
+        }
+      ]
+    },
+    {
+      "case_id": "deny_public_unsafe_input",
+      "mutations": [
+        {"path": "/declaration/public_safe_input", "value": false}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "PUBLIC_UNSAFE_INPUT_DENIED",
+          "path": "/assessment/reason_codes"
+        }
+      ]
+    },
+    {
+      "case_id": "deny_public_mbtiles",
+      "mutations": [
+        {"path": "/declaration/selected_strategy", "value": "MBTILES_LOCAL"},
+        {"path": "/declaration/offline_required", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "MBTILES_PUBLIC_DELIVERY_DENIED",
+          "path": "/assessment/reason_codes"
+        }
+      ]
+    },
+    {
+      "case_id": "deny_public_access_control_conflict",
+      "mutations": [
+        {"path": "/declaration/access_control_required", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "PUBLIC_ACCESS_CONTROL_CONFLICT",
+          "path": "/assessment/reason_codes"
+        }
+      ]
+    },
+    {
+      "case_id": "deny_static_delivery_bypasses_mediation",
+      "mutations": [
+        {"path": "/declaration/audience", "value": "STEWARD"},
+        {"path": "/declaration/server_mediation_required", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "STATIC_DELIVERY_BYPASSES_MEDIATION",
+          "path": "/assessment/reason_codes"
+        }
+      ]
+    },
+    {
+      "case_id": "error_validator_state",
+      "mutations": [
+        {"path": "/assessment_state", "value": "ERROR"}
+      ],
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        {
+          "code": "VALIDATOR_ERROR",
+          "path": "/assessment/reason_codes"
+        }
+      ]
+    },
+    {
+      "case_id": "deny_declared_assessment_mismatch",
+      "assessment_override": {
+        "outcome": "HOLD",
+        "recommended_strategy": null,
+        "reason_codes": ["STRATEGY_UNRESOLVED"],
+        "review_required": true,
+        "execution_authorized": false
+      },
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "TILE_STRATEGY_ASSESSMENT_MISMATCH",
+          "path": "/assessment"
+        }
+      ]
+    },
+    {
+      "case_id": "deny_spec_hash_mismatch",
+      "spec_hash_override": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "TILE_STRATEGY_SPEC_HASH_MISMATCH",
+          "path": "/spec_hash"
+        }
+      ]
+    },
+    {
+      "case_id": "deny_authority_overclaim",
+      "mutations": [
+        {"path": "/authority/publication_authority", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "TILE_STRATEGY_SCHEMA_INVALID",
+          "path": "/authority/publication_authority"
+        }
+      ]
+    }
+  ]
+}

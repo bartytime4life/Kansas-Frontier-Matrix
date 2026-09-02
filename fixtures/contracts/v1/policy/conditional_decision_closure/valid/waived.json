@@ -1,0 +1,39 @@
+{
+  "object_type": "ConditionalDecisionClosure",
+  "schema_version": "1.0.0",
+  "status": "PROPOSED_INACTIVE",
+  "closure_id": "kfm://policy/conditional-decision-closure/c286ebb889ec14ab3ce8fc72",
+  "subject_ref": "kfm://fixture/candidate/synthetic-policy-subject-002",
+  "operation": "VIEW",
+  "conditional_decision_ref": "kfm://fixture/policy/conditional-decision-002",
+  "obligation_set_ref": "kfm://policy/obligation-set/222222222222222222222222",
+  "assessed_at": "2026-08-09T13:00:00Z",
+  "obligations": [
+    {
+      "obligation_id": "kfm://policy/obligation/notice-waiver",
+      "applicable": true,
+      "state": "WAIVED",
+      "evidence_refs": ["kfm://fixture/evidence/waiver-record-001"],
+      "authority_ref": "kfm://fixture/authority/policy-steward-001",
+      "superseded_by_ref": null,
+      "closed_at": "2026-08-09T12:50:00Z",
+      "reason_codes": ["AUTHORIZED_WAIVER_EVIDENCE_BOUND"]
+    }
+  ],
+  "result": {
+    "outcome": "CLOSED_FOR_SEPARATE_GATE",
+    "blocking_obligation_ids": [],
+    "closed_obligation_ids": ["kfm://policy/obligation/notice-waiver"],
+    "reason_codes": ["ALL_APPLICABLE_OBLIGATIONS_CLOSED"]
+  },
+  "canonicalization_profile": "RFC8785-JCS",
+  "spec_hash": "sha256:c286ebb889ec14ab3ce8fc729b5947346e5676c9342129a7fe47db985995465e",
+  "governance": {
+    "policy_evaluated": false,
+    "obligations_enforced": false,
+    "review_authorized": false,
+    "promotion_authorized": false,
+    "release_authorized": false,
+    "publication_authorized": false
+  }
+}

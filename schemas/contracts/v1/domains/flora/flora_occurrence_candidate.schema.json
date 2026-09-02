@@ -1,0 +1,195 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/flora/flora_occurrence_candidate.schema.json",
+  "title": "FloraOccurrenceCandidate",
+  "description": "No-network normalized Darwin Core occurrence candidate held in WORK. Conformance grants no source-admission, evidence, policy, review, promotion, release, publication, or public-use authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "candidate_id",
+    "hash_profile",
+    "spec_hash",
+    "source_context",
+    "taxon",
+    "occurrence",
+    "spatial",
+    "temporal",
+    "sensitivity_hints",
+    "provenance",
+    "governance"
+  ],
+  "properties": {
+    "object_type": {"const": "FloraOccurrenceCandidate"},
+    "schema_version": {"const": "1.0.0"},
+    "candidate_id": {
+      "type": "string",
+      "pattern": "^flora-occurrence-candidate:[a-f0-9]{32}$"
+    },
+    "hash_profile": {"const": "kfm-fixture-json-v1"},
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "source_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "source_profile",
+        "source_record_id",
+        "institution_code",
+        "collection_code",
+        "catalog_number",
+        "license",
+        "rights_holder",
+        "source_role"
+      ],
+      "properties": {
+        "source_id": {"type": "string", "minLength": 1, "maxLength": 160, "pattern": "\\S"},
+        "source_profile": {"enum": ["GBIF_DWC", "IDIGBIO_DWC"]},
+        "source_record_id": {"type": "string", "minLength": 1, "maxLength": 640, "pattern": "\\S"},
+        "institution_code": {"$ref": "#/$defs/nullableText"},
+        "collection_code": {"$ref": "#/$defs/nullableText"},
+        "catalog_number": {"$ref": "#/$defs/nullableText"},
+        "license": {"$ref": "#/$defs/nullableText"},
+        "rights_holder": {"$ref": "#/$defs/nullableText"},
+        "source_role": {"const": "OBSERVATION_CANDIDATE"}
+      }
+    },
+    "taxon": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scientific_name", "taxon_id", "rank"],
+      "properties": {
+        "scientific_name": {"type": "string", "minLength": 1, "maxLength": 512, "pattern": "\\S"},
+        "taxon_id": {"$ref": "#/$defs/nullableText"},
+        "rank": {"$ref": "#/$defs/nullableText"}
+      }
+    },
+    "occurrence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["basis_of_record", "event_date", "occurrence_status"],
+      "properties": {
+        "basis_of_record": {"type": "string", "minLength": 1, "maxLength": 128, "pattern": "\\S"},
+        "event_date": {"$ref": "#/$defs/nullableText"},
+        "occurrence_status": {"enum": ["PRESENT", "ABSENT", "UNKNOWN"]}
+      }
+    },
+    "spatial": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["geometry", "crs", "uncertainty_meters", "coordinate_exposure"],
+      "properties": {
+        "geometry": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["type", "coordinates"],
+              "properties": {
+                "type": {"const": "Point"},
+                "coordinates": {
+                  "type": "array",
+                  "prefixItems": [
+                    {"type": "number", "minimum": -180, "maximum": 180},
+                    {"type": "number", "minimum": -90, "maximum": 90}
+                  ],
+                  "minItems": 2,
+                  "maxItems": 2
+                }
+              }
+            },
+            {"type": "null"}
+          ]
+        },
+        "crs": {"const": "EPSG:4326"},
+        "uncertainty_meters": {
+          "oneOf": [
+            {"type": "number", "minimum": 0, "maximum": 10000000},
+            {"type": "null"}
+          ]
+        },
+        "coordinate_exposure": {"enum": ["INTERNAL_EXACT", "NO_COORDINATE"]}
+      }
+    },
+    "temporal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["event_date_precision"],
+      "properties": {
+        "event_date_precision": {"enum": ["DAY", "MONTH", "YEAR", "UNKNOWN"]}
+      }
+    },
+    "sensitivity_hints": {
+      "type": "array",
+      "maxItems": 16,
+      "uniqueItems": true,
+      "items": {
+        "enum": ["SOURCE_DATA_GENERALIZED", "SOURCE_INFORMATION_WITHHELD"]
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["input_digest", "normalizer_id", "normalizer_version"],
+      "properties": {
+        "input_digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+        "normalizer_id": {"const": "flora-dwc-occurrence-normalizer"},
+        "normalizer_version": {"const": "1.0.0"}
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "lifecycle_state",
+        "source_admitted",
+        "evidence_bundle_resolved",
+        "policy_evaluated",
+        "review_completed",
+        "promotion_authorized",
+        "release_authorized",
+        "publication_authorized",
+        "public_use_allowed",
+        "release_ref"
+      ],
+      "properties": {
+        "lifecycle_state": {"const": "WORK"},
+        "source_admitted": {"const": false},
+        "evidence_bundle_resolved": {"const": false},
+        "policy_evaluated": {"const": false},
+        "review_completed": {"const": false},
+        "promotion_authorized": {"const": false},
+        "release_authorized": {"const": false},
+        "publication_authorized": {"const": false},
+        "public_use_allowed": {"const": false},
+        "release_ref": {"type": "null"}
+      }
+    }
+  },
+  "$defs": {
+    "nullableText": {
+      "oneOf": [
+        {"type": "string", "minLength": 1, "maxLength": 640, "pattern": "\\S"},
+        {"type": "null"}
+      ]
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED",
+    "contract_doc": "contracts/domains/flora/flora_occurrence_candidate.md",
+    "fixtures_root": "fixtures/domains/flora/flora_occurrence_candidate/",
+    "normalizer": "packages/domains/flora/normalizers/dwc_occurrence.py",
+    "tests": "tests/packages/domains/flora/normalizers/test_dwc_occurrence.py",
+    "authority": "work_stage_normalization_candidate_only",
+    "non_effects": [
+      "does_not_admit_or_activate_a_source",
+      "does_not_resolve_evidence_or_policy",
+      "does_not_generalize_or_publish_geometry",
+      "does_not_authorize_promotion_release_or_public_use"
+    ]
+  }
+}

@@ -1,0 +1,286 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kansasfrontiermatrix.org/schemas/contracts/v1/governance/cross_domain_seam_register.schema.json",
+  "title": "KFM Cross-Domain Seam Register",
+  "description": "Projection-only context map. Shape validity does not authorize a join or public use.",
+  "type": "object",
+  "additionalProperties": false,
+  "x-kfm": {
+    "contract_doc": "contracts/governance/cross_domain_seam_register.md",
+    "instance": "control_plane/cross_domain_seam_register.yaml",
+    "validator": "tools/validators/directory_governance/validate_cross_domain_seam_register.py",
+    "tests": "tests/validators/directory_governance/test_validate_cross_domain_seam_register.py",
+    "status": "PROPOSED"
+  },
+  "required": [
+    "version",
+    "registry",
+    "status",
+    "authority",
+    "updated_at",
+    "base_ref",
+    "coverage_scope",
+    "completeness",
+    "owner_role",
+    "description",
+    "doctrine",
+    "domain_lane_register",
+    "decision_requirement",
+    "defaults",
+    "non_effects",
+    "entries"
+  ],
+  "properties": {
+    "version": {
+      "const": "v1"
+    },
+    "registry": {
+      "const": "cross_domain_seam_register"
+    },
+    "status": {
+      "const": "PROPOSED"
+    },
+    "authority": {
+      "const": "navigational_and_review_projection_only"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date"
+    },
+    "base_ref": {
+      "$ref": "#/$defs/sha"
+    },
+    "coverage_scope": {
+      "const": "high_risk_initial_seams"
+    },
+    "completeness": {
+      "const": "partial"
+    },
+    "owner_role": {
+      "const": "control_plane_steward"
+    },
+    "description": {
+      "type": "string",
+      "minLength": 120
+    },
+    "doctrine": {
+      "$ref": "#/$defs/doctrine"
+    },
+    "domain_lane_register": {
+      "$ref": "#/$defs/domainRegister"
+    },
+    "decision_requirement": {
+      "const": "ADR_S_14_PENDING"
+    },
+    "defaults": {
+      "$ref": "#/$defs/defaults"
+    },
+    "non_effects": {
+      "type": "array",
+      "minItems": 6,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_]*$"
+      }
+    },
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/entry"
+      }
+    }
+  },
+  "$defs": {
+    "sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$"
+    },
+    "domainId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$"
+    },
+    "doctrine": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "document_id",
+        "sha256",
+        "decision_ref"
+      ],
+      "properties": {
+        "path": {
+          "const": "docs/doctrine/directory-rules.md"
+        },
+        "document_id": {
+          "const": "kfm://doctrine/directory-governance/v2"
+        },
+        "sha256": {
+          "$ref": "#/$defs/digest"
+        },
+        "decision_ref": {
+          "const": "ADR-0029"
+        }
+      }
+    },
+    "domainRegister": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "git_blob",
+        "base_ref"
+      ],
+      "properties": {
+        "path": {
+          "const": "control_plane/domain_lane_register.yaml"
+        },
+        "git_blob": {
+          "$ref": "#/$defs/sha"
+        },
+        "base_ref": {
+          "$ref": "#/$defs/sha"
+        }
+      }
+    },
+    "defaults": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "interaction_mode",
+        "evidence_rule",
+        "source_role_rule",
+        "sensitivity_rule",
+        "policy_rule",
+        "release_rule",
+        "mutation_authority",
+        "publication_authority"
+      ],
+      "properties": {
+        "interaction_mode": {
+          "const": "CITE_ONLY"
+        },
+        "evidence_rule": {
+          "const": "EACH_PARTICIPANT_EVIDENCE_BUNDLE_REQUIRED"
+        },
+        "source_role_rule": {
+          "const": "PRESERVE"
+        },
+        "sensitivity_rule": {
+          "const": "MOST_RESTRICTIVE"
+        },
+        "policy_rule": {
+          "const": "MOST_RESTRICTIVE"
+        },
+        "release_rule": {
+          "const": "EACH_PARTICIPANT_RELEASE_REQUIRED"
+        },
+        "mutation_authority": {
+          "const": false
+        },
+        "publication_authority": {
+          "const": false
+        }
+      }
+    },
+    "allocation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "context_id",
+        "owns",
+        "may_modify_other_context"
+      ],
+      "properties": {
+        "context_id": {
+          "$ref": "#/$defs/domainId"
+        },
+        "owns": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/slug"
+          }
+        },
+        "may_modify_other_context": {
+          "const": false
+        }
+      }
+    },
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "seam_id",
+        "participants",
+        "status",
+        "relation_class",
+        "summary",
+        "authority_allocations",
+        "prohibited_inferences",
+        "public_join_allowed",
+        "seam_contract_path"
+      ],
+      "properties": {
+        "seam_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*(?:--[a-z][a-z0-9-]*){2}$"
+        },
+        "participants": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/domainId"
+          }
+        },
+        "status": {
+          "const": "HOLD_UNRESOLVED"
+        },
+        "relation_class": {
+          "const": "contextual_join"
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 100
+        },
+        "authority_allocations": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/allocation"
+          }
+        },
+        "prohibited_inferences": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/slug"
+          }
+        },
+        "public_join_allowed": {
+          "const": false
+        },
+        "seam_contract_path": {
+          "type": "null"
+        }
+      }
+    }
+  }
+}

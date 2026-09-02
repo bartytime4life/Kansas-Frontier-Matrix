@@ -1,0 +1,183 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/release/api_capability_exposure_assessment.schema.json",
+  "title": "ApiCapabilityExposureAssessmentCandidate",
+  "description": "Fixture-only assessment of one declared API capability's purpose, audience, lifecycle-state scope, prohibited uses, finite outcomes, trust boundary, review, security, release, correction, and rollback closure without authority effects.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "profile_spec_hash",
+    "source_card",
+    "observed_at",
+    "capability",
+    "trust_boundary_review",
+    "closure",
+    "limitations",
+    "authority_claims"
+  ],
+  "properties": {
+    "object_type": {"const": "ApiCapabilityExposureAssessmentCandidate"},
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.release.api-capability-exposure-assessment.fixture.v1"},
+    "profile_spec_hash": {"$ref": "#/$defs/sha256"},
+    "source_card": {"const": "KFM-P18-INV-274"},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "capability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "capability_ref",
+        "capability_kind",
+        "purpose_statement",
+        "audience_class",
+        "exposure_posture",
+        "contract_ref",
+        "documentation_ref",
+        "allowed_data_states",
+        "prohibited_uses",
+        "finite_outcomes"
+      ],
+      "properties": {
+        "capability_ref": {"$ref": "#/$defs/ref"},
+        "capability_kind": {
+          "enum": [
+            "ADMINISTRATIVE_MUTATION",
+            "DOWNLOAD_EXPORT",
+            "EVENT_STREAM",
+            "GOVERNED_MUTATION",
+            "READ_QUERY",
+            "UNKNOWN"
+          ]
+        },
+        "purpose_statement": {
+          "anyOf": [
+            {"type": "string", "minLength": 12, "maxLength": 512},
+            {"type": "null"}
+          ]
+        },
+        "audience_class": {"enum": ["INTERNAL_OPERATOR", "PUBLIC_CLIENT", "UNKNOWN"]},
+        "exposure_posture": {"enum": ["INTERNAL_ONLY", "PUBLIC_CANDIDATE", "UNRESOLVED"]},
+        "contract_ref": {"$ref": "#/$defs/nullable_ref"},
+        "documentation_ref": {"$ref": "#/$defs/nullable_ref"},
+        "allowed_data_states": {
+          "type": "array",
+          "maxItems": 7,
+          "uniqueItems": true,
+          "items": {
+            "enum": ["CATALOG", "PROCESSED", "PUBLISHED", "QUARANTINE", "RAW", "TRIPLET", "WORK"]
+          }
+        },
+        "prohibited_uses": {
+          "type": "array",
+          "maxItems": 24,
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]{2,79}$"}
+        },
+        "finite_outcomes": {
+          "type": "array",
+          "maxItems": 4,
+          "uniqueItems": true,
+          "items": {"enum": ["ABSTAIN", "ANSWER", "DENY", "ERROR"]}
+        }
+      }
+    },
+    "trust_boundary_review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "boundary_kind",
+        "state_effect",
+        "evidence_resolution_required",
+        "policy_evaluation_required",
+        "public_payload_scrub_required",
+        "risk_assessment_ref",
+        "review_record_refs"
+      ],
+      "properties": {
+        "state": {"enum": ["COMPLETE", "ERROR", "INCOMPLETE", "UNKNOWN"]},
+        "boundary_kind": {"enum": ["DIRECT_STORE", "GOVERNED_API", "INTERNAL_GOVERNED_SERVICE", "UNKNOWN"]},
+        "state_effect": {"enum": ["ADMINISTRATIVE_MUTATION", "GOVERNED_MUTATION", "READ_ONLY", "UNKNOWN"]},
+        "evidence_resolution_required": {"$ref": "#/$defs/nullable_boolean"},
+        "policy_evaluation_required": {"$ref": "#/$defs/nullable_boolean"},
+        "public_payload_scrub_required": {"$ref": "#/$defs/nullable_boolean"},
+        "risk_assessment_ref": {"$ref": "#/$defs/nullable_ref"},
+        "review_record_refs": {"$ref": "#/$defs/ref_array"}
+      }
+    },
+    "closure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "security_review_ref",
+        "release_manifest_ref",
+        "correction_ref",
+        "rollback_ref"
+      ],
+      "properties": {
+        "security_review_ref": {"$ref": "#/$defs/nullable_ref"},
+        "release_manifest_ref": {"$ref": "#/$defs/nullable_ref"},
+        "correction_ref": {"$ref": "#/$defs/nullable_ref"},
+        "rollback_ref": {"$ref": "#/$defs/nullable_ref"}
+      }
+    },
+    "limitations": {
+      "const": [
+        "DECLARATION_ONLY",
+        "NO_API_OR_ROUTE_MUTATION",
+        "NO_AUTHORIZATION_EXECUTION",
+        "NO_CANONICAL_STORE_ACCESS",
+        "NO_EVIDENCE_OR_POLICY_EXECUTION",
+        "NO_RELEASE_OR_PUBLICATION_AUTHORITY"
+      ]
+    },
+    "authority_claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "api_mutation_authority",
+        "authorization_authority",
+        "canonical_store_authority",
+        "evidence_authority",
+        "policy_authority",
+        "review_authority",
+        "release_authority",
+        "deployment_authority",
+        "publication_authority",
+        "public_use_authority"
+      ],
+      "properties": {
+        "api_mutation_authority": {"const": false},
+        "authorization_authority": {"const": false},
+        "canonical_store_authority": {"const": false},
+        "evidence_authority": {"const": false},
+        "policy_authority": {"const": false},
+        "review_authority": {"const": false},
+        "release_authority": {"const": false},
+        "deployment_authority": {"const": false},
+        "publication_authority": {"const": false},
+        "public_use_authority": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "ref": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 512,
+      "pattern": "^[A-Za-z][A-Za-z0-9+.-]*:[^\\s]+$"
+    },
+    "nullable_ref": {"anyOf": [{"$ref": "#/$defs/ref"}, {"type": "null"}]},
+    "ref_array": {
+      "type": "array",
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/ref"}
+    },
+    "nullable_boolean": {"anyOf": [{"type": "boolean"}, {"type": "null"}]},
+    "sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"}
+  }
+}

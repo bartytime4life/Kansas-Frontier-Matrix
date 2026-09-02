@@ -1,0 +1,69 @@
+{
+  "object_type": "ClusteringOutputRoleAssessmentFixtureManifest",
+  "schema_version": "1.0.0",
+  "profile": "kfm.evidence.clustering-output-role-assessment.fixture.v1",
+  "base_candidate": {
+    "object_type": "ClusteringOutputRoleAssessmentCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.evidence.clustering-output-role-assessment.fixture.v1",
+    "profile_spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_card": "KFM-P18-INV-370",
+    "observed_at": "2026-08-10T19:00:00Z",
+    "model_output_ref": "kfm:model-output:synthetic-clusters:001",
+    "model_output_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "intended_visibility": "REVIEW_SURFACE",
+    "method": {
+      "algorithm_family": "K_MEANS",
+      "declared_cluster_count": 4,
+      "observed_cluster_count": 4,
+      "initialization_strategy": "RANDOM",
+      "initialization_seed": 1729,
+      "feature_space_ref": "kfm:feature-space:synthetic-counties:001",
+      "feature_space_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "preprocessing_receipt_ref": "kfm:run-receipt:synthetic-preprocessing:001"
+    },
+    "labeling": {
+      "output_role": "EXPLORATORY_GROUPING",
+      "claim_posture": "EXPLORATORY_ONLY",
+      "label_origin": "ANALYST_ASSIGNED",
+      "label_set_ref": "kfm:label-set:synthetic-clusters:001",
+      "public_caveat_surface": "LAYER_NOTE"
+    },
+    "evaluation": {
+      "evaluation_state": "COMPLETE",
+      "evaluation_metric_refs": ["kfm:evaluation-metric:synthetic-clusters:001"],
+      "sensitivity_state": "COMPLETE",
+      "sensitivity_run_refs": ["kfm:sensitivity-run:synthetic-clusters:001"]
+    },
+    "review": {
+      "review_state": "REVIEWED",
+      "review_record_refs": ["kfm:review-record:synthetic-clusters:001"],
+      "independent_validation_state": "PASSED",
+      "independent_validation_refs": ["kfm:validation-record:synthetic-clusters:001"]
+    },
+    "authority_claims": {
+      "evidence_authority": false,
+      "domain_category_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "promotion_authority": false,
+      "release_authority": false,
+      "publication_authority": false,
+      "public_use_authority": false
+    }
+  },
+  "cases": [
+    {"name": "pass_reviewed_exploratory", "patch": {}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_public_candidate_with_caveat", "patch": {"intended_visibility": "PUBLIC_CANDIDATE", "labeling": {"public_caveat_surface": "EVIDENCE_DRAWER"}}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "abstain_evaluation_partial", "patch": {"evaluation": {"evaluation_state": "PARTIAL"}}, "expected": {"outcome": "ABSTAIN", "codes": ["EVALUATION_INCOMPLETE"]}},
+    {"name": "abstain_validation_pending", "patch": {"review": {"independent_validation_state": "PENDING", "independent_validation_refs": []}}, "expected": {"outcome": "ABSTAIN", "codes": ["INDEPENDENT_VALIDATION_PENDING"]}},
+    {"name": "deny_authoritative_role", "patch": {"labeling": {"output_role": "AUTHORITATIVE_DOMAIN_CLASSIFICATION"}}, "expected": {"outcome": "DENY", "codes": ["AUTHORITATIVE_CLUSTER_ROLE_DENIED"]}},
+    {"name": "deny_domain_category_claim", "patch": {"labeling": {"claim_posture": "DOMAIN_CATEGORY_CLAIM"}}, "expected": {"outcome": "DENY", "codes": ["DOMAIN_CATEGORY_CLAIM_DENIED"]}},
+    {"name": "deny_public_no_caveat", "patch": {"intended_visibility": "PUBLIC_CANDIDATE", "labeling": {"public_caveat_surface": "NONE"}}, "expected": {"outcome": "DENY", "codes": ["PUBLIC_CAVEAT_REQUIRED"]}},
+    {"name": "deny_cluster_count_mismatch", "patch": {"method": {"observed_cluster_count": 5}}, "expected": {"outcome": "DENY", "codes": ["CLUSTER_COUNT_MISMATCH"]}},
+    {"name": "deny_random_without_seed", "patch": {"method": {"initialization_seed": null}}, "expected": {"outcome": "DENY", "codes": ["INITIALIZATION_SEED_REQUIRED"]}},
+    {"name": "deny_analyst_label_without_review", "patch": {"review": {"review_state": "PENDING", "review_record_refs": []}}, "expected": {"outcome": "DENY", "codes": ["ANALYST_LABEL_REVIEW_REQUIRED", "REVIEW_PENDING"]}},
+    {"name": "deny_profile_hash_tamper", "patch": {}, "tamper": "profile_hash", "expected": {"outcome": "DENY", "codes": ["PROFILE_SPEC_HASH_MISMATCH"]}},
+    {"name": "error_unknown_field", "patch": {"raw_feature_values": [1, 2, 3]}, "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}}
+  ]
+}

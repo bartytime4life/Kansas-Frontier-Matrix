@@ -1,0 +1,9 @@
+{
+  "changed": [
+    "a.pdf"
+  ],
+  "changed_count": 1,
+  "check": "sync_doctrine_artifact_provenance_status",
+  "result": "changed",
+  "write": true
+}

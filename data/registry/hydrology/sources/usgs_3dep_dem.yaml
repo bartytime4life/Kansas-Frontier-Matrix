@@ -1,0 +1,16 @@
+# source descriptor: usgs_3dep_dem
+# domain: hydrology
+# status: PROPOSED — greenfield template
+id: usgs_3dep_dem
+domain: hydrology
+role: TBD            # primary | corroborating | context | restricted
+authority: TBD
+rights:
+  license: TBD
+  attribution_required: true
+  redistribution: TBD
+sensitivity_floor: TBD
+update_cadence: TBD
+access_posture: TBD   # public | api_key | steward_only
+citation_template: "TBD"
+ingest_receipt_template: "data/receipts/ingest/hydrology/usgs_3dep_dem/<run_id>.json"

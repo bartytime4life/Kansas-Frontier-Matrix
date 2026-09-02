@@ -1,0 +1,49 @@
+{
+  "profile": "kfm.explorer.evidence-drawer.public-safe.v1",
+  "id": "kfm:ui:evidence-drawer:answer-001",
+  "outcome": "ANSWER",
+  "reason_code": "SUPPORTED",
+  "title": "Synthetic streamflow observation",
+  "summary": "A synthetic, generalized flow observation is supported by the cited fixture evidence.",
+  "evidence_refs": [
+    "kfm:evidence:synthetic:flow-001"
+  ],
+  "citations": [
+    {
+      "label": "Synthetic fixture evidence",
+      "href": "https://example.invalid/kfm/evidence/flow-001"
+    }
+  ],
+  "limitations": [
+    "Fixture-only demonstration; not a live observation or life-safety instruction."
+  ],
+  "trust_state": {
+    "source_role": "official",
+    "policy": "ALLOW",
+    "review": "REVIEWED",
+    "release": "RELEASED",
+    "freshness": "CURRENT",
+    "correction": "CORRECTED"
+  },
+  "history": {
+    "negative_outcomes": [
+      {
+        "evidence_ref": "kfm:evidence:synthetic:flow-000",
+        "state": "SUPERSEDED",
+        "reason_code": "SUPERSEDED_EVIDENCE",
+        "recorded_at": "2026-08-01T00:00:00Z",
+        "visible_in_runtime": true,
+        "resolvable_as_current": false
+      }
+    ],
+    "corrections": [
+      {
+        "prior_evidence_ref": "kfm:evidence:synthetic:flow-000",
+        "active_evidence_ref": "kfm:evidence:synthetic:flow-001",
+        "status": "ACTIVE_CORRECTION",
+        "recorded_at": "2026-08-01T00:00:00Z"
+      }
+    ]
+  },
+  "private_detail": "PRIVATE_FIELD_CANARY_981cba"
+}

@@ -1,0 +1,29 @@
+{
+  "record_id": "soil-fixture-invalid-governance",
+  "support_type": "station_observation",
+  "source_descriptor_ref": "source:synthetic-soil-station",
+  "evidence_refs": [
+    "evidence:synthetic-soil-reading"
+  ],
+  "spatial_support": {
+    "kind": "generalized_county",
+    "county_fips": "99999"
+  },
+  "depth_interval_cm": {
+    "top": 10,
+    "bottom": 20
+  },
+  "measurement": {
+    "property": "volumetric_water_content",
+    "value": 0.24,
+    "unit": "m3/m3"
+  },
+  "governance": {
+    "rights_state": "public",
+    "sensitivity_state": "precise",
+    "review_state": "approved",
+    "release_state": "released",
+    "promotion_eligible": true,
+    "rollback_state": "disabled"
+  }
+}

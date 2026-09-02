@@ -1,0 +1,49 @@
+{
+  "profile": "kfm.explorer.focus-composed-claim.public-safe.v1",
+  "request_id": "request:focus:soil-context-abstain-001",
+  "claim_id": "claim:synthetic:soil-context-003",
+  "outcome": "ABSTAIN",
+  "reason_code": "REQUIRED_DEPENDENCY_UNRESOLVED",
+  "closure_id": "kfm:closure:synthetic:soil-context-abstain-001",
+  "closure_outcome": "ABSTAIN",
+  "answer": null,
+  "evidence_refs": [],
+  "citations": [],
+  "resolved_roles": [],
+  "unavailable_roles": [
+    "STATIC_SURVEY"
+  ],
+  "limitations": [
+    "Required static-survey evidence did not resolve."
+  ],
+  "policy": "ABSTAIN",
+  "review": "NOT_APPLICABLE",
+  "release": "UNRELEASED",
+  "freshness": "UNKNOWN",
+  "ai_receipt_ref": "kfm:receipt:ai:synthetic:focus-abstain-001",
+  "evidence_drawer": {
+    "profile": "kfm.explorer.evidence-drawer.public-safe.v1",
+    "id": "kfm:ui:evidence-drawer:focus-soil-abstain-001",
+    "outcome": "ABSTAIN",
+    "reason_code": "MISSING_EVIDENCE",
+    "title": "Synthetic composed claim not supported",
+    "summary": "ABSTAIN_PRIVATE_DIAGNOSTIC_CANARY_795a24",
+    "evidence_refs": [],
+    "citations": [],
+    "limitations": [
+      "Required static-survey evidence did not resolve."
+    ],
+    "trust_state": {
+      "source_role": "context",
+      "policy": "ABSTAIN",
+      "review": "NOT_APPLICABLE",
+      "release": "UNRELEASED",
+      "freshness": "UNKNOWN",
+      "correction": "NONE"
+    },
+    "history": {
+      "negative_outcomes": [],
+      "corrections": []
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "verified": true,
+  "subject_sha256": "sha256:f4a3859af5c07b6c53a5b54fb69e218a8ff95f6f12ecc962d14a06c17e8604eb",
+  "predicate_type": "https://slsa.dev/provenance/v1",
+  "certificate_identity": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/.github/workflows/release.yml@refs/heads/main",
+  "certificate_oidc_issuer": "https://token.actions.githubusercontent.com",
+  "rekor_inclusion_verified": true,
+  "signed_entry_timestamp_verified": true
+}

@@ -1,0 +1,298 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/governance/receipt_proof_pairing_assessment.schema.json",
+  "title": "ReceiptProofPairingAssessmentCandidate",
+  "description": "Closed, fixture-only assessment of one-to-one receipt/proof pairing. Conformance grants no evidence, proof, review, promotion, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "profile",
+    "profile_status",
+    "execution_mode",
+    "authority",
+    "assessment_id",
+    "profile_spec_hash",
+    "observed_at",
+    "subject_ref",
+    "lifecycle_scope",
+    "pairing_policy",
+    "receipts",
+    "proofs",
+    "declared_pair_count",
+    "review",
+    "permissions",
+    "non_effects"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "profile": {
+      "const": "kfm.governance.receipt-proof-pairing-assessment.v1"
+    },
+    "profile_status": {
+      "const": "PROPOSED_INACTIVE"
+    },
+    "execution_mode": {
+      "const": "FIXTURE_ONLY_NO_NETWORK"
+    },
+    "authority": {
+      "const": "NONE"
+    },
+    "assessment_id": {
+      "type": "string",
+      "pattern": "^kfm:receipt-proof-pairing:[0-9a-f]{24}$"
+    },
+    "profile_spec_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "observed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "subject_ref": {
+      "$ref": "#/$defs/kfm_ref"
+    },
+    "lifecycle_scope": {
+      "enum": [
+        "PROCESSED_CANDIDATE",
+        "CATALOG_CANDIDATE",
+        "RELEASE_CANDIDATE"
+      ]
+    },
+    "pairing_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "key_fields",
+        "receipt_required",
+        "proof_required",
+        "one_receipt_per_key",
+        "one_proof_per_key",
+        "orphan_action",
+        "duplicate_action",
+        "unresolved_reference_action"
+      ],
+      "properties": {
+        "key_fields": {
+          "const": [
+            "logical_key",
+            "subject_ref"
+          ]
+        },
+        "receipt_required": {
+          "const": true
+        },
+        "proof_required": {
+          "const": true
+        },
+        "one_receipt_per_key": {
+          "const": true
+        },
+        "one_proof_per_key": {
+          "const": true
+        },
+        "orphan_action": {
+          "const": "DENY"
+        },
+        "duplicate_action": {
+          "const": "DENY"
+        },
+        "unresolved_reference_action": {
+          "const": "ABSTAIN"
+        }
+      }
+    },
+    "receipts": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "items": {
+        "$ref": "#/$defs/receipt"
+      }
+    },
+    "proofs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "items": {
+        "$ref": "#/$defs/proof"
+      }
+    },
+    "declared_pair_count": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 64
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "review_record_refs"
+      ],
+      "properties": {
+        "state": {
+          "enum": [
+            "PENDING",
+            "COMPLETE_FOR_DECLARED_SCOPE"
+          ]
+        },
+        "review_record_refs": {
+          "type": "array",
+          "maxItems": 32,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/kfm_ref"
+          }
+        }
+      }
+    },
+    "permissions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "may_create_evidence",
+        "may_create_proof",
+        "may_promote",
+        "may_release",
+        "may_publish",
+        "public_use_allowed"
+      ],
+      "properties": {
+        "may_create_evidence": {
+          "const": false
+        },
+        "may_create_proof": {
+          "const": false
+        },
+        "may_promote": {
+          "const": false
+        },
+        "may_release": {
+          "const": false
+        },
+        "may_publish": {
+          "const": false
+        },
+        "public_use_allowed": {
+          "const": false
+        }
+      }
+    },
+    "non_effects": {
+      "const": [
+        "no_evidence_resolution",
+        "no_proof_authentication",
+        "no_policy_or_review_decision",
+        "no_lifecycle_transition",
+        "no_promotion_release_or_publication"
+      ]
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "kfm_ref": {
+      "type": "string",
+      "pattern": "^kfm://[A-Za-z0-9._~:/-]{3,500}$"
+    },
+    "logical_key": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._:-]{2,160}$"
+    },
+    "receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "receipt_ref",
+        "logical_key",
+        "subject_ref",
+        "receipt_kind",
+        "artifact_digest",
+        "produced_at",
+        "resolution_state"
+      ],
+      "properties": {
+        "receipt_ref": {
+          "$ref": "#/$defs/kfm_ref"
+        },
+        "logical_key": {
+          "$ref": "#/$defs/logical_key"
+        },
+        "subject_ref": {
+          "$ref": "#/$defs/kfm_ref"
+        },
+        "receipt_kind": {
+          "enum": [
+            "RUN_RECEIPT",
+            "TRANSFORM_RECEIPT",
+            "VALIDATION_RECEIPT",
+            "PROMOTION_RECEIPT"
+          ]
+        },
+        "artifact_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "produced_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "resolution_state": {
+          "enum": [
+            "RESOLVED",
+            "UNRESOLVED"
+          ]
+        }
+      }
+    },
+    "proof": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "proof_ref",
+        "logical_key",
+        "subject_ref",
+        "proof_kind",
+        "artifact_digest",
+        "produced_at",
+        "resolution_state"
+      ],
+      "properties": {
+        "proof_ref": {
+          "$ref": "#/$defs/kfm_ref"
+        },
+        "logical_key": {
+          "$ref": "#/$defs/logical_key"
+        },
+        "subject_ref": {
+          "$ref": "#/$defs/kfm_ref"
+        },
+        "proof_kind": {
+          "enum": [
+            "VALIDATION_PROOF",
+            "INTEGRITY_PROOF",
+            "PROMOTION_PROOF",
+            "RELEASE_PROOF"
+          ]
+        },
+        "artifact_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "produced_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "resolution_state": {
+          "enum": [
+            "RESOLVED",
+            "UNRESOLVED"
+          ]
+        }
+      }
+    }
+  }
+}

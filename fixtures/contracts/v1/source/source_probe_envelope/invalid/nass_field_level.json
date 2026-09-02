@@ -1,0 +1,38 @@
+{
+  "object_type": "SourceProbeEnvelope",
+  "schema_version": "1.0.0",
+  "probe_id": "source-probe:nass-field-level-invalid-v1",
+  "profile": "NASS_AGGREGATE",
+  "observed_at": "2026-04-12T12:00:00Z",
+  "source_descriptor_ref": "data/registry/sources/agriculture/nass_crop_progress.yaml",
+  "source_head": {
+    "etag": "\"fixture\"",
+    "last_modified": "Sun, 12 Apr 2026 12:00:00 GMT",
+    "content_sha256": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+  },
+  "scope": {
+    "geography_level": "FIELD",
+    "geography_id": "field:fixture"
+  },
+  "materiality": {
+    "status": "CHANGED",
+    "reason_codes": [
+      "ROWS_CHANGED"
+    ]
+  },
+  "profile_data": {
+    "source_role": "aggregate",
+    "row_count": 1,
+    "canonical_rows_sha256": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+    "field_level_claim": true
+  },
+  "governance": {
+    "fixture_only": true,
+    "network_access": "DENIED",
+    "source_activation": false,
+    "lifecycle_write": false,
+    "promotion_allowed": false,
+    "publication_allowed": false
+  },
+  "spec_hash": "sha256:794693c115897653ad8be7f001c2e5a81f63c235bfa1d9ad66bafec5ec7ad6d5"
+}

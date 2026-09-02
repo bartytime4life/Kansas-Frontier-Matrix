@@ -1,0 +1,172 @@
+{
+  "schema_version": "1.0.0",
+  "bases": {
+    "full": {
+      "schema_version": "1.0.0",
+      "object_type": "StacGeoParquetMirrorAssessment",
+      "assessment_state": "COMPLETE",
+      "assessment_scope": "FULL_COLLECTION",
+      "mapping_profile": {
+        "profile_id": "kfm.stac-geoparquet-mirror.experimental.v1",
+        "spec_repository": "https://github.com/radiantearth/stac-geoparquet-spec",
+        "spec_document": "stac-geoparquet-spec.md",
+        "spec_blob_sha": "dcef2113c42f505cffa8208af9f6525ec5122a69",
+        "mapping_version": "1.1.0",
+        "stability": "EXPERIMENTAL_PINNED_REVISION",
+        "stac_version": "1.1.0",
+        "geoparquet_version": "1.1.0"
+      },
+      "source_collection": {
+        "collection_id": "synthetic-frontier-observations",
+        "collection_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "source_items": [
+        {
+          "collection_id": "synthetic-frontier-observations",
+          "item_id": "item-a",
+          "stac_extensions": ["https://stac-extensions.github.io/eo/v2.0.0/schema.json"],
+          "geometry_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "bbox": [-101.0, 38.0, -100.0, 39.0],
+          "links_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+          "assets_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+          "properties_digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+          "property_names": ["datetime", "eo:cloud_cover"],
+          "datetime": "2026-01-01T00:00:00Z",
+          "start_datetime": null,
+          "end_datetime": null
+        },
+        {
+          "collection_id": "synthetic-frontier-observations",
+          "item_id": "item-b",
+          "stac_extensions": [],
+          "geometry_digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+          "bbox": [-100.0, 38.0, -99.0, 39.0],
+          "links_digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+          "assets_digest": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+          "properties_digest": "sha256:8888888888888888888888888888888888888888888888888888888888888888",
+          "property_names": ["end_datetime", "start_datetime"],
+          "datetime": null,
+          "start_datetime": "2026-02-01T00:00:00Z",
+          "end_datetime": "2026-02-28T23:59:59Z"
+        }
+      ],
+      "mirror": {
+        "asset_href": "https://example.invalid/fixtures/synthetic-frontier-observations.parquet",
+        "asset_media_type": "application/vnd.apache.parquet",
+        "asset_roles": ["collection-mirror"],
+        "geometry_encoding": "WKB",
+        "datetime_storage": "NATIVE_TIMESTAMP",
+        "metadata_version": "1.1.0",
+        "collections": [
+          {
+            "collection_id": "synthetic-frontier-observations",
+            "collection_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        ],
+        "rows": [
+          {
+            "collection_id": "synthetic-frontier-observations",
+            "item_id": "item-a",
+            "stac_extensions": ["https://stac-extensions.github.io/eo/v2.0.0/schema.json"],
+            "geometry_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+            "bbox": [-101.0, 38.0, -100.0, 39.0],
+            "links_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+            "assets_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+            "properties_digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+            "property_names": ["datetime", "eo:cloud_cover"],
+            "datetime": "2026-01-01T00:00:00Z",
+            "start_datetime": null,
+            "end_datetime": null
+          },
+          {
+            "collection_id": "synthetic-frontier-observations",
+            "item_id": "item-b",
+            "stac_extensions": [],
+            "geometry_digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+            "bbox": [-100.0, 38.0, -99.0, 39.0],
+            "links_digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+            "assets_digest": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+            "properties_digest": "sha256:8888888888888888888888888888888888888888888888888888888888888888",
+            "property_names": ["end_datetime", "start_datetime"],
+            "datetime": null,
+            "start_datetime": "2026-02-01T00:00:00Z",
+            "end_datetime": "2026-02-28T23:59:59Z"
+          }
+        ]
+      },
+      "governance": {
+        "execution_mode": "FIXTURE_ONLY",
+        "network_attempted": false,
+        "parquet_opened": false,
+        "source_items_resolved": false,
+        "catalog_mutated": false,
+        "evidence_resolved": false,
+        "policy_decided": false,
+        "review_approved": false,
+        "release_authorized": false,
+        "publication_authorized": false,
+        "public_use_allowed": false
+      }
+    },
+    "partial": {
+      "schema_version": "1.0.0",
+      "object_type": "StacGeoParquetMirrorAssessment",
+      "assessment_state": "COMPLETE",
+      "assessment_scope": "PARTIAL_SAMPLE",
+      "mapping_profile": {
+        "profile_id": "kfm.stac-geoparquet-mirror.experimental.v1",
+        "spec_repository": "https://github.com/radiantearth/stac-geoparquet-spec",
+        "spec_document": "stac-geoparquet-spec.md",
+        "spec_blob_sha": "dcef2113c42f505cffa8208af9f6525ec5122a69",
+        "mapping_version": "1.1.0",
+        "stability": "EXPERIMENTAL_PINNED_REVISION",
+        "stac_version": "1.1.0",
+        "geoparquet_version": "1.1.0"
+      },
+      "source_collection": {"collection_id": "synthetic-frontier-observations", "collection_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},
+      "source_items": [{"collection_id": "synthetic-frontier-observations", "item_id": "item-a", "stac_extensions": [], "geometry_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111", "bbox": [-101.0, 38.0, -100.0, 39.0], "links_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222", "assets_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333", "properties_digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444", "property_names": ["datetime"], "datetime": "2026-01-01T00:00:00Z", "start_datetime": null, "end_datetime": null}],
+      "mirror": {
+        "asset_href": "https://example.invalid/fixtures/synthetic-frontier-observations.parquet",
+        "asset_media_type": "application/vnd.apache.parquet",
+        "asset_roles": ["collection-mirror"],
+        "geometry_encoding": "WKB",
+        "datetime_storage": "NATIVE_TIMESTAMP",
+        "metadata_version": "1.1.0",
+        "collections": [{"collection_id": "synthetic-frontier-observations", "collection_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}],
+        "rows": [{"collection_id": "synthetic-frontier-observations", "item_id": "item-a", "stac_extensions": [], "geometry_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111", "bbox": [-101.0, 38.0, -100.0, 39.0], "links_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222", "assets_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333", "properties_digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444", "property_names": ["datetime"], "datetime": "2026-01-01T00:00:00Z", "start_datetime": null, "end_datetime": null}]
+      },
+      "governance": {"execution_mode": "FIXTURE_ONLY", "network_attempted": false, "parquet_opened": false, "source_items_resolved": false, "catalog_mutated": false, "evidence_resolved": false, "policy_decided": false, "review_approved": false, "release_authorized": false, "publication_authorized": false, "public_use_allowed": false}
+    },
+    "error": {
+      "schema_version": "1.0.0",
+      "object_type": "StacGeoParquetMirrorAssessment",
+      "assessment_state": "ERROR",
+      "assessment_scope": "PARTIAL_SAMPLE",
+      "mapping_profile": {"profile_id": "kfm.stac-geoparquet-mirror.experimental.v1", "spec_repository": "https://github.com/radiantearth/stac-geoparquet-spec", "spec_document": "stac-geoparquet-spec.md", "spec_blob_sha": "dcef2113c42f505cffa8208af9f6525ec5122a69", "mapping_version": "1.1.0", "stability": "EXPERIMENTAL_PINNED_REVISION", "stac_version": "1.1.0", "geoparquet_version": "1.1.0"},
+      "source_collection": {"collection_id": "synthetic-frontier-observations", "collection_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},
+      "source_items": [{"collection_id": "synthetic-frontier-observations", "item_id": "item-a", "stac_extensions": [], "geometry_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111", "bbox": [-101.0, 38.0, -100.0, 39.0], "links_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222", "assets_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333", "properties_digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444", "property_names": ["datetime"], "datetime": "2026-01-01T00:00:00Z", "start_datetime": null, "end_datetime": null}],
+      "mirror": {"asset_href": "https://example.invalid/fixtures/error.parquet", "asset_media_type": "application/vnd.apache.parquet", "asset_roles": ["collection-mirror"], "geometry_encoding": "WKB", "datetime_storage": "NATIVE_TIMESTAMP", "metadata_version": "1.1.0", "collections": [{"collection_id": "synthetic-frontier-observations", "collection_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}], "rows": [{"collection_id": "synthetic-frontier-observations", "item_id": "item-a", "stac_extensions": [], "geometry_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111", "bbox": [-101.0, 38.0, -100.0, 39.0], "links_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222", "assets_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333", "properties_digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444", "property_names": ["datetime"], "datetime": "2026-01-01T00:00:00Z", "start_datetime": null, "end_datetime": null}]},
+      "governance": {"execution_mode": "FIXTURE_ONLY", "network_attempted": false, "parquet_opened": false, "source_items_resolved": false, "catalog_mutated": false, "evidence_resolved": false, "policy_decided": false, "review_approved": false, "release_authorized": false, "publication_authorized": false, "public_use_allowed": false}
+    }
+  },
+  "cases": [
+    {"case_id": "full-collection-parity", "base": "full", "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "partial-sample-parity", "base": "partial", "expected_outcome": "ABSTAIN", "expected_findings": [{"code": "PARTIAL_SAMPLE_PARITY_ONLY", "path": "/report/result"}]},
+    {"case_id": "explicit-error", "base": "error", "expected_outcome": "ERROR", "expected_findings": [{"code": "ASSESSMENT_ERROR", "path": "/report/result"}]},
+    {"case_id": "asset-content-divergence", "base": "full", "mutations": [{"path": "/mirror/rows/0/assets_digest", "value": "sha256:9999999999999999999999999999999999999999999999999999999999999999"}], "expected_outcome": "DENY", "expected_findings": [{"code": "MIRROR_CONTENT_CONFLICT", "path": "/report/result"}]},
+    {"case_id": "geometry-content-divergence", "base": "full", "mutations": [{"path": "/mirror/rows/1/geometry_digest", "value": "sha256:9999999999999999999999999999999999999999999999999999999999999999"}], "expected_outcome": "DENY", "expected_findings": [{"code": "MIRROR_CONTENT_CONFLICT", "path": "/report/result"}]},
+    {"case_id": "item-key-divergence", "base": "full", "mutations": [{"path": "/mirror/rows/1/item_id", "value": "item-c"}], "expected_outcome": "DENY", "expected_findings": [{"code": "MIRROR_CONTENT_CONFLICT", "path": "/report/result"}]},
+    {"case_id": "spec-hash-mismatch", "base": "full", "spec_hash_override": "sha256:0000000000000000000000000000000000000000000000000000000000000000", "expected_outcome": "DENY", "expected_findings": [{"code": "STAC_MIRROR_SPEC_HASH_MISMATCH", "path": "/spec_hash"}]},
+    {"case_id": "assessment-id-mismatch", "base": "full", "assessment_id_override": "kfm:stac-geoparquet-mirror-assessment:000000000000000000000000", "expected_outcome": "DENY", "expected_findings": [{"code": "STAC_MIRROR_ASSESSMENT_ID_MISMATCH", "path": "/assessment_id"}]},
+    {"case_id": "report-mismatch", "base": "full", "report_mutations": [{"path": "/report/result", "value": "PARTIAL_SAMPLE"}], "expected_outcome": "DENY", "expected_findings": [{"code": "STAC_MIRROR_REPORT_MISMATCH", "path": "/report"}]},
+    {"case_id": "duplicate-source-item", "base": "full", "mutations": [{"path": "/source_items/1/item_id", "value": "item-a"}], "expected_outcome": "DENY", "expected_findings": [{"code": "STAC_MIRROR_SOURCE_ITEM_DUPLICATE", "path": "/source_items"}]},
+    {"case_id": "duplicate-mirror-row", "base": "full", "mutations": [{"path": "/mirror/rows/1/item_id", "value": "item-a"}], "expected_outcome": "DENY", "expected_findings": [{"code": "STAC_MIRROR_ROW_DUPLICATE", "path": "/mirror/rows"}]},
+    {"case_id": "collection-metadata-mismatch", "base": "full", "mutations": [{"path": "/mirror/collections/0/collection_digest", "value": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"}], "expected_outcome": "DENY", "expected_findings": [{"code": "STAC_MIRROR_COLLECTION_METADATA_MISMATCH", "path": "/mirror/collections"}]},
+    {"case_id": "collection-membership-mismatch", "base": "full", "mutations": [{"path": "/mirror/rows/1/collection_id", "value": "synthetic-other"}], "expected_outcome": "DENY", "expected_findings": [{"code": "STAC_MIRROR_COLLECTION_MEMBERSHIP_MISMATCH", "path": "/mirror/rows"}]},
+    {"case_id": "property-name-collision", "base": "full", "mutations": [{"path": "/mirror/rows/0/property_names", "value": ["assets", "datetime"]}], "expected_outcome": "DENY", "expected_findings": [{"code": "STAC_MIRROR_PROPERTY_COLLISION", "path": "/mirror/rows/0/property_names"}]},
+    {"case_id": "extension-list-noncanonical", "base": "full", "mutations": [{"path": "/mirror/rows/0/stac_extensions", "value": ["https://z.example/schema.json", "https://a.example/schema.json"]}], "expected_outcome": "DENY", "expected_findings": [{"code": "STAC_MIRROR_LIST_NONCANONICAL", "path": "/mirror/rows/0/stac_extensions"}]},
+    {"case_id": "temporal-shape-invalid", "base": "full", "mutations": [{"path": "/mirror/rows/0/datetime", "value": null}], "expected_outcome": "DENY", "expected_findings": [{"code": "STAC_MIRROR_TEMPORAL_SHAPE_INVALID", "path": "/mirror/rows/0"}]},
+    {"case_id": "governance-overreach", "base": "full", "mutations": [{"path": "/governance/catalog_mutated", "value": true}], "expected_outcome": "DENY", "expected_findings": [{"code": "STAC_MIRROR_SCHEMA_INVALID", "path": "/governance/catalog_mutated"}]},
+    {"case_id": "unrecognized-mirror-media-type", "base": "full", "mutations": [{"path": "/mirror/asset_media_type", "value": "application/octet-stream"}], "expected_outcome": "DENY", "expected_findings": [{"code": "STAC_MIRROR_SCHEMA_INVALID", "path": "/mirror/asset_media_type"}]}
+  ]
+}

@@ -1,0 +1,217 @@
+{
+  "schema_version": "1.0.0",
+  "profile": "kfm.source_event_envelope_fixture_manifest.v1",
+  "cases": [
+    {
+      "case_id": "valid_admission_candidate",
+      "file": "valid/valid_admission_candidate.json",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid_deletion_review",
+      "file": "valid/valid_deletion_review.json",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid_duplicate_replay_no_action",
+      "file": "valid/valid_duplicate_replay_no_action.json",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid_quarantine_unknown_rights",
+      "file": "valid/valid_quarantine_unknown_rights.json",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "invalid_authority_overreach",
+      "file": "invalid/invalid_authority_overreach.json",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "SCHEMA_INVALID",
+          "path": "/claims/published"
+        }
+      ]
+    },
+    {
+      "case_id": "invalid_bad_hash_format",
+      "file": "invalid/invalid_bad_hash_format.json",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "SCHEMA_INVALID",
+          "path": "/payload/payload_spec_hash"
+        }
+      ]
+    },
+    {
+      "case_id": "invalid_empty_reason_codes",
+      "file": "invalid/invalid_empty_reason_codes.json",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "SCHEMA_INVALID",
+          "path": "/routing/reason_codes"
+        }
+      ]
+    },
+    {
+      "case_id": "invalid_missing_event_id",
+      "file": "invalid/invalid_missing_event_id.json",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "SCHEMA_INVALID",
+          "path": "/"
+        }
+      ]
+    },
+    {
+      "case_id": "semantic_invalid_admission_without_evidence",
+      "file": "semantic_invalid/semantic_invalid_admission_without_evidence.json",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "ADMISSION_GOVERNANCE_INCOMPLETE",
+          "path": "/routing/disposition"
+        }
+      ]
+    },
+    {
+      "case_id": "semantic_invalid_deleted_content",
+      "file": "semantic_invalid/semantic_invalid_deleted_content.json",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "CONTENT_STATE_INVALID",
+          "path": "/subject"
+        }
+      ]
+    },
+    {
+      "case_id": "semantic_invalid_event_id",
+      "file": "semantic_invalid/semantic_invalid_event_id.json",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "EVENT_ID_MISMATCH",
+          "path": "/event_id"
+        }
+      ]
+    },
+    {
+      "case_id": "semantic_invalid_last_modified",
+      "file": "semantic_invalid/semantic_invalid_last_modified.json",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "SOURCE_LAST_MODIFIED_AFTER_RECEIPT",
+          "path": "/subject/last_modified"
+        }
+      ]
+    },
+    {
+      "case_id": "semantic_invalid_manual_replay_routing",
+      "file": "semantic_invalid/semantic_invalid_manual_replay_routing.json",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "MANUAL_REPLAY_ROUTING_INVALID",
+          "path": "/routing/disposition"
+        }
+      ]
+    },
+    {
+      "case_id": "semantic_invalid_missing_content",
+      "file": "semantic_invalid/semantic_invalid_missing_content.json",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "CONTENT_STATE_INVALID",
+          "path": "/subject"
+        }
+      ]
+    },
+    {
+      "case_id": "semantic_invalid_no_action_reason",
+      "file": "semantic_invalid/semantic_invalid_no_action_reason.json",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "NO_ACTION_REASON_INVALID",
+          "path": "/routing/reason_codes"
+        }
+      ]
+    },
+    {
+      "case_id": "semantic_invalid_payload_hash",
+      "file": "semantic_invalid/semantic_invalid_payload_hash.json",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "PAYLOAD_SPEC_HASH_MISMATCH",
+          "path": "/payload/payload_spec_hash"
+        }
+      ]
+    },
+    {
+      "case_id": "semantic_invalid_reason_order",
+      "file": "semantic_invalid/semantic_invalid_reason_order.json",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "REASON_CODE_ORDER_INVALID",
+          "path": "/routing/reason_codes"
+        }
+      ]
+    },
+    {
+      "case_id": "semantic_invalid_reference_order",
+      "file": "semantic_invalid/semantic_invalid_reference_order.json",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "REFERENCE_ORDER_INVALID",
+          "path": "/governance/evidence_refs"
+        }
+      ]
+    },
+    {
+      "case_id": "semantic_invalid_source_role",
+      "file": "semantic_invalid/semantic_invalid_source_role.json",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "SOURCE_ROLE_REF_UNBOUND",
+          "path": "/source_role_ref"
+        }
+      ]
+    },
+    {
+      "case_id": "semantic_invalid_time_order",
+      "file": "semantic_invalid/semantic_invalid_time_order.json",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "TIME_ORDER_INVALID",
+          "path": "/received_at"
+        }
+      ]
+    },
+    {
+      "case_id": "semantic_invalid_unknown_rights_admission",
+      "file": "semantic_invalid/semantic_invalid_unknown_rights_admission.json",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "ADMISSION_GOVERNANCE_INCOMPLETE",
+          "path": "/routing/disposition"
+        }
+      ]
+    }
+  ]
+}

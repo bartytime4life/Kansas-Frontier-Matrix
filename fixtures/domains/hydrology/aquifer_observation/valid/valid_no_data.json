@@ -1,0 +1,31 @@
+{
+  "id": "kfm:hydrology:aquifer-observation:synthetic-no-data",
+  "version": "v0.3",
+  "spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "object_type": "AquiferObservation",
+  "source_descriptor_ref": "source:synthetic-groundwater-observations:v1",
+  "source_record_ref": "synthetic:groundwater-reading:no-data",
+  "source_role": "observed",
+  "parameter": {
+    "code": "GW_LEVEL",
+    "name": "groundwater level"
+  },
+  "measurement": {
+    "unit": "ft",
+    "basis": {
+      "reference_type": "depth_below_measuring_point",
+      "reference_ref": "synthetic:measuring-point:no-data"
+    },
+    "status": "final",
+    "no_data": true,
+    "no_data_reason": "synthetic instrument outage"
+  },
+  "observed_time": "2026-01-20T12:00:00Z",
+  "spatial_context": {
+    "site_ref": "synthetic:monitoring-site:no-data",
+    "geometry_role": "withheld"
+  },
+  "evidence_refs": [
+    "evidence:synthetic-groundwater-reading:no-data"
+  ]
+}

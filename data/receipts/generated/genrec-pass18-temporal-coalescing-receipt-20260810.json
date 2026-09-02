@@ -1,0 +1,137 @@
+{
+  "receipt_id": "genrec-pass18-temporal-coalescing-receipt-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/temporal-coalescing-receipt.yml",
+    "contracts/evidence/temporal_coalescing_receipt.md",
+    "docs/intake/exploratory/pass-18-temporal-coalescing-receipt-source-map.md",
+    "fixtures/contracts/v1/evidence/temporal_coalescing_receipt/cases.json",
+    "schemas/contracts/v1/evidence/temporal_coalescing_receipt.schema.json",
+    "tests/validators/test_validate_temporal_coalescing_receipt.py",
+    "tools/validators/evidence/validate_temporal_coalescing_receipt.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/temporal-coalescing-receipt.yml": "sha256:49b1a509b9fc29289a7558e3cc59bbab1e5c16954b74445fe25e651a2aa619ab",
+    "contracts/evidence/temporal_coalescing_receipt.md": "sha256:6a76c365a779be1547b82762eb666136ee1c98784799e92a7bcb451bb19f1dd4",
+    "docs/intake/exploratory/pass-18-temporal-coalescing-receipt-source-map.md": "sha256:2e8cc8cea5252abf6402e65ef260e9983bf08f7e5e8d00970dea31682687e42f",
+    "fixtures/contracts/v1/evidence/temporal_coalescing_receipt/cases.json": "sha256:dcf05ee2fb3c915b293349046ea8888b36e73377afe35e7397d4ea69d7836d4b",
+    "schemas/contracts/v1/evidence/temporal_coalescing_receipt.schema.json": "sha256:1a259fef5a2102af634dc90ccd9e5221a2c18e0c2ed747f4792c71e3430f336a",
+    "tests/validators/test_validate_temporal_coalescing_receipt.py": "sha256:c3ac245628bbb21a60ad488e3aa0647849cfdc645e583d52e5ec0502dd07ff57",
+    "tools/validators/evidence/validate_temporal_coalescing_receipt.py": "sha256:944f21ad4d7f29ad97b5b677416e8fed61fbdb11b9a93e0c56a9c710022d5010"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:6a76c365a779be1547b82762eb666136ee1c98784799e92a7bcb451bb19f1dd4",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository inspection and mutation",
+      "local PDF rendering and deterministic Markdown, JSON, and Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9"
+    ],
+    "attached_docs": [
+      "KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#physical-page=153&printed-page=150&card=KFM-P18-INV-414",
+      "gdrive://1ww-h3abQkxXeBvSxO5YV6_yvsZ9Wn1P5#card=KFM-P9-PROG-0015",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/149af17075f7f12d716aa14de439ea22ee6a343e/contracts/common/temporal_window.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/149af17075f7f12d716aa14de439ea22ee6a343e/contracts/data/temporal_slice.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/149af17075f7f12d716aa14de439ea22ee6a343e/contracts/evidence/temporal_support_assessment.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/149af17075f7f12d716aa14de439ea22ee6a343e/contracts/runtime/run_receipt.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/149af17075f7f12d716aa14de439ea22ee6a343e/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/temporal-coalescing-receipt.yml": "CONFIRMED",
+    "contracts/evidence/temporal_coalescing_receipt.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-temporal-coalescing-receipt-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/evidence/temporal_coalescing_receipt/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/evidence/temporal_coalescing_receipt.schema.json": "PROPOSED",
+    "tests/validators/test_validate_temporal_coalescing_receipt.py": "CONFIRMED",
+    "tools/validators/evidence/validate_temporal_coalescing_receipt.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS",
+      "reason": "Seven deterministic temporal-coalescing tests passed in an isolated declared-dependency environment."
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS",
+      "reason": "Eleven exact PASS, ABSTAIN, DENY, and ERROR cases matched reviewed outcomes and codes."
+    },
+    {
+      "gate": "no-network-boundary",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pass18-temporal-coalescing-card",
+      "validated": true,
+      "evidence_ref": "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#physical-page=153&printed-page=150&card=KFM-P18-INV-414"
+    },
+    {
+      "id": "drive-program-carrier",
+      "validated": true,
+      "evidence_ref": "gdrive://1ww-h3abQkxXeBvSxO5YV6_yvsZ9Wn1P5#card=KFM-P9-PROG-0015"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/149af17075f7f12d716aa14de439ea22ee6a343e/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T15:51:05Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub and Google Drive connectors",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Additive, inactive, fixture-only TemporalCoalescingReceiptCandidate packet derived from supplied Pass 18 card KFM-P18-INV-414 and corroborated by its connected-Drive program carrier. It validates deterministic interval-set digests, half-open UTC coverage, exact fact-key preservation, and identifier lineage without executing a transform, resolving evidence, deciding policy or review, promoting lifecycle state, releasing, deploying, publishing, or authorizing public use."
+}

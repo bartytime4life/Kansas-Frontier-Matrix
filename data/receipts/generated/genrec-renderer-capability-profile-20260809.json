@@ -1,0 +1,175 @@
+{
+  "receipt_id": "genrec-renderer-capability-profile-20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/renderer-capability-profile.yml",
+    "contracts/ui/renderer_capability_profile.md",
+    "docs/intake/exploratory/renderer-capability-profile-source-map.md",
+    "fixtures/contracts/v1/ui/renderer_capability_profile/cases.json",
+    "schemas/contracts/v1/ui/renderer_capability_profile.schema.json",
+    "tests/validators/ui/test_renderer_capability_profile.py",
+    "tools/validators/ui/validate_renderer_capability_profile.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/renderer-capability-profile.yml": "sha256:b8236867a9350199b7471deee2924a3d5a7d04f0e249bbb05c9dad59ae482a4b",
+    "contracts/ui/renderer_capability_profile.md": "sha256:30827e0a504e3d7efa7015e4af66d5e30c87b545e4a523a4db5c50df4824c3b8",
+    "docs/intake/exploratory/renderer-capability-profile-source-map.md": "sha256:68575496bf4eee8831881db2c57e51b230cfad00fe168191e243a577cb591ae2",
+    "fixtures/contracts/v1/ui/renderer_capability_profile/cases.json": "sha256:b72e41cb9dfab35aa403807b7f763fea9f53465c420702f65775aafa266782c6",
+    "schemas/contracts/v1/ui/renderer_capability_profile.schema.json": "sha256:23da1c8662b35bb19d9eab23be2a8bfb360daa73d34a932f177a26fd623c86dc",
+    "tests/validators/ui/test_renderer_capability_profile.py": "sha256:8ee9899db92035c2faea1172cfb4115d0c07ce34aef0c97e15ab584baf6ee7af",
+    "tools/validators/ui/validate_renderer_capability_profile.py": "sha256:52136480f4fe43f62bb7957c4bea3145abb75ede1542a787c69fcf27cb00bb87"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-09"
+  },
+  "prompt_or_contract": "sha256:30827e0a504e3d7efa7015e4af66d5e30c87b545e4a523a4db5c50df4824c3b8",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository inspection and mutation",
+      "local deterministic PDF and Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:07c7765576df1997e0be88141bd3cd213930e7281d490a8ae62afd78abe8f445",
+      "sha256:309cf67311059c549e144ae9961b2f49eddf1caab8739a51b47ae88c2f5c1c90",
+      "sha256:4406daa99ff0e3d58757d62d40358c9fd745f95137e99f14602659d0c3f54e55"
+    ],
+    "attached_docs": [
+      "KFM_Full_Atlas_seed_cards.md",
+      "Domain-Driven Design Reference.pdf",
+      "Master MapLibre Components-Functions-Features.pdf"
+    ],
+    "evidence_refs": [
+      "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#Renderer-as-Pluggable-Component-Framework",
+      "attachment://Domain-Driven%20Design%20Reference.pdf#page=59",
+      "attachment://Master%20MapLibre%20Components-Functions-Features.pdf#page=14",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/4e4eb979caae21922af2217247ade970bd70cf82/docs/architecture/map-master.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/4e4eb979caae21922af2217247ade970bd70cf82/docs/architecture/maplibre-master.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/4e4eb979caae21922af2217247ade970bd70cf82/docs/adr/ADR-0007%20%E2%80%94%20MapLibre%20GL%20JS%20Is%20the%20Sole%20Browser-Side%20Renderer.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/renderer-capability-profile.yml": "CONFIRMED",
+    "contracts/ui/renderer_capability_profile.md": "PROPOSED",
+    "docs/intake/exploratory/renderer-capability-profile-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/ui/renderer_capability_profile/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/ui/renderer_capability_profile.schema.json": "PROPOSED",
+    "tests/validators/ui/test_renderer_capability_profile.py": "CONFIRMED",
+    "tools/validators/ui/validate_renderer_capability_profile.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS",
+      "reason": "9 deterministic tests passed in the isolated authoring worktree."
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS",
+      "reason": "20 exact cases passed across PASS, ABSTAIN, and DENY."
+    },
+    {
+      "gate": "adjacent-view-registry-and-evidence-drawer-tests",
+      "outcome": "PASS",
+      "reason": "10 adjacent tests passed; the Evidence Drawer suite replayed 11 valid and 9 invalid fixtures."
+    },
+    {
+      "gate": "documentation-metadata-validation",
+      "outcome": "PASS",
+      "reason": "Both new metadata blocks passed the repository's required profile."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "no-network-boundary",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md",
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "full-atlas-pluggable-renderer-proposal",
+      "validated": true,
+      "evidence_ref": "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#Renderer-as-Pluggable-Component-Framework"
+    },
+    {
+      "id": "ddd-pluggable-component-framework",
+      "validated": true,
+      "evidence_ref": "attachment://Domain-Driven%20Design%20Reference.pdf#page=59"
+    },
+    {
+      "id": "maplibre-renderer-family-inventory",
+      "validated": true,
+      "evidence_ref": "attachment://Master%20MapLibre%20Components-Functions-Features.pdf#page=14"
+    },
+    {
+      "id": "renderer-boundary-doctrine",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/4e4eb979caae21922af2217247ade970bd70cf82/docs/architecture/map-master.md"
+    },
+    {
+      "id": "maplibre-runtime-dispositions",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/4e4eb979caae21922af2217247ade970bd70cf82/docs/architecture/maplibre-master.md"
+    },
+    {
+      "id": "accepted-sole-browser-renderer-decision",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/4e4eb979caae21922af2217247ade970bd70cf82/docs/adr/ADR-0007%20%E2%80%94%20MapLibre%20GL%20JS%20Is%20the%20Sole%20Browser-Side%20Renderer.md"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/4e4eb979caae21922af2217247ade970bd70cf82/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T00:38:55Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only RendererCapabilityProfileCandidate packet derived from the Full Atlas pluggable-renderer proposal, the generic Pluggable Component Framework reference, and KFM MapLibre doctrine. It separates declared capability compatibility from renderer admission, keeps MapLibre GL JS as the sole browser-side renderer, and does not select, install, import, load, contact, benchmark, admit, release, deploy, publish, or authorize public use of any renderer."
+}

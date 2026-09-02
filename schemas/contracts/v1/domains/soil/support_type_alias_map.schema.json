@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/soil/support_type_alias_map.schema.json",
+  "title": "SoilSupportTypeAliasMap",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["object_type", "schema_version", "status", "canonical_profile", "aliases", "governance"],
+  "properties": {
+    "object_type": {"const": "SoilSupportTypeAliasMap"},
+    "schema_version": {"const": "1.0.0"},
+    "status": {"const": "PROPOSED_INACTIVE"},
+    "canonical_profile": {"const": "pipeline_specs/soil/support_type_profile.v1.json"},
+    "aliases": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["alias", "canonical", "class_preserved"],
+        "properties": {
+          "alias": {"enum": ["satellite_grid_soil_moisture", "pedon_evidence", "interpretation"]},
+          "canonical": {"enum": ["satellite_soil_moisture_grid", "profile_soil_evidence", "soil_interpretation"]},
+          "class_preserved": {"const": true}
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_activated", "evidence_resolved", "policy_evaluated", "promotion_authorized", "release_authorized", "public_use_allowed"],
+      "properties": {
+        "source_activated": {"const": false},
+        "evidence_resolved": {"const": false},
+        "policy_evaluated": {"const": false},
+        "promotion_authorized": {"const": false},
+        "release_authorized": {"const": false},
+        "public_use_allowed": {"const": false}
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED",
+    "contract_doc": "contracts/domains/soil/support_type_alias_map.md",
+    "profile": "pipeline_specs/soil/support_type_alias_map.v1.json",
+    "canonical_profile": "pipeline_specs/soil/support_type_profile.v1.json",
+    "authority": "compatibility_normalization_only"
+  }
+}

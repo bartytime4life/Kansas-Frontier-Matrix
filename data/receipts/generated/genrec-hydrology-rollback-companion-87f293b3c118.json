@@ -1,0 +1,119 @@
+{
+  "receipt_id": "genrec-hydrology-rollback-companion-87f293b3c118",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/runbooks/hydrology/ROLLBACK_RUNBOOK.md"
+  ],
+  "artifact_hashes": {
+    "docs/runbooks/hydrology/ROLLBACK_RUNBOOK.md": "sha256:a36219e3a9da80e14a10882012cbbfdf87d7746ea57fb3785d04cad48e908039"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-28 scheduled run"
+  },
+  "prompt_or_contract": "sha256:6a24f155f381a6150c39aa05f698bedf416293677b8249c498fd97230e7a9163",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector",
+      "Notion connector",
+      "local repository validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:6a24f155f381a6150c39aa05f698bedf416293677b8249c498fd97230e7a9163"
+    ],
+    "attached_docs": [
+      "KFM SCHEDULED DEPENDENCY-CLOSED BUILDER v1.0"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/129ac47f359be143ce8bbe43d8401f8660b8be5f",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/129ac47f359be143ce8bbe43d8401f8660b8be5f/docs/runbooks/hydrology/ROLLBACK_RUNBOOK.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/129ac47f359be143ce8bbe43d8401f8660b8be5f/docs/runbooks/hydrology/ROLLBACK.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/129ac47f359be143ce8bbe43d8401f8660b8be5f/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/issues/3372",
+      "source://google-drive/KFM-Markdown-Engineering-Modernization-GitHub-Documentation-Implementation-Agent",
+      "source://google-drive/KFM-Verified-Improvement-Campaign-v1.1",
+      "source://google-drive/Kansas-Frontier-Matrix-AI-Build-Operating-Contract",
+      "coordination://notion/KFM-Alignment-Register-2026-08-23"
+    ]
+  },
+  "truth_labels": {
+    "docs/runbooks/hydrology/ROLLBACK_RUNBOOK.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-base-and-placement",
+      "outcome": "PASS",
+      "reason": "Pinned current main at 129ac47f359be143ce8bbe43d8401f8660b8be5f; accepted Directory Rules, CODEOWNERS, and the runbook root retain the same path under docs/runbooks/hydrology/."
+    },
+    {
+      "gate": "overlap-and-concurrency",
+      "outcome": "PASS",
+      "reason": "The final overlap search found no open pull requests. Recently merged PR #3666 owns the disjoint MapLibre acquisition-inventory seam and changes no Hydrology path, object family, or primary-runbook/readiness-companion relationship."
+    },
+    {
+      "gate": "companion-role-convergence",
+      "outcome": "PASS",
+      "reason": "Removed the primary runbook's stale claim that ROLLBACK.md remains a proposal scaffold, preserved its non-operational boundary, and normalized its related metadata to repository-root-relative graph targets."
+    },
+    {
+      "gate": "focused-documentation-and-rollback-validation",
+      "outcome": "PASS",
+      "reason": "Local links, 24 metadata-validator tests, 20 link-check tests, RollbackCard fixture polarity and eight validator tests, and twelve synthetic rollback tests passed."
+    },
+    {
+      "gate": "direct-metadata-profile",
+      "outcome": "SKIPPED",
+      "reason": "Direct base and head scans retain the identical inherited digest: 14 failures and 38 warnings from malformed nested metadata and existing registry entries; no baseline was expanded or enforcement weakened. The changed-file ratchet remains the hosted gate."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Accountable review is a separate transition and remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pinned-primary-runbook",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/129ac47f359be143ce8bbe43d8401f8660b8be5f/docs/runbooks/hydrology/ROLLBACK_RUNBOOK.md"
+    },
+    {
+      "id": "pinned-readiness-companion",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/129ac47f359be143ce8bbe43d8401f8660b8be5f/docs/runbooks/hydrology/ROLLBACK.md"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/129ac47f359be143ce8bbe43d8401f8660b8be5f/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "generated-receipt-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/129ac47f359be143ce8bbe43d8401f8660b8be5f/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-28T01:02:30Z",
+  "emitter": "openai/gpt-5",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Same-path correction of the Hydrology primary runbook's companion status. It does not change rollback mechanics, RollbackCard semantics, policy, source admission, review authority, lifecycle state, release, deployment, publication, or repository settings."
+}

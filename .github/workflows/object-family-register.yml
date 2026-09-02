@@ -1,0 +1,143 @@
+# Validate the proposed machine-readable object-family register.
+#
+# This workflow is deterministic and no-network after installing declared test
+# dependencies. A green result proves navigational index consistency only; it
+# does not select conflicting candidates, add object-family authority, or
+# authorize policy, evidence, release, deployment, promotion, or publication.
+name: object-family-register
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/**"
+      - "apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts"
+      - "contracts/**"
+      - "control_plane/object_family_register.yaml"
+      - "docs/registers/OBJECT_FAMILY.md"
+      - "fixtures/contracts/**"
+      - "fixtures/correction/correction_notice/**"
+      - "fixtures/data/layer_manifest/**"
+      - "fixtures/data/validation_report/**"
+      - "fixtures/domains/soil/domain_validation_report/**"
+      - "fixtures/release/promotion_receipt/**"
+      - "fixtures/release/release_manifest/**"
+      - "fixtures/release/rollback_card/**"
+      - "fixtures/runtime/layer_manifest_admission/**"
+      - "packages/**"
+      - "policies/**"
+      - "policy/**"
+      - "schemas/contracts/**"
+      - "tests/**"
+      - "tools/proof_pack/assemble_proof_pack.py"
+      - "tools/proof_pack/proof_pack_check.py"
+      - "tools/validators/**"
+      - "data/receipts/generated/genrec-object-family-register-*.json"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/**"
+      - "apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts"
+      - "contracts/**"
+      - "control_plane/object_family_register.yaml"
+      - "docs/registers/OBJECT_FAMILY.md"
+      - "fixtures/contracts/**"
+      - "fixtures/correction/correction_notice/**"
+      - "fixtures/data/layer_manifest/**"
+      - "fixtures/data/validation_report/**"
+      - "fixtures/domains/soil/domain_validation_report/**"
+      - "fixtures/release/promotion_receipt/**"
+      - "fixtures/release/release_manifest/**"
+      - "fixtures/release/rollback_card/**"
+      - "fixtures/runtime/layer_manifest_admission/**"
+      - "packages/**"
+      - "policies/**"
+      - "policy/**"
+      - "schemas/contracts/**"
+      - "tests/**"
+      - "tools/proof_pack/assemble_proof_pack.py"
+      - "tools/proof_pack/proof_pack_check.py"
+      - "tools/validators/**"
+      - "data/receipts/generated/genrec-object-family-register-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: object-family-register-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate-object-family-register:
+    name: validate-object-family-register
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared schema and test dependencies
+        shell: bash
+        run: python tools/ci/install_python_ci.py project-test
+
+      - name: Run focused no-network tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover \
+            --start-directory tests/validators \
+            --pattern 'test_validate_object_family_register.py' \
+            --verbose
+
+      - name: Validate fixture polarity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/control_plane/validate_object_family_register.py --fixtures
+
+      - name: Validate current register and declared paths
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/control_plane/validate_object_family_register.py
+
+      - name: Verify generated authoring receipt integrity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-object-family-register-evidence-ref-workflow-parity-20260825.json \
+            --repo-root .
+
+      - name: Record validation boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### Object family register"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: the exact sixteen-family milestone set, three retained families, schema shape, canonical ordering, relationship closure, responsibility-root placement, path existence, per-surface status, and structural classification."
+            echo "- Known gaps: eleven required families retain unresolved candidate conflicts; EvidenceRef identity remains partial, and WithdrawalNotice remains structurally partial."
+            echo "- Boundary: the register is a navigational index. It cannot select conflicting candidates, add, rename, remove, approve, release, deploy, promote, or publish an object family."
+          } >> "$GITHUB_STEP_SUMMARY"

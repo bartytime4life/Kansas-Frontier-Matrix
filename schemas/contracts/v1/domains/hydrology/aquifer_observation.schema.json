@@ -1,0 +1,277 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/hydrology/aquifer_observation.schema.json",
+  "title": "Aquifer Observation",
+  "description": "PROPOSED closed shape for a Hydrology groundwater-level or aquifer-state measurement. Aquifer geometry and interpretation remain Geology-owned and are referenced only through AquiferContextLink records.",
+  "type": "object",
+  "x-kfm": {
+    "status": "PROPOSED",
+    "contract_doc": "contracts/domains/hydrology/aquifer_observation.md",
+    "fixtures_root": "fixtures/domains/hydrology/aquifer_observation/",
+    "validator": "tools/validators/domains/hydrology/validate_aquifer_observation.py",
+    "policy": "policy/domains/hydrology/"
+  },
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^kfm:hydrology:aquifer-observation:[a-z0-9][a-z0-9._:-]{2,127}$"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^v[0-9]+(?:\\.[0-9]+){0,2}$"
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "object_type": {
+      "const": "AquiferObservation"
+    },
+    "source_descriptor_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_record_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_role": {
+      "const": "observed"
+    },
+    "parameter": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "measurement": {
+      "type": "object",
+      "properties": {
+        "source_value": {
+          "type": "number"
+        },
+        "unit": {
+          "type": "string",
+          "minLength": 1
+        },
+        "basis": {
+          "type": "object",
+          "properties": {
+            "reference_type": {
+              "enum": [
+                "depth_below_measuring_point",
+                "elevation_above_vertical_datum",
+                "hydraulic_head",
+                "aquifer_state_index",
+                "source_defined"
+              ]
+            },
+            "reference_ref": {
+              "type": "string",
+              "minLength": 1
+            },
+            "method_ref": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "reference_type",
+            "reference_ref"
+          ],
+          "additionalProperties": false
+        },
+        "qualifier": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "enum": [
+            "provisional",
+            "final",
+            "corrected",
+            "estimated",
+            "source_defined"
+          ]
+        },
+        "no_data": {
+          "type": "boolean"
+        },
+        "no_data_reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "normalized": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "number"
+            },
+            "unit": {
+              "type": "string",
+              "minLength": 1
+            },
+            "transform_ref": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "value",
+            "unit",
+            "transform_ref"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "unit",
+        "basis",
+        "status",
+        "no_data"
+      ],
+      "oneOf": [
+        {
+          "properties": {
+            "no_data": {
+              "const": false
+            }
+          },
+          "required": [
+            "source_value"
+          ]
+        },
+        {
+          "properties": {
+            "no_data": {
+              "const": true
+            }
+          },
+          "required": [
+            "no_data_reason"
+          ],
+          "not": {
+            "required": [
+              "source_value"
+            ]
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "observed_time": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+    },
+    "source_time": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+    },
+    "retrieval_time": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+    },
+    "spatial_context": {
+      "type": "object",
+      "properties": {
+        "site_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "groundwater_well_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "geometry_role": {
+          "enum": [
+            "exact_internal",
+            "source_exact",
+            "generalized_public",
+            "aggregate_public",
+            "withheld",
+            "restricted"
+          ]
+        }
+      },
+      "required": [
+        "site_ref",
+        "geometry_role"
+      ],
+      "additionalProperties": false
+    },
+    "aquifer_context_link_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^kfm:hydrology:aquifer-context-link:"
+      },
+      "uniqueItems": true
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "quality_flags": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "correction": {
+      "type": "object",
+      "properties": {
+        "supersedes_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "correction_time": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+        }
+      },
+      "required": [
+        "supersedes_ref",
+        "reason",
+        "correction_time"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "id",
+    "version",
+    "spec_hash",
+    "object_type",
+    "source_descriptor_ref",
+    "source_record_ref",
+    "source_role",
+    "parameter",
+    "measurement",
+    "observed_time",
+    "spatial_context",
+    "evidence_refs"
+  ],
+  "additionalProperties": false
+}

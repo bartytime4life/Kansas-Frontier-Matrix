@@ -1,0 +1,187 @@
+{
+  "receipt_id": "genrec-packages-taxonomy-readme-d19bb538",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "packages/taxonomy/README.md"
+  ],
+  "artifact_hashes": {
+    "packages/taxonomy/README.md": "sha256:d19bb5386ed7eae02c6b762284cab2eb9a602c10a171202e12b7ad904eeee4ad"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-5)",
+    "version": "Work Mode session 2026-07-20"
+  },
+  "prompt_or_contract": "sha256:1afd602549cc374dc1688fafa71a2a8e188ac6fb812eadc8d8ead878b1400d71",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository code search",
+      "repository file reads",
+      "remote review-branch and contents writes",
+      "local deterministic Markdown and JSON validation",
+      "local supplied-source inspection"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:1afd602549cc374dc1688fafa71a2a8e188ac6fb812eadc8d8ead878b1400d71",
+      "sha256:759de4fcb51cf0f55896089e397d9c47481d60d9fb80ac9a44d47b2f60a0a335",
+      "sha256:e92500f9b40007e8b69d183ecaa6247c542ffec25857875ecd2dbd00709785b1",
+      "sha256:57e4b74255b52863f2a489595077741d7f45c2968a9740fe4837bac73778f780"
+    ],
+    "attached_docs": [
+      "Current user request — update packages/taxonomy/README.md",
+      "Directory Rules.pdf",
+      "Unified Implementation Architecture Build Manual.md",
+      "KFM Pass 20 Part 2 Idea Index Category Atlas and Expansion Dossier.md",
+      "Repository-current KFM doctrine and authority files at the pinned base"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/13e1b27bf8cc4fdd4d88305532e69c444c07a4b5",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/13e1b27bf8cc4fdd4d88305532e69c444c07a4b5/packages/taxonomy/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/13e1b27bf8cc4fdd4d88305532e69c444c07a4b5/packages/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/13e1b27bf8cc4fdd4d88305532e69c444c07a4b5/packages/identity/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/13e1b27bf8cc4fdd4d88305532e69c444c07a4b5/packages/schema-registry/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/13e1b27bf8cc4fdd4d88305532e69c444c07a4b5/packages/envelopes/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/13e1b27bf8cc4fdd4d88305532e69c444c07a4b5/tools/validators/taxonomy_resolver/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/13e1b27bf8cc4fdd4d88305532e69c444c07a4b5/packages/domains/flora/taxonomy/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/13e1b27bf8cc4fdd4d88305532e69c444c07a4b5/packages/domains/flora/taxonomy_resolver/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/13e1b27bf8cc4fdd4d88305532e69c444c07a4b5/contracts/crosswalks/taxonomy/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/13e1b27bf8cc4fdd4d88305532e69c444c07a4b5/data/registry/crosswalks/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/13e1b27bf8cc4fdd4d88305532e69c444c07a4b5/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/13e1b27bf8cc4fdd4d88305532e69c444c07a4b5/docs/doctrine/authority-ladder.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/13e1b27bf8cc4fdd4d88305532e69c444c07a4b5/docs/doctrine/ai-build-operating-contract.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/13e1b27bf8cc4fdd4d88305532e69c444c07a4b5/docs/registers/DRIFT_REGISTER.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/13e1b27bf8cc4fdd4d88305532e69c444c07a4b5/docs/governance/DEPRECATION_PROCESS.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/13e1b27bf8cc4fdd4d88305532e69c444c07a4b5/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/13e1b27bf8cc4fdd4d88305532e69c444c07a4b5/CONTRIBUTING.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/9bc9c1003e2c108410fc8df83e5acf4bd3e6755e",
+      "attachment://current-user-request",
+      "attachment://Directory Rules.pdf",
+      "attachment://Unified Implementation Architecture Build Manual.md",
+      "attachment://KFM Pass 20 Part 2 Idea Index Category Atlas and Expansion Dossier.md"
+    ]
+  },
+  "truth_labels": {
+    "packages/taxonomy/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "task-contract-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Repository, immutable base, target blob, review branch, exact target, non-goals, acceptance criteria, and stop conditions were resolved before mutation."
+    },
+    {
+      "gate": "directory-rules-authority-adr-drift-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Directory Rules, package-root guidance, authority and AI-build doctrine, drift register, crosswalk lanes, domain taxonomy documentation, CODEOWNERS, and overlapping branch/PR state were inspected. No canonical root, schema home, registry home, API, or parallel authority was created or selected."
+    },
+    {
+      "gate": "base-drift-and-target-blob-preflight",
+      "outcome": "PASS",
+      "reason": "Immediately before branch creation, main remained at 13e1b27bf8cc4fdd4d88305532e69c444c07a4b5 and the target blob remained 0baf8065e34756b37162e703d2799da4df2e93a3."
+    },
+    {
+      "gate": "repository-inventory-and-no-overclaim",
+      "outcome": "PASS",
+      "reason": "Direct reads and bounded search established a README-only package and did not establish package metadata, source namespace, implementation modules, package-local tests/fixtures, accepted shared schemas/contracts/registry, executable consumers, distribution, deployment, or operational health."
+    },
+    {
+      "gate": "taxonomy-authority-domain-and-crosswalk-separation",
+      "outcome": "PASS",
+      "reason": "The README separates shared mechanics from domain meaning, registry authority, crosswalk semantics, source roles, evidence, policy, sensitivity, validation, release, and public surfaces; it documents ontology/class-map version drift without inventing shared authority."
+    },
+    {
+      "gate": "no-loss-and-compatibility-narrowing",
+      "outcome": "PASS",
+      "reason": "The prior helper-only, fail-closed, no-network, non-authority intent was retained while unsupported proposed imports, exact callable names, exact result enums, implementation tree, and maturity implications were removed or narrowed."
+    },
+    {
+      "gate": "markdown-meta-anchor-and-structure",
+      "outcome": "PASS",
+      "reason": "The final README has one H1, 52 unique headings with no hierarchy jumps, 35 resolved internal fragment links, four balanced fenced blocks, no trailing whitespace, a closed KFM Meta Block, and a final newline."
+    },
+    {
+      "gate": "repository-relative-link-preflight",
+      "outcome": "PASS",
+      "reason": "All eleven repository-relative Markdown link targets were verified through pinned repository reads."
+    },
+    {
+      "gate": "workflow-trigger-and-threat-preflight",
+      "outcome": "PASS",
+      "reason": "Broad pull-request workflows may run for this documentation change. Current workflow documentation records no indexed pull_request_target, workflow_run chaining, self-hosted runner, or direct secret reference; branch protection and complete workflow inventory remain unverified."
+    },
+    {
+      "gate": "security-privacy-and-sensitive-content",
+      "outcome": "PASS",
+      "reason": "The change contains no credentials, provider payloads, registry entries, exact sensitive locations, living-person or genomic data, policy mutation, release action, or publication action."
+    },
+    {
+      "gate": "remote-readback-and-content-hash",
+      "outcome": "PASS",
+      "reason": "GitHub returned blob 49492b00256211fc7344a2e434d0a5705080d33c on commit 9bc9c1003e2c108410fc8df83e5acf4bd3e6755e; remote text matched the prepared README and its SHA-256 is d19bb5386ed7eae02c6b762284cab2eb9a602c10a171202e12b7ad904eeee4ad."
+    },
+    {
+      "gate": "generated-receipt-schema",
+      "outcome": "PASS",
+      "reason": "This receipt was parsed and validated locally against schemas/contracts/v1/receipts/generated_receipt.schema.json before remote creation."
+    },
+    {
+      "gate": "multi-file-atomicity",
+      "outcome": "SKIPPED",
+      "reason": "The connector exposes serialized Contents API writes. The README and receipt are committed sequentially on a scoped branch, with final base-to-head diff and remote read-back verification."
+    },
+    {
+      "gate": "repository-native-package-execution",
+      "outcome": "SKIPPED",
+      "reason": "The package is README-only and exposes no build backend, supported API, or package-local test suite to execute. Existing trusted pull-request checks are observed separately."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and separate from generation, taxonomy authority, registry admission, evidence closure, policy approval, release, and publication."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "user-request",
+      "validated": true,
+      "evidence_ref": "conversation://current#update-packages-taxonomy-readme"
+    },
+    {
+      "id": "directory-rules-doctrine",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/13e1b27bf8cc4fdd4d88305532e69c444c07a4b5/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "taxonomy-package-baseline",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/13e1b27bf8cc4fdd4d88305532e69c444c07a4b5/packages/taxonomy/README.md"
+    },
+    {
+      "id": "taxonomy-package-remote-readback",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/9bc9c1003e2c108410fc8df83e5acf4bd3e6755e"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-20T03:12:15-05:00",
+  "emitter": "OpenAI Codex (GPT-5) via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Task kfm-packages-taxonomy-readme-v1-1-20260720. Documentation-only package-boundary revision with a two-file change budget: the requested README and this required generated-work receipt. This receipt is provenance and operation-journal memory, not taxonomy authority, registry admission, source truth, evidence closure, policy approval, human review, release approval, or publication authority."
+}

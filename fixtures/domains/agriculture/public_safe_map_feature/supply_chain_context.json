@@ -1,0 +1,73 @@
+{
+  "profile": "kfm.domains.agriculture.public-safe-map-feature.v1",
+  "status": "PROPOSED_INACTIVE",
+  "object_type": "AgricultureMapFeatureCandidate",
+  "version": "1.0.0",
+  "id": "ag-map-feature:ff6d304c80f64707e98531fa",
+  "spec_hash": "sha256:ff6d304c80f64707e98531faf4c85c73b2eba1cb46c497e36d36d9dfbaa86b64",
+  "domain": "agriculture",
+  "object_family": "SupplyChainNode",
+  "semantic_role": "INFRASTRUCTURE_CONTEXT",
+  "support": {
+    "kind": "REGION",
+    "key": "KS-AG-INFRA-REGION-01",
+    "generalized": true,
+    "precision_class": "GENERALIZED_PUBLIC_SAFE"
+  },
+  "temporal": {
+    "kind": "CALENDAR_YEAR",
+    "year": 2025,
+    "start": "2025-01-01",
+    "end": "2025-12-31",
+    "source_vintage": "2026-01-15"
+  },
+  "freshness": {
+    "evaluated_at": "2026-02-01",
+    "max_age_days": 90,
+    "state": "CURRENT"
+  },
+  "indicator": {
+    "key": "supply_chain_context_class",
+    "label": "Synthetic generalized agricultural supply-chain context",
+    "unit": "CONTEXT_ONLY",
+    "value_role": "CONTEXT_ONLY",
+    "value": "AG_SERVICE_DISTRIBUTION_CONTEXT"
+  },
+  "uncertainty": {
+    "state": "NOT_QUANTIFIED",
+    "label": "Synthetic regional context classification; no precise facility observation."
+  },
+  "evidence_refs": [
+    "evidence:synthetic:agriculture:supply-chain-context:v1"
+  ],
+  "rights_state": "SYNTHETIC_ONLY",
+  "sensitivity": {
+    "exact_field_geometry": false,
+    "operator_identity": false,
+    "parcel_owner_join": false,
+    "private_address": false,
+    "sensitive_infrastructure": false,
+    "proprietary_value": false,
+    "transform_parameters": false
+  },
+  "authority": {
+    "hydrology_observation": false,
+    "water_right": false,
+    "habitat_occurrence": false,
+    "geology_truth": false,
+    "atmosphere_forecast": false,
+    "hazard_alert": false
+  },
+  "release": {
+    "state": "UNRELEASED_CANDIDATE",
+    "policy_evaluated": false,
+    "review_approved": false,
+    "release_authorized": false,
+    "public_use_allowed": false,
+    "published": false
+  },
+  "limitations": [
+    "Generalized regional context only; no facility location or private address.",
+    "Synthetic no-network fixture; not infrastructure authority or source admission."
+  ]
+}

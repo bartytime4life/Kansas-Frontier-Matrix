@@ -1,0 +1,187 @@
+{
+  "receipt_id": "genrec-evidence-custody-handoff-20260805",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/evidence-custody-handoff.yml",
+    "contracts/evidence/evidence_custody_handoff.md",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/README.md",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/invalid/expected_findings_manifest.json",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/invalid/invalid_publication_authorized.expected_error.txt",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/invalid/invalid_publication_authorized.json",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/semantic_invalid/expected_findings_manifest.json",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/semantic_invalid/semantic_invalid_accepted_digest_mismatch.json",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/semantic_invalid/semantic_invalid_closure_status.json",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/semantic_invalid/semantic_invalid_duplicate_disposition.json",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/semantic_invalid/semantic_invalid_duplicate_without_existing_ref.json",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/semantic_invalid/semantic_invalid_item_order.json",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/semantic_invalid/semantic_invalid_manifest_digest.json",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/semantic_invalid/semantic_invalid_missing_disposition.json",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/semantic_invalid/semantic_invalid_spec_hash.json",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/semantic_invalid/semantic_invalid_stage_escalation.json",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/semantic_invalid/semantic_invalid_summary_counts.json",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/semantic_invalid/semantic_invalid_unknown_rights_accepted.json",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/valid/valid_closed_all_duplicates.json",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/valid/valid_closed_mixed_dispositions.json",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/valid/valid_open_unresolved_quarantine.json",
+    "schemas/contracts/v1/evidence/evidence_custody_handoff.schema.json",
+    "tests/validators/test_validate_evidence_custody_handoff.py",
+    "tools/validators/validate_evidence_custody_handoff.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/evidence-custody-handoff.yml": "sha256:8b0ab539f3a90465765a0a7ddc5ec5fa22604872384272796fbe0158b870edff",
+    "contracts/evidence/evidence_custody_handoff.md": "sha256:4386a6f2f1b8e0bd9338382c8e43d9c170fc188d542daae8ec0340b3383a67aa",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/README.md": "sha256:6ef2aff26d5fa47c084a3520a206c6c2659dfdf97b4366f3ae5069e8cc490091",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/invalid/expected_findings_manifest.json": "sha256:85d47667f2c4bd521ff2495f15b20b627e330c495ec9a3882dce3fd07cf26e83",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/invalid/invalid_publication_authorized.expected_error.txt": "sha256:cec355f63afc3866da967369c4a8f6ca92585a64b825c48b47401ae43201793e",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/invalid/invalid_publication_authorized.json": "sha256:fe117237ecc0a56e576fffdafadf956946469da26d3b4003a83a807de1c89713",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/semantic_invalid/expected_findings_manifest.json": "sha256:30991bbd1c4ea832c23e86786107c4a09d9fc5386d7c4a597b9061dd2f5e630e",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/semantic_invalid/semantic_invalid_accepted_digest_mismatch.json": "sha256:d1fbea49b133538178572acbebd9ecf61d1491a1cafd04fe24fd422b9aa2a890",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/semantic_invalid/semantic_invalid_closure_status.json": "sha256:9ce20070ea7b91d985e1e702b17e388a3789bf10fe8d586e2c93ab22fb0e35f4",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/semantic_invalid/semantic_invalid_duplicate_disposition.json": "sha256:e2b08d2a0d5201b4b94a89b5612c90606e6cce1e169184a81d01cda888ee688a",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/semantic_invalid/semantic_invalid_duplicate_without_existing_ref.json": "sha256:cb377058e21074c4cb32b67318b9fd8f42fd5f00aebca57c24cd58495110dd6e",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/semantic_invalid/semantic_invalid_item_order.json": "sha256:58c84c1e5f1d5a80d28a82be4a5abf4d99f835d82f1b3b51fdb40077d05dcc65",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/semantic_invalid/semantic_invalid_manifest_digest.json": "sha256:efe678bd2b07e9e9f8885bb295804a99b9ffc2becbbbaecd1b1404a74bc9bd9d",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/semantic_invalid/semantic_invalid_missing_disposition.json": "sha256:cb0c0163d69e03dbf065d389c1b80de810b9e3bbc92a49263d64558434900bf5",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/semantic_invalid/semantic_invalid_spec_hash.json": "sha256:30af8c7b8ca7a5a9e9913bbc4a53c219070a2b0ce69ff0a47a693e1df722aef0",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/semantic_invalid/semantic_invalid_stage_escalation.json": "sha256:db44a177ddf296dcb335b35647381beb7c54a3a2e37a1a7df3869e4d15640133",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/semantic_invalid/semantic_invalid_summary_counts.json": "sha256:c4da471a5851a06b9c7292b0e05b177713f3a1b5696245870b68f3c3ffc4f746",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/semantic_invalid/semantic_invalid_unknown_rights_accepted.json": "sha256:fab10f8163b6c7fab84df4d24d1a3c69b0b2c777c70f2a4b876dc68fa7516195",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/valid/valid_closed_all_duplicates.json": "sha256:a40a38a92b77f7e8e03cbeb4c5f3bb61a25143defce0f282d752c5d0bffb9401",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/valid/valid_closed_mixed_dispositions.json": "sha256:07d7511d5a0e5a22ef25e11355b548d8934ad469a72f913cb62f33ca2e6b19d3",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/valid/valid_open_unresolved_quarantine.json": "sha256:f90ebdee68b9b5765afd433715f5887289c8a9d5008106d6fe9ae4a4db4ca2dd",
+    "schemas/contracts/v1/evidence/evidence_custody_handoff.schema.json": "sha256:14ea00e375106f586a0ab6d5860a7f75af3f832c088864c821fd26e937bdf90e",
+    "tests/validators/test_validate_evidence_custody_handoff.py": "sha256:f95891cb43ffd97f8ed7e5d6e35e3eba33092af292e96d65a941c8edd9410ff3",
+    "tools/validators/validate_evidence_custody_handoff.py": "sha256:66561f8223dcdc2e8c7768fafe1bd97a24dac35b22f0f37398b1751643bd7e4f"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-05"
+  },
+  "prompt_or_contract": "sha256:8af74c0fa46f5238b79edd66b4b25330f09013b030f70c5f37f2c5154def7550",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local Python validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "New Ideas 4-23-26.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:New Ideas 4-23-26.pdf#pages-1-14-idempotent-handoffs",
+      "repo:docs/intake/exploratory/new-ideas-4-23-source-map.md#cross-boundary-evidence-custody-and-reconciliation",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "repo:docs/doctrine/directory-rules.md",
+      "repo:contracts/evidence/README.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/evidence-custody-handoff.yml": "PROPOSED",
+    "contracts/evidence/evidence_custody_handoff.md": "PROPOSED",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/README.md": "PROPOSED",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/invalid/expected_findings_manifest.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/invalid/invalid_publication_authorized.expected_error.txt": "PROPOSED",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/invalid/invalid_publication_authorized.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/semantic_invalid/expected_findings_manifest.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/semantic_invalid/semantic_invalid_accepted_digest_mismatch.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/semantic_invalid/semantic_invalid_closure_status.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/semantic_invalid/semantic_invalid_duplicate_disposition.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/semantic_invalid/semantic_invalid_duplicate_without_existing_ref.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/semantic_invalid/semantic_invalid_item_order.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/semantic_invalid/semantic_invalid_manifest_digest.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/semantic_invalid/semantic_invalid_missing_disposition.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/semantic_invalid/semantic_invalid_spec_hash.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/semantic_invalid/semantic_invalid_stage_escalation.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/semantic_invalid/semantic_invalid_summary_counts.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/semantic_invalid/semantic_invalid_unknown_rights_accepted.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/valid/valid_closed_all_duplicates.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/valid/valid_closed_mixed_dispositions.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/evidence_custody_handoff/valid/valid_open_unresolved_quarantine.json": "PROPOSED",
+    "schemas/contracts/v1/evidence/evidence_custody_handoff.schema.json": "PROPOSED",
+    "tests/validators/test_validate_evidence_custody_handoff.py": "PROPOSED",
+    "tools/validators/validate_evidence_custody_handoff.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-tests",
+      "outcome": "PASS",
+      "reason": "Ten focused tests and fourteen subtests passed without network access."
+    },
+    {
+      "gate": "fixture-polarity",
+      "outcome": "PASS",
+      "reason": "Three valid fixtures passed; eleven schema-valid semantic negatives and one schema-invalid authority negative failed with exact reviewed finding codes."
+    },
+    {
+      "gate": "schema-parser-and-workflow",
+      "outcome": "PASS",
+      "reason": "Draft 2020-12 schema, every fixture and manifest JSON, Python compilation, and workflow YAML parsing passed."
+    },
+    {
+      "gate": "generated-receipt-local-integrity",
+      "outcome": "PASS",
+      "reason": "Artifact path, key-set, and SHA-256 integrity were recomputed locally before push."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed exact head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:new-ideas-4-23-custody",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas 4-23-26.pdf#pages-1-14-idempotent-handoffs"
+    },
+    {
+      "id": "repository:new-ideas-4-23-source-map",
+      "validated": true,
+      "evidence_ref": "repo:docs/intake/exploratory/new-ideas-4-23-source-map.md#cross-boundary-evidence-custody-and-reconciliation"
+    },
+    {
+      "id": "repository:directory-governance-adr",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "repository:directory-rules",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "repository:evidence-contract-readme",
+      "validated": true,
+      "evidence_ref": "repo:contracts/evidence/README.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-05T23:46:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-first implementation of the repository-recorded cross-boundary evidence custody gap. It deterministically partitions every sender item into accepted, rejected, duplicate, or unresolved receiver outcomes; verifies digest and byte-count equality; holds unknown rights or sensitivity in quarantine; and denies lifecycle escalation. This receipt grants no source, evidence, rights, sensitivity, review, merge, promotion, release, deployment, publication, or public-use authority."
+}

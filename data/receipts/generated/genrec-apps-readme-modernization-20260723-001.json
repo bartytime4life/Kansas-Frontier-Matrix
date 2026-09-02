@@ -1,0 +1,171 @@
+{
+  "receipt_id": "genrec-apps-readme-modernization-20260723-001",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/README.md"
+  ],
+  "artifact_hashes": {
+    "apps/README.md": "sha256:2f41393526074c3fa9abc11064f865295811be0fb399a35e7e2cec8aa067b68a"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "GPT-5.6 Pro; exact deployment identifier unavailable"
+  },
+  "prompt_or_contract": "sha256:2fed671fcafb138abd1482b81de823fbc6b1b4edbd1ed0c462459bfe1d9297e3",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "file_search",
+      "Python structural validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:2fed671fcafb138abd1482b81de823fbc6b1b4edbd1ed0c462459bfe1d9297e3",
+      "sha256:759de4fcb51cf0f55896089e397d9c47481d60d9fb80ac9a44d47b2f60a0a335"
+    ],
+    "attached_docs": [
+      "Pasted text(83).txt - KFM Markdown Modernization & GitHub Documentation Implementation Agent v4.0.0",
+      "Directory Rules.pdf"
+    ],
+    "evidence_refs": [
+      "repository:bartytime4life/Kansas-Frontier-Matrix@41ef68b1f8d006419f65bc3092d9d62316b67f2c",
+      "path:apps/README.md@41ef68b1f8d006419f65bc3092d9d62316b67f2c",
+      "compare:1433a00bcd67f6c4cf5f2310ed5db3c358eb7d6c...41ef68b1f8d006419f65bc3092d9d62316b67f2c",
+      "path:docs/doctrine/directory-rules.md@41ef68b1f8d006419f65bc3092d9d62316b67f2c",
+      "path:docs/architecture/directory-rules.md@41ef68b1f8d006419f65bc3092d9d62316b67f2c",
+      "path:.github/CODEOWNERS@41ef68b1f8d006419f65bc3092d9d62316b67f2c",
+      "path:docs/adr/INDEX.md@41ef68b1f8d006419f65bc3092d9d62316b67f2c",
+      "path:apps/governed-api/src/governed_api/main.py@41ef68b1f8d006419f65bc3092d9d62316b67f2c",
+      "path:apps/governed-api/src/governed_api/routes/registry.py@41ef68b1f8d006419f65bc3092d9d62316b67f2c",
+      "path:apps/governed-api/src/governed_api/stub.py@41ef68b1f8d006419f65bc3092d9d62316b67f2c",
+      "path:apps/explorer-web/package.json@41ef68b1f8d006419f65bc3092d9d62316b67f2c",
+      "path:.github/workflows/api-test.yml@41ef68b1f8d006419f65bc3092d9d62316b67f2c",
+      "path:.github/workflows/ui-build.yml@41ef68b1f8d006419f65bc3092d9d62316b67f2c"
+    ]
+  },
+  "truth_labels": {
+    "apps/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "target identity and overlap preflight",
+      "outcome": "PASS",
+      "reason": "apps/README.md exists at the pinned base; no open pull request or branch matching apps modernization was found."
+    },
+    {
+      "gate": "Directory Rules placement and root README contract",
+      "outcome": "PASS",
+      "reason": "apps/ remains the canonical deployable root, governed-api remains the public trust path, and the final README preserves the required first twelve H2 sections in order."
+    },
+    {
+      "gate": "complete baseline and no-loss review",
+      "outcome": "PASS",
+      "reason": "The complete 330-line v0.3 file was read in bounded ranges. The v0.4 file preserves the seven-lane inventory, trust membrane, maturity distinctions, inputs, outputs, validation, review, gaps, safe-change sequence, and definition of done."
+    },
+    {
+      "gate": "repository continuity compare",
+      "outcome": "PASS",
+      "reason": "The compare from prior convergence commit 1433a00 through current base 41ef68b contains zero changed paths under apps/, so the prior recursive app inventory remains applicable."
+    },
+    {
+      "gate": "current source spot checks",
+      "outcome": "PASS",
+      "reason": "Current Governed API dispatch, route registry, ABSTAIN stub, Explorer package manifest, API workflow, UI readiness workflow, CODEOWNERS, and ADR index were directly fetched at the pinned base."
+    },
+    {
+      "gate": "Markdown structure and local fragments",
+      "outcome": "PASS",
+      "reason": "Python validation found one H1, balanced KFM meta block, balanced code fences and HTML wrappers, exact Directory Rules H2 order, a trailing newline, and no unresolved local fragment."
+    },
+    {
+      "gate": "GENERATED_RECEIPT schema preflight",
+      "outcome": "PASS",
+      "reason": "The receipt validates against the current generated_receipt.schema.json structure and constraints inspected at base commit 41ef68b."
+    },
+    {
+      "gate": "repository-relative link resolution",
+      "outcome": "SKIPPED",
+      "reason": "Existing links were retained from the previously validated baseline and key new links were directly fetched; complete remote link and host-render validation is delegated to pull-request checks."
+    },
+    {
+      "gate": "application tests and workflows",
+      "outcome": "SKIPPED",
+      "reason": "This session did not execute repository tests locally. Current source and workflow definitions were inspected; pull-request checks will provide their own bounded conclusions."
+    },
+    {
+      "gate": "deployment and operational health",
+      "outcome": "SKIPPED",
+      "reason": "No deployment, dashboard, audit sink, service health, authorization, or production runtime evidence was inspected or claimed."
+    },
+    {
+      "gate": "human review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "modernization-prompt",
+      "validated": true,
+      "evidence_ref": "sha256:2fed671fcafb138abd1482b81de823fbc6b1b4edbd1ed0c462459bfe1d9297e3"
+    },
+    {
+      "id": "directory-rules-pdf",
+      "validated": true,
+      "evidence_ref": "sha256:759de4fcb51cf0f55896089e397d9c47481d60d9fb80ac9a44d47b2f60a0a335"
+    },
+    {
+      "id": "kfm-main-snapshot",
+      "validated": true,
+      "evidence_ref": "repository:bartytime4life/Kansas-Frontier-Matrix@41ef68b1f8d006419f65bc3092d9d62316b67f2c"
+    },
+    {
+      "id": "apps-continuity-compare",
+      "validated": true,
+      "evidence_ref": "compare:1433a00bcd67f6c4cf5f2310ed5db3c358eb7d6c...41ef68b1f8d006419f65bc3092d9d62316b67f2c"
+    },
+    {
+      "id": "github-codeowners",
+      "validated": true,
+      "evidence_ref": "path:.github/CODEOWNERS@41ef68b1f8d006419f65bc3092d9d62316b67f2c"
+    },
+    {
+      "id": "adr-index",
+      "validated": true,
+      "evidence_ref": "path:docs/adr/INDEX.md@41ef68b1f8d006419f65bc3092d9d62316b67f2c"
+    },
+    {
+      "id": "governed-api-current-source",
+      "validated": true,
+      "evidence_ref": "path:apps/governed-api/src/governed_api/main.py@41ef68b1f8d006419f65bc3092d9d62316b67f2c"
+    },
+    {
+      "id": "explorer-ui-readiness",
+      "validated": true,
+      "evidence_ref": "path:.github/workflows/ui-build.yml@41ef68b1f8d006419f65bc3092d9d62316b67f2c"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [
+      "@bartytime4life"
+    ],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-23T19:42:26Z",
+  "emitter": "OpenAI GPT-5.6 Pro",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only same-path modernization of apps/README.md. No application code, route, dependency, lockfile, workflow YAML, source, data, policy, release, promotion, publication, deployment, or merge behavior changed. The receipt records process provenance and bounded validation; it is not evidence, a policy decision, human approval, release authority, or publication authority."
+}

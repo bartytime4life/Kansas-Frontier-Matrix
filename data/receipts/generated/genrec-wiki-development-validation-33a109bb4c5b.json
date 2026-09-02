@@ -1,0 +1,162 @@
+{
+  "artifact_hashes": {
+    "docs/wiki/Development-and-Validation.md": "sha256:33a109bb4c5b2fb0d78f5e707fdbee8822308f5539a53ddf8e12b3270d56bbb6"
+  },
+  "artifact_paths": [
+    "docs/wiki/Development-and-Validation.md"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "repo:docs/wiki/Development-and-Validation.md@0abdce42ea0a41f88e86b7d97df0ebd79961e37b",
+      "id": "KFM-wiki-development-validation-base",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/wiki/README.md@0abdce42ea0a41f88e86b7d97df0ebd79961e37b",
+      "id": "KFM-wiki-source-set-contract",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:Makefile@0abdce42ea0a41f88e86b7d97df0ebd79961e37b",
+      "id": "KFM-makefile-command-surface",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:pyproject.toml@0abdce42ea0a41f88e86b7d97df0ebd79961e37b",
+      "id": "KFM-python-project-contract",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:package.json@0abdce42ea0a41f88e86b7d97df0ebd79961e37b",
+      "id": "KFM-javascript-workspace-contract",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/runbooks/VALIDATOR_ORCHESTRATOR.md@0abdce42ea0a41f88e86b7d97df0ebd79961e37b",
+      "id": "KFM-validator-orchestrator-runbook",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@0abdce42ea0a41f88e86b7d97df0ebd79961e37b",
+      "id": "ADR-0029",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@0abdce42ea0a41f88e86b7d97df0ebd79961e37b",
+      "id": "KFM-generated-receipt-schema",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-15T04:42:07Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    ],
+    "evidence_refs": [
+      "repo:docs/wiki/Development-and-Validation.md@0abdce42ea0a41f88e86b7d97df0ebd79961e37b",
+      "repo:docs/wiki/README.md@0abdce42ea0a41f88e86b7d97df0ebd79961e37b",
+      "repo:docs/wiki/Home.md@0abdce42ea0a41f88e86b7d97df0ebd79961e37b",
+      "repo:docs/wiki/Contributing.md@0abdce42ea0a41f88e86b7d97df0ebd79961e37b",
+      "repo:docs/wiki/_Sidebar.md@0abdce42ea0a41f88e86b7d97df0ebd79961e37b",
+      "repo:docs/wiki/Wiki-Maintenance.md@0abdce42ea0a41f88e86b7d97df0ebd79961e37b",
+      "repo:tools/docs/wiki/README.md@0abdce42ea0a41f88e86b7d97df0ebd79961e37b",
+      "repo:Makefile@0abdce42ea0a41f88e86b7d97df0ebd79961e37b",
+      "repo:pyproject.toml@0abdce42ea0a41f88e86b7d97df0ebd79961e37b",
+      "repo:package.json@0abdce42ea0a41f88e86b7d97df0ebd79961e37b",
+      "repo:pnpm-lock.yaml@0abdce42ea0a41f88e86b7d97df0ebd79961e37b",
+      "repo:apps/explorer-web/package.json@0abdce42ea0a41f88e86b7d97df0ebd79961e37b",
+      "repo:tools/validate_all.py@0abdce42ea0a41f88e86b7d97df0ebd79961e37b",
+      "repo:tools/validators/README.md@0abdce42ea0a41f88e86b7d97df0ebd79961e37b",
+      "repo:docs/runbooks/VALIDATOR_ORCHESTRATOR.md@0abdce42ea0a41f88e86b7d97df0ebd79961e37b",
+      "repo:.github/workflows/README.md@0abdce42ea0a41f88e86b7d97df0ebd79961e37b",
+      "repo:CONTRIBUTING.md@0abdce42ea0a41f88e86b7d97df0ebd79961e37b",
+      "repo:docs/doctrine/directory-rules.md@0abdce42ea0a41f88e86b7d97df0ebd79961e37b",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@0abdce42ea0a41f88e86b7d97df0ebd79961e37b",
+      "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@0abdce42ea0a41f88e86b7d97df0ebd79961e37b",
+      "github:pull/2880",
+      "user-request:sha256:3480b5c4c1ccedf03515d9a77ccb4c6ccc8f265d3d55c8a746d67ac002de7e3e"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-08-14"
+  },
+  "notes": "Authoring provenance for the same-path modernization of docs/wiki/Development-and-Validation.md. The update preserves the existing page identity and established section headings while adding an evidence checkpoint, claim-proportional validation flow, Python and pinned JavaScript workspace setup, registry-driven validator profiles, current Make target classification, changed-area routing, wiki-source checks, hosted-CI triage, finite outcomes, negative-test guidance, reporting, anti-patterns, and rollback-aware interpretation. It explicitly corrects the stale classification of release-dry-run and publish-check without changing their implementation. No native-wiki synchronization, release, deployment, promotion, data publication, policy change, contract change, schema change, workflow change, runtime mutation, or repository-setting change occurred. Base main was 0abdce42ea0a41f88e86b7d97df0ebd79961e37b.",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local deterministic Markdown validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:3480b5c4c1ccedf03515d9a77ccb4c6ccc8f265d3d55c8a746d67ac002de7e3e",
+  "receipt_id": "genrec-wiki-development-validation-33a109bb4c5b",
+  "truth_labels": {
+    "docs/wiki/Development-and-Validation.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "target-authority-and-overlap-inspection",
+      "outcome": "PASS",
+      "reason": "The complete target, parent wiki contract, sidebar, related contributor and maintenance pages, current main SHA, accepted ADR-0029, adopted Directory Rules, and open pull requests were inspected before authoring."
+    },
+    {
+      "gate": "current-command-surface-reconciliation",
+      "outcome": "PASS",
+      "reason": "The page was reconciled with the current Makefile, Python and JavaScript package metadata, lockfile, Explorer Web scripts, validator orchestrator, and workflow-governance documentation."
+    },
+    {
+      "gate": "markdown-source-structure",
+      "outcome": "PASS",
+      "reason": "The authored source has one H1, no heading-level skips, balanced fenced blocks, no tabs or trailing whitespace, a final newline, and every established section heading from the prior page."
+    },
+    {
+      "gate": "wiki-link-and-anchor-closure",
+      "outcome": "PASS",
+      "reason": "The top anchor resolves, every relative wiki-page link targets the inspected docs/wiki inventory, and the existing page identity is unchanged."
+    },
+    {
+      "gate": "repository-claim-bounding",
+      "outcome": "PASS",
+      "reason": "Command and toolchain statements are pinned to the evidence checkpoint and distinguish validation, hold, dry-run, native-wiki synchronization, release, deployment, and publication."
+    },
+    {
+      "gate": "sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "The public documentation contains no credentials, private payloads, restricted evidence, living-person data, genomic data, or protected precise locations."
+    },
+    {
+      "gate": "generated-receipt-repository-validator",
+      "outcome": "SKIPPED",
+      "reason": "The repository-owned validator will run after the receipt is committed; this receipt was prepared against the inspected generated-receipt schema."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pending draft pull-request creation and hosted check scheduling."
+    },
+    {
+      "gate": "native-wiki-readback",
+      "outcome": "SKIPPED",
+      "reason": "Native-wiki synchronization is a separate reviewed action and is outside this source-only change."
+    }
+  ]
+}

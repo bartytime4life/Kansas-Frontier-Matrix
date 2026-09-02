@@ -1,0 +1,2 @@
+EVIDENCE_REFS_INVALID	$.events[0].evidence_refs
+EVIDENCE_REFS_INVALID	$.evidence_refs

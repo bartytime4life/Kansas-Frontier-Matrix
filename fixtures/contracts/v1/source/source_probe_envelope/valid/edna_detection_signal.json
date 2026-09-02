@@ -1,0 +1,42 @@
+{
+  "object_type": "SourceProbeEnvelope",
+  "schema_version": "1.0.0",
+  "probe_id": "source-probe:edna-invasive-carp-fixture-v1",
+  "profile": "EDNA_MONITORING",
+  "observed_at": "2026-04-12T12:00:00Z",
+  "source_descriptor_ref": "data/registry/sources/fauna/usfws_invasive_carp_edna.yaml",
+  "source_head": {
+    "etag": "\"fixture\"",
+    "last_modified": "Sun, 12 Apr 2026 12:00:00 GMT",
+    "content_sha256": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+  },
+  "scope": {
+    "geography_level": "SITE",
+    "geography_id": "generalized-site:fixture"
+  },
+  "materiality": {
+    "status": "CHANGED",
+    "reason_codes": [
+      "DETECTION_SIGNAL_REPORTED"
+    ]
+  },
+  "profile_data": {
+    "source_role": "observed",
+    "chain_of_custody_complete": true,
+    "controls": {
+      "positive_control": "PASS",
+      "negative_control": "PASS"
+    },
+    "interpretation": "DETECTION_SIGNAL",
+    "population_status_claim": null
+  },
+  "governance": {
+    "fixture_only": true,
+    "network_access": "DENIED",
+    "source_activation": false,
+    "lifecycle_write": false,
+    "promotion_allowed": false,
+    "publication_allowed": false
+  },
+  "spec_hash": "sha256:d586d70a621328da5b8ab2944f694b4b1082ef20dc47535aee1564e7a233982b"
+}

@@ -1,0 +1,261 @@
+{
+  "base": {
+    "profile_version": "kfm.worker-integrity-launch-readiness.v1",
+    "candidate_id": "kfm:worker-launch-readiness:000000000000000000000000",
+    "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "worker": {
+      "worker_ref": "urn:kfm:synthetic:worker:evidence-worker-v1",
+      "asset_ref": "urn:kfm:synthetic:worker-asset:evidence-worker-v1-mjs",
+      "runtime_version": "kfm.worker-runtime.v1"
+    },
+    "requirements": {
+      "verification_required": true,
+      "isolation_required": true,
+      "shared_array_buffer_required": true,
+      "wasm_required": true
+    },
+    "capabilities": {
+      "worker_supported": true,
+      "cross_origin_isolated": true,
+      "shared_array_buffer_available": true,
+      "wasm_supported": true
+    },
+    "verification": {
+      "proof_ref": "kfm://proof/runtime-verification/p-worker-verified-001",
+      "declared_outcome": "VERIFIED",
+      "declaration_basis": "SYNTHETIC_FIXTURE"
+    },
+    "readiness": {
+      "outcome": "READY_CANDIDATE",
+      "reason_code": "WORKER_READY_CANDIDATE",
+      "obligations": [],
+      "review_required": true,
+      "worker_launch_authorized": false
+    },
+    "boundary": {
+      "fixture_only": true,
+      "network_attempted": false,
+      "worker_started": false,
+      "artifact_bytes_read": false,
+      "proof_resolved": false,
+      "runtime_proof_emitted": false,
+      "policy_evaluated": false,
+      "release_authorized": false,
+      "deployment_authorized": false,
+      "publication_authorized": false,
+      "public_use_authorized": false
+    }
+  },
+  "cases": [
+    {
+      "case_id": "verified_worker_ready_candidate",
+      "mutations": [],
+      "expected_outcome": "PASS",
+      "expected_state": "REVIEW_REQUIRED",
+      "expected_findings": []
+    },
+    {
+      "case_id": "optional_isolation_capabilities_ready",
+      "mutations": [
+        {"path": "/requirements/isolation_required", "value": false},
+        {"path": "/requirements/shared_array_buffer_required", "value": false},
+        {"path": "/capabilities/cross_origin_isolated", "value": false},
+        {"path": "/capabilities/shared_array_buffer_available", "value": false}
+      ],
+      "expected_outcome": "PASS",
+      "expected_state": "REVIEW_REQUIRED",
+      "expected_findings": []
+    },
+    {
+      "case_id": "verification_proof_missing_abstains",
+      "mutations": [
+        {"path": "/verification/proof_ref", "value": null},
+        {"path": "/verification/declared_outcome", "value": null}
+      ],
+      "expected_outcome": "ABSTAIN",
+      "expected_state": "REVIEW_REQUIRED",
+      "expected_findings": []
+    },
+    {
+      "case_id": "manifest_declaration_missing_abstains",
+      "mutations": [
+        {"path": "/verification/declared_outcome", "value": "MISSING_DECLARATION"}
+      ],
+      "expected_outcome": "ABSTAIN",
+      "expected_state": "REVIEW_REQUIRED",
+      "expected_findings": []
+    },
+    {
+      "case_id": "verification_interrupted_abstains",
+      "mutations": [
+        {"path": "/verification/declared_outcome", "value": "INTERRUPTED"}
+      ],
+      "expected_outcome": "ABSTAIN",
+      "expected_state": "REVIEW_REQUIRED",
+      "expected_findings": []
+    },
+    {
+      "case_id": "integrity_mismatch_denies",
+      "mutations": [
+        {"path": "/verification/declared_outcome", "value": "MISMATCH"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": "REVIEW_REQUIRED",
+      "expected_findings": []
+    },
+    {
+      "case_id": "verification_error_denies",
+      "mutations": [
+        {"path": "/verification/declared_outcome", "value": "ERROR"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": "REVIEW_REQUIRED",
+      "expected_findings": []
+    },
+    {
+      "case_id": "required_isolation_unavailable_denies",
+      "mutations": [
+        {"path": "/capabilities/cross_origin_isolated", "value": false}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": "REVIEW_REQUIRED",
+      "expected_findings": []
+    },
+    {
+      "case_id": "worker_unsupported_denies",
+      "mutations": [
+        {"path": "/capabilities/worker_supported", "value": false}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": "REVIEW_REQUIRED",
+      "expected_findings": []
+    },
+    {
+      "case_id": "shared_array_buffer_unavailable_denies",
+      "mutations": [
+        {"path": "/capabilities/shared_array_buffer_available", "value": false}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": "REVIEW_REQUIRED",
+      "expected_findings": []
+    },
+    {
+      "case_id": "wasm_unavailable_denies",
+      "mutations": [
+        {"path": "/capabilities/wasm_supported", "value": false}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": "REVIEW_REQUIRED",
+      "expected_findings": []
+    },
+    {
+      "case_id": "stale_readiness_denied",
+      "mutations": [
+        {"path": "/verification/declared_outcome", "value": "MISMATCH"}
+      ],
+      "preserve_readiness": true,
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "WORKER_READINESS_ASSESSMENT_MISMATCH", "path": "/readiness"}
+      ]
+    },
+    {
+      "case_id": "proof_ref_without_outcome_denied",
+      "mutations": [
+        {"path": "/verification/declared_outcome", "value": null}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "WORKER_READINESS_PROOF_BINDING_INVALID", "path": "/verification"}
+      ]
+    },
+    {
+      "case_id": "outcome_without_proof_ref_denied",
+      "mutations": [
+        {"path": "/verification/proof_ref", "value": null}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "WORKER_READINESS_PROOF_BINDING_INVALID", "path": "/verification"}
+      ]
+    },
+    {
+      "case_id": "spec_hash_mismatch",
+      "mutations": [],
+      "spec_hash_override": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "WORKER_READINESS_SPEC_HASH_MISMATCH", "path": "/spec_hash"}
+      ]
+    },
+    {
+      "case_id": "candidate_id_mismatch",
+      "mutations": [],
+      "candidate_id_override": "kfm:worker-launch-readiness:ffffffffffffffffffffffff",
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "WORKER_READINESS_ID_MISMATCH", "path": "/candidate_id"}
+      ]
+    },
+    {
+      "case_id": "real_worker_url_denied",
+      "mutations": [
+        {"path": "/worker/asset_ref", "value": "https://example.invalid/worker.mjs"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "WORKER_READINESS_SCHEMA_INVALID", "path": "/worker/asset_ref"}
+      ]
+    },
+    {
+      "case_id": "worker_started_overreach",
+      "mutations": [
+        {"path": "/boundary/worker_started", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "WORKER_READINESS_SCHEMA_INVALID", "path": "/boundary/worker_started"}
+      ]
+    },
+    {
+      "case_id": "proof_emission_overreach",
+      "mutations": [
+        {"path": "/boundary/runtime_proof_emitted", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "WORKER_READINESS_SCHEMA_INVALID", "path": "/boundary/runtime_proof_emitted"}
+      ]
+    },
+    {
+      "case_id": "policy_evaluation_overreach",
+      "mutations": [
+        {"path": "/boundary/policy_evaluated", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "WORKER_READINESS_SCHEMA_INVALID", "path": "/boundary/policy_evaluated"}
+      ]
+    },
+    {
+      "case_id": "release_authority_overreach",
+      "mutations": [
+        {"path": "/boundary/release_authorized", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "WORKER_READINESS_SCHEMA_INVALID", "path": "/boundary/release_authorized"}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "case_id": "tile-manifest-zoom-header-mismatch",
+  "expected": {
+    "issue_codes": [
+      "TILE_MANIFEST_ZOOM_HEADER_MISMATCH"
+    ],
+    "status": "DENY"
+  },
+  "fixture_profile": "kfm.pmtiles.tile-artifact-manifest.compat.v1",
+  "mutation": "manifest_zoom_header_mismatch"
+}

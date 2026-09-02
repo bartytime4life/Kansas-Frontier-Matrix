@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/hazards/drought_obs_decl_relationship.schema.json",
+  "title": "DroughtObsDeclarationRelationship",
+  "type": "object",
+  "description": "Cross-domain link between a DroughtObservation and a DroughtDeclaration. Geometry overlap or temporal proximity is evidence of relationship only — not identity, authority equivalence, or causal derivation. This record may not assert that a declaration was derived from an observation or vice versa.",
+  "x-kfm": {
+    "status": "PROPOSED",
+    "anti_collapse_rule": "Geometry overlap is evidence of relationship only — not identity or authority equivalence. A newer physical observation does not rescind a legal declaration. A later declaration does not rewrite historical observations.",
+    "contract_doc": "contracts/domains/hazards/drought_observation.md",
+    "fixtures_root": "fixtures/domains/hazards/drought_obs_decl_relationship/",
+    "policy": "policy/domains/hazards/",
+    "not_for_life_safety": true
+  },
+  "properties": {
+    "_fixture_meta": {
+      "type": "object",
+      "description": "Optional fixture-only metadata. Not present in production records.",
+      "additionalProperties": true
+    },
+    "object_type": {
+      "type": "string",
+      "const": "DroughtObsDeclarationRelationship",
+      "description": "Discriminator field. Must be exactly 'DroughtObsDeclarationRelationship'."
+    },
+    "schema_version": {
+      "type": "string",
+      "enum": ["v1"]
+    },
+    "relationship_id": {
+      "type": "string",
+      "pattern": "^rel:[a-z0-9_:-]+$",
+      "description": "Stable identifier for this relationship record."
+    },
+    "observation_ref": {
+      "type": "string",
+      "pattern": "^obs:[a-z0-9_:-]+$",
+      "description": "Reference to the DroughtObservation (observation_id). Must use obs: prefix."
+    },
+    "declaration_ref": {
+      "type": "string",
+      "pattern": "^decl:[a-z0-9_:-]+$",
+      "description": "Reference to the DroughtDeclaration (declaration_id). Must use decl: prefix."
+    },
+    "relationship_kind": {
+      "type": "string",
+      "enum": ["temporal_overlap", "geographic_overlap", "cited_as_evidence", "informational_only"],
+      "description": "Nature of the relationship. 'cited_as_evidence' does not imply derivation or authority transfer."
+    },
+    "derivation_claimed": {
+      "type": "boolean",
+      "const": false,
+      "description": "Must always be false. Derivation of legal stage from observation category is forbidden by the anti-collapse invariant."
+    },
+    "notes": {
+      "type": ["string", "null"],
+      "description": "Optional human-readable notes about the relationship."
+    }
+  },
+  "required": [
+    "object_type",
+    "schema_version",
+    "relationship_id",
+    "observation_ref",
+    "declaration_ref",
+    "relationship_kind",
+    "derivation_claimed"
+  ],
+  "additionalProperties": false
+}

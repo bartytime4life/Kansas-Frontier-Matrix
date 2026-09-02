@@ -1,0 +1,35 @@
+{
+  "object_type": "LandCoverMaterialityProfile",
+  "schema_version": "1.0.0",
+  "status": "PROPOSED_INACTIVE",
+  "profile_id": "kfm://materiality-profile/habitat/land-cover/county-change-v1",
+  "profile_version": "1.0.0",
+  "spec_hash": "sha256:8b859ddbe0dcd17fa2c59ab45d3138ded51b3f5dd04644be21d910d8e8337cb1",
+  "domain": "habitat",
+  "sublane": "land_cover",
+  "analysis_unit_kind": "county",
+  "digest_algorithm": "sha256",
+  "canonicalization_profile": "kfm-canonical-json-v1",
+  "combination": "ANY",
+  "triggers": {
+    "reclassification_fraction": {
+      "operator": ">",
+      "threshold": 0.02,
+      "unit": "fraction"
+    },
+    "net_area_change": {
+      "operator": ">",
+      "absolute_threshold_ha": 250.0,
+      "fraction_threshold": 0.0015,
+      "threshold_rule": "max",
+      "unit": "hectare"
+    }
+  },
+  "governance": {
+    "source_activated": false,
+    "policy_evaluated": false,
+    "promotion_authorized": false,
+    "public_use_allowed": false,
+    "release_ref": null
+  }
+}

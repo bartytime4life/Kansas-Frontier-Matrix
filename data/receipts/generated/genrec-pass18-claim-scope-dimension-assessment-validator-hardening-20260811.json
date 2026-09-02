@@ -1,0 +1,150 @@
+{
+  "receipt_id": "genrec-pass18-claim-scope-dimension-assessment-validator-hardening-20260811",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/claim-scope-dimension-assessment.yml",
+    "contracts/evidence/claim_scope_dimension_assessment.md",
+    "tests/validators/evidence/test_validate_claim_scope_dimension_assessment.py",
+    "tools/validators/evidence/validate_claim_scope_dimension_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/claim-scope-dimension-assessment.yml": "sha256:99dd28d7869f6967e49dfe318b53f047576f0627a52535b381cfceb400418a4e",
+    "contracts/evidence/claim_scope_dimension_assessment.md": "sha256:3a7e7306ab884ae414bf0e1aaabb98aff51e1602a71a568f96981517a822108c",
+    "tests/validators/evidence/test_validate_claim_scope_dimension_assessment.py": "sha256:9ec911b1d10efcb9e146f1e0e0850ebb5fe7ce5c636eb68a02bdf27de1570a82",
+    "tools/validators/evidence/validate_claim_scope_dimension_assessment.py": "sha256:59cb4a2ad436a707a4399e74235558164b2c898d9e6446cebc52d71a70bbf661"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:bea3ff6eb18799e68fe04b9f8fa7c4b285a68bd64f150e7e74cb13b49e0b02e5",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub repository and pull-request inspection",
+      "local Python syntax and focused unit validation",
+      "Draft 2020-12 schema meta-validation",
+      "workflow YAML parsing",
+      "SHA-256 artifact binding"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:20e853910fed67a0d9e3ca03bd4bf3db44f6bc5b9956b0b6a295a3ee940905fc",
+      "sha256:f70267c98ba94af0d2b06d58439a1aca7f81739acfeea7799b763faa313c94de"
+    ],
+    "attached_docs": [
+      "Existing KFM-P18-INV-376 source map and generated receipt on current main"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/2493",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/2495",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/f9c63e6a227bdcbb80ecb48481ff840776a1b020",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/2493#discussion_r3754636541",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f9c63e6a227bdcbb80ecb48481ff840776a1b020/docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/claim-scope-dimension-assessment.yml": "CONFIRMED",
+    "contracts/evidence/claim_scope_dimension_assessment.md": "PROPOSED",
+    "tests/validators/evidence/test_validate_claim_scope_dimension_assessment.py": "CONFIRMED",
+    "tools/validators/evidence/validate_claim_scope_dimension_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS",
+      "reason": "The unchanged ClaimScopeDimensionAssessment schema passed Draft 2020-12 meta-validation in the focused suite."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS",
+      "reason": "Nine deterministic tests passed, including direct-candidate, canonical-hash, and file/CLI unpaired-surrogate regressions."
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS",
+      "reason": "Fourteen inherited PASS, ABSTAIN, DENY, and ERROR fixture cases remained exact."
+    },
+    {
+      "gate": "unpaired-surrogate-fail-closed",
+      "outcome": "PASS",
+      "reason": "Escaped unpaired UTF-16 surrogates now produce JSON_UNPAIRED_SURROGATE with outcome ERROR before hashing instead of raising UnicodeEncodeError."
+    },
+    {
+      "gate": "no-network-boundary",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "artifact-hash-replay",
+      "outcome": "PASS",
+      "reason": "All four authored artifact SHA-256 values were recomputed from the final local bytes."
+    },
+    {
+      "gate": "remote-branch-conflict-resolution-and-readback",
+      "outcome": "SKIPPED",
+      "reason": "Performed after this pre-push receipt is emitted and recorded in PR #2493."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the updated pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "claim-scope-pr-2493",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/pull/2493"
+    },
+    {
+      "id": "merged-core-profile-pr-2495",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/pull/2495"
+    },
+    {
+      "id": "unpaired-surrogate-review-finding",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/pull/2493#discussion_r3754636541"
+    },
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/f9c63e6a227bdcbb80ecb48481ff840776a1b020/docs/doctrine/directory-rules.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T04:32:17Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": 2493,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "PR #2495 already merged the core eight-path ClaimScopeDimensionAssessment profile. This repair preserves that current-main semantic shape, resolves PR #2493's add/add conflicts in favor of current main, and contributes only a fail-closed malformed-Unicode hardening delta plus focused regression coverage. It does not change the schema, infer EvidenceBundle resolution, activate a consumer, merge, release, deploy, promote, or publish."
+}

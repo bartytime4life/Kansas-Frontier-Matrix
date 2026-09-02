@@ -1,0 +1,198 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/release/signed_bundle_timestamp_evidence.schema.json",
+  "title": "SignedBundleTimestampEvidence",
+  "description": "Fixture-only capture and deterministic assessment of timestamp-evidence references for a signed promotion bundle. Shape validity performs no cryptographic, transparency, policy, review, release, or publication operation.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile_id",
+    "evidence_id",
+    "subject",
+    "requirement",
+    "evidence",
+    "assessment",
+    "governance",
+    "spec_hash"
+  ],
+  "properties": {
+    "object_type": { "const": "SignedBundleTimestampEvidence" },
+    "schema_version": { "const": "1.0.0" },
+    "profile_id": { "const": "kfm.release.signed-bundle-timestamp-evidence.v1" },
+    "evidence_id": {
+      "type": "string",
+      "pattern": "^kfm:signed-bundle-timestamp-evidence:[a-f0-9]{24}$"
+    },
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "promotion_bundle_ref",
+        "promotion_bundle_digest",
+        "cosign_bundle_ref",
+        "cosign_bundle_digest",
+        "rekor_uuid"
+      ],
+      "properties": {
+        "promotion_bundle_ref": { "$ref": "#/$defs/digest_ref" },
+        "promotion_bundle_digest": { "$ref": "#/$defs/sha256" },
+        "cosign_bundle_ref": { "$ref": "#/$defs/digest_ref" },
+        "cosign_bundle_digest": { "$ref": "#/$defs/sha256" },
+        "rekor_uuid": {
+          "oneOf": [
+            { "type": "string", "pattern": "^[a-f0-9]{64,128}$" },
+            { "type": "null" }
+          ]
+        }
+      }
+    },
+    "requirement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "policy_bundle_ref"],
+      "properties": {
+        "state": { "enum": ["OPTIONAL", "REQUIRED", "UNKNOWN"] },
+        "policy_bundle_ref": { "$ref": "#/$defs/nullable_ref" }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "items", "absence_reason_codes"],
+      "properties": {
+        "state": { "enum": ["ABSENT", "PRESENT", "UNREADABLE"] },
+        "items": {
+          "type": "array",
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/evidence_item" }
+        },
+        "absence_reason_codes": {
+          "type": "array",
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/reason_code" }
+        }
+      }
+    },
+    "assessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["outcome", "reason_codes"],
+      "properties": {
+        "outcome": { "enum": ["ABSTAIN", "DENY", "ERROR", "PASS"] },
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/reason_code" }
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "capture_only",
+        "timestamp_verified",
+        "cryptographic_verification_performed",
+        "transparency_verified",
+        "policy_evaluated",
+        "review_authenticated",
+        "promotion_authorized",
+        "release_authorized",
+        "publication_authorized"
+      ],
+      "properties": {
+        "capture_only": { "const": true },
+        "timestamp_verified": { "const": false },
+        "cryptographic_verification_performed": { "const": false },
+        "transparency_verified": { "const": false },
+        "policy_evaluated": { "const": false },
+        "review_authenticated": { "const": false },
+        "promotion_authorized": { "const": false },
+        "release_authorized": { "const": false },
+        "publication_authorized": { "const": false }
+      }
+    },
+    "spec_hash": { "$ref": "#/$defs/sha256" }
+  },
+  "$defs": {
+    "evidence_item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "subject_role",
+        "evidence_ref",
+        "evidence_digest",
+        "bound_subject_digest",
+        "captured_at",
+        "rfc3161_policy_oid"
+      ],
+      "properties": {
+        "kind": {
+          "enum": ["OTHER_SIGNER_TIMESTAMP", "RFC3161", "SIGSTORE_SIGNED_ENTRY_TIMESTAMP"]
+        },
+        "subject_role": { "enum": ["COSIGN_BUNDLE", "PROMOTION_BUNDLE"] },
+        "evidence_ref": { "$ref": "#/$defs/ref" },
+        "evidence_digest": { "$ref": "#/$defs/sha256" },
+        "bound_subject_digest": { "$ref": "#/$defs/sha256" },
+        "captured_at": { "type": "string", "format": "date-time" },
+        "rfc3161_policy_oid": {
+          "oneOf": [
+            { "type": "string", "pattern": "^[0-9]+(?:\\.[0-9]+)+$" },
+            { "type": "null" }
+          ]
+        }
+      }
+    },
+    "reason_code": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 128,
+      "pattern": "^[A-Z][A-Z0-9_]*$"
+    },
+    "ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 720,
+      "pattern": "^(?:kfm://|urn:)[^\\s]+$"
+    },
+    "nullable_ref": {
+      "oneOf": [
+        { "$ref": "#/$defs/ref" },
+        { "type": "null" }
+      ]
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "digest_ref": {
+      "type": "string",
+      "minLength": 80,
+      "maxLength": 720,
+      "pattern": "^(?:kfm://|urn:)[^\\s@]+@sha256:[a-f0-9]{64}$"
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "execution_mode": "FIXTURE_ONLY",
+    "source_cards": ["KFM-P22-PROG-0033", "KFM-P22-PROG-0052"],
+    "contract_doc": "contracts/release/signed_bundle_timestamp_evidence.md",
+    "fixtures_root": "fixtures/contracts/v1/release/signed_bundle_timestamp_evidence/",
+    "validator": "tools/validators/release/validate_signed_bundle_timestamp_evidence.py",
+    "tests": "tests/release/test_signed_bundle_timestamp_evidence.py",
+    "non_effects": [
+      "does_not_contact_timestamp_or_transparency_services",
+      "does_not_execute_cosign_or_verify_cryptography",
+      "does_not_resolve_policy_review_or_evidence_closure",
+      "does_not_authorize_promotion_release_publication_or_public_use"
+    ]
+  }
+}
+

@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0.0",
+  "history_id": "kfm:verification-history:synthetic:record-order",
+  "subject_ref": "kfm://synthetic/evidence/item-601",
+  "profile_id": "kfm://profile/verification-state-replay/v1",
+  "spec_hash": "sha256:30bcc7b10525a7ecc896dfb576c541cf38295d6a975492565e33864051588249",
+  "events": [
+    {
+      "event_id": "evt:601",
+      "event_type": "VERIFIED",
+      "state": "ACTIVE",
+      "effective_at": "2026-01-01T00:00:00Z",
+      "recorded_at": "2026-01-03T00:00:00Z",
+      "reason_code": "INITIAL_VERIFICATION",
+      "basis_refs": [
+        "kfm://synthetic/receipt/verify-601"
+      ]
+    },
+    {
+      "event_id": "evt:602",
+      "event_type": "CORRECTED",
+      "state": "CORRECTED",
+      "effective_at": "2026-01-02T00:00:00Z",
+      "recorded_at": "2026-01-02T00:00:00Z",
+      "reason_code": "SOURCE_CORRECTION",
+      "basis_refs": [
+        "kfm://synthetic/evidence/correction-basis-601"
+      ],
+      "relates_to_event_id": "evt:601",
+      "correction_ref": "kfm://synthetic/correction/notice-601"
+    }
+  ]
+}

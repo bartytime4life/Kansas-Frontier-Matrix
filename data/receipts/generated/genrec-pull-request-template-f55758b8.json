@@ -1,0 +1,132 @@
+{
+  "receipt_id": "genrec-pull-request-template-f55758b8",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/PULL_REQUEST_TEMPLATE.md"
+  ],
+  "artifact_hashes": {
+    ".github/PULL_REQUEST_TEMPLATE.md": "sha256:f55758b84398150d16793c92dd1a4012f55dae0835b3daa026b7a7d48f9f09b3"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-17"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository evidence inspection",
+      "repository validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "Pasted text(40).txt — KFM GitHub Repository Documentation Implementation Agent v3.1"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/99337e68ba4299b667f27d5dd35c3dc92295933e",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/99337e68ba4299b667f27d5dd35c3dc92295933e/.github/PULL_REQUEST_TEMPLATE.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/99337e68ba4299b667f27d5dd35c3dc92295933e/.github/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/99337e68ba4299b667f27d5dd35c3dc92295933e/.github/workflows/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/99337e68ba4299b667f27d5dd35c3dc92295933e/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/99337e68ba4299b667f27d5dd35c3dc92295933e/docs/doctrine/ai-build-operating-contract.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/99337e68ba4299b667f27d5dd35c3dc92295933e/policy/ai_builder/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/99337e68ba4299b667f27d5dd35c3dc92295933e/policy/ai_builder/operating_contract.rego",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/99337e68ba4299b667f27d5dd35c3dc92295933e/docs/runbooks/FIRST_GOVERNED_PR_RUNBOOK.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/99337e68ba4299b667f27d5dd35c3dc92295933e/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/6025fed14a7734b1b1123d6152ded875650bb726"
+    ]
+  },
+  "truth_labels": {
+    ".github/PULL_REQUEST_TEMPLATE.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Verified repository identity, public visibility, push authority, default branch, immutable base commit, target blob, parent GitHub governance, Directory Rules, current Markdown-authoring prompt, AI-builder policy README and Rego stub, governed-PR runbook, generated-receipt schema, and absence of overlapping open PRs or similarly named branches."
+    },
+    {
+      "gate": "no-loss-and-consumer-compatibility",
+      "outcome": "PASS",
+      "reason": "Preserved the prior goal, truth labels, evidence, Directory Rules, roots, object families, lifecycle, change summary, validation, rollback, unknowns, sensitivity, prompt-injection, generated receipt, ADR, and contract-version surfaces. The visible required tokens Goal:, Status labels:, Directory Rules basis:, Validation:, and Rollback: remain present for the current Rego stub."
+    },
+    {
+      "gate": "v3-1-governance-expansion",
+      "outcome": "PASS",
+      "reason": "Added the task contract, precise evidence table, change budget, acceptance matrix, workflow-trigger threat preflight, base-drift and remote-verification record, contract/schema/policy/test impact matrix, separation-of-duties review, and release/publication posture required by the supplied v3.1 operating prompt."
+    },
+    {
+      "gate": "truthfulness-and-drift-correction",
+      "outcome": "PASS",
+      "reason": "Corrected the footer's stale section references and removed the unsupported assertion that CI runs the Rego policy. The template now states that the Rego companion is a PROPOSED stub and that CI invocation, input assembly, branch-protection enforcement, and merge gating remain NEEDS VERIFICATION."
+    },
+    {
+      "gate": "security-and-sensitive-content",
+      "outcome": "PASS",
+      "reason": "The template warns against public disclosure of secrets, exploit details, exact sensitive locations, restricted source payloads, living-person data, and DNA/genomic material, and preserves private-first security routing."
+    },
+    {
+      "gate": "markdown-structure-and-hashes",
+      "outcome": "PASS",
+      "reason": "The final template has balanced comments and tables, a final newline, all required visible headings, and a recomputed SHA-256 of f55758b84398150d16793c92dd1a4012f55dae0835b3daa026b7a7d48f9f09b3. GitHub returned blob SHA c96d0ec0146bdc4e59e9503108980ec90388b894, matching the locally computed Git blob hash."
+    },
+    {
+      "gate": "runtime-policy-workflow-settings",
+      "outcome": "SKIPPED",
+      "reason": "The change updates the pull-request body template and provenance only. It does not modify Rego policy, policy input assembly, GitHub Actions, branch protection, rulesets, labels, repository settings, runtime behavior, release state, or publication."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "existing-pull-request-template",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/99337e68ba4299b667f27d5dd35c3dc92295933e/.github/PULL_REQUEST_TEMPLATE.md"
+    },
+    {
+      "id": "directory-rules-placement-and-review",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/99337e68ba4299b667f27d5dd35c3dc92295933e/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "markdown-authoring-pr-discipline",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/99337e68ba4299b667f27d5dd35c3dc92295933e/docs/doctrine/ai-build-operating-contract.md"
+    },
+    {
+      "id": "ai-builder-policy-current-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/99337e68ba4299b667f27d5dd35c3dc92295933e/policy/ai_builder/README.md"
+    },
+    {
+      "id": "rego-required-pr-tokens-and-stub-status",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/99337e68ba4299b667f27d5dd35c3dc92295933e/policy/ai_builder/operating_contract.rego"
+    },
+    {
+      "id": "generated-receipt-machine-shape",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/99337e68ba4299b667f27d5dd35c3dc92295933e/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-17T16:24:56Z",
+  "emitter": "openai/gpt-5.6-thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored pull-request-template revision on a scoped review branch. The template improves intake, review, verification, and rollback discipline while preserving the current Rego token contract. Human review remains pending. This receipt is provenance evidence, not proof that the Rego policy is invoked by CI, that branch protection enforces the template, that reviewer approval is complete, or that any release or publication is authorized."
+}

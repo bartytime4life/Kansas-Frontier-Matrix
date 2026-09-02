@@ -1,0 +1,138 @@
+{
+  "receipt_id": "genrec-geology-resource-character-vocabulary-adr-20260803",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/adr/ADR-0030-geology-resource-character-vocabulary.md",
+    "docs/adr/INDEX.md",
+    "docs/adr/README.md",
+    "docs/registers/ADR_INDEX.md"
+  ],
+  "artifact_hashes": {
+    "docs/adr/ADR-0030-geology-resource-character-vocabulary.md": "sha256:be756522076bdd0968db4dc02de3632eedd8ea2ec4406e7b0af67d24668b68c9",
+    "docs/adr/INDEX.md": "sha256:9a86ed7bba342cb4330c32dfd2b150356050e7520ff193f6237ac255da6b5d5b",
+    "docs/adr/README.md": "sha256:4dfd56682f08afece775272719ff527d8a2e243e78125f025962359a58498bf0",
+    "docs/registers/ADR_INDEX.md": "sha256:8579d9ec5e5902f74dbf35146f23b33e54f6518dbf3ebe4ba617933d06a4d6a5"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "ChatGPT Work Mode 2026-08-03"
+  },
+  "prompt_or_contract": "sha256:84e29d21a96aab89f10ec901092c69a2f01d271acf2be38ed38587d349ebee8c",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "connected GitHub app repository inspection and writes",
+      "local documentation drafting",
+      "deterministic no-network ADR coherence, link, and SHA-256 checks"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/5229dd8f35a9487be60a7cba7abbc0b6fa938815",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/1926",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5229dd8f35a9487be60a7cba7abbc0b6fa938815/contracts/domains/geology/MineralOccurrence.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5229dd8f35a9487be60a7cba7abbc0b6fa938815/contracts/domains/geology/ResourceDeposit.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5229dd8f35a9487be60a7cba7abbc0b6fa938815/contracts/domains/geology/ResourceEstimate.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/tree/5229dd8f35a9487be60a7cba7abbc0b6fa938815/schemas/contracts/v1/domains/geology",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5229dd8f35a9487be60a7cba7abbc0b6fa938815/docs/domains/geology/SOURCE_ROLE_MATRIX.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5229dd8f35a9487be60a7cba7abbc0b6fa938815/docs/intake/exploratory/geology-natural-resources-architecture-source-map.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5229dd8f35a9487be60a7cba7abbc0b6fa938815/tools/validators/domains/geology/validate_resource_class_distinction.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5229dd8f35a9487be60a7cba7abbc0b6fa938815/docs/adr/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5229dd8f35a9487be60a7cba7abbc0b6fa938815/tools/validators/validate_adr_index.py"
+    ]
+  },
+  "truth_labels": {
+    "docs/adr/ADR-0030-geology-resource-character-vocabulary.md": "PROPOSED",
+    "docs/adr/INDEX.md": "CONFIRMED",
+    "docs/adr/README.md": "CONFIRMED",
+    "docs/registers/ADR_INDEX.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-authority-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Merged PR #1926, current main at 5229dd8f35a9487be60a7cba7abbc0b6fa938815, the canonical ADR index, open pull requests, and ADR-related branches were inspected. No open PR or branch claimed ADR-0030, and later merged work did not overlap the four documentation artifacts."
+    },
+    {
+      "gate": "resource-character-evidence-crosswalk",
+      "outcome": "PASS",
+      "reason": "The proposal was reconciled against the three draft contracts, three permissive schema scaffolds, the seven-role source matrix, the PR #1926 fixture profile and validator, the governed source map, and accepted Directory Rules conventions. Source role, object family, source-native classification, and resource character remain separate."
+    },
+    {
+      "gate": "adr-coherence-delta",
+      "outcome": "PASS",
+      "reason": "The new filename and H1 agree on ADR-0030; source status is proposed; the canonical table contains one matching proposed/proposed row; numbered_records is 30; the table has 30 unique numbered rows; summary surfaces report one accepted and 29 proposed records; no supersession relation is asserted."
+    },
+    {
+      "gate": "documentation-link-resolution",
+      "outcome": "PASS",
+      "reason": "All 13 repository-relative targets linked by ADR-0030 resolved at the exact base. The external PR #1926 target and its merged state were verified through the connected GitHub app."
+    },
+    {
+      "gate": "documentation-only-authority-boundary",
+      "outcome": "PASS",
+      "reason": "The artifact set contains one proposed ADR and three synchronized human inventory surfaces. No contract, schema, source, registry, policy, fixture, validator, workflow, pipeline, lifecycle, API, proof, release, publication, or repository-setting surface is modified."
+    },
+    {
+      "gate": "artifact-integrity",
+      "outcome": "PASS",
+      "reason": "This receipt SHA-256 binds all four authored or modified documentation artifacts and excludes its own bytes to avoid recursive hashing."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks have not yet been observed for the draft pull request head and are not claimed by this receipt."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review and ADR acceptance remain pending; neither is authored or inferred."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "merged-geology-resource-class-validator-pr-1926",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/pull/1926"
+    },
+    {
+      "id": "current-geology-contracts-and-schema-scaffolds",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/5229dd8f35a9487be60a7cba7abbc0b6fa938815"
+    },
+    {
+      "id": "geology-source-role-matrix",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/5229dd8f35a9487be60a7cba7abbc0b6fa938815/docs/domains/geology/SOURCE_ROLE_MATRIX.md"
+    },
+    {
+      "id": "geology-resource-class-governed-source-map",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/5229dd8f35a9487be60a7cba7abbc0b6fa938815/docs/intake/exploratory/geology-natural-resources-architecture-source-map.md"
+    },
+    {
+      "id": "adr-operating-contract-and-validator",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/5229dd8f35a9487be60a7cba7abbc0b6fa938815/docs/adr/README.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-03T05:40:59.965Z",
+  "emitter": "OpenAI Codex via ChatGPT Work Mode",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0030-geology-resource-character-vocabulary.md",
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only ADR proposal. The seven tokens are proposed claim-character vocabulary, not assertions of real resource status and not source admission, policy, promotion, release, or publication authority. Observation remains represented by source_role=observed and is not collapsed into the resource-character axis. Reserve, production, permit, and modeled potential remain schema-unadmitted pending separately reviewed stewardship and evidence closure."
+}

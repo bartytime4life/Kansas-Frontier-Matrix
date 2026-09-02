@@ -1,0 +1,299 @@
+{
+  "schema_version": "kfm.recommendation-decision-authority-assessment-fixtures.v1",
+  "profile": "kfm.governance.recommendation-decision-authority-assessment.v1",
+  "description": "Synthetic cases proving that an advisory recommendation, formal decision, implementation, and outcome remain separate evidence objects.",
+  "bases": {
+    "issued_no_decision": {
+      "profile": "kfm.governance.recommendation-decision-authority-assessment.v1",
+      "status": "PROPOSED_INACTIVE",
+      "version": "1.0.0",
+      "governance_event_ref": "kfm://governance-event/synthetic-planning-session",
+      "recommendation": {
+        "recommendation_ref": "kfm://recommendation/synthetic-planning-session/r1",
+        "state": "ISSUED",
+        "issued_at": "2026-07-01T15:00:00Z",
+        "issuer_ref": "kfm://organization/synthetic-planning-staff",
+        "advisory_scope_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "source_snapshot_refs": [
+          "kfm:source-snapshot:1111111111111111111111111111111111111111111111111111111111111111"
+        ],
+        "evidence_refs": [
+          "kfm://evidence-ref/synthetic-recommendation/instrument"
+        ]
+      },
+      "decision": {
+        "decision_ref": null,
+        "state": "NO_DECISION_RECORDED",
+        "decided_at": null,
+        "authority_ref": null,
+        "instrument_digest": null,
+        "authority_basis_refs": [],
+        "source_snapshot_refs": [
+          "kfm:source-snapshot:2222222222222222222222222222222222222222222222222222222222222222"
+        ],
+        "evidence_refs": [
+          "kfm://evidence-ref/synthetic-decision-search/no-decision-observed"
+        ]
+      },
+      "linkage": {
+        "disposition": "NO_DECISION",
+        "comparison_digest": null,
+        "implementation_refs": [],
+        "outcome_observation_refs": [],
+        "boundary_outcome": "CONSISTENT",
+        "reason_codes": [
+          "ADVISORY_ONLY_NO_DECISION_RECORDED"
+        ]
+      },
+      "limitations": [
+        "DECISION_IS_NOT_IMPLEMENTATION",
+        "IMPLEMENTATION_IS_NOT_OUTCOME",
+        "NO_BINDING_AUTHORITY_CREATED",
+        "RECOMMENDATION_IS_ADVISORY",
+        "RECOMMENDATION_IS_NOT_DECISION"
+      ],
+      "effects": {
+        "recommendation_adopted": false,
+        "decision_created": false,
+        "implementation_started": false,
+        "implementation_completed": false,
+        "outcome_measured": false,
+        "policy_evaluated": false,
+        "released": false,
+        "published": false
+      }
+    },
+    "adopted": {
+      "profile": "kfm.governance.recommendation-decision-authority-assessment.v1",
+      "status": "PROPOSED_INACTIVE",
+      "version": "1.0.0",
+      "governance_event_ref": "kfm://governance-event/synthetic-planning-session",
+      "recommendation": {
+        "recommendation_ref": "kfm://recommendation/synthetic-planning-session/r1",
+        "state": "ISSUED",
+        "issued_at": "2026-07-01T15:00:00Z",
+        "issuer_ref": "kfm://organization/synthetic-planning-staff",
+        "advisory_scope_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "source_snapshot_refs": [
+          "kfm:source-snapshot:1111111111111111111111111111111111111111111111111111111111111111"
+        ],
+        "evidence_refs": [
+          "kfm://evidence-ref/synthetic-recommendation/instrument"
+        ]
+      },
+      "decision": {
+        "decision_ref": "kfm://decision/synthetic-planning-session/d1",
+        "state": "ADOPTED",
+        "decided_at": "2026-08-01T18:00:00Z",
+        "authority_ref": "kfm://authority/synthetic-planning-board",
+        "instrument_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "authority_basis_refs": [
+          "kfm://authority-basis/synthetic-planning-board/enabling-rule"
+        ],
+        "source_snapshot_refs": [
+          "kfm:source-snapshot:3333333333333333333333333333333333333333333333333333333333333333"
+        ],
+        "evidence_refs": [
+          "kfm://evidence-ref/synthetic-decision/instrument"
+        ]
+      },
+      "linkage": {
+        "disposition": "ADOPTED_AS_RECOMMENDED",
+        "comparison_digest": null,
+        "implementation_refs": [],
+        "outcome_observation_refs": [],
+        "boundary_outcome": "CONSISTENT",
+        "reason_codes": [
+          "SEPARATE_DECISION_INSTRUMENT_OBSERVED"
+        ]
+      },
+      "limitations": [
+        "DECISION_IS_NOT_IMPLEMENTATION",
+        "IMPLEMENTATION_IS_NOT_OUTCOME",
+        "NO_BINDING_AUTHORITY_CREATED",
+        "RECOMMENDATION_IS_ADVISORY",
+        "RECOMMENDATION_IS_NOT_DECISION"
+      ],
+      "effects": {
+        "recommendation_adopted": false,
+        "decision_created": false,
+        "implementation_started": false,
+        "implementation_completed": false,
+        "outcome_measured": false,
+        "policy_evaluated": false,
+        "released": false,
+        "published": false
+      }
+    }
+  },
+  "cases": [
+    {"name": "valid_no_decision", "base": "issued_no_decision", "mutations": [], "expected_outcome": "PASS", "expected_findings": []},
+    {"name": "valid_adopted_as_recommended", "base": "adopted", "mutations": [], "expected_outcome": "PASS", "expected_findings": []},
+    {
+      "name": "valid_adopted_with_changes",
+      "base": "adopted",
+      "mutations": [
+        {"path": "/decision/state", "value": "ADOPTED_WITH_CHANGES"},
+        {"path": "/linkage/disposition", "value": "ADOPTED_WITH_CHANGES"},
+        {"path": "/linkage/comparison_digest", "value": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"},
+        {"path": "/linkage/reason_codes", "value": ["MATERIAL_CHANGES_EXPLICITLY_COMPARED"]}
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "valid_rejected",
+      "base": "adopted",
+      "mutations": [
+        {"path": "/decision/state", "value": "REJECTED"},
+        {"path": "/linkage/disposition", "value": "REJECTED"},
+        {"path": "/linkage/reason_codes", "value": ["FORMAL_REJECTION_INSTRUMENT_OBSERVED"]}
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "valid_deferred",
+      "base": "adopted",
+      "mutations": [
+        {"path": "/decision/state", "value": "DEFERRED"},
+        {"path": "/linkage/disposition", "value": "DEFERRED"},
+        {"path": "/linkage/reason_codes", "value": ["FORMAL_DEFERRAL_INSTRUMENT_OBSERVED"]}
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "valid_unconfirmed_hold",
+      "base": "issued_no_decision",
+      "mutations": [
+        {"path": "/decision/state", "value": "STATUS_UNCONFIRMED"},
+        {"path": "/linkage/disposition", "value": "UNRESOLVED"},
+        {"path": "/linkage/boundary_outcome", "value": "HOLD"},
+        {"path": "/linkage/reason_codes", "value": ["DECISION_STATUS_UNCONFIRMED"]}
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "valid_downstream_references_remain_non_effects",
+      "base": "adopted",
+      "mutations": [
+        {"path": "/linkage/implementation_refs", "value": ["kfm://decision-implementation/synthetic-planning-session/i1"]},
+        {"path": "/linkage/outcome_observation_refs", "value": ["kfm://outcome-observation/synthetic-planning-session/o1"]},
+        {"path": "/linkage/reason_codes", "value": ["DOWNSTREAM_OBJECTS_LINKED_WITHOUT_EFFECTS"]}
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "no_decision_with_reference",
+      "base": "issued_no_decision",
+      "mutations": [
+        {"path": "/decision/decision_ref", "value": "kfm://decision/synthetic-planning-session/ghost"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["NO_DECISION_EVIDENCE_CONFLICT"]
+    },
+    {
+      "name": "decision_evidence_incomplete",
+      "base": "adopted",
+      "mutations": [
+        {"path": "/decision/authority_ref", "value": null}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["DECISION_EVIDENCE_INCOMPLETE"]
+    },
+    {
+      "name": "decision_before_recommendation",
+      "base": "adopted",
+      "mutations": [
+        {"path": "/decision/decided_at", "value": "2026-06-01T18:00:00Z"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["DECISION_BEFORE_RECOMMENDATION"]
+    },
+    {
+      "name": "decision_disposition_mismatch",
+      "base": "adopted",
+      "mutations": [
+        {"path": "/linkage/disposition", "value": "REJECTED"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["DECISION_DISPOSITION_MISMATCH"]
+    },
+    {
+      "name": "changes_without_comparison",
+      "base": "adopted",
+      "mutations": [
+        {"path": "/decision/state", "value": "ADOPTED_WITH_CHANGES"},
+        {"path": "/linkage/disposition", "value": "ADOPTED_WITH_CHANGES"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["CHANGE_COMPARISON_REQUIRED"]
+    },
+    {
+      "name": "comparison_wrong_posture",
+      "base": "adopted",
+      "mutations": [
+        {"path": "/linkage/comparison_digest", "value": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["CHANGE_COMPARISON_POSTURE_CONFLICT"]
+    },
+    {
+      "name": "implementation_without_adopted_decision",
+      "base": "issued_no_decision",
+      "mutations": [
+        {"path": "/linkage/implementation_refs", "value": ["kfm://decision-implementation/synthetic-planning-session/ghost"]}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["IMPLEMENTATION_WITHOUT_ADOPTED_DECISION"]
+    },
+    {
+      "name": "outcome_without_implementation",
+      "base": "adopted",
+      "mutations": [
+        {"path": "/linkage/outcome_observation_refs", "value": ["kfm://outcome-observation/synthetic-planning-session/ghost"]}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["OUTCOME_WITHOUT_IMPLEMENTATION"]
+    },
+    {
+      "name": "unconfirmed_boundary_overclaim",
+      "base": "issued_no_decision",
+      "mutations": [
+        {"path": "/decision/state", "value": "STATUS_UNCONFIRMED"},
+        {"path": "/linkage/disposition", "value": "UNRESOLVED"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["UNCONFIRMED_BOUNDARY_OVERCLAIM"]
+    },
+    {
+      "name": "effect_overclaim",
+      "base": "adopted",
+      "mutations": [
+        {"path": "/effects/recommendation_adopted", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["EFFECT_OVERCLAIM"]
+    },
+    {
+      "name": "limitation_boundary_missing",
+      "base": "adopted",
+      "mutations": [
+        {"path": "/limitations", "value": ["DECISION_IS_NOT_IMPLEMENTATION", "IMPLEMENTATION_IS_NOT_OUTCOME", "NO_BINDING_AUTHORITY_CREATED", "RECOMMENDATION_IS_ADVISORY", "RECOMMENDATION_IS_ADVISORY"]}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["SCHEMA_INVALID"]
+    },
+    {
+      "name": "identity_mismatch",
+      "base": "adopted",
+      "mutations": [],
+      "identity_mode": "MISMATCH_ID",
+      "expected_outcome": "ERROR",
+      "expected_findings": ["ASSESSMENT_ID_MISMATCH"]
+    }
+  ]
+}

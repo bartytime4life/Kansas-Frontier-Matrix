@@ -1,0 +1,150 @@
+{
+  "receipt_id": "genrec:living-persons-geoprivacy:2948ff47a729",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/policy/living_persons_geoprivacy.md"
+  ],
+  "artifact_hashes": {
+    "docs/policy/living_persons_geoprivacy.md": "sha256:2948ff47a729a69b25589d10afbb8a677dc626045fe0a36d7710822d04131c97"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-23"
+  },
+  "prompt_or_contract": "sha256:28256b46a69f287cf6435ccc5bdc4772a958486f4d63085a80b1c2f53ee1a060",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "file_search",
+      "python"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0 (turn105file0)"
+    ],
+    "evidence_refs": [
+      "github:bartytime4life/Kansas-Frontier-Matrix@4671f53533cbb1c0757c01d4f90ae60733d544e8",
+      "docs/policy/living_persons_geoprivacy.md@51a7da413c94280a527ada69c7fdd74a8dd08613",
+      "docs/policy/README.md@30fdca4921afba0c7b192b4eed722317a4748fdb",
+      "docs/doctrine/directory-rules.md@fd49a0b83e55cef52c1124281f093e263526898d",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@a4de0d7a96b78da59cfc499d1025e1508afd8dd9",
+      "docs/domains/people-dna-land/README.md@19a3ea59bab2d5e04c73f402a35048c1a55ab071",
+      "docs/domains/people-dna-land/sublanes/dna.md@a1052c21578a338a1e79a9c64773adff88534d8e",
+      "policy/geoprivacy/README.md@46c02d30d66dd950731e84d28c0e57be4f8628b6",
+      "policy/sensitivity/README.md@06197c7a7255264b94fb9dd8d7f73844cfa35682",
+      "policy/domains/people-dna-land/README.md@7260394c77d79629895da16d8d680e8d80c56b32",
+      "policy/consent/people/README.md@82bbe2795f96213f6c31c41a49542f1ff8a98f46",
+      "tests/domains/people-dna-land/README.md@ecdaac8e2509d07e39279e23e99273a15716d053",
+      "fixtures/domains/people-dna-land/README.md@8eb10804c587c62edf1eb9750c2c82b5cf237f2a"
+    ]
+  },
+  "truth_labels": {
+    "docs/policy/living_persons_geoprivacy.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "utf8-final-newline-and-whitespace",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "kfm-meta-block-yaml",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "markdown-heading-fence-table-structure",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "internal-fragment-resolution",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "local-markdown-render-smoke",
+      "outcome": "PASS",
+      "reason": "Parsed and rendered with markdown-it-py 4.2.0."
+    },
+    {
+      "gate": "protected-content-static-review",
+      "outcome": "PASS",
+      "reason": "No real person, DNA, consent credential, parcel, exact location, restricted evidence, or operational transform parameter was introduced."
+    },
+    {
+      "gate": "repository-relative-link-check",
+      "outcome": "SKIPPED",
+      "reason": "No mounted repository checkout; material targets were verified through current GitHub reads and repository-native link checking remains pending."
+    },
+    {
+      "gate": "repository-native-docs-checks",
+      "outcome": "SKIPPED",
+      "reason": "Requires a repository checkout at the exact branch head."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pending draft pull-request delivery."
+    },
+    {
+      "gate": "generated-receipt-schema-static",
+      "outcome": "PASS",
+      "reason": "Required fields, enums, hash formats, artifact-map parity, and pending human-review state were checked against the current schema shape."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "repository-base",
+      "validated": true,
+      "evidence_ref": "github:bartytime4life/Kansas-Frontier-Matrix@4671f53533cbb1c0757c01d4f90ae60733d544e8"
+    },
+    {
+      "id": "target-prior",
+      "validated": true,
+      "evidence_ref": "docs/policy/living_persons_geoprivacy.md@51a7da413c94280a527ada69c7fdd74a8dd08613"
+    },
+    {
+      "id": "parent-containment",
+      "validated": true,
+      "evidence_ref": "docs/policy/README.md@30fdca4921afba0c7b192b4eed722317a4748fdb"
+    },
+    {
+      "id": "directory-rules",
+      "validated": true,
+      "evidence_ref": "docs/doctrine/directory-rules.md@fd49a0b83e55cef52c1124281f093e263526898d"
+    },
+    {
+      "id": "adr-0029",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@a4de0d7a96b78da59cfc499d1025e1508afd8dd9"
+    },
+    {
+      "id": "living-person-policy-boundary",
+      "validated": true,
+      "evidence_ref": "policy/domains/people-dna-land/README.md@7260394c77d79629895da16d8d680e8d80c56b32"
+    },
+    {
+      "id": "implementation-task-packet",
+      "validated": true,
+      "evidence_ref": "attached:turn105file0"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-23T18:37:42Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Records AI-assisted same-path reconciliation of the living-person geoprivacy proposal scaffold. The receipt is process memory only; it does not prove person identity, living status, consent, rights, policy correctness, human approval, release, deployment, promotion, or publication. Rollback restores prior target blob 51a7da413c94280a527ada69c7fdd74a8dd08613 and reverts or supersedes this receipt transparently."
+}

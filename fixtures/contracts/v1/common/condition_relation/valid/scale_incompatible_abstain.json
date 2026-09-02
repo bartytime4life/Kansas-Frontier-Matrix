@@ -1,0 +1,70 @@
+{
+  "assessment": {
+    "causal_claim": false,
+    "evidence_refs": [
+      "kfm://evidence/model/kansas/1",
+      "kfm://evidence/observation/ks-001"
+    ],
+    "outcome": "ABSTAIN",
+    "reason_codes": [
+      "SCALE_INCOMPATIBLE"
+    ],
+    "scale_compatibility": "INCOMPATIBLE",
+    "spatial_relation": "WITHIN",
+    "temporal_relation": "OVERLAPS",
+    "weighting_method": "UNKNOWN"
+  },
+  "governance": {
+    "authority_created": false,
+    "causality_not_inferred": true,
+    "classification_not_observation": true,
+    "observation_not_forecast": true,
+    "policy_evaluated": false,
+    "promotion_authorized": false,
+    "publication_authorized": false,
+    "release_authorized": false,
+    "source_roles_preserved": true,
+    "support_types_preserved": true
+  },
+  "left": {
+    "evidence_refs": [
+      "kfm://evidence/observation/ks-001"
+    ],
+    "source_role": "OBSERVATION",
+    "spatial_scope": {
+      "geometry_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "scale": "POINT",
+      "scope_ref": "kfm://station/ks-001"
+    },
+    "subject_ref": "kfm://observation/soil/ks-001/2026-08-07T12",
+    "support_type": "DIRECT_MEASUREMENT",
+    "temporal_scope": {
+      "end": "2026-08-07T13:00:00Z",
+      "semantics": "HALF_OPEN",
+      "start": "2026-08-07T12:00:00Z"
+    }
+  },
+  "relation_id": "condition-relation:d2028570e0f2b21e5ac42fb3",
+  "relation_kind": "CONTEXTUAL_ASSOCIATION",
+  "requested_claim_type": "CONTEXTUAL",
+  "right": {
+    "evidence_refs": [
+      "kfm://evidence/model/kansas/1"
+    ],
+    "source_role": "MODEL",
+    "spatial_scope": {
+      "geometry_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "scale": "STATEWIDE",
+      "scope_ref": "kfm://geography/state/20"
+    },
+    "subject_ref": "kfm://model/climate/kansas/1",
+    "support_type": "MODELED_ESTIMATE",
+    "temporal_scope": {
+      "end": "2026-08-08T00:00:00Z",
+      "semantics": "HALF_OPEN",
+      "start": "2026-08-07T00:00:00Z"
+    }
+  },
+  "schema_version": "v1",
+  "spec_hash": "sha256:d2028570e0f2b21e5ac42fb3dac261d28fea0a7d4af2550fa51572581a8bfb32"
+}

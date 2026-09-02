@@ -1,0 +1,138 @@
+{
+  "receipt_id": "genrec-evidence-replay-effective-order-20260803",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "contracts/evidence/verification_state_history.md",
+    "fixtures/contracts/v1/evidence/verification_state_history/README.md",
+    "fixtures/contracts/v1/evidence/verification_state_history/invalid/semantic_effective_order.json",
+    "fixtures/packages/evidence_resolver/v1alpha1/README.md",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/verification_effective_order_invalid.json",
+    "packages/evidence-resolver/README.md",
+    "packages/evidence-resolver/src/evidence_resolver/verification_history.py",
+    "tests/packages/evidence_resolver/test_cli.py",
+    "tests/schemas/test_verification_state_history.py",
+    "tools/validators/evidence_resolver/validate_candidate.py"
+  ],
+  "artifact_hashes": {
+    "contracts/evidence/verification_state_history.md": "sha256:417fe169c2551eae5e5037744015cced1d91c3578590fce8c7e8fed93a7f3a67",
+    "fixtures/contracts/v1/evidence/verification_state_history/README.md": "sha256:4b0e796a91325ebbc459c3b387fe224076a9e6f3c16eccfa314f6ba6bd2f56e0",
+    "fixtures/contracts/v1/evidence/verification_state_history/invalid/semantic_effective_order.json": "sha256:ae7b4905a35bc32d71b7daa4c9df3a3a2adaa45524d49e7270964e0cad069e75",
+    "fixtures/packages/evidence_resolver/v1alpha1/README.md": "sha256:d1887b034f4719c54d649611cd7b7606a2dfcc4deabfbe3eb5003386ba3a0ac5",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/verification_effective_order_invalid.json": "sha256:8e1cb167f7f536f9cf741a17802bd4a6753269eee043660881c7a5c67a60569f",
+    "packages/evidence-resolver/README.md": "sha256:b1df254f4c66b3bb4ac81d3b93e36bd856cb021ca4ade3274a413016f8657a7c",
+    "packages/evidence-resolver/src/evidence_resolver/verification_history.py": "sha256:2850bed11eced580d2e77f214ec055c6cfe8adeea8e03a71de8733234f2b6c1e",
+    "tests/packages/evidence_resolver/test_cli.py": "sha256:a8136d6b46714abc960a42a5eb39f29dc2313559dc16795f397e52d6ed51e64c",
+    "tests/schemas/test_verification_state_history.py": "sha256:1ca4da731143ef01eae4e8887ad60c911f60005ea01ee337a4115400b6b2425d",
+    "tools/validators/evidence_resolver/validate_candidate.py": "sha256:1c9640c37cebbc8653303a3e3c01ca438a1cce3fe7c989bcd761e390681a5909"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "Work Mode 2026-08-03"
+  },
+  "prompt_or_contract": "sha256:9ed953bc26092556cbbb76fb6a3d72845adc575e147240138261efebfa998d08",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Git",
+      "connected GitHub repository read/write",
+      "deterministic standard-library Python validation",
+      "isolated repository-declared Python test environment",
+      "repository no-network documentation link checker"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [],
+    "attached_docs": [],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/d1a13a3c852944d8fd8754a887f0b35d3ea9a971",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/9d4020fc82339d98406a4e239b70ac58a5e0440b"
+    ]
+  },
+  "truth_labels": {
+    "contracts/evidence/verification_state_history.md": "PROPOSED",
+    "fixtures/contracts/v1/evidence/verification_state_history/README.md": "PROPOSED",
+    "fixtures/contracts/v1/evidence/verification_state_history/invalid/semantic_effective_order.json": "CONFIRMED",
+    "fixtures/packages/evidence_resolver/v1alpha1/README.md": "PROPOSED",
+    "fixtures/packages/evidence_resolver/v1alpha1/invalid/verification_effective_order_invalid.json": "CONFIRMED",
+    "packages/evidence-resolver/README.md": "PROPOSED",
+    "packages/evidence-resolver/src/evidence_resolver/verification_history.py": "CONFIRMED",
+    "tests/packages/evidence_resolver/test_cli.py": "CONFIRMED",
+    "tests/schemas/test_verification_state_history.py": "CONFIRMED",
+    "tools/validators/evidence_resolver/validate_candidate.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-reconciliation",
+      "outcome": "PASS",
+      "reason": "Current main at d1a13a3c852944d8fd8754a887f0b35d3ea9a971 was inspected after merged PRs #1929, #1930, and #1931. The correction extends the merged evidence resolver only through its existing contract, package, fixture, validator, test, and generated-receipt responsibility roots."
+    },
+    {
+      "gate": "effective-order-dependency-closure",
+      "outcome": "PASS",
+      "reason": "The previously accepted VERIFIED -> REVOKED -> REVERIFIED effective-time inversion now returns VERIFICATION_HISTORY_EFFECTIVE_ORDER_INVALID before replay; replay also defensively rejects any eligible child whose parent is ineligible."
+    },
+    {
+      "gate": "focused-evidence-resolution-suite",
+      "outcome": "PASS",
+      "reason": "Both Make targets passed 21 exact synthetic fixtures and 19 standard-library tests: 2 RESOLVED, 13 UNRESOLVED, 1 DENIED, and 5 ERROR; the negative-only suite produced zero resolutions."
+    },
+    {
+      "gate": "verification-history-contract-regression",
+      "outcome": "PASS",
+      "reason": "The focused VerificationStateHistory suite passed 10 tests and 26 subtests, including effective-order inversion rejection, canonical-validator parity, bitemporal replay, malformed history, transition, hash, ordering, timestamp, parser, CLI, and no-network cases."
+    },
+    {
+      "gate": "repository-schema-and-contract-regression",
+      "outcome": "PASS",
+      "reason": "KFM_NO_NETWORK=1 make validate passed the configured validator aggregate and 150 schema/contract tests plus 26 subtests without changing any schema."
+    },
+    {
+      "gate": "changed-document-links",
+      "outcome": "PASS",
+      "reason": "The repository no-network documentation checker passed all 4 changed Markdown documents and resolved 18 local targets with no external request."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "Hosted exact-head checks remain pending until the corrected branch and draft pull request are created; no hosted success is inferred."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and is neither authored nor inferred."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/d1a13a3c852944d8fd8754a887f0b35d3ea9a971/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "merged-history-aware-evidence-resolution",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/9d4020fc82339d98406a4e239b70ac58a5e0440b"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-03T05:30:02Z",
+  "emitter": "OpenAI Codex via ChatGPT Work Mode",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "This corrective slice closes a fail-open in the merged VerificationStateHistory consumer. A later recorded transition may be effective before its own recorded time, but it cannot be effective before the parent transition it replaces. Without that dependency closure, replay could select an ACTIVE re-verification while its parent revocation was not yet effective. The repair adds a stable semantic finding, defensive replay ancestry enforcement, exact-negative fixtures in both canonical and resolver lanes, regression tests, and direct documentation. It does not change schemas, source admission, policy evaluation, public projection, lifecycle state, release, deployment, publication, or repository settings. Rollback is a normal revert of this correction commit; the merged history-aware resolver remains otherwise intact."
+}

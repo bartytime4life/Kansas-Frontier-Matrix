@@ -1,0 +1,146 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/soil-ssurgo-yearly-diff.yml": "sha256:9bd8fbbbe21192eed25a13caf474baa3adf8729a6cdfe93200a4053e79b0be5e",
+    "contracts/domains/soil/ssurgo_yearly_diff_profile.md": "sha256:f9d85a7cb05fc90d49ae906aca9cd629aa9368421bbde87a6e5b404e25e3ff45",
+    "docs/intake/exploratory/pass-32-ssurgo-yearly-diff-source-map.md": "sha256:dcbe297253afb7c4ad8581f390eb02c258ce88364c3fb3c18cd8398119887612",
+    "fixtures/domains/soil/yearly_diff/snapshots/ssurgo-2025.json": "sha256:40ccd8d0898287e0b10ee1ff92c32f9d10df4b03f83736efc72009afce23b730",
+    "fixtures/domains/soil/yearly_diff/snapshots/ssurgo-2026.json": "sha256:8dd03059f448963b18b9a460e488030628036bd015c48f37dfddac78dbba8d5f",
+    "tests/generators/test_build_soil_yearly_diff.py": "sha256:35286542cf41ba07e901a55023beaf89d94e423bbf5ed3e34a4562ae9f18434c",
+    "tools/generators/README.md": "sha256:831be4ccba268b10616b5136fe1529b6af315161512869d499e7358c30c628df",
+    "tools/generators/build_soil_yearly_diff.py": "sha256:27dd7d139d960165bda93fc58ad5708090fa5967558046abe1e95243bbfdf591"
+  },
+  "artifact_paths": [
+    ".github/workflows/soil-ssurgo-yearly-diff.yml",
+    "contracts/domains/soil/ssurgo_yearly_diff_profile.md",
+    "docs/intake/exploratory/pass-32-ssurgo-yearly-diff-source-map.md",
+    "fixtures/domains/soil/yearly_diff/snapshots/ssurgo-2025.json",
+    "fixtures/domains/soil/yearly_diff/snapshots/ssurgo-2026.json",
+    "tests/generators/test_build_soil_yearly_diff.py",
+    "tools/generators/README.md",
+    "tools/generators/build_soil_yearly_diff.py"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-IDEA-0010",
+      "id": "KFM-P32-IDEA-0010",
+      "validated": true
+    },
+    {
+      "evidence_ref": "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-PROG-0013",
+      "id": "KFM-P32-PROG-0013",
+      "validated": true
+    },
+    {
+      "evidence_ref": "docs/intake/exploratory/pass-32-ssurgo-yearly-diff-source-map.md",
+      "id": "repository-follow-up-candidate",
+      "validated": true
+    },
+    {
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "id": "accepted-directory-governance",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-10T14:53:50Z",
+  "emitter": "OpenAI Codex in ChatGPT Work",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf",
+      "KFM_Full_Atlas_seed_cards",
+      "New Ideas 5-19-26"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-IDEA-0010",
+      "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-PROG-0013",
+      "repo:docs/intake/exploratory/pass-32-ssurgo-yearly-diff-source-map.md@9e76413313b8529091d01be6132d6e987e3f9fae",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@9e76413313b8529091d01be6132d6e987e3f9fae"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "Codex",
+    "provider": "OpenAI",
+    "version": "2026-08-10"
+  },
+  "notes": "Fixture-only implementation of the repository's Pass 32 follow-up. The builder compares two explicit local synthetic snapshots, emits a deterministic detailed record diff and validated SoilYearlyDiffProfile, writes nothing by default, and retains all-false source activation, network, RAW admission, promotion, release, and publication authority. It does not fetch or interpret live NRCS material.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector",
+      "local deterministic validation",
+      "PDF text extraction and rendering"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:f3f1179c6a2d6baebed40bf2dbac9ef0fd9e7284b4f0c1598e34d08fc2e3d9c7",
+  "receipt_id": "genrec-pass32-soil-yearly-diff-builder-20260810",
+  "truth_labels": {
+    ".github/workflows/soil-ssurgo-yearly-diff.yml": "CONFIRMED",
+    "contracts/domains/soil/ssurgo_yearly_diff_profile.md": "PROPOSED",
+    "docs/intake/exploratory/pass-32-ssurgo-yearly-diff-source-map.md": "CONFIRMED",
+    "fixtures/domains/soil/yearly_diff/snapshots/ssurgo-2025.json": "CONFIRMED",
+    "fixtures/domains/soil/yearly_diff/snapshots/ssurgo-2026.json": "CONFIRMED",
+    "tests/generators/test_build_soil_yearly_diff.py": "CONFIRMED",
+    "tools/generators/README.md": "CONFIRMED",
+    "tools/generators/build_soil_yearly_diff.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-builder-unittest-8",
+      "outcome": "PASS",
+      "reason": "Eight deterministic builder tests covered exact deltas, downstream profile validity, source-role and year guards, record ordering, no-network behavior, dry-run output, and overwrite denial."
+    },
+    {
+      "gate": "existing-profile-unittest-8",
+      "outcome": "PASS",
+      "reason": "The existing yearly-diff profile suite remained green."
+    },
+    {
+      "gate": "existing-fixture-polarity-8",
+      "outcome": "PASS",
+      "reason": "Two positive and six negative profile cases retained exact finite outcomes."
+    },
+    {
+      "gate": "deterministic-cli-smoke",
+      "outcome": "PASS",
+      "reason": "The two committed synthetic snapshots emitted valid JSON without filesystem writes."
+    },
+    {
+      "gate": "python-compile-and-diff-check",
+      "outcome": "PASS",
+      "reason": "Authored Python compiled and the patch had no whitespace errors."
+    },
+    {
+      "gate": "artifact-digest-replay",
+      "outcome": "PASS",
+      "reason": "Eight authored non-receipt artifacts are bound to exact SHA-256 digests."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ]
+}

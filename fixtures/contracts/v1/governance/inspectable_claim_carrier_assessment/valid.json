@@ -1,0 +1,14 @@
+{
+  "assessment_id": "kfm:claim-carrier:2de9754b93e6a45b1b3a3dcb014392da3f9f2daf0baa4cc831637a3b67dca98c",
+  "carrier_kind": "MAP_LAYER",
+  "claim_ref": "kfm:claim:fixture-huc12-summary",
+  "correction_ref": "kfm:correction:fixture-correction",
+  "effects": {"approves_policy": false, "creates_claim": false, "creates_evidence": false, "deploys": false, "promotes": false, "publishes": false, "releases": false},
+  "evidence_bundle_ref": "kfm:evidence-bundle:fixture-huc12-summary",
+  "negative_states": ["ABSTAIN", "CORRECTED", "DENY", "ERROR", "STALE", "WITHDRAWN"],
+  "policy_decision_ref": "kfm:policy-decision:fixture-public-safe",
+  "profile": "kfm.governance.inspectable-claim-carrier-assessment.v1",
+  "public_exposure": true,
+  "release_manifest_ref": "kfm:release-manifest:fixture-release",
+  "rollback_ref": "kfm:rollback:fixture-rollback"
+}

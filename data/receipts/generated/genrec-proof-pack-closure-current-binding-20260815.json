@@ -1,0 +1,101 @@
+{
+  "receipt_id": "genrec-proof-pack-closure-current-binding-20260815",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/proof-pack-closure.yml"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/proof-pack-closure.yml": "sha256:e226f43482b0882aadd87d8f80bcac9b4a2423061290f9f4f7ff6adf8ed87599"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Sol",
+    "version": "2026-08-15"
+  },
+  "prompt_or_contract": "sha256:0b05a7dddd6d5d47b4bc7e332cc1fff94341b877dd704503fa443705144cf58c",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector (read-only)",
+      "local deterministic hash computation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [],
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:commit/7b0b31613f9623771dc893146826e053d1c248b5",
+      "repo:.github/workflows/proof-pack-closure.yml@7b0b31613f9623771dc893146826e053d1c248b5",
+      "repo:data/receipts/generated/genrec-proof-pack-closure-20260805.json@7b0b31613f9623771dc893146826e053d1c248b5",
+      "repo:actions/run/31654972088",
+      "drive:KFM_Authoritative_Whole_System_Reference_PROPOSED_2026-08-15.docx#phase-8",
+      "drive:KFM Unified Doctrine Synthesis#published-and-gate-g"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/proof-pack-closure.yml": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-and-overlap-inspection",
+      "outcome": "PASS",
+      "reason": "Current main at 7b0b31613f9623771dc893146826e053d1c248b5, open pull requests, issue #2874, the ProofPack contract/workflow, and the historical receipt were inspected. No open pull request was found owning this exact ProofPack current-binding repair."
+    },
+    {
+      "gate": "historical-workflow-failure-reproduction-evidence",
+      "outcome": "PASS",
+      "reason": "Main workflow run 31654972088 passed fixture closure, focused tests, schema polarity, and deterministic assembly, then failed only at Verify generated authoring receipt integrity against the historical 2026-08-05 receipt."
+    },
+    {
+      "gate": "workflow-current-binding-digest",
+      "outcome": "PASS",
+      "reason": "This receipt binds the exact ProofPack workflow bytes that validate this current-binding receipt while leaving the historical multi-artifact authoring receipt immutable."
+    },
+    {
+      "gate": "repository-native-proof-pack-tests",
+      "outcome": "SKIPPED",
+      "reason": "Pending hosted execution on the draft pull request; the last inspected main workflow had already passed the ProofPack fixture, test, schema, and deterministic assembly steps before failing at receipt integrity."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending review on the draft pull request."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "historical-proof-pack-authoring-receipt",
+      "validated": true,
+      "evidence_ref": "repo:data/receipts/generated/genrec-proof-pack-closure-20260805.json@7b0b31613f9623771dc893146826e053d1c248b5"
+    },
+    {
+      "id": "proof-pack-receipt-failure-run",
+      "validated": true,
+      "evidence_ref": "repo:actions/run/31654972088"
+    },
+    {
+      "id": "current-main-baseline",
+      "validated": true,
+      "evidence_ref": "repo:commit/7b0b31613f9623771dc893146826e053d1c248b5"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-16T03:48:00Z",
+  "emitter": "OpenAI GPT-5.6 Sol via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Current binding for the fixture-first release-support ProofPack workflow. The 2026-08-05 multi-artifact authoring receipt remains immutable process lineage; it is no longer used as the live workflow-integrity target after later repository changes made its exact artifact hashes stale. This receipt binds only the current workflow bytes. The workflow continues to validate ProofPack fixtures, focused tests, schema polarity, deterministic assembly, and local reference integrity before validating this receipt. No evidence, policy, review, promotion, release, deployment, publication, source activation, or public-use authority is granted."
+}

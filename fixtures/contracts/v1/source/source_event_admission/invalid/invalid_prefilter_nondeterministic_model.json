@@ -1,0 +1,40 @@
+{
+  "object_type": "SourceEventPrefilterOutputCandidate",
+  "schema_version": "1.0.0",
+  "profile": "kfm.source_event_prefilter_output_candidate.v1",
+  "execution_mode": "FIXTURE_ONLY",
+  "prefilter_id": "kfm:source-prefilter:sha256:a721edc1329bc044f254dc53ec55bfc100a2af35b09e2c1a8bbddf7e294d9f54",
+  "spec_hash": "sha256:6619172accd1a78886b57abedcdf7a9a8d009883454e99e3ae1e372262db7d5d",
+  "event_ref": "kfm:source-event:sha256:cbe09b6c3df3a5b9df4eef7067ece0f0a8ba62158eae770988636cca4fe54d1d",
+  "event_payload_spec_hash": "sha256:b979e9845ee0a7c93c488c9ea1c8f3b1eb6b1158d5d7d67f168f6d78b93cce25",
+  "evaluated_at": "2026-08-06T17:00:06Z",
+  "evaluator": {
+    "evaluator_id": "kfm-fixture-source-prefilter",
+    "kind": "MODEL",
+    "version": "1.0.0",
+    "configuration_hash": "sha256:ba01f6dcbb74d141c26da76ef9ed4e100f60b7f1de18ffbf36168e0fbd3b2c3c",
+    "deterministic": true,
+    "temperature": 1,
+    "seed": null
+  },
+  "classification": "MATERIAL_CHANGE",
+  "significance_score": 1,
+  "uncertainty": 0,
+  "explanation_digest": "sha256:a39785d54b7343e0273ed58dbabc45f9581b78fddde190f3f59710b043210b33",
+  "candidate_destination": "RAW_REVIEW",
+  "reason_codes": [
+    "MATERIAL_CHANGE_DETECTED"
+  ],
+  "claims": {
+    "network_access_performed": false,
+    "hidden_reasoning_recorded": false,
+    "model_decides_truth": false,
+    "evidence_resolved": false,
+    "policy_evaluated": false,
+    "authority_created": false,
+    "source_activated": false,
+    "lifecycle_write_performed": false,
+    "released": false,
+    "published": false
+  }
+}

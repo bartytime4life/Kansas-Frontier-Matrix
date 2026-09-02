@@ -1,0 +1,416 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/data/lidar_lineage_manifest_candidate.schema.json",
+  "title": "LidarLineageManifestCandidate",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile_version",
+    "manifest_id",
+    "spec_hash",
+    "source_asset",
+    "processing",
+    "derived_artifacts",
+    "evidence",
+    "public_safety",
+    "summary",
+    "governance"
+  ],
+  "properties": {
+    "profile_version": {
+      "const": "kfm.lidar-lineage-manifest-candidate.v1"
+    },
+    "manifest_id": {
+      "type": "string",
+      "pattern": "^kfm:lidar-lineage-manifest:[a-f0-9]{24}$"
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "source_asset": {
+      "$ref": "#/$defs/source_asset"
+    },
+    "processing": {
+      "$ref": "#/$defs/processing"
+    },
+    "derived_artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 16,
+      "items": {
+        "$ref": "#/$defs/derived_artifact"
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_refs",
+        "reality_boundary_note_ref"
+      ],
+      "properties": {
+        "evidence_refs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^kfm://evidence-bundle/[a-z0-9][a-z0-9._~/-]{0,191}$"
+          }
+        },
+        "reality_boundary_note_ref": {
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "^kfm://reality-boundary-note/[a-z0-9][a-z0-9._~/-]{0,191}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "public_safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "exact_infrastructure_exposure",
+        "sensitive_feature_filter_applied",
+        "public_use_authorized"
+      ],
+      "properties": {
+        "exact_infrastructure_exposure": {
+          "const": false
+        },
+        "sensitive_feature_filter_applied": {
+          "type": "boolean"
+        },
+        "public_use_authorized": {
+          "const": false
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "derived_artifact_count",
+        "scene_artifact_count",
+        "vertical_transform_required",
+        "manifest_state",
+        "source_activated"
+      ],
+      "properties": {
+        "derived_artifact_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 16
+        },
+        "scene_artifact_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 16
+        },
+        "vertical_transform_required": {
+          "type": "boolean"
+        },
+        "manifest_state": {
+          "const": "REVIEW_REQUIRED"
+        },
+        "source_activated": {
+          "const": false
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fixture_only",
+        "source_activation_authorized",
+        "transform_authorized",
+        "sensitivity_policy_evaluated",
+        "release_authorized",
+        "published"
+      ],
+      "properties": {
+        "fixture_only": {
+          "const": true
+        },
+        "source_activation_authorized": {
+          "const": false
+        },
+        "transform_authorized": {
+          "const": false
+        },
+        "sensitivity_policy_evaluated": {
+          "const": false
+        },
+        "release_authorized": {
+          "const": false
+        },
+        "published": {
+          "const": false
+        }
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+    },
+    "source_asset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_descriptor_ref",
+        "source_role",
+        "collection_program",
+        "collection_id",
+        "acquired_from",
+        "acquired_to",
+        "sensor",
+        "horizontal_crs",
+        "vertical_crs",
+        "vertical_datum",
+        "vertical_unit",
+        "point_density_per_m2",
+        "classification_standard",
+        "available_class_codes",
+        "asset_digest",
+        "media_type"
+      ],
+      "properties": {
+        "source_descriptor_ref": {
+          "type": "string",
+          "pattern": "^kfm://source/[a-z0-9][a-z0-9._~/-]{0,191}$"
+        },
+        "source_role": {
+          "const": "OBSERVED_POINT_CLOUD"
+        },
+        "collection_program": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "collection_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9:._/-]{0,191}$"
+        },
+        "acquired_from": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "acquired_to": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "sensor": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "horizontal_crs": {
+          "type": "string",
+          "pattern": "^(EPSG:[0-9]{4,6}|urn:ogc:def:crs:[A-Za-z0-9:._-]+)$"
+        },
+        "vertical_crs": {
+          "type": "string",
+          "pattern": "^(EPSG:[0-9]{4,6}|urn:ogc:def:crs:[A-Za-z0-9:._-]+)$"
+        },
+        "vertical_datum": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "vertical_unit": {
+          "enum": [
+            "metre",
+            "us_survey_foot"
+          ]
+        },
+        "point_density_per_m2": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 10000
+        },
+        "classification_standard": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "available_class_codes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 256,
+          "uniqueItems": true,
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          }
+        },
+        "asset_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "media_type": {
+          "enum": [
+            "application/vnd.las",
+            "application/vnd.laz",
+            "application/vnd.copc+octet-stream",
+            "application/octet-stream"
+          ]
+        }
+      }
+    },
+    "vertical_transform": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "applied",
+        "source_vertical_crs",
+        "target_vertical_crs",
+        "operation_ref",
+        "parameters_digest"
+      ],
+      "properties": {
+        "applied": {
+          "type": "boolean"
+        },
+        "source_vertical_crs": {
+          "type": "string",
+          "pattern": "^(EPSG:[0-9]{4,6}|urn:ogc:def:crs:[A-Za-z0-9:._-]+)$"
+        },
+        "target_vertical_crs": {
+          "type": "string",
+          "pattern": "^(EPSG:[0-9]{4,6}|urn:ogc:def:crs:[A-Za-z0-9:._-]+)$"
+        },
+        "operation_ref": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "parameters_digest": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "processing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "tool_name",
+        "tool_version",
+        "parameters_digest",
+        "selected_class_codes",
+        "vertical_transform"
+      ],
+      "properties": {
+        "tool_name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "tool_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "parameters_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "selected_class_codes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 256,
+          "uniqueItems": true,
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          }
+        },
+        "vertical_transform": {
+          "$ref": "#/$defs/vertical_transform"
+        }
+      }
+    },
+    "derived_artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_id",
+        "artifact_kind",
+        "artifact_ref",
+        "artifact_digest",
+        "representation_role",
+        "vertical_crs",
+        "sensitivity_transform_ref"
+      ],
+      "properties": {
+        "artifact_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9._-]{2,95}$"
+        },
+        "artifact_kind": {
+          "enum": [
+            "POINT_CLOUD_COPC",
+            "TERRAIN_COG",
+            "TERRAIN_PMTILES",
+            "SCENE_DERIVATIVE"
+          ]
+        },
+        "artifact_ref": {
+          "type": "string",
+          "pattern": "^kfm://artifact/[a-z0-9][a-z0-9._~/-]{0,191}$"
+        },
+        "artifact_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "representation_role": {
+          "enum": [
+            "DERIVED_POINT_CLOUD",
+            "DERIVED_TERRAIN",
+            "DERIVED_SCENE"
+          ]
+        },
+        "vertical_crs": {
+          "type": "string",
+          "pattern": "^(EPSG:[0-9]{4,6}|urn:ogc:def:crs:[A-Za-z0-9:._-]+)$"
+        },
+        "sensitivity_transform_ref": {
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "^kfm://transform/[a-z0-9][a-z0-9._~/-]{0,191}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

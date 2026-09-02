@@ -1,0 +1,90 @@
+{
+  "object_type": "AggregateNullSemanticsDisclosureFixtureManifest",
+  "schema_version": "1.0.0",
+  "profile": "kfm.common.aggregate-null-semantics-disclosure.fixture.v1",
+  "base_candidate": {
+    "object_type": "AggregateNullSemanticsDisclosureCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.common.aggregate-null-semantics-disclosure.fixture.v1",
+    "profile_spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_card": "KFM-P18-INV-430",
+    "observed_at": "2026-08-11T18:15:00Z",
+    "metric_report_ref": "kfm:metric-report:synthetic-data-quality:001",
+    "metric_report_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "aggregate_statistic_ref": "kfm:aggregate-statistic:synthetic-average:001",
+    "aggregate_statistic_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+    "query_receipt": {
+      "ref": "kfm:query-receipt:synthetic-data-quality:001",
+      "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+      "resolution": "RESOLVED"
+    },
+    "missingness_profile": {
+      "ref": "kfm:missingness-profile:synthetic-data-quality:001",
+      "digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+      "resolution": "RESOLVED"
+    },
+    "semantics": {
+      "aggregate_kind": "AVERAGE",
+      "value_fields": ["measurement_value"],
+      "group_by_fields": ["county_fips"],
+      "input_null_handling": "EXCLUDED",
+      "group_null_handling": "OWN_GROUP",
+      "empty_input_result": "NULL",
+      "count_population_disclosure_ref": null,
+      "imputation_receipt_ref": null
+    },
+    "disclosure": {
+      "state": "COMPLETE_FOR_DECLARED_SCOPE",
+      "intended_use": "DATA_QUALITY_REPORT",
+      "summary": "Average excludes NULL measurement values, preserves NULL county keys as their own group, and returns NULL for empty eligible input.",
+      "details_surface": "DATA_QUALITY_METADATA",
+      "review_record_refs": []
+    },
+    "limitations": [
+      "DECLARATION_ONLY",
+      "NO_RAW_SQL_OR_SOURCE_ROWS",
+      "NO_QUERY_EXECUTION_OR_METRIC_COMPUTATION",
+      "NO_IMPUTATION_OR_EVIDENCE_RESOLUTION",
+      "NO_POLICY_OR_REVIEW_AUTHORITY",
+      "NO_RELEASE_OR_PUBLICATION_AUTHORITY"
+    ],
+    "authority_claims": {
+      "query_execution_authority": false,
+      "metric_computation_authority": false,
+      "imputation_authority": false,
+      "evidence_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "promotion_authority": false,
+      "release_authority": false,
+      "deployment_authority": false,
+      "publication_authority": false,
+      "public_use_authority": false
+    }
+  },
+  "cases": [
+    {"name": "pass_average_excludes_null", "patch": {}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_row_count_composes_population", "patch": {"semantics": {"aggregate_kind": "ROW_COUNT", "value_fields": [], "input_null_handling": "INCLUDED_AS_ROW", "empty_input_result": "ZERO", "count_population_disclosure_ref": "kfm:count-population-disclosure:synthetic-row-count:001"}}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_distinct_count_composes_population", "patch": {"semantics": {"aggregate_kind": "DISTINCT_COUNT", "value_fields": ["county_fips", "station_id"], "input_null_handling": "EXCLUDED", "empty_input_result": "ZERO", "count_population_disclosure_ref": "kfm:count-population-disclosure:synthetic-distinct-count:001"}}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_sum_with_imputation_receipt", "patch": {"semantics": {"aggregate_kind": "SUM", "value_fields": ["measurement_value"], "input_null_handling": "IMPUTED", "empty_input_result": "ZERO", "imputation_receipt_ref": "kfm:imputation-receipt:synthetic-data-quality:001"}, "disclosure": {"summary": "Sum uses the referenced synthetic imputation receipt and reports zero for an empty eligible input."}}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_ungrouped_minimum", "patch": {"semantics": {"aggregate_kind": "MINIMUM", "value_fields": ["measurement_value"], "group_by_fields": [], "group_null_handling": "NOT_GROUPED", "empty_input_result": "NO_RESULT"}, "disclosure": {"intended_use": "INTERNAL_REVIEW", "summary": "Minimum excludes NULL measurement values, has no grouping keys, and emits no result for empty eligible input.", "details_surface": "NONE"}}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "abstain_unresolved_aggregate", "patch": {"semantics": {"aggregate_kind": "UNRESOLVED", "value_fields": [], "input_null_handling": "UNRESOLVED", "empty_input_result": "UNRESOLVED"}}, "expected": {"outcome": "ABSTAIN", "codes": ["AGGREGATE_KIND_UNRESOLVED", "EMPTY_INPUT_RESULT_UNRESOLVED", "INPUT_NULL_HANDLING_UNRESOLVED"]}},
+    {"name": "abstain_unresolved_missingness", "patch": {"missingness_profile": {"resolution": "UNRESOLVED"}}, "expected": {"outcome": "ABSTAIN", "codes": ["MISSINGNESS_PROFILE_UNRESOLVED"]}},
+    {"name": "abstain_unresolved_query", "patch": {"query_receipt": {"resolution": "UNRESOLVED"}}, "expected": {"outcome": "ABSTAIN", "codes": ["QUERY_RECEIPT_UNRESOLVED"]}},
+    {"name": "abstain_unresolved_group_null", "patch": {"semantics": {"group_null_handling": "UNRESOLVED"}}, "expected": {"outcome": "ABSTAIN", "codes": ["GROUP_NULL_HANDLING_UNRESOLVED"]}},
+    {"name": "abstain_incomplete_disclosure", "patch": {"disclosure": {"state": "INCOMPLETE", "summary": null, "details_surface": "NONE"}}, "expected": {"outcome": "ABSTAIN", "codes": ["DISCLOSURE_INCOMPLETE"]}},
+    {"name": "deny_row_count_with_value_field", "patch": {"semantics": {"aggregate_kind": "ROW_COUNT", "input_null_handling": "INCLUDED_AS_ROW", "empty_input_result": "ZERO", "count_population_disclosure_ref": "kfm:count-population-disclosure:synthetic-row-count:001"}}, "expected": {"outcome": "DENY", "codes": ["AGGREGATE_KIND_FIELDS_INCOHERENT"]}},
+    {"name": "deny_average_without_value_field", "patch": {"semantics": {"value_fields": []}}, "expected": {"outcome": "DENY", "codes": ["AGGREGATE_KIND_FIELDS_INCOHERENT"]}},
+    {"name": "deny_average_zero_for_empty_input", "patch": {"semantics": {"empty_input_result": "ZERO"}}, "expected": {"outcome": "DENY", "codes": ["EMPTY_INPUT_RESULT_INCOHERENT"]}},
+    {"name": "deny_count_without_population_disclosure", "patch": {"semantics": {"aggregate_kind": "ROW_COUNT", "value_fields": [], "input_null_handling": "INCLUDED_AS_ROW", "empty_input_result": "ZERO"}}, "expected": {"outcome": "DENY", "codes": ["COUNT_POPULATION_DISCLOSURE_REQUIRED"]}},
+    {"name": "deny_noncount_with_population_disclosure", "patch": {"semantics": {"count_population_disclosure_ref": "kfm:count-population-disclosure:synthetic-unexpected:001"}}, "expected": {"outcome": "DENY", "codes": ["COUNT_POPULATION_DISCLOSURE_PROHIBITED"]}},
+    {"name": "deny_imputed_without_receipt", "patch": {"semantics": {"aggregate_kind": "SUM", "input_null_handling": "IMPUTED", "empty_input_result": "ZERO"}}, "expected": {"outcome": "DENY", "codes": ["IMPUTATION_RECEIPT_REQUIRED"]}},
+    {"name": "deny_receipt_without_imputation", "patch": {"semantics": {"imputation_receipt_ref": "kfm:imputation-receipt:synthetic-unexpected:001"}}, "expected": {"outcome": "DENY", "codes": ["IMPUTATION_RECEIPT_PROHIBITED"]}},
+    {"name": "deny_ungrouped_with_group_behavior", "patch": {"semantics": {"group_by_fields": []}}, "expected": {"outcome": "DENY", "codes": ["GROUP_NULL_SEMANTICS_INCOHERENT"]}},
+    {"name": "deny_grouped_as_not_grouped", "patch": {"semantics": {"group_null_handling": "NOT_GROUPED"}}, "expected": {"outcome": "DENY", "codes": ["GROUP_NULL_SEMANTICS_INCOHERENT"]}},
+    {"name": "deny_noncanonical_distinct_fields", "patch": {"semantics": {"aggregate_kind": "DISTINCT_COUNT", "value_fields": ["station_id", "county_fips"], "input_null_handling": "EXCLUDED", "empty_input_result": "ZERO", "count_population_disclosure_ref": "kfm:count-population-disclosure:synthetic-distinct-count:001"}}, "expected": {"outcome": "DENY", "codes": ["ARRAY_NOT_CANONICAL"]}},
+    {"name": "deny_public_without_disclosure", "patch": {"disclosure": {"intended_use": "PUBLIC_CANDIDATE", "summary": null, "details_surface": "NONE", "review_record_refs": []}}, "expected": {"outcome": "DENY", "codes": ["DISCLOSURE_SUMMARY_REQUIRED", "PUBLIC_DISCLOSURE_REVIEW_REQUIRED", "PUBLIC_DISCLOSURE_SURFACE_REQUIRED"]}},
+    {"name": "deny_profile_hash_tamper", "patch": {}, "tamper": "profile_hash", "expected": {"outcome": "DENY", "codes": ["PROFILE_SPEC_HASH_MISMATCH"]}},
+    {"name": "error_unknown_field", "patch": {"computed_metric_value": 7.5}, "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}}
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/water_planning/program_version.schema.json",
+  "title": "program_version",
+  "type": "object",
+  "description": "A versioned instance of a Kansas water-infrastructure grant program. Each statutory or policy change that alters eligibility criteria, scoring categories, or administration creates a new ProgramVersion rather than overwriting prior history. HB 2462 (2026) is an example of a change that requires a new version.",
+  "x-kfm": {
+    "status": "PROPOSED",
+    "contract_doc": "contracts/domains/water_planning/program_version.md",
+    "fixtures_root": "fixtures/domains/water_planning/program_version/",
+    "policy": "policy/domains/water_planning/",
+    "source": "https://www.kwo.ks.gov/events-initiatives/grant-programs/state-water-infrastructure-grant-programs"
+  },
+  "properties": {
+    "version_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_:.-]*$",
+      "description": "Stable governed identity for this program version."
+    },
+    "program_name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Official program name as stated by the source."
+    },
+    "statutory_basis": {
+      "type": ["string", "null"],
+      "description": "Statutory or policy basis reference, e.g. 'KSA § ... (2026 HB 2462)'. Required when a legislative act drives the version change."
+    },
+    "fiscal_year": {
+      "type": "string",
+      "pattern": "^FY[0-9]{4}$",
+      "description": "Fiscal year this version governs, e.g. FY2027."
+    },
+    "effective_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date on which this program version became effective."
+    },
+    "supersedes_ref": {
+      "type": ["string", "null"],
+      "description": "Reference to the prior ProgramVersion this version supersedes, or null for first versions."
+    },
+    "document_title": {
+      "type": ["string", "null"],
+      "description": "Title of the authoritative program document for this version."
+    },
+    "document_digest": {
+      "type": ["string", "null"],
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "description": "SHA-256 digest of the governing document, if available."
+    },
+    "source_publication_time": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "source_ref": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "version_id",
+    "program_name",
+    "fiscal_year",
+    "effective_date",
+    "supersedes_ref",
+    "source_ref"
+  ],
+  "additionalProperties": false
+}

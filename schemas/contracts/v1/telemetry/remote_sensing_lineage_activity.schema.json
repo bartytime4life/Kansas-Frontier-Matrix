@@ -1,0 +1,150 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/telemetry/remote_sensing_lineage_activity.schema.json",
+  "title": "RemoteSensingLineageActivity",
+  "description": "Closed fixture-only companion profile binding remote-sensing run metrics and PROV activity to an already governed OpenLineage terminal projection.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "profile",
+    "profile_status",
+    "execution_mode",
+    "authority",
+    "activity_id",
+    "source_openlineage_projection",
+    "metrics",
+    "source_links",
+    "remote_sensing_facet",
+    "prov_activity",
+    "decision",
+    "non_effects",
+    "spec_hash"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.telemetry.remote-sensing-lineage-activity.v1"},
+    "profile_status": {"const": "PROPOSED_INACTIVE"},
+    "execution_mode": {"const": "FIXTURE_ONLY_NO_NETWORK"},
+    "authority": {"const": "NONE"},
+    "activity_id": {"type": "string", "pattern": "^kfm:remote-sensing-activity:[0-9a-f]{64}$"},
+    "source_openlineage_projection": {
+      "$ref": "https://schemas.kfm.local/contracts/v1/telemetry/openlineage_run_event_projection.schema.json"
+    },
+    "metrics": {"$ref": "#/$defs/metrics"},
+    "source_links": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/kfmReference"}
+    },
+    "remote_sensing_facet": {"$ref": "#/$defs/remoteSensingFacet"},
+    "prov_activity": {"$ref": "#/$defs/provActivity"},
+    "decision": {"$ref": "#/$defs/decision"},
+    "non_effects": {
+      "type": "array",
+      "minItems": 7,
+      "maxItems": 7,
+      "prefixItems": [
+        {"const": "does_not_contact_remote_sensing_sources"},
+        {"const": "does_not_post_or_export_lineage_events"},
+        {"const": "does_not_create_or_modify_canonical_evidence"},
+        {"const": "does_not_admit_sources_or_mutate_lifecycle_state"},
+        {"const": "does_not_grant_policy_review_or_release_authority"},
+        {"const": "does_not_promote_release_deploy_or_publish"},
+        {"const": "does_not_authorize_public_use"}
+      ],
+      "items": false
+    },
+    "spec_hash": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "kfmReference": {
+      "type": "string",
+      "minLength": 4,
+      "maxLength": 320,
+      "pattern": "^kfm:(?:\\/\\/)?[A-Za-z0-9][A-Za-z0-9._~:/+-]{2,315}$"
+    },
+    "utcSecond": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+    },
+    "metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scene_count",
+        "processed_scene_count",
+        "failed_scene_count",
+        "retry_count",
+        "runtime_ms",
+        "started_at",
+        "ended_at"
+      ],
+      "properties": {
+        "scene_count": {"type": "integer", "minimum": 1, "maximum": 1000000},
+        "processed_scene_count": {"type": "integer", "minimum": 0, "maximum": 1000000},
+        "failed_scene_count": {"type": "integer", "minimum": 0, "maximum": 1000000},
+        "retry_count": {"type": "integer", "minimum": 0, "maximum": 1000000},
+        "runtime_ms": {"type": "integer", "minimum": 1, "maximum": 604800000},
+        "started_at": {"$ref": "#/$defs/utcSecond"},
+        "ended_at": {"$ref": "#/$defs/utcSecond"}
+      }
+    },
+    "remoteSensingFacet": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "activityId",
+        "sceneCount",
+        "processedSceneCount",
+        "failedSceneCount",
+        "retryCount",
+        "runtimeMs",
+        "sourceLinks"
+      ],
+      "properties": {
+        "activityId": {"type": "string", "pattern": "^kfm:remote-sensing-activity:[0-9a-f]{64}$"},
+        "sceneCount": {"type": "integer", "minimum": 1},
+        "processedSceneCount": {"type": "integer", "minimum": 0},
+        "failedSceneCount": {"type": "integer", "minimum": 0},
+        "retryCount": {"type": "integer", "minimum": 0},
+        "runtimeMs": {"type": "integer", "minimum": 1},
+        "sourceLinks": {"type": "array", "minItems": 1, "maxItems": 64, "uniqueItems": true, "items": {"$ref": "#/$defs/kfmReference"}}
+      }
+    },
+    "provActivity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "startedAt", "endedAt", "used", "generated", "wasAssociatedWith", "sourceLinks"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^kfm:remote-sensing-activity:[0-9a-f]{64}$"},
+        "type": {"const": "kfm:RemoteSensingProcessingActivity"},
+        "startedAt": {"$ref": "#/$defs/utcSecond"},
+        "endedAt": {"$ref": "#/$defs/utcSecond"},
+        "used": {"type": "array", "minItems": 1, "maxItems": 256, "uniqueItems": true, "items": {"$ref": "#/$defs/kfmReference"}},
+        "generated": {"type": "array", "minItems": 1, "maxItems": 256, "uniqueItems": true, "items": {"$ref": "#/$defs/kfmReference"}},
+        "wasAssociatedWith": {"const": "kfm:agent:fixture-only-remote-sensing-lineage-v1"},
+        "sourceLinks": {"type": "array", "minItems": 1, "maxItems": 64, "uniqueItems": true, "items": {"$ref": "#/$defs/kfmReference"}}
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["outcome", "reason_codes"],
+      "properties": {
+        "outcome": {"enum": ["PASS", "ABSTAIN", "DENY", "ERROR"]},
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 32,
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]{2,127}$"}
+        }
+      }
+    }
+  }
+}

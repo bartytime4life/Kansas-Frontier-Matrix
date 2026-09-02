@@ -1,0 +1,174 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/release/historical_signature_verification_assessment.schema.json",
+  "title": "HistoricalSignatureVerificationAssessment",
+  "description": "Fixture-only assessment of declared signature verification against effective-dated key status at signing and later verification without performing cryptography or granting release authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "assessment_id",
+    "assessment_state",
+    "artifact_ref",
+    "artifact_sha256",
+    "signature_ref",
+    "signer_identity",
+    "signer_key_id",
+    "signed_at",
+    "verified_at",
+    "signing_trust_profile_version",
+    "verification_trust_profile_version",
+    "signer_authorized_at_signing",
+    "key_status_events",
+    "status_at_signing",
+    "status_at_verification",
+    "verification",
+    "decision",
+    "governance",
+    "spec_hash"
+  ],
+  "properties": {
+    "object_type": { "const": "HistoricalSignatureVerificationAssessment" },
+    "schema_version": { "const": "1.0.0" },
+    "profile": { "const": "kfm.historical-signature-verification.fixture.v1" },
+    "assessment_id": {
+      "type": "string",
+      "pattern": "^kfm:historical-signature:[a-f0-9]{24}$"
+    },
+    "assessment_state": { "enum": ["COMPLETE", "ERROR"] },
+    "artifact_ref": {
+      "type": "string",
+      "pattern": "^kfm:artifact:[a-z0-9][a-z0-9._:-]{2,191}$"
+    },
+    "artifact_sha256": { "$ref": "#/$defs/sha256" },
+    "signature_ref": {
+      "type": "string",
+      "pattern": "^kfm:signature:[a-z0-9][a-z0-9._:-]{2,191}$"
+    },
+    "signer_identity": {
+      "type": "string",
+      "pattern": "^kfm:signer:[a-z0-9][a-z0-9._:-]{2,191}$"
+    },
+    "signer_key_id": {
+      "type": "string",
+      "pattern": "^kfm:key:[a-z0-9][a-z0-9._:-]{2,191}$"
+    },
+    "signed_at": { "$ref": "#/$defs/aware_datetime" },
+    "verified_at": { "$ref": "#/$defs/aware_datetime" },
+    "signing_trust_profile_version": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,63}$"
+    },
+    "verification_trust_profile_version": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,63}$"
+    },
+    "signer_authorized_at_signing": { "type": "boolean" },
+    "key_status_events": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1000,
+      "items": { "$ref": "#/$defs/status_event" }
+    },
+    "status_at_signing": { "$ref": "#/$defs/key_status" },
+    "status_at_verification": { "$ref": "#/$defs/key_status" },
+    "verification": { "$ref": "#/$defs/verification" },
+    "decision": { "$ref": "#/$defs/decision" },
+    "governance": { "$ref": "#/$defs/governance" },
+    "spec_hash": { "$ref": "#/$defs/sha256" }
+  },
+  "$defs": {
+    "aware_datetime": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "key_status": {
+      "enum": ["ACTIVE", "VERIFY_ONLY", "EXPIRED", "REVOKED", "COMPROMISED", "SUPERSEDED", "UNKNOWN"]
+    },
+    "status_event": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sequence", "effective_at", "status", "reason", "superseded_by_key_id"],
+      "properties": {
+        "sequence": { "type": "integer", "minimum": 1, "maximum": 1000000 },
+        "effective_at": { "$ref": "#/$defs/aware_datetime" },
+        "status": { "$ref": "#/$defs/key_status" },
+        "reason": {
+          "oneOf": [
+            { "enum": ["PROVISIONED", "ROTATION", "EXPIRY", "ADMINISTRATIVE_REVOCATION", "KEY_COMPROMISE", "SUPERSESSION", "TRUST_UNKNOWN"] },
+            { "type": "null" }
+          ]
+        },
+        "superseded_by_key_id": {
+          "oneOf": [
+            { "type": "string", "pattern": "^kfm:key:[a-z0-9][a-z0-9._:-]{2,191}$" },
+            { "type": "null" }
+          ]
+        }
+      }
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "cryptographic_result", "evidence_complete", "offline_material_ref"],
+      "properties": {
+        "mode": { "enum": ["ONLINE", "OFFLINE"] },
+        "cryptographic_result": { "enum": ["VERIFIED", "FAILED", "NOT_RUN"] },
+        "evidence_complete": { "type": "boolean" },
+        "offline_material_ref": {
+          "oneOf": [
+            { "type": "string", "pattern": "^kfm:offline-trust-material:[a-z0-9][a-z0-9._:-]{2,191}$" },
+            { "type": "null" }
+          ]
+        }
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "reason_codes", "review_required", "release_authorized", "historical_evidence_rewritten"],
+      "properties": {
+        "state": {
+          "enum": ["VERIFIED_CURRENT", "VERIFIED_HISTORICAL", "REVIEW_REVOKED_AFTER_SIGNING", "REVIEW_COMPROMISE", "PROFILE_REEVALUATION_REQUIRED", "UNKNOWN_TRUST", "INVALID_SIGNATURE", "UNAUTHORIZED_AT_SIGNING", "ERROR"]
+        },
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": ["CURRENT_TRUST_COHERENT", "HISTORICAL_TRUST_COHERENT", "KEY_REVOKED_AFTER_SIGNING", "KEY_COMPROMISE_REVIEW_REQUIRED", "TRUST_PROFILE_VERSION_CHANGED", "VERIFICATION_EVIDENCE_INCOMPLETE", "DECLARED_SIGNATURE_VERIFICATION_FAILED", "SIGNER_OR_KEY_UNAUTHORIZED_AT_SIGNING", "ASSESSMENT_ERROR"]
+          }
+        },
+        "review_required": { "const": true },
+        "release_authorized": { "const": false },
+        "historical_evidence_rewritten": { "const": false }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["execution_mode", "cryptography_performed", "network_attempted", "trust_store_mutated", "signing_authorized", "resigning_authorized", "correction_authorized", "withdrawal_authorized", "release_authorized", "publication_authorized", "public_use_allowed"],
+      "properties": {
+        "execution_mode": { "const": "FIXTURE_ONLY" },
+        "cryptography_performed": { "const": false },
+        "network_attempted": { "const": false },
+        "trust_store_mutated": { "const": false },
+        "signing_authorized": { "const": false },
+        "resigning_authorized": { "const": false },
+        "correction_authorized": { "const": false },
+        "withdrawal_authorized": { "const": false },
+        "release_authorized": { "const": false },
+        "publication_authorized": { "const": false },
+        "public_use_allowed": { "const": false }
+      }
+    }
+  }
+}

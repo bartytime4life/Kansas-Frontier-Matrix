@@ -1,0 +1,199 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/governance/recompile_manifest.schema.json",
+  "title": "RecompileManifest",
+  "description": "Fixture-only no-write manifest for one deterministic JSON candidate compiled from a valid QueryRunRecord, AIChangeProposal, and exact subject preimage. Conformance creates no repository, lifecycle, evidence, policy, review, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "profile",
+    "profile_status",
+    "execution_mode",
+    "authority",
+    "manifest_id",
+    "compiled_at",
+    "artifact_kind",
+    "target_stage",
+    "inputs",
+    "compiler",
+    "output",
+    "rollback",
+    "verification",
+    "permissions",
+    "non_effects",
+    "manifest_spec_hash"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.governance.recompile-manifest.v1"},
+    "profile_status": {"const": "PROPOSED_INACTIVE"},
+    "execution_mode": {"const": "FIXTURE_ONLY_NO_WRITE"},
+    "authority": {"const": "NONE"},
+    "manifest_id": {
+      "type": "string",
+      "pattern": "^kfm:recompile-manifest:[0-9a-f]{64}$"
+    },
+    "compiled_at": {"type": "string", "format": "date-time"},
+    "artifact_kind": {"const": "JSON_DERIVED_CANDIDATE"},
+    "target_stage": {"const": "WORK"},
+    "inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "query_run_id",
+        "query_run_hash",
+        "query_run_spec_hash",
+        "proposal_id",
+        "patch_spec_hash",
+        "subject_ref",
+        "input_spec_hash"
+      ],
+      "properties": {
+        "query_run_id": {
+          "type": "string",
+          "pattern": "^kfm:query-run:[0-9a-f]{64}$"
+        },
+        "query_run_hash": {"$ref": "#/$defs/spec_hash"},
+        "query_run_spec_hash": {"$ref": "#/$defs/spec_hash"},
+        "proposal_id": {
+          "type": "string",
+          "pattern": "^kfm:ai-change-proposal:[0-9a-f]{64}$"
+        },
+        "patch_spec_hash": {"$ref": "#/$defs/spec_hash"},
+        "subject_ref": {"$ref": "#/$defs/kfm_ref"},
+        "input_spec_hash": {"$ref": "#/$defs/spec_hash"}
+      }
+    },
+    "compiler": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "compiler_id",
+        "compiler_version",
+        "canonicalization",
+        "hash_algorithm",
+        "network_access",
+        "write_mode",
+        "compiler_spec_hash"
+      ],
+      "properties": {
+        "compiler_id": {"const": "kfm.tools.recompile-fixture.v1"},
+        "compiler_version": {"const": "1.0.0"},
+        "canonicalization": {"const": "RFC8785-JCS"},
+        "hash_algorithm": {"const": "SHA-256"},
+        "network_access": {"const": "FORBIDDEN"},
+        "write_mode": {"const": "NO_WRITE"},
+        "compiler_spec_hash": {"$ref": "#/$defs/spec_hash"}
+      }
+    },
+    "output": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "candidate_ref",
+        "content_spec_hash",
+        "byte_length",
+        "media_type",
+        "canonical_bytes"
+      ],
+      "properties": {
+        "candidate_ref": {
+          "type": "string",
+          "pattern": "^kfm:recompile-candidate:[0-9a-f]{64}$"
+        },
+        "content_spec_hash": {"$ref": "#/$defs/spec_hash"},
+        "byte_length": {"type": "integer", "minimum": 2, "maximum": 1000000},
+        "media_type": {"const": "application/json"},
+        "canonical_bytes": {"const": true}
+      }
+    },
+    "rollback": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["target_ref", "content_spec_hash", "exact_restore"],
+      "properties": {
+        "target_ref": {"$ref": "#/$defs/kfm_ref"},
+        "content_spec_hash": {"$ref": "#/$defs/spec_hash"},
+        "exact_restore": {"const": true}
+      }
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "query_record",
+        "query_outcome",
+        "evidence_resolution",
+        "proposal_record",
+        "proposal_readiness",
+        "policy_projection",
+        "human_attestation",
+        "proposal_bound_to_query",
+        "preimage_bound",
+        "output_hash_bound",
+        "destination_allowed",
+        "no_write"
+      ],
+      "properties": {
+        "query_record": {"const": "PASS"},
+        "query_outcome": {"const": "ANSWER"},
+        "evidence_resolution": {"const": "COMPLETE"},
+        "proposal_record": {"const": "PASS"},
+        "proposal_readiness": {"const": "READY_FOR_STEWARD_APPLY"},
+        "policy_projection": {"const": "ALLOW"},
+        "human_attestation": {"const": "APPROVED"},
+        "proposal_bound_to_query": {"const": true},
+        "preimage_bound": {"const": true},
+        "output_hash_bound": {"const": true},
+        "destination_allowed": {"const": true},
+        "no_write": {"const": true}
+      }
+    },
+    "permissions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repository_write_allowed",
+        "lifecycle_write_allowed",
+        "canonical_write_allowed",
+        "promotion_allowed",
+        "release_allowed",
+        "deployment_allowed",
+        "publication_allowed",
+        "public_use_allowed"
+      ],
+      "properties": {
+        "repository_write_allowed": {"const": false},
+        "lifecycle_write_allowed": {"const": false},
+        "canonical_write_allowed": {"const": false},
+        "promotion_allowed": {"const": false},
+        "release_allowed": {"const": false},
+        "deployment_allowed": {"const": false},
+        "publication_allowed": {"const": false},
+        "public_use_allowed": {"const": false}
+      }
+    },
+    "non_effects": {
+      "const": [
+        "does_not_apply_to_repository",
+        "does_not_create_evidence_policy_review_or_release_authority",
+        "does_not_promote_release_deploy_or_publish",
+        "does_not_write_canonical_or_lifecycle_state",
+        "does_not_write_files_or_use_network",
+        "output_is_fixture_only_work_candidate"
+      ]
+    },
+    "manifest_spec_hash": {"$ref": "#/$defs/spec_hash"}
+  },
+  "$defs": {
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "kfm_ref": {
+      "type": "string",
+      "pattern": "^kfm:(//)?[A-Za-z0-9][A-Za-z0-9._:/-]{3,255}$"
+    }
+  }
+}

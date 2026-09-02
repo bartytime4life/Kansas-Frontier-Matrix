@@ -1,0 +1,364 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/release/conditional_write_attempt_receipt.schema.json",
+  "title": "ConditionalWriteAttemptReceiptCandidate",
+  "description": "Fixture-only deterministic assessment of one declared conditional-write attempt. Conformance authenticates no request, response, write, lifecycle transition, release, publication, or public-use action.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "object_type",
+    "profile",
+    "execution_mode",
+    "receipt_id",
+    "preflight_candidate",
+    "attempt",
+    "result",
+    "spec_hash",
+    "claims"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "object_type": {
+      "const": "ConditionalWriteAttemptReceiptCandidate"
+    },
+    "profile": {
+      "const": "kfm.release.conditional-write-attempt-receipt.v1"
+    },
+    "execution_mode": {
+      "const": "FIXTURE_ONLY_DECLARATION"
+    },
+    "receipt_id": {
+      "type": "string",
+      "pattern": "^kfm:conditional-write-attempt-receipt:[0-9a-f]{64}$"
+    },
+    "preflight_candidate": {
+      "$ref": "https://schemas.kfm.local/contracts/v1/release/conditional_write_preflight.schema.json"
+    },
+    "attempt": {
+      "$ref": "#/$defs/attempt"
+    },
+    "result": {
+      "$ref": "#/$defs/result"
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "claims": {
+      "$ref": "#/$defs/claims"
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "bounded_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "\\S"
+    },
+    "header_value": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/sha256"
+        },
+        {
+          "const": "*"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "after_state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "etag",
+        "content_digest"
+      ],
+      "properties": {
+        "state": {
+          "enum": [
+            "ABSENT",
+            "PRESENT",
+            "UNKNOWN"
+          ]
+        },
+        "etag": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "content_digest": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "attempt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "attempted_at",
+        "adapter_id",
+        "transport",
+        "request_emitted",
+        "method",
+        "request_headers",
+        "request_content_digest",
+        "request_content_length",
+        "response_status",
+        "response_etag",
+        "response_content_digest",
+        "transport_error",
+        "after_state"
+      ],
+      "properties": {
+        "attempted_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+        },
+        "adapter_id": {
+          "$ref": "#/$defs/bounded_id"
+        },
+        "transport": {
+          "enum": [
+            "NONE",
+            "HTTP",
+            "OBJECT_STORE"
+          ]
+        },
+        "request_emitted": {
+          "type": "boolean"
+        },
+        "method": {
+          "oneOf": [
+            {
+              "const": "PUT"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "request_headers": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "if_match",
+            "if_none_match"
+          ],
+          "properties": {
+            "if_match": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/sha256"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "if_none_match": {
+              "oneOf": [
+                {
+                  "const": "*"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          }
+        },
+        "request_content_digest": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "request_content_length": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1073741824
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "response_status": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 100,
+              "maximum": 599
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "response_etag": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "response_content_digest": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "transport_error": {
+          "oneOf": [
+            {
+              "enum": [
+                "TIMEOUT",
+                "RATE_LIMIT",
+                "CONNECTION",
+                "OTHER"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "after_state": {
+          "$ref": "#/$defs/after_state"
+        }
+      }
+    },
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "outcome",
+        "reason_codes",
+        "attempt_fingerprint"
+      ],
+      "properties": {
+        "outcome": {
+          "enum": [
+            "APPLIED",
+            "NO_ACTION",
+            "CONFLICT",
+            "HOLD",
+            "ERROR"
+          ]
+        },
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "ATTEMPT_NOT_RECORDED",
+              "CONTENT_ALREADY_PRESENT",
+              "PREFLIGHT_CONFLICT",
+              "PRECONDITION_FAILED",
+              "REQUEST_DECLARATION_MISMATCH",
+              "RESPONSE_INCONSISTENT",
+              "TRANSPORT_ERROR",
+              "UPSTREAM_HOLD",
+              "WRITE_APPLIED"
+            ]
+          }
+        },
+        "attempt_fingerprint": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "deterministic_assessment",
+        "validator_network_accessed",
+        "external_state_authenticated",
+        "preflight_authority_verified",
+        "subject_execution_authenticated",
+        "write_verified",
+        "lifecycle_write_verified",
+        "release_created",
+        "published",
+        "public_use_authorized"
+      ],
+      "properties": {
+        "deterministic_assessment": {
+          "const": true
+        },
+        "validator_network_accessed": {
+          "const": false
+        },
+        "external_state_authenticated": {
+          "const": false
+        },
+        "preflight_authority_verified": {
+          "const": false
+        },
+        "subject_execution_authenticated": {
+          "const": false
+        },
+        "write_verified": {
+          "const": false
+        },
+        "lifecycle_write_verified": {
+          "const": false
+        },
+        "release_created": {
+          "const": false
+        },
+        "published": {
+          "const": false
+        },
+        "public_use_authorized": {
+          "const": false
+        }
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "authority": "fixture_attempt_receipt_shape_only",
+    "contract_doc": "contracts/release/conditional_write_attempt_receipt.md",
+    "upstream_contract": "contracts/release/conditional_write_preflight.md",
+    "validator": "tools/validators/release/validate_conditional_write_attempt_receipt.py",
+    "fixtures_root": "fixtures/contracts/v1/release/conditional_write_attempt_receipt/"
+  }
+}

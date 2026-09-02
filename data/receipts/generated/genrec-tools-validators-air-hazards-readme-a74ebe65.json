@@ -1,0 +1,177 @@
+{
+  "receipt_id": "genrec-tools-validators-air-hazards-readme-a74ebe65",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tools/validators/air-hazards/README.md"
+  ],
+  "artifact_hashes": {
+    "tools/validators/air-hazards/README.md": "sha256:a74ebe65af42f69a26e4511fe07beeee20bcbe76b667d478dfa57611753d22b3"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-16-session"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "container/Python validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM GitHub Repository Documentation Implementation Agent — Full Operating Prompt v3.1",
+      "Directory Rules.pdf",
+      "Kansas Frontier Matrix — AI Build Operating Contract.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/2ab8e92cfc76f19838de5be5e3d138d33d980bd7",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2ab8e92cfc76f19838de5be5e3d138d33d980bd7/tools/validators/air-hazards/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2ab8e92cfc76f19838de5be5e3d138d33d980bd7/tools/validators/atmosphere_hazards/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2ab8e92cfc76f19838de5be5e3d138d33d980bd7/tools/validators/domains/atmosphere/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2ab8e92cfc76f19838de5be5e3d138d33d980bd7/tools/validators/domains/atmosphere/smoke/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2ab8e92cfc76f19838de5be5e3d138d33d980bd7/tools/validators/domains/hazards/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2ab8e92cfc76f19838de5be5e3d138d33d980bd7/tools/validators/hazards/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2ab8e92cfc76f19838de5be5e3d138d33d980bd7/tools/validators/freshness/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2ab8e92cfc76f19838de5be5e3d138d33d980bd7/tools/validators/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2ab8e92cfc76f19838de5be5e3d138d33d980bd7/contracts/domains/atmosphere/SmokeContext.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2ab8e92cfc76f19838de5be5e3d138d33d980bd7/schemas/contracts/v1/domains/atmosphere/SmokeContext.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2ab8e92cfc76f19838de5be5e3d138d33d980bd7/schemas/contracts/v1/domains/atmosphere/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2ab8e92cfc76f19838de5be5e3d138d33d980bd7/schemas/contracts/v1/domains/hazards/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2ab8e92cfc76f19838de5be5e3d138d33d980bd7/policy/domains/atmosphere/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2ab8e92cfc76f19838de5be5e3d138d33d980bd7/policy/domains/hazards/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2ab8e92cfc76f19838de5be5e3d138d33d980bd7/tests/domains/atmosphere/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2ab8e92cfc76f19838de5be5e3d138d33d980bd7/.github/workflows/domain-atmosphere.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2ab8e92cfc76f19838de5be5e3d138d33d980bd7/.github/workflows/domain-hazards.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2ab8e92cfc76f19838de5be5e3d138d33d980bd7/docs/doctrine/directory-rules.md",
+      "attached://Pasted text(32).txt"
+    ]
+  },
+  "truth_labels": {
+    "tools/validators/air-hazards/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-preflight",
+      "outcome": "PASS",
+      "reason": "Repository identity, latest main, target blob, validator root, seam/bridge/domain/smoke/freshness lanes, contracts, schemas, policy scaffolds, tests, workflows, Directory Rules, and receipt requirements were inspected."
+    },
+    {
+      "gate": "base-and-target-concurrency",
+      "outcome": "PASS",
+      "reason": "Branch was created from main commit 2ab8e92cfc76f19838de5be5e3d138d33d980bd7 and the target blob was beae47c4f9af375343a38057c9d054459c9ee0c2 before mutation."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The existing README remains under tools/validators, and no schema, contract, policy, data, release, runtime, public, or parallel authority home is created."
+    },
+    {
+      "gate": "direct-lane-inventory",
+      "outcome": "PASS",
+      "reason": "Bounded search surfaced only README.md under tools/validators/air-hazards and no validate_air_hazards executable or AIR_HAZARDS_VALIDATION implementation."
+    },
+    {
+      "gate": "compatibility-and-topology",
+      "outcome": "PASS",
+      "reason": "The update preserves air-hazards as the documented seam, atmosphere_hazards as compatibility-only, smoke specialization under the Atmosphere child lane, and shared freshness/evidence responsibilities without duplicating implementation."
+    },
+    {
+      "gate": "schema-contract-maturity",
+      "outcome": "PASS",
+      "reason": "SmokeContext semantic meaning and its permissive PROPOSED schema scaffold are distinguished; Atmosphere inventory drift and Hazards schema-home conflict remain explicit."
+    },
+    {
+      "gate": "policy-ci-maturity",
+      "outcome": "PASS",
+      "reason": "Atmosphere and Hazards policy READMEs and workflows are classified as scaffolds/TODO-only rather than operational enforcement."
+    },
+    {
+      "gate": "life-safety-boundary",
+      "outcome": "PASS",
+      "reason": "The README denies KFM alert authority, emergency instructions, operational-command claims, and unsafe exact/sensitive public exposure; no alert or sensitive payload is introduced."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "One H1, balanced fenced blocks, tables, finite outcomes, open verification register, evidence ledger, migration, correction, and rollback sections were checked."
+    },
+    {
+      "gate": "internal-link-resolution",
+      "outcome": "PASS",
+      "reason": "All 46 internal links resolved in local validation."
+    },
+    {
+      "gate": "secret-pattern-review",
+      "outcome": "PASS",
+      "reason": "No common private-key, GitHub token, AWS credential, or OpenAI key pattern was found."
+    },
+    {
+      "gate": "artifact-integrity",
+      "outcome": "PASS",
+      "reason": "README SHA-256 is a74ebe65af42f69a26e4511fe07beeee20bcbe76b667d478dfa57611753d22b3 and remote Git blob is 1e026e9c404a27041bd227b320932c6e6736b174."
+    },
+    {
+      "gate": "executable-tests",
+      "outcome": "SKIPPED",
+      "reason": "No validator, schema, policy, fixture, test, workflow, or runtime implementation changed; executable Air-Hazards enforcement is not established."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "target-readme",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2ab8e92cfc76f19838de5be5e3d138d33d980bd7/tools/validators/air-hazards/README.md"
+    },
+    {
+      "id": "compatibility-bridge",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2ab8e92cfc76f19838de5be5e3d138d33d980bd7/tools/validators/atmosphere_hazards/README.md"
+    },
+    {
+      "id": "smoke-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2ab8e92cfc76f19838de5be5e3d138d33d980bd7/contracts/domains/atmosphere/SmokeContext.md"
+    },
+    {
+      "id": "smoke-schema",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2ab8e92cfc76f19838de5be5e3d138d33d980bd7/schemas/contracts/v1/domains/atmosphere/SmokeContext.schema.json"
+    },
+    {
+      "id": "hazards-schema-index",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2ab8e92cfc76f19838de5be5e3d138d33d980bd7/schemas/contracts/v1/domains/hazards/README.md"
+    },
+    {
+      "id": "domain-workflows",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2ab8e92cfc76f19838de5be5e3d138d33d980bd7/.github/workflows/domain-atmosphere.yml"
+    },
+    {
+      "id": "directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2ab8e92cfc76f19838de5be5e3d138d33d980bd7/docs/doctrine/directory-rules.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-16T18:49:38Z",
+  "emitter": "openai:gpt-5.6-thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only update. No executable validator, policy decision, evidence bundle, source admission, release record, public output, emergency alert, or life-safety behavior was created or modified. Human review remains pending."
+}

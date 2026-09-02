@@ -1,0 +1,242 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/map/renderer_binding_assessment.schema.json",
+  "title": "RendererBindingAssessmentCandidate",
+  "description": "Fixture-only renderer-to-layer binding assessment without registry, runtime, evidence, policy, review, release, deployment, publication, or public-use authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "assessment_id",
+    "profile_spec_hash",
+    "source_agenda",
+    "evaluated_at",
+    "renderer",
+    "layer",
+    "delivery",
+    "trust",
+    "interaction",
+    "review",
+    "limitations",
+    "authority_claims"
+  ],
+  "properties": {
+    "object_type": {"const": "RendererBindingAssessmentCandidate"},
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.map.renderer-binding-assessment.fixture.v1"},
+    "assessment_id": {
+      "type": "string",
+      "pattern": "^kfm:renderer-binding:[a-f0-9]{24}$"
+    },
+    "profile_spec_hash": {"$ref": "#/$defs/sha256"},
+    "source_agenda": {"const": "PASS20_EXP_015_RENDERER_BINDING"},
+    "evaluated_at": {"type": "string", "format": "date-time"},
+    "renderer": {"$ref": "#/$defs/renderer"},
+    "layer": {"$ref": "#/$defs/layer"},
+    "delivery": {"$ref": "#/$defs/delivery"},
+    "trust": {"$ref": "#/$defs/trust"},
+    "interaction": {"$ref": "#/$defs/interaction"},
+    "review": {"$ref": "#/$defs/review"},
+    "limitations": {
+      "const": [
+        "ASSESSMENT_ONLY",
+        "FIXTURE_ONLY_NO_REGISTRATION",
+        "REFERENCES_UNRESOLVED",
+        "NO_ARTIFACT_SIGNATURE_OR_RUNTIME_PROOF",
+        "NO_POLICY_REVIEW_RELEASE_OR_PUBLICATION_AUTHORITY"
+      ]
+    },
+    "authority_claims": {"$ref": "#/$defs/authority_claims"}
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "ref": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 512,
+      "pattern": "^kfm://[a-z0-9][a-z0-9._~:/-]+$"
+    },
+    "nullable_ref": {
+      "anyOf": [
+        {"$ref": "#/$defs/ref"},
+        {"type": "null"}
+      ]
+    },
+    "refs": {
+      "type": "array",
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/ref"}
+    },
+    "renderer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "renderer_family",
+        "runtime_surface",
+        "adapter_ref",
+        "capability_profile_ref",
+        "admission_ref",
+        "binding_state"
+      ],
+      "properties": {
+        "renderer_family": {
+          "enum": [
+            "HEADLESS_RENDERER",
+            "MAPLIBRE_GL_JS",
+            "PEER_BROWSER_RENDERER",
+            "UNKNOWN"
+          ]
+        },
+        "runtime_surface": {"enum": ["BROWSER", "SERVER", "TEST", "UNKNOWN"]},
+        "adapter_ref": {"$ref": "#/$defs/ref"},
+        "capability_profile_ref": {"$ref": "#/$defs/ref"},
+        "admission_ref": {"$ref": "#/$defs/nullable_ref"},
+        "binding_state": {"enum": ["ACTIVE", "CANDIDATE_INACTIVE", "UNKNOWN"]}
+      }
+    },
+    "layer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "layer_descriptor_ref",
+        "layer_manifest_ref",
+        "style_manifest_ref",
+        "artifact_manifest_ref",
+        "layer_version"
+      ],
+      "properties": {
+        "layer_descriptor_ref": {"$ref": "#/$defs/ref"},
+        "layer_manifest_ref": {"$ref": "#/$defs/ref"},
+        "style_manifest_ref": {"$ref": "#/$defs/nullable_ref"},
+        "artifact_manifest_ref": {"$ref": "#/$defs/ref"},
+        "layer_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9._+-]+$"
+        }
+      }
+    },
+    "delivery": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "input_class",
+        "delivery_ref",
+        "immutable_locator",
+        "direct_store_access",
+        "query_text_present"
+      ],
+      "properties": {
+        "input_class": {
+          "enum": [
+            "GOVERNED_API",
+            "INTERNAL_STORE",
+            "QUARANTINE",
+            "RAW",
+            "RELEASED_CARRIER",
+            "UNKNOWN",
+            "WORK"
+          ]
+        },
+        "delivery_ref": {"$ref": "#/$defs/ref"},
+        "immutable_locator": {"type": "boolean"},
+        "direct_store_access": {"type": "boolean"},
+        "query_text_present": {"type": "boolean"}
+      }
+    },
+    "trust": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_bundle_refs",
+        "policy_decision_refs",
+        "review_record_refs",
+        "promotion_decision_ref",
+        "release_manifest_ref",
+        "rollback_ref",
+        "correction_refs",
+        "sensitivity_state",
+        "rights_state",
+        "release_state"
+      ],
+      "properties": {
+        "evidence_bundle_refs": {"$ref": "#/$defs/refs"},
+        "policy_decision_refs": {"$ref": "#/$defs/refs"},
+        "review_record_refs": {"$ref": "#/$defs/refs"},
+        "promotion_decision_ref": {"$ref": "#/$defs/nullable_ref"},
+        "release_manifest_ref": {"$ref": "#/$defs/nullable_ref"},
+        "rollback_ref": {"$ref": "#/$defs/nullable_ref"},
+        "correction_refs": {"$ref": "#/$defs/refs"},
+        "sensitivity_state": {"enum": ["GENERALIZED", "PUBLIC_SAFE", "RESTRICTED", "UNKNOWN"]},
+        "rights_state": {"enum": ["APPROVED", "RESTRICTED", "UNKNOWN"]},
+        "release_state": {"enum": ["CANDIDATE", "PUBLISHED", "UNKNOWN", "WITHDRAWN"]}
+      }
+    },
+    "interaction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "context_mode",
+        "evidence_resolution_ref",
+        "feature_properties_as_authority",
+        "client_side_policy_decision",
+        "hidden_feature_inference",
+        "direct_internal_store_lookup"
+      ],
+      "properties": {
+        "context_mode": {"enum": ["FEATURE_PROPERTIES_ONLY", "GOVERNED_API_CONTEXT_ONLY", "UNKNOWN"]},
+        "evidence_resolution_ref": {"$ref": "#/$defs/nullable_ref"},
+        "feature_properties_as_authority": {"type": "boolean"},
+        "client_side_policy_decision": {"type": "boolean"},
+        "hidden_feature_inference": {"type": "boolean"},
+        "direct_internal_store_lookup": {"type": "boolean"}
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "record_refs"],
+      "properties": {
+        "state": {"enum": ["COMPLETE_FOR_DECLARED_SCOPE", "PENDING", "UNKNOWN"]},
+        "record_refs": {"$ref": "#/$defs/refs"}
+      }
+    },
+    "authority_claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "identity_minting_authority",
+        "data_access_authority",
+        "evidence_authority",
+        "policy_authority",
+        "review_authority",
+        "registry_write_authority",
+        "renderer_registration_authority",
+        "release_authority",
+        "deployment_authority",
+        "publication_authority",
+        "public_use_authority"
+      ],
+      "properties": {
+        "identity_minting_authority": {"const": false},
+        "data_access_authority": {"const": false},
+        "evidence_authority": {"const": false},
+        "policy_authority": {"const": false},
+        "review_authority": {"const": false},
+        "registry_write_authority": {"const": false},
+        "renderer_registration_authority": {"const": false},
+        "release_authority": {"const": false},
+        "deployment_authority": {"const": false},
+        "publication_authority": {"const": false},
+        "public_use_authority": {"const": false}
+      }
+    }
+  }
+}

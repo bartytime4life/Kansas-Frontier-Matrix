@@ -1,0 +1,529 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/governance/root_registry.schema.json",
+  "title": "KFM Root Registry",
+  "description": "Projection-only registry of adopted root classes and pinned top-level repository roots. JSON-compatible YAML is used for deterministic no-network parsing.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "registry",
+    "status",
+    "authority",
+    "updated_at",
+    "base_ref",
+    "coverage_scope",
+    "doctrine",
+    "owner",
+    "reviewers",
+    "description",
+    "non_effects",
+    "entry_defaults",
+    "class_defaults",
+    "roots"
+  ],
+  "properties": {
+    "version": {
+      "const": "v1"
+    },
+    "registry": {
+      "const": "root_registry"
+    },
+    "status": {
+      "const": "ACTIVE"
+    },
+    "authority": {
+      "const": "machine_projection_only"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date"
+    },
+    "base_ref": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{40}$"
+    },
+    "coverage_scope": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]{4,128}$"
+    },
+    "doctrine": {
+      "$ref": "#/$defs/doctrine"
+    },
+    "owner": {
+      "$ref": "#/$defs/actor"
+    },
+    "reviewers": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 16,
+      "items": {
+        "$ref": "#/$defs/actor"
+      },
+      "uniqueItems": true
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024
+    },
+    "non_effects": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 16,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_]{4,160}$"
+      },
+      "uniqueItems": true
+    },
+    "roots": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 128,
+      "items": {
+        "$ref": "#/$defs/root"
+      }
+    },
+    "entry_defaults": {
+      "$ref": "#/$defs/entry_defaults"
+    },
+    "class_defaults": {
+      "$ref": "#/$defs/class_defaults"
+    }
+  },
+  "$defs": {
+    "actor": {
+      "type": "string",
+      "pattern": "^@[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "root_path": {
+      "type": "string",
+      "pattern": "^(?:\\.github|[a-z][a-z0-9_-]*)/$"
+    },
+    "target": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/$defs/repo_path"
+        },
+        {
+          "type": "string",
+          "pattern": "^external://[a-z][a-z0-9._/-]{2,255}$"
+        }
+      ]
+    },
+    "token": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:/-]{1,255}$"
+    },
+    "token_array": {
+      "type": "array",
+      "maxItems": 64,
+      "items": {
+        "$ref": "#/$defs/token"
+      },
+      "uniqueItems": true
+    },
+    "artifact_kind": {
+      "type": "string",
+      "enum": [
+        "configuration",
+        "data_instance",
+        "deployable_application",
+        "generated_output",
+        "governance_projection",
+        "human_document",
+        "infrastructure",
+        "migration",
+        "pipeline",
+        "pipeline_spec",
+        "platform_integration",
+        "policy_rule",
+        "release_decision",
+        "reusable_library",
+        "runnable_example",
+        "runtime_adapter",
+        "schema",
+        "semantic_contract",
+        "source_connector",
+        "test",
+        "test_fixture",
+        "thin_script",
+        "repository_tool"
+      ]
+    },
+    "artifact_kinds": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "items": {
+        "$ref": "#/$defs/artifact_kind"
+      },
+      "uniqueItems": true
+    },
+    "doctrine": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "document_id",
+        "sha256",
+        "decision_ref"
+      ],
+      "properties": {
+        "path": {
+          "const": "docs/doctrine/directory-rules.md"
+        },
+        "document_id": {
+          "const": "kfm://doctrine/directory-governance/v2"
+        },
+        "sha256": {
+          "$ref": "#/$defs/digest"
+        },
+        "decision_ref": {
+          "const": "ADR-0029"
+        }
+      }
+    },
+    "root": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "root_id",
+        "path",
+        "class",
+        "responsibility",
+        "allowed_artifact_kinds",
+        "prohibited_artifact_kinds",
+        "exposure",
+        "mutation",
+        "retention",
+        "validation_profiles"
+      ],
+      "properties": {
+        "root_id": {
+          "type": "string",
+          "pattern": "^root\\.[a-z][a-z0-9.-]{1,95}$"
+        },
+        "path": {
+          "$ref": "#/$defs/root_path"
+        },
+        "class": {
+          "type": "string",
+          "enum": [
+            "canonical",
+            "platform",
+            "conditional",
+            "compatibility",
+            "deprecated",
+            "retired"
+          ]
+        },
+        "responsibility": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "allowed_artifact_kinds": {
+          "$ref": "#/$defs/artifact_kinds"
+        },
+        "prohibited_artifact_kinds": {
+          "$ref": "#/$defs/artifact_kinds"
+        },
+        "permitted_writers": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "items": {
+            "$ref": "#/$defs/actor"
+          },
+          "uniqueItems": true
+        },
+        "dependency_rules": {
+          "$ref": "#/$defs/token_array"
+        },
+        "exposure": {
+          "type": "string",
+          "enum": [
+            "public",
+            "semi_public",
+            "internal",
+            "restricted",
+            "mixed"
+          ]
+        },
+        "mutation": {
+          "type": "string",
+          "enum": [
+            "immutable",
+            "append_only",
+            "versioned",
+            "generated",
+            "mixed"
+          ]
+        },
+        "retention": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]{2,96}$"
+        },
+        "owner": {
+          "$ref": "#/$defs/actor"
+        },
+        "reviewers": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "items": {
+            "$ref": "#/$defs/actor"
+          },
+          "uniqueItems": true
+        },
+        "governing_decisions": {
+          "$ref": "#/$defs/token_array",
+          "minItems": 1
+        },
+        "source_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "canonical_target": {
+          "$ref": "#/$defs/target"
+        },
+        "activation_conditions": {
+          "$ref": "#/$defs/token_array"
+        },
+        "exit_conditions": {
+          "$ref": "#/$defs/token_array"
+        },
+        "validation_profiles": {
+          "$ref": "#/$defs/token_array",
+          "minItems": 1
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "PROPOSED",
+            "ACCEPTED",
+            "ACTIVE",
+            "DEPRECATED",
+            "RETIRED"
+          ]
+        }
+      }
+    },
+    "repo_path": {
+      "type": "string",
+      "pattern": "^(?:\\.github|[a-z][a-z0-9_-]*)(?:/[a-z][a-z0-9_-]*)*/$"
+    },
+    "entry_defaults": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "permitted_writers",
+        "dependency_rules",
+        "owner",
+        "reviewers",
+        "governing_decisions",
+        "source_digest"
+      ],
+      "properties": {
+        "permitted_writers": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "items": {
+            "$ref": "#/$defs/actor"
+          },
+          "uniqueItems": true
+        },
+        "dependency_rules": {
+          "$ref": "#/$defs/token_array"
+        },
+        "owner": {
+          "$ref": "#/$defs/actor"
+        },
+        "reviewers": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "items": {
+            "$ref": "#/$defs/actor"
+          },
+          "uniqueItems": true
+        },
+        "governing_decisions": {
+          "$ref": "#/$defs/token_array",
+          "minItems": 1
+        },
+        "source_digest": {
+          "$ref": "#/$defs/digest"
+        }
+      }
+    },
+    "class_defaults": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "canonical",
+        "platform",
+        "conditional",
+        "compatibility",
+        "deprecated",
+        "retired"
+      ],
+      "properties": {
+        "canonical": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "canonical_target",
+            "activation_conditions",
+            "exit_conditions",
+            "status"
+          ],
+          "properties": {
+            "canonical_target": {
+              "$ref": "#/$defs/target"
+            },
+            "activation_conditions": {
+              "$ref": "#/$defs/token_array"
+            },
+            "exit_conditions": {
+              "$ref": "#/$defs/token_array"
+            },
+            "status": {
+              "const": "ACTIVE"
+            }
+          }
+        },
+        "platform": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "canonical_target",
+            "activation_conditions",
+            "exit_conditions",
+            "status"
+          ],
+          "properties": {
+            "canonical_target": {
+              "$ref": "#/$defs/target"
+            },
+            "activation_conditions": {
+              "$ref": "#/$defs/token_array"
+            },
+            "exit_conditions": {
+              "$ref": "#/$defs/token_array"
+            },
+            "status": {
+              "const": "ACTIVE"
+            }
+          }
+        },
+        "conditional": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status"
+          ],
+          "properties": {
+            "canonical_target": {
+              "$ref": "#/$defs/target"
+            },
+            "activation_conditions": {
+              "$ref": "#/$defs/token_array"
+            },
+            "exit_conditions": {
+              "$ref": "#/$defs/token_array"
+            },
+            "status": {
+              "const": "PROPOSED"
+            }
+          }
+        },
+        "compatibility": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status"
+          ],
+          "properties": {
+            "canonical_target": {
+              "$ref": "#/$defs/target"
+            },
+            "activation_conditions": {
+              "$ref": "#/$defs/token_array"
+            },
+            "exit_conditions": {
+              "$ref": "#/$defs/token_array"
+            },
+            "status": {
+              "const": "ACTIVE"
+            }
+          }
+        },
+        "deprecated": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status"
+          ],
+          "properties": {
+            "canonical_target": {
+              "$ref": "#/$defs/target"
+            },
+            "activation_conditions": {
+              "$ref": "#/$defs/token_array"
+            },
+            "exit_conditions": {
+              "$ref": "#/$defs/token_array"
+            },
+            "status": {
+              "const": "DEPRECATED"
+            }
+          }
+        },
+        "retired": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status"
+          ],
+          "properties": {
+            "canonical_target": {
+              "$ref": "#/$defs/target"
+            },
+            "activation_conditions": {
+              "$ref": "#/$defs/token_array"
+            },
+            "exit_conditions": {
+              "$ref": "#/$defs/token_array"
+            },
+            "status": {
+              "const": "RETIRED"
+            }
+          }
+        }
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED",
+    "contract_doc": "contracts/governance/root_registry.md",
+    "instance": "control_plane/root_registry.yaml",
+    "validator": "tools/validators/directory_governance/validate_root_registry.py",
+    "fixtures_root": "fixtures/contracts/v1/governance/root_registry/",
+    "tests": "tests/validators/directory_governance/test_validate_root_registry.py",
+    "authority": "projection_shape_only",
+    "non_effects": [
+      "does_not_create_or_activate_roots",
+      "does_not_authorize_migration_release_or_publication"
+    ]
+  }
+}

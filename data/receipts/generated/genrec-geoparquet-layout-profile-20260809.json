@@ -1,0 +1,122 @@
+{
+  "receipt_id": "genrec:geoparquet-layout-profile:20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/geospatial-carrier-readiness.yml",
+    "contracts/release/geospatial_carrier_readiness.md",
+    "schemas/contracts/v1/release/geospatial_carrier_readiness.schema.json",
+    "fixtures/contracts/v1/release/geospatial_carrier_readiness/cases.json",
+    "tools/validators/release/validate_geospatial_carrier_readiness.py",
+    "tests/release/test_geospatial_carrier_readiness.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/geospatial-carrier-readiness.yml": "sha256:8d6bcd200217f3ec66f6ac06afebb9b54b85ae4117093ea94b54c95a8f6d019f",
+    "contracts/release/geospatial_carrier_readiness.md": "sha256:83478d2a99502832592a7770bd581dfbc314b44a72100659ca8ab104748fa036",
+    "schemas/contracts/v1/release/geospatial_carrier_readiness.schema.json": "sha256:aaa7d915e5504bb62dca806f93835730ea07e512ad03e05dfee2790208d00142",
+    "fixtures/contracts/v1/release/geospatial_carrier_readiness/cases.json": "sha256:4d9b15525252d789f6a76e5c5e9755afee36a9d206d32661f0f64a5bc3da53cf",
+    "tools/validators/release/validate_geospatial_carrier_readiness.py": "sha256:26e0e04c3566ebb96d1b096160e5df1fb95f893e7cc3e1895756ed73aa823e61",
+    "tests/release/test_geospatial_carrier_readiness.py": "sha256:fb05ae5d86071fca25893e0508c3fb0f865b026b2141c2a53c60af8987532b42"
+  },
+  "model_identity": {
+    "provider": "openai",
+    "model": "GPT-5",
+    "version": "Codex desktop session 2026-08-09"
+  },
+  "prompt_or_contract": "sha256:1a6ca36970ac769912fcae6f710c3864924a3291aa79cc2884388fe7d3cb5244",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "tools_enabled": [
+      "google-drive",
+      "github",
+      "container"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "git:main@ae9acb4e266931c03db80537a0081a616dbdcb36",
+      "docs/intake/exploratory/spatiotemporal-modernization-blueprint-source-map.md",
+      "docs/standards/GEOPARQUET.md",
+      "docs/architecture/directory-rules.md",
+      "contracts/release/geospatial_carrier_readiness.md"
+    ],
+    "attached_docs": [
+      "Google Drive: Kansas Frontier Matrix Improvements"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/geospatial-carrier-readiness.yml": "PROPOSED",
+    "contracts/release/geospatial_carrier_readiness.md": "PROPOSED",
+    "schemas/contracts/v1/release/geospatial_carrier_readiness.schema.json": "PROPOSED",
+    "fixtures/contracts/v1/release/geospatial_carrier_readiness/cases.json": "PROPOSED",
+    "tools/validators/release/validate_geospatial_carrier_readiness.py": "PROPOSED",
+    "tests/release/test_geospatial_carrier_readiness.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-pytest-14",
+      "outcome": "PASS",
+      "reason": "Fourteen focused deterministic tests passed against the final non-receipt artifact bytes."
+    },
+    {
+      "gate": "carrier-case-polarity-9",
+      "outcome": "PASS",
+      "reason": "Nine COG, MVT, and GeoParquet cases matched their exact READY, HOLD, and ERROR results."
+    },
+    {
+      "gate": "draft-2020-12-meta",
+      "outcome": "PASS",
+      "reason": "The focused suite checked the revised schema against JSON Schema Draft 2020-12."
+    },
+    {
+      "gate": "targeted-diff-check",
+      "outcome": "PASS",
+      "reason": "The intended changed paths contain no whitespace errors."
+    },
+    {
+      "gate": "hosted-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pending draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "policy:ai-build-operating-contract:3.0.0"
+  ],
+  "citations": [
+    {
+      "id": "KFM_SPATIOTEMPORAL_MODERNIZATION_SOURCE_MAP",
+      "validated": true,
+      "evidence_ref": "docs/intake/exploratory/spatiotemporal-modernization-blueprint-source-map.md"
+    },
+    {
+      "id": "KFM_GEOPARQUET_STANDARD",
+      "validated": true,
+      "evidence_ref": "docs/standards/GEOPARQUET.md"
+    },
+    {
+      "id": "KFM_DIRECTORY_RULES",
+      "validated": true,
+      "evidence_ref": "docs/architecture/directory-rules.md"
+    },
+    {
+      "id": "KFM_IMPROVEMENTS_DRIVE_DOCUMENT",
+      "validated": true,
+      "evidence_ref": "Google Drive: Kansas Frontier Matrix Improvements"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-09T17:39:31Z",
+  "emitter": "openai/codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Draft, inactive GeoParquet layout-profile extension mined from a supplied Drive document and constrained by the repository source map. The receipt records authorship and byte integrity only; it does not accept a GeoParquet version decision, prove benchmark results, authorize activation, approve merge, or confer release or publication authority."
+}

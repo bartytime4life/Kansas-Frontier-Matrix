@@ -1,0 +1,42 @@
+{
+  "semantic_invalid_alternative_role_coverage.json": [
+    "COMPOSED_CLAIM_ALTERNATIVE_ROLE_COVERAGE_INVALID",
+    "COMPOSED_CLAIM_GROUP_ROLE_NOT_ALTERNATIVE"
+  ],
+  "semantic_invalid_closure_id.json": [
+    "COMPOSED_CLAIM_ID_MISMATCH"
+  ],
+  "semantic_invalid_graph_hash.json": [
+    "COMPOSED_CLAIM_GRAPH_HASH_MISMATCH"
+  ],
+  "semantic_invalid_internal_lifecycle_path.json": [
+    "COMPOSED_CLAIM_INTERNAL_LIFECYCLE_PATH_DENIED"
+  ],
+  "semantic_invalid_multiple_alternative_groups.json": [
+    "COMPOSED_CLAIM_ALTERNATIVE_ROLE_MULTIPLE_GROUPS"
+  ],
+  "semantic_invalid_outcome.json": [
+    "COMPOSED_CLAIM_OUTCOME_MISMATCH"
+  ],
+  "semantic_invalid_reason_codes.json": [
+    "COMPOSED_CLAIM_REASON_CODES_MISMATCH"
+  ],
+  "semantic_invalid_resolved_roles.json": [
+    "COMPOSED_CLAIM_RESOLVED_ROLES_MISMATCH"
+  ],
+  "semantic_invalid_resolved_spec_hash.json": [
+    "COMPOSED_CLAIM_RESOLVED_SPEC_HASH_MISMATCH"
+  ],
+  "semantic_invalid_role_order.json": [
+    "COMPOSED_CLAIM_ROLE_ORDER_INVALID"
+  ],
+  "semantic_invalid_spec_hash.json": [
+    "COMPOSED_CLAIM_SPEC_HASH_MISMATCH"
+  ],
+  "semantic_invalid_time_range.json": [
+    "COMPOSED_CLAIM_TIME_RANGE_INVALID"
+  ],
+  "semantic_invalid_unknown_group_role.json": [
+    "COMPOSED_CLAIM_GROUP_ROLE_UNKNOWN"
+  ]
+}

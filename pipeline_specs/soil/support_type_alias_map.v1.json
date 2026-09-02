@@ -1,0 +1,31 @@
+{
+  "object_type": "SoilSupportTypeAliasMap",
+  "schema_version": "1.0.0",
+  "status": "PROPOSED_INACTIVE",
+  "canonical_profile": "pipeline_specs/soil/support_type_profile.v1.json",
+  "aliases": [
+    {
+      "alias": "interpretation",
+      "canonical": "soil_interpretation",
+      "class_preserved": true
+    },
+    {
+      "alias": "pedon_evidence",
+      "canonical": "profile_soil_evidence",
+      "class_preserved": true
+    },
+    {
+      "alias": "satellite_grid_soil_moisture",
+      "canonical": "satellite_soil_moisture_grid",
+      "class_preserved": true
+    }
+  ],
+  "governance": {
+    "source_activated": false,
+    "evidence_resolved": false,
+    "policy_evaluated": false,
+    "promotion_authorized": false,
+    "release_authorized": false,
+    "public_use_allowed": false
+  }
+}

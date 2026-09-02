@@ -1,0 +1,77 @@
+{
+  "receipt_id": "genrec-focus-mode-pottawatomie-county-readme-e50bbf82396f",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/focus-mode/counties/pottawatomie_county/README.md"
+  ],
+  "artifact_hashes": {
+    "docs/focus-mode/counties/pottawatomie_county/README.md": "NEEDS_VERIFICATION"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "ChatGPT",
+    "version": "GPT-5.6 Sol"
+  },
+  "inputs": {
+    "evidence_refs": [
+      "github:bartytime4life/Kansas-Frontier-Matrix@131b605163bfbca1880014a10d9f41cd00ff564f",
+      "github:docs/focus-mode/counties/pottawatomie_county/README.md@131b605163bfbca1880014a10d9f41cd00ff564f#blob:5ce738c680cb21957382810e2448532c1caf5c0c",
+      "github:docs/focus-mode/counties/pottawatomie_county/pottawatomie_county_focus_mode_build_plan.md@131b605163bfbca1880014a10d9f41cd00ff564f",
+      "task-contract:kfm-focus-mode-pottawatomie-county-readme-20260821",
+      "github:docs/focus-mode/counties/pottawatomie_county/README.md@agent/pottawatomie-county-readme-20260821#blob:e50bbf82396fa0588983d161424a479f9218c11a"
+    ]
+  },
+  "truth_labels": {
+    "docs/focus-mode/counties/pottawatomie_county/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-base-target-and-overlap-inspection",
+      "outcome": "PASS",
+      "reason": "Pinned current main, read the complete predecessor README and sibling plan, and found no matching open Pottawatomie County README pull request or task branch before mutation."
+    },
+    {
+      "gate": "same-path-directory-governance-review",
+      "outcome": "PASS",
+      "reason": "The change remains at the existing docs/ path and introduces no parallel Focus Mode authority or migration."
+    },
+    {
+      "gate": "material-no-loss-and-plan-reconciliation",
+      "outcome": "PASS",
+      "reason": "The predecessor navigation role and sibling plan link were preserved while the plan remained byte-unchanged and proposal-bounded."
+    },
+    {
+      "gate": "security-rights-sensitivity-review",
+      "outcome": "PASS",
+      "reason": "No credentials, private records, exact burial/archaeology targets, infrastructure vulnerability details, or live operational payloads were introduced."
+    },
+    {
+      "gate": "readme-content-identity",
+      "outcome": "PASS",
+      "reason": "Feature-branch README Git blob is e50bbf82396fa0588983d161424a479f9218c11a."
+    },
+    {
+      "gate": "artifact-sha256",
+      "outcome": "NEEDS_VERIFICATION",
+      "reason": "Connector-only run did not provide a trustworthy local SHA-256 computation for the final README bytes."
+    },
+    {
+      "gate": "full-repository-validator-suite",
+      "outcome": "NOT_RUN",
+      "reason": "No mounted checkout was available in this connector-only run."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "PENDING",
+      "reason": "Hosted checks are observed after draft pull-request creation and reported separately from delivery state."
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-08-22T04:23:00Z",
+  "emitter": "OpenAI GPT-5.6 Sol via ChatGPT GitHub connector",
+  "notes": "Generated authoring receipt for the Pottawatomie County README modernization. Provenance only; does not admit sources, validate external claims, decide property/floodplain/infrastructure/cultural-resource policy, prove runtime behavior, release, deploy, publish, or merge."
+}

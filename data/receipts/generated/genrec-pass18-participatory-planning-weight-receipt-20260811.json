@@ -1,0 +1,154 @@
+{
+  "receipt_id": "genrec-pass18-participatory-planning-weight-receipt-20260811",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/participatory-planning-weight-receipt.yml",
+    "contracts/evidence/participatory_planning_weight_receipt.md",
+    "docs/intake/exploratory/pass-18-participatory-planning-weight-receipt-source-map.md",
+    "fixtures/contracts/v1/evidence/participatory_planning_weight_receipt/cases.json",
+    "schemas/contracts/v1/evidence/participatory_planning_weight_receipt.schema.json",
+    "tests/validators/evidence/test_validate_participatory_planning_weight_receipt.py",
+    "tools/validators/evidence/validate_participatory_planning_weight_receipt.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/participatory-planning-weight-receipt.yml": "sha256:8a7c404105c024339e43725bc54552e71b5a63d6c7e2330034a553dfe80d05a9",
+    "contracts/evidence/participatory_planning_weight_receipt.md": "sha256:6c25eee07975684c3fc96cbc3c01e5fc10900174f1d7f62a33c3dd503d7ce7ab",
+    "docs/intake/exploratory/pass-18-participatory-planning-weight-receipt-source-map.md": "sha256:d9f876aac432ae3a282f436fd4a7f013643adcf76e47647f588d2b9fe17ac5a1",
+    "fixtures/contracts/v1/evidence/participatory_planning_weight_receipt/cases.json": "sha256:a9236a9898c55ecae21a16b1771dd06ffedecc3b88bb606dc781e5f3e4dd17bc",
+    "schemas/contracts/v1/evidence/participatory_planning_weight_receipt.schema.json": "sha256:06bb6c37a220a0f781f7c04745355ebd19873b947a9b431405f952a09cdd0742",
+    "tests/validators/evidence/test_validate_participatory_planning_weight_receipt.py": "sha256:99c01b36187e02422e9927cd32f7ac5f74d372500f776609df73081bf4bd054a",
+    "tools/validators/evidence/validate_participatory_planning_weight_receipt.py": "sha256:956bac9fb1004f807744502335f9d382f3e0a752ddb355d5bf4801d5d21413d4"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-11"
+  },
+  "prompt_or_contract": "sha256:6c25eee07975684c3fc96cbc3c01e5fc10900174f1d7f62a33c3dd503d7ce7ab",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connected-corpus discovery",
+      "GitHub repository inspection and connector publication",
+      "local deterministic JSON, YAML, Python, schema, fixture, and receipt validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9"
+    ],
+    "attached_docs": [
+      "KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf",
+      "KFM_Full_Atlas_seed_cards.md",
+      "Kansas Frontier Matrix — Connected-Dots Architecture Brief.md"
+    ],
+    "evidence_refs": [
+      "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#card=KFM-P18-INV-060",
+      "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#card=KFM-P18-INV-203",
+      "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#card=KFM-P18-INV-421",
+      "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#document=KFM-Full-Atlas-seed-cards",
+      "gdrive://1sdiLNDLFr2cVD3Q8h3ZvHO4D96WLJ6V7vf5neNzEyTM#document=KFM-Connected-Dots-Architecture-Brief",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/01b3f70bb0514c0557e777294b36992317e992c8/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/01b3f70bb0514c0557e777294b36992317e992c8/contracts/governance/public_participation_submission_assessment.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/01b3f70bb0514c0557e777294b36992317e992c8/contracts/evidence/planning_proxy_uncertainty_assessment.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/participatory-planning-weight-receipt.yml": "CONFIRMED",
+    "contracts/evidence/participatory_planning_weight_receipt.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-participatory-planning-weight-receipt-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/evidence/participatory_planning_weight_receipt/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/evidence/participatory_planning_weight_receipt.schema.json": "PROPOSED",
+    "tests/validators/evidence/test_validate_participatory_planning_weight_receipt.py": "CONFIRMED",
+    "tools/validators/evidence/validate_participatory_planning_weight_receipt.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS",
+      "reason": "Eight deterministic participatory planning weight receipt tests passed."
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS",
+      "reason": "Twenty-three exact PASS, ABSTAIN, DENY, and ERROR cases matched reviewed outcomes and codes."
+    },
+    {
+      "gate": "no-network-boundary",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pass18-kfm-p18-inv-060",
+      "validated": true,
+      "evidence_ref": "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#card=KFM-P18-INV-060"
+    },
+    {
+      "id": "pass18-kfm-p18-inv-203",
+      "validated": true,
+      "evidence_ref": "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#card=KFM-P18-INV-203"
+    },
+    {
+      "id": "pass18-kfm-p18-inv-421",
+      "validated": true,
+      "evidence_ref": "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#card=KFM-P18-INV-421"
+    },
+    {
+      "id": "drive-kfm-full-atlas-seed-cards",
+      "validated": true,
+      "evidence_ref": "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#document=KFM-Full-Atlas-seed-cards"
+    },
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/01b3f70bb0514c0557e777294b36992317e992c8/docs/doctrine/directory-rules.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T22:57:37Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub and Google Drive connectors",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Additive, inactive, fixture-only participatory planning weight receipt. It checks local declaration coherence for separate stakeholder-group weights, facilitation, consent, dissent, unresolved conflict, and sensitivity posture without collecting participants, resolving evidence, aggregating preferences, claiming consensus, deciding planning or policy, authorizing review, changing lifecycle state, releasing, deploying, or publishing."
+}

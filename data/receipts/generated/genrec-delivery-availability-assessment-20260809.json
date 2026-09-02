@@ -1,0 +1,179 @@
+{
+  "receipt_id": "genrec-delivery-availability-assessment-20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/delivery-availability-assessment.yml",
+    "contracts/source/delivery_availability_assessment.md",
+    "docs/intake/exploratory/delivery-availability-assessment-source-map.md",
+    "fixtures/contracts/v1/source/delivery_availability_assessment/cases.json",
+    "schemas/contracts/v1/source/delivery_availability_assessment.schema.json",
+    "tests/validators/test_validate_delivery_availability_assessment.py",
+    "tools/validators/source/validate_delivery_availability_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/delivery-availability-assessment.yml": "sha256:53b3672cecfea76d9dc7e0229f6848f255725256279aa2cf3d9ef6fdc095476e",
+    "contracts/source/delivery_availability_assessment.md": "sha256:eae06913fcee474b35da9c34885e38a0cddd368b4d57d866775f00cfc2e8eafd",
+    "docs/intake/exploratory/delivery-availability-assessment-source-map.md": "sha256:c7054d3ce338dfe3ec92f0b04fe52fda08235c65107ec3064226f22b9be323f8",
+    "fixtures/contracts/v1/source/delivery_availability_assessment/cases.json": "sha256:59e24d532550bb690a6c7f6669ec52e32884eac805577dcf3b4fc17c3bed2240",
+    "schemas/contracts/v1/source/delivery_availability_assessment.schema.json": "sha256:d01156b623b2cea1fdb08dc0c1c0cfa473c851aef1c0e3479c45d33008224943",
+    "tests/validators/test_validate_delivery_availability_assessment.py": "sha256:7a165e056f13c709168ef947c5dc17d71efcc5306603f7a0f8402b12547d01bd",
+    "tools/validators/source/validate_delivery_availability_assessment.py": "sha256:0a93a26f403bbf85141dfb222b7471fa45ef296c757c7459411d8f6dbb1d362c"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-09"
+  },
+  "prompt_or_contract": "sha256:eae06913fcee474b35da9c34885e38a0cddd368b4d57d866775f00cfc2e8eafd",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository inspection and mutation",
+      "local deterministic PDF and Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:07c7765576df1997e0be88141bd3cd213930e7281d490a8ae62afd78abe8f445",
+      "sha256:eb71cf66c59363580d3e5d277ee32828baf9adfb5ecd17ae4d79d3acee10eadd",
+      "sha256:3da0334f1d96043f58c92807a9a21c0b7d9d8b043c786238c4b7e3368bf8d641",
+      "sha256:26af080ec301c48405373aeb327a42cb856561f477059e95f02d96915ab5a54a",
+      "sha256:b4b2d14f1ca5b4dca22147880233de5d0debe68485af4600dbde9b4384d999cd",
+      "sha256:a1bb3b2eb4357c8b8528b11946a5f189b2bad92056f8cac9fb4ab6a6b497a030",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:db2b79eed390d1ac2e7cacda30962a65a9b5d8d7c03420b5e8d54b2760794cad"
+    ],
+    "attached_docs": [
+      "KFM_Full_Atlas_seed_cards.md",
+      "Kansas Frontier Matrix — Connected-Dots Architecture Brief.md"
+    ],
+    "evidence_refs": [
+      "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d0c8fffac1ea152066910725ef63e050958e8252/docs/kfm_full_atlas_seed_cards.md#kfm-triad-049",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d0c8fffac1ea152066910725ef63e050958e8252/docs/intake/exploratory/new-ideas-4-30-source-map.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d0c8fffac1ea152066910725ef63e050958e8252/contracts/source/source_health_assessment.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d0c8fffac1ea152066910725ef63e050958e8252/contracts/source/source_availability_watchlist.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d0c8fffac1ea152066910725ef63e050958e8252/contracts/source/source_polling_checkpoint.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d0c8fffac1ea152066910725ef63e050958e8252/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/delivery-availability-assessment.yml": "CONFIRMED",
+    "contracts/source/delivery_availability_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/delivery-availability-assessment-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/source/delivery_availability_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/source/delivery_availability_assessment.schema.json": "PROPOSED",
+    "tests/validators/test_validate_delivery_availability_assessment.py": "CONFIRMED",
+    "tools/validators/source/validate_delivery_availability_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS",
+      "reason": "10 deterministic tests and 20 subtests passed in the isolated authoring worktree."
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS",
+      "reason": "20 exact cases passed across PASS, ABSTAIN, DENY, and ERROR."
+    },
+    {
+      "gate": "adjacent-source-health-tests",
+      "outcome": "PASS",
+      "reason": "2 existing adjacent tests passed."
+    },
+    {
+      "gate": "documentation-metadata-validation",
+      "outcome": "PASS",
+      "reason": "Both new metadata blocks passed the repository required profile."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "no-network-boundary",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "google-drive-full-atlas-corpus-location",
+      "validated": true,
+      "evidence_ref": "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho"
+    },
+    {
+      "id": "full-atlas-delivery-availability-triad",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/d0c8fffac1ea152066910725ef63e050958e8252/docs/kfm_full_atlas_seed_cards.md#kfm-triad-049"
+    },
+    {
+      "id": "new-ideas-delivery-latency-gap",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/d0c8fffac1ea152066910725ef63e050958e8252/docs/intake/exploratory/new-ideas-4-30-source-map.md"
+    },
+    {
+      "id": "existing-source-health-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/d0c8fffac1ea152066910725ef63e050958e8252/contracts/source/source_health_assessment.md"
+    },
+    {
+      "id": "existing-source-availability-watchlist-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/d0c8fffac1ea152066910725ef63e050958e8252/contracts/source/source_availability_watchlist.md"
+    },
+    {
+      "id": "existing-source-polling-checkpoint-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/d0c8fffac1ea152066910725ef63e050958e8252/contracts/source/source_polling_checkpoint.md"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/d0c8fffac1ea152066910725ef63e050958e8252/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T02:51:17Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only DeliveryAvailabilityAssessment packet derived from Full Atlas KFM-TRIAD-049 and KFM-CAND-0147 after current-main collision review. It separates expected product lag, actual lateness, freshness, staleness, missing delivery, supersession, and evidenced outage without contacting a source, adopting product timings, mutating expectations, resolving evidence, deciding policy, approving review, authorizing release, deploying, publishing, or authorizing public use."
+}

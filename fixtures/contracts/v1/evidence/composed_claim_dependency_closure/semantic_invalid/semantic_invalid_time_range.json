@@ -1,0 +1,139 @@
+{
+  "schema_version": "kfm.composed-claim-dependency-closure.v1",
+  "closure_id": "kfm://candidate/evidence/composed-claim/68451dc04db9c39e95d77e69842468601265876b85a8cd6a35a24ccdd11ebb16",
+  "revision": 1,
+  "previous_closure_ref": null,
+  "claim": {
+    "claim_key": "synthetic.soil_drought_county",
+    "statement": "Synthetic soil moisture support is evaluated for one county-scoped drought interval.",
+    "scope": {
+      "spatial_scope_ref": "kfm://scope/county/synthetic-001",
+      "valid_time": {
+        "start": "2026-08-01T00:00:00Z",
+        "end": "2026-07-01T00:00:00Z"
+      }
+    }
+  },
+  "dependencies": [
+    {
+      "role_id": "county_boundary",
+      "requirement": "REQUIRED",
+      "evidence_ref": "kfm://evidence-ref/synthetic/county_boundary",
+      "expected_spec_hash": "sha256:9d215e05c414b83164b316255ec089d5346ae41b2aa3b9686f6d4bd8e5f138b1",
+      "resolution": {
+        "state": "RESOLVED",
+        "bundle_id": "kfm://evidence-bundle/synthetic/county_boundary",
+        "actual_spec_hash": "sha256:9d215e05c414b83164b316255ec089d5346ae41b2aa3b9686f6d4bd8e5f138b1",
+        "promotion_receipt_ref": "kfm://promotion/synthetic/county_boundary",
+        "reason_code": null,
+        "evaluated_at": "2026-08-05T18:00:00Z"
+      }
+    },
+    {
+      "role_id": "drought_index_a",
+      "requirement": "ALTERNATIVE",
+      "evidence_ref": "kfm://evidence-ref/synthetic/drought_index_a",
+      "expected_spec_hash": "sha256:166c4bf76817f2f9afe1bd7a5666adbe11409a970225c12b5c30cac23aaafe64",
+      "resolution": {
+        "state": "RESOLVED",
+        "bundle_id": "kfm://evidence-bundle/synthetic/drought_index_a",
+        "actual_spec_hash": "sha256:166c4bf76817f2f9afe1bd7a5666adbe11409a970225c12b5c30cac23aaafe64",
+        "promotion_receipt_ref": "kfm://promotion/synthetic/drought_index_a",
+        "reason_code": null,
+        "evaluated_at": "2026-08-05T18:00:00Z"
+      }
+    },
+    {
+      "role_id": "drought_index_b",
+      "requirement": "ALTERNATIVE",
+      "evidence_ref": "kfm://evidence-ref/synthetic/drought_index_b",
+      "expected_spec_hash": "sha256:54535a07ef9e7f64b107cb6014af9af16292f2571b3278305803cad2119200ad",
+      "resolution": {
+        "state": "UNRESOLVED",
+        "bundle_id": null,
+        "actual_spec_hash": null,
+        "promotion_receipt_ref": null,
+        "reason_code": "SYNTHETIC_EVIDENCE_UNRESOLVED",
+        "evaluated_at": "2026-08-05T18:00:00Z"
+      }
+    },
+    {
+      "role_id": "soil_moisture",
+      "requirement": "REQUIRED",
+      "evidence_ref": "kfm://evidence-ref/synthetic/soil_moisture",
+      "expected_spec_hash": "sha256:cfb479e654cd24af5ee58875f78e2c83a610887edf0e9782fc57cf3594067ce8",
+      "resolution": {
+        "state": "RESOLVED",
+        "bundle_id": "kfm://evidence-bundle/synthetic/soil_moisture",
+        "actual_spec_hash": "sha256:cfb479e654cd24af5ee58875f78e2c83a610887edf0e9782fc57cf3594067ce8",
+        "promotion_receipt_ref": "kfm://promotion/synthetic/soil_moisture",
+        "reason_code": null,
+        "evaluated_at": "2026-08-05T18:00:00Z"
+      }
+    },
+    {
+      "role_id": "station_context",
+      "requirement": "OPTIONAL",
+      "evidence_ref": "kfm://evidence-ref/synthetic/station_context",
+      "expected_spec_hash": "sha256:62a0642fab48eda0a8cc708a52706b0151e1bf7651d0dd3d6d023e3709e62335",
+      "resolution": {
+        "state": "RESOLVED",
+        "bundle_id": "kfm://evidence-bundle/synthetic/station_context",
+        "actual_spec_hash": "sha256:62a0642fab48eda0a8cc708a52706b0151e1bf7651d0dd3d6d023e3709e62335",
+        "promotion_receipt_ref": "kfm://promotion/synthetic/station_context",
+        "reason_code": null,
+        "evaluated_at": "2026-08-05T18:00:00Z"
+      }
+    }
+  ],
+  "alternative_groups": [
+    {
+      "group_id": "drought_index_choice",
+      "role_ids": [
+        "drought_index_a",
+        "drought_index_b"
+      ],
+      "minimum_resolved": 1,
+      "maximum_resolved": 1
+    }
+  ],
+  "exclusion_groups": [
+    {
+      "group_id": "drought_index_mutual_exclusion",
+      "role_ids": [
+        "drought_index_a",
+        "drought_index_b"
+      ],
+      "maximum_resolved": 1
+    }
+  ],
+  "dependency_graph_hash": "sha256:68451dc04db9c39e95d77e69842468601265876b85a8cd6a35a24ccdd11ebb16",
+  "closure_summary": {
+    "outcome": "SUPPORTED",
+    "render_allowed": true,
+    "reason_codes": [],
+    "resolved_roles": [
+      "county_boundary",
+      "drought_index_a",
+      "soil_moisture",
+      "station_context"
+    ],
+    "unresolved_roles": [
+      "drought_index_b"
+    ],
+    "denied_roles": [],
+    "error_roles": []
+  },
+  "governance": {
+    "mode": "FIXTURE_ONLY",
+    "fail_closed": true,
+    "live_evidence_resolution_performed": false,
+    "policy_decision_authority": false,
+    "review_authority": false,
+    "release_authority": false,
+    "deployment_authority": false,
+    "publication_authority": false,
+    "public_use_allowed": false
+  },
+  "spec_hash": "sha256:b60ea7965b591f11aac644e52666b56c4ba8405677b1501191d11b305e267471"
+}

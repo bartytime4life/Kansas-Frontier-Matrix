@@ -1,0 +1,179 @@
+{
+  "receipt_id": "genrec-scripts-readme-05281856",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "scripts/README.md"
+  ],
+  "artifact_hashes": {
+    "scripts/README.md": "sha256:05281856bc94232e465a0b36eb5d0b64c11eea037a65b75be60b27f3ded6d8fe"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-07-23-session"
+  },
+  "prompt_or_contract": "sha256:2fed671fcafb138abd1482b81de823fbc6b1b4edbd1ed0c462459bfe1d9297e3",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "file_search",
+      "Python validation",
+      "container validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM Markdown Modernization & GitHub Documentation Implementation Agent v4.0.0",
+      "Directory Rules.pdf",
+      "Kansas Frontier Matrix — AI Build Operating Contract.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/fae69bb52e0ebc7670dc7d20c9eb05cb587520ff",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/fae69bb52e0ebc7670dc7d20c9eb05cb587520ff/scripts/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/fae69bb52e0ebc7670dc7d20c9eb05cb587520ff/scripts/dev/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/fae69bb52e0ebc7670dc7d20c9eb05cb587520ff/scripts/maintenance/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/fae69bb52e0ebc7670dc7d20c9eb05cb587520ff/scripts/one_off/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/fae69bb52e0ebc7670dc7d20c9eb05cb587520ff/package.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/fae69bb52e0ebc7670dc7d20c9eb05cb587520ff/Makefile",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/fae69bb52e0ebc7670dc7d20c9eb05cb587520ff/.github/workflows/maplibre-perf-governance.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/fae69bb52e0ebc7670dc7d20c9eb05cb587520ff/.github/workflows/promotion-gate.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/fae69bb52e0ebc7670dc7d20c9eb05cb587520ff/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/fae69bb52e0ebc7670dc7d20c9eb05cb587520ff/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/fae69bb52e0ebc7670dc7d20c9eb05cb587520ff/docs/registers/DRIFT_REGISTER.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/fae69bb52e0ebc7670dc7d20c9eb05cb587520ff/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/agent/modernize-scripts-readme-20260723/scripts/README.md",
+      "attached://KFM-Markdown-Modernization-Agent-v4.0.0"
+    ]
+  },
+  "truth_labels": {
+    "scripts/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-preflight",
+      "outcome": "PASS",
+      "reason": "Repository identity, permissions, default branch, current base, target blob, child lanes, command surfaces, workflow definitions, CODEOWNERS, Directory Rules, drift register, and generated-receipt schema were inspected."
+    },
+    {
+      "gate": "complete-baseline-read",
+      "outcome": "PASS",
+      "reason": "All 1,067 lines of the v0.3 target were read in bounded GitHub ranges, including metadata, headings, tables, examples, anchors, links, changelog, and final boundary text."
+    },
+    {
+      "gate": "base-target-and-overlap-concurrency",
+      "outcome": "PASS",
+      "reason": "Main remained fae69bb52e0ebc7670dc7d20c9eb05cb587520ff, the target remained blob f603cb013ff86511a65dae4799c54d77c029e082 before mutation, and no overlapping open PR or branch was surfaced."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The existing canonical scripts/ root README was updated in place; no root, authority home, lifecycle phase, schema, contract, policy, registry, proof, release, or public path was created or moved."
+    },
+    {
+      "gate": "current-evidence-refresh",
+      "outcome": "PASS",
+      "reason": "The README was re-grounded after 854 intervening commits against child-lane documentation, package and Make commands, both relevant workflows, CODEOWNERS, Directory Rules, the drift register, and the MapLibre candidate-builder sources."
+    },
+    {
+      "gate": "directory-rules-readme-order",
+      "outcome": "PASS",
+      "reason": "The first twelve H2 sections exactly match Purpose, Authority level, Status, What belongs here, What does NOT belong here, Inputs, Outputs, Validation, Review burden, Related folders, ADRs, and Last reviewed."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "MarkdownIt parsed 1,525 tokens; one H1 and twenty-four H2 sections were found; fenced blocks and details tags are balanced."
+    },
+    {
+      "gate": "anchors-links-and-navigation",
+      "outcome": "PASS",
+      "reason": "Forty-five internal fragments resolve; two custom anchors are unique; legacy fragments are retained; twenty-two repository-relative destinations were inspected."
+    },
+    {
+      "gate": "badge-and-presentation-admission",
+      "outcome": "PASS",
+      "reason": "Six static Shields badge URLs are syntactically valid and link to evidence-bearing sections; no dynamic CI, release, coverage, or maturity badge was added."
+    },
+    {
+      "gate": "badge-endpoint-network",
+      "outcome": "SKIPPED",
+      "reason": "The validation environment could not resolve img.shields.io, so endpoint reachability was not claimed."
+    },
+    {
+      "gate": "no-loss-ledger",
+      "outcome": "PASS",
+      "reason": "Stable identity, path, H1, authority boundary, child lanes, MapLibre inventory, execution and output controls, finite outcomes, graduation, validation, review, ADR, rollback, verification backlog, and legacy fragments were preserved."
+    },
+    {
+      "gate": "secret-and-sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "No private-key block, common GitHub/OpenAI/AWS token pattern, credential, private endpoint, sensitive location, living-person data, genomic data, infrastructure detail, or restricted payload was introduced."
+    },
+    {
+      "gate": "remote-readback",
+      "outcome": "PASS",
+      "reason": "GitHub returned blob 8ab7b3f740f21822310fa8bf40a18527bf2057a1, matching the reconstructed and revalidated 53,299-byte remote content."
+    },
+    {
+      "gate": "runtime-and-executable-tests",
+      "outcome": "SKIPPED",
+      "reason": "Documentation/provenance-only change; no script, command, dependency, fixture, validator, workflow, runtime, release, or public behavior changed."
+    },
+    {
+      "gate": "repository-native-ci",
+      "outcome": "SKIPPED",
+      "reason": "Repository checks run after draft pull-request creation and were unavailable at receipt emission time."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "KFM-MARKDOWN-MODERNIZATION-V4",
+      "validated": true,
+      "evidence_ref": "attached://KFM-Markdown-Modernization-Agent-v4.0.0"
+    },
+    {
+      "id": "KFM-DIRECTORY-RULES",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/fae69bb52e0ebc7670dc7d20c9eb05cb587520ff/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "SCRIPTS-README-PRIOR",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/fae69bb52e0ebc7670dc7d20c9eb05cb587520ff/scripts/README.md"
+    },
+    {
+      "id": "MAPLIBRE-WORKFLOW-HOLD",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/fae69bb52e0ebc7670dc7d20c9eb05cb587520ff/.github/workflows/maplibre-perf-governance.yml"
+    },
+    {
+      "id": "SCRIPTS-ARTIFACT-DRIFT",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/fae69bb52e0ebc7670dc7d20c9eb05cb587520ff/docs/registers/DRIFT_REGISTER.md"
+    },
+    {
+      "id": "GENERATED-RECEIPT-SCHEMA",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/fae69bb52e0ebc7670dc7d20c9eb05cb587520ff/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-23T17:50:50Z",
+  "emitter": "ai-builder/openai-gpt-5.6-pro",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": "docs/registers/DRIFT_REGISTER.md"
+  },
+  "notes": "AI-authored documentation-only modernization on a scoped review branch. The root scripts README is upgraded in place, re-grounded to current workflows and drift evidence, and reordered to the required root README contract. It preserves the operational-helper boundary, records the MapLibre runtime hold and trust-shaped artifact conflict, and makes no executable, schema, contract, policy, fixture, workflow, lifecycle, release, deployment, or public-surface change. Human review remains pending; this receipt is process provenance, not approval, proof, release authority, or publication authority."
+}

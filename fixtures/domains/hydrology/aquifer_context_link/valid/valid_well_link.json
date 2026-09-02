@@ -1,0 +1,39 @@
+{
+  "id": "kfm:hydrology:aquifer-context-link:synthetic-well-001",
+  "version": "v0.1",
+  "spec_hash": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+  "object_type": "AquiferContextLink",
+  "hydrology_subject": {
+    "object_type": "GroundwaterWell",
+    "id": "kfm:hydrology:groundwater-well:synthetic-001"
+  },
+  "geology_endpoint": {
+    "owner_domain": "geology",
+    "object_type": "HydrostratigraphicUnit",
+    "id": "kfm:geology:hydrostratigraphic-unit:synthetic-001"
+  },
+  "relationship_type": "screened_in",
+  "source_roles": {
+    "hydrology": "administrative",
+    "geology": "observed"
+  },
+  "temporal_scope": {
+    "source_time": "2026-02-02T00:00:00Z"
+  },
+  "interpretation_basis": {
+    "method": "synthetic screened-interval correlation",
+    "source_record_refs": [
+      "synthetic:well-log:001",
+      "synthetic:hydrostratigraphic-unit:001"
+    ],
+    "confidence": "low",
+    "qualifier": "synthetic test relation"
+  },
+  "sensitivity": {
+    "geometry_posture": "restricted",
+    "policy_review_required": true
+  },
+  "evidence_refs": [
+    "evidence:synthetic-well-aquifer-link:001"
+  ]
+}

@@ -1,0 +1,140 @@
+{
+  "receipt_id": "genrec-pass2-k-anonymity-assessment-20260808",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/k-anonymity-assessment.yml",
+    "contracts/governance/k_anonymity_assessment.md",
+    "docs/intake/exploratory/pass-2-k-anonymity-assessment-source-map.md",
+    "fixtures/contracts/v1/governance/k_anonymity_assessment/cases.json",
+    "schemas/contracts/v1/governance/k_anonymity_assessment.schema.json",
+    "tests/validators/governance/test_validate_k_anonymity_assessment.py",
+    "tools/validators/governance/k_anonymity_assessment_core.py",
+    "tools/validators/governance/validate_k_anonymity_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/k-anonymity-assessment.yml": "sha256:aade085e364e0b45134e84a0a747bcfeb36cff7c26fba7a0b8f1e28cd20dc561",
+    "contracts/governance/k_anonymity_assessment.md": "sha256:8b01ccb94366099a82e4832242bba5d80c05da4bb73b85db6632e758189a6755",
+    "docs/intake/exploratory/pass-2-k-anonymity-assessment-source-map.md": "sha256:4756ac4ecd2426ca2e35736d512f4cbba754d905023c14addc515441a1023d66",
+    "fixtures/contracts/v1/governance/k_anonymity_assessment/cases.json": "sha256:b72146365ab66f1e828c147b9df7387ee74f299edd33f3eabbf099be8f351500",
+    "schemas/contracts/v1/governance/k_anonymity_assessment.schema.json": "sha256:4eab8f6b590bc134961dfeaabed23f8749a3a7fa58cac8acccedff8d4b96d107",
+    "tests/validators/governance/test_validate_k_anonymity_assessment.py": "sha256:be9fea8754d044b38e170af29f4022c8169840aac04e6bd5fbe41177c9ad2b64",
+    "tools/validators/governance/k_anonymity_assessment_core.py": "sha256:7733103fc7f58a6bc1fe11ef66154db889979bebead8d6e04912099203896784",
+    "tools/validators/governance/validate_k_anonymity_assessment.py": "sha256:54e30693e85d57a831b9d29c82c926efa9be4bbf8cba40ba24e337082c6e1ee5"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-08"
+  },
+  "prompt_or_contract": "sha256:a4ffaf29abeba6cc207f4efe4249f4b59aa555fce64bdbff32168b662637906a",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "uploaded-file search",
+      "GitHub connector repository inspection and mutation",
+      "local deterministic Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:60451562c8be005ed77afa8c7eada978a7cec05f406cdff137d38ff60123d408",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
+    ],
+    "attached_docs": [
+      "KFM_Pass_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P2-IDEA-0015",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/99f367c2dde6f14a2ee698a2cdbe6e4aca0fefda",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/99f367c2dde6f14a2ee698a2cdbe6e4aca0fefda/docs/intake/exploratory/pass-2-idea-atlas-import-crosswalk.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/99f367c2dde6f14a2ee698a2cdbe6e4aca0fefda/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/k-anonymity-assessment.yml": "PROPOSED",
+    "contracts/governance/k_anonymity_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/pass-2-k-anonymity-assessment-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/governance/k_anonymity_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/governance/k_anonymity_assessment.schema.json": "PROPOSED",
+    "tests/validators/governance/test_validate_k_anonymity_assessment.py": "CONFIRMED",
+    "tools/validators/governance/k_anonymity_assessment_core.py": "CONFIRMED",
+    "tools/validators/governance/validate_k_anonymity_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unittest-suite-7-tests",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "fixture-polarity-1-pass-2-abstain-7-deny-4-error",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "policy-selected-k-no-default",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "no-network-and-non-echoing-diagnostics",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human privacy, policy, and semantic review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "KFM-P2-IDEA-0015",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Pass_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P2-IDEA-0015"
+    },
+    {
+      "id": "pass-2-import-crosswalk",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/99f367c2dde6f14a2ee698a2cdbe6e4aca0fefda/docs/intake/exploratory/pass-2-idea-atlas-import-crosswalk.md"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/99f367c2dde6f14a2ee698a2cdbe6e4aca0fefda/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-08T18:48:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only adaptation of Pass 2 card KFM-P2-IDEA-0015. The assessment requires a separately governed policy-selected k, explicit quasi-identifiers, digest-only equivalence classes, explained generalization and suppression, deterministic identity, finite PASS/ABSTAIN/DENY/ERROR outcomes, and exact no-network fixtures. It adopts no threshold, proves no privacy property, accesses no live source, transforms no real data, writes no lifecycle state, and creates no release, deployment, publication, or public-use authority."
+}

@@ -1,0 +1,24 @@
+{
+  "profile": "kfm.automation.pr-proposal.v1",
+  "proposal_id": "pass12-unsafe-001",
+  "base_ref": "main",
+  "base_sha": "f56f1c7a66459cbfd355381cafa90cc3078d9ff8",
+  "head_branch": "automation/pass12-unsafe-001",
+  "title": "chore(automation): unsafe candidate",
+  "changed_paths": ["data/work/automation/pass12-unsafe-001.json"],
+  "artifacts": [
+    {
+      "path": "data/work/automation/pass12-unsafe-001.json",
+      "sha256": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    }
+  ],
+  "receipt_ref": "receipt:automation:pass12-unsafe-001",
+  "policy_outcome": "PASS",
+  "policy_reasons": [],
+  "draft": true,
+  "merge_allowed": false,
+  "release_allowed": false,
+  "deploy_allowed": false,
+  "promote_allowed": false,
+  "publish_allowed": true
+}

@@ -1,0 +1,126 @@
+{
+  "receipt_id": "genrec-adr-issue-template-9b8ecc17",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/ISSUE_TEMPLATE/adr.md"
+  ],
+  "artifact_hashes": {
+    ".github/ISSUE_TEMPLATE/adr.md": "sha256:9b8ecc172e261af2e6f9ef0755f13b5605d15a98a640d2e58c4de0b066c50a75"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-17"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository evidence inspection",
+      "Markdown issue-template validation",
+      "generated receipt validation",
+      "remote repository verification"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "Pasted text(40).txt — KFM GitHub Repository Documentation Implementation Agent v3.1"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/83c29aa31734a845aaa82c666a1f26a5d4112c8b",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/83c29aa31734a845aaa82c666a1f26a5d4112c8b/.github/ISSUE_TEMPLATE/adr.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/83c29aa31734a845aaa82c666a1f26a5d4112c8b/.github/ISSUE_TEMPLATE/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/83c29aa31734a845aaa82c666a1f26a5d4112c8b/docs/adr/ADR-template.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/83c29aa31734a845aaa82c666a1f26a5d4112c8b/docs/adr/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/83c29aa31734a845aaa82c666a1f26a5d4112c8b/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/83c29aa31734a845aaa82c666a1f26a5d4112c8b/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/9e479e07a6013ab00c628281cab3a2720be234c7"
+    ]
+  },
+  "truth_labels": {
+    ".github/ISSUE_TEMPLATE/adr.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-base-preflight",
+      "outcome": "PASS",
+      "reason": "Verified the current default-branch base, target file and blob, canonical ADR template and README, issue-intake boundary, CODEOWNERS routing, generated-receipt schema, and absence of overlapping open ADR-template work."
+    },
+    {
+      "gate": "no-loss-and-canonical-adr-alignment",
+      "outcome": "PASS",
+      "reason": "Preserved the prior status, context, decision, evidence, Directory Rules, consequences, alternatives, validation, rollback, sensitivity, companion-artifact, contract-version, open-question, and reference obligations while adding canonical identity, migration, supersession, scope, affected-surface, acceptance, and review fields."
+    },
+    {
+      "gate": "markdown-front-matter-and-structure",
+      "outcome": "PASS",
+      "reason": "Parsed the YAML front matter; verified required keys, balanced HTML comments, final newline, ordered section inventory, existing label preservation, and assignment to the verified repository owner."
+    },
+    {
+      "gate": "security-and-authority-boundary",
+      "outcome": "PASS",
+      "reason": "The issue is explicitly non-authoritative, routes security-sensitive content to SECURITY.md, prohibits restricted or exact-sensitive payloads, and separates issue closure from ADR acceptance, release, and publication."
+    },
+    {
+      "gate": "artifact-hash",
+      "outcome": "PASS",
+      "reason": "Computed SHA-256 9b8ecc172e261af2e6f9ef0755f13b5605d15a98a640d2e58c4de0b066c50a75 and Git blob SHA 9c4c44ab57c05903f76d1439504053de9e96e014 for the final issue template."
+    },
+    {
+      "gate": "label-existence-and-template-render",
+      "outcome": "SKIPPED",
+      "reason": "The existing adr and adr-proposed labels were preserved, but live label existence and issue-chooser rendering are not exposed by the selected connector flow and remain NEEDS VERIFICATION."
+    },
+    {
+      "gate": "remote-readback-and-diff",
+      "outcome": "PASS",
+      "reason": "The GitHub contents API returned blob SHA 9c4c44ab57c05903f76d1439504053de9e96e014, matching the computed Git blob SHA; SHA-256 recomputed as 9b8ecc172e261af2e6f9ef0755f13b5605d15a98a640d2e58c4de0b066c50a75. Remote diff verification will be repeated after the receipt commit."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-adr-issue-template",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/83c29aa31734a845aaa82c666a1f26a5d4112c8b/.github/ISSUE_TEMPLATE/adr.md"
+    },
+    {
+      "id": "issue-intake-authority-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/83c29aa31734a845aaa82c666a1f26a5d4112c8b/.github/ISSUE_TEMPLATE/README.md"
+    },
+    {
+      "id": "canonical-adr-template",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/83c29aa31734a845aaa82c666a1f26a5d4112c8b/docs/adr/ADR-template.md"
+    },
+    {
+      "id": "adr-root-operating-standard",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/83c29aa31734a845aaa82c666a1f26a5d4112c8b/docs/adr/README.md"
+    },
+    {
+      "id": "generated-receipt-schema",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/83c29aa31734a845aaa82c666a1f26a5d4112c8b/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-17T17:08:51Z",
+  "emitter": "openai/gpt-5.6-thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored revision of the public ADR issue-intake template on a scoped review branch. The artifact structures proposals and routing only; it does not accept an ADR, reserve an ID conclusively, prove label existence, create a ReviewRecord, authorize implementation, approve release, or grant publication authority. Human review remains pending."
+}

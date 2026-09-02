@@ -1,0 +1,135 @@
+{
+  "receipt_id": "genrec-hydrology-usgs-water-api-cutover-20260806",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/hydrology-usgs-water-api-cutover.yml",
+    "contracts/domains/hydrology/usgs_water_api_cutover.md",
+    "fixtures/domains/hydrology/usgs_water_api_cutover/valid/cutover_candidate.json",
+    "fixtures/domains/hydrology/usgs_water_api_cutover/valid/dual_run_hold.json",
+    "fixtures/domains/hydrology/usgs_water_api_cutover/valid/legacy_only_denied.json",
+    "schemas/contracts/v1/domains/hydrology/usgs_water_api_cutover_assessment.schema.json",
+    "tests/validators/domains/hydrology/usgs_water_api_cutover/test_validate_usgs_water_api_cutover.py",
+    "tools/validators/domains/hydrology/usgs_water_api_cutover/README.md",
+    "tools/validators/domains/hydrology/usgs_water_api_cutover/validate_usgs_water_api_cutover.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/hydrology-usgs-water-api-cutover.yml": "sha256:8468f9fcad2f5e46f389dff257650badf380ffae3749f95269e140a0c6acc9ed",
+    "contracts/domains/hydrology/usgs_water_api_cutover.md": "sha256:e4e19cc794a18f6d4700fe6544cafa844f76e251bef1933ab35e1bb71ae4b585",
+    "fixtures/domains/hydrology/usgs_water_api_cutover/valid/cutover_candidate.json": "sha256:1d0f159d74ba64b4d6e18f764a32721cac84bf6eb5884ec6f4d4e4e4c18bddd8",
+    "fixtures/domains/hydrology/usgs_water_api_cutover/valid/dual_run_hold.json": "sha256:9999e1d24c8e2b392a836a0dafc1564c94f805059aa15092b7bb6a1a427b8108",
+    "fixtures/domains/hydrology/usgs_water_api_cutover/valid/legacy_only_denied.json": "sha256:8b141389178fc73f71d7cbc36c16d2f8dcd93ebd1f54107672bf2457be711acd",
+    "schemas/contracts/v1/domains/hydrology/usgs_water_api_cutover_assessment.schema.json": "sha256:e2f777879b1bcce3ada1c0c08c40df0c1096e2b4f9eea0a2085316ed83c2badc",
+    "tests/validators/domains/hydrology/usgs_water_api_cutover/test_validate_usgs_water_api_cutover.py": "sha256:c1c47c067e62a060f9b561e418c352ccdef5abe55ab9680a0399c1e0aed55e44",
+    "tools/validators/domains/hydrology/usgs_water_api_cutover/README.md": "sha256:63353ddaadeae3e77af2aca826cfbcee0b4e3dac99cc44767150686f48b83194",
+    "tools/validators/domains/hydrology/usgs_water_api_cutover/validate_usgs_water_api_cutover.py": "sha256:9d85079d92e5ff7accd704602ba6cfe995be50e745de85f8ac9e61aeffd8465f"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-06"
+  },
+  "prompt_or_contract": "sha256:ea1ffb1be69424252db93f53c28f0edaa609b72e035d34ff13d8625576c5bee4",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "New Ideas 4-2-26.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:New Ideas 4-2-26.pdf#usgs-water-api-migration",
+      "repo:connectors/usgs/water_data/README.md@cb4eca90f2f59cee487673901c433bf077b1f233",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@cb4eca90f2f59cee487673901c433bf077b1f233"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/hydrology-usgs-water-api-cutover.yml": "PROPOSED",
+    "contracts/domains/hydrology/usgs_water_api_cutover.md": "PROPOSED",
+    "fixtures/domains/hydrology/usgs_water_api_cutover/valid/cutover_candidate.json": "PROPOSED",
+    "fixtures/domains/hydrology/usgs_water_api_cutover/valid/dual_run_hold.json": "PROPOSED",
+    "fixtures/domains/hydrology/usgs_water_api_cutover/valid/legacy_only_denied.json": "PROPOSED",
+    "schemas/contracts/v1/domains/hydrology/usgs_water_api_cutover_assessment.schema.json": "PROPOSED",
+    "tests/validators/domains/hydrology/usgs_water_api_cutover/test_validate_usgs_water_api_cutover.py": "PROPOSED",
+    "tools/validators/domains/hydrology/usgs_water_api_cutover/README.md": "PROPOSED",
+    "tools/validators/domains/hydrology/usgs_water_api_cutover/validate_usgs_water_api_cutover.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-pytest",
+      "outcome": "PASS",
+      "reason": "Nine deterministic USGS Water API cutover assessment tests passed locally."
+    },
+    {
+      "gate": "python-bytecode-compile",
+      "outcome": "PASS",
+      "reason": "The validator and focused tests compile without syntax errors."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The new read-only workflow parses as YAML."
+    },
+    {
+      "gate": "fixture-cli-and-spec-hash",
+      "outcome": "PASS",
+      "reason": "Valid fixtures carry deterministic canonical spec hashes and finite decisions."
+    },
+    {
+      "gate": "receipt-byte-binding",
+      "outcome": "PASS",
+      "reason": "SHA-256 values bind every authored non-receipt artifact."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:usgs-water-api-migration",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas 4-2-26.pdf#usgs-water-api-migration"
+    },
+    {
+      "id": "repository:usgs-water-connector-boundary",
+      "validated": true,
+      "evidence_ref": "repo:connectors/usgs/water_data/README.md@cb4eca90f2f59cee487673901c433bf077b1f233"
+    },
+    {
+      "id": "repository:directory-governance-adr",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@cb4eca90f2f59cee487673901c433bf077b1f233"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-06T20:25:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Adds a fixture-only USGS Water API cutover assessment. It verifies endpoint-family separation, required modern roles, rewrite-map closure, legacy dependency count, dual-run reconciliation, deterministic spec hashing, and non-release governance without live USGS access or connector activation."
+}

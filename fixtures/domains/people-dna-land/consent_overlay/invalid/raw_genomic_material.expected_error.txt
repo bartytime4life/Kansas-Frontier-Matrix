@@ -1,0 +1,2 @@
+RAW_GENOMIC_MATERIAL_DENIED	$.raw_genotype
+UNDECLARED_TOP_LEVEL_FIELD	$.raw_genotype

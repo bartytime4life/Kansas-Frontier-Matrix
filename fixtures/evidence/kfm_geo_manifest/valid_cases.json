@@ -1,0 +1,328 @@
+[
+  {
+    "name": "valid_pmtiles_release_candidate",
+    "manifest": {
+      "object_type": "KFMGeoManifest",
+      "schema_version": "1.0.0",
+      "profile_id": "fixture-first-v1",
+      "hash_profile": "kfm-fixture-json-v1",
+      "id": "geo-manifest:synthetic:pmtiles-release-candidate:v1",
+      "version": "1.0.0",
+      "spec_hash": "sha256:c2ad93614e38f92f8e2f0dca6b5e20766605f1b80da9f01fdade60484c432f97",
+      "artifact": {
+        "artifact_ref": "artifact:synthetic:pmtiles-release-candidate:v1",
+        "artifact_type": "pmtiles",
+        "artifact_role": "release_candidate",
+        "media_type": "application/vnd.pmtiles",
+        "byte_length": 39,
+        "content_digest": "sha256:00c0835bfe05aa0f9574ede14879300a3591af8949c0704c3cd4fefbff516967",
+        "source_artifact_refs": [
+          "source-artifact:synthetic:pmtiles-release-candidate:input"
+        ]
+      },
+      "claim_scope": {
+        "scope_ref": "claim-scope:synthetic:pmtiles-release-candidate",
+        "description": "Synthetic fixture scope for pmtiles-release-candidate; no real geospatial claim.",
+        "geography_ref": "geography:synthetic:kansas-generalized",
+        "temporal_scope": {
+          "valid_from": "2026-01-01T00:00:00Z",
+          "valid_to": "2026-12-31T23:59:59Z"
+        }
+      },
+      "source_role": "derived",
+      "evidence": {
+        "evidence_bundle_refs": [
+          "evidence-bundle:synthetic:pmtiles-release-candidate"
+        ],
+        "evidence_refs": [
+          "evidence-ref:synthetic:pmtiles-release-candidate"
+        ],
+        "source_descriptor_refs": [
+          "source-descriptor:synthetic:pmtiles-release-candidate:1.0.0"
+        ]
+      },
+      "spatial": {
+        "crs": "EPSG:3857",
+        "bbox": [
+          -11400000,
+          4500000,
+          -10500000,
+          5000000
+        ],
+        "geometry_type": "VectorTileSet",
+        "scale_or_resolution": {
+          "kind": "zoom_range",
+          "min_zoom": 0,
+          "max_zoom": 14
+        },
+        "tiling_profile": {
+          "scheme": "xyz",
+          "tile_size": 512,
+          "min_zoom": 0,
+          "max_zoom": 14
+        }
+      },
+      "derivation": {
+        "parameters_digest": "sha256:8edd140aa3e640f1d378909abecb050fe8912492c07883f8fcd2ff4b9cecc96b",
+        "transforms": [
+          {
+            "transform_id": "transform:synthetic:pmtiles:clip",
+            "operation": "clip",
+            "input_digest": "sha256:7ab625954f7dc4d32ea220923d6380f34faab97fe802486928af250c274d95a9",
+            "output_digest": "sha256:7be6307f046b893bfe639803a94b0def1417525c7027ca13f5caeff057dde80b",
+            "receipt_ref": "receipt:synthetic:pmtiles:clip"
+          },
+          {
+            "transform_id": "transform:synthetic:pmtiles:tile",
+            "operation": "tile",
+            "input_digest": "sha256:7be6307f046b893bfe639803a94b0def1417525c7027ca13f5caeff057dde80b",
+            "output_digest": "sha256:e1283dd0d89d2bbf7c33798dc86f45344c436babcb5bdf7e421a74f1515e675e",
+            "receipt_ref": "receipt:synthetic:pmtiles:tile"
+          },
+          {
+            "transform_id": "transform:synthetic:pmtiles:encode",
+            "operation": "encode",
+            "input_digest": "sha256:e1283dd0d89d2bbf7c33798dc86f45344c436babcb5bdf7e421a74f1515e675e",
+            "output_digest": "sha256:00c0835bfe05aa0f9574ede14879300a3591af8949c0704c3cd4fefbff516967",
+            "receipt_ref": "receipt:synthetic:pmtiles:encode"
+          }
+        ],
+        "receipt_refs": [
+          "receipt:synthetic:pmtiles-release-candidate:build"
+        ]
+      },
+      "governance": {
+        "rights_state": "verified_open",
+        "sensitivity_state": "public",
+        "policy_decision_ref": "policy-decision:synthetic:pmtiles-release-candidate",
+        "review_ref": "review:synthetic:pmtiles-release-candidate",
+        "rollback_ref": "rollback:synthetic:pmtiles-release-candidate",
+        "release_manifest_ref": null,
+        "release_state": "not_released",
+        "public_use_allowed": false,
+        "authority_created": false
+      },
+      "lineage": {
+        "supersedes": null,
+        "correction_refs": [],
+        "rollback_of": null
+      },
+      "limitations": [
+        "Fixture-only metadata; payload bytes are synthetic and do not prove format conformance.",
+        "No evidence, policy, review, release, signature, or public-use authority is authenticated."
+      ]
+    },
+    "payload_text": "KFM synthetic PMTiles fixture bytes v1\n"
+  },
+  {
+    "name": "valid_cog_generalized_derivative",
+    "manifest": {
+      "object_type": "KFMGeoManifest",
+      "schema_version": "1.0.0",
+      "profile_id": "fixture-first-v1",
+      "hash_profile": "kfm-fixture-json-v1",
+      "id": "geo-manifest:synthetic:cog-generalized-derivative:v1",
+      "version": "1.0.0",
+      "spec_hash": "sha256:700aabbe3dcdb547c9d063494ecb990a9eb7b8023b14bee0104cc9af098372af",
+      "artifact": {
+        "artifact_ref": "artifact:synthetic:cog-generalized-derivative:v1",
+        "artifact_type": "cog",
+        "artifact_role": "generalized_derivative",
+        "media_type": "image/tiff; application=geotiff; profile=cloud-optimized",
+        "byte_length": 35,
+        "content_digest": "sha256:98efd3944101366c3455ce541c5eeaf75f49b5e9a8ca103c6e2ec85d7ca7a46e",
+        "source_artifact_refs": [
+          "source-artifact:synthetic:cog-generalized-derivative:input"
+        ]
+      },
+      "claim_scope": {
+        "scope_ref": "claim-scope:synthetic:cog-generalized-derivative",
+        "description": "Synthetic fixture scope for cog-generalized-derivative; no real geospatial claim.",
+        "geography_ref": "geography:synthetic:kansas-generalized",
+        "temporal_scope": {
+          "valid_from": "2026-01-01T00:00:00Z",
+          "valid_to": "2026-12-31T23:59:59Z"
+        }
+      },
+      "source_role": "derived",
+      "evidence": {
+        "evidence_bundle_refs": [
+          "evidence-bundle:synthetic:cog-generalized-derivative"
+        ],
+        "evidence_refs": [
+          "evidence-ref:synthetic:cog-generalized-derivative"
+        ],
+        "source_descriptor_refs": [
+          "source-descriptor:synthetic:cog-generalized-derivative:1.0.0"
+        ]
+      },
+      "spatial": {
+        "crs": "EPSG:5070",
+        "bbox": [
+          -500000,
+          1400000,
+          800000,
+          2500000
+        ],
+        "geometry_type": "Raster",
+        "scale_or_resolution": {
+          "kind": "ground_resolution_m",
+          "value": 30
+        },
+        "tiling_profile": null
+      },
+      "derivation": {
+        "parameters_digest": "sha256:4888242d40861dbb40da92a754b601971c9d34f001bf75c26e7ac6ae1f2f8f03",
+        "transforms": [
+          {
+            "transform_id": "transform:synthetic:cog:reproject",
+            "operation": "reproject",
+            "input_digest": "sha256:e67a9919ec48fa8f46a5732009f5e46e29da8f503582b1f6feee879a476778d7",
+            "output_digest": "sha256:d8c621c9083547e5e1221f220f6cacfb21cdecd0c7e61756836ad9d41f1ca556",
+            "receipt_ref": "receipt:synthetic:cog:reproject"
+          },
+          {
+            "transform_id": "transform:synthetic:cog:generalize",
+            "operation": "generalize",
+            "input_digest": "sha256:d8c621c9083547e5e1221f220f6cacfb21cdecd0c7e61756836ad9d41f1ca556",
+            "output_digest": "sha256:53ef44f072071c4cb9f6939a9da6a28220f10d46c8c5054921f15c7aaea915d9",
+            "receipt_ref": "receipt:synthetic:cog:generalize"
+          },
+          {
+            "transform_id": "transform:synthetic:cog:encode",
+            "operation": "encode",
+            "input_digest": "sha256:53ef44f072071c4cb9f6939a9da6a28220f10d46c8c5054921f15c7aaea915d9",
+            "output_digest": "sha256:98efd3944101366c3455ce541c5eeaf75f49b5e9a8ca103c6e2ec85d7ca7a46e",
+            "receipt_ref": "receipt:synthetic:cog:encode"
+          }
+        ],
+        "receipt_refs": [
+          "receipt:synthetic:cog-generalized-derivative:build"
+        ]
+      },
+      "governance": {
+        "rights_state": "verified_open",
+        "sensitivity_state": "generalized",
+        "policy_decision_ref": "policy-decision:synthetic:cog-generalized-derivative",
+        "review_ref": "review:synthetic:cog-generalized-derivative",
+        "rollback_ref": "rollback:synthetic:cog-generalized-derivative",
+        "release_manifest_ref": null,
+        "release_state": "not_released",
+        "public_use_allowed": false,
+        "authority_created": false
+      },
+      "lineage": {
+        "supersedes": null,
+        "correction_refs": [],
+        "rollback_of": null
+      },
+      "limitations": [
+        "Fixture-only metadata; payload bytes are synthetic and do not prove format conformance.",
+        "No evidence, policy, review, release, signature, or public-use authority is authenticated."
+      ]
+    },
+    "payload_text": "KFM synthetic COG fixture bytes v1\n"
+  },
+  {
+    "name": "valid_geojson_rollback_target",
+    "manifest": {
+      "object_type": "KFMGeoManifest",
+      "schema_version": "1.0.0",
+      "profile_id": "fixture-first-v1",
+      "hash_profile": "kfm-fixture-json-v1",
+      "id": "geo-manifest:synthetic:geojson-rollback-target:v1",
+      "version": "1.0.0",
+      "spec_hash": "sha256:39866d3326e2ab60e3769f2b647302dbe7c68decb57aa5c68459ee293ee703d0",
+      "artifact": {
+        "artifact_ref": "artifact:synthetic:geojson-rollback-target:v1",
+        "artifact_type": "geojson",
+        "artifact_role": "rollback_target",
+        "media_type": "application/geo+json",
+        "byte_length": 43,
+        "content_digest": "sha256:6d18edfe75b3149104038dcbca4d0096bbcb923f0f9fa4b49f4815344e75bb90",
+        "source_artifact_refs": [
+          "source-artifact:synthetic:geojson-rollback-target:input"
+        ]
+      },
+      "claim_scope": {
+        "scope_ref": "claim-scope:synthetic:geojson-rollback-target",
+        "description": "Synthetic fixture scope for geojson-rollback-target; no real geospatial claim.",
+        "geography_ref": "geography:synthetic:kansas-generalized",
+        "temporal_scope": {
+          "valid_from": "2026-01-01T00:00:00Z",
+          "valid_to": "2026-12-31T23:59:59Z"
+        }
+      },
+      "source_role": "context",
+      "evidence": {
+        "evidence_bundle_refs": [
+          "evidence-bundle:synthetic:geojson-rollback-target"
+        ],
+        "evidence_refs": [
+          "evidence-ref:synthetic:geojson-rollback-target"
+        ],
+        "source_descriptor_refs": [
+          "source-descriptor:synthetic:geojson-rollback-target:1.0.0"
+        ]
+      },
+      "spatial": {
+        "crs": "EPSG:4326",
+        "bbox": [
+          -102.1,
+          36.9,
+          -94.5,
+          40.1
+        ],
+        "geometry_type": "GeometryCollection",
+        "scale_or_resolution": {
+          "kind": "nominal_scale_denominator",
+          "value": 100000
+        },
+        "tiling_profile": null
+      },
+      "derivation": {
+        "parameters_digest": "sha256:bc0df9e5f068ff738ba32faeb3045a16e0f3947c5278f117ec7b040c32560d27",
+        "transforms": [
+          {
+            "transform_id": "transform:synthetic:geojson:clip",
+            "operation": "clip",
+            "input_digest": "sha256:23088070491d7b5442ba2dc86d1983e520eb5674d8798a188d154f58af2701c1",
+            "output_digest": "sha256:83771ecf3fe6a4015d6613065d700cb557ab40729b77366497a3247ec019595f",
+            "receipt_ref": "receipt:synthetic:geojson:clip"
+          },
+          {
+            "transform_id": "transform:synthetic:geojson:encode",
+            "operation": "encode",
+            "input_digest": "sha256:83771ecf3fe6a4015d6613065d700cb557ab40729b77366497a3247ec019595f",
+            "output_digest": "sha256:6d18edfe75b3149104038dcbca4d0096bbcb923f0f9fa4b49f4815344e75bb90",
+            "receipt_ref": "receipt:synthetic:geojson:encode"
+          }
+        ],
+        "receipt_refs": [
+          "receipt:synthetic:geojson-rollback-target:build"
+        ]
+      },
+      "governance": {
+        "rights_state": "verified_open",
+        "sensitivity_state": "public",
+        "policy_decision_ref": "policy-decision:synthetic:geojson-rollback-target",
+        "review_ref": "review:synthetic:geojson-rollback-target",
+        "rollback_ref": "rollback:synthetic:geojson-rollback-target",
+        "release_manifest_ref": null,
+        "release_state": "not_released",
+        "public_use_allowed": false,
+        "authority_created": false
+      },
+      "lineage": {
+        "supersedes": null,
+        "correction_refs": [],
+        "rollback_of": "geo-manifest:synthetic:geojson-release-candidate:v0"
+      },
+      "limitations": [
+        "Fixture-only metadata; payload bytes are synthetic and do not prove format conformance.",
+        "No evidence, policy, review, release, signature, or public-use authority is authenticated."
+      ]
+    },
+    "payload_text": "{\"type\":\"FeatureCollection\",\"features\":[]}\n"
+  }
+]

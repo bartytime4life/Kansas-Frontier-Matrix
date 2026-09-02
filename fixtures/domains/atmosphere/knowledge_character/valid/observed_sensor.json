@@ -1,0 +1,32 @@
+{
+  "fixture_id": "fixture:atmosphere:knowledge-character:observed-sensor",
+  "profile_id": "kfm-atmosphere-knowledge-character-fixture-v1",
+  "object_family": "PM25Observation",
+  "knowledge_character": "OBSERVED_SENSOR",
+  "source_role": "observed",
+  "source_descriptor_ref": "fixture://sources/atmosphere/synthetic-observed-sensor",
+  "evidence_refs": [
+    "fixture://evidence/atmosphere/knowledge-character/observed-sensor"
+  ],
+  "claim": {
+    "kind": "ground_concentration",
+    "parameter": "pm2_5_mass_concentration",
+    "unit": "ug/m3",
+    "intended_use": "measurement_context"
+  },
+  "spatial_support": {
+    "kind": "generalized_county",
+    "county_fips": "99999"
+  },
+  "governance": {
+    "rights_state": "fixture_only",
+    "sensitivity_state": "public_safe_fixture",
+    "review_state": "fixture_only",
+    "release_state": "not_released",
+    "promotion_eligible": false,
+    "rollback_state": "fixture_only"
+  },
+  "limitations": [
+    "synthetic_fixture_only"
+  ]
+}

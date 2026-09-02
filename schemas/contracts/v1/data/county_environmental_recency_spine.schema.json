@@ -1,0 +1,193 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/data/county_environmental_recency_spine.schema.json",
+  "title": "CountyEnvironmentalRecencySpineCandidate",
+  "type": "object",
+  "additionalProperties": false,
+  "$defs": {
+    "aware_datetime": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "nullable_datetime": {
+      "oneOf": [
+        {"$ref": "#/$defs/aware_datetime"},
+        {"type": "null"}
+      ]
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "lane": {
+          "enum": ["AIR", "BIODIVERSITY", "HYDROLOGY", "IMAGERY", "SOILS", "VEGETATION"]
+        },
+        "source_descriptor_ref": {
+          "type": "string",
+          "pattern": "^kfm://source/[a-z0-9][a-z0-9._:-]{2,127}$"
+        },
+        "source_health_assessment_ref": {
+          "type": "string",
+          "pattern": "^kfm:source-health:[a-z0-9][a-z0-9._:-]{2,240}$"
+        },
+        "checked_at": {"$ref": "#/$defs/nullable_datetime"},
+        "health_outcome": {
+          "enum": ["HEALTHY", "DEGRADED", "STALE", "UNAVAILABLE", "UNKNOWN"]
+        },
+        "check_result": {
+          "enum": ["RECORDED", "MISSED", "ERROR"]
+        },
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "CHECK_ERROR",
+              "CHECK_MISSING",
+              "HEALTHY_WITHIN_WEEK",
+              "SOURCE_DEGRADED",
+              "SOURCE_STALE",
+              "SOURCE_UNAVAILABLE"
+            ]
+          }
+        }
+      },
+      "required": [
+        "lane",
+        "source_descriptor_ref",
+        "source_health_assessment_ref",
+        "checked_at",
+        "health_outcome",
+        "check_result",
+        "reason_codes"
+      ]
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "execution_mode": {"const": "FIXTURE_ONLY"},
+        "network_attempted": {"const": false},
+        "source_probed": {"const": false},
+        "source_health_authored": {"const": false},
+        "material_change_decided": {"const": false},
+        "interpretation_authorized": {"const": false},
+        "policy_evaluated": {"const": false},
+        "lifecycle_write_allowed": {"const": false},
+        "promotion_authorized": {"const": false},
+        "release_authorized": {"const": false},
+        "publication_authorized": {"const": false},
+        "public_use_allowed": {"const": false}
+      },
+      "required": [
+        "execution_mode",
+        "network_attempted",
+        "source_probed",
+        "source_health_authored",
+        "material_change_decided",
+        "interpretation_authorized",
+        "policy_evaluated",
+        "lifecycle_write_allowed",
+        "promotion_authorized",
+        "release_authorized",
+        "publication_authorized",
+        "public_use_allowed"
+      ]
+    }
+  },
+  "properties": {
+    "object_type": {"const": "CountyEnvironmentalRecencySpineCandidate"},
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.county-environmental-recency.fixture.v1"},
+    "spine_id": {
+      "type": "string",
+      "pattern": "^kfm:county-environmental-recency:[0-9a-f]{24}$"
+    },
+    "county": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "scope_ref": {
+          "type": "string",
+          "pattern": "^kfm://scope/county/[a-z0-9][a-z0-9._:-]{2,127}$"
+        },
+        "state_code": {"const": "KS"},
+        "geometry_ref": {
+          "type": "string",
+          "pattern": "^kfm://geometry/county/[a-z0-9][a-z0-9._:-]{2,127}$"
+        }
+      },
+      "required": ["scope_ref", "state_code", "geometry_ref"]
+    },
+    "week": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "period_start": {"$ref": "#/$defs/aware_datetime"},
+        "period_end": {"$ref": "#/$defs/aware_datetime"},
+        "assessed_at": {"$ref": "#/$defs/aware_datetime"},
+        "cadence_hours": {"const": 168}
+      },
+      "required": ["period_start", "period_end", "assessed_at", "cadence_hours"]
+    },
+    "source_availability_watchlist_ref": {
+      "type": "string",
+      "pattern": "^kfm:source-availability-watchlist:[0-9a-f]{24}$"
+    },
+    "entries": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": {"$ref": "#/$defs/entry"}
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "lane_count": {"const": 6},
+        "recorded_count": {"type": "integer", "minimum": 0, "maximum": 6},
+        "hold_count": {"type": "integer", "minimum": 0, "maximum": 6},
+        "error_count": {"type": "integer", "minimum": 0, "maximum": 6},
+        "overall_outcome": {"enum": ["COMPLETE", "HOLD", "ERROR"]},
+        "separate_interpretation_gate_required": {"const": true}
+      },
+      "required": [
+        "lane_count",
+        "recorded_count",
+        "hold_count",
+        "error_count",
+        "overall_outcome",
+        "separate_interpretation_gate_required"
+      ]
+    },
+    "governance": {"$ref": "#/$defs/governance"},
+    "spec_hash": {"$ref": "#/$defs/spec_hash"}
+  },
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "spine_id",
+    "county",
+    "week",
+    "source_availability_watchlist_ref",
+    "entries",
+    "summary",
+    "governance",
+    "spec_hash"
+  ],
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "authority": "NONE",
+    "contract_doc": "contracts/data/county_environmental_recency_spine.md",
+    "fixtures_root": "fixtures/contracts/v1/data/county_environmental_recency_spine/",
+    "validator": "tools/validators/data/validate_county_environmental_recency_spine.py"
+  }
+}

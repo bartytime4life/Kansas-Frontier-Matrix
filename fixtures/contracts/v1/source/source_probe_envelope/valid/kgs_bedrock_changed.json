@@ -1,0 +1,44 @@
+{
+  "object_type": "SourceProbeEnvelope",
+  "schema_version": "1.0.0",
+  "probe_id": "source-probe:kgs-bedrock-fixture-v1",
+  "profile": "KGS_GEOLOGY",
+  "observed_at": "2026-04-12T12:00:00Z",
+  "source_descriptor_ref": "data/registry/geology/sources/ksgs_bedrock.yaml",
+  "source_head": {
+    "etag": "\"fixture\"",
+    "last_modified": "Sun, 12 Apr 2026 12:00:00 GMT",
+    "content_sha256": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+  },
+  "scope": {
+    "geography_level": "STATE",
+    "geography_id": "KS"
+  },
+  "materiality": {
+    "status": "CHANGED",
+    "reason_codes": [
+      "MODELED_UNIT_CONTENT_CHANGED"
+    ]
+  },
+  "profile_data": {
+    "source_role": "modeled",
+    "geology_kind": "BEDROCK",
+    "unit_vocabulary": [
+      "unit_symbol",
+      "unit_name",
+      "age",
+      "lithology"
+    ],
+    "resource_inference": false,
+    "regulatory_inference": false
+  },
+  "governance": {
+    "fixture_only": true,
+    "network_access": "DENIED",
+    "source_activation": false,
+    "lifecycle_write": false,
+    "promotion_allowed": false,
+    "publication_allowed": false
+  },
+  "spec_hash": "sha256:6555a72db2d41d0472173b4e23e9c1c3ce66d3c632c0dbc314a04231d003f56a"
+}

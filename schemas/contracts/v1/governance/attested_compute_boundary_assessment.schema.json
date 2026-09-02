@@ -1,0 +1,252 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/governance/attested_compute_boundary_assessment.schema.json",
+  "title": "AttestedComputeBoundaryAssessmentCandidate",
+  "description": "Decision-only fixture profile for choosing no TRE, a synthetic assessment, deferral of real TEE work, or denial of an unverified attestation without compute or release authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "profile_spec_hash",
+    "source_map_ref",
+    "observed_at",
+    "assessment_ref",
+    "assessment_state",
+    "problem",
+    "existing_controls",
+    "execution_request",
+    "boundary_declarations",
+    "attestation_claim",
+    "decision",
+    "safeguards",
+    "correction_and_rollback",
+    "authority_claims"
+  ],
+  "properties": {
+    "object_type": {"const": "AttestedComputeBoundaryAssessmentCandidate"},
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.governance.attested-compute-boundary-assessment.fixture.v1"},
+    "profile_spec_hash": {"$ref": "#/$defs/sha256"},
+    "source_map_ref": {"const": "docs/intake/exploratory/new-ideas-5-19-26-source-map.md"},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "assessment_ref": {"$ref": "#/$defs/ref"},
+    "assessment_state": {"enum": ["COMPLETE", "ERROR"]},
+    "problem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["residual_state", "statement", "affected_owner_refs", "unsolved_by_existing_controls"],
+      "properties": {
+        "residual_state": {"enum": ["NONE", "DEFINED", "UNRESOLVED"]},
+        "statement": {
+          "oneOf": [
+            {"type": "string", "minLength": 20, "maxLength": 1200},
+            {"type": "null"}
+          ]
+        },
+        "affected_owner_refs": {
+          "type": "array",
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/ref"}
+        },
+        "unsolved_by_existing_controls": {
+          "type": "array",
+          "maxItems": 4,
+          "uniqueItems": true,
+          "items": {"enum": ["HUMAN_REVIEW", "POLICY", "QUARANTINE", "RECEIPT"]}
+        }
+      }
+    },
+    "existing_controls": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["quarantine", "policy", "receipt", "human_review"],
+      "properties": {
+        "quarantine": {"$ref": "#/$defs/control_state"},
+        "policy": {"$ref": "#/$defs/control_state"},
+        "receipt": {"$ref": "#/$defs/control_state"},
+        "human_review": {"$ref": "#/$defs/control_state"}
+      }
+    },
+    "execution_request": {"enum": ["NONE", "SYNTHETIC_SIMULATION", "REAL_TEE"]},
+    "boundary_declarations": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "workload_identity",
+        "input_authority",
+        "attestation_evidence",
+        "execution_receipt",
+        "policy_obligations",
+        "disclosure_review",
+        "output_transform",
+        "evidence_and_reviewer_decision",
+        "release_approval",
+        "rollback"
+      ],
+      "properties": {
+        "workload_identity": {"$ref": "#/$defs/boundary_declaration"},
+        "input_authority": {"$ref": "#/$defs/boundary_declaration"},
+        "attestation_evidence": {"$ref": "#/$defs/boundary_declaration"},
+        "execution_receipt": {"$ref": "#/$defs/boundary_declaration"},
+        "policy_obligations": {"$ref": "#/$defs/boundary_declaration"},
+        "disclosure_review": {"$ref": "#/$defs/boundary_declaration"},
+        "output_transform": {"$ref": "#/$defs/boundary_declaration"},
+        "evidence_and_reviewer_decision": {"$ref": "#/$defs/boundary_declaration"},
+        "release_approval": {"$ref": "#/$defs/boundary_declaration"},
+        "rollback": {"$ref": "#/$defs/boundary_declaration"}
+      }
+    },
+    "attestation_claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "verifier_profile_ref", "trust_root_ref", "claimed_support", "unsupported_authorities"],
+      "properties": {
+        "state": {"enum": ["ABSENT", "SYNTHETIC_ONLY", "UNVERIFIED_EXTERNAL"]},
+        "verifier_profile_ref": {"$ref": "#/$defs/nullable_ref"},
+        "trust_root_ref": {"$ref": "#/$defs/nullable_ref"},
+        "claimed_support": {
+          "oneOf": [
+            {"type": "string", "minLength": 20, "maxLength": 800},
+            {"type": "null"}
+          ]
+        },
+        "unsupported_authorities": {
+          "type": "array",
+          "maxItems": 7,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "CONSENT_VALIDITY",
+              "DISCLOSURE_SAFETY",
+              "EVIDENCE_SUFFICIENCY",
+              "PURPOSE_AUTHORITY",
+              "RELEASE_FITNESS",
+              "REVIEW_APPROVAL",
+              "SOURCE_ADMISSIBILITY"
+            ]
+          }
+        }
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["posture", "reason_codes", "simulation_assessment_allowed", "real_tee_authorized"],
+      "properties": {
+        "posture": {
+          "enum": [
+            "NO_TRE",
+            "SIMULATED_ASSESSMENT",
+            "DEFER_REAL_TEE",
+            "DENY_UNVERIFIED_ATTESTATION"
+          ]
+        },
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "ASSESSMENT_ERROR",
+              "ATTESTATION_BOUNDARY_INCOMPLETE",
+              "BOUNDARY_COMPONENT_UNRESOLVED",
+              "CONTROL_REVIEW_INCOMPLETE",
+              "DECISION_DEFERRED",
+              "EXISTING_CONTROLS_SUFFICIENT",
+              "REAL_TEE_DEFERRED",
+              "RESIDUAL_PROBLEM_UNRESOLVED",
+              "SIMULATION_PLAN_INCOMPLETE",
+              "SYNTHETIC_BOUNDARY_COMPLETE",
+              "UNVERIFIED_ATTESTATION_DENIED"
+            ]
+          }
+        },
+        "simulation_assessment_allowed": {"type": "boolean"},
+        "real_tee_authorized": {"const": false}
+      }
+    },
+    "safeguards": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["data_mode", "network_allowed", "credentials_allowed", "external_verification_allowed", "simulation_plan_ref"],
+      "properties": {
+        "data_mode": {"const": "NO_DATA_SYNTHETIC_ONLY"},
+        "network_allowed": {"const": false},
+        "credentials_allowed": {"const": false},
+        "external_verification_allowed": {"const": false},
+        "simulation_plan_ref": {"$ref": "#/$defs/nullable_ref"}
+      }
+    },
+    "correction_and_rollback": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["invalidation_action", "dependent_outputs_release_allowed", "rollback_ref"],
+      "properties": {
+        "invalidation_action": {"const": "VOID_ASSESSMENT_AND_REVIEW_DEPENDENTS"},
+        "dependent_outputs_release_allowed": {"const": false},
+        "rollback_ref": {"$ref": "#/$defs/ref"}
+      }
+    },
+    "authority_claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "real_sensitive_input_use",
+        "credential_use",
+        "cloud_or_tee_selection",
+        "key_enrollment",
+        "external_attestation_verification",
+        "compute_execution",
+        "output_release",
+        "deployment",
+        "publication"
+      ],
+      "properties": {
+        "real_sensitive_input_use": {"const": false},
+        "credential_use": {"const": false},
+        "cloud_or_tee_selection": {"const": false},
+        "key_enrollment": {"const": false},
+        "external_attestation_verification": {"const": false},
+        "compute_execution": {"const": false},
+        "output_release": {"const": false},
+        "deployment": {"const": false},
+        "publication": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "ref": {"type": "string", "minLength": 3, "maxLength": 512, "pattern": "^\\S+$"},
+    "nullable_ref": {
+      "oneOf": [
+        {"$ref": "#/$defs/ref"},
+        {"type": "null"}
+      ]
+    },
+    "control_state": {
+      "enum": ["REVIEWED_SUFFICIENT", "REVIEWED_INSUFFICIENT", "NOT_REVIEWED"]
+    },
+    "boundary_declaration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ref", "resolution"],
+      "properties": {
+        "ref": {"$ref": "#/$defs/ref"},
+        "resolution": {"enum": ["RESOLVED", "UNRESOLVED", "NOT_REQUIRED"]}
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "contract_doc": "contracts/governance/attested_compute_boundary_assessment.md",
+    "fixtures_root": "fixtures/contracts/v1/governance/attested_compute_boundary_assessment/",
+    "validator": "tools/validators/governance/validate_attested_compute_boundary_assessment.py",
+    "network": false,
+    "compute": false,
+    "authority_effects": false
+  }
+}

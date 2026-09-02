@@ -1,0 +1,179 @@
+{
+  "receipt_id": "genrec-path-decision-record-20260807",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/path-decision-record.yml",
+    "contracts/governance/path_decision_record.md",
+    "schemas/contracts/v1/governance/path_decision_record.schema.json",
+    "tools/validators/directory_governance/path_decision_record.md",
+    "tools/validators/directory_governance/validate_path_decision_record.py",
+    "fixtures/contracts/v1/governance/path_decision_record/expected_findings_manifest.json",
+    "fixtures/contracts/v1/governance/path_decision_record/valid/deny_public_raw.yaml",
+    "fixtures/contracts/v1/governance/path_decision_record/valid/hold_src.yaml",
+    "fixtures/contracts/v1/governance/path_decision_record/valid/migrate_catalog.yaml",
+    "fixtures/contracts/v1/governance/path_decision_record/valid/mirror_artifacts.yaml",
+    "fixtures/contracts/v1/governance/path_decision_record/valid/place_contract.yaml",
+    "fixtures/contracts/v1/governance/path_decision_record/valid/split_contract_schema.yaml",
+    "fixtures/contracts/v1/governance/path_decision_record/invalid/execution_role_mismatch.yaml",
+    "fixtures/contracts/v1/governance/path_decision_record/invalid/mirror_without_consumer.yaml",
+    "fixtures/contracts/v1/governance/path_decision_record/invalid/place_in_artifacts_trust.yaml",
+    "fixtures/contracts/v1/governance/path_decision_record/invalid/place_public_raw.yaml",
+    "fixtures/contracts/v1/governance/path_decision_record/invalid/registry_digest_mismatch.yaml",
+    "fixtures/contracts/v1/governance/path_decision_record/invalid/split_without_targets.yaml",
+    "tests/validators/directory_governance/test_validate_path_decision_record.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/path-decision-record.yml": "sha256:688030d00bd1a6d726b85b2a0f990dd55394ab24561cc3eff80829715c8d83dc",
+    "contracts/governance/path_decision_record.md": "sha256:805cc62ca23614566873173d0fc5ece1cef269a8c303a7cbe1d001b34ac605ca",
+    "schemas/contracts/v1/governance/path_decision_record.schema.json": "sha256:7f0b324e88cf85396eebaf6bdb67357bd6c685639741f4553cac472aa199ef51",
+    "tools/validators/directory_governance/path_decision_record.md": "sha256:78e14d65a55f1e1cc119f902e7bb63e09af715e5b3ac373c027a525e1c68c715",
+    "tools/validators/directory_governance/validate_path_decision_record.py": "sha256:528e46608a69deef3691ba9c9a35d527380f04386bacca75b1d3d5626a8f39ec",
+    "fixtures/contracts/v1/governance/path_decision_record/expected_findings_manifest.json": "sha256:fd642fe876fe91b331cf3fbf3de62259eeedfff677dc4b2bf133fc7b229a465a",
+    "fixtures/contracts/v1/governance/path_decision_record/valid/deny_public_raw.yaml": "sha256:0fd8494b60a30a283c8b12d489d485be192a2448d1207de1dc200025d441142e",
+    "fixtures/contracts/v1/governance/path_decision_record/valid/hold_src.yaml": "sha256:bf4ceb68321d6308881df59dcb2b2e3f842bb853f60e579b5ee5a13cc931b370",
+    "fixtures/contracts/v1/governance/path_decision_record/valid/migrate_catalog.yaml": "sha256:055e03c76df7ec1532f479c2b5580d250fb91f4e3cff486ec011f8eb596260ec",
+    "fixtures/contracts/v1/governance/path_decision_record/valid/mirror_artifacts.yaml": "sha256:63c5f98011642fbea889f79b173d338fa649aa1378d338462d97df0e2342c0b2",
+    "fixtures/contracts/v1/governance/path_decision_record/valid/place_contract.yaml": "sha256:2e3307560a534bc90be5c4c81cefebe124c3efe013179a419af61075a63ee7fe",
+    "fixtures/contracts/v1/governance/path_decision_record/valid/split_contract_schema.yaml": "sha256:27eeaaafaf1e7a48d9c94ad40865818a8302cbae47e2eadc021fe01902af0a70",
+    "fixtures/contracts/v1/governance/path_decision_record/invalid/execution_role_mismatch.yaml": "sha256:0d9198472eeed13bbecd75fab846c6aa3b0bff183768dc225c3a7b4cc7264ee7",
+    "fixtures/contracts/v1/governance/path_decision_record/invalid/mirror_without_consumer.yaml": "sha256:e0e1349bcc9d8300bee4c8656c6dad198f1c0f4e54504682cacb871c2ea96272",
+    "fixtures/contracts/v1/governance/path_decision_record/invalid/place_in_artifacts_trust.yaml": "sha256:10139ed97da830da46e5880ef4171fa587a45db1f93c9ad69aaefea272a2c534",
+    "fixtures/contracts/v1/governance/path_decision_record/invalid/place_public_raw.yaml": "sha256:359eb43cda916438589166e90c469dc3048ebd205336f960abc74cc5f70122f3",
+    "fixtures/contracts/v1/governance/path_decision_record/invalid/registry_digest_mismatch.yaml": "sha256:8936d46323b8024d20b9b6fecf539c061e56ebd9892f8895b02b449538216013",
+    "fixtures/contracts/v1/governance/path_decision_record/invalid/split_without_targets.yaml": "sha256:c6c3c1910a452efcb50ecda0af1b7cc40a3b5fcac5236f73bd36f3fec961b79f",
+    "tests/validators/directory_governance/test_validate_path_decision_record.py": "sha256:c0ee5df829b5fb93eb3f990979575410dbdb556e7fbffda81c363ad195a5661a"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-07"
+  },
+  "prompt_or_contract": "sha256:d08637e4b03cdd8e2688653df7139ee78beebcde997e74d3b87a7bd79baaea3a",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf",
+      "KFM_Comprehensive_Research_and_Verification_Agenda.docx",
+      "Kansas Frontier Matrix — AI Build Operating Contract.md"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf#sections-4-5-19",
+      "repo:pull/2136@2480c734f0aa3b834ab957842a55c6d08c894f9c",
+      "repo:control_plane/root_registry.yaml@2480c734f0aa3b834ab957842a55c6d08c894f9c#sha256:9dba2956624827673e3fcb7d903c567cbdc042aaf104d20728dc7b2d762f3641",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@013f0810944984bc08041cf8cb4e820dde6e9f13",
+      "repo:docs/doctrine/directory-rules.md@013f0810944984bc08041cf8cb4e820dde6e9f13"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/path-decision-record.yml": "PROPOSED",
+    "contracts/governance/path_decision_record.md": "PROPOSED",
+    "schemas/contracts/v1/governance/path_decision_record.schema.json": "PROPOSED",
+    "tools/validators/directory_governance/path_decision_record.md": "PROPOSED",
+    "tools/validators/directory_governance/validate_path_decision_record.py": "PROPOSED",
+    "fixtures/contracts/v1/governance/path_decision_record/expected_findings_manifest.json": "PROPOSED",
+    "fixtures/contracts/v1/governance/path_decision_record/valid/deny_public_raw.yaml": "PROPOSED",
+    "fixtures/contracts/v1/governance/path_decision_record/valid/hold_src.yaml": "PROPOSED",
+    "fixtures/contracts/v1/governance/path_decision_record/valid/migrate_catalog.yaml": "PROPOSED",
+    "fixtures/contracts/v1/governance/path_decision_record/valid/mirror_artifacts.yaml": "PROPOSED",
+    "fixtures/contracts/v1/governance/path_decision_record/valid/place_contract.yaml": "PROPOSED",
+    "fixtures/contracts/v1/governance/path_decision_record/valid/split_contract_schema.yaml": "PROPOSED",
+    "fixtures/contracts/v1/governance/path_decision_record/invalid/execution_role_mismatch.yaml": "PROPOSED",
+    "fixtures/contracts/v1/governance/path_decision_record/invalid/mirror_without_consumer.yaml": "PROPOSED",
+    "fixtures/contracts/v1/governance/path_decision_record/invalid/place_in_artifacts_trust.yaml": "PROPOSED",
+    "fixtures/contracts/v1/governance/path_decision_record/invalid/place_public_raw.yaml": "PROPOSED",
+    "fixtures/contracts/v1/governance/path_decision_record/invalid/registry_digest_mismatch.yaml": "PROPOSED",
+    "fixtures/contracts/v1/governance/path_decision_record/invalid/split_without_targets.yaml": "PROPOSED",
+    "tests/validators/directory_governance/test_validate_path_decision_record.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-unittest",
+      "outcome": "PASS",
+      "reason": "Twelve deterministic path-decision-record validator tests passed locally."
+    },
+    {
+      "gate": "schema-self-check",
+      "outcome": "PASS",
+      "reason": "The Draft 2020-12 path-decision-record schema passed Draft202012Validator.check_schema."
+    },
+    {
+      "gate": "finite-outcome-fixtures",
+      "outcome": "PASS",
+      "reason": "PLACE, SPLIT, MIGRATE, MIRROR, HOLD, and DENY fixtures all passed."
+    },
+    {
+      "gate": "negative-fixture-polarity",
+      "outcome": "PASS",
+      "reason": "Six reviewed invalid fixtures produced their exact expected invariant findings."
+    },
+    {
+      "gate": "root-registry-binding",
+      "outcome": "PASS",
+      "reason": "Every valid fixture binds the exact root-registry SHA-256 and pinned base from draft PR #2136."
+    },
+    {
+      "gate": "python-bytecode-compile",
+      "outcome": "PASS",
+      "reason": "Validator and focused test module compiled without syntax errors."
+    },
+    {
+      "gate": "receipt-byte-binding",
+      "outcome": "PASS",
+      "reason": "SHA-256 values bind all nineteen authored non-receipt artifacts with exact path closure."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted CI starts after the stacked draft pull request is opened."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:path-decision-record",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf#section-5.4"
+    },
+    {
+      "id": "repository:root-registry-dependency",
+      "validated": true,
+      "evidence_ref": "repo:pull/2136@2480c734f0aa3b834ab957842a55c6d08c894f9c"
+    },
+    {
+      "id": "repository:adopted-directory-rules",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@013f0810944984bc08041cf8cb4e820dde6e9f13"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-07T21:58:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Adds a projection-bound PathDecisionRecord contract, strict schema, deterministic no-network validator, finite outcome fixtures, negative invariants, focused tests, and read-only CI. It cannot authorize a path, accept an ADR, move bytes, grant writes, or release/deploy/promote/publish."
+}

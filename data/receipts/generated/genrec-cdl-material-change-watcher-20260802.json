@@ -1,0 +1,222 @@
+{
+  "receipt_id": "genrec-cdl-material-change-watcher-20260802",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/domain-agriculture.yml",
+    "docs/intake/exploratory/README.md",
+    "docs/intake/exploratory/cdl-material-change-watcher-source-map.md",
+    "docs/sources/catalog/usda/usda-nass-cdl.md",
+    "tests/ingest/README.md",
+    "tests/ingest/cdl_watch/README.md",
+    "tests/ingest/cdl_watch/fixtures/absolute_threshold/current_sidecar.json",
+    "tests/ingest/cdl_watch/fixtures/absolute_threshold/prior_sidecar.json",
+    "tests/ingest/cdl_watch/fixtures/below_threshold/current_sidecar.json",
+    "tests/ingest/cdl_watch/fixtures/below_threshold/prior_sidecar.json",
+    "tests/ingest/cdl_watch/fixtures/classmap_drift/current_sidecar.json",
+    "tests/ingest/cdl_watch/fixtures/classmap_drift/prior_sidecar.json",
+    "tests/ingest/cdl_watch/fixtures/geometry_drift/current_sidecar.json",
+    "tests/ingest/cdl_watch/fixtures/geometry_drift/prior_sidecar.json",
+    "tests/ingest/cdl_watch/fixtures/metadata_change/current_sidecar.json",
+    "tests/ingest/cdl_watch/fixtures/metadata_change/prior_sidecar.json",
+    "tests/ingest/cdl_watch/fixtures/no_material_change/current_sidecar.json",
+    "tests/ingest/cdl_watch/fixtures/no_material_change/prior_sidecar.json",
+    "tests/ingest/cdl_watch/fixtures/relative_threshold/current_sidecar.json",
+    "tests/ingest/cdl_watch/fixtures/relative_threshold/prior_sidecar.json",
+    "tests/ingest/cdl_watch/test_cdl_watch.py",
+    "tools/ingest/README.md",
+    "tools/ingest/cdl_watch/README.md",
+    "tools/ingest/cdl_watch/cdl_watch.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/domain-agriculture.yml": "sha256:6da3a3bbc474dd4462041e8a9f4937b780a1e5fb0796dc4fc730cd9b52106f00",
+    "docs/intake/exploratory/README.md": "sha256:ffa33e275fe4394c2f051ed837c19293ed5fe53139f8a3bb9de29c3a64043047",
+    "docs/intake/exploratory/cdl-material-change-watcher-source-map.md": "sha256:6109f6ebe668590a18abb2f6ad7071474e2a3539dade672b27bbefc4335ad9a3",
+    "docs/sources/catalog/usda/usda-nass-cdl.md": "sha256:d13fc7498457add8c013cfaeaa6c9df60ae037de6d17e8cff9fe75118c8398d3",
+    "tests/ingest/README.md": "sha256:72146e633e5469355d63fbe9db2a6d5b14bb38f1d055a13f5ce5b7b11bf7aefe",
+    "tests/ingest/cdl_watch/README.md": "sha256:7e84e56c7418ca74ed8878c918928a7a23e5a4f99ba022b97923347e0d8eb233",
+    "tests/ingest/cdl_watch/fixtures/absolute_threshold/current_sidecar.json": "sha256:9d9780fdcdc8a1bf0fe3463df0e5f0a1d315213ed35fb5559f1143ab8a2e98bb",
+    "tests/ingest/cdl_watch/fixtures/absolute_threshold/prior_sidecar.json": "sha256:841f499ef076c5ab61dab2f0ff604391af3f0fd28b02fa55164c1810f03355a9",
+    "tests/ingest/cdl_watch/fixtures/below_threshold/current_sidecar.json": "sha256:e8769025551f58c12f234dcc8216689318fd9a21011d92c4bd5a115a715f2294",
+    "tests/ingest/cdl_watch/fixtures/below_threshold/prior_sidecar.json": "sha256:c7e819b1f2c0cf4a9b77299e4be23108799d68691dbda3bad612781c190c72ef",
+    "tests/ingest/cdl_watch/fixtures/classmap_drift/current_sidecar.json": "sha256:02b1064bb5828e0bb15b8d35cf9b4a16f914f5df45c08c19cbd3c33536d44ff2",
+    "tests/ingest/cdl_watch/fixtures/classmap_drift/prior_sidecar.json": "sha256:c7e819b1f2c0cf4a9b77299e4be23108799d68691dbda3bad612781c190c72ef",
+    "tests/ingest/cdl_watch/fixtures/geometry_drift/current_sidecar.json": "sha256:e157e7bf88c89591a47596cbea486de205b30a6d94119da48360c6e2fed73161",
+    "tests/ingest/cdl_watch/fixtures/geometry_drift/prior_sidecar.json": "sha256:c7e819b1f2c0cf4a9b77299e4be23108799d68691dbda3bad612781c190c72ef",
+    "tests/ingest/cdl_watch/fixtures/metadata_change/current_sidecar.json": "sha256:30d5dcb6ab27e134a4b7af6bc445dec48741e390e9f68ccb3dfce118fa9e9587",
+    "tests/ingest/cdl_watch/fixtures/metadata_change/prior_sidecar.json": "sha256:c7e819b1f2c0cf4a9b77299e4be23108799d68691dbda3bad612781c190c72ef",
+    "tests/ingest/cdl_watch/fixtures/no_material_change/current_sidecar.json": "sha256:5d990e4bf594f779aebada4b6a7a18d827e8aaa7d3c7b76e2c393064d8c5b801",
+    "tests/ingest/cdl_watch/fixtures/no_material_change/prior_sidecar.json": "sha256:c7e819b1f2c0cf4a9b77299e4be23108799d68691dbda3bad612781c190c72ef",
+    "tests/ingest/cdl_watch/fixtures/relative_threshold/current_sidecar.json": "sha256:57e85277713ab59f6ed89782269107980e6a16171aef3ec9284392d67f50be71",
+    "tests/ingest/cdl_watch/fixtures/relative_threshold/prior_sidecar.json": "sha256:c7e819b1f2c0cf4a9b77299e4be23108799d68691dbda3bad612781c190c72ef",
+    "tests/ingest/cdl_watch/test_cdl_watch.py": "sha256:406a53e7b0331d16a7c25ccdbf32173fdb4ea6ad44bd1f693b7eb597a7a89213",
+    "tools/ingest/README.md": "sha256:fc33ed1d93070071056707e0a37df0bdcbe5b0aa646507f8b5ee511744f9a167",
+    "tools/ingest/cdl_watch/README.md": "sha256:c4e15b1b6d46439bbf86b866ba0730c2533e0100d332f0b12bc82c0b301ace06",
+    "tools/ingest/cdl_watch/cdl_watch.py": "sha256:9f49d0d6bb419664c48778637a514089641fd59659f15d78375e3224747225f8"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "Work Mode 2026-08-02"
+  },
+  "prompt_or_contract": "sha256:2fb7541726a9486b89cdd15613e7d616626e2b295b7ecd6090960a45ab008892",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local supplied-document and repository inspection",
+      "read-only parallel source and repository assays",
+      "Git",
+      "GitHub connector read operations",
+      "deterministic standard-library Python validation",
+      "isolated repository-declared Python test environment",
+      "repository no-network documentation link checker"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:57e4b74255b52863f2a489595077741d7f45c2968a9740fe4837bac73778f780",
+      "sha256:e92500f9b40007e8b69d183ecaa6247c542ffec25857875ecd2dbd00709785b1",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:3159ee37d25a897bf2525fd7dafbc6ca28ee74594a3b52a9c0a01fa30aed777b"
+    ],
+    "attached_docs": [
+      "KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md",
+      "Unified Implementation Architecture Build Manual.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/658bd477e769646cd70131ca824af0780b6812b4",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/658bd477e769646cd70131ca824af0780b6812b4/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/658bd477e769646cd70131ca824af0780b6812b4/tools/ingest/cdl_watch/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/658bd477e769646cd70131ca824af0780b6812b4/docs/sources/catalog/usda/usda-nass-cdl.md",
+      "attachment://KFM-Pass-20-Part-2:sha256:57e4b74255b52863f2a489595077741d7f45c2968a9740fe4837bac73778f780",
+      "attachment://Unified-Implementation-Architecture-Build-Manual:sha256:e92500f9b40007e8b69d183ecaa6247c542ffec25857875ecd2dbd00709785b1"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/domain-agriculture.yml": "PROPOSED",
+    "docs/intake/exploratory/README.md": "PROPOSED",
+    "docs/intake/exploratory/cdl-material-change-watcher-source-map.md": "PROPOSED",
+    "docs/sources/catalog/usda/usda-nass-cdl.md": "PROPOSED",
+    "tests/ingest/README.md": "PROPOSED",
+    "tests/ingest/cdl_watch/README.md": "PROPOSED",
+    "tests/ingest/cdl_watch/fixtures/absolute_threshold/current_sidecar.json": "CONFIRMED",
+    "tests/ingest/cdl_watch/fixtures/absolute_threshold/prior_sidecar.json": "CONFIRMED",
+    "tests/ingest/cdl_watch/fixtures/below_threshold/current_sidecar.json": "CONFIRMED",
+    "tests/ingest/cdl_watch/fixtures/below_threshold/prior_sidecar.json": "CONFIRMED",
+    "tests/ingest/cdl_watch/fixtures/classmap_drift/current_sidecar.json": "CONFIRMED",
+    "tests/ingest/cdl_watch/fixtures/classmap_drift/prior_sidecar.json": "CONFIRMED",
+    "tests/ingest/cdl_watch/fixtures/geometry_drift/current_sidecar.json": "CONFIRMED",
+    "tests/ingest/cdl_watch/fixtures/geometry_drift/prior_sidecar.json": "CONFIRMED",
+    "tests/ingest/cdl_watch/fixtures/metadata_change/current_sidecar.json": "CONFIRMED",
+    "tests/ingest/cdl_watch/fixtures/metadata_change/prior_sidecar.json": "CONFIRMED",
+    "tests/ingest/cdl_watch/fixtures/no_material_change/current_sidecar.json": "CONFIRMED",
+    "tests/ingest/cdl_watch/fixtures/no_material_change/prior_sidecar.json": "CONFIRMED",
+    "tests/ingest/cdl_watch/fixtures/relative_threshold/current_sidecar.json": "CONFIRMED",
+    "tests/ingest/cdl_watch/fixtures/relative_threshold/prior_sidecar.json": "CONFIRMED",
+    "tests/ingest/cdl_watch/test_cdl_watch.py": "CONFIRMED",
+    "tools/ingest/README.md": "PROPOSED",
+    "tools/ingest/cdl_watch/README.md": "PROPOSED",
+    "tools/ingest/cdl_watch/cdl_watch.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-authority-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Current main, accepted Directory Rules, exact base 658bd477e769646cd70131ca824af0780b6812b4, clean starting worktree, and open pull-request set were inspected. No open pull request overlapped this slice. The request authorizes bounded feature-branch implementation while source activation, ready transition, merge, release, deployment, publication, and repository-setting operations remain denied."
+    },
+    {
+      "gate": "source-assay-and-directory-placement",
+      "outcome": "PASS",
+      "reason": "The supplied Pass 20 dossier and Unified Implementation Architecture Build Manual were identity-pinned and reconciled with the existing tools/ingest/cdl_watch lane, product documentation, Agriculture workflow, and adopted directory governance. The slice retains only fixture-comparison mechanics and creates no new authority root."
+    },
+    {
+      "gate": "focused-cdl-watcher-suite",
+      "outcome": "PASS",
+      "reason": "Eighteen standard-library tests passed across seven prior/current fixture pairs, exact finite outcomes, material-threshold-only work proposals, metadata and year diagnostics, inclusive relative and absolute boundaries, below-threshold behavior, classmap, geometry and denominator fail-closed paths, chronology and timestamp checks, positive covered-area and canonical class-ID requirements, threshold-profile abstention, duplicate and oversized input, integer bounds, profile hashes, deterministic non-echoing reports, CLI polarity, create-only external output, cwd-traversal and all-repository output denial, and active socket, DNS, and urllib network denial."
+    },
+    {
+      "gate": "agriculture-workflow-boundary-and-command",
+      "outcome": "PASS",
+      "reason": "The stable domain-agriculture workflow name, three job IDs, and contents-read permission are preserved. Its validation job executes the bounded no-network watcher proof while Agriculture domain validation remains explicitly held; proof and release-dry-run jobs remain unchanged and held."
+    },
+    {
+      "gate": "repository-make-validate",
+      "outcome": "PASS",
+      "reason": "In an isolated environment installed from the repository-declared .[test] extra, make validate completed all aggregate fixture validators with intended invalid polarity and passed 148 schema/contract tests plus 15 subtests."
+    },
+    {
+      "gate": "documentation-links",
+      "outcome": "PASS",
+      "reason": "All 18 no-network link-check unit tests passed. The checker validated seven changed Markdown documents and 149 local targets; 21 external badge targets were classified without requests. Two stale targets in the directly changed CDL product page were corrected to existing responsibility roots."
+    },
+    {
+      "gate": "generated-receipt-validator",
+      "outcome": "PASS",
+      "reason": "All 24 generated-receipt validator tests and the repository's valid/invalid receipt fixture polarity passed. This receipt excludes its own bytes and binds the other 24 authored artifact paths with SHA-256."
+    },
+    {
+      "gate": "canonical-authority-roots-unchanged",
+      "outcome": "PASS",
+      "reason": "No schema, contract, policy, source registry, connector, pipeline, lifecycle data, proof, release, or published path is changed. The fixture profile cannot select a live source, establish canonical spec-hash or materiality policy, create a receipt or evidence object, promote, release, or publish."
+    },
+    {
+      "gate": "python-json-yaml-diff-and-artifact-integrity",
+      "outcome": "PASS",
+      "reason": "Changed Python compiles and executes; all 14 sidecar JSON files parse and validate through the focused proof; the workflow YAML parses with stable identity and read-only permissions; changed-document links and git diff --check pass; and all 24 non-receipt authored artifacts are SHA-256 bound."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "No remote branch or pull request exists for this local feature head. Hosted exact-head checks have therefore not been observed."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and is not authored or inferred by the agent."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/658bd477e769646cd70131ca824af0780b6812b4/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "prior-cdl-watcher-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/658bd477e769646cd70131ca824af0780b6812b4/tools/ingest/cdl_watch/README.md"
+    },
+    {
+      "id": "cdl-product-watcher-design",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/658bd477e769646cd70131ca824af0780b6812b4/docs/sources/catalog/usda/usda-nass-cdl.md"
+    },
+    {
+      "id": "pass-20-source-change-agenda",
+      "validated": true,
+      "evidence_ref": "attachment://KFM-Pass-20-Part-2:sha256:57e4b74255b52863f2a489595077741d7f45c2968a9740fe4837bac73778f780"
+    },
+    {
+      "id": "unified-build-manual-watcher-boundary",
+      "validated": true,
+      "evidence_ref": "attachment://Unified-Implementation-Architecture-Build-Manual:sha256:e92500f9b40007e8b69d183ecaa6247c542ffec25857875ecd2dbd00709785b1"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-03T00:08:02Z",
+  "emitter": "OpenAI Codex via ChatGPT Work Mode",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "This change independently adapts watcher comparison and material-change ideas from the supplied documents into a repository-native bounded fixture profile; no third-party code, source rows, or assets were copied. All sidecars are synthetic, use the non-real county sentinel 99999, and reference fixture://source/usda-nass-cdl. The helper performs no live USDA access; selects no endpoint, rights posture, source descriptor, cadence, classmap registry, county geometry registry, or canonical threshold policy; creates no SourceIntakeRecord, EvidenceBundle, receipt, proof, or release record; and cannot admit, promote, deploy, release, or publish. Rollback is a clean revert of the feature commit; no live source, lifecycle, release, or published state is created."
+}

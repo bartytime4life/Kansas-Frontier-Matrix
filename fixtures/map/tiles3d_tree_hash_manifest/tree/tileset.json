@@ -1,0 +1,23 @@
+{
+  "asset": {
+    "version": "1.1"
+  },
+  "geometricError": 100,
+  "root": {
+    "boundingVolume": {
+      "region": [
+        0,
+        0,
+        0.01,
+        0.01,
+        0,
+        100
+      ]
+    },
+    "content": {
+      "uri": "tiles/0/0/0.glb"
+    },
+    "geometricError": 0,
+    "refine": "ADD"
+  }
+}

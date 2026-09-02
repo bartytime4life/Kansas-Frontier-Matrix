@@ -1,0 +1,14 @@
+{
+  "profile": "kfm.explorer.redaction-preview.public-safe.v1",
+  "preview_id": "kfm:redaction-preview:synthetic:error",
+  "outcome": "ERROR",
+  "reason_code": "UPSTREAM_ERROR",
+  "evaluated_at": null,
+  "release_candidate_ref": null,
+  "policy_decision_ref": null,
+  "redaction_receipt_ref": null,
+  "geometry_transform": null,
+  "suppression_transform": null,
+  "maximum_public_zoom": null,
+  "abstraction_kind": null
+}

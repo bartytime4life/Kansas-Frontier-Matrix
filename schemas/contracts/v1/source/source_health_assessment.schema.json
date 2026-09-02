@@ -1,0 +1,136 @@
+{
+  "$defs": {
+    "aware_datetime": {
+      "format": "date-time",
+      "maxLength": 35,
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$",
+      "type": "string"
+    },
+    "nullable_aware_datetime": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/aware_datetime"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "nullable_header_value": {
+      "oneOf": [
+        {
+          "maxLength": 512,
+          "minLength": 1,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "$id": "https://kfm.invalid/schemas/contracts/v1/source/source_health_assessment.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "A bounded, non-publishing assessment of source retrieval health and freshness. Shape validity does not activate a source or establish source truth.",
+  "properties": {
+    "assessment_id": {
+      "maxLength": 256,
+      "pattern": "^kfm:source-health:[a-z0-9._:-]+$",
+      "type": "string"
+    },
+    "etag": {
+      "$ref": "#/$defs/nullable_header_value"
+    },
+    "freshness_deadline": {
+      "$ref": "#/$defs/nullable_aware_datetime"
+    },
+    "health_outcome": {
+      "enum": [
+        "HEALTHY",
+        "DEGRADED",
+        "STALE",
+        "UNAVAILABLE",
+        "UNKNOWN"
+      ]
+    },
+    "last_modified": {
+      "$ref": "#/$defs/nullable_header_value"
+    },
+    "last_success_at": {
+      "$ref": "#/$defs/nullable_aware_datetime"
+    },
+    "material_change": {
+      "type": "boolean"
+    },
+    "probed_at": {
+      "$ref": "#/$defs/aware_datetime"
+    },
+    "reasons": {
+      "items": {
+        "enum": [
+          "WITHIN_FRESHNESS",
+          "FRESHNESS_EXPIRED",
+          "RETRIEVAL_FAILED",
+          "EMPTY_NOT_CLEAR",
+          "ETAG_CHANGED",
+          "LAST_MODIFIED_CHANGED",
+          "SCHEMA_OR_PARSE_FAILURE",
+          "AUTH_FAILURE",
+          "NO_PRIOR_SUCCESS",
+          "NOT_PROBED",
+          "MATERIAL_CHANGE"
+        ]
+      },
+      "maxItems": 11,
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "result_class": {
+      "enum": [
+        "SUCCESS",
+        "NOT_MODIFIED",
+        "EMPTY",
+        "TIMEOUT",
+        "HTTP_ERROR",
+        "PARSE_ERROR",
+        "AUTH_ERROR",
+        "NOT_PROBED"
+      ]
+    },
+    "source_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "type": "string"
+    }
+  },
+  "required": [
+    "assessment_id",
+    "source_id",
+    "probed_at",
+    "last_success_at",
+    "freshness_deadline",
+    "result_class",
+    "health_outcome",
+    "material_change",
+    "reasons"
+  ],
+  "title": "SourceHealthAssessment",
+  "type": "object",
+  "x-kfm": {
+    "authority": "source_health_shape_only",
+    "contract_doc": "contracts/source/source_health_assessment.md",
+    "fixtures_root": "fixtures/contracts/v1/source/source_health_assessment/",
+    "non_effects": [
+      "does_not_probe_network",
+      "does_not_activate_sources",
+      "does_not_establish_source_truth",
+      "does_not_write_lifecycle_state",
+      "does_not_authorize_promotion_release_or_publication"
+    ],
+    "status": "PROPOSED",
+    "tests": "tests/source/test_source_health_assessment.py",
+    "validator": "tools/validators/source/validate_source_health_assessment.py"
+  }
+}

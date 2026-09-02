@@ -1,0 +1,201 @@
+{
+  "receipt_id": "genrec-nhdplus-waterbody-crosswalk-20260802",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/domain-hydrology.yml",
+    "contracts/domains/hydrology/README.md",
+    "contracts/domains/hydrology/nhdplus_waterbody_crosswalk.md",
+    "docs/domains/hydrology/CROSSWALK_RULES.md",
+    "fixtures/domains/hydrology/README.md",
+    "fixtures/domains/hydrology/nhdplus_waterbody_crosswalk/README.md",
+    "fixtures/domains/hydrology/nhdplus_waterbody_crosswalk/invalid/collapsed_ambiguity.json",
+    "fixtures/domains/hydrology/nhdplus_waterbody_crosswalk/invalid/duplicate_pair.json",
+    "fixtures/domains/hydrology/nhdplus_waterbody_crosswalk/invalid/geometry_equality_claim.json",
+    "fixtures/domains/hydrology/nhdplus_waterbody_crosswalk/invalid/hash_mismatch.json",
+    "fixtures/domains/hydrology/nhdplus_waterbody_crosswalk/invalid/overlap_exceeds_source_area.json",
+    "fixtures/domains/hydrology/nhdplus_waterbody_crosswalk/invalid/wrong_feature_scope.json",
+    "fixtures/domains/hydrology/nhdplus_waterbody_crosswalk/valid/exact.json",
+    "fixtures/domains/hydrology/nhdplus_waterbody_crosswalk/valid/many_to_many.json",
+    "schemas/contracts/v1/domains/hydrology/README.md",
+    "schemas/contracts/v1/domains/hydrology/nhdplus_waterbody_crosswalk.schema.json",
+    "tests/domains/hydrology/README.md",
+    "tests/domains/hydrology/test_nhdplus_hr_ambiguity.py",
+    "tools/validators/domains/hydrology/README.md",
+    "tools/validators/domains/hydrology/validate_nhdplus_waterbody_crosswalk.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/domain-hydrology.yml": "sha256:3fb49f93c3ca1c068417d687984064c9859656b0331a67e49e2363e4a4182825",
+    "contracts/domains/hydrology/README.md": "sha256:fe7eec8457939754db820983de53c5e9d5fdf3f7d8c955dd184fbf001913b887",
+    "contracts/domains/hydrology/nhdplus_waterbody_crosswalk.md": "sha256:4c6ed6fe5ab203fce102c1ac9e5b53f1fda55f154b5611377e1e2dcd5cbe28d0",
+    "docs/domains/hydrology/CROSSWALK_RULES.md": "sha256:8a2fd04fbf36f4f9bd7f5301dd9aa1e07917fc67b6e87735b15c141a9fafc4d9",
+    "fixtures/domains/hydrology/README.md": "sha256:235d253ac908d3c9881046ab21e1058ad99ce033708c7cc7b93b363c18b7ae1e",
+    "fixtures/domains/hydrology/nhdplus_waterbody_crosswalk/README.md": "sha256:5bc4bb0c793e7bfdd8ba56988d072286b6fa3c1d61c8215791c088abec81ab1e",
+    "fixtures/domains/hydrology/nhdplus_waterbody_crosswalk/invalid/collapsed_ambiguity.json": "sha256:82e28b053ce39ab106fed3b4a2e93e075bd0e0fb191cc75fd5959601c4cad4c3",
+    "fixtures/domains/hydrology/nhdplus_waterbody_crosswalk/invalid/duplicate_pair.json": "sha256:43b75121b07a8f06f1227e3aa43f008d076f0e910ac1970bab35c53d34637929",
+    "fixtures/domains/hydrology/nhdplus_waterbody_crosswalk/invalid/geometry_equality_claim.json": "sha256:ee8b93838660dfaff767aa9333ec1d4c475c024329e45961c06c147684538119",
+    "fixtures/domains/hydrology/nhdplus_waterbody_crosswalk/invalid/hash_mismatch.json": "sha256:dacc9a6636fa0bae13138a66d0d765fffb5663823c68e0c187527b7af487e24b",
+    "fixtures/domains/hydrology/nhdplus_waterbody_crosswalk/invalid/overlap_exceeds_source_area.json": "sha256:51fd166d626ce78088607c9bd05ea1f9f4c993c05bc97c47f186110677b32170",
+    "fixtures/domains/hydrology/nhdplus_waterbody_crosswalk/invalid/wrong_feature_scope.json": "sha256:f9ff909de811d6b9dcc82252f6f624670165859a4bb98d48e308caa18ff290a9",
+    "fixtures/domains/hydrology/nhdplus_waterbody_crosswalk/valid/exact.json": "sha256:00a36423ff5e95dcf3db9b33f5ebf561f61992aeece52ae4eb745d002a7ba879",
+    "fixtures/domains/hydrology/nhdplus_waterbody_crosswalk/valid/many_to_many.json": "sha256:7dbd839b335d31015154e511a63ac1a32b2942d17de45f86241b596675c1065b",
+    "schemas/contracts/v1/domains/hydrology/README.md": "sha256:289d785eeb1f8a48686d6abd7c68d32aee16fa7c65a4f0796db0382c5c30146f",
+    "schemas/contracts/v1/domains/hydrology/nhdplus_waterbody_crosswalk.schema.json": "sha256:e215a4c69ee3a23ccf17c9eb37165a5c633853896392cb2f5d2b3365c815af05",
+    "tests/domains/hydrology/README.md": "sha256:013b42b6fa99296630c9eef061e7f7997c72b9d6a90812a7904ffdc7cb7cfdca",
+    "tests/domains/hydrology/test_nhdplus_hr_ambiguity.py": "sha256:5899d56875b1c35f11c8d6d97d4d6ee4ede16cacf6089cc529832ef71b5bdab3",
+    "tools/validators/domains/hydrology/README.md": "sha256:baac321f4bf577f778f1972fefd4420c49201485dde377f0f91b06129d3b012e",
+    "tools/validators/domains/hydrology/validate_nhdplus_waterbody_crosswalk.py": "sha256:1e0d9dad7d08cbe29683e4bdc834e95eb07ed91db57d0189bfc1df0bed3fbc97"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5 Work Mode 2026-08-02"
+  },
+  "prompt_or_contract": "sha256:96b1d43895c4979086dd2aa8ee6971fb92364f9feb210941f3bc53d5003f2e60",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local attachment and repository inspection",
+      "PDF extraction and rendered-page inspection",
+      "official USGS documentation verification",
+      "Git",
+      "GitHub connector",
+      "isolated repository-declared Python test environment",
+      "deterministic no-network validators"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:2b1a0f1e0a978bd0842a60b60365af6ca8db209cd4c2820c9053a0cc51c79107"
+    ],
+    "attached_docs": [
+      "New Ideas 4-17-26(1).pdf"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/db6426d6a6cafcf5a4be7beb8811202eb45cf1d7",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/db6426d6a6cafcf5a4be7beb8811202eb45cf1d7/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/db6426d6a6cafcf5a4be7beb8811202eb45cf1d7/docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/db6426d6a6cafcf5a4be7beb8811202eb45cf1d7/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/db6426d6a6cafcf5a4be7beb8811202eb45cf1d7/docs/domains/hydrology/CROSSWALK_RULES.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/db6426d6a6cafcf5a4be7beb8811202eb45cf1d7/tests/domains/hydrology/test_nhdplus_hr_ambiguity.py",
+      "attachment://New Ideas 4-17-26(1).pdf#pages=1-8",
+      "https://www.usgs.gov/data/crosswalk-waterbody-identifiers-between-national-hydrography-dataset-plus-high-resolution"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/domain-hydrology.yml": "CONFIRMED",
+    "contracts/domains/hydrology/README.md": "PROPOSED",
+    "contracts/domains/hydrology/nhdplus_waterbody_crosswalk.md": "PROPOSED",
+    "docs/domains/hydrology/CROSSWALK_RULES.md": "PROPOSED",
+    "fixtures/domains/hydrology/README.md": "PROPOSED",
+    "fixtures/domains/hydrology/nhdplus_waterbody_crosswalk/README.md": "PROPOSED",
+    "fixtures/domains/hydrology/nhdplus_waterbody_crosswalk/invalid/collapsed_ambiguity.json": "CONFIRMED",
+    "fixtures/domains/hydrology/nhdplus_waterbody_crosswalk/invalid/duplicate_pair.json": "CONFIRMED",
+    "fixtures/domains/hydrology/nhdplus_waterbody_crosswalk/invalid/geometry_equality_claim.json": "CONFIRMED",
+    "fixtures/domains/hydrology/nhdplus_waterbody_crosswalk/invalid/hash_mismatch.json": "CONFIRMED",
+    "fixtures/domains/hydrology/nhdplus_waterbody_crosswalk/invalid/overlap_exceeds_source_area.json": "CONFIRMED",
+    "fixtures/domains/hydrology/nhdplus_waterbody_crosswalk/invalid/wrong_feature_scope.json": "CONFIRMED",
+    "fixtures/domains/hydrology/nhdplus_waterbody_crosswalk/valid/exact.json": "CONFIRMED",
+    "fixtures/domains/hydrology/nhdplus_waterbody_crosswalk/valid/many_to_many.json": "CONFIRMED",
+    "schemas/contracts/v1/domains/hydrology/README.md": "PROPOSED",
+    "schemas/contracts/v1/domains/hydrology/nhdplus_waterbody_crosswalk.schema.json": "CONFIRMED",
+    "tests/domains/hydrology/README.md": "PROPOSED",
+    "tests/domains/hydrology/test_nhdplus_hr_ambiguity.py": "CONFIRMED",
+    "tools/validators/domains/hydrology/README.md": "PROPOSED",
+    "tools/validators/domains/hydrology/validate_nhdplus_waterbody_crosswalk.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-authority-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Repository identity, exact base main@db6426d6a6cafcf5a4be7beb8811202eb45cf1d7, accepted schema-home and Directory Rules decisions, current Hydrology contracts/schemas/fixtures/validators/tests/workflow, merged predecessor PRs, open PR set, and same-scope branches were inspected. Work remains on a non-default branch with draft-review delivery only."
+    },
+    {
+      "gate": "source-curation-and-scope-correction",
+      "outcome": "PASS",
+      "reason": "New Ideas 4-17-26(1).pdf pages 1-8 proposed a Permanent Identifier/COMID crosswalk. Current official USGS evidence verified release 10.5066/P13N85SW, publication date 2026-02-26, CC0 1.0 rights, waterbody-only scope, shared-area fields, and multi-match overlap in both directions. The implementation excludes the PDF's unsupported universal-flowline interpretation."
+    },
+    {
+      "gate": "directory-and-authority-placement",
+      "outcome": "PASS",
+      "reason": "Semantic meaning extends contracts/domains/hydrology; machine shape extends schemas/contracts/v1/domains/hydrology under ADR-0001; synthetic examples extend fixtures/domains/hydrology; implementation and tests extend their current domain lanes; CI extends the stable Hydrology workflow; process memory uses data/receipts/generated. No new root or parallel schema, source, data, proof, policy, release, or publication authority was created."
+    },
+    {
+      "gate": "focused-hydrology-validation",
+      "outcome": "PASS",
+      "reason": "The combined bounded Hydrology pytest replay passed 21 tests plus 8 subtests; the FlowObservation suite passed 10 tests; the environmental cross-domain regression passed 3 tests; the new validator accepted two valid fixtures and rejected all six invalid fixtures with exact finding-code polarity."
+    },
+    {
+      "gate": "workflow-inventory-and-syntax",
+      "outcome": "PASS",
+      "reason": "The domain-hydrology readiness inventory replay reserved five bounded modules, classified seven remaining test modules as placeholders, confirmed five schema wrappers and two semantic validators, and preserved shorthand placeholder holds. PyYAML 6.0.3 parsed the workflow and confirmed its three existing job identities."
+    },
+    {
+      "gate": "repository-make-validate",
+      "outcome": "PASS",
+      "reason": "make validate passed with KFM_NO_NETWORK=1 in the isolated repository-declared environment: all configured aggregate validators preserved valid/expected-invalid polarity and 139 schema/contract tests passed."
+    },
+    {
+      "gate": "documentation-json-and-diff-integrity",
+      "outcome": "PASS",
+      "reason": "The documentation link checker's 18 tests passed; all 149 local targets in eight changed Markdown documents resolved; all crosswalk JSON parsed; workflow YAML parsed; JSON Schema Draft 2020-12 and canonical fixture hashes were checked; git diff --check passed."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "Exact-head hosted conclusions are unavailable until branch and draft pull-request delivery. No hosted result will be treated as source admission, evidence truth, policy approval, human review, release, deployment, promotion, or publication authority."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and is not authored or inferred by the agent."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md",
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "accepted-schema-home",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/db6426d6a6cafcf5a4be7beb8811202eb45cf1d7/docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md"
+    },
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/db6426d6a6cafcf5a4be7beb8811202eb45cf1d7/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "directory-governance-adoption",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/db6426d6a6cafcf5a4be7beb8811202eb45cf1d7/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "hydrology-crosswalk-lineage",
+      "validated": true,
+      "evidence_ref": "attachment://New Ideas 4-17-26(1).pdf#pages=1-8"
+    },
+    {
+      "id": "usgs-waterbody-crosswalk-release",
+      "validated": true,
+      "evidence_ref": "https://www.usgs.gov/data/crosswalk-waterbody-identifiers-between-national-hydrography-dataset-plus-high-resolution"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-02T18:03:44Z",
+  "emitter": "openai/codex-gpt-5",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md",
+    "drift_register_entry": null
+  },
+  "notes": "This batch replaces the unused broad nhdplus_crosswalk_official placeholder fixture with a bounded waterbody-only crosswalk family. It validates exact, split, merge, and complex mapping cardinality; uses ANSWER only for one-to-one lookup and ABSTAIN for every multi-match row; rejects duplicate pairs, impossible overlap area, false geometry equality, flowline-scope drift, and mismatched canonical hashes; and wires the feature into the existing Hydrology workflow. It does not fetch or copy USGS source rows, admit or activate a source, establish flowline/reach/HUC/catchment identity, resolve evidence, apply release policy, validate scientific equivalence, build proof, promote, release, deploy, or publish. Rollback is a clean revert of the feature commit, which restores the removed placeholder and removes the additive bounded family."
+}

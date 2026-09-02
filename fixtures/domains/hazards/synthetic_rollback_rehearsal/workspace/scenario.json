@@ -1,0 +1,28 @@
+{
+  "affected_release_id": "hazards-synthetic-planning-context-v2",
+  "correction": {
+    "correction_id": "hazards-synthetic-stale-context-correction-001",
+    "decided_at": "2026-08-03T00:05:00Z",
+    "reason_code": "SYNTHETIC_STALE_CONTEXT_MISLABELED"
+  },
+  "expected": {
+    "affected_manifest_digest": "sha256:3731650e9151cd30b02faeeee72a21332b45a0c4d479bcb316242c125c0c2c46",
+    "current_alias_digest": "sha256:ec398f99d6d0f2a24c524460773e1026bd018c9961d91d25e965d0ff9132eaa8",
+    "target_manifest_digest": "sha256:bb7ad5c966242539fd9cf9e7478be3652eb08f856c0b27bf8a58179647ee2df2"
+  },
+  "invalidations": [
+    "AI_CACHE",
+    "API_CACHE",
+    "CATALOG",
+    "CDN",
+    "DOWNSTREAM_DERIVATIVES",
+    "SEARCH_INDEX",
+    "TILES",
+    "TRIPLETS",
+    "VECTOR_INDEX"
+  ],
+  "operation": "ROLLBACK",
+  "scenario_id": "hazards-synthetic-stale-context-rollback-001",
+  "synthetic": true,
+  "target_release_id": "hazards-synthetic-planning-context-v1"
+}

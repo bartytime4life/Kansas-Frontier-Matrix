@@ -1,0 +1,191 @@
+{
+  "receipt_id": "genrec-pass8-pipeline-resilience-20260808",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "contracts/runtime/pipeline_resilience_plan.md",
+    "docs/runbooks/pipeline-resilience.md",
+    "fixtures/contracts/v1/runtime/pipeline_resilience_plan/invalid/inconsistent_delivery.request.json",
+    "fixtures/contracts/v1/runtime/pipeline_resilience_plan/invalid/unsafe_pipeline_id.request.json",
+    "fixtures/contracts/v1/runtime/pipeline_resilience_plan/valid/allow_replay.expected.json",
+    "fixtures/contracts/v1/runtime/pipeline_resilience_plan/valid/allow_replay.request.json",
+    "fixtures/contracts/v1/runtime/pipeline_resilience_plan/valid/allow_retry.expected.json",
+    "fixtures/contracts/v1/runtime/pipeline_resilience_plan/valid/allow_retry.request.json",
+    "fixtures/contracts/v1/runtime/pipeline_resilience_plan/valid/allow_start.expected.json",
+    "fixtures/contracts/v1/runtime/pipeline_resilience_plan/valid/allow_start.request.json",
+    "fixtures/contracts/v1/runtime/pipeline_resilience_plan/valid/deny_canary.expected.json",
+    "fixtures/contracts/v1/runtime/pipeline_resilience_plan/valid/deny_canary.request.json",
+    "fixtures/contracts/v1/runtime/pipeline_resilience_plan/valid/pause_new_starts.expected.json",
+    "fixtures/contracts/v1/runtime/pipeline_resilience_plan/valid/pause_new_starts.request.json",
+    "packages/pipelines-core/src/pipelines_core/pipeline_resilience.py",
+    "packages/pipelines-core/src/pipelines_core/_pipeline_resilience_common.py",
+    "packages/pipelines-core/src/pipelines_core/_pipeline_resilience_admission.py",
+    "packages/pipelines-core/src/pipelines_core/_pipeline_resilience_flow.py",
+    "packages/pipelines-core/src/pipelines_core/_pipeline_resilience_delivery.py",
+    "schemas/contracts/v1/runtime/pipeline_resilience_plan.schema.json",
+    "schemas/contracts/v1/runtime/pipeline_resilience_request.schema.json",
+    "scripts/plan_pipeline_resilience.py",
+    "tests/packages/pipelines_core/test_pipeline_resilience.py",
+    "tests/packages/pipelines_core/test_pipeline_resilience_cli_projection.py"
+  ],
+  "artifact_hashes": {
+    "contracts/runtime/pipeline_resilience_plan.md": "sha256:5abf0d17dd8c0c4296e6521250cf50fa9a737864a9e2a35655e2f53823cb6f60",
+    "docs/runbooks/pipeline-resilience.md": "sha256:dfceb93ffc4191d329d1943338ef8d8f31a021312330a622b46780ac213fc1e0",
+    "fixtures/contracts/v1/runtime/pipeline_resilience_plan/invalid/inconsistent_delivery.request.json": "sha256:bb39a723067bb4f9f709a68659530520a18196d987f9c26d38790d511e849cd4",
+    "fixtures/contracts/v1/runtime/pipeline_resilience_plan/invalid/unsafe_pipeline_id.request.json": "sha256:7865a966eb0450e80c0ad0eb7ffecac0898f01cf4529808fe2455030f25c6c5b",
+    "fixtures/contracts/v1/runtime/pipeline_resilience_plan/valid/allow_replay.expected.json": "sha256:d119a281080b2f5af1e5d8891e54cc5c18f88d82083e675f9fa774f276104deb",
+    "fixtures/contracts/v1/runtime/pipeline_resilience_plan/valid/allow_replay.request.json": "sha256:4aebe047ad26f0793d011e091da5ac6592d04088a1d8a4e9851abbcd55196334",
+    "fixtures/contracts/v1/runtime/pipeline_resilience_plan/valid/allow_retry.expected.json": "sha256:3a545946a50de1acb06570c66b5d8a3e84aa92e700609e0e419b57e5913f0af9",
+    "fixtures/contracts/v1/runtime/pipeline_resilience_plan/valid/allow_retry.request.json": "sha256:c68e2fc523934e9de0a51c140117d4be9d3ca88bb5a753d39f976a12fbc01a9e",
+    "fixtures/contracts/v1/runtime/pipeline_resilience_plan/valid/allow_start.expected.json": "sha256:1920e4510aa9ee29dd176e85e7b0137a89e015e9cae0a9d20b486c45cefeb76b",
+    "fixtures/contracts/v1/runtime/pipeline_resilience_plan/valid/allow_start.request.json": "sha256:2ca9f6b8a6b17a02776d4f480f6632da3bc572698512909eb9cf93db5232b26a",
+    "fixtures/contracts/v1/runtime/pipeline_resilience_plan/valid/deny_canary.expected.json": "sha256:7b34647781c3e60fff119a6cbf2e6cf3b52210f27432ec848eefdab42a6a2817",
+    "fixtures/contracts/v1/runtime/pipeline_resilience_plan/valid/deny_canary.request.json": "sha256:a90f01aa502d9595c3f85be2f2caa76e5e90d4762587472f40985d280ab224e2",
+    "fixtures/contracts/v1/runtime/pipeline_resilience_plan/valid/pause_new_starts.expected.json": "sha256:3d855d8b6a724b4b241de26aa3cf65046811bf2c5d788e61f50c3345ae5abe68",
+    "fixtures/contracts/v1/runtime/pipeline_resilience_plan/valid/pause_new_starts.request.json": "sha256:235b9b39f65afecf326675460cebb3196d26df727bc43a596a55f70541f25d71",
+    "packages/pipelines-core/src/pipelines_core/pipeline_resilience.py": "sha256:f4832e81a055f35b75046938cc78bc41333b4393837c35fbc39322e56576cf1a",
+    "packages/pipelines-core/src/pipelines_core/_pipeline_resilience_common.py": "sha256:45cc59362eb939bfaa86a4ab72658c2034e9b45766f731eb064a7968e50be67b",
+    "packages/pipelines-core/src/pipelines_core/_pipeline_resilience_admission.py": "sha256:bbea610f62e2f05d871369e482a29267de7bd1bd57a0767070ebb63c2fbecb54",
+    "packages/pipelines-core/src/pipelines_core/_pipeline_resilience_flow.py": "sha256:a28d24ff307998dcf3e2544c307c0eec520f418711fc359cb54c11874d66a262",
+    "packages/pipelines-core/src/pipelines_core/_pipeline_resilience_delivery.py": "sha256:a6c0feadead2b122853a03de722bd1d30dd2e20350c939565576bfe9cb37301f",
+    "schemas/contracts/v1/runtime/pipeline_resilience_plan.schema.json": "sha256:933875e5e6a771c376a19ef10759af5f57e4fe82033a8df5d1640383bc5e26d9",
+    "schemas/contracts/v1/runtime/pipeline_resilience_request.schema.json": "sha256:57dd4ada5ddb669eff0ccf49a0fb30a0d228b97e519c5df8ad95b97f99354490",
+    "scripts/plan_pipeline_resilience.py": "sha256:512ce3d17c66a105b3008c187ac288d977c4598b63787439f75c13571d3b6d76",
+    "tests/packages/pipelines_core/test_pipeline_resilience.py": "sha256:ebf3526bc9f05de9f905e7723480dc2e2615d05c9f74fe7a19b726951743433b",
+    "tests/packages/pipelines_core/test_pipeline_resilience_cli_projection.py": "sha256:ff51552109c4be72105e1d0be16d9d8ed80d36010cebc0a491804fea7dfc288b"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-08"
+  },
+  "prompt_or_contract": "sha256:c08f47ef7cef369fc0a92668f5fc02c439aa8d0ab7925709ecea88f34b285c85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Pass_8_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_8_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P8-PROG-0001",
+      "attachment:KFM_Pass_8_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P8-PROG-0002",
+      "attachment:KFM_Pass_8_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P8-PROG-0003",
+      "attachment:KFM_Pass_8_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P8-PROG-0004",
+      "attachment:KFM_Pass_8_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P8-PROG-0005",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@419ec33006fa20c94fa827aba8e72d119a7ddc4e",
+      "repo:packages/pipelines-core/src/pipelines_core/backfill_window.py@419ec33006fa20c94fa827aba8e72d119a7ddc4e",
+      "repo:packages/connectors-core/src/connectors_core/core.py@419ec33006fa20c94fa827aba8e72d119a7ddc4e",
+      "repo:pull/2238#discussion_r3741375559"
+    ]
+  },
+  "truth_labels": {
+    "contracts/runtime/pipeline_resilience_plan.md": "PROPOSED",
+    "docs/runbooks/pipeline-resilience.md": "PROPOSED",
+    "fixtures/contracts/v1/runtime/pipeline_resilience_plan/invalid/inconsistent_delivery.request.json": "PROPOSED",
+    "fixtures/contracts/v1/runtime/pipeline_resilience_plan/invalid/unsafe_pipeline_id.request.json": "PROPOSED",
+    "fixtures/contracts/v1/runtime/pipeline_resilience_plan/valid/allow_replay.expected.json": "PROPOSED",
+    "fixtures/contracts/v1/runtime/pipeline_resilience_plan/valid/allow_replay.request.json": "PROPOSED",
+    "fixtures/contracts/v1/runtime/pipeline_resilience_plan/valid/allow_retry.expected.json": "PROPOSED",
+    "fixtures/contracts/v1/runtime/pipeline_resilience_plan/valid/allow_retry.request.json": "PROPOSED",
+    "fixtures/contracts/v1/runtime/pipeline_resilience_plan/valid/allow_start.expected.json": "PROPOSED",
+    "fixtures/contracts/v1/runtime/pipeline_resilience_plan/valid/allow_start.request.json": "PROPOSED",
+    "fixtures/contracts/v1/runtime/pipeline_resilience_plan/valid/deny_canary.expected.json": "PROPOSED",
+    "fixtures/contracts/v1/runtime/pipeline_resilience_plan/valid/deny_canary.request.json": "PROPOSED",
+    "fixtures/contracts/v1/runtime/pipeline_resilience_plan/valid/pause_new_starts.expected.json": "PROPOSED",
+    "fixtures/contracts/v1/runtime/pipeline_resilience_plan/valid/pause_new_starts.request.json": "PROPOSED",
+    "packages/pipelines-core/src/pipelines_core/pipeline_resilience.py": "PROPOSED",
+    "packages/pipelines-core/src/pipelines_core/_pipeline_resilience_common.py": "PROPOSED",
+    "packages/pipelines-core/src/pipelines_core/_pipeline_resilience_admission.py": "PROPOSED",
+    "packages/pipelines-core/src/pipelines_core/_pipeline_resilience_flow.py": "PROPOSED",
+    "packages/pipelines-core/src/pipelines_core/_pipeline_resilience_delivery.py": "PROPOSED",
+    "schemas/contracts/v1/runtime/pipeline_resilience_plan.schema.json": "PROPOSED",
+    "schemas/contracts/v1/runtime/pipeline_resilience_request.schema.json": "PROPOSED",
+    "scripts/plan_pipeline_resilience.py": "PROPOSED",
+    "tests/packages/pipelines_core/test_pipeline_resilience.py": "PROPOSED",
+    "tests/packages/pipelines_core/test_pipeline_resilience_cli_projection.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-pytest",
+      "outcome": "SKIPPED",
+      "reason": "The prior exact head passed 34 focused tests; the post-security-projection exact-head hosted rerun is pending."
+    },
+    {
+      "gate": "python-bytecode-compile",
+      "outcome": "PASS",
+      "reason": "The modified CLI and new projection regression test compile without syntax errors."
+    },
+    {
+      "gate": "operator-safe-projection-regression",
+      "outcome": "PASS",
+      "reason": "A deterministic local projection test confirmed restricted access metadata is omitted from serialized operator output."
+    },
+    {
+      "gate": "json-schema-self-check",
+      "outcome": "PASS",
+      "reason": "Both unchanged Draft 2020-12 schemas passed self-check before the security projection patch."
+    },
+    {
+      "gate": "receipt-byte-binding",
+      "outcome": "PASS",
+      "reason": "SHA-256 values bind every authored non-receipt artifact, including the modified CLI and new regression test."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted CI must rerun after this security hardening commit."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:pass8-pipeline-resilience",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Pass_8_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P8-PROG-0001..0005"
+    },
+    {
+      "id": "repository:directory-governance-adr",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@419ec33006fa20c94fa827aba8e72d119a7ddc4e"
+    },
+    {
+      "id": "repository:pipeline-core-convention",
+      "validated": true,
+      "evidence_ref": "repo:packages/pipelines-core/src/pipelines_core/backfill_window.py@419ec33006fa20c94fa827aba8e72d119a7ddc4e"
+    },
+    {
+      "id": "repository:codeql-review",
+      "validated": true,
+      "evidence_ref": "repo:pull/2238#discussion_r3741375559"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-08T19:12:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": 2238,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Adds a deterministic planning-only pipeline resilience kernel and a security-hardened operator projection that omits restricted access metadata from CLI serialization. It performs no network fetch, workflow mutation, database mutation, restricted-value access, policy evaluation, promotion, release, deployment, or publication."
+}

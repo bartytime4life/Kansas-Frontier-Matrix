@@ -1,0 +1,4 @@
+# packages/domains/settlements-infrastructure pyproject — greenfield placeholder
+[project]
+name = "kfm-domain-settlements-infrastructure"
+version = "0.0.0"

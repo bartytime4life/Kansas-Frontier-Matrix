@@ -1,0 +1,1 @@
+{"kind":"schema","field":"/thresholds/0/binding_state","keyword":"const","contains":"UNBOUND"}

@@ -1,0 +1,97 @@
+{
+  "object_type": "WebhookIngressDecision",
+  "schema_version": "1.0.0",
+  "decision_id": "urn:kfm:webhook-ingress:sha256:4857caa5b3beba702bd2efa291faee1926567d8952023236c5b93d164b256c55",
+  "hash_profile": "kfm-fixture-json-v1",
+  "source": {
+    "source_descriptor_ref": "kfm://source/provider-demo",
+    "activation_decision_ref": "kfm://source-activation/provider-demo/v1",
+    "activation_state": "ACTIVE",
+    "policy_labels": [
+      "internal",
+      "source:webhook"
+    ]
+  },
+  "event": {
+    "provider": "provider-demo",
+    "provider_event_id": "evt-203",
+    "resource_id": "provider-demo:dataset:ks-100",
+    "change_type": "UPDATE",
+    "event_time": "2026-03-16T12:00:00Z",
+    "received_at": "2026-03-16T12:02:00Z",
+    "body_digest": "sha256:88a14e490b9717d711835c0f47943c2d4d596622a23785a9fbd93f54117c18b6",
+    "declared_spec_hash": "sha256:a1aedd979fb6e99b4e01772278dabe0da00d2028ab8ecbf868893d46a1dd05a7",
+    "sequence": {
+      "observed": 103,
+      "expected": 102,
+      "gap_detected": true
+    }
+  },
+  "verification": {
+    "signature_status": "VALID",
+    "signature_algorithm": "HMAC_SHA256",
+    "key_ref": "kms://provider-demo/webhook-key-v2",
+    "signature_digest": "sha256:954459a005741b3e066259eec2abfc295f696cd5ac4bd755e70d71d437d99a20",
+    "verified_at": "2026-03-16T12:02:01Z",
+    "event_age_seconds": 120,
+    "max_skew_seconds": 300,
+    "timestamp_status": "FRESH",
+    "nonce_digest": "sha256:f47ffca0fe19f9a8484eef2137a4b5edbe3513672be860d899fd4bcdbbc23422",
+    "nonce_status": "UNSEEN",
+    "raw_signature_persisted": false,
+    "raw_secret_persisted": false,
+    "raw_nonce_persisted": false
+  },
+  "idempotency": {
+    "request_key": "wh:provider-demo:evt-203",
+    "status": "NEW",
+    "prior_body_digest": null,
+    "side_effects_applied": false
+  },
+  "fallback": {
+    "mode": "CONDITIONAL_POLL",
+    "trigger": "SEQUENCE_GAP",
+    "conditional_request_required": false,
+    "etag": null,
+    "last_modified": null,
+    "poll_request_key": null
+  },
+  "decision": {
+    "outcome": "QUARANTINE",
+    "reason_codes": [
+      "SEQUENCE_GAP"
+    ],
+    "next_action": "HOLD_IN_QUARANTINE",
+    "materialization_request_key": null,
+    "dlq": {
+      "required": false,
+      "access_class": "NONE",
+      "visibility_timeout_seconds": 0,
+      "payload_classification": "NONE"
+    },
+    "materialization_attestation_required_before_publish": true
+  },
+  "provenance": {
+    "received_by": "connector:webhook-intake-fixture-v1",
+    "evaluated_at": "2026-03-16T12:02:02Z",
+    "input_refs": [
+      "kfm://artifact/webhook-body/sha256/body-gap",
+      "kfm://source/provider-demo"
+    ],
+    "evidence_refs": [
+      "kfm://evidence/provider-demo/activation-v1",
+      "kfm://evidence/provider-demo/signature-profile-v2"
+    ]
+  },
+  "governance": {
+    "raw_body_public": false,
+    "canonical_source_mutated": false,
+    "evidence_closure_claimed": false,
+    "promotion_authorized": false,
+    "release_authorized": false,
+    "publication_authorized": false,
+    "public_route_created": false,
+    "rollback_attestation_ref": null
+  },
+  "spec_hash": "sha256:d8892d4ac2920a4afd7834142cb3b27b97a77b37efe23bbd9042420c43aa0a7d"
+}

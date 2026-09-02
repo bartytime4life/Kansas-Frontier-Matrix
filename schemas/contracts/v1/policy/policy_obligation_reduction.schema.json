@@ -1,0 +1,329 @@
+{
+  "$defs": {
+    "governance": {
+      "additionalProperties": false,
+      "properties": {
+        "canonical_state_mutated": {
+          "const": false
+        },
+        "policy_authority_created": {
+          "const": false
+        },
+        "policy_evaluated": {
+          "const": false
+        },
+        "promotion_authorized": {
+          "const": false
+        },
+        "public_use_allowed": {
+          "const": false
+        },
+        "publication_authorized": {
+          "const": false
+        },
+        "release_authorized": {
+          "const": false
+        },
+        "repository_mutated": {
+          "const": false
+        },
+        "transform_applied": {
+          "const": false
+        }
+      },
+      "required": [
+        "policy_evaluated",
+        "policy_authority_created",
+        "transform_applied",
+        "repository_mutated",
+        "canonical_state_mutated",
+        "promotion_authorized",
+        "release_authorized",
+        "publication_authorized",
+        "public_use_allowed"
+      ],
+      "type": "object"
+    },
+    "invariants": {
+      "additionalProperties": false,
+      "properties": {
+        "idempotent": {
+          "const": true
+        },
+        "most_restrictive_wins": {
+          "const": true
+        },
+        "order_independent": {
+          "const": true
+        },
+        "output_is_instruction_only": {
+          "const": true
+        }
+      },
+      "required": [
+        "order_independent",
+        "idempotent",
+        "most_restrictive_wins",
+        "output_is_instruction_only"
+      ],
+      "type": "object"
+    },
+    "nullable_date": {
+      "oneOf": [
+        {
+          "format": "date",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "obligation": {
+      "additionalProperties": false,
+      "properties": {
+        "date_fuzz_days": {
+          "maximum": 365000,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "embargo_until": {
+          "$ref": "#/$defs/nullable_date"
+        },
+        "generalize_distance_m": {
+          "maximum": 20000000,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "obligation_id": {
+          "$ref": "#/$defs/obligation_id"
+        },
+        "policy_decision_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "reason_codes": {
+          "$ref": "#/$defs/reason_codes"
+        },
+        "suppress_geometry": {
+          "type": "boolean"
+        },
+        "transform": {
+          "$ref": "#/$defs/transform"
+        }
+      },
+      "required": [
+        "obligation_id",
+        "policy_decision_ref",
+        "transform",
+        "generalize_distance_m",
+        "date_fuzz_days",
+        "suppress_geometry",
+        "embargo_until",
+        "reason_codes"
+      ],
+      "type": "object"
+    },
+    "obligation_id": {
+      "pattern": "^policy-obligation:[a-z0-9][a-z0-9_.:-]{7,240}$",
+      "type": "string"
+    },
+    "provenance": {
+      "additionalProperties": false,
+      "properties": {
+        "input_refs": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "reducer_implementation_ref": {
+          "const": "tools/validators/policy/validate_policy_obligation_reduction.py"
+        },
+        "run_receipt_ref": {
+          "$ref": "#/$defs/ref"
+        }
+      },
+      "required": [
+        "run_receipt_ref",
+        "reducer_implementation_ref",
+        "input_refs"
+      ],
+      "type": "object"
+    },
+    "reason_codes": {
+      "items": {
+        "pattern": "^[A-Z][A-Z0-9_]{2,96}$",
+        "type": "string"
+      },
+      "maxItems": 64,
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "reduced_result": {
+      "additionalProperties": false,
+      "properties": {
+        "contributing_obligation_ids": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "date_fuzz_days": {
+          "maximum": 365000,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "embargo_until": {
+          "$ref": "#/$defs/nullable_date"
+        },
+        "generalize_distance_m": {
+          "maximum": 20000000,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "reason_codes": {
+          "$ref": "#/$defs/reason_codes"
+        },
+        "source_policy_refs": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "suppress_geometry": {
+          "type": "boolean"
+        },
+        "transform": {
+          "$ref": "#/$defs/transform"
+        }
+      },
+      "required": [
+        "transform",
+        "generalize_distance_m",
+        "date_fuzz_days",
+        "suppress_geometry",
+        "embargo_until",
+        "contributing_obligation_ids",
+        "source_policy_refs",
+        "reason_codes"
+      ],
+      "type": "object"
+    },
+    "reduction_id": {
+      "pattern": "^policy-obligation-reduction:[0-9a-f]{24}$",
+      "type": "string"
+    },
+    "ref": {
+      "maxLength": 640,
+      "minLength": 1,
+      "pattern": "\\S",
+      "type": "string"
+    },
+    "ref_array": {
+      "items": {
+        "$ref": "#/$defs/ref"
+      },
+      "maxItems": 128,
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "sha256": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "transform": {
+      "enum": [
+        "NONE",
+        "FUZZ_DATE",
+        "GENERALIZE",
+        "SUPPRESS"
+      ],
+      "type": "string"
+    }
+  },
+  "$id": "https://schemas.kfm.local/contracts/v1/policy/policy_obligation_reduction.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Fixture-first, non-authoritative record for deterministically reducing already-issued policy obligations by maximum severity. Schema validity does not evaluate policy, apply a transform, authorize promotion, release, publication, or public use.",
+  "properties": {
+    "algorithm": {
+      "const": "kfm-policy-obligation-max-severity-v1"
+    },
+    "execution_mode": {
+      "const": "FIXTURE_ONLY"
+    },
+    "governance": {
+      "$ref": "#/$defs/governance"
+    },
+    "hash_profile": {
+      "const": "RFC8785-JCS+SHA-256"
+    },
+    "inputs": {
+      "items": {
+        "$ref": "#/$defs/obligation"
+      },
+      "maxItems": 64,
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "invariants": {
+      "$ref": "#/$defs/invariants"
+    },
+    "object_type": {
+      "const": "PolicyObligationReduction"
+    },
+    "operation_ref": {
+      "$ref": "#/$defs/ref"
+    },
+    "profile_status": {
+      "const": "PROPOSED_INACTIVE"
+    },
+    "provenance": {
+      "$ref": "#/$defs/provenance"
+    },
+    "reduction_id": {
+      "$ref": "#/$defs/reduction_id"
+    },
+    "result": {
+      "$ref": "#/$defs/reduced_result"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "subject_ref": {
+      "$ref": "#/$defs/ref"
+    }
+  },
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile_status",
+    "execution_mode",
+    "reduction_id",
+    "algorithm",
+    "hash_profile",
+    "spec_hash",
+    "subject_ref",
+    "operation_ref",
+    "inputs",
+    "result",
+    "invariants",
+    "provenance",
+    "governance"
+  ],
+  "title": "PolicyObligationReduction",
+  "type": "object",
+  "x-kfm": {
+    "algorithm": "kfm-policy-obligation-max-severity-v1",
+    "authority": "deterministic_obligation_reduction_only",
+    "contract_doc": "contracts/policy/policy_obligation_reduction.md",
+    "execution_mode": "FIXTURE_ONLY",
+    "fixtures_root": "fixtures/contracts/v1/policy/policy_obligation_reduction/",
+    "non_effects": [
+      "does_not_evaluate_or_author_policy",
+      "does_not_apply_redaction_generalization_suppression_date_fuzzing_or_embargo",
+      "does_not_mutate_repository_or_canonical_state",
+      "does_not_authorize_promotion_release_publication_or_public_use"
+    ],
+    "status": "PROPOSED_INACTIVE",
+    "tests": "tests/validators/test_validate_policy_obligation_reduction.py",
+    "validator": "tools/validators/policy/validate_policy_obligation_reduction.py"
+  }
+}

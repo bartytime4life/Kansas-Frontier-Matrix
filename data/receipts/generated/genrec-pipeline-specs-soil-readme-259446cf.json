@@ -1,0 +1,188 @@
+{
+  "receipt_id": "genrec-pipeline-specs-soil-readme-259446cf",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "pipeline_specs/soil/README.md"
+  ],
+  "artifact_hashes": {
+    "pipeline_specs/soil/README.md": "sha256:259446cf76ebe0d116df4a2b80d3a174b0cddb327997507d9592b93d3b34ef7c"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-18"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository code search",
+      "repository file reads",
+      "remote branch and contents writes",
+      "local deterministic content validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85"
+    ],
+    "attached_docs": [
+      "Pasted text(46).txt",
+      "kfm_soil_architecture_extended_pro_pdf_only_report.pdf"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/2bde43821a398aff1fa1a862e6d7f61e7d68e6c9",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2bde43821a398aff1fa1a862e6d7f61e7d68e6c9/pipeline_specs/soil/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/682b7822b7f6dac3bfa0337ab25bb46d946b511b/pipeline_specs/soil/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2bde43821a398aff1fa1a862e6d7f61e7d68e6c9/pipeline_specs/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2bde43821a398aff1fa1a862e6d7f61e7d68e6c9/pipeline_specs/soil/ingest.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2bde43821a398aff1fa1a862e6d7f61e7d68e6c9/pipeline_specs/soil/normalize.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2bde43821a398aff1fa1a862e6d7f61e7d68e6c9/pipeline_specs/soil/validate.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2bde43821a398aff1fa1a862e6d7f61e7d68e6c9/pipeline_specs/soil/catalog.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2bde43821a398aff1fa1a862e6d7f61e7d68e6c9/pipeline_specs/soil/publish.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2bde43821a398aff1fa1a862e6d7f61e7d68e6c9/pipelines/domains/soil/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2bde43821a398aff1fa1a862e6d7f61e7d68e6c9/tests/pipelines/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2bde43821a398aff1fa1a862e6d7f61e7d68e6c9/tests/domains/soil/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2bde43821a398aff1fa1a862e6d7f61e7d68e6c9/fixtures/domains/soil/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2bde43821a398aff1fa1a862e6d7f61e7d68e6c9/schemas/contracts/v1/domains/soil/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2bde43821a398aff1fa1a862e6d7f61e7d68e6c9/schemas/contracts/v1/soil/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2bde43821a398aff1fa1a862e6d7f61e7d68e6c9/data/registry/sources/soil/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2bde43821a398aff1fa1a862e6d7f61e7d68e6c9/docs/architecture/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2bde43821a398aff1fa1a862e6d7f61e7d68e6c9/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2bde43821a398aff1fa1a862e6d7f61e7d68e6c9/docs/registers/DRIFT_REGISTER.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2bde43821a398aff1fa1a862e6d7f61e7d68e6c9/docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2bde43821a398aff1fa1a862e6d7f61e7d68e6c9/.github/workflows/domain-soil.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2bde43821a398aff1fa1a862e6d7f61e7d68e6c9/.github/workflows/codeql.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2bde43821a398aff1fa1a862e6d7f61e7d68e6c9/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2bde43821a398aff1fa1a862e6d7f61e7d68e6c9/.github/PULL_REQUEST_TEMPLATE.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2bde43821a398aff1fa1a862e6d7f61e7d68e6c9/data/receipts/generated/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2bde43821a398aff1fa1a862e6d7f61e7d68e6c9/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ]
+  },
+  "truth_labels": {
+    "pipeline_specs/soil/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "task-contract-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Repository identity, public visibility, authenticated admin/push permission, target path, immutable base, target blob, review-branch route, API-only profile, two-file change budget, acceptance criteria, and stop conditions were resolved before mutation."
+    },
+    {
+      "gate": "base-drift-reconciliation",
+      "outcome": "PASS",
+      "reason": "Main advanced from 653d4b2f323e8021981e7a9402e87ed35aed0a51 to 2bde43821a398aff1fa1a862e6d7f61e7d68e6c9 through unrelated Flora documentation and generated-receipt changes. The target retained blob 4069a620b637b2098465dd2800fd16c269318281, and the branch was created from the newer base."
+    },
+    {
+      "gate": "directory-adr-drift-and-path-instruction-preflight",
+      "outcome": "PASS",
+      "reason": "Root/pipeline_specs/Soil AGENTS.md checked paths were absent. The live Directory Rules copies, proposed schema-home ADR, drift register, contribution guide, parent README, CODEOWNERS, workflow documentation, and Soil canonical-path guidance were inspected. Their unresolved placement and compatibility conflicts remain visible."
+    },
+    {
+      "gate": "document-authority-and-supersession-graph",
+      "outcome": "PASS",
+      "reason": "The target doc_id was unique in bounded repository search. v0.2 preserves the v0.1 identity and creation date, declares supersession, and does not create a duplicate Soil pipeline-spec authority."
+    },
+    {
+      "gate": "repository-inventory-and-no-overclaim",
+      "outcome": "PASS",
+      "reason": "Direct reads established five Soil YAML files, each with an empty stages array. Related implementation, schema, policy, test, fixture, registry, and workflow surfaces were classified by current evidence without upgrading file presence to active parser, consumer, source, validation, release, or runtime proof."
+    },
+    {
+      "gate": "no-loss-and-soil-sensitivity-boundary",
+      "outcome": "PASS",
+      "reason": "The prior declarative-versus-executable split, lifecycle law, source-role separation, support-type anti-collapse, evidence, policy, release, correction, and rollback controls were preserved and strengthened. Field, parcel, owner, farm, operator-consent, source-rights, and false-precision risks fail closed."
+    },
+    {
+      "gate": "workflow-trigger-threat-preflight",
+      "outcome": "PASS",
+      "reason": "The Soil workflow uses pull_request/main-push triggers and TODO-only echo jobs on GitHub-hosted runners, with mutable action tags and no explicit permissions block. CodeQL uses pull_request rather than pull_request_target and declares bounded permissions including security-events: write. Indexed searches did not establish workflow_run or self-hosted workflow use; branch protection, default token permissions, and immutable action pinning remain NEEDS VERIFICATION."
+    },
+    {
+      "gate": "markdown-meta-and-navigation",
+      "outcome": "PASS",
+      "reason": "The final README has one H1, unique heading slugs, working internal navigation targets, balanced code fences, a parseable KFM Meta Block, no trailing whitespace, and a final newline."
+    },
+    {
+      "gate": "repository-relative-link-validation",
+      "outcome": "PASS",
+      "reason": "Every repository-relative Markdown link in the README was resolved through direct GitHub file reads or exact repository search at the pinned base."
+    },
+    {
+      "gate": "security-rights-and-sensitive-content",
+      "outcome": "PASS",
+      "reason": "The change contains no credentials, source-system secrets, restricted source payloads, real parcel/owner/farm records, exact sensitive locations, private sensor endpoints, or public release action. The illustrative YAML is inert and explicitly non-executable."
+    },
+    {
+      "gate": "remote-readback-and-scope",
+      "outcome": "PASS",
+      "reason": "GitHub returned target blob df621ab3d29e63edcdeb521421cb00e259920d40 on commit 682b7822b7f6dac3bfa0337ab25bb46d946b511b, matching the locally recomputed Git blob SHA. Before receipt emission, the branch contained exactly one modified path: pipeline_specs/soil/README.md."
+    },
+    {
+      "gate": "repository-native-execution",
+      "outcome": "SKIPPED",
+      "reason": "API_ONLY_STRICT was selected. The repository was not cloned and repository-native test commands were not executed locally. Pull-request workflow results will be inspected after PR creation; pending or unavailable checks will not be reported as passing."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "uploaded-documentation-implementation-prompt-v3-1",
+      "validated": true,
+      "evidence_ref": "attachment://Pasted text(46).txt#sha256=b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85"
+    },
+    {
+      "id": "uploaded-soil-architecture-lineage",
+      "validated": true,
+      "evidence_ref": "attachment://kfm_soil_architecture_extended_pro_pdf_only_report.pdf"
+    },
+    {
+      "id": "target-baseline-and-remote-readback",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/682b7822b7f6dac3bfa0337ab25bb46d946b511b/pipeline_specs/soil/README.md"
+    },
+    {
+      "id": "direct-soil-spec-inventory",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2bde43821a398aff1fa1a862e6d7f61e7d68e6c9/pipeline_specs/soil/ingest.yaml"
+    },
+    {
+      "id": "pipeline-test-maturity",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2bde43821a398aff1fa1a862e6d7f61e7d68e6c9/tests/pipelines/README.md"
+    },
+    {
+      "id": "directory-rules-and-schema-home",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2bde43821a398aff1fa1a862e6d7f61e7d68e6c9/docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md"
+    },
+    {
+      "id": "workflow-and-codeowner-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2bde43821a398aff1fa1a862e6d7f61e7d68e6c9/.github/workflows/domain-soil.yml"
+    },
+    {
+      "id": "generated-receipt-machine-shape",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2bde43821a398aff1fa1a862e6d7f61e7d68e6c9/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-18T12:19:47-05:00",
+  "emitter": "openai-chatgpt/gpt-5.6-thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored documentation-only revision on a scoped API-only review branch. The README replaces speculative planning with current repository evidence, preserves Soil support-type and governance boundaries, and changes no YAML payload, executable pipeline, policy, schema, test, workflow, release object, lifecycle data, public artifact, API, map, or AI behavior. This receipt is process provenance only; it is not factual proof, policy permission, human approval, release authority, or publication authority."
+}

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kfm://schemas/contracts/v1/domains/habitat/land_cover/change_summary.schema.json",
+  "title": "Change Summary",
+  "description": "PROPOSED scaffold created from the current docs/domains markdown inventory.",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {},
+  "x-kfm": {
+    "status": "PROPOSED",
+    "path": "schemas/contracts/v1/domains/habitat/land_cover/change_summary.schema.json",
+    "source_docs": [
+      "docs/domains/habitat/sublanes/land_cover.md"
+    ],
+    "contract_doc": "contracts/domains/habitat/land_cover/change_summary.md"
+  }
+}

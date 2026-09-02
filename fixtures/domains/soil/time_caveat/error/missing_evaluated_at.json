@@ -1,0 +1,28 @@
+{
+  "candidate_id": "soil-time-error-missing-evaluated-0001",
+  "schema_version": "1.0.0",
+  "support_type": "station_soil_moisture",
+  "source_family": "kansas_mesonet",
+  "source_role": "direct_observation_measurement",
+  "claim_kind": "current_station_condition",
+  "time_basis": {
+    "source_published_at": "2026-04-15T14:02:00Z",
+    "observed_at": "2026-04-15T14:00:00Z",
+    "valid_from": null,
+    "valid_to": null,
+    "retrieved_at": "2026-04-15T14:05:00Z",
+    "source_timezone": "America/Chicago",
+    "cadence_seconds": 300,
+    "stale_state": "UNKNOWN"
+  },
+  "evidence_refs": [
+    "evidence:synthetic-time-error"
+  ],
+  "governance": {
+    "source_activated": false,
+    "policy_evaluated": false,
+    "release_authorized": false,
+    "public_use_allowed": false,
+    "release_ref": null
+  }
+}

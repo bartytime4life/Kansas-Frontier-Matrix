@@ -1,0 +1,57 @@
+{
+  "receipt_id": "genrec-docs-build-workflow-931289e9",
+  "contract_version": "3.0.0",
+  "receipt_type": "GenerationReceipt",
+  "status": "PROPOSED",
+  "generated_at": "2026-07-18T00:00:00-05:00",
+  "repository": "bartytime4life/Kansas-Frontier-Matrix",
+  "base_commit": "ecbf3d7110559ce59f1a0afda7772bd543a0f6c3",
+  "branch": "agent/docs-build-workflow-20260718",
+  "target_path": ".github/workflows/docs-build.yml",
+  "previous_blob": "3841ed36c0af0a41621992aff1d932cfca9ac082",
+  "new_blob": "202360a8bee431b50633e78c442cc70ca939206a",
+  "sha256": "931289e9db571fba73bbd22eaddaec9185ddbb82617d6ae0f87f065036298f11",
+  "directory_rules_basis": {
+    "responsibility_root": ".github/workflows for CI orchestration; data/receipts for canonical process memory",
+    "receipt_lane": "data/receipts/generated",
+    "status": "CONFIRMED existing repository lane; no new root or parallel receipt authority created",
+    "adr_required": false
+  },
+  "truth_labels": {
+    "confirmed": [
+      "The prior mkdocs-build and publish-preview jobs only executed TODO echo commands.",
+      "Baseline run 29649485395 completed successfully without building or publishing documentation.",
+      "The repository has a canonical docs/ source root and an artifacts/docs/ transitional compatibility lane.",
+      "No mkdocs.yml, mkdocs.yaml, Docusaurus configuration, documentation dependency manifest, documentation build manifest, or established preview deployment contract was found.",
+      "Workflow name docs-build and job ids mkdocs-build and publish-preview are preserved."
+    ],
+    "proposed": [
+      "Explicit readiness holds are safer than inventing a documentation generator, dependency set, output contract, or hosting target."
+    ],
+    "needs_verification": [
+      "Final-head GitHub Actions conclusions.",
+      "Branch-protection dependencies.",
+      "Accepted documentation generator and package-manager contract.",
+      "Pinned documentation dependencies and deterministic strict build command.",
+      "Generated-site manifest, digest, retention, and artifact upload contract.",
+      "Preview hosting, permissions, release handoff, correction, withdrawal, and rollback ownership.",
+      "Whether action references should be pinned to immutable commit SHAs."
+    ]
+  },
+  "changes": [
+    "Added workflow_dispatch, contents: read permission, concurrency cancellation, and timeouts.",
+    "Disabled persisted checkout credentials.",
+    "Converted mkdocs-build from a TODO success to an explicit generator-readiness hold.",
+    "Converted publish-preview from a TODO success to an explicit preview-publication hold.",
+    "Added fail-closed graduation checks when generator, dependency, manifest, or deployment files appear.",
+    "Added bounded always-run summaries for both jobs."
+  ],
+  "authority_boundary": "A green held result is readiness evidence only. It does not mean documentation was rendered, validated, hosted, released, or published and does not authorize public reliance.",
+  "rollback": {
+    "strategy": "Revert the receipt commit and workflow commit in reverse order or close the pull request without merge.",
+    "restores_blob": "3841ed36c0af0a41621992aff1d932cfca9ac082"
+  },
+  "human_review": {
+    "state": "pending"
+  }
+}

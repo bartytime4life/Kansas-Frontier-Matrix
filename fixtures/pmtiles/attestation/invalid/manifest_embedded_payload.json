@@ -1,0 +1,9 @@
+{
+  "case_id": "tile-manifest-embedded-payload",
+  "expected": {
+    "issue_codes": ["TILE_MANIFEST_EMBEDDED_PAYLOAD_DENIED"],
+    "status": "DENY"
+  },
+  "fixture_profile": "kfm.pmtiles.tile-artifact-manifest.compat.v1",
+  "mutation": "manifest_embedded_payload"
+}

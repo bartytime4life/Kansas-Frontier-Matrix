@@ -1,0 +1,222 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/flora/flora_occurrence_intake_decision.schema.json",
+  "title": "FloraOccurrenceIntakeDecision",
+  "description": "Deterministic deduplication, license-profile, and sensitivity classification for a Flora WORK candidate. It is not a legal, policy, review, lifecycle, release, or publication decision.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "decision_id",
+    "hash_profile",
+    "spec_hash",
+    "candidate_ref",
+    "candidate_spec_hash",
+    "duplicate",
+    "rights",
+    "sensitivity",
+    "decision",
+    "provenance",
+    "governance"
+  ],
+  "properties": {
+    "object_type": {"const": "FloraOccurrenceIntakeDecision"},
+    "schema_version": {"const": "1.0.0"},
+    "decision_id": {
+      "type": "string",
+      "pattern": "^flora-occurrence-intake-decision:[a-f0-9]{32}$"
+    },
+    "hash_profile": {"const": "kfm-fixture-json-v1"},
+    "spec_hash": {"$ref": "#/$defs/digest"},
+    "candidate_ref": {
+      "type": "string",
+      "pattern": "^flora-occurrence-candidate:[a-f0-9]{32}$"
+    },
+    "candidate_spec_hash": {"$ref": "#/$defs/digest"},
+    "duplicate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "method",
+        "duplicate_of_candidate_ref",
+        "comparison_count",
+        "fingerprint"
+      ],
+      "properties": {
+        "method": {
+          "enum": [
+            "NONE",
+            "PRIMARY_INSTITUTION_CATALOG",
+            "FALLBACK_SPATIOTEMPORAL_TAXON"
+          ]
+        },
+        "duplicate_of_candidate_ref": {"$ref": "#/$defs/nullableCandidateRef"},
+        "comparison_count": {"type": "integer", "minimum": 0, "maximum": 100000},
+        "fingerprint": {
+          "oneOf": [
+            {"$ref": "#/$defs/digest"},
+            {"type": "null"}
+          ]
+        }
+      }
+    },
+    "rights": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "profile_id",
+        "input_license",
+        "license_class",
+        "disposition",
+        "reason_codes"
+      ],
+      "properties": {
+        "profile_id": {"const": "flora-occurrence-license-map-v1"},
+        "input_license": {"$ref": "#/$defs/nullableText"},
+        "license_class": {
+          "enum": ["OPEN_DECLARED", "RESTRICTED_OR_CONDITIONAL", "UNKNOWN"]
+        },
+        "disposition": {"enum": ["ALLOW_WORK", "QUARANTINE"]},
+        "reason_codes": {"$ref": "#/$defs/reasonCodes"}
+      }
+    },
+    "sensitivity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "exact_geometry_present",
+        "source_hints",
+        "disposition",
+        "reason_codes"
+      ],
+      "properties": {
+        "exact_geometry_present": {"type": "boolean"},
+        "source_hints": {
+          "type": "array",
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {
+            "enum": ["SOURCE_DATA_GENERALIZED", "SOURCE_INFORMATION_WITHHELD"]
+          }
+        },
+        "disposition": {
+          "enum": ["NO_SPECIAL_HANDLING", "HOLD_FOR_REVIEW", "GENERALIZE_REQUIRED"]
+        },
+        "reason_codes": {"$ref": "#/$defs/reasonCodes"}
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "outcome",
+        "reason_codes",
+        "canonical_candidate_ref",
+        "proposed_target_lifecycle"
+      ],
+      "properties": {
+        "outcome": {
+          "enum": [
+            "ACCEPT_FOR_WORK",
+            "DEDUPLICATE",
+            "QUARANTINE",
+            "HOLD_FOR_REVIEW"
+          ]
+        },
+        "reason_codes": {"$ref": "#/$defs/reasonCodes"},
+        "canonical_candidate_ref": {"$ref": "#/$defs/nullableCandidateRef"},
+        "proposed_target_lifecycle": {"enum": ["WORK", "QUARANTINE"]}
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "candidate_digest",
+        "peer_set_digest",
+        "engine_id",
+        "engine_version"
+      ],
+      "properties": {
+        "candidate_digest": {"$ref": "#/$defs/digest"},
+        "peer_set_digest": {"$ref": "#/$defs/digest"},
+        "engine_id": {"const": "flora-occurrence-intake-governance"},
+        "engine_version": {"const": "1.0.0"}
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_admission_decided",
+        "legal_rights_decided",
+        "policy_evaluated",
+        "review_completed",
+        "lifecycle_transition_executed",
+        "promotion_authorized",
+        "release_authorized",
+        "publication_authorized",
+        "public_use_allowed",
+        "release_ref"
+      ],
+      "properties": {
+        "source_admission_decided": {"const": false},
+        "legal_rights_decided": {"const": false},
+        "policy_evaluated": {"const": false},
+        "review_completed": {"const": false},
+        "lifecycle_transition_executed": {"const": false},
+        "promotion_authorized": {"const": false},
+        "release_authorized": {"const": false},
+        "publication_authorized": {"const": false},
+        "public_use_allowed": {"const": false},
+        "release_ref": {"type": "null"}
+      }
+    }
+  },
+  "$defs": {
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "nullableCandidateRef": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^flora-occurrence-candidate:[a-f0-9]{32}$"
+        },
+        {"type": "null"}
+      ]
+    },
+    "nullableText": {
+      "oneOf": [
+        {"type": "string", "minLength": 1, "maxLength": 640, "pattern": "\\S"},
+        {"type": "null"}
+      ]
+    },
+    "reasonCodes": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Z][A-Z0-9_]{2,96}$"
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED",
+    "contract_doc": "contracts/domains/flora/flora_occurrence_intake_decision.md",
+    "fixtures_root": "fixtures/domains/flora/flora_occurrence_intake_decision/",
+    "classifier": "packages/domains/flora/normalizers/intake_governance.py",
+    "tests": "tests/packages/domains/flora/normalizers/test_intake_governance.py",
+    "authority": "bounded_intake_classification_only",
+    "non_effects": [
+      "does_not_make_a_legal_rights_or_policy_decision",
+      "does_not_execute_a_lifecycle_transition",
+      "does_not_generalize_or_publish_geometry",
+      "does_not_authorize_source_admission_promotion_release_or_public_use"
+    ]
+  }
+}

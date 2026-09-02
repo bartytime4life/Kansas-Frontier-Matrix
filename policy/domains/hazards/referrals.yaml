@@ -1,0 +1,6 @@
+status: PROPOSED
+path: "policy/domains/hazards/referrals.yaml"
+source_docs:
+  - "docs/domains/hazards/API_CONTRACTS.md"
+notes:
+  - "Placeholder created from the current docs/domains markdown inventory."

@@ -1,0 +1,10 @@
+{
+  "status": "PROPOSED",
+  "path": "data/registry/sources/atmosphere/aqs.source.json",
+  "source_docs": [
+    "docs/domains/atmosphere/VERIFICATION_BACKLOG.md"
+  ],
+  "notes": [
+    "Placeholder created from the current docs/domains markdown inventory."
+  ]
+}

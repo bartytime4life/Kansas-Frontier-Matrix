@@ -1,0 +1,12 @@
+{
+  "id": "ing2",
+  "source_id": "src2",
+  "run_id": "run2",
+  "started_at": "2026-05-09T00:00:00Z",
+  "finished_at": "2026-05-09T00:01:00Z",
+  "outcome": "PARTIAL",
+  "bytes_in": 0,
+  "digests": {
+    "raw": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  }
+}

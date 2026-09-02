@@ -1,0 +1,24 @@
+{
+  "profile_id": "kfm.fixture.csv-geojson-preflight.v1",
+  "source_event_ref": "kfm:source-event:sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "source_descriptor_ref": "kfm://source/fixture/csv-geojson-public-safe",
+  "source_role": "synthetic_fixture",
+  "id_field": "record_id",
+  "latitude_field": "latitude",
+  "longitude_field": "longitude",
+  "property_fields": [
+    "fixture_area",
+    "label"
+  ],
+  "expected_headers": [
+    "record_id",
+    "latitude",
+    "longitude",
+    "fixture_area",
+    "label"
+  ],
+  "coordinate_precision": 6,
+  "max_rows": 10,
+  "execution_mode": "FIXTURE_ONLY",
+  "geometry_policy": "PUBLIC_SAFE_SYNTHETIC_POINTS"
+}

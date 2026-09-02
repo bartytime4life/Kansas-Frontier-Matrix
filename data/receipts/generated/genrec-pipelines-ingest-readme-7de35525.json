@@ -1,0 +1,177 @@
+{
+  "receipt_id": "genrec-pipelines-ingest-readme-7de35525",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "pipelines/ingest/README.md"
+  ],
+  "artifact_hashes": {
+    "pipelines/ingest/README.md": "sha256:7de35525cab98b64967a1cee5c9a54e19f8e2051ad6fcb2f4235d40b3cad6003"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-5)",
+    "version": "2026-07-20"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository evidence inspection",
+      "PDF text extraction",
+      "Directory Rules placement preflight",
+      "Markdown and JSON structural validation",
+      "remote branch and diff verification"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "Pasted text(56).txt",
+      "Kansas_Frontier_Matrix_Pipeline_Living_Implementation_Manual_v0.3.pdf"
+    ],
+    "evidence_hashes": [
+      "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+      "sha256:43d0c6fea4cc64edb87238a13ac49b639934a82dcef0fab2ef49217add0ba8cf"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/13e1b27bf8cc4fdd4d88305532e69c444c07a4b5/pipelines/ingest/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/13e1b27bf8cc4fdd4d88305532e69c444c07a4b5/pipelines/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/13e1b27bf8cc4fdd4d88305532e69c444c07a4b5/pipelines/ingest/fauna/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/13e1b27bf8cc4fdd4d88305532e69c444c07a4b5/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/13e1b27bf8cc4fdd4d88305532e69c444c07a4b5/docs/sources/ADMISSION_PROCESS.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/13e1b27bf8cc4fdd4d88305532e69c444c07a4b5/docs/runbooks/FIRST_INGEST.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/13e1b27bf8cc4fdd4d88305532e69c444c07a4b5/docs/adr/ADR-0012-connector-outputs-to-data-raw-or-data-quarantine-only.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/13e1b27bf8cc4fdd4d88305532e69c444c07a4b5/docs/adr/ADR-0017-source-descriptor-admission-process.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/13e1b27bf8cc4fdd4d88305532e69c444c07a4b5/docs/adr/ADR-0021-quarantine-has-structured-exit-paths.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/13e1b27bf8cc4fdd4d88305532e69c444c07a4b5/contracts/source/ingest_receipt.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/13e1b27bf8cc4fdd4d88305532e69c444c07a4b5/schemas/contracts/v1/source/ingest_receipt.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/13e1b27bf8cc4fdd4d88305532e69c444c07a4b5/fixtures/contracts/v1/source/ingest_receipt/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/13e1b27bf8cc4fdd4d88305532e69c444c07a4b5/tests/schemas/test_common_contracts.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/13e1b27bf8cc4fdd4d88305532e69c444c07a4b5/tests/pipelines/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/13e1b27bf8cc4fdd4d88305532e69c444c07a4b5/pipeline_specs/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/13e1b27bf8cc4fdd4d88305532e69c444c07a4b5/tools/ingest/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/13e1b27bf8cc4fdd4d88305532e69c444c07a4b5/.github/workflows/contracts-validate.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/13e1b27bf8cc4fdd4d88305532e69c444c07a4b5/.github/workflows/schema-validation.yml"
+    ]
+  },
+  "truth_labels": {
+    "pipelines/ingest/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Verified public repository identity, default branch, pinned base, target blob, authenticated admin permission, scoped branch, and no matching open pull request or branch."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The existing target remains in the canonical pipelines executable-how root and the generated receipt uses the established data/receipts/generated provenance lane. No new root or parallel authority was created."
+    },
+    {
+      "gate": "repository-evidence-grounding",
+      "outcome": "PASS",
+      "reason": "Inspected the target, parent pipeline contract, Fauna compatibility child, Directory Rules, source admission/runbook documents, proposed ADRs, IngestReceipt contract/schema/fixtures, common schema harness, pipeline test/spec/tool boundaries, workflows, CODEOWNERS, and pull-request template at the pinned base."
+    },
+    {
+      "gate": "bounded-inventory-and-absence",
+      "outcome": "PASS",
+      "reason": "Recorded the direct documentation inventory and checked each previously proposed helper, shared ingest spec/test/fixture README, dedicated receipt validator, and focused validator test at exact paths without converting bounded absence into an exhaustive repository claim."
+    },
+    {
+      "gate": "conflict-disclosure",
+      "outcome": "PASS",
+      "reason": "Surfaced the unresolved conflict between the Directory Rules connector RAW-or-QUARANTINE writer rule and the pre-RAW executable ingest placement in the source-admission document; the README does not invent a winner or a second authority."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "Local checks confirmed 630 lines, one H1, 40 headings without hierarchy jumps or duplicate slugs, 18 resolved internal links, balanced code fences, no unintended trailing whitespace, an evidence ledger, open verification register, and rollback section."
+    },
+    {
+      "gate": "workflow-trigger-threat-preflight",
+      "outcome": "PASS",
+      "reason": "Inspected applicable broad pull-request workflows. Relevant validation and documentation jobs use GitHub-hosted runners and read-only contents permission without source activation, deployment, release, or KFM publication authority; external action refs are version tags rather than immutable commit pins."
+    },
+    {
+      "gate": "remote-readback-and-base-stability",
+      "outcome": "PASS",
+      "reason": "Verified commit 6df906f49f34b42f36ea1da9eb418536943c88b5, README blob 47e484ed891d5b830f6cb30d20829610824f33ab, byte-for-byte equality with the prepared artifact, and unchanged default base 13e1b27bf8cc4fdd4d88305532e69c444c07a4b5 before receipt creation."
+    },
+    {
+      "gate": "security-rights-and-sensitivity",
+      "outcome": "PASS",
+      "reason": "The documentation contains no credentials, private source payloads, living-person records, genomic data, restricted source material, or exact sensitive locations and preserves fail-closed rights and sensitivity handling."
+    },
+    {
+      "gate": "shared-ingest-runtime",
+      "outcome": "SKIPPED",
+      "reason": "No accepted shared ingest interface, executable, consumer, active specification, source activation, dedicated behavior suite, emitted runtime receipt, scheduler, or release integration was established or changed."
+    },
+    {
+      "gate": "repository-native-tests",
+      "outcome": "SKIPPED",
+      "reason": "The repository was operated through the API-only profile without a mounted checkout. Existing pull-request workflows provide separate current remote schema, contract, policy, documentation, and security evidence."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "target-and-pipeline-placement",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/13e1b27bf8cc4fdd4d88305532e69c444c07a4b5/pipelines/ingest/README.md"
+    },
+    {
+      "id": "directory-rules-connector-pipeline-split",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/13e1b27bf8cc4fdd4d88305532e69c444c07a4b5/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "source-admission-handoff",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/13e1b27bf8cc4fdd4d88305532e69c444c07a4b5/docs/sources/ADMISSION_PROCESS.md"
+    },
+    {
+      "id": "ingest-receipt-contract-and-shape",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/13e1b27bf8cc4fdd4d88305532e69c444c07a4b5/contracts/source/ingest_receipt.md"
+    },
+    {
+      "id": "ingest-receipt-fixture-harness",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/13e1b27bf8cc4fdd4d88305532e69c444c07a4b5/tests/schemas/test_common_contracts.py"
+    },
+    {
+      "id": "pipeline-test-and-spec-maturity",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/13e1b27bf8cc4fdd4d88305532e69c444c07a4b5/tests/pipelines/README.md"
+    },
+    {
+      "id": "tooling-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/13e1b27bf8cc4fdd4d88305532e69c444c07a4b5/tools/ingest/README.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-20T08:09:55Z",
+  "emitter": "openai/codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored repository-grounded README revision on a scoped review branch. This receipt records provenance and validation boundaries, not approval, source truth, evidence closure, policy permission, lifecycle promotion, release authority, or publication. The README SHA-256 was computed from the prepared bytes and remote readback confirmed exact equality before receipt creation. The change updates documentation and adds this required provenance receipt only. Human review remains pending."
+}

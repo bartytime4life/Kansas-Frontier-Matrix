@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/runtime/runtime_verification/outcome.schema.json",
+  "title": "RuntimeVerificationOutcome",
+  "description": "Finite outcome vocabulary for one runtime digest-verification attempt.",
+  "type": "string",
+  "enum": [
+    "VERIFIED",
+    "MISMATCH",
+    "MISSING_DECLARATION",
+    "INTERRUPTED",
+    "ERROR"
+  ],
+  "x-kfm": {
+    "status": "PROPOSED",
+    "contract_doc": "contracts/runtime/runtime_verification.md",
+    "authority": "runtime_verification_outcome_shape_only",
+    "non_effects": [
+      "does_not_create_evidence_closure",
+      "does_not_evaluate_policy",
+      "does_not_authorize_release_or_publication"
+    ]
+  }
+}

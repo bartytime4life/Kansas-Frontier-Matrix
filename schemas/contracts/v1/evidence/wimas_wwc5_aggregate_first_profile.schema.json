@@ -1,0 +1,457 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/evidence/wimas_wwc5_aggregate_first_profile.schema.json",
+  "title": "WimasWwc5AggregateFirstProfile",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile",
+    "status",
+    "execution_mode",
+    "assessment_id",
+    "bundle",
+    "wimas_wwc5_profile",
+    "claims"
+  ],
+  "properties": {
+    "profile": {
+      "const": "kfm.wimas_wwc5_aggregate_first_profile.v1"
+    },
+    "status": {
+      "const": "PROPOSED_INACTIVE"
+    },
+    "execution_mode": {
+      "const": "FIXTURE_ONLY"
+    },
+    "assessment_id": {
+      "type": "string",
+      "pattern": "^kfm:wimas-wwc5-assessment:sha256:[0-9a-f]{64}$"
+    },
+    "bundle": {
+      "$ref": "#/$defs/bundle"
+    },
+    "wimas_wwc5_profile": {
+      "$ref": "#/$defs/body"
+    },
+    "claims": {
+      "$ref": "#/$defs/claims"
+    }
+  },
+  "$defs": {
+    "hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "ref": {
+      "type": "string",
+      "minLength": 4,
+      "maxLength": 300,
+      "pattern": "^[^\\s]+$"
+    },
+    "optionalRef": {
+      "type": "string",
+      "maxLength": 300,
+      "pattern": "^[^\\s]*$"
+    },
+    "dt": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "bundle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "bundle_id",
+        "claim_scope",
+        "evidence_refs",
+        "source_records",
+        "citations",
+        "rights",
+        "sensitivity",
+        "transforms",
+        "checksums",
+        "spec_hash"
+      ],
+      "properties": {
+        "bundle_id": {
+          "type": "string"
+        },
+        "claim_scope": {
+          "type": "string"
+        },
+        "evidence_refs": {
+          "type": "array",
+          "minItems": 3,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/ref"
+          }
+        },
+        "source_records": {
+          "type": "array",
+          "minItems": 3,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/ref"
+          }
+        },
+        "citations": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/ref"
+          }
+        },
+        "rights": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "license"
+          ],
+          "properties": {
+            "license": {
+              "const": "fixture-only-no-rights-claim"
+            }
+          }
+        },
+        "sensitivity": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "level",
+            "reason",
+            "applied_at"
+          ],
+          "properties": {
+            "level": {
+              "const": "generalized"
+            },
+            "reason": {
+              "type": "string"
+            },
+            "applied_at": {
+              "$ref": "#/$defs/dt"
+            }
+          }
+        },
+        "transforms": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "checksums": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/hash"
+          },
+          "required": [
+            "wimas_wwc5_aggregate_first_profile"
+          ]
+        },
+        "spec_hash": {
+          "$ref": "#/$defs/hash"
+        }
+      }
+    },
+    "sourceRole": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_descriptor_ref",
+        "role",
+        "support_ref_ids",
+        "source_time",
+        "retrieved_at",
+        "position_quality"
+      ],
+      "properties": {
+        "source_descriptor_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "role": {
+          "enum": [
+            "WIMAS_WATER_USE_AGGREGATE",
+            "WIMAS_WATER_RIGHT_CONTEXT",
+            "WWC5_WELL_RECORD_REFERENCE"
+          ]
+        },
+        "support_ref_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/ref"
+          }
+        },
+        "source_time": {
+          "$ref": "#/$defs/dt"
+        },
+        "retrieved_at": {
+          "$ref": "#/$defs/dt"
+        },
+        "position_quality": {
+          "enum": [
+            "AGGREGATED",
+            "MEASURED",
+            "LEGAL_DESCRIPTION_DERIVED",
+            "GEOCODED",
+            "UNKNOWN"
+          ]
+        }
+      }
+    },
+    "aggregate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "aggregate_id",
+        "source_role",
+        "geography_type",
+        "geography_ref",
+        "group_count",
+        "quantity_scaled",
+        "position_quality",
+        "support_ref_ids"
+      ],
+      "properties": {
+        "aggregate_id": {
+          "$ref": "#/$defs/ref"
+        },
+        "source_role": {
+          "enum": [
+            "WIMAS_WATER_USE_AGGREGATE",
+            "WIMAS_WATER_RIGHT_CONTEXT",
+            "WWC5_WELL_RECORD_REFERENCE"
+          ]
+        },
+        "geography_type": {
+          "enum": [
+            "COUNTY",
+            "HUC12"
+          ]
+        },
+        "geography_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "group_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "quantity_scaled": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "position_quality": {
+          "enum": [
+            "AGGREGATED",
+            "MEASURED",
+            "LEGAL_DESCRIPTION_DERIVED",
+            "GEOCODED",
+            "UNKNOWN"
+          ]
+        },
+        "support_ref_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/ref"
+          }
+        }
+      }
+    },
+    "body": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_roles",
+        "public_aggregation",
+        "privacy_controls",
+        "aggregates",
+        "policy_profile_ref",
+        "review_refs",
+        "temporal_lineage",
+        "spec_hash"
+      ],
+      "properties": {
+        "source_roles": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "$ref": "#/$defs/sourceRole"
+          }
+        },
+        "public_aggregation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "geography_type",
+            "exact_coordinates_present",
+            "record_level_public_output"
+          ],
+          "properties": {
+            "geography_type": {
+              "enum": [
+                "COUNTY",
+                "HUC12"
+              ]
+            },
+            "exact_coordinates_present": {
+              "const": false
+            },
+            "record_level_public_output": {
+              "const": false
+            }
+          }
+        },
+        "privacy_controls": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "owner_names_suppressed",
+            "contact_details_suppressed",
+            "exact_private_well_coordinates_suppressed",
+            "minimum_group_size"
+          ],
+          "properties": {
+            "owner_names_suppressed": {
+              "const": true
+            },
+            "contact_details_suppressed": {
+              "const": true
+            },
+            "exact_private_well_coordinates_suppressed": {
+              "const": true
+            },
+            "minimum_group_size": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        },
+        "aggregates": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "$ref": "#/$defs/aggregate"
+          }
+        },
+        "policy_profile_ref": {
+          "$ref": "#/$defs/optionalRef"
+        },
+        "review_refs": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "rights_review_ref",
+            "privacy_review_ref"
+          ],
+          "properties": {
+            "rights_review_ref": {
+              "$ref": "#/$defs/optionalRef"
+            },
+            "privacy_review_ref": {
+              "$ref": "#/$defs/optionalRef"
+            }
+          }
+        },
+        "temporal_lineage": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "period_start",
+            "period_end",
+            "computed_at"
+          ],
+          "properties": {
+            "period_start": {
+              "$ref": "#/$defs/dt"
+            },
+            "period_end": {
+              "$ref": "#/$defs/dt"
+            },
+            "computed_at": {
+              "$ref": "#/$defs/dt"
+            }
+          }
+        },
+        "spec_hash": {
+          "$ref": "#/$defs/hash"
+        }
+      }
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "deterministic_identity",
+        "evidence_resolved",
+        "policy_evaluated",
+        "network_access_performed",
+        "source_activated",
+        "ownership_authority",
+        "legal_entitlement_authority",
+        "current_use_authority",
+        "current_well_condition_authority",
+        "lifecycle_write_performed",
+        "released",
+        "published"
+      ],
+      "properties": {
+        "deterministic_identity": {
+          "const": true
+        },
+        "evidence_resolved": {
+          "const": false
+        },
+        "policy_evaluated": {
+          "const": false
+        },
+        "network_access_performed": {
+          "const": false
+        },
+        "source_activated": {
+          "const": false
+        },
+        "ownership_authority": {
+          "const": false
+        },
+        "legal_entitlement_authority": {
+          "const": false
+        },
+        "current_use_authority": {
+          "const": false
+        },
+        "current_well_condition_authority": {
+          "const": false
+        },
+        "lifecycle_write_performed": {
+          "const": false
+        },
+        "released": {
+          "const": false
+        },
+        "published": {
+          "const": false
+        }
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "source_cards": [
+      "KFM-P2-IDEA-0027",
+      "KFM-P2-PROG-0009"
+    ],
+    "non_effects": [
+      "no_live_source",
+      "no_private_well_disclosure",
+      "no_release_or_publication"
+    ]
+  }
+}

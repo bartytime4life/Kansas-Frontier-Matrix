@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/geology/release_manifest.schema.json",
+  "title": "release_manifest",
+  "type": "object",
+  "description": "KFM v1 contract schema stub for release_manifest. Greenfield placeholder; fields to be defined per the contract document and ADR.",
+  "x-kfm": {
+    "contract_doc": "contracts/domains/geology/release_manifest.md",
+    "fixtures_root": "fixtures/domains/geology/release_manifest/",
+    "validator": "tools/validators/domains/geology/validate_release_manifest.py",
+    "policy": "policy/domains/geology/",
+    "status": "PROPOSED"
+  },
+  "properties": {
+    "spec_hash": {
+      "type": "string",
+      "description": "Deterministic content hash."
+    },
+    "id": {
+      "type": "string",
+      "description": "Canonical identifier."
+    },
+    "version": {
+      "type": "string",
+      "description": "Contract or object version."
+    }
+  },
+  "required": [
+    "id"
+  ],
+  "additionalProperties": true
+}

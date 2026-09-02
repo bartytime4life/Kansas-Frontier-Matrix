@@ -1,0 +1,156 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/release/api_contract_change_assessment.schema.json",
+  "title": "ApiContractChangeAssessmentCandidate",
+  "description": "Fixture-only assessment of declared API contract version, compatibility, notice, migration, release, correction, and rollback readiness without authority effects.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "profile_spec_hash",
+    "source_card",
+    "observed_at",
+    "change_subject",
+    "compatibility",
+    "release_closure",
+    "limitations",
+    "authority_claims"
+  ],
+  "properties": {
+    "object_type": {"const": "ApiContractChangeAssessmentCandidate"},
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.release.api-contract-change-assessment.fixture.v1"},
+    "profile_spec_hash": {"$ref": "#/$defs/sha256"},
+    "source_card": {"const": "KFM-P18-INV-413"},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "change_subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "api_contract_ref",
+        "previous_contract_digest",
+        "candidate_contract_digest",
+        "previous_version",
+        "candidate_version",
+        "declared_version_impact",
+        "change_kind",
+        "response_shape_impact",
+        "interpretation_impact",
+        "client_behavior_impact",
+        "evidence_handling_impact",
+        "security_policy_impact",
+        "affected_resource_refs"
+      ],
+      "properties": {
+        "api_contract_ref": {"$ref": "#/$defs/ref"},
+        "previous_contract_digest": {"$ref": "#/$defs/sha256"},
+        "candidate_contract_digest": {"$ref": "#/$defs/sha256"},
+        "previous_version": {"$ref": "#/$defs/semver"},
+        "candidate_version": {"$ref": "#/$defs/semver"},
+        "declared_version_impact": {"enum": ["PATCH", "MINOR", "MAJOR", "UNKNOWN"]},
+        "change_kind": {"enum": ["PATCH_CORRECTION", "ADDITIVE_COMPATIBLE", "BREAKING", "DEPRECATION", "UNKNOWN"]},
+        "response_shape_impact": {"enum": ["NONE", "ADDITIVE", "BREAKING", "UNKNOWN"]},
+        "interpretation_impact": {"enum": ["NONE", "CHANGED", "UNKNOWN"]},
+        "client_behavior_impact": {"enum": ["NONE", "CHANGED", "UNKNOWN"]},
+        "evidence_handling_impact": {"enum": ["NONE", "CHANGED", "UNKNOWN"]},
+        "security_policy_impact": {"enum": ["NONE", "CHANGED", "UNKNOWN"]},
+        "affected_resource_refs": {"$ref": "#/$defs/ref_array"}
+      }
+    },
+    "compatibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "declared_compatibility",
+        "compatibility_test_refs",
+        "client_fixture_refs",
+        "compatibility_rationale_ref",
+        "migration_guide_ref",
+        "deprecation_notice_ref"
+      ],
+      "properties": {
+        "state": {"enum": ["COMPLETE", "INCOMPLETE", "UNKNOWN", "ERROR"]},
+        "declared_compatibility": {"enum": ["BACKWARD_COMPATIBLE", "INCOMPATIBLE", "UNKNOWN"]},
+        "compatibility_test_refs": {"$ref": "#/$defs/ref_array"},
+        "client_fixture_refs": {"$ref": "#/$defs/ref_array"},
+        "compatibility_rationale_ref": {"$ref": "#/$defs/nullable_ref"},
+        "migration_guide_ref": {"$ref": "#/$defs/nullable_ref"},
+        "deprecation_notice_ref": {"$ref": "#/$defs/nullable_ref"}
+      }
+    },
+    "release_closure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "change_notice_ref",
+        "release_manifest_ref",
+        "correction_notice_ref",
+        "rollback_card_ref",
+        "review_record_refs"
+      ],
+      "properties": {
+        "change_notice_ref": {"$ref": "#/$defs/nullable_ref"},
+        "release_manifest_ref": {"$ref": "#/$defs/nullable_ref"},
+        "correction_notice_ref": {"$ref": "#/$defs/nullable_ref"},
+        "rollback_card_ref": {"$ref": "#/$defs/nullable_ref"},
+        "review_record_refs": {"$ref": "#/$defs/ref_array"}
+      }
+    },
+    "limitations": {
+      "const": [
+        "DECLARATION_ONLY",
+        "NO_API_MUTATION",
+        "NO_CLIENT_DISCOVERY",
+        "NO_COMPATIBILITY_EXECUTION",
+        "NO_RELEASE_AUTHORITY",
+        "NO_VERSION_POLICY_ADOPTION"
+      ]
+    },
+    "authority_claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "api_mutation_authority",
+        "compatibility_authority",
+        "client_migration_authority",
+        "evidence_authority",
+        "policy_authority",
+        "review_authority",
+        "release_authority",
+        "rollback_authority",
+        "publication_authority"
+      ],
+      "properties": {
+        "api_mutation_authority": {"const": false},
+        "compatibility_authority": {"const": false},
+        "client_migration_authority": {"const": false},
+        "evidence_authority": {"const": false},
+        "policy_authority": {"const": false},
+        "review_authority": {"const": false},
+        "release_authority": {"const": false},
+        "rollback_authority": {"const": false},
+        "publication_authority": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "ref": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 512,
+      "pattern": "^[A-Za-z][A-Za-z0-9+.-]*:[^\\s]+$"
+    },
+    "nullable_ref": {"anyOf": [{"$ref": "#/$defs/ref"}, {"type": "null"}]},
+    "ref_array": {
+      "type": "array",
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/ref"}
+    },
+    "sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "semver": {"type": "string", "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"}
+  }
+}

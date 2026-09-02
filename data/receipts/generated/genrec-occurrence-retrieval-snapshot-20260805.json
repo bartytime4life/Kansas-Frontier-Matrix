@@ -1,0 +1,195 @@
+{
+  "receipt_id": "genrec-occurrence-retrieval-snapshot-20260805",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/occurrence-retrieval-snapshot.yml",
+    "contracts/source/occurrence_retrieval_snapshot.md",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/README.md",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/schema_invalid/expected_findings_manifest.json",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/schema_invalid/invalid_release_hold_removed.json",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/semantic_invalid/expected_findings_manifest.json",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/semantic_invalid/semantic_invalid_ebird_non_detection_without_pair.json",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/semantic_invalid/semantic_invalid_exact_coordinates_requested.json",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/semantic_invalid/semantic_invalid_failed_transfer_as_zero_records.json",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/semantic_invalid/semantic_invalid_gbif_absence_claim.json",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/semantic_invalid/semantic_invalid_gbif_missing_citation.json",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/semantic_invalid/semantic_invalid_incomplete_checklist_non_detection.json",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/semantic_invalid/semantic_invalid_internal_lifecycle_ref.json",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/semantic_invalid/semantic_invalid_predicate_order.json",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/semantic_invalid/semantic_invalid_query_hash.json",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/semantic_invalid/semantic_invalid_source_role.json",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/semantic_invalid/semantic_invalid_succeeded_without_artifact.json",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/semantic_invalid/semantic_invalid_transfer_transition.json",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/valid/valid_ebird_complete_checklist_succeeded.json",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/valid/valid_gbif_async_running.json",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/valid/valid_gbif_async_succeeded.json",
+    "schemas/contracts/v1/source/occurrence_retrieval_snapshot.schema.json",
+    "tests/validators/test_validate_occurrence_retrieval_snapshot.py",
+    "tools/validators/validate_occurrence_retrieval_snapshot.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/occurrence-retrieval-snapshot.yml": "sha256:0f200dcafb1524aa431f42322b4295746c28e2d7a25b4145813b5206eb12df01",
+    "contracts/source/occurrence_retrieval_snapshot.md": "sha256:3ef473760d1678e56bea810332d5f53fffd3fc2ade5ef1d8223706b31b35d86b",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/README.md": "sha256:064441e3ccb62c49db17cca53aca71d46e341dc97de645cd1a0c575d18dd5474",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/schema_invalid/expected_findings_manifest.json": "sha256:a548be587840a5b22d97cd4d6ae689719d257037cf3b530325b2c22a21b23ec3",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/schema_invalid/invalid_release_hold_removed.json": "sha256:aab65085feb470a0492d8cf1f1fabdb5132a2dafb6c0f27ca3eb8fd7fd8ffce6",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/semantic_invalid/expected_findings_manifest.json": "sha256:55d590c90a5da53ba62fc65ad96d0be54cbc7bfd0dddb2cbc988b6d988c7d4d5",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/semantic_invalid/semantic_invalid_ebird_non_detection_without_pair.json": "sha256:f29bc469fe60d301d0fbaac83972a90b86a1dd537333d5972dc0617bd1aa2e9a",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/semantic_invalid/semantic_invalid_exact_coordinates_requested.json": "sha256:2bd0b94b7f87253b4e2b0e4c0728c91cba3218148bf993a52f4de4df6d9c0298",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/semantic_invalid/semantic_invalid_failed_transfer_as_zero_records.json": "sha256:7b17c56654300010a7566c16eef352b60a311da8ea74297c2b7da9045a6d7831",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/semantic_invalid/semantic_invalid_gbif_absence_claim.json": "sha256:4aa28fa3e96e11b70e01a4dfc9216825f9a5b2ad6241d13c1d901d4809c23d53",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/semantic_invalid/semantic_invalid_gbif_missing_citation.json": "sha256:9728e3ff217361251755010b1477f0b0b0c8f86539a9cd0660b7cb9b03676893",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/semantic_invalid/semantic_invalid_incomplete_checklist_non_detection.json": "sha256:64c1be4ced198b065c8cdc3a2683bf0f878bf012678db9462ed0d1618dd8ef2a",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/semantic_invalid/semantic_invalid_internal_lifecycle_ref.json": "sha256:b5662e1f1a8ab7c6f34042f8c75dbd433d5dad797e60bea7ad2f858421a124fa",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/semantic_invalid/semantic_invalid_predicate_order.json": "sha256:60810dde2ececf9fe67ca64520db4d5d9b264a2db1a9e3a7823ebf9b4f5d4862",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/semantic_invalid/semantic_invalid_query_hash.json": "sha256:37c820e24c28a35451d5711d3b37e00472b0bae735bea8bf5f4f0c9983a68756",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/semantic_invalid/semantic_invalid_source_role.json": "sha256:efee388c0c7e7612b74e5010c7cf9097df54d838487bf1986f2dcdb8dc9141b9",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/semantic_invalid/semantic_invalid_succeeded_without_artifact.json": "sha256:6324596497b275697eb10ab498408ec88b53d78edc67096783602a253c896b0e",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/semantic_invalid/semantic_invalid_transfer_transition.json": "sha256:0f4b5e8cc1df5755781b31c2eb99dfa528f309c61f76e5809cecc774beb02295",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/valid/valid_ebird_complete_checklist_succeeded.json": "sha256:bb795c5040a0bbbe294bd6f04f458bfd1ac92b74d99ee6aafc8b8420ad3e9de8",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/valid/valid_gbif_async_running.json": "sha256:51105bd24fe317b39802fd34bab6c618a654fe383eb94c4ffab86b4f0b30353a",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/valid/valid_gbif_async_succeeded.json": "sha256:49eebdac27ac2e02ed70dfc2092e9ce4c7a7ae45aa4a1efc67868d340c393a64",
+    "schemas/contracts/v1/source/occurrence_retrieval_snapshot.schema.json": "sha256:4dce470c21859a4f4c9c2fbf6b2b99f2afa43df84ce6d4dbde1efc47e2121ea7",
+    "tests/validators/test_validate_occurrence_retrieval_snapshot.py": "sha256:35449990d0dad14040ff3447222497ef9ce2b253747b1fe3c5badf8fb6bf3fb0",
+    "tools/validators/validate_occurrence_retrieval_snapshot.py": "sha256:2d2e0a55c2a0679a01b9e25e9e62387fb335eae897cbba8efb1928261bfc2299"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-05"
+  },
+  "prompt_or_contract": "sha256:31e953037bd2c011de080effd66436f417ae5a87303e8e27a1b0a3f838414970",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local Python validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "New Ideas 4-30-26.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:New Ideas 4-30-26.pdf#pages-12-20-ebird-gbif",
+      "attachment:New Ideas 4-30-26.pdf#pages-105-124-query-transfer-and-county-work",
+      "repo:docs/intake/exploratory/new-ideas-4-30-source-map.md#ebird-gbif-query-and-transfer-gap",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "repo:contracts/source/source_adapter.md",
+      "repo:contracts/source/source_artifact.md",
+      "repo:docs/sources/catalog/ebird/sampling-event-data.md",
+      "repo:docs/sources/catalog/gbif/async-download.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/occurrence-retrieval-snapshot.yml": "PROPOSED",
+    "contracts/source/occurrence_retrieval_snapshot.md": "PROPOSED",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/README.md": "PROPOSED",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/schema_invalid/expected_findings_manifest.json": "PROPOSED",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/schema_invalid/invalid_release_hold_removed.json": "PROPOSED",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/semantic_invalid/expected_findings_manifest.json": "PROPOSED",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/semantic_invalid/semantic_invalid_ebird_non_detection_without_pair.json": "PROPOSED",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/semantic_invalid/semantic_invalid_exact_coordinates_requested.json": "PROPOSED",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/semantic_invalid/semantic_invalid_failed_transfer_as_zero_records.json": "PROPOSED",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/semantic_invalid/semantic_invalid_gbif_absence_claim.json": "PROPOSED",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/semantic_invalid/semantic_invalid_gbif_missing_citation.json": "PROPOSED",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/semantic_invalid/semantic_invalid_incomplete_checklist_non_detection.json": "PROPOSED",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/semantic_invalid/semantic_invalid_internal_lifecycle_ref.json": "PROPOSED",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/semantic_invalid/semantic_invalid_predicate_order.json": "PROPOSED",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/semantic_invalid/semantic_invalid_query_hash.json": "PROPOSED",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/semantic_invalid/semantic_invalid_source_role.json": "PROPOSED",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/semantic_invalid/semantic_invalid_succeeded_without_artifact.json": "PROPOSED",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/semantic_invalid/semantic_invalid_transfer_transition.json": "PROPOSED",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/valid/valid_ebird_complete_checklist_succeeded.json": "PROPOSED",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/valid/valid_gbif_async_running.json": "PROPOSED",
+    "fixtures/contracts/v1/source/occurrence_retrieval_snapshot/valid/valid_gbif_async_succeeded.json": "PROPOSED",
+    "schemas/contracts/v1/source/occurrence_retrieval_snapshot.schema.json": "PROPOSED",
+    "tests/validators/test_validate_occurrence_retrieval_snapshot.py": "PROPOSED",
+    "tools/validators/validate_occurrence_retrieval_snapshot.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-tests",
+      "outcome": "PASS",
+      "reason": "Nine focused tests and sixteen subtests passed with no network dependency."
+    },
+    {
+      "gate": "fixture-polarity",
+      "outcome": "PASS",
+      "reason": "Three valid fixtures passed; twelve schema-valid semantic negatives and one schema-invalid negative failed with exact reviewed reason codes."
+    },
+    {
+      "gate": "schema-parser-and-workflow",
+      "outcome": "PASS",
+      "reason": "Draft 2020-12 schema, every fixture/manifest JSON, Python compilation, and workflow YAML parsing passed."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed exact head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:new-ideas-4-30-ebird-gbif",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas 4-30-26.pdf#pages-12-20-ebird-gbif"
+    },
+    {
+      "id": "repository:new-ideas-4-30-source-map",
+      "validated": true,
+      "evidence_ref": "repo:docs/intake/exploratory/new-ideas-4-30-source-map.md#ebird-gbif-query-and-transfer-gap"
+    },
+    {
+      "id": "repository:directory-governance-adr",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "repository:source-adapter-contract",
+      "validated": true,
+      "evidence_ref": "repo:contracts/source/source_adapter.md"
+    },
+    {
+      "id": "repository:source-artifact-contract",
+      "validated": true,
+      "evidence_ref": "repo:contracts/source/source_artifact.md"
+    },
+    {
+      "id": "repository:ebird-sed-product",
+      "validated": true,
+      "evidence_ref": "repo:docs/sources/catalog/ebird/sampling-event-data.md"
+    },
+    {
+      "id": "repository:gbif-async-product",
+      "validated": true,
+      "evidence_ref": "repo:docs/sources/catalog/gbif/async-download.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-05T22:13:15Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-first implementation of the repository-recorded common eBird/GBIF retrieval seam. It distinguishes checklist-event non-detection from broad absence, records deterministic query and snapshot identity, and prevents failed or unfinished transfers from becoming empty biological results. This receipt grants no source, evidence, rights, sensitivity, review, merge, promotion, release, deployment, publication, or public-use authority."
+}

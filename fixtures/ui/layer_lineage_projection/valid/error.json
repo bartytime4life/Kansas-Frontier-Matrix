@@ -1,0 +1,10 @@
+{
+  "profile": "kfm.explorer.layer-lineage.public-safe.v1",
+  "timeline_id": "kfm:layer-lineage:synthetic:error",
+  "outcome": "ERROR",
+  "reason_code": "UPSTREAM_ERROR",
+  "layer_ref": null,
+  "current_release_ref": null,
+  "current_state": null,
+  "entries": []
+}

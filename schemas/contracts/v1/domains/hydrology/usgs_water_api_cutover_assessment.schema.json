@@ -1,0 +1,241 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kansasfrontiermatrix.org/schemas/contracts/v1/domains/hydrology/usgs_water_api_cutover_assessment.schema.json",
+  "title": "UsgsWaterApiCutoverAssessment",
+  "description": "Fixture-only USGS Water API migration readiness assessment; not connector activation.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "assessment_id",
+    "assessed_at",
+    "connector_ref",
+    "source_descriptor_ref",
+    "source_descriptor_state",
+    "target_mode",
+    "endpoint_profiles",
+    "migration",
+    "decision",
+    "governance",
+    "spec_hash"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "UsgsWaterApiCutoverAssessment"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "assessment_id": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 160
+    },
+    "assessed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "connector_ref": {
+      "const": "connectors/usgs/water_data"
+    },
+    "source_descriptor_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_descriptor_state": {
+      "enum": [
+        "RESOLVED",
+        "UNRESOLVED",
+        "DENIED"
+      ]
+    },
+    "target_mode": {
+      "enum": [
+        "modern_only",
+        "dual_run",
+        "legacy_only"
+      ]
+    },
+    "endpoint_profiles": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "endpoint_id",
+          "family",
+          "role",
+          "base_uri",
+          "active",
+          "response_schema_hash",
+          "fixture_ref"
+        ],
+        "properties": {
+          "endpoint_id": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 120
+          },
+          "family": {
+            "enum": [
+              "modern_waterdata",
+              "legacy_waterservices",
+              "legacy_nwisweb"
+            ]
+          },
+          "role": {
+            "enum": [
+              "continuous",
+              "daily",
+              "monitoring_locations",
+              "site_metadata"
+            ]
+          },
+          "base_uri": {
+            "type": "string",
+            "format": "uri"
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "response_schema_hash": {
+            "type": "string",
+            "pattern": "^sha256:[a-f0-9]{64}$"
+          },
+          "fixture_ref": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "migration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "required_roles",
+        "modern_coverage",
+        "rewrite_map_complete",
+        "legacy_dependency_count",
+        "dual_run_reconciliation",
+        "reconciliation_evidence_refs"
+      ],
+      "properties": {
+        "required_roles": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "continuous",
+              "daily",
+              "monitoring_locations",
+              "site_metadata"
+            ]
+          }
+        },
+        "modern_coverage": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "continuous",
+              "daily",
+              "monitoring_locations",
+              "site_metadata"
+            ]
+          }
+        },
+        "rewrite_map_complete": {
+          "type": "boolean"
+        },
+        "legacy_dependency_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "dual_run_reconciliation": {
+          "enum": [
+            "NOT_APPLICABLE",
+            "COMPLETE",
+            "MISSING",
+            "CONFLICTED"
+          ]
+        },
+        "reconciliation_evidence_refs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "outcome",
+        "reasons"
+      ],
+      "properties": {
+        "outcome": {
+          "enum": [
+            "CUTOVER_CANDIDATE",
+            "HOLD",
+            "DENY"
+          ]
+        },
+        "reasons": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "ACTIVE_LEGACY_ENDPOINT_IN_MODERN_ONLY",
+              "DUAL_RUN_LEGACY_ENDPOINT_MISSING",
+              "DUAL_RUN_RECONCILIATION_MISSING",
+              "DUAL_RUN_CONFLICT",
+              "LEGACY_DEPENDENCIES_REMAIN",
+              "LEGACY_ONLY_MODE",
+              "REQUIRED_ROLE_MISSING",
+              "REWRITE_MAP_INCOMPLETE",
+              "SOURCE_DESCRIPTOR_DENIED",
+              "SOURCE_DESCRIPTOR_UNRESOLVED"
+            ]
+          }
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fixture_only",
+        "production_activation",
+        "promotion_allowed",
+        "public_use_allowed"
+      ],
+      "properties": {
+        "fixture_only": {
+          "const": true
+        },
+        "production_activation": {
+          "const": false
+        },
+        "promotion_allowed": {
+          "const": false
+        },
+        "public_use_allowed": {
+          "const": false
+        }
+      }
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    }
+  }
+}

@@ -1,0 +1,205 @@
+{
+  "receipt_id": "genrec-kansas-mesonet-readme-d9786952",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "connectors/kansas/mesonet/README.md"
+  ],
+  "artifact_hashes": {
+    "connectors/kansas/mesonet/README.md": "sha256:2ba3bc5837e7b926e0c1bde4c43f49477f1b4e64c737f66e4f1f6df78536a299"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-07-12-session"
+  },
+  "prompt_or_contract": "sha256:297fe17ad9b2749ea6691e99071ada9b78db2e434419f8f289379616073d650f",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "file_search",
+      "web",
+      "python",
+      "container"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM GitHub Repository Documentation Implementation Agent — Full Operating Prompt v3",
+      "Directory Rules.pdf",
+      "KFM Soil Architecture Extended Pro PDF-Only Planning Report"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/55c4e537f14386ea503a5879a2a4dfbaebef5384",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/55c4e537f14386ea503a5879a2a4dfbaebef5384/connectors/kansas/mesonet/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/55c4e537f14386ea503a5879a2a4dfbaebef5384",
+      "github://bartytime4life/Kansas-Frontier-Matrix/deleted-at/55c4e537f14386ea503a5879a2a4dfbaebef5384/connectors/kansas-mesonet/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/d9786952a3110bef2729cdb7b9ce4f1d6ab9a689",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d9786952a3110bef2729cdb7b9ce4f1d6ab9a689/connectors/kansas/mesonet/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/55c4e537f14386ea503a5879a2a4dfbaebef5384/connectors/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/55c4e537f14386ea503a5879a2a4dfbaebef5384/connectors/kansas/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/55c4e537f14386ea503a5879a2a4dfbaebef5384/connectors/kansas_mesonet/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/55c4e537f14386ea503a5879a2a4dfbaebef5384/connectors/ks-mesonet/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/55c4e537f14386ea503a5879a2a4dfbaebef5384/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/55c4e537f14386ea503a5879a2a4dfbaebef5384/docs/sources/catalog/kansas/kansas-mesonet.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/55c4e537f14386ea503a5879a2a4dfbaebef5384/data/registry/sources/soil/ks-mesonet.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/55c4e537f14386ea503a5879a2a4dfbaebef5384/data/registry/sources/agriculture/ks_mesonet.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/55c4e537f14386ea503a5879a2a4dfbaebef5384/data/registry/sources/agriculture/kansas-mesonet.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/55c4e537f14386ea503a5879a2a4dfbaebef5384/schemas/contracts/v1/source/source_descriptor.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/55c4e537f14386ea503a5879a2a4dfbaebef5384/contracts/domains/soil/soil_moisture_observation.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/55c4e537f14386ea503a5879a2a4dfbaebef5384/pipelines/domains/soil/mesonet_normalizer/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/55c4e537f14386ea503a5879a2a4dfbaebef5384/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/55c4e537f14386ea503a5879a2a4dfbaebef5384/.github/PULL_REQUEST_TEMPLATE.md",
+      "https://mesonet.k-state.edu/rest/",
+      "https://mesonet.k-state.edu/about/usage/",
+      "https://mesonet.k-state.edu/about/network/",
+      "https://mesonet.k-state.edu/agriculture/soilmoist/",
+      "https://mesonet.k-state.edu/about/parameters/"
+    ]
+  },
+  "truth_labels": {
+    "connectors/kansas/mesonet/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-preflight",
+      "outcome": "PASS",
+      "reason": "Repository identity, visibility, permissions, default branch, pinned base, target blob, deletion commit, duplicate branch/PR state, and adjacent Kansas Mesonet/Soil evidence were inspected."
+    },
+    {
+      "gate": "target-successor-resolution",
+      "outcome": "PASS",
+      "reason": "The user-named top-level path was deliberately deleted on main, so the change updates the repository-present connectors/kansas/mesonet/ successor candidate and does not recreate the retired alias."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The substantive update remains in the existing source-specific connectors/ responsibility root; the paired receipt uses data/receipts/generated/. No root, lifecycle phase, schema home, policy home, registry home, or release authority is created."
+    },
+    {
+      "gate": "adjacent-contract-reconciliation",
+      "outcome": "PASS",
+      "reason": "The product contract was reconciled with connector-root and Kansas-family guidance, remaining aliases, source profile, three registry placeholders, SourceDescriptor schema, Soil moisture contract, and Mesonet normalizer documentation without claiming implementation."
+    },
+    {
+      "gate": "official-source-verification",
+      "outcome": "PASS",
+      "reason": "Current official Kansas Mesonet REST, Data Usage, Network Architecture, Weather Parameters, and Soil Moisture pages were inspected on 2026-07-12; unstable access, interval, record-limit, variable-order, quality-flag, depth, citation, preliminary-data, and consent claims were updated."
+    },
+    {
+      "gate": "remote-readback",
+      "outcome": "PASS",
+      "reason": "The committed README was read back from branch agent/kansas-mesonet-product-readme and resolved to Git blob SHA-1 346fd5a5318ca6800d1d6bd9a846bec0ac35a511."
+    },
+    {
+      "gate": "artifact-integrity",
+      "outcome": "PASS",
+      "reason": "The remote content identity is Git blob SHA-1 346fd5a5318ca6800d1d6bd9a846bec0ac35a511. artifact_hashes records SHA-256 2ba3bc5837e7b926e0c1bde4c43f49477f1b4e64c737f66e4f1f6df78536a299 over canonical identifier git-blob-sha1:346fd5a5318ca6800d1d6bd9a846bec0ac35a511; the Git object remains the byte-addressed source of truth."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "Meta block, one-H1 hierarchy, quick-jump targets, relative links, tables, callouts, balanced fenced blocks, Mermaid lifecycle flow, definition of done, verification backlog, and rollback were checked."
+    },
+    {
+      "gate": "authority-boundary-review",
+      "outcome": "PASS",
+      "reason": "Connector mechanics remain separate from source doctrine, SourceDescriptor/activation authority, contracts, schemas, policy, evidence/proof closure, catalog, release, public clients, and publication."
+    },
+    {
+      "gate": "sensitive-data-review",
+      "outcome": "PASS",
+      "reason": "No observation payload, private consent document, credential, signed URL, private query value, precise private location, or other sensitive material was introduced."
+    },
+    {
+      "gate": "live-source-ingest",
+      "outcome": "SKIPPED",
+      "reason": "Official documentation pages were inspected, but no REST observation request, automated ingest, source activation, or data capture was authorized or performed."
+    },
+    {
+      "gate": "executable-connector-tests",
+      "outcome": "SKIPPED",
+      "reason": "This documentation-only revision creates no executable connector code, package, fixture, or test; common target-local implementation paths were absent in bounded probes."
+    },
+    {
+      "gate": "generated-receipt-schema",
+      "outcome": "PASS",
+      "reason": "Required fields, types, hash patterns, truth labels, validation outcomes, review state, link shapes, and notes length were checked against the inspected Draft 2020-12 schema."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "KFM-OPERATING-PROMPT-V3",
+      "validated": true,
+      "evidence_ref": "attached://KFM GitHub Repository Documentation Implementation Agent — Full Operating Prompt v3"
+    },
+    {
+      "id": "KFM-DIRECTORY-RULES",
+      "validated": true,
+      "evidence_ref": "attached://Directory Rules.pdf"
+    },
+    {
+      "id": "KFM-SOIL-ARCHITECTURE",
+      "validated": true,
+      "evidence_ref": "attached://KFM Soil Architecture Extended Pro PDF-Only Planning Report"
+    },
+    {
+      "id": "CONNECTORS-ROOT-CONTRACT",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/55c4e537f14386ea503a5879a2a4dfbaebef5384/connectors/README.md"
+    },
+    {
+      "id": "KANSAS-FAMILY-CONTRACT",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/55c4e537f14386ea503a5879a2a4dfbaebef5384/connectors/kansas/README.md"
+    },
+    {
+      "id": "KANSAS-MESONET-SOURCE-PROFILE",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/55c4e537f14386ea503a5879a2a4dfbaebef5384/docs/sources/catalog/kansas/kansas-mesonet.md"
+    },
+    {
+      "id": "KANSAS-MESONET-REST",
+      "validated": true,
+      "evidence_ref": "https://mesonet.k-state.edu/rest/"
+    },
+    {
+      "id": "KANSAS-MESONET-DATA-USAGE",
+      "validated": true,
+      "evidence_ref": "https://mesonet.k-state.edu/about/usage/"
+    },
+    {
+      "id": "KANSAS-MESONET-NETWORK-QA",
+      "validated": true,
+      "evidence_ref": "https://mesonet.k-state.edu/about/network/"
+    },
+    {
+      "id": "SOIL-MOISTURE-CONTRACT",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/55c4e537f14386ea503a5879a2a4dfbaebef5384/contracts/domains/soil/soil_moisture_observation.md"
+    },
+    {
+      "id": "GENERATED-RECEIPT-SCHEMA",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/55c4e537f14386ea503a5879a2a4dfbaebef5384/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-12T16:31:05Z",
+  "emitter": "ai-builder/openai-gpt-5.6-pro",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored documentation update on a scoped review branch. The user-named top-level alias was already deleted, so the branch updates the surviving Kansas-family product lane without recreating obsolete structure. The contract records official REST limits and parsing caveats, scopes written consent to automated ingest, preserves preliminary/revision and QA/QC state, and keeps path, registry, station-health, package, test, activation, and runtime uncertainty visible. Human review remains pending; this receipt is well-formed but not merge-authorizing."
+}

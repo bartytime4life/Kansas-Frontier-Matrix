@@ -1,0 +1,478 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/geology/geology_pipeline_specification_assessment.schema.json",
+  "title": "GeologyPipelineSpecificationAssessmentCandidate",
+  "description": "Fixture-only assessment of a proposed inactive Geology pipeline specification. Conformance grants no source, pipeline, evidence, policy, review, release, publication, or public-use authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "source_packet",
+    "spec_hash",
+    "assessment_id",
+    "recorded_at",
+    "specification",
+    "source_bindings",
+    "domain_semantics",
+    "spatial_temporal",
+    "lifecycle",
+    "review_requirements",
+    "limitations",
+    "authority_claims"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "GeologyPipelineSpecificationAssessmentCandidate"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "profile": {
+      "const": "kfm.geology.pipeline-specification-assessment.fixture.v1"
+    },
+    "source_packet": {
+      "const": "KFM-GEOLOGY-ARCHITECTURE-2026-04-21"
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "assessment_id": {
+      "type": "string",
+      "pattern": "^kfm:geology:pipeline-specification-assessment:[a-f0-9]{24}$"
+    },
+    "recorded_at": {
+      "$ref": "#/$defs/date_time"
+    },
+    "specification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "specification_ref",
+        "specification_family",
+        "specification_status",
+        "spec_id",
+        "spec_version",
+        "parser_ref",
+        "consumer_ref",
+        "supersedes_ref",
+        "assessment_state"
+      ],
+      "properties": {
+        "specification_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "specification_family": {
+          "enum": [
+            "BEDROCK_UNITS",
+            "BOREHOLES",
+            "CROSS_SECTIONS",
+            "MINERAL_OCCURRENCES",
+            "SURFICIAL_UNITS",
+            "WELL_LOGS"
+          ]
+        },
+        "specification_status": {
+          "const": "PROPOSED_INACTIVE"
+        },
+        "spec_id": {
+          "type": "string",
+          "pattern": "^kfm\\.geology\\.[a-z0-9-]+$"
+        },
+        "spec_version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "parser_ref": {
+          "$ref": "#/$defs/nullable_ref"
+        },
+        "consumer_ref": {
+          "$ref": "#/$defs/nullable_ref"
+        },
+        "supersedes_ref": {
+          "$ref": "#/$defs/nullable_ref"
+        },
+        "assessment_state": {
+          "enum": [
+            "COMPLETE",
+            "ERROR",
+            "INCOMPLETE",
+            "UNKNOWN"
+          ]
+        }
+      }
+    },
+    "source_bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_descriptor_refs",
+        "source_roles",
+        "rights_state",
+        "source_activation_state"
+      ],
+      "properties": {
+        "source_descriptor_refs": {
+          "$ref": "#/$defs/ref_array_nonempty"
+        },
+        "source_roles": {
+          "$ref": "#/$defs/source_role_array"
+        },
+        "rights_state": {
+          "enum": [
+            "DENIED",
+            "UNRESOLVED",
+            "VERIFIED"
+          ]
+        },
+        "source_activation_state": {
+          "const": "INACTIVE"
+        }
+      }
+    },
+    "domain_semantics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "object_roles",
+        "knowledge_characters",
+        "resource_claim_class",
+        "anti_collapse_assertions",
+        "claim_scope_statement"
+      ],
+      "properties": {
+        "object_roles": {
+          "$ref": "#/$defs/object_role_array"
+        },
+        "knowledge_characters": {
+          "$ref": "#/$defs/knowledge_array"
+        },
+        "resource_claim_class": {
+          "enum": [
+            "NONE",
+            "OCCURRENCE"
+          ]
+        },
+        "anti_collapse_assertions": {
+          "$ref": "#/$defs/assertion_array"
+        },
+        "claim_scope_statement": {
+          "$ref": "#/$defs/nullable_statement"
+        }
+      }
+    },
+    "spatial_temporal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "support_kind",
+        "horizontal_crs_ref",
+        "vertical_datum_ref",
+        "depth_reference_ref",
+        "map_scale_denominator",
+        "source_vintage",
+        "temporal_scope_ref",
+        "uncertainty_ref",
+        "sensitivity_state"
+      ],
+      "properties": {
+        "support_kind": {
+          "enum": [
+            "BOREHOLE_POINT",
+            "CROSS_SECTION_2D",
+            "MAP_UNIT_POLYGON",
+            "OCCURRENCE_POINT_OR_AREA",
+            "WELL_LOG_INTERVAL"
+          ]
+        },
+        "horizontal_crs_ref": {
+          "$ref": "#/$defs/nullable_ref"
+        },
+        "vertical_datum_ref": {
+          "$ref": "#/$defs/nullable_ref"
+        },
+        "depth_reference_ref": {
+          "$ref": "#/$defs/nullable_ref"
+        },
+        "map_scale_denominator": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1,
+          "maximum": 1000000000
+        },
+        "source_vintage": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 4,
+          "maxLength": 128
+        },
+        "temporal_scope_ref": {
+          "$ref": "#/$defs/nullable_ref"
+        },
+        "uncertainty_ref": {
+          "$ref": "#/$defs/nullable_ref"
+        },
+        "sensitivity_state": {
+          "enum": [
+            "CONTROLLED",
+            "PUBLIC_SAFE_GENERALIZED",
+            "UNRESOLVED"
+          ]
+        }
+      }
+    },
+    "lifecycle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "execution_mode",
+        "network_access",
+        "source_material_access",
+        "candidate_output_stage",
+        "validation_profile_ref",
+        "evidence_requirements_ref",
+        "correction_ref",
+        "rollback_ref"
+      ],
+      "properties": {
+        "execution_mode": {
+          "const": "FIXTURE_ONLY"
+        },
+        "network_access": {
+          "const": false
+        },
+        "source_material_access": {
+          "const": false
+        },
+        "candidate_output_stage": {
+          "enum": [
+            "QUARANTINE",
+            "WORK"
+          ]
+        },
+        "validation_profile_ref": {
+          "$ref": "#/$defs/nullable_ref"
+        },
+        "evidence_requirements_ref": {
+          "$ref": "#/$defs/nullable_ref"
+        },
+        "correction_ref": {
+          "$ref": "#/$defs/nullable_ref"
+        },
+        "rollback_ref": {
+          "$ref": "#/$defs/nullable_ref"
+        }
+      }
+    },
+    "review_requirements": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_rights_review_ref",
+        "sensitivity_review_ref",
+        "geology_review_ref",
+        "validation_review_ref"
+      ],
+      "properties": {
+        "source_rights_review_ref": {
+          "$ref": "#/$defs/nullable_ref"
+        },
+        "sensitivity_review_ref": {
+          "$ref": "#/$defs/nullable_ref"
+        },
+        "geology_review_ref": {
+          "$ref": "#/$defs/nullable_ref"
+        },
+        "validation_review_ref": {
+          "$ref": "#/$defs/nullable_ref"
+        }
+      }
+    },
+    "limitations": {
+      "const": [
+        "DECLARATION_ONLY",
+        "FIXTURE_ONLY",
+        "NO_EVIDENCE_OR_SOURCE_ACTIVATION_AUTHORITY",
+        "NO_LIVE_SOURCE_OR_NETWORK_ACCESS",
+        "NO_OBSERVATION_UPGRADE",
+        "NO_POLICY_REVIEW_RELEASE_OR_PUBLICATION_AUTHORITY",
+        "NO_PROTECTED_GEOMETRY",
+        "SYNTHETIC_REFERENCES_ONLY"
+      ]
+    },
+    "authority_claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_admission_authority",
+        "pipeline_activation_authority",
+        "geologic_truth_authority",
+        "resource_classification_authority",
+        "evidence_authority",
+        "policy_authority",
+        "review_authority",
+        "release_authority",
+        "publication_authority",
+        "public_use_authority"
+      ],
+      "properties": {
+        "source_admission_authority": {
+          "const": false
+        },
+        "pipeline_activation_authority": {
+          "const": false
+        },
+        "geologic_truth_authority": {
+          "const": false
+        },
+        "resource_classification_authority": {
+          "const": false
+        },
+        "evidence_authority": {
+          "const": false
+        },
+        "policy_authority": {
+          "const": false
+        },
+        "review_authority": {
+          "const": false
+        },
+        "release_authority": {
+          "const": false
+        },
+        "publication_authority": {
+          "const": false
+        },
+        "public_use_authority": {
+          "const": false
+        }
+      }
+    }
+  },
+  "$defs": {
+    "date_time": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "ref": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 512,
+      "pattern": "^[A-Za-z][A-Za-z0-9+.-]*:[^\\s]+$"
+    },
+    "nullable_ref": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ref"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "ref_array_nonempty": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/ref"
+      }
+    },
+    "source_role_array": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 16,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "ADMINISTRATIVE_RECORD",
+          "AUTHORITATIVE_MAP",
+          "DIRECT_OBSERVATION",
+          "INTERPRETIVE_MAP",
+          "MODEL_OUTPUT",
+          "REFERENCE_CATALOG",
+          "SYNTHETIC_FIXTURE"
+        ]
+      }
+    },
+    "object_role_array": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 8,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "BoreholeReference",
+          "CrossSection",
+          "GeologicUnit",
+          "MineralOccurrence",
+          "SurficialUnit",
+          "WellLogReference"
+        ]
+      }
+    },
+    "knowledge_array": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 16,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "ADMINISTRATIVE",
+          "AGGREGATED",
+          "CANDIDATE",
+          "INFERRED",
+          "INTERPRETED",
+          "MEASURED",
+          "MODELED",
+          "OBSERVED",
+          "SYNTHETIC"
+        ]
+      }
+    },
+    "assertion_array": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 16,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "ADMINISTRATIVE_RECORD_NOT_PHYSICAL_GEOLOGY",
+          "GENERALIZED_GEOMETRY_NOT_PUBLIC_APPROVAL",
+          "INTERPRETATION_NOT_OBSERVATION",
+          "MAP_UNIT_NOT_POINT_TRUTH",
+          "OCCURRENCE_NOT_DEPOSIT_OR_ESTIMATE",
+          "SUCCESSFUL_RUN_NOT_EVIDENCE_OR_RELEASE"
+        ]
+      }
+    },
+    "nullable_statement": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 24,
+          "maxLength": 1200
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "execution_mode": "FIXTURE_ONLY",
+    "contract_doc": "contracts/domains/geology/geology_pipeline_specification_assessment.md",
+    "source_packet": "KFM-GEOLOGY-ARCHITECTURE-2026-04-21"
+  }
+}

@@ -1,0 +1,173 @@
+{
+  "receipt_id": "genrec:pass18-drone-authorization-metadata:20260811",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/drone-capture-authorization-metadata.yml",
+    "contracts/evidence/drone_capture_authorization_metadata.md",
+    "docs/intake/exploratory/pass-18-drone-capture-authorization-metadata-source-map.md",
+    "fixtures/contracts/v1/evidence/drone_capture_authorization_metadata/cases.json",
+    "schemas/contracts/v1/evidence/drone_capture_authorization_metadata.schema.json",
+    "tests/validators/evidence/test_validate_drone_capture_authorization_metadata.py",
+    "tools/validators/evidence/validate_drone_capture_authorization_metadata.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/drone-capture-authorization-metadata.yml": "sha256:9aad0f967253d496e43789fbfd35be2e0ecaf825b094a92f8373a69c1cab6eeb",
+    "contracts/evidence/drone_capture_authorization_metadata.md": "sha256:dbe8ed0825f4ffc91ce850938d8e6caa12634727c7b1a03173b5752c2557f72d",
+    "docs/intake/exploratory/pass-18-drone-capture-authorization-metadata-source-map.md": "sha256:ec97dbbca86f2ad9dfef4e8e4fc64eb6a06cfa81b8610302e0fa814341d56329",
+    "fixtures/contracts/v1/evidence/drone_capture_authorization_metadata/cases.json": "sha256:9a4a618f792da28e44897b1a0b084c8f118755737e59e018815dcc2154ef1f4a",
+    "schemas/contracts/v1/evidence/drone_capture_authorization_metadata.schema.json": "sha256:d62d06f2eabeccca738b1ed413ed6575b50af51ce81fb893fd7d68ac2f54f26a",
+    "tests/validators/evidence/test_validate_drone_capture_authorization_metadata.py": "sha256:f6facb5a9dab7f1adf1604db96433b57838657bbf015b169f17ba06ad35c3b9c",
+    "tools/validators/evidence/validate_drone_capture_authorization_metadata.py": "sha256:7e9a8cc0fc227156bfb866c71702b3156cf5d8f8380e8728c9519bc9c09ff328"
+  },
+  "model_identity": {
+    "provider": "openai",
+    "model": "gpt-5",
+    "version": "2026-08-11"
+  },
+  "prompt_or_contract": "sha256:f0a2ce4ce39d80b38b15e24bde01cbd124658c3cd059546e5462297ff493e217",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "tools_enabled": [
+      "container",
+      "google_drive",
+      "github"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9"
+    ],
+    "attached_docs": [
+      "KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "git:authoring-base@ded9a9755316fee97827d5d65b8fc26e31c2ae4b",
+      "drive:file:11GH5lYaa-lqXDKhG20GmiSetFgh5VWx3#pages=29-31",
+      "drive:file:1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho",
+      "KFM-P18-INV-466",
+      "contracts/evidence/field_capture_evidence_handoff.md",
+      "contracts/source/source_descriptor.md",
+      "docs/doctrine/directory-rules.md",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/drone-capture-authorization-metadata.yml": "PROPOSED",
+    "contracts/evidence/drone_capture_authorization_metadata.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-drone-capture-authorization-metadata-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/evidence/drone_capture_authorization_metadata/cases.json": "PROPOSED",
+    "schemas/contracts/v1/evidence/drone_capture_authorization_metadata.schema.json": "PROPOSED",
+    "tests/validators/evidence/test_validate_drone_capture_authorization_metadata.py": "PROPOSED",
+    "tools/validators/evidence/validate_drone_capture_authorization_metadata.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "pass18-card-visual-review",
+      "outcome": "PASS",
+      "reason": "Rendered physical PDF pages 169-170 were visually inspected; the card requests authorization, area, altitude, time, airspace, and safety metadata while warning that regulations change."
+    },
+    {
+      "gate": "connected-drive-source-pages-29-31",
+      "outcome": "PASS",
+      "reason": "Connected Drive text verified the historical source structure for operation date/time, altitude, aircraft model, airspace-data checking, and authorization-or-denial response; it was not treated as current law."
+    },
+    {
+      "gate": "fixture-exact-four-way-polarity-30",
+      "outcome": "PASS",
+      "reason": "Thirty fixture cases reproduced exact PASS, ABSTAIN, DENY, and ERROR outcomes and findings."
+    },
+    {
+      "gate": "focused-unittest-8",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "docs-validator-unit-tests-51",
+      "outcome": "PASS",
+      "reason": "Twenty-four metadata and twenty-seven document-graph unit tests passed."
+    },
+    {
+      "gate": "docs-meta-block-present-profile",
+      "outcome": "PASS",
+      "reason": "Both new metadata blocks are valid; missing registry entries remain review-only add-candidate warnings."
+    },
+    {
+      "gate": "draft-2020-12-meta",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "python-compile",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-local-parity",
+      "outcome": "PASS",
+      "reason": "Artifact paths, SHA-256 hashes, and truth-label keys match all seven non-self artifacts."
+    },
+    {
+      "gate": "hosted-current-head",
+      "outcome": "SKIPPED",
+      "reason": "Pending exact-head GitHub Actions after draft PR publication."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "PASS18_IDEA_CARD_KFM-P18-INV-466",
+      "validated": true,
+      "evidence_ref": "KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#physical-pages=169-170"
+    },
+    {
+      "id": "SRC-P18-010",
+      "validated": true,
+      "evidence_ref": "https://drive.google.com/file/d/11GH5lYaa-lqXDKhG20GmiSetFgh5VWx3/view#pages=29-31"
+    },
+    {
+      "id": "CONNECTED_DRIVE_FULL_ATLAS",
+      "validated": true,
+      "evidence_ref": "https://docs.google.com/document/d/1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho/edit"
+    },
+    {
+      "id": "FIELD_CAPTURE_EVIDENCE_HANDOFF",
+      "validated": true,
+      "evidence_ref": "contracts/evidence/field_capture_evidence_handoff.md"
+    },
+    {
+      "id": "DIRECTORY_RULES",
+      "validated": true,
+      "evidence_ref": "docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "DIRECTORY_RULES_ADOPTION_ADR",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "GENERATED_RECEIPT_SCHEMA_V1",
+      "validated": true,
+      "evidence_ref": "schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-12T01:36:15Z",
+  "emitter": "openai/gpt-5",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only implementation of KFM-P18-INV-466's missing authorization-metadata seam. PASS means internally coherent for evidence-handoff review only; it is not current legal guidance, permission to fly, authorization authentication, evidence, policy, review, release, publication, or public-use authority."
+}

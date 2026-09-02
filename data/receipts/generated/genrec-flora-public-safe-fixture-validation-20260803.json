@@ -1,0 +1,169 @@
+{
+  "receipt_id": "genrec-flora-public-safe-fixture-validation-20260803",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/domain-flora.yml",
+    "fixtures/domains/flora/README.md",
+    "fixtures/domains/flora/invalid/README.md",
+    "fixtures/domains/flora/invalid/candidate_not_object.expected_error.txt",
+    "fixtures/domains/flora/invalid/candidate_not_object.json",
+    "fixtures/domains/flora/invalid/missing_public_controls.expected_error.txt",
+    "fixtures/domains/flora/invalid/missing_public_controls.json",
+    "fixtures/domains/flora/invalid/missing_references.expected_error.txt",
+    "fixtures/domains/flora/invalid/missing_references.json",
+    "fixtures/domains/flora/invalid/role_and_taxonomy_collapse.expected_error.txt",
+    "fixtures/domains/flora/invalid/role_and_taxonomy_collapse.json",
+    "fixtures/domains/flora/invalid/undeclared_external_transform.expected_error.txt",
+    "fixtures/domains/flora/invalid/undeclared_external_transform.json",
+    "fixtures/domains/flora/invalid/unsafe_location_and_sensitivity.expected_error.txt",
+    "fixtures/domains/flora/invalid/unsafe_location_and_sensitivity.json",
+    "fixtures/domains/flora/valid/README.md",
+    "fixtures/domains/flora/valid/public_safe_occurrence.json",
+    "tests/domains/flora/README.md",
+    "tests/domains/flora/test_flora_smoke.py",
+    "tools/validators/domains/flora/README.md",
+    "tools/validators/domains/flora/validate_public_safe_fixture.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/domain-flora.yml": "sha256:0f32a4971152b45458cf0392f2d3309f789befd1f10ad8b756fc518ee69e6d4b",
+    "fixtures/domains/flora/README.md": "sha256:4fd05e7959fc283527a8a40a0653f3936a7b92a0ef7ddcb43eca911ea06add78",
+    "fixtures/domains/flora/invalid/README.md": "sha256:71765a2709dec66739553d502ed273527b2d7104a1e305ed6217715ff90c9f66",
+    "fixtures/domains/flora/invalid/candidate_not_object.expected_error.txt": "sha256:605aff0eab866b0f3abe71dd1bbbe8c544bbd7172c9eea7e4103d48b2c85e78a",
+    "fixtures/domains/flora/invalid/candidate_not_object.json": "sha256:37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "fixtures/domains/flora/invalid/missing_public_controls.expected_error.txt": "sha256:e60e537dbeec4168b6c775082bd9af0ae5dfe5f7c41d03cfbbb0fc835218654d",
+    "fixtures/domains/flora/invalid/missing_public_controls.json": "sha256:cd71028d982ecd452ea0ba9aa6651ab54d1408d024690153968f8d3da5217beb",
+    "fixtures/domains/flora/invalid/missing_references.expected_error.txt": "sha256:755a9cd9c8df1dc99ee5685ec38ed8716884c86810d5a18fa82e899fee89ee23",
+    "fixtures/domains/flora/invalid/missing_references.json": "sha256:155711af7039284ac5f349b8ad923e437d8868384a41291f51454fe34a7c144a",
+    "fixtures/domains/flora/invalid/role_and_taxonomy_collapse.expected_error.txt": "sha256:9e796ec8f8fb1c32852c98d509e0014f148fa4e7e4dd2e47877128e02b822844",
+    "fixtures/domains/flora/invalid/role_and_taxonomy_collapse.json": "sha256:212d56e04eb671976928eebc8ccbe59ffae81f03ad8133903f3e751db56c7270",
+    "fixtures/domains/flora/invalid/undeclared_external_transform.expected_error.txt": "sha256:06eb40f7ac3ebbf36a8d611136f379bba77eac9d222ef8e1437adfb405e89dff",
+    "fixtures/domains/flora/invalid/undeclared_external_transform.json": "sha256:3070717623f765ac7b9c074daf5ba6b2f7449572c4479b8fca23f54d1151c4d0",
+    "fixtures/domains/flora/invalid/unsafe_location_and_sensitivity.expected_error.txt": "sha256:3c359c7cacd9309a3b0c1e23c217c43ac1925068552c5a34a04e34f83d2cf4e6",
+    "fixtures/domains/flora/invalid/unsafe_location_and_sensitivity.json": "sha256:badbee8fa8a24583fab4b182ef2294febd97d73bc407aaeca217dd45bbae01e5",
+    "fixtures/domains/flora/valid/README.md": "sha256:a4def4424348167dde47082289dec94a9ba6fab30a94f75b70b1f907691468b3",
+    "fixtures/domains/flora/valid/public_safe_occurrence.json": "sha256:240703853d4858f8bf210244ce2fbd38065289f27baaae8592baddda670c5165",
+    "tests/domains/flora/README.md": "sha256:5dffc53d2690b0829f4235793d1504b9ddc86050a7be3ca058e006595d58e883",
+    "tests/domains/flora/test_flora_smoke.py": "sha256:8590efa38dca5ff6a5867a03b3f769b48779cdc7f959bc67153f19161c8757a7",
+    "tools/validators/domains/flora/README.md": "sha256:2bd5f322ff5f87f0f182452b995f99e47ceaf5cb934b88011e1f7c71aad79257",
+    "tools/validators/domains/flora/validate_public_safe_fixture.py": "sha256:487a9fcc34f3e0923c01890231eb6dbba23335860cd1669b29e5e4cb055757e3"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-03"
+  },
+  "prompt_or_contract": "sha256:169d0521ebcd05024077e7a7a0183d25ef189b3920719cc39e6dbffa7c87169e",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "connected GitHub repository inspection and contents writes",
+      "standard-library fixture validator and no-network tests",
+      "deterministic JSON, YAML, sidecar, security-shape, and SHA-256 checks"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [],
+    "attached_docs": [],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/68069dce9e292649697f63f96fa57edd07181a27",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/68069dce9e292649697f63f96fa57edd07181a27/tools/validators/_common/public_safe_fixture.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/68069dce9e292649697f63f96fa57edd07181a27/.github/workflows/domain-flora.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5163173607",
+      "github://bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5163318373"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/domain-flora.yml": "CONFIRMED",
+    "fixtures/domains/flora/README.md": "CONFIRMED",
+    "fixtures/domains/flora/invalid/README.md": "CONFIRMED",
+    "fixtures/domains/flora/invalid/candidate_not_object.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/flora/invalid/candidate_not_object.json": "CONFIRMED",
+    "fixtures/domains/flora/invalid/missing_public_controls.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/flora/invalid/missing_public_controls.json": "CONFIRMED",
+    "fixtures/domains/flora/invalid/missing_references.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/flora/invalid/missing_references.json": "CONFIRMED",
+    "fixtures/domains/flora/invalid/role_and_taxonomy_collapse.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/flora/invalid/role_and_taxonomy_collapse.json": "CONFIRMED",
+    "fixtures/domains/flora/invalid/undeclared_external_transform.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/flora/invalid/undeclared_external_transform.json": "CONFIRMED",
+    "fixtures/domains/flora/invalid/unsafe_location_and_sensitivity.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/flora/invalid/unsafe_location_and_sensitivity.json": "CONFIRMED",
+    "fixtures/domains/flora/valid/README.md": "CONFIRMED",
+    "fixtures/domains/flora/valid/public_safe_occurrence.json": "CONFIRMED",
+    "tests/domains/flora/README.md": "CONFIRMED",
+    "tests/domains/flora/test_flora_smoke.py": "CONFIRMED",
+    "tools/validators/domains/flora/README.md": "CONFIRMED",
+    "tools/validators/domains/flora/validate_public_safe_fixture.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-standard-library-suite",
+      "outcome": "PASS",
+      "reason": "All 16 deterministic unittest cases passed locally with common socket, DNS, HTTP, and urllib entry points blocked."
+    },
+    {
+      "gate": "positive-negative-fixture-polarity",
+      "outcome": "PASS",
+      "reason": "The explicit positive fixture is accepted and all six exact negative fixtures match sorted nonempty sidecars."
+    },
+    {
+      "gate": "bounded-json-and-cli-contract",
+      "outcome": "PASS",
+      "reason": "Duplicate keys, malformed and non-finite JSON, excessive integers, depth, nodes, bytes, and non-regular files fail closed; CLI exit codes 0, 1, and 2 and compact JSON output were verified."
+    },
+    {
+      "gate": "sensitive-content-and-value-echo",
+      "outcome": "PASS",
+      "reason": "The positive fixture contains no coordinates, URLs, precise locations, private-land details, collection or access clues, or transform parameters; one intentionally invalid synthetic coordinate-like string proves rejection, and candidate values are never emitted in findings."
+    },
+    {
+      "gate": "workflow-and-authority-boundary",
+      "outcome": "PASS",
+      "reason": "The Flora workflow executes only the focused synthetic suite while preserving read-only permissions and explicit proof and release holds."
+    },
+    {
+      "gate": "artifact-integrity",
+      "outcome": "PASS",
+      "reason": "This self-excluding receipt binds exactly the 21 authored or substantively modified artifacts; artifact_paths, artifact_hashes, and truth_labels use the same key set."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "Hosted exact-head workflow evidence is collected after the bounded branch and draft pull request are created."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "base-main",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/68069dce9e292649697f63f96fa57edd07181a27"
+    },
+    {
+      "id": "model-b-exception",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5163173607"
+    },
+    {
+      "id": "sequential-write-amendment",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5163318373"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-08-03T06:59:02Z",
+  "emitter": "OpenAI GPT-5.6 Pro via connected GitHub app",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only, no-network Flora validation slice. Remote exact-head evidence belongs in the draft pull request and a later issue #1675 completion record. No source admission, policy decision, proof, promotion, release, deployment, publication, or repository-setting effect is asserted."
+}

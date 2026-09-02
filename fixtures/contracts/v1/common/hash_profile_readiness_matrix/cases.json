@@ -1,0 +1,105 @@
+{
+  "schema_version": "v1",
+  "suite": "hash-profile-readiness-matrix",
+  "cases": [
+    {
+      "case_id": "valid-repository-matrix",
+      "mutations": [],
+      "recompute_spec_hash": false,
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "invalid-spec-hash",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/spec_hash",
+          "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+        }
+      ],
+      "recompute_spec_hash": false,
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        "MATRIX_SPEC_HASH_MISMATCH"
+      ]
+    },
+    {
+      "case_id": "unavailable-range-baseline",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/profiles/2/activation_state",
+          "value": "BASELINE"
+        },
+        {
+          "op": "replace",
+          "path": "/profiles/5/activation_state",
+          "value": "INACTIVE"
+        }
+      ],
+      "recompute_spec_hash": true,
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        "BASELINE_ROLE_NOT_AUTHORIZED",
+        "BASELINE_SPEC_PROFILE_INVALID",
+        "RANGE_PROFILE_NOT_INACTIVE_BAO",
+        "UNAVAILABLE_PROFILE_ACTIVE"
+      ]
+    },
+    {
+      "case_id": "algorithm-prefix-mismatch",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/profiles/2/digest_prefix",
+          "value": "sha256:"
+        }
+      ],
+      "recompute_spec_hash": true,
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        "ALGORITHM_PREFIX_MISMATCH"
+      ]
+    },
+    {
+      "case_id": "duplicate-hash-role",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/profiles/3/hash_role",
+          "value": "content_hash"
+        },
+        {
+          "op": "replace",
+          "path": "/profiles/3/canonicalization_profile",
+          "value": "RAW-BYTES"
+        }
+      ],
+      "recompute_spec_hash": true,
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        "HASH_ROLE_DUPLICATE"
+      ]
+    },
+    {
+      "case_id": "object-families-not-canonical",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/profiles/0/object_families",
+          "value": [
+            "RawCapture",
+            "Artifact",
+            "EvidenceCarrier"
+          ]
+        }
+      ],
+      "recompute_spec_hash": true,
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        "OBJECT_FAMILIES_NOT_CANONICAL"
+      ]
+    }
+  ]
+}

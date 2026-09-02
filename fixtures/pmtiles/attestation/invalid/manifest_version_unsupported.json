@@ -1,0 +1,9 @@
+{
+  "case_id": "tile-manifest-version-unsupported",
+  "expected": {
+    "issue_codes": ["TILE_MANIFEST_PMTILES_VERSION_UNSUPPORTED"],
+    "status": "DENY"
+  },
+  "fixture_profile": "kfm.pmtiles.tile-artifact-manifest.compat.v1",
+  "mutation": "manifest_version_unsupported"
+}

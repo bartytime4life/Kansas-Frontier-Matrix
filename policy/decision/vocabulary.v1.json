@@ -1,0 +1,219 @@
+{
+  "object_type": "PolicyDecisionVocabulary",
+  "vocabulary_id": "policy-decision-vocabulary:v1",
+  "version": "v1",
+  "status": "PROPOSED_INACTIVE",
+  "reason_codes": [
+    {
+      "code": "CONSENT_REQUIRED",
+      "outcome": "DENY",
+      "policy_families": [
+        "consent"
+      ],
+      "public_safe": true,
+      "description": "Required consent is absent, expired, revoked, or outside the requested use."
+    },
+    {
+      "code": "EVIDENCE_STALE",
+      "outcome": "ABSTAIN",
+      "policy_families": [
+        "access",
+        "capability",
+        "promotion",
+        "render"
+      ],
+      "public_safe": true,
+      "description": "Available evidence is outside the admitted freshness window for the requested operation."
+    },
+    {
+      "code": "EVIDENCE_UNRESOLVED",
+      "outcome": "ABSTAIN",
+      "policy_families": [
+        "access",
+        "capability",
+        "promotion",
+        "render"
+      ],
+      "public_safe": true,
+      "description": "Required EvidenceRef values do not resolve to an admissible EvidenceBundle."
+    },
+    {
+      "code": "OPERATION_ALLOWED_WITH_OBLIGATIONS",
+      "outcome": "ANSWER",
+      "policy_families": [
+        "access",
+        "capability",
+        "promotion",
+        "render",
+        "sensitivity"
+      ],
+      "public_safe": true,
+      "description": "The bounded operation may proceed only after every attached obligation is enforced."
+    },
+    {
+      "code": "POLICY_BUNDLE_UNAVAILABLE",
+      "outcome": "ERROR",
+      "policy_families": [
+        "access",
+        "capability",
+        "consent",
+        "promotion",
+        "render",
+        "sensitivity"
+      ],
+      "public_safe": true,
+      "description": "The selected policy bundle or evaluator context is missing, stale, or not verifiable."
+    },
+    {
+      "code": "POLICY_INPUT_INCOMPLETE",
+      "outcome": "ERROR",
+      "policy_families": [
+        "access",
+        "capability",
+        "consent",
+        "promotion",
+        "render",
+        "sensitivity"
+      ],
+      "public_safe": true,
+      "description": "The explicit policy input lacks required operation, audience, evidence, rights, sensitivity, review, release, or evaluator context."
+    },
+    {
+      "code": "PUBLIC_PRECISION_UNSAFE",
+      "outcome": "DENY",
+      "policy_families": [
+        "access",
+        "render",
+        "sensitivity"
+      ],
+      "public_safe": true,
+      "description": "Requested public precision exceeds the approved public-safe geometry or location posture."
+    },
+    {
+      "code": "RIGHTS_UNKNOWN",
+      "outcome": "DENY",
+      "policy_families": [
+        "access",
+        "promotion",
+        "render"
+      ],
+      "public_safe": true,
+      "description": "Storage, transformation, redistribution, attribution, export, or public-use rights are unresolved."
+    },
+    {
+      "code": "SENSITIVITY_UNRESOLVED",
+      "outcome": "DENY",
+      "policy_families": [
+        "access",
+        "promotion",
+        "render",
+        "sensitivity"
+      ],
+      "public_safe": true,
+      "description": "Sensitivity classification or required public-safe transform is unresolved."
+    }
+  ],
+  "obligation_codes": [
+    {
+      "code": "ATTACH_CITATIONS",
+      "applicable_outcomes": [
+        "ANSWER"
+      ],
+      "policy_families": [
+        "access",
+        "capability",
+        "promotion",
+        "render"
+      ],
+      "description": "Carry resolvable evidence citations into the governed response or release surface."
+    },
+    {
+      "code": "ATTACH_RIGHTS_NOTICE",
+      "applicable_outcomes": [
+        "ANSWER"
+      ],
+      "policy_families": [
+        "access",
+        "promotion",
+        "render"
+      ],
+      "description": "Carry the approved attribution, license, terms, or reuse notice into the exposed artifact."
+    },
+    {
+      "code": "DELAY_PUBLICATION",
+      "applicable_outcomes": [
+        "ANSWER"
+      ],
+      "policy_families": [
+        "promotion",
+        "sensitivity"
+      ],
+      "description": "Do not expose the candidate before the approved embargo or delayed-release condition ends."
+    },
+    {
+      "code": "GENERALIZE_GEOMETRY",
+      "applicable_outcomes": [
+        "ANSWER"
+      ],
+      "policy_families": [
+        "access",
+        "render",
+        "sensitivity"
+      ],
+      "description": "Replace exact geometry with the approved generalized representation before exposure."
+    },
+    {
+      "code": "REDACT_EXACT_LOCATION",
+      "applicable_outcomes": [
+        "ANSWER"
+      ],
+      "policy_families": [
+        "access",
+        "render",
+        "sensitivity"
+      ],
+      "description": "Remove exact coordinates or location-bearing attributes before public or semi-public use."
+    },
+    {
+      "code": "REQUIRE_STEWARD_REVIEW",
+      "applicable_outcomes": [
+        "ANSWER"
+      ],
+      "policy_families": [
+        "consent",
+        "promotion",
+        "sensitivity"
+      ],
+      "description": "Require the named steward or qualified reviewer to approve the exact candidate version."
+    },
+    {
+      "code": "VERIFY_ROLLBACK_TARGET",
+      "applicable_outcomes": [
+        "ANSWER"
+      ],
+      "policy_families": [
+        "promotion"
+      ],
+      "description": "Verify the candidate has an executable rollback target before promotion or release."
+    },
+    {
+      "code": "WITHHOLD_EXPORT",
+      "applicable_outcomes": [
+        "ANSWER"
+      ],
+      "policy_families": [
+        "access",
+        "render",
+        "sensitivity"
+      ],
+      "description": "Permit bounded viewing while blocking downloadable or bulk-export representations."
+    }
+  ],
+  "governance": {
+    "policy_evaluation": false,
+    "decision_emitted": false,
+    "promotion_authorized": false,
+    "release_authorized": false,
+    "publication_authorized": false
+  }
+}

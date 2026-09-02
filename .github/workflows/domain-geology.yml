@@ -1,0 +1,557 @@
+# KFM Geology domain CI readiness workflow.
+# Status: four bounded no-network fixture profiles are executable (resource
+# class, public-safe geometry metadata, a sparse announcement-bound GMD 3 AEM
+# campaign candidate, and production material-change assessment). Their Python
+# commands load the shared Python startup guard;
+# broader validation, proof, and release-dry-run producers remain held.
+#
+# Authority boundary:
+# - This workflow inspects repository maturity without opening restricted
+#   subsurface, private-well, well-log, parcel, operator, or resource payloads.
+# - It does not validate Geology truth, certify reserves or engineering claims,
+#   build an EvidenceBundle or ProofPack, admit sources, apply policy, perform a
+#   public-safe geometry transform, promote lifecycle artifacts, approve release,
+#   write published data, deploy, or publish.
+name: domain-geology
+
+"on":
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: domain-geology-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  TZ: UTC
+  PYTHONUNBUFFERED: "1"
+
+jobs:
+  validate-geology:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      PYTHONPATH: ${{ github.workspace }}/tools/ci/kfm_no_network:${{ github.workspace }}
+
+    steps:
+      - name: Check out Geology boundaries
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+
+      - name: Install Geology validation dependencies
+        run: python tools/ci/install_python_ci.py project-test
+
+      - name: Inspect Geology validation boundaries
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_paths=(
+            "docs/domains/geology/README.md"
+            "contracts/domains/geology/README.md"
+            "schemas/contracts/v1/domains/geology/README.md"
+            "fixtures/domains/geology/README.md"
+            "policy/domains/geology/README.md"
+            "tests/domains/geology/README.md"
+            "tests/domains/geology/test_source_role_anti_collapse.py"
+            "tests/domains/geology/test_aem_campaign.py"
+            "tests/domains/geology/test_no_network_proof.py"
+            "tests/domains/geology/test_public_safe_geometry.py"
+            "tests/validators/domains/geology/test_schema_contract_doc_links.py"
+            "tools/ci/kfm_no_network/sitecustomize.py"
+            "tools/validators/domains/geology/README.md"
+            "tools/validators/domains/geology/validate_resource_class_distinction.py"
+            "tools/validators/domains/geology/validate_aem_campaign.py"
+            "tools/validators/domains/geology/validate_schema.py"
+            "tools/validators/geology/public_safe_geometry/validate_public_safe_geometry.py"
+            "tools/validators/geology/README.md"
+            "tools/validators/geology/resource_class/README.md"
+            "fixtures/domains/geology/resource_class/README.md"
+            "fixtures/domains/geology/aem_survey_campaign/README.md"
+            "fixtures/contracts/v1/source/source_descriptor/README.md"
+            "fixtures/contracts/v1/source/source_descriptor/valid/README.md"
+            "fixtures/contracts/v1/source/source_descriptor/valid/valid_ku_news_gmd3_aem_announcement_2026_05_11.json"
+            "contracts/domains/geology/AemSurveyCampaign.md"
+            "contracts/domains/geology/public_safe_geometry_assessment.md"
+            "schemas/contracts/v1/domains/geology/aem_survey_campaign.schema.json"
+            "schemas/contracts/v1/domains/geology/public_safe_geometry_assessment.schema.json"
+            "fixtures/contracts/v1/domains/geology/public_safe_geometry/cases.json"
+            "docs/intake/exploratory/geology-public-safe-geometry-source-map.md"
+            "data/receipts/generated/genrec-geology-public-safe-geometry-20260810.json"
+            "data/receipts/generated/genrec-geology-post-merge-convergence-20260828.json"
+            "data/receipts/generated/genrec-geology-no-network-guard-adoption-20260828.json"
+            "data/receipts/generated/genrec-geology-lowlevel-guard-convergence-20260828.json"
+            "data/registry/sources/geology/README.md"
+            "data/registry/sensitivity/geology/README.md"
+            "release/candidates/geology/README.md"
+          )
+
+          for required_path in "${required_paths[@]}"; do
+            if [[ ! -e "$required_path" ]]; then
+              echo "::error::Required Geology boundary is missing: $required_path"
+              exit 1
+            fi
+          done
+
+          python - <<'PY'
+          from pathlib import Path
+
+          from tools.validators.ci_readiness import (
+              classify_test_source,
+              classify_validator_source,
+          )
+
+          accepted_tests = {
+              Path(
+                  "tests/domains/geology/"
+                  "test_source_role_anti_collapse.py"
+              ),
+              Path("tests/domains/geology/test_aem_campaign.py"),
+              Path("tests/domains/geology/test_no_network_proof.py"),
+              Path("tests/domains/geology/test_public_safe_geometry.py"),
+              Path("tests/domains/geology/test_production_material_change.py"),
+          }
+          accepted_validators = {
+              Path(
+                  "tools/validators/domains/geology/"
+                  "validate_resource_class_distinction.py"
+              ),
+              Path(
+                  "tools/validators/domains/geology/"
+                  "validate_aem_campaign.py"
+              ),
+              Path(
+                  "tools/validators/domains/geology/"
+                  "validate_production_material_change.py"
+              ),
+              Path(
+                  "tools/validators/domains/geology/"
+                  "validate_schema.py"
+              ),
+              Path(
+                  "tools/validators/geology/public_safe_geometry/"
+                  "validate_public_safe_geometry.py"
+              ),
+          }
+
+          for path in sorted(Path("tests/domains/geology").rglob("*.py")):
+              classification = classify_test_source(path.read_text(encoding="utf-8"))
+              if path in accepted_tests:
+                  if classification.placeholder:
+                      raise SystemExit(f"Accepted Geology test regressed: {path}")
+              elif not classification.placeholder:
+                  raise SystemExit(
+                      f"Unwired Geology test became substantive: {path}"
+                  )
+
+          validator_roots = (
+              Path("tools/validators/domains/geology"),
+              Path("tools/validators/geology"),
+          )
+          for root in validator_roots:
+              for path in sorted(root.rglob("*.py")):
+                  classification = classify_validator_source(
+                      path.read_text(encoding="utf-8")
+                  )
+                  if path in accepted_validators:
+                      if classification.placeholder:
+                          raise SystemExit(
+                              f"Accepted Geology validator regressed: {path}"
+                          )
+                  elif not classification.placeholder:
+                      raise SystemExit(
+                          f"Unwired Geology validator became substantive: {path}"
+                      )
+
+          print("Geology executable and placeholder inventories are explicit.")
+          PY
+
+          if grep -Eq '^(geology-validate|validate-geology):' Makefile; then
+            echo "::error::A Geology validation target now exists. Wire and verify it deliberately instead of retaining this hold."
+            exit 1
+          fi
+
+          echo "WORKFLOW_CHECK_EXECUTED: geology-validation-boundary-inventory"
+          echo "WORKFLOW_HOLD: broader Geology validation is not established"
+
+      - name: Verify Geology schema contract links
+        shell: bash
+        env:
+          KFM_NO_NETWORK: "1"
+          PYTHONDONTWRITEBYTECODE: "1"
+          PYTHONHASHSEED: "0"
+        run: |
+          set -euo pipefail
+
+          python -m pytest -q -p no:cacheprovider \
+            tests/validators/domains/geology/test_schema_contract_doc_links.py
+
+          echo "WORKFLOW_CHECK_EXECUTED: geology-schema-contract-links"
+
+      - name: Prove shared Geology Python no-network startup guard
+        shell: bash
+        env:
+          KFM_NO_NETWORK: "0"
+          PYTHONDONTWRITEBYTECODE: "1"
+          PYTHONHASHSEED: "0"
+        run: |
+          set -euo pipefail
+
+          python -m pytest -q -p no:cacheprovider \
+            tests/domains/geology/test_no_network_proof.py
+
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-geology-lowlevel-guard-convergence-20260828.json \
+            --repo-root .
+
+          echo "WORKFLOW_CHECK_EXECUTED: geology-python-no-network-startup-guard"
+
+      - name: Run bounded Geology resource-class fixture validation
+        shell: bash
+        env:
+          KFM_NO_NETWORK: "1"
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          set -euo pipefail
+
+          python tests/domains/geology/test_source_role_anti_collapse.py --verbose
+
+          python tools/validators/domains/geology/validate_resource_class_distinction.py \
+            fixtures/domains/geology/resource_class/valid/*.json
+
+          if python tools/validators/domains/geology/validate_resource_class_distinction.py \
+            fixtures/domains/geology/resource_class/invalid/*.json; then
+            echo "::error::Known-invalid Geology resource-class fixtures were accepted."
+            exit 1
+          fi
+
+          echo "EXPECTED_REJECTION: invalid Geology resource-class fixtures"
+          echo "WORKFLOW_CHECK_EXECUTED: geology-resource-class-fixture"
+
+      - name: Run bounded Geology AEM campaign fixture validation
+        shell: bash
+        env:
+          KFM_NO_NETWORK: "1"
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          set -euo pipefail
+
+          python tests/domains/geology/test_aem_campaign.py --verbose
+
+          python tools/validators/domains/geology/validate_aem_campaign.py \
+            fixtures/domains/geology/aem_survey_campaign/valid/*.json
+
+          if python tools/validators/domains/geology/validate_aem_campaign.py \
+            fixtures/domains/geology/aem_survey_campaign/invalid/*.json; then
+            echo "::error::Known-invalid Geology AEM campaign fixtures were accepted."
+            exit 1
+          fi
+
+          echo "EXPECTED_REJECTION: invalid Geology AEM campaign fixtures"
+          echo "WORKFLOW_CHECK_EXECUTED: geology-aem-campaign-fixture"
+
+      - name: Run bounded Geology public-safe geometry assessment
+        shell: bash
+        env:
+          KFM_NO_NETWORK: "1"
+          PYTHONDONTWRITEBYTECODE: "1"
+          PYTHONHASHSEED: "0"
+        run: |
+          set -euo pipefail
+
+          python -m pytest -q -p no:cacheprovider \
+            tests/domains/geology/test_public_safe_geometry.py
+
+          python tools/validators/geology/public_safe_geometry/validate_public_safe_geometry.py \
+            --fixtures
+
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-geology-lowlevel-guard-convergence-20260828.json \
+            --repo-root .
+
+          echo "WORKFLOW_CHECK_EXECUTED: geology-public-safe-geometry-fixture"
+
+      - name: Run bounded Geology production material-change validation
+        shell: bash
+        env:
+          KFM_NO_NETWORK: "1"
+          PYTHONDONTWRITEBYTECODE: "1"
+          PYTHONHASHSEED: "0"
+        run: |
+          set -euo pipefail
+
+          python -m pytest -q -p no:cacheprovider \
+            tests/domains/geology/test_production_material_change.py
+
+          echo "WORKFLOW_CHECK_EXECUTED: geology-production-material-change"
+
+      - name: Record Geology validation result and broader hold
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### Geology validation status
+
+          `WORKFLOW_CHECK_EXECUTED: geology-python-no-network-startup-guard`
+
+          `WORKFLOW_CHECK_EXECUTED: geology-resource-class-fixture`
+
+          `WORKFLOW_CHECK_EXECUTED: geology-aem-campaign-fixture`
+
+          `WORKFLOW_CHECK_EXECUTED: geology-public-safe-geometry-fixture`
+
+          `WORKFLOW_CHECK_EXECUTED: geology-production-material-change`
+
+          `WORKFLOW_HOLD: broader Geology semantics, evidence closure, proof, and release remain unestablished`
+
+          Fresh Python subprocesses prove that the shared startup guard is
+          inactive without the explicit posture, activates for the four bounded
+          profile commands, routes the public `socket.SocketType` and direct
+          private `_socket.socket` constructor aliases through the guarded
+          class, denies representative destination-bearing sends through both,
+          and preserves Unix-domain routing. Other private extension factories,
+          dependency installation, non-Python processes, and operating-system
+          or runner-wide egress remain outside this proof.
+
+          When green, this job has executed a frozen, synthetic fixture profile
+          that keeps MineralOccurrence, ResourceDeposit, and ResourceEstimate
+          distinct. It checks exact positive/negative polarity, occurrence-
+          as-deposit, modeled-potential-as-deposit, permit-as-deposit,
+          production-as-deposit, estimate-as-observation, estimate-as-reserve,
+          missing estimate-classification support, sensitive-location denial,
+          bounded JSON input, deterministic CLI behavior, and explicit network
+          denial.
+
+          The AEM fixture profile keeps one 2026-05-11 announcement-bound
+          campaign candidate sparse and time-scoped. It preserves the
+          document-reported planned posture while keeping current campaign
+          state unknown and binding no acquisition evidence. It denies unscoped
+          planning, downstream raw/processing/inversion/datum/geometry/product/
+          uncertainty fields, false release, and malformed correction lineage.
+          It also pins the exact document-specific SourceDescriptor so endpoint,
+          credential, connector, source-head, prose, claim-role, and release
+          posture drift fails closed. Neither fixture is source-registry
+          authority, evidence closure, or current campaign truth.
+
+          The production material-change profile compares version-pinned snapshot
+          metadata and emits only NO_CHANGE, REVIEW, HOLD, or ERROR. It preserves
+          production as production evidence rather than physical-geology,
+          deposit, estimate, or reserve truth; fails closed on missing baseline,
+          unresolved rights, or regressing coverage; and performs no live KGS
+          request, source activation, lifecycle write, promotion, or publication.
+
+          The profile is not a canonical resource-classification vocabulary and
+          does not evaluate live Geology records, source rights, EvidenceBundles,
+          policy, economic viability, title, reserves, or regulatory state.
+          Other Geology test and validator modules remain explicit placeholders
+          or documentation-only lanes and are checked as such. Neither bounded
+          profile activates a source, observes official AEM product bytes,
+          resolves rights or evidence, applies policy, releases, or publishes.
+
+          The public-safe geometry profile consumes only opaque synthetic
+          references and metadata. It denies coordinate material and exact
+          public geometry, requires restricted exact-source posture, and checks
+          generalized or withheld declarations, transform-receipt references,
+          coarser scale, uncertainty, rights, policy, and review summaries. A
+          coherent generalized candidate remains HOLD because the profile does
+          not execute a transform, resolve live inputs, create receipts, or
+          authorize release, map/API/export serving, or publication.
+
+          This check does not establish geologic interpretation, resource class,
+          reserve or estimate validity, permit or production status, mineral or
+          property rights, exact subsurface safety, evidence closure, policy
+          approval, engineering suitability, or release readiness.
+          EOF
+
+  build-proof-geology:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Check out Geology proof boundaries
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Evaluate Geology proof readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_paths=(
+            "data/proofs/geology/README.md"
+            "data/registry/sources/geology/README.md"
+            "data/registry/sensitivity/geology/README.md"
+            "release/candidates/geology/README.md"
+            "tests/domains/geology/README.md"
+          )
+
+          for required_path in "${required_paths[@]}"; do
+            if [[ ! -e "$required_path" ]]; then
+              echo "::error::Required Geology proof boundary is missing: $required_path"
+              exit 1
+            fi
+          done
+
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          path = Path("data/proofs/geology/README.md")
+          lines = path.read_text(encoding="utf-8").splitlines()
+          start_marker = "<!-- [KFM_META_BLOCK_V2]"
+          end_marker = "[/KFM_META_BLOCK_V2] -->"
+
+          try:
+              start = lines.index(start_marker)
+              end = lines.index(end_marker, start + 1)
+          except ValueError as exc:
+              raise SystemExit(f"{path} is missing its deterministic KFM metadata block.") from exc
+
+          status_lines = [line for line in lines[start + 1 : end] if line.startswith("status:")]
+          if len(status_lines) != 1:
+              raise SystemExit(f"{path} metadata block must contain exactly one status field.")
+
+          status = status_lines[0].partition(":")[2].strip()
+          status_tokens = set(re.findall(r"[a-z0-9_-]+", status.casefold()))
+          conflicting_statuses = {
+              "accepted", "adopted", "approved", "final", "rejected", "superseded"
+          }
+          if "draft" not in status_tokens or status_tokens & conflicting_statuses:
+              raise SystemExit(
+                  f"{path} metadata status is not an unconflicted draft; "
+                  "review proof posture before accepting this workflow."
+              )
+
+          print(f"Confirmed draft proof metadata status for {path}.")
+          PY
+
+          proof_artifact="$(find data/proofs/geology -type f ! -name 'README.md' ! -name '.gitkeep' -print -quit)"
+          if [[ -n "$proof_artifact" ]]; then
+            echo "::error::Geology proof material surfaced at $proof_artifact. Replace this hold with the governed proof validator and manifest path."
+            exit 1
+          fi
+
+          if grep -Eq '^(geology-proof|proof-geology):' Makefile; then
+            echo "::error::A Geology proof target now exists. Wire and validate it deliberately instead of retaining this hold."
+            exit 1
+          fi
+
+          proof_implementation="$(find . -path './.git' -prune -o -type f \( -iname '*geology*proof*.py' -o -iname '*proof*geology*.py' -o -iname '*geology*proof*.mjs' -o -iname '*proof*geology*.mjs' \) -print -quit)"
+          if [[ -n "$proof_implementation" ]]; then
+            echo "::error::Potential Geology proof implementation surfaced at $proof_implementation. Establish its contract, synthetic fixtures, sensitivity controls, receipts, access controls, and rollback before wiring CI."
+            exit 1
+          fi
+
+          echo "WORKFLOW_SKIPPED_EXPLICIT: build-proof-geology"
+          echo "WORKFLOW_HOLD: no accepted Geology proof producer or deterministic proof command"
+
+      - name: Record Geology proof hold
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### Geology proof status
+
+          `WORKFLOW_SKIPPED_EXPLICIT`
+
+          `WORKFLOW_HOLD: no accepted Geology proof producer or deterministic proof command`
+
+          The Geology proof lane is documented, but concrete proof inventory,
+          EvidenceRef-to-EvidenceBundle resolution, schemas, validators,
+          synthetic fixtures, access controls, occurrence/deposit/estimate/
+          permit/production/reserve anti-collapse proof, review binding, receipt
+          linkage, and release linkage remain unverified.
+
+          A green held result is readiness evidence only. It is not an
+          EvidenceBundle, ProofPack, ValidationReport, reserve estimate,
+          mineral-rights record, property-rights record, engineering
+          certification, extraction recommendation, release decision, or
+          publication authority.
+          EOF
+
+  publish-dry-run-geology:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Check out Geology release boundaries
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Evaluate Geology release dry-run readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_paths=(
+            "release/candidates/geology/README.md"
+            "docs/domains/geology/RELEASE_INDEX.md"
+            "data/published/geology/README.md"
+            ".github/workflows/release-dry-run.yml"
+          )
+
+          for required_path in "${required_paths[@]}"; do
+            if [[ ! -e "$required_path" ]]; then
+              echo "::error::Required Geology release boundary is missing: $required_path"
+              exit 1
+            fi
+          done
+
+          if ! grep -Fq "A candidate is not a release." "release/candidates/geology/README.md"; then
+            echo "::error::The documented Geology candidate posture changed. Re-evaluate source, evidence, rights, sensitivity, claim class, policy, review, correction, and rollback gates."
+            exit 1
+          fi
+
+          candidate_record="$(find release/candidates/geology -mindepth 1 -type f ! -name 'README.md' ! -name '.gitkeep' -print -quit)"
+          if [[ -n "$candidate_record" ]]; then
+            echo "::error::A Geology candidate record surfaced at $candidate_record. Replace this hold with the independently reviewed domain dry-run path."
+            exit 1
+          fi
+
+          if grep -Eq '^(geology-release-dry-run|release-dry-run-geology):' Makefile; then
+            echo "::error::A Geology release dry-run target now exists. Wire the accepted fail-closed command instead of retaining this hold."
+            exit 1
+          fi
+
+          echo "WORKFLOW_SKIPPED_EXPLICIT: publish-dry-run-geology"
+          echo "WORKFLOW_HOLD: no accepted Geology release dry-run command or candidate manifest contract"
+
+      - name: Record Geology release dry-run hold
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### Geology release dry-run status
+
+          `WORKFLOW_SKIPPED_EXPLICIT`
+
+          `WORKFLOW_HOLD: no accepted Geology release dry-run command or candidate manifest contract`
+
+          This lane performs no source access, geometry transform, resource
+          classification, release, promotion, manifest assembly, deployment,
+          publication, or write to processed, catalog, proof, receipt, release,
+          or published stores.
+
+          Graduate it only after candidate identity, immutable artifact pointer,
+          source and EvidenceBundle closure, rights, sensitivity, public-safe
+          geometry, claim-class separation, policy result, steward review,
+          validation receipts, independent approval, correction path,
+          withdrawal path, and rollback target are accepted.
+
+          A green held result does not mean Geology data is accurate, complete,
+          suitable for engineering, investment, extraction, legal, regulatory,
+          emergency, or operational use, approved, released, or published.
+          EOF

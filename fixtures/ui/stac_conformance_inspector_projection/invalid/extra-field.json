@@ -1,0 +1,28 @@
+{
+  "profile": "kfm.explorer.stac-conformance-inspector.public-safe.v1",
+  "outcome": "ABSTAIN",
+  "reason_code": "INSPECTION_UNAVAILABLE",
+  "evaluated_at": null,
+  "inspection_id": null,
+  "spec_hash": null,
+  "profile_version": null,
+  "stac_version": null,
+  "inspection_state": null,
+  "item_count": null,
+  "conformance_classes": [],
+  "extensions": [],
+  "identity_rules": [],
+  "mime_types": [],
+  "collection_contract": null,
+  "internal_canary": "STAC_INSPECTOR_INTERNAL_CANARY_6d927e",
+  "governance": {
+    "network_attempted": false,
+    "catalog_query_attempted": false,
+    "catalog_mutation_allowed": false,
+    "source_admission_allowed": false,
+    "evidence_authority_created": false,
+    "policy_evaluated": false,
+    "release_authorized": false,
+    "publication_allowed": false
+  }
+}

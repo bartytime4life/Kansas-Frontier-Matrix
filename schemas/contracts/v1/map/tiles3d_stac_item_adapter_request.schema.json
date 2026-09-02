@@ -1,0 +1,156 @@
+{
+  "$defs": {
+    "ref": {
+      "pattern": "^(?:urn:kfm:|git:|sha256:)[A-Za-z0-9:._/+\\-]{8,512}$",
+      "type": "string"
+    },
+    "timestamp": {
+      "format": "date-time",
+      "maxLength": 64,
+      "minLength": 20,
+      "type": "string"
+    }
+  },
+  "$id": "https://schemas.kfm.local/contracts/v1/map/tiles3d_stac_item_adapter_request.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "bbox": {
+      "items": {
+        "type": "number"
+      },
+      "maxItems": 6,
+      "minItems": 4,
+      "type": "array"
+    },
+    "collection": {
+      "pattern": "^[a-z0-9][a-z0-9._-]{2,127}$",
+      "type": "string"
+    },
+    "created": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "datetime": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "evidence_bundle_ref": {
+      "$ref": "#/$defs/ref"
+    },
+    "evidence_ref": {
+      "$ref": "#/$defs/ref"
+    },
+    "geometry": {
+      "additionalProperties": true,
+      "required": [
+        "type",
+        "coordinates"
+      ],
+      "type": "object"
+    },
+    "item_id": {
+      "pattern": "^[a-z0-9][a-z0-9._-]{2,127}$",
+      "type": "string"
+    },
+    "license": {
+      "maxLength": 128,
+      "minLength": 1,
+      "type": "string"
+    },
+    "object_type": {
+      "const": "Tiles3DStacItemAdapterRequest"
+    },
+    "providers": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "maxLength": 128,
+            "minLength": 1,
+            "type": "string"
+          },
+          "roles": {
+            "items": {
+              "maxLength": 64,
+              "minLength": 1,
+              "type": "string"
+            },
+            "maxItems": 8,
+            "minItems": 1,
+            "type": "array",
+            "uniqueItems": true
+          }
+        },
+        "required": [
+          "name",
+          "roles"
+        ],
+        "type": "object"
+      },
+      "maxItems": 16,
+      "minItems": 1,
+      "type": "array"
+    },
+    "representation_receipt_ref": {
+      "$ref": "#/$defs/ref"
+    },
+    "rights_status": {
+      "enum": [
+        "public",
+        "open"
+      ]
+    },
+    "run_receipt_ref": {
+      "$ref": "#/$defs/ref"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "sensitivity": {
+      "const": "public"
+    },
+    "source_role": {
+      "const": "derived"
+    },
+    "tree_commit": {
+      "pattern": "^[a-f0-9]{40}$",
+      "type": "string"
+    },
+    "updated": {
+      "$ref": "#/$defs/timestamp"
+    }
+  },
+  "required": [
+    "object_type",
+    "schema_version",
+    "item_id",
+    "collection",
+    "datetime",
+    "created",
+    "updated",
+    "license",
+    "providers",
+    "geometry",
+    "bbox",
+    "evidence_ref",
+    "evidence_bundle_ref",
+    "run_receipt_ref",
+    "representation_receipt_ref",
+    "tree_commit",
+    "source_role",
+    "rights_status",
+    "sensitivity"
+  ],
+  "title": "Tiles3DStacItemAdapterRequest",
+  "type": "object",
+  "x-kfm": {
+    "authority": "adapter_request_only",
+    "contract_doc": "contracts/map/tiles3d_stac_item_adapter.md",
+    "non_effects": [
+      "does_not_create_evidence",
+      "does_not_promote",
+      "does_not_release",
+      "does_not_publish"
+    ],
+    "validator": "tools/validators/map/tiles3d_stac_item_adapter/build_tiles3d_stac_item.py"
+  }
+}

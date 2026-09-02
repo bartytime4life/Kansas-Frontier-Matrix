@@ -1,0 +1,136 @@
+{
+  "receipt_id": "genrec:kwo-digest-provenance:073417c03ebc2999",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "fixtures/domains/water_planning/document_receipts/invalid/bad_format_digest.json",
+    "fixtures/domains/water_planning/document_receipts/invalid/blocked_behaviors.json",
+    "fixtures/domains/water_planning/document_receipts/invalid/null_digest.json",
+    "fixtures/domains/water_planning/document_receipts/invalid/official_source_digest.json",
+    "fixtures/domains/water_planning/document_receipts/invalid/zero_placeholder_digest.json",
+    "fixtures/domains/water_planning/document_receipts/valid/valid_1.json",
+    "fixtures/domains/water_planning/program_version/valid/valid_1.json",
+    "fixtures/domains/water_planning/scoring_matrix_version/valid/valid_1.json",
+    "tests/domains/water_planning/test_document_receipts.py",
+    "tools/validators/domains/water_planning/validate_document_receipts.py"
+  ],
+  "artifact_hashes": {
+    "fixtures/domains/water_planning/document_receipts/invalid/bad_format_digest.json": "sha256:a5a839f0296e402f6c3ebe3b68afdf9bd80e7a0e726122404aa2ef441bd1616f",
+    "fixtures/domains/water_planning/document_receipts/invalid/blocked_behaviors.json": "sha256:ce5c6d8317dd28dfbd8a496e0313a209ac75604a988d92e913f01436cf100ec0",
+    "fixtures/domains/water_planning/document_receipts/invalid/null_digest.json": "sha256:bdb513a3efcaf5eb07f1e658664075dc14b8328bbe9f32175c0ebd76eb3610f3",
+    "fixtures/domains/water_planning/document_receipts/invalid/official_source_digest.json": "sha256:7556d81b585a584f8052d41316604026b03304ab2409f11cc53d494aa0ced2a6",
+    "fixtures/domains/water_planning/document_receipts/invalid/zero_placeholder_digest.json": "sha256:bd7b84767e07308265f8bb7ee864b9847c548401e92bfbf362693a655b4a3687",
+    "fixtures/domains/water_planning/document_receipts/valid/valid_1.json": "sha256:4c77fba2d245f9d5bef1b4a2176632d5807d3550663137b065afaa1adf3ced1c",
+    "fixtures/domains/water_planning/program_version/valid/valid_1.json": "sha256:9fc2622b4413f2fdab2f4873dd2dd813a91629b54cd2f4b044bb52bba31c3858",
+    "fixtures/domains/water_planning/scoring_matrix_version/valid/valid_1.json": "sha256:dd717017505b4caeb5d16419f8aaba236efbe742648d770a8016b37e384df849",
+    "tests/domains/water_planning/test_document_receipts.py": "sha256:4d15e3508a685c1d43bb9da4921478a89aebb44204d8b454b201d82f0e05f394",
+    "tools/validators/domains/water_planning/validate_document_receipts.py": "sha256:63c58182aca92ec5e7d2e3cf07463267c7be01e71768ad982750dc1fd4f5c6a8"
+  },
+  "model_identity": {
+    "provider": "openai",
+    "model": "gpt-5.6-thinking",
+    "version": "2026-08-02"
+  },
+  "prompt_or_contract": "sha256:073417c03ebc2999bb2325e104083711526fb7228a544e28b665874923eac0af",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "github",
+      "container",
+      "web"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:073417c03ebc2999bb2325e104083711526fb7228a544e28b665874923eac0af",
+      "sha256:2fbee8363da3998a57ee9645eed2a2b998593a75360b20162c9c64832bdd67eb"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "git:main@14d6385f963b7113518ea90d949c0926a2f88b88",
+      "github:issue#1844",
+      "github:pull#1910",
+      "github:pull#1914",
+      "schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      ".github/PULL_REQUEST_TEMPLATE.md"
+    ]
+  },
+  "truth_labels": {
+    "fixtures/domains/water_planning/document_receipts/invalid/bad_format_digest.json": "PROPOSED",
+    "fixtures/domains/water_planning/document_receipts/invalid/blocked_behaviors.json": "PROPOSED",
+    "fixtures/domains/water_planning/document_receipts/invalid/null_digest.json": "PROPOSED",
+    "fixtures/domains/water_planning/document_receipts/invalid/official_source_digest.json": "PROPOSED",
+    "fixtures/domains/water_planning/document_receipts/invalid/zero_placeholder_digest.json": "PROPOSED",
+    "fixtures/domains/water_planning/document_receipts/valid/valid_1.json": "PROPOSED",
+    "fixtures/domains/water_planning/program_version/valid/valid_1.json": "PROPOSED",
+    "fixtures/domains/water_planning/scoring_matrix_version/valid/valid_1.json": "PROPOSED",
+    "tests/domains/water_planning/test_document_receipts.py": "PROPOSED",
+    "tools/validators/domains/water_planning/validate_document_receipts.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-water-planning-receipt-tests",
+      "outcome": "PASS",
+      "reason": "11 tests passed with 9 subtests in the reconstructed no-network workspace."
+    },
+    {
+      "gate": "canonical-water-planning-schema-validation",
+      "outcome": "PASS",
+      "reason": "Draft 2020-12 validation accepted both canonical null-digest fixtures."
+    },
+    {
+      "gate": "exact-pr-diff-review",
+      "outcome": "PASS",
+      "reason": "PR #1914 changed only the bounded validator, tests, and water-planning fixtures before this receipt was added."
+    },
+    {
+      "gate": "generated-receipt-schema-and-integrity",
+      "outcome": "PASS",
+      "reason": "Receipt field parity and all declared SHA-256 artifact bindings were recomputed locally."
+    },
+    {
+      "gate": "hosted-ci",
+      "outcome": "SKIPPED",
+      "reason": "PR-triggered workflows were still queued or running when this receipt was emitted."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "KWO_BYTE_IDENTITY_REQUIREMENT_1844",
+      "validated": true,
+      "evidence_ref": "github:issue#1844"
+    },
+    {
+      "id": "METADATA_DERIVED_DIGEST_CHANGE_1910",
+      "validated": true,
+      "evidence_ref": "github:pull#1910"
+    },
+    {
+      "id": "GENERATED_RECEIPT_SCHEMA_V1",
+      "validated": true,
+      "evidence_ref": "schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    },
+    {
+      "id": "PULL_REQUEST_TEMPLATE_V1_2",
+      "validated": true,
+      "evidence_ref": ".github/PULL_REQUEST_TEMPLATE.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-02T16:11:17Z",
+  "emitter": "openai/gpt-5.6-thinking",
+  "links": {
+    "pr_number": 1914,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Corrective draft-only repository work. The receipt records AI authorship and local validation; it does not authenticate source bytes, approve review, authorize merge, activate a connector, construct proof, release, deploy, or publish."
+}

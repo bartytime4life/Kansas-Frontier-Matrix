@@ -1,0 +1,163 @@
+{
+  "receipt_id": "genrec-consent-tokens-standard-20260818",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/standards/CONSENT_TOKENS.md"
+  ],
+  "artifact_hashes": {
+    "docs/standards/CONSENT_TOKENS.md": "sha256:9239da5be2d5dfecfd0210f9a4c7c933380bf79bb8fc06b19c4b32ea8f6bf8eb"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-18"
+  },
+  "prompt_or_contract": "sha256:3d900f08d660a678cecef50bc181273e8403898d7cdc16d2543fc47a5eb859f4",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "official-source web research",
+      "local Python Markdown and JSON validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    ],
+    "evidence_refs": [
+      "repo:bartytime4life/Kansas-Frontier-Matrix@7ac9f151aacc03b03fd486a64b348743b7325a51",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/standards/CONSENT_TOKENS.md@7ac9f151aacc03b03fd486a64b348743b7325a51",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/standards/README.md@7ac9f151aacc03b03fd486a64b348743b7325a51",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:policy/consent/README.md@7ac9f151aacc03b03fd486a64b348743b7325a51",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:schemas/contracts/v1/runtime/consent_grant.schema.json@7ac9f151aacc03b03fd486a64b348743b7325a51",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:schemas/governance/consent_receipt.schema.json@7ac9f151aacc03b03fd486a64b348743b7325a51",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:contracts/policy/policy_decision.md@7ac9f151aacc03b03fd486a64b348743b7325a51",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:contracts/domains/people-dna-land/consented_genealogy_overlay.md@7ac9f151aacc03b03fd486a64b348743b7325a51",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:contracts/domains/people-dna-land/consent_revocation_propagation_assessment.md@7ac9f151aacc03b03fd486a64b348743b7325a51",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:apps/explorer-web/src/adapters/ConsentCardProjection.ts@7ac9f151aacc03b03fd486a64b348743b7325a51",
+      "ietf:rfc:8725",
+      "ietf:rfc:9700",
+      "ietf:rfc:7662",
+      "ietf:rfc:9396",
+      "ietf:rfc:9901",
+      "w3c:vc-data-model:2.0",
+      "w3c:vc-bitstring-status-list:1.0",
+      "ietf:draft-ietf-oauth-sd-jwt-vc:16",
+      "ga4gh:aai-oidc-profile",
+      "ga4gh:passport:1.2.1"
+    ]
+  },
+  "truth_labels": {
+    "docs/standards/CONSENT_TOKENS.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-authority-placement-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Current main, target bytes, standards-lane responsibility, accepted ADR-0029, consent-adjacent contracts/schemas/policy/UI surfaces, and open pull-request overlap were inspected before authoring."
+    },
+    {
+      "gate": "official-upstream-currentness",
+      "outcome": "PASS",
+      "reason": "Official IETF, W3C, and GA4GH publication-state sources were checked on 2026-08-18; the document treats them as external candidates rather than KFM adoption proof."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "markdown-it parsed the full file; exactly one H1, balanced fences and metadata markers, valid heading hierarchy, no tabs, no trailing whitespace, and a final newline were confirmed."
+    },
+    {
+      "gate": "internal-fragment-closure",
+      "outcome": "PASS",
+      "reason": "All 32 internal fragment links resolve to unique explicit compatibility or section anchors."
+    },
+    {
+      "gate": "repository-relative-link-closure",
+      "outcome": "PASS",
+      "reason": "Every repository-relative target introduced or retained by the final document was resolved against main@7ac9f151aacc03b03fd486a64b348743b7325a51."
+    },
+    {
+      "gate": "generated-receipt-schema",
+      "outcome": "PASS",
+      "reason": "This receipt was validated against the current GENERATED_RECEIPT Draft 2020-12 field and type constraints, with human review left pending."
+    },
+    {
+      "gate": "repository-native-checkout-validation",
+      "outcome": "SKIPPED",
+      "reason": "No mounted repository checkout was available; no local Make, link-check, docs-build, or workflow result is claimed."
+    },
+    {
+      "gate": "hosted-exact-head-validation",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed draft pull-request head and are reported separately after delivery."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Authorized human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "repository:consent-token-target-and-current-state",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:docs/standards/CONSENT_TOKENS.md@7ac9f151aacc03b03fd486a64b348743b7325a51"
+    },
+    {
+      "id": "repository:directory-governance",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@7ac9f151aacc03b03fd486a64b348743b7325a51"
+    },
+    {
+      "id": "repository:consent-parent-policy-posture",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:policy/consent/README.md@7ac9f151aacc03b03fd486a64b348743b7325a51"
+    },
+    {
+      "id": "repository:consent-scaffold-and-synthetic-proof",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:contracts/domains/people-dna-land/consent_revocation_propagation_assessment.md@7ac9f151aacc03b03fd486a64b348743b7325a51"
+    },
+    {
+      "id": "external:oauth-jwt-security-currentness",
+      "validated": true,
+      "evidence_ref": "ietf:rfc:8725+9700"
+    },
+    {
+      "id": "external:credential-and-status-currentness",
+      "validated": true,
+      "evidence_ref": "w3c:vc-data-model:2.0+vc-bitstring-status-list:1.0"
+    },
+    {
+      "id": "external:selective-disclosure-currentness",
+      "validated": true,
+      "evidence_ref": "ietf:rfc:9901+draft-ietf-oauth-sd-jwt-vc:16"
+    },
+    {
+      "id": "external:ga4gh-domain-profile-currentness",
+      "validated": true,
+      "evidence_ref": "ga4gh:aai-oidc-profile+passport:1.2.1"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-18T23:17:11Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Same-path documentation modernization only. The artifact does not adopt a consent-token profile, issue or validate credentials, create a policy decision, activate an issuer or status service, change runtime behavior, expose sensitive data, release, deploy, or publish."
+}

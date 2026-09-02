@@ -1,0 +1,79 @@
+{
+  "base": {
+    "object_type": "PipelineReplayAssessmentCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.pipeline-replay-assessment.fixture.v1",
+    "assessment_id": "",
+    "spec_hash": "",
+    "pipeline_ref": "kfm:pipeline:synthetic-frontier-join",
+    "assessed_at": "2026-08-09T23:30:00Z",
+    "replay_profile": {
+      "profile_ref": "kfm:pipeline-replay-profile:synthetic-v1",
+      "sources": [
+        {"source_ref": "kfm:source-snapshot:soil-synthetic", "snapshot_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},
+        {"source_ref": "kfm:source-snapshot:water-synthetic", "snapshot_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"}
+      ],
+      "transform_parameters_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "model_identity": {"provider": "synthetic-provider", "model": "synthetic-model", "version": "1.0.0", "artifact_digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"},
+      "validators": [
+        {"validator_ref": "kfm:validator:semantic-synthetic", "version": "1.0.0", "artifact_digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"},
+        {"validator_ref": "kfm:validator:shape-synthetic", "version": "1.0.0", "artifact_digest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"}
+      ],
+      "expected_output_digest": "sha256:1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"
+    },
+    "replay_observation": {
+      "replay_ref": "kfm:pipeline-replay:synthetic-run",
+      "profile_ref": "kfm:pipeline-replay-profile:synthetic-v1",
+      "sources": [
+        {"source_ref": "kfm:source-snapshot:soil-synthetic", "snapshot_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},
+        {"source_ref": "kfm:source-snapshot:water-synthetic", "snapshot_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"}
+      ],
+      "transform_parameters_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "model_identity": {"provider": "synthetic-provider", "model": "synthetic-model", "version": "1.0.0", "artifact_digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"},
+      "validators": [
+        {"validator_ref": "kfm:validator:semantic-synthetic", "version": "1.0.0", "artifact_digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"},
+        {"validator_ref": "kfm:validator:shape-synthetic", "version": "1.0.0", "artifact_digest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"}
+      ],
+      "observed_output_digest": "sha256:1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
+      "observation_mode": "SYNTHETIC_DECLARATION"
+    },
+    "report": {
+      "outcome": "PASS",
+      "drift_codes": [],
+      "replay_execution_claimed": false,
+      "replay_equivalence_authoritative": false,
+      "separate_review_required": true
+    },
+    "governance": {
+      "execution_mode": "FIXTURE_ONLY",
+      "network_attempted": false,
+      "sources_resolved": false,
+      "pipeline_executed": false,
+      "transform_executed": false,
+      "model_invoked": false,
+      "validators_executed": false,
+      "receipt_attested": false,
+      "policy_evaluated": false,
+      "review_approved": false,
+      "release_authorized": false,
+      "publication_authorized": false,
+      "public_use_allowed": false
+    }
+  },
+  "cases": [
+    {"case_id": "match-all-pins", "mutations": [], "recompute_report": true, "expected_status": "PASS", "expected_replay_outcome": "PASS", "expected_findings": []},
+    {"case_id": "fail-source-snapshot-drift", "mutations": [{"path": "/replay_observation/sources/0/snapshot_digest", "value": "sha256:0000000000000000000000000000000000000000000000000000000000000001"}], "recompute_report": true, "expected_status": "PASS", "expected_replay_outcome": "FAIL", "expected_findings": []},
+    {"case_id": "fail-transform-parameters-drift", "mutations": [{"path": "/replay_observation/transform_parameters_digest", "value": "sha256:0000000000000000000000000000000000000000000000000000000000000002"}], "recompute_report": true, "expected_status": "PASS", "expected_replay_outcome": "FAIL", "expected_findings": []},
+    {"case_id": "fail-model-identity-drift", "mutations": [{"path": "/replay_observation/model_identity/version", "value": "1.0.1"}], "recompute_report": true, "expected_status": "PASS", "expected_replay_outcome": "FAIL", "expected_findings": []},
+    {"case_id": "fail-validator-set-drift", "mutations": [{"path": "/replay_observation/validators/0/version", "value": "1.0.1"}], "recompute_report": true, "expected_status": "PASS", "expected_replay_outcome": "FAIL", "expected_findings": []},
+    {"case_id": "fail-output-drift", "mutations": [{"path": "/replay_observation/observed_output_digest", "value": "sha256:0000000000000000000000000000000000000000000000000000000000000003"}], "recompute_report": true, "expected_status": "PASS", "expected_replay_outcome": "FAIL", "expected_findings": []},
+    {"case_id": "fail-multiple-drift", "mutations": [{"path": "/replay_observation/sources/1/snapshot_digest", "value": "sha256:0000000000000000000000000000000000000000000000000000000000000004"}, {"path": "/replay_observation/model_identity/artifact_digest", "value": "sha256:0000000000000000000000000000000000000000000000000000000000000005"}, {"path": "/replay_observation/observed_output_digest", "value": "sha256:0000000000000000000000000000000000000000000000000000000000000006"}], "recompute_report": true, "expected_status": "PASS", "expected_replay_outcome": "FAIL", "expected_findings": []},
+    {"case_id": "deny-report-mismatch", "mutations": [{"path": "/replay_observation/observed_output_digest", "value": "sha256:0000000000000000000000000000000000000000000000000000000000000007"}], "expected_status": "DENY", "expected_replay_outcome": "FAIL", "expected_findings": [{"code": "PIPELINE_REPLAY_REPORT_MISMATCH", "path": "/report"}]},
+    {"case_id": "deny-spec-hash", "mutations": [], "recompute_report": true, "spec_hash_override": "sha256:0000000000000000000000000000000000000000000000000000000000000000", "expected_status": "DENY", "expected_replay_outcome": null, "expected_findings": [{"code": "PIPELINE_REPLAY_SPEC_HASH_MISMATCH", "path": "/spec_hash"}]},
+    {"case_id": "deny-assessment-id", "mutations": [], "recompute_report": true, "assessment_id_override": "kfm:pipeline-replay-assessment:000000000000000000000000", "expected_status": "DENY", "expected_replay_outcome": null, "expected_findings": [{"code": "PIPELINE_REPLAY_ID_MISMATCH", "path": "/assessment_id"}]},
+    {"case_id": "deny-profile-binding", "mutations": [{"path": "/replay_observation/profile_ref", "value": "kfm:pipeline-replay-profile:other"}], "recompute_report": true, "expected_status": "DENY", "expected_replay_outcome": null, "expected_findings": [{"code": "PIPELINE_REPLAY_PROFILE_BINDING_MISMATCH", "path": "/replay_observation/profile_ref"}]},
+    {"case_id": "deny-source-order", "mutations": [{"path": "/replay_observation/sources", "value": [{"source_ref": "kfm:source-snapshot:water-synthetic", "snapshot_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"}, {"source_ref": "kfm:source-snapshot:soil-synthetic", "snapshot_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}]}], "recompute_report": true, "expected_status": "DENY", "expected_replay_outcome": null, "expected_findings": [{"code": "PIPELINE_REPLAY_SOURCES_NOT_CANONICAL", "path": "/replay_observation/sources"}]},
+    {"case_id": "deny-validator-order", "mutations": [{"path": "/replay_observation/validators", "value": [{"validator_ref": "kfm:validator:shape-synthetic", "version": "1.0.0", "artifact_digest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"}, {"validator_ref": "kfm:validator:semantic-synthetic", "version": "1.0.0", "artifact_digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"}]}], "recompute_report": true, "expected_status": "DENY", "expected_replay_outcome": null, "expected_findings": [{"code": "PIPELINE_REPLAY_VALIDATORS_NOT_CANONICAL", "path": "/replay_observation/validators"}]},
+    {"case_id": "deny-governance-effect", "mutations": [{"path": "/governance/pipeline_executed", "value": true}], "recompute_report": true, "expected_status": "DENY", "expected_replay_outcome": null, "expected_findings": [{"code": "PIPELINE_REPLAY_SCHEMA_INVALID", "path": "/governance/pipeline_executed"}]}
+  ]
+}

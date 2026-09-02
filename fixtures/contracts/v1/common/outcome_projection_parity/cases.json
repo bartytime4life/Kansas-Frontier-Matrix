@@ -1,0 +1,684 @@
+{
+  "base": {
+    "object_type": "OutcomeProjectionParityCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.outcome-projection-parity.fixture.v1",
+    "assessment_id": "",
+    "subject_ref": "kfm:claim:synthetic-projection",
+    "assessed_at": "2026-08-09T22:00:00Z",
+    "projection_profile": {
+      "profile_ref": "kfm:outcome-projection-profile:synthetic-v1",
+      "profile_spec_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "layer_order": [
+        "POLICY",
+        "RELEASE",
+        "RUNTIME",
+        "API",
+        "UI",
+        "EXPORT",
+        "CACHE"
+      ],
+      "allowed_outcome_pairs": [
+        "ABSTAIN->ABSTAIN",
+        "ABSTAIN->DENY",
+        "ABSTAIN->ERROR",
+        "ANSWER->ABSTAIN",
+        "ANSWER->ANSWER",
+        "ANSWER->DENY",
+        "ANSWER->ERROR",
+        "DENY->DENY",
+        "ERROR->ERROR"
+      ],
+      "allowed_visibility_pairs": [
+        "FULL->FULL",
+        "FULL->REDACTED",
+        "FULL->STALE",
+        "FULL->UNAVAILABLE",
+        "REDACTED->REDACTED",
+        "REDACTED->STALE",
+        "REDACTED->UNAVAILABLE",
+        "STALE->STALE",
+        "STALE->UNAVAILABLE",
+        "UNAVAILABLE->UNAVAILABLE"
+      ],
+      "reason_lineage_mode": "DECLARED_MAPPING_REQUIRED",
+      "support_lineage_mode": "NO_SILENT_DROP"
+    },
+    "initial_state": {
+      "layer": "POLICY",
+      "native_outcome": "ALLOW",
+      "semantic_outcome": "ANSWER",
+      "visibility": "FULL",
+      "reason_codes": ["POLICY_SUPPORTED"],
+      "support_refs": ["kfm:evidence:synthetic-projection"]
+    },
+    "steps": [
+      {
+        "step_index": 1,
+        "transition_id": "POLICY->RELEASE",
+        "input_state": {
+          "layer": "POLICY",
+          "native_outcome": "ALLOW",
+          "semantic_outcome": "ANSWER",
+          "visibility": "FULL",
+          "reason_codes": ["POLICY_SUPPORTED"],
+          "support_refs": ["kfm:evidence:synthetic-projection"]
+        },
+        "output_state": {
+          "layer": "RELEASE",
+          "native_outcome": "READY",
+          "semantic_outcome": "ANSWER",
+          "visibility": "FULL",
+          "reason_codes": ["RELEASE_SUPPORTED"],
+          "support_refs": ["kfm:evidence:synthetic-projection"]
+        },
+        "reason_mappings": [
+          {
+            "input_code": "POLICY_SUPPORTED",
+            "output_code": "RELEASE_SUPPORTED",
+            "mapping": "TRANSLATED"
+          }
+        ],
+        "added_reason_codes": [],
+        "omitted_fields": [],
+        "degradation_rule_ref": null
+      },
+      {
+        "step_index": 2,
+        "transition_id": "RELEASE->RUNTIME",
+        "input_state": {
+          "layer": "RELEASE",
+          "native_outcome": "READY",
+          "semantic_outcome": "ANSWER",
+          "visibility": "FULL",
+          "reason_codes": ["RELEASE_SUPPORTED"],
+          "support_refs": ["kfm:evidence:synthetic-projection"]
+        },
+        "output_state": {
+          "layer": "RUNTIME",
+          "native_outcome": "ANSWER",
+          "semantic_outcome": "ANSWER",
+          "visibility": "FULL",
+          "reason_codes": ["RUNTIME_SUPPORTED"],
+          "support_refs": ["kfm:evidence:synthetic-projection"]
+        },
+        "reason_mappings": [
+          {
+            "input_code": "RELEASE_SUPPORTED",
+            "output_code": "RUNTIME_SUPPORTED",
+            "mapping": "TRANSLATED"
+          }
+        ],
+        "added_reason_codes": [],
+        "omitted_fields": [],
+        "degradation_rule_ref": null
+      },
+      {
+        "step_index": 3,
+        "transition_id": "RUNTIME->API",
+        "input_state": {
+          "layer": "RUNTIME",
+          "native_outcome": "ANSWER",
+          "semantic_outcome": "ANSWER",
+          "visibility": "FULL",
+          "reason_codes": ["RUNTIME_SUPPORTED"],
+          "support_refs": ["kfm:evidence:synthetic-projection"]
+        },
+        "output_state": {
+          "layer": "API",
+          "native_outcome": "ANSWER",
+          "semantic_outcome": "ANSWER",
+          "visibility": "FULL",
+          "reason_codes": ["API_SUPPORTED"],
+          "support_refs": ["kfm:evidence:synthetic-projection"]
+        },
+        "reason_mappings": [
+          {
+            "input_code": "RUNTIME_SUPPORTED",
+            "output_code": "API_SUPPORTED",
+            "mapping": "TRANSLATED"
+          }
+        ],
+        "added_reason_codes": [],
+        "omitted_fields": [],
+        "degradation_rule_ref": null
+      },
+      {
+        "step_index": 4,
+        "transition_id": "API->UI",
+        "input_state": {
+          "layer": "API",
+          "native_outcome": "ANSWER",
+          "semantic_outcome": "ANSWER",
+          "visibility": "FULL",
+          "reason_codes": ["API_SUPPORTED"],
+          "support_refs": ["kfm:evidence:synthetic-projection"]
+        },
+        "output_state": {
+          "layer": "UI",
+          "native_outcome": "ANSWER",
+          "semantic_outcome": "ANSWER",
+          "visibility": "FULL",
+          "reason_codes": ["UI_SUPPORTED"],
+          "support_refs": ["kfm:evidence:synthetic-projection"]
+        },
+        "reason_mappings": [
+          {
+            "input_code": "API_SUPPORTED",
+            "output_code": "UI_SUPPORTED",
+            "mapping": "TRANSLATED"
+          }
+        ],
+        "added_reason_codes": [],
+        "omitted_fields": [],
+        "degradation_rule_ref": null
+      },
+      {
+        "step_index": 5,
+        "transition_id": "UI->EXPORT",
+        "input_state": {
+          "layer": "UI",
+          "native_outcome": "ANSWER",
+          "semantic_outcome": "ANSWER",
+          "visibility": "FULL",
+          "reason_codes": ["UI_SUPPORTED"],
+          "support_refs": ["kfm:evidence:synthetic-projection"]
+        },
+        "output_state": {
+          "layer": "EXPORT",
+          "native_outcome": "ANSWER",
+          "semantic_outcome": "ANSWER",
+          "visibility": "FULL",
+          "reason_codes": ["EXPORT_SUPPORTED"],
+          "support_refs": ["kfm:evidence:synthetic-projection"]
+        },
+        "reason_mappings": [
+          {
+            "input_code": "UI_SUPPORTED",
+            "output_code": "EXPORT_SUPPORTED",
+            "mapping": "TRANSLATED"
+          }
+        ],
+        "added_reason_codes": [],
+        "omitted_fields": [],
+        "degradation_rule_ref": null
+      },
+      {
+        "step_index": 6,
+        "transition_id": "EXPORT->CACHE",
+        "input_state": {
+          "layer": "EXPORT",
+          "native_outcome": "ANSWER",
+          "semantic_outcome": "ANSWER",
+          "visibility": "FULL",
+          "reason_codes": ["EXPORT_SUPPORTED"],
+          "support_refs": ["kfm:evidence:synthetic-projection"]
+        },
+        "output_state": {
+          "layer": "CACHE",
+          "native_outcome": "HIT_ANSWER",
+          "semantic_outcome": "ANSWER",
+          "visibility": "FULL",
+          "reason_codes": ["CACHE_SUPPORTED"],
+          "support_refs": ["kfm:evidence:synthetic-projection"]
+        },
+        "reason_mappings": [
+          {
+            "input_code": "EXPORT_SUPPORTED",
+            "output_code": "CACHE_SUPPORTED",
+            "mapping": "TRANSLATED"
+          }
+        ],
+        "added_reason_codes": [],
+        "omitted_fields": [],
+        "degradation_rule_ref": null
+      }
+    ],
+    "report": {
+      "terminal_layer": "CACHE",
+      "terminal_outcome": "ANSWER",
+      "terminal_visibility": "FULL",
+      "parity_status": "PARITY_CONFIRMED",
+      "failing_step_indexes": [],
+      "finding_codes": [],
+      "trusted_surface_allowed": false,
+      "separate_policy_review_required": true
+    },
+    "governance": {
+      "execution_mode": "FIXTURE_ONLY",
+      "network_attempted": false,
+      "policy_evaluated": false,
+      "release_authorized": false,
+      "runtime_executed": false,
+      "api_called": false,
+      "ui_rendered": false,
+      "export_created": false,
+      "cache_mutated": false,
+      "evidence_resolved": false,
+      "review_approved": false,
+      "publication_authorized": false,
+      "public_use_allowed": false
+    },
+    "spec_hash": ""
+  },
+  "cases": [
+    {
+      "case_id": "answer-parity-preserved",
+      "expected_status": "PASS",
+      "expected_parity_status": "PARITY_CONFIRMED",
+      "expected_findings": []
+    },
+    {
+      "case_id": "abstain-parity-preserved",
+      "chain_outcome": "ABSTAIN",
+      "expected_status": "PASS",
+      "expected_parity_status": "PARITY_CONFIRMED",
+      "expected_findings": []
+    },
+    {
+      "case_id": "deny-parity-preserved",
+      "chain_outcome": "DENY",
+      "expected_status": "PASS",
+      "expected_parity_status": "PARITY_CONFIRMED",
+      "expected_findings": []
+    },
+    {
+      "case_id": "error-parity-preserved",
+      "chain_outcome": "ERROR",
+      "expected_status": "PASS",
+      "expected_parity_status": "PARITY_CONFIRMED",
+      "expected_findings": []
+    },
+    {
+      "case_id": "redaction-authorized-at-cache",
+      "mutations": [
+        {
+          "path": "/steps/5/output_state/visibility",
+          "value": "REDACTED"
+        },
+        {
+          "path": "/steps/5/output_state/reason_codes",
+          "value": ["CACHE_REDACTED", "CACHE_SUPPORTED"]
+        },
+        {
+          "path": "/steps/5/added_reason_codes",
+          "value": ["CACHE_REDACTED"]
+        },
+        {
+          "path": "/steps/5/degradation_rule_ref",
+          "value": "kfm:outcome-projection-rule:synthetic-redaction"
+        }
+      ],
+      "recompute_report": true,
+      "expected_status": "PASS",
+      "expected_parity_status": "AUTHORIZED_DEGRADATION",
+      "expected_findings": []
+    },
+    {
+      "case_id": "stale-cache-degrades-to-abstain",
+      "mutations": [
+        {
+          "path": "/steps/5/output_state/native_outcome",
+          "value": "CACHE_STALE"
+        },
+        {
+          "path": "/steps/5/output_state/semantic_outcome",
+          "value": "ABSTAIN"
+        },
+        {
+          "path": "/steps/5/output_state/visibility",
+          "value": "STALE"
+        },
+        {
+          "path": "/steps/5/output_state/reason_codes",
+          "value": ["CACHE_STALE", "EXPORT_SUPPORTED"]
+        },
+        {
+          "path": "/steps/5/reason_mappings",
+          "value": [
+            {
+              "input_code": "EXPORT_SUPPORTED",
+              "output_code": "EXPORT_SUPPORTED",
+              "mapping": "PRESERVED"
+            }
+          ]
+        },
+        {
+          "path": "/steps/5/added_reason_codes",
+          "value": ["CACHE_STALE"]
+        },
+        {
+          "path": "/steps/5/degradation_rule_ref",
+          "value": "kfm:outcome-projection-rule:synthetic-stale-cache"
+        }
+      ],
+      "recompute_report": true,
+      "expected_status": "PASS",
+      "expected_parity_status": "AUTHORIZED_DEGRADATION",
+      "expected_findings": []
+    },
+    {
+      "case_id": "unavailable-cache-degrades-to-error",
+      "mutations": [
+        {
+          "path": "/steps/5/output_state/native_outcome",
+          "value": "CACHE_UNAVAILABLE"
+        },
+        {
+          "path": "/steps/5/output_state/semantic_outcome",
+          "value": "ERROR"
+        },
+        {
+          "path": "/steps/5/output_state/visibility",
+          "value": "UNAVAILABLE"
+        },
+        {
+          "path": "/steps/5/output_state/reason_codes",
+          "value": ["CACHE_UNAVAILABLE", "EXPORT_SUPPORTED"]
+        },
+        {
+          "path": "/steps/5/reason_mappings",
+          "value": [
+            {
+              "input_code": "EXPORT_SUPPORTED",
+              "output_code": "EXPORT_SUPPORTED",
+              "mapping": "PRESERVED"
+            }
+          ]
+        },
+        {
+          "path": "/steps/5/added_reason_codes",
+          "value": ["CACHE_UNAVAILABLE"]
+        },
+        {
+          "path": "/steps/5/degradation_rule_ref",
+          "value": "kfm:outcome-projection-rule:synthetic-unavailable-cache"
+        }
+      ],
+      "recompute_report": true,
+      "expected_status": "PASS",
+      "expected_parity_status": "AUTHORIZED_DEGRADATION",
+      "expected_findings": []
+    },
+    {
+      "case_id": "deny-upgraded-to-answer",
+      "chain_outcome": "DENY",
+      "mutations": [
+        {
+          "path": "/steps/5/output_state/native_outcome",
+          "value": "HIT_ANSWER"
+        },
+        {
+          "path": "/steps/5/output_state/semantic_outcome",
+          "value": "ANSWER"
+        },
+        {
+          "path": "/steps/5/output_state/reason_codes",
+          "value": ["CACHE_UPGRADE", "EXPORT_DENY"]
+        },
+        {
+          "path": "/steps/5/reason_mappings",
+          "value": [
+            {
+              "input_code": "EXPORT_DENY",
+              "output_code": "EXPORT_DENY",
+              "mapping": "PRESERVED"
+            }
+          ]
+        },
+        {
+          "path": "/steps/5/added_reason_codes",
+          "value": ["CACHE_UPGRADE"]
+        },
+        {
+          "path": "/steps/5/degradation_rule_ref",
+          "value": "kfm:outcome-projection-rule:synthetic-invalid-upgrade"
+        }
+      ],
+      "recompute_report": true,
+      "expected_status": "DENY",
+      "expected_parity_status": "PARITY_FAILURE",
+      "expected_findings": [
+        {
+          "code": "OUTCOME_PARITY_PROHIBITED_UPGRADE",
+          "path": "/steps/5/output_state/semantic_outcome"
+        }
+      ]
+    },
+    {
+      "case_id": "reason-lineage-lost",
+      "mutations": [
+        {
+          "path": "/steps/5/added_reason_codes",
+          "value": ["CACHE_AUDIT"]
+        }
+      ],
+      "recompute_report": true,
+      "expected_status": "DENY",
+      "expected_parity_status": "PARITY_FAILURE",
+      "expected_findings": [
+        {
+          "code": "OUTCOME_PARITY_REASON_LINEAGE_LOST",
+          "path": "/steps/5/output_state/reason_codes"
+        }
+      ]
+    },
+    {
+      "case_id": "reason-mapping-invalid",
+      "mutations": [
+        {
+          "path": "/steps/5/reason_mappings/0/mapping",
+          "value": "PRESERVED"
+        }
+      ],
+      "recompute_report": true,
+      "expected_status": "DENY",
+      "expected_parity_status": "PARITY_FAILURE",
+      "expected_findings": [
+        {
+          "code": "OUTCOME_PARITY_REASON_MAPPING_INVALID",
+          "path": "/steps/5/reason_mappings"
+        }
+      ]
+    },
+    {
+      "case_id": "empty-success-and-support-loss",
+      "mutations": [
+        {
+          "path": "/steps/5/output_state/support_refs",
+          "value": []
+        }
+      ],
+      "recompute_report": true,
+      "expected_status": "DENY",
+      "expected_parity_status": "PARITY_FAILURE",
+      "expected_findings": [
+        {
+          "code": "OUTCOME_PARITY_EMPTY_SUCCESS",
+          "path": "/steps/5/output_state/support_refs"
+        },
+        {
+          "code": "OUTCOME_PARITY_SUPPORT_LINEAGE_LOST",
+          "path": "/steps/5/output_state/support_refs"
+        }
+      ]
+    },
+    {
+      "case_id": "stale-answer-not-degraded",
+      "mutations": [
+        {
+          "path": "/steps/5/output_state/visibility",
+          "value": "STALE"
+        },
+        {
+          "path": "/steps/5/output_state/reason_codes",
+          "value": ["CACHE_STALE", "CACHE_SUPPORTED"]
+        },
+        {
+          "path": "/steps/5/added_reason_codes",
+          "value": ["CACHE_STALE"]
+        },
+        {
+          "path": "/steps/5/degradation_rule_ref",
+          "value": "kfm:outcome-projection-rule:synthetic-stale-cache"
+        }
+      ],
+      "recompute_report": true,
+      "expected_status": "DENY",
+      "expected_parity_status": "PARITY_FAILURE",
+      "expected_findings": [
+        {
+          "code": "OUTCOME_PARITY_STALE_OR_UNAVAILABLE_SUCCESS",
+          "path": "/steps/5/output_state"
+        }
+      ]
+    },
+    {
+      "case_id": "degradation-rule-missing",
+      "mutations": [
+        {
+          "path": "/steps/5/output_state/native_outcome",
+          "value": "CACHE_STALE"
+        },
+        {
+          "path": "/steps/5/output_state/semantic_outcome",
+          "value": "ABSTAIN"
+        },
+        {
+          "path": "/steps/5/output_state/visibility",
+          "value": "STALE"
+        },
+        {
+          "path": "/steps/5/output_state/reason_codes",
+          "value": ["CACHE_STALE", "EXPORT_SUPPORTED"]
+        },
+        {
+          "path": "/steps/5/reason_mappings",
+          "value": [
+            {
+              "input_code": "EXPORT_SUPPORTED",
+              "output_code": "EXPORT_SUPPORTED",
+              "mapping": "PRESERVED"
+            }
+          ]
+        },
+        {
+          "path": "/steps/5/added_reason_codes",
+          "value": ["CACHE_STALE"]
+        }
+      ],
+      "recompute_report": true,
+      "expected_status": "DENY",
+      "expected_parity_status": "PARITY_FAILURE",
+      "expected_findings": [
+        {
+          "code": "OUTCOME_PARITY_DEGRADATION_UNBOUND",
+          "path": "/steps/5"
+        }
+      ]
+    },
+    {
+      "case_id": "step-continuity-broken",
+      "mutations": [
+        {
+          "path": "/steps/5/input_state/native_outcome",
+          "value": "DIFFERENT_NATIVE"
+        }
+      ],
+      "recompute_report": true,
+      "expected_status": "DENY",
+      "expected_parity_status": "PARITY_FAILURE",
+      "expected_findings": [
+        {
+          "code": "OUTCOME_PARITY_STEP_CONTINUITY_INVALID",
+          "path": "/steps/5/input_state"
+        }
+      ]
+    },
+    {
+      "case_id": "profile-matrix-reordered",
+      "mutations": [
+        {
+          "path": "/projection_profile/allowed_outcome_pairs",
+          "value": [
+            "ERROR->ERROR",
+            "DENY->DENY",
+            "ANSWER->ERROR",
+            "ANSWER->DENY",
+            "ANSWER->ANSWER",
+            "ANSWER->ABSTAIN",
+            "ABSTAIN->ERROR",
+            "ABSTAIN->DENY",
+            "ABSTAIN->ABSTAIN"
+          ]
+        }
+      ],
+      "expected_status": "DENY",
+      "expected_parity_status": null,
+      "expected_findings": [
+        {
+          "code": "OUTCOME_PARITY_PROFILE_MATRIX_INVALID",
+          "path": "/projection_profile"
+        }
+      ]
+    },
+    {
+      "case_id": "report-does-not-match-steps",
+      "mutations": [
+        {
+          "path": "/report/terminal_outcome",
+          "value": "DENY"
+        }
+      ],
+      "expected_status": "DENY",
+      "expected_parity_status": null,
+      "expected_findings": [
+        {
+          "code": "OUTCOME_PARITY_REPORT_MISMATCH",
+          "path": "/report"
+        }
+      ]
+    },
+    {
+      "case_id": "spec-hash-mismatch",
+      "spec_hash_override": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "expected_status": "DENY",
+      "expected_parity_status": null,
+      "expected_findings": [
+        {
+          "code": "OUTCOME_PARITY_SPEC_HASH_MISMATCH",
+          "path": "/spec_hash"
+        }
+      ]
+    },
+    {
+      "case_id": "assessment-id-mismatch",
+      "assessment_id_override": "kfm:outcome-projection-parity:ffffffffffffffffffffffff",
+      "expected_status": "DENY",
+      "expected_parity_status": null,
+      "expected_findings": [
+        {
+          "code": "OUTCOME_PARITY_ID_MISMATCH",
+          "path": "/assessment_id"
+        }
+      ]
+    },
+    {
+      "case_id": "authority-overreach",
+      "mutations": [
+        {
+          "path": "/governance/public_use_allowed",
+          "value": true
+        }
+      ],
+      "expected_status": "DENY",
+      "expected_parity_status": null,
+      "expected_findings": [
+        {
+          "code": "OUTCOME_PARITY_SCHEMA_INVALID",
+          "path": "/governance/public_use_allowed"
+        }
+      ]
+    }
+  ]
+}

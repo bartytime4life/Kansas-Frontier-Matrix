@@ -1,0 +1,231 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/data/county_year_panel.schema.json",
+  "title": "CountyYearPanel",
+  "description": "Fixture-only aggregate composition of versioned county-year observation references.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "panel_id",
+    "panel_scope",
+    "observations",
+    "summary",
+    "support",
+    "disclosure",
+    "governance",
+    "spec_hash"
+  ],
+  "properties": {
+    "object_type": {"const": "CountyYearPanel"},
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.county-year-panel.fixture.v1"},
+    "panel_id": {
+      "type": "string",
+      "pattern": "^kfm:county-year-panel:[a-f0-9]{24}$"
+    },
+    "panel_scope": {"$ref": "#/$defs/panel_scope"},
+    "observations": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "items": {"$ref": "#/$defs/observation"}
+    },
+    "summary": {"$ref": "#/$defs/summary"},
+    "support": {"$ref": "#/$defs/support"},
+    "disclosure": {"$ref": "#/$defs/disclosure"},
+    "governance": {"$ref": "#/$defs/governance"},
+    "spec_hash": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "digest_ref": {
+      "type": "string",
+      "pattern": "^kfm://[a-z0-9][a-z0-9._:/-]{2,191}@sha256:[a-f0-9]{64}$"
+    },
+    "nullable_digest_ref": {
+      "oneOf": [{"$ref": "#/$defs/digest_ref"}, {"type": "null"}]
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "panel_scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "panel_key",
+        "county_identifier_digest",
+        "calendar_year",
+        "geography_version_ref",
+        "frontier_definition_ref"
+      ],
+      "properties": {
+        "panel_key": {"type": "string", "pattern": "^[a-z][a-z0-9_]{2,63}$"},
+        "county_identifier_digest": {"$ref": "#/$defs/sha256"},
+        "calendar_year": {"type": "integer", "minimum": 1700, "maximum": 2500},
+        "geography_version_ref": {"$ref": "#/$defs/digest_ref"},
+        "frontier_definition_ref": {"$ref": "#/$defs/digest_ref"}
+      }
+    },
+    "observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "observation_kind",
+        "indicator_definition_ref",
+        "source_role_ref",
+        "observation_geography_version_ref",
+        "geography_alignment",
+        "geography_crosswalk_ref",
+        "availability",
+        "observation_ref",
+        "uncertainty_ref",
+        "evidence_refs",
+        "reason_code"
+      ],
+      "properties": {
+        "observation_kind": {"enum": ["ACCESS", "AGRICULTURE", "ECONOMIC", "POPULATION"]},
+        "indicator_definition_ref": {"$ref": "#/$defs/digest_ref"},
+        "source_role_ref": {"$ref": "#/$defs/digest_ref"},
+        "observation_geography_version_ref": {"$ref": "#/$defs/digest_ref"},
+        "geography_alignment": {"enum": ["SAME_VERSION", "CROSSWALK_REFERENCED", "UNRESOLVED"]},
+        "geography_crosswalk_ref": {"$ref": "#/$defs/nullable_digest_ref"},
+        "availability": {"enum": ["AVAILABLE", "MISSING", "SUPPRESSED", "NOT_APPLICABLE"]},
+        "observation_ref": {"$ref": "#/$defs/nullable_digest_ref"},
+        "uncertainty_ref": {"$ref": "#/$defs/nullable_digest_ref"},
+        "evidence_refs": {
+          "type": "array",
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/digest_ref"}
+        },
+        "reason_code": {
+          "enum": [
+            "NONE",
+            "SOURCE_MISSING",
+            "POLICY_SUPPRESSED",
+            "OUT_OF_SCOPE",
+            "GEOGRAPHY_ALIGNMENT_UNRESOLVED"
+          ]
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["panel_state", "decision", "reason_codes"],
+      "properties": {
+        "panel_state": {"enum": ["COMPLETE", "PARTIAL", "INSUFFICIENT"]},
+        "decision": {"enum": ["REVIEW_CANDIDATE", "HOLD"]},
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "ALL_REQUIRED_OBSERVATIONS_AVAILABLE",
+              "NO_OBSERVATIONS_AVAILABLE",
+              "OBSERVATION_GAPS_PRESENT",
+              "SUPPRESSED_OBSERVATION_PRESENT",
+              "UNRESOLVED_GEOGRAPHY_ALIGNMENT"
+            ]
+          }
+        }
+      }
+    },
+    "support": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_roles_preserved",
+        "evidence_state",
+        "panel_evidence_refs",
+        "assumption_refs",
+        "rights_state",
+        "sensitivity_state"
+      ],
+      "properties": {
+        "source_roles_preserved": {"const": true},
+        "evidence_state": {"const": "REFERENCED_NOT_RESOLVED"},
+        "panel_evidence_refs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/digest_ref"}
+        },
+        "assumption_refs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/digest_ref"}
+        },
+        "rights_state": {"const": "REFERENCED_NOT_EVALUATED"},
+        "sensitivity_state": {"const": "REFERENCED_NOT_EVALUATED"}
+      }
+    },
+    "disclosure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["interpretation_limits"],
+      "properties": {
+        "interpretation_limits": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "AGGREGATE_ONLY",
+              "NO_CROSSWALK_INFERENCE",
+              "NO_FRONTIER_CLASSIFICATION",
+              "NO_PUBLICATION_AUTHORITY",
+              "OBSERVATIONS_REFERENCED_NOT_RESOLVED",
+              "SOURCE_ROLES_PRESERVED"
+            ]
+          }
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "execution_mode",
+        "network_attempted",
+        "observations_loaded",
+        "values_computed",
+        "geography_resolved",
+        "crosswalk_executed",
+        "evidence_resolved",
+        "policy_evaluated",
+        "frontier_classified",
+        "review_approved",
+        "promotion_authorized",
+        "release_authorized",
+        "public_use_allowed",
+        "publication_authorized"
+      ],
+      "properties": {
+        "execution_mode": {"const": "FIXTURE_ONLY"},
+        "network_attempted": {"const": false},
+        "observations_loaded": {"const": false},
+        "values_computed": {"const": false},
+        "geography_resolved": {"const": false},
+        "crosswalk_executed": {"const": false},
+        "evidence_resolved": {"const": false},
+        "policy_evaluated": {"const": false},
+        "frontier_classified": {"const": false},
+        "review_approved": {"const": false},
+        "promotion_authorized": {"const": false},
+        "release_authorized": {"const": false},
+        "public_use_allowed": {"const": false},
+        "publication_authorized": {"const": false}
+      }
+    }
+  }
+}

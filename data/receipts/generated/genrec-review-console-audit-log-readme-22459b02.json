@@ -1,0 +1,138 @@
+{
+  "receipt_id": "genrec-review-console-audit-log-readme-22459b02",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/review-console/src/features/audit_log/README.md"
+  ],
+  "artifact_hashes": {
+    "apps/review-console/src/features/audit_log/README.md": "sha256:22459b021b7f3c68138de16fc856b61083e114491176f8887132c79ed4e6d5ae"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-19"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "container"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85"
+    ],
+    "attached_docs": [
+      "KFM GitHub Repository Documentation Implementation Agent v3.1 — prior project prompt"
+    ],
+    "evidence_refs": [
+      "repo:bartytime4life/Kansas-Frontier-Matrix:apps/review-console/src/features/audit_log/README.md@66adcd917bc77232f6eac2218849f812019631dd",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:apps/review-console/src/features/README.md@66adcd917bc77232f6eac2218849f812019631dd",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:apps/review-console/src/README.md@66adcd917bc77232f6eac2218849f812019631dd",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:apps/review-console/README.md@66adcd917bc77232f6eac2218849f812019631dd",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:apps/review-console/package.json@66adcd917bc77232f6eac2218849f812019631dd",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/architecture/ui/REVIEW_CONSOLE.md@66adcd917bc77232f6eac2218849f812019631dd",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/governance/REVIEW_DUTIES.md@66adcd917bc77232f6eac2218849f812019631dd",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/security/AUDIT_INVARIANTS.md@66adcd917bc77232f6eac2218849f812019631dd",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/doctrine/directory-rules.md@66adcd917bc77232f6eac2218849f812019631dd",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:contracts/governance/ReviewRecord.md@66adcd917bc77232f6eac2218849f812019631dd",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:schemas/contracts/v1/governance/review_record.schema.json@66adcd917bc77232f6eac2218849f812019631dd",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:fixtures/contracts/v1/governance/review_record/README.md@66adcd917bc77232f6eac2218849f812019631dd",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:tools/validators/validate_review_record.py@66adcd917bc77232f6eac2218849f812019631dd",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:tests/schemas/test_common_contracts.py@66adcd917bc77232f6eac2218849f812019631dd",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:policy/decision/README.md@66adcd917bc77232f6eac2218849f812019631dd"
+    ]
+  },
+  "truth_labels": {
+    "apps/review-console/src/features/audit_log/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "target-and-meta-block-structure",
+      "outcome": "PASS",
+      "reason": "One H1, closed KFM Meta Block v2, balanced code fences, resolved internal anchors, unique heading slugs, final newline, and no trailing whitespace."
+    },
+    {
+      "gate": "authority-and-placement-preflight",
+      "outcome": "PASS",
+      "reason": "Existing app-local feature path retained under apps/review-console; no new authority root, path move, duplicate identity, overlapping branch, or open pull request surfaced."
+    },
+    {
+      "gate": "repository-evidence-grounding",
+      "outcome": "PASS",
+      "reason": "Current-state claims are bounded to exact repository files and searches pinned to main@66adcd917bc77232f6eac2218849f812019631dd."
+    },
+    {
+      "gate": "contract-schema-drift-disclosure",
+      "outcome": "PASS",
+      "reason": "The README explicitly separates the rich semantic ReviewRecord contract from the closed seven-field schema and discloses the case-sensitive contract-path mismatch."
+    },
+    {
+      "gate": "sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "Documentation contains no credentials, private audit payloads, reviewer personal data, exact protected locations, living-person records, genomic data, or secret operational details."
+    },
+    {
+      "gate": "repository-native-test-run",
+      "outcome": "SKIPPED",
+      "reason": "API-only documentation workflow has no mounted checkout; no local repository test result or current full-suite pass state is claimed."
+    },
+    {
+      "gate": "generated-receipt-shape",
+      "outcome": "PASS",
+      "reason": "Receipt includes required v3.0 fields, valid truth labels, PASS/FAIL/SKIPPED gate outcomes, SHA-256 artifact hash, citations, and pending human review."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "repo:apps/review-console/src/features/audit_log/README.md",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:apps/review-console/src/features/audit_log/README.md@66adcd917bc77232f6eac2218849f812019631dd"
+    },
+    {
+      "id": "repo:contracts/governance/ReviewRecord.md",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:contracts/governance/ReviewRecord.md@66adcd917bc77232f6eac2218849f812019631dd"
+    },
+    {
+      "id": "repo:schemas/contracts/v1/governance/review_record.schema.json",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:schemas/contracts/v1/governance/review_record.schema.json@66adcd917bc77232f6eac2218849f812019631dd"
+    },
+    {
+      "id": "repo:fixtures/contracts/v1/governance/review_record/README.md",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:fixtures/contracts/v1/governance/review_record/README.md@66adcd917bc77232f6eac2218849f812019631dd"
+    },
+    {
+      "id": "repo:docs/security/AUDIT_INVARIANTS.md",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:docs/security/AUDIT_INVARIANTS.md@66adcd917bc77232f6eac2218849f812019631dd"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-19T16:40:45Z",
+  "emitter": "OpenAI GPT-5.6 Thinking via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only update. This receipt records AI-authored provenance and bounded preflight outcomes; it is not an audit event, ReviewRecord, PolicyDecision, evidence, proof, human review, release approval, deployment, publication authority, or runtime validation."
+}

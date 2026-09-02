@@ -1,0 +1,6 @@
+{
+  "manifest_id": "fixture:maplibre-source-meta:mismatch",
+  "source_digests": {
+    "soil_moisture_q1": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  }
+}

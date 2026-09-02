@@ -1,0 +1,57 @@
+[
+  {
+    "object_type": "FloraOccurrenceCandidate",
+    "schema_version": "1.0.0",
+    "candidate_id": "flora-occurrence-candidate:7ea12f4486a7f4357191043a0edbeb50",
+    "hash_profile": "kfm-fixture-json-v1",
+    "spec_hash": "sha256:430d6cac78f6ef2e06b0b15d42c597eaa50abb29aa52ee49936704bea6ffddf9",
+    "source_context": {
+      "source_id": "idigbio",
+      "source_profile": "IDIGBIO_DWC",
+      "source_record_id": "synthetic-primary-peer-0001",
+      "institution_code": "SYNTH",
+      "collection_code": "OTHER",
+      "catalog_number": "SYNTH-0001",
+      "license": "CC0-1.0",
+      "rights_holder": null,
+      "source_role": "OBSERVATION_CANDIDATE"
+    },
+    "taxon": {
+      "scientific_name": "Andropogon gerardii",
+      "taxon_id": null,
+      "rank": null
+    },
+    "occurrence": {
+      "basis_of_record": "PRESERVED_SPECIMEN",
+      "event_date": "2022-01-01",
+      "occurrence_status": "PRESENT"
+    },
+    "spatial": {
+      "geometry": null,
+      "crs": "EPSG:4326",
+      "uncertainty_meters": null,
+      "coordinate_exposure": "NO_COORDINATE"
+    },
+    "temporal": {
+      "event_date_precision": "DAY"
+    },
+    "sensitivity_hints": [],
+    "provenance": {
+      "input_digest": "sha256:831ca20e65fa90646c13e73552b38b0fbd1699937c0270b06c22adeebfa92312",
+      "normalizer_id": "flora-dwc-occurrence-normalizer",
+      "normalizer_version": "1.0.0"
+    },
+    "governance": {
+      "lifecycle_state": "WORK",
+      "source_admitted": false,
+      "evidence_bundle_resolved": false,
+      "policy_evaluated": false,
+      "review_completed": false,
+      "promotion_authorized": false,
+      "release_authorized": false,
+      "publication_authorized": false,
+      "public_use_allowed": false,
+      "release_ref": null
+    }
+  }
+]

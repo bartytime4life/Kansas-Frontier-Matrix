@@ -1,0 +1,43 @@
+{
+  "cases": [
+    {
+      "case_id": "valid-placeholder",
+      "expected_findings": [],
+      "expected_outcome": "PASS",
+      "input": "valid/valid_placeholder_matrix.json"
+    },
+    {
+      "case_id": "duplicate-tuple",
+      "expected_findings": [
+        "COMPATIBILITY_TUPLE_DUPLICATE",
+        "ROW_ID_DUPLICATE"
+      ],
+      "expected_outcome": "ERROR",
+      "input": "semantic_invalid/duplicate_tuple.json"
+    },
+    {
+      "case_id": "supported-without-evidence",
+      "expected_findings": [
+        "SUPPORTED_EVIDENCE_INCOMPLETE"
+      ],
+      "expected_outcome": "ERROR",
+      "input": "semantic_invalid/supported_without_evidence.json"
+    },
+    {
+      "case_id": "clustered-without-rehearsal",
+      "expected_findings": [
+        "SUPPORTED_CLUSTER_REHEARSAL_INCOMPLETE"
+      ],
+      "expected_outcome": "ERROR",
+      "input": "semantic_invalid/clustered_without_rehearsal.json"
+    },
+    {
+      "case_id": "spec-hash-mismatch",
+      "expected_findings": [
+        "MATRIX_SPEC_HASH_MISMATCH"
+      ],
+      "expected_outcome": "ERROR",
+      "input": "semantic_invalid/spec_hash_mismatch.json"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "profile": "kfm.explorer.consent-card.public-safe.v1",
+  "id": "kfm:consent-card:SENSITIVE_DENIAL_CANARY_4aa9",
+  "outcome": "DENY",
+  "reason_code": "POLICY_DENIED",
+  "layer_ref": null,
+  "layer_label": null,
+  "basis": null,
+  "scope": [],
+  "expires_at": null,
+  "subject_consent_state": "UNRESOLVED",
+  "obligation_set_ref": null,
+  "policy_decision_ref": null
+}

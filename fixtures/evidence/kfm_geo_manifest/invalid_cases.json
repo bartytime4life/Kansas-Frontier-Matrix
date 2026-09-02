@@ -1,0 +1,470 @@
+[
+  {
+    "name": "invalid_missing_crs",
+    "manifest": {
+      "object_type": "KFMGeoManifest",
+      "schema_version": "1.0.0",
+      "profile_id": "fixture-first-v1",
+      "hash_profile": "kfm-fixture-json-v1",
+      "id": "geo-manifest:synthetic:pmtiles-release-candidate:v1",
+      "version": "1.0.0",
+      "spec_hash": "sha256:c2ad93614e38f92f8e2f0dca6b5e20766605f1b80da9f01fdade60484c432f97",
+      "artifact": {
+        "artifact_ref": "artifact:synthetic:pmtiles-release-candidate:v1",
+        "artifact_type": "pmtiles",
+        "artifact_role": "release_candidate",
+        "media_type": "application/vnd.pmtiles",
+        "byte_length": 39,
+        "content_digest": "sha256:00c0835bfe05aa0f9574ede14879300a3591af8949c0704c3cd4fefbff516967",
+        "source_artifact_refs": [
+          "source-artifact:synthetic:pmtiles-release-candidate:input"
+        ]
+      },
+      "claim_scope": {
+        "scope_ref": "claim-scope:synthetic:pmtiles-release-candidate",
+        "description": "Synthetic fixture scope for pmtiles-release-candidate; no real geospatial claim.",
+        "geography_ref": "geography:synthetic:kansas-generalized",
+        "temporal_scope": {
+          "valid_from": "2026-01-01T00:00:00Z",
+          "valid_to": "2026-12-31T23:59:59Z"
+        }
+      },
+      "source_role": "derived",
+      "evidence": {
+        "evidence_bundle_refs": [
+          "evidence-bundle:synthetic:pmtiles-release-candidate"
+        ],
+        "evidence_refs": [
+          "evidence-ref:synthetic:pmtiles-release-candidate"
+        ],
+        "source_descriptor_refs": [
+          "source-descriptor:synthetic:pmtiles-release-candidate:1.0.0"
+        ]
+      },
+      "spatial": {
+        "bbox": [
+          -11400000,
+          4500000,
+          -10500000,
+          5000000
+        ],
+        "geometry_type": "VectorTileSet",
+        "scale_or_resolution": {
+          "kind": "zoom_range",
+          "min_zoom": 0,
+          "max_zoom": 14
+        },
+        "tiling_profile": {
+          "scheme": "xyz",
+          "tile_size": 512,
+          "min_zoom": 0,
+          "max_zoom": 14
+        }
+      },
+      "derivation": {
+        "parameters_digest": "sha256:8edd140aa3e640f1d378909abecb050fe8912492c07883f8fcd2ff4b9cecc96b",
+        "transforms": [
+          {
+            "transform_id": "transform:synthetic:pmtiles:clip",
+            "operation": "clip",
+            "input_digest": "sha256:7ab625954f7dc4d32ea220923d6380f34faab97fe802486928af250c274d95a9",
+            "output_digest": "sha256:7be6307f046b893bfe639803a94b0def1417525c7027ca13f5caeff057dde80b",
+            "receipt_ref": "receipt:synthetic:pmtiles:clip"
+          },
+          {
+            "transform_id": "transform:synthetic:pmtiles:tile",
+            "operation": "tile",
+            "input_digest": "sha256:7be6307f046b893bfe639803a94b0def1417525c7027ca13f5caeff057dde80b",
+            "output_digest": "sha256:e1283dd0d89d2bbf7c33798dc86f45344c436babcb5bdf7e421a74f1515e675e",
+            "receipt_ref": "receipt:synthetic:pmtiles:tile"
+          },
+          {
+            "transform_id": "transform:synthetic:pmtiles:encode",
+            "operation": "encode",
+            "input_digest": "sha256:e1283dd0d89d2bbf7c33798dc86f45344c436babcb5bdf7e421a74f1515e675e",
+            "output_digest": "sha256:00c0835bfe05aa0f9574ede14879300a3591af8949c0704c3cd4fefbff516967",
+            "receipt_ref": "receipt:synthetic:pmtiles:encode"
+          }
+        ],
+        "receipt_refs": [
+          "receipt:synthetic:pmtiles-release-candidate:build"
+        ]
+      },
+      "governance": {
+        "rights_state": "verified_open",
+        "sensitivity_state": "public",
+        "policy_decision_ref": "policy-decision:synthetic:pmtiles-release-candidate",
+        "review_ref": "review:synthetic:pmtiles-release-candidate",
+        "rollback_ref": "rollback:synthetic:pmtiles-release-candidate",
+        "release_manifest_ref": null,
+        "release_state": "not_released",
+        "public_use_allowed": false,
+        "authority_created": false
+      },
+      "lineage": {
+        "supersedes": null,
+        "correction_refs": [],
+        "rollback_of": null
+      },
+      "limitations": [
+        "Fixture-only metadata; payload bytes are synthetic and do not prove format conformance.",
+        "No evidence, policy, review, release, signature, or public-use authority is authenticated."
+      ]
+    },
+    "expected_codes": [
+      "SCHEMA"
+    ]
+  },
+  {
+    "name": "invalid_public_use_enabled",
+    "manifest": {
+      "object_type": "KFMGeoManifest",
+      "schema_version": "1.0.0",
+      "profile_id": "fixture-first-v1",
+      "hash_profile": "kfm-fixture-json-v1",
+      "id": "geo-manifest:synthetic:pmtiles-release-candidate:v1",
+      "version": "1.0.0",
+      "spec_hash": "sha256:c2ad93614e38f92f8e2f0dca6b5e20766605f1b80da9f01fdade60484c432f97",
+      "artifact": {
+        "artifact_ref": "artifact:synthetic:pmtiles-release-candidate:v1",
+        "artifact_type": "pmtiles",
+        "artifact_role": "release_candidate",
+        "media_type": "application/vnd.pmtiles",
+        "byte_length": 39,
+        "content_digest": "sha256:00c0835bfe05aa0f9574ede14879300a3591af8949c0704c3cd4fefbff516967",
+        "source_artifact_refs": [
+          "source-artifact:synthetic:pmtiles-release-candidate:input"
+        ]
+      },
+      "claim_scope": {
+        "scope_ref": "claim-scope:synthetic:pmtiles-release-candidate",
+        "description": "Synthetic fixture scope for pmtiles-release-candidate; no real geospatial claim.",
+        "geography_ref": "geography:synthetic:kansas-generalized",
+        "temporal_scope": {
+          "valid_from": "2026-01-01T00:00:00Z",
+          "valid_to": "2026-12-31T23:59:59Z"
+        }
+      },
+      "source_role": "derived",
+      "evidence": {
+        "evidence_bundle_refs": [
+          "evidence-bundle:synthetic:pmtiles-release-candidate"
+        ],
+        "evidence_refs": [
+          "evidence-ref:synthetic:pmtiles-release-candidate"
+        ],
+        "source_descriptor_refs": [
+          "source-descriptor:synthetic:pmtiles-release-candidate:1.0.0"
+        ]
+      },
+      "spatial": {
+        "crs": "EPSG:3857",
+        "bbox": [
+          -11400000,
+          4500000,
+          -10500000,
+          5000000
+        ],
+        "geometry_type": "VectorTileSet",
+        "scale_or_resolution": {
+          "kind": "zoom_range",
+          "min_zoom": 0,
+          "max_zoom": 14
+        },
+        "tiling_profile": {
+          "scheme": "xyz",
+          "tile_size": 512,
+          "min_zoom": 0,
+          "max_zoom": 14
+        }
+      },
+      "derivation": {
+        "parameters_digest": "sha256:8edd140aa3e640f1d378909abecb050fe8912492c07883f8fcd2ff4b9cecc96b",
+        "transforms": [
+          {
+            "transform_id": "transform:synthetic:pmtiles:clip",
+            "operation": "clip",
+            "input_digest": "sha256:7ab625954f7dc4d32ea220923d6380f34faab97fe802486928af250c274d95a9",
+            "output_digest": "sha256:7be6307f046b893bfe639803a94b0def1417525c7027ca13f5caeff057dde80b",
+            "receipt_ref": "receipt:synthetic:pmtiles:clip"
+          },
+          {
+            "transform_id": "transform:synthetic:pmtiles:tile",
+            "operation": "tile",
+            "input_digest": "sha256:7be6307f046b893bfe639803a94b0def1417525c7027ca13f5caeff057dde80b",
+            "output_digest": "sha256:e1283dd0d89d2bbf7c33798dc86f45344c436babcb5bdf7e421a74f1515e675e",
+            "receipt_ref": "receipt:synthetic:pmtiles:tile"
+          },
+          {
+            "transform_id": "transform:synthetic:pmtiles:encode",
+            "operation": "encode",
+            "input_digest": "sha256:e1283dd0d89d2bbf7c33798dc86f45344c436babcb5bdf7e421a74f1515e675e",
+            "output_digest": "sha256:00c0835bfe05aa0f9574ede14879300a3591af8949c0704c3cd4fefbff516967",
+            "receipt_ref": "receipt:synthetic:pmtiles:encode"
+          }
+        ],
+        "receipt_refs": [
+          "receipt:synthetic:pmtiles-release-candidate:build"
+        ]
+      },
+      "governance": {
+        "rights_state": "verified_open",
+        "sensitivity_state": "public",
+        "policy_decision_ref": "policy-decision:synthetic:pmtiles-release-candidate",
+        "review_ref": "review:synthetic:pmtiles-release-candidate",
+        "rollback_ref": "rollback:synthetic:pmtiles-release-candidate",
+        "release_manifest_ref": null,
+        "release_state": "not_released",
+        "public_use_allowed": true,
+        "authority_created": false
+      },
+      "lineage": {
+        "supersedes": null,
+        "correction_refs": [],
+        "rollback_of": null
+      },
+      "limitations": [
+        "Fixture-only metadata; payload bytes are synthetic and do not prove format conformance.",
+        "No evidence, policy, review, release, signature, or public-use authority is authenticated."
+      ]
+    },
+    "expected_codes": [
+      "SCHEMA"
+    ]
+  },
+  {
+    "name": "invalid_unknown_artifact_type",
+    "manifest": {
+      "object_type": "KFMGeoManifest",
+      "schema_version": "1.0.0",
+      "profile_id": "fixture-first-v1",
+      "hash_profile": "kfm-fixture-json-v1",
+      "id": "geo-manifest:synthetic:pmtiles-release-candidate:v1",
+      "version": "1.0.0",
+      "spec_hash": "sha256:c2ad93614e38f92f8e2f0dca6b5e20766605f1b80da9f01fdade60484c432f97",
+      "artifact": {
+        "artifact_ref": "artifact:synthetic:pmtiles-release-candidate:v1",
+        "artifact_type": "unknown",
+        "artifact_role": "release_candidate",
+        "media_type": "application/vnd.pmtiles",
+        "byte_length": 39,
+        "content_digest": "sha256:00c0835bfe05aa0f9574ede14879300a3591af8949c0704c3cd4fefbff516967",
+        "source_artifact_refs": [
+          "source-artifact:synthetic:pmtiles-release-candidate:input"
+        ]
+      },
+      "claim_scope": {
+        "scope_ref": "claim-scope:synthetic:pmtiles-release-candidate",
+        "description": "Synthetic fixture scope for pmtiles-release-candidate; no real geospatial claim.",
+        "geography_ref": "geography:synthetic:kansas-generalized",
+        "temporal_scope": {
+          "valid_from": "2026-01-01T00:00:00Z",
+          "valid_to": "2026-12-31T23:59:59Z"
+        }
+      },
+      "source_role": "derived",
+      "evidence": {
+        "evidence_bundle_refs": [
+          "evidence-bundle:synthetic:pmtiles-release-candidate"
+        ],
+        "evidence_refs": [
+          "evidence-ref:synthetic:pmtiles-release-candidate"
+        ],
+        "source_descriptor_refs": [
+          "source-descriptor:synthetic:pmtiles-release-candidate:1.0.0"
+        ]
+      },
+      "spatial": {
+        "crs": "EPSG:3857",
+        "bbox": [
+          -11400000,
+          4500000,
+          -10500000,
+          5000000
+        ],
+        "geometry_type": "VectorTileSet",
+        "scale_or_resolution": {
+          "kind": "zoom_range",
+          "min_zoom": 0,
+          "max_zoom": 14
+        },
+        "tiling_profile": {
+          "scheme": "xyz",
+          "tile_size": 512,
+          "min_zoom": 0,
+          "max_zoom": 14
+        }
+      },
+      "derivation": {
+        "parameters_digest": "sha256:8edd140aa3e640f1d378909abecb050fe8912492c07883f8fcd2ff4b9cecc96b",
+        "transforms": [
+          {
+            "transform_id": "transform:synthetic:pmtiles:clip",
+            "operation": "clip",
+            "input_digest": "sha256:7ab625954f7dc4d32ea220923d6380f34faab97fe802486928af250c274d95a9",
+            "output_digest": "sha256:7be6307f046b893bfe639803a94b0def1417525c7027ca13f5caeff057dde80b",
+            "receipt_ref": "receipt:synthetic:pmtiles:clip"
+          },
+          {
+            "transform_id": "transform:synthetic:pmtiles:tile",
+            "operation": "tile",
+            "input_digest": "sha256:7be6307f046b893bfe639803a94b0def1417525c7027ca13f5caeff057dde80b",
+            "output_digest": "sha256:e1283dd0d89d2bbf7c33798dc86f45344c436babcb5bdf7e421a74f1515e675e",
+            "receipt_ref": "receipt:synthetic:pmtiles:tile"
+          },
+          {
+            "transform_id": "transform:synthetic:pmtiles:encode",
+            "operation": "encode",
+            "input_digest": "sha256:e1283dd0d89d2bbf7c33798dc86f45344c436babcb5bdf7e421a74f1515e675e",
+            "output_digest": "sha256:00c0835bfe05aa0f9574ede14879300a3591af8949c0704c3cd4fefbff516967",
+            "receipt_ref": "receipt:synthetic:pmtiles:encode"
+          }
+        ],
+        "receipt_refs": [
+          "receipt:synthetic:pmtiles-release-candidate:build"
+        ]
+      },
+      "governance": {
+        "rights_state": "verified_open",
+        "sensitivity_state": "public",
+        "policy_decision_ref": "policy-decision:synthetic:pmtiles-release-candidate",
+        "review_ref": "review:synthetic:pmtiles-release-candidate",
+        "rollback_ref": "rollback:synthetic:pmtiles-release-candidate",
+        "release_manifest_ref": null,
+        "release_state": "not_released",
+        "public_use_allowed": false,
+        "authority_created": false
+      },
+      "lineage": {
+        "supersedes": null,
+        "correction_refs": [],
+        "rollback_of": null
+      },
+      "limitations": [
+        "Fixture-only metadata; payload bytes are synthetic and do not prove format conformance.",
+        "No evidence, policy, review, release, signature, or public-use authority is authenticated."
+      ]
+    },
+    "expected_codes": [
+      "SCHEMA"
+    ]
+  },
+  {
+    "name": "invalid_extra_property",
+    "manifest": {
+      "object_type": "KFMGeoManifest",
+      "schema_version": "1.0.0",
+      "profile_id": "fixture-first-v1",
+      "hash_profile": "kfm-fixture-json-v1",
+      "id": "geo-manifest:synthetic:pmtiles-release-candidate:v1",
+      "version": "1.0.0",
+      "spec_hash": "sha256:c2ad93614e38f92f8e2f0dca6b5e20766605f1b80da9f01fdade60484c432f97",
+      "artifact": {
+        "artifact_ref": "artifact:synthetic:pmtiles-release-candidate:v1",
+        "artifact_type": "pmtiles",
+        "artifact_role": "release_candidate",
+        "media_type": "application/vnd.pmtiles",
+        "byte_length": 39,
+        "content_digest": "sha256:00c0835bfe05aa0f9574ede14879300a3591af8949c0704c3cd4fefbff516967",
+        "source_artifact_refs": [
+          "source-artifact:synthetic:pmtiles-release-candidate:input"
+        ]
+      },
+      "claim_scope": {
+        "scope_ref": "claim-scope:synthetic:pmtiles-release-candidate",
+        "description": "Synthetic fixture scope for pmtiles-release-candidate; no real geospatial claim.",
+        "geography_ref": "geography:synthetic:kansas-generalized",
+        "temporal_scope": {
+          "valid_from": "2026-01-01T00:00:00Z",
+          "valid_to": "2026-12-31T23:59:59Z"
+        }
+      },
+      "source_role": "derived",
+      "evidence": {
+        "evidence_bundle_refs": [
+          "evidence-bundle:synthetic:pmtiles-release-candidate"
+        ],
+        "evidence_refs": [
+          "evidence-ref:synthetic:pmtiles-release-candidate"
+        ],
+        "source_descriptor_refs": [
+          "source-descriptor:synthetic:pmtiles-release-candidate:1.0.0"
+        ]
+      },
+      "spatial": {
+        "crs": "EPSG:3857",
+        "bbox": [
+          -11400000,
+          4500000,
+          -10500000,
+          5000000
+        ],
+        "geometry_type": "VectorTileSet",
+        "scale_or_resolution": {
+          "kind": "zoom_range",
+          "min_zoom": 0,
+          "max_zoom": 14
+        },
+        "tiling_profile": {
+          "scheme": "xyz",
+          "tile_size": 512,
+          "min_zoom": 0,
+          "max_zoom": 14
+        }
+      },
+      "derivation": {
+        "parameters_digest": "sha256:8edd140aa3e640f1d378909abecb050fe8912492c07883f8fcd2ff4b9cecc96b",
+        "transforms": [
+          {
+            "transform_id": "transform:synthetic:pmtiles:clip",
+            "operation": "clip",
+            "input_digest": "sha256:7ab625954f7dc4d32ea220923d6380f34faab97fe802486928af250c274d95a9",
+            "output_digest": "sha256:7be6307f046b893bfe639803a94b0def1417525c7027ca13f5caeff057dde80b",
+            "receipt_ref": "receipt:synthetic:pmtiles:clip"
+          },
+          {
+            "transform_id": "transform:synthetic:pmtiles:tile",
+            "operation": "tile",
+            "input_digest": "sha256:7be6307f046b893bfe639803a94b0def1417525c7027ca13f5caeff057dde80b",
+            "output_digest": "sha256:e1283dd0d89d2bbf7c33798dc86f45344c436babcb5bdf7e421a74f1515e675e",
+            "receipt_ref": "receipt:synthetic:pmtiles:tile"
+          },
+          {
+            "transform_id": "transform:synthetic:pmtiles:encode",
+            "operation": "encode",
+            "input_digest": "sha256:e1283dd0d89d2bbf7c33798dc86f45344c436babcb5bdf7e421a74f1515e675e",
+            "output_digest": "sha256:00c0835bfe05aa0f9574ede14879300a3591af8949c0704c3cd4fefbff516967",
+            "receipt_ref": "receipt:synthetic:pmtiles:encode"
+          }
+        ],
+        "receipt_refs": [
+          "receipt:synthetic:pmtiles-release-candidate:build"
+        ]
+      },
+      "governance": {
+        "rights_state": "verified_open",
+        "sensitivity_state": "public",
+        "policy_decision_ref": "policy-decision:synthetic:pmtiles-release-candidate",
+        "review_ref": "review:synthetic:pmtiles-release-candidate",
+        "rollback_ref": "rollback:synthetic:pmtiles-release-candidate",
+        "release_manifest_ref": null,
+        "release_state": "not_released",
+        "public_use_allowed": false,
+        "authority_created": false
+      },
+      "lineage": {
+        "supersedes": null,
+        "correction_refs": [],
+        "rollback_of": null
+      },
+      "limitations": [
+        "Fixture-only metadata; payload bytes are synthetic and do not prove format conformance.",
+        "No evidence, policy, review, release, signature, or public-use authority is authenticated."
+      ],
+      "unexpected": "not allowed"
+    },
+    "expected_codes": [
+      "SCHEMA"
+    ]
+  }
+]

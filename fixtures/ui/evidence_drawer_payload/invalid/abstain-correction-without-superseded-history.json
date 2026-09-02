@@ -1,0 +1,34 @@
+{
+  "profile": "kfm.explorer.evidence-drawer.public-safe.v1",
+  "id": "kfm:ui:evidence-drawer:abstain-untracked-correction-001",
+  "outcome": "ABSTAIN",
+  "reason_code": "STALE_EVIDENCE",
+  "title": "Synthetic stale corrected observation",
+  "summary": "UNTRACKED_CORRECTION_SUMMARY_MUST_NOT_RENDER",
+  "evidence_refs": [
+    "kfm:evidence:synthetic:stale-001"
+  ],
+  "citations": [],
+  "limitations": [
+    "The fixture intentionally omits superseded prior history."
+  ],
+  "trust_state": {
+    "source_role": "official",
+    "policy": "ABSTAIN",
+    "review": "REVIEWED",
+    "release": "RELEASED",
+    "freshness": "STALE",
+    "correction": "CORRECTED"
+  },
+  "history": {
+    "negative_outcomes": [],
+    "corrections": [
+      {
+        "prior_evidence_ref": "kfm:evidence:synthetic:flow-000",
+        "active_evidence_ref": "kfm:evidence:synthetic:flow-001",
+        "status": "ACTIVE_CORRECTION",
+        "recorded_at": "2026-08-01T00:00:00Z"
+      }
+    ]
+  }
+}

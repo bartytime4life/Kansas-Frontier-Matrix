@@ -1,0 +1,107 @@
+{
+  "receipt_id": "genrec-connectors-ahgp-src-readme-927bdc65",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "connectors/ahgp/src/README.md"
+  ],
+  "artifact_hashes": {
+    "connectors/ahgp/src/README.md": "sha256:927bdc65d6d767969685092b5502bd6241da6bb22bf4b15115b50e229883af01"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-07-16-work-mode"
+  },
+  "prompt_or_contract": "sha256:26eb0b8038645dcb21d95d1123d761cd45f8e920198ff69f2ea391ae50efe345",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "repository inspection",
+      "parallel audit",
+      "git",
+      "GitHub connector"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [],
+    "attached_docs": [],
+    "evidence_refs": [
+      "main@975291ccc1342f323bb23ce723e7f5e4b1f44ddc:connectors/README.md",
+      "main@975291ccc1342f323bb23ce723e7f5e4b1f44ddc:connectors/ahgp/README.md",
+      "main@975291ccc1342f323bb23ce723e7f5e4b1f44ddc:connectors/ahgp/pyproject.toml",
+      "main@975291ccc1342f323bb23ce723e7f5e4b1f44ddc:connectors/ahgp/src/ahgp/README.md",
+      "main@975291ccc1342f323bb23ce723e7f5e4b1f44ddc:connectors/ahgp/src/ahgp/__init__.py",
+      "main@975291ccc1342f323bb23ce723e7f5e4b1f44ddc:connectors/ahgp/src/ahgp/admit.py",
+      "main@975291ccc1342f323bb23ce723e7f5e4b1f44ddc:connectors/ahgp/src/ahgp/fetch.py",
+      "main@975291ccc1342f323bb23ce723e7f5e4b1f44ddc:connectors/ahgp/src/ahgp/descriptor.yaml",
+      "main@975291ccc1342f323bb23ce723e7f5e4b1f44ddc:connectors/ahgp/tests/README.md",
+      "main@975291ccc1342f323bb23ce723e7f5e4b1f44ddc:docs/doctrine/directory-rules.md#15-required-readme-contract",
+      "main@975291ccc1342f323bb23ce723e7f5e4b1f44ddc:.github/CODEOWNERS"
+    ]
+  },
+  "truth_labels": {
+    "connectors/ahgp/src/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-preflight",
+      "outcome": "PASS",
+      "reason": "The target directory and its bounded evidence were inspected at the pinned main commit; the path was the only missing connector source-root README among 24 connector source roots."
+    },
+    {
+      "gate": "directory-rules-readme-contract",
+      "outcome": "PASS",
+      "reason": "The README contains the required Directory Rules section 15 headings in order and includes rollback/correction guidance."
+    },
+    {
+      "gate": "markdown-structure-and-relative-links",
+      "outcome": "PASS",
+      "reason": "The document has one H1, one KFM meta block, balanced fences, a final newline, and all repository-relative Markdown targets resolve in the working tree."
+    },
+    {
+      "gate": "whitespace-and-secret-scan",
+      "outcome": "PASS",
+      "reason": "Git whitespace checks and a bounded high-risk credential-pattern scan found no issue in the authored artifact."
+    },
+    {
+      "gate": "repository-validation",
+      "outcome": "PASS",
+      "reason": "PYTHONPATH=/tmp/kfm-validation-deps make validate completed successfully for the authored documentation change."
+    },
+    {
+      "gate": "runtime-or-executable-behavior",
+      "outcome": "SKIPPED",
+      "reason": "Documentation-only change; the README explicitly records the connector implementation and activation state as placeholder or unknown."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "directory-rules-readme-contract",
+      "validated": true,
+      "evidence_ref": "main@975291ccc1342f323bb23ce723e7f5e4b1f44ddc:docs/doctrine/directory-rules.md#15-required-readme-contract"
+    },
+    {
+      "id": "ahgp-bounded-source-inventory",
+      "validated": true,
+      "evidence_ref": "main@975291ccc1342f323bb23ce723e7f5e4b1f44ddc:connectors/ahgp/src/ahgp/"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-17T04:13:12Z",
+  "emitter": "openai-codex/gpt-5",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only source-root contract. The checked-in AHGP descriptor remains incomplete; sensitivity_floor: public is recorded as observed text, not as source activation, rights approval, public-release approval, or evidence of safe living-person handling."
+}

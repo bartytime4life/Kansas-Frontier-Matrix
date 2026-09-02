@@ -1,0 +1,30 @@
+{
+  "profile": "kfm.explorer.streamflow-qc-dashboard.public-safe.v1",
+  "outcome": "AVAILABLE",
+  "status": "LOCAL_REVIEW",
+  "reason_code": "LOCAL_REVIEW_AVAILABLE",
+  "assessment_id": "kfm:streamflow-qc-context:bbbbbbbbbbbbbbbbbbbbbbbb",
+  "spec_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "evaluated_at": "2026-08-10T18:00:00Z",
+  "gauge_ref": "kfm:gauge:synthetic-kansas-002",
+  "flow_state": "LOW_PERCENTILE",
+  "adjacent_gauge_count": 3,
+  "corroboration": "DOES_NOT_CORROBORATE",
+  "drought_context": "DOES_NOT_SUPPORT",
+  "ingest_state": "CLEAN",
+  "unit_state": "COMPATIBLE",
+  "cadence_state": "ON_TIME",
+  "priority": "ELEVATED",
+  "evidence_refs": [
+    "evidence:synthetic-flow-002",
+    "evidence:synthetic-noncorroboration-002"
+  ],
+  "sensor_invalidated": false,
+  "hydrologic_event_declared": false,
+  "detector_configuration_mutated": false,
+  "policy_evaluated": false,
+  "review_approved": false,
+  "release_authorized": false,
+  "publication_authorized": false,
+  "public_use_allowed": false
+}

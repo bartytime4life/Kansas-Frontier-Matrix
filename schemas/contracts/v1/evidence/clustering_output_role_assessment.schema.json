@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/evidence/clustering_output_role_assessment.schema.json",
+  "title": "ClusteringOutputRoleAssessmentCandidate",
+  "description": "Fixture-only assessment of an unsupervised clustering output's declared exploratory role without evidence, policy, review, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["object_type", "schema_version", "profile", "profile_spec_hash", "source_card", "observed_at", "model_output_ref", "model_output_digest", "intended_visibility", "method", "labeling", "evaluation", "review", "authority_claims"],
+  "properties": {
+    "object_type": {"const": "ClusteringOutputRoleAssessmentCandidate"},
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.evidence.clustering-output-role-assessment.fixture.v1"},
+    "profile_spec_hash": {"$ref": "#/$defs/sha256"},
+    "source_card": {"const": "KFM-P18-INV-370"},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "model_output_ref": {"$ref": "#/$defs/ref"},
+    "model_output_digest": {"$ref": "#/$defs/sha256"},
+    "intended_visibility": {"enum": ["INTERNAL_RESEARCH", "REVIEW_SURFACE", "PUBLIC_CANDIDATE"]},
+    "method": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["algorithm_family", "declared_cluster_count", "observed_cluster_count", "initialization_strategy", "initialization_seed", "feature_space_ref", "feature_space_digest", "preprocessing_receipt_ref"],
+      "properties": {
+        "algorithm_family": {"enum": ["K_MEANS", "K_MEDOIDS", "HIERARCHICAL", "DBSCAN", "OTHER_UNSUPERVISED"]},
+        "declared_cluster_count": {"type": "integer", "minimum": 1, "maximum": 100000},
+        "observed_cluster_count": {"type": "integer", "minimum": 1, "maximum": 100000},
+        "initialization_strategy": {"enum": ["RANDOM", "DETERMINISTIC", "NOT_APPLICABLE"]},
+        "initialization_seed": {"type": ["integer", "null"], "minimum": 0, "maximum": 2147483647},
+        "feature_space_ref": {"$ref": "#/$defs/ref"},
+        "feature_space_digest": {"$ref": "#/$defs/sha256"},
+        "preprocessing_receipt_ref": {"$ref": "#/$defs/ref"}
+      }
+    },
+    "labeling": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["output_role", "claim_posture", "label_origin", "label_set_ref", "public_caveat_surface"],
+      "properties": {
+        "output_role": {"enum": ["EXPLORATORY_GROUPING", "AUTHORITATIVE_DOMAIN_CLASSIFICATION"]},
+        "claim_posture": {"enum": ["EXPLORATORY_ONLY", "DOMAIN_CATEGORY_CLAIM"]},
+        "label_origin": {"enum": ["ALGORITHM_GENERATED", "ANALYST_ASSIGNED", "UNLABELED"]},
+        "label_set_ref": {"oneOf": [{"$ref": "#/$defs/ref"}, {"type": "null"}]},
+        "public_caveat_surface": {"enum": ["NONE", "LAYER_NOTE", "LEGEND", "EVIDENCE_DRAWER"]}
+      }
+    },
+    "evaluation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["evaluation_state", "evaluation_metric_refs", "sensitivity_state", "sensitivity_run_refs"],
+      "properties": {
+        "evaluation_state": {"enum": ["COMPLETE", "PARTIAL", "NOT_RUN"]},
+        "evaluation_metric_refs": {"$ref": "#/$defs/ref_array"},
+        "sensitivity_state": {"enum": ["COMPLETE", "PARTIAL", "NOT_RUN"]},
+        "sensitivity_run_refs": {"$ref": "#/$defs/ref_array"}
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["review_state", "review_record_refs", "independent_validation_state", "independent_validation_refs"],
+      "properties": {
+        "review_state": {"enum": ["PENDING", "REVIEWED", "REJECTED"]},
+        "review_record_refs": {"$ref": "#/$defs/ref_array"},
+        "independent_validation_state": {"enum": ["NOT_PERFORMED", "PENDING", "PASSED", "FAILED"]},
+        "independent_validation_refs": {"$ref": "#/$defs/ref_array"}
+      }
+    },
+    "authority_claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["evidence_authority", "domain_category_authority", "policy_authority", "review_authority", "promotion_authority", "release_authority", "publication_authority", "public_use_authority"],
+      "properties": {
+        "evidence_authority": {"const": false},
+        "domain_category_authority": {"const": false},
+        "policy_authority": {"const": false},
+        "review_authority": {"const": false},
+        "promotion_authority": {"const": false},
+        "release_authority": {"const": false},
+        "publication_authority": {"const": false},
+        "public_use_authority": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "ref": {"type": "string", "minLength": 3, "maxLength": 512, "pattern": "^\\S+$"},
+    "ref_array": {"type": "array", "maxItems": 100, "uniqueItems": true, "items": {"$ref": "#/$defs/ref"}}
+  },
+  "x-kfm": {
+    "contract_doc": "contracts/evidence/clustering_output_role_assessment.md",
+    "fixtures_root": "fixtures/contracts/v1/evidence/clustering_output_role_assessment/",
+    "validator": "tools/validators/evidence/validate_clustering_output_role_assessment.py",
+    "status": "PROPOSED_INACTIVE",
+    "network": false,
+    "authority_effects": false
+  }
+}

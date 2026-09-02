@@ -1,0 +1,227 @@
+{
+  "object_type": "TemporalUniquenessAssessmentFixtureManifest",
+  "schema_version": "1.0.0",
+  "profile": "kfm.common.temporal-uniqueness-assessment.fixture.v1",
+  "base_candidate": {
+    "object_type": "TemporalUniquenessAssessmentCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.common.temporal-uniqueness-assessment.fixture.v1",
+    "profile_spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_card": "KFM-P18-INV-392",
+    "assessed_at": "2026-08-11T04:20:00Z",
+    "key_profile": {
+      "ref": "kfm:temporal-key-profile:synthetic:observation-by-station",
+      "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "resolution": "RESOLVED",
+      "identity_field_refs": ["kfm:field:synthetic:station-id"],
+      "temporal_mode": "VALID_TIME",
+      "pair_conflict_rule": "ANY_DECLARED_AXIS_OVERLAP"
+    },
+    "overlap_policy": {
+      "mode": "DENY_OVERLAP",
+      "resolution": "RESOLVED",
+      "policy_profile_ref": "kfm:policy-profile:synthetic:temporal-uniqueness:deny-overlap",
+      "exception_review_refs": []
+    },
+    "subject": {
+      "ref": "kfm:observation:synthetic:station-001:revision-002",
+      "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "key_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "presence": "PRESENT"
+    },
+    "comparisons": [
+      {
+        "peer": {
+          "ref": "kfm:observation:synthetic:station-001:revision-001",
+          "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+          "key_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "presence": "PRESENT"
+        },
+        "lineage_relation": "NONE",
+        "lineage_ref": null,
+        "axes": [
+          {
+            "axis": "VALID_TIME",
+            "subject_window": {
+              "window_ref": "kfm:temporal-window:synthetic:subject-valid:001",
+              "resolution": "RESOLVED",
+              "start": "2026-01-01T00:00:00Z",
+              "end": "2026-01-10T00:00:00Z",
+              "start_inclusive": true,
+              "end_inclusive": false
+            },
+            "peer_window": {
+              "window_ref": "kfm:temporal-window:synthetic:peer-valid:001",
+              "resolution": "RESOLVED",
+              "start": "2026-01-10T00:00:00Z",
+              "end": "2026-02-01T00:00:00Z",
+              "start_inclusive": true,
+              "end_inclusive": false
+            },
+            "declared_overlap": "DISJOINT"
+          }
+        ]
+      }
+    ],
+    "declared_state": "UNIQUE",
+    "failure_handling": {
+      "recommended_action": "NONE",
+      "recommendation_only": true,
+      "disposition_executed": false,
+      "review_record_refs": [],
+      "correction_ref": "kfm:correction-path:synthetic:temporal-uniqueness",
+      "rollback_ref": "kfm:rollback:synthetic:temporal-uniqueness"
+    },
+    "evidence_refs": [
+      "kfm:evidence-bundle:synthetic:temporal-uniqueness:001",
+      "kfm:evidence-bundle:synthetic:temporal-uniqueness:002"
+    ],
+    "authority_claims": {
+      "table_inspection_authority": false,
+      "record_mutation_authority": false,
+      "constraint_execution_authority": false,
+      "quarantine_authority": false,
+      "evidence_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "promotion_authority": false,
+      "release_authority": false,
+      "publication_authority": false,
+      "public_use_authority": false
+    }
+  },
+  "cases": [
+    {"name": "pass_valid_time_half_open_nonoverlap", "patch": {}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_no_declared_peers", "patch": {"comparisons": []}, "expected": {"outcome": "PASS", "codes": []}},
+    {
+      "name": "pass_supersession_overlap_allowed",
+      "patch": {
+        "overlap_policy": {"mode": "ALLOW_WITH_SUPERSESSION", "policy_profile_ref": "kfm:policy-profile:synthetic:temporal-uniqueness:supersession"},
+        "comparisons": [
+          {
+            "peer": {"ref": "kfm:observation:synthetic:station-001:revision-001", "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333", "key_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "presence": "PRESENT"},
+            "lineage_relation": "SUBJECT_SUPERSEDES_PEER",
+            "lineage_ref": "kfm:lineage:synthetic:station-001:revision-002-supersedes-001",
+            "axes": [
+              {"axis": "VALID_TIME", "subject_window": {"window_ref": "kfm:temporal-window:synthetic:supersession-subject", "resolution": "RESOLVED", "start": "2026-01-01T00:00:00Z", "end": "2026-02-01T00:00:00Z", "start_inclusive": true, "end_inclusive": false}, "peer_window": {"window_ref": "kfm:temporal-window:synthetic:supersession-peer", "resolution": "RESOLVED", "start": "2026-01-15T00:00:00Z", "end": "2026-03-01T00:00:00Z", "start_inclusive": true, "end_inclusive": false}, "declared_overlap": "OVERLAPS"}
+            ]
+          }
+        ],
+        "declared_state": "ALLOWED_OVERLAP",
+        "failure_handling": {"recommended_action": "REVIEW_OVERLAP", "review_record_refs": ["kfm:review-record:synthetic:temporal-uniqueness:supersession"]}
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_reviewed_parallel_overlap_allowed",
+      "patch": {
+        "overlap_policy": {"mode": "ALLOW_REVIEWED_PARALLEL", "policy_profile_ref": "kfm:policy-profile:synthetic:temporal-uniqueness:parallel", "exception_review_refs": ["kfm:review-record:synthetic:temporal-uniqueness:parallel-exception"]},
+        "comparisons": [
+          {
+            "peer": {"ref": "kfm:observation:synthetic:station-001:parallel", "digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444", "key_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "presence": "PRESENT"},
+            "lineage_relation": "NONE",
+            "lineage_ref": null,
+            "axes": [
+              {"axis": "VALID_TIME", "subject_window": {"window_ref": "kfm:temporal-window:synthetic:parallel-subject", "resolution": "RESOLVED", "start": "2026-01-01T00:00:00Z", "end": "2026-02-01T00:00:00Z", "start_inclusive": true, "end_inclusive": false}, "peer_window": {"window_ref": "kfm:temporal-window:synthetic:parallel-peer", "resolution": "RESOLVED", "start": "2026-01-15T00:00:00Z", "end": "2026-03-01T00:00:00Z", "start_inclusive": true, "end_inclusive": false}, "declared_overlap": "OVERLAPS"}
+            ]
+          }
+        ],
+        "declared_state": "ALLOWED_OVERLAP",
+        "failure_handling": {"recommended_action": "REVIEW_OVERLAP", "review_record_refs": ["kfm:review-record:synthetic:temporal-uniqueness:parallel-exception"]}
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_transaction_time_nonoverlap",
+      "patch": {
+        "key_profile": {"temporal_mode": "TRANSACTION_TIME"},
+        "comparisons": [
+          {
+            "peer": {"ref": "kfm:observation:synthetic:station-001:transaction-peer", "digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555", "key_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "presence": "PRESENT"},
+            "lineage_relation": "NONE",
+            "lineage_ref": null,
+            "axes": [
+              {"axis": "TRANSACTION_TIME", "subject_window": {"window_ref": "kfm:temporal-window:synthetic:transaction-subject", "resolution": "RESOLVED", "start": "2026-03-01T00:00:00Z", "end": "2026-03-10T00:00:00Z", "start_inclusive": true, "end_inclusive": false}, "peer_window": {"window_ref": "kfm:temporal-window:synthetic:transaction-peer", "resolution": "RESOLVED", "start": "2026-03-10T00:00:00Z", "end": "2026-04-01T00:00:00Z", "start_inclusive": true, "end_inclusive": false}, "declared_overlap": "DISJOINT"}
+            ]
+          }
+        ]
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_bitemporal_all_axes_rule_nonconflict",
+      "patch": {
+        "key_profile": {"temporal_mode": "BITEMPORAL", "pair_conflict_rule": "ALL_DECLARED_AXES_OVERLAP"},
+        "comparisons": [
+          {
+            "peer": {"ref": "kfm:observation:synthetic:station-001:bitemporal-peer", "digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666", "key_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "presence": "PRESENT"},
+            "lineage_relation": "NONE",
+            "lineage_ref": null,
+            "axes": [
+              {"axis": "VALID_TIME", "subject_window": {"window_ref": "kfm:temporal-window:synthetic:bitemporal-subject-valid", "resolution": "RESOLVED", "start": "2026-01-01T00:00:00Z", "end": "2026-02-01T00:00:00Z", "start_inclusive": true, "end_inclusive": false}, "peer_window": {"window_ref": "kfm:temporal-window:synthetic:bitemporal-peer-valid", "resolution": "RESOLVED", "start": "2026-01-15T00:00:00Z", "end": "2026-03-01T00:00:00Z", "start_inclusive": true, "end_inclusive": false}, "declared_overlap": "OVERLAPS"},
+              {"axis": "TRANSACTION_TIME", "subject_window": {"window_ref": "kfm:temporal-window:synthetic:bitemporal-subject-transaction", "resolution": "RESOLVED", "start": "2026-04-01T00:00:00Z", "end": "2026-04-10T00:00:00Z", "start_inclusive": true, "end_inclusive": false}, "peer_window": {"window_ref": "kfm:temporal-window:synthetic:bitemporal-peer-transaction", "resolution": "RESOLVED", "start": "2026-04-10T00:00:00Z", "end": "2026-05-01T00:00:00Z", "start_inclusive": true, "end_inclusive": false}, "declared_overlap": "DISJOINT"}
+            ]
+          }
+        ]
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {"name": "abstain_key_profile_unresolved", "patch": {"key_profile": {"resolution": "UNRESOLVED"}, "declared_state": "UNRESOLVED"}, "expected": {"outcome": "ABSTAIN", "codes": ["KEY_PROFILE_UNRESOLVED"]}},
+    {"name": "abstain_overlap_policy_unresolved", "patch": {"overlap_policy": {"resolution": "UNRESOLVED"}, "declared_state": "UNRESOLVED"}, "expected": {"outcome": "ABSTAIN", "codes": ["OVERLAP_POLICY_UNRESOLVED"]}},
+    {"name": "abstain_subject_record_unresolved", "patch": {"subject": {"presence": "UNRESOLVED"}, "declared_state": "UNRESOLVED"}, "expected": {"outcome": "ABSTAIN", "codes": ["SUBJECT_RECORD_UNRESOLVED"]}},
+    {"name": "abstain_peer_record_unresolved", "patch": {"comparisons": [{"peer": {"ref": "kfm:observation:synthetic:station-001:revision-001", "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333", "key_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "presence": "UNRESOLVED"}, "lineage_relation": "NONE", "lineage_ref": null, "axes": [{"axis": "VALID_TIME", "subject_window": {"window_ref": "kfm:temporal-window:synthetic:subject-valid:001", "resolution": "RESOLVED", "start": "2026-01-01T00:00:00Z", "end": "2026-01-10T00:00:00Z", "start_inclusive": true, "end_inclusive": false}, "peer_window": {"window_ref": "kfm:temporal-window:synthetic:peer-valid:001", "resolution": "RESOLVED", "start": "2026-01-10T00:00:00Z", "end": "2026-02-01T00:00:00Z", "start_inclusive": true, "end_inclusive": false}, "declared_overlap": "DISJOINT"}]}], "declared_state": "UNRESOLVED"}, "expected": {"outcome": "ABSTAIN", "codes": ["PEER_RECORD_UNRESOLVED"]}},
+    {
+      "name": "abstain_subject_window_unresolved",
+      "patch": {"comparisons": [{"peer": {"ref": "kfm:observation:synthetic:station-001:revision-001", "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333", "key_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "presence": "PRESENT"}, "lineage_relation": "NONE", "lineage_ref": null, "axes": [{"axis": "VALID_TIME", "subject_window": {"window_ref": "kfm:temporal-window:synthetic:subject-unresolved", "resolution": "UNRESOLVED", "start": "2026-01-01T00:00:00Z", "end": "2026-01-10T00:00:00Z", "start_inclusive": true, "end_inclusive": false}, "peer_window": {"window_ref": "kfm:temporal-window:synthetic:peer-valid:001", "resolution": "RESOLVED", "start": "2026-01-10T00:00:00Z", "end": "2026-02-01T00:00:00Z", "start_inclusive": true, "end_inclusive": false}, "declared_overlap": "UNRESOLVED"}]}], "declared_state": "UNRESOLVED"},
+      "expected": {"outcome": "ABSTAIN", "codes": ["SUBJECT_WINDOW_UNRESOLVED"]}
+    },
+    {
+      "name": "abstain_peer_window_unresolved",
+      "patch": {"comparisons": [{"peer": {"ref": "kfm:observation:synthetic:station-001:revision-001", "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333", "key_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "presence": "PRESENT"}, "lineage_relation": "NONE", "lineage_ref": null, "axes": [{"axis": "VALID_TIME", "subject_window": {"window_ref": "kfm:temporal-window:synthetic:subject-valid:001", "resolution": "RESOLVED", "start": "2026-01-01T00:00:00Z", "end": "2026-01-10T00:00:00Z", "start_inclusive": true, "end_inclusive": false}, "peer_window": {"window_ref": "kfm:temporal-window:synthetic:peer-unresolved", "resolution": "UNRESOLVED", "start": "2026-01-10T00:00:00Z", "end": "2026-02-01T00:00:00Z", "start_inclusive": true, "end_inclusive": false}, "declared_overlap": "UNRESOLVED"}]}], "declared_state": "UNRESOLVED"},
+      "expected": {"outcome": "ABSTAIN", "codes": ["PEER_WINDOW_UNRESOLVED"]}
+    },
+    {
+      "name": "deny_overlap_conflict",
+      "patch": {"comparisons": [{"peer": {"ref": "kfm:observation:synthetic:station-001:overlap", "digest": "sha256:7777777777777777777777777777777777777777777777777777777777777777", "key_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "presence": "PRESENT"}, "lineage_relation": "NONE", "lineage_ref": null, "axes": [{"axis": "VALID_TIME", "subject_window": {"window_ref": "kfm:temporal-window:synthetic:overlap-subject", "resolution": "RESOLVED", "start": "2026-01-01T00:00:00Z", "end": "2026-02-01T00:00:00Z", "start_inclusive": true, "end_inclusive": false}, "peer_window": {"window_ref": "kfm:temporal-window:synthetic:overlap-peer", "resolution": "RESOLVED", "start": "2026-01-15T00:00:00Z", "end": "2026-03-01T00:00:00Z", "start_inclusive": true, "end_inclusive": false}, "declared_overlap": "OVERLAPS"}]}], "declared_state": "CONFLICT", "failure_handling": {"recommended_action": "DENY_CANDIDATE", "review_record_refs": ["kfm:review-record:synthetic:temporal-uniqueness:overlap"]}},
+      "expected": {"outcome": "DENY", "codes": ["TEMPORAL_UNIQUENESS_CONFLICT"]}
+    },
+    {
+      "name": "deny_closed_endpoint_conflict",
+      "patch": {"comparisons": [{"peer": {"ref": "kfm:observation:synthetic:station-001:closed-meeting", "digest": "sha256:8888888888888888888888888888888888888888888888888888888888888888", "key_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "presence": "PRESENT"}, "lineage_relation": "NONE", "lineage_ref": null, "axes": [{"axis": "VALID_TIME", "subject_window": {"window_ref": "kfm:temporal-window:synthetic:closed-subject", "resolution": "RESOLVED", "start": "2026-01-01T00:00:00Z", "end": "2026-01-10T00:00:00Z", "start_inclusive": true, "end_inclusive": true}, "peer_window": {"window_ref": "kfm:temporal-window:synthetic:closed-peer", "resolution": "RESOLVED", "start": "2026-01-10T00:00:00Z", "end": "2026-02-01T00:00:00Z", "start_inclusive": true, "end_inclusive": false}, "declared_overlap": "OVERLAPS"}]}], "declared_state": "CONFLICT", "failure_handling": {"recommended_action": "QUARANTINE_CANDIDATE", "review_record_refs": ["kfm:review-record:synthetic:temporal-uniqueness:closed-endpoint"]}},
+      "expected": {"outcome": "DENY", "codes": ["TEMPORAL_UNIQUENESS_CONFLICT"]}
+    },
+    {
+      "name": "deny_bitemporal_any_axis_conflict",
+      "patch": {"key_profile": {"temporal_mode": "BITEMPORAL"}, "comparisons": [{"peer": {"ref": "kfm:observation:synthetic:station-001:bitemporal-any", "digest": "sha256:9999999999999999999999999999999999999999999999999999999999999999", "key_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "presence": "PRESENT"}, "lineage_relation": "NONE", "lineage_ref": null, "axes": [{"axis": "VALID_TIME", "subject_window": {"window_ref": "kfm:temporal-window:synthetic:any-subject-valid", "resolution": "RESOLVED", "start": "2026-01-01T00:00:00Z", "end": "2026-02-01T00:00:00Z", "start_inclusive": true, "end_inclusive": false}, "peer_window": {"window_ref": "kfm:temporal-window:synthetic:any-peer-valid", "resolution": "RESOLVED", "start": "2026-01-15T00:00:00Z", "end": "2026-03-01T00:00:00Z", "start_inclusive": true, "end_inclusive": false}, "declared_overlap": "OVERLAPS"}, {"axis": "TRANSACTION_TIME", "subject_window": {"window_ref": "kfm:temporal-window:synthetic:any-subject-transaction", "resolution": "RESOLVED", "start": "2026-04-01T00:00:00Z", "end": "2026-04-10T00:00:00Z", "start_inclusive": true, "end_inclusive": false}, "peer_window": {"window_ref": "kfm:temporal-window:synthetic:any-peer-transaction", "resolution": "RESOLVED", "start": "2026-04-10T00:00:00Z", "end": "2026-05-01T00:00:00Z", "start_inclusive": true, "end_inclusive": false}, "declared_overlap": "DISJOINT"}]}], "declared_state": "CONFLICT", "failure_handling": {"recommended_action": "DENY_CANDIDATE", "review_record_refs": ["kfm:review-record:synthetic:temporal-uniqueness:bitemporal-any"]}},
+      "expected": {"outcome": "DENY", "codes": ["TEMPORAL_UNIQUENESS_CONFLICT"]}
+    },
+    {"name": "deny_axis_overlap_mismatch", "patch": {"comparisons": [{"peer": {"ref": "kfm:observation:synthetic:station-001:revision-001", "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333", "key_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "presence": "PRESENT"}, "lineage_relation": "NONE", "lineage_ref": null, "axes": [{"axis": "VALID_TIME", "subject_window": {"window_ref": "kfm:temporal-window:synthetic:subject-valid:001", "resolution": "RESOLVED", "start": "2026-01-01T00:00:00Z", "end": "2026-01-10T00:00:00Z", "start_inclusive": true, "end_inclusive": false}, "peer_window": {"window_ref": "kfm:temporal-window:synthetic:peer-valid:001", "resolution": "RESOLVED", "start": "2026-01-10T00:00:00Z", "end": "2026-02-01T00:00:00Z", "start_inclusive": true, "end_inclusive": false}, "declared_overlap": "OVERLAPS"}]}]}, "expected": {"outcome": "DENY", "codes": ["AXIS_OVERLAP_MISMATCH"]}},
+    {"name": "deny_key_digest_mismatch", "patch": {"comparisons": [{"peer": {"ref": "kfm:observation:synthetic:station-001:revision-001", "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333", "key_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "presence": "PRESENT"}, "lineage_relation": "NONE", "lineage_ref": null, "axes": [{"axis": "VALID_TIME", "subject_window": {"window_ref": "kfm:temporal-window:synthetic:subject-valid:001", "resolution": "RESOLVED", "start": "2026-01-01T00:00:00Z", "end": "2026-01-10T00:00:00Z", "start_inclusive": true, "end_inclusive": false}, "peer_window": {"window_ref": "kfm:temporal-window:synthetic:peer-valid:001", "resolution": "RESOLVED", "start": "2026-01-10T00:00:00Z", "end": "2026-02-01T00:00:00Z", "start_inclusive": true, "end_inclusive": false}, "declared_overlap": "DISJOINT"}]}]}, "expected": {"outcome": "DENY", "codes": ["TEMPORAL_KEY_DIGEST_MISMATCH"]}},
+    {"name": "deny_axis_set_mismatch", "patch": {"key_profile": {"temporal_mode": "BITEMPORAL"}}, "expected": {"outcome": "DENY", "codes": ["TEMPORAL_AXIS_SET_MISMATCH"]}},
+    {
+      "name": "deny_supersession_lineage_missing",
+      "patch": {"overlap_policy": {"mode": "ALLOW_WITH_SUPERSESSION"}, "comparisons": [{"peer": {"ref": "kfm:observation:synthetic:station-001:no-lineage", "digest": "sha256:abababababababababababababababababababababababababababababababab", "key_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "presence": "PRESENT"}, "lineage_relation": "NONE", "lineage_ref": null, "axes": [{"axis": "VALID_TIME", "subject_window": {"window_ref": "kfm:temporal-window:synthetic:no-lineage-subject", "resolution": "RESOLVED", "start": "2026-01-01T00:00:00Z", "end": "2026-02-01T00:00:00Z", "start_inclusive": true, "end_inclusive": false}, "peer_window": {"window_ref": "kfm:temporal-window:synthetic:no-lineage-peer", "resolution": "RESOLVED", "start": "2026-01-15T00:00:00Z", "end": "2026-03-01T00:00:00Z", "start_inclusive": true, "end_inclusive": false}, "declared_overlap": "OVERLAPS"}]}], "declared_state": "CONFLICT", "failure_handling": {"recommended_action": "DENY_CANDIDATE", "review_record_refs": ["kfm:review-record:synthetic:temporal-uniqueness:no-lineage"]}},
+      "expected": {"outcome": "DENY", "codes": ["SUPERSESSION_LINEAGE_REQUIRED", "TEMPORAL_UNIQUENESS_CONFLICT"]}
+    },
+    {
+      "name": "deny_parallel_review_reference_missing",
+      "patch": {"overlap_policy": {"mode": "ALLOW_REVIEWED_PARALLEL"}, "comparisons": [{"peer": {"ref": "kfm:observation:synthetic:station-001:no-review", "digest": "sha256:cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd", "key_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "presence": "PRESENT"}, "lineage_relation": "NONE", "lineage_ref": null, "axes": [{"axis": "VALID_TIME", "subject_window": {"window_ref": "kfm:temporal-window:synthetic:no-review-subject", "resolution": "RESOLVED", "start": "2026-01-01T00:00:00Z", "end": "2026-02-01T00:00:00Z", "start_inclusive": true, "end_inclusive": false}, "peer_window": {"window_ref": "kfm:temporal-window:synthetic:no-review-peer", "resolution": "RESOLVED", "start": "2026-01-15T00:00:00Z", "end": "2026-03-01T00:00:00Z", "start_inclusive": true, "end_inclusive": false}, "declared_overlap": "OVERLAPS"}]}], "declared_state": "CONFLICT", "failure_handling": {"recommended_action": "DENY_CANDIDATE", "review_record_refs": ["kfm:review-record:synthetic:temporal-uniqueness:no-review-policy"]}},
+      "expected": {"outcome": "DENY", "codes": ["OVERLAP_REVIEW_REFERENCE_REQUIRED", "TEMPORAL_UNIQUENESS_CONFLICT"]}
+    },
+    {"name": "deny_declared_state_mismatch", "patch": {"declared_state": "CONFLICT"}, "expected": {"outcome": "DENY", "codes": ["DECLARED_STATE_MISMATCH"]}},
+    {
+      "name": "deny_failure_action_and_review_required",
+      "patch": {"comparisons": [{"peer": {"ref": "kfm:observation:synthetic:station-001:action-required", "digest": "sha256:dededededededededededededededededededededededededededededededede", "key_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "presence": "PRESENT"}, "lineage_relation": "NONE", "lineage_ref": null, "axes": [{"axis": "VALID_TIME", "subject_window": {"window_ref": "kfm:temporal-window:synthetic:action-subject", "resolution": "RESOLVED", "start": "2026-01-01T00:00:00Z", "end": "2026-02-01T00:00:00Z", "start_inclusive": true, "end_inclusive": false}, "peer_window": {"window_ref": "kfm:temporal-window:synthetic:action-peer", "resolution": "RESOLVED", "start": "2026-01-15T00:00:00Z", "end": "2026-03-01T00:00:00Z", "start_inclusive": true, "end_inclusive": false}, "declared_overlap": "OVERLAPS"}]}], "declared_state": "CONFLICT"},
+      "expected": {"outcome": "DENY", "codes": ["FAILURE_ACTION_REQUIRED", "FAILURE_REVIEW_REFERENCE_REQUIRED", "TEMPORAL_UNIQUENESS_CONFLICT"]}
+    },
+    {"name": "deny_failure_action_mismatch", "patch": {"failure_handling": {"recommended_action": "QUARANTINE_CANDIDATE"}}, "expected": {"outcome": "DENY", "codes": ["FAILURE_ACTION_MISMATCH"]}},
+    {"name": "deny_identity_fields_not_canonical", "patch": {"key_profile": {"identity_field_refs": ["kfm:field:synthetic:station-id", "kfm:field:synthetic:agency-id"]}}, "expected": {"outcome": "DENY", "codes": ["ARRAY_NOT_CANONICAL"]}},
+    {"name": "deny_evidence_refs_not_canonical", "patch": {"evidence_refs": ["kfm:evidence-bundle:synthetic:temporal-uniqueness:002", "kfm:evidence-bundle:synthetic:temporal-uniqueness:001"]}, "expected": {"outcome": "DENY", "codes": ["ARRAY_NOT_CANONICAL"]}},
+    {"name": "deny_self_comparison", "patch": {"comparisons": [{"peer": {"ref": "kfm:observation:synthetic:station-001:revision-002", "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333", "key_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "presence": "PRESENT"}, "lineage_relation": "NONE", "lineage_ref": null, "axes": [{"axis": "VALID_TIME", "subject_window": {"window_ref": "kfm:temporal-window:synthetic:subject-valid:001", "resolution": "RESOLVED", "start": "2026-01-01T00:00:00Z", "end": "2026-01-10T00:00:00Z", "start_inclusive": true, "end_inclusive": false}, "peer_window": {"window_ref": "kfm:temporal-window:synthetic:peer-valid:001", "resolution": "RESOLVED", "start": "2026-01-10T00:00:00Z", "end": "2026-02-01T00:00:00Z", "start_inclusive": true, "end_inclusive": false}, "declared_overlap": "DISJOINT"}]}]}, "expected": {"outcome": "DENY", "codes": ["SELF_COMPARISON_INVALID"]}},
+    {"name": "deny_assessed_at_not_utc", "patch": {"assessed_at": "2026-08-10T23:20:00-05:00"}, "expected": {"outcome": "DENY", "codes": ["UTC_TIMESTAMP_REQUIRED"]}},
+    {"name": "deny_interval_order_invalid", "patch": {"comparisons": [{"peer": {"ref": "kfm:observation:synthetic:station-001:revision-001", "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333", "key_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "presence": "PRESENT"}, "lineage_relation": "NONE", "lineage_ref": null, "axes": [{"axis": "VALID_TIME", "subject_window": {"window_ref": "kfm:temporal-window:synthetic:reversed-subject", "resolution": "RESOLVED", "start": "2026-01-10T00:00:00Z", "end": "2026-01-01T00:00:00Z", "start_inclusive": true, "end_inclusive": false}, "peer_window": {"window_ref": "kfm:temporal-window:synthetic:peer-valid:001", "resolution": "RESOLVED", "start": "2026-01-10T00:00:00Z", "end": "2026-02-01T00:00:00Z", "start_inclusive": true, "end_inclusive": false}, "declared_overlap": "DISJOINT"}]}]}, "expected": {"outcome": "DENY", "codes": ["INTERVAL_ORDER_INVALID"]}},
+    {"name": "deny_profile_hash_tamper", "patch": {}, "tamper": "profile_hash", "expected": {"outcome": "DENY", "codes": ["PROFILE_SPEC_HASH_MISMATCH"]}},
+    {"name": "error_unknown_field", "patch": {"table_rows": [1, 2, 3]}, "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}},
+    {"name": "error_authority_overclaim", "patch": {"authority_claims": {"constraint_execution_authority": true}}, "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}}
+  ]
+}

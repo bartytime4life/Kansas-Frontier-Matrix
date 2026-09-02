@@ -1,0 +1,113 @@
+{
+  "receipt_id": "genrec-drinking-water-advisory-receipt-trigger-closure-20260828",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/drinking-water-advisory.yml",
+    "tests/domains/hazards/test_drinking_water_advisory_workflow_binding.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/drinking-water-advisory.yml": "sha256:db28d729d870749950d09599ad8fdc079c4d1bfd68dc52c536f6fed37d9955b7",
+    "tests/domains/hazards/test_drinking_water_advisory_workflow_binding.py": "sha256:7349dffae6008579fb9de1df642bbb7858889377bc04951af8d79dc4f43345b0"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5"
+  },
+  "prompt_or_contract": "sha256:c25b49ae7fc7bd84cf689ce343f0211d045eef39fd4c3b82196a826f21386cba",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector repository inspection and mutation",
+      "Notion connector coordination",
+      "local repository validation"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0f16620bb37e5fecb0d9540ff3a345f671303135/.github/workflows/drinking-water-advisory.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0f16620bb37e5fecb0d9540ff3a345f671303135/tools/validators/validate_generated_receipt.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0f16620bb37e5fecb0d9540ff3a345f671303135/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0f16620bb37e5fecb0d9540ff3a345f671303135/tools/ci/install_python_ci.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0f16620bb37e5fecb0d9540ff3a345f671303135/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/drinking-water-advisory.yml": "PROPOSED",
+    "tests/domains/hazards/test_drinking_water_advisory_workflow_binding.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "active-work-and-overlap-reconciliation",
+      "outcome": "PASS",
+      "reason": "No open pull request owns Hazards paths. The open pull requests at selection time are disjoint documentation changes in quality, habitat, and people-dna-land."
+    },
+    {
+      "gate": "drinking-water-advisory-trigger-closure",
+      "outcome": "PASS",
+      "reason": "The workflow executes generated-receipt validation but omitted its validator, the full contract-schema tree recursively consumed by the local resolver, the resolver itself, the installation helper, migration manifest, and locked dependency file from pull-request and main-push path filters. The proposed workflow adds that execution seam and a deterministic test for both trigger sets."
+    },
+    {
+      "gate": "artifact-hash-replay",
+      "outcome": "PASS",
+      "reason": "SHA-256 digests bind the exact proposed workflow and workflow-binding test bytes; the workflow triggers on both artifacts and validates this immutable receipt."
+    },
+    {
+      "gate": "local-focused-validation",
+      "outcome": "PASS",
+      "reason": "The workflow-binding test, advisory suite, exact advisory fixture replay, adjacent shared tests, generated-receipt integrity validation, YAML parse, JSON parse, compilation, and whitespace checks pass on the proposed bytes."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pending until the task-owned draft pull request head is created and hosted workflows run."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "The task stops at a draft pull request and does not approve or mark work ready."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "drinking-water-advisory-workflow",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/0f16620bb37e5fecb0d9540ff3a345f671303135/.github/workflows/drinking-water-advisory.yml"
+    },
+    {
+      "id": "generated-receipt-validator",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/0f16620bb37e5fecb0d9540ff3a345f671303135/tools/validators/validate_generated_receipt.py"
+    },
+    {
+      "id": "generated-receipt-schema",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/0f16620bb37e5fecb0d9540ff3a345f671303135/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/0f16620bb37e5fecb0d9540ff3a345f671303135/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-29T02:54:20Z",
+  "emitter": "OpenAI Codex automation runtime",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Dependency-closure receipt for the fixture-only DrinkingWaterAdvisory workflow's direct local execution and generated-receipt validation seam. It changes trigger coverage and deterministic proof only. It grants no live source access, source admission, health determination, evidence resolution, policy decision, lifecycle transition, alert, release, deployment, promotion, publication, public-use, emergency, or life-safety authority."
+}

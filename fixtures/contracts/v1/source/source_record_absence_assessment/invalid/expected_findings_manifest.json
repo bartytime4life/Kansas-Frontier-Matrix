@@ -1,0 +1,44 @@
+{
+  "invalid_missing_record_key_hash.json": [
+    "SCHEMA_INVALID"
+  ],
+  "semantic_invalid_assessment_id.json": [
+    "ASSESSMENT_ID_MISMATCH"
+  ],
+  "semantic_invalid_governance_overreach.json": [
+    "GOVERNANCE_BOUNDARY_VIOLATION"
+  ],
+  "semantic_invalid_history_deletion.json": [
+    "HISTORY_DELETION_DENIED"
+  ],
+  "semantic_invalid_incremental_false_clear.json": [
+    "FALSE_CLEAR_RISK",
+    "PRIOR_STATE_RETENTION_MISMATCH",
+    "REASON_CODES_MISMATCH",
+    "SOURCE_MODE_OUTCOME_MISMATCH",
+    "TRANSITION_CANDIDATE_MISMATCH"
+  ],
+  "semantic_invalid_publication_page_removal.json": [
+    "FALSE_CLEAR_RISK",
+    "PRIOR_STATE_RETENTION_MISMATCH",
+    "REASON_CODES_MISMATCH",
+    "SOURCE_MODE_OUTCOME_MISMATCH",
+    "TRANSITION_CANDIDATE_MISMATCH"
+  ],
+  "semantic_invalid_removal_without_completeness.json": [
+    "FALSE_CLEAR_RISK",
+    "PRIOR_STATE_RETENTION_MISMATCH",
+    "REASON_CODES_MISMATCH",
+    "SOURCE_MODE_OUTCOME_MISMATCH",
+    "TRANSITION_CANDIDATE_MISMATCH"
+  ],
+  "semantic_invalid_spec_hash.json": [
+    "SPEC_HASH_MISMATCH"
+  ],
+  "semantic_invalid_temporal_order.json": [
+    "TEMPORAL_ORDER_INVALID"
+  ],
+  "semantic_invalid_unsorted_refs.json": [
+    "REFERENCE_ARRAY_NOT_CANONICAL"
+  ]
+}

@@ -1,0 +1,216 @@
+{
+  "cases": [
+    {
+      "case_id": "valid-current-state",
+      "evaluated_at": "2026-08-08T20:00:00Z",
+      "evidence_refs": ["kfm:evidence-ref:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"],
+      "expected": {"finding_codes": [], "outcome": "PASS"},
+      "mutations": [],
+      "query_run_ref": "kfm:query-run:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "requested_as_of": null,
+      "snapshot_refs": ["kfm:temporal-snapshot:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"],
+      "temporal_query_type": "CURRENT_STATE",
+      "time_basis": "VALID_TIME",
+      "transaction_cutoff": null,
+      "valid_end": null,
+      "valid_start": null
+    },
+    {
+      "case_id": "valid-prior-state",
+      "evaluated_at": "2026-08-08T20:00:00Z",
+      "evidence_refs": ["kfm:evidence-ref:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"],
+      "expected": {"finding_codes": [], "outcome": "PASS"},
+      "mutations": [],
+      "query_run_ref": "kfm:query-run:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "requested_as_of": "2020-01-01T00:00:00Z",
+      "snapshot_refs": ["kfm:temporal-snapshot:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"],
+      "temporal_query_type": "PRIOR_STATE",
+      "time_basis": "VALID_TIME",
+      "transaction_cutoff": null,
+      "valid_end": null,
+      "valid_start": null
+    },
+    {
+      "case_id": "valid-sequenced",
+      "evaluated_at": "2026-08-08T20:00:00Z",
+      "evidence_refs": ["kfm:evidence-ref:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"],
+      "expected": {"finding_codes": [], "outcome": "PASS"},
+      "mutations": [],
+      "query_run_ref": "kfm:query-run:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "requested_as_of": null,
+      "snapshot_refs": [
+        "kfm:temporal-snapshot:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "kfm:temporal-snapshot:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+      ],
+      "temporal_query_type": "SEQUENCED",
+      "time_basis": "BITEMPORAL",
+      "transaction_cutoff": null,
+      "valid_end": "2021-01-01T00:00:00Z",
+      "valid_start": "2020-01-01T00:00:00Z"
+    },
+    {
+      "case_id": "valid-nonsequenced",
+      "evaluated_at": "2026-08-08T20:00:00Z",
+      "evidence_refs": ["kfm:evidence-ref:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"],
+      "expected": {"finding_codes": [], "outcome": "PASS"},
+      "mutations": [],
+      "query_run_ref": "kfm:query-run:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "requested_as_of": null,
+      "snapshot_refs": [
+        "kfm:temporal-snapshot:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "kfm:temporal-snapshot:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+      ],
+      "temporal_query_type": "NONSEQUENCED",
+      "time_basis": "TRANSACTION_TIME",
+      "transaction_cutoff": "2026-08-08T19:00:00Z",
+      "valid_end": null,
+      "valid_start": null
+    },
+    {
+      "case_id": "valid-tracking-log",
+      "evaluated_at": "2026-08-08T20:00:00Z",
+      "evidence_refs": ["kfm:evidence-ref:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"],
+      "expected": {"finding_codes": [], "outcome": "PASS"},
+      "mutations": [],
+      "query_run_ref": "kfm:query-run:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "requested_as_of": null,
+      "snapshot_refs": [
+        "kfm:temporal-snapshot:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "kfm:temporal-snapshot:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+      ],
+      "temporal_query_type": "TRACKING_LOG",
+      "time_basis": "BITEMPORAL",
+      "transaction_cutoff": "2026-08-08T19:00:00Z",
+      "valid_end": null,
+      "valid_start": null
+    },
+    {
+      "case_id": "prior-missing-as-of",
+      "evaluated_at": "2026-08-08T20:00:00Z",
+      "evidence_refs": ["kfm:evidence-ref:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"],
+      "expected": {"finding_codes": ["PRIOR_STATE_FIELDS_INVALID"], "outcome": "DENY"},
+      "mutations": [],
+      "query_run_ref": "kfm:query-run:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "requested_as_of": null,
+      "snapshot_refs": ["kfm:temporal-snapshot:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"],
+      "temporal_query_type": "PRIOR_STATE",
+      "time_basis": "VALID_TIME",
+      "transaction_cutoff": null,
+      "valid_end": null,
+      "valid_start": null
+    },
+    {
+      "case_id": "sequenced-single-snapshot",
+      "evaluated_at": "2026-08-08T20:00:00Z",
+      "evidence_refs": ["kfm:evidence-ref:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"],
+      "expected": {"finding_codes": ["SEQUENCE_REQUIRES_MULTIPLE_SNAPSHOTS"], "outcome": "DENY"},
+      "mutations": [],
+      "query_run_ref": "kfm:query-run:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "requested_as_of": null,
+      "snapshot_refs": ["kfm:temporal-snapshot:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"],
+      "temporal_query_type": "SEQUENCED",
+      "time_basis": "VALID_TIME",
+      "transaction_cutoff": null,
+      "valid_end": "2021-01-01T00:00:00Z",
+      "valid_start": "2020-01-01T00:00:00Z"
+    },
+    {
+      "case_id": "nonsequenced-wrong-basis",
+      "evaluated_at": "2026-08-08T20:00:00Z",
+      "evidence_refs": ["kfm:evidence-ref:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"],
+      "expected": {"finding_codes": ["TIME_BASIS_INCOMPATIBLE"], "outcome": "DENY"},
+      "mutations": [],
+      "query_run_ref": "kfm:query-run:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "requested_as_of": null,
+      "snapshot_refs": [
+        "kfm:temporal-snapshot:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "kfm:temporal-snapshot:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+      ],
+      "temporal_query_type": "NONSEQUENCED",
+      "time_basis": "VALID_TIME",
+      "transaction_cutoff": "2026-08-08T19:00:00Z",
+      "valid_end": null,
+      "valid_start": null
+    },
+    {
+      "case_id": "reversed-valid-interval",
+      "evaluated_at": "2026-08-08T20:00:00Z",
+      "evidence_refs": ["kfm:evidence-ref:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"],
+      "expected": {"finding_codes": ["VALID_INTERVAL_REVERSED"], "outcome": "DENY"},
+      "mutations": [],
+      "query_run_ref": "kfm:query-run:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "requested_as_of": null,
+      "snapshot_refs": [
+        "kfm:temporal-snapshot:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "kfm:temporal-snapshot:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+      ],
+      "temporal_query_type": "SEQUENCED",
+      "time_basis": "VALID_TIME",
+      "transaction_cutoff": null,
+      "valid_end": "2020-01-01T00:00:00Z",
+      "valid_start": "2021-01-01T00:00:00Z"
+    },
+    {
+      "case_id": "explanation-code-drift",
+      "evaluated_at": "2026-08-08T20:00:00Z",
+      "evidence_refs": ["kfm:evidence-ref:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"],
+      "expected": {
+        "finding_codes": ["DISCLOSURE_ID_MISMATCH", "PUBLIC_EXPLANATION_CODE_MISMATCH", "SPEC_HASH_MISMATCH"],
+        "outcome": "DENY"
+      },
+      "mutations": [{"operation": "set", "path": ["public_explanation_code"], "value": "TRACKING_LOG_HISTORY"}],
+      "query_run_ref": "kfm:query-run:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "requested_as_of": null,
+      "snapshot_refs": ["kfm:temporal-snapshot:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"],
+      "temporal_query_type": "CURRENT_STATE",
+      "time_basis": "VALID_TIME",
+      "transaction_cutoff": null,
+      "valid_end": null,
+      "valid_start": null
+    },
+    {
+      "case_id": "unsorted-snapshot-refs",
+      "evaluated_at": "2026-08-08T20:00:00Z",
+      "evidence_refs": ["kfm:evidence-ref:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"],
+      "expected": {
+        "finding_codes": ["COLLECTION_NOT_SORTED_UNIQUE", "DISCLOSURE_ID_MISMATCH", "SPEC_HASH_MISMATCH"],
+        "outcome": "DENY"
+      },
+      "mutations": [{
+        "operation": "set",
+        "path": ["snapshot_refs"],
+        "value": [
+          "kfm:temporal-snapshot:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+          "kfm:temporal-snapshot:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        ]
+      }],
+      "query_run_ref": "kfm:query-run:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "requested_as_of": null,
+      "snapshot_refs": [
+        "kfm:temporal-snapshot:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "kfm:temporal-snapshot:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+      ],
+      "temporal_query_type": "SEQUENCED",
+      "time_basis": "VALID_TIME",
+      "transaction_cutoff": null,
+      "valid_end": "2021-01-01T00:00:00Z",
+      "valid_start": "2020-01-01T00:00:00Z"
+    },
+    {
+      "case_id": "arbitrary-public-prose-forbidden",
+      "evaluated_at": "2026-08-08T20:00:00Z",
+      "evidence_refs": ["kfm:evidence-ref:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"],
+      "expected": {"finding_codes": ["SCHEMA_INVALID"], "outcome": "DENY"},
+      "mutations": [{"operation": "set", "path": ["public_explanation"], "value": "This is definitely true."}],
+      "query_run_ref": "kfm:query-run:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "requested_as_of": null,
+      "snapshot_refs": ["kfm:temporal-snapshot:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"],
+      "temporal_query_type": "CURRENT_STATE",
+      "time_basis": "VALID_TIME",
+      "transaction_cutoff": null,
+      "valid_end": null,
+      "valid_start": null
+    }
+  ],
+  "profile": "kfm.governance.temporal-query-disclosure.fixture-suite.v1"
+}

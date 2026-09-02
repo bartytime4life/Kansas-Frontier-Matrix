@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kfm://schemas/contracts/v1/map/style_manifest.schema.json",
+  "title": "Style Manifest",
+  "description": "PROPOSED scaffold created from the current docs/domains markdown inventory.",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {},
+  "x-kfm": {
+    "status": "PROPOSED",
+    "path": "schemas/contracts/v1/map/style_manifest.schema.json",
+    "source_docs": [
+      "docs/domains/atmosphere/MAP_UI_CONTRACTS.md",
+      "docs/domains/people-dna-land/MAP_UI_CONTRACTS.md",
+      "docs/domains/settlements-infrastructure/MAP_UI_CONTRACTS.md"
+    ],
+    "contract_doc": null
+  }
+}

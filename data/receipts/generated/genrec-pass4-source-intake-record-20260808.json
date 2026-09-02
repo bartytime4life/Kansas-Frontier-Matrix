@@ -1,0 +1,147 @@
+{
+  "receipt_id": "genrec-pass4-source-intake-record-20260808",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/source-intake-record.yml",
+    "contracts/source/drift_summary.md",
+    "contracts/source/source_intake_record.md",
+    "fixtures/contracts/v1/source/source_intake_record/README.md",
+    "fixtures/contracts/v1/source/source_intake_record/expected_findings_manifest.json",
+    "fixtures/contracts/v1/source/source_intake_record/invalid/invalid_direct_publish.json",
+    "fixtures/contracts/v1/source/source_intake_record/invalid/invalid_resolved_without_bundle_ref.json",
+    "fixtures/contracts/v1/source/source_intake_record/semantic_invalid/semantic_candidate_delta_on_no_change.json",
+    "fixtures/contracts/v1/source/source_intake_record/semantic_invalid/semantic_quarantine_without_blocking.json",
+    "fixtures/contracts/v1/source/source_intake_record/valid/valid_no_material_change.json",
+    "fixtures/contracts/v1/source/source_intake_record/valid/valid_proposed_work_record.json",
+    "fixtures/contracts/v1/source/source_intake_record/valid/valid_quarantine_blocking.json",
+    "schemas/contracts/v1/source/drift-summary.json",
+    "schemas/contracts/v1/source/drift_summary.schema.json",
+    "schemas/contracts/v1/source/source-intake-record.json",
+    "schemas/contracts/v1/source/source_intake_record.schema.json",
+    "tests/validators/test_validate_source_intake_record.py",
+    "tools/validators/validate_source_intake_record.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/source-intake-record.yml": "sha256:238952ae84b695161b8404365ad8a5366bf837aa2e022ecb11d5db29361ad0dc",
+    "contracts/source/drift_summary.md": "sha256:d20cd9416f5aaee8e73674d40ca2b8f2f9ee3bf84efa76dc2621bc05aca8e1b8",
+    "contracts/source/source_intake_record.md": "sha256:eedf1d84bf7f6fba9f40b7e27ea62966ebd4118f5197aa71a9351794f4e4bbd2",
+    "fixtures/contracts/v1/source/source_intake_record/README.md": "sha256:3f80653655dadc59366563257d851d6e9e128d442044c1c340ff4e44c0e72687",
+    "fixtures/contracts/v1/source/source_intake_record/expected_findings_manifest.json": "sha256:fe5f3bfcd45eca8b1e713b14f6be819fa5469536f221baacfeb92738d16db979",
+    "fixtures/contracts/v1/source/source_intake_record/invalid/invalid_direct_publish.json": "sha256:67507469f28a814478cb19bdf4a11deaec2d2cfeb9a1bf6f942aafc2ffaae119",
+    "fixtures/contracts/v1/source/source_intake_record/invalid/invalid_resolved_without_bundle_ref.json": "sha256:ac4dbc4d15197fb7358f9a2a2016b2338862d2331abc6eb0a1adab714d46b22a",
+    "fixtures/contracts/v1/source/source_intake_record/semantic_invalid/semantic_candidate_delta_on_no_change.json": "sha256:d9c406c3135a47cf1273d3fb09b92ec535075deb4d5a6ab124cc40ed33c62b29",
+    "fixtures/contracts/v1/source/source_intake_record/semantic_invalid/semantic_quarantine_without_blocking.json": "sha256:afb6ee1e68de3cb26002d232f39f1ac19bd1007bc4f72274276c88499d99262f",
+    "fixtures/contracts/v1/source/source_intake_record/valid/valid_no_material_change.json": "sha256:3fea1b2120304e389e53fdf38dd121321afe22078fb5f510a4280b145e663f29",
+    "fixtures/contracts/v1/source/source_intake_record/valid/valid_proposed_work_record.json": "sha256:257de5604c012df0c313b8eceb820fb5d8b5d7c1b6bd914a85591d175704a7aa",
+    "fixtures/contracts/v1/source/source_intake_record/valid/valid_quarantine_blocking.json": "sha256:247ac940f9ab5cb454db67f07aee2da1bf67099c74a20ea90b00a7b8dcd84aee",
+    "schemas/contracts/v1/source/drift-summary.json": "sha256:9af3496575cb4d4e5add33d7aea0921927b6a3879d6c11073f6b3bf257561c7a",
+    "schemas/contracts/v1/source/drift_summary.schema.json": "sha256:292fab31ff7ffdbf20b17a97ca97d8db1191f02babbf9e44c6cc668ceb2f2cc3",
+    "schemas/contracts/v1/source/source-intake-record.json": "sha256:cba6f65e320ace28cbc4ea3fbca3e217f5b503ef8a89bd2ae2837f05bf800a68",
+    "schemas/contracts/v1/source/source_intake_record.schema.json": "sha256:09b45aa3dc78fd94dad64843d60751fed503d43429a8af1b0689c534d4d1aac6",
+    "tests/validators/test_validate_source_intake_record.py": "sha256:9e5ae9d0e44b8ef8722c1f4b3a12a3e8260c195a0846b6a31d2bf9f738b37734",
+    "tools/validators/validate_source_intake_record.py": "sha256:bdfffc7cb3596272ea1b9daab58d0bbf3a04119293aa320272dcb2064daf4229"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-08"
+  },
+  "prompt_or_contract": "sha256:d9229dabced67c81fa33be426d6165dae65dc551429b51812afc079f2d44f295",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Pass_4_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_4_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P4-PROG-0001",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@13fe1a725dee233cc1f0464848a4ee7dc7136fca",
+      "repo:schemas/contracts/v1/source/source-intake-record.json@13fe1a725dee233cc1f0464848a4ee7dc7136fca"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/source-intake-record.yml": "CONFIRMED",
+    "contracts/source/drift_summary.md": "PROPOSED",
+    "contracts/source/source_intake_record.md": "PROPOSED",
+    "fixtures/contracts/v1/source/source_intake_record/README.md": "CONFIRMED",
+    "fixtures/contracts/v1/source/source_intake_record/expected_findings_manifest.json": "CONFIRMED",
+    "fixtures/contracts/v1/source/source_intake_record/invalid/invalid_direct_publish.json": "CONFIRMED",
+    "fixtures/contracts/v1/source/source_intake_record/invalid/invalid_resolved_without_bundle_ref.json": "CONFIRMED",
+    "fixtures/contracts/v1/source/source_intake_record/semantic_invalid/semantic_candidate_delta_on_no_change.json": "CONFIRMED",
+    "fixtures/contracts/v1/source/source_intake_record/semantic_invalid/semantic_quarantine_without_blocking.json": "CONFIRMED",
+    "fixtures/contracts/v1/source/source_intake_record/valid/valid_no_material_change.json": "CONFIRMED",
+    "fixtures/contracts/v1/source/source_intake_record/valid/valid_proposed_work_record.json": "CONFIRMED",
+    "fixtures/contracts/v1/source/source_intake_record/valid/valid_quarantine_blocking.json": "CONFIRMED",
+    "schemas/contracts/v1/source/drift-summary.json": "PROPOSED",
+    "schemas/contracts/v1/source/drift_summary.schema.json": "PROPOSED",
+    "schemas/contracts/v1/source/source-intake-record.json": "PROPOSED",
+    "schemas/contracts/v1/source/source_intake_record.schema.json": "PROPOSED",
+    "tests/validators/test_validate_source_intake_record.py": "CONFIRMED",
+    "tools/validators/validate_source_intake_record.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-unit-tests",
+      "outcome": "PASS",
+      "reason": "Local reconstructed-workspace unit tests passed."
+    },
+    {
+      "gate": "fixture-manifest-polarity",
+      "outcome": "PASS",
+      "reason": "Seven synthetic no-network cases matched finite outcomes and reason codes."
+    },
+    {
+      "gate": "closed-schema-and-semantics",
+      "outcome": "PASS",
+      "reason": "Draft 2020-12 schemas and cross-field invariants validated deterministically."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires pushed draft pull request exact-head run."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:pass4-source-intake",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Pass_4_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P4-PROG-0001"
+    },
+    {
+      "id": "repository:directory-governance",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@13fe1a725dee233cc1f0464848a4ee7dc7136fca"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-08T16:15:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-first implementation of KFM-P4-PROG-0001. SourceIntakeRecord remains WORK/QUARANTINE only, CandidateDelta is a separate optional downstream proposal, and no live source, RAW admission, promotion, release, publication, or notification authority is created."
+}

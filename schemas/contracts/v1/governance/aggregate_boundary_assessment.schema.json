@@ -1,0 +1,304 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/governance/aggregate_boundary_assessment.schema.json",
+  "title": "AggregateBoundaryAssessmentCandidate",
+  "description": "Fixture-only declaration of one aggregate boundary, root, invariants, reference rules, repository/factory posture, and consistency scope without object, persistence, transaction, evidence, policy, review, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "assessment_id",
+    "profile_spec_hash",
+    "source_card",
+    "observed_at",
+    "bounded_context_ref",
+    "aggregate_family_ref",
+    "semantic_contract_ref",
+    "semantic_contract_digest",
+    "bindings",
+    "declaration",
+    "limitations",
+    "authority_claims"
+  ],
+  "properties": {
+    "object_type": {"const": "AggregateBoundaryAssessmentCandidate"},
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.governance.aggregate-boundary-assessment.fixture.v1"},
+    "assessment_id": {
+      "type": "string",
+      "pattern": "^kfm:aggregate-boundary:[a-f0-9]{24}$"
+    },
+    "profile_spec_hash": {"$ref": "#/$defs/sha256"},
+    "source_card": {"const": "KFM-P18-INV-465"},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "bounded_context_ref": {"$ref": "#/$defs/ref"},
+    "aggregate_family_ref": {"$ref": "#/$defs/ref"},
+    "semantic_contract_ref": {"$ref": "#/$defs/ref"},
+    "semantic_contract_digest": {"$ref": "#/$defs/sha256"},
+    "bindings": {"$ref": "#/$defs/bindings"},
+    "declaration": {"$ref": "#/$defs/declaration"},
+    "limitations": {
+      "const": [
+        "DECLARATION_ONLY",
+        "NO_OBJECT_CREATION_OR_MUTATION",
+        "NO_PERSISTENCE_OR_TRANSACTION_EXECUTION",
+        "NO_REFERENCE_OR_EVIDENCE_RESOLUTION",
+        "NO_SCHEMA_REGISTER_POLICY_OR_REVIEW_AUTHORITY",
+        "NO_PROMOTION_RELEASE_DEPLOYMENT_OR_PUBLICATION_AUTHORITY"
+      ]
+    },
+    "authority_claims": {"$ref": "#/$defs/authority_claims"}
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "nullable_sha256": {
+      "anyOf": [
+        {"$ref": "#/$defs/sha256"},
+        {"type": "null"}
+      ]
+    },
+    "ref": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 512,
+      "pattern": "^kfm://[a-z0-9][a-z0-9._~:/-]+$"
+    },
+    "nullable_ref": {
+      "anyOf": [
+        {"$ref": "#/$defs/ref"},
+        {"type": "null"}
+      ]
+    },
+    "canonical_refs": {
+      "type": "array",
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/ref"}
+    },
+    "bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["object_family_register", "identity_kind_assessment"],
+      "properties": {
+        "object_family_register": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["state", "ref", "digest"],
+          "properties": {
+            "state": {"enum": ["RESOLVED", "UNRESOLVED", "NOT_REGISTERED"]},
+            "ref": {"$ref": "#/$defs/nullable_ref"},
+            "digest": {"$ref": "#/$defs/nullable_sha256"}
+          }
+        },
+        "identity_kind_assessment": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["state", "ref", "root_identity_kind"],
+          "properties": {
+            "state": {"enum": ["RESOLVED", "UNRESOLVED"]},
+            "ref": {"$ref": "#/$defs/nullable_ref"},
+            "root_identity_kind": {
+              "enum": ["ENTITY", "VALUE_OBJECT", "DERIVED_ARTIFACT", "UNRESOLVED"]
+            }
+          }
+        }
+      }
+    },
+    "member": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["member_ref", "role"],
+      "properties": {
+        "member_ref": {"$ref": "#/$defs/ref"},
+        "role": {"enum": ["ROOT", "ENTITY", "VALUE_OBJECT"]}
+      }
+    },
+    "reference_edge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_ref", "target_member_ref", "scope"],
+      "properties": {
+        "source_ref": {"$ref": "#/$defs/ref"},
+        "target_member_ref": {"$ref": "#/$defs/ref"},
+        "scope": {"enum": ["EXTERNAL", "SINGLE_OPERATION_INTERNAL"]}
+      }
+    },
+    "repository": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "repository_ref",
+        "exposed_root_ref",
+        "return_scope",
+        "direct_internal_member_access"
+      ],
+      "properties": {
+        "state": {"enum": ["DECLARED", "NOT_REQUIRED", "UNRESOLVED"]},
+        "repository_ref": {"$ref": "#/$defs/nullable_ref"},
+        "exposed_root_ref": {"$ref": "#/$defs/nullable_ref"},
+        "return_scope": {
+          "anyOf": [
+            {"enum": ["WHOLE_AGGREGATE_OR_PROXY", "INTERNAL_FRAGMENT"]},
+            {"type": "null"}
+          ]
+        },
+        "direct_internal_member_access": {"type": "boolean"}
+      }
+    },
+    "factory": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "factory_ref", "creation_scope", "enforces_invariants"],
+      "properties": {
+        "state": {"enum": ["DECLARED", "NOT_REQUIRED", "UNRESOLVED"]},
+        "factory_ref": {"$ref": "#/$defs/nullable_ref"},
+        "creation_scope": {
+          "anyOf": [
+            {"enum": ["WHOLE_AGGREGATE", "INTERNAL_FRAGMENT"]},
+            {"type": "null"}
+          ]
+        },
+        "enforces_invariants": {"type": "boolean"}
+      }
+    },
+    "consistency": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["transaction_unit", "within_boundary", "cross_boundary"],
+      "properties": {
+        "transaction_unit": {"enum": ["AGGREGATE", "CROSS_AGGREGATE"]},
+        "within_boundary": {"enum": ["SYNCHRONOUS", "EVENTUAL"]},
+        "cross_boundary": {
+          "enum": ["ASYNCHRONOUS_OR_EXPLICIT_PROCESS", "SYNCHRONOUS_CASCADE"]
+        }
+      }
+    },
+    "external_evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_bundle_refs",
+        "relationship",
+        "consistency_scope",
+        "resolution_authority"
+      ],
+      "properties": {
+        "evidence_bundle_refs": {"$ref": "#/$defs/canonical_refs"},
+        "relationship": {"enum": ["REFERENCE_ONLY", "OWNED_MEMBER"]},
+        "consistency_scope": {"enum": ["OUTSIDE_AGGREGATE", "INSIDE_AGGREGATE"]},
+        "resolution_authority": {"const": false}
+      }
+    },
+    "declaration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "boundary_state",
+        "aggregate_root_ref",
+        "members",
+        "invariant_refs",
+        "invariant_coverage",
+        "external_reference_policy",
+        "reference_edges",
+        "repository",
+        "factory",
+        "consistency",
+        "external_evidence",
+        "review_state",
+        "review_record_refs",
+        "rationale_summary"
+      ],
+      "properties": {
+        "boundary_state": {"enum": ["DECLARED", "UNRESOLVED"]},
+        "aggregate_root_ref": {"$ref": "#/$defs/ref"},
+        "members": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 32,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/member"}
+        },
+        "invariant_refs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 32,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/ref"}
+        },
+        "invariant_coverage": {
+          "enum": ["COMPLETE_FOR_DECLARED_SCOPE", "INCOMPLETE", "UNKNOWN"]
+        },
+        "external_reference_policy": {
+          "enum": ["ROOT_ONLY", "INTERNAL_MEMBERS_ALLOWED"]
+        },
+        "reference_edges": {
+          "type": "array",
+          "maxItems": 64,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/reference_edge"}
+        },
+        "repository": {"$ref": "#/$defs/repository"},
+        "factory": {"$ref": "#/$defs/factory"},
+        "consistency": {"$ref": "#/$defs/consistency"},
+        "external_evidence": {"$ref": "#/$defs/external_evidence"},
+        "review_state": {"enum": ["COMPLETE_FOR_DECLARED_SCOPE", "PENDING", "UNKNOWN"]},
+        "review_record_refs": {"$ref": "#/$defs/canonical_refs"},
+        "rationale_summary": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 24,
+              "maxLength": 1024,
+              "pattern": "^[^\\r\\n]+$"
+            },
+            {"type": "null"}
+          ]
+        }
+      }
+    },
+    "authority_claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "object_creation_authority",
+        "object_mutation_authority",
+        "persistence_authority",
+        "transaction_authority",
+        "reference_resolution_authority",
+        "evidence_authority",
+        "schema_authority",
+        "register_write_authority",
+        "policy_authority",
+        "review_authority",
+        "promotion_authority",
+        "release_authority",
+        "deployment_authority",
+        "publication_authority",
+        "public_use_authority"
+      ],
+      "properties": {
+        "object_creation_authority": {"const": false},
+        "object_mutation_authority": {"const": false},
+        "persistence_authority": {"const": false},
+        "transaction_authority": {"const": false},
+        "reference_resolution_authority": {"const": false},
+        "evidence_authority": {"const": false},
+        "schema_authority": {"const": false},
+        "register_write_authority": {"const": false},
+        "policy_authority": {"const": false},
+        "review_authority": {"const": false},
+        "promotion_authority": {"const": false},
+        "release_authority": {"const": false},
+        "deployment_authority": {"const": false},
+        "publication_authority": {"const": false},
+        "public_use_authority": {"const": false}
+      }
+    }
+  }
+}

@@ -1,0 +1,115 @@
+{
+  "receipt_id": "genrec-promotion-gate-execution-inventory-20260808",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/promotion-gate.yml"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/promotion-gate.yml": "sha256:bebd94c16b687b51c7e660baad4e4ab10edca0672407d72482ddb6c6e4d5a9ee"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-08"
+  },
+  "prompt_or_contract": "sha256:c866760146c113f908c9a903ddfddedc05a7a68400664baf5e2ac96493056b11",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local deterministic YAML and source validation",
+      "uploaded KFM doctrine"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "kfm_soil_architecture_extended_pro_pdf_only_report.pdf"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/7f402354df34ebccb81d64ea6d235f2e1bae8b07",
+      "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs/31234903047/jobs/93046206720",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/2147",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7f402354df34ebccb81d64ea6d235f2e1bae8b07/.github/workflows/promotion-gate.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7f402354df34ebccb81d64ea6d235f2e1bae8b07/tools/validators/promotion_gate/execute_promotion_verification.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7f402354df34ebccb81d64ea6d235f2e1bae8b07/tools/validators/promotion_gate/execution/engine.py",
+      "attachment:kfm_soil_architecture_extended_pro_pdf_only_report.pdf"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/promotion-gate.yml": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "failure-evidence-reconciliation",
+      "outcome": "PASS",
+      "reason": "Run 31234903047 job 93046206720 failed because the review-readiness inventory still expected the original three-file promotion-gate package after merged PR 2147 added the bounded execution entry point and execution modules."
+    },
+    {
+      "gate": "directory-and-authority-placement",
+      "outcome": "PASS",
+      "reason": "The correction updates the existing read-only workflow in .github/workflows and creates no new authority root, release record, proof, policy, or lifecycle state."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The complete modified workflow parsed successfully as YAML and retained the existing workflow name and four job identifiers."
+    },
+    {
+      "gate": "inventory-and-authority-static-check",
+      "outcome": "PASS",
+      "reason": "The exact seven-file inventory is retained fail-closed, and the workflow checks the execution entry point plus false lifecycle, promotion, release, deployment, and publication authority flags."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted pull-request validation requires the pushed exact head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "current-main-base",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/7f402354df34ebccb81d64ea6d235f2e1bae8b07"
+    },
+    {
+      "id": "promotion-gate-inventory-failure",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs/31234903047/jobs/93046206720"
+    },
+    {
+      "id": "bounded-execution-package-merge",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/pull/2147"
+    },
+    {
+      "id": "kfm-lifecycle-and-public-client-doctrine",
+      "validated": true,
+      "evidence_ref": "attachment:kfm_soil_architecture_extended_pro_pdf_only_report.pdf"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-08T02:50:33Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Forward repair for promotion-gate run 31234903047. The change recognizes the already merged bounded promotion-verification execution package while preserving an exact inventory, static authority-boundary checks, the held hydrology promoter, and the rule that PASS is only APPROVE_READY for accountable review. It does not authenticate evidence, execute a real release decision, promote, release, deploy, publish, or change repository settings."
+}

@@ -1,0 +1,75 @@
+{
+  "receipt_id": "genrec-release-dry-run-mrts-successor-20260822",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/release-dry-run.yml",
+    ".github/workflows/rollback-drill.yml",
+    "data/receipts/generated/genrec-publication-deny-dry-run-mrts-successor-20260822.json"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/release-dry-run.yml": "sha256:9d6d71f03792454e7f5ef96f27968a42319a79dc0475bc2cb63612ad5c5dfd65",
+    ".github/workflows/rollback-drill.yml": "sha256:32a83bf38f62f0bd30b8c569de4246056124f2450428d2e0d4f838b62ce385f4",
+    "data/receipts/generated/genrec-publication-deny-dry-run-mrts-successor-20260822.json": "sha256:46262f9f47a3ec80d2a196c6fcf51d1a0b9dd28a01ee936004624ff2397402ee"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5-session-2026-08-22"
+  },
+  "prompt_or_contract": "sha256:7f3a8dc38a3dc1e05581c50516d2b9aac824da53b12458e2e373c29d6a25cc7e",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "tools_enabled": [
+      "Google Drive connector",
+      "GitHub connector",
+      "local no-network validation"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/3405",
+      "repo:main@db070e62a1f95d5edaaa088896a6e9ff3757a9a0",
+      "repo:historical-receipt:data/receipts/generated/genrec-release-dry-run-rollback-card-presence-repair-20260816.json"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/release-dry-run.yml": "PROPOSED",
+    ".github/workflows/rollback-drill.yml": "CONFIRMED",
+    "data/receipts/generated/genrec-publication-deny-dry-run-mrts-successor-20260822.json": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "dependency-closed-generated-receipts",
+      "outcome": "PASS",
+      "reason": "The release dry-run selects the append-only publication-denial successor and this receipt binds the resulting workflow bytes."
+    },
+    {
+      "gate": "release-and-rollback-behavior",
+      "outcome": "PASS",
+      "reason": "The release helper, no-write tests, and rollback-drill workflow are unchanged."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Independent human review remains pending and this receipt grants no release or rollback authority."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-22T19:51:12Z",
+  "emitter": "OpenAI Codex Work Mode",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Append-only dependency-closed successor for the release dry-run workflow after MRTS integration changed Makefile. Historical receipts remain unchanged. This record is process memory only and grants no policy, review, rollback, merge, release, deployment, promotion, or publication authority."
+}

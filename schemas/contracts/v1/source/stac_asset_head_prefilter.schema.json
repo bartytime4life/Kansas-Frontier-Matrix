@@ -1,0 +1,188 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/source/stac_asset_head_prefilter.schema.json",
+  "title": "StacAssetHeadPrefilterAttributes",
+  "description": "Closed fixture-only profile for comparing recorded STAC asset HEAD metadata against a previously admitted asset state. It performs no network request or download and creates no source, lifecycle, evidence, policy, review, release, publication, or public-use authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "stac.profile",
+    "stac.item_id",
+    "stac.asset_key",
+    "stac.asset_href",
+    "stac.media_type",
+    "stac.http_method",
+    "stac.http_status",
+    "stac.prior_etag",
+    "stac.observed_etag",
+    "stac.prior_last_modified",
+    "stac.observed_last_modified",
+    "stac.prior_content_length",
+    "stac.observed_content_length",
+    "stac.decision",
+    "stac.reason_code",
+    "stac.download_allowed",
+    "stac.checked_at"
+  ],
+  "properties": {
+    "stac.profile": {
+      "const": "kfm.stac_asset_head_prefilter.v1"
+    },
+    "stac.item_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]*$"
+    },
+    "stac.asset_key": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]*$"
+    },
+    "stac.asset_href": {
+      "type": "string",
+      "format": "uri",
+      "minLength": 12,
+      "maxLength": 2048,
+      "pattern": "^https://"
+    },
+    "stac.media_type": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 160,
+      "pattern": "^[A-Za-z0-9!#$&^_.+-]+/[A-Za-z0-9!#$&^_.+;-]+$"
+    },
+    "stac.http_method": {
+      "const": "HEAD"
+    },
+    "stac.http_status": {
+      "type": "integer",
+      "enum": [
+        200,
+        204,
+        304,
+        401,
+        403,
+        404,
+        405,
+        410,
+        429,
+        500,
+        502,
+        503,
+        504
+      ]
+    },
+    "stac.prior_etag": {
+      "$ref": "#/$defs/nullable_token"
+    },
+    "stac.observed_etag": {
+      "$ref": "#/$defs/nullable_token"
+    },
+    "stac.prior_last_modified": {
+      "$ref": "#/$defs/nullable_datetime"
+    },
+    "stac.observed_last_modified": {
+      "$ref": "#/$defs/nullable_datetime"
+    },
+    "stac.prior_content_length": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 1000000000000
+    },
+    "stac.observed_content_length": {
+      "oneOf": [
+        {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000000000
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "stac.decision": {
+      "type": "string",
+      "enum": [
+        "UNCHANGED",
+        "CHANGED",
+        "UNAVAILABLE",
+        "DENY",
+        "ERROR"
+      ]
+    },
+    "stac.reason_code": {
+      "type": "string",
+      "enum": [
+        "HTTP_NOT_MODIFIED",
+        "VALIDATOR_MATCH",
+        "VALIDATOR_CHANGED",
+        "VALIDATOR_CONFLICT",
+        "VALIDATOR_MISSING",
+        "ASSET_NOT_FOUND",
+        "ASSET_GONE",
+        "ACCESS_DENIED",
+        "METHOD_NOT_ALLOWED",
+        "RATE_LIMITED",
+        "UPSTREAM_ERROR"
+      ]
+    },
+    "stac.download_allowed": {
+      "const": false
+    },
+    "stac.checked_at": {
+      "$ref": "#/$defs/aware_datetime"
+    }
+  },
+  "$defs": {
+    "nullable_token": {
+      "oneOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "\\S"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "aware_datetime": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "nullable_datetime": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/aware_datetime"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED",
+    "source_card": "KFM-P32-PROG-0004",
+    "contract_doc": "contracts/source/stac_asset_head_prefilter.md",
+    "applies_to": "SourceEventEnvelopeCandidate.payload.attributes",
+    "base_contract": "contracts/source/source_event_envelope.md",
+    "base_schema": "schemas/contracts/v1/source/source_event_envelope.schema.json",
+    "fixtures": "fixtures/contracts/v1/source/stac_asset_head_prefilter/cases.json",
+    "validator": "tools/validators/validate_stac_asset_head_prefilter.py",
+    "tests": "tests/validators/test_validate_stac_asset_head_prefilter.py",
+    "non_effects": [
+      "no_network_request",
+      "no_asset_download",
+      "no_source_activation",
+      "no_raw_or_lifecycle_write",
+      "no_evidence_policy_or_review_creation",
+      "no_promotion_release_or_publication"
+    ]
+  }
+}

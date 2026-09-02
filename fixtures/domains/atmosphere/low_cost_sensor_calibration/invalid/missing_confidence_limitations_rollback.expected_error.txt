@@ -1,0 +1,3 @@
+CONFIDENCE_STATE_INVALID	$.assessment.confidence_state
+GOVERNANCE_STATE_INVALID	$.governance.rollback_state
+LIMITATIONS_INVALID	$.limitations

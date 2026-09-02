@@ -1,0 +1,359 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/common/advisory_event_envelope.schema.json",
+  "title": "advisory_event_envelope",
+  "description": "Fixture-first, no-network, release-neutral shared mechanics for volatile advisory events. The domain-native payload remains authoritative for native meaning.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "temporal_authority",
+    "event",
+    "source_surface",
+    "advisory",
+    "scope",
+    "domain_payload",
+    "controls"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "temporal_authority": {
+      "$ref": "https://schemas.kfm.local/contracts/v1/common/temporal_authority_envelope.schema.json"
+    },
+    "event": {
+      "$ref": "#/$defs/event"
+    },
+    "source_surface": {
+      "$ref": "#/$defs/source_surface"
+    },
+    "advisory": {
+      "$ref": "#/$defs/advisory"
+    },
+    "scope": {
+      "$ref": "#/$defs/scope"
+    },
+    "domain_payload": {
+      "$ref": "#/$defs/domain_payload"
+    },
+    "controls": {
+      "$ref": "#/$defs/controls"
+    }
+  },
+  "$defs": {
+    "nonempty": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024,
+      "pattern": "\\S"
+    },
+    "nullable_nonempty": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/nonempty"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "aware_datetime": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "nullable_datetime": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/aware_datetime"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "event": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "event_id",
+        "profile_id",
+        "event_family",
+        "native_event_type",
+        "native_event_id"
+      ],
+      "properties": {
+        "event_id": {
+          "type": "string",
+          "pattern": "^kfm:advisory:[a-f0-9]{64}$"
+        },
+        "profile_id": {
+          "const": "kfm.advisory-event.hab.v1"
+        },
+        "event_family": {
+          "const": "harmful_algal_bloom"
+        },
+        "native_event_type": {
+          "const": "KdheHabAdvisorySnapshot"
+        },
+        "native_event_id": {
+          "$ref": "#/$defs/nonempty"
+        }
+      }
+    },
+    "source_surface": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "semantics",
+        "snapshot_complete",
+        "retrieval_status",
+        "parse_status",
+        "freshness_status",
+        "checked_at",
+        "freshness_budget_hours"
+      ],
+      "properties": {
+        "semantics": {
+          "enum": [
+            "complete_snapshot",
+            "incremental_feed",
+            "single_event",
+            "unknown"
+          ]
+        },
+        "snapshot_complete": {
+          "type": "boolean"
+        },
+        "retrieval_status": {
+          "enum": [
+            "success",
+            "source_unavailable",
+            "parse_error",
+            "partial"
+          ]
+        },
+        "parse_status": {
+          "enum": [
+            "success",
+            "malformed",
+            "partial",
+            "error"
+          ]
+        },
+        "freshness_status": {
+          "enum": [
+            "current",
+            "stale",
+            "unavailable",
+            "quarantined"
+          ]
+        },
+        "checked_at": {
+          "$ref": "#/$defs/aware_datetime"
+        },
+        "freshness_budget_hours": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 168
+        }
+      }
+    },
+    "advisory": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "native_status",
+        "normalized_status",
+        "last_confirmed_status",
+        "severity",
+        "certainty",
+        "urgency",
+        "basis",
+        "onset_at",
+        "expires_at",
+        "cancelled_at",
+        "rescinded_at"
+      ],
+      "properties": {
+        "native_status": {
+          "$ref": "#/$defs/nullable_nonempty"
+        },
+        "normalized_status": {
+          "enum": [
+            "ISSUED",
+            "ACTIVE_CONFIRMED",
+            "UPDATED",
+            "SUPERSEDED",
+            "RESCINDED",
+            "EXPIRED",
+            "CANCELLED",
+            "STATUS_UNCONFIRMED",
+            "STATUS_CHECK_FAILED",
+            "IDENTITY_CONFLICT",
+            "GEOMETRY_UNRESOLVED"
+          ]
+        },
+        "last_confirmed_status": {
+          "oneOf": [
+            {
+              "enum": [
+                "ISSUED",
+                "ACTIVE_CONFIRMED",
+                "UPDATED"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "severity": {
+          "$ref": "#/$defs/nullable_nonempty"
+        },
+        "certainty": {
+          "enum": [
+            "confirmed",
+            "probable",
+            "uncertain",
+            "unknown",
+            "conflicted"
+          ]
+        },
+        "urgency": {
+          "$ref": "#/$defs/nullable_nonempty"
+        },
+        "basis": {
+          "enum": [
+            "regulatory_advisory",
+            "forecast",
+            "model",
+            "observation",
+            "synthetic"
+          ]
+        },
+        "onset_at": {
+          "$ref": "#/$defs/nullable_datetime"
+        },
+        "expires_at": {
+          "$ref": "#/$defs/nullable_datetime"
+        },
+        "cancelled_at": {
+          "$ref": "#/$defs/nullable_datetime"
+        },
+        "rescinded_at": {
+          "$ref": "#/$defs/nullable_datetime"
+        }
+      }
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "affected_area_ref",
+        "geometry_role",
+        "geometry_confidence",
+        "zone_scope"
+      ],
+      "properties": {
+        "affected_area_ref": {
+          "$ref": "#/$defs/nullable_nonempty"
+        },
+        "geometry_role": {
+          "enum": [
+            "advisory_area",
+            "administrative_zone",
+            "display_only",
+            "unresolved",
+            "not_applicable"
+          ]
+        },
+        "geometry_confidence": {
+          "enum": [
+            "confirmed",
+            "approximate",
+            "unresolved",
+            "not_applicable"
+          ]
+        },
+        "zone_scope": {
+          "enum": [
+            "whole_water_body",
+            "zone",
+            "partial",
+            "unresolved"
+          ]
+        }
+      }
+    },
+    "domain_payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "payload_type",
+        "payload_ref",
+        "payload_schema_id",
+        "payload_record_digest",
+        "payload_source_content_digest"
+      ],
+      "properties": {
+        "payload_type": {
+          "const": "KdheHabAdvisorySnapshot"
+        },
+        "payload_ref": {
+          "type": "string",
+          "pattern": "^fixtures/domains/hazards/kdhe_hab_advisory_snapshot/valid/[a-z0-9_-]+\\.json$"
+        },
+        "payload_schema_id": {
+          "const": "https://schemas.kfm.local/contracts/v1/domains/hazards/kdhe_hab_advisory_snapshot.schema.json"
+        },
+        "payload_record_digest": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "payload_source_content_digest": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        }
+      }
+    },
+    "controls": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rescission_ref",
+        "public_guidance_ref",
+        "release_neutral",
+        "public_use_allowed",
+        "alerts_allowed"
+      ],
+      "properties": {
+        "rescission_ref": {
+          "$ref": "#/$defs/nullable_nonempty"
+        },
+        "public_guidance_ref": {
+          "$ref": "#/$defs/nullable_nonempty"
+        },
+        "release_neutral": {
+          "const": true
+        },
+        "public_use_allowed": {
+          "const": false
+        },
+        "alerts_allowed": {
+          "const": false
+        }
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED",
+    "contract_doc": "contracts/common/advisory_event_envelope.md",
+    "fixtures_root": "fixtures/contracts/v1/common/advisory_event_envelope/",
+    "validator": "tools/validators/validate_advisory_event_envelope.py",
+    "tests": "tests/validators/test_validate_advisory_event_envelope.py",
+    "authority": "shared volatile-event mechanics only",
+    "domain_profile": "KDHE HAB snapshot fixture profile; no live source activation or public alert authority"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "object_type": "TemporalSupportAssessment",
+  "schema_version": "1.0.0",
+  "assessment_id": "kfm:temporal-support:outside-marked-supported:v1",
+  "subject_ref": "kfm:claim:huc12:current:v1",
+  "query": {
+    "mode": "CURRENT_STATE",
+    "start": "2026-08-06T00:00:00Z",
+    "end": "2026-08-06T01:00:00Z"
+  },
+  "support": {
+    "time_slice_manifest_ref": "kfm:time-slice:huc12:2026-08-07",
+    "temporal_basis_complete": true,
+    "observed_at": "2026-08-07T22:30:00Z",
+    "valid_time": {
+      "start": "2026-08-07T00:00:00Z",
+      "end": "2026-08-08T00:00:00Z"
+    },
+    "source_updated_at": "2026-08-07T22:45:00Z",
+    "retrieved_at": "2026-08-07T22:50:00Z",
+    "freshness_ttl_seconds": 7200,
+    "source_cadence_seconds": 3600
+  },
+  "release_state": {
+    "release_manifest_ref": "kfm:release:huc12:2026-08-07",
+    "status": "RELEASED",
+    "correction_ref": null,
+    "superseded_by_ref": null,
+    "rollback_ref": "kfm:rollback:huc12:2026-08-06"
+  },
+  "outcome": "SUPPORTED",
+  "reason_codes": [],
+  "obligations": [],
+  "evidence_bundle_refs": [
+    "kfm:evidence-bundle:huc12:2026-08-07"
+  ],
+  "conflict_refs": [],
+  "evaluated_at": "2026-08-07T23:00:00Z",
+  "governance": {
+    "fixture_only": true,
+    "lifecycle_write": false,
+    "truth_authority": false,
+    "policy_authority": false,
+    "review_authority": false,
+    "release_authority": false,
+    "publication_authority": false
+  },
+  "spec_hash": "sha256:a7ba3e055074525425e92f2a5f07ebf591d0b89bd9789344a269c491a64ec662"
+}

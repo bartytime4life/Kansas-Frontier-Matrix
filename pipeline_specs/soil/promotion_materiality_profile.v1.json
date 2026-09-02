@@ -1,0 +1,50 @@
+{
+  "canonicalization_profile": "kfm-canonical-json-v1",
+  "combination": "ANY",
+  "digest_algorithm": "sha256",
+  "domain": "soil",
+  "governance": {
+    "policy_evaluated": false,
+    "promotion_authorized": false,
+    "public_use_allowed": false,
+    "release_authorized": false,
+    "release_ref": null,
+    "source_activated": false
+  },
+  "ignored_dimensions": [
+    "retrieved_at"
+  ],
+  "object_type": "SoilPromotionMaterialityProfile",
+  "profile_id": "kfm://materiality-profile/soil/promotion-hash-dimensions-v1",
+  "profile_version": "1.0.0",
+  "schema_version": "1.0.0",
+  "spec_hash": "sha256:f09f5db9fbe536de0eecbf051c6a38fc21ef18519a0e8a6610be707782be6682",
+  "status": "PROPOSED_INACTIVE",
+  "substantive_dimensions": [
+    {
+      "criterion_id": "soil.hash.content_spec_hash",
+      "dimension_id": "content_spec_hash",
+      "required": true
+    },
+    {
+      "criterion_id": "soil.hash.policy_hash",
+      "dimension_id": "policy_hash",
+      "required": true
+    },
+    {
+      "criterion_id": "soil.hash.schema_hash",
+      "dimension_id": "schema_hash",
+      "required": true
+    },
+    {
+      "criterion_id": "soil.hash.source_descriptor_hash",
+      "dimension_id": "source_descriptor_hash",
+      "required": true
+    },
+    {
+      "criterion_id": "soil.hash.validator_hash",
+      "dimension_id": "validator_hash",
+      "required": true
+    }
+  ]
+}

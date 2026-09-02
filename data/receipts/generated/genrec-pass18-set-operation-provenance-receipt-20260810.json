@@ -1,0 +1,86 @@
+{
+  "receipt_id": "genrec-pass18-set-operation-provenance-receipt-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/set-operation-provenance-receipt.yml",
+    "contracts/evidence/set_operation_provenance_receipt.md",
+    "docs/intake/exploratory/pass-18-set-operation-provenance-receipt-source-map.md",
+    "fixtures/contracts/v1/evidence/set_operation_provenance_receipt/cases.json",
+    "schemas/contracts/v1/evidence/set_operation_provenance_receipt.schema.json",
+    "tests/validators/evidence/test_validate_set_operation_provenance_receipt.py",
+    "tools/validators/evidence/validate_set_operation_provenance_receipt.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/set-operation-provenance-receipt.yml": "sha256:1f37753860645baa2efeab4a8b05a19e3764bfbe767c5b0a632d3d67238fff95",
+    "contracts/evidence/set_operation_provenance_receipt.md": "sha256:f837e3b6d704aeb490ee928077c085798c1787897428c43dcd9645fdf48c6280",
+    "docs/intake/exploratory/pass-18-set-operation-provenance-receipt-source-map.md": "sha256:4268b7f186e14bed4404076e61adb52d855f4913bda097334a1372211ca46603",
+    "fixtures/contracts/v1/evidence/set_operation_provenance_receipt/cases.json": "sha256:defeed6ac88a21dd8ff9fa3f126eecaafd4743ec838e0a9bf0b9653e205bb5df",
+    "schemas/contracts/v1/evidence/set_operation_provenance_receipt.schema.json": "sha256:abd5c6bf42a9151b70b6d9f21cd5b466b9289b0778a3e3967558b510530e18fa",
+    "tests/validators/evidence/test_validate_set_operation_provenance_receipt.py": "sha256:0b47cc737c273426a3be978623cdd7c85027cc3efe488d84307baca8ec0b53e4",
+    "tools/validators/evidence/validate_set_operation_provenance_receipt.py": "sha256:94eca19c2be55e8e25693c251e804715a2b63d2dd350c9567e74499ce2dee254"
+  },
+  "model_identity": {"provider": "OpenAI", "model": "GPT-5", "version": "2026-08-10"},
+  "prompt_or_contract": "sha256:f837e3b6d704aeb490ee928077c085798c1787897428c43dcd9645fdf48c6280",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": ["Google Drive private-corpus discovery", "GitHub repository inspection and draft PR publication", "local PDF rendering and deterministic validation"]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:2579d23bae5217ceeed65e29e82966c6b40600af124ea0bba63212a284fc0ed5",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:e65fe4498b76b65c427a0748767c8c76614042c0cac59a804194d437de33bdc0",
+      "sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9",
+      "sha256:fe569107d2aa8ffc9c995aed227e3b448913eba5df89e6b75d85de2018ee8478"
+    ],
+    "attached_docs": ["Supplied Pass 18 atlas; private discovery identifier withheld"],
+    "evidence_refs": [
+      "attachment://supplied-pass18-atlas#card=KFM-P18-INV-068",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/463381703bcd6eada8eea05e95c4a88912ed4b02/contracts/common/reversible_entity_reconciliation.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/463381703bcd6eada8eea05e95c4a88912ed4b02/contracts/common/measurement_support_reconciliation.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/463381703bcd6eada8eea05e95c4a88912ed4b02/contracts/evidence/spatial_transform_receipt.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/463381703bcd6eada8eea05e95c4a88912ed4b02/docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/set-operation-provenance-receipt.yml": "CONFIRMED",
+    "contracts/evidence/set_operation_provenance_receipt.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-set-operation-provenance-receipt-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/evidence/set_operation_provenance_receipt/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/evidence/set_operation_provenance_receipt.schema.json": "PROPOSED",
+    "tests/validators/evidence/test_validate_set_operation_provenance_receipt.py": "CONFIRMED",
+    "tools/validators/evidence/validate_set_operation_provenance_receipt.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "workflow-yaml-parse", "outcome": "PASS"},
+    {"gate": "focused-unittest-suite", "outcome": "PASS", "reason": "Nine deterministic set-operation provenance receipt tests passed."},
+    {"gate": "exact-fixture-replay", "outcome": "PASS", "reason": "Twenty-one exact PASS, ABSTAIN, DENY, and ERROR cases matched reviewed outcomes and codes."},
+    {"gate": "adjacent-reconciliation-and-transform-regression", "outcome": "PASS", "reason": "Twenty-one reversible-entity, measurement-support, and spatial-transform receipt tests passed."},
+    {"gate": "documentation-meta-block-profile", "outcome": "PASS"},
+    {"gate": "local-document-link-check", "outcome": "PASS"},
+    {"gate": "no-network-boundary", "outcome": "PASS"},
+    {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS"},
+    {"gate": "git-diff-check", "outcome": "PASS"},
+    {"gate": "hosted-exact-head-ci", "outcome": "SKIPPED", "reason": "Requires the pushed pull-request head."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Pending on the draft pull request."}
+  ],
+  "policy_decisions": ["docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"],
+  "citations": [
+    {"id": "pass18-set-operation-provenance-card", "validated": true, "evidence_ref": "attachment://supplied-pass18-atlas#card=KFM-P18-INV-068"},
+    {"id": "reversible-entity-reconciliation-adjacent-contract", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/463381703bcd6eada8eea05e95c4a88912ed4b02/contracts/common/reversible_entity_reconciliation.md"},
+    {"id": "measurement-support-adjacent-contract", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/463381703bcd6eada8eea05e95c4a88912ed4b02/contracts/common/measurement_support_reconciliation.md"},
+    {"id": "spatial-transform-adjacent-contract", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/463381703bcd6eada8eea05e95c4a88912ed4b02/contracts/evidence/spatial_transform_receipt.md"},
+    {"id": "accepted-directory-rules", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/463381703bcd6eada8eea05e95c4a88912ed4b02/docs/doctrine/directory-rules.md"}
+  ],
+  "human_review": {"reviewer_ids": [], "state": "pending", "timestamp": null},
+  "override_record": null,
+  "created_at": "2026-08-11T01:46:59Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub and Google Drive connectors",
+  "links": {"pr_number": null, "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md", "drift_register_entry": null},
+  "notes": "Additive, inactive, fixture-only set-operation provenance receipt. It records operator, duplicate policy, alignment, ordered inputs, output, and evidence references without executing a query, inspecting records, resolving evidence, or creating source, reconciliation, catalog, policy, review, release, publication, or public-use authority."
+}

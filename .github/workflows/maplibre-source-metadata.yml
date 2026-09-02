@@ -1,0 +1,104 @@
+# Validate the proposed MapLibre source-metadata projection profile.
+#
+# This workflow is read-only, deterministic, synthetic, and no-network. It
+# checks local MapLibre style metadata, local digest-manifest projections,
+# finite outcomes, and exact fixture polarity. It does not resolve remote
+# bytes, evidence, rights, policy, review, release, or publication authority.
+name: maplibre-source-metadata
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/maplibre-source-metadata.yml"
+      - "tools/validators/maplibre/validate_source_metadata.py"
+      - "tests/maplibre/test_source_metadata.py"
+      - "tests/fixtures/maplibre/source-metadata/**"
+      - "data/receipts/generated/genrec-maplibre-source-metadata-*.json"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/maplibre-source-metadata.yml"
+      - "tools/validators/maplibre/validate_source_metadata.py"
+      - "tests/maplibre/test_source_metadata.py"
+      - "tests/fixtures/maplibre/source-metadata/**"
+      - "data/receipts/generated/genrec-maplibre-source-metadata-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: maplibre-source-metadata-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate-source-metadata:
+    name: validate-source-metadata
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+
+      - name: Run focused no-network source-metadata tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover \
+            --start-directory tests/maplibre \
+            --pattern 'test_source_metadata.py' \
+            --verbose
+
+      - name: Validate exact fixture outcomes and reason codes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/maplibre/validate_source_metadata.py --fixtures
+
+      - name: Validate authored Python and JSON syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile \
+            tools/validators/maplibre/validate_source_metadata.py \
+            tests/maplibre/test_source_metadata.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          root = Path("tests/fixtures/maplibre/source-metadata")
+          files = sorted(root.rglob("*.json"))
+          assert files, "source-metadata fixture inventory is empty"
+          for path in files:
+              json.loads(path.read_text(encoding="utf-8"))
+          print(f"CONFIRMED: parsed {len(files)} source-metadata JSON fixtures.")
+          PY
+
+      - name: Record validation boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### MapLibre source-metadata projection"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: local source epoch/license/digest projection, optional proof/manifest reference syntax, and local manifest-digest equality."
+            echo "- Finite outcomes: ALLOW, ABSTAIN, DENY, and ERROR with stable reason codes."
+            echo "- Network posture: no dependency installation and no source, tile, manifest, proof, or URL retrieval."
+            echo "- Boundary: a green result is not source authority, rights clearance, EvidenceBundle closure, policy approval, review, release, deployment, publication, or remote-byte verification."
+          } >> "$GITHUB_STEP_SUMMARY"

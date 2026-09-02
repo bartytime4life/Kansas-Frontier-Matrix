@@ -1,0 +1,69 @@
+{
+  "object_type": "CountPopulationDisclosureFixtureManifest",
+  "schema_version": "1.0.0",
+  "profile": "kfm.evidence.count-population-disclosure.fixture.v1",
+  "base_candidate": {
+    "object_type": "CountPopulationDisclosureCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.evidence.count-population-disclosure.fixture.v1",
+    "profile_spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_card": "KFM-P18-INV-157",
+    "observed_at": "2026-08-11T14:00:00Z",
+    "metric_definition_ref": "kfm:metric-definition:synthetic-public-count:001",
+    "metric_definition_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "query_receipt_ref": "kfm:query-receipt:synthetic-public-count:001",
+    "query_receipt_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+    "evidence_scope": {
+      "ref": "kfm:evidence-scope:synthetic-public-count:001",
+      "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+      "resolution": "RESOLVED"
+    },
+    "intended_surface": "DASHBOARD",
+    "count_semantics": {
+      "count_kind": "ROWS",
+      "counted_field": null,
+      "distinct_fields": [],
+      "group_by_fields": [],
+      "filter_state": "UNFILTERED",
+      "filter_predicate_ref": null,
+      "null_posture": "INCLUDED_AS_ROW",
+      "population_basis": "ALL_INPUT_ROWS"
+    },
+    "disclosure": {
+      "state": "COMPLETE_FOR_DECLARED_SCOPE",
+      "population_note": "Count includes every input row, including rows whose non-key attributes are null.",
+      "details_surface": "DASHBOARD_METADATA",
+      "review_record_refs": ["kfm:review-record:synthetic-public-count:001"]
+    },
+    "authority_claims": {
+      "metric_authority": false,
+      "evidence_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "promotion_authority": false,
+      "release_authority": false,
+      "publication_authority": false,
+      "public_use_authority": false
+    }
+  },
+  "cases": [
+    {"name": "pass_all_rows", "patch": {}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_filtered_non_null_values", "patch": {"intended_surface": "MAP_POPUP", "count_semantics": {"count_kind": "NON_NULL_VALUES", "counted_field": "station_id", "filter_state": "FILTERED", "filter_predicate_ref": "kfm:query-predicate:synthetic-active-stations:001", "null_posture": "EXCLUDED", "population_basis": "NON_NULL_FIELD_VALUES"}, "disclosure": {"population_note": "Count includes non-null station identifiers only after the reviewed active-station filter.", "details_surface": "EVIDENCE_DRAWER"}}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_distinct_value_tuple", "patch": {"intended_surface": "EXPORT_CANDIDATE", "count_semantics": {"count_kind": "DISTINCT_NON_NULL_VALUES", "distinct_fields": ["county_fips", "source_native_id"], "null_posture": "EXCLUDED", "population_basis": "DISTINCT_VALUE_TUPLES"}, "disclosure": {"population_note": "Count includes distinct non-null county and source-native identifier pairs.", "details_surface": "METRIC_NOTE"}}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_grouped_internal_review", "patch": {"intended_surface": "INTERNAL_REVIEW", "count_semantics": {"count_kind": "GROUPED_ROWS", "group_by_fields": ["county_fips", "valid_year"], "null_posture": "GROUPED_AS_VALUE", "population_basis": "GROUPED_OUTPUT_ROWS"}, "disclosure": {"population_note": null, "details_surface": "NONE", "review_record_refs": []}}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "abstain_unresolved_count_kind", "patch": {"count_semantics": {"count_kind": "UNRESOLVED", "null_posture": "UNRESOLVED", "population_basis": "UNRESOLVED"}, "disclosure": {"state": "INCOMPLETE"}}, "expected": {"outcome": "ABSTAIN", "codes": ["COUNT_KIND_UNRESOLVED", "DISCLOSURE_INCOMPLETE", "NULL_POSTURE_UNRESOLVED", "POPULATION_BASIS_UNRESOLVED"]}},
+    {"name": "abstain_unresolved_filter", "patch": {"count_semantics": {"filter_state": "UNRESOLVED"}}, "expected": {"outcome": "ABSTAIN", "codes": ["FILTER_STATE_UNRESOLVED"]}},
+    {"name": "abstain_unresolved_evidence", "patch": {"evidence_scope": {"resolution": "UNRESOLVED"}}, "expected": {"outcome": "ABSTAIN", "codes": ["EVIDENCE_SCOPE_UNRESOLVED"]}},
+    {"name": "abstain_unknown_disclosure", "patch": {"disclosure": {"state": "UNKNOWN", "population_note": null, "details_surface": "NONE", "review_record_refs": []}}, "expected": {"outcome": "ABSTAIN", "codes": ["DISCLOSURE_UNKNOWN"]}},
+    {"name": "deny_rows_with_counted_field", "patch": {"count_semantics": {"counted_field": "station_id"}}, "expected": {"outcome": "DENY", "codes": ["COUNT_KIND_FIELDS_INCOHERENT"]}},
+    {"name": "deny_non_null_without_field", "patch": {"count_semantics": {"count_kind": "NON_NULL_VALUES", "null_posture": "EXCLUDED", "population_basis": "NON_NULL_FIELD_VALUES"}}, "expected": {"outcome": "DENY", "codes": ["COUNT_KIND_FIELDS_INCOHERENT"]}},
+    {"name": "deny_distinct_noncanonical_fields", "patch": {"count_semantics": {"count_kind": "DISTINCT_NON_NULL_VALUES", "distinct_fields": ["source_native_id", "county_fips"], "null_posture": "EXCLUDED", "population_basis": "DISTINCT_VALUE_TUPLES"}}, "expected": {"outcome": "DENY", "codes": ["ARRAY_NOT_CANONICAL"]}},
+    {"name": "deny_grouped_without_keys", "patch": {"count_semantics": {"count_kind": "GROUPED_ROWS", "null_posture": "GROUPED_AS_VALUE", "population_basis": "GROUPED_OUTPUT_ROWS"}}, "expected": {"outcome": "DENY", "codes": ["COUNT_KIND_FIELDS_INCOHERENT"]}},
+    {"name": "deny_filtered_without_predicate", "patch": {"count_semantics": {"filter_state": "FILTERED"}}, "expected": {"outcome": "DENY", "codes": ["FILTER_DECLARATION_INCOHERENT"]}},
+    {"name": "deny_unfiltered_with_predicate", "patch": {"count_semantics": {"filter_predicate_ref": "kfm:query-predicate:synthetic-unexpected:001"}}, "expected": {"outcome": "DENY", "codes": ["FILTER_DECLARATION_INCOHERENT"]}},
+    {"name": "deny_public_without_note", "patch": {"disclosure": {"population_note": null, "details_surface": "NONE"}}, "expected": {"outcome": "DENY", "codes": ["PUBLIC_DISCLOSURE_NOTE_REQUIRED", "PUBLIC_DISCLOSURE_SURFACE_REQUIRED"]}},
+    {"name": "deny_public_without_review", "patch": {"disclosure": {"review_record_refs": []}}, "expected": {"outcome": "DENY", "codes": ["PUBLIC_DISCLOSURE_REVIEW_REQUIRED"]}},
+    {"name": "deny_profile_hash_tamper", "patch": {}, "tamper": "profile_hash", "expected": {"outcome": "DENY", "codes": ["PROFILE_SPEC_HASH_MISMATCH"]}},
+    {"name": "error_unknown_field", "patch": {"computed_count": 42}, "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}}
+  ]
+}

@@ -1,0 +1,86 @@
+{
+  "object_type": "RepresentationFitnessAssessment",
+  "schema_version": "1.0.0",
+  "assessment_id": "kfm:representation-fitness:synthetic-scene:v1",
+  "subject": {
+    "artifact_ref": "kfm:scene:historic-reconstruction:v1",
+    "representation_kind": "SCENE",
+    "source_role": "SYNTHETIC",
+    "crs": "EPSG:4978",
+    "spatial_support": {
+      "support_kind": "POLYGON",
+      "nominal_resolution_m": 5.0,
+      "source_scale_denominator": null,
+      "declared_precision_m": 5.0,
+      "generalized": true,
+      "geometry_version_ref": "kfm:geometry:historic-site:generalized:v1"
+    },
+    "temporal_support_ref": "kfm:temporal-support:historic-reconstruction:v1"
+  },
+  "intended_use": {
+    "use_case_id": "operational-site-decision",
+    "use_class": "OPERATIONAL_DECISION",
+    "consequence_level": "HIGH"
+  },
+  "dimensions": {
+    "positional": {
+      "outcome": "SUPPORTED",
+      "evidence_refs": [
+        "kfm:evidence:huc12-positional"
+      ],
+      "notes": ""
+    },
+    "thematic": {
+      "outcome": "UNSUPPORTED",
+      "evidence_refs": [
+        "kfm:evidence:reality-boundary:historic-reconstruction:v1"
+      ],
+      "notes": "Synthetic reconstruction is not operational evidence."
+    },
+    "temporal": {
+      "outcome": "SUPPORTED",
+      "evidence_refs": [
+        "kfm:evidence:huc12-temporal"
+      ],
+      "notes": ""
+    },
+    "completeness": {
+      "outcome": "SUPPORTED",
+      "evidence_refs": [
+        "kfm:evidence:huc12-completeness"
+      ],
+      "notes": ""
+    },
+    "lineage": {
+      "outcome": "SUPPORTED",
+      "evidence_refs": [
+        "kfm:evidence:huc12-lineage"
+      ],
+      "notes": ""
+    }
+  },
+  "overall_outcome": "NOT_FIT",
+  "reason_codes": [
+    "SYNTHETIC_NOT_OPERATIONAL_EVIDENCE"
+  ],
+  "obligations": [
+    "REALITY_BOUNDARY_REQUIRED"
+  ],
+  "evidence_bundle_refs": [
+    "kfm:evidence-bundle:historic-reconstruction:v1"
+  ],
+  "policy_decision_refs": [],
+  "review_state": "DRAFT",
+  "evaluated_at": "2026-08-07T23:00:00Z",
+  "expires_at": "2027-08-07T23:00:00Z",
+  "governance": {
+    "fixture_only": true,
+    "lifecycle_write": false,
+    "truth_authority": false,
+    "policy_authority": false,
+    "review_authority": false,
+    "release_authority": false,
+    "publication_authority": false
+  },
+  "spec_hash": "sha256:3726646d6609eafddc280718bac18b014e33208a7639e2146abd5f477712eb21"
+}

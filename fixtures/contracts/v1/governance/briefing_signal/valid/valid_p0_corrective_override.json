@@ -1,0 +1,135 @@
+{
+  "schema_version": "1.2.0",
+  "signal_version": 1,
+  "signal_id": "kfm:briefing-signal:2026-08-01:cfe3c50d18561399be974d50",
+  "event_cluster_id": "kfm:event-cluster:repository_governance:9f371c88ccbd5a5f5b50d63a",
+  "briefing_date": "2026-08-01",
+  "status": "NEEDS_VERIFICATION",
+  "headline": "Synthetic repository-control merge divergence",
+  "story_type": "repository_governance",
+  "domains": [
+    "governance",
+    "repository-control"
+  ],
+  "identity": {
+    "algorithm": "kfm-briefing-identity-v1",
+    "primary_authority_id": "fixture:authority:repository-host",
+    "native_id_or_identity_key": "fixture:merge-divergence:alpha",
+    "geography_identity": "repository:kansas-frontier-matrix",
+    "durable_subject_key": "repository-control-divergence",
+    "signal_digest": "sha256:cfe3c50d18561399be974d5040637f2b2c03512eea3bcb40dd24b700b5cbc87b"
+  },
+  "deduplication": {
+    "status": "UNIQUE",
+    "matched_signal_ids": [],
+    "matched_issue_ids": [],
+    "reason_codes": [
+      "NEW_CLUSTER"
+    ]
+  },
+  "materiality": {
+    "algorithm": "kfm-briefing-materiality-v1",
+    "threshold_profile": "kfm-briefing-thresholds-v1",
+    "dimensions": {
+      "public_safety": 0,
+      "repository_integrity": 5,
+      "geospatial_relevance": 0,
+      "recurrence": 2,
+      "reuse_value": 4,
+      "authority_quality": 5,
+      "time_sensitivity": 5,
+      "rights_sensitivity_risk": 0,
+      "identity_uncertainty": 0,
+      "implementation_readiness": 5
+    },
+    "raw_score": 47,
+    "priority": "P0",
+    "reason_codes": [
+      "REPOSITORY_INTEGRITY",
+      "RECURRENCE",
+      "REUSE_VALUE",
+      "AUTHORITY_QUALITY",
+      "TIME_SENSITIVITY",
+      "IMPLEMENTATION_READINESS",
+      "UNEXPECTED_REPOSITORY_MERGE"
+    ],
+    "mandatory_override": {
+      "applied": true,
+      "reason_code": "UNEXPECTED_REPOSITORY_MERGE"
+    },
+    "rationale": "A synthetic unexpected merge is a mandatory repository-integrity escalation."
+  },
+  "routing": {
+    "algorithm": "kfm-briefing-routing-v1",
+    "official_support": "RESOLVED",
+    "modeling_ready": true,
+    "dependency_state": "CLEAR",
+    "safety_state": "SAFE",
+    "issue_kind": "CORRECTIVE",
+    "reason_codes": [
+      "P0_CORRECTIVE_READY"
+    ]
+  },
+  "geographic_scope": {
+    "kind": "repository",
+    "identifiers": [
+      "bartytime4life/Kansas-Frontier-Matrix"
+    ],
+    "geometry_ref": null,
+    "geometry_status": "not_applicable"
+  },
+  "claims": [
+    {
+      "claim_id": "claim-001",
+      "text": "A synthetic merge diverged from the fixture control state.",
+      "truth_label": "CONFIRMED",
+      "evidence_refs": [
+        "fixture:evidence:repository-control:merge-alpha"
+      ]
+    }
+  ],
+  "official_source_candidates": [
+    {
+      "source_kind": "repository",
+      "authority_name": "Synthetic repository host",
+      "locator": "fixture:repository:kansas-frontier-matrix",
+      "observed_at": "2026-08-01T12:00:00Z",
+      "snapshot_status": "SNAPSHOT_CAPTURED"
+    }
+  ],
+  "existing_kfm_links": {
+    "issues": [],
+    "pull_requests": [],
+    "paths": [],
+    "object_refs": []
+  },
+  "proposed_object_families": [
+    "RepositoryControlState",
+    "TerminalStateDivergence"
+  ],
+  "next_action": {
+    "disposition": "OPEN_CORRECTIVE_ISSUE",
+    "scope": "Propose one bounded corrective issue; do not mutate GitHub from this fixture.",
+    "idempotency_key": "sha256:b8a69232a277069f990f335cf784f4c98140882a14a0934582e2714e28a61237",
+    "repository_mutation_allowed": false
+  },
+  "permissions": {
+    "source_activation": false,
+    "proof_construction": false,
+    "release": false,
+    "deployment": false,
+    "publication": false
+  },
+  "public_use_allowed": false,
+  "generation_receipt_ref": "fixture:receipt:briefing:p0-corrective",
+  "candidate_payload": {
+    "object_family": "RepositoryControlState",
+    "candidate_state": "NEEDS_VERIFICATION",
+    "authority_boundary": "Synthetic routing fixture only; not repository authorization.",
+    "attributes": {
+      "observed_divergence": true,
+      "merge_authority_established": false
+    }
+  },
+  "expires_at": "2026-08-02T12:00:00Z"
+}

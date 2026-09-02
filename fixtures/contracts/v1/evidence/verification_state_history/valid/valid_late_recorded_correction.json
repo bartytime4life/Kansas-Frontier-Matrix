@@ -1,0 +1,58 @@
+{
+  "schema_version": "1.0.0",
+  "history_id": "kfm:verification-history:synthetic:late-correction",
+  "subject_ref": "kfm://synthetic/evidence/item-001",
+  "profile_id": "kfm://profile/verification-state-replay/v1",
+  "spec_hash": "sha256:dc6725b2a499b8ce2d5f232b203599d4df61483f0f3ea60dadd47f9e951bcf08",
+  "events": [
+    {
+      "event_id": "evt:001",
+      "event_type": "VERIFIED",
+      "state": "ACTIVE",
+      "effective_at": "2026-01-01T00:00:00Z",
+      "recorded_at": "2026-01-02T00:00:00Z",
+      "reason_code": "INITIAL_VERIFICATION",
+      "basis_refs": [
+        "kfm://synthetic/receipt/verify-001"
+      ]
+    },
+    {
+      "event_id": "evt:002",
+      "event_type": "CORRECTED",
+      "state": "CORRECTED",
+      "effective_at": "2026-01-15T00:00:00Z",
+      "recorded_at": "2026-02-01T00:00:00Z",
+      "reason_code": "SOURCE_CORRECTION",
+      "basis_refs": [
+        "kfm://synthetic/evidence/correction-basis-001"
+      ],
+      "relates_to_event_id": "evt:001",
+      "correction_ref": "kfm://synthetic/correction/notice-001"
+    },
+    {
+      "event_id": "evt:003",
+      "event_type": "REVERIFIED",
+      "state": "ACTIVE",
+      "effective_at": "2026-01-20T00:00:00Z",
+      "recorded_at": "2026-02-05T00:00:00Z",
+      "reason_code": "CORRECTION_REVERIFIED",
+      "basis_refs": [
+        "kfm://synthetic/receipt/verify-002"
+      ],
+      "relates_to_event_id": "evt:002"
+    },
+    {
+      "event_id": "evt:004",
+      "event_type": "SUPERSEDED",
+      "state": "SUPERSEDED",
+      "effective_at": "2026-03-01T00:00:00Z",
+      "recorded_at": "2026-03-01T00:00:00Z",
+      "reason_code": "SUCCESSOR_AVAILABLE",
+      "basis_refs": [
+        "kfm://synthetic/receipt/supersession-001"
+      ],
+      "relates_to_event_id": "evt:003",
+      "replacement_ref": "kfm://synthetic/evidence/item-002"
+    }
+  ]
+}

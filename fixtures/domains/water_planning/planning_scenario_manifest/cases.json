@@ -1,0 +1,61 @@
+[
+  {
+    "case_id": "spec-hash-mismatch",
+    "mutations": {
+      "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "expected_outcome": "FAIL",
+    "expected_findings": ["SPEC_HASH_MISMATCH"]
+  },
+  {
+    "case_id": "temporal-order-invalid",
+    "mutations": {"time_horizon.horizon_end": "2029-12-31"},
+    "expected_outcome": "FAIL",
+    "expected_findings": ["TEMPORAL_ORDER_INVALID"]
+  },
+  {
+    "case_id": "surface-outcome-mismatch",
+    "mutations": {"drawer_payload.outcome": "DENY"},
+    "expected_outcome": "FAIL",
+    "expected_findings": ["SURFACE_OUTCOME_MISMATCH"]
+  },
+  {
+    "case_id": "drawer-reference-mismatch",
+    "mutations": {
+      "drawer_payload.assumption_refs": [
+        "assumption-demand-comparison",
+        "assumption-no-forecast"
+      ]
+    },
+    "expected_outcome": "FAIL",
+    "expected_findings": ["DRAWER_REFERENCE_MISMATCH"]
+  },
+  {
+    "case_id": "authority-overclaim",
+    "mutations": {"governance.publication_authorized": true},
+    "expected_outcome": "FAIL",
+    "expected_findings": ["AUTHORITY_OVERCLAIM"]
+  },
+  {
+    "case_id": "references-not-canonical",
+    "mutations": {
+      "evidence_refs": [
+        "fixture:evidence:reservoir-series",
+        "fixture:evidence:precipitation-series",
+        "fixture:evidence:participation-record",
+        "fixture:evidence:demand-series"
+      ]
+    },
+    "expected_outcome": "FAIL",
+    "expected_findings": ["REFERENCE_ORDER_INVALID"]
+  },
+  {
+    "case_id": "internal-public-reference",
+    "mutations": {
+      "public_summary.evidence_refs": ["internal:restricted-record"],
+      "drawer_payload.evidence_refs": ["internal:restricted-record"]
+    },
+    "expected_outcome": "FAIL",
+    "expected_findings": ["EVIDENCE_SCOPE_MISMATCH", "INTERNAL_REFERENCE_DENIED"]
+  }
+]

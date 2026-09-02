@@ -1,0 +1,55 @@
+name: temporal-authority-envelope
+
+"on":
+  pull_request:
+    paths:
+      - "contracts/evidence/temporal_authority_envelope.md"
+      - "schemas/contracts/v1/evidence/temporal_authority_envelope.schema.json"
+      - "fixtures/contracts/v1/evidence/temporal_authority_envelope/**"
+      - "tools/validators/evidence/validate_temporal_authority_envelope.py"
+      - "tools/validators/evidence/validate_evidence_temporal_posture_assessment.py"
+      - "tests/evidence/test_temporal_authority_envelope.py"
+      - ".github/workflows/temporal-authority-envelope.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  KFM_NO_NETWORK: "1"
+  KFM_VALIDATION_NOW: "2026-08-17T00:00:00Z"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+jobs:
+  validate-temporal-authority-envelope:
+    name: validate-temporal-authority-envelope
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+      - name: Install declared test dependencies
+        run: python tools/ci/install_python_ci.py project-test
+      - name: Run legacy wrapper tests
+        run: python -m unittest tests.evidence.test_temporal_authority_envelope --verbose
+      - name: Replay legacy fixture polarity
+        run: |
+          set -euo pipefail
+          python tools/validators/evidence/validate_temporal_authority_envelope.py \
+            fixtures/contracts/v1/evidence/temporal_authority_envelope/valid/current_observation.json
+          for fixture in fixtures/contracts/v1/evidence/temporal_authority_envelope/invalid/*.json; do
+            if python tools/validators/evidence/validate_temporal_authority_envelope.py "$fixture"; then
+              echo "::error::Known-invalid legacy fixture was accepted: $fixture"
+              exit 1
+            fi
+          done

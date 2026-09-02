@@ -1,0 +1,159 @@
+{
+  "receipt_id": "genrec-campaign-explorer-readme-current-state-20260824",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/explorer-web/README.md"
+  ],
+  "artifact_hashes": {
+    "apps/explorer-web/README.md": "sha256:f8bcabd1722eb566ec9e2620c36fb3e0ebe1e7f2aac62a0dd16fde1cb022f848"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector",
+      "local Git",
+      "local PDF text extraction",
+      "local documentation validators",
+      "local SHA-256 hashing"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:77f56ec1ab632b76c7728cfb250330271b7dc8948db95c8c0594c92ad9ca6b36"
+    ],
+    "attached_docs": [
+      "Kansas Frontier Matrix - MapLibre Operating Architecture - Revised Working Edition"
+    ],
+    "evidence_refs": [
+      "repo:main@366cfa9185b0d10ca27f128a8a041ca8c5312896",
+      "repo:apps/explorer-web/README.md@366cfa9185b0d10ca27f128a8a041ca8c5312896",
+      "repo:apps/explorer-web/src/main.ts@366cfa9185b0d10ca27f128a8a041ca8c5312896",
+      "repo:apps/explorer-web/src/site/README.md@366cfa9185b0d10ca27f128a8a041ca8c5312896",
+      "repo:apps/explorer-web/src/site/mount-explorer-site.ts@366cfa9185b0d10ca27f128a8a041ca8c5312896",
+      "repo:apps/explorer-web/src/site/mount-synthetic-focus-workspace.ts@366cfa9185b0d10ca27f128a8a041ca8c5312896",
+      "repo:apps/explorer-web/src/site/trust-surface.ts@366cfa9185b0d10ca27f128a8a041ca8c5312896",
+      "repo:apps/explorer-web/src/site/workspace-navigation.ts@366cfa9185b0d10ca27f128a8a041ca8c5312896",
+      "repo:apps/explorer-web/tests/focus-workspace-boundary.test.ts@366cfa9185b0d10ca27f128a8a041ca8c5312896",
+      "repo:apps/explorer-web/tests/browser/workspace-navigation.spec.ts@366cfa9185b0d10ca27f128a8a041ca8c5312896",
+      "repo:docs/architecture/map-shell.md@366cfa9185b0d10ca27f128a8a041ca8c5312896",
+      "repo:docs/architecture/ui/README.md@366cfa9185b0d10ca27f128a8a041ca8c5312896",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@366cfa9185b0d10ca27f128a8a041ca8c5312896",
+      "repo:docs/doctrine/directory-rules.md@366cfa9185b0d10ca27f128a8a041ca8c5312896",
+      "attachment:sha256:77f56ec1ab632b76c7728cfb250330271b7dc8948db95c8c0594c92ad9ca6b36#section-15-16-pdf-page-12"
+    ]
+  },
+  "truth_labels": {
+    "apps/explorer-web/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-refresh",
+      "outcome": "PASS",
+      "reason": "Immediately before branch creation, remote main and the branch fork point were confirmed at 366cfa9185b0d10ca27f128a8a041ca8c5312896."
+    },
+    {
+      "gate": "source-provenance-and-authority",
+      "outcome": "PASS",
+      "reason": "The attached revised MapLibre working edition was used only as proposal lineage; current repository code, tests, architecture documentation, accepted ADR-0029, and the adopted Directory Rules establish placement and implementation evidence."
+    },
+    {
+      "gate": "overlap-reconciliation",
+      "outcome": "PASS",
+      "reason": "Current open-PR searches for the exact README, Explorer composition, and default-entrypoint terms found no overlapping pull request; matching Explorer branch heads were verified as ancestors already merged into main."
+    },
+    {
+      "gate": "same-path-directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The existing deployable-app README remains at apps/explorer-web/README.md under the apps responsibility root; the paired generated-work receipt remains under the adopted data/receipts/generated responsibility lane."
+    },
+    {
+      "gate": "repository-current-state-reconciliation",
+      "outcome": "PASS",
+      "reason": "The README now matches the exact main.ts composition call graph while keeping production routes, live governed transport, model execution, renderer admission, deployment, release, and publication explicitly unproved."
+    },
+    {
+      "gate": "documentation-structure-and-links",
+      "outcome": "PASS",
+      "reason": "Bounded metadata, local-link, and freshness checks completed with zero failures; four pre-existing unsupported-nesting advisory findings remained unchanged in count, and local targets resolved."
+    },
+    {
+      "gate": "repository-guardrails-and-validator-registry",
+      "outcome": "PASS",
+      "reason": "Repository topology, workflow security, and the full registered validator set are required to pass on the final branch head before remote delivery."
+    },
+    {
+      "gate": "local-explorer-node22-build-and-tests",
+      "outcome": "SKIPPED",
+      "reason": "The local runtime exposes Node.js 24.19.0, while the locked repository engines require Node.js >=22.13 <23; the Node 22 hosted ui-build workflow remains the comparable execution lane."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks can begin only after the draft pull request is opened."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending; this receipt is authoring provenance and not approval."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "explorer-current-entrypoint",
+      "validated": true,
+      "evidence_ref": "repo:apps/explorer-web/src/main.ts@366cfa9185b0d10ca27f128a8a041ca8c5312896"
+    },
+    {
+      "id": "explorer-site-composition",
+      "validated": true,
+      "evidence_ref": "repo:apps/explorer-web/src/site/README.md@366cfa9185b0d10ca27f128a8a041ca8c5312896"
+    },
+    {
+      "id": "explorer-focus-boundary-test",
+      "validated": true,
+      "evidence_ref": "repo:apps/explorer-web/tests/focus-workspace-boundary.test.ts@366cfa9185b0d10ca27f128a8a041ca8c5312896"
+    },
+    {
+      "id": "repository-stale-readme-finding",
+      "validated": true,
+      "evidence_ref": "repo:docs/architecture/map-shell.md@366cfa9185b0d10ca27f128a8a041ca8c5312896"
+    },
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@366cfa9185b0d10ca27f128a8a041ca8c5312896"
+    },
+    {
+      "id": "maplibre-working-edition-repo-scan-gate",
+      "validated": true,
+      "evidence_ref": "attachment:sha256:77f56ec1ab632b76c7728cfb250330271b7dc8948db95c8c0594c92ad9ca6b36#section-15-16-pdf-page-12"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-25T01:49:15Z",
+  "emitter": "OpenAI Codex Work Mode",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only same-path current-state repair. The README now reflects the mounted local Explorer composition and keeps all live, authority-bearing, release, deployment, and publication claims held. No source, data, policy, contract, schema, runtime behavior, dependency, workflow, release, deployment, or repository setting changes."
+}

@@ -1,0 +1,5 @@
+{
+  "outcome": "DENY",
+  "reason_code": "POLICY_DENIED",
+  "internal_detail": "SENSITIVE_TIME_DENIAL_CANARY_64ad31"
+}
