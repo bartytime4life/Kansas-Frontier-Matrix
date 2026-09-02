@@ -26,6 +26,7 @@
     "nullable_ref": {"oneOf": [{"$ref": "#/$defs/ref"}, {"type": "null"}]},
     "nullable_key": {"oneOf": [{"type": "string", "minLength": 1, "maxLength": 256}, {"type": "null"}]},
     "code": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]{2,79}$"},
+    "source_role": {"enum": ["OBSERVED", "REGULATORY", "MODELED", "AGGREGATE", "ADMINISTRATIVE", "CANDIDATE", "SYNTHETIC"]},
     "sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
     "request": {
       "type": "object",
@@ -52,7 +53,7 @@
         "domain": {"type": "string", "pattern": "^[a-z][a-z0-9-]{1,63}$"},
         "object_ref": {"$ref": "#/$defs/ref"},
         "source_descriptor_ref": {"$ref": "#/$defs/ref"},
-        "source_role": {"enum": ["OBSERVED", "REGULATORY", "MODELED", "AGGREGATE", "ADMINISTRATIVE", "CANDIDATE", "SYNTHETIC"]},
+        "source_role": {"$ref": "#/$defs/source_role"},
         "evidence_ref": {"$ref": "#/$defs/nullable_ref"},
         "sensitivity": {"enum": ["PUBLIC_SAFE", "INTERNAL", "RESTRICTED", "PROHIBITED"]},
         "living_person": {"type": "boolean"},
@@ -86,8 +87,8 @@
       "additionalProperties": false,
       "required": ["left", "right", "output_role"],
       "properties": {
-        "left": {"$ref": "#/$defs/code"},
-        "right": {"$ref": "#/$defs/code"},
+        "left": {"$ref": "#/$defs/source_role"},
+        "right": {"$ref": "#/$defs/source_role"},
         "output_role": {"const": "CANDIDATE_RELATION"}
       }
     },
