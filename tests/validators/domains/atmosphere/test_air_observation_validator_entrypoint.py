@@ -132,6 +132,20 @@ class AirObservationValidatorEntrypointTests(unittest.TestCase):
             validate_candidate(candidate),
         )
 
+    def test_schema_findings_report_bounded_truncation(self) -> None:
+        candidate = self._bound_observation()
+        candidate["evidence_refs"] = [""] * 80
+
+        findings = validate_candidate(candidate)
+        schema_findings = [
+            finding
+            for finding in findings
+            if finding.code == "AIR_OBSERVATION_SCHEMA_INVALID"
+        ]
+        self.assertLessEqual(len(schema_findings), 50)
+        self.assertIn(Finding("SCHEMA_FINDINGS_TRUNCATED", "$"), findings)
+        self.assertEqual(findings, validate_candidate(candidate))
+
     def test_adapter_preserves_temporal_unit_and_sensor_semantics(self) -> None:
         temporal_candidate = self._bound_observation()
         temporal_scope = deepcopy(temporal_candidate["temporal_scope"])
