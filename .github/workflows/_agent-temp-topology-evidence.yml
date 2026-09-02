@@ -1,5 +1,5 @@
 # TEMPORARY branch-only diagnostic. Remove before reviewable delivery.
-# Emits current topology evidence members to Actions logs with read-only scope.
+# Packages strict-shrinkage baseline candidates without changing repository state.
 name: _agent-temp-topology-evidence
 
 "on":
@@ -15,7 +15,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  emit-topology-evidence:
+  package-topology-evidence:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -25,43 +25,97 @@ jobs:
           fetch-depth: 1
           persist-credentials: false
 
-      - name: Emit bounded topology evidence
+      - name: Build strict-shrinkage candidate
         shell: bash
         run: |
           set -euo pipefail
+          mkdir -p artifacts/temporary/topology-reconciliation
           python3 - <<'PY'
           import json
           from pathlib import Path
 
           from tools.validators.directory_governance import validate_repository_topology as topology
 
-          targets = {
+          root = Path(".")
+          baseline_path = root / topology.BASELINE_REPOSITORY_PATH
+          raw = baseline_path.read_bytes()
+          plain = json.loads(raw.decode("utf-8"))
+          data, entries = topology._load_baseline_bytes(raw, label="diagnostic")
+          findings, tracked_path_count = topology.scan(root)
+          by_identity = {(item.rule_id, item.subject): item for item in findings}
+
+          shrink_identities = (
               ("KFM-TOPO-001", "path-grammar:uppercase"),
-              ("KFM-TOPO-004", "catalog/"),
               ("KFM-TOPO-009", "scaffold-only-leaf-directories"),
               ("KFM-TOPO-016", "doc-id:kfm://doc/NEEDS-VERIFICATION"),
-          }
-          findings, tracked_path_count = topology.scan(Path("."))
-          selected = [
-              finding
-              for finding in findings
-              if (finding.rule_id, finding.subject) in targets
-          ]
-          assert len(selected) == len(targets), (
-              "expected all four current aggregate findings; got "
-              f"{[(item.rule_id, item.subject) for item in selected]}"
           )
-          print(f"TOPOLOGY_TRACKED_PATH_COUNT={tracked_path_count}")
-          for finding in sorted(selected):
-              payload = {
-                  "rule_id": finding.rule_id,
-                  "subject": finding.subject,
-                  "fingerprint": finding.fingerprint,
-                  "evidence_sha256": finding.evidence_sha256,
-                  "evidence_members": list(finding.evidence_members),
-                  "serialized_entry": topology._serialized_baseline_entry(finding),
-              }
-              print("BEGIN_TOPOLOGY_EVIDENCE")
-              print(json.dumps(payload, indent=2, sort_keys=True))
-              print("END_TOPOLOGY_EVIDENCE")
+          comparisons = []
+          replacements = {}
+          for identity in shrink_identities:
+              current = by_identity[identity]
+              prior_pair = next(
+                  (pair for pair in entries.items()
+                   if (pair[1]["rule_id"], pair[1]["subject"]) == identity),
+                  None,
+              )
+              assert prior_pair is not None, f"missing prior entry for {identity}"
+              prior_fingerprint, prior = prior_pair
+              current_members = set(current.evidence_members)
+              prior_members = set(prior["evidence_members"])
+              added = sorted(current_members - prior_members)
+              removed = sorted(prior_members - current_members)
+              assert current_members < prior_members, (
+                  f"{identity} is not strict shrinkage; added={added}; removed={removed}"
+              )
+              replacement = topology._serialized_baseline_entry(current)
+              replacements[prior_fingerprint] = replacement
+              comparisons.append({
+                  "rule_id": identity[0],
+                  "subject": identity[1],
+                  "prior_fingerprint": prior_fingerprint,
+                  "current_fingerprint": current.fingerprint,
+                  "prior_member_count": len(prior_members),
+                  "current_member_count": len(current_members),
+                  "added_members": added,
+                  "removed_members": removed,
+                  "strict_subset": True,
+              })
+
+          candidate_entries = []
+          for entry in plain["entries"]:
+              candidate_entries.append(replacements.get(entry["fingerprint"], entry))
+          candidate_entries.sort(key=lambda item: item["fingerprint"])
+          plain["entries"] = candidate_entries
+
+          candidate_raw = (json.dumps(plain, indent=2, sort_keys=True) + "\n").encode("utf-8")
+          candidate_data, candidate = topology._load_baseline_bytes(
+              candidate_raw, label="candidate"
+          )
+          topology.validate_baseline_transition(data=candidate_data, current_data=candidate_data, current_entries=candidate, trusted_data=data, trusted_entries=entries) if False else None
+          topology.validate_baseline_transition(
+              candidate_data,
+              candidate,
+              data,
+              entries,
+          )
+
+          out = root / "artifacts/temporary/topology-reconciliation"
+          (out / "repository_topology_baseline.candidate.json").write_bytes(candidate_raw)
+          (out / "strict-shrinkage-comparison.json").write_text(
+              json.dumps({
+                  "tracked_path_count": tracked_path_count,
+                  "candidate_entry_count": len(candidate_entries),
+                  "comparisons": comparisons,
+              }, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          print(json.dumps(comparisons, indent=2, sort_keys=True))
           PY
+
+      - name: Upload bounded candidate
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: topology-reconciliation-candidate-${{ github.run_id }}
+          path: artifacts/temporary/topology-reconciliation/
+          if-no-files-found: error
+          retention-days: 1
