@@ -7,11 +7,12 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
-PROFILE = "kfm.catalog-domain-compatibility-redirect.v4"
+PROFILE = "kfm.catalog-domain-compatibility-redirect.v5"
 SECTION_HEADER = "## Current bounded inventory"
 ROW_RE = re.compile(
     r"^-\s+\[`([^`]+/)`\]\(\./([^/]+)/README\.md\)\s*$"
 )
+CONFLICT_BOUNDARY_RE = re.compile(r"^(?:<{7}|>{7})(?: .*)?$")
 
 
 def _read_redirect_rows(readme_path: Path) -> tuple[list[str], list[str]]:
@@ -67,7 +68,7 @@ def _unexpected_root_files(root: Path) -> list[str]:
 def _child_redirect_reason_codes(readme_path: Path, lane: str) -> list[str]:
     text = readme_path.read_text(encoding="utf-8")
     reasons: list[str] = []
-    if any(marker in text for marker in ("<<<<<<<", "=======", ">>>>>>>")):
+    if any(CONFLICT_BOUNDARY_RE.fullmatch(line) for line in text.splitlines()):
         reasons.append("MERGE_CONFLICT_MARKER")
     if f"data/catalog/domain/{lane}/" not in text:
         reasons.append("CANONICAL_TARGET_MISSING")

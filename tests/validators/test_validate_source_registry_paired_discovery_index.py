@@ -192,6 +192,29 @@ class SourceRegistryPairedDiscoveryIndexTests(unittest.TestCase):
             ["agriculture!=atmosphere"], report["row_domain_mismatches"]
         )
 
+    def test_malformed_pairing_row_fails_closed(self) -> None:
+        tempdir, repo = self._fixture(
+            (("agriculture", "agriculture"),),
+            ("agriculture",),
+            ("agriculture",),
+        )
+        self.addCleanup(tempdir.cleanup)
+        readme = repo / "data" / "registry" / "sources" / "README.md"
+        readme.write_text(
+            readme.read_text(encoding="utf-8").replace(
+                "[`agriculture/sources/`](../agriculture/sources/README.md)",
+                "[`agriculture/sources/`](../agriculture/sources/README.md",
+            ),
+            encoding="utf-8",
+        )
+
+        report = validate_source_registry_paired_discovery_index(repo)
+
+        self.assertEqual("FAIL", report["outcome"])
+        self.assertEqual(1, len(report["invalid_index_rows"]))
+        self.assertEqual(["agriculture"], report["missing_canonical_index"])
+        self.assertEqual(["agriculture"], report["missing_parallel_index"])
+
     def test_missing_section_errors(self) -> None:
         tempdir, repo = self._fixture(
             (("agriculture", "agriculture"),),
@@ -227,7 +250,7 @@ class SourceRegistryPairedDiscoveryIndexTests(unittest.TestCase):
         self.assertEqual(first.stdout, second.stdout)
         parsed = json.loads(first.stdout)
         self.assertEqual(
-            "kfm.source-registry-paired-discovery-index.v3", parsed["profile"]
+            "kfm.source-registry-paired-discovery-index.v4", parsed["profile"]
         )
         self.assertEqual("PASS", parsed["outcome"])
 
