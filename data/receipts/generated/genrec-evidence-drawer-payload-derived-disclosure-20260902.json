@@ -1,0 +1,136 @@
+{
+  "receipt_id": "genrec-evidence-drawer-payload-derived-disclosure-20260902",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/evidence-drawer-payload.yml",
+    "apps/explorer-web/src/adapters/GovernedClient.ts",
+    "apps/explorer-web/src/features/evidence_drawer/index.tsx",
+    "apps/explorer-web/tests/browser/map-evidence-drawer.spec.ts",
+    "apps/explorer-web/tests/browser/workspace-navigation.spec.ts",
+    "apps/explorer-web/tests/evidence-drawer.test.ts",
+    "contracts/ui/evidence_drawer_payload.md",
+    "fixtures/ui/evidence_drawer_payload/invalid/abstain-correction-without-superseded-history.expected_code.txt",
+    "fixtures/ui/evidence_drawer_payload/invalid/abstain-correction-without-superseded-history.json",
+    "tests/validators/test_validate_evidence_drawer_payload.py",
+    "tools/validators/ui/validate_evidence_drawer_payload.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/evidence-drawer-payload.yml": "sha256:53f0cf4744638ac9c4cda92cf130e664c0ee094f17377144eed6f52c65760930",
+    "apps/explorer-web/src/adapters/GovernedClient.ts": "sha256:648a4285af49f72cfb052a39fd3d4ac035b074bb2429b1abc5b7426b839f9af7",
+    "apps/explorer-web/src/features/evidence_drawer/index.tsx": "sha256:6d2f98fbf49946e0d2d6779980f1709ef76210971da8758031871f48f1b64e73",
+    "apps/explorer-web/tests/browser/map-evidence-drawer.spec.ts": "sha256:21bca123eda755afbe6da43e5465e733909880557c10f08748fb1bd1068133fa",
+    "apps/explorer-web/tests/browser/workspace-navigation.spec.ts": "sha256:b58d09605cb21272c49910f6adc9220b891725e3713b062376948485c778c644",
+    "apps/explorer-web/tests/evidence-drawer.test.ts": "sha256:312600de850a082d38e04996c919f1c8fe4705cdc7b4e35d039d44dcd72b058b",
+    "contracts/ui/evidence_drawer_payload.md": "sha256:4b2697c1ea259e2733e11a8e3ab667ef358770050b6fcf2d2a76d4793176de13",
+    "fixtures/ui/evidence_drawer_payload/invalid/abstain-correction-without-superseded-history.expected_code.txt": "sha256:cda21b7240e7b89fc7cf3bafaf8765429a3081e624d7daa5fc62b47e6c653c12",
+    "fixtures/ui/evidence_drawer_payload/invalid/abstain-correction-without-superseded-history.json": "sha256:514e291537e7d38ffcb15cd78306f7819fc0527c9931c448e1015ef7a524c108",
+    "tests/validators/test_validate_evidence_drawer_payload.py": "sha256:1b6d5e1d450fcdeccc02f434aab9af08907dbc671f37916bb643fcdbe14b43c1",
+    "tools/validators/ui/validate_evidence_drawer_payload.py": "sha256:fe09178b44da72ef503580df4c183bccd9e91ba892d2032f4e23b3043d12ed98"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-09-02"
+  },
+  "prompt_or_contract": "sha256:421ea2c9910ff6837f9be0c6dd6c9f93210fdfaa9cd1c4fc362b9b005c6f5a71",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "TypeScript 5.8.3",
+      "Node.js 22.16.0",
+      "local deterministic hash validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [],
+    "attached_docs": [
+      "KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf",
+      "KFM Contributor Reliability System_ Documentation, PR Quality, and CI Hardening.pdf"
+    ],
+    "evidence_refs": [
+      "repo:pull/4208@1cc7b74e9c924437f7bb1a26db8f73cc34559715",
+      "repo:pull/4225@be8079d0f95c6bdd4af3ef9885b07cc379aa8eb0",
+      "repo:main@596f105e7dfd3e6963e04ed076b3ebb7f68c78fc",
+      "github:actions/run/33664974212",
+      "receipt:genrec-evidence-drawer-payload-trust-labels-20260902"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/evidence-drawer-payload.yml": "PROPOSED",
+    "apps/explorer-web/src/adapters/GovernedClient.ts": "PROPOSED",
+    "apps/explorer-web/src/features/evidence_drawer/index.tsx": "PROPOSED",
+    "apps/explorer-web/tests/browser/map-evidence-drawer.spec.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/workspace-navigation.spec.ts": "PROPOSED",
+    "apps/explorer-web/tests/evidence-drawer.test.ts": "PROPOSED",
+    "contracts/ui/evidence_drawer_payload.md": "PROPOSED",
+    "fixtures/ui/evidence_drawer_payload/invalid/abstain-correction-without-superseded-history.expected_code.txt": "PROPOSED",
+    "fixtures/ui/evidence_drawer_payload/invalid/abstain-correction-without-superseded-history.json": "PROPOSED",
+    "tests/validators/test_validate_evidence_drawer_payload.py": "PROPOSED",
+    "tools/validators/ui/validate_evidence_drawer_payload.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "candidate-artifact-hash-closure",
+      "outcome": "PASS",
+      "reason": "The candidate workflow and current Evidence Drawer bytes were SHA-256 bound; unchanged artifacts retain hashes from the previously valid exact-head receipt."
+    },
+    {
+      "gate": "historical-receipt-replay",
+      "outcome": "SKIPPED",
+      "reason": "The workflow is configured to replay the immutable historical receipt at ancestor 1cc7b74e9c924437f7bb1a26db8f73cc34559715; exact-head hosted execution is pending."
+    },
+    {
+      "gate": "canonical-payload-validator",
+      "outcome": "SKIPPED",
+      "reason": "Repository-native schema, fixture, and validator execution remains an exact-head hosted check."
+    },
+    {
+      "gate": "hosted-exact-head",
+      "outcome": "SKIPPED",
+      "reason": "Exact-head GitHub Actions evidence remains pending on the corrective draft pull request."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Accountable human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "repo:historical-evidence-drawer-receipt",
+      "validated": true,
+      "evidence_ref": "data/receipts/generated/genrec-evidence-drawer-payload-trust-labels-20260902.json"
+    },
+    {
+      "id": "repo:pull-4225-derived-disclosure",
+      "validated": true,
+      "evidence_ref": "repo:pull/4225@be8079d0f95c6bdd4af3ef9885b07cc379aa8eb0"
+    },
+    {
+      "id": "repo:failed-current-byte-validation",
+      "validated": true,
+      "evidence_ref": "github:actions/run/33664974212"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-02T20:01:29Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Successor authoring provenance for the current Evidence Drawer derived-representation disclosure. The historical trust-label receipt remains unchanged and is replayed against its exact ancestor. This receipt binds current candidate bytes only; it is not evidence, policy approval, human review, merge authority, release authority, deployment authority, publication authority, or public-use permission."
+}
