@@ -7,7 +7,7 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
-PROFILE = "kfm.catalog-domain-compatibility-redirect.v6"
+PROFILE = "kfm.catalog-domain-compatibility-redirect.v7"
 SECTION_TITLE = "Current bounded inventory"
 SECTION_HEADER = f"## {SECTION_TITLE}"
 FENCE_OPEN_RE = re.compile(r"^ {0,3}(?P<fence>`{3,}|~{3,}).*$")
@@ -70,11 +70,15 @@ def _read_redirect_rows(readme_path: Path) -> tuple[list[str], list[str]]:
         (start for start, _, _ in headings if start > section_start),
         len(text),
     )
-    section = text[section_start:section_end]
+    section_lines = [
+        line
+        for start, _, line in _visible_line_spans(text)
+        if section_start <= start < section_end
+    ]
 
     lanes: list[str] = []
     invalid_rows: list[str] = []
-    for line in section.splitlines():
+    for line in section_lines:
         stripped = line.strip()
         if not stripped.startswith("- ["):
             continue

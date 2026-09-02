@@ -294,6 +294,29 @@ class SourceRegistryPairedDiscoveryIndexTests(unittest.TestCase):
         report = validate_source_registry_paired_discovery_index(repo)
         self.assertEqual("PASS", report["outcome"])
 
+    def test_fenced_rows_inside_pairing_section_are_not_indexed(self) -> None:
+        tempdir, repo = self._fixture(
+            (("agriculture", "agriculture"),),
+            ("agriculture",),
+            ("agriculture",),
+        )
+        self.addCleanup(tempdir.cleanup)
+        readme = repo / "data" / "registry" / "sources" / "README.md"
+        readme.write_text(
+            readme.read_text(encoding="utf-8").replace(
+                "## Write rule while topology is unresolved",
+                "~~~markdown\n"
+                "| Domain | Canonical-family lane | Parallel domain-first lane |\n"
+                "|---|---|---|\n"
+                "| Example | [`sources/example/`](example/README.md) "
+                "| [`example/sources/`](../example/sources/README.md) |\n"
+                "~~~\n\n## Write rule while topology is unresolved",
+            ),
+            encoding="utf-8",
+        )
+        report = validate_source_registry_paired_discovery_index(repo)
+        self.assertEqual("PASS", report["outcome"])
+
     def test_cli_output_is_deterministic_json(self) -> None:
         tempdir, repo = self._fixture(
             (("agriculture", "agriculture"), ("atmosphere", "atmosphere")),
@@ -317,7 +340,7 @@ class SourceRegistryPairedDiscoveryIndexTests(unittest.TestCase):
         self.assertEqual(first.stdout, second.stdout)
         parsed = json.loads(first.stdout)
         self.assertEqual(
-            "kfm.source-registry-paired-discovery-index.v5", parsed["profile"]
+            "kfm.source-registry-paired-discovery-index.v6", parsed["profile"]
         )
         self.assertEqual("PASS", parsed["outcome"])
 

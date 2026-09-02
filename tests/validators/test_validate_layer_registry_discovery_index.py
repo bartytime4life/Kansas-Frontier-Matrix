@@ -194,6 +194,19 @@ class LayerRegistryDiscoveryIndexTests(unittest.TestCase):
         report = validate_layer_registry_discovery_index(root)
         self.assertEqual(report["outcome"], "PASS")
 
+    def test_fenced_rows_inside_section_are_not_indexed(self) -> None:
+        tempdir, root = self._fixture(("agriculture",), ("agriculture",))
+        self.addCleanup(tempdir.cleanup)
+        readme = _readme("agriculture").replace(
+            "## Layer registry boundary",
+            "```markdown\n"
+            "| [`example/`](example/README.md) | example only |\n"
+            "```\n\n## Layer registry boundary",
+        )
+        (root / "README.md").write_text(readme, encoding="utf-8")
+        report = validate_layer_registry_discovery_index(root)
+        self.assertEqual(report["outcome"], "PASS")
+
     def test_cli_output_is_deterministic_json(self) -> None:
         tempdir, root = self._fixture(
             ("agriculture", "atmosphere"),
@@ -216,7 +229,7 @@ class LayerRegistryDiscoveryIndexTests(unittest.TestCase):
         self.assertEqual(first.stdout, second.stdout)
         parsed = json.loads(first.stdout)
         self.assertEqual(
-            "kfm.layer-registry-discovery-index-drift.v6", parsed["profile"]
+            "kfm.layer-registry-discovery-index-drift.v7", parsed["profile"]
         )
         self.assertEqual("PASS", parsed["outcome"])
 

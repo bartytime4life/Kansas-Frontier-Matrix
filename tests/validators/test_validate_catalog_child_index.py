@@ -181,6 +181,20 @@ class CatalogChildIndexDriftTests(unittest.TestCase):
             report = MODULE.validate_catalog_child_index(root)
             self.assertEqual(report["outcome"], "PASS")
 
+    def test_fenced_rows_inside_section_are_not_indexed(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "catalog"
+            root.mkdir()
+            (root / "stac").mkdir()
+            readme = _readme(("stac/", "test posture")).replace(
+                "## Next section",
+                "```markdown\n| `example/` | example only |\n```\n\n"
+                "## Next section",
+            )
+            (root / "README.md").write_text(readme, encoding="utf-8")
+            report = MODULE.validate_catalog_child_index(root)
+            self.assertEqual(report["outcome"], "PASS")
+
     def test_missing_alias_target_fails_closed(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp) / "catalog"

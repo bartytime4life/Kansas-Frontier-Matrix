@@ -7,7 +7,7 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
-PROFILE = "kfm.source-registry-paired-discovery-index.v5"
+PROFILE = "kfm.source-registry-paired-discovery-index.v6"
 SECTION_HEADER = "The 13 paired domain README lanes confirmed at the pinned base are:"
 FENCE_OPEN_RE = re.compile(r"^ {0,3}(?P<fence>`{3,}|~{3,}).*$")
 ATX_H2_RE = re.compile(r"^ {0,3}##(?:[ \t]+|[ \t]*$)")
@@ -69,12 +69,16 @@ def _read_index_rows(
         ),
         len(text),
     )
-    section = text[section_start:section_end]
+    section_lines = [
+        line
+        for start, _, line in visible
+        if section_start <= start < section_end
+    ]
 
     rows: list[dict[str, str]] = []
     invalid_rows: list[str] = []
     table_active = False
-    for line in section.splitlines():
+    for line in section_lines:
         stripped = line.strip()
         if TABLE_SEPARATOR_RE.fullmatch(stripped):
             table_active = True

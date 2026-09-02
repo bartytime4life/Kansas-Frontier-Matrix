@@ -7,7 +7,7 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
-PROFILE = "kfm.crosswalk-registry-inventory-drift.v3"
+PROFILE = "kfm.crosswalk-registry-inventory-drift.v4"
 SECTION_TITLE = "Current inventory"
 SECTION_HEADER = f"## {SECTION_TITLE}"
 FENCE_OPEN_RE = re.compile(r"^ {0,3}(?P<fence>`{3,}|~{3,}).*$")
@@ -72,12 +72,16 @@ def _read_inventory_rows(
         (start for start, _, _ in headings if start > section_start),
         len(text),
     )
-    section = text[section_start:section_end]
+    section_lines = [
+        line
+        for start, _, line in _visible_line_spans(text)
+        if section_start <= start < section_end
+    ]
 
     rows: list[dict[str, str]] = []
     invalid_rows: list[str] = []
     table_active = False
-    for line in section.splitlines():
+    for line in section_lines:
         stripped = line.strip()
         if TABLE_SEPARATOR_RE.fullmatch(stripped):
             table_active = True

@@ -7,7 +7,7 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
-PROFILE = "kfm.catalog-child-index-drift.v5"
+PROFILE = "kfm.catalog-child-index-drift.v6"
 SECTION_TITLE = "Current bounded child-lane index"
 SECTION_HEADER = f"## {SECTION_TITLE}"
 FENCE_OPEN_RE = re.compile(r"^ {0,3}(?P<fence>`{3,}|~{3,}).*$")
@@ -20,8 +20,8 @@ ALIAS_TARGET_RE = re.compile(
 )
 
 
-def _h2_spans(text: str) -> list[tuple[int, int, str]]:
-    headings: list[tuple[int, int, str]] = []
+def _visible_line_spans(text: str) -> list[tuple[int, int, str]]:
+    visible: list[tuple[int, int, str]] = []
     fence_char: str | None = None
     fence_length = 0
     offset = 0
@@ -42,12 +42,19 @@ def _h2_spans(text: str) -> list[tuple[int, int, str]]:
                 fence_char = fence[0]
                 fence_length = len(fence)
             else:
-                heading = ATX_H2_RE.match(line)
-                if heading is not None:
-                    title = heading.group("title") or ""
-                    title = CLOSING_HASH_RE.sub("", title).strip(" \t")
-                    headings.append((offset, offset + len(line), title))
+                visible.append((offset, offset + len(line), line))
         offset += len(raw_line)
+    return visible
+
+
+def _h2_spans(text: str) -> list[tuple[int, int, str]]:
+    headings: list[tuple[int, int, str]] = []
+    for start, end, line in _visible_line_spans(text):
+        heading = ATX_H2_RE.match(line)
+        if heading is not None:
+            title = heading.group("title") or ""
+            title = CLOSING_HASH_RE.sub("", title).strip(" \t")
+            headings.append((start, end, title))
     return headings
 
 
@@ -64,10 +71,14 @@ def _read_index_rows(readme_path: Path) -> list[tuple[str, str]]:
         (start for start, _, _ in headings if start > section_start),
         len(text),
     )
-    section = text[section_start:section_end]
+    section_lines = [
+        line
+        for start, _, line in _visible_line_spans(text)
+        if section_start <= start < section_end
+    ]
 
     rows: list[tuple[str, str]] = []
-    for line in section.splitlines():
+    for line in section_lines:
         match = ROW_RE.match(line)
         if match:
             rows.append((match.group(1), match.group(2).strip()))

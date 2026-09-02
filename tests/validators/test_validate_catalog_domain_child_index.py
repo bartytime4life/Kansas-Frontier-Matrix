@@ -205,6 +205,20 @@ class CatalogDomainChildIndexDriftTests(unittest.TestCase):
             report = MODULE.validate_catalog_domain_child_index(root)
             self.assertEqual(report["outcome"], "PASS")
 
+    def test_fenced_rows_inside_known_child_lanes_are_not_indexed(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "domain"
+            root.mkdir()
+            (root / "agriculture").mkdir()
+            readme = _readme("agriculture/").replace(
+                "## Catalog requirements",
+                "~~~markdown\n| `example/` | example only |\n~~~\n\n"
+                "## Catalog requirements",
+            )
+            (root / "README.md").write_text(readme, encoding="utf-8")
+            report = MODULE.validate_catalog_domain_child_index(root)
+            self.assertEqual(report["outcome"], "PASS")
+
     def test_cli_emits_deterministic_machine_readable_report(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp) / "domain"

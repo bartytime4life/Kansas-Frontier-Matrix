@@ -196,6 +196,22 @@ class CatalogDomainCompatibilityRedirectTests(unittest.TestCase):
             report = validate_catalog_domain_compatibility_redirect(compat, canonical)
             self.assertEqual("PASS", report["outcome"])
 
+    def test_fenced_rows_inside_inventory_are_not_indexed(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            compat, canonical = _write_layout(
+                Path(tmp), actual=["agriculture"], indexed=["agriculture"]
+            )
+            readme = compat / "README.md"
+            readme.write_text(
+                readme.read_text(encoding="utf-8")
+                + "\n```markdown\n"
+                + "- [`agriculture/`](./agriculture/README.md)\n"
+                + "```\n",
+                encoding="utf-8",
+            )
+            report = validate_catalog_domain_compatibility_redirect(compat, canonical)
+            self.assertEqual("PASS", report["outcome"])
+
     def test_missing_canonical_target_fails_closed(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             compat, canonical = _write_layout(
@@ -395,7 +411,7 @@ class CatalogDomainCompatibilityRedirectTests(unittest.TestCase):
             self.assertEqual(outputs[0], outputs[1])
             report = json.loads(outputs[0])
             self.assertEqual(
-                "kfm.catalog-domain-compatibility-redirect.v6",
+                "kfm.catalog-domain-compatibility-redirect.v7",
                 report["profile"],
             )
 

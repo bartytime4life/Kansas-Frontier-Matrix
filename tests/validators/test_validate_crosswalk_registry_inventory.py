@@ -267,6 +267,26 @@ class CrosswalkRegistryInventoryTests(unittest.TestCase):
         report = validate_crosswalk_registry_inventory(repo)
         self.assertEqual("PASS", report["outcome"])
 
+    def test_fenced_rows_inside_inventory_are_not_indexed(self) -> None:
+        paths = ("README.md", "water_planning/README.md")
+        rows = tuple((path, path) for path in paths)
+        tempdir, repo = self._fixture(rows, paths)
+        self.addCleanup(tempdir.cleanup)
+        readme = repo / "data" / "registry" / "crosswalks" / "README.md"
+        readme.write_text(
+            readme.read_text(encoding="utf-8").replace(
+                "## Repository fit",
+                "```markdown\n"
+                "| Tracked path | Role | Bounded state |\n"
+                "|---|---|---|\n"
+                "| [`example.md`](example.md) | example | only |\n"
+                "```\n\n## Repository fit",
+            ),
+            encoding="utf-8",
+        )
+        report = validate_crosswalk_registry_inventory(repo)
+        self.assertEqual("PASS", report["outcome"])
+
     def test_cli_output_is_deterministic_json(self) -> None:
         paths = (
             "README.md",
@@ -292,7 +312,7 @@ class CrosswalkRegistryInventoryTests(unittest.TestCase):
         self.assertEqual(0, first.returncode)
         self.assertEqual(first.stdout, second.stdout)
         parsed = json.loads(first.stdout)
-        self.assertEqual("kfm.crosswalk-registry-inventory-drift.v3", parsed["profile"])
+        self.assertEqual("kfm.crosswalk-registry-inventory-drift.v4", parsed["profile"])
         self.assertEqual("PASS", parsed["outcome"])
 
 
