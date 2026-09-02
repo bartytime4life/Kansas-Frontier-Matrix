@@ -64,6 +64,24 @@ class AirObservationValidatorEntrypointTests(unittest.TestCase):
             str(VALIDATOR.relative_to(REPO_ROOT)),
         )
 
+    def test_schema_metadata_paths_resolve_to_governed_assets(self) -> None:
+        schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
+        expected_paths = {
+            "contract_doc": REPO_ROOT
+            / "contracts/domains/atmosphere/AirObservation.md",
+            "profile_doc": REPO_ROOT
+            / "docs/domains/atmosphere/OBSERVED_MODELED_SEPARATION.md",
+            "fixtures_root": FIXTURE_ROOT,
+            "validator": VALIDATOR,
+        }
+
+        self.assertLessEqual(set(expected_paths), set(schema["x-kfm"]))
+        for field, expected_path in expected_paths.items():
+            with self.subTest(field=field):
+                declared_path = REPO_ROOT / schema["x-kfm"][field]
+                self.assertEqual(declared_path.resolve(), expected_path.resolve())
+                self.assertTrue(declared_path.exists())
+
     def test_declared_schema_rejects_short_observation_id(self) -> None:
         candidate = self._bound_observation()
         candidate["observation_id"] = "x"
