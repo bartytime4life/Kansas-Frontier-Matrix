@@ -198,7 +198,7 @@ The current schema does not require these fields. They are `PROPOSED` semantic r
 
 | Field | Meaning |
 |---|---|
-| `candidate_feature_id` | Stable deterministic or steward-assigned candidate identity. |
+| `candidate_feature_id` | Stable deterministic or steward-assigned candidate identity using a strict end-of-input grammar; terminal line breaks cannot become part of identity. |
 | `candidate_type` | Candidate class such as surface feature, subsurface feature, structure, artifact scatter, earthwork, landscape trace, anomaly, or context lead. |
 | `origin_method` | How the candidate was identified: survey, archival, map comparison, remote sensing, LiDAR, geophysics, report extraction, cross-domain analysis, steward submission, or other reviewed source. |
 | `source_refs` | Source, SourceDescriptor, or source-record references; evidence, observation, correction, and geometry families cannot substitute. |

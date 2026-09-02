@@ -8,6 +8,9 @@ burial, sacred-place, collection-security, or culturally restricted data.
   spatial precision withheld, and contains no inline geometry.
 - `malformed_candidate_id_deny.json` proves that the validator and schema share
   the same lowercase candidate-identifier grammar.
+- `candidate_id_line_terminator_deny.json` proves that a terminal line break
+  cannot exploit `$`-anchor differences between schema engines to become part
+  of a candidate identity.
 - `unsupported_candidate_type_deny.json` proves that the validator rejects
   confirmed-site-like or otherwise unsupported candidate-type labels rather than
   allowing them to weaken the candidate boundary.
@@ -62,7 +65,7 @@ python tools/validators/archaeology/validate_candidate_feature.py --fixtures
 python -m unittest tests.domains.archaeology.test_candidate_not_site
 ```
 
-Passing these checks proves only the schema-aligned candidate identifier,
+Passing these checks proves only the schema-aligned, strict-end candidate identifier,
 candidate-type vocabulary, spatial-precision vocabulary, and geometry-reference
 precision binding; bounded candidate discriminator; inline location denial;
 opaque-reference, protected-locator-token, and reference-family boundaries;

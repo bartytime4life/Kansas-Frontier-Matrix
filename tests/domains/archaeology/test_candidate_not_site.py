@@ -49,9 +49,19 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
         payload = _load(FIXTURE_ROOT / "malformed_candidate_id_deny.json")
         errors = validate_candidate_feature(payload)
         self.assertIn(
-            "candidate_feature_id must match ^arc-candidate-[a-z0-9][a-z0-9-]*$",
+            "candidate_feature_id must match "
+            "^arc-candidate-[a-z0-9][a-z0-9-]*(?![\\s\\S])",
             errors,
         )
+
+    def test_candidate_identifier_terminal_line_break_fails_closed(self) -> None:
+        payload = _load(FIXTURE_ROOT / "candidate_id_line_terminator_deny.json")
+        expected_error = (
+            "candidate_feature_id must match "
+            "^arc-candidate-[a-z0-9][a-z0-9-]*(?![\\s\\S])"
+        )
+        self.assertTrue(payload["candidate_feature_id"].endswith("\n"))
+        self.assertEqual(validate_candidate_feature(payload), [expected_error])
 
     def test_unsupported_candidate_type_fails_closed(self) -> None:
         payload = _load(FIXTURE_ROOT / "unsupported_candidate_type_deny.json")

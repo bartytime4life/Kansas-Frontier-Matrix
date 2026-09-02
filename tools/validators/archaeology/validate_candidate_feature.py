@@ -111,7 +111,11 @@ SPATIAL_PRECISION_CLASSES = frozenset(
 )
 LIFECYCLE_STATES = frozenset({"WORK", "QUARANTINE", "PROCESSED", "CATALOG"})
 EVIDENCE_BOUND_LIFECYCLE_STATES = frozenset({"PROCESSED", "CATALOG"})
-CANDIDATE_ID_PATTERN = re.compile(r"^arc-candidate-[a-z0-9][a-z0-9-]*$")
+# `(?![\s\S])` is a portable strict end-of-input assertion.  Unlike `$`, it
+# cannot match immediately before a terminal newline in Python schema tooling.
+CANDIDATE_ID_PATTERN = re.compile(
+    r"^arc-candidate-[a-z0-9][a-z0-9-]*(?![\s\S])"
+)
 # Opaque reference paths must not become a second channel for protected
 # geometry. Keep this expression ECMAScript-compatible for JSON Schema and
 # spell case-insensitive locator tokens with character classes because schema
@@ -235,7 +239,7 @@ def validate_candidate_feature(payload: Any) -> list[str]:
     ):
         errors.append(
             "candidate_feature_id must match "
-            "^arc-candidate-[a-z0-9][a-z0-9-]*$"
+            "^arc-candidate-[a-z0-9][a-z0-9-]*(?![\\s\\S])"
         )
     if payload.get("object_type") != "CandidateFeature":
         errors.append("object_type must be CandidateFeature")
@@ -356,6 +360,7 @@ def validate_fixture_suite() -> int:
         FIXTURE_ROOT / "unbound_catalog_candidate_deny.json": "evidence_refs are required",
         FIXTURE_ROOT / "superseded_without_correction_deny.json": "correction_refs are required",
         FIXTURE_ROOT / "malformed_candidate_id_deny.json": "candidate_feature_id must match",
+        FIXTURE_ROOT / "candidate_id_line_terminator_deny.json": "candidate_feature_id must match",
         FIXTURE_ROOT / "unsupported_candidate_type_deny.json": "candidate_type is not in",
         FIXTURE_ROOT / "unsupported_spatial_precision_deny.json": "spatial_precision_class is not in",
         FIXTURE_ROOT / "unclassified_geometry_reference_deny.json": "spatial_precision_class is required",

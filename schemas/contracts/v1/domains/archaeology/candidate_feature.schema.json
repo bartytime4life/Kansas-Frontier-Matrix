@@ -23,7 +23,8 @@
   "properties": {
     "candidate_feature_id": {
       "type": "string",
-      "pattern": "^arc-candidate-[a-z0-9][a-z0-9-]*$"
+      "$comment": "Uses a portable strict end-of-input assertion so terminal line breaks cannot become part of identity.",
+      "pattern": "^arc-candidate-[a-z0-9][a-z0-9-]*(?![\\s\\S])"
     },
     "object_type": {
       "const": "CandidateFeature"
