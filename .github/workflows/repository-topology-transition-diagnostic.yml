@@ -1,5 +1,5 @@
-# Temporary read-only diagnostic for the current repository-topology baseline drift.
-# It is branch-scoped and must be removed before review handoff.
+# Temporary diagnostic and bounded branch-only repair for repository-topology drift.
+# It must be removed before review handoff.
 name: repository-topology-transition-diagnostic
 
 "on":
@@ -8,7 +8,7 @@ name: repository-topology-transition-diagnostic
       - fix/repository-topology-convergence-20260902
 
 permissions:
-  contents: read
+  contents: write
 
 env:
   PIP_DISABLE_PIP_VERSION_CHECK: "1"
@@ -27,7 +27,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
-          persist-credentials: false
+          persist-credentials: true
 
       - name: Set up repository Python
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
@@ -208,3 +208,17 @@ jobs:
             /tmp/repository_topology_partial_report.json
           if-no-files-found: error
           retention-days: 1
+
+      - name: Commit only the legal strict-shrink baseline
+        shell: bash
+        run: |
+          set -euo pipefail
+          baseline=tools/validators/directory_governance/repository_topology_baseline.json
+          cp /tmp/repository_topology_partial_baseline.json "${baseline}"
+          test "$(git diff --name-only)" = "${baseline}"
+          git diff --check
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "${baseline}"
+          git commit -m "chore(validation): shrink topology baseline"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
