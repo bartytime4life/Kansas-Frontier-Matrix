@@ -79,6 +79,8 @@ The unresolved-alias projection is also a validator dependency. If `control_plan
 
 For `SPATIAL_TEMPORAL`, zero-tolerance intervals that only touch at `left.valid_to == right.valid_from` or `right.valid_to == left.valid_from` also fail `JOIN_PREDICATE_MATCHED`. The shared `TemporalWindow` contract explicitly treats boundary inclusivity as compatibility-significant rather than globally settled, so this join profile must not silently choose closed-interval semantics. Boundary-touch inputs therefore return `ABSTAIN` / `NO_JOIN_CANDIDATE` with reason `TEMPORAL_BOUNDARY_AMBIGUOUS` and obligation `ROUTE_TO_PAIR_TEMPORAL_SEMANTICS`. A genuine interval overlap remains eligible, and a positive declared tolerance remains an explicit bounded comparison rule rather than an implied repository-wide time convention.
 
+Disposition precedence preserves stronger failures. Same-domain scope routing remains first because the generic cross-lane helper does not own domain-local work. For distinct raw domains, unavailable dependencies produce `ERROR`, and living-person or blocked sensitive geometry produces `DENY`, before an unresolved alias collision can route the request to alias review. Alias review never downgrades a system error or a privacy/sensitivity denial.
+
 ## Join mechanics
 
 - Both endpoints must declare distinct `domain` values. Same-domain requests are routed away from this profile and never emit `JOIN_CANDIDATE`.

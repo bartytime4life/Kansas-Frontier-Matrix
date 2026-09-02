@@ -291,8 +291,6 @@ def derive_decision(candidate: Mapping[str, Any]) -> dict[str, Any]:
 
     if same_domain:
         outcome, status, reason, obligation = "ABSTAIN", "NO_JOIN_CANDIDATE", "CROSS_DOMAIN_PAIR_REQUIRED", "ROUTE_TO_DOMAIN_LOCAL_VALIDATOR"
-    elif domain_alias_collision:
-        outcome, status, reason, obligation = "ABSTAIN", "NO_JOIN_CANDIDATE", "DOMAIN_ALIAS_REVIEW_REQUIRED", "ROUTE_TO_DOMAIN_ALIAS_REVIEW"
     elif alias_dependency_error:
         outcome, status, reason, obligation = "ERROR", "VALIDATOR_SYSTEM_ERROR", "DOMAIN_ALIAS_REGISTER_UNAVAILABLE", "REPAIR_DOMAIN_ALIAS_REGISTER_DEPENDENCY"
     elif request.get("dependency_state") == "ERROR":
@@ -301,6 +299,8 @@ def derive_decision(candidate: Mapping[str, Any]) -> dict[str, Any]:
         outcome, status, reason, obligation = "DENY", "LIVING_PERSON_JOIN_DENIED", "LIVING_PERSON_JOIN_DENIED", "REQUIRE_CONSENT_AND_POLICY_REVIEW"
     elif exact_sensitive_count or inherited == "PROHIBITED":
         outcome, status, reason, obligation = "DENY", "GEOMETRY_PRECISION_BLOCKED", "GEOMETRY_PRECISION_BLOCKED", "GENERALIZE_OR_WITHHOLD_GEOMETRY"
+    elif domain_alias_collision:
+        outcome, status, reason, obligation = "ABSTAIN", "NO_JOIN_CANDIDATE", "DOMAIN_ALIAS_REVIEW_REQUIRED", "ROUTE_TO_DOMAIN_ALIAS_REVIEW"
     elif missing_evidence:
         outcome, status, reason, obligation = "ABSTAIN", "EVIDENCE_REF_MISSING", "EVIDENCE_REF_MISSING", "RESOLVE_EVIDENCE_REFS"
     elif temporal_boundary_ambiguous:

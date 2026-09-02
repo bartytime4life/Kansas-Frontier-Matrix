@@ -14,11 +14,15 @@ sys.modules[SPEC.name] = MODULE
 SPEC.loader.exec_module(MODULE)
 
 
-def _decision(left_domain: str, right_domain: str) -> dict[str, object]:
+def _candidate(left_domain: str, right_domain: str) -> dict[str, object]:
     candidate = copy.deepcopy(MODULE.fixture_cases()[0][0])
     candidate["endpoints"]["left"]["domain"] = left_domain
     candidate["endpoints"]["right"]["domain"] = right_domain
-    return MODULE.derive_decision(candidate)
+    return candidate
+
+
+def _decision(left_domain: str, right_domain: str) -> dict[str, object]:
+    return MODULE.derive_decision(_candidate(left_domain, right_domain))
 
 
 def _rule_counts(decision: dict[str, object]) -> dict[str, int]:
@@ -68,3 +72,43 @@ def test_same_domain_scope_still_routes_to_domain_local_validation() -> None:
     assert "ROUTE_TO_DOMAIN_LOCAL_VALIDATOR" in decision["obligations"]
     assert _rule_counts(decision)["JOIN_PREDICATE_MATCHED"] == 1
     assert not any(decision["effects"].values())
+
+
+def test_alias_review_does_not_downgrade_dependency_error() -> None:
+    candidate = _candidate("air", "atmosphere")
+    candidate["request"]["dependency_state"] = "ERROR"
+    decision = MODULE.derive_decision(candidate)
+
+    assert decision["validator_outcome"] == "ERROR"
+    assert decision["status"] == "VALIDATOR_SYSTEM_ERROR"
+    assert decision["reason_codes"] == ["VALIDATOR_DEPENDENCY_ERROR"]
+    assert "REPAIR_VALIDATOR_DEPENDENCY" in decision["obligations"]
+    assert _rule_counts(decision)["DEPENDENCIES_READY"] == 1
+    assert _rule_counts(decision)["JOIN_PREDICATE_MATCHED"] == 1
+
+
+def test_alias_review_does_not_downgrade_living_person_denial() -> None:
+    candidate = _candidate("air", "atmosphere")
+    candidate["endpoints"]["left"]["living_person"] = True
+    decision = MODULE.derive_decision(candidate)
+
+    assert decision["validator_outcome"] == "DENY"
+    assert decision["status"] == "LIVING_PERSON_JOIN_DENIED"
+    assert decision["reason_codes"] == ["LIVING_PERSON_JOIN_DENIED"]
+    assert "REQUIRE_CONSENT_AND_POLICY_REVIEW" in decision["obligations"]
+    assert _rule_counts(decision)["LIVING_PERSON_SAFE"] == 1
+    assert _rule_counts(decision)["JOIN_PREDICATE_MATCHED"] == 1
+
+
+def test_alias_review_does_not_downgrade_sensitive_geometry_denial() -> None:
+    candidate = _candidate("air", "atmosphere")
+    candidate["endpoints"]["left"]["sensitivity"] = "PROHIBITED"
+    candidate["endpoints"]["left"]["geometry_precision"] = "EXACT"
+    decision = MODULE.derive_decision(candidate)
+
+    assert decision["validator_outcome"] == "DENY"
+    assert decision["status"] == "GEOMETRY_PRECISION_BLOCKED"
+    assert decision["reason_codes"] == ["GEOMETRY_PRECISION_BLOCKED"]
+    assert "GENERALIZE_OR_WITHHOLD_GEOMETRY" in decision["obligations"]
+    assert _rule_counts(decision)["SENSITIVITY_SAFE"] >= 1
+    assert _rule_counts(decision)["JOIN_PREDICATE_MATCHED"] == 1
