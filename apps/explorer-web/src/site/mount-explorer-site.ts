@@ -29,9 +29,10 @@ import {
 export type ExplorerSiteController = Readonly<{ destroy: () => void }>;
 
 export const SUPPORTED_SYNTHETIC_STREAMFLOW_EVIDENCE_REFS = Object.freeze([
-  "kfm:evidence:synthetic:flow-000",
   "kfm:evidence:synthetic:flow-001",
 ]);
+export const SUPPORTED_SYNTHETIC_STREAMFLOW_HISTORY_EVIDENCE_REFS =
+  Object.freeze(["kfm:evidence:synthetic:flow-000"]);
 
 export const SUPPORTED_SYNTHETIC_STREAMFLOW_PROJECTION = Object.freeze({
   profile: "kfm.explorer.evidence-drawer.public-safe.v1",
@@ -100,7 +101,7 @@ const restrictedProjection = Object.freeze({
 });
 
 const mapCases: readonly MapEvidenceFixtureCase[] = Object.freeze([
-  { caseId: "supported", label: "Supported synthetic streamflow", selection: { profile: MAP_FEATURE_SELECTION_PROFILE, selection_id: "selection:flow-001", layer_id: "layer:synthetic-streamflow", feature_id: "feature:flow-001", evidence_refs: SUPPORTED_SYNTHETIC_STREAMFLOW_EVIDENCE_REFS } },
+  { caseId: "supported", label: "Supported synthetic streamflow", selection: { profile: MAP_FEATURE_SELECTION_PROFILE, selection_id: "selection:flow-001", layer_id: "layer:synthetic-streamflow", feature_id: "feature:flow-001", evidence_refs: SUPPORTED_SYNTHETIC_STREAMFLOW_EVIDENCE_REFS, history_evidence_refs: SUPPORTED_SYNTHETIC_STREAMFLOW_HISTORY_EVIDENCE_REFS } },
   { caseId: "missing", label: "Feature without governed evidence", selection: { profile: MAP_FEATURE_SELECTION_PROFILE, selection_id: "selection:missing", layer_id: "layer:synthetic-streamflow", feature_id: "feature:missing", evidence_refs: [] } },
   { caseId: "restricted", label: "Policy-restricted feature", selection: { profile: MAP_FEATURE_SELECTION_PROFILE, selection_id: "selection:restricted", layer_id: "layer:synthetic-restricted", feature_id: "feature:restricted", evidence_refs: ["kfm:evidence:synthetic:restricted"] } },
   { caseId: "mismatch", label: "Mismatched evidence scope", selection: { profile: MAP_FEATURE_SELECTION_PROFILE, selection_id: "selection:mismatch", layer_id: "layer:synthetic-streamflow", feature_id: "feature:mismatch", evidence_refs: ["kfm:evidence:synthetic:other"] } },

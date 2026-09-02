@@ -21,6 +21,7 @@ const selection: MapFeatureSelection = Object.freeze({
   layerId: "layer:released:synthetic",
   featureId: "feature:synthetic:1",
   evidenceRefs: Object.freeze(["evidence:synthetic:1"]),
+  historyEvidenceRefs: Object.freeze(["evidence:synthetic:prior-1"]),
 });
 
 describe("MapRuntimePort dependency-free consumer seam", () => {
@@ -33,6 +34,7 @@ describe("MapRuntimePort dependency-free consumer seam", () => {
         layer_id: selection.layerId,
         feature_id: selection.featureId,
         evidence_refs: [...selection.evidenceRefs],
+        history_evidence_refs: [...(selection.historyEvidenceRefs ?? [])],
       }),
     ).toEqual(selection);
     expect(isMapFeatureSelection(selection)).toBe(true);
@@ -63,6 +65,7 @@ describe("MapRuntimePort dependency-free consumer seam", () => {
     expect(listener).toHaveBeenCalledTimes(1);
     expect(listener).toHaveBeenCalledWith(selection);
     expect(Object.isFrozen(snapshot.selection?.evidenceRefs)).toBe(true);
+    expect(Object.isFrozen(snapshot.selection?.historyEvidenceRefs)).toBe(true);
 
     unsubscribe();
     runtime.emitSelection({ ...selection, selectionId: "selection:synthetic:2" });
@@ -114,6 +117,12 @@ describe("MapRuntimePort dependency-free consumer seam", () => {
     const runtime = createNullMapRuntime();
     expect(isMapRuntimeCamera({ ...runtime.getSnapshot().camera, latitude: 100 })).toBe(false);
     expect(isMapFeatureSelection({ ...selection, evidenceRefs: ["duplicate", "duplicate"] })).toBe(false);
+    expect(
+      isMapFeatureSelection({
+        ...selection,
+        historyEvidenceRefs: ["evidence:synthetic:1"],
+      }),
+    ).toBe(false);
 
     await runtime.initialize();
     expect(() => runtime.setCamera({ ...runtime.getSnapshot().camera, zoom: 99 })).toThrow(
