@@ -7,11 +7,18 @@ import {
   parseEvidenceDrawerProjection,
 } from "../../adapters/GovernedClient";
 
+export type EvidenceDrawerRepresentationDisclosure = Readonly<{
+  kind: "DERIVED";
+  label: "Derived representation";
+  message: "Computed from upstream evidence; not a source-observed relationship or event.";
+}>;
+
 export type EvidenceDrawerViewModel = Readonly<{
   outcome: EvidenceDrawerOutcome;
   code: EvidenceDrawerReasonCode | "NO_GOVERNED_RESPONSE" | "INVALID_PAYLOAD";
   title: string;
   message: string;
+  representationDisclosure: EvidenceDrawerRepresentationDisclosure | null;
   evidenceRefs: readonly string[];
   evidenceRefsLabel:
     | "Current evidence references"
@@ -40,6 +47,14 @@ type EvidenceDrawerDomIds = Readonly<{
 
 const EMPTY_STRINGS = Object.freeze([]) as readonly string[];
 const EMPTY_CITATIONS = Object.freeze([]) as readonly EvidenceDrawerCitation[];
+
+export const DERIVED_REPRESENTATION_DISCLOSURE: EvidenceDrawerRepresentationDisclosure =
+  Object.freeze({
+    kind: "DERIVED",
+    label: "Derived representation",
+    message:
+      "Computed from upstream evidence; not a source-observed relationship or event.",
+  });
 
 const SAFE_NEGATIVE_MESSAGES: Readonly<Record<EvidenceDrawerReasonCode, string>> =
   Object.freeze({
@@ -125,6 +140,7 @@ function fixedNegativeView(
     code,
     title,
     message: SAFE_NEGATIVE_MESSAGES[code],
+    representationDisclosure: null,
     evidenceRefs: outcome === "ABSTAIN" ? evidenceRefs : EMPTY_STRINGS,
     evidenceRefsLabel: "Non-current evidence references",
     citations: EMPTY_CITATIONS,
@@ -147,6 +163,7 @@ export function resolveEvidenceDrawer(
       code: "NO_GOVERNED_RESPONSE",
       title: "Evidence not available",
       message: "No governed evidence response is available.",
+      representationDisclosure: null,
       evidenceRefs: EMPTY_STRINGS,
       evidenceRefsLabel: "Non-current evidence references",
       citations: EMPTY_CITATIONS,
@@ -166,6 +183,7 @@ export function resolveEvidenceDrawer(
       code: "INVALID_PAYLOAD",
       title: "Evidence unavailable",
       message: "The governed evidence response is invalid.",
+      representationDisclosure: null,
       evidenceRefs: EMPTY_STRINGS,
       evidenceRefsLabel: "Non-current evidence references",
       citations: EMPTY_CITATIONS,
@@ -196,6 +214,10 @@ export function resolveEvidenceDrawer(
     code: payload.reasonCode,
     title: payload.title,
     message: payload.summary,
+    representationDisclosure:
+      payload.trustState.sourceRole === "derived"
+        ? DERIVED_REPRESENTATION_DISCLOSURE
+        : null,
     evidenceRefs: payload.evidenceRefs,
     evidenceRefsLabel: "Current evidence references",
     citations: payload.citations,
@@ -316,20 +338,22 @@ export function mountEvidenceDrawer(
     limitationList.append(item);
   }
 
-  drawer.id = ids.panelId;
-  drawer.hidden = true;
-  drawer.dataset.component = "evidence-drawer";
-  drawer.dataset.outcome = state.outcome;
-  drawer.setAttribute("role", state.landmarkRole);
-  drawer.setAttribute(
-    "aria-labelledby",
-    `${accessibleLabel.id} ${heading.id}`,
-  );
-  drawer.setAttribute("aria-live", state.ariaLive);
-  drawer.replaceChildren(
-    accessibleLabel,
-    heading,
-    outcome,
+  const drawerChildren: Node[] = [accessibleLabel, heading, outcome];
+  if (state.representationDisclosure !== null) {
+    const disclosure = document.createElement("section");
+    const disclosureHeading = document.createElement("strong");
+    const disclosureMessage = document.createElement("p");
+    disclosure.className = "guardrail evidence-drawer__representation-disclosure";
+    disclosure.dataset.component = "derived-representation-disclosure";
+    disclosure.dataset.representationKind = state.representationDisclosure.kind;
+    disclosure.setAttribute("role", "note");
+    disclosure.setAttribute("aria-label", "Representation disclosure");
+    disclosureHeading.textContent = state.representationDisclosure.label;
+    disclosureMessage.textContent = state.representationDisclosure.message;
+    disclosure.replaceChildren(disclosureHeading, disclosureMessage);
+    drawerChildren.push(disclosure);
+  }
+  drawerChildren.push(
     message,
     trustList,
     evidenceList,
@@ -338,6 +362,21 @@ export function mountEvidenceDrawer(
     limitationList,
     closeButton,
   );
+
+  drawer.id = ids.panelId;
+  drawer.hidden = true;
+  drawer.dataset.component = "evidence-drawer";
+  drawer.dataset.outcome = state.outcome;
+  if (state.representationDisclosure !== null) {
+    drawer.dataset.representationKind = state.representationDisclosure.kind;
+  }
+  drawer.setAttribute("role", state.landmarkRole);
+  drawer.setAttribute(
+    "aria-labelledby",
+    `${accessibleLabel.id} ${heading.id}`,
+  );
+  drawer.setAttribute("aria-live", state.ariaLive);
+  drawer.replaceChildren(...drawerChildren);
 
   function open(): void {
     if (!drawer.hidden) return;
