@@ -12,7 +12,7 @@ SECTION_HEADER = "## Current bounded inventory"
 ROW_RE = re.compile(
     r"^-\s+\[`([^`]+/)`\]\(\./([^/]+)/README\.md\)\s*$"
 )
-CONFLICT_BOUNDARY_RE = re.compile(r"^(?:<{7}|>{7})(?: .*)?$")
+CONFLICT_BOUNDARY_RE = re.compile(r"^(?:<{7,}|>{7,})(?: .*)?$")
 
 
 def _read_redirect_rows(readme_path: Path) -> tuple[list[str], list[str]]:

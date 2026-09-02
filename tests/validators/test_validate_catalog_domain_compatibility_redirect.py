@@ -259,6 +259,37 @@ class CatalogDomainCompatibilityRedirectTests(unittest.TestCase):
             self.assertEqual("PASS", report["outcome"])
             self.assertEqual([], report["invalid_child_redirects"])
 
+    def test_wide_configured_conflict_markers_fail_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            boundary_width = 12
+            compat, canonical = _write_layout(
+                Path(tmp),
+                actual=["agriculture"],
+                indexed=["agriculture"],
+                readme_overrides={
+                    "agriculture": (
+                        f"{'<' * boundary_width} HEAD\n"
+                        "Canonical catalog: data/catalog/domain/agriculture/\n"
+                        f"{'=' * boundary_width}\n"
+                        "Canonical catalog: data/catalog/domain/agriculture/\n"
+                        f"{'>' * boundary_width} origin/main\n"
+                    )
+                },
+            )
+
+            report = validate_catalog_domain_compatibility_redirect(compat, canonical)
+
+            self.assertEqual("FAIL", report["outcome"])
+            self.assertEqual(
+                [
+                    {
+                        "lane": "agriculture/",
+                        "reason_codes": ["MERGE_CONFLICT_MARKER"],
+                    }
+                ],
+                report["invalid_child_redirect_details"],
+            )
+
     def test_child_redirect_reason_codes_are_stable_and_composable(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             compat, canonical = _write_layout(
