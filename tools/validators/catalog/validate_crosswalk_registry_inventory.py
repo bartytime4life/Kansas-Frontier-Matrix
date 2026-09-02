@@ -7,31 +7,58 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
-PROFILE = "kfm.crosswalk-registry-inventory-drift.v1"
+PROFILE = "kfm.crosswalk-registry-inventory-drift.v2"
 SECTION_HEADER = "## Current inventory"
 ROW_RE = re.compile(r"^\|\s*\[`([^`]+)`\]\(([^)]+)\)\s*\|")
+TABLE_SEPARATOR_RE = re.compile(
+    r"^\|\s*:?-+:?\s*(?:\|\s*:?-+:?\s*)+\|?$"
+)
 
 
-def _read_inventory_rows(readme_path: Path) -> list[dict[str, str]]:
+def _read_inventory_rows(
+    readme_path: Path,
+) -> tuple[list[dict[str, str]], list[str]]:
     text = readme_path.read_text(encoding="utf-8")
-    start = text.find(SECTION_HEADER)
-    if start < 0:
+    marker_count = sum(
+        line.strip() == SECTION_HEADER for line in text.splitlines()
+    )
+    if marker_count == 0:
         raise ValueError(f"missing section marker: {SECTION_HEADER}")
+    if marker_count > 1:
+        raise ValueError(f"duplicate section marker: {SECTION_HEADER}")
+    start = text.find(SECTION_HEADER)
     section = text[start + len(SECTION_HEADER):]
     next_h2 = section.find("\n## ")
     if next_h2 >= 0:
         section = section[:next_h2]
 
     rows: list[dict[str, str]] = []
+    invalid_rows: list[str] = []
+    table_active = False
     for line in section.splitlines():
-        match = ROW_RE.match(line)
+        stripped = line.strip()
+        if TABLE_SEPARATOR_RE.fullmatch(stripped):
+            table_active = True
+            continue
+        if not table_active:
+            continue
+        if not stripped:
+            if rows or invalid_rows:
+                table_active = False
+            continue
+        if not stripped.startswith("|"):
+            if rows or invalid_rows:
+                table_active = False
+            continue
+        match = ROW_RE.match(stripped)
         if not match:
+            invalid_rows.append(stripped)
             continue
         label, link = match.groups()
         rows.append({"label": label, "link": link})
-    if not rows:
+    if not rows and not invalid_rows:
         raise ValueError("crosswalk registry inventory contains no parseable rows")
-    return rows
+    return rows, sorted(invalid_rows)
 
 
 def _actual_inventory(repo_root: Path) -> list[str]:
@@ -59,7 +86,7 @@ def validate_crosswalk_registry_inventory(
     root = repo_root / "data" / "registry" / "crosswalks"
     readme_path = (readme_path or root / "README.md").resolve()
 
-    rows = _read_inventory_rows(readme_path)
+    rows, invalid_inventory_rows = _read_inventory_rows(readme_path)
     indexed_paths = [row["link"] for row in rows]
     indexed_labels = [row["label"] for row in rows]
     actual_paths = _actual_inventory(repo_root)
@@ -89,7 +116,8 @@ def validate_crosswalk_registry_inventory(
     )
 
     failures = (
-        duplicate_index_paths
+        invalid_inventory_rows
+        or duplicate_index_paths
         or label_link_mismatches
         or unindexed_paths
         or stale_index_paths
@@ -105,6 +133,7 @@ def validate_crosswalk_registry_inventory(
         "indexed_paths": indexed_paths,
         "indexed_labels": indexed_labels,
         "actual_paths": actual_paths,
+        "invalid_inventory_rows": invalid_inventory_rows,
         "duplicate_index_paths": duplicate_index_paths,
         "label_link_mismatches": label_link_mismatches,
         "unindexed_paths": unindexed_paths,

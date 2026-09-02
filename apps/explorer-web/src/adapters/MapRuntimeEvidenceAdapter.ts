@@ -24,6 +24,7 @@ export type MapRuntimeEvidenceRequest = Readonly<{
   layer_id: string;
   feature_id: string;
   evidence_refs: readonly string[];
+  history_evidence_refs?: readonly string[];
 }>;
 
 /** Convert one validated MapRuntimePort selection into Explorer bridge input. */
@@ -32,12 +33,18 @@ export function mapRuntimeSelectionToEvidenceRequest(
 ): MapRuntimeEvidenceRequest | null {
   if (!isMapFeatureSelection(input)) return null;
 
+  const historyEvidenceRefs = input.historyEvidenceRefs;
   return Object.freeze({
     profile: input.profile,
     selection_id: input.selectionId,
     layer_id: input.layerId,
     feature_id: input.featureId,
     evidence_refs: Object.freeze([...input.evidenceRefs]),
+    ...(historyEvidenceRefs === undefined
+      ? {}
+      : {
+          history_evidence_refs: Object.freeze([...historyEvidenceRefs]),
+        }),
   });
 }
 

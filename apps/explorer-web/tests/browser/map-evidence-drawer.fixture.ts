@@ -21,10 +21,8 @@ const cases: readonly MapEvidenceFixtureCase[] = Object.freeze([
       selection_id: "selection:flow-001",
       layer_id: "layer:synthetic-streamflow",
       feature_id: "feature:flow-001",
-      evidence_refs: [
-        "kfm:evidence:synthetic:flow-001",
-        "kfm:evidence:synthetic:flow-000",
-      ],
+      evidence_refs: ["kfm:evidence:synthetic:flow-001"],
+      history_evidence_refs: ["kfm:evidence:synthetic:flow-000"],
     },
   },
   {
@@ -70,7 +68,10 @@ const cases: readonly MapEvidenceFixtureCase[] = Object.freeze([
       selection_id: "selection:held",
       layer_id: "layer:synthetic-streamflow",
       feature_id: "feature:held",
-      evidence_refs: ["kfm:evidence:synthetic:source-drift-held-001"],
+      evidence_refs: [],
+      history_evidence_refs: [
+        "kfm:evidence:synthetic:source-drift-held-001",
+      ],
     },
   },
   {
@@ -81,7 +82,8 @@ const cases: readonly MapEvidenceFixtureCase[] = Object.freeze([
       selection_id: "selection:held-mismatch",
       layer_id: "layer:synthetic-streamflow",
       feature_id: "feature:held-mismatch",
-      evidence_refs: ["kfm:evidence:synthetic:other"],
+      evidence_refs: [],
+      history_evidence_refs: ["kfm:evidence:synthetic:other"],
     },
   },
   {
@@ -92,7 +94,8 @@ const cases: readonly MapEvidenceFixtureCase[] = Object.freeze([
       selection_id: "selection:stale",
       layer_id: "layer:synthetic-streamflow",
       feature_id: "feature:stale",
-      evidence_refs: ["kfm:evidence:synthetic:stale-001"],
+      evidence_refs: [],
+      history_evidence_refs: ["kfm:evidence:synthetic:stale-001"],
     },
   },
   {
@@ -103,7 +106,8 @@ const cases: readonly MapEvidenceFixtureCase[] = Object.freeze([
       selection_id: "selection:stale-mismatch",
       layer_id: "layer:synthetic-streamflow",
       feature_id: "feature:stale-mismatch",
-      evidence_refs: ["kfm:evidence:synthetic:other"],
+      evidence_refs: [],
+      history_evidence_refs: ["kfm:evidence:synthetic:other"],
     },
   },
   {
@@ -114,7 +118,8 @@ const cases: readonly MapEvidenceFixtureCase[] = Object.freeze([
       selection_id: "selection:withdrawn",
       layer_id: "layer:synthetic-streamflow",
       feature_id: "feature:withdrawn",
-      evidence_refs: [
+      evidence_refs: [],
+      history_evidence_refs: [
         "kfm:evidence:synthetic:withdrawn-soil-summary-001",
       ],
     },
@@ -127,7 +132,8 @@ const cases: readonly MapEvidenceFixtureCase[] = Object.freeze([
       selection_id: "selection:withdrawn-mismatch",
       layer_id: "layer:synthetic-streamflow",
       feature_id: "feature:withdrawn-mismatch",
-      evidence_refs: ["kfm:evidence:synthetic:other"],
+      evidence_refs: [],
+      history_evidence_refs: ["kfm:evidence:synthetic:other"],
     },
   },
   {
@@ -138,7 +144,8 @@ const cases: readonly MapEvidenceFixtureCase[] = Object.freeze([
       selection_id: "selection:revoked",
       layer_id: "layer:synthetic-streamflow",
       feature_id: "feature:revoked",
-      evidence_refs: ["kfm:evidence:synthetic:revoked-001"],
+      evidence_refs: [],
+      history_evidence_refs: ["kfm:evidence:synthetic:revoked-001"],
     },
   },
   {
@@ -149,7 +156,8 @@ const cases: readonly MapEvidenceFixtureCase[] = Object.freeze([
       selection_id: "selection:revoked-mismatch",
       layer_id: "layer:synthetic-streamflow",
       feature_id: "feature:revoked-mismatch",
-      evidence_refs: ["kfm:evidence:synthetic:other"],
+      evidence_refs: [],
+      history_evidence_refs: ["kfm:evidence:synthetic:other"],
     },
   },
   {
@@ -160,7 +168,8 @@ const cases: readonly MapEvidenceFixtureCase[] = Object.freeze([
       selection_id: "selection:superseded",
       layer_id: "layer:synthetic-streamflow",
       feature_id: "feature:superseded",
-      evidence_refs: ["kfm:evidence:synthetic:superseded-001"],
+      evidence_refs: [],
+      history_evidence_refs: ["kfm:evidence:synthetic:superseded-001"],
     },
   },
   {
@@ -172,6 +181,7 @@ const cases: readonly MapEvidenceFixtureCase[] = Object.freeze([
       layer_id: "layer:synthetic-streamflow",
       feature_id: "feature:history-mismatch",
       evidence_refs: ["kfm:evidence:synthetic:flow-001"],
+      history_evidence_refs: [],
     },
   },
   {

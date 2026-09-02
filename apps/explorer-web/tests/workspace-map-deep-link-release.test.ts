@@ -133,6 +133,7 @@ describe("Explorer manual map-selection deep-link release", () => {
       missingMapUrl(),
       "missing",
       "missing",
+      true,
     );
 
     expect(transition).toEqual({
@@ -147,6 +148,7 @@ describe("Explorer manual map-selection deep-link release", () => {
       missingMapUrl(),
       "missing",
       "restricted",
+      true,
     );
 
     expect(transition.activeDeepLinkMapCaseId).toBeNull();
@@ -172,6 +174,7 @@ describe("Explorer manual map-selection deep-link release", () => {
       url,
       "missing",
       "supported",
+      true,
     );
 
     expect(transition).toEqual({
@@ -180,6 +183,40 @@ describe("Explorer manual map-selection deep-link release", () => {
       reason: "STALE_OWNER",
     });
     expect(url.toString()).toBe("https://example.invalid/explorer?lang=en#map");
+  });
+
+  it("releases an uncommitted URL request after a different manual case applies", () => {
+    const transition = resolvePublicMapCaseManualSelectionTransition(
+      missingMapUrl(),
+      null,
+      "supported",
+      true,
+    );
+
+    expect(transition.reason).toBe("RELEASED");
+    expect(transition.activeDeepLinkMapCaseId).toBeNull();
+    expect(
+      transition.replacementUrl?.searchParams.has(
+        PUBLIC_WORKSPACE_CONTEXT_QUERY_PARAM,
+      ),
+    ).toBe(false);
+    expect(transition.replacementUrl?.searchParams.get("lang")).toBe("en");
+    expect(transition.replacementUrl?.hash).toBe("#map");
+  });
+
+  it("keeps an uncommitted URL request when a manual case does not apply", () => {
+    expect(
+      resolvePublicMapCaseManualSelectionTransition(
+        missingMapUrl(),
+        null,
+        "supported",
+        false,
+      ),
+    ).toEqual({
+      activeDeepLinkMapCaseId: null,
+      replacementUrl: null,
+      reason: "UNCHANGED",
+    });
   });
 
   it("composes the release at the existing synthetic fixture boundary", () => {
@@ -197,6 +234,7 @@ describe("Explorer manual map-selection deep-link release", () => {
     );
     expect(mainSource).toContain("resolvePublicMapCaseUrlTransition");
     expect(mainSource).toContain("resolvePublicMapCaseUrlConsumerCommit");
+    expect(mainSource).toContain("caseId,\n    button.disabled,");
     expect(mainSource).toContain("mapCaseButton?.disabled");
     expect(mainSource).toContain("scheduleMapDeepLinkRetry(safeUrl)");
     expect(mainSource).toContain("window.location.href !== retryPlan.urlHref");

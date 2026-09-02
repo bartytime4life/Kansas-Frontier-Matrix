@@ -128,6 +128,24 @@ class CatalogDomainCompatibilityRedirectTests(unittest.TestCase):
             self.assertEqual("FAIL", report["outcome"])
             self.assertEqual(1, len(report["invalid_redirect_rows"]))
 
+    def test_duplicate_inventory_section_errors(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            compat, canonical = _write_layout(
+                Path(tmp),
+                actual=["agriculture"],
+                indexed=["agriculture"],
+            )
+            readme = compat / "README.md"
+            readme.write_text(
+                readme.read_text(encoding="utf-8")
+                + "\n## Current bounded inventory\n\n"
+                + "- [`agriculture/`](./agriculture/README.md)\n",
+                encoding="utf-8",
+            )
+
+            with self.assertRaisesRegex(ValueError, "duplicate section"):
+                validate_catalog_domain_compatibility_redirect(compat, canonical)
+
     def test_missing_canonical_target_fails_closed(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             compat, canonical = _write_layout(
@@ -221,6 +239,26 @@ class CatalogDomainCompatibilityRedirectTests(unittest.TestCase):
                 report["invalid_child_redirect_details"],
             )
 
+    def test_setext_heading_is_not_a_conflict_marker(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            compat, canonical = _write_layout(
+                Path(tmp),
+                actual=["agriculture"],
+                indexed=["agriculture"],
+                readme_overrides={
+                    "agriculture": (
+                        "Compatibility redirect\n"
+                        "=======\n\n"
+                        "Canonical catalog: data/catalog/domain/agriculture/\n"
+                    )
+                },
+            )
+
+            report = validate_catalog_domain_compatibility_redirect(compat, canonical)
+
+            self.assertEqual("PASS", report["outcome"])
+            self.assertEqual([], report["invalid_child_redirects"])
+
     def test_child_redirect_reason_codes_are_stable_and_composable(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             compat, canonical = _write_layout(
@@ -276,7 +314,7 @@ class CatalogDomainCompatibilityRedirectTests(unittest.TestCase):
             self.assertEqual(outputs[0], outputs[1])
             report = json.loads(outputs[0])
             self.assertEqual(
-                "kfm.catalog-domain-compatibility-redirect.v4",
+                "kfm.catalog-domain-compatibility-redirect.v5",
                 report["profile"],
             )
 

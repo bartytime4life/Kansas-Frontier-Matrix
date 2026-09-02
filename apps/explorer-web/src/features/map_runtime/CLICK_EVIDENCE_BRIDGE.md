@@ -20,9 +20,10 @@ The selection contract contains only:
 - `selection_id`
 - `layer_id`
 - `feature_id`
-- `evidence_refs`
+- `evidence_refs` (current-support eligible)
+- optional `history_evidence_refs` (audit-only)
 
-Unknown fields are rejected. IDs use a bounded portable grammar. Evidence references are unique and capped at 16. An empty evidence set returns `ABSTAIN / MISSING_EVIDENCE` without calling the resolver.
+Unknown fields are rejected. IDs use a bounded portable grammar. Evidence references are unique across both roles and capped at 16 in total. Current and history roles cannot overlap. A selection with neither current nor history evidence returns `ABSTAIN / MISSING_EVIDENCE` without calling the resolver.
 
 ## Shared `MapRuntimePort` profile
 
@@ -41,7 +42,7 @@ MapRuntimePort selection event
   -> validate and freeze KFM-owned MapFeatureSelection
   -> translate to the strict external selection profile
   -> resolveMapFeatureEvidence(...)
-  -> evidence-subset guard
+  -> role-preserving current/history evidence-subset guard
   -> finite Evidence Drawer resolution
   -> consumer callback
 ```
@@ -75,15 +76,15 @@ does not decide evidence, policy, review, correction, release, or rollback.
 
 This is a bounded consumer-integration proof. The current browser lab may continue to use deterministic controls until a separately reviewed concrete adapter translates real renderer events into the same port contract.
 
-## Evidence-subset invariant
+## Evidence-role and subset invariant
 
-A returned drawer projection may cite only evidence references already declared by the clicked selection. If the resolver returns any additional reference, the bridge fails closed with:
+A returned drawer projection may use current support only from `evidence_refs`. Negative outcomes and correction-prior references may use only `history_evidence_refs`; correction-active references must remain in the current set. The two selection roles are disjoint, so an audit-only reference cannot satisfy the current-support check. If the resolver widens either role or returns a historical reference as current support, the bridge fails closed with:
 
 ```text
 ERROR / DRAWER_EVIDENCE_OUTSIDE_SELECTION
 ```
 
-Rendered properties are therefore request scope, never evidence, and the resolver cannot silently widen the clicked feature's evidence set.
+Rendered properties are therefore request scope, never evidence, and the resolver cannot silently widen or rewrite the clicked feature's evidence roles.
 
 ## Finite failure behavior
 

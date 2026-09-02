@@ -960,7 +960,7 @@ The source envelope is not done until all applicable conditions are verified.
 | 11 | Which ReleaseManifest fields are required for production closure? | NEEDS VERIFICATION |
 | 12 | Where is the accepted ReleaseManifest validator and fixture set? | NEEDS VERIFICATION |
 | 13 | How is PromotionDecision connected to policy and accountable review? | NEEDS VERIFICATION |
-| 14 | Where is the schema-declared RollbackCard validator? | NEEDS VERIFICATION |
+| 14 | Where is the schema-declared RollbackCard validator? | CONFIRMED at `tools/validators/release/validate_rollback_card.py`; top-level compatibility delegate retained |
 | 15 | Which rollback fields and invalidation targets are mandatory? | NEEDS VERIFICATION |
 | 16 | Is CorrectionNotice canonical under correction, release, or compatibility paths? | CONFLICTED / NEEDS VERIFICATION |
 | 17 | Where is the accepted CorrectionNotice validator? | NEEDS VERIFICATION |
@@ -1003,9 +1003,9 @@ Resolution should be a separate scoped revision of the package README so review 
 
 CorrectionNotice appears in correction-family authority while release documentation also references it. This source tree must preserve refs without choosing a canonical family.
 
-### Validator-path drift
+### Validator boundary
 
-RollbackCard and CorrectionNotice schema-declared validators are absent or do not match the placeholder validator that exists elsewhere. Source code must not compensate by inventing private validation semantics.
+RollbackCard has a canonical no-network validator at `tools/validators/release/validate_rollback_card.py`; the historical top-level entrypoint delegates to it with deterministic compatibility coverage. CorrectionNotice validation remains unresolved. Source code must not invent private validation semantics or treat bounded RollbackCard candidate validation as execution authority.
 
 [Back to top](#top)
 
@@ -1094,7 +1094,7 @@ Do not silently rewrite release records or prior generated receipts.
 | Release root | Governs release records | Lane conventions remain open |
 | ReleaseManifest contract/schema | Rich meaning, thin shape | No production closure |
 | PromotionDecision contract/schema/test | Concrete proposed shape and fixture validation | No policy/review/release authorization |
-| RollbackCard contract/schema/validator | Rich meaning, thin shape, placeholder validator | No rollback readiness |
+| RollbackCard contract/schema/validator | Rich meaning, closed proposed candidate schema, bounded validator and compatibility delegate | No operational rollback readiness |
 | CorrectionNotice contract/schema | Rich meaning, thin shape | Placement/validator unresolved |
 | Signing standard | Draft signing model | No production key/trust authority |
 | ADR-0018 | Proposed gate sequence | Not accepted |

@@ -147,6 +147,28 @@ class CrosswalkRegistryInventoryTests(unittest.TestCase):
             report["label_link_mismatches"],
         )
 
+    def test_malformed_inventory_row_fails_closed(self) -> None:
+        paths = ("README.md", "water_planning/README.md")
+        rows = tuple((path, path) for path in paths)
+        tempdir, repo = self._fixture(rows, paths)
+        self.addCleanup(tempdir.cleanup)
+        readme = repo / "data" / "registry" / "crosswalks" / "README.md"
+        readme.write_text(
+            readme.read_text(encoding="utf-8").replace(
+                "| [`water_planning/README.md`](water_planning/README.md) |",
+                "| [`water_planning/README.md`](water_planning/README.md |",
+            ),
+            encoding="utf-8",
+        )
+
+        report = validate_crosswalk_registry_inventory(repo)
+
+        self.assertEqual("FAIL", report["outcome"])
+        self.assertEqual(1, len(report["invalid_inventory_rows"]))
+        self.assertEqual(
+            ["water_planning/README.md"], report["unindexed_paths"]
+        )
+
     def test_child_lane_without_readme_fails_closed(self) -> None:
         rows = (
             ("README.md", "README.md"),
@@ -169,6 +191,24 @@ class CrosswalkRegistryInventoryTests(unittest.TestCase):
         readme.write_text("# Crosswalk Registry\n", encoding="utf-8")
 
         with self.assertRaisesRegex(ValueError, "missing section marker"):
+            validate_crosswalk_registry_inventory(repo)
+
+    def test_duplicate_inventory_section_errors(self) -> None:
+        rows = (("README.md", "README.md"),)
+        actual = ("README.md",)
+        tempdir, repo = self._fixture(rows, actual)
+        self.addCleanup(tempdir.cleanup)
+        readme = repo / "data" / "registry" / "crosswalks" / "README.md"
+        readme.write_text(
+            readme.read_text(encoding="utf-8")
+            + "\n## Current inventory\n\n"
+            + "| Tracked path | Role | Bounded state |\n"
+            + "|---|---|---|\n"
+            + "| [`README.md`](README.md) | role | state |\n",
+            encoding="utf-8",
+        )
+
+        with self.assertRaisesRegex(ValueError, "duplicate section marker"):
             validate_crosswalk_registry_inventory(repo)
 
     def test_cli_output_is_deterministic_json(self) -> None:
@@ -196,7 +236,7 @@ class CrosswalkRegistryInventoryTests(unittest.TestCase):
         self.assertEqual(0, first.returncode)
         self.assertEqual(first.stdout, second.stdout)
         parsed = json.loads(first.stdout)
-        self.assertEqual("kfm.crosswalk-registry-inventory-drift.v1", parsed["profile"])
+        self.assertEqual("kfm.crosswalk-registry-inventory-drift.v2", parsed["profile"])
         self.assertEqual("PASS", parsed["outcome"])
 
 

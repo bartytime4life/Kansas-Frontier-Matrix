@@ -15,10 +15,8 @@ const matchingSelection = Object.freeze({
   selection_id: "selection:flow-001",
   layer_id: "layer:synthetic-streamflow",
   feature_id: "feature:flow-001",
-  evidence_refs: [
-    "kfm:evidence:synthetic:flow-001",
-    "kfm:evidence:synthetic:flow-000",
-  ],
+  evidence_refs: ["kfm:evidence:synthetic:flow-001"],
+  history_evidence_refs: ["kfm:evidence:synthetic:flow-000"],
 });
 
 describe("Explorer map feature to Evidence Drawer bridge", () => {
@@ -26,19 +24,19 @@ describe("Explorer map feature to Evidence Drawer bridge", () => {
     const input = {
       ...matchingSelection,
       evidence_refs: [...matchingSelection.evidence_refs],
+      history_evidence_refs: [...matchingSelection.history_evidence_refs],
     };
     const parsed = parseMapFeatureSelection(input);
     input.evidence_refs[0] = "kfm:evidence:mutated";
+    input.history_evidence_refs[0] = "kfm:evidence:history-mutated";
 
     expect(parsed).toEqual({
       profile: MAP_FEATURE_SELECTION_PROFILE,
       selectionId: "selection:flow-001",
       layerId: "layer:synthetic-streamflow",
       featureId: "feature:flow-001",
-      evidenceRefs: [
-        "kfm:evidence:synthetic:flow-001",
-        "kfm:evidence:synthetic:flow-000",
-      ],
+      evidenceRefs: ["kfm:evidence:synthetic:flow-001"],
+      historyEvidenceRefs: ["kfm:evidence:synthetic:flow-000"],
     });
   });
 
@@ -49,11 +47,21 @@ describe("Explorer map feature to Evidence Drawer bridge", () => {
       async (selection) => {
         expect(Object.isFrozen(selection)).toBe(true);
         expect(Object.isFrozen(selection.evidenceRefs)).toBe(true);
+        expect(Object.isFrozen(selection.historyEvidenceRefs)).toBe(true);
 
         const mutableSelection = selection as unknown as Record<string, unknown>;
         const mutableEvidenceRefs = selection.evidenceRefs as unknown as string[];
+        const mutableHistoryEvidenceRefs =
+          selection.historyEvidenceRefs as unknown as string[];
         expect(
           Reflect.set(mutableSelection, "featureId", "feature:mutated"),
+        ).toBe(false);
+        expect(
+          Reflect.set(
+            mutableHistoryEvidenceRefs,
+            "0",
+            "kfm:evidence:synthetic:history-mutated",
+          ),
         ).toBe(false);
         expect(
           Reflect.set(
@@ -68,6 +76,7 @@ describe("Explorer map feature to Evidence Drawer bridge", () => {
           selection.layerId,
           selection.featureId,
           ...selection.evidenceRefs,
+          ...(selection.historyEvidenceRefs ?? []),
         );
         return answerFixture;
       },
@@ -84,10 +93,8 @@ describe("Explorer map feature to Evidence Drawer bridge", () => {
       code: "SUPPORTED",
       selection: {
         featureId: "feature:flow-001",
-        evidenceRefs: [
-          "kfm:evidence:synthetic:flow-001",
-          "kfm:evidence:synthetic:flow-000",
-        ],
+        evidenceRefs: ["kfm:evidence:synthetic:flow-001"],
+        historyEvidenceRefs: ["kfm:evidence:synthetic:flow-000"],
       },
     });
   });
@@ -128,7 +135,11 @@ describe("Explorer map feature to Evidence Drawer bridge", () => {
   it("abstains without calling the resolver when the selected feature has no governed evidence ref", async () => {
     const resolver = vi.fn(async () => answerFixture);
     const result = await resolveMapFeatureEvidence(
-      { ...matchingSelection, evidence_refs: [] },
+      {
+        ...matchingSelection,
+        evidence_refs: [],
+        history_evidence_refs: [],
+      },
       resolver,
     );
 
@@ -167,7 +178,10 @@ describe("Explorer map feature to Evidence Drawer bridge", () => {
     const result = await resolveMapFeatureEvidence(
       {
         ...matchingSelection,
-        evidence_refs: ["kfm:evidence:synthetic:superseded-001"],
+        evidence_refs: [],
+        history_evidence_refs: [
+          "kfm:evidence:synthetic:superseded-001",
+        ],
       },
       async () => supersededFixture,
     );
@@ -189,6 +203,7 @@ describe("Explorer map feature to Evidence Drawer bridge", () => {
       {
         ...matchingSelection,
         evidence_refs: ["kfm:evidence:synthetic:flow-001"],
+        history_evidence_refs: [],
       },
       async () => supersededFixture,
     );
@@ -213,8 +228,40 @@ describe("Explorer map feature to Evidence Drawer bridge", () => {
       {
         ...matchingSelection,
         evidence_refs: ["kfm:evidence:synthetic:flow-001"],
+        history_evidence_refs: [],
       },
       async () => answerFixture,
+    );
+
+    expect(result).toMatchObject({
+      code: "DRAWER_EVIDENCE_OUTSIDE_SELECTION",
+      drawer: {
+        outcome: "ERROR",
+        code: "UPSTREAM_ERROR",
+        evidenceRefs: [],
+        citations: [],
+        historyLabels: [],
+      },
+    });
+    expect(JSON.stringify(result.drawer)).not.toContain(
+      "kfm:evidence:synthetic:flow-000",
+    );
+  });
+
+  it("fails closed when an audit-only ref is returned as current support", async () => {
+    const uncorrectedPriorAnswer = structuredClone(answerFixture);
+    uncorrectedPriorAnswer.evidence_refs = [
+      "kfm:evidence:synthetic:flow-000",
+    ];
+    uncorrectedPriorAnswer.trust_state.correction = "NONE";
+    uncorrectedPriorAnswer.history = {
+      negative_outcomes: [],
+      corrections: [],
+    };
+
+    const result = await resolveMapFeatureEvidence(
+      matchingSelection,
+      async () => uncorrectedPriorAnswer,
     );
 
     expect(result).toMatchObject({

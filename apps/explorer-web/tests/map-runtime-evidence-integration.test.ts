@@ -14,6 +14,7 @@ import {
 import { resolveMapFeatureEvidence } from "../src/features/map_runtime";
 import {
   SUPPORTED_SYNTHETIC_STREAMFLOW_EVIDENCE_REFS,
+  SUPPORTED_SYNTHETIC_STREAMFLOW_HISTORY_EVIDENCE_REFS,
   SUPPORTED_SYNTHETIC_STREAMFLOW_PROJECTION,
 } from "../src/site/mount-explorer-site";
 
@@ -23,13 +24,17 @@ const runtimeSelection = Object.freeze({
   layerId: "layer:synthetic-streamflow",
   featureId: "feature:flow-001",
   evidenceRefs: SUPPORTED_SYNTHETIC_STREAMFLOW_EVIDENCE_REFS,
+  historyEvidenceRefs:
+    SUPPORTED_SYNTHETIC_STREAMFLOW_HISTORY_EVIDENCE_REFS,
 });
 
 describe("MapRuntimePort to Explorer evidence integration", () => {
   it("keeps audit history scoped without presenting it as current support", async () => {
     expect(SUPPORTED_SYNTHETIC_STREAMFLOW_EVIDENCE_REFS).toEqual([
-      "kfm:evidence:synthetic:flow-000",
       "kfm:evidence:synthetic:flow-001",
+    ]);
+    expect(SUPPORTED_SYNTHETIC_STREAMFLOW_HISTORY_EVIDENCE_REFS).toEqual([
+      "kfm:evidence:synthetic:flow-000",
     ]);
     expect(SUPPORTED_SYNTHETIC_STREAMFLOW_PROJECTION.evidence_refs).toEqual([
       "kfm:evidence:synthetic:flow-001",
@@ -45,6 +50,8 @@ describe("MapRuntimePort to Explorer evidence integration", () => {
         layer_id: runtimeSelection.layerId,
         feature_id: runtimeSelection.featureId,
         evidence_refs: SUPPORTED_SYNTHETIC_STREAMFLOW_EVIDENCE_REFS,
+        history_evidence_refs:
+          SUPPORTED_SYNTHETIC_STREAMFLOW_HISTORY_EVIDENCE_REFS,
       }),
       async () => SUPPORTED_SYNTHETIC_STREAMFLOW_PROJECTION,
     );
@@ -66,9 +73,9 @@ describe("MapRuntimePort to Explorer evidence integration", () => {
       layer_id: "layer:synthetic-streamflow",
       feature_id: "feature:flow-001",
       evidence_refs: [
-        "kfm:evidence:synthetic:flow-000",
         "kfm:evidence:synthetic:flow-001",
       ],
+      history_evidence_refs: ["kfm:evidence:synthetic:flow-000"],
     });
   });
 

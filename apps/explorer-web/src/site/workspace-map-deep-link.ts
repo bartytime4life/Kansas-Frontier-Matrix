@@ -106,15 +106,33 @@ export function resolvePublicMapCaseUrlTransition(
  * newly selected fixture, EvidenceRefs, feature properties, or protected state.
  *
  * A programmatic click restoring the same `missing` case leaves the deep link
- * intact. If the tracked owner is already stale relative to the current URL,
- * ownership is dropped without rewriting unrelated browser state.
+ * intact. A successful different manual choice also releases a still-pending
+ * URL request before ownership has committed, preventing a later retry from
+ * overriding the user's visible selection. If the tracked owner is already
+ * stale relative to the current URL, ownership is dropped without rewriting
+ * unrelated browser state.
  */
 export function resolvePublicMapCaseManualSelectionTransition(
   url: URL,
   activeDeepLinkMapCaseId: "missing" | null,
   selectedCaseId: string,
+  selectionApplied: boolean,
 ): PublicMapCaseDeepLinkRelease {
+  const requestedMapCaseId = resolvePublicEvidenceFreeMapCaseId(url);
   if (activeDeepLinkMapCaseId === null) {
+    if (
+      selectionApplied &&
+      requestedMapCaseId !== null &&
+      selectedCaseId !== requestedMapCaseId
+    ) {
+      const replacementUrl = new URL(url.toString());
+      replacementUrl.searchParams.delete(PUBLIC_WORKSPACE_CONTEXT_QUERY_PARAM);
+      return Object.freeze({
+        activeDeepLinkMapCaseId: null,
+        replacementUrl,
+        reason: "RELEASED",
+      });
+    }
     return Object.freeze({
       activeDeepLinkMapCaseId: null,
       replacementUrl: null,
@@ -122,11 +140,19 @@ export function resolvePublicMapCaseManualSelectionTransition(
     });
   }
 
-  if (resolvePublicEvidenceFreeMapCaseId(url) !== activeDeepLinkMapCaseId) {
+  if (requestedMapCaseId !== activeDeepLinkMapCaseId) {
     return Object.freeze({
       activeDeepLinkMapCaseId: null,
       replacementUrl: null,
       reason: "STALE_OWNER",
+    });
+  }
+
+  if (!selectionApplied) {
+    return Object.freeze({
+      activeDeepLinkMapCaseId,
+      replacementUrl: null,
+      reason: "UNCHANGED",
     });
   }
 
