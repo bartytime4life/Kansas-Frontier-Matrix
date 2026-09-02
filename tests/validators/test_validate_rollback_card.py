@@ -25,6 +25,11 @@ STALE_COMPATIBILITY_GUIDANCE_PATTERNS = (
     r"(?=[^\n]*(?:\bplaceholders?\b|\bstubs?\b|do not use|revert))[^\n]*",
 )
 
+STALE_RELEASE_PACKAGE_ROLLBACK_GUIDANCE_PATTERNS = (
+    r"(?i)(?=[^\n]*\brollbackcard\b)(?=[^\n]*\bvalidator\b)"
+    r"(?=[^\n]*(?:\babsent\b|\bplaceholders?\b|notimplementederror))[^\n]*",
+)
+
 
 class RollbackCardValidatorTests(unittest.TestCase):
     def test_schema_is_valid_draft_2020_12(self) -> None:
@@ -348,26 +353,41 @@ class RollbackCardValidatorTests(unittest.TestCase):
         self,
     ) -> None:
         rollback_guidance_paths = []
-        for path in sorted((REPO_ROOT / "docs").rglob("*.md")):
+        release_package_root = REPO_ROOT / "packages/release"
+        for path in sorted(REPO_ROOT.rglob("*.md")):
             guidance = path.read_text(encoding="utf-8")
+            is_release_package_guidance = (
+                path.is_relative_to(release_package_root)
+                and "rollbackcard" in guidance.casefold()
+            )
             if (
                 "rollback" in path.as_posix().casefold()
                 or "tools/validators/validate_rollback_card.py" in guidance
+                or is_release_package_guidance
             ):
                 rollback_guidance_paths.append(path)
 
-        self.assertGreaterEqual(len(rollback_guidance_paths), 10)
-        self.assertIn(
+        self.assertGreaterEqual(len(rollback_guidance_paths), 13)
+        required_paths = (
             REPO_ROOT
             / "docs/intake/exploratory/"
             "publication-validator-compatibility-source-map.md",
-            rollback_guidance_paths,
+            REPO_ROOT / "packages/release/README.md",
+            REPO_ROOT / "packages/release/src/README.md",
+            REPO_ROOT / "packages/release/src/release/README.md",
         )
+        for required_path in required_paths:
+            self.assertIn(required_path, rollback_guidance_paths)
         for path in rollback_guidance_paths:
             with self.subTest(path=path.relative_to(REPO_ROOT).as_posix()):
                 guidance = path.read_text(encoding="utf-8")
                 for stale_pattern in STALE_COMPATIBILITY_GUIDANCE_PATTERNS:
                     self.assertNotRegex(guidance, stale_pattern)
+                if path.is_relative_to(release_package_root):
+                    for stale_pattern in (
+                        STALE_RELEASE_PACKAGE_ROLLBACK_GUIDANCE_PATTERNS
+                    ):
+                        self.assertNotRegex(guidance, stale_pattern)
 
     def test_stale_operator_guidance_patterns_are_non_vacuous(self) -> None:
         stale_variants = (
@@ -392,6 +412,30 @@ class RollbackCardValidatorTests(unittest.TestCase):
             any(
                 re.search(pattern, production_hold)
                 for pattern in STALE_COMPATIBILITY_GUIDANCE_PATTERNS
+            )
+        )
+        release_package_stale_variants = (
+            "| `RollbackCard` | Declared validator absent; other validator placeholder |",
+            "RollbackCard has a different validator that raises NotImplementedError.",
+            "RollbackCard contract/schema/validator is still a placeholder validator.",
+        )
+        for stale_variant in release_package_stale_variants:
+            with self.subTest(stale_variant=stale_variant):
+                self.assertTrue(
+                    any(
+                        re.search(pattern, stale_variant)
+                        for pattern in (
+                            STALE_RELEASE_PACKAGE_ROLLBACK_GUIDANCE_PATTERNS
+                        )
+                    )
+                )
+        bounded_validator = (
+            "RollbackCard has a bounded validator and no execution authority."
+        )
+        self.assertFalse(
+            any(
+                re.search(pattern, bounded_validator)
+                for pattern in STALE_RELEASE_PACKAGE_ROLLBACK_GUIDANCE_PATTERNS
             )
         )
 
