@@ -83,6 +83,17 @@ def test_missing_validator_fails_closed_without_execution(monkeypatch, tmp_path)
     assert module.main(["--fixtures"]) == 2
 
 
+@pytest.mark.parametrize("exact", ("--fixtures", "--input"))
+def test_assessment_modes_reject_abbreviated_option_names(exact):
+    module = _load_module()
+
+    for length in range(3, len(exact)):
+        option = exact[:length]
+        with pytest.raises(SystemExit) as exc:
+            module.main([option])
+        assert exc.value.code == 2
+
+
 def test_operational_execute_flag_is_not_supported():
     module = _load_module()
 

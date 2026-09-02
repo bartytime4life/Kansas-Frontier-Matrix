@@ -49,5 +49,15 @@ class LivingPersonScreenTests(unittest.TestCase):
         self.assertIn("scope=historical_synthetic", result.stdout)
 
 
+    def test_fixture_mode_rejects_abbreviated_option_names(self) -> None:
+        exact = "--fixtures"
+        for length in range(3, len(exact)):
+            option = exact[:length]
+            with self.subTest(option=option):
+                result = self.run_screen(option)
+                self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+                self.assertIn("unrecognized arguments", result.stderr)
+
+
 if __name__ == "__main__":
     unittest.main()

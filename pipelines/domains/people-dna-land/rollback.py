@@ -26,7 +26,7 @@ ASSESSMENT_VALIDATOR = (
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(description=__doc__, allow_abbrev=False)
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument(
         "--fixtures",

@@ -79,7 +79,7 @@ def run_fixtures() -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(description=__doc__, allow_abbrev=False)
     parser.add_argument("paths", nargs="*", type=Path)
     parser.add_argument(
         "--fixtures",
