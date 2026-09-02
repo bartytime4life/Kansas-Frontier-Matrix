@@ -118,9 +118,12 @@ PROTECTED_IDENTIFIER_PATTERN = re.compile(
     r"\s*[:=#]\s*"
     r")[a-z0-9][a-z0-9._/-]*\b"
 )
+SAFE_AGGREGATE_NO_AUTHORITY_PHRASE_PATTERN = re.compile(
+    r"(?i)\bgeneralized aggregate support;\s*not farm or operator truth\b"
+)
 PRIVATE_IDENTITY_LABEL_PATTERN = re.compile(
     r"\b(?i:parcel|field|farm|operator|owner|well|permit|water[-_ ]?right)\s+"
-    r"[A-Z0-9][A-Za-z0-9.'’/-]*(?:\s+[A-Z0-9][A-Za-z0-9.'’/-]*)*\b"
+    r"[A-Za-z0-9][A-Za-z0-9.'’/-]*(?:\s+[A-Za-z0-9][A-Za-z0-9.'’/-]*)*\b"
 )
 LABELED_COORDINATE_PATTERN = re.compile(
     r"(?i)\b(?:lat(?:itude)?|lon(?:gitude)?)\s*[:=]\s*"
@@ -189,6 +192,11 @@ def _strict_json_loads(text: str) -> Any:
     )
 
 
+def _contains_private_identity_label(value: str) -> bool:
+    scrubbed = SAFE_AGGREGATE_NO_AUTHORITY_PHRASE_PATTERN.sub("", value)
+    return bool(PRIVATE_IDENTITY_LABEL_PATTERN.search(scrubbed))
+
+
 def _contains_coordinate_literal(value: str) -> bool:
     if LABELED_COORDINATE_PATTERN.search(value) or WKT_POINT_PATTERN.search(value):
         return True
@@ -213,7 +221,7 @@ def _unsafe_scalar_findings(value: Any, path: tuple[Any, ...] = ()) -> set[Findi
     elif isinstance(value, str):
         if (_contains_coordinate_literal(value)
                 or PROTECTED_IDENTIFIER_PATTERN.search(value)
-                or PRIVATE_IDENTITY_LABEL_PATTERN.search(value)):
+                or _contains_private_identity_label(value)):
             findings.add(Finding("AG_MAP_HARMFUL_PRECISION_DENIED", _pointer(path)))
     return findings
 
