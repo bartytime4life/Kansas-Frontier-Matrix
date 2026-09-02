@@ -167,6 +167,62 @@ class PublicSafeMigrationFixtureTests(unittest.TestCase):
                     )
                     candidate_reader.assert_not_called()
 
+    def test_manifest_schema_is_closed_before_candidate_read(self):
+        path = "valid/public_safe_synthetic_route.json"
+        cases = {
+            "top-level": (
+                {"cases": [], "ignored": True},
+                Finding("fixture.manifest_invalid", "/"),
+            ),
+            "case": (
+                {
+                    "cases": [
+                        {
+                            "path": path,
+                            "expected_findings": [],
+                            "ignored": True,
+                        }
+                    ]
+                },
+                Finding("fixture.case_invalid", "/cases/0"),
+            ),
+            "expected-finding": (
+                {
+                    "cases": [
+                        {
+                            "path": path,
+                            "expected_findings": [
+                                {"code": "ignored", "path": "/", "extra": True}
+                            ],
+                        }
+                    ]
+                },
+                Finding(
+                    "fixture.case_invalid",
+                    "/cases/0/expected_findings/0",
+                ),
+            ),
+        }
+        with TemporaryDirectory() as temp_dir:
+            manifest_path = Path(temp_dir) / "manifest.json"
+            for name, (manifest, expected) in cases.items():
+                with self.subTest(name=name):
+                    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+                    with (
+                        patch.object(
+                            migration_validator,
+                            "MANIFEST_PATH",
+                            manifest_path,
+                        ),
+                        patch.object(
+                            migration_validator,
+                            "validate_file",
+                        ) as candidate_reader,
+                    ):
+                        result = migration_validator.validate_fixture_manifest()
+                    self.assertEqual(result.findings, (expected,))
+                    candidate_reader.assert_not_called()
+
     def test_degenerate_route_fails_closed(self):
         self.assertEqual(
             validate_file(DEGENERATE).findings,

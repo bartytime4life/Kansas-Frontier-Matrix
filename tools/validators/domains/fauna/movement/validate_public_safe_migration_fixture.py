@@ -362,13 +362,18 @@ def validate_fixture_manifest() -> ValidationResult:
         manifest = _load_bounded_json(MANIFEST_PATH)
     except (OSError, UnicodeError, ValueError, RecursionError):
         return ValidationResult((Finding("fixture.manifest_invalid", "/"),))
-    if not isinstance(manifest, Mapping) or not isinstance(manifest.get("cases"), list):
+    if not isinstance(manifest, Mapping) or set(manifest) != {"cases"}:
+        return ValidationResult((Finding("fixture.manifest_invalid", "/"),))
+    if not isinstance(manifest.get("cases"), list):
         return ValidationResult((Finding("fixture.manifest_invalid", "/cases"),))
 
     findings: list[Finding] = []
-    declared: list[str] = []
+    parsed_cases: list[tuple[int, str, tuple[Finding, ...]]] = []
     for index, case in enumerate(manifest["cases"]):
-        if not isinstance(case, Mapping):
+        if not isinstance(case, Mapping) or set(case) != {
+            "expected_findings",
+            "path",
+        }:
             _add(findings, "fixture.case_invalid", f"/cases/{index}")
             continue
         relative_path = case.get("path")
@@ -376,22 +381,46 @@ def validate_fixture_manifest() -> ValidationResult:
         if not isinstance(relative_path, str) or not isinstance(expected, list):
             _add(findings, "fixture.case_invalid", f"/cases/{index}")
             continue
+        expected_findings: list[Finding] = []
+        expected_is_valid = True
+        for finding_index, item in enumerate(expected):
+            if (
+                not isinstance(item, Mapping)
+                or set(item) != {"code", "path"}
+                or not isinstance(item.get("code"), str)
+                or not isinstance(item.get("path"), str)
+            ):
+                _add(
+                    findings,
+                    "fixture.case_invalid",
+                    f"/cases/{index}/expected_findings/{finding_index}",
+                )
+                expected_is_valid = False
+            else:
+                expected_findings.append(Finding(item["code"], item["path"]))
+        if not expected_is_valid:
+            continue
+        parsed_cases.append((index, relative_path, tuple(sorted(expected_findings))))
+
+    if findings:
+        return ValidationResult(tuple(sorted(set(findings))))
+
+    declared: list[str] = []
+    resolved_cases: list[tuple[int, Path, tuple[Finding, ...]]] = []
+    for index, relative_path, expected_findings in parsed_cases:
         fixture_path = _fixture_case_path(relative_path)
         if fixture_path is None:
             _add(findings, "fixture.path_invalid", f"/cases/{index}/path")
             continue
         declared.append(relative_path)
+        resolved_cases.append((index, fixture_path, expected_findings))
+
+    if findings:
+        return ValidationResult(tuple(sorted(set(findings))))
+
+    for index, fixture_path, expected_findings in resolved_cases:
         actual = validate_file(fixture_path).findings
-        expected_findings = tuple(
-            sorted(
-                Finding(item.get("code"), item.get("path"))
-                for item in expected
-                if isinstance(item, Mapping)
-                and isinstance(item.get("code"), str)
-                and isinstance(item.get("path"), str)
-            )
-        )
-        if len(expected_findings) != len(expected) or expected_findings != actual:
+        if expected_findings != actual:
             _add(findings, "fixture.outcome_mismatch", f"/cases/{index}")
 
     actual_paths = sorted(
