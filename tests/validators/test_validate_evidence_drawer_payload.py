@@ -51,6 +51,21 @@ class EvidenceDrawerPayloadValidatorTests(unittest.TestCase):
         )
         self.assertEqual((), findings)
 
+    def test_every_outcome_requires_superseded_correction_prior_history(self) -> None:
+        valid = MODULE.validate_payload(
+            MODULE.FIXTURES_ROOT / "valid/answer-corrected.json"
+        )
+        invalid = MODULE.validate_payload(
+            MODULE.FIXTURES_ROOT
+            / "invalid/abstain-correction-without-superseded-history.json"
+        )
+
+        self.assertEqual((), valid)
+        self.assertEqual(
+            {"CORRECTION_PRIOR_NOT_SUPERSEDED"},
+            {item.code for item in invalid},
+        )
+
     def test_negative_state_reason_must_match(self) -> None:
         findings = MODULE.validate_payload(
             MODULE.FIXTURES_ROOT / "invalid/negative-state-reason-mismatch.json"
@@ -120,6 +135,7 @@ class EvidenceDrawerPayloadValidatorTests(unittest.TestCase):
         ).read_text(encoding="utf-8")
         self.assertIn("kfm.explorer.evidence-drawer.public-safe.v1", source)
         self.assertIn("SUPERSEDED_EVIDENCE", source)
+        self.assertIn("correctionPriorRefs", source)
         self.assertIn("correctionsContainCycle", source)
         self.assertIn("resolvable_as_current", source)
 
