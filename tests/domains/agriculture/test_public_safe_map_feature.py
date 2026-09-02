@@ -472,6 +472,31 @@ def test_whitespace_labeled_coordinate_literals_are_denied():
         ]
 
 
+def test_cardinal_coordinate_pairs_are_denied():
+    module = _module()
+    manifest = json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))
+    candidate = module.materialize_case(
+        manifest, _case(manifest, "valid_county_crop_observation")
+    )
+
+    for value in (
+        "N 38.8751 W 98.4520",
+        "N38.8751,W98.4520",
+        "38.8751N 98.4520W",
+        "ｎ 38.8751 ｗ 98.4520",
+    ):
+        mutated = copy.deepcopy(candidate)
+        mutated["indicator"]["value"] = value
+        mutated["spec_hash"], mutated["id"] = module.canonical_identity(mutated)
+        result = module.validate_payload(mutated)
+        assert [(finding.code, finding.path) for finding in result.findings] == [
+            ("AG_MAP_HARMFUL_PRECISION_DENIED", "/indicator/value")
+        ]
+
+    assert not module._contains_coordinate_literal("N 91 W 98")
+    assert not module._contains_coordinate_literal("38N 181W")
+
+
 def test_malformed_json_returns_machine_readable_denial(tmp_path, capsys):
     module = _module()
     candidate_path = tmp_path / "malformed.json"
@@ -581,4 +606,3 @@ def test_unavailable_input_returns_machine_readable_error(tmp_path, capsys):
         ]
         assert payload["authority"] == "NONE"
         assert payload["execution_mode"] == "SYNTHETIC_NO_NETWORK"
-
