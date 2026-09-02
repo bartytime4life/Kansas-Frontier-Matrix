@@ -66,9 +66,20 @@ def validate_lockfile(path: Path = LOCKFILE) -> None:
     if any(token in lowered for token in FORBIDDEN_LOCK_TEXT):
         raise CliInstallConfigurationError("CLI_LOCKFILE_SOURCE_UNSAFE")
 
+    physical_lines = text.splitlines()
+    if any(
+        previous.rstrip().endswith("\\")
+        and not previous.lstrip().startswith("#")
+        and (not current.strip() or current.lstrip().startswith("#"))
+        for previous, current in zip(physical_lines, physical_lines[1:])
+    ):
+        raise CliInstallConfigurationError(
+            "CLI_LOCKFILE_CONTINUATION_INTERRUPTED"
+        )
+
     lock_lines = [
         line
-        for line in text.splitlines()
+        for line in physical_lines
         if line.strip() and not line.lstrip().startswith("#")
     ]
     if any(
