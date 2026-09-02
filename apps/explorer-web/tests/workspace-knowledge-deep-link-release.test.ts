@@ -2,10 +2,12 @@ import { describe, expect, it } from "vitest";
 import mainSource from "../src/main.ts?raw";
 import {
   PUBLIC_KNOWLEDGE_DOMAIN_DEEP_LINK_RETRY_LIMIT,
+  hasSinglePublicKnowledgeDomainConsumer,
   isPublicKnowledgeDomainRetryGenerationCurrent,
   resolvePublicKnowledgeDomainRetryPlan,
   resolvePublicKnowledgeDomainManualSelectionTransition,
   resolvePublicKnowledgeDomainUrlConsumerCommit,
+  resolveSinglePublicKnowledgeDomainControlId,
 } from "../src/site/workspace-knowledge-deep-link";
 import { resolvePublicKnowledgeDomainSelectionTransition } from "../src/site/workspace-navigation";
 import {
@@ -47,6 +49,38 @@ function contextUrl(domainIds: readonly string[]): URL {
 }
 
 describe("public Knowledge-domain deep-link release", () => {
+  it("fails closed when mounted or selected Knowledge controls are ambiguous", () => {
+    expect(
+      hasSinglePublicKnowledgeDomainConsumer(
+        ["hydrology", "archaeology"],
+        "archaeology",
+      ),
+    ).toBe(true);
+    expect(
+      hasSinglePublicKnowledgeDomainConsumer([], "archaeology"),
+    ).toBe(false);
+    expect(
+      hasSinglePublicKnowledgeDomainConsumer(
+        ["archaeology", "archaeology"],
+        "archaeology",
+      ),
+    ).toBe(false);
+
+    expect(
+      resolveSinglePublicKnowledgeDomainControlId(["archaeology"]),
+    ).toBe("archaeology");
+    expect(resolveSinglePublicKnowledgeDomainControlId([])).toBeNull();
+    expect(
+      resolveSinglePublicKnowledgeDomainControlId([
+        "archaeology",
+        "archaeology",
+      ]),
+    ).toBeNull();
+    expect(
+      resolveSinglePublicKnowledgeDomainControlId([undefined]),
+    ).toBeNull();
+  });
+
   it("bounds unavailable-control retries and resets the budget for a new URL", () => {
     let state = Object.freeze({
       attemptsRemaining: PUBLIC_KNOWLEDGE_DOMAIN_DEEP_LINK_RETRY_LIMIT,
@@ -335,6 +369,12 @@ describe("public Knowledge-domain deep-link release", () => {
     ).toBeGreaterThan(clickIndex);
     expect(mainSource).toContain(
       'button[data-domain-id][aria-pressed="true"]',
+    );
+    expect(mainSource).toContain(
+      "hasSinglePublicKnowledgeDomainConsumer(",
+    );
+    expect(mainSource).toContain(
+      "resolveSinglePublicKnowledgeDomainControlId(",
     );
     expect(mainSource).not.toContain("domainIds.join");
   });

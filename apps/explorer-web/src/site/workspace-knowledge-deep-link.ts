@@ -24,6 +24,35 @@ export type PublicKnowledgeDomainDeepLinkRelease = Readonly<{
 }>;
 
 /**
+ * Resolve visible Knowledge state only when exactly one control reports the
+ * selection. Responsive or repeated mounts must not turn DOM order into
+ * catalog authority.
+ */
+export function resolveSinglePublicKnowledgeDomainControlId(
+  selectedDomainIds: readonly (string | undefined)[],
+): string | null {
+  if (selectedDomainIds.length !== 1) return null;
+  const selectedDomainId = selectedDomainIds[0];
+  return selectedDomainId === undefined || selectedDomainId.length === 0
+    ? null
+    : selectedDomainId;
+}
+
+/**
+ * A URL request has one truthful consumer only when exactly one mounted
+ * Knowledge control carries the requested catalog identifier.
+ */
+export function hasSinglePublicKnowledgeDomainConsumer(
+  mountedDomainIds: readonly (string | undefined)[],
+  requestedDomainId: string,
+): boolean {
+  return (
+    mountedDomainIds.filter((domainId) => domainId === requestedDomainId)
+      .length === 1
+  );
+}
+
+/**
  * Reserve one finite retry for a Knowledge-domain control that is absent or
  * disabled while its validated public URL request is pending. A different URL
  * receives a fresh budget; exhaustion fails closed without polling forever or

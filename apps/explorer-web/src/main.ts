@@ -25,10 +25,12 @@ import {
 } from "./site/workspace-map-deep-link";
 import {
   PUBLIC_KNOWLEDGE_DOMAIN_DEEP_LINK_RETRY_LIMIT,
+  hasSinglePublicKnowledgeDomainConsumer,
   isPublicKnowledgeDomainRetryGenerationCurrent,
   resolvePublicKnowledgeDomainRetryPlan,
   resolvePublicKnowledgeDomainManualSelectionTransition,
   resolvePublicKnowledgeDomainUrlConsumerCommit,
+  resolveSinglePublicKnowledgeDomainControlId,
   type PublicKnowledgeDomainRetryState,
 } from "./site/workspace-knowledge-deep-link";
 
@@ -255,10 +257,13 @@ const syncWorkspaceNavigation = (): void => {
     if (activeDeepLinkMapCaseId === null) cancelPendingMapDeepLinkRetry();
   }
 
-  const currentDomainId =
-    root.querySelector<HTMLButtonElement>(
-      'button[data-domain-id][aria-pressed="true"]',
-    )?.dataset.domainId ?? null;
+  const currentDomainId = resolveSinglePublicKnowledgeDomainControlId(
+    Array.from(
+      root.querySelectorAll<HTMLButtonElement>(
+        'button[data-domain-id][aria-pressed="true"]',
+      ),
+    ).map((button) => button.dataset.domainId),
+  );
   const domainTransition = resolvePublicKnowledgeDomainSelectionTransition(
     safeUrl,
     activeDeepLinkKnowledgeDomainId,
@@ -267,12 +272,21 @@ const syncWorkspaceNavigation = (): void => {
   const domainIdToSelect = domainTransition.domainIdToSelect;
   const requestedDomainId = domainTransition.activeDeepLinkDomainId;
   const domainConsumerId = domainIdToSelect ?? requestedDomainId;
+  const domainButtons = Array.from(
+    root.querySelectorAll<HTMLButtonElement>("button[data-domain-id]"),
+  );
+  const domainConsumerIsUnique =
+    domainConsumerId !== null &&
+    hasSinglePublicKnowledgeDomainConsumer(
+      domainButtons.map((button) => button.dataset.domainId),
+      domainConsumerId,
+    );
   const domainButton =
-    domainConsumerId === null
+    !domainConsumerIsUnique
       ? undefined
-      : Array.from(
-          root.querySelectorAll<HTMLButtonElement>("button[data-domain-id]"),
-        ).find((button) => button.dataset.domainId === domainConsumerId);
+      : domainButtons.find(
+          (button) => button.dataset.domainId === domainConsumerId,
+        );
   const consumerReady = domainButton !== undefined && !domainButton.disabled;
   if (requestedDomainId !== null && !consumerReady) {
     scheduleKnowledgeDomainDeepLinkRetry(safeUrl);
@@ -298,10 +312,13 @@ const syncWorkspaceNavigation = (): void => {
       if (priorFocus?.isConnected) priorFocus.focus();
     }
   }
-  const selectedDomainId =
-    root.querySelector<HTMLButtonElement>(
-      'button[data-domain-id][aria-pressed="true"]',
-    )?.dataset.domainId ?? null;
+  const selectedDomainId = resolveSinglePublicKnowledgeDomainControlId(
+    Array.from(
+      root.querySelectorAll<HTMLButtonElement>(
+        'button[data-domain-id][aria-pressed="true"]',
+      ),
+    ).map((button) => button.dataset.domainId),
+  );
   activeDeepLinkKnowledgeDomainId =
     resolvePublicKnowledgeDomainUrlConsumerCommit(
       domainTransition,
