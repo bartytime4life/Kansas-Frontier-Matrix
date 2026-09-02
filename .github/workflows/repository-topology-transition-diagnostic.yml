@@ -40,17 +40,12 @@ jobs:
         shell: bash
         run: python tools/ci/install_python_ci.py project-runtime
 
-      - name: Emit and classify the bounded transition candidate
+      - name: Emit, classify, and stage the legal partial baseline
         shell: bash
         run: |
-          set -uo pipefail
-          set +e
+          set -euo pipefail
           python tools/validators/directory_governance/validate_repository_topology.py \
             --emit-baseline > /tmp/repository_topology_baseline_candidate.json
-          validator_status=$?
-          set -e
-          echo "VALIDATOR_STATUS=${validator_status}"
-          test -s /tmp/repository_topology_baseline_candidate.json
           python - <<'PY'
           import base64
           import json
@@ -61,6 +56,7 @@ jobs:
               "tools/validators/directory_governance/repository_topology_baseline.json"
           )
           candidate_path = Path("/tmp/repository_topology_baseline_candidate.json")
+          partial_path = Path("/tmp/repository_topology_partial_baseline.json")
           current = json.loads(baseline_path.read_text(encoding="utf-8"))
           candidate = json.loads(candidate_path.read_text(encoding="utf-8"))
 
@@ -86,10 +82,18 @@ jobs:
           removed_identities = set(old) - set(new)
           added_identities = set(new) - set(old)
           expected = {
-              ("KFM-TOPO-001", "path-grammar:uppercase"),
               ("KFM-TOPO-004", "catalog/"),
               ("KFM-TOPO-009", "scaffold-only-leaf-directories"),
               ("KFM-TOPO-016", "doc-id:kfm://doc/NEEDS-VERIFICATION"),
+          }
+          strict_shrink_identities = {
+              ("KFM-TOPO-009", "scaffold-only-leaf-directories"),
+              ("KFM-TOPO-016", "doc-id:kfm://doc/NEEDS-VERIFICATION"),
+          }
+          expected_classifications = {
+              "KFM-TOPO-004 / catalog/": "MIXED_CHANGE",
+              "KFM-TOPO-009 / scaffold-only-leaf-directories": "STRICT_SHRINKAGE",
+              "KFM-TOPO-016 / doc-id:kfm://doc/NEEDS-VERIFICATION": "STRICT_SHRINKAGE",
           }
 
           print("CHANGED_IDENTITIES=" + json.dumps(sorted(changed)))
@@ -120,23 +124,87 @@ jobs:
               print("NEW_EVIDENCE_SHA256=" + new[identity]["evidence_sha256"])
               print("REMOVED_MEMBERS=" + json.dumps(removed))
               print("ADDED_MEMBERS=" + json.dumps(added))
-              print(
-                  "CANDIDATE_ENTRY="
-                  + json.dumps(new[identity], sort_keys=True, separators=(",", ":"))
-              )
               print("END_TRANSITION")
+          assert classifications == expected_classifications, classifications
 
-          print("CLASSIFICATIONS=" + json.dumps(classifications, sort_keys=True))
+          partial = dict(current)
+          partial_entries = []
+          for identity, entry in old.items():
+              partial_entries.append(
+                  new[identity] if identity in strict_shrink_identities else entry
+              )
+          partial_entries.sort(key=lambda entry: entry["fingerprint"])
+          partial["entries"] = partial_entries
+          assert len(partial_entries) == len(current["entries"])
+          assert all(
+              partial[field] == current[field]
+              for field in current
+              if field != "entries"
+          )
+          partial_path.write_text(
+              json.dumps(partial, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          print("PARTIAL_BASELINE_ENTRIES=" + str(len(partial_entries)))
           print(
-              "BOUNDARY: classification only; no migration, deletion, release, "
-              "deployment, publication, policy, or baseline-update authority."
+              "BOUNDARY: only KFM-TOPO-009 and KFM-TOPO-016 strict shrinkages "
+              "are staged; the frozen catalog mutation remains unresolved."
           )
           PY
 
-      - name: Upload the validator-generated candidate
+          set +e
+          python tools/validators/directory_governance/validate_repository_topology.py \
+            --baseline /tmp/repository_topology_partial_baseline.json \
+            --trusted-baseline-ref df45bbaea90c210ec485dd85562a314ed0c9ccf4 \
+            --format json > /tmp/repository_topology_partial_report.json
+          partial_status=$?
+          set -e
+          echo "PARTIAL_VALIDATOR_STATUS=${partial_status}"
+          test "${partial_status}" -eq 1
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(
+              Path("/tmp/repository_topology_partial_report.json").read_text(
+                  encoding="utf-8"
+              )
+          )
+          assert report["outcome"] == "FAIL_INVARIANT", report["outcome"]
+          assert report["counts"]["fail_invariant"] == 0, report["counts"]
+          assert report["counts"]["fail_new_drift"] == 1, report["counts"]
+          assert report["counts"]["baselined_warning"] == 126, report["counts"]
+          assert report["baseline"]["applicable_count"] == 127, report["baseline"]
+          assert report["baseline"]["stale_fingerprints"] == [
+              "sha256:521388927153c91a67ca8cead55af9d688a6064517d109aa556cffca91505006"
+          ], report["baseline"]
+          introduced = [
+              finding
+              for finding in report["findings"]
+              if finding["disposition"] == "FAIL_NEW_DRIFT"
+          ]
+          assert introduced == [
+              {
+                  "disposition": "FAIL_NEW_DRIFT",
+                  "evidence_sha256": "sha256:2ee2ee5e1bb3e87b8b796a81c29729ceb0822e16427246f92e2d40072726ddbc",
+                  "fingerprint": "sha256:0ad45247555960029c34d1222365cbe17a5cabec278bf9f6b8f3e9572ea33e8f",
+                  "rule_id": "KFM-TOPO-004",
+                  "subject": "catalog/",
+              }
+          ], introduced
+          print(
+              "CONFIRMED: the legal partial baseline is a trusted strict shrink "
+              "and leaves exactly one frozen catalog mutation hold."
+          )
+          PY
+
+      - name: Upload the bounded transition evidence
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: repository-topology-baseline-candidate
-          path: /tmp/repository_topology_baseline_candidate.json
+          name: repository-topology-transition-evidence
+          path: |
+            /tmp/repository_topology_baseline_candidate.json
+            /tmp/repository_topology_partial_baseline.json
+            /tmp/repository_topology_partial_report.json
           if-no-files-found: error
           retention-days: 1
