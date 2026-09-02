@@ -76,6 +76,7 @@ export type MapRuntimeTerrainTransitionCoordinator = Readonly<{
     ticket: MapRuntimeTerrainTransitionTicket,
     executor: MapRuntimeTerrainTransitionExecutor,
   ): Promise<MapRuntimeTerrainState>;
+  dispose(): void;
 }>;
 
 const REQUEST_FIELDS = new Set([
@@ -272,10 +273,21 @@ export function createMapRuntimeTerrainTransitionCoordinator(
   let pending: MapRuntimeTerrainTransitionTicket | null = null;
   let executing: MapRuntimeTerrainTransitionTicket | null = null;
   let nextRevision = 1;
+  let disposed = false;
+
+  function requireActive(): void {
+    if (disposed) {
+      throw new MapRuntimePortError(
+        "MAP_RUNTIME_DISPOSED",
+        "Map runtime terrain transition coordinator is disposed.",
+      );
+    }
+  }
 
   function requirePending(
     ticket: MapRuntimeTerrainTransitionTicket,
   ): MapRuntimeTerrainTransitionTicket {
+    requireActive();
     if (ticket !== pending) {
       invalid("Map runtime terrain transition ticket is stale or invalid.");
     }
@@ -291,6 +303,7 @@ export function createMapRuntimeTerrainTransitionCoordinator(
       request: MapRuntimeTerrainRequest,
       capabilities: MapRuntimeTerrainCapabilities,
     ): MapRuntimeTerrainTransitionTicket {
+      requireActive();
       if (executing !== null) {
         invalid("Map runtime terrain transition execution is in progress.");
       }
@@ -335,6 +348,9 @@ export function createMapRuntimeTerrainTransitionCoordinator(
       try {
         await executor(accepted.plan);
       } catch {
+        if (disposed) {
+          requireActive();
+        }
         if (executing !== accepted) {
           invalid("Map runtime terrain transition execution state is invalid.");
         }
@@ -344,12 +360,22 @@ export function createMapRuntimeTerrainTransitionCoordinator(
           "Map runtime terrain transition execution failed.",
         );
       }
+      if (disposed) {
+        requireActive();
+      }
       if (executing !== accepted) {
         invalid("Map runtime terrain transition execution state is invalid.");
       }
       current = accepted.plan.target;
       executing = null;
       return current;
+    },
+
+    dispose(): void {
+      if (disposed) return;
+      disposed = true;
+      pending = null;
+      executing = null;
     },
   });
 }

@@ -369,10 +369,9 @@ describe("renderer-neutral terrain transition coordination", () => {
     let finishExecution: (() => void) | undefined;
     const execution = coordinator.execute(
       ticket,
-      () =>
-        new Promise<void>((resolve) => {
-          finishExecution = resolve;
-        }),
+      () => new Promise<void>((resolve) => {
+        finishExecution = resolve;
+      }),
     );
 
     expect(() =>
@@ -409,5 +408,66 @@ describe("renderer-neutral terrain transition coordination", () => {
       { terrainSupported: true, demSourceReady: true },
     );
     expect(flatPlan.plan.effect).toBe("DISABLE_TERRAIN");
+  });
+
+  it("disposes idempotently and rejects pending or future transitions", async () => {
+    const initial = resolveMapRuntimeTerrainState(terrainRequest, {
+      terrainSupported: true,
+      demSourceReady: true,
+    });
+    const coordinator = createMapRuntimeTerrainTransitionCoordinator(initial);
+    const ticket = coordinator.plan(terrainRequest, {
+      terrainSupported: false,
+      demSourceReady: true,
+    });
+
+    coordinator.dispose();
+    coordinator.dispose();
+
+    expect(coordinator.getState()).toEqual(initial);
+    expect(() => coordinator.commit(ticket)).toThrow(
+      expect.objectContaining({ code: "MAP_RUNTIME_DISPOSED" }),
+    );
+    expect(() => coordinator.reject(ticket)).toThrow(
+      expect.objectContaining({ code: "MAP_RUNTIME_DISPOSED" }),
+    );
+    expect(() =>
+      coordinator.plan(terrainRequest, {
+        terrainSupported: true,
+        demSourceReady: true,
+      }),
+    ).toThrow(expect.objectContaining({ code: "MAP_RUNTIME_DISPOSED" }));
+    await expect(coordinator.execute(ticket, () => undefined)).rejects.toMatchObject({
+      code: "MAP_RUNTIME_DISPOSED",
+    });
+  });
+
+  it("contains late renderer completion after disposal", async () => {
+    const initial = resolveMapRuntimeTerrainState(terrainRequest, {
+      terrainSupported: true,
+      demSourceReady: true,
+    });
+    const coordinator = createMapRuntimeTerrainTransitionCoordinator(initial);
+    const ticket = coordinator.plan(terrainRequest, {
+      terrainSupported: false,
+      demSourceReady: true,
+    });
+    let finishExecution: (() => void) | undefined;
+    const execution = coordinator.execute(
+      ticket,
+      () =>
+        new Promise<void>((resolve) => {
+          finishExecution = resolve;
+        }),
+    );
+
+    coordinator.dispose();
+    finishExecution?.();
+
+    await expect(execution).rejects.toMatchObject({
+      code: "MAP_RUNTIME_DISPOSED",
+      message: "Map runtime terrain transition coordinator is disposed.",
+    });
+    expect(coordinator.getState()).toEqual(initial);
   });
 });
