@@ -221,7 +221,8 @@ export function isMapFeatureSelection(
   if (!value.evidenceRefs.every(isSafeId)) return false;
   if (new Set(value.evidenceRefs).size !== value.evidenceRefs.length) return false;
 
-  const historyEvidenceRefs = value.historyEvidenceRefs ?? [];
+  const historyEvidenceRefs =
+    value.historyEvidenceRefs === undefined ? [] : value.historyEvidenceRefs;
   if (
     !Array.isArray(historyEvidenceRefs) ||
     value.evidenceRefs.length + historyEvidenceRefs.length > MAX_EVIDENCE_REFS

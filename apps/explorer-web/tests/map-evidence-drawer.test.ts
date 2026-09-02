@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 
 import answerFixture from "../../../fixtures/ui/evidence_drawer_payload/valid/answer-corrected.json";
+import staleFixture from "../../../fixtures/ui/evidence_drawer_payload/valid/abstain-stale.json";
 import supersededFixture from "../../../fixtures/ui/evidence_drawer_payload/valid/abstain-superseded.json";
 import denyFixture from "../../../fixtures/ui/evidence_drawer_payload/valid/deny-sensitive.json";
 import mapRuntimeSource from "../src/features/map_runtime/index.tsx?raw";
@@ -196,6 +197,30 @@ describe("Explorer map feature to Evidence Drawer bridge", () => {
       },
     });
     expect(result.drawer.historyLabels).toHaveLength(1);
+  });
+
+  it("preserves stale abstention evidence as audit-only", async () => {
+    const result = await resolveMapFeatureEvidence(
+      {
+        ...matchingSelection,
+        evidence_refs: [],
+        history_evidence_refs: ["kfm:evidence:synthetic:stale-001"],
+      },
+      async () => staleFixture,
+    );
+
+    expect(result).toMatchObject({
+      code: "STALE_EVIDENCE",
+      drawer: {
+        outcome: "ABSTAIN",
+        code: "STALE_EVIDENCE",
+        evidenceRefs: ["kfm:evidence:synthetic:stale-001"],
+        citations: [],
+      },
+    });
+    expect(JSON.stringify(result.drawer)).not.toContain(
+      "STALE_SUMMARY_MUST_NOT_RENDER_AS_A_CLAIM",
+    );
   });
 
   it("fails closed when negative-only history widens beyond the clicked selection", async () => {

@@ -239,7 +239,9 @@ export function parsePublicWorkspaceContext(
  */
 function isPublicUrlSafeContext(context: PublicWorkspaceContext): boolean {
   return (
-    context.selection === null || context.selection.evidenceRefs.length === 0
+    context.selection === null ||
+    (context.selection.evidenceRefs.length === 0 &&
+      (context.selection.historyEvidenceRefs?.length ?? 0) === 0)
   );
 }
 

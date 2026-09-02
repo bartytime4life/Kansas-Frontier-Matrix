@@ -167,7 +167,8 @@ export function resolvePublicEvidenceFreeMapCaseId(url: URL): "missing" | null {
     context.time.releaseId !== null ||
     context.compare.mode !== "NONE" ||
     context.storyNodeId !== null ||
-    selection.evidenceRefs.length !== 0
+    selection.evidenceRefs.length !== 0 ||
+    (selection.historyEvidenceRefs?.length ?? 0) !== 0
   ) {
     return null;
   }
