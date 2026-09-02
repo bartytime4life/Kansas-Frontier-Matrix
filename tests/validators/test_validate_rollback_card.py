@@ -55,7 +55,14 @@ def repository_git_environment() -> dict[str, str]:
 
 
 def tracked_markdown_paths(repo_root: Path = REPO_ROOT) -> tuple[Path, ...]:
-    command = ["git", "ls-files", "--stage", "-z", "--", "*.md"]
+    command = [
+        "git",
+        "ls-files",
+        "--stage",
+        "-z",
+        "--",
+        ":(icase)*.md",
+    ]
     try:
         result = subprocess.run(
             command,
@@ -546,6 +553,38 @@ class RollbackCardValidatorTests(unittest.TestCase):
                     tracked_markdown_paths(repo_root),
                 )
 
+    def test_guidance_inventory_includes_case_variant_extensions(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            repo_root = Path(directory)
+            subprocess.run(
+                ["git", "init", "--quiet"],
+                cwd=repo_root,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+            guidance_paths = tuple(
+                repo_root / name
+                for name in ("LOWER.md", "UPPER.MD", "TITLE.Md", "MIXED.mD")
+            )
+            for guidance_path in guidance_paths:
+                guidance_path.write_text(
+                    "# Repository-owned guidance\n",
+                    encoding="utf-8",
+                )
+            subprocess.run(
+                ["git", "add", "--", *(path.name for path in guidance_paths)],
+                cwd=repo_root,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+
+            self.assertEqual(
+                tuple(sorted(guidance_paths)),
+                tracked_markdown_paths(repo_root),
+            )
+
     def test_guidance_inventory_timeout_fails_closed(self) -> None:
         with patch.object(
             subprocess,
@@ -566,7 +605,12 @@ class RollbackCardValidatorTests(unittest.TestCase):
         workflow = (
             REPO_ROOT / ".github/workflows/rollback-card.yml"
         ).read_text(encoding="utf-8")
-        self.assertRegex(workflow, r'(?m)^\s+- "\*\*/\*\.md"$')
+        for extension in ("md", "MD", "Md", "mD"):
+            with self.subTest(extension=extension):
+                self.assertRegex(
+                    workflow,
+                    rf'(?m)^\s+- "\*\*/\*\.{extension}"$',
+                )
 
     def test_stale_operator_guidance_patterns_are_non_vacuous(self) -> None:
         stale_variants = (
