@@ -90,7 +90,10 @@ class AirObservationValidatorEntrypointTests(unittest.TestCase):
                 self.assertEqual(metadata_value, normalized_value)
                 declared_path = REPO_ROOT / metadata_path
                 self.assertEqual(declared_path.resolve(), expected_path.resolve())
-                self.assertTrue(declared_path.exists())
+                if field == "fixtures_root":
+                    self.assertTrue(declared_path.is_dir())
+                else:
+                    self.assertTrue(declared_path.is_file())
 
     def test_declared_schema_rejects_short_observation_id(self) -> None:
         candidate = self._bound_observation()
