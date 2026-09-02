@@ -190,6 +190,35 @@ class HabitatModelRunReceiptTests(unittest.TestCase):
                         payload["findings"],
                     )
 
+    def test_cli_malformed_bytes_do_not_echo_candidate_content(self) -> None:
+        sentinel = "do-not-echo-habitat-secret"
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            malformed = root / "malformed.json"
+            malformed.write_text(f'{{"secret":"{sentinel}"', encoding="utf-8")
+            undecodable = root / "undecodable.json"
+            undecodable.write_bytes(b"\xff\xfe" + sentinel.encode("ascii"))
+            for path in (malformed, undecodable):
+                with self.subTest(path=path.name):
+                    completed = subprocess.run(
+                        [sys.executable, str(Path(validator.__file__)), str(path)],
+                        cwd=ROOT,
+                        check=False,
+                        capture_output=True,
+                        text=True,
+                    )
+                    self.assertEqual(2, completed.returncode)
+                    self.assertEqual("", completed.stderr)
+                    self.assertNotIn(sentinel, completed.stdout)
+                    payload = json.loads(completed.stdout)
+                    self.assertEqual("ERROR", payload["outcome"])
+                    self.assertEqual("NONE", payload["authority"])
+                    self.assertEqual(path.name, payload["input"])
+                    self.assertEqual(
+                        [{"code": "MODEL_RUN_JSON_INVALID", "path": "/"}],
+                        payload["findings"],
+                    )
+
     def test_duplicate_nonfinite_symlink_and_oversize_are_errors(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
