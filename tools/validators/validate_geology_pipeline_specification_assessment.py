@@ -406,11 +406,10 @@ def validate_fixture_manifest(path: Path = FIXTURE_PATH) -> list[dict[str, objec
         }]
     case_names = [case.get("name") for case in cases]
     if (
-        len(case_names) != len(set(case_names))
+        any(not isinstance(name, str) or not name for name in case_names)
+        or len(case_names) != len(set(case_names))
         or any(
-            not isinstance(case.get("name"), str)
-            or not case["name"]
-            or not isinstance(case.get("base"), str)
+            not isinstance(case.get("base"), str)
             or case["base"] not in bases
             or case.get("expected_outcome") not in {"PASS", "ABSTAIN", "DENY", "ERROR"}
             or not isinstance(case.get("expected_findings"), list)
