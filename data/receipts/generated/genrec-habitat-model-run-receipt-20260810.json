@@ -14,10 +14,10 @@
     ".github/workflows/habitat-model-run-receipt.yml": "sha256:1812620807ea7ac6287e670564bcc2fb7583bfd54714f7337cea3fb959799c57",
     "contracts/domains/habitat/model_run_receipt.md": "sha256:f611914064a5691dab68c6dff79c19c4df943e93a9141335cc27fef7a332401f",
     "docs/intake/exploratory/habitat-model-run-receipt-source-map.md": "sha256:6128a385928d422602f29bd08bdd2a0cc29c8eda0fdb08fa6d399a4678a99435",
-    "fixtures/contracts/v1/domains/habitat/model_run_receipt/cases.json": "sha256:4fdf82b3f68c3bb4a819895cd126c8c0ae9c5dd670e4fa354d1b3535f440de31",
+    "fixtures/contracts/v1/domains/habitat/model_run_receipt/cases.json": "sha256:a248b3edfb6010d69ef4745e6b98ce88b51996791b5a5e208c0c5397ca0510aa",
     "schemas/contracts/v1/domains/habitat/model_run_receipt.schema.json": "sha256:717e5e6bc6ecb8ba814fe0bc243eeff3cfac6aaed6565dcddab4b9b56b3e05b0",
     "tests/validators/domains/habitat/test_validate_model_run_receipt.py": "sha256:0338238aa762b100508baf2d6a4b4ab4f1606c615adc37ec81de435bca83a562",
-    "tools/validators/domains/habitat/validate_model_run_receipt.py": "sha256:ed8d79d103bf692b48f2cdfd159a7bf654456b34cf41fbf05fb391e00a3ef703"
+    "tools/validators/domains/habitat/validate_model_run_receipt.py": "sha256:9765b04d145c984886603b50db85a016413e35946144ca30162c7c90fd00617b"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -68,7 +68,7 @@
     {
       "gate": "focused-model-run-receipt-suite",
       "outcome": "PASS",
-      "reason": "Nine tests, twenty-seven subtests, and twenty-three exact fixture cases passed, including mixed-known-offset ordering, known-UTC acceptance, and unknown-local-offset denial at every governed timestamp field."
+      "reason": "Nine tests, twenty-seven subtests, and twenty-three exact fixture cases passed, including deterministic failure-reason ordering, mixed-known-offset chronology, known-UTC acceptance, and unknown-local-offset denial at every governed timestamp field."
     },
     {
       "gate": "completed-failed-source-role-and-non-authority-boundary",
@@ -126,5 +126,5 @@
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Completes the existing Habitat ModelRunReceipt schema and validator scaffolds as a closed fixture-only profile, including fail-closed denial of RFC 3339 unknown local offsets at started, completed, and recorded timestamps. Private research contributed only to candidate discovery; public provenance contains no private identifiers or copied private content. The profile performs no model run, evidence resolution, policy or review decision, lifecycle transition, release, deployment, or publication."
+  "notes": "Completes the existing Habitat ModelRunReceipt schema and validator scaffolds as a closed fixture-only profile, including deterministic failure-reason ordering and fail-closed denial of RFC 3339 unknown local offsets at started, completed, and recorded timestamps. Private research contributed only to candidate discovery; public provenance contains no private identifiers or copied private content. The profile performs no model run, evidence resolution, policy or review decision, lifecycle transition, release, deployment, or publication."
 }
