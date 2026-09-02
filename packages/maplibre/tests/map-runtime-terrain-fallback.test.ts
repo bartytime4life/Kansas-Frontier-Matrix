@@ -360,29 +360,54 @@ describe("renderer-neutral terrain transition coordination", () => {
     );
   });
 
-  it("does not let a stale in-flight execution clear the latest ticket", async () => {
+  it("serializes renderer execution and reconciles the next plan", async () => {
     const coordinator = createMapRuntimeTerrainTransitionCoordinator();
-    const first = coordinator.plan(terrainRequest, {
-      terrainSupported: true,
-      demSourceReady: false,
-    });
-    let finishFirst: (() => void) | undefined;
-    const firstExecution = coordinator.execute(
-      first,
-      () =>
-        new Promise<void>((resolve) => {
-          finishFirst = resolve;
-        }),
-    );
-    const latest = coordinator.plan(terrainRequest, {
+    const ticket = coordinator.plan(terrainRequest, {
       terrainSupported: true,
       demSourceReady: true,
     });
+    let finishExecution: (() => void) | undefined;
+    const execution = coordinator.execute(
+      ticket,
+      () =>
+        new Promise<void>((resolve) => {
+          finishExecution = resolve;
+        }),
+    );
 
-    finishFirst?.();
-    await expect(firstExecution).rejects.toMatchObject({
+    expect(() =>
+      coordinator.plan(
+        {
+          profile: MAP_RUNTIME_TERRAIN_FALLBACK_PROFILE,
+          mode: "FLAT",
+          exaggeration: 0,
+          fallback: "FLAT",
+        },
+        { terrainSupported: true, demSourceReady: true },
+      ),
+    ).toThrow(expect.objectContaining({ code: "MAP_RUNTIME_STATE_INVALID" }));
+    expect(() => coordinator.commit(ticket)).toThrow(
+      expect.objectContaining({ code: "MAP_RUNTIME_STATE_INVALID" }),
+    );
+    expect(() => coordinator.reject(ticket)).toThrow(
+      expect.objectContaining({ code: "MAP_RUNTIME_STATE_INVALID" }),
+    );
+    await expect(coordinator.execute(ticket, () => undefined)).rejects.toMatchObject({
       code: "MAP_RUNTIME_STATE_INVALID",
     });
-    expect(coordinator.commit(latest)).toBe(latest.plan.target);
+
+    finishExecution?.();
+    await expect(execution).resolves.toBe(ticket.plan.target);
+
+    const flatPlan = coordinator.plan(
+      {
+        profile: MAP_RUNTIME_TERRAIN_FALLBACK_PROFILE,
+        mode: "FLAT",
+        exaggeration: 0,
+        fallback: "FLAT",
+      },
+      { terrainSupported: true, demSourceReady: true },
+    );
+    expect(flatPlan.plan.effect).toBe("DISABLE_TERRAIN");
   });
 });
