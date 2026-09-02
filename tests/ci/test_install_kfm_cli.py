@@ -27,8 +27,8 @@ class InstallKfmCliTests(unittest.TestCase):
     def test_commands_use_hash_lock_and_fixed_local_package(self) -> None:
         dependency, local = module.build_commands(executable="python")
         self.assertEqual("python", dependency[0])
-        self.assertEqual("-P", dependency[1])
-        self.assertEqual("-P", local[1])
+        self.assertEqual("-I", dependency[1])
+        self.assertEqual("-I", local[1])
         self.assertIn("--require-hashes", dependency)
         self.assertEqual(str(module.LOCKFILE), dependency[-1])
         self.assertIn("--no-deps", local)
