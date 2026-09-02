@@ -330,6 +330,19 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
         errors = validate_candidate_feature(payload)
         self.assertIn("evidence_refs must contain at least one reference", errors)
 
+    def test_present_observation_binding_cannot_be_empty(self) -> None:
+        payload = _load(FIXTURE_ROOT / "empty_observation_refs_deny.json")
+        errors = validate_candidate_feature(payload)
+        self.assertEqual(
+            errors,
+            ["observation_refs must contain at least one reference"],
+        )
+
+    def test_omitted_observation_binding_remains_optional(self) -> None:
+        payload = copy.deepcopy(self.valid)
+        payload.pop("observation_refs", None)
+        self.assertEqual(validate_candidate_feature(payload), [])
+
     def test_superseded_candidate_requires_correction_binding(self) -> None:
         payload = _load(
             FIXTURE_ROOT / "superseded_without_correction_deny.json"
@@ -404,6 +417,7 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
                 REFERENCE_FAMILY_PATTERNS[field].pattern,
             )
         self.assertEqual(properties["evidence_refs"]["minItems"], 1)
+        self.assertEqual(properties["observation_refs"]["minItems"], 1)
         self.assertEqual(properties["correction_refs"]["minItems"], 1)
         evidence_conditional = schema["allOf"][0]
         self.assertEqual(evidence_conditional["then"]["required"], ["evidence_refs"])

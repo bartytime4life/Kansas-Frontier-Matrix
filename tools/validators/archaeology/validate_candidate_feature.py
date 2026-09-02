@@ -284,7 +284,9 @@ def validate_candidate_feature(payload: Any) -> list[str]:
         not isinstance(correction_refs, list) or not correction_refs
     ):
         errors.append("correction_refs are required for superseded candidates")
-    nonempty_when_present = frozenset({"evidence_refs", "correction_refs"})
+    nonempty_when_present = frozenset(
+        {"evidence_refs", "observation_refs", "correction_refs"}
+    )
     for field in ("evidence_refs", "observation_refs", "correction_refs"):
         if field in payload:
             errors.extend(
@@ -359,6 +361,7 @@ def validate_fixture_suite() -> int:
         FIXTURE_ROOT / "unclassified_geometry_reference_deny.json": "spatial_precision_class is required",
         FIXTURE_ROOT / "non_string_reference_deny.json": "opaque kfm:// references",
         FIXTURE_ROOT / "empty_evidence_refs_deny.json": "evidence_refs must contain",
+        FIXTURE_ROOT / "empty_observation_refs_deny.json": "observation_refs must contain",
         FIXTURE_ROOT / "non_string_vocabulary_deny.json": "candidate_type is not in",
         FIXTURE_ROOT / "malformed_spec_hash_deny.json": "spec_hash must match",
         FIXTURE_ROOT / "null_optional_scalars_deny.json": "candidate_type is not in",

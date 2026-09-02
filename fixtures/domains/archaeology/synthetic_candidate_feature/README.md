@@ -49,6 +49,9 @@ burial, sacred-place, collection-security, or culturally restricted data.
   one governed EvidenceRef.
 - `empty_evidence_refs_deny.json` proves that an explicitly present EvidenceRef
   binding cannot be an empty array, even while the candidate remains in `WORK`.
+- `empty_observation_refs_deny.json` proves that an explicitly present
+  observation binding cannot be an empty array; absent observations must be
+  represented by omitting the optional field.
 - `superseded_without_correction_deny.json` proves that a superseded candidate
   cannot lose its governed correction or withdrawal lineage.
 
@@ -65,7 +68,8 @@ precision binding; bounded candidate discriminator; inline location denial;
 opaque-reference, protected-locator-token, and reference-family boundaries;
 conditional EvidenceRef binding; and supersession
 correction binding; malformed-reference finite denial; and nonempty governed
-reference bindings; malformed-vocabulary and null-scalar finite denial; and
+evidence, observation, and correction bindings; malformed-vocabulary and
+null-scalar finite denial; and
 schema-aligned `spec_hash` and deterministic Unicode-safe confidence-statement
 validation. It
 does not confirm a site,
