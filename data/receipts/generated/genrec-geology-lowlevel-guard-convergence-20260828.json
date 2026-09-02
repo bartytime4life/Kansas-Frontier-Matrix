@@ -9,7 +9,7 @@
     "tests/domains/geology/test_no_network_proof.py"
   ],
   "artifact_hashes": {
-    ".github/workflows/domain-geology.yml": "sha256:c4fecf5c0df2bb5bb07c2f6517a013ee1ce69affce3f2e97840974c8a27fb080",
+    ".github/workflows/domain-geology.yml": "sha256:d5509f83c9f129bdf5e0d533a1677cd321c08166636a16d26e7a181a9f6c5e26",
     "docs/runbooks/geology/NO_NETWORK_TEST_RUNBOOK.md": "sha256:2b91dfa12d20af9420afe3991f43d01be68b09230e8285d413a2be45c70722af",
     "docs/runbooks/geology/README.md": "sha256:855e0bc44de5c39ec931feeffe2f34e7326ba822315db26623382768643e170a",
     "tests/domains/geology/README.md": "sha256:ab20ce893c72bb96dd8b1570f06dda0d8223c53aa5b22f895cca042034e94aab",
