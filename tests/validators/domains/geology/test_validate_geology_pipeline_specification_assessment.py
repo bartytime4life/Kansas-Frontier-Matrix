@@ -144,7 +144,27 @@ class GeologyPipelineSpecificationAssessmentTests(unittest.TestCase):
             )
         self.assertEqual(2, completed.returncode)
         self.assertEqual("", completed.stdout)
-        self.assertIn("input cannot be combined with --fixtures", completed.stderr)
+        self.assertIn("--fixtures must be used as the only argument", completed.stderr)
+
+    def test_fixture_cli_rejects_repeated_or_decorated_mode(self) -> None:
+        for arguments in (
+            ["--fixtures", "--fixtures"],
+            ["--fixtures", "--"],
+        ):
+            with self.subTest(arguments=arguments):
+                completed = subprocess.run(
+                    [sys.executable, str(MODULE_PATH), *arguments],
+                    cwd=ROOT,
+                    check=False,
+                    capture_output=True,
+                    text=True,
+                )
+                self.assertEqual(2, completed.returncode)
+                self.assertEqual("", completed.stdout)
+                self.assertIn(
+                    "--fixtures must be used as the only argument",
+                    completed.stderr,
+                )
 
     def test_option_terminator_allows_dash_prefixed_input_filename(self) -> None:
         candidate = self._candidate("pass_bedrock_units")
