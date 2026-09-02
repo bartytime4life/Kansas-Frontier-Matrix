@@ -49,8 +49,8 @@
     "attached_docs": [],
     "evidence_refs": [
       "repo:main@3ee7942913e32c11d8fbf91fa4a4f221dddd4ac0",
-      "repo:pull/4208@84352b1f03451fce74dc74be8bff0c8a0e546138",
-      "github:actions/run/33619506908"
+      "repo:pull/4208@c6a4ab69f06970b520708831586c9a9fbf1a6989",
+      "github:actions/run/33624259383"
     ]
   },
   "truth_labels": {
@@ -94,8 +94,8 @@
     },
     {
       "gate": "hosted-exact-head",
-      "outcome": "SKIPPED",
-      "reason": "GitHub Actions must settle against the successor correction-trust commit before review disposition."
+      "outcome": "PASS",
+      "reason": "The evidence-drawer-payload workflow passed at exact head c6a4ab69f06970b520708831586c9a9fbf1a6989 in GitHub Actions run 33624259383."
     },
     {
       "gate": "human-review",
@@ -113,9 +113,9 @@
       "evidence_ref": "contracts/ui/evidence_drawer_payload.md@78dce9d07c91f154df86d9785f586d4e195f626b"
     },
     {
-      "id": "repo:pull-4208-prior-exact-head",
+      "id": "repo:pull-4208-correction-trust-proof",
       "validated": true,
-      "evidence_ref": "github:actions/run/33619506908"
+      "evidence_ref": "github:actions/run/33624259383"
     }
   ],
   "human_review": {
