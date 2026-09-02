@@ -1,5 +1,7 @@
 """Shared constants and finite validation result types for path aliases."""
 
+# Branch-local diagnostic trigger; remove after exact topology findings are captured.
+
 from __future__ import annotations
 
 from dataclasses import dataclass
