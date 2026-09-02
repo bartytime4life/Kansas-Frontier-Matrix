@@ -362,6 +362,19 @@ class DrinkingWaterAdvisoryTests(unittest.TestCase):
                 self.assertEqual(result.outcome, "ERROR")
                 self.assertEqual(result.findings[0].code, "INPUT_SYMLINK_DENIED")
 
+    def test_regular_file_ancestor_is_not_reported_as_a_symlink(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            ancestor = Path(directory) / "ancestor.json"
+            ancestor.write_text("{}", encoding="utf-8")
+
+            result = validator.validate_file(ancestor / "input.json")
+
+            self.assertEqual(result.outcome, "ERROR")
+            self.assertEqual(
+                [(finding.code, finding.path) for finding in result.findings],
+                [("FILE_NOT_FOUND", "/")],
+            )
+
     def test_descriptor_traversal_binds_read_to_opened_directory(self) -> None:
         if not getattr(os, "O_NOFOLLOW", 0) or not getattr(os, "O_DIRECTORY", 0):
             self.skipTest("descriptor no-follow traversal unavailable")

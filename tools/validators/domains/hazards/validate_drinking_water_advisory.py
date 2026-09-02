@@ -167,8 +167,20 @@ def _read_text_no_symlinks(path: Path) -> str:
                     dir_fd=directory_fd,
                 )
             except OSError as exc:
-                if exc.errno in {errno.ELOOP, errno.ENOTDIR}:
+                if exc.errno == errno.ELOOP:
                     raise SymlinkPathError(path) from exc
+                if exc.errno == errno.ENOTDIR:
+                    try:
+                        entry_stat = os.stat(
+                            part,
+                            dir_fd=directory_fd,
+                            follow_symlinks=False,
+                        )
+                    except OSError:
+                        raise FileNotFoundError(path) from exc
+                    if stat.S_ISLNK(entry_stat.st_mode):
+                        raise SymlinkPathError(path) from exc
+                    raise FileNotFoundError(path) from exc
                 raise
             os.close(directory_fd)
             directory_fd = next_fd
