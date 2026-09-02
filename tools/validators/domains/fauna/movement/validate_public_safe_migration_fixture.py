@@ -302,6 +302,25 @@ def _load_json_text(value: str) -> object:
     return json.loads(value, object_pairs_hook=_reject_duplicate_members)
 
 
+def _fixture_case_path(value: str) -> Path | None:
+    relative_path = Path(value)
+    if (
+        value != relative_path.as_posix()
+        or relative_path.is_absolute()
+        or len(relative_path.parts) != 2
+        or relative_path.parts[0] not in {"valid", "invalid"}
+        or relative_path.suffix != ".json"
+    ):
+        return None
+    candidate_path = FIXTURE_ROOT / relative_path
+    if any(
+        (FIXTURE_ROOT / Path(*relative_path.parts[:depth])).is_symlink()
+        for depth in range(1, len(relative_path.parts) + 1)
+    ):
+        return None
+    return candidate_path
+
+
 def validate_file(path: Path | str) -> ValidationResult:
     try:
         candidate = _load_json_text(Path(path).read_text(encoding="utf-8"))
@@ -329,8 +348,12 @@ def validate_fixture_manifest() -> ValidationResult:
         if not isinstance(relative_path, str) or not isinstance(expected, list):
             _add(findings, "fixture.case_invalid", f"/cases/{index}")
             continue
+        fixture_path = _fixture_case_path(relative_path)
+        if fixture_path is None:
+            _add(findings, "fixture.path_invalid", f"/cases/{index}/path")
+            continue
         declared.append(relative_path)
-        actual = validate_file(FIXTURE_ROOT / relative_path).findings
+        actual = validate_file(fixture_path).findings
         expected_findings = tuple(
             sorted(
                 Finding(item.get("code"), item.get("path"))

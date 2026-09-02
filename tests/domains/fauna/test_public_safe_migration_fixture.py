@@ -13,6 +13,9 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 from unittest.mock import patch
 
+from tools.validators.domains.fauna.movement import (
+    validate_public_safe_migration_fixture as migration_validator,
+)
 from tools.validators.domains.fauna.movement.validate_public_safe_migration_fixture import (
     FIXTURE_ROOT,
     Finding,
@@ -67,6 +70,47 @@ class PublicSafeMigrationFixtureTests(unittest.TestCase):
                         validate_file(path).findings,
                         (Finding("schema.input_invalid", "/"),),
                     )
+
+    def test_manifest_path_escape_fails_before_candidate_read(self):
+        with TemporaryDirectory() as temp_dir:
+            manifest_path = Path(temp_dir) / "manifest.json"
+            path_cases = {
+                "traversal": "../outside.json",
+                "absolute": str(Path(temp_dir) / "outside.json"),
+                "nested": "valid/nested/outside.json",
+            }
+            for name, candidate_path in path_cases.items():
+                with self.subTest(name=name):
+                    manifest_path.write_text(
+                        json.dumps(
+                            {
+                                "cases": [
+                                    {
+                                        "path": candidate_path,
+                                        "expected_findings": [],
+                                    }
+                                ]
+                            }
+                        ),
+                        encoding="utf-8",
+                    )
+                    with (
+                        patch.object(
+                            migration_validator,
+                            "MANIFEST_PATH",
+                            manifest_path,
+                        ),
+                        patch.object(
+                            migration_validator,
+                            "validate_file",
+                        ) as candidate_reader,
+                    ):
+                        result = migration_validator.validate_fixture_manifest()
+                    self.assertIn(
+                        Finding("fixture.path_invalid", "/cases/0/path"),
+                        result.findings,
+                    )
+                    candidate_reader.assert_not_called()
 
     def test_degenerate_route_fails_closed(self):
         self.assertEqual(
