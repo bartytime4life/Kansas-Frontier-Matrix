@@ -82,6 +82,32 @@ def test_symlinked_alias_projection_fails_closed_as_dependency_error(tmp_path: P
     assert not any(decision["effects"].values())
 
 
+def test_aliased_projection_fails_closed_like_canonical_validator(
+    tmp_path: Path, monkeypatch
+) -> None:
+    candidate = _base_candidate()
+    candidate["endpoints"]["left"]["domain"] = "geology"
+    candidate["endpoints"]["right"]["domain"] = "hydrology"
+    projection = tmp_path / "domain_lane_register.yaml"
+    projection.write_text(
+        AUTHORITY_ENVELOPE
+        + "unresolved_aliases: &aliases\n  air: atmosphere\n"
+        + "alias_copy: *aliases\n"
+        + "entries:\n  - lane_id: atmosphere\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(MODULE, "DOMAIN_LANE_REGISTER_PATH", projection)
+
+    decision = MODULE.derive_decision(candidate)
+
+    assert decision["validator_outcome"] == "ERROR"
+    assert decision["status"] == "VALIDATOR_SYSTEM_ERROR"
+    assert decision["reason_codes"] == ["DOMAIN_ALIAS_REGISTER_UNAVAILABLE"]
+    assert "REPAIR_DOMAIN_ALIAS_REGISTER_DEPENDENCY" in decision["obligations"]
+    assert _rule_counts(decision)["DEPENDENCIES_READY"] == 1
+    assert not any(decision["effects"].values())
+
+
 def test_malformed_alias_projection_fails_closed_as_dependency_error(tmp_path: Path, monkeypatch) -> None:
     candidate = _base_candidate()
     malformed = tmp_path / "domain_lane_register.yaml"

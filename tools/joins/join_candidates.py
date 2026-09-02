@@ -20,6 +20,7 @@ from typing import Any
 
 import yaml
 from jsonschema import Draft202012Validator, FormatChecker
+from yaml.events import AliasEvent
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 HASHING_SRC = REPO_ROOT / "packages" / "hashing" / "src"
@@ -51,7 +52,17 @@ SENSITIVITY_RANK = {"PUBLIC_SAFE": 0, "INTERNAL": 1, "RESTRICTED": 2, "PROHIBITE
 
 
 class _UniqueKeySafeLoader(yaml.SafeLoader):
-    """Safe YAML loader that rejects ambiguous duplicate mapping keys."""
+    """Safe YAML loader aligned with the canonical projection validator."""
+
+    def compose_node(self, parent: object, index: object) -> yaml.Node:
+        if self.check_event(AliasEvent):
+            raise yaml.constructor.ConstructorError(
+                "while composing a node",
+                None,
+                "YAML aliases are not allowed in the domain lane register",
+                self.peek_event().start_mark,
+            )
+        return super().compose_node(parent, index)
 
 
 def _construct_unique_mapping(
