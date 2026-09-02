@@ -52,6 +52,27 @@ describe("Explorer Evidence Drawer governed projection", () => {
     expect(result.trustLabels).toContain("Freshness: STALE");
   });
 
+  it("fails closed when stale abstention claims current freshness", () => {
+    const contradictoryFreshness = {
+      ...abstainFixture,
+      trust_state: {
+        ...abstainFixture.trust_state,
+        freshness: "CURRENT",
+      },
+    };
+
+    const result = resolveEvidenceDrawer(contradictoryFreshness);
+
+    expect(result).toMatchObject({
+      outcome: "ERROR",
+      code: "INVALID_PAYLOAD",
+    });
+    expect(result.evidenceRefs).toEqual([]);
+    expect(result.citations).toEqual([]);
+    expect(result.historyLabels).toEqual([]);
+    expect(JSON.stringify(result)).not.toContain("kfm:evidence:synthetic:stale-001");
+  });
+
   it("keeps a fully recorded abstention correction visible as audit history", () => {
     const correctedAbstention = {
       ...abstainFixture,

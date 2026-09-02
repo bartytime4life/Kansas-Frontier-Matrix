@@ -84,6 +84,19 @@ class EvidenceDrawerPayloadValidatorTests(unittest.TestCase):
         payload["trust_state"]["correction"] = "CORRECTED"
         self.assertEqual([], MODULE._semantic_findings(payload))
 
+    def test_stale_abstention_cannot_claim_current_freshness(self) -> None:
+        payload = json.loads(
+            (MODULE.FIXTURES_ROOT / "valid/abstain-stale.json").read_text(encoding="utf-8")
+        )
+        self.assertEqual([], MODULE._semantic_findings(payload))
+
+        payload["trust_state"]["freshness"] = "CURRENT"
+        findings = MODULE._semantic_findings(payload)
+        self.assertEqual(
+            {"STALE_STATE_INVALID"},
+            {item.code for item in findings},
+        )
+
     def test_negative_state_reason_must_match(self) -> None:
         findings = MODULE.validate_payload(
             MODULE.FIXTURES_ROOT / "invalid/negative-state-reason-mismatch.json"

@@ -447,6 +447,9 @@ function historyCombinationIsValid(
       history.negativeOutcomes.some((item) => item.state === "SUPERSEDED")
     );
   }
+  if (outcome === "ABSTAIN" && reasonCode === "STALE_EVIDENCE") {
+    return trustState.freshness === "STALE";
+  }
   if (outcome === "ABSTAIN" && reasonCode === "HELD_EVIDENCE") {
     return history.negativeOutcomes.some((item) => item.state === "HELD");
   }
