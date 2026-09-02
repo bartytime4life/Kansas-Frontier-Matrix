@@ -20,6 +20,8 @@ consumers do not need to infer which value violated the governed sequence.
 An unknown intermediate timestamp suppresses only comparisons that require
 it; independently knowable issue, check, expiry, and rescission bounds remain
 enforced.
+An exact expiry cannot precede the source check while a record claims an
+`ISSUED`, `ACTIVE_CONFIRMED`, or `UPDATED` current status.
 Input validation opens every directory and the final regular file through
 no-follow descriptors, then sizes and reads that same final descriptor. Leaf,
 ancestor, and cyclic symlinks fail closed, while a rename or symlink swap after

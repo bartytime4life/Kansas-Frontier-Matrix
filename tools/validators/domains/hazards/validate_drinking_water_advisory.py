@@ -506,6 +506,13 @@ def _semantic_findings(candidate: Mapping[str, Any]) -> list[Finding]:
         (effective is not None and checked is not None and effective > checked, "/advisory/effective_at"),
         (expires is not None and issued is not None and expires < issued, "/advisory/expires_at"),
         (expires is not None and effective is not None and expires < effective, "/advisory/expires_at"),
+        (
+            status in {"ISSUED", "ACTIVE_CONFIRMED", "UPDATED"}
+            and expires is not None
+            and checked is not None
+            and expires < checked,
+            "/advisory/expires_at",
+        ),
         (rescinded is not None and issued is not None and rescinded < issued, "/advisory/rescinded_at"),
         (rescinded is not None and effective is not None and rescinded < effective, "/advisory/rescinded_at"),
         (rescinded is not None and checked is not None and rescinded > checked, "/advisory/rescinded_at"),

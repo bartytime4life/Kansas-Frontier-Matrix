@@ -199,6 +199,21 @@ class DrinkingWaterAdvisoryTests(unittest.TestCase):
                     {("TEMPORAL_ORDER_INVALID", expected_path)},
                 )
 
+    def test_current_status_cannot_outlive_exact_expiry(self) -> None:
+        for base_name in ("valid_issued", "valid_active_not_modified"):
+            with self.subTest(base_name=base_name):
+                candidate = copy.deepcopy(self.valid[base_name])
+                candidate["advisory"]["expires_at"] = "2026-08-10T13:30:00Z"
+                candidate = validator.assign_identity(candidate)
+
+                result = validator.validate_payload(candidate)
+
+                self.assertEqual(result.outcome, "DENY")
+                self.assertEqual(
+                    {(finding.code, finding.path) for finding in result.findings},
+                    {("TEMPORAL_ORDER_INVALID", "/advisory/expires_at")},
+                )
+
     def test_unknown_intermediate_preserves_independent_time_bounds(self) -> None:
         scenarios = (
             ("valid_issued", "issued_at", "2026-08-10T15:00:00Z", "/advisory/issued_at"),
