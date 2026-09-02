@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import copy
 import json
+import math
 import sqlite3
 import sys
 from collections.abc import Mapping, Sequence
@@ -37,6 +38,9 @@ from hashing import (  # noqa: E402
 SCHEMA_PATH = REPO_ROOT / "schemas/contracts/v1/joins/cross_lane_join_assessment.schema.json"
 CASES_PATH = REPO_ROOT / "fixtures/contracts/v1/joins/cross_lane_join_assessment/cases.json"
 DOMAIN_LANE_REGISTER_PATH = REPO_ROOT / "control_plane/domain_lane_register.yaml"
+DOMAIN_LANE_REGISTER_MAX_BYTES = 4 * 1024 * 1024
+DOMAIN_LANE_REGISTER_MAX_NODES = 8_192
+DOMAIN_LANE_REGISTER_MAX_DEPTH = 64
 IDENTITY_PREFIX = "kfm:cross-lane-join-assessment:"
 CANDIDATE_PREFIX = "kfm:join-candidate:"
 SCOPE = "cross-lane-join-assessment-fixture-only-v1"
@@ -211,6 +215,26 @@ def _source_role_conflict(left: Mapping[str, Any], right: Mapping[str, Any]) -> 
     return left.get("source_role") != right.get("source_role")
 
 
+def _domain_lane_projection_is_bounded(value: object) -> bool:
+    pending = [(value, 0)]
+    visited = 0
+    while pending:
+        current, depth = pending.pop()
+        visited += 1
+        if (
+            visited > DOMAIN_LANE_REGISTER_MAX_NODES
+            or depth > DOMAIN_LANE_REGISTER_MAX_DEPTH
+        ):
+            return False
+        if isinstance(current, float) and not math.isfinite(current):
+            return False
+        if isinstance(current, Mapping):
+            pending.extend((child, depth + 1) for child in current.values())
+        elif isinstance(current, list):
+            pending.extend((child, depth + 1) for child in current)
+    return True
+
+
 def _unresolved_domain_aliases(path: Path | None = None) -> Mapping[str, str]:
     """Read unresolved aliases as a fail-closed dependency, never identity authority.
 
@@ -223,12 +247,19 @@ def _unresolved_domain_aliases(path: Path | None = None) -> Mapping[str, str]:
     if register_path.is_symlink():
         raise ValueError("domain lane register unavailable")
     try:
+        if (
+            not register_path.is_file()
+            or register_path.stat().st_size > DOMAIN_LANE_REGISTER_MAX_BYTES
+        ):
+            raise ValueError("domain lane register unavailable")
         value = yaml.load(
             register_path.read_text(encoding="utf-8"),
             Loader=_UniqueKeySafeLoader,
         )
-    except (OSError, UnicodeError, yaml.YAMLError) as exc:
+    except (OSError, UnicodeError, yaml.YAMLError, RecursionError) as exc:
         raise ValueError("domain lane register unavailable") from exc
+    if not _domain_lane_projection_is_bounded(value):
+        raise ValueError("domain lane register unavailable")
     document = _mapping(value)
     if (
         document.get("version") != "v1"

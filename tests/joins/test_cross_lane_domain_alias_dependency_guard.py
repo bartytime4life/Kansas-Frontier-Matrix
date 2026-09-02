@@ -108,6 +108,73 @@ def test_aliased_projection_fails_closed_like_canonical_validator(
     assert not any(decision["effects"].values())
 
 
+def test_overlarge_projection_fails_closed_like_canonical_validator(
+    tmp_path: Path, monkeypatch
+) -> None:
+    _assert_projection_fails_closed(
+        _base_candidate(),
+        tmp_path,
+        monkeypatch,
+        (
+            "unresolved_aliases:\n  air: atmosphere\n"
+            "entries:\n  - lane_id: atmosphere\n"
+            "padding: "
+            + ("x" * MODULE.DOMAIN_LANE_REGISTER_MAX_BYTES)
+            + "\n"
+        ),
+    )
+
+
+def test_excessive_projection_nodes_fail_closed_like_canonical_validator(
+    tmp_path: Path, monkeypatch
+) -> None:
+    _assert_projection_fails_closed(
+        _base_candidate(),
+        tmp_path,
+        monkeypatch,
+        (
+            "unresolved_aliases:\n  air: atmosphere\n"
+            "entries:\n  - lane_id: atmosphere\n"
+            "padding:\n"
+            + ("  - 0\n" * MODULE.DOMAIN_LANE_REGISTER_MAX_NODES)
+        ),
+    )
+
+
+def test_excessive_projection_depth_fails_closed_like_canonical_validator(
+    tmp_path: Path, monkeypatch
+) -> None:
+    nested = "padding:\n"
+    for depth in range(MODULE.DOMAIN_LANE_REGISTER_MAX_DEPTH + 1):
+        nested += ("  " * (depth + 1)) + f"level_{depth}:\n"
+    nested += ("  " * (MODULE.DOMAIN_LANE_REGISTER_MAX_DEPTH + 2)) + "terminal: true\n"
+    _assert_projection_fails_closed(
+        _base_candidate(),
+        tmp_path,
+        monkeypatch,
+        (
+            "unresolved_aliases:\n  air: atmosphere\n"
+            "entries:\n  - lane_id: atmosphere\n"
+            + nested
+        ),
+    )
+
+
+def test_nonfinite_projection_number_fails_closed_like_canonical_validator(
+    tmp_path: Path, monkeypatch
+) -> None:
+    _assert_projection_fails_closed(
+        _base_candidate(),
+        tmp_path,
+        monkeypatch,
+        (
+            "unresolved_aliases:\n  air: atmosphere\n"
+            "entries:\n  - lane_id: atmosphere\n"
+            "padding: .nan\n"
+        ),
+    )
+
+
 def test_malformed_alias_projection_fails_closed_as_dependency_error(tmp_path: Path, monkeypatch) -> None:
     candidate = _base_candidate()
     malformed = tmp_path / "domain_lane_register.yaml"
