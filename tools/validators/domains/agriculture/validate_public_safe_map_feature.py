@@ -417,12 +417,15 @@ def main(argv: Sequence[str] | None = None) -> int:
         value = _strict_json_loads(Path(args.path).read_text(encoding="utf-8"))
     except StrictJSONError as error:
         result = Result("DENY", (error.finding,))
-    except json.JSONDecodeError:
-        result = Result("DENY", (Finding("AG_MAP_JSON_DECODE_INVALID", "/"),))
     except (OSError, UnicodeError):
         result = Result("ERROR", (Finding("AG_MAP_INPUT_UNAVAILABLE", "/"),))
+    except (RecursionError, ValueError):
+        result = Result("DENY", (Finding("AG_MAP_JSON_DECODE_INVALID", "/"),))
     else:
-        result = validate_payload(value)
+        try:
+            result = validate_payload(value)
+        except RecursionError:
+            result = Result("DENY", (Finding("AG_MAP_JSON_DECODE_INVALID", "/"),))
     print(json.dumps({
         "outcome": result.outcome,
         "findings": [{"code": f.code, "path": f.path} for f in result.findings],
