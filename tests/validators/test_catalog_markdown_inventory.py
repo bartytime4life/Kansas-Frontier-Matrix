@@ -97,6 +97,38 @@ class CatalogMarkdownInventoryTests(unittest.TestCase):
             ["visible"],
         )
 
+    def test_html_comment_blocks_are_not_visible_inventory(self) -> None:
+        text = "\n".join(
+            [
+                "visible-before",
+                "  <!--",
+                "## Hidden inventory",
+                "| hidden |",
+                "  --> trailing hidden text",
+                "<!-- hidden on one line -->",
+                "inline <!-- remains bounded text -->",
+                "visible-after",
+            ]
+        )
+
+        self.assertEqual(
+            [line for _, _, line in visible_line_spans(text)],
+            [
+                "visible-before",
+                "inline <!-- remains bounded text -->",
+                "visible-after",
+            ],
+        )
+
+    def test_unterminated_html_comment_fails_closed_with_stable_offset(self) -> None:
+        text = "visible\n<!-- hidden inventory\n| hidden |\n"
+
+        with self.assertRaisesRegex(
+            ValueError,
+            rf"^unterminated Markdown HTML comment at offset {len('visible\n')}$",
+        ):
+            visible_line_spans(text)
+
     def test_all_inventory_validators_share_the_canonical_scanner(self) -> None:
         modules = (
             validate_catalog_child_index,
@@ -120,6 +152,10 @@ class CatalogMarkdownInventoryTests(unittest.TestCase):
                     module._visible_line_spans("    | hidden |\n| visible |\n"),
                     [(15, 26, "| visible |")],
                 )
+                with self.assertRaisesRegex(
+                    ValueError, "unterminated Markdown HTML comment"
+                ):
+                    module._visible_line_spans("<!-- hidden inventory\n| hidden |\n")
 
 
 if __name__ == "__main__":
