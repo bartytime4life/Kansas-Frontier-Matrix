@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 
 import answerFixture from "../../../fixtures/ui/evidence_drawer_payload/valid/answer-corrected.json";
+import supersededFixture from "../../../fixtures/ui/evidence_drawer_payload/valid/abstain-superseded.json";
 import denyFixture from "../../../fixtures/ui/evidence_drawer_payload/valid/deny-sensitive.json";
 import mapRuntimeSource from "../src/features/map_runtime/index.tsx?raw";
 import {
@@ -14,7 +15,10 @@ const matchingSelection = Object.freeze({
   selection_id: "selection:flow-001",
   layer_id: "layer:synthetic-streamflow",
   feature_id: "feature:flow-001",
-  evidence_refs: ["kfm:evidence:synthetic:flow-001"],
+  evidence_refs: [
+    "kfm:evidence:synthetic:flow-001",
+    "kfm:evidence:synthetic:flow-000",
+  ],
 });
 
 describe("Explorer map feature to Evidence Drawer bridge", () => {
@@ -31,7 +35,60 @@ describe("Explorer map feature to Evidence Drawer bridge", () => {
       selectionId: "selection:flow-001",
       layerId: "layer:synthetic-streamflow",
       featureId: "feature:flow-001",
-      evidenceRefs: ["kfm:evidence:synthetic:flow-001"],
+      evidenceRefs: [
+        "kfm:evidence:synthetic:flow-001",
+        "kfm:evidence:synthetic:flow-000",
+      ],
+    });
+  });
+
+  it("keeps feature identity and EvidenceRef scope immutable inside the resolver", async () => {
+    const observed: string[] = [];
+    const result = await resolveMapFeatureEvidence(
+      matchingSelection,
+      async (selection) => {
+        expect(Object.isFrozen(selection)).toBe(true);
+        expect(Object.isFrozen(selection.evidenceRefs)).toBe(true);
+
+        const mutableSelection = selection as unknown as Record<string, unknown>;
+        const mutableEvidenceRefs = selection.evidenceRefs as unknown as string[];
+        expect(
+          Reflect.set(mutableSelection, "featureId", "feature:mutated"),
+        ).toBe(false);
+        expect(
+          Reflect.set(
+            mutableEvidenceRefs,
+            "0",
+            "kfm:evidence:synthetic:mutated",
+          ),
+        ).toBe(false);
+
+        observed.push(
+          selection.selectionId,
+          selection.layerId,
+          selection.featureId,
+          ...selection.evidenceRefs,
+        );
+        return answerFixture;
+      },
+    );
+
+    expect(observed).toEqual([
+      "selection:flow-001",
+      "layer:synthetic-streamflow",
+      "feature:flow-001",
+      "kfm:evidence:synthetic:flow-001",
+      "kfm:evidence:synthetic:flow-000",
+    ]);
+    expect(result).toMatchObject({
+      code: "SUPPORTED",
+      selection: {
+        featureId: "feature:flow-001",
+        evidenceRefs: [
+          "kfm:evidence:synthetic:flow-001",
+          "kfm:evidence:synthetic:flow-000",
+        ],
+      },
     });
   });
 
@@ -103,6 +160,75 @@ describe("Explorer map feature to Evidence Drawer bridge", () => {
     });
     expect(JSON.stringify(result.drawer)).not.toContain(
       "SENSITIVE_DENIAL_CANARY_4d7ec2",
+    );
+  });
+
+  it("preserves independently scoped superseded history as audit-only", async () => {
+    const result = await resolveMapFeatureEvidence(
+      {
+        ...matchingSelection,
+        evidence_refs: ["kfm:evidence:synthetic:superseded-001"],
+      },
+      async () => supersededFixture,
+    );
+
+    expect(result).toMatchObject({
+      code: "SUPERSEDED_EVIDENCE",
+      drawer: {
+        outcome: "ABSTAIN",
+        code: "SUPERSEDED_EVIDENCE",
+        evidenceRefs: [],
+        citations: [],
+      },
+    });
+    expect(result.drawer.historyLabels).toHaveLength(1);
+  });
+
+  it("fails closed when negative-only history widens beyond the clicked selection", async () => {
+    const result = await resolveMapFeatureEvidence(
+      {
+        ...matchingSelection,
+        evidence_refs: ["kfm:evidence:synthetic:flow-001"],
+      },
+      async () => supersededFixture,
+    );
+
+    expect(result).toMatchObject({
+      code: "DRAWER_EVIDENCE_OUTSIDE_SELECTION",
+      drawer: {
+        outcome: "ERROR",
+        code: "UPSTREAM_ERROR",
+        evidenceRefs: [],
+        citations: [],
+        historyLabels: [],
+      },
+    });
+    expect(JSON.stringify(result.drawer)).not.toContain(
+      "kfm:evidence:synthetic:superseded-001",
+    );
+  });
+
+  it("fails closed when correction history widens beyond the clicked selection", async () => {
+    const result = await resolveMapFeatureEvidence(
+      {
+        ...matchingSelection,
+        evidence_refs: ["kfm:evidence:synthetic:flow-001"],
+      },
+      async () => answerFixture,
+    );
+
+    expect(result).toMatchObject({
+      code: "DRAWER_EVIDENCE_OUTSIDE_SELECTION",
+      drawer: {
+        outcome: "ERROR",
+        code: "UPSTREAM_ERROR",
+        evidenceRefs: [],
+        citations: [],
+        historyLabels: [],
+      },
+    });
+    expect(JSON.stringify(result.drawer)).not.toContain(
+      "kfm:evidence:synthetic:flow-000",
     );
   });
 

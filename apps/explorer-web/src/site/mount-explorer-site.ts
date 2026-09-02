@@ -28,7 +28,12 @@ import {
 
 export type ExplorerSiteController = Readonly<{ destroy: () => void }>;
 
-const supportedProjection = Object.freeze({
+export const SUPPORTED_SYNTHETIC_STREAMFLOW_EVIDENCE_REFS = Object.freeze([
+  "kfm:evidence:synthetic:flow-000",
+  "kfm:evidence:synthetic:flow-001",
+]);
+
+export const SUPPORTED_SYNTHETIC_STREAMFLOW_PROJECTION = Object.freeze({
   profile: "kfm.explorer.evidence-drawer.public-safe.v1",
   id: "kfm:ui:evidence-drawer:answer-001",
   outcome: "ANSWER",
@@ -95,7 +100,7 @@ const restrictedProjection = Object.freeze({
 });
 
 const mapCases: readonly MapEvidenceFixtureCase[] = Object.freeze([
-  { caseId: "supported", label: "Supported synthetic streamflow", selection: { profile: MAP_FEATURE_SELECTION_PROFILE, selection_id: "selection:flow-001", layer_id: "layer:synthetic-streamflow", feature_id: "feature:flow-001", evidence_refs: ["kfm:evidence:synthetic:flow-001"] } },
+  { caseId: "supported", label: "Supported synthetic streamflow", selection: { profile: MAP_FEATURE_SELECTION_PROFILE, selection_id: "selection:flow-001", layer_id: "layer:synthetic-streamflow", feature_id: "feature:flow-001", evidence_refs: SUPPORTED_SYNTHETIC_STREAMFLOW_EVIDENCE_REFS } },
   { caseId: "missing", label: "Feature without governed evidence", selection: { profile: MAP_FEATURE_SELECTION_PROFILE, selection_id: "selection:missing", layer_id: "layer:synthetic-streamflow", feature_id: "feature:missing", evidence_refs: [] } },
   { caseId: "restricted", label: "Policy-restricted feature", selection: { profile: MAP_FEATURE_SELECTION_PROFILE, selection_id: "selection:restricted", layer_id: "layer:synthetic-restricted", feature_id: "feature:restricted", evidence_refs: ["kfm:evidence:synthetic:restricted"] } },
   { caseId: "mismatch", label: "Mismatched evidence scope", selection: { profile: MAP_FEATURE_SELECTION_PROFILE, selection_id: "selection:mismatch", layer_id: "layer:synthetic-streamflow", feature_id: "feature:mismatch", evidence_refs: ["kfm:evidence:synthetic:other"] } },
@@ -290,7 +295,7 @@ export function mountExplorerSite(root: HTMLElement): ExplorerSiteController {
     await Promise.resolve();
     if (selection.selectionId === "selection:restricted") return restrictedProjection;
     if (selection.selectionId === "selection:error") throw new Error("Synthetic governed resolver failure");
-    return supportedProjection;
+    return SUPPORTED_SYNTHETIC_STREAMFLOW_PROJECTION;
   });
   mapRuntimeStatus = mountMapRuntimeTrustStatus(runtimeStatusHost, mapRuntime);
 
