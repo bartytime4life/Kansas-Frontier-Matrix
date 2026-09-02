@@ -103,8 +103,9 @@ shape.
 Protected detail is denied whether it appears as an object member name or is
 embedded in an otherwise permitted scalar string such as an indicator value or
 evidence reference. Protected identifiers remain denied with punctuation or
-plain whitespace separators, and coordinate literals remain denied whether
-integer or fractional and whether coordinate pairs use commas or whitespace.
+plain whitespace separators. Latitude and longitude labels are denied whether
+they use punctuation or plain whitespace; coordinate literals remain denied
+whether integer or fractional and whether coordinate pairs use commas or whitespace.
 Protected identifier values are denied at every length. A complete scalar that
 is shaped as a private identity label remains denied with one or more identity
 tokens, regardless of capitalization or Unicode letter width, even when it
