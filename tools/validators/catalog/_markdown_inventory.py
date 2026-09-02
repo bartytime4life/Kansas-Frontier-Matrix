@@ -26,6 +26,12 @@ def visible_line_spans(text: str) -> list[tuple[int, int, str]]:
             opening = FENCE_OPEN_RE.match(line)
             if opening is not None:
                 fence = opening.group("fence")
+                info = line[opening.end("fence") :]
+                if fence[0] == "`" and "`" in info:
+                    raise ValueError(
+                        "backtick fence info contains backtick "
+                        f"at offset {offset}"
+                    )
                 fence_char = fence[0]
                 fence_length = len(fence)
                 fence_offset = offset

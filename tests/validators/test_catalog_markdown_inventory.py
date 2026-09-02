@@ -65,6 +65,23 @@ class CatalogMarkdownInventoryTests(unittest.TestCase):
                 ):
                     visible_line_spans(text)
 
+    def test_backtick_fence_info_rejects_backticks_with_stable_offset(self) -> None:
+        text = "visible\n```language`variant\nhidden\n```\n"
+
+        with self.assertRaisesRegex(
+            ValueError,
+            rf"^backtick fence info contains backtick at offset {len('visible\n')}$",
+        ):
+            visible_line_spans(text)
+
+    def test_tilde_fence_info_may_contain_backticks(self) -> None:
+        text = "~~~ language`variant\nhidden\n~~~\nvisible\n"
+
+        self.assertEqual(
+            [line for _, _, line in visible_line_spans(text)],
+            ["visible"],
+        )
+
     def test_all_inventory_validators_share_the_canonical_scanner(self) -> None:
         modules = (
             validate_catalog_child_index,
@@ -80,6 +97,10 @@ class CatalogMarkdownInventoryTests(unittest.TestCase):
                 self.assertIs(module._visible_line_spans, visible_line_spans)
                 with self.assertRaisesRegex(ValueError, "unterminated Markdown fence"):
                     module._visible_line_spans("visible\n```example\nhidden\n")
+                with self.assertRaisesRegex(
+                    ValueError, "backtick fence info contains backtick"
+                ):
+                    module._visible_line_spans("```language`variant\n```\n")
 
 
 if __name__ == "__main__":
