@@ -3,7 +3,36 @@ from __future__ import annotations
 import re
 
 FENCE_OPEN_RE = re.compile(r"^ {0,3}(?P<fence>`{3,}|~{3,}).*$")
-HTML_COMMENT_OPEN_RE = re.compile(r"^ {0,3}<!--")
+RAW_HTML_BLOCK_SPECS = (
+    (
+        re.compile(r"^ {0,3}<!--"),
+        re.compile(r"-->"),
+        "Markdown HTML comment",
+    ),
+    (
+        re.compile(
+            r"^ {0,3}<(?:pre|script|style|textarea)(?=[ \t>]|$)",
+            re.IGNORECASE,
+        ),
+        re.compile(r"</(?:pre|script|style|textarea)>", re.IGNORECASE),
+        "Markdown raw HTML element block",
+    ),
+    (
+        re.compile(r"^ {0,3}<\?"),
+        re.compile(r"\?>"),
+        "Markdown HTML processing instruction",
+    ),
+    (
+        re.compile(r"^ {0,3}<!\[CDATA\["),
+        re.compile(r"\]\]>"),
+        "Markdown CDATA block",
+    ),
+    (
+        re.compile(r"^ {0,3}<![A-Za-z]"),
+        re.compile(r">"),
+        "Markdown HTML declaration",
+    ),
+)
 
 
 def _is_indented_code_line(line: str) -> bool:
@@ -23,18 +52,21 @@ def _is_indented_code_line(line: str) -> bool:
 
 
 def visible_line_spans(text: str) -> list[tuple[int, int, str]]:
-    """Return non-code Markdown lines with offsets into the original text."""
+    """Return rendered inventory lines with offsets into the original text."""
     visible: list[tuple[int, int, str]] = []
     fence_char: str | None = None
     fence_length = 0
     fence_offset = 0
-    html_comment_offset: int | None = None
+    raw_html_end: re.Pattern[str] | None = None
+    raw_html_name: str | None = None
+    raw_html_offset = 0
     offset = 0
     for raw_line in text.splitlines(keepends=True):
         line = raw_line.rstrip("\r\n")
-        if html_comment_offset is not None:
-            if "-->" in line:
-                html_comment_offset = None
+        if raw_html_end is not None:
+            if raw_html_end.search(line) is not None:
+                raw_html_end = None
+                raw_html_name = None
         elif fence_char is not None:
             closing = re.fullmatch(
                 rf" {{0,3}}{re.escape(fence_char)}{{{fence_length},}}[ \t]*",
@@ -58,19 +90,23 @@ def visible_line_spans(text: str) -> list[tuple[int, int, str]]:
                 fence_offset = offset
             elif _is_indented_code_line(line):
                 pass
-            elif HTML_COMMENT_OPEN_RE.match(line) is not None:
-                if "-->" not in line:
-                    html_comment_offset = offset
             else:
-                visible.append((offset, offset + len(line), line))
+                for opening, ending, name in RAW_HTML_BLOCK_SPECS:
+                    if opening.match(line) is None:
+                        continue
+                    if ending.search(line) is None:
+                        raw_html_end = ending
+                        raw_html_name = name
+                        raw_html_offset = offset
+                    break
+                else:
+                    visible.append((offset, offset + len(line), line))
         offset += len(raw_line)
     if fence_char is not None:
         fence = fence_char * fence_length
         raise ValueError(
             f"unterminated Markdown fence {fence!r} at offset {fence_offset}"
         )
-    if html_comment_offset is not None:
-        raise ValueError(
-            f"unterminated Markdown HTML comment at offset {html_comment_offset}"
-        )
+    if raw_html_end is not None:
+        raise ValueError(f"unterminated {raw_html_name} at offset {raw_html_offset}")
     return visible

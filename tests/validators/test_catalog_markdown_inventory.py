@@ -129,6 +129,53 @@ class CatalogMarkdownInventoryTests(unittest.TestCase):
         ):
             visible_line_spans(text)
 
+    def test_explicit_raw_html_blocks_are_not_visible_inventory(self) -> None:
+        cases = (
+            (
+                "element",
+                "<SCRIPT type=example>\n## Hidden\n| hidden |\n</STYLE>\nvisible",
+            ),
+            (
+                "processing-instruction",
+                "<?inventory\n## Hidden\n?>\nvisible",
+            ),
+            (
+                "declaration",
+                "<!INVENTORY\n## Hidden\n>\nvisible",
+            ),
+            (
+                "cdata",
+                "<![CDATA[\n## Hidden\n| hidden |\n]]>\nvisible",
+            ),
+        )
+
+        for name, text in cases:
+            with self.subTest(name=name):
+                self.assertEqual(
+                    [line for _, _, line in visible_line_spans(text)],
+                    ["visible"],
+                )
+
+    def test_unterminated_raw_html_blocks_fail_with_stable_offsets(self) -> None:
+        cases = (
+            (
+                "visible\n<script>\n## Hidden\n",
+                "Markdown raw HTML element block",
+                len("visible\n"),
+            ),
+            ("<?inventory\n## Hidden\n", "Markdown HTML processing instruction", 0),
+            ("<!INVENTORY\n## Hidden\n", "Markdown HTML declaration", 0),
+            ("<![CDATA[\n## Hidden\n", "Markdown CDATA block", 0),
+        )
+
+        for text, block_name, offset in cases:
+            with self.subTest(block_name=block_name):
+                with self.assertRaisesRegex(
+                    ValueError,
+                    rf"^unterminated {block_name} at offset {offset}$",
+                ):
+                    visible_line_spans(text)
+
     def test_all_inventory_validators_share_the_canonical_scanner(self) -> None:
         modules = (
             validate_catalog_child_index,
@@ -156,6 +203,10 @@ class CatalogMarkdownInventoryTests(unittest.TestCase):
                     ValueError, "unterminated Markdown HTML comment"
                 ):
                     module._visible_line_spans("<!-- hidden inventory\n| hidden |\n")
+                with self.assertRaisesRegex(
+                    ValueError, "unterminated Markdown raw HTML element block"
+                ):
+                    module._visible_line_spans("<script>\n| hidden |\n")
 
 
 if __name__ == "__main__":
