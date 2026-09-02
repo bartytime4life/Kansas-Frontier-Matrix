@@ -273,6 +273,10 @@ def test_strict_json_decoder_rejects_nonfinite_and_duplicate_members():
         ('{"value":NaN}', ("AG_MAP_NONFINITE_NUMBER_DENIED", "/")),
         ('{"release":{"public_use_allowed":true,"public_use_allowed":false}}',
          ("AG_MAP_DUPLICATE_JSON_MEMBER", "/public_use_allowed")),
+        ('{"a/b":1,"a/b":2}',
+         ("AG_MAP_DUPLICATE_JSON_MEMBER", "/a~1b")),
+        ('{"a~b":1,"a~b":2}',
+         ("AG_MAP_DUPLICATE_JSON_MEMBER", "/a~0b")),
     ):
         try:
             module._strict_json_loads(text)
