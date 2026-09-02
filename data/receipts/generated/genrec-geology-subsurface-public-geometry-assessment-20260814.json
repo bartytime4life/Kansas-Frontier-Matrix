@@ -16,8 +16,8 @@
     "docs/intake/exploratory/geology-subsurface-public-geometry-assessment-source-map.md": "sha256:6e9b7cc47919db7ccd17ff022ee91189dd22dde449bf6d9faa6de767840414fb",
     "fixtures/contracts/v1/domains/geology/subsurface_public_geometry_assessment/cases.json": "sha256:15e28a843628bb5a08d22685f8967e3d182f12415bbe4bef963dc93e80b999bd",
     "schemas/contracts/v1/domains/geology/subsurface_public_geometry_assessment.schema.json": "sha256:276cbda5389886c1f0128d86485e536c8f1a5953fc4dd21c349193d9afc79632",
-    "tests/validators/domains/geology/test_validate_geology_subsurface_public_geometry_assessment.py": "sha256:6f6126da59d01dbd713db5a7d89c2f67dbb971e8af86dfb087bdcd3235886986",
-    "tools/validators/validate_geology_subsurface_public_geometry_assessment.py": "sha256:ec3ca5fb53d137c15a44f9842c9dc02dc73f49d748bb0298577af1743726b0ab"
+    "tests/validators/domains/geology/test_validate_geology_subsurface_public_geometry_assessment.py": "sha256:d7e2a35a995ec9706b5130d8c41a3b3a06f7e64addc49a94f32f5ce241f1166f",
+    "tools/validators/validate_geology_subsurface_public_geometry_assessment.py": "sha256:5d69e2339dde4079521c227d791308712b04883788ee9bf09473581af7c55955"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -75,7 +75,7 @@
     {
       "gate": "focused-unittest-suite",
       "outcome": "PASS",
-      "reason": "Nine deterministic focused tests passed."
+      "reason": "Twelve deterministic focused tests passed."
     },
     {
       "gate": "exact-fixture-replay",
