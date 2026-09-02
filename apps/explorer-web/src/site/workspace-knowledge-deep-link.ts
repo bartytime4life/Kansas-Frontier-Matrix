@@ -52,6 +52,19 @@ export function resolvePublicKnowledgeDomainRetryPlan(
 }
 
 /**
+ * Accept a scheduled retry callback only while it still owns the active local
+ * generation. Navigation, manual release, or a newer retry invalidates older
+ * callbacks so they cannot clear a replacement timer or resynchronize stale
+ * URL state.
+ */
+export function isPublicKnowledgeDomainRetryGenerationCurrent(
+  activeGeneration: number,
+  callbackGeneration: number,
+): boolean {
+  return activeGeneration === callbackGeneration;
+}
+
+/**
  * Commit URL ownership only after the existing Knowledge control is enabled
  * and visibly applies the requested domain. This readiness proof is required
  * even when the requested domain was already selected before synchronization;

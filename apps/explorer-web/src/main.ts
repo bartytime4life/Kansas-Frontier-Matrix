@@ -24,6 +24,7 @@ import {
 } from "./site/workspace-map-deep-link";
 import {
   PUBLIC_KNOWLEDGE_DOMAIN_DEEP_LINK_RETRY_LIMIT,
+  isPublicKnowledgeDomainRetryGenerationCurrent,
   resolvePublicKnowledgeDomainRetryPlan,
   resolvePublicKnowledgeDomainManualSelectionTransition,
   resolvePublicKnowledgeDomainUrlConsumerCommit,
@@ -50,6 +51,7 @@ let activeDeepLinkMapCaseId: "missing" | null = null;
 let activeDeepLinkKnowledgeDomainId: string | null = null;
 let pendingMapDeepLinkRetry: number | null = null;
 let pendingKnowledgeDomainDeepLinkRetry: number | null = null;
+let knowledgeDomainDeepLinkRetryGeneration = 0;
 let mapDeepLinkRetryState: PublicMapCaseRetryState = Object.freeze({
   attemptsRemaining: PUBLIC_MAP_CASE_DEEP_LINK_RETRY_LIMIT,
   urlHref: null,
@@ -90,6 +92,7 @@ const scheduleMapDeepLinkRetry = (url: URL): void => {
 };
 
 const cancelPendingKnowledgeDomainDeepLinkRetry = (): void => {
+  knowledgeDomainDeepLinkRetryGeneration += 1;
   if (pendingKnowledgeDomainDeepLinkRetry !== null) {
     window.clearTimeout(pendingKnowledgeDomainDeepLinkRetry);
   }
@@ -108,7 +111,17 @@ const scheduleKnowledgeDomainDeepLinkRetry = (url: URL): void => {
   );
   knowledgeDomainDeepLinkRetryState = retryPlan;
   if (!retryPlan.shouldSchedule) return;
+  knowledgeDomainDeepLinkRetryGeneration += 1;
+  const retryGeneration = knowledgeDomainDeepLinkRetryGeneration;
   pendingKnowledgeDomainDeepLinkRetry = window.setTimeout(() => {
+    if (
+      !isPublicKnowledgeDomainRetryGenerationCurrent(
+        knowledgeDomainDeepLinkRetryGeneration,
+        retryGeneration,
+      )
+    ) {
+      return;
+    }
     pendingKnowledgeDomainDeepLinkRetry = null;
     if (window.location.href !== retryPlan.urlHref) {
       cancelPendingKnowledgeDomainDeepLinkRetry();

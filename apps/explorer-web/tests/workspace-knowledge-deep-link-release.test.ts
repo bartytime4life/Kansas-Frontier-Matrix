@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import mainSource from "../src/main.ts?raw";
 import {
   PUBLIC_KNOWLEDGE_DOMAIN_DEEP_LINK_RETRY_LIMIT,
+  isPublicKnowledgeDomainRetryGenerationCurrent,
   resolvePublicKnowledgeDomainRetryPlan,
   resolvePublicKnowledgeDomainManualSelectionTransition,
   resolvePublicKnowledgeDomainUrlConsumerCommit,
@@ -84,6 +85,12 @@ describe("public Knowledge-domain deep-link release", () => {
       urlHref: contextUrl(["people_dna_land"]).href,
       shouldSchedule: true,
     });
+  });
+
+  it("rejects a stale retry callback after cancellation or replacement", () => {
+    expect(isPublicKnowledgeDomainRetryGenerationCurrent(4, 4)).toBe(true);
+    expect(isPublicKnowledgeDomainRetryGenerationCurrent(5, 4)).toBe(false);
+    expect(isPublicKnowledgeDomainRetryGenerationCurrent(6, 4)).toBe(false);
   });
 
   it("commits URL ownership after the existing control applies the domain", () => {
@@ -304,6 +311,21 @@ describe("public Knowledge-domain deep-link release", () => {
     expect(mainSource).toContain(
       "window.location.href !== retryPlan.urlHref",
     );
+    const knowledgeRetryScheduleIndex = mainSource.indexOf(
+      "const scheduleKnowledgeDomainDeepLinkRetry",
+    );
+    const staleGenerationGuardIndex = mainSource.indexOf(
+      "isPublicKnowledgeDomainRetryGenerationCurrent(",
+      knowledgeRetryScheduleIndex,
+    );
+    const knowledgeRetryClearIndex = mainSource.indexOf(
+      "pendingKnowledgeDomainDeepLinkRetry = null",
+      staleGenerationGuardIndex,
+    );
+    expect(staleGenerationGuardIndex).toBeGreaterThan(
+      knowledgeRetryScheduleIndex,
+    );
+    expect(knowledgeRetryClearIndex).toBeGreaterThan(staleGenerationGuardIndex);
     const clickIndex = mainSource.indexOf("domainButton.click()");
     expect(
       mainSource.indexOf(
