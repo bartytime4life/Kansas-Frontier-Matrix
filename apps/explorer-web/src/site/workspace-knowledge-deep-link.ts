@@ -7,11 +7,49 @@ import {
 export const PUBLIC_KNOWLEDGE_DOMAIN_DEEP_LINK_RELEASE_PROFILE =
   "kfm.explorer.public-knowledge-domain-deep-link-release.v1" as const;
 
+export const PUBLIC_KNOWLEDGE_DOMAIN_DEEP_LINK_RETRY_LIMIT = 8 as const;
+
+export type PublicKnowledgeDomainRetryState = Readonly<{
+  attemptsRemaining: number;
+  urlHref: string | null;
+}>;
+
+export type PublicKnowledgeDomainRetryPlan = PublicKnowledgeDomainRetryState &
+  Readonly<{ shouldSchedule: boolean }>;
+
 export type PublicKnowledgeDomainDeepLinkRelease = Readonly<{
   activeDeepLinkDomainId: string | null;
   replacementUrl: URL | null;
   reason: "UNCHANGED" | "RELEASED" | "STALE_OWNER";
 }>;
+
+/**
+ * Reserve one finite retry for a Knowledge-domain control that is absent or
+ * disabled while its validated public URL request is pending. A different URL
+ * receives a fresh budget; exhaustion fails closed without polling forever or
+ * claiming that the requested catalog domain became visible.
+ */
+export function resolvePublicKnowledgeDomainRetryPlan(
+  state: PublicKnowledgeDomainRetryState,
+  requestedUrlHref: string,
+): PublicKnowledgeDomainRetryPlan {
+  const attemptsRemaining =
+    state.urlHref === requestedUrlHref
+      ? state.attemptsRemaining
+      : PUBLIC_KNOWLEDGE_DOMAIN_DEEP_LINK_RETRY_LIMIT;
+  if (attemptsRemaining <= 0) {
+    return Object.freeze({
+      attemptsRemaining: 0,
+      urlHref: requestedUrlHref,
+      shouldSchedule: false,
+    });
+  }
+  return Object.freeze({
+    attemptsRemaining: attemptsRemaining - 1,
+    urlHref: requestedUrlHref,
+    shouldSchedule: true,
+  });
+}
 
 /**
  * Commit URL ownership only after the existing Knowledge controls visibly

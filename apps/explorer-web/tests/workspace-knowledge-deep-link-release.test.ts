@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import mainSource from "../src/main.ts?raw";
 import {
+  PUBLIC_KNOWLEDGE_DOMAIN_DEEP_LINK_RETRY_LIMIT,
+  resolvePublicKnowledgeDomainRetryPlan,
   resolvePublicKnowledgeDomainManualSelectionTransition,
   resolvePublicKnowledgeDomainUrlConsumerCommit,
 } from "../src/site/workspace-knowledge-deep-link";
@@ -44,6 +46,46 @@ function contextUrl(domainIds: readonly string[]): URL {
 }
 
 describe("public Knowledge-domain deep-link release", () => {
+  it("bounds unavailable-control retries and resets the budget for a new URL", () => {
+    let state = Object.freeze({
+      attemptsRemaining: PUBLIC_KNOWLEDGE_DOMAIN_DEEP_LINK_RETRY_LIMIT,
+      urlHref: null,
+    });
+    for (
+      let index = 0;
+      index < PUBLIC_KNOWLEDGE_DOMAIN_DEEP_LINK_RETRY_LIMIT;
+      index += 1
+    ) {
+      const plan = resolvePublicKnowledgeDomainRetryPlan(
+        state,
+        contextUrl(["archaeology"]).href,
+      );
+      expect(plan.shouldSchedule).toBe(true);
+      state = plan;
+    }
+    expect(
+      resolvePublicKnowledgeDomainRetryPlan(
+        state,
+        contextUrl(["archaeology"]).href,
+      ),
+    ).toEqual({
+      attemptsRemaining: 0,
+      urlHref: contextUrl(["archaeology"]).href,
+      shouldSchedule: false,
+    });
+
+    expect(
+      resolvePublicKnowledgeDomainRetryPlan(
+        state,
+        contextUrl(["people_dna_land"]).href,
+      ),
+    ).toEqual({
+      attemptsRemaining: PUBLIC_KNOWLEDGE_DOMAIN_DEEP_LINK_RETRY_LIMIT - 1,
+      urlHref: contextUrl(["people_dna_land"]).href,
+      shouldSchedule: true,
+    });
+  });
+
   it("commits URL ownership after the existing control applies the domain", () => {
     const transition = resolvePublicKnowledgeDomainSelectionTransition(
       contextUrl(["archaeology"]),
@@ -218,6 +260,15 @@ describe("public Knowledge-domain deep-link release", () => {
       '!button.disabled && button.getAttribute("aria-pressed") === "true"',
     );
     expect(mainSource).toContain("domainButton.click()");
+    expect(mainSource).toContain(
+      "scheduleKnowledgeDomainDeepLinkRetry(safeUrl)",
+    );
+    expect(mainSource).toContain(
+      "cancelPendingKnowledgeDomainDeepLinkRetry()",
+    );
+    expect(mainSource).toContain(
+      "window.location.href !== retryPlan.urlHref",
+    );
     const clickIndex = mainSource.indexOf("domainButton.click()");
     expect(
       mainSource.indexOf(

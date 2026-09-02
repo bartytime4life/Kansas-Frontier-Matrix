@@ -23,8 +23,11 @@ import {
   type PublicMapCaseRetryState,
 } from "./site/workspace-map-deep-link";
 import {
+  PUBLIC_KNOWLEDGE_DOMAIN_DEEP_LINK_RETRY_LIMIT,
+  resolvePublicKnowledgeDomainRetryPlan,
   resolvePublicKnowledgeDomainManualSelectionTransition,
   resolvePublicKnowledgeDomainUrlConsumerCommit,
+  type PublicKnowledgeDomainRetryState,
 } from "./site/workspace-knowledge-deep-link";
 
 const root = document.querySelector<HTMLElement>("#root");
@@ -46,10 +49,16 @@ mountPublicWorkspaceNavigation(navigation);
 let activeDeepLinkMapCaseId: "missing" | null = null;
 let activeDeepLinkKnowledgeDomainId: string | null = null;
 let pendingMapDeepLinkRetry: number | null = null;
+let pendingKnowledgeDomainDeepLinkRetry: number | null = null;
 let mapDeepLinkRetryState: PublicMapCaseRetryState = Object.freeze({
   attemptsRemaining: PUBLIC_MAP_CASE_DEEP_LINK_RETRY_LIMIT,
   urlHref: null,
 });
+let knowledgeDomainDeepLinkRetryState: PublicKnowledgeDomainRetryState =
+  Object.freeze({
+    attemptsRemaining: PUBLIC_KNOWLEDGE_DOMAIN_DEEP_LINK_RETRY_LIMIT,
+    urlHref: null,
+  });
 
 const cancelPendingMapDeepLinkRetry = (): void => {
   if (pendingMapDeepLinkRetry !== null) {
@@ -80,6 +89,35 @@ const scheduleMapDeepLinkRetry = (url: URL): void => {
   }, 16);
 };
 
+const cancelPendingKnowledgeDomainDeepLinkRetry = (): void => {
+  if (pendingKnowledgeDomainDeepLinkRetry !== null) {
+    window.clearTimeout(pendingKnowledgeDomainDeepLinkRetry);
+  }
+  pendingKnowledgeDomainDeepLinkRetry = null;
+  knowledgeDomainDeepLinkRetryState = Object.freeze({
+    attemptsRemaining: PUBLIC_KNOWLEDGE_DOMAIN_DEEP_LINK_RETRY_LIMIT,
+    urlHref: null,
+  });
+};
+
+const scheduleKnowledgeDomainDeepLinkRetry = (url: URL): void => {
+  if (pendingKnowledgeDomainDeepLinkRetry !== null) return;
+  const retryPlan = resolvePublicKnowledgeDomainRetryPlan(
+    knowledgeDomainDeepLinkRetryState,
+    url.href,
+  );
+  knowledgeDomainDeepLinkRetryState = retryPlan;
+  if (!retryPlan.shouldSchedule) return;
+  pendingKnowledgeDomainDeepLinkRetry = window.setTimeout(() => {
+    pendingKnowledgeDomainDeepLinkRetry = null;
+    if (window.location.href !== retryPlan.urlHref) {
+      cancelPendingKnowledgeDomainDeepLinkRetry();
+      return;
+    }
+    syncWorkspaceNavigation();
+  }, 16);
+};
+
 const releaseDeepLinkMapOwnershipOnManualSelection = (event: MouseEvent): void => {
   const button =
     event.target instanceof Element
@@ -100,6 +138,7 @@ const releaseDeepLinkMapOwnershipOnManualSelection = (event: MouseEvent): void =
     transition.replacementUrl !== null &&
     transition.replacementUrl.href !== currentUrl.href
   ) {
+    cancelPendingMapDeepLinkRetry();
     window.history.replaceState(
       window.history.state,
       "",
@@ -132,6 +171,7 @@ const releaseDeepLinkKnowledgeOwnershipOnManualSelection = (
     transition.replacementUrl !== null &&
     transition.replacementUrl.href !== currentUrl.href
   ) {
+    cancelPendingKnowledgeDomainDeepLinkRetry();
     window.history.replaceState(
       window.history.state,
       "",
@@ -204,6 +244,9 @@ const syncWorkspaceNavigation = (): void => {
       root.querySelectorAll<HTMLButtonElement>("button[data-domain-id]"),
     ).find((button) => button.dataset.domainId === domainIdToSelect);
     const consumerReady = domainButton !== undefined && !domainButton.disabled;
+    if (!consumerReady) {
+      scheduleKnowledgeDomainDeepLinkRetry(safeUrl);
+    }
     if (consumerReady) {
       // Provisional ownership keeps the programmatic click from looking like a
       // manual selection to the delegated release listener. The observed DOM
@@ -233,9 +276,13 @@ const syncWorkspaceNavigation = (): void => {
       domainTransition,
       selectedDomainId,
     );
+  if (activeDeepLinkKnowledgeDomainId !== null || domainIdToSelect === null) {
+    cancelPendingKnowledgeDomainDeepLinkRetry();
+  }
 };
 const syncWorkspaceNavigationFromBrowser = (): void => {
   cancelPendingMapDeepLinkRetry();
+  cancelPendingKnowledgeDomainDeepLinkRetry();
   syncWorkspaceNavigation();
 };
 syncWorkspaceNavigationFromBrowser();
