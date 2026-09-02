@@ -145,6 +145,23 @@
       "expected_findings": []
     },
     {
+      "case_id": "failure-reason-order-invalid",
+      "base": "failed",
+      "mutations": [
+        {
+          "path": "/failure_reason_codes",
+          "value": ["MODEL_EXECUTION_FAILED", "INPUT_VALIDATION_FAILED"]
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "MODEL_RUN_FAILURE_REASON_ORDER_INVALID",
+          "path": "/failure_reason_codes"
+        }
+      ]
+    },
+    {
       "case_id": "known-zero-offset-pass",
       "base": "completed",
       "mutations": [
