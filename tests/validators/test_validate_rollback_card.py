@@ -22,7 +22,7 @@ STALE_COMPATIBILITY_GUIDANCE_PATTERNS = (
     r"(?i)(?:generic|compatibility)[^\n;|]*"
     r"(?:validator|entry\s*point)[^\n;|]*\bplaceholders?\b",
     r"(?i)(?=[^\n]*validate_rollback_card\.py)"
-    r"(?=[^\n]*(?:\bplaceholders?\b|do not use))[^\n]*",
+    r"(?=[^\n]*(?:\bplaceholders?\b|\bstubs?\b|do not use|revert))[^\n]*",
 )
 
 
@@ -282,12 +282,22 @@ class RollbackCardValidatorTests(unittest.TestCase):
     def test_all_rollback_guidance_rejects_stale_compatibility_claims(
         self,
     ) -> None:
-        rollback_guidance_paths = sorted(
-            path
-            for path in (REPO_ROOT / "docs").rglob("*.md")
-            if "rollback" in path.as_posix().casefold()
-        )
+        rollback_guidance_paths = []
+        for path in sorted((REPO_ROOT / "docs").rglob("*.md")):
+            guidance = path.read_text(encoding="utf-8")
+            if (
+                "rollback" in path.as_posix().casefold()
+                or "tools/validators/validate_rollback_card.py" in guidance
+            ):
+                rollback_guidance_paths.append(path)
+
         self.assertGreaterEqual(len(rollback_guidance_paths), 10)
+        self.assertIn(
+            REPO_ROOT
+            / "docs/intake/exploratory/"
+            "publication-validator-compatibility-source-map.md",
+            rollback_guidance_paths,
+        )
         for path in rollback_guidance_paths:
             with self.subTest(path=path.relative_to(REPO_ROOT).as_posix()):
                 guidance = path.read_text(encoding="utf-8")
@@ -302,6 +312,7 @@ class RollbackCardValidatorTests(unittest.TestCase):
             "| Generic validator shortcut | "
             "`python tools/validators/validate_rollback_card.py` | "
             "Do not use |",
+            "`tools/validators/validate_rollback_card.py` must remain a stub.",
         )
         for stale_variant in stale_variants:
             with self.subTest(stale_variant=stale_variant):
