@@ -426,7 +426,17 @@ def validate_fixture_manifest(path: Path = FIXTURE_PATH) -> list[dict[str, objec
         }]
     results: list[dict[str, object]] = []
     for case in cases:
-        result = validate_candidate(materialize_fixture_case(manifest, case))
+        try:
+            candidate = materialize_fixture_case(manifest, case)
+        except (AssertionError, KeyError, IndexError, RecursionError, TypeError, ValueError):
+            results.append({
+                "name": case["name"],
+                "outcome": "ERROR",
+                "findings": ["FIXTURE_CASE_MATERIALIZATION_ERROR"],
+                "ok": False,
+            })
+            continue
+        result = validate_candidate(candidate)
         results.append({
             "name": case["name"],
             "outcome": result.outcome,
