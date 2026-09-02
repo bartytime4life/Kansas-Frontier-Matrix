@@ -143,6 +143,13 @@ def _has_canonical_evidence_path(value: str) -> bool:
     )
 
 
+def _evidence_ref_matches_water_level_identity(
+    value: str, gauge_identifier: str
+) -> bool:
+    segments = value[len(FIXTURE_EVIDENCE_PREFIX) :].split("/")
+    return len(segments) >= 2 and segments[:2] == ["water-level", gauge_identifier]
+
+
 def _parse_utc(value: object) -> datetime | None:
     if not isinstance(value, str) or _CANONICAL_UTC.fullmatch(value) is None:
         return None
@@ -225,6 +232,15 @@ def validate_candidate(candidate: object) -> list[Finding]:
             add_finding(findings, "EVIDENCE_REF_NOT_FIXTURE", "$.evidence_refs")
         elif any(not _has_canonical_evidence_path(value) for value in evidence_refs):
             add_finding(findings, "EVIDENCE_REF_IDENTIFIER_INVALID", "$.evidence_refs")
+        elif gauge_identifier is not None and any(
+            not _evidence_ref_matches_water_level_identity(value, gauge_identifier)
+            for value in evidence_refs
+        ):
+            add_finding(
+                findings,
+                "EVIDENCE_REF_IDENTITY_MISMATCH",
+                "$.evidence_refs",
+            )
         if len(evidence_refs) != len(set(evidence_refs)):
             add_finding(findings, "EVIDENCE_REFS_DUPLICATE", "$.evidence_refs")
         if len(evidence_refs) > MAX_EVIDENCE_REFS:

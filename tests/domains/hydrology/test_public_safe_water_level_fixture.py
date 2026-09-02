@@ -224,6 +224,19 @@ class HydrologyWaterLevelFixtureTests(unittest.TestCase):
             validate_candidate(candidate),
         )
 
+    def test_evidence_references_bind_family_and_gauge_identity(self) -> None:
+        candidate = _load_candidate()
+        self.assertEqual(validate_candidate(candidate), [])
+
+        mismatch = Finding("EVIDENCE_REF_IDENTITY_MISMATCH", "$.evidence_refs")
+        for value in (
+            "fixture://evidence/hydrology/flow/99999/20260802T120000Z",
+            "fixture://evidence/hydrology/water-level/88888/20260802T120000Z",
+        ):
+            mutated = copy.deepcopy(candidate)
+            mutated["evidence_refs"] = [value]
+            self.assertIn(mismatch, validate_candidate(mutated))
+
     def test_evidence_references_use_canonical_order(self) -> None:
         candidate = _load_candidate()
         first = "fixture://evidence/hydrology/water-level/99999/receipt-1"
