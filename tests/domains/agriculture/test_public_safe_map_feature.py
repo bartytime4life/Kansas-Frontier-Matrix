@@ -451,6 +451,27 @@ def test_whitespace_separated_coordinate_pairs_are_denied():
         ]
 
 
+def test_whitespace_labeled_coordinate_literals_are_denied():
+    module = _module()
+    manifest = json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))
+    candidate = module.materialize_case(
+        manifest, _case(manifest, "valid_county_crop_observation")
+    )
+
+    for value in (
+        "lat 38.8751",
+        "longitude -98.4520",
+        "lat 38.8751 lon -98.4520",
+    ):
+        mutated = copy.deepcopy(candidate)
+        mutated["indicator"]["value"] = value
+        mutated["spec_hash"], mutated["id"] = module.canonical_identity(mutated)
+        result = module.validate_payload(mutated)
+        assert [(finding.code, finding.path) for finding in result.findings] == [
+            ("AG_MAP_HARMFUL_PRECISION_DENIED", "/indicator/value")
+        ]
+
+
 def test_malformed_json_returns_machine_readable_denial(tmp_path, capsys):
     module = _module()
     candidate_path = tmp_path / "malformed.json"
