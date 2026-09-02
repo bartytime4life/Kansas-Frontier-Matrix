@@ -29,6 +29,7 @@ MAX_REQUIREMENTS = 128
 MAX_HASHES_PER_REQUIREMENT = 32
 INSTALL_TIMEOUT_SECONDS = 300
 UNSAFE_PYTHON_ENVIRONMENT = {"PYTHONHOME", "PYTHONPATH", "PYTHONUSERBASE"}
+NONCANONICAL_LINE_BREAKS = ("\v", "\f", "\x1c", "\x1d", "\x1e", "\x85", "\u2028", "\u2029")
 HASH_LINE = re.compile(r"^\s+--hash=sha256:[0-9a-f]{64}(?: \\)?$")
 REQUIREMENT_LINE = re.compile(
     r"^[A-Za-z0-9]+(?:[._-][A-Za-z0-9]+)*"
@@ -64,6 +65,8 @@ def validate_lockfile(path: Path = LOCKFILE) -> None:
         raise CliInstallConfigurationError("CLI_LOCKFILE_UNREADABLE") from exc
     if size <= 0 or size > LOCK_LIMIT_BYTES:
         raise CliInstallConfigurationError("CLI_LOCKFILE_SIZE_INVALID")
+    if any(separator in text for separator in NONCANONICAL_LINE_BREAKS):
+        raise CliInstallConfigurationError("CLI_LOCKFILE_LINE_BREAK_INVALID")
 
     lowered = text.lower()
     if any(token in lowered for token in FORBIDDEN_LOCK_TEXT):

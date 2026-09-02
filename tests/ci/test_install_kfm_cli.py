@@ -179,6 +179,22 @@ class InstallKfmCliTests(unittest.TestCase):
             ):
                 module.validate_lockfile(path)
 
+    def test_lock_validation_rejects_noncanonical_line_breaks(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "python-cli.lock"
+            for separator in module.NONCANONICAL_LINE_BREAKS:
+                with self.subTest(separator=repr(separator)):
+                    path.write_text(
+                        "demo==1.0 \\" + separator
+                        + f"    --hash=sha256:{'0' * 64}\n",
+                        encoding="utf-8",
+                    )
+                    with self.assertRaisesRegex(
+                        module.CliInstallConfigurationError,
+                        "^CLI_LOCKFILE_LINE_BREAK_INVALID$",
+                    ):
+                        module.validate_lockfile(path)
+
     def test_lock_validation_binds_hash_continuations(self) -> None:
         cases = {
             "missing-intermediate": (
