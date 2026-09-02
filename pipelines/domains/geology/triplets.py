@@ -1,1 +1,0 @@
-# geology :: triplets — greenfield placeholder

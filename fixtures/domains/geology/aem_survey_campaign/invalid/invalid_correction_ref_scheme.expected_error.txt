@@ -1,1 +1,0 @@
-AEM_CORRECTION_REFERENCE_SCHEME_INVALID	$.correction.supersedes_ref

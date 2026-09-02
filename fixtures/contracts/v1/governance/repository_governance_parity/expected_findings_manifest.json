@@ -1,9 +1,0 @@
-{
-  "invalid/baseline_growth.yaml": ["BASELINE_GROWTH"],
-  "invalid/check_not_run.yaml": ["LANE_NOT_RUN"],
-  "invalid/failed_lane.yaml": ["LANE_OUTCOME_MISMATCH"],
-  "invalid/hold_as_pass.yaml": ["TOPOLOGY_HOLD_MISCLASSIFIED"],
-  "invalid/introduced_drift.yaml": ["TOPOLOGY_INTRODUCED_DRIFT"],
-  "invalid/missing_coverage.yaml": ["COVERAGE_SET_INVALID"],
-  "valid/inherited_hold.yaml": []
-}

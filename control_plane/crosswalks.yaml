@@ -1,8 +1,0 @@
-meta:
-  status: PROPOSED
-  owner: docs steward
-  last_reviewed: 2026-05-15
-  related_doctrine:
-    - docs/doctrine/directory-rules.md
-
-crosswalks: []

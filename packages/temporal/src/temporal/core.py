@@ -1,1 +1,0 @@
-# temporal core — greenfield placeholder

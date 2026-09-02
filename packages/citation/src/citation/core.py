@@ -1,1 +1,0 @@
-# citation core — greenfield placeholder

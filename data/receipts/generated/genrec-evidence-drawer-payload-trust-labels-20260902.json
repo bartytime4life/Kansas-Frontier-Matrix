@@ -48,7 +48,9 @@
     "evidence_hashes": [],
     "attached_docs": [],
     "evidence_refs": [
-      "repo:main@3ee7942913e32c11d8fbf91fa4a4f221dddd4ac0"
+      "repo:main@3ee7942913e32c11d8fbf91fa4a4f221dddd4ac0",
+      "repo:pull/4208@660066bbfb6d31c213be168c551c9aa8763e23dd",
+      "github:actions/run/33629880352"
     ]
   },
   "truth_labels": {
@@ -92,8 +94,8 @@
     },
     {
       "gate": "hosted-exact-head",
-      "outcome": "SKIPPED",
-      "reason": "Exact-head hosted execution is pending for the temporal freshness implementation."
+      "outcome": "PASS",
+      "reason": "The evidence-drawer-payload workflow passed at exact implementation head 660066bbfb6d31c213be168c551c9aa8763e23dd in GitHub Actions run 33629880352."
     },
     {
       "gate": "human-review",
@@ -108,7 +110,12 @@
     {
       "id": "repo:evidence-drawer-payload-contract",
       "validated": true,
-      "evidence_ref": "contracts/ui/evidence_drawer_payload.md@78dce9d07c91f154df86d9785f586d4e195f626b"
+      "evidence_ref": "contracts/ui/evidence_drawer_payload.md@660066bbfb6d31c213be168c551c9aa8763e23dd"
+    },
+    {
+      "id": "repo:pull-4208-stale-freshness-proof",
+      "validated": true,
+      "evidence_ref": "github:actions/run/33629880352"
     }
   ],
   "human_review": {

@@ -1,1 +1,0 @@
-# atmosphere :: normalize — greenfield placeholder

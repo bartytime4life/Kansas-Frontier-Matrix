@@ -1,1 +1,0 @@
-# nrcs fetcher — greenfield placeholder

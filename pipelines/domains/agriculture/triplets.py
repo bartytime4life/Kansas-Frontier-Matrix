@@ -1,1 +1,0 @@
-# agriculture :: triplets — greenfield placeholder
