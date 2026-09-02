@@ -89,7 +89,36 @@ class GeologyEvidenceBundleSchemaConvergenceTests(unittest.TestCase):
 
         self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
         self.assertEqual(result.stdout, "")
-        self.assertIn("Cannot combine --fixtures", result.stderr)
+        self.assertIn("Use exactly --fixtures", result.stderr)
+
+    def test_fixture_profile_abbreviations_cannot_ignore_an_explicit_file(self) -> None:
+        for length in range(3, len("--fixtures")):
+            abbreviation = "--fixtures"[:length]
+            with self.subTest(abbreviation=abbreviation):
+                result = self.run_domain_validator(abbreviation, "/missing.json")
+
+                self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+                self.assertEqual(result.stdout, "")
+                self.assertIn("Use exactly --fixtures", result.stderr)
+
+    def test_option_terminator_preserves_explicit_file_validation(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            fixture = Path(directory) / "--fixtures"
+            fixture.write_text(
+                (SHARED_FIXTURES / "valid/valid_1.json").read_text(encoding="utf-8"),
+                encoding="utf-8",
+            )
+            result = subprocess.run(
+                [sys.executable, str(DOMAIN_VALIDATOR), "--", fixture.name],
+                cwd=directory,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn("OK --fixtures", result.stdout)
+        self.assertEqual(result.stderr, "")
 
     def test_inline_exact_subsurface_location_is_rejected(self) -> None:
         payload = self.load(SHARED_FIXTURES / "valid/valid_1.json")
