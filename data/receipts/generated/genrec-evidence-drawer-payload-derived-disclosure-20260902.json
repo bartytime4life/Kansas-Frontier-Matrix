@@ -15,7 +15,7 @@
     "tools/validators/ui/validate_evidence_drawer_payload.py"
   ],
   "artifact_hashes": {
-    ".github/workflows/evidence-drawer-payload.yml": "sha256:53f0cf4744638ac9c4cda92cf130e664c0ee094f17377144eed6f52c65760930",
+    ".github/workflows/evidence-drawer-payload.yml": "sha256:48e00cd2040f963c41ebf778574a6a3035fe9b3fc53540b54a8890513d975dfb",
     "apps/explorer-web/src/adapters/GovernedClient.ts": "sha256:648a4285af49f72cfb052a39fd3d4ac035b074bb2429b1abc5b7426b839f9af7",
     "apps/explorer-web/src/features/evidence_drawer/index.tsx": "sha256:6d2f98fbf49946e0d2d6779980f1709ef76210971da8758031871f48f1b64e73",
     "apps/explorer-web/tests/browser/map-evidence-drawer.spec.ts": "sha256:21bca123eda755afbe6da43e5465e733909880557c10f08748fb1bd1068133fa",
@@ -81,7 +81,7 @@
     {
       "gate": "historical-receipt-replay",
       "outcome": "SKIPPED",
-      "reason": "The workflow is configured to replay the immutable historical receipt at ancestor 1cc7b74e9c924437f7bb1a26db8f73cc34559715; exact-head hosted execution is pending."
+      "reason": "The workflow fetches repository history and is configured to replay the immutable historical receipt at ancestor 1cc7b74e9c924437f7bb1a26db8f73cc34559715; exact-head hosted execution is pending."
     },
     {
       "gate": "canonical-payload-validator",
