@@ -107,7 +107,7 @@
         "random_seed": null
       },
       "outputs": [],
-      "failure_reason_codes": ["INPUT_VALIDATION_FAILED"],
+      "failure_reason_codes": ["INPUT_VALIDATION_FAILED", "MODEL_EXECUTION_FAILED"],
       "evidence_refs": ["kfm://evidence/habitat/patch-candidate"],
       "governance": {
         "execution_mode": "FIXTURE_ONLY",
@@ -332,11 +332,16 @@
               "validation_report_ref": "kfm://validation/habitat/failed-run"
             }
           ]
+        },
+        {
+          "path": "/failure_reason_codes",
+          "value": ["RESOURCE_LIMIT_REACHED", "MODEL_EXECUTION_FAILED"]
         }
       ],
       "expected_outcome": "DENY",
       "expected_findings": [
-        { "code": "MODEL_RUN_FAILED_OUTPUT_FORBIDDEN", "path": "/outputs" }
+        { "code": "MODEL_RUN_FAILED_OUTPUT_FORBIDDEN", "path": "/outputs" },
+        { "code": "MODEL_RUN_FAILURE_REASON_ORDER_INVALID", "path": "/failure_reason_codes" }
       ]
     },
     {
