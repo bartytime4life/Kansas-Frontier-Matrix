@@ -111,19 +111,24 @@ FALSE_RELEASE = {
 }
 
 PROTECTED_IDENTIFIER_PATTERN = re.compile(
-    r"(?i)\b(?:parcel|field|farm|operator|owner|well|permit|water[-_ ]?right)"
-    r"(?:[-_ ]?id)?\s*[:=#]\s*[a-z0-9][a-z0-9._/-]{2,}\b"
+    r"(?i)\b(?:"
+    r"(?:parcel|field|farm|operator|owner|well|permit|water[-_ ]?right)"
+    r"[-_ ]?id\s*(?:[:=#]\s*)?"
+    r"|(?:parcel|field|farm|operator|owner|well|permit|water[-_ ]?right)"
+    r"\s*[:=#]\s*"
+    r")[a-z0-9][a-z0-9._/-]{2,}\b"
 )
 LABELED_COORDINATE_PATTERN = re.compile(
-    r"(?i)\b(?:lat(?:itude)?|lon(?:gitude)?)\s*[:=]\s*[+-]?\d{1,3}\.\d+\b"
+    r"(?i)\b(?:lat(?:itude)?|lon(?:gitude)?)\s*[:=]\s*"
+    r"[+-]?\d{1,3}(?:\.\d+)?\b"
 )
 COORDINATE_PAIR_PATTERN = re.compile(
-    r"(?<![\w.])([+-]?\d{1,3}\.\d{3,})\s*,\s*"
-    r"([+-]?\d{1,3}\.\d{3,})(?![\w.])"
+    r"(?<![\w.])([+-]?\d{1,3}(?:\.\d+)?)\s*,\s*"
+    r"([+-]?\d{1,3}(?:\.\d+)?)(?![\w.])"
 )
 WKT_POINT_PATTERN = re.compile(
-    r"(?i)\bpoint\s*\(\s*[+-]?\d{1,3}\.\d+\s+"
-    r"[+-]?\d{1,3}\.\d+\s*\)"
+    r"(?i)\bpoint\s*\(\s*[+-]?\d{1,3}(?:\.\d+)?\s+"
+    r"[+-]?\d{1,3}(?:\.\d+)?\s*\)"
 )
 EVIDENCE_REF_PATTERN = re.compile(
     r"^evidence:synthetic:agriculture:[a-z0-9]+(?:-[a-z0-9]+)*:v[1-9][0-9]*$"
@@ -402,6 +407,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         value = _strict_json_loads(Path(args.path).read_text(encoding="utf-8"))
     except StrictJSONError as error:
         result = Result("DENY", (error.finding,))
+    except json.JSONDecodeError:
+        result = Result("DENY", (Finding("AG_MAP_JSON_DECODE_INVALID", "/"),))
     else:
         result = validate_payload(value)
     print(json.dumps({

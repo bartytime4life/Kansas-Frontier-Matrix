@@ -304,3 +304,56 @@ def test_schema_and_semantics_bind_evidence_refs_to_agriculture_synthetic_namesp
         "AG_MAP_EVIDENCE_REF_NAMESPACE_MISMATCH",
         "/evidence_refs/0",
     ) in {(finding.code, finding.path) for finding in module._semantic_findings(candidate)}
+
+
+def test_unpunctuated_protected_identifiers_are_denied():
+    module = _module()
+    manifest = json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))
+    candidate = module.materialize_case(
+        manifest, _case(manifest, "valid_county_crop_observation")
+    )
+
+    for path, value in (
+        (("indicator", "label"), "Farm ID KS-EL-004821"),
+        (("indicator", "value"), "operator_id KS-EL-004821"),
+        (("limitations", 0), "Field ID KS-EL-004821 is excluded."),
+    ):
+        mutated = copy.deepcopy(candidate)
+        target = mutated[path[0]]
+        target[path[1]] = value
+        mutated["spec_hash"], mutated["id"] = module.canonical_identity(mutated)
+        result = module.validate_payload(mutated)
+        expected_path = f"/{path[0]}/{path[1]}"
+        assert [(finding.code, finding.path) for finding in result.findings] == [
+            ("AG_MAP_HARMFUL_PRECISION_DENIED", expected_path)
+        ]
+
+
+def test_integer_coordinate_literals_are_denied():
+    module = _module()
+    manifest = json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))
+    candidate = module.materialize_case(
+        manifest, _case(manifest, "valid_county_crop_observation")
+    )
+
+    for value in ("38,-98", "POINT(-98 38)", "latitude=38"):
+        mutated = copy.deepcopy(candidate)
+        mutated["indicator"]["value"] = value
+        mutated["spec_hash"], mutated["id"] = module.canonical_identity(mutated)
+        result = module.validate_payload(mutated)
+        assert [(finding.code, finding.path) for finding in result.findings] == [
+            ("AG_MAP_HARMFUL_PRECISION_DENIED", "/indicator/value")
+        ]
+
+
+def test_malformed_json_returns_machine_readable_denial(tmp_path, capsys):
+    module = _module()
+    candidate_path = tmp_path / "malformed.json"
+    candidate_path.write_text('{"indicator":', encoding="utf-8")
+
+    assert module.main([str(candidate_path)]) == 1
+    output = json.loads(capsys.readouterr().out)
+    assert output["outcome"] == "DENY"
+    assert output["findings"] == [
+        {"code": "AG_MAP_JSON_DECODE_INVALID", "path": "/"}
+    ]

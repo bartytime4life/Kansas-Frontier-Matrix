@@ -102,9 +102,12 @@ shape.
 
 Protected detail is denied whether it appears as an object member name or is
 embedded in an otherwise permitted scalar string such as an indicator value or
-evidence reference. JSON decoding is strict: duplicate object members and
-non-finite numeric literals are invalid, and programmatic candidates receive
-the same finite-number check before schema validation or identity hashing.
+evidence reference. Protected identifiers remain denied with punctuation or
+plain whitespace separators, and coordinate literals remain denied whether
+integer or fractional. JSON decoding is strict: malformed documents, duplicate
+object members, and non-finite numeric literals receive machine-readable
+denials; programmatic candidates receive the same finite-number check before
+schema validation or identity hashing.
 
 Every EvidenceRef is carrier-local and synthetic-only. Its canonical form is
 `evidence:synthetic:agriculture:<slug>:vN`, where the slug is lowercase
