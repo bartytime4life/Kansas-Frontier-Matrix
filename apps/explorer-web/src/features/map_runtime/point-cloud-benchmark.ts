@@ -13,7 +13,7 @@ export type SyntheticPointCloudCase = Readonly<{
   id: string;
   seed: number;
   pointCount: SyntheticPointCount;
-  nearestNeighborEdges: boolean;
+  nearestNeighbourEdges: boolean;
   publicSafe: true;
   synthetic: true;
 }>;
@@ -135,7 +135,7 @@ function finiteNonNegative(value: unknown): value is number {
 }
 
 function normalizeSeed(value: number): number {
-  if (!Number.isSafeInteger(value))) return 1;
+  if (!Number.isSafeInteger(value)) return 1;
   const normalized = Math.abs(value) % 2_147_483_647;
   return normalized === 0 ? 1 : normalized;
 }
@@ -150,17 +150,17 @@ export function buildSyntheticPointCloudBenchmarkPlan(
       id: `synthetic-point-cloud-${pointCount}`,
       seed: normalizedSeed + index,
       pointCount,
-      nearestNeighborEdges: pointCount !== 1_000_000,
+      nearestNeighbourEdges: pointCount !== 1_000_000,
       publicSafe: true as const,
       synthetic: true as const,
-  }),
+    }),
   );
 
   return Object.freeze({
     profile: SYNTHETIC_POINT_CLOUD_BENCHMARK_PROFILE,
     version: "1.0.0",
     cases: Object.freeze(cases),
-    measurements: [
+    measurements: Object.freeze([
       "initialization_ms",
       "p95_frame_ms",
       "main_thread_block_ms",
@@ -168,63 +168,59 @@ export function buildSyntheticPointCloudBenchmarkPlan(
       "peak_memory_mb",
       "disposed_cleanly",
       "reduced_motion_fallback",
-    ] as const,
+    ] as const),
     authority: "NONE",
   });
 }
 
 /**
- * Generate one deterministic normalized sample without materializing the full
- * point set. A future harness may stream samples into an admitted renderer.
+ * Produce one deterministic point without allocating a fixture array. The
+ * generator is deliberately synthetic and carries no spatial or evidentiary
+ * meaning.
  */
 export function sampleSyntheticPoint(seed: number, index: number): SyntheticPoint {
   const normalizedSeed = normalizeSeed(seed);
-  const safeIndex = Number.isSafeInteger(index) && index >= 0 ? index : 0;
-  let state = (normalizedSeed + safeIndex * 48_271) % 2_147_483_647;
+  const normalizedIndex = Number.isSafeInteger(index) ? Math.max(0, index) : 0;
+  let state = (normalizedSeed ^ Math.imul(normalizedIndex + 1, 0x9e3779b1)) >>> 0;
+
   const next = (): number => {
-    state = (state * 48_271) % 2_147_483_647;
-    return state / 2_147_483_647;
+    state = (state + 0x6d2b79f5) >>> 0;
+    let value = state;
+    value = Math.imul(value ^ (value >>> 15), value | 1);
+    value ^= value + Math.imul(value ^ (value >>> 7), value | 61);
+    return ((value ^ (value >>> 14)) >>> 0) / 4_294_967_296;
   };
+
   return Object.freeze({
-    x: Number((next() * 2 - 1).toFixed(9)),
-    y: Number((next() * 2 - 1).toFixed(9)),
-    z: Number((next() * 2 - 1).toFixed(9)),
+    x: next() * 2 - 1,
+    y: next() * 2 - 1,
+    z: next() * 2 - 1,
   });
 }
 
-function parseMeasurement(
+/** Strictly parse one closed synthetic benchmark measurement. */
+export function parsePointCloudBenchmarkMeasurement(
   value: unknown,
 ): PointCloudBenchmarkMeasurement | null {
-  if (!isRecord(value) || !hasExactFields(value, MEASUREMENT_FIELDS)) {
-    return null;
-  }
+  if (!isRecord(value) || !hasExactFields(value, MEASUREMENT_FIELDS)) return null;
   if (value.profile !== SYNTHETIC_POINT_CLOUD_BENCHMARK_PROFILE) return null;
   if (typeof value.caseId !== "string" || !SAFE_ID.test(value.caseId)) return null;
-  if (typeof value.pointCount !== "number" || !COUNTS.has(value.pointCount)) {
-    return null;
-  }
-  if (
-    !finiteNonNegative(value.initializationMs) ||
-    !finiteNonNegative(value.p95FrameMs) ||
-    !finiteNonNegative(value.mainThreadBlockMs) ||
-    !finiteNonNegative(value.selectionLatencyMs) ||
-   !finiteNonNegative(value.peakMemoryMb)
-  ) {
-    return null;
-  }
-  if (
-    typeof value.disposedCleanly !== "boolean" ||
-    typeof value.reducedMotionFallback !== "boolean" ||
-    value.synthetic !== true ||
-    value.publicSafe !== true
-  ) {
-    return null;
-  }
+  if (typeof value.pointCount !== "number" || !COUNTS.has(value.pointCount)) return null;
+  const pointCount = value.pointCount as SyntheticPointCount;
+  if (value.caseId !== `synthetic-point-cloud-${pointCount}`) return null;
+  if (!finiteNonNegative(value.initializationMs)) return null;
+  if (!finiteNonNegative(value.p95FrameMs)) return null;
+  if (!finiteNonNegative(value.mainThreadBlockMs)) return null;
+  if (!finiteNonNegative(value.selectionLatencyMs)) return null;
+  if (!finiteNonNegative(value.peakMemoryMb)) return null;
+  if (typeof value.disposedCleanly !== "boolean") return null;
+  if (typeof value.reducedMotionFallback !== "boolean") return null;
+  if (value.synthetic !== true || value.publicSafe !== true) return null;
 
   return Object.freeze({
     profile: SYNTHETIC_POINT_CLOUD_BENCHMARK_PROFILE,
     caseId: value.caseId,
-    pointCount: value.pointCount as SyntheticPointCount,
+    pointCount,
     initializationMs: value.initializationMs,
     p95FrameMs: value.p95FrameMs,
     mainThreadBlockMs: value.mainThreadBlockMs,
@@ -237,11 +233,11 @@ function parseMeasurement(
   });
 }
 
-/** Evaluate benchmark evidence without claiming renderer or production readiness. */
+/** Evaluate finite safety and performance outcomes without renderer authority. */
 export function evaluatePointCloudBenchmark(
   value: unknown,
 ): PointCloudBenchmarkOutcome {
-  const measurement = parseMeasurement(value);
+  const measurement = parsePointCloudBenchmarkMeasurement(value);
   if (measurement === null) {
     return Object.freeze({
       outcome: "ERROR",
@@ -251,19 +247,54 @@ export function evaluatePointCloudBenchmark(
     });
   }
 
-  if (!measurement.disposedCleanly || !measurement.reducedMotionFallback) {
-    const reasons = Object.freeze([
-      ...(measurement.disposedCleanly ? [] : ["DISPOSAL_NOT_PROVEN"]),
-      ...(measurement.reducedMotionFallback
-        ? []
-        : ["REDUCED_MOTION_FALLBACK_MISSING"]),
-    ]);
+  const safetyReasons: string[] = [];
+  if (!measurement.disposedCleanly) safetyReasons.push("DISPOSAL_NOT_PROVEN");
+  if (!measurement.reducedMotionFallback) {
+    safetyReasons.push("REDUCED_MOTION_FALLBACK_MISSING");
+  }
+  if (safetyReasons.length > 0) {
     return Object.freeze({
       outcome: "DENY",
-      reasons,
+      reasons: Object.freeze(safetyReasons),
       pointCount: measurement.pointCount,
       recommendedCarrier: "CLUSTERED_2D",
     });
   }
 
-  const budget = BUQMmµ•…ÍÕÉ•µ•¹Ð¹Á½¥¹Ñ½Õ¹Ñtì(€½¹ÍÐÉ•…Í½¹ÌèÍÑÉ¥¹mt€ômtì(€¥˜€¡µ•…ÍÕÉ•µ•¹Ð¹¥¹¥Ñ¥…±¥é…Ñ¥½¹5Ì€ø‰Õ‘•Ð¹¥¹¥Ñ¥…±¥é…Ñ¥½¹5Ì¤ì(€€€É•…Í½¹Ì¹ÁÕÍ  ‰%9%Q%1%iQ%=9}	UQ}aˆ¤ì(€ô(€¥˜€¡µ•…ÍÕÉ•µ•¹Ð¹ÀäÕÉ…µ•5Ì€ø‰Õ‘•Ð¹ÀäÕÉ…µ•5Ì¤ì(€€€É•…Í½¹Ì¹ÁÕÍ  ‰I5}Q%5}	UQ}aˆ¤ì(€ô(€¥˜€¡µ•…ÍÕÉ•µ•¹Ð¹µ…¥¹Q¡É•…‘	±½­5Ì€ø‰Õ‘•Ð¹µ…¥¹Q¡É•…‘	±½­5Ì¤ì(€€€É•…Í½¹Ì¹ÁÕÍ  ‰5%9}Q!I}	UQ}aˆ¤ì(€ô(€¥˜€¡µ•…ÍÕÉ•µ•¹Ð¹Í•±•Ñ¥½¹1…Ñ•¹å5Ì€ø‰Õ‘•Ð¹Í•±•Ñ¥½¹1…Ñ•¹å5Ì¤ì(€€€É•…Í½¹Ì¹ÁÕÍ  ‰M1Q%=9}1Q9e}	UQ}aˆ¤ì(€ô(€¥˜€¡µ•…ÍÕÉ•µ•¹Ð¹Á•…­5•µ½Éå5ˆ€ø‰Õ‘•Ð¹Á•…­5•µ½Éå5ˆ¤ì(€€€É•…Í½¹Ì¹ÁÕÍ  ‰55=Ie}	UQ}aˆ¤ì(€ô((€¥˜€¡É•…Í½¹Ì¹±•¹Ñ €ôôô€À¤ì(€€€É•ÑÕÉ¸=‰©•Ð¹™É••é”¡ì(€€€€€½ÕÑ½µ”è€‰AMLˆ°(€€€€€É•…Í½¹Ìè=‰©•Ð¹™É••é”¡l‰	UQM}MQ%M%‰t¤°(€€€€€Á½¥¹Ñ½Õ¹Ðèµ•…ÍÕÉ•µ•¹Ð¹Á½¥¹Ñ½Õ¹Ð°(€€€€€É•½µµ•¹‘•‘…ÉÉ¥•Èè€‰A=%9QM|Íˆ°(€€€ô¤ì(€ô((€É•ÑÕÉ¸=‰©•Ð¹™É••é”¡ì(€€€½ÕÑ½µ”è€‰!=1ˆ°(€€€É•…Í½¹Ìè=‰©•Ð¹™É••é”¡É•…Í½¹Ì¤°(€€€Á½¥¹Ñ½Õ¹Ðèµ•…ÍÕÉ•µ•¹Ð¹Á½¥¹Ñ½Õ¹Ð°(€€€É•½µµ•¹‘•‘…ÉÉ¥•Èè(€€€€€µ•…ÍÕÉ•µ•¹Ð¹Á½¥¹Ñ½Õ¹Ð€ôôô€Å|ÀÀÁ|ÀÀÀ(€€€€€€€€ü€‰1UMQI|Éˆ(€€€€€€€€è€‰%5Q}A=%9QM|Íˆ°(€ô¤ì)ô(
+  const budget = BUDGETS[measurement.pointCount];
+  const reasons: string[] = [];
+  if (measurement.initializationMs > budget.initializationMs) {
+    reasons.push("INITIALIZATION_BUDGET_EXCEEDED");
+  }
+  if (measurement.p95FrameMs > budget.p95FrameMs) {
+    reasons.push("P95_FRAME_BUDGET_EXCEEDED");
+  }
+  if (measurement.mainThreadBlockMs > budget.mainThreadBlockMs) {
+    reasons.push("MAIN_THREAD_BLOCK_BUDGET_EXCEEDED");
+  }
+  if (measurement.selectionLatencyMs > budget.selectionLatencyMs) {
+    reasons.push("SELECTION_LATENCY_BUDGET_EXCEEDED");
+  }
+  if (measurement.peakMemoryMb > budget.peakMemoryMb) {
+    reasons.push("PEAK_MEMORY_BUDGET_EXCEEDED");
+  }
+
+  if (reasons.length === 0) {
+    return Object.freeze({
+      outcome: "PASS",
+      reasons: Object.freeze(["BUDGETS_SATISFIED"]),
+      pointCount: measurement.pointCount,
+      recommendedCarrier: "POINTS_3D",
+    });
+  }
+
+  return Object.freeze({
+    outcome: "HOLD",
+    reasons: Object.freeze(reasons),
+    pointCount: measurement.pointCount,
+    recommendedCarrier:
+      measurement.pointCount === 1_000_000
+        ? "CLUSTERED_2D"
+        : "DECIMATED_POINTS_3D",
+  });
+}
