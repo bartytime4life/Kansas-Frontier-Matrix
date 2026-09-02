@@ -96,6 +96,17 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
                 payload.pop(field)
                 self.assertEqual(validate_candidate_feature(payload), [])
 
+    def test_null_optional_scalars_fixture_proves_all_denials(self) -> None:
+        payload = _load(FIXTURE_ROOT / "null_optional_scalars_deny.json")
+        self.assertEqual(
+            set(validate_candidate_feature(payload)),
+            {
+                "candidate_type is not in the bounded vocabulary",
+                "spatial_precision_class is not in the bounded vocabulary",
+                "spec_hash must match ^sha256:[a-f0-9]{64}$",
+            },
+        )
+
     def test_malformed_confidence_statement_fails_closed(self) -> None:
         payload = _load(
             FIXTURE_ROOT / "malformed_confidence_statement_deny.json"
