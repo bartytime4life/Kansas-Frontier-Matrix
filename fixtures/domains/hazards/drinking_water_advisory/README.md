@@ -8,6 +8,8 @@ credential, source locator, restricted payload, or public guidance.
 The semantic validator also rejects RFC 3339 `-00:00` unknown-offset markers
 for source-check, issue, effective, expiry, and rescission timestamps. Such
 values are never treated as exact UTC evidence for derived temporal findings.
+An unknown-offset rescission time is also insufficient to establish
+authoritative clearance of a prior advisory.
 The marker is recognized only on a schema-valid aware date-time; a malformed
 string that merely ends in `-00:00` cannot satisfy rescission requirements.
 Semantic ordering accepts the same RFC 3339 date-time grammar and aware-offset

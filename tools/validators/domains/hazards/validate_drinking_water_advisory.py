@@ -461,10 +461,7 @@ def _semantic_findings(candidate: Mapping[str, Any]) -> list[Finding]:
             and _present_ref(authority.get("rescission_authority_ref"))
             and authority.get("rescission_authority_status") == "CONFIRMED"
             and _present_ref(controls.get("prior_advisory_ref"))
-            and (
-                _time(advisory.get("rescinded_at")) is not None
-                or _unknown_offset(advisory.get("rescinded_at"))
-            )
+            and _time(advisory.get("rescinded_at")) is not None
             and clears
         )
         if not required_rescission:

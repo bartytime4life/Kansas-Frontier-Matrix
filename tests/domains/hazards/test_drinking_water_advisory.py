@@ -146,9 +146,14 @@ class DrinkingWaterAdvisoryTests(unittest.TestCase):
             result = validator.validate_payload(candidate)
 
             self.assertEqual(result.outcome, "DENY", (section, field, result.findings))
+            expected_findings = {
+                ("TIMESTAMP_UNKNOWN_OFFSET", f"/{section}/{field}")
+            }
+            if section == "advisory" and field == "rescinded_at":
+                expected_findings.add(("RESCISSION_REQUIRED", "/advisory"))
             self.assertEqual(
                 {(finding.code, finding.path) for finding in result.findings},
-                {("TIMESTAMP_UNKNOWN_OFFSET", f"/{section}/{field}")},
+                expected_findings,
             )
             self.assertNotIn(
                 "TEMPORAL_ORDER_INVALID",
