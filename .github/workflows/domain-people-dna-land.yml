@@ -1,13 +1,14 @@
 # KFM People/DNA/Land domain CI readiness workflow.
-# Status: two bounded structural adapters, one domain-schema validator, and two
-# synthetic consent fixture profiles are executable; broader validation,
-# policy-runtime, proof, revocation execution, cleanup, and release producers
-# remain held.
+# Status: retained EvidenceBundle/CatalogMatrix adapters, the domain-schema
+# validator, one bounded synthetic living-person screen, and two consent fixture
+# profiles are executable; broader validation, policy-runtime, proof, revocation
+# execution, cleanup, and release producers remain held.
 #
 # Authority boundary:
 # - This workflow opens only repository-owned deterministic schemas and fixtures
-#   used by the retained EvidenceBundle and CatalogMatrix adapters, plus synthetic
-#   consent payloads under fixtures/domains/people-dna-land/consent_overlay/ and
+#   used by the retained EvidenceBundle and CatalogMatrix adapters, the bounded
+#   synthetic historical/living-person screen, plus consent payloads under
+#   fixtures/domains/people-dna-land/consent_overlay/ and
 #   fixtures/domains/people-dna-land/consent_revocation_propagation/.
 # - It does not open real person, genealogy, DNA/genomic, consent, revocation,
 #   parcel, deed, title, assessor, tax, or private person-land payloads.
@@ -70,8 +71,10 @@ jobs:
             "schemas/contracts/v1/domains/people-dna-land/genealogy_overlay_revocation_manifest.schema.json"
             "schemas/contracts/v1/domains/people-dna-land/consent_revocation_propagation_assessment.schema.json"
             "schemas/contracts/v1/domains/people-dna-land/evidence_bundle.schema.json"
+            "schemas/contracts/v1/domains/people-dna-land/historical_person_place_event_resolution.schema.json"
             "schemas/contracts/v1/data/catalog_matrix_closure_profile.schema.json"
             "fixtures/contracts/v1/evidence/evidence_bundle"
+            "fixtures/contracts/v1/domains/people-dna-land/historical_person_place_event_resolution"
             "fixtures/data/catalog_matrix/closure/expected_findings_manifest.json"
             "fixtures/domains/people-dna-land/README.md"
             "fixtures/domains/people-dna-land/consent_overlay/README.md"
@@ -88,6 +91,7 @@ jobs:
             "tests/validators/domains/people-dna-land/test_domain_evidence_bundle_validator_entrypoint.py"
             "tests/validators/domains/people-dna-land/test_domain_schema_validator.py"
             "tests/validators/domains/people-dna-land/test_evidence_bundle_schema_convergence.py"
+            "tests/validators/test_screen_living_persons.py"
             "tools/validators/domains/people-dna-land/README.md"
             "tools/validators/domains/people-dna-land/validate_consent_overlay.py"
             "tools/validators/domains/people-dna-land/validate_consent_revocation_propagation_assessment.py"
@@ -95,7 +99,9 @@ jobs:
             "tools/validators/domains/people-dna-land/validate_evidence_bundle.py"
             "tools/validators/domains/people-dna-land/validate_schema.py"
             "tools/validators/validate_catalog_matrix_closure.py"
+            "tools/validators/validate_historical_person_place_event_resolution.py"
             "tools/validators/genealogy/README.md"
+            "tools/validators/genealogy/screen_living_persons.py"
             "data/registry/sources/people-dna-land/README.md"
             "release/candidates/people-dna-land/README.md"
           )
@@ -146,6 +152,7 @@ jobs:
                   "tools/validators/domains/people-dna-land/"
                   "validate_schema.py"
               ),
+              Path("tools/validators/genealogy/screen_living_persons.py"),
           }
 
           for path in sorted(Path("tests/domains/people-dna-land").rglob("*.py")):
@@ -246,7 +253,7 @@ jobs:
           echo "WORKFLOW_CHECK_EXECUTED: people-dna-land-validation-boundary-inventory"
           echo "WORKFLOW_HOLD: broader People/DNA/Land validation and consent enforcement are not established"
 
-      - name: Run retained schema and exact-option adapter regressions
+      - name: Run retained schema, screen, and exact-option adapter regressions
         shell: bash
         env:
           KFM_NO_NETWORK: "1"
@@ -259,13 +266,16 @@ jobs:
             tests/validators/domains/people-dna-land/test_domain_catalog_matrix_validator_entrypoint.py \
             tests/validators/domains/people-dna-land/test_domain_evidence_bundle_validator_entrypoint.py \
             tests/validators/domains/people-dna-land/test_domain_schema_validator.py \
-            tests/validators/domains/people-dna-land/test_evidence_bundle_schema_convergence.py
+            tests/validators/domains/people-dna-land/test_evidence_bundle_schema_convergence.py \
+            tests/validators/test_screen_living_persons.py
 
           python tools/validators/domains/people-dna-land/validate_schema.py
           python tools/validators/domains/people-dna-land/validate_evidence_bundle.py --fixtures
           python tools/validators/domains/people-dna-land/validate_catalog_matrix.py --fixtures
+          python tools/validators/genealogy/screen_living_persons.py --fixtures
 
           echo "WORKFLOW_CHECK_EXECUTED: people-dna-land-exact-option-adapters"
+          echo "WORKFLOW_CHECK_EXECUTED: people-dna-land-living-person-screen"
 
       - name: Run bounded consent-safe genealogy-overlay validation
         shell: bash
@@ -315,6 +325,8 @@ jobs:
 
           `WORKFLOW_CHECK_EXECUTED: people-dna-land-exact-option-adapters`
 
+          `WORKFLOW_CHECK_EXECUTED: people-dna-land-living-person-screen`
+
           `WORKFLOW_CHECK_EXECUTED: people-dna-land-consent-overlay-fixture`
 
           `WORKFLOW_CHECK_EXECUTED: people-dna-land-consent-revocation-propagation-assessment`
@@ -322,10 +334,11 @@ jobs:
           `WORKFLOW_HOLD: broader People/DNA/Land semantics, policy runtime, evidence closure, proof, and release remain unestablished`
 
           When green, this job has validated the retained domain schemas and
-          exact-option EvidenceBundle and CatalogMatrix adapter seams, then
-          executed two frozen, synthetic, no-network fixture profiles: a
-          consent-safe genealogy-overlay candidate and a consent-revocation
-          propagation assessment. The structural adapter regressions reject every
+          exact-option EvidenceBundle and CatalogMatrix adapter seams, replayed
+          the already-merged bounded living-person screen, then executed two
+          frozen, synthetic, no-network consent fixture profiles: a consent-safe
+          genealogy-overlay candidate and a consent-revocation propagation
+          assessment. The structural adapter and screen regressions reject every
           strict prefix of `--fixtures` before delegation and keep fixture mode
           mutually exclusive with explicit files. The consent profiles check
           active consent
@@ -338,7 +351,8 @@ jobs:
           deterministic diagnostics, and explicit network denial.
 
           These profiles are not production overlay, identity, catalog, evidence,
-          or consent systems. They do not validate real people, identity, kinship,
+          living-person determination, or consent systems. They do not validate
+          real people, identity, kinship,
           DNA, consent legal sufficiency, source rights, EvidenceBundle closure,
           policy approval, public-safe transforms, release readiness, withdrawal
           execution, cache invalidation, or publication. SourceDescriptor remains
