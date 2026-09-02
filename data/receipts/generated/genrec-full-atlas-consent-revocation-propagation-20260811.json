@@ -15,15 +15,15 @@
   ],
   "artifact_hashes": {
     ".github/workflows/consent-revocation-propagation.yml": "sha256:9a8789d6cc7a42273672009d5fde6fd1be1e489ce9cb3e326983b4c9b876fc2c",
-    ".github/workflows/domain-people-dna-land.yml": "sha256:ea0893574e7d22f5599398248deeb1e9cf99b2093660c8484f0c2cde61467f21",
+    ".github/workflows/domain-people-dna-land.yml": "sha256:de9fb1737da78b901bad8d50b44bdfa0ace53c5d5858ad7384ac96f329d31abb",
     "contracts/domains/people-dna-land/README.md": "sha256:bae2df009ee08d9b950694d6f77c65a8605ace36a75b1d1daa25d8c6c783f7d3",
     "contracts/domains/people-dna-land/consent_revocation_propagation_assessment.md": "sha256:470031dd8ac9e4597aade9b07b485437525e3329b32f94d17b5e7b792dfba582",
     "docs/intake/exploratory/full-atlas-consent-revocation-propagation-source-map.md": "sha256:32c3042e8704126ade1594057872857c7077a6b05a7620a6e2a406149a3e3cb2",
     "fixtures/domains/people-dna-land/consent_revocation_propagation/README.md": "sha256:4b758064e16e71a74bcb8218cc8fcabf8f542eda042422cc436272b05d2c92f1",
     "fixtures/domains/people-dna-land/consent_revocation_propagation/cases.json": "sha256:5ff62c55261a9e0c96660719d0ad79301bd537f524cc2006fb89147dcba22e6c",
     "schemas/contracts/v1/domains/people-dna-land/consent_revocation_propagation_assessment.schema.json": "sha256:e31d0a8f32bd437f678de7760abdb7da2027517a5d6f490b5818897224a257fc",
-    "tests/domains/people-dna-land/consent/revocation/test_consent_revocation_propagation_assessment.py": "sha256:d73abcea106dffe5b0dc524be98e5032bac9a2dcb4a4c512b9f39e6bbc8157a0",
-    "tools/validators/domains/people-dna-land/validate_consent_revocation_propagation_assessment.py": "sha256:36fd8d254d22a225375cd95f16bc43d2d995f9b5253ce02d50224a1b2c761745"
+    "tests/domains/people-dna-land/consent/revocation/test_consent_revocation_propagation_assessment.py": "sha256:14710050998a2b0e725cb28ddbb82d2d0947a61b69a61df01f5a51f48109ee0a",
+    "tools/validators/domains/people-dna-land/validate_consent_revocation_propagation_assessment.py": "sha256:dca450ad5f2a6f6fe310698b0d68cde5dfcf4fa53ab83d96573ae14cb10f93fd"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -80,7 +80,7 @@
     {
       "gate": "focused-unittest-suite",
       "outcome": "PASS",
-      "reason": "Nine deterministic consent revocation propagation tests passed."
+      "reason": "Ten deterministic consent revocation propagation tests passed."
     },
     {
       "gate": "exact-fixture-replay",
@@ -90,7 +90,7 @@
     {
       "gate": "existing-consent-overlay-regression-suite",
       "outcome": "PASS",
-      "reason": "All sixteen pre-existing consent overlay tests and current valid overlay fixtures passed."
+      "reason": "All seventeen consent overlay tests and current valid overlay fixtures passed."
     },
     {
       "gate": "workflow-yaml-parse",
