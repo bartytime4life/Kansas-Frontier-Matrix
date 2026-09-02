@@ -165,6 +165,31 @@ class HabitatModelRunReceiptTests(unittest.TestCase):
         self.assertEqual("NONE", payload["authority"])
         self.assertEqual("--fixtures", payload["input"])
 
+    def test_cli_missing_and_directory_inputs_are_errors(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            existing_directory = root / "candidate"
+            existing_directory.mkdir()
+            for path in (root / "missing.json", existing_directory):
+                with self.subTest(path=path.name):
+                    completed = subprocess.run(
+                        [sys.executable, str(Path(validator.__file__)), str(path)],
+                        cwd=ROOT,
+                        check=False,
+                        capture_output=True,
+                        text=True,
+                    )
+                    self.assertEqual(2, completed.returncode)
+                    self.assertEqual("", completed.stderr)
+                    payload = json.loads(completed.stdout)
+                    self.assertEqual("ERROR", payload["outcome"])
+                    self.assertEqual("NONE", payload["authority"])
+                    self.assertEqual(path.name, payload["input"])
+                    self.assertEqual(
+                        [{"code": "MODEL_RUN_INPUT_NOT_FILE", "path": "/"}],
+                        payload["findings"],
+                    )
+
     def test_duplicate_nonfinite_symlink_and_oversize_are_errors(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
