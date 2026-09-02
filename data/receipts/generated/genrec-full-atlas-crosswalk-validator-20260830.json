@@ -27,20 +27,20 @@
     ".github/workflows/soil-hydrology-public-safe-context.yml": "sha256:4914255dc12681f3ee2ab1c6ec21cf3ec1c2a31993c73ac702faf5b95f617efa",
     ".github/workflows/soil-agriculture-public-safe-context.yml": "sha256:02a454bf4dc37fca7dc009e0a7336abdeebf7c77fcf97bc2628622fe8266e280",
     ".github/workflows/fauna-habitat-public-safe-assignment.yml": "sha256:ae04722885e1d94418e2c6ab0d6a9174cb51b88fce4b17d1dd259a55176505f3",
-    "contracts/joins/cross_lane_join_assessment.md": "sha256:44b2c76a839f13aa1d990cea02f59215ae557ef97a8a7766448818f2a5d190a8",
+    "contracts/joins/cross_lane_join_assessment.md": "sha256:8c89e855188e46af5c9031e2177a6c3e3990a9b3da2d5e333898eb587982f014",
     "docs/intake/exploratory/full-atlas-crosswalk-validator-source-map.md": "sha256:34299c5ba17f3d451d09e2d9a2f69514711a0c8ed1303f88233c56b6ded45962",
     "fixtures/contracts/v1/joins/cross_lane_join_assessment/cases.json": "sha256:7372e0d9900bc3f1d17861b3bdf0afa2570fe8436edcbd972c485257605c7b94",
     "schemas/contracts/v1/joins/cross_lane_join_assessment.schema.json": "sha256:1ad7520fc7c07514d7887e73db8ebb9ebde4df1f3f26a4f6013f5fba239e1bb7",
     "tests/joins/README.md": "sha256:55dc936fc55a19de05f0f5f15804433b5f617027292e666385af59cd31c06723",
     "tests/joins/test_cross_lane_domain_alias_dependency_guard.py": "sha256:94012f622650d0ad2e86ab034012da08149bd76b9a7eb016c089cf1f7a5d8bc8",
-    "tests/joins/test_cross_lane_domain_alias_guard.py": "sha256:4844ca9c56b7e47f758699f3c86b46bbacc9bee7f4803264fad7760203b196e7",
+    "tests/joins/test_cross_lane_domain_alias_guard.py": "sha256:6f75f1c74e85bb9c360a8d4fcef45406b760e005c838475e72469877f28c5802",
     "tests/joins/test_cross_lane_scope_precedence.py": "sha256:7f5da617cb65996c876093f43b1201bc27add2508a3846fbedd8bca956acf1ce",
     "tests/joins/test_cross_lane_source_role_schema_guard.py": "sha256:9c6bd884f0c51fd7f22d517c7b4ac5a2d866edef80b36a6cf5f1ca7a8f1ebac5",
     "tests/joins/test_cross_lane_synthetic_role_guard.py": "sha256:f63cf5320fe45d5848bc03f747a2eaf073c66932eb584349ab0e6d9d96c4e7ef",
     "tests/joins/test_cross_lane_temporal_boundary_guard.py": "sha256:8a3f943cb7127682dae40c9ee9f6086aefc13efc686614e7bba8ff81b6497e6e",
     "tests/joins/test_cross_lane_workflow_propagation.py": "sha256:8db63dc7c31eec11497dcc8bb8afcc5ffd80a79b37eb38e54a66dc5ac45e7587",
     "tests/joins/test_join_candidates.py": "sha256:8f1203d844342fcd011a505e64d857f06b4e9f49d5c9649f92d90928063fd06c",
-    "tools/joins/join_candidates.py": "sha256:faf8e620c605e45ed904a5078c5b129a54498612eb2476bff6441891e993c36d",
+    "tools/joins/join_candidates.py": "sha256:036a68a18bd8235a2c51269d3ac468c4d1c954129c3cec551c589d1b8609d21b",
     "contracts/joins/README.md": "sha256:0a91c1c699cbaa8cadee09dea378861cedc9c6fdb9aab6ba25655899d6abb821"
   },
   "model_identity": {
@@ -97,22 +97,22 @@
     {
       "gate": "active-work-and-overlap-reconciliation",
       "outcome": "PASS",
-      "reason": "Fresh changed-filename reconciliation checked all 20 cumulative branch paths and all 19 receipt-bound artifacts against nine open pull requests; no path, object-family, authority, producer/consumer-contract, migration, or failing-check collision was found."
+      "reason": "Fresh changed-filename reconciliation checked this four-path repair against the two pre-existing open pull requests (#4171 and #4172); both are path-, object-family-, and authority-disjoint."
     },
     {
       "gate": "current-main-regression-reproduction",
       "outcome": "PASS",
-      "reason": "A deterministic baseline proof showed PyYAML last-value-wins parsing accepted duplicate unresolved_aliases blocks and erased the earlier air-to-atmosphere review signal."
+      "reason": "Deterministic current-main cases showed an unresolved alias collision downgraded a declared dependency error, living-person denial, and blocked sensitive-geometry denial to alias-review ABSTAIN."
     },
     {
       "gate": "focused-pytest-and-fixture-matrix",
       "outcome": "PASS",
-      "reason": "The focused propagation suite passed 20 cases, including complete overlap-scope proof and synthetic partial-scope negatives for both branch paths and receipt-bound artifacts."
+      "reason": "Nine focused deterministic cases passed: ordinary alias review and unrelated-domain positives, same-domain scope precedence, plus dependency-error, living-person, and sensitive-geometry negatives."
     },
     {
       "gate": "artifact-hash-replay",
       "outcome": "PASS",
-      "reason": "All 19 declared artifact SHA-256 values were replayed from exact content bytes, including the complete-scope overlap regression."
+      "reason": "All 19 declared artifact SHA-256 values were replayed from exact bytes, including the updated contract, executable helper, and alias-precedence regression."
     },
     {
       "gate": "generated-receipt-schema-and-integrity",
@@ -122,7 +122,7 @@
     {
       "gate": "hosted-exact-head-ci",
       "outcome": "SKIPPED",
-      "reason": "Hosted validation will rerun from the complete-overlap-scope head; no post-update hosted result is claimed by this receipt."
+      "reason": "Hosted validation is pending on draft PR #4175; no post-update hosted result is claimed by this receipt."
     },
     {
       "gate": "human-review",
@@ -164,9 +164,9 @@
   "created_at": "2026-08-30T18:09:17.956Z",
   "emitter": "OpenAI ChatGPT automation runtime",
   "links": {
-    "pr_number": 4116,
+    "pr_number": 4175,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Successor provenance receipt for the CrossLaneJoinAssessment review unit. It binds the generic join contract, current pair-profile inventory, all seven dedicated synthetic regression files, the self-checking nine-module join-test inventory, and the generic plus three pair-specific workflows. The generic validator now triggers when any receipt-bound artifact changes, preventing workflow or joins-inventory edits from bypassing receipt replay. The documented local pytest command leaves its cross-lane glob unquoted so Bash expands and executes the same boundary guards as hosted CI. Deterministic positive and synthetic-negative proof keeps that receipt-to-workflow propagation fail closed. The overlap gate is also bound to the complete 20-path review unit and all 19 receipt artifacts, preventing an incremental path count from masquerading as full reconciliation. Alias-register ambiguity also fails closed: duplicate YAML mapping keys cannot erase a conservative domain-alias review signal through last-value-wins parsing. Contract, executable guard, regression proof, workflow collection, and generated provenance remain one bounded propagation chain. The historical 20260809 receipt remains immutable. This receipt creates no source, evidence, policy, review, proof, promotion, release, publication, or public-use authority."
+  "notes": "Successor provenance receipt for the CrossLaneJoinAssessment review unit. It binds the generic join contract, current pair-profile inventory, all seven dedicated synthetic regression files, the self-checking nine-module join-test inventory, and the generic plus three pair-specific workflows. Generic join validation triggers on every receipt-bound artifact. Disposition precedence is now fail-closed: for distinct raw domains, dependency failures remain ERROR and living-person or blocked sensitive-geometry conditions remain DENY before unresolved aliases can route to review; same-domain scope routing remains first because the generic helper does not own domain-local work. Deterministic positive and synthetic-negative proof prevents alias review from downgrading stronger outcomes. The historical 20260809 receipt remains immutable. This receipt creates no source, evidence, policy, review, proof, promotion, release, publication, or public-use authority."
 }
