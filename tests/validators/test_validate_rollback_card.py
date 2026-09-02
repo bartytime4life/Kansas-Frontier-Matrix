@@ -93,7 +93,12 @@ def tracked_markdown_paths(repo_root: Path = REPO_ROOT) -> tuple[Path, ...]:
             raise AssertionError(
                 "could not parse repository-owned Markdown index entry"
             )
-        mode = metadata_parts[0]
+        mode, _, stage = metadata_parts
+        if stage != "0":
+            raise AssertionError(
+                "repository-owned Markdown index must be fully merged: "
+                f"{relative_path} (index stage {stage})"
+            )
         if mode not in {"100644", "100755"}:
             raise AssertionError(
                 "repository-owned Markdown must be a regular file: "
@@ -504,6 +509,50 @@ class RollbackCardValidatorTests(unittest.TestCase):
             with self.assertRaisesRegex(
                 AssertionError,
                 r"regular file: ROLLBACK\.md \(index mode 120000\)",
+            ):
+                tracked_markdown_paths(repo_root)
+
+    def test_guidance_inventory_rejects_unmerged_index_entries(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            repo_root = Path(directory)
+            subprocess.run(
+                ["git", "init", "--quiet"],
+                cwd=repo_root,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+            object_ids = []
+            for content in (
+                "# Base guidance\n",
+                "# Ours guidance\n",
+                "# Theirs guidance\n",
+            ):
+                result = subprocess.run(
+                    ["git", "hash-object", "-w", "--stdin"],
+                    cwd=repo_root,
+                    capture_output=True,
+                    text=True,
+                    check=True,
+                    input=content,
+                )
+                object_ids.append(result.stdout.strip())
+            index_entries = "".join(
+                f"100644 {object_id} {stage}\tCONFLICT.md\n"
+                for stage, object_id in enumerate(object_ids, start=1)
+            )
+            subprocess.run(
+                ["git", "update-index", "--index-info"],
+                cwd=repo_root,
+                capture_output=True,
+                text=True,
+                check=True,
+                input=index_entries,
+            )
+
+            with self.assertRaisesRegex(
+                AssertionError,
+                r"fully merged: CONFLICT\.md \(index stage 1\)",
             ):
                 tracked_markdown_paths(repo_root)
 
