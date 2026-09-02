@@ -346,7 +346,7 @@ def test_short_protected_identifiers_are_denied():
         ]
 
 
-def test_private_identity_labels_are_denied_at_every_case_and_token_count():
+def test_private_identity_labels_are_denied_at_every_case_token_count_and_width():
     module = _module()
     manifest = json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))
     candidate = module.materialize_case(
@@ -366,6 +366,10 @@ def test_private_identity_labels_are_denied_at_every_case_and_token_count():
         "owner jane doe",
         "operator john smith",
         "farm smith acres",
+        "Owner José",
+        "operator Zoë",
+        "Ｆａｒｍ Sunflower",
+        "water right Niño",
     ):
         mutated = copy.deepcopy(candidate)
         mutated["indicator"]["value"] = value
@@ -381,8 +385,25 @@ def test_private_identity_labels_are_denied_at_every_case_and_token_count():
         "Derived generalized-grid context only; not observed field or planting truth.",
         "Agriculture irrigation-use context only; not hydrologic observation or water-right authority.",
         "Synthetic county-level fixture only; no well, permit, parcel, operator, or field precision.",
+        "County résumé notes no farm or operator observation.",
     ):
-        assert not module.PRIVATE_IDENTITY_LABEL_PATTERN.search(description)
+        normalized = module.unicodedata.normalize("NFKC", description)
+        assert not module.PRIVATE_IDENTITY_LABEL_PATTERN.search(normalized)
+
+
+def test_unicode_compatibility_forms_do_not_bypass_protected_id_denial():
+    module = _module()
+    manifest = json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))
+    candidate = module.materialize_case(
+        manifest, _case(manifest, "valid_county_crop_observation")
+    )
+
+    candidate["indicator"]["value"] = "ｆａｒｍ＿ｉｄ 1"
+    candidate["spec_hash"], candidate["id"] = module.canonical_identity(candidate)
+    result = module.validate_payload(candidate)
+    assert [(finding.code, finding.path) for finding in result.findings] == [
+        ("AG_MAP_HARMFUL_PRECISION_DENIED", "/indicator/value")
+    ]
 
 
 def test_integer_coordinate_literals_are_denied():
