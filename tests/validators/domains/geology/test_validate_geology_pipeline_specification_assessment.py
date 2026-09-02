@@ -148,6 +148,24 @@ class GeologyPipelineSpecificationAssessmentTests(unittest.TestCase):
             results,
         )
 
+    def test_fixture_manifest_rejects_malformed_cases_finitely(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "cases.json"
+            path.write_text(
+                json.dumps({"bases": {}, "cases": [{"name": "broken"}]}),
+                encoding="utf-8",
+            )
+            results = MODULE.validate_fixture_manifest(path)
+        self.assertEqual(
+            [{
+                "name": "fixture_manifest",
+                "outcome": "ERROR",
+                "findings": ["FIXTURE_CASE_INVALID"],
+                "ok": False,
+            }],
+            results,
+        )
+
     def test_fixture_cli_rejects_abbreviated_flags(self) -> None:
         for length in range(3, len("--fixtures")):
             abbreviation = "--fixtures"[:length]
