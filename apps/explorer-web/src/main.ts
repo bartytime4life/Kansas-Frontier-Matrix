@@ -230,20 +230,27 @@ const syncWorkspaceNavigation = (): void => {
     cancelPendingMapDeepLinkRetry();
   }
   const mapCaseId = mapTransition.mapCaseIdToSelect;
-  if (mapCaseId !== null) {
-    const mapCaseButtons = Array.from(
-      root.querySelectorAll<HTMLButtonElement>(
-        `button[data-map-evidence-case="${mapCaseId}"]`,
-      ),
-    );
-    const mapConsumerIsUnique = hasSinglePublicMapCaseConsumer(
+  const requestedMapCaseId =
+    mapCaseId ?? mapTransition.activeDeepLinkMapCaseId;
+  const mapCaseButtons =
+    requestedMapCaseId === null
+      ? []
+      : Array.from(
+          root.querySelectorAll<HTMLButtonElement>(
+            `button[data-map-evidence-case="${requestedMapCaseId}"]`,
+          ),
+        );
+  const mapConsumerIsUnique =
+    requestedMapCaseId !== null &&
+    hasSinglePublicMapCaseConsumer(
       mapCaseButtons.map((button) => button.dataset.mapEvidenceCase),
-      mapCaseId,
+      requestedMapCaseId,
     );
-    const mapCaseButton =
-      mapConsumerIsUnique && mapCaseButtons.length === 1
-        ? mapCaseButtons[0]
-        : undefined;
+  const mapCaseButton =
+    mapConsumerIsUnique && mapCaseButtons.length === 1
+      ? mapCaseButtons[0]
+      : undefined;
+  if (mapCaseId !== null) {
     if (mapCaseButton === undefined || mapCaseButton.disabled) {
       scheduleMapDeepLinkRetry(safeUrl);
     } else {
@@ -256,16 +263,25 @@ const syncWorkspaceNavigation = (): void => {
       activeDeepLinkMapCaseId = resolvePublicMapCaseUrlConsumerCommit(
         mapTransition,
         selectionApplied,
+        true,
       );
       if (selectionApplied) cancelPendingMapDeepLinkRetry();
       if (priorFocus?.isConnected) priorFocus.focus();
     }
   } else {
+    const ownedConsumerCurrent =
+      mapTransition.activeDeepLinkMapCaseId === null ||
+      (mapCaseButton !== undefined && mapCaseButton.disabled);
     activeDeepLinkMapCaseId = resolvePublicMapCaseUrlConsumerCommit(
       mapTransition,
       false,
+      ownedConsumerCurrent,
     );
-    if (activeDeepLinkMapCaseId === null) cancelPendingMapDeepLinkRetry();
+    if (requestedMapCaseId !== null && activeDeepLinkMapCaseId === null) {
+      scheduleMapDeepLinkRetry(safeUrl);
+    } else if (activeDeepLinkMapCaseId === null) {
+      cancelPendingMapDeepLinkRetry();
+    }
   }
 
   const currentDomainId = resolveSinglePublicKnowledgeDomainControlId(

@@ -83,14 +83,22 @@ export function isPublicMapCaseRetryGenerationCurrent(
 
 /**
  * Commit URL ownership only after the fixture control accepted the requested
- * selection. A disabled control ignores `click()`, so retaining the prior
- * owner keeps the URL request retryable instead of falsely claiming that its
- * Evidence Drawer was restored.
+ * selection, and retain established ownership only while its unique consumer
+ * still reports the selected state. Mount churn therefore cannot leave a URL
+ * owning a removed, duplicated, or deselected fixture.
  */
 export function resolvePublicMapCaseUrlConsumerCommit(
   transition: PublicMapCaseUrlTransition,
   selectionApplied: boolean,
+  ownedConsumerCurrent: boolean,
 ): "missing" | null {
+  if (
+    transition.mapCaseIdToSelect === null &&
+    transition.activeDeepLinkMapCaseId !== null &&
+    !ownedConsumerCurrent
+  ) {
+    return null;
+  }
   if (transition.mapCaseIdToSelect === null || !selectionApplied) {
     return transition.activeDeepLinkMapCaseId;
   }
