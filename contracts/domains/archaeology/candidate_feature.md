@@ -198,17 +198,17 @@ The current schema does not require these fields. They are `PROPOSED` semantic r
 
 | Field | Meaning |
 |---|---|
-| `candidate_feature_id` | Stable deterministic or steward-assigned candidate identity. |
+| `candidate_feature_id` | Stable deterministic or steward-assigned candidate identity using a strict end-of-input grammar; terminal line breaks cannot become part of identity. |
 | `candidate_type` | Candidate class such as surface feature, subsurface feature, structure, artifact scatter, earthwork, landscape trace, anomaly, or context lead. |
 | `origin_method` | How the candidate was identified: survey, archival, map comparison, remote sensing, LiDAR, geophysics, report extraction, cross-domain analysis, steward submission, or other reviewed source. |
-| `source_refs` | SourceDescriptor/source record references. |
+| `source_refs` | Source, SourceDescriptor, or source-record references; evidence, observation, correction, and geometry families cannot substitute. |
 | `source_roles` | Source roles supporting, contextualizing, or contesting the candidate. |
-| `evidence_refs` | EvidenceRef/EvidenceBundle references where available. |
-| `observation_refs` | RemoteSensingAnomaly, LiDARCandidate, GeophysicsObservation, field observation, or archival observation references. |
-| `candidate_geometry_ref` | Internal geometry/support-scope reference, with public-safe generalization required before public exposure. |
+| `evidence_refs` | Evidence, EvidenceRef, or EvidenceBundle references with a non-empty opaque identity where available; source references and bare family paths cannot substitute. |
+| `observation_refs` | Observation-family references for RemoteSensingAnomaly, LiDARCandidate, GeophysicsObservation, field observation, or archival observation records; when present, the binding must contain at least one governed reference. |
+| `candidate_geometry_ref` | Internal geometry/support-scope reference whose opaque identifier must not encode latitude, longitude, bounding-box, coordinate-system, or similar locator tokens, including compact digit-suffixed forms such as `lat39`; public-safe generalization remains required before public exposure. |
 | `spatial_precision_class` | Precision bucket or generalization class; exact coordinate handling must be policy-gated. |
 | `temporal_scope` | Valid/observed/source/retrieval/review time context where material. |
-| `confidence_statement` | Bounded confidence or uncertainty note; must not be treated as confirmation. |
+| `confidence_statement` | Bounded confidence or uncertainty note containing at least one portable, non-surrogate BMP content code point outside the schema's Unicode 15.0 Cc/Cf/separator and Default-Ignorable deny set; supplementary characters may accompany that content but cannot alone satisfy the field; must not be treated as confirmation. |
 | `review_state` | Intake, needs review, under review, rejected, retained, promoted, superseded, or quarantined candidate state. |
 | `review_refs` | StewardReview, CulturalReview, or other review record references. |
 | `policy_state` | Policy posture or policy-decision reference. |
@@ -216,8 +216,8 @@ The current schema does not require these fields. They are `PROPOSED` semantic r
 | `site_lineage_refs` | References to any promoted ArchaeologicalSite or rejected/superseded candidate lineage. |
 | `lifecycle_state` | RAW/WORK/QUARANTINE/PROCESSED/CATALOG/TRIPLET/PUBLISHED posture where used. |
 | `release_refs` | Release/candidate linkage where applicable. |
-| `correction_refs` | Correction/supersession/rollback lineage. |
-| `spec_hash` | Integrity pin for the representation. |
+| `correction_refs` | Correction, correction-notice, or rollback lineage references. |
+| `spec_hash` | Lowercase SHA-256 integrity pin using a strict end-of-input grammar; terminal line breaks are denied. |
 
 ---
 
@@ -229,6 +229,9 @@ The current schema does not require these fields. They are `PROPOSED` semantic r
 - a candidate confidence score or analyst note is not proof;
 - candidate-to-site promotion requires governed review, evidence closure, and policy checks;
 - exact or sensitive location exposure fails closed unless policy and review authorize a specific public-safe transform;
+- governed-reference paths cannot serve as an alternate channel for protected locator material, including compact locator-token-plus-digit forms;
+- governed references must bind to the object family required by their field, carry a non-empty segmented opaque identity, and end strictly without terminal line-break material;
+- optional observation bindings must be omitted when absent and non-empty when present;
 - supporting observations remain distinct from the candidate object;
 - supporting context from other domains can inform but cannot independently confirm archaeology truth;
 - schema validity is not evidence proof;

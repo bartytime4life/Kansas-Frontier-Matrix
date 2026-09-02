@@ -12,9 +12,12 @@ from pathlib import Path
 from tools.validators.archaeology.validate_candidate_feature import (
     CANDIDATE_ID_PATTERN,
     CANDIDATE_TYPES,
+    CONFIDENCE_CONTENT_PATTERN,
     CONFIDENCE_STATEMENT_MAX_LENGTH,
     FORBIDDEN_INLINE_LOCATION_FIELDS,
     FORBIDDEN_SITE_CLAIM_FIELDS,
+    KFM_REFERENCE_PATTERN,
+    REFERENCE_FAMILY_PATTERNS,
     SPEC_HASH_PATTERN,
     SPATIAL_PRECISION_CLASSES,
     validate_candidate_feature,
@@ -46,9 +49,19 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
         payload = _load(FIXTURE_ROOT / "malformed_candidate_id_deny.json")
         errors = validate_candidate_feature(payload)
         self.assertIn(
-            "candidate_feature_id must match ^arc-candidate-[a-z0-9][a-z0-9-]*$",
+            "candidate_feature_id must match "
+            "^arc-candidate-[a-z0-9][a-z0-9-]*(?![\\s\\S])",
             errors,
         )
+
+    def test_candidate_identifier_terminal_line_break_fails_closed(self) -> None:
+        payload = _load(FIXTURE_ROOT / "candidate_id_line_terminator_deny.json")
+        expected_error = (
+            "candidate_feature_id must match "
+            "^arc-candidate-[a-z0-9][a-z0-9-]*(?![\\s\\S])"
+        )
+        self.assertTrue(payload["candidate_feature_id"].endswith("\n"))
+        self.assertEqual(validate_candidate_feature(payload), [expected_error])
 
     def test_unsupported_candidate_type_fails_closed(self) -> None:
         payload = _load(FIXTURE_ROOT / "unsupported_candidate_type_deny.json")
@@ -76,10 +89,49 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
 
     def test_malformed_spec_hash_fails_closed(self) -> None:
         payload = _load(FIXTURE_ROOT / "malformed_spec_hash_deny.json")
-        expected_error = "spec_hash must match ^sha256:[a-f0-9]{64}$"
+        expected_error = (
+            "spec_hash must match ^sha256:[a-f0-9]{64}(?![\\s\\S])"
+        )
         self.assertIn(expected_error, validate_candidate_feature(payload))
         payload["spec_hash"] = {"synthetic": "not-a-digest"}
         self.assertIn(expected_error, validate_candidate_feature(payload))
+
+    def test_spec_hash_terminal_line_break_fails_closed(self) -> None:
+        payload = _load(FIXTURE_ROOT / "spec_hash_line_terminator_deny.json")
+        expected_error = (
+            "spec_hash must match ^sha256:[a-f0-9]{64}(?![\\s\\S])"
+        )
+        self.assertTrue(payload["spec_hash"].endswith("\n"))
+        self.assertEqual(validate_candidate_feature(payload), [expected_error])
+        payload["spec_hash"] = "sha256:" + "a" * 64
+        self.assertEqual(validate_candidate_feature(payload), [])
+
+    def test_null_optional_scalars_fail_closed_while_omission_remains_valid(self) -> None:
+        cases = {
+            "candidate_type": "candidate_type is not in the bounded vocabulary",
+            "spatial_precision_class": "spatial_precision_class is not in the bounded vocabulary",
+            "spec_hash": (
+                "spec_hash must match ^sha256:[a-f0-9]{64}(?![\\s\\S])"
+            ),
+        }
+        for field, expected_error in cases.items():
+            with self.subTest(field=field):
+                payload = copy.deepcopy(self.valid)
+                payload[field] = None
+                self.assertIn(expected_error, validate_candidate_feature(payload))
+                payload.pop(field)
+                self.assertEqual(validate_candidate_feature(payload), [])
+
+    def test_null_optional_scalars_fixture_proves_all_denials(self) -> None:
+        payload = _load(FIXTURE_ROOT / "null_optional_scalars_deny.json")
+        self.assertEqual(
+            set(validate_candidate_feature(payload)),
+            {
+                "candidate_type is not in the bounded vocabulary",
+                "spatial_precision_class is not in the bounded vocabulary",
+                "spec_hash must match ^sha256:[a-f0-9]{64}(?![\\s\\S])",
+            },
+        )
 
     def test_malformed_confidence_statement_fails_closed(self) -> None:
         payload = _load(
@@ -89,11 +141,48 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
         self.assertIn(expected_error, validate_candidate_feature(payload))
         for malformed in (
             {"synthetic": "not-a-statement"},
+            " \t\n",
+            "\u0085",
+            "\u00ad",
+            "\u034f",
+            "\u061c",
+            "\u115f",
+            "\ufe0f",
+            "\ufeff",
+            "\U000e0001",
             "x" * (CONFIDENCE_STATEMENT_MAX_LENGTH + 1),
         ):
             with self.subTest(value_type=type(malformed).__name__):
                 payload["confidence_statement"] = malformed
                 self.assertIn(expected_error, validate_candidate_feature(payload))
+
+    def test_null_confidence_statement_fails_closed(self) -> None:
+        payload = copy.deepcopy(self.valid)
+        payload["confidence_statement"] = None
+        self.assertIn(
+            "confidence_statement must contain 1 to 1000 characters",
+            validate_candidate_feature(payload),
+        )
+
+    def test_unicode_invisible_confidence_fixture_fails_closed(self) -> None:
+        payload = _load(FIXTURE_ROOT / "unicode_invisible_confidence_deny.json")
+        self.assertEqual(payload["confidence_statement"], "\u061c\ufe0f")
+        self.assertIn(
+            "confidence_statement must contain 1 to 1000 characters",
+            validate_candidate_feature(payload),
+        )
+
+    def test_unicode_content_with_supplementary_context_remains_valid(self) -> None:
+        for statement in ("uncertain \U0001f600", "不確実"):
+            with self.subTest(statement=statement):
+                payload = copy.deepcopy(self.valid)
+                payload["confidence_statement"] = statement
+                self.assertEqual(validate_candidate_feature(payload), [])
+
+    def test_omitted_confidence_statement_remains_optional(self) -> None:
+        payload = copy.deepcopy(self.valid)
+        payload.pop("confidence_statement", None)
+        self.assertEqual(validate_candidate_feature(payload), [])
 
     def test_unsupported_spatial_precision_fails_closed(self) -> None:
         payload = _load(FIXTURE_ROOT / "unsupported_spatial_precision_deny.json")
@@ -117,7 +206,7 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
         errors = validate_candidate_feature(payload)
         self.assertIn(
             "candidate_geometry_ref must be an opaque governed kfm:// reference "
-            "without query, fragment, or encoded locator material",
+            "without query, fragment, or protected locator material",
             errors,
         )
 
@@ -132,6 +221,132 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
         errors = validate_candidate_feature(payload)
         self.assertTrue(errors)
         self.assertTrue(any("opaque kfm:// references" in error for error in errors))
+
+    def test_reference_terminal_line_breaks_fail_closed_in_every_field(self) -> None:
+        payload = _load(FIXTURE_ROOT / "reference_line_terminator_deny.json")
+        errors = validate_candidate_feature(payload)
+        expected_fields = {
+            "source_refs",
+            "evidence_refs",
+            "observation_refs",
+            "correction_refs",
+            "candidate_geometry_ref",
+        }
+        for field in expected_fields:
+            with self.subTest(field=field):
+                self.assertTrue(
+                    any(error.startswith(field) for error in errors),
+                    errors,
+                )
+        self.assertEqual(len(errors), len(expected_fields))
+
+    def test_path_locator_reference_fixture_fails_closed(self) -> None:
+        payload = _load(FIXTURE_ROOT / "path_locator_reference_deny.json")
+        self.assertIn(
+            "candidate_geometry_ref must be an opaque governed kfm:// reference "
+            "without query, fragment, or protected locator material",
+            validate_candidate_feature(payload),
+        )
+
+    def test_compact_locator_reference_fixture_fails_closed(self) -> None:
+        payload = _load(FIXTURE_ROOT / "compact_locator_reference_deny.json")
+        self.assertIn(
+            "candidate_geometry_ref must be an opaque governed kfm:// reference "
+            "without query, fragment, or protected locator material",
+            validate_candidate_feature(payload),
+        )
+
+    def test_protected_locator_tokens_fail_closed_in_every_reference_field(self) -> None:
+        cases = {
+            "source_refs": ["kfm://source/synthetic/Latitude/000"],
+            "evidence_refs": ["kfm://evidence/synthetic/longitude/000"],
+            "observation_refs": ["kfm://observation/synthetic/GeoHash/none"],
+            "correction_refs": ["kfm://correction/synthetic/MGRS/none"],
+            "candidate_geometry_ref": "kfm://geometry/synthetic/BBox/none",
+        }
+        for field, value in cases.items():
+            with self.subTest(field=field):
+                payload = copy.deepcopy(self.valid)
+                payload[field] = value
+                self.assertTrue(
+                    any(
+                        "protected locator material" in error
+                        for error in validate_candidate_feature(payload)
+                    )
+                )
+
+    def test_digit_suffixed_locator_tokens_fail_closed_in_every_reference_field(self) -> None:
+        cases = {
+            "source_refs": ["kfm://source/synthetic/lat39"],
+            "evidence_refs": ["kfm://evidence/synthetic/lon98"],
+            "observation_refs": ["kfm://observation/synthetic/geohash9y"],
+            "correction_refs": ["kfm://correction/synthetic/utm14"],
+            "candidate_geometry_ref": "kfm://geometry/synthetic/mgrs14",
+        }
+        for field, value in cases.items():
+            with self.subTest(field=field):
+                payload = copy.deepcopy(self.valid)
+                payload[field] = value
+                self.assertTrue(
+                    any(
+                        "protected locator material" in error
+                        for error in validate_candidate_feature(payload)
+                    )
+                )
+
+    def test_misbound_reference_family_fixture_fails_closed(self) -> None:
+        payload = _load(FIXTURE_ROOT / "misbound_reference_family_deny.json")
+        self.assertIn(
+            "evidence_refs entries must use the allowed governed reference family "
+            "with a non-empty opaque identity",
+            validate_candidate_feature(payload),
+        )
+
+    def test_empty_reference_identity_fixture_fails_closed(self) -> None:
+        payload = _load(FIXTURE_ROOT / "empty_reference_identity_deny.json")
+        self.assertIn(
+            "evidence_refs entries must use the allowed governed reference family "
+            "with a non-empty opaque identity",
+            validate_candidate_feature(payload),
+        )
+
+    def test_reference_fields_require_nonempty_segmented_identity(self) -> None:
+        cases = {
+            "source_refs": ["kfm://source/"],
+            "evidence_refs": ["kfm://evidence/synthetic/"],
+            "observation_refs": ["kfm://observation/synthetic//identity"],
+            "correction_refs": ["kfm://correction//identity"],
+            "candidate_geometry_ref": "kfm://geometry/",
+        }
+        for field, value in cases.items():
+            with self.subTest(field=field):
+                payload = copy.deepcopy(self.valid)
+                payload[field] = value
+                self.assertTrue(
+                    any(
+                        "non-empty opaque identity" in error
+                        for error in validate_candidate_feature(payload)
+                    )
+                )
+
+    def test_reference_fields_reject_cross_family_bindings(self) -> None:
+        cases = {
+            "source_refs": ["kfm://evidence/synthetic/misbound-source"],
+            "evidence_refs": ["kfm://source/synthetic/misbound-evidence"],
+            "observation_refs": ["kfm://correction/synthetic/misbound-observation"],
+            "correction_refs": ["kfm://observation/synthetic/misbound-correction"],
+            "candidate_geometry_ref": "kfm://evidence/synthetic/misbound-geometry",
+        }
+        for field, value in cases.items():
+            with self.subTest(field=field):
+                payload = copy.deepcopy(self.valid)
+                payload[field] = value
+                self.assertTrue(
+                    any(
+                        "reference family" in error or "kfm://geometry/ family" in error
+                        for error in validate_candidate_feature(payload)
+                    )
+                )
 
     def test_non_string_reference_fails_closed_without_exception(self) -> None:
         payload = _load(FIXTURE_ROOT / "non_string_reference_deny.json")
@@ -156,6 +371,19 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
         payload = _load(FIXTURE_ROOT / "empty_evidence_refs_deny.json")
         errors = validate_candidate_feature(payload)
         self.assertIn("evidence_refs must contain at least one reference", errors)
+
+    def test_present_observation_binding_cannot_be_empty(self) -> None:
+        payload = _load(FIXTURE_ROOT / "empty_observation_refs_deny.json")
+        errors = validate_candidate_feature(payload)
+        self.assertEqual(
+            errors,
+            ["observation_refs must contain at least one reference"],
+        )
+
+    def test_omitted_observation_binding_remains_optional(self) -> None:
+        payload = copy.deepcopy(self.valid)
+        payload.pop("observation_refs", None)
+        self.assertEqual(validate_candidate_feature(payload), [])
 
     def test_superseded_candidate_requires_correction_binding(self) -> None:
         payload = _load(
@@ -202,17 +430,36 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
         self.assertEqual(properties["spec_hash"]["pattern"], SPEC_HASH_PATTERN.pattern)
         self.assertEqual(properties["confidence_statement"]["minLength"], 1)
         self.assertEqual(
+            properties["confidence_statement"]["pattern"],
+            CONFIDENCE_CONTENT_PATTERN.pattern,
+        )
+        self.assertEqual(
             properties["confidence_statement"]["maxLength"],
             CONFIDENCE_STATEMENT_MAX_LENGTH,
         )
         self.assertFalse(schema["additionalProperties"])
         self.assertTrue(FORBIDDEN_INLINE_LOCATION_FIELDS.isdisjoint(properties))
         self.assertTrue(FORBIDDEN_SITE_CLAIM_FIELDS.isdisjoint(properties))
-        expected_ref_pattern = "^kfm://[A-Za-z0-9][A-Za-z0-9._~/-]*$"
+        expected_ref_pattern = KFM_REFERENCE_PATTERN.pattern
         self.assertEqual(properties["source_refs"]["items"]["type"], "string")
         self.assertEqual(properties["source_refs"]["items"]["pattern"], expected_ref_pattern)
         self.assertEqual(properties["candidate_geometry_ref"]["pattern"], expected_ref_pattern)
+        for field in ("evidence_refs", "observation_refs", "correction_refs"):
+            self.assertEqual(properties[field]["items"]["pattern"], expected_ref_pattern)
+        schema_family_locations = {
+            "source_refs": properties["source_refs"]["items"],
+            "evidence_refs": properties["evidence_refs"]["items"],
+            "observation_refs": properties["observation_refs"]["items"],
+            "correction_refs": properties["correction_refs"]["items"],
+            "candidate_geometry_ref": properties["candidate_geometry_ref"],
+        }
+        for field, location in schema_family_locations.items():
+            self.assertEqual(
+                location["allOf"][0]["pattern"],
+                REFERENCE_FAMILY_PATTERNS[field].pattern,
+            )
         self.assertEqual(properties["evidence_refs"]["minItems"], 1)
+        self.assertEqual(properties["observation_refs"]["minItems"], 1)
         self.assertEqual(properties["correction_refs"]["minItems"], 1)
         evidence_conditional = schema["allOf"][0]
         self.assertEqual(evidence_conditional["then"]["required"], ["evidence_refs"])

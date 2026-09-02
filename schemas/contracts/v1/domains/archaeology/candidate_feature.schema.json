@@ -23,7 +23,8 @@
   "properties": {
     "candidate_feature_id": {
       "type": "string",
-      "pattern": "^arc-candidate-[a-z0-9][a-z0-9-]*$"
+      "$comment": "Uses a portable strict end-of-input assertion so terminal line breaks cannot become part of identity.",
+      "pattern": "^arc-candidate-[a-z0-9][a-z0-9-]*(?![\\s\\S])"
     },
     "object_type": {
       "const": "CandidateFeature"
@@ -64,7 +65,12 @@
       "uniqueItems": true,
       "items": {
         "type": "string",
-        "pattern": "^kfm://[A-Za-z0-9][A-Za-z0-9._~/-]*$"
+        "pattern": "^(?!.*[/._~-](?:[Ll][Aa][Tt](?:[Ii][Tt][Uu][Dd][Ee])?|[Ll][Oo][Nn](?:[Gg][Ii][Tt][Uu][Dd][Ee])?|[Ll][Nn][Gg]|[Cc][Oo][Oo][Rr][Dd][Ii][Nn][Aa][Tt][Ee][Ss]?|[Bb][Bb][Oo][Xx]|[Gg][Ee][Oo][Hh][Aa][Ss][Hh]|[Ww][Kk][Tt]|[Ee][Aa][Ss][Tt][Ii][Nn][Gg]|[Nn][Oo][Rr][Tt][Hh][Ii][Nn][Gg]|[Uu][Tt][Mm]|[Mm][Gg][Rr][Ss])(?:$|[0-9]|[/._~-]))kfm://[A-Za-z0-9][A-Za-z0-9._~/-]*(?![\\s\\S])",
+        "allOf": [
+          {
+            "pattern": "^kfm://(?:source|source-descriptor|source-record)/[A-Za-z0-9][A-Za-z0-9._~-]*(?:/[A-Za-z0-9][A-Za-z0-9._~-]*)*(?![\\s\\S])"
+          }
+        ]
       }
     },
     "evidence_refs": {
@@ -73,20 +79,36 @@
       "uniqueItems": true,
       "items": {
         "type": "string",
-        "pattern": "^kfm://[A-Za-z0-9][A-Za-z0-9._~/-]*$"
+        "pattern": "^(?!.*[/._~-](?:[Ll][Aa][Tt](?:[Ii][Tt][Uu][Dd][Ee])?|[Ll][Oo][Nn](?:[Gg][Ii][Tt][Uu][Dd][Ee])?|[Ll][Nn][Gg]|[Cc][Oo][Oo][Rr][Dd][Ii][Nn][Aa][Tt][Ee][Ss]?|[Bb][Bb][Oo][Xx]|[Gg][Ee][Oo][Hh][Aa][Ss][Hh]|[Ww][Kk][Tt]|[Ee][Aa][Ss][Tt][Ii][Nn][Gg]|[Nn][Oo][Rr][Tt][Hh][Ii][Nn][Gg]|[Uu][Tt][Mm]|[Mm][Gg][Rr][Ss])(?:$|[0-9]|[/._~-]))kfm://[A-Za-z0-9][A-Za-z0-9._~/-]*(?![\\s\\S])",
+        "allOf": [
+          {
+            "pattern": "^kfm://(?:evidence|evidence-ref|evidence-bundle)/[A-Za-z0-9][A-Za-z0-9._~-]*(?:/[A-Za-z0-9][A-Za-z0-9._~-]*)*(?![\\s\\S])"
+          }
+        ]
       }
     },
     "observation_refs": {
       "type": "array",
+      "minItems": 1,
       "uniqueItems": true,
       "items": {
         "type": "string",
-        "pattern": "^kfm://[A-Za-z0-9][A-Za-z0-9._~/-]*$"
+        "pattern": "^(?!.*[/._~-](?:[Ll][Aa][Tt](?:[Ii][Tt][Uu][Dd][Ee])?|[Ll][Oo][Nn](?:[Gg][Ii][Tt][Uu][Dd][Ee])?|[Ll][Nn][Gg]|[Cc][Oo][Oo][Rr][Dd][Ii][Nn][Aa][Tt][Ee][Ss]?|[Bb][Bb][Oo][Xx]|[Gg][Ee][Oo][Hh][Aa][Ss][Hh]|[Ww][Kk][Tt]|[Ee][Aa][Ss][Tt][Ii][Nn][Gg]|[Nn][Oo][Rr][Tt][Hh][Ii][Nn][Gg]|[Uu][Tt][Mm]|[Mm][Gg][Rr][Ss])(?:$|[0-9]|[/._~-]))kfm://[A-Za-z0-9][A-Za-z0-9._~/-]*(?![\\s\\S])",
+        "allOf": [
+          {
+            "pattern": "^kfm://observation/[A-Za-z0-9][A-Za-z0-9._~-]*(?:/[A-Za-z0-9][A-Za-z0-9._~-]*)*(?![\\s\\S])"
+          }
+        ]
       }
     },
     "candidate_geometry_ref": {
       "type": "string",
-      "pattern": "^kfm://[A-Za-z0-9][A-Za-z0-9._~/-]*$"
+      "pattern": "^(?!.*[/._~-](?:[Ll][Aa][Tt](?:[Ii][Tt][Uu][Dd][Ee])?|[Ll][Oo][Nn](?:[Gg][Ii][Tt][Uu][Dd][Ee])?|[Ll][Nn][Gg]|[Cc][Oo][Oo][Rr][Dd][Ii][Nn][Aa][Tt][Ee][Ss]?|[Bb][Bb][Oo][Xx]|[Gg][Ee][Oo][Hh][Aa][Ss][Hh]|[Ww][Kk][Tt]|[Ee][Aa][Ss][Tt][Ii][Nn][Gg]|[Nn][Oo][Rr][Tt][Hh][Ii][Nn][Gg]|[Uu][Tt][Mm]|[Mm][Gg][Rr][Ss])(?:$|[0-9]|[/._~-]))kfm://[A-Za-z0-9][A-Za-z0-9._~/-]*(?![\\s\\S])",
+      "allOf": [
+        {
+          "pattern": "^kfm://geometry/[A-Za-z0-9][A-Za-z0-9._~-]*(?:/[A-Za-z0-9][A-Za-z0-9._~-]*)*(?![\\s\\S])"
+        }
+      ]
     },
     "spatial_precision_class": {
       "type": "string",
@@ -99,7 +121,9 @@
     "confidence_statement": {
       "type": "string",
       "minLength": 1,
-      "maxLength": 1000
+      "maxLength": 1000,
+      "$comment": "Requires a portable non-surrogate BMP content code point; excludes Unicode 15.0 BMP Cc/Cf/separators and Default_Ignorable ranges.",
+      "pattern": "(?=[\\u0000-\\uFFFF])[^\\u0000-\\u0020\\u007F-\\u00A0\\u00AD\\u034F\\u0600-\\u0605\\u061C\\u06DD\\u070F\\u0890-\\u0891\\u08E2\\u115F-\\u1160\\u1680\\u17B4-\\u17B5\\u180B-\\u180F\\u2000-\\u200F\\u2028-\\u202F\\u205F-\\u206F\\u3000\\u3164\\uD800-\\uDFFF\\uFE00-\\uFE0F\\uFEFF\\uFFA0\\uFFF0-\\uFFFB]"
     },
     "review_state": {
       "type": "string",
@@ -136,12 +160,18 @@
       "uniqueItems": true,
       "items": {
         "type": "string",
-        "pattern": "^kfm://[A-Za-z0-9][A-Za-z0-9._~/-]*$"
+        "pattern": "^(?!.*[/._~-](?:[Ll][Aa][Tt](?:[Ii][Tt][Uu][Dd][Ee])?|[Ll][Oo][Nn](?:[Gg][Ii][Tt][Uu][Dd][Ee])?|[Ll][Nn][Gg]|[Cc][Oo][Oo][Rr][Dd][Ii][Nn][Aa][Tt][Ee][Ss]?|[Bb][Bb][Oo][Xx]|[Gg][Ee][Oo][Hh][Aa][Ss][Hh]|[Ww][Kk][Tt]|[Ee][Aa][Ss][Tt][Ii][Nn][Gg]|[Nn][Oo][Rr][Tt][Hh][Ii][Nn][Gg]|[Uu][Tt][Mm]|[Mm][Gg][Rr][Ss])(?:$|[0-9]|[/._~-]))kfm://[A-Za-z0-9][A-Za-z0-9._~/-]*(?![\\s\\S])",
+        "allOf": [
+          {
+            "pattern": "^kfm://(?:correction|correction-notice|rollback)/[A-Za-z0-9][A-Za-z0-9._~-]*(?:/[A-Za-z0-9][A-Za-z0-9._~-]*)*(?![\\s\\S])"
+          }
+        ]
       }
     },
     "spec_hash": {
       "type": "string",
-      "pattern": "^sha256:[a-f0-9]{64}$"
+      "$comment": "Uses a portable strict end-of-input assertion so terminal line breaks cannot become part of the evidence-binding digest.",
+      "pattern": "^sha256:[a-f0-9]{64}(?![\\s\\S])"
     }
   },
   "additionalProperties": false,

@@ -1,0 +1,17 @@
+{
+  "candidate_feature_id": "arc-candidate-synthetic-empty-evidence-identity",
+  "object_type": "CandidateFeature",
+  "truth_state": "CANDIDATE",
+  "candidate_type": "ANOMALY",
+  "origin_method": "REMOTE_SENSING",
+  "source_refs": [
+    "kfm://source/synthetic/empty-evidence-identity"
+  ],
+  "evidence_refs": [
+    "kfm://evidence/"
+  ],
+  "review_state": "UNDER_REVIEW",
+  "sensitivity_class": "WITHHELD",
+  "spatial_precision_class": "WITHHELD",
+  "lifecycle_state": "WORK"
+}

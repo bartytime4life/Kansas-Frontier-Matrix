@@ -111,10 +111,65 @@ SPATIAL_PRECISION_CLASSES = frozenset(
 )
 LIFECYCLE_STATES = frozenset({"WORK", "QUARANTINE", "PROCESSED", "CATALOG"})
 EVIDENCE_BOUND_LIFECYCLE_STATES = frozenset({"PROCESSED", "CATALOG"})
-CANDIDATE_ID_PATTERN = re.compile(r"^arc-candidate-[a-z0-9][a-z0-9-]*$")
-KFM_REFERENCE_PATTERN = re.compile(r"^kfm://[A-Za-z0-9][A-Za-z0-9._~/-]*$")
-SPEC_HASH_PATTERN = re.compile(r"^sha256:[a-f0-9]{64}$")
+# `(?![\s\S])` is a portable strict end-of-input assertion.  Unlike `$`, it
+# cannot match immediately before a terminal newline in Python schema tooling.
+CANDIDATE_ID_PATTERN = re.compile(
+    r"^arc-candidate-[a-z0-9][a-z0-9-]*(?![\s\S])"
+)
+# Opaque reference paths must not become a second channel for protected
+# geometry. Keep this expression ECMAScript-compatible for JSON Schema and
+# spell case-insensitive locator tokens with character classes because schema
+# patterns do not carry flags.
+KFM_REFERENCE_PATTERN = re.compile(
+    r"^(?!.*[/._~-](?:[Ll][Aa][Tt](?:[Ii][Tt][Uu][Dd][Ee])?|"
+    r"[Ll][Oo][Nn](?:[Gg][Ii][Tt][Uu][Dd][Ee])?|[Ll][Nn][Gg]|"
+    r"[Cc][Oo][Oo][Rr][Dd][Ii][Nn][Aa][Tt][Ee][Ss]?|[Bb][Bb][Oo][Xx]|"
+    r"[Gg][Ee][Oo][Hh][Aa][Ss][Hh]|[Ww][Kk][Tt]|[Ee][Aa][Ss][Tt][Ii][Nn][Gg]|"
+    r"[Nn][Oo][Rr][Tt][Hh][Ii][Nn][Gg]|[Uu][Tt][Mm]|[Mm][Gg][Rr][Ss])"
+    r"(?:$|[0-9]|[/._~-]))kfm://[A-Za-z0-9][A-Za-z0-9._~/-]*(?![\s\S])"
+)
+OPAQUE_ID_PATH_PATTERN = (
+    r"[A-Za-z0-9][A-Za-z0-9._~-]*(?:/[A-Za-z0-9][A-Za-z0-9._~-]*)*"
+)
+REFERENCE_FAMILY_PATTERNS = {
+    "source_refs": re.compile(
+        r"^kfm://(?:source|source-descriptor|source-record)/"
+        + OPAQUE_ID_PATH_PATTERN
+        + r"(?![\s\S])"
+    ),
+    "evidence_refs": re.compile(
+        r"^kfm://(?:evidence|evidence-ref|evidence-bundle)/"
+        + OPAQUE_ID_PATH_PATTERN
+        + r"(?![\s\S])"
+    ),
+    "observation_refs": re.compile(
+        r"^kfm://observation/" + OPAQUE_ID_PATH_PATTERN + r"(?![\s\S])"
+    ),
+    "correction_refs": re.compile(
+        r"^kfm://(?:correction|correction-notice|rollback)/"
+        + OPAQUE_ID_PATH_PATTERN
+        + r"(?![\s\S])"
+    ),
+    "candidate_geometry_ref": re.compile(
+        r"^kfm://geometry/" + OPAQUE_ID_PATH_PATTERN + r"(?![\s\S])"
+    ),
+}
+SPEC_HASH_PATTERN = re.compile(r"^sha256:[a-f0-9]{64}(?![\s\S])")
 CONFIDENCE_STATEMENT_MAX_LENGTH = 1000
+# Keep this ECMAScript-compatible for the Draft 2020-12 schema.  Requiring a
+# non-surrogate BMP content code point makes supplementary-only strings fail
+# closed while preserving supplementary characters alongside ordinary text.
+# The excluded BMP set covers Unicode 15.0 Cc/Cf/separator code points plus
+# BMP Default_Ignorable_Code_Point ranges that are not already in those
+# categories.
+CONFIDENCE_CONTENT_PATTERN = re.compile(
+    r"(?=[\u0000-\uFFFF])"
+    r"[^\u0000-\u0020\u007F-\u00A0\u00AD\u034F\u0600-\u0605"
+    r"\u061C\u06DD\u070F\u0890-\u0891\u08E2\u115F-\u1160"
+    r"\u1680\u17B4-\u17B5\u180B-\u180F\u2000-\u200F"
+    r"\u2028-\u202F\u205F-\u206F\u3000\u3164\uD800-\uDFFF"
+    r"\uFE00-\uFE0F\uFEFF\uFFA0\uFFF0-\uFFFB]"
+)
 
 
 def _is_bounded_string(value: Any, allowed: frozenset[str]) -> bool:
@@ -142,7 +197,13 @@ def _validate_refs(value: Any, field: str, *, required: bool = False) -> list[st
         if not _is_opaque_kfm_ref(ref):
             errors.append(
                 f"{field} entries must be opaque kfm:// references without query, "
-                "fragment, or encoded locator material"
+                "fragment, or protected locator material"
+            )
+            continue
+        if REFERENCE_FAMILY_PATTERNS[field].fullmatch(ref) is None:
+            errors.append(
+                f"{field} entries must use the allowed governed reference family "
+                "with a non-empty opaque identity"
             )
     return errors
 
@@ -178,14 +239,14 @@ def validate_candidate_feature(payload: Any) -> list[str]:
     ):
         errors.append(
             "candidate_feature_id must match "
-            "^arc-candidate-[a-z0-9][a-z0-9-]*$"
+            "^arc-candidate-[a-z0-9][a-z0-9-]*(?![\\s\\S])"
         )
     if payload.get("object_type") != "CandidateFeature":
         errors.append("object_type must be CandidateFeature")
     if payload.get("truth_state") != "CANDIDATE":
         errors.append("truth_state must remain CANDIDATE")
     candidate_type = payload.get("candidate_type")
-    if candidate_type is not None and not _is_bounded_string(
+    if "candidate_type" in payload and not _is_bounded_string(
         candidate_type, CANDIDATE_TYPES
     ):
         errors.append("candidate_type is not in the bounded vocabulary")
@@ -198,11 +259,8 @@ def validate_candidate_feature(payload: Any) -> list[str]:
     ):
         errors.append("sensitivity_class is not in the bounded vocabulary")
     spatial_precision_class = payload.get("spatial_precision_class")
-    if (
-        spatial_precision_class is not None
-        and not _is_bounded_string(
-            spatial_precision_class, SPATIAL_PRECISION_CLASSES
-        )
+    if "spatial_precision_class" in payload and not _is_bounded_string(
+        spatial_precision_class, SPATIAL_PRECISION_CLASSES
     ):
         errors.append("spatial_precision_class is not in the bounded vocabulary")
     if not _is_bounded_string(payload.get("lifecycle_state"), LIFECYCLE_STATES):
@@ -230,7 +288,9 @@ def validate_candidate_feature(payload: Any) -> list[str]:
         not isinstance(correction_refs, list) or not correction_refs
     ):
         errors.append("correction_refs are required for superseded candidates")
-    nonempty_when_present = frozenset({"evidence_refs", "correction_refs"})
+    nonempty_when_present = frozenset(
+        {"evidence_refs", "observation_refs", "correction_refs"}
+    )
     for field in ("evidence_refs", "observation_refs", "correction_refs"):
         if field in payload:
             errors.extend(
@@ -246,27 +306,38 @@ def validate_candidate_feature(payload: Any) -> list[str]:
     ):
         errors.append(
             "candidate_geometry_ref must be an opaque governed kfm:// reference "
-            "without query, fragment, or encoded locator material"
+            "without query, fragment, or protected locator material"
+        )
+    elif (
+        "candidate_geometry_ref" in payload
+        and REFERENCE_FAMILY_PATTERNS["candidate_geometry_ref"].fullmatch(
+            geometry_ref
+        )
+        is None
+    ):
+        errors.append(
+            "candidate_geometry_ref must use the kfm://geometry/ family with a "
+            "non-empty opaque identity"
         )
     if "candidate_geometry_ref" in payload and spatial_precision_class is None:
         errors.append(
             "spatial_precision_class is required with candidate_geometry_ref"
         )
     spec_hash = payload.get("spec_hash")
-    if (
-        spec_hash is not None
-        and (
-            not isinstance(spec_hash, str)
-            or SPEC_HASH_PATTERN.fullmatch(spec_hash) is None
-        )
+    if "spec_hash" in payload and (
+        not isinstance(spec_hash, str)
+        or SPEC_HASH_PATTERN.fullmatch(spec_hash) is None
     ):
-        errors.append("spec_hash must match ^sha256:[a-f0-9]{64}$")
+        errors.append(
+            "spec_hash must match ^sha256:[a-f0-9]{64}(?![\\s\\S])"
+        )
     confidence_statement = payload.get("confidence_statement")
     if (
-        confidence_statement is not None
+        "confidence_statement" in payload
         and (
             not isinstance(confidence_statement, str)
             or not 1 <= len(confidence_statement) <= CONFIDENCE_STATEMENT_MAX_LENGTH
+            or CONFIDENCE_CONTENT_PATTERN.search(confidence_statement) is None
         )
     ):
         errors.append("confidence_statement must contain 1 to 1000 characters")
@@ -284,17 +355,27 @@ def validate_fixture_suite() -> int:
     deny_paths = {
         FIXTURE_ROOT / "sensitive_geometry_deny.json": "inline location fields are denied",
         FIXTURE_ROOT / "location_bearing_reference_deny.json": "opaque kfm:// references",
+        FIXTURE_ROOT / "reference_line_terminator_deny.json": "opaque kfm:// references",
+        FIXTURE_ROOT / "path_locator_reference_deny.json": "protected locator material",
+        FIXTURE_ROOT / "compact_locator_reference_deny.json": "protected locator material",
+        FIXTURE_ROOT / "misbound_reference_family_deny.json": "allowed governed reference family",
+        FIXTURE_ROOT / "empty_reference_identity_deny.json": "non-empty opaque identity",
         FIXTURE_ROOT / "unbound_catalog_candidate_deny.json": "evidence_refs are required",
         FIXTURE_ROOT / "superseded_without_correction_deny.json": "correction_refs are required",
         FIXTURE_ROOT / "malformed_candidate_id_deny.json": "candidate_feature_id must match",
+        FIXTURE_ROOT / "candidate_id_line_terminator_deny.json": "candidate_feature_id must match",
         FIXTURE_ROOT / "unsupported_candidate_type_deny.json": "candidate_type is not in",
         FIXTURE_ROOT / "unsupported_spatial_precision_deny.json": "spatial_precision_class is not in",
         FIXTURE_ROOT / "unclassified_geometry_reference_deny.json": "spatial_precision_class is required",
         FIXTURE_ROOT / "non_string_reference_deny.json": "opaque kfm:// references",
         FIXTURE_ROOT / "empty_evidence_refs_deny.json": "evidence_refs must contain",
+        FIXTURE_ROOT / "empty_observation_refs_deny.json": "observation_refs must contain",
         FIXTURE_ROOT / "non_string_vocabulary_deny.json": "candidate_type is not in",
         FIXTURE_ROOT / "malformed_spec_hash_deny.json": "spec_hash must match",
+        FIXTURE_ROOT / "spec_hash_line_terminator_deny.json": "spec_hash must match",
+        FIXTURE_ROOT / "null_optional_scalars_deny.json": "candidate_type is not in",
         FIXTURE_ROOT / "malformed_confidence_statement_deny.json": "confidence_statement must contain",
+        FIXTURE_ROOT / "unicode_invisible_confidence_deny.json": "confidence_statement must contain",
     }
     valid_errors = validate_candidate_feature(_load(valid_path))
     if valid_errors:
