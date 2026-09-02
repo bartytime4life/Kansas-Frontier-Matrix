@@ -104,19 +104,17 @@ function governedDrawerEvidenceScope(
     });
   }
 
-  const staleAbstention =
-    parsed.payload.outcome === "ABSTAIN" &&
-    parsed.payload.reasonCode === "STALE_EVIDENCE";
+  const nonCurrentAbstention = parsed.payload.outcome === "ABSTAIN";
 
   return Object.freeze({
     current: Object.freeze([
-      ...(staleAbstention ? [] : parsed.payload.evidenceRefs),
+      ...(nonCurrentAbstention ? [] : parsed.payload.evidenceRefs),
       ...parsed.payload.history.corrections.map(
         (item) => item.activeEvidenceRef,
       ),
     ]),
     history: Object.freeze([
-      ...(staleAbstention ? parsed.payload.evidenceRefs : []),
+      ...(nonCurrentAbstention ? parsed.payload.evidenceRefs : []),
       ...parsed.payload.history.negativeOutcomes.map(
         (item) => item.evidenceRef,
       ),

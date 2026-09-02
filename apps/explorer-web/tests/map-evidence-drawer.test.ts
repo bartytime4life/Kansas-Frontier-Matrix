@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 
 import answerFixture from "../../../fixtures/ui/evidence_drawer_payload/valid/answer-corrected.json";
+import unresolvedCitationFixture from "../../../fixtures/ui/evidence_drawer_payload/valid/abstain-invalid-provenance-reference.json";
 import staleFixture from "../../../fixtures/ui/evidence_drawer_payload/valid/abstain-stale.json";
 import supersededFixture from "../../../fixtures/ui/evidence_drawer_payload/valid/abstain-superseded.json";
 import denyFixture from "../../../fixtures/ui/evidence_drawer_payload/valid/deny-sensitive.json";
@@ -221,6 +222,62 @@ describe("Explorer map feature to Evidence Drawer bridge", () => {
     expect(JSON.stringify(result.drawer)).not.toContain(
       "STALE_SUMMARY_MUST_NOT_RENDER_AS_A_CLAIM",
     );
+  });
+
+  it("preserves any visible abstention evidence as audit-only", async () => {
+    const evidenceRef =
+      "kfm:evidence:synthetic:unresolved-provenance-001";
+    const unresolvedWithVisibleRef = {
+      ...unresolvedCitationFixture,
+      evidence_refs: [evidenceRef],
+    };
+
+    const result = await resolveMapFeatureEvidence(
+      {
+        ...matchingSelection,
+        evidence_refs: [],
+        history_evidence_refs: [evidenceRef],
+      },
+      async () => unresolvedWithVisibleRef,
+    );
+
+    expect(result).toMatchObject({
+      code: "CITATION_UNRESOLVED",
+      drawer: {
+        outcome: "ABSTAIN",
+        code: "CITATION_UNRESOLVED",
+        evidenceRefs: [evidenceRef],
+        evidenceRefsLabel: "Non-current evidence references",
+      },
+    });
+  });
+
+  it("fails closed when abstention evidence is carried as current support", async () => {
+    const evidenceRef =
+      "kfm:evidence:synthetic:unresolved-provenance-001";
+    const unresolvedWithVisibleRef = {
+      ...unresolvedCitationFixture,
+      evidence_refs: [evidenceRef],
+    };
+
+    const result = await resolveMapFeatureEvidence(
+      {
+        ...matchingSelection,
+        evidence_refs: [evidenceRef],
+        history_evidence_refs: [],
+      },
+      async () => unresolvedWithVisibleRef,
+    );
+
+    expect(result).toMatchObject({
+      code: "DRAWER_EVIDENCE_OUTSIDE_SELECTION",
+      drawer: {
+        outcome: "ERROR",
+        evidenceRefs: [],
+        citations: [],
+        historyLabels: [],
+      },
+    });
   });
 
   it("fails closed when negative-only history widens beyond the clicked selection", async () => {
