@@ -1,0 +1,174 @@
++    raw_entries = data["entries"]
++    if not isinstance(raw_entries, list) or len(raw_entries) > MAX_RECONCILIATIONS:
++        raise TopologyError("reconciliation entries must be a bounded array")
++    result: dict[str, Mapping[str, object]] = {}
++    ordered: list[str] = []
++    expected_fields = {
++        "current_blob_sha",
++        "current_evidence_sha256",
++        "current_fingerprint",
++        "governance_issue",
++        "path",
++        "prior_blob_sha",
++        "prior_evidence_sha256",
++        "prior_fingerprint",
++        "reason",
++        "record_id",
++        "retire_when",
++        "rule_id",
++        "subject",
++        "trusted_base_sha",
++    }
++    seen_paths: set[tuple[str, str]] = set()
++    for index, entry in enumerate(raw_entries):
++        if not isinstance(entry, dict) or set(entry) != expected_fields:
++            raise TopologyError(f"reconciliation entry {index} is malformed")
++        record_id = entry.get("record_id")
++        if not isinstance(record_id, str) or not re.fullmatch(
++            r"[a-z0-9][a-z0-9.-]{0,127}", record_id
++        ):
++            raise TopologyError(f"reconciliation entry {index} has an invalid record_id")
++        if record_id in result:
++            raise TopologyError(f"duplicate reconciliation record_id: {record_id}")
++        if entry.get("rule_id") != "KFM-TOPO-004" or entry.get("subject") != "catalog/":
++            raise TopologyError(
++                f"reconciliation entry {index} exceeds the frozen catalog correction scope"
++            )
++        path = entry.get("path")
++        if (
++            not isinstance(path, str)
++            or not path.startswith("catalog/")
++            or PurePosixPath(path).name != "README.md"
++            or PurePosixPath(path).is_absolute()
++            or ".." in PurePosixPath(path).parts
++        ):
++            raise TopologyError(f"reconciliation entry {index} has an invalid path")
++        path_key = (str(entry["trusted_base_sha"]), path)
++        if path_key in seen_paths:
++            raise TopologyError("reconciliation register repeats a trusted path transition")
++        seen_paths.add(path_key)
++        for field in ("prior_blob_sha", "current_blob_sha", "trusted_base_sha"):
++            value = entry.get(field)
++            if not isinstance(value, str) or not re.fullmatch(r"[0-9a-f]{40}", value):
++                raise TopologyError(f"reconciliation entry {index} has an invalid {field}")
++        if entry["prior_blob_sha"] == entry["current_blob_sha"]:
++            raise TopologyError("reconciliation blob transition must change content")
++        for field in (
++            "prior_evidence_sha256",
++            "current_evidence_sha256",
++            "prior_fingerprint",
++            "current_fingerprint",
++        ):
++            value = entry.get(field)
++            if not isinstance(value, str) or not re.fullmatch(
++                r"sha256:[0-9a-f]{64}", value
++            ):
++                raise TopologyError(f"reconciliation entry {index} has an invalid {field}")
++        if entry["prior_fingerprint"] == entry["current_fingerprint"]:
++            raise TopologyError("reconciliation fingerprint transition must change")
++        issue = entry.get("governance_issue")
++        if not isinstance(issue, str) or not re.fullmatch(
++            r"https://github\.com/bartytime4life/Kansas-Frontier-Matrix/issues/[1-9][0-9]*",
++            issue,
++        ):
++            raise TopologyError(
++                f"reconciliation entry {index} has an invalid governance_issue"
++            )
++        if entry.get("reason") != RECONCILIATION_REASON:
++            raise TopologyError(f"reconciliation entry {index} has an invalid reason")
++        if entry.get("retire_when") != RECONCILIATION_RETIREMENT:
++            raise TopologyError(
++                f"reconciliation entry {index} has an invalid retirement condition"
++            )
++        ordered.append(record_id)
++        result[record_id] = entry
++    if ordered != sorted(ordered):
++        raise TopologyError("reconciliation entries are not sorted by record_id")
++    return data, result
++
++
++def load_reconciliations(path: Path) -> dict[str, Mapping[str, object]]:
++    if path.is_symlink() or not path.is_file() or path.stat().st_size > MAX_FILE_BYTES:
++        raise TopologyError("reconciliation register is missing, unsafe, or too large")
++    try:
++        raw = path.read_bytes()
++    except OSError as exc:
++        raise TopologyError("reconciliation register cannot be read") from exc
++    _data, entries = _load_reconciliation_bytes(raw, label="current")
++    return entries
++
++
++def validate_reconciliation_transition(
++    current_data: Mapping[str, object],
++    current_entries: Mapping[str, Mapping[str, object]],
++    trusted_data: Mapping[str, object],
++    trusted_entries: Mapping[str, Mapping[str, object]],
++) -> tuple[str, ...]:
++    immutable = (
++        "authority",
++        "closure_ref",
++        "non_effects",
++        "owner",
++        "schema_version",
++    )
++    if any(current_data[field] != trusted_data[field] for field in immutable):
++        raise TopologyError("reconciliation transition mutates protected metadata")
++    removed = sorted(set(trusted_entries) - set(current_entries))
++    if removed:
++        raise TopologyError("reconciliation transition removes correction records")
++    for record_id in set(current_entries).intersection(trusted_entries):
++        if current_entries[record_id] != trusted_entries[record_id]:
++            raise TopologyError("reconciliation transition mutates a correction record")
++    additions = tuple(sorted(set(current_entries) - set(trusted_entries)))
++    if len(additions) > 1:
++        raise TopologyError("reconciliation transition adds more than one correction record")
++    return additions
++
++
++def _frozen_root_finding_at_ref(
++    repo_root: Path, commit_sha: str, subject: str
++) -> Finding:
++    root = subject.removesuffix("/")
++    raw = _git(
++        repo_root,
++        "ls-tree",
++        "-rz",
++        "-r",
++        "--full-tree",
++        commit_sha,
++        "--",
++        root,
++    )
++    evidence: list[str] = []
++    for record in raw.split(b"\0"):
++        if not record:
++            continue
++        try:
++            header, path_raw = record.split(b"\t", 1)
++            mode_raw, kind_raw, object_id_raw = header.split(b" ", 2)
++            mode = mode_raw.decode("ascii")
++            kind = kind_raw.decode("ascii")
++            object_id = object_id_raw.decode("ascii")
++            path = path_raw.decode("utf-8")
++        except (ValueError, UnicodeError) as exc:
++            raise TopologyError("trusted frozen-root tree is malformed") from exc
++        if (
++            kind != "blob"
++            or mode not in {"100644", "100755", "120000"}
++            or not re.fullmatch(r"[0-9a-f]{40}", object_id)
++            or not path.startswith(subject)
++            or PurePosixPath(path).is_absolute()
++            or ".." in PurePosixPath(path).parts
++        ):
++            raise TopologyError("trusted frozen-root tree contains an unsafe entry")
++        evidence.append(f"{path}@{object_id}")
++    if not evidence:
++        raise TopologyError("trusted frozen-root evidence is missing")
++    return _finding("KFM-TOPO-004", subject, evidence)
++
++
++def _git_blob(repo_root: Path, object_id: str) -> bytes:
++    if not re.fullmatch(r"[0-9a-f]{40}", object_id):
++        raise TopologyError("registered Git blob id is invalid")
++    raw = _git(repo_root, "cat-file", "blob", object_id)
++    if len(raw) > MAX_FILE_BYTES:
