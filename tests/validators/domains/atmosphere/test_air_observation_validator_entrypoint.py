@@ -10,6 +10,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from copy import deepcopy
 from pathlib import Path
 
 
@@ -35,6 +36,11 @@ INVALID_DIR = FIXTURE_ROOT / "invalid"
 
 
 class AirObservationValidatorEntrypointTests(unittest.TestCase):
+    def _bound_observation(self) -> dict[str, object]:
+        return json.loads(
+            (VALID_DIR / "air_observation_bound.json").read_text(encoding="utf-8")
+        )
+
     def _run(self, *arguments: str) -> subprocess.CompletedProcess[str]:
         with tempfile.TemporaryDirectory() as directory:
             return subprocess.run(
@@ -48,6 +54,39 @@ class AirObservationValidatorEntrypointTests(unittest.TestCase):
     def test_bound_observation_passes(self) -> None:
         result = validate_file(VALID_DIR / "air_observation_bound.json")
         self.assertEqual(result, ValidationResult("PASS", ()))
+
+    def test_declared_schema_rejects_short_observation_id(self) -> None:
+        candidate = self._bound_observation()
+        candidate["observation_id"] = "x"
+
+        self.assertIn(
+            Finding("AIR_OBSERVATION_SCHEMA_INVALID", "$.observation_id"),
+            validate_candidate(candidate),
+        )
+
+    def test_declared_schema_rejects_non_object_fixture_metadata(self) -> None:
+        candidate = self._bound_observation()
+        candidate["_fixture_meta"] = 1
+
+        self.assertIn(
+            Finding("AIR_OBSERVATION_SCHEMA_INVALID", "$._fixture_meta"),
+            validate_candidate(candidate),
+        )
+
+    def test_declared_schema_checks_date_time_formats(self) -> None:
+        candidate = self._bound_observation()
+        temporal_scope = deepcopy(candidate["temporal_scope"])
+        self.assertIsInstance(temporal_scope, dict)
+        temporal_scope["observed_at"] = "not-a-date-time"
+        candidate["temporal_scope"] = temporal_scope
+
+        self.assertIn(
+            Finding(
+                "AIR_OBSERVATION_SCHEMA_INVALID",
+                "$.temporal_scope.observed_at",
+            ),
+            validate_candidate(candidate),
+        )
 
     def test_unresolved_observation_preserves_abstain(self) -> None:
         result = validate_file(VALID_DIR / "air_observation_unresolved.json")
