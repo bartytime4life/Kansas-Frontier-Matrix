@@ -112,7 +112,18 @@ SPATIAL_PRECISION_CLASSES = frozenset(
 LIFECYCLE_STATES = frozenset({"WORK", "QUARANTINE", "PROCESSED", "CATALOG"})
 EVIDENCE_BOUND_LIFECYCLE_STATES = frozenset({"PROCESSED", "CATALOG"})
 CANDIDATE_ID_PATTERN = re.compile(r"^arc-candidate-[a-z0-9][a-z0-9-]*$")
-KFM_REFERENCE_PATTERN = re.compile(r"^kfm://[A-Za-z0-9][A-Za-z0-9._~/-]*$")
+# Opaque reference paths must not become a second channel for protected
+# geometry. Keep this expression ECMAScript-compatible for JSON Schema and
+# spell case-insensitive locator tokens with character classes because schema
+# patterns do not carry flags.
+KFM_REFERENCE_PATTERN = re.compile(
+    r"^(?!.*[/._~-](?:[Ll][Aa][Tt](?:[Ii][Tt][Uu][Dd][Ee])?|"
+    r"[Ll][Oo][Nn](?:[Gg][Ii][Tt][Uu][Dd][Ee])?|[Ll][Nn][Gg]|"
+    r"[Cc][Oo][Oo][Rr][Dd][Ii][Nn][Aa][Tt][Ee][Ss]?|[Bb][Bb][Oo][Xx]|"
+    r"[Gg][Ee][Oo][Hh][Aa][Ss][Hh]|[Ww][Kk][Tt]|[Ee][Aa][Ss][Tt][Ii][Nn][Gg]|"
+    r"[Nn][Oo][Rr][Tt][Hh][Ii][Nn][Gg]|[Uu][Tt][Mm]|[Mm][Gg][Rr][Ss])"
+    r"(?:$|[/._~-]))kfm://[A-Za-z0-9][A-Za-z0-9._~/-]*$"
+)
 SPEC_HASH_PATTERN = re.compile(r"^sha256:[a-f0-9]{64}$")
 CONFIDENCE_STATEMENT_MAX_LENGTH = 1000
 # Keep this ECMAScript-compatible for the Draft 2020-12 schema.  Requiring a
@@ -156,7 +167,7 @@ def _validate_refs(value: Any, field: str, *, required: bool = False) -> list[st
         if not _is_opaque_kfm_ref(ref):
             errors.append(
                 f"{field} entries must be opaque kfm:// references without query, "
-                "fragment, or encoded locator material"
+                "fragment, or protected locator material"
             )
     return errors
 
@@ -257,7 +268,7 @@ def validate_candidate_feature(payload: Any) -> list[str]:
     ):
         errors.append(
             "candidate_geometry_ref must be an opaque governed kfm:// reference "
-            "without query, fragment, or encoded locator material"
+            "without query, fragment, or protected locator material"
         )
     if "candidate_geometry_ref" in payload and spatial_precision_class is None:
         errors.append(
@@ -293,6 +304,7 @@ def validate_fixture_suite() -> int:
     deny_paths = {
         FIXTURE_ROOT / "sensitive_geometry_deny.json": "inline location fields are denied",
         FIXTURE_ROOT / "location_bearing_reference_deny.json": "opaque kfm:// references",
+        FIXTURE_ROOT / "path_locator_reference_deny.json": "protected locator material",
         FIXTURE_ROOT / "unbound_catalog_candidate_deny.json": "evidence_refs are required",
         FIXTURE_ROOT / "superseded_without_correction_deny.json": "correction_refs are required",
         FIXTURE_ROOT / "malformed_candidate_id_deny.json": "candidate_feature_id must match",

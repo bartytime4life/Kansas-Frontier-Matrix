@@ -16,6 +16,7 @@ from tools.validators.archaeology.validate_candidate_feature import (
     CONFIDENCE_STATEMENT_MAX_LENGTH,
     FORBIDDEN_INLINE_LOCATION_FIELDS,
     FORBIDDEN_SITE_CLAIM_FIELDS,
+    KFM_REFERENCE_PATTERN,
     SPEC_HASH_PATTERN,
     SPATIAL_PRECISION_CLASSES,
     validate_candidate_feature,
@@ -180,7 +181,7 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
         errors = validate_candidate_feature(payload)
         self.assertIn(
             "candidate_geometry_ref must be an opaque governed kfm:// reference "
-            "without query, fragment, or encoded locator material",
+            "without query, fragment, or protected locator material",
             errors,
         )
 
@@ -195,6 +196,33 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
         errors = validate_candidate_feature(payload)
         self.assertTrue(errors)
         self.assertTrue(any("opaque kfm:// references" in error for error in errors))
+
+    def test_path_locator_reference_fixture_fails_closed(self) -> None:
+        payload = _load(FIXTURE_ROOT / "path_locator_reference_deny.json")
+        self.assertIn(
+            "candidate_geometry_ref must be an opaque governed kfm:// reference "
+            "without query, fragment, or protected locator material",
+            validate_candidate_feature(payload),
+        )
+
+    def test_protected_locator_tokens_fail_closed_in_every_reference_field(self) -> None:
+        cases = {
+            "source_refs": ["kfm://source/synthetic/Latitude/000"],
+            "evidence_refs": ["kfm://evidence/synthetic/longitude/000"],
+            "observation_refs": ["kfm://observation/synthetic/GeoHash/none"],
+            "correction_refs": ["kfm://correction/synthetic/MGRS/none"],
+            "candidate_geometry_ref": "kfm://geometry/synthetic/BBox/none",
+        }
+        for field, value in cases.items():
+            with self.subTest(field=field):
+                payload = copy.deepcopy(self.valid)
+                payload[field] = value
+                self.assertTrue(
+                    any(
+                        "protected locator material" in error
+                        for error in validate_candidate_feature(payload)
+                    )
+                )
 
     def test_non_string_reference_fails_closed_without_exception(self) -> None:
         payload = _load(FIXTURE_ROOT / "non_string_reference_deny.json")
@@ -275,10 +303,12 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
         self.assertFalse(schema["additionalProperties"])
         self.assertTrue(FORBIDDEN_INLINE_LOCATION_FIELDS.isdisjoint(properties))
         self.assertTrue(FORBIDDEN_SITE_CLAIM_FIELDS.isdisjoint(properties))
-        expected_ref_pattern = "^kfm://[A-Za-z0-9][A-Za-z0-9._~/-]*$"
+        expected_ref_pattern = KFM_REFERENCE_PATTERN.pattern
         self.assertEqual(properties["source_refs"]["items"]["type"], "string")
         self.assertEqual(properties["source_refs"]["items"]["pattern"], expected_ref_pattern)
         self.assertEqual(properties["candidate_geometry_ref"]["pattern"], expected_ref_pattern)
+        for field in ("evidence_refs", "observation_refs", "correction_refs"):
+            self.assertEqual(properties[field]["items"]["pattern"], expected_ref_pattern)
         self.assertEqual(properties["evidence_refs"]["minItems"], 1)
         self.assertEqual(properties["correction_refs"]["minItems"], 1)
         evidence_conditional = schema["allOf"][0]
