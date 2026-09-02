@@ -480,4 +480,47 @@ describe("renderer-neutral terrain transition coordination", () => {
     });
     expect(coordinator.getState()).toEqual(initial);
   });
+
+  it("cancels an executing ticket and reconciles from confirmed state", async () => {
+    const initial = resolveMapRuntimeTerrainState(terrainRequest, {
+      terrainSupported: true,
+      demSourceReady: true,
+    });
+    const coordinator = createMapRuntimeTerrainTransitionCoordinator(initial);
+    const cancelledTicket = coordinator.plan(terrainRequest, {
+      terrainSupported: false,
+      demSourceReady: true,
+    });
+    let finishCancelled: (() => void) | undefined;
+    let cancelledSignal: AbortSignal | undefined;
+    const cancelledExecution = coordinator.execute(
+      cancelledTicket,
+      (_plan, signal) =>
+        new Promise<void>((resolve) => {
+          cancelledSignal = signal;
+          finishCancelled = resolve;
+        }),
+    );
+
+    expect(coordinator.cancel(cancelledTicket)).toEqual(initial);
+    expect(cancelledSignal?.aborted).toBe(true);
+
+    const replacementTicket = coordinator.plan(
+      { ...terrainRequest, exaggeration: 2 },
+      { terrainSupported: true, demSourceReady: true },
+    );
+    await expect(
+      coordinator.execute(replacementTicket, () => undefined),
+    ).resolves.toBe(replacementTicket.plan.target);
+
+    finishCancelled?.();
+    await expect(cancelledExecution).rejects.toMatchObject({
+      code: "MAP_RUNTIME_TERRAIN_TRANSITION_CANCELLED",
+      message: "Map runtime terrain transition execution was cancelled.",
+    });
+    expect(coordinator.getState()).toBe(replacementTicket.plan.target);
+    expect(() => coordinator.cancel(cancelledTicket)).toThrow(
+      expect.objectContaining({ code: "MAP_RUNTIME_STATE_INVALID" }),
+    );
+  });
 });
