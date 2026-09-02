@@ -97,6 +97,51 @@ class AirObservationValidatorEntrypointTests(unittest.TestCase):
             validate_candidate(candidate),
         )
 
+    def test_adapter_preserves_temporal_unit_and_sensor_semantics(self) -> None:
+        temporal_candidate = self._bound_observation()
+        temporal_scope = deepcopy(temporal_candidate["temporal_scope"])
+        self.assertIsInstance(temporal_scope, dict)
+        temporal_scope["retrieved_at"] = "2000-01-01T00:00:00Z"
+        temporal_candidate["temporal_scope"] = temporal_scope
+        self.assertIn(
+            Finding("TEMPORAL_ORDER_INVALID", "$.temporal_scope"),
+            validate_candidate(temporal_candidate),
+        )
+
+        measurement_candidate = self._bound_observation()
+        measurement = deepcopy(measurement_candidate["measurement"])
+        self.assertIsInstance(measurement, dict)
+        measurement["value"] = float("nan")
+        measurement["unit"] = ""
+        measurement_candidate["measurement"] = measurement
+        measurement_findings = validate_candidate(measurement_candidate)
+        self.assertIn(
+            Finding("MEASUREMENT_VALUE_INVALID", "$.measurement.value"),
+            measurement_findings,
+        )
+        self.assertIn(
+            Finding("MEASUREMENT_UNIT_INVALID", "$.measurement.unit"),
+            measurement_findings,
+        )
+
+        low_cost_candidate = self._bound_observation()
+        low_cost_candidate["source_role"] = "low_cost_sensor"
+        low_cost_findings = validate_candidate(low_cost_candidate)
+        self.assertIn(
+            Finding(
+                "LOW_COST_SENSOR_CAVEAT_REQUIRED",
+                "$.low_cost_sensor_caveat",
+            ),
+            low_cost_findings,
+        )
+        self.assertIn(
+            Finding(
+                "CONFIDENCE_STATEMENT_REQUIRED",
+                "$.confidence_statement",
+            ),
+            low_cost_findings,
+        )
+
     def test_unresolved_observation_preserves_abstain(self) -> None:
         result = validate_file(VALID_DIR / "air_observation_unresolved.json")
         self.assertEqual(result.outcome, "ABSTAIN")
