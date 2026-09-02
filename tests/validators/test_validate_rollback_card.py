@@ -31,10 +31,10 @@ STALE_RELEASE_PACKAGE_ROLLBACK_GUIDANCE_PATTERNS = (
 )
 
 
-def tracked_markdown_paths() -> tuple[Path, ...]:
+def tracked_markdown_paths(repo_root: Path = REPO_ROOT) -> tuple[Path, ...]:
     result = subprocess.run(
-        ["git", "ls-files", "-z", "--", "*.md"],
-        cwd=REPO_ROOT,
+        ["git", "ls-files", "--stage", "-z", "--", "*.md"],
+        cwd=repo_root,
         capture_output=True,
         text=True,
         check=False,
@@ -44,11 +44,24 @@ def tracked_markdown_paths() -> tuple[Path, ...]:
             "could not enumerate repository-owned Markdown: "
             + result.stderr.strip()
         )
-    paths = tuple(
-        REPO_ROOT / relative_path
-        for relative_path in result.stdout.split("\0")
-        if relative_path
-    )
+    paths: list[Path] = []
+    for entry in result.stdout.split("\0"):
+        if not entry:
+            continue
+        metadata, separator, relative_path = entry.partition("\t")
+        metadata_parts = metadata.split()
+        if not separator or len(metadata_parts) != 3:
+            raise AssertionError(
+                "could not parse repository-owned Markdown index entry"
+            )
+        mode = metadata_parts[0]
+        if mode not in {"100644", "100755"}:
+            raise AssertionError(
+                "repository-owned Markdown must be a regular file: "
+                f"{relative_path} (index mode {mode})"
+            )
+        paths.append(repo_root / relative_path)
+    paths = tuple(paths)
     if not paths:
         raise AssertionError("repository-owned Markdown inventory is empty")
     return paths
@@ -423,6 +436,37 @@ class RollbackCardValidatorTests(unittest.TestCase):
                 encoding="utf-8",
             )
             self.assertNotIn(untracked_guidance, tracked_markdown_paths())
+
+    def test_guidance_inventory_rejects_tracked_symlink(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            repo_root = Path(directory)
+            subprocess.run(
+                ["git", "init", "--quiet"],
+                cwd=repo_root,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+            target = repo_root / "runner-local-guidance.txt"
+            target.write_text(
+                "The generic validator remains a placeholder.\n",
+                encoding="utf-8",
+            )
+            guidance = repo_root / "ROLLBACK.md"
+            guidance.symlink_to(target.name)
+            subprocess.run(
+                ["git", "add", "--", guidance.name],
+                cwd=repo_root,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+
+            with self.assertRaisesRegex(
+                AssertionError,
+                r"regular file: ROLLBACK\.md \(index mode 120000\)",
+            ):
+                tracked_markdown_paths(repo_root)
 
     def test_workflow_runs_for_repository_markdown_changes(self) -> None:
         workflow = (
