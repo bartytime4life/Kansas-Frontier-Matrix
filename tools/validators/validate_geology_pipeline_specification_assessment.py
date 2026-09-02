@@ -395,11 +395,13 @@ def validate_fixture_manifest() -> list[dict[str, object]]:
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(description=__doc__, allow_abbrev=False)
     parser.add_argument("input", nargs="?", type=Path)
     parser.add_argument("--fixtures", action="store_true")
     args = parser.parse_args(argv)
     if args.fixtures:
+        if args.input is not None:
+            parser.error("input cannot be combined with --fixtures")
         results = validate_fixture_manifest()
         for result in results:
             print(json.dumps(result, sort_keys=True, separators=(",", ":")))
