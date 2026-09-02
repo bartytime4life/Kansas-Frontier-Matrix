@@ -261,6 +261,47 @@ class PublicSafeMigrationFixtureTests(unittest.TestCase):
                     self.assertEqual(result.findings, expected)
                     candidate_reader.assert_not_called()
 
+    def test_expected_findings_are_canonical_before_candidate_read(self):
+        canonical_manifest = json.loads(
+            migration_validator.MANIFEST_PATH.read_text(encoding="utf-8")
+        )
+        exact_track_findings = canonical_manifest["cases"][2]["expected_findings"]
+        manifests = {
+            "reordered": copy.deepcopy(canonical_manifest),
+            "duplicate": copy.deepcopy(canonical_manifest),
+        }
+        manifests["reordered"]["cases"][2]["expected_findings"] = list(
+            reversed(exact_track_findings)
+        )
+        manifests["duplicate"]["cases"][2]["expected_findings"].append(
+            copy.deepcopy(exact_track_findings[0])
+        )
+        expected = (
+            Finding(
+                "fixture.expected_findings_not_canonical",
+                "/cases/2/expected_findings",
+            ),
+        )
+        with TemporaryDirectory() as temp_dir:
+            manifest_path = Path(temp_dir) / "manifest.json"
+            for name, manifest in manifests.items():
+                with self.subTest(name=name):
+                    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+                    with (
+                        patch.object(
+                            migration_validator,
+                            "MANIFEST_PATH",
+                            manifest_path,
+                        ),
+                        patch.object(
+                            migration_validator,
+                            "validate_file",
+                        ) as candidate_reader,
+                    ):
+                        result = migration_validator.validate_fixture_manifest()
+                    self.assertEqual(result.findings, expected)
+                    candidate_reader.assert_not_called()
+
     def test_degenerate_route_fails_closed(self):
         self.assertEqual(
             validate_file(DEGENERATE).findings,

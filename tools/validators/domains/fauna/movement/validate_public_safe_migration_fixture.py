@@ -400,7 +400,15 @@ def validate_fixture_manifest() -> ValidationResult:
                 expected_findings.append(Finding(item["code"], item["path"]))
         if not expected_is_valid:
             continue
-        parsed_cases.append((index, relative_path, tuple(sorted(expected_findings))))
+        canonical_expected_findings = tuple(sorted(set(expected_findings)))
+        if tuple(expected_findings) != canonical_expected_findings:
+            _add(
+                findings,
+                "fixture.expected_findings_not_canonical",
+                f"/cases/{index}/expected_findings",
+            )
+            continue
+        parsed_cases.append((index, relative_path, canonical_expected_findings))
 
     if findings:
         return ValidationResult(tuple(sorted(set(findings))))
