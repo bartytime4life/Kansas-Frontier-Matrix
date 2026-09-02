@@ -131,6 +131,40 @@ class HabitatModelRunReceiptTests(unittest.TestCase):
                 self.assertEqual("", completed.stdout)
                 self.assertIn("unrecognized arguments", completed.stderr)
 
+    def test_cli_mode_boundary_and_option_terminated_path(self) -> None:
+        manifest = validator.load_fixtures()
+        candidate = validator.materialize_case(manifest, manifest["cases"][0])
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            ordinary = root / "candidate.json"
+            ordinary.write_text(json.dumps(candidate), encoding="utf-8")
+            mixed = subprocess.run(
+                [sys.executable, str(Path(validator.__file__)), "--fixtures", str(ordinary)],
+                cwd=ROOT,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+
+            dash_prefixed = root / "--fixtures"
+            dash_prefixed.write_text(json.dumps(candidate), encoding="utf-8")
+            terminated = subprocess.run(
+                [sys.executable, str(Path(validator.__file__)), "--", dash_prefixed.name],
+                cwd=root,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+
+        self.assertEqual(2, mixed.returncode)
+        self.assertEqual("", mixed.stdout)
+        self.assertIn("path cannot be combined with --fixtures", mixed.stderr)
+        self.assertEqual(0, terminated.returncode, terminated.stderr)
+        payload = json.loads(terminated.stdout)
+        self.assertEqual("PASS", payload["outcome"])
+        self.assertEqual("NONE", payload["authority"])
+        self.assertEqual("--fixtures", payload["input"])
+
     def test_duplicate_nonfinite_symlink_and_oversize_are_errors(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

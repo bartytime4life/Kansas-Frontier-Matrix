@@ -16,7 +16,7 @@
     "docs/intake/exploratory/habitat-model-run-receipt-source-map.md": "sha256:6128a385928d422602f29bd08bdd2a0cc29c8eda0fdb08fa6d399a4678a99435",
     "fixtures/contracts/v1/domains/habitat/model_run_receipt/cases.json": "sha256:c85ff7f0b92e578d54ce260f66b1c7463b1bf492b1ac4f7760532e1951001b2e",
     "schemas/contracts/v1/domains/habitat/model_run_receipt.schema.json": "sha256:717e5e6bc6ecb8ba814fe0bc243eeff3cfac6aaed6565dcddab4b9b56b3e05b0",
-    "tests/validators/domains/habitat/test_validate_model_run_receipt.py": "sha256:a7cd23f3325117490163ed3e1335da5fc857e83742691d710050330c24d4bc1e",
+    "tests/validators/domains/habitat/test_validate_model_run_receipt.py": "sha256:4741e11334e15d863a288cb13a00d307a067bd86695ccc5ea894ffedd06cffc3",
     "tools/validators/domains/habitat/validate_model_run_receipt.py": "sha256:217b4e6529efe6d5c06629e05998b5cdc1023d28047099c9424f68ca04d831c2"
   },
   "model_identity": {
@@ -68,7 +68,7 @@
     {
       "gate": "focused-model-run-receipt-suite",
       "outcome": "PASS",
-      "reason": "Ten tests, thirty-five subtests, and twenty-four exact fixture cases passed, including deterministic failure-reason ordering, mixed-known-offset chronology, known-UTC acceptance, and unknown-local-offset denial at every governed timestamp field."
+      "reason": "Eleven tests, thirty-five subtests, and twenty-four exact fixture cases passed, including deterministic failure-reason ordering, mixed-known-offset chronology, known-UTC acceptance, and unknown-local-offset denial at every governed timestamp field."
     },
     {
       "gate": "completed-failed-source-role-and-non-authority-boundary",
