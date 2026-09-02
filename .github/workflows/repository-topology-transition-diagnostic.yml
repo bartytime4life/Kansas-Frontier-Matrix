@@ -1,4 +1,4 @@
-# Temporary diagnostic and bounded branch-only repair for repository-topology drift.
+# Temporary exact-head validation for the bounded repository-topology repair.
 # It must be removed before review handoff.
 name: repository-topology-transition-diagnostic
 
@@ -8,9 +8,12 @@ name: repository-topology-transition-diagnostic
       - fix/repository-topology-convergence-20260902
 
 permissions:
-  contents: write
+  contents: read
 
 env:
+  CI: "true"
+  COREPACK_ENABLE_STRICT: "1"
+  NODE_VERSION: "22"
   PIP_DISABLE_PIP_VERSION_CHECK: "1"
   PIP_NO_INPUT: "1"
   PYTHONDONTWRITEBYTECODE: "1"
@@ -19,15 +22,15 @@ env:
   TZ: UTC
 
 jobs:
-  diagnose:
+  validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 30
     steps:
       - name: Check out the exact branch revision
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
-          persist-credentials: true
+          persist-credentials: false
 
       - name: Set up repository Python
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
@@ -40,25 +43,50 @@ jobs:
         shell: bash
         run: python tools/ci/install_python_ci.py project-runtime
 
-      - name: Emit, classify, and stage the legal partial baseline
+      - name: Run focused topology regression tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover \
+            --start-directory tests/validators/directory_governance \
+            --pattern 'test_validate_*topology.py' \
+            --verbose 2>&1 | tee /tmp/repository_topology_unit_tests.log
+
+      - name: Verify the exact remaining topology hold
         shell: bash
         run: |
           set -euo pipefail
           python tools/validators/directory_governance/validate_repository_topology.py \
             --emit-baseline > /tmp/repository_topology_baseline_candidate.json
+          set +e
+          python tools/validators/directory_governance/validate_repository_topology.py \
+            --trusted-baseline-ref df45bbaea90c210ec485dd85562a314ed0c9ccf4 \
+            --format json > /tmp/repository_topology_exact_head_report.json
+          validator_status=$?
+          set -e
+          echo "VALIDATOR_STATUS=${validator_status}"
+          test "${validator_status}" -eq 1
           python - <<'PY'
           import base64
           import json
           import zlib
           from pathlib import Path
 
-          baseline_path = Path(
-              "tools/validators/directory_governance/repository_topology_baseline.json"
+          baseline = json.loads(
+              Path(
+                  "tools/validators/directory_governance/repository_topology_baseline.json"
+              ).read_text(encoding="utf-8")
           )
-          candidate_path = Path("/tmp/repository_topology_baseline_candidate.json")
-          partial_path = Path("/tmp/repository_topology_partial_baseline.json")
-          current = json.loads(baseline_path.read_text(encoding="utf-8"))
-          candidate = json.loads(candidate_path.read_text(encoding="utf-8"))
+          candidate = json.loads(
+              Path("/tmp/repository_topology_baseline_candidate.json").read_text(
+                  encoding="utf-8"
+              )
+          )
+          report = json.loads(
+              Path("/tmp/repository_topology_exact_head_report.json").read_text(
+                  encoding="utf-8"
+              )
+          )
 
           def index(payload):
               return {
@@ -72,112 +100,35 @@ jobs:
               ).decode("utf-8")
               return set() if decoded == "" else set(decoded.split("\0"))
 
-          old = index(current)
+          old = index(baseline)
           new = index(candidate)
           changed = {
               identity
               for identity in old.keys() & new.keys()
               if old[identity]["fingerprint"] != new[identity]["fingerprint"]
           }
-          removed_identities = set(old) - set(new)
-          added_identities = set(new) - set(old)
-          expected = {
-              ("KFM-TOPO-004", "catalog/"),
-              ("KFM-TOPO-009", "scaffold-only-leaf-directories"),
-              ("KFM-TOPO-016", "doc-id:kfm://doc/NEEDS-VERIFICATION"),
+          assert changed == {("KFM-TOPO-004", "catalog/")}, changed
+          assert not (set(old) - set(new)), set(old) - set(new)
+          assert not (set(new) - set(old)), set(new) - set(old)
+          before = members(old[("KFM-TOPO-004", "catalog/")])
+          after = members(new[("KFM-TOPO-004", "catalog/")])
+          assert before - after == {
+              "catalog/domain/agriculture/README.md@bf1a333573c6d068fbb0b695356346003842aceb"
           }
-          strict_shrink_identities = {
-              ("KFM-TOPO-009", "scaffold-only-leaf-directories"),
-              ("KFM-TOPO-016", "doc-id:kfm://doc/NEEDS-VERIFICATION"),
+          assert after - before == {
+              "catalog/domain/agriculture/README.md@4be1711bfa011636ac1c5cd13e7c98e5002ff9c0"
           }
-          expected_classifications = {
-              "KFM-TOPO-004 / catalog/": "MIXED_CHANGE",
-              "KFM-TOPO-009 / scaffold-only-leaf-directories": "STRICT_SHRINKAGE",
-              "KFM-TOPO-016 / doc-id:kfm://doc/NEEDS-VERIFICATION": "STRICT_SHRINKAGE",
-          }
-
-          print("CHANGED_IDENTITIES=" + json.dumps(sorted(changed)))
-          print("REMOVED_IDENTITIES=" + json.dumps(sorted(removed_identities)))
-          print("ADDED_IDENTITIES=" + json.dumps(sorted(added_identities)))
-          assert changed == expected, (changed, expected)
-          assert not removed_identities, removed_identities
-          assert not added_identities, added_identities
-
-          classifications = {}
-          for identity in sorted(expected):
-              before = members(old[identity])
-              after = members(new[identity])
-              removed = sorted(before - after)
-              added = sorted(after - before)
-              if after < before:
-                  classification = "STRICT_SHRINKAGE"
-              elif before < after:
-                  classification = "GROWTH"
-              else:
-                  classification = "MIXED_CHANGE"
-              classifications[" / ".join(identity)] = classification
-              print("BEGIN_TRANSITION " + json.dumps(identity))
-              print("CLASSIFICATION=" + classification)
-              print("OLD_FINGERPRINT=" + old[identity]["fingerprint"])
-              print("NEW_FINGERPRINT=" + new[identity]["fingerprint"])
-              print("OLD_EVIDENCE_SHA256=" + old[identity]["evidence_sha256"])
-              print("NEW_EVIDENCE_SHA256=" + new[identity]["evidence_sha256"])
-              print("REMOVED_MEMBERS=" + json.dumps(removed))
-              print("ADDED_MEMBERS=" + json.dumps(added))
-              print("END_TRANSITION")
-          assert classifications == expected_classifications, classifications
-
-          partial = dict(current)
-          partial_entries = []
-          for identity, entry in old.items():
-              partial_entries.append(
-                  new[identity] if identity in strict_shrink_identities else entry
-              )
-          partial_entries.sort(key=lambda entry: entry["fingerprint"])
-          partial["entries"] = partial_entries
-          assert len(partial_entries) == len(current["entries"])
-          assert all(
-              partial[field] == current[field]
-              for field in current
-              if field != "entries"
-          )
-          partial_path.write_text(
-              json.dumps(partial, indent=2, sort_keys=True) + "\n",
-              encoding="utf-8",
-          )
-          print("PARTIAL_BASELINE_ENTRIES=" + str(len(partial_entries)))
-          print(
-              "BOUNDARY: only KFM-TOPO-009 and KFM-TOPO-016 strict shrinkages "
-              "are staged; the frozen catalog mutation remains unresolved."
-          )
-          PY
-
-          set +e
-          python tools/validators/directory_governance/validate_repository_topology.py \
-            --baseline /tmp/repository_topology_partial_baseline.json \
-            --trusted-baseline-ref df45bbaea90c210ec485dd85562a314ed0c9ccf4 \
-            --format json > /tmp/repository_topology_partial_report.json
-          partial_status=$?
-          set -e
-          echo "PARTIAL_VALIDATOR_STATUS=${partial_status}"
-          test "${partial_status}" -eq 1
-          python - <<'PY'
-          import json
-          from pathlib import Path
-
-          report = json.loads(
-              Path("/tmp/repository_topology_partial_report.json").read_text(
-                  encoding="utf-8"
-              )
-          )
           assert report["outcome"] == "FAIL_INVARIANT", report["outcome"]
-          assert report["counts"]["fail_invariant"] == 0, report["counts"]
-          assert report["counts"]["fail_new_drift"] == 1, report["counts"]
-          assert report["counts"]["baselined_warning"] == 126, report["counts"]
-          assert report["baseline"]["applicable_count"] == 127, report["baseline"]
+          assert report["counts"] == {
+              "baselined_warning": 126,
+              "fail_invariant": 0,
+              "fail_new_drift": 1,
+              "finding": 127,
+          }, report["counts"]
+          assert report["baseline"]["applicable_count"] == 127
           assert report["baseline"]["stale_fingerprints"] == [
               "sha256:521388927153c91a67ca8cead55af9d688a6064517d109aa556cffca91505006"
-          ], report["baseline"]
+          ]
           introduced = [
               finding
               for finding in report["findings"]
@@ -193,32 +144,59 @@ jobs:
               }
           ], introduced
           print(
-              "CONFIRMED: the legal partial baseline is a trusted strict shrink "
-              "and leaves exactly one frozen catalog mutation hold."
+              "CONFIRMED: exact head has no uppercase-path growth, has accepted "
+              "strict shrinkage for KFM-TOPO-009 and KFM-TOPO-016, and retains "
+              "only the frozen catalog README replacement as an explicit hold."
           )
           PY
 
-      - name: Upload the bounded transition evidence
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          name: repository-topology-transition-evidence
-          path: |
-            /tmp/repository_topology_baseline_candidate.json
-            /tmp/repository_topology_partial_baseline.json
-            /tmp/repository_topology_partial_report.json
-          if-no-files-found: error
-          retention-days: 1
+          node-version: ${{ env.NODE_VERSION }}
+          package-manager-cache: false
 
-      - name: Commit only the legal strict-shrink baseline
+      - name: Install locked workspace dependencies
         shell: bash
         run: |
           set -euo pipefail
-          baseline=tools/validators/directory_governance/repository_topology_baseline.json
-          cp /tmp/repository_topology_partial_baseline.json "${baseline}"
-          test "$(git diff --name-only)" = "${baseline}"
+          corepack enable
+          pnpm install --frozen-lockfile
+
+      - name: Run Explorer Web unit tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          pnpm --filter explorer-web test:unit 2>&1 | tee /tmp/explorer_web_unit_tests.log
+
+      - name: Build Explorer Web
+        shell: bash
+        run: |
+          set -euo pipefail
+          pnpm --filter explorer-web build 2>&1 | tee /tmp/explorer_web_build.log
+
+      - name: Verify the portable adapter path and clean tracked tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f apps/explorer-web/src/adapters/map-runtime-evidence-adapter.ts
+          test ! -e apps/explorer-web/src/adapters/MapRuntimeEvidenceAdapter.ts
+          if git grep -n 'MapRuntimeEvidenceAdapter'; then
+            echo "legacy uppercase adapter reference remains" >&2
+            exit 1
+          fi
           git diff --check
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add "${baseline}"
-          git commit -m "chore(validation): shrink topology baseline"
-          git push origin "HEAD:${GITHUB_REF_NAME}"
+          test -z "$(git status --porcelain --untracked-files=no)"
+
+      - name: Upload exact-head validation evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: repository-topology-exact-head-validation
+          path: |
+            /tmp/repository_topology_baseline_candidate.json
+            /tmp/repository_topology_exact_head_report.json
+            /tmp/repository_topology_unit_tests.log
+            /tmp/explorer_web_unit_tests.log
+            /tmp/explorer_web_build.log
+          if-no-files-found: error
+          retention-days: 1
