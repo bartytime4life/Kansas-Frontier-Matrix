@@ -27,6 +27,20 @@ export type PublicMapCaseUrlTransition = Readonly<{
 }>;
 
 /**
+ * A public Map URL request has one truthful fixture consumer only when exactly
+ * one mounted control carries the requested synthetic case identifier.
+ * Responsive or repeated mounts must not turn DOM order into ownership.
+ */
+export function hasSinglePublicMapCaseConsumer(
+  mountedCaseIds: readonly (string | undefined)[],
+  requestedCaseId: string,
+): boolean {
+  return (
+    mountedCaseIds.filter((caseId) => caseId === requestedCaseId).length === 1
+  );
+}
+
+/**
  * Reserve one finite retry for an absent or disabled public map-selection
  * control.
  * A different URL receives a fresh budget; exhausting the budget fails closed

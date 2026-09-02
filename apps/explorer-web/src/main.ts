@@ -16,6 +16,7 @@ import {
 } from "./site/workspace-navigation";
 import {
   PUBLIC_MAP_CASE_DEEP_LINK_RETRY_LIMIT,
+  hasSinglePublicMapCaseConsumer,
   isPublicMapCaseRetryGenerationCurrent,
   resolvePublicMapCaseManualSelectionTransition,
   resolvePublicMapCaseRetryPlan,
@@ -230,10 +231,20 @@ const syncWorkspaceNavigation = (): void => {
   }
   const mapCaseId = mapTransition.mapCaseIdToSelect;
   if (mapCaseId !== null) {
-    const mapCaseButton = root.querySelector<HTMLButtonElement>(
-      `button[data-map-evidence-case="${mapCaseId}"]`,
+    const mapCaseButtons = Array.from(
+      root.querySelectorAll<HTMLButtonElement>(
+        `button[data-map-evidence-case="${mapCaseId}"]`,
+      ),
     );
-    if (mapCaseButton === null || mapCaseButton.disabled) {
+    const mapConsumerIsUnique = hasSinglePublicMapCaseConsumer(
+      mapCaseButtons.map((button) => button.dataset.mapEvidenceCase),
+      mapCaseId,
+    );
+    const mapCaseButton =
+      mapConsumerIsUnique && mapCaseButtons.length === 1
+        ? mapCaseButtons[0]
+        : undefined;
+    if (mapCaseButton === undefined || mapCaseButton.disabled) {
       scheduleMapDeepLinkRetry(safeUrl);
     } else {
       const priorFocus =

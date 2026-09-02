@@ -8,6 +8,7 @@ import {
 } from "../src/site/workspace-context";
 import {
   PUBLIC_MAP_CASE_DEEP_LINK_RETRY_LIMIT,
+  hasSinglePublicMapCaseConsumer,
   isPublicMapCaseRetryGenerationCurrent,
   resolvePublicMapCaseManualSelectionTransition,
   resolvePublicMapCaseRetryPlan,
@@ -53,6 +54,22 @@ function missingMapUrl(): URL {
 }
 
 describe("Explorer manual map-selection deep-link release", () => {
+  it("fails closed when the requested Map control is absent or duplicated", () => {
+    expect(
+      hasSinglePublicMapCaseConsumer(
+        ["supported", "missing", "restricted"],
+        "missing",
+      ),
+    ).toBe(true);
+    expect(hasSinglePublicMapCaseConsumer([], "missing")).toBe(false);
+    expect(
+      hasSinglePublicMapCaseConsumer(["missing", "missing"], "missing"),
+    ).toBe(false);
+    expect(
+      hasSinglePublicMapCaseConsumer([undefined, "supported"], "missing"),
+    ).toBe(false);
+  });
+
   it("selects a newly URL-owned case without resetting the fixture", () => {
     expect(resolvePublicMapCaseUrlTransition(missingMapUrl(), null)).toEqual({
       activeDeepLinkMapCaseId: null,
@@ -243,8 +260,10 @@ describe("Explorer manual map-selection deep-link release", () => {
     expect(mainSource).toContain("resolvePublicMapCaseUrlConsumerCommit");
     expect(mainSource).toContain("caseId,\n    button.disabled,");
     expect(mainSource).toContain(
-      "mapCaseButton === null || mapCaseButton.disabled",
+      "mapCaseButton === undefined || mapCaseButton.disabled",
     );
+    expect(mainSource).toContain("hasSinglePublicMapCaseConsumer(");
+    expect(mainSource).toContain("root.querySelectorAll<HTMLButtonElement>(");
     expect(mainSource).toContain("scheduleMapDeepLinkRetry(safeUrl)");
     expect(mainSource).toContain("window.location.href !== retryPlan.urlHref");
     const mapRetryScheduleIndex = mainSource.indexOf(
