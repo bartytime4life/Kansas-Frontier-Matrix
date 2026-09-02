@@ -107,8 +107,13 @@
         "random_seed": null
       },
       "outputs": [],
-      "failure_reason_codes": ["INPUT_VALIDATION_FAILED"],
-      "evidence_refs": ["kfm://evidence/habitat/patch-candidate"],
+      "failure_reason_codes": [
+        "INPUT_VALIDATION_FAILED",
+        "MODEL_EXECUTION_FAILED"
+      ],
+      "evidence_refs": [
+        "kfm://evidence/habitat/patch-candidate"
+      ],
       "governance": {
         "execution_mode": "FIXTURE_ONLY",
         "network_accessed": false,
@@ -148,9 +153,18 @@
       "case_id": "known-zero-offset-pass",
       "base": "completed",
       "mutations": [
-        { "path": "/started_at", "value": "2026-08-10T12:00:00+00:00" },
-        { "path": "/completed_at", "value": "2026-08-10T12:05:00+00:00" },
-        { "path": "/recorded_at", "value": "2026-08-10T12:06:00+00:00" }
+        {
+          "path": "/started_at",
+          "value": "2026-08-10T12:00:00+00:00"
+        },
+        {
+          "path": "/completed_at",
+          "value": "2026-08-10T12:05:00+00:00"
+        },
+        {
+          "path": "/recorded_at",
+          "value": "2026-08-10T12:06:00+00:00"
+        }
       ],
       "expected_outcome": "PASS",
       "expected_findings": []
@@ -159,9 +173,18 @@
       "case_id": "mixed-known-offset-order-pass",
       "base": "completed",
       "mutations": [
-        { "path": "/started_at", "value": "2026-08-10T07:00:00-05:00" },
-        { "path": "/completed_at", "value": "2026-08-10T14:05:00+02:00" },
-        { "path": "/recorded_at", "value": "2026-08-10T12:06:00Z" }
+        {
+          "path": "/started_at",
+          "value": "2026-08-10T07:00:00-05:00"
+        },
+        {
+          "path": "/completed_at",
+          "value": "2026-08-10T14:05:00+02:00"
+        },
+        {
+          "path": "/recorded_at",
+          "value": "2026-08-10T12:06:00Z"
+        }
       ],
       "expected_outcome": "PASS",
       "expected_findings": []
@@ -171,11 +194,17 @@
       "base": "completed",
       "mutations": [],
       "assertion_mutations": [
-        { "path": "/spec_hash", "value": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff" }
+        {
+          "path": "/spec_hash",
+          "value": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+        }
       ],
       "expected_outcome": "DENY",
       "expected_findings": [
-        { "code": "MODEL_RUN_SPEC_HASH_MISMATCH", "path": "/spec_hash" }
+        {
+          "code": "MODEL_RUN_SPEC_HASH_MISMATCH",
+          "path": "/spec_hash"
+        }
       ]
     },
     {
@@ -183,11 +212,17 @@
       "base": "completed",
       "mutations": [],
       "assertion_mutations": [
-        { "path": "/receipt_id", "value": "kfm:model-run-receipt:habitat:ffffffffffffffffffffffff" }
+        {
+          "path": "/receipt_id",
+          "value": "kfm:model-run-receipt:habitat:ffffffffffffffffffffffff"
+        }
       ],
       "expected_outcome": "DENY",
       "expected_findings": [
-        { "code": "MODEL_RUN_RECEIPT_ID_MISMATCH", "path": "/receipt_id" }
+        {
+          "code": "MODEL_RUN_RECEIPT_ID_MISMATCH",
+          "path": "/receipt_id"
+        }
       ]
     },
     {
@@ -195,125 +230,205 @@
       "base": "completed",
       "mutations": [],
       "assertion_mutations": [
-        { "path": "/inputs_digest", "value": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee" }
+        {
+          "path": "/inputs_digest",
+          "value": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+        }
       ],
       "expected_outcome": "DENY",
       "expected_findings": [
-        { "code": "MODEL_RUN_INPUTS_DIGEST_MISMATCH", "path": "/inputs_digest" },
-        { "code": "MODEL_RUN_RECEIPT_ID_MISMATCH", "path": "/receipt_id" },
-        { "code": "MODEL_RUN_SPEC_HASH_MISMATCH", "path": "/spec_hash" }
+        {
+          "code": "MODEL_RUN_INPUTS_DIGEST_MISMATCH",
+          "path": "/inputs_digest"
+        },
+        {
+          "code": "MODEL_RUN_RECEIPT_ID_MISMATCH",
+          "path": "/receipt_id"
+        },
+        {
+          "code": "MODEL_RUN_SPEC_HASH_MISMATCH",
+          "path": "/spec_hash"
+        }
       ]
     },
     {
       "case_id": "modeled-output-role-required",
       "base": "completed",
       "mutations": [
-        { "path": "/outputs/0/source_role", "value": "OBSERVED" }
+        {
+          "path": "/outputs/0/source_role",
+          "value": "OBSERVED"
+        }
       ],
       "expected_outcome": "DENY",
       "expected_findings": [
-        { "code": "MODEL_RUN_SCHEMA_INVALID", "path": "/outputs/0/source_role" }
+        {
+          "code": "MODEL_RUN_SCHEMA_INVALID",
+          "path": "/outputs/0/source_role"
+        }
       ]
     },
     {
       "case_id": "time-order-invalid",
       "base": "completed",
       "mutations": [
-        { "path": "/completed_at", "value": "2026-08-10T11:59:00Z" }
+        {
+          "path": "/completed_at",
+          "value": "2026-08-10T11:59:00Z"
+        }
       ],
       "expected_outcome": "DENY",
       "expected_findings": [
-        { "code": "MODEL_RUN_TIME_ORDER_INVALID", "path": "/completed_at" }
+        {
+          "code": "MODEL_RUN_TIME_ORDER_INVALID",
+          "path": "/completed_at"
+        }
       ]
     },
     {
       "case_id": "unknown-local-offset-denied",
       "base": "completed",
       "mutations": [
-        { "path": "/recorded_at", "value": "2026-08-10T12:06:00-00:00" }
+        {
+          "path": "/recorded_at",
+          "value": "2026-08-10T12:06:00-00:00"
+        }
       ],
       "expected_outcome": "DENY",
       "expected_findings": [
-        { "code": "MODEL_RUN_SCHEMA_INVALID", "path": "/recorded_at" }
+        {
+          "code": "MODEL_RUN_SCHEMA_INVALID",
+          "path": "/recorded_at"
+        }
       ]
     },
     {
       "case_id": "unknown-started-offset-denied",
       "base": "completed",
       "mutations": [
-        { "path": "/started_at", "value": "2026-08-10T12:00:00-00:00" }
+        {
+          "path": "/started_at",
+          "value": "2026-08-10T12:00:00-00:00"
+        }
       ],
       "expected_outcome": "DENY",
       "expected_findings": [
-        { "code": "MODEL_RUN_SCHEMA_INVALID", "path": "/started_at" }
+        {
+          "code": "MODEL_RUN_SCHEMA_INVALID",
+          "path": "/started_at"
+        }
       ]
     },
     {
       "case_id": "unknown-completed-offset-denied",
       "base": "completed",
       "mutations": [
-        { "path": "/completed_at", "value": "2026-08-10T12:05:00-00:00" }
+        {
+          "path": "/completed_at",
+          "value": "2026-08-10T12:05:00-00:00"
+        }
       ],
       "expected_outcome": "DENY",
       "expected_findings": [
-        { "code": "MODEL_RUN_SCHEMA_INVALID", "path": "/completed_at" }
+        {
+          "code": "MODEL_RUN_SCHEMA_INVALID",
+          "path": "/completed_at"
+        }
       ]
     },
     {
       "case_id": "duplicate-input-ref",
       "base": "completed",
       "mutations": [
-        { "path": "/inputs/1/input_ref", "value": "kfm://input/habitat/baseline-observation" }
+        {
+          "path": "/inputs/1/input_ref",
+          "value": "kfm://input/habitat/baseline-observation"
+        }
       ],
       "expected_outcome": "DENY",
       "expected_findings": [
-        { "code": "MODEL_RUN_INPUT_REF_DUPLICATE", "path": "/inputs" }
+        {
+          "code": "MODEL_RUN_INPUT_REF_DUPLICATE",
+          "path": "/inputs"
+        }
       ]
     },
     {
       "case_id": "input-order-invalid",
       "base": "completed",
       "mutations": [
-        { "path": "/inputs/0/input_ref", "value": "kfm://input/habitat/z-last" },
-        { "path": "/inputs/1/input_ref", "value": "kfm://input/habitat/a-first" }
+        {
+          "path": "/inputs/0/input_ref",
+          "value": "kfm://input/habitat/z-last"
+        },
+        {
+          "path": "/inputs/1/input_ref",
+          "value": "kfm://input/habitat/a-first"
+        }
       ],
       "expected_outcome": "DENY",
       "expected_findings": [
-        { "code": "MODEL_RUN_INPUT_ORDER_INVALID", "path": "/inputs" }
+        {
+          "code": "MODEL_RUN_INPUT_ORDER_INVALID",
+          "path": "/inputs"
+        }
       ]
     },
     {
       "case_id": "evidence-order-invalid",
       "base": "completed",
       "mutations": [
-        { "path": "/evidence_refs/0", "value": "kfm://evidence/habitat/z-last" },
-        { "path": "/evidence_refs/1", "value": "kfm://evidence/habitat/a-first" }
+        {
+          "path": "/evidence_refs/0",
+          "value": "kfm://evidence/habitat/z-last"
+        },
+        {
+          "path": "/evidence_refs/1",
+          "value": "kfm://evidence/habitat/a-first"
+        }
       ],
       "expected_outcome": "DENY",
       "expected_findings": [
-        { "code": "MODEL_RUN_EVIDENCE_ORDER_INVALID", "path": "/evidence_refs" }
+        {
+          "code": "MODEL_RUN_EVIDENCE_ORDER_INVALID",
+          "path": "/evidence_refs"
+        }
       ]
     },
     {
       "case_id": "completed-output-required",
       "base": "completed",
       "mutations": [
-        { "path": "/outputs", "value": [] }
+        {
+          "path": "/outputs",
+          "value": []
+        }
       ],
       "expected_outcome": "DENY",
       "expected_findings": [
-        { "code": "MODEL_RUN_COMPLETED_OUTPUT_REQUIRED", "path": "/outputs" }
+        {
+          "code": "MODEL_RUN_COMPLETED_OUTPUT_REQUIRED",
+          "path": "/outputs"
+        }
       ]
     },
     {
       "case_id": "completed-failure-reason-forbidden",
       "base": "completed",
       "mutations": [
-        { "path": "/failure_reason_codes", "value": ["MODEL_EXECUTION_FAILED"] }
+        {
+          "path": "/failure_reason_codes",
+          "value": [
+            "MODEL_EXECUTION_FAILED"
+          ]
+        }
       ],
       "expected_outcome": "DENY",
       "expected_findings": [
-        { "code": "MODEL_RUN_COMPLETED_FAILURE_REASON_FORBIDDEN", "path": "/failure_reason_codes" }
+        {
+          "code": "MODEL_RUN_COMPLETED_FAILURE_REASON_FORBIDDEN",
+          "path": "/failure_reason_codes"
+        }
       ]
     },
     {
@@ -332,22 +447,42 @@
               "validation_report_ref": "kfm://validation/habitat/failed-run"
             }
           ]
+        },
+        {
+          "path": "/failure_reason_codes",
+          "value": [
+            "RESOURCE_LIMIT_REACHED",
+            "MODEL_EXECUTION_FAILED"
+          ]
         }
       ],
       "expected_outcome": "DENY",
       "expected_findings": [
-        { "code": "MODEL_RUN_FAILED_OUTPUT_FORBIDDEN", "path": "/outputs" }
+        {
+          "code": "MODEL_RUN_FAILED_OUTPUT_FORBIDDEN",
+          "path": "/outputs"
+        },
+        {
+          "code": "MODEL_RUN_FAILURE_REASON_ORDER_INVALID",
+          "path": "/failure_reason_codes"
+        }
       ]
     },
     {
       "case_id": "failed-reason-required",
       "base": "failed",
       "mutations": [
-        { "path": "/failure_reason_codes", "value": [] }
+        {
+          "path": "/failure_reason_codes",
+          "value": []
+        }
       ],
       "expected_outcome": "DENY",
       "expected_findings": [
-        { "code": "MODEL_RUN_FAILED_REASON_REQUIRED", "path": "/failure_reason_codes" }
+        {
+          "code": "MODEL_RUN_FAILED_REASON_REQUIRED",
+          "path": "/failure_reason_codes"
+        }
       ]
     },
     {
@@ -368,40 +503,64 @@
       ],
       "expected_outcome": "DENY",
       "expected_findings": [
-        { "code": "MODEL_RUN_LIMITATIONS_MISMATCH", "path": "/limitations" }
+        {
+          "code": "MODEL_RUN_LIMITATIONS_MISMATCH",
+          "path": "/limitations"
+        }
       ]
     },
     {
       "case_id": "publication-authority-denied",
       "base": "completed",
       "mutations": [
-        { "path": "/governance/publication_authorized", "value": true }
+        {
+          "path": "/governance/publication_authorized",
+          "value": true
+        }
       ],
       "expected_outcome": "DENY",
       "expected_findings": [
-        { "code": "MODEL_RUN_SCHEMA_INVALID", "path": "/governance/publication_authorized" }
+        {
+          "code": "MODEL_RUN_SCHEMA_INVALID",
+          "path": "/governance/publication_authorized"
+        }
       ]
     },
     {
       "case_id": "validation-ref-required",
       "base": "completed",
       "mutations": [
-        { "path": "/outputs/0/validation_report_ref", "value": null }
+        {
+          "path": "/outputs/0/validation_report_ref",
+          "value": null
+        }
       ],
       "expected_outcome": "DENY",
       "expected_findings": [
-        { "code": "MODEL_RUN_SCHEMA_INVALID", "path": "/outputs/0/validation_report_ref" }
+        {
+          "code": "MODEL_RUN_SCHEMA_INVALID",
+          "path": "/outputs/0/validation_report_ref"
+        }
       ]
     },
     {
       "case_id": "coordinate-field-denied",
       "base": "completed",
       "mutations": [
-        { "path": "/outputs/0/coordinates", "value": [-98.0, 38.5] }
+        {
+          "path": "/outputs/0/coordinates",
+          "value": [
+            -98,
+            38.5
+          ]
+        }
       ],
       "expected_outcome": "DENY",
       "expected_findings": [
-        { "code": "MODEL_RUN_SCHEMA_INVALID", "path": "/outputs/0" }
+        {
+          "code": "MODEL_RUN_SCHEMA_INVALID",
+          "path": "/outputs/0"
+        }
       ]
     }
   ]
