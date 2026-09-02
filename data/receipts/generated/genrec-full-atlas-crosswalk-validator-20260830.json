@@ -27,12 +27,12 @@
     ".github/workflows/soil-hydrology-public-safe-context.yml": "sha256:4914255dc12681f3ee2ab1c6ec21cf3ec1c2a31993c73ac702faf5b95f617efa",
     ".github/workflows/soil-agriculture-public-safe-context.yml": "sha256:02a454bf4dc37fca7dc009e0a7336abdeebf7c77fcf97bc2628622fe8266e280",
     ".github/workflows/fauna-habitat-public-safe-assignment.yml": "sha256:ae04722885e1d94418e2c6ab0d6a9174cb51b88fce4b17d1dd259a55176505f3",
-    "contracts/joins/cross_lane_join_assessment.md": "sha256:4a249674e1edd93a0d5a050b88e17094a48be8eddce9281f8e48516e6f12f895",
+    "contracts/joins/cross_lane_join_assessment.md": "sha256:a2bcc522676ceb55c0e3071e43dad04940c046e924afee381f4d9eeafaa1ccb0",
     "docs/intake/exploratory/full-atlas-crosswalk-validator-source-map.md": "sha256:34299c5ba17f3d451d09e2d9a2f69514711a0c8ed1303f88233c56b6ded45962",
     "fixtures/contracts/v1/joins/cross_lane_join_assessment/cases.json": "sha256:7372e0d9900bc3f1d17861b3bdf0afa2570fe8436edcbd972c485257605c7b94",
     "schemas/contracts/v1/joins/cross_lane_join_assessment.schema.json": "sha256:1ad7520fc7c07514d7887e73db8ebb9ebde4df1f3f26a4f6013f5fba239e1bb7",
     "tests/joins/README.md": "sha256:55dc936fc55a19de05f0f5f15804433b5f617027292e666385af59cd31c06723",
-    "tests/joins/test_cross_lane_domain_alias_dependency_guard.py": "sha256:94012f622650d0ad2e86ab034012da08149bd76b9a7eb016c089cf1f7a5d8bc8",
+    "tests/joins/test_cross_lane_domain_alias_dependency_guard.py": "sha256:5b1d653cdc1a9766ac9093a43905c97384ea2f84e92620419187f3cb33b6ce4d",
     "tests/joins/test_cross_lane_domain_alias_guard.py": "sha256:bd8bbc0fdfefe7e264f3b11dadd4c753ee5e225c20bcc7b5d4dad97fb6f2ff02",
     "tests/joins/test_cross_lane_scope_precedence.py": "sha256:7f5da617cb65996c876093f43b1201bc27add2508a3846fbedd8bca956acf1ce",
     "tests/joins/test_cross_lane_source_role_schema_guard.py": "sha256:9c6bd884f0c51fd7f22d517c7b4ac5a2d866edef80b36a6cf5f1ca7a8f1ebac5",
@@ -40,7 +40,7 @@
     "tests/joins/test_cross_lane_temporal_boundary_guard.py": "sha256:8a3f943cb7127682dae40c9ee9f6086aefc13efc686614e7bba8ff81b6497e6e",
     "tests/joins/test_cross_lane_workflow_propagation.py": "sha256:8db63dc7c31eec11497dcc8bb8afcc5ffd80a79b37eb38e54a66dc5ac45e7587",
     "tests/joins/test_join_candidates.py": "sha256:8f1203d844342fcd011a505e64d857f06b4e9f49d5c9649f92d90928063fd06c",
-    "tools/joins/join_candidates.py": "sha256:fa821054d5fe51b7769edbaed6a778907f2d32f3fae684296e380a5fc718301c",
+    "tools/joins/join_candidates.py": "sha256:daa88add4ccaf752ff078a727350ac1100126b5191cb7a9ee42f2e55bce9bc6d",
     "contracts/joins/README.md": "sha256:0a91c1c699cbaa8cadee09dea378861cedc9c6fdb9aab6ba25655899d6abb821"
   },
   "model_identity": {
@@ -102,12 +102,12 @@
     {
       "gate": "current-main-regression-reproduction",
       "outcome": "PASS",
-      "reason": "Deterministic baseline analysis showed an unresolved alias collision hid missing EvidenceRefs and restricted generalized sensitivity behind DOMAIN_ALIAS_REVIEW_REQUIRED, suppressing their mandatory trust routes."
+      "reason": "Deterministic synthetic analysis showed that structurally parseable aliases with unknown or chained targets were treated as available, allowing a true alias relationship to evade conservative review."
     },
     {
       "gate": "focused-pytest-and-fixture-matrix",
       "outcome": "SKIPPED",
-      "reason": "The prior 58-test focused suite passed. Two deterministic synthetic negatives now assert that missing evidence retains EVIDENCE_REF_MISSING and restricted generalized context retains SENSITIVITY_REVIEW_REQUIRED before alias review; hosted execution of the new exact head is pending."
+      "reason": "The prior exact head passed 20/20 fixtures and 60 focused tests. New positive and negative cases bind registered alias targets and require unknown or chained targets to fail closed; hosted execution of the new exact head is pending."
     },
     {
       "gate": "artifact-hash-replay",
@@ -122,7 +122,7 @@
     {
       "gate": "hosted-exact-head-ci",
       "outcome": "SKIPPED",
-      "reason": "The prior exact head passed 20/20 generic fixtures, 58 focused tests, and all three pair workflows. Hosted validation of the evidence/sensitivity precedence increment is pending."
+      "reason": "The prior exact head passed the generic and all three pair workflows. Hosted validation of the alias-target integrity increment is pending."
     },
     {
       "gate": "human-review",
@@ -168,5 +168,5 @@
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Successor provenance receipt for the CrossLaneJoinAssessment review unit. It binds the generic join contract, current pair-profile inventory, all seven dedicated synthetic regression files, the self-checking nine-module join-test inventory, and the generic plus three pair-specific workflows. Generic join validation triggers on every receipt-bound artifact. Disposition precedence is fail-closed: for distinct raw domains, dependency failures remain ERROR and living-person or blocked sensitive-geometry conditions remain DENY before unresolved aliases can route to review; same-domain scope routing remains first because the generic helper does not own domain-local work. Deterministic positive and synthetic-negative proof prevents alias review from downgrading stronger outcomes or hiding missing-evidence and restricted-sensitivity review obligations. Fresh overlap reconciliation found zero open pull requests and remains explicitly scoped to the current four-path increment, all 20 cumulative branch paths, and all 19 receipt-bound artifacts so partial claims fail closed. Closed PRs #4175 and #4190 remain preserved and unmerged; this branch is refreshed non-destructively onto current main before any replacement draft is opened. Current-main bytes remain unchanged outside the bounded four-path seam. The historical 20260809 receipt remains immutable. This receipt creates no source, evidence, policy, review, proof, promotion, release, publication, or public-use authority."
+  "notes": "Successor provenance receipt for the CrossLaneJoinAssessment review unit. It binds the generic join contract, current pair-profile inventory, all seven dedicated synthetic regression files, the self-checking nine-module join-test inventory, and the generic plus three pair-specific workflows. Generic join validation triggers on every receipt-bound artifact. Disposition precedence is fail-closed: for distinct raw domains, dependency failures remain ERROR and living-person or blocked sensitive-geometry conditions remain DENY before unresolved aliases can route to review; same-domain scope routing remains first because the generic helper does not own domain-local work. Deterministic positive and synthetic-negative proof prevents alias review from downgrading stronger outcomes or hiding missing-evidence and restricted-sensitivity review obligations. Alias projection integrity also requires exact registered targets and rejects self-reference, canonical-lane keys, and alias chains so a parseable but incoherent projection cannot fail open. Fresh overlap reconciliation found zero open pull requests and remains explicitly scoped to the current four-path increment, all 20 cumulative branch paths, and all 19 receipt-bound artifacts so partial claims fail closed. Closed PRs #4175 and #4190 remain preserved and unmerged; this branch is refreshed non-destructively onto current main before any replacement draft is opened. Current-main bytes remain unchanged outside the bounded four-path seam. The historical 20260809 receipt remains immutable. This receipt creates no source, evidence, policy, review, proof, promotion, release, publication, or public-use authority."
 }

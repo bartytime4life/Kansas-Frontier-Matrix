@@ -216,12 +216,38 @@ def _unresolved_domain_aliases(path: Path | None = None) -> Mapping[str, str]:
         )
     except (OSError, UnicodeError, yaml.YAMLError) as exc:
         raise ValueError("domain lane register unavailable") from exc
-    aliases = _mapping(value).get("unresolved_aliases")
-    if not isinstance(aliases, Mapping) or not all(
-        isinstance(key, str) and isinstance(target, str)
-        for key, target in aliases.items()
-    ):
+    document = _mapping(value)
+    aliases = document.get("unresolved_aliases")
+    entries = document.get("entries")
+    if not isinstance(aliases, Mapping) or not isinstance(entries, list):
         raise ValueError("domain lane alias projection invalid")
+
+    lane_ids: list[str] = []
+    for entry in entries:
+        if not isinstance(entry, Mapping):
+            raise ValueError("domain lane alias projection invalid")
+        lane_id = entry.get("lane_id")
+        if not isinstance(lane_id, str) or not lane_id or lane_id.strip() != lane_id:
+            raise ValueError("domain lane alias projection invalid")
+        lane_ids.append(lane_id)
+    lane_id_set = set(lane_ids)
+    if len(lane_id_set) != len(lane_ids):
+        raise ValueError("domain lane alias projection invalid")
+
+    for alias, target in aliases.items():
+        if (
+            not isinstance(alias, str)
+            or not isinstance(target, str)
+            or not alias
+            or not target
+            or alias.strip() != alias
+            or target.strip() != target
+            or alias == target
+            or alias in lane_id_set
+            or target not in lane_id_set
+            or target in aliases
+        ):
+            raise ValueError("domain lane alias projection invalid")
     return dict(aliases)
 
 

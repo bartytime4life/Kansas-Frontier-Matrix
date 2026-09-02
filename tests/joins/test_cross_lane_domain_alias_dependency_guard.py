@@ -70,7 +70,7 @@ def test_malformed_alias_projection_fails_closed_as_dependency_error(tmp_path: P
     assert not any(decision["effects"].values())
 
 
-def _assert_duplicate_projection_fails_closed(
+def _assert_projection_fails_closed(
     candidate: dict[str, object],
     tmp_path: Path,
     monkeypatch,
@@ -91,7 +91,7 @@ def _assert_duplicate_projection_fails_closed(
 
 
 def test_duplicate_alias_projection_block_fails_closed(tmp_path: Path, monkeypatch) -> None:
-    _assert_duplicate_projection_fails_closed(
+    _assert_projection_fails_closed(
         _base_candidate(),
         tmp_path,
         monkeypatch,
@@ -100,9 +100,43 @@ def test_duplicate_alias_projection_block_fails_closed(tmp_path: Path, monkeypat
 
 
 def test_duplicate_alias_name_fails_closed(tmp_path: Path, monkeypatch) -> None:
-    _assert_duplicate_projection_fails_closed(
+    _assert_projection_fails_closed(
         _base_candidate(),
         tmp_path,
         monkeypatch,
         "unresolved_aliases:\n  air: atmosphere\n  air: geology\n",
+    )
+
+def test_custom_valid_alias_projection_resolves_registered_target(tmp_path: Path) -> None:
+    projection = tmp_path / "domain_lane_register.yaml"
+    projection.write_text(
+        "unresolved_aliases:\n  air: atmosphere\nentries:\n  - lane_id: atmosphere\n",
+        encoding="utf-8",
+    )
+
+    assert MODULE._unresolved_domain_aliases(projection) == {"air": "atmosphere"}
+
+
+def test_unknown_alias_target_fails_closed(tmp_path: Path, monkeypatch) -> None:
+    _assert_projection_fails_closed(
+        _base_candidate(),
+        tmp_path,
+        monkeypatch,
+        "unresolved_aliases:\n  air: atmosphere\nentries:\n  - lane_id: climate\n",
+    )
+
+
+def test_chained_alias_target_fails_closed(tmp_path: Path, monkeypatch) -> None:
+    _assert_projection_fails_closed(
+        _base_candidate(),
+        tmp_path,
+        monkeypatch,
+        (
+            "unresolved_aliases:\n"
+            "  air: atmosphere\n"
+            "  atmosphere: climate\n"
+            "entries:\n"
+            "  - lane_id: atmosphere\n"
+            "  - lane_id: climate\n"
+        ),
     )
