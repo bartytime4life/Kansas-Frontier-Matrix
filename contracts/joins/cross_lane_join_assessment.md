@@ -18,8 +18,10 @@ related:
   - ../../fixtures/contracts/v1/joins/cross_lane_join_assessment/cases.json
   - ../../tests/joins/test_join_candidates.py
   - ../../tests/joins/test_cross_lane_scope_precedence.py
+  - ../../tests/joins/test_cross_lane_source_role_schema_guard.py
   - ../../tests/joins/test_cross_lane_synthetic_role_guard.py
   - ../../tests/joins/test_cross_lane_temporal_boundary_guard.py
+  - ../../tests/joins/test_cross_lane_workflow_propagation.py
   - ../../tests/joins/test_cross_lane_domain_alias_guard.py
   - ../../tests/joins/test_cross_lane_domain_alias_dependency_guard.py
   - ../../tests/joins/README.md
@@ -37,6 +39,7 @@ notes:
   - "The generic seam does not own a repository-wide source-role crosswalk. Equal roles may continue to candidate proof, but any unequal role vector abstains for pair/domain-owned compatibility review."
   - "Zero-tolerance SPATIAL_TEMPORAL intervals that only touch at one boundary abstain; this profile does not invent repository-wide interval-boundary inclusivity."
   - "CLI modes are mutually exclusive and long options require exact spelling; fixture or derive mode never silently ignores an explicit assessment file."
+  - "The related proof inventory names every receipt-bound tests/joins/test_*.py module; deterministic propagation proof rejects omissions."
 [/KFM_META_BLOCK_V2] -->
 
 # CrossLaneJoinAssessment
@@ -102,7 +105,7 @@ The decision's effects are schema-fixed to false for lifecycle writes, evidence 
 
 ## Directory Rules basis
 
-Generic relationship meaning belongs in `contracts/joins/`; shape in `schemas/contracts/v1/joins/`; the dry-run helper in `tools/joins/`; synthetic cases in `fixtures/contracts/v1/joins/`; tests in `tests/joins/`; authoring provenance in `data/receipts/generated/`. Pair-specific meaning, source-role compatibility, domain alias acceptance or migration, policy, evidence, receipts, lifecycle data, and release remain in their owning roots. `control_plane/domain_lane_register.yaml` remains a projection-only review aid; consuming its unresolved-alias rows as a fail-closed signal, and treating loss of that signal as a validator dependency error, does not promote it into domain identity authority. Refusing a symlink at that canonical path also prevents another responsibility root from silently supplying the projection bytes.
+Generic relationship meaning belongs in `contracts/joins/`; shape in `schemas/contracts/v1/joins/`; the dry-run helper in `tools/joins/`; synthetic cases in `fixtures/contracts/v1/joins/`; tests in `tests/joins/`; authoring provenance in `data/receipts/generated/`. Pair-specific meaning, source-role compatibility, domain alias acceptance or migration, policy, evidence, receipts, lifecycle data, and release remain in their owning roots. `control_plane/domain_lane_register.yaml` remains a projection-only review aid; consuming its unresolved-alias rows as a fail-closed signal, and treating loss of that signal as a validator dependency error, does not promote it into domain identity authority. Refusing a symlink at that canonical path also prevents another responsibility root from silently supplying the projection bytes. Contract provenance names every receipt-bound join proof module so implementation, schema, and workflow guards cannot disappear from the semantic authority's review surface.
 
 ## Non-effects and rollback
 
