@@ -374,7 +374,10 @@ def materialize_fixture_case(manifest: Mapping[str, object], case: Mapping[str, 
     candidate = _resolve_base(manifest, str(case["base"]))
     for mutation in case.get("mutations", []):
         assert isinstance(mutation, Mapping)
-        _replace(candidate, str(mutation["path"]), mutation.get("value"))
+        pointer = mutation["path"]
+        if not isinstance(pointer, str) or not pointer.startswith("/") or pointer == "/":
+            raise ValueError("mutation path must be a non-root JSON pointer")
+        _replace(candidate, pointer, mutation.get("value"))
     spec_hash, assessment_id = compute_identity(candidate)
     candidate["spec_hash"] = case.get("spec_hash_override", spec_hash)
     candidate["assessment_id"] = case.get("assessment_id_override", assessment_id)
