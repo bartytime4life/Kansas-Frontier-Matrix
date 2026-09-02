@@ -453,15 +453,25 @@ describe("renderer-neutral terrain transition coordination", () => {
       demSourceReady: true,
     });
     let finishExecution: (() => void) | undefined;
+    let executionSignal: AbortSignal | undefined;
+    let abortEvents = 0;
     const execution = coordinator.execute(
       ticket,
-      () =>
+      (_plan, signal) =>
         new Promise<void>((resolve) => {
+          executionSignal = signal;
+          signal.addEventListener("abort", () => {
+            abortEvents += 1;
+          });
           finishExecution = resolve;
         }),
     );
 
+    expect(executionSignal?.aborted).toBe(false);
     coordinator.dispose();
+    coordinator.dispose();
+    expect(executionSignal?.aborted).toBe(true);
+    expect(abortEvents).toBe(1);
     finishExecution?.();
 
     await expect(execution).rejects.toMatchObject({
