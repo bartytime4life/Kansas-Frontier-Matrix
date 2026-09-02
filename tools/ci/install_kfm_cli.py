@@ -23,13 +23,19 @@ LOCKFILE = REPO_ROOT / "tools/ci/python-cli.lock"
 LOCAL_PACKAGE = REPO_ROOT / "packages/kfm-cli"
 LOCAL_SPEC = "./packages/kfm-cli"
 LOCK_LIMIT_BYTES = 262_144
+MAX_LOCK_LINE_LENGTH = 1_024
+MAX_LOCK_LINES = 8_192
+MAX_REQUIREMENTS = 128
+MAX_HASHES_PER_REQUIREMENT = 32
 INSTALL_TIMEOUT_SECONDS = 300
 UNSAFE_PYTHON_ENVIRONMENT = {"PYTHONHOME", "PYTHONPATH", "PYTHONUSERBASE"}
+NONCANONICAL_LINE_BREAKS = ("\v", "\f", "\x1c", "\x1d", "\x1e", "\x85", "\u2028", "\u2029")
 HASH_LINE = re.compile(r"^\s+--hash=sha256:[0-9a-f]{64}(?: \\)?$")
 REQUIREMENT_LINE = re.compile(
     r"^[A-Za-z0-9]+(?:[._-][A-Za-z0-9]+)*"
     r"==[A-Za-z0-9]+(?:[._+!-][A-Za-z0-9]+)* \\?$"
 )
+DISTRIBUTION_SEPARATOR = re.compile(r"[-_.]+")
 FORBIDDEN_LOCK_TEXT = (
     "--extra-index-url",
     "--index-url",
@@ -53,32 +59,97 @@ def validate_lockfile(path: Path = LOCKFILE) -> None:
     if path.is_symlink() or not path.is_file():
         raise CliInstallConfigurationError("CLI_LOCKFILE_UNSAFE")
     try:
-        size = path.stat().st_size
-        text = path.read_text(encoding="utf-8")
-    except (OSError, UnicodeError) as exc:
+        with path.open("rb") as stream:
+            raw = stream.read(LOCK_LIMIT_BYTES + 1)
+    except OSError as exc:
         raise CliInstallConfigurationError("CLI_LOCKFILE_UNREADABLE") from exc
-    if size <= 0 or size > LOCK_LIMIT_BYTES:
+    if not raw or len(raw) > LOCK_LIMIT_BYTES:
         raise CliInstallConfigurationError("CLI_LOCKFILE_SIZE_INVALID")
+    try:
+        text = raw.decode("utf-8")
+    except UnicodeError as exc:
+        raise CliInstallConfigurationError("CLI_LOCKFILE_UNREADABLE") from exc
+    if any(separator in text for separator in NONCANONICAL_LINE_BREAKS):
+        raise CliInstallConfigurationError("CLI_LOCKFILE_LINE_BREAK_INVALID")
 
     lowered = text.lower()
     if any(token in lowered for token in FORBIDDEN_LOCK_TEXT):
         raise CliInstallConfigurationError("CLI_LOCKFILE_SOURCE_UNSAFE")
 
-    requirements = [
+    physical_lines = text.splitlines()
+    if len(physical_lines) > MAX_LOCK_LINES:
+        raise CliInstallConfigurationError("CLI_LOCKFILE_LINE_LIMIT_EXCEEDED")
+    if any(len(line) > MAX_LOCK_LINE_LENGTH for line in physical_lines):
+        raise CliInstallConfigurationError("CLI_LOCKFILE_LINE_TOO_LONG")
+    if any(
+        previous.rstrip().endswith("\\")
+        and not previous.lstrip().startswith("#")
+        and (not current.strip() or current.lstrip().startswith("#"))
+        for previous, current in zip(physical_lines, physical_lines[1:])
+    ):
+        raise CliInstallConfigurationError(
+            "CLI_LOCKFILE_CONTINUATION_INTERRUPTED"
+        )
+
+    lock_lines = [
         line
-        for line in text.splitlines()
-        if line and not line[0].isspace() and not line.startswith("#")
+        for line in physical_lines
+        if line.strip() and not line.lstrip().startswith("#")
     ]
-    hashes = [line for line in text.splitlines() if "--hash=" in line]
-    if not requirements or len(hashes) < len(requirements):
+    if any(
+        (line[0].isspace() and "--hash=" not in line) or line.startswith("-")
+        for line in lock_lines
+    ):
+        raise CliInstallConfigurationError("CLI_LOCKFILE_DIRECTIVE_UNSAFE")
+    requirements = [line for line in lock_lines if not line[0].isspace()]
+    hashes = [line for line in lock_lines if "--hash=" in line]
+    if len(requirements) > MAX_REQUIREMENTS:
+        raise CliInstallConfigurationError(
+            "CLI_LOCKFILE_REQUIREMENT_LIMIT_EXCEEDED"
+        )
+    hash_coverage: list[int] = []
+    hash_groups: list[list[str]] = []
+    for line in lock_lines:
+        if not line[0].isspace():
+            hash_coverage.append(0)
+            hash_groups.append([])
+        elif "--hash=" in line:
+            if not hash_coverage:
+                raise CliInstallConfigurationError(
+                    "CLI_LOCKFILE_HASH_COVERAGE_INVALID"
+                )
+            hash_coverage[-1] += 1
+            hash_groups[-1].append(line)
+            if hash_coverage[-1] > MAX_HASHES_PER_REQUIREMENT:
+                raise CliInstallConfigurationError(
+                    "CLI_LOCKFILE_HASH_LIMIT_EXCEEDED"
+                )
+    if not hash_coverage or any(count == 0 for count in hash_coverage):
         raise CliInstallConfigurationError("CLI_LOCKFILE_HASH_COVERAGE_INVALID")
+    if any(
+        any(not line.rstrip().endswith("\\") for line in group[:-1])
+        or group[-1].rstrip().endswith("\\")
+        for group in hash_groups
+    ):
+        raise CliInstallConfigurationError("CLI_LOCKFILE_CONTINUATION_INVALID")
+    seen_distributions: set[str] = set()
     for requirement in requirements:
         if "==" not in requirement or not requirement.rstrip().endswith("\\"):
             raise CliInstallConfigurationError("CLI_LOCKFILE_REQUIREMENT_UNPINNED")
         if not REQUIREMENT_LINE.fullmatch(requirement):
             raise CliInstallConfigurationError("CLI_LOCKFILE_REQUIREMENT_UNSAFE")
+        distribution = DISTRIBUTION_SEPARATOR.sub(
+            "-", requirement.split("==", 1)[0].lower()
+        )
+        if distribution in seen_distributions:
+            raise CliInstallConfigurationError("CLI_LOCKFILE_REQUIREMENT_DUPLICATE")
+        seen_distributions.add(distribution)
     if any(not HASH_LINE.fullmatch(line) for line in hashes):
         raise CliInstallConfigurationError("CLI_LOCKFILE_HASH_INVALID")
+    for group in hash_groups:
+        digests = [line.split("sha256:", 1)[1].split()[0] for line in group]
+        if len(digests) != len(set(digests)):
+            raise CliInstallConfigurationError("CLI_LOCKFILE_HASH_DUPLICATE")
 
 
 def validate_local_package(path: Path = LOCAL_PACKAGE) -> None:
