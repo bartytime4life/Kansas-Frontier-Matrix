@@ -58,6 +58,7 @@
 .site-nav { display: flex; justify-content: center; gap: .15rem; }
 .site-nav a { display: inline-flex; align-items: center; min-height: 2.7rem; border-radius: 999px; padding: .45rem .75rem; color: var(--muted); font-size: .86rem; font-weight: 730; text-decoration: none; }
 .site-nav a:hover { background: rgb(255 255 255 / 6%); color: var(--ink); }
+.site-nav a[aria-current="page"] { background: rgb(218 182 109 / 14%); color: var(--prairie-soft); }
 .header-state { display: flex; justify-content: flex-end; gap: .35rem; }
 .site-main { display: grid; gap: 6rem; padding-block: 3rem 6rem; }
 .section-shell { scroll-margin-top: 6rem; }

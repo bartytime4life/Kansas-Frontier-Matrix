@@ -10,7 +10,7 @@
     "tools/validators/cross_domain/fauna_habitat/validate_public_safe_assignment.py"
   ],
   "artifact_hashes": {
-    ".github/workflows/fauna-habitat-public-safe-assignment.yml": "sha256:a816ceca2a09640150264c9f193dd297230e00ae9e00a891f6df42e523866bfc",
+    ".github/workflows/fauna-habitat-public-safe-assignment.yml": "sha256:ae04722885e1d94418e2c6ab0d6a9174cb51b88fce4b17d1dd259a55176505f3",
     "contracts/cross_domain/fauna_habitat/public_safe_assignment_profile.md": "sha256:6c991066607ef281e4e12e192ae4b0173f04a1e01a210db7767950bf91d66634",
     "fixtures/contracts/v1/joins/fauna_habitat_public_safe_assignment/cases.json": "sha256:780cfba32a71f8055b2ae86272b42170cb3848bfccb593f87c42827f5487eb28",
     "tests/cross_domain/fauna_habitat/test_public_safe_assignment.py": "sha256:be388c429f6f83aa076937857fbb2651d5ba9dfd924ee723b9a92780dc041093",
@@ -139,5 +139,5 @@
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Fixture-only Fauna-Habitat public-safe assignment candidate profile. ALLOW remains a non-publishing CANDIDATE_RELATION and all evidence, policy, review, lifecycle, release, publication, and public-use effects remain false."
+  "notes": "Fixture-only Fauna-Habitat public-safe assignment candidate profile. The workflow now executes the generic boundary-specific regression modules and reruns when the unresolved domain-alias register changes. ALLOW remains a non-publishing CANDIDATE_RELATION and all evidence, policy, review, lifecycle, release, publication, and public-use effects remain false."
 }

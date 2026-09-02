@@ -83,6 +83,7 @@ jobs:
             "tests/domains/atmosphere/test_knowledge_character_registry.py"
             "tests/domains/atmosphere/test_low_cost_sensor_caveat_required.py"
             "tests/domains/atmosphere/test_observed_modeled_separation.py"
+            "tests/validators/domains/atmosphere/test_air_observation_validator_entrypoint.py"
             "tests/domains/atmosphere/test_pm25_trigger_candidate_assessment.py"
             "tests/domains/atmosphere/test_correctable_environmental_event_assessment.py"
             "tests/validators/domains/atmosphere/airnow_aqs_reconciliation/test_validate_reconciliation.py"
@@ -92,6 +93,7 @@ jobs:
             "tools/validators/domains/atmosphere/validate_low_cost_sensor_caveats.py"
             "tools/validators/domains/atmosphere/validate_public_safe_precipitation_fixture.py"
             "tools/validators/domains/atmosphere/validate_observed_modeled_separation.py"
+            "tools/validators/domains/atmosphere/validate_air_observation.py"
             "tools/validators/domains/atmosphere/validate_pm25_trigger_candidate_assessment.py"
             "tools/validators/domains/atmosphere/validate_correctable_environmental_event_assessment.py"
             "tools/validators/domains/atmosphere/airnow_aqs_reconciliation/README.md"
@@ -185,11 +187,19 @@ jobs:
               ),
               Path(
                   "tools/validators/domains/atmosphere/"
+                  "validate_air_observation.py"
+              ),
+              Path(
+                  "tools/validators/domains/atmosphere/"
                   "validate_prescribed_burn_quality_flag.py"
               ),
               Path(
                   "tools/validators/domains/atmosphere/"
                   "validate_pm25_trigger_candidate_assessment.py"
+              ),
+              Path(
+                  "tools/validators/domains/atmosphere/"
+                  "validate_evidence_bundle.py"
               ),
               Path(
                   "tools/validators/domains/atmosphere/"
@@ -254,6 +264,7 @@ jobs:
           python tests/domains/atmosphere/test_knowledge_character_registry.py --verbose
           python tests/domains/atmosphere/test_low_cost_sensor_caveat_required.py --verbose
           python tests/domains/atmosphere/test_observed_modeled_separation.py --verbose
+          python tests/validators/domains/atmosphere/test_air_observation_validator_entrypoint.py --verbose
           python tests/cross_domain/test_environmental_observation_boundaries.py --verbose
           python -m pytest \
             tests/validators/domains/atmosphere/airnow_aqs_reconciliation/test_validate_reconciliation.py \
@@ -305,6 +316,18 @@ jobs:
           fi
 
           echo "EXPECTED_REJECTION: invalid Atmosphere observed-versus-modeled fixtures"
+          python tools/validators/domains/atmosphere/validate_air_observation.py \
+            fixtures/domains/atmosphere/observed_modeled_separation/valid/air_observation_bound.json \
+            fixtures/domains/atmosphere/observed_modeled_separation/valid/air_observation_unresolved.json
+
+          if python tools/validators/domains/atmosphere/validate_air_observation.py \
+            fixtures/domains/atmosphere/observed_modeled_separation/valid/forecast_context_bound.json; then
+            echo "::error::A ForecastContext entered the AirObservation-only lane."
+            exit 1
+          fi
+
+          echo "EXPECTED_REJECTION: ForecastContext in AirObservation-only lane"
+          echo "WORKFLOW_CHECK_EXECUTED: atmosphere-air-observation-entrypoint"
           echo "WORKFLOW_CHECK_EXECUTED: atmosphere-public-safe-precipitation-fixture"
           echo "WORKFLOW_CHECK_EXECUTED: atmosphere-knowledge-character-fixture"
           echo "WORKFLOW_CHECK_EXECUTED: atmosphere-low-cost-sensor-calibration-fixture"
@@ -326,6 +349,8 @@ jobs:
           `WORKFLOW_CHECK_EXECUTED: atmosphere-low-cost-sensor-calibration-fixture`
 
           `WORKFLOW_CHECK_EXECUTED: atmosphere-observed-modeled-separation`
+
+          `WORKFLOW_CHECK_EXECUTED: atmosphere-air-observation-entrypoint`
 
           `WORKFLOW_CHECK_EXECUTED: atmosphere-airnow-aqs-reconciliation`
 
@@ -369,6 +394,11 @@ jobs:
           DERIVED_FROM lineage, uncertainty, exact ABSTAIN behavior, false
           release denial, and the not-for-life-safety boundary. CamelCase schema
           paths are compatibility mirrors and cannot evolve independently.
+
+          The AirObservation compatibility entrypoint narrows that same governed
+          profile to AirObservation carriers, preserves PASS, ABSTAIN, DENY, and
+          ERROR semantics, and rejects ForecastContext substitution. It creates
+          no independent unit, source, evidence, policy, alert, or release authority.
 
           The fixture-only AirNow-to-AQS profile checks canonical monitor-key
           consistency, provisional-versus-regulatory source roles, AQS QA and

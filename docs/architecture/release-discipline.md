@@ -864,7 +864,7 @@ Presence in a synthetic scenario is not proof that those external or runtime sys
 The `rollback-drill` workflow confirms:
 
 - the production rollback pipeline remains a placeholder;
-- the generic RollbackCard entrypoint remains a placeholder;
+- the generic RollbackCard entrypoint delegates to the schema-declared canonical validator and must preserve fixture-output parity;
 - the release-specific candidate validator and synthetic rehearsal tests pass;
 - domain-specific rollback profiles remain uneven;
 - root rollback-card JSON examples remain documentation placeholders;

@@ -17,6 +17,7 @@ import {
   type GovernedMapEvidenceResolver,
   type MapEvidenceResolution,
 } from "./index";
+import { resolveEvidenceDrawer } from "../evidence_drawer";
 import {
   evaluateLayerManifestSelectionAdmission,
   type AdmissionResult,
@@ -61,12 +62,18 @@ function externalSelection(
   selection: MapFeatureSelection,
 ): Readonly<Record<string, unknown>> {
   const frozen = freezeMapFeatureSelection(selection);
+  const historyEvidenceRefs = frozen.historyEvidenceRefs;
   return Object.freeze({
     profile: frozen.profile,
     selection_id: frozen.selectionId,
     layer_id: frozen.layerId,
     feature_id: frozen.featureId,
     evidence_refs: Object.freeze([...frozen.evidenceRefs]),
+    ...(historyEvidenceRefs === undefined
+      ? {}
+      : {
+          history_evidence_refs: Object.freeze([...historyEvidenceRefs]),
+        }),
   });
 }
 
@@ -145,16 +152,22 @@ export async function resolveMapRuntimeSelectionEvidence(
     layerManifestInput,
     selectionInput.layerId,
   );
-  const evidence =
-    layerAdmission.outcome === "PASS"
-      ? await resolveMapFeatureEvidence(
-          externalSelection(selectionInput),
-          resolver,
-        )
-      : await resolveMapFeatureEvidence(
-          externalSelection(selectionInput),
-          async () => admissionDrawerInput(selectionInput, layerAdmission),
-        );
+  let evidence: MapEvidenceResolution;
+  if (layerAdmission.outcome === "PASS") {
+    evidence = await resolveMapFeatureEvidence(
+      externalSelection(selectionInput),
+      resolver,
+    );
+  } else {
+    const drawerInput = admissionDrawerInput(selectionInput, layerAdmission);
+    const drawer = resolveEvidenceDrawer(drawerInput);
+    evidence = Object.freeze({
+      selection: freezeMapFeatureSelection(selectionInput),
+      code: drawer.code,
+      drawerInput,
+      drawer,
+    });
+  }
 
   return Object.freeze({ layerAdmission, evidence });
 }
