@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import copy
 import json
+import math
 import sqlite3
 import sys
 from collections.abc import Mapping, Sequence
@@ -20,6 +21,7 @@ from typing import Any
 
 import yaml
 from jsonschema import Draft202012Validator, FormatChecker
+from yaml.events import AliasEvent
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 HASHING_SRC = REPO_ROOT / "packages" / "hashing" / "src"
@@ -36,6 +38,9 @@ from hashing import (  # noqa: E402
 SCHEMA_PATH = REPO_ROOT / "schemas/contracts/v1/joins/cross_lane_join_assessment.schema.json"
 CASES_PATH = REPO_ROOT / "fixtures/contracts/v1/joins/cross_lane_join_assessment/cases.json"
 DOMAIN_LANE_REGISTER_PATH = REPO_ROOT / "control_plane/domain_lane_register.yaml"
+DOMAIN_LANE_REGISTER_MAX_BYTES = 4 * 1024 * 1024
+DOMAIN_LANE_REGISTER_MAX_NODES = 8_192
+DOMAIN_LANE_REGISTER_MAX_DEPTH = 64
 IDENTITY_PREFIX = "kfm:cross-lane-join-assessment:"
 CANDIDATE_PREFIX = "kfm:join-candidate:"
 SCOPE = "cross-lane-join-assessment-fixture-only-v1"
@@ -51,7 +56,17 @@ SENSITIVITY_RANK = {"PUBLIC_SAFE": 0, "INTERNAL": 1, "RESTRICTED": 2, "PROHIBITE
 
 
 class _UniqueKeySafeLoader(yaml.SafeLoader):
-    """Safe YAML loader that rejects ambiguous duplicate mapping keys."""
+    """Safe YAML loader aligned with the canonical projection validator."""
+
+    def compose_node(self, parent: object, index: object) -> yaml.Node:
+        if self.check_event(AliasEvent):
+            raise yaml.constructor.ConstructorError(
+                "while composing a node",
+                None,
+                "YAML aliases are not allowed in the domain lane register",
+                self.peek_event().start_mark,
+            )
+        return super().compose_node(parent, index)
 
 
 def _construct_unique_mapping(
@@ -200,6 +215,26 @@ def _source_role_conflict(left: Mapping[str, Any], right: Mapping[str, Any]) -> 
     return left.get("source_role") != right.get("source_role")
 
 
+def _domain_lane_projection_is_bounded(value: object) -> bool:
+    pending = [(value, 0)]
+    visited = 0
+    while pending:
+        current, depth = pending.pop()
+        visited += 1
+        if (
+            visited > DOMAIN_LANE_REGISTER_MAX_NODES
+            or depth > DOMAIN_LANE_REGISTER_MAX_DEPTH
+        ):
+            return False
+        if isinstance(current, float) and not math.isfinite(current):
+            return False
+        if isinstance(current, Mapping):
+            pending.extend((child, depth + 1) for child in current.values())
+        elif isinstance(current, list):
+            pending.extend((child, depth + 1) for child in current)
+    return True
+
+
 def _unresolved_domain_aliases(path: Path | None = None) -> Mapping[str, str]:
     """Read unresolved aliases as a fail-closed dependency, never identity authority.
 
@@ -209,19 +244,60 @@ def _unresolved_domain_aliases(path: Path | None = None) -> Mapping[str, str]:
     of being treated as an empty alias set.
     """
     register_path = DOMAIN_LANE_REGISTER_PATH if path is None else path
+    if register_path.is_symlink():
+        raise ValueError("domain lane register unavailable")
     try:
+        if (
+            not register_path.is_file()
+            or register_path.stat().st_size > DOMAIN_LANE_REGISTER_MAX_BYTES
+        ):
+            raise ValueError("domain lane register unavailable")
         value = yaml.load(
             register_path.read_text(encoding="utf-8"),
             Loader=_UniqueKeySafeLoader,
         )
-    except (OSError, UnicodeError, yaml.YAMLError) as exc:
+    except (OSError, UnicodeError, yaml.YAMLError, RecursionError) as exc:
         raise ValueError("domain lane register unavailable") from exc
-    aliases = _mapping(value).get("unresolved_aliases")
-    if not isinstance(aliases, Mapping) or not all(
-        isinstance(key, str) and isinstance(target, str)
-        for key, target in aliases.items()
+    if not _domain_lane_projection_is_bounded(value):
+        raise ValueError("domain lane register unavailable")
+    document = _mapping(value)
+    if (
+        document.get("version") != "v1"
+        or document.get("registry") != "domain_lane_register"
+        or document.get("authority") != "machine_projection_only"
     ):
         raise ValueError("domain lane alias projection invalid")
+    aliases = document.get("unresolved_aliases")
+    entries = document.get("entries")
+    if not isinstance(aliases, Mapping) or not isinstance(entries, list):
+        raise ValueError("domain lane alias projection invalid")
+
+    lane_ids: list[str] = []
+    for entry in entries:
+        if not isinstance(entry, Mapping):
+            raise ValueError("domain lane alias projection invalid")
+        lane_id = entry.get("lane_id")
+        if not isinstance(lane_id, str) or not lane_id or lane_id.strip() != lane_id:
+            raise ValueError("domain lane alias projection invalid")
+        lane_ids.append(lane_id)
+    lane_id_set = set(lane_ids)
+    if len(lane_id_set) != len(lane_ids):
+        raise ValueError("domain lane alias projection invalid")
+
+    for alias, target in aliases.items():
+        if (
+            not isinstance(alias, str)
+            or not isinstance(target, str)
+            or not alias
+            or not target
+            or alias.strip() != alias
+            or target.strip() != target
+            or alias == target
+            or alias in lane_id_set
+            or target not in lane_id_set
+            or target in aliases
+        ):
+            raise ValueError("domain lane alias projection invalid")
     return dict(aliases)
 
 
@@ -291,8 +367,6 @@ def derive_decision(candidate: Mapping[str, Any]) -> dict[str, Any]:
 
     if same_domain:
         outcome, status, reason, obligation = "ABSTAIN", "NO_JOIN_CANDIDATE", "CROSS_DOMAIN_PAIR_REQUIRED", "ROUTE_TO_DOMAIN_LOCAL_VALIDATOR"
-    elif domain_alias_collision:
-        outcome, status, reason, obligation = "ABSTAIN", "NO_JOIN_CANDIDATE", "DOMAIN_ALIAS_REVIEW_REQUIRED", "ROUTE_TO_DOMAIN_ALIAS_REVIEW"
     elif alias_dependency_error:
         outcome, status, reason, obligation = "ERROR", "VALIDATOR_SYSTEM_ERROR", "DOMAIN_ALIAS_REGISTER_UNAVAILABLE", "REPAIR_DOMAIN_ALIAS_REGISTER_DEPENDENCY"
     elif request.get("dependency_state") == "ERROR":
@@ -303,14 +377,16 @@ def derive_decision(candidate: Mapping[str, Any]) -> dict[str, Any]:
         outcome, status, reason, obligation = "DENY", "GEOMETRY_PRECISION_BLOCKED", "GEOMETRY_PRECISION_BLOCKED", "GENERALIZE_OR_WITHHOLD_GEOMETRY"
     elif missing_evidence:
         outcome, status, reason, obligation = "ABSTAIN", "EVIDENCE_REF_MISSING", "EVIDENCE_REF_MISSING", "RESOLVE_EVIDENCE_REFS"
+    elif inherited == "RESTRICTED":
+        outcome, status, reason, obligation = "ABSTAIN", "SENSITIVITY_REVIEW_REQUIRED", "SENSITIVITY_REVIEW_REQUIRED", "ROUTE_TO_SENSITIVITY_REVIEW"
+    elif domain_alias_collision:
+        outcome, status, reason, obligation = "ABSTAIN", "NO_JOIN_CANDIDATE", "DOMAIN_ALIAS_REVIEW_REQUIRED", "ROUTE_TO_DOMAIN_ALIAS_REVIEW"
     elif temporal_boundary_ambiguous:
         outcome, status, reason, obligation = "ABSTAIN", "NO_JOIN_CANDIDATE", "TEMPORAL_BOUNDARY_AMBIGUOUS", "ROUTE_TO_PAIR_TEMPORAL_SEMANTICS"
     elif not matched:
         outcome, status, reason, obligation = "ABSTAIN", "NO_JOIN_CANDIDATE", "JOIN_PREDICATE_NOT_SATISFIED", "REVIEW_JOIN_BASIS"
     elif source_conflict:
         outcome, status, reason, obligation = "ABSTAIN", "SOURCE_ROLE_REVIEW_REQUIRED", "SOURCE_ROLE_CONFLICT", "RESOLVE_SOURCE_ROLE_COMPATIBILITY"
-    elif inherited == "RESTRICTED":
-        outcome, status, reason, obligation = "ABSTAIN", "SENSITIVITY_REVIEW_REQUIRED", "SENSITIVITY_REVIEW_REQUIRED", "ROUTE_TO_SENSITIVITY_REVIEW"
     else:
         outcome, status, reason, obligation = "ALLOW", "JOIN_CANDIDATE", "JOIN_PREDICATE_SATISFIED", "ROUTE_TO_PAIR_JOIN_VALIDATOR"
 
@@ -473,11 +549,15 @@ def _display(path: Path) -> str:
 
 
 def run(argv: Sequence[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(description=__doc__, allow_abbrev=False)
     parser.add_argument("files", nargs="*", type=Path)
     parser.add_argument("--derive", type=Path, help="derive and print one sealed assessment; stdout only")
     parser.add_argument("--fixtures", action="store_true")
     args = parser.parse_args(argv)
+    if args.fixtures and (args.files or args.derive is not None):
+        parser.error("--fixtures cannot be combined with assessment files or --derive")
+    if args.derive is not None and args.files:
+        parser.error("--derive cannot be combined with assessment files")
     if args.fixtures:
         return fixture_profile()
     if args.derive is not None:

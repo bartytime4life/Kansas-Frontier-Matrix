@@ -6,7 +6,7 @@ version: v0.1.0
 status: proposed; fixture-first; dry-run; local-only; non-authoritative
 owners: OWNER_TBD — join steward; participating domain stewards; evidence steward; sensitivity steward; validation steward
 created: 2026-08-09
-updated: 2026-09-01
+updated: 2026-09-02
 policy_label: repository-facing; cross-domain-join; sql-first; non-publisher; fail-closed
 owning_root: contracts/
 responsibility: Define a deterministic dry-run assessment for exact-key and synthetic spatial-temporal join candidates while preserving endpoint roles, evidence, sensitivity, and non-publisher effects.
@@ -18,8 +18,10 @@ related:
   - ../../fixtures/contracts/v1/joins/cross_lane_join_assessment/cases.json
   - ../../tests/joins/test_join_candidates.py
   - ../../tests/joins/test_cross_lane_scope_precedence.py
+  - ../../tests/joins/test_cross_lane_source_role_schema_guard.py
   - ../../tests/joins/test_cross_lane_synthetic_role_guard.py
   - ../../tests/joins/test_cross_lane_temporal_boundary_guard.py
+  - ../../tests/joins/test_cross_lane_workflow_propagation.py
   - ../../tests/joins/test_cross_lane_domain_alias_guard.py
   - ../../tests/joins/test_cross_lane_domain_alias_dependency_guard.py
   - ../../tests/joins/README.md
@@ -32,9 +34,12 @@ notes:
   - "The exact-key lane uses parameterized in-memory SQLite over synthetic fixture values and performs no database or lifecycle write."
   - "Same-domain endpoints are outside this cross-lane profile and abstain with CROSS_DOMAIN_PAIR_REQUIRED; callers must route them to a domain-local validator."
   - "Unresolved domain aliases recorded by the projection-only domain-lane register are review signals, never normalization authority; alias/canonical pairs abstain with DOMAIN_ALIAS_REVIEW_REQUIRED."
-  - "If the unresolved-alias projection is unavailable or malformed, the helper fails closed as VALIDATOR_SYSTEM_ERROR with DOMAIN_ALIAS_REGISTER_UNAVAILABLE; missing projection is never interpreted as an empty alias set."
+  - "Missing EvidenceRefs and restricted generalized sensitivity review retain their explicit routes before unresolved-alias review; alias collision never suppresses evidence or sensitivity obligations."
+  - "If the unresolved-alias projection is unavailable, malformed, a symlink, exceeds canonical byte, node, or depth bounds, contains non-finite numbers, uses YAML anchors or aliases, or lacks the exact v1/domain_lane_register/machine_projection_only authority envelope, the helper fails closed as VALIDATOR_SYSTEM_ERROR with DOMAIN_ALIAS_REGISTER_UNAVAILABLE."
   - "The generic seam does not own a repository-wide source-role crosswalk. Equal roles may continue to candidate proof, but any unequal role vector abstains for pair/domain-owned compatibility review."
   - "Zero-tolerance SPATIAL_TEMPORAL intervals that only touch at one boundary abstain; this profile does not invent repository-wide interval-boundary inclusivity."
+  - "CLI modes are mutually exclusive and long options require exact spelling; fixture or derive mode never silently ignores an explicit assessment file."
+  - "The related proof inventory names every receipt-bound tests/joins/test_*.py module; deterministic propagation proof rejects omissions."
 [/KFM_META_BLOCK_V2] -->
 
 # CrossLaneJoinAssessment
@@ -75,21 +80,24 @@ Each rule reports a non-negative failure count. Endpoint source roles remain sep
 
 `JOIN_PREDICATE_MATCHED` is the effective cross-lane candidate predicate. It fails when the declared exact-key or spatial-temporal predicate does not match, when both endpoints declare the same domain, **or when their raw domain values form an unresolved alias/canonical pair recorded by the projection-only domain-lane register**. Same-domain inputs return `ABSTAIN` / `NO_JOIN_CANDIDATE` with reason `CROSS_DOMAIN_PAIR_REQUIRED` and obligation `ROUTE_TO_DOMAIN_LOCAL_VALIDATOR`; the helper does not relabel domain-local work as a cross-domain relation. Unresolved alias/canonical pairs return `ABSTAIN` / `NO_JOIN_CANDIDATE` with reason `DOMAIN_ALIAS_REVIEW_REQUIRED` and obligation `ROUTE_TO_DOMAIN_ALIAS_REVIEW`. The helper does not normalize either endpoint, does not accept the proposed register as semantic authority, and does not turn an unresolved compatibility name into a second independently governed domain.
 
-The unresolved-alias projection is also a validator dependency. If `control_plane/domain_lane_register.yaml` cannot be read, parsed, or exposed as a string-to-string `unresolved_aliases` mapping, the helper cannot prove that a raw pair is free of unresolved alias collision. Duplicate YAML mapping keys are ambiguous and invalid at this boundary; last-value-wins parsing must not erase an alias review signal. The helper therefore returns `ERROR` / `VALIDATOR_SYSTEM_ERROR` with reason `DOMAIN_ALIAS_REGISTER_UNAVAILABLE`, obligation `REPAIR_DOMAIN_ALIAS_REGISTER_DEPENDENCY`, and a non-zero `DEPENDENCIES_READY` failure count. This fail-closed dependency behavior does not elevate the register into identity authority; it only prevents absence, ambiguity, or corruption of the conservative review projection from being misread as evidence that no aliases exist.
+The unresolved-alias projection is also a validator dependency. If `control_plane/domain_lane_register.yaml` cannot be read, is a symlink, cannot be parsed, lacks the exact `version: v1`, `registry: domain_lane_register`, and `authority: machine_projection_only` envelope, or cannot be exposed as a coherent `unresolved_aliases` mapping plus lane inventory, the helper cannot prove that a raw pair is free of unresolved alias collision. Duplicate YAML mapping keys are ambiguous and invalid at this boundary; last-value-wins parsing must not erase an alias review signal. Canonical register validation also denies YAML anchors and aliases; join derivation rejects the same graph-reuse syntax instead of accepting expanded bytes that the authority owner refuses. The consumer also enforces the canonical 4 MiB input, 8,192-node, 64-level depth, and finite-number limits before using the projection, so ignored padding cannot bypass the authority owner's resource-safety decision. Structural validation also requires unique, non-blank canonical lane IDs; exact non-blank alias names and targets; targets that resolve to a registered lane; and no self-reference, registered-lane alias key, or alias chain. An unknown or chained target can otherwise make a true alias/canonical pair appear unrelated and reach candidate proof. The helper therefore returns `ERROR` / `VALIDATOR_SYSTEM_ERROR` with reason `DOMAIN_ALIAS_REGISTER_UNAVAILABLE`, obligation `REPAIR_DOMAIN_ALIAS_REGISTER_DEPENDENCY`, and a non-zero `DEPENDENCIES_READY` failure count. This fail-closed dependency behavior does not elevate the register into identity authority; it only prevents absence, ambiguity, or corruption of the conservative review projection from being misread as evidence that no aliases exist.
 
 For `SPATIAL_TEMPORAL`, zero-tolerance intervals that only touch at `left.valid_to == right.valid_from` or `right.valid_to == left.valid_from` also fail `JOIN_PREDICATE_MATCHED`. The shared `TemporalWindow` contract explicitly treats boundary inclusivity as compatibility-significant rather than globally settled, so this join profile must not silently choose closed-interval semantics. Boundary-touch inputs therefore return `ABSTAIN` / `NO_JOIN_CANDIDATE` with reason `TEMPORAL_BOUNDARY_AMBIGUOUS` and obligation `ROUTE_TO_PAIR_TEMPORAL_SEMANTICS`. A genuine interval overlap remains eligible, and a positive declared tolerance remains an explicit bounded comparison rule rather than an implied repository-wide time convention.
+
+Disposition precedence preserves mandatory trust routes. Same-domain scope routing remains first because the generic cross-lane helper does not own domain-local work. For distinct raw domains, unavailable dependencies produce `ERROR`, and living-person or blocked sensitive geometry produces `DENY`. Missing EvidenceRefs then retain `EVIDENCE_REF_MISSING`, and restricted generalized context retains `SENSITIVITY_REVIEW_REQUIRED`, before an unresolved alias collision can route the request to alias review. Alias review never downgrades a system error or privacy/sensitivity denial, and never hides evidence or sensitivity-review obligations.
 
 ## Join mechanics
 
 - Both endpoints must declare distinct `domain` values. Same-domain requests are routed away from this profile and never emit `JOIN_CANDIDATE`.
 - Raw domain values that form an unresolved alias/canonical pair in `control_plane/domain_lane_register.yaml` are also routed to review. That projection is consumed only as a conservative collision signal: the helper preserves both raw domain values and never normalizes, registers, accepts, or migrates a domain identity.
-- The unresolved-alias projection is required to make that conservative check. Missing, unreadable, malformed, structurally invalid, or duplicate-key projection data produces `VALIDATOR_SYSTEM_ERROR`; it never degrades to an empty alias inventory or an `ALLOW` candidate.
+- The unresolved-alias projection is required to make that conservative check. Missing, unreadable, symlinked, malformed, structurally invalid, duplicate-key, identity-mismatched, or authority-overclaiming projection data produces `VALIDATOR_SYSTEM_ERROR`; it never degrades to an empty alias inventory or an `ALLOW` candidate.
 - `EXACT_KEY` uses a parameterized one-row-per-side SQLite join in an in-memory database. Keys are values, never SQL fragments.
 - `SPATIAL_TEMPORAL` compares synthetic spatial-cell refs and timezone-aware intervals with a declared tolerance. It is not a geometry engine and proves no real-world spatial relationship.
 - A zero-tolerance spatial-temporal boundary touch abstains instead of inventing inclusive-end semantics. Pair-specific temporal policy must resolve the boundary; positive tolerance is explicit and remains bounded to candidate comparison.
 - Missing EvidenceRefs abstain. Any unequal source-role pair abstains for pair/domain-owned compatibility review because the generic seam owns no accepted global crosswalk. Restricted generalized context abstains for sensitivity review. Restricted exact geometry and living-person joins deny.
 - `candidate_id` is RFC 8785/SHA-256 over request and endpoints. `spec_hash` binds the complete assessment excluding `assessment_id` and `spec_hash`.
 - `--derive` validates the fully sealed assessment before stdout. A malformed or schema-invalid input returns a bounded `FAIL` result and never emits a schema-invalid assessment as successful output.
+- CLI modes are mutually exclusive and long options are not abbreviated. `--fixtures` cannot be combined with assessment files or `--derive`, and `--derive` cannot be combined with assessment files, so an explicit input is never silently ignored; `--` remains available for a dash-prefixed filename.
 
 ## Non-publisher effects
 
@@ -97,7 +105,7 @@ The decision's effects are schema-fixed to false for lifecycle writes, evidence 
 
 ## Directory Rules basis
 
-Generic relationship meaning belongs in `contracts/joins/`; shape in `schemas/contracts/v1/joins/`; the dry-run helper in `tools/joins/`; synthetic cases in `fixtures/contracts/v1/joins/`; tests in `tests/joins/`; authoring provenance in `data/receipts/generated/`. Pair-specific meaning, source-role compatibility, domain alias acceptance or migration, policy, evidence, receipts, lifecycle data, and release remain in their owning roots. `control_plane/domain_lane_register.yaml` remains a projection-only review aid; consuming its unresolved-alias rows as a fail-closed signal, and treating loss of that signal as a validator dependency error, does not promote it into domain identity authority.
+Generic relationship meaning belongs in `contracts/joins/`; shape in `schemas/contracts/v1/joins/`; the dry-run helper in `tools/joins/`; synthetic cases in `fixtures/contracts/v1/joins/`; tests in `tests/joins/`; authoring provenance in `data/receipts/generated/`. Pair-specific meaning, source-role compatibility, domain alias acceptance or migration, policy, evidence, receipts, lifecycle data, and release remain in their owning roots. `control_plane/domain_lane_register.yaml` remains a projection-only review aid; consuming its unresolved-alias rows as a fail-closed signal, and treating loss of that signal as a validator dependency error, does not promote it into domain identity authority. Refusing a symlink at that canonical path also prevents another responsibility root from silently supplying the projection bytes. Requiring the exact projection-only identity envelope prevents a fragment or authority overclaim from impersonating the canonical register. Contract provenance names every receipt-bound join proof module so implementation, schema, and workflow guards cannot disappear from the semantic authority's review surface.
 
 ## Non-effects and rollback
 

@@ -17,6 +17,7 @@ import pytest
 ROOT = Path(__file__).resolve().parents[2]
 README = ROOT / "tests/joins/README.md"
 CONTRACT_README = ROOT / "contracts/joins/README.md"
+CONTRACT = ROOT / "contracts/joins/cross_lane_join_assessment.md"
 RECEIPT = ROOT / "data/receipts/generated/genrec-full-atlas-crosswalk-validator-20260830.json"
 WORKFLOWS = (
     ROOT / ".github/workflows/cross-lane-join-assessment.yml",
@@ -36,6 +37,9 @@ _TRIGGER_RE = re.compile(
 )
 _TRIGGER_PATH_RE = re.compile(r'(?m)^      - "([^"]+)"$')
 _DOCUMENTED_GUARD_RE = re.compile(r"`(test_cross_lane_[a-z0-9_]+\.py)`")
+_CONTRACT_PROOF_RE = re.compile(
+    r"(?m)^  - \.\./\.\./tests/joins/(test_[a-z0-9_]+\.py)$"
+)
 REQUIRED_JOIN_CONTRACT_LINKS = (
     "./cross_lane_join_assessment.md",
     "../cross_domain/fauna_habitat/public_safe_assignment_profile.md",
@@ -144,6 +148,24 @@ def _missing_join_contract_links(source: str) -> list[str]:
     )
 
 
+def _missing_contract_proof_links(
+    contract_source: str, receipt_source: str
+) -> list[str]:
+    payload = json.loads(receipt_source)
+    expected = {
+        path
+        for path in payload.get("artifact_paths", [])
+        if isinstance(path, str)
+        and path.startswith("tests/joins/test_")
+        and path.endswith(".py")
+    }
+    linked = {
+        f"tests/joins/{name}"
+        for name in _CONTRACT_PROOF_RE.findall(contract_source)
+    }
+    return sorted(expected - linked)
+
+
 def _local_command_findings(source: str) -> list[str]:
     expected = f"  {CROSS_LANE_TEST_GLOB} \\\n"
     if expected not in source:
@@ -200,6 +222,33 @@ def test_join_contract_readme_routes_current_generic_and_pair_profiles() -> None
     assert _missing_join_contract_links(
         CONTRACT_README.read_text(encoding="utf-8")
     ) == []
+
+
+def test_contract_links_every_receipt_bound_join_proof() -> None:
+    assert _missing_contract_proof_links(
+        CONTRACT.read_text(encoding="utf-8"),
+        RECEIPT.read_text(encoding="utf-8"),
+    ) == []
+
+
+@pytest.mark.parametrize(
+    "proof_path",
+    (
+        "tests/joins/test_cross_lane_source_role_schema_guard.py",
+        "tests/joins/test_cross_lane_workflow_propagation.py",
+    ),
+)
+def test_synthetic_missing_contract_proof_link_is_detected(
+    proof_path: str,
+) -> None:
+    source = CONTRACT.read_text(encoding="utf-8")
+    link = f"  - ../../{proof_path}\n"
+    assert link in source
+    mutated = source.replace(link, "", 1)
+    assert proof_path in _missing_contract_proof_links(
+        mutated,
+        RECEIPT.read_text(encoding="utf-8"),
+    )
 
 
 def test_readme_local_command_expands_cross_lane_pytest_glob() -> None:

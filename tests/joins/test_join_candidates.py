@@ -4,6 +4,7 @@ import copy
 import importlib.util
 import json
 import os
+import subprocess
 import sys
 from pathlib import Path
 
@@ -186,6 +187,73 @@ def test_derive_cli_emits_only_valid_assessments(tmp_path: Path, capsys) -> None
     assert "assessment_id" not in failure
     assert "decision" not in failure
     assert {item["code"] for item in failure["findings"]} == {"SCHEMA_INVALID"}
+
+
+def test_cli_modes_are_exclusive_and_unabbreviated(tmp_path: Path) -> None:
+    candidate_path = tmp_path / "candidate.json"
+    candidate_path.write_text(json.dumps(MODULE.fixture_cases()[0][0]))
+
+    invalid_modes = (
+        (["--fixtures", str(candidate_path)], "--fixtures cannot be combined"),
+        (["--fixtures", "--derive", str(candidate_path)], "--fixtures cannot be combined"),
+        (["--derive", str(candidate_path), str(candidate_path)], "--derive cannot be combined"),
+    )
+    for argv, message in invalid_modes:
+        completed = subprocess.run(
+            [sys.executable, str(MODULE_PATH), *argv],
+            cwd=REPO_ROOT,
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        assert completed.returncode == 2
+        assert completed.stdout == ""
+        assert message in completed.stderr
+
+    for length in range(3, len("--fixtures")):
+        abbreviation = "--fixtures"[:length]
+        completed = subprocess.run(
+            [sys.executable, str(MODULE_PATH), abbreviation],
+            cwd=REPO_ROOT,
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        assert completed.returncode == 2
+        assert completed.stdout == ""
+        assert "unrecognized arguments" in completed.stderr
+
+
+def test_cli_exact_modes_and_option_terminator_remain_available(tmp_path: Path) -> None:
+    fixture_run = subprocess.run(
+        [sys.executable, str(MODULE_PATH), "--fixtures"],
+        cwd=REPO_ROOT,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    assert fixture_run.returncode == 0, fixture_run.stderr
+    fixture_report = json.loads(fixture_run.stdout)
+    assert fixture_report == {
+        "cases": 20,
+        "failed_case_indexes": [],
+        "scope": MODULE.SCOPE,
+        "status": "PASS",
+    }
+
+    dash_path = tmp_path / "--fixtures"
+    dash_path.write_text(json.dumps(MODULE.fixture_cases()[0][0]))
+    file_run = subprocess.run(
+        [sys.executable, str(MODULE_PATH), "--", dash_path.name],
+        cwd=tmp_path,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    assert file_run.returncode == 0, file_run.stderr
+    report = json.loads(file_run.stdout)
+    assert report["status"] == "PASS"
+    assert report["file"] == "--fixtures"
 
 
 def test_helper_has_no_network_client_or_file_write_path() -> None:
