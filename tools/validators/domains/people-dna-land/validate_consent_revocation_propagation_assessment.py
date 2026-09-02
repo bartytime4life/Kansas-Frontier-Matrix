@@ -461,7 +461,8 @@ def validate_fixture_manifest(path: Path = FIXTURE_PATH) -> list[dict[str, objec
 
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
-        description="Validate fixture-only consent revocation propagation assessments."
+        description="Validate fixture-only consent revocation propagation assessments.",
+        allow_abbrev=False,
     )
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("--fixtures", action="store_true")

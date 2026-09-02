@@ -546,5 +546,16 @@ class ConsentOverlayFixtureTests(unittest.TestCase):
             network_mock.assert_not_called()
 
 
+    def test_cli_rejects_abbreviated_revocation_manifest_option(self) -> None:
+        exact = "--revocation-manifest"
+        for length in range(3, len(exact)):
+            option = exact[:length]
+            with self.subTest(option=option), self.assertRaises(SystemExit) as captured:
+                VALIDATOR.main(
+                    [option, str(MANIFEST_PATH), str(_valid_fixture())]
+                )
+            self.assertEqual(captured.exception.code, 2)
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

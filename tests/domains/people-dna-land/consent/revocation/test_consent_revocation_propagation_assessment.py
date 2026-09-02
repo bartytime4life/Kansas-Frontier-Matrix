@@ -138,5 +138,14 @@ class ConsentRevocationPropagationAssessmentTests(unittest.TestCase):
         self.assertEqual(first, second)
 
 
+    def test_cli_rejects_abbreviated_fixture_and_input_options(self) -> None:
+        for exact in ("--fixtures", "--input"):
+            for length in range(3, len(exact)):
+                option = exact[:length]
+                with self.subTest(option=option), self.assertRaises(SystemExit) as captured:
+                    MODULE.main([option])
+                self.assertEqual(captured.exception.code, 2)
+
+
 if __name__ == "__main__":
     unittest.main()

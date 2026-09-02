@@ -442,7 +442,10 @@ def validate_file(path: Path | str, *, revocation_manifest: Mapping[str, Any] | 
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Validate synthetic consent-safe genealogy-overlay fixtures.")
+    parser = argparse.ArgumentParser(
+        description="Validate synthetic consent-safe genealogy-overlay fixtures.",
+        allow_abbrev=False,
+    )
     parser.add_argument("--revocation-manifest", required=True, type=Path)
     parser.add_argument("files", nargs="+", type=Path)
     args = parser.parse_args(argv)
