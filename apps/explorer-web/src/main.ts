@@ -93,6 +93,7 @@ const releaseDeepLinkMapOwnershipOnManualSelection = (event: MouseEvent): void =
     currentUrl,
     activeDeepLinkMapCaseId,
     caseId,
+    button.disabled,
   );
   activeDeepLinkMapCaseId = transition.activeDeepLinkMapCaseId;
   if (

@@ -39,8 +39,10 @@ export function resolvePublicKnowledgeDomainUrlConsumerCommit(
  * domain or any unconsumed context dimension.
  *
  * A programmatic click restoring the URL-owned domain leaves the deep link
- * intact. If the tracked owner is already stale relative to the current URL,
- * ownership is dropped without rewriting unrelated browser state.
+ * intact. A successful different manual choice also releases a still-pending
+ * URL request before ownership has committed, keeping visible selection and
+ * the address bar coherent. If the tracked owner is already stale relative to
+ * the current URL, ownership is dropped without rewriting unrelated state.
  */
 export function resolvePublicKnowledgeDomainManualSelectionTransition(
   url: URL,
@@ -48,7 +50,21 @@ export function resolvePublicKnowledgeDomainManualSelectionTransition(
   selectedDomainId: string,
   selectionApplied: boolean,
 ): PublicKnowledgeDomainDeepLinkRelease {
+  const requestedDomainId = resolveSinglePublicKnowledgeDomainId(url);
   if (activeDeepLinkDomainId === null) {
+    if (
+      selectionApplied &&
+      requestedDomainId !== null &&
+      selectedDomainId !== requestedDomainId
+    ) {
+      const replacementUrl = new URL(url.toString());
+      replacementUrl.searchParams.delete(PUBLIC_WORKSPACE_CONTEXT_QUERY_PARAM);
+      return Object.freeze({
+        activeDeepLinkDomainId: null,
+        replacementUrl,
+        reason: "RELEASED",
+      });
+    }
     return Object.freeze({
       activeDeepLinkDomainId: null,
       replacementUrl: null,
@@ -56,7 +72,7 @@ export function resolvePublicKnowledgeDomainManualSelectionTransition(
     });
   }
 
-  if (resolveSinglePublicKnowledgeDomainId(url) !== activeDeepLinkDomainId) {
+  if (requestedDomainId !== activeDeepLinkDomainId) {
     return Object.freeze({
       activeDeepLinkDomainId: null,
       replacementUrl: null,
