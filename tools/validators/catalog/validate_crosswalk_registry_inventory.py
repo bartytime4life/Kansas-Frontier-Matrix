@@ -19,9 +19,14 @@ def _read_inventory_rows(
     readme_path: Path,
 ) -> tuple[list[dict[str, str]], list[str]]:
     text = readme_path.read_text(encoding="utf-8")
-    start = text.find(SECTION_HEADER)
-    if start < 0:
+    marker_count = sum(
+        line.strip() == SECTION_HEADER for line in text.splitlines()
+    )
+    if marker_count == 0:
         raise ValueError(f"missing section marker: {SECTION_HEADER}")
+    if marker_count > 1:
+        raise ValueError(f"duplicate section marker: {SECTION_HEADER}")
+    start = text.find(SECTION_HEADER)
     section = text[start + len(SECTION_HEADER):]
     next_h2 = section.find("\n## ")
     if next_h2 >= 0:

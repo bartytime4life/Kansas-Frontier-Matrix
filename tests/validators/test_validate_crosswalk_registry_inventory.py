@@ -193,6 +193,24 @@ class CrosswalkRegistryInventoryTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "missing section marker"):
             validate_crosswalk_registry_inventory(repo)
 
+    def test_duplicate_inventory_section_errors(self) -> None:
+        rows = (("README.md", "README.md"),)
+        actual = ("README.md",)
+        tempdir, repo = self._fixture(rows, actual)
+        self.addCleanup(tempdir.cleanup)
+        readme = repo / "data" / "registry" / "crosswalks" / "README.md"
+        readme.write_text(
+            readme.read_text(encoding="utf-8")
+            + "\n## Current inventory\n\n"
+            + "| Tracked path | Role | Bounded state |\n"
+            + "|---|---|---|\n"
+            + "| [`README.md`](README.md) | role | state |\n",
+            encoding="utf-8",
+        )
+
+        with self.assertRaisesRegex(ValueError, "duplicate section marker"):
+            validate_crosswalk_registry_inventory(repo)
+
     def test_cli_output_is_deterministic_json(self) -> None:
         paths = (
             "README.md",

@@ -227,6 +227,27 @@ class SourceRegistryPairedDiscoveryIndexTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "missing section marker"):
             validate_source_registry_paired_discovery_index(repo)
 
+    def test_duplicate_pairing_section_errors(self) -> None:
+        tempdir, repo = self._fixture(
+            (("agriculture", "agriculture"),),
+            ("agriculture",),
+            ("agriculture",),
+        )
+        self.addCleanup(tempdir.cleanup)
+        readme = repo / "data" / "registry" / "sources" / "README.md"
+        readme.write_text(
+            readme.read_text(encoding="utf-8")
+            + "\nThe 13 paired domain README lanes confirmed at the pinned base are:\n\n"
+            + "| Domain | Canonical-family lane | Parallel domain-first lane |\n"
+            + "|---|---|---|\n"
+            + "| Agriculture | [`sources/agriculture/`](agriculture/README.md) "
+            + "| [`agriculture/sources/`](../agriculture/sources/README.md) |\n",
+            encoding="utf-8",
+        )
+
+        with self.assertRaisesRegex(ValueError, "duplicate section marker"):
+            validate_source_registry_paired_discovery_index(repo)
+
     def test_cli_output_is_deterministic_json(self) -> None:
         tempdir, repo = self._fixture(
             (("agriculture", "agriculture"), ("atmosphere", "atmosphere")),

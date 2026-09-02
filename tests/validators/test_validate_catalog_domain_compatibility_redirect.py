@@ -128,6 +128,24 @@ class CatalogDomainCompatibilityRedirectTests(unittest.TestCase):
             self.assertEqual("FAIL", report["outcome"])
             self.assertEqual(1, len(report["invalid_redirect_rows"]))
 
+    def test_duplicate_inventory_section_errors(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            compat, canonical = _write_layout(
+                Path(tmp),
+                actual=["agriculture"],
+                indexed=["agriculture"],
+            )
+            readme = compat / "README.md"
+            readme.write_text(
+                readme.read_text(encoding="utf-8")
+                + "\n## Current bounded inventory\n\n"
+                + "- [`agriculture/`](./agriculture/README.md)\n",
+                encoding="utf-8",
+            )
+
+            with self.assertRaisesRegex(ValueError, "duplicate section"):
+                validate_catalog_domain_compatibility_redirect(compat, canonical)
+
     def test_missing_canonical_target_fails_closed(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             compat, canonical = _write_layout(
