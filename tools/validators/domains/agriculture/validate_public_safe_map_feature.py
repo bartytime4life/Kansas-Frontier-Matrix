@@ -8,6 +8,7 @@ import hashlib
 import json
 import math
 import re
+import unicodedata
 from dataclasses import dataclass
 from datetime import date
 from itertools import islice
@@ -120,7 +121,7 @@ PROTECTED_IDENTIFIER_PATTERN = re.compile(
 )
 PRIVATE_IDENTITY_LABEL_PATTERN = re.compile(
     r"\A(?i:\s*(?:parcel|field|farm|operator|owner|well|permit|water[-_ ]?right)\s+"
-    r"[a-z0-9][a-z0-9.'’/-]*(?:\s+[a-z0-9][a-z0-9.'’/-]*)*\s*)\Z"
+    r"[^\W_](?:[^\W_]|[.'’/\-])*(?:\s+[^\W_](?:[^\W_]|[.'’/\-])*)*\s*)\Z"
 )
 LABELED_COORDINATE_PATTERN = re.compile(
     r"(?i)\b(?:lat(?:itude)?|lon(?:gitude)?)\s*[:=]\s*"
@@ -211,9 +212,10 @@ def _unsafe_scalar_findings(value: Any, path: tuple[Any, ...] = ()) -> set[Findi
     elif isinstance(value, float) and not math.isfinite(value):
         findings.add(Finding("AG_MAP_NONFINITE_NUMBER_DENIED", _pointer(path)))
     elif isinstance(value, str):
-        if (_contains_coordinate_literal(value)
-                or PROTECTED_IDENTIFIER_PATTERN.search(value)
-                or PRIVATE_IDENTITY_LABEL_PATTERN.search(value)):
+        normalized = unicodedata.normalize("NFKC", value)
+        if (_contains_coordinate_literal(normalized)
+                or PROTECTED_IDENTIFIER_PATTERN.search(normalized)
+                or PRIVATE_IDENTITY_LABEL_PATTERN.search(normalized)):
             findings.add(Finding("AG_MAP_HARMFUL_PRECISION_DENIED", _pointer(path)))
     return findings
 
