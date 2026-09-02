@@ -187,6 +187,8 @@ class HydrologyWaterLevelFixtureTests(unittest.TestCase):
         for value in (
             "fixture://evidence/hydrology/",
             "fixture://evidence/hydrology/   ",
+            "fixture://evidence/hydrology/Water-Level/99999/receipt-1",
+            "fixture://evidence/hydrology/water-level/99999/Receipt-1",
             "fixture://evidence/hydrology/water-level//receipt",
             "fixture://evidence/hydrology/water-level/../receipt",
             "fixture://evidence/hydrology/-water-level/receipt",

@@ -109,7 +109,10 @@ _CANONICAL_RESOURCE_IDENTIFIER = re.compile(
     r"\A(?=.{1,128}\Z)[a-z0-9]+(?:[._-][a-z0-9]+)*\Z"
 )
 _CANONICAL_EVIDENCE_SEGMENT = re.compile(
-    r"\A(?=.{1,128}\Z)[A-Za-z0-9]+(?:[._:-][A-Za-z0-9]+)*\Z"
+    r"\A(?=.{1,128}\Z)[a-z0-9]+(?:[._:-][a-z0-9]+)*\Z"
+)
+_CANONICAL_EVIDENCE_TIMESTAMP_SEGMENT = re.compile(
+    r"\A\d{8}T\d{6}Z\Z"
 )
 
 
@@ -119,6 +122,7 @@ def _has_canonical_evidence_path(value: str) -> bool:
         1 <= len(suffix) <= 256
         and all(
             _CANONICAL_EVIDENCE_SEGMENT.fullmatch(segment) is not None
+            or _CANONICAL_EVIDENCE_TIMESTAMP_SEGMENT.fullmatch(segment) is not None
             for segment in suffix.split("/")
         )
     )
