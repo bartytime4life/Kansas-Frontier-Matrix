@@ -24,6 +24,7 @@ LOCAL_PACKAGE = REPO_ROOT / "packages/kfm-cli"
 LOCAL_SPEC = "./packages/kfm-cli"
 LOCK_LIMIT_BYTES = 262_144
 MAX_LOCK_LINE_LENGTH = 1_024
+MAX_LOCK_LINES = 8_192
 MAX_REQUIREMENTS = 128
 MAX_HASHES_PER_REQUIREMENT = 32
 INSTALL_TIMEOUT_SECONDS = 300
@@ -69,6 +70,8 @@ def validate_lockfile(path: Path = LOCKFILE) -> None:
         raise CliInstallConfigurationError("CLI_LOCKFILE_SOURCE_UNSAFE")
 
     physical_lines = text.splitlines()
+    if len(physical_lines) > MAX_LOCK_LINES:
+        raise CliInstallConfigurationError("CLI_LOCKFILE_LINE_LIMIT_EXCEEDED")
     if any(len(line) > MAX_LOCK_LINE_LENGTH for line in physical_lines):
         raise CliInstallConfigurationError("CLI_LOCKFILE_LINE_TOO_LONG")
     if any(
