@@ -87,8 +87,8 @@ class PublicSafeMigrationFixtureTests(unittest.TestCase):
             oversized = temp_root / "oversized.json"
             oversized.write_bytes(b" " * (MAX_INPUT_BYTES + 1))
             with patch.object(
-                Path,
-                "read_text",
+                migration_validator.os,
+                "fdopen",
                 side_effect=AssertionError("oversized candidate was read"),
             ) as candidate_reader:
                 self.assertEqual(
@@ -115,8 +115,8 @@ class PublicSafeMigrationFixtureTests(unittest.TestCase):
             with (
                 patch.object(migration_validator, "MANIFEST_PATH", oversized),
                 patch.object(
-                    Path,
-                    "read_text",
+                    migration_validator.os,
+                    "fdopen",
                     side_effect=AssertionError("oversized manifest was read"),
                 ) as manifest_reader,
             ):

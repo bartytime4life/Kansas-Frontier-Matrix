@@ -13,6 +13,8 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import os
+import stat
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Mapping, Sequence
@@ -304,13 +306,28 @@ def _load_json_text(value: str) -> object:
 
 
 def _load_bounded_json(path: Path) -> object:
-    if (
-        path.is_symlink()
-        or not path.is_file()
-        or path.stat().st_size > MAX_INPUT_BYTES
-    ):
-        raise ValueError("input must be a bounded regular file")
-    return _load_json_text(path.read_text(encoding="utf-8"))
+    nofollow = getattr(os, "O_NOFOLLOW", None)
+    if nofollow is None:
+        raise OSError("platform cannot enforce no-follow input reads")
+    flags = os.O_RDONLY | nofollow | getattr(os, "O_CLOEXEC", 0)
+    descriptor = os.open(path, flags)
+    try:
+        file_status = os.fstat(descriptor)
+        if (
+            not stat.S_ISREG(file_status.st_mode)
+            or file_status.st_size > MAX_INPUT_BYTES
+        ):
+            raise ValueError("input must be a bounded regular file")
+        stream = os.fdopen(descriptor, "rb")
+        descriptor = -1
+        with stream:
+            payload = stream.read(MAX_INPUT_BYTES + 1)
+    finally:
+        if descriptor >= 0:
+            os.close(descriptor)
+    if len(payload) > MAX_INPUT_BYTES:
+        raise ValueError("input exceeded the byte limit while reading")
+    return _load_json_text(payload.decode("utf-8"))
 
 
 def _fixture_case_path(value: str) -> Path | None:
