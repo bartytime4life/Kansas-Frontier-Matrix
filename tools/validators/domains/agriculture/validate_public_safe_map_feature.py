@@ -403,11 +403,13 @@ def run_fixtures() -> int:
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(allow_abbrev=False)
     parser.add_argument("path", nargs="?")
     parser.add_argument("--fixtures", action="store_true")
     args = parser.parse_args(argv)
     if args.fixtures:
+        if args.path:
+            parser.error("path cannot be combined with --fixtures")
         return run_fixtures()
     if not args.path:
         parser.error("path or --fixtures required")
