@@ -104,6 +104,21 @@ class InstallKfmCliTests(unittest.TestCase):
             ):
                 module.validate_lockfile(path)
 
+    def test_lock_validation_bounds_hashes_per_requirement(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / "excessive-hashes.lock"
+            hashes = "".join(
+                f"    --hash=sha256:{index:064x}"
+                + (" \\\n" if index < module.MAX_HASHES_PER_REQUIREMENT else "\n")
+                for index in range(module.MAX_HASHES_PER_REQUIREMENT + 1)
+            )
+            path.write_text("demo==1.0 \\\n" + hashes, encoding="utf-8")
+            with self.assertRaisesRegex(
+                module.CliInstallConfigurationError,
+                "^CLI_LOCKFILE_HASH_LIMIT_EXCEEDED$",
+            ):
+                module.validate_lockfile(path)
+
     def test_install_executes_argument_vectors_without_a_shell(self) -> None:
         with (
             mock.patch.object(module.time, "monotonic", side_effect=(100.0, 100.0, 150.0)),

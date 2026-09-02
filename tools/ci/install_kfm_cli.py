@@ -23,6 +23,7 @@ LOCKFILE = REPO_ROOT / "tools/ci/python-cli.lock"
 LOCAL_PACKAGE = REPO_ROOT / "packages/kfm-cli"
 LOCAL_SPEC = "./packages/kfm-cli"
 LOCK_LIMIT_BYTES = 262_144
+MAX_HASHES_PER_REQUIREMENT = 32
 INSTALL_TIMEOUT_SECONDS = 300
 UNSAFE_PYTHON_ENVIRONMENT = {"PYTHONHOME", "PYTHONPATH", "PYTHONUSERBASE"}
 HASH_LINE = re.compile(r"^\s+--hash=sha256:[0-9a-f]{64}(?: \\)?$")
@@ -87,6 +88,10 @@ def validate_lockfile(path: Path = LOCKFILE) -> None:
                     "CLI_LOCKFILE_HASH_COVERAGE_INVALID"
                 )
             hash_coverage[-1] += 1
+            if hash_coverage[-1] > MAX_HASHES_PER_REQUIREMENT:
+                raise CliInstallConfigurationError(
+                    "CLI_LOCKFILE_HASH_LIMIT_EXCEEDED"
+                )
     if not hash_coverage or any(count == 0 for count in hash_coverage):
         raise CliInstallConfigurationError("CLI_LOCKFILE_HASH_COVERAGE_INVALID")
     seen_distributions: set[str] = set()
