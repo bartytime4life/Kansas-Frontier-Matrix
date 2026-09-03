@@ -24,6 +24,9 @@
 # Enforcement boundary:
 # The check is advisory until the exact check name below is configured as a
 # required, strict status check for main in the repository ruleset.
+# The job deliberately runs for draft pull requests. GitHub treats a skipped
+# required job as successful, so the trusted-base validator—not a job-level
+# draft predicate—must emit the nonzero PULL_REQUEST_IS_DRAFT hold.
 
 name: repository-control
 
@@ -58,7 +61,6 @@ env:
 jobs:
   authorize-ready-and-merge:
     name: authorize-ready-and-merge
-    if: ${{ !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -117,6 +119,7 @@ jobs:
             echo "- Result: ${{ job.status }}."
             echo "- Trust boundary: standalone validator fetched from the exact trusted base SHA; no checkout or pull-request code execution; read-only contents/issues/pull-requests token."
             echo "- A success means only that an unedited owner-account comment contains a current exact-base and exact-head transition record."
+            echo "- Draft pull requests intentionally run this job; the validator emits \`EXPECTED_READINESS_HOLD / PULL_REQUEST_IS_DRAFT\` with a nonzero exit rather than a skipped-success result."
             echo "- An expected readiness hold remains nonzero and merge-blocking for this authorization check."
             echo "- Expiry and comment state are evaluated when this job runs; GitHub does not time-expire the result or rerun it after a later comment edit/deletion."
             echo "- It is not independent review, human-versus-app attribution, ruleset evidence, source activation, proof, release, deployment, or publication authority."

@@ -92,7 +92,30 @@ def test_workflow_uses_selected_live_issue_and_preserves_trusted_base_boundary()
     assert "?ref=${KFM_BASE_SHA}" in workflow
     assert "/issues/${KFM_CONTROL_ISSUE}/comments?per_page=100" in workflow
     assert "set -euo pipefail" in workflow
+    assert "if: ${{ !github.event.pull_request.draft }}" not in workflow
+    assert "PULL_REQUEST_IS_DRAFT" in workflow
     assert "|| true" not in workflow
+
+
+def test_draft_pull_request_runs_validator_and_remains_blocking() -> None:
+    draft_event = event()
+    draft_event["action"] = "opened"
+    draft_event["pull_request"]["draft"] = True
+
+    result = evaluate(
+        draft_event,
+        comments(CONTROL_ISSUE),
+        control_issue=CONTROL_ISSUE,
+        authorized_login="bartytime4life",
+        default_branch="main",
+        now=NOW,
+    )
+
+    assert (result.outcome_class, result.reason_code, result.exit_code) == (
+        "EXPECTED_READINESS_HOLD",
+        "PULL_REQUEST_IS_DRAFT",
+        3,
+    )
 
 
 def test_selected_issue_record_authorizes_only_its_exact_binding() -> None:
