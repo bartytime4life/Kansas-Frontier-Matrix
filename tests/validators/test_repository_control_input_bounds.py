@@ -20,9 +20,12 @@ class Response:
             encoded = json.dumps(value, separators=(",", ":")).encode("utf-8")
         self._stream = io.BytesIO(encoded)
         self.status = 200
+        self.bytes_read = 0
 
     def read(self, size: int = -1) -> bytes:
-        return self._stream.read(size)
+        chunk = self._stream.read(size)
+        self.bytes_read += len(chunk)
+        return chunk
 
     def __enter__(self):
         return self
@@ -135,31 +138,49 @@ def test_oversized_page_is_stopped_before_json_loading_and_fails_closed(
     assert comments_path.read_text(encoding="utf-8") == "[]\n"
 
 
-def test_aggregate_byte_limit_is_enforced_across_pages(tmp_path: Path) -> None:
+def test_aggregate_byte_limit_is_enforced_before_later_page_materialization(
+    tmp_path: Path,
+) -> None:
     pages = {
         1: [{"body": "a" * 40}],
         2: [{"body": "b" * 40}],
     }
+    encoded_pages = {
+        page: json.dumps(value, separators=(",", ":")).encode("utf-8")
+        for page, value in pages.items()
+    }
+    responses: dict[int, Response] = {}
+
+    def open_request(request, *, timeout: int):
+        assert timeout == helper.REQUEST_TIMEOUT_SECONDS
+        page = int(parse_qs(urlparse(request.full_url).query)["page"][0])
+        response = Response([], raw=encoded_pages.get(page, b"[]"))
+        responses[page] = response
+        return response
+
     comments_path = tmp_path / "comments.json"
     status_path = tmp_path / "status.json"
+    maximum = len(encoded_pages[1]) + 5
 
-    first_page_size = len(json.dumps(pages[1], separators=(",", ":")).encode())
     result = helper.capture_to_files(
         repository="bartytime4life/Kansas-Frontier-Matrix",
         control_issue=4024,
         token="test-token",
         comments_output=comments_path,
         status_output=status_path,
-        opener=opener_for(pages),
+        opener=open_request,
         per_page=1,
         max_pages=3,
         max_page_bytes=1024,
-        max_total_bytes=first_page_size + 5,
+        max_total_bytes=maximum,
     )
 
     assert result.status == "UNAVAILABLE"
     assert result.reason_code == "CONTROL_SOURCE_TOTAL_BYTES_EXCEEDED"
     assert json.loads(comments_path.read_text(encoding="utf-8")) == []
+    assert responses[1].bytes_read == len(encoded_pages[1])
+    assert responses[2].bytes_read == 6
+    assert sum(response.bytes_read for response in responses.values()) == maximum + 1
 
 
 def test_duplicate_page_keys_are_rejected_without_echoing_values(
@@ -221,6 +242,40 @@ def test_cli_missing_token_writes_unavailable_for_downstream_classification(
     assert output["reason_code"] == "CONTROL_SOURCE_TOKEN_UNAVAILABLE"
     assert comments_path.read_text(encoding="utf-8") == "[]\n"
     assert json.loads(status_path.read_text(encoding="utf-8"))["status"] == "UNAVAILABLE"
+
+
+def test_cli_rejects_abbreviated_options(tmp_path: Path) -> None:
+    comments_path = tmp_path / "comments.json"
+    status_path = tmp_path / "status.json"
+    completed = subprocess.run(
+        [
+            sys.executable,
+            str(
+                ROOT
+                / "tools/validators/repository_control/fetch_bounded_issue_comments.py"
+            ),
+            "--repository",
+            "bartytime4life/Kansas-Frontier-Matrix",
+            "--control-issue",
+            "4024",
+            "--comments-output",
+            str(comments_path),
+            "--status-output",
+            str(status_path),
+            "--api",
+            "https://api.github.com",
+        ],
+        cwd=ROOT,
+        env={"GH_TOKEN": "test-token"},
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+
+    assert completed.returncode == 2
+    assert "unrecognized arguments: --api" in completed.stderr
+    assert not comments_path.exists()
+    assert not status_path.exists()
 
 
 def test_workflow_uses_trusted_base_bounded_capture_without_slurp() -> None:
