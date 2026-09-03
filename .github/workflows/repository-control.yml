@@ -2,14 +2,16 @@
 #
 # Threat model:
 # - pull_request_target is required so pull-request changes cannot replace this
-#   workflow or the validator before the check runs.
-# - The workflow fetches only the standalone validator from the exact
+#   workflow or either validator before the check runs.
+# - The workflow fetches only standalone validators from the exact
 #   github.event.pull_request.base.sha through the GitHub API. It never checks
 #   out or executes head code.
 # - The token can read contents, issues, and pull requests only. It cannot write
 #   comments, statuses, branches, settings, releases, deployments, or packages.
-# - Issue text and event JSON are untrusted bounded data. The validator parses a
-#   strict JSON marker and never echoes comment bodies or executes their content.
+# - Issue text and event JSON are untrusted bounded data. The validators parse
+#   strict JSON and never echo comment bodies or execute their content.
+# - Control-source retrieval failure is converted into a bounded status record
+#   and rejected by a trusted-base validator instead of skipping classification.
 # - This workflow does not distinguish a human from an app acting through the
 #   same owner account. Security-log evidence and credential/app controls remain
 #   separate requirements.
@@ -42,7 +44,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  KFM_CONTROL_ISSUE: "1675"
+  KFM_CONTROL_ISSUE: "4024"
   PYTHONDONTWRITEBYTECODE: "1"
   PYTHONHASHSEED: "0"
   PYTHONUNBUFFERED: "1"
@@ -55,7 +57,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Fetch the standalone validator from the exact trusted base
+      - name: Fetch standalone validators from the exact trusted base
         env:
           GH_TOKEN: ${{ github.token }}
           KFM_BASE_SHA: ${{ github.event.pull_request.base.sha }}
@@ -64,12 +66,18 @@ jobs:
           set -euo pipefail
 
           [[ "${KFM_BASE_SHA}" =~ ^[0-9a-f]{40}$ ]]
-          validator="${RUNNER_TEMP}/validate-transition-authorization.py"
+          source_validator="${RUNNER_TEMP}/validate-control-source-availability.py"
+          transition_validator="${RUNNER_TEMP}/validate-transition-authorization.py"
+
+          gh api \
+            -H "Accept: application/vnd.github.raw+json" \
+            "/repos/${GITHUB_REPOSITORY}/contents/tools/validators/repository_control/validate_control_source_availability.py?ref=${KFM_BASE_SHA}" \
+            > "${source_validator}"
           gh api \
             -H "Accept: application/vnd.github.raw+json" \
             "/repos/${GITHUB_REPOSITORY}/contents/tools/validators/repository_control/validate_transition_authorization.py?ref=${KFM_BASE_SHA}" \
-            > "${validator}"
-          chmod 0555 "${validator}"
+            > "${transition_validator}"
+          chmod 0555 "${source_validator}" "${transition_validator}"
 
       - name: Read repository-control issue comments
         env:
@@ -77,12 +85,54 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          gh api \
+
+          comments_path="${RUNNER_TEMP}/repository-control-comments.json"
+          status_path="${RUNNER_TEMP}/repository-control-source-status.json"
+          temporary_comments="${comments_path}.tmp"
+          source_status="UNAVAILABLE"
+
+          if gh api \
             --paginate \
             --slurp \
             -H "Accept: application/vnd.github+json" \
             "/repos/${GITHUB_REPOSITORY}/issues/${KFM_CONTROL_ISSUE}/comments?per_page=100" \
-            > "${RUNNER_TEMP}/repository-control-comments.json"
+            > "${temporary_comments}" 2>/dev/null; then
+            mv "${temporary_comments}" "${comments_path}"
+            source_status="AVAILABLE"
+          else
+            rm -f "${temporary_comments}"
+            printf '[]\n' > "${comments_path}"
+          fi
+
+          python3 - "${status_path}" "${source_status}" "${GITHUB_REPOSITORY}" "${KFM_CONTROL_ISSUE}" <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+
+          output_path, status, repository, issue_text = sys.argv[1:]
+          payload = {
+              "schema_version": "1.0.0",
+              "repository": repository,
+              "control_issue": int(issue_text),
+              "status": status,
+          }
+          Path(output_path).write_text(
+              json.dumps(payload, sort_keys=True, separators=(",", ":")) + "\n",
+              encoding="utf-8",
+          )
+          PY
+
+      - name: Require live repository-control source
+        env:
+          KFM_EXPECTED_REPOSITORY: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 "${RUNNER_TEMP}/validate-control-source-availability.py" \
+            --status-file "${RUNNER_TEMP}/repository-control-source-status.json" \
+            --expected-repository "${KFM_EXPECTED_REPOSITORY}" \
+            --expected-control-issue "${KFM_CONTROL_ISSUE}" \
+            --github-step-summary "${GITHUB_STEP_SUMMARY}"
 
       - name: Require an exact owner transition record
         env:
@@ -108,7 +158,9 @@ jobs:
             echo
             echo "- Check: \`repository-control / authorize-ready-and-merge\`."
             echo "- Result: ${{ job.status }}."
-            echo "- Trust boundary: standalone validator fetched from the exact trusted base SHA; no checkout or pull-request code execution; read-only contents/issues/pull-requests token."
+            echo "- Live control source: issue \`#${KFM_CONTROL_ISSUE}\`; issue body text is non-authorizing."
+            echo "- Trust boundary: standalone validators fetched from the exact trusted base SHA; no checkout or pull-request code execution; read-only contents/issues/pull-requests token."
+            echo "- An unavailable or malformed control source remains nonzero and merge-blocking for this authorization check."
             echo "- A success means only that an unedited owner-account comment contains a current exact-base and exact-head transition record."
             echo "- An expected readiness hold remains nonzero and merge-blocking for this authorization check."
             echo "- Expiry and comment state are evaluated when this job runs; GitHub does not time-expire the result or rerun it after a later comment edit/deletion."
