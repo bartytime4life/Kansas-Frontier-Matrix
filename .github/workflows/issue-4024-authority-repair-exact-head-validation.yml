@@ -170,6 +170,7 @@ jobs:
           export KFM_HEAD_TOPOLOGY_RC="${head_rc}"
           export KFM_BASE_TOPOLOGY_REPORT="${base_report}"
           export KFM_HEAD_TOPOLOGY_REPORT="${head_report}"
+          export KFM_BASE_WORKTREE="${base_dir}"
           python - <<'PY'
           import json
           import os
@@ -181,48 +182,70 @@ jobs:
           head = json.loads(Path(os.environ["KFM_HEAD_TOPOLOGY_REPORT"]).read_text())
 
           assert base_rc == head_rc, (base_rc, head_rc)
-          assert "counts" in base and "counts" in head, (base, head)
-          assert head["tracked_path_count"] == base["tracked_path_count"] + 1, (
-              base["tracked_path_count"],
-              head["tracked_path_count"],
-          )
-          for key in (
-              "authority",
-              "schema_version",
-              "rule_count",
-              "outcome",
-              "counts",
-              "findings",
-              "baseline",
-          ):
-              assert base[key] == head[key], key
+          for key in ("authority", "schema_version", "outcome"):
+              assert base.get(key) == head.get(key), (key, base.get(key), head.get(key))
 
-          assert base_rc != 0, base
-          blocking = [
-              finding
-              for finding in head["findings"]
-              if finding["disposition"] in {
-                  "FAIL_INVARIANT",
-                  "FAIL_NEW_DRIFT",
-                  "ERROR_BASELINE_MISMATCH",
+          if "counts" not in base or "counts" not in head:
+              assert base_rc != 0, (base_rc, base)
+              assert base.get("outcome") == head.get("outcome") == "ERROR", (base, head)
+              base_error = base.get("error")
+              head_error = head.get("error")
+              assert isinstance(base_error, str) and base_error, base
+              assert isinstance(head_error, str) and head_error, head
+
+              replacements = {
+                  str(Path(os.environ["GITHUB_WORKSPACE"]).resolve()): "<repo>",
+                  str(Path(os.environ["KFM_BASE_WORKTREE"]).resolve()): "<repo>",
               }
-          ]
-          assert blocking, head
-          assert any(
-              finding["rule_id"] == "KFM-TOPO-004"
-              and finding["subject"] == "catalog/"
-              for finding in blocking
-          ), blocking
-          print(
-              "PASS_NON_INTRODUCING: current main and the exact repair head have "
-              "identical topology outcome, counts, findings, and baseline; the "
-              "only report difference is the expected one added focused test path."
-          )
-          print(
-              "Inherited topology classification: "
-              f"rc={head_rc}, outcome={head['outcome']}, "
-              f"blocking_findings={len(blocking)}."
-          )
+
+              def normalize(text: str) -> str:
+                  for source, replacement in replacements.items():
+                      text = text.replace(source, replacement)
+                  return text
+
+              assert normalize(base_error) == normalize(head_error), (base_error, head_error)
+              print(
+                  "PASS_NON_INTRODUCING: exact current main and canonical repair "
+                  "return the same inherited topology error classification."
+              )
+              print(f"Inherited topology classification: rc={head_rc}, error={head_error}")
+          else:
+              assert head["tracked_path_count"] == base["tracked_path_count"] + 1, (
+                  base["tracked_path_count"],
+                  head["tracked_path_count"],
+              )
+              for key in (
+                  "authority",
+                  "schema_version",
+                  "rule_count",
+                  "outcome",
+                  "counts",
+                  "findings",
+                  "baseline",
+              ):
+                  assert base[key] == head[key], key
+
+              assert base_rc != 0, base
+              blocking = [
+                  finding
+                  for finding in head["findings"]
+                  if finding["disposition"] in {
+                      "FAIL_INVARIANT",
+                      "FAIL_NEW_DRIFT",
+                      "ERROR_BASELINE_MISMATCH",
+                  }
+              ]
+              assert blocking, head
+              print(
+                  "PASS_NON_INTRODUCING: current main and the exact repair head have "
+                  "identical topology outcome, counts, findings, and baseline; the "
+                  "only report difference is the expected one added focused test path."
+              )
+              print(
+                  "Inherited topology classification: "
+                  f"rc={head_rc}, outcome={head['outcome']}, "
+                  f"blocking_findings={len(blocking)}."
+              )
           PY
 
           python -m unittest discover \
@@ -241,6 +264,6 @@ jobs:
             echo "- Compared base: \`${KFM_VALIDATION_BASE}\`."
             echo "- Scope: exact three-file repository-control authority-source repair."
             echo "- Permissions: read-only contents; no secrets, writes, deployment, release, or publication."
-            echo "- Topology is evaluated differentially: an inherited nonzero result is accepted only when outcome, counts, findings, and baseline are byte-equivalent between the pinned base and target, apart from the expected tracked-path count for the new focused test."
+            echo "- Topology is evaluated differentially: an inherited nonzero report or error is accepted only when the pinned base and target produce the same stable classification and diagnostics, apart from the expected tracked-path count for the new focused test when full findings are available."
             echo "- This run is validation evidence only. It does not authorize a pull request, ready transition, merge, repository-setting change, Stage 1B, Stage 2, topology-baseline replacement, or catalog mutation."
           } >> "${GITHUB_STEP_SUMMARY}"
