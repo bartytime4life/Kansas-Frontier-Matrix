@@ -117,7 +117,7 @@ not preventive merge containment.
 ## Live-source rules
 
 - Keep issue #4024 available while trusted-base workflow code references it.
-- Only an undited owner-account comment containing one strict authorization
+- Only an unedited owner-account comment containing one strict authorization
   marker can satisfy the transition validator.
 - Each record is exact to repository, control issue, pull request, base SHA,
   head SHA, actor, decision, and expiry.
@@ -165,7 +165,7 @@ emits the nonzero blocking classification.
 
 ## Pull-request lifecycle behavior
 
-The current workflow listens to `opened`, `reopened`, `synchronized`,
+The current workflow listens to `opened`, `reopened`, `synchronize`,
 `ready_for_review`, `converted_to_draft`, `edited`, `labeled`, and `unlabeled`.
 
 The authorization job runs for draft and non-draft pull requests:
