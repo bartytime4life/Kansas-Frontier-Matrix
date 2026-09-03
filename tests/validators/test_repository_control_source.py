@@ -3,11 +3,15 @@ from __future__ import annotations
 import json
 import subprocess
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 
 from tools.validators.repository_control.validate_control_source_availability import (
     append_github_step_summary,
-    evaluate,
+    evaluate as evaluate_source,
+)
+from tools.validators.repository_control.validate_transition_authorization import (
+    evaluate as evaluate_transition,
 )
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -17,8 +21,13 @@ VALIDATOR_PATH = (
 )
 WORKFLOW_PATH = ROOT / ".github/workflows/repository-control.yml"
 BINDING_PATH = ROOT / "docs/governance/REPOSITORY_TRANSITION_CONTROL_SOURCE.md"
+EVENT_PATH = (
+    ROOT
+    / "tests/fixtures/governance/repository_control/pull_request_target_event_ready.json"
+)
 REPOSITORY = "bartytime4life/Kansas-Frontier-Matrix"
 CONTROL_ISSUE = 4024
+TRANSITION_NOW = datetime(2026, 9, 3, 18, 0, tzinfo=timezone.utc)
 
 
 def source_status(status: str = "AVAILABLE") -> dict[str, object]:
@@ -31,11 +40,19 @@ def source_status(status: str = "AVAILABLE") -> dict[str, object]:
 
 
 def run(value: object):
-    return evaluate(
+    return evaluate_source(
         value,
         expected_repository=REPOSITORY,
         expected_control_issue=CONTROL_ISSUE,
     )
+
+
+def transition_event(action: str) -> dict:
+    event = json.loads(EVENT_PATH.read_text(encoding="utf-8"))
+    event["action"] = action
+    event["pull_request"]["draft"] = False
+    event["pull_request"]["state"] = "open"
+    return event
 
 
 def test_available_exact_binding_passes() -> None:
@@ -182,6 +199,28 @@ def test_workflow_uses_live_source_and_classifies_fetch_failure() -> None:
     assert "issues: write" not in workflow
     assert "pull-requests: read" in workflow
     assert "contents: write" not in workflow
+
+
+def test_workflow_holds_born_ready_and_later_ready_without_authorization() -> None:
+    workflow = WORKFLOW_PATH.read_text(encoding="utf-8")
+    assert "      - opened" in workflow
+    assert "      - ready_for_review" in workflow
+    assert "if: ${{ !github.event.pull_request.draft }}" in workflow
+
+    for action in ("opened", "ready_for_review"):
+        result = evaluate_transition(
+            transition_event(action),
+            [],
+            control_issue=CONTROL_ISSUE,
+            authorized_login="bartytime4life",
+            default_branch="main",
+            now=TRANSITION_NOW,
+        )
+        assert (result.outcome_class, result.reason_code, result.exit_code) == (
+            "EXPECTED_READINESS_HOLD",
+            "TRANSITION_AUTHORIZATION_MISSING",
+            3,
+        )
 
 
 def test_binding_note_names_selected_source_without_rewriting_history() -> None:
