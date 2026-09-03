@@ -86,6 +86,17 @@ def test_unavailable_source_fails_closed_explicitly() -> None:
     )
 
 
+def test_limit_exceeded_source_fails_closed_explicitly() -> None:
+    result = run(source_status("LIMIT_EXCEEDED"))
+    assert (result.outcome_class, result.reason_code, result.exit_code) == (
+        "REGRESSION",
+        "CONTROL_SOURCE_LIMIT_EXCEEDED",
+        1,
+    )
+    assert result.repository == REPOSITORY
+    assert result.control_issue == CONTROL_ISSUE
+
+
 def test_wrong_repository_or_issue_fails_binding() -> None:
     cases = (
         {**source_status(), "repository": "example/other"},
@@ -127,10 +138,11 @@ def test_step_summary_is_bounded(tmp_path: Path) -> None:
     assert "Response bodies and transport errors are not copied" in summary
 
 
-def test_cli_available_and_unavailable_outcomes(tmp_path: Path) -> None:
+def test_cli_available_unavailable_and_limit_outcomes(tmp_path: Path) -> None:
     for status, returncode, reason in (
         ("AVAILABLE", 0, "CONTROL_SOURCE_AVAILABLE"),
         ("UNAVAILABLE", 1, "CONTROL_SOURCE_UNAVAILABLE"),
+        ("LIMIT_EXCEEDED", 1, "CONTROL_SOURCE_LIMIT_EXCEEDED"),
     ):
         status_path = tmp_path / f"{status.lower()}.json"
         status_path.write_text(
@@ -196,12 +208,11 @@ def test_workflow_uses_live_source_and_classifies_fetch_failure() -> None:
     assert 'KFM_CONTROL_ISSUE: "4233"' not in workflow
     assert "validate_control_source_availability.py?ref=${KFM_BASE_SHA}" in workflow
     assert "validate_transition_authorization.py?ref=${KFM_BASE_SHA}" in workflow
-    assert "if gh api \\" in workflow
+    assert "if ! gh api \\" in workflow
     assert 'source_status="UNAVAILABLE"' in workflow
     assert 'source_status="AVAILABLE"' in workflow
+    assert 'source_status="LIMIT_EXCEEDED"' in workflow
     assert "repository-control-source-status.json" in workflow
-    assert 'printf \'[]\\n\' > "${comments_path}"' in workflow
-    assert '--expected-control-issue "${KFM_CONTROL_ISSUE}"' in workflow
     assert "Require live repository-control source" in workflow
     assert workflow.index("Require live repository-control source") < workflow.index(
         "Require an exact owner transition record"
@@ -210,6 +221,26 @@ def test_workflow_uses_live_source_and_classifies_fetch_failure() -> None:
     assert "issues: write" not in workflow
     assert "pull-requests: read" in workflow
     assert "contents: write" not in workflow
+
+
+def test_workflow_bounds_comment_ingestion_before_aggregation() -> None:
+    workflow = WORKFLOW_PATH.read_text(encoding="utf-8")
+    assert "--paginate" not in workflow
+    assert "--slurp" not in workflow
+    assert 'KFM_MAX_CONTROL_PAGE_BYTES: "2097152"' in workflow
+    assert 'KFM_MAX_CONTROL_SOURCE_BYTES: "16777216"' in workflow
+    assert 'KFM_MAX_CONTROL_SOURCE_PAGES: "100"' in workflow
+    assert 'KFM_MAX_CONTROL_SOURCE_RECORDS: "10000"' in workflow
+    assert "per_page=100&page=${page}" in workflow
+    assert "stat -c%s" in workflow
+    assert "page_bytes > KFM_MAX_CONTROL_PAGE_BYTES" in workflow
+    assert "total_bytes > KFM_MAX_CONTROL_SOURCE_BYTES" in workflow
+    assert "total_records > KFM_MAX_CONTROL_SOURCE_RECORDS" in workflow
+    assert "page <= KFM_MAX_CONTROL_SOURCE_PAGES + 1" in workflow
+    assert "len(encoded) > max_bytes" in workflow
+    assert workflow.index('page_bytes="$(stat -c%s') < workflow.index(
+        'path.read_text(encoding="utf-8")'
+    )
 
 
 def test_workflow_runs_draft_and_holds_both_non_draft_entry_paths() -> None:
@@ -250,3 +281,6 @@ def test_binding_note_names_selected_source_without_rewriting_history() -> None:
     assert "skipped-success" in binding
     assert "proposed and not applied" in binding
     assert "does not authorize a ruleset" in binding
+    assert "bounded page-wise ingestion" in binding
+    assert "16 mib" in binding
+    assert "10,000" in binding
