@@ -1,31 +1,43 @@
 #!/usr/bin/env python3
-"""Validate bounded availability evidence for the repository-control issue.
+"""Normalize and validate bounded repository-control source evidence.
 
-The workflow converts its GitHub issue-comment read into one strict local status
-record. This validator performs no network access, emits no untrusted response
-body, and fails closed when the designated source is unavailable or malformed.
+The workflow streams one base64-encoded issue-comment JSON object per line into
+this helper. The helper performs no network access, bounds every encoded record,
+the aggregate decoded input, and the record count before it writes one canonical
+comments array. A separate mode validates the strict local source-status record.
+No mode emits untrusted response bodies or executes their content.
 """
 
 from __future__ import annotations
 
 import argparse
+import base64
+import binascii
 import json
 import sys
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Sequence
+from typing import Any, BinaryIO, Sequence
 
 STATUS_KEYS = {"schema_version", "repository", "control_issue", "status"}
-STATUS_VALUES = {"AVAILABLE", "UNAVAILABLE"}
+STATUS_VALUES = {"AVAILABLE", "UNAVAILABLE", "INVALID", "OVER_LIMIT"}
+MAX_CONTROL_SOURCE_COMMENTS = 10_000
+MAX_CONTROL_SOURCE_BYTES = 16 * 1024 * 1024
+MAX_ENCODED_COMMENT_RECORD_BYTES = 512 * 1024
 AUTHORITY_BOUNDARY = (
-    "This result proves only whether the workflow obtained the designated "
-    "control issue comments for this run. It is not transition authorization, "
-    "independent review, settings evidence, release authority, or publication authority."
+    "This result proves only whether the workflow obtained and bounded the "
+    "designated control issue comments for this run. It is not transition "
+    "authorization, independent review, settings evidence, release authority, "
+    "or publication authority."
 )
 
 
 class InputError(ValueError):
-    """Raised when the bounded source-status input is unsafe or malformed."""
+    """Raised when bounded source input is unsafe or malformed."""
+
+
+class LimitError(InputError):
+    """Raised when bounded source input exceeds a declared limit."""
 
 
 @dataclass(frozen=True)
@@ -58,6 +70,85 @@ def _object_no_duplicates(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
             raise InputError(f"duplicate JSON key: {key}")
         result[key] = value
     return result
+
+
+def _positive_int(value: str) -> int:
+    try:
+        parsed = int(value)
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError("must be an integer") from exc
+    if parsed <= 0:
+        raise argparse.ArgumentTypeError("must be greater than zero")
+    return parsed
+
+
+def normalize_comment_stream(
+    stream: BinaryIO,
+    output_path: Path,
+    *,
+    max_comments: int = MAX_CONTROL_SOURCE_COMMENTS,
+    max_bytes: int = MAX_CONTROL_SOURCE_BYTES,
+    max_encoded_record_bytes: int = MAX_ENCODED_COMMENT_RECORD_BYTES,
+) -> tuple[int, int]:
+    """Normalize a bounded base64-per-line comment stream to one JSON array."""
+
+    if max_comments <= 0 or max_bytes <= 0 or max_encoded_record_bytes <= 0:
+        raise InputError("normalization limits must be positive integers")
+
+    comments: list[dict[str, Any]] = []
+    decoded_bytes = 2  # opening and closing brackets in the normalized array
+
+    while True:
+        encoded_line = stream.readline(max_encoded_record_bytes + 1)
+        if not encoded_line:
+            break
+        if len(encoded_line) > max_encoded_record_bytes:
+            raise LimitError("encoded comment record exceeds the byte limit")
+
+        encoded = encoded_line.strip()
+        if not encoded:
+            continue
+        try:
+            raw = base64.b64decode(encoded, validate=True)
+        except (binascii.Error, ValueError) as exc:
+            raise InputError("comment stream contains invalid base64") from exc
+
+        projected_bytes = decoded_bytes + len(raw) + (1 if comments else 0)
+        if projected_bytes > max_bytes:
+            raise LimitError("comment stream exceeds the aggregate byte limit")
+
+        try:
+            value = json.loads(
+                raw.decode("utf-8"),
+                object_pairs_hook=_object_no_duplicates,
+            )
+        except (UnicodeError, json.JSONDecodeError, InputError) as exc:
+            raise InputError("comment stream contains invalid JSON") from exc
+        if not isinstance(value, dict):
+            raise InputError("comment stream records must be JSON objects")
+
+        comments.append(value)
+        decoded_bytes = projected_bytes
+        if len(comments) > max_comments:
+            raise LimitError("comment stream exceeds the record-count limit")
+
+    normalized = (
+        json.dumps(
+            comments,
+            sort_keys=True,
+            separators=(",", ":"),
+            ensure_ascii=False,
+        )
+        + "\n"
+    ).encode("utf-8")
+    if len(normalized) > max_bytes:
+        raise LimitError("normalized comments exceed the aggregate byte limit")
+
+    try:
+        output_path.write_bytes(normalized)
+    except OSError as exc:
+        raise InputError("cannot write normalized comments") from exc
+    return len(comments), len(normalized)
 
 
 def load_json(path: Path) -> Any:
@@ -140,10 +231,26 @@ def evaluate(
             repository=repository,
             control_issue=control_issue,
         )
+    if status == "INVALID":
+        return Result(
+            "REGRESSION",
+            "CONTROL_SOURCE_RESPONSE_INVALID",
+            "The designated repository-control response was not a valid bounded comment stream.",
+            repository=repository,
+            control_issue=control_issue,
+        )
+    if status == "OVER_LIMIT":
+        return Result(
+            "REGRESSION",
+            "CONTROL_SOURCE_LIMIT_EXCEEDED",
+            "The designated repository-control response exceeded a configured input limit.",
+            repository=repository,
+            control_issue=control_issue,
+        )
     return Result(
         "PASS",
         "CONTROL_SOURCE_AVAILABLE",
-        "The designated repository-control issue comments were obtained for this run.",
+        "The designated repository-control issue comments were obtained and bounded for this run.",
         repository=repository,
         control_issue=control_issue,
     )
@@ -176,11 +283,94 @@ def append_github_step_summary(path: Path, result: Result) -> None:
 
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__, allow_abbrev=False)
-    parser.add_argument("--status-file", type=Path, required=True)
-    parser.add_argument("--expected-repository", required=True)
-    parser.add_argument("--expected-control-issue", type=int, required=True)
+    parser.add_argument("--normalize-comments-stream", action="store_true")
+    parser.add_argument("--comments-output", type=Path)
+    parser.add_argument(
+        "--max-comments",
+        type=_positive_int,
+        default=MAX_CONTROL_SOURCE_COMMENTS,
+    )
+    parser.add_argument(
+        "--max-bytes",
+        type=_positive_int,
+        default=MAX_CONTROL_SOURCE_BYTES,
+    )
+    parser.add_argument(
+        "--max-encoded-record-bytes",
+        type=_positive_int,
+        default=MAX_ENCODED_COMMENT_RECORD_BYTES,
+    )
+    parser.add_argument("--status-file", type=Path)
+    parser.add_argument("--expected-repository")
+    parser.add_argument("--expected-control-issue", type=int)
     parser.add_argument("--github-step-summary", type=Path)
     args = parser.parse_args(argv)
+
+    if args.normalize_comments_stream:
+        if args.comments_output is None:
+            parser.error("--comments-output is required with --normalize-comments-stream")
+        if any(
+            value is not None
+            for value in (
+                args.status_file,
+                args.expected_repository,
+                args.expected_control_issue,
+                args.github_step_summary,
+            )
+        ):
+            parser.error("status-validation options cannot be mixed with normalization mode")
+        try:
+            record_count, normalized_bytes = normalize_comment_stream(
+                sys.stdin.buffer,
+                args.comments_output,
+                max_comments=args.max_comments,
+                max_bytes=args.max_bytes,
+                max_encoded_record_bytes=args.max_encoded_record_bytes,
+            )
+        except LimitError:
+            print(
+                json.dumps(
+                    {
+                        "outcome_class": "REGRESSION",
+                        "reason_code": "CONTROL_SOURCE_LIMIT_EXCEEDED",
+                    },
+                    sort_keys=True,
+                    separators=(",", ":"),
+                )
+            )
+            return 2
+        except InputError:
+            print(
+                json.dumps(
+                    {
+                        "outcome_class": "REGRESSION",
+                        "reason_code": "CONTROL_SOURCE_RESPONSE_INVALID",
+                    },
+                    sort_keys=True,
+                    separators=(",", ":"),
+                )
+            )
+            return 1
+        print(
+            json.dumps(
+                {
+                    "outcome_class": "PASS",
+                    "reason_code": "CONTROL_SOURCE_STREAM_NORMALIZED",
+                    "record_count": record_count,
+                    "normalized_bytes": normalized_bytes,
+                },
+                sort_keys=True,
+                separators=(",", ":"),
+            )
+        )
+        return 0
+
+    if args.status_file is None:
+        parser.error("--status-file is required for status validation")
+    if args.expected_repository is None:
+        parser.error("--expected-repository is required for status validation")
+    if args.expected_control_issue is None:
+        parser.error("--expected-control-issue is required for status validation")
 
     try:
         value = load_json(args.status_file)

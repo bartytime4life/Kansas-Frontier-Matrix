@@ -2,13 +2,13 @@
 doc_id: kfm://doc/governance/repository-transition-control-source
 title: Repository transition control-source binding
 type: governance binding and enforcement-candidate note
-version: v1.2.0
-status: proposed; branch-only; exact-main-reconciled; not workflow-active
+version: v1.3.0
+status: current-main advisory workflow; branch-local bounded-input hardening; required check not configured
 owner: OWNER_TBD — governance steward and repository-control steward
 created: 2026-09-03
 updated: 2026-09-03
 policy_label: repository-facing; governance; fail-closed; non-authoritative
-truth_posture: CONFIRMED selected GitHub issue, incident entry paths, skipped-check race, and current ruleset gap / PROPOSED branch implementation and required-check packet
+truth_posture: CONFIRMED selected GitHub issue, incident entry paths, skipped-check race, PR #4237 bootstrap integration, and current ruleset gap / PROPOSED bounded-input hardening and required-check packet
 related:
   - ../../contracts/governance/repository_control_state.md
   - ../../tools/validators/repository_control/validate_control_source_availability.py
@@ -20,6 +20,7 @@ related:
   - https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024#issuecomment-5529114880
   - https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4234
   - https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4235
+  - https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4237
   - https://github.com/bartytime4life/Kansas-Frontier-Matrix/rules/15484585
 [/KFM_META_BLOCK_V2] -->
 
@@ -40,6 +41,20 @@ receipts still name it.
 This note binds one operational lookup identity. It does not replace the
 `RepositoryControlState` semantic contract, create a second authorization
 format, or make a workflow result authoritative.
+
+## Current implementation checkpoint
+
+CONFIRMED: PR #4237 integrated the permanent five-file bootstrap repair as
+`main@bd942b45493fa5f80e946ecfb3e810e413787394`, tree
+`73d31fda24c29185425ee87effe77c1125247b50`. The trusted-base workflow now
+reads issue #4024, validates source availability before transition records, and
+runs its authorization job for both draft and non-draft pull requests.
+
+That integration made the workflow active on the protected base. It did not
+make the check required, create independent review, prove initiating-client
+identity, authorize Stage 1B or Stage 2, or change release, deployment,
+publication, or source state. The bounded-input changes described below remain
+a branch-local hardening proposal until separately reviewed and integrated.
 
 ## Observed unauthorized entry paths
 
@@ -80,31 +95,61 @@ are not merge containment.
 - Keep issue #4024 available while a trusted-base workflow version references it.
 - The issue body is descriptive and never authorizes a transition.
 - Only an unedited owner-account comment containing one strict authorization
-  marker can satisfy the existing transition validator.
+  marker can satisfy the transition validator.
 - The record remains exact to repository, control issue, pull request, base
   SHA, head SHA, actor, finite decision, and expiry.
 - Missing, unavailable, deleted, malformed, edited, stale, expired,
   future-dated, wrong-base, wrong-head, wrong-issue, and non-owner material
   fails closed.
-- Retrieval errors are represented by a bounded local status object. Raw API
-  response bodies and transport errors are not copied into reports.
+- Retrieval errors, malformed streams, and limit violations are represented by
+  bounded local status values. Raw API response bodies and transport errors are
+  not copied into reports.
+- Comment retrieval is bounded before aggregate JSON loading: at most 10,000
+  comment objects, 16 MiB of normalized UTF-8 JSON, and 512 KiB of base64 text
+  for any one streamed comment record.
 
 ## Trusted-base execution
 
 The `pull_request_target` workflow fetches both standalone validators from the
 exact pull-request base SHA and never checks out or executes pull-request head
-code:
+code.
 
-1. `validate_control_source_availability.py` confirms that comments for the
-   designated issue were obtained and bound to the expected repository and
-   issue number.
-2. `validate_transition_authorization.py` evaluates the bounded comments only
-   after the source-availability check passes.
+### Bounded source normalization
 
-The source validator emits `CONTROL_SOURCE_UNAVAILABLE` or another bounded
-regression when the lookup cannot be trusted. This prevents deletion, outage,
-or retrieval failure from skipping the substantive authorization
-classification.
+The workflow no longer uses aggregate `--slurp` materialization. It asks
+`gh api --paginate` to emit one comment object per line as base64 and pipes the
+stream into the trusted-base `validate_control_source_availability.py` helper.
+The helper:
+
+1. reads no more than 512 KiB for any encoded record;
+2. strictly decodes one UTF-8 JSON object without duplicate keys;
+3. admits no more than 10,000 objects;
+4. admits no more than 16 MiB for the normalized comments array;
+5. writes the comments file only after all limits and shape checks pass; and
+6. emits only bounded outcome metadata, never comment content.
+
+The workflow maps the finite retrieval result into the same four-field local
+status object:
+
+- `AVAILABLE` when GitHub retrieval and normalization both succeed;
+- `UNAVAILABLE` when retrieval or the execution path is unavailable;
+- `INVALID` when the returned record stream is malformed; and
+- `OVER_LIMIT` when a record, aggregate-byte, or record-count ceiling is
+  exceeded.
+
+`validate_control_source_availability.py` then binds that status to the expected
+repository and issue. It emits `CONTROL_SOURCE_UNAVAILABLE`,
+`CONTROL_SOURCE_RESPONSE_INVALID`, `CONTROL_SOURCE_LIMIT_EXCEEDED`, or another
+bounded regression when the source cannot be trusted.
+
+### Transition classification
+
+`validate_transition_authorization.py` evaluates the normalized comments only
+after source validation passes. The trusted-base normalizer guarantees that this
+downstream file is a strict JSON array no larger than 16 MiB and contains no more
+than 10,000 comment objects. The transition validator then applies its existing
+comment-count, marker-comment, authorization-payload, owner, repository, issue,
+PR, base, head, edit-state, time, and expiry controls.
 
 The workflow listens to `opened`, `ready_for_review`, and
 `converted_to_draft`, among its bounded rerun events. Its authorization job
@@ -128,8 +173,8 @@ with a fresh exact-head pass.
 
 ## Exact platform snapshot
 
-Ruleset `15484585`, named `Protect`, was observed active for the default branch
-on `2026-09-03`. Its registered rules are:
+Ruleset `15484585`, named `Protect`, was re-read on `2026-09-03`. Its registered
+rules remain:
 
 - deletion protection;
 - non-fast-forward protection; and
@@ -143,8 +188,8 @@ or repository-topology result therefore does not presently block merge.
 
 ## Proposed server-side enforcement packet
 
-After the workflow repair is reviewed and integrated, the smallest candidate
-addition to ruleset `15484585` is:
+After the bounded-input hardening is reviewed and integrated, the smallest
+candidate addition to ruleset `15484585` remains:
 
 ```json
 {
@@ -179,28 +224,29 @@ for independent review, not permission to mutate ruleset `15484585`.
 
 The safe order is dependency-bound:
 
-1. Integrate the five-file trusted-base workflow repair through a separately
-   authorized bootstrap path. Until those bytes reach the protected base, a
-   `pull_request_target` run continues to fetch the deleted-#1675
-   implementation.
-2. Re-read the integrated workflow, exact check-run name, and GitHub Actions App
-   identity on current main.
-3. Through a separately authorized repository-settings operation, add the
+1. **CONFIRMED complete:** PR #4237 placed the issue-#4024 trusted-base workflow
+   repair on `main@bd942b45493fa5f80e946ecfb3e810e413787394`.
+2. Review, validate, and separately integrate the bounded stream
+   protections without using an unsafe PR-state path as proof of containment.
+3. Re-read the integrated workflow, exact check-run name, and GitHub Actions App
+   identity on the resulting current main.
+4. Through a separately authorized repository-settings operation, add the
    reviewed required-status-check rule without weakening deletion,
    non-fast-forward, pull-request, or thread-resolution rules.
-4. Create a draft canary and prove its first `opened` event produces
+5. Create a draft canary and prove its first `opened` event produces
    `PULL_REQUEST_IS_DRAFT`, not a skipped-success check.
-5. Prove a born-ready pull request with no record cannot merge while
+6. Prove a born-ready pull request with no record cannot merge while
    `TRANSITION_AUTHORIZATION_MISSING` is outstanding.
-6. Prove a draft pull request changed to ready with no record cannot merge under
+7. Prove a draft pull request changed to ready with no record cannot merge under
    the same hold.
-7. Prove one exact, unedited, unexpired owner record for the current base and
+8. Prove one exact, unedited, unexpired owner record for the current base and
    head allows only that transition check to pass.
-8. Prove stale, edited, malformed, duplicate-key, wrong-base, wrong-head,
-   wrong-issue, non-owner, expired, and unavailable-source cases remain blocked.
-9. Push a new head and prove strict currentness invalidates the earlier result
-   until a fresh exact-head record and rerun exist.
-10. Confirm the platform rejected each negative merge attempt before merge;
+9. Prove stale, edited, malformed, duplicate-key, wrong-base, wrong-head,
+   wrong-issue, non-owner, expired, unavailable-source, invalid-stream, and
+   over-limit cases remain blocked.
+10. Push a new head and prove strict currentness invalidates the earlier result
+    until a fresh exact-head record and rerun exist.
+11. Confirm the platform rejected each negative merge attempt before merge;
     workflow failure after merge is not acceptance evidence.
 
 The canary must use a capability-separated operator or account path whose sole
@@ -213,8 +259,10 @@ The exact check is commonly rendered as
 `repository-control / authorize-ready-and-merge`, but the ruleset context
 candidate is the check-run name `authorize-ready-and-merge`.
 
-Repairing the lookup prevents a silent 404-and-skip failure. Requiring the check
-would make its current outcome a server-side merge prerequisite. Neither action
+The active main workflow prevents a silent deleted-issue lookup. Bounded source
+normalization additionally prevents an unbounded comment history from being
+materialized and decoded as one unchecked input. Requiring the check would make
+its current outcome a server-side merge prerequisite. None of these actions
 proves the initiating client, creates independent review, or authorizes source
 admission, proof construction, release, deployment, promotion, publication, or
 sensitive-data handling.
@@ -225,25 +273,28 @@ publication, or source-state change.
 
 ## Migration boundary
 
-The workflow and this note may move to issue #4024 before historical fixtures
-and receipts are rewritten. Historical records should retain the issue identity
-they actually observed. Any authored instruction that still tells an operator
-to post a new authorization to deleted issue #1675 is stale and needs separate
+Historical fixtures and receipts may continue to name the issue identity they
+actually observed. Any authored instruction that tells an operator to post a
+new authorization to deleted issue #1675 is stale and needs separate
 reconciliation; that documentation debt does not make historical receipts
 false.
 
-This branch stops at `VALIDATED_BRANCH_ONLY` under issue #4024. It does not
-create a pull request or authorize ready, merge, Stage 1B, Stage 2, or a
-repository-settings change.
+The bounded-input hardening remains branch-local until reviewed and integrated.
+It does not authorize a pull request, ready transition, merge, Stage 1B, Stage 2,
+or repository-settings change.
 
 ## Rollback
 
-Before integration, abandon the branch. After reviewed byte integration, a
-focused forward change may restore a separately verified live successor source
-and its tests. If the required-check rule is later installed, remove or replace
-that rule through a separately authorized settings operation before reverting
-or renaming its workflow, so the protected branch is not deadlocked.
+Before integration, abandon the bounded-input branch. After reviewed
+integration, a focused forward change may adjust the numeric ceilings or replace
+the stream framing while preserving finite source states, aggregate and per-record
+limits, and fail-closed behavior. Do not undo PR #4237's live issue-#4024 binding or restore
+deleted issue #1675 without a separately verified live successor and migration
+plan.
 
-Never repoint the workflow to a missing issue, weaken negative outcomes to make
-a canary green, or rewrite historical evidence to make rollback appear
-retroactive.
+If the required-check rule is later installed, remove or replace that rule
+through a separately authorized settings operation before reverting or renaming
+its workflow, so the protected branch is not deadlocked.
+
+Never weaken negative outcomes to make a canary green or rewrite historical
+evidence to make rollback appear retroactive.

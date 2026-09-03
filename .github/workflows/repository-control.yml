@@ -10,8 +10,12 @@
 #   comments, statuses, branches, settings, releases, deployments, or packages.
 # - Issue text and event JSON are untrusted bounded data. The validators parse
 #   strict JSON and never echo comment bodies or execute their content.
-# - Control-source retrieval failure is converted into a bounded status record
-#   and rejected by a trusted-base validator instead of skipping classification.
+# - Issue comments are streamed one record at a time. Per-record, aggregate-byte,
+#   and record-count ceilings are enforced before one normalized JSON file is
+#   written or loaded by the transition validator.
+# - Control-source retrieval, shape, or limit failure is converted into a bounded
+#   status record and rejected by a trusted-base validator instead of skipping
+#   classification.
 # - The authorization job runs for draft and non-draft pull requests. Draft state
 #   produces an explicit nonzero hold; it is not converted into a skipped-success
 #   check that could satisfy a later required-status-check rule.
@@ -48,6 +52,9 @@ concurrency:
 
 env:
   KFM_CONTROL_ISSUE: "4024"
+  KFM_CONTROL_SOURCE_MAX_BYTES: "16777216"
+  KFM_CONTROL_SOURCE_MAX_COMMENTS: "10000"
+  KFM_CONTROL_SOURCE_MAX_ENCODED_RECORD_BYTES: "524288"
   PYTHONDONTWRITEBYTECODE: "1"
   PYTHONHASHSEED: "0"
   PYTHONUNBUFFERED: "1"
@@ -81,30 +88,57 @@ jobs:
             > "${transition_validator}"
           chmod 0555 "${source_validator}" "${transition_validator}"
 
-      - name: Read repository-control issue comments
+      - name: Read and bound repository-control issue comments
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           set -euo pipefail
 
+          source_validator="${RUNNER_TEMP}/validate-control-source-availability.py"
           comments_path="${RUNNER_TEMP}/repository-control-comments.json"
           status_path="${RUNNER_TEMP}/repository-control-source-status.json"
           temporary_comments="${comments_path}.tmp"
+          normalization_summary="${RUNNER_TEMP}/repository-control-normalization-summary.json"
           source_status="UNAVAILABLE"
 
+          set +e
           if gh api \
             --paginate \
-            --slurp \
+            --jq '.[] | @base64' \
             -H "Accept: application/vnd.github+json" \
             "/repos/${GITHUB_REPOSITORY}/issues/${KFM_CONTROL_ISSUE}/comments?per_page=100" \
-            > "${temporary_comments}" 2>/dev/null; then
+            2>/dev/null \
+            | python3 "${source_validator}" \
+                --normalize-comments-stream \
+                --comments-output "${temporary_comments}" \
+                --max-comments "${KFM_CONTROL_SOURCE_MAX_COMMENTS}" \
+                --max-bytes "${KFM_CONTROL_SOURCE_MAX_BYTES}" \
+                --max-encoded-record-bytes "${KFM_CONTROL_SOURCE_MAX_ENCODED_RECORD_BYTES}" \
+                > "${normalization_summary}" 2>/dev/null; then
+            pipeline_status=("${PIPESTATUS[@]}")
+          else
+            pipeline_status=("${PIPESTATUS[@]}")
+          fi
+          set -e
+
+          gh_status="${pipeline_status[0]}"
+          normalizer_status="${pipeline_status[1]}"
+          if [[ "${gh_status}" -eq 0 && "${normalizer_status}" -eq 0 ]]; then
             mv "${temporary_comments}" "${comments_path}"
             source_status="AVAILABLE"
           else
             rm -f "${temporary_comments}"
             printf '[]\n' > "${comments_path}"
+            if [[ "${normalizer_status}" -eq 2 ]]; then
+              source_status="OVER_LIMIT"
+            elif [[ "${normalizer_status}" -eq 1 ]]; then
+              source_status="INVALID"
+            else
+              source_status="UNAVAILABLE"
+            fi
           fi
+          rm -f "${normalization_summary}"
 
           python3 - "${status_path}" "${source_status}" "${GITHUB_REPOSITORY}" "${KFM_CONTROL_ISSUE}" <<'PY'
           import json
@@ -162,8 +196,9 @@ jobs:
             echo "- Result: ${{ job.status }}."
             echo "- Live control source: issue \`#${KFM_CONTROL_ISSUE}\`; issue body text is non-authorizing."
             echo "- Trust boundary: standalone validators fetched from the exact trusted base SHA; no checkout or pull-request code execution; read-only contents/issues/pull-requests token."
+            echo "- Input envelope: at most ${KFM_CONTROL_SOURCE_MAX_COMMENTS} streamed comments, ${KFM_CONTROL_SOURCE_MAX_BYTES} normalized bytes, and ${KFM_CONTROL_SOURCE_MAX_ENCODED_RECORD_BYTES} encoded bytes per record."
             echo "- Draft pull requests run this job and retain a nonzero \`PULL_REQUEST_IS_DRAFT\` hold; the job is not skipped."
-            echo "- An unavailable or malformed control source remains nonzero and merge-blocking for this authorization check."
+            echo "- An unavailable, malformed, or over-limit control source remains nonzero and merge-blocking for this authorization check."
             echo "- A success means only that an unedited owner-account comment contains a current exact-base and exact-head transition record."
             echo "- An expected readiness hold remains nonzero and merge-blocking for this authorization check."
             echo "- Expiry and comment state are evaluated when this job runs; GitHub does not time-expire the result or rerun it after a later comment edit/deletion."
