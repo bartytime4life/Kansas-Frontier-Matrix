@@ -109,65 +109,70 @@ jobs:
 
           test_path = Path("tests/validators/test_repository_control_input_bounds.py")
           test_text = test_path.read_text(encoding="utf-8")
-          test_import_anchor = "import sys\nfrom pathlib import Path\n"
-          test_import_replacement = (
+          import_test_anchor = "import sys\nfrom pathlib import Path\n"
+          import_test_replacement = (
               "import sys\n"
               "from http.client import IncompleteRead\n"
               "from pathlib import Path\n"
           )
-          if test_text.count(test_import_anchor) != 1:
+          if test_text.count(import_test_anchor) != 1:
               raise SystemExit("unexpected test import anchor")
           test_text = test_text.replace(
-              test_import_anchor, test_import_replacement, 1
+              import_test_anchor, import_test_replacement, 1
           )
 
           insertion_anchor = (
               "\n\ndef test_aggregate_byte_limit_is_enforced_before_later_page_materialization(\n"
           )
-          regression = '''
-
-
-def test_incomplete_http_read_is_normalized_to_unavailable(tmp_path: Path) -> None:
-    class TruncatedResponse:
-        status = 200
-
-        def read(self, size: int = -1) -> bytes:
-            raise IncompleteRead(b"DO_NOT_ECHO", 32)
-
-        def __enter__(self):
-            return self
-
-        def __exit__(self, exc_type, exc, traceback) -> None:
-            return None
-
-    def open_request(_request, *, timeout: int):
-        assert timeout == helper.REQUEST_TIMEOUT_SECONDS
-        return TruncatedResponse()
-
-    comments_path = tmp_path / "comments.json"
-    status_path = tmp_path / "status.json"
-    result = helper.capture_to_files(
-        repository="bartytime4life/Kansas-Frontier-Matrix",
-        control_issue=4024,
-        token="test-token",
-        comments_output=comments_path,
-        status_output=status_path,
-        opener=open_request,
-    )
-
-    assert result.status == "UNAVAILABLE"
-    assert result.reason_code == "CONTROL_SOURCE_FETCH_FAILED"
-    assert comments_path.read_text(encoding="utf-8") == "[]\\n"
-    assert json.loads(status_path.read_text(encoding="utf-8")) == {
-        "schema_version": "1.0.0",
-        "repository": "bartytime4life/Kansas-Frontier-Matrix",
-        "control_issue": 4024,
-        "status": "UNAVAILABLE",
-    }
-    serialized = json.dumps(result.as_dict(), sort_keys=True)
-    assert "DO_NOT_ECHO" not in serialized
-    assert "IncompleteRead" not in serialized
-'''
+          regression = "\n".join(
+              [
+                  "",
+                  "",
+                  "def test_incomplete_http_read_is_normalized_to_unavailable(",
+                  "    tmp_path: Path,",
+                  ") -> None:",
+                  "    class TruncatedResponse:",
+                  "        status = 200",
+                  "",
+                  "        def read(self, size: int = -1) -> bytes:",
+                  "            raise IncompleteRead(b\"DO_NOT_ECHO\", 32)",
+                  "",
+                  "        def __enter__(self):",
+                  "            return self",
+                  "",
+                  "        def __exit__(self, exc_type, exc, traceback) -> None:",
+                  "            return None",
+                  "",
+                  "    def open_request(_request, *, timeout: int):",
+                  "        assert timeout == helper.REQUEST_TIMEOUT_SECONDS",
+                  "        return TruncatedResponse()",
+                  "",
+                  "    comments_path = tmp_path / \"comments.json\"",
+                  "    status_path = tmp_path / \"status.json\"",
+                  "    result = helper.capture_to_files(",
+                  "        repository=\"bartytime4life/Kansas-Frontier-Matrix\",",
+                  "        control_issue=4024,",
+                  "        token=\"test-token\",",
+                  "        comments_output=comments_path,",
+                  "        status_output=status_path,",
+                  "        opener=open_request,",
+                  "    )",
+                  "",
+                  "    assert result.status == \"UNAVAILABLE\"",
+                  "    assert result.reason_code == \"CONTROL_SOURCE_FETCH_FAILED\"",
+                  "    assert comments_path.read_text(encoding=\"utf-8\") == \"[]\\n\"",
+                  "    assert json.loads(status_path.read_text(encoding=\"utf-8\")) == {",
+                  "        \"schema_version\": \"1.0.0\",",
+                  "        \"repository\": \"bartytime4life/Kansas-Frontier-Matrix\",",
+                  "        \"control_issue\": 4024,",
+                  "        \"status\": \"UNAVAILABLE\",",
+                  "    }",
+                  "    serialized = json.dumps(result.as_dict(), sort_keys=True)",
+                  "    assert \"DO_NOT_ECHO\" not in serialized",
+                  "    assert \"IncompleteRead\" not in serialized",
+                  "",
+              ]
+          )
           if test_text.count(insertion_anchor) != 1:
               raise SystemExit("unexpected regression insertion anchor")
           test_text = test_text.replace(
