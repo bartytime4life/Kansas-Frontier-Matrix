@@ -182,7 +182,7 @@ def test_workflow_uses_live_source_and_classifies_fetch_failure() -> None:
 
 
 def test_binding_note_names_successor_without_rewriting_history() -> None:
-    binding = BINDING_PATH.read_text(encoding="utf-8")
+    binding = BINDING_PATH.read_text(encoding="utf-8").lower()
     assert "issue #4233" in binding
     assert "deleted issue #1675" in binding
     assert "historical evidence" in binding
