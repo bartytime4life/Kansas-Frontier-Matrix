@@ -1,6 +1,7 @@
-# Temporary branch-only validation harness for the repository-control bootstrap.
+# Temporary validation harness for the repository-control bootstrap.
 # It has read-only contents permission, no secrets, no OIDC, and no mutation or
-# deployment authority. Remove it after the exact branch run is recorded.
+# deployment authority. It targets an isolated non-default validation branch so
+# even an unintended PR merge cannot alter main. Remove it after proof is saved.
 
 name: repository-control-branch-validation
 
@@ -8,6 +9,9 @@ name: repository-control-branch-validation
   push:
     branches:
       - fix/repository-control-issue-4024-binding-20260903
+  pull_request:
+    branches:
+      - validation/repository-control-canary-base-20260903
 
 permissions:
   contents: read
@@ -30,7 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - name: Check out exact branch head without persisted credentials
+      - name: Check out exact tested revision without persisted credentials
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
@@ -118,7 +122,8 @@ jobs:
             echo '### Repository-control branch validation'
             echo
             echo '- Scope: syntax, workflow parsing, focused tests, and bounded diff only.'
+            echo '- Target: isolated non-default validation branch; no main integration.'
             echo '- Permissions: read-only repository contents; no secrets or OIDC.'
-            echo '- Non-effects: no pull request, ready, merge, ruleset, release, deployment, publication, or source-state authority.'
+            echo '- Non-effects: no ready, main merge, ruleset, release, deployment, publication, or source-state authority.'
             echo '- The temporary workflow must be removed after this run is recorded.'
           } >> "${GITHUB_STEP_SUMMARY}"
