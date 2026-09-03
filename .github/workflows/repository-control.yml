@@ -14,6 +14,13 @@
 #   same owner account. Security-log evidence and credential/app controls remain
 #   separate requirements.
 #
+# Authority source:
+# - Issue #4024 was selected by the explicit owner decision recorded in comment
+#   5529114880. The issue is only the read location for candidate records; no
+#   comment authorizes a transition unless the trusted-base validator accepts its
+#   exact repository, control-issue, PR, base, head, owner, decision, and expiry.
+# - Deleted issue #1675 remains historical lineage only and is not queried.
+#
 # Enforcement boundary:
 # The check is advisory until the exact check name below is configured as a
 # required, strict status check for main in the repository ruleset.
@@ -42,7 +49,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  KFM_CONTROL_ISSUE: "1675"
+  KFM_CONTROL_ISSUE: "4024"
   PYTHONDONTWRITEBYTECODE: "1"
   PYTHONHASHSEED: "0"
   PYTHONUNBUFFERED: "1"

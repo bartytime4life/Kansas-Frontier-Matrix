@@ -1,11 +1,11 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://contract/governance/repository-control-state
 title: RepositoryControlState semantic contract
-version: v0.4.0
+version: v0.5.0
 status: proposed
 owner: OWNER_TBD — governance steward and repository-control steward
 created: 2026-07-26
-updated: 2026-07-30
+updated: 2026-09-03
 policy_label: repository-facing; governance; fail-closed; non-authoritative
 related:
   - ../../docs/doctrine/directory-rules.md
@@ -18,7 +18,10 @@ related:
   - ../../tools/validators/repository_control/validate_transition_authorization.py
   - ../../tests/validators/test_repository_control.py
   - ../../tests/validators/test_repository_transition_authorization.py
+  - ../../tests/validators/test_repository_control_authority_source.py
   - ../../.github/workflows/repository-control.yml
+  - https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024
+  - https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024#issuecomment-5529114880
   - https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675
 [/KFM_META_BLOCK_V2] -->
 
@@ -84,6 +87,16 @@ Confirmed platform evidence is one atomic prepared-context snapshot: its PR numb
 
 A required check satisfies the merge-readiness evaluation only with `PASS`. `EXPECTED_READINESS_HOLD`, `SKIPPED_EXPLICIT`, and `NOT_APPLICABLE` remain holds for a required check; `UNKNOWN` remains unknown; `REGRESSION` remains a regression. The evaluator does not infer GitHub settings or convert raw workflow failures into a classification.
 
+## Current authority source and lineage
+
+Issue #4024 is the selected live read location for exact, short-lived `KFM_REPOSITORY_TRANSITION_AUTHORIZATION_V1` records. The selection is the explicit owner decision in issue comment `5529114880`; it is not inferred from the issue merely existing, being open, or containing other incident comments. The workflow reads candidate records from #4024, but the issue and its comments remain untrusted input until the exact trusted-base validator accepts the record.
+
+Issue #1675 remains historical predecessor lineage only. It is deleted and must not be queried for new repository-transition records or presented as the current authority source. Historical contracts, fixtures, receipts, and incident records may continue to cite #1675 when they are describing the earlier control period; those references do not authorize present transitions.
+
+If issue #4024 is missing, deleted, unreadable, unavailable, or returns a failed API response, the workflow's `set -euo pipefail` path stops before validation and the check remains red. No fallback issue, cached comment set, or silently substituted source is permitted. Replacing #4024 later requires another explicit owner decision plus a separately reviewed workflow, test, and documentation change.
+
+Selecting #4024 does not authorize any pull request to become ready or merge, does not make the check required, and does not establish independent review or initiating-client attribution. It only repairs the current read location used by the existing exact-binding validator.
+
 ## Head-bound transition records
 
 The proposed `RepositoryTransitionAuthorization` is a separate, short-lived record embedded as strict JSON in a comment intended to remain append-only on the repository-control issue. It exists to make a Model B ready-and-merge decision explicit and exact-head bound when independent review is unavailable.
@@ -99,15 +112,15 @@ An accepted record must match:
 
 The trusted-base workflow rejects draft PRs, edited comments, duplicate or unknown JSON fields, stale or overlong records, and base/head mismatches. Comment bodies are treated as untrusted bounded data and are never executed or echoed.
 
-Post each authorization as a new comment on issue #1675 after the PR base and head are frozen. Do not edit it; post a replacement for any correction or new head. This synthetic example shows the exact marker and shape:
+Post each authorization as a new comment on issue #4024 after the PR base and head are frozen. Do not edit it; post a replacement for any correction or new head. This synthetic example shows the exact marker and shape:
 
 ```html
 <!-- KFM_REPOSITORY_TRANSITION_AUTHORIZATION_V1
-{"schema_version":"1.0.0","authorization_id":"kfm-rta-pr-9001-head-222222222222","repository":"bartytime4life/Kansas-Frontier-Matrix","control_issue":1675,"pr_number":9001,"base_sha":"1111111111111111111111111111111111111111","head_sha":"2222222222222222222222222222222222222222","authorizing_actor":"bartytime4life","decision":"ALLOW_READY_AND_MERGE","expires_at":"2026-07-30T22:00:00Z","reason":"Synthetic exact-head transition example.","evidence_refs":["fixture://repository-control/pr/9001/head/222222222222"]}
+{"schema_version":"1.0.0","authorization_id":"kfm-rta-pr-9001-head-222222222222","repository":"bartytime4life/Kansas-Frontier-Matrix","control_issue":4024,"pr_number":9001,"base_sha":"1111111111111111111111111111111111111111","head_sha":"2222222222222222222222222222222222222222","authorizing_actor":"bartytime4life","decision":"ALLOW_READY_AND_MERGE","expires_at":"2026-09-03T20:00:00Z","reason":"Synthetic exact-head transition example.","evidence_refs":["fixture://repository-control/pr/9001/head/222222222222"]}
 -->
 ```
 
-Keep the PR draft until that separate transition decision exists, then mark it ready to trigger the check. If an already-ready PR needs reevaluation, an `edited`, `labeled`, or `unlabeled` PR event can request a new run; none of those events supplies authority without a matching unedited #1675 record.
+Keep the PR draft until that separate transition decision exists, then mark it ready to trigger the check. If an already-ready PR needs reevaluation, an `edited`, `labeled`, or `unlabeled` PR event can request a new run; none of those events supplies authority without a matching unedited #4024 record.
 
 The expiry and unedited-comment condition are evaluated at workflow run time. GitHub does not automatically turn an already-recorded successful check into a failure when the timestamp later passes or the issue comment is later edited or deleted. Therefore the record is an exact-head point-in-time transition decision, not a continuously enforced time lease or immutable ledger: post it only when the ready-and-merge transition is actually intended, preserve it, and request a fresh run before relying on it after expiry or any comment mutation. A later head or base change invalidates the exact binding and causes a new run to hold.
 
@@ -147,4 +160,4 @@ This split follows adopted Directory Rules v2 responsibility ownership and avoid
 
 ## Rollback
 
-Before merge, close the draft PR and abandon the branch. After merge, remove any required-check coupling before reverting or renaming the workflow so `main` is not deadlocked, then use a focused reviewed revert. Preserve issue history and incident fixtures; do not rewrite shared history or represent rollback as erasing the observed control incident.
+Before merge, abandon or delete the unmerged branch. After merge, remove any required-check coupling before reverting or renaming the workflow so `main` is not deadlocked, then use a focused reviewed revert. A future authority-source replacement must be selected explicitly and must not silently fall back to deleted issue #1675. Preserve issue history and incident fixtures; do not rewrite shared history or represent rollback as erasing the observed control incident.
