@@ -1,0 +1,172 @@
+# Temporary, read-only validation harness for the repository-control bounded-input repair.
+# Every job checks out the exact candidate head rather than validation-branch code.
+# No secrets, OIDC, write permissions, deployment, release, or publication authority.
+
+name: repository-control-input-bounds-validation
+
+"on":
+  push:
+    branches:
+      - validation/repository-control-input-bounds-eb320ee
+
+permissions:
+  contents: read
+
+concurrency:
+  group: repository-control-input-bounds-validation-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_TARGET_SHA: "eb320eefa4f6ba4956c6bf3a5aa3a3afaa916e6b"
+  KFM_TRUSTED_BASE_REF: "bd942b45493fa5f80e946ecfb3e810e413787394"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  focused-control:
+    name: focused-control
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out exact candidate without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ env.KFM_TARGET_SHA }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify exact tested identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${KFM_TARGET_SHA}"
+          git merge-base --is-ancestor "${KFM_TRUSTED_BASE_REF}" HEAD
+          test "$(git merge-base "${KFM_TRUSTED_BASE_REF}" HEAD)" = "${KFM_TRUSTED_BASE_REF}"
+          git diff --check "${KFM_TRUSTED_BASE_REF}...HEAD"
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared validator dependencies
+        shell: bash
+        run: python tools/ci/install_python_ci.py project-runtime
+
+      - name: Verify syntax and workflow parsing
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile \
+            tools/validators/repository_control/fetch_bounded_issue_comments.py \
+            tools/validators/repository_control/validate_control_source_availability.py \
+            tools/validators/repository_control/validate_transition_authorization.py \
+            tests/validators/test_repository_control_input_bounds.py \
+            tests/validators/test_repository_control_source.py \
+            tests/validators/test_repository_transition_authorization.py
+          python - <<'PY'
+          from pathlib import Path
+          import yaml
+
+          value = yaml.safe_load(
+              Path('.github/workflows/repository-control.yml').read_text(encoding='utf-8')
+          )
+          assert isinstance(value, dict), 'repository-control workflow root must be an object'
+          PY
+
+      - name: Run focused repository-control regressions
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pytest \
+            tests/validators/test_repository_control_input_bounds.py \
+            tests/validators/test_repository_control_source.py \
+            tests/validators/test_repository_transition_authorization.py \
+            -q
+
+      - name: Record focused boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo '### Repository-control bounded-input validation'
+            echo
+            echo "- Exact candidate: \`${KFM_TARGET_SHA}\`."
+            echo "- Trusted base: \`${KFM_TRUSTED_BASE_REF}\`."
+            echo '- Scope: exact identity, syntax, workflow parsing, focused regressions, strict aggregate-stream budget, and exact CLI options.'
+            echo '- Permissions: read-only contents; no secrets, OIDC, PR mutation, settings, release, deployment, promotion, or publication authority.'
+          } >> "${GITHUB_STEP_SUMMARY}"
+
+  aggregate-validators:
+    name: aggregate-validators
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ env.KFM_TARGET_SHA }}
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - run: python tools/ci/install_python_ci.py project-runtime
+      - name: Validate registry and aggregate fixtures
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${KFM_TARGET_SHA}"
+          make validator-registry-check
+          make schemas
+
+  workflow-security:
+    name: workflow-security
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ env.KFM_TARGET_SHA }}
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - run: python tools/ci/install_python_ci.py project-runtime
+      - name: Run workflow-security ratchet
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${KFM_TARGET_SHA}"
+          make workflow-security
+
+  repository-topology:
+    name: repository-topology
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ env.KFM_TARGET_SHA }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - run: python tools/ci/install_python_ci.py project-runtime
+      - name: Run repository-topology ratchet
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${KFM_TARGET_SHA}"
+          make repository-topology
