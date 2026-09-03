@@ -4,6 +4,7 @@ import io
 import json
 import subprocess
 import sys
+from http.client import IncompleteRead
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
@@ -136,6 +137,50 @@ def test_oversized_page_is_stopped_before_json_loading_and_fails_closed(
     assert result.status == "UNAVAILABLE"
     assert result.reason_code == "CONTROL_SOURCE_PAGE_BYTES_EXCEEDED"
     assert comments_path.read_text(encoding="utf-8") == "[]\n"
+
+
+def test_incomplete_http_read_is_normalized_to_unavailable(
+    tmp_path: Path,
+) -> None:
+    class TruncatedResponse:
+        status = 200
+
+        def read(self, size: int = -1) -> bytes:
+            raise IncompleteRead(b"DO_NOT_ECHO", 32)
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, traceback) -> None:
+            return None
+
+    def open_request(_request, *, timeout: int):
+        assert timeout == helper.REQUEST_TIMEOUT_SECONDS
+        return TruncatedResponse()
+
+    comments_path = tmp_path / "comments.json"
+    status_path = tmp_path / "status.json"
+    result = helper.capture_to_files(
+        repository="bartytime4life/Kansas-Frontier-Matrix",
+        control_issue=4024,
+        token="test-token",
+        comments_output=comments_path,
+        status_output=status_path,
+        opener=open_request,
+    )
+
+    assert result.status == "UNAVAILABLE"
+    assert result.reason_code == "CONTROL_SOURCE_FETCH_FAILED"
+    assert comments_path.read_text(encoding="utf-8") == "[]\n"
+    assert json.loads(status_path.read_text(encoding="utf-8")) == {
+        "schema_version": "1.0.0",
+        "repository": "bartytime4life/Kansas-Frontier-Matrix",
+        "control_issue": 4024,
+        "status": "UNAVAILABLE",
+    }
+    serialized = json.dumps(result.as_dict(), sort_keys=True)
+    assert "DO_NOT_ECHO" not in serialized
+    assert "IncompleteRead" not in serialized
 
 
 def test_aggregate_byte_limit_is_enforced_before_later_page_materialization(

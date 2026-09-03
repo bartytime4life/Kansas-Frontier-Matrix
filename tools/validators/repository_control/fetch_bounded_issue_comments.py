@@ -16,6 +16,7 @@ import math
 import os
 import re
 from dataclasses import dataclass
+from http.client import HTTPException
 from pathlib import Path
 from typing import Any, Callable, Sequence
 from urllib.error import HTTPError, URLError
@@ -230,7 +231,13 @@ def _read_page(
             )
     except CaptureError:
         raise
-    except (HTTPError, URLError, OSError, TimeoutError) as exc:
+    except (
+        HTTPError,
+        URLError,
+        HTTPException,
+        OSError,
+        TimeoutError,
+    ) as exc:
         raise CaptureError("CONTROL_SOURCE_FETCH_FAILED") from exc
 
     try:
