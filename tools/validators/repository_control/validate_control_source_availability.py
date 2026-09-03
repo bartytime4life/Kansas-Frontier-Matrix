@@ -16,7 +16,7 @@ from pathlib import Path
 from typing import Any, Sequence
 
 STATUS_KEYS = {"schema_version", "repository", "control_issue", "status"}
-STATUS_VALUES = {"AVAILABLE", "UNAVAILABLE"}
+STATUS_VALUES = {"AVAILABLE", "UNAVAILABLE", "LIMIT_EXCEEDED"}
 AUTHORITY_BOUNDARY = (
     "This result proves only whether the workflow obtained the designated "
     "control issue comments for this run. It is not transition authorization, "
@@ -129,6 +129,14 @@ def evaluate(
             "REGRESSION",
             "CONTROL_SOURCE_STATUS_INVALID",
             "The control-source availability state is unsupported.",
+            repository=repository,
+            control_issue=control_issue,
+        )
+    if status == "LIMIT_EXCEEDED":
+        return Result(
+            "REGRESSION",
+            "CONTROL_SOURCE_LIMIT_EXCEEDED",
+            "The designated repository-control issue comments exceeded the bounded ingestion limits.",
             repository=repository,
             control_issue=control_issue,
         )
