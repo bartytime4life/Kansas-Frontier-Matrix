@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import "./globals.css";
+import "./transformation.css";
+import OperationalSpine from "./operational-spine";
 
 const fallbackBase = new URL("https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site");
 
@@ -47,8 +49,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        <OperationalSpine />
+        {children}
+      </body>
     </html>
   );
 }
-
