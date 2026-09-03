@@ -198,7 +198,7 @@ def test_strict_serializer_rejects_non_finite_values(value: float) -> None:
     assert caught.value.reason_code == "CONTROL_SOURCE_SERIALIZATION_INVALID"
 
 
-def test_binding_note_describes_integrated_bounded_capture_and_uninstalled_gate() -> None:
+def test_binding_note_describes_integrated_capture_and_unapplied_authorized_gate() -> None:
     binding = BINDING_PATH.read_text(encoding="utf-8")
     lowered = binding.lower()
 
@@ -214,9 +214,14 @@ def test_binding_note_describes_integrated_bounded_capture_and_uninstalled_gate(
     assert "1,000,000 json nodes" in lowered
     assert "allow_nan=false" in lowered
     assert "content-length" in lowered
-    assert "required-status-check not installed" in lowered
-    assert "proposed and not applied" in lowered
-    assert "does not authorize a ruleset" in lowered
+    assert "5532535765" in binding
+    assert "5532579086" in binding
+    assert "5532649271" in binding
+    assert "connected github capability exposes ruleset reads" in lowered
+    assert "no ruleset mutation was attempted" in lowered
+    assert "required-status-check authorized but not applied" in lowered
+    assert "authorized but not applied" in lowered
+    assert "does not itself authorize a ruleset mutation" in lowered
 
     stale_phrases = (
         "candidate bounded-input hardening",
