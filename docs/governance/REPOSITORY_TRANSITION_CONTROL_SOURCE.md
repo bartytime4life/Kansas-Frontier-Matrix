@@ -2,18 +2,19 @@
 doc_id: kfm://doc/governance/repository-transition-control-source
 title: Repository transition control-source binding
 type: governance binding and enforcement-candidate note
-version: v1.1.0
+version: v1.2.0
 status: proposed; branch-only; exact-main-reconciled; not workflow-active
 owner: OWNER_TBD — governance steward and repository-control steward
 created: 2026-09-03
 updated: 2026-09-03
 policy_label: repository-facing; governance; fail-closed; non-authoritative
-truth_posture: CONFIRMED selected GitHub issue, incident entry paths, and current ruleset gap / PROPOSED branch implementation and required-check packet
+truth_posture: CONFIRMED selected GitHub issue, incident entry paths, skipped-check race, and current ruleset gap / PROPOSED branch implementation and required-check packet
 related:
   - ../../contracts/governance/repository_control_state.md
   - ../../tools/validators/repository_control/validate_control_source_availability.py
   - ../../tools/validators/repository_control/validate_transition_authorization.py
   - ../../tests/validators/test_repository_control_source.py
+  - ../../tests/validators/test_repository_transition_authorization.py
   - ../../.github/workflows/repository-control.yml
   - https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024
   - https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024#issuecomment-5529114880
@@ -105,18 +106,25 @@ regression when the lookup cannot be trusted. This prevents deletion, outage,
 or retrieval failure from skipping the substantive authorization
 classification.
 
-The workflow listens to both `opened` and `ready_for_review`. A born-ready pull
-request therefore enters the job through `opened`; a draft pull request enters
-when a later `ready_for_review` event makes the job-level non-draft condition
-true. Focused tests require both event forms, without an exact authorization
-record, to return:
+The workflow listens to `opened`, `ready_for_review`, and
+`converted_to_draft`, among its bounded rerun events. Its authorization job
+runs for both draft and non-draft pull requests:
 
-```text
-EXPECTED_READINESS_HOLD / TRANSITION_AUTHORIZATION_MISSING / exit 3
-```
+- draft state returns
+  `EXPECTED_READINESS_HOLD / PULL_REQUEST_IS_DRAFT / exit 3`;
+- born-ready `opened` without a record returns
+  `EXPECTED_READINESS_HOLD / TRANSITION_AUTHORIZATION_MISSING / exit 3`;
+- later `ready_for_review` without a record returns the same missing-record
+  hold.
 
-This executable result becomes preventive only when GitHub requires the exact
-check before merge.
+The job must not use a draft-state `if` condition. GitHub reports a skipped job
+as successful even when that job is required. Leaving a skipped-success result
+on a draft head would create a race in which a later ready transition might be
+merged before the replacement run registers its hold.
+
+Running the job on the initial draft event leaves an explicit nonzero result on
+that head. A later valid authorization and ready event must replace that result
+with a fresh exact-head pass.
 
 ## Exact platform snapshot
 
@@ -136,7 +144,7 @@ or repository-topology result therefore does not presently block merge.
 ## Proposed server-side enforcement packet
 
 After the workflow repair is reviewed and integrated, the smallest candidate
-addition to ruleset `15484585` is the following required-status-check rule:
+addition to ruleset `15484585` is:
 
 ```json
 {
@@ -156,9 +164,13 @@ addition to ruleset `15484585` is the following required-status-check rule:
 
 The context is the observed GitHub Actions check-run name
 `authorize-ready-and-merge`; `15368` is the observed GitHub Actions App ID. The
-strict policy requires the pull-request branch to be current with the protected
-branch before the check can satisfy the rule. `do_not_enforce_on_create=false`
-keeps the rule applicable when a pull request is created already non-draft.
+strict policy requires the pull-request head to be tested with the latest
+protected-branch code before the check can satisfy the rule.
+
+`do_not_enforce_on_create` concerns creation of a protected ref, not whether a
+pull request is born draft or non-draft. It remains `false` to preserve normal
+enforcement, but the born-ready guarantee comes from the required missing or
+failing check context plus the always-running authorization job.
 
 **This packet is proposed and not applied.** It is an exact settings candidate
 for independent review, not permission to mutate ruleset `15484585`.
@@ -167,25 +179,29 @@ for independent review, not permission to mutate ruleset `15484585`.
 
 The safe order is dependency-bound:
 
-1. Integrate the four-file trusted-base workflow repair through a separately
+1. Integrate the five-file trusted-base workflow repair through a separately
    authorized bootstrap path. Until those bytes reach the protected base, a
-   `pull_request_target` run continues to fetch the deleted-#1675 implementation.
-2. Re-read the integrated workflow and exact check-run name on current main.
+   `pull_request_target` run continues to fetch the deleted-#1675
+   implementation.
+2. Re-read the integrated workflow, exact check-run name, and GitHub Actions App
+   identity on current main.
 3. Through a separately authorized repository-settings operation, add the
    reviewed required-status-check rule without weakening deletion,
    non-fast-forward, pull-request, or thread-resolution rules.
-4. Prove a born-ready pull request with no record cannot merge while
+4. Create a draft canary and prove its first `opened` event produces
+   `PULL_REQUEST_IS_DRAFT`, not a skipped-success check.
+5. Prove a born-ready pull request with no record cannot merge while
    `TRANSITION_AUTHORIZATION_MISSING` is outstanding.
-5. Prove a draft pull request changed to ready with no record cannot merge under
+6. Prove a draft pull request changed to ready with no record cannot merge under
    the same hold.
-6. Prove one exact, unedited, unexpired owner record for the current base and
+7. Prove one exact, unedited, unexpired owner record for the current base and
    head allows only that transition check to pass.
-7. Prove stale, edited, malformed, duplicate-key, wrong-base, wrong-head,
+8. Prove stale, edited, malformed, duplicate-key, wrong-base, wrong-head,
    wrong-issue, non-owner, expired, and unavailable-source cases remain blocked.
-8. Push a new head and prove strict currentness invalidates the earlier result
+9. Push a new head and prove strict currentness invalidates the earlier result
    until a fresh exact-head record and rerun exist.
-9. Confirm the platform rejected each negative merge attempt before merge;
-   workflow failure after merge is not acceptance evidence.
+10. Confirm the platform rejected each negative merge attempt before merge;
+    workflow failure after merge is not acceptance evidence.
 
 The canary must use a capability-separated operator or account path whose sole
 purpose is controlled test execution. Reusing the owner-authenticated path

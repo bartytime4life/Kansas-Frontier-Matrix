@@ -12,6 +12,9 @@
 #   strict JSON and never echo comment bodies or execute their content.
 # - Control-source retrieval failure is converted into a bounded status record
 #   and rejected by a trusted-base validator instead of skipping classification.
+# - The authorization job runs for draft and non-draft pull requests. Draft state
+#   produces an explicit nonzero hold; it is not converted into a skipped-success
+#   check that could satisfy a later required-status-check rule.
 # - This workflow does not distinguish a human from an app acting through the
 #   same owner account. Security-log evidence and credential/app controls remain
 #   separate requirements.
@@ -53,7 +56,6 @@ env:
 jobs:
   authorize-ready-and-merge:
     name: authorize-ready-and-merge
-    if: ${{ !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -160,6 +162,7 @@ jobs:
             echo "- Result: ${{ job.status }}."
             echo "- Live control source: issue \`#${KFM_CONTROL_ISSUE}\`; issue body text is non-authorizing."
             echo "- Trust boundary: standalone validators fetched from the exact trusted base SHA; no checkout or pull-request code execution; read-only contents/issues/pull-requests token."
+            echo "- Draft pull requests run this job and retain a nonzero \`PULL_REQUEST_IS_DRAFT\` hold; the job is not skipped."
             echo "- An unavailable or malformed control source remains nonzero and merge-blocking for this authorization check."
             echo "- A success means only that an unedited owner-account comment contains a current exact-base and exact-head transition record."
             echo "- An expected readiness hold remains nonzero and merge-blocking for this authorization check."

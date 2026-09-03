@@ -47,12 +47,23 @@ def run(value: object):
     )
 
 
-def transition_event(action: str) -> dict:
+def transition_event(action: str, *, draft: bool = False) -> dict:
     event = json.loads(EVENT_PATH.read_text(encoding="utf-8"))
     event["action"] = action
-    event["pull_request"]["draft"] = False
+    event["pull_request"]["draft"] = draft
     event["pull_request"]["state"] = "open"
     return event
+
+
+def evaluate_event(event: dict):
+    return evaluate_transition(
+        event,
+        [],
+        control_issue=CONTROL_ISSUE,
+        authorized_login="bartytime4life",
+        default_branch="main",
+        now=TRANSITION_NOW,
+    )
 
 
 def test_available_exact_binding_passes() -> None:
@@ -201,21 +212,22 @@ def test_workflow_uses_live_source_and_classifies_fetch_failure() -> None:
     assert "contents: write" not in workflow
 
 
-def test_workflow_holds_born_ready_and_later_ready_without_authorization() -> None:
+def test_workflow_runs_draft_and_holds_both_non_draft_entry_paths() -> None:
     workflow = WORKFLOW_PATH.read_text(encoding="utf-8")
     assert "      - opened" in workflow
     assert "      - ready_for_review" in workflow
-    assert "if: ${{ !github.event.pull_request.draft }}" in workflow
+    assert "      - converted_to_draft" in workflow
+    assert "if: ${{ !github.event.pull_request.draft }}" not in workflow
+
+    draft_result = evaluate_event(transition_event("opened", draft=True))
+    assert (draft_result.outcome_class, draft_result.reason_code, draft_result.exit_code) == (
+        "EXPECTED_READINESS_HOLD",
+        "PULL_REQUEST_IS_DRAFT",
+        3,
+    )
 
     for action in ("opened", "ready_for_review"):
-        result = evaluate_transition(
-            transition_event(action),
-            [],
-            control_issue=CONTROL_ISSUE,
-            authorized_login="bartytime4life",
-            default_branch="main",
-            now=TRANSITION_NOW,
-        )
+        result = evaluate_event(transition_event(action))
         assert (result.outcome_class, result.reason_code, result.exit_code) == (
             "EXPECTED_READINESS_HOLD",
             "TRANSITION_AUTHORIZATION_MISSING",
@@ -229,5 +241,12 @@ def test_binding_note_names_selected_source_without_rewriting_history() -> None:
     assert "issue #4233" not in binding
     assert "deleted issue #1675" in binding
     assert "historical evidence" in binding
-    assert "advisory" in binding
+    assert "pr #4234" in binding
+    assert "pr #4235" in binding
+    assert "ruleset `15484585`" in binding
+    assert '"context": "authorize-ready-and-merge"' in binding
+    assert '"integration_id": 15368' in binding
+    assert '"strict_required_status_checks_policy": true' in binding
+    assert "skipped-success" in binding
+    assert "proposed and not applied" in binding
     assert "does not authorize a ruleset" in binding
