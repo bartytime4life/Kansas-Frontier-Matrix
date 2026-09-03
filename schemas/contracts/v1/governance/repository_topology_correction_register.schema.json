@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/governance/repository_topology_correction_register.schema.json",
+  "title": "KFM Repository Topology Correction Register",
+  "description": "Fail-closed machine projection of explicitly reviewed exact frozen-topology correction transitions. Validation does not create authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "authority", "non_effects", "entries"],
+  "properties": {
+    "schema_version": {"const": "kfm.repository-topology-correction-register.v1"},
+    "authority": {"const": "accepted-decision-projection-only"},
+    "non_effects": {
+      "type": "array",
+      "minItems": 4,
+      "uniqueItems": true,
+      "allOf": [
+        {"contains": {"const": "does_not_suppress_live_findings"}},
+        {"contains": {"const": "does_not_reclassify_roots"}},
+        {"contains": {"const": "does_not_authorize_unregistered_edits"}},
+        {"contains": {"const": "does_not_authorize_deletion_migration_release_or_publication"}}
+      ],
+      "items": {"type": "string", "pattern": "^[a-z][a-z0-9_]{2,128}$"}
+    },
+    "entries": {
+      "type": "array",
+      "maxItems": 128,
+      "items": {"$ref": "#/$defs/entry"}
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "git_blob": {"type": "string", "pattern": "^[a-f0-9]{40}$"},
+    "commit": {"type": "string", "pattern": "^[a-f0-9]{40}$"},
+    "repo_path": {"type": "string", "minLength": 1, "maxLength": 512, "pattern": "^(?:\\.github|[A-Za-z0-9][A-Za-z0-9_. -]*)(?:/[A-Za-z0-9][A-Za-z0-9_. -]*)*/?$"},
+    "evidence_member": {"type": "string", "pattern": "^.+@[a-f0-9]{40}$", "maxLength": 640},
+    "state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fingerprint", "blob", "member_count"],
+      "properties": {
+        "fingerprint": {"$ref": "#/$defs/sha256"},
+        "blob": {"$ref": "#/$defs/git_blob"},
+        "member_count": {"type": "integer", "minimum": 1}
+      }
+    },
+    "delta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["removed", "added", "unchanged_member_count", "require_equal_path_set"],
+      "properties": {
+        "removed": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"$ref": "#/$defs/evidence_member"}},
+        "added": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"$ref": "#/$defs/evidence_member"}},
+        "unchanged_member_count": {"type": "integer", "minimum": 0},
+        "require_equal_path_set": {"const": true}
+      }
+    },
+    "decision_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "blob", "accepted_commit"],
+      "properties": {
+        "path": {"$ref": "#/$defs/repo_path"},
+        "blob": {"oneOf": [{"$ref": "#/$defs/git_blob"}, {"type": "null"}]},
+        "accepted_commit": {"oneOf": [{"$ref": "#/$defs/commit"}, {"type": "null"}]}
+      }
+    },
+    "rollback": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "prohibited_automatic_restore_blob", "content_change_requires_new_transition"],
+      "properties": {
+        "mode": {"const": "revoke-acceptance-and-fail-closed"},
+        "prohibited_automatic_restore_blob": {"$ref": "#/$defs/git_blob"},
+        "content_change_requires_new_transition": {"const": true}
+      }
+    },
+    "retirement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reuse", "condition"],
+      "properties": {
+        "reuse": {"const": "forbidden"},
+        "condition": {"const": "baseline-has-to-fingerprint-and-no-pending-consumer"}
+      }
+    },
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["correction_id", "status", "consume_once", "rule_id", "subject", "path", "from", "to", "exact_delta", "decision_ref", "evidence_refs", "reason_code", "rollback", "retirement"],
+      "properties": {
+        "correction_id": {"type": "string", "pattern": "^KFM-TOPO-[0-9]{3}-CORR-[A-Z0-9-]{4,64}$"},
+        "status": {"enum": ["proposed", "accepted", "rejected", "revoked", "expired", "consumed"]},
+        "consume_once": {"const": true},
+        "rule_id": {"type": "string", "pattern": "^KFM-TOPO-[0-9]{3}$"},
+        "subject": {"type": "string", "minLength": 1, "maxLength": 256},
+        "path": {"$ref": "#/$defs/repo_path"},
+        "from": {"$ref": "#/$defs/state"},
+        "to": {"$ref": "#/$defs/state"},
+        "exact_delta": {"$ref": "#/$defs/delta"},
+        "decision_ref": {"$ref": "#/$defs/decision_ref"},
+        "evidence_refs": {"type": "array", "minItems": 1, "maxItems": 32, "uniqueItems": true, "items": {"type": "string", "minLength": 1, "maxLength": 512}},
+        "reason_code": {"type": "string", "pattern": "^[a-z][a-z0-9-]{2,128}$"},
+        "rollback": {"$ref": "#/$defs/rollback"},
+        "retirement": {"$ref": "#/$defs/retirement"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"status": {"const": "accepted"}}, "required": ["status"]},
+          "then": {
+            "properties": {
+              "decision_ref": {
+                "properties": {
+                  "blob": {"$ref": "#/$defs/git_blob"},
+                  "accepted_commit": {"$ref": "#/$defs/commit"}
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED",
+    "contract_doc": "contracts/governance/repository_topology_correction_register.md",
+    "projection": "control_plane/repository_topology_correction_register.yaml",
+    "decision": "docs/adr/ADR-0038-trusted-base-topology-correction-transitions.md",
+    "authority": "accepted_decision_projection_only",
+    "non_effects": ["no_topology_validator_consumption_in_stage_1", "no_baseline_change_in_stage_1", "no_catalog_write"]
+  }
+}
