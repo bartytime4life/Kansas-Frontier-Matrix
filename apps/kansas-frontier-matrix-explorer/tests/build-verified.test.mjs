@@ -86,3 +86,23 @@ test("build wrapper rejects a vinext executable outside node_modules", linuxOnly
   assert.equal(result.status, 69, result.stderr || result.stdout);
   assert.match(result.stderr, /vinext is unavailable from the npm script PATH and app-local node_modules/);
 });
+
+test("non-authoritative Vercel projects disable automatic Git deployments", async () => {
+  const expected = {
+    $schema: "https://openapi.vercel.sh/vercel.json",
+    git: { deploymentEnabled: false },
+  };
+  const configs = [
+    ["Explorer", new URL("../vercel.json", import.meta.url)],
+    ["USGS connector", new URL("../../../connectors/usgs/vercel.json", import.meta.url)],
+  ];
+
+  for (const [label, configUrl] of configs) {
+    const actual = JSON.parse(await readFile(configUrl, "utf8"));
+    assert.deepEqual(
+      actual,
+      expected,
+      `${label} Vercel config must suspend Git deployment without adding an unadmitted adapter`,
+    );
+  }
+});
