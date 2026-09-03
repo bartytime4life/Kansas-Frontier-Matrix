@@ -1,14 +1,14 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/governance/repository-transition-control-source
 title: Repository transition control-source binding
-type: governance binding note
-version: v1.0.0
-status: proposed; branch-only; not workflow-active
+type: governance binding and enforcement-candidate note
+version: v1.1.0
+status: proposed; branch-only; exact-main-reconciled; not workflow-active
 owner: OWNER_TBD — governance steward and repository-control steward
 created: 2026-09-03
 updated: 2026-09-03
 policy_label: repository-facing; governance; fail-closed; non-authoritative
-truth_posture: CONFIRMED selected GitHub issue / PROPOSED branch implementation / UNKNOWN required-check enforcement
+truth_posture: CONFIRMED selected GitHub issue, incident entry paths, and current ruleset gap / PROPOSED branch implementation and required-check packet
 related:
   - ../../contracts/governance/repository_control_state.md
   - ../../tools/validators/repository_control/validate_control_source_availability.py
@@ -17,6 +17,9 @@ related:
   - ../../.github/workflows/repository-control.yml
   - https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024
   - https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024#issuecomment-5529114880
+  - https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4234
+  - https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4235
+  - https://github.com/bartytime4life/Kansas-Frontier-Matrix/rules/15484585
 [/KFM_META_BLOCK_V2] -->
 
 # Repository transition control-source binding
@@ -36,6 +39,40 @@ receipts still name it.
 This note binds one operational lookup identity. It does not replace the
 `RepositoryControlState` semantic contract, create a second authorization
 format, or make a workflow result authoritative.
+
+## Observed unauthorized entry paths
+
+Two exact incidents show that repository control must cover both ways a
+non-draft pull request can enter the mergeable lifecycle.
+
+### Born ready — PR #4234
+
+PR #4234 was created with `draft=false` at `2026-09-03T16:57:04Z` and merged at
+`16:57:16Z`, twelve seconds later. There was no `ready_for_review` event because
+the pull request entered the lifecycle already non-draft. The owner account is
+the recorded merge actor and GitHub reports no performing GitHub App for that
+merge event.
+
+The advisory authorization job began after the merge, still used deleted issue
+#1675, received HTTP 404, and never evaluated an exact transition record.
+
+### Draft then ready — PR #4235
+
+PR #4235 was created through a one-shot invocation with `draft=true` at
+`2026-09-03T17:29:20Z`. GitHub later records `ready_for_review` at `17:44:37Z`
+and merge at `17:44:41Z`, a four-second ready-to-merge interval. The owner
+account is the recorded actor for both events and GitHub reports no performing
+GitHub App for either event.
+
+The advisory authorization job again began after merge and used the deleted
+#1675 source from the trusted base. Terminating the draft-creation invocation
+therefore established process separation but did not establish preventive
+capability separation.
+
+These records do not identify whether the later action came from a browser,
+CLI, PAT, OAuth client, connector, or another owner-authenticated session. They
+do prove that body warnings, draft creation, and asynchronous advisory checks
+are not merge containment.
 
 ## Live-source rules
 
@@ -68,35 +105,129 @@ regression when the lookup cannot be trusted. This prevents deletion, outage,
 or retrieval failure from skipping the substantive authorization
 classification.
 
+The workflow listens to both `opened` and `ready_for_review`. A born-ready pull
+request therefore enters the job through `opened`; a draft pull request enters
+when a later `ready_for_review` event makes the job-level non-draft condition
+true. Focused tests require both event forms, without an exact authorization
+record, to return:
+
+```text
+EXPECTED_READINESS_HOLD / TRANSITION_AUTHORIZATION_MISSING / exit 3
+```
+
+This executable result becomes preventive only when GitHub requires the exact
+check before merge.
+
+## Exact platform snapshot
+
+Ruleset `15484585`, named `Protect`, was observed active for the default branch
+on `2026-09-03`. Its registered rules are:
+
+- deletion protection;
+- non-fast-forward protection; and
+- pull-request use with unresolved-thread resolution.
+
+The pull-request rule currently requires zero approving reviews, does not
+require code-owner review or last-push approval, and allows merge, squash, and
+rebase. No bypass actor is registered. Most importantly, the ruleset contains
+**no required-status-check rule**. A failing `authorize-ready-and-merge` result
+or repository-topology result therefore does not presently block merge.
+
+## Proposed server-side enforcement packet
+
+After the workflow repair is reviewed and integrated, the smallest candidate
+addition to ruleset `15484585` is the following required-status-check rule:
+
+```json
+{
+  "type": "required_status_checks",
+  "parameters": {
+    "do_not_enforce_on_create": false,
+    "required_status_checks": [
+      {
+        "context": "authorize-ready-and-merge",
+        "integration_id": 15368
+      }
+    ],
+    "strict_required_status_checks_policy": true
+  }
+}
+```
+
+The context is the observed GitHub Actions check-run name
+`authorize-ready-and-merge`; `15368` is the observed GitHub Actions App ID. The
+strict policy requires the pull-request branch to be current with the protected
+branch before the check can satisfy the rule. `do_not_enforce_on_create=false`
+keeps the rule applicable when a pull request is created already non-draft.
+
+**This packet is proposed and not applied.** It is an exact settings candidate
+for independent review, not permission to mutate ruleset `15484585`.
+
+## Bootstrap and proof order
+
+The safe order is dependency-bound:
+
+1. Integrate the four-file trusted-base workflow repair through a separately
+   authorized bootstrap path. Until those bytes reach the protected base, a
+   `pull_request_target` run continues to fetch the deleted-#1675 implementation.
+2. Re-read the integrated workflow and exact check-run name on current main.
+3. Through a separately authorized repository-settings operation, add the
+   reviewed required-status-check rule without weakening deletion,
+   non-fast-forward, pull-request, or thread-resolution rules.
+4. Prove a born-ready pull request with no record cannot merge while
+   `TRANSITION_AUTHORIZATION_MISSING` is outstanding.
+5. Prove a draft pull request changed to ready with no record cannot merge under
+   the same hold.
+6. Prove one exact, unedited, unexpired owner record for the current base and
+   head allows only that transition check to pass.
+7. Prove stale, edited, malformed, duplicate-key, wrong-base, wrong-head,
+   wrong-issue, non-owner, expired, and unavailable-source cases remain blocked.
+8. Push a new head and prove strict currentness invalidates the earlier result
+   until a fresh exact-head record and rerun exist.
+9. Confirm the platform rejected each negative merge attempt before merge;
+   workflow failure after merge is not acceptance evidence.
+
+The canary must use a capability-separated operator or account path whose sole
+purpose is controlled test execution. Reusing the owner-authenticated path
+implicated by PRs #4234 and #4235 would not prove separation.
+
 ## Enforcement boundary
 
-The exact check remains
-`repository-control / authorize-ready-and-merge`. It is **advisory** until a
-separately authorized GitHub ruleset or branch-protection change requires that
-check with strict, up-to-date behavior.
+The exact check is commonly rendered as
+`repository-control / authorize-ready-and-merge`, but the ruleset context
+candidate is the check-run name `authorize-ready-and-merge`.
 
-Repairing the lookup prevents a silent 404-and-skip failure. It does not make a
-post-transition workflow preventive, prove the initiating client, establish
-independent review, or stop an owner-authenticated merge by itself. This note
-does not authorize a ruleset, branch-protection, permission, bypass, repository
-setting, release, deployment, promotion, publication, or source-state change.
+Repairing the lookup prevents a silent 404-and-skip failure. Requiring the check
+would make its current outcome a server-side merge prerequisite. Neither action
+proves the initiating client, creates independent review, or authorizes source
+admission, proof construction, release, deployment, promotion, publication, or
+sensitive-data handling.
+
+This note does not authorize a ruleset, branch-protection, permission, bypass,
+repository-setting, approval, ready, merge, release, deployment, promotion,
+publication, or source-state change.
 
 ## Migration boundary
 
-The active workflow and this note may move to issue #4024 before historical
-fixtures and receipts are rewritten. Historical records should retain the issue
-identity they actually observed. Any authored instruction that still tells an
-operator to post a new authorization to deleted issue #1675 is stale and needs
-separate reconciliation; that documentation debt does not make historical
-receipts false.
+The workflow and this note may move to issue #4024 before historical fixtures
+and receipts are rewritten. Historical records should retain the issue identity
+they actually observed. Any authored instruction that still tells an operator
+to post a new authorization to deleted issue #1675 is stale and needs separate
+reconciliation; that documentation debt does not make historical receipts
+false.
 
 This branch stops at `VALIDATED_BRANCH_ONLY` under issue #4024. It does not
 create a pull request or authorize ready, merge, Stage 1B, Stage 2, or a
-repository-setting change.
+repository-settings change.
 
 ## Rollback
 
-Before integration, abandon the branch. After reviewed integration, rollback is
-a focused forward change that restores a separately verified live successor
-source and its tests. Never repoint the workflow to a missing issue or rewrite
-historical evidence to make rollback appear retroactive.
+Before integration, abandon the branch. After reviewed byte integration, a
+focused forward change may restore a separately verified live successor source
+and its tests. If the required-check rule is later installed, remove or replace
+that rule through a separately authorized settings operation before reverting
+or renaming its workflow, so the protected branch is not deadlocked.
+
+Never repoint the workflow to a missing issue, weaken negative outcomes to make
+a canary green, or rewrite historical evidence to make rollback appear
+retroactive.
