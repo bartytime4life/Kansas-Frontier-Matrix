@@ -1,0 +1,227 @@
+# Temporary read-only attribution harness. It executes only immutable base/head SHAs.
+name: repository-control-topology-4d438a3
+
+"on":
+  push:
+    branches:
+      - validation/repository-control-topology-4d438a3
+
+permissions:
+  contents: read
+
+concurrency:
+  group: repository-control-topology-4d438a3
+  cancel-in-progress: true
+
+env:
+  KFM_TRUSTED_BASE_REF: "7d9eda78f7da0aee0a2396d31780aaafb5694c7b"
+  KFM_TARGET_SHA: "4d438a3a3d007d85eb53d36b120c52c888d9b20c"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  paired-repository-topology:
+    name: paired-repository-topology
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out immutable trusted base
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ env.KFM_TRUSTED_BASE_REF }}
+          path: base
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Check out immutable draft head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ env.KFM_TARGET_SHA }}
+          path: candidate
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify exact identities and two-file scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C base rev-parse HEAD)" = "${KFM_TRUSTED_BASE_REF}"
+          test "$(git -C candidate rev-parse HEAD)" = "${KFM_TARGET_SHA}"
+          test "$(git -C candidate merge-base "${KFM_TRUSTED_BASE_REF}" HEAD)" = "${KFM_TRUSTED_BASE_REF}"
+          git -C candidate diff --check "${KFM_TRUSTED_BASE_REF}...HEAD"
+          git -C candidate diff --name-only "${KFM_TRUSTED_BASE_REF}...HEAD" | sort > /tmp/actual.txt
+          cat > /tmp/expected.txt <<'EOF'
+          tests/validators/test_repository_control_input_bounds.py
+          tools/validators/repository_control/fetch_bounded_issue_comments.py
+          EOF
+          diff -u /tmp/expected.txt /tmp/actual.txt
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: candidate/pyproject.toml
+
+      - name: Install declared validator dependencies
+        working-directory: candidate
+        shell: bash
+        run: python tools/ci/install_python_ci.py project-runtime
+
+      - name: Run paired repository-topology diagnostic
+        id: paired
+        shell: bash
+        run: |
+          set -uo pipefail
+          mkdir -p topology-diagnostic
+          set +e
+          (cd base && make repository-topology) > topology-diagnostic/base.log 2>&1
+          base_rc=$?
+          (cd candidate && make repository-topology) > topology-diagnostic/candidate.log 2>&1
+          candidate_rc=$?
+          set -e
+
+          BASE_RC="${base_rc}" CANDIDATE_RC="${candidate_rc}" python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          root = Path('topology-diagnostic')
+          marker = 'AssertionError: 0 != 1 : '
+
+          def read(name):
+              return (root / name).read_text(encoding='utf-8', errors='replace')
+
+          def report(text):
+              for line in text.splitlines():
+                  if marker in line:
+                      try:
+                          return json.loads(line.split(marker, 1)[1])
+                      except json.JSONDecodeError:
+                          return None
+              return None
+
+          def failed_tests(text):
+              return sorted(
+                  line.removeprefix('FAIL: ').strip()
+                  for line in text.splitlines()
+                  if line.startswith('FAIL: ')
+              )
+
+          def signature(text, return_code):
+              value = report(text)
+              result = {
+                  'return_code': return_code,
+                  'failed_tests': failed_tests(text),
+                  'report_present': value is not None,
+              }
+              if value is not None:
+                  result.update({
+                      'outcome': value.get('outcome'),
+                      'rule_count': value.get('rule_count'),
+                      'counts': value.get('counts'),
+                      'stale_fingerprints': sorted(value.get('baseline', {}).get('stale_fingerprints', [])),
+                      'non_baselined_findings': sorted(
+                          (
+                              finding.get('disposition'),
+                              finding.get('rule_id'),
+                              finding.get('subject'),
+                              finding.get('fingerprint'),
+                              finding.get('evidence_sha256'),
+                          )
+                          for finding in value.get('findings', [])
+                          if finding.get('disposition') != 'BASELINED_WARNING'
+                      ),
+                  })
+              return result, value
+
+          base_rc = int(os.environ['BASE_RC'])
+          candidate_rc = int(os.environ['CANDIDATE_RC'])
+          base_signature, base_report = signature(read('base.log'), base_rc)
+          candidate_signature, candidate_report = signature(read('candidate.log'), candidate_rc)
+          signatures_equal = base_signature == candidate_signature
+
+          if base_rc == 0 and candidate_rc == 0:
+              classification = 'BOTH_PASS'
+          elif base_rc != 0 and candidate_rc == 0:
+              classification = 'CANDIDATE_REPAIRS_BASE'
+          elif base_rc == 0 and candidate_rc != 0:
+              classification = 'CANDIDATE_REGRESSION'
+          elif signatures_equal:
+              classification = 'INHERITED_EQUIVALENT_FAILURE'
+          else:
+              classification = 'BOTH_FAIL_DIFFERENT_SIGNATURE'
+
+          base_tracked = base_report.get('tracked_path_count') if base_report else None
+          candidate_tracked = candidate_report.get('tracked_path_count') if candidate_report else None
+          result = {
+              'trusted_base_sha': os.environ['KFM_TRUSTED_BASE_REF'],
+              'candidate_sha': os.environ['KFM_TARGET_SHA'],
+              'base_exit_code': base_rc,
+              'candidate_exit_code': candidate_rc,
+              'failure_signatures_equal': signatures_equal,
+              'base_tracked_path_count': base_tracked,
+              'candidate_tracked_path_count': candidate_tracked,
+              'tracked_path_count_delta': (
+                  candidate_tracked - base_tracked
+                  if isinstance(base_tracked, int) and isinstance(candidate_tracked, int)
+                  else None
+              ),
+              'classification': classification,
+          }
+          print(json.dumps(result, indent=2, sort_keys=True))
+          with Path(os.environ['GITHUB_OUTPUT']).open('a', encoding='utf-8') as handle:
+              handle.write(
+                  f"classification={classification}\n"
+                  f"base_rc={base_rc}\n"
+                  f"candidate_rc={candidate_rc}\n"
+                  f"signatures_equal={'true' if signatures_equal else 'false'}\n"
+                  f"tracked_delta={result['tracked_path_count_delta']}\n"
+              )
+          PY
+
+      - name: Classification BOTH_PASS
+        if: steps.paired.outputs.classification == 'BOTH_PASS'
+        run: echo BOTH_PASS
+
+      - name: Classification CANDIDATE_REPAIRS_BASE
+        if: steps.paired.outputs.classification == 'CANDIDATE_REPAIRS_BASE'
+        run: echo CANDIDATE_REPAIRS_BASE
+
+      - name: Classification INHERITED_EQUIVALENT_FAILURE
+        if: steps.paired.outputs.classification == 'INHERITED_EQUIVALENT_FAILURE'
+        run: echo INHERITED_EQUIVALENT_FAILURE
+
+      - name: Record paired attribution boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo '### Current-base paired repository-topology attribution'
+            echo
+            echo "- Base: \`${KFM_TRUSTED_BASE_REF}\`."
+            echo "- Draft head: \`${KFM_TARGET_SHA}\`."
+            echo "- Base exit: \`${{ steps.paired.outputs.base_rc }}\`; candidate exit: \`${{ steps.paired.outputs.candidate_rc }}\`."
+            echo "- Signatures equal: \`${{ steps.paired.outputs.signatures_equal }}\`."
+            echo "- Tracked-path delta: \`${{ steps.paired.outputs.tracked_delta }}\`."
+            echo "- Classification: \`${{ steps.paired.outputs.classification }}\`."
+            echo '- Read-only diagnostic only; no PR, settings, release, deployment, or publication authority.'
+          } >> "${GITHUB_STEP_SUMMARY}"
+
+      - name: Fail closed on candidate-specific topology fallout
+        shell: bash
+        run: |
+          set -euo pipefail
+          case "${{ steps.paired.outputs.classification }}" in
+            BOTH_PASS|CANDIDATE_REPAIRS_BASE|INHERITED_EQUIVALENT_FAILURE)
+              exit 0
+              ;;
+            *)
+              echo "candidate-specific or non-equivalent topology result" >&2
+              exit 1
+              ;;
+          esac
