@@ -2,13 +2,13 @@
 doc_id: kfm://doc/governance/repository-transition-control-source
 title: Repository transition control-source binding
 type: governance binding and enforcement-candidate note
-version: v1.3.2
-status: current-main workflow-active advisory; bounded capture and truncated-response hardening integrated; required-status-check not installed
+version: v1.3.3
+status: current-main workflow-active advisory; bounded capture and truncated-response hardening integrated; required-status-check authorized but not applied
 owner: OWNER_TBD — governance steward and repository-control steward
 created: 2026-09-03
 updated: 2026-09-03
 policy_label: repository-facing; governance; fail-closed; non-authoritative
-truth_posture: CONFIRMED current-main issue-#4024 binding, three-helper bounded capture, and truncated-response handling / PROPOSED required-check packet
+truth_posture: CONFIRMED current-main issue-#4024 binding, three-helper bounded capture, truncated-response handling, and authorized-but-unapplied required-check packet
 related:
   - ../../contracts/governance/repository_control_state.md
   - ../../tools/validators/repository_control/fetch_bounded_issue_comments.py
@@ -21,6 +21,9 @@ related:
   - ../../.github/workflows/repository-control.yml
   - https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024
   - https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024#issuecomment-5532519315
+  - https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024#issuecomment-5532535765
+  - https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024#issuecomment-5532579086
+  - https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024#issuecomment-5532649271
   - https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4234
   - https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4235
   - https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4237
@@ -198,7 +201,7 @@ approval, and contains no required-status-check rule. No bypass actor is
 registered. That is why a correct advisory failure can occur after a merge
 without preventing it.
 
-## Proposed server-side enforcement packet
+## Authorized but unapplied server-side enforcement packet
 
 The smallest current candidate addition is:
 
@@ -218,21 +221,30 @@ The smallest current candidate addition is:
 }
 ```
 
-This packet is **proposed and not applied**. The check context is observed, but
-the GitHub Actions App identity and integration ID must be re-read immediately
-before any settings mutation. This document does not authorize a ruleset. It
-also does not authorize branch protection, permissions, bypass, approval,
-ready, merge, release, deployment, promotion, publication, or source-state
-change.
+The exact packet is **authorized but not applied**. Issue #4024 comment
+`5532535765` preserves the rollback-bound operator commands, comment
+`5532579086` records the owner authorization, and comment `5532649271`
+confirms that the connected GitHub capability exposes ruleset reads but no
+Administration-write operation. No ruleset mutation was attempted through that
+connected surface.
+
+The recorded authorization is abort-on-drift and was time-bounded through
+`2026-09-03T23:30:00Z`; its validity, current main, ruleset preimage, check
+context, and GitHub Actions integration identity must be re-read immediately
+before any separately authenticated settings operation.
+This document does not itself authorize a ruleset mutation. It also does not
+authorize branch protection, permissions, bypass, approval, ready, merge,
+release, deployment, promotion, publication, or source-state change.
 
 ## Remaining proof order
 
 1. **CONFIRMED complete:** issue #4024 source binding, three-helper strict
    bounded capture, and truncated-response handling are present on current main.
 2. Re-read the exact current workflow, check-run name, GitHub Actions App
-   identity, current ruleset, and current main immediately before a settings
-   decision.
-3. Through a separately authorized repository-settings operation, add one
+   identity, current ruleset, current main, and the recorded authorization
+   window immediately before a settings operation.
+3. Through the separately authenticated, abort-on-drift repository-settings
+   operation authorized in issue #4024 comment `5532579086`, add one
    reviewed strict required-status-check rule without weakening deletion,
    non-fast-forward, pull-request, or thread-resolution protections.
 4. Use a genuinely capability-separated operator or account for all canaries.
