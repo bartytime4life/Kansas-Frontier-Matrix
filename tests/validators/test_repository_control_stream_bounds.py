@@ -174,7 +174,7 @@ def test_workflow_streams_and_bounds_before_transition_loading() -> None:
     assert "--normalize-comments-stream" in workflow
     assert 'pipeline_status=("${PIPESTATUS[@]}")' in workflow
     assert 'source_status="INVALID"' in workflow
-    assert 'source_status="OVER_LIMIT"' in workflo
+    assert 'source_status="OVER_LIMIT"' in workflow
     assert f'KFM_CONTROL_SOURCE_MAX_COMMENTS: "{MAX_CONTROL_SOURCE_COMMENTS}"' in workflow
     assert f'KFM_CONTROL_SOURCE_MAX_BYTES: "{MAX_CONTROL_SOURCE_BYTES}"' in workflow
     assert (
