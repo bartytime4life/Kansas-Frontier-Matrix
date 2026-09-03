@@ -49,6 +49,7 @@ jobs:
           test "$(git merge-base "${KFM_TRUSTED_BASE_REF}" HEAD)" = "${KFM_TRUSTED_BASE_REF}"
           git diff --check "${KFM_TRUSTED_BASE_REF}...HEAD"
           python - <<'PY'
+          import os
           import subprocess
 
           expected = {
@@ -60,10 +61,10 @@ jobs:
               'tools/validators/repository_control/fetch_bounded_issue_comments.py',
               'tools/validators/repository_control/validate_control_source_availability.py',
           }
+          base = os.environ['KFM_TRUSTED_BASE_REF']
           actual = set(
               subprocess.check_output(
-                  ['git', 'diff', '--name-only', f"{subprocess.check_output(['git', 'merge-base', '${KFM_TRUSTED_BASE_REF}', 'HEAD'], text=True).strip()}...HEAD"],
-                  text=True,
+                  ['git', 'diff', '--name-only', f'{base}...HEAD'], text=True
               ).splitlines()
           )
           if actual != expected:
@@ -139,6 +140,7 @@ jobs:
 
           python - <<'PY'
           import json
+          import os
           from pathlib import Path
 
           root = Path('review-evidence')
@@ -147,8 +149,8 @@ jobs:
               for name in ('focused', 'registry', 'schemas', 'workflow-security')
           }
           result = {
-              'trusted_base_sha': 'bd942b45493fa5f80e946ecfb3e810e413787394',
-              'candidate_sha': '7784dce3a6b3dab59eb054b60b6139074e906b94',
+              'trusted_base_sha': os.environ['KFM_TRUSTED_BASE_REF'],
+              'candidate_sha': os.environ['KFM_TARGET_SHA'],
               'checks': checks,
               'all_pass': all(code == 0 for code in checks.values()),
           }
@@ -156,7 +158,7 @@ jobs:
               json.dumps(result, indent=2, sort_keys=True) + '\n', encoding='utf-8'
           )
           print(json.dumps(result, indent=2, sort_keys=True))
-          with Path(__import__('os').environ['GITHUB_OUTPUT']).open('a', encoding='utf-8') as output:
+          with Path(os.environ['GITHUB_OUTPUT']).open('a', encoding='utf-8') as output:
               output.write(f"all_pass={'true' if result['all_pass'] else 'false'}\n")
           PY
 
@@ -201,6 +203,8 @@ jobs:
           test "$(git -C base rev-parse HEAD)" = "${KFM_TRUSTED_BASE_REF}"
           test "$(git -C candidate rev-parse HEAD)" = "${KFM_TARGET_SHA}"
           git -C candidate merge-base --is-ancestor "${KFM_TRUSTED_BASE_REF}" HEAD
+          test "$(git -C candidate merge-base "${KFM_TRUSTED_BASE_REF}" HEAD)" = "${KFM_TRUSTED_BASE_REF}"
+          git -C candidate diff --check "${KFM_TRUSTED_BASE_REF}...HEAD"
 
       - name: Set up repository Python
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
@@ -221,9 +225,9 @@ jobs:
           set -uo pipefail
           mkdir -p topology-evidence
           set +e
-          (cd base && make repository-topology) > topology-evidence/base.log 2>&1
+          (cd base && make repository-topology) > topology-evidence/base.raw.log 2>&1
           base_rc=$?
-          (cd candidate && make repository-topology) > topology-evidence/candidate.log 2>&1
+          (cd candidate && make repository-topology) > topology-evidence/candidate.raw.log 2>&1
           candidate_rc=$?
           set -e
           BASE_RC="${base_rc}" CANDIDATE_RC="${candidate_rc}" python - <<'PY'
@@ -233,33 +237,114 @@ jobs:
           from pathlib import Path
 
           root = Path('topology-evidence')
-          base = (root / 'base.log').read_text(encoding='utf-8', errors='replace')
-          candidate = (root / 'candidate.log').read_text(encoding='utf-8', errors='replace')
-          workspace = str(Path.cwd().resolve())
-          for old in (f'{workspace}/base', f'{workspace}/candidate'):
-              base = base.replace(old, '<WORKTREE>')
-              candidate = candidate.replace(old, '<WORKTREE>')
+          workspace = Path.cwd().resolve()
+          base_sha = os.environ['KFM_TRUSTED_BASE_REF']
+          candidate_sha = os.environ['KFM_TARGET_SHA']
           base_rc = int(os.environ['BASE_RC'])
           candidate_rc = int(os.environ['CANDIDATE_RC'])
-          equal = base == candidate
-          if base_rc == candidate_rc == 0:
+
+          def raw_text(name: str) -> str:
+              return (root / name).read_text(encoding='utf-8', errors='replace')
+
+          def normalize(text: str) -> str:
+              replacements = (
+                  (str(workspace / 'base'), '<WORKTREE>'),
+                  (str(workspace / 'candidate'), '<WORKTREE>'),
+                  (str(workspace), '<GITHUB_WORKSPACE>'),
+                  (candidate_sha, '<CANDIDATE_SHA>'),
+                  (base_sha, '<BASE_SHA>'),
+              )
+              for old, new in replacements:
+                  text = text.replace(old, new)
+              return text
+
+          def report_from(text: str):
+              marker = 'AssertionError: 0 != 1 : '
+              for line in text.splitlines():
+                  if marker in line:
+                      return json.loads(line.split(marker, 1)[1])
+              return None
+
+          def failed_tests(text: str):
+              return sorted(
+                  line.removeprefix('FAIL: ').strip()
+                  for line in text.splitlines()
+                  if line.startswith('FAIL: ')
+              )
+
+          def failure_signature(text: str, return_code: int):
+              report = report_from(text)
+              signature = {
+                  'return_code': return_code,
+                  'failed_tests': failed_tests(text),
+                  'report_present': report is not None,
+              }
+              if report is not None:
+                  signature.update(
+                      {
+                          'outcome': report.get('outcome'),
+                          'rule_count': report.get('rule_count'),
+                          'counts': report.get('counts'),
+                          'stale_fingerprints': sorted(
+                              report.get('baseline', {}).get('stale_fingerprints', [])
+                          ),
+                          'non_baselined_findings': sorted(
+                              (
+                                  finding.get('disposition'),
+                                  finding.get('rule_id'),
+                                  finding.get('subject'),
+                                  finding.get('fingerprint'),
+                                  finding.get('evidence_sha256'),
+                              )
+                              for finding in report.get('findings', [])
+                              if finding.get('disposition') != 'BASELINED_WARNING'
+                          ),
+                      }
+                  )
+              return signature, report
+
+          base_raw = raw_text('base.raw.log')
+          candidate_raw = raw_text('candidate.raw.log')
+          base_text = normalize(base_raw)
+          candidate_text = normalize(candidate_raw)
+          (root / 'base.normalized.log').write_text(base_text, encoding='utf-8')
+          (root / 'candidate.normalized.log').write_text(candidate_text, encoding='utf-8')
+
+          base_signature, base_report = failure_signature(base_raw, base_rc)
+          candidate_signature, candidate_report = failure_signature(candidate_raw, candidate_rc)
+          signatures_equal = base_signature == candidate_signature
+
+          if base_rc == 0 and candidate_rc == 0:
               classification = 'BOTH_PASS'
           elif base_rc != 0 and candidate_rc == 0:
               classification = 'CANDIDATE_REPAIRS_BASE'
           elif base_rc == 0 and candidate_rc != 0:
               classification = 'CANDIDATE_REGRESSION'
-          elif equal:
+          elif signatures_equal:
               classification = 'INHERITED_EQUIVALENT_FAILURE'
           else:
-              classification = 'BOTH_FAIL_DIFFERENT_OUTPUT'
+              classification = 'BOTH_FAIL_DIFFERENT_SIGNATURE'
+
           result = {
+              'trusted_base_sha': base_sha,
+              'candidate_sha': candidate_sha,
               'base_exit_code': base_rc,
               'candidate_exit_code': candidate_rc,
-              'normalized_outputs_equal': equal,
+              'failure_signatures_equal': signatures_equal,
               'classification': classification,
-              'base_sha256': hashlib.sha256(base.encode()).hexdigest(),
-              'candidate_sha256': hashlib.sha256(candidate.encode()).hexdigest(),
+              'base_signature_sha256': hashlib.sha256(
+                  json.dumps(base_signature, sort_keys=True, separators=(',', ':')).encode()
+              ).hexdigest(),
+              'candidate_signature_sha256': hashlib.sha256(
+                  json.dumps(candidate_signature, sort_keys=True, separators=(',', ':')).encode()
+              ).hexdigest(),
           }
+          (root / 'base.failure-signature.json').write_text(
+              json.dumps(base_signature, indent=2, sort_keys=True) + '\n', encoding='utf-8'
+          )
+          (root / 'candidate.failure-signature.json').write_text(
+              json.dumps(candidate_signature, indent=2, sort_keys=True) + '\n', encoding='utf-8'
+          )
           (root / 'result.json').write_text(
               json.dumps(result, indent=2, sort_keys=True) + '\n', encoding='utf-8'
           )
