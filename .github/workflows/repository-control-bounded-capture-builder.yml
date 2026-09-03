@@ -1,0 +1,273 @@
+# One-shot branch-only builder for the repository-control bounded-capture correction.
+# It reconstructs the reviewed five-path delta from immutable SHAs, adds one
+# transport-failure regression, validates the resulting commit, and pushes only
+# to the dedicated unprotected correction branch. It never writes main or settings.
+
+name: repository-control-bounded-capture-builder
+
+"on":
+  push:
+    branches:
+      - automation/repository-control-bounded-capture-builder-20260903
+
+permissions:
+  contents: write
+
+concurrency:
+  group: repository-control-bounded-capture-builder
+  cancel-in-progress: false
+
+env:
+  KFM_BASE_SHA: "bd942b45493fa5f80e946ecfb3e810e413787394"
+  KFM_REFERENCE_SHA: "ce481946f4f93431abd92808b13657866d2bf9e4"
+  KFM_REFERENCE_BRANCH: "fix/repository-control-issue-4024-binding-20260903"
+  KFM_TARGET_BRANCH: "fix/repository-control-bounded-capture-20260903"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  build-and-validate:
+    name: build-and-validate
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - name: Check out immutable current main
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ env.KFM_BASE_SHA }}
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Verify immutable inputs and target lease
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${KFM_BASE_SHA}"
+          remote_target="$(git ls-remote --heads origin "refs/heads/${KFM_TARGET_BRANCH}" | awk '{print $1}')"
+          test "${remote_target}" = "${KFM_BASE_SHA}"
+          git fetch --no-tags origin \
+            "refs/heads/${KFM_REFERENCE_BRANCH}:refs/remotes/origin/kfm-reference"
+          git cat-file -e "${KFM_REFERENCE_SHA}^{commit}"
+          git merge-base --is-ancestor "${KFM_REFERENCE_SHA}" refs/remotes/origin/kfm-reference
+          test "$(git merge-base "${KFM_BASE_SHA}" "${KFM_REFERENCE_SHA}")" = "${KFM_BASE_SHA}"
+
+      - name: Reconstruct reviewed five-path delta
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --binary "${KFM_BASE_SHA}" "${KFM_REFERENCE_SHA}" -- \
+            .github/workflows/repository-control.yml \
+            docs/governance/REPOSITORY_TRANSITION_CONTROL_SOURCE.md \
+            tests/validators/test_repository_control_input_bounds.py \
+            tests/validators/test_repository_control_strict_input.py \
+            tools/validators/repository_control/fetch_bounded_issue_comments.py \
+            > "${RUNNER_TEMP}/reviewed.patch"
+          test -s "${RUNNER_TEMP}/reviewed.patch"
+          git apply --index --whitespace=error-all "${RUNNER_TEMP}/reviewed.patch"
+
+      - name: Normalize truncated HTTP reads and add regression
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          helper_path = Path(
+              "tools/validators/repository_control/fetch_bounded_issue_comments.py"
+          )
+          helper = helper_path.read_text(encoding="utf-8")
+          import_anchor = "from dataclasses import dataclass\nfrom pathlib import Path\n"
+          import_replacement = (
+              "from dataclasses import dataclass\n"
+              "from http.client import HTTPException\n"
+              "from pathlib import Path\n"
+          )
+          if helper.count(import_anchor) != 1:
+              raise SystemExit("unexpected helper import anchor")
+          helper = helper.replace(import_anchor, import_replacement, 1)
+
+          except_anchor = (
+              "    except (HTTPError, URLError, OSError, TimeoutError) as exc:\n"
+          )
+          except_replacement = (
+              "    except (\n"
+              "        HTTPError,\n"
+              "        URLError,\n"
+              "        HTTPException,\n"
+              "        OSError,\n"
+              "        TimeoutError,\n"
+              "    ) as exc:\n"
+          )
+          if helper.count(except_anchor) != 1:
+              raise SystemExit("unexpected helper exception anchor")
+          helper = helper.replace(except_anchor, except_replacement, 1)
+          helper_path.write_text(helper, encoding="utf-8")
+
+          test_path = Path("tests/validators/test_repository_control_input_bounds.py")
+          test_text = test_path.read_text(encoding="utf-8")
+          test_import_anchor = "import sys\nfrom pathlib import Path\n"
+          test_import_replacement = (
+              "import sys\n"
+              "from http.client import IncompleteRead\n"
+              "from pathlib import Path\n"
+          )
+          if test_text.count(test_import_anchor) != 1:
+              raise SystemExit("unexpected test import anchor")
+          test_text = test_text.replace(
+              test_import_anchor, test_import_replacement, 1
+          )
+
+          insertion_anchor = (
+              "\n\ndef test_aggregate_byte_limit_is_enforced_before_later_page_materialization(\n"
+          )
+          regression = '''
+
+
+def test_incomplete_http_read_is_normalized_to_unavailable(tmp_path: Path) -> None:
+    class TruncatedResponse:
+        status = 200
+
+        def read(self, size: int = -1) -> bytes:
+            raise IncompleteRead(b"DO_NOT_ECHO", 32)
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, traceback) -> None:
+            return None
+
+    def open_request(_request, *, timeout: int):
+        assert timeout == helper.REQUEST_TIMEOUT_SECONDS
+        return TruncatedResponse()
+
+    comments_path = tmp_path / "comments.json"
+    status_path = tmp_path / "status.json"
+    result = helper.capture_to_files(
+        repository="bartytime4life/Kansas-Frontier-Matrix",
+        control_issue=4024,
+        token="test-token",
+        comments_output=comments_path,
+        status_output=status_path,
+        opener=open_request,
+    )
+
+    assert result.status == "UNAVAILABLE"
+    assert result.reason_code == "CONTROL_SOURCE_FETCH_FAILED"
+    assert comments_path.read_text(encoding="utf-8") == "[]\\n"
+    assert json.loads(status_path.read_text(encoding="utf-8")) == {
+        "schema_version": "1.0.0",
+        "repository": "bartytime4life/Kansas-Frontier-Matrix",
+        "control_issue": 4024,
+        "status": "UNAVAILABLE",
+    }
+    serialized = json.dumps(result.as_dict(), sort_keys=True)
+    assert "DO_NOT_ECHO" not in serialized
+    assert "IncompleteRead" not in serialized
+'''
+          if test_text.count(insertion_anchor) != 1:
+              raise SystemExit("unexpected regression insertion anchor")
+          test_text = test_text.replace(
+              insertion_anchor, regression + insertion_anchor, 1
+          )
+          test_path.write_text(test_text, encoding="utf-8")
+          PY
+          git add \
+            tools/validators/repository_control/fetch_bounded_issue_comments.py \
+            tests/validators/test_repository_control_input_bounds.py
+          git diff --cached --check
+          git diff --cached --name-only | sort > "${RUNNER_TEMP}/actual-paths.txt"
+          cat > "${RUNNER_TEMP}/expected-paths.txt" <<'EOF'
+          .github/workflows/repository-control.yml
+          docs/governance/REPOSITORY_TRANSITION_CONTROL_SOURCE.md
+          tests/validators/test_repository_control_input_bounds.py
+          tests/validators/test_repository_control_strict_input.py
+          tools/validators/repository_control/fetch_bounded_issue_comments.py
+          EOF
+          diff -u "${RUNNER_TEMP}/expected-paths.txt" "${RUNNER_TEMP}/actual-paths.txt"
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared validator dependencies
+        shell: bash
+        run: python tools/ci/install_python_ci.py project-runtime
+
+      - name: Create exact candidate commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "fix(control): bound comment capture failures" \
+            -m "Reconstruct the reviewed five-path strict-input correction from immutable SHAs and normalize truncated HTTP reads to the existing deterministic UNAVAILABLE handoff. Issue: #4024."
+          echo "KFM_TARGET_SHA=$(git rev-parse HEAD)" >> "${GITHUB_ENV}"
+
+      - name: Validate exact candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${KFM_TARGET_SHA}"
+          test "$(git merge-base "${KFM_BASE_SHA}" HEAD)" = "${KFM_BASE_SHA}"
+          git diff --check "${KFM_BASE_SHA}...HEAD"
+          python -m py_compile \
+            tools/validators/repository_control/fetch_bounded_issue_comments.py \
+            tools/validators/repository_control/validate_control_source_availability.py \
+            tools/validators/repository_control/validate_transition_authorization.py \
+            tests/validators/test_repository_control_input_bounds.py \
+            tests/validators/test_repository_control_strict_input.py \
+            tests/validators/test_repository_control_source.py \
+            tests/validators/test_repository_transition_authorization.py
+          python - <<'PY'
+          from pathlib import Path
+          import yaml
+
+          value = yaml.safe_load(
+              Path(".github/workflows/repository-control.yml").read_text(
+                  encoding="utf-8"
+              )
+          )
+          assert isinstance(value, dict)
+          PY
+          python -m pytest \
+            tests/validators/test_repository_control_input_bounds.py \
+            tests/validators/test_repository_control_strict_input.py \
+            tests/validators/test_repository_control_source.py \
+            tests/validators/test_repository_transition_authorization.py \
+            -q
+          make validator-registry-check
+          make schemas
+          make workflow-security
+
+      - name: Push validated branch without force
+        shell: bash
+        run: |
+          set -euo pipefail
+          remote_target="$(git ls-remote --heads origin "refs/heads/${KFM_TARGET_BRANCH}" | awk '{print $1}')"
+          test "${remote_target}" = "${KFM_BASE_SHA}"
+          git push origin "HEAD:refs/heads/${KFM_TARGET_BRANCH}"
+          remote_after="$(git ls-remote --heads origin "refs/heads/${KFM_TARGET_BRANCH}" | awk '{print $1}')"
+          test "${remote_after}" = "${KFM_TARGET_SHA}"
+
+      - name: Record bounded authority
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### Repository-control bounded-capture builder"
+            echo
+            echo "- Base: \`${KFM_BASE_SHA}\`."
+            echo "- Reviewed reference: \`${KFM_REFERENCE_SHA}\`."
+            echo "- Candidate: \`${KFM_TARGET_SHA:-not-created}\`."
+            echo "- Target branch: \`${KFM_TARGET_BRANCH}\`."
+            echo "- Scope: five paths; bounded capture plus truncated-HTTP normalization."
+            echo "- Push policy: target branch only, non-force, exact-base lease checked before and immediately before push."
+            echo "- Non-effects: no pull request, main mutation, settings, ruleset, release, deployment, promotion, publication, or source-state authority."
+          } >> "${GITHUB_STEP_SUMMARY}"
