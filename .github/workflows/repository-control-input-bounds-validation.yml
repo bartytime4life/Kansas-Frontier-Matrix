@@ -1,0 +1,237 @@
+# Temporary, read-only validation harness for the repository-control bounded-input repair.
+# It checks out the exact candidate head rather than executing validation-branch code.
+# This workflow has no secrets, OIDC, write permissions, deployment, release, or publication authority.
+
+name: repository-control-input-bounds-validation
+
+"on":
+  push:
+    branches:
+      - validation/repository-control-input-bounds-94b9f32
+
+permissions:
+  contents: read
+
+concurrency:
+  group: repository-control-input-bounds-validation-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_TARGET_SHA: "94b9f32e0203cd9bba62a1b48056c5344e7b3940"
+  KFM_TRUSTED_BASE_REF: "bd942b45493fa5f80e946ecfb3e810e413787394"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  focused-control:
+    name: focused-control
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out exact candidate without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ env.KFM_TARGET_SHA }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify exact tested identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${KFM_TARGET_SHA}"
+          git merge-base --is-ancestor "${KFM_TRUSTED_BASE_REF}" HEAD
+          test "$(git merge-base "${KFM_TRUSTED_BASE_REF}" HEAD)" = "${KFM_TRUSTED_BASE_REF}"
+          git diff --check "${KFM_TRUSTED_BASE_REF}...HEAD"
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared validator dependencies
+        shell: bash
+        run: python tools/ci/install_python_ci.py project-runtime
+
+      - name: Verify syntax and workflow parsing
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile \
+            tools/validators/repository_control/fetch_bounded_issue_comments.py \
+            tools/validators/repository_control/validate_control_source_availability.py \
+            tools/validators/repository_control/validate_transition_authorization.py \
+            tests/validators/test_repository_control_input_bounds.py \
+            tests/validators/test_repository_control_source.py \
+            tests/validators/test_repository_transition_authorization.py
+          python - <<'PY'
+          from pathlib import Path
+          import yaml
+
+          value = yaml.safe_load(
+              Path('.github/workflows/repository-control.yml').read_text(encoding='utf-8')
+          )
+          assert isinstance(value, dict), 'repository-control workflow root must be an object'
+          PY
+
+      - name: Run focused repository-control regressions
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pytest \
+            tests/validators/test_repository_control_input_bounds.py \
+            tests/validators/test_repository_control_source.py \
+            tests/validators/test_repository_transition_authorization.py \
+            -q
+
+      - name: Probe strict aggregate read budget
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import io
+          import json
+          from urllib.parse import parse_qs, urlparse
+
+          from tools.validators.repository_control import fetch_bounded_issue_comments as helper
+
+          raw_one = json.dumps([{'body': 'a' * 20}], separators=(',', ':')).encode('utf-8')
+          raw_two = json.dumps([{'body': 'b' * 20}], separators=(',', ':')).encode('utf-8')
+          responses = {}
+
+          class TrackingResponse:
+              status = 200
+
+              def __init__(self, raw):
+                  self.stream = io.BytesIO(raw)
+                  self.bytes_read = 0
+
+              def read(self, size=-1):
+                  chunk = self.stream.read(size)
+                  self.bytes_read += len(chunk)
+                  return chunk
+
+              def __enter__(self):
+                  return self
+
+              def __exit__(self, exc_type, exc, traceback):
+                  return None
+
+          def opener(request, *, timeout):
+              page = int(parse_qs(urlparse(request.full_url).query)['page'][0])
+              raw = raw_one if page == 1 else raw_two
+              response = TrackingResponse(raw)
+              responses[page] = response
+              return response
+
+          maximum = len(raw_one) + 5
+          try:
+              helper.fetch_bounded_pages(
+                  repository='bartytime4life/Kansas-Frontier-Matrix',
+                  control_issue=4024,
+                  token='test-token',
+                  opener=opener,
+                  per_page=1,
+                  max_pages=3,
+                  max_page_bytes=1024,
+                  max_total_bytes=maximum,
+              )
+          except helper.CaptureError as exc:
+              assert exc.reason_code == 'CONTROL_SOURCE_TOTAL_BYTES_EXCEEDED'
+          else:
+              raise AssertionError('aggregate overflow must fail closed')
+
+          total_read = sum(response.bytes_read for response in responses.values())
+          assert total_read <= maximum + 1, (
+              f'aggregate capture read {total_read} bytes for a {maximum}-byte budget; '
+              'the remaining budget was not enforced before the next page was decoded'
+          )
+          print(f'PASS: aggregate stream read stayed within the {maximum}-byte budget plus one-byte overflow probe')
+          PY
+
+      - name: Record focused boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo '### Repository-control bounded-input validation'
+            echo
+            echo "- Exact candidate: \`${KFM_TARGET_SHA}\`."
+            echo "- Trusted base: \`${KFM_TRUSTED_BASE_REF}\`."
+            echo '- Scope: exact identity, syntax, YAML, focused regressions, and a strict aggregate-stream budget probe.'
+            echo '- Permissions: read-only contents; no secrets, OIDC, PR mutation, settings, release, deployment, promotion, or publication authority.'
+          } >> "${GITHUB_STEP_SUMMARY}"
+
+  aggregate-validators:
+    name: aggregate-validators
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ env.KFM_TARGET_SHA }}
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - run: python tools/ci/install_python_ci.py project-runtime
+      - name: Validate registry and aggregate fixtures
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${KFM_TARGET_SHA}"
+          make validator-registry-check
+          make schemas
+
+  workflow-security:
+    name: workflow-security
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ env.KFM_TARGET_SHA }}
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - run: python tools/ci/install_python_ci.py project-runtime
+      - name: Run workflow-security ratchet
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${KFM_TARGET_SHA}"
+          make workflow-security
+
+  repository-topology:
+    name: repository-topology
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ env.KFM_TARGET_SHA }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - run: python tools/ci/install_python_ci.py project-runtime
+      - name: Run topology ratchet with exact trusted base
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${KFM_TARGET_SHA}"
+          make repository-topology
