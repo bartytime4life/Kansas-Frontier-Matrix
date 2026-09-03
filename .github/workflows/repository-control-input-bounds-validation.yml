@@ -98,8 +98,10 @@ jobs:
           base_rc = int(os.environ["BASE_RC"])
           candidate_rc = int(os.environ["CANDIDATE_RC"])
 
-          def normalize(path: Path) -> str:
-              text = path.read_text(encoding="utf-8", errors="replace")
+          def raw_text(name: str) -> str:
+              return (root / name).read_text(encoding="utf-8", errors="replace")
+
+          def normalize(text: str) -> str:
               replacements = (
                   (str(workspace / "base"), "<WORKTREE>"),
                   (str(workspace / "candidate"), "<WORKTREE>"),
@@ -111,8 +113,55 @@ jobs:
                   text = text.replace(old, new)
               return text
 
-          base_text = normalize(root / "base.raw.log")
-          candidate_text = normalize(root / "candidate.raw.log")
+          def report_from(text: str):
+              marker = "AssertionError: 0 != 1 : "
+              for line in text.splitlines():
+                  if marker in line:
+                      return json.loads(line.split(marker, 1)[1])
+              return None
+
+          def failed_tests(text: str):
+              return sorted(
+                  line.removeprefix("FAIL: ").strip()
+                  for line in text.splitlines()
+                  if line.startswith("FAIL: ")
+              )
+
+          def failure_signature(text: str, return_code: int):
+              report = report_from(text)
+              signature = {
+                  "return_code": return_code,
+                  "failed_tests": failed_tests(text),
+                  "report_present": report is not None,
+              }
+              if report is not None:
+                  signature.update(
+                      {
+                          "outcome": report.get("outcome"),
+                          "rule_count": report.get("rule_count"),
+                          "counts": report.get("counts"),
+                          "stale_fingerprints": sorted(
+                              report.get("baseline", {}).get("stale_fingerprints", [])
+                          ),
+                          "non_baselined_findings": sorted(
+                              (
+                                  finding.get("disposition"),
+                                  finding.get("rule_id"),
+                                  finding.get("subject"),
+                                  finding.get("fingerprint"),
+                                  finding.get("evidence_sha256"),
+                              )
+                              for finding in report.get("findings", [])
+                              if finding.get("disposition") != "BASELINED_WARNING"
+                          ),
+                      }
+                  )
+              return signature, report
+
+          base_raw = raw_text("base.raw.log")
+          candidate_raw = raw_text("candidate.raw.log")
+          base_text = normalize(base_raw)
+          candidate_text = normalize(candidate_raw)
           (root / "base.normalized.log").write_text(base_text, encoding="utf-8")
           (root / "candidate.normalized.log").write_text(candidate_text, encoding="utf-8")
 
@@ -126,45 +175,74 @@ jobs:
           )
           (root / "normalized.diff").write_text(diff, encoding="utf-8")
 
+          base_signature, base_report = failure_signature(base_raw, base_rc)
+          candidate_signature, candidate_report = failure_signature(
+              candidate_raw, candidate_rc
+          )
+          (root / "base.failure-signature.json").write_text(
+              json.dumps(base_signature, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          (root / "candidate.failure-signature.json").write_text(
+              json.dumps(candidate_signature, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+
+          signatures_equal = base_signature == candidate_signature
+          base_tracked = base_report.get("tracked_path_count") if base_report else None
+          candidate_tracked = (
+              candidate_report.get("tracked_path_count") if candidate_report else None
+          )
+
           if base_rc == 0 and candidate_rc == 0:
               classification = "BOTH_PASS"
           elif base_rc != 0 and candidate_rc == 0:
               classification = "CANDIDATE_REPAIRS_BASE"
           elif base_rc == 0 and candidate_rc != 0:
               classification = "CANDIDATE_REGRESSION"
-          elif base_text == candidate_text:
-              classification = "INHERITED_IDENTICAL_FAILURE"
+          elif signatures_equal:
+              classification = "INHERITED_EQUIVALENT_FAILURE"
           else:
-              classification = "BOTH_FAIL_DIFFERENT_OUTPUT"
+              classification = "BOTH_FAIL_DIFFERENT_SIGNATURE"
 
           result = {
               "trusted_base_sha": base_sha,
               "candidate_sha": candidate_sha,
               "base_exit_code": base_rc,
               "candidate_exit_code": candidate_rc,
-              "normalized_outputs_equal": base_text == candidate_text,
+              "base_tracked_path_count": base_tracked,
+              "candidate_tracked_path_count": candidate_tracked,
+              "tracked_path_count_delta": (
+                  candidate_tracked - base_tracked
+                  if isinstance(base_tracked, int) and isinstance(candidate_tracked, int)
+                  else None
+              ),
+              "raw_normalized_outputs_equal": base_text == candidate_text,
+              "failure_signatures_equal": signatures_equal,
               "classification": classification,
           }
           (root / "result.json").write_text(
               json.dumps(result, indent=2, sort_keys=True) + "\n",
               encoding="utf-8",
           )
-          Path(os.environ["GITHUB_OUTPUT"]).open("a", encoding="utf-8").write(
-              f"classification={classification}\n"
-              f"base_rc={base_rc}\n"
-              f"candidate_rc={candidate_rc}\n"
-              f"outputs_equal={'true' if base_text == candidate_text else 'false'}\n"
-          )
+          with Path(os.environ["GITHUB_OUTPUT"]).open("a", encoding="utf-8") as output:
+              output.write(
+                  f"classification={classification}\n"
+                  f"base_rc={base_rc}\n"
+                  f"candidate_rc={candidate_rc}\n"
+                  f"signatures_equal={'true' if signatures_equal else 'false'}\n"
+                  f"tracked_delta={result['tracked_path_count_delta']}\n"
+              )
           PY
 
           echo '--- paired topology result ---'
           cat topology-diagnostic/result.json
-          echo '--- trusted-base topology output (first 240 lines) ---'
-          sed -n '1,240p' topology-diagnostic/base.raw.log
-          echo '--- candidate topology output (first 240 lines) ---'
-          sed -n '1,240p' topology-diagnostic/candidate.raw.log
-          echo '--- normalized diff (first 240 lines) ---'
-          sed -n '1,240p' topology-diagnostic/normalized.diff
+          echo '--- trusted-base failure signature ---'
+          cat topology-diagnostic/base.failure-signature.json
+          echo '--- candidate failure signature ---'
+          cat topology-diagnostic/candidate.failure-signature.json
+          echo '--- normalized raw diff (first 120 lines; diagnostic only) ---'
+          sed -n '1,120p' topology-diagnostic/normalized.diff
 
       - name: Upload paired diagnostic evidence
         if: always()
@@ -186,8 +264,10 @@ jobs:
             echo "- Candidate: \`${KFM_TARGET_SHA}\`."
             echo "- Base exit code: \`${{ steps.paired.outputs.base_rc }}\`."
             echo "- Candidate exit code: \`${{ steps.paired.outputs.candidate_rc }}\`."
-            echo "- Normalized outputs equal: \`${{ steps.paired.outputs.outputs_equal }}\`."
+            echo "- Failure signatures equal: \`${{ steps.paired.outputs.signatures_equal }}\`."
+            echo "- Tracked-path delta: \`${{ steps.paired.outputs.tracked_delta }}\`."
             echo "- Classification: \`${{ steps.paired.outputs.classification }}\`."
+            echo '- Raw logs may differ in worktree paths, timing, and tracked-path count; attribution is based on exact failed tests and fail-driving topology fingerprints.'
             echo '- The harness is diagnostic only and grants no integration, release, deployment, promotion, or publication authority.'
           } >> "${GITHUB_STEP_SUMMARY}"
 
@@ -196,7 +276,7 @@ jobs:
         run: |
           set -euo pipefail
           case "${{ steps.paired.outputs.classification }}" in
-            BOTH_PASS|CANDIDATE_REPAIRS_BASE|INHERITED_IDENTICAL_FAILURE)
+            BOTH_PASS|CANDIDATE_REPAIRS_BASE|INHERITED_EQUIVALENT_FAILURE)
               exit 0
               ;;
             *)
