@@ -1,17 +1,18 @@
 #!/usr/bin/env python3
 """Capture repository-control issue comments through strict resource bounds.
 
-The helper reads one GitHub API page at a time, rejects oversized pages or
-aggregates before JSON materialization can grow without bound, and writes only
-one of two local source states: ``AVAILABLE`` with the complete bounded page
-array, or ``UNAVAILABLE`` with an empty comments array. The downstream trusted-
-base source validator remains responsible for the blocking classification.
+The helper reads one GitHub API page at a time, rejects oversized or structurally
+unsafe pages before they can become control input, and writes only one of two
+local source states: ``AVAILABLE`` with a complete bounded page array, or
+``UNAVAILABLE`` with an empty comments array. The downstream trusted-base source
+validator remains responsible for the blocking classification.
 """
 
 from __future__ import annotations
 
 import argparse
 import json
+import math
 import os
 import re
 from dataclasses import dataclass
@@ -25,6 +26,11 @@ PER_PAGE = 100
 MAX_PAGES = 100
 MAX_PAGE_BYTES = 8 * 1024 * 1024
 MAX_TOTAL_BYTES = 16 * 1024 * 1024
+MAX_JSON_DEPTH = 32
+MAX_PAGE_NODES = 100_000
+MAX_TOTAL_NODES = 1_000_000
+MAX_INTEGER_DIGITS = 128
+MAX_FLOAT_TOKEN_CHARS = 128
 READ_CHUNK_BYTES = 64 * 1024
 REQUEST_TIMEOUT_SECONDS = 20
 REPOSITORY_PATTERN = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$")
@@ -61,6 +67,7 @@ class BoundedPages:
     value: list[list[dict[str, Any]]]
     comment_count: int
     transferred_bytes: int
+    node_count: int
 
 
 def _object_no_duplicates(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
@@ -70,6 +77,45 @@ def _object_no_duplicates(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
             raise CaptureError("CONTROL_SOURCE_PAGE_JSON_INVALID")
         result[key] = value
     return result
+
+
+def _reject_constant(_value: str) -> Any:
+    raise CaptureError("CONTROL_SOURCE_PAGE_JSON_INVALID")
+
+
+def _parse_int(value: str) -> int:
+    digits = value[1:] if value.startswith("-") else value
+    if not digits or len(digits) > MAX_INTEGER_DIGITS:
+        raise CaptureError("CONTROL_SOURCE_PAGE_JSON_INVALID")
+    try:
+        return int(value)
+    except (ValueError, OverflowError) as exc:
+        raise CaptureError("CONTROL_SOURCE_PAGE_JSON_INVALID") from exc
+
+
+def _parse_float(value: str) -> float:
+    if len(value) > MAX_FLOAT_TOKEN_CHARS:
+        raise CaptureError("CONTROL_SOURCE_PAGE_JSON_INVALID")
+    try:
+        parsed = float(value)
+    except (ValueError, OverflowError) as exc:
+        raise CaptureError("CONTROL_SOURCE_PAGE_JSON_INVALID") from exc
+    if not math.isfinite(parsed):
+        raise CaptureError("CONTROL_SOURCE_PAGE_JSON_INVALID")
+    return parsed
+
+
+def _strict_json_text(value: object) -> str:
+    try:
+        return json.dumps(
+            value,
+            ensure_ascii=True,
+            sort_keys=True,
+            separators=(",", ":"),
+            allow_nan=False,
+        )
+    except (TypeError, ValueError, RecursionError) as exc:
+        raise CaptureError("CONTROL_SOURCE_SERIALIZATION_INVALID") from exc
 
 
 def _bounded_read(
@@ -84,8 +130,7 @@ def _bounded_read(
     size = 0
     while True:
         # Read no more than the remaining allowance plus one byte. That final
-        # byte is sufficient to prove overflow without consuming an arbitrary
-        # transport chunk beyond the configured boundary.
+        # byte proves overflow without consuming an arbitrary transport chunk.
         read_size = min(READ_CHUNK_BYTES, maximum_bytes - size + 1)
         if read_size <= 0:  # pragma: no cover - defensive.
             raise CaptureError(overflow_reason)
@@ -102,6 +147,34 @@ def _bounded_read(
         chunks.append(chunk)
 
     return b"".join(chunks)
+
+
+def _measure_structure(
+    value: object,
+    *,
+    maximum_depth: int,
+    maximum_nodes: int,
+    node_overflow_reason: str,
+) -> int:
+    """Measure an already byte-bounded JSON value without recursive traversal."""
+
+    stack: list[tuple[object, int]] = [(value, 1)]
+    nodes = 0
+    while stack:
+        current, depth = stack.pop()
+        if depth > maximum_depth:
+            raise CaptureError("CONTROL_SOURCE_PAGE_DEPTH_EXCEEDED")
+
+        nodes += 1
+        if nodes > maximum_nodes:
+            raise CaptureError(node_overflow_reason)
+
+        if isinstance(current, dict):
+            stack.extend((child, depth + 1) for child in current.values())
+        elif isinstance(current, list):
+            stack.extend((child, depth + 1) for child in current)
+
+    return nodes
 
 
 def _page_url(
@@ -125,8 +198,11 @@ def _read_page(
     per_page: int,
     token: str,
     maximum_bytes: int,
-    overflow_reason: str,
-) -> tuple[list[dict[str, Any]], int]:
+    byte_overflow_reason: str,
+    maximum_depth: int,
+    maximum_nodes: int,
+    node_overflow_reason: str,
+) -> tuple[list[dict[str, Any]], int, int]:
     request = Request(
         _page_url(
             api_url=api_url,
@@ -150,7 +226,7 @@ def _read_page(
             encoded = _bounded_read(
                 response,
                 maximum_bytes=maximum_bytes,
-                overflow_reason=overflow_reason,
+                overflow_reason=byte_overflow_reason,
             )
     except CaptureError:
         raise
@@ -159,12 +235,29 @@ def _read_page(
 
     try:
         value = json.loads(
-            encoded.decode("utf-8"), object_pairs_hook=_object_no_duplicates
+            encoded.decode("utf-8"),
+            object_pairs_hook=_object_no_duplicates,
+            parse_constant=_reject_constant,
+            parse_float=_parse_float,
+            parse_int=_parse_int,
         )
     except CaptureError:
         raise
-    except (UnicodeError, json.JSONDecodeError) as exc:
+    except (
+        UnicodeError,
+        json.JSONDecodeError,
+        ValueError,
+        OverflowError,
+        RecursionError,
+    ) as exc:
         raise CaptureError("CONTROL_SOURCE_PAGE_JSON_INVALID") from exc
+
+    node_count = _measure_structure(
+        value,
+        maximum_depth=maximum_depth,
+        maximum_nodes=maximum_nodes,
+        node_overflow_reason=node_overflow_reason,
+    )
 
     if not isinstance(value, list):
         raise CaptureError("CONTROL_SOURCE_PAGE_SHAPE_INVALID")
@@ -172,7 +265,7 @@ def _read_page(
         raise CaptureError("CONTROL_SOURCE_PAGE_COUNT_EXCEEDED")
     if any(not isinstance(comment, dict) for comment in value):
         raise CaptureError("CONTROL_SOURCE_PAGE_SHAPE_INVALID")
-    return value, len(encoded)
+    return value, len(encoded), node_count
 
 
 def fetch_bounded_pages(
@@ -186,6 +279,9 @@ def fetch_bounded_pages(
     max_pages: int = MAX_PAGES,
     max_page_bytes: int = MAX_PAGE_BYTES,
     max_total_bytes: int = MAX_TOTAL_BYTES,
+    max_json_depth: int = MAX_JSON_DEPTH,
+    max_page_nodes: int = MAX_PAGE_NODES,
+    max_total_nodes: int = MAX_TOTAL_NODES,
 ) -> BoundedPages:
     """Return a complete page array or fail before exceeding resource limits."""
 
@@ -201,7 +297,15 @@ def fetch_bounded_pages(
         raise CaptureError("CONTROL_SOURCE_TOKEN_UNAVAILABLE")
     if not api_url.startswith("https://"):
         raise CaptureError("CONTROL_SOURCE_API_URL_INVALID")
-    limits = (per_page, max_pages, max_page_bytes, max_total_bytes)
+    limits = (
+        per_page,
+        max_pages,
+        max_page_bytes,
+        max_total_bytes,
+        max_json_depth,
+        max_page_nodes,
+        max_total_nodes,
+    )
     if any(
         not isinstance(limit, int) or isinstance(limit, bool) or limit <= 0
         for limit in limits
@@ -211,6 +315,7 @@ def fetch_bounded_pages(
     pages: list[list[dict[str, Any]]] = []
     comment_count = 0
     transferred_bytes = 0
+    total_nodes = 0
 
     # One sentinel page beyond the admitted page count proves completeness when
     # the final admitted page contains exactly ``per_page`` records.
@@ -219,13 +324,24 @@ def fetch_bounded_pages(
         if remaining_total_bytes <= 0:
             raise CaptureError("CONTROL_SOURCE_TOTAL_BYTES_EXCEEDED")
 
-        page_budget = min(max_page_bytes, remaining_total_bytes)
-        overflow_reason = (
+        page_byte_budget = min(max_page_bytes, remaining_total_bytes)
+        byte_overflow_reason = (
             "CONTROL_SOURCE_PAGE_BYTES_EXCEEDED"
             if max_page_bytes <= remaining_total_bytes
             else "CONTROL_SOURCE_TOTAL_BYTES_EXCEEDED"
         )
-        page, page_bytes = _read_page(
+
+        remaining_total_nodes = max_total_nodes - total_nodes
+        if remaining_total_nodes <= 0:
+            raise CaptureError("CONTROL_SOURCE_TOTAL_NODES_EXCEEDED")
+        page_node_budget = min(max_page_nodes, remaining_total_nodes)
+        node_overflow_reason = (
+            "CONTROL_SOURCE_PAGE_NODES_EXCEEDED"
+            if max_page_nodes <= remaining_total_nodes
+            else "CONTROL_SOURCE_TOTAL_NODES_EXCEEDED"
+        )
+
+        page, page_bytes, page_nodes = _read_page(
             opener=opener,
             api_url=api_url,
             repository=repository,
@@ -233,10 +349,14 @@ def fetch_bounded_pages(
             page=page_number,
             per_page=per_page,
             token=token,
-            maximum_bytes=page_budget,
-            overflow_reason=overflow_reason,
+            maximum_bytes=page_byte_budget,
+            byte_overflow_reason=byte_overflow_reason,
+            maximum_depth=max_json_depth,
+            maximum_nodes=page_node_budget,
+            node_overflow_reason=node_overflow_reason,
         )
         transferred_bytes += page_bytes
+        total_nodes += page_nodes
 
         if page_number > max_pages:
             if page:
@@ -254,22 +374,21 @@ def fetch_bounded_pages(
     else:  # pragma: no cover - defensive; the finite loop always terminates.
         raise CaptureError("CONTROL_SOURCE_PAGE_LIMIT_EXCEEDED")
 
-    serialized = json.dumps(
-        pages, ensure_ascii=False, sort_keys=True, separators=(",", ":")
-    ).encode("utf-8")
+    try:
+        serialized = _strict_json_text(pages).encode("ascii")
+    except (UnicodeError, CaptureError) as exc:
+        if isinstance(exc, CaptureError):
+            raise
+        raise CaptureError("CONTROL_SOURCE_SERIALIZATION_INVALID") from exc
     if len(serialized) > max_total_bytes:
         raise CaptureError("CONTROL_SOURCE_SERIALIZED_BYTES_EXCEEDED")
-    return BoundedPages(pages, comment_count, transferred_bytes)
+    return BoundedPages(pages, comment_count, transferred_bytes, total_nodes)
 
 
 def _write_json(path: Path, value: object) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_name(path.name + ".tmp")
-    temporary.write_text(
-        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        + "\n",
-        encoding="utf-8",
-    )
+    temporary.write_text(_strict_json_text(value) + "\n", encoding="utf-8")
     temporary.replace(path)
 
 
@@ -286,6 +405,9 @@ def capture_to_files(
     max_pages: int = MAX_PAGES,
     max_page_bytes: int = MAX_PAGE_BYTES,
     max_total_bytes: int = MAX_TOTAL_BYTES,
+    max_json_depth: int = MAX_JSON_DEPTH,
+    max_page_nodes: int = MAX_PAGE_NODES,
+    max_total_nodes: int = MAX_TOTAL_NODES,
 ) -> CaptureResult:
     """Write strict source files while keeping transport failures fail-closed."""
 
@@ -300,6 +422,9 @@ def capture_to_files(
             max_pages=max_pages,
             max_page_bytes=max_page_bytes,
             max_total_bytes=max_total_bytes,
+            max_json_depth=max_json_depth,
+            max_page_nodes=max_page_nodes,
+            max_total_nodes=max_total_nodes,
         )
     except CaptureError as exc:
         _write_json(comments_output, [])
@@ -352,10 +477,10 @@ def main(argv: Sequence[str] | None = None) -> int:
         status_output=args.status_output,
         api_url=args.api_url,
     )
-    print(json.dumps(result.as_dict(), sort_keys=True, separators=(",", ":")))
+    print(_strict_json_text(result.as_dict()))
 
     # Source availability is classified by the next trusted-base validator.
-    # Returning zero here ensures transport errors are represented by the
+    # Returning zero ensures transport/parser errors are represented by the
     # bounded UNAVAILABLE status instead of bypassing that classification step.
     return 0
 
