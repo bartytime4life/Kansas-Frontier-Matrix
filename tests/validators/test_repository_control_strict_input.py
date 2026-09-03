@@ -50,46 +50,87 @@ def capture_raw(
     return result, comments_path, status_path
 
 
+def assert_unavailable_output(
+    *,
+    result,
+    comments_path: Path,
+    status_path: Path,
+    reason_code: str,
+    forbidden_tokens: tuple[str, ...] = (),
+) -> None:
+    comments_text = comments_path.read_text(encoding="utf-8")
+    status_text = status_path.read_text(encoding="utf-8")
+    result_text = json.dumps(result.as_dict(), sort_keys=True, allow_nan=False)
+
+    assert (result.status, result.reason_code) == ("UNAVAILABLE", reason_code)
+    assert comments_text == "[]\n"
+    assert json.loads(status_text) == {
+        "control_issue": 4024,
+        "repository": "bartytime4life/Kansas-Frontier-Matrix",
+        "schema_version": "1.0.0",
+        "status": "UNAVAILABLE",
+    }
+    assert len(comments_text.encode("utf-8")) == 3
+    assert len(status_text.encode("utf-8")) < 256
+    for token in forbidden_tokens:
+        assert token not in comments_text
+        assert token not in status_text
+        assert token not in result_text
+
+
 @pytest.mark.parametrize("token", [b"NaN", b"Infinity", b"-Infinity", b"1e1000000"])
 def test_non_finite_numeric_input_is_unavailable_without_echo(
     tmp_path: Path, token: bytes
 ) -> None:
-    raw = b'[{"id":' + token + b',"body":"DO_NOT_ECHO"}]'
+    marker = "DO_NOT_ECHO_NON_FINITE"
+    raw = b'[{"id":' + token + f',"body":"{marker}"}}]'.encode("utf-8")
     result, comments_path, status_path = capture_raw(tmp_path, raw)
 
-    assert (result.status, result.reason_code) == (
-        "UNAVAILABLE",
-        "CONTROL_SOURCE_PAGE_JSON_INVALID",
+    assert_unavailable_output(
+        result=result,
+        comments_path=comments_path,
+        status_path=status_path,
+        reason_code="CONTROL_SOURCE_PAGE_JSON_INVALID",
+        forbidden_tokens=(token.decode("ascii"), marker),
     )
-    assert comments_path.read_text(encoding="utf-8") == "[]\n"
-    assert json.loads(status_path.read_text(encoding="utf-8"))["status"] == "UNAVAILABLE"
-    rendered = json.dumps(result.as_dict(), sort_keys=True)
-    assert token.decode("ascii") not in rendered
-    assert "DO_NOT_ECHO" not in rendered
 
 
-def test_overlong_integer_is_unavailable(tmp_path: Path) -> None:
-    token = b"9" * (helper.MAX_INTEGER_DIGITS + 1)
-    raw = b'[{"id":' + token + b"}]"
-    result, comments_path, _ = capture_raw(tmp_path, raw)
+def test_overlong_integer_is_unavailable_without_malformed_json_shortcut(
+    tmp_path: Path,
+) -> None:
+    token = "9" * (helper.MAX_INTEGER_DIGITS + 1)
+    marker = "DO_NOT_ECHO_INTEGER"
+    raw = f'[{{"id":{token},"body":"{marker}"}}]'.encode("utf-8")
+    result, comments_path, status_path = capture_raw(tmp_path, raw)
 
-    assert result.reason_code == "CONTROL_SOURCE_PAGE_JSON_INVALID"
-    assert comments_path.read_text(encoding="utf-8") == "[]\n"
+    assert_unavailable_output(
+        result=result,
+        comments_path=comments_path,
+        status_path=status_path,
+        reason_code="CONTROL_SOURCE_PAGE_JSON_INVALID",
+        forbidden_tokens=(token, marker),
+    )
 
 
-def test_excessive_json_depth_is_unavailable(tmp_path: Path) -> None:
+def test_excessive_json_depth_is_unavailable_without_echo(tmp_path: Path) -> None:
     nesting = helper.MAX_JSON_DEPTH + 2
+    marker = "DO_NOT_ECHO_DEPTH"
     raw = (
-        b'[{"id":1,"extra":'
+        f'[{"id":1,"body":"{marker}","extra":'.encode("utf-8")
         + (b"[" * nesting)
         + b"0"
         + (b"]" * nesting)
         + b"}]"
     )
-    result, comments_path, _ = capture_raw(tmp_path, raw)
+    result, comments_path, status_path = capture_raw(tmp_path, raw)
 
-    assert result.reason_code == "CONTROL_SOURCE_PAGE_DEPTH_EXCEEDED"
-    assert comments_path.read_text(encoding="utf-8") == "[]\n"
+    assert_unavailable_output(
+        result=result,
+        comments_path=comments_path,
+        status_path=status_path,
+        reason_code="CONTROL_SOURCE_PAGE_DEPTH_EXCEEDED",
+        forbidden_tokens=(marker,),
+    )
 
 
 @pytest.mark.parametrize("exception", [ValueError("invalid"), RecursionError("deep")])
@@ -102,39 +143,55 @@ def test_parser_limit_exceptions_are_normalized(
     monkeypatch.setattr(helper.json, "loads", fail_loads)
     result, comments_path, status_path = capture_raw(tmp_path, b"[]")
 
-    assert result.reason_code == "CONTROL_SOURCE_PAGE_JSON_INVALID"
-    assert comments_path.read_text(encoding="utf-8") == "[]\n"
-    assert '"status":"UNAVAILABLE"' in status_path.read_text(encoding="utf-8")
+    assert_unavailable_output(
+        result=result,
+        comments_path=comments_path,
+        status_path=status_path,
+        reason_code="CONTROL_SOURCE_PAGE_JSON_INVALID",
+        forbidden_tokens=(str(exception),),
+    )
 
 
 def test_page_node_limit_is_unavailable(tmp_path: Path) -> None:
-    raw = b'[{"id":1,"extra":[0,1,2,3,4,5,6,7,8]}]'
-    result, comments_path, _ = capture_raw(
+    marker = "DO_NOT_ECHO_NODE_LIMIT"
+    raw = f'[{"id":1,"body":"{marker}","extra":[0,1,2,3,4,5,6,7,8]}]'.encode(
+        "utf-8"
+    )
+    result, comments_path, status_path = capture_raw(
         tmp_path,
         raw,
         max_page_nodes=8,
         max_total_nodes=128,
     )
 
-    assert result.reason_code == "CONTROL_SOURCE_PAGE_NODES_EXCEEDED"
-    assert comments_path.read_text(encoding="utf-8") == "[]\n"
+    assert_unavailable_output(
+        result=result,
+        comments_path=comments_path,
+        status_path=status_path,
+        reason_code="CONTROL_SOURCE_PAGE_NODES_EXCEEDED",
+        forbidden_tokens=(marker,),
+    )
 
 
-def test_strict_serializer_rejects_non_finite_values() -> None:
+@pytest.mark.parametrize("value", [float("nan"), float("inf"), float("-inf")])
+def test_strict_serializer_rejects_non_finite_values(value: float) -> None:
     with pytest.raises(helper.CaptureError) as caught:
-        helper._strict_json_text({"value": float("nan")})
+        helper._strict_json_text({"value": value})
 
     assert caught.value.reason_code == "CONTROL_SOURCE_SERIALIZATION_INVALID"
 
 
-def test_binding_note_describes_active_bounded_control() -> None:
+def test_binding_note_distinguishes_current_main_from_candidate_hardening() -> None:
     binding = BINDING_PATH.read_text(encoding="utf-8")
     lowered = binding.lower()
 
-    assert "workflow-active" in lowered
+    assert "current-main workflow-active advisory" in lowered
+    assert "candidate bounded-input hardening" in lowered
     assert "pr #4237" in lowered
+    assert "current protected-main workflow still uses two trusted-base validators" in lowered
+    assert "candidate adds a third trusted-base capture helper" in lowered
     assert "fetch_bounded_issue_comments.py" in binding
-    assert "three trusted-base helpers" in lowered
+    assert "if the candidate bytes are integrated" in lowered
     assert "16 mib" in lowered
     assert "1,000,000 json nodes" in lowered
     assert "allow_nan=false" in lowered
