@@ -72,19 +72,35 @@ def _object_no_duplicates(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
     return result
 
 
-def _bounded_read(response: Any, *, maximum_bytes: int) -> bytes:
+def _bounded_read(
+    response: Any,
+    *,
+    maximum_bytes: int,
+    overflow_reason: str,
+) -> bytes:
+    """Read at most ``maximum_bytes`` plus one bounded overflow probe."""
+
     chunks: list[bytes] = []
     size = 0
     while True:
-        chunk = response.read(READ_CHUNK_BYTES)
+        # Read no more than the remaining allowance plus one byte. That final
+        # byte is sufficient to prove overflow without consuming an arbitrary
+        # transport chunk beyond the configured boundary.
+        read_size = min(READ_CHUNK_BYTES, maximum_bytes - size + 1)
+        if read_size <= 0:  # pragma: no cover - defensive.
+            raise CaptureError(overflow_reason)
+
+        chunk = response.read(read_size)
         if not chunk:
             break
-        if not isinstance(chunk, bytes):
+        if not isinstance(chunk, bytes) or len(chunk) > read_size:
             raise CaptureError("CONTROL_SOURCE_PAGE_READ_INVALID")
+
         size += len(chunk)
         if size > maximum_bytes:
-            raise CaptureError("CONTROL_SOURCE_PAGE_BYTES_EXCEEDED")
+            raise CaptureError(overflow_reason)
         chunks.append(chunk)
+
     return b"".join(chunks)
 
 
@@ -109,6 +125,7 @@ def _read_page(
     per_page: int,
     token: str,
     maximum_bytes: int,
+    overflow_reason: str,
 ) -> tuple[list[dict[str, Any]], int]:
     request = Request(
         _page_url(
@@ -130,7 +147,11 @@ def _read_page(
         with opener(request, timeout=REQUEST_TIMEOUT_SECONDS) as response:
             if getattr(response, "status", 200) != 200:
                 raise CaptureError("CONTROL_SOURCE_FETCH_FAILED")
-            encoded = _bounded_read(response, maximum_bytes=maximum_bytes)
+            encoded = _bounded_read(
+                response,
+                maximum_bytes=maximum_bytes,
+                overflow_reason=overflow_reason,
+            )
     except CaptureError:
         raise
     except (HTTPError, URLError, OSError, TimeoutError) as exc:
@@ -180,11 +201,10 @@ def fetch_bounded_pages(
         raise CaptureError("CONTROL_SOURCE_TOKEN_UNAVAILABLE")
     if not api_url.startswith("https://"):
         raise CaptureError("CONTROL_SOURCE_API_URL_INVALID")
-    if (
-        per_page <= 0
-        or max_pages <= 0
-        or max_page_bytes <= 0
-        or max_total_bytes <= 0
+    limits = (per_page, max_pages, max_page_bytes, max_total_bytes)
+    if any(
+        not isinstance(limit, int) or isinstance(limit, bool) or limit <= 0
+        for limit in limits
     ):
         raise CaptureError("CONTROL_SOURCE_LIMIT_INVALID")
 
@@ -195,6 +215,16 @@ def fetch_bounded_pages(
     # One sentinel page beyond the admitted page count proves completeness when
     # the final admitted page contains exactly ``per_page`` records.
     for page_number in range(1, max_pages + 2):
+        remaining_total_bytes = max_total_bytes - transferred_bytes
+        if remaining_total_bytes <= 0:
+            raise CaptureError("CONTROL_SOURCE_TOTAL_BYTES_EXCEEDED")
+
+        page_budget = min(max_page_bytes, remaining_total_bytes)
+        overflow_reason = (
+            "CONTROL_SOURCE_PAGE_BYTES_EXCEEDED"
+            if max_page_bytes <= remaining_total_bytes
+            else "CONTROL_SOURCE_TOTAL_BYTES_EXCEEDED"
+        )
         page, page_bytes = _read_page(
             opener=opener,
             api_url=api_url,
@@ -203,11 +233,10 @@ def fetch_bounded_pages(
             page=page_number,
             per_page=per_page,
             token=token,
-            maximum_bytes=min(max_page_bytes, max_total_bytes),
+            maximum_bytes=page_budget,
+            overflow_reason=overflow_reason,
         )
         transferred_bytes += page_bytes
-        if transferred_bytes > max_total_bytes:
-            raise CaptureError("CONTROL_SOURCE_TOTAL_BYTES_EXCEEDED")
 
         if page_number > max_pages:
             if page:
@@ -305,7 +334,7 @@ def capture_to_files(
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(description=__doc__, allow_abbrev=False)
     parser.add_argument("--repository", required=True)
     parser.add_argument("--control-issue", required=True, type=int)
     parser.add_argument("--comments-output", required=True, type=Path)
