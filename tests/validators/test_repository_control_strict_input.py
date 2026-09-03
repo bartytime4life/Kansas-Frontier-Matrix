@@ -83,7 +83,13 @@ def test_non_finite_numeric_input_is_unavailable_without_echo(
     tmp_path: Path, token: bytes
 ) -> None:
     marker = "DO_NOT_ECHO_NON_FINITE"
-    raw = b'[{"id":' + token + f',"body":"{marker}"}}]'.encode("utf-8")
+    raw = (
+        b'[{"id":'
+        + token
+        + b',"body":"'
+        + marker.encode("utf-8")
+        + b'"}]'
+    )
     result, comments_path, status_path = capture_raw(tmp_path, raw)
 
     assert_unavailable_output(
@@ -100,7 +106,13 @@ def test_overlong_integer_is_unavailable_without_malformed_json_shortcut(
 ) -> None:
     token = "9" * (helper.MAX_INTEGER_DIGITS + 1)
     marker = "DO_NOT_ECHO_INTEGER"
-    raw = f'[{{"id":{token},"body":"{marker}"}}]'.encode("utf-8")
+    raw = (
+        b'[{"id":'
+        + token.encode("ascii")
+        + b',"body":"'
+        + marker.encode("utf-8")
+        + b'"}]'
+    )
     result, comments_path, status_path = capture_raw(tmp_path, raw)
 
     assert_unavailable_output(
@@ -116,7 +128,9 @@ def test_excessive_json_depth_is_unavailable_without_echo(tmp_path: Path) -> Non
     nesting = helper.MAX_JSON_DEPTH + 2
     marker = "DO_NOT_ECHO_DEPTH"
     raw = (
-        f'[{"id":1,"body":"{marker}","extra":'.encode("utf-8")
+        b'[{"id":1,"body":"'
+        + marker.encode("utf-8")
+        + b'","extra":'
         + (b"[" * nesting)
         + b"0"
         + (b"]" * nesting)
@@ -154,8 +168,10 @@ def test_parser_limit_exceptions_are_normalized(
 
 def test_page_node_limit_is_unavailable(tmp_path: Path) -> None:
     marker = "DO_NOT_ECHO_NODE_LIMIT"
-    raw = f'[{"id":1,"body":"{marker}","extra":[0,1,2,3,4,5,6,7,8]}]'.encode(
-        "utf-8"
+    raw = (
+        b'[{"id":1,"body":"'
+        + marker.encode("utf-8")
+        + b'","extra":[0,1,2,3,4,5,6,7,8]}]'
     )
     result, comments_path, status_path = capture_raw(
         tmp_path,
