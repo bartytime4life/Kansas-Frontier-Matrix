@@ -1,0 +1,215 @@
+# Temporary branch-only validation harness for the canonical issue #4024
+# repository-control authority-source repair. This workflow checks out and
+# validates an immutable target commit; it does not open or mutate a pull
+# request, change repository settings, publish artifacts, or grant Stage 1B or
+# Stage 2 authority. Remove this file after the bounded run is reconciled.
+
+name: issue-4024-authority-repair-exact-head-validation
+
+"on":
+  push:
+    branches:
+      - governance/issue-4024-repository-control-authority-repair-repin-13e7114
+
+permissions:
+  contents: read
+
+concurrency:
+  group: issue-4024-authority-repair-exact-head-validation
+  cancel-in-progress: false
+
+env:
+  KFM_VALIDATION_BASE: "13e7114494ce5dfb5cb0495aef6127a1ee783a45"
+  KFM_VALIDATION_TARGET: "63855d6903170f3da33b4013a355a5dff092e55b"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate-exact-head:
+    name: validate-exact-head
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out immutable canonical repair head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: 63855d6903170f3da33b4013a355a5dff092e55b
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Verify immutable target, exact scope, and blobs
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${KFM_VALIDATION_TARGET}"
+          git cat-file -e "${KFM_VALIDATION_BASE}^{commit}"
+          git diff --check "${KFM_VALIDATION_BASE}" "${KFM_VALIDATION_TARGET}"
+          python - <<'PY'
+          import os
+          import subprocess
+
+          base = os.environ["KFM_VALIDATION_BASE"]
+          target = os.environ["KFM_VALIDATION_TARGET"]
+          expected_paths = [
+              ".github/workflows/repository-control.yml",
+              "contracts/governance/repository_control_state.md",
+              "tests/validators/test_repository_control_authority_source.py",
+          ]
+          expected_blobs = {
+              ".github/workflows/repository-control.yml": "534bb670e5edff22bf89f2fb42dc587ac5375461",
+              "contracts/governance/repository_control_state.md": "c6a627fd213ea547cb102f10282021bb03397f47",
+              "tests/validators/test_repository_control_authority_source.py": "9b5b213cdff5eca57430b6216897f84bb3f88dec",
+          }
+
+          changed = subprocess.check_output(
+              ["git", "diff", "--name-only", base, target], text=True
+          ).splitlines()
+          assert changed == expected_paths, (changed, expected_paths)
+          for path, expected in expected_blobs.items():
+              actual = subprocess.check_output(
+                  ["git", "rev-parse", f"{target}:{path}"], text=True
+              ).strip()
+              assert actual == expected, (path, actual, expected)
+          print("PASS: immutable target, three-path scope, and exact blobs match.")
+          PY
+
+      - name: Install declared validator dependencies
+        shell: bash
+        run: python tools/ci/install_python_ci.py project-runtime
+
+      - name: Compile repository-control validator surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m compileall -q \
+            tools/validators/repository_control \
+            tests/validators/test_repository_control_authority_source.py
+
+      - name: Run focused repository-control tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pytest -q --strict-config --strict-markers \
+            tests/validators/test_repository_control_authority_source.py \
+            tests/validators/test_repository_transition_authorization.py \
+            tests/validators/test_repository_control.py
+
+      - name: Validate registry and workflow-security ratchet
+        shell: bash
+        run: |
+          set -euo pipefail
+          make validator-registry-check
+          make workflow-security
+
+      - name: Run aggregate schema validators and contract tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          make schemas
+          make test
+
+      - name: Validate ADR source-index coherence
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_adr_index.py
+          python -m pytest -q --strict-config --strict-markers \
+            tests/validators/test_validate_adr_index.py
+
+      - name: Compare exact topology diagnostics with current main
+        shell: bash
+        run: |
+          set -euo pipefail
+          base_dir="${RUNNER_TEMP}/kfm-topology-base"
+          base_report="${RUNNER_TEMP}/base-topology.json"
+          head_report="${RUNNER_TEMP}/head-topology.json"
+          base_stderr="${RUNNER_TEMP}/base-topology.stderr"
+          head_stderr="${RUNNER_TEMP}/head-topology.stderr"
+
+          git worktree add --detach "${base_dir}" "${KFM_VALIDATION_BASE}"
+
+          set +e
+          python tools/validators/directory_governance/validate_repository_topology.py \
+            --format json > "${head_report}" 2> "${head_stderr}"
+          head_rc=$?
+          (
+            cd "${base_dir}"
+            python tools/validators/directory_governance/validate_repository_topology.py \
+              --format json > "${base_report}" 2> "${base_stderr}"
+          )
+          base_rc=$?
+          set -e
+
+          export KFM_BASE_TOPOLOGY_RC="${base_rc}"
+          export KFM_HEAD_TOPOLOGY_RC="${head_rc}"
+          export KFM_BASE_TOPOLOGY_REPORT="${base_report}"
+          export KFM_HEAD_TOPOLOGY_REPORT="${head_report}"
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          base_rc = int(os.environ["KFM_BASE_TOPOLOGY_RC"])
+          head_rc = int(os.environ["KFM_HEAD_TOPOLOGY_RC"])
+          base = json.loads(Path(os.environ["KFM_BASE_TOPOLOGY_REPORT"]).read_text())
+          head = json.loads(Path(os.environ["KFM_HEAD_TOPOLOGY_REPORT"]).read_text())
+
+          assert (base_rc, head_rc) == (1, 1), (base_rc, head_rc)
+          for key in ("schema_version", "rule_count", "outcome", "counts", "findings", "baseline"):
+              assert base[key] == head[key], key
+          assert head["outcome"] == "FAIL_NEW_DRIFT"
+          failures = [
+              finding
+              for finding in head["findings"]
+              if finding["disposition"] in {
+                  "FAIL_INVARIANT",
+                  "FAIL_NEW_DRIFT",
+                  "ERROR_BASELINE_MISMATCH",
+              }
+          ]
+          assert len(failures) == 1, failures
+          failure = failures[0]
+          assert failure["rule_id"] == "KFM-TOPO-004", failure
+          assert failure["subject"] == "catalog/", failure
+          assert failure["fingerprint"] == (
+              "sha256:0ad45247555960029c34d1222365cbe17a5cabec278bf9f6b8f3e9572ea33e8f"
+          ), failure
+          assert (
+              "sha256:521388927153c91a67ca8cead55af9d688a6064517d109aa556cffca91505006"
+              in head["baseline"]["stale_fingerprints"]
+          )
+          print(
+              "PASS: exact repair head reproduces only the inherited KFM-TOPO-004 "
+              "catalog transition present on current main."
+          )
+          PY
+
+          python -m unittest discover \
+            --start-directory tests/validators/directory_governance \
+            --pattern 'test_validate_*topology.py' \
+            --verbose
+
+      - name: Record bounded validation result
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### Issue #4024 canonical repair exact-head validation"
+            echo
+            echo "- Tested target: \`${KFM_VALIDATION_TARGET}\`."
+            echo "- Compared base: \`${KFM_VALIDATION_BASE}\`."
+            echo "- Scope: exact three-file repository-control authority-source repair."
+            echo "- Permissions: read-only contents; no secrets, writes, deployment, release, or publication."
+            echo "- This run is validation evidence only. It does not authorize a pull request, ready transition, merge, repository-setting change, Stage 1B, Stage 2, topology-baseline replacement, or catalog mutation."
+          } >> "${GITHUB_STEP_SUMMARY}"
