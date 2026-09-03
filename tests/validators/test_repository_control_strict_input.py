@@ -154,8 +154,9 @@ def test_parser_limit_exceptions_are_normalized(
     def fail_loads(*args, **kwargs):
         raise exception
 
-    monkeypatch.setattr(helper.json, "loads", fail_loads)
-    result, comments_path, status_path = capture_raw(tmp_path, b"[]")
+    with monkeypatch.context() as parser_patch:
+        parser_patch.setattr(helper.json, "loads", fail_loads)
+        result, comments_path, status_path = capture_raw(tmp_path, b"[]")
 
     assert_unavailable_output(
         result=result,
