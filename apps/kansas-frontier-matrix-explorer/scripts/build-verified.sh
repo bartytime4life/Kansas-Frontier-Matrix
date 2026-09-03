@@ -12,13 +12,16 @@ command -v timeout || {
   exit 69
 }
 
-vinext="${SITES_PROJECT_ROOT}/node_modules/.bin/vinext"
+vinext="$(command -v vinext || true)"
+if [[ "${vinext}" != */node_modules/.bin/vinext || ! -x "${vinext}" ]]; then
+  vinext="${SITES_PROJECT_ROOT}/node_modules/.bin/vinext"
+fi
 if [[ ! -x "${vinext}" ]]; then
-  echo "vinext is unavailable. Run npm run install:ci and wait for it to finish before building." >&2
+  echo "vinext is unavailable from the npm script PATH and app-local node_modules. Run npm run install:ci and wait for it to finish before building." >&2
   exit 69
 fi
 
-echo "Running bounded vinext build..."
+echo "Running bounded vinext build from ${vinext}..."
 timeout \
   --signal=TERM \
   --kill-after="${SITES_BUILD_KILL_AFTER:-10s}" \
