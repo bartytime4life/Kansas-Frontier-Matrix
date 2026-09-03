@@ -2,13 +2,13 @@
 doc_id: kfm://doc/governance/repository-transition-control-source
 title: Repository transition control-source binding
 type: governance binding and enforcement-candidate note
-version: v1.2.0
-status: proposed; branch-only; exact-main-reconciled; not workflow-active
+version: v1.3.0
+status: accepted; bootstrap-integrated; workflow-active; enforcement-pending
 owner: OWNER_TBD — governance steward and repository-control steward
 created: 2026-09-03
 updated: 2026-09-03
 policy_label: repository-facing; governance; fail-closed; non-authoritative
-truth_posture: CONFIRMED selected GitHub issue, incident entry paths, skipped-check race, and current ruleset gap / PROPOSED branch implementation and required-check packet
+truth_posture: CONFIRMED selected GitHub issue, incident entry paths, skipped-check race, bootstrap integration at main@bd942b45493fa5f80e946ecfb3e810e413787394, exact check identity, current ruleset gap, and hosting non-effect / PROPOSED required-check packet and capability-separated canary
 related:
   - ../../contracts/governance/repository_control_state.md
   - ../../tools/validators/repository_control/validate_control_source_availability.py
@@ -18,8 +18,11 @@ related:
   - ../../.github/workflows/repository-control.yml
   - https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024
   - https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024#issuecomment-5529114880
+  - https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024#issuecomment-5530676972
   - https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4234
   - https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4235
+  - https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4237
+  - https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/bd942b45493fa5f80e946ecfb3e810e413787394
   - https://github.com/bartytime4life/Kansas-Frontier-Matrix/rules/15484585
 [/KFM_META_BLOCK_V2] -->
 
@@ -40,6 +43,28 @@ receipts still name it.
 This note binds one operational lookup identity. It does not replace the
 `RepositoryControlState` semantic contract, create a second authorization
 format, or make a workflow result authoritative.
+
+## Bootstrap integration status
+
+The five-file trusted-base repair was bootstrap-integrated by an explicit,
+authorized squash merge of PR #4237 at `2026-09-03T18:56:08Z`.
+
+The resulting authoritative revision is:
+
+- main commit: `bd942b45493fa5f80e946ecfb3e810e413787394`;
+- parent: `13e7114494ce5dfb5cb0495aef6127a1ee783a45`;
+- tree: `73d31fda24c29185425ee87effe77c1125247b50`;
+- exact bootstrap head: `50952c9d554ee366a22170d0ed86d09e7f5de77b`;
+- recovery ref:
+  `recovery/repository-control-bootstrap-pre-50952c9@13e7114494ce5dfb5cb0495aef6127a1ee783a45`.
+
+The temporary read-only hosted-validation workflow is absent from the resulting
+tree and main history. The integrated tree is the same permanent repair tree
+validated by GitHub-hosted run `33790380138`, job `100765268087`.
+
+The workflow is therefore active on the trusted default-branch base. It remains
+advisory until ruleset `15484585` requires the exact
+`authorize-ready-and-merge` check with strict currentness.
 
 ## Observed unauthorized entry paths
 
@@ -128,8 +153,8 @@ with a fresh exact-head pass.
 
 ## Exact platform snapshot
 
-Ruleset `15484585`, named `Protect`, was observed active for the default branch
-on `2026-09-03`. Its registered rules are:
+Ruleset `15484585`, named `Protect`, was re-read active for the default branch
+after the PR #4237 bootstrap on `2026-09-03`. Its registered rules are:
 
 - deletion protection;
 - non-fast-forward protection; and
@@ -141,10 +166,14 @@ rebase. No bypass actor is registered. Most importantly, the ruleset contains
 **no required-status-check rule**. A failing `authorize-ready-and-merge` result
 or repository-topology result therefore does not presently block merge.
 
+The exact GitHub Actions check-run name remains
+`authorize-ready-and-merge`, and the observed GitHub Actions App identity
+remains `15368`.
+
 ## Proposed server-side enforcement packet
 
-After the workflow repair is reviewed and integrated, the smallest candidate
-addition to ruleset `15484585` is:
+The workflow repair is integrated. The smallest candidate addition to ruleset
+`15484585` remains:
 
 ```json
 {
@@ -173,39 +202,48 @@ enforcement, but the born-ready guarantee comes from the required missing or
 failing check context plus the always-running authorization job.
 
 **This packet is proposed and not applied.** It is an exact settings candidate
-for independent review, not permission to mutate ruleset `15484585`.
+for independent review and a separately authorized repository-settings
+operation.
 
 ## Bootstrap and proof order
 
-The safe order is dependency-bound:
+The dependency-bound bootstrap stages are complete:
 
-1. Integrate the five-file trusted-base workflow repair through a separately
-   authorized bootstrap path. Until those bytes reach the protected base, a
-   `pull_request_target` run continues to fetch the deleted-#1675
-   implementation.
-2. Re-read the integrated workflow, exact check-run name, and GitHub Actions App
-   identity on current main.
+1. The five-file trusted-base workflow repair is integrated on current main.
+2. The integrated workflow, exact check-run name, and GitHub Actions App
+   identity have been re-read.
+
+The remaining order is:
+
 3. Through a separately authorized repository-settings operation, add the
    reviewed required-status-check rule without weakening deletion,
    non-fast-forward, pull-request, or thread-resolution rules.
-4. Create a draft canary and prove its first `opened` event produces
+4. Re-read the complete ruleset and confirm the required check is active,
+   strict, and bound to integration ID `15368`.
+5. Create a draft canary and prove its first `opened` event produces
    `PULL_REQUEST_IS_DRAFT`, not a skipped-success check.
-5. Prove a born-ready pull request with no record cannot merge while
+6. Prove a born-ready pull request with no record cannot merge while
    `TRANSITION_AUTHORIZATION_MISSING` is outstanding.
-6. Prove a draft pull request changed to ready with no record cannot merge under
+7. Prove a draft pull request changed to ready with no record cannot merge under
    the same hold.
-7. Prove one exact, unedited, unexpired owner record for the current base and
+8. Prove one exact, unedited, unexpired owner record for the current base and
    head allows only that transition check to pass.
-8. Prove stale, edited, malformed, duplicate-key, wrong-base, wrong-head,
+9. Prove stale, edited, malformed, duplicate-key, wrong-base, wrong-head,
    wrong-issue, non-owner, expired, and unavailable-source cases remain blocked.
-9. Push a new head and prove strict currentness invalidates the earlier result
-   until a fresh exact-head record and rerun exist.
-10. Confirm the platform rejected each negative merge attempt before merge;
+10. Push a new head and prove strict currentness invalidates the earlier result
+    until a fresh exact-head record and rerun exist.
+11. Confirm the platform rejected each negative merge attempt before merge;
     workflow failure after merge is not acceptance evidence.
 
 The canary must use a capability-separated operator or account path whose sole
 purpose is controlled test execution. Reusing the owner-authenticated path
-implicated by PRs #4234 and #4235 would not prove separation.
+implicated by PRs #4234, #4235, and #4236 would not prove separation.
+
+A pre-enforcement canary may demonstrate workflow classification, but it cannot
+prove server-side rejection. Because pull-request creation currently fans out
+to more than one hundred checks, do not spend another canary run until the
+required-check rule can be installed and read back or a narrower, separately
+approved validation surface exists.
 
 ## Enforcement boundary
 
@@ -225,24 +263,28 @@ publication, or source-state change.
 
 ## Migration boundary
 
-The workflow and this note may move to issue #4024 before historical fixtures
-and receipts are rewritten. Historical records should retain the issue identity
-they actually observed. Any authored instruction that still tells an operator
-to post a new authorization to deleted issue #1675 is stale and needs separate
-reconciliation; that documentation debt does not make historical receipts
-false.
+The workflow and this note now use issue #4024 while historical fixtures and
+receipts may continue to retain the issue identity they actually observed. Any
+authored instruction that still tells an operator to post a new authorization
+to deleted issue #1675 is stale and needs separate reconciliation; that
+documentation debt does not make historical receipts false.
 
-This branch stops at `VALIDATED_BRANCH_ONLY` under issue #4024. It does not
-create a pull request or authorize ready, merge, Stage 1B, Stage 2, or a
-repository-settings change.
+The bootstrap integration is complete at
+`main@bd942b45493fa5f80e946ecfb3e810e413787394`. Required-check enforcement,
+capability-separated canaries, Stage 1B, and Stage 2 remain ungranted and
+unproved.
 
 ## Rollback
 
-Before integration, abandon the branch. After reviewed byte integration, a
-focused forward change may restore a separately verified live successor source
-and its tests. If the required-check rule is later installed, remove or replace
-that rule through a separately authorized settings operation before reverting
-or renaming its workflow, so the protected branch is not deadlocked.
+The pre-bootstrap default-branch state is preserved at
+`recovery/repository-control-bootstrap-pre-50952c9@13e7114494ce5dfb5cb0495aef6127a1ee783a45`.
+No automatic rollback is authorized.
+
+If the required-check rule is later installed, remove or replace that rule
+through a separately authorized settings operation before reverting or
+renaming its workflow, so the protected branch is not deadlocked. A reviewed
+forward correction may instead bind a separately verified live successor
+source and update the coupled tests.
 
 Never repoint the workflow to a missing issue, weaken negative outcomes to make
 a canary green, or rewrite historical evidence to make rollback appear
