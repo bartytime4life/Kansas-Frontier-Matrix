@@ -1,7 +1,7 @@
-# Temporary, read-only paired diagnostic for the repository-control bounded-input repair.
-# The job checks out the immutable trusted base and candidate SHAs side by side.
-# No secrets, OIDC, write permissions, PR mutation, settings, release, deployment,
-# promotion, or publication authority.
+# Temporary, read-only exact-head and paired-topology validation for the
+# repository-control bounded-input candidate. The workflow checks out immutable
+# SHAs and grants no PR, settings, release, deployment, promotion, publication,
+# or source-activation authority.
 
 name: repository-control-input-bounds-validation
 
@@ -18,7 +18,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  KFM_TARGET_SHA: "eb320eefa4f6ba4956c6bf3a5aa3a3afaa916e6b"
+  KFM_TARGET_SHA: "d711a2404521eb7e7f476bf31d124dcaad825a3d"
   KFM_TRUSTED_BASE_REF: "bd942b45493fa5f80e946ecfb3e810e413787394"
   PIP_DISABLE_PIP_VERSION_CHECK: "1"
   PIP_NO_INPUT: "1"
@@ -28,10 +28,105 @@ env:
   TZ: UTC
 
 jobs:
+  exact-candidate:
+    name: exact-candidate
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out immutable candidate
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ env.KFM_TARGET_SHA }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify exact identity, ancestry, and diff hygiene
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${KFM_TARGET_SHA}"
+          git merge-base --is-ancestor "${KFM_TRUSTED_BASE_REF}" HEAD
+          test "$(git merge-base "${KFM_TRUSTED_BASE_REF}" HEAD)" = "${KFM_TRUSTED_BASE_REF}"
+          git diff --check "${KFM_TRUSTED_BASE_REF}...HEAD"
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared validator dependencies
+        shell: bash
+        run: python tools/ci/install_python_ci.py project-runtime
+
+      - name: Compile changed and adjacent repository-control Python
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m compileall -q \
+            tools/validators/repository_control/fetch_bounded_issue_comments.py \
+            tools/validators/repository_control/validate_control_source_availability.py \
+            tools/validators/repository_control/validate_transition_authorization.py \
+            tests/validators/test_repository_control_input_bounds.py \
+            tests/validators/test_repository_control_strict_input.py \
+            tests/validators/test_repository_control_source.py \
+            tests/validators/test_repository_transition_authorization.py
+
+      - name: Parse repository-control workflow YAML
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import yaml
+
+          path = Path('.github/workflows/repository-control.yml')
+          value = yaml.safe_load(path.read_text(encoding='utf-8'))
+          if not isinstance(value, dict):
+              raise SystemExit('workflow root must be an object')
+          if value.get('name') != 'repository-control':
+              raise SystemExit('workflow name mismatch')
+          PY
+
+      - name: Run focused repository-control regressions
+        shell: bash
+        run: |
+          set -euo pipefail
+          pytest -q \
+            tests/validators/test_repository_control_input_bounds.py \
+            tests/validators/test_repository_control_strict_input.py \
+            tests/validators/test_repository_control_source.py \
+            tests/validators/test_repository_transition_authorization.py
+
+      - name: Run repository validator registry check
+        shell: bash
+        run: make validator-registry-check
+
+      - name: Run schema checks
+        shell: bash
+        run: make schemas
+
+      - name: Run workflow security checks
+        shell: bash
+        run: make workflow-security
+
+      - name: Record exact-head validation boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo '### Repository-control exact-head validation'
+            echo
+            echo "- Trusted base: \`${KFM_TRUSTED_BASE_REF}\`."
+            echo "- Candidate: \`${KFM_TARGET_SHA}\`."
+            echo "- This job checks exact bytes only and grants no review, integration, settings, release, deployment, promotion, or publication authority."
+          } >> "${GITHUB_STEP_SUMMARY}"
+
   paired-repository-topology:
     name: paired-repository-topology
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - name: Check out immutable trusted base
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -91,30 +186,30 @@ jobs:
           import os
           from pathlib import Path
 
-          root = Path("topology-diagnostic")
+          root = Path('topology-diagnostic')
           workspace = Path.cwd().resolve()
-          base_sha = os.environ["KFM_TRUSTED_BASE_REF"]
-          candidate_sha = os.environ["KFM_TARGET_SHA"]
-          base_rc = int(os.environ["BASE_RC"])
-          candidate_rc = int(os.environ["CANDIDATE_RC"])
+          base_sha = os.environ['KFM_TRUSTED_BASE_REF']
+          candidate_sha = os.environ['KFM_TARGET_SHA']
+          base_rc = int(os.environ['BASE_RC'])
+          candidate_rc = int(os.environ['CANDIDATE_RC'])
 
           def raw_text(name: str) -> str:
-              return (root / name).read_text(encoding="utf-8", errors="replace")
+              return (root / name).read_text(encoding='utf-8', errors='replace')
 
           def normalize(text: str) -> str:
               replacements = (
-                  (str(workspace / "base"), "<WORKTREE>"),
-                  (str(workspace / "candidate"), "<WORKTREE>"),
-                  (str(workspace), "<GITHUB_WORKSPACE>"),
-                  (candidate_sha, "<CANDIDATE_SHA>"),
-                  (base_sha, "<BASE_SHA>"),
+                  (str(workspace / 'base'), '<WORKTREE>'),
+                  (str(workspace / 'candidate'), '<WORKTREE>'),
+                  (str(workspace), '<GITHUB_WORKSPACE>'),
+                  (candidate_sha, '<CANDIDATE_SHA>'),
+                  (base_sha, '<BASE_SHA>'),
               )
               for old, new in replacements:
                   text = text.replace(old, new)
               return text
 
           def report_from(text: str):
-              marker = "AssertionError: 0 != 1 : "
+              marker = 'AssertionError: 0 != 1 : '
               for line in text.splitlines():
                   if marker in line:
                       return json.loads(line.split(marker, 1)[1])
@@ -122,110 +217,110 @@ jobs:
 
           def failed_tests(text: str):
               return sorted(
-                  line.removeprefix("FAIL: ").strip()
+                  line.removeprefix('FAIL: ').strip()
                   for line in text.splitlines()
-                  if line.startswith("FAIL: ")
+                  if line.startswith('FAIL: ')
               )
 
           def failure_signature(text: str, return_code: int):
               report = report_from(text)
               signature = {
-                  "return_code": return_code,
-                  "failed_tests": failed_tests(text),
-                  "report_present": report is not None,
+                  'return_code': return_code,
+                  'failed_tests': failed_tests(text),
+                  'report_present': report is not None,
               }
               if report is not None:
                   signature.update(
                       {
-                          "outcome": report.get("outcome"),
-                          "rule_count": report.get("rule_count"),
-                          "counts": report.get("counts"),
-                          "stale_fingerprints": sorted(
-                              report.get("baseline", {}).get("stale_fingerprints", [])
+                          'outcome': report.get('outcome'),
+                          'rule_count': report.get('rule_count'),
+                          'counts': report.get('counts'),
+                          'stale_fingerprints': sorted(
+                              report.get('baseline', {}).get('stale_fingerprints', [])
                           ),
-                          "non_baselined_findings": sorted(
+                          'non_baselined_findings': sorted(
                               (
-                                  finding.get("disposition"),
-                                  finding.get("rule_id"),
-                                  finding.get("subject"),
-                                  finding.get("fingerprint"),
-                                  finding.get("evidence_sha256"),
+                                  finding.get('disposition'),
+                                  finding.get('rule_id'),
+                                  finding.get('subject'),
+                                  finding.get('fingerprint'),
+                                  finding.get('evidence_sha256'),
                               )
-                              for finding in report.get("findings", [])
-                              if finding.get("disposition") != "BASELINED_WARNING"
+                              for finding in report.get('findings', [])
+                              if finding.get('disposition') != 'BASELINED_WARNING'
                           ),
                       }
                   )
               return signature, report
 
-          base_raw = raw_text("base.raw.log")
-          candidate_raw = raw_text("candidate.raw.log")
+          base_raw = raw_text('base.raw.log')
+          candidate_raw = raw_text('candidate.raw.log')
           base_text = normalize(base_raw)
           candidate_text = normalize(candidate_raw)
-          (root / "base.normalized.log").write_text(base_text, encoding="utf-8")
-          (root / "candidate.normalized.log").write_text(candidate_text, encoding="utf-8")
+          (root / 'base.normalized.log').write_text(base_text, encoding='utf-8')
+          (root / 'candidate.normalized.log').write_text(candidate_text, encoding='utf-8')
 
-          diff = "".join(
+          diff = ''.join(
               difflib.unified_diff(
                   base_text.splitlines(keepends=True),
                   candidate_text.splitlines(keepends=True),
-                  fromfile="base.normalized.log",
-                  tofile="candidate.normalized.log",
+                  fromfile='base.normalized.log',
+                  tofile='candidate.normalized.log',
               )
           )
-          (root / "normalized.diff").write_text(diff, encoding="utf-8")
+          (root / 'normalized.diff').write_text(diff, encoding='utf-8')
 
           base_signature, base_report = failure_signature(base_raw, base_rc)
           candidate_signature, candidate_report = failure_signature(
               candidate_raw, candidate_rc
           )
-          (root / "base.failure-signature.json").write_text(
-              json.dumps(base_signature, indent=2, sort_keys=True) + "\n",
-              encoding="utf-8",
+          (root / 'base.failure-signature.json').write_text(
+              json.dumps(base_signature, indent=2, sort_keys=True) + '\n',
+              encoding='utf-8',
           )
-          (root / "candidate.failure-signature.json").write_text(
-              json.dumps(candidate_signature, indent=2, sort_keys=True) + "\n",
-              encoding="utf-8",
+          (root / 'candidate.failure-signature.json').write_text(
+              json.dumps(candidate_signature, indent=2, sort_keys=True) + '\n',
+              encoding='utf-8',
           )
 
           signatures_equal = base_signature == candidate_signature
-          base_tracked = base_report.get("tracked_path_count") if base_report else None
+          base_tracked = base_report.get('tracked_path_count') if base_report else None
           candidate_tracked = (
-              candidate_report.get("tracked_path_count") if candidate_report else None
+              candidate_report.get('tracked_path_count') if candidate_report else None
           )
 
           if base_rc == 0 and candidate_rc == 0:
-              classification = "BOTH_PASS"
+              classification = 'BOTH_PASS'
           elif base_rc != 0 and candidate_rc == 0:
-              classification = "CANDIDATE_REPAIRS_BASE"
+              classification = 'CANDIDATE_REPAIRS_BASE'
           elif base_rc == 0 and candidate_rc != 0:
-              classification = "CANDIDATE_REGRESSION"
+              classification = 'CANDIDATE_REGRESSION'
           elif signatures_equal:
-              classification = "INHERITED_EQUIVALENT_FAILURE"
+              classification = 'INHERITED_EQUIVALENT_FAILURE'
           else:
-              classification = "BOTH_FAIL_DIFFERENT_SIGNATURE"
+              classification = 'BOTH_FAIL_DIFFERENT_SIGNATURE'
 
           result = {
-              "trusted_base_sha": base_sha,
-              "candidate_sha": candidate_sha,
-              "base_exit_code": base_rc,
-              "candidate_exit_code": candidate_rc,
-              "base_tracked_path_count": base_tracked,
-              "candidate_tracked_path_count": candidate_tracked,
-              "tracked_path_count_delta": (
+              'trusted_base_sha': base_sha,
+              'candidate_sha': candidate_sha,
+              'base_exit_code': base_rc,
+              'candidate_exit_code': candidate_rc,
+              'base_tracked_path_count': base_tracked,
+              'candidate_tracked_path_count': candidate_tracked,
+              'tracked_path_count_delta': (
                   candidate_tracked - base_tracked
                   if isinstance(base_tracked, int) and isinstance(candidate_tracked, int)
                   else None
               ),
-              "raw_normalized_outputs_equal": base_text == candidate_text,
-              "failure_signatures_equal": signatures_equal,
-              "classification": classification,
+              'raw_normalized_outputs_equal': base_text == candidate_text,
+              'failure_signatures_equal': signatures_equal,
+              'classification': classification,
           }
-          (root / "result.json").write_text(
-              json.dumps(result, indent=2, sort_keys=True) + "\n",
-              encoding="utf-8",
+          (root / 'result.json').write_text(
+              json.dumps(result, indent=2, sort_keys=True) + '\n',
+              encoding='utf-8',
           )
-          with Path(os.environ["GITHUB_OUTPUT"]).open("a", encoding="utf-8") as output:
+          with Path(os.environ['GITHUB_OUTPUT']).open('a', encoding='utf-8') as output:
               output.write(
                   f"classification={classification}\n"
                   f"base_rc={base_rc}\n"
@@ -248,7 +343,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: repository-topology-paired-eb320ee
+          name: repository-topology-paired-d711a24
           path: topology-diagnostic/
           if-no-files-found: error
           retention-days: 7
