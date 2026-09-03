@@ -2,13 +2,13 @@
 doc_id: kfm://doc/governance/repository-transition-control-source
 title: Repository transition control-source binding
 type: governance binding and enforcement-candidate note
-version: v1.3.0
-status: implemented workflow-active advisory; bounded-input hardened; required-status-check not installed
+version: v1.3.1
+status: current-main workflow-active advisory; candidate bounded-input hardening; required-status-check not installed
 owner: OWNER_TBD — governance steward and repository-control steward
 created: 2026-09-03
 updated: 2026-09-03
 policy_label: repository-facing; governance; fail-closed; non-authoritative
-truth_posture: CONFIRMED live issue source and #4237 workflow bootstrap / BOUNDED capture implementation / PROPOSED required-check packet
+truth_posture: CONFIRMED current-main #4237 active two-validator workflow / IMPLEMENTED candidate bounded capture / PROPOSED required-check packet
 related:
   - ../../contracts/governance/repository_control_state.md
   - ../../tools/validators/repository_control/fetch_bounded_issue_comments.py
@@ -48,12 +48,18 @@ PR #4237 integrated the live-source workflow baseline into protected
 `main@bd942b45493fa5f80e946ecfb3e810e413787394` on 2026-09-03. The workflow is
 therefore **workflow-active** and reads issue #4024 from trusted-base code.
 
-The check remains advisory. Ruleset `15484585`, named `Protect`, still has no
-`required_status_checks` rule. A passing or failing
-`authorize-ready-and-merge` result is not presently a server-side merge
-prerequisite.
+The current protected-main workflow still uses two trusted-base validators and
+an inline `gh api --paginate --slurp` comment-capture step. That current base is
+active but advisory; it does not contain the candidate bounded capture helper.
 
-The active control uses three trusted-base helpers:
+This candidate adds a third trusted-base capture helper,
+`fetch_bounded_issue_comments.py`, and replaces the inline capture step with
+explicit transport, parser, structure, pagination, and serialization ceilings.
+The candidate code and this note are not current-main behavior until separately
+reviewed and integrated.
+
+If the candidate bytes are integrated, the control will use three trusted-base
+helpers:
 
 1. `fetch_bounded_issue_comments.py` captures the source page by page under
    strict transport, parser, structure, and serialization ceilings.
@@ -63,9 +69,14 @@ The active control uses three trusted-base helpers:
    comments against the exact pull request, base, head, actor, decision, and
    expiry.
 
-All three helpers are fetched from the exact pull-request base SHA. The workflow
-never checks out or executes pull-request-head code and has read-only
-`contents`, `issues`, and `pull-requests` permissions.
+All three candidate helpers are fetched from the exact pull-request base SHA.
+The workflow never checks out or executes pull-request-head code and has
+read-only `contents`, `issues`, and `pull-requests` permissions.
+
+The check remains advisory. Ruleset `15484585`, named `Protect`, still has no
+`required_status_checks` rule. A passing or failing
+`authorize-ready-and-merge` result is not presently a server-side merge
+prerequisite.
 
 ## Incident entry paths
 
@@ -100,13 +111,13 @@ not preventive merge containment.
 - Raw response bodies, comments, numeric tokens, and transport exceptions are
   not copied into bounded decision output.
 
-## Bounded source capture
+## Candidate bounded source capture
 
-The capture helper requests at most 100 records per page and admits at most 100
-pages. A bounded sentinel page is used when page 100 is full so the source is
-never silently truncated.
+If the candidate bytes are integrated, the capture helper will request at most
+100 records per page and admit at most 100 pages. A bounded sentinel page is
+used when page 100 is full so the source is never silently truncated.
 
-The fixed limits are:
+The candidate's fixed limits are:
 
 - 8 MiB of transferred input per page;
 - 16 MiB of aggregate transferred and reserialized input;
@@ -135,10 +146,11 @@ which emits the nonzero blocking classification.
 
 ## Pull-request lifecycle behavior
 
-The workflow listens to `opened`, `reopened`, `synchronize`,
-`ready_for_review`, `converted_to_draft`, `edited`, `labeled`, and `unlabeled`.
+The current and candidate workflows listen to `opened`, `reopened`,
+`synchronize`, `ready_for_review`, `converted_to_draft`, `edited`, `labeled`,
+and `unlabeled`.
 
-Its authorization job runs for draft and non-draft pull requests:
+The authorization job runs for draft and non-draft pull requests:
 
 - draft state returns
   `EXPECTED_READINESS_HOLD / PULL_REQUEST_IS_DRAFT / exit 3`;
@@ -164,8 +176,8 @@ That is why an advisory failure can occur after a merge without preventing it.
 
 ## Proposed server-side enforcement packet
 
-After the bounded workflow bytes are independently reviewed and integrated, the
-smallest candidate addition is:
+After the bounded-capture candidate is independently reviewed and integrated,
+the smallest candidate addition is:
 
 ```json
 {
@@ -189,25 +201,27 @@ deployment, promotion, publication, or source-state change.
 
 ## Remaining proof order
 
-1. Integrate the bounded-capture implementation through a separately authorized
-   path.
-2. Re-read the helper, workflow, check-run name, and GitHub Actions App identity
-   on exact current main.
-3. Run a fresh draft event and verify the active workflow emits
+1. Obtain focused and hosted exact-head validation plus a new separate review of
+   the bounded-capture candidate.
+2. Integrate the bounded-capture implementation only through a separately
+   authorized, capability-separated path.
+3. Re-read the integrated helper, workflow, check-run name, and GitHub Actions
+   App identity on exact current main.
+4. Run a fresh draft event and verify the active workflow emits
    `PULL_REQUEST_IS_DRAFT`, not skipped success.
-4. Through a separately authorized settings operation, add the reviewed strict
+5. Through a separately authorized settings operation, add the reviewed strict
    required-status-check rule without weakening existing protections.
-5. Use a genuinely capability-separated operator for negative and positive
+6. Use a genuinely capability-separated operator for negative and positive
    canaries.
-6. Prove born-ready and later-ready requests cannot merge without an exact
+7. Prove born-ready and later-ready requests cannot merge without an exact
    current record.
-7. Prove stale, edited, malformed, duplicate-key, wrong-base, wrong-head,
+8. Prove stale, edited, malformed, duplicate-key, wrong-base, wrong-head,
    wrong-issue, non-owner, expired, unavailable, oversized, and incomplete
    source states remain blocked.
-8. Advance the head and prove strict currentness requires a fresh record and
+9. Advance the head and prove strict currentness requires a fresh record and
    rerun.
-9. Record platform rejection before merge; a check that starts after merge is
-   not prevention evidence.
+10. Record platform rejection before merge; a check that starts after merge is
+    not prevention evidence.
 
 ## Explicit residual limits
 
