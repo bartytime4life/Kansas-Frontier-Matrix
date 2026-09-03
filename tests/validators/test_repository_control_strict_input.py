@@ -198,21 +198,32 @@ def test_strict_serializer_rejects_non_finite_values(value: float) -> None:
     assert caught.value.reason_code == "CONTROL_SOURCE_SERIALIZATION_INVALID"
 
 
-def test_binding_note_distinguishes_current_main_from_candidate_hardening() -> None:
+def test_binding_note_describes_integrated_bounded_capture_and_uninstalled_gate() -> None:
     binding = BINDING_PATH.read_text(encoding="utf-8")
     lowered = binding.lower()
 
     assert "current-main workflow-active advisory" in lowered
-    assert "candidate bounded-input hardening" in lowered
+    assert "bounded capture and truncated-response hardening integrated" in lowered
     assert "pr #4237" in lowered
-    assert "current protected-main workflow still uses two trusted-base validators" in lowered
-    assert "candidate adds a third trusted-base capture helper" in lowered
+    assert "pr #4239" in lowered
+    assert "pr #4238" in lowered
+    assert "current protected-main workflow uses three trusted-base helpers" in lowered
     assert "fetch_bounded_issue_comments.py" in binding
-    assert "if the candidate bytes are integrated" in lowered
+    assert "100 pages" in lowered
     assert "16 mib" in lowered
     assert "1,000,000 json nodes" in lowered
     assert "allow_nan=false" in lowered
+    assert "content-length" in lowered
     assert "required-status-check not installed" in lowered
     assert "proposed and not applied" in lowered
     assert "does not authorize a ruleset" in lowered
-    assert "proposed; branch-only; exact-main-reconciled; not workflow-active" not in lowered
+
+    stale_phrases = (
+        "candidate bounded-input hardening",
+        "current protected-main workflow still uses two trusted-base validators",
+        "candidate adds a third trusted-base capture helper",
+        "if the candidate bytes are integrated",
+        "the bounded-input changes described below remain a branch-local hardening proposal",
+    )
+    for phrase in stale_phrases:
+        assert phrase not in lowered
