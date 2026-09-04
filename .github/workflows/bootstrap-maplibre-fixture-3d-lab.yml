@@ -27,20 +27,23 @@ jobs:
       TZ: UTC
       AUTHORIZED_BASE_SHA: "7c5d4125c277536258be6345e366efae59dbe5d6"
       AUTHORIZED_BRANCH: "feat/maplibre-fixture-3d-lab-20260903"
+      BOOTSTRAP_COMMIT_SHA: "f4715ebb9bf1399d588d80d960cf923c71d6fc6f"
+      ADAPTER_PREIMAGE_BLOB: "d1e4d3e3783f6d550d8dfa64beea1ddf995aa924"
       PAYLOAD_SHA256: "e36101d4b79cf528c6a5a93cceb4f07c15fe00d523688de4ced7330e9f61db8a"
     steps:
       - name: Check out the exact branch writer commit
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          fetch-depth: 2
+          fetch-depth: 3
           persist-credentials: true
 
       - name: Verify branch and immutable authorized parent
         run: |
           set -euo pipefail
           test "${{ github.ref_name }}" = "${AUTHORIZED_BRANCH}"
-          test "$(git rev-parse HEAD^)" = "${AUTHORIZED_BASE_SHA}"
-          test "$(git rev-list --count HEAD^..HEAD)" = "1"
+          test "$(git rev-parse HEAD^)" = "${BOOTSTRAP_COMMIT_SHA}"
+          test "$(git rev-parse "${BOOTSTRAP_COMMIT_SHA}^")" = "${AUTHORIZED_BASE_SHA}"
+          test "$(git diff-tree --no-commit-id --name-only -r HEAD)" = ".github/workflows/bootstrap-maplibre-fixture-3d-lab.yml"
           cat > "${RUNNER_TEMP}/expected-bootstrap-paths.txt" <<'EXPECTED_BOOTSTRAP_PATHS'
           .github/kfm-bootstrap-maplibre-3d/payload-00.b64
           .github/kfm-bootstrap-maplibre-3d/payload-01.b64
@@ -48,7 +51,7 @@ jobs:
           .github/kfm-bootstrap-maplibre-3d/payload-03.b64
           .github/workflows/bootstrap-maplibre-fixture-3d-lab.yml
           EXPECTED_BOOTSTRAP_PATHS
-          git diff-tree --no-commit-id --name-only -r HEAD | LC_ALL=C sort > "${RUNNER_TEMP}/actual-bootstrap-paths.txt"
+          git diff-tree --no-commit-id --name-only -r "${BOOTSTRAP_COMMIT_SHA}" | LC_ALL=C sort > "${RUNNER_TEMP}/actual-bootstrap-paths.txt"
           diff -u "${RUNNER_TEMP}/expected-bootstrap-paths.txt" "${RUNNER_TEMP}/actual-bootstrap-paths.txt"
 
       - name: Decode the exact synthetic 3D payload
@@ -62,7 +65,7 @@ jobs:
       - name: Verify exact payload paths and inline-only boundary
         run: |
           set -euo pipefail
-          cat > "${RUNNER_TEMP}/expected-final-paths.txt" <<'EXPECTED_FINAL_PATHS'
+          cat > "${RUNNER_TEMP}/expected-payload-paths.txt" <<'EXPECTED_PAYLOAD_PATHS'
           apps/explorer-web/index.html
           apps/explorer-web/src/fixture-3d-lab.ts
           apps/explorer-web/src/site/fixture-3d-lab.css
@@ -71,9 +74,9 @@ jobs:
           packages/maplibre/src/maplibre-vite-adapter.ts
           packages/maplibre/src/synthetic-3d-fixture-lab.ts
           packages/maplibre/tests/synthetic-3d-fixture-lab.test.ts
-          EXPECTED_FINAL_PATHS
-          tar -tzf "${RUNNER_TEMP}/kfm-maplibre-3d-payload.tgz" | sed 's#/$##' | grep -v '^$' | LC_ALL=C sort > "${RUNNER_TEMP}/actual-final-paths.txt"
-          diff -u "${RUNNER_TEMP}/expected-final-paths.txt" "${RUNNER_TEMP}/actual-final-paths.txt"
+          EXPECTED_PAYLOAD_PATHS
+          tar -tzf "${RUNNER_TEMP}/kfm-maplibre-3d-payload.tgz" | sed 's#/$##' | grep -v '^$' | LC_ALL=C sort > "${RUNNER_TEMP}/actual-payload-paths.txt"
+          diff -u "${RUNNER_TEMP}/expected-payload-paths.txt" "${RUNNER_TEMP}/actual-payload-paths.txt"
           python - <<'PY_BOUNDARY'
           from pathlib import Path
 
@@ -99,6 +102,35 @@ jobs:
               raise SystemExit("missing required fixture surfaces: " + ", ".join(missing))
           print("inline-only synthetic 3D boundary passed")
           PY_BOUNDARY
+
+      - name: Repair the existing adapter's TypeScript 7 state-narrowing seam
+        run: |
+          set -euo pipefail
+          test "$(git hash-object packages/maplibre/src/maplibre-adapter.ts)" = "${ADAPTER_PREIMAGE_BLOB}"
+          python - <<'PY_ADAPTER'
+          from pathlib import Path
+
+          path = Path("packages/maplibre/src/maplibre-adapter.ts")
+          source = path.read_text(encoding="utf-8")
+          equal = 'this.state === "DISPOSED"'
+          unequal = 'this.state !== "DISPOSED"'
+          if source.count(equal) != 5 or source.count(unequal) != 3:
+              raise SystemExit("adapter DISPOSED comparison preimage drift")
+          anchor = "  private readRendererCamera(map: MapLibreMap): MapRuntimeCamera {\n"
+          if source.count(anchor) != 1:
+              raise SystemExit("adapter helper insertion anchor drift")
+          source = source.replace(equal, "this.isDisposed()")
+          source = source.replace(unequal, "!this.isDisposed()")
+          source = source.replace(
+              anchor,
+              "  private isDisposed(): boolean {\n"
+              "    return this.state === \"DISPOSED\";\n"
+              "  }\n\n"
+              + anchor,
+          )
+          path.write_text(source, encoding="utf-8")
+          PY_ADAPTER
+          test "$(git hash-object packages/maplibre/src/maplibre-adapter.ts)" != "${ADAPTER_PREIMAGE_BLOB}"
 
       - name: Set up Node.js
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -135,6 +167,7 @@ jobs:
           git config user.email "kfm-3d-branch-writer@users.noreply.github.com"
 
           git add \
+            packages/maplibre/src/maplibre-adapter.ts \
             packages/maplibre/src/synthetic-3d-fixture-lab.ts \
             packages/maplibre/src/maplibre-vite-adapter.ts \
             packages/maplibre/tests/synthetic-3d-fixture-lab.test.ts \
@@ -161,6 +194,7 @@ jobs:
           apps/explorer-web/src/site/fixture-3d-lab.css
           apps/explorer-web/tests/browser/synthetic-3d-fixture-lab.spec.ts
           apps/explorer-web/tests/synthetic-3d-fixture-lab.test.ts
+          packages/maplibre/src/maplibre-adapter.ts
           packages/maplibre/src/maplibre-vite-adapter.ts
           packages/maplibre/src/synthetic-3d-fixture-lab.ts
           packages/maplibre/tests/synthetic-3d-fixture-lab.test.ts
@@ -173,6 +207,17 @@ jobs:
           test -z "$(git status --porcelain --untracked-files=no)"
           final_sha="$(git rev-parse HEAD)"
           final_tree="$(git rev-parse HEAD^{tree})"
+          cat > "${RUNNER_TEMP}/expected-final-paths.txt" <<'EXPECTED_FINAL_PATHS'
+          apps/explorer-web/index.html
+          apps/explorer-web/src/fixture-3d-lab.ts
+          apps/explorer-web/src/site/fixture-3d-lab.css
+          apps/explorer-web/tests/browser/synthetic-3d-fixture-lab.spec.ts
+          apps/explorer-web/tests/synthetic-3d-fixture-lab.test.ts
+          packages/maplibre/src/maplibre-adapter.ts
+          packages/maplibre/src/maplibre-vite-adapter.ts
+          packages/maplibre/src/synthetic-3d-fixture-lab.ts
+          packages/maplibre/tests/synthetic-3d-fixture-lab.test.ts
+          EXPECTED_FINAL_PATHS
           git diff --name-only "${AUTHORIZED_BASE_SHA}..HEAD" | LC_ALL=C sort > "${RUNNER_TEMP}/final-net-paths.txt"
           diff -u "${RUNNER_TEMP}/expected-final-paths.txt" "${RUNNER_TEMP}/final-net-paths.txt"
           git push origin "HEAD:refs/heads/${AUTHORIZED_BRANCH}"
