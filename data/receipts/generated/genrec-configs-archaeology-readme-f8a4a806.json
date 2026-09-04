@@ -1,0 +1,176 @@
+{
+  "receipt_id": "genrec-configs-archaeology-readme-f8a4a806",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "configs/domains/archaeology/README.md"
+  ],
+  "artifact_hashes": {
+    "configs/domains/archaeology/README.md": "sha256:f8a4a8061a894104b806f23432a5f14b7917f7b43c518f56d5cafaada0be5700"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Pro",
+    "version": "UNKNOWN; exact runtime build not exposed"
+  },
+  "prompt_or_contract": "sha256:43be04669580777efda34e20b748e77df8145cbbb90ba1fb58886ddbac43ef24",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "tools_enabled": [
+      "GitHub",
+      "Google_Drive",
+      "Notion",
+      "container"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "Google Drive Directory Rules, native document 1uTqdIEFZE2cq3gyISetoRYM6LIlnKqTc3FobtEx7Cbs (lineage only)",
+      "Notion KFM Hourly Archaeology Domain Builder v1.0, 3caa9202-1bf6-81c1-b8c4-dcc4c06ac8ec (coordination, older checkpoint)"
+    ],
+    "evidence_refs": [
+      "configs/domains/archaeology/README.md@bb3eb695e6068b38453ca3ded8f1394a8fdebc20#git-blob=e42316554e24777096611a5cc54fd3a61e2fa0be",
+      "configs/domains/README.md@bb3eb695e6068b38453ca3ded8f1394a8fdebc20#git-blob=c497e41466f3aaf934aeca4b9976a2fa8516ff21",
+      "configs/README.md@bb3eb695e6068b38453ca3ded8f1394a8fdebc20#git-blob=a800983eac7582a84e9dd82bc7d4baf04f552ad8",
+      "docs/domains/archaeology/README.md@bb3eb695e6068b38453ca3ded8f1394a8fdebc20#git-blob=c128be25ea31227cf03fc756dcd74b2a5e82bb06",
+      "docs/doctrine/directory-rules.md@bb3eb695e6068b38453ca3ded8f1394a8fdebc20#git-blob=fd49a0b83e55cef52c1124281f093e263526898d",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@bb3eb695e6068b38453ca3ded8f1394a8fdebc20#git-blob=a4de0d7a96b78da59cfc499d1025e1508afd8dd9",
+      ".github/CODEOWNERS@bb3eb695e6068b38453ca3ded8f1394a8fdebc20#git-blob=dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61",
+      "schemas/contracts/v1/domains/archaeology/evidence_bundle.schema.json@bb3eb695e6068b38453ca3ded8f1394a8fdebc20#git-blob=6bf74442d485f346c2412a2e07564161d80d1900",
+      "tools/validators/validate_archaeology_evidence_bundle_projection.py@bb3eb695e6068b38453ca3ded8f1394a8fdebc20#git-blob=28cceef5f1446fd492c6e520f3c7ed64698a4ee7",
+      "tools/validators/domains/archaeology/validate_evidence_bundle.py@bb3eb695e6068b38453ca3ded8f1394a8fdebc20#git-blob=5eb3a70d78c1074ba64071b16f591032b629b8c5",
+      "tests/validators/domains/archaeology/test_evidence_bundle_schema_convergence.py@bb3eb695e6068b38453ca3ded8f1394a8fdebc20#git-blob=79e712f5ada05eae3596134f23c1281121b9f544",
+      ".github/workflows/archaeology-evidence-bundle-convergence.yml@bb3eb695e6068b38453ca3ded8f1394a8fdebc20#git-blob=259d61c5e339d693e964ca7297cff60a0ada5d80",
+      "schemas/contracts/v1/receipts/generated_receipt.schema.json@bb3eb695e6068b38453ca3ded8f1394a8fdebc20#git-blob=fba21ed27ebccf1362fe397fe0c3ebd85e072685",
+      "data/receipts/generated/README.md@bb3eb695e6068b38453ca3ded8f1394a8fdebc20#git-blob=5a67f8d743306799a014590ccb45fa9f1177f16a",
+      "authoring-base:700570cbcf191038aa20a030174c2dd08cf93675",
+      "compare:bb3eb695e6068b38453ca3ded8f1394a8fdebc20...700570cbcf191038aa20a030174c2dd08cf93675:catalog/triplet/README.md-only",
+      "github:issue/4024",
+      "github:pull/4266:ready-event/30577890120:2026-09-04T19:46:06Z",
+      "github:pull/4266:merge-event/30577897710:2026-09-04T19:46:16Z"
+    ]
+  },
+  "truth_labels": {
+    "configs/domains/archaeology/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "pinned-repository-source-and-inventory-review",
+      "outcome": "PASS",
+      "reason": "Exact one-file tracked config inventory, adopted placement, review route, projection schema/validator/test/workflow and separate legacy stub inspected through GitHub. Current-base compare changes only catalog/triplet/README.md. No runtime proof."
+    },
+    {
+      "gate": "offline-markdown-metadata-navigation",
+      "outcome": "PASS",
+      "reason": "Session-only markdown-it and YAML checks: one H1, 36 retained H2 destinations, 20 links, 10 metadata references to connector-verified paths, 6 parsed tables, balanced fences/HTML, UTF-8/LF/final newline. Four negative probes rejected. This is not a full repository link crawler or visual browser test."
+    },
+    {
+      "gate": "candidate-whitespace",
+      "outcome": "PASS",
+      "reason": "git diff --no-index --check /dev/null candidate returned 1 with no diagnostics; independent trailing-whitespace scan passed. Not an exact-base checkout diff."
+    },
+    {
+      "gate": "receipt-schema-and-artifact-integrity",
+      "outcome": "PASS",
+      "reason": "Draft202012Validator with FormatChecker; schema materialization is byte-verified to git blob fba21ed27ebccf1362fe397fe0c3ebd85e072685. Artifact SHA-256 and field-map parity verified; invalid hash, unexpected property, and altered artifact negative probes rejected."
+    },
+    {
+      "gate": "repository-native-tests-and-hosted-execution",
+      "outcome": "SKIPPED",
+      "reason": "No full local checkout; Git network access failed. Native receipt validator, archaeology tests, make validate, topology suite, browser render, exact-base git diff, and hosted exact-head execution not run. Source inspection is not a passing run."
+    },
+    {
+      "gate": "independent-pr-delivery-and-human-review",
+      "outcome": "SKIPPED",
+      "reason": "Branch-only delivery under current issue #4024 after PR #4266 ready/merge recurrence. No new PR, ready, approval, merge or settings action; human review pending."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "configs/domains/archaeology/README.md",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/configs/domains/archaeology/README.md"
+    },
+    {
+      "id": "configs/domains/README.md",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/configs/domains/README.md"
+    },
+    {
+      "id": "configs/README.md",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/configs/README.md"
+    },
+    {
+      "id": "docs/domains/archaeology/README.md",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/docs/domains/archaeology/README.md"
+    },
+    {
+      "id": "docs/doctrine/directory-rules.md",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": ".github/CODEOWNERS",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/.github/CODEOWNERS"
+    },
+    {
+      "id": "schemas/contracts/v1/domains/archaeology/evidence_bundle.schema.json",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/schemas/contracts/v1/domains/archaeology/evidence_bundle.schema.json"
+    },
+    {
+      "id": "tools/validators/validate_archaeology_evidence_bundle_projection.py",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/tools/validators/validate_archaeology_evidence_bundle_projection.py"
+    },
+    {
+      "id": "tools/validators/domains/archaeology/validate_evidence_bundle.py",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/tools/validators/domains/archaeology/validate_evidence_bundle.py"
+    },
+    {
+      "id": "tests/validators/domains/archaeology/test_evidence_bundle_schema_convergence.py",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/tests/validators/domains/archaeology/test_evidence_bundle_schema_convergence.py"
+    },
+    {
+      "id": ".github/workflows/archaeology-evidence-bundle-convergence.yml",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/.github/workflows/archaeology-evidence-bundle-convergence.yml"
+    },
+    {
+      "id": "schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    },
+    {
+      "id": "data/receipts/generated/README.md",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/data/receipts/generated/README.md"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-04T20:44:15Z",
+  "emitter": "chatgpt:kfm-archaeology-config-readme-writer",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Same-path documentation and this required generation-provenance receipt only. No config payload, consumer, domain data, source admission, schema, policy, workflow, controls, runtime, release, deployment, promotion, or publication change. Prior target blob e42316554e24777096611a5cc54fd3a61e2fa0be. Prompt hash covers only the current user request, UTF-8 without final newline; no prompt text or hidden reasoning stored. Historical all-scaffold claims replaced with bounded source evidence; safeguards and H2 navigation retained. Placement under configs/ is not cultural authority or public-use permission. Preserve branch unintegrated or non-force-revert; retain receipt as provenance for its recorded bytes. Full consumer inventory, specialist review, live enforcement and external state remain unverified."
+}

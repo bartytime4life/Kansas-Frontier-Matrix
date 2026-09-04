@@ -2,472 +2,208 @@
 doc_id: kfm://doc/configs-domains-hazards-readme
 title: configs/domains/hazards/ — Governed Hazards Configuration Boundary
 type: readme
-version: v0.3
-status: draft
-owners: OWNER_TBD — Config steward · Hazards steward · Public-safety reviewer · Official-source reviewer · Source and rights steward · Freshness steward · Infrastructure sensitivity steward · Consumer owner · Validation steward · Policy steward · Release steward · Docs steward
+version: v0.4
+status: draft; repository-grounded; README-only configuration lane; non-authoritative
+owners:
+  - "@bartytime4life — verified /configs/ CODEOWNERS review route only"
+  - "NEEDS VERIFICATION — accountable configuration, Hazards, source/rights, public-safety boundary, freshness, sensitivity, consumer, validation, policy, and release stewardship"
 created: 2026-07-13
-updated: 2026-07-14
-policy_label: "public; config-sublane; hazards; contextual-only; not-for-life-safety; alert-authority-denied; source-role-aware; evidence-aware; freshness-aware; expiry-aware; official-source-redirect; infrastructure-sensitive; join-risk-aware; reconstruction-resistant; non-secret; non-authoritative; no-live-binding; no-source-activation; no-watcher-activation; no-notification-activation; no-action-guidance; no-release-authority"
+updated: 2026-09-04
+policy_label: "public; config-sublane; hazards; contextual-only; not-for-life-safety; alert-authority-denied; source-role-aware; freshness-aware; infrastructure-sensitive; non-secret; non-authoritative; no-live-binding; no-source-activation; no-notification-activation; no-release-authority"
 current_path: configs/domains/hazards/README.md
-truth_posture: CONFIRMED canonical Hazards config lane, parent configuration contract, permanent not-for-life-safety boundary, KFM-as-alert-authority T4-forever rule, seven source-role classes, expired-as-current denial, official-source redirect requirement, watcher-as-non-publisher rule, README-only bounded config inventory, source-family-first connector placement, noncanonical connectors/hazards compatibility index, canonical contracts/domains/hazards lane with contracts/hazards compatibility guard, canonical schemas/contracts/v1/domains/hazards lane with schemas/contracts/v1/hazards alias guardrail, subtype-first versus domain-first source-registry topology conflict, package version 0.0.0 and placeholder modules, PROPOSED pipeline specifications, PROPOSED/default-deny policy scaffolds, permissive and empty schema scaffolds, README/placeholder-heavy fixtures and tests, placeholder Explorer UI files, release-candidate documentation, absent hazards child under the inspected plural manifest lane, and TODO-only domain workflow / PROPOSED future consumer-bound templates and governed contextual-display, freshness, referral, and public-safe aggregation profile selectors / CONFLICTED source-registry topology, connector aliases, contract/schema aliases and vocabulary, policy release-path alternatives, singular versus plural release-manifest topology, and source descriptor role vocabularies / UNKNOWN direct config consumers, loader behavior, precedence, deployment binding, exhaustive recursive inventory, live source activation, policy-runtime wiring, notification behavior, cache invalidation, runtime enforcement, generated public derivatives, and publication use / NEEDS VERIFICATION accepted owners, canonical hazard object vocabulary, accepted source descriptors and source roles, rights, freshness thresholds, official-source referral profiles, public-safe infrastructure aggregation parameters, executable validation, meaningful CI, review enforcement, correction propagation, and rollback/invalidation integration
+owning_root: configs/
+readme_profile: BOUNDARY_COMPACT
+responsibility: "Document safe, non-secret Hazards configuration authoring and future explicit consumer binding without acquiring source, evidence, policy, alerting, or release authority."
+truth_posture: "CONFIRMED pinned tracked configuration inventory, parent contracts, accepted Directory Rules adoption, review routing, and workflow source; PROPOSED future configuration classes and payload/binding profiles; UNKNOWN runtime consumption, live enforcement, source admission, and public use; NEEDS VERIFICATION accountable stewardship and exact-head behavioral validation."
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   repository_id: "1059091169"
-  visibility: public
   base_ref: main
-  base_commit: 98b39c7171129b90ca858e2e3849ed121c0d7769
-  prior_blob: 13c2c95b11b089ab8e91254a9f6293e7f256f63b
-  bounded_path_search: configs/domains/hazards/README.md only
+  base_commit: 700570cbcf191038aa20a030174c2dd08cf93675
+  main_tree: f98d5965812e9a29f55d820f9942549719930408
+  prior_blob: 9ea59b80a1e73fb0cd4f3dc23b30b39c9c8cea10
+  tracked_config_files: [README.md]
+  parent_readme_blob: c497e41466f3aaf934aeca4b9976a2fa8516ff21
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  domain_workflow_blob: a13416bda7deed696aadccb81f0009bd4fc22c18
 related:
   - ../README.md
   - ../../README.md
-  - ../../../docs/domains/hazards/README.md
-  - ../../../docs/domains/hazards/ARCHITECTURE.md
-  - ../../../docs/domains/hazards/CANONICAL_PATHS.md
-  - ../../../docs/domains/hazards/DATA_LIFECYCLE.md
-  - ../../../docs/domains/hazards/IDENTITY_MODEL.md
-  - ../../../docs/domains/hazards/SOURCE_REGISTRY.md
-  - ../../../docs/domains/hazards/SOURCES.md
-  - ../../../docs/domains/hazards/SOURCE_ROLE_MATRIX.md
-  - ../../../docs/domains/hazards/LIFE_SAFETY_BOUNDARY.md
-  - ../../../docs/domains/hazards/PUBLICATION_AND_BOUNDARY.md
-  - ../../../docs/domains/hazards/PRESERVATION_MATRIX.md
-  - ../../../docs/domains/hazards/API_CONTRACTS.md
-  - ../../../docs/domains/hazards/MAP_UI_CONTRACTS.md
-  - ../../../docs/domains/hazards/RELEASE_INDEX.md
-  - ../../../docs/domains/hazards/VERIFICATION_BACKLOG.md
-  - ../../../docs/registers/DOMAIN_LANE.md
-  - ../../../docs/registers/DRIFT_REGISTER.md
+  - ../../../CONTRIBUTING.md
+  - ../../../.github/CODEOWNERS
   - ../../../docs/doctrine/directory-rules.md
-  - ../../../docs/security/SECRETS.md
-  - ../../../contracts/domains/hazards/
-  - ../../../contracts/hazards/README.md
-  - ../../../schemas/contracts/v1/domains/hazards/
-  - ../../../schemas/contracts/v1/hazards/README.md
-  - ../../../policy/domains/hazards/
-  - ../../../policy/rights/
-  - ../../../packages/domains/hazards/
-  - ../../../pipelines/domains/hazards/
-  - ../../../pipeline_specs/hazards/
-  - ../../../tools/validators/domains/hazards/
-  - ../../../tests/domains/hazards/
-  - ../../../fixtures/domains/hazards/
-  - ../../../apps/explorer-web/src/features/domains/hazards/
-  - ../../../connectors/hazards/README.md
-  - ../../../data/registry/sources/hazards/
-  - ../../../data/registry/hazards/sources/
-  - ../../../data/raw/hazards/
-  - ../../../data/work/hazards/
-  - ../../../data/quarantine/hazards/
-  - ../../../data/processed/hazards/
-  - ../../../data/catalog/domain/hazards/
-  - ../../../data/published/layers/hazards/
-  - ../../../release/candidates/hazards/
-  - ../../../release/manifest/
-  - ../../../release/manifests/
+  - ../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../../docs/domains/hazards/README.md
+  - ../../../docs/domains/hazards/LIFE_SAFETY_BOUNDARY.md
+  - ../../../contracts/domains/hazards/README.md
+  - ../../../schemas/contracts/v1/domains/hazards/README.md
+  - ../../../policy/domains/hazards/README.md
+  - ../../../fixtures/domains/hazards/README.md
+  - ../../../tests/domains/hazards/README.md
+  - ../../../release/candidates/hazards/README.md
   - ../../../.github/workflows/domain-hazards.yml
-tags: [kfm, configs, hazards, contextual-only, not-for-life-safety, warning-context, disaster-declarations, flood-context, wildfire-detections, smoke-context, drought, earthquake, exposure, resilience, source-role, freshness, expiry, official-sources, sensitive-infrastructure, join-risk, rights, no-secrets, governance]
+tags: [kfm, configs, hazards, contextual-only, not-for-life-safety, source-role, freshness, sensitivity, no-secrets, governance]
 notes:
-  - "The bounded repository search for configs/domains/hazards surfaced this README only. No executable Hazards configuration payload or indexed direct consumer was found."
-  - "The prior v0.2 README already carried strong not-for-life-safety, alert-authority denial, official-source redirect, source-role, freshness, expired-state, infrastructure-sensitivity, validation, correction, rollback, and safe-language controls. v0.3 preserves them and adds current repository evidence, implementation maturity, path conflicts, object-family boundaries, consumer-binding rules, cache/log invalidation, and stricter first-payload gates."
-  - "Repository-present Hazards implementation-shaped files are predominantly version-0.0.0, PROPOSED, default-deny scaffolds, permissive/empty schemas, placeholders, README-only guidance, or TODO-only workflows. Presence does not prove production behavior."
-  - "Source-specific connector implementation remains source or authority-family first under connectors/<source-or-family>/. connectors/hazards/ is a noncanonical compatibility index and must not become a parallel implementation hierarchy."
-  - "The repository contains both data/registry/sources/hazards/ and data/registry/hazards/sources/, plus contract/schema alias paths, connector aliases, and singular/plural release-manifest lanes. This README surfaces those conflicts without resolving or duplicating them by convenience."
-  - "Only this Markdown file changes."
+  - "v0.4 supersedes v0.3 documentation at this same path; no executable payload, consumer, schema, policy, source record, workflow, or release object changes."
+  - "README-only describes this tracked configuration directory, not the whole Hazards domain. The workflow now invokes bounded synthetic validation and retains explicit proof/release holds."
+  - "The earlier July inventory and alias observations remain revision history, not current implementation proof. Main and linked source files must be re-pinned before a subsequent change."
+  - "Existing section anchors are retained. Configuration field/class examples below are proposals, not an adopted schema or implemented loader."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # Governed Hazards Domain Configuration
 
-`configs/domains/hazards/`
+`configs/domains/hazards/` provides the configuration boundary for **hazard history, analysis, and contextual presentation—not emergency alerting**.
 
-> Safe-to-commit configuration documentation and future consumer-bound templates for historical hazard context, regulatory hazard context, operational-source context, observations, models, impact and exposure summaries, stale-state presentation, official-source referral, public-safe derivatives, and review routing. This lane is never an emergency-alert authority, warning issuer, incident-command surface, source authority, evidence authority, policy authority, release authority, or publication authority.
+**Status:** draft v0.4 · **Tracked contents:** README only · **Owning root:** `configs/` · **Consumer binding:** UNKNOWN
 
-![status](https://img.shields.io/badge/status-draft-blue)
-![version](https://img.shields.io/badge/version-v0.3-informational)
-![authority](https://img.shields.io/badge/authority-config__sublane-green)
-![maturity](https://img.shields.io/badge/maturity-README--only-lightgrey)
-![life safety](https://img.shields.io/badge/life__safety-not__an__alert__system-critical)
-![alert authority](https://img.shields.io/badge/alert__authority-T4__forever-critical)
-![freshness](https://img.shields.io/badge/expired__as__current-denied-orange)
-![truth](https://img.shields.io/badge/truth-cite--or--abstain-0b7285)
-
-**Quick links:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status-and-evidence) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Repo fit](#repository-fit-and-directory-rules-basis) · [Classes](#configuration-classes) · [Contract](#minimum-configuration-contract) · [Binding](#consumer-binding-precedence-and-discovery) · [Objects](#hazards-object-family-boundaries) · [Source roles](#source-role-and-evidence-character) · [Freshness](#time-freshness-expiry-and-correction) · [Life safety](#not-for-life-safety-and-official-source-referral) · [Cross-lane](#cross-lane-ownership-and-context-rules) · [Sensitivity](#sensitivity-infrastructure-and-reconstruction-risk) · [Connectors](#connector-source-registry-and-watcher-boundaries) · [Automation](#network-notification-and-automation-boundary) · [Rendering](#map-ui-export-and-governed-ai-boundaries) · [Logging](#logging-telemetry-caches-and-derived-indexes) · [Failure](#failure-behavior) · [Validation](#validation-and-test-matrix) · [Review](#review-burden) · [Maintenance](#maintenance-and-safe-change-pattern) · [Migration](#migration-and-anti-bypass-posture) · [ADRs](#adrs-and-drift-triggers) · [Done](#definition-of-done-for-the-first-payload) · [Rollback](#rollback-correction-supersession-and-invalidation) · [Language](#safe-language-rules) · [Last reviewed](#last-reviewed)
-
-> [!IMPORTANT]
-> **Document lifecycle:** draft `v0.3`<br>
-> **Observed lane maturity:** README-only in the bounded configuration-path search; no executable Hazards configuration payload or direct consumer binding is established<br>
-> **Authority:** implementation-supporting configuration sublane; contextual-only and non-authoritative for hazards truth, official-source status, life-safety decisions, evidence, policy, review, release, or publication<br>
-> **Runtime posture:** no loader, precedence rule, source activation, polling, notification delivery, warning issuance, incident workflow, emergency recommendation, public layer, release, or publication is established by this README
+[Evidence](#status-and-evidence) · [Placement](#repository-fit-and-directory-rules-basis) · [Future binding](#minimum-configuration-contract) · [Safety](#not-for-life-safety-and-official-source-referral) · [Validation](#validation-and-test-matrix) · [First payload](#definition-of-done-for-the-first-payload) · [Rollback](#rollback-correction-supersession-and-invalidation)
 
 > [!CAUTION]
-> **KFM is not an emergency alert system.** Hazards configuration must never issue, synthesize, rank, suppress, extend, cancel, replace, or operationalize warnings, watches, advisories, evacuation instructions, shelter directions, road-closure instructions, medical guidance, incident-command actions, or other life-safety guidance. Operational products may be shown only as source-attributed context with explicit issue/expiry state, a permanent not-for-life-safety disclaimer, and a redirect to appropriate official authorities.
-
----
+> **KFM is not an emergency alert system. KFM-as-alert-authority is T4 forever.** Configuration cannot issue, synthesize, rank, suppress, extend, cancel, replace, or operationalize warnings, watches, advisories, evacuation instructions, shelter directions, road-safety instructions, medical guidance, or incident-command actions. Official operational products remain attributed context with visible validity/expiry, a not-for-life-safety disclaimer, and referral to appropriate official authorities. These are governing requirements, not a claim that runtime enforcement has been proved.
 
 ## Purpose
 
-This directory defines the safe-to-commit configuration boundary for the canonical `hazards` domain segment under `configs/domains/`.
+Inherit the [domain configuration contract](../README.md) and [configuration root contract](../../README.md). This page adds the Hazards-specific constraints that a maintainer needs before drafting a template or binding it to a consumer.
 
-It may eventually hold small defaults, templates, examples, profile references, or review-oriented settings for a **named and verified contextual consumer**. Those files may describe how that consumer should parse, validate, label, qualify, generalize, render, cache, or package already-governed Hazards material, but they cannot decide:
+A future configuration may help a named consumer label, qualify, generalize, cache, or present already-governed context. It cannot decide whether an event is true, a source is active, a warning is actionable, an area is safe, or an artifact is released. The audience is configuration maintainers, consumer owners, Hazards reviewers, and source, rights, freshness, sensitivity, policy, and release reviewers.
 
-- whether a hazard event, observation, warning, watch, advisory, declaration, detection, model, exposure surface, impact area, or resilience summary is true;
-- whether a source is official, authoritative, admissible, active, current, complete, rights-cleared, or appropriate for an operation;
-- whether an official warning or advisory should be acted upon;
-- whether an expired or superseded operational record may be presented as current;
-- whether a public-source link is complete or suitable for a particular emergency;
-- whether a detection is a confirmed event;
-- whether a regulatory zone represents an observed event;
-- whether a modeled or forecast product is an observation;
-- whether a joined output exposes critical infrastructure, emergency resources, private people, or sensitive sites;
-- whether evidence supports a consequential claim;
-- whether a user should evacuate, shelter, travel, return, enter, consume water, approach a fire, use a road, or take another protective action;
-- whether a candidate may be promoted, released, rendered, indexed, exported, summarized, or published.
-
-This README is for configuration maintainers, Hazards stewards, public-safety and official-source reviewers, source and rights stewards, freshness reviewers, infrastructure and sensitivity reviewers, Hydrology, Atmosphere, Geology, Roads, Infrastructure, Agriculture, Habitat, Archaeology, and People/Land liaisons, consumer owners, validation and test owners, policy and release reviewers, security reviewers, and contributors checking Directory Rules placement.
-
-[Back to top](#top)
-
----
+**Inputs:** parent configuration contracts, accepted decisions, source/profile references, and explicitly synthetic authoring inputs. **Outputs:** reviewable configuration documentation and inactive candidate templates, not lifecycle records, approvals, or public artifacts.
 
 ## Authority level
 
-**Configuration-supporting, contextual-only, and non-authoritative.**
+**Implementation-supporting, contextual-only, and non-authoritative.** Configuration may reference an accepted decision; it may not manufacture or override it.
 
-| Concern | Authority in this lane |
-|---|---|
-| Hazards domain meaning | **None.** Human doctrine remains under [`docs/domains/hazards/`](../../../docs/domains/hazards/README.md); semantic meaning remains in accepted contracts. |
-| Emergency alerting or incident command | **Permanently none.** KFM-as-alert-authority is denied at T4 forever and cannot be enabled through configuration, policy selection, UI mode, AI prompt, or release. |
-| Warning, watch, or advisory issuance | **None.** Config cannot create, alter, prioritize, suppress, extend, cancel, or operationalize an official product. |
-| Protective-action guidance | **None.** Config cannot generate evacuation, shelter, travel, medical, fire-response, route-safety, utility-safety, or re-entry instructions. |
-| Hazard event or observation truth | **None.** Config cannot convert a candidate, detection, model, forecast, aggregate, declaration, regulatory area, or context object into an observation. |
-| Regulatory or administrative status | **None.** Config cannot create or alter a disaster declaration, flood zone, emergency order, permit, closure, or official designation. |
-| Source identity and activation | **None.** Config may reference reviewed source IDs or profiles; it cannot admit, activate, suspend, retire, or supersede a source. |
-| Source role and evidence character | **None.** Source role is fixed through source governance and must not be upgraded by a configuration key. |
-| Rights and redistribution | **None.** Public availability or successful fetch does not establish reuse, redistribution, derivative, or export rights. |
-| Freshness or expiry | **Supporting only.** Config may select an accepted profile; it cannot override authoritative issue, update, effective, expiry, cancellation, or supersession fields. |
-| Machine shape | **None.** Config may reference accepted schemas; it does not define schema authority. |
-| Sensitivity or public-safe transform | **None.** Config may select a governed profile; it cannot create, weaken, approve, or execute infrastructure-redaction or aggregation policy. |
-| Evidence | **None.** Config cannot create an `EvidenceBundle`, resolve evidence, or make generated language authoritative. |
-| Review approval | **None.** Review records and steward decisions remain outside this lane. |
-| Release or publication | **None.** Config cannot authorize promotion, release, public display, export, or KFM publication. |
-| Consumer behavior | **Supporting only.** A verified consumer may load a validated payload under an explicit binding, precedence, and rollback contract. |
+Preserve `RAW -> WORK/QUARANTINE -> PROCESSED -> CATALOG/TRIPLET -> PUBLISHED`. Promotion is a governed transition, not a file move; configuration cannot skip a lifecycle gate.
 
-A configuration value may point to authority. It does not become authority through proximity, parsing success, operational convenience, apparent urgency, repeated use, or presentation by a map, dashboard, Evidence Drawer, Focus Mode, export, notification component, or AI surface.
-
-[Back to top](#top)
-
----
+| Concern | Owning authority or required evidence | Configuration limit |
+|---|---|---|
+| Domain meaning and object semantics | [Hazards doctrine](../../../docs/domains/hazards/README.md) and [semantic contracts](../../../contracts/domains/hazards/README.md) | No conversion of a detection, model, declaration, or aggregate into an observation. |
+| Machine shape | [Hazards schema lane](../../../schemas/contracts/v1/domains/hazards/README.md) | Refer to an appropriate versioned profile; do not define a second schema home. |
+| Admissibility, rights, and sensitivity | [Hazards policy boundary](../../../policy/domains/hazards/README.md) and applicable source governance | No policy weakening, rights clearance, source-role upgrade, or exact-location permission. |
+| Evidence and review | Resolvable EvidenceRef -> EvidenceBundle and applicable review records | No invented evidence closure, approval, or accepted stewardship. |
+| Release and correction | [Release-candidate boundary](../../../release/candidates/hazards/README.md) and governed release records | A candidate, config value, successful check, or file move is not a release. |
+| Consumer operation | Exact loader, binding, validation, and runtime evidence | No implicit discovery, precedence, network access, notification, or deployment. |
+| Emergency authority | [Permanent life-safety boundary](../../../docs/domains/hazards/LIFE_SAFETY_BOUNDARY.md) | None; not unlockable by configuration, an AI prompt, a UI mode, or a release. |
 
 ## Status and evidence
 
 ### Evidence snapshot
 
-| Field | Value |
-|---|---|
-| Repository | `bartytime4life/Kansas-Frontier-Matrix` |
-| Repository ID | `1059091169` |
-| Visibility | public |
-| Base ref | `main` |
-| Base commit | `98b39c7171129b90ca858e2e3849ed121c0d7769` |
-| Prior target blob | `13c2c95b11b089ab8e91254a9f6293e7f256f63b` |
-| Bounded config-path result | this README only |
+This revision inspected GitHub at `main@700570cbcf191038aa20a030174c2dd08cf93675`, tree `f98d5965812e9a29f55d820f9942549719930408`. The previous target blob is `9ea59b80a1e73fb0cd4f3dc23b30b39c9c8cea10`.
+
+The exact tracked contents of this directory are:
+
+```text
+configs/domains/hazards/
+└── README.md
+```
 
 ### Current maturity matrix
 
-| Surface | State | Safe conclusion |
-|---|---:|---|
-| Hazards config lane | **README ONLY IN BOUNDED SEARCH** | No executable config payload or indexed direct consumer is established. |
-| Parent config contract | **CONFIRMED** | `configs/domains/README.md` defines non-secret, non-authoritative domain configuration. |
-| Hazards doctrine | **CONFIRMED repository-present** | The not-for-life-safety, source-role, freshness, expiry, referral, and watcher boundaries are documented. |
-| Alert-authority posture | **CONFIRMED — T4 FOREVER** | No transform, config, policy selection, release, or UI mode can make KFM an alert authority. |
-| Canonical semantic contract lane | **CONFIRMED path** | `contracts/domains/hazards/` contains a README and implementation-shaped contract files. |
-| Contract compatibility path | **CONFIRMED guardrail path** | `contracts/hazards/README.md` exists and must not become parallel authority. |
-| Canonical schema lane | **CONFIRMED path / MIXED PLACEHOLDER MATURITY** | `schemas/contracts/v1/domains/hazards/` contains numerous schemas, many permissive or empty `PROPOSED` scaffolds. |
-| Schema alias path | **CONFIRMED guardrail path** | `schemas/contracts/v1/hazards/README.md` exists; do not promote it into a second schema home. |
-| Domain package | **CONFIRMED PLACEHOLDER** | Package version is `0.0.0`; inspected `identity.py`, `observations.py`, and `layers.py` contain placeholder comments only. |
-| Hazards policy files | **CONFIRMED PATHS / PROPOSED SCAFFOLDS** | Rego and YAML files exist, but inspected files are `PROPOSED`, default-deny, empty-rule, or placeholder scaffolds. |
-| Pipeline specs | **CONFIRMED PATHS / PROPOSED PLACEHOLDERS** | Generic and source-oriented YAML files exist, but inspected files are generated placeholders. |
-| Connector topology | **CONFIRMED CONFLICTED** | `connectors/hazards/` is a documentation-only compatibility index; source and product paths have family, hyphen, underscore, nested, and flat variants. |
-| Source registries | **CONFIRMED CONFLICTED** | Both `data/registry/sources/hazards/` and `data/registry/hazards/sources/` exist. One inspected record is a generated placeholder; the other is a field-level `TBD` template. |
-| Fixtures | **CONFIRMED PLACEHOLDER/README-HEAVY** | Valid, invalid, focus, drawer, identity, negative, and manifest lanes exist, but placeholder files and README scenarios dominate. |
-| Tests | **CONFIRMED FILE PATHS / BEHAVIOR UNPROVED** | Test filenames exist, but inspected Python tests are documentation-only placeholder modules. |
-| Explorer UI | **CONFIRMED PLACEHOLDER** | `layers.ts` and `EvidenceDrawer.tsx` export placeholder markers. |
-| Release candidate lane | **CONFIRMED README** | `release/candidates/hazards/README.md` exists; this does not prove an accepted candidate or release. |
-| Plural manifest child | **NOT FOUND IN BOUNDED SEARCH** | No `release/manifests/hazards/` child was surfaced. Parent singular/plural manifest topology remains unresolved. |
-| Domain workflow | **CONFIRMED TODO-ONLY** | `domain-hazards.yml` runs echo-only validation, proof, and publish-dry-run jobs. |
-| Direct consumer, loader, and precedence | **UNKNOWN** | No config parser, auto-discovery, merge order, reload behavior, or deployment binding is established. |
-| Live enforcement and publication | **UNKNOWN / NOT AUTHORIZED** | Repository presence and workflow success do not prove production enforcement or public safety. |
+| Surface | Confirmed at the snapshot | What remains unproved |
+|---|---|---|
+| This configuration directory | One tracked README and no child directory or executable configuration payload. | Ignored, untracked, externally stored configuration, loaders, and runtime use. |
+| Parent configuration guidance | The domain parent is v0.6; the root is v0.5. Both separate configuration from governance authority. | General discovery, merge order, or universal consumer binding. |
+| Hazards domain | The domain README describes mixed maturity; fixture and test indexes document bounded synthetic families alongside incomplete lanes. | Whole-domain completeness or production readiness. README-only is not a domain-wide maturity label. |
+| Domain workflow | Source invokes drought smoke tests, `make hazards-validate`, and workflow-binding tests. | Exact-head execution and results in this authoring session. The workflow is no longer TODO-only. |
+| Proof and release jobs | Workflow source explicitly retains proof-producer and release-dry-run holds. | Accepted proof production, release assembly, promotion, deployment, or publication. A successful hold check proves none of these. |
+| Review routing | `/configs/` routes to `@bartytime4life` in CODEOWNERS. | Accountable specialist stewardship, required-review enforcement, and independent approval. |
+| Source and public integration | No such capability is established by this README. | Live admission, rights, freshness, evidence closure, policy execution, warning-feed operation, cache invalidation, and public-use safety. |
 
 ### Evidence boundary
 
-This README may state directly inspected repository presence and file content. It must not claim:
+The July v0.3 blanket descriptions of placeholder tests and an echo-only workflow are superseded by this bounded current-state account. Its wider connector, registry, schema-alias, and manifest inventory is **historical**, not automatically reverified here. This revision does not settle those seams or claim an exhaustive consumer audit.
 
-- accepted owners or CODEOWNERS enforcement;
-- accepted schemas or object vocabulary;
-- active source descriptors;
-- live connectors or watchers;
-- meaningful Hazards test execution;
-- real OPA enforcement;
-- production warning-feed behavior;
-- current-condition accuracy;
-- notification delivery;
-- public release safety;
-- cache invalidation correctness;
-- complete rollback integration.
+[Workflow source](../../../.github/workflows/domain-hazards.yml), [fixture index](../../../fixtures/domains/hazards/README.md), and [test index](../../../tests/domains/hazards/README.md) remain separate evidence surfaces. Their prior test receipts are not this revision's test results.
 
-Directory presence must not trigger config loading, source discovery, polling, network access, alert ingestion, notification delivery, geofencing, sirens, messaging, dispatch, incident workflows, emergency recommendations, public-layer creation, lifecycle promotion, or publication.
-
-[Back to top](#top)
-
----
+**Source lineage:** the Drive *Directory Rules* document and *KFM Hazards Architecture — Extended Pro PDF-Only Implementation Blueprint* (2026-04-21; Drive ID `1nTzBV_-7_-DzzXxCQPsrQRGffoO2zZSv`, pp. 1–3) support responsibility separation and the contextual-only boundary. The blueprint explicitly lacked a mounted repository; its proposed paths and source checks are not current repository or live-source proof. The Notion Hazards builder's August 31 monitoring entry is coordination history; GitHub records its PR #4001 as merged, not an open blocker for this file.
 
 ## What belongs here
 
-Only safe, non-secret, Hazards-specific configuration material for a named or explicitly proposed **contextual** consumer belongs here.
+Safe, non-secret configuration documentation and, when separately scoped, small **inactive** templates or synthetic examples. Future payloads may select reviewed presentation, freshness, official-referral, public-safe transformation, review-routing, or compatibility profiles for a named contextual consumer.
 
-| Material | Permitted purpose | Minimum posture |
-|---|---|---|
-| `README.md` | Define this configuration boundary. | Preserve non-alert authority, source-role, freshness, evidence, sensitivity, and release controls. |
-| `*.template.yaml` / `*.template.yml` | Placeholder-based template for a verified contextual consumer. | Parseable, versioned, consumer-bound, no secrets, no live binding, no action guidance. |
-| `*.example.yaml` / `*.example.json` / `*.example.toml` | Tiny synthetic example. | Impossible identifiers and geometry; obvious mock timestamps; no automatic activation. |
-| Conservative display defaults | Select historical, stale, contextual, hold, abstain, deny, or official-link modes. | Cannot weaken policy, freshness, disclaimer, rights, evidence, or release burden. |
-| Official-source referral profile selector | Select an accepted referral profile for a verified surface. | Cannot claim completeness, replace official channels, or include KFM-authored action instructions. |
-| Freshness profile selector | Select an accepted per-source or per-product freshness profile. | Cannot override source issue, effective, expiry, cancellation, or supersession times. |
-| Public-safe display profile selector | Select an accepted aggregation, suppression, or generalization profile. | Cannot contain exact protected detail or authorize exposure. |
-| Presentation hints | Configure role badges, time labels, stale banners, uncertainty, disclaimer placement, caveats, and source-link placement. | Must not change evidence character, urgency, validity, source role, or sensitivity. |
-| Review routing defaults | Select an existing reviewer class or fail-closed disposition. | Cannot assign approval or reduce separation of duties. |
-| Migration notes | Document a real key, version, consumer, or path transition. | Time-bounded, owner-linked, reversible, and not a second authority. |
-| Validation notes | Describe verified checks and finite outcomes. | Commands and workflows must resolve or remain labeled `PROPOSED` / `NEEDS VERIFICATION`. |
-
-Synthetic examples must not resemble a real warning identifier, active incident, critical facility, emergency resource, shelter, hospital, utility asset, transportation-control point, hazardous-material site, or exact impact location closely enough to cause confusion or support reconstruction.
-
-[Back to top](#top)
-
----
+Unmistakably synthetic authoring may proceed with a **PROPOSED** consumer/profile and explicit non-effects. Missing production approval does not prohibit drafting; it prohibits treating that draft as an active or approved binding. No such payload is added in this revision.
 
 ## What does not belong here
 
-- current warnings, watches, advisories, emergency alerts, evacuation notices, shelter instructions, protective-action guidance, road-closure instructions, medical guidance, or incident-command material;
-- real source payloads, event records, warning feeds, model grids, declarations, detections, exposure outputs, or operational status;
-- exact or reconstructable critical-infrastructure, emergency-response, hazardous-material, utility, communications, shelter, healthcare, transportation-control, private-person, or resilience-critical detail;
-- contact lists, pager routes, phone trees, dispatch instructions, escalation policies, notification templates, or messaging targets;
-- credentials, tokens, private keys, cookies, signed URLs, private endpoints, workstation paths, environment secrets, or internal deployment bindings;
-- settings that present a detection, candidate, forecast, model, regulatory zone, administrative declaration, aggregate, or synthetic object as observed hazard truth;
-- settings that present historical, expired, cancelled, superseded, withdrawn, partial, delayed, or unavailable operational context as current;
-- settings that hide or disable the not-for-life-safety disclaimer or official-source referral;
-- settings that trigger SMS, email, push, calls, sirens, dispatch, ticketing, geofencing, escalation, or emergency workflows;
-- settings that convert official-source content into KFM-authored advice;
-- permissive fallbacks that hide missing, stale, partial, failed, or contradictory source state;
-- source admission, activation, cadence, rights, redistribution, or source-role decisions;
-- schemas, semantic contracts, policy rules, registry records, receipts, proofs, evidence bundles, release records, correction notices, or publication decisions;
-- package code, pipeline logic, connector code, watcher code, runtime adapters, UI code, infrastructure definitions, generated artifacts, caches, exports, screenshots, or reports;
-- lifecycle records from RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, or PUBLISHED stores;
-- duplicate alias files created to bypass unresolved connector, contract, schema, registry, or manifest topology.
+Real warnings or source records; credentials, tokens, cookies, signed URLs, private endpoints or workstation bindings; emergency contacts or notification destinations; protected coordinates or reconstructable infrastructure/person details; source admission or role decisions; policy parameters that create or weaken protection; schemas, semantic contracts, receipts, proofs, release decisions, lifecycle data, runtime code, caches, or public artifacts.
 
-[Back to top](#top)
-
----
+Also prohibited are hidden current-condition claims, reassuring fallbacks for missing data, expired-as-current display, KFM-authored protective actions, arbitrary public-user profile selection, and parallel files created to bypass an unresolved canonical-home decision.
 
 ## Repository fit and Directory Rules basis
 
-This file remains under the `configs/` responsibility root because its responsibility is safe-to-commit configuration documentation and future consumer-bound templates.
-
-```text
-configs/
-└── domains/
-    ├── README.md
-    └── hazards/
-        └── README.md
-```
-
-| Responsibility | Home | Boundary |
-|---|---|---|
-| Config documentation and future templates | `configs/domains/hazards/` | This lane; no truth, policy, release, or activation authority. |
-| Human doctrine | `docs/domains/hazards/` | Scope, language, life-safety boundary, sources, lifecycle, publication posture. |
-| Semantic meaning | `contracts/domains/hazards/` | Accepted object meaning and invariants. |
-| Legacy/alias contract path | `contracts/hazards/` | Compatibility guard only unless accepted ADR or migration says otherwise. |
-| Machine shape | `schemas/contracts/v1/domains/hazards/` | Canonical domain schema lane; current files require maturity review. |
-| Alias schema path | `schemas/contracts/v1/hazards/` | Guardrail/compatibility path; not parallel authority. |
-| Policy | `policy/domains/hazards/` and accepted cross-cutting policy lanes | Admissibility, abstention, freshness, release, sensitivity, and public-surface gates. |
-| Shared domain code | `packages/domains/hazards/` | Reusable implementation only after package maturity and tests. |
-| Pipeline code/specs | `pipelines/domains/hazards/`, `pipeline_specs/hazards/` | Executable logic versus declarative run intent. |
-| Source access | `connectors/<source-or-authority-family>/` | Source-family-first; not under `connectors/hazards/`. |
-| Source descriptors | accepted source registry home | Topology currently conflicted; do not duplicate records. |
-| Validation | `tools/validators/`, `tests/`, `fixtures/` | Checks and examples; not policy or release authority. |
-| Lifecycle data | `data/<phase>/hazards/` | RAW through PUBLISHED state remains phase-visible. |
-| Release and rollback | `release/` | Promotion, release, correction, withdrawal, supersession, and rollback authority. |
-| Public surfaces | governed apps and APIs | Must consume released or explicitly authorized projections, not internal stores. |
+[Accepted ADR-0029](../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts the exact [Directory Rules v2](../../../docs/doctrine/directory-rules.md) bytes, including their retained `PROPOSED_FOR_ADOPTION` source label. The accepted decision—not that frozen label in isolation—establishes adoption.
 
 ### Directory Rules decisions preserved
 
-- Hazards remains a segment inside responsibility roots, not a new root-level domain folder.
-- `configs/` does not duplicate `contracts/`, `schemas/`, `policy/`, `data/`, `release/`, `packages/`, or `apps/`.
-- `connectors/hazards/` remains a compatibility index, not a source hierarchy.
-- Alias contract and schema paths remain guardrails unless a reviewed migration changes them.
-- Source-registry and manifest conflicts are surfaced, not resolved by convenience.
-- Publication follows validation, policy, review, and release gates.
-- Standard clients use governed APIs and released carriers, not canonical or internal stores.
+The owning root stays `configs/`: this file documents safe configuration, not Hazards truth. The `hazards` segment refines that responsibility; it does not create a root-level domain. Directory Rules §16.3 supplies the `BOUNDARY_COMPACT` profile, and `DIR-README-003` limits the directory map to this directory and its direct children. Parent contracts carry shared configuration obligations.
 
-[Back to top](#top)
-
----
+Meaning remains in `contracts/`, shape in `schemas/`, admissibility in `policy/`, examples in `fixtures/`, validation in `tests/` and tooling, lifecycle instances in `data/`, and release/correction decisions in `release/`. The verified links above navigate those responsibilities; they do not establish that every object or implementation within them is accepted. No new home, move, rename, or ADR is introduced.
 
 ## Configuration classes
 
-A future payload must declare one narrow configuration class.
+These are **PROPOSED authoring classes**, retained from v0.3, not an implemented enumeration or accepted configuration schema.
 
-| Class | Permitted purpose | Prohibited effect |
-|---|---|---|
-| `context_presentation` | Labels, badges, caveats, source-role display, uncertainty, historical/stale state. | Cannot alter source role, validity, urgency, or evidence status. |
-| `freshness_profile_ref` | Select an accepted freshness/expiry profile by stable identifier and version. | Cannot define or silently extend official validity. |
-| `official_referral_profile_ref` | Select reviewed official-source links and neutral referral wording. | Cannot claim completeness or provide KFM-authored emergency instructions. |
-| `public_safe_profile_ref` | Select approved aggregation, suppression, redaction, or generalization behavior. | Cannot define policy parameters or expose exact protected detail. |
-| `review_routing` | Select an accepted reviewer class, hold state, or escalation to governance review. | Cannot approve the candidate or contact emergency responders. |
-| `feature_toggle` | Enable a non-consequential, non-alerting presentation behavior in a named consumer. | Cannot enable polling, notifications, life-safety behavior, or public release. |
-| `synthetic_test_profile` | Configure deterministic public-safe tests. | Cannot contain real warnings, facilities, people, or source credentials. |
-| `migration_compatibility` | Time-bounded mapping for a real key or consumer migration. | Cannot create silent aliases or permanent parallel authority. |
+| Class | Bounded purpose |
+|---|---|
+| `context_presentation` | Labels, attribution, source-role badges, uncertainty, historical/stale state. |
+| `freshness_profile_ref` | Reference a governed, source/product-specific validity profile; never extend official validity. |
+| `official_referral_profile_ref` | Reference reviewed authority links and neutral referral wording, without completeness guarantees. |
+| `public_safe_profile_ref` | Reference policy-owned aggregation, redaction, suppression, or delay; never authorize exposure. |
+| `review_routing` | Select a governance-review route; never approve or contact emergency responders. |
+| `feature_toggle` | Non-consequential, non-alerting presentation only; never source, network, or release activation. |
+| `synthetic_test_profile` | Deterministic synthetic, non-operational test inputs. |
+| `migration_compatibility` | Explicit, time-bounded mapping with one writer, consumer impact, and rollback. |
 
-A file serving more than one class should be split unless atomic review and rollback require one unit and the owner documents that choice.
-
-[Back to top](#top)
-
----
+Prefer one class per payload; document the atomic dependency when more than one is necessary.
 
 ## Minimum configuration contract
 
-Every future non-README file must declare or document the following.
-
 ### Identity and ownership
 
-| Field | Requirement |
-|---|---|
-| `config_id` | Stable identifier scoped to one verified consumer. |
-| `config_version` | Explicit immutable version; no implicit latest behavior. |
-| `config_class` | One accepted class from the preceding table. |
-| `consumer_id` | Exact package, app, route, renderer, pipeline, validator, or test harness. |
-| `owner` | Accepted accountable person or team. |
-| `purpose` | One bounded contextual behavior. |
-| `status` | `proposed`, `candidate`, `active`, `deprecated`, `superseded`, or `retired` for that consumer. |
-| `authority_refs` | Stable references to controlling docs, contracts, schemas, policy profiles, source records, ADRs, or release records. |
-| `supersedes` | Prior config version where applicable. |
-| `rollback_target` | Prior known-good version or safe disabled state. |
+A future binding must establish `config_id`, immutable `config_version`, proposed/accepted class, exact `consumer_id`, accountable owner, bounded purpose, authority/profile references, supersession relationship, and rollback target. These field names describe design requirements, not an adopted schema. An inactive draft must visibly retain unresolved ownership and profile status rather than invent accepted values.
 
 ### Parsing and loading
 
-The consumer contract must define:
-
-- canonical filename and path;
-- format and format version;
-- parser and encoding;
-- duplicate-key behavior;
-- unknown-key behavior;
-- required versus optional file behavior;
-- unsupported-version behavior;
-- partial-application behavior;
-- environment substitution policy;
-- include/import policy;
-- external-reference policy;
-- cache and reload behavior;
-- failure disposition;
-- deterministic rejection of ambiguous configuration.
+Before execution, document the exact allowlisted filename, encoding, parser, supported version, restrictive shape, required/optional-file behavior, duplicate/unknown-key rejection, atomic failure behavior, permitted substitutions/includes, external-reference policy, reload semantics, and disabled fallback. No remote include or environment substitution may silently introduce secrets, policy overrides, or executable behavior.
 
 ### Hazards-specific context
 
-A payload must identify, where applicable:
-
-- intended object family;
-- source-role and knowledge-character expectations;
-- accepted source IDs or source-family refs;
-- temporal fields and accepted freshness profile ref;
-- issue/effective/update/expiry/cancellation/supersession semantics;
-- disclaimer profile;
-- official-source referral profile;
-- audience;
-- map/export/API/AI surface;
-- generalization or redaction profile ref;
-- cross-lane dependencies;
-- review requirements;
-- release constraints;
-- correction and invalidation behavior.
+Bind the object family, originating source/product identity, source role, material times, validity/expiry profile, disclaimer, referral, audience, output surface, public-safe profile, cross-lane references, review requirements, release constraints, and correction/invalidation behavior. Live source identity, rights, and activation must be verified at the transition that uses them; synthetic drafting is not source admission.
 
 ### Safety controls
 
-A file must:
-
-- contain no secrets or real sensitive operational values;
-- contain no real emergency contacts or notification destinations;
-- contain no active-warning identifiers or precise protected infrastructure;
-- use synthetic examples;
-- fail closed when authority, rights, source role, freshness, sensitivity, evidence, review, release, or rollback support is missing;
-- avoid network access during validation;
-- avoid source, watcher, notification, route, renderer, release, or publication activation by file presence;
-- preserve finite reason-coded failures;
-- remain reversible without rewriting shared history.
-
-[Back to top](#top)
-
----
+Validation defaults to no-network fixtures. No file-presence activation, notification/contact field, real operational identifier, exact protected geometry, permissive fallback, partial application, or concealed production binding is allowed. A valid config does not waive evidence, rights, sensitivity, policy, review, or release requirements.
 
 ## Consumer binding, precedence, and discovery
 
-No universal Hazards configuration loader is confirmed.
-
-A future consumer must bind to an exact file intentionally. Directory scanning is not an acceptable activation mechanism.
-
 ### Required binding record
 
-| Item | Requirement |
-|---|---|
-| Consumer | Exact code path and owner. |
-| Config path | One allowlisted repository path. |
-| Expected digest/version | Pin immutable version or hash where practical. |
-| Schema/profile | Exact accepted schema or validation profile. |
-| Precedence | Explicit order relative to defaults, dev, test, local, deployment, and runtime state. |
-| Failure behavior | Fail closed; no implicit fallback to unreviewed values. |
-| Reload behavior | Define restart, atomic reload, or no-reload behavior. |
-| Audit | Record selected version and safe outcome where consequential. |
-| Rollback | State how selection returns to a known-good or disabled state. |
+**No Hazards config loader is established here.** A future consumer must intentionally select a named file and version/digest, validate its exact profile, record safe selection evidence where consequential, and provide atomic disable/revert behavior. Directory scanning is not source or feature activation authority.
 
 ### Safe precedence principles
 
-1. Policy, rights, evidence, release, and sensitivity controls are not override layers.
-2. Local or deployment settings cannot weaken repository-governed safety.
-3. More specific configuration cannot disable the life-safety disclaimer or referral.
-4. A stale or invalid override cannot silently fall back to a permissive value.
-5. Missing configuration must not enable a feature.
-6. Unknown keys fail or hold according to the accepted consumer contract.
-7. Partial application is forbidden when one key fails validation.
-8. File discovery must be allowlisted and deterministic.
-9. Config selection must not be user-controlled on public surfaces.
-10. Runtime state must record enough identity to support correction and rollback.
-
-[Back to top](#top)
-
----
+Defaults, test, local, deployment, and runtime overrides need an explicit order. They must not override policy, rights, source role, evidence, release, sensitivity, official validity, disclaimer, or referral. Unknown keys/versions, duplicate keys, ambiguous aliases, malformed inputs, missing required configuration, and failed reloads must not yield a partially applied or permissive configuration. Public callers cannot select arbitrary paths or policy profiles.
 
 ## Hazards object family boundaries
 
-Configuration must preserve distinct object families and claim types.
+The [domain README](../../../docs/domains/hazards/README.md) identifies these families. Their presence in this table does not prove a corresponding accepted config schema or runtime.
 
-| Object or claim family | Contextual meaning | Must not imply |
+| Family | Preserve | Never infer from it alone |
 |---|---|---|
-| `HazardEvent` | Sourced event record with type, place, time, and evidence character. | Current danger, warning authority, or recommended action. |
-| `HazardObservation` | Measured or observed hazard-related datum. | Complete event confirmation or forecast. |
-| `WarningContext` | Preserved official-source warning product or reference. | KFM warning issuance or independent life-safety guidance. |
-| `AdvisoryContext` | Preserved advisory/watch/context product. | KFM endorsement, extension, or prioritization. |
-| `DisasterDeclaration` | Administrative or regulatory declaration record. | Direct observation of damage, current conditions, or individual eligibility. |
-| `FloodContext` | Regulatory, modeled, historical, or observed flood-related context with explicit role. | Current inundation or route safety unless separately evidenced and officially communicated. |
-| `WildfireDetection` | Sensor or source detection candidate. | Confirmed fire perimeter, incident status, or evacuation need. |
-| `SmokeContext` | Smoke extent, model, observation, or advisory context. | Ground-level PM2.5 concentration, health instruction, or visibility at a specific place unless separately supported. |
-| `DroughtIndicator` | Classification or index for defined place and period. | Current water availability, crop outcome, or emergency condition. |
-| `EarthquakeEvent` | Sourced seismic-event record. | Damage, aftershock probability, building safety, or official emergency status. |
-| `HeatColdEvent` | Historical or sourced temperature-impact context. | Medical advice, current warning authority, or individual risk assessment. |
-| `ExposureSummary` | Derived relation between hazard context and assets/populations. | Observed impact, loss, casualty, or operational failure. |
-| `ResilienceSummary` | Planning-oriented derived indicator. | Guarantee of readiness, safety, continuity, or response capacity. |
-| `HazardTimeline` | Ordered sourced context. | Complete event chronology or official incident record. |
-| `ImpactArea` | Sourced or modeled area with role, method, time, and uncertainty. | Current official evacuation zone or verified damage footprint. |
+| `HazardEvent` / `HazardObservation` | Sourced event versus measured/observed datum. | Current danger, complete event confirmation, forecast, or action. |
+| `WarningContext` / `AdvisoryContext` | Attributed official-source product/reference and its validity. | KFM issuance, endorsement, extension, cancellation, or priority. |
+| `DisasterDeclaration` | Administrative declaration and effective scope. | Observed damage, current conditions, or individual eligibility. |
+| `FloodContext` | Explicit regulatory, modeled, historical, or observed support. | Current inundation, an evacuation zone, or route safety. |
+| `WildfireDetection` | Detection/candidate status and source limitations. | Confirmed perimeter, incident status, or evacuation need. |
+| `SmokeContext` | Polygon, model, observation, or advisory character. | Ground-level PM2.5, local visibility, or health instructions. |
+| `DroughtIndicator` | Classification/index, geography, and period. | Current water supply, crop outcome, or emergency status. |
+| `EarthquakeEvent` / `HeatColdEvent` | Sourced phenomenon and its uncertainty. | Damage, building safety, individual medical risk, or official emergency status. |
+| `ExposureSummary` / `ResilienceSummary` | Derived join, method, scale, and uncertainty. | Observed impact, loss, casualties, readiness, or safety guarantees. |
+| `HazardTimeline` / `ImpactArea` | Sourced chronology or area with role and limits. | Complete incident history or an official/verified operational footprint. |
 
 ### Load-bearing anti-collapse rules
 
@@ -484,839 +220,245 @@ resilience score != safety guarantee
 source fetch success != current, complete, or releasable truth
 ```
 
-Config keys must not rename, alias, merge, promote, or silently fall back across these boundaries.
-
-[Back to top](#top)
-
----
-
 ## Source role and evidence character
 
-Hazards doctrine distinguishes seven source-role classes:
-
-- `observed`
-- `regulatory`
-- `modeled`
-- `aggregate`
-- `administrative`
-- `candidate`
-- `synthetic`
-
-A configuration file may reference an accepted role. It cannot assign, infer, or upgrade the role.
-
-| Role | Typical use | Prohibited collapse |
-|---|---|---|
-| `observed` | Measured or directly recorded phenomenon. | Does not automatically prove impact, completeness, or official action. |
-| `regulatory` | FEMA/NFHL or other regulatory context. | Is not an observed event or current inundation. |
-| `modeled` | Forecast, hindcast, interpolation, smoke field, exposure model. | Is not measurement or event confirmation. |
-| `aggregate` | County, basin, grid, period, index, or statistical summary. | Is not site-level truth. |
-| `administrative` | Declaration, incident record, program status, official administrative action. | Is not physical observation. |
-| `candidate` | Detection or unresolved match awaiting validation. | Is not confirmed truth or warning. |
-| `synthetic` | Test, scenario, exercise, simulation, or clearly artificial example. | Must never be presented as real conditions. |
+Preserve the domain's seven source-role classes: `observed`, `regulatory`, `modeled`, `aggregate`, `administrative`, `candidate`, and `synthetic`. Configuration references a governed role; it cannot assign, infer, upgrade, alias away, or silently substitute that role. Aggregate support is not site-level truth; a scenario is not current conditions.
 
 ### Required source evidence
 
-Before a future config references a source or product profile, verify:
-
-- canonical source ID;
-- originating publisher and distributor relationship;
-- source role;
-- authority scope;
-- product type;
-- rights and attribution;
-- access posture;
-- cadence;
-- issue/update/expiry semantics;
-- quality flags;
-- spatial and temporal support;
-- correction and supersession behavior;
-- SourceDescriptor and activation state where applicable.
-
-A source accessed through an aggregator does not inherit the aggregator's authority. Preserve original publisher, product, timestamps, identifiers, and caveats.
-
-[Back to top](#top)
-
----
+Before real-source binding, verify canonical source/product ID, origin versus distributor, authority scope, role, rights/attribution, access/admission state, cadence, time semantics, spatial support, quality flags, and correction/supersession behavior. An aggregator, public URL, successful fetch, or copied source name does not establish authority or redistribution rights.
 
 ## Time, freshness, expiry, and correction
 
-Hazards configuration is unusually time-sensitive. It must preserve every material time rather than collapsing them into a single `timestamp`.
-
 ### Time kinds
 
-At minimum, distinguish where applicable:
-
-- source time;
-- observation time;
-- valid time;
-- retrieval time;
-- issue time;
-- effective time;
-- update time;
-- expiry time;
-- cancellation time;
-- supersession time;
-- release time;
-- correction time.
-
-A retrieval time cannot substitute for observation time. A file modification time cannot substitute for issue or expiry time. A release time cannot make stale source material current.
+Keep source, observation, valid, retrieval, issue, effective, update, expiry, cancellation, supersession, release, and correction times distinct when material. Retrieval, file modification, or release time cannot refresh the underlying observation or extend a warning.
 
 ### Presentation states
 
-| State | Meaning | Required public/contextual posture |
-|---|---|---|
-| `current_context` | Within accepted source/product validity and not superseded. | Source-attributed context only; disclaimer and referral remain mandatory. |
-| `stale` | Beyond freshness threshold but not formally expired or withdrawn. | Label stale; do not imply current conditions. |
-| `expired` | Official or accepted validity ended. | Historical context only; never current. |
-| `cancelled` | Official product was cancelled. | Preserve cancellation and stop current presentation. |
-| `superseded` | Replaced by a newer product or correction. | Route to newer record; preserve lineage. |
-| `withdrawn` | Source or KFM governance withdrew use. | Do not newly select or display as active. |
-| `partial` | Incomplete retrieval, coverage, or product set. | Label incomplete; no silent completeness claim. |
-| `delayed` | Source latency exceeds accepted expectation. | Label delay; do not reuse old content as new. |
-| `unavailable` | Source or required support is unavailable. | Fail closed; refer users to official channels. |
-| `historical` | Intentionally presented for retrospective analysis. | Display historical date and avoid operational styling. |
+Future profiles must distinguish contextual-current, stale, expired, cancelled, superseded, withdrawn, partial, delayed, unavailable, and intentionally historical material. These are presentation requirements, not a newly adopted machine enum. Expired/cancelled material cannot look active; historical use still requires rights and release support. Withdrawal and supersession must remain visible and enforceable.
 
 ### Freshness profile rules
 
-A future config may reference an accepted profile but cannot:
-
-- define a threshold without review;
-- extend an official expiry;
-- treat cancellation as a transient fetch error;
-- use cache age alone to establish validity;
-- drop supersession links;
-- hide partial-source state;
-- remove stale/expired labels;
-- downgrade an unavailable source to current;
-- substitute a different product without explicit mapping and review.
+Thresholds and clock-skew tolerance come from reviewed source/product governance, not convenience defaults. Preserve official expiry/cancellation and uncertainty. Do not infer freshness from cache age alone, discard supersession links, substitute products silently, or turn unavailable/partial data into an all-clear state.
 
 ### Clock and cache safety
 
-- Use UTC or an explicitly declared timezone.
-- Validate monotonic relationships where applicable.
-- Record clock-skew tolerance in the accepted profile.
-- Never mutate stored timestamps to make a record appear current.
-- Cache keys must include source/product identity and material version/freshness context.
-- Expiry, cancellation, correction, and withdrawal must invalidate affected caches, tiles, indexes, exports, screenshots, and generated narratives.
-
-[Back to top](#top)
-
----
+Use UTC or an explicit timezone, validate applicable time relationships, and preserve original timestamps. Expiry, cancellation, correction, and withdrawal must stop affected current presentation and invalidate controlled caches and derivatives. See [rollback](#rollback-correction-supersession-and-invalidation) for already-distributed copies.
 
 ## Not-for-life-safety and official-source referral
 
-The not-for-life-safety boundary is permanent.
-
 ### Required public-surface elements
 
-Every public or semi-public Hazards surface must preserve, where applicable:
-
-1. a visible not-for-life-safety disclaimer;
-2. source attribution;
-3. source role or evidence-character label;
-4. material issue/effective/update/expiry state;
-5. stale, historical, partial, or unavailable status;
-6. uncertainty and coverage limits;
-7. a link or referral to appropriate official authorities;
-8. no KFM-authored emergency instruction.
+Every authorized Hazards map, drawer, API representation, Focus answer, report, or export must retain source attribution, source role, material issue/effective/update/expiry state, stale/historical/partial/unavailable labels, uncertainty, a visible not-for-life-safety disclaimer, and appropriate official referral. It must not contain KFM-authored protective-action guidance.
 
 ### Referral profile requirements
 
-A reviewed referral profile should define:
+A reviewed profile identifies jurisdiction/audience, official authority family, a verified public destination, neutral wording, unavailable-link behavior, review owner, version, and rollback. It cannot imply completeness, exclusivity, or that KFM evaluated what emergency action to take. Unverified links block an active referral binding, not drafting a clearly inactive example.
 
-- intended jurisdiction and audience;
-- official authority family;
-- stable public URL or verified route;
-- neutral label;
-- fallback when the authority URL is unavailable;
-- no guarantee of completeness;
-- no claim that the linked source is the only relevant authority;
-- review and update owner;
-- version and rollback target.
-
-Referral wording should say, in substance:
-
-> KFM provides contextual information only. For current warnings and instructions, consult official federal, state, tribal, county, municipal, fire, law-enforcement, transportation, utility, or emergency-management sources appropriate to your location and situation.
-
-It must not say:
-
-- "You are safe."
-- "Evacuate now."
-- "Shelter here."
-- "This road is open."
-- "The warning is no longer relevant."
-- "Return home."
-- "Approach the incident area."
-- "Ignore official instructions."
-
-[Back to top](#top)
-
----
+Neutral wording: **KFM provides contextual information only. Consult appropriate official authorities for current warnings and instructions.** No profile may disable this boundary or convert official text into KFM advice.
 
 ## Cross-lane ownership and context rules
 
-Hazards joins many domains but must not absorb their truth authority.
-
-| Adjacent lane | Hazards may consume | Hazards must not claim |
-|---|---|---|
-| Hydrology | Gauge, flood, watershed, groundwater, regulatory flood context by reference. | Canonical streamflow, water-quality, aquifer, or regulatory-zone truth. |
-| Atmosphere | Weather, smoke, air-quality, heat/cold, model, and advisory context by reference. | Canonical meteorological or air-quality truth, medical guidance, or official warning authority. |
-| Geology | Fault, earthquake, subsurface, slope, and geologic context by reference. | Engineering safety, building safety, resource truth, or geologic certainty beyond evidence. |
-| Roads, Rail, and Trade | Closure, detour, route, bridge, crossing, and transport context by reference. | Current route safety or operational authority. |
-| Settlements and Infrastructure | Facilities, lifelines, utilities, dependencies, and service areas by reference. | Facility operation, security posture, outage truth, or emergency-resource availability. |
-| Agriculture | Crop, livestock, drought, fire-weather, and impact context by reference. | Farm-specific impact, food safety, insurance, or emergency direction. |
-| Habitat / Fauna / Flora | Habitat exposure, smoke/fire/flood interaction, restoration context. | Species impact certainty or exact sensitive locations. |
-| Soil | Erosion, burn severity, infiltration, and landscape context. | Soil authority or site safety. |
-| Archaeology / cultural resources | Exposure context by restricted reference. | Exact sensitive site locations or cultural authority. |
-| People / DNA / Land | Population, parcel, ownership, vulnerability, and community context by governed projection. | Living-person status, title, ownership, consent, or individual risk. |
+Hydrology retains water/gauge/flood-system authority; Atmosphere retains weather, air-quality, and smoke-source authority; Geology retains geological support; Roads/Rail retains transport records; Settlements/Infrastructure retains asset and service context. Agriculture, Soil, Habitat, Fauna, Flora, Archaeology, and People/DNA/Land retain their own records, rights, and sensitive-context controls. Hazards consumes governed references rather than duplicating capture or redefining those facts.
 
 ### Join-induced sensitivity
 
-The output may be more sensitive than any input. Examples include:
-
-- warning polygons joined to exact critical facilities;
-- wildfire detections joined to private residences or responder locations;
-- flood context joined to shelters, hospitals, utility assets, or vulnerable individuals;
-- earthquake context joined to pipelines, hazardous-material storage, or security infrastructure;
-- low-count exposure summaries combined with names or precise parcels;
-- public imagery combined with generalized facility locations to reconstruct exact assets.
-
-The joined result must inherit the strongest applicable restriction and pass an independent reconstruction-risk review.
-
-[Back to top](#top)
-
----
+A hazard polygon joined to a private residence, responder location, critical facility, protected site, or small vulnerable population can become more sensitive than either input. Carry the strongest applicable restrictions and review the joined output independently. Exposure is a derived relation, not proof of damage, ownership, operational availability, or individual risk.
 
 ## Sensitivity, infrastructure, and reconstruction risk
 
 ### Fail-closed classes
 
-The following require policy-backed review before public or semi-public use:
-
-- critical infrastructure and dependencies;
-- hazardous-material facilities;
-- emergency operations centers;
-- responder staging or deployment;
-- shelters and protected populations;
-- healthcare surge or capacity detail;
-- utility control, communications, and cybersecurity-adjacent detail;
-- private-person, address, parcel, or contact information;
-- rare-species, archaeology, or cultural-resource locations exposed by hazard joins;
-- precise damage, vulnerability, access, or security detail;
-- low-count or uniquely identifying exposure outputs;
-- unreleased incident, enforcement, investigation, or operational information.
+Protect precise critical infrastructure/dependencies, hazardous-material sites, emergency operations and staging, responder deployment, shelters and protected populations, healthcare capacity, utility/control/communications detail, private people/addresses/parcels/contacts, low-count exposure results, and rare-species or archaeological/cultural locations. Unreleased operational or investigative details do not belong in commit-safe examples.
 
 ### Public-safe transforms
 
-A future config may select an accepted profile. It may not define policy parameters.
-
-Possible governed outcomes include:
-
-- omit the object;
-- suppress exact geometry;
-- aggregate to an approved region;
-- generalize attributes;
-- withhold operational fields;
-- delay publication;
-- restrict to steward or partner audiences;
-- provide a derived summary;
-- deny export or screenshot;
-- deny the output.
+Configuration may select an accepted policy profile, not create its thresholds or approve its output. Permitted governed outcomes include omission, suppression, aggregation, generalization, delay, restricted access, derived summary, export denial, or denial of the object. Record transform lineage and reasons without leaking protected facts.
 
 ### Reconstruction tests
 
-Validation should consider whether a user can reconstruct protected detail through:
-
-- zoom changes;
-- layer combinations;
-- time sliders;
-- query filters;
-- repeated exports;
-- tooltips and labels;
-- source URLs or identifiers;
-- cache keys;
-- screenshots;
-- graph neighbors;
-- AI narrative clues;
-- temporal differencing;
-- joining public parcels, imagery, roads, or addresses.
-
-[Back to top](#top)
-
----
+Test combined zooms, layers, time slices, query filters, repeated exports, temporal differencing, tooltips, source identifiers/URLs, cache keys, imagery/parcels, graph neighbors, screenshots, and AI clues. A rounded coordinate alone is not proof against reconstruction.
 
 ## Connector, source-registry, and watcher boundaries
 
 ### Connector placement
 
-`connectors/hazards/` is a compatibility and navigation index. Source implementations remain source or authority-family first.
-
-Current repository evidence includes multiple path variants for NOAA, NWS, FEMA, USGS, NASA, Storm Events, HMS smoke, earthquake, FIRMS, drought, and state emergency context. Config must not choose a canonical connector path by filename preference.
-
-Before referencing a connector:
-
-- verify the accepted source ID;
-- verify the source or family path;
-- verify package/client maturity;
-- verify SourceDescriptor and activation decision;
-- verify rights and credentials handling;
-- verify fixtures and tests;
-- verify correction and rollback behavior;
-- verify that capture is not duplicated across domains.
+Source implementation remains source/authority-family-first. The historical `connectors/hazards/` compatibility index is not permission to create a parallel source hierarchy. Before binding, inspect the current accepted connector path, source ID, descriptor, rights, activation, fixtures, consumers, and correction/rollback behavior.
 
 ### Source-registry topology
 
-The repository contains both:
-
-```text
-data/registry/sources/hazards/
-data/registry/hazards/sources/
-```
-
-One inspected subtype-first record is a generated `PROPOSED` placeholder. One domain-first record is a field-level `TBD` template. Neither is evidence of accepted source admission.
-
-Until topology is resolved:
-
-- do not maintain divergent records;
-- do not reference an ambiguous record path as authority;
-- prefer pointer/migration records over duplication;
-- require an accepted canonical home before activation;
-- preserve rollback and backlink updates.
+The July revision reported both `data/registry/sources/hazards/` and `data/registry/hazards/sources/`, plus contract/schema and singular/plural manifest variants. **These are retained historical seam warnings, not a fresh inventory or a canonicality decision.** Resolve the actual home from current rules, accepted decisions, and the owning source/alias records before a new binding. Do not write two records, choose a path by filename preference, or accept proposed vocabulary by repetition.
 
 ### Watcher rule
 
-A watcher may detect source change and request governed processing. It is never a publisher, alert authority, or emergency notification system.
-
-A watcher must not:
-
-- publish directly;
-- send public alerts;
-- choose a new source role;
-- extend product validity;
-- override policy or release state;
-- create public map layers;
-- call generative AI for emergency advice;
-- turn missing data into a reassuring status.
-
-[Back to top](#top)
-
----
+Watchers may detect changes and propose governed work; they do not publish, issue alerts, change source roles, extend validity, bypass policy/release, create public layers, or ask AI for emergency instructions. Watcher, source, and configuration activation are separate operations.
 
 ## Network, notification, and automation boundary
 
 ### Network access
 
-Configuration validation should be no-network by default.
-
-A future runtime may access a source only through an independently reviewed connector and activation record. The config lane does not authorize that access.
+Default configuration validation uses synthetic no-network inputs. Real retrieval requires independent source/connector admission and authorized execution; this lane grants neither. Dependency installation in CI is not evidence that the entire hosted job is network-isolated.
 
 ### Notification and messaging
 
-The following are outside this lane:
-
-- email recipients;
-- SMS destinations;
-- phone-call targets;
-- push-notification audiences;
-- siren or public-address integration;
-- emergency-dispatch integration;
-- pager rotations;
-- incident escalation;
-- responder mobilization;
-- public warning delivery.
-
-A display refresh, internal build notification, or maintainer alert may be legitimate elsewhere, but it must be explicitly non-emergency, separately governed, and unable to masquerade as a public warning.
+No SMS/email/push/call destinations, siren integration, dispatch, pagers, geofencing, escalation, responder mobilization, or public warning delivery belong in these configs. Non-emergency maintainer/build notifications may be governed elsewhere, but cannot masquerade as hazard warnings.
 
 ### Automation safety
 
-Automated behavior must fail closed when:
-
-- source state is missing or stale;
-- official issue/expiry fields are invalid;
-- referral links cannot be verified;
-- policy or release state is unresolved;
-- a sensitive join is requested;
-- a public disclaimer cannot render;
-- a caller requests protective-action guidance;
-- a notification destination appears;
-- config identity or version is ambiguous.
-
-[Back to top](#top)
-
----
+Missing authority, stale/invalid official times, failed disclaimer/referral obligations, sensitive joins, unresolved release, ambiguous config identity, or a protective-action request must produce a bounded failure—not an automatic source substitution, permissive retry, or reassuring output. No route, renderer, notification, source, watcher, or release is enabled by file presence.
 
 ## Map, UI, export, and governed-AI boundaries
 
 ### Map and UI
 
-A contextual Hazards map may show released or review-authorized projections. It must not:
-
-- read RAW, WORK, QUARANTINE, or canonical internal stores directly;
-- use visual urgency to imply KFM alert authority;
-- hide source role, time, freshness, uncertainty, disclaimer, or official referral;
-- show expired products with current styling;
-- show model output as observation;
-- expose exact sensitive infrastructure;
-- allow users to choose arbitrary unreviewed config or policy profiles.
-
-The repository-present Hazards Explorer files are placeholders. Their presence does not prove these controls are implemented.
+Public clients use governed APIs and released artifacts, never RAW, WORK, QUARANTINE, candidates, or canonical/internal stores directly. A restricted review preview is not a public release. Rendering, visual urgency, animation, styling, or a layer toggle cannot change source role, warning authority, release state, or sensitivity.
 
 ### Evidence Drawer
 
-A Hazards Evidence Drawer should preserve:
-
-- object and source identity;
-- source role;
-- relevant timestamps;
-- freshness/expiry state;
-- evidence refs and resolution state;
-- rights and caveats;
-- uncertainty;
-- disclaimer;
-- official referral;
-- correction/supersession state.
-
-It must not expose restricted evidence or present an unresolved EvidenceRef as a resolved EvidenceBundle.
+Retain object/source identity, role, time, freshness, EvidenceRef resolution state, rights, caveats, uncertainty, disclaimer, referral, and correction/supersession lineage. An unresolved EvidenceRef must not appear as a resolved EvidenceBundle, and restricted evidence must not leak through an error or tooltip.
 
 ### Export and screenshots
 
-Exports and screenshots are publication carriers. Apply:
-
-- release-state checks;
-- disclaimer persistence;
-- source attribution;
-- time/freshness labels;
-- sensitivity and reconstruction checks;
-- correction and withdrawal handling;
-- watermark or context labeling where appropriate.
+Reports, tiles, PMTiles, screenshots, graph/index projections, cached narratives, and offline bundles are downstream carriers, not truth. Preserve applicable labels, release checks, sensitivity controls, attribution, and correction references. A screenshot cannot bypass a restriction merely because it is an image.
 
 ### Governed AI
 
-AI may summarize released, policy-passed, evidence-supported Hazards context. It must:
-
-- retrieve evidence first;
-- preserve source role and time;
-- cite or abstain;
-- refuse emergency instructions;
-- redirect to official sources for current action;
-- avoid claiming that an area, road, building, utility, or person is safe;
-- avoid converting models, warnings, declarations, or detections into observations;
-- avoid exposing restricted infrastructure or people;
-- preserve uncertainty and bounded confidence;
-- respect correction and withdrawal state.
-
-[Back to top](#top)
-
----
+Scope -> evidence -> EvidenceBundle -> policy, rights, sensitivity, review, and release checks -> cited interpretation or bounded abstention/denial/error. AI cannot author emergency instructions, make safety guarantees, infer observed impact from exposure, or expose protected facts. No model endpoint or internal-store access becomes a normal public path.
 
 ## Logging, telemetry, caches, and derived indexes
 
-Operational metadata can itself leak sensitive or misleading information.
-
 ### Logging rules
 
-Do not log:
-
-- exact protected coordinates;
-- emergency contacts;
-- private-person detail;
-- credentials or signed URLs;
-- restricted source payloads;
-- sensitive infrastructure joins;
-- raw official warning text when policy forbids redistribution;
-- complete policy reasons that reveal protected facts.
-
-Prefer stable identifiers, safe reason codes, hashes, and generalized context.
+Use safe reason codes, identifiers, and hashes rather than restricted payloads, exact locations, emergency contacts, secrets, signed URLs, private-person details, or policy explanations that disclose protected facts. Respect source redistribution limits in logs too.
 
 ### Cache identity
 
-Cache keys should include where material:
-
-- source/product ID;
-- source version or state hash;
-- object ID;
-- config ID and version;
-- policy profile/version;
-- release ID;
-- audience;
-- generalization/redaction profile;
-- freshness/expiry state;
-- correction/supersession version.
+Where material, bind source/product and version, object, config/version, policy/version, release, audience, public-safe profile, validity/expiry, and correction/supersession identity. A cached result must not silently survive a change to those obligations.
 
 ### Invalidation triggers
 
-Invalidate affected outputs when:
-
-- source correction or withdrawal arrives;
-- warning/advisory expires, cancels, or is superseded;
-- source role changes through governance;
-- rights or sensitivity posture changes;
-- config changes;
-- policy or release state changes;
-- official referral changes;
-- evidence resolution changes;
-- a protected join is discovered;
-- rollback is activated.
-
-Affected carriers may include API responses, map tiles, PMTiles, search indexes, vector indexes, graph projections, reports, exports, screenshots, dashboards, cached AI answers, and offline bundles.
-
-[Back to top](#top)
-
----
+Source correction/withdrawal, expiry/cancellation, governed role/rights/sensitivity changes, config/profile changes, release changes, referral changes, evidence-resolution changes, newly discovered protected joins, and rollback require impact assessment and invalidation of controlled affected carriers. Preserve an auditable lineage; do not rewrite history to conceal the error.
 
 ## Failure behavior
 
-| Condition | Safe disposition |
+Keep validation results, work states, and runtime outcomes distinct. `PASS` is not approval; `HOLD` is a work-state restriction; `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR` are outward outcomes where the governing runtime contract uses them. This README does not introduce a combined enum.
+
+| Condition | Required boundary |
 |---|---|
-| Valid contextual config with all accepted references | `PASS` for config validation only; ordinary governed gates still apply. |
-| Malformed file, unsupported version, duplicate key, or invalid schema/profile ref | `ERROR` / `FAIL`; do not partially apply. |
-| Unknown config key or ambiguous alias | `ERROR` or `HOLD`; do not guess. |
-| Missing consumer or owner | `HOLD` or `ERROR`. |
-| Missing source role, rights, evidence, policy, review, release, or rollback support | `ABSTAIN`, `DENY`, `HOLD`, or `ERROR` according to gate; never implicit allow. |
-| Detection/model/regulatory/administrative/aggregate material presented as observation | `FAIL` and block public use. |
-| Expired, cancelled, superseded, or withdrawn product presented as current | `DENY` for current styling/use; historical context only if released. |
-| Missing or invalid not-for-life-safety disclaimer | `DENY` public rendering/export. |
-| Missing official-source referral | `HOLD` or `DENY` for public operational-context presentation. |
-| Protective-action or safety-status request | `DENY` KFM-authored advice; return neutral official-source referral. |
-| Notification, dispatch, siren, SMS, email, or escalation behavior requested | `DENY`; outside config authority. |
-| Exact or reconstructable infrastructure or person detail requested | `DENY` or `RESTRICT`; require approved public-safe transform. |
-| Stale cache after expiry/correction/withdrawal | `ERROR` / `DENY`; invalidate and rebuild before use. |
-| Source outage or partial retrieval | Preserve unavailable/partial state; do not fabricate completeness or current status. |
-| Consumer cannot determine precedence | `ERROR`; do not merge unpredictably. |
-| Cross-lane ownership conflict | `HOLD`; route to the owning lane. |
-| Runtime cannot enforce obligations | `DENY` or `ERROR`; do not proceed. |
-
-Validator `PASS` is not a policy decision, evidence closure, source activation, release approval, or publication approval.
-
-[Back to top](#top)
-
----
+| Malformed/duplicate/unknown keys, unsupported version, ambiguous alias, failed reload | Reject atomically; no partial application or permissive fallback. |
+| Missing owner/consumer/profile for active use | Keep inactive or HOLD; a labeled synthetic draft may still be reviewed. |
+| Missing evidence, rights, policy, sensitivity, review, release, or rollback support | Abstain, deny, hold, or error at the responsible gate; never implicit allow. |
+| Role collapse, expired-as-current, hidden disclaimer, invalid active referral | Deny affected public use and correct the representation. |
+| Emergency advice, notification/dispatch, exact protected detail, arbitrary user profile | Deny the requested KFM behavior; referral remains neutral and governed. |
+| Source outage, partial retrieval, stale cache, cross-lane conflict | Preserve the actual failure/uncertainty; stop affected presentation until resolved. |
+| Runtime cannot enforce an obligation | Deny or error; documentation is not a compensating implementation. |
 
 ## Validation and test matrix
 
 ### Documentation validation
 
-For this README:
-
-- metadata block is balanced;
-- one H1 is used;
-- fenced blocks are balanced;
-- internal anchors resolve;
-- relative links target repository-present or explicitly parent/guardrail paths;
-- no real warning, incident, facility, person, credential, or protected location is included;
-- implementation claims use explicit truth labels;
-- final newline is present.
+Check balanced metadata and fences, one H1, retained section anchors, resolving local navigation, source-backed relative links, accurate truth/maturity labels, safe examples, whitespace, and final newline. Compare the exact remote blob with the validated candidate; confirm that the diff changes only this README. Do not label a custom Markdown check as the repository's native validator.
 
 ### Future payload validation
 
 #### Syntax and shape
 
-- declared parser succeeds;
-- required keys exist;
-- duplicate-key behavior is enforced;
-- unknown-key behavior is enforced;
-- version is supported;
-- authority/profile refs resolve;
-- no secret-like values or private endpoints appear;
-- no prohibited notification/contact fields appear.
+Require supported encoding/parser/version, required fields, duplicate/unknown-key rejection, restrictive schema/profile resolution, secret/private-endpoint/contact-field rejection, and atomic failure.
 
 #### Semantic checks
 
-- consumer and owner are accepted;
-- config class is supported;
-- object and source roles are explicit and valid;
-- observation/model/regulatory/administrative/candidate/aggregate/synthetic boundaries are preserved;
-- issue/effective/update/expiry/cancellation/supersession semantics are explicit;
-- freshness profile is accepted and source/product scoped;
-- disclaimer and referral profiles are accepted;
-- rights and attribution are supported;
-- sensitivity and public-safe profiles resolve to policy;
-- cross-lane ownership is preserved;
-- no source, watcher, notification, route, public layer, release, or publication is activated by presence.
+Verify consumer binding, role/object/time distinctions, source/product-scoped profiles, disclaimer/referral behavior, rights, sensitivity, cross-lane ownership, deterministic discovery, safe precedence, and no activation by presence. Synthetic profile validation proves no real-source admission.
 
 #### Required negative cases
 
-- Focus Mode used as emergency alerting;
-- AI asked for evacuation or shelter instructions;
-- expired warning rendered as current;
-- cancelled product rendered as active;
-- regulatory flood zone labeled observed inundation;
-- wildfire detection labeled confirmed fire;
-- smoke polygon labeled PM2.5 measurement;
-- forecast/model labeled observation;
-- administrative declaration labeled physical event;
-- unresolved EvidenceRef treated as resolved;
-- UI reads RAW or QUARANTINE directly;
-- Evidence Drawer omits disclaimer;
-- official referral missing or unverified;
-- exact critical infrastructure exposed;
-- low-count sensitive join exposed;
-- public user selects arbitrary config/profile;
-- unknown key or duplicate key;
-- stale cache survives correction/expiry;
-- network access during no-network validation;
-- rollback target missing;
-- partial application after one key fails.
+Cover expired/cancelled-as-current; forecast/detection/declaration/regulatory/aggregate-as-observed; smoke-as-PM2.5; emergency Focus/notification requests; unresolved EvidenceRef; direct internal-store access; missing disclaimer/referral; precise infrastructure and low-count joins; arbitrary user config; duplicate/unknown keys; partial application; network access; stale cache after correction; and missing rollback.
 
 #### Structural behavior
 
-- validation is deterministic;
-- validation runs without network access;
-- failures are finite and reason-coded;
-- rejected config is not cached or partially applied;
-- logs remain public-safe;
-- prior known-good or disabled state is recoverable;
-- correction and withdrawal invalidate derived carriers.
+Prove deterministic finite failures, no-network fixture execution, safe logs, no caching of rejected config, atomic reload/disable, and correction/withdrawal invalidation. Tests must assert outcomes, not merely collect successfully or echo a message.
 
 ### Current repository reality
 
-Existing Hazards test filenames, fixture lanes, Rego files, package modules, schemas, pipeline specs, UI files, and workflow jobs do not by themselves prove these requirements. Inspected examples remain placeholders or scaffolds. Meaningful behavioral proof remains `NEEDS VERIFICATION`.
+The current [domain workflow](../../../.github/workflows/domain-hazards.yml) names these commands:
 
-[Back to top](#top)
+```bash
+# From a matching complete checkout with its declared dependencies installed.
+python -m unittest -v tests.domains.hazards.test_hazards_smoke
+make hazards-validate
+python -m unittest tests.domains.hazards.test_domain_hazards_workflow_binding -v
+```
 
----
+**Verified here: workflow source, not execution.** These commands exercise bounded synthetic Hazards behavior, not a config loader or the complete future-payload matrix. Their exact-head results are **NOT RUN in this authoring environment**. The workflow triggers on pull requests, pushes to `main`, and manual dispatch; a feature-branch push alone does not establish a domain-workflow result.
+
+The proof job retains `WORKFLOW_HOLD: no accepted Hazards proof producer or deterministic proof command`. The release job retains `WORKFLOW_HOLD: no accepted Hazards release dry-run command or candidate manifest contract`. Neither is an executed proof build or release dry run. Hosted CI, policy evaluation, live freshness, browser behavior, and operational rollback remain separate verification.
 
 ## Review burden
 
-README-only changes require:
+[CODEOWNERS](../../../.github/CODEOWNERS) routes `/configs/` to `@bartytime4life`; that is not specialist stewardship or independent approval. README changes need configuration/domain review, with public-safety boundary review when wording affects perceived authority. Active bindings additionally need applicable consumer, source/rights, freshness/referral, contract/schema, policy, sensitivity/security, cross-lane, validation, and release/rollback review.
 
-- config/docs review;
-- Hazards domain review;
-- public-safety boundary review when wording or scope changes.
-
-A future payload also requires the applicable:
-
-- consumer owner;
-- source and rights reviewer;
-- official-source/freshness reviewer;
-- policy reviewer;
-- infrastructure/security reviewer;
-- privacy/sensitivity reviewer;
-- Hydrology, Atmosphere, Geology, Roads, Infrastructure, Agriculture, Habitat, Archaeology, or People/Land reviewer for cross-lane effects;
-- schema/contract reviewer;
-- validation/test reviewer;
-- release and rollback reviewer.
-
-Changes that could be mistaken for emergency functionality require heightened review even when the author describes them as "just configuration."
-
-Do not infer approval from placeholder owners, a passing TODO workflow, file presence, or absence of a reviewer rule.
-
-[Back to top](#top)
-
----
+Do not infer approval from a placeholder owner, absent review rule, passing hold job, or an old receipt.
 
 ## Maintenance and safe change pattern
 
-When a Hazards config file is added or changed:
+Pin current main and target bytes; inspect parent contracts, accepted Directory Rules, relevant seams and overlapping work; define the smallest complete change; author on an isolated branch; validate changed-area behavior and links; attribute failures to exact refs; verify remote content; preserve rollback and review limitations.
 
-1. identify the exact consumer, owner, config class, and bounded purpose;
-2. re-read the parent config contract and Hazards life-safety doctrine;
-3. verify Directory Rules placement;
-4. verify canonical contract, schema, policy, source, ADR, and drift references;
-5. inspect connector and source-registry topology;
-6. preserve object-family, source-role, temporal, freshness, and cross-lane boundaries;
-7. review rights, sensitive infrastructure, private-person, archaeology/cultural, and reconstruction risks;
-8. validate disclaimer and official referral behavior;
-9. run deterministic syntax, semantic, negative, no-network, and rollback checks;
-10. inspect logs, caches, exports, screenshots, AI output, and derived indexes;
-11. verify no notification, dispatch, or emergency-action behavior was introduced;
-12. verify remote read-back and changed paths;
-13. keep source activation, watcher behavior, policy, release, and publication as separate governed decisions;
-14. record correction and rollback paths.
+**Mutation and retention:** use reviewed, versioned branch changes rather than in-place runtime edits. Preserve superseded config identity and correction history under the owning retention rules; no operational-data retention or deletion policy is created here.
 
-Prefer the smallest reversible change. A profile reference is safer than copying policy parameters into config.
-
-[Back to top](#top)
-
----
+Only this README changes in v0.4. No dependency, executable configuration, source payload, fixture, test, schema, contract, policy, workflow, runtime binding, lifecycle record, or public artifact is created or modified. A later source or release hold does not prohibit this reversible documentation work.
 
 ## Migration and anti-bypass posture
 
-A configuration migration must define:
-
-- old key/path/version;
-- new key/path/version;
-- owning consumer;
-- compatibility period;
-- exact precedence during migration;
-- warning/error behavior;
-- deprecation date;
-- removal criteria;
-- data/cache/index impact;
-- rollback target;
-- backlink and documentation updates.
+A real configuration migration needs old/new path/key/version, one accountable consumer, explicit precedence, compatibility period, deprecation/removal conditions, affected caches/derivatives, repaired backlinks, validation, and rollback. Dual-read, where justified, is not permission for two authoritative writers.
 
 ### Forbidden migration shortcuts
 
-- loading both old and new files and merging silently;
-- maintaining independent copies under alias contract/schema/registry paths;
-- creating a domain-scoped source connector beneath `connectors/hazards/`;
-- moving policy thresholds into config;
-- using config to bypass official issue/expiry state;
-- using config to suppress disclaimers or referrals;
-- using a "temporary" notification key that becomes public warning delivery;
-- treating a release manifest path conflict as permission to write both;
-- duplicating source descriptors across both registry topologies;
-- changing role or object names without deterministic migration and correction handling.
-
-[Back to top](#top)
-
----
+Do not silently merge old/new files, duplicate descriptors or schemas, choose unresolved manifest aliases, move policy thresholds into configuration, weaken expiry/disclaimer/referral controls, or introduce temporary notification keys that become public alerting. Preserve semantic identity or version an intentional change through the owning contract.
 
 ## ADRs and drift triggers
 
-No new ADR is created by this README.
+This revision creates or accepts no ADR. New canonical homes, source-role/object mappings, shared discovery rules, alias migrations, live bindings, or public-output changes require their own applicable governance and evidence. The permanent life-safety and public trust boundaries are not ordinary configuration options or exceptions this README can authorize.
 
-Separate governance is required to:
-
-- change the permanent not-for-life-safety boundary;
-- change KFM-as-alert-authority T4-forever posture;
-- add warning issuance, emergency instructions, notifications, dispatch, or incident-command behavior;
-- select canonical object-family names;
-- resolve `contracts/hazards/` or `schemas/contracts/v1/hazards/` compatibility paths;
-- select source-registry topology;
-- select canonical NOAA/NWS/FEMA/USGS/NASA/product connector paths and IDs;
-- define source-role vocabulary or mapping;
-- accept freshness thresholds or referral profiles;
-- define infrastructure redaction/aggregation parameters;
-- select singular/plural release-manifest topology or create a Hazards manifest sublane;
-- establish universal config discovery or precedence;
-- authorize network-dependent validation;
-- authorize direct public reads of internal stores;
-- combine config activation with source, watcher, release, or publication activation.
-
-Record drift when:
-
-- config references an alias as canonical authority;
-- source descriptors diverge between registry paths;
-- a warning or advisory is presented without disclaimer/referral;
-- expired context is styled as current;
-- placeholder tests/workflows are cited as behavioral proof;
-- a domain connector path gains implementation;
-- a public client can select config;
-- config contains exact sensitive operational detail;
-- a release or cache cannot be invalidated after correction.
-
-[Back to top](#top)
-
----
+Record confirmed drift at the owning surface: alias-as-authority, divergent source records, hidden referral/disclaimer, expired-as-current, fixture-as-production proof, protected joins, arbitrary profile selection, or missing correction/invalidation. Historical seam reports need fresh verification before being described as current conflicts.
 
 ## Definition of done for the first payload
 
-- [ ] A real named contextual consumer and accepted owners are verified.
-- [ ] Filename, format, encoding, parser, duplicate-key behavior, version, and load path are verified.
-- [ ] Config class and bounded purpose are accepted.
-- [ ] Canonical semantic contract and restrictive schema/profile references resolve; compatibility paths are not used as authority.
-- [ ] Object-family, source-role, evidence-character, and cross-lane semantics are explicit.
-- [ ] Source ID, originating publisher, rights, attribution, cadence, and activation state are verified.
-- [ ] Issue, effective, update, expiry, cancellation, supersession, release, and correction times are explicit where material.
-- [ ] Freshness profile comes from accepted governance, not the config file.
-- [ ] Not-for-life-safety disclaimer and official-source referral profiles are accepted and tested.
-- [ ] Public-safe infrastructure and join-risk parameters come from policy, not config.
-- [ ] Source-registry, connector, contract/schema, and manifest topology conflicts are resolved or bounded by reviewed compatibility rules.
-- [ ] Synthetic fixtures cover valid, invalid, held, denied, abstained, error, stale, expired, cancelled, partial, unavailable, corrected, superseded, withdrawn, and rollback cases.
-- [ ] Anti-collapse tests pass.
-- [ ] Life-safety denial tests pass.
-- [ ] No-network tests pass.
-- [ ] Secret, contact, infrastructure, private-person, archaeology/cultural, and protected-location scans pass.
-- [ ] Precedence, unknown-key, migration, deactivation, watcher stop, correction, rollback, and invalidation behavior are tested.
-- [ ] Policy execution and input assembly are tested; placeholder Rego files are replaced or explicitly retained as non-production guards.
-- [ ] Package, pipeline, UI, and test placeholders are not represented as implemented behavior.
-- [ ] Domain workflow jobs execute meaningful checks rather than TODO echoes.
-- [ ] No source, watcher, notification, emergency workflow, public layer, release, or publication is activated by file presence.
-- [ ] A rollback drill demonstrates safe disabled or prior-known-good selection.
-- [ ] Documentation is updated with verified consumer behavior.
+Separate the transition being checked; later release prerequisites must not become a ban on safe drafting.
 
-[Back to top](#top)
+| Transition | Minimum completion | Must remain unavailable without further authority |
+|---|---|---|
+| Inactive authoring | Bounded purpose, proposed consumer/profile identity, unmistakably synthetic/non-secret values, clear status, no live binding, documented validation and rollback. | Production consumption, live source access, notifications, sensitive disclosure, promotion, and publication. |
+| Consumer binding | Verified owner/consumer, allowlisted path, immutable version/digest, appropriate schema/profile, strict parser, explicit precedence, atomic disable/reload, meaningful positive/negative/no-network tests, reviewed obligations. | Unadmitted sources, unreviewed policy changes, unapproved audiences or output surfaces. |
+| Real-source or public integration | Applicable source identity/admission, rights, role, freshness/expiry, EvidenceRef -> EvidenceBundle closure, sensitivity/transform lineage, policy, review, validation receipts/proofs, release identity, correction/withdrawal, and rollback. | Alert authority, protective-action guidance, direct public internal-store access, or permission inferred from config presence. |
 
----
+No checklist item is marked complete merely because this document exists. A new payload must update this inventory and state exactly which stage and acceptance tests it satisfies.
 
 ## Rollback, correction, supersession, and invalidation
 
 ### README rollback
 
-Before merge, close the draft PR and abandon the scoped branch when authorized.
-
-After merge, create a transparent revert commit or revert PR that restores the previous README. Do not rewrite shared history.
+Before integration, preserve or abandon the task branch under the contribution workflow; there is no runtime configuration to deactivate in this change. After separately authorized integration, restore the prior README through a reviewed revert/forward correction. Do not rewrite shared history or automatically revert unrelated work.
 
 ### Future payload rollback
 
-1. stop selecting the affected config through the verified consumer mechanism;
-2. stop any watcher, scheduler, renderer, cache warmer, or contextual refresh path that depends on it;
-3. confirm no emergency notification or action workflow was enabled;
-4. preserve the faulty version and evidence needed for review;
-5. identify affected objects, joins, API responses, caches, indexes, tiles, exports, screenshots, reports, and generated narratives without exposing protected details;
-6. assess whether stale/expired context was shown as current;
-7. assess whether any model, detection, declaration, regulatory area, aggregate, or candidate was misrepresented as observation;
-8. assess whether a disclaimer or referral was missing;
-9. assess whether exact or reconstructable sensitive information was exposed;
-10. restore the prior known-good version or safe disabled state;
-11. invalidate and rebuild affected derived carriers;
-12. re-run parsing, semantic, freshness, source-role, rights, sensitivity, negative, and no-network validation;
-13. create required correction, withdrawal, review, release, or rollback records in canonical homes;
-14. verify governed public surfaces no longer serve unauthorized, stale, misclassified, unsupported, or reconstructable material.
+Disable affected selection through the verified consumer; stop dependent refresh/watch/cache paths where authorized; preserve faulty identity and evidence; assess misleading freshness/role/referral and sensitive disclosure; restore a verified prior or disabled state; invalidate controlled derivatives; rerun negative/no-network checks; and record correction, withdrawal, review, and rollback in their owning homes.
 
-A Git revert does not revoke an activated config, stop a watcher, invalidate caches, correct public artifacts, withdraw screenshots, or establish release lineage.
-
-[Back to top](#top)
-
----
+A Git revert does not stop a running consumer, revoke admission, invalidate caches, or withdraw distributed artifacts. Already-downloaded screenshots, exports, and offline copies may not be remotely erasable: stop serving affected controlled versions, publish the authorized correction/withdrawal references, and document residual distribution rather than promise complete erasure.
 
 ## Safe language rules
 
 ### Preferred language
 
-Use:
-
-- "contextual information";
-- "historical record";
-- "official-source warning context";
-- "modeled";
-- "detected";
-- "candidate";
-- "regulatory context";
-- "administrative declaration";
-- "stale";
-- "expired";
-- "cancelled";
-- "superseded";
-- "partial";
-- "unavailable";
-- "not for life safety";
-- "consult official sources";
-- "evidence supports";
-- "evidence is unresolved";
-- "KFM abstains";
-- "public-safe generalized view."
+Use “contextual,” “historical,” “official-source warning context,” “modeled,” “candidate,” “regulatory,” “administrative,” “stale,” “expired,” “partial,” “unavailable,” “evidence unresolved,” and “consult official sources” when they accurately describe the source and governed state.
 
 ### Prohibited or high-risk language
 
-Do not use without controlling official evidence and appropriate context:
-
-- "safe";
-- "all clear";
-- "evacuate";
-- "shelter now";
-- "return home";
-- "road is safe";
-- "confirmed" for a candidate/detection/model;
-- "current" for expired or unverified context;
-- "no risk";
-- "no danger";
-- "official KFM warning";
-- "KFM recommends";
-- "guaranteed";
-- "complete coverage";
-- "real-time" unless latency and source semantics are verified and the surface remains contextual-only.
-
-A display label is part of the safety contract. Wording that changes perceived authority requires review.
-
-[Back to top](#top)
-
----
+Do not author “safe,” “all clear,” “no risk,” “evacuate,” “shelter now,” “return home,” “road is safe,” “official KFM warning,” or comparable protective-action assurances. “Confirmed,” “current,” “complete,” and “real-time” require evidence for the exact claim and cannot erase the contextual-only boundary. Any permitted source quotation must stay attributed and must not become KFM-authored instruction.
 
 ## Last reviewed
 
-**2026-07-14**, against `main@98b39c7171129b90ca858e2e3849ed121c0d7769`.
+**2026-09-04**, against `main@700570cbcf191038aa20a030174c2dd08cf93675`. This is a documentation/currentness review, not specialist approval, operational certification, or proof of runtime enforcement.
 
-Review again before the first non-README payload, consumer binding, source-role or freshness profile, official-referral profile, source or watcher activation, public-safe aggregation profile, notification-adjacent feature, schema/profile migration, manifest placement decision, or public-output integration.
+Re-review before the first non-README payload, consumer binding, profile/source-role change, official-referral update, alias migration, source/watch activation, notification-adjacent behavior, exposure change, or public integration. Re-pin main, target bytes, controlling decisions, and relevant checks each time.
+
+[Back to top](#top)
