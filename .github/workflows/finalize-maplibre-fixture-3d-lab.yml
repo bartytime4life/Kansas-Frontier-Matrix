@@ -1,0 +1,95 @@
+# Temporary self-removing finalizer for issue #4228 comment 5534365447.
+name: finalize-maplibre-fixture-3d-lab
+on:
+  push:
+    branches: [feat/maplibre-fixture-3d-lab-20260903]
+permissions:
+  contents: write
+concurrency:
+  group: bootstrap-maplibre-fixture-3d-lab-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  validate-and-finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      CI: "true"
+      COREPACK_ENABLE_STRICT: "1"
+      KFM_NO_NETWORK: "1"
+      BASE: 7c5d4125c277536258be6345e366efae59dbe5d6
+      PARENT: f3d10662554b139d4611b2ed23aa1802ff505b9a
+      PAYLOAD: e36101d4b79cf528c6a5a93cceb4f07c15fe00d523688de4ced7330e9f61db8a
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 6
+          persist-credentials: true
+      - name: Rebuild, correct, and verify exact synthetic 3D payload
+        run: |
+          set -euo pipefail
+          test "${{ github.ref_name }}" = feat/maplibre-fixture-3d-lab-20260903
+          test "$(git rev-parse HEAD^)" = "$PARENT"
+          test "$(git rev-parse HEAD^^^^)" = "$BASE"
+          test "$(git diff-tree --no-commit-id --name-only -r HEAD)" = .github/workflows/finalize-maplibre-fixture-3d-lab.yml
+          cat .github/kfm-bootstrap-maplibre-3d/payload-*.b64 | tr -d '\r\n' > "$RUNNER_TEMP/payload.b64"
+          base64 --decode "$RUNNER_TEMP/payload.b64" > "$RUNNER_TEMP/payload.tgz"
+          echo "$PAYLOAD  $RUNNER_TEMP/payload.tgz" | sha256sum --check --strict
+          tar -xzf "$RUNNER_TEMP/payload.tgz" -C .
+          test "$(git hash-object packages/maplibre/src/synthetic-3d-fixture-lab.ts)" = 5e2e767d241572306e42eb64bc1062c62bce5eeb
+          test "$(git hash-object apps/explorer-web/tests/browser/synthetic-3d-fixture-lab.spec.ts)" = 35d232f31f03234c68f58818224f86b6bdc6ed2b
+          test "$(git hash-object packages/maplibre/src/maplibre-adapter.ts)" = d1e4d3e3783f6d550d8dfa64beea1ddf995aa924
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('packages/maplibre/src/synthetic-3d-fixture-lab.ts'); s=p.read_text()
+          a='        lineMetrics: true,\n      },'; b='        lineMetrics: true,\n        promoteId: "id",\n      },'
+          c='          "fill-extrusion-opacity": [\n            "case",\n            ["boolean", ["feature-state", "selected"], false],\n            0.98,\n            0.82,\n          ],'
+          assert s.count(a)==s.count(c)==1; p.write_text(s.replace(a,b).replace(c,'          "fill-extrusion-opacity": 0.86,'))
+          p=Path('apps/explorer-web/tests/browser/synthetic-3d-fixture-lab.spec.ts'); s=p.read_text()
+          a='  await expect(lab.locator(".synthetic-3d-lab__evidence code")).toContainText(\n    "kfm:evidence:synthetic:3d:western-context",\n  );'
+          b='  await expect(\n    lab.getByText("kfm:evidence:synthetic:3d:western-context", { exact: true }),\n  ).toBeVisible();'
+          assert s.count(a)==1; p.write_text(s.replace(a,b))
+          p=Path('packages/maplibre/src/maplibre-adapter.ts'); s=p.read_text(); e='this.state === "DISPOSED"'; n='this.state !== "DISPOSED"'
+          a='  private readRendererCamera(map: MapLibreMap): MapRuntimeCamera {\n'
+          assert s.count(e)==5 and s.count(n)==3 and s.count(a)==1
+          s=s.replace(e,'this.isDisposed()').replace(n,'!this.isDisposed()')
+          p.write_text(s.replace(a,'  private isDisposed(): boolean {\n    return this.state === "DISPOSED";\n  }\n\n'+a))
+          combined=Path('packages/maplibre/src/synthetic-3d-fixture-lab.ts').read_text()+Path('apps/explorer-web/src/fixture-3d-lab.ts').read_text()
+          denied=['fetch(','XMLHttpRequest','WebSocket','EventSource','setTerrain(','raster-dem','pmtiles://','http://','https://','serviceWorker.register']
+          assert not [x for x in denied if x in combined]
+          PY
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "22"
+          package-manager-cache: false
+      - name: Test, build, browser-probe, and publish branch-only review bytes
+        run: |
+          set -euo pipefail
+          corepack enable
+          pnpm install --frozen-lockfile
+          pnpm --filter @kfm/maplibre test
+          pnpm --filter explorer-web run test:unit
+          pnpm --filter explorer-web run build
+          pnpm --filter explorer-web exec playwright test --config=playwright.config.ts tests/browser/maplibre-vite-adapter.spec.ts tests/browser/synthetic-3d-fixture-lab.spec.ts
+          git config user.name 'KFM synthetic 3D branch writer'
+          git config user.email 'kfm-3d-branch-writer@users.noreply.github.com'
+          git add apps/explorer-web/index.html apps/explorer-web/src/fixture-3d-lab.ts apps/explorer-web/src/site/fixture-3d-lab.css apps/explorer-web/tests/browser/synthetic-3d-fixture-lab.spec.ts apps/explorer-web/tests/synthetic-3d-fixture-lab.test.ts packages/maplibre/src/maplibre-adapter.ts packages/maplibre/src/maplibre-vite-adapter.ts packages/maplibre/src/synthetic-3d-fixture-lab.ts packages/maplibre/tests/synthetic-3d-fixture-lab.test.ts
+          git rm .github/workflows/bootstrap-maplibre-fixture-3d-lab.yml .github/workflows/finalize-maplibre-fixture-3d-lab.yml .github/kfm-bootstrap-maplibre-3d/payload-{00,01,02,03}.b64
+          git diff --cached --check
+          git commit -m 'feat(maplibre): add opt-in synthetic 3D fixture lab'
+          cat > "$RUNNER_TEMP/expected" <<'PATHS'
+          apps/explorer-web/index.html
+          apps/explorer-web/src/fixture-3d-lab.ts
+          apps/explorer-web/src/site/fixture-3d-lab.css
+          apps/explorer-web/tests/browser/synthetic-3d-fixture-lab.spec.ts
+          apps/explorer-web/tests/synthetic-3d-fixture-lab.test.ts
+          packages/maplibre/src/maplibre-adapter.ts
+          packages/maplibre/src/maplibre-vite-adapter.ts
+          packages/maplibre/src/synthetic-3d-fixture-lab.ts
+          packages/maplibre/tests/synthetic-3d-fixture-lab.test.ts
+          PATHS
+          git diff --name-only "$BASE..HEAD" | LC_ALL=C sort > "$RUNNER_TEMP/actual"
+          diff -u "$RUNNER_TEMP/expected" "$RUNNER_TEMP/actual"
+          git push origin HEAD:refs/heads/feat/maplibre-fixture-3d-lab-20260903
+          echo "final_sha=$(git rev-parse HEAD)" >> "$GITHUB_STEP_SUMMARY"
+          echo "final_tree=$(git rev-parse HEAD^{tree})" >> "$GITHUB_STEP_SUMMARY"
+          echo '57 package tests; 446 Explorer tests; build; 4 Chromium fixtures; no PR/merge/deploy/terrain/network' >> "$GITHUB_STEP_SUMMARY"
