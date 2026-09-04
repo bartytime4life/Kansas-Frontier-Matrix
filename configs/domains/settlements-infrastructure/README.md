@@ -90,7 +90,7 @@ The audience is configuration maintainers, consumer owners, Settlements/Infrastr
 | Release and correction | Governed release/correction records | A config, successful check, map display, or file move is not release. |
 | Consumer operation | Exact loader/binding/validation/runtime evidence | No implicit discovery, precedence, remote include, deployment, or public use. |
 
-Preserve `RAW -> WORK/QUARANTINE -> PROCESSED -> CATALOG/TRIPLET -> PUBLISHED`. Configuration cannot skip or authorize a lifecycle transition.
+Preserve `RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLETS -> PUBLISHED`. Configuration cannot skip or authorize a lifecycle transition.
 
 ## Status and evidence
 
