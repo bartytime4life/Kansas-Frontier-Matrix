@@ -1,5 +1,5 @@
 # Temporary read-only diagnostic harness. Validation-branch code is not
-# executed; the job checks out immutable candidate b790c79... before tests.
+# executed; the job checks out immutable candidate 6caac02... before tests.
 
 name: repository-control-doc-currentness-diagnostic
 
@@ -12,7 +12,7 @@ permissions:
   contents: read
 
 env:
-  KFM_TARGET_SHA: "b790c79c5164c29bb52bfa3ffaa2aa36031499a3"
+  KFM_TARGET_SHA: "6caac026921d578d55e39687c77f65d607a119f7"
   PYTHONDONTWRITEBYTECODE: "1"
   PYTHONHASHSEED: "0"
   PYTHONUNBUFFERED: "1"
