@@ -1,0 +1,254 @@
+# Temporary read-only exact-head validation harness for the KFM-TOPO-016 strict evidence shrink.
+name: temporary-validate-topology-doc-id-shrink
+
+"on":
+  push:
+    branches:
+      - validation/topology-doc-id-shrink-a20d1ec
+    paths:
+      - .github/workflows/temporary-validate-topology-doc-id-shrink.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: temporary-validate-topology-doc-id-shrink
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      MAIN_SHA: 7c5d4125c277536258be6345e366efae59dbe5d6
+      BASE_SHA: 3a36ee4919202f12c5d2c738f2452da74db58c90
+      BASE_BRANCH: review/topology-data-maps-baseline-shrink-3a36ee4
+      CANDIDATE_SHA: d01299734ba0d6055444775bd6537f705f27c22c
+      CANDIDATE_BRANCH: review/topology-doc-id-baseline-shrink-a20d1ec
+      BASELINE_PATH: tools/validators/directory_governance/repository_topology_baseline.json
+      BASELINE_BLOB: 928c02e6645c1bcd364d326111f0da5191dad843
+      OLD_FINGERPRINT: sha256:1831dfdc821f0553c6a55336d9e1e6122298db4ad1518232deb5f2b68cec6593
+      NEW_FINGERPRINT: sha256:a20d1ec8834c7b3fc105ad3b01063e1ebc73b48fed9e5b7902d03ba1507de13b
+    steps:
+      - name: Check out immutable candidate
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+          ref: ${{ env.CANDIDATE_SHA }}
+
+      - name: Verify exact identity, ancestry, and one-path scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$CANDIDATE_SHA"
+          test "$(git merge-base "$BASE_SHA" "$CANDIDATE_SHA")" = "$BASE_SHA"
+          test "$(git ls-remote origin refs/heads/main | awk '{print $1}')" = "$MAIN_SHA"
+          test "$(git ls-remote origin "refs/heads/$BASE_BRANCH" | awk '{print $1}')" = "$BASE_SHA"
+          test "$(git ls-remote origin "refs/heads/$CANDIDATE_BRANCH" | awk '{print $1}')" = "$CANDIDATE_SHA"
+          test "$(git rev-parse "$CANDIDATE_SHA:$BASELINE_PATH")" = "$BASELINE_BLOB"
+          mapfile -t changed < <(git diff --name-only "$BASE_SHA...$CANDIDATE_SHA")
+          test "${#changed[@]}" -eq 1
+          test "${changed[0]}" = "$BASELINE_PATH"
+          test ! -e .github/workflows/temporary-topology-doc-id-baseline-shrink.yml
+          python -m json.tool "$BASELINE_PATH" >/dev/null
+          git diff --check "$BASE_SHA...$CANDIDATE_SHA"
+
+      - name: Validate strict evidence shrink and finding isolation
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p topology-evidence
+          git show "$BASE_SHA:$BASELINE_PATH" > topology-evidence/baseline-before.json
+
+          set +e
+          python tools/validators/directory_governance/validate_repository_topology.py \
+            --repo-root . \
+            --baseline topology-evidence/baseline-before.json \
+            --format json > topology-evidence/report-before.json
+          before_rc=$?
+          python tools/validators/directory_governance/validate_repository_topology.py \
+            --repo-root . \
+            --baseline "$BASELINE_PATH" \
+            --trusted-baseline-ref "$BASE_SHA" \
+            --format json > topology-evidence/report-after.json
+          after_rc=$?
+          set -e
+          test "$before_rc" -eq 1
+          test "$after_rc" -eq 1
+
+          python - <<'PY'
+          from __future__ import annotations
+
+          import base64
+          import hashlib
+          import json
+          import os
+          import zlib
+          from pathlib import Path
+
+          evidence_dir = Path("topology-evidence")
+          before = json.loads((evidence_dir / "report-before.json").read_text(encoding="utf-8"))
+          after = json.loads((evidence_dir / "report-after.json").read_text(encoding="utf-8"))
+          baseline = json.loads(Path(os.environ["BASELINE_PATH"]).read_text(encoding="utf-8"))
+          old_fp = os.environ["OLD_FINGERPRINT"]
+          new_fp = os.environ["NEW_FINGERPRINT"]
+          rule_id = "KFM-TOPO-016"
+          subject = "doc-id:kfm://doc/NEEDS-VERIFICATION"
+          expected_members = (
+              "data/registry/sources/habitat/README.md",
+              "data/registry/sources/habitat/ecoregions/README.md",
+              "data/registry/sources/hazards/README.md",
+              "data/registry/sources/hydrology/README.md",
+              "data/registry/sources/people-dna-land/README.md",
+              "data/registry/sources/people-dna-land/land-ownership/README.md",
+              "data/registry/sources/people/README.md",
+              "docs/atlases/maplibre-master.md",
+              "docs/atlases/pipeline-gate-reference.md",
+              "docs/atlases/receipt-catalog.md",
+              "docs/doctrine/ai-build-operating-contract.md",
+              "docs/intake/IDEA_INTAKE.md",
+              "docs/intake/carry-forward/README.md",
+              "docs/intake/exploratory/README.md",
+          )
+
+          entries = [
+              entry for entry in baseline["entries"]
+              if entry.get("rule_id") == rule_id and entry.get("subject") == subject
+          ]
+          if len(entries) != 1:
+              raise SystemExit(f"expected one document-identity entry, found {len(entries)}")
+          entry = entries[0]
+          if entry["fingerprint"] != new_fp:
+              raise SystemExit(f"unexpected fingerprint: {entry['fingerprint']}")
+          members = tuple(
+              zlib.decompress(base64.b64decode(entry["evidence_zlib_base64"]))
+              .decode("utf-8")
+              .split("\0")
+          )
+          if members != expected_members:
+              raise SystemExit(f"unexpected document-identity evidence: {members!r}")
+          rendered = "\0".join(members)
+          evidence_sha = "sha256:" + hashlib.sha256(rendered.encode("utf-8")).hexdigest()
+          if entry["evidence_sha256"] != evidence_sha:
+              raise SystemExit("evidence digest does not match decoded members")
+          finding_fp = "sha256:" + hashlib.sha256(
+              "\0".join((rule_id, subject, evidence_sha)).encode("utf-8")
+          ).hexdigest()
+          if finding_fp != new_fp:
+              raise SystemExit("finding fingerprint does not match canonical fields")
+
+          before_by_fp = {item["fingerprint"]: item for item in before["findings"]}
+          after_by_fp = {item["fingerprint"]: item for item in after["findings"]}
+          if before_by_fp[new_fp]["disposition"] != "FAIL_NEW_DRIFT":
+              raise SystemExit("document identity was not new drift against prior baseline")
+          if after_by_fp[new_fp]["disposition"] != "BASELINED_WARNING":
+              raise SystemExit("document identity was not baselined after strict shrink")
+          if old_fp not in before["baseline"]["stale_fingerprints"]:
+              raise SystemExit("prior document-identity fingerprint was not stale before repair")
+          if old_fp in after["baseline"]["stale_fingerprints"]:
+              raise SystemExit("prior document-identity fingerprint remains stale after repair")
+          if before["counts"]["fail_new_drift"] != 4 or after["counts"]["fail_new_drift"] != 3:
+              raise SystemExit("fail-new-drift count did not change exactly 4 -> 3")
+          if len(before["baseline"]["stale_fingerprints"]) != 4 or len(after["baseline"]["stale_fingerprints"]) != 3:
+              raise SystemExit("stale-fingerprint count did not change exactly 4 -> 3")
+          if after["counts"]["fail_invariant"] != before["counts"]["fail_invariant"]:
+              raise SystemExit("invariant count changed")
+          if after["tracked_path_count"] != before["tracked_path_count"]:
+              raise SystemExit("tracked path count changed")
+
+          remaining_before = {
+              item["fingerprint"]: item["disposition"]
+              for item in before["findings"] if item["fingerprint"] != new_fp
+          }
+          remaining_after = {
+              item["fingerprint"]: item["disposition"]
+              for item in after["findings"] if item["fingerprint"] != new_fp
+          }
+          if remaining_before != remaining_after:
+              raise SystemExit("an unrelated finding changed disposition")
+
+          remaining_failures = [
+              {
+                  "rule_id": item["rule_id"],
+                  "subject": item["subject"],
+                  "fingerprint": item["fingerprint"],
+              }
+              for item in after["findings"]
+              if item["disposition"] in {"FAIL_NEW_DRIFT", "FAIL_INVARIANT"}
+          ]
+          summary = {
+              "main_sha": os.environ["MAIN_SHA"],
+              "base_sha": os.environ["BASE_SHA"],
+              "candidate_sha": os.environ["CANDIDATE_SHA"],
+              "candidate_baseline_blob": os.environ["BASELINE_BLOB"],
+              "changed_paths": [os.environ["BASELINE_PATH"]],
+              "transition": "STRICT_EVIDENCE_SHRINK",
+              "resolved_identity": "KFM-TOPO-016:doc-id:kfm://doc/NEEDS-VERIFICATION",
+              "old_member_count": 22,
+              "new_member_count": len(members),
+              "before": {
+                  "exit_code": 1,
+                  "outcome": before["outcome"],
+                  "fail_new_drift": before["counts"]["fail_new_drift"],
+                  "fail_invariant": before["counts"]["fail_invariant"],
+                  "stale_fingerprints": len(before["baseline"]["stale_fingerprints"]),
+              },
+              "after": {
+                  "exit_code": 1,
+                  "outcome": after["outcome"],
+                  "fail_new_drift": after["counts"]["fail_new_drift"],
+                  "fail_invariant": after["counts"]["fail_invariant"],
+                  "stale_fingerprints": len(after["baseline"]["stale_fingerprints"]),
+              },
+              "remaining_failures": remaining_failures,
+              "remaining_drift_status": "INHERITED_UNCHANGED_EXCEPT_RESOLVED_IDENTITY",
+          }
+          (evidence_dir / "summary.json").write_text(
+              json.dumps(summary, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          print(json.dumps(summary, sort_keys=True))
+          PY
+
+      - name: Run focused topology tests excluding known live-baseline closure assertions
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from __future__ import annotations
+
+          import importlib.util
+          import sys
+          import unittest
+          from pathlib import Path
+
+          path = Path("tests/validators/directory_governance/test_validate_repository_topology.py")
+          spec = importlib.util.spec_from_file_location("kfm_topology_tests", path)
+          if spec is None or spec.loader is None:
+              raise SystemExit("unable to load topology test module")
+          module = importlib.util.module_from_spec(spec)
+          sys.modules[spec.name] = module
+          spec.loader.exec_module(module)
+          excluded = {
+              "test_cli_json_is_deterministic",
+              "test_live_index_matches_baseline_after_reviewed_authority_resolution",
+          }
+          names = [
+              name for name in unittest.defaultTestLoader.getTestCaseNames(module.RepositoryTopologyTests)
+              if name not in excluded
+          ]
+          suite = unittest.TestSuite(module.RepositoryTopologyTests(name) for name in names)
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful():
+              raise SystemExit(1)
+          print(f"PASS focused_topology_tests={result.testsRun} excluded={sorted(excluded)!r}")
+          PY
+
+      - name: Upload exact-head topology evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: topology-doc-id-shrink-a20d1ec
+          path: topology-evidence/
+          if-no-files-found: error
+          retention-days: 7
