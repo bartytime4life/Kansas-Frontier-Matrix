@@ -22,7 +22,7 @@ jobs:
   replay-fix-and-validate:
     if: >-
       github.ref == 'refs/heads/docs/issue-4024-control-state-currentness-20260903' &&
-      github.event.head_commit.message == 'ci(control): retry currentness refresh harness'
+      github.event.head_commit.message == 'ci(control): retry currentness refresh extraction'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -38,7 +38,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          expected_parent='95a557a2b3d6f610e65fc3ba316ae67c1cfb8a1d'
+          expected_parent='e023735f5c42bbf8a72af785d54418ad1ece5ddc'
           expected_doc_blob='6bcb1ca8a64be7d4600ee8d53aab9f09eaececbd'
           expected_test_blob='216e5e0f1d3e6446a42858ea1e0e50c3a2bae87e'
           original_workflow='.github/workflows/tmp-repository-control-currentness-refresh.yml'
@@ -66,8 +66,13 @@ jobs:
           raw_script = workflow_text[start:end]
           script_lines = []
           for line in raw_script.splitlines():
+              if not line:
+                  script_lines.append("")
+                  continue
               if not line.startswith("          "):
-                  raise SystemExit("unexpected original transformation indentation")
+                  raise SystemExit(
+                      f"unexpected original transformation indentation: {line!r}"
+                  )
               script_lines.append(line[10:])
           script = "\n".join(script_lines) + "\n"
           exec(compile(script, "<currentness-refresh-replay>", "exec"), {})
