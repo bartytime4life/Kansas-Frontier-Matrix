@@ -1,0 +1,96 @@
+name: temporary-m16-roads-rail-trade-nonvacuous-validation
+
+"on":
+  push:
+    branches:
+      - quality/m16-roads-rail-trade-nonvacuous-validated-20260903
+
+permissions:
+  contents: read
+
+concurrency:
+  group: temporary-m16-roads-rail-trade-nonvacuous-validation-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+  KFM_NO_NETWORK: "1"
+  KFM_BASE_SHA: 7c5d4125c277536258be6345e366efae59dbe5d6
+  KFM_CANDIDATE_SHA: 2e16ee2c64dca3089eee29ccc17dffa7b77c5cd7
+  KFM_CANDIDATE_TREE: 9d32e51665626e62ff755f6bf1dd551dfff42fc3
+  KFM_SMOKE_BLOB: 7fe2b4040a10856d84146bc2ed8bcebce2e498d3
+  KFM_WORKFLOW_BLOB: a8a3432c9a35ad1c0e77ea4e979f467b0f331641
+
+jobs:
+  focused-m16-nonvacuous:
+    name: focused-m16-nonvacuous
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out validation head without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify exact candidate identity and permanent scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = "${KFM_CANDIDATE_SHA}"
+          test "$(git rev-parse "${KFM_CANDIDATE_SHA}^{tree}")" = "${KFM_CANDIDATE_TREE}"
+          test "$(git merge-base "${KFM_BASE_SHA}" "${KFM_CANDIDATE_SHA}")" = "${KFM_BASE_SHA}"
+          test "$(git rev-parse "${KFM_CANDIDATE_SHA}:tests/domains/roads-rail-trade/test_roads_rail_trade_smoke.py")" = "${KFM_SMOKE_BLOB}"
+          test "$(git rev-parse "${KFM_CANDIDATE_SHA}:.github/workflows/domain-roads-rail-trade.yml")" = "${KFM_WORKFLOW_BLOB}"
+
+          mapfile -t changed < <(
+            git diff --name-only "${KFM_BASE_SHA}"...HEAD \
+              | grep -v '^.github/workflows/tmp-m16-roads-rail-trade-nonvacuous-validation.yml$' \
+              | LC_ALL=C sort
+          )
+          expected=(
+            .github/workflows/domain-roads-rail-trade.yml
+            tests/domains/roads-rail-trade/test_roads_rail_trade_smoke.py
+          )
+          test "${#changed[@]}" -eq "${#expected[@]}"
+          diff <(printf '%s\n' "${expected[@]}") <(printf '%s\n' "${changed[@]}")
+          git diff --check "${KFM_BASE_SHA}"...HEAD
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install declared repository test dependencies
+        shell: bash
+        run: python tools/ci/install_python_ci.py project-test
+
+      - name: Run focused non-vacuous Roads Rail Trade proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile tests/domains/roads-rail-trade/test_roads_rail_trade_smoke.py
+          python -m pytest -q tests/domains/roads-rail-trade/test_roads_rail_trade_smoke.py
+          python -m pytest -q tests/schemas/test_corridor_route_contract.py
+          python tools/validators/domains/roads-rail-trade/validate_corridor_route.py --fixtures
+
+      - name: Record bounded validation scope
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### M16 Roads/Rail/Trade non-vacuous validation"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Trusted base: \`${KFM_BASE_SHA}\`."
+            echo "- Permanent candidate: \`${KFM_CANDIDATE_SHA}\`."
+            echo "- Permanent scope: one domain smoke test and one existing domain-workflow wiring line."
+            echo "- The test uses only synthetic, no-network fixtures and proves PASS, ABSTAIN, and DENY behavior through the existing CorridorRoute validator."
+            echo "- This run is validation evidence only; it does not authorize a pull request, readiness, merge, source admission, release, deployment, publication, or settings mutation."
+          } >> "$GITHUB_STEP_SUMMARY"
