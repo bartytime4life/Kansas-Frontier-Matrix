@@ -2,945 +2,404 @@
 doc_id: kfm://doc/configs-domains-fauna-readme
 title: configs/domains/fauna/ — Governed Fauna Configuration Boundary
 type: readme
-version: v0.3
+version: v0.4
 status: draft
-owners: OWNER_TBD — Config steward · Fauna steward · Taxonomy steward · Source and rights steward · Sensitivity/geoprivacy steward · Consumer owner · Validation steward · Policy steward · Release steward · Docs steward
+owners:
+  - "@bartytime4life — CODEOWNERS review route only"
+  - "NEEDS VERIFICATION — configuration, Fauna, taxonomy, source/rights, sensitivity/geoprivacy, consumer, validation, policy, release, and independent review assignments"
 created: 2026-07-13
-updated: 2026-07-14
-policy_label: "public; config-sublane; fauna; taxonomy-aware; source-role-aware; occurrence-class-aware; sensitivity-aware; geoprivacy-aware; reconstruction-resistant; rights-aware; time-aware; deny-by-default; non-secret; non-authoritative; no-live-binding; no-source-activation; no-exact-sensitive-location; no-release-authority"
+updated: 2026-09-04
+owning_root: configs/
+responsibility: Shared non-secret Fauna configuration guidance; reference authority without duplicating it
 current_path: configs/domains/fauna/README.md
-truth_posture: CONFIRMED canonical Fauna config lane, parent configuration contract, repository-present Fauna doctrine and implementation-shaped surfaces, README-only bounded config inventory, source-first connector placement, noncanonical connectors/fauna compatibility index, canonical contracts/domains/fauna lane with contracts/fauna compatibility guard, subtype-first versus domain-first source-registry topology conflict, package version 0.0.0 placeholder, PROPOSED refresh spec, PROPOSED sensitivity YAML placeholders, default-deny Rego scaffold, permissive empty Fauna schemas, placeholder fixtures and release manifests, and TODO-only domain workflow / PROPOSED future consumer-bound templates and accepted profile references / CONFLICTED source-registry topology and compatibility-path cleanup / UNKNOWN direct consumers, loader behavior, precedence, deployment binding, exhaustive recursive inventory, runtime behavior, policy-runtime wiring, source activation, generated public derivatives, and publication use / NEEDS VERIFICATION accepted owners, canonical taxonomy resolver, source roles and rights, occurrence identity, temporal semantics, sensitivity tier transitions, geoprivacy parameters, reconstruction-risk controls, executable validation, branch protection, review enforcement, correction propagation, and rollback/invalidation integration
+policy_label: "public; config-sublane; fauna; non-secret; non-authoritative; no-live-binding; no-source-activation; no-exact-sensitive-location; no-release-authority"
+truth_posture: >
+  CONFIRMED exact tracked README-only config directory, accepted Directory Rules,
+  source-first registry-family authority, CODEOWNERS routing, inspected workflow
+  commands, and closed draft OccurrenceEvidence schema / PROPOSED future
+  consumer-bound configuration / UNKNOWN loader, precedence, runtime use,
+  source activation, policy integration, independent review, and publication /
+  NEEDS VERIFICATION exact-head execution and physical writer/consumer migration
+  closure; broader Fauna maturity is file-specific, not uniformly scaffold-only.
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
-  repository_id: "1059091169"
-  visibility: public
   base_ref: main
-  base_commit: b04e9b4a576557ec8cf2f48f6cbe45fd07fbec7a
-  prior_blob: fdf1a884595de3d8e194ee162ae8f468a2aa547a
-  bounded_path_search: configs/domains/fauna/README.md only
+  initial_read_commit: bb3eb695e6068b38453ca3ded8f1394a8fdebc20
+  repin_basis: Exact compare to the base changed only catalog/triplet/README.md; all inspected inputs unchanged
+  base_commit: 700570cbcf191038aa20a030174c2dd08cf93675
+  main_tree: f98d5965812e9a29f55d820f9942549719930408
+  prior_blob: 30504fabf55a008a749eb2b9199c27d0acfac3da
+  inventory_scope: Exact tracked configs/domains/fauna directory; README.md only, no child directories
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  adoption_adr_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
 related:
   - ../README.md
-  - ../../README.md
-  - ../../../docs/domains/fauna/README.md
-  - ../../../docs/domains/fauna/ARCHITECTURE.md
-  - ../../../docs/domains/fauna/CANONICAL_PATHS.md
-  - ../../../docs/domains/fauna/DATA_LIFECYCLE.md
-  - ../../../docs/domains/fauna/OBJECT_FAMILIES.md
-  - ../../../docs/domains/fauna/SOURCE_REGISTRY.md
-  - ../../../docs/domains/fauna/SOURCE_ROLES.md
-  - ../../../docs/domains/fauna/SENSITIVITY.md
-  - ../../../docs/domains/fauna/POLICY.md
-  - ../../../docs/domains/fauna/API_CONTRACTS.md
-  - ../../../docs/domains/fauna/MAP_UI_CONTRACTS.md
-  - ../../../docs/domains/fauna/RELEASE_INDEX.md
-  - ../../../docs/domains/fauna/MISSING_OR_PLANNED_FILES.md
-  - ../../../docs/registers/DOMAIN_LANE.md
-  - ../../../docs/registers/DRIFT_REGISTER.md
   - ../../../docs/doctrine/directory-rules.md
-  - ../../../docs/security/SECRETS.md
-  - ../../../contracts/domains/fauna/
-  - ../../../contracts/fauna/README.md
-  - ../../../schemas/contracts/v1/domains/fauna/
-  - ../../../schemas/contracts/v1/fauna/README.md
-  - ../../../policy/domains/fauna/
-  - ../../../policy/sensitivity/fauna/
-  - ../../../data/registry/sources/fauna/
-  - ../../../data/registry/fauna/sources/
-  - ../../../packages/domains/fauna/
-  - ../../../pipelines/domains/fauna/
-  - ../../../pipelines/ingest/fauna/
-  - ../../../pipelines/normalize/fauna/
-  - ../../../pipelines/rollback/fauna/
-  - ../../../pipeline_specs/fauna/
-  - ../../../tools/validators/fauna/
-  - ../../../tools/validators/geoprivacy/habitat-fauna/
-  - ../../../tests/domains/fauna/
-  - ../../../fixtures/domains/fauna/
-  - ../../../apps/explorer-web/src/features/domains/fauna/
-  - ../../../connectors/fauna/README.md
-  - ../../../data/raw/fauna/
-  - ../../../data/work/fauna/
-  - ../../../data/quarantine/fauna/
-  - ../../../data/processed/fauna/
-  - ../../../data/catalog/domain/fauna/
-  - ../../../data/triplets/fauna/
-  - ../../../data/published/layers/fauna/
-  - ../../../data/receipts/fauna/
-  - ../../../data/proofs/fauna/
-  - ../../../data/rollback/fauna/
-  - ../../../release/candidates/fauna/
-  - ../../../release/manifests/
+  - ../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../../docs/domains/fauna/README.md
+  - ../../../data/registry/sources/README.md
+  - ../../../data/registry/sources/fauna/README.md
+  - ../../../.github/CODEOWNERS
   - ../../../.github/workflows/domain-fauna.yml
-tags: [kfm, configs, fauna, animals, wildlife, taxonomy, occurrence, range, monitoring, mortality, disease, invasive-species, source-role, sensitivity, geoprivacy, reconstruction-risk, rights, time, no-secrets, governance]
+  - ../../../.github/workflows/fauna-occurrence-evidence.yml
+  - ../../../schemas/contracts/v1/domains/fauna/occurrence_evidence.schema.json
+tags: [kfm, configs, fauna, taxonomy, source-role, occurrence, geoprivacy, rights, time, no-secrets, governance]
 notes:
-  - "The bounded repository search for configs/domains/fauna returned this README only. No executable Fauna configuration payload or indexed direct consumer was found."
-  - "The prior v0.2 README already carried strong taxonomy, source-role, occurrence-class, T4 sensitivity, geoprivacy, reconstruction-risk, validation, correction, and rollback controls. v0.3 preserves them and adds current repository evidence, implementation maturity, path conflicts, object-family boundaries, consumer-binding rules, cache/log invalidation, and stricter first-payload gates."
-  - "The repository contains many Fauna implementation-shaped files, but inspected package metadata, pipeline specs, sensitivity files, Rego policy, JSON Schemas, fixtures, release templates, and workflow jobs remain version-0.0.0, PROPOSED placeholders, empty-permissive scaffolds, or TODO-only and do not prove production behavior."
-  - "Source-specific connector implementations are canonical under connectors/<source_id>/. connectors/fauna/ is a noncanonical compatibility index and must not become a parallel implementation hierarchy."
-  - "The repository contains both data/registry/sources/fauna/ and data/registry/fauna/sources/. This README does not select or duplicate records across them; topology remains a drift item requiring migration or ADR-backed resolution."
-  - "Only this Markdown file changes."
+  - "Same-path README revision; no configuration payload, loader, schema, policy, source, workflow, or release object changes."
+  - "v0.3 and its 2026-07-14 checkpoint remain Git history. v0.4 corrects blanket scaffold/TODO claims and distinguishes accepted registry-family authority from unresolved migration."
+  - "Directory Rules retain their original draft label inside the exact bytes adopted by accepted ADR-0029. This README neither edits those bytes nor adopts another ADR."
+  - "Shared configuration belongs in configs; app-only settings, pipeline specifications, infrastructure settings, and policy retain their own responsibility owners."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # Governed Fauna Domain Configuration
 
-`configs/domains/fauna/`
+`configs/domains/fauna/` makes shared, non-secret Fauna configuration choices inspectable. It does not decide animal truth, taxonomic identity, source admission, geoprivacy, policy, review, or release.
 
-> Safe-to-commit configuration documentation and future consumer-bound templates for animal taxonomy references, occurrence processing, monitoring, ranges, seasonal context, mortality, disease, invasive-species records, public-safe derivatives, and review routing. This lane is not animal truth, taxonomic authority, source admission, sensitivity policy, geoprivacy authority, evidence, release, or publication authority.
+**Status:** draft `v0.4` · **Config inventory:** README-only · **Owning root:** `configs/` · **Review route:** `@bartytime4life` via CODEOWNERS, not verified independent stewardship.
 
-![status](https://img.shields.io/badge/status-draft-blue)
-![version](https://img.shields.io/badge/version-v0.3-informational)
-![authority](https://img.shields.io/badge/authority-config__sublane-green)
-![maturity](https://img.shields.io/badge/maturity-README--only-lightgrey)
-![sensitivity](https://img.shields.io/badge/sensitive__occurrence-T4__default-critical)
-![roles](https://img.shields.io/badge/source__roles-no__collapse-purple)
-![secrets](https://img.shields.io/badge/secrets-forbidden-red)
-![truth](https://img.shields.io/badge/truth-cite--or--abstain-0b7285)
-
-**Quick links:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs-and-drift-triggers) · [Last reviewed](#last-reviewed) · [Scope](#scope-and-bounded-context) · [Classes](#configuration-classes) · [Contract](#minimum-configuration-contract) · [Binding](#consumer-binding-precedence-and-discovery) · [Objects](#fauna-object-family-boundaries) · [Taxonomy](#taxonomy-identity-and-status) · [Roles](#source-role-and-evidence-character) · [Occurrences](#occurrence-monitoring-range-and-candidate-boundaries) · [Time](#time-seasonality-freshness-and-correction) · [Space](#spatial-support-precision-and-reconstruction-risk) · [Geoprivacy](#sensitivity-geoprivacy-and-tier-motion) · [Rights](#source-rights-attribution-and-stewardship) · [Connectors](#connector-and-source-registry-boundaries) · [Logging](#logging-telemetry-caches-and-derived-indexes) · [Failure](#failure-behavior) · [AI](#governed-ai-and-generated-language) · [Migration](#migration-and-anti-bypass-posture) · [Rollback](#rollback-correction-supersession-and-invalidation) · [Done](#definition-of-done-for-the-first-payload)
+**Start here:** [Status](#status) · [Permitted content](#what-belongs-here) · [Consumer binding](#consumer-binding-precedence-and-discovery) · [Source boundaries](#connector-and-source-registry-boundaries) · [Validation](#validation) · [First payload](#definition-of-done-for-the-first-payload)
 
 > [!IMPORTANT]
-> **Document lifecycle:** draft `v0.3`
-> **Observed lane maturity:** README-only in the bounded config-path search; no executable Fauna configuration payload or direct consumer binding is established
-> **Authority:** implementation-supporting configuration sublane; non-authoritative for taxonomy, occurrence meaning, source admission, sensitivity, geoprivacy, evidence, policy, review, release, or publication
-> **Runtime posture:** no loader, precedence rule, network fetch, source activation, taxonomy resolution, occurrence processing, public-layer generation, release, or publication is established by this README
+> The configuration lane remains README-only; the broader Fauna domain does **not** remain uniformly placeholder-only. Inspected workflow sources invoke bounded synthetic tests, and the OccurrenceEvidence schema has a closed draft shape. Neither observation proves a configuration loader, a passing run, accepted policy, live source use, or public readiness.
 
 > [!CAUTION]
-> Exact or reconstructable sensitive occurrences, nests, dens, roosts, hibernacula, spawning or breeding sites, telemetry paths, steward-controlled records, observer or landowner details, and protected collection or rehabilitation locations fail closed. A configuration value cannot lower sensitivity, turn restricted evidence into public evidence, convert a model or range into an observation, make an aggregator authoritative, authorize a transform, or create a release. Missing source role, taxonomy, time, rights, evidence, policy, review, redaction, release, correction, or rollback support must not become implicit permission.
-
----
+> Sensitive occurrences default to **T4** under Fauna doctrine. Exact or reconstructable nests, dens, roosts, hibernacula, spawning/breeding sites, telemetry paths, private-land clues, and observer or steward details fail closed. Hiding a layer or popup is not redaction. Configuration cannot lower sensitivity or grant exposure.
 
 ## Purpose
 
-This directory defines the safe-to-commit configuration boundary for the canonical `fauna` domain segment under `configs/domains/`.
+This is the contributor-facing boundary for shared Fauna defaults, templates, examples, and profile references. It inherits the [parent domain-configuration contract](../README.md) rather than creating another domain architecture or authority register.
 
-It may eventually hold small defaults, templates, examples, profile references, or review-oriented settings for a **named and verified consumer**. Those files may describe how that consumer should parse, validate, route, label, generalize, render, cache, or package already-governed Fauna material, but they cannot decide:
-
-- which taxonomy, taxon identifier, synonym, or crosswalk is controlling;
-- whether a conservation or legal status is authoritative, current, or applicable to a place and time;
-- whether a record is observed, reported, inferred, modeled, predicted, aggregated, contextual, candidate, restricted, generalized, or released;
-- whether two occurrence, specimen, monitoring, telemetry, acoustic, eDNA, mortality, disease, or invasive-species records refer to the same real-world event;
-- whether a source is admitted, active, rights-cleared, redistributable, current, or authoritative for a requested claim;
-- whether a source accessed through an aggregator inherits the aggregator's authority;
-- whether exact or generalized geometry is safe to expose;
-- whether a geoprivacy transform is adequate;
-- whether a timestamp means observation time, event time, reporting time, ingestion time, valid time, embargo expiry, release time, or correction time;
-- whether a range, seasonal range, migration route, habitat association, or density surface supports direct occurrence;
-- whether a public map, API, export, cache, log, or AI answer resists reconstruction;
-- whether evidence supports a claim;
-- whether an artifact may be promoted, released, rendered, indexed, exported, summarized, or published.
-
-This README is intended for configuration maintainers, Fauna stewards, taxonomy and source reviewers, sensitivity and geoprivacy stewards, rights and stewardship reviewers, consumer owners, validation and test owners, policy and release reviewers, security reviewers, and contributors checking Directory Rules placement.
-
-[Back to top](#top)
-
----
+A useful configuration file identifies the consumer, configurable behavior, authority references, validation, failure handling, and rollback. Directory completeness alone is not a reason to add a payload.
 
 ## Authority level
 
-**Configuration-supporting and non-authoritative.**
+**Implementation-supporting; non-authoritative for evidence and governance.** Placement follows [Directory Rules](../../../docs/doctrine/directory-rules.md) §10.4 and §12, as adopted by [ADR-0029](../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md).
 
-| Concern | Authority in this lane |
-|---|---|
-| Fauna domain meaning | **None.** Human doctrine remains under `docs/domains/fauna/`; semantic meaning remains in accepted contract homes. |
-| Taxonomic identity | **None.** Config may reference a reviewed taxonomy or crosswalk profile; it cannot resolve conflicts or create canonical identity. |
-| Conservation and legal status | **None.** Config cannot make an aggregator, cached list, model, or local mapping authoritative. |
-| Occurrence and monitoring meaning | **None.** Config cannot turn candidate, modeled, range, contextual, or aggregate material into direct occurrence evidence. |
-| Source identity and activation | **None.** Config may reference reviewed source IDs or profiles; it cannot admit, activate, suspend, retire, or supersede a source. |
-| Source role and evidence character | **None.** Config cannot relabel authority, observation, aggregator, context, model, candidate, or restricted material. |
-| Sensitivity and geoprivacy | **None.** Config may select an accepted policy profile; it cannot define, weaken, approve, or override a transform. |
-| Temporal and spatial support | **None.** Config cannot invent observation time, seasonal scope, precision, geometry support, or freshness. |
-| Evidence and claim truth | **None.** Config cannot create an `EvidenceBundle`, close proof, validate a claim, or convert a candidate into truth. |
-| Policy and review | **None.** Config cannot substitute for accepted executable policy, a `PolicyDecision`, source review, redaction review, or release review. |
-| Release and publication | **None.** Config cannot authorize lifecycle promotion, public map/API/UI use, export, Focus Mode, AI response, or publication. |
-| Consumer behavior | **Supporting only.** A verified consumer may read a validated file through explicit binding and deterministic precedence. |
+Configuration follows its consumer unless genuinely shared. App-only settings belong with the app; declarative run definitions belong in `pipeline_specs/`; deployment settings belong in `infra/`; admissibility rules belong in `policy/`; secrets remain outside Git. This existing shared lane is not a license to centralize every Fauna-related setting.
 
-A configuration value may point to authority. It cannot acquire that authority through naming, placement, parsing, repetition, successful validation, a passing scaffold workflow, or use by a UI.
+| Responsibility | Configuration may do | Configuration cannot do |
+|---|---|---|
+| Consumer behavior | Select a supported, validated profile for an explicitly bound consumer | Establish a loader or precedence rule by filename alone |
+| Meaning and shape | Reference semantic contracts and machine schemas | Create a competing contract or schema authority |
+| Taxonomy and evidence | Reference reviewed identities and evidence | Adjudicate synonyms, confirm occurrences, or manufacture evidence |
+| Sources and rights | Reference canonical source identity and reviewed permissions | Admit/activate a source or upgrade its role or rights |
+| Sensitivity and policy | Reference an accepted policy/transform profile | Define geoprivacy parameters, approve a transform, or weaken controls |
+| Review and release | Carry references needed by the consumer | Substitute for review, promotion, release, correction, or publication |
 
-[Back to top](#top)
-
----
+A valid configuration is not a valid claim, approved source, public-safe derivative, or release.
 
 ## Status
 
 ### Repository snapshot
 
-| Field | Value |
+| Field | Inspected value |
 |---|---|
 | Repository | `bartytime4life/Kansas-Frontier-Matrix` |
-| Repository ID | `1059091169` |
-| Visibility | public |
-| Base ref | `main` |
-| Evidence commit | `b04e9b4a576557ec8cf2f48f6cbe45fd07fbec7a` |
-| Prior README blob | `fdf1a884595de3d8e194ee162ae8f468a2aa547a` |
-| Bounded config-path result | `configs/domains/fauna/README.md` only |
+| Evidence base | `main@700570cbcf191038aa20a030174c2dd08cf93675` |
+| Main tree | `f98d5965812e9a29f55d820f9942549719930408` |
+| Prior target blob | `30504fabf55a008a749eb2b9199c27d0acfac3da` |
+| Exact tracked config directory | One file, `README.md`; no child directories |
+| Scope not observed | Ignored, untracked, generated-outside-Git, workstation, or external configuration |
+
+```text
+configs/domains/fauna/
+└── README.md
+```
+
+This snapshot is immutable evidence, not a promise that `main` will remain unchanged. Parent and companion documents retain their own dated checkpoints; those internal dates are not upgraded by reading their current bytes.
 
 ### Evidence ledger
 
-| Surface | CONFIRMED repository evidence | Safe conclusion |
+| Inspected source | Bounded finding | Limit |
 |---|---|---|
-| Config lane | This README exists; bounded search returned no other file under `configs/domains/fauna/`. | **README-only boundary.** No payload, loader, or direct consumer is established. |
-| Parent config contract | `configs/domains/README.md` exists and defines domain config as non-secret and non-authoritative. | This child must inherit the parent no-authority and no-live-binding rules. |
-| Fauna doctrine | `docs/domains/fauna/` contains README, architecture, canonical-path, lifecycle, object, source, sensitivity, policy, API, map/UI, release, and backlog documents. | Strong human-facing doctrine exists; it is not runtime proof. |
-| Canonical contracts | `contracts/domains/fauna/` contains semantic object-family Markdown. | Semantic surfaces exist; acceptance and enforcement remain separate questions. |
-| Contract compatibility path | `contracts/fauna/README.md` is a deprecated compatibility guard pointing to `contracts/domains/fauna/`. | Do not create parallel contract authority. |
-| Fauna schemas | `schemas/contracts/v1/domains/fauna/` contains Draft 2020-12 files such as `occurrence_public.schema.json`. | Inspected schemas remain **PROPOSED empty-permissive scaffolds** with `{}` properties and `additionalProperties: true`. |
-| Sensitivity policy | `policy/sensitivity/fauna/` contains YAML and Rego files. | Inspected YAML files are placeholders; the Rego file is a default-deny scaffold, not proven enforcement. |
-| Package | `packages/domains/fauna/pyproject.toml` declares `kfm-domain-fauna` version `0.0.0`. | Package presence is scaffold evidence, not implemented behavior. |
-| Pipeline specification | `pipeline_specs/fauna/refresh.yaml` exists. | It is a `PROPOSED` placeholder generated from docs inventory. |
-| Fixtures | `fixtures/domains/fauna/` contains valid, invalid, and synthetic paths. | Inspected fixture is a placeholder record, not a behavioral proof fixture. |
-| Release templates | `release/manifests/` contains Fauna template JSON files. | Inspected template is a `PROPOSED` placeholder, not a release manifest. |
-| Workflow | `.github/workflows/domain-fauna.yml` exists. | Jobs only echo TODO messages; workflow presence does not prove validation, proof building, or release dry-run behavior. |
-| Source-first connector policy | `connectors/fauna/README.md` exists as a noncanonical compatibility index. | Runtime connector implementations belong under `connectors/<source_id>/`; no parallel fauna connector hierarchy. |
-| Source registry | Both `data/registry/sources/fauna/` and `data/registry/fauna/sources/` exist. | Topology is **CONFLICTED / NEEDS VERIFICATION**; do not maintain divergent records. |
-| Explorer feature lane | `apps/explorer-web/src/features/domains/fauna/README.md` exists. | UI documentation or scaffolding is downstream and does not prove safe public runtime behavior. |
-| Published/lifecycle lanes | README-backed Fauna paths exist under processed, published, proof, receipt, rollback, and related roots. | Directory and README presence does not prove emitted artifacts, evidence closure, policy approval, or release. |
+| [Parent configuration README](../README.md), `v0.6` | Non-secret, non-authoritative shared domain configuration boundary | No generic discovery, loading, or precedence implementation established |
+| [Directory Rules](../../../docs/doctrine/directory-rules.md) and [ADR-0029](../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) | Exact rules bytes adopted; responsibility and source-first identity rules apply | The rules' internal draft label is retained; no new adoption or migration occurs here |
+| [Fauna domain README](../../../docs/domains/fauna/README.md), `v1.2.3` | Mixed maturity, sensitive-location controls, optional Fauna RAW reference, and bounded implementation navigation | Its historical counts and prior test results are not new execution evidence |
+| [Source registry parent](../../../data/registry/sources/README.md), `v1.2` | `data/registry/sources/` is the canonical source-registry family | Exact writer, authoritative record inventory, consumer migration, and physical RAW placement remain unresolved |
+| [domain-fauna workflow](../../../.github/workflows/domain-fauna.yml), blob `ba5eb3cfcdd759fff76b3e7e7c58cba604e29b47` | Validation invokes two standard-library synthetic suites; proof and release-dry-run jobs explicitly check held boundaries | It is not TODO-only; a successful hold check still produces no proof or release |
+| [OccurrenceEvidence workflow](../../../.github/workflows/fauna-occurrence-evidence.yml), blob `faae7732e4cafe7f997bc367dc67ba5c61f8dd06` | Declares focused tests, fixture replay, and generated-receipt validation | Workflow source is not evidence those commands passed on this revision |
+| [OccurrenceEvidence schema](../../../schemas/contracts/v1/domains/fauna/occurrence_evidence.schema.json), blob `55bfdf896627443281e41ef2761024bddedc7828` | Draft object schema declares required fields and `additionalProperties: false` | Not a Fauna configuration schema, operational acceptance, or proof that every Fauna schema is restrictive |
+| [CODEOWNERS](../../../.github/CODEOWNERS), blob `dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61` | `/configs/` routes to `@bartytime4life`; no narrower Fauna-config pattern in these bytes | Routing is not accepted stewardship, required approval, or independent review |
 
 ### Maturity matrix
 
-| Capability | Status | Safe conclusion |
-|---|---:|---|
-| Config-boundary README | **CONFIRMED** | The lane is documented. |
-| Executable config payload | **NOT ESTABLISHED** | No non-README payload found in the bounded config search. |
-| Direct consumer binding | **UNKNOWN** | No package, pipeline, app, or runtime is proven to load this lane. |
-| Config precedence and discovery | **UNKNOWN** | No deterministic load, merge, or unknown-key rule is established. |
-| Taxonomy resolver | **NEEDS VERIFICATION** | Taxonomy and crosswalk decisions remain governed concerns. |
-| Source activation | **NOT AUTHORIZED** | Config presence must not activate connectors or sources. |
-| Sensitivity/geoprivacy enforcement | **SCAFFOLD ONLY** | Default-deny doctrine is strong; parameter files and executable integration are not proven. |
-| Schema validation | **SCAFFOLD ONLY** | Present Fauna schemas are not yet restrictive enough to prove object validity. |
-| Fixtures/tests | **PLACEHOLDER / NEEDS VERIFICATION** | Named paths exist; behavioral coverage is not proven. |
-| CI enforcement | **TODO SCAFFOLD** | `domain-fauna.yml` does not execute substantive validation. |
-| Release/publication | **NOT ESTABLISHED** | Templates and README lanes are not releases. |
-| Owners/CODEOWNERS | **UNKNOWN** | `OWNER_TBD` remains unresolved. |
+| Capability | Status at this review |
+|---|---|
+| Tracked configuration payload | **Absent in this exact config directory** |
+| Loader, direct consumer, precedence, config schema binding | **UNKNOWN / not established by this review** |
+| Broader Fauna validation | **CONFIRMED source-level bounded implementation; maturity remains file-specific** |
+| Exact-head test results and hosted enforcement | **NEEDS VERIFICATION; not established by workflow inspection** |
+| Taxonomy resolver, accepted geoprivacy policy and runtime integration | **NEEDS VERIFICATION** |
+| Live source admission, release, deployment, publication | **Not authorized or established by this README** |
 
-Directory presence must not trigger discovery, network access, source activation, indexing, taxonomy resolution, geometry transformation, map-layer creation, AI interpretation, lifecycle promotion, release, or publication.
-
-[Back to top](#top)
-
----
+The July `v0.3` blanket statements about empty schemas, placeholder fixtures, and TODO-only validation are superseded by this bounded ledger. Uninspected packages, policies, fixtures, and release surfaces are not thereby declared complete.
 
 ## What belongs here
 
-Only small, safe-to-commit Fauna configuration material for a named or explicitly proposed consumer belongs here.
+Small shared settings or inactive authoring examples with an explicit consumer justification may belong here: placeholder-only `*.template.yaml` files; tiny synthetic YAML/JSON/TOML examples; references to accepted taxonomy, source-role, sensitivity, display, freshness, or review profiles; and config-specific migration/validation notes.
 
-| Accepted material | Purpose | Minimum posture |
-|---|---|---|
-| Domain child `README.md` | Define the Fauna configuration boundary. | Preserve parent config law, source-role separation, T4 default, and no-live-binding. |
-| `*.template.yaml` / `*.template.yml` | Placeholder-based template for a named consumer. | Parseable, versioned, placeholders only, no secrets, inactive by default. |
-| `*.example.yaml` / `*.example.json` / `*.example.toml` | Tiny synthetic example. | Fictional taxa, locations, sources, times, and identifiers; no reconstruction path. |
-| Profile references | Select an accepted taxonomy, source-role, sensitivity, generalization, display, freshness, or review profile. | Stable identifier only; config does not embed or redefine policy. |
-| Conservative review defaults | Select deny, hold, abstain, quarantine, generalize, or steward-review routing. | Cannot reduce review burden. |
-| Public-safe display hints | Select an accepted generalized display profile or field allowlist. | Must not contain protected geometry or grant exposure. |
-| Migration notes | Document a real key or path transition. | Owner-linked, time-bounded, reversible, and not a parallel authority. |
-| Validation notes | Explain consumer-specific validation commands. | Commands must be verified or labeled `PROPOSED`. |
+Examples must be unmistakably synthetic and must not provide plausible reconstruction clues for real taxa occurrences, sites, people, collections, telemetry, or properties. File extensions and profile names are examples, not discovered payloads or a new schema.
 
-Synthetic examples must not resemble real occurrences, observers, telemetry paths, sites, properties, rehabilitation facilities, collections, or protected locations closely enough to enable reconstruction.
-
-[Back to top](#top)
-
----
+Safe reversible drafting may proceed with clearly labeled non-critical unknowns. **Consumer-ready use** requires the binding and validation gates below; source activation and publication remain separate transitions.
 
 ## What does not belong here
 
-- real occurrences, observations, surveys, telemetry, tracking, eDNA, acoustic, specimen, mortality, disease, rehabilitation, rescue, invasive-species, or source payloads;
-- exact or reconstructable nests, dens, roosts, hibernacula, spawning sites, breeding sites, congregation sites, nursery areas, migration paths, or steward-controlled geometry;
-- observer, researcher, volunteer, landowner, permit-holder, patient, rehabilitation-client, or other living-person data;
-- rights-restricted media, media metadata, EXIF, collection details, access-control detail, or steward-only notes;
-- credentials, tokens, cookies, signed URLs, connection strings, private endpoints, workstation paths, or deployment bindings;
-- source admission, activation, authority-role, rights, license, redistribution, cadence, or retirement decisions;
-- taxonomy authority, synonym adjudication, taxon merge/split decisions, conservation status, or legal status;
-- geoprivacy radii, randomization distributions, withholding logic, tier transition criteria, or transform implementation;
-- schemas, semantic contracts, executable policy, registry records, receipts, proofs, manifests, release decisions, correction notices, or rollback cards;
-- values that present modeled range, habitat suitability, density estimation, candidate detections, inferred presence, environmental association, or AI interpretation as observed occurrence truth;
-- values that let GBIF, eBird, iNaturalist, iDigBio, BISON-like systems, or another access platform stand in as the original evidence authority;
-- hidden bypasses for sensitivity, rights, review, quarantine, deny, abstain, redaction, release, or correction gates;
-- automatic config discovery based only on directory or filename presence;
-- connector code or source clients under `configs/` or `connectors/fauna/`.
+Do not commit source payloads, real occurrences or surveys, specimens/media, acoustic/eDNA records, mortality/disease records, telemetry, protected geometry, observer/landowner information, private endpoints, credentials, cookies, signed URLs, or workstation/deployment bindings here.
 
-[Back to top](#top)
+Do not duplicate schemas, semantic contracts, source registries, taxonomic authority tables, executable policy, geoprivacy parameters, receipts, proofs, release manifests, or correction records. Do not embed source clients or a second connector hierarchy.
 
----
+Reject bypasses such as `skip_review`, `allow_exact`, or an unqualified `trusted`/`public` flag that substitutes for separate evidence, rights, sensitivity, review, and release decisions. UI masking cannot make restricted input suitable for this directory.
 
 ## Inputs
 
-A future Fauna configuration payload requires all of the following before it may be treated as consumer-ready:
+Before a payload is treated as consumer-ready, identify its consumer and accountable review assignments; format/version/parser; canonical contract and restrictive schema; referenced source/policy profiles; permitted configurable fields; effective precedence and unknown-key behavior; no-network test boundary; and correction/deactivation/rollback path.
 
-1. **Named consumer** — exact package, app, pipeline, service, runtime, test harness, or tool.
-2. **Accepted owners** — accountable consumer, config, Fauna, sensitivity, validation, and release roles as applicable.
-3. **Declared format** — file type, format version, canonical parser, and encoding.
-4. **Authority references** — verified semantic contract, schema, policy, source registry, and domain documentation.
-5. **Synthetic or public-safe values** — no real occurrence, location, person, telemetry, media, source payload, or protected join.
-6. **Source-role model** — original authority, observation, aggregator/access platform, context, model, candidate, and restricted roles remain distinguishable.
-7. **Taxonomy posture** — vocabulary, resolver, authority version, synonym behavior, merge/split behavior, unresolved conflict behavior, and update cadence.
-8. **Occurrence posture** — evidence, restricted, public derivative, range, seasonal range, migration, monitoring, mortality, disease, invasive, and candidate classes remain distinct.
-9. **Temporal posture** — observation, event, valid, reporting, ingestion, embargo, freshness, release, correction, and supersession times are explicit.
-10. **Sensitivity and geoprivacy review** — protected taxa, sensitive sites, exact geometry, private joins, temporal clues, identifier joins, and reconstruction risk are reviewed.
-11. **Rights and stewardship review** — provider terms, attribution, redistribution, media, embargo, permit, and steward restrictions.
-12. **Validation path** — deterministic parse, schema, semantic, source-role, taxonomy, temporal, sensitivity, reconstruction, rights, secret, and negative-case checks.
-13. **Precedence rule** — interaction with repository defaults, environment, local overrides, deployment configuration, and runtime values.
-14. **Unknown-key behavior** — reject, warn, or ignore; explicit and tested.
-15. **Network posture** — no network by default; authorized live probes isolated from deterministic validation.
-16. **Rollback and correction** — prior version, deactivation, cache/index invalidation, migration, correction, supersession, and rollback behavior.
-
-A missing requirement leaves the payload **PROPOSED**, **UNKNOWN**, or **NEEDS VERIFICATION**. It does not become active by convention.
-
-[Back to top](#top)
-
----
+Domain-sensitive inputs must separately preserve taxonomy, source role, occurrence class, observation method, spatial support, temporal meaning, rights, sensitivity, and review state. Missing evidence remains explicit; it does not become a permissive default.
 
 ## Outputs
 
-This lane currently outputs documentation only.
+Current output is documentation only. A future consumer-bound file may select already-governed behavior; it cannot issue a `PolicyDecision`, `RedactionReceipt`, `ReviewRecord`, `EvidenceBundle`, or `ReleaseManifest` by naming one.
 
-A future validated file may support a verified consumer by selecting conservative, already-governed behavior such as:
-
-- a named taxonomy or taxon-crosswalk profile;
-- a source-role mapping profile;
-- a restricted/public occurrence routing profile;
-- a deny, hold, abstain, quarantine, or steward-review route;
-- an accepted public-safe generalization or display profile;
-- a field allowlist for an already-approved public derivative;
-- a product-specific freshness or stale-state profile;
-- cache and derived-index invalidation behavior;
-- a migration compatibility window.
-
-A configuration output cannot:
-
-- admit or activate a source;
-- create taxonomic, occurrence, conservation-status, or legal-status truth;
-- create or approve a geoprivacy transform;
-- issue a valid `RedactionReceipt`, `ReviewRecord`, `PolicyDecision`, `EvidenceBundle`, `ReleaseManifest`, or rollback record merely by naming one;
-- reveal a sensitive site or lower a sensitivity tier;
-- write directly to a later lifecycle phase;
-- authorize a public layer, API response, map display, AI answer, release, or publication.
-
-[Back to top](#top)
-
----
+Public clients consume governed APIs and released public-safe artifacts, never this directory as a truth store or a shortcut to RAW, WORK, QUARANTINE, internal stores, or a model endpoint.
 
 ## Validation
 
 ### Documentation validation
 
-For this README:
+For a README-only change, check the complete diff, stable metadata identity, one H1, heading/fragment compatibility, resolving relative links, UTF-8 and whitespace hygiene, truth labels, and absence of sensitive examples or authority-changing wording. Re-pin target bytes and overlap before writing; verify the remote blob and single-file scope afterward.
 
-- one H1 is present;
-- headings are ordered and linkable;
-- relative links remain inside known responsibility roots;
-- the KFM metadata block retains its `doc_id` and `created` value;
-- no real occurrence, person, media, telemetry, source, credential, or protected-location data is included;
-- doctrine, current repository state, proposals, unknowns, conflicts, and verification needs remain distinct;
-- scaffold presence is not described as working implementation.
+Record commands, exact base/head, results, limitations, and rollback in the branch/PR handoff. Structural document checks do not prove domain runtime behavior. Never report inherited or unrun checks as passing.
 
 ### Future payload validation
 
-| Validation layer | Required checks |
-|---|---|
-| Parse | Declared format and encoding parse deterministically. |
-| Shape | Accepted schema validates every field; permissive scaffold schemas are insufficient for production claims. |
-| Consumer binding | Named consumer, filename, format version, load path, and owner are verified. |
-| Unknown keys | Behavior is explicit and covered by negative tests. |
-| Precedence | Merge and override behavior is deterministic and tested. |
-| Taxonomy | Authority, vocabulary version, synonyms, merge/split events, crosswalks, and unresolved conflicts remain explicit. |
-| Source roles | Original source role survives aggregation and delivery; access platform does not become authority. |
-| Occurrence split | Evidence, restricted record, public derivative, range, model, context, and candidate remain separate. |
-| Sensitivity | T4 records and protected sites fail closed; policy references resolve. |
-| Geoprivacy | Selected profile is governed, versioned, reviewable, and cannot be weakened by local override. |
-| Reconstruction | Coordinates, time, identifiers, joins, media metadata, counts, logs, caches, and tiles are tested for indirect disclosure. |
-| Rights | Provider, steward, attribution, redistribution, media, embargo, permit, and private-person constraints resolve. |
-| Temporal | Observation/event/reporting/ingestion/valid/embargo/freshness/release/correction times remain distinguishable. |
-| Spatial support | Point, generalized point, cell, polygon, range, corridor, route, and aggregate support remain explicit. |
-| Network | Deterministic tests use no live network; authorized probes are isolated and redacted. |
-| Secrets | No credential, token, private endpoint, or sensitive operational value is present. |
-| Logging/cache | Logs, telemetry, cache keys, previews, indexes, and errors do not disclose protected material. |
-| Rollback | Prior config, deactivation, invalidation, correction, and rollback behavior are documented and tested. |
+Require deterministic parsing; a consumer-specific restrictive schema; semantic validation; explicit loading and precedence; tested unknown-key rejection for authority-affecting or unsupported keys; no unsafe overrides; and redacted diagnostics. Profile references must resolve without fetching live data merely because configuration exists.
 
-Executable configuration validation remains **NOT APPLICABLE** while this lane contains no payload and no verified consumer.
+Check taxonomy identity, source-role preservation, occurrence/model separation, time and spatial support, rights, sensitivity, reconstruction risk, and cache invalidation. Exercise the actual parser and consumer, not just an example schema. Configuration-payload validation is **not applicable to this revision**, which adds no payload.
+
+The inspected `domain-fauna.yml` invokes the following bounded suite. This is a repository command reference, **not a claim of execution in this documentation update**, and it does not validate a future config loader. Run it from a prepared repository root:
+
+```sh
+KFM_NO_NETWORK=1 PYTHONDONTWRITEBYTECODE=1 python -m unittest --verbose \
+  tests.domains.fauna.test_fauna_smoke \
+  tests.domains.fauna.test_public_safe_migration_fixture
+```
 
 ### Required negative cases
 
-- unknown taxon or unresolved taxonomy conflict;
-- taxon merge/split without versioned identity handling;
-- aggregator/access platform presented as original evidence authority;
-- stale legal or conservation status presented as current;
-- model, range, habitat, or density product presented as direct observation;
-- candidate promoted without confirming evidence;
-- restricted occurrence routed to a public profile;
-- exact sensitive site requested for public use;
-- missing or invalid policy, review, redaction, evidence, or release reference;
-- protected geometry reconstructed from time, identifiers, counts, tile boundaries, media, or joins;
-- observer, landowner, telemetry, collection, disease, rehabilitation, or media metadata leakage;
-- stale, partial, unavailable, embargoed, withdrawn, or superseded source state;
-- malformed file, unknown key, unsupported version, ambiguous precedence, or missing rollback target;
-- duplicate records maintained across both Fauna source-registry topologies;
-- config pointing to noncanonical connector or contract implementation paths.
-
-[Back to top](#top)
-
----
+| Case | Required boundary |
+|---|---|
+| Unknown taxon, synonym conflict, merge/split, or stale status | Preserve uncertainty and versioned identity; do not silently rekey or confirm presence |
+| Aggregator promoted to authority; model/range/candidate promoted to observation | Reject the unsupported claim or role change |
+| Missing rights, evidence, policy, review, transform, or release support | Hold, deny, or abstain; no implicit permission |
+| Exact sensitive geometry or reconstruction through time, IDs, counts, media, tiles, or joins | Deny exposure before delivery, including caches and logs |
+| Malformed file, unsupported version/key, conflicting precedence, partial application | Fail closed and preserve a known-safe configuration |
+| Duplicate registry identity, noncanonical writer, or implicit source fetch | Reject the bypass; retain one source-first identity |
+| Withdrawn source/release, changed taxonomy/policy, or failed invalidation | Stop stale public reuse; require correction and rebuilding |
+| Missing deactivation or rollback target | Do not graduate the payload to operational use |
 
 ## Review burden
 
-README changes require:
+The verified GitHub route is `@bartytime4life` through `/configs/`. Configuration and Fauna review remain required; accepted stewardship and independent approval are not inferred from that route.
 
-- config or documentation review; and
-- Fauna domain review.
-
-A future payload also requires the applicable:
-
-- named consumer owner;
-- taxonomy reviewer;
-- source-role and source-rights reviewer;
-- sensitivity and geoprivacy reviewer;
-- steward or rights-holder representative where protected records are implicated;
-- schema or contract reviewer;
-- validation and test reviewer;
-- security and privacy reviewer;
-- policy reviewer;
-- release and rollback reviewer.
-
-Do not infer acceptance from a missing reviewer rule, repository path, scaffold file, or placeholder `CODEOWNERS` entry. Owners remain `OWNER_TBD` until verified.
-
-[Back to top](#top)
-
----
+A payload also needs the applicable consumer, taxonomy, source/rights, sensitivity/geoprivacy, schema, validation, security, policy, and release/correction reviewers. Where protected records are implicated, include the relevant steward or rights-holder authority. Documentation authors cannot self-grant these roles.
 
 ## Related folders
 
 ### Configuration and doctrine
 
-- [`../README.md`](../README.md) — parent domain-configuration contract.
-- [`../../README.md`](../../README.md) — repository-wide configuration boundary.
-- [`../../../docs/domains/fauna/README.md`](../../../docs/domains/fauna/README.md) — Fauna lane doctrine.
-- [`../../../docs/domains/fauna/ARCHITECTURE.md`](../../../docs/domains/fauna/ARCHITECTURE.md) — architecture boundary.
-- [`../../../docs/domains/fauna/CANONICAL_PATHS.md`](../../../docs/domains/fauna/CANONICAL_PATHS.md) — placement register.
-- [`../../../docs/domains/fauna/DATA_LIFECYCLE.md`](../../../docs/domains/fauna/DATA_LIFECYCLE.md) — lifecycle and promotion posture.
-- [`../../../docs/domains/fauna/SENSITIVITY.md`](../../../docs/domains/fauna/SENSITIVITY.md) — deny-by-default sensitivity posture.
-- [`../../../docs/domains/fauna/SOURCE_REGISTRY.md`](../../../docs/domains/fauna/SOURCE_REGISTRY.md) and [`SOURCE_ROLES.md`](../../../docs/domains/fauna/SOURCE_ROLES.md) — source identities and roles.
-- [`../../../docs/domains/fauna/POLICY.md`](../../../docs/domains/fauna/POLICY.md) — policy-oriented documentation.
-- [`../../../docs/registers/DRIFT_REGISTER.md`](../../../docs/registers/DRIFT_REGISTER.md) — unresolved topology and compatibility drift.
-- [`../../../docs/doctrine/directory-rules.md`](../../../docs/doctrine/directory-rules.md) — responsibility-root placement law.
+Use the [parent README](../README.md) for shared configuration rules, [Fauna domain README](../../../docs/domains/fauna/README.md) for domain navigation, and [adopted Directory Rules](../../../docs/doctrine/directory-rules.md) with [ADR-0029](../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) for placement.
 
 ### Authority and implementation-shaped surfaces
 
-- [`../../../contracts/domains/fauna/`](../../../contracts/domains/fauna/) — canonical semantic contract lane.
-- [`../../../contracts/fauna/README.md`](../../../contracts/fauna/README.md) — compatibility guard; no parallel authority.
-- [`../../../schemas/contracts/v1/domains/fauna/`](../../../schemas/contracts/v1/domains/fauna/) — Fauna machine-shape scaffolds.
-- [`../../../policy/domains/fauna/`](../../../policy/domains/fauna/) and [`../../../policy/sensitivity/fauna/`](../../../policy/sensitivity/fauna/) — policy and sensitivity scaffolds.
-- [`../../../data/registry/sources/fauna/`](../../../data/registry/sources/fauna/) — subtype-first source registry lane.
-- [`../../../data/registry/fauna/sources/`](../../../data/registry/fauna/sources/) — domain-first sibling requiring topology resolution.
-- [`../../../packages/domains/fauna/`](../../../packages/domains/fauna/) — package scaffold.
-- [`../../../pipelines/domains/fauna/`](../../../pipelines/domains/fauna/) and [`../../../pipeline_specs/fauna/`](../../../pipeline_specs/fauna/) — executable/specification lanes.
-- [`../../../tools/validators/fauna/`](../../../tools/validators/fauna/) — validator documentation/scaffolding.
-- [`../../../tests/domains/fauna/`](../../../tests/domains/fauna/) and [`../../../fixtures/domains/fauna/`](../../../fixtures/domains/fauna/) — proof and synthetic fixtures.
-- [`../../../apps/explorer-web/src/features/domains/fauna/`](../../../apps/explorer-web/src/features/domains/fauna/) — downstream explorer feature lane.
-- [`../../../connectors/fauna/README.md`](../../../connectors/fauna/README.md) — noncanonical compatibility index; runtime connector work remains source-first.
-- [`../../../.github/workflows/domain-fauna.yml`](../../../.github/workflows/domain-fauna.yml) — TODO workflow scaffold.
+The [source registry parent](../../../data/registry/sources/README.md) controls the family boundary. The [Fauna registry child](../../../data/registry/sources/fauna/README.md) remains a useful historical navigation surface, but its older unresolved-canonical-family language must not override the adopted rules or parent correction.
 
-[Back to top](#top)
-
----
+The [OccurrenceEvidence schema](../../../schemas/contracts/v1/domains/fauna/occurrence_evidence.schema.json), [focused workflow](../../../.github/workflows/fauna-occurrence-evidence.yml), and [domain workflow](../../../.github/workflows/domain-fauna.yml) show specific implementation boundaries, not a general Fauna readiness certificate. Refer to domain navigation for other contracts, policies, validators, fixtures, and release-related lanes; reverify each before use.
 
 ## ADRs and drift triggers
 
-This README introduces no ADR.
+No new ADR, root, writer, schema, or policy is introduced. Apply accepted authority before changing ownership, a domain slug, a canonical schema or registry family, a compatibility path, source identity, sensitivity, public exposure, or release semantics.
 
-A reviewed ADR, correction, or migration decision is required before:
+**Resolved authority:** the source-registry family is `data/registry/sources/`. **Unresolved implementation:** exact record organization, writer/consumer binding, generated-view migration, physical RAW placement, and published-carrier convergence. A same-file README correction does not settle those migrations.
 
-- adding, renaming, merging, or retiring the `fauna` domain slug;
-- selecting a canonical taxonomy resolver or crosswalk-conflict policy;
-- changing sensitive-taxon tiers or geoprivacy parameters;
-- selecting canonical topology between `data/registry/sources/fauna/` and `data/registry/fauna/sources/`;
-- turning `connectors/fauna/` into an implementation hierarchy;
-- moving durable semantic contracts into `contracts/fauna/`;
-- adopting a compatibility schema path as canonical over `schemas/contracts/v1/domains/fauna/`;
-- establishing universal config discovery, precedence, or unknown-key behavior;
-- allowing configuration to lower policy or review burden;
-- authorizing direct public access to internal or canonical stores;
-- changing the separation among configuration, evidence, policy, review, release, correction, and publication.
-
-Configuration must not settle these decisions indirectly.
-
-[Back to top](#top)
-
----
+An ordinary inactive template inside an established responsibility does not automatically require a new ADR. A parallel authority, topology migration, policy change, or new exposure path does require the applicable decision, impact review, validation, and rollback.
 
 ## Scope and bounded context
 
-The Fauna config lane supports consumer behavior only after domain meaning and governance are supplied elsewhere.
+Configuration references the owning responsibilities; it does not absorb them:
 
 ```text
-docs/domains/fauna/                 = human doctrine and orientation
-contracts/domains/fauna/            = semantic meaning
-schemas/contracts/v1/domains/fauna/ = machine shape
-policy/domains/fauna/               = domain admissibility
-policy/sensitivity/fauna/           = sensitivity and geoprivacy decisions
-data/registry/sources/fauna/        = source identity/admission posture
-connectors/<source_id>/             = source-specific acquisition
-packages/pipelines/apps/tools/      = implementation and delivery
-data/<phase>/fauna/                 = lifecycle material
-release/                            = promotion, publication, correction, rollback
-configs/domains/fauna/              = safe non-secret consumer configuration only
+human domain guidance      -> docs/
+semantic meaning           -> contracts/
+machine-checkable shape    -> schemas/
+admissibility rules        -> policy/
+source identity            -> data/registry/sources/
+source acquisition         -> connectors/ (source-first)
+lifecycle instances        -> governed data/ lanes
+release decisions          -> release/
+shared non-secret settings -> configs/
 ```
 
-A value in this lane may select an accepted profile. It must not copy the authority data into config or create an alternate truth surface.
-
-[Back to top](#top)
-
----
+This is an authority map, not an inventory or permission to scaffold every lane. Preserve `RAW -> WORK/QUARANTINE -> PROCESSED -> CATALOG/TRIPLET -> PUBLISHED`; promotion is a governed transition, not a file move.
 
 ## Configuration classes
 
-| Class | Example use | Default posture |
-|---|---|---|
-| `taxonomy_profile` | Select accepted taxon vocabulary/crosswalk behavior for a named consumer. | Inactive until resolver, authority version, and conflict behavior are verified. |
-| `source_role_profile` | Select reviewed mapping from source descriptor roles into consumer behavior. | No local role upgrades. |
-| `occurrence_routing_profile` | Route evidence into restricted review, public-derivative preparation, or hold. | Restricted by default; config cannot approve publication. |
-| `sensitivity_profile` | Reference accepted T-tier and geoprivacy policy. | Reference only; no inline policy. |
-| `public_safe_display_profile` | Select field allowlist, generalized geometry class, precision label, or zoom behavior already approved elsewhere. | Must not expose exact or reconstructable material. |
-| `freshness_profile` | Select accepted product-specific stale and expiry handling. | Stale never becomes current silently. |
-| `review_routing_profile` | Select required reviewer classes for defined conditions. | Cannot remove required review. |
-| `cache_invalidation_profile` | Define how a verified consumer invalidates derived caches after source, taxonomy, policy, correction, or release changes. | Fail closed when invalidation cannot be proven. |
-| `migration_profile` | Support temporary key or path transitions. | Time-bounded, reversible, and never a second authority. |
+**PROPOSED design categories, not implemented keys:** taxonomy/crosswalk profile selection; source-role mapping references; restricted/public-derivative routing; sensitivity profile references; public-safe display allowlists; freshness and review routing; cache invalidation; and time-bounded migration support.
 
-Avoid generic booleans such as `trusted`, `safe`, `public`, `sensitive=false`, `allow_exact`, or `skip_review`. They collapse multiple governed decisions.
-
-[Back to top](#top)
-
----
+Select accepted profiles by stable reference. Do not copy their authority content, invent an accepted resolver, or place geoprivacy radii, randomization distributions, tier-transition logic, or transform code in this lane.
 
 ## Minimum configuration contract
 
-Every future non-README file should document or carry the following information in the repository-approved form.
+The following is a **PROPOSED review checklist**, not a machine schema or requirement to add unused fields. A future consumer defines and validates the exact shape in the proper authority homes.
 
-| Field | Required meaning |
+| Conceptual fields | Required meaning |
 |---|---|
-| `config_id` | Stable identifier for the configuration object. |
-| `config_version` | Version of the configuration shape and values. |
-| `domain` | Exactly `fauna`; config cannot create a domain alias. |
-| `consumer_id` | Exact component that reads the file. |
-| `owner_refs` | Verified accountable roles or owners. |
-| `format_version` | Parser/shape version. |
-| `contract_ref` / `schema_ref` | Canonical semantic and machine-shape references. |
-| `policy_profile_refs` | Accepted policy references; no embedded replacement rules. |
-| `source_registry_refs` | Stable references to reviewed source records. |
-| `taxonomy_profile_ref` | Accepted taxonomy/crosswalk profile. |
-| `source_role_profile_ref` | Accepted role vocabulary and mapping. |
-| `occurrence_profile_ref` | Accepted class/routing profile. |
-| `sensitivity_profile_ref` | Accepted sensitivity/geoprivacy profile. |
-| `temporal_profile_ref` | Time, seasonality, freshness, embargo, and correction semantics. |
-| `public_safe_profile_ref` | Approved display or transform profile reference. |
-| `unknown_key_behavior` | Reject, warn, or ignore; explicit and tested. |
-| `precedence` | Exact merge and override order. |
-| `network_posture` | No network by default unless explicitly reviewed. |
-| `logging_posture` | Redaction/minimization rules for logs, errors, analytics, and support bundles. |
-| `failure_posture` | Finite reason-coded fail-closed behavior. |
-| `migration` | Deprecated keys, replacement, compatibility window, and correction path. |
-| `rollback` | Prior known-good version, deactivation, invalidation, and restoration method. |
-
-Do not place unresolved owners, policy decisions, geoprivacy parameters, or sensitive values into machine-parsed payloads merely to fill fields.
-
-[Back to top](#top)
-
----
+| `config_id`, `config_version`, `domain`, `format_version` | Stable identity, supported shape/version, and explicit `fauna` scope |
+| `consumer_id`, `owner_refs` | Exact binding and accountable assignments; no invented owners |
+| `contract_ref`, `schema_ref` | Controlling semantics and machine shape; no duplicated authority |
+| `policy_profile_refs`, `source_registry_refs` | Versioned authority references preserving canonical identity |
+| Taxonomy, source-role, occurrence, sensitivity, temporal, public-safe profile references | Explicit decisions supplied elsewhere, not approval by configuration |
+| `unknown_key_behavior`, `precedence`, `network_posture` | Tested effective configuration; no implicit discovery, network access, or unsafe overrides |
+| `logging_posture`, `failure_posture` | Minimized diagnostics and finite fail-closed outcomes |
+| `migration`, `rollback` | Compatibility window, deactivation, correction, invalidation, and prior known-safe version |
 
 ## Consumer binding, precedence, and discovery
 
-No consumer should discover or load this directory merely because it exists.
+No loader is established here. Do not auto-discover this directory from its name or interpret a committed file as active.
 
-A valid binding requires:
+A binding must identify the exact consumer/code or declarative registration, supported file/version, parser, schema, load timing, error handling, and deactivation path. Document effective precedence for defaults, shared config, environment/local overrides, and deployment configuration; there is **no universal precedence order established by this README**.
 
-1. explicit consumer code or declarative binding;
-2. exact supported path and filename;
-3. supported config version;
-4. accepted parser and validation path;
-5. deterministic precedence;
-6. unknown-key behavior;
-7. environment/local/deployment override rules;
-8. safe failure if the file is missing, stale, invalid, or incompatible;
-9. audit of the effective configuration without logging sensitive values;
-10. deactivation and rollback behavior.
-
-Recommended precedence is **PROPOSED**, not current fact:
-
-```text
-embedded safe defaults
-  < reviewed domain config
-  < deployment-specific non-secret config
-  < secret-manager values outside the repository
-```
-
-Local or environment overrides must never lower sensitivity, bypass review, change source role, or make unreleased material public.
-
-[Back to top](#top)
-
----
+Secret resolution remains separate and must never serialize secrets into the repository or effective-config logs. Overrides cannot reduce sensitivity, change source authority, remove required review, or expose unreleased material. Unsupported authority-affecting keys fail closed rather than being silently ignored.
 
 ## Fauna object-family boundaries
 
-| Object family | Configuration may select | Configuration must not decide |
-|---|---|---|
-| `Taxon` / `TaxonCrosswalk` | Resolver/profile identifier and display preferences. | Canonical identity, synonym adjudication, merge/split truth, or authority. |
-| `ConservationStatus` | Accepted status-source profile and display label policy. | Legal or conservation status. |
-| `OccurrenceEvidence` | Parsing/routing profile and field handling for a named consumer. | Whether evidence is true or publishable. |
-| `OccurrenceRestricted` | Restricted storage/review route. | Public exposure or tier reduction. |
-| `OccurrencePublic` | Approved derivative/display profile reference. | Creation or approval of the derivative. |
-| `RangePolygon` / `SeasonalRange` | Rendering, temporal-filter, and precision labels. | Direct occurrence confirmation or unsupported precision. |
-| `MigrationRoute` | Public-safe representation profile. | Exact route exposure or observation equivalence. |
-| `SensitiveSite` | Hold/deny/review routing. | Release, public geometry, or sensitivity downgrade. |
-| `MonitoringEvent` | Method/time/quality profile reference. | Confirmation of taxon presence beyond evidence support. |
-| `MortalityObservation` | Review, redaction, and display profile reference. | Cause attribution or sensitive-location release. |
-| `DiseaseObservation` | Restricted/public-health review route. | Diagnosis, clinical advice, or exact sensitive facility/location disclosure. |
-| `InvasiveSpeciesRecord` | Accepted source-role and public display profile. | Confirmation or legal designation by configuration alone. |
-| `RedactionReceipt` | Receipt reference. | Receipt issuance or validity. |
+These are domain review concepts, not a claim that every family is implemented or accepted.
 
-[Back to top](#top)
-
----
+| Family | Boundary to preserve |
+|---|---|
+| `Taxon`, `TaxonCrosswalk`, `ConservationStatus` | Identity, synonym/crosswalk assertions, and jurisdiction/time-bound status remain separate from presence |
+| `OccurrenceEvidence`, `OccurrenceRestricted`, `OccurrencePublic` | Source evidence, restricted material, and public-safe derivatives retain distinct lifecycle and access meaning |
+| `RangePolygon`, `SeasonalRange`, `MigrationRoute` | Range/model/seasonal support is not direct occurrence or precise telemetry |
+| `SensitiveSite`, `MonitoringEvent` | Sensitive-site exposure and method-specific monitoring require their own evidence and review |
+| `MortalityObservation`, `DiseaseObservation`, `InvasiveSpeciesRecord` | A report does not establish cause, diagnosis, prevalence, legal designation, or a confirmed invasion |
+| `RedactionReceipt`, `ReviewRecord`, `PolicyDecision`, `EvidenceBundle` | Different accountability/evidence families; none is interchangeable with configuration or release approval |
 
 ## Taxonomy identity and status
 
-- Preserve original source taxon identifiers and authority names.
-- Pin taxonomy or vocabulary version where material.
-- Treat synonyms and crosswalks as versioned relations, not silent replacements.
-- Preserve unresolved conflicts and taxon merge/split history.
-- Do not let consumer-friendly labels overwrite canonical identifiers.
-- Do not use conservation or legal status from an aggregator unless the underlying authority and scope resolve.
-- Status must retain jurisdiction, effective time, source, and supersession state.
-- A config update cannot silently rekey public or restricted records after taxonomy changes.
-- Taxonomy changes must trigger review of caches, indexes, tiles, reports, and cross-lane relations.
+Preserve source-native taxon identifiers and names, reviewed authority/vocabulary versions, synonyms, unresolved conflicts, and merge/split lineage. Display labels do not replace identifiers. A taxonomy change must not silently rekey records or erase historical interpretations.
 
-[Back to top](#top)
-
----
+Conservation and legal status retain source, jurisdiction, effective time, and supersession. Status is not occurrence evidence. Taxonomy/status changes require review of affected relations, caches, indexes, tiles, and reports.
 
 ## Source role and evidence character
 
-| Role | Required treatment |
-|---|---|
-| Original authority | Retain authority scope and limitations; never inferred from access path. |
-| Direct observation source | Preserve method, time, observer/provenance, uncertainty, sensitivity, and rights. |
-| Aggregator/access platform | Preserve original provider and record-level restrictions; access platform is not automatically evidence authority. |
-| Context source | Supports interpretation only; cannot confirm taxon presence or legal status. |
-| Model/derived product | Preserve method, version, training/support data, uncertainty, spatial/temporal scope, and derivative status. |
-| Candidate/detection | Remains unconfirmed until governed evidence and review close the claim. |
-| Restricted/steward source | Remains access-controlled and deny-by-default for public exact details. |
+Keep original provider/authority, access platform, method, and claim support distinct. An aggregator does not inherit original-source authority; community observation is not automatically specimen, agency, or regulatory authority. Model, aggregate, contextual, candidate, and synthetic support retain their own limitations.
 
-Configuration must never collapse these into a generic `trusted`, `verified`, `authoritative`, or `public` flag.
-
-[Back to top](#top)
-
----
+These descriptions are not a replacement `source_role` enum. The inspected OccurrenceEvidence draft schema carries a concrete vocabulary; any consumer mapping must follow its actual governing contract/schema without relabeling authority. Access restrictions and rights are separate axes, not observation roles.
 
 ## Occurrence, monitoring, range, and candidate boundaries
 
-- `OccurrenceEvidence` is source-bound evidence before public/restricted disposition.
-- `OccurrenceRestricted` preserves exact or steward-controlled material under governed access.
-- `OccurrencePublic` is a downstream public-safe derivative after evidence, policy, review, transform, receipt, and release gates.
-- Range, seasonal range, migration, habitat, occupancy, density, suitability, and distribution products are not substitutes for occurrence evidence.
-- Acoustic, eDNA, telemetry, camera, specimen, survey, checklist, mortality, disease, and invasive records retain method-specific semantics.
-- Absence of a record is not species absence unless sampling design and evidence support that claim.
-- A threshold, score, model probability, or AI interpretation cannot promote a candidate into an occurrence.
-- Duplicate detection and identity resolution must preserve source lineage and uncertainty.
-- Public counts and aggregates must be tested for small-cell or rare-taxon disclosure.
+Range, habitat association, suitability, density, occupancy, and distribution models do not substitute for direct occurrence evidence. Acoustic, eDNA, camera, specimen, checklist, survey, telemetry, mortality, disease, and invasive-species records retain method-specific uncertainty.
 
-[Back to top](#top)
-
----
+Non-detection is not absence unless sampling design and evidence support that inference. Scores, thresholds, model probabilities, and generated language cannot confirm a candidate by themselves. Duplicate resolution preserves lineage and uncertainty; public counts require small-cell and rare-taxon disclosure review. Habitat owns habitat patches/suitability; a cross-lane assignment does not transfer Fauna truth authority.
 
 ## Time, seasonality, freshness, and correction
 
-Where applicable, preserve:
+Separate observation time, event interval, reporting time, retrieval/processing time, model issue/valid time, seasonal/life-stage scope, source freshness, embargo, release, and correction/withdrawal time. Do not replace them with one apparently current timestamp.
 
-- observation time;
-- event interval;
-- reporting or submission time;
-- ingestion and processing time;
-- model issue and valid time;
-- seasonal or life-stage scope;
-- embargo or withholding expiry;
-- source update and freshness time;
-- release time;
-- correction, withdrawal, and supersession time.
-
-Missing or ambiguous time should produce hold, abstain, denial, or error according to the accepted consumer contract. It must not produce apparently current truth.
-
-A taxonomy update, status change, source correction, embargo expiry, policy change, or release withdrawal must trigger review of affected derived caches and public carriers.
-
-[Back to top](#top)
-
----
+Ambiguous or stale support remains visible. Embargo expiry alone does not authorize release. Taxonomy, status, source, policy, or release changes trigger review and scoped invalidation rather than silent reuse.
 
 ## Spatial support, precision, and reconstruction risk
 
-Fauna material may use:
+Distinguish restricted exact points/tracks, generalized points, cells, polygons/ranges, corridors, aggregates, and withheld geometry. Preserve method and precision labels; generalized display is not exact location or release approval.
 
-- exact restricted point or track;
-- generalized point;
-- grid/cell;
-- buffered or fuzzed geometry;
-- polygon or range;
-- seasonal polygon;
-- corridor or route;
-- county/watershed/ecoregion aggregate;
-- withheld geometry with textual scope only.
-
-The support type and precision class must remain explicit. A generalized point is not an exact point; a range is not an occurrence; a tile is not evidence.
-
-Reconstruction review must consider:
-
-- timestamps combined with observer or route histories;
-- stable source identifiers joinable to external records;
-- media EXIF, filenames, thumbnails, or URLs;
-- low-count cells, rare-taxon labels, and small geographic units;
-- tile boundaries, zoom levels, feature counts, and vector-tile attributes;
-- parcel, trail, water-body, habitat, facility, rehabilitation, collection, or landowner joins;
-- logs, cache keys, analytics, errors, screenshots, support bundles, and preview artifacts.
-
-When reconstruction safety cannot be proven, deny, hold, abstain, omit, or use a governed generalization profile.
-
-[Back to top](#top)
-
----
+Review reconstruction through timestamps plus observer/route histories; externally joinable IDs; media EXIF, thumbnails, names and URLs; rare labels and small counts; tile attributes, boundaries and zoom; parcel/trail/water/habitat/facility joins; and logs, analytics, screenshots, exports, or support bundles. Where safety is unresolved, withhold, generalize through accepted authority, quarantine, or deny before delivery.
 
 ## Sensitivity, geoprivacy, and tier motion
 
-- Sensitive occurrence and sensitive-site material defaults to **T4** under repository-present Fauna doctrine.
-- Public exact sensitive-occurrence tiles and API responses are denied.
-- Configuration cannot lower a tier.
-- A T4 record may reach a public-safe derivative only through accepted policy, transform, review, receipt, evidence, release, correction, and rollback paths.
-- Geoprivacy parameters belong in accepted policy or transform authority—not this directory.
-- Local overrides must not weaken transform strength, field withholding, precision labels, or reviewer requirements.
-- If a transform reference is missing, stale, unsupported, or incompatible, fail closed.
-- A valid public derivative must retain precision/generalization status and the lineage needed to audit the transform without exposing restricted inputs.
+Sensitive occurrences and sites default to **T4** under Fauna doctrine. A public-safe **T1 derivative** requires accepted geoprivacy/generalization controls, `RedactionReceipt`, `ReviewRecord`, `PolicyDecision`, admissible evidence, and separate release/correction/rollback support. The restricted original remains restricted; this is not a config-driven downgrade.
 
-The currently inspected sensitivity YAML files are placeholders. Do not treat their names as approved parameters.
-
-[Back to top](#top)
-
----
+Configuration references an accepted profile, never its approval. Parameters belong with policy/transform authority, not here. Missing, stale, unsupported, or conflicting profile references fail closed. Public lineage must support auditing without leaking restricted inputs or reconstruction-enabling transform details.
 
 ## Source rights, attribution, and stewardship
 
-Before a config references a source or output profile, verify:
+Resolve provider and original-record identity, applicable record/media terms, attribution, redistribution and derivative permissions, public/commercial-use restrictions, retention, embargo, permits, steward authority, permitted claim families, automation/rate limits, correction contacts, and freshness before operational use.
 
-- provider and original source identity;
-- license and terms;
-- attribution;
-- redistribution and derivative permissions;
-- commercial or public-use limits;
-- media-specific terms;
-- embargo and steward restrictions;
-- API/download quotas and rate limits;
-- permitted claim families;
-- correction and takedown contacts;
-- source version and freshness;
-- restricted-person or private-land implications.
-
-Public accessibility does not prove redistribution rights. Aggregation does not erase upstream restrictions.
-
-[Back to top](#top)
-
----
+Public accessibility is not redistribution permission. Aggregation does not erase upstream restrictions. This revision verifies no provider license, endpoint, authorization, or live dataset and admits no source.
 
 ## Connector and source-registry boundaries
 
 ### Connectors
 
-Source-specific connector implementations belong under:
+Accepted rules are source-first: acquisition belongs under `connectors/` using the canonical source ID or declared provider grouping. `connectors/fauna/` remains a compatibility/navigation concept, not permission for another source-client hierarchy. Domain normalization belongs with its accepted pipeline/package responsibility.
 
-```text
-connectors/<source_id>/
-```
-
-`connectors/fauna/` is a documented noncanonical compatibility index. Do not place source clients, fetchers, parsers, authentication, rate-limit logic, connector package metadata, tests, fixtures, or activation state there.
-
-Connector output may enter Fauna RAW or QUARANTINE through governed source admission. A connector does not publish.
+Maintain one source-first RAW capture identity. As the current Fauna domain README explains, `data/raw/fauna/` may be an **optional compatibility/reference** to that capture, not a mandatory hop or accepted payload writer. Exact physical capture placement remains **HOLD / NEEDS VERIFICATION**. Route through governed sensitivity handling without duplicating RAW bytes; a connector does not publish.
 
 ### Source registry
 
-The repository contains both:
+`DIR-SOURCE-001` through `DIR-SOURCE-004` and the [registry parent](../../../data/registry/sources/README.md) establish `data/registry/sources/` as the canonical family. Existing `data/registry/sources/fauna/` and `data/registry/fauna/sources/` views do not have equal independent-write authority.
 
-```text
-data/registry/sources/fauna/
-data/registry/fauna/sources/
-```
-
-Until topology is resolved:
-
-- do not create duplicate SourceDescriptor records;
-- do not let config choose between divergent copies;
-- treat one lane as canonical only after accepted migration/ADR evidence;
-- use pointers or compatibility records rather than synchronized manual duplicates;
-- preserve correction and rollback for any migration.
-
-[Back to top](#top)
-
----
+Do not choose the convenient copy, duplicate a SourceDescriptor, or infer an accepted `sources/<domain>/<source_id>` writer from directory shape. Domain-first records may be governed generated/compatibility views; actual binding is not proven here. Migration needs writer/consumer inventory, identity crosswalk, accepted placement, view contract, validation, and rollback. Older child wording that leaves the canonical family undecided is drift, not a reason to reopen the accepted family decision.
 
 ## Logging, telemetry, caches, and derived indexes
 
-A consumer must minimize and redact operational output.
+Minimize diagnostics; never expose protected geometry, source payload fragments, sensitive identifiers, person/landowner/permit/facility details, credentials, or signed locators in logs, cache keys, previews, analytics, errors, or support bundles.
 
-Do not log:
-
-- exact or reconstructable protected geometry;
-- observer, landowner, permit, rehabilitation, collection, or private-person details;
-- source credentials or signed URLs;
-- restricted source payload fragments;
-- sensitive taxon/site identifiers when a generalized code suffices.
-
-Cache and index keys must not reveal restricted values.
-
-Changes to any of these should trigger scoped invalidation:
-
-- source activation or role;
-- taxonomy or crosswalk version;
-- legal/conservation status;
-- sensitivity policy or transform profile;
-- embargo state;
-- public field allowlist;
-- geometry generalization;
-- correction, withdrawal, or release manifest.
-
-Derived search, vector, graph, tile, report, and AI indexes remain rebuildable carriers. They do not become canonical truth.
-
-[Back to top](#top)
-
----
+Source/rights changes, taxonomy/crosswalk versions, status, policy/transform profiles, embargo, field allowlists, generalization, and correction/withdrawal/release changes require scoped invalidation. Search/vector/graph indexes, tiles, reports, and AI summaries remain rebuildable derivatives, not truth. Failed invalidation must not leave unauthorized material silently available.
 
 ## Failure behavior
 
-A verified consumer must use finite, reason-coded, fail-closed outcomes. Names below are **PROPOSED** until code and tests confirm them.
+Exact consumer reason codes remain **PROPOSED** until implemented and tested. Keep three different outcomes separate:
 
-| Condition | Safe disposition |
+| Layer | Boundary |
 |---|---|
-| Valid, authorized, non-sensitive configuration | `PASS` for internal validation; continue to governed processing. |
-| Malformed file, unsupported version, or schema violation | `FAIL` or `ERROR`; do not partially apply. |
-| Unknown taxon or unresolved crosswalk | `HOLD` or `ABSTAIN`; preserve competing identities. |
-| Missing source role, rights, policy, review, transform, or release authority | `HOLD`, `DENY`, or `ABSTAIN`; do not infer permission. |
-| Restricted occurrence or sensitive site requested for public use | `DENY`. |
-| Model, range, habitat, or candidate presented as observation | `FAIL` and `DENY` for consequential use. |
-| Missing or stale evidence | `ABSTAIN`; do not substitute cache, model, or generated prose silently. |
-| Unauthorized sensitivity reduction or bypass key | `FAIL` and `DENY`; audit without exposing values. |
-| Source outage or incomplete data | Preserve stale/partial state; do not fabricate completeness. |
-| Conflicting registry copies | `HOLD` or `ERROR`; do not pick by path convenience. |
-| Consumer cannot determine precedence | `ERROR` or `HOLD`; do not merge unpredictably. |
-| Cache/index invalidation cannot be proven | `HOLD` or `DENY` public reuse until rebuilt. |
+| Validation | Internal `PASS`/`FAIL` or error means a bounded check result, not permission to expose data |
+| Work disposition | `HOLD`, quarantine, remediation, or denial preserves unresolved obligations |
+| Governed response | `ANSWER`, `ABSTAIN`, `DENY`, `ERROR` follows the actual runtime contract and admissible evidence |
 
-`PASS` and `FAIL` are validator outcomes, not publication decisions.
-
-[Back to top](#top)
-
----
+Malformed configuration must not partially apply. Missing evidence must not fall back silently to stale caches or a model. Unresolved taxonomy, rights, precedence, policy, or conflicting registry identity must not become permission. A successful explicit workflow hold is not a successful proof build or release dry-run.
 
 ## Governed AI and generated language
 
-AI may help:
+Keep the sequence: scope -> evidence -> `EvidenceRef` -> `EvidenceBundle` -> rights/sensitivity/policy/review/release checks -> cited bounded answer or abstention/denial/error.
 
-- summarize released, policy-safe `EvidenceBundle` material;
-- explain taxonomy or source-role caveats;
-- draft review notes;
-- suggest a narrowed query;
-- describe why an answer abstains or is denied.
-
-AI must not:
-
-- infer hidden sensitive locations;
-- reconstruct exact sites from generalized outputs;
-- upgrade source authority;
-- resolve taxonomy or legal status without governed evidence;
-- turn a range/model/candidate into an occurrence;
-- issue geoprivacy, review, release, or publication decisions;
-- present generated language as evidence;
-- bypass finite `ANSWER | ABSTAIN | DENY | ERROR` outcomes.
-
-Config may select a reviewed AI presentation profile. It cannot grant the model new evidence or access authority.
-
-[Back to top](#top)
-
----
+AI may explain released evidence and uncertainty or draft review notes. It cannot reconstruct protected sites, upgrade source authority, settle taxonomy/legal status without support, convert a range/model/candidate into occurrence, or decide redaction, review, or release. A configuration profile cannot grant a model new evidence or access authority.
 
 ## Migration and anti-bypass posture
 
-When adding or changing a Fauna config:
+Pin exact base/target bytes, identify the consumer and owning root, inspect accepted authority and overlapping work, then author the smallest reversible change. Separate changed-area evidence from unrelated inherited failures. Preserve existing identities and fragment links when updating documentation.
 
-1. identify the exact consumer and owner;
-2. pin the base commit and existing config blob;
-3. inspect parent config and Fauna doctrine;
-4. verify canonical contracts, schemas, policy, source registry, and compatibility paths;
-5. preserve source-role and restricted/public occurrence separation;
-6. review taxonomy, rights, sensitivity, geoprivacy, reconstruction, personal-data, and cross-lane risk;
-7. run deterministic parse, shape, semantic, negative, and no-network checks;
-8. inspect the complete diff for secrets and protected clues;
-9. document precedence, unknown-key behavior, stale-state, migration, deactivation, correction, invalidation, and rollback;
-10. verify remote read-back and changed paths;
-11. keep release and publication as separate governed decisions.
+A future payload change also needs parser/schema and negative tests, source/taxonomy/time/rights/sensitivity review, deterministic precedence, minimized effective-config auditing, and deactivation/invalidation/rollback. Do not copy authority objects into config, create another registry writer, weaken validation, or treat fixture success as live readiness.
 
-Forbidden migration shortcuts:
-
-- copy canonical contract content into config;
-- duplicate source descriptors across both registry topologies;
-- create connector code under `connectors/fauna/`;
-- create durable contracts under `contracts/fauna/`;
-- use permissive scaffold schemas as production proof;
-- treat TODO workflows as enforcement;
-- add a `skip_review`, `allow_exact`, or `public=true` escape hatch.
-
-[Back to top](#top)
-
----
+No code, schema, policy, validator, workflow, registry, or runtime behavior changes in this revision, so this README is the affected documentation surface; companion historical checkpoints are not rewritten.
 
 ## Rollback, correction, supersession, and invalidation
 
-Before merge, rollback means closing the unmerged pull request and abandoning the scoped branch when separately authorized.
+For this documentation-only revision, preserve the prior blob and branch/commit evidence. Before merge, the isolated change can be abandoned through the authorized review process. After merge, a separately reviewed revert restores the prior file without force-pushing or rewriting shared history; nothing here requests an automatic revert.
 
-After merge, create a transparent revert commit or revert pull request that restores the prior known-good README or configuration version. Do not force-push shared history.
+For a future payload, disable the affected selection, preserve the faulty version and audit evidence, identify downstream effects without exposing protected data, restore the known-safe version, rerun validation, and invalidate/rebuild caches and carriers. Record required correction, withdrawal, release, and rollback objects in their owning homes.
 
-For a future payload correction:
-
-1. disable or stop selecting the affected configuration through the verified consumer;
-2. preserve the faulty version and evidence needed for review;
-3. identify affected outputs, caches, indexes, reports, tiles, exports, and AI carriers without exposing protected material;
-4. restore the prior known-good version;
-5. re-run parse, schema, semantic, source-role, taxonomy, temporal, sensitivity, rights, reconstruction, and negative tests;
-6. rebuild or invalidate derived caches and indexes;
-7. create required correction, redaction, withdrawal, release, or rollback records in canonical homes;
-8. verify that no public surface continues to serve an unauthorized, stale, withdrawn, or reconstructable derivative.
-
-A Git revert does not itself revoke exposed data, correct released artifacts, invalidate caches, or establish KFM publication lineage.
-
-[Back to top](#top)
-
----
+A Git revert does not revoke disclosed data, invalidate external caches, correct released artifacts, or replace auditable publication lineage.
 
 ## Definition of done for the first payload
 
-- [ ] A named consumer and accepted owners are verified.
-- [ ] The config file is justified by a real consumer, not directory completeness.
-- [ ] File format, version, parser, exact path, and discovery mechanism are verified.
-- [ ] Canonical semantic contract and restrictive schema references resolve.
-- [ ] Taxonomy, source-role, occurrence-class, temporal, spatial-support, sensitivity, rights, and status semantics are explicit.
-- [ ] Geoprivacy parameters come from accepted policy, not config.
-- [ ] Source registry topology is resolved or a single reviewed pointer is used.
-- [ ] Source-first connector references are canonical.
-- [ ] Synthetic fixtures cover valid, invalid, held, denied, abstained, and error cases.
-- [ ] No-network tests pass.
-- [ ] Secret, personal-data, and reconstruction-risk scans pass.
-- [ ] Precedence and unknown-key behavior are deterministic and tested.
-- [ ] Logging, cache, preview, tile, search, graph, report, and AI index behavior is reviewed.
-- [ ] Migration, deactivation, correction, supersession, invalidation, and rollback are tested.
-- [ ] CI executes substantive validation rather than TODO echo steps.
-- [ ] No source, public layer, release, or publication is activated by file presence.
-- [ ] Public outputs require evidence, policy, review, receipt, release, correction, and rollback support.
-
-[Back to top](#top)
-
----
+- [ ] A real shared consumer need, exact binding, accountable assignments, and correct responsibility home are established.
+- [ ] Format, version, parser, restrictive schema, semantics, allowed keys, precedence, and safe failure are tested.
+- [ ] Profile references preserve taxonomy, source role, occurrence class, time, spatial support, rights, and sensitivity without duplicating authority.
+- [ ] Synthetic valid/invalid/held/denied cases exercise the actual consumer with no live source retrieval.
+- [ ] Sensitive-data, secret, reconstruction, media, logging, cache, tile, export, and cross-lane risks are reviewed.
+- [ ] One canonical source identity survives compatibility views; no implicit discovery or activation is introduced.
+- [ ] Deactivation, migration, correction, supersession, invalidation, and rollback are verified.
+- [ ] Actual changed-area results, unrun checks, inherited failures, and independent review limitations are recorded at exact revisions.
+- [ ] Source admission, transformation approval, evidence closure, release, and publication remain separate governed gates.
 
 ## Last reviewed
 
-**2026-07-14**, against `main@b04e9b4a576557ec8cf2f48f6cbe45fd07fbec7a`.
+**2026-09-04**, using GitHub evidence at `main@700570cbcf191038aa20a030174c2dd08cf93675`. Configuration inventory is exact for the tracked directory; broader implementation inspection is bounded to the named sources above.
 
-Review again before the first non-README payload, direct consumer binding, taxonomy-profile selection, source-registry migration, geoprivacy-profile selection, source activation, workflow hardening, or public-output integration.
+**Lineage:** `v0.3` (2026-07-14, `main@b04e9b4a576557ec8cf2f48f6cbe45fd07fbec7a`) is retained in Git history. The read-only [Fauna architecture PDF](https://drive.google.com/file/d/1mWhhtubyaAtNuWJ3vY7nuDLx50Wig7Bj/view), native Drive [Directory Rules](https://docs.google.com/document/d/1uTqdIEFZE2cq3gyISetoRYM6LIlnKqTc3FobtEx7Cbs/edit), and [Notion Fauna coordination page](https://app.notion.com/p/3caa92021bf6811b8926dc0010d67672) informed this review. Their proposed paths, old no-repository findings, and schedule/status snapshots are lineage, not current implementation or activation authority.
+
+Reverify before the first payload, consumer binding, profile selection, source/RAW migration, geoprivacy change, or public-output integration. No source artifact was edited; no merge, release, deployment, promotion, publication, or settings change is authorized.
+
+[Back to top](#top)
