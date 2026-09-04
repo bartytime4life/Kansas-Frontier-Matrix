@@ -2,13 +2,13 @@
 doc_id: kfm://doc/governance/repository-transition-control-source
 title: Repository transition control-source binding
 type: governance binding and enforcement-candidate note
-version: v1.3.3
-status: current-main workflow-active advisory; bounded capture and truncated-response hardening integrated; required-status-check authorized but not applied
+version: v1.3.4
+status: current-main workflow-active advisory; bounded capture and truncated-response hardening integrated; required-status-check authorized but not applied before 2026-09-03T23:30:00Z; authorization now expired
 owner: OWNER_TBD — governance steward and repository-control steward
 created: 2026-09-03
 updated: 2026-09-03
 policy_label: repository-facing; governance; fail-closed; non-authoritative
-truth_posture: CONFIRMED current-main issue-#4024 binding, three-helper bounded capture, truncated-response handling, and authorized-but-unapplied required-check packet
+truth_posture: CONFIRMED current-main issue-#4024 binding, three-helper bounded capture, truncated-response handling, and expired-unapplied required-check authorization
 related:
   - ../../contracts/governance/repository_control_state.md
   - ../../tools/validators/repository_control/fetch_bounded_issue_comments.py
@@ -24,6 +24,7 @@ related:
   - https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024#issuecomment-5532535765
   - https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024#issuecomment-5532579086
   - https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024#issuecomment-5532649271
+  - https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024#issuecomment-5533558088
   - https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4234
   - https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4235
   - https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4237
@@ -201,9 +202,9 @@ approval, and contains no required-status-check rule. No bypass actor is
 registered. That is why a correct advisory failure can occur after a merge
 without preventing it.
 
-## Authorized but unapplied server-side enforcement packet
+## Expired authorization; server-side packet remains unapplied
 
-The smallest current candidate addition is:
+The smallest reviewed addition remains:
 
 ```json
 {
@@ -221,17 +222,21 @@ The smallest current candidate addition is:
 }
 ```
 
-The exact packet is **authorized but not applied**. Issue #4024 comment
-`5532535765` preserves the rollback-bound operator commands, comment
-`5532579086` records the owner authorization, and comment `5532649271`
-confirms that the connected GitHub capability exposes ruleset reads but no
-Administration-write operation. No ruleset mutation was attempted through that
-connected surface.
+The packet remains **unapplied**. `REQUIRED-STATUS-CHECK AUTHORIZED BUT NOT APPLIED`
+was the bounded status through `2026-09-03T23:30:00Z`; that authorization has
+expired. Issue #4024 comment `5532535765` preserves the rollback-bound operator
+commands, comment `5532579086` records the expired owner authorization, and
+comment `5532649271` confirms that the connected GitHub capability exposes ruleset reads
+but no Administration-write operation. Comment `5533558088` records the
+validated, Drive-published operator package; publishing that package did not
+renew authority or apply the setting. No ruleset mutation was attempted through
+the connected surface.
 
-The recorded authorization is abort-on-drift and was time-bounded through
-`2026-09-03T23:30:00Z`; its validity, current main, ruleset preimage, check
-context, and GitHub Actions integration identity must be re-read immediately
-before any separately authenticated settings operation.
+No settings operation may reuse the expired authorization. A new owner decision
+must be bound to the exact current main, tree, ruleset preimage, check context,
+GitHub Actions integration identity, operation, rollback, and validity window
+before a separately authenticated settings mutation.
+
 This document does not itself authorize a ruleset mutation. It also does not
 authorize branch protection, permissions, bypass, approval, ready, merge,
 release, deployment, promotion, publication, or source-state change.
@@ -241,12 +246,12 @@ release, deployment, promotion, publication, or source-state change.
 1. **CONFIRMED complete:** issue #4024 source binding, three-helper strict
    bounded capture, and truncated-response handling are present on current main.
 2. Re-read the exact current workflow, check-run name, GitHub Actions App
-   identity, current ruleset, current main, and the recorded authorization
-   window immediately before a settings operation.
-3. Through the separately authenticated, abort-on-drift repository-settings
-   operation authorized in issue #4024 comment `5532579086`, add one
-   reviewed strict required-status-check rule without weakening deletion,
-   non-fast-forward, pull-request, or thread-resolution protections.
+   identity, current ruleset, and current main immediately before requesting a
+   new settings authorization.
+3. After a new exact owner authorization, use a separately authenticated,
+   abort-on-drift repository-settings operation to add one reviewed strict
+   required-status-check rule without weakening deletion, non-fast-forward,
+   pull-request, or thread-resolution protections.
 4. Use a genuinely capability-separated operator or account for all canaries.
 5. Create a draft canary and prove its first `opened` event produces
    `PULL_REQUEST_IS_DRAFT`, not skipped success.
