@@ -1,392 +1,346 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/catalog-stac-readme
-title: catalog/STAC/ — STAC Compatibility Redirect
-type: readme
-version: v0.2
-status: draft
-owners: OWNER_TBD — Catalog steward · STAC steward · Data steward · Source steward · Evidence steward · Release steward · Schema steward · Policy steward · Docs steward
+title: catalog/STAC/ — Deprecated STAC Compatibility Redirect
+type: readme; deprecated-boundary; compatibility-redirect
+version: v0.3.0
+status: draft; repository-grounded; deprecated; redirect-only; integration-hold
+owners: ["@bartytime4life"]
+owner_scope: repository review route; specialist stewardship and independent approval remain NEEDS VERIFICATION
 created: 2026-06-16
-updated: 2026-07-09
-policy_label: public
+updated: 2026-09-04
+policy_label: public-doc; no-catalog-publication; fail-closed
+owning_root: catalog/
+root_class: deprecated
+readme_profile: BOUNDARY_COMPACT
+canonical_target: data/catalog/stac/
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_commit: 7187fb20a8c1f9bf838e0f1fd00fb691b378c434
+  prior_readme_blob: 198a970db9e71b2dc7f5cdbf171b14c0f9a878ce
+  stac_tree: 93947fa1b72ed6fe4915a2ed11653f4cd43473c9
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+truth_posture: CONFIRMED tracked inventory and adopted boundary; PROPOSED README correction; UNKNOWN external consumers and runtime state
 related:
   - ../README.md
-  - ../../data/README.md
-  - ../../data/catalog/README.md
   - ../../data/catalog/stac/README.md
-  - ../../data/catalog/dcat/README.md
-  - ../../data/catalog/prov/README.md
-  - ../../data/triplets/README.md
-  - ../../data/receipts/README.md
-  - ../../data/proofs/README.md
-  - ../../data/published/README.md
-  - ../../data/registry/README.md
-  - ../../release/README.md
-  - ../../schemas/contracts/v1/
-  - ../../contracts/
-  - ../../policy/
-  - ../../docs/standards/STAC.md
-  - ../../docs/standards/STAC_KFM_PROFILE.md
-  - ../../docs/standards/DCAT.md
-  - ../../docs/standards/PROV.md
   - ../../docs/doctrine/directory-rules.md
-tags: [kfm, catalog, stac, compatibility-root, redirect, data-catalog, spatiotemporal-asset-catalog, non-authoritative, drift-fence, no-trust-records, no-public-use]
+  - ../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../docs/adr/ADR-0038-trusted-base-topology-correction-transitions.md
+  - ../../control_plane/root_registry.yaml
+  - ../../control_plane/repository_topology_correction_register.yaml
+  - ../../data/receipts/generated/README.md
+tags: [kfm, stac, deprecated, compatibility, redirect-only, frozen-no-writes]
 notes:
-  - "Refreshes the root-level catalog/STAC compatibility-redirect fence."
-  - "Root-level catalog/STAC/ is treated as a compatibility and drift-control path only, not canonical STAC authority."
-  - "Canonical STAC records belong under data/catalog/stac/ unless a future accepted ADR changes the catalog authority model."
-  - "The uppercase STAC path is retained only as a legacy/path-drift guard; prefer lowercase data/catalog/stac/ for canonical machine paths."
-  - "Do not add STAC Catalogs, Collections, Items, assets, links, source descriptors, receipts, proofs, release records, policy rules, schemas, published artifacts, or generated catalog indexes here without an ADR/migration note."
-  - "Actual current contents beyond this README, historical producers, workflow writes, migration status, CI/review enforcement, lowercase-path acceptance, and ADR disposition remain NEEDS VERIFICATION."
-  - "v0.2 adds current evidence basis, Directory Rules placement basis, canonical STAC lane alignment, minimum safe redirect slice, anti-bypass matrix, no-producer/no-public-use/no-trust-record safeguards, and validation/rollback guidance without claiming migration or enforcement maturity."
+  - "Preserves the existing document ID, top anchor, and numbered section anchors."
+  - "Removes obsolete permission to add notes or placeholders beneath the frozen catalog root."
+  - "This proposed correction does not authorize its own frozen-root blob replacement."
+  - "No schema, policy, validator, baseline, register, payload, release, or runtime change."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-<div align="center">
-
 # STAC Compatibility Redirect
 
-`catalog/STAC/`
+**Looking for KFM STAC records? Start with the [canonical STAC lane](../../data/catalog/stac/README.md).**
 
-**Root-level compatibility and drift-control fence for legacy or accidental uppercase STAC placement. Canonical KFM STAC records belong under `data/catalog/stac/`, not under this root-level folder.**
-
-![status](https://img.shields.io/badge/status-draft-blue)
-![authority](https://img.shields.io/badge/authority-compatibility-orange)
-![canonical](https://img.shields.io/badge/canonical_home-data%2Fcatalog%2Fstac-blue)
-![case](https://img.shields.io/badge/path_case-lowercase__preferred-yellow)
-![trust](https://img.shields.io/badge/trust__content-forbidden-red)
-![truth](https://img.shields.io/badge/truth-NEEDS__VERIFICATION-yellow)
-
-[Evidence](#0-evidence-basis-for-this-revision) · [Purpose](#1-purpose) · [Canonical home](#2-canonical-home) · [Boundary](#3-authority-boundary) · [Allowed](#5-allowed-contents) · [Forbidden](#6-forbidden-contents) · [Migration](#10-migration-posture) · [Definition of done](#17-definition-of-done)
-
-</div>
-
----
+`catalog/STAC/` is retained navigation beneath the **deprecated, frozen**
+[`catalog/` root](../README.md). It is not a catalog service, storage target,
+source registry, or public asset endpoint. This README is a documentation
+redirect; it does not implement an HTTP redirect, filesystem alias, or resolver.
 
 > [!IMPORTANT]
-> **Status:** draft / `NEEDS VERIFICATION`  
-> **Path:** `catalog/STAC/README.md`  
-> **Responsibility root:** compatibility redirect / drift fence only  
-> **Canonical STAC home:** `data/catalog/stac/`  
-> **Directory Rules basis:** file location encodes ownership, governance, and lifecycle. STAC catalog records are lifecycle catalog records, so canonical STAC belongs under `data/catalog/stac/`. Root-level `catalog/STAC/` is a compatibility redirect only; it must not become a parallel catalog, schema, policy, proof, receipt, release, source-registry, published-artifact, pipeline, package, tool, or UI authority.  
-> **Truth posture:** CONFIRMED current GitHub README path / CONFIRMED parent root-level `catalog/README.md` exists and treats `catalog/` as compatibility redirect / CONFIRMED canonical `data/catalog/README.md` exists and treats catalog as CATALOG-stage data / CONFIRMED canonical `data/catalog/stac/README.md` exists and defines STAC as a CATALOG/TRIPLET sublane with RELEASED ONLY exposure / CONFIRMED `docs/standards/STAC.md` exists and places STAC at CATALOG/TRIPLET / CONFIRMED Directory Rules document exists / PROPOSED root-level `catalog/STAC/` redirect contract / UNKNOWN actual files beyond README, historical producers, workflow writes, migration status, CI/review guard, lowercase-path acceptance, and ADR disposition
+> The canonical logical home is `data/catalog/stac/`. Placement there does not
+> authorize public access: public clients use governed APIs or released,
+> public-safe artifacts, not internal or unreleased catalog stores.
 
-> [!CAUTION]
-> Do not make `catalog/STAC/` a parallel STAC authority. KFM STAC Catalogs, Collections, Items, assets, links, catalog indexes, validation summaries, and publication-linked catalog records must live in the governed data lifecycle path, especially `data/catalog/stac/`, with receipts, proofs, release records, schemas, contracts, policy, and public-safe outputs in their own owning roots.
-
----
+> [!WARNING]
+> **Draft correction; integration held.** Replacing this README changes a blob
+> covered by the frozen-root topology rule. The existing agricultural correction
+> mechanism does not authorize this STAC edit. Keep the validator, baseline, and
+> correction register unchanged; see [validation expectations](#13-validation-expectations).
 
 ## Quick jump
 
-- [0. Evidence basis for this revision](#0-evidence-basis-for-this-revision)
-- [1. Purpose](#1-purpose)
-- [2. Canonical home](#2-canonical-home)
-- [3. Authority boundary](#3-authority-boundary)
-- [4. Default posture](#4-default-posture)
-- [5. Allowed contents](#5-allowed-contents)
-- [6. Forbidden contents](#6-forbidden-contents)
-- [7. Directory shape](#7-directory-shape)
-- [8. Minimum safe redirect slice](#8-minimum-safe-redirect-slice)
-- [9. Diagram](#9-diagram)
-- [10. Migration posture](#10-migration-posture)
-- [11. Runtime and producer anti-bypass matrix](#11-runtime-and-producer-anti-bypass-matrix)
-- [12. Inspection path](#12-inspection-path)
-- [13. Validation expectations](#13-validation-expectations)
-- [14. Safe change pattern](#14-safe-change-pattern)
-- [15. Rollback and correction posture](#15-rollback-and-correction-posture)
-- [16. Safe language rules](#16-safe-language-rules)
-- [17. Definition of done](#17-definition-of-done)
-- [18. Open verification items](#18-open-verification-items)
-
----
+[Evidence](#0-evidence-basis-for-this-revision) ·
+[Canonical home](#2-canonical-home) ·
+[Boundary](#3-authority-boundary) ·
+[Inventory](#7-directory-shape) ·
+[Inspection](#12-inspection-path) ·
+[Validation](#13-validation-expectations) ·
+[Open verification](#18-open-verification-items)
 
 ## 0. Evidence basis for this revision
 
-This README is a documentation boundary, not migration proof and not catalog enforcement proof. The 2026-07-09 revision updates an existing compatibility README and keeps maturity bounded while aligning the root-level `catalog/STAC/` redirect with the canonical `data/catalog/stac/` STAC lane and Directory Rules placement posture.
+Reviewed on **2026-09-04** against
+[`main@7187fb20a8c1f9bf838e0f1fd00fb691b378c434`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/7187fb20a8c1f9bf838e0f1fd00fb691b378c434).
+The following are snapshot findings, not assertions about later `main`.
 
-| Evidence item | Status | What it supports | What it does not prove |
-|---|---|---|---|
-| `catalog/STAC/README.md` exists on `main`. | CONFIRMED | This is an existing README update, not a new path proposal. | It does not prove actual contents beyond the README, historical producers, migration status, CI enforcement, or ADR disposition. |
-| `catalog/README.md` exists and treats root-level `catalog/` as a compatibility redirect, not canonical catalog authority. | CONFIRMED document presence and redirect posture | `catalog/STAC/` should inherit root-level redirect/fence behavior. | It does not prove all root-level catalog drift has been removed. |
-| `data/catalog/README.md` exists and treats `data/catalog/` as CATALOG-stage data with RELEASED ONLY public exposure. | CONFIRMED lifecycle posture | Canonical catalog records belong under the data lifecycle root. | It does not prove current STAC inventory, validators, receipts, policy gates, or public route behavior. |
-| `data/catalog/stac/README.md` exists and defines STAC as a CATALOG/TRIPLET sublane with RELEASED ONLY exposure. | CONFIRMED canonical STAC-lane posture | `data/catalog/stac/` is the canonical STAC lane unless an accepted ADR changes the model. | It does not prove concrete STAC records, schemas, validators, receipts, release manifests, or routed access behavior exist. |
-| `docs/standards/STAC.md` exists and explains STAC lives at the CATALOG/TRIPLET stage, with EvidenceRef, EvidenceBundle, RunReceipt, SourceDescriptor, spec hash, and policy digests threaded through STAC objects. | CONFIRMED standards posture | STAC is a catalog envelope, not source truth, release approval, or evidence authority. | It does not prove the strict profile, validators, CI gates, or namespace decision are finalized. |
-| `docs/doctrine/directory-rules.md` exists and states that file location encodes ownership, governance, and lifecycle. | CONFIRMED placement doctrine | Root-level `catalog/STAC/` must remain a compatibility fence; lifecycle catalog records belong under `data/catalog/stac/`. | It does not prove live repo drift has been fully audited. |
+| Evidence | Confirmed scope | Limit |
+|---|---|---|
+| Exact `catalog/STAC/` Git tree `93947fa1b72ed6fe4915a2ed11653f4cd43473c9` | Only `README.md` and an empty `.gitkeep`; no tracked payload or child directory | Does not inventory ignored, untracked, cached, or externally stored bytes |
+| [Parent README](../README.md), blob `44378e14fe7470f19df20ebfc9914ad1e3d2a6a9` | Deprecated containment; retain existing redirects without adding placeholders | Its older inventory and enforcement snapshot are not a current runtime audit |
+| [Root Registry](../../control_plane/root_registry.yaml), blob `024f668b5f0a9239bafa4f8b09e2afd86300ff8c` | `root.catalog`: deprecated, immutable, `frozen_no_writes`, `redirect_only`; target `data/catalog/` | A machine projection does not grant write or release authority |
+| [ADR-0029](../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) and [Directory Rules](../../docs/doctrine/directory-rules.md) | Accepted adoption of rules blob `fd49a0b83e55cef52c1124281f093e263526898d` | The adopted file's internal draft label does not undo that exact-byte adoption |
+| [Canonical STAC README](../../data/catalog/stac/README.md), blob `6d534b95f46ba11bb86e8cbe9abd22b88fb7c1f9` | Documents the CATALOG-stage home and release-gated exposure | Its draft profile and historical version statements do not prove current conformance |
+| [ADR-0038](../../docs/adr/ADR-0038-trusted-base-topology-correction-transitions.md), blob `79f37be0991b050d8bc9c00991d6db887d343cd7` | Stage 1 mechanism accepted; exact-transition and trusted-base requirements remain | No blanket frozen-root exception and no authorization for this path |
+| [Correction register](../../control_plane/repository_topology_correction_register.yaml), blob `b48e8df74a2b9d8c2599ce256ef5156687b98dbf` | One proposed agriculture entry with null accepted-decision bindings | No accepted, bound STAC transition |
 
-[Back to top](#top)
-
----
+Drive's *Directory Rules* and the Notion *Frozen Catalog Correction-Mechanism
+Decision Package* were consulted as lineage and coordination. The adopted
+repository decisions above govern; neither coordination prose nor this README
+creates an exception. `CONFIRMED` inventory is separate from `PROPOSED` correction
+and from unverified runtime or release maturity.
 
 ## 1. Purpose
 
-`catalog/STAC/` is a **root-level compatibility redirect** for STAC-specific path drift.
-
-It exists only to prevent accidental, legacy, generated, copied, or externally imported STAC material from becoming a parallel authority outside the KFM lifecycle data root.
-
-This folder should not be used for canonical:
-
-- STAC Catalog records;
-- STAC Collection records;
-- STAC Item records;
-- STAC Asset descriptors;
-- STAC links;
-- STAC extensions or KFM profile sidecars;
-- catalog indexes, summaries, matrices, or search manifests;
-- release-linked catalog records;
-- validation summaries or receipt-backed catalog outputs.
-
-This README does not prove that any STAC material currently exists here, that migration has been completed, that producer tools avoid this path, that CI blocks writes here, or that any ADR has finalized long-term retention of this compatibility root.
-
-[Back to top](#top)
-
----
+Preserve legacy navigation, direct contributors to the owning lifecycle lane,
+and prevent a second writable STAC home. Inherit the parent root's containment
+contract; do not turn this leaf into a replacement STAC specification.
 
 ## 2. Canonical home
 
-Canonical STAC material belongs under:
+| Path | Role |
+|---|---|
+| `catalog/STAC/` | Deprecated, frozen documentation redirect; no new catalog writes |
+| `data/catalog/stac/` | Canonical logical STAC catalog lane inside the governed data lifecycle |
 
-```text
-data/catalog/stac/
-```
-
-The root-level `catalog/` directory is a redirect/fence, and `data/` is the lifecycle root where catalog material belongs. The preferred canonical path is lower-case for machine-path stability and cross-platform predictability.
-
-```text
-catalog/STAC/       # compatibility redirect only; do not add catalog records here
-data/catalog/stac/  # canonical STAC catalog lane, subject to lifecycle governance
-```
-
-A path that differs only by case can create confusing behavior across operating systems, build systems, object stores, and generated indexes. Treat uppercase `STAC` under root-level `catalog/` as legacy/compatibility vocabulary, not an implementation target.
+Use the exact lowercase canonical path. Do not create case variants, symlinks,
+mirrors, or automatic rewrites as a shortcut. An external STAC source, synthetic
+test fixture, or released representation is not automatically misplaced merely
+because it is outside this lane; classify it by its owning responsibility and
+lifecycle, rather than its filename.
 
 ## 3. Authority boundary
 
-`catalog/STAC/` has **no canonical STAC authority**. It may hold only redirect guidance, migration notes, drift logs, or temporary markers while misplaced STAC material is reviewed and moved into its proper lifecycle home.
+| Concern | Local contract |
+|---|---|
+| Ownership | `catalog/` owns deprecated containment only; `data/` owns lifecycle catalog instances |
+| Review route | `@bartytime4life`, as recorded by the Root Registry; specialist stewardship and independent approval remain unverified |
+| Inputs / outputs | Verified path and migration facts in; navigation and containment guidance out; no dataset or trust-object output |
+| Mutation | Frozen; retaining a README does not authorize its replacement or new sibling files |
+| Exposure | Public documentation is not permission to expose catalog records, source bytes, or internal stores |
+| Retention | Migration-bound; no retirement until accepted decisions and zero-writer/zero-consumer evidence close |
 
-```text
-WRONG / LEGACY ROOT                  CANONICAL LIFECYCLE HOME              TRUST SUPPORT HOMES
-catalog/STAC/                   -->  data/catalog/stac/               -->  data/receipts/
-compatibility fence only             STAC Catalog / Collection / Item       data/proofs/
-not authoritative                    STAC links / assets / indexes          release/
-                                      release-linked catalog records         data/published/
-```
-
-A STAC record outside `data/catalog/stac/` should be treated as drift until reviewed and migrated.
+Directory Rules §§16–18 supply the compact boundary profile, direct-child map,
+compatibility constraints, migration discipline, and rollback rules. ADR-0029
+establishes the adopted edition; ADR-0038 constrains frozen-topology corrections.
+This draft changes none of those authorities.
 
 ## 4. Default posture
 
-Anything found under root-level `catalog/STAC/` should be treated as **NEEDS VERIFICATION** and potentially misplaced.
-
-Do not expose, publish, index, cite, validate as canonical, use as a source of truth, or depend on root-level STAC files as authoritative records. First confirm source, provenance, rights, sensitivity, schema validity, lifecycle state, catalog-stage receipt, evidence/proof support, release state, rollback path, correction path, and migration route.
-
-The safe default is:
-
-```text
-found in catalog/STAC/ -> hold as drift -> inspect -> migrate/regenerate under data/catalog/stac/ -> validate -> receipt -> release gate -> publish only through governed path
-```
+Unexpected content is **drift requiring review**, not admitted evidence. Do not
+load, index, publish, or cite it as canonical STAC. Preserve its identity and
+provenance before remediation. Unclear rights, sensitivity, sovereignty,
+protected locations, living-person/DNA data, or private-land details require
+restricted handling; do not copy them into public issues or review receipts.
 
 ## 5. Allowed contents
 
-| Allowed item | Example | Required posture |
-|---|---|---|
-| README / redirect docs | `README.md` | Compatibility fence only |
-| Migration note | `MIGRATION.md` | Temporary, review-linked, and rollback-aware |
-| Drift note | `DRIFT.md`, `OPEN-QUESTIONS.md` | Must point to canonical homes and review steps |
-| Placeholder marker | `.gitkeep` | Does not authorize STAC content |
-| Removal note | `REMOVED.md` | Must reference migration target, review state, and rollback notes |
+Retain the **existing** README and zero-byte `.gitkeep` while the root remains
+under containment. Links may point to records in their actual owning homes.
+
+Do **not** add `MIGRATION.md`, `DRIFT.md`, `OPEN-QUESTIONS.md`, `REMOVED.md`, extra
+placeholders, or a second editable catalog here. The previous edition's suggested
+files were proposals, not an exception to the subsequently adopted freeze.
 
 ## 6. Forbidden contents
 
-| Forbidden here | Correct home |
+| Not stored here | Owning responsibility |
 |---|---|
-| STAC Catalogs | `data/catalog/stac/` |
-| STAC Collections | `data/catalog/stac/` |
-| STAC Items | `data/catalog/stac/` |
-| STAC Assets, links, extensions, asset indexes, link indexes, collection summaries | `data/catalog/stac/` or governed catalog support homes |
-| CatalogMatrix or STAC/DCAT/PROV closure artifacts | `data/catalog/` under accepted catalog-family lanes |
-| DCAT or PROV records | `data/catalog/dcat/`, `data/catalog/prov/`, or accepted sibling lanes |
-| Domain catalog records | `data/catalog/domain/` or accepted domain catalog lane |
-| Catalog-derived public products | `data/published/` after governed release |
-| Source descriptors, source registry rows, rights rows, sensitivity rows | `data/registry/` or governed registry homes |
-| Receipts, validation reports, redaction receipts, catalog-build receipts, transform receipts | `data/receipts/` |
-| EvidenceBundles, proof packs, attestations | `data/proofs/` |
-| ReleaseManifest, PromotionDecision, RollbackCard, CorrectionNotice, signatures | `release/` |
-| Schemas and machine-shape contracts | `schemas/contracts/v1/` |
-| Human contracts and object-meaning docs | `contracts/` |
-| Policy rules and policy decisions | `policy/` and governed policy-decision homes |
-| Source code, scripts, packages, pipelines, build tools | `apps/`, `packages/`, `tools/`, `scripts/`, `pipelines/`, `pipeline_specs/` |
-| Raw, work, quarantine, processed, or published lifecycle data | `data/` lifecycle subtrees |
+| STAC Catalogs, Collections, Items, asset metadata, links, indexes, or profile sidecars | Governed catalog instances in `data/catalog/stac/`; standards and schemas in their separate homes |
+| DCAT/PROV records or domain catalog instances | Appropriate family under `data/catalog/` |
+| Source descriptors, rights/sensitivity registry instances | Governed registry family under `data/registry/` |
+| Receipts or evidence/proof objects | Their respective `data/receipts/` and `data/proofs/` families |
+| Release, promotion, correction, withdrawal, or rollback decisions | `release/` |
+| Released public-safe payloads | `data/published/`, after governed release |
+| Semantic contracts, schemas, or normative policy | `contracts/`, `schemas/`, and `policy/`, respectively |
+| Producer code, validation code, tests, or migration implementation | Existing responsibility-owning implementation, tooling, test, and migration roots |
+
+These are routing boundaries, not declarations that every proposed object family
+or validator is implemented. Asset metadata does not relocate the asset bytes.
 
 ## 7. Directory shape
 
-Current implementation inventory remains `NEEDS VERIFICATION`.
+**CONFIRMED tracked inventory at the evidence snapshot:**
 
 ```text
 catalog/STAC/
-├── README.md                 # compatibility redirect / drift fence
-├── MIGRATION.md              # PROPOSED only if migration is active
-├── DRIFT.md                  # PROPOSED only if misplaced STAC material is found
-└── .gitkeep                  # optional marker; does not authorize catalog content
+├── .gitkeep                  # existing zero-byte placeholder; not authority
+└── README.md                 # existing deprecated STAC navigation boundary
 ```
 
-> [!WARNING]
-> Do not treat this suggested shape as repo fact. Verify actual contents before making inventory, producer, enforcement, or migration claims.
+The retained placeholder has blob
+`e69de29bb2d1d6434b8b29ae775ad8c2e48c5391`. The pre-edit README has blob
+`198a970db9e71b2dc7f5cdbf171b14c0f9a878ce`. There are no tracked STAC records in
+this subtree. That finding does not prove migration completion or zero consumers.
 
 ## 8. Minimum safe redirect slice
 
-A smallest safe `catalog/STAC/` state should prove only that the folder prevents drift; it should not contain trust-bearing material.
-
-| Slice item | Minimum requirement | Why it matters |
-|---|---|---|
-| Redirect README | Points to `data/catalog/stac/` as canonical | Prevents parallel authority |
-| No STAC records | No Catalog, Collection, Item, Asset, Link, extension, index, summary, or matrix files | Keeps truth-bearing catalog records in lifecycle root |
-| No trust support records | No receipts, proofs, releases, registry rows, policy rules, schemas, contracts, or published artifacts | Preserves responsibility roots |
-| Drift procedure | Explains how to inspect and migrate misplaced STAC | Keeps remediation reversible |
-| Producer guard | Producers, generators, scripts, and CI should not write durable STAC here | Prevents reintroducing drift |
-| Public-use guard | Public clients and indexes must not read from this path as canonical | Preserves governed access path |
-| Case guard | Uppercase `STAC` remains compatibility vocabulary only | Avoids path-case instability |
-| Verification backlog | Open items stay visible | Prevents documentation from pretending migration/enforcement is complete |
+A useful redirect preserves the canonical pointer, existing anchors, no-payload
+boundary, immutable-root posture, and explicit unknowns. A README, empty tree,
+or successful formatting check cannot prove that producers and public clients
+obey those boundaries.
 
 ## 9. Diagram
 
-```mermaid
-flowchart TD
-    wrong["catalog/STAC/\nlegacy uppercase redirect"] --> review["review for STAC drift"]
-    review --> classify["classify: record / receipt / proof / release / source / schema / policy / published artifact"]
-    classify --> canonical["data/catalog/stac/\ncanonical STAC lane"]
-    classify --> receipts["data/receipts\nvalidation / transform / catalog-build receipts"]
-    classify --> proofs["data/proofs\nEvidenceBundles / proof packs"]
-    classify --> release["release\npublication decisions"]
-    release --> published["data/published\npublic-safe released artifacts"]
-    canonical --> release
-    wrong -. "must not be public/canonical" .-> published
-    wrong -. "must not be producer target" .-> canonical
+```text
+Legacy navigation: catalog/STAC/README.md -> data/catalog/stac/README.md
+                   (documentation link; no data transfer or publication)
+
+Governed lifecycle: RAW -> WORK / QUARANTINE -> PROCESSED
+                       -> CATALOG / TRIPLET -> PUBLISHED
+
+Catalog discovery, EvidenceRef -> EvidenceBundle resolution, policy,
+review, release, correction, and rollback remain separate responsibilities.
 ```
+
+Maps, tiles, indexes, graphs, scenes, summaries, and AI are downstream carriers;
+they do not acquire truth or publication authority from a STAC link.
 
 ## 10. Migration posture
 
-If STAC files are found here:
+If misplaced material is discovered, first inventory exact paths, bytes, hashes,
+source roles, rights, sensitivity, writers, consumers, and existing references.
+Then obtain the applicable accepted decision and record the migration in its
+owning lane before moving or regenerating anything.
 
-1. Do not publish, cite, index, or depend on them.
-2. Identify whether they are STAC Catalogs, Collections, Items, assets, links, extensions, catalog indexes, CatalogMatrix records, DCAT/PROV records, receipts, proofs, release records, source registry rows, schemas, policy records, published-output material, generated previews, or temporary build artifacts.
-3. Determine whether the file is historical drift, generated drift, copied output, unreviewed local work, or an intentional migration marker.
-4. Move or regenerate durable STAC records into `data/catalog/stac/` through a governed migration.
-5. Move receipts, proofs, release records, published artifacts, schemas, contracts, policy, source descriptors, and producer code into their owning roots.
-6. Normalize canonical machine-path placement to `data/catalog/stac/` unless an accepted ADR says otherwise.
-7. Preserve provenance, source refs, digests, receipts, review notes, producer identity, and rollback path.
-8. Add a drift register, migration note, or correction note if the misplaced material was previously consumed.
-9. Add or update validation checks so producers do not recreate root-level STAC drift.
-10. Leave `catalog/STAC/` as a redirect/fence unless an accepted ADR explicitly changes the authority model.
+A reviewed migration preserves identity or explicitly versions it, keeps source
+and transform lineage, validates target and consumer parity, supplies correction
+and rollback evidence, and proves the old path is no longer written or consumed.
+No migration, deletion, source admission, or retirement is performed by this
+README. Moving a file does not promote it through the lifecycle.
 
 ## 11. Runtime and producer anti-bypass matrix
 
-| Bypass risk | Required behavior | Review signal |
+| Risk | Required boundary | Evidence needed before claiming closure |
 |---|---|---|
-| Producer writes STAC records to `catalog/STAC/` | Fail review/CI; write to `data/catalog/stac/` instead | Generator config and output paths checked |
-| Public client reads root-level STAC | Deny; route through governed catalog/release path | Client/search/index config excludes this path |
-| Root-level STAC is treated as canonical | Mark as drift and migrate/regenerate | Migration note references canonical target |
-| Receipts/proofs/release records stored here | Move to owning roots | Directory review blocks trust support records |
-| Schema/profile file stored here | Move to `schemas/` or standards docs as appropriate | Schema-home review passes |
-| Policy rule stored here | Move to `policy/` | Policy-root review passes |
-| Published artifact stored here | Move to `data/published/` after release gate | Release/publication review passes |
-| Case variant `catalog/STAC` and `data/catalog/stac` both appear in tooling | Canonicalize to lowercase lifecycle path | Build/search config points to `data/catalog/stac/` |
-| Drift file already consumed downstream | Add correction/migration note and rollback path | Correction path is auditable |
-| README claims CI enforcement without run/check evidence | Mark enforcement `NEEDS VERIFICATION` | Current CI evidence cited before pass claims |
+| Producer targets `catalog/STAC/` | Reject new durable output here | Producer configuration, negative test, and exact-run result |
+| Public API, map, search, export, or AI uses legacy content as authority | Deny or use the governed released path | Consumer trace and applicable policy/release evidence |
+| Canonical path is mistaken for a public URL | No direct internal-store access | Serving configuration and public-boundary checks |
+| Duplicate uppercase/lowercase writers or mirrors | Preserve one canonical writer | Case-aware inventory, verified consumer need, and accepted migration |
+| Prior downstream use is discovered | Preserve correction and rollback lineage | Affected-consumer inventory and reviewed remediation |
+| Documentation or a green check is called release approval | Keep evidence, policy, review, and release distinct | Actual decision records, not README assertions |
+
+This matrix states obligations. It is not an assertion that runtime enforcement
+or a comprehensive producer/consumer audit has passed.
 
 ## 12. Inspection path
 
-Actual root-level contents, producers, workflow writes, migration status, CI/review enforcement, and current ADR disposition remain `NEEDS VERIFICATION`.
+Run these read-only commands from an actual checkout, replacing `REF` only when
+intentionally reviewing another pinned commit. They do not validate or publish
+STAC records.
 
 ```bash
-find catalog/STAC -maxdepth 6 -type f | sort
-find catalog data/catalog data/receipts data/proofs data/published data/registry release schemas contracts policy docs/standards tools scripts pipelines pipeline_specs .github/workflows -maxdepth 6 -type f 2>/dev/null | grep -Ei 'stac|spatiotemporal|catalog|collection|item|asset|link|CatalogBuildReceipt|CatalogMatrix|ReleaseManifest|EvidenceBundle|RunReceipt|SourceDescriptor|dcat|prov|schema|policy|validator|publish|workflow|migration|drift' | sort
+REF=7187fb20a8c1f9bf838e0f1fd00fb691b378c434
+
+git rev-parse --verify "${REF}^{commit}"
+git ls-tree -r --long "$REF" -- catalog/STAC/
+git show "${REF}:control_plane/root_registry.yaml"
+git show "${REF}:control_plane/repository_topology_correction_register.yaml"
+
+# Search tracked text for candidate references; a match is not proof of use.
+git grep -n -F 'catalog/STAC' "$REF" -- .
 ```
+
+`git grep` returning no matches normally exits `1`; a fatal Git error is not an
+empty inventory. These commands cannot inspect untracked files, runtime mounts,
+external catalogs, browser caches, or deployed configuration. Their presence
+here does not claim they were executed in a local checkout for this revision.
 
 ## 13. Validation expectations
 
-Useful validation for this folder should cover:
+**Keep review validation and integration authorization separate.**
 
-- no STAC Catalogs, Collections, Items, assets, links, extensions, indexes, or summaries are stored here;
-- no DCAT, PROV, CatalogMatrix, or domain catalog records are stored here;
-- no receipts, proofs, release records, registry records, policy rules, schemas, source code, pipelines, tools, or published artifacts are stored here;
-- any non-README content is tied to an active migration, drift note, or placeholder marker;
-- producer tools, scripts, generated outputs, workflows, indexes, and client configuration do not target `catalog/STAC/` as canonical;
-- links point users to `data/catalog/stac/` and other owning roots;
-- CI or review checks flag root-level `catalog/STAC/` writes when enforcement exists;
-- CI/pass/enforcement state is not claimed without current evidence.
+For this documentation correction, check exact base/head identity, the complete
+diff, retained anchors, resolving relative links, balanced fences, final newline,
+no sensitive payloads, and the generated-work receipt's schema and final content
+hash. Record actual results in the PR rather than treating this checklist as a
+passing test report.
+
+For frozen-root integration, [ADR-0038](../../docs/adr/ADR-0038-trusted-base-topology-correction-transitions.md)
+explains why `KFM-TOPO-004` fingerprints `path@object_id`. A README replacement
+changes that evidence even when no path is added. The existing
+[register](../../control_plane/repository_topology_correction_register.yaml)
+contains only the proposed agricultural transition; it is not an STAC exception.
+
+**The STAC blob delta is new to this change.** Do not attribute it to inherited
+agricultural drift, waive it as “docs-only,” refresh the baseline, suppress the
+finding, or use a same-change register edit to authorize it. Integration remains
+held pending separately accepted exact authority and the required trusted-base
+validation. A draft PR and a valid generation receipt do not satisfy that gate.
 
 ## 14. Safe change pattern
 
-For changes under `catalog/STAC/`:
-
-1. Confirm the change is redirect documentation, migration support, drift documentation, or a non-authoritative placeholder only.
-2. Confirm it does not create a parallel STAC catalog authority.
-3. Confirm durable STAC records are placed under `data/catalog/stac/`.
-4. Confirm receipts, proofs, release records, registry records, schemas, contracts, policy rules, published artifacts, and code are placed under their owning roots.
-5. Confirm no public client, search index, map runtime, export job, tile job, story/focus/evidence surface, or catalog producer reads this path as canonical.
-6. Document migration, correction, and rollback if any misplaced material was moved or previously consumed.
-7. Update docs and validation rules when behavior materially changes.
+Re-pin current `main`, target bytes, applicable decisions, and overlapping work.
+Prepare only the bounded correction and its provenance receipt, retaining the
+existing path, document ID, and section anchors. Keep proposed bytes separate
+from accepted implementation and preserve the frozen-root failure as a later
+integration blocker. Follow the current contributor and PR-delivery controls;
+do not turn branch authoring into ready, approval, or merge authority.
 
 ## 15. Rollback and correction posture
 
-If material was added here by mistake, rollback should be small and auditable:
+Before integration, leave the candidate branch unmerged or append a non-force
+revert on that branch. The exact prior README blob is recorded in §7; `.gitkeep`
+and all catalog payloads remain untouched. Preserve the generated receipt as
+history rather than rewriting it to describe a different artifact hash.
 
-- remove or revert the misplaced file from `catalog/STAC/`;
-- regenerate or move durable catalog records into `data/catalog/stac/` through a governed migration;
-- preserve digest/provenance notes for anything already referenced;
-- add a correction note if public, semi-public, or generated downstream artifacts consumed the misplaced path;
-- update producer configuration and tests so the drift is not recreated.
+After any authorized integration, reverting frozen content is itself a reviewed
+transition. Re-check current authority and exact bytes; never restore damaged
+content, erase correction history, or reopen parallel writers merely to obtain
+a matching baseline fingerprint.
 
 ## 16. Safe language rules
 
-Use these terms carefully:
-
-| Phrase | Allowed here? | Safer wording |
-|---|---:|---|
-| "canonical STAC record in `catalog/STAC/`" | No | "misplaced or legacy STAC record requiring review" |
-| "published from `catalog/STAC/`" | No | "published only after release via canonical lifecycle path" |
-| "CI blocks this" | Only with current evidence | "CI guard remains NEEDS VERIFICATION" |
-| "migration complete" | Only with migration evidence | "migration status remains NEEDS VERIFICATION" |
-| "safe to consume" | Only after release/access evidence | "do not consume as canonical from this path" |
+| Avoid | Use instead |
+|---|---|
+| “STAC is published here” | “This is a deprecated documentation redirect” |
+| “No STAC exists” | “No tracked STAC payload exists in this pinned subtree” |
+| “Migration is complete” | “Tracked inventory is confirmed; consumer and migration closure remain unverified” |
+| “The canonical path is safe to expose” | “Exposure still requires governed release and access checks” |
+| “ADR-0038 permits this edit” | “The accepted mechanism does not authorize this unregistered STAC transition” |
+| “CI passed” without exact-head results | Name the executed check, exact scope, result, and limitations |
 
 ## 17. Definition of done
 
-- [ ] Owners are confirmed and `OWNER_TBD` is replaced.
-- [ ] Actual root-level `catalog/STAC/` contents are verified.
-- [ ] Any misplaced STAC material is migrated, removed, regenerated under `data/catalog/stac/`, or documented as drift.
-- [ ] `data/catalog/stac/` is confirmed as the canonical STAC home in current docs and producer configuration.
-- [ ] No trust-bearing records live here.
-- [ ] No STAC/DCAT/PROV records, registry records, receipts, proofs, release records, published artifacts, schemas, contracts, policy rules, source code, or lifecycle data live here.
-- [ ] No public client, search index, map runtime, export job, tile job, or catalog producer uses this path as canonical.
-- [ ] Case-sensitive/case-insensitive path behavior is reviewed where tooling may run on multiple platforms.
-- [ ] CI/review behavior is verified or marked `NEEDS VERIFICATION`.
-- [ ] Any migration, correction, or rollback path is documented.
+For the **README draft**, completion means accurate canonical navigation,
+confirmed bounded inventory, inherited freeze semantics, preserved identity and
+anchors, documented validation, a hash-matching provenance receipt, and explicit
+integration blockers.
+
+For **integration or retirement**, additionally require the applicable accepted
+exact transition, trusted-base checks, human review, producer/consumer closure
+where relevant, and migration/correction/rollback evidence. Draft completion is
+not integration, retirement, runtime readiness, or publication.
 
 ## 18. Open verification items
 
-| Item | Why it matters |
+| Item | Status and first affected transition |
 |---|---|
-| Confirm actual files under root-level `catalog/STAC/` | Prevents overclaiming or missing drift |
-| Confirm whether any workflow, script, tool, or producer writes here | Required before producer-safety claims |
-| Confirm whether any public client, index, export path, map layer, or catalog service reads here | Required before public-use claims |
-| Confirm migration status to `data/catalog/stac/` | Required before canonical-home claims beyond doctrine |
-| Confirm lowercase path convention is accepted in current ADRs/tooling | Required before finalizing migration guidance |
-| Confirm CI/review guard exists and has current pass evidence | Required before enforcement claims |
-| Confirm no trust records are stored here | Required before Directory Rules compliance claims |
-| Confirm ADR status for root-level `catalog/STAC/` | Required before long-term retention claims |
-| Confirm STAC profile namespace decision | Required before strict profile or schema claims |
-| Confirm validators and schema bindings | Required before record-validity claims |
+| Accepted, bound exact transition for this README replacement | **NEEDS VERIFICATION / HOLD integration**; none present in the inspected register |
+| Exact-head hosted checks and independent human review | **NEEDS VERIFICATION** before any readiness or integration claim |
+| Full producer, consumer, external-storage, and case-sensitive behavior | **UNKNOWN**; blocks migration/retirement and exposure claims |
+| Specialist catalog stewardship and separation of review duties | **NEEDS VERIFICATION**; repository routing is not independent approval |
+| Current STAC profile, namespace, schemas, and release/access implementation | **NOT INSPECTED** for this redirect change; no conformance or operational claim |
 
 <details>
 <summary>Appendix A — no-loss preservation note</summary>
 
-The previous README already treated `catalog/STAC/` as a STAC-specific redirect and anti-parallel-authority contract. This revision preserves that posture, refreshes metadata, adds a current evidence-basis section, adds Directory Rules placement posture, aligns the redirect with `catalog/`, `data/catalog/`, `data/catalog/stac/`, and `docs/standards/STAC.md`, strengthens no-trust-record, no-producer, no-public-use, case-safety, migration, validation, correction, rollback, and anti-bypass safeguards, and keeps migration/enforcement claims bounded. It does not claim actual file inventory, migration work, CI enforcement, producer workflow behavior, lowercase path acceptance, STAC validator/profile maturity, or ADR disposition are implemented.
+Version v0.3.0 retains the canonical STAC pointer, trust-family separation,
+no-public-bypass rule, case-aware routing, migration and rollback requirements,
+document ID, top anchor, and all numbered section headings. It replaces stale
+inventory uncertainty with the verified two-file tree, removes obsolete proposals
+to add files beneath the deprecated root, and records the accepted directory and
+exact-transition constraints. Historical v0.2 bytes remain available at the pinned
+prior blob. This is not an adoption record or implementation-maturity upgrade.
 
 </details>
 
 ## Status summary
 
-`catalog/STAC/` is a root-level compatibility redirect and STAC drift fence. It is not the canonical STAC catalog home.
+**Deprecated navigation, not a catalog.** Use the canonical lifecycle lane for
+STAC instances; preserve evidence, policy, review, release, correction, and
+rollback boundaries. This proposed documentation correction does not authorize
+its own integration or any data publication.
 
-STAC authority belongs under `data/catalog/stac/`; trust-bearing support belongs under `data/receipts/`, `data/proofs/`, and `release/`; released public-safe products belong under `data/published/`.
-
-<p align="right"><a href="#top">Back to top</a></p>
+[Back to top](#top)
