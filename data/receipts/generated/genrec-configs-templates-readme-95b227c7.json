@@ -1,0 +1,111 @@
+{
+  "receipt_id": "genrec-configs-templates-readme-95b227c7",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "configs/templates/README.md"
+  ],
+  "artifact_hashes": {
+    "configs/templates/README.md": "sha256:95b227c71c6d8f01d0db135eb40102ab83a6533ff8345cd432b37bb81579690b"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-09-04"
+  },
+  "prompt_or_contract": "sha256:43832e23cf97fc43621a9244880d7f183bb974178f39f6f5fab6430c6507ad11",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "Google Drive",
+      "Notion"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/7cbb5e771834c07465c0270efcb32d9dd4329cc2",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7cbb5e771834c07465c0270efcb32d9dd4329cc2/configs/templates/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7cbb5e771834c07465c0270efcb32d9dd4329cc2/configs/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7cbb5e771834c07465c0270efcb32d9dd4329cc2/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7cbb5e771834c07465c0270efcb32d9dd4329cc2/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7cbb5e771834c07465c0270efcb32d9dd4329cc2/.github/PULL_REQUEST_TEMPLATE.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7cbb5e771834c07465c0270efcb32d9dd4329cc2/CONTRIBUTING.md"
+    ]
+  },
+  "truth_labels": {
+    "configs/templates/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Current main, the target file, the exact directory listing, adjacent configuration guidance, Directory Rules, the PR contract, and open target overlap were inspected before delivery."
+    },
+    {
+      "gate": "documentation-boundary-and-inventory",
+      "outcome": "PASS",
+      "reason": "The README remains at the established configs/templates path, re-pins the six-entry inventory, records the five observed payload shapes, and labels consumer and validator uncertainty."
+    },
+    {
+      "gate": "markdown-structure-and-link-review",
+      "outcome": "PASS",
+      "reason": "The authored file has one H1, balanced fenced blocks, no trailing whitespace, and all checked repository-relative links resolve at the pinned base."
+    },
+    {
+      "gate": "remote-readback-and-integrity",
+      "outcome": "PASS",
+      "reason": "The README read back byte-identically from the scoped branch and its raw UTF-8 SHA-256 is recorded in artifact_hashes."
+    },
+    {
+      "gate": "template-payload-and-runtime-impact",
+      "outcome": "SKIPPED",
+      "reason": "No template payload, consumer, loader, schema, runtime, policy, release, deployment, or public-surface file was changed."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "PENDING",
+      "reason": "The PR is intentionally draft and no human approval is claimed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "KFM-CONFIG-TEMPLATES-BASE",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7cbb5e771834c07465c0270efcb32d9dd4329cc2/configs/templates/README.md"
+    },
+    {
+      "id": "KFM-DIRECTORY-RULES",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7cbb5e771834c07465c0270efcb32d9dd4329cc2/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "KFM-ADR-0029",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7cbb5e771834c07465c0270efcb32d9dd4329cc2/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "KFM-PR-CONTRACT",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7cbb5e771834c07465c0270efcb32d9dd4329cc2/.github/PULL_REQUEST_TEMPLATE.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-04T18:27:21Z",
+  "emitter": "ai-builder/openai-gpt-5.6-pro",
+  "links": {
+    "pr_number": null,
+    "adr_link": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/7cbb5e771834c07465c0270efcb32d9dd4329cc2/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored documentation-only update with one accompanying provenance receipt. The README re-pins current repository evidence and preserves the non-authoritative template boundary. Human review remains pending; this receipt is provenance, not approval, proof of runtime behavior, release authority, or publication authorization."
+}
