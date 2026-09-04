@@ -93,7 +93,7 @@ A future configuration may help a consumer label, filter, compare, generalize, c
 
 **Implementation-supporting and non-authoritative.** Configuration may reference an accepted decision; it may not manufacture one.
 
-Preserve `RAW -> WORK/QUARANTINE -> PROCESSED -> CATALOG/TRIPLET -> PUBLISHED`. Promotion is a governed transition, not a file move.
+Preserve `RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLETS -> PUBLISHED`. Promotion is a governed transition, not a file move.
 
 | Concern | Owning authority or required evidence | Configuration limit |
 |---|---|---|
