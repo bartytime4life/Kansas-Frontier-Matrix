@@ -178,7 +178,7 @@ Before the first non-README payload is consumer-ready, document or encode:
 
 | Contract item | Required information |
 |---|---|
-| Identity | Status, owner, named consumer, config version, exact path and format. |
+| Metadata | Status, owner, named consumer, config version, exact path and format. |
 | Binding | Parser/loader entrypoint, load timing, selection mechanism, reload behavior, and tests. |
 | Authority refs | Exact contract, schema, policy, source/profile, doctrine, and release-boundary references. |
 | Source roles | Canonical role vocabulary and fail-closed behavior for missing/conflicting role. |
@@ -272,7 +272,7 @@ Assess sensitivity on the **resulting join**, not only the inputs. Repeated quer
 - The parent domain-config README is v0.6 and records thirteen child lanes.
 - ADR-0029 and the adopted Directory Rules were re-read as placement authority.
 - Current Hydrology workflow source was inspected and contains executable bounded checks rather than the v0.3 TODO-only description.
-- Open-PR search returned no existing PR for this exact Hydrology config README before branch creation.
+- Author-performed open-PR search (outside this pinned repository snapshot) reported no existing PR for this exact Hydrology config README before branch creation.
 
 ### Not proved by this update
 
