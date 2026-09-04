@@ -20,10 +20,10 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  KFM_TARGET_SHA: "6caac026921d578d55e39687c77f65d607a119f7"
+  KFM_TARGET_SHA: "ca40797237374dc0400065805bbadb739eb25890"
   KFM_TRUSTED_BASE_REF: "7c5d4125c277536258be6345e366efae59dbe5d6"
-  KFM_DOC_BLOB: "af87e107f1971355c60a4e0cdea1a82268117afd"
-  KFM_TEST_BLOB: "257ccad0742dd3c506dc6c36a20371f657af8895"
+  KFM_DOC_BLOB: "6bcb1ca8a64be7d4600ee8d53aab9f09eaececbd"
+  KFM_TEST_BLOB: "216e5e0f1d3e6446a42858ea1e0e50c3a2bae87e"
   PIP_DISABLE_PIP_VERSION_CHECK: "1"
   PIP_NO_INPUT: "1"
   PYTHONDONTWRITEBYTECODE: "1"
@@ -102,7 +102,7 @@ jobs:
             echo "- Exact candidate: \`${KFM_TARGET_SHA}\`."
             echo "- Trusted base: \`${KFM_TRUSTED_BASE_REF}\`."
             echo "- Governance blob: \`${KFM_DOC_BLOB}\`; coupled-test blob: \`${KFM_TEST_BLOB}\`."
-            echo '- Scope: exact ancestry, two-path diff, expired-authorization currentness, focused repository-control regressions, registry, schemas, and workflow security.'
+            echo '- Scope: exact ancestry, two-path diff, declared-length currentness, expired-authorization currentness, focused repository-control regressions, registry, schemas, and workflow security.'
             echo '- Permissions: read-only contents; no secrets, OIDC, PR mutation, settings, release, deployment, promotion, publication, or source-state authority.'
           } >> "${GITHUB_STEP_SUMMARY}"
 
