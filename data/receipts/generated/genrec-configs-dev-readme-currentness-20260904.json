@@ -5,7 +5,7 @@
     "configs/dev/README.md"
   ],
   "artifact_hashes": {
-    "configs/dev/README.md": "sha256:b7a79f9136bedfadce265e95d197859f626eb0329a41275c0e2685fff1ba8e8d"
+    "configs/dev/README.md": "sha256:d40e93d0db6bc8f75b1eeaf860738aafbbe5506e140b12c44764d490227b301d"
   },
   "model_identity": "Codex GPT-5",
   "prompt_or_contract": "Update configs/dev/README.md using a reviewable PR; preserve repository governance, evidence boundaries, and no-merge incident-response limits.",
@@ -67,8 +67,8 @@
     "currentness_reconciliation": "PASS — v0.3 metadata and bounded-search wording are refreshed to v0.4 exact-tree wording",
     "authority_and_overlap": "PASS — 0 current open draft PRs were checked by exact changed paths; none touches configs/dev/README.md or the receipt path",
     "directory_and_secret_boundary": "PASS — accepted ADR-0029 doctrine, configs root, secrets standard, incident-response distinction, and CODEOWNERS route are reflected",
-    "markdown_structure_and_content_review": "PASS — final newline, balanced fences, one H1 outside fences, no accidental trailing whitespace or NULs; five existing Markdown hard-break lines are preserved",
-    "receipt_schema_shape": "PASS — required generated-receipt fields and sha256 artifact hash format are present",
+    "markdown_structure_and_content_review": "PASS — final branch README readback matches prepared content; final newline, balanced fences, one H1 outside fences, no accidental trailing whitespace or NULs; five existing Markdown hard-break lines are preserved",
+    "receipt_schema_shape": "PASS — final branch receipt artifact hash matches the final branch README SHA-256 and required fields are present",
     "local_precommit_and_repository_tests": "NOT RUN — no mounted checkout was available through the selected connector surface",
     "hosted_workflow_behavior": "NOT CLAIMED — no workflow or settings change is included",
     "human_review": "PENDING — draft PR requires independent review"
