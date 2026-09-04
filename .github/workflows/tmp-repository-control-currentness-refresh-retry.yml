@@ -1,0 +1,147 @@
+name: temporary-repository-control-currentness-refresh-retry
+
+"on":
+  push:
+    branches:
+      - docs/issue-4024-control-state-currentness-20260903
+
+permissions:
+  contents: write
+
+concurrency:
+  group: temporary-repository-control-currentness-refresh-retry
+  cancel-in-progress: false
+
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  TZ: UTC
+
+jobs:
+  replay-fix-and-validate:
+    if: >-
+      github.ref == 'refs/heads/docs/issue-4024-control-state-currentness-20260903' &&
+      github.event.head_commit.message == 'ci(control): retry currentness refresh harness'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out exact guarded retry head
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 2
+          persist-credentials: true
+
+      - name: Replay reviewed transformation and repair harness indentation
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          expected_parent='95a557a2b3d6f610e65fc3ba316ae67c1cfb8a1d'
+          expected_doc_blob='6bcb1ca8a64be7d4600ee8d53aab9f09eaececbd'
+          expected_test_blob='216e5e0f1d3e6446a42858ea1e0e50c3a2bae87e'
+          original_workflow='.github/workflows/tmp-repository-control-currentness-refresh.yml'
+          retry_workflow='.github/workflows/tmp-repository-control-currentness-refresh-retry.yml'
+
+          test "$(git rev-parse HEAD^)" = "${expected_parent}"
+          test "$(git rev-parse HEAD:docs/governance/REPOSITORY_TRANSITION_CONTROL_SOURCE.md)" = "${expected_doc_blob}"
+          test "$(git rev-parse HEAD:tests/validators/test_repository_control_strict_input.py)" = "${expected_test_blob}"
+          test "$(git diff-tree --no-commit-id --name-only -r HEAD^ HEAD)" = "${retry_workflow}"
+          test -f "${original_workflow}"
+
+          python3 - <<'PY'
+          from pathlib import Path
+
+          workflow_path = Path(
+              ".github/workflows/tmp-repository-control-currentness-refresh.yml"
+          )
+          workflow_text = workflow_path.read_text(encoding="utf-8")
+          start_marker = "          python3 - <<'PY'\n"
+          end_marker = "\n          PY\n"
+          if workflow_text.count(start_marker) < 1:
+              raise SystemExit("original transformation heredoc not found")
+          start = workflow_text.index(start_marker) + len(start_marker)
+          end = workflow_text.index(end_marker, start)
+          raw_script = workflow_text[start:end]
+          script_lines = []
+          for line in raw_script.splitlines():
+              if not line.startswith("          "):
+                  raise SystemExit("unexpected original transformation indentation")
+              script_lines.append(line[10:])
+          script = "\n".join(script_lines) + "\n"
+          exec(compile(script, "<currentness-refresh-replay>", "exec"), {})
+
+          test_path = Path("tests/validators/test_repository_control_strict_input.py")
+          lines = test_path.read_text(encoding="utf-8").splitlines()
+          first = 'assert "version: v1.3.7" in normalized'
+          last = (
+              'assert "review evidence, lifecycle events, and transition authority '
+              'remain separate" in normalized'
+          )
+          in_generated_block = False
+          found_first = False
+          found_last = False
+          repaired: list[str] = []
+          for line in lines:
+              if line == first:
+                  in_generated_block = True
+                  found_first = True
+              if in_generated_block:
+                  if line and not line.startswith("assert "):
+                      raise SystemExit(
+                          f"unexpected generated assertion line: {line!r}"
+                      )
+                  if line.startswith("assert "):
+                      line = "    " + line
+              repaired.append(line)
+              if in_generated_block and line.strip() == last:
+                  in_generated_block = False
+                  found_last = True
+          if in_generated_block or not found_first or not found_last:
+              raise SystemExit("generated assertion block boundary not found")
+          test_path.write_text("\n".join(repaired) + "\n", encoding="utf-8")
+          PY
+
+      - name: Install pinned focused-test runner
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m pip install 'pytest==8.2.2'
+
+      - name: Validate refreshed exact currentness surface
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --check
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path("tests/validators/test_repository_control_strict_input.py")
+          compile(path.read_text(encoding="utf-8"), str(path), "exec")
+          PY
+          python3 -m pytest -p no:cacheprovider \
+            tests/validators/test_repository_control_strict_input.py \
+            tests/validators/test_repository_control_input_bounds.py \
+            tests/validators/test_repository_control_source.py \
+            tests/validators/test_repository_transition_authorization.py
+
+      - name: Commit exact two-file refresh and self-delete both harnesses
+        shell: bash
+        run: |
+          set -euo pipefail
+          original_workflow='.github/workflows/tmp-repository-control-currentness-refresh.yml'
+          retry_workflow='.github/workflows/tmp-repository-control-currentness-refresh-retry.yml'
+          rm -- "${original_workflow}" "${retry_workflow}"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          actual_paths="$(git diff --cached --name-only | LC_ALL=C sort)"
+          expected_paths="$(printf '%s\n' \
+            '.github/workflows/tmp-repository-control-currentness-refresh-retry.yml' \
+            '.github/workflows/tmp-repository-control-currentness-refresh.yml' \
+            'docs/governance/REPOSITORY_TRANSITION_CONTROL_SOURCE.md' \
+            'tests/validators/test_repository_control_strict_input.py' \
+            | LC_ALL=C sort)"
+          test "${actual_paths}" = "${expected_paths}"
+          git commit -m 'docs(control): refresh capability-reviewed currentness'
+          git push origin "HEAD:${GITHUB_REF_NAME}"
