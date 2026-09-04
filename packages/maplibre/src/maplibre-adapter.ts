@@ -132,10 +132,10 @@ export class MapLibreAdapter implements MapRuntimePort {
     try {
       this.notifySnapshot();
     } catch {
-      if (this.state !== "DISPOSED") this.failInitialization();
+      if (!this.isDisposed()) this.failInitialization();
       return initialization;
     }
-    if (this.state === "DISPOSED") return initialization;
+    if (this.isDisposed()) return initialization;
 
     if (!supportsWebGL2()) {
       this.failInitialization();
@@ -169,19 +169,19 @@ export class MapLibreAdapter implements MapRuntimePort {
       const loadSubscription = map.on("load", () => {
         loadSubscription.unsubscribe();
         this.rendererUnsubscribers.delete(loadSubscription.unsubscribe);
-        if (this.state === "DISPOSED") return;
+        if (this.isDisposed()) return;
         try {
           this.camera = this.readRendererCamera(map);
           this.state = "READY";
           this.reason = null;
           this.clearInitializationDeadline();
           const snapshot = this.notifySnapshot();
-          if (this.state === "DISPOSED") return;
+          if (this.isDisposed()) return;
           this.initialization = null;
           this.rejectInitialization = null;
           resolveInitialization(snapshot);
         } catch {
-          if (this.state !== "DISPOSED") this.failInitialization();
+          if (!this.isDisposed()) this.failInitialization();
         }
       });
       this.rendererUnsubscribers.add(loadSubscription.unsubscribe);
@@ -204,7 +204,7 @@ export class MapLibreAdapter implements MapRuntimePort {
           this.failInitialization();
           return;
         }
-        if (this.state !== "DISPOSED") this.failRuntime();
+        if (!this.isDisposed()) this.failRuntime();
       });
       this.rendererUnsubscribers.add(errorSubscription.unsubscribe);
     } catch {
@@ -262,7 +262,7 @@ export class MapLibreAdapter implements MapRuntimePort {
   }
 
   dispose(): void {
-    if (this.state === "DISPOSED") return;
+    if (this.isDisposed()) return;
     this.clearInitializationDeadline();
     const rejection = this.rejectInitialization;
     this.rejectInitialization = null;
@@ -283,6 +283,10 @@ export class MapLibreAdapter implements MapRuntimePort {
         "Map runtime was disposed during initialization.",
       ),
     );
+  }
+
+  private isDisposed(): boolean {
+    return this.state === "DISPOSED";
   }
 
   private readRendererCamera(map: MapLibreMap): MapRuntimeCamera {
@@ -358,7 +362,7 @@ export class MapLibreAdapter implements MapRuntimePort {
   }
 
   private assertNotDisposed(): void {
-    if (this.state === "DISPOSED") {
+    if (this.isDisposed()) {
       throw new MapRuntimePortError(
         "MAP_RUNTIME_DISPOSED",
         "Map runtime has been disposed.",
