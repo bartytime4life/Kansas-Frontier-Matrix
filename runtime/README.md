@@ -2,14 +2,14 @@
 doc_id: kfm://doc/runtime-readme
 title: runtime/ — Bounded Runtime Composition Root
 type: readme; root-readme; canonical-runtime-root; internal-composition-boundary; compatibility-drift-index
-version: v0.5
+version: v0.6
 status: proposed-update; canonical-root-confirmed; root-contract-current-at-target; implementation-mixed; deployment-unverified
 owners:
   - "@bartytime4life — repository owner and current machine-projected review route"
   - "NEEDS VERIFICATION — independent runtime, governed-AI, governed-API, policy, evidence, security, test, and operations stewards"
 created: "NEEDS VERIFICATION — compact root stub existed before v0.2 expansion"
-updated: 2026-08-09
-supersedes: "v0.4 upon merge"
+updated: 2026-09-04
+supersedes: "v0.5 upon merge"
 policy_label: public-documentation; internal-runtime-boundary; no-direct-public-runtime; no-secrets; evidence-subordinate; policy-subordinate; release-subordinate
 current_path: runtime/README.md
 root_registry_id: root.runtime
@@ -42,10 +42,14 @@ evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   visibility: public
   base_ref: main
-  base_commit: 7da777a8cd87130406bbcb081738e21f92f1c932
-  prior_blob: 520097cf14639e41191a399c84f080c2c6cfb30f
+  base_commit: b5a91a33b6c900033364fe924a74a907745a6d2d
+  base_tree: b52d0c835a3b82f997bf1c0d4f122227a7eff9a2
+  observed_at: "2026-09-04T18:29:48Z"
+  open_prs_at_preflight: 1
+  overlap_note: "Open PR #4258 changes configs/templates/ only and is path-disjoint from runtime/."
+  prior_blob: e6843df941a57ca09159083d89ed5952c464ae72
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
-  adr_0029_blob: b01322ef64f8c2b1ecb41de7ef4685b97cfa2a62
+  adr_0029_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
   root_registry_blob: 024f668b5f0a9239bafa4f8b09e2afd86300ff8c
   validator_entrypoint_blob: c308015da780d7b72f56277b521fb0e42317651e
 related:
@@ -101,7 +105,7 @@ notes:
 > **One-line purpose.** `runtime/` owns KFM's internal runtime composition, provider bindings, deterministic mocks, finite-outcome handoffs, health and kill-switch behavior, and non-secret service wiring without becoming a public API, evidence authority, policy authority, source authority, release authority, or publication path.
 
 <p>
-  <a href="#purpose"><img alt="Document version v0.5" src="https://img.shields.io/badge/version-v0.5-0969da?style=flat-square"></a>
+  <a href="#purpose"><img alt="Document version v0.6" src="https://img.shields.io/badge/version-v0.6-0969da?style=flat-square"></a>
   <a href="#root-class-and-authority-owner"><img alt="Root class canonical" src="https://img.shields.io/badge/root-canonical-1f883d?style=flat-square"></a>
   <a href="#public-exposure-and-sensitivity-posture"><img alt="Exposure internal" src="https://img.shields.io/badge/exposure-internal-8250df?style=flat-square"></a>
   <a href="#adoption-and-conformance-status"><img alt="Implementation maturity mixed" src="https://img.shields.io/badge/maturity-mixed-f97316?style=flat-square"></a>
@@ -205,7 +209,7 @@ The root contract and implementation maturity are separate claims.
 | `runtime/` responsibility root | `CONFIRMED` | Directory Rules v2 and the current machine projection classify it as canonical and internal. |
 | Directory Rules authority | `CONFIRMED / ACCEPTED` | ADR-0029 adopts `docs/doctrine/directory-rules.md` as the single writable human-readable authority. |
 | This README's ROOT_FULL structure | `PROPOSED UPDATE` until merge | The first twelve H2 sections follow the adopted root-README profile. |
-| Current direct-child inventory | `CONFIRMED` at `main@7da777a8cd87130406bbcb081738e21f92f1c932` | Fourteen entries are present, including this README and thirteen directories. |
+| Current direct-child inventory | `CONFIRMED` at `main@b5a91a33b6c900033364fe924a74a907745a6d2d` (tree `b52d0c835a3b82f997bf1c0d4f122227a7eff9a2`) | Fourteen entries are present, including this README and thirteen directories. |
 | Normalized canonical child set | `PARTIAL CONFORMANCE` | `local/`, `model_adapters/`, `mock/`, `ollama/`, `envelopes/`, and `service_configs/` exist; the normalized `health/` lane is absent. |
 | Compatibility or unresolved children | `CONFIRMED PRESENT / NEEDS VERIFICATION` | `AI/`, `adapters/`, `flora/`, `log/`, `people/`, `pipelines/`, and `release/` require retained compatibility or object-by-object disposition; this README does not move them. |
 | Provider-neutral adapter documentation | `CONFIRMED` | `runtime/model_adapters/README.md` defines the provider-neutral lane; presence is not execution proof. |
@@ -542,7 +546,7 @@ This README does not move, rename, delete, mirror, or create any child. A future
 
 ## Direct-child directory map
 
-Verified against the GitHub contents view for `runtime/` at `main@7da777a8cd87130406bbcb081738e21f92f1c932`.
+Verified against the GitHub contents view for `runtime/` at `main@b5a91a33b6c900033364fe924a74a907745a6d2d` (tree `b52d0c835a3b82f997bf1c0d4f122227a7eff9a2`).
 
 ```text
 runtime/
@@ -608,12 +612,15 @@ runtime/
 
 | Field | Value |
 |---|---|
-| Last documentation evidence review | 2026-08-09 |
+| Last documentation evidence review | 2026-09-04 |
 | Repository | `bartytime4life/Kansas-Frontier-Matrix` |
-| Pinned base | `main@7da777a8cd87130406bbcb081738e21f92f1c932` |
-| Prior README blob | `520097cf14639e41191a399c84f080c2c6cfb30f` |
+| Pinned base | `main@b5a91a33b6c900033364fe924a74a907745a6d2d` |
+| Pinned main tree | `b52d0c835a3b82f997bf1c0d4f122227a7eff9a2` |
+| Open pull requests at preflight | `1` |
+| Open-PR overlap | `NONE` | PR #4258 changes `configs/templates/` only; it is path-disjoint from `runtime/`. |
+| Prior README blob | `e6843df941a57ca09159083d89ed5952c464ae72` |
 | Directory Rules blob | `fd49a0b83e55cef52c1124281f093e263526898d` |
-| ADR-0029 blob | `b01322ef64f8c2b1ecb41de7ef4685b97cfa2a62` |
+| ADR-0029 blob | `a4de0d7a96b78da59cfc499d1025e1508afd8dd9` |
 | Root registry blob | `024f668b5f0a9239bafa4f8b09e2afd86300ff8c` |
 | Evidence reviewed | Target README, adopted directory authority, accepted ADR, machine projection, current direct-child tree, selected child READMEs, runtime contracts/schemas/validators referenced by the current root, and sibling ROOT_FULL patterns |
 | Runtime exercised | No live model, provider, evidence resolver, policy engine, receipt store, deployment, health endpoint, or public client was exercised for this documentation update |
@@ -903,10 +910,10 @@ The related documents do not all have equal authority or maturity. Read their me
 
 ### Documentation-only rollback for this README
 
-This v0.5 update changes one Markdown file and no runtime behavior. Rollback is therefore:
+This v0.6 update changes one Markdown file and no runtime behavior. Rollback is therefore:
 
 1. revert the feature-branch commit or the eventual merge commit;
-2. restore prior blob `520097cf14639e41191a399c84f080c2c6cfb30f` at `runtime/README.md` if a byte-exact restoration is required;
+2. restore prior blob `e6843df941a57ca09159083d89ed5952c464ae72` at `runtime/README.md` if a byte-exact restoration is required;
 3. rerun README structure, anchors, direct-child parity, links, and hosted documentation checks;
 4. preserve the revert commit and PR history rather than rewriting shared history.
 
@@ -932,6 +939,14 @@ Rollback does not erase receipts, prior decisions, or correction lineage. A roll
 ---
 
 ## Changelog
+
+### v0.6 — 2026-09-04
+
+- Re-pinned the documentation evidence snapshot to current GitHub `main@b5a91a33b6c900033364fe924a74a907745a6d2d` and tree `b52d0c835a3b82f997bf1c0d4f122227a7eff9a2`, observed at `2026-09-04T18:29:48Z`.
+- Refreshed the prior README blob to `e6843df941a57ca09159083d89ed5952c464ae72` and the accepted ADR-0029 blob to `a4de0d7a96b78da59cfc499d1025e1508afd8dd9`; Directory Rules, root-registry, and validator-entrypoint identities remain unchanged.
+- Re-verified the direct-child `runtime/` tree as fourteen entries, including the absent normalized `health/` lane and the retained compatibility or unresolved lanes.
+- Recorded one current open PR (#4258) as path-disjoint from `runtime/` and kept the update limited to this same-path README.
+- Preserved the distinction between root conformance and runtime implementation maturity; no runtime code, provider, model, route, source, policy, release, deployment, or publication state changed.
 
 ### v0.5 — 2026-08-09
 
