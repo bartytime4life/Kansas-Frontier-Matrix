@@ -159,3 +159,89 @@ def test_missing_content_length_preserves_existing_bounded_behavior(
     assert response.bytes_read == len(raw)
     assert json.loads(comments_path.read_text(encoding="utf-8")) == []
     assert json.loads(status_path.read_text(encoding="utf-8"))["status"] == "AVAILABLE"
+
+
+class ScalarGetAllHeaders:
+    def __init__(self, value: object) -> None:
+        self.value = value
+
+    def get_all(self, name: str):
+        assert name == "Content-Length"
+        return self.value
+
+    def get(self, _name: str):
+        raise AssertionError(
+            "get fallback must not run after get_all result"
+        )
+
+
+class GetOnlyHeaders:
+    def __init__(self, value: object) -> None:
+        self.value = value
+
+    def get_all(self, name: str):
+        assert name == "Content-Length"
+        return None
+
+    def get(self, name: str):
+        assert name == "Content-Length"
+        return self.value
+
+
+class GetHeaderOnlyResponse:
+    headers = None
+
+    def __init__(self, value: object) -> None:
+        self.value = value
+
+    def getheader(self, name: str):
+        assert name == "Content-Length"
+        return self.value
+
+
+def assert_invalid_header_shape(response: object) -> None:
+    try:
+        helper._header_values(response, "Content-Length")
+    except helper.CaptureError as exc:
+        assert (
+            exc.reason_code
+            == "CONTROL_SOURCE_CONTENT_LENGTH_INVALID"
+        )
+    else:
+        raise AssertionError(
+            "non-text or unsupported header shape was accepted"
+        )
+
+
+def test_scalar_get_all_string_is_one_header_value() -> None:
+    response = type(
+        "Response",
+        (),
+        {"headers": ScalarGetAllHeaders("2, 2")},
+    )()
+
+    assert helper._header_values(response, "Content-Length") == ["2, 2"]
+    assert helper._declared_content_length(response) == 2
+
+
+def test_get_all_rejects_non_text_and_unsupported_shapes() -> None:
+    for value in (2, b"2", {"2"}, ["2", 2]):
+        response = type(
+            "Response",
+            (),
+            {"headers": ScalarGetAllHeaders(value)},
+        )()
+        assert_invalid_header_shape(response)
+
+
+def test_get_fallback_rejects_non_text_value() -> None:
+    response = type(
+        "Response",
+        (),
+        {"headers": GetOnlyHeaders(2)},
+    )()
+    assert_invalid_header_shape(response)
+
+
+def test_getheader_fallback_rejects_non_text_value() -> None:
+    assert_invalid_header_shape(GetHeaderOnlyResponse(2))

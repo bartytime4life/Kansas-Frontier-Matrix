@@ -120,31 +120,44 @@ def _strict_json_text(value: object) -> str:
         raise CaptureError("CONTROL_SOURCE_SERIALIZATION_INVALID") from exc
 
 
+def _header_text(value: object) -> str:
+    """Return one textual header value or reject the response shape."""
+
+    if not isinstance(value, str):
+        raise CaptureError("CONTROL_SOURCE_CONTENT_LENGTH_INVALID")
+    return value
+
+
 def _header_values(response: Any, name: str) -> list[str]:
-    """Return all visible values for one response header without trusting shape."""
+    """Return all visible textual values for one response header."""
 
     headers = getattr(response, "headers", None)
     if headers is not None:
         get_all = getattr(headers, "get_all", None)
         if callable(get_all):
             values = get_all(name)
-            if values:
-                return list(values)
+            if values is not None:
+                if isinstance(values, str):
+                    return [values]
+                if not isinstance(values, (list, tuple)):
+                    raise CaptureError(
+                        "CONTROL_SOURCE_CONTENT_LENGTH_INVALID"
+                    )
+                return [_header_text(value) for value in values]
 
         get = getattr(headers, "get", None)
         if callable(get):
             value = get(name)
             if value is not None:
-                return [value]
+                return [_header_text(value)]
 
     getheader = getattr(response, "getheader", None)
     if callable(getheader):
         value = getheader(name)
         if value is not None:
-            return [value]
+            return [_header_text(value)]
 
     return []
-
 
 def _declared_content_length(response: Any) -> int | None:
     """Return one strict Content-Length value or fail on ambiguity/malformed input."""
