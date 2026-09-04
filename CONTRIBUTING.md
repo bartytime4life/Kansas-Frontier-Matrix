@@ -9,14 +9,15 @@ This guide explains how to contribute code, documentation, schemas, policies, fi
 | Field | Current status |
 |---|---|
 | Repository | `bartytime4life/Kansas-Frontier-Matrix` |
-| Evidence snapshot for this revision | `main@66489ef991cf015d1dd697fe965981a1da171897` |
-| Directory-governance authority reverified | `main@2262d5b374eebeb216494c05a8edb4cc189dfd84`; accepted [`ADR-0029`](docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) |
+| Evidence snapshot for this revision | `main@87099f58986e9795e7152eaea0b27d9568754ccb` (reverified 2026-09-04) |
+| Directory-governance authority reverified | `main@87099f58986e9795e7152eaea0b27d9568754ccb`; accepted [`ADR-0029`](docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts the exact pinned bytes at [`docs/doctrine/directory-rules.md`](docs/doctrine/directory-rules.md) |
 | Document role | Root contribution guide |
 | Truth posture | Cite-or-abstain; report truth posture and capability maturity separately for material capability claims |
-| Review route | Focused branch and draft pull request by default |
+| Review route | Focused branch and draft pull request when the delivery path is eligible |
 | Verified review-routing file | [`.github/CODEOWNERS`](.github/CODEOWNERS) |
-| Review-routing limitation | The listed GitHub teams and branch-protection enforcement remain **NEEDS VERIFICATION** |
-| Local validation surface | [`Makefile`](Makefile), [`pyproject.toml`](pyproject.toml), targeted package or subsystem commands |
+| GitHub protection snapshot | Ruleset `15484585` (`Protect`) is active on the default branch; pull requests and review-thread resolution are required, approving-review count is `0`, and no required-status-check rule is configured (read-only observation) |
+| Review-routing limitation | `CODEOWNERS` routes `@bartytime4life`; independent review, approval requirements, and required-status-check enforcement remain **NEEDS VERIFICATION** |
+| Local validation surface | [`Makefile`](Makefile), [`pyproject.toml`](pyproject.toml), [`.pre-commit-config.yaml`](.pre-commit-config.yaml), [`package.json`](package.json), and targeted package or subsystem commands |
 | Implementation limit | A documented rule, planned path, stub workflow, or passing check is not automatically proof of runtime behavior or release authority |
 
 > [!IMPORTANT]
@@ -31,9 +32,29 @@ This guide explains how to contribute code, documentation, schemas, policies, fi
 > material placement drift in
 > [`docs/registers/DRIFT_REGISTER.md`](docs/registers/DRIFT_REGISTER.md).
 
+## Documentation authority and cross-system roles
+
+GitHub is the canonical current implementation and operational contributor-contract surface. This file and the repository's current [pull-request template](.github/PULL_REQUEST_TEMPLATE.md) are the repository-facing contribution authorities.
+
+Notion is a coordination surface for current work, owners, stale pointers, source lineage, and open verification. It does not establish repository implementation, review approval, release authority, or publication state.
+
+Google Drive and attached or reference material are proposal, research, doctrine-lineage, and design-pressure inputs unless the repository has explicitly adopted them. They do not override current GitHub evidence or authorize a new path, source admission, review, merge, release, deployment, promotion, or publication.
+
+When an operational contributor rule changes, update GitHub first. Update Notion or Drive pointers only as coordination or lineage; do not maintain a competing executable copy of this contract.
+
+GitHub's actual pull-request fields and timeline are authoritative for `Draft`/`Ready`, review, check, closed, merged, and base/merge state. Body prose, comments, generated receipts, badges, and tool intent may support the record but cannot override GitHub metadata.
+
+> [!CAUTION]
+> **Current delivery-control boundary (`main@87099f58986e9795e7152eaea0b27d9568754ccb`, 2026-09-04).** [Issue #4024](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024) remains open after repeated owner-authenticated, null-GitHub-App ready-to-merge or ready-to-close transitions whose exact client remains unresolved.
+>
+> The incident scope is the implicated PR-state mutation path; it does not impose a global authoring freeze. If a delivery path is incident-quarantined, stop at `VALIDATED_BRANCH_ONLY`, preserve the branch and exact head, do not create a same-path successor PR, and separate writer, one-shot draft creator, and observer duties. Unrelated collision-free branch work still requires its own current-base and overlap checks.
+>
+> This boundary grants no ready, approval, merge, settings, release, deployment, promotion, publication, or source-admission authority.
+
 ## Quick navigation
 
 - [Operating rules](#operating-rules)
+- [Documentation authority and cross-system roles](#documentation-authority-and-cross-system-roles)
 - [Before you start](#before-you-start)
 - [Choose the owning responsibility root](#choose-the-owning-responsibility-root)
 - [Keep meaning, shape, admissibility, and proof separate](#keep-meaning-shape-admissibility-and-proof-separate)
@@ -111,7 +132,7 @@ At minimum:
 
 1. Read the target file in full.
 2. Read the nearest parent README and relevant adjacent documentation.
-3. Inspect path-scoped instructions such as `AGENTS.md` when present. A root `AGENTS.md` was not verified at the evidence snapshot; do not assume one will remain absent.
+3. Inspect path-scoped instructions such as `AGENTS.md` when present. No root `AGENTS.md` was present at the current evidence snapshot; do not assume that nested or future instructions are absent.
 4. Read the current [Directory Rules](docs/doctrine/directory-rules.md) and accepted
    [`ADR-0029`](docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md). Treat the
    architecture-path copy as read-only compatibility, not current authority.
@@ -320,6 +341,8 @@ Minimum expectations:
 
 Use [`.github/PULL_REQUEST_TEMPLATE.md`](.github/PULL_REQUEST_TEMPLATE.md) and keep every heading. At draft opening, complete the core review boundary and mark each non-triggered conditional section `Not applicable` with one reason. Do not fabricate evidence or delete the visible tokens required by the current proposed Rego companion.
 
+GitHub's actual pull-request fields and timeline are authoritative for delivery state. Do not rely on a PR body saying `DRAFT`, `DO NOT MERGE`, or `READY`; read back the GitHub `draft`, review, check, base, head, conflict, closed, and merged fields before making a delivery-state claim.
+
 At draft opening, the core review boundary identifies:
 
 - goal and status labels;
@@ -430,6 +453,9 @@ The root project currently requires Python 3.11 or newer and exposes this baseli
 python -m venv .venv
 . .venv/bin/activate
 python -m pip install -e ".[test]"
+python -m pip install pre-commit
+pre-commit install
+pre-commit run --all-files
 
 make validate
 git diff --check
@@ -437,12 +463,15 @@ git diff --check
 
 At the evidence snapshot:
 
-- `make validate` runs `make schemas` and `make test`;
-- `make schemas` invokes `python tools/validators/_common/run_all.py`;
-- `make test` runs `python -m pytest tests/schemas tests/contracts -q`;
-- many other Make targets and root JavaScript `lint`, `test`, and `build` scripts remain explicit TODO placeholders.
+- `make validate` delegates to `make schemas test`.
+- `make schemas` invokes `python tools/validators/_common/run_all.py`.
+- `make test` runs `python -m pytest tests/schemas tests/contracts -q`.
+- Implemented Make targets include repository guardrails, governed-API checks, deny/boundary checks, release dry-run checks, and MapLibre validation surfaces; read each target before relying on it.
+- Readiness markers `policy`, `fixtures`, `proof-slice`, and `catalog` intentionally print `TODO` and do not prove validation.
+- The root JavaScript workspace in [`package.json`](package.json) pins `pnpm@11.17.0` and Node `>=22.13 <23`; its root `lint`, `test`, and `build` scripts intentionally exit with `WORKFLOW_HOLD`, so they are not validation. Use affected package commands for JavaScript/TypeScript changes.
+- [`pnpm-workspace.yaml`](pnpm-workspace.yaml) carries an `allowBuilds` policy. Do not bypass or rewrite that policy merely to make a check green.
 
-Do not report a TODO target as validation. Run targeted subsystem checks in addition to the baseline.
+Do not report a TODO target or `WORKFLOW_HOLD` script as validation. Run targeted subsystem checks in addition to the baseline.
 
 ### Targeted examples
 
@@ -558,6 +587,8 @@ Release-affecting rollback must use the repository's governed release, correctio
 ### Validation and delivery
 
 - [ ] Repository-native baseline and targeted checks were run, or every omission has a reason.
+- [ ] `pre-commit run --all-files` was run, or its omission or failure is recorded with a reason.
+- [ ] GitHub metadata, not PR body prose, was used for delivery-state claims.
 - [ ] Positive and negative behavior were tested where applicable.
 - [ ] Markdown structure and links were checked for documentation changes.
 - [ ] Final diff contains only authorized paths.
