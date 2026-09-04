@@ -1,0 +1,235 @@
+{
+  "profile_id": "kfm:fixture-profile:municipal-legal-status-support:v0.1.0",
+  "schema_path": "schemas/contracts/v1/domains/settlements-infrastructure/municipal-legal-status-support.schema.json",
+  "base": {
+    "object_type": "MunicipalLegalStatusSupportEnvelope",
+    "schema_version": "0.1.0",
+    "id": "kfm:municipal-legal-status-support:synthetic:supported",
+    "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "domain": "settlements-infrastructure",
+    "synthetic": true,
+    "input_state": "VALID",
+    "subject": {
+      "place_identity_ref": "kfm:place-identity:synthetic-municipality",
+      "identity_family": "Municipality",
+      "display_label": "Synthetic Municipality"
+    },
+    "claim": {
+      "claim_type": "municipal_legal_status",
+      "as_of": "2026-06-01T00:00:00Z"
+    },
+    "legal_status_evidence": {
+      "source_role": "administrative",
+      "source_ref": "source:synthetic:municipal_record",
+      "evidence_ref": "evidence:synthetic:municipal_status",
+      "source_date": "2026-01-15T00:00:00Z",
+      "effective_from": "2026-01-01T00:00:00Z",
+      "effective_to": null
+    },
+    "census_geography_context": {
+      "source_role": "aggregate",
+      "source_ref": "source:synthetic:census_geography",
+      "evidence_ref": "evidence:synthetic:census_geography",
+      "vintage": "synthetic-2026"
+    },
+    "policy_gate": {
+      "state": "UNRESOLVED",
+      "decision_ref": null
+    },
+    "review_gate": {
+      "state": "UNRESOLVED",
+      "review_ref": null
+    },
+    "release_gate": {
+      "state": "UNRELEASED",
+      "manifest_ref": null
+    },
+    "outcome": "ANSWER",
+    "reason_codes": [
+      "LEGAL_STATUS_SUPPORT_PRESENT"
+    ],
+    "non_authority": {
+      "real_world_assertion": false,
+      "source_activation": false,
+      "evidence_bundle_resolution": false,
+      "policy_approval": false,
+      "review_approval": false,
+      "release_or_publication": false,
+      "live_route": false
+    },
+    "limitations": [
+      "Synthetic fixture only; ANSWER means bounded internal support completeness, not a real legal-status determination."
+    ]
+  },
+  "valid": {
+    "answer_supported_municipality.json": {
+      "patch": {},
+      "expected_outcome": "ANSWER",
+      "expected_reasons": [
+        "LEGAL_STATUS_SUPPORT_PRESENT"
+      ]
+    },
+    "abstain_missing_legal_evidence.json": {
+      "patch": {
+        "id": "kfm:municipal-legal-status-support:synthetic:missing_evidence",
+        "legal_status_evidence": {
+          "source_ref": null,
+          "evidence_ref": null,
+          "source_date": null,
+          "effective_from": null,
+          "effective_to": null
+        },
+        "outcome": "ABSTAIN",
+        "reason_codes": [
+          "LEGAL_STATUS_EVIDENCE_INSUFFICIENT"
+        ]
+      },
+      "expected_outcome": "ABSTAIN",
+      "expected_reasons": [
+        "LEGAL_STATUS_EVIDENCE_INSUFFICIENT"
+      ]
+    },
+    "abstain_undated_legal_evidence.json": {
+      "patch": {
+        "id": "kfm:municipal-legal-status-support:synthetic:undated",
+        "legal_status_evidence": {
+          "source_date": null
+        },
+        "outcome": "ABSTAIN",
+        "reason_codes": [
+          "LEGAL_STATUS_EVIDENCE_UNDATED"
+        ]
+      },
+      "expected_outcome": "ABSTAIN",
+      "expected_reasons": [
+        "LEGAL_STATUS_EVIDENCE_UNDATED"
+      ]
+    },
+    "abstain_out_of_scope.json": {
+      "patch": {
+        "id": "kfm:municipal-legal-status-support:synthetic:out_of_scope",
+        "claim": {
+          "as_of": "2025-12-01T00:00:00Z"
+        },
+        "outcome": "ABSTAIN",
+        "reason_codes": [
+          "LEGAL_STATUS_EVIDENCE_OUT_OF_SCOPE"
+        ]
+      },
+      "expected_outcome": "ABSTAIN",
+      "expected_reasons": [
+        "LEGAL_STATUS_EVIDENCE_OUT_OF_SCOPE"
+      ]
+    },
+    "deny_census_place.json": {
+      "patch": {
+        "id": "kfm:municipal-legal-status-support:synthetic:census_place",
+        "subject": {
+          "place_identity_ref": "kfm:place-identity:synthetic-census-place",
+          "identity_family": "CensusPlace",
+          "display_label": "Synthetic Census Place"
+        },
+        "outcome": "DENY",
+        "reason_codes": [
+          "CENSUS_PLACE_NOT_MUNICIPALITY"
+        ]
+      },
+      "expected_outcome": "DENY",
+      "expected_reasons": [
+        "CENSUS_PLACE_NOT_MUNICIPALITY"
+      ]
+    },
+    "error_explicit_input_state.json": {
+      "patch": {
+        "id": "kfm:municipal-legal-status-support:synthetic:input_error",
+        "input_state": "ERROR",
+        "outcome": "ERROR",
+        "reason_codes": [
+          "SYNTHETIC_INPUT_ERROR"
+        ]
+      },
+      "expected_outcome": "ERROR",
+      "expected_reasons": [
+        "SYNTHETIC_INPUT_ERROR"
+      ]
+    },
+    "error_partial_legal_evidence.json": {
+      "patch": {
+        "id": "kfm:municipal-legal-status-support:synthetic:partial_legal_evidence",
+        "legal_status_evidence": {
+          "evidence_ref": null
+        },
+        "outcome": "ERROR",
+        "reason_codes": [
+          "LEGAL_EVIDENCE_PARTIAL"
+        ]
+      },
+      "expected_outcome": "ERROR",
+      "expected_reasons": [
+        "LEGAL_EVIDENCE_PARTIAL"
+      ]
+    }
+  },
+  "invalid": {
+    "invalid_answer_for_census_place.json": {
+      "patch": {
+        "id": "kfm:municipal-legal-status-support:synthetic:bad_outcome",
+        "subject": {
+          "place_identity_ref": "kfm:place-identity:synthetic-census-place",
+          "identity_family": "CensusPlace",
+          "display_label": "Synthetic Census Place"
+        }
+      },
+      "expected_findings": [
+        "OUTCOME_MISMATCH",
+        "REASON_CODES_MISMATCH"
+      ]
+    },
+    "invalid_legal_source_role.json": {
+      "patch": {
+        "id": "kfm:municipal-legal-status-support:synthetic:bad_legal_role",
+        "legal_status_evidence": {
+          "source_role": "observed"
+        }
+      },
+      "expected_findings": [
+        "LEGAL_SOURCE_ROLE_INVALID"
+      ]
+    },
+    "invalid_census_source_role.json": {
+      "patch": {
+        "id": "kfm:municipal-legal-status-support:synthetic:bad_census_role",
+        "census_geography_context": {
+          "source_role": "administrative"
+        }
+      },
+      "expected_findings": [
+        "CENSUS_SOURCE_ROLE_INVALID"
+      ]
+    },
+    "invalid_reversed_effective_time.json": {
+      "patch": {
+        "id": "kfm:municipal-legal-status-support:synthetic:reversed_time",
+        "legal_status_evidence": {
+          "effective_from": "2026-07-01T00:00:00Z",
+          "effective_to": "2026-06-01T00:00:00Z"
+        }
+      },
+      "expected_findings": [
+        "LEGAL_VALID_TIME_ORDER"
+      ]
+    },
+    "invalid_gate_upgrade.json": {
+      "patch": {
+        "id": "kfm:municipal-legal-status-support:synthetic:gate_upgrade",
+        "policy_gate": {
+          "state": "ALLOW",
+          "decision_ref": "policy:synthetic:fake"
+        }
+      },
+      "expected_findings": [
+        "SCHEMA_INVALID"
+      ]
+    }
+  }
+}
