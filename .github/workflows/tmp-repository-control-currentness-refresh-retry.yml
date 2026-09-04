@@ -22,7 +22,7 @@ jobs:
   replay-fix-and-validate:
     if: >-
       github.ref == 'refs/heads/docs/issue-4024-control-state-currentness-20260903' &&
-      github.event.head_commit.message == 'ci(control): retry currentness refresh extraction'
+      github.event.head_commit.message == 'ci(control): align refreshed currentness assertion'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -33,12 +33,12 @@ jobs:
           fetch-depth: 2
           persist-credentials: true
 
-      - name: Replay reviewed transformation and repair harness indentation
+      - name: Replay reviewed transformation and align coupled assertions
         shell: bash
         run: |
           set -euo pipefail
 
-          expected_parent='e023735f5c42bbf8a72af785d54418ad1ece5ddc'
+          expected_parent='286fe8af68d608fd42f1b1269e164a1074c230f6'
           expected_doc_blob='6bcb1ca8a64be7d4600ee8d53aab9f09eaececbd'
           expected_test_blob='216e5e0f1d3e6446a42858ea1e0e50c3a2bae87e'
           original_workflow='.github/workflows/tmp-repository-control-currentness-refresh.yml'
@@ -78,7 +78,20 @@ jobs:
           exec(compile(script, "<currentness-refresh-replay>", "exec"), {})
 
           test_path = Path("tests/validators/test_repository_control_strict_input.py")
-          lines = test_path.read_text(encoding="utf-8").splitlines()
+          test_text = test_path.read_text(encoding="utf-8")
+          old_assertion = (
+              '    assert "declared content-length completeness correction '
+              'validated branch-only" in normalized\n'
+          )
+          new_assertion = (
+              '    assert "content-length correction capability-reviewed '
+              'branch-only" in normalized\n'
+          )
+          if test_text.count(old_assertion) != 1:
+              raise SystemExit("expected one stale branch-status assertion")
+          test_text = test_text.replace(old_assertion, new_assertion)
+
+          lines = test_text.splitlines()
           first = 'assert "version: v1.3.7" in normalized'
           last = (
               'assert "review evidence, lifecycle events, and transition authority '
