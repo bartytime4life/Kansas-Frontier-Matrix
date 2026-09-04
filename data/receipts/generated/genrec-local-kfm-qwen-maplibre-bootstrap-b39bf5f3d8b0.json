@@ -1,0 +1,173 @@
+{
+  "artifact_hashes": {
+    "apps/governed-api/src/governed_api/main.py": "sha256:5ba94563212bee9e55d4769fea49cfd82e6ecd0cb6cbe1d27ba66a0567f7c071",
+    "apps/governed-api/tests/test_local_server_config.py": "sha256:5e36c42d238b4e6b483736f6c2df9839f2b0e0033c07e6cc275ae231348f3597",
+    "docs/runbooks/ui_LOCAL_DEV.md": "sha256:a5ddc274b6be4e10293a531e462252cf42e755c492cca991d36da3722c32d372",
+    "package.json": "sha256:3395774eb46a7e850e91077beb69e602ae5c33325599abc33322f1013a1b2dfe",
+    "scripts/dev/README.md": "sha256:2fd3e724b2a0936567551e4fecbf0c84469af337260322d7bc7fa42af9a71166",
+    "scripts/dev/bootstrap.sh": "sha256:f1fad7d2e288ff9f62845b5a3ce8aa7beb725116a48df7c0d28c14e9aacf44a2",
+    "scripts/dev/ollama-readiness.sh": "sha256:f7b047fed368abc946ead59775df8b1a6de30346398af137fc9297dfe1021e39",
+    "tests/test_local_dev_bootstrap.py": "sha256:d6460975b98702c4de6571f6bbc6ae5d29bf6321db2e8e4d18faea844436c63f"
+  },
+  "artifact_paths": [
+    "package.json",
+    "scripts/dev/bootstrap.sh",
+    "scripts/dev/ollama-readiness.sh",
+    "scripts/dev/README.md",
+    "docs/runbooks/ui_LOCAL_DEV.md",
+    "apps/governed-api/src/governed_api/main.py",
+    "apps/governed-api/tests/test_local_server_config.py",
+    "tests/test_local_dev_bootstrap.py"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "repo:commit@7c5d4125c277536258be6345e366efae59dbe5d6",
+      "id": "KFM-current-main",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:package.json@7c5d4125c277536258be6345e366efae59dbe5d6",
+      "id": "KFM-workspace-contract",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:pnpm-workspace.yaml@7c5d4125c277536258be6345e366efae59dbe5d6",
+      "id": "KFM-pnpm-build-policy",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:packages/maplibre/package.json@7c5d4125c277536258be6345e366efae59dbe5d6",
+      "id": "KFM-maplibre-boundary",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/adr/ADR-0008-ollama-subordinate-to-governed-api.md@7c5d4125c277536258be6345e366efae59dbe5d6",
+      "id": "KFM-ollama-ADR",
+      "validated": true
+    },
+    {
+      "evidence_ref": "https://nodejs.org/download/release/latest-v22.x/",
+      "id": "Node-v22-release-index",
+      "validated": true
+    },
+    {
+      "evidence_ref": "https://docs.ollama.com/linux",
+      "id": "Ollama-Linux-installation",
+      "validated": true
+    },
+    {
+      "evidence_ref": "https://ollama.com/library/qwen3:14b",
+      "id": "Ollama-qwen3-14b",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-09-04T14:59:12Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:commit@7c5d4125c277536258be6345e366efae59dbe5d6",
+      "repo:package.json@7c5d4125c277536258be6345e366efae59dbe5d6",
+      "repo:pnpm-workspace.yaml@7c5d4125c277536258be6345e366efae59dbe5d6",
+      "repo:.env.example@7c5d4125c277536258be6345e366efae59dbe5d6",
+      "repo:apps/explorer-web/vite.config.ts@7c5d4125c277536258be6345e366efae59dbe5d6",
+      "repo:packages/maplibre/package.json@7c5d4125c277536258be6345e366efae59dbe5d6",
+      "repo:docs/adr/ADR-0008-ollama-subordinate-to-governed-api.md@7c5d4125c277536258be6345e366efae59dbe5d6",
+      "github:issue/4024",
+      "https://nodejs.org/download/release/latest-v22.x/",
+      "https://docs.ollama.com/linux",
+      "https://ollama.com/library/qwen3:14b"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0008-ollama-subordinate-to-governed-api.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-09-04"
+  },
+  "notes": "Branch-only local-development slice based on main@7c5d4125c277536258be6345e366efae59dbe5d6. Replaces the bootstrap placeholder, adds a loopback-only Ollama/Qwen inventory probe, local package commands, a reconciled runbook, loopback-bound API configuration, and focused tests. It does not install the user workstation, activate a live Ollama provider, connect Explorer to a live API, create a PR, deploy, or publish.",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "container-backed deterministic validation",
+      "official web-source verification"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md",
+    "docs/adr/ADR-0008-ollama-subordinate-to-governed-api.md",
+    "github:issue/4024"
+  ],
+  "prompt_or_contract": "sha256:5285863df8512b9aeb707c59137696eb7e5e4584f9d7938bc66e6e40b470faea",
+  "receipt_id": "genrec-local-kfm-qwen-maplibre-bootstrap-b39bf5f3d8b0",
+  "truth_labels": {
+    "apps/governed-api/src/governed_api/main.py": "PROPOSED",
+    "apps/governed-api/tests/test_local_server_config.py": "PROPOSED",
+    "docs/runbooks/ui_LOCAL_DEV.md": "PROPOSED",
+    "package.json": "PROPOSED",
+    "scripts/dev/README.md": "PROPOSED",
+    "scripts/dev/bootstrap.sh": "PROPOSED",
+    "scripts/dev/ollama-readiness.sh": "PROPOSED",
+    "tests/test_local_dev_bootstrap.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-and-overlap-inspection",
+      "outcome": "PASS",
+      "reason": "Authored against main@7c5d4125c277536258be6345e366efae59dbe5d6; no relevant overlapping open branch or PR was found."
+    },
+    {
+      "gate": "focused-local-regression-suite",
+      "outcome": "PASS",
+      "reason": "All 32 focused bootstrap, Ollama-readiness, and Governed API configuration tests passed."
+    },
+    {
+      "gate": "static-integrity-validation",
+      "outcome": "PASS",
+      "reason": "Bash syntax, Python compilation, JSON, metadata shape, Markdown structure, UTF-8, final newline, tabs, trailing whitespace, and artifact hashes passed."
+    },
+    {
+      "gate": "loopback-and-model-boundary",
+      "outcome": "PASS",
+      "reason": "Tests cover non-loopback rejection, redirect denial, proxy bypass, bounded /api/tags reads, exact model identity, and absence of generation requests."
+    },
+    {
+      "gate": "repository-topology-precheck",
+      "outcome": "PASS",
+      "reason": "No new root or authority root was introduced; a proposed .nvmrc was removed before handoff."
+    },
+    {
+      "gate": "locked-workspace-install-and-explorer-build",
+      "outcome": "SKIPPED",
+      "reason": "The execution environment is not the user workstation and did not contain the complete installed workspace; no install/build result is claimed."
+    },
+    {
+      "gate": "full-repository-validator-profile",
+      "outcome": "SKIPPED",
+      "reason": "A complete local clone was unavailable; hosted exact-head checks remain necessary after branch handoff."
+    },
+    {
+      "gate": "pull-request-and-hosted-ci",
+      "outcome": "SKIPPED",
+      "reason": "Issue #4024 keeps PR creation quarantined for this path; terminal state is VALIDATED_BRANCH_ONLY."
+    },
+    {
+      "gate": "user-workstation-installation",
+      "outcome": "SKIPPED",
+      "reason": "No remote shell or filesystem access to the user Ubuntu workstation was available; the branch supplies the exact path and executable procedure."
+    }
+  ]
+}
