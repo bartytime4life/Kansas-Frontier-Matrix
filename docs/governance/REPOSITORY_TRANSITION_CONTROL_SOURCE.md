@@ -2,24 +2,28 @@
 doc_id: kfm://doc/governance/repository-transition-control-source
 title: Repository transition control-source binding
 type: governance binding and enforcement-candidate note
-version: v1.3.6
-status: current-main workflow-active advisory; three-helper bounded capture integrated; declared Content-Length completeness correction validated branch-only; required-status-check authorization expired
+version: v1.3.7
+status: current-main workflow-active advisory; three-helper bounded capture integrated; Content-Length correction capability-reviewed branch-only; required-status-check authorization expired
 owner: OWNER_TBD — governance steward and repository-control steward
 created: 2026-09-03
-updated: 2026-09-03
+updated: 2026-09-04
 policy_label: repository-facing; governance; fail-closed; non-authoritative
-truth_posture: CONFIRMED current-main issue-#4024 binding and strict bounded-EOF capture / CONFIRMED silent-short declared-length gap on main / VALIDATED_BRANCH_ONLY completeness correction / EXPIRED_UNAPPLIED required-check authorization
+truth_posture: CONFIRMED current-main issue-#4024 binding and strict bounded-EOF capture / CONFIRMED silent-short declared-length gap on main / CAPABILITY_SEPARATED_TECHNICAL_PASS branch-only completeness correction / EXPIRED_UNAPPLIED required-check authorization
 related:
   - ../../contracts/governance/repository_control_state.md
   - ../../tools/validators/repository_control/fetch_bounded_issue_comments.py
   - ../../tools/validators/repository_control/validate_control_source_availability.py
   - ../../tools/validators/repository_control/validate_transition_authorization.py
   - ../../tests/validators/test_repository_control_input_bounds.py
+  - ../../tests/validators/test_repository_control_content_length.py
   - ../../tests/validators/test_repository_control_strict_input.py
   - ../../tests/validators/test_repository_control_source.py
   - ../../tests/validators/test_repository_transition_authorization.py
   - ../../.github/workflows/repository-control.yml
   - https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024
+  - https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4240
+  - https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4240#issuecomment-5534981507
+  - https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024#issuecomment-5534984234
   - https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024#issuecomment-5532519315
   - https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024#issuecomment-5532535765
   - https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024#issuecomment-5532579086
@@ -33,6 +37,9 @@ related:
   - https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4237
   - https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4238
   - https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4239
+  - https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4241
+  - https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4242
+  - https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4243
   - https://github.com/bartytime4life/Kansas-Frontier-Matrix/rules/15484585
 [/KFM_META_BLOCK_V2] -->
 
@@ -84,7 +91,7 @@ Ruleset `15484585`, named `Protect`, still has no `required_status_checks` rule.
 A passing or failing `authorize-ready-and-merge` result is therefore not
 presently a server-side merge prerequisite.
 
-## Declared Content-Length completeness gap and branch-only correction
+## Declared Content-Length completeness gap and capability-reviewed branch-only correction
 
 Fresh review of the exact current-main helper found that it does not inspect or
 compare a declared `Content-Length`. It reads under the page and aggregate byte
@@ -93,36 +100,62 @@ peer can therefore declare a longer body, end the transfer after a complete
 valid-JSON prefix such as `[]`, and have that prefix classified as an
 `AVAILABLE` source.
 
-Issue #4024 comment `5533902911` records the bounded reproduction and the
-branch-only correction. Comment `5534073715` records a same-session second-pass
-technical review; it is not independent human or capability-separated review.
-
-The preserved correction is:
+The current corrected branch is:
 
 - branch: `fix/repository-control-content-length-completeness-20260903`;
-- exact head: `5fe7ca322c838f5de3d677977a12302ba3c9e6f6`;
-- exact tree from fresh GitHub branch readback:
-  `841ce3565e297e2a4778dd56cd4a4ef3e9e6b78f`;
-- helper blob: `9047c59d2ba91618078713ebffc2989ac282ab9b`;
-- direct-regression blob: `174733cb47d00ed688c168d3deee5015ba316e3e`;
+- current exact head: `952d564c90c4536f0a021b6fcf0be685c5c476f9`;
+- current exact tree: `79021db8b062f1107fad664a1011622c1d5cff21`;
+- helper blob: `40498bd7be4318e43615c2a68713c6c43439308c`;
+- direct-regression blob: `7c45d3085f9c3c08101395eeaa21bdc8af301f0e`;
 - permanent net paths: the capture helper and
-  `tests/validators/test_repository_control_content_length.py`.
+  `tests/validators/test_repository_control_content_length.py`;
+- hosted correction validation: run `33830734231`, job
+  `100893006792`, with `60 passed in 0.79s`.
 
-The two issue comments transcribed the final tree as
-`841ce7988aabc4b864a275e61c7253003848f082`. That value is not the tree of exact
-head `5fe7ca322c838f5de3d677977a12302ba3c9e6f6` and must not be used as its
-identity.
-
-The correction collects all visible `Content-Length` values, rejects malformed
-or conflicting declarations, rejects a declared size above the applicable
+The correction collects all visible `Content-Length` values, accepts a scalar
+textual `get_all()` result as one value, accepts only list or tuple collections
+whose members are text, and rejects unsupported or non-text `get_all`, `get`,
+and `getheader` response shapes. It rejects malformed or conflicting decimal
+declarations, rejects a declared size above the applicable page or aggregate
 budget before reading, and requires the received byte count to equal a valid
 declared length after EOF. A missing `Content-Length` remains permissible and
 uses the existing bounded-EOF behavior.
 
-That correction is validated branch-only. It is not integrated into protected
-main, and no pull request exists for it. This note records the distinction; it
-does not authorize delivery or integration.
+Issue #4024 comments `5533902911` and `5534073715` captured the
+pre-review correction checkpoint. Comment `5534073715` is a same-session
+technical review, not independent human or capability-separated review. The
+two issue comments transcribed the pre-review tree as
+`841ce7988aabc4b864a275e61c7253003848f082`. That value is not the tree
+of exact pre-review head `5fe7ca322c838f5de3d677977a12302ba3c9e6f6`
+and must not be used as its identity. Those pre-review identities are now
+historical and superseded by current exact head `952d564c90c4536f0a021b6fcf0be685c5c476f9`.
 
+Capability-separated review then proceeded through review-only, non-default-base
+pull requests under issue #4240:
+
+- PR #4242 reviewed the pre-review head and reported one P2 on
+  `_header_values`: non-text values could contradict its `list[str]` contract,
+  and a scalar string returned by a nonstandard `get_all()` implementation
+  could be expanded into characters. Inline finding `3930396535` records the
+  exact issue.
+- Exact head `952d564c90c4536f0a021b6fcf0be685c5c476f9` resolves that
+  finding and carries the focused regressions named above.
+- PR #4243 review `5108722539`, submitted by
+  `copilot-pull-request-reviewer[bot]` at `2026-09-04T02:51:44Z`, is
+  bound to exact corrected head `952d564c90c4536f0a021b6fcf0be685c5c476f9`.
+  It reviewed 2/2 files, generated zero comments, and reported
+  `Approval recommended`, expressly concluding that the prior non-string and
+  scalar-shape gaps were closed.
+
+That result is a capability-separated technical pass with no reported P0, P1,
+or P2 finding on the corrected exact head. Its effort level was `Lite`; it is
+not accountable human approval, delivery authority, transition authorization,
+or repository-settings authority.
+
+The correction remains branch-only and is not integrated into protected main.
+No integration pull request exists for it; PRs #4242 and #4243 were isolated
+review transports against disposable non-default bases and are closed. This
+note records the distinction and does not authorize delivery or integration.
 ## Incident entry paths
 
 ### Born ready — PR #4234
@@ -156,6 +189,34 @@ and correctly classified the exact head as
 `TRANSITION_AUTHORIZATION_MISSING`, but it was created one second after merge.
 The later declared-length completeness finding does not change that incident
 timeline or classification.
+
+### Non-default review transports — PRs #4241 through #4243
+
+PR #4241 was created as a draft review transport against disposable non-default
+base `review-base/issue-4240-lane-a-7c5d4125`. It was marked ready at
+`2026-09-04T02:26:07Z` and merged three seconds later as
+`6fe6b27292ac7705089e86f2ab3b165750df28e0`. The owner account is the
+recorded actor for both transitions and neither event names a performing GitHub
+App. The merge advanced only the disposable review base; protected main did not
+move. A later Copilot review was bound to the exact Lane A head and reported no
+findings, but it did not authorize or explain the preceding lifecycle events.
+
+PR #4242 was a separate Lane B review transport. It was closed unmerged, and the
+later capability-separated review reported the `_header_values` P2 described
+above. The review finding, not the closed PR state, triggered the branch-only
+correction.
+
+PR #4243 exposed the corrected Lane B exact head through a fresh disposable
+non-default base. It was marked ready at `2026-09-04T02:49:32Z` by the owner
+identity with no performing GitHub App and was closed unmerged three seconds
+later. GitHub Copilot review work began after closure and produced the exact-head
+technical pass recorded above. The ready event remains unauthorized and its
+initiating client remains unresolved.
+
+These review transports prove that a non-default base can contain protected-main
+impact but does not itself preserve draft state. They also show that the
+owner/null-App draft-removal signature is not limited to pull requests targeting
+main. Review evidence, lifecycle events, and transition authority remain separate.
 
 These incidents do not identify whether the initiating path was a browser, CLI,
 PAT, OAuth client, connector, or another owner-authenticated session. They do
@@ -305,38 +366,46 @@ promotion, publication, or source-state change.
    resource-bounded capture, strict parser and serialization behavior, bounded
    pagination, and bounded reads to EOF.
 2. **CONFIRMED branch-only:** exact correction
-   `fix/repository-control-content-length-completeness-20260903@5fe7ca322c838f5de3d677977a12302ba3c9e6f6`
-   detects malformed, conflicting, oversized, and mismatched declared lengths.
-3. Obtain genuinely independent exact-final-head review and a separately
-   authorized delivery decision before opening or integrating that correction.
-4. Re-read the exact current workflow, check-run name, GitHub Actions App
+   `fix/repository-control-content-length-completeness-20260903@952d564c90c4536f0a021b6fcf0be685c5c476f9`
+   detects malformed, conflicting, oversized, mismatched, non-text, and unsupported
+   declared-length response shapes.
+3. **CONFIRMED technical review:** GitHub Copilot review `5108722539` is bound
+   to exact corrected head `952d564c90c4536f0a021b6fcf0be685c5c476f9`,
+   reports 2/2 files reviewed and zero findings, and is capability-separated
+   technical evidence rather than accountable human approval or transition authority.
+4. Revalidate and re-review the governance-currentness note after every change to
+   the exact branch-only correction identity. A prior review does not transfer to
+   this refreshed document head.
+5. Obtain a separately authorized delivery decision before opening or integrating
+   either preserved branch. Review success alone does not authorize delivery.
+6. Re-read the exact current workflow, check-run name, GitHub Actions App
    identity, current ruleset, and current main immediately before requesting a
    new settings authorization.
-5. After a new exact owner authorization, use a separately authenticated,
+7. After a new exact owner authorization, use a separately authenticated,
    abort-on-drift repository-settings operation to add one reviewed strict
    required-status-check rule without weakening deletion, non-fast-forward,
    pull-request, or thread-resolution protections.
-6. Use a genuinely capability-separated operator or account for all canaries.
-7. Create a draft canary and prove its first `opened` event produces
+8. Use a genuinely capability-separated operator or account for all canaries.
+9. Create a draft canary and prove its first `opened` event produces
    `PULL_REQUEST_IS_DRAFT`, not skipped success.
-8. Prove a born-ready pull request with no exact record cannot merge while
-   `TRANSITION_AUTHORIZATION_MISSING` is outstanding.
-9. Prove a draft changed to ready without an exact record cannot merge under
-   the same hold.
-10. Prove one exact, unedited, unexpired owner record for the current base and
+10. Prove a born-ready pull request with no exact record cannot merge while
+    `TRANSITION_AUTHORIZATION_MISSING` is outstanding.
+11. Prove a draft changed to ready without an exact record cannot merge under
+    the same hold.
+12. Prove one exact, unedited, unexpired owner record for the current base and
     head allows only that authorization check to pass.
-11. Prove stale, edited, malformed, duplicate-key, wrong-base, wrong-head,
+13. Prove stale, edited, malformed, duplicate-key, wrong-base, wrong-head,
     wrong-issue, non-owner, expired, unavailable, oversized, incomplete, and
     truncated source states remain blocked after the completeness correction is
     integrated.
-12. Push a new head and prove strict currentness requires a fresh record and
-    rerun.
-13. Record platform rejection before merge; a check that starts after merge is
+14. Push a new head and prove strict currentness requires a fresh record and rerun.
+15. Record platform rejection before merge; a check that starts after merge is
     not prevention evidence.
 
 Reusing the owner-authenticated path implicated by PRs #4234, #4235, #4238,
-and #4239 would not prove capability separation.
-
+#4239, #4241, and #4243 would not prove capability separation for delivery or
+settings mutation. The non-default-base review transports provided technical
+review and containment evidence only.
 ## Explicit residual limits
 
 A public commenter can consume the issue-wide capture budget and cause a safe
@@ -380,7 +449,8 @@ Do not rewrite receipts merely because the live control source moved from
 deleted issue #1675 to issue #4024.
 
 The three-helper resource-bounded capture is on main. Strict declared-length
-completeness remains on the exact validated branch identified above. Any later
+and header-shape completeness remains on the exact capability-reviewed branch
+`fix/repository-control-content-length-completeness-20260903@952d564c90c4536f0a021b6fcf0be685c5c476f9`. Any later
 integration or correction should be a focused reviewed forward change. If a
 required-check rule is later installed, remove or replace that rule through a
 separately authorized settings operation before reverting or renaming its

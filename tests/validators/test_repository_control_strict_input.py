@@ -205,7 +205,7 @@ def test_binding_note_distinguishes_main_bounds_from_branch_only_length_fix() ->
 
     assert "current-main workflow-active advisory" in normalized
     assert "three-helper bounded capture integrated" in normalized
-    assert "declared content-length completeness correction validated branch-only" in normalized
+    assert "content-length correction capability-reviewed branch-only" in normalized
     assert "pr #4237" in normalized
     assert "pr #4239" in normalized
     assert "pr #4238" in normalized
@@ -218,22 +218,38 @@ def test_binding_note_distinguishes_main_bounds_from_branch_only_length_fix() ->
     assert "it does not inspect or compare a declared `content-length`" in normalized
     assert "silently short response as complete" in normalized
     assert "fix/repository-control-content-length-completeness-20260903" in binding
-    assert "5fe7ca322c838f5de3d677977a12302ba3c9e6f6" in binding
-    assert "841ce3565e297e2a4778dd56cd4a4ef3e9e6b78f" in binding
+    assert "952d564c90c4536f0a021b6fcf0be685c5c476f9" in binding
+    assert "79021db8b062f1107fad664a1011622c1d5cff21" in binding
     assert (
-        "the two issue comments transcribed the final tree as "
+        "the two issue comments transcribed the pre-review tree as "
         "`841ce7988aabc4b864a275e61c7253003848f082`"
     ) in normalized
-    assert "that value is not the tree of exact head" in normalized
+    assert "that value is not the tree of exact pre-review head" in normalized
     assert "must not be used as its identity" in normalized
-    assert "9047c59d2ba91618078713ebffc2989ac282ab9b" in binding
-    assert "174733cb47d00ed688c168d3deee5015ba316e3e" in binding
+    assert "40498bd7be4318e43615c2a68713c6c43439308c" in binding
+    assert "7c45d3085f9c3c08101395eeaa21bdc8af301f0e" in binding
     assert "5533902911" in binding
     assert "5534073715" in binding
     assert "not integrated into protected main" in normalized
-    assert "no pull request exists for it" in normalized
+    assert "no integration pull request exists for it" in normalized
     assert "a missing `content-length` remains permissible" in normalized
     assert "not independent human or capability-separated review" in normalized
+    assert "version: v1.3.7" in normalized
+    assert "content-length correction capability-reviewed branch-only" in normalized
+    assert "capability_separated_technical_pass" in normalized
+    assert "33830734231" in binding
+    assert "100893006792" in binding
+    assert "60 passed in 0.79s" in normalized
+    assert "3930396535" in binding
+    assert "5108722539" in binding
+    assert "pr #4242" in normalized
+    assert "pr #4243" in normalized
+    assert "2/2 files" in normalized
+    assert "approval recommended" in normalized
+    assert "not accountable human approval" in normalized
+    assert "no reported p0, p1, or p2 finding" in normalized
+    assert "review-only, non-default-base" in normalized
+    assert "review evidence, lifecycle events, and transition authority remain separate" in normalized
     assert "5532535765" in binding
     assert "5532579086" in binding
     assert "5532649271" in binding
@@ -257,6 +273,9 @@ def test_binding_note_distinguishes_main_bounds_from_branch_only_length_fix() ->
         "truncated-response handling are present on current main",
         "the bounded-capture and truncated-response code is now on main",
         "incomplete-response failure modes",
+        "- exact head: `5fe7ca322c838f5de3d677977a12302ba3c9e6f6`",
+        "- helper blob: `9047c59d2ba91618078713ebffc2989ac282ab9b`",
+        "- direct-regression blob: `174733cb47d00ed688c168d3deee5015ba316e3e`",
     )
     for phrase in stale_phrases:
         assert phrase not in normalized
