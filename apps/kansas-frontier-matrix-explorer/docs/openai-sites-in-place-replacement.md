@@ -5,7 +5,7 @@ type: app-local operational handoff
 version: v0.1.0
 status: READY_FOR_SITES_EXECUTION / HOLD_NO_SITES_MUTATION_SURFACE
 owners:
-  - "@bartytime4life — verified repository and Site-owner review route"
+  - "@bartytime4life — verified repository owner; intended Site-owner review route; Sites ownership and restore capability NEEDS VERIFICATION"
 created: 2026-09-04
 updated: 2026-09-04
 policy_label: public; fixture-only; no protected precision
@@ -281,7 +281,7 @@ critical interaction path. Preserve both the failed candidate receipt and rollba
 evidence.
 
 A Site rollback does not rewrite Git history, change repository source, alter
-Vercel configuration, reverse source admission, change KFM lifecycle state, or
+Vercel configuration, reverse source admission, change KFM Lifecycle state, or
 withdraw a KFM knowledge release.
 
 ## Hard non-effects

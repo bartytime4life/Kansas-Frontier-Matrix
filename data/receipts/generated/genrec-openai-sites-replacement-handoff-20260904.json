@@ -8,7 +8,7 @@
   ],
   "artifact_hashes": {
     "apps/kansas-frontier-matrix-explorer/README.md": "sha256:3a792800eb199caf8b22f6b41bf6c9526377629a30697eb0da77ec6dff0cf126",
-    "apps/kansas-frontier-matrix-explorer/docs/openai-sites-in-place-replacement.md": "sha256:2ebd0bc2a9fca74b4fca5993a428b322ded62fa6a109ca7600552b67dc7ff8c5",
+    "apps/kansas-frontier-matrix-explorer/docs/openai-sites-in-place-replacement.md": "sha256:5f5ab685ca6ea18c1f8b8b3b21a336218c9b9d8950cb7267d0869f7cb5080885",
     "apps/kansas-frontier-matrix-explorer/tests/hosting-boundary.test.mjs": "sha256:3ce09bde4ff7331437a7def3d5f591bed7931e7b010ec770fad3a18ef8dfa84a"
   },
   "model_identity": {
@@ -123,6 +123,11 @@
       "gate": "human-review",
       "outcome": "SKIPPED",
       "reason": "Human review remains pending; this receipt records authorship and bounded validation only."
+    },
+    {
+      "gate": "site-owner-truth-posture-correction",
+      "outcome": "PASS",
+      "reason": "The handoff now distinguishes verified repository ownership from unverified OpenAI Sites ownership and restore capability; no Site-owner state is claimed without a Sites readback."
     }
   ],
   "policy_decisions": [
