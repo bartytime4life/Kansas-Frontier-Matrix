@@ -1,0 +1,140 @@
+{
+  "receipt_id": "genrec-catalog-stac-readme-14506ba5",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "catalog/STAC/README.md"
+  ],
+  "artifact_hashes": {
+    "catalog/STAC/README.md": "sha256:14506ba5b90dc660d95e313913607ddbe9361e1ad9fcd5a57c90ec3b873ab99d"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Pro",
+    "version": "UNKNOWN; exact runtime build not exposed"
+  },
+  "prompt_or_contract": "sha256:e0c5a40094f7413374fe66571b0f4ad86727189b2398b00e8800d438c39fabb5",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "tools_enabled": [
+      "GitHub",
+      "Google_Drive",
+      "Notion",
+      "container"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "Google Drive: Directory Rules (lineage only)",
+      "Notion: KFM Issue #4228 — Frozen Catalog Correction-Mechanism Decision Package (coordination only)"
+    ],
+    "evidence_refs": [
+      "catalog/STAC/README.md@7187fb20a8c1f9bf838e0f1fd00fb691b378c434",
+      "catalog/README.md@7187fb20a8c1f9bf838e0f1fd00fb691b378c434",
+      "data/catalog/stac/README.md@7187fb20a8c1f9bf838e0f1fd00fb691b378c434",
+      "docs/doctrine/directory-rules.md@7187fb20a8c1f9bf838e0f1fd00fb691b378c434",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@7187fb20a8c1f9bf838e0f1fd00fb691b378c434",
+      "docs/adr/ADR-0038-trusted-base-topology-correction-transitions.md@7187fb20a8c1f9bf838e0f1fd00fb691b378c434",
+      "control_plane/root_registry.yaml@7187fb20a8c1f9bf838e0f1fd00fb691b378c434",
+      "control_plane/repository_topology_correction_register.yaml@7187fb20a8c1f9bf838e0f1fd00fb691b378c434",
+      "CONTRIBUTING.md@7187fb20a8c1f9bf838e0f1fd00fb691b378c434",
+      ".github/PULL_REQUEST_TEMPLATE.md@7187fb20a8c1f9bf838e0f1fd00fb691b378c434",
+      "docs/doctrine/ai-build-operating-contract.md@7187fb20a8c1f9bf838e0f1fd00fb691b378c434",
+      "data/receipts/generated/README.md@7187fb20a8c1f9bf838e0f1fd00fb691b378c434",
+      "schemas/contracts/v1/receipts/generated_receipt.schema.json@7187fb20a8c1f9bf838e0f1fd00fb691b378c434"
+    ]
+  },
+  "truth_labels": {
+    "catalog/STAC/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "connector-pinned-inventory-and-authority-review",
+      "outcome": "PASS",
+      "reason": "Exact base, two-file STAC tree, adopted Directory Rules, ADR-0038 and inert agriculture-only correction register read from GitHub. This verifies facts, not integration permission."
+    },
+    {
+      "gate": "offline-markdown-structure-links-and-shell-syntax",
+      "outcome": "PASS",
+      "reason": "Session-only markdown-it/YAML checks: one H1, 21 retained H2 headings, top/heading anchors, 21 links against pinned verified paths or local anchors, seven parsed tables, balanced fences/HTML, final newline, no conflict markers; bash -n on the inspection example."
+    },
+    {
+      "gate": "candidate-whitespace",
+      "outcome": "PASS",
+      "reason": "git diff --no-index --check /dev/null candidate: exit 1 with no whitespace diagnostics because files differ; independent trailing-whitespace scan passed, and a synthetic trailing-space negative probe was detected."
+    },
+    {
+      "gate": "offline-receipt-schema-and-artifact-hash",
+      "outcome": "PASS",
+      "reason": "Draft202012Validator with FormatChecker against materialized schema byte-verified as Git blob fba21ed27ebccf1362fe397fe0c3ebd85e072685; final SHA-256 and field-map parity checked. Negative invalid-hash, extra-field, and altered-artifact probes rejected."
+    },
+    {
+      "gate": "frozen-root-integration-authority",
+      "outcome": "FAIL",
+      "reason": "Manual exact-authority review: no accepted, bound transition for catalog/STAC/README.md. This new blob delta is not inherited agriculture drift. Integration HOLD; no baseline, validator, or register changes."
+    },
+    {
+      "gate": "repository-native-validators-and-hosted-ci",
+      "outcome": "SKIPPED",
+      "reason": "No full local KFM checkout; git network access failed. Repository-native generated-receipt validator, topology suite, make validate, browser rendering, and hosted exact-head CI were not run before emission."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "catalog/STAC/README.md",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/7187fb20a8c1f9bf838e0f1fd00fb691b378c434/catalog/STAC/README.md"
+    },
+    {
+      "id": "catalog/README.md",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/7187fb20a8c1f9bf838e0f1fd00fb691b378c434/catalog/README.md"
+    },
+    {
+      "id": "data/catalog/stac/README.md",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/7187fb20a8c1f9bf838e0f1fd00fb691b378c434/data/catalog/stac/README.md"
+    },
+    {
+      "id": "docs/doctrine/directory-rules.md",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/7187fb20a8c1f9bf838e0f1fd00fb691b378c434/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/7187fb20a8c1f9bf838e0f1fd00fb691b378c434/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "docs/adr/ADR-0038-trusted-base-topology-correction-transitions.md",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/7187fb20a8c1f9bf838e0f1fd00fb691b378c434/docs/adr/ADR-0038-trusted-base-topology-correction-transitions.md"
+    },
+    {
+      "id": "control_plane/root_registry.yaml",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/7187fb20a8c1f9bf838e0f1fd00fb691b378c434/control_plane/root_registry.yaml"
+    },
+    {
+      "id": "control_plane/repository_topology_correction_register.yaml",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/7187fb20a8c1f9bf838e0f1fd00fb691b378c434/control_plane/repository_topology_correction_register.yaml"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-04T19:25:41Z",
+  "emitter": "chatgpt:kfm-stac-readme-authoring",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0038-trusted-base-topology-correction-transitions.md",
+    "drift_register_entry": null
+  },
+  "notes": "Scoped proposed README correction only. Existing document ID and section anchors retained. Prior README blob 198a970db9e71b2dc7f5cdbf171b14c0f9a878ce; candidate blob c2e327dafbabec3cd6cc185f690fbcf4f227ca11. Prompt hash covers only the current user request as UTF-8 without a trailing newline; no prompt text or hidden reasoning is stored. Specialist and independent human review remain unverified. Branch authoring/draft review does not authorize frozen-root integration, settings changes, source admission, release, deployment, promotion, or publication. Before integration, preserve or non-force-revert the candidate branch; any integrated frozen-content reversal needs current exact-transition review. This receipt is provenance, not proof or approval."
+}
