@@ -423,13 +423,6 @@
       "subject": "artifacts/trust-shaped"
     },
     {
-      "evidence_sha256": "sha256:02f9f42e689fa8eb8017c4a1758e626880a3e44a82f9e17f1513059e37d33ab0",
-      "evidence_zlib_base64": "eNpLSSxJ1M9NLCjW10vPLMlOTS1gSIELBbk6uvi66uWmAAAIvA0X",
-      "fingerprint": "sha256:7afc85a2d54cf8a3a7a191f3168dbfd13dab417e3799015cd6851f0ecf017a66",
-      "rule_id": "KFM-TOPO-010",
-      "subject": "data/maps/"
-    },
-    {
       "evidence_sha256": "sha256:2fc7eda5c1c21876950f371cd8e0bea60b2ca2daec0f010e68368808d96b78ab",
       "evidence_zlib_base64": "eNorSs1JTSxO1U/OLypKTS7JzM/TD3J1dPF11ctNYSjClCzKz8lJSkzO1tdLzyzJTk0twKsIbhQAwSslyQ==",
       "fingerprint": "sha256:7b90f98333dec2ea419273985562c2d38d7a717b7b8daf5880dae1719cef9cda",
@@ -813,6 +806,13 @@
       "fingerprint": "sha256:f11867231a4ec310c4f527063739c0e860bb9a0dcc31fa3e51be8bc04ca5b0e7",
       "rule_id": "KFM-TOPO-007",
       "subject": "casefold:docs/standards/stac.md"
+    },
+    {
+      "evidence_sha256": "sha256:04eb09536052f254c0ae6a0742915e1af43cc5de9fa2c9f64f9ce8641f96834c",
+      "evidence_zlib_base64": "eNpLSSxJ1M9NLCjWD3J1dPF11ctNAQBChgZX",
+      "fingerprint": "sha256:f2cb20b8da2fb6cab980cc5d2f3f80b8623623fb231501de565d5df19655796f",
+      "rule_id": "KFM-TOPO-010",
+      "subject": "data/maps/"
     },
     {
       "evidence_sha256": "sha256:c28a793a528b2d1887f961c7a1b8c60cf7ca9419fdddaaa9c63edb0956e2c4d4",
