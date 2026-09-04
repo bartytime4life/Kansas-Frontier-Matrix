@@ -198,12 +198,13 @@ def test_strict_serializer_rejects_non_finite_values(value: float) -> None:
     assert caught.value.reason_code == "CONTROL_SOURCE_SERIALIZATION_INVALID"
 
 
-def test_binding_note_describes_integrated_capture_and_expired_unapplied_gate() -> None:
+def test_binding_note_distinguishes_main_bounds_from_branch_only_length_fix() -> None:
     binding = BINDING_PATH.read_text(encoding="utf-8")
     lowered = binding.lower()
 
     assert "current-main workflow-active advisory" in lowered
-    assert "bounded capture and truncated-response hardening integrated" in lowered
+    assert "three-helper bounded capture integrated" in lowered
+    assert "declared content-length completeness correction validated branch-only" in lowered
     assert "pr #4237" in lowered
     assert "pr #4239" in lowered
     assert "pr #4238" in lowered
@@ -213,22 +214,34 @@ def test_binding_note_describes_integrated_capture_and_expired_unapplied_gate() 
     assert "16 mib" in lowered
     assert "1,000,000 json nodes" in lowered
     assert "allow_nan=false" in lowered
-    assert "content-length" in lowered
+    assert "current main does not inspect or compare a declared" in lowered
+    assert "silently short response as complete" in lowered
+    assert "fix/repository-control-content-length-completeness-20260903" in binding
+    assert "5fe7ca322c838f5de3d677977a12302ba3c9e6f6" in binding
+    assert "841ce3565e297e2a4778dd56cd4a4ef3e9e6b78f" in binding
+    assert "841ce7988aabc4b864a275e61c7253003848f082" in binding
+    assert "must not be used as its" in lowered
+    assert "identity" in lowered
+    assert "9047c59d2ba91618078713ebffc2989ac282ab9b" in binding
+    assert "174733cb47d00ed688c168d3deee5015ba316e3e" in binding
+    assert "5533902911" in binding
+    assert "5534073715" in binding
+    assert "not integrated into protected" in lowered
+    assert "no pull request exists for it" in lowered
+    assert "a missing `content-length` remains permissible" in lowered
+    assert "not independent human or capability-separated review" in lowered
     assert "5532535765" in binding
     assert "5532579086" in binding
     assert "5532649271" in binding
     assert "5533558088" in binding
-    assert "connected github capability exposes ruleset reads" in lowered
+    assert "connected github capability exposes" in lowered
+    assert "ruleset reads but no administration-write operation" in lowered
     assert "no ruleset mutation was attempted" in lowered
-    assert (
-        "required-status-check authorized but not applied before "
-        "2026-09-03t23:30:00z; authorization now expired"
-    ) in lowered
-    assert "expired-unapplied required-check authorization" in lowered
+    assert "owner authorization expired at `2026-09-03t23:30:00z`" in lowered
     assert "no settings operation may reuse the expired authorization" in lowered
     assert "a new owner decision" in lowered
-    assert "publishing that package did not" in lowered
-    assert "renew authority or apply the setting" in lowered
+    assert "publishing that package" in lowered
+    assert "did not renew authority or apply the setting" in lowered
     assert "does not itself authorize a ruleset mutation" in lowered
 
     stale_phrases = (
@@ -237,6 +250,10 @@ def test_binding_note_describes_integrated_capture_and_expired_unapplied_gate() 
         "candidate adds a third trusted-base capture helper",
         "if the candidate bytes are integrated",
         "the bounded-input changes described below remain a branch-local hardening proposal",
+        "bounded capture and truncated-response hardening integrated",
+        "truncated-response handling are present on current main",
+        "the bounded-capture and truncated-response code is now on main",
+        "incomplete-response failure modes",
     )
     for phrase in stale_phrases:
         assert phrase not in lowered
