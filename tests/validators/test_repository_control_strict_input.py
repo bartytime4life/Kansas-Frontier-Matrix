@@ -201,48 +201,51 @@ def test_strict_serializer_rejects_non_finite_values(value: float) -> None:
 def test_binding_note_distinguishes_main_bounds_from_branch_only_length_fix() -> None:
     binding = BINDING_PATH.read_text(encoding="utf-8")
     lowered = binding.lower()
+    normalized = " ".join(lowered.split())
 
-    assert "current-main workflow-active advisory" in lowered
-    assert "three-helper bounded capture integrated" in lowered
-    assert "declared content-length completeness correction validated branch-only" in lowered
-    assert "pr #4237" in lowered
-    assert "pr #4239" in lowered
-    assert "pr #4238" in lowered
-    assert "current protected-main workflow uses three trusted-base helpers" in lowered
+    assert "current-main workflow-active advisory" in normalized
+    assert "three-helper bounded capture integrated" in normalized
+    assert "declared content-length completeness correction validated branch-only" in normalized
+    assert "pr #4237" in normalized
+    assert "pr #4239" in normalized
+    assert "pr #4238" in normalized
+    assert "current protected-main workflow uses three trusted-base helpers" in normalized
     assert "fetch_bounded_issue_comments.py" in binding
-    assert "100 pages" in lowered
-    assert "16 mib" in lowered
-    assert "1,000,000 json nodes" in lowered
-    assert "allow_nan=false" in lowered
-    assert "current main does not inspect or compare a declared" in lowered
-    assert "silently short response as complete" in lowered
+    assert "100 pages" in normalized
+    assert "16 mib" in normalized
+    assert "1,000,000 json nodes" in normalized
+    assert "allow_nan=false" in normalized
+    assert "it does not inspect or compare a declared `content-length`" in normalized
+    assert "silently short response as complete" in normalized
     assert "fix/repository-control-content-length-completeness-20260903" in binding
     assert "5fe7ca322c838f5de3d677977a12302ba3c9e6f6" in binding
     assert "841ce3565e297e2a4778dd56cd4a4ef3e9e6b78f" in binding
-    assert "841ce7988aabc4b864a275e61c7253003848f082" in binding
-    assert "must not be used as its" in lowered
-    assert "identity" in lowered
+    assert (
+        "the two issue comments transcribed the final tree as "
+        "`841ce7988aabc4b864a275e61c7253003848f082`"
+    ) in normalized
+    assert "that value is not the tree of exact head" in normalized
+    assert "must not be used as its identity" in normalized
     assert "9047c59d2ba91618078713ebffc2989ac282ab9b" in binding
     assert "174733cb47d00ed688c168d3deee5015ba316e3e" in binding
     assert "5533902911" in binding
     assert "5534073715" in binding
-    assert "not integrated into protected" in lowered
-    assert "no pull request exists for it" in lowered
-    assert "a missing `content-length` remains permissible" in lowered
-    assert "not independent human or capability-separated review" in lowered
+    assert "not integrated into protected main" in normalized
+    assert "no pull request exists for it" in normalized
+    assert "a missing `content-length` remains permissible" in normalized
+    assert "not independent human or capability-separated review" in normalized
     assert "5532535765" in binding
     assert "5532579086" in binding
     assert "5532649271" in binding
     assert "5533558088" in binding
-    assert "connected github capability exposes" in lowered
-    assert "ruleset reads but no administration-write operation" in lowered
-    assert "no ruleset mutation was attempted" in lowered
-    assert "owner authorization expired at `2026-09-03t23:30:00z`" in lowered
-    assert "no settings operation may reuse the expired authorization" in lowered
-    assert "a new owner decision" in lowered
-    assert "publishing that package" in lowered
-    assert "did not renew authority or apply the setting" in lowered
-    assert "does not itself authorize a ruleset mutation" in lowered
+    assert "connected github capability exposes ruleset reads" in normalized
+    assert "no administration-write operation" in normalized
+    assert "no ruleset mutation was attempted" in normalized
+    assert "owner authorization expired at `2026-09-03t23:30:00z`" in normalized
+    assert "no settings operation may reuse the expired authorization" in normalized
+    assert "a new owner decision" in normalized
+    assert "publishing that package did not renew authority or apply the setting" in normalized
+    assert "does not itself authorize a ruleset mutation" in normalized
 
     stale_phrases = (
         "candidate bounded-input hardening",
@@ -256,4 +259,4 @@ def test_binding_note_distinguishes_main_bounds_from_branch_only_length_fix() ->
         "incomplete-response failure modes",
     )
     for phrase in stale_phrases:
-        assert phrase not in lowered
+        assert phrase not in normalized
