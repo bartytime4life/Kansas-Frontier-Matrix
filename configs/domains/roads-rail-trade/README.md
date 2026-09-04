@@ -130,7 +130,7 @@ configs/domains/roads-rail-trade/
 | Domain documentation | Roads/Rail/Trade doctrine, canonical-path, object-family, and historic-route documentation exist. | Whole-domain implementation completeness or production readiness. |
 | Semantic contracts | `contracts/domains/roads-rail-trade/` exists, while `contracts/transport/` also exists. | Canonical slug convergence; current docs explicitly record the conflict/divergence. |
 | Machine schemas | Domain workflow expects `schemas/contracts/v1/domains/roads-rail-trade/` schema surfaces and parses them. | Acceptance of every schema family, broader `transport/` relationship, consumer use. |
-| CorridorRoute proof slice | Workflow runs `tests/schemas/test_corridor_route_contract.py` and `validate_corridor_route.py --fixtures`. | Hosted exact-head result for this README revision; broader transport-family correctness. |
+| CorridorRoute validation slice | Workflow runs `tests/schemas/test_corridor_route_contract.py` and `validate_corridor_route.py --fixtures`. | Hosted exact-head result for this README revision; broader transport-family correctness. |
 | Other validator roots | Workflow requires crossings/bridge/facility validator roots to remain documented scaffolds and fails if implementation appears without explicit wiring. | Accepted executable implementations for those families. |
 | Proof / release | Workflow source states proof and release-dry-run producers are not established. | Promotion, release assembly, signer custody, deployment, publication, rollback drill. |
 | Review routing | `/configs/` routes to `@bartytime4life` in CODEOWNERS. | Accountable specialist stewardship, independent approval, required-review enforcement. |
@@ -139,7 +139,7 @@ configs/domains/roads-rail-trade/
 
 The v0.2 blanket statement that inspected workflow, schema, validator, and source surfaces were merely TODO/empty scaffolds is no longer accurate. Current repository evidence now contains a bounded synthetic `CorridorRoute` validation slice and a workflow that explicitly checks its dependencies. That improvement is real but narrow: it does **not** establish a configuration consumer, live source activation, route authority, production readiness, or release status.
 
-The KFM corpus also consistently treats modern and historic movement systems as evidence-bearing but risk-sensitive. Historic routes can have narrative evidence without surveyed precision, rail alignment is distinct from operator/status, and movement-story products are derived narrative carriers rather than root truth. fileciteturn139file0
+The KFM domain corpus treats modern and historic movement systems as evidence-bearing but risk-sensitive: narrative geometry may be less precise than mapped geometry, rail alignment is distinct from operator/status, and movement-story products remain derived carriers rather than root truth. The current repository domain dossier preserves those distinctions.
 
 ## What belongs here
 
@@ -220,15 +220,7 @@ A configured display threshold does not make stale information current. A future
 
 Historic trails, roads, mail/stage routes, military/emigrant corridors, cattle trails, river crossings, and trade corridors often combine narrative, cartographic, archaeological, and later interpretive evidence. Configuration should preserve that uncertainty rather than manufacture a single precise line.
 
-A future profile may reference accepted behavior for:
-
-- corridor-width/generalization classes;
-- evidence-density or confidence display;
-- segment-level disagreement;
-- source-comparison mode;
-- generalized public geometry;
-- narrative/story-node presentation;
-- withheld or restricted cultural/sensitive route context.
+A future profile may reference accepted behavior for corridor-width/generalization classes, evidence-density/confidence display, segment-level disagreement, source-comparison mode, generalized public geometry, narrative/story-node presentation, and withheld or restricted cultural/sensitive route context.
 
 No threshold in this directory can convert plausibility into observation or authorize exposure of culturally sensitive or restricted alignments.
 
@@ -242,7 +234,7 @@ Graph traversal must not be presented as safe routing, legal access, current pas
 
 Geometry is not access permission. A displayed line or point does not establish ownership, right-of-way, public entry, current condition, bridge safety, route clearance, or permission to cross railroad/private property.
 
-Where infrastructure, archaeology-adjacent context, private land, culturally sensitive corridors, or operational detail creates risk, the configuration may only **reference** an accepted public-safe transform/profile. Redaction, generalization, suppression, delay, or denial must remain policy/review decisions with appropriate receipts and release evidence.
+Where infrastructure, archaeology-adjacent context, private land, culturally sensitive corridors, or operational detail creates risk, configuration may only **reference** an accepted public-safe transform/profile. Redaction, generalization, suppression, delay, or denial remain policy/review decisions with appropriate receipts and release evidence.
 
 ## Failure behavior
 
@@ -277,18 +269,11 @@ This documentation-only revision does not claim that repository-wide validation,
 
 **Moderate documentation review.** Executable risk is low because this change edits only one README, but the wording touches transport authority, historic uncertainty, infrastructure sensitivity, and an unresolved path/slug split.
 
-Review should confirm that the README:
-
-- remains subordinate to parent configuration contracts;
-- does not imply current navigation, legal-access, closure, bridge, or rail-operational authority;
-- does not convert the bounded CorridorRoute validation slice into domain-wide maturity;
-- preserves historic-route uncertainty and graph-derived labeling;
-- does not silently resolve the `roads-rail-trade` / `transport` contract/schema conflict;
-- does not imply source activation, evidence closure, release, or publication.
+Review should confirm that the README remains subordinate to parent configuration contracts, does not imply current navigation/legal-access/closure/bridge/rail authority, does not convert the bounded CorridorRoute validation slice into domain-wide maturity, preserves historic-route uncertainty and graph-derived labeling, does not silently resolve the `roads-rail-trade` / `transport` conflict, and does not imply source activation, evidence closure, release, or publication.
 
 ## Definition of done for the first payload
 
-The first executable file in this directory should not be added until a bounded PR can prove all of the following:
+The first executable file in this directory should not be added until a bounded PR can prove:
 
 - [ ] one named consumer and accountable owner;
 - [ ] one unambiguous file name and profile version;
