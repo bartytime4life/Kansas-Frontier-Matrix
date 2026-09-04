@@ -198,7 +198,7 @@ def test_strict_serializer_rejects_non_finite_values(value: float) -> None:
     assert caught.value.reason_code == "CONTROL_SOURCE_SERIALIZATION_INVALID"
 
 
-def test_binding_note_describes_integrated_capture_and_unapplied_authorized_gate() -> None:
+def test_binding_note_describes_integrated_capture_and_expired_unapplied_gate() -> None:
     binding = BINDING_PATH.read_text(encoding="utf-8")
     lowered = binding.lower()
 
@@ -217,10 +217,18 @@ def test_binding_note_describes_integrated_capture_and_unapplied_authorized_gate
     assert "5532535765" in binding
     assert "5532579086" in binding
     assert "5532649271" in binding
+    assert "5533558088" in binding
     assert "connected github capability exposes ruleset reads" in lowered
     assert "no ruleset mutation was attempted" in lowered
-    assert "required-status-check authorized but not applied" in lowered
-    assert "authorized but not applied" in lowered
+    assert (
+        "required-status-check authorized but not applied before "
+        "2026-09-03t23:30:00z; authorization now expired"
+    ) in lowered
+    assert "expired-unapplied required-check authorization" in lowered
+    assert "no settings operation may reuse the expired authorization" in lowered
+    assert "a new owner decision" in lowered
+    assert "publishing that package did not" in lowered
+    assert "renew authority or apply the setting" in lowered
     assert "does not itself authorize a ruleset mutation" in lowered
 
     stale_phrases = (
