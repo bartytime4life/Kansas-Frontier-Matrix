@@ -1,74 +1,40 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/configs-domains-atmosphere-readme
-title: configs/domains/atmosphere/ — Governed Atmosphere, Air, Weather, Climate, and Smoke Configuration Boundary
+title: "configs/domains/atmosphere/ — Governed Atmosphere Configuration Boundary"
 type: readme
-version: v0.3
-status: draft
-owners: OWNER_TBD — Config steward · Atmosphere steward · Air-quality steward · Meteorology/climate steward · Smoke/remote-sensing steward · Station/network steward · Source and rights steward · Temporal/freshness steward · Consumer owner · Validation steward · Policy steward · Hazards liaison · Release steward · Docs steward
+version: v0.4
+status: draft; repository-grounded; documentation-only; non-authoritative; non-publisher
+owners: ["@bartytime4life — CODEOWNERS review route only"]
+stewardship: "NEEDS VERIFICATION — configuration, Atmosphere, scientific-method, rights, policy, and release responsibilities are not assigned by review routing"
 created: 2026-07-13
-updated: 2026-07-14
-policy_label: "public; config-sublane; atmosphere; air-quality; weather; climate; smoke; aod; forecast; advisory-context; source-role-aware; knowledge-character-aware; time-aware; unit-aware; stale-state-aware; non-alert; no-life-safety-authority; non-secret; non-authoritative; no-live-binding; no-model-as-observation; no-aqi-as-concentration; no-aod-as-pm25; no-release-authority"
+updated: 2026-09-04
+policy_label: "public; non-secret; non-authoritative; no-live-binding; source-role-preserving; time-aware; non-alert; not-for-life-safety; no-release-authority"
 current_path: configs/domains/atmosphere/README.md
-truth_posture: CONFIRMED canonical Atmosphere config lane, parent configuration contract, repository-present Atmosphere doctrine and implementation-shaped surfaces, README-only bounded config inventory, air-versus-atmosphere slug and pipeline-lane conflict, CamelCase-versus-slug/snake-case object-path compatibility, domain-first-versus-subtype-first source-registry topology, placeholder/scaffold state of inspected package metadata and code, pipeline entrypoints, pipeline specs, policy files, schemas, validators, source records, UI files, published-layer documentation, workflow, and schema-home ADR, and prior README lineage / PROPOSED future consumer-bound templates and accepted profile references / CONFLICTED air versus atmosphere, CamelCase versus hyphen/snake-case object paths, contract/schema compatibility pointers, source-registry topology, and pipeline-lane placement / UNKNOWN direct consumers, loader behavior, precedence, deployment binding, exhaustive recursive inventory, runtime behavior, alerting behavior, and publication use / NEEDS VERIFICATION accepted owners, source roles and rights, station identity and siting, units and methods, temporal semantics and freshness budgets, low-cost sensor corrections, model/forecast profiles, smoke and AOD interpretation, climate baselines, executable config validation, policy-runtime binding, scanners, CI enforcement, correction propagation, and rollback/invalidation integration
+owning_root: configs/
+responsibility: "Explain safe Atmosphere configuration authoring, explicit consumer binding, compatibility, validation, and rollback without creating domain or publication authority"
+truth_posture: "CONFIRMED pinned directory contents, adopted placement, review routing, selected schema bytes, and validator source / PROPOSED future configuration design / UNKNOWN loader, operational enforcement, source admission, and release use / NEEDS VERIFICATION for broader implementation and independent review"
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
-  repository_id: "1059091169"
-  visibility: public
-  base_ref: main
-  base_commit: 65a0d9f6159efa03aba0711d38a51eb203079c3f
-  prior_blob: 46864d086e790ee4e64e909f02acfab633ca5a62
-  bounded_path_search: configs/domains/atmosphere/README.md only
+  ref: main
+  commit: 700570cbcf191038aa20a030174c2dd08cf93675
+  tree: f98d5965812e9a29f55d820f9942549719930408
+  initial_inspection_commit: bb3eb695e6068b38453ca3ded8f1394a8fdebc20
+  prior_target_blob: 6379c8123a278723f89b3bb3913f0371eff95f8b
+  tracked_config_files: [configs/domains/atmosphere/README.md]
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
 related:
   - ../README.md
-  - ../../README.md
-  - ../../../docs/domains/atmosphere/README.md
-  - ../../../docs/domains/atmosphere/ARCHITECTURE.md
-  - ../../../docs/domains/atmosphere/CANONICAL_PATHS.md
-  - ../../../docs/domains/atmosphere/DATA_LIFECYCLE.md
-  - ../../../docs/domains/atmosphere/API_CONTRACTS.md
-  - ../../../docs/domains/atmosphere/OBJECT_FAMILY_MAP.md
-  - ../../../docs/domains/atmosphere/KNOWLEDGE_CHARACTER_REGISTRY.md
-  - ../../../docs/domains/atmosphere/SOURCE_REGISTRY.md
-  - ../../../docs/domains/atmosphere/SENSITIVITY.md
-  - ../../../docs/domains/atmosphere/PUBLICATION_POSTURE.md
-  - ../../../docs/registers/DOMAIN_LANE.md
-  - ../../../docs/registers/DRIFT_REGISTER.md
   - ../../../docs/doctrine/directory-rules.md
-  - ../../../docs/security/SECRETS.md
-  - ../../../contracts/domains/atmosphere/
-  - ../../../schemas/contracts/v1/domains/atmosphere/
-  - ../../../policy/domains/atmosphere/
-  - ../../../data/registry/sources/atmosphere/
-  - ../../../data/registry/atmosphere/sources/
-  - ../../../packages/domains/atmosphere/
-  - ../../../pipelines/domains/atmosphere/
-  - ../../../pipelines/domains/air/
-  - ../../../pipeline_specs/atmosphere/
-  - ../../../tools/validators/domains/atmosphere/
-  - ../../../tests/domains/atmosphere/
-  - ../../../fixtures/domains/atmosphere/
-  - ../../../apps/explorer-web/src/features/domains/atmosphere/
-  - ../../../data/raw/atmosphere/
-  - ../../../data/work/atmosphere/
-  - ../../../data/quarantine/atmosphere/
-  - ../../../data/processed/atmosphere/
-  - ../../../data/catalog/domain/atmosphere/
-  - ../../../data/triplets/atmosphere/
-  - ../../../data/published/layers/atmosphere/
-  - ../../../data/receipts/atmosphere/
-  - ../../../data/proofs/atmosphere/
-  - ../../../release/candidates/atmosphere/
-  - ../../../release/manifests/atmosphere/
-  - ../../../docs/adr/ADR-XXXX-atmosphere-schema-home.md
-  - ../../../.github/workflows/domain-atmosphere.yml
-tags: [kfm, configs, atmosphere, air, air-quality, weather, meteorology, climate, smoke, aod, aqi, pm25, ozone, forecast, advisory, station, source-role, knowledge-character, time, freshness, units, no-alert, no-secrets, governance]
+  - ../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../../docs/domains/atmosphere/README.md
+  - ../../../tools/validators/domains/atmosphere/README.md
 notes:
-  - "The bounded repository search for configs/domains/atmosphere returned this README only. No executable Atmosphere configuration payload or indexed direct consumer was found."
-  - "The prior v0.2 README already carried strong non-alert, source-role, temporal, stale-state, AQI/concentration, AOD/PM2.5, model/observation, validation, correction, and rollback controls. v0.3 preserves them and adds current repository evidence, implementation maturity, object/path conflicts, station/measurement/model semantics, derived-cache invalidation, and stricter first-payload gates."
-  - "The repository contains many Atmosphere implementation-shaped files, but inspected package code, pipeline entrypoints, declarative specs, policy files, schemas, validators, source records, UI files, workflow jobs, and schema-home ADR remain version-0.0.0, placeholder, empty-stage, PROPOSED, empty-permissive, unimplemented, TBD, TODO-only, or otherwise not proof of production behavior."
-  - "Repository evidence preserves air versus atmosphere slug and pipeline conflicts, CamelCase versus hyphen/snake-case contract/schema paths, and subtype-first versus domain-first source-registry paths. This lane does not resolve, alias, or duplicate those conflicts."
-  - "Published-layer README lanes document downstream carrier expectations but do not prove emitted layers, release manifests, EvidenceBundle closure, policy approval, or governed runtime use."
-  - "Only this Markdown file changes."
+  - "This is a dated evidence snapshot, not a moving claim about main. Re-pin before acting."
+  - "Re-pin comparison changed only catalog/triplet/README.md; the target and inspected dependencies were unchanged from the initial inspection."
+  - "v0.4 replaces July-wide scaffold assertions with bounded evidence and consolidates repeated safeguards while retaining the existing H2 navigation."
+  - "README-only configuration does not imply an unimplemented Atmosphere domain; schema and validator maturity must be assessed individually."
+  - "Only this README changes. No payload, source, schema, policy, validator, runtime, release, or scheduler is changed."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -77,1539 +43,643 @@ notes:
 
 `configs/domains/atmosphere/`
 
-> Safe-to-commit configuration documentation and future consumer-bound templates for air-quality observations, weather and station observations, smoke and aerosol context, AOD, climate normals and anomalies, atmospheric model and forecast context, advisory referral context, and public-safe Atmosphere derivatives. This lane is not observation truth, regulatory authority, emergency alerting, health advice, source admission, evidence, policy, or release authority.
+> Configure a named consumer without redefining what the evidence means.
+> This lane is for safe, non-secret configuration support—not observations,
+> source admission, scientific interpretation, policy, alerts, or release decisions.
 
-![status](https://img.shields.io/badge/status-draft-blue)
-![version](https://img.shields.io/badge/version-v0.3-informational)
-![authority](https://img.shields.io/badge/authority-config__sublane-green)
-![maturity](https://img.shields.io/badge/maturity-README--only-lightgrey)
-![alerting](https://img.shields.io/badge/alerting-not__an__alert__system-red)
-![roles](https://img.shields.io/badge/source__roles-no__collapse-purple)
-![secrets](https://img.shields.io/badge/secrets-forbidden-red)
-![truth](https://img.shields.io/badge/truth-cite--or--abstain-0b7285)
+**Status:** draft `v0.4` · **Tracked lane:** README-only · **Implementation outside this lane:** mixed · **Review route:** `@bartytime4life`; stewardship and independent review remain unverified.
 
-**Quick links:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs-and-drift-triggers) · [Last reviewed](#last-reviewed) · [Scope](#scope-and-bounded-context) · [Classes](#configuration-classes) · [Contract](#minimum-configuration-contract) · [Binding](#consumer-binding-precedence-and-discovery) · [Objects](#atmosphere-object-family-boundaries) · [Roles](#source-role-and-knowledge-character) · [Stations](#station-network-and-sensor-identity) · [Measurements](#measurements-units-methods-averaging-and-quality) · [Time](#time-forecast-cycle-freshness-and-stale-state) · [Space](#spatial-support-resolution-height-and-generalization) · [AQI](#aqi-concentration-aod-pm25-and-smoke-boundaries) · [Models](#models-forecasts-ensembles-and-climate-products) · [Advisories](#advisory-alert-health-and-life-safety-boundary) · [Joins](#cross-domain-context-and-anti-authority) · [Rights](#source-rights-attribution-quotas-and-outages) · [Logging](#logging-telemetry-caches-and-derived-indexes) · [Failure](#failure-behavior) · [AI](#governed-ai-and-generated-language) · [Migration](#migration-and-anti-bypass-posture) · [Rollback](#rollback-correction-supersession-and-invalidation) · [Done](#definition-of-done-for-the-first-payload)
-
-> [!IMPORTANT]
-> **Document lifecycle:** draft `v0.3`  
-> **Observed lane maturity:** README-only in the bounded config-path search; no executable Atmosphere configuration payload or direct consumer binding is established  
-> **Authority:** implementation-supporting configuration sublane; non-authoritative for observation/model/advisory meaning, source admission, station identity, freshness, evidence, policy, emergency direction, or release  
-> **Runtime posture:** no loader, precedence rule, network fetch, source activation, station ingest, forecast run, model execution, advisory issuance, alerting, public layer, release, or publication is established by this README
+**Start here:** [Status](#status) · [Allowed content](#what-belongs-here) · [Validation](#validation) · [Compatibility](#adrs-and-drift-triggers) · [Consumer binding](#consumer-binding-precedence-and-discovery) · [First payload](#definition-of-done-for-the-first-payload) · [Evidence](#evidence-ledger)
 
 > [!CAUTION]
-> KFM Atmosphere is not an emergency alert, clinical, public-health, occupational-safety, aviation-safety, fire-behavior, or life-safety system. A configuration value cannot turn AQI into concentration, AOD or smoke context into surface PM2.5, a forecast or model field into an observation, a normal into current weather, a stale source into current truth, or advisory context into official instruction. Missing source role, knowledge character, time, units, method, quality, rights, evidence, policy, official-source redirect, review, release, or rollback support fails closed.
-
----
+> KFM Atmosphere is not an emergency-alert, clinical, public-health,
+> occupational-safety, aviation-safety, fire-behavior, or life-safety system.
+> AQI is not concentration; AOD and smoke context are not observed surface PM2.5;
+> model and forecast products are not observations. Refer advisory users to the
+> official issuing authority. The Hazards lane owns the related KFM context,
+> not the official authority itself. [ATM] [PDF]
 
 ## Purpose
 
-This directory defines the safe-to-commit configuration boundary for the canonical `atmosphere` domain segment under `configs/domains/`.
+Help contributors place, review, and eventually bind small Atmosphere configuration
+files without creating a second domain authority. A configuration may select an
+accepted profile for a verified consumer; it cannot establish station identity,
+measurement validity, source rights, evidence closure, or publication permission.
 
-It may eventually hold small defaults, templates, examples, profile references, or review-oriented settings for a **named and verified consumer**. Those files may describe how that consumer should parse, validate, compare, label, caveat, generalize, render, cache, or package already-governed Atmosphere material, but they cannot decide:
-
-- whether an air-quality, weather, smoke, AOD, climate, model, forecast, station, or advisory record is true;
-- whether a value is observed, regulatory, modeled, forecast, climatological, advisory, aggregate, inferred, corrected, provisional, or final;
-- whether an AQI value is a pollutant concentration;
-- whether an AOD value, smoke mask, plume polygon, or model field is a surface PM2.5 measurement;
-- whether a low-cost sensor is calibrated, corrected, comparable to a regulatory monitor, or appropriate for a requested use;
-- whether two station identifiers, networks, sites, relocations, instruments, or sensor channels refer to the same real-world station history;
-- whether a timestamp means observation time, issue time, model initialization, valid time, retrieval time, processing time, publication time, or stale-after time;
-- whether a forecast cycle, lead time, ensemble member, run, analysis, nowcast, hindcast, normal, or anomaly is current or fit for use;
-- whether a source is admitted, active, rights-cleared, current, redistributable, or authoritative for a requested claim;
-- whether a station point, raster cell, model grid, plume polygon, county aggregate, vertical level, or generalized layer is the right spatial support;
-- whether smoke, heat, air quality, weather, or advisory context implies hazard impact, diagnosis, exposure, evacuation, or protective action;
-- whether evidence supports a claim;
-- whether an artifact may be promoted, released, rendered, indexed, exported, summarized, or published.
-
-This README is intended for configuration maintainers, Atmosphere stewards, air-quality and meteorology reviewers, climate and model reviewers, station/network stewards, smoke/remote-sensing reviewers, source and rights stewards, temporal/freshness reviewers, consumer owners, validation owners, policy and release reviewers, Hazards liaisons, security reviewers, and contributors checking Directory Rules placement.
-
-[Back to top](#top)
-
----
+The audience is configuration maintainers, consumer owners, Atmosphere and
+scientific-method reviewers, rights/sensitivity reviewers, and policy/release
+reviewers. This README explains the boundary; executable behavior belongs to its
+owning implementation root. [PARENT] [DIR]
 
 ## Authority level
 
-**Configuration-supporting and non-authoritative.**
+**Owning root: `configs/`.** Accepted [ADR-0029] adopts [Directory Rules][DIR],
+whose §7.2 assigns non-secret defaults, profiles, templates, and examples to this
+root. This existing same-path README update creates no directory or authority
+home and requires no new placement decision.
 
-| Concern | Authority in this lane |
-|---|---|
-| Atmosphere domain meaning | **None.** Human doctrine remains under `docs/domains/atmosphere/`; semantic meaning remains in accepted contract homes. |
-| Source identity and activation | **None.** Config may reference reviewed source IDs or profiles; it cannot admit, activate, suspend, retire, or supersede a source. |
-| Source role and knowledge character | **None.** Config cannot relabel observed, regulatory, modeled, forecast, climatological, advisory, aggregate, contextual, synthetic, candidate, or restricted material. |
-| Station/network identity | **None.** Config cannot merge station identifiers, infer relocations, or equate instruments, channels, operators, or networks. |
-| Measurement meaning | **None.** Config cannot define pollutant semantics, units, averaging periods, methods, quality flags, detection limits, calibration, or regulatory status. |
-| AQI, AOD, smoke, and PM2.5 interpretation | **None.** Config cannot convert indexes, remote-sensing products, masks, plumes, or model context into concentration observations. |
-| Model, forecast, and climate interpretation | **None.** Config may select an accepted profile; it cannot create forecast truth, climate baselines, model authority, or fitness-for-use. |
-| Freshness and stale-state policy | **None.** Config may select an accepted product-specific profile; it cannot make stale data current or suppress outage/correction state. |
-| Advisory and alert authority | **None.** Official issuing authorities and the Hazards lane govern emergency and life-safety direction. |
-| Evidence and claim truth | **None.** Config cannot create an `EvidenceBundle`, close proof, validate a claim, or convert a candidate into truth. |
-| Policy and review | **None.** Config cannot substitute for accepted executable policy, a `PolicyDecision`, source review, or release review. |
-| Release and publication | **None.** Config cannot authorize lifecycle promotion, public map/API/UI use, export, Focus Mode, AI response, or publication. |
-| Consumer behavior | **Supporting only.** A verified consumer may read a validated file through explicit binding and deterministic precedence. |
+| Responsibility | Configuration relationship |
+| --- | --- |
+| Domain meaning and semantic contracts | Reference the owning documentation/contracts; do not redefine them. |
+| Machine shape and admissibility | Reference schemas and policy; a config file is neither authority. |
+| Source and station identity | Use governed identifiers and approved crosswalks; do not admit sources or merge stations. |
+| Evidence, review, release, correction | Preserve references and decisions; do not manufacture or approve them. |
+| Consumer behavior | Support only an explicit, validated binding with documented precedence. |
 
-A configuration value may point to authority. It cannot acquire that authority through naming, file placement, parsing, repetition, successful validation, a passing scaffold workflow, or use by a UI.
+The invariant remains:
 
-[Back to top](#top)
+```text
+RAW -> WORK/QUARANTINE -> PROCESSED -> CATALOG/TRIPLET -> PUBLISHED
+EvidenceRef -> EvidenceBundle
+Public consumers -> governed APIs or released public-safe artifacts
+```
 
----
+Promotion is a governed transition, not a file move, successful parse, commit,
+layer toggle, or model response. Public consumers must not read internal,
+unreleased, RAW, WORK, QUARANTINE, or direct model stores. Receipts record executions, proofs support closure, and
+review and release decisions remain separate. [DIR] [ATM]
 
 ## Status
 
-### Repository snapshot
+**Evidence snapshot:** `main@700570cbcf191038aa20a030174c2dd08cf93675`, inspected
+2026-09-04. These statements are limited to the sources in the [evidence ledger](#evidence-ledger).
 
-| Field | Value |
-|---|---|
-| Repository | `bartytime4life/Kansas-Frontier-Matrix` |
-| Repository ID | `1059091169` |
-| Visibility | public |
-| Base ref | `main` |
-| Base commit | `65a0d9f6159efa03aba0711d38a51eb203079c3f` |
-| Prior target blob | `46864d086e790ee4e64e909f02acfab633ca5a62` |
-| Current task scope | `configs/domains/atmosphere/README.md` only |
+| Surface | Confirmed evidence | Limit |
+| --- | --- | --- |
+| This configuration directory | Exact contents listing contains only `README.md`; no child directories. | No tracked config payload here. Ignored, untracked, and external configuration are not inventoried. |
+| Parent and domain guidance | Parent config boundary and Atmosphere domain README exist. | Their historical implementation snapshots are not runtime proof. |
+| Placement | ADR-0029 is accepted; the adopted Directory Rules blob is unchanged at the evidence pin. | ADR-0001 remains proposed; this README does not ratify it. |
+| `air` compatibility | Current domain guidance uses `atmosphere`; the existing `air` pipeline README is a documentation-only compatibility guardrail. | No automatic alias, duplicate executable lane, or retirement is authorized. |
+| AirObservation shape | `air_observation.schema.json` contains a bounded `DRAFT_SCHEMA` with properties and constraints; `AirObservation.schema.json` explicitly references it as `MIRROR`. | One inspected pair does not settle every object family's naming or schema maturity. |
+| Observed/modeled validator | Inspected source defines a synthetic profile, closed field sets, and forbidden observation/model fields. | Source inspection is not execution, scientific validation, live evidence resolution, or policy evaluation. |
+| Other fixture validators | The validator index documents precipitation, knowledge-character, and low-cost-sensor fixture checks. | This update does not claim those implementations or their tests were fully re-audited. |
+| Review routing | `/configs/` routes to `@bartytime4life` in CODEOWNERS. | Routing is not stewardship, independent review, approval, or an enforced merge gate. |
+| Config loading and public use | No active binding is established by the inspected configuration surface. | Loader, precedence, operational enforcement, deployment, and release use remain UNKNOWN. |
 
-### Truth labels for this lane
-
-| Label | Current use |
-|---|---|
-| **CONFIRMED** | Target README; parent config contract; Atmosphere doctrine; bounded README-only config result; inspected repository paths and exact file contents; one-file change scope after verification. |
-| **PROPOSED** | Future consumer-bound payloads, profile references, validation contract, safe defaults, and first-payload implementation plan. |
-| **CONFLICTED** | `air` versus `atmosphere`; `pipelines/domains/air/` versus `pipelines/domains/atmosphere/`; CamelCase versus hyphen/snake-case object paths; domain-first versus subtype-first source registry. |
-| **NEEDS VERIFICATION** | Accepted owners, source roles/rights, station identity rules, measurement profiles, product-specific freshness, low-cost corrections, model profiles, meaningful schemas, executable validation, policy runtime, CI, release integration, and correction/rollback propagation. |
-| **UNKNOWN** | Direct config consumers, discovery, precedence, fallback, deployment binding, runtime behavior, alerting behavior, and publication use. |
-
-### Current config-lane inventory
-
-A bounded repository search for `configs/domains/atmosphere` returned:
-
-```text
-configs/domains/atmosphere/
-└── README.md
-```
-
-This is a bounded indexed-search result, not proof that no unindexed or generated file could exist elsewhere.
-
-### Surrounding repository maturity
-
-| Surface | Current evidence | Safe conclusion |
-|---|---|---|
-| Domain documentation | Rich draft README and companion documents exist. | Doctrine and design are documented; implementation maturity must be checked separately. |
-| Semantic contracts | Expanded contract README and object contracts exist. | Meaning surfaces exist; naming/casing and compatibility drift remain. |
-| Contract compatibility | `AirStation.md` plus lowercase `air-station.md` pointer exist. | Do not create parallel object authority through config. |
-| Schemas | Opened `AirStation`, `air_station`, `PM25Observation`, and `climate-anomaly` schemas have empty `properties` and `additionalProperties: true`. | They are `PROPOSED` scaffolds, not meaningful enforcement. |
-| Package | `pyproject.toml` is version `0.0.0`; opened source is a placeholder comment. | Package implementation is greenfield. |
-| Atmosphere pipeline | Opened ingest, normalize, validate, publish, and triplets entrypoints are placeholder comments. | No executable transformation is proven. |
-| `air` pipeline alias lane | `pipelines/domains/air/README.md` exists and labels the path alias-candidate / `NEEDS VERIFICATION`. | Slug conflict is active; config cannot resolve it. |
-| Pipeline specs | Opened ingest, normalize, validate, and publish specs use `stages: []`. | Declarative wiring is not implemented. |
-| Policy | Opened AOD, model, freshness, advisory, and dry-run files are `PROPOSED` scaffolds with `default allow := false`. | Fail-closed intent exists; complete rules, tests, and runtime binding are not proven. |
-| Validators | Opened schema validator raises `NotImplementedError`; other opened validators contain only placeholder docstrings. | Executable validation is not established. |
-| Source registries | Both `data/registry/atmosphere/sources/` and `data/registry/sources/atmosphere/` exist. Opened records are empty/TBD/`PROPOSED`. | Registry topology and source admission are unresolved. |
-| Published layer lane | A detailed draft README indexes child layer lanes. | Carrier documentation exists; emitted layers, manifests, proofs, and runtime use remain unverified. |
-| Explorer UI | Opened Evidence Drawer file exports a placeholder. | UI implementation and privacy/caveat enforcement are unverified. |
-| Domain workflow | Pull-request workflow runs TODO echo jobs. | Workflow presence is not substantive validation. |
-| Schema-home ADR | `ADR-XXXX-atmosphere-schema-home.md` is a `PROPOSED` scaffold. | It is an open decision handle, not accepted authority. |
-| Direct config consumer | None found in the bounded search. | Do not claim loading, activation, or runtime use. |
-
-### Critical scaffold rule
-
-> [!WARNING]
-> No future configuration may activate, select, or rely on a `PROPOSED` policy, empty-permissive schema, placeholder validator, zero-stage pipeline spec, placeholder source descriptor, TODO workflow, or draft published-lane README as if it were accepted safety enforcement or release proof.
-
-[Back to top](#top)
-
----
+**Correction to v0.3:** README-only configuration must not be described as proof
+that all Atmosphere schemas, validators, workflows, or applications are scaffolds.
+Conversely, the existence of a bounded validator or schema does not make this
+configuration lane active. Broader implementation requires its own exact-source
+and execution evidence. [INV] [ATM] [SCHEMA] [MIRROR] [VALIDATOR] [VALIDATOR-INDEX]
 
 ## What belongs here
 
-Only safe, bounded, non-secret Atmosphere configuration support for a **named consumer** belongs here.
+Small, non-secret defaults, placeholder templates, profile references, and
+configuration-facing examples for a named consumer may belong here. Synthetic
+test overrides must remain isolated from production discovery. A migration note
+may describe a real configuration transition, but the migration decision and
+implementation remain with their responsible owners. [PARENT] [DIR]
 
-| Material | Permitted purpose | Minimum posture |
-|---|---|---|
-| `README.md` | Define this configuration boundary. | Preserve source-role, time, units, freshness, public-safety, evidence, policy, and release controls. |
-| `*.template.yaml` or `*.template.yml` | Placeholder-based template for a verified consumer. | Parseable, versioned, consumer-bound, no secrets, no live endpoints or source activation. |
-| `*.example.yaml`, `*.example.json`, or `*.example.toml` | Tiny synthetic example. | Fictional stations, times, values, model runs, advisories, and geometry only. |
-| Profile references | Select an accepted source-role, station, measurement, freshness, caveat, model, generalization, or display profile. | Reference by stable ID/version; do not copy or weaken authority rules. |
-| Conservative defaults | Select abstain, hold, stale, unavailable, caveat, official-redirect, or deny behavior. | Must not bypass evidence, policy, rights, review, or release. |
-| Test-only values | Support deterministic no-network tests for a named consumer. | Synthetic, clearly non-operational, isolated from production discovery. |
-| Migration notes | Document a real key/path/profile transition. | Time-bounded, owner-linked, reversible, and not a parallel authority. |
-
-### Child-lane creation criteria
-
-Do not add a child configuration file merely because a conceptual profile can be imagined. A file is justified only when all of these are identified:
-
-1. exact consumer;
-2. owning component and reviewer;
-3. bounded behavior;
-4. accepted format and version;
-5. accepted authority references;
-6. deterministic binding and precedence;
-7. safe failure behavior;
-8. synthetic fixtures and executable validation;
-9. correction, deactivation, and rollback;
-10. proof that the file does not create source, policy, alert, evidence, release, or publication authority.
-
-[Back to top](#top)
-
----
+Do not create a file just to reserve a future idea. Identify its consumer,
+purpose, owner/review route, format, validation, failure behavior, and rollback.
+Unimplemented binding or unsettled authority must be conspicuous. Safe isolated
+authoring may proceed as **PROPOSED / TEST_ONLY**; operational activation is a
+separate gate, not an implication of committing a template.
 
 ## What does not belong here
 
-The following material is forbidden in this lane:
+No credentials, tokens, cookies, private endpoints, workstation bindings,
+production data, real sensor payloads, private station siting/access details,
+or sensitive facility/network information. References must not disclose secrets
+or sensitive geometry indirectly.
 
-- real air-quality, weather, climate, smoke, AOD, satellite, station, model, forecast, advisory, or alert payloads;
-- credentials, tokens, API keys, cookies, connection strings, private endpoints, workstation paths, internal network topology, or deployment secrets;
-- source descriptors, activation decisions, endpoint inventories, rate-limit secrets, or live connector settings;
-- real station coordinates, private-land/access details, infrastructure-sensitive siting, instrument-security details, or non-public network metadata;
-- settings that convert AQI to pollutant concentration or imply they are interchangeable;
-- settings that convert AOD, smoke masks, plume polygons, fire detections, or model fields to observed surface PM2.5;
-- settings that present models, forecasts, analyses, reanalyses, nowcasts, hindcasts, normals, or anomalies as direct observations;
-- settings that remove low-cost sensor correction, calibration, confidence, quality, caveat, or limitation requirements;
-- settings that silently merge station IDs, networks, instruments, sensor channels, station relocations, or time series;
-- settings that hide units, averaging period, vertical level, detection limit, method, QA flag, uncertainty, provisional/final status, or source role;
-- settings that make stale, delayed, partial, superseded, corrected, unavailable, or outage-affected data appear current;
-- emergency or life-safety instructions, clinical/health recommendations, evacuation guidance, aviation decisions, occupational exposure decisions, or alert authority;
-- hidden bypasses for official-source redirection, Hazards handoff, caveat display, evidence resolution, policy, review, release, correction, or rollback;
-- schemas, semantic contracts, policy bundles, registries, receipts, proofs, catalogs, triplets, release objects, or publication decisions;
-- alternate `air` or `atmosphere` config authorities created to bypass the unresolved slug conflict;
-- duplicate CamelCase, hyphenated, or snake-case profile authorities created to bypass object-path compatibility decisions;
-- automatic discovery or activation based only on directory presence or filename convention.
-
-[Back to top](#top)
-
----
+Do not put semantic contracts, machine schemas, executable policy, source
+registries, station crosswalk authority, evidence/proof instances, lifecycle
+payloads, release decisions, or published artifacts in this lane. Do not add
+config-local source activation, automatic publication, alert thresholds, hidden
+policy bypasses, or a competing `air` authority. [PARENT] [DIR]
 
 ## Inputs
 
-A future Atmosphere configuration payload requires all of the following:
+A proposed payload needs a named consumer and exact intended load point; a stable
+config ID/version; its purpose, parser/format, and allowed keys; accepted
+reference targets or explicitly unresolved draft dependencies; non-sensitive
+values; deterministic missing/invalid/override behavior; synthetic fixtures;
+and a removal or rollback path.
 
-1. **Named consumer** — exact package, pipeline, app, service, worker, test harness, or tool.
-2. **Bounded purpose** — one behavior, not a hidden domain policy bundle.
-3. **Declared format and version** — parser, encoding, compatibility expectations, and schema version where accepted.
-4. **Explicit binding** — exact load point, no assumed recursive discovery.
-5. **Deterministic precedence** — relation to defaults, environment, deployment, command-line, local, and test overrides.
-6. **Accepted authority references** — contract, schema, source registry, policy, knowledge-character, station, measurement, time, release, and review profiles as applicable.
-7. **Source-role preservation** — observed, regulatory, modeled, forecast, climatological, advisory, aggregate, contextual, candidate, synthetic, and restricted roles remain distinguishable.
-8. **Knowledge-character preservation** — sensor observation, public AQI report, network/site context, remote-sensing mask, model field, smoke context, climate baseline/anomaly, and advisory context remain distinct.
-9. **Station identity context** — network, station ID, sensor/channel, operator, relocation, instrument, method, coordinate precision, and effective-time rules.
-10. **Measurement context** — parameter, units, averaging period, method, QA, uncertainty, detection/quantitation limits, regulatory status, correction state, and provisional/final state where applicable.
-11. **Temporal context** — observation, issue, initialization, valid, lead, retrieval, ingestion, processing, expiry, supersession, and correction time.
-12. **Spatial context** — point, raster, polygon, grid, aggregate, CRS, resolution, vertical level, height reference, and generalization profile.
-13. **Rights and operational context** — terms, attribution, redistribution, quotas, outage handling, and official-source redirect.
-14. **Safe values** — synthetic placeholders or non-sensitive defaults only.
-15. **Validation path** — parse, shape, semantic, temporal, unit, source-role, station, rights, no-network, negative, and rollback tests.
-16. **Failure posture** — finite reject, hold, abstain, stale, unavailable, deny, or error behavior.
-17. **Correction and rollback** — prior known-good state, cache/index invalidation, deactivation, correction, supersession, withdrawal, and revert path.
-
-A payload missing any required input remains **PROPOSED and inactive**.
-
-[Back to top](#top)
-
----
+When the consumer handles observations or derived products, its input contract
+also needs the applicable source role, knowledge character, station identity,
+units/method/quality, spatial support, time/freshness, rights, sensitivity,
+provenance, and correction context. Public-bound use additionally requires
+admissible evidence, policy, review, integrity, release, and rollback support.
+A test-only input must not pretend those operational gates are satisfied.
 
 ## Outputs
 
-This lane currently outputs documentation only.
+**Current output: documentation only.** A future validated config may select an
+already-governed consumer profile. It does not emit observations, merge station
+identities, admit sources, resolve EvidenceBundles, decide policy, create proofs,
+issue advisories, or approve release by itself.
 
-A future validated configuration file may support a named consumer by selecting safe, already-governed behavior. It may select:
-
-- a source-role or knowledge-character profile;
-- a station/network identity profile;
-- a measurement/unit/method profile;
-- a product-specific time and freshness profile;
-- a model/forecast/climate profile;
-- a caveat and official-source redirect profile;
-- a spatial-support/generalization profile;
-- a stale, outage, correction, or unavailable-state profile;
-- a review route or conservative finite outcome;
-- a cache/index invalidation profile.
-
-It may not:
-
-- admit or activate a source;
-- create a station identity or merge station histories;
-- define pollutant, AQI, AOD, smoke, model, forecast, climate, or advisory truth;
-- issue, suppress, replace, or reinterpret an official alert or advisory;
-- create evidence or establish claim truth;
-- write lifecycle data as hidden side effect;
-- promote an object through the trust membrane;
-- create a receipt, proof, catalog record, release object, or publication state;
-- expose a public map/API/UI layer merely because a profile exists.
-
-[Back to top](#top)
-
----
+Any consumer that writes an artifact must use its declared lifecycle and
+accountability interfaces. Neither a config file nor its parser may hide a write
+to a source registry, internal store, release record, or public carrier.
 
 ## Validation
 
-### Documentation validation for this revision
+### README-only review
 
-The README revision must satisfy:
+Check the exact changed path, metadata identity/version/evidence pin, one H1,
+unique H2 headings, retained navigation, balanced fences, valid Markdown links,
+UTF-8/final newline, whitespace, and conflict-marker absence. Verify repository
+links against pinned contents, not invented filesystem paths. Inspect claims
+against their sources and retain the non-alert, non-secret, role, sensitivity,
+evidence, and release boundaries.
 
-- exactly one H1;
-- required Directory Rules folder-contract headings present and ordered;
-- no duplicate H2 headings;
-- internal quick-link anchors resolve;
-- fenced code blocks are balanced;
-- final newline exists;
-- no credentials, token-like values, private keys, private endpoints, or live bindings;
-- no real station, source payload, advisory, health instruction, or deployment setting;
-- current implementation maturity is not overstated;
-- `air`/`atmosphere`, object naming, and registry conflicts remain visible;
-- no new source, schema, contract, policy, alert, evidence, release, or publication authority is created.
+From a real checkout, a reviewer can begin with:
 
-### Validation matrix for a future payload
+```sh
+git diff --check
+git diff --name-only
+```
 
-| Gate | Required check | Fail-safe result |
-|---|---|---|
-| Parse | File is deterministic and accepted by the named parser. | `CONFIG_PARSE_ERROR` |
-| Version | Format/profile version is supported and migration is explicit. | `CONFIG_VERSION_UNSUPPORTED` |
-| Consumer | Declared consumer and binding exist. | `CONFIG_CONSUMER_UNBOUND` |
-| Precedence | Load and override order is deterministic. | `CONFIG_PRECEDENCE_UNRESOLVED` |
-| Unknown keys | Unknown and duplicate keys are rejected or explicitly handled. | `CONFIG_UNKNOWN_KEY` |
-| Authority refs | Referenced contract/schema/policy/source/profile IDs resolve and are accepted. | `CONFIG_AUTHORITY_REF_INVALID` |
-| Scaffold rejection | Referenced schema/policy/validator/source/release surface is not merely a scaffold. | `CONFIG_SCAFFOLD_DEPENDENCY` |
-| Source role | Role and knowledge character remain distinct. | `SOURCE_ROLE_COLLAPSE` |
-| Station identity | Station/network/instrument/channel/relocation rules are complete. | `STATION_IDENTITY_UNRESOLVED` |
-| Parameter | Parameter identity and pollutant/metric family are explicit. | `PARAMETER_UNRESOLVED` |
-| Units | Canonical units and conversion provenance are explicit. | `UNIT_OR_CONVERSION_INVALID` |
-| Averaging | Averaging/accumulation period is explicit. | `AVERAGING_PERIOD_MISSING` |
-| Method and QA | Method, correction, calibration, QA, uncertainty, and flags are preserved. | `METHOD_OR_QA_UNRESOLVED` |
-| Time | Observation/issue/init/valid/lead/retrieval/ingest/expiry semantics are complete. | `TIME_SEMANTICS_INVALID` |
-| Freshness | Product-specific stale/outage rules are deterministic. | `FRESHNESS_PROFILE_MISSING` |
-| Spatial support | Point/grid/polygon/aggregate support, CRS, resolution, and vertical level are explicit. | `SPATIAL_SUPPORT_INVALID` |
-| AQI | AQI is not consumed as concentration. | `AQI_CONCENTRATION_COLLAPSE` |
-| AOD/smoke | AOD/smoke/model context is not consumed as observed PM2.5. | `AOD_PM25_COLLAPSE` |
-| Model/forecast | Model and forecast fields remain non-observational. | `MODEL_OBSERVATION_COLLAPSE` |
-| Climate | Normals/anomalies carry baseline and reference period. | `CLIMATE_BASELINE_MISSING` |
-| Advisory | Official issuer, issue/expiry, redirect, and no-alert boundary are preserved. | `OFFICIAL_REDIRECT_MISSING` |
-| Rights | Terms, attribution, redistribution, quota, and access posture resolve. | `RIGHTS_OR_TERMS_UNRESOLVED` |
-| Secrets | No credentials, private endpoints, or local paths. | `SECRET_OR_LIVE_BINDING_FOUND` |
-| Fixtures | Valid/invalid/stale/outage/corrected/denied examples are synthetic and no-network. | `FIXTURE_COVERAGE_INCOMPLETE` |
-| Logging | Logs and metrics omit sensitive values and false alert-like wording. | `OBSERVABILITY_UNSAFE` |
-| Release | Public-bound behavior has evidence, policy, review, release, correction, and rollback refs. | `RELEASE_SUPPORT_MISSING` |
-| Invalidation | Superseded/corrected/outage state invalidates caches, indexes, maps, exports, and AI. | `INVALIDATION_INCOMPLETE` |
-| Rollback | Prior known-good behavior can be restored and revalidated. | `ROLLBACK_UNVERIFIED` |
+These are hygiene/scope checks, not domain or operational tests. Record the exact
+base/head, command, result, and limitation. Do not label unrun pytest, schema,
+Rego, workflow, browser, or runtime checks as passing; a documentation update
+cannot establish their execution.
 
-### Finite configuration review outcomes
+### Future consumer-bound validation
 
-Use finite review outcomes:
+The following is an acceptance plan, not a new implemented validator or wire enum.
+Use the selected contract's actual outcomes and reason codes.
 
-- `PASS` — all applicable gates pass.
-- `PASS_WITH_OBLIGATIONS` — accepted only with explicit caveat, stale, redirect, generalization, audience, or review obligations.
-- `HOLD` — checkable support is incomplete.
-- `ABSTAIN` — available context cannot support a safe interpretation.
-- `DENY` — requested behavior is prohibited.
-- `ERROR` — parsing, validation, dependency, or execution failed safely.
+| Check family | Positive and negative coverage |
+| --- | --- |
+| Parsing and identity | Supported version, stable ID, duplicate/unknown keys, malformed input, unsupported version. |
+| Binding and authority | Explicit load point; missing required file, unresolved profile, ambiguous precedence, scaffold-as-enforcement rejection. |
+| Meaning | Units/method/averaging and station identity; AQI/concentration, AOD/PM2.5, model/observation, and advisory/alert substitution denial. |
+| Time and support | Valid/sample/run intervals, timezone, stale/outage/partial states, wrong spatial or vertical support, missing climate baseline. |
+| Rights and sensitivity | Unknown rights, restricted data, private coordinates, unsafe joins, secret-bearing values, and public-path bypass. |
+| Correction | Supersession, advisory expiry, withdrawal, invalidation, rollback, and stale cached/AI output. |
+| Isolation | Synthetic fixtures, deterministic no-network execution, and no implicit production discovery or writes. |
 
-A passing parser is not proof of source admission, measurement validity, forecast skill, public safety, policy approval, release readiness, or current truth.
-
-[Back to top](#top)
-
----
+A passing fixture demonstrates only its tested profile. It is not evidence of
+scientific accuracy, source admission, regulatory comparability, production
+policy enforcement, public safety, or release readiness. [VALIDATOR] [VALIDATOR-INDEX]
 
 ## Review burden
 
-README-only changes require:
+CODEOWNERS supplies the verified GitHub route, not an assignment of scientific,
+rights, policy, or release responsibility. Named accountable stewards and
+independent review remain **NEEDS VERIFICATION**. [OWNERS]
 
-- configuration/documentation review;
-- Atmosphere domain review;
-- source-role/knowledge-character review where terminology changes;
-- public-safety/Hazards review where advisory or alert language changes.
+README-only work needs proportionate configuration/domain review; terminology
+or advisory changes also need the relevant source-role or safety-context review.
+A behavior-bearing payload needs its consumer owner and applicable method,
+station, temporal, rights/sensitivity, schema/policy, and rollback reviewers.
+Do not allow a config author to self-certify policy-significant source approval,
+release, or rollback. Record any bootstrap review limitation explicitly.
 
-A future payload also requires, as applicable:
-
-- named consumer owner;
-- air-quality or meteorology/climate steward;
-- station/network and sensor-method reviewer;
-- temporal/freshness reviewer;
-- source, rights, attribution, quota, and operational reviewer;
-- smoke/AOD/remote-sensing or model reviewer;
-- schema and contract reviewer;
-- validator, fixture, and test reviewer;
-- security and observability reviewer;
-- policy and Hazards liaison;
-- release, correction, and rollback reviewer;
-- ADR or migration reviewer for `air`/`atmosphere`, object naming, registry topology, or profile authority.
-
-### Separation of duties
-
-No single config author should both:
-
-- define or select a risk-significant profile;
-- approve its source/right/measurement semantics;
-- approve policy behavior;
-- approve release;
-- certify rollback.
-
-Configuration review cannot substitute for source admission, scientific/method review, policy evaluation, official advisory authority, evidence closure, or release review.
-
-[Back to top](#top)
-
----
+Current contributor controls and [issue #4024][INCIDENT] distinguish branch
+writing, independent one-shot draft creation, and observation for an
+incident-quarantined delivery path. A README update grants no ready, approval,
+merge, settings, scheduler, source-admission, deployment, or release authority.
 
 ## Related folders
 
-| Concern | Responsibility home | Relationship to this lane |
-|---|---|---|
-| Parent domain config contract | [`../README.md`](../README.md) | Governs non-secret, non-authoritative, consumer-bound domain configuration. |
-| Repository config root | [`../../README.md`](../../README.md) | Governs safe configuration defaults/templates. |
-| Atmosphere doctrine | [`../../../docs/domains/atmosphere/README.md`](../../../docs/domains/atmosphere/README.md) | Human domain scope and invariants. |
-| Canonical-path discussion | `../../../docs/domains/atmosphere/CANONICAL_PATHS.md` | Records `air`/`atmosphere` drift and responsibility-root placement. |
-| Semantic contracts | `../../../contracts/domains/atmosphere/` | Object meaning; not config authority. |
-| Machine schemas | `../../../schemas/contracts/v1/domains/atmosphere/` | Shape authority after acceptance; opened files remain scaffolds. |
-| Domain policy | `../../../policy/domains/atmosphere/` | Admissibility and release rules; opened files remain scaffolds. |
-| Source registry, subtype-first | `../../../data/registry/sources/atmosphere/` | Candidate source descriptor home; topology conflicted. |
-| Source registry, domain-first | `../../../data/registry/atmosphere/sources/` | Existing competing registry lane; topology conflicted. |
-| Shared package | `../../../packages/domains/atmosphere/` | Reusable Atmosphere helper code; current opened implementation is greenfield. |
-| Atmosphere pipeline | `../../../pipelines/domains/atmosphere/` | Intended executable processing; opened entrypoints are placeholders. |
-| `air` pipeline lane | `../../../pipelines/domains/air/` | Alias/transitional candidate; slug conflict unresolved. |
-| Pipeline specs | `../../../pipeline_specs/atmosphere/` | Declarative specs; opened files have empty stage lists. |
-| Validators | `../../../tools/validators/domains/atmosphere/` | Intended checks; opened entrypoints are placeholders/unimplemented. |
-| Fixtures and tests | `../../../fixtures/domains/atmosphere/`, `../../../tests/domains/atmosphere/` | Enforcement proof; coverage remains `NEEDS VERIFICATION`. |
-| Published layer carriers | `../../../data/published/layers/atmosphere/` | Draft carrier-lane docs; not release proof. |
-| Governed public path | governed API and approved released-artifact interfaces | Public consumers must not read internal lifecycle stores directly. |
-| Hazards | applicable Hazards docs/policy/runtime lanes | Owns emergency/life-safety interpretation and official-alert handoff. |
-| Drift register | `../../../docs/registers/DRIFT_REGISTER.md` | Records unresolved path/authority drift. |
-| Secret handling | [`../../../docs/security/SECRETS.md`](../../../docs/security/SECRETS.md) | Prohibits committed secrets and live bindings. |
+| Read next | Relationship |
+| --- | --- |
+| [Parent domain configuration](../README.md) | Shared non-secret, consumer-bound configuration boundary. |
+| [Atmosphere domain guide](../../../docs/domains/atmosphere/README.md) | Domain scope, source distinctions, and responsibility-root navigation. |
+| [Atmosphere validator index](../../../tools/validators/domains/atmosphere/README.md) | Bounded fixture checks and their limits; not a config loader. |
+| [Air compatibility guardrail](../../../pipelines/domains/air/README.md) | Preserve compatibility without creating duplicate executable authority. |
+| [Directory Rules](../../../docs/doctrine/directory-rules.md) and [ADR-0029](../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) | Adopted placement basis. |
+| [CODEOWNERS](../../../.github/CODEOWNERS) and [CONTRIBUTING](../../../CONTRIBUTING.md) | Review routing and current contribution/delivery controls. |
 
-[Back to top](#top)
-
----
+The [Atmosphere guide][ATM] is the navigation surface for related contracts,
+policy, registry, lifecycle, application, and release lanes. This README does
+not duplicate that inventory or imply every referenced lane is operational.
 
 ## ADRs and drift triggers
 
-No ADR is enacted by this README.
+No ADR or migration is enacted here. Preserve accepted Directory Rules and the
+existing responsibility split; [ADR-0001] remains proposed, not newly accepted.
 
-A separate accepted governance decision, migration note, or ADR is required before:
+| Topic | Current bounded disposition | Action before broader use |
+| --- | --- | --- |
+| `atmosphere` / `air` | Use the existing Atmosphere config lane; retain documented Air compatibility. | Verify affected consumers and an accepted mapping before aliasing, relocation, or retirement. |
+| AirObservation schema pair | CamelCase is an explicit mirror of the lowercase profile. | Follow the declared reference; do not edit the mirror independently or normalize names heuristically. |
+| Other object spellings | Not resolved by the one inspected pair. | Inspect each contract/schema and any migration before selecting it. |
+| Source-registry layouts | This update does not select or migrate a registry authority. | Resolve the exact accepted descriptor/profile; do not create duplicate activation records. |
+| Discovery or precedence | No general behavior is established here. | Implement an explicit consumer contract and tests; architecture-changing behavior needs the appropriate decision. |
 
-- resolving `air` versus `atmosphere`;
-- choosing between `pipelines/domains/air/` and `pipelines/domains/atmosphere/`;
-- changing contract/schema path authority;
-- deciding CamelCase, hyphenated, or snake-case canonical object filenames and compatibility behavior;
-- choosing domain-first versus subtype-first source-registry topology;
-- defining universal config discovery, precedence, override, or fallback;
-- defining canonical source-role or knowledge-character vocabularies;
-- establishing public station-coordinate precision;
-- establishing low-cost sensor correction or comparability profiles;
-- establishing product-specific freshness/stale thresholds;
-- establishing AQI, AOD, smoke, forecast, climate, or advisory interpretation profiles;
-- allowing a scaffold policy/schema/validator/source record to become active;
-- creating alert, emergency, health, aviation, occupational, or life-safety authority;
-- creating a new schema, contract, policy, registry, evidence, release, or publication authority.
-
-### Drift that must remain visible
-
-| Drift | Current status | Config posture |
-|---|---|---|
-| `air` vs `atmosphere` domain slug | `CONFLICTED` | Use current `atmosphere` config lane; do not create alternate authority. |
-| Atmosphere pipeline vs `air` pipeline lane | `CONFLICTED` | No automatic aliasing or dual-loading. |
-| `AirStation.md` vs `air-station.md` | Canonical contract plus compatibility pointer | Reference accepted canonical identity; do not duplicate semantics. |
-| `AirStation.schema.json` vs `air_station.schema.json` | Mixed casing/naming scaffolds | Do not select one as active without migration/ADR evidence. |
-| CamelCase vs hyphen/snake-case object files | `NEEDS VERIFICATION` | Preserve exact accepted IDs and versions; reject ambiguous refs. |
-| `data/registry/sources/atmosphere/` vs `data/registry/atmosphere/sources/` | `CONFLICTED` | No duplicate source activation or mirrored authority. |
-| Published-path README vs actual release | Documentation present; release proof unverified | Never infer publication from directory name. |
-
-[Back to top](#top)
-
----
+Authority-changing placement, canonical vocabularies, precision policy,
+scientific profiles, compatibility retirement, and public exposure require the
+owning decision process. A draft may record a reversible proposal without
+misrepresenting it as adoption or enabling the held behavior. [DIR] [MIRROR]
 
 ## Last reviewed
 
-**2026-07-14**, against `main@65a0d9f6159efa03aba0711d38a51eb203079c3f`.
-
-Review again before:
-
-- the first non-README payload;
-- a direct consumer or loader binding;
-- a change to `air`/`atmosphere` compatibility;
-- a source-role or knowledge-character profile;
-- a station, measurement, freshness, model, climate, smoke, AOD, AQI, advisory, or official-redirect profile;
-- a policy/schema/validator/source scaffold promotion;
-- public map/API/UI, export, alert-like, AI, release, or deployment use.
-
-[Back to top](#top)
-
----
+**2026-09-04**, using the immutable repository snapshot recorded above and
+read-only Drive/Notion context. Repository evidence, document lineage, and
+execution results are separate. Re-pin before a payload, loader, reference
+migration, method/profile change, or public-bound use; this date does not certify
+operational freshness, source terms, runtime health, or release readiness.
 
 ## Scope and bounded context
 
-The Atmosphere configuration bounded context supports configuration for these **already-governed** object and product families:
+The supported subject matter remains air-quality observations and AQI reporting,
+weather/station observations, smoke/aerosol/AOD context, climate baselines and
+anomalies, atmospheric models and forecasts, and official-advisory referral.
+This is not a reduction to a PM2.5-only lane. [ATM] [PDF]
 
-- air-quality station and observation context;
-- PM2.5 and ozone observation/report context;
-- AQI report context;
-- smoke and plume context;
-- AOD and remote-sensing context;
-- weather station and observation context;
-- wind, precipitation, and temperature context;
-- climate normal and anomaly context;
-- atmospheric model and forecast context;
-- advisory referral context;
-- public-safe, caveat-aware released derivatives.
-
-The lane owns no scientific observation, model run, station record, source record, alert, policy decision, evidence object, or released artifact.
-
-### Configuration boundary diagram
-
-```mermaid
-flowchart LR
-  CFG["configs/domains/atmosphere/<br/>safe profile references"] --> CONS["explicit named consumer"]
-  CONS --> AUTH["accepted contracts · schemas · source registry · policy"]
-  AUTH --> VAL["parse · semantic · time · unit · role · rights validation"]
-  VAL --> FINITE{"finite outcome"}
-  FINITE -->|PASS| SUPPORT["support consumer behavior"]
-  FINITE -->|HOLD / ABSTAIN / DENY / ERROR| SAFE["no authoritative display or action"]
-
-  SUPPORT --> GOV["governed lifecycle / release interfaces"]
-  GOV --> PUBLIC["public-safe map · API · UI carrier"]
-
-  CFG -. no authority .-> AUTH
-  CFG -. no release .-> PUBLIC
-```
-
-### Anti-collapse summary
+The intended dependency order for a future consumer is:
 
 ```text
-config profile           != source admission
-station ID               != station identity proof
-station point            != observation
-AQI                      != pollutant concentration
-AOD                      != PM2.5
-smoke context            != exposure or health diagnosis
-model field              != observation
-forecast                 != current observed state
-climate normal           != current weather
-climate anomaly          != absolute measurement
-advisory context         != official alert or instruction
-successful parse         != scientific validity
-workflow success         != release approval
-published-path README    != released artifact
-generated language       != EvidenceBundle
+explicit config reference -> named consumer -> accepted governing profiles
+-> applicable validation/evidence/policy/review/release checks
+-> bounded result or fail-safe outcome
 ```
 
-[Back to top](#top)
-
----
+This describes a design boundary, not a verified runtime integration.
 
 ## Configuration classes
 
-| Class | Example purpose | Activation posture |
-|---|---|---|
-| Documentation | Boundary, evidence ledger, migration note. | Inert. |
-| Template | Placeholder structure for a named consumer. | Inert until instantiated and reviewed. |
-| Example | Synthetic station/model/advisory values. | Test/documentation only; never production-discovered. |
-| Source-role profile reference | Select accepted source-role/knowledge-character behavior. | Requires accepted profile and explicit binding. |
-| Station identity profile reference | Select station/network identity and relocation handling. | Requires accepted station authority and tests. |
-| Measurement profile reference | Select units, method, averaging, QA, and correction behavior. | Requires accepted method profile. |
-| Freshness profile reference | Select product-specific stale/outage behavior. | Requires accepted time semantics and correction rules. |
-| Model/forecast profile reference | Select run/cycle/lead/member/baseline interpretation. | Requires accepted model contract and validation. |
-| Display/caveat profile reference | Select public-safe labels, caveats, redirects, and generalization. | Does not authorize release; requires policy/release support. |
-| Test override | Force deterministic stale/outage/invalid behavior in fixtures. | Test environment only; no live source/network. |
-| Compatibility mapping | Bridge accepted names during migration. | Time-bounded, versioned, non-recursive, tested, reversible. |
+| Class | Boundary |
+| --- | --- |
+| Documentation or placeholder template | Inert; identify the intended consumer and unresolved dependencies. |
+| Synthetic example or test override | Test-only; excluded from production discovery and live retrieval. |
+| Accepted profile reference | Select a versioned owning profile; do not copy its authority into config. |
+| Operational default | Requires demonstrated binding, validation, allowed overrides, safe failure, and rollback. |
+| Compatibility mapping | Only an explicitly reviewed mapping with identity, scope, lifetime, and migration tests. |
 
-### Prohibited configuration classes
-
-Do not create:
-
-- live source endpoint or secret configuration;
-- alert issuance or suppression configuration;
-- health/safety decision thresholds presented as KFM authority;
-- policy-as-config;
-- source admission as config;
-- evidence truth as config;
-- automatic release as config;
-- dual `air`/`atmosphere` authority maps;
-- permissive fallback that bypasses stale, rights, evidence, policy, or release gates.
-
-[Back to top](#top)
-
----
+No class permits policy-as-config, source admission, evidence truth, scientific
+role upgrades, alert issuance, or automatic release.
 
 ## Minimum configuration contract
 
-Every future non-README file must document, in the file or an adjacent accepted specification:
+**PROPOSED design checklist, not a committed schema.** Use existing accepted
+consumer conventions rather than inventing a second configuration schema home.
 
-| Field | Required meaning |
-|---|---|
-| `config_id` | Stable deterministic identifier. |
-| `config_version` | Semver or accepted repository version. |
-| `status` | `PROPOSED`, `TEST_ONLY`, `ACTIVE`, `DEPRECATED`, or other accepted finite value. |
-| `consumer` | Exact component and code path that reads the file. |
-| `owner` | Responsible maintainer and review group. |
-| `purpose` | One bounded behavior. |
-| `format` | Parser-visible file type and encoding. |
-| `authority_refs` | Accepted contract, schema, policy, source, profile, and release references. |
-| `source_roles` | Allowed roles and anti-collapse behavior. |
-| `knowledge_characters` | Allowed knowledge-character labels and transitions. |
-| `station_identity_profile` | Network/station/instrument/channel/relocation handling or `N/A`. |
-| `measurement_profile` | Parameter, units, averaging, method, QA, correction, uncertainty, and status handling. |
-| `time_profile` | Observation/issue/init/valid/lead/retrieval/ingest/expiry/supersession semantics. |
-| `freshness_profile` | Product-specific thresholds and stale/outage behavior. |
-| `spatial_profile` | Support type, CRS, resolution, vertical level, precision, and generalization. |
-| `model_profile` | Model/run/cycle/member/baseline semantics or `N/A`. |
-| `advisory_profile` | Official issuer/redirect/expiry/no-alert handling or `N/A`. |
-| `rights_profile` | Terms, attribution, redistribution, quota, and access posture. |
-| `defaults` | Safe, non-secret, fail-closed defaults. |
-| `allowed_overrides` | Explicit sources and keys permitted to override. |
-| `precedence` | Deterministic merge/replacement order. |
-| `unknown_key_behavior` | Reject, hold, warn, or ignore—never implicit. |
-| `missing_file_behavior` | Optional-safe default or required-file failure. |
-| `validation` | Parser, semantic, time, unit, role, rights, fixture, and negative checks. |
-| `observability` | Safe logs/metrics with no secrets, false alerts, or misleading current-state claims. |
-| `correction` | Supersession and invalidation behavior. |
-| `rollback` | Prior version, deactivation, restore, and revalidation path. |
+| Information | Required explanation |
+| --- | --- |
+| Identity and intent | Stable config ID/version, authoring status, purpose, consumer, responsible owner/review route. |
+| Binding | Exact parser/load point, supported format/version, allowed keys, allowed override sources and keys. |
+| Governing references | Exact profile IDs/versions and contract/schema/policy references; unresolved dependencies explicitly held. |
+| Applicable domain context | Source role/knowledge character, station/method/unit/QA, time/freshness, spatial/vertical support, model/baseline, advisory referral, rights/sensitivity. |
+| Safe failure | Missing file, malformed value, duplicate/unknown key, unsupported profile, conflicting override, stale/outage behavior. |
+| Verification and recovery | Synthetic tests, safe observability, correction/invalidation, deactivation, prior known-good state, rollback. |
 
-### Illustrative template shape
-
-This is a non-operational example:
-
-```yaml
-config_id: kfm.config.atmosphere.example
-config_version: 0.0.0-example
-status: TEST_ONLY
-consumer:
-  id: example-consumer
-  binding: NOT_IMPLEMENTED
-authority_refs:
-  contract_profile: NOT_SELECTED
-  schema_profile: NOT_SELECTED
-  policy_profile: NOT_SELECTED
-source_roles:
-  allowed: [observed, modeled, forecast, climatological, advisory]
-  unknown: HOLD
-time_profile:
-  id: NOT_SELECTED
-freshness_profile:
-  id: NOT_SELECTED
-defaults:
-  current_state_when_unknown: ABSTAIN
-  alert_authority: false
-  official_source_redirect_required: true
-network:
-  live_fetch: false
-```
-
-The example must never be discovered as production configuration.
-
-[Back to top](#top)
-
----
+Mark inapplicable fields with a reason. Do not require a fictional station, live
+source activation, or release decision merely to author an isolated test profile;
+do require the relevant approvals before operational or public-bound use.
 
 ## Consumer binding, precedence, and discovery
 
-### Explicit binding only
+No loader or universal precedence rule is established by this directory.
+Implement an explicit allowlist or consumer-owned manifest; do not recursively
+activate files based on extension, sort order, directory presence, or proximity.
+Templates, examples, backups, compatibility copies, and deprecated profiles must
+not become production inputs accidentally.
 
-A file is inactive unless the repository proves:
-
-- the exact consumer;
-- the exact parser;
-- the exact load call or deployment binding;
-- accepted schema/semantic validation;
-- deterministic precedence;
-- tests for missing, malformed, unknown, stale, and conflicting values;
-- safe rollback and deactivation.
-
-### No recursive discovery
-
-Consumers must not recursively load every file under `configs/domains/atmosphere/`. Recursive discovery can accidentally activate:
-
-- templates;
-- examples;
-- migration copies;
-- compatibility aliases;
-- editor backups;
-- deprecated profiles;
-- unreviewed `air`/`atmosphere` mappings.
-
-Use an explicit allowlist or manifest owned by the consumer.
-
-### Precedence requirements
-
-A consumer must publish its precedence order. A possible order is **PROPOSED**, not current behavior:
-
-```text
-built-in conservative default
-  < accepted repository profile
-  < deployment-bound non-secret profile
-  < explicit test-only override
-```
-
-Environment variables, command-line values, secrets, local files, and remote configuration stores must not silently outrank repository policy or release controls.
-
-### Conflict behavior
-
-When two values conflict:
-
-- prefer neither by filename sort;
-- do not merge scientific meanings heuristically;
-- reject or hold when authority is unclear;
-- log only safe identifiers;
-- preserve the source of each attempted value;
-- require review for `air`/`atmosphere`, casing, registry, station, unit, time, and policy conflicts.
-
-[Back to top](#top)
-
----
+A future binding must state its parser, validation, defaults, permitted overrides,
+conflict handling, and missing-file behavior. Environment variables, CLI values,
+local files, deployment settings, and remote config must not outrank policy or
+release controls implicitly. Reject or hold ambiguous authority; record only safe
+identifiers and the provenance of attempted overrides. Rollback must disable or
+restore the actual binding, not merely edit prose.
 
 ## Atmosphere object-family boundaries
 
-| Object family | Configuration may support | Configuration must not decide |
-|---|---|---|
-| `AirStation` | Station display/generalization profile; identity-reference profile. | Station identity, exact siting clearance, ownership, access, or operational status. |
-| `AirObservation` | Parameter/unit/time/QA/caveat profile selection. | Whether a value is scientifically valid or regulatory. |
-| `PM25Observation` | PM2.5 units/averaging/method labels. | AQI equivalence, exposure diagnosis, health advice, or unsupported concentration. |
-| `OzoneObservation` | Ozone units/averaging/method labels. | AQI equivalence or regulatory/health determination. |
-| `SmokeContext` | Smoke/plume/model context profile. | Surface concentration, exposure, health impact, fire behavior, or hazard truth. |
-| `AODRaster` | Remote-sensing resolution, time, and caveat profile. | Surface PM2.5 or observed air quality. |
-| `WeatherStation` | Station/network context and safe precision profile. | Operational status, ownership, or observation truth. |
-| `WeatherObservation` | Units/method/time/quality profile. | Forecast or model equivalence. |
-| `WindField` | Vector units, height/level, time, and model/observed role. | Guaranteed transport, fire behavior, aviation, or hazard outcome. |
-| `PrecipitationObservation` | Units, accumulation window, method, and time. | Hydrologic/flood truth or crop impact. |
-| `TemperatureObservation` | Units, height, method, and time. | Heat illness, hazard impact, or operational advice. |
-| `ClimateNormal` | Baseline/reference-period profile. | Current conditions or future forecast. |
-| `ClimateAnomaly` | Baseline-linked anomaly profile. | Absolute observation without baseline/method. |
-| `ForecastContext` | Cycle/init/valid/lead/member/model profile. | Observation truth, certainty, alert authority, or guaranteed outcome. |
-| `AdvisoryContext` | Official issuer, issue/expiry, redirect, and display caveats. | Official advisory creation, amendment, cancellation, or life-safety instruction. |
-| Decision envelope support | Finite outcome/profile mapping. | Evidence proof, policy decision, or release approval. |
+| Families retained from the domain guide | Config may select | Config must not establish |
+| --- | --- | --- |
+| `AirStation`, `WeatherStation` | Approved identity-reference and public-display profiles. | Station identity, ownership, siting clearance, or current operation. |
+| `AirObservation`, `PM25Observation`, `OzoneObservation` | Units, averaging, method/QA and caveat profiles. | Scientific validity, regulatory status, concentration from AQI, or health effects. |
+| `WeatherObservation`, `WindField`, `PrecipitationObservation`, `TemperatureObservation` | Time, support, level and measurement profiles. | Model/observation equivalence, crop/flood impacts, or route/fire/aviation safety. |
+| `SmokeContext`, `AODRaster` | Explicitly contextual or derived display profiles. | Surface concentration, personal exposure, diagnosis, or evacuation need. |
+| `ClimateNormal`, `ClimateAnomaly`, `ForecastContext` | Baseline, model/run/member and validity profiles. | Current observations, deterministic local futures, or guaranteed outcomes. |
+| `AdvisoryContext` | Issuer, validity and official-source referral presentation. | Issuance, amendment, cancellation, or protective-action authority. |
 
-### Object-path compatibility
-
-Current repository evidence includes:
-
-- canonical expanded CamelCase contract files such as `AirStation.md`;
-- lowercase compatibility pointers such as `air-station.md`;
-- CamelCase schema paths such as `AirStation.schema.json`;
-- snake-case or hyphenated schema paths such as `air_station.schema.json` and `climate-anomaly.schema.json`.
-
-Configuration must reference exact accepted object/profile IDs, not infer equivalence from normalized filenames.
-
-[Back to top](#top)
-
----
+These fifteen families come from [ATM]. Listing a family does not prove its
+schema, policy evaluator, config consumer, or released product is complete.
 
 ## Source role and knowledge character
 
-### Required separations
+Preserve distinctions among sensor observation, regulatory/archive record,
+public AQI report, low-cost sensor, network/site metadata, remote-sensing
+product, model/forecast/reanalysis/fusion product, climate baseline/anomaly,
+advisory context, and aggregate/derived output. Rights, sensitivity, review,
+fixture status, and release state are separate axes—not interchangeable source
+roles or a new config enum. [ATM] [PDF]
 
-| Category | Meaning boundary |
-|---|---|
-| Observed sensor | A measurement under a stated instrument/method/time/QA context. |
-| Regulatory record | Official or regulatory context under a stated authority and method; not every observation is regulatory. |
-| Public AQI report | An index/reporting product; not raw concentration. |
-| Low-cost sensor | Observation with correction/calibration/confidence/limitations requirements; not automatically regulatory-comparable. |
-| Network/site context | Station/network metadata; not an observation. |
-| Remote-sensing mask/raster | A satellite or derived product; not surface concentration. |
-| Atmospheric model field | Model output with run/cycle/level/lead/member metadata; not an observation. |
-| Forecast context | Future-valid model or official forecast context; not current observed state. |
-| Climate baseline | Reference-period normal; not a current measurement. |
-| Climate anomaly | Baseline-relative departure; not absolute value without its baseline. |
-| Advisory context | Official-source referral context; not KFM-issued instruction. |
-| Aggregate/derived product | A transformation whose evidence, method, caveats, and release lineage remain visible. |
-| Candidate/synthetic | Provisional or generated material; never mixed with evidence claims. |
-| Restricted | Rights-, security-, privacy-, or policy-limited material; deny/hold by default. |
-
-### Role transitions
-
-Configuration must not authorize role upgrades. Any transformation must preserve:
-
-- input role;
-- output role;
-- transform identity and version;
-- method and uncertainty;
-- evidence refs;
-- validation result;
-- review/policy state;
-- release state.
-
-### Unknown role
-
-Unknown or conflicting role results in `HOLD` or `ABSTAIN`, not a guessed default.
-
-[Back to top](#top)
-
----
+Any transformation retains input/output roles, method/version, uncertainty,
+evidence references, validation, and review/release lineage. A config cannot
+upgrade a role. Unknown or conflicting meaning requires a bounded hold,
+abstention, denial, or error under the applicable contract—not a guessed default.
 
 ## Station, network, and sensor identity
 
-A station is not merely a coordinate and a label.
+Preserve source/network and site IDs, operator, instrument/channel and method,
+effective dates, relocation and replacement history, calibration/correction
+version, coordinate precision/access posture, and approved alias/supersession
+lineage where applicable.
 
-A station identity profile may need to preserve:
-
-- source/network ID;
-- station/site ID;
-- operator/maintainer;
-- instrument and sensor channel;
-- parameter;
-- method code;
-- effective start/end time;
-- relocation history;
-- instrument replacement history;
-- calibration/correction version;
-- coordinate precision and siting class;
-- elevation and sensor height;
-- timezone/reporting convention;
-- public precision and access restrictions;
-- supersession and alias history.
-
-### Forbidden station inferences
-
-Configuration must not infer that:
-
-- matching coordinates mean identical station identity;
-- nearby stations are interchangeable;
-- a relocated station is one uninterrupted homogeneous series;
-- a station name is globally unique;
-- an instrument replacement preserves comparability automatically;
-- a low-cost sensor is equivalent to a regulatory monitor;
-- station presence means current operation;
-- a public station point permits exposure of private access or infrastructure details.
-
-### Station aliases
-
-Aliases require an accepted identity/crosswalk record with effective time and provenance. Config-local alias tables must be test-only or explicitly approved compatibility profiles, never an unreviewed identity authority.
-
-[Back to top](#top)
-
----
+Matching names or coordinates do not prove identity; nearby stations are not
+interchangeable; relocation or instrument replacement does not automatically
+preserve series comparability. Station presence is not current operation.
+Aliases belong to an approved identity/crosswalk authority, not an unreviewed
+config-local table. Do not expose private access or sensitive infrastructure
+because a station point is otherwise available. [ATM] [PDF]
 
 ## Measurements, units, methods, averaging, and quality
 
-Every measurement-facing profile must preserve, where applicable:
+Keep parameter/quantity identity, raw and canonical units, conversion method and
+version, reference conditions where needed, sampling and averaging/accumulation
+windows, instrument/method, QA flags, detection/quantitation limits, uncertainty,
+correction/calibration, provisional/revised/final state, and vertical level.
+Missing, suspect, invalid, and below-detection values require explicit handling.
 
-- parameter identity;
-- quantity kind;
-- canonical unit;
-- source unit;
-- conversion method and version;
-- averaging or accumulation period;
-- sampling method;
-- instrument/method code;
-- detection and quantitation limits;
-- QA/validation flags;
-- correction/calibration state;
-- uncertainty/confidence;
-- below-detection handling;
-- missing/invalid/suspect handling;
-- provisional/revised/final status;
-- regulatory/non-regulatory status;
-- vertical height or pressure level;
-- source role and knowledge character.
+A profile may select an accepted conversion, not invent its assumptions.
+Gust and sustained wind, rate and accumulation, index and concentration, anomaly
+and absolute value, and model analysis and sensor observation stay distinct.
 
-### Examples of non-equivalence
-
-```text
-µg/m³ PM2.5 concentration != AQI
-ppb ozone                 != ozone AQI
-AOD                       != surface PM2.5
-instantaneous wind        != hourly mean wind
-gust                      != sustained wind
-precipitation rate        != accumulation
-climate normal            != observation
-anomaly                   != absolute measurement
-model analysis            != sensor observation
-```
-
-### Unit conversion
-
-A configuration profile may select an accepted conversion. It must not invent conversion assumptions or omit temperature/pressure/reference conditions when they matter.
-
-### Low-cost sensors
-
-Low-cost sensor public use requires accepted handling for:
-
-- calibration or correction model;
-- training/reference data scope;
-- firmware/instrument version;
-- humidity/temperature effects where relevant;
-- uncertainty and confidence;
-- outlier and drift behavior;
-- regulatory comparability disclaimer;
-- stale or disconnected state;
-- correction invalidation after model/version change.
-
-[Back to top](#top)
-
----
+Low-cost sensor use must retain correction/training/reference and colocation
+lineage, firmware/instrument version, applicable meteorological effects,
+uncertainty/confidence, limitations, drift, transferability, and disconnected
+state. Fixture checks do not certify calibration accuracy or regulatory
+comparability. [ATM] [PDF] [VALIDATOR-INDEX]
 
 ## Time, forecast cycle, freshness, and stale state
 
-Atmosphere data is highly time-sensitive. A single `timestamp` is insufficient.
+Preserve observation and sample intervals; advisory issue/effective/expiry times;
+model initialization and valid intervals/lead time; retrieval, ingestion,
+processing and release times; correction/supersession times; and climate
+baseline periods where applicable. Model run and ensemble-member identity are
+associated metadata, not substitutes for time.
 
-### Time kinds
+Use explicit timezone/normalization rules. Do not guess naive timestamps, hide
+accumulation windows, replace observation time with retrieval time, or combine
+incompatible forecast cycles. Freshness must be product- and use-specific; this
+README selects no threshold.
 
-Preserve distinct fields when applicable:
-
-- `observation_time`;
-- `sample_start_time`;
-- `sample_end_time`;
-- `issue_time`;
-- `model_initialization_time`;
-- `forecast_valid_start`;
-- `forecast_valid_end`;
-- `lead_time`;
-- `ensemble_member`;
-- `retrieval_time`;
-- `ingestion_time`;
-- `processing_time`;
-- `release_time`;
-- `stale_after`;
-- `superseded_at`;
-- `corrected_at`;
-- climatology `baseline_start` and `baseline_end`.
-
-### Product-specific freshness
-
-A single global freshness threshold is unsafe. Profiles must be specific to product family, source, cadence, and use.
-
-Examples requiring distinct handling:
-
-- near-real-time station observations;
-- hourly or daily regulatory archives;
-- low-cost sensor feeds;
-- forecast cycles;
-- model analyses;
-- smoke-plume products;
-- AOD scenes;
-- climate normals;
-- climate anomalies;
-- advisories;
-- historical archives.
-
-### Stale-state requirements
-
-When a source becomes stale, delayed, partial, corrected, superseded, or unavailable:
-
-- preserve last known time;
-- label stale/unavailable state explicitly;
-- do not advance timestamps artificially;
-- do not substitute a different role/source silently;
-- do not keep an expired advisory looking active;
-- do not reuse a prior forecast cycle as current without explicit historical labeling;
-- invalidate dependent caches, layers, indexes, exports, and generated summaries as required;
-- record recovery and supersession.
-
-### Clock and timezone discipline
-
-Use explicit timezone and UTC normalization where required. Configuration must not interpret naive timestamps without an accepted rule.
-
-[Back to top](#top)
-
----
+Stale does not necessarily mean false. Preserve last-known time and historical
+use, but make delayed, partial, stale, corrected, superseded, expired, or
+unavailable status visible. Never fabricate continuity, silently substitute a
+model for a missing observation, or present an old forecast/advisory as current.
+Recovery and invalidation must preserve lineage. [ATM] [PDF]
 
 ## Spatial support, resolution, height, and generalization
 
-Atmosphere values can refer to different spatial supports:
+Distinguish station/instrument footprint, mobile observation, raster pixel,
+model grid, smoke polygon, regional aggregate, atmospheric column, pressure
+level, and height-above-ground support. Preserve CRS, extent, resolution,
+vertical reference, interpolation/aggregation method, precision, and any
+public-safe transformation with its reason and provenance.
 
-- station point;
-- instrument footprint;
-- route/mobile observation;
-- raster pixel;
-- model grid cell;
-- smoke/plume polygon;
-- county or regional aggregate;
-- vertical column;
-- pressure level;
-- height-above-ground layer;
-- generalized public tile.
-
-A profile must preserve:
-
-- CRS;
-- support type;
-- resolution;
-- extent;
-- interpolation or aggregation method;
-- vertical coordinate/height/pressure level;
-- coordinate precision;
-- generalization and public-display obligations.
-
-### Spatial anti-collapse
-
-Configuration must not:
-
-- treat a station point as representative of an entire county without accepted method;
-- treat a raster pixel as a point measurement;
-- treat a model grid as observed local conditions;
-- downscale county or regional data to a site;
-- infer surface conditions from column AOD without an accepted model and evidence;
-- treat plume intersection as exposure;
-- expose private/infrastructure-sensitive station siting because coordinates are technically public elsewhere;
-- hide resolution or support changes during resampling.
-
-[Back to top](#top)
-
----
+A point does not establish county-wide conditions; a grid is not a local sensor;
+a county aggregate cannot be silently downscaled to a site; plume intersection
+is not exposure. Do not hide resampling or derive exact sensitive locations
+through joins. Generalize, redact, quarantine, or deny before public delivery;
+UI hiding alone is not a sensitivity control. [ATM] [PDF]
 
 ## AQI, concentration, AOD, PM2.5, and smoke boundaries
 
-### AQI is not concentration
+**AQI is an index/reporting product, not concentration.** Retain pollutant basis,
+averaging, issuing/reporting authority, breakpoint/method version, supporting
+inputs, valid/issue time, freshness, and caveats.
 
-AQI configuration must preserve:
+**AOD or smoke context is not observed surface PM2.5.** Any approved retrieval or
+relationship needs method, meteorological/vertical context, model/run identity,
+calibration/validation, uncertainty and use limitations; the result retains its
+derived role. A config cannot perform an epistemic upgrade.
 
-- pollutant basis;
-- averaging period;
-- issuing/reporting authority;
-- breakpoint/method version;
-- observation inputs;
-- issue and valid time;
-- stale state;
-- caveats.
-
-AQI must not be used as if it were a raw PM2.5 or ozone concentration.
-
-### AOD is not PM2.5
-
-AOD is column-integrated optical information. AOD/PM2.5 relationships require method, meteorology, vertical structure, surface conditions, model/run identity, calibration, validation, uncertainty, and use limitations.
-
-A configuration file may select an accepted AOD interpretation profile. It cannot make AOD a surface PM2.5 observation.
-
-### Smoke context is not exposure
-
-Smoke masks, plume polygons, satellite detections, and model smoke fields may support contextual statements. They do not by themselves establish:
-
-- personal exposure;
-- indoor air quality;
-- diagnosis or health outcome;
-- fire location/behavior truth;
-- surface concentration;
-- evacuation need;
-- regulatory exceedance.
-
-### PM2.5 observation requirements
-
-A PM2.5 profile must preserve concentration units, averaging period, method, QA, correction, station/network identity, time, provisional/final status, and source role.
-
-[Back to top](#top)
-
----
+PM2.5 observations retain units, averaging, station/network identity, method/QA,
+correction, time, source role and provisional/final state. Smoke masks, plumes,
+hotspots, and modeled transport do not by themselves establish ground exposure,
+indoor air, health outcome, fire behavior, regulatory exceedance, or evacuation
+need. [ATM] [PDF]
 
 ## Models, forecasts, ensembles, and climate products
 
-### Model and forecast metadata
+Keep provider/product and version, run/init cycle, analysis/forecast distinction,
+lead/valid interval, grid and vertical level, assimilation/post-processing,
+ensemble member/summary/spread, uncertainty, limitations, and superseding run.
+Matching a sensor or being interpolated, validated, rendered, or summarized does
+not turn modeled output into an observation. [VALIDATOR] [ATM]
 
-A profile must preserve where applicable:
-
-- model/product name;
-- provider;
-- version;
-- initialization cycle;
-- analysis/forecast distinction;
-- lead time;
-- valid interval;
-- grid/resolution;
-- vertical level;
-- ensemble member and summary method;
-- data assimilation/analysis status;
-- post-processing/bias correction;
-- uncertainty or spread;
-- known limitations;
-- superseding run.
-
-### No model-to-observation upgrade
-
-A model field remains modeled even when:
-
-- it matches an observation;
-- it is validated;
-- it is interpolated to a station;
-- it is used in a map;
-- it is used in an explanation;
-- a newer run supersedes it.
-
-### Forecast handling
-
-Forecasts require visible issue/init/valid/lead metadata. Expired or superseded forecasts must not be presented as current.
-
-### Climate normals
-
-A normal requires:
-
-- metric;
-- baseline period;
-- aggregation method;
-- station/grid support;
-- version;
-- completeness/quality;
-- source.
-
-### Climate anomalies
-
-An anomaly requires the referenced normal/baseline, sign convention, metric, period, method, and uncertainty. A profile cannot display an anomaly without enough context to interpret it.
-
-### Scenario and projection boundary
-
-Climate scenarios or projections are modeled context, not forecasts or observations. They require explicit scenario/model/period/ensemble labels and should not be presented as deterministic local outcomes.
-
-[Back to top](#top)
-
----
+Normals require metric, baseline period, aggregation method, station/grid support,
+version and completeness/quality. Anomalies require the referenced baseline,
+sign convention, period, method and uncertainty. Climate scenarios/projections
+are not direct observations or deterministic local forecasts. [PDF]
 
 ## Advisory, alert, health, and life-safety boundary
 
-Atmosphere may carry `AdvisoryContext` only as a governed referral surface.
+Advisory context must preserve official issuer and identifier, geographic scope,
+issue/effective/valid times, expiry/cancellation/supersession, retrieval time,
+stale state, and an official-source reference. Make clear that KFM is not the
+issuer. Coordinate KFM hazard context without assigning official powers to
+Atmosphere, Hazards, configuration, or AI. [ATM]
 
-Required advisory context includes:
-
-- official issuing authority;
-- advisory identifier/type;
-- issue time;
-- effective/valid period;
-- expiry/cancellation/supersession state;
-- geographic scope;
-- official source link/reference;
-- retrieval time;
-- stale/unavailable state;
-- clear statement that KFM is not the issuing authority.
-
-Configuration may not:
-
-- originate, edit, cancel, or suppress an official advisory;
-- infer an alert from thresholds;
-- turn model output into an alert;
-- issue evacuation, shelter, travel, medical, occupational, aviation, or fire-safety instructions;
-- hide the official source;
-- keep expired context looking active;
-- bypass Hazards or official-authority workflows.
-
-### Health and exposure boundary
-
-Air-quality context is not individualized medical advice or exposure assessment. Health messaging must remain official-source referral/context under accepted policy.
-
-[Back to top](#top)
-
----
+Do not originate, alter, suppress, or cancel official guidance, infer an alert
+from a threshold, or issue medical, exposure, evacuation, shelter, travel,
+aviation, occupational, or fire-safety instructions. Health content remains
+bounded official-source referral under applicable policy, not individualized
+advice. Missing or expired support must not appear as active guidance.
 
 ## Cross-domain context and anti-authority
 
-| Other lane | Atmosphere may provide | Atmosphere config must not assert |
-|---|---|---|
-| Hazards | Smoke, heat, weather, advisory context. | Hazard event truth, alert authority, evacuation/protective action. |
-| Agriculture | Heat, precipitation, smoke, weather, drought forcing context. | Crop condition, yield, field, suitability, or loss truth. |
-| Hydrology | Precipitation, temperature, snow/weather forcing context. | Streamflow, flood, water-body, or groundwater truth. |
-| Soil | Atmospheric inputs or moisture-driving context. | Soil property, map-unit, or field-condition truth. |
-| Habitat/Flora/Fauna | Climate, phenology, smoke, weather context. | Species occurrence, sensitive location, habitat condition truth. |
-| Settlements/Infrastructure | Weather/air context around places and assets. | Asset operational status, outage, vulnerability, or emergency status. |
-| Roads/Rail/Trade | Weather/smoke/visibility context. | Road closure, route safety, navigation, logistics, or railroad status. |
-| Geology | Atmospheric transport or dust context. | Geologic/mineral/source attribution truth without evidence. |
-| People/Land | Aggregate environmental context. | Individual exposure, health, property, owner/operator, or person-place truth. |
+Atmosphere may provide governed weather, climate, smoke, precipitation, or dust
+context. It does not thereby establish Agriculture crop/yield claims; Hydrology
+flood/gauge truth; Soil properties/moisture; ecological occurrence/habitat;
+asset operation/outages; road closure/navigation safety; geological source
+attribution; or individual exposure, health, property, and ownership claims.
 
-Cross-domain joins must preserve each domain's ownership, time, spatial support, source role, sensitivity, evidence, and release state.
-
-[Back to top](#top)
-
----
+Cross-domain joins preserve each owner's claim, time, spatial support, role,
+rights/sensitivity, evidence, review, and release state. Additional sensitive
+inferences can require generalization or denial even when the inputs are
+separately public. [ATM] [PDF]
 
 ## Source rights, attribution, quotas, and outages
 
-Configuration may reference a reviewed source profile but must not contain credentials or activate a source.
+Config may reference a reviewed source profile; it cannot activate a connector
+or claim that its source is admitted. Source owners must establish current terms,
+attribution, redistribution, retention/caching, access, quotas, cadence,
+correction and outage obligations before the relevant use. This update performs
+no live source or licensing verification. [PDF]
 
-A reviewed profile should cover:
-
-- publisher/authority;
-- source/product identity;
-- access method;
-- current terms/license;
-- attribution;
-- redistribution;
-- caching/retention;
-- API key handling outside the repo;
-- quotas/rate limits;
-- user-agent/contact requirements;
-- update cadence;
-- outage/degradation behavior;
-- correction/supersession;
-- source role and knowledge character;
-- public-release limitations.
-
-### Quota behavior
-
-Quota exhaustion must not trigger silent source substitution or fabricated continuity.
-
-### Source substitution
-
-Replacing one source with another requires explicit compatibility review. Similar metric names do not prove equivalent method, network, units, time, authority, or use rights.
-
-### Live endpoint boundary
-
-Repository templates may use placeholders. Real private endpoints, tokens, keys, and deployment bindings belong in approved secret/configuration systems, not this public lane.
-
-[Back to top](#top)
-
----
+Keep keys and private endpoints outside committed examples. Quota exhaustion
+or outage requires explicit degraded/unavailable state, not invented continuity.
+Source replacement needs method, units, time, rights, and authority compatibility
+review; similar labels do not prove interchangeability. Unresolved rights or
+sensitivity block public exposure, not safe synthetic authoring.
 
 ## Logging, telemetry, caches, and derived indexes
 
-Observability must not create a hidden truth or alert surface.
+Log public-safe IDs/versions, finite results, reason codes, and stale/outage
+status—not secrets, private siting, restricted responses, unreviewed payloads,
+misleading current-condition claims, or alert-like instructions.
 
-### Safe logging
+Cache identity must prevent reuse across incompatible profile/source versions,
+roles, parameters/units/methods, run/valid intervals, support/resolution/level,
+and release/correction states. This is a requirement for a future consumer,
+not a claimed implemented cache key.
 
-Logs may include safe identifiers such as:
-
-- config ID/version;
-- consumer ID;
-- profile IDs;
-- finite validation outcome;
-- source descriptor ID;
-- product/run ID where public-safe;
-- safe reason code;
-- stale/outage state.
-
-Logs must not include:
-
-- secrets or tokens;
-- private endpoints;
-- sensitive station access details;
-- unreviewed payload values;
-- misleading alert-like language;
-- false current-state claims;
-- full restricted source responses.
-
-### Cache keys
-
-Cache keys must include enough identity to prevent incompatible reuse:
-
-- source/profile version;
-- role/knowledge character;
-- parameter/unit/method;
-- time/run/valid interval;
-- spatial support/resolution/level;
-- release/correction/supersession version where applicable.
-
-### Invalidation
-
-Correction, supersession, source-role change, station relocation, method/correction update, model rerun, advisory expiry, rights change, or policy/release change may require invalidation of:
-
-- caches;
-- tiles and layer manifests;
-- search indexes;
-- vector indexes/embeddings;
-- graphs/triplets;
-- exports/reports;
-- dashboards;
-- notifications;
-- AI summaries and citations.
-
-A config rollback that leaves derived products active is incomplete.
-
-[Back to top](#top)
-
----
+Corrections, relocations, method changes, model reruns, advisory expiry,
+rights changes, or withdrawal may invalidate tiles, layers, API payloads,
+caches, search/vector indexes, graphs, reports/exports, dashboards, and AI
+summaries/citations. Restore or withdraw dependent outputs through the owning
+systems; changing configuration alone is insufficient. [PDF]
 
 ## Failure behavior
 
-| Condition | Minimum safe behavior |
-|---|---|
-| Missing optional file | Use documented conservative built-in behavior and record that no override loaded. |
-| Missing required file | `ERROR` or `HOLD`; do not guess. |
-| Parse/schema failure | Reject file; `ERROR`. |
-| Unknown/duplicate key | Reject or `HOLD` unless accepted contract says otherwise. |
-| Ambiguous config precedence | `HOLD`; no filename-sort winner. |
-| Scaffold dependency | Reject activation; `CONFIG_SCAFFOLD_DEPENDENCY`. |
-| `air`/`atmosphere` conflict | `HOLD` pending accepted mapping. |
-| Object-path/casing ambiguity | `HOLD`; require exact accepted ID/version. |
-| Source-registry topology conflict | `HOLD`; do not activate duplicate records. |
-| Unknown source role/knowledge character | `HOLD` or `ABSTAIN`. |
-| Station identity unresolved | `HOLD`; do not merge time series. |
-| Units/method/averaging missing | `ERROR` or `HOLD`. |
-| Time semantics missing | `HOLD`, stale, or `ABSTAIN`; never apparently current truth. |
-| Source stale/delayed/partial | Display explicit stale/unavailable state or withhold. |
-| Source outage/quota exhaustion | Report unavailable/degraded state; no fabricated continuity. |
-| AQI treated as concentration | `DENY` or `ERROR`. |
-| AOD/smoke treated as observed PM2.5 | `DENY` or `ERROR`. |
-| Model/forecast treated as observation | `DENY` or `ERROR`. |
-| Climate anomaly lacks baseline | `HOLD` or `ERROR`. |
-| Low-cost correction/caveats absent | `HOLD` or `DENY` for public-bound use. |
-| Advisory official redirect absent | `HOLD` or `DENY`. |
-| Requested alert/health/life-safety action | Redirect to official authority/Hazards; no KFM instruction. |
-| Rights/attribution unresolved | `HOLD` or `DENY` for release-facing use. |
-| Evidence/policy/release missing | `DENY` public-bound behavior. |
-| Correction/rollback incomplete | Keep affected outputs held/withdrawn and continue invalidation. |
+These are design obligations; exact outcome enums belong to the chosen contract.
+Do not conflate work-state `HOLD`, a validation result, and an outward runtime
+response.
 
-A warning log is not sufficient if unsafe behavior continues.
-
-[Back to top](#top)
-
----
+| Condition | Required safe behavior |
+| --- | --- |
+| Missing optional file | Use only a documented conservative default; record that no override loaded. |
+| Required file missing, malformed or unsupported | Reject or hold; no guessed binding or version. |
+| Duplicate/unknown keys, ambiguous refs/precedence | Reject or hold unless the accepted contract defines an explicit safe alternative. |
+| Unresolved source/station/units/time/rights | Preserve uncertainty; withhold unsupported interpretation or public use. |
+| Role collapse, sensitive exposure, policy/release bypass | Deny or error; a warning while behavior continues is insufficient. |
+| Stale/outage/partial or expired advisory | Label accurately or withhold; no fabricated current state or source substitution. |
+| Missing evidence or public release support | No authoritative public-bound output. |
+| Incomplete correction/rollback | Keep affected outputs held/withdrawn and complete downstream invalidation. |
 
 ## Governed AI and generated language
 
-AI may help explain released, policy-safe Atmosphere evidence. It may not:
+AI is interpretive, not root truth. Use scope -> admissible evidence ->
+`EvidenceBundle` -> applicable rights/sensitivity/policy/review/release checks ->
+cited, bounded answer or abstention/denial/error. Generated text cannot supply
+missing authority, approval, source freshness, or scientific validation. [ATM]
 
-- infer current conditions from stale or ambiguous data;
-- convert AQI, AOD, smoke, forecasts, models, normals, or anomalies into unsupported observations;
-- issue emergency, health, exposure, travel, aviation, occupational, or fire-safety direction;
-- claim an advisory was issued, active, cancelled, or authoritative without cited official context;
-- hide source role, time, units, method, uncertainty, caveats, stale state, or limitations;
-- treat config values as evidence;
-- bypass the governed API or released artifacts;
-- preserve a withdrawn/corrected claim in embeddings, search, caches, or generated summaries.
-
-Preferred order:
-
-```text
-scope
-  -> retrieve released evidence
-  -> resolve EvidenceRef to EvidenceBundle
-  -> apply source-role / time / unit / policy / release checks
-  -> answer with citations and limitations
-  -> abstain, deny, or narrow when support is insufficient
-```
-
-Generated text remains downstream of evidence and policy.
-
-[Back to top](#top)
-
----
+Do not infer observations from models, exposure from smoke, current conditions
+from stale data, or official instructions from a config threshold. Preserve
+units, time, role, uncertainty, caveats, and correction state in maps, reports,
+search and AI. Withdrawn support must not survive as an authoritative cached
+answer or embedding-derived claim.
 
 ## Migration and anti-bypass posture
 
-### Safe migration sequence
+For a real consumer change, pin the old binding and IDs; identify affected
+readers/writers and exact reference mappings; obtain necessary authority; change
+the owning implementation plus tests; verify stale/correction/rollback behavior;
+and retire an old binding only after consumer/reference closure. Preserve
+compatibility and auditable supersession.
 
-1. identify current consumer and exact old binding;
-2. pin current config and authority versions;
-3. define new ID/path/key/profile mapping;
-4. resolve `air`/`atmosphere`, casing, registry, and object compatibility explicitly;
-5. update schema/contract/profile refs;
-6. add compatibility tests;
-7. add stale/outage/correction/rollback tests;
-8. deploy through reviewed binding;
-9. observe safe metrics;
-10. remove the old path only after consumers and derivatives are verified;
-11. retain correction and rollback lineage.
-
-### Anti-bypass matrix
-
-| Attempt | Required response |
-|---|---|
-| Activate file because it exists | Deny; require explicit binding. |
-| Load both `air` and `atmosphere` profiles | Deny/hold unless accepted migration explicitly permits it. |
-| Normalize filenames to select authority | Deny; require exact accepted ID/version. |
-| Use empty schema as validation | Deny activation. |
-| Use scaffold Rego as policy proof | Deny activation. |
-| Use TODO workflow success as enforcement proof | Deny claim. |
-| Use published-directory name as release proof | Deny; require release/evidence/policy refs. |
-| Use model/forecast fallback after observation outage | Preserve role and label; do not substitute as observation. |
-| Hide stale state to keep map populated | Deny. |
-| Omit official redirect to simplify UI | Deny public display. |
-| Keep corrected output in cache/index/AI | Invalidate and hold until corrected. |
-
-[Back to top](#top)
-
----
+Do not normalize filenames to select authority, load both `air` and `atmosphere`
+by default, treat an empty schema or a TODO workflow as enforcement, use directory
+names as release proof, hide stale state, omit official referral, or leave
+corrected outputs active. The explicit AirObservation mirror is evidence for
+that pair only. [MIRROR] [AIR]
 
 ## Rollback, correction, supersession, and invalidation
 
-### README rollback
+**README-only rollback:** leave the isolated branch unintegrated, or prepare a
+reviewed non-force revert of this change. Never rewrite shared history or
+implicitly revert an already-merged PR because its lifecycle was unexpected.
 
-Before merge, close or abandon the review branch. After merge, create a transparent revert commit or revert PR. Do not rewrite shared history.
+**Future behavior rollback:** identify config/consumer/version and affected
+exposure window; disable the binding or restore an accepted prior version; rerun
+relevant checks; invalidate or withdraw dependent outputs; preserve receipts
+and correction lineage; and verify that consumers no longer use the unsafe
+state. Record correction, withdrawal, and rollback in their owning homes.
 
-### Future payload rollback
-
-1. identify affected config ID/version, consumer, release, and exposure window;
-2. disable the binding or select the accepted conservative built-in posture;
-3. restore the prior known-good version;
-4. rerun parse, semantic, role, station, unit, time, freshness, rights, policy, and no-network tests;
-5. invalidate affected caches, tiles, indexes, graphs, exports, dashboards, and AI outputs;
-6. preserve logs/receipts safely;
-7. issue required correction, supersession, withdrawal, or rollback records in canonical homes;
-8. verify public and internal consumers no longer use the unsafe state;
-9. record root cause and prevention.
-
-### Correction is not silent mutation
-
-Corrected measurements, station histories, model runs, advisories, profiles, or source rights must preserve lineage. Do not overwrite an old state without supersession/correction references where downstream reliance is possible.
-
-### Rollback limitation
-
-A Git revert does not retract already published, cached, exported, indexed, embedded, or summarized information. Complete rollback includes downstream invalidation and governed correction.
-
-[Back to top](#top)
-
----
+A Git revert does not retract already published, cached, exported, indexed, or
+summarized information. Preserve prior observations, advisories, model runs,
+source rights, and transformations as auditable history rather than silently
+overwriting them.
 
 ## Definition of done for the first payload
 
-- [ ] exact consumer, code binding, owner, and reviewers verified;
-- [ ] config class, format, version, parser, precedence, missing-file, unknown-key, and fallback behavior defined;
-- [ ] canonical `air`/`atmosphere` mapping resolved or accepted compatibility map referenced;
-- [ ] contract/schema object names and casing resolved or accepted compatibility map referenced;
-- [ ] source-registry topology resolved or exact accepted descriptor path referenced;
-- [ ] accepted non-empty schema with required fields and controlled additional properties;
-- [ ] executable validator and valid/invalid fixtures;
-- [ ] accepted policy modules with tests and runtime binding; no scaffold reliance;
-- [ ] source IDs, roles, knowledge characters, rights, cadence, and activation verified;
-- [ ] station/network/instrument/channel/relocation rules verified;
-- [ ] parameter, units, averaging/accumulation, method, QA, correction, uncertainty, and status rules verified;
-- [ ] observation/issue/init/valid/lead/retrieval/ingest/expiry/supersession semantics verified;
-- [ ] product-specific freshness, outage, recovery, and stale rules verified;
-- [ ] spatial support, CRS, resolution, vertical level/height, and generalization verified;
-- [ ] AQI/concentration, AOD/PM2.5, smoke/exposure, and model/observation negative tests pass;
-- [ ] low-cost sensor correction/caveat tests pass where applicable;
-- [ ] climate normal/anomaly baseline tests pass;
-- [ ] advisory issuer/issue/expiry/redirect/no-alert tests pass;
-- [ ] cross-domain anti-authority tests pass;
-- [ ] no real credentials, private endpoints, sensitive siting, or source payloads in fixtures;
-- [ ] no-network tests pass;
-- [ ] safe logging/telemetry/cache-key tests pass;
-- [ ] public-bound flow requires EvidenceBundle, policy, review, release, correction, and rollback;
-- [ ] correction/supersession/withdrawal invalidation tests cover caches, maps, search, vector, graph, exports, dashboards, and AI;
-- [ ] rollback rehearsal passes;
-- [ ] documentation and evidence ledger updated.
+**Authoring gate:** one justified named-consumer purpose; correct responsibility
+root; explicit draft/test-only status where appropriate; stable identity/version;
+non-secret values; no production discovery or live effects; a reviewable dependency
+list; synthetic tests; and reversible removal. Unresolved scientific, source,
+policy, or release dependencies remain visible and cannot authorize use.
 
----
+**Binding gate:** demonstrate the exact parser/load point, supported keys and
+version, deterministic precedence, required/optional handling, accepted reference
+mapping, safe observability, relevant positive/negative tests, and rollback.
+Profiles covering units, station identity, time, models, climate, advisories,
+rights and sensitivity apply only where the consumer actually needs them.
+
+**Operational/public-use gate:** independently establish applicable source
+admission, identity, rights, sensitivity, validation, provenance, integrity,
+receipts/proofs, policy, review, release, correction, and rollback closure.
+Public APIs, maps, exports, and AI remain downstream of this gate. A first
+synthetic config test cannot satisfy it by declaration.
 
 ## Verification backlog
 
-| Item | Status |
-|---|---:|
-| Exhaustive recursive config inventory | `NEEDS VERIFICATION` |
-| Direct config consumer/loader | `UNKNOWN` |
-| Discovery/precedence/fallback | `UNKNOWN` |
-| Accepted owners/CODEOWNERS | `OWNER_TBD / NEEDS VERIFICATION` |
-| `air` versus `atmosphere` | `CONFLICTED` |
-| Atmosphere pipeline versus `air` pipeline lane | `CONFLICTED` |
-| CamelCase/hyphen/snake-case contract/schema compatibility | `CONFLICTED / NEEDS VERIFICATION` |
-| Source-registry topology | `CONFLICTED` |
-| Source-role and knowledge-character vocabulary | `NEEDS VERIFICATION` |
-| Source rights, terms, quotas, cadence, outage | `NEEDS VERIFICATION` |
-| Station identity/relocation/instrument rules | `NEEDS VERIFICATION` |
-| Public station precision/siting controls | `NEEDS VERIFICATION` |
-| Units/averaging/method/QA/correction profiles | `NEEDS VERIFICATION` |
-| Product-specific freshness/stale profiles | `NEEDS VERIFICATION` |
-| Low-cost sensor correction/comparability | `NEEDS VERIFICATION` |
-| Model/forecast/run/ensemble profiles | `NEEDS VERIFICATION` |
-| Climate baseline/anomaly profiles | `NEEDS VERIFICATION` |
-| Smoke/AOD interpretation profiles | `NEEDS VERIFICATION` |
-| Advisory official-source redirect profile | `NEEDS VERIFICATION` |
-| Package implementation | `GREENFIELD 0.0.0 / PLACEHOLDER` |
-| Atmosphere pipeline implementation | `PLACEHOLDER` |
-| `air` pipeline implementation | `README / ALIAS-CANDIDATE; EXECUTION NEEDS VERIFICATION` |
-| Pipeline specs | `EMPTY STAGE LISTS` |
-| Policy implementation | `PROPOSED SCAFFOLDS` |
-| Schema completeness | `EMPTY-PROPERTIES PERMISSIVE SCAFFOLDS` |
-| Validator implementation | `NOT IMPLEMENTED / PLACEHOLDER IN OPENED FILES` |
-| Source records | `EMPTY/TBD/PROPOSED` |
-| Published layer carriers/manifests | `NEEDS VERIFICATION` |
-| Explorer UI | `PLACEHOLDER` |
-| Workflow enforcement | `TODO SCAFFOLD` |
-| Tests/pass rates | `NEEDS VERIFICATION` |
-| Logging/telemetry/cache/index scanners | `NEEDS VERIFICATION` |
-| Governed API/runtime/alerting/publication | `UNKNOWN` |
-| Correction/supersession invalidation | `NEEDS VERIFICATION` |
-| Schema-home ADR | `PROPOSED SCAFFOLD` |
+| Open question | Status and next evidence |
+| --- | --- |
+| Consumer/load/precedence behavior | UNKNOWN; identify exact code and a tested explicit binding before activation. |
+| Broader schema/validator maturity | NEEDS VERIFICATION; inspect and execute each selected profile with its dependencies. |
+| Source-registry topology and admission | NEEDS VERIFICATION; use exact accepted descriptors and migration evidence, not copied registries. |
+| Remaining spelling/slug compatibility | NEEDS VERIFICATION; do not generalize from AirObservation or retire Air documentation automatically. |
+| Scientific profiles and freshness budgets | NEEDS VERIFICATION; method, station, spatial/vertical, temporal and use-specific review. |
+| Rights, sensitive joins and public precision | NEEDS VERIFICATION; source terms and transformation/access evidence before exposure. |
+| Independent review and stewardship | NEEDS VERIFICATION; CODEOWNERS proves routing only. |
+| Policy/runtime, CI enforcement and release closure | UNKNOWN in this update; obtain exact execution and decision records before claiming readiness. |
+| Correction/invalidation/rollback | NEEDS VERIFICATION for any real consumer and downstream artifacts. |
 
----
+These items do not block safe, isolated documentation or synthetic test authoring.
+They do constrain the behavior or transition that depends on the missing evidence.
 
 ## Safe language rules
 
 | Avoid | Prefer |
-|---|---|
-| “The config is active.” | “The README defines a boundary; direct consumer binding is not established.” |
-| “The policy blocks this.” | “Doctrine requires the boundary; opened policy files are scaffolds and runtime enforcement is unverified.” |
-| “The schema validates Atmosphere data.” | “Opened schemas are `PROPOSED` empty-permissive scaffolds.” |
-| “The validator passed.” | “Opened validator entrypoints are unimplemented/placeholders; no result is claimed.” |
-| “The source is registered.” | “A TBD/`PROPOSED` registry record exists; admission and activation are unverified.” |
-| “This layer is published.” | “A draft published-lane README exists; emitted carrier and release support remain unverified.” |
-| “Current PM2.5 is…” | “A cited PM2.5 observation under stated source, station, time, averaging, method, QA, and freshness is…” |
-| “AQI concentration…” | “AQI index/report context…” |
-| “AOD shows PM2.5…” | “AOD provides remote-sensing aerosol context; surface PM2.5 is not established.” |
-| “Smoke exposure…” | “Smoke/plume/model context; exposure and health impact are not established.” |
-| “The model observed…” | “The model estimated/forecast…” |
-| “The forecast says it is…” | “The forecast valid for [time] projects…” |
-| “Normal weather…” | “Climate normal for the stated baseline period…” |
-| “Anomaly temperature…” | “Baseline-relative temperature anomaly under the stated method…” |
-| “The station is here and active.” | “A station record reports this public-safe location and effective-time context; current operation is separately supported.” |
-| “This alert means…” | “Official advisory context from the cited issuing authority; follow the official source.” |
-| “CI validates Atmosphere.” | “The inspected domain workflow currently runs TODO echo jobs.” |
-| “air and atmosphere are aliases.” | “The repository records an unresolved `air`/`atmosphere` conflict.” |
-
----
+| --- | --- |
+| “Atmosphere is entirely scaffolded.” | “This config lane is README-only; inspected schema/validator surfaces have bounded implementation.” |
+| “The validator passed.” | “Source was inspected; execution was not established by that inspection.” |
+| “All schema casing is resolved.” | “AirObservation has an explicit mirror; other families require individual verification.” |
+| “air and atmosphere are interchangeable.” | “Atmosphere is the current lane; Air documentation preserves compatibility and migration constraints.” |
+| “The config is active / the source is admitted.” | “An explicit binding/admission record must be verified separately.” |
+| “AQI concentration / observed AOD PM2.5 / smoke exposure.” | “Index, remote-sensing, or smoke context with its actual support and limitations.” |
+| “The model observed / normal current weather.” | “Modeled result or baseline-relative climate product for the stated time and method.” |
+| “KFM issued this alert.” | “Official-source advisory context; KFM is not the issuing authority.” |
+| “Reviewed and release-ready.” | “Review routing, independent review, validation, and release are separately evidenced.” |
 
 ## Evidence ledger
 
-| Evidence | State | Supports | Does not prove |
-|---|---|---|---|
-| Target README | prior blob `46864d08…`, v0.2 | Existing non-alert, role, time, stale, safety, validation, rollback safeguards. | Payloads or consumers. |
-| Parent config README | blob `2c5e8b70…`, v0.4 | No-secret/no-authority child contract. | Atmosphere runtime behavior. |
-| Bounded config search | README only | No indexed payload/direct consumer. | Exhaustive absence. |
-| Atmosphere README | blob `005421a9…` | Object families, source-role denials, non-alert doctrine, slug conflict. | Current implementation. |
-| Contract README | blob `2626d011…` | Semantic object roster and current `atmosphere` contract lane. | Complete schema/policy/runtime enforcement. |
-| `air-station.md` pointer | blob `a7242662…` | CamelCase canonical contract plus lowercase compatibility pointer. | Full naming migration or validator coverage. |
-| Package metadata/code | blobs `504e4c6b…`, `1bf26664…` | Version `0.0.0` and placeholder source. | Working package. |
-| Atmosphere pipeline files | placeholder comments | Core intended paths exist. | Executable processing. |
-| `pipelines/domains/air/README.md` | blob `75bcd81d…` | Alias-candidate/transitional slug conflict. | Accepted pipeline canonical path. |
-| Pipeline specs | `stages: []` | Spec paths exist. | Stage wiring/execution. |
-| Atmosphere policy files | `PROPOSED`, `default allow := false` | Fail-closed policy intent. | Complete rules, tests, or runtime binding. |
-| Opened schemas | empty properties, additional properties allowed | Proposed paths and paired contract refs. | Meaningful validation. |
-| Opened validators | `NotImplementedError` or placeholder docstring | Intended validator paths. | Executable validation. |
-| Domain-first registry | empty register and TBD source templates | Existing lane and candidate source families. | Accepted source admission/rights. |
-| Subtype-first registry | `PROPOSED` placeholder records | Existing competing lane. | Canonical topology or active descriptors. |
-| Published layer README | blob `d0d85689…`, draft | Downstream carrier expectations and child-lane index. | Emitted layers, manifests, evidence closure, or public runtime. |
-| Explorer Evidence Drawer | placeholder export | Intended UI path. | Real evidence display or caveat enforcement. |
-| Domain workflow | TODO echo jobs | Trigger/job scaffolding. | Substantive CI/proof/release. |
-| Schema-home ADR | blob `7e565aad…`, `PROPOSED` scaffold | Open decision handle. | Accepted schema/slug decision. |
+Repository references below are pinned to the evidence commit, not to moving
+`main`. They support the stated bounded findings only. Tool/session identifiers
+are intentionally not used as durable repository citations.
 
----
+| ID | Source and identity | Supports / limits |
+| --- | --- | --- |
+| INV | [Exact directory contents][INV]; prior README blob `6379c8123a278723f89b3bb3913f0371eff95f8b`. | One tracked README, no subdirectory; not external-file absence. |
+| PARENT | [Parent configuration README][PARENT]; blob `c497e41466f3aaf934aeca4b9976a2fa8516ff21`. | Configuration responsibility; its inventories remain dated. |
+| DIR / ADR-0029 | [Adopted rules][DIR], blob `fd49a0b83e55cef52c1124281f093e263526898d`; [accepted adoption record][ADR-0029]. | Placement authority, not operational enforcement. |
+| ADR-0001 | [Schema-home ADR][ADR-0001]; blob `ed6f258f8d9ea152996570768a31666953e4a809`. | Still proposed; not ratified here. |
+| ATM | [Atmosphere domain guide][ATM]; blob `7e7a96a3f22547fd12afcce5dc7ccd82ddd226af`. | Domain meaning, mixed maturity and compatibility guidance; not test execution. |
+| AIR | [Air pipeline guardrail][AIR]; blob `2717874d4f489248a145bb8df82d4c65258b1972`. | Documentation-only compatibility intent; historical maturity details need rechecking. |
+| SCHEMA / MIRROR | [Lowercase profile][SCHEMA], blob `84e88b8f0149e679e1addf23e6b9074c4c70592d`; [mirror][MIRROR], blob `4df22268a660d8d2ff1af2ad6e5e3c121b224a0c`. | Inspected draft shape and explicit reference direction; not whole-domain acceptance. |
+| VALIDATOR | [Observed/modeled source][VALIDATOR]; blob `bdabf478fb2ec19395ac98a1e91895d991f9941a`. | Inspected bounded profile/field checks, not execution or scientific fitness. |
+| VALIDATOR-INDEX | [Validator README][VALIDATOR-INDEX]; blob `64680d31a964d4052b4cf444700982a9d3a9e579`. | Documentary index of fixture checks; broader re-audit not claimed. |
+| OWNERS | [CODEOWNERS][OWNERS]; blob `dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61`. | Verified review route; no independent approval or stewardship assignment. |
+| PDF | [Atmosphere / Air report, 2026-04-21][PDF]; Drive ID `1gHk6Jp3fGfrPTgvczwxyNXxvNopiKgRw`. | Read-only design lineage. Its no-mounted-repo finding describes that historical session, not this repository. No current source-rights claim. |
 
-<details>
-<summary><strong>Appendix A — no-loss preservation note</strong></summary>
-
-v0.2 established:
-
-- the Atmosphere config lane and documentation-only maturity;
-- non-authoritative and no-live-binding posture;
-- non-alert/life-safety boundary;
-- source-role separation;
-- AQI-not-concentration, AOD-not-PM2.5, model-not-observation, and advisory-not-alert rules;
-- time-kind and stale-state handling;
-- source rights and official-source redirect expectations;
-- minimum configuration contract;
-- future validation, finite failure behavior, review, correction, and rollback;
-- visible `air` versus `atmosphere` conflict.
-
-v0.3 preserves those controls and adds:
-
-- pinned repository and prior-blob evidence;
-- bounded config inventory;
-- actual scaffold/placeholder maturity across implementation-shaped surfaces;
-- pipeline-lane, object-path/casing, schema, and registry conflicts;
-- full object-family configuration boundaries;
-- station/network/sensor identity and relocation rules;
-- units, averaging, methods, QA, correction, uncertainty, and status rules;
-- detailed time/run/forecast/freshness semantics;
-- spatial support, resolution, vertical-level, and generalization rules;
-- low-cost sensor controls;
-- smoke/AOD/AQI/PM2.5 interpretation boundaries;
-- model, forecast, ensemble, climate-normal, anomaly, and scenario controls;
-- advisory/health/life-safety referral boundary;
-- cross-domain anti-authority;
-- rights/quota/outage behavior;
-- logging, telemetry, cache, index, export, and AI invalidation;
-- stricter validation matrix, first-payload gate, safe-language matrix, and evidence ledger.
-
-No v0.2 safeguard is intentionally weakened.
-
-</details>
-
-<details>
-<summary><strong>Appendix B — documentation-only boundary</strong></summary>
-
-This revision changes no:
-
-- executable config payload;
-- consumer, loader, discovery, or precedence behavior;
-- source descriptor, source activation, connector, watcher, endpoint, or credential;
-- schema, contract, policy, package, pipeline, validator, test, fixture, or workflow code;
-- station, observation, model run, forecast, climate baseline, advisory, smoke, AOD, AQI, or source payload;
-- lifecycle, registry, receipt, proof, catalog, triplet, graph, or published artifact;
-- release, correction, withdrawal, supersession, or rollback object;
-- API, map, UI, search, vector, export, Focus Mode, AI, alert, health, or deployment behavior.
-
-Any future behavior change must be implemented and validated in its owning responsibility roots.
-
-</details>
+**Revision continuity:** v0.2 established the boundary; v0.3 expanded the station,
+measurement, time, source-role, sensitivity and recovery safeguards. v0.4 retains
+those safeguards while consolidating repetition, replacing stale all-scaffold
+claims, recognizing the inspected schema mirror, and separating reversible
+authoring from activation/release gates. Existing H2 navigation is retained.
+The prior text remains recoverable through the recorded Git blob/history.
 
 ## Status summary
 
-`configs/domains/atmosphere/` is a README-only, non-secret, non-authoritative configuration-support lane. The surrounding repository contains rich Atmosphere doctrine, contracts, published-carrier documentation, and many implementation-shaped paths, but the inspected package, pipeline, specification, policy, schema, validator, source, UI, workflow, and ADR surfaces remain greenfield, scaffolded, placeholder, conflicted, or unverified. No direct config consumer is established. Future payloads require explicit binding, accepted non-empty schemas and executable validators, accepted policy/runtime enforcement, resolved slug/object/registry mappings, source roles and rights, station identity, units/method/quality, time/freshness, spatial support, AQI/AOD/smoke/model/climate/advisory boundaries, evidence, policy, review, official-source redirect, release, correction, invalidation, and rollback.
+This directory remains a README-only, non-secret, non-authoritative configuration
+lane. Atmosphere implementation outside it is mixed, not uniformly absent and
+not demonstrated production-ready. The update changes documentation only:
+no payload, schema, policy, source, validator, fixture, test, workflow, renderer,
+API, model, scheduler, release, deployment, or published artifact is modified.
 
-<p align="right"><a href="#top">Back to top</a></p>
+[Back to top](#top)
+
+[INV]: https://api.github.com/repos/bartytime4life/Kansas-Frontier-Matrix/contents/configs/domains/atmosphere?ref=700570cbcf191038aa20a030174c2dd08cf93675
+[PARENT]: https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/700570cbcf191038aa20a030174c2dd08cf93675/configs/domains/README.md
+[DIR]: https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/700570cbcf191038aa20a030174c2dd08cf93675/docs/doctrine/directory-rules.md
+[ADR-0029]: https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/700570cbcf191038aa20a030174c2dd08cf93675/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+[ADR-0001]: https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/700570cbcf191038aa20a030174c2dd08cf93675/docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
+[ATM]: https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/700570cbcf191038aa20a030174c2dd08cf93675/docs/domains/atmosphere/README.md
+[AIR]: https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/700570cbcf191038aa20a030174c2dd08cf93675/pipelines/domains/air/README.md
+[SCHEMA]: https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/700570cbcf191038aa20a030174c2dd08cf93675/schemas/contracts/v1/domains/atmosphere/air_observation.schema.json
+[MIRROR]: https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/700570cbcf191038aa20a030174c2dd08cf93675/schemas/contracts/v1/domains/atmosphere/AirObservation.schema.json
+[VALIDATOR]: https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/700570cbcf191038aa20a030174c2dd08cf93675/tools/validators/domains/atmosphere/validate_observed_modeled_separation.py
+[VALIDATOR-INDEX]: https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/700570cbcf191038aa20a030174c2dd08cf93675/tools/validators/domains/atmosphere/README.md
+[OWNERS]: https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/700570cbcf191038aa20a030174c2dd08cf93675/.github/CODEOWNERS
+[INCIDENT]: https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024
+[PDF]: https://drive.google.com/file/d/1gHk6Jp3fGfrPTgvczwxyNXxvNopiKgRw/view
