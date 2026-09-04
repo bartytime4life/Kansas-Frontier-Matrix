@@ -2,26 +2,27 @@
 doc_id: kfm://data/readme
 title: data/ — Governed Lifecycle, Accountability, Registry, Catalog, and Released Carrier Root
 type: readme; root-readme; canonical-data-root; lifecycle-and-accountability-boundary; compatibility-drift-index
-version: v0.4.0
+version: v0.5.0
 status: repository-grounded; ADR-0029-aligned; root-registry-active; mixed-maturity; payload-and-runtime-enforcement-unverified; no-release; no-publication
 owners: ["@bartytime4life"]
 created: 2026-06-29
-updated: 2026-08-08
-supersedes: v0.3.0 documentation at the same path; no data instance, lifecycle state, source admission, policy decision, release decision, runtime behavior, or publication state is superseded
+updated: 2026-09-04
+supersedes: v0.4.0 documentation at the same path; no data instance, lifecycle state, source admission, policy decision, release decision, runtime behavior, or publication state is superseded
 prepared_under_prompt: KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0
 policy_label: repository-facing; data-root; lifecycle-governed; internal-by-default; mixed-exposure; no-direct-public-path; release-gated; source-role-aware; rights-aware; sensitivity-aware; correction-aware; rollback-aware
 current_path: data/README.md
 owning_root: data/
 root_registry_id: root.data
 responsibility: governed lifecycle, accountability, registry, catalog, and released carrier instances
-review_packet_id: kfm-data-root-readme-20260808
+review_packet_id: kfm-data-root-readme-20260904
 truth_posture: >
   CONFIRMED same-path target and stable document identity; accepted ADR-0029; adopted
-  Directory Rules v2 bytes; active root.data machine projection; current main, repository,
-  and data tree identities; nineteen current direct child directories; ten present canonical
-  data lanes; absent conditional pre_raw lane; current compatibility, deprecated, and
-  migration-candidate children; bounded data/catalog, data/registry, data/document,
-  data/reports, data/maps, data/manifests, and data/rollback evidence; no exact-path open PR /
+  Directory Rules v2 bytes; active root.data machine projection; freshly re-pinned current
+  main, repository, and data tree identities; nineteen current direct child directories; ten
+  present canonical data lanes; absent conditional pre_raw lane; current compatibility,
+  deprecated, and migration-candidate children; bounded data/catalog, data/registry,
+  data/document, data/reports, data/receipts, data/maps, data/manifests, and
+  data/rollback evidence; no exact-path open PR at preflight /
   PROPOSED future child-README convergence, recursive object-family inventory, migration
   manifests, consumer cutovers, and enforcement ratchets / CONFLICTED current direct and
   nested paths versus adopted subtype-first, lifecycle-first, and object-family-first
@@ -38,22 +39,26 @@ evidence_snapshot:
   repository_id: "1059091169"
   visibility: public
   base_ref: main
-  base_commit: 1001a87233e0f23695b6b12e60c654f938e6ffb5
-  base_tree: 1ef11008331b41797b8601f45003e2fe42c5c029
-  data_tree: e4ce79ed25b3d6b772bf00ec77fca92d38801fd3
-  prior_blob: 22d13b833369c290fe99e4a3d3c083835e5f2a37
+  base_commit: b5a91a33b6c900033364fe924a74a907745a6d2d
+  base_tree: b52d0c835a3b82f997bf1c0d4f122227a7eff9a2
+  data_tree: 3f589883635622358fd565332ea5a783280c644d
+  prior_blob: 24cfdd38fd8b1c0c8fc5fa5eda148fe6d5eddaa3
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   directory_rules_sha256: sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e
   directory_rules_decision: ADR-0029 accepted
   root_registry_blob: 024f668b5f0a9239bafa4f8b09e2afd86300ff8c
-  catalog_tree: 6d7849e718244a9f9b540d047af6993a47cd0ed9
-  registry_tree: 515fa1ff5ae98a332114b67b2cb486791f5d07d8
+  catalog_tree: 4fe642b05bb269042ba70023bc90d26a0f707229
+  registry_tree: 81f41952932e536457ae52d5a6633745f5133ad5
   document_tree: 0f790bcc92eddec204968aa0219663debb94a019
   reports_tree: 89de9c854233576cdeac443f480ad4b9ae881946
+  receipts_tree: 4a8a525f264242a4bc3602c5d5393c1f0e287d48
+  maps_tree: 95f15c1fd26cdeece60e8d23cb24ad30ee5b0a03
+  manifests_tree: aad1c06439f9f41499936c217e0bc42b905ef376
+  rollback_tree: 649f1d6977e0318f788238be53b119a40b50af83
   direct_child_directories: 19
   direct_child_files: 1
   open_exact_path_pull_requests: 0
-  inventory_method: exact commit and blob reads, exact Git tree inspection, bounded child README reads, code and pull-request search, and workflow threat preflight; no clone, payload download, Git LFS walk, object-store query, database query, runtime probe, deployment inspection, or production access
+  inventory_method: exact commit, blob, branch, and Git tree reads; bounded child-README and governance-anchor reads; branch/open-PR search; and read-only Notion/Drive coordination review; no clone, payload download, Git LFS walk, object-store query, database query, runtime probe, deployment inspection, or production access
 related:
   - raw/README.md
   - work/README.md
@@ -94,9 +99,10 @@ related:
   - ../.github/PULL_REQUEST_TEMPLATE.md
 tags: [kfm, data, lifecycle, raw, work, quarantine, processed, catalog, triplets, receipts, proofs, registry, published, release, correction, compatibility, migration, cite-or-abstain]
 notes:
-  - "v0.4.0 reconciles the root README with accepted ADR-0029 and the exact current data tree."
+  - "v0.5.0 refreshes the root README against current main and exact direct-child tree evidence."
   - "The README follows the adopted ROOT_FULL profile and preserves legacy anchors used by prior editions."
   - "The current direct-child tree is evidence, not automatic canon; nonconforming children remain visible and fail closed."
+  - "Current catalog, registry, document, reports, receipts, maps, manifests, and rollback tree identities were read without changing their contents."
   - "No payload, child README, source activation, contract, schema, policy, fixture, test, validator, pipeline, workflow, release record, migration, redirect, tombstone, runtime, API, UI, deployment, or public artifact is changed."
 [/KFM_META_BLOCK_V2] -->
 
@@ -191,10 +197,10 @@ The values above are projected by [`control_plane/root_registry.yaml`](../contro
 
 | Evidence | Current result | Interpretation |
 |---|---|---|
-| Default branch | `main@1001a87233e0f23695b6b12e60c654f938e6ffb5` | Immutable base for this review. |
-| Repository tree | `1ef11008331b41797b8601f45003e2fe42c5c029` | Current root tree at the base. |
-| `data/` tree | `e4ce79ed25b3d6b772bf00ec77fca92d38801fd3` | Exact current direct-child inventory. |
-| Prior README blob | `22d13b833369c290fe99e4a3d3c083835e5f2a37` | v0.3.0 source replaced in place. |
+| Default branch | `main@b5a91a33b6c900033364fe924a74a907745a6d2d` | Immutable base for this review. |
+| Repository tree | `b52d0c835a3b82f997bf1c0d4f122227a7eff9a2` | Current root tree at the base. |
+| `data/` tree | `3f589883635622358fd565332ea5a783280c644d` | Exact current direct-child inventory. |
+| Prior README blob | `24cfdd38fd8b1c0c8fc5fa5eda148fe6d5eddaa3` | v0.4.0 source replaced in place. |
 | Directory Rules | blob `fd49a0b83e55cef52c1124281f093e263526898d` | Exact bytes adopted by ADR-0029. |
 | Directory Rules decision | `ADR-0029`, `accepted` | Makes `docs/doctrine/directory-rules.md` the single writable human authority. |
 | Root Registry | blob `024f668b5f0a9239bafa4f8b09e2afd86300ff8c` | Active projection; does not create authority. |
@@ -510,7 +516,7 @@ No migration, redirect, tombstone, or deletion is performed by this README updat
 
 ## Direct-child directory map
 
-The map below is the exact direct-child tree at `data_tree=e4ce79ed25b3d6b772bf00ec77fca92d38801fd3`. It shows repository state, not automatic canonicality.
+The map below is the exact direct-child tree at `data_tree=3f589883635622358fd565332ea5a783280c644d`. It shows repository state, not automatic canonicality.
 
 ```text
 data/
@@ -549,10 +555,10 @@ A child README owns deeper detail. This root README does not reproduce recursive
 
 ## Last evidence review and review triggers
 
-- **Review date:** 2026-08-08
-- **Base:** `main@1001a87233e0f23695b6b12e60c654f938e6ffb5`
-- **Target prior blob:** `22d13b833369c290fe99e4a3d3c083835e5f2a37`
-- **Review type:** exact root and direct-child tree inspection; accepted Directory Rules/ADR/Root Registry inspection; bounded child README and workflow preflight; no payload/runtime/deployment inspection
+- **Review date:** 2026-09-04
+- **Base:** `main@b5a91a33b6c900033364fe924a74a907745a6d2d`
+- **Target prior blob:** `24cfdd38fd8b1c0c8fc5fa5eda148fe6d5eddaa3`
+- **Review type:** current-main re-pin with exact root/direct-child tree inspection; accepted Directory Rules/ADR/Root Registry inspection; bounded child README, branch/open-PR, PR-template, and read-only Notion/Drive coordination preflight; no payload/runtime/deployment inspection
 - **Direct-child directories:** 19
 - **Current open exact-path PRs:** 0 found at preflight
 
@@ -867,16 +873,20 @@ Unknowns narrow claims and block higher-risk transitions. They do not invite pla
 
 | Evidence | What it supports | What it does not prove |
 |---|---|---|
-| `main@1001a87233e0f23695b6b12e60c654f938e6ffb5` | Repository/base identity for this review | Runtime, deployment, or public behavior |
-| `data_tree=e4ce79ed25b3d6b772bf00ec77fca92d38801fd3` | Exact direct-child names and object IDs | Recursive payload quality, writers, consumers, or rights |
-| `data/README.md` prior blob `22d13b...` | Stable target identity and v0.3 lineage | Current governance alignment after ADR-0029 |
+| `main@b5a91a33b6c900033364fe924a74a907745a6d2d` | Repository/base identity for this review | Runtime, deployment, or public behavior |
+| `data_tree=3f589883635622358fd565332ea5a783280c644d` | Exact direct-child names and object IDs | Recursive payload quality, writers, consumers, or rights |
+| `data/README.md` prior blob `24cfdd38fd8b1c0c8fc5fa5eda148fe6d5eddaa3` | Stable target identity and v0.4 lineage | Current governance alignment after ADR-0029 |
 | Adopted Directory Rules blob `fd49a0...` and digest `44f7e9...` | Normative placement, lifecycle/accountability, data/release split, naming, README, migration rules | Whether every current path conforms |
 | Accepted ADR-0029 | Adoption and sole writable Directory Rules authority | Child migrations or release/publication approval |
 | Root Registry blob `024f66...` | Active machine projection for `root.data` | Authority expansion, source activation, policy, review, or release |
-| Catalog tree `6d7849...` | Exact direct catalog children | Semantic equivalence or safe migration |
-| Registry tree `515fa1...` | Exact direct registry children | Canonical writer/consumer choice for duplicated families |
+| Catalog tree `4fe642b05bb269042ba70023bc90d26a0f707229` | Exact direct catalog children | Semantic equivalence or safe migration |
+| Registry tree `81f41952932e536457ae52d5a6633745f5133ad5` | Exact direct registry children | Canonical writer/consumer choice for duplicated families |
 | `data/document/README.md` and tree `0f790b...` | Pointer-only compatibility posture and bounded direct contents | External/deployed consumers |
-| `data/reports/README.md` and tree `89de9c...` | Transitional report-candidate posture and exact direct domain children | Payload correctness or release state |
+| `data/reports/README.md` and tree `89de9c854233576cdeac443f480ad4b9ae881946` | Transitional report-candidate posture and exact direct domain children | Payload correctness or release state |
+| `data/receipts/` tree `4a8a525f264242a4bc3602c5d5393c1f0e287d48` | Current canonical receipt-root tree at the preflight | Receipt validity or process execution closure |
+| `data/maps/` tree `95f15c1fd26cdeece60e8d23cb24ad30ee5b0a03` | Exact compatibility-root presence at the preflight | Complete map artifact inventory or renderer readiness |
+| `data/manifests/` tree `aad1c06439f9f41499936c217e0bc42b905ef376` | Exact compatibility-root presence at the preflight | Complete manifest inventory or accepted target for every family |
+| `data/rollback/` tree `649f1d6977e0318f788238be53b119a40b50af83` | Exact recovery-support tree at the preflight | Current authority under adopted v2 |
 | `data/maps/README.md` | Noncanonical pointer/retirement boundary | Complete map artifact inventory or renderer readiness |
 | `data/manifests/README.md` | Noncanonical manifest routing/retirement boundary | Complete manifest inventory or accepted target for every family |
 | `data/rollback/README.md` | Historical support-lane documentation | Current authority under adopted v2 |
@@ -891,7 +901,7 @@ No source in this ledger proves release, deployment, publication, source fitness
 
 ## No-loss ledger
 
-| Prior v0.3 material | v0.4 disposition |
+| Prior root-README material | v0.5 disposition |
 |---|---|
 | Stable path, `doc_id`, created date, H1 role, and legacy anchors | Preserved |
 | Lifecycle law and state-transition framing | Preserved and aligned to adopted v2 |
@@ -903,11 +913,20 @@ No source in this ledger proves release, deployment, publication, source fitness
 | Directory Rules v1.4/proposed-authority framing | Superseded by accepted ADR-0029 and adopted v2 evidence |
 | Generic `data/rollback/` as canonical support | Corrected to adopted v2 deprecation and object-family split |
 | `catalog/domain/` singular target | Corrected to adopted subtype-first `catalog/domains/`; current conflict remains visible |
-| Current direct-child map | Replaced with exact 19-directory tree |
+| Current direct-child map | Re-pinned to the exact current 19-directory tree; same 19-directory shape confirmed. |
 | Static badge wall | Removed; status is expressed through evidence tables and alerts |
+| v0.4.0 current-main snapshot and exact tree pins | Replaced by the fresh current-main re-pin; prior SHAs remain history, not current authority. |
 | Payload, source, code, schema, policy, workflow, release, migration, or public-state change | None |
 
 ### Change history
+
+#### v0.5.0 — 2026-09-04
+
+- re-pinned current `main`, repository tree, `data/` tree, and bounded child-tree identities;
+- rechecked the exact 19-directory direct-child shape and found no exact-path open PR at preflight;
+- recorded the current `data/receipts/` tree after the latest main change added a generated receipt, without interpreting that receipt as process or release authority;
+- preserved the existing lifecycle, compatibility, sensitivity, no-direct-public-path, migration, correction, and rollback boundaries;
+- changed documentation only; no payload, source admission, authority, policy, release, deployment, promotion, or publication state changed.
 
 #### v0.4.0 — 2026-08-08
 
