@@ -1,0 +1,140 @@
+{
+  "receipt_id": "genrec-contributing-guide-currentness-20260904",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "CONTRIBUTING.md"
+  ],
+  "artifact_hashes": {
+    "CONTRIBUTING.md": "sha256:c04df72139330593ce9302170389da99a60e1c7ac13f571358e15dc51d81798e"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-09-04"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector",
+      "Notion connector",
+      "deterministic Markdown checks"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM Contributor Reliability System — Documentation, PR Quality, and CI Hardening (owner-only Google Drive source)",
+      "KFM Verified Improvement Campaign v1.1 (owner-only Google Drive source)",
+      "KFM Repository Workbench (Notion coordination page)",
+      "KFM Cross-System Authority & Intake Model (Notion coordination page)"
+    ],
+    "evidence_refs": [
+      "repo:main@87099f58986e9795e7152eaea0b27d9568754ccb",
+      "repo:CONTRIBUTING.md@9d782e9894612f1fdb50bee2e60558824d449a19",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@main",
+      "repo:docs/doctrine/directory-rules.md@main",
+      "repo:Makefile@main",
+      "repo:package.json@main",
+      "repo:.pre-commit-config.yaml@main",
+      "repo:pnpm-workspace.yaml@main",
+      "repo:ruleset/15484585@read-only",
+      "repo:issue/4024@open"
+    ]
+  },
+  "truth_labels": {
+    "CONTRIBUTING.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-repin",
+      "outcome": "PASS",
+      "reason": "GitHub main ref was read at exact SHA 87099f58986e9795e7152eaea0b27d9568754ccb immediately before branch creation; the branch was created from that SHA."
+    },
+    {
+      "gate": "authority-and-overlap",
+      "outcome": "PASS",
+      "reason": "Accepted ADR-0029, current Directory Rules path, PR template, and zero open pull requests were read; Notion and Drive were used as non-authoritative coordination and lineage inputs."
+    },
+    {
+      "gate": "ruleset-read-only-observation",
+      "outcome": "PASS",
+      "reason": "Ruleset 15484585 is active; pull-request and review-thread resolution rules are present; required approvals are 0; no required-status-check rule is configured; no settings were changed."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "Readback confirmed one H1, balanced fenced blocks, no trailing whitespace, and a final newline."
+    },
+    {
+      "gate": "changed-reference-readback",
+      "outcome": "PASS",
+      "reason": "Repository-relative authority, incident, template, and validation references used by the update were read from GitHub."
+    },
+    {
+      "gate": "scope-and-sensitive-content",
+      "outcome": "PASS",
+      "reason": "The authored guide is documentation-only; no secrets, private Drive links, restricted data, exact sensitive locations, or copied source passages were added."
+    },
+    {
+      "gate": "pre-commit-and-repository-tests",
+      "outcome": "SKIPPED",
+      "reason": "No mounted local checkout was available in this connector-only session; documented commands were not executed locally."
+    },
+    {
+      "gate": "full-markdown-link-audit",
+      "outcome": "SKIPPED",
+      "reason": "No canonical repository-wide Markdown link checker was verified; the guide records this limitation honestly."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending; this receipt records authorship and bounded validation only."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-main",
+      "validated": true,
+      "evidence_ref": "repo:main@87099f58986e9795e7152eaea0b27d9568754ccb"
+    },
+    {
+      "id": "directory-authority",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@main; repo:docs/doctrine/directory-rules.md@main"
+    },
+    {
+      "id": "current-ruleset-read",
+      "validated": true,
+      "evidence_ref": "repo:ruleset/15484585@read-only"
+    },
+    {
+      "id": "toolchain-and-validation",
+      "validated": true,
+      "evidence_ref": "repo:Makefile@main; repo:package.json@main; repo:.pre-commit-config.yaml@main; repo:pnpm-workspace.yaml@main"
+    },
+    {
+      "id": "delivery-state-incident",
+      "validated": true,
+      "evidence_ref": "repo:issue/4024@open"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-04T17:17:47.244Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored docs-only update. Main and ruleset claims are pinned to the observed GitHub snapshot. Notion and Drive were used as read-only coordination and lineage inputs. No PR was opened, no PR state was changed, and no merge, ready, approval, settings, release, deployment, promotion, publication, or source-admission mutation occurred. The branch remains VALIDATED_BRANCH_ONLY pending a separately proven draft-delivery boundary under issue #4024."
+}
