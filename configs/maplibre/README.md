@@ -21,7 +21,7 @@ evidence_snapshot:
   root_tree: b17f061592f3da0b1903c5252bc1d12437fe3575
   prior_readme_blob: 9b24a8d51013e06401cce7a02f06941feecf37e7
   payload_blob: 2833f99b5316df91e71c0f8913bb06d70917abcf
-  package_manifest_blob: f6d450af19c33011e159e123c8a07ca2bca6dfd3
+  package_manifest_blob: f6d450af19c33011e159e123c8a07ca2bca6dfd
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   perf_workflow_blob: 8e4c3b801fe6dbaac5e6645b054768859e84fa1e
   method: pinned connector reads; exact-byte materialized subset for bounded offline checks; no full checkout
@@ -670,7 +670,7 @@ README was read in full through bounded line ranges before consolidation.
 | Directory Rules | `fd49a0b83e55cef52c1124281f093e263526898d` | Adopted placement law; configuration ownership and compact boundary profile. |
 | ADR-0029 | `a4de0d7a96b78da59cfc499d1025e1508afd8dd9` | Accepted adoption of the exact Directory Rules bytes. |
 | ADR-0006 / ADR-0007 | `4bf4292dc05a85fd4cd829c491808b13894bc223` / `2482eea382fd97e68544bb04bc2e2ea1e1cedebe` | Accepted package seam / renderer-family decisions, not current execution proof. |
-| Package manifest | `f6d450af19c33011e159e123c8a07ca2bca6dfd3` | Exact dependency and export declarations; repairs the prior truncated blob reference. |
+| Package manifest | `f6d450af19c33011e159e123c8a07ca2bca6dfd` | Exact dependency and export declarations; repairs the prior truncated blob reference. |
 | Envelope / schema | `2833f99b5316df91e71c0f8913bb06d70917abcf` / `511e7f34ca84390fd5d000326ab33c46c3050fc4` | Current values and accept-any-object schema. |
 | Envelope wrapper | `1f9e0f785a701da2a2b8f52bf73f4e97866d951d` | Existing schema-runner delegation. |
 | Performance workflow | `8e4c3b801fe6dbaac5e6645b054768859e84fa1e` | Shape check, nine direct tests, triggers, and explicit execution holds. |
