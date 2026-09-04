@@ -14,6 +14,31 @@ fit together.
 - The repository and source briefing reports implementation boundaries; it does
   not release or publish data.
 
+## Authoritative hosting and in-place replacement
+
+| Field | Current boundary |
+|---|---|
+| OpenAI Sites project | `appgprj_6a870a079c1c8191abb7401ef092a181` from [`.openai/hosting.json`](./.openai/hosting.json) |
+| Existing slug | `kansas-frontier-matrix-explorer` |
+| Existing public URL | <https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site> |
+| Authoritative host | OpenAI Sites/Vinext; [issue #4232](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4232) records the adapter decision |
+| Vercel boundary | [`vercel.json`](./vercel.json) disables automatic Git deployment; Vercel remains non-authoritative for this app |
+| Replacement procedure | [OpenAI Sites in-place replacement handoff](./docs/openai-sites-in-place-replacement.md) |
+| Hosted version state | `NEEDS VERIFICATION` from the Sites version-history and production browser surfaces |
+
+The staged 2026-09-03 replacement ZIP is an external, digest-bound Sites execution
+input. It is not the canonical repository source and must not be copied over this
+application or used to import its standalone CDN MapLibre acquisition pattern.
+Repository integration continues through the accepted package-owned renderer seam;
+this app remains renderer-neutral until that separate dependency and validation path
+is closed.
+
+A Sites-enabled operator must save and inspect a new version before deployment,
+retain the immediately preceding Site version as the rollback target, and return the
+receipt defined by the app-local handoff. Repository branch work does not deploy or
+restore a Site version. GitHub repository-homepage metadata still requires the
+separate settings-only action tracked in [issue #4246](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4246).
+
 The application runs as a single-route Vinext site through the package-owned
 `NullMapRuntime`. TypeScript and Vite resolve the `@kfm/maplibre` facade to the
 accepted workspace package root, following the same renderer-neutral pattern as
@@ -114,6 +139,7 @@ actions tied to the current ChatGPT user. Leave public content anonymous.
 - `npm run build`: build the deployable Sites artifact
 - `npm run start`: start the built Vinext application
 - `npm test`: build and verify the rendered development-preview metadata
+- `node --test tests/hosting-boundary.test.mjs`: verify Sites identity, replacement handoff, and host non-effects
 - `npm run db:generate`: generate Drizzle migrations after schema changes
 
 Use build commands for targeted diagnosis after a remote failure, not as part of the normal checkpoint path.

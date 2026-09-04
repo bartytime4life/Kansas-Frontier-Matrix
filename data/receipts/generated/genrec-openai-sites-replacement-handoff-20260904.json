@@ -1,0 +1,182 @@
+{
+  "receipt_id": "genrec-openai-sites-replacement-handoff-20260904",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/kansas-frontier-matrix-explorer/README.md",
+    "apps/kansas-frontier-matrix-explorer/docs/openai-sites-in-place-replacement.md",
+    "apps/kansas-frontier-matrix-explorer/tests/hosting-boundary.test.mjs"
+  ],
+  "artifact_hashes": {
+    "apps/kansas-frontier-matrix-explorer/README.md": "sha256:3a792800eb199caf8b22f6b41bf6c9526377629a30697eb0da77ec6dff0cf126",
+    "apps/kansas-frontier-matrix-explorer/docs/openai-sites-in-place-replacement.md": "sha256:2ebd0bc2a9fca74b4fca5993a428b322ded62fa6a109ca7600552b67dc7ff8c5",
+    "apps/kansas-frontier-matrix-explorer/tests/hosting-boundary.test.mjs": "sha256:3ce09bde4ff7331437a7def3d5f591bed7931e7b010ec770fad3a18ef8dfa84a"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-09-04"
+  },
+  "prompt_or_contract": "sha256:94904d8962a76b1e711ab8149930434f6d0b6c7b71f1dac41cb6dd289bf34035",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector",
+      "Notion connector",
+      "local deterministic Node validation",
+      "local deterministic Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:6444f960bee9d2269fbf6854733bc63a59d2dd14c486670a0bfb040fd6136655"
+    ],
+    "attached_docs": [
+      "KFM Evidence Atlas — OpenAI Sites Replacement Packet — 2026-09-03 (Notion page 3d1a9202-1bf6-81fe-892c-e0f082c47cca)",
+      "KFM Evidence Atlas — OpenAI Sites Replacement Execution Packet — 2026-09-03 (Drive ID 1StBDmSu_uW49fvQo8dha_oSd10CqNiZpzyEOpF2ceXs)",
+      "kfm-evidence-atlas-replacement-2026-09-03.zip (Drive ID 1ze-jvGbn_doNZf7YgTKs2R9xb8mx-0C6)"
+    ],
+    "evidence_refs": [
+      "repo:main@7c5d4125c277536258be6345e366efae59dbe5d6",
+      "repo:apps/kansas-frontier-matrix-explorer/.openai/hosting.json@7c5d4125c277536258be6345e366efae59dbe5d6",
+      "repo:apps/kansas-frontier-matrix-explorer/README.md@7c5d4125c277536258be6345e366efae59dbe5d6",
+      "repo:apps/kansas-frontier-matrix-explorer/app/layout.tsx@7c5d4125c277536258be6345e366efae59dbe5d6",
+      "repo:apps/kansas-frontier-matrix-explorer/vercel.json@7c5d4125c277536258be6345e366efae59dbe5d6",
+      "repo:issue/4232",
+      "repo:pull/4235",
+      "repo:issue/4246",
+      "drive:1ze-jvGbn_doNZf7YgTKs2R9xb8mx-0C6",
+      "drive:1StBDmSu_uW49fvQo8dha_oSd10CqNiZpzyEOpF2ceXs",
+      "notion:3d1a9202-1bf6-81fe-892c-e0f082c47cca"
+    ]
+  },
+  "truth_labels": {
+    "apps/kansas-frontier-matrix-explorer/README.md": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/docs/openai-sites-in-place-replacement.md": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/tests/hosting-boundary.test.mjs": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-refresh",
+      "outcome": "PASS",
+      "reason": "Immediately before authoring, main was read back at 7c5d4125c277536258be6345e366efae59dbe5d6 with tree 0a9aaac391d9c8a101234fc9cee8facbe1c4e5c6."
+    },
+    {
+      "gate": "open-overlap-recheck",
+      "outcome": "PASS",
+      "reason": "Open pull-request searches returned no current Explorer or Sites replacement overlap; issue search found no existing homepage-metadata repair issue before #4246 was created."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The procedure and test remain inside the established deployable-app boundary; no new root or parallel schema, policy, receipt, release, or publication authority is created."
+    },
+    {
+      "gate": "app-readme-baseline-reconstruction",
+      "outcome": "PASS",
+      "reason": "Removing the two intended README additions reproduced the exact prior Git blob 6848caeb917c826d0312ee9964a5a0296b6afbd9 and byte count 6412."
+    },
+    {
+      "gate": "replacement-zip-integrity",
+      "outcome": "PASS",
+      "reason": "The downloaded ZIP SHA-256 matched 6444f960bee9d2269fbf6854733bc63a59d2dd14c486670a0bfb040fd6136655; all 11 ARTIFACT_MANIFEST entries matched their declared byte counts and SHA-256 values."
+    },
+    {
+      "gate": "replacement-package-validation",
+      "outcome": "PASS",
+      "reason": "node --check core.mjs, node --check app.mjs, seven Node tests, and python3 tests/validate_static.py all passed against the exact downloaded package; static result was ids=51 domains=9 features=10 restricted_negative=1."
+    },
+    {
+      "gate": "hosting-boundary-test",
+      "outcome": "PASS",
+      "reason": "node --check and node --test passed 2/2 focused tests covering exact Sites project identity, slug/URL consistency, Vercel Git-deployment suspension, package digest, required commands, rollback fields, restricted-negative language, and non-effects."
+    },
+    {
+      "gate": "markdown-structure-and-links",
+      "outcome": "PASS",
+      "reason": "Both Markdown artifacts contain one H1, balanced fenced blocks, final newlines, and resolvable repository-relative links in the bounded local fixture tree."
+    },
+    {
+      "gate": "diff-whitespace",
+      "outcome": "PASS",
+      "reason": "git diff --no-index --check reported no whitespace errors for the modified README, new handoff, or new test."
+    },
+    {
+      "gate": "artifact-byte-binding",
+      "outcome": "PASS",
+      "reason": "SHA-256 values were computed over all three finalized non-self artifacts named by this receipt."
+    },
+    {
+      "gate": "full-repository-schema-and-application-suite",
+      "outcome": "SKIPPED",
+      "reason": "No complete mounted repository or locked application dependency tree is available locally; exact-head hosted workflows are required for full schema and app-suite evidence."
+    },
+    {
+      "gate": "site-version-execution-and-production-smoke",
+      "outcome": "SKIPPED",
+      "reason": "This session exposes no OpenAI Sites mutation/version-history surface; no Site version was saved, deployed, verified, or restored."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending; this receipt records authorship and bounded validation only."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "sites-project-identity",
+      "validated": true,
+      "evidence_ref": "repo:apps/kansas-frontier-matrix-explorer/.openai/hosting.json@7c5d4125c277536258be6345e366efae59dbe5d6"
+    },
+    {
+      "id": "sites-public-url-fallback",
+      "validated": true,
+      "evidence_ref": "repo:apps/kansas-frontier-matrix-explorer/app/layout.tsx@7c5d4125c277536258be6345e366efae59dbe5d6"
+    },
+    {
+      "id": "authoritative-host-decision",
+      "validated": true,
+      "evidence_ref": "repo:issue/4232"
+    },
+    {
+      "id": "vercel-non-authoritative-configuration",
+      "validated": true,
+      "evidence_ref": "repo:pull/4235"
+    },
+    {
+      "id": "staged-replacement-package",
+      "validated": true,
+      "evidence_ref": "drive:1ze-jvGbn_doNZf7YgTKs2R9xb8mx-0C6"
+    },
+    {
+      "id": "sites-execution-contract",
+      "validated": true,
+      "evidence_ref": "drive:1StBDmSu_uW49fvQo8dha_oSd10CqNiZpzyEOpF2ceXs"
+    },
+    {
+      "id": "repository-homepage-drift",
+      "validated": true,
+      "evidence_ref": "repo:issue/4246"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-04T16:04:47Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Adds an app-local, digest-bound Sites replacement handoff and static host-boundary test. It does not copy the standalone package into the repository, admit MapLibre acquisition, mutate OpenAI Sites or Vercel, change repository settings, admit a source, release, promote, or publish KFM knowledge."
+}
