@@ -1,0 +1,133 @@
+{
+  "receipt_id": "genrec-root-readme-polish-20260904-v2",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "README.md"
+  ],
+  "artifact_hashes": {
+    "README.md": "sha256:bcd1d5caac96c6babb533c7936b37980d04d223ed9f0e2bf23688849c2a41e72"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-5)",
+    "version": "2026-09-04"
+  },
+  "prompt_or_contract": "sha256:8bade6e3910ec9cf9805e2b1938f2a8c51e19af7f2d9b50f257c3af53ac653d6",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector",
+      "Notion connector",
+      "deterministic Markdown checks"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "Notion: KFM Repository Workbench (coordination input)",
+      "Google Drive: KFM Knowledge Workspace Charter (durable knowledge input)",
+      "Google Drive: KFM System Chronicle (lineage and coordination input)",
+      "Google Drive: KFM Evidence Atlas — Sites Replacement Execution Packet (hosting-boundary input)",
+      "KFM_Full_Atlas_seed_cards.md (local reference input)"
+    ],
+    "evidence_refs": [
+      "repo:main@48f6ce5123d4f7cbc199761bda6596c0d2df1b42",
+      "repo:README.md@2a35f44fe8814230a833d826dcc7b8db02980f13",
+      "repo:apps/kansas-frontier-matrix-explorer/README.md@9a0f0c2b0afc14e5dcf7ad5628546d4d45e3f6d4",
+      "repo:apps/explorer-web/README.md@561f78ea224338b3a1748d5689a2f56bfe7a1359",
+      "repo:package.json@5cba790c88c40b885cc65fe2d585f3205aa1ef9d",
+      "repo:rules:ADR-0029@main",
+      "repo:issue:#4024@open"
+    ]
+  },
+  "truth_labels": {
+    "README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-repin",
+      "outcome": "PASS",
+      "reason": "GitHub main was re-read at exact SHA 48f6ce5123d4f7cbc199761bda6596c0d2df1b42; the feature branch was created directly from that commit."
+    },
+    {
+      "gate": "readme-target-identity",
+      "outcome": "PASS",
+      "reason": "The prior README blob was re-read as 2a35f44fe8814230a833d826dcc7b8db02980f13 before replacement; branch readback is expected to carry the new content."
+    },
+    {
+      "gate": "bounded-overlap-search",
+      "outcome": "PASS",
+      "reason": "The exact v2 branch name was absent before creation and current open-PR read returned zero results at branch creation; the immediately prior README-related PR #4252 is merged. Main advances that occurred while the prior branch was being prepared were path-disjoint and were re-pinned before this branch."
+    },
+    {
+      "gate": "markdown-structure-and-readback",
+      "outcome": "PASS",
+      "reason": "One Markdown H1, 19 H2/H3 headings, 12 balanced fenced-code delimiters, no trailing whitespace, final newline, required sections, and local prepared-artifact checks were confirmed."
+    },
+    {
+      "gate": "relative-link-readback",
+      "outcome": "PASS",
+      "reason": "All 34 unique relative link targets were checked through the read-only GitHub contents surface; no target returned a GitHub error."
+    },
+    {
+      "gate": "changed-path-scope",
+      "outcome": "PASS",
+      "reason": "The implementation commit changes only README.md; the generated receipt is the sole additional file in the bounded PR."
+    },
+    {
+      "gate": "repository-tests",
+      "outcome": "SKIPPED",
+      "reason": "No mounted repository checkout was available in this connector-only session; make, pnpm, npm, pre-commit, and hosted workflows were not run."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review is pending; generation, readback, and bounded checks do not constitute approval."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-main",
+      "validated": true,
+      "evidence_ref": "repo:main@48f6ce5123d4f7cbc199761bda6596c0d2df1b42"
+    },
+    {
+      "id": "explorer-host-identity",
+      "validated": true,
+      "evidence_ref": "repo:apps/kansas-frontier-matrix-explorer/README.md@9a0f0c2b0afc14e5dcf7ad5628546d4d45e3f6d4"
+    },
+    {
+      "id": "explorer-web-boundary",
+      "validated": true,
+      "evidence_ref": "repo:apps/explorer-web/README.md@561f78ea224338b3a1748d5689a2f56bfe7a1359"
+    },
+    {
+      "id": "directory-placement",
+      "validated": true,
+      "evidence_ref": "repo:rules:ADR-0029@main"
+    },
+    {
+      "id": "delivery-boundary",
+      "validated": true,
+      "evidence_ref": "repo:issue:#4024@open"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-04T18:27:29Z",
+  "emitter": "OpenAI Codex (GPT-5) via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored docs-only update on branch docs/readme-user-facing-polish-20260904-v2. The README is a public orientation surface, not a truth, policy, review, release, deployment, promotion, publication, or source-admission authority. Notion and Google Drive were used as coordination/lineage inputs only; current GitHub bytes control implementation claims. No settings, Site, Vercel, source, lifecycle, release, deployment, or publication mutation occurred."
+}
