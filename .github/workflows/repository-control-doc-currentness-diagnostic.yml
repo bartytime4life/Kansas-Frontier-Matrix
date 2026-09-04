@@ -1,0 +1,113 @@
+# Temporary read-only diagnostic harness. Validation-branch code is not
+# executed; the job checks out immutable candidate b790c79... before tests.
+
+name: repository-control-doc-currentness-diagnostic
+
+"on":
+  push:
+    branches:
+      - validation/repository-control-doc-currentness-b790c79
+
+permissions:
+  contents: read
+
+env:
+  KFM_TARGET_SHA: "b790c79c5164c29bb52bfa3ffaa2aa36031499a3"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  split-focused-tests:
+    name: split-focused-tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out immutable candidate
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ env.KFM_TARGET_SHA }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify exact candidate
+        shell: bash
+        run: test "$(git rev-parse HEAD)" = "${KFM_TARGET_SHA}"
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared validator dependencies
+        shell: bash
+        run: python tools/ci/install_python_ci.py project-runtime
+
+      - name: Compile focused sources
+        id: compile
+        continue-on-error: true
+        shell: bash
+        run: |
+          python -m py_compile \
+            tests/validators/test_repository_control_strict_input.py \
+            tools/validators/repository_control/fetch_bounded_issue_comments.py
+
+      - name: Run changed documentation-currentness regression
+        id: currentness
+        continue-on-error: true
+        shell: bash
+        run: |
+          python -m pytest \
+            tests/validators/test_repository_control_strict_input.py::test_binding_note_describes_integrated_capture_and_expired_unapplied_gate \
+            -vv
+
+      - name: Run remaining strict-input regressions
+        id: strict
+        continue-on-error: true
+        shell: bash
+        run: |
+          python -m pytest \
+            tests/validators/test_repository_control_strict_input.py \
+            -k 'not test_binding_note_describes_integrated_capture_and_expired_unapplied_gate' \
+            -q
+
+      - name: Run control-source regressions
+        id: source
+        continue-on-error: true
+        shell: bash
+        run: python -m pytest tests/validators/test_repository_control_source.py -q
+
+      - name: Run transition-authorization regressions
+        id: transition
+        continue-on-error: true
+        shell: bash
+        run: python -m pytest tests/validators/test_repository_transition_authorization.py -q
+
+      - name: Report split outcomes
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo '### Split focused-test diagnostic'
+            echo
+            echo "- candidate: \`${KFM_TARGET_SHA}\`"
+            echo "- compile: \`${{ steps.compile.outcome }}\`"
+            echo "- changed currentness regression: \`${{ steps.currentness.outcome }}\`"
+            echo "- remaining strict-input regressions: \`${{ steps.strict.outcome }}\`"
+            echo "- control-source regressions: \`${{ steps.source.outcome }}\`"
+            echo "- transition-authorization regressions: \`${{ steps.transition.outcome }}\`"
+          } >> "${GITHUB_STEP_SUMMARY}"
+
+      - name: Fail closed on any split failure
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "${{ steps.compile.outcome }}" = success
+          test "${{ steps.currentness.outcome }}" = success
+          test "${{ steps.strict.outcome }}" = success
+          test "${{ steps.source.outcome }}" = success
+          test "${{ steps.transition.outcome }}" = success
