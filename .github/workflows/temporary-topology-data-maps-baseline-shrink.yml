@@ -1,0 +1,262 @@
+# Temporary one-shot branch writer for the reviewed KFM-TOPO-010 strict evidence shrink.
+# This workflow is removed from the candidate branch after it writes the baseline update.
+name: temporary-topology-data-maps-baseline-shrink
+
+"on":
+  push:
+    branches:
+      - fix/topology-data-maps-baseline-shrink-20260903
+    paths:
+      - .github/workflows/temporary-topology-data-maps-baseline-shrink.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: temporary-topology-data-maps-baseline-shrink
+  cancel-in-progress: false
+
+jobs:
+  write:
+    if: "${{ github.event.head_commit.message == 'chore(ci): stage one-shot data-maps baseline shrink' }}"
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      EXPECTED_BASE: 7c5d4125c277536258be6345e366efae59dbe5d6
+      EXPECTED_BASELINE_BLOB: cb654a1b89e83cedc681a7b66d05ecaa0da3517a
+      BRANCH_NAME: fix/topology-data-maps-baseline-shrink-20260903
+      BASELINE_PATH: tools/validators/directory_governance/repository_topology_baseline.json
+      OLD_FINGERPRINT: sha256:7afc85a2d54cf8a3a7a191f3168dbfd13dab417e3799015cd6851f0ecf017a66
+      NEW_FINGERPRINT: sha256:f2cb20b8da2fb6cab980cc5d2f3f80b8623623fb231501de565d5df19655796f
+    steps:
+      - name: Check out exact writer head
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+          ref: ${{ github.sha }}
+
+      - name: Verify immutable base and branch boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF_NAME" = "$BRANCH_NAME"
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test "$(git rev-parse "$EXPECTED_BASE^{commit}")" = "$EXPECTED_BASE"
+          test "$(git merge-base HEAD "$EXPECTED_BASE")" = "$EXPECTED_BASE"
+          remote_main="$(git ls-remote origin refs/heads/main | awk '{print $1}')"
+          test "$remote_main" = "$EXPECTED_BASE"
+          test "$(git rev-parse "$EXPECTED_BASE:$BASELINE_PATH")" = "$EXPECTED_BASELINE_BLOB"
+          test -f data/maps/README.md
+          test ! -e data/maps/.gitkeep
+
+      - name: Replace only the data/maps baseline evidence with a strict subset
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from __future__ import annotations
+
+          import base64
+          import hashlib
+          import json
+          import os
+          import zlib
+          from pathlib import Path
+
+          path = Path(os.environ["BASELINE_PATH"])
+          raw_before = path.read_text(encoding="utf-8")
+          data = json.loads(raw_before)
+
+          old = {
+              "evidence_sha256": "sha256:02f9f42e689fa8eb8017c4a1758e626880a3e44a82f9e17f1513059e37d33ab0",
+              "evidence_zlib_base64": "eNpLSSxJ1M9NLCjW10vPLMlOTS1gSIELBbk6uvi66uWmAAAIvA0X",
+              "fingerprint": os.environ["OLD_FINGERPRINT"],
+              "rule_id": "KFM-TOPO-010",
+              "subject": "data/maps/",
+          }
+
+          def digest(value: str) -> str:
+              return "sha256:" + hashlib.sha256(value.encode("utf-8")).hexdigest()
+
+          members = ["data/maps/README.md"]
+          rendered = "\0".join(members)
+          new = {
+              "evidence_sha256": digest(rendered),
+              "evidence_zlib_base64": base64.b64encode(
+                  zlib.compress(rendered.encode("utf-8"), level=9)
+              ).decode("ascii"),
+              "fingerprint": digest(
+                  "\0".join(("KFM-TOPO-010", "data/maps/", digest(rendered)))
+              ),
+              "rule_id": "KFM-TOPO-010",
+              "subject": "data/maps/",
+          }
+
+          expected_new = {
+              "evidence_sha256": "sha256:04eb09536052f254c0ae6a0742915e1af43cc5de9fa2c9f64f9ce8641f96834c",
+              "evidence_zlib_base64": "eNpLSSxJ1M9NLCjWD3J1dPF11ctNAQBChgZX",
+              "fingerprint": os.environ["NEW_FINGERPRINT"],
+              "rule_id": "KFM-TOPO-010",
+              "subject": "data/maps/",
+          }
+          if new != expected_new:
+              raise SystemExit(f"computed replacement mismatch: {new!r}")
+
+          matches = [
+              index for index, entry in enumerate(data["entries"])
+              if entry.get("rule_id") == "KFM-TOPO-010"
+              and entry.get("subject") == "data/maps/"
+          ]
+          if len(matches) != 1:
+              raise SystemExit(f"expected one data/maps baseline entry, found {matches!r}")
+          index = matches[0]
+          if data["entries"][index] != old:
+              raise SystemExit("trusted data/maps baseline entry does not match the pinned preimage")
+
+          old_members = tuple(
+              zlib.decompress(base64.b64decode(old["evidence_zlib_base64"])).decode("utf-8").split("\0")
+          )
+          new_members = tuple(
+              zlib.decompress(base64.b64decode(new["evidence_zlib_base64"])).decode("utf-8").split("\0")
+          )
+          if not set(new_members) < set(old_members):
+              raise SystemExit("replacement is not a strict evidence subset")
+          if old_members != ("data/maps/.gitkeep", "data/maps/README.md"):
+              raise SystemExit(f"unexpected prior evidence: {old_members!r}")
+          if new_members != ("data/maps/README.md",):
+              raise SystemExit(f"unexpected replacement evidence: {new_members!r}")
+
+          protected = {
+              key: data[key]
+              for key in (
+                  "authority",
+                  "closure_ref",
+                  "expires_on",
+                  "generated_from_ref",
+                  "non_effects",
+                  "owner",
+                  "schema_version",
+              )
+          }
+          data["entries"][index] = new
+          data["entries"].sort(key=lambda entry: entry["fingerprint"])
+          if protected != {
+              key: data[key]
+              for key in protected
+          }:
+              raise SystemExit("protected baseline metadata changed")
+
+          path.write_text(
+              json.dumps(data, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          if path.read_text(encoding="utf-8") == raw_before:
+              raise SystemExit("baseline did not change")
+          PY
+
+      - name: Prove the trusted-base transition and isolate the remaining inherited drift
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          git show "$EXPECTED_BASE:$BASELINE_PATH" > "$RUNNER_TEMP/baseline-before.json"
+
+          set +e
+          python tools/validators/directory_governance/validate_repository_topology.py \
+            --repo-root . \
+            --baseline "$RUNNER_TEMP/baseline-before.json" \
+            --format json > "$RUNNER_TEMP/report-before.json"
+          before_rc=$?
+
+          python tools/validators/directory_governance/validate_repository_topology.py \
+            --repo-root . \
+            --baseline "$BASELINE_PATH" \
+            --trusted-baseline-ref "$EXPECTED_BASE" \
+            --format json > "$RUNNER_TEMP/report-after.json"
+          after_rc=$?
+          set -e
+
+          test "$before_rc" -eq 1
+          test "$after_rc" -eq 1
+
+          python - <<'PY'
+          from __future__ import annotations
+
+          import json
+          import os
+          from pathlib import Path
+
+          tmp = Path(os.environ["RUNNER_TEMP"])
+          before = json.loads((tmp / "report-before.json").read_text(encoding="utf-8"))
+          after = json.loads((tmp / "report-after.json").read_text(encoding="utf-8"))
+
+          old_fp = os.environ["OLD_FINGERPRINT"]
+          new_fp = os.environ["NEW_FINGERPRINT"]
+
+          before_by_fp = {item["fingerprint"]: item for item in before["findings"]}
+          after_by_fp = {item["fingerprint"]: item for item in after["findings"]}
+
+          target_before = before_by_fp.get(new_fp)
+          target_after = after_by_fp.get(new_fp)
+          if not target_before or target_before["disposition"] != "FAIL_NEW_DRIFT":
+              raise SystemExit(f"data/maps was not new drift before repair: {target_before!r}")
+          if not target_after or target_after["disposition"] != "BASELINED_WARNING":
+              raise SystemExit(f"data/maps was not baselined after repair: {target_after!r}")
+          if old_fp not in before["baseline"]["stale_fingerprints"]:
+              raise SystemExit("pinned data/maps fingerprint was not stale before repair")
+          if old_fp in after["baseline"]["stale_fingerprints"]:
+              raise SystemExit("pinned data/maps fingerprint remained stale after repair")
+          if after["counts"]["fail_new_drift"] != before["counts"]["fail_new_drift"] - 1:
+              raise SystemExit("new-drift count did not decrease by exactly one")
+          if len(after["baseline"]["stale_fingerprints"]) != len(before["baseline"]["stale_fingerprints"]) - 1:
+              raise SystemExit("stale-baseline count did not decrease by exactly one")
+          if after["counts"]["fail_invariant"] != before["counts"]["fail_invariant"]:
+              raise SystemExit("invariant count changed unexpectedly")
+          if after["tracked_path_count"] != before["tracked_path_count"]:
+              raise SystemExit("tracked-path count changed during the baseline-only comparison")
+
+          remaining_before = {
+              item["fingerprint"]: item["disposition"]
+              for item in before["findings"]
+              if item["fingerprint"] != new_fp
+          }
+          remaining_after = {
+              item["fingerprint"]: item["disposition"]
+              for item in after["findings"]
+              if item["fingerprint"] != new_fp
+          }
+          if remaining_before != remaining_after:
+              raise SystemExit("an unrelated finding changed disposition")
+
+          print(json.dumps({
+              "before": {
+                  "outcome": before["outcome"],
+                  "fail_new_drift": before["counts"]["fail_new_drift"],
+                  "stale": len(before["baseline"]["stale_fingerprints"]),
+              },
+              "after": {
+                  "outcome": after["outcome"],
+                  "fail_new_drift": after["counts"]["fail_new_drift"],
+                  "stale": len(after["baseline"]["stale_fingerprints"]),
+              },
+              "resolved_identity": "KFM-TOPO-010:data/maps/",
+              "transition": "STRICT_EVIDENCE_SHRINK",
+          }, sort_keys=True))
+          PY
+
+          git diff --check
+          git diff -- "$BASELINE_PATH"
+          test "$(git diff --name-only | wc -l)" -eq 1
+          test "$(git diff --name-only)" = "$BASELINE_PATH"
+
+      - name: Commit the exact baseline-only repair to the task branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$BASELINE_PATH"
+          git diff --cached --check
+          test "$(git diff --cached --name-only)" = "$BASELINE_PATH"
+          git commit -m "fix(topology): reconcile data maps baseline shrink"
+          git push origin "HEAD:$BRANCH_NAME"
