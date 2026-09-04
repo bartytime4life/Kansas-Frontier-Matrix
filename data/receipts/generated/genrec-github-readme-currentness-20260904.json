@@ -1,0 +1,162 @@
+{
+  "receipt_id": "genrec-github-readme-currentness-20260904",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/README.md"
+  ],
+  "artifact_hashes": {
+    ".github/README.md": "sha256:bcb36e3721e5090d7a572d64088c91080e010e84c5bf7ecf5a14242502a8b831"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-09-04"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector",
+      "Notion connector",
+      "deterministic Markdown checks"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM Contributor Reliability System — Documentation, PR Quality, and CI Hardening (owner-only Google Drive source)",
+      "KFM Verified Improvement Campaign v1.1 (owner-only Google Drive source)",
+      "KFM Markdown Engineering, Modernization & GitHub Documentation Implementation Agent (owner-only Google Drive source)",
+      "KFM Repository Workbench (Notion coordination page)",
+      "KFM Cross-System Authority & Intake Model (Notion coordination page)"
+    ],
+    "evidence_refs": [
+      "repo:main@38ba9349dc9740babb60d14c9383e5b0162d940b",
+      "repo:.github/README.md@bbc8680236d78f87a3e8a762c89782cbb29ba117",
+      "repo:root-tree@3e4714400201251e31398561cd6fbfce23acad82",
+      "repo:.github-tree@b4d5cea1193237cd4b7ebeecb4f1bf3d35c23310",
+      "repo:.github/workflows-tree@d9d5fbc0d056166558c3526bdc0f126cfb187d70",
+      "repo:.github/ISSUE_TEMPLATE-tree@e61bb3049675546f7154e15d88390595f77a30a2",
+      "repo:.github/dependabot.yml@main",
+      "repo:.github/workflows/README.md@main",
+      "repo:ruleset/15484585@read-only",
+      "repo:issue/4024@open",
+      "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@main"
+    ]
+  },
+  "truth_labels": {
+    ".github/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-repin",
+      "outcome": "PASS",
+      "reason": "GitHub main ref was read at exact SHA 38ba9349dc9740babb60d14c9383e5b0162d940b; the branch was created from that SHA."
+    },
+    {
+      "gate": "inventory-tree-recount",
+      "outcome": "PASS",
+      "reason": "The current Git tree was recounted at the pinned base: 496 tracked .github files, 483 .yml workflows, 7 issue-template files, and 6 chooser templates."
+    },
+    {
+      "gate": "companion-currentness-reconciliation",
+      "outcome": "PASS",
+      "reason": "The companion workflow README was read at the pinned base; its 482-workflow snapshot is older than the live 483-file tree and is explicitly recorded as NEEDS VERIFICATION without changing the companion."
+    },
+    {
+      "gate": "authority-and-overlap",
+      "outcome": "PASS",
+      "reason": "Notion coordination pages and Google Drive guidance were read as non-authoritative inputs; current GitHub open-PR search returned zero results before branch creation."
+    },
+    {
+      "gate": "ruleset-read-only-observation",
+      "outcome": "PASS",
+      "reason": "Ruleset 15484585 was read without mutation; its active pull-request rule has zero required approvals and requires review-thread resolution, with no required-status-check rule observed."
+    },
+    {
+      "gate": "markdown-structure-and-readback",
+      "outcome": "PASS",
+      "reason": "Branch readback matched the prepared artifact; one Markdown H1 outside fenced code, balanced fences, final newline, and no trailing whitespace were confirmed."
+    },
+    {
+      "gate": "changed-path-scope",
+      "outcome": "PASS",
+      "reason": "Compare against the pinned base reports exactly one changed path: .github/README.md."
+    },
+    {
+      "gate": "scope-and-sensitive-content",
+      "outcome": "PASS",
+      "reason": "The update is documentation-only and contains no secrets, private Drive URLs, restricted data, exact sensitive locations, or copied source passages."
+    },
+    {
+      "gate": "pre-commit-and-repository-tests",
+      "outcome": "SKIPPED",
+      "reason": "No mounted local checkout was available in this connector-only session; local commands were not executed."
+    },
+    {
+      "gate": "full-markdown-link-audit",
+      "outcome": "SKIPPED",
+      "reason": "No canonical repository-wide Markdown link checker was verified; the README records the limitation."
+    },
+    {
+      "gate": "hosted-workflow-behavior-audit",
+      "outcome": "SKIPPED",
+      "reason": "No workflow YAML was changed and no hosted workflow behavior was claimed."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending; this receipt records authorship and bounded validation only."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-main",
+      "validated": true,
+      "evidence_ref": "repo:main@38ba9349dc9740babb60d14c9383e5b0162d940b"
+    },
+    {
+      "id": "github-tree-inventory",
+      "validated": true,
+      "evidence_ref": "repo:root-tree@3e4714400201251e31398561cd6fbfce23acad82; repo:.github-tree@b4d5cea1193237cd4b7ebeecb4f1bf3d35c23310"
+    },
+    {
+      "id": "workflow-companion-drift",
+      "validated": true,
+      "evidence_ref": "repo:.github/workflows/README.md@main"
+    },
+    {
+      "id": "dependabot-configuration",
+      "validated": true,
+      "evidence_ref": "repo:.github/dependabot.yml@main"
+    },
+    {
+      "id": "delivery-state-incident",
+      "validated": true,
+      "evidence_ref": "repo:issue/4024@open"
+    },
+    {
+      "id": "ruleset-readback",
+      "validated": true,
+      "evidence_ref": "repo:ruleset/15484585@read-only"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-04T17:49:25.526Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored docs-only update. GitHub is the current implementation authority; Notion and Google Drive were read-only coordination and lineage inputs. No PR was opened, no PR state was changed, and no merge, ready, approval, settings, release, deployment, promotion, publication, or source-admission mutation occurred. The branch remains VALIDATED_BRANCH_ONLY under the open issue #4024 delivery-state boundary. The workflow companion's 482-file snapshot remains an explicit follow-up rather than an unverified current claim."
+}
