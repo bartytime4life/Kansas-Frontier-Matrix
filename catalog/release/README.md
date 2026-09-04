@@ -1,431 +1,410 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/catalog-release-readme
-title: catalog/release/ — Release Compatibility Redirect
-type: readme
-version: v0.2
-status: draft
-owners: OWNER_TBD — Release steward · Publication steward · Catalog steward · Data steward · Receipt steward · Proof steward · Policy steward · Schema steward · Docs steward
+title: catalog/release/ — Deprecated Release Compatibility Redirect
+type: readme; deprecated-boundary; compatibility-redirect
+version: v0.3.0
+status: draft; repository-grounded; deprecated; redirect-only; integration-hold
+owners: ["@bartytime4life"]
+owner_scope: repository review route only; specialist stewardship and independent approval remain NEEDS VERIFICATION
 created: 2026-06-16
-updated: 2026-07-10
-policy_label: public
+updated: 2026-09-04
+policy_label: public-doc; no-release-authorization; fail-closed
+owning_root: catalog/
+root_class: deprecated
+readme_profile: BOUNDARY_COMPACT
+scope_id: catalog/release/
+release_decision_home: release/
+published_artifact_home: data/published/
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_commit: bb3eb695e6068b38453ca3ded8f1394a8fdebc20
+  prior_readme_blob: 309be86f3c589e47e47f60fbf8e84a40d3832f5b
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  root_registry_blob: 024f668b5f0a9239bafa4f8b09e2afd86300ff8c
+truth_posture: CONFIRMED tracked inventory and adopted placement; PROPOSED README correction; UNKNOWN external consumers and operational state
 related:
   - ../README.md
-  - ../../data/README.md
-  - ../../data/catalog/README.md
-  - ../../data/published/README.md
-  - ../../data/receipts/README.md
-  - ../../data/proofs/README.md
-  - ../../data/registry/README.md
   - ../../release/README.md
-  - ../../schemas/contracts/v1/
-  - ../../contracts/
-  - ../../policy/
-  - ../../docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md
+  - ../../data/published/README.md
   - ../../docs/doctrine/directory-rules.md
-tags: [kfm, catalog, release, publication, rollback, correction, compatibility-root, redirect, release-plane, data-published, receipt-proof-catalog-publication-separation, non-authoritative, drift-fence, no-public-use]
+  - ../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../docs/adr/ADR-0038-trusted-base-topology-correction-transitions.md
+  - ../../control_plane/root_registry.yaml
+  - ../../control_plane/repository_topology_correction_register.yaml
+  - ../../data/receipts/generated/README.md
 notes:
-  - "Refreshes the root-level catalog/release compatibility-redirect fence."
-  - "Root-level catalog/release/ is compatibility and drift-control documentation only, not canonical release authority, publication authority, catalog authority, receipt authority, proof authority, schema authority, policy authority, producer authority, hosting authority, or UI authority."
-  - "Release-governance records, release decisions, release manifests, promotion records, rollback cards, corrections, withdrawals, supersessions, signatures, and release-state records belong under release/."
-  - "Published delivery artifacts belong under data/published/ only after governed release; catalog records belong under data/catalog/; receipts belong under data/receipts/; proof support belongs under data/proofs/; source/rights/sensitivity registry rows belong under data/registry/."
-  - "ADR-0011 is proposed and is used here only as separation evidence, not accepted-rule proof."
-  - "Do not add release records, publication artifacts, receipts, proofs, source registry rows, catalog records, schemas, policy rules, generated outputs, or producer targets here without an ADR/migration note."
-  - "Actual current contents beyond this README, historical producers, workflow writes, migration status, release/publication schema maturity, CI/review enforcement, public-client/producer exclusion, hosting readiness, and ADR disposition remain NEEDS VERIFICATION."
-  - "v0.2 adds current evidence basis, Directory Rules placement basis, canonical release/ and data/published alignment, receipt/proof/catalog/publication separation, minimum safe redirect slice, anti-bypass matrix, migration/rollback posture, and safe language rules without claiming migration or enforcement maturity."
+  - "Retains the existing document ID, H1, top anchor, numbered sections, and status-summary anchor."
+  - "Corrects rollback-decision versus rollback-execution-receipt routing."
+  - "Removes obsolete permission to add notes, placeholders, or trust objects under the frozen root."
+  - "No accepted exact-transition authority for this replacement is supplied by this document."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-<div align="center">
-
 # Release Compatibility Redirect
 
-`catalog/release/`
+**Looking for release decisions? Use the [release governance root](../../release/README.md).
+Looking for released payloads? Use [data/published/](../../data/published/README.md).**
 
-**Root-level compatibility and drift-control fence for legacy or accidental release placement. Release-governance records belong under `release/`; released public-safe artifacts belong under `data/published/`; supporting catalog, receipt, proof, and registry records stay in their own roots.**
-
-![status](https://img.shields.io/badge/status-draft-blue)
-![authority](https://img.shields.io/badge/authority-compatibility-orange)
-![release home](https://img.shields.io/badge/release__home-release%2F-blueviolet)
-![published home](https://img.shields.io/badge/published__home-data%2Fpublished-blue)
-![trust](https://img.shields.io/badge/trust__content-forbidden-red)
-![truth](https://img.shields.io/badge/truth-NEEDS__VERIFICATION-yellow)
-
-[Evidence](#0-evidence-basis-for-this-revision) · [Purpose](#1-purpose) · [Canonical homes](#2-canonical-homes) · [Boundary](#3-authority-boundary) · [Allowed](#5-allowed-contents) · [Forbidden](#6-forbidden-contents) · [Migration](#10-migration-posture) · [Definition of done](#17-definition-of-done)
-
-</div>
-
----
+`catalog/release/` preserves navigation beneath the **deprecated, frozen**
+[`catalog/` root](../README.md). It is not a release queue, manifest registry,
+rollback service, publisher, or public download endpoint. This is a documentation
+redirect, not an HTTP redirect, filesystem alias, or implemented resolver.
 
 > [!IMPORTANT]
-> **Status:** draft / `NEEDS VERIFICATION`  
-> **Path:** `catalog/release/README.md`  
-> **Responsibility root:** compatibility redirect / drift fence only  
-> **Release-governance home:** `release/`  
-> **Published artifact home:** `data/published/`  
-> **Catalog home:** `data/catalog/`  
-> **Receipt home:** `data/receipts/`  
-> **Proof home:** `data/proofs/`  
-> **Directory Rules basis:** file location encodes ownership, governance, and lifecycle. Release decisions, release manifests, promotion decisions, rollback cards, correction records, withdrawal records, supersession records, signatures, and release-state records belong under `release/`; released public-safe delivery artifacts belong under `data/published/`; catalog records belong under `data/catalog/`; receipts belong under `data/receipts/`; proof support belongs under `data/proofs/`. Root-level `catalog/release/` is a compatibility redirect only and must not become a parallel release, publication, catalog, receipt, proof, schema, policy, source-registry, pipeline, package, tool, search, hosting, or UI authority.  
-> **Truth posture:** CONFIRMED current GitHub README path / CONFIRMED parent root-level `catalog/README.md` exists and treats `catalog/` as compatibility redirect / CONFIRMED `release/README.md` exists and treats `release/` as release-governance root / CONFIRMED `data/published/README.md` exists and treats `data/published/` as released public-safe downstream carrier lane / CONFIRMED `data/catalog/README.md` exists and states catalog records are not release decisions / CONFIRMED `data/receipts/README.md` exists and states receipts are process memory, not proof, catalog, release, or publication approval / CONFIRMED `data/proofs/README.md` exists and treats proof artifacts as support objects, not public truth by placement / CONFIRMED ADR-0011 document exists and states proposed receipt/proof/catalog/publication separation / CONFIRMED Directory Rules document exists / PROPOSED root-level `catalog/release/` redirect contract / UNKNOWN actual files beyond README, historical producers, workflow writes, migration status, release schema maturity, publication schema maturity, CI/review guard, public-client/producer exclusion, hosting readiness, and ADR disposition
+> Release decisions, evidence support, execution receipts, and released payloads
+> are different object families. A successful check, signature, catalog entry,
+> generated receipt, GitHub merge, or file location does not authorize release.
 
-> [!CAUTION]
-> Do not make `catalog/release/` a parallel release, publication, or catalog authority. KFM release manifests, promotion decisions, release decisions, rollback cards, correction notices, withdrawal records, supersession records, signatures, and release-state records belong under `release/`. Published artifacts belong under `data/published/` only after governed release. Catalog records, receipts, proofs, registry rows, schemas, contracts, policies, code, generated previews, and unpublished lifecycle data stay in their own roots.
-
----
+> [!WARNING]
+> **Proposed correction; integration held.** Replacing this README changes frozen
+> content. The inspected correction register contains no accepted, bound
+> transition for this path. Preserve the validator, baseline, and register;
+> [validation expectations](#13-validation-expectations) explain the boundary.
 
 ## Quick jump
 
-- [0. Evidence basis for this revision](#0-evidence-basis-for-this-revision)
-- [1. Purpose](#1-purpose)
-- [2. Canonical homes](#2-canonical-homes)
-- [3. Authority boundary](#3-authority-boundary)
-- [4. Default posture](#4-default-posture)
-- [5. Allowed contents](#5-allowed-contents)
-- [6. Forbidden contents](#6-forbidden-contents)
-- [7. Directory shape](#7-directory-shape)
-- [8. Minimum safe redirect slice](#8-minimum-safe-redirect-slice)
-- [9. Diagram](#9-diagram)
-- [10. Migration posture](#10-migration-posture)
-- [11. Runtime and producer anti-bypass matrix](#11-runtime-and-producer-anti-bypass-matrix)
-- [12. Inspection path](#12-inspection-path)
-- [13. Validation expectations](#13-validation-expectations)
-- [14. Safe change pattern](#14-safe-change-pattern)
-- [15. Rollback and correction posture](#15-rollback-and-correction-posture)
-- [16. Safe language rules](#16-safe-language-rules)
-- [17. Definition of done](#17-definition-of-done)
-- [18. Open verification items](#18-open-verification-items)
-
----
+[Evidence](#0-evidence-basis-for-this-revision) ·
+[Routing](#2-canonical-homes) ·
+[Inventory](#7-directory-shape) ·
+[Inspection](#12-inspection-path) ·
+[Validation](#13-validation-expectations) ·
+[Rollback](#15-rollback-and-correction-posture) ·
+[Open verification](#18-open-verification-items)
 
 ## 0. Evidence basis for this revision
 
-This README is a documentation boundary, not migration proof, release approval proof, publication-hosting proof, or CI enforcement proof. The 2026-07-10 revision updates an existing compatibility README and keeps maturity bounded while aligning root-level `catalog/release/` with the canonical `release/` release-governance root, the canonical `data/published/` published-artifact lane, the separate `data/catalog/` catalog root, the separate `data/receipts/` process-memory root, the separate `data/proofs/` proof-support root, and Directory Rules placement posture.
+Reviewed **2026-09-04** against
+[`main@bb3eb695e6068b38453ca3ded8f1394a8fdebc20`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/bb3eb695e6068b38453ca3ded8f1394a8fdebc20).
+These findings are a pinned snapshot, not claims about future `main`.
 
-| Evidence item | Status | What it supports | What it does not prove |
-|---|---|---|---|
-| `catalog/release/README.md` exists on `main`. | CONFIRMED | This is an existing README update, not a new path proposal. | It does not prove actual contents beyond the README, historical producers, migration status, CI enforcement, public-client exclusion, hosting readiness, or ADR disposition. |
-| `catalog/README.md` exists and treats root-level `catalog/` as a compatibility redirect, not canonical catalog authority. | CONFIRMED document presence and redirect posture | `catalog/release/` should inherit root-level redirect/fence behavior. | It does not prove all root-level catalog/release drift has been removed. |
-| `release/README.md` exists and treats `release/` as release-governance root for decisions, manifests, corrections, notices, signatures, and release state. | CONFIRMED release-root posture | Release-governance records belong under `release/`, not root-level `catalog/release/`. | It does not prove release workflow maturity, singular/plural manifest convention finality, or active release approval. |
-| `data/published/README.md` exists and treats `data/published/` as the released public-safe downstream carrier lane. | CONFIRMED published-lane posture | Published delivery artifacts belong under `data/published/` after governed release. | It does not prove artifact payload bytes, hosting, validators, release-manifest approval, or CI enforcement. |
-| `data/catalog/README.md` exists and states catalog records are not release decisions and public-safe materialization belongs under `data/published/` after gates. | CONFIRMED catalog-root posture | Catalog records belong under `data/catalog/` and must not be treated as release approval. | It does not prove concrete catalog inventory, validators, receipts, or route behavior. |
-| `data/receipts/README.md` exists and marks receipts as process-memory artifacts. | CONFIRMED receipt-root posture | Receipts must not be stored or treated as release authority in this redirect path. | It does not prove emitted receipt inventories, signing, validators, or release integration. |
-| `data/proofs/README.md` exists and treats proof artifacts as support objects, not public truth by placement. | CONFIRMED proof-root posture | Proof support belongs under `data/proofs/` and does not become release authority by storage path. | It does not prove emitted proof inventories, schemas, validators, fixtures, CI workflows, or release-gate enforcement. |
-| `docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md` exists and states the proposed separation rule `receipt ≠ proof ≠ catalog ≠ publication`. | CONFIRMED ADR document presence; PROPOSED decision status | Supports separation language while keeping ADR acceptance bounded. | It does not prove ADR acceptance or validator enforcement. |
-| `docs/doctrine/directory-rules.md` exists and states placement doctrine. | CONFIRMED placement-doctrine document presence | Root-level `catalog/release/` must remain a compatibility fence; release, publication, catalog, receipt, and proof records belong under their owning roots. | It does not prove live repo drift has been fully audited. |
+| Evidence | Confirmed finding | Limit |
+|---|---|---|
+| Exact `catalog/release/` listing | Only `README.md` and zero-byte `.gitkeep`; no child directory or tracked payload | Does not inspect ignored, untracked, mounted, or external bytes |
+| [Parent README](../README.md), blob `44378e14fe7470f19df20ebfc9914ad1e3d2a6a9` | Deprecated containment; retain existing redirects without growing the root | Its older operational snapshot is not a current consumer audit |
+| [ADR-0029](../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) and [Directory Rules](../../docs/doctrine/directory-rules.md) | Accepted adoption of exact rules blob `fd49a0b83e55cef52c1124281f093e263526898d` | The internal draft label remains inside those adopted bytes |
+| [Root Registry](../../control_plane/root_registry.yaml), blob `024f668b5f0a9239bafa4f8b09e2afd86300ff8c` | `root.catalog` is deprecated, immutable, `frozen_no_writes`, and `redirect_only`; root target `data/catalog/` | A projection does not authorize new writes or release |
+| [Release README](../../release/README.md), blob `60b6a656f8f2b765616bba7223f51c25863c7172` | Separate append-only decision plane for release, promotion, correction, withdrawal, rollback, and signatures | Does not prove authenticated production release or signing custody |
+| [Published-artifact README](../../data/published/README.md), blob `8ecb5d2f9737349fb6569efbde36659f398de151` | Released public-safe payload responsibility is distinct from release decisions | Does not prove a current payload, serving path, or public fitness |
+| [ADR-0038](../../docs/adr/ADR-0038-trusted-base-topology-correction-transitions.md), blob `79f37be0991b050d8bc9c00991d6db887d343cd7` | Stage 1 trusted-base exact-transition mechanism accepted | No blanket frozen-root exception |
+| [Correction register](../../control_plane/repository_topology_correction_register.yaml), blob `b48e8df74a2b9d8c2599ce256ef5156687b98dbf` | One proposed agriculture-specific entry, with null accepted-decision bindings | No authority for this release README replacement |
 
-[Back to top](#top)
-
----
+Drive's *Directory Rules* and Notion's *Frozen Catalog Correction-Mechanism
+Decision Package* were consulted as lineage and coordination. Their historical
+repository checkpoints do not supersede fresh GitHub evidence or adopted
+repository decisions. Matching blob identities preserve the identity of
+previously inspected source bytes; they do not rerun those sources' historical
+tests or certify their operational claims.
 
 ## 1. Purpose
 
-`catalog/release/` is a **root-level compatibility redirect** for release path drift.
+Keep legacy navigation useful while directing contributors to the responsibility
+that actually owns each release-related object. Inherit the parent root's
+containment contract rather than creating a second release specification here.
 
-It exists only to prevent accidental, legacy, generated, copied, or externally imported release material from becoming a parallel authority outside KFM's release-governance, published-artifact, catalog, receipt, proof, and registry roots.
-
-This folder should not be used for canonical:
-
-- ReleaseManifest records, release decisions, promotion decisions, release approvals, release-state records, release signatures, changelog entries, release notices, withdrawal records, or supersession records;
-- RollbackCard records, rollback targets, rollback approvals, rollback notices, rollback execution records, correction records, or CorrectionNotice files;
-- released artifacts, public-safe bundles, map delivery products, tiles, PMTiles, reports, stories, downloads, API payload snapshots, public indexes, allowlists, caveat summaries, digests, or release-resolved pointers;
-- catalog records, STAC/DCAT/PROV records, CatalogMatrix records, catalog indexes, source descriptors, or discovery carriers;
-- process receipts, validation receipts, redaction/generalization receipts, AI receipts, release dry-run receipts, migration receipts, rollback receipts, or telemetry receipts;
-- EvidenceBundles, ProofPacks, citation-validation bundles, catalog-closure proof, release-readiness proof, rollback proof, correction proof, or claim-support records;
-- source descriptors, rights rows, sensitivity rows, registry rows, schemas, contracts, policy rules, producer code, generated previews, build outputs, or unpublished lifecycle data.
-
-This README does not prove that any release material currently exists here, that migration has been completed, that producer tools avoid this path, that public clients exclude this path, that release schemas are implemented, that CI blocks writes here, or that any ADR has finalized long-term retention of this compatibility root.
-
-[Back to top](#top)
-
----
+This leaf owns no release state, publication permission, policy, evidence,
+signature authority, execution history, or payload. It neither migrates objects
+nor proves retirement of historical producers and consumers.
 
 ## 2. Canonical homes
 
-Release decision, release-state, rollback, correction, withdrawal, supersession, manifest, and signature material belongs under:
+Classify by **object responsibility and lifecycle**, not by a filename containing
+“release,” “manifest,” “proof,” or “rollback.”
 
-```text
-release/
-```
+| Object or responsibility | Owning home | Distinction to preserve |
+|---|---|---|
+| ReleaseManifest, PromotionDecision, release approval, correction, withdrawal, supersession, and signature decision records | [release/](../../release/README.md) | A candidate or stored decision-shaped object is not an effective approval |
+| RollbackCard and rollback decisions | `release/`, in the governed rollback-card family | The decision to roll back is not evidence that rollback executed |
+| Executed rollback, cache-invalidation, validation-run, generation, and other process receipts | `data/receipts/`, in the applicable receipt family | Records of what ran are process memory, not release authority |
+| EvidenceBundle, ProofPack, citation-validation, and claim-support objects | `data/proofs/` | Support for a decision does not replace the decision |
+| Released public-safe layers, tiles, PMTiles, reports, stories, API snapshots, and delivery sidecars | [data/published/](../../data/published/README.md) | Payloads require governed release and access checks |
+| Catalog records, indexes, and STAC/DCAT/PROV discovery representations | `data/catalog/` | Discovery does not approve publication |
+| Source, dataset, layer, rights, and sensitivity registry instances | `data/registry/` | Registration does not activate a source or release data |
+| Semantic contracts, machine-checkable shapes, and normative policy | [contracts/](../../contracts/), [schemas/](../../schemas/), [policy/](../../policy/) | Meaning, shape, and admissibility are separate responsibilities |
 
-Released public-safe delivery artifacts belong under:
+**Correction to v0.2:** the former table sent a “rollback execution record” to
+`release/`. Directory Rules `DIR-RELEASE-003` separates `RollbackCard` decisions
+from executed rollback and cache-invalidation process receipts. Route the latter
+to the receipt family, not the release decision plane. Likewise, classify a
+validation report by its contract: an execution receipt and a proof-support
+report must not be collapsed merely because both describe validation.
 
-```text
-data/published/
-```
+These are logical owning homes. They do not require large or restricted bytes
+to be committed to Git. Approved external storage still needs identity, digest,
+access policy, retention, provenance, and correction/rollback references.
+Upstream source material and synthetic test fixtures keep their own roles;
+they are not misplaced releases merely because they reside elsewhere.
 
-Catalog records and discovery/interchange carriers belong under:
-
-```text
-data/catalog/
-```
-
-Process-memory receipts belong under:
-
-```text
-data/receipts/
-```
-
-Proof support belongs under:
-
-```text
-data/proofs/
-```
-
-Source, rights, sensitivity, and registry rows belong under:
-
-```text
-data/registry/
-```
-
-The root-level `catalog/release/` directory is a redirect/fence only.
-
-```text
-catalog/release/  # compatibility redirect only; do not add release records here
-release/          # release-governance records and decisions
-data/published/   # released public-safe delivery artifacts
-data/catalog/     # catalog-stage lifecycle records
-data/receipts/    # process-memory records
-data/proofs/      # proof-support records
-data/registry/    # source, rights, sensitivity, and registry records
-```
-
-If a future ADR or migration changes release placement, this README should be updated to cite the accepted target, producer-configuration evidence, validation evidence, and any migration, correction, or rollback records.
+The Root Registry's generic `catalog/` target, `data/catalog/`, does not route
+release decisions into the catalog. Follow the family split above and the
+canonical release root's current contracts; this README does not settle
+singular/plural collection migrations or invent a new child lane.
 
 ## 3. Authority boundary
 
-`catalog/release/` has **no canonical release authority**, **no publication authority**, **no catalog authority**, **no receipt authority**, and **no proof authority**. It may hold only redirect guidance, migration notes, drift logs, or temporary markers while misplaced material is reviewed and moved into its proper owning root.
+| Concern | Local contract |
+|---|---|
+| Owning root / local scope | Deprecated `catalog/`; `catalog/release/` is containment documentation only |
+| Review route | `@bartytime4life`, from the Root Registry; specialist stewardship and independent approval remain unverified |
+| Inputs / outputs | Verified placement, inventory, and migration facts in; navigation and containment guidance out |
+| Mutation | Frozen; an existing README is not an automatic exception for replacement or new siblings |
+| Exposure | Public documentation does not authorize access to internal decisions, source bytes, or unreleased payloads |
+| Retention | Migration-bound; no deletion or retirement without accepted decisions and verified dependency closure |
 
-```text
-WRONG / LEGACY ROOT          RELEASE / PUBLICATION HOMES        SUPPORT HOMES
-catalog/release/        -->  release/                       --> data/catalog/
-compatibility fence only     release decisions / rollback       data/receipts/
-not authoritative            data/published/                    data/proofs/
-                             released delivery artifacts        data/registry/
-```
-
-A release record outside `release/` should be treated as release-plane drift. A published artifact outside `data/published/` should be treated as publication drift. A catalog record outside `data/catalog/`, a receipt outside `data/receipts/`, or a proof outside `data/proofs/` should be treated as family drift until reviewed and migrated.
+Directory Rules §16 defines the compact inherited boundary and direct-child
+map; §§17–18 govern compatibility, migration, correction, and rollback.
+ADR-0029 establishes the adopted edition. ADR-0038 governs exact frozen-content
+corrections. This candidate changes none of those authorities.
 
 ## 4. Default posture
 
-Anything found under root-level `catalog/release/` should be treated as **NEEDS VERIFICATION** and potentially misplaced.
+Unexpected content is **drift requiring review**, not admitted evidence or an
+authorized release. Do not cite, load, index, cache, export, tile, host, or use it
+to make release decisions. Preserve its identity and provenance before
+remediation; location alone does not establish its status.
 
-Do not expose, publish, index, cite, search, cache, export, tile, host, or depend on root-level release files as canonical release or published artifact records. First confirm object family, source, provenance, rights, sensitivity, evidence resolution, schema validity, policy decision, lifecycle state, receipt support, proof support, catalog closure, release state, digest/sidecar integrity, rollback path, correction path, and whether the object is actually a release-governance record, published artifact, catalog carrier, receipt, proof, registry row, or unpublished candidate.
+Unclear rights, sovereignty, cultural sensitivity, living-person/DNA data,
+protected locations, archaeology, rare species, infrastructure, or private-land
+detail require quarantine, redaction, generalization, staged access, or denial
+under the applicable controls. Record reasons and transforms without copying
+sensitive payloads into public issues, PRs, or generated-work receipts.
 
 ## 5. Allowed contents
 
-| Allowed item | Example | Required posture |
-|---|---|---|
-| README / redirect docs | `README.md` | Compatibility fence only |
-| Migration note | `MIGRATION.md` | Temporary and ADR/review-linked |
-| Drift note | `DRIFT.md`, `OPEN-QUESTIONS.md` | Must point to canonical homes and review steps |
-| Placeholder marker | `.gitkeep` | Does not authorize release, publication, catalog, receipt, proof, policy, schema, or public-output content |
+Retain only the **existing** README and zero-byte `.gitkeep` while this path
+remains under containment. Navigation may point to migration, drift, correction,
+and rollback records in their proper governing homes.
+
+Do not add `MIGRATION.md`, `DRIFT.md`, `OPEN-QUESTIONS.md`, new placeholders,
+or trust-bearing records here. The previous edition's suggested siblings were
+not an exception to the subsequently adopted freeze. This replacement also
+remains subject to its own exact-transition integration gate.
 
 ## 6. Forbidden contents
 
-| Forbidden here | Correct home |
-|---|---|
-| ReleaseManifest, PromotionDecision, release approval, release decision, release-state record, release signature, release notice, changelog release record, withdrawal, or supersession record | `release/` |
-| RollbackCard, rollback target, rollback approval, rollback execution record, correction record, or CorrectionNotice | `release/` |
-| Released artifacts, published map/docs/data bundles, public indexes, allowlists, caveat summaries, digest sidecars, tiles, PMTiles, reports, stories, downloads, API payload snapshots | `data/published/` after governed release |
-| Catalog records, catalog indexes, STAC/DCAT/PROV records, CatalogMatrix records | `data/catalog/` |
-| Receipts, validation reports, redaction/generalization receipts, AI receipts, release dry-run receipts, rollback receipts, migration receipts | `data/receipts/` |
-| EvidenceBundles, ProofPacks, attestations, citation-validation bundles, release-readiness proof, rollback proof, correction proof, claim-support records | `data/proofs/` |
-| Source descriptors, source registry rows, rights rows, sensitivity rows | `data/registry/` or governed registry homes |
-| Schemas and machine-shape contracts | `schemas/contracts/v1/` |
-| Human contracts and object-meaning docs | `contracts/` |
-| Policy rules and policy decisions | `policy/` and governed policy-decision homes |
-| Source code, scripts, packages, pipelines, build tools, producers, preview generators | `apps/`, `packages/`, `tools/`, `scripts/`, `pipelines/` |
-| RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, unpublished candidate, or restricted lifecycle data | `data/` lifecycle subtrees |
+No release approvals, manifests, signatures, rollback cards, correction notices,
+withdrawals, supersessions, receipts, proofs, registry instances, catalog
+records, or published payloads belong here. The owning-home table in §2 is not
+permission to move uncertain objects directly into a released lifecycle state.
+
+Producer code, publisher configuration, schemas, normative policy, migration
+implementation, generated previews, build output, model output, credentials,
+and restricted source material also stay out. Use existing responsibility roots,
+not an additional authority hidden under a familiar legacy name.
 
 ## 7. Directory shape
 
-Current implementation inventory remains `NEEDS VERIFICATION`.
+**CONFIRMED tracked inventory at the evidence commit:**
 
 ```text
 catalog/release/
-├── README.md                 # compatibility redirect / drift fence
-├── MIGRATION.md              # PROPOSED only if migration is active
-└── DRIFT.md                  # PROPOSED only if misplaced release/publication material is found
+├── .gitkeep     # Existing zero-byte placeholder; no authority
+└── README.md    # Existing release navigation; frozen-content correction gated
 ```
 
-> [!WARNING]
-> Do not treat this suggested shape as complete repo inventory. Verify actual contents before making inventory, producer, enforcement, release, publication, hosting, or migration claims.
+| Entry before this correction | Git blob | Bytes |
+|---|---|---:|
+| `.gitkeep` | `e69de29bb2d1d6434b8b29ae775ad8c2e48c5391` | 0 |
+| `README.md` | `309be86f3c589e47e47f60fbf8e84a40d3832f5b` | 34,115 |
+
+No other tracked descendants were returned. This closes the local tracked-tree
+question, not historical migration, ignored-file, external-storage, producer,
+consumer, runtime, hosting, or deletion-safety questions.
 
 ## 8. Minimum safe redirect slice
 
-A smallest safe `catalog/release/` state should prove only that the folder prevents drift; it should not contain trust-bearing release or public-delivery material.
+The documentation candidate must preserve canonical navigation, exact inventory,
+existing identity and anchors, the no-new-content boundary, family separation,
+sensitivity controls, and explicit validation/rollback limits. Its generation
+receipt belongs in the existing accountability lane outside the frozen root.
 
-| Slice item | Minimum requirement | Why it matters |
-|---|---|---|
-| Redirect README | Points to `release/` for release governance and `data/published/` for released artifacts | Prevents parallel authority |
-| No release-governance records | No ReleaseManifest, PromotionDecision, RollbackCard, CorrectionNotice, signatures, withdrawals, supersessions, or release decisions | Preserves release root authority |
-| No published artifacts | No tiles, PMTiles, reports, stories, downloads, API snapshots, public indexes, allowlists, caveats, or digests | Keeps public delivery in published lifecycle root |
-| No catalog records | No STAC, DCAT, PROV, CatalogMatrix, source descriptor, or catalog index files | Preserves catalog and registry roots |
-| No receipt records | No RunReceipt, ValidationReceipt, AIReceipt, migration receipt, release dry-run receipt, rollback receipt, or redaction receipt | Preserves receipt/process-memory root |
-| No proof records | No EvidenceBundle, ProofPack, release attestation, citation validation, rollback proof, correction proof, or claim-support files | Preserves proof-support root |
-| Drift procedure | Explains how to inspect and migrate misplaced records | Keeps remediation reversible |
-| Producer guard | Producers, generators, scripts, and CI should not write durable release or public artifacts here | Prevents reintroducing drift |
-| Public-use guard | Public clients, search services, map runtimes, exports, static hosting, and indexes must not read from this path as canonical | Preserves governed access path |
-| Verification backlog | Open items stay visible | Prevents documentation from pretending migration/enforcement is complete |
+A readable README, empty placeholder, valid receipt, or successful formatting
+check does not prove that producers, release jobs, or public clients obey the
+boundary. Those require their own implementation and execution evidence.
 
 ## 9. Diagram
 
-```mermaid
-flowchart TD
-    wrong["catalog/release/\nroot-level redirect"] --> review["review for release / publication / catalog / receipt / proof drift"]
-    review --> classify["classify object family"]
-    classify --> release["release/\nReleaseManifest / decisions / rollback / correction"]
-    classify --> published["data/published/\nreleased public-safe delivery artifacts"]
-    classify --> catalog["data/catalog/\ncatalog records / discovery carriers"]
-    classify --> receipts["data/receipts/\nprocess memory"]
-    classify --> proofs["data/proofs/\nEvidenceBundle / ProofPack support"]
-    classify --> registry["data/registry/\nsource / rights / sensitivity rows"]
-    catalog --> release
-    receipts --> release
-    proofs --> release
-    release --> published
-    wrong -. "must not be public/canonical" .-> published
-    wrong -. "must not be producer target" .-> release
+```text
+Documentation navigation only:
+  catalog/release/README.md -> release/README.md
+                           -> data/published/README.md
+
+Distinct responsibilities:
+  evidence/proofs + process receipts -> support release review
+  release decision                  -> governs released payloads
+  RollbackCard                      -> records rollback decision/target
+  rollback execution receipt        -> records what the rollback actually did
+
+Governed lifecycle:
+  RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 ```
+
+These arrows do not implement transfer or automatic approval. Before release,
+require identity, rights, sensitivity, validation, provenance, integrity,
+EvidenceRef-to-EvidenceBundle closure, receipts/proofs, policy, review, release
+state, correction, and rollback support. Maps, tiles, graphs, indexes, scenes,
+summaries, and AI remain carriers, not truth or approval authorities.
 
 ## 10. Migration posture
 
-If release files are found here:
+First inventory exact paths, bytes, hashes, identities, source roles, rights,
+sensitivity, producers, consumers, and downstream references. Obtain the
+applicable accepted decision and record the migration in its owning lane before
+moving, regenerating, deleting, or changing consumers.
 
-1. Do not publish, cite, index, search, cache, export, tile, host, or depend on them.
-2. Identify whether they are release manifests, release decisions, promotion decisions, release-state records, rollback/correction records, published artifacts, public indexes, layer/report/story/API payloads, digest sidecars, catalog records, CatalogMatrix/STAC/DCAT/PROV records, receipts, proof support, source registry rows, schemas, policy records, unpublished lifecycle material, generated previews, temporary build artifacts, or producer outputs.
-3. Determine whether the file is historical drift, generated drift, copied output, unreviewed local work, or an intentional migration marker.
-4. Move release-governance records into `release/` through the appropriate release/correction/rollback review path.
-5. Move or regenerate released public-safe artifacts into `data/published/` only after governed release approval and required sidecar/digest/citation/caveat support.
-6. Move catalog records into `data/catalog/` and source/rights/sensitivity registry records into `data/registry/`.
-7. Move receipts into `data/receipts/`.
-8. Move proof support into `data/proofs/`.
-9. Move schemas, contracts, policy rules, code, and producer outputs into their owning roots.
-10. Preserve provenance, source refs, digests, receipts, proof refs, catalog refs, review notes, producer identity, release refs, correction refs, and rollback path.
-11. Add a drift register, migration note, or correction note if the misplaced material was previously consumed.
-12. Add or update validation checks so producers do not recreate root-level release drift.
-13. Leave `catalog/release/` as a redirect/fence unless an accepted ADR explicitly changes the authority model.
+A migration preserves identity or explicitly versions it, maintains source and
+transform lineage, validates target and consumer parity, and retains correction
+and rollback evidence. Decisions route to `release/`; execution receipts route
+to their receipt family; already released payloads require verified release
+state before placement under `data/published/`. Unreleased candidates do not
+become published through a file move.
+
+No migration, source admission, release, deletion, or retirement is performed by
+this README. Existing placeholders remain unchanged.
 
 ## 11. Runtime and producer anti-bypass matrix
 
-| Bypass risk | Required behavior | Review signal |
+| Risk | Required boundary | Evidence before claiming closure |
 |---|---|---|
-| Producer writes ReleaseManifest, PromotionDecision, or release decisions to `catalog/release/` | Fail review/CI; write to `release/` instead | Release path check passes |
-| Producer writes rollback, correction, withdrawal, or supersession records here | Fail review/CI; write to `release/` instead | Release/correction/rollback path check passes |
-| Producer writes published artifacts here | Fail review/CI; write to `data/published/` after release instead | Generator config and output paths checked |
-| Producer writes catalog records here | Fail review/CI; write to `data/catalog/` instead | Catalog path check passes |
-| Producer writes receipts here | Fail review/CI; write to `data/receipts/` instead | Receipt path check passes |
-| Producer writes proofs here | Fail review/CI; write to `data/proofs/` instead | Proof path check passes |
-| Public client reads root-level release path | Deny; route through governed API/release/public-safe path | Client/search/index/hosting config excludes this path |
-| Root-level release file is treated as canonical | Mark as drift and migrate/regenerate | Migration note references canonical target |
-| Unreleased candidate copied here for preview | Remove or quarantine; use governed preview/work/release-review paths if accepted | Release and preview review blocks public leakage |
-| Restricted detail appears here | Deny, quarantine, redact, generalize, or remove | Sensitivity/publication review passes |
-| Schema/profile file stored here | Move to `schemas/` or standards docs as appropriate | Schema-home review passes |
-| Policy rule stored here | Move to `policy/` | Policy-root review passes |
-| Search/cache/export/tile/static-hosting pipeline consumes this path | Deny as canonical; switch to governed release/published source | Producer and client config reviewed |
-| Drift file already consumed downstream | Add correction/migration note and rollback path | Correction path is auditable |
-| README claims CI enforcement without run/check evidence | Mark enforcement `NEEDS VERIFICATION` | Current CI evidence cited before pass claims |
+| Producer targets `catalog/release/` | Reject new durable output here | Producer configuration, negative test, and exact-run result |
+| Rollback execution receipt is treated as rollback approval | Keep decision and execution identities separate | Contract-aligned objects and negative family-substitution checks |
+| Public client, map, search, export, or AI reads legacy content as authority | Deny; resolve governed APIs or released public-safe artifacts | Consumer trace plus applicable policy/release evidence |
+| Signature, digest, or green check is treated as release permission | Require the actual authorized decision and closure | Bound review, policy, identity, and release records |
+| Generalized payload leaks restricted detail through sidecars | Apply sensitivity controls to both payload and metadata | Transform review and reconstruction-risk checks |
+| Historical drift was consumed downstream | Preserve correction, invalidation, and rollback obligations | Affected-consumer inventory and reviewed remediation |
+
+This matrix states obligations. It does not report that runtime enforcement,
+all producer exclusions, or a comprehensive consumer audit passed.
 
 ## 12. Inspection path
 
-Actual root-level contents, producers, workflow writes, migration status, release/publication schema maturity, hosting readiness, CI/review enforcement, public-client/index exclusion, and current ADR disposition remain `NEEDS VERIFICATION`.
+From a checkout containing the evidence commit, these commands inspect tracked
+history without changing content or performing a release:
 
 ```bash
-find catalog/release -maxdepth 6 -type f | sort
-find release data/published data/catalog data/receipts data/proofs data/registry schemas contracts policy docs tools scripts pipelines pipeline_specs .github/workflows -maxdepth 6 -type f 2>/dev/null | grep -Ei 'release|publish|publication|published|rollback|correction|withdraw|supersede|ReleaseManifest|PromotionDecision|RollbackCard|CorrectionNotice|manifest|receipt|proof|EvidenceBundle|ProofPack|CatalogMatrix|stac|dcat|prov|rights|sensitivity|schema|policy|validator|workflow|migration|drift|pmtiles|tile|report|story|api|export|host' | sort
+REF=bb3eb695e6068b38453ca3ded8f1394a8fdebc20
+
+git rev-parse --verify "${REF}^{commit}"
+git ls-tree -r --long "$REF" -- catalog/release/
+git show "${REF}:control_plane/root_registry.yaml"
+git show "${REF}:control_plane/repository_topology_correction_register.yaml"
+
+# Candidate references, not proof of an active writer or consumer.
+git grep -n -F 'catalog/release' "$REF" -- .
 ```
+
+A no-match `git grep` result exits `1`; a fatal Git error is not an empty
+inventory. Tracked-text searches do not inspect deployed configuration, ignored
+files, external stores, mounts, or caches. Listing these commands does not claim
+they ran: this revision's inventory came from pinned GitHub file/tree reads.
 
 ## 13. Validation expectations
 
-Useful validation for this folder should cover:
+Keep documentation validation separate from integration authorization. Check
+the exact base/head diff, unchanged placeholder, stable document ID and anchors,
+relative destinations, metadata, tables, fences, shell syntax, final newline,
+absence of sensitive payloads, and generation-receipt shape and final-byte hash.
+Record actual results, limitations, and not-run checks in the review handoff.
 
-- no ReleaseManifest, PromotionDecision, release decisions, release approvals, release-state records, signatures, reviews, withdrawals, supersession records, RollbackCard records, correction records, or CorrectionNotice files are stored here;
-- no released artifacts, PMTiles, map tiles, report payloads, story payloads, API snapshots, public indexes, allowlists, caveat summaries, digest sidecars, or downloads are stored here;
-- no STAC, DCAT, PROV, CatalogMatrix, catalog indexes, source registry records, receipts, proofs, policy rules, schemas, source code, pipelines, tools, producer outputs, or unpublished lifecycle data are stored here;
-- any non-README content is tied to an active migration, drift note, or placeholder marker;
-- producer tools, scripts, generated outputs, workflows, indexes, search services, public clients, exports, tile jobs, static hosting, and map runtimes do not target `catalog/release/` as canonical;
-- links point users to `release/`, `data/published/`, `data/catalog/`, `data/receipts/`, `data/proofs/`, `data/registry/`, and other owning roots;
-- CI or review checks flag root-level `catalog/release/` writes when enforcement exists;
-- CI/pass/enforcement state is not claimed without current evidence.
+[ADR-0038](../../docs/adr/ADR-0038-trusted-base-topology-correction-transitions.md)
+preserves `KFM-TOPO-004` evidence identity as `path@object_id`. Replacing this
+README introduces a **new release-path blob delta** even with the same path
+count. The inspected [register](../../control_plane/repository_topology_correction_register.yaml)
+has only a proposed agriculture-specific transition and cannot authorize it.
+
+Do not label this delta wholly inherited, waive it as documentation, refresh the
+baseline, suppress the finding, or use a same-change authority input to approve
+it. Integration requires separately accepted exact-transition authority and the
+required trusted-base validation. Other edits under `catalog/` change the full
+frozen evidence set even when they do not touch this leaf; re-pin that shared
+set before any later transition. A sibling merge is not an exception.
 
 ## 14. Safe change pattern
 
-For changes under `catalog/release/`:
+Re-pin `main`, the target, relevant decisions, and overlapping work. Prepare the
+bounded README candidate and its required new provenance record in
+[data/receipts/generated/](../../data/receipts/generated/README.md). Preserve the
+path, document identity, existing anchors, and placeholder; do not modify the
+root classification, correction register, baseline, or validator.
 
-1. Confirm the change is redirect documentation, migration support, drift documentation, or a non-authoritative placeholder only.
-2. Confirm it does not create a parallel release, publication, catalog, receipt, proof, schema, policy, or public-hosting authority.
-3. Confirm release-governance records remain under `release/`.
-4. Confirm released public-safe artifacts are placed under `data/published/` only after governed release approval.
-5. Confirm catalog records remain under `data/catalog/`.
-6. Confirm receipts remain under `data/receipts/`.
-7. Confirm proof support remains under `data/proofs/`.
-8. Confirm registry rows remain under `data/registry/`.
-9. Confirm no public client, search index, map runtime, export job, tile job, story/focus/evidence surface, static host, publication producer, release producer, or cache reads this path as canonical.
-10. Document migration, correction, and rollback if any misplaced material was moved or previously consumed.
-11. Update docs and validation rules when behavior materially changes.
+Follow the current [contributor contract](../../CONTRIBUTING.md). Separate
+branch authoring, validation, independent review, PR creation, readiness, merge,
+release, and publication. An incident-held PR delivery path remains held even
+when the candidate is useful; preserve branch progress and a precise handoff
+rather than bypassing the [active delivery controls](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024).
 
 ## 15. Rollback and correction posture
 
-If material was added here by mistake, rollback should be small and auditable:
+Before integration, leave the candidate unmerged or restore only the prior
+README in a new, non-force task-branch commit. Preserve the generated receipt as
+historical provenance instead of changing its hash to describe another artifact.
+The exact prior blob is recorded in §7; it also contains the obsolete sibling-file
+permission and rollback-execution routing that this candidate corrects.
 
-- remove or revert the misplaced file from `catalog/release/`;
-- move release-governance records into `release/` through the appropriate release review path;
-- regenerate or move released public-safe artifacts into `data/published/` only through governed release controls;
-- move catalog, receipt, proof, registry, schema, contract, policy, code, and producer material into their owning roots;
-- preserve digest/provenance notes for anything already referenced;
-- add a correction note if public, semi-public, generated downstream, search, export, cache, release, map, story, report, API, or catalog artifacts consumed the misplaced path;
-- update producer configuration and tests so the drift is not recreated.
+After integration, reversal is itself a frozen-content transition requiring
+current authority and review. Do not automatically restore old mistakes, erase
+history, reset a shared branch, or reopen parallel writers merely to match a
+baseline. Real release rollback additionally needs its own decision, execution
+receipt, affected-consumer verification, correction, and cache-invalidation
+support. A README revert proves none of those operational outcomes.
 
 ## 16. Safe language rules
 
-Avoid language that implies root-level `catalog/release/` is authoritative.
-
-| Avoid saying | Safer wording |
+| Avoid | Use instead |
 |---|---|
-| `catalog/release/` contains release truth | `catalog/release/` is a compatibility redirect; release truth belongs under `release/` after review |
-| This folder approves publication | Publication requires release records, proofs, receipts, policy checks, and public-safe artifacts |
-| Files here are published | Files here are potentially misplaced until reviewed and migrated |
-| CI blocks this path | CI enforcement is `NEEDS VERIFICATION` unless current run/check evidence is cited |
-| The migration is complete | Migration status is `NEEDS VERIFICATION` unless migration records and diffs are cited |
+| “Release truth lives here” | “This path preserves deprecated release navigation” |
+| “The rollback receipt approved rollback” | “The decision authorizes; the receipt records execution” |
+| “No release material exists anywhere” | “No tracked payload exists in this pinned subtree” |
+| “A signed manifest or merge publishes the data” | “Release, policy, review, integrity, and public access still require closure” |
+| “The canonical path is public” | “Logical ownership does not confer access permission” |
+| “CI blocks this” or “migration complete” | Name the verified scope, execution evidence, and remaining unknowns |
+| “ADR-0038 permits this replacement” | “The mechanism does not authorize this unregistered exact transition” |
 
 ## 17. Definition of done
 
-- [ ] Owners are confirmed and `OWNER_TBD` is replaced.
-- [ ] Actual root-level `catalog/release/` contents are verified.
-- [ ] Any misplaced release-decision material is migrated or documented as drift.
-- [ ] Any misplaced publication artifact is migrated or documented as drift.
-- [ ] `release/` is confirmed as the canonical release-governance home in current docs.
-- [ ] `data/published/` is confirmed as the canonical published artifact home in current docs.
-- [ ] No trust-bearing records live here.
-- [ ] No release records, published artifacts, receipts, proofs, catalog records, registry records, schemas, contracts, policy rules, source code, generated previews, or unpublished lifecycle data live here.
-- [ ] Public clients, search indexes, map runtimes, exports, tile jobs, static hosting, and producer configs exclude this path as canonical.
-- [ ] CI/review behavior is verified or marked `NEEDS VERIFICATION`.
+For the **documentation candidate**: correct routing, verified bounded inventory,
+adopted containment language, preserved identity/navigation, focused validation,
+hash-bound provenance, rollback guidance, and explicit integration blockers.
+Human review stays pending until an authorized reviewer acts.
+
+For **integration, migration, retirement, or release**: satisfy the separate
+accepted decisions, trusted-base transition validation, applicable writer and
+consumer closure, review, correction/rollback evidence, and current delivery
+controls. Completion of the README candidate cannot check off those outcomes.
 
 ## 18. Open verification items
 
-| Item | Why it matters |
-|---|---|
-| Confirm actual files under root-level `catalog/release/` | Prevents overclaiming or missing drift |
-| Confirm whether any workflow writes here | Required before producer claims |
-| Confirm release/publication schema maturity | Required before implementation claims |
-| Confirm migration status to `release/` or `data/published/` | Required before canonical-home claims beyond doctrine |
-| Confirm CI/review guard exists | Required before enforcement claims |
-| Confirm public-client/search/index/static-host exclusion | Required before no-public-use claims |
-| Confirm no trust records are stored here | Required before Directory Rules compliance claims |
-| Confirm ADR status for root-level `catalog/release/` | Required before long-term retention claims |
+| Item | First affected transition | Evidence required |
+|---|---|---|
+| Accepted exact correction for this README | Frozen-root integration | Trusted-base binding to path, old/new blobs, and full evidence fingerprints |
+| Exact-head validation and qualifying review | Readiness / merge | Actual check results, failure attribution, and reviewer disposition |
+| Eligible PR delivery boundary | Draft creation | Current incident controls and independent execution boundary where required |
+| Historical/live producers and consumers, including external references | Migration / retirement | Configuration/runtime inventory and verified closure |
+| Actual artifact rights, sensitivity, evidence, policy, integrity, and release state | Public exposure | Applicable validated objects, review, and correction/rollback support |
+| Signing custody, executed rollback, invalidation, and consumer parity | Operational release | Authenticated execution evidence, not documentation or fixture inference |
+| Specialist stewards and independent release duties | Policy-significant approval | Explicit assignments and qualifying review |
 
 <details>
 <summary>Appendix A — no-loss preservation note</summary>
 
-The previous README established that `catalog/release/` was a compatibility redirect and not a canonical release home. This revision preserves that boundary while adding current evidence basis, explicit family separation, stronger no-public-use and no-producer-target safeguards, rollback/correction posture, and validation expectations. It does not claim release files, publication files, migration work, CI enforcement, producer workflows, release schema maturity, hosting readiness, or ADR disposition are implemented.
+This revision retains the release/publication/catalog/receipt/proof/registry
+split, default-deny public boundary, sensitivity safeguards, migration and
+rollback obligations, document ID, H1, `top`, all 19 numbered sections, and
+status-summary anchor. It corrects the execution-receipt routing, replaces the
+speculative directory shape with verified inventory, removes obsolete
+file-addition permission, and distinguishes documentary completion from later
+governed transitions. Repeated badges and tables are consolidated. No payload,
+contract, schema, policy, validator, baseline, register, runtime, or release
+state is changed by this documentation candidate.
 
 </details>
 
 ## Status summary
 
-`catalog/release/` is a root-level compatibility redirect and release drift fence. It is not the canonical release, publication, or catalog home.
+`catalog/release/` is deprecated, frozen navigation only. Release decisions
+belong to `release/`; released payloads belong to `data/published/`; execution
+receipts and evidence/proof support retain their separate families. This
+candidate is reviewable documentation, not authority to integrate frozen bytes,
+approve a release, execute rollback, or expose data.
 
-Release-governance records belong under `release/`; published artifacts belong under `data/published/`; receipts belong under `data/receipts/`; proofs belong under `data/proofs/`; catalog records belong under `data/catalog/`.
-
-<p align="right"><a href="#top">Back to top</a></p>
+[Back to top](#top)
