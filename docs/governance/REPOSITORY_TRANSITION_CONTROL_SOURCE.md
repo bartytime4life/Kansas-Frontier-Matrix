@@ -2,7 +2,7 @@
 doc_id: kfm://doc/governance/repository-transition-control-source
 title: Repository transition control-source binding
 type: governance binding and enforcement-candidate note
-version: v1.3.4
+version: v1.3.5
 status: current-main workflow-active advisory; bounded capture and truncated-response hardening integrated; required-status-check authorized but not applied before 2026-09-03T23:30:00Z; authorization now expired
 owner: OWNER_TBD — governance steward and repository-control steward
 created: 2026-09-03
@@ -222,6 +222,9 @@ The smallest reviewed addition remains:
 }
 ```
 
+The required-check addition remains **proposed and not applied**. Its bounded
+owner authorization expired at `2026-09-03T23:30:00Z`.
+
 The packet remains **unapplied**. `REQUIRED-STATUS-CHECK AUTHORIZED BUT NOT APPLIED`
 was the bounded status through `2026-09-03T23:30:00Z`; that authorization has
 expired. Issue #4024 comment `5532535765` preserves the rollback-bound operator
@@ -237,9 +240,10 @@ must be bound to the exact current main, tree, ruleset preimage, check context,
 GitHub Actions integration identity, operation, rollback, and validity window
 before a separately authenticated settings mutation.
 
-This document does not itself authorize a ruleset mutation. It also does not
-authorize branch protection, permissions, bypass, approval, ready, merge,
-release, deployment, promotion, publication, or source-state change.
+This document does not authorize a ruleset mutation; preservation of the packet
+does not itself authorize a ruleset mutation. It also does not authorize branch
+protection, permissions, bypass, approval, ready, merge, release, deployment,
+promotion, publication, or source-state change.
 
 ## Remaining proof order
 
