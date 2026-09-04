@@ -12,6 +12,7 @@ name: municipal-legal-status-support
       - "fixtures/contracts/v1/domains/settlements-infrastructure/municipal_legal_status_support/**"
       - "tools/validators/validate_municipal_legal_status_support.py"
       - "tests/validators/test_validate_municipal_legal_status_support.py"
+      - "data/receipts/generated/genrec-municipal-legal-status-support-731d03b6.json"
   push:
     branches: [main]
     paths:
@@ -21,6 +22,7 @@ name: municipal-legal-status-support
       - "fixtures/contracts/v1/domains/settlements-infrastructure/municipal_legal_status_support/**"
       - "tools/validators/validate_municipal_legal_status_support.py"
       - "tests/validators/test_validate_municipal_legal_status_support.py"
+      - "data/receipts/generated/genrec-municipal-legal-status-support-731d03b6.json"
   workflow_dispatch:
 
 permissions:
@@ -65,7 +67,10 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python -m unittest discover             --start-directory tests/validators             --pattern 'test_validate_municipal_legal_status_support.py'             --verbose
+          python -m unittest discover \
+            --start-directory tests/validators \
+            --pattern 'test_validate_municipal_legal_status_support.py' \
+            --verbose
 
       - name: Validate exact fixture polarity
         shell: bash
@@ -87,6 +92,14 @@ jobs:
           json.loads(profile_path.read_text(encoding="utf-8"))
           print("CONFIRMED: schema and synthetic fixture profile parsed.")
           PY
+
+      - name: Verify generated authoring receipt integrity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-municipal-legal-status-support-731d03b6.json \
+            --repo-root .
 
       - name: Record bounded validation boundary
         if: always()

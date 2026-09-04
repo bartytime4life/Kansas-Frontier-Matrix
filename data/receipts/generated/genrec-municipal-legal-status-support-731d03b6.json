@@ -1,0 +1,159 @@
+{
+  "receipt_id": "genrec-municipal-legal-status-support-731d03b6",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/municipal-legal-status-support.yml",
+    "contracts/domains/settlements-infrastructure/municipal-legal-status-support.md",
+    "schemas/contracts/v1/domains/settlements-infrastructure/municipal-legal-status-support.schema.json",
+    "fixtures/contracts/v1/domains/settlements-infrastructure/municipal_legal_status_support/fixture_profile.json",
+    "tools/validators/validate_municipal_legal_status_support.py",
+    "tests/validators/test_validate_municipal_legal_status_support.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/municipal-legal-status-support.yml": "sha256:63c3d29862565cd45398596a5a66ce4575a6b3153c62d785131fbaa14ea9637b",
+    "contracts/domains/settlements-infrastructure/municipal-legal-status-support.md": "sha256:d6b59b7eb9cf6c2d9feedd9f45b3554259929ee02089909e1fe82c57338a9212",
+    "schemas/contracts/v1/domains/settlements-infrastructure/municipal-legal-status-support.schema.json": "sha256:0ea3bcdea7261fdbe1f5fffeb802bb7bbf54e2bea8125b7ab0e262b50c70885e",
+    "fixtures/contracts/v1/domains/settlements-infrastructure/municipal_legal_status_support/fixture_profile.json": "sha256:8474d41b77190c87c0c26634cd8950cd1460e9d20f872c555a0fe41eaba778b3",
+    "tools/validators/validate_municipal_legal_status_support.py": "sha256:a9ddd64fb71091b79318f8b25027063a104d6bf634c52cba3f8deb0d91d8bb1b",
+    "tests/validators/test_validate_municipal_legal_status_support.py": "sha256:2c12e6e50f05fa6d4d4752ae269804ece6e852f6bd002fe18eb54b38695ca1b1"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "ChatGPT",
+    "version": "GPT-5.6 Sol"
+  },
+  "prompt_or_contract": "sha256:731d03b6fcea1e6d934ce71bbe1329d7403bdf6f19a38f6a193efa8e44eaffd2",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector",
+      "local deterministic no-network validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [],
+    "attached_docs": [
+      "kfm_settlements_infrastructure_extended_pro_plan_2026-04-21.pdf",
+      "GPT Prompt for settlements, cities, and infrastructure",
+      "KFM settlements & infrastructure.pdf"
+    ],
+    "evidence_refs": [
+      "drive:1DA3kAx4QT34thvY-e9X1XeJM4czt72HQ",
+      "drive:1MtH1oZslVQ2PopLNlRCviH5GihyXeXfwZb0MV7VTre0",
+      "drive:13fWSQntfDoMHkpW6OuwHUTeGqjg7Zkqd",
+      "repo:main@7c5d4125c277536258be6345e366efae59dbe5d6",
+      "repo:contracts/domains/settlements-infrastructure/place-identity.md@7c5d4125c277536258be6345e366efae59dbe5d6",
+      "repo:schemas/contracts/v1/domains/settlements-infrastructure/place-identity.schema.json@7c5d4125c277536258be6345e366efae59dbe5d6",
+      "repo:policy/domains/settlements-infrastructure/municipality_evidence.rego@7c5d4125c277536258be6345e366efae59dbe5d6",
+      "repo:issue/4024@2026-09-04T02:20:18Z"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/municipal-legal-status-support.yml": "PROPOSED",
+    "contracts/domains/settlements-infrastructure/municipal-legal-status-support.md": "PROPOSED",
+    "schemas/contracts/v1/domains/settlements-infrastructure/municipal-legal-status-support.schema.json": "PROPOSED",
+    "fixtures/contracts/v1/domains/settlements-infrastructure/municipal_legal_status_support/fixture_profile.json": "PROPOSED",
+    "tools/validators/validate_municipal_legal_status_support.py": "PROPOSED",
+    "tests/validators/test_validate_municipal_legal_status_support.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-refresh",
+      "outcome": "PASS",
+      "reason": "Branch was created from exact current main 7c5d4125c277536258be6345e366efae59dbe5d6 immediately before authoring."
+    },
+    {
+      "gate": "overlap-reconciliation",
+      "outcome": "PASS",
+      "reason": "The only open PR observed was unrelated repository-control review PR #4242; no municipal legal-status support overlap was found in current code or commit history."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The slice uses existing responsibility roots: contracts for meaning, schemas for machine shape, fixtures for synthetic vectors, tools for validation, tests for enforcement, workflows for CI, and data/receipts/generated for provenance."
+    },
+    {
+      "gate": "local-focused-tests",
+      "outcome": "PASS",
+      "reason": "Local no-network reconstruction executed 9 focused unittest cases and all 12 fixture vectors successfully, including exact finite-outcome polarity and fail-closed parser/CLI cases."
+    },
+    {
+      "gate": "schema-and-syntax",
+      "outcome": "PASS",
+      "reason": "The municipal support Draft 2020-12 schema parsed and validated; Python files compiled; fixture JSON and workflow YAML parsed in the local reconstruction."
+    },
+    {
+      "gate": "artifact-byte-binding",
+      "outcome": "PASS",
+      "reason": "Local git blob hashes for the first branch commit matched the six GitHub blob SHAs; this receipt records SHA-256 over the final six artifact bytes after adding receipt verification to the workflow."
+    },
+    {
+      "gate": "no-sensitive-geometry",
+      "outcome": "PASS",
+      "reason": "The contract and schema contain no coordinate, address, parcel, facility, infrastructure, private-property, or protected-location payload fields; the workflow records this boundary explicitly."
+    },
+    {
+      "gate": "generated-receipt-native-validator",
+      "outcome": "SKIPPED",
+      "reason": "The repository-native generated-receipt validator will run in hosted CI once an independently safe PR/delivery boundary exists; this writer path cannot open a PR under issue #4024 containment."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "The new workflow triggers push only on main and pull_request for this slice; branch-only containment under #4024 intentionally produced no hosted run."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review has not occurred. Branch delivery remains VALIDATED_BRANCH_ONLY and is not merge authorization."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "place-identity-contract",
+      "validated": true,
+      "evidence_ref": "repo:contracts/domains/settlements-infrastructure/place-identity.md@7c5d4125c277536258be6345e366efae59dbe5d6"
+    },
+    {
+      "id": "place-identity-schema",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/domains/settlements-infrastructure/place-identity.schema.json@7c5d4125c277536258be6345e366efae59dbe5d6"
+    },
+    {
+      "id": "municipality-policy-scaffold",
+      "validated": true,
+      "evidence_ref": "repo:policy/domains/settlements-infrastructure/municipality_evidence.rego@7c5d4125c277536258be6345e366efae59dbe5d6"
+    },
+    {
+      "id": "generated-receipt-lane",
+      "validated": true,
+      "evidence_ref": "repo:data/receipts/generated/README.md@7c5d4125c277536258be6345e366efae59dbe5d6"
+    },
+    {
+      "id": "incident-containment",
+      "validated": true,
+      "evidence_ref": "repo:issue/4024@2026-09-04T02:20:18Z"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-04T02:47:20Z",
+  "emitter": "OpenAI ChatGPT via GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Bounded synthetic municipal legal-status support only. No live Census, state, local, archival, utility, address, parcel, operator, or infrastructure source is admitted or activated. No real municipality is asserted. Administrative legal evidence and aggregate Census geography remain distinct. Policy, review, EvidenceBundle closure, release, deployment, and publication remain unresolved/held. Branch-only delivery is preserved under issue #4024."
+}
