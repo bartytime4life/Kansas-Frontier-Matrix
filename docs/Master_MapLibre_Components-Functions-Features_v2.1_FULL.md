@@ -3,36 +3,57 @@ doc_id: kfm://doc/docs-master-maplibre-components-functions-features-v2-1-full
 title: Master MapLibre Components, Functions, and Features
 type: architecture_reference
 version: v2.1
-status: draft
+status: draft; repository-grounded; architecture-accepted; acquisition-HOLD; runtime-HOLD; no-release; no-publication
 owners: <PLACEHOLDER — Docs steward · Map steward · UI steward · Governed API steward · Evidence steward>
 created: 2026-05-10
-updated: 2026-06-12
+updated: 2026-09-04
 policy_label: public
 authority_class: synthesis / architecture reference; NOT canonical doctrine
 requested_path: docs/Master_MapLibre_Components-Functions-Features_v2.1_FULL.md
 owning_root: docs/
 directory_rules_basis: docs/ owns human-readable architecture, doctrine, reports, and implementation references. This file explains MapLibre architecture to humans and does not define machine schema, policy, release state, or runtime code.
 truth_posture: cite-or-abstain with explicit truth labels
-implementation_boundary: repository topology, package versions, route names, component names, workflows, dashboards, release manifests, and runtime behavior remain NEEDS VERIFICATION unless checked in the mounted repo.
+repository_checkpoint: main@b5a91a33b6c900033364fe924a74a907745a6d2d
+base_target_blob_before_edit: d9219c99716fba7e89283bddfde654b34149667b
+canonical_companion: docs/architecture/maplibre-master.md
+implementation_boundary: "The checkpoint below records bounded current-main paths and package/code facts. Runtime readiness, source admission, consumer conformance, policy, release, deployment, publication, and hosted behavior remain gated unless separately evidenced."
 related:
   - docs/doctrine/directory-rules.md
-  - docs/doctrine/trust-membrane.md
-  - docs/doctrine/lifecycle-law.md
-  - docs/doctrine/truth-posture.md
+  - docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md
+  - docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md
+  - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - docs/architecture/maplibre-master.md
+  - docs/architecture/maplibre.md
   - docs/architecture/map-shell.md
-  - docs/architecture/contract-schema-policy-split.md
-  - docs/architecture/repository-structure-guiding-document.md
-  - docs/sources/catalog/README.md
-  - docs/standards/STAC.md
-  - docs/standards/DCAT.md
-  - docs/standards/PROV.md
+  - docs/architecture/evidence-drawer.md
+  - docs/architecture/ui/MAP_RUNTIME_BOUNDARY.md
+  - docs/architecture/ui/EVIDENCE_DRAWER.md
+  - packages/maplibre/package.json
+  - packages/maplibre/src/map-runtime-port.ts
+  - packages/maplibre/src/maplibre-adapter.ts
+  - packages/maplibre/src/maplibre-vite-adapter.ts
+  - packages/maplibre/src/null-map-runtime.ts
   - apps/explorer-web/
-  - apps/governed-api/
-  - packages/ui/
-  - packages/maplibre/
-  - data/registry/layers/
-  - data/published/layers/
-  - data/published/pmtiles/
+  - apps/kansas-frontier-matrix-explorer/
+  - tools/validators/maplibre/
+  - tests/maplibre/
+  - fixtures/maplibre/
+  - configs/maplibre/
+  - contracts/data/layer_manifest.md
+  - contracts/release/tile_artifact_manifest.md
+  - contracts/release/map_release_manifest.md
+  - contracts/ui/map_context_envelope.md
+  - contracts/evidence/evidence_drawer_payload.md
+  - contracts/ui/evidence_drawer_payload.md
+  - contracts/runtime/runtime_response_envelope.md
+  - schemas/contracts/v1/map/layer_manifest.schema.json
+  - schemas/contracts/v1/map/tile_artifact_manifest.schema.json
+  - schemas/contracts/v1/ui/map_context_envelope.schema.json
+  - schemas/contracts/v1/ui/evidence_drawer_payload.schema.json
+  - schemas/contracts/v1/runtime/runtime_response_envelope.schema.json
+  - policy/runtime/
+  - policy/sensitivity/
+  - policy/release/
   - release/
 tags:
   - kfm
@@ -54,23 +75,26 @@ tags:
   - rollback
 notes:
   - "v2.1 — Markdown working edition prepared for repository use from the cumulative MapLibre architecture packet and KFM doctrine."
-  - "The filename uses v2.1 because this is the requested target. The current-session source packet directly available here is earlier cumulative MapLibre evidence; current repo presence of a prior v2.1 file remains NEEDS VERIFICATION."
-  - "This document is a reference surface. Contracts, schemas, policies, manifests, receipts, and runtime code remain authoritative in their own responsibility roots."
+  - "2026-09-04 currentness pass: the requested compatibility/full reference is present under docs/; the canonical current architecture register is docs/architecture/maplibre-master.md. This file is not a parallel authority."
+  - "Current-main evidence is bounded: package manifest/lock, source modules, tests/fixtures/validators, and app aliases are recorded; command output, hosted runtime, source admission, release, deployment, and publication remain separate gates."
+  - "Drive source packets and Notion work items are lineage/coordination inputs. GitHub current main is the implementation authority."
 ] -->
 
 # Master MapLibre Components, Functions, and Features
 
 > **Kansas Frontier Matrix map architecture reference**
 > **Version:** v2.1 draft working Markdown
+> **Status:** Repository-grounded architecture reference; acquisition/runtime HOLD; no release/publication effect
 > **Requested path:** `docs/Master_MapLibre_Components-Functions-Features_v2.1_FULL.md`
-> **Authority:** Architecture reference / synthesis, not canonical doctrine
+> **Canonical companion:** `docs/architecture/maplibre-master.md`
+> **Authority:** Full compatibility/reference surface subordinate to canonical doctrine, ADRs, contracts, schemas, policy, and current repository evidence
 > **Core rule:** MapLibre renders governed truth; it does not create or authorize truth.
 
 ---
 
 ## 0. Reader note
 
-This document is the master MapLibre architecture reference for KFM’s public and review-facing map surfaces.
+This document is the requested full components/functions/features reference for KFM’s public and review-facing map surfaces. Its current architecture companion and implementation register is `docs/architecture/maplibre-master.md`; this file preserves the requested compatibility filename and remains subordinate to that register.
 
 It defines how MapLibre, tiles, layer manifests, Evidence Drawer payloads, Focus Mode, Story Nodes, terrain/3D views, style JSON, PMTiles, COGs, MVT layers, and related UI features should behave inside the KFM trust membrane.
 
@@ -145,9 +169,29 @@ The following are carriers, not root truth:
 * popups
 * hover cards
 
-**PROPOSED — v2.1 should act as the maintainable Markdown edition of the MapLibre master.**
+**CONFIRMED — this requested v2.1 Markdown file is a repository-facing full/compatibility reference.**
 
-This file should replace oversized PDF-only map architecture packets as the repository-facing, reviewable, diffable architecture reference. It should preserve the earlier master packet’s operating law while making the implementation backlog easier to inspect.
+The current canonical MapLibre architecture register is `docs/architecture/maplibre-master.md`. This file preserves the cumulative packet’s operating law and component matrix while making the implementation backlog reviewable and diffable; it must not become a parallel contract, schema, policy, runtime, release, or publication authority.
+
+---
+
+## 1.1 Current repository checkpoint — 2026-09-04
+
+**CONFIRMED — bounded repository evidence at `main@b5a91a33b6c900033364fe924a74a907745a6d2d`.**
+
+The requested target exists at `docs/Master_MapLibre_Components-Functions-Features_v2.1_FULL.md` before this edit (base blob `d9219c99716fba7e89283bddfde654b34149667b`). The current canonical companion is `docs/architecture/maplibre-master.md`. This update is documentation-only; it changes no package, lockfile, app, validator, fixture, workflow, release, deployment, or publication behavior.
+
+| Axis | Current-main evidence | Boundary / limit |
+| --- | --- | --- |
+| Architecture decisions | ADR-0006 and ADR-0007 are `accepted`; ADR-0029 records accepted Directory Rules v2. | These decisions govern placement and seams; they do not by themselves authorize source admission, hosted runtime readiness, release, deployment, or publication. |
+| Package identity and lock | `packages/maplibre/package.json` is private `@kfm/maplibre` `0.0.0`, with `maplibre-gl` `6.6.0`; the `packages/maplibre` importer and `maplibre-gl@6.6.0` integrity resolution are present in `pnpm-lock.yaml`. | Presence and lock closure are implementation evidence. License/provenance, browser/CSP, consumer conformance, and operational admission remain separate checks. |
+| Renderer-neutral seam | `MapRuntimePort`, finite runtime/selection types, and deterministic `NullMapRuntime` are in `packages/maplibre/src/`; the package root exports the renderer-neutral surfaces. | The port/null runtime has no evidence, policy, review, source, release, deployment, or publication authority and is not a renderer. |
+| Concrete adapter | The explicit package adapter subpath owns the MapLibre CSS/runtime import, bounded empty-style construction, camera sync, finite initialization failure handling, and teardown. | Source/layer/style admission, hit testing, protocols, plugins, custom layers, external styles, and full capability migration are not established by this slice. |
+| Vite worker seam | `@kfm/maplibre/vite-adapter` configures the same-origin Vite worker once before constructing the adapter; focused package and browser-fixture paths are present. | Worker configuration is not hosted browser proof and does not authorize public runtime use. |
+| Explorer compositions | `apps/explorer-web/` and `apps/kansas-frontier-matrix-explorer/` are present; current architecture documentation records their normal compositions as `NullMapRuntime`, while the Sites app aliases `@kfm/maplibre` to the package root. | Normal composition remains renderer-neutral/fail-closed. Public route maturity, deployed behavior, and production renderer activation remain NEEDS VERIFICATION/HOLD. |
+| Validation surfaces | Current paths include `tools/validators/maplibre/`, `tests/maplibre/`, `fixtures/maplibre/v6_readiness/cases.json`, `configs/maplibre/`, package tests, and an isolated browser fixture. | No validator or browser command result is asserted by this docs PR. The acquisition inventory and twelve-probe readiness packet remain distinct HOLDs. |
+
+The accepted ADR language is retained as architecture authority. The current package/dependency/adapter facts are subsequent bounded implementation evidence recorded in the canonical companion and current files; they must not be read as a silent admission of source loading, production activation, release, deployment, or publication.
 
 ---
 
@@ -172,9 +216,9 @@ This file should replace oversized PDF-only map architecture packets as the repo
 
 **Requested path:** `docs/Master_MapLibre_Components-Functions-Features_v2.1_FULL.md`
 
-**Placement status:** **PROPOSED / reasonable**
+**Placement status:** **CONFIRMED / PLACE**
 
-The file explains architecture to humans, so it belongs under `docs/`.
+The current repository contains this exact requested file under `docs/`. The canonical current MapLibre architecture register is `docs/architecture/maplibre-master.md` under `docs/architecture/`; this file is retained as the requested full/compatibility reference and must not evolve as a parallel authority.
 
 ### 3.2 Naming note
 
@@ -190,7 +234,7 @@ Do not rename automatically without checking current repo references.
 
 ### 3.3 Authority limit
 
-This file may describe target homes such as `apps/explorer-web/`, `packages/maplibre/`, and `data/registry/layers/`, but path existence and implementation status remain **NEEDS VERIFICATION** until checked in a mounted repo.
+This file may describe current responsibility roots and implementation surfaces. The current GitHub tree was checked at `main@b5a91a33b6c900033364fe924a74a907745a6d2d` for the paths listed in §1.1 and §23. Paths not listed as confirmed, command output, hosted behavior, and all operational maturity claims remain **NEEDS VERIFICATION**.
 
 ---
 
@@ -969,6 +1013,32 @@ A map-related PR should fail if it:
 * exposes exact sensitive geometry
 * bypasses governed API
 
+### 20.4 Current repository validation surfaces
+
+**CONFIRMED —** the current tree tracks the following MapLibre-specific validation surfaces:
+
+| Surface | Current path | What it can establish | What it cannot establish |
+| --- | --- | --- | --- |
+| Acquisition inventory | `tools/validators/maplibre/assess_acquisition_inventory.py` and `tests/maplibre/test_assess_acquisition_inventory.py` | Structural scan of renderer acquisition boundaries. | It does not admit a renderer or prove hosted runtime behavior. |
+| v6 readiness packet | `tools/validators/maplibre/validate_v6_readiness.py`, `tests/maplibre/test_validate_v6_readiness.py`, and `fixtures/maplibre/v6_readiness/cases.json` | Fixture/scan evaluation for the twelve-probe readiness packet. | A READY-like fixture result is not production activation or release authority. |
+| Package seam | `packages/maplibre/tests/` and `tests/maplibre/test_package_exports.py` | Package export, port, adapter, worker, and fail-closed unit coverage. | It does not prove consumer-wide conformance or public deployment. |
+| Browser fixture | `apps/explorer-web/tests/browser/maplibre-vite-adapter.fixture.ts` and its browser test | Isolated package-owned Vite/MapLibre fixture path. | It does not make the normal Explorer composition renderer-active. |
+| Performance governance | `configs/maplibre/`, `tools/validators/maplibre/validate_perf_*.py`, and related tests/workflows | Shape/governance checks for performance artifacts. | It does not establish a trustworthy benchmark, release, or publication. |
+
+The following commands are available validation surfaces recorded by the current architecture register, but were **not run as part of this documentation-only change**:
+
+```text
+python -m unittest tests.maplibre.test_assess_acquisition_inventory -v
+python tools/validators/maplibre/assess_acquisition_inventory.py --repo-root . --summary
+python -m unittest tests.maplibre.test_validate_v6_readiness -v
+python tools/validators/maplibre/validate_v6_readiness.py --fixtures
+python tools/validators/maplibre/validate_v6_readiness.py --scan-root .
+pnpm --filter @kfm/maplibre test
+python -m unittest tests.validators.ui.test_renderer_capability_profile -v
+python tools/validators/ui/validate_renderer_capability_profile.py --fixtures
+```
+
+The expected governance distinction is **acquisition profile v14 structural HOLD** versus **readiness twelve-probe HOLD / NOT_RUN**. Neither result authorizes source/layer activation, production renderer use, release, deployment, or publication; future PRs must record actual exit codes and artifacts rather than inheriting this expectation.
 ---
 
 ## 21. Anti-pattern register
@@ -1104,127 +1174,132 @@ Rules:
 
 ## 23. Implementation-ready object map
 
+This map distinguishes current paths from proposed or unresolved authority. A confirmed path does not imply semantic adoption, runtime activation, release, deployment, or publication.
+
 ### 23.1 Docs
 
-| File                                                              | Purpose                            | Status                 |
-| ----------------------------------------------------------------- | ---------------------------------- | ---------------------- |
-| `docs/Master_MapLibre_Components-Functions-Features_v2.1_FULL.md` | This master reference.             | **PROPOSED**           |
-| `docs/architecture/map-shell.md`                                  | Map shell architecture.            | **NEEDS VERIFICATION** |
-| `docs/architecture/evidence-drawer.md`                            | Drawer behavior and trust model.   | **PROPOSED**           |
-| `docs/architecture/focus-mode.md`                                 | Focus Mode behavior and boundary.  | **PROPOSED**           |
-| `docs/runbooks/map-release.md`                                    | How to release a map/layer bundle. | **PROPOSED**           |
-| `docs/runbooks/map-rollback.md`                                   | How to rollback map releases.      | **PROPOSED**           |
+| File | Purpose | Status |
+| --- | --- | --- |
+| `docs/Master_MapLibre_Components-Functions-Features_v2.1_FULL.md` | Requested full/compatibility reference. | **CONFIRMED / current target** |
+| `docs/architecture/maplibre-master.md` | Canonical current MapLibre architecture register. | **CONFIRMED / current companion** |
+| `docs/architecture/maplibre.md` | MapLibre architecture lane entry point. | **CONFIRMED / current entry point** |
+| `docs/architecture/map-shell.md` | Map shell architecture. | **CONFIRMED / current path** |
+| `docs/architecture/evidence-drawer.md` | Drawer behavior and trust model. | **CONFIRMED / current path** |
+| `docs/architecture/ui/MAP_RUNTIME_BOUNDARY.md` | Renderer/runtime boundary record. | **CONFIRMED / current path** |
+| `docs/architecture/focus-mode.md` | Standalone Focus Mode architecture path. | **ABSENT / PROPOSED at this path** |
+| `docs/runbooks/map-release.md` | Map/layer release runbook. | **ABSENT / PROPOSED at this path** |
+| `docs/runbooks/map-rollback.md` | Map release rollback runbook. | **ABSENT / PROPOSED at this path** |
 
 ### 23.2 Contracts
 
-| Contract                                         | Purpose                         | Status       |
-| ------------------------------------------------ | ------------------------------- | ------------ |
-| `contracts/map/layer-manifest.md`                | LayerManifest meaning.          | **PROPOSED** |
-| `contracts/map/tile-artifact-manifest.md`        | TileArtifactManifest meaning.   | **PROPOSED** |
-| `contracts/map/map-context-envelope.md`          | MapContextEnvelope meaning.     | **PROPOSED** |
-| `contracts/ui/evidence-drawer-payload.md`        | EvidenceDrawerPayload meaning.  | **PROPOSED** |
-| `contracts/runtime/runtime-response-envelope.md` | Finite runtime outcome meaning. | **PROPOSED** |
+| Contract | Purpose | Status |
+| --- | --- | --- |
+| `contracts/data/layer_manifest.md` | Layer manifest semantics. | **CONFIRMED path / authority needs verification** |
+| `contracts/release/tile_artifact_manifest.md` | Tile artifact manifest semantics. | **CONFIRMED path / authority needs verification** |
+| `contracts/release/map_release_manifest.md` | Release-manifest semantics. | **CONFIRMED path / release maturity held** |
+| `contracts/ui/map_context_envelope.md` | Map context semantics. | **CONFIRMED path / convergence needs verification** |
+| `contracts/evidence/evidence_drawer_payload.md` and `contracts/ui/evidence_drawer_payload.md` | Evidence Drawer payload families. | **CONFLICTED / two current families require authority/convergence review** |
+| `contracts/runtime/runtime_response_envelope.md` | Finite runtime response meaning. | **CONFIRMED path / runtime admission held** |
 
 ### 23.3 Schemas
 
-| Schema                                                               | Purpose                 | Status       |
-| -------------------------------------------------------------------- | ----------------------- | ------------ |
-| `schemas/contracts/v1/map/layer_manifest.schema.json`                | Layer manifest shape.   | **PROPOSED** |
-| `schemas/contracts/v1/map/tile_artifact_manifest.schema.json`        | Tile artifact shape.    | **PROPOSED** |
-| `schemas/contracts/v1/map/map_context_envelope.schema.json`          | Map context shape.      | **PROPOSED** |
-| `schemas/contracts/v1/ui/evidence_drawer_payload.schema.json`        | Drawer payload shape.   | **PROPOSED** |
-| `schemas/contracts/v1/runtime/runtime_response_envelope.schema.json` | Runtime envelope shape. | **PROPOSED** |
+| Schema | Purpose | Status |
+| --- | --- | --- |
+| `schemas/contracts/v1/map/layer_manifest.schema.json` | Layer manifest shape. | **CONFIRMED path / semantic authority needs verification** |
+| `schemas/contracts/v1/map/tile_artifact_manifest.schema.json` | Tile artifact shape. | **CONFIRMED path / semantic authority needs verification** |
+| `schemas/contracts/v1/map/map_release_manifest.schema.json` | Map release shape. | **CONFIRMED path / release maturity held** |
+| `schemas/contracts/v1/ui/map_context_envelope.schema.json` | Map context shape. | **CONFIRMED path / family convergence needs verification** |
+| `schemas/contracts/v1/ui/evidence_drawer_payload.schema.json` | Drawer payload shape. | **CONFIRMED path / family convergence needs verification** |
+| `schemas/contracts/v1/runtime/runtime_response_envelope.schema.json` | Runtime response shape. | **CONFIRMED path / runtime admission held** |
+| Other `schemas/contracts/v1/runtime/` and domain families | Related duplicate or specialized shapes. | **NEEDS VERIFICATION / do not infer one global authority** |
 
 ### 23.4 Policy
 
-| Policy area                | Purpose                                  | Status                            |
-| -------------------------- | ---------------------------------------- | --------------------------------- |
-| `policy/maplibre/`         | Renderer and layer policy.               | **PROPOSED / NEEDS VERIFICATION** |
-| `policy/runtime/`          | Runtime finite outcomes.                 | **NEEDS VERIFICATION**            |
-| `policy/sensitivity/`      | Sensitivity tiers and geometry exposure. | **NEEDS VERIFICATION**            |
-| `policy/release/`          | Release gates.                           | **NEEDS VERIFICATION**            |
-| `policy/domains/<domain>/` | Domain-specific map policy.              | **NEEDS VERIFICATION**            |
+| Policy area | Purpose | Status |
+| --- | --- | --- |
+| `policy/maplibre/` | MapLibre-specific policy bundle. | **ABSENT / do not create implicitly** |
+| `policy/runtime/` | Runtime finite outcomes. | **CONFIRMED path / MapLibre binding needs verification** |
+| `policy/sensitivity/` | Sensitivity tiers and geometry exposure. | **CONFIRMED path / map binding needs verification** |
+| `policy/release/` | Release gates. | **CONFIRMED path / operational maturity held** |
 
-### 23.5 Tests and fixtures
+### 23.5 Tests, fixtures, and configuration
 
-| Test/fixture                                      | Purpose                                    | Status       |
-| ------------------------------------------------- | ------------------------------------------ | ------------ |
-| `fixtures/map/layers/valid_public_layer.json`     | Happy path layer.                          | **PROPOSED** |
-| `fixtures/map/layers/denied_sensitive_layer.json` | Deny exact sensitive geometry.             | **PROPOSED** |
-| `fixtures/map/layers/missing_evidence_ref.json`   | Abstain on missing evidence.               | **PROPOSED** |
-| `tests/map/test_layer_manifest_validation.py`     | Validate manifests.                        | **PROPOSED** |
-| `tests/map/test_no_public_raw_access.py`          | Prevent public raw/work/quarantine access. | **PROPOSED** |
-| `tests/map/test_focus_mode_citations.py`          | Focus citation enforcement.                | **PROPOSED** |
-| `tests/map/test_accessibility_states.py`          | UI trust state accessibility.              | **PROPOSED** |
+| Surface | Purpose | Status |
+| --- | --- | --- |
+| `fixtures/maplibre/v6_readiness/cases.json` | v6 readiness fixtures. | **CONFIRMED path / probe results not run here** |
+| `tests/maplibre/` | Acquisition, package, readiness, governance, source-metadata, and legacy-harness tests. | **CONFIRMED path / command results not run here** |
+| `tools/validators/maplibre/` | Acquisition, readiness, performance, metadata, and release validators. | **CONFIRMED path / authority remains gated** |
+| `configs/maplibre/` | MapLibre performance/configuration envelopes. | **CONFIRMED path / benchmark authority needs verification** |
+| `packages/maplibre/tests/` | Package port, adapter, worker, and lifecycle tests. | **CONFIRMED path / bounded slice only** |
+| `apps/explorer-web/tests/browser/maplibre-vite-adapter.fixture.ts` | Isolated browser fixture. | **CONFIRMED path / no normal-app activation** |
 
 ---
 
 ## 24. Next smallest useful PR
 
-**PROPOSED — Build a manifest-first MapLibre proof slice.**
+**PROPOSED — Run one dependency-closed MapLibre verification slice.**
 
-Include:
+This documentation change updates the reference only. The next implementation/probe PR should:
 
-1. This document.
-2. `contracts/map/layer-manifest.md`.
-3. `schemas/contracts/v1/map/layer_manifest.schema.json`.
-4. One public-safe synthetic layer fixture.
-5. One denied sensitive fixture.
-6. One missing-evidence abstain fixture.
-7. Validator for LayerManifest.
-8. Test proving public client cannot reference RAW/WORK/QUARANTINE.
-9. Test proving missing evidence returns abstain.
-10. Test proving denied sensitive layer cannot be loaded.
-11. Documentation note linking MapLibre addSource to manifest verification.
-12. Rollback note for the proof slice.
+1. Re-pin the exact current `main` commit and record the environment, dependency lock, browser, and fixture inputs.
+2. Select one dependency-ready missing browser or long-session probe from the governed MapLibre readiness packet tracked by issue #2906.
+3. Capture the exact URL/head, command, exit code, artifact/proof path, reviewer, and failure/rollback interpretation.
+4. If a consumer migration is needed, use the package-owned `MapRuntimePort` / `MapLibreAdapter` seam and preserve `NullMapRuntime` fallback.
+5. Keep source/layer admission, policy, evidence resolution, accessibility/performance graduation, release, deployment, promotion, and publication as separately gated work.
 
-Do not include live source fetches in the first PR unless source rights, source cadence, and source descriptor review are already complete.
+Do not create new parallel `packages/maplibre-runtime/`, `policy/maplibre/`, contract/schema families, or release paths from this reference update.
 
 ---
 
 ## 25. Open verification backlog
 
-| ID        | Question                                                                | Status                 | Resolution path                             |
-| --------- | ----------------------------------------------------------------------- | ---------------------- | ------------------------------------------- |
-| ML-OQ-001 | Does this exact file already exist in the repo?                         | **NEEDS VERIFICATION** | Inspect current repo.                       |
-| ML-OQ-002 | Is `docs/` the final home, or should this move to `docs/architecture/`? | **NEEDS VERIFICATION** | Check docs index and Directory Rules.       |
-| ML-OQ-003 | What MapLibre GL JS version is pinned?                                  | **NEEDS VERIFICATION** | Inspect package lockfiles.                  |
-| ML-OQ-004 | Is `packages/maplibre/` present and canonical?                          | **NEEDS VERIFICATION** | Inspect repo and ADRs.                      |
-| ML-OQ-005 | Is `apps/explorer-web/` the current public shell?                       | **NEEDS VERIFICATION** | Inspect repo.                               |
-| ML-OQ-006 | Does governed API expose map layer, evidence, and Focus Mode endpoints? | **NEEDS VERIFICATION** | Inspect API routes/tests.                   |
-| ML-OQ-007 | Are LayerManifest and TileArtifactManifest schemas already present?     | **NEEDS VERIFICATION** | Inspect schemas/contracts/v1.               |
-| ML-OQ-008 | Are PMTiles sidecar/digest checks implemented?                          | **NEEDS VERIFICATION** | Inspect tools/tests/release artifacts.      |
-| ML-OQ-009 | Are Range/CORS/cache behaviors tested for PMTiles/COGs?                 | **NEEDS VERIFICATION** | Inspect CI/runtime tests.                   |
-| ML-OQ-010 | Is MLT supported, piloted, or only tracked?                             | **NEEDS VERIFICATION** | Inspect package/toolchain docs.             |
-| ML-OQ-011 | Is a plugin allowlist present?                                          | **NEEDS VERIFICATION** | Inspect control plane/policy/docs.          |
-| ML-OQ-012 | Are source-layer mismatch tests implemented?                            | **NEEDS VERIFICATION** | Inspect tests.                              |
-| ML-OQ-013 | Are accessibility tests merge-blocking?                                 | **NEEDS VERIFICATION** | Inspect CI.                                 |
-| ML-OQ-014 | Are Evidence Drawer payload schemas implemented?                        | **NEEDS VERIFICATION** | Inspect contracts/schemas/fixtures.         |
-| ML-OQ-015 | Are Focus Mode citations validated before display?                      | **NEEDS VERIFICATION** | Inspect API/UI tests.                       |
-| ML-OQ-016 | Are Story Nodes release/citation aware?                                 | **NEEDS VERIFICATION** | Inspect UI/export docs and tests.           |
-| ML-OQ-017 | Are map exports blocked when attribution/citations are missing?         | **NEEDS VERIFICATION** | Inspect export pipeline.                    |
-| ML-OQ-018 | Is exact sensitive geometry proven absent from public artifacts?        | **NEEDS VERIFICATION** | Inspect validators and release proof packs. |
-| ML-OQ-019 | Are rollback and cache invalidation tied together?                      | **NEEDS VERIFICATION** | Inspect release tooling.                    |
-| ML-OQ-020 | Are local/offline packages policy-safe and release-scoped?              | **NEEDS VERIFICATION** | Inspect PWA/offline docs.                   |
+The items below retain unresolved work after the current-main reconciliation. “Confirmed” means path or bounded code evidence only; it is not an operational-readiness claim.
+
+| ID | Question | Current status | Resolution path |
+| --- | --- | --- | --- |
+| ML-OQ-001 | Does this exact file already exist in the repo? | **CONFIRMED** | Target exists at the requested path on the reviewed base. |
+| ML-OQ-002 | Is `docs/` the final home, or should this move to `docs/architecture/`? | **CONFIRMED split placement** | Keep this compatibility/full reference under `docs/`; use `docs/architecture/maplibre-master.md` as the canonical current register. |
+| ML-OQ-003 | What MapLibre GL JS version is pinned? | **CONFIRMED implementation fact** | `packages/maplibre/package.json` and `pnpm-lock.yaml` record `6.6.0`; admission/runtime checks remain separate. |
+| ML-OQ-004 | Is `packages/maplibre/` present and canonical? | **CONFIRMED bounded seam** | Package exists and is the accepted reusable home; full capability migration remains held. |
+| ML-OQ-005 | Is `apps/explorer-web/` the current public shell? | **PARTIAL / NEEDS VERIFICATION** | Both Explorer compositions and the Sites-derived app exist; public/deployed/production status is not established here. |
+| ML-OQ-006 | Does governed API expose map layer, evidence, and Focus Mode endpoints? | **NEEDS VERIFICATION** | Inspect current API routes, contracts, auth, and tests. |
+| ML-OQ-007 | Are LayerManifest and TileArtifactManifest schemas already present? | **PARTIAL** | Current paths exist, but schema-family and semantic authority convergence require review. |
+| ML-OQ-008 | Are PMTiles sidecar/digest checks implemented? | **PARTIAL / NEEDS VERIFICATION** | Inspect current validators, fixtures, receipts, and release records; do not infer production admission. |
+| ML-OQ-009 | Are Range/CORS/cache behaviors tested for PMTiles/COGs? | **NEEDS VERIFICATION** | Inspect runtime/browser/hosting evidence. |
+| ML-OQ-010 | Is MLT supported, piloted, or only tracked? | **NEEDS VERIFICATION** | Inspect current package/toolchain and released-artifact evidence. |
+| ML-OQ-011 | Is a plugin allowlist present? | **NEEDS VERIFICATION** | No current `policy/maplibre/` path was found; inspect policy/control-plane binding before creating one. |
+| ML-OQ-012 | Are source-layer mismatch tests implemented? | **NEEDS VERIFICATION** | Inspect current renderer/source-layer validators and fixtures. |
+| ML-OQ-013 | Are accessibility tests merge-blocking? | **NEEDS VERIFICATION** | Inspect workflow required checks and browser evidence. |
+| ML-OQ-014 | Are Evidence Drawer payload schemas implemented? | **PARTIAL / CONFLICTED** | Current contract/schema paths exist across evidence/UI/runtime families; resolve authority and convergence. |
+| ML-OQ-015 | Are Focus Mode citations validated before display? | **NEEDS VERIFICATION** | Inspect current resolver, API, UI, and browser tests. |
+| ML-OQ-016 | Are Story Nodes release/citation aware? | **NEEDS VERIFICATION** | Inspect current story contracts, manifests, UI, and export tests. |
+| ML-OQ-017 | Are map exports blocked when attribution/citations are missing? | **NEEDS VERIFICATION** | Inspect export implementation, policy, and negative tests. |
+| ML-OQ-018 | Is exact sensitive geometry proven absent from public artifacts? | **NEEDS VERIFICATION** | Inspect redaction, artifact, release, and proof-pack evidence. |
+| ML-OQ-019 | Are rollback and cache invalidation tied together? | **NEEDS VERIFICATION** | Inspect release/cache contracts, validators, and rollback records. |
+| ML-OQ-020 | Are local/offline packages policy-safe and release-scoped? | **NEEDS VERIFICATION** | Inspect offline/release capsule policy and current consumer behavior. |
+
+The current validation commands in §20.4 were not run by this documentation PR. Future results must be pinned to an exact commit and must preserve the distinct acquisition-HOLD and readiness-HOLD meanings.
 
 ---
 
 ## 26. Source ledger
 
-This ledger is a source-control surface, not a bibliography.
+This ledger is a source-control surface, not a bibliography. GitHub current main is the implementation authority; Drive and Notion entries preserve lineage and coordination context.
 
-| Source key       | Source                                  | Role in this document                                        | Limitation                                                               |
-| ---------------- | --------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------------------ |
-| `SRC-MAP-MASTER` | Prior Master MapLibre cumulative packet | Main MapLibre architecture source.                           | Earlier packet evidence; current repo implementation remains unverified. |
-| `SRC-DIRRULES`   | Directory Rules                         | Placement, responsibility roots, drift, UI/map roots.        | File path existence still requires repo check.                           |
-| `SRC-REPO-GUIDE` | Repository Structure Guiding Document   | Prior repo-structure and drift summary.                      | Snapshot-bound; current repo may differ.                                 |
-| `SRC-GAI`        | Governed AI reports                     | Focus Mode and finite runtime outcome boundary.              | Implementation status unknown.                                           |
-| `SRC-UIAI`       | Whole UI + Governed AI report           | Evidence Drawer, UI shell, governed API posture.             | Implementation status unknown.                                           |
-| `SRC-PIPELINE`   | Pipeline Living Manual                  | Lifecycle, receipts, promotion, query/save/recompile.        | Implementation status unknown.                                           |
-| `SRC-DOMAINS`    | Domain reports and consolidated atlas   | Domain-specific sensitivity and map layer posture.           | Paths and maturity need verification.                                    |
-| `SRC-GIS`        | GIS/cartography references              | Representation, scale, projection, communication background. | Not KFM implementation evidence.                                         |
-| `SRC-API`        | Web API design reference                | API resource and developer experience background.            | Not KFM implementation evidence.                                         |
-| `SRC-DDD`        | Domain-Driven Design reference          | Bounded contexts and published language.                     | Not KFM implementation evidence.                                         |
+| Source key | Source | Role in this document | Limitation |
+| --- | --- | --- | --- |
+| `SRC-REPO-20260904` | [Kansas Frontier Matrix current main](https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/b5a91a33b6c900033364fe924a74a907745a6d2d), reviewed at `b5a91a33b6c900033364fe924a74a907745a6d2d`; target base blob `d9219c99716fba7e89283bddfde654b34149667b` | Current repository placement, package, lock, source, app, contract/schema, fixture, validator, and policy-path evidence. | No command output, hosted runtime trace, independent review, release approval, deployment proof, or publication evidence. |
+| `SRC-MAP-MASTER-DRIVE-V2` | [Master MapLibre Components-Functions-Features.pdf](https://drive.google.com/file/d/1a4cmaH8MdMqh6KrD_E7_yU5I_LqF7D-s/view?usp=drivesdk), modified 2026-05-16 | Cumulative MapLibre/tile/renderer/UI/evidence/release design lineage and source ledger. | Source packet records no mounted KFM repository or runtime evidence; it is not current implementation authority. |
+| `SRC-MAP-OPS-DRIVE` | [KFM MapLibre Operating Architecture — revised working edition](https://drive.google.com/file/d/13bbwuRu-v7zKH2t_tcfaI29w3LClv-K3/view?usp=drivesdk), modified 2026-04-26 | Governed UI/AI interaction, trust membrane, and operating-architecture lineage. | Working-edition design material; no current repository or hosted-runtime proof. |
+| `SRC-MAPLIBRE-3D` | Uploaded `project_sources/10-maplibre3d.md` | Proposed 3D/terrain/scene boundary and cite-or-abstain design lineage. | Explicitly proposal-bound; `docs/architecture/maplibre-3d.md` is not a current tracked path. |
+| `SRC-NOTION-MAP-BOUNDARY` | [Reconcile MapLibre architecture boundary with current implementation](https://app.notion.com/p/3c9a92021bf681319300c9b58c32e5d9?pvs=204) | Coordination record identifying the stale dependency/adapter contradiction and the documentation-only correction scope. | Notion checkpoint is coordination evidence, not current implementation proof; GitHub current main wins. |
+| `SRC-NOTION-MAP-PROBES` | [Close governed MapLibre runtime probe matrix](https://app.notion.com/p/3c9a92021bf68146ab6aca4e03139382?pvs=204) | Records the twelve-probe/runtime-readiness hold and required evidence shape. | Historical/stale checkpoint; no new hosted probe result is implied. |
+| `SRC-DIRRULES` | Accepted Directory Rules v2 and ADR-0029 | Placement, responsibility roots, and drift handling. | Authority applies to topology/governance, not MapLibre runtime admission. |
+| `SRC-ADR-MAPLIBRE` | Accepted ADR-0006 and ADR-0007 | Renderer family and package-owned acquisition-seam decisions. | Accepted architecture does not itself establish consumer conformance, browser readiness, release, deployment, or publication. |
+| `SRC-MAP-MASTER` | Prior Master MapLibre cumulative packet | Main design and component/function/feature source lineage. | Earlier packet; current implementation facts are taken from `SRC-REPO-20260904`. |
+| `SRC-GIS` | GIS/cartography references supplied in the source set | Representation, scale, projection, and communication background. | Not KFM implementation evidence. |
+| `SRC-API` | Web API design references supplied in the source set | Resource and developer-experience background. | Not KFM implementation evidence. |
+| `SRC-DDD` | Domain-Driven Design reference supplied in the source set | Bounded-context and published-language background. | Not KFM implementation evidence. |
 
 ---
 
@@ -1232,22 +1307,22 @@ This ledger is a source-control surface, not a bibliography.
 
 Before merging this file:
 
-* [ ] Verify the requested path is correct.
-* [ ] Check if a prior `Master_MapLibre_Components-Functions-Features_v2.1_FULL.md` exists.
-* [ ] Decide whether this belongs directly under `docs/` or under `docs/architecture/`.
-* [ ] Update docs index / README.
-* [ ] Confirm no generated citation tokens remain.
-* [ ] Confirm no current implementation claims are unsupported.
-* [ ] Confirm all proposed paths are marked PROPOSED or NEEDS VERIFICATION.
-* [ ] Link to current Directory Rules.
-* [ ] Link to map shell architecture once present.
-* [ ] Add drift entry if path or naming convention conflicts.
-* [ ] Run Markdown lint.
-* [ ] Run link check.
+* [x] Verify the requested path is correct.
+* [x] Confirm the prior target exists and record its base blob.
+* [x] Resolve placement as `docs/` compatibility/full reference with canonical companion under `docs/architecture/`.
+* [ ] Decide whether a docs index / README link is required in a separate, bounded change.
+* [x] Confirm no generated citation tokens remain.
+* [x] Reconcile bounded current implementation claims against exact current-main paths.
+* [x] Mark absent, proposed, conflicted, and unresolved paths explicitly.
+* [x] Link to current Directory Rules and accepted MapLibre ADRs.
+* [x] Link to the current canonical MapLibre architecture register.
+* [x] Record that validation commands were not run by this documentation PR.
+* [ ] Run repository Markdown lint in the PR environment.
+* [ ] Run repository link check in the PR environment.
 * [ ] Review for sensitive location leakage.
 * [ ] Review for public RAW/WORK/QUARANTINE leakage.
 * [ ] Review for direct model-client language.
-* [ ] Review with docs, map, UI, governed API, policy, and evidence stewards.
+* [ ] Review with docs, map, UI, governed API, policy, evidence, release, and independent-review stewards.
 
 ---
 
@@ -1256,6 +1331,7 @@ Before merging this file:
 | Version      |       Date | Change                                                                                                                                                                                                                                  |
 | ------------ | ---------: | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | v2.1         | 2026-06-12 | Created repository-facing Markdown working edition for `docs/Master_MapLibre_Components-Functions-Features_v2.1_FULL.md`; strengthened trust membrane, component matrix, validation plan, anti-patterns, and open verification backlog. |
+| v2.1 currentness pass | 2026-09-04 | Reconciled the requested full reference with current `main@b5a91a33b6c900033364fe924a74a907745a6d2d`: confirmed target placement, canonical companion, package/lock/adapter/Vite-worker/null-runtime boundaries, actual contract/schema/test paths, separate acquisition/readiness holds, and Drive/Notion lineage limits. |
 | v1.9 lineage | 2026-05-10 | Prior cumulative PDF packet retained MapLibre as downstream renderer and carried forward source ledger, idea index, PMTiles/COG/Focus Mode expansions, and verification backlog.                                                        |
 | v1.8 lineage | 2026-05-10 | Retained prior cumulative idea baseline.                                                                                                                                                                                                |
 
@@ -1268,10 +1344,13 @@ kfm_footer:
   document: "Master MapLibre Components, Functions, and Features"
   requested_path: "docs/Master_MapLibre_Components-Functions-Features_v2.1_FULL.md"
   version: "v2.1"
-  status: "draft"
-  authority_class: "architecture_reference / synthesis; not canonical doctrine"
+  status: "draft; repository-grounded; architecture-accepted; acquisition-HOLD; runtime-HOLD; no-release; no-publication"
+  authority_class: "architecture_reference / synthesis; subordinate to canonical architecture and responsibility roots"
   owning_root: "docs/"
-  implementation_claims: "bounded; current repo/runtime behavior requires verification"
+  repository_checkpoint: "main@b5a91a33b6c900033364fe924a74a907745a6d2d"
+  target_base_blob_before_edit: "d9219c99716fba7e89283bddfde654b34149667b"
+  canonical_companion: "docs/architecture/maplibre-master.md"
+  implementation_claims: "bounded; current-main paths and package/code facts verified; runtime/release/publication claims remain gated"
   core_invariant: "RAW -> WORK/QUARANTINE -> PROCESSED -> CATALOG/TRIPLET -> PUBLISHED"
   renderer_boundary: "MapLibre renders released, governed, evidence-bound artifacts; it is not truth, policy, release, citation, or AI authority."
   next_review_triggers:
