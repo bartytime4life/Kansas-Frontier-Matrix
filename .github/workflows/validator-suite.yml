@@ -71,7 +71,7 @@ env:
 jobs:
   run-validators:
     name: run-validators
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
       - name: Check out tested revision without persisted credentials
@@ -225,7 +225,7 @@ jobs:
 
   ensure-fail-closed:
     name: ensure-fail-closed
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
       - name: Check out tested revision without persisted credentials
