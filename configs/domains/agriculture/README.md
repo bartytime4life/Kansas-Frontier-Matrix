@@ -2,1248 +2,620 @@
 doc_id: kfm://doc/configs-domains-agriculture-readme
 title: configs/domains/agriculture/ — Governed Agriculture Configuration Boundary
 type: readme
-version: v0.3
-status: draft
-owners: OWNER_TBD — Config steward · Agriculture steward · Crop/field steward · Agricultural statistics steward · Privacy/aggregation steward · Source and rights steward · Consumer owner · Validation steward · Policy steward · Release steward · Docs steward
+version: v0.4
+status: draft; repository-grounded; documentation-only; no-config-binding
+owners: "NEEDS VERIFICATION — specialist configuration, Agriculture, privacy, source, validation, policy, and release stewards"
+review_route: "@bartytime4life via /configs/ CODEOWNERS; routing is not independent approval"
 created: 2026-07-13
-updated: 2026-07-14
-policy_label: "public; config-sublane; agriculture; source-role-aware; crop-year-aware; revision-aware; aggregation-aware; privacy-aware; rights-aware; non-secret; non-authoritative; no-live-binding; no-field-truth; no-operator-identification; no-agronomic-advice; no-regulatory-or-compliance-authority; no-release-authority"
+updated: 2026-09-04
+policy_label: "public; non-secret; non-authoritative; no-live-binding; no-field-truth; no-operator-identification; no-advice; no-release-authority"
 current_path: configs/domains/agriculture/README.md
-truth_posture: CONFIRMED canonical Agriculture config lane, parent configuration contract, repository-present Agriculture doctrine and implementation-shaped surfaces, README-only bounded config inventory, placeholder/scaffold status of inspected package metadata, pipeline entrypoints, pipeline specs, policy lane, aggregation-receipt schema, validator lane, workflow, governed-api route source, source registries, and catalog compatibility redirect, unresolved segmented-versus-short contract/schema paths, unresolved aggregation-receipt naming and placement, and unresolved source-registry topology / PROPOSED future consumer-bound templates and accepted profile references / UNKNOWN direct consumers, loader behavior, precedence, deployment binding, exhaustive recursive inventory, runtime behavior, and publication use / NEEDS VERIFICATION accepted owners, canonical authority paths, source-role vocabulary, source rights, suppression and aggregation rules, field-candidate identity rules, crop/yield/statistical revision semantics, model and remote-sensing profiles, private-operation handling, executable config validation, scanners, CI enforcement, correction propagation, and rollback integration
+owning_root: configs/
+root_class: canonical
+scope_id: agriculture
+readme_profile: BOUNDARY_COMPACT
+responsibility: "Explain the Agriculture configuration boundary without owning domain meaning, policy, source admission, evidence, or release."
+truth_posture: >-
+  CONFIRMED tracked README-only inventory, inherited configuration boundary,
+  current workflow source, and selected schema/validator documentation /
+  PROPOSED future consumer-bound configuration requirements /
+  UNKNOWN dynamic or external consumers, runtime, deployment, and publication /
+  NEEDS VERIFICATION first-payload schema, binding, specialist review, and operational tests
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
-  repository_id: "1059091169"
-  visibility: public
   base_ref: main
-  base_commit: 916a13651c4a6596df8d9e7990bb6515b598365b
-  prior_blob: 1125052b1892a00df3b4af2755f92e163e9d1d6c
-  bounded_path_search: configs/domains/agriculture/README.md only
+  base_commit: 700570cbcf191038aa20a030174c2dd08cf93675
+  source_read_commit: bb3eb695e6068b38453ca3ded8f1394a8fdebc20
+  prior_blob: 99032995f37f46d4692c908092f9d7f3d7ce68fe
+  prior_bytes: 82823
+  tracked_files: 1
+  tracked_configuration_payloads: 0
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  directory_rules_adr_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  method: "Exact GitHub directory/file reads and bounded indexed consumer search; no full checkout or runtime execution."
 related:
   - ../README.md
   - ../../README.md
-  - ../../../docs/domains/agriculture/README.md
-  - ../../../docs/domains/agriculture/ARCHITECTURE.md
-  - ../../../docs/domains/agriculture/CANONICAL_PATHS.md
-  - ../../../docs/domains/agriculture/DATA_LIFECYCLE.md
-  - ../../../docs/domains/agriculture/SOURCES.md
-  - ../../../docs/domains/agriculture/SENSITIVITY.md
-  - ../../../docs/domains/agriculture/POLICY.md
-  - ../../../docs/domains/agriculture/IDENTITY_MODEL.md
-  - ../../../docs/domains/agriculture/VERIFICATION_BACKLOG.md
-  - ../../../docs/registers/DOMAIN_LANE.md
-  - ../../../docs/registers/DRIFT_REGISTER.md
   - ../../../docs/doctrine/directory-rules.md
-  - ../../../docs/security/SECRETS.md
-  - ../../../contracts/domains/agriculture/
-  - ../../../contracts/agriculture/
-  - ../../../schemas/contracts/v1/domains/agriculture/
-  - ../../../schemas/contracts/v1/agriculture/
-  - ../../../policy/domains/agriculture/
-  - ../../../data/registry/sources/agriculture/
-  - ../../../data/registry/agriculture/
-  - ../../../data/registry/source_descriptors/agriculture/
-  - ../../../data/catalog/domain/agriculture/
-  - ../../../catalog/domain/agriculture/
-  - ../../../packages/domains/agriculture/
-  - ../../../pipelines/domains/agriculture/
-  - ../../../pipeline_specs/agriculture/
-  - ../../../tools/validators/agriculture/
-  - ../../../tests/domains/agriculture/
-  - ../../../fixtures/domains/agriculture/
-  - ../../../apps/governed-api/src/routes/agriculture/
-  - ../../../apps/explorer-web/src/features/domains/agriculture/
-  - ../../../data/raw/agriculture/
-  - ../../../data/work/agriculture/
-  - ../../../data/quarantine/agriculture/
-  - ../../../data/processed/agriculture/
-  - ../../../data/triplets/agriculture/
-  - ../../../data/published/agriculture/
-  - ../../../data/receipts/agriculture/
-  - ../../../data/proofs/agriculture/
-  - ../../../release/candidates/agriculture/
-  - ../../../release/agriculture/
-  - ../../../docs/runbooks/agriculture/PROMOTION_RUNBOOK.md
-  - ../../../docs/runbooks/agriculture/NO_NETWORK_TEST_RUNBOOK.md
+  - ../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../../docs/domains/agriculture/README.md
+  - ../../../tools/validators/domains/agriculture/README.md
   - ../../../.github/workflows/domain-agriculture.yml
-tags: [kfm, configs, agriculture, crops, fields, yield, rotation, irrigation, conservation, stress, economy, aggregation, suppression, source-role, crop-year, revision, privacy, rights, no-secrets, governance]
+  - ../../../schemas/contracts/v1/domains/agriculture/aggregation_receipt.schema.json
 notes:
-  - "The bounded repository search for configs/domains/agriculture returned this README only. No executable Agriculture configuration payload or indexed direct consumer was found."
-  - "The prior v0.2 README already contained strong privacy, aggregation, source-role, failure, and rollback controls. v0.3 preserves them and adds current repository evidence, implementation maturity, compatibility and registry conflicts, richer Agriculture-specific invariants, and a stricter first-payload gate."
-  - "Inspected package metadata, pipeline entrypoints, declarative specs, policy lane, aggregation-receipt schema, validator lane, and domain workflow are version-0.0.0, placeholder, empty-stage, proposed, empty-permissive, documentation-only, TODO-only, or otherwise not proof of production behavior."
-  - "Repository evidence contains segmented-versus-short contract/schema paths, three source-registry orderings, an aggregation_receipt versus aggregation-receipt naming conflict, root-versus-receipts schema placement uncertainty, and a root-level catalog compatibility redirect. This lane does not resolve, alias, or duplicate those conflicts."
-  - "Configuration may reference accepted source, role, crop-year, revision, aggregation, suppression, model, privacy, review, or release profiles. It cannot create crop, field, yield, operator, parcel, regulatory, compliance, market, suitability, evidence, policy, release, or publication truth."
-  - "Only this Markdown file changes."
+  - "v0.4 replaces stale July-wide scaffold claims with a bounded September source review; executable configuration remains absent from this tracked lane."
+  - "Existing H1, document identity, and H2 navigation topics are preserved; repeated controls and historical inventory prose are condensed."
+  - "Workflow source inspection is not a test result or proof that the workflow consumes this directory."
+  - "No executable configuration, source activation, policy threshold, schema, consumer, workflow, release, or publication is changed."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # Governed Agriculture Domain Configuration
 
-`configs/domains/agriculture/`
+`configs/domains/agriculture/` is the Agriculture-specific boundary inside KFM's
+[commit-safe configuration root](../../README.md). It currently contains **this
+README only**. There is no tracked Agriculture configuration payload to load.
 
-> Safe-to-commit configuration documentation and future consumer-bound templates for crop observations, cropland classifications, field candidates, rotations, aggregate yields, irrigation context, conservation context, suitability and stress indicators, agricultural-economy summaries, supply-chain context, and public-safe derivatives. This lane is not crop or field truth, farm/operator identity authority, parcel/title authority, agronomic advice, compliance authority, market advice, evidence, policy, or release authority.
+**Documentation:** draft v0.4 · **Configuration maturity:** documentation-only ·
+**Domain implementation:** mixed, with bounded fixture-based validation ·
+**Activation and release:** not established by this directory.
 
-![status](https://img.shields.io/badge/status-draft-blue)
-![version](https://img.shields.io/badge/version-v0.3-informational)
-![authority](https://img.shields.io/badge/authority-config__sublane-green)
-![maturity](https://img.shields.io/badge/maturity-README--only-lightgrey)
-![privacy](https://img.shields.io/badge/field__operator-exposure__denied-red)
-![secrets](https://img.shields.io/badge/secrets-forbidden-red)
-![truth](https://img.shields.io/badge/truth-cite--or--abstain-0b7285)
-
-**Quick links:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs-and-drift-triggers) · [Last reviewed](#last-reviewed) · [Scope](#scope-and-bounded-context) · [Classes](#configuration-classes) · [Contract](#minimum-configuration-contract) · [Binding](#consumer-binding-precedence-and-discovery) · [Objects](#agriculture-object-family-boundaries) · [Roles](#source-role-and-knowledge-character) · [Identity](#field-parcel-operator-and-facility-identity) · [Space](#spatial-unit-aggregation-suppression-and-reconstruction) · [Time](#crop-year-survey-year-time-and-revision-state) · [Measurements](#units-methods-denominators-quality-and-uncertainty) · [Models](#classified-imagery-remote-sensing-and-model-products) · [Interpretation](#suitability-stress-and-advice-boundary) · [Operations](#irrigation-conservation-regulatory-and-compliance-context) · [Economy](#agricultural-economy-and-supply-chain-context) · [Joins](#cross-domain-joins) · [Rights](#source-rights-attribution-and-redistribution) · [Logging](#logging-telemetry-and-observability) · [Failure](#failure-behavior) · [AI](#governed-ai-and-generated-language) · [Migration](#migration-and-anti-bypass-posture) · [Rollback](#rollback-correction-and-deactivation) · [Done](#definition-of-done-for-the-first-payload)
+**Start here:** [Current evidence](#status) · [Permitted content](#what-belongs-here) ·
+[Consumer binding](#consumer-binding-precedence-and-discovery) ·
+[Validation](#validation) · [First payload](#definition-of-done-for-the-first-payload) ·
+[Rollback](#rollback-correction-and-deactivation).
 
 > [!IMPORTANT]
-> **Document lifecycle:** draft `v0.3`  
-> **Observed lane maturity:** README-only in the bounded path search; no executable Agriculture configuration payload or direct consumer binding is established  
-> **Authority:** implementation-supporting configuration sublane; non-authoritative for agricultural meaning, source admission, crop/field/operator identity, privacy thresholds, evidence, policy, or release  
-> **Runtime posture:** no loader, precedence rule, source activation, network fetch, survey query, imagery job, field inference, statistical disclosure check, public layer, release, or publication is established by this README
+> Agriculture has executable validation elsewhere; that does not make this
+> configuration lane implemented or consumed. A configuration value may select
+> an already-governed profile. It cannot establish crop or field truth, identify
+> an operator, remove suppression, admit a source, approve advice, or release data.
 
 > [!CAUTION]
-> A configuration value cannot turn a classified pixel into an observed crop, a field candidate into a confirmed field or parcel, a survey aggregate into an operator fact, a modeled yield into a measured yield, a suitability score into a recommendation, a conservation indicator into compliance proof, or a public map into permission to expose field/operator detail. Missing source role, rights, aggregation/suppression support, time, revision, evidence, policy, review, or release state fails closed.
-
----
+> Never commit credentials, private endpoints or live bindings, exact protected
+> field/facility geometry, operator-linked records, confidential statistics, or
+> data that reconstructs private operations. Public clients use governed APIs
+> and released public-safe artifacts, not this directory or internal stores.
 
 ## Purpose
 
-This directory defines the safe-to-commit configuration boundary for the canonical `agriculture` domain segment under `configs/domains/`.
-
-It may eventually hold small defaults, templates, examples, or review-oriented settings for a **named and verified consumer**. Those files may describe how that consumer should parse, validate, compare, aggregate, suppress, generalize, render, or package already-governed Agriculture material, but they cannot decide:
-
-- whether a crop, field, rotation, yield, irrigation link, conservation practice, suitability rating, stress indicator, agricultural-economy observation, or supply-chain node is true;
-- whether a field boundary is actual, current, operator-confirmed, parcel-aligned, or publicly releasable;
-- whether a source is admitted, active, licensed, current, redistributable, or authoritative for a requested claim;
-- whether an administrative, aggregate, modeled, inferred, candidate, contextual, or restricted record may be relabeled as observed;
-- whether a county, crop-reporting-district, HUC, grid, pixel, field, parcel, facility, farm, ranch, operation, or operator is the correct spatial or identity unit;
-- whether a crop-year, survey-year, imagery acquisition, observation, valid period, retrieval time, release time, revision, or correction is current;
-- whether a numeric value has a valid unit, denominator, method, sample frame, confidence interval, suppression state, revision state, or uncertainty description;
-- whether field/operator/facility/private-land detail may be exposed or reconstructed through small cells, temporal differencing, or cross-layer joins;
-- whether an interpretation constitutes agronomic, engineering, insurance, lending, market, pesticide, animal-health, conservation-compliance, regulatory, legal, or hazard advice;
-- whether evidence supports a claim;
-- whether an artifact may be promoted, released, or published.
-
-This README is intended for configuration maintainers, Agriculture stewards, crop/field and statistical stewards, source and rights stewards, privacy/aggregation reviewers, consumer owners, validation owners, policy and release reviewers, security reviewers, and contributors checking Directory Rules placement.
-
-[Back to top](#top)
-
----
+Keep Agriculture configuration discoverable, non-secret, explicitly bound, and
+reviewable. Inherit common rules from the [domain configuration parent](../README.md)
+rather than maintaining another general configuration standard. This document
+adds Agriculture-specific identity, time, statistical-disclosure, and source-role
+constraints for maintainers and prospective consumer owners.
 
 ## Authority level
 
-**Configuration-supporting and non-authoritative.**
+The owning responsibility root is `configs/`; `agriculture` is a scope segment,
+not a new authority root. [ADR-0029](../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md)
+adopts the exact [Directory Rules](../../../docs/doctrine/directory-rules.md)
+bytes, including the boundary-README, compatibility, and migration rules.
+The adopted artifact retains its historical draft label; that label does not
+undo the accepted, exact-byte adoption decision.
 
-| Concern | Authority in this lane |
-|---|---|
-| Agriculture domain meaning | **None.** Human doctrine remains under `docs/domains/agriculture/`; semantic meaning remains in accepted contract homes. |
-| Source identity and activation | **None.** Config may reference reviewed source IDs or profiles; it cannot admit, activate, suspend, retire, or supersede a source. |
-| Source role | **None.** Config cannot upgrade observed, regulatory, administrative, modeled, aggregate, candidate, context, synthetic, restricted, or other accepted roles. |
-| Crop and land-cover class meaning | **None.** Config may select an accepted class crosswalk; it cannot silently remap crop, land-cover, or confidence semantics. |
-| Field, parcel, farm, operator, or facility identity | **None.** Config cannot infer identity or equivalence from geometry overlap, name, address, program record, imagery, or repeated appearance. |
-| Statistical estimates and revisions | **None.** Config cannot make an estimate final, remove suppression, downscale an aggregate, or promote a revision without authority support. |
-| Aggregation, suppression, redaction, or generalization policy | **None.** Config may select an accepted profile; it cannot define a privacy threshold or authorize exact exposure. |
-| Suitability, stress, conservation, irrigation, or economic interpretation | **None.** Config may select a method profile; it cannot create accepted fitness-for-use, advice, compliance, market, or operational authority. |
-| Evidence and claim truth | **None.** Config cannot create an `EvidenceBundle`, close proof, validate a claim, or turn a candidate into truth. |
-| Release and publication | **None.** Config cannot authorize promotion, release, public display, export, Focus Mode use, or publication. |
-| Consumer behavior | **Supporting only.** A verified consumer may read a validated file through explicit binding and deterministic precedence. |
-
-A configuration value may point to authority. It cannot acquire that authority through parsing, naming, location, reuse, or a successful pipeline run.
-
-[Back to top](#top)
-
----
+Meaning belongs to contracts, machine shape to schemas, admissibility to policy,
+source identity and admission to governed registries, evidence to its owning
+families, and release decisions to `release/`. Configuration supports a named
+consumer; it cannot replace any of those responsibilities.
 
 ## Status
 
 ### Evidence snapshot
 
-| Field | Value |
-|---|---|
-| Repository | `bartytime4life/Kansas-Frontier-Matrix` |
-| Repository ID | `1059091169` |
-| Visibility | public |
-| Base ref | `main` |
-| Base commit | `916a13651c4a6596df8d9e7990bb6515b598365b` |
-| Prior target blob | `1125052b1892a00df3b4af2755f92e163e9d1d6c` |
-| Bounded config search | `configs/domains/agriculture/README.md` only |
+All snapshot claims below are bounded to `main@700570cbcf191038aa20a030174c2dd08cf93675`
+on **2026-09-04**. Sources were read at `bb3eb695e6068b38453ca3ded8f1394a8fdebc20`
+and revalidated by an exact base comparison: only the unrelated catalog triplet
+README changed. The preimage of this README is Git blob
+`99032995f37f46d4692c908092f9d7f3d7ce68fe`.
+
+```text
+configs/domains/agriculture/
+└── README.md    # Configuration boundary; no executable payload
+```
+
+The exact directory response contains one regular file and no child directories,
+placeholders, or configuration payloads. This closes the tracked inventory for
+this lane, not ignored, untracked, generated, externally mounted, or hosted files.
+A bounded indexed search for the literal path outside Markdown returned zero
+matches; dynamically constructed and external consumers remain unverified.
 
 ### Confirmed repository surfaces
 
-The following current-repository surfaces were directly inspected for this revision:
-
-- `configs/domains/agriculture/README.md` — existing v0.2 configuration boundary;
-- `configs/domains/README.md` — parent v0.4 domain-config contract;
-- `docs/domains/agriculture/README.md`, `ARCHITECTURE.md`, and `CANONICAL_PATHS.md`;
-- `packages/domains/agriculture/README.md` and `pyproject.toml`;
-- `pipelines/domains/agriculture/README.md` plus `ingest.py`, `normalize.py`, `validate.py`, `publish.py`, and `rollback.py`;
-- `pipeline_specs/agriculture/ingest.yaml`, `validate.yaml`, and `publish.yaml`;
-- `schemas/contracts/v1/domains/agriculture/README.md` and `aggregation_receipt.schema.json`;
-- `policy/domains/agriculture/README.md`;
-- `tools/validators/agriculture/README.md` and the exact probe for `validate_agriculture_candidate.py`;
-- `.github/workflows/domain-agriculture.yml`;
-- `data/registry/sources/agriculture/README.md` and `data/registry/agriculture/README.md`;
-- `catalog/domain/agriculture/README.md`;
-- `apps/governed-api/src/routes/agriculture/README.md`.
+| Surface inspected | Current source evidence | Limit |
+|---|---|---|
+| This configuration lane | One README; zero configuration payloads | No loader, binding, precedence, or active consumer established |
+| Configuration parents | `configs/` v0.5; `configs/domains/` v0.6 | Their historical inventory snapshots are not live counts |
+| [Agriculture domain orientation](../../../docs/domains/agriculture/README.md) | v0.3, updated 2026-08-28; mixed-maturity domain | Documentation is not runtime or source-admission proof |
+| [Domain workflow](../../../.github/workflows/domain-agriculture.yml) | Readiness checks, public-safe carrier fixture validation/tests, and fixture-only CDL watcher tests are wired | Source inspected; no exact-head execution result asserted here |
+| Dedicated NDVI and vegetation checks | Domain workflow names separately owned, path-filtered NDVI delta, HLS materiality, NDVI readiness, and vegetation connectivity workflows | Listing a workflow is not evidence that it ran for a documentation change |
+| [Per-domain validator index](../../../tools/validators/domains/agriculture/README.md) | Existing narrower edge/cross-lane index, distinct from broad `tools/validators/agriculture/` scope | Its July maturity narrative also needs current executable evidence |
+| [AggregationReceipt scaffold](../../../schemas/contracts/v1/domains/agriculture/aggregation_receipt.schema.json) | Still `PROPOSED`, with empty `properties` and `additionalProperties: true` | Not an Agriculture configuration schema or meaningful disclosure validation |
 
 ### Maturity matrix
 
-| Surface | Confirmed state | Safe conclusion |
-|---|---|---|
-| Config lane | README-only bounded result | No payload or direct consumer is established. |
-| Parent config contract | Draft v0.4 | Non-secret, inactive, non-authoritative child-lane rules apply. |
-| Agriculture doctrine | Rich draft documentation | Strong domain boundaries exist; implementation claims remain bounded. |
-| Package | Detailed README; `pyproject.toml` version `0.0.0` and labeled greenfield | Helper responsibilities are documented; working modules, exports, tests, and consumers remain unverified. |
-| Pipeline | Detailed README; five inspected core entrypoints contain only placeholder comments | No executable ingest/normalize/validate/publish/rollback behavior is established by those files. |
-| Pipeline specs | `stages: []` in inspected ingest/validate/publish files | No declarative stage wiring is established. |
-| Policy | Detailed draft README; concrete policy modules not confirmed in the bounded search | Policy intent is documented; accepted executable rules and runtime enforcement remain unverified. |
-| Schema | Domain index plus one `AggregationReceipt` scaffold with empty `properties` and permissive `additionalProperties` | Path and draft shape exist; meaningful validation is not established. |
-| Validator | README-only lane; proposed executable exact path returned `Not Found` | Validator responsibilities are documented; an executable entrypoint is not established. |
-| Workflow | PR/push workflow with TODO echo jobs | Trigger scaffolding exists; substantive validation/proof/publish checks are not established. |
-| Governed API route source | Detailed README | Route-source boundary exists; handlers, DTOs, middleware, integrations, tests, and runtime behavior remain unverified. |
-| Source registries | Subtype-first and domain-first README lanes | Registry path presence and conflict are established; active descriptor payloads and canonical topology remain unverified. |
-| Catalog compatibility | Root-level redirect points to `data/catalog/domain/agriculture/` | Compatibility boundary exists; migration and producer compliance remain unverified. |
-| Runtime/release/publication | Not established by this lane | Presence of docs, schemas, or config files does not authorize use. |
+**CONFIRMED source wiring / PARTIAL Agriculture validation / NOT IMPLEMENTED in
+this tracked configuration lane.** The earlier blanket statement that Agriculture
+CI is only TODO echo jobs is obsolete. Conversely, the current workflow explicitly
+retains broader validation, proof-production, and release-readiness holds.
+Neither a held job nor a successful inventory check proves an operating pipeline.
 
 ### Current conflicts and drift
 
-| Conflict | State | Required handling |
-|---|---:|---|
-| `contracts/domains/agriculture/` vs `contracts/agriculture/` | `CONFLICTED / ADR-SENSITIVE` | Do not duplicate semantic contracts or select a winner in config. |
-| `schemas/contracts/v1/domains/agriculture/` vs `schemas/contracts/v1/agriculture/` | `CONFLICTED / COMPATIBILITY` | Treat the short path as compatibility/index unless accepted migration evidence says otherwise. |
-| `aggregation_receipt` vs `aggregation-receipt` contract naming | `CONFLICTED` | Preserve both references in drift/migration records; no silent rename. |
-| Agriculture schema root vs `receipts/` child for `AggregationReceipt` | `NEEDS VERIFICATION` | Resolve by schema/receipt governance before binding a config. |
-| `data/registry/sources/agriculture/` vs `data/registry/agriculture/sources/` vs `data/registry/source_descriptors/agriculture/` | `CONFLICTED` | Do not maintain divergent authoritative descriptor sets. |
-| `catalog/domain/agriculture/` vs `data/catalog/domain/agriculture/` | `COMPATIBILITY REDIRECT` | Canonical catalog records stay under `data/catalog/domain/agriculture/`. |
-| Source-role vocabulary and sensitivity tiers | `NEEDS VERIFICATION` | Config must reference an accepted vocabulary/profile, not invent one. |
+The domain orientation discourages a parallel `tools/validators/domains/agriculture/`
+home, while the current workflow explicitly references that existing subtree and
+its dedicated validators. The per-domain index describes a narrower edge-specific
+scope. Preserve that documentation/implementation tension; use exact current code
+and workflow evidence for behavior, not this config README to reclassify or move it.
 
-[Back to top](#top)
-
----
+The v0.3 preimage also recorded short-versus-segmented contract/schema paths,
+`aggregation_receipt` versus `aggregation-receipt`, receipt-root versus `receipts/`
+placement, and three source-registry orderings. Their complete disposition was
+**not re-audited** here. A future binding must resolve its exact object's authority
+and aliases; do not repeat old conflicts as newly verified global findings.
 
 ## What belongs here
 
-Only safe, non-secret, Agriculture-scoped configuration support for a named and verified consumer belongs here.
+This README and, after bounded review, small non-secret defaults, templates,
+examples, or profile selectors for an exact named consumer. Templates and examples
+remain synthetic and inactive by presence. Profile selectors reference accepted
+IDs and versions rather than duplicate crop crosswalks, methods, suppression
+thresholds, sensitivity rules, or release decisions.
 
-| Material | Permitted purpose | Minimum posture |
-|---|---|---|
-| `README.md` | Define this boundary. | Preserve privacy, source-role, evidence, policy, release, and rollback controls. |
-| `*.template.yaml` / `*.template.yml` | Placeholder-based consumer template. | Parseable, versioned, synthetic, explicit binding, no automatic activation. |
-| `*.example.yaml` / `*.example.json` / `*.example.toml` | Tiny illustrative example. | Non-operational mock values; no real operator, field, parcel, facility, or source payload. |
-| Review defaults | Select an accepted hold, abstain, restrict, deny, or review route. | Cannot reduce mandatory policy or release review. |
-| Aggregation/suppression profile references | Select an already-governed public-safe profile. | Profile identity and version only; do not define thresholds as local policy. |
-| Class/crosswalk profile references | Select an accepted crop or land-cover crosswalk. | Preserve native codes, source role, vintage, uncertainty, and mapping receipt. |
-| Temporal/freshness profile references | Select accepted crop-year, survey-year, imagery, observation, revision, or stale-state handling. | Cannot manufacture currency or finality. |
-| Model/method profile references | Select accepted remote-sensing, suitability, stress, or statistical method profiles. | Preserve model/run/version/input/uncertainty refs; not evidence by itself. |
-| Public-safe display hints | Select accepted generalized layers, zoom limits, labels, legends, or caveat profiles. | No exact sensitive geometry or operator-resolvable detail. |
-| Migration notes | Document a real key, filename, or consumer transition. | Time-bounded, owner-linked, tested, reversible, and not a second authority. |
-
-Examples must remain synthetic and must not approximate a real field, parcel, farm, ranch, facility, storage site, livestock operation, well, operator, worker, or protected location closely enough to enable reconstruction.
-
-[Back to top](#top)
-
----
+A config-local key migration note may accompany a real consumer transition.
+Authority-changing migration records remain in their owning governance/migration
+homes. Do not add empty scaffolding merely to illustrate a future tree.
 
 ## What does not belong here
 
-- private producer, operator, landowner, tenant, employee, worker, household, customer, or living-person data;
-- person–parcel, operator–field, farm–owner, livestock–operator, permit–operator, or facility–operator joins;
-- exact field boundaries, parcel geometries, farmstead locations, storage or chemical locations, livestock-facility locations, private wells, irrigation infrastructure, equipment, routes, or other reconstructable operational details;
-- source payloads, API responses, imagery, rasters, vectors, statistics extracts, survey microdata, farm records, assessor records, program records, market transactions, or model outputs;
-- credentials, tokens, signed URLs, connection strings, private endpoints, workstation paths, deployment secrets, or real local values;
-- source descriptors, source activation decisions, cadence, rights, license, terms, authority-role, or stale-state decisions;
-- canonical crop/land-cover classifications, object contracts, JSON Schemas, policy rules, registry records, receipts, proofs, catalogs, triplets, release records, or published artifacts;
-- settings that relabel modeled, classified, inferred, estimated, survey, aggregate, administrative, candidate, contextual, or synthetic material as direct observation;
-- settings that infer field identity from pixels, repeated crop classes, parcel overlap, management similarity, or address proximity;
-- settings that downscale county, district, watershed, or survey aggregates to farm, parcel, field, operator, or household claims;
-- settings that remove suppression, reconstruct small cells, or combine layers/time slices to reveal protected operations;
-- settings that treat assessor or cadastral records as title, operator, crop, yield, tenancy, or management truth;
-- settings that convert suitability/stress/conservation/economy indicators into advice, compliance, enforcement, insurance, lending, taxation, market, or legal conclusions;
-- hidden bypasses for rights, aggregation, suppression, redaction, generalization, review, quarantine, deny, abstain, correction, withdrawal, rollback, or release gates;
-- directory scanning or filename conventions that activate consumers or sources automatically.
-
-[Back to top](#top)
-
----
+No source payloads, survey extracts or microdata, imagery, statistical records,
+field/parcel/facility data, operator or living-person records, financial transactions,
+private endpoints, signed URLs, credentials, workstation-specific values, or live
+deployment bindings. No contracts, schemas, policy rules, source descriptors,
+registries, receipts, proofs, catalog/triplet objects, release records, or published
+products. No settings that weaken evidence, rights, suppression, review, or release.
 
 ## Inputs
 
-A future Agriculture configuration payload requires all of the following:
-
-1. **Named consumer** — exact package, app, pipeline, service, runtime, test harness, or tool.
-2. **Declared class** — template, example, development default, test default, review default, public-safe profile selector, or compatibility layer.
-3. **Declared format** — file type, format version, canonical parser, and parser version/range.
-4. **Explicit binding** — exact path and code/deployment mechanism that selects the file.
-5. **Authority references** — verified contract, schema, policy, registry, profile, and domain documentation as applicable.
-6. **Safe values** — synthetic placeholders or non-sensitive defaults only.
-7. **Source-role preservation** — observed, regulatory, administrative, modeled, aggregate, candidate, context, synthetic, restricted, and accepted variants remain distinguishable.
-8. **Spatial-unit declaration** — county, district, HUC, grid, pixel, field-candidate, parcel-adjacent, facility, or other support is explicit.
-9. **Temporal declaration** — crop year, survey year, imagery acquisition, observation time, valid period, retrieval time, revision status, release time, correction time, and stale state as applicable.
-10. **Statistical/method declaration** — unit, denominator, estimate status, sample frame, method, model/run, confidence/uncertainty, suppression, and revision as applicable.
-11. **Privacy and rights review** — field, operator, parcel, facility, small-cell, temporal differencing, cross-layer reconstruction, attribution, redistribution, and source-term risks are reviewed.
-12. **Validation path** — deterministic parsing, schema checks, semantic checks, privacy/suppression tests, rights tests, no-network fixtures, and finite outcomes.
-13. **Precedence rule** — deterministic relation to defaults, environment, local, test, deployment, command-line, and runtime overlays.
-14. **Failure posture** — explicit `ABSTAIN`, `DENY`, `RESTRICT`, `HOLD`, `QUARANTINE`, or `ERROR` behavior.
-15. **Rollback path** — prior known-good configuration, deactivation, cache/derivative invalidation, correction, and rollback lineage.
-
-A payload missing any required item remains `PROPOSED` and must not be treated as active.
-
-[Back to top](#top)
-
----
+A proposed payload needs a named consumer and owner, declared class and parser,
+explicit binding, applicable authority references, synthetic safe values, relevant
+source/time/spatial/method context, validation, failure behavior, and rollback.
+Missing operational evidence may remain explicit in an isolated draft; it must not
+be converted into a claim of active consumption or permission for exposure.
 
 ## Outputs
 
-This lane currently outputs documentation only.
+Currently, documentation only. A future consumer may use validated configuration
+to select governed behavior. Parsing must not itself query a live source, initiate
+imagery processing, infer field/operator identity, emit trust objects, or publish.
+Promotion remains a governed transition, not a file move or a configuration toggle:
 
-A future validated configuration file may support a named consumer by selecting safe, already-governed behavior. It may not:
-
-- admit, activate, retire, or supersede a source;
-- identify a producer, operator, owner, worker, parcel, field, facility, or farm;
-- define crop or land-cover class truth;
-- remove suppression or lower a privacy/aggregation threshold;
-- expose exact field, facility, operator, or private-land detail;
-- waive rights, attribution, redistribution, policy, review, evidence, receipt, proof, release, correction, withdrawal, or rollback requirements;
-- create evidence, an `AggregationReceipt`, a `RedactionReceipt`, a `PolicyDecision`, a `ReleaseManifest`, or claim truth;
-- promote an object through the lifecycle;
-- create catalog/triplet records or published artifacts;
-- provide agronomic, regulatory, compliance, legal, insurance, lending, market, pesticide, livestock-health, water-right, or emergency advice.
-
-[Back to top](#top)
-
----
+```text
+RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
+```
 
 ## Validation
 
-No executable config validator or direct Agriculture config consumer was verified for this lane. The matrix below is the **required validation target**, not a claim that every check is implemented.
-
 ### Validation matrix
 
-| Check | Required result | Current evidence |
-|---|---|---|
-| Markdown structure | One H1, valid hierarchy, resolvable internal anchors, balanced fences, final newline. | Performed for this README revision. |
-| Parse and format | File parses deterministically under declared parser/version. | `NEEDS VERIFICATION` per future payload. |
-| Schema | File conforms to an accepted, non-empty schema or explicit format contract. | Current opened Agriculture schema is an empty permissive scaffold. |
-| Known keys | Unknown/misspelled keys reject or enter documented safe behavior. | `UNKNOWN`. |
-| Consumer binding | Exact consumer/path/selection mechanism is tested. | `UNKNOWN`; no direct consumer found. |
-| Precedence | Merge/replace order is deterministic and tested. | `UNKNOWN`. |
-| Missing-file behavior | Absence enters safe inactive/error/hold state. | `PROPOSED`. |
-| Source-role preservation | No role upcast or collapse. | Required; executable enforcement unverified. |
-| Spatial-unit preservation | Aggregate/grid/pixel/field/parcel/facility units cannot silently change. | Required; executable enforcement unverified. |
-| Crop/field identity | Field candidates cannot become confirmed field, parcel, or operator identities. | Required; executable enforcement unverified. |
-| Crop-year/revision | Crop/survey year, revision/finality, release, correction, and stale state remain explicit. | Required; executable enforcement unverified. |
-| Measurement/statistics | Unit, denominator, method, sample frame, estimate/suppression/revision, and uncertainty remain explicit. | Required; executable enforcement unverified. |
-| Model/classification | Model/run/product/version, inputs, resolution, QA, uncertainty, and limitation refs remain attached. | Required; executable enforcement unverified. |
-| Aggregation/suppression | Public-bound outputs use accepted profiles; small-cell and differencing tests fail closed. | Required; policy/receipt implementation unverified. |
-| Reconstruction resistance | Cross-layer, temporal, spatial, and category combinations do not reveal protected operations. | Required; tooling unverified. |
-| Rights/attribution | License, terms, attribution, redistribution, and audience limitations resolve. | `NEEDS VERIFICATION` per source. |
-| Cross-domain ownership | Soil, Hydrology, Atmosphere, Hazards, People/Land, Infrastructure, Roads/Rail, Habitat, Flora, and Fauna truth stays with owning lanes. | Required. |
-| No secrets/private values | No credential, private endpoint, personal path, operator identity, or restricted detail. | Bounded pattern/manual checks required. |
-| No-network validation | Parse and core validation use local synthetic/sanitized fixtures where practical. | Agriculture no-network fixture docs exist; executable config coverage unverified. |
-| Logging/telemetry | Sensitive values are redacted; field/operator details never appear in default logs. | Required; runtime unverified. |
-| Lifecycle isolation | Config stores no RAW/WORK/QUARANTINE/PROCESSED/CATALOG/TRIPLET/PUBLISHED or trust/release objects. | Manual boundary review required. |
-| Rollback | Prior config, deactivation, cache/derivative invalidation, correction, and rollback are tested. | `NEEDS VERIFICATION`. |
+For **this README**, check metadata, a single H1, retained anchors, relative links,
+tables, fences, final newline, whitespace, exact changed paths, and generation
+provenance. Report the actual results in the branch/PR handoff and receipt; the
+presence of this checklist is not a passing result.
+
+For a **future consumed payload**, require deterministic parsing and a meaningful
+consumer-owned schema/format contract; known-key handling; binding and precedence;
+missing/stale/withdrawn-input behavior; source-role and support preservation; crop
+identity, time, revision, units, uncertainty, disclosure controls, and rights checks;
+no-network synthetic tests; safe diagnostics; and correction/deactivation/rollback.
+Exercise both accepted and rejected cases. Use the actual owning contract's outcomes.
 
 ### Configuration-review outcomes
 
-These outcomes apply to configuration review, not publication:
+`PASS`, `RESTRICT`, `HOLD`, `ABSTAIN`, `DENY`, and `ERROR` are explanatory review
+terms here, not a newly implemented enum or parser API. `QUARANTINE` denotes a
+controlled handling/lifecycle action where applicable. Do not collapse these into
+one wire-level status family. Passing a check is neither review approval nor merge,
+activation, release, or publication authorization.
 
-| Outcome | Meaning | Required action |
-|---|---|---|
-| `PASS` | Required config checks pass. | May merge as configuration support; no release authority follows. |
-| `RESTRICT` | File is usable only for a bounded audience/purpose/profile. | Enforce audience, precision, and obligations. |
-| `HOLD` | Review, rights, source, schema, receipt, or migration support is incomplete. | Do not activate or claim consumption. |
-| `ABSTAIN` | Meaning, role, identity, method, or evidence cannot be resolved safely. | Narrow or reject use. |
-| `DENY` | Secret, private detail, unsafe exposure, authority bypass, or prohibited advice is present. | Remove/quarantine and follow incident/correction procedures. |
-| `ERROR` | Parser, validator, or review machinery failed. | Fail closed and repair the process. |
+### Existing domain checks are not config checks
 
-A successful parse does not prove authorization, privacy safety, evidentiary support, runtime activation, or publication readiness.
+The following commands are copied from the inspected domain workflow. They are
+**reference commands for a prepared checkout**, not commands executed by this
+README and not proof of consumer binding:
 
-[Back to top](#top)
+```bash
+KFM_NO_NETWORK=1 PYTHONDONTWRITEBYTECODE=1 \
+  python tools/validators/domains/agriculture/validate_public_safe_map_feature.py --fixtures
+KFM_NO_NETWORK=1 PYTHONDONTWRITEBYTECODE=1 \
+  python -m pytest -q tests/domains/agriculture/test_public_safe*.py
+KFM_NO_NETWORK=1 PYTHONDONTWRITEBYTECODE=1 \
+  python -m unittest tests.ingest.cdl_watch.test_cdl_watch --verbose
+```
 
----
+The workflow supplies its own declared dependencies. An environment-variable name
+alone does not prove network isolation. No Agriculture config-validator command is
+invented; the permissive AggregationReceipt scaffold must not be repurposed as one.
 
 ## Review burden
 
 ### Minimum review posture
 
-| Change class | Minimum reviewers |
-|---|---|
-| README clarification | Config/docs steward + Agriculture steward. |
-| New Agriculture config template/example | Config steward + named consumer owner + Agriculture steward + validation owner. |
-| Source ID, role, cadence, freshness, rights, or attribution reference | Add source and rights reviewers. |
-| Crop/land-cover crosswalk or model profile | Add crop/classification/model and validation reviewers. |
-| Field/parcel/facility/operator-related key | Add privacy, sensitivity, People/Land, security, policy, and release reviewers. |
-| Aggregation/suppression/generalization/redaction profile | Add privacy/statistical disclosure, policy, receipt, evidence, and release reviewers. |
-| Yield/economy/supply-chain/statistical key | Add statistical/economy steward and privacy reviewer. |
-| Irrigation/conservation/regulatory/compliance key | Add Hydrology/People-Land/regulatory-domain reviewers as applicable. |
-| Public API/UI/export/Focus Mode selector | Add governed API/UI, evidence, AI, policy, release, correction, and rollback reviewers. |
-| Loader/discovery/precedence behavior | ADR-class config architecture review plus consumer/test owners. |
-| Path or authority migration | Directory Rules, ADR, migration, compatibility, drift, test, and rollback review. |
+[CODEOWNERS](../../../.github/CODEOWNERS) routes `/configs/` to `@bartytime4life`.
+That is a verified review route, not specialist stewardship, required approval,
+independent review, or evidence that review occurred.
 
-No single reviewer or config owner may convert configuration into source, identity, policy, evidence, release, or publication authority.
+README changes need configuration/docs and Agriculture review. Payloads additionally
+need their consumer and validation owners. Source changes add rights/source review;
+field/operator, aggregation, and public-output changes add privacy, statistical,
+policy, evidence, release, and affected-domain review. Loader or authority changes
+need proportional architecture review. Generation and approval stay separate.
 
 ### Change budget
 
-Prefer one bounded concern per PR:
-
-- one README revision;
-- one template plus schema/consumer/test support;
-- one profile reference update;
-- one key migration with compatibility and rollback;
-- one consumer binding with negative-state tests.
-
-Do not combine config cleanup with unrelated source activation, schema redesign, policy changes, data migration, or public release.
-
-[Back to top](#top)
-
----
+Prefer one coherent concern: this README; one bound template with its required
+tests; one profile-reference update; or one reversible key migration. Do not bundle
+source activation, policy changes, data migration, or release into documentation work.
 
 ## Related folders
 
-| Responsibility | Current or proposed home | Relationship |
-|---|---|---|
-| Parent domain config | `configs/domains/` | Common non-secret, non-authoritative child-lane contract. |
-| Repository config root | `configs/` | Safe defaults/templates/examples; real secrets and live bindings excluded. |
-| Agriculture doctrine | `docs/domains/agriculture/` | Scope, object families, source families, sensitivity, lifecycle, and human guidance. |
-| Semantic contracts | `contracts/domains/agriculture/` or ADR-selected equivalent | Object meaning; config references but never duplicates. |
-| Short contract compatibility | `contracts/agriculture/` | `CONFLICTED / NEEDS VERIFICATION`; do not create duplicate truth. |
-| Machine schemas | `schemas/contracts/v1/domains/agriculture/` | Draft schema index and current scaffold. |
-| Short schema compatibility | `schemas/contracts/v1/agriculture/` | Compatibility/index lane; canonical behavior needs verification. |
-| Policy | `policy/domains/agriculture/` | Agriculture admissibility/exposure intent; executable rules/runtime remain unverified. |
-| Source registry, subtype-first | `data/registry/sources/agriculture/` | Source admission/control; path presence confirmed. |
-| Source registry, domain-first | `data/registry/agriculture/sources/` | Existing companion; topology conflicted. |
-| Source-descriptor compatibility | `data/registry/source_descriptors/agriculture/` | Additional documented pattern; topology conflicted. |
-| Package helpers | `packages/domains/agriculture/` | Reusable helpers; version `0.0.0`, implementation depth unverified. |
-| Pipeline logic | `pipelines/domains/agriculture/` | Intended transformations; inspected core entrypoints are placeholders. |
-| Pipeline specs | `pipeline_specs/agriculture/` | Inspected core specs have empty stage lists. |
-| Validators | `tools/validators/agriculture/` | README-only proposed validator lane; exact proposed executable not found. |
-| Tests/fixtures | `tests/domains/agriculture/`, `fixtures/domains/agriculture/` | Enforceability and synthetic/no-network examples; coverage/pass rates unverified. |
-| Governed API route source | `apps/governed-api/src/routes/agriculture/` | README boundary confirmed; handlers/runtime unverified. |
-| Explorer feature | `apps/explorer-web/src/features/domains/agriculture/` | Search-surfaced feature README; implementation unverified. |
-| Lifecycle | `data/raw|work|quarantine|processed/agriculture/` | Data states, not config. |
-| Catalog | `data/catalog/domain/agriculture/` | Canonical catalog lane. |
-| Catalog compatibility | `catalog/domain/agriculture/` | Redirect/drift fence only. |
-| Triplets | `data/triplets/agriculture/` or accepted lane | Derived relationship projections; not sovereign truth. |
-| Receipts/proofs | `data/receipts/agriculture/`, `data/proofs/agriculture/` | Process memory/evidence support; not config. |
-| Release | `release/candidates/agriculture/`, `release/agriculture/`, accepted release roots | Promotion, correction, withdrawal, rollback. |
-| Public artifacts | `data/published/agriculture/` or accepted released layer homes | Governed release output only. |
+Use the [parent configuration index](../README.md) for common defaults and override
+boundaries, the [configuration root](../../README.md) for repository placement, and
+[Agriculture orientation](../../../docs/domains/agriculture/README.md) for the domain
+map. Consult the [per-domain validator index](../../../tools/validators/domains/agriculture/README.md)
+and [actual workflow](../../../.github/workflows/domain-agriculture.yml) together;
+resolve their differing scope/maturity narratives before implementation.
 
-[Back to top](#top)
-
----
+For object-specific contracts, schemas, policy, fixtures, registries, receipts,
+proofs, catalogs, and releases, follow the owning domain references and inspect the
+exact target. A directory link does not accept a schema, activate a source, or create
+a route. Root-level `catalog/` remains a deprecated compatibility surface, not a
+new place to store Agriculture truth.
 
 ## ADRs and drift triggers
 
-This README enacts no ADR.
-
-A separate accepted decision is required before this lane is used to:
-
-- resolve `contracts/domains/agriculture/` versus `contracts/agriculture/`;
-- resolve `schemas/contracts/v1/domains/agriculture/` versus `schemas/contracts/v1/agriculture/`;
-- resolve `aggregation_receipt` versus `aggregation-receipt` naming;
-- move `AggregationReceipt` between the Agriculture schema root and `receipts/`;
-- resolve the three Agriculture source-registry orderings;
-- convert `catalog/domain/agriculture/` from compatibility redirect into any trust-bearing use;
-- establish universal config discovery, merge, precedence, unknown-key, fallback, or environment-substitution behavior;
-- define source-role or sensitivity vocabulary;
-- define privacy, aggregation, suppression, redaction, generalization, or public-precision thresholds;
-- authorize field/operator/private-facility exposure;
-- establish a current-state operational, advisory, compliance, market, or recommendation surface;
-- create a new schema, contract, policy, registry, receipt, proof, release, or public authority.
+This revision accepts no ADR, creates no alias, and changes no authority owner.
+ADR-0029 is the placement basis. New or moved authority homes, parallel writable
+contracts/schemas/registries, or general discovery/precedence architecture require
+an accepted decision before dependent structural implementation. Ordinary documentation and
+safe branch-local drafts do not require a new ADR merely to exist.
 
 ### Drift triggers
 
-Open or update a drift record when:
-
-- a consumer reads an undeclared config path;
-- two config files claim the same scope;
-- a compatibility path receives canonical records;
-- a source descriptor is duplicated across registry shapes;
-- schema and contract refs disagree on filename or authority home;
-- a field/operator-sensitive key appears without policy and review support;
-- a public-bound consumer reads internal data or config directly;
-- a config change alters released output without correction and rollback lineage.
-
-[Back to top](#top)
-
----
+Escalate undeclared consumers, overlapping config scopes, contradictory authority
+references, duplicate descriptors, field/operator-sensitive keys without review,
+public reads of internal stores, and released-output changes without correction
+lineage. Preserve the exact evidence and scope rather than silently choosing a winner.
 
 ## Last reviewed
 
-**2026-07-14**, against `main@916a13651c4a6596df8d9e7990bb6515b598365b`.
-
-Review again before:
-
-- the first non-README payload;
-- the first direct consumer binding;
-- any loader/discovery/precedence decision;
-- any source-related, crosswalk, aggregation, suppression, field, operator, parcel, facility, crop-year, revision, yield, model, suitability, stress, irrigation, conservation, compliance, economy, export, API/UI, Focus Mode, or public-layer setting;
-- any schema/contract/registry/catalog path migration;
-- any change to policy, release, correction, or rollback behavior;
-- six months elapse.
-
-[Back to top](#top)
-
----
+**2026-09-04**, at the base commit in [Status](#status). Human review is pending.
+Re-review when the first payload or consumer appears, a loader/schema/profile changes,
+a sensitive or public-facing selector is proposed, an authority/alias decision changes,
+a validation or ownership boundary changes, or correction/withdrawal/rollback occurs.
+Use an explicitly assigned risk-based interval, not the old blanket six-month timer.
 
 ## Scope and bounded context
 
-Agriculture configuration may support already-governed handling for these domain object families:
-
-| Object family | Configuration may support | Configuration must not decide |
-|---|---|---|
-| `CropObservation` | Accepted class/crosswalk, display, temporal, aggregation, and caveat profile selection. | Crop truth, field identity, source authority, or current condition. |
-| `FieldCandidate` | Candidate-review, generalization, suppression, and restricted-audience profile selection. | Field confirmation, parcel equivalence, ownership, operator, or public release. |
-| `CropRotation` | Sequence-window and display profile selection. | Farm-management history, operator continuity, or definitive rotation truth. |
-| `YieldObservation` | Unit/denominator/statistical/revision/aggregation profile selection. | Measured-versus-estimated truth, field-level yield, operator performance, or financial conclusion. |
-| `IrrigationLink` | Cross-domain link and public-safe caveat profile selection. | Water right, allocation, pumping, legal access, actual use, or compliance. |
-| `ConservationPractice` | Context/review profile selection. | Adoption, compliance, effectiveness, payment/program participation, or operator behavior. |
-| `SoilCropSuitability` | Accepted method/fitness-for-use/caveat profile selection. | Agronomic recommendation, land appraisal, engineering decision, crop guarantee, or Soil truth. |
-| `AgriculturalEconomyObservation` | Aggregate statistical and disclosure-control profile selection. | Business performance, individual transaction, valuation, forecast, trading, lending, or tax advice. |
-| `SupplyChainNode` | Generalized network/context profile selection. | Operator identity, inventory, capacity, vulnerability, route, security, or real-time status. |
-| `DroughtStressIndicator` | Model/method/uncertainty/caveat profile selection. | Hazard warning, crop-loss determination, insurance outcome, or emergency advice. |
-| `PestStressIndicator` | Model/taxonomy/caveat/review profile selection. | Confirmed infestation, pesticide recommendation, quarantine status, or regulatory finding. |
-| `AggregationReceipt` | Reference to an accepted receipt/profile and required-presence behavior. | Receipt fabrication, privacy approval, release approval, or proof closure. |
-
-Other Agriculture object families may be added only after doctrine, contract, schema, policy, source, validation, review, and release impacts are verified.
-
----
+The retained Agriculture vocabulary includes `CropObservation`, `FieldCandidate`,
+`CropRotation`, `YieldObservation`, `IrrigationLink`, `ConservationPractice`,
+`SoilCropSuitability`, `AgriculturalEconomyObservation`, `SupplyChainNode`,
+`DroughtStressIndicator`, `PestStressIndicator`, and `AggregationReceipt`.
+These are domain concepts and potential consumers' concerns, **not configuration
+keys or a claim that every family is implemented or accepted**.
 
 ## Configuration classes
 
-Every future payload should declare one class:
-
-| Class | Intended use | Commit posture | Activation posture |
-|---|---|---|---|
-| `template` | Demonstrate supported keys and external placeholders. | Safe after review. | Never active by presence. |
-| `example` | Explain a realistic but synthetic configuration. | Safe after review. | Never active by presence. |
-| `dev-default` | Conservative defaults for a verified development consumer. | Portable and non-secret. | Explicit opt-in only. |
-| `test-default` | Deterministic, synthetic, no-network test settings. | No real data or source access. | Test harness only. |
-| `review-default` | Hold/abstain/restrict routing for review tools. | Fail closed. | Verified review tooling only. |
-| `public-safe-profile-selector` | References an accepted aggregation/redaction/generalization/display profile. | Identifier/version only; no protected detail. | Policy, receipt, evidence, review, release still required. |
-| `source-profile-selector` | References an accepted source/cadence/role profile. | No credentials/endpoints that are unsafe to publish. | Cannot activate a source. |
-| `model-method-selector` | References an accepted model/method/run family. | Preserve version/input/uncertainty refs. | Cannot create model truth. |
-| `compatibility` | Temporary key/path mapping during migration. | Time-bounded and owner-linked. | Remove after closure. |
-| `production-binding` | Real environment, credential, private source, or deployment values. | **Forbidden here.** | External deployment/secret system only. |
-
----
+Templates, examples, development/test/review defaults, public-safe profile selectors,
+source-profile selectors, model/method selectors, and time-bounded compatibility
+mappings may be proposed for a named consumer. These remain descriptive classes
+until its contract defines exact values. Real production bindings belong to the
+approved deployment/secret system, not this tracked lane. No class activates itself.
 
 ## Minimum configuration contract
 
-Every future non-README file should document, in-file or through an accepted adjacent machine contract:
+This is a **PROPOSED design checklist**, not a published config schema. A consumer's
+actual contract owns field names and supported values.
 
-| Field | Requirement |
+| Concern | Required declaration before use |
 |---|---|
-| `domain_slug` | `agriculture`. |
-| `config_id` / `config_version` | Stable identity and semantic version. |
-| `config_class` | One class from the table above. |
-| `intended_consumer` | Exact repo path/component or `NEEDS VERIFICATION`. |
-| `consumer_version` | Accepted version/range when verified. |
-| `format` / `parser` | File type, parser, parser version, and canonicalization behavior. |
-| `binding` | Exact selection mechanism; no directory-presence activation. |
-| `authority_refs` | Contract, schema, policy, registry, profile, receipt, and ADR refs as applicable. |
-| `source_refs` | Reviewed source/profile IDs only; no secret/live credentials. |
-| `source_role_behavior` | Accepted roles and no-upcast behavior. |
-| `spatial_support` | County/district/HUC/grid/pixel/field-candidate/parcel-adjacent/facility/other. |
-| `temporal_scope` | Crop/survey/acquisition/observation/valid/retrieval/revision/release/correction fields as applicable. |
-| `measurement_semantics` | Unit, denominator, method, sample frame, model/run, confidence, uncertainty, suppression, revision. |
-| `privacy_posture` | Audience, aggregation/suppression/generalization profile, small-cell and reconstruction constraints. |
-| `rights_posture` | License/terms/attribution/redistribution/audience refs. |
-| `network_behavior` | `none` for parse/validation by default; live access belongs to the consumer/source systems. |
-| `side_effects` | `none` for parse/validation; lifecycle/release side effects forbidden. |
-| `unknown_key_behavior` | Reject/warn/other safe behavior. |
-| `missing_file_behavior` | Safe inactive/error/hold behavior. |
-| `precedence` | Deterministic merge/replace order. |
-| `observability` | Safe diagnostics with redaction. |
-| `validation_ref` | Executable check or explicit `NEEDS VERIFICATION`. |
-| `owner` / `reviewers` | Accepted owner/review classes or unresolved placeholders. |
-| `reviewed_at` | ISO date. |
-| `deprecation` | Replacement/sunset for temporary files. |
-| `rollback` | Prior known-good ref, deactivation, invalidation, correction, and restore steps. |
+| Identity and scope | Config ID/version, class, `agriculture` scope, owner, reviewers, review date |
+| Reader and format | Exact consumer/version, file path, parser/version, format and canonicalization |
+| Selection | Explicit binding; included files; merge/replace and key precedence; substitution/coercion rules |
+| Authorities | Exact contract, schema, policy, registry, profile, receipt, and applicable decision references |
+| Source support | Source/product/profile IDs and claim-relative roles; no credentials or admission decisions |
+| Space and time | Support unit, crop/survey/reference period, acquisition/observation/valid times, revision and freshness |
+| Measurement | Unit, denominator, sample frame, method/model/run/version, resolution, QA and uncertainty |
+| Privacy and rights | Audience, accepted aggregation/suppression/generalization references, attribution and redistribution limits |
+| Execution | No network or side effects during parsing/core validation; separate authorized live execution |
+| Failure and diagnostics | Unknown/missing/deprecated keys, partial load, stale/withdrawn profile handling, redacted diagnostics |
+| Validation and retirement | Positive/negative tests, deprecation/sunset, deactivation, correction/invalidation and rollback references |
 
-No value may grant authority not already provided by the referenced accepted surfaces.
-
----
+Do not store policy-significant values here to avoid review of their owning policy.
 
 ## Consumer binding, precedence, and discovery
 
 ### Explicit binding
 
-A consumer must identify the exact config file it reads. Avoid recursive discovery, first-match behavior, filename conventions, or “load every YAML under this directory.”
+No consumer is established for this lane. A future reader must select an exact file;
+recursive discovery, first-match wins, or loading every YAML file is not authorized
+by a folder name or this README.
 
 ### No implicit precedence
 
-This README does not establish an order such as:
-
-```text
-repository default
-  -> domain default
-  -> environment profile
-  -> local override
-  -> command-line
-  -> runtime/deployment
-```
-
-A verified consumer must define and test:
-
-- included files;
-- merge versus replace semantics;
-- key-level precedence;
-- environment substitution;
-- type coercion;
-- unknown-key behavior;
-- missing-file behavior;
-- partial-load behavior;
-- stale/deprecated config behavior;
-- logging/redaction;
-- cache and derivative invalidation;
-- rollback selection.
+Define and test included files, replacement versus merge, key-level order,
+environment substitution, type coercion, unknown keys, absent files, partial loads,
+stale/deprecated profiles, safe logging, cache invalidation, and rollback selection.
+No universal defaults-to-environment-to-local-to-CLI order is established here.
 
 ### Safe failure
 
-Loading failure must not silently:
-
-- activate a source;
-- reveal field/operator/facility detail;
-- remove aggregation or suppression;
-- broaden audience;
-- treat candidates/models/estimates as observations;
-- produce advice or compliance conclusions;
-- continue using a stale public profile;
-- publish or retain a released derivative after invalidation.
-
----
+Missing or invalid configuration must not activate sources, broaden audience,
+unmask protected detail, upcast models/candidates/estimates, bypass review, provide
+advice, or keep serving a withdrawn public profile through permissive fallback.
 
 ## Agriculture object-family boundaries
 
-| Object or concept | Must remain separate from | Reason |
-|---|---|---|
-| Crop observation | Classified pixel, model inference, survey estimate, crop-progress aggregate | Different role, method, support, and uncertainty. |
-| Field candidate | Parcel, cadastral boundary, Common Land Unit, operator field, farm, management unit | Geometry or overlap does not prove identity, control, ownership, or public release. |
-| Crop rotation | Repeated classification sequence, farm-management record, conservation practice | Sequence is an inference unless evidence and method support stronger status. |
-| Yield observation | Modeled yield, survey estimate, county aggregate, insurance yield, operator record | Units, denominator, method, aggregation, rights, and revision differ. |
-| Irrigation link | Water right, well ownership, pumping record, legal allocation, actual use | Hydrology/People-Land/regulatory authority remains separate. |
-| Conservation practice | Program participation, compliance, payment, effectiveness, observed management | Administrative/planning records do not prove on-ground practice. |
-| Suitability | Crop recommendation, appraisal, engineering design, guaranteed productivity | Interpretation is method- and use-specific. |
-| Drought/pest stress | Hazard warning, loss determination, infestation, disease diagnosis, pesticide recommendation | Indicator is not operational/regulatory truth. |
-| Agricultural economy aggregate | Farm/business/household transaction or performance | Aggregate statistics cannot be downscaled. |
-| Supply-chain node | Operator identity, inventory, capacity, security condition, real-time logistics | Infrastructure and private-operation risks. |
-| Aggregation receipt | EvidenceBundle, policy decision, proof, release manifest | Separate trust objects with distinct authority. |
-
----
+| Keep distinct | Do not infer |
+|---|---|
+| Crop observation / classified pixel / survey estimate / model | Direct observation from a classification or aggregate |
+| Field candidate / cadastral parcel / CLU / farm / operator / facility | Identity, title, control, management, or public permission from overlap |
+| Rotation / repeated class sequence / management record | Farm-management continuity from imagery alone |
+| Measured yield / modeled yield / aggregate estimate / operator record | Field or operator performance from county statistics |
+| Irrigation context / water right / pumping / allocation | Use, entitlement, or compliance from a link |
+| Conservation context / program participation / field verification | Practice adoption, effectiveness, payment, or compliance from administration |
+| Suitability or stress / recommendation / loss or diagnosis | Operational advice or a regulatory/insurance decision from an indicator |
+| Economy aggregate / transaction; supply-chain context / operations | Private business performance, inventory, security, or real-time status |
+| Receipt / EvidenceBundle / policy decision / proof / release | Approval or truth from process provenance |
 
 ## Source role and knowledge character
 
-Configuration must preserve the accepted role assigned at source admission and used for the specific claim.
-
-| Role | Agriculture example | Config boundary |
-|---|---|---|
-| `observed` | Direct measurement or field-verified record with method and rights support. | Cannot be assigned to classification, survey, model, aggregate, or administrative records. |
-| `regulatory` | Official restriction, designation, inspection, quarantine, eligibility, or compliance determination. | Cannot be inferred from context or config; may be sensitive and time-bound. |
-| `administrative` | Program record, inventory, directory, permit index, CLU-like record, assessor record. | Administrative presence is not crop, field, operator, ownership, condition, or compliance truth. |
-| `modeled` | Crop classification, yield estimate, evapotranspiration, stress model, remote-sensing inference. | Preserve model/run/product/version/input/uncertainty/validation refs. |
-| `aggregate` | County/district/HUC/survey/economy statistic. | Never downscale to farm, parcel, field, operator, worker, or household. |
-| `candidate` | Imported field boundary, geocode, extracted table, provisional match, unreviewed crosswalk. | Blocks public truth and release until governed transition. |
-| `context` | Agronomic publication, extension note, background report, explanatory narrative. | Not sufficient claim proof by itself. |
-| `synthetic` | Scenario, demo, simulated crop pattern, generated teaching example. | Reality-boundary label required; never mixed with observations. |
-| `restricted` | Private operator/farm records, confidential survey microdata, sensitive facility, compliance or health detail. | Deny, restrict, redact, generalize, delay, or quarantine according to policy. |
-
-A source family may support different roles for different products or uses. Config must reference the reviewed use/profile, not assume one universal role.
-
----
+Preserve claim-relative observed, regulatory, administrative, modeled/classified,
+aggregate, candidate, contextual, and synthetic distinctions using the exact governing
+profile. Preserve restricted-access and sensitivity posture as well; do not invent
+or collapse machine fields from this explanatory vocabulary. A source family can
+support different roles for different products. Configuration cannot assign a more
+authoritative role or turn synthetic material into observation.
 
 ## Field, parcel, operator, and facility identity
 
-- A field candidate is not automatically a cadastral parcel, CLU, farm, ranch, management unit, operator field, or ownership unit.
-- Geometry overlap, centroid proximity, matching acreage, repeated crop class, address, facility proximity, or temporal persistence does not prove identity.
-- Parcel/assessor data does not prove operator, tenant, crop, management, compliance, ownership title, or field use.
-- A field boundary may be inferred, classified, digitized, administrative, surveyed, operator-supplied, or synthetic; the identity method and uncertainty must remain explicit.
-- Splits, merges, rotations, fallow periods, boundary revisions, survey vintages, imagery artifacts, and crop-class changes must not be treated as identity continuity without evidence.
-- Farmstead, storage, livestock, chemical, irrigation, well, elevator, processor, or supply-chain facilities require role, source, rights, sensitivity, valid-time, and release review.
-- Public identifiers must be deterministic where practical but must not encode private identity or enable reverse lookup.
-- Config cannot define a hidden crosswalk that joins field, parcel, operator, owner, facility, permit, inspection, program, or financial records.
-
----
+Overlap, centroids, matching acreage, address proximity, repeated crop classes, or
+persistence do not prove field/parcel/operator equivalence. Preserve boundary method,
+uncertainty, source, vintage, splits/merges, and revision lineage. Administrative
+records do not establish title, tenancy, management, or current use. Public IDs must
+not encode private identity or enable reverse lookup; hidden operator/parcel/facility
+crosswalks are prohibited.
 
 ## Spatial unit, aggregation, suppression, and reconstruction
 
 ### Spatial/support units
 
-A payload must declare the support of every threshold or profile:
-
-- state;
-- crop-reporting district;
-- county;
-- watershed/HUC;
-- administrative region;
-- grid cell;
-- raster pixel;
-- generalized tile;
-- field candidate;
-- parcel-adjacent feature;
-- facility or point;
-- route/network node;
-- other accepted support.
-
-A value defined for one support cannot silently apply to another.
+Keep state, crop-reporting district, county, HUC/watershed, administrative region,
+grid, pixel, generalized tile, field candidate, parcel-adjacent feature, facility,
+and network support distinct. Thresholds and methods do not transfer across them
+without an accepted transformation.
 
 ### Aggregation rules
 
-- Public-safe products default to accepted aggregate/generalized supports.
-- Aggregation must preserve denominator, population/frame, geography, time window, method, suppression, revision, and source role.
-- A county or district value cannot be copied to fields or parcels as if observed there.
-- Raster resampling or zonal statistics do not create field truth.
-- Aggregation profiles must be versioned and referenced, not reimplemented as ad hoc local thresholds.
+Use accepted versioned profiles and preserve geography, denominator/population,
+frame, time window, role, method, uncertainty, suppression, and revision. Never copy
+an aggregate onto fields/operators as an observation; resampling and zonal statistics
+do not create field truth.
 
 ### Suppression and disclosure control
 
-Configuration must not:
-
-- remove or override source suppression;
-- infer suppressed cells from totals or adjacent categories;
-- expose small-cell or sparse-category details;
-- combine time slices to reveal entries/exits or operator activity;
-- combine maps, exports, search, tooltips, APIs, or filters to reconstruct protected detail;
-- use randomized/jittered display as proof of privacy without an accepted method and receipt;
-- lower minimum counts, area thresholds, precision, or delay without policy review.
+Never undo source suppression, reconstruct cells from totals/categories or time
+slices, expose sparse groups, lower thresholds/delays, or combine map/API/search/export
+views to reveal private operations. Jitter or aggregation alone is not a privacy proof.
 
 ### Transform evidence
 
-A public-bound transform may require an accepted `AggregationReceipt`, `RedactionReceipt`, `GeneralizationReceipt`, `TransformReceipt`, or equivalent. Config may require or reference the object; it cannot fabricate or self-approve it.
-
----
+Require the applicable aggregation, redaction, generalization, or transform evidence
+and receipts. A profile selector cannot fabricate, approve, or replace them.
 
 ## Crop year, survey year, time, and revision state
 
-Where material, preserve:
-
-| Time/revision field | Meaning |
-|---|---|
-| `crop_year` | Production/planting/harvest season represented. |
-| `survey_year` / `reference_period` | Statistical or administrative reporting period. |
-| `acquired_at` | Imagery/sensor acquisition time. |
-| `observed_at` | Direct observation time. |
-| `valid_from` / `valid_to` | Period for which a status or classification is asserted. |
-| `retrieved_at` | KFM/source retrieval time. |
-| `published_at` | Upstream publication time. |
-| `revision_status` | Preliminary, revised, final, superseded, corrected, withdrawn, or source-specific state. |
-| `release_time` | KFM release time. |
-| `correction_time` | KFM/source correction time. |
-| `freshness_state` | Current, stale, expired, superseded, unavailable, or unresolved under an accepted profile. |
-
-Rules:
-
-- A newer retrieval does not make an old crop/survey year current.
-- Preliminary estimates cannot be presented as final.
-- Revised values must supersede through explicit lineage rather than silent replacement.
-- Imagery acquisition and product publication dates are distinct.
-- Crop progress, condition, market, facility, pest, disease, drought, irrigation, and supply-chain context may be operationally time-sensitive; stale state must be visible.
-- Historic records remain historic even when loaded recently.
-- Config cannot define finality, effective dates, or revision authority independently.
-
----
+Distinguish crop year, survey/reference period, acquisition, observation, valid
+interval, retrieval, upstream publication, KFM release, correction, and freshness.
+Preserve source-specific preliminary/revised/final/superseded/withdrawn states.
+New retrieval does not make an old season current; revisions need explicit lineage,
+not silent replacement. Operationally time-sensitive context must show staleness.
 
 ## Units, methods, denominators, quality, and uncertainty
 
-A numeric Agriculture value is incomplete without applicable context:
-
-- measure and unit;
-- numerator and denominator;
-- area/weight/count/volume basis;
-- commodity/crop/livestock/product class;
-- geography/support;
-- crop/survey/reference year;
-- method and instrument;
-- sample frame or population;
-- model/product/run/version;
-- resolution and scale;
-- confidence interval, standard error, accuracy, QA/QC, or uncertainty;
-- suppression/disclosure status;
-- preliminary/revised/final status;
-- known limitations and fitness for use.
-
-Examples of forbidden collapse:
-
-```text
-classified acreage -> observed planted acreage
-county yield estimate -> field yield
-production total -> operator output
-pixel confidence -> field certainty
-survey response -> complete population
-price index -> transaction price
-suitability score -> recommendation
-stress index -> confirmed loss
-```
-
-Config may select accepted normalization and display profiles. It cannot make an untyped, unsupported, suppressed, or methodless value valid.
-
----
+Carry measure, unit, numerator/denominator, area/weight/count/volume basis,
+commodity/class, geography, period, instrument/method, sample frame, model/run/version,
+resolution, QA, confidence/error/uncertainty, suppression, revision, and fitness-for-use
+where material. Classified acreage is not observed planted acreage; production is
+not operator output; a price index is not a transaction price; pixel confidence is
+not field certainty. Normalization cannot make missing support valid.
 
 ## Classified imagery, remote sensing, and model products
 
-For CDL/HLS/SMAP/vegetation-index/ET/stress/yield/classification or similar products, preserve:
-
-- source/product family;
-- product version;
-- scene/granule/tile/run identity;
-- acquisition and processing time;
-- spatial and temporal resolution;
-- class scheme and crosswalk version;
-- training/reference/validation basis where available;
-- QA/cloud/mask/quality flags;
-- method/model/version;
-- uncertainty/accuracy/confusion limits;
-- source role;
-- valid use and prohibited use;
-- aggregation/generalization method;
-- evidence and release refs.
-
-A model or classification is not a direct field observation. A repeated classification is not proof of rotation, ownership, or management. A vegetation signal is not a diagnosis. A field candidate extracted from pixels is not a confirmed field or public parcel layer.
-
----
+For classified imagery, vegetation indices, evapotranspiration, yield, or stress
+products, retain product/version, scene/granule/tile/run identity, acquisition and
+processing time, resolution, native classes/crosswalk version, training/reference
+and validation support, QA/cloud/masks, method, uncertainty, limitations, evidence,
+and release references. Repeated classification is not rotation proof, a vegetation
+signal is not a diagnosis, and an extracted field candidate is not a confirmed parcel.
 
 ## Suitability, stress, and advice boundary
 
-Configuration may reference accepted method and caveat profiles for:
-
-- soil–crop suitability;
-- drought/heat/moisture stress;
-- vegetation condition;
-- pest/disease stress indicators;
-- erosion/conservation context;
-- yield potential or productivity indicators;
-- restoration or land-cover transition context.
-
-It must not convert those outputs into:
-
-- planting, spraying, fertilizer, irrigation, harvest, grazing, livestock-health, storage, safety, or management instructions;
-- pesticide, veterinary, quarantine, or disease diagnosis/recommendation;
-- engineering design, drainage, erosion-control, water-system, or infrastructure advice;
-- crop-loss, insurance, appraisal, lending, tax, subsidy, eligibility, or compliance determinations;
-- legal, regulatory, enforcement, title, boundary, or water-right determinations;
-- hazard alerts or emergency instructions;
-- financial, market, commodity-trading, procurement, or investment advice.
-
-Display must preserve method, input, scale, time, uncertainty, source role, limitations, and evidence. Where those are missing, abstain or hold.
-
----
+Method-specific suitability, moisture/heat/drought/pest stress, erosion/conservation,
+productivity, and restoration context must retain input, scale, time, uncertainty,
+limitations, and evidence. Configuration cannot authorize planting/spraying/irrigation,
+fertilizer/harvest/grazing, veterinary/pesticide, engineering/safety, insurance/lending,
+appraisal/tax, market/investment, legal/title/water-right, compliance, or emergency
+advice. Missing support calls for narrowing, abstention, or hold.
 
 ## Irrigation, conservation, regulatory, and compliance context
 
-- Agriculture may reference Hydrology-owned water observations and People/Land-owned rights/parcel context; it does not own water-right, allocation, pumping, ownership, title, or legal-access truth.
-- An irrigation link may be modeled, administrative, observed, inferred, or candidate. The role must remain explicit.
-- Conservation-practice context may come from planning, technical assistance, program, remote-sensing, self-report, or field-verification sources; these are not interchangeable.
-- Program participation does not prove practice implementation, effectiveness, compliance, or payment status.
-- Regulatory, inspection, pesticide, animal-health, disease, quarantine, contamination, or enforcement records may be highly sensitive and time-bound.
-- Config cannot disable mandatory review, retention, redaction, delay, audience restriction, or correction.
-- Public presentation must not expose vulnerabilities, private facilities, operational patterns, restricted materials, or individuals through combined attributes.
-
----
+Keep Hydrology-owned observations and People/Land rights context separate from
+Agriculture interpretation. Planning, technical assistance, program records,
+remote sensing, self-report, and field verification are not interchangeable.
+Regulatory, disease/quarantine, inspection, pesticide, animal-health, contamination,
+or enforcement information may be sensitive and time-bound. No config may bypass
+review, redaction, retention, delay, audience restrictions, or correction.
 
 ## Agricultural economy and supply-chain context
 
-Agricultural economy and supply-chain config must preserve:
-
-- aggregation level;
-- statistical method;
-- source role;
-- reference period;
-- commodity/product class;
-- price/quantity/value basis;
-- inflation or index basis;
-- revision/finality;
-- suppression/confidentiality;
-- geographic and business support;
-- uncertainty and caveats.
-
-It must not expose or infer:
-
-- individual farm/ranch/business transactions;
-- operator revenue, cost, inventory, debt, insurance, tax, loan, contract, customer, employee, or performance;
-- facility inventory, capacity, vulnerability, schedules, routing, access, security, or real-time operational status;
-- private buyer/seller relationships;
-- market manipulation, trading signals, price forecasts, or financial recommendations.
-
-Supply-chain nodes and routes are contextual or derived unless supported by their owning domains and release controls. Roads/Rail/Trade owns transport-route truth; Settlements/Infrastructure owns facility/infrastructure context; People/Land owns ownership/private-person context.
-
----
+Preserve statistical support, reference period, commodity, price/quantity/value and
+inflation/index basis, method, uncertainty, suppression, and finality. Do not expose
+or infer individual revenues, costs, debt, taxes, insurance, transactions, contracts,
+customers/workers, performance, buyer/seller relationships, facility inventory,
+capacity, vulnerability, access, schedules, routes, or live operations. No trading
+signals or financial recommendations follow from a profile selector.
 
 ## Cross-domain joins
 
-| Join | Agriculture may consume | Must remain owned elsewhere | Fail-closed risk |
-|---|---|---|---|
-| Agriculture × Soil | Map-unit, component, HSG, property, suitability inputs with refs. | Soil identity, survey lineage, horizons, soil truth. | Treating SoilGrid/SSURGO context as field management truth. |
-| Agriculture × Hydrology | Streamflow, groundwater, drought/water context, irrigation-support evidence. | Water observations, rights, flood/regulatory truth. | Inferring pumping, allocation, access, or compliance. |
-| Agriculture × Atmosphere | Weather, climate, heat, precipitation, smoke/AOD context. | Atmospheric observations and forecast authority. | Treating forecast/model context as observed crop impact. |
-| Agriculture × Hazards | Drought, flood, wildfire, storm, disease-event context. | Hazard events, warnings, declarations, emergency authority. | Converting indicators into warnings/loss determinations. |
-| Agriculture × People/DNA/Land | Parcel/ownership/consent context under restricted governance. | Title, ownership, living-person, DNA, consent truth. | Operator/owner/tenant identification or private joins. |
-| Agriculture × Settlements/Infrastructure | Facilities, service areas, critical assets, dependencies. | Facility/infrastructure truth and security posture. | Exposing storage, livestock, chemical, utility, or operational detail. |
-| Agriculture × Roads/Rail/Trade | Freight/market corridor context. | Route, rail, access, restriction, operational truth. | Revealing logistics or treating routes as current/safe. |
-| Agriculture × Habitat/Flora/Fauna | Habitat, vegetation, taxa, rare-species or plant context. | Ecological/taxonomic/occurrence truth. | Rare-location leakage through land/crop joins. |
-| Agriculture × Geology | Parent material, groundwater/geologic context where relevant. | Lithology, stratigraphy, mineral/resource truth. | Overclaiming causal or site-specific conditions. |
+Soil retains soil units, horizons, survey identity, and properties; Hydrology retains
+water observations; Atmosphere retains weather/climate observations and forecasts;
+Hazards retains hazard-event semantics; People/DNA/Land retains protected person,
+parcel, title, ownership, and consent context. Habitat/Flora/Fauna retain ecological
+and taxonomic truth; Geology retains lithology/stratigraphy/resources;
+Settlements/Infrastructure retains facility context; Roads/Rail/Trade retains routes.
 
-Every join must preserve source role, domain ownership, time, scale, rights, sensitivity, evidence, policy, receipt, release, correction, and rollback.
-
----
+Every join preserves its owning claims, evidence, source role, time, scale, rights,
+sensitivity, policy, transform receipts, release, correction, and rollback. Neither
+geometry overlap nor combined layers may reveal protected people, sites, species,
+private operations, or infrastructure vulnerabilities.
 
 ## Source rights, attribution, and redistribution
 
-Before a configuration references or enables a source/product profile, verify:
-
-- publisher/maintainer;
-- source/product identity;
-- access method and endpoint status;
-- current terms/license;
-- public-domain or licensed status;
-- attribution requirements;
-- redistribution and derivative-product limits;
-- rate limits and automation restrictions;
-- privacy/confidentiality restrictions;
-- crop/survey/reference vintage and revision behavior;
-- spatial/temporal scale and coverage;
-- permitted claim families and audience;
-- source role;
-- stale/supersession/correction behavior;
-- steward and review state.
-
-Missing or unclear rights must produce `HOLD`, `ABSTAIN`, `DENY`, `RESTRICT`, or `QUARANTINE` as applicable. Config cannot declare rights resolved.
-
----
+Before use, resolve publisher/product identity, permitted access and automation,
+terms/license, attribution/redistribution and derivative limits, audience,
+confidentiality, cadence, vintage/revision, coverage, role, stale/supersession behavior,
+and review ownership. No current endpoint, license, or source admission is certified
+by this documentation revision. Missing rights block the affected use or exposure.
 
 ## Logging, telemetry, and observability
 
-Logs and diagnostics must never include by default:
-
-- credentials, tokens, signed URLs, private endpoints, or local paths;
-- exact field/parcel/facility/well/storage/livestock/chemical locations;
-- operator, owner, tenant, worker, household, customer, or business identity;
-- unsuppressed small-cell data;
-- confidential survey or program records;
-- source payloads or restricted attributes;
-- model prompts or generated text containing protected context.
-
-Prefer safe fields:
-
-- config ID/version/digest;
-- consumer version;
-- parser/validator version;
-- source/profile IDs when public-safe;
-- object family and source role;
-- aggregate support class;
-- crop/reference year;
-- policy decision ID/reason code;
-- receipt/evidence/release refs;
-- finite outcome;
-- redacted error class.
-
-Logging must not become a shadow export or private-data store.
-
----
+Diagnostics must not become an export of credentials, private paths/endpoints,
+field/facility geometry, operator/person/business identity, unsuppressed cells,
+confidential records, payloads, or protected prompt/model text. Prefer public-safe
+config/consumer/parser/validator IDs and digests, support/period, redacted error/reason
+codes, and permissible evidence/policy/receipt/release references.
 
 ## Failure behavior
 
-A consumer must fail closed when a config is:
-
-- malformed or unsigned where integrity is required;
-- missing required keys;
-- using unknown/deprecated keys;
-- bound to an unsupported consumer/parser version;
-- referencing unresolved schema/contract/policy/registry/profile paths;
-- selecting an unverified source or role;
-- missing time, revision, spatial support, unit, denominator, method, uncertainty, or suppression context;
-- exposing field/operator/private-facility detail;
-- removing aggregation/suppression;
-- enabling cross-layer reconstruction;
-- using a stale or withdrawn profile;
-- selecting an interpretation for advice/compliance/operational use;
-- missing evidence, receipt, policy, review, release, correction, or rollback support.
-
-Safe outcomes include `ABSTAIN`, `DENY`, `RESTRICT`, `HOLD`, `QUARANTINE`, or `ERROR`. Silent permissive fallback is prohibited.
-
----
+Reject or hold malformed, incomplete, unknown-key, incompatible, unresolved,
+stale/withdrawn, role-upcasting, disclosure-unsafe, or authority-bypassing inputs.
+Preserve the governing consumer's finite outcomes and distinguish review state from
+runtime response and lifecycle action. No silent fallback may broaden access,
+remove suppression, fabricate support, or release a derivative.
 
 ## Governed AI and generated language
 
-AI may interpret already-retrieved, already-governed Agriculture evidence. It must not:
-
-- treat this config as evidence;
-- invent crop, field, yield, operator, compliance, facility, market, or source facts;
-- infer private operations from maps or cross-layer context;
-- remove source-role, aggregation, suppression, time, revision, uncertainty, rights, or release caveats;
-- provide agronomic, pesticide, veterinary, regulatory, legal, insurance, lending, market, or emergency advice from config-selected context;
-- turn model/classification/aggregate/candidate outputs into observations;
-- expose restricted detail through prose even when the map is generalized;
-- answer when `EvidenceRef` cannot resolve to an authorized `EvidenceBundle`.
-
-Preferred order:
-
-```text
-scope
-  -> retrieve governed evidence
-  -> resolve EvidenceRef to EvidenceBundle
-  -> apply rights, sensitivity, aggregation, and policy
-  -> verify release and audience
-  -> answer with citations and bounded confidence
-  -> otherwise abstain, deny, restrict, or narrow scope
-```
-
-Generated summaries remain downstream carriers, never root truth.
-
----
+Follow scope -> admissible evidence -> `EvidenceRef` -> `EvidenceBundle` -> rights,
+sensitivity, disclosure, policy, review, release/audience checks -> cited bounded
+answer or abstention/denial. AI cannot treat configuration as evidence, invent facts,
+identify private operations, erase caveats, or leak through prose what a map hides.
+Maps, tiles, indexes, graphs, screenshots, reports, and AI remain downstream carriers.
 
 ## Migration and anti-bypass posture
 
-When misplaced or duplicated Agriculture config material is found:
-
-1. freeze new consumers and authority claims;
-2. identify the real consumer and responsibility owner;
-3. remove/quarantine secrets and protected details immediately;
-4. preserve the current blob, provenance, consumers, and release impact;
-5. resolve schema/contract/registry/catalog compatibility status through accepted governance;
-6. move meaning to contracts, shape to schemas, policy to policy, source control to registry, data to lifecycle lanes, and release objects to release;
-7. update explicit bindings and precedence;
-8. add valid/invalid/no-network/privacy/reconstruction tests;
-9. verify aggregation/suppression and transform receipts;
-10. issue correction/withdrawal/rollback records for affected public outputs;
-11. invalidate caches, tiles, exports, search/vector/graph products, screenshots, and AI carriers as applicable;
-12. keep compatibility redirects time-bounded;
-13. close drift/migration only after consumers and rollback are verified.
+Freeze identities, blobs, consumers, and affected releases; contain secrets and
+sensitive material without erasing audit evidence; classify by owning responsibility;
+obtain the applicable decision before authority-changing cutover; update explicit
+bindings with compatibility, negative tests, and rollback. Correct affected
+published derivatives through their owners. No silent rename, copied descriptor,
+second schema/policy home, or config-to-catalog/release write is permitted.
 
 ### Anti-bypass matrix
 
-| Bypass | Required response |
-|---|---|
-| Config file activates a source | Reject; activation belongs to registry/governed source control. |
-| Config contains private source credentials or endpoint bindings | Remove; rotate/revoke if exposed; externalize binding. |
-| Config supplies exact field/operator/facility data | Deny/quarantine; config is not data storage. |
-| Config defines aggregation/suppression thresholds as local policy | Move to accepted policy/profile authority; retain reference only. |
-| Config points public client to internal stores | Reject; public clients use governed APIs/released artifacts. |
-| Config labels model/classification/candidate as observed | Deny; preserve source role and knowledge character. |
-| Config bypasses receipt/evidence/release | Deny/hold; config cannot close trust objects. |
-| Config writes catalog/release/published objects | Move behavior to governed pipeline/release roots. |
-| Config enables advice/compliance/market decisions | Deny; narrow to explanatory, evidence-bound context. |
-| Compatibility path gains canonical records | Stop writes, migrate reversibly, preserve redirect/drift documentation. |
-
----
+Source activation, live credentials, exact protected data, local suppression policy,
+direct public internal-store reads, role upcasts, missing evidence/receipt/review,
+automatic publication, operational advice, and canonical writes into compatibility
+paths all require rejection or controlled containment—not a convenient config flag.
 
 ## Rollback, correction, and deactivation
 
 ### Rollback triggers
 
-- wrong source/profile/role;
-- unsafe field/operator/private-facility exposure;
-- aggregation or suppression regression;
-- cross-layer reconstruction risk;
-- stale/revision/finality error;
-- wrong class crosswalk or model profile;
-- unit/denominator/method error;
-- rights or attribution failure;
-- authority-path conflict;
-- advice/compliance/market boundary breach;
-- evidence/policy/release/correction/rollback link failure;
-- consumer/precedence behavior differs from documented behavior.
+Wrong role/profile/class/time/revision/unit, privacy or suppression regression,
+reconstruction risk, rights/attribution failure, authority conflict, advice leakage,
+broken evidence/release links, or undocumented consumer behavior requires correction.
 
 ### Required rollback sequence
 
-1. disable the exact consumer binding;
-2. enter safe inactive/deny/hold state;
-3. restore the prior reviewed config;
-4. stop or quarantine affected jobs and candidates;
-5. invalidate derived caches, tiles, exports, search/vector/graph indexes, screenshots, and AI context;
-6. identify affected source/crop/reference years, geographies, profiles, releases, and audiences;
-7. preserve receipts, logs, evidence, and provenance without exposing protected detail;
-8. issue correction, supersession, withdrawal, or rollback records through owning release governance;
-9. re-run parse, schema, semantic, role, time, revision, measurement, privacy, suppression, rights, policy, evidence, release, and no-network tests;
-10. document the incident/drift and prevention changes.
+Disable the exact binding; enter a safe state; restore a reviewed config; stop or
+quarantine affected jobs/candidates; invalidate caches, tiles, exports, search,
+graph/vector indexes, and AI context; identify affected periods/geographies/releases;
+preserve safe provenance; issue governing correction/withdrawal/rollback records;
+rerun applicable negative and positive tests. Correct distributed/static copies through
+their correction channel rather than claiming every screenshot can be recalled.
 
-For this README, mechanical restoration uses the prior blob recorded in metadata. Do not force-push or rewrite shared history.
-
----
+For this documentation-only change, preserve the branch or use a reviewed forward
+revert to the preimage recorded in metadata. Do not force-push shared history or
+claim a runtime rollback drill. Generation receipts retain their historical meaning;
+different artifact bytes require matching provenance, not silent receipt reuse.
 
 ## Definition of done for the first payload
 
-Before the first non-README file is accepted:
+Before a payload is treated as consumed, verify its exact owner/consumer, format,
+meaningful schema, explicit binding/precedence/fallback, relevant authority and source
+references, privacy/rights review, positive/negative tests, safe diagnostics, and
+reversible deactivation. Apply the identity, time, measurement, model, cross-domain,
+and disclosure checks above wherever the consumer's actual scope makes them material.
 
-- [ ] exact consumer and accepted owner verified;
-- [ ] config class, format, parser, binding, discovery, precedence, unknown-key, missing-file, and fallback behavior defined;
-- [ ] accepted non-empty schema or format contract validates;
-- [ ] contract/policy/registry/profile/ADR references verified;
-- [ ] segmented/short contract-schema conflicts do not create duplicate authority;
-- [ ] source-registry topology is resolved or one authoritative record family is clearly selected with redirects;
-- [ ] source identity, role, rights, terms, attribution, cadence, vintage, revision, and stale handling verified;
-- [ ] crop/land-cover crosswalk version and native-code preservation tested;
-- [ ] field-candidate versus parcel/operator/farm identity tests pass;
-- [ ] spatial-unit and no-downscaling tests pass;
-- [ ] crop-year/survey-year/acquisition/observation/valid/retrieval/revision/release/correction tests pass;
-- [ ] unit/denominator/method/sample/model/QA/uncertainty/suppression tests pass;
-- [ ] aggregation/suppression/small-cell/temporal-differencing/cross-layer reconstruction tests pass;
-- [ ] private field/operator/facility/parcel/worker/business denial tests pass;
-- [ ] model/classification/candidate no-upcast tests pass;
-- [ ] suitability/stress/conservation/irrigation/economy no-advice and no-compliance tests pass;
-- [ ] cross-domain ownership tests pass;
-- [ ] accepted transform receipt, evidence, policy, review, release, correction, and rollback requirements are enforced;
-- [ ] no secrets/private endpoints/private values;
-- [ ] no-network parsing and validation where practical;
-- [ ] logging/telemetry redaction verified;
-- [ ] no lifecycle/trust/catalog/triplet/release objects stored here;
-- [ ] deactivation, cache/derivative invalidation, correction, withdrawal, and rollback tested;
-- [ ] docs, evidence ledger, migration, and drift records updated.
-
----
+Before any public effect, additionally close evidence, policy, review, transform
+receipts/proofs, release, correction, and rollback. An isolated synthetic draft is
+not an active payload; unresolved gates must travel with it explicitly. Do not use
+later publication gates as a blanket ban on safe reversible authoring.
 
 ## Verification backlog
 
-| Item | Status |
-|---|---:|
-| Recursive config inventory | `NEEDS VERIFICATION` |
-| Direct consumer/loader | `UNKNOWN` |
-| Discovery/precedence/fallback | `UNKNOWN` |
-| Segmented vs short contract path | `CONFLICTED / ADR-SENSITIVE` |
-| Segmented vs short schema path | `CONFLICTED / COMPATIBILITY` |
-| `aggregation_receipt` vs `aggregation-receipt` naming | `CONFLICTED` |
-| Aggregation receipt root vs `receipts/` child placement | `NEEDS VERIFICATION` |
-| Source-registry topology | `CONFLICTED` |
-| Catalog compatibility migration | `NEEDS VERIFICATION` |
-| Source-role vocabulary | `NEEDS VERIFICATION` |
-| Package implementation | `VERSION 0.0.0 / NEEDS VERIFICATION` |
-| Pipeline implementation | `PLACEHOLDER ENTRYPOINTS` |
-| Pipeline specs | `EMPTY STAGE LISTS` |
-| Policy executable modules/runtime | `NEEDS VERIFICATION` |
-| Schema completeness | `PROPOSED EMPTY-PROPERTIES SCAFFOLD` |
-| Validator executable | `NOT FOUND AT PROPOSED EXACT PATH` |
-| Workflow enforcement | `TODO SCAFFOLD` |
-| Tests/pass rates | `NEEDS VERIFICATION` |
-| Governed API handlers/runtime | `NEEDS VERIFICATION` |
-| Source descriptor payloads/activation | `NEEDS VERIFICATION` |
-| Source rights/endpoints/cadence | `NEEDS VERIFICATION` |
-| Crop/land-cover crosswalk authority | `NEEDS VERIFICATION` |
-| Field identity/merge/split rules | `NEEDS VERIFICATION` |
-| Crop-year/revision/finality profiles | `NEEDS VERIFICATION` |
-| Units/denominators/method/statistical profiles | `NEEDS VERIFICATION` |
-| Aggregation/suppression/reconstruction profiles | `NEEDS VERIFICATION` |
-| Model/remote-sensing/uncertainty profiles | `NEEDS VERIFICATION` |
-| Private operation/facility handling | `NEEDS VERIFICATION` |
-| Advice/compliance/economy boundaries in runtime | `NEEDS VERIFICATION` |
-| Secret/sensitive scanners | `NEEDS VERIFICATION` |
-| Ownership/CODEOWNERS/branch protection | `NEEDS VERIFICATION` |
-| Runtime/release/publication | `UNKNOWN` |
-
-[Back to top](#top)
-
----
+| Question | Status / next evidence needed |
+|---|---|
+| Tracked lane inventory | CONFIRMED: README only at the pinned base |
+| Direct config consumer, schema, parser, precedence | UNKNOWN / not established; inspect and test the first exact reader |
+| Dynamic, external, untracked, or deployed reads | UNKNOWN; indexed search is not exhaustive consumer closure |
+| Agriculture CI maturity | CONFIRMED source-level partial execution; exact-run results remain separate |
+| AggregationReceipt completeness | CONFIRMED permissive scaffold; no privacy/config validation implied |
+| Validator documentation scope discrepancy | NEEDS VERIFICATION; reconcile owning docs against exact implementation without creating another lane |
+| Historical contract/schema/registry aliases | NEEDS VERIFICATION for each selected family; no global migration decision made |
+| Source roles, rights, profile thresholds and admission | NEEDS VERIFICATION before affected use; no live source check performed |
+| Specialist stewardship and independent review | NEEDS VERIFICATION; CODEOWNERS is routing only |
+| Runtime, public exposure, release and operational rollback | UNKNOWN / NOT INSPECTED |
 
 ## Safe language rules
 
-| Avoid | Prefer |
-|---|---|
-| “The pipeline uses this config.” | “This file names an intended consumer; direct binding is `NEEDS VERIFICATION`.” |
-| “Observed crop.” | “Source-role-labeled crop observation/classification under a stated method, year, scale, and uncertainty.” |
-| “This is the field boundary.” | “A field candidate under a stated source/method/time/uncertainty; parcel/operator equivalence is not implied.” |
-| “This farm grows…” | “An aggregate or candidate crop context is shown; operator/farm identity is not asserted.” |
-| “County yield applies here.” | “County-level estimate under a stated reference period; no field/operator downscaling.” |
-| “Final NASS value.” | “Value with explicit preliminary/revised/final status from the cited source.” |
-| “This pixel proves crop rotation.” | “A classified sequence that may support a rotation hypothesis under a stated method.” |
-| “This land is suitable.” | “A method-specific interpretation with inputs, scale, uncertainty, limitations, and evidence.” |
-| “Drought/pest damage.” | “A stress indicator; hazard, infestation, diagnosis, and loss authority remain separate.” |
-| “Irrigated field.” | “An irrigation-related candidate/context under cited source role; rights/use/compliance not implied.” |
-| “Conservation practice implemented.” | “Administrative, modeled, contextual, or observed practice evidence as specifically supported.” |
-| “Service/facility is operational.” | “Time-bound cited context; no operational assurance.” |
-| “Public-safe because aggregated.” | “An accepted profile plus disclosure tests, transform receipt, policy, review, and release support a bounded derivative.” |
-| “Schema is active.” | “Opened schema is a `PROPOSED` scaffold with empty properties.” |
-| “Policy enforces this.” | “Policy intent is documented; executable modules/runtime binding remain `NEEDS VERIFICATION`.” |
-| “Validators enforce this.” | “Validator README exists; proposed executable exact path was not found.” |
-| “CI validates Agriculture.” | “The inspected domain workflow currently runs TODO echo jobs.” |
-| “catalog/domain/agriculture is the catalog.” | “It is a compatibility redirect; canonical catalog records belong under `data/catalog/domain/agriculture/`.” |
-
-[Back to top](#top)
-
----
+Say **“no tracked config payload”**, not “Agriculture has no implementation.” Say
+**“the workflow wires fixture-based checks”**, not “CI proves this config is consumed.”
+Say **“this AggregationReceipt file is permissive”**, not “all Agriculture schemas
+are empty.” Say **“field candidate,” “aggregate estimate,” “method-specific indicator,”**
+and **“claim-relative source role”** unless stronger evidence supports stronger words.
+Never equate a parse, test, receipt, merge, map, or generated answer with approval.
 
 ## Evidence ledger
 
-| Evidence | State | Supports | Does not prove |
-|---|---|---|---|
-| Target README | prior blob `1125052b…`, v0.2 | Existing privacy/aggregation/source-role/failure/rollback contract. | Consumers or payloads. |
-| Parent config README | blob `2c5e8b70…`, v0.4 | Non-secret/non-authoritative child contract. | Agriculture runtime behavior. |
-| Bounded config search | README only | No indexed payload/direct consumer. | Exhaustive absence. |
-| Agriculture domain README | blob `a2cac517…` | Object families, source/privacy/publication doctrine. | Current implementation. |
-| Agriculture architecture | blob `3e241679…` | Bounded context, source roles, lifecycle, trust membrane, sensitivity. | Executable behavior. |
-| Canonical paths | blob `94e9fb5d…` | Responsibility-root mapping and short/segmented path variance. | Accepted migration resolution. |
-| Package README / pyproject | blobs `dd2fc20d…`, `9ff43f0d…` | Intended helper boundary; version `0.0.0`. | Working modules/exports/tests. |
-| Pipeline README | blob `ec53bc7e…` | Intended executable boundary and privacy gates. | Implemented transformations. |
-| Pipeline entrypoints | placeholder comments | Inspected core entrypoints are greenfield placeholders. | All possible code elsewhere. |
-| Pipeline specs | `stages: []` | Spec paths exist. | Stage wiring/execution. |
-| Policy README | blob `ba73c387…` | Policy lane/default-deny intent. | Concrete accepted policy modules/runtime enforcement. |
-| Schema index | blob `35d28a2c…` | Schema/alias/child-lane/naming conflict. | Production-ready validation. |
-| Aggregation receipt schema | blob `16c55157…` | Proposed path/id/contract ref. | Meaningful fields or strict validation. |
-| Validator README | blob `ba9009bd…` | Intended validation responsibilities and outcomes. | Executable validator. |
-| Proposed validator path | exact fetch `Not Found` | Proposed command is not current path proof. | Absence of all validator code. |
-| Domain workflow | blob `a9f5f212…` | PR/push trigger and TODO jobs. | Substantive validation/proof/release. |
-| Source registry subtype-first | blob `7828ec0b…` | Source families/roles/risks and path posture. | Active descriptor payloads. |
-| Registry domain-first parent | blob `020b7257…` | Three-way registry ordering conflict. | Canonical topology or active records. |
-| Catalog compatibility README | blob `5295809c…` | Root path is redirect; canonical catalog under `data/catalog/domain/agriculture/`. | Migration completeness. |
-| Governed API route-source README | blob `cec20a47…` | Intended trust-membrane and field/operator denial boundary. | Handlers, integrations, tests, deployment, runtime. |
+| Evidence at the pinned base | Use / limitation |
+|---|---|
+| `configs/domains/agriculture/` exact Contents response; target preimage | Complete tracked leaf inventory and v0.3 lineage; no external inventory |
+| `configs/README.md`; `configs/domains/README.md` | Inherited non-secret, non-authoritative configuration responsibility |
+| Directory Rules blob `fd49a0b83e55cef52c1124281f093e263526898d`; accepted ADR-0029 | Adopted placement and boundary/migration rules; not runtime proof |
+| `.github/CODEOWNERS` blob `dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61` | Verified review routing, not approval |
+| `.github/workflows/domain-agriculture.yml` | Current executable wiring and explicit broader holds; not an observed run |
+| `docs/domains/agriculture/README.md`; `tools/validators/domains/agriculture/README.md` | Domain and narrower validator scope; differing historical descriptions remain visible |
+| AggregationReceipt blob `16c55157c07d3115bfb540b2064e0401bc71b564` | Exact still-permissive scaffold; does not characterize every schema |
+| Literal-path code search excluding Markdown | Zero indexed matches at review; cannot exclude computed or external reads |
+| Drive Directory Rules; Notion Agriculture builder record | Read-only lineage/coordination; their older checkpoints do not override GitHub |
 
-[Back to top](#top)
-
----
-
-<details>
-<summary><strong>Appendix A — no-loss preservation note</strong></summary>
-
-v0.2 established:
-
-- the Agriculture config lane and documentation-only maturity;
-- non-authoritative and no-live-binding posture;
-- privacy, field/operator, parcel, facility, and sensitive-location controls;
-- source-role separation;
-- aggregation, generalization, rights, evidence, policy, review, release, and rollback boundaries;
-- minimum configuration contract;
-- deterministic validation and finite failure behavior;
-- review burden, maintenance, ADR, correction, and rollback requirements.
-
-v0.3 preserves those controls and adds:
-
-- pinned current repository evidence;
-- implementation/scaffold maturity;
-- schema/contract/registry/catalog compatibility conflicts;
-- aggregation-receipt naming and placement conflict;
-- full Agriculture object-family boundaries;
-- field/parcel/operator/facility identity rules;
-- spatial support, aggregation, suppression, and reconstruction resistance;
-- crop-year, survey-year, time, revision, and stale-state rules;
-- units, denominators, methods, QA, statistical uncertainty, and suppression context;
-- classified imagery and model-product controls;
-- suitability/stress/no-advice boundaries;
-- irrigation, conservation, compliance, economy, and supply-chain safeguards;
-- cross-domain ownership matrix;
-- rights/attribution/redistribution rules;
-- logging, AI, migration, anti-bypass, invalidation, and first-payload gates;
-- expanded backlog, safe language, and evidence ledger.
-
-No v0.2 safeguard is intentionally weakened.
-
-</details>
-
-<details>
-<summary><strong>Appendix B — documentation-only boundary</strong></summary>
-
-This revision changes no:
-
-- executable config payload;
-- consumer, loader, discovery, or precedence behavior;
-- source descriptor, source activation, connector, or watcher;
-- schema, contract, policy, package, pipeline, validator, test, fixture, or workflow code;
-- source data, imagery, statistics, field candidate, parcel, facility, model, or interpretation;
-- lifecycle, registry, receipt, proof, catalog, triplet, graph, or published artifact;
-- release, correction, withdrawal, supersession, or rollback object;
-- API, map, UI, export, Focus Mode, AI, advice, compliance, market, or deployment behavior.
-
-Any future behavior change must be implemented and validated in its owning responsibility roots.
-
-</details>
+The full v0.3 preimage remains in Git history. v0.4 preserves document identity,
+H1/H2 navigation topics, agricultural distinctions, privacy/disclosure controls,
+source/time/method limits, cross-domain ownership, and correction/rollback. It
+condenses repeated lists, replaces stale global scaffold claims, and keeps prior
+alias findings as unclosed lineage rather than pretending to reverify them.
 
 ## Status summary
 
-`configs/domains/agriculture/` is a README-only, non-secret, non-authoritative configuration-support lane. The surrounding repository contains rich Agriculture documentation and many implementation-shaped paths, but inspected package, pipeline, specification, policy, schema, validator, workflow, registry, catalog, and route-source surfaces remain draft, scaffolded, placeholder, compatibility-only, conflicted, or unverified. No direct config consumer is established. Future payloads require explicit binding, accepted source/role/classification profiles, field/operator identity limits, crop-year/revision and measurement semantics, disclosure-resistant aggregation, privacy and rights review, cross-domain authority preservation, validation, evidence, policy, review, release, correction, invalidation, and rollback.
+**README-only configuration, not TODO-only Agriculture.** This revision updates
+navigation and the source-evidence boundary without adding a config payload,
+changing executable behavior, accepting a source or policy, resolving authority
+aliases, activating a consumer, or granting merge/release/publication authority.
+Review and delivery evidence belongs in the accompanying handoff and generated
+receipt; operational readiness must be demonstrated separately.
 
-<p align="right"><a href="#top">Back to top</a></p>
+[Back to top](#top)

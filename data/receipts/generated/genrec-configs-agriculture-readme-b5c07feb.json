@@ -1,0 +1,177 @@
+{
+  "receipt_id": "genrec-configs-agriculture-readme-b5c07feb",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "configs/domains/agriculture/README.md"
+  ],
+  "artifact_hashes": {
+    "configs/domains/agriculture/README.md": "sha256:b5c07feb3398dd7c3685ca5f3a716b9331d97a152a6def28110799f13dbd2ee7"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Pro",
+    "version": "UNKNOWN: exact runtime build not exposed"
+  },
+  "prompt_or_contract": "sha256:1d34e2a828dc16de447f1d7c9d6400b395cb0a67f1ba05249ebdf476c0154ba0",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "Google Drive",
+      "Notion",
+      "container"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "configs/domains/agriculture/README.md@bb3eb695e6068b38453ca3ded8f1394a8fdebc20",
+      "configs/README.md@bb3eb695e6068b38453ca3ded8f1394a8fdebc20",
+      "configs/domains/README.md@bb3eb695e6068b38453ca3ded8f1394a8fdebc20",
+      "docs/doctrine/directory-rules.md@bb3eb695e6068b38453ca3ded8f1394a8fdebc20",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@bb3eb695e6068b38453ca3ded8f1394a8fdebc20",
+      ".github/CODEOWNERS@bb3eb695e6068b38453ca3ded8f1394a8fdebc20",
+      ".github/workflows/domain-agriculture.yml@bb3eb695e6068b38453ca3ded8f1394a8fdebc20",
+      "docs/domains/agriculture/README.md@bb3eb695e6068b38453ca3ded8f1394a8fdebc20",
+      "tools/validators/domains/agriculture/README.md@bb3eb695e6068b38453ca3ded8f1394a8fdebc20",
+      "schemas/contracts/v1/domains/agriculture/aggregation_receipt.schema.json@bb3eb695e6068b38453ca3ded8f1394a8fdebc20",
+      "schemas/contracts/v1/receipts/generated_receipt.schema.json@bb3eb695e6068b38453ca3ded8f1394a8fdebc20",
+      "data/receipts/generated/README.md@bb3eb695e6068b38453ca3ded8f1394a8fdebc20",
+      "CONTRIBUTING.md@bb3eb695e6068b38453ca3ded8f1394a8fdebc20",
+      "GitHub exact comparison bb3eb695e6068b38453ca3ded8f1394a8fdebc20...700570cbcf191038aa20a030174c2dd08cf93675: only catalog/triplet/README.md changed",
+      "Google Drive Directory Rules: 1uTqdIEFZE2cq3gyISetoRYM6LIlnKqTc3FobtEx7Cbs (read-only lineage)",
+      "Notion Agriculture builder: 3caa9202-1bf6-814b-b884-ed13a2923c19 (historical coordination)",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4267"
+    ]
+  },
+  "truth_labels": {
+    "configs/domains/agriculture/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "pinned-source-and-leaf-inventory-review",
+      "outcome": "PASS",
+      "reason": "Exact Contents response contains only README.md. Current workflow source is partially executable; permissive AggregationReceipt is not a config schema. No execution result inferred."
+    },
+    {
+      "gate": "offline-markdown-metadata-links",
+      "outcome": "PASS",
+      "reason": "Session-only parser: one H1, 38 retained H2 topics, 22 links (14 relative links to 9 connector-verified targets; 8 local anchors), 5 tables, 3 fences, YAML metadata, UTF-8/LF and final newline."
+    },
+    {
+      "gate": "whitespace-and-shell-syntax",
+      "outcome": "PASS",
+      "reason": "git diff --no-index --check emitted no whitespace diagnostics; bash -n passed on the reference command block. Those domain commands were not executed."
+    },
+    {
+      "gate": "receipt-schema-and-artifact-integrity",
+      "outcome": "PASS",
+      "reason": "Draft202012Validator plus FormatChecker against schema byte-verified to Git blob fba21ed27ebccf1362fe397fe0c3ebd85e072685; artifact path/hash parity checked."
+    },
+    {
+      "gate": "session-harness-negative-probes",
+      "outcome": "PASS",
+      "reason": "Trailing whitespace, missing anchor, unverified target, malformed receipt hash, unexpected receipt property, and changed artifact bytes detected."
+    },
+    {
+      "gate": "repository-native-tests-and-validation",
+      "outcome": "SKIPPED",
+      "reason": "No full checkout; Git network access failed with DNS resolution error. Native generated-receipt validator, topology, make validate, and Agriculture tests not run locally."
+    },
+    {
+      "gate": "hosted-exact-head-ci-and-runtime",
+      "outcome": "SKIPPED",
+      "reason": "Not observed at receipt emission; no PR or workflow dispatch performed. No runtime, deployment, browser visual, source-access or rollback drill claims."
+    },
+    {
+      "gate": "draft-pr-delivery",
+      "outcome": "SKIPPED",
+      "reason": "Branch-only containment under issue #4024 after prior intended-draft PR #4267 recorded ready and merge. An independent draft-creation boundary is still required."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "configs/domains/agriculture/README.md@bb3eb695e6068b38453ca3ded8f1394a8fdebc20",
+      "validated": true,
+      "evidence_ref": "configs/domains/agriculture/README.md@bb3eb695e6068b38453ca3ded8f1394a8fdebc20"
+    },
+    {
+      "id": "configs/README.md@bb3eb695e6068b38453ca3ded8f1394a8fdebc20",
+      "validated": true,
+      "evidence_ref": "configs/README.md@bb3eb695e6068b38453ca3ded8f1394a8fdebc20"
+    },
+    {
+      "id": "configs/domains/README.md@bb3eb695e6068b38453ca3ded8f1394a8fdebc20",
+      "validated": true,
+      "evidence_ref": "configs/domains/README.md@bb3eb695e6068b38453ca3ded8f1394a8fdebc20"
+    },
+    {
+      "id": "docs/doctrine/directory-rules.md@bb3eb695e6068b38453ca3ded8f1394a8fdebc20",
+      "validated": true,
+      "evidence_ref": "docs/doctrine/directory-rules.md@bb3eb695e6068b38453ca3ded8f1394a8fdebc20"
+    },
+    {
+      "id": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@bb3eb695e6068b38453ca3ded8f1394a8fdebc20",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@bb3eb695e6068b38453ca3ded8f1394a8fdebc20"
+    },
+    {
+      "id": ".github/CODEOWNERS@bb3eb695e6068b38453ca3ded8f1394a8fdebc20",
+      "validated": true,
+      "evidence_ref": ".github/CODEOWNERS@bb3eb695e6068b38453ca3ded8f1394a8fdebc20"
+    },
+    {
+      "id": ".github/workflows/domain-agriculture.yml@bb3eb695e6068b38453ca3ded8f1394a8fdebc20",
+      "validated": true,
+      "evidence_ref": ".github/workflows/domain-agriculture.yml@bb3eb695e6068b38453ca3ded8f1394a8fdebc20"
+    },
+    {
+      "id": "docs/domains/agriculture/README.md@bb3eb695e6068b38453ca3ded8f1394a8fdebc20",
+      "validated": true,
+      "evidence_ref": "docs/domains/agriculture/README.md@bb3eb695e6068b38453ca3ded8f1394a8fdebc20"
+    },
+    {
+      "id": "tools/validators/domains/agriculture/README.md@bb3eb695e6068b38453ca3ded8f1394a8fdebc20",
+      "validated": true,
+      "evidence_ref": "tools/validators/domains/agriculture/README.md@bb3eb695e6068b38453ca3ded8f1394a8fdebc20"
+    },
+    {
+      "id": "schemas/contracts/v1/domains/agriculture/aggregation_receipt.schema.json@bb3eb695e6068b38453ca3ded8f1394a8fdebc20",
+      "validated": true,
+      "evidence_ref": "schemas/contracts/v1/domains/agriculture/aggregation_receipt.schema.json@bb3eb695e6068b38453ca3ded8f1394a8fdebc20"
+    },
+    {
+      "id": "schemas/contracts/v1/receipts/generated_receipt.schema.json@bb3eb695e6068b38453ca3ded8f1394a8fdebc20",
+      "validated": true,
+      "evidence_ref": "schemas/contracts/v1/receipts/generated_receipt.schema.json@bb3eb695e6068b38453ca3ded8f1394a8fdebc20"
+    },
+    {
+      "id": "data/receipts/generated/README.md@bb3eb695e6068b38453ca3ded8f1394a8fdebc20",
+      "validated": true,
+      "evidence_ref": "data/receipts/generated/README.md@bb3eb695e6068b38453ca3ded8f1394a8fdebc20"
+    },
+    {
+      "id": "CONTRIBUTING.md@bb3eb695e6068b38453ca3ded8f1394a8fdebc20",
+      "validated": true,
+      "evidence_ref": "CONTRIBUTING.md@bb3eb695e6068b38453ca3ded8f1394a8fdebc20"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-04T20:46:32Z",
+  "emitter": "kfm-configs-agriculture-readme-authoring-session",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Two-file documentation/provenance slice. Existing config README retained in configs/; no config payload, loader, schema, policy, registry, workflow, source, release or public behavior changes. README separates lane absence from partial Agriculture implementation and preserves privacy, suppression, time, role, evidence and rollback boundaries. Consumer search was bounded indexed search, not exhaustive dynamic/external closure. No prompt text, hidden reasoning, private data or approval recorded. Reversible branch authoring only; no ready, merge, settings, release, deployment, promotion or publication authority."
+}
