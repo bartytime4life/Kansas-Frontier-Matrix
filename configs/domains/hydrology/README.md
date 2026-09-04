@@ -93,7 +93,7 @@ A useful configuration answers **how an already-governed consumer is configured*
 The lifecycle remains:
 
 ```text
-RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
+RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLETS -> PUBLISHED
 ```
 
 Promotion is a governed transition, not a file move or configuration choice. Public clients use governed APIs and released public-safe artifacts, never RAW, WORK, QUARANTINE, unreleased stores, or direct model endpoints.
