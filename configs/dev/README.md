@@ -25,7 +25,7 @@ evidence_snapshot:
   codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
   secrets_blob: 562b654e101ca3c52e32b85f7acdaea9f589ab5c
   path_search_result: exact recursive Git tree; truncated: false
-  path_search_result: README.md only
+
   named_absence_probes:
     - configs/dev/dev.yaml
     - configs/dev/.env.example
