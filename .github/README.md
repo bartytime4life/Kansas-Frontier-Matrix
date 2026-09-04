@@ -2,11 +2,11 @@
 doc_id: kfm://doc/github-folder-readme
 title: .github — GitHub Platform Governance Hooks
 type: README
-version: v1.6
+version: v1.7
 status: draft; repository-grounded; current tree counted; workflow maturity bounded
 owners: ["@bartytime4life"]
 created: 2026-05-11
-updated: 2026-08-28
+updated: 2026-09-04
 policy_label: public
 owning_root: .github/
 responsibility: GitHub-platform governance hooks, review routing, dependency intake, issue and pull-request intake, and CI orchestration
@@ -14,12 +14,12 @@ truth_posture: cite-or-abstain; implementation claims are bounded to the pinned 
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: d4586ec659d86e4bf07e59bccd65c6c3412755e7
-  root_tree: 11d536872a6ddeefb5d4f80fa7cf0b957fe674b6
-  github_readme_prior_blob: 3bef7347b113473215e20e48b4ee85a1b304f580
-  workflows_tree: 2ae2cae3c225bfd56ead2a2dd0f96690f13d8f0d
-  issue_template_tree: 188d3879975bd1096a58350c9c3a6bf63ddbedc6
-  inventory: 204 tracked paths; 191 workflow YAML files; 6 issue chooser templates
+  base_commit: 38ba9349dc9740babb60d14c9383e5b0162d940b
+  root_tree: 3e4714400201251e31398561cd6fbfce23acad82
+  github_readme_prior_blob: bbc8680236d78f87a3e8a762c89782cbb29ba117
+  workflows_tree: d9d5fbc0d056166558c3526bdc0f126cfb187d70
+  issue_template_tree: e61bb3049675546f7154e15d88390595f77a30a2
+  inventory: 496 tracked files; 483 workflow YAML files; 6 issue chooser templates; 2 subtree READMEs
 related:
   - ../README.md
   - ../CONTRIBUTING.md
@@ -35,7 +35,7 @@ related:
   - ISSUE_TEMPLATE/README.md
   - workflows/README.md
 notes:
-  - "The path count and workflow filename count are exact for the pinned Git trees. They do not prove GitHub settings, branch protection, workflow success, per-workflow safety, release approval, or publication."
+  - "The 496-file and 483-workflow counts are exact for the pinned Git tree; the companion workflow README retains an older 482-workflow snapshot. They do not prove GitHub settings, branch protection, workflow success, per-workflow safety, release approval, or publication."
   - "The v1.4 forty-four-workflow snapshot is preserved in Git history but is superseded as a description of the current tree."
   - "Accepted ADR-0029 makes docs/doctrine/directory-rules.md the sole writable Directory Rules authority. The architecture-path copy remains a read-only compatibility surface."
 [/KFM_META_BLOCK_V2] -->
@@ -49,8 +49,8 @@ notes:
 # `.github/` — GitHub platform governance hooks
 
 [![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b)](#status-and-evidence-boundary)
-[![Inventory: 204 paths](https://img.shields.io/badge/inventory-204%20tracked%20paths-1f6feb)](#confirmed-inventory)
-[![Workflows: 191](https://img.shields.io/badge/workflows-191-2563eb)](workflows/README.md)
+[![Inventory: 496 tracked files](https://img.shields.io/badge/inventory-496%20tracked%20files-1f6feb)](#confirmed-inventory)
+[![Workflows: 483](https://img.shields.io/badge/workflows-483-2563eb)](workflows/README.md)
 [![Issue templates: 6](https://img.shields.io/badge/issue%20templates-6-7c3aed)](ISSUE_TEMPLATE/README.md)
 [![Publisher: no](https://img.shields.io/badge/publisher-no-b91c1c)](#authority-boundary)
 [![Truth: cite or abstain](https://img.shields.io/badge/truth-cite--or--abstain-15803d)](#authority-boundary)
@@ -65,6 +65,7 @@ notes:
 - [Purpose](#purpose)
 - [Authority boundary](#authority-boundary)
 - [Status and evidence boundary](#status-and-evidence-boundary)
+- [Cross-system source boundary](#cross-system-source-boundary)
 - [Confirmed inventory](#confirmed-inventory)
 - [Platform surface contracts](#platform-surface-contracts)
 - [Operating flow](#operating-flow)
@@ -112,21 +113,27 @@ Neither a commit, pull request, check, artifact upload, merge, badge, nor GitHub
 
 ## Status and evidence boundary
 
-This edition is pinned to `main@d4586ec659d86e4bf07e59bccd65c6c3412755e7` and the Git tree identities recorded in the metadata block. The Docker lane described below is a **proposed current-change overlay**; it is not attributed to that pinned snapshot.
+This edition is pinned to `main@38ba9349dc9740babb60d14c9383e5b0162d940b`, root tree `3e4714400201251e31398561cd6fbfce23acad82`, and the `.github/` subtree tree `b4d5cea1193237cd4b7ebeecb4f1bf3d35c23310` (reverified 2026-09-04). The companion [`workflows/README.md`](workflows/README.md) still reports `482` workflow files at `main@1b654851dc58e2ea3104bf90072604148f91a84c`; the live Git tree below is authoritative for this README's current inventory. The companion discrepancy is recorded as `NEEDS VERIFICATION` rather than silently copied.
 
 | Surface | Confirmed repository state | Boundary |
 |---|---|---|
-| Tracked `.github/` paths | **204** | Exact for the pinned tree: five top-level files, seven issue-template files, one workflow README, and 191 workflow files. GitHub settings are external. |
-| Workflows | **191 `.yml` files** plus [`workflows/README.md`](workflows/README.md) | Exact filename count. Per-workflow triggers, permissions, action pins, network use, maturity, and hosted outcomes were not re-audited for all 191 in this documentation slice. |
-| Issue intake | **6 Markdown chooser templates** plus [`ISSUE_TEMPLATE/README.md`](ISSUE_TEMPLATE/README.md) | No issue-form YAML or chooser `config.yml` is present in the pinned issue-template tree. Blank-issue behavior remains settings-dependent. |
+| Tracked `.github/` files | **496** | Exact for the pinned tree: five top-level files, seven issue-template files, one workflow README, and 483 workflow `.yml` files. The three directory entries are not counted as files; GitHub settings are external. |
+| Workflows | **483 `.yml` files** plus [`workflows/README.md`](workflows/README.md) | Exact filename count from the current Git tree. No `.yaml` workflow files were observed. Per-workflow triggers, permissions, action pins, network use, maturity, and hosted outcomes were not re-audited for all 483. |
+| Issue intake | **6 Markdown chooser templates** plus [`ISSUE_TEMPLATE/README.md`](ISSUE_TEMPLATE/README.md) | No issue-form YAML or chooser `config.yml` was observed in the current issue-template tree. Blank-issue behavior remains settings-dependent. |
 | Pull-request intake | [`PULL_REQUEST_TEMPLATE.md`](PULL_REQUEST_TEMPLATE.md) | Tracked and review-visible; completion and enforcement remain human/process questions. |
 | Review routing | [`CODEOWNERS`](CODEOWNERS) routes all paths to `@bartytime4life` with narrower path entries | File behavior is confirmed; required code-owner review and separation of duties remain **NEEDS VERIFICATION**. |
-| Dependency intake | In the pinned snapshot, [`dependabot.yml`](dependabot.yml) covers pip, npm, GitHub Actions, and pre-commit. This change proposes Docker as a fifth ecosystem. | The four-ecosystem base configuration is confirmed. Docker coverage remains proposed until merge; execution history, alerts, and update state were not inspected. |
+| Dependency intake | [`dependabot.yml`](dependabot.yml) declares pip, npm, docker, github-actions, pre-commit update lanes (with two npm directories). | Configuration is confirmed at this ref; Dependabot execution, alerts, generated update PRs, and compatibility/security outcomes were not inspected. |
 | Funding | [`FUNDING.yml`](FUNDING.yml) is a comment-only placeholder | It configures no active funding provider. |
-| Root `CODEOWNERS` | Absent from the pinned repository root | `.github/CODEOWNERS` is the tracked GitHub-supported review-routing file. |
+| Root `CODEOWNERS` | Absent from the pinned repository root | [`.github/CODEOWNERS`](CODEOWNERS) is the tracked GitHub-supported review-routing file. |
 
 > [!WARNING]
 > Branch protection, rulesets, repository token defaults, private vulnerability reporting, environments, labels, Dependabot execution, and workflow run results live outside this file tree. Keep those claims `NEEDS VERIFICATION` until inspected through current settings or exact-head run evidence.
+
+## Cross-system source boundary
+
+GitHub at the pinned ref is the current implementation and platform-configuration evidence surface. Notion coordinates work, ownership, stale pointers, and verification; Google Drive and attached/reference material provide proposal, research, and lineage input. Neither coordination nor lineage material overrides repository bytes, GitHub settings, review state, release, deployment, promotion, or publication authority.
+
+GitHub object state—not README prose, labels, generated receipts, or tool intent—controls pull-request draft, review, check, conflict, merge, and closed state. The open [issue #4024](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024) remains the controlling delivery-state incident boundary at this snapshot; it constrains PR-state mutation paths but does not freeze ordinary authoring. Follow [`CONTRIBUTING.md`](../CONTRIBUTING.md) for the current branch-first and stop-condition contract.
 
 ## Confirmed inventory
 
@@ -147,10 +154,10 @@ This edition is pinned to `main@d4586ec659d86e4bf07e59bccd65c6c3412755e7` and th
 │   └── source_admission.md
 └── workflows/
     ├── README.md
-    └── 191 workflow .yml files
+    └── 483 workflow .yml files
 ```
 
-The workflow subtree README records the current filename-count boundary and the audit work still required. The issue-template README owns chooser-specific guidance.
+The workflow subtree README is a related governance surface, but its pinned 482-file statement is older than the live 483-file tree read above. Recount from the proposed head before relying on either document; the companion discrepancy remains **NEEDS VERIFICATION**. The issue-template README owns chooser-specific guidance.
 
 ## Platform surface contracts
 
@@ -158,7 +165,7 @@ The workflow subtree README records the current filename-count boundary and the 
 |---|---|---|
 | [`CODEOWNERS`](CODEOWNERS) | Default and path-specific review routing | Not a `ReviewRecord`, stewardship assignment, or proof that review occurred. |
 | [`PULL_REQUEST_TEMPLATE.md`](PULL_REQUEST_TEMPLATE.md) | Task contract, evidence, Directory Rules, threat preflight, validation, and rollback prompts | Not approval, release, or publication authority. |
-| [`dependabot.yml`](dependabot.yml) | Pinned snapshot: weekly dependency-update proposals across four ecosystems. Current change: proposed fifth Docker lane. | Proposal-only; no automatic compatibility or merge claim. |
+| [`dependabot.yml`](dependabot.yml) | Current configuration declares pip, npm, docker, github-actions, pre-commit update lanes (with two npm directories). | Reviewable proposals only; no automatic compatibility, security, approval, or merge claim. |
 | [`ISSUE_TEMPLATE/`](ISSUE_TEMPLATE/README.md) | Public-safe issue routing | Intake only; labels and settings may be external or unverified. |
 | [`workflows/`](workflows/README.md) | GitHub Actions orchestration | Non-publisher; every workflow must be interpreted from its exact steps and current run evidence. |
 | [`FUNDING.yml`](FUNDING.yml) | GitHub funding/community-health surface | Inactive placeholder. |
@@ -182,7 +189,7 @@ This flow is repository collaboration, not the KFM data lifecycle. It must not c
 
 ## Workflow growth and maturity boundary
 
-The prior v1.4 README recorded **44** workflows at `main@c455e51be776a355a392284711898af092fb423f`. The pinned current tree contains **191**, an increase of **147** workflow files.
+The prior v1.4 README recorded **44** workflows at `main@c455e51be776a355a392284711898af092fb423f`. The companion workflow README later recorded **482** `.yml` workflows at an older pinned snapshot, while a fresh exact-tree recount for this revision finds **483** `.yml` workflows at `main@38ba9349dc9740babb60d14c9383e5b0162d940b`. The 1-file difference is currentness drift, not maturity evidence; the current tree is 439 files above the prior 44-file classification.
 
 That increase is a tree fact, not a maturity claim. It creates a maintenance obligation:
 
@@ -193,7 +200,7 @@ That increase is a tree fact, not a maturity claim. It creates a maintenance obl
 5. holds, skips, partial coverage, and substantive validation must remain distinguishable;
 6. redundant or overlapping workflows must be reconciled rather than inferred safe from filenames.
 
-The companion [`workflows/README.md`](workflows/README.md) is updated with the current count and explicitly retires the old 44-file classification as a current inventory. A complete 191-workflow behavioral audit remains **NEEDS VERIFICATION**.
+The companion [`workflows/README.md`](workflows/README.md) is not changed by this revision and still reports 482. Reconcile its metadata and prose in a separate bounded documentation change before treating it as current inventory. A complete 483-workflow behavioral audit remains **NEEDS VERIFICATION**.
 
 ## What belongs here
 
@@ -219,11 +226,9 @@ The companion [`workflows/README.md`](workflows/README.md) is updated with the c
 ### Confirmed in this documentation slice
 
 - `.github/CODEOWNERS` contains one verified executable owner identity, `@bartytime4life`, and explicitly disclaims review or release authority.
-- the pinned `dependabot.yml` defines reviewable proposals for four ecosystems and no private registry; the paired current change proposes Docker as a fifth ecosystem.
+- the current `dependabot.yml` declares pip, npm, docker, github-actions, pre-commit update lanes (with two npm directories); no private registry is configured.
 - the issue-template tree contains six Markdown chooser templates and no issue-form YAML or chooser configuration file;
-- the paired `dependabot.yml` change only adds Docker base-image update
-  proposals; it changes no workflow, permission, trigger, action reference,
-  template behavior, secret, repository setting, or governed lifecycle state.
+- the current `dependabot.yml` includes a Docker base-image lane alongside pip, npm, github-actions, pre-commit; this README update changes no Dependabot bytes, workflow, permission, trigger, action reference, template behavior, secret, repository setting, or governed lifecycle state.
 
 ### Required for workflow changes
 
@@ -299,11 +304,12 @@ Do not claim a command passed unless it was actually run. A README-only packet s
 
 ## Open verification items
 
+- **NEEDS VERIFICATION** — reconcile the companion `workflows/README.md` 482-file snapshot with the live 483-file tree before using that companion document as current inventory.
 - **NEEDS VERIFICATION** — exact current rulesets, branch protections, and required workflow/job names.
 - **NEEDS VERIFICATION** — whether required code-owner review is enabled and whether independent review is available.
 - **NEEDS VERIFICATION** — repository and organization default `GITHUB_TOKEN` permissions.
-- **NEEDS VERIFICATION** — current conclusions, failure causes, logs, and artifact retention across all 191 workflows.
-- **NEEDS VERIFICATION** — complete trigger, path-filter, permission, runner, secret/OIDC, network, cache, artifact, action-pin, and write-scope inventory for all 191 workflows.
+- **NEEDS VERIFICATION** — current conclusions, failure causes, logs, and artifact retention across all 483 workflows.
+- **NEEDS VERIFICATION** — complete trigger, path-filter, permission, runner, secret/OIDC, network, cache, artifact, action-pin, and write-scope inventory for all 483 workflows.
 - **NEEDS VERIFICATION** — overlapping, redundant, stale, or misleading workflow/check names introduced during rapid expansion.
 - **NEEDS VERIFICATION** — issue labels, blank-issue chooser behavior, and private vulnerability reporting settings.
 - **NEEDS VERIFICATION** — Dependabot execution, alert, and security-update state.
@@ -318,6 +324,7 @@ Before merge, close the draft pull request or revert the documentation commits o
 
 | Date | Version | Change |
 |---|---|---|
+| 2026-09-04 | v1.7 | Re-pinned the root to `main@38ba9349dc9740babb60d14c9383e5b0162d940b`; reconciled the live `.github/` tree to 496 tracked files, 483 workflow YAML files, and 6 chooser templates; confirmed the current Docker Dependabot lane; and recorded the companion workflow README's stale 482-file snapshot as `NEEDS VERIFICATION` without changing that subtree. |
 | 2026-08-28 | v1.6 | Proposed bounded Dependabot coverage for the two digest-pinned `infra/docker/Dockerfile.*` placeholders, labeled Docker as a current-change fifth ecosystem rather than pinned-tree state, and preserved image updates as proposal-only review boundaries. |
 | 2026-08-08 | v1.5 | Re-pinned the root to `main@d4586ec…`; reconciled 204 tracked `.github/` paths, 191 workflows, and six issue templates; retired the 44-workflow snapshot as current evidence; separated exact tree facts from unverified per-workflow behavior; and preserved the non-publisher authority boundary. |
 | 2026-07-31 | v1.4 | Reconciled the complete 57-path tree and 44-workflow static posture at `main@c455e51…`; recorded the trusted-base `pull_request_target` exception, mixed action-pinning posture, accepted Directory Rules authority, and corrected the workflow-threat-preflight fragment. |
