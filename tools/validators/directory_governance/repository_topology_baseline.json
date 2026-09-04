@@ -94,13 +94,6 @@
       "subject": "test-reference:apps/explorer-web/tests/streamflow-qc-dashboard.test.ts"
     },
     {
-      "evidence_sha256": "sha256:2fcc564a29158f518332b12760f9fd88670ac729e2de4ce622db70686d77ce26",
-      "evidence_zlib_base64": "eNqVU9tuwjAM3Q+ZqoUfQMAkhJimae+RSUyJSJPICbDu6+fChhjdGHtJlZyLTx3HYMaCqbYpc1uksGNNqdjgymbMxctsPF3OBo15MDd5pEOHBZ/ukLwjmzt4reHgQt3+yYwUoiMwHsGhN//mdwuEgydOGxvvlF/Sgk4FZodJ0MXjUk1Dg9YnNdm5xnrM0hc17nC1L1V5U9IRVHS7pJ4xpWp4/AwrNZHWBmclEZmTV8/GnCzguId9OSh/pXQg6E05usnogdt1A98s4jEjDCvQF/lOCXrqBqOzKyZoMGXiH/Du+CJ+UY2kxqntILNAgD5bKeUcxkT3GVTApMnGDM6uSbfadQFitL7uGUQbyVlPUMtviG5NTF73C305apkPmdAzLktm0RdoYbWzTqYqEsv9+7prUGbU+Uy2PuOWivl0Nlbzp9fxYnYNaWRuYR34IA/met4+OfQWXZASgS/eyQfGyWCM",
-      "fingerprint": "sha256:1831dfdc821f0553c6a55336d9e1e6122298db4ad1518232deb5f2b68cec6593",
-      "rule_id": "KFM-TOPO-016",
-      "subject": "doc-id:kfm://doc/NEEDS-VERIFICATION"
-    },
-    {
       "evidence_sha256": "sha256:752c925a6112c9cfdcf625484919daa2220b92f945c8137612ede0a8b881316d",
       "evidence_zlib_base64": "eNpLyU8u1i8uScxLSSxKKdb3d/TUDfD10MtNYUhBlclPzNQtyM0AygAA2JYSKw==",
       "fingerprint": "sha256:238d3aa621befa1b680e0e9243c7d783d514504b8445ccc6969449166158dd39",
@@ -589,6 +582,13 @@
       "fingerprint": "sha256:a08096a90ddd2733965291e258ad2a2229c918bdaba0933f2de18c626f3fd499",
       "rule_id": "KFM-TOPO-011",
       "subject": "release/promotion_decisions/hazards-r0003.yaml"
+    },
+    {
+      "evidence_sha256": "sha256:047f5ccbbdacead1da1f3ae97997bb9ea5b11c9cbcc80efd535ecf404d30311d",
+      "evidence_zlib_base64": "eNqVkctqAzEMRftDqr9hILMIpV2U7ovGvpmIOpaRFdLp19eBEkIC7XSjzTkXvRI7B8MszW0JTY8W0cKeJ3H28DoOm+fx8ZAe0q8eop6ZlrYi8sWWVnhLMs06L3+aFVozKBWmzCX92z8X0lOBtb3UlfFrTWML7JlbpweuWSYDHbg57I5XqchSQDM7yLCDoUTceYYIqU6xz9CvcOG9uPV8YKHpKLlPXmHsUmaKWtw4+kWW4vyBsN2Mw/v25W14Gm9RZLOFdmqn/pTbnX4cfNasvYXa1S++AawFzlk=",
+      "fingerprint": "sha256:a20d1ec8834c7b3fc105ad3b01063e1ebc73b48fed9e5b7902d03ba1507de13b",
+      "rule_id": "KFM-TOPO-016",
+      "subject": "doc-id:kfm://doc/NEEDS-VERIFICATION"
     },
     {
       "evidence_sha256": "sha256:640e85338c1bf33f70e228aba608c54dcfed34a53ee5d0e5a8a5982922387604",
