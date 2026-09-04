@@ -143,10 +143,11 @@ A non-trivial payload should identify or reference at least:
 
 ```yaml
 domain_slug: soil
-config_class: <template|example|dev-default|test-default|review-default|profile-reference|compatibility>
+config_class: dev-default
+parser_version: yaml/1.2
 intended_consumer: <verified path or NEEDS_VERIFICATION>
 consumer_version: <version or NEEDS_VERIFICATION>
-format: <yaml|json|toml|other>
+format: yaml
 binding: <explicit file-selection mechanism>
 precedence: <explicit order or UNRESOLVED>
 missing_file_behavior: <inactive|hold|error>
@@ -168,6 +169,7 @@ rollback: <prior file/profile/version and deactivation procedure>
 ```
 
 This example is documentation, not a schema and not an accepted universal field contract.
+`config_class` values are `template`, `example`, `dev-default`, `test-default`, `review-default`, `profile-reference`, or `compatibility` — select the type matching your payload's purpose.
 
 ## Consumer binding, precedence, and failure
 
