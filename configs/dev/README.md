@@ -2,21 +2,29 @@
 doc_id: kfm://doc/configs-dev-readme
 title: configs/dev/ — Governed Development Configuration Boundary
 type: readme
-version: v0.3
+version: v0.4
 status: draft
 owners: OWNER_TBD — Config steward · Security steward · Developer-experience steward · Consumer owner(s) · Validation steward · Ops steward · Docs steward
 created: 2026-06-16
-updated: 2026-07-13
+updated: 2026-09-04
 policy_label: public; config-sublane; development; commit-safe; non-secret; non-authoritative; no-live-binding; no-runtime-authority; no-deployment-authority
 current_path: configs/dev/README.md
-truth_posture: CONFIRMED repository-present README lane at the pinned base, parent configs root contract, sibling examples/local/templates/test boundaries, Directory Rules placement doctrine, repository secrets doctrine, current CODEOWNERS fallback, prior README lineage, repository search result scoped by returned path, and named conventional-path probes / PROPOSED development-config file contract, precedence documentation contract, naming convention, validation matrix, review workflow, and minimum safe development slice / UNKNOWN exhaustive recursive inventory, differently named files, consumer loaders, merge order, environment substitution, schema bindings, validators, secret-scanning enforcement, CI requirements, deployment integration, accepted owners, and runtime behavior
+truth_posture: CONFIRMED exact tracked README-only lane at current main, parent configs root contract, sibling boundaries, accepted Directory Rules doctrine, repository secrets standard, present incident-response file, current CODEOWNERS route, current PR template, exact recursive Git tree receipt, and prior README lineage / PROPOSED development-config file contract, precedence documentation contract, naming convention, validation matrix, review workflow, and minimum safe development slice / UNKNOWN ignored or untracked files, differently named files, branch-only work, external consumer stores, loader behavior, merge order, environment substitution, schema bindings, validators, secret-scanning enforcement, CI requirements, deployment integration, accepted config-steward assignment, and runtime behavior
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   repository_id: "1059091169"
   visibility: public
   base_ref: main
-  base_commit: b6bcc4cd27dc8c0fa1f74aa5b989cb3240e90aa8
-  prior_blob: d9b6a87289fe60370f9e849954c9cccb6ece57b1
+  base_commit: 80cccb313e460cc8c408fc7acd19be60c1984c11
+  prior_blob: e05de7866a7f2423f462002a687f79c967973ac1
+  root_tree: 11dd4b90bfa78c2781caddfc6e420033bffe3b37
+  configs_dev_tree: c4d413a4e4b0ee7e2729d5e015df8b3033296312
+  parent_configs_blob: a800983eac7582a84e9dd82bc7d4baf04f552ad8
+  directory_rules_doctrine_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  directory_rules_adr_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  secrets_blob: 562b654e101ca3c52e32b85f7acdaea9f589ab5c
+  path_search_result: exact recursive Git tree; truncated: false
   path_search_result: README.md only
   named_absence_probes:
     - configs/dev/dev.yaml
@@ -48,12 +56,12 @@ related:
   - ../../.github/PULL_REQUEST_TEMPLATE.md
 tags: [kfm, configs, dev, development, local-defaults, templates, placeholders, non-secret, commit-safe, config-validation, consumer-binding, precedence, portability, governance]
 notes:
-  - "At the pinned base, a repository search for `configs/dev` returned this README as the only result located inside that directory; other results were references from outside the lane. Exact probes for dev.yaml, .env.example, local.template.yaml, and validation.md returned Not Found. These are bounded findings, not an exhaustive recursive tree receipt."
+  - "At current main, the exact recursive Git tree is not truncated and contains only configs/dev/README.md under configs/dev/. Named probes for dev.yaml, .env.example, local.template.yaml, and validation.md are absent. This is an exact tracked-tree finding; ignored/untracked local content and branch-only work remain outside the receipt."
   - "configs/dev/ is distinct from configs/examples/, configs/local/, configs/templates/, configs/test/, root examples/, fixtures/, runtime/, and infra/."
   - "A development config is candidate input for a named local-development consumer. It is not a schema, policy, contract, deployment binding, secret store, runtime state, release decision, lifecycle object, test fixture, generated artifact, or proof of consumption."
   - "The repository secrets standard forbids real secrets even when labeled test or local. Only references-by-name, public verifier material, obvious placeholders, and clearly mock values are acceptable."
-  - "The repository secrets standard references a secret-leak runbook path that was not present at the pinned base. Incident-response procedure therefore remains NEEDS VERIFICATION; do not invent a path or delay credential rotation."
-  - "Only this README and its required GENERATED_RECEIPT are changed. No development config payload, consumer, loader, schema, contract, policy, validator, test, workflow, secret-scanning rule, deployment binding, runtime behavior, or public artifact is created or modified."
+  - "docs/security/INCIDENT_RESPONSE.md exists at the current tree, but the dedicated docs/runbooks/SECRET_LEAK_RUNBOOK.md named by the secrets standard is absent and remains a proposed/unverified path. Do not treat either file as proof that a leak response was executed."
+  - "This revision changes only this README and its required generated receipt. No development config payload, consumer, loader, schema, contract, policy, validator, test, workflow, secret-scanning rule, deployment binding, runtime behavior, or public artifact is created or modified."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -63,8 +71,8 @@ notes:
 > `configs/dev/` is the development-configuration sublane under `configs/`. It may provide safe, reviewable defaults and templates for local development, but it does not create runtime behavior, deployment authority, schema authority, policy authority, secret material, release state, or operational truth.
 
 > [!IMPORTANT]
-> **Document lifecycle:** `draft v0.3`  
-> **Observed lane maturity:** README-only at the inspected repository search and named conventional-path probes  
+> **Document lifecycle:** `draft v0.4`  
+> **Observed lane maturity:** exact tracked README-only lane at current `main`; named conventional-path probes absent  
 > **Owning responsibility root:** `configs/` — safe, non-secret configuration defaults and templates  
 > **Authority:** development-configuration documentation and candidate defaults only  
 > **Default posture:** safe to review, not safe to assume consumed  
@@ -127,14 +135,14 @@ A development config can point to authority. It cannot become authority by conve
 
 ### Bounded repository snapshot
 
-At base commit `b6bcc4cd27dc8c0fa1f74aa5b989cb3240e90aa8`, the directly verified lane is:
+At current `main@80cccb313e460cc8c408fc7acd19be60c1984c11`, the exact tracked lane inventory is:
 
 ```text
 configs/dev/
 └── README.md
 ```
 
-A repository search for `configs/dev` returned this README as the only result located inside the directory; other returned files referenced the lane from elsewhere. Exact probes returned `Not Found` for:
+The current recursive Git tree response was not truncated. `configs/dev/` is subtree `c4d413a4e4b0ee7e2729d5e015df8b3033296312`, and its only tracked entry is this README blob. Named probes are absent at these exact paths:
 
 ```text
 configs/dev/dev.yaml
@@ -143,21 +151,21 @@ configs/dev/local.template.yaml
 configs/dev/validation.md
 ```
 
-These are bounded absence statements for named paths and indexed search results—not a recursive filesystem receipt. Differently named files, ignored files, generated files, branch-only work, or unindexed content remain `UNKNOWN`.
+This is an exact tracked-tree finding—not a receipt for ignored or untracked workstation files, other branches, generated files outside the ref, or external consumer configuration stores. Differently named files and external bindings remain `UNKNOWN`.
 
 ### Current maturity
 
 | Capability | Status | Safe conclusion |
 |---|---:|---|
 | README boundary | **CONFIRMED** | The lane has a documented responsibility boundary. |
-| Development config payloads | **NOT ESTABLISHED** | No actual dev configuration payload was verified in the inspected evidence. |
+| Development config payloads | **NOT ESTABLISHED** | No actual dev configuration payload was verified in the current tracked tree. |
 | Named consumers | **NOT ESTABLISHED** | No app, package, pipeline, runtime, test, or tool is bound here by current evidence. |
 | Config loader | **NOT ESTABLISHED** | Do not infer auto-loading, discovery, imports, overlay order, or environment expansion. |
 | Schema validation | **NOT ESTABLISHED** | No lane-specific schema binding or validator was verified. |
 | Secret scanning | **NEEDS VERIFICATION** | Doctrine forbids secrets; repository automation coverage was not established. |
 | Test/CI enforcement | **NEEDS VERIFICATION** | No lane-specific executable check or passing proof was verified. |
 | Deployment integration | **UNKNOWN** | Nothing here establishes production, staging, review, or operator binding. |
-| Accepted ownership | **OWNER_TBD** | Current CODEOWNERS provides a repository-wide fallback, not a verified config-specific steward. |
+| Accepted ownership | **NEEDS VERIFICATION** | `/configs/` has a CODEOWNERS review route, but no config-specific steward assignment or independent approval proof was verified. |
 | Publication impact | **NONE BY DESIGN** | This README update does not create or promote a published artifact. |
 
 [Back to top](#top)
@@ -306,7 +314,7 @@ When credential-like material is discovered:
 6. record the correction and follow the verified incident-response procedure;
 7. do not wait for documentation-path cleanup before rotation.
 
-The current secrets standard references a dedicated secret-leak runbook, but that named path was not present at the pinned base. The procedure path is therefore `NEEDS VERIFICATION`; the duty to rotate, contain, and audit is not.
+The current tree contains `docs/security/INCIDENT_RESPONSE.md`, but the dedicated `docs/runbooks/SECRET_LEAK_RUNBOOK.md` named by the secrets standard is absent from this ref and remains a proposed/unverified path. Procedure completeness is therefore `NEEDS VERIFICATION`; the duty to rotate, contain, and audit is not.
 
 [Back to top](#top)
 
@@ -525,7 +533,7 @@ Validation should be layered. Passing a lower layer does not imply a higher laye
 
 ### Current routing
 
-At the pinned base, `.github/CODEOWNERS` provides a repository-wide fallback but no config-specific path rule. Config-specific accepted owners therefore remain `NEEDS VERIFICATION`.
+At current `main`, `.github/CODEOWNERS` explicitly routes `/configs/` to `@bartytime4life` (in addition to the default `*` route). No `/configs/dev/`-specific rule, accepted config-steward assignment, required code-owner review, or independent approval enforcement is established. CODEOWNERS is review routing, not proof that review occurred.
 
 ### Review matrix
 
@@ -543,7 +551,7 @@ At the pinned base, `.github/CODEOWNERS` provides a repository-wide fallback but
 
 ### Workflow-trigger preflight
 
-This revision changes one README and one required generated receipt. No workflow file, executable config, policy, schema, runtime, or deployment file is changed. Repository-level push or pull-request workflows may still run. Their required-check status and branch-protection enforcement remain `NEEDS VERIFICATION`.
+This revision changes `configs/dev/README.md` and `data/receipts/generated/genrec-configs-dev-readme-currentness-20260904.json` only. No development payload, workflow, executable config, policy, schema, runtime, or deployment file is changed. Repository-level workflows may still run; their required-check status and branch-protection enforcement remain `NEEDS VERIFICATION`.
 
 [Back to top](#top)
 
@@ -680,38 +688,33 @@ An ADR is required before a future config change:
 ## Evidence basis
 
 | Evidence | Status | Supports | Does not prove |
-|---|---:|---|---|
-| `configs/dev/README.md` at prior blob `d9b6a872…` | **CONFIRMED** | Existing lane and v0.2 boundary; this is a revision, not a new path | Current payload inventory or consumer behavior |
-| `configs/README.md` | **CONFIRMED** | Parent root owns safe non-secret defaults/templates | Complete current config inventory or enforcement |
-| `configs/examples/README.md` | **CONFIRMED** | Example lane is illustrative and non-authoritative | Dev loader behavior |
-| `configs/local/README.md` | **CONFIRMED** | Local lane is for commit-safe templates/notes, not personal values | Ignored override mechanism |
-| `configs/templates/README.md` | **CONFIRMED** | Template lane owns reusable templates | Current template consumers |
-| `configs/test/README.md` | **CONFIRMED** | Test config lane is distinct from tests/fixtures | CI enforcement |
-| `docs/doctrine/directory-rules.md` | **CONFIRMED doctrine** | Placement by responsibility root; `configs/` is non-secret configuration | Current runtime or deployment behavior |
-| `docs/security/SECRETS.md` | **CONFIRMED repository standard** | No real secrets in repository, including test/local material | Tooling coverage, store choice, or current leak-response path |
-| `.github/CODEOWNERS` | **CONFIRMED at pinned base** | Repository-wide fallback owner exists | Accepted config-specific owner or team resolvability |
-| `.github/PULL_REQUEST_TEMPLATE.md` | **CONFIRMED at pinned base** | PR requires evidence, Directory Rules basis, validation, rollback, and generated receipt disclosure | Branch protection or required-check enforcement |
-| Repository search for `configs/dev` | **BOUNDED** | Returned this README as the only result located inside the directory | Exhaustive recursive absence |
-| Named probes for `dev.yaml`, `.env.example`, `local.template.yaml`, `validation.md` | **CONFIRMED ABSENT AT NAMED PATHS** | Those exact conventional files were not present | Differently named files or branch-only work |
-| Root/configs/configs-dev `AGENTS.md` probes | **CONFIRMED ABSENT AT NAMED PATHS** | No path-scoped agent instruction file was found at those exact locations | Other instruction mechanisms |
-| Uploaded documentation operating prompt v3.1 | **CONFIRMED task input** | Implementation, evidence, concurrency, PR, and no-truncation requirements | Repository behavior by itself |
+|---|---|---|---|
+| `configs/dev/README.md` at current blob `e05de7866a7f2423f462002a687f79c967973ac1` | **CONFIRMED** | Existing lane and v0.3 boundary; this is a currentness revision, not a new path | Current payload inventory or consumer behavior |
+| `configs/README.md` at current blob `a800983eac7582a84e9dd82bc7d4baf04f552ad8` | **CONFIRMED** | Parent root owns safe non-secret defaults/templates and is non-authoritative for runtime | Complete current config inventory or enforcement |
+| `configs/examples/`, `configs/local/`, `configs/templates/`, `configs/test/` | **CONFIRMED PRESENT BY CURRENT TREE** | Neighboring config boundaries exist in the current tree | Semantic separation or consumer behavior |
+| `docs/doctrine/directory-rules.md` at current blob `fd49a0b83e55cef52c1124281f093e263526898d` plus ADR-0029 at `a4de0d7a96b78da59cfc499d1025e1508afd8dd9` | **CONFIRMED DOCTRINE** | Accepted directory-governance and placement basis | Runtime behavior or review completion |
+| `docs/security/SECRETS.md` at current blob `562b654e101ca3c52e32b85f7acdaea9f589ab5c` | **CONFIRMED STANDARD** | No real secrets in development config lanes; placeholders and references only | Secret-scanning automation, rotation, or containment execution |
+| `docs/security/INCIDENT_RESPONSE.md` at current blob `da6eb82dc6608e0cdfbbe9f1823ebd1e13289ec4` | **CONFIRMED PRESENT** | A current incident-response file exists | Dedicated leak-runbook completeness or execution |
+| `.github/CODEOWNERS` at current blob `dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61` | **CONFIRMED** | `/configs/` routes to `@bartytime4life` and the default fallback exists | Accepted config-steward assignment, review occurrence, or independent approval |
+| `.github/PULL_REQUEST_TEMPLATE.md` at current blob `f4efe2cade80942d8d87315a68d18757655ba05c` | **CONFIRMED** | The PR contract requires evidence, validation, receipt, and review-separation disclosure | Branch protection, required checks, or merge readiness |
+| Current `main` recursive tree `11dd4b90bfa78c2781caddfc6e420033bffe3b37` with `configs/dev/` subtree `c4d413a4e4b0ee7e2729d5e015df8b3033296312` | **CONFIRMED TRACKED-TREE RECEIPT** | Exact current tracked inventory and non-truncated tree response | Ignored/untracked workstation files, other branches, or external consumer stores |
+| Named probes `configs/dev/dev.yaml`, `configs/dev/.env.example`, `configs/dev/local.template.yaml`, and `configs/dev/validation.md` | **CONFIRMED ABSENT AT NAMED PATHS** | No files at those exact paths in the current tree | Differently named files or non-Git content |
+| Root/configs/configs-dev `AGENTS.md` probes | **CONFIRMED ABSENT AT NAMED PATHS** | No path-scoped instruction file was found at the checked locations | Other instruction surfaces or future additions |
+| Drive Directory Rules and contributor-reliability guidance plus Notion KFM Repository Workbench | **CONFIRMED TASK CONTEXT; NON-AUTHORITATIVE** | PR/coordination conventions and lineage context | GitHub tree, checks, runtime, or ownership truth |
 
 ### Evidence limitations
 
-- No recursive Git tree receipt was available through the selected connector surface.
-- No config loader, consumer implementation, validator, workflow log, branch-protection setting, deployment, or runtime trace was inspected.
+- The GitHub recursive tree response for current `main` was not truncated; it proves tracked Git content only, not ignored/untracked workstation files, other branches, or an external consumer configuration store.
+- No config loader, consumer implementation, schema binding, validator, workflow log, deployment, or runtime trace was inspected.
+- Ruleset `15484585` was read-only observed as active with no required-status-check rule and zero required approvals; that does not prove enforcement of this README or authorize a settings change.
 - No external source activation or version-sensitive product fact is needed for this README.
-- The failed anonymous local clone attempt made no repository mutation and provided no additional evidence.
-
-[Back to top](#top)
-
----
+- No mounted checkout was used; local pre-commit, Markdownlint, and repository test commands were not run in this connector-only session.
 
 ## Verification backlog
 
 | Item | Why it matters | Evidence needed |
 |---|---|---|
-| Obtain recursive `configs/dev/` tree inventory | Replaces bounded search/probe finding with complete inventory | Git tree or mounted checkout receipt |
+| Confirm ignored/untracked/local inventory if a payload is proposed | The exact Git tree excludes workstation and external-consumer state | Mounted checkout, `.gitignore`, and consumer evidence |
 | Confirm config-specific owner(s) | Establishes maintenance and review routing | Accepted CODEOWNERS/team evidence |
 | Confirm intended consumers | Required before any payload is called active | Current code/import/loader evidence |
 | Confirm config discovery and precedence | Prevents hidden override drift | Loader tests and documented merge algorithm |
@@ -720,7 +723,7 @@ An ADR is required before a future config change:
 | Confirm negative tests | Unsafe values must fail predictably | Test files and passing runs |
 | Confirm ignored local override path | Prevents accidental commits and false instructions | `.gitignore`, setup docs, and consumer behavior |
 | Confirm CI required checks | A workflow file does not prove merge protection | GitHub branch/ruleset settings |
-| Confirm incident-response runbook path | Secrets standard references a path not present at pinned base | Accepted runbook or corrected reference |
+| Resolve the dedicated `docs/runbooks/SECRET_LEAK_RUNBOOK.md` gap | `docs/security/INCIDENT_RESPONSE.md` exists, but the secrets standard still names a separate absent/proposed leak runbook | Accepted runbook or corrected current reference, without weakening rotate/contain/audit duty |
 | Confirm generated/mirrored config policy | Prevents hand-edited drift | Generator, canonical source, and sync tests |
 | Confirm platform portability | Avoids Windows/Linux/container divergence | Cross-platform tests or support statement |
 | Confirm stale-config review cadence | Prevents obsolete defaults from looking supported | Ownership and scheduled validation evidence |
@@ -735,10 +738,10 @@ An ADR is required before a future config change:
 
 - [x] Existing strong no-secrets, no-live-binding, and no-authority boundaries are preserved.
 - [x] Parent and sibling config-lane responsibilities are distinguished.
-- [x] Current evidence is pinned to repository, ref, commit, and prior blob.
-- [x] Bounded search and named absence probes are stated without claiming exhaustive inventory.
+- [x] Current evidence is pinned to repository, ref, commit, tree identities, and prior blob.
+- [x] Exact tracked `configs/dev/` inventory and named absence probes are stated without extending the claim to ignored/untracked or external content.
 - [x] Development-config file contract, precedence questions, naming, portability, validation, review, migration, and rollback are documented.
-- [x] Secret-leak response duty is stated without inventing a missing runbook path.
+- [x] Secret-leak response duty is stated while distinguishing the present incident file from the absent/proposed dedicated leak runbook.
 - [x] No config payload, consumer, schema, contract, policy, test, workflow, runtime, deployment, or publication behavior is claimed as implemented.
 - [x] AI-authored change is paired with a generated-work receipt.
 - [ ] Human review approves the README and receipt.
@@ -760,7 +763,7 @@ An ADR is required before a future config change:
 ---
 
 <details>
-<summary>Appendix A — no-loss preservation and v0.2 → v0.3 delta</summary>
+<summary>Appendix A — no-loss preservation and v0.2 → v0.4 delta</summary>
 
 The prior README established these durable boundaries:
 
@@ -771,7 +774,7 @@ The prior README established these durable boundaries:
 - misplaced material should migrate to its responsibility root through a reversible change;
 - rollback and safe-language rules are part of the lane contract.
 
-v0.3 preserves those points and adds:
+v0.3 established those points and added:
 
 - a pinned evidence snapshot and bounded README-only finding;
 - explicit sibling-lane distinctions;
@@ -784,6 +787,14 @@ v0.3 preserves those points and adds:
 - the missing secret-leak-runbook verification gap;
 - ADR triggers, drift triggers, migration, rollback, and correction detail;
 - a required generated-work receipt for the AI-authored revision.
+
+v0.4 preserves those protections and adds:
+
+- a fresh `main@ccc4f3a7…` snapshot with exact root and `configs/dev/` tree identities;
+- an exact tracked-tree inventory replacing the older search-only currentness claim;
+- the current `/configs/` CODEOWNERS route without promoting it to accepted ownership or approval;
+- a distinction between the present `docs/security/INCIDENT_RESPONSE.md` and the absent/proposed dedicated secret-leak runbook;
+- a current connector-only validation limitation and a focused ignored/untracked-content backlog item.
 
 No previous substantive protection is intentionally removed.
 
