@@ -198,21 +198,84 @@ def test_strict_serializer_rejects_non_finite_values(value: float) -> None:
     assert caught.value.reason_code == "CONTROL_SOURCE_SERIALIZATION_INVALID"
 
 
-def test_binding_note_distinguishes_current_main_from_candidate_hardening() -> None:
+def test_binding_note_distinguishes_main_bounds_from_branch_only_length_fix() -> None:
     binding = BINDING_PATH.read_text(encoding="utf-8")
     lowered = binding.lower()
+    normalized = " ".join(lowered.split())
 
-    assert "current-main workflow-active advisory" in lowered
-    assert "candidate bounded-input hardening" in lowered
-    assert "pr #4237" in lowered
-    assert "current protected-main workflow still uses two trusted-base validators" in lowered
-    assert "candidate adds a third trusted-base capture helper" in lowered
+    assert "current-main workflow-active advisory" in normalized
+    assert "three-helper bounded capture integrated" in normalized
+    assert "content-length correction capability-reviewed branch-only" in normalized
+    assert "pr #4237" in normalized
+    assert "pr #4239" in normalized
+    assert "pr #4238" in normalized
+    assert "current protected-main workflow uses three trusted-base helpers" in normalized
     assert "fetch_bounded_issue_comments.py" in binding
-    assert "if the candidate bytes are integrated" in lowered
-    assert "16 mib" in lowered
-    assert "1,000,000 json nodes" in lowered
-    assert "allow_nan=false" in lowered
-    assert "required-status-check not installed" in lowered
-    assert "proposed and not applied" in lowered
-    assert "does not authorize a ruleset" in lowered
-    assert "proposed; branch-only; exact-main-reconciled; not workflow-active" not in lowered
+    assert "100 pages" in normalized
+    assert "16 mib" in normalized
+    assert "1,000,000 json nodes" in normalized
+    assert "allow_nan=false" in normalized
+    assert "it does not inspect or compare a declared `content-length`" in normalized
+    assert "silently short response as complete" in normalized
+    assert "fix/repository-control-content-length-completeness-20260903" in binding
+    assert "952d564c90c4536f0a021b6fcf0be685c5c476f9" in binding
+    assert "79021db8b062f1107fad664a1011622c1d5cff21" in binding
+    assert (
+        "the two issue comments transcribed the pre-review tree as "
+        "`841ce7988aabc4b864a275e61c7253003848f082`"
+    ) in normalized
+    assert "that value is not the tree of exact pre-review head" in normalized
+    assert "must not be used as its identity" in normalized
+    assert "40498bd7be4318e43615c2a68713c6c43439308c" in binding
+    assert "7c45d3085f9c3c08101395eeaa21bdc8af301f0e" in binding
+    assert "5533902911" in binding
+    assert "5534073715" in binding
+    assert "not integrated into protected main" in normalized
+    assert "no integration pull request exists for it" in normalized
+    assert "a missing `content-length` remains permissible" in normalized
+    assert "not independent human or capability-separated review" in normalized
+    assert "version: v1.3.7" in normalized
+    assert "content-length correction capability-reviewed branch-only" in normalized
+    assert "capability_separated_technical_pass" in normalized
+    assert "33830734231" in binding
+    assert "100893006792" in binding
+    assert "60 passed in 0.79s" in normalized
+    assert "3930396535" in binding
+    assert "5108722539" in binding
+    assert "pr #4242" in normalized
+    assert "pr #4243" in normalized
+    assert "2/2 files" in normalized
+    assert "approval recommended" in normalized
+    assert "not accountable human approval" in normalized
+    assert "no reported p0, p1, or p2 finding" in normalized
+    assert "review-only, non-default-base" in normalized
+    assert "review evidence, lifecycle events, and transition authority remain separate" in normalized
+    assert "5532535765" in binding
+    assert "5532579086" in binding
+    assert "5532649271" in binding
+    assert "5533558088" in binding
+    assert "connected github capability exposes ruleset reads" in normalized
+    assert "no administration-write operation" in normalized
+    assert "no ruleset mutation was attempted" in normalized
+    assert "owner authorization expired at `2026-09-03t23:30:00z`" in normalized
+    assert "no settings operation may reuse the expired authorization" in normalized
+    assert "a new owner decision" in normalized
+    assert "publishing that package did not renew authority or apply the setting" in normalized
+    assert "does not itself authorize a ruleset mutation" in normalized
+
+    stale_phrases = (
+        "candidate bounded-input hardening",
+        "current protected-main workflow still uses two trusted-base validators",
+        "candidate adds a third trusted-base capture helper",
+        "if the candidate bytes are integrated",
+        "the bounded-input changes described below remain a branch-local hardening proposal",
+        "bounded capture and truncated-response hardening integrated",
+        "truncated-response handling are present on current main",
+        "the bounded-capture and truncated-response code is now on main",
+        "incomplete-response failure modes",
+        "- exact head: `5fe7ca322c838f5de3d677977a12302ba3c9e6f6`",
+        "- helper blob: `9047c59d2ba91618078713ebffc2989ac282ab9b`",
+        "- direct-regression blob: `174733cb47d00ed688c168d3deee5015ba316e3e`",
+    )
+    for phrase in stale_phrases:
+        assert phrase not in normalized
