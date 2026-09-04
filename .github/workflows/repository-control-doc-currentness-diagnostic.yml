@@ -86,6 +86,11 @@ jobs:
         shell: bash
         run: python -m pytest tests/validators/test_repository_transition_authorization.py -q
 
+      - name: outcomes compile=${{ steps.compile.outcome }} currentness=${{ steps.currentness.outcome }} strict=${{ steps.strict.outcome }} source=${{ steps.source.outcome }} transition=${{ steps.transition.outcome }}
+        if: always()
+        shell: bash
+        run: echo 'Outcome values are exposed in this step name.'
+
       - name: Report split outcomes
         if: always()
         shell: bash
