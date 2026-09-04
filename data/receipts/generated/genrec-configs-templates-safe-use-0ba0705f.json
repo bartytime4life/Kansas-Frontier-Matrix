@@ -1,0 +1,178 @@
+{
+  "receipt_id": "genrec-configs-templates-safe-use-0ba0705f",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "configs/templates/README.md"
+  ],
+  "artifact_hashes": {
+    "configs/templates/README.md": "sha256:0ba0705f426ab7f7fae8869397c87022b5d34927afc9839de190769f9423b9d0"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Pro",
+    "version": "UNKNOWN (revision not exposed)"
+  },
+  "prompt_or_contract": "sha256:b29be959d92e92decb5e9e8d670050ebe7b5aa9f775ba6ec6a80596f069f2a4b",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "Google Drive",
+      "Notion",
+      "container"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/configs/templates/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/configs/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/docs/doctrine/directory-rules.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/CONTRIBUTING.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/configs/templates/dataset_manifest.template.yaml",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/configs/templates/layer_manifest.template.yaml",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/configs/templates/release_manifest.template.yaml",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/configs/templates/source_descriptor.template.yaml",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/configs/templates/viewer_style.template.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/700570cbcf191038aa20a030174c2dd08cf93675",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8c2873a699c755ea87843c38a01df19b6f268f89/configs/templates/README.md"
+    ]
+  },
+  "truth_labels": {
+    "configs/templates/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "pinned-byte-inventory-and-preflight",
+      "outcome": "PASS",
+      "reason": "Six tracked files and five complete template payloads inspected at bb3eb695e6068b38453ca3ded8f1394a8fdebc20. Before write, current main 700570cbcf191038aa20a030174c2dd08cf93675 differed only at catalog/triplet/README.md; open PR endpoint returned zero. The new branch starts at that newer main. Historical template branches remain untouched."
+    },
+    {
+      "gate": "candidate-markdown-and-metadata",
+      "outcome": "PASS",
+      "reason": "Local Python QA checked strict UTF-8, LF, final newline, whitespace/conflict markers, YAML metadata, one H1, GFM structure, all 13 previous heading anchors, 22 body links and 16 connector-verified relative body targets. Metadata related targets are not part of that link count."
+    },
+    {
+      "gate": "read-only-recipe-positive-and-negative",
+      "outcome": "PASS",
+      "reason": "Executed the embedded syntax recipe against five exact-byte template mirrors. Ten negative cases rejected five missing-file variants, malformed YAML, malformed JSON, invalid UTF-8, an unsafe YAML tag, and absent PyYAML. Original payload hashes remained unchanged. This is syntax behavior, not template schema conformance or source admission."
+    },
+    {
+      "gate": "git-diff-whitespace",
+      "outcome": "PASS",
+      "reason": "git diff --check passed using an isolated scratch index with exact base and candidate README; a trailing-whitespace negative control was rejected. This was not a full KFM checkout."
+    },
+    {
+      "gate": "remote-readme-blob-readback",
+      "outcome": "PASS",
+      "reason": "At commit 8c2873a699c755ea87843c38a01df19b6f268f89, GitHub fetch_file returned blob 14def4b162a508b533a236c6e9047c68eec6adbc, identical to the locally validated complete candidate Git blob."
+    },
+    {
+      "gate": "generated-receipt-shape-and-artifact-parity",
+      "outcome": "PASS",
+      "reason": "Validated locally against exact schema blob fba21ed27ebccf1362fe397fe0c3ebd85e072685 using Draft202012Validator and FormatChecker, plus explicit artifact-map parity and SHA-256 recomputation. Native repository receipt validator was not run."
+    },
+    {
+      "gate": "repository-native-and-hosted-validation",
+      "outcome": "SKIPPED",
+      "reason": "Full checkout fetch failed DNS resolution. Native validators, full suite, and hosted exact-head CI were not run or claimed passing. Existing repository failures are not assessed by this receipt."
+    },
+    {
+      "gate": "runtime-template-schema-and-admission",
+      "outcome": "SKIPPED",
+      "reason": "No template payload, consumer, schema, runtime, source, policy, release, or public-surface behavior is changed. Syntax success is not approval."
+    },
+    {
+      "gate": "human-review-and-pr-delivery",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending. This invocation stops at validated branch delivery under issue #4024 after observing the #4268 ready/merge lifecycle. No new PR, ready transition, approval, auto-merge, or merge was performed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "KFM-TEMPLATES-01",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/configs/templates/README.md"
+    },
+    {
+      "id": "KFM-TEMPLATES-02",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/configs/README.md"
+    },
+    {
+      "id": "KFM-TEMPLATES-03",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "KFM-TEMPLATES-04",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "KFM-TEMPLATES-05",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/CONTRIBUTING.md"
+    },
+    {
+      "id": "KFM-TEMPLATES-06",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    },
+    {
+      "id": "KFM-TEMPLATES-07",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/configs/templates/dataset_manifest.template.yaml"
+    },
+    {
+      "id": "KFM-TEMPLATES-08",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/configs/templates/layer_manifest.template.yaml"
+    },
+    {
+      "id": "KFM-TEMPLATES-09",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/configs/templates/release_manifest.template.yaml"
+    },
+    {
+      "id": "KFM-TEMPLATES-10",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/configs/templates/source_descriptor.template.yaml"
+    },
+    {
+      "id": "KFM-TEMPLATES-11",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/configs/templates/viewer_style.template.json"
+    },
+    {
+      "id": "KFM-TEMPLATES-12",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/700570cbcf191038aa20a030174c2dd08cf93675"
+    },
+    {
+      "id": "KFM-TEMPLATES-13",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8c2873a699c755ea87843c38a01df19b6f268f89/configs/templates/README.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-04T20:41:06.496559+00:00",
+  "emitter": "chatgpt/gpt-6-pro",
+  "links": {
+    "pr_number": null,
+    "adr_link": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Scope is the v0.4 README and this required provenance receipt only. The five template payloads and earlier receipts are preserved unchanged. prompt_or_contract hashes the exact current user request, not hidden instructions; generation parameters and model revision are unavailable. Notion Workbench and Drive Directory Rules were read as coordination/lineage, not implementation authority. Source public defaults are existing bytes, not independently granted permissions. Rollback is a reviewed restoration of prior README blob 7a0d642589a6d622929f4e67fa77b9cbb209fe2e with auditable provenance. No schema, policy, settings, release, deployment, promotion, publication, or source-admission authority is created. Initial ad hoc whitespace QA had an incorrect no-index exit-code expectation; the harness was corrected and rerun with unchanged candidate bytes."
+}
