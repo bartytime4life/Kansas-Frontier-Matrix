@@ -13,6 +13,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
   PYTHONDONTWRITEBYTECODE: "1"
   PYTHONHASHSEED: "0"
   TZ: UTC
@@ -21,7 +22,7 @@ jobs:
   patch-and-validate:
     if: >-
       github.ref == 'refs/heads/fix/repository-control-content-length-completeness-20260903' &&
-      github.event.head_commit.message == 'ci(control): retry capability-separated review fix'
+      github.event.head_commit.message == 'ci(control): install pinned pytest for review fix'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -37,7 +38,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          expected_parent='6908838030c6f6d3497349b655185f9696cda73d'
+          expected_parent='a9b6f926a317530d2b37f511e00948f390824299'
           expected_helper_blob='9047c59d2ba91618078713ebffc2989ac282ab9b'
           expected_test_blob='174733cb47d00ed688c168d3deee5015ba316e3e'
           workflow_path='.github/workflows/tmp-repository-control-header-shape-fix.yml'
@@ -208,6 +209,12 @@ jobs:
               newline="\n",
           )
           PY
+
+      - name: Install pinned focused-test runner
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m pip install 'pytest==8.2.2'
 
       - name: Validate focused repository-control surface
         shell: bash
