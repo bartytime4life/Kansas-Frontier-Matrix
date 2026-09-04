@@ -35,6 +35,7 @@ MAX_FLOAT_TOKEN_CHARS = 128
 READ_CHUNK_BYTES = 64 * 1024
 REQUEST_TIMEOUT_SECONDS = 20
 REPOSITORY_PATTERN = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$")
+CONTENT_LENGTH_PATTERN = re.compile(r"^[0-9]+$")
 
 
 class CaptureError(ValueError):
@@ -119,13 +120,77 @@ def _strict_json_text(value: object) -> str:
         raise CaptureError("CONTROL_SOURCE_SERIALIZATION_INVALID") from exc
 
 
+def _header_values(response: Any, name: str) -> list[str]:
+    """Return all visible values for one response header without trusting shape."""
+
+    headers = getattr(response, "headers", None)
+    if headers is not None:
+        get_all = getattr(headers, "get_all", None)
+        if callable(get_all):
+            values = get_all(name)
+            if values:
+                return list(values)
+
+        get = getattr(headers, "get", None)
+        if callable(get):
+            value = get(name)
+            if value is not None:
+                return [value]
+
+    getheader = getattr(response, "getheader", None)
+    if callable(getheader):
+        value = getheader(name)
+        if value is not None:
+            return [value]
+
+    return []
+
+
+def _declared_content_length(response: Any) -> int | None:
+    """Return one strict Content-Length value or fail on ambiguity/malformed input."""
+
+    raw_values = _header_values(response, "Content-Length")
+    if not raw_values:
+        return None
+
+    tokens: list[str] = []
+    for raw_value in raw_values:
+        if not isinstance(raw_value, str):
+            raise CaptureError("CONTROL_SOURCE_CONTENT_LENGTH_INVALID")
+        tokens.extend(part.strip() for part in raw_value.split(","))
+
+    if not tokens:
+        raise CaptureError("CONTROL_SOURCE_CONTENT_LENGTH_INVALID")
+
+    parsed_values: set[int] = set()
+    for token in tokens:
+        if (
+            not token
+            or len(token) > MAX_INTEGER_DIGITS
+            or CONTENT_LENGTH_PATTERN.fullmatch(token) is None
+        ):
+            raise CaptureError("CONTROL_SOURCE_CONTENT_LENGTH_INVALID")
+        try:
+            parsed_values.add(int(token))
+        except (ValueError, OverflowError) as exc:
+            raise CaptureError("CONTROL_SOURCE_CONTENT_LENGTH_INVALID") from exc
+
+    if len(parsed_values) != 1:
+        raise CaptureError("CONTROL_SOURCE_CONTENT_LENGTH_INVALID")
+    return parsed_values.pop()
+
+
 def _bounded_read(
     response: Any,
     *,
     maximum_bytes: int,
     overflow_reason: str,
 ) -> bytes:
-    """Read at most ``maximum_bytes`` plus one bounded overflow probe."""
+    """Read one complete response under a byte limit and verify declared length."""
+
+    declared_length = _declared_content_length(response)
+    if declared_length is not None and declared_length > maximum_bytes:
+        raise CaptureError(overflow_reason)
 
     chunks: list[bytes] = []
     size = 0
@@ -146,6 +211,9 @@ def _bounded_read(
         if size > maximum_bytes:
             raise CaptureError(overflow_reason)
         chunks.append(chunk)
+
+    if declared_length is not None and size != declared_length:
+        raise CaptureError("CONTROL_SOURCE_CONTENT_LENGTH_MISMATCH")
 
     return b"".join(chunks)
 
