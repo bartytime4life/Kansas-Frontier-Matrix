@@ -1,0 +1,199 @@
+.maplibre-3d-fixture {
+  margin-top: 1.5rem;
+  padding: clamp(1rem, 2vw, 1.5rem);
+  border: 1px solid color-mix(in srgb, var(--line, #6f8c89) 75%, transparent);
+  border-radius: 1rem;
+  background:
+    linear-gradient(135deg, rgb(7 21 23 / 97%), rgb(12 40 43 / 94%)),
+    var(--surface, #071517);
+  box-shadow: 0 1.25rem 3rem rgb(0 0 0 / 25%);
+}
+
+.maplibre-3d-fixture__title {
+  margin-block: 0.15rem 0.5rem;
+}
+
+.maplibre-3d-fixture__summary {
+  max-width: 78ch;
+  color: var(--text-muted, #b7ccca);
+}
+
+.maplibre-3d-fixture__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-block: 1rem;
+}
+
+.maplibre-3d-fixture__badge {
+  padding: 0.3rem 0.55rem;
+  border: 1px solid rgb(255 209 102 / 48%);
+  border-radius: 999px;
+  color: #ffe3a0;
+  background: rgb(255 209 102 / 8%);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.055em;
+}
+
+.maplibre-3d-fixture__status {
+  margin-block: 0.75rem 1rem;
+  padding: 0.75rem 0.9rem;
+  border-left: 0.3rem solid #55c6b5;
+  background: rgb(85 198 181 / 10%);
+  color: #e8fffb;
+}
+
+.maplibre-3d-fixture__status[data-state="ERROR"] {
+  border-left-color: #ff8b7d;
+  background: rgb(255 139 125 / 10%);
+}
+
+.maplibre-3d-fixture__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(18rem, 0.9fr);
+  gap: 1rem;
+  align-items: stretch;
+}
+
+.maplibre-3d-fixture__map {
+  min-height: 29rem;
+  overflow: hidden;
+  border: 1px solid rgb(141 219 207 / 35%);
+  border-radius: 0.85rem;
+  background:
+    radial-gradient(circle at 50% 40%, rgb(42 161 152 / 22%), transparent 48%),
+    #041112;
+}
+
+.maplibre-3d-fixture__map canvas:focus-visible {
+  outline: 0.2rem solid #ffd166;
+  outline-offset: -0.3rem;
+}
+
+.maplibre-3d-fixture__controls {
+  display: grid;
+  align-content: start;
+  gap: 1rem;
+}
+
+.maplibre-3d-fixture__button-group,
+.maplibre-3d-fixture__selection-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.maplibre-3d-fixture__button-group button,
+.maplibre-3d-fixture__selection-controls button {
+  min-height: 2.75rem;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid rgb(141 219 207 / 45%);
+  border-radius: 0.65rem;
+  color: #e8fffb;
+  background: rgb(85 198 181 / 10%);
+  cursor: pointer;
+}
+
+.maplibre-3d-fixture__button-group button[aria-pressed="true"],
+.maplibre-3d-fixture__selection-controls button[aria-pressed="true"] {
+  border-color: #ffd166;
+  color: #071517;
+  background: #ffd166;
+}
+
+.maplibre-3d-fixture__button-group button:focus-visible,
+.maplibre-3d-fixture__selection-controls button:focus-visible,
+.maplibre-3d-fixture__camera input:focus-visible {
+  outline: 0.2rem solid #ffd166;
+  outline-offset: 0.15rem;
+}
+
+.maplibre-3d-fixture button:disabled,
+.maplibre-3d-fixture input:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.maplibre-3d-fixture__camera {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0.9rem;
+  border: 1px solid rgb(141 219 207 / 28%);
+  border-radius: 0.75rem;
+}
+
+.maplibre-3d-fixture__camera label {
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.86rem;
+  font-weight: 650;
+}
+
+.maplibre-3d-fixture__camera input {
+  width: 100%;
+}
+
+.maplibre-3d-fixture__camera-readout,
+.maplibre-3d-fixture__control-label,
+.maplibre-3d-fixture__limitation {
+  margin: 0;
+  color: var(--text-muted, #b7ccca);
+  font-size: 0.86rem;
+}
+
+.maplibre-3d-fixture__control-label {
+  flex-basis: 100%;
+}
+
+.maplibre-3d-fixture__selection {
+  padding: 0.9rem;
+  border: 1px solid rgb(255 209 102 / 35%);
+  border-radius: 0.75rem;
+  background: rgb(255 209 102 / 6%);
+}
+
+.maplibre-3d-fixture__selection-title,
+.maplibre-3d-fixture__evidence-ref {
+  margin-block: 0 0.4rem;
+}
+
+.maplibre-3d-fixture__evidence-ref {
+  overflow-wrap: anywhere;
+  color: #ffe3a0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.8rem;
+}
+
+.maplibre-3d-fixture__fallback {
+  display: grid;
+  min-height: 29rem;
+  place-items: center;
+  margin: 0;
+  padding: 2rem;
+  color: var(--text-muted, #b7ccca);
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+  .maplibre-3d-fixture__layout {
+    grid-template-columns: 1fr;
+  }
+
+  .maplibre-3d-fixture__map,
+  .maplibre-3d-fixture__fallback {
+    min-height: 23rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .maplibre-3d-fixture *,
+  .maplibre-3d-fixture *::before,
+  .maplibre-3d-fixture *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
