@@ -1,0 +1,82 @@
+# ADR-0029 section 8.2: read-only CI, not release or alert-disposition authority.
+# Extends the preserved alert-63 candidate to cover both alert-53 advisories.
+# Scope/rollback: apps/kansas-frontier-matrix-explorer/docs/esbuild-security-remediation.md
+name: esbuild-security
+on:
+  pull_request:
+    paths:
+      - package.json
+      - pnpm-workspace.yaml
+      - pnpm-lock.yaml
+      - apps/kansas-frontier-matrix-explorer/package.json
+      - apps/kansas-frontier-matrix-explorer/package-lock.json
+      - apps/kansas-frontier-matrix-explorer/tests/esbuild-security.test.mjs
+      - apps/kansas-frontier-matrix-explorer/tests/fflate-security.test.mjs
+      - .github/workflows/esbuild-security.yml
+  push:
+    branches: [main]
+    paths:
+      - package.json
+      - pnpm-workspace.yaml
+      - pnpm-lock.yaml
+      - apps/kansas-frontier-matrix-explorer/package.json
+      - apps/kansas-frontier-matrix-explorer/package-lock.json
+      - apps/kansas-frontier-matrix-explorer/tests/esbuild-security.test.mjs
+      - apps/kansas-frontier-matrix-explorer/tests/fflate-security.test.mjs
+      - .github/workflows/esbuild-security.yml
+permissions:
+  contents: read
+concurrency:
+  group: esbuild-security-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+defaults:
+  run:
+    shell: bash
+jobs:
+  regression:
+    name: esbuild-security-${{ matrix.installer }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        installer: [pnpm, npm]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22.23.2'
+          package-manager-cache: false
+      - name: Check both locks without executing dependencies
+        env:
+          KFM_ESBUILD_REQUIRE_WORKSPACE: '1'
+        run: node --test apps/kansas-frontier-matrix-explorer/tests/{esbuild,fflate}-security.test.mjs
+      - name: Frozen workspace install, real probes and advisory check
+        if: matrix.installer == 'pnpm'
+        env:
+          KFM_ESBUILD_REQUIRE_WORKSPACE: '1'
+          KFM_ESBUILD_RUNTIME_PROBE: '1'
+        run: |
+          set -euo pipefail
+          corepack enable
+          sha256sum pnpm-lock.yaml > "$RUNNER_TEMP/esbuild-lock.sha256"
+          pnpm install --frozen-lockfile
+          sha256sum -c "$RUNNER_TEMP/esbuild-lock.sha256"
+          node --test apps/kansas-frontier-matrix-explorer/tests/{esbuild,fflate}-security.test.mjs
+          pnpm audit --json
+      - name: Independent npm install, real probes and advisory check
+        if: matrix.installer == 'npm'
+        run: |
+          set -euo pipefail
+          app="$RUNNER_TEMP/kfm-esbuild-standalone"
+          mkdir -p "$app/tests"
+          cp apps/kansas-frontier-matrix-explorer/{package.json,package-lock.json} "$app/"
+          cp apps/kansas-frontier-matrix-explorer/tests/{esbuild,fflate}-security.test.mjs "$app/tests/"
+          cd "$app"
+          sha256sum package-lock.json > "$RUNNER_TEMP/esbuild-npm-lock.sha256"
+          npm ci --no-fund --loglevel=error
+          sha256sum -c "$RUNNER_TEMP/esbuild-npm-lock.sha256"
+          KFM_ESBUILD_RUNTIME_PROBE=1 node --test tests/{esbuild,fflate}-security.test.mjs
+          npm audit --json
