@@ -1,0 +1,8 @@
+{
+  "name": "typescript",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./typescript-compat.mjs"
+  }
+}
