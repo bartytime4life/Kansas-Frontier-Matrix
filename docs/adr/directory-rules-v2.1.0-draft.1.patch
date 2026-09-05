@@ -95,7 +95,7 @@
  This section is **informative implementation evidence**, not timeless doctrine.
 
  ### 20.1 Evidence snapshot
-@@ -1319,6 +1354,10 @@
+@@ -1319,5 +1354,9 @@
  ### Phase 5 — Enforcement graduation
 
  Move baselined warnings to failures as each drift class reaches zero. No phase claims completion without the declared proof suite.
@@ -105,4 +105,3 @@
 +The phases above are the retained v2 bootstrap sequence. For this amendment, first review the complete candidate and clause ledger in ADR-0039. The existing effective bytes and machine bindings remain unchanged during proposal authoring. A distinct acceptance record shall bind the exact candidate and applicable profile bytes; a later authorized effective transition shall synchronize the authority and legitimate projections/enforcement together. Keep the twenty-rule topology engine's invariant/baseline behavior intact; new prose obligations are not automatically new executable rules. Any enforcement extension requires explicit activation and focused positive/negative tests. Separate held root corrections, application convergence, source admission, deployment, and release from this cutover.
 
  ---
-

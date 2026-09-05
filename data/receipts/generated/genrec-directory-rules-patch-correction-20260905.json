@@ -1,0 +1,99 @@
+{
+  "receipt_id": "genrec-directory-rules-patch-correction-20260905",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/adr/directory-rules-v2.1.0-draft.1.patch",
+    "docs/adr/ADR-0039-directory-build-and-verification-profiles.md"
+  ],
+  "artifact_hashes": {
+    "docs/adr/directory-rules-v2.1.0-draft.1.patch": "sha256:26f3e7cdf69cc79830c14217344be8d5883be97447bc95bb8c71cab6cf15d6bf",
+    "docs/adr/ADR-0039-directory-build-and-verification-profiles.md": "sha256:2b8250105b5db4fbac3aaddefd5be86a475280f6e18968ae7509c02e3bcb9a3d"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Pro",
+    "version": "UNKNOWN: exact runtime build identifier is not exposed"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub",
+      "container"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/102b0e9a463597459e4fa92d66e53b6eb29206bf",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33992401139"
+    ],
+    "evidence_hashes": [
+      "sha256:800c704a1c5db1e94bb6936892c731abb8017a002767d9726f9c3f1eb057e31b",
+      "sha256:c12ce50a95edd30a1058c9e4af62f05eb1a1db53152ff5403d1d46feb1b71e41"
+    ]
+  },
+  "truth_labels": {
+    "docs/adr/directory-rules-v2.1.0-draft.1.patch": "PROPOSED",
+    "docs/adr/ADR-0039-directory-build-and-verification-profiles.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "introduced-failure-reproduction",
+      "outcome": "PASS",
+      "reason": "Exact first-head hosted run 33992401139 reports git diff --check exit 2 for new blank line at EOF; matched base exits 0. This is an author-introduced carrier-format defect, not inherited topology drift."
+    },
+    {
+      "gate": "patch-correction-local",
+      "outcome": "PASS",
+      "reason": "Removed one trailing blank context line and corrected final hunk counts; forward/reverse git apply verifies unchanged candidate bytes and adopted predecessor restoration. Native git diff --cached --check exits 0 in an isolated relevant-file Git fixture."
+    },
+    {
+      "gate": "local-adr-index-and-preservation",
+      "outcome": "PASS",
+      "reason": "Native ADR coherence in selected exact-source overlay, 94 retained rule definitions, 103 unique candidate IDs, heading/anchor retention, 73 relative links, whitespace and no new NFC/case-fold collisions pass after correction."
+    },
+    {
+      "gate": "exact-corrected-head-hosted",
+      "outcome": "SKIPPED",
+      "reason": "Not run at emission; later run belongs in delivery evidence. Earlier matched tests remain historical."
+    },
+    {
+      "gate": "receipt-validation",
+      "outcome": "SKIPPED",
+      "reason": "To run after emission; do not change this historical authoring record retroactively."
+    },
+    {
+      "gate": "authority-runtime-release",
+      "outcome": "SKIPPED",
+      "reason": "No active standard, projection, validator, baseline, catalog, installer, application, deployment, source or release change."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "first-head-execution",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33992401139"
+    },
+    {
+      "id": "predecessor-proposal",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/102b0e9a463597459e4fa92d66e53b6eb29206bf"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-05T21:17:10.503921+00:00",
+  "emitter": "ChatGPT: isolated patch-carrier correction, no adoption or PR transition",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0039-directory-build-and-verification-profiles.md",
+    "drift_register_entry": null
+  },
+  "notes": "Two authored postimages plus this new receipt. Preserve genrec-directory-rules-amendment-20260905.json unchanged and replay its artifact hashes against 102b0e9a463597459e4fa92d66e53b6eb29206bf. The corrected patch reconstructs exactly the same 2.1.0-draft.1 candidate, SHA-256 800c704a1c5db1e94bb6936892c731abb8017a002767d9726f9c3f1eb057e31b. No ignore or enforcement relaxation. Effective adopted bytes remain unchanged. This does not clear #4024 or #4228, accept ADR-0039, authorize its machine cutover, or grant merge/deployment/release authority."
+}

@@ -2,7 +2,7 @@
 doc_id: kfm://adr/0039
 title: Directory Build and Verification Profiles Amendment
 type: architecture-decision-record
-version: v0.1.0
+version: v0.1.1
 status: proposed
 effective_decision_status: proposed
 owners: ["@bartytime4life"]
@@ -67,7 +67,7 @@ The `.patch` below is the single editable candidate-text carrier in this proposa
 | Predecessor adoption record | ADR-0029 blob `a4de0d7a96b78da59cfc499d1025e1508afd8dd9`; the embedded draft label is part of adopted bytes. |
 | Candidate Git blob | `706b0d21ed81db88704ee63a913b1660becf98c6` |
 | Candidate SHA-256 | `800c704a1c5db1e94bb6936892c731abb8017a002767d9726f9c3f1eb057e31b` |
-| [Replacement diff](./directory-rules-v2.1.0-draft.1.patch) SHA-256 | `d70b9ce5851b9e34e892d23db376f683c06e9c9a23f530db4fceb7a34f1e4ed0` |
+| [Replacement diff](./directory-rules-v2.1.0-draft.1.patch) SHA-256 | `26f3e7cdf69cc79830c14217344be8d5883be97447bc95bb8c71cab6cf15d6bf` |
 | Profile SHA-256 | `b827934b1f082467b7a85f31e6e2bf0b07e0cc82d84b73f1675dcb35266c76a6` |
 | Inventory SHA-256 | `999745620740872da6ad6d5d25202f27a54e242ee6b582e1a5624016b7cb8727` — non-normative; its digest is provenance, not authority. |
 
@@ -143,6 +143,10 @@ Required changed-area checks: candidate reconstruction and raw-byte digests; pre
 The native ADR commands are `python tools/validators/validate_adr_index.py` and `python -m pytest tests/validators/test_validate_adr_index.py -q --strict-config --strict-markers`, also reached by the existing docs-control-plane workflow. Full topology and schema suites are separate results; inherited cleanup evidence does not certify this proposal. Local reconstruction uses exact exported sources, not a claimed complete local checkout. Hosted results after receipt emission belong in the handoff, not retroactive receipt edits.
 
 Re-pin main, this head and open PR/branch overlap before delivery. Preserve #4024's branch-only boundary until a proven independent one-shot draft path exists; do not create a successor PR to evade it. #4228 remains Stage 1B HOLD / Stage 2 UNAUTHORIZED. No merge, settings, Site/Vercel, source, production-data, deployment or release action is authorized.
+
+## Patch-carrier correction
+
+The first proposal head `102b0e9a463597459e4fa92d66e53b6eb29206bf` was checked alongside base `8b9c52d8...` in run `33992401139`, attempt 1. Native ADR coherence/tests, root-registry validation/tests and GeneratedReceipt tests passed; both variants retained identical topology findings and two failing topology tests. The proposal alone failed `git diff --check` because the stored patch ended with a blank context line. The correction removes that one trailing context line and adjusts the final hunk counts. Forward/reverse applicability and reconstructed candidate bytes are unchanged. The original GeneratedReceipt remains historical and is replayed against its original head; a separate correction receipt binds the changed carrier and this record. No ignore, validator, adopted byte or baseline is changed.
 
 ## Rollback and open decisions
 
