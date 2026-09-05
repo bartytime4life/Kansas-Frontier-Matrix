@@ -1,3 +1,4 @@
+import { deriveTemporalStateId, type TemporalViewState } from "../features/temporal";
 import {
   freezeMapFeatureSelection,
   freezeMapRuntimeCamera,
@@ -307,4 +308,219 @@ export function parsePublicWorkspaceContextUrl(
   if (!context) return null;
   const workspace = findPublicWorkspaceByHash(url.hash);
   return workspace?.id === context.workspaceId ? context : null;
+}
+
+
+const ADAPTER_AWARE_INSTANT =
+  /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,9})?(?:Z|[+-]\d{2}:\d{2})$/;
+const ADAPTER_DATE_ONLY = /^\d{4}-\d{2}-\d{2}$/;
+const ADAPTER_MONTH = /^\d{4}-\d{2}$/;
+const ADAPTER_YEAR = /^\d{4}$/;
+const TEMPORAL_ADAPTER_PROVENANCE =
+  "kfm:normalization:adapter:temporal-view-state-v1";
+
+export type PublicWorkspaceTemporalStateResult = Readonly<{
+  status: "SUPPORTED" | "UNSUPPORTED" | "ERROR";
+  code: string;
+  state: TemporalViewState | null;
+}>;
+
+function adapterBoundary(raw: string): TemporalViewState["selection"]["start"] {
+  if (ADAPTER_AWARE_INSTANT.test(raw)) {
+    return {
+      profile: "instant",
+      raw,
+      normalized: raw,
+      precision: "second",
+      source_timezone: raw.endsWith("Z") ? "UTC" : raw.slice(-6),
+      calendar: "GREGORIAN",
+      bound_status: "KNOWN",
+      normalization: {
+        status: "OFFSET_TO_UTC",
+        provenance_ref: TEMPORAL_ADAPTER_PROVENANCE,
+      },
+      uncertainty: null,
+    };
+  }
+  if (ADAPTER_DATE_ONLY.test(raw)) {
+    return {
+      profile: "date_only",
+      raw,
+      normalized: null,
+      precision: "day",
+      source_timezone: null,
+      calendar: "GREGORIAN",
+      bound_status: "KNOWN",
+      normalization: {
+        status: "CALENDAR_PRESERVED",
+        provenance_ref: TEMPORAL_ADAPTER_PROVENANCE,
+      },
+      uncertainty: null,
+    };
+  }
+  if (ADAPTER_MONTH.test(raw)) {
+    return {
+      profile: "month",
+      raw,
+      normalized: null,
+      precision: "month",
+      source_timezone: null,
+      calendar: "GREGORIAN",
+      bound_status: "KNOWN",
+      normalization: {
+        status: "CALENDAR_PRESERVED",
+        provenance_ref: TEMPORAL_ADAPTER_PROVENANCE,
+      },
+      uncertainty: null,
+    };
+  }
+  if (ADAPTER_YEAR.test(raw)) {
+    return {
+      profile: "year",
+      raw,
+      normalized: null,
+      precision: "year",
+      source_timezone: null,
+      calendar: "GREGORIAN",
+      bound_status: "KNOWN",
+      normalization: {
+        status: "CALENDAR_PRESERVED",
+        provenance_ref: TEMPORAL_ADAPTER_PROVENANCE,
+      },
+      uncertainty: null,
+    };
+  }
+  return {
+    profile: "uncertain_range",
+    raw,
+    normalized: null,
+    precision: "range",
+    source_timezone: null,
+    calendar: "EDTF",
+    bound_status: "KNOWN",
+    normalization: {
+      status: "CALENDAR_PRESERVED",
+      provenance_ref: TEMPORAL_ADAPTER_PROVENANCE,
+    },
+    uncertainty: {
+      kind: "UNCERTAIN",
+      lower_raw: raw,
+      upper_raw: raw,
+    },
+  };
+}
+
+/**
+ * Compose an existing browser-safe workspace projection into the shared
+ * temporal state successor. This is an adapter only: it carries no raw
+ * evidence, source URL, privileged option, authority, or release decision.
+ */
+export async function buildTemporalViewStateFromPublicContext(
+  context: PublicWorkspaceContext,
+): Promise<PublicWorkspaceTemporalStateResult> {
+  const raw = context.time.validAt ?? context.time.observedAt;
+  if (raw === null) {
+    return {
+      status: "UNSUPPORTED",
+      code: "NO_TEMPORAL_SELECTION",
+      state: null,
+    };
+  }
+  if (context.layerIds.length === 0) {
+    return {
+      status: "ERROR",
+      code: "ACTIVE_LAYER_REQUIRED",
+      state: null,
+    };
+  }
+  if (context.compare.mode !== "NONE") {
+    return {
+      status: "UNSUPPORTED",
+      code: "COMPARISON_REQUIRES_TEMPORAL_SIDES",
+      state: null,
+    };
+  }
+  if (context.time.asOf !== null && !ADAPTER_AWARE_INSTANT.test(context.time.asOf)) {
+    return {
+      status: "UNSUPPORTED",
+      code: "AS_OF_REQUIRES_ZONED_INSTANT",
+      state: null,
+    };
+  }
+
+  const stateWithoutId = {
+    profile: "kfm.temporal.view-state.v1",
+    schema_version: "1.0.0",
+    state_id: "",
+    spatial_scope: {
+      scope_type: context.placeIds.length > 0 ? "AOI" : "LAYER_NATIVE",
+      aoi_ref: context.placeIds[0] ?? null,
+      geometry_ref: null,
+      public_safe: true,
+    },
+    active_layer_ids: [...context.layerIds],
+    query: {
+      disclosure_profile: "kfm.governance.temporal-query-disclosure.v1",
+      query_class: "CURRENT_STATE",
+      time_basis: "VALID_TIME",
+      interval_semantics: "HALF_OPEN",
+      point_event_semantics: "AT_INSTANT",
+      master_time: "DECLARED_MASTER",
+      controlling_layer_id: null,
+    },
+    selection: {
+      selection_mode: "INSTANT",
+      start: adapterBoundary(raw),
+      end: null,
+      anchor: "START",
+      support_ref: context.selection?.selectionId ?? null,
+    },
+    display: {
+      mode: "SNAPSHOT",
+      step_rule: "NONE",
+      direction: "FORWARD",
+      controlling_layer_id: null,
+      missing_data_policy: "PAUSE",
+      aggregate_semantics: "NONE",
+      window_duration: null,
+    },
+    presentation: {
+      speed: 1,
+      frame_rate: 30,
+      duration_ms: 0,
+      loop: false,
+      reduced_motion: false,
+      camera_easing: "NONE",
+    },
+    as_of: {
+      knowledge_cutoff: context.time.asOf,
+      release_ref: context.time.releaseId,
+      correction_policy: "CURRENT_POLICY",
+    },
+    pins: {
+      dataset_version_refs: [],
+      release_refs: context.time.releaseId ? [context.time.releaseId] : [],
+      pin_status: context.time.releaseId ? "PINNED" : "UNPINNED",
+    },
+    comparison: {
+      enabled: false,
+      left: null,
+      right: null,
+      camera_lock: true,
+      compatibility: "UNASSESSED",
+    },
+    representation: {
+      color_scale: "STABLE",
+      units: "SOURCE_UNITS",
+      geometry: "NO_MORPHING",
+      accessible_alternative: "TABLE",
+    },
+  } as unknown as TemporalViewState;
+
+  const state_id = await deriveTemporalStateId(stateWithoutId);
+  return {
+    status: "SUPPORTED",
+    code: "OK",
+    state: Object.freeze({ ...stateWithoutId, state_id }),
+  };
 }
