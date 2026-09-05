@@ -1,666 +1,483 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://app/apps-packages/readme
 title: apps/packages/ — Dormant Workspace-Risk and Drift-Guard Boundary
-type: app-readme; directory-readme; architecture-drift-guard; deprecation-candidate
-version: v0.2
-status: draft; repository-grounded; bounded-readme-only-evidence; dormant-workspace-risk; frozen-for-new-authority; disposition-open
-owners: OWNER_TBD — Apps steward · Package steward · Architecture steward · Build/workspace steward · Security steward · Validation steward · Docs steward
+type: directory-readme; architecture-drift-guard; deprecation-candidate
+version: v0.3
+status: draft; repository-grounded; non-implementation; disposition-open
+owners: "OWNER_TBD — Apps, Package, Architecture, Build, Security, Validation, and Docs stewards"
 created: 2026-06-16
-updated: 2026-07-19
-policy_label: "public-governance; restricted-review; architecture-drift; workspace-risk; no-package-authority; no-app-authority; no-public-trust-path; migration-or-removal-required"
+updated: 2026-09-05
+policy_label: public
 current_path: apps/packages/README.md
 owning_root: apps/
-responsibility: document, freeze, inspect, and retire or explicitly govern the anomalous apps/packages path without allowing it to become a deployable app, JavaScript workspace package, Python package namespace, shared-library root, runtime adapter, public trust surface, or parallel authority home
-authority_level: drift-guard-and-disposition-boundary-only
-truth_posture: CONFIRMED target README and prior drift-guard intent, Directory Rules apps deployable root, Directory Rules top-level packages shared-library root, apps root classification of this path as an anomaly, top-level packages root authority, root JavaScript workspace selector apps/* and packages/*, current root Python wheel target src/kfm only, absence at checked paths of apps/packages/package.json, apps/packages/pyproject.toml, and apps/packages/__init__.py, historical broad apps* Python package-discovery commit, current read-only all-PR UI workflow readiness failure posture, default CODEOWNERS routing, and bounded absence of overlapping open PR/branch work / PROPOSED dormant-workspace-risk classification, freeze policy, activation sentinels, deterministic drift test, explicit review route, removal sequence, and ADR-backed transitional exception / UNKNOWN exhaustive recursive lane inventory, every import/build reference, branch-protection requirements, retained external consumer, or maintainer disposition / NEEDS VERIFICATION named owners, recursive inventory, package-manager behavior under every supported tool, accepted migration/ADR, dedicated drift test, explicit CODEOWNERS pattern, expiry, removal approval, and current full-suite pass state
+responsibility: "Document the existing non-implementation lane and route contributors to the correct responsibility owner without activating, removing, or reclassifying it."
+authority_level: drift-guard-only
+truth_posture: "CONFIRMED pinned files and configuration; PROPOSED future enforcement and disposition; UNKNOWN complete consumers and independent review controls"
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
-  visibility: public
   base_ref: main
-  base_commit: 5cf7386b17a85feeadbb82a0eb9ec92bded68279
-  prior_blob: f96476a05d8eba03e538fe9f9053d7e0e5a77033
-  directory_rules_blob: 18653c00ba193a4afaa3e07a0924452807fb98ef
-  apps_root_readme_blob: e0c26da27d45f287db1de88967c98546f3a9e3a9
-  packages_root_readme_blob: fc18fb3334fefe992a551fe12aa98c812232cd17
-  root_package_manifest_blob: 62f45306aef7376a2d68042b0c9e7f556edf0e78
-  root_python_manifest_blob: e3bd40e8e6ce14dfcde78ff5c09608095c3eca76
-  ui_build_workflow_blob: 12f7936e5f83301311f6100bb41e9c78f2dd10f5
-  docs_build_workflow_blob: 202360a8bee431b50633e78c442cc70ca939206a
+  base_commit: cbd6d82bad962a58ab62cfb776ee31696b575107
+  target_prior_blob: 5a9f5b2b7019cca476631cad3533bbdc2dbc9199
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  apps_readme_blob: 95b3b021cad9bcafbd53fd1ddd18f6b51df22d80
+  packages_readme_blob: 7b672f4d834b648f4b30ce7e2e9a5e214efa2c71
+  workspace_yaml_blob: 3eece3b536797f3bee593b2ce286964b62cc5391
+  root_package_blob: 5cba790c88c40b885cc65fe2d585f3205aa1ef9d
+  root_python_blob: cbfc1af273f125caca0c2eea055af1ad39baf2b8
   codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
-  initial_drift_guard_commit: 8e262da92f3d5d7620b75fa169e46f0bad681a8e
-  historical_broad_python_discovery_commit: c9c1b7efabc82ba5e59d9ccc8806256a1b6604b4
-  inventory_method: exact GitHub file reads and probes, target-history inspection, bounded commit/code/branch/pull-request searches, and current manifest/workflow inspection
-  direct_lane_files_confirmed:
+  inventory_method: "Complete GitHub contents listing for this two-file directory; no child directories returned"
+  tracked_lane_files:
+    - apps/packages/.gitkeep
     - apps/packages/README.md
-  checked_absent_activation_paths:
-    - apps/packages/package.json
-    - apps/packages/pyproject.toml
-    - apps/packages/__init__.py
-  bounded_inventory_note: exact probes and commit history did not establish an active package manifest, Python package marker, implementation source, tests, build script, or runtime consumer in this lane; the connector did not expose a recursive directory listing, so permanent absence is not asserted
 related:
   - ../README.md
   - ../../packages/README.md
+  - ../../docs/doctrine/directory-rules.md
+  - ../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../CONTRIBUTING.md
   - ../../package.json
+  - ../../pnpm-workspace.yaml
+  - ../../pnpm-lock.yaml
   - ../../pyproject.toml
-  - ../../docs/architecture/directory-rules.md
-  - ../../docs/architecture/contract-schema-policy-split.md
-  - ../governed-api/README.md
-  - ../explorer-web/README.md
-  - ../../packages/api/README.md
-  - ../../packages/domains/README.md
-  - ../../packages/ui/README.md
-  - ../../packages/temporal/README.md
-  - ../../tests/policy/README.md
-  - ../../.github/workflows/ui-build.yml
-  - ../../.github/workflows/docs-build.yml
   - ../../.github/CODEOWNERS
-tags:
-  - kfm
-  - apps
-  - packages
-  - architecture-drift
-  - dormant-workspace-risk
-  - compatibility
-  - deprecation-candidate
-  - shared-libraries
-  - deployables
-  - workspace-glob
-  - import-boundary
-  - trust-membrane
-  - fail-closed
-  - reversible-change
+  - ../../.github/PULL_REQUEST_TEMPLATE.md
+  - ../../data/receipts/generated/README.md
+tags: [kfm, apps, packages, drift-guard, workspace-boundary, non-implementation, reversible-change]
 notes:
-  - "This v0.2 revision preserves the stable document identity and existing path while replacing broad uncertainty with a pinned repository evidence boundary."
-  - "Directory Rules define apps/ as deployable applications and top-level packages/ as shared reusable libraries; apps/packages/ is absent from the canonical app map."
-  - "The root JavaScript manifest selects apps/* and packages/* as workspaces. No apps/packages/package.json was found at the checked base, but adding one would place a manifest inside a selected app-child path and could activate this anomaly in workspace tooling."
-  - "The current root Python build targets src/kfm only. A historical commit temporarily used broad apps* and packages* setuptools discovery; that history is a drift warning, not current behavior."
-  - "The long-term disposition is not decided here. Safe outcomes are transparent removal or an ADR/migration-backed transitional exception with owner, consumer evidence, tests, expiry, and rollback."
+  - "v0.3 corrects the earlier README-only inventory: the pinned tree also contains an empty .gitkeep. Neither file is changed into implementation."
+  - "ADR-0029 adopts the pinned v2 doctrine despite its retained PROPOSED_FOR_ADOPTION source label. The architecture-path rules copy remains read-only compatibility."
+  - "This README describes a boundary; it is not an executable workspace exclusion, import guard, accepted migration decision, or release gate."
+  - "Historical receipts remain unchanged. New authoring provenance belongs in data/receipts/generated/, not inside this lane."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # `apps/packages/` — Dormant Workspace-Risk and Drift-Guard Boundary
 
-`apps/packages/` is an existing anomalous child of the deployable-app root. It is **not** the KFM shared-package root, **not** a deployable app, and **not** an accepted compatibility package. Current bounded evidence shows the README and no checked activation manifest; the directory remains frozen against new code or authority until it is removed or governed as a temporary migration exception.
+**Looking for reusable code? Use [top-level `packages/`](../../packages/README.md).**
+For deployable applications, use the [parent application index](../README.md).
+This directory is a retained drift warning, not an app, a shared-library root,
+or an accepted compatibility package.
 
-<p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Classification: dormant workspace risk" src="https://img.shields.io/badge/classification-dormant%20workspace%20risk-orange">
-  <img alt="Authority: none" src="https://img.shields.io/badge/authority-none-critical">
-  <img alt="Shared packages: top-level packages" src="https://img.shields.io/badge/shared%20packages-top--level%20packages-blue">
-  <img alt="New files: frozen" src="https://img.shields.io/badge/new%20files-frozen-critical">
-  <img alt="Disposition: remove or govern" src="https://img.shields.io/badge/disposition-remove%20or%20govern-blueviolet">
-</p>
+**Status:** documentation-only lane; implementation expansion held; final disposition open.
+**Evidence:** `main@cbd6d82bad962a58ab62cfb776ee31696b575107`, inspected 2026-09-05.
 
-**Status:** draft, repository-grounded drift guard<br>
-**Path:** `apps/packages/README.md`<br>
-**Owning root:** `apps/` by physical placement; no deployable authority granted<br>
-**Canonical shared-library root:** [`../../packages/`](../../packages/README.md)<br>
-**Default action:** freeze expansion; prefer transparent removal after verification<br>
-**Quick links:** [Purpose](#purpose) · [Current evidence](#current-repository-evidence) · [Placement](#directory-rules-and-repository-fit) · [Classification](#classification-and-disposition) · [Workspace risk](#workspace-and-import-activation-risk) · [Freeze](#freeze-contract) · [Validation](#validation-and-negative-cases) · [Removal](#removal-migration-and-transitional-exception) · [Done](#definition-of-done) · [Open](#open-verification-register)
+[Purpose](#purpose) · [Evidence](#current-repository-evidence) ·
+[Placement](#directory-rules-and-repository-fit) ·
+[Workspace risk](#workspace-and-import-activation-risk) ·
+[Validation](#validation-and-negative-cases) ·
+[Disposition](#removal-migration-and-transitional-exception) ·
+[Open work](#open-verification-register)
 
 > [!IMPORTANT]
-> **CONFIRMED:** `apps/` owns deployable applications; top-level `packages/` owns shared reusable libraries; the root JavaScript manifest selects immediate `apps/*` and `packages/*` children; the current root Python wheel targets `src/kfm`; no package manifest or Python package marker was found at three checked `apps/packages/` activation paths.
->
-> **PROPOSED:** classify this path as a dormant workspace risk and freeze it against any file other than this README or a separately approved migration/deprecation pointer.
->
-> **UNKNOWN / NEEDS VERIFICATION:** exhaustive recursive contents, every historical or external consumer, branch protection, explicit owner, and the final decision to remove or retain temporarily.
+> The pinned directory contains exactly `README.md` and an empty `.gitkeep`,
+> with no child directories. It contains no package manifest, source, local
+> tests, build configuration, or runtime implementation. This is a statement
+> about tracked files at the named commit, not every workstation or future ref.
 
 > [!CAUTION]
-> Do not add `package.json`, `pyproject.toml`, `setup.py`, `setup.cfg`, `__init__.py`, source code, tests, generated output, runtime configuration, or package-manager metadata here. Such a change would convert a documented anomaly into an implementation surface and could create a shadow package root or workspace without an accepted placement decision.
-
----
+> Do not scaffold an application or package here. A workspace glob, successful
+> import, passing CI job, or existing directory does not grant placement authority.
+> Corrective documentation and safe branch authoring remain possible; activating
+> or removing this lane requires a separately reviewed scope.
 
 ## Purpose
 
-This README is a **drift guard**, not a package README and not an app README in the ordinary implementation sense.
-
-It exists to:
-
-1. make the path anomaly visible;
-2. prevent top-level `packages/` authority from being duplicated beneath `apps/`;
-3. prevent an immediate `apps/*` workspace selector from silently normalizing this child as a package location;
-4. prevent Python namespace or build-discovery drift from reappearing here;
-5. keep public, policy, data, release, evidence, schema, contract, runtime, and deployment authority out of the lane;
-6. define the evidence required before removal or temporary retention;
-7. preserve a reversible, reviewable disposition path.
-
-This README does **not** establish that the directory is needed. Documentation presence is not a retention decision.
-
----
+Keep the `apps/` and `packages/` responsibilities distinct, make the anomalous
+path visible, and preserve a reviewable route to removal or a bounded migration
+exception. This README is navigation and drift documentation, not a package API,
+installation guide, deployable identity, normative policy, or retention decision.
 
 ## Current repository evidence
 
 ### Status matrix
 
-| Surface | Evidence | Status | Safe conclusion |
-|---|---|---:|---|
-| Target README | `apps/packages/README.md` exists; prior blob `f96476a0…` | **CONFIRMED** | Existing document is being revised in place. |
-| Initial lane history | Commit `8e262da9…` replaced an empty file with the original drift guard | **CONFIRMED** | The path was documented as an anomaly, not introduced as a working package. |
-| Canonical app map | Directory Rules §7.1 lists governed API, Explorer Web, review console, CLI, workers, and admin; it does not list `apps/packages/` | **CONFIRMED** | This path has no canonical deployable-app role. |
-| Canonical package root | Directory Rules §7.2 and `packages/README.md` assign reusable libraries to top-level `packages/` | **CONFIRMED** | Shared code does not belong here. |
-| Apps-root index | `apps/README.md` names this path as a drift guard/anomaly | **CONFIRMED** | Parent documentation does not grant implementation authority. |
-| JavaScript workspace selector | Root `package.json` declares `apps/*` and `packages/*` workspaces | **CONFIRMED** | Every immediate app child is inside a workspace-selection pattern; manifest creation here is a concrete activation risk. |
-| Local JavaScript manifest | `apps/packages/package.json` returned not found at the pinned base | **CONFIRMED checked absence** | No checked JavaScript workspace package is established here. |
-| Local Python manifest | `apps/packages/pyproject.toml` returned not found | **CONFIRMED checked absence** | No checked Python distribution is established here. |
-| Python namespace marker | `apps/packages/__init__.py` returned not found | **CONFIRMED checked absence** | No checked regular Python package marker is established here. |
-| Current root Python build | Root `pyproject.toml` uses Hatchling and packages only `src/kfm` | **CONFIRMED** | Current root wheel configuration does not intentionally package `apps/packages/`. |
-| Historical Python discovery | Commit `c9c1b7ef…` temporarily broadened setuptools discovery to `apps*`, `packages*`, `runtime*`, and `tools*` | **CONFIRMED history / superseded current behavior** | Broad namespace discovery is a demonstrated drift mode and must not be reintroduced casually. |
-| UI workflow | `ui-build` runs on every PR with read-only permission and currently fails closed on unrelated Explorer Web workspace readiness | **CONFIRMED** | A PR check may fail even when this README is structurally valid; success/failure is not app/package authority. |
-| Docs workflow | `docs-build` is an explicit read-only readiness hold; it does not render or publish docs | **CONFIRMED** | A green hold is not documentation publication or completeness proof. |
-| Review routing | `.github/CODEOWNERS` has a default owner and explicit routes for canonical app/package lanes, but no explicit `apps/packages/` pattern | **CONFIRMED** | The anomaly lacks a dedicated visible review route; default routing is not independent approval. |
-| Overlapping work | No matching open PR or branch surfaced in bounded searches | **CONFIRMED bounded result** | No known concurrent update blocks this revision. |
-| Recursive lane inventory | Connector exact probes and history were available; recursive directory enumeration was not | **UNKNOWN / NEEDS VERIFICATION** | Do not claim permanent README-only status without a checkout or tree inventory. |
+All source observations below use the pinned commit above. Definitions of checks
+and manifests are distinguished from executed checks.
+
+| Surface | CONFIRMED observation | Limit |
+|---|---|---|
+| Directory | Two regular files: `README.md` and zero-byte `.gitkeep`; no child directories | Does not inventory untracked or external files |
+| Parent guidance | `apps/README.md` identifies this child as a drift guard, not a shared-package authority | A navigation entry is not app admission |
+| Shared root | `packages/README.md` assigns reusable implementation to top-level `packages/` | This child does not inherit that role |
+| pnpm workspace | `pnpm-workspace.yaml` selects `apps/*` and `packages/*`; it also records version-specific `allowBuilds` decisions | Selection patterns and script approval are different controls |
+| Lockfile | The complete `importers` mapping has no `apps/packages` entry | A source inspection, not an installation experiment |
+| Root JavaScript manifest | Pins `pnpm@11.17.0` and Node `>=22.13 <23`; repeats the workspace patterns | Root generic lint/test/build scripts intentionally fail with `WORKFLOW_HOLD` |
+| Root Python manifest | Hatch wheel packages `src/kfm`; the source-distribution include list is explicit | Packaging configuration is not universal Python import isolation |
+| Review route | CODEOWNERS catch-all is `@bartytime4life`; no explicit `/apps/packages/` rule | Routing is not an accepted steward assignment or independent approval |
+| References | Parent/package READMEs and historical receipts reference this path; search also returns prose meaning “apps and packages” | Matches must be classified; zero-consumer closure is not established |
 
 ### Evidence limit
 
-The strongest current statement is:
+The v0.2 claim **“README-only in bounded evidence”** is superseded for this
+snapshot. The exact result is **README plus empty `.gitkeep`, no implementation**.
+The existing marker is retained unchanged; it is neither a package entrypoint
+nor permission to add other files.
 
-> **`apps/packages/` is README-only in bounded evidence and has no checked activation manifest.**
-
-Do not upgrade that sentence to “the directory is empty except for README” until a recursive tree or checkout proves it at the reviewed commit.
-
----
+No package-manager execution, wheel build, exhaustive import audit, complete
+external-consumer inventory, hosted validation of this revision, or live runtime
+inspection is established by this README. A dedicated activation guard has not
+been verified; the proposed checks below must not be described as deployed CI.
 
 ## Directory Rules and repository fit
 
-Directory Rules encode responsibility by root:
+Use [Directory Rules v2](../../docs/doctrine/directory-rules.md), particularly
+implementation-role routing, dependency direction, README inheritance, and
+migration rules, together with
+[accepted ADR-0029](../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md).
 
-```text
-apps/       = deployable application boundaries
-packages/   = reusable shared implementation libraries
-tools/      = long-lived validators, generators, and operator tooling
-pipelines/  = executable lifecycle transformations
-runtime/    = local/provider adapters behind governed interfaces
-```
+ADR-0029 adopts the exact doctrine blob `fd49a0b83e55cef52c1124281f093e263526898d`.
+Its retained `PROPOSED_FOR_ADOPTION` header is part of the adopted bytes; it is
+not evidence that adoption is still pending. The older
+`docs/architecture/directory-rules.md` remains read-only compatibility, not the
+current writable rules source.
 
-The canonical `apps/` map contains:
+| Responsibility | Correct routing |
+|---|---|
+| Deployable process or user interface | An existing, named application under `apps/` |
+| Reusable implementation across consumers | An appropriate top-level `packages/` lane |
+| Code used only by one app | That app's existing source boundary |
+| Repository-wide validator or generator | Existing `tools/` responsibility |
+| Source acquisition | Existing `connectors/` responsibility |
+| Lifecycle transformation or run specification | `pipelines/` or `pipeline_specs/`, respectively |
+| Provider composition or deployment | `runtime/` or `infra/`, respectively |
 
-```text
-apps/governed-api/
-apps/explorer-web/
-apps/review-console/
-apps/cli/
-apps/workers/
-apps/admin/
-```
-
-The canonical reusable-library map is top-level:
-
-```text
-packages/<package-name>/
-```
-
-`apps/packages/` therefore fails both normal placement tests:
-
-- it is not a named deployable application;
-- it is not the canonical shared-library root.
+These are routing rules, not instructions to create the example lanes.
+Verify the concrete destination and applicable ADR before moving or adding files.
 
 ### Directory Rules basis for keeping this README temporarily
 
-Retaining the README is justified only as a **small, reversible drift warning** while the path is inspected and dispositioned. It must not become a compatibility root by assertion.
-
-Directory Rules recognize compatibility classes such as `legacy`, `mirror`, `deprecated`, `external-export`, and `transitional`. No evidence inspected here assigns one of those accepted classes to `apps/packages/`.
-
-Accordingly:
-
-| Claim | Status |
-|---|---:|
-| `apps/packages/` is a canonical app | **DENIED** |
-| `apps/packages/` is the shared-package root | **DENIED** |
-| `apps/packages/` is an accepted compatibility root | **NOT ESTABLISHED** |
-| The README may warn against drift pending disposition | **PROPOSED bounded exception** |
-| The directory should be removed if no consumer or migration need exists | **PROPOSED preferred outcome** |
-| Temporary retention may be allowed by ADR/migration record | **PROPOSED exception** |
-
-No new root, authority family, lifecycle stage, public path, or compatibility authority is created by this document.
-
----
+This is a same-path maintenance edit under `apps/`, following the parent and
+canonical package-root drift guidance. It does not adopt a new compatibility
+class, authorize permanent retention, create package authority, or remove the
+path. The authoring receipt belongs in the existing
+[`data/receipts/generated/`](../../data/receipts/generated/README.md) accountability
+lane; receipts are process memory, not proof or approval.
 
 ## Classification and disposition
 
 ### Current proposed classification
 
-```text
-dormant-workspace-risk / deprecation-candidate
-```
-
-Meaning:
-
-- the path exists;
-- no checked activation manifest exists;
-- its name collides semantically with the canonical top-level `packages/` root;
-- it sits beneath a broad immediate-child workspace selector;
-- it has no accepted app identity;
-- it should remain frozen while removal or a temporary migration exception is reviewed.
-
-This label is descriptive, not a new Directory Rules compatibility class.
+`dormant-workspace-risk / deprecation-candidate` remains a descriptive label.
+It is not a newly accepted Directory Rules class or a package-manager state.
+The implementation freeze comes from the existing lane/parent boundaries; this
+revision does not claim that a machine guard enforces it.
 
 ### Allowed long-term outcomes
 
-Only two outcomes are sound:
-
-| Outcome | Required support | Default posture |
-|---|---|---|
-| **Remove** | recursive inventory, import/build/reference search, parent-link update, review, rollback commit | **Preferred when no dependency exists** |
-| **Transitional exception** | accepted ADR or migration note, named owner, exact consumers, target canonical home, expiry, tests, workspace/import controls, rollback | **Fail closed until complete** |
-
-The following are not acceptable outcomes:
-
-- indefinite “just in case” retention;
-- adding shared utilities because the folder already exists;
-- adding an app package manifest to make tooling convenient;
-- allowing workspace discovery to decide architecture;
-- treating the README as an ADR;
-- treating a passing build as placement approval.
-
----
+Prefer removal after consumer and navigation closure, or retain only a reviewed,
+time-bounded transitional exception with a demonstrated need. The choice remains
+**PROPOSED / disposition open**. Do not turn the lane into a shared utility dump,
+activate it to satisfy a tool, or treat indefinite retention as approved.
 
 ## Authority boundary
 
-This lane owns no implementation or governance authority beyond documenting the anomaly.
+This lane owns only its drift explanation. Contracts retain semantic meaning;
+schemas retain machine shape; policy retains admissibility; governed data lanes
+retain lifecycle, evidence, receipt and proof records; release retains release,
+correction and rollback decisions. App, package, source, pipeline, runtime and
+infrastructure implementation stay with their respective owners.
 
-| Responsibility | Owning home | `apps/packages/` authority |
-|---|---|---:|
-| Deployable service/UI/CLI/worker/admin | `apps/<named-app>/` | **None** |
-| Shared reusable library | `packages/<named-package>/` | **None** |
-| App-local source | owning app `src/` | **None** |
-| JavaScript workspace package | accepted app or top-level package lane | **None** |
-| Python distribution/package | accepted package root and manifest | **None** |
-| Schema shape | `schemas/contracts/v1/` | **None** |
-| Semantic contracts | `contracts/` | **None** |
-| Policy/admissibility | `policy/` | **None** |
-| Lifecycle data, receipts, proofs | `data/` | **None** |
-| Release, correction, withdrawal, rollback | `release/` | **None** |
-| Runtime/model adapters | `runtime/` behind governed API | **None** |
-| Source admission | `connectors/` | **None** |
-| Pipeline execution/specification | `pipelines/`, `pipeline_specs/` | **None** |
-| Repository validators/generators | `tools/` | **None** |
-| Deployment/configuration | `infra/`, `configs/` | **None** |
-| Public trust membrane | `apps/governed-api/` | **None** |
-
-A file under this path does not inherit package or app legitimacy from the parent folder name.
-
----
+No new contract, schema, policy, source registry, receipt/proof store, release
+home, public route or model integration belongs beneath `apps/packages/`.
 
 ## Workspace and import activation risk
 
 ### JavaScript workspace risk
 
-The root manifest currently contains:
+[`pnpm-workspace.yaml`](../../pnpm-workspace.yaml) is the inspected pnpm workspace
+configuration. Its `apps/*` pattern covers this immediate child structurally,
+but the directory has no `package.json` and the lockfile has no matching importer.
+Adding a manifest could activate it in workspace discovery. That is a risk to
+review, not a behavior tested by this documentation change.
 
-```json
-{
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ]
-}
-```
-
-`apps/packages/` is an immediate child matching the structural scope of `apps/*`. No local `package.json` was found at the checked base, so an active workspace package is not established. Adding one would place a package manifest inside the selected app-child pattern and could cause package-manager, install, filter, build, test, or dependency-graph behavior to treat this anomaly as a workspace.
-
-Therefore:
-
-- local `package.json` creation is an architecture-significant change;
-- workspace activation must not occur as a side effect of scaffolding;
-- a package-manager accepting the path does not make the placement valid;
-- a future lockfile entry or successful build is not an ADR or migration decision.
+The version-specific `allowBuilds` map approves or denies dependency scripts;
+it does **not** exclude this directory from workspace discovery. Preserve those
+decisions and frozen-lockfile discipline. Do not broaden script approvals, add
+an importer, change workspace globs, or install dependencies merely to update
+this README. Use the actual owning app/package instructions for implementation.
 
 ### Python import/build risk
 
-The current root Python build config is narrow:
+[`pyproject.toml`](../../pyproject.toml) specifies:
 
 ```toml
 [tool.hatch.build.targets.wheel]
 packages = ["src/kfm"]
 ```
 
-Checked activation files under `apps/packages/` are absent. However, repository history contains a prior broad discovery configuration that included `apps*` and `packages*`. That history demonstrates why the lane must prohibit:
+Its source-distribution include list also excludes this lane. These are build
+configuration facts, not proof that every interpreter or test environment denies
+imports from repository directories. In particular, the root pytest settings
+add `.` to the Python path. Absence of `__init__.py` alone is not a universal
+namespace-import guard.
 
-- `__init__.py` namespace activation;
-- broad recursive discovery that sweeps in `apps/packages`;
-- import compatibility shims without migration tests;
-- relying on `PYTHONPATH=.` or editable-install side effects to normalize the path.
-
-Current safety is configuration-specific and reversible; it must be tested, not assumed permanently.
+The v0.2 discussion of historical broad setuptools discovery is retained as
+lineage in Git history, not reasserted as current configuration. Any proposed
+change to discovery, aliases, editable installation or import paths needs tests
+for its actual supported environment.
 
 ### Activation sentinels
 
-The appearance of any item below is a **review stop** until placement is resolved:
-
-```text
-apps/packages/package.json
-apps/packages/pnpm-workspace.yaml
-apps/packages/pyproject.toml
-apps/packages/setup.py
-apps/packages/setup.cfg
-apps/packages/__init__.py
-apps/packages/src/
-apps/packages/lib/
-apps/packages/tests/
-apps/packages/tsconfig.json
-apps/packages/vite.config.*
-apps/packages/index.*
-```
-
-This list is a detection surface, not permission to add unlisted implementation files.
-
----
+Treat a new package/build manifest, Python marker, source module, re-export,
+symlink, alias, local test, lockfile importer or deployment reference as a
+placement-review trigger. Examples such as `package.json`, `pyproject.toml`,
+`setup.py`, `setup.cfg`, `__init__.py`, `src/`, `lib/` and `tests/` are **prohibited
+candidate additions here**, not a scaffold plan or an exhaustive detection list.
 
 ## Freeze contract
 
-Until a removal or transitional decision is approved, the lane follows this contract.
-
 ### Allowed
 
-- this README;
-- a reviewed edit that tightens the drift boundary;
-- a pointer to an accepted ADR or migration record after that record exists;
-- an explicit deprecation/removal marker when coordinated with parent indexes.
+Maintain this README, preserve the already-tracked empty `.gitkeep`, and link to
+an accepted disposition record when one exists. A scoped corrective document
+edit is not implementation activation. A future removal may delete the marker
+and README only with its own reviewed navigation and rollback scope.
 
 ### Denied by default
 
-- implementation source;
-- package manifests or workspace metadata;
-- app manifests, entry points, routes, workers, or deploy scripts;
-- tests local to this anomaly;
-- compatibility imports or re-export shims;
-- generated files;
-- schemas, contracts, policy, receipts, proofs, data, release records, or runtime adapters;
-- secrets, credentials, environment files, or private configuration;
-- symlinks or path aliases that make canonical tooling resolve here;
-- child directories created for future use.
+Do not add implementation, package/workspace metadata, tests, imports, aliases,
+symlinks, generated output, lifecycle data, authority-bearing records, secrets,
+private configuration or speculative child directories. The empty marker is a
+specific observed retention, not a general exception for non-document files.
 
 ### Review stop conditions
 
-Stop a proposed change when any of these occur:
-
-1. a new non-document file appears under `apps/packages/`;
-2. a root workspace/build pattern explicitly names or starts packaging the path;
-3. an import, alias, test, script, CI job, or deployment references the path;
-4. a package manager writes lock or metadata state for the path;
-5. a public app reads through the path;
-6. a proposed move lacks a target responsibility root;
-7. retention lacks owner, expiry, migration target, tests, and rollback;
-8. the path is presented as canonical without an ADR that amends Directory Rules.
-
----
+Stop the affected activation or disposition when a proposed file or reference
+makes this lane executable, changes packaging/discovery, creates a public bypass,
+claims canonical status, or lacks a verified destination and rollback. Do not
+apply these stops to unrelated safe authoring or treat this README as permission
+to modify repository settings, validators or policy.
 
 ## Public trust and sensitive-data boundary
 
-`apps/packages/` must never become a shortcut around the trust membrane.
+Public clients use governed APIs or reviewed released artifacts. This lane must
+not expose internal lifecycle stores, direct model endpoints, protected geometry,
+living-person/DNA data, archaeological or cultural detail, rare-species locations,
+private-land detail or sensitive infrastructure. Unclear rights or sensitivity
+stay with the appropriate quarantine, redaction, generalization or denial process.
 
-It must not:
-
-- serve public or semi-public traffic;
-- load RAW, WORK, QUARANTINE, PROCESSED, catalog, triplet, registry, receipt, proof, or release internals for a client;
-- select policy bundles or create policy decisions;
-- resolve evidence or generate citations as authority;
-- expose living-person, genomic, archaeology, cultural, rare-species, private-land, infrastructure, or exact protected-location detail;
-- host AI/model adapters or generated language as truth;
-- publish maps, tiles, exports, screenshots, reports, or stories;
-- approve release, correction, withdrawal, supersession, or rollback.
-
-Normal public clients continue through `apps/governed-api/` and approved public-safe carriers only.
-
----
+Preserve `RAW -> WORK/QUARANTINE -> PROCESSED -> CATALOG/TRIPLET -> PUBLISHED`,
+`EvidenceRef -> EvidenceBundle`, and cite-or-abstain. Maps, tiles, indexes,
+scenes, exports and generated language are carriers, not evidence or publication
+authority. This directory is not a shortcut around those controls.
 
 ## Dependency and ownership rules
 
 ### Dependency direction
 
-```text
-apps/<named-app>  -> packages/<named-package>
-apps/packages     -X packages authority
-apps/packages     -X public clients
-apps/packages     -X lifecycle/internal stores
-```
-
-No accepted dependency should originate from or target this lane while it remains a drift guard.
+Named apps consume appropriate shared packages; shared packages must not use
+this anomaly as an intermediate import root. Documentation links and immutable
+historical receipt references are not runtime dependencies and must not be
+blindly rejected or rewritten by a string-only search.
 
 ### Ownership
 
-Current CODEOWNERS evidence routes this path through the repository default because no explicit `apps/packages/` pattern was found.
-
-That is sufficient for GitHub notification only. It does not establish:
-
-- an Apps steward;
-- a Package steward;
-- an Architecture steward;
-- independent author/reviewer separation;
-- required approval rules;
-- permission to retain the path.
-
-A future transitional exception should add an explicit review route using only verified GitHub identities. Placeholder role names must not be encoded as executable CODEOWNERS entries.
-
----
+[`CODEOWNERS`](../../.github/CODEOWNERS) supplies the current default review route,
+not a named stewardship assignment, mandatory independent approval or proof of
+review. No dedicated rule is added here. Any future exception requires verified
+responsible owners and actual review controls; repeating the same account in
+another pattern does not create independence.
 
 ## Validation and negative cases
 
 ### Minimum deterministic checks
 
-A future repository-structure test should verify:
+For this documentation-only scope, check metadata, headings, anchors, relative
+links, fences, whitespace, final newline, the exact changed paths, and the new
+receipt's schema and artifact digest. Keep the marker unchanged. Report executed
+checks separately from source inspection and from unrun native/hosted checks.
 
-1. the only permitted regular file is `README.md`, unless an accepted migration record names another pointer;
-2. no activation sentinel exists;
-3. no repository import or build reference targets `apps/packages` or `apps.packages`;
-4. root workspace/build discovery does not explicitly activate this path;
-5. no public app or governed API code reads from the lane;
-6. no authority-bearing artifact is stored here;
-7. the parent apps index continues to classify the lane as drift until removal;
-8. removal or transitional status remains explicit and non-expired.
+For a future executable guard, **PROPOSED** acceptance requirements are: a
+non-vacuous inventory, exact regular-file allowlist (`README.md` plus the existing
+zero-byte `.gitkeep` while retained), no symlinks or extra children, no package
+activation, and context-aware import/build-reference checks. Its tests must reject
+changed marker bytes as well as new implementation; documentation and historical
+receipts must remain distinguishable from executable consumers.
+
+Read-only inspection commands for a real checkout, from repository root:
+
+```bash
+BASE=cbd6d82bad962a58ab62cfb776ee31696b575107
+# Expected tracked names: apps/packages/.gitkeep and apps/packages/README.md.
+git ls-tree -r --name-only "$BASE" -- apps/packages/
+git show "$BASE:pnpm-workspace.yaml"
+git show "$BASE:pyproject.toml"
+# Classify matches; grep exit 1 means no match, not an execution error.
+if git grep -n -F -e 'apps/packages' -e 'apps.packages' "$BASE" -- .; then
+  :
+else
+  rc=$?
+  test "$rc" -eq 1
+fi
+git diff --check
+```
+
+These commands are an inspection recipe, not an installed drift validator or a
+claim that a complete checkout was available for this authoring session.
 
 ### Negative cases
 
-| Case | Expected result |
+| Proposed guard case | Expected disposition |
 |---|---|
-| Add `apps/packages/package.json` | **FAIL / architecture review required** |
-| Add `apps/packages/__init__.py` | **FAIL / import-boundary review required** |
-| Add reusable helper source | **FAIL; move to top-level `packages/`** |
-| Add app-local implementation | **FAIL; move to owning app** |
-| Add schema or contract | **FAIL; use canonical authority root** |
-| Add release/data/proof/receipt material | **FAIL; use lifecycle/release roots** |
-| Add a compatibility shim without expiry/tests | **FAIL** |
-| Remove directory without reference inventory | **HOLD** |
-| Retain path indefinitely without ADR/migration | **DENY** |
-| Workspace/build succeeds with the path | **No authority effect; placement still invalid** |
+| New manifest, source, re-export, symlink or local test | Reject expansion; route work to its owner |
+| Existing `.gitkeep` becomes non-empty | Reject unreviewed content, not grandfather it |
+| Lockfile/import/build alias activates the lane | Require separately reviewed placement and consumer tests |
+| README or historical receipt references the path | Classify as documentation/lineage; not automatically an import violation |
+| Removal leaves current navigation broken | Hold removal until links and consumers close |
+| Build succeeds after unapproved activation | No placement or release authority follows |
 
 ### Proposed test placement
 
-A structure-boundary test may fit the existing repository policy/boundary test family, but the exact file and workflow binding are **PROPOSED** until the test owner confirms placement. The test should be deterministic and no-network.
+Use the existing repository-level validator/test responsibilities, after checking
+adjacent conventions and overlap. Exact new paths and CI wiring remain
+**PROPOSED**. Do not put executable tests under this frozen directory and do not
+weaken a topology baseline to make new activation appear conformant.
 
 ### CI limits
 
-The current `ui-build` workflow:
+[`ui-build.yml`](../../.github/workflows/ui-build.yml) now defines a real, locked
+Explorer build/test lane. The earlier claim that scripts, the pnpm pin and
+lockfile are missing is obsolete. A workflow definition does not establish the
+result for this change; failing checks require exact-head and comparable-base
+evidence before they may be called inherited.
 
-- runs on all pull requests;
-- uses hosted runners and read-only repository permission;
-- does not deploy or publish;
-- currently fails closed because Explorer Web build/test scripts, exact package-manager pinning, and lockfile readiness are incomplete.
+[`docs-build.yml`](../../.github/workflows/docs-build.yml) still contains explicit
+generator and preview readiness holds. A successful held job does not prove
+that this Markdown was rendered, accessible or published. The generic root
+JavaScript scripts are also explicit holds, not package-wide validation.
 
-Consequently, a failure of `ui-build` on a README-only change may reflect known Explorer Web readiness rather than a defect in this lane. It must not be mislabeled as path-specific validation.
-
-The current `docs-build` workflow is a readiness hold and does not render or publish this document.
-
----
+No passing result, merge, document badge or receipt authorizes package activation,
+source admission, review approval, deployment or publication.
 
 ## Removal, migration, and transitional exception
 
 ### Preferred removal sequence
 
-Removal is the preferred outcome when no consumer exists.
-
-1. Pin the reviewed base commit.
-2. Recursively inventory `apps/packages/`.
-3. Search repository imports, aliases, workspaces, package-manager metadata, CI, tests, deployment, docs, and external compatibility notes.
-4. Confirm no runtime or external consumer depends on the path.
-5. Update `apps/README.md` and any navigation that links to this README.
-6. Remove the directory in one scoped review branch.
-7. Run structure, link, workspace, import, UI, and repository checks.
-8. Preserve the removal commit and prior blob as rollback targets.
-9. Record the disposition in an accepted migration/deprecation register if the repository adopts one.
-
-Do not leave a broken parent link or silent tombstone.
+Re-pin the current tree; finish repository and external-consumer checks; obtain
+the appropriate disposition review; update parent/package navigation and other
+active links; remove the README and marker together; validate affected links,
+imports, discovery and consumers; record a specific revert target. Preserve
+historical receipts and source pins rather than rewriting their original hashes.
+No removal is performed by this update.
 
 ### Transitional exception requirements
 
-If a real consumer requires temporary retention, the exception must state:
-
-| Field | Requirement |
-|---|---|
-| Classification | `transitional` or another Directory Rules-recognized class |
-| Governing record | Accepted ADR or migration note |
-| Owner | Verified responsible identity and stewardship assignment |
-| Consumer inventory | Exact imports, workspaces, scripts, CI, deployments, or external users |
-| Canonical destination | Existing responsibility-root path checked against Directory Rules |
-| Compatibility surface | Exact files and behavior retained temporarily |
-| Security posture | No secrets, public bypass, internal-store shortcut, or sensitive-data leak |
-| Tests | Positive compatibility and negative bypass/activation cases |
-| Expiry/removal trigger | Date, version, consumer migration, or other deterministic condition |
-| Rollback | Revert target and forward-remediation path |
-| Review | Apps + package + architecture + affected security/runtime reviewers |
-
-Directory presence alone satisfies none of these requirements.
+A justified exception needs an accepted ADR or applicable migration record,
+verified owner, exact retained files and consumers, canonical destination,
+compatibility contract, rights/security constraints, positive and negative tests,
+expiry or deterministic retirement trigger, and rollback. A README, workspace
+entry or successful build supplies none of those approvals by itself.
 
 ### Migration rules
 
-- Shared reusable code moves to top-level `packages/<name>/`.
-- App-local code moves into the owning named app.
-- One-off scripts move to `tools/`, `scripts/one_off/`, or `pipelines/` according to duration and responsibility.
-- Runtime adapters move to `runtime/` behind governed interfaces.
-- Tests move to the owning app/package test lane or accepted repository test family.
-- Authority-bearing content moves to its canonical root with an ADR/migration note when necessary.
-
-A move is not complete until imports, build manifests, lockfiles, workflows, docs, tests, ownership, and rollback references are updated.
-
----
+Route content by responsibility, not by the word “packages.” Close affected
+imports, build manifests, lockfiles, tests, workflows, documentation, ownership
+and rollback together. Respect compatibility holds elsewhere; this child-lane
+update does not migrate the Directory Rules compatibility copy or any root.
 
 ## Smallest sound implementation sequence
 
-The next useful implementation work is intentionally small:
+This revision closes the tracked-file inventory gap and refreshes the guide.
+The next separate slice is to establish actual consumers and select either
+removal with navigation repair or a justified bounded guard/exception. Do not
+add tooling, ownership patterns or a package merely to give this directory work.
 
-1. **Keep the freeze visible.** Merge this README revision without adding code.
-2. **Add a recursive inventory receipt/report.** Use a mounted checkout or tree API; record exact files and references.
-3. **Add a deterministic drift guard.** Fail when activation sentinels or imports appear.
-4. **Make review routing explicit.** Add a verified path-specific CODEOWNERS rule if the path remains during review.
-5. **Choose disposition.** Remove when unused; otherwise accept a time-bounded migration record.
-6. **Execute the disposition in a separate PR.** Update parent navigation, tests, and rollback together.
-
-Do not scaffold a package merely to make the path appear purposeful.
-
----
+Branch authoring, draft delivery, readiness, review and merge remain distinct.
+Follow current [CONTRIBUTING.md](../../CONTRIBUTING.md) and the
+[PR template](../../.github/PULL_REQUEST_TEMPLATE.md). An incident-quarantined
+PR-state path stops at a validated branch until the required independent
+one-shot draft-delivery boundary is proven. Documentation does not clear it.
 
 ## Definition of done
 
-This README update is complete when:
+For this update: preserve document identity and anchors; describe the two-file
+inventory accurately; cite adopted placement authority; separate workspace
+selection from script approval; correct CI claims; retain all trust boundaries;
+bind the new README bytes in a pending-review receipt; and report actual delivery
+and validation without claiming a PR, test or merge that did not occur.
 
-- [x] The stable `doc_id` and existing path are preserved.
-- [x] `apps/` and top-level `packages/` responsibilities are grounded in current Directory Rules and root READMEs.
-- [x] The JavaScript workspace-selector risk is documented.
-- [x] Current Python build posture and historical broad-discovery drift are separated.
-- [x] Checked absent activation paths are recorded without overstating recursive inventory.
-- [x] The lane is frozen against new authority and implementation.
-- [x] Removal and transitional-exception paths are reversible and explicit.
-- [x] Current CI limitations are disclosed.
-- [ ] Named owners are accepted.
-- [ ] A recursive inventory is captured.
-- [ ] A deterministic drift test exists and runs in CI.
-- [ ] A dedicated verified review route exists while the path remains.
-- [ ] The final remove-or-transitional decision is approved.
-- [ ] Parent navigation is updated if the path is removed.
-
----
+Final disposition, a dedicated executable guard, accepted stewards, complete
+consumer closure and independent review controls remain separate open work.
 
 ## Open verification register
 
-| ID | Question | Why it matters | Status |
-|---|---|---|---:|
-| `APP-PKG-01` | Is `README.md` truly the only current file in the lane? | Required for exact classification and removal | **NEEDS VERIFICATION** |
-| `APP-PKG-02` | Do any imports, aliases, scripts, tests, CI jobs, lockfiles, or external users reference the path? | Required before removal | **NEEDS VERIFICATION** |
-| `APP-PKG-03` | How do all supported package managers interpret an immediate app child without a manifest? | Prevents tooling-specific activation surprises | **NEEDS VERIFICATION** |
-| `APP-PKG-04` | Should the root workspace selector be narrowed or guarded? | Prevents future manifest activation | **PROPOSED / NEEDS VERIFICATION** |
-| `APP-PKG-05` | Is transparent removal preferred by maintainers? | Resolves indefinite anomaly retention | **UNKNOWN** |
-| `APP-PKG-06` | Does any accepted ADR or migration record require temporary compatibility? | Required to classify as transitional | **NOT ESTABLISHED** |
-| `APP-PKG-07` | Which verified GitHub identities should review the path? | Makes drift review visible | **NEEDS VERIFICATION** |
-| `APP-PKG-08` | Which accepted test family should own the drift guard? | Required for enforceable freeze | **NEEDS VERIFICATION** |
-| `APP-PKG-09` | Are branch protection and required checks configured for this path? | Prevents bypass of review gates | **UNKNOWN** |
-| `APP-PKG-10` | Have historical broad Python discovery assumptions been fully retired from docs/scripts? | Prevents regression to `apps*` packaging | **NEEDS VERIFICATION** |
-
----
+| ID | Current disposition | First affected transition |
+|---|---|---|
+| `APP-PKG-01` | **CONFIRMED:** README and empty `.gitkeep`, no descendants at the pin; earlier single-file premise corrected | Re-inventory when the ref changes |
+| `APP-PKG-02` | **NEEDS VERIFICATION:** complete imports, aliases, automation and external consumers | Removal or activation |
+| `APP-PKG-03` | **NEEDS VERIFICATION:** behavior of each supported packaging/import tool | Tooling or packaging changes |
+| `APP-PKG-04` | **PROPOSED:** executable guard or selector change only if justified | Enforcement implementation |
+| `APP-PKG-05` | **UNKNOWN:** final maintainer removal/retention decision | Disposition |
+| `APP-PKG-06` | **NEEDS VERIFICATION:** accepted, unexpired transitional need | Compatibility admission |
+| `APP-PKG-07` | **CONFIRMED:** default CODEOWNERS route; **UNKNOWN:** accepted stewards and independent approval | Stewardship or approval claims |
+| `APP-PKG-08` | **NEEDS VERIFICATION:** dedicated guard, test owner and CI wiring | Enforced-freeze claims |
+| `APP-PKG-09` | **UNKNOWN:** sufficient independent PR-state and merge controls | Draft delivery through an implicated path; later integration |
+| `APP-PKG-10` | **NEEDS VERIFICATION:** all historical discovery assumptions retired from active consumers | Broad packaging/import changes |
 
 ## Evidence ledger
 
-| Evidence | Observation used | Truth label |
-|---|---|---:|
-| `apps/packages/README.md@5cf7386b…` | Existing v0.1 drift guard and prior identity | **CONFIRMED** |
-| `apps/README.md@5cf7386b…` | Deployable root; path identified as anomaly | **CONFIRMED** |
-| `packages/README.md@5cf7386b…` | Top-level shared reusable package authority | **CONFIRMED** |
-| `docs/architecture/directory-rules.md@5cf7386b…` | Canonical apps map, packages root, compatibility discipline | **CONFIRMED live artifact; document status remains review** |
-| `package.json@5cf7386b…` | `apps/*` and `packages/*` workspace selectors | **CONFIRMED** |
-| `pyproject.toml@5cf7386b…` | Current Hatch wheel packages only `src/kfm` | **CONFIRMED** |
-| exact probes for local manifests/marker | `package.json`, `pyproject.toml`, `__init__.py` not found | **CONFIRMED checked absence** |
-| commit `8e262da9…` | Original README replaced an empty file | **CONFIRMED history** |
-| commit `c9c1b7ef…` | Historical broad Python discovery included `apps*` | **CONFIRMED history / superseded** |
-| `.github/workflows/ui-build.yml` | All-PR read-only readiness failure posture | **CONFIRMED** |
-| `.github/workflows/docs-build.yml` | Read-only documentation readiness hold | **CONFIRMED** |
-| `.github/CODEOWNERS` | Default route; no path-specific anomaly route | **CONFIRMED** |
-| branch and PR searches | No overlapping open work surfaced | **CONFIRMED bounded result** |
-| recursive lane contents and all consumers | Not fully enumerable in connector session | **UNKNOWN / NEEDS VERIFICATION** |
+The relative links below resolve in the reader's checkout. The immutable source
+pin for every observation is `cbd6d82bad962a58ab62cfb776ee31696b575107`; nearby
+READMEs may retain older evidence dates and do not override current source bytes.
 
----
+| Source | Use |
+|---|---|
+| GitHub directory inventory for `apps/packages/` | Complete two-file tracked surface, including zero-byte marker |
+| [Parent apps README](../README.md), [shared packages README](../../packages/README.md) | Drift classification and responsibility routing |
+| [Directory Rules](../../docs/doctrine/directory-rules.md), [ADR-0029](../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) | Adopted placement authority and compatibility limitation |
+| [Root manifest](../../package.json), [workspace YAML](../../pnpm-workspace.yaml), [lockfile](../../pnpm-lock.yaml) | Workspace selection, importer absence, separate script policy |
+| [Python manifest](../../pyproject.toml) | Wheel/source distribution and pytest path configuration |
+| [CODEOWNERS](../../.github/CODEOWNERS), [contributor guide](../../CONTRIBUTING.md) | Routing, review and delivery limitations |
+| [UI workflow](../../.github/workflows/ui-build.yml), [docs workflow](../../.github/workflows/docs-build.yml) | Declared checks versus explicit readiness holds |
+| [GeneratedReceipt lane](../../data/receipts/generated/README.md) | Authoring provenance, pending review and non-authority |
+
+Google Drive's *Directory Rules* was consulted as design lineage; the Notion
+*KFM Repository Workbench* was consulted as coordination. Neither replaces
+adopted GitHub doctrine or current implementation evidence. No private page
+content or source document is copied into this lane.
 
 ## Rollback and maintenance
 
 ### Rollback
 
-Before merge, close the review PR or reset/delete its branch. After merge, revert the README commit and generated-work receipt commit in reverse order. The prior README blob is:
-
-```text
-f96476a05d8eba03e538fe9f9053d7e0e5a77033
-```
-
-Rollback restores documentation only. It does not authorize package activation or settle disposition.
+Revert only this update's README/receipt commit as one unit, preserving Git
+history. The prior README blob is `5a9f5b2b7019cca476631cad3533bbdc2dbc9199`.
+The existing `.gitkeep`, historical receipts, packages, manifests and workflows
+remain unchanged. Rollback restores documentation; it does not authorize
+activation, delete a consumer, or require a data/deployment migration.
 
 ### Maintenance triggers
 
-Review this README when any of the following changes:
-
-- a file appears under `apps/packages/`;
-- root workspaces or package-manager tooling changes;
-- Python package discovery changes;
-- an import/build/deployment reference appears;
-- Directory Rules changes app or package placement;
-- an ADR/migration record is accepted;
-- CODEOWNERS or branch protection changes;
-- the path is removed;
-- a recursive inventory proves a different current state.
+Reinspect on tracked-content, workspace/import/distribution, consumer, accepted
+ADR, owner, delivery-control or disposition changes. Check the affected ref and
+actual results; do not refresh an evidence date without refreshing its basis.
 
 ### No-loss preservation note
 
-The v0.1 README already established the essential rule: this path must not become a shadow package root. v0.2 preserves that rule and adds current repository evidence, workspace/import activation risks, a strict freeze, removal/transitional decision criteria, validation expectations, CI limits, explicit rollback, and an evidence ledger.
-
-The old statement that all contents beyond the README were simply unknown is narrowed, not erased: exact activation probes are now confirmed absent, while exhaustive recursive inventory remains `NEEDS VERIFICATION`.
-
----
+The original no-shadow-package rule, public trust boundary, activation risks,
+negative-test requirements, disposition choices and rollback remain intact.
+Earlier source snapshots and broad-discovery history remain in Git and immutable
+receipts. v0.3 corrects currentness without relabeling that history as fresh proof.
 
 ## Changelog
 
+### v0.3 — 2026-09-05
+
+Correct the two-file inventory, reference adopted v2 doctrine, document the pnpm
+workspace/importer and script-policy distinction, narrow Python isolation claims,
+refresh CI guidance, distinguish planned guards from enforcement, and retain a
+reversible non-implementation boundary. No package activation or deletion.
+
 ### v0.2 — 2026-07-19
 
-- pinned current repository evidence and prior blob;
-- classified the lane as a dormant workspace risk/deprecation candidate;
-- documented root JavaScript workspace selectors;
-- documented current narrow Python build and historical broad-discovery drift;
-- recorded checked absent activation files;
-- established a freeze contract and activation sentinels;
-- separated removal from ADR-backed transitional retention;
-- added deterministic validation and negative cases;
-- documented CODEOWNERS and CI limitations;
-- added implementation sequence, definition of done, open register, evidence ledger, and rollback.
+Established the pinned drift-guard account, workspace/import risks, proposed
+freeze and negative checks, disposition requirements, ownership/CI limits and
+rollback. Its README-only inventory and missing-UI-toolchain account are historical,
+not the current state described above.
 
 ### v0.1 — 2026-06-16
 
-- replaced an empty README with the initial bounded drift-guard contract.
+Replaced an empty README with the initial bounded drift-guard contract.
 
-<p align="right"><a href="#top">Back to top</a></p>
+[Back to top](#top)
