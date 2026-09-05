@@ -100,6 +100,12 @@ jobs:
           git diff --exit-code 34a9348ce7882284a5843f414368b92ade9d79db...HEAD -- \
             data/receipts/generated/genrec-earth-layer-library-20260905-a7374a0d9e32.json \
             > "$RUNNER_TEMP/earth-library-app/historical-receipt-diff.txt"
+      - name: Install repository hash-locked Python validation profile
+        if: ${{ always() && matrix.kind == 'candidate' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/ci/install_python_ci.py project-test 2>&1 | tee "$RUNNER_TEMP/earth-library-app/python-bootstrap.log"
       - name: Validate current integration receipt when present
         if: ${{ always() && matrix.kind == 'candidate' }}
         shell: bash
@@ -116,7 +122,10 @@ jobs:
             printf 'expected exactly one current integration receipt, found %s\n' "${#receipts[@]}" | tee "$out/current-receipt.log"
             exit 1
           fi
-          python tools/validators/validate_generated_receipt.py "${receipts[0]}" --repo-root . 2>&1 | tee "$out/current-receipt.log"
+          python tools/validators/validate_generated_receipt.py "${receipts[0]}" \
+            --repo-root . \
+            --artifact-git-ref 698b833109e3b58bcb9ef5321cb9a8a49a3823e6 \
+            2>&1 | tee "$out/current-receipt.log"
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
           node-version: '22'
