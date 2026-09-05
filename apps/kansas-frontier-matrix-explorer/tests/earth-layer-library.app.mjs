@@ -102,9 +102,12 @@ try {
     assert.equal('membershipEpoch' in saved,false);assert.equal('members' in saved,false);
   });
   await run('visible operational Layers control and Library share actual state', async()=>{
-    // Desktop deliberately clips the legacy header buttons. Use the control a user sees.
+    // Use the visible operational control, then its label-wrapped custom switch.
+    // No force click or synthetic event bypass for this ordinary user interaction.
     await page.getByRole('button',{name:/^Layer catalog\. Choose governed context\./}).click();
-    await page.getByRole('checkbox',{name:'Show Hydrology context',exact:true}).check();
+    const checkbox = page.getByRole('checkbox',{name:'Show Hydrology context',exact:true});
+    assert.equal(await checkbox.isChecked(),false);
+    await page.locator('label.visibility-switch').filter({has:checkbox}).click();
     await waitLayer('water-context',true);await open();await stack();
     assert.equal(await dialog.getByRole('checkbox',{name:'Enable Hydrology context',exact:true}).isChecked(),true);
     await close();
