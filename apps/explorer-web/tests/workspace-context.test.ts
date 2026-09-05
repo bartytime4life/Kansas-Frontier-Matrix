@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { MAP_FEATURE_SELECTION_PROFILE } from "@kfm/maplibre";
 import {
+  buildTemporalViewStateFromPublicContext,
   PUBLIC_WORKSPACE_CONTEXT_PROFILE,
   PUBLIC_WORKSPACE_CONTEXT_QUERY_PARAM,
   parsePublicWorkspaceContext,
@@ -8,6 +9,7 @@ import {
   parsePublicWorkspaceContextUrl,
   serializePublicWorkspaceContext,
   withPublicWorkspaceContext,
+  type PublicWorkspaceContext,
 } from "../src/site/workspace-context";
 
 const validContext = Object.freeze({
@@ -213,4 +215,42 @@ describe("Explorer public workspace context", () => {
       }),
     ).toBeNull();
   });
+  it("normalizes explicit numeric-offset instants while preserving the raw value", async () => {
+    const context = parsePublicWorkspaceContext({
+      ...validContext,
+      time: {
+        ...validContext.time,
+        validAt: null,
+        observedAt: "2026-08-23T16:00:00-05:00",
+      },
+    });
+    expect(context).not.toBeNull();
+    const result = await buildTemporalViewStateFromPublicContext(
+      context as PublicWorkspaceContext,
+    );
+    expect(result).toMatchObject({ status: "SUPPORTED", code: "OK" });
+    expect(result.state?.selection.start).toMatchObject({
+      raw: "2026-08-23T16:00:00-05:00",
+      normalized: "2026-08-23T21:00:00Z",
+      source_timezone: "-05:00",
+      normalization: { status: "OFFSET_TO_UTC" },
+    });
+  });
+
+  it("rejects an unparsed context instead of fabricating an uncertain range", async () => {
+    const forged = {
+      ...validContext,
+      time: {
+        ...validContext.time,
+        validAt: "circa 1880",
+        observedAt: null,
+      },
+    } as unknown as PublicWorkspaceContext;
+    await expect(buildTemporalViewStateFromPublicContext(forged)).resolves.toMatchObject({
+      status: "ERROR",
+      code: "PUBLIC_CONTEXT_INVALID",
+      state: null,
+    });
+  });
+
 });

@@ -313,6 +313,8 @@ export function parsePublicWorkspaceContextUrl(
 
 const ADAPTER_AWARE_INSTANT =
   /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,9})?(?:Z|[+-]\d{2}:\d{2})$/;
+const ADAPTER_AWARE_INSTANT_PARTS =
+  /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})(\.\d{1,9})?(Z|[+-]\d{2}:\d{2})$/;
 const ADAPTER_DATE_ONLY = /^\d{4}-\d{2}-\d{2}$/;
 const ADAPTER_MONTH = /^\d{4}-\d{2}$/;
 const ADAPTER_YEAR = /^\d{4}$/;
@@ -325,89 +327,148 @@ export type PublicWorkspaceTemporalStateResult = Readonly<{
   state: TemporalViewState | null;
 }>;
 
-function adapterBoundary(raw: string): TemporalViewState["selection"]["start"] {
-  if (ADAPTER_AWARE_INSTANT.test(raw)) {
+type AdapterBoundaryResult =
+  | Readonly<{
+      status: "SUPPORTED";
+      code: "OK";
+      boundary: TemporalViewState["selection"]["start"];
+    }>
+  | Readonly<{
+      status: "UNSUPPORTED" | "ERROR";
+      code: string;
+      boundary: null;
+    }>;
+
+function adapterFailure(
+  status: "UNSUPPORTED" | "ERROR",
+  code: string,
+): AdapterBoundaryResult {
+  return { status, code, boundary: null };
+}
+
+function adapterBoundary(raw: string): AdapterBoundaryResult {
+  const instant = ADAPTER_AWARE_INSTANT_PARTS.exec(raw);
+  if (instant !== null) {
+    const sourceTimezone = instant[3] ?? "";
+    if (sourceTimezone === "-00:00") {
+      return adapterFailure("UNSUPPORTED", "UNKNOWN_TIMEZONE");
+    }
+
+    const wholeSecond = Date.parse((instant[1] ?? "") + "Z");
+    if (!Number.isFinite(wholeSecond)) {
+      return adapterFailure("ERROR", "TEMPORAL_BOUNDARY_INVALID");
+    }
+    if (new Date(wholeSecond).toISOString().slice(0, 19) !== instant[1]) {
+      return adapterFailure("ERROR", "TEMPORAL_BOUNDARY_INVALID");
+    }
+
+    let offsetMinutes = 0;
+    if (sourceTimezone !== "Z") {
+      const offsetHour = Number(sourceTimezone.slice(1, 3));
+      const offsetMinute = Number(sourceTimezone.slice(4, 6));
+      if (offsetHour > 23 || offsetMinute > 59) {
+        return adapterFailure("ERROR", "TEMPORAL_BOUNDARY_INVALID");
+      }
+      const sign = sourceTimezone[0] === "+" ? 1 : -1;
+      offsetMinutes = sign * (offsetHour * 60 + offsetMinute);
+    }
+
+    const utc = new Date(wholeSecond - offsetMinutes * 60_000).toISOString();
     return {
-      profile: "instant",
-      raw,
-      normalized: raw,
-      precision: "second",
-      source_timezone: raw.endsWith("Z") ? "UTC" : raw.slice(-6),
-      calendar: "GREGORIAN",
-      bound_status: "KNOWN",
-      normalization: {
-        status: "OFFSET_TO_UTC",
-        provenance_ref: TEMPORAL_ADAPTER_PROVENANCE,
+      status: "SUPPORTED",
+      code: "OK",
+      boundary: {
+        profile: "instant",
+        raw,
+        normalized: utc.slice(0, 19) + (instant[2] ?? "") + "Z",
+        precision: "second",
+        source_timezone: sourceTimezone === "Z" ? "UTC" : sourceTimezone,
+        calendar: "GREGORIAN",
+        bound_status: "KNOWN",
+        normalization: {
+          status: sourceTimezone === "Z" ? "NONE" : "OFFSET_TO_UTC",
+          provenance_ref: TEMPORAL_ADAPTER_PROVENANCE,
+        },
+        uncertainty: null,
       },
-      uncertainty: null,
     };
   }
+
   if (ADAPTER_DATE_ONLY.test(raw)) {
+    const parsedDate = Date.parse(raw + "T00:00:00Z");
+    if (
+      !Number.isFinite(parsedDate) ||
+      new Date(parsedDate).toISOString().slice(0, 10) !== raw
+    ) {
+      return adapterFailure("ERROR", "TEMPORAL_BOUNDARY_INVALID");
+    }
     return {
-      profile: "date_only",
-      raw,
-      normalized: null,
-      precision: "day",
-      source_timezone: null,
-      calendar: "GREGORIAN",
-      bound_status: "KNOWN",
-      normalization: {
-        status: "CALENDAR_PRESERVED",
-        provenance_ref: TEMPORAL_ADAPTER_PROVENANCE,
+      status: "SUPPORTED",
+      code: "OK",
+      boundary: {
+        profile: "date_only",
+        raw,
+        normalized: null,
+        precision: "day",
+        source_timezone: null,
+        calendar: "GREGORIAN",
+        bound_status: "KNOWN",
+        normalization: {
+          status: "CALENDAR_PRESERVED",
+          provenance_ref: TEMPORAL_ADAPTER_PROVENANCE,
+        },
+        uncertainty: null,
       },
-      uncertainty: null,
     };
   }
+
   if (ADAPTER_MONTH.test(raw)) {
+    const month = Number(raw.slice(5));
+    if (month < 1 || month > 12) {
+      return adapterFailure("ERROR", "TEMPORAL_BOUNDARY_INVALID");
+    }
     return {
-      profile: "month",
-      raw,
-      normalized: null,
-      precision: "month",
-      source_timezone: null,
-      calendar: "GREGORIAN",
-      bound_status: "KNOWN",
-      normalization: {
-        status: "CALENDAR_PRESERVED",
-        provenance_ref: TEMPORAL_ADAPTER_PROVENANCE,
+      status: "SUPPORTED",
+      code: "OK",
+      boundary: {
+        profile: "month",
+        raw,
+        normalized: null,
+        precision: "month",
+        source_timezone: null,
+        calendar: "GREGORIAN",
+        bound_status: "KNOWN",
+        normalization: {
+          status: "CALENDAR_PRESERVED",
+          provenance_ref: TEMPORAL_ADAPTER_PROVENANCE,
+        },
+        uncertainty: null,
       },
-      uncertainty: null,
     };
   }
+
   if (ADAPTER_YEAR.test(raw)) {
     return {
-      profile: "year",
-      raw,
-      normalized: null,
-      precision: "year",
-      source_timezone: null,
-      calendar: "GREGORIAN",
-      bound_status: "KNOWN",
-      normalization: {
-        status: "CALENDAR_PRESERVED",
-        provenance_ref: TEMPORAL_ADAPTER_PROVENANCE,
+      status: "SUPPORTED",
+      code: "OK",
+      boundary: {
+        profile: "year",
+        raw,
+        normalized: null,
+        precision: "year",
+        source_timezone: null,
+        calendar: "GREGORIAN",
+        bound_status: "KNOWN",
+        normalization: {
+          status: "CALENDAR_PRESERVED",
+          provenance_ref: TEMPORAL_ADAPTER_PROVENANCE,
+        },
+        uncertainty: null,
       },
-      uncertainty: null,
     };
   }
-  return {
-    profile: "uncertain_range",
-    raw,
-    normalized: null,
-    precision: "range",
-    source_timezone: null,
-    calendar: "EDTF",
-    bound_status: "KNOWN",
-    normalization: {
-      status: "CALENDAR_PRESERVED",
-      provenance_ref: TEMPORAL_ADAPTER_PROVENANCE,
-    },
-    uncertainty: {
-      kind: "UNCERTAIN",
-      lower_raw: raw,
-      upper_raw: raw,
-    },
-  };
+
+  return adapterFailure("UNSUPPORTED", "AMBIGUOUS_TEMPORAL_BOUNDARY");
 }
 
 /**
@@ -418,7 +479,15 @@ function adapterBoundary(raw: string): TemporalViewState["selection"]["start"] {
 export async function buildTemporalViewStateFromPublicContext(
   context: PublicWorkspaceContext,
 ): Promise<PublicWorkspaceTemporalStateResult> {
-  const raw = context.time.validAt ?? context.time.observedAt;
+  const parsedContext = parsePublicWorkspaceContext(context);
+  if (parsedContext === null) {
+    return {
+      status: "ERROR",
+      code: "PUBLIC_CONTEXT_INVALID",
+      state: null,
+    };
+  }
+  const raw = parsedContext.time.validAt ?? parsedContext.time.observedAt;
   if (raw === null) {
     return {
       status: "UNSUPPORTED",
@@ -426,24 +495,44 @@ export async function buildTemporalViewStateFromPublicContext(
       state: null,
     };
   }
-  if (context.layerIds.length === 0) {
+  if (parsedContext.layerIds.length === 0) {
     return {
       status: "ERROR",
       code: "ACTIVE_LAYER_REQUIRED",
       state: null,
     };
   }
-  if (context.compare.mode !== "NONE") {
+  if (parsedContext.compare.mode !== "NONE") {
     return {
       status: "UNSUPPORTED",
       code: "COMPARISON_REQUIRES_TEMPORAL_SIDES",
       state: null,
     };
   }
-  if (context.time.asOf !== null && !ADAPTER_AWARE_INSTANT.test(context.time.asOf)) {
+  if (parsedContext.time.asOf !== null && !ADAPTER_AWARE_INSTANT.test(parsedContext.time.asOf)) {
     return {
       status: "UNSUPPORTED",
       code: "AS_OF_REQUIRES_ZONED_INSTANT",
+      state: null,
+    };
+  }
+
+  if (parsedContext.time.asOf !== null) {
+    const asOfResult = adapterBoundary(parsedContext.time.asOf);
+    if (asOfResult.status !== "SUPPORTED") {
+      return {
+        status: asOfResult.status,
+        code: asOfResult.code,
+        state: null,
+      };
+    }
+  }
+
+  const boundaryResult = adapterBoundary(raw);
+  if (boundaryResult.status !== "SUPPORTED") {
+    return {
+      status: boundaryResult.status,
+      code: boundaryResult.code,
       state: null,
     };
   }
@@ -453,12 +542,12 @@ export async function buildTemporalViewStateFromPublicContext(
     schema_version: "1.0.0",
     state_id: "",
     spatial_scope: {
-      scope_type: context.placeIds.length > 0 ? "AOI" : "LAYER_NATIVE",
-      aoi_ref: context.placeIds[0] ?? null,
+      scope_type: parsedContext.placeIds.length > 0 ? "AOI" : "LAYER_NATIVE",
+      aoi_ref: parsedContext.placeIds[0] ?? null,
       geometry_ref: null,
       public_safe: true,
     },
-    active_layer_ids: [...context.layerIds],
+    active_layer_ids: [...parsedContext.layerIds],
     query: {
       disclosure_profile: "kfm.governance.temporal-query-disclosure.v1",
       query_class: "CURRENT_STATE",
@@ -470,10 +559,10 @@ export async function buildTemporalViewStateFromPublicContext(
     },
     selection: {
       selection_mode: "INSTANT",
-      start: adapterBoundary(raw),
+      start: boundaryResult.boundary,
       end: null,
       anchor: "START",
-      support_ref: context.selection?.selectionId ?? null,
+      support_ref: parsedContext.selection?.selectionId ?? null,
     },
     display: {
       mode: "SNAPSHOT",
@@ -493,14 +582,14 @@ export async function buildTemporalViewStateFromPublicContext(
       camera_easing: "NONE",
     },
     as_of: {
-      knowledge_cutoff: context.time.asOf,
-      release_ref: context.time.releaseId,
+      knowledge_cutoff: parsedContext.time.asOf,
+      release_ref: parsedContext.time.releaseId,
       correction_policy: "CURRENT_POLICY",
     },
     pins: {
       dataset_version_refs: [],
-      release_refs: context.time.releaseId ? [context.time.releaseId] : [],
-      pin_status: context.time.releaseId ? "PINNED" : "UNPINNED",
+      release_refs: parsedContext.time.releaseId ? [parsedContext.time.releaseId] : [],
+      pin_status: parsedContext.time.releaseId ? "PINNED" : "UNPINNED",
     },
     comparison: {
       enabled: false,
