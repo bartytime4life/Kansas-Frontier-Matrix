@@ -1,5 +1,5 @@
 # Diagnostic transport only. NEVER merge this branch or substitute this run for accessibility proof.
-# Exact product, frozen dependency, and main are checked out separately. No writes or deployment.
+# Product, prerequisite, and current main are separate literal checkouts. No writes or deployment.
 name: accessibility
 on:
   push:
@@ -20,11 +20,11 @@ jobs:
       matrix:
         include:
           - lane: candidate
-            source: a120361953ae574c4c1df8ea805a69677c9fab78
+            source: bf1335ad7250dec6334f62ad86d1032f0df7ef61
           - lane: repaired-baseline
             source: 343a516812596f0b29fdb1a56b3a549edbe43490
-          - lane: main
-            source: 8b9c52d88687986879c8f87d7e3835f6a58bbacd
+          - lane: current-main
+            source: 94e976ff281ff5033c1c91ada417ab1d0c445f7b
     env:
       CI: 'true'
       COREPACK_ENABLE_STRICT: '1'
@@ -52,8 +52,16 @@ jobs:
           git diff --check > "$out/diff-check.log"
           sha256sum package.json pnpm-workspace.yaml pnpm-lock.yaml apps/kansas-frontier-matrix-explorer/package-lock.json > "$out/locks-before.sha256"
           git diff --name-status 343a516812596f0b29fdb1a56b3a549edbe43490 HEAD > "$out/diff-from-repaired-baseline.txt"
+          git diff --name-status 8b9c52d88687986879c8f87d7e3835f6a58bbacd 94e976ff281ff5033c1c91ada417ab1d0c445f7b > "$out/main-advance-paths.txt"
+          git diff --exit-code 8b9c52d88687986879c8f87d7e3835f6a58bbacd 94e976ff281ff5033c1c91ada417ab1d0c445f7b -- apps/kansas-frontier-matrix-explorer package.json pnpm-workspace.yaml pnpm-lock.yaml > "$out/main-app-lock-equivalence.log"
           if [ '${{ matrix.lane }}' = candidate ]; then
             git diff --name-only -z 343a516812596f0b29fdb1a56b3a549edbe43490 HEAD | xargs -0 sha256sum > "$out/product-source.sha256"
+            git diff --binary 343a516812596f0b29fdb1a56b3a549edbe43490 HEAD > "$out/product.patch"
+            git diff --name-only 343a516812596f0b29fdb1a56b3a549edbe43490 HEAD > "$out/product-paths.txt"
+            tar -czf "$out/product-source.tgz" -T "$out/product-paths.txt"
+            cp data/receipts/generated/genrec-explorer-eslint10-context-a1203619.json "$out/receipt.json"
+            test "$(git rev-parse HEAD:.github/workflows/accessibility.yml)" = 1b3137905c441d5f5fab52afe33599fdda2ced88
+            git diff --exit-code a120361953ae574c4c1df8ea805a69677c9fab78 HEAD -- apps docs tests > "$out/receipt-only-source-parity.log"
           fi
           node --version > "$out/node-version.txt"
           corepack enable
@@ -83,8 +91,10 @@ jobs:
             run_gate lint-contract pnpm --filter kansas-frontier-matrix-explorer run test:lint
             run_gate posttest pnpm --filter kansas-frontier-matrix-explorer run posttest
             run_gate compat-source-syntax node --check apps/kansas-frontier-matrix-explorer/eslint-react-context.mjs
+            run_gate python-bootstrap python3 tools/ci/install_python_ci.py project-test
+            run_gate generated-receipt python3 tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-explorer-eslint10-context-a1203619.json --repo-root . --artifact-git-ref a120361953ae574c4c1df8ea805a69677c9fab78
           fi
-          run_gate topology python3 tools/validators/directory_governance/validate_repository_topology.py --repo-root . --trusted-baseline-ref 8b9c52d88687986879c8f87d7e3835f6a58bbacd --format json
+          run_gate topology python3 tools/validators/directory_governance/validate_repository_topology.py --repo-root . --trusted-baseline-ref 94e976ff281ff5033c1c91ada417ab1d0c445f7b --format json
           run_gate immutable git diff --exit-code
           sha256sum -c "$out/locks-before.sha256" > "$out/locks-check.log"
           git status --porcelain --untracked-files=no > "$out/tracked-after.txt"
