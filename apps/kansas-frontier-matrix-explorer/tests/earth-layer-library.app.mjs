@@ -115,7 +115,7 @@ try {
   });
   await run('old-format saved workspace restore is atomic and clears hidden membership and undo', async()=>{
     await page.locator('.map-command-bar').getByRole('button',{name:'Build report',exact:true}).click();
-    await page.locator('.saved-workspace-list').getByRole('button',{name:new RegExp(saved.name)}).click();
+    await page.locator('.saved-workspace-list').getByRole('button',{name:new RegExp('^'+saved.name+' ')}).click();
     await waitLayer('water-context',false);await open();await stack();
     assert.equal(await dialog.getByRole('checkbox',{name:'Enable Hydrology context',exact:true}).count(),0);
     assert.equal(await dialog.getByRole('slider',{name:'Opacity Atmosphere observations',exact:true}).inputValue(),'0');
