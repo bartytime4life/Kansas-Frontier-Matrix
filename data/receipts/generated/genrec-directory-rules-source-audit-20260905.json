@@ -1,0 +1,60 @@
+{
+  "receipt_id": "genrec-directory-rules-source-audit-20260905",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/directory-rules-source-audit.yml"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/directory-rules-source-audit.yml": "sha256:5ce19e19370ca0cbcdd16b7f603e2a845b8bb4717a9c24cfffd0866170f1478a"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Pro",
+    "version": "not exposed"
+  },
+  "prompt_or_contract": "sha256:bea0921d69007e4c8b74640130b78b5cbd4453e923bec77cec47e9f81253ddb2",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub",
+      "container"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/d1b430ca51887777766050e5582659ab34322286/docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/directory-rules-source-audit.yml": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "YAML parse and embedded Python syntax",
+      "outcome": "PASS",
+      "reason": "Executed in the authoring environment; not a hosted execution result."
+    },
+    {
+      "gate": "Hosted source audit",
+      "outcome": "SKIPPED",
+      "reason": "Not yet executed at authoring time."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "adopted-directory-rules",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/d1b430ca51887777766050e5582659ab34322286/docs/doctrine/directory-rules.md"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-09-05T19:13:56.827745+00:00",
+  "emitter": "kfm-directory-modernization-author",
+  "notes": "Temporary branch-only audit, not a second topology validator. Reads a fixed main commit. Outputs QA inspection artifacts. No PR, merge, authority adoption, baseline update, source activation, deployment, or release. Remove the task workflow after capture; preserve its immutable commit reference."
+}

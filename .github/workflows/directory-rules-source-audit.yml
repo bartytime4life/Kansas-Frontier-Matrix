@@ -1,0 +1,113 @@
+# Temporary, branch-only evidence collection for the direct Directory Rules task.
+# Owns no topology rules and does not modify adopted files, projections, or data.
+# Network: pinned checkout and QA artifact upload only; no dependency install.
+# No PR, settings, deployment, release, source activation, or publication action.
+# Outputs are bounded inspection artifacts, not KFM receipts/proofs/release records.
+name: directory-rules-source-audit
+"on":
+  push:
+    branches: ["agent/directory-rules-evidence-20260905"]
+permissions:
+  contents: read
+concurrency:
+  group: directory-rules-source-audit-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  inspect-pinned-main:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Check out the explicit main observation, not the workflow head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: d1b430ca51887777766050e5582659ab34322286
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Capture complete tracked paths and bounded engineering text
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path, PurePosixPath
+          import collections, datetime, hashlib, json, os, subprocess, unicodedata, zipfile
+          base = "d1b430ca51887777766050e5582659ab34322286"
+          def git(*args):
+              return subprocess.check_output(["git", *args])
+          assert git("rev-parse", "HEAD").decode().strip() == base
+          assert not git("status", "--porcelain"), "source checkout is not clean"
+          out = Path(os.environ["RUNNER_TEMP"]) / "kfm-directory-audit"
+          out.mkdir(exist_ok=False)
+          rows=[]
+          for item in git("ls-tree", "-r", "-l", "-z", "HEAD").split(b"\0"):
+              if not item: continue
+              head, path = item.split(b"\t", 1)
+              mode, kind, oid, size = head.decode("ascii").split()
+              rows.append(dict(path=path.decode("utf-8"), mode=mode, kind=kind,
+                               git_blob=oid, size=None if size == "-" else int(size)))
+          assert rows and len(rows) == len({r["path"] for r in rows})
+          raw=(json.dumps(rows, ensure_ascii=False, indent=2)+"\n").encode()
+          (out / "tracked-paths.json").write_bytes(raw)
+          roots=collections.Counter(r["path"].split("/")[0] for r in rows if "/" in r["path"])
+          folds=collections.defaultdict(list)
+          for r in rows: folds[unicodedata.normalize("NFC",r["path"]).casefold()].append(r["path"])
+          leaf=collections.defaultdict(list)
+          all_dirs=set()
+          for r in rows:
+              p=PurePosixPath(r["path"])
+              leaf[str(p.parent)].append(p.name)
+              all_dirs.update(str(x) for x in p.parents if str(x) != ".")
+          parents={str(PurePosixPath(x).parent) for x in all_dirs}
+          placeholder_leaves=[d for d,names in leaf.items() if d not in parents and set(names)<= {"README.md",".gitkeep"}]
+          allowed={".md",".ts",".tsx",".js",".mjs",".cjs",".json",".yaml",".yml",".py",".toml",".sh",".css",".html",".txt",".rego"}
+          chosen=[]; exclusions=[]
+          for r in rows:
+              p=PurePosixPath(r["path"])
+              reason=None
+              if r["kind"]!="blob" or r["mode"] not in {"100644","100755"}: reason="non-regular-file"
+              elif r["size"] > 4*1024*1024: reason="over-4-MiB-per-file-bound"
+              elif p.parts[0] in {"data","release"} and p.name!="README.md": reason="trust-instance-payload-not-required"
+              elif p.name.startswith(".env") or p.name in {".npmrc",".netrc"}: reason="environment-input-excluded"
+              elif p.suffix not in allowed and p.name not in {"Makefile",".gitkeep",".gitignore",".editorconfig"}: reason="binary-or-unselected-format"
+              if reason: exclusions.append({"path":r["path"],"reason":reason}); continue
+              chosen.append(r)
+          assert sum(r["size"] for r in chosen)<=128*1024*1024, "source-text archive exceeds bounded size"
+          proc=subprocess.run(["git","cat-file","--batch"],input=("\n".join(r["git_blob"] for r in chosen)+"\n").encode(),capture_output=True,check=True)
+          position=0; included=[]
+          with zipfile.ZipFile(out / "source-text.zip","w",compression=zipfile.ZIP_DEFLATED) as archive:
+              for r in chosen:
+                  end=proc.stdout.index(b"\n",position); header=proc.stdout[position:end].decode().split()
+                  assert header == [r["git_blob"],"blob",str(r["size"])], header
+                  start=end+1; data=proc.stdout[start:start+r["size"]]; position=start+r["size"]+1
+                  assert hashlib.sha1(f"blob {len(data)}\0".encode()+data).hexdigest()==r["git_blob"]
+                  try: data.decode("utf-8")
+                  except UnicodeDecodeError:
+                      exclusions.append({"path":r["path"],"reason":"not-UTF-8"});continue
+                  archive.writestr(r["path"],data)
+                  included.append({**r,"sha256":hashlib.sha256(data).hexdigest()})
+          assert position == len(proc.stdout)
+          doctrine=git("show","HEAD:docs/doctrine/directory-rules.md")
+          assert hashlib.sha256(doctrine).hexdigest()=="44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
+          meta=dict(repository="bartytime4life/Kansas-Frontier-Matrix",checked_out_commit=base,
+           checked_out_tree=git("rev-parse","HEAD^{tree}").decode().strip(),workflow_head=os.environ["GITHUB_SHA"],
+           workflow_run=os.environ["GITHUB_RUN_ID"],attempt=os.environ["GITHUB_RUN_ATTEMPT"],
+           observed_at=datetime.datetime.now(datetime.timezone.utc).isoformat(),tracked_paths=len(rows),
+           tracked_roots=dict(sorted(roots.items())),readmes=sum(PurePosixPath(r["path"]).name=="README.md" for r in rows),
+           gitkeeps=sum(PurePosixPath(r["path"]).name==".gitkeep" for r in rows),
+           placeholder_only_leaf_count=len(placeholder_leaves),placeholder_only_leaves=sorted(placeholder_leaves),
+           nfc_casefold_collisions=[v for v in folds.values() if len(v)>1],
+           source_text_files=len(included),excluded_source_payloads=len(exclusions),
+           inventory_sha256=hashlib.sha256(raw).hexdigest(),
+           archive_sha256=hashlib.sha256((out/"source-text.zip").read_bytes()).hexdigest(),
+           limitations=["Tracked paths only; no untracked files or external consumers.","Placeholder-only is a filename classification, not a deletion decision.","Source text archive excludes trust instances, large files, binary payloads, and environment inputs.","No adoption, implementation, deployment, release, or source admission follows from this inventory."])
+          (out/"observation.json").write_text(json.dumps(meta,indent=2)+"\n")
+          (out/"source-text-manifest.json").write_text(json.dumps(included,indent=2)+"\n")
+          (out/"source-text-exclusions.json").write_text(json.dumps(exclusions,indent=2)+"\n")
+          print(json.dumps({k:v for k,v in meta.items() if k not in {"placeholder_only_leaves","nfc_casefold_collisions"}},indent=2))
+          PY
+      - name: Upload non-release inspection packet
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: directory-rules-pinned-source-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/kfm-directory-audit/
+          if-no-files-found: error
+          retention-days: 5
