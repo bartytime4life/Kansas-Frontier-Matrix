@@ -72,12 +72,12 @@
     {
       "gate": "final-head hosted validation",
       "outcome": "SKIPPED",
-      "reason": "Not executed at receipt authorship. Later exact-head run/issue evidence must supplement this record; no historical field rewrite."
+      "reason": "Not executed at receipt authorship. Later exact-head run/issue evidence supplements this record; historical gate state is preserved."
     },
     {
       "gate": "independent review and eligible draft delivery",
       "outcome": "SKIPPED",
-      "reason": "Pending; #4024 transition control exit not established."
+      "reason": "Human review is now recorded separately below. Draft-delivery eligibility and every PR lifecycle transition remain separate controls; this receipt does not authorize ready-for-review or merge."
     }
   ],
   "policy_decisions": [],
@@ -94,9 +94,11 @@
     }
   ],
   "human_review": {
-    "state": "pending",
-    "reviewer_ids": [],
-    "timestamp": null
+    "state": "approved",
+    "reviewer_ids": [
+      "bartytime4life"
+    ],
+    "timestamp": "2026-09-05T22:06:00Z"
   },
   "created_at": "2026-09-05T21:04:31Z",
   "emitter": "chatgpt:m18-temporal-ci-followup",
@@ -105,5 +107,5 @@
     "adr_link": null,
     "drift_register_entry": null
   },
-  "notes": "Append-only provenance covering five unchanged prior repair artifacts and two new CI changes; excludes this receipt to avoid circular self-hashing. The original b5bcc4d9 commit and historical receipts remain unchanged. The profile and schema are not adopted by this receipt. Expected outcomes remain fail-closed. Canonical workflow now includes both temporal regression files, workspace-context tests, and strict Explorer build; Node 22.23.2 is pinned within the existing major without bypassing signed Corepack, frozen locks, or build-script policy. This is author-side review, not independent approval. Revert the complete new workflow/test/receipt delta together if needed; preserve the five-file residual repair unless separately rolled back. No policy decisions were consulted or emitted for a policy-controlled artifact root. No PR transition, merge, source activation, release, deployment, publication, migration, or persisted-record rewrite is authorized."
+  "notes": "Append-only provenance covering five unchanged prior repair artifacts and two new CI changes; excludes this receipt to avoid circular self-hashing. The original b5bcc4d9 commit and historical evidence remain unchanged. The profile and schema are not adopted by this receipt. Expected outcomes remain fail-closed. Canonical workflow includes both temporal regression files, workspace-context tests, and strict Explorer build; Node 22.23.2 is pinned within the existing major without bypassing signed Corepack, frozen locks, or build-script policy. Repository owner review was recorded on 2026-09-05 after the validated branch handoff; approval here records human review of the artifact set, not ready-for-review, merge, release, deployment, publication, source activation, migration, persisted-record rewrite, or incident-control exit. Revert the complete workflow/test/receipt continuation together if needed; preserve the five-file residual repair unless separately rolled back. No policy decisions were consulted or emitted for a policy-controlled artifact root."
 }
