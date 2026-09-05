@@ -254,11 +254,42 @@ def _render(path: Path, report: ValidationReport) -> str:
 
 def _expected_matches(path: Path, findings: Sequence[Finding]) -> bool:
     try:
-        expected = path.read_text(encoding="utf-8").strip().lower()
+        expected = path.read_text(encoding="utf-8").strip()
     except (OSError, UnicodeError):
         return False
     if not expected:
         return False
+    if expected.startswith("{"):
+        # Match the shared schema-sidecar identity, not renderer-dependent prose.
+        # Unsupported keys (including message predicates) fail closed because
+        # bounded temporal findings deliberately do not expose raw messages.
+        try:
+            structured = json.loads(
+                expected, object_pairs_hook=_reject_duplicate_keys
+            )
+        except (ValueError, RecursionError):
+            return False
+        if not isinstance(structured, dict) or set(structured) != {
+            "kind", "field", "keyword"
+        }:
+            return False
+        field = structured["field"]
+        keyword = structured["keyword"]
+        if (
+            structured["kind"] != "schema"
+            or not isinstance(field, str)
+            or not field.startswith("/")
+            or not isinstance(keyword, str)
+            or not keyword
+        ):
+            return False
+        return any(
+            item.code == "SCHEMA_INVALID"
+            and item.field == field
+            and item.detail == keyword
+            for item in findings
+        )
+    expected = expected.lower()
     searchable = "\n".join(
         f"{item.code} {item.field} {item.detail}".lower() for item in findings
     )

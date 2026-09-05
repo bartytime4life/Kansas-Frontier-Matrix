@@ -276,15 +276,12 @@ export function normalizeTemporalBoundary(
   const raw = value.raw;
   const normalized = value.normalized;
   if (
-    typeof profile !== "string" ||
-    ![
-      "instant",
-      "date_only",
-      "month",
-      "year",
-      "uncertain_range",
-      "geologic_age",
-    ].includes(profile)
+    profile !== "instant" &&
+    profile !== "date_only" &&
+    profile !== "month" &&
+    profile !== "year" &&
+    profile !== "uncertain_range" &&
+    profile !== "geologic_age"
   ) {
     return {
       status: "ERROR",
@@ -295,10 +292,10 @@ export function normalizeTemporalBoundary(
     };
   }
   if (typeof raw !== "string" || raw.length === 0) {
-    return { status: "ERROR", code: "BOUNDARY_RAW_REQUIRED", profile: profile as TemporalBoundaryProfile, raw: null, normalized: null };
+    return { status: "ERROR", code: "BOUNDARY_RAW_REQUIRED", profile, raw: null, normalized: null };
   }
   if (normalized !== null && typeof normalized !== "string") {
-    return { status: "ERROR", code: "NORMALIZED_TYPE_INVALID", profile: profile as TemporalBoundaryProfile, raw, normalized: null };
+    return { status: "ERROR", code: "NORMALIZED_TYPE_INVALID", profile, raw, normalized: null };
   }
 
   if (profile === "geologic_age") {
@@ -336,7 +333,7 @@ export function normalizeTemporalBoundary(
   ) {
     return { status: "ERROR", code: "CALENDAR_SYNTAX_INVALID", profile, raw, normalized: null };
   }
-  return { status: "SUPPORTED", code: "CALENDAR_PRESERVED", profile: profile as TemporalBoundaryProfile, raw, normalized: null };
+  return { status: "SUPPORTED", code: "CALENDAR_PRESERVED", profile, raw, normalized: null };
 }
 
 function normalizeSelection(
@@ -361,23 +358,29 @@ function normalizeSelection(
   if (error) return { status: "ERROR", code: error.code, start, end };
   const unsupported = results.find((item) => item.status === "UNSUPPORTED");
   if (unsupported) return { status: "UNSUPPORTED", code: unsupported.code, start, end };
-  if (end && start.profile !== end.profile) {
-    return { status: "ERROR", code: "MIXED_BOUNDARY_PROFILES", start, end };
-  }
-  if (end && start.normalized && end.normalized && Date.parse(start.normalized) > Date.parse(end.normalized)) {
-    return { status: "ERROR", code: "REVERSED_INTERVAL", start, end };
-  }
-  if (end && start.profile === "date_only" && start.raw > end.raw) {
-    return { status: "ERROR", code: "REVERSED_INTERVAL", start, end };
-  }
-  if (end && start.profile === "month" && start.raw > end.raw) {
-    return { status: "ERROR", code: "REVERSED_INTERVAL", start, end };
-  }
-  if (end && start.profile === "year" && start.raw > end.raw) {
-    return { status: "ERROR", code: "REVERSED_INTERVAL", start, end };
-  }
-  if (end && start.profile === "uncertain_range" && start.raw !== end.raw) {
-    return { status: "UNSUPPORTED", code: "UNCERTAIN_ORDERING", start, end };
+  if (end !== null) {
+    // Do not skip ordering or coerce absent raw values to make a comparison.
+    if (start.raw === null || end.raw === null) {
+      return { status: "ERROR", code: "BOUNDARY_RAW_REQUIRED", start, end };
+    }
+    if (start.profile !== end.profile) {
+      return { status: "ERROR", code: "MIXED_BOUNDARY_PROFILES", start, end };
+    }
+    if (start.normalized && end.normalized && Date.parse(start.normalized) > Date.parse(end.normalized)) {
+      return { status: "ERROR", code: "REVERSED_INTERVAL", start, end };
+    }
+    if (start.profile === "date_only" && start.raw > end.raw) {
+      return { status: "ERROR", code: "REVERSED_INTERVAL", start, end };
+    }
+    if (start.profile === "month" && start.raw > end.raw) {
+      return { status: "ERROR", code: "REVERSED_INTERVAL", start, end };
+    }
+    if (start.profile === "year" && start.raw > end.raw) {
+      return { status: "ERROR", code: "REVERSED_INTERVAL", start, end };
+    }
+    if (start.profile === "uncertain_range" && start.raw !== end.raw) {
+      return { status: "UNSUPPORTED", code: "UNCERTAIN_ORDERING", start, end };
+    }
   }
   return { status: "SUPPORTED", code: "OK", start, end };
 }

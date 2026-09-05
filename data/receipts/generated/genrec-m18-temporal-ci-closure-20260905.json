@@ -1,0 +1,111 @@
+{
+  "receipt_id": "kfm:genrec:m18-temporal-ci-closure:20260905",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/temporal-view-state-validation.yml",
+    "apps/explorer-web/src/features/temporal/index.ts",
+    "apps/explorer-web/tests/temporal-boundary-regression.test.ts",
+    "fixtures/contracts/v1/common/temporal_view_state/invalid/invalid_extra_property.expected_error.txt",
+    "tests/ci/test_temporal_view_state_workflow.py",
+    "tests/validators/test_validate_temporal_view_state_expectations.py",
+    "tools/validators/validate_temporal_view_state.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/temporal-view-state-validation.yml": "sha256:b03cad44edcb710b19641b16d6b0db408c64711f3ac280fb5e65b954d0d79520",
+    "apps/explorer-web/src/features/temporal/index.ts": "sha256:99addfa500ff2fc3459813bb204090da3d46e972ce3376f28a44f4438c7b653c",
+    "apps/explorer-web/tests/temporal-boundary-regression.test.ts": "sha256:4c9b61fc965f4c2d23656864113cbde4083e4e73ee57c174006e95b60aba62aa",
+    "fixtures/contracts/v1/common/temporal_view_state/invalid/invalid_extra_property.expected_error.txt": "sha256:d85a3da634fbad7b2fd1cc057338743b36039b2752f830910c7243c246f5c1e5",
+    "tests/ci/test_temporal_view_state_workflow.py": "sha256:9685b4f871d607683c8e72eed88468b6bf9b57c405ff5975fe76213951c3a990",
+    "tests/validators/test_validate_temporal_view_state_expectations.py": "sha256:1905a4c40abedef0dbd953d524dd55d864c7faba9149a6c871ec4c5bda861e9b",
+    "tools/validators/validate_temporal_view_state.py": "sha256:9be2affc30cf2213df38606ee51ca5617057fb75b5fa34fb98bee3b9af54045b"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Pro",
+    "version": "runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:9d9bcf5fa67a10bd63f3a983a55aa333283fbcbb0b987644209bc56e73003167",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "tools_enabled": [
+      "GitHub",
+      "Notion",
+      "Google_Drive",
+      "container",
+      "web"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/8b9c52d88687986879c8f87d7e3835f6a58bbacd",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/b5bcc4d96e2959a499a77078a80fffbf06e6dd40",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3383#issuecomment-5554470276",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/tests/ci/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/.github/workflows/README.md",
+      "https://github.com/nodejs/corepack/issues/627",
+      "https://github.com/nodejs/nodejs.org/blob/main/apps/site/pages/en/blog/release/v22.23.2.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/temporal-view-state-validation.yml": "PROPOSED",
+    "apps/explorer-web/src/features/temporal/index.ts": "PROPOSED",
+    "apps/explorer-web/tests/temporal-boundary-regression.test.ts": "PROPOSED",
+    "fixtures/contracts/v1/common/temporal_view_state/invalid/invalid_extra_property.expected_error.txt": "PROPOSED",
+    "tests/ci/test_temporal_view_state_workflow.py": "PROPOSED",
+    "tests/validators/test_validate_temporal_view_state_expectations.py": "PROPOSED",
+    "tools/validators/validate_temporal_view_state.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "prior exact-source repair b5bcc4d9 native validation",
+      "outcome": "PASS",
+      "reason": "Historical run 33989035228 candidate jobs: strict Explorer build, 460 unit, 128 browser, 13 temporal Python, 251 generic schema cases. Not a result for this new workflow tree."
+    },
+    {
+      "gate": "local temporal workflow source-contract regression",
+      "outcome": "PASS",
+      "reason": "26 pytest cases passed in the isolated two-file source-contract lane; old workflow rejected. Python 3.13.5; not the hosted locked Python environment."
+    },
+    {
+      "gate": "final-head hosted validation",
+      "outcome": "SKIPPED",
+      "reason": "Not executed at receipt authorship. Later exact-head run/issue evidence supplements this record; historical gate state is preserved."
+    },
+    {
+      "gate": "independent review and eligible draft delivery",
+      "outcome": "SKIPPED",
+      "reason": "Human review is now recorded separately below. Draft-delivery eligibility and every PR lifecycle transition remain separate controls; this receipt does not authorize ready-for-review or merge."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "prior-native-run",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33989035228"
+    },
+    {
+      "id": "workflow-preimage",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b5bcc4d96e2959a499a77078a80fffbf06e6dd40/.github/workflows/temporal-view-state-validation.yml"
+    }
+  ],
+  "human_review": {
+    "state": "approved",
+    "reviewer_ids": [
+      "bartytime4life"
+    ],
+    "timestamp": "2026-09-05T22:06:00Z"
+  },
+  "created_at": "2026-09-05T21:04:31Z",
+  "emitter": "chatgpt:m18-temporal-ci-followup",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Append-only provenance covering five unchanged prior repair artifacts and two new CI changes; excludes this receipt to avoid circular self-hashing. The original b5bcc4d9 commit and historical evidence remain unchanged. The profile and schema are not adopted by this receipt. Expected outcomes remain fail-closed. Canonical workflow includes both temporal regression files, workspace-context tests, and strict Explorer build; Node 22.23.2 is pinned within the existing major without bypassing signed Corepack, frozen locks, or build-script policy. Repository owner review was recorded on 2026-09-05 after the validated branch handoff; approval here records human review of the artifact set, not ready-for-review, merge, release, deployment, publication, source activation, migration, persisted-record rewrite, or incident-control exit. Revert the complete workflow/test/receipt continuation together if needed; preserve the five-file residual repair unless separately rolled back. No policy decisions were consulted or emitted for a policy-controlled artifact root."
+}
