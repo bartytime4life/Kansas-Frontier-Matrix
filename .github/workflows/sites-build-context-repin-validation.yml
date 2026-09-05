@@ -107,7 +107,7 @@ jobs:
           run('wrapper-syntax',['bash','-n','apps/kansas-frontier-matrix-explorer/scripts/build-verified.sh'])
           assert json.loads(pathlib.Path('package.json').read_text())['packageManager'] == 'pnpm@11.17.0'
           if run('corepack-enable',['corepack','enable']) == 0 and run('pnpm-version',['pnpm','--version']) == 0:
-              assert (out/'pnpm-version.log').read_text().strip() == '11.17.0'
+              assert subprocess.check_output(['pnpm','--version'],text=True).strip() == '11.17.0'
               if run('pnpm-install',['pnpm','install','--frozen-lockfile']) == 0:
                   run('sites-build',['pnpm','--filter','kansas-frontier-matrix-explorer','build'])
                   run('explorer-build',['pnpm','--filter','explorer-web','build'])

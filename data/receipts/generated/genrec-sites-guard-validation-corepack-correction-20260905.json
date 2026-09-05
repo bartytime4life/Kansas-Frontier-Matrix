@@ -1,0 +1,18 @@
+{
+  "receipt_id": "genrec-sites-guard-validation-corepack-correction-20260905",
+  "contract_version": "3.0.0",
+  "artifact_paths": [".github/workflows/sites-build-context-repin-validation.yml"],
+  "artifact_hashes": {".github/workflows/sites-build-context-repin-validation.yml": "sha256:8633d11d58b47bf9bafe09b80ee1e868a08ab0d926a74b80b181683ab6760e45"},
+  "model_identity": {"provider": "OpenAI", "model": "GPT-6 Pro", "version": "not exposed"},
+  "prompt_or_contract": "Correct only the newly authored comparison harness after run 33999507380; retain exact base and product heads, all old failures, lock policies, substantive gates, and historical receipts.",
+  "parameters": {"seed": null, "temperature": null, "tools_enabled": ["GitHub", "container"]},
+  "inputs": {"evidence_refs": ["https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33999507380", "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/d17b331e8c62a38476dff49868957c70d4d052df"]},
+  "truth_labels": {".github/workflows/sites-build-context-repin-validation.yml": "PROPOSED"},
+  "validation_gates": [{"gate": "YAML and embedded Python syntax", "outcome": "PASS", "reason": "Parsed YAML and compiled embedded Python locally."}, {"gate": "First matched run", "outcome": "FAIL", "reason": "33999507380 stops after wrapper/syntax/Corepack/version success because the author compared merged stdout/stderr against a bare version. Dependency installation, app builds, full tests and topology were not executed."}, {"gate": "Corrected hosted execution", "outcome": "SKIPPED", "reason": "Not executed at authorship. The corrected assertion reads stdout independently without suppressing or weakening Corepack verification. All substantive nonzero results remain failures."}],
+  "policy_decisions": [],
+  "citations": [{"id": "first-run", "validated": true, "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33999507380"}],
+  "human_review": {"state": "pending", "reviewer_ids": [], "timestamp": null},
+  "created_at": "2026-09-05T23:46:25.278734+00:00",
+  "emitter": "kfm-sites-guard-repin-validation-author",
+  "notes": "Add-only correction of author-side collection, not a product repair. The preceding transport receipt's manually transcribed created_at 23:47:00Z is inaccurate: the locally generated transport receipt was authored at 23:43:47.535594Z, before Git commit d17b331 at 23:45:22Z. Preserve that old record and interpret this as its timestamp correction. Existing user-supplied receipts are unchanged. Product be9d1023 and main 94e976ff remain the compared commits. Retire the temporary workflow after obtaining bounded evidence; no PR, rule, topology, source or deployment authority is conveyed."
+}
