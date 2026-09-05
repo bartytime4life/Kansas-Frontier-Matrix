@@ -20,7 +20,7 @@ jobs:
       matrix:
         include:
           - lane: candidate
-            source: b7c3a2c0d325a87ecf93b102d27c1ae483b77194
+            source: a120361953ae574c4c1df8ea805a69677c9fab78
           - lane: repaired-baseline
             source: 343a516812596f0b29fdb1a56b3a549edbe43490
           - lane: main
@@ -52,6 +52,9 @@ jobs:
           git diff --check > "$out/diff-check.log"
           sha256sum package.json pnpm-workspace.yaml pnpm-lock.yaml apps/kansas-frontier-matrix-explorer/package-lock.json > "$out/locks-before.sha256"
           git diff --name-status 343a516812596f0b29fdb1a56b3a549edbe43490 HEAD > "$out/diff-from-repaired-baseline.txt"
+          if [ '${{ matrix.lane }}' = candidate ]; then
+            git diff --name-only -z 343a516812596f0b29fdb1a56b3a549edbe43490 HEAD | xargs -0 sha256sum > "$out/product-source.sha256"
+          fi
           node --version > "$out/node-version.txt"
           corepack enable
           pnpm --version > "$out/pnpm-version.txt"
@@ -78,6 +81,7 @@ jobs:
           run_gate lint-json bash apps/kansas-frontier-matrix-explorer/scripts/sites-env.sh -- "$GITHUB_WORKSPACE/apps/kansas-frontier-matrix-explorer/node_modules/.bin/eslint" . --ignore-pattern dist --ignore-pattern .next --ignore-pattern public/maplibre --format json
           if [ '${{ matrix.lane }}' = candidate ]; then
             run_gate lint-contract pnpm --filter kansas-frontier-matrix-explorer run test:lint
+            run_gate posttest pnpm --filter kansas-frontier-matrix-explorer run posttest
             run_gate compat-source-syntax node --check apps/kansas-frontier-matrix-explorer/eslint-react-context.mjs
           fi
           run_gate topology python3 tools/validators/directory_governance/validate_repository_topology.py --repo-root . --trusted-baseline-ref 8b9c52d88687986879c8f87d7e3835f6a58bbacd --format json
