@@ -112,9 +112,9 @@ jobs:
           node-version: "22.13.1"
           package-manager-cache: false
 
-      - name: Enable pinned workspace package manager
+      - name: Install the repository-declared pnpm version
         shell: bash
-        run: corepack enable
+        run: npm install --global --no-audit --no-fund pnpm@11.17.0
 
       - name: Install locked Explorer dependencies
         shell: bash
