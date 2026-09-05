@@ -13,7 +13,7 @@ const appRequire = createRequire(join(app, "package.json"));
 const { ESLint } = appRequire("eslint");
 const { defineConfig, globalIgnores } = appRequire("eslint/config");
 const nextVitals = (await import(pathToFileURL(appRequire.resolve("eslint-config-next/core-web-vitals")).href)).default;
-const nextTs = (await import(pathToFileURL(appRequire.resolve("eslint-config-next/typescript" )).href)).default;
+const nextTs = (await import(pathToFileURL(appRequire.resolve("eslint-config-next/typescript")).href)).default;
 const baseline = defineConfig([
   ...nextVitals, ...nextTs,
   globalIgnores([".next/**", "out/**", "build/**", "next-env.d.ts"]),
@@ -64,6 +64,8 @@ test("compiler and lint dependencies stay pinned; lint command is not weakened",
   assert.equal(manifest.devDependencies["eslint-config-next"], "16.3.3");
   assert.equal(manifest.devDependencies["@typescript/native"], "npm:typescript@7.0.2");
   assert.equal(manifest.scripts.lint, "bash scripts/sites-env.sh -- eslint . --ignore-pattern dist --ignore-pattern .next --ignore-pattern public/maplibre");
+  assert.equal(manifest.scripts.test, "npm run build && node --test tests/*.test.mjs");
+  assert.equal(manifest.scripts.posttest, "npm run test:lint");
   assert.equal(ESLint.version, "10.9.1");
 });
 
@@ -73,14 +75,36 @@ test("valid React source lints without errors or warnings", async () => {
   assert.deepEqual(result.messages, []);
 });
 
-test("the unadapted locked configuration still reproduces the removed API crash", async () => {
-  await assert.rejects(original.lintText(good, { filePath: "app/lint-contract.tsx" }), /getFilename is not a function/);
+test("a fresh unadapted process reproduces the removed API crash", () => {
+  // React version detection caches globally. Never share the repaired process's cache
+  // with the negative control or it can conceal the unadapted configuration failure.
+  const source = `
+    import { ESLint } from "eslint";
+    import { defineConfig } from "eslint/config";
+    import nextVitals from "eslint-config-next/core-web-vitals";
+    import nextTs from "eslint-config-next/typescript";
+    const eslint = new ESLint({ overrideConfigFile: true, overrideConfig: defineConfig([...nextVitals, ...nextTs]) });
+    await eslint.lintText(${JSON.stringify(good)}, { filePath: "app/lint-contract.tsx" });
+  `;
+  const result = spawnSync(process.execPath, ["--input-type=module", "-e", source], {
+    cwd: app, encoding: "utf8", timeout: 60000,
+  });
+  assert.ifError(result.error);
+  assert.equal(result.status, 1, result.stderr);
+  assert.match(result.stderr, /getFilename is not a function/);
+});
+
+test("the Next-disabled unknown-property rule is not silently enabled", async () => {
+  const before = await original.calculateConfigForFile("app/lint-contract.jsx");
+  const after = await repaired.calculateConfigForFile("app/lint-contract.jsx");
+  assert.deepEqual(before.rules["react/no-unknown-property"], [0]);
+  assert.deepEqual(after.rules["react/no-unknown-property"], before.rules["react/no-unknown-property"]);
 });
 
 const negatives = [
   ["react/display-name", "jsx", 'import { memo } from "react"; export default memo(() => <div />);'],
   ["react/jsx-key", "tsx", 'export default function Example() { return <ul>{[1, 2].map(value => <li>{value}</li>)}</ul>; }'],
-  ["react/no-unknown-property", "jsx", 'export default function Example() { return <div class="fixture" />; }'],
+  ["react/jsx-no-undef", "jsx", 'export default function Example() { return <MissingFixture />; }'],
   ["react/no-unescaped-entities", "tsx", 'export default function Example() { return <div>can\'t</div>; }'],
   ["react/jsx-no-duplicate-props", "jsx", 'export default function Example() { return <div title="one" title="two" />; }'],
   ["react-hooks/rules-of-hooks", "tsx", 'import { useState } from "react"; export default function Example({ enabled }: { enabled: boolean }) { if (enabled) { useState(0); } return <div />; }'],
