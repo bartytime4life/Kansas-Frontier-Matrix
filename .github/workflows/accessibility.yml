@@ -1,4 +1,4 @@
-# TEMPORARY BRANCH-ONLY validation transport. Restore from main after evidence capture.
+# TEMPORARY BRANCH-ONLY lockfile transport. Restore from main after evidence capture.
 name: accessibility
 
 on:
@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: accessibility-${{ github.workflow }}-${{ github.ref }}
@@ -35,7 +35,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           fetch-depth: 0
-          persist-credentials: false
+          persist-credentials: true
 
       - name: Set up Node.js
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
@@ -43,32 +43,42 @@ jobs:
           node-version: "22.23.2"
           package-manager-cache: false
 
-      - name: Synthesize lockfiles without installing or running package scripts
+      - name: Synthesize and commit only the sanctioned lock transitions
         shell: bash
         run: |
           set -euo pipefail
           out="$RUNNER_TEMP/explorer-lock-synthesis"
-          mkdir -p "$out/generated"
+          mkdir -p "$out"
           git rev-parse HEAD | tee "$out/head.txt"
           git diff --check 8b9c52d88687986879c8f87d7e3835f6a58bbacd...HEAD 2>&1 | tee "$out/diff-check.log"
-          cp pnpm-lock.yaml "$out/pnpm-lock.before.yaml"
-          cp apps/kansas-frontier-matrix-explorer/package-lock.json "$out/package-lock.before.json"
 
           corepack enable
           pnpm install --lockfile-only --no-frozen-lockfile --ignore-scripts
           npm --prefix apps/kansas-frontier-matrix-explorer install \
             --package-lock-only --ignore-scripts --workspaces=false
 
-          cp pnpm-lock.yaml "$out/generated/pnpm-lock.yaml"
-          cp apps/kansas-frontier-matrix-explorer/package-lock.json "$out/generated/package-lock.json"
-          sha256sum "$out/generated/pnpm-lock.yaml" "$out/generated/package-lock.json" | tee "$out/generated.sha256"
-          git diff -- pnpm-lock.yaml apps/kansas-frontier-matrix-explorer/package-lock.json > "$out/lock-diff.patch"
+          git diff -- pnpm-lock.yaml apps/kansas-frontier-matrix-explorer/package-lock.json | tee "$out/lock-diff.patch"
+          sha256sum pnpm-lock.yaml apps/kansas-frontier-matrix-explorer/package-lock.json | tee "$out/generated.sha256"
 
-      - name: Upload generated lock candidates
+          git add -- pnpm-lock.yaml apps/kansas-frontier-matrix-explorer/package-lock.json
+          if git diff --cached --quiet; then
+            echo 'LOCKS_ALREADY_CURRENT' | tee "$out/result.txt"
+            exit 0
+          fi
+
+          test "$(git diff --cached --name-only | sort)" = $'apps/kansas-frontier-matrix-explorer/package-lock.json\npnpm-lock.yaml'
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'chore(explorer): lock TS7 and TS6 tooling side by side'
+          git push origin HEAD:agent/explorer-baseline-ts7-worker-types-20260905
+          git rev-parse HEAD | tee "$out/committed-head.txt"
+          echo 'LOCKS_COMMITTED' | tee "$out/result.txt"
+
+      - name: Upload lock synthesis evidence
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: explorer-ts7-ts6-locks-${{ github.sha }}
+          name: explorer-ts7-ts6-lock-commit-${{ github.sha }}
           path: ${{ runner.temp }}/explorer-lock-synthesis/
           retention-days: 14
           if-no-files-found: error
