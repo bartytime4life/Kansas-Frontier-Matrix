@@ -1,0 +1,18 @@
+{
+  "receipt_id": "genrec-sites-build-context-validation-20260905",
+  "contract_version": "3.0.0",
+  "artifact_paths": [".github/workflows/sites-build-context-repin-validation.yml"],
+  "artifact_hashes": {".github/workflows/sites-build-context-repin-validation.yml": "sha256:dbc8c3c2a5f1c11f1ff8262372cc34c6b7a5b3a1754b06f87e2f6ef8c74241ee"},
+  "model_identity": {"provider": "OpenAI", "model": "GPT-6 Pro", "version": "not exposed"},
+  "prompt_or_contract": "Follow the user's Proceed instruction: re-pin the existing Sites guard onto current main, validate matched exact heads, preserve the four-file implementation boundary and historical evidence, and do not adopt Directory Rules or alter topology controls.",
+  "parameters": {"seed": null, "temperature": null, "tools_enabled": ["GitHub", "container"]},
+  "inputs": {"evidence_refs": ["https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/be9d1023449b3fe6e46a941aa47149e0f5b0698b", "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/94e976ff281ff5033c1c91ada417ab1d0c445f7b"]},
+  "truth_labels": {".github/workflows/sites-build-context-repin-validation.yml": "PROPOSED"},
+  "validation_gates": [{"gate": "YAML and embedded Python parse", "outcome": "PASS", "reason": "Parsed YAML and compiled embedded Python in authoring environment."}, {"gate": "Hosted matched execution", "outcome": "SKIPPED", "reason": "Not executed at authorship. All nonzero substantive outcomes remain failure; uploads are not acceptance."}],
+  "policy_decisions": [],
+  "citations": [{"id": "adopted-directory-rules", "validated": true, "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/94e976ff281ff5033c1c91ada417ab1d0c445f7b/docs/doctrine/directory-rules.md"}],
+  "human_review": {"state": "pending", "reviewer_ids": [], "timestamp": null},
+  "created_at": "2026-09-05T23:47:00Z",
+  "emitter": "kfm-sites-guard-repin-validation-author",
+  "notes": "Read-only single-purpose diagnostic transport on a separate validation branch, not the implementation diff. Preserves old evidence branch and every historical receipt. No PR state, main mutation, topology change, rule adoption, source admission or deployment. Retire only this new workflow after capturing the run; preserve this receipt and exact workflow ancestor."
+}
