@@ -1,0 +1,143 @@
+{
+  "receipt_id": "genrec-connectors-ahgp-readme-20260905-2b2f542c071a94c1",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "connectors/ahgp/README.md"
+  ],
+  "artifact_hashes": {
+    "connectors/ahgp/README.md": "sha256:2b2f542c071a94c12a452134ccce113e357acbe9e37ed22159d18021a6d7c3bb"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Pro",
+    "version": "6 Pro; exact serving build not exposed"
+  },
+  "prompt_or_contract": "sha256:177fb9d0186622939632e7ce5b1d54e5b422d1d2f6c0b89fbf82ca75c60c8aad",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "Google Drive",
+      "Notion",
+      "web",
+      "container"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:a00d004ac40b00c5ee896f5aedf8ed3657f22ed40a8b8caf827a6f4b2b3ddf54",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:425e998e5584a7e400e99c963aba019b33ff685f9fa26b5b474d8758a3160b2a"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/10be9a177fc88333c983bb1b428ce20a32b22c76/connectors/ahgp/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/10be9a177fc88333c983bb1b428ce20a32b22c76/connectors/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/10be9a177fc88333c983bb1b428ce20a32b22c76/connectors/ahgp/pyproject.toml",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/10be9a177fc88333c983bb1b428ce20a32b22c76/connectors/ahgp/src/ahgp/admit.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/10be9a177fc88333c983bb1b428ce20a32b22c76/connectors/ahgp/src/ahgp/fetch.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/10be9a177fc88333c983bb1b428ce20a32b22c76/connectors/ahgp/src/ahgp/descriptor.yaml",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/10be9a177fc88333c983bb1b428ce20a32b22c76/connectors/ahgp/tests/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/10be9a177fc88333c983bb1b428ce20a32b22c76/docs/sources/catalog/ahgp.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/10be9a177fc88333c983bb1b428ce20a32b22c76/docs/doctrine/directory-rules.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/10be9a177fc88333c983bb1b428ce20a32b22c76/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/10be9a177fc88333c983bb1b428ce20a32b22c76/docs/doctrine/ai-build-operating-contract.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/10be9a177fc88333c983bb1b428ce20a32b22c76/data/receipts/generated/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/10be9a177fc88333c983bb1b428ce20a32b22c76/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "https://docs.google.com/document/d/1uTqdIEFZE2cq3gyISetoRYM6LIlnKqTc3FobtEx7Cbs/edit",
+      "https://app.notion.com/p/3c9a92021bf68195b8b1f3a8d694b447?pvs=204",
+      "https://ahgp.org/",
+      "https://ahgp.org/census/"
+    ]
+  },
+  "truth_labels": {
+    "connectors/ahgp/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Markdown structure, metadata, navigation, and preserved anchors",
+      "outcome": "PASS",
+      "reason": "One H1, valid metadata YAML, 12 preserved H2 anchors, 4 balanced tagged fences, 4 parsed tables, 13 unique repository link targets matched to fetched paths; two official external references inspected."
+    },
+    {
+      "gate": "Original, schema, and scaffold byte identity",
+      "outcome": "PASS",
+      "reason": "Reconstructed original README, exact repository receipt schema, and five scaffold files match their GitHub Git-blob SHAs."
+    },
+    {
+      "gate": "Documented scaffold command",
+      "outcome": "PASS",
+      "reason": "Shell syntax and metadata/empty-AST assertions executed with Python 3.13.5 in an isolated extracted snapshot; no AHGP import, network, installation, or connector behavior exercised."
+    },
+    {
+      "gate": "Generated receipt schema and artifact-hash closure",
+      "outcome": "PASS",
+      "reason": "Exact repository Draft 2020-12 schema, format checking, final README SHA-256, and artifact-map parity passed; extra-field and changed-byte negative checks rejected."
+    },
+    {
+      "gate": "Two-file scope and whitespace",
+      "outcome": "PASS",
+      "reason": "Isolated Git diff checks and staged-file inventory contain only the README and companion provenance receipt."
+    },
+    {
+      "gate": "Bounded secret and sensitive-payload scan",
+      "outcome": "PASS",
+      "reason": "Authored text contains no credential patterns or live genealogy payloads; this is not a repository-wide security audit."
+    },
+    {
+      "gate": "Full repository and native aggregate validation",
+      "outcome": "SKIPPED",
+      "reason": "No full local checkout; container GitHub DNS resolution unavailable. Connector reads supplied exact evidence. Proportional documentation checks do not stand in for the full suite."
+    },
+    {
+      "gate": "Hosted exact-head CI",
+      "outcome": "SKIPPED",
+      "reason": "Pre-PR authoring checkpoint. Later hosted results must be reported against the actual PR head separately."
+    },
+    {
+      "gate": "Human review and merge authorization",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending. No override, approval, ready, auto-merge, merge, source activation, release, deployment, promotion, or publication is granted."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pinned-ahgp-implementation",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/10be9a177fc88333c983bb1b428ce20a32b22c76/connectors/ahgp/src/ahgp/fetch.py"
+    },
+    {
+      "id": "accepted-directory-placement",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/10be9a177fc88333c983bb1b428ce20a32b22c76/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "ahgp-official-name",
+      "validated": true,
+      "evidence_ref": "https://ahgp.org/"
+    },
+    {
+      "id": "ahgp-census-discovery-and-copying-notice",
+      "validated": true,
+      "evidence_ref": "https://ahgp.org/census/"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-05T04:40:21Z",
+  "emitter": "chatgpt-kfm-ahgp-readme-author",
+  "links": {
+    "pr_number": null,
+    "adr_link": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/10be9a177fc88333c983bb1b428ce20a32b22c76/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only provenance, not proof or approval. prompt_or_contract hashes only the exact current user request; no prompt text or hidden reasoning is stored. README factual observations are bounded to the pinned tree; implementation proposals remain unimplemented. Initial inspection at c1d4efc64fe23f47a15dcb18da945a553304bbf6 was re-pinned to 10be9a177fc88333c983bb1b428ce20a32b22c76 after the complete comparison showed only three unrelated connector .gitkeep removals. Drive is lineage and Notion is coordination, not repository authority. Older AHGP package-guide naming/inventory drift remains explicitly disclosed without rewriting its historical receipt. Source IDs, modules, local descriptor, registry, tests, workflows, settings, lifecycle, and public state are unchanged. The receipt does not hash itself. Rollback the README and this companion receipt together through a reviewed correction. Issue #4024 remains open; no containment, cause attribution, or review independence is claimed."
+}
