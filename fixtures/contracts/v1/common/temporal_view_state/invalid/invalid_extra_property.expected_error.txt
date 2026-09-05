@@ -1,1 +1,1 @@
-additionalProperties
+{"kind":"schema","field":"/","keyword":"additionalProperties"}
