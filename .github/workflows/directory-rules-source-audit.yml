@@ -22,7 +22,7 @@ jobs:
           - label: base
             sha: 8b9c52d88687986879c8f87d7e3835f6a58bbacd
           - label: proposal
-            sha: 102b0e9a463597459e4fa92d66e53b6eb29206bf
+            sha: 2fe65059af3753fbf662d267d7483a881afc83a0
     env:
       CHECKOUT_SHA: ${{ matrix.sha }}
       CHECKOUT_LABEL: ${{ matrix.label }}
@@ -37,7 +37,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           ref: ${{ matrix.sha }}
-          fetch-depth: 2
+          fetch-depth: 3
           persist-credentials: false
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
         with:
@@ -75,7 +75,8 @@ jobs:
               run("topology-tests", [sys.executable, "-m", "unittest", "discover", "--start-directory", "tests/validators/directory_governance", "--pattern", "test_validate_*topology.py", "--verbose"])
               run("topology", [sys.executable, "tools/validators/directory_governance/validate_repository_topology.py", "--trusted-baseline-ref", base])
               if os.environ["CHECKOUT_LABEL"] == "proposal":
-                  run("receipt", [sys.executable, "tools/validators/validate_generated_receipt.py", "data/receipts/generated/genrec-directory-rules-amendment-20260905.json", "--repo-root", "."])
+                  run("receipt", [sys.executable, "tools/validators/validate_generated_receipt.py", "data/receipts/generated/genrec-directory-rules-amendment-20260905.json", "--repo-root", ".", "--artifact-git-ref", "102b0e9a463597459e4fa92d66e53b6eb29206bf"])
+                  run("correction-receipt", [sys.executable, "tools/validators/validate_generated_receipt.py", "data/receipts/generated/genrec-directory-rules-patch-correction-20260905.json", "--repo-root", "."])
           run("diff-whitespace", ["git", "diff", "--check", base, "HEAD"])
           protected = ["docs/doctrine/directory-rules.md", "docs/architecture/directory-rules.md", "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md", "docs/adr/ADR-0038-trusted-base-topology-correction-transitions.md", "control_plane", "tools/validators", "tests", "fixtures", "schemas", "contracts", "policy", "catalog", "apps", "packages", "package.json", "pnpm-lock.yaml", "pnpm-workspace.yaml", ".github"]
           run("protected-inputs", ["git", "diff", "--exit-code", base, "HEAD", "--", *protected])
