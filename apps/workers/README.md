@@ -3,12 +3,12 @@ doc_id: kfm://app/workers/readme
 title: Workers App README
 type: app-readme
 subtype: deployable-boundary-readme
-version: v0.2
-prior_version: v0.1
+version: v0.3
+prior_version: v0.2
 status: draft
 owners: NEEDS VERIFICATION — default CODEOWNERS route is @bartytime4life; no accepted Workers steward, operations owner, independent reviewer, or release authority was verified
 created: 2026-06-16
-updated: 2026-08-12
+updated: 2026-09-05
 policy_label: public
 current_path: apps/workers/README.md
 owning_root: apps/
@@ -18,15 +18,15 @@ truth_labels: [CONFIRMED, PROPOSED, UNKNOWN, NEEDS VERIFICATION]
 authority_class: deployable application boundary; non-sovereign; non-publishing
 canonical_relationship: same-path modernization; no sibling authority created
 repository: bartytime4life/Kansas-Frontier-Matrix
-evidence_base: main@97c33418735146c2a0495783996809ef8cb28d1a
-workers_tree: e46345c92af8400a76b03149dbf9338a53b1fb7d
-source_tree: 746351de055f859e607d22e267201e46ecb69e94
-target_prior_blob: 5b73c596786e5f5231579264ee5f31ee77427c75
-source_readme_blob: 420eed44aef61a4d7b9f9d89c057a3df84ba0a0e
+evidence_base: main@de25f099381cf0cad87884fe5bb35b17d4c1fa04
+workers_tree: 692f52ff0e4a1f2e9751994eb288f81f4a9a94f3
+source_tree: e76054fda0f400700288e625f8248bf1b46bf599
+target_prior_blob: 5b5c1e6b067e652a380bf445488a6227028dfc0e
+source_readme_blob: 08ad9f8116f64817ffa4f8b2058613749360c102
 directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
 directory_rules_adoption: ADR-0029 accepted
-directory_rules_adr_blob: b01322ef64f8c2b1ecb41de7ef4685b97cfa2a62
-apps_readme_blob: 6cd825905976b2b662e43497203206305cb78827
+directory_rules_adr_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
+apps_readme_blob: 95b3b021cad9bcafbd53fd1ddd18f6b51df22d80
 codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
 related:
   - ../README.md
@@ -47,6 +47,7 @@ related:
   - ../../fixtures/README.md
 tags: [kfm, apps, workers, background-jobs, scaffold, candidates, receipts, non-publisher, lifecycle, evidence, policy, idempotency, least-privilege]
 notes:
+  - "v0.3 re-pins the unchanged comment-only entrypoints, refreshes changed documentation/tree identities, fixes tracked-file inspection, and distinguishes browser-worker readiness proposals from this background-worker app."
   - "v0.2 replaces generalized implementation uncertainty with a pinned repository inventory: eight documented worker lanes, eight one-line placeholder main.py files, and no runnable worker package, queue, scheduler, app-local test, fixture, or deployment configuration inside apps/workers/."
   - "This README records requirements and boundaries; it does not create a job schema, grant write capability, admit a source, approve policy, prove execution, release an artifact, or publish a claim."
   - "Workers remain downstream executors. Connectors acquire, pipelines transform, packages supply reusable behavior, policy decides admissibility, data stores lifecycle and accountability instances, and release owns promotion, correction, withdrawal, and rollback decisions."
@@ -67,7 +68,7 @@ notes:
 ![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)
 ![Entrypoints: eight placeholders](https://img.shields.io/badge/entrypoints-8%20placeholders-d4a72c?style=flat-square)
 ![Directory Rules: ADR-0029 accepted](https://img.shields.io/badge/directory%20rules-ADR--0029%20accepted-2da44e?style=flat-square)
-![Evidence review: 2026-08-12](https://img.shields.io/badge/evidence%20review-2026--08--12-8250df?style=flat-square)
+![Evidence review: 2026-09-05](https://img.shields.io/badge/evidence%20review-2026--09--05-8250df?style=flat-square)
 
 **Quick navigation:** [Profile](#current-profile) · [Purpose](#1-purpose-and-scope) · [Placement](#2-placement-and-repository-fit) · [Boundary](#3-authority-and-trust-boundary) · [Inventory](#4-current-scaffold-inventory) · [Lanes](#5-worker-family-map) · [Flow](#6-governed-execution-flow) · [Job contract](#7-job-contract) · [Inputs and outputs](#8-inputs-outputs-and-exclusions) · [Implementation](#9-inspection-and-safe-implementation) · [Validation](#10-validation-and-definition-of-done) · [Operations](#11-security-operations-and-recovery) · [Evidence](#12-evidence-and-open-verification) · [Rollback](#13-maintenance-review-and-rollback)
 
@@ -92,11 +93,12 @@ notes:
 | Responsibility root | `apps/` — deployable processes and user/service boundaries |
 | Placement outcome | `PLACE` — same-path modernization of an existing boundary README |
 | Governing placement authority | [Accepted ADR-0029](../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopting [Directory Rules v2](../../docs/doctrine/directory-rules.md) |
-| Evidence base | `main@97c33418735146c2a0495783996809ef8cb28d1a` |
-| App/source trees | `e46345c92af8400a76b03149dbf9338a53b1fb7d` / `746351de055f859e607d22e267201e46ecb69e94` |
-| Tracked app files | **CONFIRMED:** 18 |
+| Evidence base | `main@de25f099381cf0cad87884fe5bb35b17d4c1fa04` |
+| App/source trees | `692f52ff0e4a1f2e9751994eb288f81f4a9a94f3` / `e76054fda0f400700288e625f8248bf1b46bf599` |
+| Tracked app files | **CONFIRMED:** 18 — ten READMEs and eight Python placeholders |
 | Documented worker lanes | **CONFIRMED:** eight |
-| Executable bytes | **CONFIRMED:** eight one-line placeholder `main.py` files |
+| Entrypoint files | **CONFIRMED:** eight one-line, comment-only `main.py` placeholders |
+| Executable Python statements | **CONFIRMED:** zero across those eight files |
 | Runnable application | **CONFIRMED absent within this tree** |
 | Queue/scheduler wiring | **CONFIRMED absent within this tree**; repository-wide wiring remains **NEEDS VERIFICATION** |
 | App-local tests/fixtures | **CONFIRMED absent within this tree** |
@@ -104,7 +106,7 @@ notes:
 | Current review route | Default [CODEOWNERS](../../.github/CODEOWNERS) route to `@bartytime4life`; routing is not stewardship, independent approval, policy, or release authority |
 | Public exposure | None established; workers must not be public-facing |
 | Release/publication role | None |
-| Last evidence review | 2026-08-12 |
+| Last evidence review | 2026-09-05 |
 
 **Truth-label legend:** `CONFIRMED` means verified from the pinned repository evidence. `PROPOSED` is designed but not verified as current implementation. `UNKNOWN` means evidence is insufficient. `NEEDS VERIFICATION` names a concrete remaining check.
 
@@ -128,6 +130,8 @@ The lane may eventually coordinate work such as:
 - asynchronous Focus Mode work behind governed API, evidence, policy, citation, and runtime boundaries.
 
 These are **documented intentions**, not current executable capability. The pinned source tree contains placeholders only.
+
+The governing lifecycle remains `RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED`. Consequential claims must resolve `EvidenceRef -> EvidenceBundle`; worker completion, a receipt, or a derived map artifact cannot replace that closure or the separate policy, review, and release decisions.
 
 ### Audience
 
@@ -160,6 +164,8 @@ Directory Rules treat root folders as authority boundaries. `apps/` owns deploya
 | Deployable process composition | `apps/workers/` | Owns bootstrap, dependency wiring, lifecycle hooks, health surface, and app-local orchestration |
 | Source acquisition/adaptation | [`connectors/`](../../connectors/README.md) | Worker calls admitted connector interfaces; it does not duplicate connector logic |
 | Lifecycle transformation | [`pipelines/`](../../pipelines/README.md) | Worker invokes pipeline behavior; it does not invent a parallel lifecycle engine |
+| Declarative run graphs and schedules | `pipeline_specs/` | Declares runs, not executable business logic or permission to activate a schedule |
+| Repository validators and operators | `tools/` | Development/operator checks only; production workers must not import repository tools as runtime libraries |
 | Reusable domain/runtime behavior | [`packages/`](../../packages/README.md) | Worker stays thin and delegates reusable logic |
 | Semantic meaning | [`contracts/`](../../contracts/README.md) | Worker consumes contracts; it does not redefine them locally |
 | Machine shape | [`schemas/`](../../schemas/README.md) | Worker validates against schemas; it does not create an app-local schema authority |
@@ -168,9 +174,11 @@ Directory Rules treat root folders as authority boundaries. `apps/` owns deploya
 | Promotion, correction, rollback | [`release/`](../../release/README.md) | Worker may emit candidates; release authority remains separate |
 | Provider/model adapters | [`runtime/`](../../runtime/README.md) | AI worker calls governed adapters; no direct public model path |
 | Deployment, identity, network, secrets | [`infra/`](../../infra/README.md) | Infrastructure grants least-privilege runtime capability |
-| Conformance evidence | [`tests/`](../../tests/README.md), [`fixtures/`](../../fixtures/README.md) | Worker behavior requires positive and negative evidence outside this app tree |
+| Conformance evidence | [`tests/`](../../tests/README.md), [`fixtures/`](../../fixtures/README.md) | Shared conformance belongs here; app-local tests may cover wrapper behavior without becoming a shared conformance authority |
 
 ### Placement result
+
+Accepted Directory Rules §10.1 (`DIR-EXEC-001`) governs the thin app wrapper; §14.1 governs dependency direction; §16 governs README inheritance. ADR-0029 adopts the exact Directory Rules bytes even though the adopted file retains its original draft header. The architecture-path compatibility copy is not a second writable authority.
 
 `apps/workers/README.md` already exists under the correct deployable-process root. This change is a same-path `PLACE` modernization. It creates no new root, authority family, lifecycle store, schema home, policy home, source registry, proof home, release surface, or publication path.
 
@@ -230,18 +238,11 @@ A path in a repository tree does not grant runtime access. Every worker read or 
 apps/workers/
 ├── README.md
 └── src/
-    ├── README.md
-    ├── ingest_worker/
-    ├── validate_worker/
-    ├── catalog_worker/
-    ├── tile_worker/
-    ├── receipt_worker/
-    ├── correction_worker/
-    ├── quarantine_review_worker/
-    └── ai_focus_worker/
 ```
 
-Each worker-lane directory contains exactly two tracked files at the pinned snapshot: a lane README and a one-line `main.py` placeholder.
+The direct children are this README and `src/`. The [worker family map](#5-worker-family-map) links all eight lanes below `src/`; its [source README](src/README.md) owns the next-level orientation.
+
+Each worker-lane directory contains exactly two tracked files at the pinned snapshot: a lane README and a one-line `main.py` placeholder. Every Python file has an empty executable syntax tree. A successful Python exit on one of these comment-only files would not demonstrate job handling or a working service.
 
 ### Confirmed absence within this app tree
 
@@ -257,6 +258,12 @@ No current file establishes:
 - runtime logs, metrics, traces, dashboards, receipts, proof packs, or release artifacts.
 
 This is a boundary README plus lane scaffolding. It must not be described as an implemented worker platform.
+
+### Background workers are not browser workers
+
+The separately tracked [Worker Integrity Launch Readiness Candidate](../../contracts/runtime/worker_integrity_launch_readiness.md) is a **PROPOSED, inactive, fixture-only browser-capability profile**. It combines synthetic worker identity, declared runtime-verification outcome, isolation, SharedArrayBuffer, and WASM requirements. `READY_CANDIDATE` does not launch a worker, resolve a proof, evaluate policy, or authorize release.
+
+Its [workflow definition](../../.github/workflows/worker-integrity-launch-readiness.yml) wires focused tests and fixture validation outside this app. That is a confirmed definition, not an executed result for this README revision, a job-envelope implementation, a background queue, or a binding to these eight Python placeholders. Likewise, renderer-worker assets, Explorer capabilities, root manifests, and repository validators must not be counted as implementation of `apps/workers/` merely because they mention workers.
 
 [Back to top](#top)
 
@@ -282,6 +289,8 @@ The lane names and child READMEs are current repository facts. Their intended ro
 ---
 
 ## 6. Governed execution flow
+
+**PROPOSED execution design, not an observed running pipeline.** The worker must preserve each owning system's outcome rather than treating a completed job as validation, review, or release success.
 
 ```mermaid
 flowchart LR
@@ -421,15 +430,28 @@ A worker must not emit or mutate as its own authority:
 
 ### Read-only inspection
 
-From the repository root, maintainers can inspect the current scaffold without executing code:
+From a local checkout that already contains the recorded commit, inspect tracked bytes without executing a worker. These commands neither fetch a source nor activate a schedule; an unavailable commit must fail rather than silently fall back to another revision.
 
 ```bash
-find apps/workers -maxdepth 3 -type f -print | sort
-find apps/workers/src -mindepth 1 -maxdepth 1 -type d -print | sort
-sed -n '1,220p' apps/workers/README.md
-sed -n '1,220p' apps/workers/src/README.md
-find apps/workers/src -name main.py -type f -exec sh -c 'printf "\n== %s ==\n" "$1"; cat "$1"' _ {} \;
+set -euo pipefail
+cd "$(git rev-parse --show-toplevel)"
+snapshot=de25f099381cf0cad87884fe5bb35b17d4c1fa04
+git cat-file -e "${snapshot}^{commit}"
+git ls-tree -r --name-only "$snapshot" -- apps/workers/
+git ls-tree --name-only "${snapshot}:apps/workers/src"
+git show "${snapshot}:apps/workers/README.md"
+git show "${snapshot}:apps/workers/src/README.md"
+while IFS= read -r -d '' path; do
+  case "$path" in
+    apps/workers/src/*/main.py)
+      printf '\n== %s ==\n' "$path"
+      git show "${snapshot}:${path}"
+      ;;
+  esac
+done < <(git ls-tree -r --name-only -z "$snapshot" -- apps/workers/src/)
 ```
+
+The recursive tracked-file list includes the lane files that a shallow filesystem walk can miss and excludes untracked local artifacts. These are inspection commands, not a worker test suite. Re-pin main, the target blob, applicable instructions, and overlapping work before implementing a later change; this snapshot is not a moving `main` reference.
 
 ### No quickstart yet
 
@@ -445,7 +467,7 @@ There is intentionally no install, run, queue, schedule, service, or deployment 
 6. Add positive, negative, denied-write, retry, idempotency, correction, and safe-logging tests.
 7. Add a dry-run path and deterministic output/receipt verification.
 8. Update this README and the child lane README with only verified commands and behavior.
-9. Deliver through a reviewable feature branch and draft pull request.
+9. Validate and preserve an exact-head feature branch; deliver a draft pull request only through a currently eligible path under [CONTRIBUTING](../../CONTRIBUTING.md). A delivery-path hold does not prohibit unrelated reversible authoring, and a branch or draft is not ready/merge authority.
 10. Keep activation, deployment, release, and publication as separate decisions.
 
 [Back to top](#top)
@@ -469,6 +491,8 @@ For a README-only change, validate:
 - bounded secret/private-key pattern scan;
 - no unsupported runtime, security, rights, release, or deployment claims;
 - semantic preservation of prior boundary content.
+
+Record validation with the exact base/head and distinguish session-only checks, repository-native execution, hosted CI, and unrun work. For AI-authored edits, [CONTRIBUTING](../../CONTRIBUTING.md) also requires an artifact-hash-bound generated-work receipt in the existing `data/receipts/generated/` lane, with human review pending until an authorized reviewer acts. That authoring receipt is not a receipt emitted by a running worker.
 
 ### Executable worker graduation
 
@@ -547,15 +571,19 @@ A credible operational record should include worker/job/run/attempt identity, co
 
 | Evidence | Identity | Supports | Does not prove |
 |---|---|---|---|
-| Current base | `97c33418735146c2a0495783996809ef8cb28d1a` | Repository state used for this review | Deployment or runtime health |
-| Workers tree | `e46345c92af8400a76b03149dbf9338a53b1fb7d` | Direct-child and total-file inventory | Behavior outside the tree |
-| Source tree | `746351de055f859e607d22e267201e46ecb69e94` | Eight lanes, child docs, placeholder entrypoints | Runnable workers |
-| Prior target | blob `5b73c596786e5f5231579264ee5f31ee77427c75` | Baseline identity and semantic no-loss review | Correctness of future implementation |
-| Source README | blob `420eed44aef61a4d7b9f9d89c057a3df84ba0a0e` | Child source-boundary contract | Implemented modules |
+| Current base | `de25f099381cf0cad87884fe5bb35b17d4c1fa04` | Repository state used for this review | Deployment or runtime health |
+| Workers tree | `692f52ff0e4a1f2e9751994eb288f81f4a9a94f3` | Direct-child and total-file inventory | Behavior outside the tree |
+| Source tree | `e76054fda0f400700288e625f8248bf1b46bf599` | Eight lanes, child docs, placeholder entrypoints | Runnable workers |
+| Prior target | blob `5b5c1e6b067e652a380bf445488a6227028dfc0e` | Baseline identity and semantic no-loss review | Correctness of future implementation |
+| Source README | blob `08ad9f8116f64817ffa4f8b2058613749360c102` | Child source-boundary contract | Implemented modules |
 | Directory Rules | blob `fd49a0b83e55cef52c1124281f093e263526898d` | Placement, dependency, README, and write-capability law | Implementation by documentation |
-| ADR-0029 | blob `b01322ef64f8c2b1ecb41de7ef4685b97cfa2a62` | Accepted adoption of exact Directory Rules bytes | Approval of worker behavior |
-| Apps README | blob `6cd825905976b2b662e43497203206305cb78827` | Parent boundary and mixed-maturity context | Worker runtime |
+| ADR-0029 | blob `a4de0d7a96b78da59cfc499d1025e1508afd8dd9` | Accepted adoption of exact Directory Rules bytes | Approval of worker behavior |
+| Apps README | blob `95b3b021cad9bcafbd53fd1ddd18f6b51df22d80` | Parent boundary and mixed-maturity context | Worker runtime |
 | CODEOWNERS | blob `dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61` | Default executable review routing | Stewardship or release authority |
+
+The trees above are **pre-edit evidence**, not the resulting PR trees. The previous v0.2 review at `main@97c33418735146c2a0495783996809ef8cb28d1a` remains historical lineage in the [prior README bytes](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/cbd6d82bad962a58ab62cfb776ee31696b575107/apps/workers/README.md). Child README checkpoints and earlier receipts are not silently re-dated or treated as fresh execution evidence.
+
+Google Drive's *Directory Rules* was consulted as predecessor lineage, and the Notion *KFM Repository Workbench* as coordination. Neither substitutes for the adopted repository rules, inspected source bytes, actual GitHub PR state, or independent review. No Drive/Notion implementation or control-exit claim is imported into this README.
 
 ### Open verification backlog
 
@@ -660,13 +688,13 @@ No authority, lifecycle, release, correction, or publication boundary was weaken
 | Quarantine Review | `eaef2862a7c1038590e5afba8224b52de54c5c96` | One-line greenfield placeholder |
 | AI Focus | `7715d01fc585b03dedae7bb535591064bd6d055c` | One-line greenfield placeholder |
 
-The comments in those files identify them as placeholders. This is scaffold-maturity evidence only.
+All eight blobs were re-read for v0.3 and remain comment-only. The comments in those files identify them as placeholders. This is scaffold-maturity evidence only.
 
 </details>
 
 ## Status summary
 
-`apps/workers/` is a **CONFIRMED documentation-led scaffold**, not a runnable or deployed worker system. Its eight lane contracts provide a useful bounded-context map, and its eight placeholder entrypoints reserve no authority beyond the existing `apps/` boundary.
+`apps/workers/` is a **CONFIRMED documentation-led scaffold**, with no runnable worker in the inspected tree; external deployment and operational health remain **UNKNOWN**. Its eight lane contracts provide a useful bounded-context map, and its eight placeholder entrypoints reserve no authority beyond the existing `apps/` boundary.
 
 The next credible transition is one fixture-only, no-network, dependency-closed worker slice with explicit contracts, schemas, policy/evidence gates, deterministic identity, receipts, denied-write tests, least privilege, safe errors, correction/rollback behavior, and a separate human review path. Until that evidence exists, workers remain non-publishing placeholders.
 

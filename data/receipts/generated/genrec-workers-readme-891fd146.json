@@ -1,0 +1,140 @@
+{
+  "receipt_id": "genrec-workers-readme-891fd146",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/workers/README.md"
+  ],
+  "artifact_hashes": {
+    "apps/workers/README.md": "sha256:891fd146cee73029d415593053622defea92a9d9bd1ff0a42c994e49f7eda05f"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Astra Pro",
+    "version": "UNKNOWN: exact runtime build identifier is not exposed"
+  },
+  "prompt_or_contract": "sha256:96a5c6586b31c86bbaaf48e06be9b2c4f9f665cb737b7c14f511a14816d7332b",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "Google Drive",
+      "Notion",
+      "container"
+    ],
+    "generation_settings": "UNKNOWN; no unavailable sampling values are inferred"
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:43713beea5438e7ac58338f4c5a794001190bb10e795c7fe658b31115cac886d"
+    ],
+    "attached_docs": [
+      "Google Drive: Directory Rules (predecessor lineage, read-only)",
+      "Notion: KFM Repository Workbench (coordination, read-only)"
+    ],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/de25f099381cf0cad87884fe5bb35b17d4c1fa04/apps/workers/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/de25f099381cf0cad87884fe5bb35b17d4c1fa04/apps/workers/src/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/de25f099381cf0cad87884fe5bb35b17d4c1fa04/apps/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/de25f099381cf0cad87884fe5bb35b17d4c1fa04/.github/CODEOWNERS",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/de25f099381cf0cad87884fe5bb35b17d4c1fa04/CONTRIBUTING.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/de25f099381cf0cad87884fe5bb35b17d4c1fa04/.github/PULL_REQUEST_TEMPLATE.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/de25f099381cf0cad87884fe5bb35b17d4c1fa04/docs/doctrine/directory-rules.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/de25f099381cf0cad87884fe5bb35b17d4c1fa04/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/de25f099381cf0cad87884fe5bb35b17d4c1fa04/docs/doctrine/ai-build-operating-contract.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/de25f099381cf0cad87884fe5bb35b17d4c1fa04/contracts/runtime/worker_integrity_launch_readiness.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/de25f099381cf0cad87884fe5bb35b17d4c1fa04/.github/workflows/worker-integrity-launch-readiness.yml",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/de25f099381cf0cad87884fe5bb35b17d4c1fa04/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/de25f099381cf0cad87884fe5bb35b17d4c1fa04/data/receipts/generated/README.md"
+    ]
+  },
+  "truth_labels": {
+    "apps/workers/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "source-byte-integrity",
+      "outcome": "PASS",
+      "reason": "Exact reconstructed upstream README matches Git blob 5b5c1e6b067e652a380bf445488a6227028dfc0e; all eight Python placeholder blobs match their pinned identities."
+    },
+    {
+      "gate": "readme-structure-and-navigation",
+      "outcome": "PASS",
+      "reason": "Session-only CommonMark/table parsing: one H1, 16 H2, all 45 prior headings preserved, 46 total headings, seven tables, five fenced blocks, 29 internal Markdown links, 40 relative targets verified through exact-ref GitHub reads/tree entries; metadata and related references checked."
+    },
+    {
+      "gate": "placeholder-ast",
+      "outcome": "PASS",
+      "reason": "All eight directly read, hash-matched Python files contain one comment line and zero executable AST statements. This is inventory evidence, not worker execution."
+    },
+    {
+      "gate": "inspection-command-replay",
+      "outcome": "PASS",
+      "reason": "Exact Bash snippet passes bash -n. Synthetic disposable Git replay with only the snapshot SHA substituted lists all 18 fixture files and all eight placeholders, excludes untracked artifacts, rejects an absent commit, and leaves the worktree unchanged. Not a full KFM checkout."
+    },
+    {
+      "gate": "whitespace-and-bounded-secret-scan",
+      "outcome": "PASS",
+      "reason": "UTF-8, final newline, no tabs/trailing whitespace, balanced metadata/HTML/fences, bounded private-key/token patterns; git diff --check over exact source/target bytes in a disposable Git harness."
+    },
+    {
+      "gate": "generated-receipt-schema-and-integrity",
+      "outcome": "PASS",
+      "reason": "Session-only Draft 2020-12 schema validation with format checking against exact schema blob fba21ed27ebccf1362fe397fe0c3ebd85e072685; artifact-map parity, complete SHA-256 binding, pending review/no override, and negative schema/hash/map checks."
+    },
+    {
+      "gate": "repository-native-validators-and-full-suite",
+      "outcome": "SKIPPED",
+      "reason": "NOT RUN. Full repository checkout failed because the execution environment could not resolve github.com. No make validate, repository-native receipt/topology validator, worker test suite, or complete repository regression pass is asserted."
+    },
+    {
+      "gate": "hosted-ci",
+      "outcome": "SKIPPED",
+      "reason": "NOT RUN at receipt emission. Query hosted results against the final PR head; later results belong in the PR record, not a retroactive edit to this authoring receipt."
+    },
+    {
+      "gate": "runtime-deployment-release",
+      "outcome": "SKIPPED",
+      "reason": "NOT RUN and outside this documentation change. No worker start, source activation, queue mutation, browser probe, release, deployment, promotion, publication, or repository settings change."
+    },
+    {
+      "gate": "independent-human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending; no reviewer, approval, or override is fabricated."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "worker-source-inventory",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/de25f099381cf0cad87884fe5bb35b17d4c1fa04/apps/workers/src/"
+    },
+    {
+      "id": "directory-rules-adoption",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/de25f099381cf0cad87884fe5bb35b17d4c1fa04/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "browser-worker-profile-boundary",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/de25f099381cf0cad87884fe5bb35b17d4c1fa04/contracts/runtime/worker_integrity_launch_readiness.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-05T18:47:41Z",
+  "emitter": "ChatGPT: session-local authoring and validation; GitHub connector delivery",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Base de25f099381cf0cad87884fe5bb35b17d4c1fa04. One same-path README update plus this required generated-work receipt. Current source facts are confirmed within the inspected tree; execution design stays proposed, and external operation is unknown. No child README, implementation, dependency, schema, policy, historical receipt, or release object is changed. Local QA is explicitly a selected-byte/synthetic fixture harness, not a mounted full repository. The existing generated-receipts lane is populated and CONTRIBUTING requires the record; existing ignore rules are not edited. Receipt schema shape and declared citations do not authenticate policy or review. GitHub remains implementation authority; Drive and Notion were read-only lineage/coordination. No incident-control exit or authorization of any held transition is inferred. Before integration retain or abandon the draft branch; after any separately authorized integration use a reviewed revert/forward fix preserving audit history. No live rollback is required."
+}
