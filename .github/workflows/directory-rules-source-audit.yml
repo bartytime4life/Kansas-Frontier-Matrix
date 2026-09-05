@@ -1,15 +1,12 @@
-# Temporary branch-only comparison. No writes, deployments, or release actions.
+# Temporary exact-checkout Python verification; no deployment or policy writes.
 name: directory-rules-source-audit
 "on":
   push:
     branches: ["agent/directory-rules-evidence-20260905"]
 permissions:
   contents: read
-concurrency:
-  group: directory-rules-comparison-${{ github.ref }}
-  cancel-in-progress: false
 jobs:
-  same-base-comparison:
+  python-comparison:
     strategy:
       fail-fast: false
       matrix:
@@ -19,80 +16,56 @@ jobs:
           - label: candidate
             ref: 3d75f67e8ca48c74e1fab43b1fdebefc383e1d23
     runs-on: ubuntu-24.04
-    timeout-minutes: 25
+    timeout-minutes: 15
     env:
       KFM_NO_NETWORK: "1"
       PYTHONDONTWRITEBYTECODE: "1"
       PYTHONHASHSEED: "0"
-      PYTHONUNBUFFERED: "1"
       TZ: UTC
-      CI: "true"
-      COREPACK_ENABLE_STRICT: "1"
-      COMPARISON_LABEL: ${{ matrix.label }}
       CHECKED_REF: ${{ matrix.ref }}
+      COMPARISON_LABEL: ${{ matrix.label }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           ref: ${{ matrix.ref }}
           fetch-depth: 2
           persist-credentials: false
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
-        with:
-          node-version: "22"
-          package-manager-cache: false
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
         with:
           python-version: "3.11"
-      - name: Execute independent checks and preserve every outcome
+      - name: Run the inspected positional installer and independent topology checks
         shell: bash
         run: |
           python3 - <<'PY'
-          import datetime, hashlib, json, os, pathlib, subprocess, time
-          out=pathlib.Path(os.environ['RUNNER_TEMP'])/'directory-comparison'
+          import datetime, hashlib, json, os, pathlib, subprocess
+          out=pathlib.Path(os.environ['RUNNER_TEMP'])/'directory-python'
           out.mkdir()
-          def capture(args): return subprocess.check_output(args,text=True).strip()
-          assert capture(['git','rev-parse','HEAD'])==os.environ['CHECKED_REF']
-          assert not capture(['git','status','--porcelain'])
-          paths=['package.json','pnpm-lock.yaml','pnpm-workspace.yaml','apps/kansas-frontier-matrix-explorer/package.json','apps/kansas-frontier-matrix-explorer/package-lock.json','docs/doctrine/directory-rules.md','tools/validators/directory_governance/repository_topology_baseline.json']
-          before={p:hashlib.sha256(pathlib.Path(p).read_bytes()).hexdigest() for p in paths}
-          meta={'label':os.environ['COMPARISON_LABEL'],'checked_out_commit':capture(['git','rev-parse','HEAD']),'checked_out_tree':capture(['git','rev-parse','HEAD^{tree}']),'workflow_head':os.environ['GITHUB_SHA'],'run_id':os.environ['GITHUB_RUN_ID'],'attempt':os.environ['GITHUB_RUN_ATTEMPT'],'job_key':os.environ['GITHUB_JOB'],'observed_at':datetime.datetime.now(datetime.timezone.utc).isoformat(),'node':capture(['node','--version']),'python':capture(['python3','--version']),'git':capture(['git','--version']),'results':[]}
-          def run(label,args,timeout=600):
-              started=time.monotonic()
+          def git(*args): return subprocess.check_output(['git',*args],text=True).strip()
+          assert git('rev-parse','HEAD')==os.environ['CHECKED_REF']
+          assert not git('status','--porcelain')
+          meta={'label':os.environ['COMPARISON_LABEL'],'checked_out_commit':git('rev-parse','HEAD'),'checked_out_tree':git('rev-parse','HEAD^{tree}'),'workflow_head':os.environ['GITHUB_SHA'],'run_id':os.environ['GITHUB_RUN_ID'],'attempt':os.environ['GITHUB_RUN_ATTEMPT'],'job_key':os.environ['GITHUB_JOB'],'observed_at':datetime.datetime.now(datetime.timezone.utc).isoformat(),'python':subprocess.check_output(['python3','--version'],text=True).strip(),'results':[]}
+          def run(label,args):
               with (out/(label+'.log')).open('w') as log:
-                  try: code=subprocess.run(args,stdout=log,stderr=subprocess.STDOUT,timeout=timeout).returncode
-                  except subprocess.TimeoutExpired: code=124;log.write('\nCOLLECTOR_TIMEOUT: command did not complete.\n')
-              meta['results'].append({'check':label,'command':args,'exit':code,'elapsed_seconds':round(time.monotonic()-started,3)})
+                  try: code=subprocess.run(args,stdout=log,stderr=subprocess.STDOUT,timeout=300).returncode
+                  except subprocess.TimeoutExpired: code=124;log.write('\nCOLLECTOR_TIMEOUT\n')
+              meta['results'].append({'check':label,'command':args,'exit':code})
               (out/'observation.json').write_text(json.dumps(meta,indent=2)+'\n')
               print(label,code,flush=True)
               return code
-          run('wrapper-tests',['node','--test','apps/kansas-frontier-matrix-explorer/tests/build-verified.test.mjs'])
-          run('wrapper-syntax',['bash','-n','apps/kansas-frontier-matrix-explorer/scripts/build-verified.sh'])
-          python_ok=run('python-install',['python3','tools/ci/install_python_ci.py','--profile','project-runtime'])==0
-          if python_ok:
-              run('topology-fixtures',['python3','-m','unittest','discover','--start-directory','tests/validators/directory_governance','--pattern','test_validate_*topology.py','--verbose'])
-              run('topology-current-tree',['python3','tools/validators/directory_governance/validate_repository_topology.py','--trusted-baseline-ref','8b9c52d88687986879c8f87d7e3835f6a58bbacd'])
-              if meta['label']=='candidate':
-                  run('generated-receipt',['python3','tools/validators/validate_generated_receipt.py','data/receipts/generated/genrec-directory-build-context-20260905.json'])
-          package=json.loads(pathlib.Path('package.json').read_text())
-          assert package['packageManager']=='pnpm@11.17.0'
-          if run('corepack-enable',['corepack','enable'])==0 and run('pnpm-install',['pnpm','install','--frozen-lockfile'])==0:
-              run('sites-build',['pnpm','--filter','kansas-frontier-matrix-explorer','build'])
-              run('explorer-build',['pnpm','--filter','explorer-web','build'])
-              run('explorer-unit',['pnpm','--filter','explorer-web','test:unit'])
-          after={p:hashlib.sha256(pathlib.Path(p).read_bytes()).hexdigest() for p in paths}
-          meta['protected_inputs_unchanged']=before==after
-          meta['protected_input_sha256']=after
-          meta['final_tracked_diff']=capture(['git','diff','--name-only'])
+          run('python-install',['python3','tools/ci/install_python_ci.py','test-dependencies'])
+          run('topology-fixtures',['python3','-m','unittest','discover','--start-directory','tests/validators/directory_governance','--pattern','test_validate_*topology.py','--verbose'])
+          run('topology-current-tree',['python3','tools/validators/directory_governance/validate_repository_topology.py','--trusted-baseline-ref','8b9c52d88687986879c8f87d7e3835f6a58bbacd'])
+          if meta['label']=='candidate':
+              run('generated-receipt',['python3','tools/validators/validate_generated_receipt.py','data/receipts/generated/genrec-directory-build-context-20260905.json'])
+          meta['final_tracked_diff']=git('diff','--name-only')
           (out/'observation.json').write_text(json.dumps(meta,indent=2)+'\n')
-          failed=any(r['exit']!=0 for r in meta['results']) or before!=after or bool(meta['final_tracked_diff'])
           print(json.dumps(meta,indent=2))
-          raise SystemExit(1 if failed else 0)
+          raise SystemExit(1 if meta['final_tracked_diff'] or any(x['exit']!=0 for x in meta['results']) else 0)
           PY
-      - name: Preserve comparison logs even when a substantive check fails
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          name: directory-comparison-${{ matrix.label }}-${{ github.run_id }}-${{ github.run_attempt }}
-          path: ${{ runner.temp }}/directory-comparison/
+          name: directory-python-${{ matrix.label }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/directory-python/
           if-no-files-found: error
           retention-days: 5

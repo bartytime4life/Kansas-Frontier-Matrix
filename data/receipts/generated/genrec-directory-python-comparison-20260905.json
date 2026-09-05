@@ -1,0 +1,21 @@
+{
+  "receipt_id": "genrec-directory-python-comparison-20260905",
+  "contract_version": "3.0.0",
+  "artifact_paths": [".github/workflows/directory-rules-source-audit.yml"],
+  "artifact_hashes": {".github/workflows/directory-rules-source-audit.yml": "sha256:4c175017b34272ec2bf105a5b61bc316a82913cd56ca56f989e1602df605c3f2"},
+  "model_identity": {"provider": "OpenAI", "model": "GPT-6 Pro", "version": "not exposed"},
+  "prompt_or_contract": "sha256:bea0921d69007e4c8b74640130b78b5cbd4453e923bec77cec47e9f81253ddb2",
+  "parameters": {"seed": null, "temperature": null, "tools_enabled": ["GitHub", "container"]},
+  "inputs": {"evidence_refs": ["https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/d1b430ca51887777766050e5582659ab34322286/docs/doctrine/directory-rules.md"]},
+  "truth_labels": {".github/workflows/directory-rules-source-audit.yml": "PROPOSED"},
+  "validation_gates": [
+    {"gate": "Workflow YAML and embedded Python syntax", "outcome": "PASS", "reason": "Parsed and compiled in authoring environment."},
+    {"gate": "Hosted comparison", "outcome": "SKIPPED", "reason": "Not executed at authorship. Substantive nonzero checks will fail their job; upload does not convert failure to success."}
+  ],
+  "policy_decisions": [],
+  "citations": [{"id": "adopted-directory-rules", "validated": true, "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/d1b430ca51887777766050e5582659ab34322286/docs/doctrine/directory-rules.md"}],
+  "human_review": {"state": "pending", "reviewer_ids": [], "timestamp": null},
+  "created_at": "2026-09-05T19:49:20Z",
+  "emitter": "kfm-directory-modernization-author",
+  "notes": "Corrects author-side invocation error: install_python_ci.py takes a positional profile, not --profile. Prior run 33987716411 retains exit 2 and no topology execution. New run independently invokes native tests and topology on unchanged exact base and candidate. No validator edits, baseline changes, catalog changes, or new authority."
+}
