@@ -1,5 +1,5 @@
-# Branch-only exact-head validation. No source admission, renderer activation,
-# PR lifecycle, repository writes, release or deployment permissions.
+# Branch-only validation with independent pinned-main attribution.
+# No source admission, PR lifecycle, repository writes or deployment permissions.
 name: earth-layer-library-app-validation
 on:
   push:
@@ -23,21 +23,36 @@ jobs:
   native-app:
     runs-on: ubuntu-24.04
     timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - kind: candidate
+            ref: ''
+          - kind: pinned-main
+            ref: 8b9c52d88687986879c8f87d7e3835f6a58bbacd
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
+          ref: ${{ matrix.ref || github.sha }}
           persist-credentials: false
           fetch-depth: 0
-      - name: Verify preserved lineage and policy preimages
+      - name: Record exact source and dependency-policy preimages
         shell: bash
+        env:
+          KIND: ${{ matrix.kind }}
         run: |
           set -euo pipefail
-          git merge-base --is-ancestor 34a9348ce7882284a5843f414368b92ade9d79db HEAD
-          git merge-base --is-ancestor 8b9c52d88687986879c8f87d7e3835f6a58bbacd HEAD
-          test -z "$(git ls-files '*earth-library-authoring*')"
           mkdir -p "$RUNNER_TEMP/earth-library-app"
           git rev-parse HEAD > "$RUNNER_TEMP/earth-library-app/head.txt"
-          git diff --stat 8b9c52d88687986879c8f87d7e3835f6a58bbacd HEAD > "$RUNNER_TEMP/earth-library-app/diff-stat.txt"
+          if test "$KIND" = candidate; then
+            git merge-base --is-ancestor 34a9348ce7882284a5843f414368b92ade9d79db HEAD
+            git merge-base --is-ancestor 8b9c52d88687986879c8f87d7e3835f6a58bbacd HEAD
+            test -z "$(git ls-files '*earth-library-authoring*')"
+            git diff --stat 8b9c52d88687986879c8f87d7e3835f6a58bbacd HEAD > "$RUNNER_TEMP/earth-library-app/diff-stat.txt"
+          else
+            test "$(git rev-parse HEAD)" = 8b9c52d88687986879c8f87d7e3835f6a58bbacd
+          fi
           sha256sum package.json pnpm-workspace.yaml pnpm-lock.yaml apps/kansas-frontier-matrix-explorer/package.json apps/kansas-frontier-matrix-explorer/package-lock.json > "$RUNNER_TEMP/earth-library-app/locks.sha256"
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
@@ -52,7 +67,7 @@ jobs:
           pnpm install --frozen-lockfile
           sha256sum -c "$RUNNER_TEMP/earth-library-app/locks.sha256"
       - name: Native Library and synchronous owner tests
-        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        if: ${{ !cancelled() && steps.install.outcome == 'success' && matrix.kind == 'candidate' }}
         shell: bash
         run: |
           set -euo pipefail
@@ -64,19 +79,26 @@ jobs:
         run: |
           set -euo pipefail
           pnpm --filter kansas-frontier-matrix-explorer build 2>&1 | tee "$RUNNER_TEMP/earth-library-app/build.log"
-      - name: Existing application Node regression suite
+      - name: Existing application Node regression suite from explicit repository root
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         shell: bash
         run: |
           set -euo pipefail
-          cd apps/kansas-frontier-matrix-explorer
-          node --test tests/*.test.mjs 2>&1 | tee "$RUNNER_TEMP/earth-library-app/app-node.log"
+          # Identical invocation/cwd on both pins. TS7 file-list compilation must
+          # not inherit an unrelated app tsconfig. No ignored test failures.
+          node --test apps/kansas-frontier-matrix-explorer/tests/*.test.mjs 2>&1 | tee "$RUNNER_TEMP/earth-library-app/app-node.log"
+      - name: Native complete application typecheck
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          pnpm --filter kansas-frontier-matrix-explorer exec tsc --noEmit 2>&1 | tee "$RUNNER_TEMP/earth-library-app/typecheck.log"
       - name: Install locked Playwright Chromium
         id: browser
-        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        if: ${{ !cancelled() && steps.install.outcome == 'success' && matrix.kind == 'candidate' }}
         run: pnpm exec playwright install --with-deps chromium
       - name: Actual HTTP app composition and browser interactions
-        if: ${{ !cancelled() && steps.build.outcome == 'success' && steps.browser.outcome == 'success' }}
+        if: ${{ !cancelled() && steps.build.outcome == 'success' && steps.browser.outcome == 'success' && matrix.kind == 'candidate' }}
         shell: bash
         run: |
           set -euo pipefail
@@ -97,7 +119,7 @@ jobs:
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
-          name: earth-library-actual-app-${{ github.sha }}
+          name: earth-library-${{ matrix.kind }}-${{ github.sha }}
           path: ${{ runner.temp }}/earth-library-app/
           retention-days: 14
           if-no-files-found: error

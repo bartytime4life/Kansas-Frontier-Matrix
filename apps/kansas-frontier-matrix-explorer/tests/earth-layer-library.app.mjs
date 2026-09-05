@@ -1,6 +1,5 @@
-/** Real HTTP + Vinext/React composition test. No injected app modules, API doubles,
- * replacement root, renderer claims, public Site access or source activation.
- * Run against a loopback app started from the complete locked checkout.
+/** Actual HTTP + Vinext/React composition test. No injected application modules,
+ * API doubles, replacement root, renderer claims or public Site access.
  */
 import assert from 'node:assert/strict';
 import { mkdir, writeFile } from 'node:fs/promises';
@@ -102,12 +101,14 @@ try {
     assert.equal(saved.visibility['water-context'],false);assert.equal(saved.opacity['atmosphere-observations'],0);
     assert.equal('membershipEpoch' in saved,false);assert.equal('members' in saved,false);
   });
-  await run('legacy controls and Library share actual visibility rather than mirrors', async()=>{
-    await page.locator('button[title="Layers · shortcut L"]').click();
+  await run('visible operational Layers control and Library share actual state', async()=>{
+    // Desktop deliberately clips the legacy header buttons. Use the control a user sees.
+    await page.getByRole('button',{name:/^Layer catalog\. Choose governed context\./}).click();
     await page.getByRole('checkbox',{name:'Show Hydrology context',exact:true}).check();
     await waitLayer('water-context',true);await open();await stack();
     assert.equal(await dialog.getByRole('checkbox',{name:'Enable Hydrology context',exact:true}).isChecked(),true);
     await close();
+    await page.getByRole('button',{name:'Close Layer Catalog',exact:true}).click();
   });
   await run('old-format saved workspace restore is atomic and clears hidden membership and undo', async()=>{
     await page.locator('.map-command-bar').getByRole('button',{name:'Build report',exact:true}).click();
@@ -118,7 +119,7 @@ try {
     assert.equal(await dialog.getByRole('button',{name:'Undo',exact:true}).isDisabled(),true);
     await close();
   });
-  await run('browser back and forward invoke the existing restore path without remounting map', async()=>{
+  await run('browser back and forward invoke restore without remounting map', async()=>{
     await page.waitForTimeout(450);
     await page.evaluate(()=>{
       const url=new URL(location.href);url.searchParams.set('l','kansas-extent,geology-context');url.searchParams.set('t','1910');
@@ -155,7 +156,7 @@ try {
     assert.deepEqual(await camera(),before);
     assert.equal(new URL(page.url()).searchParams.get('maptab'),'inspect');
   });
-  await run('mobile real app dialog text remains visible and fits the viewport', async()=>{
+  await run('mobile actual app dialog text remains visible and fits viewport', async()=>{
     await page.setViewportSize({width:390,height:844});await open();
     const box=await dialog.boundingBox();assert.ok(box.width<=390 && box.x>=-1 && box.x+box.width<=391);
     const boundary=dialog.locator('.kfm-library-boundary');assert.equal(await boundary.isVisible(),true);
@@ -163,7 +164,7 @@ try {
     assert.equal(await boundary.evaluate(el=>getComputedStyle(el).whiteSpace),'normal');
     await page.screenshot({path:path.join(output,'mobile-app-library.png')});await close();
   });
-  await run('repeated modal lifecycle retains one controller, then real route unmount cleans portal', async()=>{
+  await run('repeated modal lifecycle then actual route unmount cleans portal', async()=>{
     await page.setViewportSize({width:1440,height:1000});
     for(let i=0;i<10;i++){await open();await close();}
     assert.equal(await dialog.count(),1);assert.equal(await trigger.count(),1);
