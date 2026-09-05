@@ -158,6 +158,10 @@ try {
     assert.equal(new URL(page.url()).pathname,'/');
     assert.deepEqual(await camera(),before);
     assert.equal(new URL(page.url()).searchParams.get('maptab'),'inspect');
+    // Finish the inspector interaction through its visible close control before
+    // opening a different modal on the compact viewport. Do not force through it.
+    await page.getByRole('button',{name:'Close Map Workbench',exact:true}).click();
+    await page.locator('.map-utility-panel[data-open="true"]').waitFor({state:'hidden'});
   });
   await run('mobile actual app dialog text remains visible and fits viewport', async()=>{
     await page.setViewportSize({width:390,height:844});await open();
