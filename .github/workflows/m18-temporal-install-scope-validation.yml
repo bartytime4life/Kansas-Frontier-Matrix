@@ -1,0 +1,94 @@
+# Diagnostic branch only; never merge. Product source is matrix.revision.
+name: m18-temporal-install-scope-validation
+"on":
+  push:
+    branches: [agent/m18-temporal-validation-20260905]
+    paths: [.github/workflows/m18-temporal-install-scope-validation.yml]
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  CI: "true"
+  COREPACK_ENABLE_STRICT: "1"
+  KFM_NO_NETWORK: "1"
+  TZ: UTC
+
+jobs:
+  explorer:
+    name: explorer-${{ matrix.label }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - label: prior-filtered
+            revision: b5bcc4d96e2959a499a77078a80fffbf06e6dd40
+            install_scope: filtered
+          - label: prior-workspace
+            revision: b5bcc4d96e2959a499a77078a80fffbf06e6dd40
+            install_scope: workspace
+          - label: candidate-filtered
+            revision: 8fbfc9a7ec90d2b99fece580029197b19211cb78
+            install_scope: filtered
+          - label: candidate-workspace
+            revision: 8fbfc9a7ec90d2b99fece580029197b19211cb78
+            install_scope: workspace
+    steps:
+      - name: Check out exact source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ matrix.revision }}
+          persist-credentials: false
+          fetch-depth: 1
+      - name: Assert revision and pin dependency inputs
+        env:
+          EXPECTED_REVISION: ${{ matrix.revision }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_REVISION"
+          git log -1 --format='%H %T'
+          sha256sum package.json pnpm-workspace.yaml pnpm-lock.yaml apps/explorer-web/package.json apps/explorer-web/tsconfig.json > /tmp/m18-locks.sha256
+          cat /tmp/m18-locks.sha256
+      - name: Set up identical Node patch
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "22.23.2"
+          package-manager-cache: false
+      - name: Signed pinned package manager
+        run: |
+          set -euo pipefail
+          node --version
+          corepack --version
+          corepack enable
+          pnpm --version
+      - name: Frozen installation with explicit diagnostic scope
+        id: install
+        env:
+          INSTALL_SCOPE: ${{ matrix.install_scope }}
+        run: |
+          set -euo pipefail
+          case "$INSTALL_SCOPE" in
+            filtered) pnpm install --frozen-lockfile --filter explorer-web... ;;
+            workspace) pnpm install --frozen-lockfile ;;
+            *) exit 2 ;;
+          esac
+      - name: Native Explorer strict build
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: pnpm --filter explorer-web build
+      - name: Native complete Explorer unit tests
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: pnpm --filter explorer-web test:unit
+      - name: Native complete Explorer browser tests
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: pnpm --filter explorer-web test:browser
+      - name: Verify source and dependency policy remain unchanged
+        if: ${{ !cancelled() }}
+        run: |
+          set -euo pipefail
+          sha256sum --check /tmp/m18-locks.sha256
+          git diff --exit-code
