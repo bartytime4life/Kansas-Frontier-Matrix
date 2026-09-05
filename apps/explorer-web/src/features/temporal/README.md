@@ -13,6 +13,8 @@ separate from committed frame context so map, chart, legend, table, Evidence
 Drawer, report preview, and AI handoff can bind to one future resolver result.
 
 Unknown timezones and geologic-age boundaries return explicit unsupported
-outcomes. Raw values remain available for labels and provenance; only
-timezone-aware instants are compared as instants. A withheld layer carries no
+outcomes. The public-context adapter also rejects unparsed or ambiguous time
+strings instead of reclassifying them as uncertain history. Explicit numeric
+offsets are normalized to UTC for comparison while their raw value and source
+offset remain available for labels and provenance. A withheld layer carries no
 actual timestamp or evidence reference.
