@@ -1,0 +1,126 @@
+# Branch-only, read-only governance readback for the Earth Layer Library handoff.
+# This workflow records current bytes and validator outcomes; it does not amend
+# topology baselines, rewrite historical receipts, create PR lifecycle state,
+# activate sources/renderers, release, deploy, or publish.
+name: earth-layer-library-governance-validation
+on:
+  push:
+    branches: [agent/earth-layer-library-readback-20260905]
+    paths:
+      - .github/workflows/earth-layer-library-governance-validation.yml
+      - .github/workflows/earth-layer-library-app-validation.yml
+      - apps/kansas-frontier-matrix-explorer/**
+      - packages/ui/src/**
+      - data/receipts/generated/genrec-earth-layer-library-*
+permissions:
+  contents: read
+concurrency:
+  group: earth-layer-library-governance-validation-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  readback:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - kind: candidate
+            ref: ''
+          - kind: pinned-main
+            ref: 8b9c52d88687986879c8f87d7e3835f6a58bbacd
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ matrix.ref || github.sha }}
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Record exact source and candidate artifact hashes
+        shell: bash
+        env:
+          KIND: ${{ matrix.kind }}
+        run: |
+          set -euo pipefail
+          out="$RUNNER_TEMP/earth-library-governance"
+          mkdir -p "$out"
+          git rev-parse HEAD | tee "$out/head.txt"
+          git status --short --untracked-files=no > "$out/worktree-before.txt"
+          if test "$KIND" = candidate; then
+            git merge-base --is-ancestor 34a9348ce7882284a5843f414368b92ade9d79db HEAD
+            git merge-base --is-ancestor 8b9c52d88687986879c8f87d7e3835f6a58bbacd HEAD
+            git diff --name-status 8b9c52d88687986879c8f87d7e3835f6a58bbacd...HEAD > "$out/diff-name-status.txt"
+            git diff --name-only 8b9c52d88687986879c8f87d7e3835f6a58bbacd...HEAD \
+              | grep -v '^data/receipts/generated/genrec-earth-layer-library-20260905-a7374a0d9e32.json$' \
+              | grep -v '^data/receipts/generated/genrec-earth-layer-library-app-integration-' \
+              | sort > "$out/current-artifact-paths.txt"
+            while IFS= read -r path; do
+              test -f "$path"
+              sha256sum "$path"
+            done < "$out/current-artifact-paths.txt" > "$out/current-artifact-sha256.txt"
+          else
+            test "$(git rev-parse HEAD)" = 8b9c52d88687986879c8f87d7e3835f6a58bbacd
+          fi
+      - name: Diff hygiene
+        if: always()
+        shell: bash
+        run: |
+          set -o pipefail
+          git diff --check 8b9c52d88687986879c8f87d7e3835f6a58bbacd...HEAD 2>&1 | tee "$RUNNER_TEMP/earth-library-governance/diff-check.log"
+      - name: Root registry validator
+        if: always()
+        shell: bash
+        run: |
+          set -o pipefail
+          python tools/validators/directory_governance/validate_root_registry.py 2>&1 | tee "$RUNNER_TEMP/earth-library-governance/root-registry.log"
+      - name: Repository topology ratchet
+        if: always()
+        shell: bash
+        run: |
+          set -o pipefail
+          python tools/validators/directory_governance/validate_repository_topology.py --format text 2>&1 | tee "$RUNNER_TEMP/earth-library-governance/topology.log"
+      - name: Bounded topology diagnostics
+        if: always()
+        shell: bash
+        run: |
+          set +e
+          python tools/validators/directory_governance/render_repository_topology_diagnostics.py 2>&1 | tee "$RUNNER_TEMP/earth-library-governance/topology-diagnostics.log"
+          exit 0
+      - name: Historical receipt preservation check
+        if: ${{ always() && matrix.kind == 'candidate' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --exit-code 34a9348ce7882284a5843f414368b92ade9d79db...HEAD -- \
+            data/receipts/generated/genrec-earth-layer-library-20260905-a7374a0d9e32.json \
+            > "$RUNNER_TEMP/earth-library-governance/historical-receipt-diff.txt"
+      - name: Validate current integration receipt when present
+        if: ${{ always() && matrix.kind == 'candidate' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          out="$RUNNER_TEMP/earth-library-governance"
+          shopt -s nullglob
+          receipts=(data/receipts/generated/genrec-earth-layer-library-app-integration-*.json)
+          if ((${#receipts[@]} == 0)); then
+            printf '%s\n' 'CURRENT_INTEGRATION_RECEIPT_NOT_YET_PRESENT' | tee "$out/current-receipt.log"
+            exit 0
+          fi
+          if ((${#receipts[@]} != 1)); then
+            printf 'expected exactly one current integration receipt, found %s\n' "${#receipts[@]}" | tee "$out/current-receipt.log"
+            exit 1
+          fi
+          python tools/validators/validate_generated_receipt.py "${receipts[0]}" --repo-root . 2>&1 | tee "$out/current-receipt.log"
+      - name: Verify validator readback did not mutate tracked files
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          git status --short --untracked-files=no | tee "$RUNNER_TEMP/earth-library-governance/worktree-after.txt"
+          test -z "$(git status --short --untracked-files=no)"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: earth-layer-library-governance-${{ matrix.kind }}-${{ github.sha }}
+          path: ${{ runner.temp }}/earth-library-governance/
+          retention-days: 14
+          if-no-files-found: error
