@@ -1,0 +1,204 @@
+{
+  "receipt_id": "genrec-scripts-readme-currentness-73a72509b07f",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "scripts/README.md"
+  ],
+  "artifact_hashes": {
+    "scripts/README.md": "sha256:73a72509b07f4166f279a3488ea97fd3240fdf443d0c43f09af973fe86d4c28b"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Pro",
+    "version": "UNKNOWN — build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:71fca879e280c7797157de28a732b87a132f786c96749eb0d0c716c17c141bd0",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "tools_enabled": [
+      "GitHub",
+      "Google_Drive",
+      "Notion",
+      "container"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/scripts/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/docs/doctrine/directory-rules.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/control_plane/root_registry.yaml",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/scripts/maplibre-smoke-perf.mjs",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/packages/maplibre/package.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/package.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/Makefile",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/.github/workflows/maplibre-perf-governance.yml",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/.github/workflows/promotion-gate.yml",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/scripts/maintenance/run_doctrine_artifact_preflight.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/scripts/maintenance/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/scripts/plan_backfill_window.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/scripts/plan_pipeline_resilience.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/tests/packages/pipelines_core/test_pipeline_resilience_cli_projection.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/CONTRIBUTING.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/.github/PULL_REQUEST_TEMPLATE.md"
+    ],
+    "attached_docs": [
+      "Google Drive Directory Rules — unversioned lineage; document 1uTqdIEFZE2cq3gyISetoRYM6LIlnKqTc3FobtEx7Cbs",
+      "Notion KFM Repository Workbench — coordination only; page 3c9a9202-1bf6-8195-b8b1-f3a8d694b447"
+    ],
+    "evidence_hashes": [
+      "sha256:425e998e5584a7e400e99c963aba019b33ff685f9fa26b5b474d8758a3160b2a",
+      "sha256:e7e6ab7ea26864bde30e8438a8414eb3cc107279fda47e707b0ee5c11ea86a94"
+    ]
+  },
+  "truth_labels": {
+    "scripts/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-source-and-placement-review",
+      "outcome": "PASS",
+      "reason": "Pinned main, complete prior README, complete tracked scripts tree, selected actual code/workflows/manifests and accepted ADR-0029 inspected. README only plus this new receipt; no executable or authority change."
+    },
+    {
+      "gate": "markdown-metadata-navigation-and-whitespace",
+      "outcome": "PASS",
+      "reason": "Local candidate QA: one H1, all 25 H2 and 38 H3 headings retained, 66 unique anchors, 32 Markdown links and 14 related paths checked against the finite inspected-path ledger; 15 tables, three Bash fences, embedded Python syntax and candidate-only Git whitespace checks pass. This is not a checkout-wide link audit."
+    },
+    {
+      "gate": "exact-retired-harness-source-export",
+      "outcome": "PASS",
+      "reason": "Reconstructed 755-byte source matches Git blob ac2522686546b7428ad0cc5c8cd76860ab285998. Node 22.16.0 syntax passes; bounded execution returns expected script exit 3 with WORKFLOW_HOLD, empty stdout and no working-directory files. No browser/performance run."
+    },
+    {
+      "gate": "shell-multi-file-negative-regression",
+      "outcome": "PASS",
+      "reason": "Synthetic valid-first/invalid-second shell pair: old batched bash -n returns 0; corrected xargs -n1 returns 123 and identifies the second file. Corrected all-valid pair returns 0. No repository scripts executed by this syntax regression."
+    },
+    {
+      "gate": "local-exact-schema-and-artifact-binding",
+      "outcome": "PASS",
+      "reason": "Current exact schema (Git blob fba21ed27ebccf1362fe397fe0c3ebd85e072685), Draft202012Validator and FormatChecker pass with full artifact SHA-256, map parity and pending/no-override packet invariants. Eight synthetic invalid or overclaiming mutations rejected. Native validator not run; final receipt revalidated after recording this result."
+    },
+    {
+      "gate": "repository-native-and-full-suite-validation",
+      "outcome": "SKIPPED",
+      "reason": "Container DNS could not resolve GitHub or raw.githubusercontent.com; no full checkout. Native receipt validator, planner pytest, maintenance suite, aggregate validation and topology not run. No inherited failure is relabeled passing."
+    },
+    {
+      "gate": "hosted-exact-head-and-independent-review",
+      "outcome": "SKIPPED",
+      "reason": "Not established at emission. Human review pending. The existing contributor incident control has no verified independent PR-creation clearance; branch-only handoff, not approval or merge authority."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "repo-source-01",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/scripts/README.md"
+    },
+    {
+      "id": "repo-source-02",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "repo-source-03",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "repo-source-04",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/control_plane/root_registry.yaml"
+    },
+    {
+      "id": "repo-source-05",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/scripts/maplibre-smoke-perf.mjs"
+    },
+    {
+      "id": "repo-source-06",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/packages/maplibre/package.json"
+    },
+    {
+      "id": "repo-source-07",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/package.json"
+    },
+    {
+      "id": "repo-source-08",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/Makefile"
+    },
+    {
+      "id": "repo-source-09",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/.github/workflows/maplibre-perf-governance.yml"
+    },
+    {
+      "id": "repo-source-10",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/.github/workflows/promotion-gate.yml"
+    },
+    {
+      "id": "repo-source-11",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/scripts/maintenance/run_doctrine_artifact_preflight.py"
+    },
+    {
+      "id": "repo-source-12",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/scripts/maintenance/README.md"
+    },
+    {
+      "id": "repo-source-13",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/scripts/plan_backfill_window.py"
+    },
+    {
+      "id": "repo-source-14",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/scripts/plan_pipeline_resilience.py"
+    },
+    {
+      "id": "repo-source-15",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/tests/packages/pipelines_core/test_pipeline_resilience_cli_projection.py"
+    },
+    {
+      "id": "repo-source-16",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    },
+    {
+      "id": "repo-source-17",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/CONTRIBUTING.md"
+    },
+    {
+      "id": "repo-source-18",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/.github/PULL_REQUEST_TEMPLATE.md"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-05T20:14:42Z",
+  "emitter": "ChatGPT: scripts root README documentation writer",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Source-based documentation update at main@8b9c52d88687986879c8f87d7e3835f6a58bbacd. Prior README blob 053cec0d3732362636970a0e38fb48544868e292. Current readbacks distinguish the six legacy candidate writers from the retired hold shim and the package-owned renderer. The tracked inventory and cited source observations are not universal runtime or approval evidence. Only the README is bound; this receipt must not bind itself. SHA-256 is over final UTF-8 bytes. The schema recovered from a prior review packet reproduced the current Git blob fba21ed27ebccf1362fe397fe0c3ebd85e072685 before reuse. Local QA uses an explicit source export/candidate overlay, not a complete checkout; Python 3.13.5 and Node 22.16.0 are environment observations, not full supported-platform proof. Source citations were inspected; this does not claim an automated universal evidence resolver. Root/data placement follows accepted ADR-0029 and Directory Rules sections 10, 11, 15 and 16; no new authority home. Existing receipts and executable files remain untouched. New documentation is proposed pending human review; no reviewer or policy decision fabricated. Revert only README to its prior blob or append a correction and new receipt; preserve historical receipts and unrelated main changes. No PR, ready, approval, merge, settings, source admission, release, deployment, promotion or publication authority follows."
+}
