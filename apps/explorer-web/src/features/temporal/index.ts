@@ -336,7 +336,7 @@ export function normalizeTemporalBoundary(
   ) {
     return { status: "ERROR", code: "CALENDAR_SYNTAX_INVALID", profile, raw, normalized: null };
   }
-  return { status: "SUPPORTED", code: "CALENDAR_PRESERVED", profile, raw, normalized: null };
+  return { status: "SUPPORTED", code: "CALENDAR_PRESERVED", profile: profile as TemporalBoundaryProfile, raw, normalized: null };
 }
 
 function normalizeSelection(
