@@ -1,4 +1,39 @@
-# TEMPORARY BRANCH-ONLY receipt validation transport. Restore canonical bytes after evidence capture.
+# KFM CI workflow: accessibility
+# Status: PARTIAL enforcement. The keyboard-navigation job executes a bounded
+# Explorer Web browser smoke; the axe job remains an explicit readiness hold.
+#
+# Responsibility:
+# - Preserve the stable `accessibility`, `axe`, and `keyboard-navigation` check
+#   surfaces while enforcing the repository-owned keyboard/focus fixtures that
+#   already exist and keeping broader automated-rule coverage visibly held.
+# Authority:
+# - This workflow is orchestration only. It does not prove WCAG conformance,
+#   approve UI behavior, authorize release, or publish any artifact.
+# Trigger:
+# - Existing broad pull-request and main-push triggers are retained because
+#   branch-protection dependencies are not verified. `workflow_dispatch` permits
+#   an explicit maintainer run.
+# Untrusted-code posture:
+# - Pull requests execute submitted repository code with read-only contents
+#   permission and no secrets, write scopes, OIDC, deployment, or publication.
+# Permissions:
+# - The workflow has read-only contents permission for checkout.
+# Network and secrets:
+# - Locked dependency installation may use the package registry. The browser
+#   smoke uses local Vite fixtures only and no source system, model provider,
+#   private endpoint, credential, or repository secret.
+# Outputs:
+# - Job results, logs, and step summaries only; no uploaded artifacts, receipts,
+#   proofs, release records, or public-surface changes.
+# Outcome:
+# - `axe` reports WORKFLOW_SKIPPED_EXPLICIT and a readiness HOLD.
+# - `keyboard-navigation` passes only when the named fixture journeys pass.
+# - Neither outcome is a WCAG, whole-app, assistive-technology, release, or
+#   publication claim.
+# Graduation:
+# - Replace the axe reporting step only after a repository-owned command,
+#   deterministic public-safe fixtures, positive and negative tests, a reviewed
+#   dependency/ruleset, reviewer ownership, and rollback/disable path are verified.
 name: accessibility
 
 on:
@@ -6,64 +41,103 @@ on:
   push:
     branches:
       - main
-      - agent/explorer-baseline-ts7-worker-types-20260905
   workflow_dispatch:
 
 permissions:
   contents: read
 
+concurrency:
+  group: accessibility-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  explorer-repair-receipt:
-    if: ${{ github.ref == 'refs/heads/agent/explorer-baseline-ts7-worker-types-20260905' }}
-    runs-on: ubuntu-24.04
-    timeout-minutes: 15
+  axe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
     steps:
-      - name: Check out receipt-bearing branch head
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - name: Report axe readiness hold
+        run: |
+          set -euo pipefail
+
+          {
+            echo "## Accessibility — axe"
+            echo
+            echo "**Outcome:** \`WORKFLOW_SKIPPED_EXPLICIT\`"
+            echo
+            echo "**Readiness:** \`WORKFLOW_HOLD\`"
+            echo
+            echo "No reviewed repository-owned axe command, pinned ruleset, exclusion"
+            echo "policy, or representative state matrix is established."
+            echo
+            echo "This scaffold did not check accessibility and did not emit a proof,"
+            echo "receipt, release decision, or publication artifact."
+          } >> "${GITHUB_STEP_SUMMARY}"
+
+          echo "::warning title=Accessibility axe check not implemented::WORKFLOW_HOLD — this scaffold did not run axe or validate accessibility."
+          echo "TODO axe: add a reviewed repository-owned command and deterministic public-safe fixtures before graduation."
+
+  keyboard-navigation:
+    name: keyboard-navigation
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      CI: "true"
+      COREPACK_ENABLE_STRICT: "1"
+      KFM_NO_NETWORK: "1"
+      NODE_VERSION: "22"
+      TZ: UTC
+    steps:
+      - name: Check out tested revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          fetch-depth: 0
+          fetch-depth: 1
           persist-credentials: false
 
-      - name: Record exact head and preserved product ancestor
-        shell: bash
-        run: |
-          set -euo pipefail
-          out="$RUNNER_TEMP/explorer-repair-receipt"
-          mkdir -p "$out"
-          git rev-parse HEAD | tee "$out/head.txt"
-          git merge-base --is-ancestor 673a0fd60dfca321e3c2fbe8a889a3bcafb4a1c8 HEAD
-          git merge-base --is-ancestor 8b9c52d88687986879c8f87d7e3835f6a58bbacd HEAD
-          git diff --check 8b9c52d88687986879c8f87d7e3835f6a58bbacd...HEAD 2>&1 | tee "$out/diff-check.log"
-
-      - name: Install repository hash-locked Python validation profile
-        shell: bash
-        run: |
-          set -euo pipefail
-          python tools/ci/install_python_ci.py project-test 2>&1 | tee "$RUNNER_TEMP/explorer-repair-receipt/python-bootstrap.log"
-
-      - name: Validate immutable six-file receipt bindings
-        shell: bash
-        run: |
-          set -euo pipefail
-          python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-explorer-ts7-worker-baseline-repair-673a0fd6.json \
-            --repo-root . \
-            --artifact-git-ref 673a0fd60dfca321e3c2fbe8a889a3bcafb4a1c8 \
-            2>&1 | tee "$RUNNER_TEMP/explorer-repair-receipt/receipt.log"
-
-      - name: Verify no tracked mutation
-        if: always()
-        shell: bash
-        run: |
-          set -euo pipefail
-          git status --short --untracked-files=no | tee "$RUNNER_TEMP/explorer-repair-receipt/worktree-after.txt"
-          test -z "$(git status --short --untracked-files=no)"
-
-      - name: Upload receipt validation evidence
-        if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          name: explorer-repair-receipt-${{ github.sha }}
-          path: ${{ runner.temp }}/explorer-repair-receipt/
-          retention-days: 14
-          if-no-files-found: error
+          node-version: ${{ env.NODE_VERSION }}
+          package-manager-cache: false
+
+      - name: Install locked workspace dependencies
+        run: |
+          set -euo pipefail
+          corepack enable
+          pnpm install --frozen-lockfile
+
+      - name: Run bounded Explorer keyboard and focus smoke
+        run: >-
+          pnpm --filter explorer-web exec playwright test
+          --config=playwright.config.ts
+          tests/browser/citation-pill.spec.ts
+          tests/browser/evidence-drawer.spec.ts
+          tests/browser/evidence-tooltip.spec.ts
+          tests/browser/focus-composed-claim.spec.ts
+          tests/browser/map-evidence-drawer.spec.ts
+          tests/browser/map-runtime-trust-status.spec.ts
+          tests/browser/time-banner.spec.ts
+          tests/browser/workspace-navigation.spec.ts
+
+      - name: Record keyboard-navigation boundary
+        if: always()
+        run: |
+          set -euo pipefail
+
+          {
+            echo "## Accessibility — keyboard navigation"
+            echo
+            echo "**Result:** \`${{ job.status }}\`"
+            echo
+            echo "**Scope:** eight deterministic Explorer Web Playwright specifications"
+            echo "covering native navigation, keyboard activation, focus entry and"
+            echo "restoration, Escape dismissal, a keyboard-operable time slider,"
+            echo "text-first runtime trust states, finite negative states, and"
+            echo "protected-detail suppression."
+            echo
+            echo "**Holds:** no axe/ruleset scan, manual assistive-technology matrix,"
+            echo "whole-app focus-order audit, contrast/zoom/reflow/forced-color proof,"
+            echo "reduced-motion audit, non-map parity completion, or WCAG conformance."
+            echo
+            echo "**Authority:** CI evidence only; no source, evidence, policy, release,"
+            echo "deployment, publication, or repository-setting authority."
+          } >> "${GITHUB_STEP_SUMMARY}"
