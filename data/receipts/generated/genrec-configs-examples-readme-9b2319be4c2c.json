@@ -1,0 +1,207 @@
+{
+  "receipt_id": "genrec-configs-examples-readme-9b2319be4c2c",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "configs/examples/README.md"
+  ],
+  "artifact_hashes": {
+    "configs/examples/README.md": "sha256:9b2319be4c2c91f3fdc9d06f8b92e1995a4574b0ed8c801c9de9aeab1c1b6ae7"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Pro",
+    "version": "Not exposed by this session"
+  },
+  "prompt_or_contract": "sha256:e4e5de5e89d13c7d303145e5bbe3366ede8f001025154b41d57f6b65b2fb5c2e",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:425e998e5584a7e400e99c963aba019b33ff685f9fa26b5b474d8758a3160b2a"
+    ],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/configs/examples/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/configs/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/configs/templates/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/configs/local/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/configs/dev/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/configs/test/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/configs/domains/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/configs/maplibre/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/examples/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/CONTRIBUTING.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/SECURITY.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/.github/CODEOWNERS",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/.github/PULL_REQUEST_TEMPLATE.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/.pre-commit-config.yaml",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/.gitignore",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/docs/doctrine/directory-rules.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/docs/security/SECRETS.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/data/receipts/generated/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ],
+    "attached_docs": [
+      "Google Drive Directory Rules, 1uTqdIEFZE2cq3gyISetoRYM6LIlnKqTc3FobtEx7Cbs: read-only lineage, not current implementation authority."
+    ]
+  },
+  "truth_labels": {
+    "configs/examples/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "pinned-source-and-placement-review",
+      "outcome": "PASS",
+      "reason": "Exact README-only config tree; accepted ADR-0029; existing configs/ and generated-receipts responsibilities; source, review routing and broken runbook target inspected. No config or authority home added."
+    },
+    {
+      "gate": "documentation-structure-and-links",
+      "outcome": "PASS",
+      "reason": "Session-local check_update.py: stable doc_id, one H1, 23 H2 and 24 H3 retained against transcribed pinned-source headings; 49 anchors; 19 relative-link occurrences to 16 source-verified targets; 10 internal links; 16 metadata refs; seven tables; UTF-8/LF/final newline and whitespace/conflict checks."
+    },
+    {
+      "gate": "illustrative-yaml-syntax",
+      "outcome": "PASS",
+      "reason": "Four explicitly illustrative YAML blocks parse with duplicate-key rejection. Template substitution remains literal; disabled-looking flags are not represented as runtime enforcement. No consumer executed."
+    },
+    {
+      "gate": "documentation-negative-probes",
+      "outcome": "PASS",
+      "reason": "Seven probes rejected: missing anchor, removed heading, duplicate metadata key, unverified relative target, trailing whitespace, transient citation token, and duplicate YAML snippet key."
+    },
+    {
+      "gate": "receipt-schema-and-hash",
+      "outcome": "PASS",
+      "reason": "Exact materialized schema blob fba21ed27ebccf1362fe397fe0c3ebd85e072685; Draft 2020-12 with FormatChecker; full artifact SHA-256 and path/truth-label parity; five receipt schema/hash/review negative probes rejected. Native repository receipt validator was not run."
+    },
+    {
+      "gate": "repository-native-and-hosted-checks",
+      "outcome": "SKIPPED",
+      "reason": "Pinned raw-file download failed DNS resolution; no full checkout. Native Markdown/link/topology/receipt validators, pre-commit invocation, make validate, full tests, comprehensive secret scanning, hosted exact-head checks and enforcement NOT RUN. Local Python 3.13.5; no hosted parity claimed."
+    },
+    {
+      "gate": "consumer-runtime-and-release",
+      "outcome": "SKIPPED",
+      "reason": "No payload, loader, service, real credentials, live source, browser, production consumer, release, deployment or publication exercised. Independent human review pending."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "repo-source-1",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/configs/examples/README.md"
+    },
+    {
+      "id": "repo-source-2",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/configs/README.md"
+    },
+    {
+      "id": "repo-source-3",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/configs/templates/README.md"
+    },
+    {
+      "id": "repo-source-4",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/configs/local/README.md"
+    },
+    {
+      "id": "repo-source-5",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/configs/dev/README.md"
+    },
+    {
+      "id": "repo-source-6",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/configs/test/README.md"
+    },
+    {
+      "id": "repo-source-7",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/configs/domains/README.md"
+    },
+    {
+      "id": "repo-source-8",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/configs/maplibre/README.md"
+    },
+    {
+      "id": "repo-source-9",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/examples/README.md"
+    },
+    {
+      "id": "repo-source-10",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/CONTRIBUTING.md"
+    },
+    {
+      "id": "repo-source-11",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/SECURITY.md"
+    },
+    {
+      "id": "repo-source-12",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/.github/CODEOWNERS"
+    },
+    {
+      "id": "repo-source-13",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/.github/PULL_REQUEST_TEMPLATE.md"
+    },
+    {
+      "id": "repo-source-14",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/.pre-commit-config.yaml"
+    },
+    {
+      "id": "repo-source-15",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/.gitignore"
+    },
+    {
+      "id": "repo-source-16",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "repo-source-17",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "repo-source-18",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/docs/security/SECRETS.md"
+    },
+    {
+      "id": "repo-source-19",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/data/receipts/generated/README.md"
+    },
+    {
+      "id": "repo-source-20",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-05T03:42:05.458626+00:00",
+  "emitter": "KFM configs/examples README maintenance; session-local receipt emitter",
+  "links": {
+    "pr_number": null,
+    "adr_link": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Only the README and this generated-work receipt are intended to change. Prior README blob c040064e4aea09e4e87658faf37f57b4e13a96f8. The current user request is hashed, not stored; no system prompt or hidden reasoning is included. This receipt does not hash itself and does not authenticate policy, review, runtime, or publication. GitHub sources were read at the pinned base; sibling link existence does not certify their entire contents. The missing docs/runbooks/SECRET_LEAK_RUNBOOK.md reference is reported, not recreated; SECURITY.md remains explicit about unverified private-channel availability. No policy decision was executed. Delivery remains branch-only under current CONTRIBUTING.md and issue #4024; no PR, ready, approval, auto-merge, merge, source, release, deployment, publication, settings or scheduler mutation. Post-push head/currentness and remote readback belong to the later handoff, not this pre-push record. Preserve this receipt as history during correction."
+}
