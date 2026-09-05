@@ -332,7 +332,14 @@ def normalize_temporal_query(state: Mapping[str, Any]) -> NormalizedQuery:
         if start_result.normalized is not None and end_result.normalized is not None:
             start_time, _ = _parse_aware(start_result.normalized)
             end_time, _ = _parse_aware(end_result.normalized)
-            if start_time is not None and end_time is not None and start_time > end_time:
+            if (
+                (
+                    start_time is not None
+                    and end_time is not None
+                    and start_time > end_time
+                )
+                or start_result.normalized > end_result.normalized
+            ):
                 return _error_query(state, "REVERSED_INTERVAL", canonical)
         elif start_result.profile in {"date_only", "month", "year"}:
             start_key = _calendar_key(start_result.profile, start_result.raw)
