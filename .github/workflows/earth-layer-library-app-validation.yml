@@ -1,0 +1,61 @@
+# Task-owned diagnostics under ADR-0029 / Directory Rules section 8.2.
+# No PR lifecycle, repository writes, release, source admission or deployment.
+name: earth-layer-library-app-validation
+on:
+  push:
+    branches: [agent/earth-layer-library-readback-20260905]
+    paths:
+      - .github/workflows/earth-layer-library-app-validation.yml
+      - apps/kansas-frontier-matrix-explorer/**
+      - packages/ui/src/layer-library*
+permissions:
+  contents: read
+concurrency:
+  group: earth-layer-library-app-validation-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  checkout-and-baseline:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Export exact source and lineage for inspection
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/earth-library-source"
+          git merge-base --is-ancestor 34a9348ce7882284a5843f414368b92ade9d79db HEAD
+          git cat-file -e 8b9c52d88687986879c8f87d7e3835f6a58bbacd^{commit}
+          git archive --format=tar.gz HEAD > "$RUNNER_TEMP/earth-library-source/candidate.tar.gz"
+          git archive --format=tar.gz 8b9c52d88687986879c8f87d7e3835f6a58bbacd > "$RUNNER_TEMP/earth-library-source/main.tar.gz"
+          git log -5 --format='%H %P %s' > "$RUNNER_TEMP/earth-library-source/lineage.txt"
+          git ls-tree -r HEAD > "$RUNNER_TEMP/earth-library-source/candidate-tree.txt"
+          git ls-tree -r 8b9c52d88687986879c8f87d7e3835f6a58bbacd > "$RUNNER_TEMP/earth-library-source/main-tree.txt"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: earth-library-exact-source
+          path: ${{ runner.temp }}/earth-library-source/
+          retention-days: 7
+          if-no-files-found: error
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: '22'
+          package-manager-cache: false
+      - name: Install frozen workspace without changing build-script policy
+        shell: bash
+        run: |
+          set -euo pipefail
+          corepack enable
+          sha256sum package.json pnpm-workspace.yaml pnpm-lock.yaml apps/kansas-frontier-matrix-explorer/package.json apps/kansas-frontier-matrix-explorer/package-lock.json > "$RUNNER_TEMP/earth-library-locks.sha256"
+          pnpm install --frozen-lockfile
+          sha256sum -c "$RUNNER_TEMP/earth-library-locks.sha256"
+      - name: Run lock-native Library source tests
+        run: node --test apps/kansas-frontier-matrix-explorer/tests/earth-layer-library.test.mjs
+      - name: Build the existing Sites application in the complete workspace
+        run: pnpm --filter kansas-frontier-matrix-explorer build
+      - name: Verify dependency and policy immutability
+        if: always()
+        run: test -f "$RUNNER_TEMP/earth-library-locks.sha256" && sha256sum -c "$RUNNER_TEMP/earth-library-locks.sha256"
