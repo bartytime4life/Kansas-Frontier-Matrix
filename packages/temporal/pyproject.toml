@@ -1,4 +1,14 @@
-# packages/temporal pyproject — greenfield placeholder
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [project]
 name = "kfm-temporal"
-version = "0.0.0"
+version = "0.1.0"
+description = "Renderer-independent temporal state and query normalization support for KFM."
+requires-python = ">=3.11"
+readme = "README.md"
+dependencies = []
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/temporal"]

@@ -1,0 +1,53 @@
+{
+  "id": 0,
+  "type": "Feature Layer",
+  "geometryType": "esriGeometryPolyline",
+  "objectIdField": "OBJECTID",
+  "hasZ": true,
+  "hasM": true,
+  "maxRecordCount": 2,
+  "capabilities": "Query,Extract",
+  "advancedQueryCapabilities": {
+    "supportsPagination": true,
+    "supportsTrueCurve": true
+  },
+  "extent": {
+    "xmin": 0,
+    "ymin": 0,
+    "xmax": 5500,
+    "ymax": 5500,
+    "spatialReference": {
+      "wkid": 3857
+    }
+  },
+  "fields": [
+    {
+      "name": "OBJECTID",
+      "type": "esriFieldTypeOID"
+    },
+    {
+      "name": "Id",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "RouteId",
+      "type": "esriFieldTypeString"
+    },
+    {
+      "name": "FromMeasure",
+      "type": "esriFieldTypeDouble"
+    },
+    {
+      "name": "ToMeasure",
+      "type": "esriFieldTypeDouble"
+    },
+    {
+      "name": "CreatedUser",
+      "type": "esriFieldTypeString"
+    }
+  ],
+  "editingInfo": {
+    "lastEditDate": 0
+  },
+  "description": "Entirely synthetic metadata. Not captured from KDOT. Record limit deliberately 2."
+}

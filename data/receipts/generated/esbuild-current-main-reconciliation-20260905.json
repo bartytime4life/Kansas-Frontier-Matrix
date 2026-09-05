@@ -1,0 +1,151 @@
+{
+  "receipt_id": "kfm:generated:esbuild-current-main-reconciliation:20260905",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/kansas-frontier-matrix-explorer/docs/esbuild-security-remediation.md",
+    "apps/kansas-frontier-matrix-explorer/package-lock.json"
+  ],
+  "artifact_hashes": {
+    "apps/kansas-frontier-matrix-explorer/docs/esbuild-security-remediation.md": "sha256:00ad9e345215241baf93906f4120f7d70bc56e4e492e2c5063c29b9f50af8d3b",
+    "apps/kansas-frontier-matrix-explorer/package-lock.json": "sha256:48ea4a55a8c95e186754cee1eef5cbcfcaab08cb7a4f3088ddf72e2f399c629a"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Pro",
+    "version": "UNKNOWN: exact serving revision is not exposed"
+  },
+  "prompt_or_contract": "sha256:8859f0f33abbab0f55e1dba5e486108d6bb8cdc261ef3a0e01dd348414b4243e",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "Google Drive",
+      "Notion",
+      "web",
+      "isolated local validation",
+      "GitHub Actions evidence readback"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:56e3bcf55d713ee1d638da6f9e5fad452962467ecb309ca108890806fa4a8b49"
+    ],
+    "evidence_refs": [
+      "github:bartytime4life/Kansas-Frontier-Matrix@3d6b8a6e81ed65a726156feae67fa73875b5b069",
+      "github:bartytime4life/Kansas-Frontier-Matrix@3d6b8a6e81ed65a726156feae67fa73875b5b069:docs/doctrine/directory-rules.md",
+      "github:bartytime4life/Kansas-Frontier-Matrix@3d6b8a6e81ed65a726156feae67fa73875b5b069:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github:bartytime4life/Kansas-Frontier-Matrix@3d6b8a6e81ed65a726156feae67fa73875b5b069:CONTRIBUTING.md",
+      "github:bartytime4life/Kansas-Frontier-Matrix@8705c0788cf9f90b63b32d7dd35b258510f586eb",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33981346520",
+      "gdrive:1yJpf-Rvb0kAcfgPQjU0kllsMMg4DDlB6",
+      "notion:3c9a9202-1bf6-8195-b8b1-f3a8d694b447",
+      "https://github.com/evanw/esbuild/security/advisories/GHSA-67mh-4wv8-2f99"
+    ]
+  },
+  "truth_labels": {
+    "apps/kansas-frontier-matrix-explorer/docs/esbuild-security-remediation.md": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/package-lock.json": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "recovered-artifact-integrity",
+      "outcome": "PASS",
+      "reason": "Downloaded evidence archive SHA-256 matches GitHub artifact 9973882585; candidate npm lock SHA-256 and Git blob rechecked locally. Prepared documentation matches blob b2fa230f96d9733ce3f772010062fb05b5eb7cbc."
+    },
+    {
+      "gate": "same-base-scope-babel-and-pnpm-policy",
+      "outcome": "PASS",
+      "reason": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33981346520; base 3d6b8a6e81ed65a726156feae67fa73875b5b069, tested integration tree 284de7da03c0674561e1d95accda5bed0ffca455. Only esbuild npm records changed; all Babel 7.29.7 records and every pnpm build-script decision preserved."
+    },
+    {
+      "gate": "same-base-clean-pnpm-and-npm-installs",
+      "outcome": "PASS",
+      "reason": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33981346520; both variants passed pnpm 11.17.0 frozen install, app npm ci and post-command lock/policy byte immutability. Node 22.23.2, npm 10.9.8."
+    },
+    {
+      "gate": "same-base-explorer-unit-and-browser-tests",
+      "outcome": "PASS",
+      "reason": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33981346520; both base and candidate passed 445 unit tests and 128 browser tests. These are repository test fixtures, not production Sites proof."
+    },
+    {
+      "gate": "same-base-sites-app-pnpm-build",
+      "outcome": "PASS",
+      "reason": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33981346520; complete workspace pnpm --filter kansas-frontier-matrix-explorer build passed on both variants."
+    },
+    {
+      "gate": "same-base-explorer-web-build",
+      "outcome": "FAIL",
+      "reason": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33981346520; both variants failed with identical seven temporal TypeScript diagnostics (TS2322 at 330:71; TS18047 at 370,373,376). Inherited at this exact base; not repaired or waived."
+    },
+    {
+      "gate": "same-base-app-only-npm-build",
+      "outcome": "FAIL",
+      "reason": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33981346520; both app-only exports could not resolve sibling ../../packages/maplibre/src/index.ts. A demonstrated export dependency-closure limitation, not an npm installation failure or proof about live Sites."
+    },
+    {
+      "gate": "candidate-resolved-esbuild-and-drizzle-runtime-probes",
+      "outcome": "PASS",
+      "reason": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33981346520; pnpm 7 passed/0 skipped; standalone npm 5 passed/2 workspace-only skips. Synthetic TypeScript, loopback bundle/source-map CORS checks and offline SQLite SQL generation; no live database."
+    },
+    {
+      "gate": "targeted-esbuild-advisory",
+      "outcome": "PASS",
+      "reason": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33981346520; GHSA-67mh-4wv8-2f99 absent from npm audit. This is not GitHub alert closure."
+    },
+    {
+      "gate": "complete-npm-audit",
+      "outcome": "FAIL",
+      "reason": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33981346520; audit exit 1: one moderate fflate GHSA-px8p-9vwx-vf98 remains. No exclusions or suppression added."
+    },
+    {
+      "gate": "generated-receipt-schema-and-hash-parity",
+      "outcome": "PASS",
+      "reason": "Local Draft202012Validator with FormatChecker against exact canonical schema blob fba21ed27ebccf1362fe397fe0c3ebd85e072685; artifact/hash/truth-label key parity and actual SHA-256 values checked. Not the full repository-native conformance command."
+    },
+    {
+      "gate": "final-head-ci-and-native-conformance",
+      "outcome": "SKIPPED",
+      "reason": "Final head does not exist at receipt authorship. Read the permanent esbuild-security workflow result at the final commit independently. Full repository CI and native GeneratedReceipt conformance were not run locally."
+    },
+    {
+      "gate": "independent-review-pr-transition-exit-and-release",
+      "outcome": "SKIPPED",
+      "reason": "Human review pending; no eligible independent PR-creation path established. No ready, merge, alert dismissal, settings, deployment, source admission or publication authority."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "same-base-native-evidence",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33981346520"
+    },
+    {
+      "id": "advisory",
+      "validated": true,
+      "evidence_ref": "https://github.com/evanw/esbuild/security/advisories/GHSA-67mh-4wv8-2f99"
+    },
+    {
+      "id": "directory-authority",
+      "validated": true,
+      "evidence_ref": "github:bartytime4life/Kansas-Frontier-Matrix@3d6b8a6e81ed65a726156feae67fa73875b5b069:docs/doctrine/directory-rules.md"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-05T18:03:18Z",
+  "emitter": "KFM esbuild current-main recovery and branch reconciliation",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "BRANCH ONLY. Preserve original esbuild-alert-63-20260905.json unchanged at blob bf3201184bad6fdf59d980a7af7bd352fafd63eb; its prior artifact hashes and skipped results remain historical. This addendum binds only the updated maintenance note and Babel-preserving npm lock. Other candidate files retain their original receipt identities. Evidence execution commit 860ea5c0223e9f0ad9dfba37a0d45eb45e8137bb is not the tested integration tree or final head. Final tree differs from tested integration only by this note and this new receipt; temporary generation workflow is removed, not promoted. The visible prior assistant conclusion incorrectly said inspectable results were unavailable; recovery verified the preserved archive and GitHub branch instead. Issue 4024 is closed in GitHub but control exit remains unverified; no incident resolution inferred. Rollback must preserve Babel 7.29.7 and keep the four dependency files paired; restoring esbuild 0.18.20 reintroduces risk. Prompt hash covers only the direct continuation request. No private prompts, hidden reasoning, credentials, or production payloads. Receipt self-bytes excluded to avoid self-hash cycle."
+}

@@ -2,7 +2,7 @@
 doc_id: kfm://doc/explorer/esbuild-security-remediation
 title: Explorer esbuild development dependency remediation
 type: app-maintenance-note
-version: 0.1.0
+version: 0.2.0
 status: branch candidate; independent review pending
 owning_root: apps/
 responsibility: paired npm/pnpm dependency maintenance and app-local regression coverage
@@ -81,6 +81,79 @@ metadata; this patch preserves those existing non-esbuild records rather than
 shipping collateral changes. Native `npm ci` and frozen pnpm validation must
 still pass. Do not hand-invent integrity values or accept unrelated version drift.
 
+## Current-main reconciliation: 2026-09-05
+
+The earlier evidence above belongs to its original execution, not to later main.
+The [reconciliation run 33981346520](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33981346520)
+compared actual `main@3d6b8a6e81ed65a726156feae67fa73875b5b069` with a
+three-way integration of that main and the existing repair head
+`8705c0788cf9f90b63b32d7dd35b258510f586eb`.
+
+| Identity | Value |
+|---|---|
+| Workflow execution commit | `860ea5c0223e9f0ad9dfba37a0d45eb45e8137bb` |
+| Tested integration tree | `284de7da03c0674561e1d95accda5bed0ffca455` |
+| npm lock Git blob | `d3d470e9f99b04f896c7ba4cfb564bbe714434b9` |
+| npm lock SHA-256 | `48ea4a55a8c95e186754cee1eef5cbcfcaab08cb7a4f3088ddf72e2f399c629a` |
+| Evidence artifact | `esbuild-current-base-evidence`, artifact `9973882585` |
+| Evidence archive SHA-256 | `56e3bcf55d713ee1d638da6f9e5fad452962467ecb309ca108890806fa4a8b49` |
+| Native toolchain | Ubuntu 24.04; Node 22.23.2; npm 10.9.8; pnpm 11.17.0 |
+
+Scope assertions passed: the integration retained every current-main non-esbuild
+npm package record, including all of PR #4296's Babel records and
+`@babel/core@7.29.7`. The root pnpm lock remained the previously generated
+candidate. The complete `pnpm-workspace.yaml` base bytes were retained, with
+only the two-line parent-qualified override appended. All six build-script
+allow/deny decisions therefore remain unchanged. KDOT and temporal source
+changes from current main were retained, not replaced with an older app tree.
+
+| Executed check | Actual base | Integration candidate |
+|---|---|---|
+| `pnpm install --frozen-lockfile` | PASS | PASS |
+| Separate app `npm ci` | PASS | PASS |
+| Root/app lock and workspace-policy byte immutability after commands | PASS | PASS |
+| `pnpm --filter explorer-web test` | 445 unit tests and 128 browser tests passed | 445 unit tests and 128 browser tests passed |
+| `pnpm --filter explorer-web build` | FAIL: seven temporal TypeScript errors | FAIL: the same seven diagnostics |
+| `pnpm --filter kansas-frontier-matrix-explorer build` | PASS | PASS |
+| App-only exported tree: `npm run build` | FAIL: missing sibling MapLibre source | FAIL: the same missing sibling source |
+| pnpm security/runtime probes | Not run against vulnerable base | 7 passed; no skips |
+| Standalone npm security/runtime probes | Not run against vulnerable base | 5 passed; 2 explicit workspace-only skips |
+
+The seven matching compiler diagnostics are in
+`apps/explorer-web/src/features/temporal/index.ts`: TS2322 at `(330,71)` and
+TS18047 for nullable `start.raw`/`end.raw` at lines 370, 373, and 376. The build
+stops before Vite bundling. This is a demonstrated same-base failure, not a
+passing build and not a reason to weaken TypeScript checks in this patch.
+
+The app-only npm build fails resolving `../../packages/maplibre/src/index.ts`
+from the existing `@kfm/maplibre` import. The export deliberately contains this
+app alone, not its sibling package. This establishes a packaging/environment
+limit for that exact export, not a failure of `npm ci`, a new esbuild regression,
+or a tested claim about the live Sites deployment. The complete pnpm workspace
+build passes. Closing the standalone export is separate dependency-closure work.
+
+Candidate `npm audit --json` returned exit 1 with **one moderate finding**:
+`fflate`, [GHSA-px8p-9vwx-vf98](https://github.com/advisories/GHSA-px8p-9vwx-vf98).
+The target esbuild GHSA is absent; the audit is not globally clean. No audit
+ignore, blanket script approval, package-manager change, or broad dependency
+upgrade was used. No live source, database, production server, or deployment
+was contacted by the synthetic probes.
+
+The integration tree was tested in an isolated checkout. Final handoff changes
+only this maintenance note and a new reconciliation receipt relative to that
+tested tree; final-commit installer/probe results must be read separately from
+the permanent `esbuild-security` workflow. Collection success does not erase the
+two reported build failures. Full repository CI, a production-browser test,
+GitHub security-alert closure, independent review, and incident-control exit
+remain unverified by these checks.
+
+The [original receipt](../../../data/receipts/generated/esbuild-alert-63-20260905.json)
+is preserved unchanged and binds its old artifact hashes to the original
+repair head. Its pending or skipped fields are historical, not silently upgraded.
+The [reconciliation receipt](../../../data/receipts/generated/esbuild-current-main-reconciliation-20260905.json)
+binds this updated note and npm lock. The temporary reconciliation workflow is
+removed from the final tree; its historical commit and run remain inspectable.
+
 ## Review, closure, and rollback
 
 Placement follows accepted ADR-0029: app maintenance/tests under `apps/`, root
@@ -92,6 +165,9 @@ This branch does not merge, dismiss alert #63, deploy Sites/Vercel, or alter
 repository settings. Alert #63's exact state and default-branch closure require
 an authenticated Dependabot read after separately authorized integration. The
 PR-transition safety boundary is not waived by successful dependency tests.
+Issue #4024's closed metadata does not establish the exit proof required by the
+current contributor and coordination records. Delivery remains branch-only
+until the applicable PR-creation path is independently cleared.
 
 Before integration, abandon the candidate branch to roll back authoring. After
 an authorized integration, revert the paired override declarations and both
@@ -99,4 +175,5 @@ locks together only with security review: restoring the old dependency
 reintroduces the advisory. Keep affected development serving disabled until a
 patched replacement is restored. Do not silently revert just one lockfile,
 remove the regression checks to obtain green CI, or treat rollback as permission
-to reopen a vulnerable development server.
+to reopen a vulnerable development server. Preserve #4296's Babel repair during
+any forward correction or rollback; do not restore the old pre-Babel npm lock.
