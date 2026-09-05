@@ -185,9 +185,12 @@ export function mountLayerLibrary(host: HTMLElement, port: LibraryPort, initial:
     timer = null; queryGeneration++;
     filters = { ...EMPTY_FILTERS, mode: filters.mode }; search.value = ""; page = 0; render();
   }
-  // Keep host document shortcuts from opening a competing panel while modal.
-  // Native Tab/Escape behavior is not prevented.
-  dialog.addEventListener("keydown", (event) => event.stopPropagation());
+  // Keep host shortcuts from opening a competing panel. Tab stays native, but
+  // Escape must dismiss even when a populated search field consumes its default.
+  dialog.addEventListener("keydown", (event) => {
+    event.stopPropagation();
+    if (event.key === "Escape") { event.preventDefault(); cancel(); }
+  });
   dialog.addEventListener("cancel", (event) => { event.preventDefault(); cancel(); });
   dialog.addEventListener("click", (event) => { if (event.target === dialog) {
     const r = dialog.getBoundingClientRect();
