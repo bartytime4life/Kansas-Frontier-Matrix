@@ -1,0 +1,78 @@
+# ADR-0029 section 8.2: read-only CI orchestration, not release authority.
+# Scope and rollback: apps/kansas-frontier-matrix-explorer/docs/esbuild-security-remediation.md
+name: esbuild-security
+on:
+  pull_request:
+    paths:
+      - package.json
+      - pnpm-workspace.yaml
+      - pnpm-lock.yaml
+      - apps/kansas-frontier-matrix-explorer/package.json
+      - apps/kansas-frontier-matrix-explorer/package-lock.json
+      - apps/kansas-frontier-matrix-explorer/tests/esbuild-security.test.mjs
+      - .github/workflows/esbuild-security.yml
+  push:
+    branches: [main, agent/esbuild-alert-63-20260905]
+    paths:
+      - package.json
+      - pnpm-workspace.yaml
+      - pnpm-lock.yaml
+      - apps/kansas-frontier-matrix-explorer/package.json
+      - apps/kansas-frontier-matrix-explorer/package-lock.json
+      - apps/kansas-frontier-matrix-explorer/tests/esbuild-security.test.mjs
+      - .github/workflows/esbuild-security.yml
+permissions:
+  contents: read
+concurrency:
+  group: esbuild-security-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  regression:
+    name: esbuild-security-${{ matrix.installer }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        installer: [pnpm, npm]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: '22'
+          package-manager-cache: false
+      - name: Require both monorepo lockfile guards before installation
+        env:
+          KFM_ESBUILD_REQUIRE_WORKSPACE: '1'
+        run: node --test apps/kansas-frontier-matrix-explorer/tests/esbuild-security.test.mjs
+      - name: Install frozen pnpm workspace with its existing build-script policy
+        if: matrix.installer == 'pnpm'
+        shell: bash
+        run: |
+          set -euo pipefail
+          corepack enable
+          sha256sum pnpm-lock.yaml > "$RUNNER_TEMP/esbuild-lock.sha256"
+          pnpm install --frozen-lockfile
+          sha256sum -c "$RUNNER_TEMP/esbuild-lock.sha256"
+      - name: Probe actual pnpm resolution and synthetic TypeScript migrations
+        if: matrix.installer == 'pnpm'
+        env:
+          KFM_ESBUILD_REQUIRE_WORKSPACE: '1'
+          KFM_ESBUILD_RUNTIME_PROBE: '1'
+        run: node --test apps/kansas-frontier-matrix-explorer/tests/esbuild-security.test.mjs
+      - name: Install and probe the independent npm application
+        if: matrix.installer == 'npm'
+        shell: bash
+        run: |
+          set -euo pipefail
+          app="$RUNNER_TEMP/kfm-esbuild-standalone"
+          mkdir -p "$app/tests"
+          cp apps/kansas-frontier-matrix-explorer/{package.json,package-lock.json} "$app/"
+          cp apps/kansas-frontier-matrix-explorer/tests/esbuild-security.test.mjs "$app/tests/"
+          cd "$app"
+          sha256sum package-lock.json > "$RUNNER_TEMP/esbuild-npm-lock.sha256"
+          npm ci --no-fund --loglevel=error
+          sha256sum -c "$RUNNER_TEMP/esbuild-npm-lock.sha256"
+          KFM_ESBUILD_RUNTIME_PROBE=1 node --test tests/esbuild-security.test.mjs

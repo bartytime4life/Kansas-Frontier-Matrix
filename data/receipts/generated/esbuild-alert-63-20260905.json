@@ -1,0 +1,148 @@
+{
+  "receipt_id": "kfm:generated:esbuild-alert-63:20260905",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "pnpm-workspace.yaml",
+    "pnpm-lock.yaml",
+    "apps/kansas-frontier-matrix-explorer/package.json",
+    "apps/kansas-frontier-matrix-explorer/package-lock.json",
+    "apps/kansas-frontier-matrix-explorer/tests/esbuild-security.test.mjs",
+    ".github/workflows/esbuild-security.yml",
+    "apps/kansas-frontier-matrix-explorer/docs/esbuild-security-remediation.md"
+  ],
+  "artifact_hashes": {
+    "pnpm-workspace.yaml": "sha256:b07cba9d2d137c036c03d143eba724a7912309b38edf9ba9636c87aac628360b",
+    "pnpm-lock.yaml": "sha256:181c43bad52178f637c11b2fb162a31deb1878ab1cda4c6effc72707f63730b7",
+    "apps/kansas-frontier-matrix-explorer/package.json": "sha256:dc01262ccf6af6c63dc1608fc8190c84f0eb79de2f1a3acda30569f39a58896e",
+    "apps/kansas-frontier-matrix-explorer/package-lock.json": "sha256:82b65aef3735028be17cb12be06f061f7018197eb9fd1a6c36966ba646236c65",
+    "apps/kansas-frontier-matrix-explorer/tests/esbuild-security.test.mjs": "sha256:15cea0e109b6f1eb7dfcc7279247ed2bb662201d0031f54e3b98f6e21e2cc4d2",
+    ".github/workflows/esbuild-security.yml": "sha256:1ee9d1a8bbfeaafd033abac090376c9679e3337584aebdb9a5f604c76d80aaf0",
+    "apps/kansas-frontier-matrix-explorer/docs/esbuild-security-remediation.md": "sha256:ebcb39ba079f60f9509dbf19386f342f0b510bce5b19c9e11ea229f69d8765d2"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Pro",
+    "version": "UNKNOWN: exact serving revision is not exposed"
+  },
+  "prompt_or_contract": "sha256:506dd33977e6ab2925aebae4e7f6f3df4d17968168637c1e6fef07b8397ae08f",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "Google Drive",
+      "Notion",
+      "web",
+      "isolated local validation",
+      "GitHub Actions"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "github:bartytime4life/Kansas-Frontier-Matrix@702e97d824d7305698cd66bc1f9a57edc4063440",
+      "github:bartytime4life/Kansas-Frontier-Matrix@702e97d824d7305698cd66bc1f9a57edc4063440:docs/doctrine/directory-rules.md",
+      "github:bartytime4life/Kansas-Frontier-Matrix@702e97d824d7305698cd66bc1f9a57edc4063440:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github:bartytime4life/Kansas-Frontier-Matrix@702e97d824d7305698cd66bc1f9a57edc4063440:CONTRIBUTING.md",
+      "github:bartytime4life/Kansas-Frontier-Matrix@702e97d824d7305698cd66bc1f9a57edc4063440:SECURITY.md",
+      "https://github.com/advisories/GHSA-67mh-4wv8-2f99",
+      "gdrive:1uTqdIEFZE2cq3gyISetoRYM6LIlnKqTc3FobtEx7Cbs",
+      "notion:3c9a9202-1bf6-8195-b8b1-f3a8d694b447",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33974360827"
+    ]
+  },
+  "truth_labels": {
+    "pnpm-workspace.yaml": "PROPOSED",
+    "pnpm-lock.yaml": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/package.json": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/package-lock.json": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/tests/esbuild-security.test.mjs": "PROPOSED",
+    ".github/workflows/esbuild-security.yml": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/docs/esbuild-security-remediation.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "paired-lock-generation-and-scoped-diff",
+      "outcome": "PASS",
+      "reason": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33974360827; hashes above identify exact candidate bytes. No unrelated dependency identity changes or npm metadata changes shipped."
+    },
+    {
+      "gate": "frozen-pnpm-install-and-lock-immutability",
+      "outcome": "PASS",
+      "reason": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33974360827; pnpm 11.17.0, unchanged allowBuilds decisions."
+    },
+    {
+      "gate": "initial-esbuild-and-drizzle-runtime-probes",
+      "outcome": "PASS",
+      "reason": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33974360827; initial test revision, synthetic loopback bundles/source maps and offline TypeScript SQL generation; not a browser or deployment test."
+    },
+    {
+      "gate": "canonical-explorer-build-and-unit-tests",
+      "outcome": "PASS",
+      "reason": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33974360827; pnpm --filter explorer-web build and test on the hash-listed dependency candidates."
+    },
+    {
+      "gate": "targeted-npm-advisory-readback",
+      "outcome": "PASS",
+      "reason": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33974360827; GHSA-67mh-4wv8-2f99 absent. This does not clear other advisories or GitHub alert #63."
+    },
+    {
+      "gate": "final-test-syntax-and-workflow-yaml-local",
+      "outcome": "PASS",
+      "reason": "node --check and PyYAML parsing; read-only permissions, both installer jobs, and whitespace checked locally. Not a hosted workflow-security scan."
+    },
+    {
+      "gate": "final-guard-synthetic-negative-and-standalone-tests",
+      "outcome": "PASS",
+      "reason": "Local synthetic patched workspace passed; vulnerable npm and pnpm fixtures each failed as expected; standalone workspace-only tests explicitly skipped. Runtime probes not enabled in these fixtures."
+    },
+    {
+      "gate": "generated-receipt-schema",
+      "outcome": "PASS",
+      "reason": "Draft202012Validator plus FormatChecker using exact canonical schema blob fba21ed27ebccf1362fe397fe0c3ebd85e072685; path/hash/truth-label key parity checked."
+    },
+    {
+      "gate": "final-pnpm-and-real-npm-ci-matrix",
+      "outcome": "SKIPPED",
+      "reason": "Not run at receipt authorship; read the final esbuild-security workflow at its exact tested commit. Initial generation used npm ci --dry-run only."
+    },
+    {
+      "gate": "repository-wide-ci-sites-browser-runtime-and-alert-closure",
+      "outcome": "SKIPPED",
+      "reason": "Not performed. No claim of a clean full audit, deployment, production exposure, review, merge, or default-branch alert closure."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "GHSA-67mh-4wv8-2f99",
+      "validated": true,
+      "evidence_ref": "https://github.com/advisories/GHSA-67mh-4wv8-2f99"
+    },
+    {
+      "id": "candidate-validation-run",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33974360827"
+    },
+    {
+      "id": "directory-rules-adoption",
+      "validated": true,
+      "evidence_ref": "github:bartytime4life/Kansas-Frontier-Matrix@702e97d824d7305698cd66bc1f9a57edc4063440:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-05T15:27:12Z",
+  "emitter": "KFM scoped esbuild remediation authoring session",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "BRANCH ONLY / NO READY, MERGE, DEPLOYMENT, PUBLICATION OR ALERT-DISMISSAL AUTHORITY. PROPOSED labels identify review candidates; actual bounded checks are separately recorded. Prompt hash covers the direct user request, not hidden instructions. No private prompts, reasoning, credentials or production payloads are stored. First generation run 33974028755 FAILED on unrelated npm metadata and is not counted as passing; corrected run 33974360827 preserved unrelated records and passed. The temporary generator is removed from the final tree; its commits/runs remain lineage. This receipt excludes its own bytes to avoid a self-hash cycle. The incident issue closed state does not establish that its PR-transition exit criteria were satisfied; current contribution and coordination boundaries remain preserved."
+}

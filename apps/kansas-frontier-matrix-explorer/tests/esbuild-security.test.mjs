@@ -1,8 +1,10 @@
-/** GHSA-67mh-4wv8-2f99: lockfile guards; optional synthetic loopback probes. */
+/** GHSA-67mh-4wv8-2f99: lockfile guards; optional synthetic loopback probes.
+ * See ../docs/esbuild-security-remediation.md for scope, validation and rollback.
+ */
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 import { mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
-import { realpathSync } from 'node:fs';
+import { existsSync, realpathSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -15,6 +17,12 @@ const fixed = '0.28.2';
 const read = (p) => readFile(p, 'utf8');
 const json = async (p) => JSON.parse(await read(p));
 const runtime = process.env.KFM_ESBUILD_RUNTIME_PROBE === '1';
+// Standalone Sites exports do not carry the monorepo's root lock. CI explicitly
+// requires workspace checks before testing the separately copied npm app.
+const inWorkspace = process.env.KFM_ESBUILD_REQUIRE_WORKSPACE === '1'
+  || existsSync(path.join(root, '.git'))
+  || existsSync(path.join(root, 'pnpm-workspace.yaml'));
+const workspaceOnly = { skip: inWorkspace ? false : 'standalone app; workspace parity is checked by monorepo CI' };
 
 function isPatched(version) {
   const match = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/.exec(version ?? '');
@@ -34,8 +42,8 @@ function npmEsbuild(lock) {
 
 function pnpmEsbuild(text) {
   assert.match(text, /^lockfileVersion: ['"]9\.0['"]$/m);
-  const entries = [...text.matchAll(/^  ['"]?(esbuild@[^\s:'"]+)['"]?:/gm)].map((m) => m[1]);
-  assert.ok(entries.length > 0, 'esbuild package/snapshot keys must be inventoried');
+  const entries = [...text.matchAll(/^  ['"]?((?:esbuild|@esbuild\/[^@\s:'"]+)@[^\s:'"]+)['"]?:/gm)].map((m) => m[1]);
+  assert.ok(entries.some((entry) => entry.startsWith('esbuild@')), 'esbuild package/snapshot keys must be inventoried');
   return entries;
 }
 
@@ -54,15 +62,18 @@ test('standalone npm lock contains no affected esbuild or platform binary', asyn
   }
 });
 
-test('workspace pnpm lock contains no affected esbuild package or snapshot', async () => {
+test('workspace pnpm lock contains no affected esbuild package, binary or snapshot', workspaceOnly, async () => {
   for (const entry of pnpmEsbuild(await read(path.join(root, 'pnpm-lock.yaml')))) {
-    assert.ok(isPatched(entry.slice('esbuild@'.length)), entry);
+    assert.ok(isPatched(entry.slice(entry.lastIndexOf('@') + 1)), entry);
   }
 });
 
-test('npm and pnpm retain the same parent-scoped remediation', async () => {
+test('standalone npm retains the parent-scoped remediation', async () => {
   const manifest = await json(path.join(app, 'package.json'));
   assert.deepEqual(manifest.overrides?.['@esbuild-kit/core-utils@3.3.2'], { esbuild: fixed });
+});
+
+test('workspace retains matching override and existing build-script decisions', workspaceOnly, async () => {
   const workspace = await read(path.join(root, 'pnpm-workspace.yaml'));
   assert.match(workspace, /^overrides:\n  "@esbuild-kit\/core-utils@3\.3\.2>esbuild": "0\.28\.2"$/m);
   // Supply-chain permissions are intentionally not widened by a version override.
