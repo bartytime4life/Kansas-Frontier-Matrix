@@ -1,0 +1,66 @@
+{
+  "receipt_id": "genrec-directory-rules-source-audit-scope-20260905",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/directory-rules-source-audit.yml"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/directory-rules-source-audit.yml": "sha256:b4f19f92ad22470056cb6940d62aa7ceaeee79bf7e4803e496ce2f434fe10e27"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Pro",
+    "version": "not exposed"
+  },
+  "prompt_or_contract": "sha256:bea0921d69007e4c8b74640130b78b5cbd4453e923bec77cec47e9f81253ddb2",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub",
+      "container"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/d1b430ca51887777766050e5582659ab34322286/docs/doctrine/directory-rules.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33986569446"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/directory-rules-source-audit.yml": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "YAML parse and embedded Python syntax",
+      "outcome": "PASS",
+      "reason": "Executed after narrowing document-content selection; complete tracked-path enumeration remains unchanged."
+    },
+    {
+      "gate": "Prior hosted audit",
+      "outcome": "FAIL",
+      "reason": "Run 33986569446 attempt 1, job 101361108247, workflow head 896ad6137d97cce769413df749e17bd8bcab1fa8 checked out d1b430ca51887777766050e5582659ab34322286 and stopped at the 128-MiB source-text limit. No topology validator was executed."
+    },
+    {
+      "gate": "Revised hosted audit",
+      "outcome": "SKIPPED",
+      "reason": "Not yet executed at authoring time."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "adopted-directory-rules",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/d1b430ca51887777766050e5582659ab34322286/docs/doctrine/directory-rules.md"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-09-05T19:18:18.949927+00:00",
+  "emitter": "kfm-directory-modernization-author",
+  "notes": "Retains the 128-MiB archive bound; narrows copied Markdown to ADRs and selected responsibility documents. Complete tracked-path inventory is unchanged. Archive selection is not a validator ignore rule or baseline change. Always-upload preserves diagnostic artifacts on failure without changing the job conclusion. Prior receipt describes immutable commit 896ad6137d97cce769413df749e17bd8bcab1fa8. No PR, adoption, merge, settings, deployment, release, or source activation."
+}
