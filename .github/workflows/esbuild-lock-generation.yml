@@ -1,0 +1,187 @@
+# TEMPORARY task-owned lock generation; remove before review delivery.
+# No refs, pull requests, settings, credentials, deployments or releases are changed.
+name: esbuild-alert-63-branch-validation
+on:
+  push:
+    branches: [agent/esbuild-alert-63-20260905]
+    paths:
+      - .github/workflows/esbuild-lock-generation.yml
+permissions: {}
+concurrency:
+  group: esbuild-alert-63-branch-generation
+  cancel-in-progress: false
+jobs:
+  generate:
+    if: github.repository == 'bartytime4life/Kansas-Frontier-Matrix' && github.ref == 'refs/heads/agent/esbuild-alert-63-20260905'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: '22'
+          package-manager-cache: false
+      - name: Freeze inputs and add parent-only overrides in the disposable checkout
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git hash-object pnpm-lock.yaml)" = 02e273ebacfa0a4bc89a275204d67c027c4695bb
+          test "$(git hash-object pnpm-workspace.yaml)" = 3eece3b536797f3bee593b2ce286964b62cc5391
+          test "$(git hash-object apps/kansas-frontier-matrix-explorer/package.json)" = 17fc4e47f73967678965a2ed59f7fe830c07bacf
+          test "$(git hash-object apps/kansas-frontier-matrix-explorer/package-lock.json)" = 7e4935f204b9c802327b20b28814a4c2ae5284b4
+          mkdir -p "$RUNNER_TEMP/kfm-before" "$RUNNER_TEMP/kfm-npm" "$RUNNER_TEMP/kfm-output"
+          cp pnpm-lock.yaml "$RUNNER_TEMP/kfm-before/pnpm-lock.yaml"
+          cp apps/kansas-frontier-matrix-explorer/package-lock.json "$RUNNER_TEMP/kfm-before/package-lock.json"
+          python3 - <<'PY'
+          import json, pathlib
+          w = pathlib.Path('pnpm-workspace.yaml')
+          w.write_text(w.read_text() + 'overrides:\n  "@esbuild-kit/core-utils@3.3.2>esbuild": "0.28.2"\n')
+          p = pathlib.Path('apps/kansas-frontier-matrix-explorer/package.json')
+          d = json.loads(p.read_text())
+          assert 'overrides' not in d
+          d['overrides'] = {'@esbuild-kit/core-utils@3.3.2': {'esbuild': '0.28.2'}}
+          p.write_text(json.dumps(d, indent=2) + '\n')
+          PY
+      - name: Regenerate both package-manager lockfiles without installing npm dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          corepack enable
+          test "$(pnpm --version)" = 11.17.0
+          node --version
+          npm --version
+          pnpm install --lockfile-only
+          cp apps/kansas-frontier-matrix-explorer/{package.json,package-lock.json} "$RUNNER_TEMP/kfm-npm/"
+          (cd "$RUNNER_TEMP/kfm-npm" && npm install --package-lock-only && npm ci --dry-run)
+          cp "$RUNNER_TEMP/kfm-npm/package-lock.json" apps/kansas-frontier-matrix-explorer/package-lock.json
+      - name: Reject unrelated lockfile drift and inventory the exact dependency chain
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, pathlib, re
+          before = pathlib.Path(os.environ['RUNNER_TEMP']) / 'kfm-before'
+          app = pathlib.Path('apps/kansas-frontier-matrix-explorer')
+          a = json.loads((before/'package-lock.json').read_text())['packages']
+          b = json.loads((app/'package-lock.json').read_text())['packages']
+          binary = re.compile(r'(?:^|/)node_modules/(?:esbuild|@esbuild/[^/]+)$')
+          changed = []
+          for key in sorted(a.keys() | b.keys()):
+              if a.get(key) != b.get(key):
+                  changed.append(key)
+                  assert binary.search(key), ('unrelated npm drift', key)
+          def sections(text):
+              parts = re.split(r'^([A-Za-z][A-Za-z0-9]*):\s*\n', text, flags=re.M)
+              return dict(zip(['header'] + parts[1::2], [parts[0]] + parts[2::2]))
+          x = sections((before/'pnpm-lock.yaml').read_text())
+          y = sections(pathlib.Path('pnpm-lock.yaml').read_text())
+          for key in x.keys() | y.keys():
+              if key not in ('packages', 'snapshots', 'overrides'):
+                  assert x.get(key) == y.get(key), ('unrelated pnpm section drift', key)
+          assert 'overrides' not in x
+          assert '@esbuild-kit/core-utils@3.3.2>esbuild: 0.28.2' in y['overrides'].replace("'", '').replace('"', '')
+          def stanzas(text):
+              parts = re.split(r'^  (.+):\s*\n', text, flags=re.M)
+              assert not parts[0].strip()
+              return {k.strip("'\""): v for k, v in zip(parts[1::2], parts[2::2])}
+          for section in ('packages', 'snapshots'):
+              old, new = stanzas(x[section]), stanzas(y[section])
+              for key in old.keys() | new.keys():
+                  if old.get(key) != new.get(key):
+                      if key == '@esbuild-kit/core-utils@3.3.2':
+                          assert new[key] == old[key].replace('esbuild: 0.18.20', 'esbuild: 0.28.2')
+                      else:
+                          assert re.match(r'^(esbuild|@esbuild/[^@]+)@', key), ('unrelated pnpm package drift', key)
+          print('Scoped lockfile comparison PASS. npm changed package entries:', changed)
+          print('Confirmed old npm esbuild entries:', [(k,v['version']) for k,v in a.items() if k.endswith('/esbuild')])
+          print('Patched npm esbuild entries:', [(k,v['version']) for k,v in b.items() if k.endswith('/esbuild')])
+          PY
+          node --test apps/kansas-frontier-matrix-explorer/tests/esbuild-security.test.mjs
+          git diff --check
+          git diff --stat
+      - name: Install using the unchanged pnpm build-script permission policy
+        shell: bash
+        run: |
+          set -euo pipefail
+          sha256sum pnpm-lock.yaml > "$RUNNER_TEMP/pnpm-lock.before-install.sha256"
+          pnpm install --frozen-lockfile
+          sha256sum -c "$RUNNER_TEMP/pnpm-lock.before-install.sha256"
+      - name: Probe actual resolved esbuild and synthetic Drizzle generation
+        shell: bash
+        env:
+          KFM_ESBUILD_RUNTIME_PROBE: '1'
+        run: node --test apps/kansas-frontier-matrix-explorer/tests/esbuild-security.test.mjs
+      - name: Build and test the canonical Explorer consumer
+        shell: bash
+        run: |
+          set -euo pipefail
+          pnpm --filter explorer-web build
+          pnpm --filter explorer-web test
+      - name: Stage only four validated UTF-8 files and their integrity record
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib, json, os, pathlib, subprocess
+          paths = ['pnpm-workspace.yaml', 'pnpm-lock.yaml', 'apps/kansas-frontier-matrix-explorer/package.json', 'apps/kansas-frontier-matrix-explorer/package-lock.json']
+          assert sorted(subprocess.check_output(['git','diff','--name-only'],text=True).splitlines()) == sorted(paths)
+          out = pathlib.Path(os.environ['RUNNER_TEMP'])/'kfm-output'
+          record = {'tested_commit': os.environ['GITHUB_SHA'], 'files': [], 'authority': 'VALIDATED_CANDIDATE_ONLY; NO_REF_OR_PR_MUTATION; NO_MERGE_OR_DEPLOYMENT'}
+          for i, p in enumerate(paths):
+              content = pathlib.Path(p).read_bytes()
+              content.decode('utf-8')
+              name = f'candidate-{i}.txt'
+              (out/name).write_bytes(content)
+              record['files'].append({'path':p,'artifact':name,'sha256':hashlib.sha256(content).hexdigest(),'git_blob':hashlib.sha1(f'blob {len(content)}\0'.encode()+content).hexdigest()})
+          (out/'record.json').write_text(json.dumps(record, indent=2)+'\n')
+          print(json.dumps(record, indent=2))
+          PY
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: esbuild-validated-candidates
+          path: ${{ runner.temp }}/kfm-output/
+          retention-days: 7
+          if-no-files-found: error
+  store-blobs:
+    needs: generate
+    if: github.repository == 'bartytime4life/Kansas-Frontier-Matrix' && github.ref == 'refs/heads/agent/esbuild-alert-63-20260905'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      # Fresh runner; no checkout, package installation, repository code, or ref writes.
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: esbuild-validated-candidates
+          path: candidate
+      - name: Store validated content-addressed blobs only; print hashes for independent branch assembly
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib, json, os, pathlib, urllib.request
+          root = pathlib.Path('candidate')
+          record = json.loads((root/'record.json').read_text())
+          expected = ['pnpm-workspace.yaml','pnpm-lock.yaml','apps/kansas-frontier-matrix-explorer/package.json','apps/kansas-frontier-matrix-explorer/package-lock.json']
+          assert record['tested_commit'] == os.environ['GITHUB_SHA']
+          assert [f['path'] for f in record['files']] == expected
+          for i, item in enumerate(record['files']):
+              assert item['artifact'] == f'candidate-{i}.txt'
+              content = (root/item['artifact']).read_bytes()
+              assert len(content) < 2000000
+              assert hashlib.sha256(content).hexdigest() == item['sha256']
+              assert hashlib.sha1(f'blob {len(content)}\0'.encode()+content).hexdigest() == item['git_blob']
+              body = json.dumps({'content':content.decode('utf-8'),'encoding':'utf-8'}).encode()
+              request = urllib.request.Request('https://api.github.com/repos/bartytime4life/Kansas-Frontier-Matrix/git/blobs', data=body, method='POST', headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json','Content-Type':'application/json'})
+              with urllib.request.urlopen(request, timeout=30) as response:
+                  result = json.load(response)
+              assert result['sha'] == item['git_blob']
+              print(json.dumps({'path':item['path'],'blob':result['sha'],'sha256':item['sha256']}))
+          PY
