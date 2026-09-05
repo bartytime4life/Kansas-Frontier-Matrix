@@ -1,0 +1,143 @@
+{
+  "receipt_id": "genrec-governed-api-readme-97f4cfb7fabb2560",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/governed-api/README.md"
+  ],
+  "artifact_hashes": {
+    "apps/governed-api/README.md": "sha256:97f4cfb7fabb2560f12080423a28db935d5479daad4d24a45eb6ed795e16a860"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Pro",
+    "version": "UNKNOWN: deployment revision not exposed"
+  },
+  "prompt_or_contract": "sha256:db70714fed324b90c511ed26a9cd7453aebd7f36e84bca6ccc74a8a1d09e8841",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "Google_Drive",
+      "Notion",
+      "container",
+      "web"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/de25f099381cf0cad87884fe5bb35b17d4c1fa04/CONTRIBUTING.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/de25f099381cf0cad87884fe5bb35b17d4c1fa04/docs/doctrine/ai-build-operating-contract.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/de25f099381cf0cad87884fe5bb35b17d4c1fa04/docs/doctrine/directory-rules.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/de25f099381cf0cad87884fe5bb35b17d4c1fa04/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/de25f099381cf0cad87884fe5bb35b17d4c1fa04/docs/adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/de25f099381cf0cad87884fe5bb35b17d4c1fa04/apps/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/de25f099381cf0cad87884fe5bb35b17d4c1fa04/apps/governed-api/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/de25f099381cf0cad87884fe5bb35b17d4c1fa04/apps/governed-api/src/governed_api/main.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/de25f099381cf0cad87884fe5bb35b17d4c1fa04/apps/governed-api/src/governed_api/routes/registry.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/de25f099381cf0cad87884fe5bb35b17d4c1fa04/apps/governed-api/src/governed_api/stub.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/de25f099381cf0cad87884fe5bb35b17d4c1fa04/apps/governed-api/tests/test_abstain_routes.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/de25f099381cf0cad87884fe5bb35b17d4c1fa04/apps/governed-api/tests/test_boundary_guards.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/de25f099381cf0cad87884fe5bb35b17d4c1fa04/apps/governed-api/tests/schema_assert.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/de25f099381cf0cad87884fe5bb35b17d4c1fa04/contracts/runtime/runtime_response_envelope.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/de25f099381cf0cad87884fe5bb35b17d4c1fa04/schemas/contracts/v1/runtime/runtime_response_envelope.schema.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/de25f099381cf0cad87884fe5bb35b17d4c1fa04/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/de25f099381cf0cad87884fe5bb35b17d4c1fa04/Makefile",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/de25f099381cf0cad87884fe5bb35b17d4c1fa04/pyproject.toml",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/de25f099381cf0cad87884fe5bb35b17d4c1fa04/.github/workflows/api-test.yml"
+    ],
+    "attached_docs": [
+      "Google Drive: Directory Rules; read-only lineage, not current implementation authority",
+      "Notion: KFM Repository Workbench; read-only coordination, not implementation or approval authority"
+    ]
+  },
+  "truth_labels": {
+    "apps/governed-api/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "markdown_metadata_navigation",
+      "outcome": "PASS",
+      "reason": "Session-only Markdown parser and metadata checks; 52 link/reference occurrences checked against pinned file evidence or local anchors; 15 numbered anchors preserved; nine balanced code fences; example equals current builder output."
+    },
+    {
+      "gate": "full_authored_file_whitespace",
+      "outcome": "PASS",
+      "reason": "git diff --cached --check in a scratch index containing the complete README; not a full KFM checkout or repository-baseline diff."
+    },
+    {
+      "gate": "exact_source_snapshot",
+      "outcome": "PASS",
+      "reason": "Fourteen copied API source/test/schema/constant files reproduced their fetched Git blob SHA-1 values; initial cbd6d82bad962a58ab62cfb776ee31696b575107 to final-base comparison changes only apps/explorer-web/src/README.md."
+    },
+    {
+      "gate": "existing_api_tests_isolated",
+      "outcome": "PASS",
+      "reason": "Six existing API tests passed in 0.06s using Python 3.13.5 and pytest 9.0.2; PYTHONPATH=. and plugin autoload disabled. This is a partial source snapshot, not the required full dependency environment; pytest is below the root-declared 9.1.1 floor."
+    },
+    {
+      "gate": "supplemental_wsgi_schema_checks",
+      "outcome": "PASS",
+      "reason": "42 session-only route/method cases checked with Draft 2020-12 and format validation, JSON headers, HTTP status and outcome; external schema retrieval disabled. Empty-evidence scaffold cases only, not EvidenceBundle resolution."
+    },
+    {
+      "gate": "loopback_http_examples",
+      "outcome": "PASS",
+      "reason": "Started the exact API module on 127.0.0.1:8000 with fixed issuance time; GET /layers, POST /layers, GET /not-a-route produced 200/ABSTAIN, 405/ERROR, 404/ERROR; process stopped."
+    },
+    {
+      "gate": "generated_receipt_schema_and_hash_binding",
+      "outcome": "PASS",
+      "reason": "Exact fetched generated-receipt schema, format checks, exact README SHA-256/path binding, pending human review, and negative schema/binding diagnostics passed."
+    },
+    {
+      "gate": "root_dependency_install_and_native_full_checkout_validation",
+      "outcome": "SKIPPED",
+      "reason": "Container GitHub DNS/checkout acquisition unavailable. Root dependency installation, full-checkout Make targets, native receipt validator, and aggregate tests were not run."
+    },
+    {
+      "gate": "hosted_exact_head_ci",
+      "outcome": "SKIPPED",
+      "reason": "Not established at receipt emission; subsequent PR checks must be recorded separately without rewriting this historical receipt."
+    },
+    {
+      "gate": "live_client_deployment_policy_evidence_release",
+      "outcome": "SKIPPED",
+      "reason": "Outside documentation scope; no live client, model, source, policy, evidence, deployment, release, promotion, publication, or rollback rehearsal performed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "directory-placement",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/de25f099381cf0cad87884fe5bb35b17d4c1fa04/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "api-dispatch",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/de25f099381cf0cad87884fe5bb35b17d4c1fa04/apps/governed-api/src/governed_api/main.py"
+    },
+    {
+      "id": "response-shape",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/de25f099381cf0cad87884fe5bb35b17d4c1fa04/schemas/contracts/v1/runtime/runtime_response_envelope.schema.json"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-05T18:43:57Z",
+  "emitter": "ChatGPT governed-api README authoring agent",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Documentation and required authoring receipt only. The README is a proposed revision with confirmed source facts and explicit operational unknowns. The prompt hash covers only the direct user request as UTF-8 without a final newline; no prompt text or hidden reasoning is stored. No generated language is evidence or approval. No schema, runtime, policy, dependency, workflow, lifecycle, release, or deployment behavior changes. Human review is pending; no override is issued. Preserve this process record on rollback and record later corrections separately. Generation parameters and deployment revision were not exposed. Supplemental diagnostics and copied source files remain outside the PR. Source/header excerpts were used only for their stated scope; no exhaustive historic-branch audit or CI/control-exit proof is claimed."
+}
