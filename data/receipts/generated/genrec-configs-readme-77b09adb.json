@@ -1,0 +1,156 @@
+{
+  "receipt_id": "genrec-configs-readme-77b09adb0757f08c",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "configs/README.md"
+  ],
+  "artifact_hashes": {
+    "configs/README.md": "sha256:77b09adb0757f08c0a5553eacf49731fa93f4e85897740e95f714919d6946029"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Pro",
+    "version": "unreported"
+  },
+  "prompt_or_contract": "sha256:77bf26e6edd4feff298dc845315315729ebfbe382e09453f2b36ade87c376c3b",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "tools_enabled": [
+      "GitHub",
+      "Google_Drive",
+      "Notion",
+      "container"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/configs/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/configs/dev/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/configs/domains/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/configs/examples/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/configs/local/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/configs/maplibre/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/configs/templates/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/configs/test/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/docs/doctrine/directory-rules.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/docs/architecture/directory-rules.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/control_plane/root_registry.yaml",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/.github/CODEOWNERS",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/.gitignore",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/docs/security/INCIDENT_RESPONSE.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/.github/PULL_REQUEST_TEMPLATE.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/data/receipts/generated/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/schemas/maplibre/perf-envelope.schema.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/tools/validators/maplibre/validate_perf_envelope.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/.github/workflows/maplibre-perf-governance.yml",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/tests/maplibre/test_perf_governance_negative_paths.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/tests/maplibre/perf_fixture_builder.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/.github/workflows/docs-meta-block.yml",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/.github/workflows/docs-stale-scan.yml",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/.github/workflows/link-check.yml",
+      "https://api.github.com/repos/bartytime4life/Kansas-Frontier-Matrix/git/trees/58bd56d863ec3c6298038ff5b53757d4439e5684?recursive=1",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024#issuecomment-5548270686",
+      "https://api.github.com/repos/bartytime4life/Kansas-Frontier-Matrix/issues/4285/events?per_page=100"
+    ],
+    "attached_docs": [
+      "Google Drive Directory Rules, document 1uTqdIEFZE2cq3gyISetoRYM6LIlnKqTc3FobtEx7Cbs; read-only lineage",
+      "Notion KFM Repository Workbench, page 3c9a9202-1bf6-8195-b8b1-f3a8d694b447; read-only coordination"
+    ]
+  },
+  "truth_labels": {
+    "configs/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "pinned-placement-and-inventory",
+      "outcome": "PASS",
+      "reason": "Accepted ADR-0029, configuration ownership and ROOT_FULL fields, active registry, existing tombstone, direct-child guide sections and non-truncated configs Git tree inspected. Independent reconstruction of all 28 blob entries reproduces tree 58bd56d863ec3c6298038ff5b53757d4439e5684."
+    },
+    {
+      "gate": "bounded-source-review",
+      "outcome": "PASS",
+      "reason": "Selected MapLibre schema/wrapper/workflow and separate fixture-test source inspected; declarations remain distinct from execution. Documentation workflow commands explicitly omit configs from metadata/freshness roots. No complete consumer audit claimed."
+    },
+    {
+      "gate": "session-only-markdown-qa",
+      "outcome": "PASS",
+      "reason": "markdown-it parsing and explicit checks: 1 H1, 23 retained H2, 38 H3, 76 unique anchors including 15 legacy targets, 55 Markdown links, 16 related refs, 15 tables, 4 fences; UTF-8, metadata uniqueness, scope, direct-child map, boundary text and bash -n passed. Local path targets checked against pinned metadata, not a full checkout."
+    },
+    {
+      "gate": "session-only-negative-qa",
+      "outcome": "PASS",
+      "reason": "Deliberate trailing whitespace, broken anchor, unverified path, duplicate metadata key, missing lifecycle and omitted Git-tree entry detected. Malformed receipt hash, extra property, changed artifact and mismatched path map rejected."
+    },
+    {
+      "gate": "isolated-source-diagnostics",
+      "outcome": "PASS",
+      "reason": "Exact source .gitignore replay in disposable Git directory ignores a synthetic local override but not local README or dev example. Exact perf-envelope schema accepts empty/invalid-budget objects and rejects a non-object, demonstrating limited shape validation, not performance assurance."
+    },
+    {
+      "gate": "generated-receipt-schema-and-binding",
+      "outcome": "PASS",
+      "reason": "Draft202012Validator with FormatChecker, artifact-map parity, SHA-256 binding and negative cases passed. Materialized schema matched Git blob fba21ed27ebccf1362fe397fe0c3ebd85e072685. This is not the repository-native validator or review authentication."
+    },
+    {
+      "gate": "repository-native-and-runtime-validation",
+      "outcome": "SKIPPED",
+      "reason": "No full checkout; git ls-remote failed with GitHub DNS resolution error. Repository-native docs/receipt/topology/aggregate validators, full suite, MapLibre fixture execution, browser/runtime and deployment/release tests NOT RUN."
+    },
+    {
+      "gate": "hosted-exact-head-validation",
+      "outcome": "SKIPPED",
+      "reason": "No hosted result observed at authorship; remote branch delivery is recorded separately."
+    },
+    {
+      "gate": "draft-pr-delivery",
+      "outcome": "SKIPPED",
+      "reason": "Current #4024 containment and newly read #4285 ready/merge events preserve writer-only branch delivery. No independent one-shot draft-creation boundary was proved in this invocation."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "placement",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "adoption",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "tombstone",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/docs/architecture/directory-rules.md"
+    },
+    {
+      "id": "bounded-reader",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/26c7a6aa126cb361124d15801c23824ffc03ff23/.github/workflows/maplibre-perf-governance.yml"
+    },
+    {
+      "id": "inventory",
+      "validated": true,
+      "evidence_ref": "https://api.github.com/repos/bartytime4life/Kansas-Frontier-Matrix/git/trees/58bd56d863ec3c6298038ff5b53757d4439e5684?recursive=1"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-05T03:48:27Z",
+  "emitter": "kfm-configs-root-readme-writer",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Authorship provenance only. The visible user request is hashed, not hidden instructions. Readme review date uses America/Chicago; receipt timestamp is UTC. Prior README blob a800983eac7582a84e9dd82bc7d4baf04f552ad8. Native validation and independent approval remain unproved. This session authors the root README plus this receipt only; source schema/ignore fixtures and QA report are session-local, not repository changes. No child file, config payload, dependency, workflow, policy, register, baseline, source, runtime, or release state changes. #4285 ready event 30583434735 at 2026-09-04T21:39:33Z and merge event 30583548313 at 21:42:08Z identify the owner account with null GitHub App attribution; initiating client, cause, intent and shared cause remain unknown. No new PR, ready, approval, merge, automatic revert, settings change, source admission, deployment, promotion or publication is authorized. Preserve current incident holds; unrelated collision-free authoring remains possible."
+}
