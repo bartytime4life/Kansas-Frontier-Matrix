@@ -2,310 +2,270 @@
 doc_id: kfm://app/review-console/readme
 title: Review Console App README
 type: app-readme
-version: v0.1
-status: draft
+version: v0.2
+status: draft; repository-grounded; documentation-scaffold; non-publisher
 owners: OWNER_TBD — Apps steward · Review steward · Policy steward · Evidence steward · Release steward · Audit steward · Docs steward
 created: 2026-06-16
-updated: 2026-06-16
+updated: 2026-09-05
 policy_label: public
+current_path: apps/review-console/README.md
+owning_root: apps/
+responsibility: Orient contributors to the restricted review application boundary, verified scaffold, separate fixture-validation support, and safe implementation sequence.
+truth_posture: cite-or-abstain; repository presence is not operational readiness
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_commit: cbd6d82bad962a58ab62cfb776ee31696b575107
+  app_tree: 33e26773850d908973f78c0bf179d30e5aa57eed
+  prior_readme_blob: 02512b6b8d16a8f1dfcd4c564f8b6d68b61b49e3
+  package_blob: 9c83b3dee793e2428a33c4aae072e668f1c2a4f8
+  source_tree: a04f0ea489839e3b8fd8742c22f3e08b7c661bf8
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
 related:
   - ../README.md
+  - ./package.json
+  - ./src/README.md
+  - ./src/features/README.md
   - ../governed-api/README.md
-  - ../explorer-web/README.md
-  - ../admin/README.md
-  - ../cli/README.md
-  - ../workers/README.md
+  - ../explorer-web/src/features/review_console_readonly/README.md
   - ../../docs/architecture/ui/REVIEW_CONSOLE.md
-  - ../../docs/governance/REVIEW_DUTIES.md
-  - ../../policy/access/README.md
-  - ../../policy/decision/README.md
-  - ../../schemas/contracts/v1/review/
-  - ../../schemas/contracts/v1/evidence/
-  - ../../contracts/
-  - ../../data/README.md
-  - ../../release/README.md
-  - ../../packages/evidence-resolver/README.md
-  - ../../packages/policy-runtime/README.md
-tags: [kfm, apps, review-console, steward-review, quarantine, promotion, correction, sensitivity, evidencebundle, audit, provenance]
+  - ../../docs/doctrine/directory-rules.md
+  - ../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../contracts/governance/ReviewRecord.md
+  - ../../schemas/contracts/v1/governance/review_record.schema.json
+  - ../../tools/validators/validate_review_record.py
+  - ../../CONTRIBUTING.md
+tags: [kfm, apps, review-console, steward-review, evidence, policy, sensitivity, audit, correction, rollback]
 notes:
-  - "Replaces the short review-console stub with a governed app boundary contract."
-  - "This README documents the intended role of apps/review-console/ without claiming routes, UI files, decision recorder, schemas, tests, fixtures, deployments, logs, dashboards, or pass state beyond current-session evidence."
-  - "Review Console is role-gated and audited. Mutating review decisions require explicit policy, provenance, tests, and separation-of-duty posture."
+  - "Same-path documentation update; document identity and existing section anchors are retained."
+  - "Eleven tracked app files were inspected: ten READMEs and one placeholder package manifest. No executable app source, app-local tests, or app-local fixtures are present in this subtree."
+  - "Role gating, review submission, audit persistence, and deployment are requirements, not implemented app capabilities."
+  - "ReviewRecord fixture validation is separate from a Review Console runtime and creates no review, promotion, release, or publication authority."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-<div align="center">
-
 # Review Console App
 
-`apps/review-console/`
-
-**Role-gated steward review surface for KFM quarantine/work adjudication: review queue visibility, item inspection, validator and evidence context, sensitivity and rights review, decision capture, correction support, promotion routing signals, audit/provenance references, and fail-closed review workflows.**
-
-![status](https://img.shields.io/badge/status-draft-blue)
-![owner](https://img.shields.io/badge/owner-OWNER__TBD-lightgrey)
-![root](https://img.shields.io/badge/root-apps%2F-0a7ea4)
-![mode](https://img.shields.io/badge/mode-role--gated-df7e00)
-![truth](https://img.shields.io/badge/truth-NEEDS__VERIFICATION-yellow)
-
-[Purpose](#1-purpose) · [Repo fit](#2-repo-fit) · [Boundary](#3-authority-boundary) · [Inputs](#5-inputs) · [Exclusions](#6-exclusions) · [Surface map](#7-review-console-surface-map) · [Definition of done](#14-definition-of-done)
-
-</div>
-
----
+`apps/review-console/` is the reserved application home for **restricted steward review**, not a running review service. Its intended job is to inspect governed review projections and, after a separately validated write path exists, submit accountable review records. It is neither a general data editor nor a publication console.
 
 > [!IMPORTANT]
-> **Status:** draft / `NEEDS VERIFICATION`  
-> **Owners:** `OWNER_TBD` — Apps steward · Review steward · Policy steward · Evidence steward · Release steward · Audit steward · Docs steward  
-> **Path:** `apps/review-console/README.md`  
-> **Responsibility root:** `apps/` — deployable application surfaces  
-> **Truth posture:** CONFIRMED README path / CONFIRMED apps-root role for review-console / CONFIRMED Review Console architecture doctrine / PROPOSED app contract / UNKNOWN app source, routes, decision recorder, schemas, tests, fixtures, deployment, logs, dashboards, and CI pass state
+> **Current maturity: documentation scaffold.** At the [inspected commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/cbd6d82bad962a58ab62cfb776ee31696b575107), this subtree contains ten READMEs and a private `review-console@0.0.0` manifest. There are no app entrypoints, routes, package scripts, dependencies, app-local tests, or app-local fixtures. Authentication, authorization, decision recording, audit persistence, and deployment are not established. “Role-gated” describes a required boundary, not a functioning control.
 
-> [!CAUTION]
-> Review Console is not a public path and not a general data editor. It must not read or expose RAW/WORK/QUARANTINE internals directly to normal public clients, mutate published artifacts, bypass governed API/policy gates, or turn reviewer convenience into publication authority.
-
----
+**Navigation:** [Purpose](#1-purpose) · [Repo fit](#2-repo-fit) · [Authority](#3-authority-boundary) · [Inputs](#5-inputs) · [Exclusions](#6-exclusions) · [Feature map](#7-review-console-surface-map) · [Decisions](#9-review-decision-contract) · [Inspection](#11-inspection-path) · [Validation](#12-validation-expectations) · [Completion gates](#14-definition-of-done)
 
 ## 1. Purpose
 
-`apps/review-console/` is the proposed role-gated deployable surface for human-in-the-loop KFM review.
+The proposed console supports human review across the lifecycle: eligible WORK or QUARANTINE candidates, evidence and validation gaps, rights and sensitivity questions, promotion readiness, and correction or rollback context. It does not own every KFM review duty, and review is not limited to one physical quarantine folder.
 
-It may eventually contain app source, routes, adapters, tests, fixtures, and operator documentation for:
+The [Review Console architecture](../../docs/architecture/ui/REVIEW_CONSOLE.md) explains the broader design. This README owns app-level orientation and the current file inventory; it does not create a second architecture, contract, policy, or release authority.
 
-- review queue browsing for routed `WORK/QUARANTINE` items;
-- item-detail inspection with source, validator, evidence, policy, and provenance context;
-- reviewer role and clearance-aware access;
-- sensitivity, rights, source-role, and release-readiness inspection;
-- decision capture for approve, reject, defer, annotate, or route outcomes where policy allows;
-- correction and rollback-context review support;
-- promotion routing signals back into governed pipeline flows;
-- durable audit and provenance references;
-- safe read-only slices for public/semi-public UI handoff where allowed.
+| Inspected surface | Truth / maturity | What the evidence establishes |
+|---|---|---|
+| This app and its seven feature lanes | CONFIRMED / DRAFT | Documentation and a placeholder manifest exist; executable app behavior is absent in this subtree. |
+| [Package manifest](package.json) | CONFIRMED / DRAFT | `name: review-console`, `private: true`, `version: 0.0.0`; no `scripts`, `dependencies`, or `devDependencies`. |
+| [Explorer read-only review entry](../explorer-web/src/features/review_console_readonly/index.tsx) | CONFIRMED / DRAFT | It exports `placeholder = true`; it is not an integrated review viewer or a decision API. |
+| [ReviewRecord validator](../../tools/validators/validate_review_record.py) | CONFIRMED / IMPLEMENTED, fixture-only | Separate executable checks for synthetic release-promotion review projections exist; execution results must be recorded separately. |
+| Integrated identity, queue, API, evidence, policy, audit, and release handoffs | UNKNOWN / NOT INSPECTED as a running system | Documentation and validator source do not establish an operational review service. |
 
-This README does not prove any UI, route, decision recorder, queue API, schema, fixture, test, deployment, log, dashboard, or CI pass state exists.
-
-[Back to top](#top)
-
----
+These observations are pinned to the commit above. Reinspect before implementation; source presence, test execution, review approval, deployment, and publication are separate facts.
 
 ## 2. Repo fit
 
-| Concern | Owning root | Expected relationship |
+**Directory Rules basis:** accepted [ADR-0029](../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts [Directory Rules](../../docs/doctrine/directory-rules.md). Section 10.1 assigns deployable composition to `apps/`; sections 9.3 and 11 separate meaning, shape, admissibility, lifecycle/accountability records, and release decisions. This same-path update changes no root or authority boundary.
+
+| Responsibility | Owning surface | Relationship to this app |
 |---|---|---|
-| Review Console app | `apps/review-console/` | Role-gated deployable review/steward surface |
-| Apps root | `apps/` | Deployable application boundary |
-| Governed API | `apps/governed-api/` | Trust membrane and normal API path, including elevated audited roles |
-| Explorer Web read-only review slice | `apps/explorer-web/src/features/review_console_readonly/` | Read-only visibility; no review mutation |
-| Admin app | `apps/admin/` | Restricted administration; not normal review/public path |
-| Workers | `apps/workers/` | Emit receipts/candidates; do not publish |
-| Review architecture | `docs/architecture/ui/REVIEW_CONSOLE.md` | Proposed architecture and human-in-loop review concepts |
-| Policy gates | `policy/` | Access, sensitivity, rights, review, release, and decision policy |
-| Evidence support | `packages/evidence-resolver/`, `data/proofs/` | EvidenceBundle support and proof context |
-| Lifecycle artifacts | `data/` | Lifecycle state, receipts, proofs, registries, catalog, triplets, published outputs |
-| Release authority | `release/` | Publication, correction, rollback, release manifest authority |
-| Schemas/contracts | `schemas/contracts/v1/`, `contracts/` | Machine shape and object meaning |
+| Deployable composition | [Apps root](../README.md), this app, [source guide](src/README.md) | App-local shell and review workflow composition, when implemented |
+| Governed interface | [Governed API](../governed-api/README.md) | Role-appropriate projections and a separately admitted review-write interface; no live queue or submission route is claimed here |
+| Public/semi-public visibility | [Explorer read-only review](../explorer-web/src/features/review_console_readonly/README.md) | Separate consumer; no import or exposure of mutating review behavior |
+| Object meaning and machine shape | [ReviewRecord contract](../../contracts/governance/ReviewRecord.md), [governance schema](../../schemas/contracts/v1/governance/review_record.schema.json) | Existing draft/proposed definitions, not a newly accepted submission contract |
+| Access, rights, sensitivity, and action rules | [Policy root](../../policy/) | The app consumes decisions; it does not author or override policy |
+| Lifecycle state, receipts, and proofs | [Data root](../../data/) | Records stay outside the browser and app source tree |
+| Promotion, release, correction, and rollback decisions | [Release root](../../release/) | Independent governed transitions, not side effects of a review button |
+| Shared implementation and exposure | [Packages](../../packages/), [infrastructure](../../infra/) | Reuse and deployment remain separate from app-local composition |
 
 ## 3. Authority boundary
 
-Review Console may present and record governed review decisions where explicitly implemented and policy-authorized. It does not own source ingestion, lifecycle storage, schema authority, contract authority, policy authorship, EvidenceBundle truth, release approval by itself, publication, rollback approval by itself, canonical data, public UI rendering, renderer authority, or model/runtime authority.
+Preserve the KFM lifecycle:
 
 ```text
-apps/review-console/        = role-gated review deployable
-apps/governed-api/          = trust membrane and elevated audited API path
-apps/explorer-web/          = public/semi-public map-first UI consumer
-policy/                     = admissibility and decision policy
-data/                       = lifecycle artifacts, receipts, proofs, registries
-release/                    = publication, correction, rollback authority
-schemas/contracts/v1/       = machine shape
-contracts/                  = object meaning
-packages/                   = reusable helper libraries
+RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 ```
+
+Promotion is a governed transition, never a file move, completed job, accepted review, or UI toggle. Public clients use governed APIs or released public-safe artifacts, never internal or unreleased stores. A restricted console must also use authorized projections rather than treating a reviewer role as permission to browse storage directly.
+
+A `ReviewRecord` is distinct from an `EvidenceRef`, `EvidenceBundle`, `PolicyDecision`, `PromotionDecision`, release manifest, correction notice, rollback record, receipt, proof, or audit reference. Review may support a decision; it cannot manufacture evidence or authorize its own release.
+
+Maps, tiles, spatial previews, charts, summaries, and AI are carriers, not truth. A future spatial pane must preserve allowed precision and evidence references. A generated rationale cannot replace a reviewer, evidence, policy, approval, or release state.
 
 ## 4. Default posture
 
-Review Console should fail closed. A review workflow should not present or submit a mutating decision when any of these are unresolved:
+**Required for future implementation, not currently enforced by this scaffold:** read-only first; deny by default; least privilege; safe errors; no payload editing; one audited review-submission boundary.
 
-- reviewer identity, role, separation-of-duty, and clearance;
-- item lifecycle state and queue eligibility;
-- source role, provenance, rights, license, and use terms;
-- EvidenceRef and EvidenceBundle support;
-- validator report and policy decision state;
-- sensitivity, privacy, cultural, ecological, infrastructure, living-person, or DNA/data constraints;
-- release, correction, rollback, stale-state, and review-lineage context;
-- decision vocabulary, reason codes, and required reviewer rationale;
-- audit/provenance write target and rollback path;
-- safe error behavior and no raw/internal detail leakage.
+Do not enable a mutation while reviewer identity, assignment, clearance, separation of duties, subject version, evidence support, policy outcome, rights, sensitivity, or durable audit acceptance is unresolved. A failed submission must not look accepted; a successful review submission must not look published.
+
+Where rights, sovereignty, cultural context, living-person or DNA data, rare species, archaeology, infrastructure, private land, or exact locations are unclear, retain quarantine, denial, redaction, generalization, or staged access as required by the owning policy. Record transformation reasons upstream. Hiding protected fields after delivering them to the browser is not redaction.
 
 ## 5. Inputs
 
-| Input family | Examples | Required posture |
-|---|---|---|
-| Queue state | item id, source summary, validator category, policy label, age, priority | Governed projection only |
-| Item detail | normalized preview fields, validator summary, related refs | Redacted, role-gated projection |
-| Evidence state | EvidenceRef list, EvidenceBundle refs, source refs, limitations | Resolver-backed and citation-aware |
-| Policy state | reviewer role, sensitivity, rights, deny/restrict/hold reason, release precheck | Policy runtime derived |
-| Review action | approve, reject, defer, annotate, route, request more evidence | Finite, audited, policy-gated |
-| Release/correction context | release manifest ref, correction notice ref, rollback target | Required when review touches publication state |
-| Audit/provenance context | reviewer id, decision id, event id, timestamp, reason code | Durable and non-repudiable |
-| UI state | loading, ready, denied, restricted, abstained, stale, malformed, error | Explicit finite states |
+The following are **proposed input families**, not implemented DTOs or route contracts.
+
+| Input | Required boundary |
+|---|---|
+| Queue and subject projection | Authorized, minimized fields; stable subject identity and version; no disclosure through counts, filters, or deep links |
+| Evidence and validation context | Resolvable EvidenceRef/EvidenceBundle support, source role, validator findings, uncertainty, and explicit gaps |
+| Reviewer and policy context | Server-established identity, assignment, scope, clearance, obligations, and policy version; no client-authored authority |
+| Time and state | Keep observation/valid time, review time, authority validity, evaluation time, staleness, supersession, and release state distinct |
+| Release/correction/rollback context | Relevant references and blocked transitions; review cannot change the underlying release decision |
+| Review submission | Versioned, finite vocabulary; rationale, subject binding, replay/concurrency handling, and durable acceptance semantics |
+
+Loading, empty, ready, restricted, denied, abstained, stale, malformed, and error views must remain distinguishable. A fixture validator's `PASS` is not a UI authorization or publication state.
 
 ## 6. Exclusions
 
-| Does not belong here | Correct home |
-|---|---|
-| Source ingestion and fetchers | `connectors/`, `pipelines/`, `pipeline_specs/` |
-| Pipeline transformations | `pipelines/`, `apps/workers/` where appropriate |
-| Lifecycle data and canonical stores | `data/` |
-| Release manifests, correction notices, rollback cards | `release/` |
-| Schemas and contracts | `schemas/contracts/v1/`, `contracts/` |
-| Policy rules and sensitivity policy | `policy/` |
-| Shared UI or helper libraries | `packages/` |
-| Public/semi-public review visibility | `apps/explorer-web/src/features/review_console_readonly/` through governed API |
-| General admin shortcuts | `apps/admin/` only when justified and audited |
-| Published artifact mutation | Release/correction workflows, not direct console edits |
-| Free-form payload editing | Out of scope unless a future ADR changes provenance model |
-| Direct model/runtime calls | `runtime/` behind governed API only |
-| Secrets or deployment-only values | Deployment environment/config channels |
+Do not place canonical data, source captures, policy rules, schemas, semantic contracts, release records, proof objects, or credentials inside this app. Source acquisition belongs in `connectors/`; transformations in `pipelines/`; shared logic in `packages/`; authoritative records in their existing data or release lanes.
+
+The console must not directly edit published artifacts, expose a public administration shortcut, call a model runtime directly, turn AI output into evidence, or reuse the Explorer's public read-only lane as a mutation channel. Deployment and network exposure require their own reviewed configuration and authority; no public launch is implied by this README.
 
 ## 7. Review Console surface map
 
-Exact implementation files remain `NEEDS VERIFICATION`.
+The complete app inventory is **11 tracked files: this README, `package.json`, `src/README.md`, `src/features/README.md`, and the seven feature READMEs below**. Each feature directory contains only its README at the inspected snapshot. The directory names are real; the described behavior is proposed.
 
-| Candidate surface | Purpose | Required safeguard | Status |
-|---|---|---|---|
-| `queue` | Review queue list, filters, sort, priority | Role-gated governed projection | PROPOSED |
-| `item-detail` | Full item context and validator summary | Redacted, lifecycle-aware display | PROPOSED |
-| `evidence-pane` | EvidenceBundle/EvidenceRef context | No raw bundle copy to browser unless authorized projection | PROPOSED |
-| `spatial-pane` | Map context for items with geometry | No restricted geometry exposure | PROPOSED |
-| `decision-pane` | Mutating review decision capture | Sole write affordance; policy and audit required | PROPOSED |
-| `history` | Item/reviewer audit and provenance history | Read-only immutable projection | PROPOSED |
-| `correction-review` | Correction/rollback context review | Release authority remains separate | PROPOSED |
-| `sensitivity-review` | Rights/sensitivity review support | Fail closed for unresolved sensitive status | PROPOSED |
-| `safe-errors` | Denied/restricted/abstained/error states | No internal detail leakage | PROPOSED |
+| Existing feature guide | Intended responsibility | Required limit |
+|---|---|---|
+| [Queue](src/features/queue/README.md) | Eligible subject browsing, filters, assignment, and age | Governed projection; no count or metadata leakage |
+| [Record view](src/features/record_view/README.md) | Subject detail, evidence, validation, and spatial context | Read-only; no underlying payload edits |
+| [Sensitivity review](src/features/sensitivity_review/README.md) | Rights, consent, sovereignty, and precision review | Fail closed; cannot clear itself for public exposure |
+| [Promotion](src/features/promotion/README.md) | Readiness context and recommendation | No lifecycle promotion or release execution |
+| [Correction](src/features/correction/README.md) | Correction and supersession context | No silent overwrite of prior evidence or release records |
+| [Rollback](src/features/rollback/README.md) | Target, reason, and impact inspection | No rollback execution or approval by itself |
+| [Audit log](src/features/audit_log/README.md) | History and durable acceptance references | Read-only projection, not the audit store |
 
-> [!WARNING]
-> Candidate surface names are not implementation proof. Do not claim a surface is live until files, routes, tests, fixtures, schemas, policy gates, audit/provenance handoffs, and deployment evidence confirm it.
+The [feature index](src/features/README.md) and source guide are navigation, not runtime proof. Evidence panes, spatial panes, safe-error views, and a decision pane remain design concepts; this update creates no additional feature directory, component, route, or decision recorder.
 
 ## 8. Diagram
 
+**Proposed integration, not an implemented wiring diagram.** Every arrow into a restricted client is an authorized projection. The browser has no direct storage path.
+
 ```mermaid
-flowchart LR
-    raw["RAW"] --> validators["ingest + validators"]
-    validators --> work["WORK"]
-    validators --> quarantine["QUARANTINE"]
-    quarantine --> rc["apps/review-console"]
-    rc --> decision["decision record"]
-    decision --> audit["audit / provenance"]
-    decision --> route["routing signal"]
-    route --> work
-    work --> processed["PROCESSED"]
-    processed --> catalog["CATALOG / TRIPLET"]
-    catalog --> published["PUBLISHED"]
-    rc --> api["apps/governed-api"]
-    api --> policy["policy"]
-    api --> evidence["EvidenceBundle refs"]
+flowchart TD
+    subject["Eligible lifecycle subject"] --> service["Governed review service"]
+    checks["Identity, evidence, rights, sensitivity and policy checks"] --> service
+    service --> projection["Authorized review projection"]
+    projection --> console["Restricted Review Console"]
+    console --> request["Proposed review submission"]
+    request --> recorder["Policy-gated decision recorder"]
+    checks --> recorder
+    recorder --> review["ReviewRecord + durable audit acceptance"]
+    review --> process["Separate governed downstream evaluation"]
+    process --> gate["Validation, proof, policy, independent review and release checks"]
+    gate --> decision["Release decision + correction and rollback support"]
+    decision --> published["Released public-safe artifacts"]
 ```
+
+Review acceptance and downstream processing can fail separately. Expose the actual result, keep non-release outcomes visible, and preserve retry/reconciliation records; do not treat the last arrow as automatic after review.
 
 ## 9. Review decision contract
 
-Every mutating review decision should be finite, policy-gated, evidence-aware, and auditable.
+The [semantic ReviewRecord contract](../../contracts/governance/ReviewRecord.md) is draft. The [governance ReviewRecord schema](../../schemas/contracts/v1/governance/review_record.schema.json) declares `x-kfm.status: PROPOSED`; it requires `review_id`, `subject_ref`, `reviewer_role`, `decision`, `reasons`, `obligations`, and `reviewed_at`, and rejects undeclared fields.
 
-| Decision family | Meaning | Required posture |
-|---|---|---|
-| `APPROVE_ROUTE` | Reviewer allows a candidate to route forward | Evidence, policy, review, and audit support required |
-| `REJECT_ARCHIVE` | Reviewer rejects and archives/holds item from promotion | Reason code and provenance required |
-| `DEFER_HOLD` | Reviewer holds item for more evidence or later review | Hold reason and next-step owner required |
-| `ANNOTATE_ONLY` | Reviewer adds non-routing note, if allowed | Must not mutate source payload or publish |
-| `ESCALATE` | Reviewer sends item to higher-sensitivity/steward lane | Role and policy handoff required |
+**The inspected schema's decision vocabulary is `approve`, `reject`, `request_changes`.** This is a description of existing proposed schema bytes, not adoption of a production submission API. The schema alone does not authenticate a reviewer, bind authority, require evidence closure, persist an audit event, or grant release permission.
+
+The separate [fixture validator](../../tools/validators/validate_review_record.py) validates a richer synthetic promotion packet. Its `release.promotion_gate` profile checks identity separation, assignment scope and validity, subject/spec/artifact binding, expiry, supersession, and obligations. It requires `approve` for that gate; open obligations yield `ABSTAIN`. Other failures can yield `DENY` or `ERROR`. These are profile-specific validation outcomes, not a universal review state machine.
+
+The v0.1 labels `APPROVE_ROUTE`, `REJECT_ARCHIVE`, `DEFER_HOLD`, `ANNOTATE_ONLY`, and `ESCALATE` are retained here as **proposal lineage only**. They are not valid decision values in that schema and are not implemented actions. Do not silently map them to `approve`, add fields to the closed schema, or treat annotation/escalation as permission to mutate a payload. Reconcile meaning, shape, policy, and downstream effects in their owning artifacts before admitting a write path.
 
 ## 10. Review Console obligations
 
-| Obligation | Example effect |
+| Obligation for future implementation | Acceptance evidence needed |
 |---|---|
-| `role_gated_access` | Reviewer identity and clearance are checked before queue/detail/decision views |
-| `single_decision_write_path` | Mutating decisions use a governed decision recorder, not ad hoc UI writes |
-| `no_payload_editing` | Underlying item payload remains immutable from the console |
-| `evidence_required` | Review decisions carry EvidenceRef/EvidenceBundle support where material |
-| `policy_required` | Sensitivity, rights, review, and release policy gates run before decisions |
-| `auditability_required` | Reviewer, timestamp, reason, decision id, and provenance refs are durable |
-| `release_separation` | Review decision is not the same as publication/release approval |
-| `safe_error_only` | Errors reveal no protected data, internal paths, or raw validator internals |
-| `read_only_slice_separated` | Explorer Web read-only review feature cannot mutate lifecycle state |
-| `rollback_path_visible` | Decisions affecting release/promotion have correction/rollback context |
+| Role- and subject-scoped access | Denial tests for unauthenticated, expired, wrong-scope, and insufficient-clearance requests |
+| Read-only default and single write boundary | No direct lifecycle/evidence/release writes; one admitted recorder interface |
+| No self-authorization | Independent authority checks; author/reviewer separation where required |
+| Evidence-aware decisions | Evidence references, policy references, subject/version binding, and visible unresolved support |
+| Durable, replay-safe acceptance | Duplicate submission, stale version, partial failure, audit outage, and safe retry tests |
+| Release separation | Accepted review cannot issue a release decision or mark an artifact PUBLISHED |
+| Safe presentation | No sensitive fields, raw paths, credentials, unsafe markup, or protected geometry leakage |
+| Accessible review | Keyboard completion, focus handling, non-color states, and an alternative to map-only inspection |
+
+These obligations are requirements, not a claim that this app currently satisfies them.
 
 ## 11. Inspection path
 
-App source, routes, decision recorder, schemas, tests, fixtures, policy integration, audit/provenance writes, deployment state, logs, dashboards, and emitted artifacts remain `NEEDS VERIFICATION`.
+There is **no supported console start, build, or app-test command yet**: the app manifest has no scripts. Do not invent `pnpm --filter review-console dev`, a port, a URL, or an environment-variable contract. Workspace membership would not make this scaffold launchable.
+
+From a repository checkout, inspect the exact historical baseline:
 
 ```bash
-find apps/review-console -maxdepth 6 -type f | sort
-find apps/review-console apps/governed-api apps/explorer-web docs/architecture/ui policy schemas contracts data release packages tests fixtures -maxdepth 6 -type f 2>/dev/null | grep -Ei 'review.?console|ReviewRecord|ReviewDecision|EvidenceRef|EvidenceBundle|PolicyDecision|ReleaseManifest|CorrectionNotice|RollbackCard|quarantine|promot|defer|reject|approve|audit|prov|rbac|sensitivity|test|fixture' | sort
+git ls-tree -r --name-only cbd6d82bad962a58ab62cfb776ee31696b575107 -- apps/review-console
+git show cbd6d82bad962a58ab62cfb776ee31696b575107:apps/review-console/package.json
 ```
+
+Then re-pin current main and compare before building. Read the [contributor guide](../../CONTRIBUTING.md), the app/source guides, and the actual package/workflow files. Preserve the workspace's existing dependency build-script policy; this documentation update neither installs dependencies nor changes that policy.
 
 ## 12. Validation expectations
 
-Useful validation for this app should cover:
+### Existing, separate fixture check
 
-- queue/detail access denied for unauthorized roles;
-- read-only views cannot submit decisions or mutate lifecycle state;
-- only the decision pane or decision recorder can create decision records;
-- reviewer decisions do not edit original payloads;
-- decisions preserve reviewer identity, reason code, timestamps, EvidenceRef/EvidenceBundle refs, policy refs, audit/provenance refs, and routing signal refs;
-- published artifacts cannot be edited directly from Review Console;
-- sensitive, rights-limited, living-person, DNA, cultural, ecology, infrastructure, or exact-location cases fail closed when clearance or transform support is missing;
-- safe errors reveal no raw payload, internal store path, protected detail, or validator internals.
+The validator source implements the following command, to be run from a complete repository checkout:
+
+```bash
+KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 \
+  PYTHONUNBUFFERED=1 TZ=UTC \
+  python tools/validators/validate_review_record.py --fixtures
+```
+
+It checks repository-owned synthetic promotion-review fixtures, including expected negative outcomes, without creating authoritative review or release records. It is **not an app test, live-identity check, or production approval**. See the architecture's [test surface](../../docs/architecture/ui/REVIEW_CONSOLE.md#12-test-surface) for the broader fixture and future integration matrix. Command existence does not mean it passed in this README update.
+
+### Documentation and implementation checks
+
+For this README, check the inventory, manifest claims, links, preserved anchors, tables, code fences, final newline, and whitespace. Validate the required generated-work receipt against the [existing receipt schema](../../schemas/contracts/v1/receipts/generated_receipt.schema.json) and recompute the README hash. Report exactly which checks ran; no hosted pass state is asserted here.
+
+For a future runtime, add positive and negative tests for authorization, evidence gaps, policy denial, stale/superseded subjects, unknown dispositions, no-payload-editing, audit outage, retries, concurrent decisions, release separation, sensitive geometry, safe errors, and accessibility. A synthetic test success must remain distinguishable from live service or release readiness.
 
 ## 13. Safe change pattern
 
-For Review Console changes:
+1. Re-pin current main, target bytes, relevant authority, and overlapping PRs/branches. Preserve the existing app identity and section anchors; avoid unrelated Explorer, API, topology, or policy changes.
+2. Build the smallest dependency-closed **synthetic read-only** queue/detail slice first. Admit package scripts and dependencies explicitly, with tests and a safe unconfigured state; do not enable live acquisition or public access.
+3. Keep a write-capable slice separate until its semantic/schema profile, actor authority, policy evaluation, subject binding, replay/concurrency behavior, durable audit acceptance, and failure recovery are defined and tested. UI-disabled buttons alone are not authorization.
+4. Update behavior-linked app/API/contract/schema/policy/test documentation only where the implementation actually changes it. Keep generated receipts as process memory and human review pending; authoring does not grant merge, release, deployment, promotion, or publication authority.
 
-1. Add or update queue/detail/decision surface inventory.
-2. Link DTOs to schemas/contracts before changing request or decision shapes.
-3. Add fixtures for authorized view, unauthorized denial, missing evidence, policy denial, stale item, invalid decision, approve, reject, defer, annotate, escalate, safe error, and audit write cases.
-4. Add policy and separation-of-duty tests before exposing mutating decisions.
-5. Preserve EvidenceRef/EvidenceBundle refs, PolicyDecision refs, release/correction/rollback refs, audit/provenance refs, reason codes, and limitations through every decision.
-6. Update this README, governed API docs, Explorer Web read-only review docs, policy docs, schemas/contracts, and tests when behavior materially changes.
+**Rollback for this documentation change:** restore prior README blob `02512b6b8d16a8f1dfcd4c564f8b6d68b61b49e3` in a reviewed, non-force follow-up and rerun the same checks. Preserve the authoring receipt as history and record any correction rather than rewriting evidence. No data or runtime migration is required.
 
 ## 14. Definition of done
 
-- [ ] Owners are confirmed and `OWNER_TBD` is replaced.
-- [ ] App source and route inventory are documented.
-- [ ] Queue/detail/decision DTOs and schemas are verified.
-- [ ] Authorization, policy runtime, evidence resolver, release lookup, decision recorder, audit/provenance writer, and rollback hooks are documented and tested.
-- [ ] Read-only surfaces cannot mutate state.
-- [ ] Decision recorder writes are finite, auditable, and policy-gated.
-- [ ] No-payload-editing tests are present and passing.
-- [ ] Sensitive-domain and role-denial tests are present and passing.
-- [ ] Safe-error tests are present and passing.
-- [ ] Deployment, logs, dashboards, and runbooks are documented with current evidence.
+The README refresh is complete when its current-state claims, navigation, distinctions, and authoring receipt are verified. **An operational console has separate, still-open completion gates:**
+
+- [ ] Named application and review stewards are confirmed; review routing is not mistaken for independent approval.
+- [ ] An app entrypoint, framework, package scripts, configuration, and route inventory are implemented and tested.
+- [ ] Queue/detail projections and any submission contract are versioned and reconciled with their owning schemas and policy.
+- [ ] Identity, authority, evidence, sensitivity, policy, and audit integrations are tested, including outages and denials.
+- [ ] Read-only surfaces cannot mutate records; source payloads and published artifacts remain immutable to the console.
+- [ ] Any admitted recorder rejects stale, replayed, unbound, unauthorized, or insufficiently supported submissions.
+- [ ] Browser, accessibility, no-leak, recovery, and release-separation tests have exact execution evidence.
+- [ ] Deployment, operating ownership, retention, monitoring, correction, and rollback have separately approved evidence.
 
 ## 15. Open verification items
 
-| Item | Why it matters |
+| Gap | First blocked transition |
 |---|---|
-| Confirm app source files beyond README | Prevents overclaiming implementation maturity |
-| Confirm route/API integration | Required before queue/detail/decision behavior claims |
-| Confirm decision recorder location | Required before mutating review claims |
-| Confirm schemas and DTOs | Required before contract claims |
-| Confirm authorization and separation-of-duty logic | Required before role-gated claims |
-| Confirm EvidenceBundle and policy integration | Required before review support claims |
-| Confirm audit/provenance writes | Required before durable decision claims |
-| Confirm release/correction/rollback integration | Required before promotion/correction claims |
-| Confirm tests and fixtures | Required before runtime maturity claims |
-| Confirm deployment, logs, dashboards, and runbooks | Required before operational claims |
+| No executable app or package scripts in the inspected subtree | App startup/build/test claims |
+| Production disposition vocabulary and submission profile unresolved | Mutating review submission |
+| Actor/assignment authority, clearance, and independent stewardship unproved | Access to restricted subjects or consequential review |
+| Governed queue/detail/evidence/policy integration not demonstrated | Live reviewer data access |
+| Decision recorder, audit persistence, atomicity, retry, and concurrency unproved | Durable acceptance of a review |
+| Operational review ledger, deployment, and recovery not verified | Operational readiness or external exposure |
+| Release/correction/rollback handoff not demonstrated | Any downstream promotion or publication claim |
 
 <details>
 <summary>Appendix A — no-loss preservation note</summary>
 
-The previous README was a short stub: "Steward review, promotion, correction, sensitivity review. Read-only first slice." This replacement preserves that intent while separating app-level role-gated review from the Explorer Web read-only review slice and keeping mutating review decisions bounded behind policy, provenance, audit, and verification requirements.
+The original stub said: “Steward review, promotion, correction, sensitivity review. Read-only first slice.” The v0.1 expansion established the app boundary. This v0.2 refresh preserves that intent, document identity, H1, and existing section anchors while replacing June-era generic unknowns with a pinned scaffold inventory, correcting the conceptual trust flow, and separating proposal vocabulary from the existing ReviewRecord schema and fixture profile. Child guides remain separate documents with their own evidence dates.
 
 </details>
 
 ## Status summary
 
-`apps/review-console/` should contain the role-gated review deployable only after source inventory, route integration, queue/detail/decision schemas, authorization, policy runtime integration, evidence resolver integration, decision recorder, audit/provenance writes, release/correction/rollback support, tests, and operational evidence are verified.
+**CONFIRMED scaffold; PROPOSED operational console; no release or publication effect.** The app has an established responsibility home and useful feature documentation. Separate synthetic review validation exists, but neither that validator nor this README supplies a runnable console, authenticated reviewer, decision recorder, durable review ledger, or publication authority.
 
-It must preserve the KFM trust membrane and review boundary: Review Console may support human adjudication, but it must not become a public path, raw data editor, publication authority, release authority by itself, schema/contract/policy root, lifecycle store, proof store, public UI renderer, or unreviewed shortcut around governed API and audit controls.
-
-<p align="right"><a href="#top">Back to top</a></p>
+[Back to top](#top)
