@@ -8,3 +8,5 @@ allowBuilds:
   "esbuild@0.28.2": true
   "unrs-resolver@1.12.2": false
   "workerd@1.20260828.1": false
+overrides:
+  "@esbuild-kit/core-utils@3.3.2>esbuild": "0.28.2"

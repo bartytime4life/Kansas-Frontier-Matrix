@@ -1,0 +1,168 @@
+{
+  "receipt_id": "kfm:generated:code-scanning-alert-53:20260905",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "pnpm-workspace.yaml",
+    "pnpm-lock.yaml",
+    "apps/kansas-frontier-matrix-explorer/package.json",
+    "apps/kansas-frontier-matrix-explorer/package-lock.json",
+    "apps/kansas-frontier-matrix-explorer/tests/esbuild-security.test.mjs",
+    "apps/kansas-frontier-matrix-explorer/tests/fflate-security.test.mjs",
+    ".github/workflows/esbuild-security.yml",
+    "apps/kansas-frontier-matrix-explorer/docs/esbuild-security-remediation.md"
+  ],
+  "artifact_hashes": {
+    "pnpm-workspace.yaml": "sha256:b07cba9d2d137c036c03d143eba724a7912309b38edf9ba9636c87aac628360b",
+    "pnpm-lock.yaml": "sha256:181c43bad52178f637c11b2fb162a31deb1878ab1cda4c6effc72707f63730b7",
+    "apps/kansas-frontier-matrix-explorer/package.json": "sha256:dc01262ccf6af6c63dc1608fc8190c84f0eb79de2f1a3acda30569f39a58896e",
+    "apps/kansas-frontier-matrix-explorer/package-lock.json": "sha256:373ab947aad7e40e70f39c3d1d8f00cd49d243d8bc96aefa7e7d5adf32e811d4",
+    "apps/kansas-frontier-matrix-explorer/tests/esbuild-security.test.mjs": "sha256:15cea0e109b6f1eb7dfcc7279247ed2bb662201d0031f54e3b98f6e21e2cc4d2",
+    "apps/kansas-frontier-matrix-explorer/tests/fflate-security.test.mjs": "sha256:37ae86021f2da7629a3e14fb23b2c9c7cb2292dc30ca1b51c5f0ba08b6363bce",
+    ".github/workflows/esbuild-security.yml": "sha256:7ee77ebe321da23e95eda8ef808c55ae76b875af748aecbef94f1eb95c29cbd0",
+    "apps/kansas-frontier-matrix-explorer/docs/esbuild-security-remediation.md": "sha256:12c176efb9f0afd3bc0010f978b1190d1f306536e7b4922a0d4f3abce1a7643c"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Astra Pro",
+    "version": "UNKNOWN: exact serving revision is not exposed"
+  },
+  "prompt_or_contract": "sha256:05af961ae3184cbdf6bc63825851a13f8edacae38e6cdd1d612146cc7f1e34e2",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "Notion",
+      "Google Drive",
+      "web",
+      "local validation",
+      "GitHub Actions"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:4c339fbe956d5df9afbc55d51e985ffd5cfd28570b0bb4e6f76a8dbaefc2fd0d",
+      "sha256:0385813c775e79329ab1613673abe1049b33c3a12e6e262bf79adfb6c32a2086",
+      "sha256:4a9716d51a5526a4c1b4af949dfa7dddc0b0a5572345e1c4661081c6e1f09309"
+    ],
+    "evidence_refs": [
+      "github:bartytime4life/Kansas-Frontier-Matrix@3d6b8a6e81ed65a726156feae67fa73875b5b069",
+      "github:bartytime4life/Kansas-Frontier-Matrix@3d6b8a6e81ed65a726156feae67fa73875b5b069:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github:bartytime4life/Kansas-Frontier-Matrix@3d6b8a6e81ed65a726156feae67fa73875b5b069:docs/doctrine/directory-rules.md",
+      "github:bartytime4life/Kansas-Frontier-Matrix@3d6b8a6e81ed65a726156feae67fa73875b5b069:CONTRIBUTING.md",
+      "github:bartytime4life/Kansas-Frontier-Matrix@8705c0788cf9f90b63b32d7dd35b258510f586eb",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024",
+      "gdrive:1uTqdIEFZE2cq3gyISetoRYM6LIlnKqTc3FobtEx7Cbs",
+      "notion:3c9a9202-1bf6-8195-b8b1-f3a8d694b447",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33978673049",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33978939495",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33979681933"
+    ]
+  },
+  "truth_labels": {
+    "pnpm-workspace.yaml": "PROPOSED",
+    "pnpm-lock.yaml": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/package.json": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/package-lock.json": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/tests/esbuild-security.test.mjs": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/tests/fflate-security.test.mjs": "PROPOSED",
+    ".github/workflows/esbuild-security.yml": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/docs/esbuild-security-remediation.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "authenticated-current-alert-and-advisory-trace",
+      "outcome": "PASS",
+      "reason": "Run 33978673049 read alert 53 as open Scorecard v5.5.0 at main 3d6b8a6e81ed65a726156feae67fa73875b5b069; two IDs: GHSA-67mh-4wv8-2f99 and GHSA-px8p-9vwx-vf98. Run 33978939495 traced both locks and stable parent metadata."
+    },
+    {
+      "gate": "baseline-regression-reproduction",
+      "outcome": "PASS",
+      "reason": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33979681933; original locks fail five static checks; original npm runtime also fails five checks, including the malformed ZIP64 child ETIMEDOUT. Three workspace-only checks are explicitly skipped in standalone npm."
+    },
+    {
+      "gate": "scoped-generated-lockfile-integrity",
+      "outcome": "PASS",
+      "reason": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33979681933 at generator d3fcce8083efbcb1ff5900a4623530fc1f8a0d4f; four candidate Git/SHA-256 identities independently checked after artifact download. Only esbuild closure plus npm fflate backport changed; Babel 7.29.7, browserslist 4.28.8 and all allowBuilds entries preserved."
+    },
+    {
+      "gate": "real-frozen-pnpm-and-npm-installs",
+      "outcome": "PASS",
+      "reason": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33979681933; Node 22.23.2, root-pinned pnpm 11.17.0 and bundled npm 10.9.8; both frozen locks remained unchanged. No ignore-scripts or build-policy weakening."
+    },
+    {
+      "gate": "actual-package-security-and-compatibility-regressions",
+      "outcome": "PASS",
+      "reason": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33979681933; workspace 11/11 passed; standalone 8 passed, 3 workspace-only skipped. Actual esbuild transform/loopback cross-origin tests, Drizzle SQL generation without a database, fflate roundtrips and finite ZIP64 rejection passed."
+    },
+    {
+      "gate": "both-complete-dependency-audits",
+      "outcome": "PASS",
+      "reason": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33979681933; pnpm audit --json and independent npm audit --json both exited 0, reported zero vulnerability counts and neither target GHSA. This is a time-bounded package audit, not Scorecard alert closure."
+    },
+    {
+      "gate": "canonical-explorer-tests",
+      "outcome": "PASS",
+      "reason": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33979681933; 54 Vitest files / 445 tests and 128 Playwright tests passed."
+    },
+    {
+      "gate": "permanent-workflow-security",
+      "outcome": "PASS",
+      "reason": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33979681933; with the temporary probe omitted, make workflow-security passed 19 tests and scanned 485 workflows: zero invariants, new drift, baselined warnings or stale entries."
+    },
+    {
+      "gate": "canonical-explorer-build",
+      "outcome": "FAIL",
+      "reason": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33979681933; seven existing-path temporal TypeScript errors. Matching base execution not yet obtained at receipt authorship; do not call this an inherited pass or attribute it to the dependency diff without comparison."
+    },
+    {
+      "gate": "standalone-app-build-and-broad-tests",
+      "outcome": "FAIL",
+      "reason": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33979681933; both original/candidate standalone build copies lack sibling packages/maplibre. Candidate broad tests: 23 passed, 14 failed, 6 skipped; failures include missing workspace context and TypeScript API assumptions. Complete-workspace base/head comparison pending."
+    },
+    {
+      "gate": "generated-receipt-schema-and-local-artifact-inspection",
+      "outcome": "PASS",
+      "reason": "Draft202012Validator with FormatChecker against exact canonical schema blob fba21ed27ebccf1362fe397fe0c3ebd85e072685; artifact/hash/truth-label key parity and whitespace checked. Native repository receipt validator still pending."
+    },
+    {
+      "gate": "exact-final-head-hosted-ci-and-repository-native-receipt",
+      "outcome": "SKIPPED",
+      "reason": "Pending final head and hosted execution; this receipt records completed candidate evidence only. Independent review, approval, merge, public runtime, deployment and alert closure are not performed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "GHSA-67mh-4wv8-2f99",
+      "validated": true,
+      "evidence_ref": "https://github.com/advisories/GHSA-67mh-4wv8-2f99"
+    },
+    {
+      "id": "GHSA-px8p-9vwx-vf98",
+      "validated": true,
+      "evidence_ref": "https://github.com/advisories/GHSA-px8p-9vwx-vf98"
+    },
+    {
+      "id": "candidate-validation",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33979681933"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-05T17:07:26Z",
+  "emitter": "KFM scoped code-scanning alert 53 remediation session",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "DRAFT AUTHORING ONLY / NO READY, MERGE, ALERT DISMISSAL, SETTINGS OR DEPLOYMENT AUTHORITY. The prompt hash covers a normalized public user-request boundary, not hidden prompts or reasoning. The preserved esbuild-alert-63 branch is not overwritten; this candidate reconciles its overlapping slice against current main and adds the actual second alert-53 advisory. Its older npm lock is not reused. Temporary diagnostic/generation code is removed from the final PR tree; commits and runs remain lineage. This receipt excludes itself to avoid a self-hash cycle. It records actual checks, not independent review or release decisions. Close the draft unmerged to abandon it; reverting patched locks after integration reintroduces known vulnerabilities and needs security review."
+}
