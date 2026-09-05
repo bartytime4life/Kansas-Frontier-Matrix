@@ -1,0 +1,172 @@
+# TEMPORARY: current-base reconciliation on the existing esbuild branch only.
+# Remove before delivery. The separate writer stores one verified blob only.
+# No ref, PR, settings, deployment, release, source, or publication mutation.
+name: esbuild-current-base-reconciliation
+on:
+  push:
+    branches: [agent/esbuild-alert-63-20260905]
+    paths: [.github/workflows/esbuild-lock-generation.yml]
+permissions: {}
+concurrency:
+  group: esbuild-current-base-reconciliation
+  cancel-in-progress: true
+jobs:
+  collect:
+    if: github.repository == 'bartytime4life/Kansas-Frontier-Matrix'
+    permissions:
+      contents: read
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 30
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: '22.23.2'
+          package-manager-cache: false
+      - name: Reconcile pinned trees and reject unrelated or policy changes
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags --depth=30 origin 3d6b8a6e81ed65a726156feae67fa73875b5b069
+          test "$(git merge-base 8705c0788cf9f90b63b32d7dd35b258510f586eb 3d6b8a6e81ed65a726156feae67fa73875b5b069)" = 702e97d824d7305698cd66bc1f9a57edc4063440
+          tree=$(git merge-tree --write-tree 8705c0788cf9f90b63b32d7dd35b258510f586eb 3d6b8a6e81ed65a726156feae67fa73875b5b069)
+          test "${#tree}" = 40
+          mkdir -p "$RUNNER_TEMP/esbuild-evidence"
+          printf '%s\n' "$tree" > "$RUNNER_TEMP/esbuild-evidence/merged-tree.txt"
+          git worktree add --detach "$RUNNER_TEMP/esbuild-base" 3d6b8a6e81ed65a726156feae67fa73875b5b069
+          git worktree add --detach "$RUNNER_TEMP/esbuild-candidate" 8705c0788cf9f90b63b32d7dd35b258510f586eb
+          git -C "$RUNNER_TEMP/esbuild-candidate" read-tree --reset -u "$tree"
+          python3 - <<'PY'
+          import json, os, pathlib, re, subprocess
+          t = pathlib.Path(os.environ['RUNNER_TEMP'])
+          base, candidate = t/'esbuild-base', t/'esbuild-candidate'
+          app = 'apps/kansas-frontier-matrix-explorer'
+          tree = (t/'esbuild-evidence/merged-tree.txt').read_text().strip()
+          expected = {'.github/workflows/esbuild-security.yml', f'{app}/docs/esbuild-security-remediation.md', f'{app}/package.json', f'{app}/package-lock.json', f'{app}/tests/esbuild-security.test.mjs', 'data/receipts/generated/esbuild-alert-63-20260905.json', 'pnpm-lock.yaml', 'pnpm-workspace.yaml'}
+          changed = set(subprocess.check_output(['git','diff','--name-only','3d6b8a6e81ed65a726156feae67fa73875b5b069',tree],text=True).splitlines())
+          assert changed == expected, changed
+          before = (base/'pnpm-workspace.yaml').read_bytes()
+          after = (candidate/'pnpm-workspace.yaml').read_bytes()
+          assert after == before + b'overrides:\n  "@esbuild-kit/core-utils@3.3.2>esbuild": "0.28.2"\n'
+          assert subprocess.check_output(['git','hash-object',str(candidate/'pnpm-lock.yaml')],text=True).strip() == 'c5f8b7cfd08f96b7bbf438457ce5f2d1133b7e17'
+          a = json.loads((base/app/'package-lock.json').read_text())
+          b = json.loads((candidate/app/'package-lock.json').read_text())
+          binary = re.compile(r'(?:^|/)node_modules/(?:esbuild|@esbuild/[^/]+)$')
+          assert {k:v for k,v in a.items() if k!='packages'} == {k:v for k,v in b.items() if k!='packages'}
+          delta = []
+          for key in a['packages'].keys() | b['packages'].keys():
+              if a['packages'].get(key) != b['packages'].get(key):
+                  assert binary.search(key), ('unrelated npm drift',key)
+                  delta.append(key)
+          assert b['packages']['node_modules/@babel/core']['version'] == '7.29.7'
+          assert b['packages']['node_modules/@esbuild-kit/core-utils/node_modules/esbuild']['version'] == '0.28.2'
+          assert subprocess.check_output(['git','hash-object',str(candidate/'data/receipts/generated/esbuild-alert-63-20260905.json')],text=True).strip() == 'bf3201184bad6fdf59d980a7af7bd352fafd63eb'
+          (t/'esbuild-evidence/scope.json').write_text(json.dumps({'base':'3d6b8a6e81ed65a726156feae67fa73875b5b069','original_head':'8705c0788cf9f90b63b32d7dd35b258510f586eb','merged_tree':tree,'changed_paths':sorted(changed),'npm_changed_records':sorted(delta),'allowBuilds':'byte-identical to base','babel_core':'7.29.7','historical_receipt':'unchanged'},indent=2)+'\n')
+          print('Scope, all Babel records, build-script policy, and historical receipt: PASS')
+          PY
+          corepack enable
+          test "$(pnpm --version)" = 11.17.0
+      - name: Collect same-base and candidate native results without relabeling failures
+        shell: bash
+        run: |
+          set -euo pipefail
+          out="$RUNNER_TEMP/esbuild-evidence"
+          printf 'check\texit_code\n' > "$out/results.tsv"
+          run_check() {
+            name="$1"; where="$2"; shift 2
+            set +e
+            (cd "$where" && "$@") > "$out/$name.log" 2>&1
+            code=$?
+            set -e
+            printf '%s\t%s\n' "$name" "$code" >> "$out/results.tsv"
+            echo "===== $name: exit $code ====="
+            tail -n 35 "$out/$name.log"
+          }
+          for variant in base candidate; do
+            dir="$RUNNER_TEMP/esbuild-$variant"
+            (cd "$dir" && sha256sum pnpm-lock.yaml pnpm-workspace.yaml apps/kansas-frontier-matrix-explorer/package-lock.json) > "$out/$variant-locks.sha256"
+            run_check "$variant-pnpm-install" "$dir" pnpm install --frozen-lockfile
+            run_check "$variant-explorer-build" "$dir" pnpm --filter explorer-web build
+            run_check "$variant-explorer-test" "$dir" pnpm --filter explorer-web test
+            run_check "$variant-sites-build-pnpm" "$dir" pnpm --filter kansas-frontier-matrix-explorer build
+            run_check "$variant-pnpm-lock-immutability" "$dir" sha256sum -c "$out/$variant-locks.sha256"
+            npm_dir="$RUNNER_TEMP/esbuild-npm-$variant"
+            mkdir -p "$npm_dir"
+            ref=3d6b8a6e81ed65a726156feae67fa73875b5b069
+            if [ "$variant" = candidate ]; then ref=$(cat "$out/merged-tree.txt"); fi
+            git archive "$ref:apps/kansas-frontier-matrix-explorer" | tar -x -C "$npm_dir"
+            (cd "$npm_dir" && sha256sum package-lock.json) > "$out/$variant-npm-lock.sha256"
+            run_check "$variant-npm-ci" "$npm_dir" npm ci --no-fund --loglevel=error
+            run_check "$variant-sites-build-npm" "$npm_dir" npm run build
+            run_check "$variant-npm-lock-immutability" "$npm_dir" sha256sum -c "$out/$variant-npm-lock.sha256"
+          done
+          run_check candidate-pnpm-probes "$RUNNER_TEMP/esbuild-candidate" env KFM_ESBUILD_REQUIRE_WORKSPACE=1 KFM_ESBUILD_RUNTIME_PROBE=1 node --test apps/kansas-frontier-matrix-explorer/tests/esbuild-security.test.mjs
+          run_check candidate-npm-probes "$RUNNER_TEMP/esbuild-npm-candidate" env KFM_ESBUILD_RUNTIME_PROBE=1 node --test tests/esbuild-security.test.mjs
+          run_check candidate-npm-audit "$RUNNER_TEMP/esbuild-npm-candidate" npm audit --json
+          python3 - <<'PY'
+          import csv, hashlib, json, os, pathlib, platform, subprocess
+          t = pathlib.Path(os.environ['RUNNER_TEMP'])
+          out = t/'esbuild-evidence'
+          results = {r['check']:int(r['exit_code']) for r in csv.DictReader((out/'results.tsv').open(),delimiter='\t')}
+          critical = ['base-pnpm-install','base-npm-ci','candidate-pnpm-install','candidate-npm-ci','base-pnpm-lock-immutability','base-npm-lock-immutability','candidate-pnpm-lock-immutability','candidate-npm-lock-immutability','candidate-pnpm-probes','candidate-npm-probes']
+          assert all(results[k] == 0 for k in critical), results
+          assert results['candidate-npm-audit'] in (0,1)
+          audit=json.loads((out/'candidate-npm-audit.log').read_text())
+          assert 'error' not in audit and isinstance(audit.get('vulnerabilities'),dict)
+          assert 'GHSA-67mh-4wv8-2f99' not in json.dumps(audit)
+          data=(t/'esbuild-candidate/apps/kansas-frontier-matrix-explorer/package-lock.json').read_bytes()
+          (out/'candidate-package-lock.json').write_bytes(data)
+          record=json.loads((out/'scope.json').read_text())
+          record.update({'execution_commit':os.environ['GITHUB_SHA'],'results':results,'critical_checks_passed':True,'build_checks_are_separate':True,'audit_counts':audit['metadata']['vulnerabilities'],'node':subprocess.check_output(['node','--version'],text=True).strip(),'npm':subprocess.check_output(['npm','--version'],text=True).strip(),'pnpm':'11.17.0','file':{'path':'apps/kansas-frontier-matrix-explorer/package-lock.json','artifact':'candidate-package-lock.json','sha256':hashlib.sha256(data).hexdigest(),'git_blob':hashlib.sha1(f'blob {len(data)}\0'.encode()+data).hexdigest()},'authority':'BRANCH_CANDIDATE_ONLY; NO PR, REF, SETTINGS, RELEASE OR DEPLOYMENT MUTATION'})
+          (out/'record.json').write_text(json.dumps(record,indent=2)+'\n')
+          print(json.dumps(record,indent=2))
+          PY
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: esbuild-current-base-evidence
+          path: ${{ runner.temp }}/esbuild-evidence
+          retention-days: 7
+          if-no-files-found: error
+  store-blob:
+    needs: collect
+    permissions:
+      contents: write
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: esbuild-current-base-evidence
+          path: candidate
+      - name: Store exactly one verified lockfile blob; never change a ref
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib, json, os, pathlib, urllib.request
+          p=pathlib.Path('candidate')
+          r=json.loads((p/'record.json').read_text())
+          assert r['base']=='3d6b8a6e81ed65a726156feae67fa73875b5b069'
+          assert r['original_head']=='8705c0788cf9f90b63b32d7dd35b258510f586eb'
+          assert r['critical_checks_passed'] is True
+          f=r['file']
+          assert f['path']=='apps/kansas-frontier-matrix-explorer/package-lock.json'
+          assert f['artifact']=='candidate-package-lock.json'
+          data=(p/f['artifact']).read_bytes()
+          assert len(data)<2000000 and hashlib.sha256(data).hexdigest()==f['sha256']
+          assert hashlib.sha1(f'blob {len(data)}\0'.encode()+data).hexdigest()==f['git_blob']
+          lock=json.loads(data)
+          assert lock['packages']['node_modules/@babel/core']['version']=='7.29.7'
+          body=json.dumps({'content':data.decode('utf-8'),'encoding':'utf-8'}).encode()
+          request=urllib.request.Request('https://api.github.com/repos/bartytime4life/Kansas-Frontier-Matrix/git/blobs',data=body,headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json','Content-Type':'application/json'},method='POST')
+          with urllib.request.urlopen(request,timeout=30) as response:
+              result=json.load(response)
+          assert result['sha']==f['git_blob']
+          print(json.dumps({'stored_blob':result['sha'],'path':f['path'],'sha256':f['sha256'],'ref_mutations':0}))
+          PY
