@@ -134,14 +134,25 @@ export function stagePlan(ids: readonly string[], current: Workspace, cards: rea
   // Return counts only for exclusions: never echo a denied ID or its previous title.
   return { accepted, rejected, duplicates };
 }
-export function addStaged(ids: readonly string[], current: Workspace, cards: readonly CatalogCard[]): EditResult {
+export function addStaged(ids: readonly string[], current: Workspace, cards: readonly CatalogCard[], fixedOrder?: readonly string[]): EditResult {
   const before = normalizeWorkspace(current, cards);
   const plan = stagePlan(ids, before, cards); // Delivery-time defensive recheck.
   const byId = new Map(cards.map((card) => [card.id, card]));
   const next = Object.freeze([...before, ...plan.accepted.map((id) => Object.freeze({
     id, visible: true, opacity: byId.get(id)!.defaultOpacity,
   }))]);
-  return { next, undo: plan.accepted.length ? { before, after: next } : null, rejected: plan.rejected,
+  // Hosts with held/unknown render groups may require their existing order.
+  // Adding a member must not silently reorder those groups or fake readback.
+  let ordered = next;
+  if (fixedOrder) {
+    const ranks = new Map(fixedOrder.map((id, index) => [id, index]));
+    if (ranks.size !== fixedOrder.length || next.some((item) => !ranks.has(item.id))) {
+      return { next: before, undo: null, rejected: plan.accepted.length + plan.rejected,
+        notice: "Host layer order is unavailable; no additions were applied." };
+    }
+    ordered = Object.freeze([...next].sort((a, b) => ranks.get(a.id)! - ranks.get(b.id)!));
+  }
+  return { next: ordered, undo: plan.accepted.length ? { before, after: ordered } : null, rejected: plan.rejected,
     notice: `${plan.accepted.length} added to the requested stack. ${plan.duplicates} already present. ${plan.rejected} unavailable or over the limit. Rendering is a separate state.` };
 }
 export type Edit = { kind: "visible"; id: string; value: boolean }

@@ -308,3 +308,14 @@ test('malformed and oversized host state sends no write',()=>{
     assert.equal(M.confirmWorkspaceWrite(port,ws('a','b'),ws('a')).outcome,'ERROR');assert.equal(writes,0);
   }
 });
+test('fixed host order inserts new members without moving unknown render groups',()=>{
+  const result=M.addStaged(['a'],ws('b'),catalog(),['a','b']);
+  assert.deepEqual(result.next.map(x=>x.id),['a','b']);
+  assert.deepEqual(result.undo.before,ws('b'));assert.deepEqual(result.undo.after,result.next);
+});
+test('malformed fixed order refuses additions instead of faking an acknowledgement',()=>{
+  for(const order of [['b'],['a','a','b']]){
+    const result=M.addStaged(['a'],ws('b'),catalog(),order);
+    assert.deepEqual(result.next,ws('b'));assert.equal(result.undo,null);assert.equal(result.rejected,1);
+  }
+});

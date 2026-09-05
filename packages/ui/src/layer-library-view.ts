@@ -13,6 +13,8 @@ export type LibraryPort = Readonly<{
 }>;
 export type LibraryContext = Readonly<{
   cards: readonly CardInput[]; areaLabel: string; timeLabel: string;
+  /** Optional host-owned order and session restore epoch; neither is persisted here. */
+  fixedOrder?: readonly string[]; workspaceEpoch?: number;
 }>;
 function element<K extends keyof HTMLElementTagNameMap>(tag: K, text?: string, className?: string) {
   const el = document.createElement(tag);
@@ -34,7 +36,7 @@ let nextInstance = 0;
 /** Browser-native UI. No fetch, renderer, browser location, URL state or persistence.
  * The host map and its camera are deliberately outside this component's capability.
  */
-export function mountLayerLibrary(host: HTMLElement, port: LibraryPort, initial: LibraryContext) {
+export function mountLayerLibrary(host: HTMLElement, port: LibraryPort, initial: LibraryContext, options: Readonly<{ dialogHost?: HTMLElement }> = {}) {
   const instance = `kfm-library-${++nextInstance}`;
   let context = initial;
   let cards = projectCatalog(initial.cards);
@@ -122,7 +124,7 @@ export function mountLayerLibrary(host: HTMLElement, port: LibraryPort, initial:
     // Current host state and current disclosure projection are read at commit.
     const current = readWorkspace();
     if (current === null) { render(); return; }
-    const result = addStaged([...staged], current, cards);
+    const result = addStaged([...staged], current, cards, context.fixedOrder);
     if (commit(result, current)) staged.clear();
     render();
   });
@@ -135,7 +137,8 @@ export function mountLayerLibrary(host: HTMLElement, port: LibraryPort, initial:
   }, true);
   footer.append(selectionCount, button("Cancel selection", () => cancel()), undoButton, add);
   dialog.append(heading, boundary, navigation, browse, stack, notice, footer);
-  host.append(trigger, dialog);
+  host.append(trigger);
+  (options.dialogHost ?? host).append(dialog);
 
   function readWorkspace(): Workspace | null {
     try {
@@ -341,6 +344,10 @@ export function mountLayerLibrary(host: HTMLElement, port: LibraryPort, initial:
     open,
     update(next: LibraryContext) {
       if (disposed) return;
+      if (next.workspaceEpoch !== context.workspaceEpoch) {
+        undo = null; staged.clear();
+        notice.textContent = "Workspace restored; staged changes and undo cleared.";
+      }
       // Project before replacing: invalid/oversized responses fail closed instead of retaining stale cards.
       try { cards = projectCatalog(next.cards); context = next; }
       catch { cards = []; context = { ...next, cards: [] }; notice.textContent = "Catalog unavailable. No previous metadata is retained."; }

@@ -1,66 +1,103 @@
-# Temporary exact-byte authoring transport. Removed before final validation.
-# Materializes unreferenced blobs only; never writes refs, commits, PRs or releases.
+# Branch-only exact-head validation. No source admission, renderer activation,
+# PR lifecycle, repository writes, release or deployment permissions.
 name: earth-layer-library-app-validation
 on:
   push:
     branches: [agent/earth-layer-library-readback-20260905]
     paths:
       - .github/workflows/earth-layer-library-app-validation.yml
-      - apps/kansas-frontier-matrix-explorer/tests/earth-library-authoring.patch.xz.*
+      - apps/kansas-frontier-matrix-explorer/**
+      - packages/ui/src/layer-library*
+      - data/receipts/generated/genrec-earth-layer-library-app-*
 permissions:
   contents: read
 concurrency:
   group: earth-layer-library-app-validation-${{ github.ref }}
   cancel-in-progress: true
+env:
+  CI: 'true'
+  DO_NOT_TRACK: '1'
+  CLOUDFLARE_SEND_METRICS: 'false'
+  WRANGLER_SEND_METRICS: 'false'
 jobs:
-  exact-byte-authoring:
+  native-app:
     runs-on: ubuntu-24.04
-    timeout-minutes: 5
-    permissions:
-      contents: write
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
           fetch-depth: 0
-      - name: Check pins, apply exact task patch and materialize only its Git blobs
-        env:
-          GH_TOKEN: ${{ github.token }}
+      - name: Verify preserved lineage and policy preimages
         shell: bash
         run: |
           set -euo pipefail
           git merge-base --is-ancestor 34a9348ce7882284a5843f414368b92ade9d79db HEAD
           git merge-base --is-ancestor 8b9c52d88687986879c8f87d7e3835f6a58bbacd HEAD
-          python - <<'PY'
-          import base64, hashlib, json, lzma, os, pathlib, subprocess, urllib.request
-          root=pathlib.Path('.')
-          app='apps/kansas-frontier-matrix-explorer/'
-          paths=[app+'app/'+p for p in ['page.tsx','layout.tsx','site-requested-layer-state.ts','site-layer-library.tsx','site-layer-library.css']]
-          paths += [app+'tests/'+p for p in ['site-requested-layer-state.test.mjs','earth-layer-library.test.mjs','earth-layer-library.app.mjs']]
-          paths += ['packages/ui/src/layer-library-model.ts','packages/ui/src/layer-library-view.ts']
-          packed=b''.join((root/(app+'tests/earth-library-authoring.patch.xz.'+str(n))).read_bytes() for n in (0,1))
-          patch=lzma.decompress(packed)
-          assert hashlib.sha256(patch).hexdigest()=='5876e35df67a9a960c6656f9cd7b515c16ef8eebd2523e8509c22aba9bfc31d6'
-          changed=[line[6:] for line in patch.decode().splitlines() if line.startswith('+++ b/')]
-          assert set(changed)==set(paths) and len(changed)==len(paths)
-          subprocess.run(['git','apply','--check','-'],input=patch,check=True)
-          subprocess.run(['git','apply','-'],input=patch,check=True)
-          results={}
-          for path in paths:
-            content=(root/path).read_bytes()
-            expected=hashlib.sha1(b'blob '+str(len(content)).encode()+b'\0'+content).hexdigest()
-            payload=json.dumps({'content':base64.b64encode(content).decode(),'encoding':'base64'}).encode()
-            request=urllib.request.Request('https://api.github.com/repos/bartytime4life/Kansas-Frontier-Matrix/git/blobs',data=payload,headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json','Content-Type':'application/json','X-GitHub-Api-Version':'2022-11-28'},method='POST')
-            with urllib.request.urlopen(request,timeout=30) as response: received=json.load(response)['sha']
-            assert received==expected
-            results[path]={'git_blob':received,'sha256':hashlib.sha256(content).hexdigest()}
-          out=pathlib.Path(os.environ['RUNNER_TEMP'])/'earth-library-authoring';out.mkdir()
-          (out/'blob-manifest.json').write_text(json.dumps(results,indent=2)+'\n')
-          print(json.dumps(results,indent=2))
-          PY
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+          test -z "$(git ls-files '*earth-library-authoring*')"
+          mkdir -p "$RUNNER_TEMP/earth-library-app"
+          git rev-parse HEAD > "$RUNNER_TEMP/earth-library-app/head.txt"
+          git diff --stat 8b9c52d88687986879c8f87d7e3835f6a58bbacd HEAD > "$RUNNER_TEMP/earth-library-app/diff-stat.txt"
+          sha256sum package.json pnpm-workspace.yaml pnpm-lock.yaml apps/kansas-frontier-matrix-explorer/package.json apps/kansas-frontier-matrix-explorer/package-lock.json > "$RUNNER_TEMP/earth-library-app/locks.sha256"
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
-          name: earth-library-authoring-blobs
-          path: ${{ runner.temp }}/earth-library-authoring/
-          retention-days: 7
+          node-version: '22'
+          package-manager-cache: false
+      - name: Install exact frozen workspace without build-policy changes
+        id: install
+        shell: bash
+        run: |
+          set -euo pipefail
+          corepack enable
+          pnpm install --frozen-lockfile
+          sha256sum -c "$RUNNER_TEMP/earth-library-app/locks.sha256"
+      - name: Native Library and synchronous owner tests
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --test apps/kansas-frontier-matrix-explorer/tests/earth-layer-library.test.mjs apps/kansas-frontier-matrix-explorer/tests/site-requested-layer-state.test.mjs 2>&1 | tee "$RUNNER_TEMP/earth-library-app/library-node.log"
+      - name: Build the existing Explorer in the complete locked workspace
+        id: build
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          pnpm --filter kansas-frontier-matrix-explorer build 2>&1 | tee "$RUNNER_TEMP/earth-library-app/build.log"
+      - name: Existing application Node regression suite
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd apps/kansas-frontier-matrix-explorer
+          node --test tests/*.test.mjs 2>&1 | tee "$RUNNER_TEMP/earth-library-app/app-node.log"
+      - name: Install locked Playwright Chromium
+        id: browser
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: pnpm exec playwright install --with-deps chromium
+      - name: Actual HTTP app composition and browser interactions
+        if: ${{ !cancelled() && steps.build.outcome == 'success' && steps.browser.outcome == 'success' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          pnpm --filter kansas-frontier-matrix-explorer exec vite --host 127.0.0.1 --port 4173 --strictPort > "$RUNNER_TEMP/earth-library-app/server.log" 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          ready=0
+          for attempt in $(seq 1 90); do
+            if curl --fail --silent --max-time 3 http://127.0.0.1:4173/ > /dev/null; then ready=1; break; fi
+            kill -0 "$server_pid"
+            sleep 2
+          done
+          test "$ready" = 1
+          KFM_APP_URL=http://127.0.0.1:4173 KFM_APP_OUTPUT="$RUNNER_TEMP/earth-library-app/browser" node apps/kansas-frontier-matrix-explorer/tests/earth-layer-library.app.mjs 2>&1 | tee "$RUNNER_TEMP/earth-library-app/browser.log"
+      - name: Verify dependency and build-policy immutability
+        if: always()
+        run: sha256sum -c "$RUNNER_TEMP/earth-library-app/locks.sha256"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: earth-library-actual-app-${{ github.sha }}
+          path: ${{ runner.temp }}/earth-library-app/
+          retention-days: 14
           if-no-files-found: error
