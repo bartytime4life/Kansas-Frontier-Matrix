@@ -1,8 +1,4 @@
-# Temporary, branch-only evidence collection for the direct Directory Rules task.
-# Owns no topology rules and does not modify adopted files, projections, or data.
-# Network: pinned checkout and QA artifact upload only; no dependency install.
-# No PR, settings, deployment, release, source activation, or publication action.
-# Outputs are bounded inspection artifacts, not KFM receipts/proofs/release records.
+# Temporary branch-only comparison. No writes, deployments, or release actions.
 name: directory-rules-source-audit
 "on":
   push:
@@ -10,116 +6,93 @@ name: directory-rules-source-audit
 permissions:
   contents: read
 concurrency:
-  group: directory-rules-source-audit-${{ github.ref }}
+  group: directory-rules-comparison-${{ github.ref }}
   cancel-in-progress: false
 jobs:
-  inspect-pinned-main:
+  same-base-comparison:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - label: base
+            ref: 8b9c52d88687986879c8f87d7e3835f6a58bbacd
+          - label: candidate
+            ref: 3d75f67e8ca48c74e1fab43b1fdebefc383e1d23
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    timeout-minutes: 25
+    env:
+      KFM_NO_NETWORK: "1"
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONHASHSEED: "0"
+      PYTHONUNBUFFERED: "1"
+      TZ: UTC
+      CI: "true"
+      COREPACK_ENABLE_STRICT: "1"
+      COMPARISON_LABEL: ${{ matrix.label }}
+      CHECKED_REF: ${{ matrix.ref }}
     steps:
-      - name: Check out the explicit main observation, not the workflow head
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
-          ref: d1b430ca51887777766050e5582659ab34322286
-          fetch-depth: 1
+          ref: ${{ matrix.ref }}
+          fetch-depth: 2
           persist-credentials: false
-      - name: Capture complete tracked paths and bounded engineering text
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: "22"
+          package-manager-cache: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: "3.11"
+      - name: Execute independent checks and preserve every outcome
         shell: bash
         run: |
-          set -euo pipefail
           python3 - <<'PY'
-          from pathlib import Path, PurePosixPath
-          import collections, datetime, hashlib, json, os, subprocess, unicodedata, zipfile
-          base = "d1b430ca51887777766050e5582659ab34322286"
-          def git(*args):
-              return subprocess.check_output(["git", *args])
-          assert git("rev-parse", "HEAD").decode().strip() == base
-          assert not git("status", "--porcelain"), "source checkout is not clean"
-          out = Path(os.environ["RUNNER_TEMP"]) / "kfm-directory-audit"
-          out.mkdir(exist_ok=False)
-          rows=[]
-          for item in git("ls-tree", "-r", "-l", "-z", "HEAD").split(b"\0"):
-              if not item: continue
-              head, path = item.split(b"\t", 1)
-              mode, kind, oid, size = head.decode("ascii").split()
-              rows.append(dict(path=path.decode("utf-8"), mode=mode, kind=kind,
-                               git_blob=oid, size=None if size == "-" else int(size)))
-          assert rows and len(rows) == len({r["path"] for r in rows})
-          raw=(json.dumps(rows, ensure_ascii=False, indent=2)+"\n").encode()
-          (out / "tracked-paths.json").write_bytes(raw)
-          roots=collections.Counter(r["path"].split("/")[0] for r in rows if "/" in r["path"])
-          folds=collections.defaultdict(list)
-          for r in rows: folds[unicodedata.normalize("NFC",r["path"]).casefold()].append(r["path"])
-          leaf=collections.defaultdict(list)
-          all_dirs=set()
-          for r in rows:
-              p=PurePosixPath(r["path"])
-              leaf[str(p.parent)].append(p.name)
-              all_dirs.update(str(x) for x in p.parents if str(x) != ".")
-          parents={str(PurePosixPath(x).parent) for x in all_dirs}
-          placeholder_leaves=[d for d,names in leaf.items() if d not in parents and set(names)<= {"README.md",".gitkeep"}]
-          allowed={".md",".ts",".tsx",".js",".mjs",".cjs",".json",".yaml",".yml",".py",".toml",".sh",".css",".html",".txt",".rego"}
-          selected_docs={
-            "docs/doctrine/directory-rules.md", "docs/doctrine/ai-build-operating-contract.md",
-            "docs/architecture/directory-rules.md", "docs/architecture/maplibre.md",
-            "docs/architecture/temporal.md", "docs/architecture/whole-system-architecture.md",
-            "docs/registers/DRIFT_REGISTER.md", "docs/runbooks/pr-reliability-guide.md",
-            "CONTRIBUTING.md", "README.md", "SECURITY.md"
-          }
-          chosen=[]; exclusions=[]
-          for r in rows:
-              p=PurePosixPath(r["path"])
-              reason=None
-              if r["kind"]!="blob" or r["mode"] not in {"100644","100755"}: reason="non-regular-file"
-              elif r["size"] > 4*1024*1024: reason="over-4-MiB-per-file-bound"
-              elif p.parts[0] in {"data","release"} and p.name!="README.md": reason="trust-instance-payload-not-required"
-              elif p.name.startswith(".env") or p.name in {".npmrc",".netrc"}: reason="environment-input-excluded"
-              elif p.suffix == ".md" and not (
-                  r["path"] in selected_docs or r["path"].startswith("docs/adr/") or
-                  (p.name == "README.md" and (len(p.parts)<=3 or (p.parts[0]=="apps" and len(p.parts)<=5)))
-              ): reason="non-selected-document-content-in-inventory-only"
-              elif p.suffix not in allowed and p.name not in {"Makefile",".gitkeep",".gitignore",".editorconfig"}: reason="binary-or-unselected-format"
-              if reason: exclusions.append({"path":r["path"],"reason":reason}); continue
-              chosen.append(r)
-          assert sum(r["size"] for r in chosen)<=128*1024*1024, "source-text archive exceeds bounded size"
-          proc=subprocess.run(["git","cat-file","--batch"],input=("\n".join(r["git_blob"] for r in chosen)+"\n").encode(),capture_output=True,check=True)
-          position=0; included=[]
-          with zipfile.ZipFile(out / "source-text.zip","w",compression=zipfile.ZIP_DEFLATED) as archive:
-              for r in chosen:
-                  end=proc.stdout.index(b"\n",position); header=proc.stdout[position:end].decode().split()
-                  assert header == [r["git_blob"],"blob",str(r["size"])], header
-                  start=end+1; data=proc.stdout[start:start+r["size"]]; position=start+r["size"]+1
-                  assert hashlib.sha1(f"blob {len(data)}\0".encode()+data).hexdigest()==r["git_blob"]
-                  try: data.decode("utf-8")
-                  except UnicodeDecodeError:
-                      exclusions.append({"path":r["path"],"reason":"not-UTF-8"});continue
-                  archive.writestr(r["path"],data)
-                  included.append({**r,"sha256":hashlib.sha256(data).hexdigest()})
-          assert position == len(proc.stdout)
-          doctrine=git("show","HEAD:docs/doctrine/directory-rules.md")
-          assert hashlib.sha256(doctrine).hexdigest()=="44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
-          meta=dict(repository="bartytime4life/Kansas-Frontier-Matrix",checked_out_commit=base,
-           checked_out_tree=git("rev-parse","HEAD^{tree}").decode().strip(),workflow_head=os.environ["GITHUB_SHA"],
-           workflow_run=os.environ["GITHUB_RUN_ID"],attempt=os.environ["GITHUB_RUN_ATTEMPT"],
-           observed_at=datetime.datetime.now(datetime.timezone.utc).isoformat(),tracked_paths=len(rows),
-           tracked_roots=dict(sorted(roots.items())),readmes=sum(PurePosixPath(r["path"]).name=="README.md" for r in rows),
-           gitkeeps=sum(PurePosixPath(r["path"]).name==".gitkeep" for r in rows),
-           placeholder_only_leaf_count=len(placeholder_leaves),placeholder_only_leaves=sorted(placeholder_leaves),
-           nfc_casefold_collisions=[v for v in folds.values() if len(v)>1],
-           source_text_files=len(included),excluded_source_payloads=len(exclusions),
-           inventory_sha256=hashlib.sha256(raw).hexdigest(),
-           archive_sha256=hashlib.sha256((out/"source-text.zip").read_bytes()).hexdigest(),
-           limitations=["Tracked paths only; no untracked files or external consumers.","Placeholder-only is a filename classification, not a deletion decision.","Source text archive excludes trust instances, large files, binary payloads, and environment inputs.","No adoption, implementation, deployment, release, or source admission follows from this inventory."])
-          (out/"observation.json").write_text(json.dumps(meta,indent=2)+"\n")
-          (out/"source-text-manifest.json").write_text(json.dumps(included,indent=2)+"\n")
-          (out/"source-text-exclusions.json").write_text(json.dumps(exclusions,indent=2)+"\n")
-          print(json.dumps({k:v for k,v in meta.items() if k not in {"placeholder_only_leaves","nfc_casefold_collisions"}},indent=2))
+          import datetime, hashlib, json, os, pathlib, subprocess, time
+          out=pathlib.Path(os.environ['RUNNER_TEMP'])/'directory-comparison'
+          out.mkdir()
+          def capture(args): return subprocess.check_output(args,text=True).strip()
+          assert capture(['git','rev-parse','HEAD'])==os.environ['CHECKED_REF']
+          assert not capture(['git','status','--porcelain'])
+          paths=['package.json','pnpm-lock.yaml','pnpm-workspace.yaml','apps/kansas-frontier-matrix-explorer/package.json','apps/kansas-frontier-matrix-explorer/package-lock.json','docs/doctrine/directory-rules.md','tools/validators/directory_governance/repository_topology_baseline.json']
+          before={p:hashlib.sha256(pathlib.Path(p).read_bytes()).hexdigest() for p in paths}
+          meta={'label':os.environ['COMPARISON_LABEL'],'checked_out_commit':capture(['git','rev-parse','HEAD']),'checked_out_tree':capture(['git','rev-parse','HEAD^{tree}']),'workflow_head':os.environ['GITHUB_SHA'],'run_id':os.environ['GITHUB_RUN_ID'],'attempt':os.environ['GITHUB_RUN_ATTEMPT'],'job_key':os.environ['GITHUB_JOB'],'observed_at':datetime.datetime.now(datetime.timezone.utc).isoformat(),'node':capture(['node','--version']),'python':capture(['python3','--version']),'git':capture(['git','--version']),'results':[]}
+          def run(label,args,timeout=600):
+              started=time.monotonic()
+              with (out/(label+'.log')).open('w') as log:
+                  try: code=subprocess.run(args,stdout=log,stderr=subprocess.STDOUT,timeout=timeout).returncode
+                  except subprocess.TimeoutExpired: code=124;log.write('\nCOLLECTOR_TIMEOUT: command did not complete.\n')
+              meta['results'].append({'check':label,'command':args,'exit':code,'elapsed_seconds':round(time.monotonic()-started,3)})
+              (out/'observation.json').write_text(json.dumps(meta,indent=2)+'\n')
+              print(label,code,flush=True)
+              return code
+          run('wrapper-tests',['node','--test','apps/kansas-frontier-matrix-explorer/tests/build-verified.test.mjs'])
+          run('wrapper-syntax',['bash','-n','apps/kansas-frontier-matrix-explorer/scripts/build-verified.sh'])
+          python_ok=run('python-install',['python3','tools/ci/install_python_ci.py','--profile','project-runtime'])==0
+          if python_ok:
+              run('topology-fixtures',['python3','-m','unittest','discover','--start-directory','tests/validators/directory_governance','--pattern','test_validate_*topology.py','--verbose'])
+              run('topology-current-tree',['python3','tools/validators/directory_governance/validate_repository_topology.py','--trusted-baseline-ref','8b9c52d88687986879c8f87d7e3835f6a58bbacd'])
+              if meta['label']=='candidate':
+                  run('generated-receipt',['python3','tools/validators/validate_generated_receipt.py','data/receipts/generated/genrec-directory-build-context-20260905.json'])
+          package=json.loads(pathlib.Path('package.json').read_text())
+          assert package['packageManager']=='pnpm@11.17.0'
+          if run('corepack-enable',['corepack','enable'])==0 and run('pnpm-install',['pnpm','install','--frozen-lockfile'])==0:
+              run('sites-build',['pnpm','--filter','kansas-frontier-matrix-explorer','build'])
+              run('explorer-build',['pnpm','--filter','explorer-web','build'])
+              run('explorer-unit',['pnpm','--filter','explorer-web','test:unit'])
+          after={p:hashlib.sha256(pathlib.Path(p).read_bytes()).hexdigest() for p in paths}
+          meta['protected_inputs_unchanged']=before==after
+          meta['protected_input_sha256']=after
+          meta['final_tracked_diff']=capture(['git','diff','--name-only'])
+          (out/'observation.json').write_text(json.dumps(meta,indent=2)+'\n')
+          failed=any(r['exit']!=0 for r in meta['results']) or before!=after or bool(meta['final_tracked_diff'])
+          print(json.dumps(meta,indent=2))
+          raise SystemExit(1 if failed else 0)
           PY
-      - name: Upload non-release inspection packet
+      - name: Preserve comparison logs even when a substantive check fails
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          name: directory-rules-pinned-source-${{ github.run_id }}-${{ github.run_attempt }}
-          path: ${{ runner.temp }}/kfm-directory-audit/
+          name: directory-comparison-${{ matrix.label }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/directory-comparison/
           if-no-files-found: error
           retention-days: 5
