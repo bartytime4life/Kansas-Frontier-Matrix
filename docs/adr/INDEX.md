@@ -2,20 +2,20 @@
 doc_id: kfm://doc/adr-index
 title: Architecture Decision Record Index
 type: register-index
-version: v1.13
+version: v1.14
 status: draft; repository-grounded
 owners:
   - Architecture steward
   - Docs steward
 created: 2026-07-22
-updated: 2026-09-03
+updated: 2026-09-05
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
 owning_root: docs/
 responsibility: canonical human ADR file inventory and decision-status crosswalk without independent acceptance or implementation authority
 canonical_for: human ADR file inventory and decision-status crosswalk
-numbered_records: 38
+numbered_records: 39
 unassigned_scaffolds: 12
 related:
   - docs/adr/README.md
@@ -25,6 +25,7 @@ related:
   - tools/validators/validate_adr_index.py
 tags: [kfm, adr, index, governance, decisions]
 notes:
+  - "ADR-0039 registers an unadopted byte-bound Directory Rules amendment; no effective doctrine, projection, enforcement, application migration or release changes. ADR-0029 and ADR-0038 remain unchanged."
   - "ADR-0006 and ADR-0007 transition to accepted together with their source records under the binding maintainer disposition in issue #2957; this records architecture only and does not admit MapLibre, implement a runtime, or change release, deployment, or publication state."
   - "ADR-0029 remains accepted as the Directory Governance Standard v2 decision."
   - "ADR-0038 transitions to accepted under the project-owner decision in issue #4228 comment 5518331532; this accepts the Stage 1 mechanism only, leaves the machine register inert pending exact trusted-main binding, and authorizes no Stage 2 topology transition."
@@ -36,15 +37,15 @@ notes:
 
 # Architecture Decision Record Index
 
-[![numbered records](https://img.shields.io/badge/numbered_records-38-0969da)](#numbered-records)
-[![effective status](https://img.shields.io/badge/effective_status-4_accepted_%7C_34_proposed-1a7f37)](#status-interpretation)
+[![numbered records](https://img.shields.io/badge/numbered_records-39-0969da)](#numbered-records)
+[![effective status](https://img.shields.io/badge/effective_status-4_accepted_%7C_35_proposed-1a7f37)](#status-interpretation)
 [![scaffolds](https://img.shields.io/badge/unassigned_scaffolds-12-6e7781)](#unassigned-scaffolds)
 [![coherence](https://img.shields.io/badge/coherence-machine_checked-1a7f37)](../../tools/validators/validate_adr_index.py)
 
 This file is the canonical human inventory for direct ADR records and unassigned ADR scaffolds under `docs/adr/`. It records what exists and how each record is classified; it cannot accept or promote a decision independently.
 
 > [!IMPORTANT]
-> ADR-0006, ADR-0007, ADR-0029, and ADR-0038 have effective status `accepted`. The other 34 numbered records remain `proposed`; no numbered record is `superseded` or `rejected`. ADR-0006 and ADR-0007 accept architecture only—their status does not admit `maplibre-gl`, prove implementation or browser readiness, or authorize release, deployment, or publication. ADR-0038 accepts only the trusted-base correction mechanism; its machine register remains inert until a later exact-binding transition, and Stage 2 remains separate.
+> ADR-0006, ADR-0007, ADR-0029, and ADR-0038 have effective status `accepted`. The other 35 numbered records remain `proposed`; no numbered record is `superseded` or `rejected`. ADR-0006 and ADR-0007 accept architecture only—their status does not admit `maplibre-gl`, prove implementation or browser readiness, or authorize release, deployment, or publication. ADR-0038 accepts only the trusted-base correction mechanism; its machine register remains inert until a later exact-binding transition, and Stage 2 remains separate.
 
 ## Status interpretation
 
@@ -58,7 +59,7 @@ This file is the canonical human inventory for direct ADR records and unassigned
 
 ## Numbered records
 
-The numbered sequence is complete and unique from `ADR-0001` through `ADR-0038`. ADR-0006, ADR-0007, ADR-0029, and ADR-0038 are `accepted`; all other numbered records remain effectively `proposed`.
+The numbered sequence is complete and unique from `ADR-0001` through `ADR-0039`. ADR-0006, ADR-0007, ADR-0029, and ADR-0038 are `accepted`; all other numbered records remain effectively `proposed`.
 
 <!-- ADR_INDEX_TABLE_START -->
 | ID | Record | Effective status | Source metadata | Supersedes | Superseded by |
@@ -101,6 +102,7 @@ The numbered sequence is complete and unique from `ADR-0001` through `ADR-0038`.
 | `ADR-0036` | [Planning Encyclopedia Carrier, Single-Writer, and Scaffold Disposition](./ADR-0036-planning-encyclopedia-carrier-single-writer-and-scaffold-disposition.md) | `proposed` | `proposed` | — | — |
 | `ADR-0037` | [Keep `EvidenceDrawerPayload` authority in the UI family](./ADR-0037-evidence-drawer-payload-ui-authority-and-compatibility.md) | `proposed` | `proposed` | — | — |
 | `ADR-0038` | [Trusted-Base Exact Transitions for Frozen-Topology Corrections](./ADR-0038-trusted-base-topology-correction-transitions.md) | `accepted` | `accepted` | — | — |
+| `ADR-0039` | [Directory Build and Verification Profiles Amendment](./ADR-0039-directory-build-and-verification-profiles.md) | `proposed` | `proposed` | — | — |
 <!-- ADR_INDEX_TABLE_END -->
 
 ## Unassigned scaffolds

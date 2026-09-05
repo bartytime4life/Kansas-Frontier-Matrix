@@ -1,0 +1,152 @@
+{
+  "receipt_id": "genrec-directory-rules-amendment-20260905",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/adr/ADR-0039-directory-build-and-verification-profiles.md",
+    "docs/adr/directory-rules-v2.1.0-draft.1.patch",
+    "docs/architecture/directory-implementation-profiles.md",
+    "docs/architecture/directory-current-state-20260905.md",
+    "docs/adr/INDEX.md"
+  ],
+  "artifact_hashes": {
+    "docs/adr/ADR-0039-directory-build-and-verification-profiles.md": "sha256:49c7798591d64786a44b367eb8c30d5f3189e6d2198caa7eeb4bf20c08ed118a",
+    "docs/adr/directory-rules-v2.1.0-draft.1.patch": "sha256:d70b9ce5851b9e34e892d23db376f683c06e9c9a23f530db4fceb7a34f1e4ed0",
+    "docs/architecture/directory-implementation-profiles.md": "sha256:b827934b1f082467b7a85f31e6e2bf0b07e0cc82d84b73f1675dcb35266c76a6",
+    "docs/architecture/directory-current-state-20260905.md": "sha256:999745620740872da6ad6d5d25202f27a54e242ee6b582e1a5624016b7cb8727",
+    "docs/adr/INDEX.md": "sha256:a525e3ffdd3749e7b20d8f51769197627382731a03fe764336e04a44856e89a5"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Pro",
+    "version": "UNKNOWN: exact runtime build identifier is not exposed"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "Google Drive",
+      "Notion",
+      "container"
+    ],
+    "generation_settings": "UNKNOWN; no unavailable sampling values are inferred"
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:5dc4c172dfeb5c041140f3159d28e75cc5ad2f11629c8f0441e37489c0609461",
+      "sha256:48928adfee8437c95f61260f8129288c2171bc56aa386e278a753af90c9089ba"
+    ],
+    "attached_docs": [
+      "Google Drive Directory Rules: predecessor responsibility-root lineage, read-only",
+      "Notion KFM Repository Workbench: coordination snapshot, read-only"
+    ],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/docs/doctrine/directory-rules.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/docs/adr/INDEX.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/docs/adr/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/docs/architecture/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/control_plane/root_registry.yaml",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/tools/validators/directory_governance/validate_repository_topology.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/tools/validators/validate_adr_index.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/CONTRIBUTING.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/.github/CODEOWNERS",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ]
+  },
+  "truth_labels": {
+    "docs/adr/ADR-0039-directory-build-and-verification-profiles.md": "PROPOSED",
+    "docs/adr/directory-rules-v2.1.0-draft.1.patch": "PROPOSED",
+    "docs/architecture/directory-implementation-profiles.md": "PROPOSED",
+    "docs/architecture/directory-current-state-20260905.md": "PROPOSED",
+    "docs/adr/INDEX.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "source-and-inventory-integrity",
+      "outcome": "PASS",
+      "reason": "Complete 14,474-path metadata inventory re-encodes current main tree c49c300a7102600c22ce5486f2d44c36ecf84d56; 8,188 selected source payloads verified against Git blobs and SHA-256. This is not a complete local checkout or exhaustive content/consumer audit."
+    },
+    {
+      "gate": "inactive-candidate-reconstruction",
+      "outcome": "PASS",
+      "reason": "Git apply --check, reconstruction, candidate digest 800c704a1c5db1e94bb6936892c731abb8017a002767d9726f9c3f1eb057e31b, and reverse application restore predecessor bytes exactly in a disposable directory. Mutated candidate/predecessor bytes reject recorded digests."
+    },
+    {
+      "gate": "rule-and-fragment-preservation",
+      "outcome": "PASS",
+      "reason": "All 94 prior rule-definition lines preserved; 103 unique candidate rule IDs. Existing heading/explicit-anchor targets retained, including the prior version fragment. Local structural check, not full GitHub renderer certification."
+    },
+    {
+      "gate": "proposal-markdown-and-paths",
+      "outcome": "PASS",
+      "reason": "UTF-8, final newline, whitespace, metadata, one H1 per Markdown document, 73 relative links against the complete tracked path inventory and candidate paths; no new NFC/case-fold path collision. External URL availability not certified."
+    },
+    {
+      "gate": "native-adr-index-selected-overlay",
+      "outcome": "PASS",
+      "reason": "Native validate_adr_index.py checks all 39 numbered records and 12 scaffolds in the exact-source ADR overlay. Eight existing pytest cases pass. An uncoordinated accepted source status is rejected by the native diagnostic. First attempt lacked a prerequisite pointer export; exact blob retrieval corrected the overlay, not repository behavior."
+    },
+    {
+      "gate": "generated-receipt-shape-and-bindings",
+      "outcome": "SKIPPED",
+      "reason": "Pending execution immediately after emission; subsequent results belong in the delivery evidence, not retroactive edits to this authoring record."
+    },
+    {
+      "gate": "full-proposal-native-topology-and-schema",
+      "outcome": "SKIPPED",
+      "reason": "NOT RUN at emission. Recovered matching base/cleanup failures are retained as history and do not certify this separate proposal."
+    },
+    {
+      "gate": "successor-enforcement-activation",
+      "outcome": "SKIPPED",
+      "reason": "Not implemented or activated. No active standard, projection, validator digest, baseline, alias or held correction-register mutation."
+    },
+    {
+      "gate": "browser-runtime-deployment-release",
+      "outcome": "SKIPPED",
+      "reason": "Outside this documentation/inactive-patch unit; no Site, hosting, renderer, source, production-data or publication change."
+    },
+    {
+      "gate": "independent-review-and-adoption",
+      "outcome": "SKIPPED",
+      "reason": "Human review pending; no approval, override, adoption or eligible independent draft-creation boundary claimed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "adopted-directory-authority",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "canonical-adr-mechanism",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/docs/adr/INDEX.md"
+    },
+    {
+      "id": "current-source-inventory",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33986784702"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-05T21:01:52.450107+00:00",
+  "emitter": "ChatGPT: source-bound proposal authoring; local selected-source validation; GitHub branch-only delivery",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0039-directory-build-and-verification-profiles.md",
+    "drift_register_entry": null
+  },
+  "notes": "Five authored proposal artifacts plus this receipt. ADR-0039 is proposed; its patch is the single editable carrier for candidate effective text. Full reconstructed text is a verified review derivative. No current authority binding changes. Inventory facts are bounded CONFIRMED observations; recommendations and acceptance remain PROPOSED. Current-main base 8b9c52d88687986879c8f87d7e3835f6a58bbacd. Preserve ADR-0029 historical bytes, #4228 Stage 1B HOLD and Stage 2 UNAUTHORIZED, and #4024 delivery separation. The earlier standalone handoff incorrectly denied existing branch/test evidence; corrected in this packet without rewriting historical receipts. The build-context cleanup remains on its separate existing branch. No new PR, merge, settings, source activation, migration, deployment or release is authorized. Proposed rule adoption and machine cutover require distinct decisions and validation."
+}

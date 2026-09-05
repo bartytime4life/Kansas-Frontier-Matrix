@@ -1,0 +1,108 @@
+--- a/docs/doctrine/directory-rules.md
++++ b/docs/doctrine/directory-rules.md
+@@ -3,7 +3,10 @@
+ document_id: kfm://doctrine/directory-governance/v2
+ title: Kansas Frontier Matrix Directory Governance Standard
+ short_title: Directory Rules v2
+-version: 2.0.0-draft.1
++version: 2.1.0-draft.1
++updated: 2026-09-05
++predecessor_sha256: 44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e
++proposal_record: docs/adr/ADR-0039-directory-build-and-verification-profiles.md
+ status: PROPOSED_FOR_ADOPTION
+ created: 2026-07-26
+ authority_class: proposed_successor_doctrine
+@@ -19,24 +22,26 @@
+
+ # Kansas Frontier Matrix Directory Governance Standard
+
+-## Directory Rules v2.0.0-draft.1
++<a id="directory-rules-v200-draft1"></a>
++
++## Directory Rules v2.1.0-draft.1
+
+ > **Operating law:** A path is an authority claim. Place an artifact by the one responsibility that owns it, then refine by lifecycle, execution role, scope, exposure, mutability, and retention. A topic, filename, producer, or convenient import path never creates authority.
+
+ > [!IMPORTANT]
+-> This is a **complete proposed successor**, not an adopted rule set. Until an accepted decision adopts it, the current KFM placement doctrine remains controlling. Adoption should make `docs/doctrine/directory-rules.md` the single canonical human-readable rules file and convert `docs/architecture/directory-rules.md` into a temporary, read-only redirect before retirement.
++> This is a **complete proposed amendment**, not an effective replacement. ADR-0029 adopted the exact `2.0.0-draft.1` predecessor bytes, including their internal draft label. Those bytes remain controlling until a separate accepted decision and authorized effective transition install this candidate. ADR-0039 is only the proposal carrier. The architecture-path tombstone remains read-only; this amendment grants no retirement or migration authority.
+
+ | Field | Value |
+ |---|---|
+ | Document class | Governance doctrine and placement standard |
+-| Version | `2.0.0-draft.1` |
++| Version | `2.1.0-draft.1` |
+ | Status | `PROPOSED_FOR_ADOPTION` |
+-| Date | 2026-07-26 |
++| Date | 2026-09-05 amendment; 2026-07-26 predecessor |
+ | Proposed canonical home | `docs/doctrine/directory-rules.md` |
+ | Proposed machine projection | `control_plane/root_registry.yaml` |
+ | Proposed validator family | `tools/validators/directory_governance/` |
+ | Proposed conformance outcomes | `PLACE`, `SPLIT`, `MIGRATE`, `MIRROR`, `HOLD`, `DENY` |
+-| Supersedes | The attached unversioned `Directory Rules.pdf`, repository `docs/doctrine/directory-rules.md` v1.4, and repository `docs/architecture/directory-rules.md` v1.3.1 **only after adoption** |
++| Supersedes | Only the effective Directory Rules edition adopted by ADR-0029, and only after separate acceptance and cutover. ADR-0029 and its earlier supersession/adoption evidence remain historical authority records, not rewritten or retroactively rejected. |
+ | Primary reviewer classes | Documentation governance, architecture, affected responsibility-root owner, and an independent reviewer for authority-changing decisions |
+ | Core invariant | `RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLETS -> PUBLISHED`; promotion is a governed state transition, not a file move |
+
+@@ -171,6 +176,10 @@
+ | Naming convention inside one root | Root README decision unless identity or compatibility changes |
+ | Rule that changes an object family's authority owner | Accepted ADR, compatibility analysis, correction and rollback plan |
+
++### 2.4 Amendment identity and effective transition
++
++`DIR-AUTH-005` — An amendment shall identify the exact predecessor and candidate bytes, SHA-256 digests over raw UTF-8 bytes without normalization, review requirements, supersession scope, compatibility treatment, effective transition, and rollback. Preserve immutable predecessor references and historical acceptance labels/digests. Proposal authoring, inventory refresh, branch delivery, or a merge without the required acceptance evidence does not make an amendment effective. Synchronize the single writable authority, legitimate projections, and enforcement only in the separately authorized cutover; an amendment may not authorize its own dependent migration.
++
+ ---
+
+ ## 3. Truth labels and placement outcomes
+@@ -597,6 +606,30 @@
+ | Secret value | External secret store; never Git |
+ | Executable admissibility rule | `policy/`, not `configs/` |
+
++### 10.5 Implementation profiles and application composition
++
++`DIR-PROFILE-001` — Maintain three distinct layers: this normative standard; implementation profiles under existing accepted responsibility owners; and a commit-pinned, non-normative current-state inventory. Profiles explain conventions without expanding root authority. Inventory updates do not accept architecture, commission features, admit sources, or promote data. Reuse existing requirement/capability and verification identities rather than creating a competing registry.
++
++`DIR-DEP-004` — Deployable applications may own feature state, views, controllers, authentication helpers, workers, and framework-required platform files. Reusable packages shall expose explicit independently testable interfaces when genuine shared use or an independently justified boundary exists. Do not extract merely for symmetry, import another application's internals, or create catch-all ownership. Keep capabilities host-independent where practical; provider configuration does not justify a responsibility root or hosting migration.
++
++The candidate [implementation profiles](../architecture/directory-implementation-profiles.md) and [pinned inventory](../architecture/directory-current-state-20260905.md) accompany ADR-0039. Their presence while proposed does not amend the existing authority.
++
++### 10.6 Build and export input contracts
++
++`DIR-BUILD-001` — Each supported build/deployment entrypoint shall identify the edited source tree, framework entrypoints, public package interfaces, source aliases, installer/version, manifest and consumed lockfile, assembly procedure, generated inputs, builder input boundary, and excluded content. Trace aliases into sibling source packages. Preserve installer inputs with demonstrated consumers and the existing dependency build-script allow/deny policy.
++
++`DIR-BUILD-002` — An app-only export shall contain its permitted build dependencies or have a tested assembly process supplying them. Missing sibling packages shall fail explicitly rather than trigger CDN/global renderer acquisition or silent synthetic fallback. Preserve the package-owned MapLibre boundary, including workers, styles, plugins, and protocols. A minimum-file check does not prove transitive closure; test the intended assembled context without deploying.
++
++`DIR-BUILD-003` — Bundle selection shall distinguish runtime demonstrations, test-only inputs, generated assets, durable receipts/proofs, released data, secrets, internal stores, and disposable output. Copy rules shall not promote test fixtures or unadmitted data into released artifacts. Preserve fixture/model/observation disclosure and applicable rights, sensitivity, mutability, retention, correction, and rollback obligations. A manifest or successful build is not source admission or release approval.
++
++### 10.7 Verification placement and evidence
++
++`DIR-TEST-001` — App/package-local unit and component tests may colocate with their owned behavior under existing permitted conventions. Repository-wide contract, schema, policy, integration, and end-to-end checks retain explicit shared ownership. Public-safe shared fixtures and private fixtures shall declare ownership, permitted reuse, discovery, and exposure. A moved test must remain discoverable, non-vacuous, connected to its intended target and CI entrypoint, and excluded from inappropriate application bundles.
++
++`DIR-TEST-002` — Trace stable requirement/capability identities through user outcomes, app surfaces, public functions/types/commands/APIs, contracts/schemas/policies, fixtures/tests, CI, acceptance criteria, and correction/rollback dependencies. Mark missing implementation, dormant integration, missing tests, unrun checks, fixture proof, runtime proof, deployment, and release separately. Do not hand-maintain every private function or report placeholder root commands as successful validation.
++
++`DIR-TEST-003` — Changed-area checks shall address applicable denied/restricted data, stale evidence, malformed imports, unsupported time, interrupted frame changes, missing packages, and absent renderer capabilities. Preserve local-import privacy, redaction in URLs/logs/exports, finite Focus outcomes, report reproducibility, and valid/observed/retrieval/release-time distinctions. Assert expected negative diagnostics and state invariants, not any nonzero exit. Record command, revision/tree, toolchain, exit and actual result; use comparable same-base evidence before calling a failure inherited. Browser/GPU, worker/CSS, keyboard/mobile/accessibility, visual/performance, and long-session results prove only their tested behavior; an in-memory host cannot certify rendering or public operation.
++
+ ---
+
+ ## 11. Data, evidence, and release placement
+@@ -1200,6 +1233,8 @@
+
+ ## 20. Current repository convergence map
+
++This section retains the predecessor's historical convergence snapshot. It is not a September 2026 tracked-tree inventory. Current observations belong in the separately pinned, non-normative [inventory](../architecture/directory-current-state-20260905.md); do not repin the historical evidence below merely to make it appear current.
++
+ This section is **informative implementation evidence**, not timeless doctrine.
+
+ ### 20.1 Evidence snapshot
+@@ -1319,6 +1354,10 @@
+ ### Phase 5 — Enforcement graduation
+
+ Move baselined warnings to failures as each drift class reaches zero. No phase claims completion without the declared proof suite.
++
++### Amendment cutover after the original bootstrap
++
++The phases above are the retained v2 bootstrap sequence. For this amendment, first review the complete candidate and clause ledger in ADR-0039. The existing effective bytes and machine bindings remain unchanged during proposal authoring. A distinct acceptance record shall bind the exact candidate and applicable profile bytes; a later authorized effective transition shall synchronize the authority and legitimate projections/enforcement together. Keep the twenty-rule topology engine's invariant/baseline behavior intact; new prose obligations are not automatically new executable rules. Any enforcement extension requires explicit activation and focused positive/negative tests. Separate held root corrections, application convergence, source admission, deployment, and release from this cutover.
+
+ ---
+
