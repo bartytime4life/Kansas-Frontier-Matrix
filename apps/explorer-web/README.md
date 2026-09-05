@@ -2,356 +2,257 @@
 doc_id: kfm://app/explorer-web/readme
 title: Explorer Web App README
 type: app-readme
-version: v0.6
+version: v0.7
 status: draft
 owners: OWNER_TBD — Apps steward · UI steward · Map steward · Governed API steward · Policy steward · Accessibility steward · Docs steward
 created: 2026-06-16
-updated: 2026-08-24
+updated: 2026-09-05
 policy_label: public
 owning_root: apps/
-responsibility: "Orient maintainers to the bounded Explorer Web deployable, its trust boundary, verified executable slices, validation path, and graduation gates without claiming release or deployment."
-truth_posture: "CONFIRMED repository-grounded local composition and bounded synthetic interaction / PROPOSED shell decision / UNKNOWN deployment and live integration"
+responsibility: "Orient maintainers to the existing Explorer Web application, its actual composition, package boundaries, local commands, validation, and remaining graduation gates."
+truth_posture: "CONFIRMED pinned source and configuration / PROPOSED canonical-shell decision and ungraduated integration / UNKNOWN deployment and public operation"
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 366cfa9185b0d10ca27f128a8a041ca8c5312896
-  target_prior_blob: a668a318b56cd3d8987162b366d0ffbae779c50c
+  base_commit: 3d6b8a6e81ed65a726156feae67fa73875b5b069
+  target_prior_blob: 561f78ea224338b3a1748d5689a2f56bfe7a1359
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  entrypoint_blob: 787c5182777b7f26d281e7e2851344b504a70d1c
+  site_mount_blob: 7a4164e9ade0e77aeac0d0ef01d5e89df5cb9799
+  explorer_manifest_blob: 25b67b10eb4d208b780eb456853257d051a2ce39
+  maplibre_manifest_blob: f6d450af19c33011e159e123c8a07ca2bca6dfd3
 related:
   - ../README.md
-  - ../governed-api/README.md
-  - ../review-console/README.md
   - ./src/README.md
   - ./src/site/README.md
   - ./src/adapters/README.md
   - ./src/features/README.md
+  - ./src/features/temporal/README.md
   - ./src/features/story_player/current-implementation.md
   - ./src/features/map_runtime/MOBILE_PMTILES_VERIFICATION_FIXTURE.md
-  - ../../docs/adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md
+  - ../../tests/policy/test_explorer_web_adapter_boundary.py
+  - ../../packages/maplibre/package.json
   - ../../docs/adr/ADR-0005-apps-explorer-web-is-the-canonical-map-first-shell.md
-  - ../../docs/adr/ADR-0025-public-client-never-reads-canonical-internal-stores.md
+  - ../../docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md
   - ../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../../docs/doctrine/directory-rules.md
   - ../../.github/workflows/ui-build.yml
-  - ../../tests/policy/test_explorer_web_adapter_boundary.py
-tags: [kfm, apps, explorer-web, map-first, governed-ui, evidence-drawer, focus-mode, story-player, finite-outcomes, fail-closed]
+tags: [kfm, apps, explorer-web, map-first, governed-ui, evidence-drawer, focus-mode, temporal, finite-outcomes, fail-closed]
 notes:
-  - "v0.6 reconciles the app boundary with the current repository-grounded site composition, public anchor navigation, shared trust surface, and bounded synthetic Focus workspace."
-  - "The mounted composition and independently tested projections are implementation evidence for their bounded local slices, not proof of a production route tree, live Governed API transport, admitted renderer, deployment, release, or publication."
-  - "The synthetic Focus workspace accepts bounded user questions but resolves them only against deterministic repository fixtures; it does not contact a source, policy service, model runtime, or release service."
-  - "ADR-0005 remains proposed; repository presence and passing checks do not accept the shell decision."
+  - "v0.7 corrects the obsolete renderer-dependency absence claim: the package pins maplibre-gl 6.6.0 and owns a concrete adapter and Vite worker wrapper; the normal Explorer composition still uses NullMapRuntime."
+  - "Source inspection and test definitions are not fresh build, browser, hosted-CI, dependency-admission, deployment, release, or publication proof."
+  - "The temporal conformance adapter is bounded implementation of a proposed shared profile, not a live synchronized temporal Explorer."
+  - "This same-path documentation update preserves the document identity and numbered navigation anchors; application code, code-owned catalog snapshots, dependencies, and authority decisions are unchanged."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-<div align="center">
-
 # Explorer Web
 
-`apps/explorer-web/`
+`apps/explorer-web/` is KFM's **bounded browser-shell workspace**: a local Map, Knowledge, Features, and Trust composition, synthetic evidence and Focus interactions, and separately exercised feature and renderer fixtures.
 
-**KFM's bounded browser-shell workspace: a repository-grounded local composition plus fixture-first projections for evidence, trust, time, Focus, story, map-selection, artifact-verification, and review surfaces.**
-
-![status](https://img.shields.io/badge/status-draft-blue)
-![default](https://img.shields.io/badge/default-ABSTAIN%20fail--closed-d4a72c)
-![implementation](https://img.shields.io/badge/implementation-bounded%20slices-0969da)
-![renderer](https://img.shields.io/badge/renderer-HOLD-b42318)
-![deployment](https://img.shields.io/badge/deployment-UNKNOWN-6e7781)
-
-[Current state](#0-current-evidence-snapshot) · [Purpose](#1-purpose) · [Boundary](#3-authority-boundary) · [Surfaces](#7-shell-surfaces) · [Run locally](#12-inspection-path) · [Validation](#13-validation-expectations) · [Open work](#15-open-verification-items)
-
-</div>
-
----
+[Current state](#0-current-evidence-snapshot) · [Boundary](#3-authority-boundary) · [Surfaces](#7-shell-surfaces) · [Run locally](#12-inspection-path) · [Validation](#13-validation-expectations) · [Open work](#15-open-verification-items)
 
 > [!IMPORTANT]
-> **This app is not a released KFM product.** The tracked workspace, locked build/test scripts, repository-grounded site composition, bounded projections, and synthetic browser proofs are real repository implementation. The default entrypoint mounts local Map, Knowledge, Features, and Trust regions, public anchor navigation, a shared trust surface, and a bounded synthetic Focus workspace while retaining `ABSTAIN / NO_GOVERNED_RESPONSE` as its baseline trust posture. It exposes no live map, production route tree, Governed API transport, model runtime, deployment, or publication path.
+> **The normal page is not a live MapLibre map.** It mounts `NullMapRuntime` and an explicitly illustrative synthetic map stage. The shared package already pins MapLibre GL JS **6.6.0** and contains a concrete adapter and Vite worker wrapper, but their presence and isolated browser fixture do not activate them in the normal page. Renderer activation, governed layer delivery, and production readiness remain separate work.
 
 > [!CAUTION]
-> Explorer Web is downstream of trust. A rendered feature, tile, popup, story, diagnostic, score, screenshot, or generated explanation is never evidence authority. Claim-bearing UI must consume a governed finite-outcome envelope or an already released public-safe artifact and preserve evidence, policy, time, sensitivity, correction, and release context.
+> **This README does not establish a released or deployed product.** The baseline remains `ABSTAIN / NO_GOVERNED_RESPONSE`. Synthetic `ANSWER`, `REVIEWED`, or `RELEASED` examples demonstrate presentation states, not actual observations, approvals, or releases. Maps, tiles, screenshots, and generated language remain downstream of evidence and governance.
 
 ## Quick jump
 
-- [0. Current evidence snapshot](#0-current-evidence-snapshot)
-- [1. Purpose](#1-purpose)
-- [2. Repo fit](#2-repo-fit)
-- [3. Authority boundary](#3-authority-boundary)
-- [4. Default posture](#4-default-posture)
-- [5. Inputs](#5-inputs)
-- [6. Exclusions](#6-exclusions)
-- [7. Shell surfaces](#7-shell-surfaces)
-- [8. Diagram](#8-diagram)
-- [9. Decision vocabulary](#9-decision-vocabulary)
-- [10. UI obligations](#10-ui-obligations)
-- [11. Route contract](#11-route-contract)
-- [12. Inspection path](#12-inspection-path)
-- [13. Validation expectations](#13-validation-expectations)
-- [14. Definition of done](#14-definition-of-done)
-- [15. Open verification items](#15-open-verification-items)
-
----
+- [0. Current evidence snapshot](#0-current-evidence-snapshot) · [1. Purpose](#1-purpose) · [2. Repo fit](#2-repo-fit) · [3. Authority boundary](#3-authority-boundary)
+- [4. Default posture](#4-default-posture) · [5. Inputs](#5-inputs) · [6. Exclusions](#6-exclusions) · [7. Shell surfaces](#7-shell-surfaces)
+- [8. Diagram](#8-diagram) · [9. Decision vocabulary](#9-decision-vocabulary) · [10. UI obligations](#10-ui-obligations) · [11. Route contract](#11-route-contract)
+- [12. Inspection path](#12-inspection-path) · [13. Validation expectations](#13-validation-expectations) · [14. Definition of done](#14-definition-of-done) · [15. Open verification items](#15-open-verification-items)
 
 ## 0. Current evidence snapshot
 
-This README distinguishes the **mounted local composition** from the larger set of **independently executable feature slices** and from **unverified live operation**. That three-way distinction is the safest current maturity description.
+**Source review:** `main@3d6b8a6e81ed65a726156feae67fa73875b5b069`, 2026-09-05. The table records source/configuration inspected at that commit. It does not report a newly executed build, test suite, browser session, or hosted workflow.
 
-| Surface | Verified repository state | Authority limit |
+| Surface | CONFIRMED at the pinned source | Limit |
 |---|---|---|
-| Workspace and toolchain | `package.json` provides real Vite, TypeScript, Vitest, and Playwright scripts under the locked pnpm workspace. | Buildability is not deployment, release, or publication. |
-| Default entrypoint | `src/main.ts` mounts the repository-grounded Explorer site, public workspace navigation, bounded synthetic Focus workspace, and public trust surface. | Composition is local and deterministic; it is not a production route tree, transport, deployment, release, or publication path. |
-| Baseline shell posture | The composed hero preserves `ABSTAIN / NO_GOVERNED_RESPONSE`; the underlying fixed shell resolver still rejects unsupported baseline input. | The baseline remains a trust posture inside the larger composition, not the complete entrypoint. |
-| Site and workspace navigation | `src/site/` implements Map, Knowledge, Features, and Trust regions, code-owned anchor destinations, bounded public URL context, a synthetic map stage, and conservative repository catalogs. | Anchors and public context are not authenticated routes, released-layer identity, evidence authority, or live data. |
-| Adapters and feature modules | `src/adapters/` and `src/features/` contain app-local, defensive projections for multiple trust-visible surfaces. | Most are fixture-first consumers or view-model builders, not composed live routes. |
-| Evidence Drawer and trust surface | A bounded parser/resolver, keyboard-operable drawer, shared six-label trust grammar, negative copy, correction/history display, and browser tests exist. | No live `EvidenceBundle` resolver or accepted cross-root network contract is wired. |
-| Focus workspace | The normal entrypoint mounts a bounded question form that submits through an injected synthetic governed boundary and preserves finite outcomes, evidence support, withheld-context limitations, and correction history. | Deterministic fixtures only; no source retrieval, model call, policy execution, live evidence authentication, or publication. |
-| Story Player | A bounded 2D-only consumer of an already-governed public-safe StoryManifest projection and focused unit tests exist. | No live route, fetch, StoryNode resolution, map continuity, authoring, or publication. |
-| Map and PMTiles proof | Synthetic map-selection handoff and mobile-emulated PMTiles archive/index/range/render verification exist with fail-closed cases. | No admitted MapLibre dependency, live renderer boot, cryptographic trust decision, source activation, or released layer. |
-| UI validation | The `ui-build` workflow performs locked install, build, unit tests, and browser tests; a policy test constrains renderer imports and internal-store path literals. | CI is a bounded signal, not evidence, policy, review, release, deployment, or publication authority. |
-| Shell decision | ADR-0005 documents the proposed single Explorer shell and current implementation evidence. | ADR-0005 remains `proposed`; repository presence does not accept it. |
-| Deployment and operation | No current evidence in this README establishes hosting, authentication, CSP, observability, service health, or public use. | `UNKNOWN` until tied to current deployment and runtime evidence. |
+| Workspace | [App manifest](./package.json) defines Vite, TypeScript, Vitest, and Playwright commands. [Root manifest](../../package.json) pins `pnpm@11.17.0`; both declare Node `>=22.13 <23`. | Configured commands are not execution results. |
+| Normal composition | [`src/main.ts`](./src/main.ts) mounts the site, public workspace navigation, synthetic Focus workspace, and shared trust surface. | No production route tree or live governed transport is established by that wiring. |
+| Normal map stage | [`mount-explorer-site.ts`](./src/site/mount-explorer-site.ts) creates `NullMapRuntime` and decorative SVG geometry, with synthetic feature-selection cases and finite runtime-state controls. | `READY` in the null runtime is not GPU readiness, real terrain, or released-layer loading. |
+| Shared renderer package | [`packages/maplibre/package.json`](../../packages/maplibre/package.json) pins `maplibre-gl@6.6.0`; the [concrete adapter](../../packages/maplibre/src/maplibre-adapter.ts) and [Vite worker wrapper](../../packages/maplibre/src/maplibre-vite-adapter.ts) exist. | Package presence is distinct from admission evidence, default-app activation, source/layer admission, and public release. |
+| Isolated renderer fixture | [`maplibre-vite-adapter.spec.ts`](./tests/browser/maplibre-vite-adapter.spec.ts) defines local-asset boot, canvas/CSS, disposal, external-request, and unavailable-WebGL2 checks. | A test definition is not a fresh PASS. Its fixture is not the normal application or a production map. |
+| Evidence and Focus | [`GovernedClient.ts`](./src/adapters/GovernedClient.ts) is a fixture-only projection adapter; the [site composition](./src/site/README.md) documents injected synthetic Focus and evidence cases. | A defensive parser is not a network client, EvidenceBundle authentication, policy execution, or a live Qwen/Ollama connection. |
+| Public workspace context | The [site context/navigation boundary](./src/site/README.md) separates public URL context from in-memory evidence-bearing context. | URL state supplies bounded navigation input, not evidence or access eligibility. |
+| Temporal adapter | [`src/features/temporal/`](./src/features/temporal/README.md) contains browser-side conformance, identity, normalization, frame-context hygiene, and a generation-guarded reducer for a proposed common profile. | Not a live timeline, source query, synchronized map/chart frame, or release decision. |
+| CI | [`ui-build.yml`](../../.github/workflows/ui-build.yml) defines separate filtered build and test jobs after frozen installation. | Workflow definitions and older green runs do not establish the current head's result or required-check enforcement. |
+| Shell decision | [ADR-0005](../../docs/adr/ADR-0005-apps-explorer-web-is-the-canonical-map-first-shell.md) remains `proposed`; [ADR-0006](../../docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md) accepts the package-owned renderer boundary. | Architecture acceptance, dependency admission, implementation, activation, and release are different transitions. |
+| Deployment and public operation | No deployment or live-site observation was performed for this README revision. | Hosting, authentication, CSP/CORS, service health, public data, release, and rollback readiness remain UNKNOWN here. |
 
 ### Maturity summary
 
 ```text
-CONFIRMED
-  configured workspace
-  locked build and test lane
-  repository-grounded local site composition
-  code-owned public anchor navigation and bounded URL context
-  shared trust-state surface and synthetic Focus workspace
-  independently tested fixture-first projections
-  synthetic browser and boundary proofs
+CONFIRMED SOURCE
+  configured app-local build/test commands
+  local composition using NullMapRuntime and synthetic evidence/Focus cases
+  package-owned MapLibre dependency, adapter, and Vite worker wrapper
+  isolated renderer browser-test definitions
+  bounded public navigation and temporal-conformance implementation
 
 PROPOSED
-  one canonical map-first Explorer composition root
-  live route families and full governed-shell composition
+  canonical single-shell decision (ADR-0005)
+  ungraduated shared temporal profile and live integrated workflows
 
-HOLD
-  admitted renderer dependency and production map boot
-  live trust-bearing transport and public artifact loading
+HOLD / SEPARATE GATES
+  concrete renderer activation in the normal composition
+  governed source/layer delivery, live evidence/model transport, public release
 
-UNKNOWN
-  deployment, authentication, CSP, operations, public availability,
-  production data flows, and release posture
+UNKNOWN IN THIS REVIEW
+  fresh native build/test and hosted-CI results
+  deployment, operations, public availability, and release posture
 ```
 
-[Back to top](#top)
+**Keep snapshot scopes separate.** The [site README](./src/site/README.md) records its code-owned catalog snapshot at `90e8a1b231b2c07ae6346ce75ecd42a172ef67e7`. Updating this application README does not update `catalog.ts`, refresh the website's source links, or deploy a Site. Likewise, historical implementation notes inside ADRs are not current-code inventories; their decision status and acceptance scope remain controlling.
 
----
+[Back to top](#top)
 
 ## 1. Purpose
 
-Explorer Web is the deployable browser workspace in which KFM's map-first, time-aware, evidence-first posture can become inspectable to users.
+Explorer Web is the application boundary where KFM's map-first, time-aware, evidence-first posture becomes inspectable. Its intended composition includes persistent map context, layer discovery, evidence and provenance, distinct time kinds, finite Focus outcomes, stories, comparison, export, settings, diagnostics, and accessible non-map alternatives.
 
-Its intended role is to compose:
-
-- a persistent governed shell;
-- bounded map interaction and layer discovery;
-- trust, freshness, time-kind, sensitivity, and release indicators;
-- Evidence Drawer handoffs;
-- finite Focus Mode outcomes;
-- Story Player, Compare, Export, Settings, Diagnostics, and read-only review views;
-- accessible non-map alternatives and negative states.
-
-The current implementation proves a defensive, repository-grounded local composition and multiple bounded projection slices. It does **not** yet prove an integrated live map application. See the [site-composition README](./src/site/README.md), [feature catalog](./src/features/README.md), and [ADR-0005](../../docs/adr/ADR-0005-apps-explorer-web-is-the-canonical-map-first-shell.md) for the deeper implementation boundary and proposed shell decision.
-
-[Back to top](#top)
-
----
+The current normal page implements a local, fixture-first subset. Other modules and fixtures are not automatically mounted features. Use the [source orientation](./src/README.md), [site composition](./src/site/README.md), [adapter boundary](./src/adapters/README.md), and [feature catalog](./src/features/README.md) to trace a feature before describing it as integrated.
 
 ## 2. Repo fit
 
-Accepted Directory Rules place deployable application code under `apps/`. This existing README remains at the app boundary; no path, root, or authority migration is introduced here.
+This is the existing **`explorer-web` pnpm workspace**, not the separately tracked Sites-derived `apps/kansas-frontier-matrix-explorer/` application described by the [parent README](../README.md). Do not transfer the sibling's package-lock, framework, URL, screenshots, or deployment history to this app. No second Explorer, path migration, or deployment is created by this document.
 
-| Concern | Owning surface | Relationship to Explorer Web |
+The direct app structure at the evidence pin is:
+
+```text
+apps/explorer-web/
+├── README.md
+├── index.html
+├── package.json
+├── playwright.config.ts
+├── src/
+├── tests/
+├── tsconfig.json
+└── vite.config.ts
+```
+
+| Responsibility | Owning surface | Explorer relationship |
 |---|---|---|
-| Deployable browser composition | `apps/explorer-web/` | App workspace, default entrypoint, app-local features, adapters, and tests |
-| Dynamic trust-bearing interface | [`apps/governed-api/`](../governed-api/) | Normal future transport for claim-bearing responses |
-| Steward review | [`apps/review-console/`](../review-console/) | Separate review authority; Explorer may expose read-only projections only |
-| App-local boundary adapters | [`src/adapters/`](./src/adapters/) | Defensive translation of governed or bounded fixture inputs |
-| App-local feature modules | [`src/features/`](./src/features/) | UI composition and view-model behavior |
-| Shared UI primitives | [`packages/ui/`](../../packages/ui/) | Reusable components when extracted from app-local ownership |
-| Renderer wrapper | [`packages/maplibre/`](../../packages/maplibre/) | Current scaffold/adapter authority; functional runtime remains held |
-| Contracts and schemas | `contracts/`, `schemas/` | Meaning and machine shape; Explorer references but does not redefine them |
-| Policy | `policy/` | Rights, sensitivity, access, telemetry, and admissibility decisions |
-| Lifecycle and evidence objects | `data/` | Internal records, receipts, proofs, catalogs, and published artifacts; never direct browser stores |
-| Release and rollback | `release/` | Publication, correction, withdrawal, supersession, and rollback authority |
-| Architecture and decisions | `docs/` | Doctrine, proposed decisions, UI architecture, and operational guidance |
-| Cross-root enforcement | [`tests/policy/test_explorer_web_adapter_boundary.py`](../../tests/policy/test_explorer_web_adapter_boundary.py) | Bounded static guard against renderer-import and internal-store bypass |
+| Deployable browser composition | `apps/explorer-web/` | Entrypoint, app-local adapters, features, and tests |
+| Dynamic trust-bearing interface | `apps/governed-api/` | Governed transport boundary; the normal composition is not wired to live service |
+| Steward review | `apps/review-console/` and review governance | Explorer may display read-only projections, not perform approvals |
+| Reusable renderer implementation | `packages/maplibre/` | KFM-owned port and package-owned acquisition seam |
+| Reusable UI and temporal logic | Existing responsibility-owning packages, when actually shared | Do not create parallel authority or claim extraction without evidence |
+| Meaning / shape / admissibility | `contracts/` / `schemas/` / `policy/` | Refer to their authority; do not redefine it in feature code |
+| Lifecycle records / release decisions | `data/` / `release/` | No direct internal-store access or client-side promotion |
+| Deployment and provider wiring | `infra/` / `runtime/` | Separate exposure and service responsibilities |
 
 ### Placement basis
 
-- **CONFIRMED:** `apps/` owns deployable applications under accepted Directory Rules and ADR-0029.
-- **CONFIRMED:** this is a same-path README modernization; there are no new, moved, renamed, or deleted paths.
-- **PROPOSED:** ADR-0005 would make this exact child workspace the single canonical map-first shell.
-- **NEEDS VERIFICATION:** final owner roles and any branch-protection or required-review enforcement.
+[ADR-0029](../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts the exact [Directory Rules](../../docs/doctrine/directory-rules.md) bytes and establishes the doctrine path as the single writable human authority. Deployable applications belong under `apps/`; reusable renderer code belongs under `packages/`. The legacy architecture-path rules are read-only compatibility, not an alternative authority.
 
-[Back to top](#top)
-
----
+This is a same-path app README update. Its paired authoring receipt belongs in the established [`data/receipts/generated/`](../../data/receipts/generated/README.md) process-memory lane. Neither change accepts ADR-0005, assigns unverified stewards, creates a new root, or alters lifecycle ownership. Human review and any independent-review requirement remain separate from authorship.
 
 ## 3. Authority boundary
 
-Explorer Web may present governed results. It may not create or silently strengthen their authority.
+The invariant remains:
 
 ```text
-sources / lifecycle stores / evidence / policy / review / release
-                              |
-                              v
-              governed interface or released public-safe artifact
-                              |
-                              v
-                   apps/explorer-web/src/adapters
-                              |
-                              v
-                   apps/explorer-web/src/features
-                              |
-                              v
-              shell / drawer / story / compare / export / diagnostics
+RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 ```
+
+Promotion is a governed transition, not a file move, commit, successful test, layer toggle, or generated explanation. Public clients use governed interfaces and already released public-safe artifacts, never internal working stores.
 
 ### Explorer Web may
 
-- validate and project a bounded response before rendering;
-- preserve finite outcomes, evidence handles, citations, time kinds, policy labels, release state, and correction lineage;
-- treat map interactions as candidate scope for governed resolution;
-- render already released public-safe immutable artifacts with integrity and release context;
-- propose safe user actions or navigation without executing authority-bearing transitions;
-- emit minimized, non-secret UI telemetry only when the applicable contract and policy allow it.
+- Validate and project bounded responses, retaining finite outcomes, evidence handles, citations, source roles, time, rights, sensitivity, release, and correction context.
+- Treat map interaction and public workspace state as candidate scope for governed resolution.
+- Present already released public-safe artifacts through an approved delivery path; propose safe navigation without executing authority-bearing transitions.
+- Emit only minimized telemetry when an applicable contract and policy permit it.
 
 ### Explorer Web must not
 
-- read `RAW`, `WORK`, `QUARANTINE`, `PROCESSED`, candidate, canonical, internal, graph, vector, or object stores directly as browser truth;
-- call model providers or model runtimes directly;
-- infer evidence from pixels, feature properties, route parameters, telemetry, local files, or generated prose;
-- execute source admission, policy, review, promotion, release, correction, rollback, or publication;
-- reverse server-side redaction, generalization, suppression, delay, or denial;
-- redefine contracts, schemas, policy, renderer authority, receipt semantics, or release meaning inside feature code.
+- Read RAW, WORK, QUARANTINE, PROCESSED, candidate, canonical, internal, graph, vector, or object stores directly as browser truth.
+- Call model providers or local model runtimes directly, or treat Qwen/Ollama output as evidence.
+- Infer authority from pixels, feature properties, URLs, local imports, telemetry, badges, or generated prose.
+- Perform source admission, policy evaluation, review approval, promotion, release, correction, rollback, or publication.
+- Reverse redaction, generalization, suppression, delayed access, or denial; expose protected detail through export, URLs, logs, or caches.
+- Fork semantic contracts, schemas, policy, renderer acquisition, receipt meaning, or release authority inside the app.
 
-> [!IMPORTANT]
-> A static edge may serve an already released public-safe artifact. It must not become a second API, canonical store, policy engine, or publication authority.
-
-[Back to top](#top)
-
----
+A static delivery edge may serve an already released public-safe artifact. It must not become a second API, truth store, policy engine, or publication authority. `EvidenceRef -> EvidenceBundle` resolution remains outside renderer truth.
 
 ## 4. Default posture
 
-The browser fails safe.
+The default shell retains `ABSTAIN / NO_GOVERNED_RESPONSE`. Positive fixture cases do not override that live-integration boundary.
 
-When a required trust-bearing input is absent, malformed, stale, denied, unsupported, conflicted, unreleased, superseded, or outside scope, the UI must show a bounded negative state instead of guessing or silently falling back.
+Absent, malformed, stale, denied, unsupported, conflicted, unreleased, superseded, or out-of-scope trust input must produce a bounded negative state, not an invented answer or silent fallback. Required context varies with consequence, but material claims need inspectable evidence, source role, provenance, distinct time semantics, rights/sensitivity obligations, release/correction lineage, and an accessible textual status.
 
-Required context depends on consequence, but claim-bearing views normally need:
-
-- a validated finite-outcome envelope;
-- evidence or citation handles where a claim is made;
-- source role and provenance summary;
-- valid, observed, source, retrieval, release, correction, and freshness time where material;
-- rights, sensitivity, access, redaction, and generalization obligations;
-- release, correction, supersession, withdrawal, and rollback context;
-- an accessible textual status that does not rely on color, map position, or animation alone.
-
-The default shell deliberately proves the absence path first. Broader feature slices may implement positive fixture cases, but they do not override the composed app's fail-closed maturity boundary.
-
-[Back to top](#top)
-
----
+Unclear cultural or sovereignty obligations, living-person/DNA information, rare species, archaeology, private land, infrastructure, or exact locations remain subject to denial, quarantine, generalization, redaction, staged access, or delay. The browser preserves supplied protections; it does not decide that unclear rights or sensitivity are safe.
 
 ## 5. Inputs
 
 | Input family | Examples | Required posture |
 |---|---|---|
-| Finite response | `ANSWER`, `ABSTAIN`, `DENY`, `ERROR`, reason code, bounded message | Parse and validate before render |
-| Evidence support | `EvidenceRef`, EvidenceBundle-derived summary, citation and support references | Required for consequential claims |
-| Policy and rights | audience, access, sensitivity, rights, redaction, generalization, delay, suppression | Preserve; never weaken client-side |
-| Release support | release reference, artifact digest, correction lineage, rollback target | Visible where material |
-| Time support | valid, observed, source, retrieval, release, correction, freshness, stale state | Keep time kinds distinct |
-| Layer and map state | released layer manifest, selected feature candidate, viewport, tile status | Candidate interaction, never truth by itself |
-| Story state | public-safe StoryManifest projection, node order, support references | Playback only when all gates remain satisfied |
-| Export state | selected scope, citations, policy obligations, release identity | Governed export only |
-| Review projection | status, history, provenance, reviewer-facing summary | Read-only unless a separate authorized workflow owns mutation |
-| Diagnostics and telemetry | bounded version/status metadata and minimized event names | No secrets, raw evidence, prompts, model output, or restricted geometry |
-| Accessibility state | labels, focus return, keyboard paths, reduced motion, contrast, non-map alternative | Required for public and semi-public use |
+| Finite response | `ANSWER`, `ABSTAIN`, `DENY`, `ERROR`, reason code, bounded message | Parse before render; unknown outcomes fail closed |
+| Evidence | EvidenceRef, EvidenceBundle-derived projection, citations | Required for consequential claims; fixture support stays labeled |
+| Policy and rights | Audience, access, sensitivity, redaction, generalization, delay | Preserve; never weaken client-side |
+| Release | Release identity, artifact digest, correction and rollback references | Integrity alone does not establish release eligibility |
+| Time | Valid, observed, source, retrieval, release, correction, freshness | Do not collapse distinct meanings into a single timestamp |
+| Map and layers | Camera, candidate selection, released layer identifiers, tile status | Interaction context is not truth or source admission |
+| Story and comparison | Ordered nodes, support references, compatible place/time scopes | Preserve support and representation limits across transitions |
+| Export | Scope, citations, rights, redaction, release and correction state | A download is not a publication decision |
+| Review projection | Safe status, history, provenance | Read-only; no approval inferred from a badge |
+| Diagnostics and accessibility | Minimized events, labels, focus, reduced motion, non-map paths | No secrets, prompts, raw evidence, or protected geometry |
 
-Inputs may come from test fixtures while a feature is under development. Fixture success must remain visibly distinct from live transport or released-data support.
-
-[Back to top](#top)
-
----
+The temporal adapter separates requested state from committed frame context. Its [documented boundary](./src/features/temporal/README.md) preserves raw labels, compares timezone-aware instants, returns unsupported outcomes for unknown timezones/geologic-age boundaries, and withholds actual timestamps and evidence references for withheld layers. These are bounded adapter semantics, not a functioning live temporal service.
 
 ## 6. Exclusions
 
-| Does not belong in Explorer Web authority | Owning surface |
+| Does not belong in this app's authority | Owning surface or handling |
 |---|---|
-| Governed API implementation and trust-bearing transport | `apps/governed-api/` |
-| Mutating steward review workflows | `apps/review-console/` and review governance |
-| Shared reusable UI primitives | `packages/ui/` |
-| Renderer wrapper implementation | `packages/maplibre/` or an accepted successor |
-| Model runtime and provider clients | `runtime/` behind governed interfaces |
-| Source connectors and admission | `connectors/`, registries, and source policy |
-| Semantic contracts | `contracts/` |
-| Machine schemas | `schemas/` |
-| Rights, sensitivity, access, telemetry, and release policy | `policy/` |
-| RAW through PUBLISHED lifecycle records | `data/` under the correct phase/family |
-| Release manifests, correction notices, withdrawal, and rollback cards | `release/` |
-| Secrets, tokens, private keys, protected endpoints | deployment secret manager or environment |
-| Production evidence copied into fixtures | prohibited; use deterministic synthetic or public-safe minimized fixtures |
-
-[Back to top](#top)
-
----
+| Governed API implementation or mutating steward workflow | `apps/governed-api/`, `apps/review-console/`, and review governance |
+| Shared renderer implementation, raw renderer types, workers, plugins or protocol acquisition | Accepted `packages/maplibre/` boundary; no app-local/CDN alternative |
+| Source acquisition, admission, and lifecycle transformation | `connectors/`, registries, `pipelines/`, and their policies |
+| Canonical meaning, validation shape, or policy decisions | `contracts/`, `schemas/`, `policy/` |
+| Internal data, proof objects, release/correction/rollback decisions | Correct `data/` phase/family and `release/` authority |
+| Direct provider/model clients | Governed runtime integration behind the public trust boundary |
+| Secrets and protected endpoints | Authorized secret-management and deployment controls, never committed browser content |
+| Production evidence copied into fixtures | Prohibited; use synthetic or appropriately minimized public-safe examples |
 
 ## 7. Shell surfaces
 
-The directory contains a growing catalog of bounded feature families. Presence means a path exists; maturity must be established from its implementation, fixtures, tests, and composition.
-
-| Family | Current evidence | Current boundary |
+| Family | Current bounded surface | Integration limit |
 |---|---|---|
-| Shell and trust chrome | Repository-grounded site composition, public anchor navigation/context, baseline shell posture, shared trust surface, and focused tests | Local/static and fixture-first; no production route tree, authentication, transport, or deployment |
-| Evidence surfaces | Mounted Evidence Drawer/trust projections plus citation pill, tooltip, provenance, attestation, lineage, and denial slices | Fixture-first; no live evidence resolver |
-| Focus and story | Mounted synthetic Focus workspace, Focus composed-claim tests, and bounded Story Player consumer | No live governed transport, model call, story route, or story publication |
-| Map and layers | Synthetic map-selection bridge, layer catalog/lineage projections, HUC crosswalk, mobile PMTiles verification | No admitted MapLibre runtime or released layer |
-| Domain panels | Fauna and environmental/soil/hydrology-oriented projections | Domain UI projections, not domain truth |
-| Review and governance visibility | Read-only review, promotion-gate, watcher/source-health, STAC, OCI, and diagnostics projections | No review mutation or authority transition |
-| Compare and export | App-local feature boundaries and defensive contracts | Integrated public workflows remain `NEEDS VERIFICATION` |
-| Settings and accessibility | Feature-boundary obligations and focused behavior in tested slices | Full integrated preference persistence and accessibility audit remain open |
+| Shell and navigation | Four public anchor regions, sanitized public context, bounded deep-link handling | Anchors are not authenticated production routes |
+| Map | Null-runtime status and synthetic feature-to-drawer cases | No real renderer or admitted layer in the normal composition |
+| Shared renderer | Package-owned concrete adapter, Vite worker wrapper, isolated browser fixture | Normal-page activation and source/layer delivery remain separate |
+| Evidence and trust | Defensive payload projections, shared six-label trust grammar, evidence/correction history | No live EvidenceBundle resolver or policy execution |
+| Focus | Mounted synthetic question workspace and bounded response cases | No source retrieval or direct/live model invocation |
+| Temporal | Proposed-profile conformance adapter and frame-state reducer | No claim of composed playback or map/chart/report synchronization |
+| Story, domain panels, comparison and export | App-local feature families and fixture-oriented consumers | Presence is not proof of a complete public workflow |
+| Review and diagnostics | Read-only projections and safe negative-state guidance | No review, source-admission, promotion, or release transition |
+| Accessibility and settings | Focused interaction fixtures and feature obligations | Whole-app conformance and integrated preferences remain unverified |
 
-For the authoritative child inventory and per-feature obligations, use [`src/features/README.md`](./src/features/README.md). Two high-signal current implementation notes are:
+The [feature catalog](./src/features/README.md) is the navigation starting point, not independent proof of maturity. Trace the source, inputs, entrypoint consumption, and tests for the specific capability. File and test counts are intentionally omitted because they drift.
 
-- [`Story Player current implementation`](./src/features/story_player/current-implementation.md)
-- [`Mobile PMTiles verification fixture`](./src/features/map_runtime/MOBILE_PMTILES_VERIFICATION_FIXTURE.md)
-
-> [!WARNING]
-> Do not convert this table into a route list. A feature directory, test, README, or view-model builder does not prove navigation wiring, live transport, released inputs, deployment, or public readiness.
-
-[Back to top](#top)
-
----
+Retain the narrower [Story Player implementation note](./src/features/story_player/current-implementation.md) and [mobile PMTiles fixture note](./src/features/map_runtime/MOBILE_PMTILES_VERIFICATION_FIXTURE.md): the former describes a 2D-only governed-projection consumer, not a mounted story route; the latter describes synthetic in-memory archive/range/digest checks and mobile-emulated PNG rendering, not cryptographic signature verification, real-device support, live hosting, or MapLibre activation. Their historical test reports must not be relabeled as fresh results.
 
 ## 8. Diagram
+
+The intended trust flow below is an architectural boundary, **not a claim that its live transport is mounted**. The normal composition currently uses injected synthetic projections.
 
 ```mermaid
 flowchart LR
     released["governed response or released public-safe artifact"] --> adapters["src/adapters"]
     adapters --> features["src/features"]
-    features --> shell["Explorer shell"]
-    features --> drawer["Evidence Drawer"]
-    features --> story["Story / Focus / Compare / Export"]
-    features --> diagnostics["safe diagnostics"]
-
-    mapEvent["map or tile interaction candidate"] --> mapPort["renderer-neutral map port"]
-    mapPort --> resolver["injected governed resolver"]
+    features --> shell["Explorer shell / Evidence Drawer"]
+    features --> outputs["Focus / Story / Compare / Export / diagnostics"]
+    selection["map interaction candidate"] --> port["KFM-owned runtime port"]
+    port --> resolver["governed resolver boundary"]
     resolver --> outcome{{"ANSWER / ABSTAIN / DENY / ERROR"}}
-    outcome --> features
-
-    internal["RAW / WORK / QUARANTINE / canonical stores / model providers / secrets"] -. "DENY" .-> features
-    authority["policy / review / release / correction / rollback"] -. "display state only" .-> features
+    outcome --> adapters
+    internal["internal lifecycle stores / direct model providers / secrets"] -. "DENY" .-> features
+    authority["policy / review / release / correction / rollback"] -. "display supplied state only" .-> features
 ```
-
-The renderer, UI, and generated language remain downstream carriers. Evidence and release authority stay outside the browser.
-
-[Back to top](#top)
-
----
 
 ## 9. Decision vocabulary
 
@@ -359,94 +260,71 @@ The renderer, UI, and generated language remain downstream carriers. Evidence an
 
 | Outcome | UI behavior |
 |---|---|
-| `ANSWER` | Render only the bounded supported content, citations, and governing context. |
-| `ABSTAIN` | Explain that support is missing, stale, conflicted, out of scope, or not released. |
-| `DENY` | Withhold protected content and show only a safe public reason class or next step. |
-| `ERROR` | Report an operational failure without falling back to unvalidated content. |
+| `ANSWER` | Present only bounded supported content with citations and governing context |
+| `ABSTAIN` | Explain insufficient, stale, conflicted, out-of-scope, or unavailable support |
+| `DENY` | Withhold protected content and expose only a safe reason or next step |
+| `ERROR` | Report a bounded operational failure without unvalidated fallback |
 
 ### Supporting UI states
 
-`LOADING`, `EMPTY`, `HOLD`, `RESTRICTED`, `STALE`, `DEGRADED`, `CONFLICT`, `SUPERSEDED`, `WITHDRAWN`, and `UNAVAILABLE` may refine the interface. They must not silently coerce into `ANSWER`.
+`LOADING`, `EMPTY`, `HOLD`, `RESTRICTED`, `STALE`, `DEGRADED`, `CONFLICT`, `SUPERSEDED`, `WITHDRAWN`, and `UNAVAILABLE` may refine presentation. They are not additional answer authorities and must not silently become `ANSWER`.
 
-Rules:
-
-1. Unknown outcome values fail closed.
-2. A prior positive render is cleared when the next result denies or errors.
-3. Negative copy does not leak restricted fields or hidden policy reasons.
-4. Retry is offered only when retry is safe and meaningful.
-5. Correction, supersession, and withdrawal state outrank cached positive presentation.
-
-[Back to top](#top)
-
----
+Unknown outcomes fail closed. Denial or error clears prior positive presentation; negative copy does not leak protected fields. Retry is offered only when safe and meaningful. Correction, supersession, and withdrawal outrank cached positive content. `LOADING` is a transient browser condition, not a governed result.
 
 ## 10. UI obligations
 
 | Obligation | Required effect |
 |---|---|
-| `governed_interface_only` | Claim-bearing dynamic data enters through a governed boundary. |
-| `released_static_only` | Static artifacts are already released, public-safe, integrity-bound, and correction-aware. |
-| `runtime_validation` | Malformed or unknown envelopes cannot become display truth. |
-| `evidence_visible` | Consequential claims expose inspectable support or abstain. |
-| `policy_preserved` | Rights, sensitivity, access, redaction, and generalization survive every handoff. |
-| `time_kinds_preserved` | Distinct time semantics are not flattened into one timestamp. |
-| `renderer_downstream` | Map state scopes a request; it does not prove the result. |
-| `finite_negative_states` | Deny, abstain, error, stale, conflict, and unavailable states are first-class. |
-| `correction_aware` | Corrected, superseded, withdrawn, or rolled-back content cannot remain silently current. |
-| `safe_export` | Exports preserve citation, release, rights, redaction, and correction context. |
-| `safe_telemetry` | Telemetry contains minimized event metadata only. |
-| `accessible_by_default` | Keyboard, focus, screen reader, reduced motion, contrast, non-color status, and non-map alternatives are testable. |
-| `no_browser_model` | No direct provider SDK or model-runtime call exists in public client code. |
-| `no_authority_fork` | Feature code does not reimplement schema, policy, evidence, release, or review authority. |
-
-[Back to top](#top)
-
----
+| `governed_interface_only` / `released_static_only` | Dynamic claims use the trust boundary; static carriers retain release, integrity, and correction context |
+| `runtime_validation` / `evidence_visible` | Unknown or malformed payloads cannot become display truth; consequential claims expose support or abstain |
+| `policy_preserved` / `time_kinds_preserved` | Preserve rights, sensitivity, redaction, generalization, and distinct time semantics |
+| `renderer_downstream` / `no_authority_fork` | Renderers scope requests; app code does not fork evidence, policy, schema, or release authority |
+| `finite_negative_states` / `correction_aware` | Missing, denied, errored, stale, conflicted, corrected, and withdrawn states remain visible |
+| `safe_export` / `safe_telemetry` | Preserve citation and access obligations; minimize payloads and prevent sensitive leakage |
+| `accessible_by_default` | Test keyboard, focus, screen-reader, reduced-motion, contrast, non-color, and non-map paths proportionately |
+| `no_browser_model` | No direct provider SDK or model-runtime connection in the public client |
 
 ## 11. Route contract
 
-A production route tree is not yet established. Any future long-lived route must document or encode:
+The current public navigation is anchor-based. A future production route needs explicit identity, owner, audience, accepted inputs, governed adapter or released-artifact origin, finite outcomes, place/time scope, evidence and correction display, protected-field handling, accessibility, tests, and rollback/disable behavior.
 
-- stable route identity, owner, purpose, audience, and sensitivity posture;
-- accepted inputs and the governed adapter or released-artifact source;
-- finite outcomes and all negative states;
-- evidence, citation, policy, release, correction, and time display;
-- map-selection and Evidence Drawer handoffs;
-- redaction/generalization behavior that cannot be reversed in the browser;
-- loading, empty, stale, denied, abstained, errored, conflicted, superseded, and withdrawn behavior;
-- accessible heading, landmark, keyboard, focus-entry, focus-return, announcement, reduced-motion, and non-map paths;
-- export and telemetry behavior, if present;
-- deterministic fixtures and tests;
-- rollback or disable path.
+Do not promote `publicSafe: true`, a layer ID, a route parameter, or a saved URL into policy approval. The current public-context boundary rejects evidence-bearing selections in URL serialization; governed resolution must recover admissible support after navigation. In-memory transfer and public sharing are different exposure paths.
 
-A route is not considered implemented because its name appears in documentation or a feature folder. Evidence requires route wiring, accepted inputs, focused tests, browser behavior, and the relevant governed upstream support.
-
-[Back to top](#top)
-
----
+A feature folder, view-model builder, route name in prose, or fixture page does not prove normal-entrypoint wiring, production authentication, live transport, released inputs, or deployment.
 
 ## 12. Inspection path
 
 ### Run the bounded workspace
 
-From the repository root:
+Use the repository's declared Node range (`>=22.13 <23`) and exact package-manager pin (`pnpm@11.17.0`). From the repository root:
 
 ```bash
+node --version
 corepack enable
+pnpm --version
 pnpm install --frozen-lockfile
 pnpm --filter explorer-web build
-pnpm --filter explorer-web test
+pnpm --filter explorer-web dev --host 127.0.0.1 --port 5173 --strictPort
 ```
 
-Focused commands:
+The last command starts the local development page on loopback port 5173; stop it with Ctrl+C. Expect the synthetic map stage, public navigation, bounded Focus questions, and shared trust cases—not live terrain, source ingestion, or a Qwen connection.
+
+The build runs TypeScript checking before Vite and writes app-local `dist/` according to [Vite configuration](./vite.config.ts). Generated build output is not source to commit, and build success is not permission to expose the repository or publish the app.
+
+**Keep installation policy intact.** The committed [`pnpm-workspace.yaml`](../../pnpm-workspace.yaml) contains version-specific `allowBuilds` decisions. Do not remove the frozen-lockfile requirement, broadly approve build scripts, regenerate the lockfile, or bypass an installation failure merely to make this README's commands succeed. Diagnose toolchain, lockfile, and build-script failures as separate work. The unfiltered root `build`, `test`, and `lint` scripts deliberately return `WORKFLOW_HOLD`; use the app-filtered commands above.
+
+For tests, stop any process using port 4173, then run from the repository root:
 
 ```bash
 pnpm --filter explorer-web test:unit
+# Provision the browser used by the locked local Playwright package.
+pnpm --filter explorer-web exec playwright install chromium
 pnpm --filter explorer-web test:browser
-pnpm --filter explorer-web dev
 ```
 
-The development server displays the repository-grounded local site composition, including its synthetic map, public workspace navigation, bounded Focus request surface, and shared trust-state cases. Tests exercise a broader set of fixture-first slices than the composed page.
+After browser provisioning, `pnpm --filter explorer-web test` runs both suites. Browser installation may download binaries; missing Linux system libraries require separate environment preparation using the [official Playwright browser instructions](https://playwright.dev/docs/browsers). They are not an app-code regression by themselves.
+
+The [Playwright configuration](./playwright.config.ts) starts its own loopback Vite server on **4173**, uses `--strictPort`, and disables server reuse. Local tests use Chromium; `CI=true` selects the installed Chrome channel. The existing `KFM_CHROMIUM_EXECUTABLE` override also adds `--no-sandbox`; it is not the normal setup recommendation or evidence of production browser security. Do not set it merely to silence a failed prerequisite.
 
 ### Inspect current implementation
 
@@ -456,138 +334,85 @@ find apps/explorer-web/tests -maxdepth 4 -type f | sort
 find apps/explorer-web/src/features -mindepth 1 -maxdepth 1 -type d | sort
 ```
 
-High-signal files:
-
-- [`package.json`](./package.json)
-- [`src/main.ts`](./src/main.ts)
-- [`src/README.md`](./src/README.md)
-- [`src/adapters/README.md`](./src/adapters/README.md)
-- [`src/features/README.md`](./src/features/README.md)
-- [`ui-build.yml`](../../.github/workflows/ui-build.yml)
-- [`test_explorer_web_adapter_boundary.py`](../../tests/policy/test_explorer_web_adapter_boundary.py)
+Start at [`src/main.ts`](./src/main.ts), follow [`mount-explorer-site.ts`](./src/site/mount-explorer-site.ts), and distinguish that graph from isolated browser fixtures. [Vite aliases](./vite.config.ts) resolve `@kfm/maplibre` and `@kfm/maplibre/vite-adapter` into the existing shared package; they do not justify direct app-level renderer acquisition.
 
 ### Evidence discipline
 
-When reporting a result, record the exact branch/commit and distinguish:
-
-- source presence;
-- focused local test result;
-- hosted exact-head result;
-- route composition;
-- deployed runtime evidence;
-- release/publication state.
-
-These are separate claims.
-
-[Back to top](#top)
-
----
+Record the exact commit, environment, command, result, and scope. Keep source presence, app composition, unit execution, browser execution, hosted head/merge-ref execution, deployment observation, and release/publication state separate. A prior receipt or a same-day merge is not a substitute for the relevant current result.
 
 ## 13. Validation expectations
 
 ### Repository-native Explorer lane
 
-The maintained workflow runs:
-
-```bash
-pnpm --filter explorer-web build
-pnpm --filter explorer-web test
-```
-
-A trustworthy validation report should identify the exact tested SHA and separate unit, browser, boundary, and hosted conclusions.
+The maintained workflow invokes `pnpm --filter explorer-web build` and `pnpm --filter explorer-web test` in separate jobs after a frozen workspace install. The app test script combines unit and browser tests. Read the actual run/job result at the tested SHA rather than treating workflow presence as a pass.
 
 ### Required checks by change type
 
-| Change type | Minimum focused evidence |
+| Change | Minimum focused evidence |
 |---|---|
-| README only | One H1; heading/anchor and relative-link checks; balanced fences/HTML; no stale maturity claims; final newline; `git diff --check`; generated receipt for AI-authored work |
-| Shell or feature projection | Unit cases for positive and finite negative states; no-leak checks; evidence/policy/time preservation |
-| Browser interaction | Playwright keyboard/focus and prior-render clearing; no external request when fixture-only |
-| Map-facing feature | Renderer import boundary, synthetic selection, governed resolver injection, no direct store access |
-| Evidence Drawer or claim display | Missing/malformed support fails closed; citations and correction/history remain visible |
-| Story, Compare, or Export | Public-safe support gates, ordering/identity validation, citation/redaction/release continuity |
-| Diagnostics or telemetry | Secret/restricted-field denial and minimized event payloads |
-| Renderer admission | Accepted dependency/adapter decision, locked supply chain, browser proof, performance/accessibility budget, rollback |
-| Live transport | Accepted response contract, authentication/exposure review, CSP/CORS, error isolation, policy and citation validation, integration tests |
-| Deployment | Environment-specific security, observability, rollback, release, and public-operation evidence |
+| README only | One H1; preserved navigation; headings, links, fences, tables and metadata; final newline and whitespace checks; source-backed maturity and commands; GeneratedReceipt for AI-authored work |
+| Shell or projection | Positive and finite negative unit cases, no-leak checks, evidence/policy/time preservation |
+| Browser interaction | Keyboard/focus, prior-render clearing, and declared network-boundary checks |
+| Map-facing change | Package acquisition boundary, selection handoff, resolver injection, negative states; fixture/default-page distinction |
+| Evidence or claim display | Missing/malformed support fails closed; citations and correction/history persist |
+| Temporal, Story, Compare, Export | Identity, time/scope consistency, stale-request handling, withheld-context safety, and release/citation continuity |
+| Diagnostics or telemetry | Secret/protected-field denial and minimized event payloads |
+| Renderer or live transport graduation | Governing decisions, pinned dependencies, browser/integration proof, exposure review, accessibility/performance limits, and rollback |
+| Deployment | Environment-specific security, observability, governed release, correction and rollback evidence |
+
+README validation does not require pretending to have run the application. Where the native toolchain or complete checkout is unavailable, report source-subset/static checks as such and list native build, unit, browser, and repository-wide checks as unrun. A failing check is only demonstrated to be inherited after a comparable same-base execution; out-of-scope does not automatically mean inherited.
 
 ### Boundary checks
 
-The app must continue to prove that:
+The existing [cross-root static boundary test](../../tests/policy/test_explorer_web_adapter_boundary.py) scans renderer imports and internal-store path literals; it is not a complete security or runtime audit. Keep renderer imports behind the accepted package seam; deny internal-store and direct-model paths; retain fixture-only network constraints; clear positive content on negative transitions; preserve redaction; and prevent docs or badges from turning fixtures into live-product claims.
 
-- renderer imports stay behind the adapter boundary;
-- internal lifecycle-store path literals do not enter browser source;
-- direct model-provider calls are absent;
-- fixture-only modules make no undeclared external requests;
-- denied or errored results clear prior positive content;
-- redacted or generalized content cannot be reconstructed client-side;
-- documentation does not promote a fixture slice into a live-product claim.
-
-> [!NOTE]
-> A green `ui-build` run proves the workflow's declared build/test scope for its exact SHA. It does not prove deployment, evidence closure, policy approval, release, or publication.
-
-[Back to top](#top)
-
----
+AI-authored work must include a receipt that binds the final artifact bytes and honestly reports validation. The existing [GeneratedReceipt lane](../../data/receipts/generated/README.md) and [schema](../../schemas/contracts/v1/receipts/generated_receipt.schema.json) govern that process. A well-formed receipt with human review pending is not approval or merge authority. Use [CONTRIBUTING.md](../../CONTRIBUTING.md) and the [PR template](../../.github/PULL_REQUEST_TEMPLATE.md) for current delivery controls; do not infer incident resolution from a closed issue alone.
 
 ## 14. Definition of done
 
 ### For changes inside this app
 
-- [ ] Scope, base SHA, target paths, and owner/review route are recorded.
-- [ ] The feature or route contract names its inputs, finite outcomes, evidence and policy obligations, accessibility behavior, tests, and rollback.
-- [ ] Dynamic claim-bearing inputs use a governed interface; static inputs are already released public-safe artifacts.
-- [ ] Evidence, citation, time, rights, sensitivity, release, correction, and rollback state survive composition.
-- [ ] Negative, malformed, stale, denied, superseded, and unavailable cases fail closed.
-- [ ] Direct internal-store and model-runtime access remains denied.
-- [ ] Map-facing code preserves the adapter boundary.
-- [ ] Export, diagnostics, and telemetry paths are minimized and non-leaking.
-- [ ] Keyboard, focus, screen-reader, reduced-motion, contrast, non-color, and non-map paths are tested in proportion to the surface.
-- [ ] Documentation describes only verified maturity.
-- [ ] Targeted local and exact-head hosted validation are recorded separately.
-- [ ] AI-authored changes include a generated receipt with pending human review.
-- [ ] Rollback is a specific revert/disable path and does not imply data publication.
+- [ ] Scope, immutable base/head, paths, overlap, review route, and non-goals are recorded.
+- [ ] Inputs, finite outcomes, evidence, time, policy, sensitivity, release and correction obligations are explicit.
+- [ ] Negative, stale, malformed, denied, superseded, and unavailable cases fail closed without protected-data leakage.
+- [ ] Renderer acquisition stays package-owned; direct internal-store and model access remain denied.
+- [ ] User interaction, accessibility, export, and telemetry are validated in proportion to the changed surface.
+- [ ] Documentation distinguishes source, fixtures, normal composition, execution, deployment, and release.
+- [ ] Local and hosted results identify their actual tested revisions; unrun, pending, and failed checks are not labeled passing.
+- [ ] AI-authored work has a byte-bound receipt; human review remains pending until an authorized reviewer acts.
+- [ ] Rollback is specific and preserves audit history without implying data publication.
 
 ### Before describing Explorer as an integrated map product
 
-- [ ] ADR-0005 or a successor resolves the shell decision.
-- [ ] A renderer dependency and adapter boundary are accepted, pinned, and exercised.
-- [ ] The default entrypoint composes an explicit route inventory.
-- [ ] Live Governed API transport and accepted envelope validation are wired.
-- [ ] At least one released public-safe layer loads through the governed delivery path.
-- [ ] Map selection resolves evidence and finite outcomes through the governed interface.
-- [ ] Evidence Drawer, Focus, Story, Compare, and Export handoffs are integrated and accessible.
-- [ ] Authentication, CSP/CORS, telemetry, diagnostics, deployment, observability, correction, and rollback are verified.
-- [ ] Public operation and release state are proven by governed runtime and release evidence rather than documentation.
+- [ ] ADR-0005 or an accepted successor resolves the shell decision.
+- [ ] Package/dependency admission evidence and consumer activation are reviewed separately; existing dependency bytes alone do not close the gate.
+- [ ] The normal entrypoint uses the concrete renderer through the accepted seam and has its own browser proof.
+- [ ] At least one released public-safe layer loads through governed delivery with identity, rights, sensitivity, integrity, provenance and correction support.
+- [ ] Selection resolves EvidenceRef to admissible EvidenceBundle support through a governed interface.
+- [ ] Temporal, Evidence Drawer, Focus, Story, Compare, and Export handoffs preserve consistent scope and accessible negative states.
+- [ ] Authentication, CSP/CORS, operations, diagnostics, and exposure are verified for the actual deployed environment.
+- [ ] Review, release, correction propagation, and rollback have their own evidence; public operation is not inferred from tests or prose.
 
-[Back to top](#top)
-
----
+For this documentation-only revision, rollback is a reviewed revert of the README and paired authoring-receipt change. Git history retains the prior document and receipt. Do not revert independent renderer, temporal, dependency, or Sites work as a side effect.
 
 ## 15. Open verification items
 
-| Item | Why it remains open |
+| Item | Remaining work or boundary |
 |---|---|
-| ADR-0005 acceptance or successor decision | The intended single-shell posture is documented but not binding. |
-| Confirmed owner and independent review route | `OWNER_TBD` must not be replaced without evidence. |
-| Functional MapLibre adapter and dependency | Current wrapper/adapter surfaces do not establish a live renderer. |
-| Live Governed API response contract and transport | Fixture projections are not network integration. |
-| Production route inventory | Code-owned anchor destinations and public URL context exist, but feature paths and anchors are not proof of authenticated or production routes. |
-| Released layer and artifact discovery | Synthetic PMTiles proof does not load a governed public release. |
-| EvidenceBundle resolution and citation validation | Defensive payload projection is not end-to-end evidence closure. |
-| Integrated Focus, Story, Compare, and Export flows | Bounded consumers exist, but cross-feature composition remains incomplete. |
-| Authentication, authorization, CSP, CORS, and exposure posture | No deployed-system evidence is established here. |
-| Telemetry contract, policy, retention, and runtime wiring | Feature guidance does not prove operational telemetry safety. |
-| Complete accessibility audit | Focused tests do not establish whole-app conformance. |
-| Offline, service-worker, mobile-device, and hosting Range behavior | Mobile-emulated synthetic proof is intentionally narrower. |
-| Production observability and incident response | Workflow output is not service-health evidence. |
-| Deployment, release, correction propagation, and rollback drill | No current public operation or released Explorer state is established. |
-| Exact current file/test counts | Counts drift quickly and should be generated from the inspected commit, not copied into this README. |
+| Canonical shell decision | ADR-0005 is still proposed; this README does not accept it |
+| Owners and review separation | Preserve `OWNER_TBD`; review routing is not an authenticated stewardship assignment or independent approval |
+| Default renderer activation | Package and worker-wrapper source exist; the normal composition still uses NullMapRuntime |
+| Governed layers and artifacts | Synthetic fixtures and local boot tests do not establish source admission, released layers, Range/CORS/cache behavior, or public-safe delivery |
+| Live evidence and Focus | Fixture projections do not establish live EvidenceBundle resolution, citation validation, or governed model transport |
+| Temporal integration | Adapter presence does not establish live playback, resolver-backed committed frames, or cross-surface synchronization |
+| Complete public workflows | Story, comparison, reports, settings, imports, and sharing require feature-specific composition and safety proof |
+| Public routing and exposure | Anchors are not authenticated routes; deployment, authorization, CSP/CORS and service health are not verified here |
+| Accessibility, mobile and performance | Focused fixtures are not a full accessibility audit, real-device matrix, long-session test, or production performance claim |
+| Offline and correction propagation | Service workers, real hosting, cache invalidation, withdrawal and rollback need environment-specific proof |
+| Snapshot and validation currentness | Re-pin code-owned catalogs, exact-head CI and relevant base comparisons independently; this README changes none of them |
 
 ## Status summary
 
-Explorer Web is best described as a **bounded, executable, repository-grounded local composition and fixture-first UI laboratory**.
+Explorer Web is a **bounded, executable-source browser workspace**, not an inert placeholder and not a demonstrated live map product. Its normal page remains synthetic and renderer-neutral. The shared MapLibre dependency, concrete adapter, worker wrapper, browser fixture, and temporal-conformance surface are present; their presence must not be confused with normal-page activation, admitted data, model-backed answers, deployment, approval, or publication.
 
-That is more mature than a placeholder or inert shell and less mature than a live map product. The repository proves real build/test tooling, a mounted local site and navigation composition, bounded public context, shared trust states, a synthetic Focus request surface, defensive adapters, many finite-state projections, Evidence Drawer behavior, a bounded Story Player consumer, synthetic map-selection and mobile PMTiles verification, and static anti-bypass checks. It does not yet prove a production route tree, admitted renderer, live Governed API transport, released map layer, model-backed Focus execution, deployment, or public operation.
-
-<p align="right"><a href="#top">Back to top</a></p>
+[Back to top](#top)
