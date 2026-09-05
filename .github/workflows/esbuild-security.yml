@@ -1,5 +1,5 @@
 # ADR-0029 section 8.2: read-only CI orchestration, not release authority.
-# Scope and rollback: apps/kansas-frontier-matrix-explorer/docs/esbuild-security-remediation.md
+# Scope: apps/kansas-frontier-matrix-explorer/docs/esbuild-policy-guard-review.md
 name: esbuild-security
 on:
   pull_request:
@@ -10,6 +10,8 @@ on:
       - apps/kansas-frontier-matrix-explorer/package.json
       - apps/kansas-frontier-matrix-explorer/package-lock.json
       - apps/kansas-frontier-matrix-explorer/tests/esbuild-security.test.mjs
+      - apps/kansas-frontier-matrix-explorer/docs/esbuild-*.md
+      - data/receipts/generated/esbuild-*.json
       - .github/workflows/esbuild-security.yml
   push:
     branches: [main, agent/esbuild-alert-63-20260905]
@@ -20,6 +22,8 @@ on:
       - apps/kansas-frontier-matrix-explorer/package.json
       - apps/kansas-frontier-matrix-explorer/package-lock.json
       - apps/kansas-frontier-matrix-explorer/tests/esbuild-security.test.mjs
+      - apps/kansas-frontier-matrix-explorer/docs/esbuild-*.md
+      - data/receipts/generated/esbuild-*.json
       - .github/workflows/esbuild-security.yml
 permissions:
   contents: read
@@ -53,7 +57,7 @@ jobs:
         run: |
           set -euo pipefail
           corepack enable
-          sha256sum pnpm-lock.yaml > "$RUNNER_TEMP/esbuild-lock.sha256"
+          sha256sum pnpm-lock.yaml pnpm-workspace.yaml apps/kansas-frontier-matrix-explorer/package-lock.json > "$RUNNER_TEMP/esbuild-lock.sha256"
           pnpm install --frozen-lockfile
           sha256sum -c "$RUNNER_TEMP/esbuild-lock.sha256"
       - name: Probe actual pnpm resolution and synthetic TypeScript migrations
@@ -62,6 +66,14 @@ jobs:
           KFM_ESBUILD_REQUIRE_WORKSPACE: '1'
           KFM_ESBUILD_RUNTIME_PROBE: '1'
         run: node --test apps/kansas-frontier-matrix-explorer/tests/esbuild-security.test.mjs
+      - name: Exercise Explorer tests and the Sites app build in the complete workspace
+        if: matrix.installer == 'pnpm'
+        shell: bash
+        run: |
+          set -euo pipefail
+          pnpm --filter explorer-web test
+          pnpm --filter kansas-frontier-matrix-explorer build
+          sha256sum -c "$RUNNER_TEMP/esbuild-lock.sha256"
       - name: Install and probe the independent npm application
         if: matrix.installer == 'npm'
         shell: bash
@@ -76,3 +88,30 @@ jobs:
           npm ci --no-fund --loglevel=error
           sha256sum -c "$RUNNER_TEMP/esbuild-npm-lock.sha256"
           KFM_ESBUILD_RUNTIME_PROBE=1 node --test tests/esbuild-security.test.mjs
+  provenance:
+    name: esbuild-receipt-provenance
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      KFM_NO_NETWORK: '1'
+      PIP_DISABLE_PIP_VERSION_CHECK: '1'
+      PIP_NO_INPUT: '1'
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONHASHSEED: '0'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.11'
+      - name: Install the repository-locked validation dependencies
+        run: python tools/ci/install_python_ci.py project-test
+      - name: Validate the current authoring receipt and exact historical bindings
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py data/receipts/generated/esbuild-policy-guard-review-20260905.json --repo-root .
+          python tools/validators/validate_generated_receipt.py data/receipts/generated/esbuild-alert-63-20260905.json --repo-root . --artifact-git-ref 8705c0788cf9f90b63b32d7dd35b258510f586eb
+          python tools/validators/validate_generated_receipt.py data/receipts/generated/esbuild-current-main-reconciliation-20260905.json --repo-root . --artifact-git-ref f1d48190f27a2b7f47692e0e186142afbf1dc9cb

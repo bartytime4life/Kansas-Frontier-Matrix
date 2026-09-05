@@ -1,0 +1,122 @@
+{
+  "receipt_id": "kfm:generated:esbuild-policy-guard-review:20260905",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/kansas-frontier-matrix-explorer/tests/esbuild-security.test.mjs",
+    ".github/workflows/esbuild-security.yml",
+    "apps/kansas-frontier-matrix-explorer/docs/esbuild-policy-guard-review.md"
+  ],
+  "artifact_hashes": {
+    "apps/kansas-frontier-matrix-explorer/tests/esbuild-security.test.mjs": "sha256:c5f0a0a2fcfd1f36e3249fbbd81333c7e0e8a9bae09356ecdab7fe25c48f3df3",
+    ".github/workflows/esbuild-security.yml": "sha256:1c5a80f850879b3bcacb66605e875555f5d1fac365cfc65e0933a5558e3df328",
+    "apps/kansas-frontier-matrix-explorer/docs/esbuild-policy-guard-review.md": "sha256:5bcc7ef8de62ea3a226d1ea8978847cc23f95b86b59adc8feb6eaa14604dfa62"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Pro",
+    "version": "UNKNOWN: exact serving revision is not exposed"
+  },
+  "prompt_or_contract": "sha256:8859f0f33abbab0f55e1dba5e486108d6bb8cdc261ef3a0e01dd348414b4243e",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "Google Drive",
+      "Notion",
+      "web",
+      "isolated local validation"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "github:bartytime4life/Kansas-Frontier-Matrix@5f03c5c8129d9fc86b3cb7b19a48aaa3c1420a4f",
+      "github:bartytime4life/Kansas-Frontier-Matrix@f1d48190f27a2b7f47692e0e186142afbf1dc9cb",
+      "github:bartytime4life/Kansas-Frontier-Matrix:blob:7a0d72b39aefbb0741be1f5837ebcc624e6f9c84",
+      "https://github.com/evanw/esbuild/security/advisories/GHSA-67mh-4wv8-2f99",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024",
+      "gdrive:1uTqdIEFZE2cq3gyISetoRYM6LIlnKqTc3FobtEx7Cbs",
+      "notion:3c9a9202-1bf6-8195-b8b1-f3a8d694b447",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33981346520"
+    ],
+    "evidence_hashes": [
+      "sha256:56e3bcf55d713ee1d638da6f9e5fad452962467ecb309ca108890806fa4a8b49"
+    ]
+  },
+  "truth_labels": {
+    "apps/kansas-frontier-matrix-explorer/tests/esbuild-security.test.mjs": "PROPOSED",
+    ".github/workflows/esbuild-security.yml": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/docs/esbuild-policy-guard-review.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "exact-old-test-recovery",
+      "outcome": "PASS",
+      "reason": "Recovered UTF-8 bytes match Git blob 7a0d72b39aefbb0741be1f5837ebcc624e6f9c84; downloaded historical evidence ZIP matches its SHA-256."
+    },
+    {
+      "gate": "old-guard-bypass-reproduction",
+      "outcome": "PASS",
+      "reason": "Complete old static suite exits 0 for added approval and comment-spoofed denial in disposable files. This confirms a test-coverage defect, not weakened committed policy. No mutated policy installed."
+    },
+    {
+      "gate": "hardened-static-and-negative-cases",
+      "outcome": "PASS",
+      "reason": "Node 22.16.0: complete hardened suite exits 0 for reviewed fixture and 1 for each bypass fixture. Six in-test mutation cases rejected. Runtime probes explicitly skipped locally."
+    },
+    {
+      "gate": "syntax-and-read-only-workflow-preflight",
+      "outcome": "PASS",
+      "reason": "node --check, YAML parsing, immutable action SHA length, read-only permissions, unchanged two-installer matrix and absence of continue-on-error checked locally."
+    },
+    {
+      "gate": "local-full-checkout-and-native-install",
+      "outcome": "SKIPPED",
+      "reason": "Local Git fetch failed because github.com DNS resolution was unavailable. No local full-checkout or dependency-install success claimed."
+    },
+    {
+      "gate": "final-head-hosted-validation-and-native-receipts",
+      "outcome": "SKIPPED",
+      "reason": "Pending at authorship. Read the exact-head esbuild-security run separately; three native receipt validations include exact-ancestor replay for old receipts."
+    },
+    {
+      "gate": "full-explorer-production-build-isolated-npm-export-global-audit-independent-review",
+      "outcome": "SKIPPED",
+      "reason": "Not rerun or established here. Earlier same-base failures and fflate audit result remain historical. No approval, PR clearance, deployment or alert-closure claim."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "reviewed-test",
+      "validated": true,
+      "evidence_ref": "github:bartytime4life/Kansas-Frontier-Matrix@f1d48190f27a2b7f47692e0e186142afbf1dc9cb:apps/kansas-frontier-matrix-explorer/tests/esbuild-security.test.mjs"
+    },
+    {
+      "id": "native-receipt-workflow-precedent",
+      "validated": true,
+      "evidence_ref": "github:bartytime4life/Kansas-Frontier-Matrix@5f03c5c8129d9fc86b3cb7b19a48aaa3c1420a4f:.github/workflows/evidence-drawer-payload.yml"
+    },
+    {
+      "id": "maintainer-advisory",
+      "validated": true,
+      "evidence_ref": "https://github.com/evanw/esbuild/security/advisories/GHSA-67mh-4wv8-2f99"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-05T18:23:45Z",
+  "emitter": "KFM esbuild author-side policy-guard review",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "BRANCH ONLY / INDEPENDENT REVIEW PENDING / PR TRANSITION HOLD. This author-side review does not approve its own change. Preserve both earlier receipts without rewriting their hashes or pending fields; replay their exact ancestors. Dependency and workspace-policy bytes are unchanged from f1d48190f27a2b7f47692e0e186142afbf1dc9cb; the test snapshot is not policy authority. No schema, policy, baseline, correction-register, approval, settings, default-branch, release, source, deployment, publication or alert-dismissal mutation. Receipt excludes its own bytes to avoid a self-hash cycle. Prompt digest covers only the direct user message, not hidden instructions. Undo this follow-up without undoing the dependency repair, Babel 7.29.7 or current-main temporal changes."
+}

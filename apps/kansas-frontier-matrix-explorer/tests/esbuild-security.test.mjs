@@ -24,6 +24,27 @@ const inWorkspace = process.env.KFM_ESBUILD_REQUIRE_WORKSPACE === '1'
   || existsSync(path.join(root, 'pnpm-workspace.yaml'));
 const workspaceOnly = { skip: inWorkspace ? false : 'standalone app; workspace parity is checked by monorepo CI' };
 
+// Exact reviewed input, not a second policy authority. Deliberate workspace
+// changes require updating this snapshot with their own review and evidence.
+const reviewedWorkspace = `packages:
+  - "apps/*"
+  - "packages/*"
+allowBuilds:
+  "esbuild@0.18.20": false
+  "esbuild@0.25.12": false
+  "esbuild@0.28.1": false
+  "esbuild@0.28.2": true
+  "unrs-resolver@1.12.2": false
+  "workerd@1.20260828.1": false
+overrides:
+  "@esbuild-kit/core-utils@3.3.2>esbuild": "0.28.2"
+`;
+
+function assertWorkspacePolicy(workspace) {
+  assert.equal(workspace, reviewedWorkspace,
+    'workspace policy or override differs from the reviewed snapshot');
+}
+
 function isPatched(version) {
   const match = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/.exec(version ?? '');
   if (!match) return false; // Unknown, ranges, and prereleases are not accepted.
@@ -74,14 +95,24 @@ test('standalone npm retains the parent-scoped remediation', async () => {
 });
 
 test('workspace retains matching override and existing build-script decisions', workspaceOnly, async () => {
-  const workspace = await read(path.join(root, 'pnpm-workspace.yaml'));
-  assert.match(workspace, /^overrides:\n  "@esbuild-kit\/core-utils@3\.3\.2>esbuild": "0\.28\.2"$/m);
-  // Supply-chain permissions are intentionally not widened by a version override.
-  for (const [name, allowed] of Object.entries({
-    'esbuild@0.18.20': false, 'esbuild@0.25.12': false,
-    'esbuild@0.28.1': false, 'esbuild@0.28.2': true,
-    'unrs-resolver@1.12.2': false, 'workerd@1.20260828.1': false,
-  })) assert.ok(workspace.includes(`  "${name}": ${allowed}\n`), name);
+  assertWorkspacePolicy(await read(path.join(root, 'pnpm-workspace.yaml')));
+});
+
+test('workspace guard rejects additive approvals, spoofed denials and override changes', () => {
+  assert.doesNotThrow(() => assertWorkspacePolicy(reviewedWorkspace));
+  const denied = '  "workerd@1.20260828.1": false\n';
+  const mutations = [
+    reviewedWorkspace.replace('allowBuilds:\n', 'allowBuilds:\n  "unreviewed-package@1.0.0": true\n'),
+    reviewedWorkspace.replace(denied, `#${denied}  "workerd@1.20260828.1": true\n`),
+    reviewedWorkspace.replace(denied, `#${denied}`),
+    reviewedWorkspace + 'allowBuilds: {}\n',
+    reviewedWorkspace + '  esbuild: "0.28.2"\n',
+    reviewedWorkspace.replace('"0.28.2"\n', '"0.18.20"\n'),
+  ];
+  for (const mutation of mutations) {
+    assert.notEqual(mutation, reviewedWorkspace);
+    assert.throws(() => assertWorkspacePolicy(mutation), { code: 'ERR_ASSERTION' });
+  }
 });
 
 test('resolved legacy loader uses the patched esbuild; cross-origin reads are not granted',
