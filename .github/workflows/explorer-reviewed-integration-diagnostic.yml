@@ -1,4 +1,4 @@
-# Task-owned read-only diagnostic branch. Never merge this workflow branch.
+# Read-only, exact-source diagnostics. This workflow branch must never be merged.
 name: explorer-reviewed-integration-diagnostic
 on:
   push:
@@ -10,50 +10,111 @@ concurrency:
   group: explorer-reviewed-integration-${{ github.ref }}
   cancel-in-progress: false
 jobs:
-  inspect-composition:
+  integration:
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - lane: candidate
+            source: d550c452382c626bc871d921199af5dea2fabaa7
+          - lane: main
+            source: a9a53470e385350b795f6d978ad3e7a5811961c5
+    env:
+      CI: 'true'
+      DO_NOT_TRACK: '1'
+      CLOUDFLARE_SEND_METRICS: 'false'
+      WRANGLER_SEND_METRICS: 'false'
+      COREPACK_ENABLE_STRICT: '1'
+      TZ: UTC
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
-          ref: a9a53470e385350b795f6d978ad3e7a5811961c5
+          ref: ${{ matrix.source }}
           fetch-depth: 0
           persist-credentials: false
-      - name: Compose reviewed histories in the local index only
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: '22.23.2'
+          package-manager-cache: false
+      - name: Pin source and install frozen dependencies
         shell: bash
         run: |
           set -euo pipefail
-          out="$RUNNER_TEMP/integration-inspection"
+          out="$RUNNER_TEMP/integration"
           mkdir -p "$out"
-          test "$(git rev-parse HEAD)" = a9a53470e385350b795f6d978ad3e7a5811961c5
-          git merge-base --is-ancestor 343a516812596f0b29fdb1a56b3a549edbe43490 bf1335ad7250dec6334f62ad86d1032f0df7ef61
-          git merge-base --is-ancestor 34a9348ce7882284a5843f414368b92ade9d79db 8e4167852d9037cc308ee744501f2172a6ee44f9
-          git config user.name 'KFM local integration inspection'
-          git config user.email 'noreply@example.invalid'
-          git merge --no-commit --no-ff bf1335ad7250dec6334f62ad86d1032f0df7ef61 8e4167852d9037cc308ee744501f2172a6ee44f9 2>&1 | tee "$out/merge.log"
-          git diff --cached --check
-          git diff --cached --binary > "$out/combined.patch"
-          git diff --binary 8b9c52d88687986879c8f87d7e3835f6a58bbacd a9a53470e385350b795f6d978ad3e7a5811961c5 > "$out/main-advance.patch"
-          git ls-files -z | grep -zE '(^|/)AGENTS\.md$|^CONTRIBUTING\.md$|^docs/doctrine/directory-rules\.md$|^contracts/.*generated_receipt|^schemas/.*generated_receipt|^tools/validators/validate_generated_receipt\.py$' | tar --null -T - -czf "$out/authority.tgz"
-          tar -czf "$out/combined-app.tgz" apps/kansas-frontier-matrix-explorer packages/ui/src/layer-library* tests/ui/test_explorer_lint_compat.mjs
-          python3 - <<'PY'
-          import hashlib,json,os,pathlib,subprocess
-          out=pathlib.Path(os.environ['RUNNER_TEMP'])/'integration-inspection'
-          paths=subprocess.check_output(['git','diff','--cached','--name-only','-z']).decode().split('\0')
-          entries=[]
-          for path in filter(None,paths):
-            row=subprocess.check_output(['git','ls-files','-s','--',path]).decode().split()
-            assert row and row[2]=='0',path
-            content=pathlib.Path(path).read_bytes()
-            entries.append({'path':path,'mode':row[0],'type':'blob','sha':row[1],'sha256':hashlib.sha256(content).hexdigest()})
-          (out/'tree-elements.json').write_text(json.dumps(entries,indent=2)+'\n')
-          print(json.dumps(entries,indent=2))
-          PY
-      - name: Preserve inspection and unmerged source
+          test "$(git rev-parse HEAD)" = '${{ matrix.source }}'
+          git rev-parse HEAD > "$out/head.txt"
+          git diff --check a9a53470e385350b795f6d978ad3e7a5811961c5 HEAD
+          git diff --exit-code a9a53470e385350b795f6d978ad3e7a5811961c5 HEAD -- apps/kansas-frontier-matrix-explorer/scripts/build-verified.sh apps/kansas-frontier-matrix-explorer/tests/build-verified.test.mjs pnpm-workspace.yaml > "$out/protected-main-parity.log"
+          sha256sum package.json pnpm-workspace.yaml pnpm-lock.yaml apps/kansas-frontier-matrix-explorer/package.json apps/kansas-frontier-matrix-explorer/package-lock.json > "$out/install-inputs.sha256"
+          git diff --binary a9a53470e385350b795f6d978ad3e7a5811961c5 HEAD > "$out/product.patch"
+          git diff --name-only -z a9a53470e385350b795f6d978ad3e7a5811961c5 HEAD | xargs -0 -r sha256sum > "$out/product.sha256"
+          corepack enable
+          node --version > "$out/node.txt"
+          pnpm --version > "$out/pnpm.txt"
+          pnpm install --frozen-lockfile > "$out/install.log" 2>&1
+          pnpm exec playwright install --with-deps chromium > "$out/browser-install.log" 2>&1
+      - name: Execute all application gates with raw exit codes
+        shell: bash
+        env:
+          LANE: ${{ matrix.lane }}
+        run: |
+          set -euo pipefail
+          out="$RUNNER_TEMP/integration"
+          : > "$out/gates.tsv"
+          run_gate() {
+            local name="$1"; shift
+            local status=0
+            "$@" > "$out/$name.log" 2>&1 || status=$?
+            printf '%s\t%s\n' "$name" "$status" | tee -a "$out/gates.tsv"
+          }
+          run_gate app-build pnpm --filter kansas-frontier-matrix-explorer run build
+          run_gate root-node node --test apps/kansas-frontier-matrix-explorer/tests/*.test.mjs
+          run_gate npm-test pnpm --filter kansas-frontier-matrix-explorer exec npm test
+          run_gate app-types pnpm --filter kansas-frontier-matrix-explorer exec tsc --noEmit
+          run_gate app-lint pnpm --filter kansas-frontier-matrix-explorer run lint
+          run_gate lint-json pnpm --filter kansas-frontier-matrix-explorer exec eslint . --ignore-pattern dist --ignore-pattern .next --ignore-pattern public/maplibre --format json
+          run_gate web-build pnpm --filter explorer-web run build
+          run_gate web-unit pnpm --filter explorer-web run test:unit
+          run_gate web-browser pnpm --filter explorer-web run test:browser
+          if test "$LANE" = candidate; then
+            run_gate lint-contract pnpm --filter kansas-frontier-matrix-explorer run test:lint
+            export GITHUB_SHA="$(git rev-parse HEAD)"
+            pnpm --filter kansas-frontier-matrix-explorer exec vite --host 127.0.0.1 --port 4173 --strictPort > "$out/server.log" 2>&1 &
+            server_pid=$!
+            trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+            ready=0
+            for attempt in $(seq 1 60); do
+              if curl --fail --silent --max-time 3 http://127.0.0.1:4173/ > /dev/null; then ready=1; break; fi
+              kill -0 "$server_pid" || break
+              sleep 2
+            done
+            if test "$ready" = 1; then
+              run_gate actual-app env KFM_APP_URL=http://127.0.0.1:4173 KFM_APP_OUTPUT="$out/browser" node apps/kansas-frontier-matrix-explorer/tests/earth-layer-library.app.mjs
+            else
+              printf 'actual-app\t1\n' >> "$out/gates.tsv"
+            fi
+            kill "$server_pid" 2>/dev/null || true
+            trap - EXIT
+          fi
+          run_gate topology python3 tools/validators/directory_governance/validate_repository_topology.py --repo-root . --trusted-baseline-ref a9a53470e385350b795f6d978ad3e7a5811961c5 --format json
+          run_gate immutable git diff --exit-code
+          run_gate inputs-immutable sha256sum -c "$out/install-inputs.sha256"
+          cat "$out/gates.tsv" >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: explorer-reviewed-integration-inspection
-          path: ${{ runner.temp }}/integration-inspection/
+          name: explorer-integration-${{ matrix.lane }}-${{ matrix.source }}
+          path: ${{ runner.temp }}/integration/
           retention-days: 14
           if-no-files-found: error
+      - name: Enforce every collected gate
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          file="$RUNNER_TEMP/integration/gates.tsv"
+          test -s "$file"
+          awk -F '\t' '$2 != 0 { bad = 1 } END { exit bad }' "$file"
