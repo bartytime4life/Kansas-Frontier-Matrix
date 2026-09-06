@@ -25,7 +25,8 @@ tests/packages/evidence_resolver/
 ├── test_hydrology_fixture_adapter.py   # lookup, digest, paths, and no-I/O proof
 ├── test_result_schema.py               # existing result-contract conformance
 ├── test_runtime_projection.py          # finite internal runtime map
-└── test_runtime_projection_fixtures.py # candidate-to-runtime integration
+├── test_runtime_projection_fixtures.py # candidate-to-runtime integration
+└── test_timestamp_boundary.py          # RFC 3339 offsets and safe runtime errors
 ```
 
 Run:
@@ -43,3 +44,8 @@ manifest misses, duplicate IDs, profile and schema failure, tamper detection,
 absolute/traversal/outside-root/non-allowlisted paths, symlinks, caller-bundle
 injection, no negative fall-through, and active denial of network, URL, and
 process access. Static imports exclude model clients.
+
+The timestamp boundary regressions reject overflowing numeric UTC offsets before
+Python can normalize them. They exercise direct candidates, every existing policy
+posture, and the manifest adapter after a matching test-only digest, while
+preserving valid timestamp forms and non-authoritative runtime behavior.
