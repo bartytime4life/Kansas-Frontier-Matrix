@@ -1,0 +1,119 @@
+{
+  "receipt_id": "genrec-directory-amendment-ci-20260906",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/docs-control-plane.yml",
+    "docs/adr/ADR-0039-directory-build-and-verification-profiles.md",
+    "tests/validators/test_directory_rules_amendment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/docs-control-plane.yml": "sha256:996b21afff69cc04949912eb3322480e10ccebcc3a5ff76a921b361195ff3f91",
+    "docs/adr/ADR-0039-directory-build-and-verification-profiles.md": "sha256:723ea07b8d166b2f6f5c3db2be08e16ecafdd6feb5584b5c6a4b55f72514adc2",
+    "tests/validators/test_directory_rules_amendment.py": "sha256:760e6a8ee177d747ab4ce4c964f505da901879cef1b5f95a2e97f2cc31e6e851"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Astra Pro",
+    "version": "UNKNOWN: runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:fa6b67e5c3893bf7d890cb1c5f684dffd1792fcef753f3afdc1b142a6cc2b311",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub",
+      "Google Drive",
+      "Notion",
+      "container"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/a9a53470e385350b795f6d978ad3e7a5811961c5",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/2fe65059af3753fbf662d267d7483a881afc83a0",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4306"
+    ],
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:800c704a1c5db1e94bb6936892c731abb8017a002767d9726f9c3f1eb057e31b"
+    ],
+    "attached_docs": [
+      "Drive Directory Rules, predecessor lineage read only",
+      "Notion KFM Repository Workbench, coordination read only"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/docs-control-plane.yml": "PROPOSED",
+    "docs/adr/ADR-0039-directory-build-and-verification-profiles.md": "PROPOSED",
+    "tests/validators/test_directory_rules_amendment.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "selected-source-local-tests",
+      "outcome": "PASS",
+      "reason": "32 new proposal-carrier checks and 8 existing ADR-index checks pass (40 total) in the exact selected-source overlay. Toolchain: {\"python\": \"3.13.5 (main, Jul 15 2026, 20:25:40) [GCC 14.2.0]\", \"pytest\": \"9.0.2\"}. Not a full or lock-native checkout."
+    },
+    {
+      "gate": "broader-generated-receipt-suite",
+      "outcome": "SKIPPED",
+      "reason": "BLOCKED_ENVIRONMENT: combined local execution produced 67 passes and one failure because a historical receipt input was absent from the selected source export. Not classified as a semantic regression or full-suite pass. Full-checkout hosted validation remains pending."
+    },
+    {
+      "gate": "historical-defect-replay",
+      "outcome": "PASS",
+      "reason": "The exact original 102b0e9a patch carrier is rejected with PATCH_TRAILING_CONTEXT. Current carrier reconstructs the unchanged candidate and roundtrips to the unchanged adopted bytes."
+    },
+    {
+      "gate": "adr-inventory",
+      "outcome": "PASS",
+      "reason": "Native ADR index validator passes in the selected-source overlay; 39 numbered records and 12 unassigned scaffolds. No status transition is performed."
+    },
+    {
+      "gate": "exact-head-hosted",
+      "outcome": "SKIPPED",
+      "reason": "Not executed at receipt emission. Later evidence must identify source head and checkout, not retroactively rewrite this receipt."
+    },
+    {
+      "gate": "full-topology-runtime-release",
+      "outcome": "SKIPPED",
+      "reason": "Not run in local source overlay. No new topology, runtime, build, browser, deployment or release success is inferred from this test/CI change."
+    },
+    {
+      "gate": "independent-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending; this authoring request is not independent artifact approval, ADR acceptance or a delivery-control exit."
+    },
+    {
+      "gate": "receipt-native-validation",
+      "outcome": "SKIPPED",
+      "reason": "Pending at receipt emission. Subsequent native validator output is retained in the handoff rather than editing this authoring-time observation."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-adopted-byte-binding",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/a9a53470e385350b795f6d978ad3e7a5811961c5/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "merged-separate-cleanup",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4306"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-06T00:38:39.208311+00:00",
+  "emitter": "ChatGPT: isolated source-overlay authoring and GitHub branch delivery",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0039-directory-build-and-verification-profiles.md",
+    "drift_register_entry": null
+  },
+  "notes": "Reconcile the same amendment branch with a9a53470 current main without force. Four-file continuation: tests, existing CI job, ADR guidance/currentness and this receipt. Original seven-file proposal remains separately identifiable. Effective Directory Rules, candidate patch and profile/inventory bytes, adopted ADRs, root/alias/correction registers, validators, topology baseline, dependency locks and data remain unchanged. Preserve both older proposal receipts; replay them at 102b0e9a463597459e4fa92d66e53b6eb29206bf and 2fe65059af3753fbf662d267d7483a881afc83a0 respectively. The existing Sites guard is already merged; no duplicate or successor cleanup PR is created. #4228 held transitions and #4024 delivery controls remain separate. No adoption, active enforcement cutover, new registry, PR, main mutation, settings, source activation, Site edit, merge, deployment or publication authority follows. Rollback this four-path continuation together; preserve historical receipts and the unchanged candidate carrier. Local validation began with an authored Unicode bytes-literal syntax error and an incomplete archive extraction; both were corrected before commit without weakening checks. Initial ADR CLI execution also lacked docs/registers/ADR_INDEX.md in the export; fetching its exact current blob c5a056011d6496cb2574cedd7f9e5dadadbbbe1e closed that local input gap and the native ADR CLI then passed. Precommit native receipt validation caught omitted documentation citation records; the two verified source references were supplied before delivery, without relaxing the validator."
+}

@@ -2,18 +2,19 @@
 doc_id: kfm://adr/0039
 title: Directory Build and Verification Profiles Amendment
 type: architecture-decision-record
-version: v0.1.1
+version: v0.1.2
 status: proposed
 effective_decision_status: proposed
 owners: ["@bartytime4life"]
 created: 2026-09-05
-updated: 2026-09-05
+updated: 2026-09-06
 policy_label: public; governance; non-publisher
 owning_root: docs/
 responsibility_root: docs/
 current_path: docs/adr/ADR-0039-directory-build-and-verification-profiles.md
 responsibility: Carry a byte-bound, unadopted Directory Rules amendment and its inactive replacement diff, without changing effective authority or authorizing dependent migration.
 base_commit: 8b9c52d88687986879c8f87d7e3835f6a58bbacd
+continuation_base_commit: a9a53470e385350b795f6d978ad3e7a5811961c5
 related:
   - ./INDEX.md
   - ./ADR-0029-adopt-directory-governance-standard-v2.md
@@ -21,6 +22,8 @@ related:
   - ../architecture/directory-implementation-profiles.md
   - ../architecture/directory-current-state-20260905.md
   - ../doctrine/directory-rules.md
+  - ../../tests/validators/test_directory_rules_amendment.py
+  - ../../.github/workflows/docs-control-plane.yml
 [/KFM_META_BLOCK_V2] -->
 
 # ADR-0039 — Directory Build and Verification Profiles Amendment
@@ -37,7 +40,7 @@ related:
 | Supersedes / superseded by | No ADR is superseded by this proposal. Future effective-edition supersession is conditional on acceptance and cutover. |
 | Review required | Documentation governance, architecture and affected application/package/test owners; independent review for authority-changing acceptance. No qualifying approval is claimed. |
 | Placement basis | Adopted Directory Rules §9.1 and established `docs/adr/` proposal/index mechanism; profiles and observations stay in existing `docs/architecture/`. |
-| Separate cleanup | Existing build-context branch at `3d75f67e8ca48c74e1fab43b1fdebefc383e1d23`, not part of this proposal's diff. |
+| Separate cleanup | Integrated through PR #4306 at `a9a53470e385350b795f6d978ad3e7a5811961c5`; original guard `3d75f67e8ca48c74e1fab43b1fdebefc383e1d23` remains history. Not part of the amendment net diff. |
 
 ## Context and goal
 
@@ -143,6 +146,44 @@ Required changed-area checks: candidate reconstruction and raw-byte digests; pre
 The native ADR commands are `python tools/validators/validate_adr_index.py` and `python -m pytest tests/validators/test_validate_adr_index.py -q --strict-config --strict-markers`, also reached by the existing docs-control-plane workflow. Full topology and schema suites are separate results; inherited cleanup evidence does not certify this proposal. Local reconstruction uses exact exported sources, not a claimed complete local checkout. Hosted results after receipt emission belong in the handoff, not retroactive receipt edits.
 
 Re-pin main, this head and open PR/branch overlap before delivery. Preserve #4024's branch-only boundary until a proven independent one-shot draft path exists; do not create a successor PR to evade it. #4228 remains Stage 1B HOLD / Stage 2 UNAUTHORIZED. No merge, settings, Site/Vercel, source, production-data, deployment or release action is authorized.
+
+## Continuing verification without adoption
+
+The continuation is based on `main@a9a53470e385350b795f6d978ad3e7a5811961c5`.
+It retains the original predecessor and the separately pinned inventory rather
+than relabeling either as a fresh full audit. Main now includes the temporal
+residual repair and the Sites source-context guard; their earlier failed or
+branch-only observations remain historical. This proposal does not reapply,
+revert, or claim independent approval of either merged implementation.
+
+The [proposal-carrier tests](../../tests/validators/test_directory_rules_amendment.py)
+make reconstruction checks permanent in the existing `adr-index-coherence` job
+of [docs-control-plane](../../.github/workflows/docs-control-plane.yml):
+
+```bash
+python -m pytest tests/validators/test_directory_rules_amendment.py -q --strict-config --strict-markers
+```
+
+The suite checks raw-byte predecessor/candidate/blob identities, profile and
+inventory digests, forward/reverse patch reconstruction, retained definition
+lines and headings, the explicit legacy version anchor, the nine added IDs,
+and proposed status. Negative cases assert particular diagnostics for malformed
+hunks, unexpected targets, whitespace/corrupt carriers, invalid digest rows,
+mutated artifacts, lost/duplicated rules, lost headings/anchors, escaped/symlinked
+or oversized inputs, and inherited Git environment variables. Reconstruction
+runs only inside disposable Git directories, never against the effective file.
+The workflow test checks discovery in the existing job without conditional skips
+or failure suppression. No new workflow, registry or topology engine is added.
+
+This is **proposal integrity coverage**, not automated enforcement of the nine
+proposed obligations or proof of their acceptance. It uses the current adopted
+file after checking its binding, so a shallow source checkout is sufficient.
+A future authorized acceptance/cutover must explicitly update or retire this
+proposed-only assertion with matching decision evidence; simply editing these
+tests cannot authorize that transition. Actual executed results belong in the
+new continuation receipt and exact-head handoff, not rewritten older receipts.
+Placement follows adopted Directory Rules §§7.2, 8.2 and 9.1: tests own regression
+proof, `.github/` owns CI composition, and this ADR owns the unadopted proposal.
 
 ## Patch-carrier correction
 

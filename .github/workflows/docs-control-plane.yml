@@ -200,6 +200,15 @@ jobs:
           --strict-config
           --strict-markers
 
+      # Proposal-carrier integrity only; does not activate ADR-0039 or new rules.
+      - name: Verify the inactive Directory Rules amendment carrier
+        run: >-
+          python -m pytest
+          tests/validators/test_directory_rules_amendment.py
+          -q
+          --strict-config
+          --strict-markers
+
       - name: Record ADR validation boundary
         if: always()
         shell: bash
