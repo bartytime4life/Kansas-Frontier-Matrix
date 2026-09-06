@@ -2,25 +2,25 @@
 doc_id: kfm://app/explorer-web/src/readme
 title: Explorer Web Source Tree README
 type: app-readme
-version: v0.4
+version: v0.4.1
 status: draft
 owners: OWNER_TBD — Apps steward · UI steward · Map steward · Governed API steward · Policy steward · Docs steward
 created: 2026-06-16
-updated: 2026-09-05
+updated: 2026-09-06
 policy_label: public
 owning_root: apps/
 responsibility: 'Define the Explorer Web source-layout boundary and record current repository-grounded composition, adapters, features, templates, tests, and maturity limits.'
 truth_posture: 'CONFIRMED source inventory and bounded local/fixture-first slices / PROPOSED broader route and integration shape / UNKNOWN fresh execution, deployment, release, and public operation'
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
-  main_commit: cbd6d82bad962a58ab62cfb776ee31696b575107
-  main_tree: 06d56a795d7423dcf4c96f36151f2721cd4749c5
+  main_commit: 0bcfbcea8fd8e8f9af344ce6d1a1c9fceb82310e
+  main_tree: c0e40dc0fbedb4415488e5561222ae96f015c81e
   target_prior_blob: a79d96b196d8b95208e209ccd74e51c02e7d146f
   parent_app_readme_blob: bd022e91d998685820f6c3b0965bdffbfd355726
   entrypoint_blob: 787c5182777b7f26d281e7e2851344b504a70d1c
-  site_directory_blob: 99fa37b9d97b118eb9164fc7ade5186fff64c1a2
+  site_directory_blob: 2c7b089f28a024040004ac65cdc6ae824c3cea0b
   adapters_directory_blob: d6ae7b54fce25eb39149b98183da4a67665c02c0
-  features_directory_blob: 221c930cd3e0eee56f8392c0c324689fa4b17e83
+  features_directory_blob: ced6a9877636ec3e22c67f842ba625593387fcdd
   viewer_templates_directory_blob: c92aa9b9e716ab74df89e88d6023c77d1365a84c
   package_manifest_blob: 25b67b10eb4d208b780eb456853257d051a2ce39
   temporal_test_blob: fe9e790d3e74aefe47720fa30952f10515bc02a8
@@ -47,9 +47,10 @@ related:
 tags: [kfm, apps, explorer-web, src, map-first, public-ui, governed-api, evidence-drawer, focus-mode, temporal, renderer-boundary]
 notes:
   - 'v0.4 re-pins this source-tree README to current main and records the actual direct-child, adapter, feature, site, template, package, and test surfaces observed there.'
+  - 'v0.4.1 re-pins the evidence snapshot to main@0bcfbcea8fd8e8f9af344ce6d1a1c9fceb82310e and refreshes the site/features directory anchors observed 2026-09-06; structural counts and bounded maturity claims are unchanged.'
   - 'Counts are structural evidence only; a file, feature directory, test definition, package, or viewer template does not prove route integration, a fresh pass, production data, release, deployment, or publication.'
   - 'The package-owned MapLibre implementation and dependency are present, while src/adapters/MapLibreAdapter.ts remains a boundary note and the normal Explorer composition uses NullMapRuntime.'
-  - 'This PR updates only apps/explorer-web/src/README.md. The parent app README and its own evidence snapshot remain related surfaces, not silently rewritten here.'
+  - 'This documentation change is scoped to apps/explorer-web/src/README.md; its generated receipt is the only provenance companion. The parent app README and its own evidence snapshot remain related surfaces, not silently rewritten here.'
   - 'src/ is the app implementation source-layout boundary only; it must not become a public API, lifecycle data store, policy root, release authority, schema/contract home, model-runtime surface, or shared package root.'
 [/KFM_META_BLOCK_V2] -->
 
@@ -110,7 +111,7 @@ notes:
 
 ## 0. Current evidence snapshot
 
-**Repository pin:** [`main@cbd6d82bad962a58ab62cfb776ee31696b575107`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/cbd6d82bad962a58ab62cfb776ee31696b575107), tree `06d56a795d7423dcf4c96f36151f2721cd4749c5`, observed 2026-09-05. This table records source/configuration evidence at that exact ref; it does not assert a fresh build, unit run, browser session, hosted check, deployment, release, or publication.
+**Repository pin:** [`main@0bcfbcea8fd8e8f9af344ce6d1a1c9fceb82310e`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/0bcfbcea8fd8e8f9af344ce6d1a1c9fceb82310e), tree `c0e40dc0fbedb4415488e5561222ae96f015c81e`, observed 2026-09-06. This table records source/configuration evidence at that exact ref; it does not assert a fresh build, unit run, browser session, hosted check, deployment, release, or publication.
 
 | Surface | Confirmed at the pinned source | Limit |
 |---|---|---|
@@ -348,7 +349,7 @@ For source changes under `apps/explorer-web/src/`:
 
 The target file began as an empty placeholder. Earlier README versions correctly established the `src/` boundary but later became stale as `site/`, `adapters/`, `features/`, `viewer_templates/`, and their tests were added.
 
-This v0.4 refresh records the current pinned source inventory and bounded repository facts without promoting them into claims about a production router, live transport, default renderer activation, deployment, release, publication, or public operation. It preserves the prior source-tree identity and keeps the update limited to this README.
+This v0.4.1 currentness correction re-pins the source snapshot to main@0bcfbcea8fd8e8f9af344ce6d1a1c9fceb82310e with tree c0e40dc0fbedb4415488e5561222ae96f015c81e and preserves the existing bounded inventory and maturity limits. It does not promote source evidence into claims about a production router, live transport, default renderer activation, deployment, release, publication, or public operation. It preserves the prior source-tree identity and keeps the documentation change limited to this README, with provenance in the required generated receipt.
 
 </details>
 
