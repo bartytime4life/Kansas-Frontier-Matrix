@@ -1,0 +1,129 @@
+# Task-local validation transport. NEVER merge this branch.
+# Tests literal main and product SHAs; no PR lifecycle, source, or deployment writes.
+name: m04-verification-query-validation
+"on":
+  push:
+    branches: [validation/m04-verification-query-20260905]
+    paths: [.github/workflows/m04-verification-query-validation.yml]
+permissions:
+  contents: read
+concurrency:
+  group: m04-verification-query-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  validate:
+    name: m04-${{ matrix.lane }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - lane: main
+            source: a9a53470e385350b795f6d978ad3e7a5811961c5
+          - lane: candidate
+            source: e709e64723c8131dcc417e9609c0bec8a5175a9b
+    env:
+      PYTHONHASHSEED: '0'
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONUNBUFFERED: '1'
+      KFM_NO_NETWORK: '1'
+      TZ: UTC
+      PIP_NO_INPUT: '1'
+      PIP_DISABLE_PIP_VERSION_CHECK: '1'
+    steps:
+      - name: Check out literal source without retained credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ matrix.source }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.11'
+      - name: Preserve source and install hash-locked dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          out="$RUNNER_TEMP/m04-evidence"
+          mkdir -p "$out"
+          test "$(git rev-parse HEAD)" = '${{ matrix.source }}'
+          git rev-parse HEAD HEAD^{tree} > "$out/source.txt"
+          git diff --name-status a9a53470e385350b795f6d978ad3e7a5811961c5 HEAD > "$out/changed-paths.txt"
+          git diff --binary a9a53470e385350b795f6d978ad3e7a5811961c5 HEAD > "$out/product.patch"
+          git archive --format=tar.gz HEAD > "$out/source.tar.gz"
+          git ls-files -s > "$out/source-index.txt"
+          sha256sum pyproject.toml tools/ci/python-test.lock docs/doctrine/directory-rules.md control_plane/repository_topology_correction_register.yaml tools/validators/directory_governance/repository_topology_baseline.json > "$out/protected-before.sha256"
+          python --version > "$out/python-version.txt"
+          python tools/ci/install_python_ci.py project-test > "$out/install.log" 2>&1
+          python -m pip freeze > "$out/dependencies.txt"
+      - name: Collect native gates with raw exit codes
+        shell: bash
+        run: |
+          set -euo pipefail
+          out="$RUNNER_TEMP/m04-evidence"
+          : > "$out/gates.tsv"
+          gate() {
+            local name="$1"; shift
+            set +e
+            "$@" > "$out/$name.log" 2>&1
+            local code=$?
+            set -e
+            printf '%s\t%s\n' "$name" "$code" | tee -a "$out/gates.tsv"
+          }
+          gate resolver make evidence-resolver
+          gate deny make evidence-resolver-deny
+          gate runtime python -m unittest tests.packages.evidence_resolver.test_runtime_projection_fixtures --verbose
+          gate history-tests python -m unittest tests.schemas.test_verification_state_history --verbose
+          gate history-fixtures python tools/validators/validate_verification_state_history.py --fixtures
+          gate evidence-ref python tools/validators/validate_evidence_ref.py --fixtures
+          gate evidence-bundle python tools/validators/validate_evidence_bundle.py --fixtures
+          gate schemas timeout 180 make schemas
+          if [ '${{ matrix.lane }}' = candidate ]; then
+            gate regression python -m unittest discover -s tests/packages/evidence_resolver -p test_verification_query_timestamps.py -v
+            gate regression-seed env PYTHONHASHSEED=8675309 python -m unittest discover -s tests/packages/evidence_resolver -p test_verification_query_timestamps.py -v
+            gate receipt python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-m04-verification-query-20260905.json --repo-root . --artifact-git-ref ae196ab808b30e9d37fabd874334a4f7df3aa555
+            git diff --name-only -z a9a53470e385350b795f6d978ad3e7a5811961c5 HEAD | xargs -0 sha256sum > "$out/product.sha256"
+          else
+            test_file=tests/packages/evidence_resolver/test_verification_query_timestamps.py
+            test ! -e "$test_file"
+            git show e709e64723c8131dcc417e9609c0bec8a5175a9b:"$test_file" > "$test_file"
+            trap 'rm -f tests/packages/evidence_resolver/test_verification_query_timestamps.py' EXIT
+            gate regression-negative-control python - <<'PY'
+          import json
+          import unittest
+          suite = unittest.defaultTestLoader.discover(
+              'tests/packages/evidence_resolver', pattern='test_verification_query_timestamps.py'
+          )
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          counts = {'methods': result.testsRun, 'failures': len(result.failures), 'errors': len(result.errors)}
+          print('EXPECTED_BASELINE_REGRESSION', json.dumps(counts, sort_keys=True))
+          assert counts == {'methods': 14, 'failures': 39, 'errors': 0}, counts
+          PY
+            rm "$test_file"
+            trap - EXIT
+          fi
+          gate topology python tools/validators/directory_governance/validate_repository_topology.py --repo-root . --trusted-baseline-ref a9a53470e385350b795f6d978ad3e7a5811961c5 --format json
+          gate diff-check git diff --check a9a53470e385350b795f6d978ad3e7a5811961c5 HEAD
+          gate protected-inputs sha256sum -c "$out/protected-before.sha256"
+          gate unchanged git diff --exit-code
+          git status --porcelain --untracked-files=all > "$out/worktree-after.txt"
+          cat "$out/gates.tsv" >> "$GITHUB_STEP_SUMMARY"
+      - name: Preserve source and raw evidence including failures
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: m04-${{ matrix.lane }}-${{ matrix.source }}
+          path: ${{ runner.temp }}/m04-evidence
+          if-no-files-found: error
+          retention-days: 14
+      - name: Enforce all collected outcomes without waivers
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          out="$RUNNER_TEMP/m04-evidence"
+          test -s "$out/gates.tsv"
+          awk -F '\t' '$2 != 0 { failed = 1 } END { exit failed }' "$out/gates.tsv"
+          test ! -s "$out/worktree-after.txt"
