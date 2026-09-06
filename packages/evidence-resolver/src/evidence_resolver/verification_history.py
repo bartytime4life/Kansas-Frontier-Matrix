@@ -116,6 +116,10 @@ def canonical_spec_hash(document: Mapping[str, object]) -> str:
 def parse_timestamp(value: str) -> datetime:
     """Parse one real UTC-second timestamp used by the bounded profile."""
 
+    # strptime accepts unpadded fields and case-folded literals. Replay queries
+    # must instead use the same closed grammar as verification-history events.
+    if not isinstance(value, str) or not _TIMESTAMP.fullmatch(value):
+        raise ValueError("timestamp must be a real UTC second")
     try:
         parsed = datetime.strptime(value, "%Y-%m-%dT%H:%M:%SZ")
     except (TypeError, ValueError) as exc:
