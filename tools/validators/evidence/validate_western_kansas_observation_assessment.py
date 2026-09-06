@@ -181,7 +181,10 @@ def _source_semantic_reasons(candidate: Mapping[str, Any]) -> list[str]:
 
     if not source_refs.issubset(evidence_refs):
         reasons.append("TUPLE_EVIDENCE_INCOMPLETE")
-    return reasonsdef _claim_reasons(candidate: Mapping[str, Any]) -> list[str]:
+    return reasons
+
+
+def _claim_reasons(candidate: Mapping[str, Any]) -> list[str]:
     reasons: list[str] = []
     claim = candidate["claim"]
     kind = claim["kind"]
