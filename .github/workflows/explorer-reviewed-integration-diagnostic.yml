@@ -1,4 +1,4 @@
-# Read-only, exact-source diagnostics. This workflow branch must never be merged.
+# Read-only exact-source diagnostics. Never merge this workflow branch.
 name: explorer-reviewed-integration-diagnostic
 on:
   push:
@@ -18,7 +18,7 @@ jobs:
       matrix:
         include:
           - lane: candidate
-            source: 71d0250bdd293ee2b5c367c901afd6d50402e010
+            source: b434a8ea606d44d3903da79cab08c5e08e824165
           - lane: main
             source: a9a53470e385350b795f6d978ad3e7a5811961c5
     env:
@@ -58,19 +58,26 @@ jobs:
             git diff --name-only a9a53470e385350b795f6d978ad3e7a5811961c5 HEAD > "$out/product-paths.txt"
             tar -czf "$out/product-source.tgz" -T "$out/product-paths.txt"
             python3 - <<'PY'
-          import json,subprocess,pathlib,hashlib
-          source='9091952f2adfb8b1aca26c9d3f9dabb121ad073f'
-          receipt=json.loads(pathlib.Path('data/receipts/generated/genrec-explorer-combined-integration-9091952f.json').read_text())
+          import json,subprocess,pathlib,hashlib,os
+          receipts=[('genrec-explorer-combined-integration-9091952f.json','9091952f2adfb8b1aca26c9d3f9dabb121ad073f'),('genrec-explorer-compiler-entrypoint-7e2a2f90.json','7e2a2f90b0420ae0863e12ba237b65edc3d50c0d')]
+          overlay={}
+          for name,source in receipts:
+            receipt=json.loads((pathlib.Path('data/receipts/generated')/name).read_text())
+            for path in receipt['artifact_paths']:
+              bound=subprocess.check_output(['git','show',source+':'+path])
+              assert 'sha256:'+hashlib.sha256(bound).hexdigest()==receipt['artifact_hashes'][path],path
+              overlay[path]={'sha256':hashlib.sha256(bound).hexdigest(),'source':source,'receipt':name}
           changed=set(subprocess.check_output(['git','diff','--name-only','a9a53470e385350b795f6d978ad3e7a5811961c5','HEAD']).decode().splitlines())
-          assert set(receipt['artifact_paths'])=={p for p in changed if not p.startswith('data/receipts/generated/')}
-          for path in receipt['artifact_paths']:
-            current=pathlib.Path(path).read_bytes()
-            assert current==subprocess.check_output(['git','show',source+':'+path]),path
-            assert 'sha256:'+hashlib.sha256(current).hexdigest()==receipt['artifact_hashes'][path],path
+          assert len(overlay)==29 and set(overlay)=={p for p in changed if not p.startswith('data/receipts/generated/')}
+          for path,binding in overlay.items():
+            assert hashlib.sha256(pathlib.Path(path).read_bytes()).hexdigest()==binding['sha256'],path
           for path,marker in [('apps/kansas-frontier-matrix-explorer/tests/earth-layer-library.test.mjs',"const card ="),('apps/kansas-frontier-matrix-explorer/tests/site-requested-layer-state.test.mjs',"const initial =")]:
             before=subprocess.check_output(['git','show','d550c452382c626bc871d921199af5dea2fabaa7:'+path]).decode()
             after=pathlib.Path(path).read_text()
             assert before[before.index(marker):]==after[after.index(marker):],path
+          out=pathlib.Path(os.environ['RUNNER_TEMP'])/'integration'
+          (out/'current-artifact-bindings.json').write_text(json.dumps(overlay,indent=2)+'\n')
+          (out/'source-preservation.log').write_text('ALL_29_CURRENT_ARTIFACT_BINDINGS_AND_EXISTING_ASSERTIONS_PRESERVED\n')
           print('ALL_29_CURRENT_ARTIFACT_BINDINGS_AND_EXISTING_ASSERTIONS_PRESERVED')
           PY
           fi
@@ -78,6 +85,18 @@ jobs:
           node --version > "$out/node.txt"
           pnpm --version > "$out/pnpm.txt"
           pnpm install --frozen-lockfile > "$out/install.log" 2>&1
+          python3 - <<'PY' > "$out/installed-compiler-metadata.json"
+          import pathlib,json
+          app=pathlib.Path('apps/kansas-frontier-matrix-explorer')
+          records={}
+          for key in ('typescript','@typescript/native'):
+            p=app/'node_modules'/key/'package.json'
+            if p.is_file():
+              v=json.loads(p.read_text());records[key]={k:v.get(k) for k in ('name','version','bin')}
+          lock=json.loads((app/'package-lock.json').read_text())
+          records['locked-native-bin']=lock.get('packages',{}).get('node_modules/@typescript/native',{}).get('bin')
+          print(json.dumps(records,indent=2))
+          PY
           pnpm exec playwright install --with-deps chromium > "$out/browser-install.log" 2>&1
       - name: Execute all application gates with raw exit codes
         shell: bash
@@ -123,6 +142,7 @@ jobs:
             trap - EXIT
             run_gate python-bootstrap python3 tools/ci/install_python_ci.py project-test
             run_gate combined-receipt python3 tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-explorer-combined-integration-9091952f.json --repo-root . --artifact-git-ref 9091952f2adfb8b1aca26c9d3f9dabb121ad073f
+            run_gate correction-receipt python3 tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-explorer-compiler-entrypoint-7e2a2f90.json --repo-root . --artifact-git-ref 7e2a2f90b0420ae0863e12ba237b65edc3d50c0d
             run_gate owner-review-receipt python3 tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-explorer-owner-review-bf1335ad.json --repo-root . --artifact-git-ref a120361953ae574c4c1df8ea805a69677c9fab78 --require-review-claim
             run_gate historical-library-receipt python3 tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-earth-layer-library-app-integration-698b8331.json --repo-root . --artifact-git-ref 698b833109e3b58bcb9ef5321cb9a8a49a3823e6
             run_gate historical-baseline-receipt python3 tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-explorer-ts7-worker-baseline-repair-673a0fd6.json --repo-root . --artifact-git-ref 673a0fd60dfca321e3c2fbe8a889a3bcafb4a1c8
