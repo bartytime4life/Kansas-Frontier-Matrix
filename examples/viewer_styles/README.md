@@ -280,7 +280,7 @@ The current GitHub directory read returned one direct child, README.md. That res
 | Style, legend, trust-state, negative-state, and accessibility scope | Preserved and clarified |
 | Operational-home and lifecycle separation | Preserved and linked to current authority references |
 | Existing bounded-inventory limitation | Preserved and pinned to the current direct-child read |
-| STATIC_WALHROUGH typo in the example contract | Corrected to STATIC_WALKTHROUGH |
+| Prior misspelled maturity label in the example contract | Corrected to STATIC_WALKTHROUGH |
 | Stale July evidence pin and prior blob | Replaced with current-main evidence; prior blob retained in metadata/history |
 | Operational payload, code, fixture, test, schema, policy, proof, receipt, route, release, deployment, or publication state | None added or changed |
 
