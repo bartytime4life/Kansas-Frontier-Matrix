@@ -2,15 +2,36 @@
 doc_id: kfm://doc/control-plane-domains-readme
 title: control_plane/domains/README.md — Control-Plane Domain Governance-Index Lanes
 type: README
-version: v0.3
-status: repository-grounded draft; 13-entry root projection; dedicated validation implemented; nested-domain-yaml-not-admitted; non-authoritative
+version: v0.4
+status: repository-grounded draft; current-main-repinned; 13-entry root projection; dedicated validation implemented; nested-domain-yaml-not-admitted; non-authoritative
 owner: NEEDS VERIFICATION — Control-plane steward · Domain stewards · Policy steward · Evidence steward · Release steward · Docs steward
 created: 2026-05-14
-updated: 2026-08-28
+updated: 2026-09-06
 policy_label: repository-facing; control-plane; domains; governance-index; no-parallel-authority; no-direct-public-path; cite-or-abstain; correction-aware; rollback-aware
 owning_root: control_plane/
 responsibility: Document the nested domain-governance index boundary and reconcile it with the canonical 13-entry root projection without creating domain, source, policy, lifecycle, release, or publication authority.
-truth_posture: CONFIRMED exact-main root projection, schema, validator, tests, workflow, receipt binding, subtree inventory, and repository ownership / PROPOSED machine_projection_only identity set / UNKNOWN consumers and cross-root maturity / NEEDS VERIFICATION accountable review, nested-YAML strategy, and runtime effects
+truth_posture: CONFIRMED current-main root projection, exact subtree inventory, schema/validator/test/workflow definitions, historical receipt binding, accepted Directory Rules, and repository ownership route / PROPOSED machine_projection_only identity set and root-versus-child strategy / UNKNOWN current hosted domain-lane result, consumers, cross-root maturity, and runtime effects / NEEDS VERIFICATION accountable review, nested-YAML strategy, and runtime effects
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 56c6694fbf1a3c7b91677e360bce144cdb612f13
+  prior_blob: a03d93a0867b768bc6b415a3f08606b27d339a17
+  control_plane_readme_blob: cd315af7c4a9cc5ac50f6a80989f2ec8d1c1a8ba
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  directory_rules_sha256: sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e
+  adr_0029_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
+  domain_lane_register_blob: 1bfc6f91cfa713a5e3d51ece011b63b46310734f
+  domain_lane_workflow_blob: 318214ba62830d255429fa257c3391276f5a2bf0
+  domain_lane_schema_blob: 62776893b6589aacf8ffc5d14be3b39f68439c0b
+  domain_lane_validator_blob: 0ed8fbbec788d785fbd7ae1a8ad878af567dbf2a
+  domain_lane_tests_blob: 89f1887ceebe44c3fd0954471a5c12e53c332880
+  domain_lane_receipt_blob: 9185c351880b5a210ab18a16468c9e312e677187
+  narrative_register_blob: 7cd641d99e1e4e3b3823f608d63679a438590c3a
+  habitat_readme_blob: bf3d500033ca1180b611a9cc714e8ec5bc35dfc1
+  habitat_gitkeep_blob: e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
+  domain_subtree: "README.md; habitat/README.md; habitat/.gitkeep"
+  current_main_domain_lane_workflow_runs: none_returned_for_latest_merge_commit
+  open_control_plane_prs_at_preflight: none_observed
 related:
   - ../README.md
   - ../domain_lane_register.yaml
@@ -58,7 +79,7 @@ related:
 > **A domain index describes authority relationships; it does not create domain authority.** A child folder, README, YAML file, badge, workflow result, commit, pull request, or merged branch cannot establish object meaning, source authority, evidence closure, policy approval, release approval, or publication by itself.
 
 > [!WARNING]
-> **The machine projection is populated but non-authorizing.** [`domain_lane_register.yaml`](../domain_lane_register.yaml) carries the 13 canonical lane identities and is schema-backed, validator-tested, and workflow-checked. Its `PROPOSED` and `machine_projection_only` posture does not establish implementation maturity, accountable stewardship, sensitivity authority, consumer admission, release, or publication.
+> **The machine projection is populated but non-authorizing.** [`domain_lane_register.yaml`](../domain_lane_register.yaml) carries the 13 canonical lane identities and is schema-backed, validator-tested, and covered by a dedicated workflow definition and generated receipt. Its `PROPOSED` and `machine_projection_only` posture does not establish implementation maturity, accountable stewardship, sensitivity authority, consumer admission, release, or publication; no current hosted pass is claimed for the latest merge commit.
 
 > [!CAUTION]
 > Ordinary public clients must not read this folder or its future registers directly. Public and semi-public surfaces consume governed APIs and released, policy-allowed artifacts. A control-plane pointer may guide backend validation or review, but it is never a public claim payload.
@@ -115,13 +136,13 @@ Authority is **referential** in this lane. An unresolved, stale, contradicted, o
 |---|---:|---|
 | Parent path and README | `CONFIRMED` | `control_plane/domains/README.md` exists with stable `kfm://doc/control-plane-domains-readme` identity. |
 | Canonical root ownership | `CONFIRMED DOCTRINE` | Directory Rules assign machine-readable governance indexes to `control_plane/`; domain names remain segments inside responsibility roots. |
-| Verified child README lanes | `CONFIRMED BOUNDED` | Exact-main tree inspection finds the parent README and one child README at [`habitat/README.md`](./habitat/README.md); no nested machine YAML is tracked. |
-| Root domain-lane machine entries | `CONFIRMED / PROPOSED PROJECTION` | [`domain_lane_register.yaml`](../domain_lane_register.yaml) contains 13 canonically ordered entries and excludes `matrix`, `scene`, and `spatial` as cross-cutting scopes. |
+| Verified child README lanes | `CONFIRMED BOUNDED` | `main@56c6694fbf1a3c7b91677e360bce144cdb612f13` contains the parent README, [`habitat/README.md`](./habitat/README.md), and an empty Habitat `.gitkeep`; no nested machine YAML is tracked. |
+| Root domain-lane machine entries | `CONFIRMED / PROPOSED PROJECTION` | [`domain_lane_register.yaml`](../domain_lane_register.yaml) at blob `1bfc6f91cfa713a5e3d51ece011b63b46310734f` contains 13 canonically ordered entries and excludes `matrix`, `scene`, and `spatial` as cross-cutting scopes. |
 | Related root registers | `CONFIRMED MIXED` | The object-family register contains 19 entries; policy-gate and release-state registers remain empty. Their independent maturity is outside this README's domain-lane boundary. |
 | Root YAML parsing | `CONFIRMED / ENFORCED` | The docs-control-plane workflow parses root `control_plane/*.yaml`, rejects duplicate keys, and requires mapping roots. |
 | Root register meta contract | `CONFIRMED / ENFORCED` | Tests require nine exact root registers, selected metadata, ISO review dates, related-doctrine paths, and an `entries:` body. |
 | Nested domain YAML validation | `NOT IMPLEMENTED` | The inspected workflow glob and exact-file tests do not cover `control_plane/domains/**/*.yaml`. |
-| Field-level domain-register schema | `CONFIRMED / ENFORCED` | The Draft 2020-12 schema, deterministic validator, focused tests, workflow, and generated authoring receipt are present and pass on exact main. |
+| Field-level domain-register schema | `CONFIRMED / IMPLEMENTED BOUNDED` | The Draft 2020-12 schema, deterministic validator, focused tests, workflow, and generated authoring receipt are present. The receipt records focused local gates as PASS; repository/byte bindings and hosted exact-head CI were recorded as skipped, so no current hosted pass is claimed. |
 | Domain inventory completeness | `BOUNDED / NEEDS VERIFICATION` | The projection contains the 13 canonical lane identities, but it deliberately does not prove cross-root implementation completeness, stewardship, or consumer readiness. |
 | Consumer readiness | `UNKNOWN / HOLD` | No admitted consumer contract or stale-reference behavior was established for domain indexes. |
 | Review routing | `CONFIRMED ROUTING / NEEDS VERIFICATION ENFORCEMENT` | CODEOWNERS routes `/control_plane/` to `@bartytime4life`; independent stewardship and required-review controls remain unverified. |
@@ -248,6 +269,8 @@ The dedicated [domain-lane-register workflow](../../.github/workflows/domain-lan
 
 The broader [docs-control-plane workflow](../../.github/workflows/docs-control-plane.yml) separately parses root `control_plane/*.yaml`, enforces the legacy meta contract, and checks ADR-index coherence. That compatibility coverage does not replace the dedicated semantic validator.
 
+At the current-main readback, GitHub returned no `domain-lane-register` workflow run for the latest merge commit. The workflow definition and historical receipt therefore remain bounded implementation evidence, not a current hosted-success claim.
+
 ### Not established by those checks
 
 These checks do **not** prove:
@@ -346,7 +369,7 @@ A proposed README or child file cannot authorize itself. Decisions that create p
 
 ## Last reviewed
 
-**2026-08-28**
+**2026-09-06 — current snapshot `main@56c6694fbf1a3c7b91677e360bce144cdb612f13`**
 
 Review again when any of these occurs:
 
@@ -370,18 +393,19 @@ Review again when any of these occurs:
 
 ```text
 control_plane/
-├── README.md                         # grounded root contract
-├── domain_lane_register.yaml         # 13-entry PROPOSED projection
+├── README.md                         # grounded root contract; blob cd315af7…
+├── domain_lane_register.yaml         # 13-entry PROPOSED projection; blob 1bfc6f91…
 ├── object_family_register.yaml       # separate 19-entry projection
 ├── policy_gate_register.yaml         # exists; entries: []
 ├── release_state_register.yaml       # exists; entries: []
 └── domains/
-    ├── README.md                     # this parent boundary
+    ├── README.md                     # this parent boundary; prior blob a03d93a0…
     └── habitat/
-        └── README.md                 # grounded child boundary
+        ├── .gitkeep                  # empty tracked placeholder
+        └── README.md                 # grounded child boundary; blob bf3d5000…
 ```
 
-This is a **bounded exact-main inventory** of the directly relevant root registers and the complete tracked `control_plane/domains/` subtree. It does not claim that the 13 projected lanes have complete implementation across every responsibility root.
+This is a **bounded exact-main inventory** read at `main@56c6694fbf1a3c7b91677e360bce144cdb612f13` of the directly relevant root registers and the complete tracked `control_plane/domains/` subtree. It does not claim that the 13 projected lanes have complete implementation across every responsibility root.
 
 ### Inventory interpretation
 
@@ -620,10 +644,10 @@ Rollback of this README means restoring prior documentation. Rollback of a domai
 
 | ID | Item | Status | Closure evidence |
 |---|---|---|---|
-| `CP-DOM-V-001` | Exhaustive recursive inventory beneath `control_plane/domains/`. | CONFIRMED BOUNDED | Exact-main tree contains this README, Habitat README, and Habitat `.gitkeep`; future changes require a fresh inventory. |
+| `CP-DOM-V-001` | Exhaustive recursive inventory beneath `control_plane/domains/`. | CONFIRMED BOUNDED | At `main@56c6694fbf1a3c7b91677e360bce144cdb612f13`, the exact subtree contains this README, Habitat README, and Habitat `.gitkeep`; future changes require a fresh inventory. |
 | `CP-DOM-V-002` | Stable domain ID, slug, alias, and supersession grammar. | PARTIAL / ENFORCED PROJECTION | Schema and validator enforce 13 lane IDs, code aliases, three unresolved compatibility aliases, and canonical ordering; authority remains PROPOSED. |
 | `CP-DOM-V-003` | Root-only versus root-plus-child versus generated-projection strategy. | NEEDS VERIFICATION | Reviewed decision and migration plan. |
-| `CP-DOM-V-004` | Field-level schema for `domain_lane_register.yaml`. | IMPLEMENTED | Dedicated Draft 2020-12 schema, validator, focused positive/negative tests, workflow, and generated authoring receipt. |
+| `CP-DOM-V-004` | Field-level schema for `domain_lane_register.yaml`. | IMPLEMENTED / HOSTED CURRENTNESS UNVERIFIED | Dedicated Draft 2020-12 schema, validator, focused positive/negative tests, workflow, and generated authoring receipt; the latest merge commit returned no domain-lane workflow run at readback. |
 | `CP-DOM-V-005` | Habitat root projection entry. | IMPLEMENTED / REVIEW HELD | Habitat is one of 13 validated entries; accountable review and authority remain separate. |
 | `CP-DOM-V-006` | Recursive nested YAML parsing and duplicate-key checks. | NOT IMPLEMENTED | Workflow and negative test evidence. |
 | `CP-DOM-V-007` | Root/child reciprocal reference and drift checks. | NOT IMPLEMENTED | Deterministic cross-check tests. |
@@ -641,9 +665,24 @@ Rollback of this README means restoring prior documentation. Rollback of a domai
 
 ## Version lineage and no-loss ledger
 
-### v0.3 reconciliation
+### v0.4 current-main reconciliation
 
-v0.3 corrects only current-state claims superseded by the merged root projection and its validation family. It preserves the v0.2 boundary, the absent nested-YAML posture, stable document identity, historical evidence, and every non-effect.
+v0.4 refreshes current-state evidence after the observed merges of the adjacent control-plane README, drift-register README, and register-lane README work. It preserves the stable document identity, non-authoritative domain-index boundary, 13-entry root projection, absent nested-YAML posture, historical no-loss ledger, and every publication, source, policy, lifecycle, release, and runtime non-effect.
+
+Current implementation evidence at preflight:
+
+- `main@56c6694fbf1a3c7b91677e360bce144cdb612f13` is the latest observed implementation snapshot; this README's prior blob is `a03d93a0867b768bc6b415a3f08606b27d339a17`.
+- The current parent root README is blob `cd315af7c4a9cc5ac50f6a80989f2ec8d1c1a8ba`; the root domain-lane projection remains blob `1bfc6f91cfa713a5e3d51ece011b63b46310734f` with 13 entries.
+- The dedicated schema, validator, focused tests, workflow, narrative register, Habitat child README, and generated receipt are present at the blobs recorded in the metadata evidence snapshot.
+- The exact `control_plane/domains/` subtree remains this parent README, `habitat/README.md`, and `habitat/.gitkeep`; no nested machine YAML is admitted.
+- The latest merge commit returned no `domain-lane-register` workflow run at readback. The generated receipt records focused local gates as PASS but repository/byte bindings and hosted exact-head CI as SKIPPED; this refresh does not convert those facts into current hosted acceptance.
+- No open control-plane PR was observed at preflight. Any later change must re-pin `main`, the target blob, and path overlap before mutation.
+
+These corrections are currentness metadata and evidence-boundary repairs only. They do not add a domain lane, change the root register, admit a consumer, accept a new ADR, or authorize a release or public path.
+
+### v0.3 historical reconciliation
+
+v0.3 was the prior currentness reconciliation superseded by this v0.4 snapshot. It preserves the v0.2 boundary, the absent nested-YAML posture, stable document identity, historical evidence, and every non-effect.
 
 <details>
 <summary>v0.2 evidence snapshot (historical; not current authority)</summary>
@@ -682,10 +721,10 @@ No accurate governance boundary was intentionally removed. Generic or unsupporte
 |---|---|
 | Document outcome | **UPGRADED** — same path, same stable ID, no parallel README. |
 | Lane role | Nested governance-index lane under canonical `control_plane/`; non-authoritative with respect to domain truth. |
-| Verified child inventory | Exact-main subtree contains this parent README, one grounded Habitat README, and Habitat `.gitkeep`; no nested machine YAML. |
-| Root domain machine inventory | 13-entry `PROPOSED` and `machine_projection_only` identity/placement projection. |
+| Verified child inventory | `main@56c6694fbf1a3c7b91677e360bce144cdb612f13` contains this parent README, one grounded Habitat README, and Habitat `.gitkeep`; no nested machine YAML. |
+| Root domain machine inventory | 13-entry `PROPOSED` and `machine_projection_only` identity/placement projection at current blob `1bfc6f91cfa713a5e3d51ece011b63b46310734f`. |
 | Related root register population | Object-family has 19 entries; policy-gate and release-state remain empty. Their maturity remains independently governed. |
-| Validation maturity | Root schema, semantic validator, positive/negative tests, workflow, and generated-receipt verification implemented; nested-lane YAML remains unadmitted. |
+| Validation maturity | Root schema, semantic validator, positive/negative tests, workflow, and generated-receipt contract are implemented; the receipt's hosted/current-main gates are not a current pass claim; nested-lane YAML remains unadmitted. |
 | Consumer maturity | UNKNOWN / HOLD; no admitted consequential consumer established. |
 | Public path | DENY direct use; governed APIs and released artifacts only. |
 | Next smallest safe change | Add reciprocal root/narrative drift checks before admitting any nested YAML or consequential consumer. |
