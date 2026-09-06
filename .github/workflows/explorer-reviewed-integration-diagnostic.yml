@@ -1,0 +1,59 @@
+# Task-owned read-only diagnostic branch. Never merge this workflow branch.
+name: explorer-reviewed-integration-diagnostic
+on:
+  push:
+    branches: [validation/explorer-reviewed-integration-20260905]
+    paths: [.github/workflows/explorer-reviewed-integration-diagnostic.yml]
+permissions:
+  contents: read
+concurrency:
+  group: explorer-reviewed-integration-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  inspect-composition:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: a9a53470e385350b795f6d978ad3e7a5811961c5
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Compose reviewed histories in the local index only
+        shell: bash
+        run: |
+          set -euo pipefail
+          out="$RUNNER_TEMP/integration-inspection"
+          mkdir -p "$out"
+          test "$(git rev-parse HEAD)" = a9a53470e385350b795f6d978ad3e7a5811961c5
+          git merge-base --is-ancestor 343a516812596f0b29fdb1a56b3a549edbe43490 bf1335ad7250dec6334f62ad86d1032f0df7ef61
+          git merge-base --is-ancestor 34a9348ce7882284a5843f414368b92ade9d79db 8e4167852d9037cc308ee744501f2172a6ee44f9
+          git config user.name 'KFM local integration inspection'
+          git config user.email 'noreply@example.invalid'
+          git merge --no-commit --no-ff bf1335ad7250dec6334f62ad86d1032f0df7ef61 8e4167852d9037cc308ee744501f2172a6ee44f9 2>&1 | tee "$out/merge.log"
+          git diff --cached --check
+          git diff --cached --binary > "$out/combined.patch"
+          git diff --binary 8b9c52d88687986879c8f87d7e3835f6a58bbacd a9a53470e385350b795f6d978ad3e7a5811961c5 > "$out/main-advance.patch"
+          git ls-files -z | grep -zE '(^|/)AGENTS\.md$|^CONTRIBUTING\.md$|^docs/doctrine/directory-rules\.md$|^contracts/.*generated_receipt|^schemas/.*generated_receipt|^tools/validators/validate_generated_receipt\.py$' | tar --null -T - -czf "$out/authority.tgz"
+          tar -czf "$out/combined-app.tgz" apps/kansas-frontier-matrix-explorer packages/ui/src/layer-library* tests/ui/test_explorer_lint_compat.mjs
+          python3 - <<'PY'
+          import hashlib,json,os,pathlib,subprocess
+          out=pathlib.Path(os.environ['RUNNER_TEMP'])/'integration-inspection'
+          paths=subprocess.check_output(['git','diff','--cached','--name-only','-z']).decode().split('\0')
+          entries=[]
+          for path in filter(None,paths):
+            row=subprocess.check_output(['git','ls-files','-s','--',path]).decode().split()
+            assert row and row[2]=='0',path
+            content=pathlib.Path(path).read_bytes()
+            entries.append({'path':path,'mode':row[0],'type':'blob','sha':row[1],'sha256':hashlib.sha256(content).hexdigest()})
+          (out/'tree-elements.json').write_text(json.dumps(entries,indent=2)+'\n')
+          print(json.dumps(entries,indent=2))
+          PY
+      - name: Preserve inspection and unmerged source
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: explorer-reviewed-integration-inspection
+          path: ${{ runner.temp }}/integration-inspection/
+          retention-days: 14
+          if-no-files-found: error
