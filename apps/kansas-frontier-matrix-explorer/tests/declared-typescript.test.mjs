@@ -16,7 +16,7 @@ function fixture(t, alias = true) {
   if (alias) manifest.devDependencies.typescript = 'npm:@typescript/typescript6@6.0.2';
   const installed = { name: 'typescript', version: '7.0.2', bin: { tsc: 'bin/tsc' } };
   const lock = { packages: { '': { devDependencies: { ...manifest.devDependencies } },
-    [`node_modules/${key}`]: { ...installed, integrity: 'sha512-synthetic-contract-fixture' } } };
+    [`node_modules/${key}`]: { ...installed, bin: { ...installed.bin }, integrity: 'sha512-synthetic-contract-fixture' } } };
   const write = () => {
     writeFileSync(join(root, 'package.json'), JSON.stringify(manifest));
     writeFileSync(join(root, 'package-lock.json'), JSON.stringify(lock));
@@ -57,4 +57,27 @@ test('even a lock-matching bin cannot escape the package through a symlink', t =
   const outside = join(f.root, 'outside'); writeFileSync(outside, '// external');
   rmSync(bin); symlinkSync(outside, bin);
   assert.throws(() => resolveDeclaredTypeScript(f.root), /escapes/);
+});
+for (const [installedBin, lockedBin] of [['./bin/tsc', 'bin/tsc'], ['bin/tsc', './bin/tsc']]) {
+  test(`equivalent entrypoint spellings select one confined file: ${installedBin} / ${lockedBin}`, t => {
+    const f = fixture(t);
+    // These are independent package/lock objects, not a shared fixture alias.
+    f.installed.bin = { tsc: installedBin };
+    f.lock.packages[`node_modules/${f.key}`].bin = { tsc: lockedBin };
+    f.write();
+    assert.equal(resolveDeclaredTypeScript(f.root).compiler, join(f.directory, 'bin/tsc'));
+  });
+}
+test('absolute lock entrypoints fail even when the installed relative path targets the same file', t => {
+  const f = fixture(t);
+  f.lock.packages[`node_modules/${f.key}`].bin = { tsc: join(f.directory, 'bin/tsc') };
+  f.write();
+  assert.throws(() => resolveDeclaredTypeScript(f.root), /does not match/);
+});
+test('different existing entrypoints are rejected rather than merely checked for existence', t => {
+  const f = fixture(t);
+  writeFileSync(join(f.directory, 'bin/other'), '// different installed program');
+  f.installed.bin = { tsc: 'bin/other' };
+  f.write();
+  assert.throws(() => resolveDeclaredTypeScript(f.root), /does not match/);
 });

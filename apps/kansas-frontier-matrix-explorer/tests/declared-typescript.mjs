@@ -28,10 +28,17 @@ export function resolveDeclaredTypeScript(appRoot) {
     throw new Error('Installed TypeScript CLI identity does not match the app lock');
   }
   const bin = installed.bin?.tsc;
-  if (typeof bin !== 'string' || bin !== entry.bin?.tsc || isAbsolute(bin)) {
+  const lockedBin = entry.bin?.tsc;
+  if (typeof bin !== 'string' || !bin || typeof lockedBin !== 'string' || !lockedBin
+      || isAbsolute(bin) || isAbsolute(lockedBin)) {
     throw new Error('TypeScript CLI entrypoint does not match the app lock');
   }
+  // Lock serializers can normalize ./bin/tsc to bin/tsc. Compare the actual
+  // package-confined file, not the spelling; a different entrypoint still fails.
   const compiler = realpathSync(resolve(directory, bin));
+  if (compiler !== realpathSync(resolve(directory, lockedBin))) {
+    throw new Error('TypeScript CLI entrypoint does not match the app lock');
+  }
   const path = relative(directory, compiler);
   if (!path || path === '..' || path.startsWith('../') || path.startsWith('..\\')
       || isAbsolute(path) || !statSync(compiler).isFile()) {
