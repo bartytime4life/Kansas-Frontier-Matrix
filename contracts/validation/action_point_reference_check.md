@@ -50,7 +50,7 @@ The profile is fixture-only, no-network, and non-mutating. It does not open a so
 
 ## Repository reconciliation (2026-09-06)
 
-This contract was re-read against GitHub `main@eaae135d8f4508c0712e3c6e151d7168a46f54ab` on 2026-09-06. GitHub is the implementation authority for this snapshot; Notion and Google Drive remain coordination and lineage inputs. The semantic rules above remain inactive and unchanged by this currentness refresh.
+This contract was re-read against GitHub `main@5efb430268fb59fccc0b1332d187615f5c063b10` on 2026-09-06. GitHub is the implementation authority for this snapshot; Notion and Google Drive remain coordination and lineage inputs. The semantic rules above remain inactive and unchanged by this currentness refresh.
 
 The base snapshot contains the following bounded packet:
 
@@ -73,7 +73,7 @@ Confirmed from the repository snapshot:
 
 - The contract, closed schema, eight-case synthetic manifest, deterministic builder, validator, focused tests, source map, workflow, and receipt are present at the paths named above.
 - `PASS` means only that a generated declaration reproduces its finite report and deterministic identity. It does not prove that a real action occurred correctly or was authorized.
-- The workflow is a command-bearing CI path, not proof that a run passed at the current `main` SHA. No matching action-point check run was identified for `main@eaae135d8f4508c0712e3c6e151d7168a46f54ab` during this reconciliation.
+- The workflow is a command-bearing CI path, not proof that a run passed at the current `main` SHA. No matching action-point check run was identified for `main@5efb430268fb59fccc0b1332d187615f5c063b10` during this reconciliation.
 - The profile remains proposed, inactive, fixture-only, no-network, non-mutating, and non-authoritative.
 
 Still open:
