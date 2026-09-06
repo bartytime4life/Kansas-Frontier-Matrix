@@ -10,6 +10,8 @@ import argparse
 import hashlib
 import json
 import os
+import re
+import stat
 import sys
 from pathlib import Path
 
@@ -28,7 +30,7 @@ def _load_metadata(path: Path) -> dict[str, object]:
 
 def _digest_hex(metadata: dict[str, object]) -> str:
     value = metadata.get("content_digest")
-    if not isinstance(value, str) or not value.startswith("sha256:") or len(value) != 71:
+    if not isinstance(value, str) or re.fullmatch(r"sha256:[0-9a-f]{64}", value) is None:
         raise ValueError("metadata content_digest is not a sha256 identity")
     return value.removeprefix("sha256:")
 
@@ -38,15 +40,29 @@ def object_path(store_root: Path, metadata: dict[str, object]) -> Path:
     return store_root / "sha256" / digest[:2] / digest[2:4] / f"{digest}.blob"
 
 
-def _ensure_safe_root(store_root: Path) -> None:
-    store_root.mkdir(parents=True, exist_ok=True)
-    current = Path(store_root.absolute().anchor)
-    for part in store_root.absolute().parts[1:]:
+def _check_directory_chain(directory: Path, *, create: bool) -> None:
+    """Check each existing component before descending or creating a child.
+
+    This rejects static symlinks, including dangling links. The caller must
+    still prevent concurrent replacement of the destination directory chain.
+    """
+    absolute = directory.absolute()
+    current = Path(absolute.anchor)
+    for part in absolute.parts[1:]:
         current /= part
-        if current.is_symlink():
-            raise ValueError("store root contains a symlink component")
-        if current.exists() and not current.is_dir():
-            raise ValueError("store root must contain directories only")
+        try:
+            mode = current.lstat().st_mode
+        except FileNotFoundError:
+            if not create:
+                raise ValueError("store directory is missing") from None
+            current.mkdir()
+            mode = current.lstat().st_mode
+        if not stat.S_ISDIR(mode):
+            raise ValueError("store path must contain real directories only")
+
+
+def _ensure_safe_root(store_root: Path) -> None:
+    _check_directory_chain(store_root, create=True)
 
 
 def store(metadata_path: Path, payload_path: Path, store_root: Path) -> Path:
@@ -54,12 +70,11 @@ def store(metadata_path: Path, payload_path: Path, store_root: Path) -> Path:
     metadata, payload = load_validated_artifact(metadata_path, payload_path)
     _ensure_safe_root(store_root)
     destination = object_path(store_root, metadata)
-    destination.parent.mkdir(parents=True, exist_ok=True)
-    for parent in (destination.parent, destination.parent.parent):
-        if parent.is_symlink():
-            raise ValueError("store shard contains a symlink")
+    _check_directory_chain(destination.parent, create=True)
+    if destination.is_symlink():
+        raise ValueError("existing object path is unsafe")
     if destination.exists():
-        if not destination.is_file() or destination.is_symlink():
+        if not destination.is_file():
             raise ValueError("existing object path is unsafe")
         if destination.read_bytes() != payload:
             raise ValueError("existing object bytes do not match digest identity")
@@ -80,7 +95,8 @@ def store(metadata_path: Path, payload_path: Path, store_root: Path) -> Path:
 def verify(metadata_path: Path, store_root: Path) -> Path:
     metadata = _load_metadata(metadata_path)
     destination = object_path(store_root, metadata)
-    if not destination.is_file() or destination.is_symlink():
+    _check_directory_chain(destination.parent, create=False)
+    if destination.is_symlink() or not destination.is_file():
         raise ValueError("content-addressed object is missing or unsafe")
     payload = destination.read_bytes()
     expected = metadata["content_digest"]

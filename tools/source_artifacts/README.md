@@ -9,7 +9,7 @@ python tools/source_artifacts/content_addressed_store.py verify \
   METADATA.json STORE_ROOT
 ```
 
-The helper is deterministic and no-network. It writes only beneath the caller-supplied temporary or local store root. It does not define production object storage, retention, credentials, legal hold, evidence admissibility, lifecycle promotion, release, or public delivery. A passing store or verify operation proves only that local bytes match the declared SHA-256 and byte length.
+The helper is deterministic and no-network. It stores object bytes beneath the caller-supplied temporary or local store root; preparing a missing root may create ordinary parent directories. It does not define production object storage, retention, credentials, legal hold, evidence admissibility, lifecycle promotion, release, or public delivery. A passing store or verify operation proves only that local bytes match the declared SHA-256 and byte length.
 
 ## Captured-input binding
 
@@ -37,3 +37,21 @@ python -m tools.validators.validate_source_artifact --fixtures
 
 The existing `source-artifact-validation` workflow watches and runs the first
 module, including the captured-input regressions. No new workflow is required.
+
+## Static store-directory containment
+
+Before creating each directory or reading a stored payload, the helper checks
+all existing components with `lstat`: ancestors of the supplied root, the root,
+`sha256`, and both digest shards must be real directories, not symlinks or other
+file types. This includes dangling directory symlinks. `store` also refuses a
+dangling object symlink rather than replacing it. `verify` never creates a
+missing directory. Both paths require the existing canonical lowercase
+`sha256:<64 hex digits>` identity before deriving an object path.
+
+These checks prevent pre-existing symlink redirection; they are not a sandbox
+against a process concurrently replacing checked ancestors. The caller must
+control the destination tree. Metadata and payload admission, captured-input
+binding, byte limits, source rights, and publication boundaries are unchanged.
+The regression module above covers root/algorithm/shard symlinks, rejected-path
+side effects, outside-object read prevention, malformed identities, read-only
+verification, and deterministic no-network operation with a relative root.

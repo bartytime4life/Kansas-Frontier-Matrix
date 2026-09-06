@@ -315,6 +315,152 @@ class SourceArtifactTests(unittest.TestCase):
         self.assertEqual(destination.read_bytes(), b"existing corrupt bytes")
         self.assertEqual(list(store_root.rglob("*.tmp-*")), [])
 
+    def _containment_layout(self, name: str, level: str) -> tuple[Path, Path, Path]:
+        base = self.root / name
+        base.mkdir()
+        store_root = base / "store"
+        destination = object_path(store_root, self.api_case["metadata"])
+        components = {
+            "root": store_root,
+            "algorithm": store_root / "sha256",
+            "first-shard": destination.parent.parent,
+            "second-shard": destination.parent,
+        }
+        if level == "ancestor":
+            link = base / "root-link"
+            store_root = link / "missing" / "store"
+        else:
+            link = components[level]
+        link.parent.mkdir(parents=True, exist_ok=True)
+        return store_root, link, base / "outside"
+
+    def test_store_rejects_static_directory_symlinks_before_outside_mutation(self) -> None:
+        for level in ("ancestor", "root", "algorithm", "first-shard", "second-shard"):
+            with self.subTest(level=level):
+                store_root, link, outside = self._containment_layout(f"linked-{level}", level)
+                outside.mkdir()
+                (outside / "sentinel").write_bytes(b"unchanged")
+                link.symlink_to(outside, target_is_directory=True)
+                with self.assertRaisesRegex(ValueError, "store"):
+                    store(self.api_metadata, self.api_payload, store_root)
+                self.assertEqual(sorted(p.relative_to(outside).as_posix() for p in outside.rglob("*")), ["sentinel"])
+                self.assertEqual((outside / "sentinel").read_bytes(), b"unchanged")
+                self.assertTrue(link.is_symlink())
+
+    def test_store_rejects_dangling_directory_symlinks(self) -> None:
+        for level in ("ancestor", "root", "algorithm", "first-shard", "second-shard"):
+            with self.subTest(level=level):
+                store_root, link, outside = self._containment_layout(f"dangling-{level}", level)
+                link.symlink_to(outside, target_is_directory=True)
+                with self.assertRaisesRegex(ValueError, "store"):
+                    store(self.api_metadata, self.api_payload, store_root)
+                self.assertTrue(link.is_symlink())
+                self.assertFalse(outside.exists())
+
+    def test_verify_rejects_static_directory_symlinks_before_payload_read(self) -> None:
+        for level in ("ancestor", "root", "algorithm", "first-shard", "second-shard"):
+            with self.subTest(level=level):
+                store_root, link, outside = self._containment_layout(f"verify-{level}", level)
+                destination = object_path(store_root, self.api_case["metadata"])
+                external_object = outside / destination.relative_to(link)
+                external_object.parent.mkdir(parents=True)
+                external_object.write_bytes(self.api_payload.read_bytes())
+                link.symlink_to(outside, target_is_directory=True)
+                with mock.patch.object(Path, "read_bytes", side_effect=AssertionError("unsafe object read")):
+                    with self.assertRaisesRegex(ValueError, "store"):
+                        verify(self.api_metadata, store_root)
+                self.assertEqual(external_object.read_bytes(), self.api_payload.read_bytes())
+
+    def test_store_rejects_non_directory_components(self) -> None:
+        for level in ("ancestor", "root", "algorithm", "first-shard", "second-shard"):
+            with self.subTest(level=level):
+                store_root, component, _ = self._containment_layout(f"file-{level}", level)
+                component.write_bytes(b"not a directory")
+                with self.assertRaisesRegex(ValueError, "store"):
+                    store(self.api_metadata, self.api_payload, store_root)
+                self.assertEqual(component.read_bytes(), b"not a directory")
+
+    def test_store_refuses_dangling_object_symlink_without_replacing_it(self) -> None:
+        store_root = self.root / "store"
+        destination = object_path(store_root, self.api_case["metadata"])
+        destination.parent.mkdir(parents=True)
+        outside = self.root / "missing-outside-object"
+        destination.symlink_to(outside)
+        with self.assertRaisesRegex(ValueError, "unsafe"):
+            store(self.api_metadata, self.api_payload, store_root)
+        self.assertTrue(destination.is_symlink())
+        self.assertFalse(outside.exists())
+        self.assertEqual(list(store_root.rglob("*.tmp-*")), [])
+
+    def test_object_identity_rejects_noncanonical_digest_before_directory_access(self) -> None:
+        invalid_digests = (
+            "sha256:" + "/" + "a" * 63,
+            "sha256:" + "../" + "a" * 61,
+            "sha256:" + "\\" + "a" * 63,
+            "sha256:" + "A" * 64,
+            "sha256:" + "g" * 64,
+            "sha256:" + "a" * 63 + "\n",
+            "sha256:" + "a" * 63,
+            "sha256:" + "a" * 65,
+        )
+        for value in invalid_digests:
+            with self.subTest(digest=value):
+                metadata = copy.deepcopy(self.api_case["metadata"])
+                metadata["content_digest"] = value
+                path = self._write_metadata(metadata)
+                with self.assertRaisesRegex(ValueError, "sha256 identity"):
+                    object_path(self.root / "store", metadata)
+                with mock.patch.object(Path, "lstat", side_effect=AssertionError("invalid identity reached filesystem")):
+                    with self.assertRaisesRegex(ValueError, "sha256 identity"):
+                        verify(path, self.root / "store")
+
+    def test_store_cli_reports_finite_failure_for_symlink_escape(self) -> None:
+        for command in ("store", "verify"):
+            with self.subTest(command=command):
+                store_root, link, outside = self._containment_layout(f"cli-{command}", "algorithm")
+                destination = object_path(store_root, self.api_case["metadata"])
+                external_object = outside / destination.relative_to(link)
+                external_object.parent.mkdir(parents=True)
+                external_object.write_bytes(self.api_payload.read_bytes())
+                link.symlink_to(outside, target_is_directory=True)
+                args = [command, str(self.api_metadata)]
+                if command == "store":
+                    args.append(str(self.api_payload))
+                stream = io.StringIO()
+                with contextlib.redirect_stdout(stream):
+                    code = cas.main([*args, str(store_root)])
+                self.assertEqual(code, 1)
+                result = json.loads(stream.getvalue())
+                self.assertEqual(result["outcome"], "FAIL")
+                self.assertNotIn("object_path", result)
+                self.assertNotIn(str(outside), stream.getvalue())
+
+    def test_verify_missing_store_is_read_only(self) -> None:
+        store_root = self.root / "missing" / "store"
+        with mock.patch.object(Path, "mkdir", side_effect=AssertionError("verify created directories")):
+            with self.assertRaisesRegex(ValueError, "store|missing"):
+                verify(self.api_metadata, store_root)
+        self.assertFalse(store_root.parent.exists())
+
+    def test_safe_nested_relative_store_roundtrip_remains_no_network(self) -> None:
+        previous = Path.cwd()
+        try:
+            os.chdir(self.root)
+            store_root = Path("relative") / "nested" / "store"
+            with (
+                mock.patch.object(socket.socket, "connect", _unexpected_network),
+                mock.patch.object(socket, "create_connection", _unexpected_network),
+                mock.patch.object(urllib.request, "urlopen", _unexpected_network),
+            ):
+                first = store(self.api_metadata, self.api_payload, store_root)
+                self.assertFalse(first.is_absolute())
+                self.assertEqual(store(self.api_metadata, self.api_payload, store_root), first)
+                self.assertEqual(verify(self.api_metadata, store_root), first)
+                self.assertEqual(first.read_bytes(), self.api_payload.read_bytes())
+                self.assertEqual(list(store_root.rglob("*.tmp-*")), [])
+        finally:
+            os.chdir(previous)
+
     def test_content_addressed_store_is_deterministic_and_detects_tampering(self) -> None:
         store_root = self.root / "store"
         first = store(self.api_metadata, self.api_payload, store_root)
