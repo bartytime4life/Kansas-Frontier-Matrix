@@ -2,37 +2,47 @@
 doc_id: kfm://doc/examples/story-decks/readme
 title: `examples/story_decks/` — Evidence-Gated Story Deck Examples
 type: readme; nested-example-lane; non-authoritative-demonstration-boundary
-version: v0.2.0
-status: repository-grounded draft; STATIC_WALKTHROUGH; non-authoritative; validation-bounded; do-not-publish
+version: v0.3.0
+status: repository-grounded currentness refresh; STATIC_WALKTHROUGH; non-authoritative; validation-bounded; do-not-publish
 owners: NEEDS VERIFICATION — examples steward and listed specialist reviewers
-updated: 2026-07-24
-supersedes: v0.1.x content at the same path; no operational object, runtime behavior, release, or publication state
-prepared_under_prompt: KFM Markdown Engineering, Modernization & GitHub Documentation Implementation Agent v5.0.0
+updated: 2026-09-06
+supersedes: v0.2.0 content at the same path; no operational object, runtime behavior, release, or publication state
+prepared_under_prompt: user-requested story-deck README currentness update
 policy_label: public-review; synthetic-first; fail-closed; cite-or-abstain; correction-aware
 current_path: examples/story_decks/README.md
-review_packet_id: kfm-md-examples-wave-20260724
+review_packet_id: kfm-md-story-decks-currentness-20260906
 truth_posture: >
-  CONFIRMED exact path, prior blob, current parent examples contract, complete prior file,
-  and referenced repository boundaries / PROPOSED normalized lane contract and future
-  example-validator profile / UNKNOWN executable child payloads, runtime parity, deployed
-  consumers, and production effects / NEEDS VERIFICATION owners, accepted schemas,
-  validators, fixtures, CI, host rendering, correction propagation, and retirement drills
+  CONFIRMED exact path, current parent examples contract, accepted Directory Rules decision through
+  ADR-0029, current direct directory inventory, and bounded linked story-source evidence / PROPOSED
+  normalized lane contract and future example-validator profile / UNKNOWN executable child payloads,
+  runtime parity, deployed consumers, and production effects / NEEDS VERIFICATION owners, child
+  schema conformance, validator wiring, fixtures, CI, host rendering, correction propagation,
+  and retirement drills
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
-  base_commit: fe9442ef01ed676e11ccea2796c6fe4090dd1e7e
-  prior_blob: 5235af859ea076c19dad4750f0e92947690bf337
-  parent_examples_blob: d3fbce80c82106935288d59a708bbb1a0118591e
-  inventory_method: complete target read plus bounded linked-file evidence; no example execution or runtime inspection
+  base_ref: main
+  base_commit: 4a2ddb9abe7ae64aad7c2d650478a7a14af1b73c
+  current_target_blob_before_patch: b7735f58aa1605abaf94165f352cee4f55a69b67
+  prior_v0.2.0_blob: 5235af859ea076c19dad4750f0e92947690bf337
+  parent_examples_blob: 749dfd2f387589f8ef1edd639a13f066eb2d2958
+  child_deck_blob: a65b225e8498e518f0bb955004e39e4e2a466245
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  adr_0029_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
+  root_registry_blob: 024f668b5f0a9239bafa4f8b09e2afd86300ff8c
+  story_architecture_blob: 893ccbd0cc9a10edd892462c74119e4d5d9284ef
+  published_stories_readme_blob: eba161a2740417be017a7e4514d6a09d3b6ce24c
+  inventory_method: exact target read plus pinned direct-directory listing and bounded linked-file reads; no example execution or runtime inspection
 notes:
-  - "The first twelve H2 sections follow Directory Rules section 15 exactly."
-  - "This change is Markdown only and does not create a fixture, test, schema, policy, proof, receipt, route, release, or publication state."
+  - "Directory Rules v2 bytes are adopted by accepted ADR-0029 even though the pinned doctrine file retains PROPOSED_FOR_ADOPTION in its internal control block."
+  - "The current direct listing contains README.md and kansas_drought_2012.md; recursive/non-Markdown completeness remains unverified."
+  - "This is a Markdown-only documentation refresh; it creates no fixture, test, schema, policy, proof, receipt, route, release, or publication state."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # `examples/story_decks/` — Evidence-Gated Story Deck Examples
 
-> **One-line purpose.** Teach story node sequencing, camera/time/layer state, evidence callouts, finite outcomes, Reality Boundary Notes, accessibility, and release gates.
+> **One-line purpose.** Teach story node sequencing, camera/time/layer state, evidence callouts, finite outcomes, Reality Boundary Notes, accessibility, and release gates while keeping illustrative plans separate from StoryManifest/StoryNode contracts, runtime, and published payloads.
 
 [![Status: static walkthrough](https://img.shields.io/badge/status-STATIC__WALKTHROUGH-f59e0b?style=flat-square)](#status)
 [![Authority: example only](https://img.shields.io/badge/authority-example%20only-b42318?style=flat-square)](#authority-level)
@@ -48,7 +58,7 @@ notes:
 
 Teach story node sequencing, camera/time/layer state, evidence callouts, finite outcomes, Reality Boundary Notes, accessibility, and release gates.
 
-This lane exists to make review and learning faster. It must not become a paralle contract, schema, policy, fixture, test, proof, receipt, source registry, runtime, release, or publication authority.
+This lane exists to make review and learning faster. It must not become a parallel contract, schema, policy, fixture, test, proof, receipt, source registry, runtime, release, or publication authority.
 
 ## Authority level
 
@@ -56,15 +66,20 @@ This lane exists to make review and learning faster. It must not become a parall
 
 Operational meaning remains owned by the relevant `docs/`, `contracts/`, `schemas/`, `policy/`, implementation, `tests/`, `fixtures/`, `data/`, and `release/` surfaces.
 
+The current story architecture describes public-safe StoryManifest/StoryNode projections and an app-local projection consumer, while live transport, rendered playback, evidence dereference, policy execution, release, deployment, and publication remain outside this lane's verified boundary. This README may illustrate those handoffs but cannot establish them.
+
 ## Status
 
 | Field | Bounded result |
 |---|---|
 | Path | `examples/story_decks/README.md` |
-| Version | `v0.2.0` |
-| Maturity | `STATIC_WALKTHROUGH` |
-| Prior blob | `5235af859ea076c19dad4750f0e92947690bf337` |
-| Recursive payload inventory | `UNKNOWN` beyond the bounded inventory below |
+| Version | `v0.3.0` |
+| Evidence base | `main@4a2ddb9abe7ae64aad7c2d650478a7a14af1b73c` |
+| Base target blob before this patch | `b7735f58aa1605abaf94165f352cee4f55a69b67` |
+| Prior v0.2.0 blob | `5235af859ea076c19dad4750f0e92947690bf337` |
+| Direct inventory | `CONFIRMED BOUNDED` — README plus `kansas_drought_2012.md` |
+| Recursive/non-Markdown inventory | `UNKNOWN` beyond the pinned direct listing |
+| Story implementation relation | `BOUNDED` — story architecture is implementation-partial/projection-only; no publisher is verified here |
 | Executable entrypoint / observed run | `NOT ESTABLISHED` |
 | Public/release readiness | `DENY BY PLACEMENT` |
 
@@ -82,7 +97,8 @@ Every new file must be visibly synthetic or safely transformed, name its learnin
 
 | Do not place here | Correct home or action |
 |---|---|
-| operational StoryManifest, StoryNode, public story package, or latest index | `data/published/stories/` after release |
+| StoryManifest/StoryNode contracts and schemas | `contracts/ui/` and `schemas/contracts/v1/ui/` |
+| released story payloads, packages, or latest indexes | `data/published/stories/` after release |
 | unreleased authoring drafts or generated narration candidates | governed WORK/QUARANTINE story lanes |
 | evidence/proof, receipts, policy, release, UI/API runtime, plugins, or schemas | their canonical roots |
 | sensitive detail hidden only by camera, style, zoom, or narration | transform before publication or deny |
@@ -121,18 +137,22 @@ CODEOWNERS routing is not stewardship, approval evidence, policy permission, or 
 - [Parent examples contract](../README.md)
 - [Kansas Drought 2012 deck](kansas_drought_2012.md)
 - [Story architecture](../../docs/architecture/story/README.md)
+- [StoryManifest contract](../../contracts/ui/story_manifest.md)
+- [StoryNode contract](../../contracts/ui/story_node.md)
+- [StoryManifest schema](../../schemas/contracts/v1/ui/story_manifest.schema.json)
+- [StoryNode schema](../../schemas/contracts/v1/ui/story_node.schema.json)
 - [Published story lane](../../data/published/stories/README.md)
 - [Published root](../../data/published/README.md)
 
 ## ADRs
 
-Renderer, story, public-client, and release decisions remain governed outside examples. This lane accepts none.
+Placement follows accepted ADR-0029 and the `DIR-ROOT-EXAMPLES` root registration without granting this lane authority. Renderer, story contract, public-client, and release decisions remain governed outside examples; this lane accepts none.
 
 ## Last reviewed
 
-- **Date:** 2026-07-24
-- **Evidence boundary:** `main@fe9442ef01ed676e11ccea2796c6fe4090dd1e7e`
-- **Method:** complete target read plus bounded linked-file verification
+- **Date:** 2026-09-06
+- **Evidence boundary:** `main@4a2ddb9abe7ae64aad7c2d650478a7a14af1b73c`
+- **Method:** exact target read, pinned direct-directory listing, and bounded reads of the parent contract, Directory Rules, ADR-0029, root registry, child deck, story architecture, and published-story README
 - **Execution/runtime inspection:** not performed
 - **Human review:** pending
 
@@ -167,15 +187,19 @@ correction_trigger: "<contract, policy, source, runtime, or release change>"
 
 ## Current bounded inventory
 
-`Kansas_drought_2012.md`  is the only verified child deck.
+The current direct listing contains exactly two Markdown files:
 
-Omission is not evidence of absence, retirement, or permission to create speculative children.
+- `README.md` (this file)
+- `kansas_drought_2012.md` (the only verified child deck)
+
+This direct listing is bounded evidence. It does not prove recursive absence, retirement, or permission to create speculative children.
 
 ## Open verification register
 
 | Item | Status | Required evidence |
 |---|---:|---|
-| Recursive subtree and non-Markdown inventory | `UNKNOWN` | Pinned tree and file classification |
+| Direct directory listing | `CONFIRMED BOUNDED` | `main@4a2ddb9abe7ae64aad7c2d650478a7a14af1b73c` lists README.md and kansas_drought_2012.md |
+| Recursive subtree and non-Markdown inventory | `UNKNOWN` | Pinned recursive tree and file classification |
 | Runnable entrypoints and dependency closure | `UNKNOWN` | Manifests, locks, commands, no-network inputs, observed runs |
 | Schema/contract conformance | `NEEDS VERIFICATION` | Accepted versions and validation results |
 | Examples-specific validation and CI | `NEEDS VERIFICATION` | Repository-owned validator, tests, fixtures, workflow |
@@ -187,6 +211,7 @@ Omission is not evidence of absence, retirement, or permission to create specula
 | Prior material | Disposition |
 |---|---|
 | Stable path and `doc_id` | Preserved |
+| Current-main evidence re-pin and direct two-file inventory | Added as bounded current evidence; not a recursive absence claim |
 | Non-authority and trust-membrane warnings | Preserved and strengthened |
 | Accepted material and exclusions | Preserved and normalized |
 | Finite outcomes and fail-closed behavior | Preserved |
@@ -197,6 +222,14 @@ Omission is not evidence of absence, retirement, or permission to create specula
 | Operational payload, code, fixture, test, or release change | None |
 
 ### Change history
+
+#### v0.3.0 — 2026-09-06
+
+- re-pinned the README to current `main` and recorded the exact direct directory inventory;
+- reconciled placement with accepted ADR-0029 while preserving the non-authoritative example boundary;
+- clarified StoryManifest/StoryNode contract and schema homes versus released story payloads;
+- refreshed the linked story-source evidence and review method;
+- changed Markdown only; no operational, runtime, release, or publication state changed.
 
 #### v0.2.0 — 2026-07-24
 
