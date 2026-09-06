@@ -1,0 +1,134 @@
+# Diagnostic-only workflow. This file is not product integration material and
+# must not be merged. The job deliberately checks out literal main@94e976ff so
+# the driver commit cannot alter the topology input being measured.
+name: topology-clean-index-diagnostic
+
+"on":
+  push:
+    branches:
+      - agent/topology-clean-index-diagnostic-20260905
+
+permissions:
+  contents: read
+
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  exact-main-topology:
+    name: exact-main-topology
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out literal tested main without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: 94e976ff281ff5033c1c91ada417ab1d0c445f7b
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared validator dependencies
+        shell: bash
+        run: python tools/ci/install_python_ci.py project-runtime
+
+      - name: Prove exact tested source and clean index
+        id: source
+        shell: bash
+        run: |
+          set -euo pipefail
+          expected_commit=94e976ff281ff5033c1c91ada417ab1d0c445f7b
+          expected_tree=2fb9f21adb52b01c2b5dbf5c5506dc6eda411bcf
+          actual_commit="$(git rev-parse HEAD)"
+          actual_tree="$(git write-tree)"
+          test "$actual_commit" = "$expected_commit"
+          test "$actual_tree" = "$expected_tree"
+          git diff --cached --quiet
+          echo "TESTED_COMMIT=$actual_commit"
+          echo "INDEX_TREE_BEFORE=$actual_tree"
+          for prefix in data/spec data/temporal data/temporal_gazetteer; do
+            tracked="$(git ls-files "$prefix/**")"
+            if [ -n "$tracked" ]; then
+              echo "UNEXPECTED_TRACKED_PREFIX=$prefix" >&2
+              printf '%s\n' "$tracked" >&2
+              exit 1
+            fi
+            echo "CONFIRMED_ABSENT_FROM_INDEX=$prefix/"
+          done
+          echo "TRACKED_DATA_MAPS_COUNT=$(git ls-files 'data/maps/**' | wc -l | tr -d ' ')"
+
+      - name: Run direct topology projection before topology tests
+        id: direct_before
+        shell: bash
+        run: |
+          set +e
+          export KFM_TRUSTED_BASE_REF=8b9c52d88687986879c8f87d7e3835f6a58bbacd
+          python tools/validators/directory_governance/render_repository_topology_diagnostics.py 2>&1 | tee /tmp/topology-direct-before.log
+          rc=${PIPESTATUS[0]}
+          echo "DIRECT_BEFORE_RC=$rc"
+          echo "rc=$rc" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Run canonical repository-topology target
+        id: canonical
+        shell: bash
+        run: |
+          set +e
+          export KFM_TRUSTED_BASE_REF=8b9c52d88687986879c8f87d7e3835f6a58bbacd
+          make repository-topology 2>&1 | tee /tmp/topology-canonical.log
+          rc=${PIPESTATUS[0]}
+          echo "CANONICAL_RC=$rc"
+          echo "rc=$rc" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Re-run direct topology and prove no index mutation
+        id: direct_after
+        shell: bash
+        run: |
+          set +e
+          export KFM_TRUSTED_BASE_REF=8b9c52d88687986879c8f87d7e3835f6a58bbacd
+          python tools/validators/directory_governance/render_repository_topology_diagnostics.py 2>&1 | tee /tmp/topology-direct-after.log
+          rc=${PIPESTATUS[0]}
+          echo "DIRECT_AFTER_RC=$rc"
+          echo "rc=$rc" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Assert diagnostic source isolation and summarize outcomes
+        shell: bash
+        run: |
+          set -euo pipefail
+          expected_tree=2fb9f21adb52b01c2b5dbf5c5506dc6eda411bcf
+          final_tree="$(git write-tree)"
+          test "$final_tree" = "$expected_tree"
+          git diff --cached --quiet
+          cmp /tmp/topology-direct-before.log /tmp/topology-direct-after.log
+          echo "INDEX_TREE_AFTER=$final_tree"
+          echo "DIRECT_OUTPUT_STABLE=true"
+          echo "DIRECT_BEFORE_RC=${{ steps.direct_before.outputs.rc }}"
+          echo "CANONICAL_RC=${{ steps.canonical.outputs.rc }}"
+          echo "DIRECT_AFTER_RC=${{ steps.direct_after.outputs.rc }}"
+          {
+            echo "### Exact-main topology diagnostic"
+            echo
+            echo "- Tested source: \`94e976ff281ff5033c1c91ada417ab1d0c445f7b\`."
+            echo "- Tested index tree before/after: \`$expected_tree\`."
+            echo "- Trusted comparison ref: \`8b9c52d88687986879c8f87d7e3835f6a58bbacd\`."
+            echo "- \`data/spec/\`, \`data/temporal/\`, and \`data/temporal_gazetteer/\` are absent from the tested Git index."
+            echo "- Direct-before exit: \`${{ steps.direct_before.outputs.rc }}\`."
+            echo "- Canonical \`make repository-topology\` exit: \`${{ steps.canonical.outputs.rc }}\`."
+            echo "- Direct-after exit: \`${{ steps.direct_after.outputs.rc }}\`."
+            echo "- Direct diagnostic output is byte-identical before and after topology unit tests."
+            echo "- This job records evidence and intentionally does not reinterpret a nonzero topology exit as PASS."
+            echo "- This diagnostic driver branch/file is not a merge target and grants no baseline, migration, release, or publication authority."
+          } >> "$GITHUB_STEP_SUMMARY"
