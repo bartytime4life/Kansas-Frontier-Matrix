@@ -11,6 +11,8 @@
     "build": "bash scripts/build-verified.sh",
     "start": "WRANGLER_LOG_PATH=.wrangler/wrangler.log vinext start",
     "test": "npm run build && node --test tests/*.test.mjs",
+    "posttest": "npm run test:lint",
+    "test:lint": "node --test ../../tests/ui/test_explorer_lint_compat.mjs",
     "lint": "bash scripts/sites-env.sh -- eslint . --ignore-pattern dist --ignore-pattern .next --ignore-pattern public/maplibre",
     "db:generate": "bash scripts/sites-env.sh -- drizzle-kit generate"
   },
@@ -27,6 +29,7 @@
     "@types/node": "26.4.0",
     "@types/react": "19.2.18",
     "@types/react-dom": "19.2.5",
+    "@typescript/native": "npm:typescript@7.0.2",
     "@vitejs/plugin-react": "6.1.1",
     "@vitejs/plugin-rsc": "0.5.34",
     "drizzle-kit": "0.31.10",
@@ -34,7 +37,7 @@
     "eslint-config-next": "16.3.3",
     "react-server-dom-webpack": "19.2.8",
     "tailwindcss": "4.3.3",
-    "typescript": "7.0.2",
+    "typescript": "npm:@typescript/typescript6@6.0.2",
     "vinext": "1.0.0-beta.8",
     "vite": "8.2.2",
     "wrangler": "4.127.1"

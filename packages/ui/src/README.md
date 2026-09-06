@@ -2,11 +2,11 @@
 doc_id: kfm://package/ui/src
 title: UI source tree README
 type: package-src-readme
-version: v0.2
+version: v0.3
 status: draft
 owners: OWNER_TBD — UI steward · Design-system steward · Evidence UI steward
 created: 2026-06-15
-updated: 2026-06-15
+updated: 2026-09-05
 policy_label: internal
 related:
   - ../README.md
@@ -19,7 +19,7 @@ related:
 tags: [kfm, ui, src, components, trust-visible-ui, evidence-drawer, focus-mode, design-system]
 notes:
   - "v0.2 formatting pass: added README impact block, Shields badges, quick jumps, Mermaid boundary diagram, callouts, task list, and collapsible appendix."
-  - "Implementation depth is UNKNOWN until actual exports, tests, build config, and consuming apps are inspected."
+  - "v0.3 adds the bounded Layer Library candidate; broader component and consumer maturity remains UNKNOWN."
   - "Source components render governed data; they do not decide truth, policy, evidence, release, or correction state."
 [/KFM_META_BLOCK_V2] -->
 
@@ -47,10 +47,72 @@ notes:
 > **Owners:** `OWNER_TBD` — UI steward · Design-system steward · Evidence UI steward  
 > **Path:** `packages/ui/src/README.md`  
 > **Repo fit:** importable source tree inside `packages/ui/`  
-> **Truth posture:** CONFIRMED file path / PROPOSED source-tree contract / UNKNOWN implementation depth
+> **Truth posture:** CONFIRMED bounded Layer Library / PROPOSED source-tree contract / UNKNOWN broader implementation depth
 
 > [!NOTE]
 > This README defines the intended source-tree boundary for shared UI code. It does not prove that all folders, exports, tests, stories, or consuming app imports already exist.
+
+## Layer Library candidate — 2026-09-05
+
+The bounded implementation now consists of [the metadata/transaction model](layer-library-model.ts),
+[the browser-native view](layer-library-view.ts), and [scoped styles](layer-library.css).
+These are shared UI modules, not a renderer, policy engine, catalog authority,
+network client or workspace-persistence service. The historical package-wide
+checklist below is not upgraded to completed by this slice.
+
+The Library supports staged discovery, cards/table, 24-item pages, search and
+filters, explicit eligible/fixture/discovery modes, requested visibility/opacity,
+constrained order, removal and conflict-aware undo. Unknown coverage/time is not
+a positive match. A held renderer is labeled not drawn. No geometry or thumbnails
+are fetched. Disclosure revocation removes old cards, category chips and staged
+references; release withdrawal independently blocks addition. Explicitly allowed
+metadata about an unavailable item is not the same as permission to deliver it.
+
+Every mutation now checks the current requested state, requires an explicit
+synchronous host acknowledgment and compares an immutable value snapshot with
+readback. No-op, rejection, mismatched readback and exceptions are distinguished.
+Unconfirmed writes are not announced as applied, do not create an undo receipt,
+and are not automatically retried or rolled back. Errors after a host mutation
+are not described as proof that nothing changed. Persistent host-read failures
+disable mutation and show a finite, redacted message.
+
+The [existing Site adapter and integration handoff](../../../apps/kansas-frontier-matrix-explorer/docs/earth-layer-library-integration.md)
+remain **dormant**: this change does not import the wrapper into `page.tsx` or its
+stylesheet into `layout.tsx`. The adapter covers eight inspected synthetic or
+generalized fixtures only; no operational source is admitted. Other legacy layer
+controls, MapLibre, temporal work, KanPlan, reports and workspaces remain unchanged.
+The new acknowledgment callback is deliberately not compatible with the earlier
+unapplied void-callback snippet. Use the updated handoff, not the original ZIP's
+page-edit recipe. Actual React commit/paint and renderer delivery are separate
+from requested-state acknowledgment and remain unverified.
+
+From the repository root, the bounded source test is:
+
+```bash
+node --test apps/kansas-frontier-matrix-explorer/tests/earth-layer-library.test.mjs
+```
+
+Use lock-installed TypeScript. The runner checks its version against the app
+manifest and lock and rejects implicit `NODE_PATH` fallback; installed-byte
+integrity is not proved by that version check. `KFM_ALLOW_GLOBAL_TSC=1` is an
+explicit **diagnostic-only** fallback with compiler identity in the log. The companion browser runner injects compiled modules
+into Chromium with a synthetic host. The continuation run passed 47 Node cases
+and 27 browser-DOM cases using Node 22.16.0, TypeScript 5.8.3 and Chromium
+144.0.7559.96. The unchanged original candidate was also rerun: 37 Node cases and
+21 browser cases passed. This is candidate-to-candidate evidence, not a same-base
+repository-wide failure attribution. The app declares TypeScript 7.0.2; no locked
+app build, native full validation, hosted CI, React runtime, GPU, Site preview or
+production success is claimed. Wrapper checking is syntax-only.
+
+Placement follows accepted ADR-0029 and adopted Directory Rules section 10.1 /
+`DIR-EXEC-001`: shared UI in `packages/`, host composition and its existing tests
+in `apps/`. The generated-work receipt is process memory under the existing
+`data/receipts/generated/` lane, not approval or a release. No canonical schema,
+policy, data catalog or other competing authority home is introduced.
+
+Rollback this complete candidate change only after checking intervening work.
+It does not require deleting any user workspace or clearing browser storage.
+Keep current disclosure/access restrictions even when restoring older UI code.
 
 ## Scope
 
@@ -105,7 +167,7 @@ Accepted inputs are component-ready, already-governed values passed through an a
 
 ## Directory map
 
-The exact source tree is `NEEDS VERIFICATION`. The following is a proposed placement guide, not a claim that these folders currently exist.
+The three Layer Library modules above are the bounded candidate implementation. The following older layout remains a proposed placement guide, not a claim that those folders exist.
 
 ```text
 src/

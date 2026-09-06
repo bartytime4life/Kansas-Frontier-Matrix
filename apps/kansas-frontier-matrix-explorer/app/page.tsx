@@ -1,7 +1,10 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
+import SiteLayerLibrary from "./site-layer-library";
+import { createRequestedLayerStore } from "./site-requested-layer-state";
+import { INSPECTED_DEMO_IDS } from "./site-layer-library-metadata";
 import type { Feature, Geometry } from "geojson";
 import {
   createNullMapRuntime,
@@ -400,9 +403,6 @@ const cameraViewsEquivalent = (left: ViewState, right: ViewState) => (
 export default function Home() {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRuntimeRef = useRef<MapRuntimePort | null>(null);
-  const visibilityRef = useRef(defaultVisibility);
-  const opacityRef = useRef(defaultOpacity);
-  const orderRef = useRef(defaultOrder);
   const yearRef = useRef<number>(2026);
   const basemapRef = useRef<BasemapKey>("midnight");
   const projectionRef = useRef<"mercator" | "globe">("mercator");
@@ -443,9 +443,15 @@ export default function Home() {
   const compactRef = useRef(false);
   const openSelectionRef = useRef<(context: SelectedContext, returnElement?: HTMLElement | null) => void>(() => undefined);
 
-  const [visibility, setVisibility] = useState<Record<string, boolean>>(defaultVisibility);
-  const [opacity, setOpacity] = useState<Record<string, number>>(defaultOpacity);
-  const [layerOrder, setLayerOrder] = useState<string[]>(defaultOrder);
+  // A single synchronous owner serves both imperative Library transactions and
+  // all legacy app writers. React renders its immutable subscribed snapshot.
+  const [requestedLayers] = useState(() => createRequestedLayerStore({
+    visibility: defaultVisibility, opacity: defaultOpacity, layerOrder: defaultOrder,
+  }, INSPECTED_DEMO_IDS));
+  const { visibility, opacity, layerOrder, membershipEpoch } = useSyncExternalStore(
+    requestedLayers.subscribe, requestedLayers.getSnapshot, requestedLayers.getServerSnapshot,
+  );
+  const { setVisibility, setOpacity, setLayerOrder } = requestedLayers;
   const [basemap, setBasemap] = useState<BasemapKey>("midnight");
   const [view, setView] = useState<ViewState>(KANSAS_VIEW);
   const [scenePreset, setScenePreset] = useState<ScenePresetId>("overview-2d");
@@ -551,9 +557,6 @@ export default function Home() {
   const debouncedGlobalQuery = useDebounced(globalQuery, 140);
   const debouncedLayerQuery = useDebounced(layerQuery, 140);
 
-  useEffect(() => { visibilityRef.current = visibility; }, [visibility]);
-  useEffect(() => { opacityRef.current = opacity; }, [opacity]);
-  useEffect(() => { orderRef.current = layerOrder; }, [layerOrder]);
   useEffect(() => { yearRef.current = year; }, [year]);
   useEffect(() => { basemapRef.current = basemap; }, [basemap]);
   useEffect(() => { projectionRef.current = projection; }, [projection]);
@@ -1041,7 +1044,7 @@ export default function Home() {
   const showComparedLayers = useCallback(() => {
     setVisibility((current) => ({ ...current, [compareLeft.id]: true, [compareRight.id]: true }));
     announce(`Showing ${compareLeft.title} and ${compareRight.title}; other visible layers were preserved`);
-  }, [announce, compareLeft, compareRight]);
+  }, [announce, compareLeft, compareRight, setVisibility]);
 
   const fitComparedLayers = useCallback(() => {
     const bounds: [number, number, number, number] = [
@@ -1053,7 +1056,7 @@ export default function Home() {
     setVisibility((current) => ({ ...current, [compareLeft.id]: true, [compareRight.id]: true }));
     fitRendererNeutralBounds(bounds);
     announce("Framed both comparison layers in renderer-neutral camera state; visibility changed only in this browser");
-  }, [announce, compareLeft, compareRight, fitRendererNeutralBounds]);
+  }, [announce, compareLeft, compareRight, fitRendererNeutralBounds, setVisibility]);
 
   const copyLayerComparison = useCallback(async () => {
     const summarize = (layer: LayerRecord) => ({
@@ -1368,7 +1371,7 @@ export default function Home() {
       center: focus,
       zoom: Math.max(mapRuntimeRef.current?.getSnapshot().camera.zoom ?? KANSAS_VIEW.zoom, 7),
     });
-  }, [openSelection, updateRendererNeutralView]);
+  }, [openSelection, setVisibility, updateRendererNeutralView]);
 
   const openGuidedExample = useCallback((example: (typeof GUIDED_EXAMPLES)[number]) => {
     yearRef.current = example.year;
@@ -1477,15 +1480,11 @@ export default function Home() {
       const restoredVisibility = params.has("l")
         ? Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, visibleIds.includes(layer.id)]))
         : defaultVisibility;
-      visibilityRef.current = restoredVisibility;
-      setVisibility(restoredVisibility);
       const opacityPairs = params.get("o")?.split(",").map((pair) => pair.split(":")) ?? [];
       const restoredOpacity = Object.fromEntries(opacityPairs
         .filter(([id, value]) => knownLayerIds.has(id) && typeof value === "string" && value.trim() !== "" && Number.isFinite(Number(value)))
-        .map(([id, value]) => [id, clamp(Number(value), 0.1, 1)]));
+        .map(([id, value]) => [id, clamp(Number(value), 0, 1)]));
       const nextOpacity = { ...defaultOpacity, ...restoredOpacity };
-      opacityRef.current = nextOpacity;
-      setOpacity(nextOpacity);
       const restoredYear = Number(params.get("t"));
       const nextYear = TIME_STEPS.includes(restoredYear as (typeof TIME_STEPS)[number]) ? restoredYear : 2026;
       yearRef.current = nextYear;
@@ -1545,13 +1544,10 @@ export default function Home() {
         setTimelineOpen(false);
       }
       const restoredOrder = params.get("order")?.split(",").filter(Boolean) ?? [];
-      if (restoredOrder.length === knownLayerIds.size && new Set(restoredOrder).size === knownLayerIds.size && restoredOrder.every((id) => knownLayerIds.has(id))) {
-        orderRef.current = restoredOrder;
-        setLayerOrder(restoredOrder);
-      } else {
-        orderRef.current = defaultOrder;
-        setLayerOrder(defaultOrder);
-      }
+      const nextOrder = restoredOrder.length === knownLayerIds.size
+        && new Set(restoredOrder).size === knownLayerIds.size
+        && restoredOrder.every((id) => knownLayerIds.has(id)) ? restoredOrder : defaultOrder;
+      requestedLayers.replace({ visibility: restoredVisibility, opacity: nextOpacity, layerOrder: nextOrder });
       const featureId = params.get("f");
       let restoredSelection = false;
       if (featureId) {
@@ -1567,7 +1563,6 @@ export default function Home() {
             setSelected(context);
             if (!params.has("l")) setVisibility((current) => {
               const next = { ...current, [context.layerId]: true };
-              visibilityRef.current = next;
               return next;
             });
             const restoredDrawer = params.get("panel");
@@ -1588,7 +1583,7 @@ export default function Home() {
         setSelected(null);
         setRightOpen(false);
       }
-  }, [applyRendererNeutralView]);
+  }, [applyRendererNeutralView, requestedLayers, setVisibility]);
 
   useEffect(() => {
     const restore = window.setTimeout(restoreExplorerFromUrl, 0);
@@ -2201,7 +2196,6 @@ export default function Home() {
     }[preset];
     stopSceneOrbit(false);
     const nextVisibility = Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, scene.layers.includes(layer.id)]));
-    visibilityRef.current = nextVisibility;
     yearRef.current = 2026;
     basemapRef.current = scene.basemap;
     projectionRef.current = scene.projection;
@@ -2230,7 +2224,6 @@ export default function Home() {
   const toggleSceneLayer = (layerId: "watershed-context" | "smoke-context" | "elevation-concept" | "tile-matrix-grid") => {
     setVisibility((current) => {
       const next = { ...current, [layerId]: !current[layerId] };
-      visibilityRef.current = next;
       return next;
     });
   };
@@ -2282,7 +2275,6 @@ export default function Home() {
     const nextAtmosphere: AtmospherePreset = profile.id === "smoke" || profile.id === "elevation" ? "dusk" : profile.projection === "globe" ? "clear" : "night";
     const nextFieldOfView = profile.id === "elevation" ? 44 : profile.projection === "globe" ? 42 : 36;
     stopSceneOrbit(false);
-    visibilityRef.current = nextVisibility;
     yearRef.current = profile.year;
     basemapRef.current = profile.basemap;
     projectionRef.current = profile.projection;
@@ -2307,7 +2299,6 @@ export default function Home() {
   const applyAnalysisRecipe = (recipe: AnalysisRecipe) => {
     const nextVisibility = Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, recipe.layerIds.includes(layer.id)]));
     stopSceneOrbit(false);
-    visibilityRef.current = nextVisibility;
     yearRef.current = recipe.year;
     basemapRef.current = recipe.basemap;
     projectionRef.current = "mercator";
@@ -2347,6 +2338,7 @@ export default function Home() {
   const saveCurrentWorkspace = () => {
     const savedAt = new Date().toISOString();
     const redactWorkspaceCamera = locationCameraRedacted || locationDerivedViewRef.current;
+    const currentLayers = requestedLayers.getSnapshot();
     const snapshot: WorkspaceSnapshot = {
       id: `workspace-${Date.now()}`,
       name: workspaceName.trim() || `Kansas workspace ${savedWorkspaces.length + 1}`,
@@ -2355,9 +2347,9 @@ export default function Home() {
         ? { center: [...KANSAS_VIEW.center] as [number, number], zoom: KANSAS_VIEW.zoom, bearing: KANSAS_VIEW.bearing, pitch: KANSAS_VIEW.pitch }
         : { center: [...view.center] as [number, number], zoom: view.zoom, bearing: view.bearing, pitch: view.pitch },
       locationCameraRedacted: redactWorkspaceCamera,
-      visibility: { ...visibility },
-      opacity: { ...opacity },
-      layerOrder: [...layerOrder],
+      visibility: { ...currentLayers.visibility },
+      opacity: { ...currentLayers.opacity },
+      layerOrder: [...currentLayers.layerOrder],
       year,
       basemap,
       projection,
@@ -2390,8 +2382,8 @@ export default function Home() {
     stopSceneOrbit(false);
     const knownLayerIds = new Set(LAYER_REGISTRY.map((layer) => layer.id));
     const nextVisibility = Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, snapshot.visibility?.[layer.id] === true]));
-    const nextOpacity = Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, clamp(Number(snapshot.opacity?.[layer.id] ?? layer.defaultOpacity), .1, 1)]));
-    const savedOrder = Array.isArray(snapshot.layerOrder) ? snapshot.layerOrder.filter((id) => knownLayerIds.has(id)) : [];
+    const nextOpacity = Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, clamp(parseNumber(String(snapshot.opacity?.[layer.id] ?? layer.defaultOpacity), layer.defaultOpacity), 0, 1)]));
+    const savedOrder = Array.isArray(snapshot.layerOrder) ? [...new Set(snapshot.layerOrder.filter((id) => knownLayerIds.has(id)))] : [];
     const nextOrder = [...savedOrder, ...defaultOrder.filter((id) => !savedOrder.includes(id))];
     const nextYear = TIME_STEPS.includes(snapshot.year as (typeof TIME_STEPS)[number]) ? snapshot.year : 2026;
     const nextBasemap: BasemapKey = snapshot.basemap === "prairie" ? "prairie" : "midnight";
@@ -2404,9 +2396,6 @@ export default function Home() {
     const nextAtmosphere: AtmospherePreset = savedScene?.atmosphere === "dusk" || savedScene?.atmosphere === "clear" ? savedScene.atmosphere : "night";
     const nextLightAzimuth = clamp(Number(savedScene?.lightAzimuth ?? 210), 0, 359);
     const nextFieldOfView = clamp(Number(savedScene?.fieldOfView ?? 36), 20, 60);
-    visibilityRef.current = nextVisibility;
-    opacityRef.current = nextOpacity;
-    orderRef.current = nextOrder;
     yearRef.current = nextYear;
     basemapRef.current = nextBasemap;
     projectionRef.current = nextProjection;
@@ -2414,9 +2403,7 @@ export default function Home() {
     atmospherePresetRef.current = nextAtmosphere;
     lightAzimuthRef.current = nextLightAzimuth;
     fieldOfViewRef.current = nextFieldOfView;
-    setVisibility(nextVisibility);
-    setOpacity(nextOpacity);
-    setLayerOrder(nextOrder);
+    requestedLayers.replace({ visibility: nextVisibility, opacity: nextOpacity, layerOrder: nextOrder });
     setYear(nextYear);
     setPlaying(false);
     setBasemap(nextBasemap);
@@ -2499,9 +2486,6 @@ export default function Home() {
   };
 
   const resetExplorer = () => {
-    visibilityRef.current = defaultVisibility;
-    opacityRef.current = defaultOpacity;
-    orderRef.current = defaultOrder;
     yearRef.current = 2026;
     basemapRef.current = "midnight";
     projectionRef.current = "mercator";
@@ -2510,9 +2494,7 @@ export default function Home() {
     lightAzimuthRef.current = 210;
     fieldOfViewRef.current = 36;
     gestureModeRef.current = "cooperative";
-    setVisibility(defaultVisibility);
-    setOpacity(defaultOpacity);
-    setLayerOrder(defaultOrder);
+    requestedLayers.replace({ visibility: defaultVisibility, opacity: defaultOpacity, layerOrder: defaultOrder });
     setYear(2026);
     setBasemap("midnight");
     setProjection("mercator");
@@ -3310,7 +3292,7 @@ export default function Home() {
                   {expanded && <div className="layer-detail">
                     <p>{layer.description}</p>
                     <dl><div><dt>Format</dt><dd>{layer.sourceType}</dd></div><div><dt>Scale</dt><dd>{layer.scaleNote}</dd></div><div><dt>Time</dt><dd>{layer.validTimeExtent}</dd></div><div><dt>Freshness</dt><dd>{layer.freshnessState}</dd></div></dl>
-                    <label className="opacity-control"><span>Opacity <b>{Math.round((opacity[layer.id] ?? layer.defaultOpacity) * 100)}%</b></span><input type="range" min="10" max="100" value={Math.round((opacity[layer.id] ?? layer.defaultOpacity) * 100)} onChange={(event) => setOpacity((current) => ({ ...current, [layer.id]: Number(event.target.value) / 100 }))} /></label>
+                    <label className="opacity-control"><span>Opacity <b>{Math.round((opacity[layer.id] ?? layer.defaultOpacity) * 100)}%</b></span><input type="range" min="0" max="100" value={Math.round((opacity[layer.id] ?? layer.defaultOpacity) * 100)} onChange={(event) => setOpacity((current) => ({ ...current, [layer.id]: Number(event.target.value) / 100 }))} /></label>
                     <div className="layer-actions"><button type="button" onClick={() => zoomToLayer(layer)}>Zoom</button><button type="button" onClick={(event) => inspectLayer(layer, event.currentTarget)}>Features</button><button type="button" onClick={() => moveLayer(layer.id, -1)} aria-label={`Move ${layer.title} down in draw order`}>↓</button><button type="button" onClick={() => moveLayer(layer.id, 1)} aria-label={`Move ${layer.title} up in draw order`}>↑</button></div>
                     <p className="layer-note">{layer.sensitivityNote}</p>
                   </div>}
@@ -3327,7 +3309,16 @@ export default function Home() {
           <div className="mission-band map-command-bar">
             <span data-runtime={runtime.kind}><i /> RENDERER HOLD · NULL RUNTIME</span>
             <p>Synthetic and generalized catalog data only · <b>{visibleCount}</b> layers · <b>{formatTimelineStep(year)}</b> · <b>{selected ? selected.properties.title : "No selection"}</b></p>
-            <div><button type="button" onClick={saveCurrentWorkspace}>Save view</button><button type="button" onClick={(event) => openMapUtility("report", event.currentTarget)}>Build report</button></div>
+            <div><SiteLayerLibrary
+              layers={LAYER_REGISTRY} visibility={visibility} opacity={opacity} layerOrder={layerOrder}
+              area={analysisArea} year={year} membershipEpoch={membershipEpoch}
+              readState={requestedLayers.getSnapshot} onChange={requestedLayers.compareAndSet}
+              onInspect={(id) => {
+                const layer = LAYER_REGISTRY.find((candidate) => candidate.id === id);
+                const returnElement = document.activeElement instanceof HTMLElement ? document.activeElement : mapContainerRef.current;
+                if (layer && returnElement) inspectLayer(layer, returnElement);
+              }}
+            /><button type="button" onClick={saveCurrentWorkspace}>Save view</button><button type="button" onClick={(event) => openMapUtility("report", event.currentTarget)}>Build report</button></div>
           </div>
           <div id="map-canvas" ref={mapContainerRef} className="map-canvas" tabIndex={areaDrawMode ? -1 : 0} role="application" aria-label="Renderer-neutral Kansas Explorer shell. Use Map Workbench Inspect or the Layer Catalog to inspect catalog and evidence metadata; renderer interactions remain held." />
           {analysisAreaOverlay && !areaDrawMode && <div className="map-analysis-overlay" style={{ left: `${analysisAreaOverlay.left}%`, top: `${analysisAreaOverlay.top}%`, width: `${analysisAreaOverlay.width}%`, height: `${analysisAreaOverlay.height}%` }} aria-hidden="true"><span>REPORT AREA · {analysisAreaRecordCount}</span></div>}
@@ -3674,7 +3665,7 @@ export default function Home() {
                     <header><div><span>{layer.domain} · {layer.sourceType}</span><h4>{layer.title}</h4><code>{layer.sourceId}</code></div><strong>{state.toUpperCase()}</strong></header>
                     <div className="source-connection-path" aria-label={`${layer.title} renderer connection`}><span>REGISTRY</span><i>→</i><span>{activity}</span><i>→</i><span>{layer.renderers.length} DESCRIPTOR{layer.renderers.length === 1 ? "" : "S"}</span><i>→</i><span>RUNTIME HELD</span></div>
                     <dl><div><dt>Time-compatible</dt><dd>{compatibleCount}</dd></div><div><dt>In viewport</dt><dd>{viewportCount}</dd></div><div><dt>Source probe</dt><dd>{probeCount === undefined ? "NOT RUN" : `${probeCount} UNIQUE`}</dd></div><div><dt>Attribution</dt><dd>{layer.attribution}</dd></div></dl>
-                    <footer><button type="button" onClick={() => setVisibility((current) => { const next = { ...current, [layer.id]: !current[layer.id] }; visibilityRef.current = next; return next; })}>{visible ? "Hide intent" : "Show intent"}</button><button type="button" onClick={() => zoomToLayer(layer)}>Fit</button><button type="button" onClick={() => probeSourceConnection(layer)}>Inspect fixture</button><button type="button" onClick={() => inspectSourceConnection(layer)}>Records</button></footer>
+                    <footer><button type="button" onClick={() => setVisibility((current) => { const next = { ...current, [layer.id]: !current[layer.id] }; return next; })}>{visible ? "Hide intent" : "Show intent"}</button><button type="button" onClick={() => zoomToLayer(layer)}>Fit</button><button type="button" onClick={() => probeSourceConnection(layer)}>Inspect fixture</button><button type="button" onClick={() => inspectSourceConnection(layer)}>Records</button></footer>
                   </article>)}
                   {filteredSourceConnections.length === 0 && <div className="map-utility-empty"><strong>No source connections match</strong><p>Clear the search or choose another connection state.</p></div>}
                 </div>
