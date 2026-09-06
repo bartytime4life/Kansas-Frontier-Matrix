@@ -6,7 +6,7 @@ version: v3.0.0
 status: repository-grounded draft
 owners: ["@bartytime4life"]
 created: 2026-05-11
-updated: 2026-09-04
+updated: 2026-09-06
 policy_label: public
 current_path: README.md
 owning_root: repository-root
@@ -15,7 +15,7 @@ truth_posture: cite-or-abstain; implementation claims require pinned repository 
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 48f6ce5123d4f7cbc199761bda6596c0d2df1b42
+  base_commit: 11cb4b51125db18d952d9f00e997beab89791cea
 related:
   - docs/doctrine/directory-rules.md
   - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
@@ -129,7 +129,7 @@ These are exploration and implementation lanes, not a promise that each theme ha
 
 ## Current posture
 
-The table below is the honest maturity snapshot for the repository at `main@48f6ce5123d4f7cbc199761bda6596c0d2df1b42`.
+The table below is the honest maturity snapshot for the repository at `main@11cb4b51125db18d952d9f00e997beab89791cea`.
 
 | Surface | Current repository evidence | Boundary |
 |---|---|---|
@@ -372,8 +372,8 @@ The most important open edges are the exact packaging mismatch noted above, host
 | Field | Value |
 |---|---|
 | Repository | `bartytime4life/Kansas-Frontier-Matrix` |
-| Evidence snapshot | `main@48f6ce5123d4f7cbc199761bda6596c0d2df1b42` |
-| Open pull requests at snapshot | `0` |
+| Evidence snapshot | `main@11cb4b51125db18d952d9f00e997beab89791cea` |
+| Open pull requests at review time | `2` — [#4319](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4319), [#4321](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4321) |
 | Reviewed | Root tree, current root README, Explorer site app README/manifest, Explorer Web README/manifest, root package, Makefile, `.github/README.md`, Directory Rules, and accepted ADR-0029 |
 | Change class | Same-path public documentation and navigation modernization |
 | No mutation implied | No source activation, settings change, release, deployment, promotion, publication, or lifecycle transition |
