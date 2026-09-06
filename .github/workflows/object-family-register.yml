@@ -9,7 +9,7 @@ name: object-family-register
 "on":
   pull_request:
     paths:
-      - ".github/workflows/**"
+      - ".github/workflows/object-family-register.yml"
       - "apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts"
       - "contracts/**"
       - "control_plane/object_family_register.yaml"
@@ -36,7 +36,7 @@ name: object-family-register
     branches:
       - main
     paths:
-      - ".github/workflows/**"
+      - ".github/workflows/object-family-register.yml"
       - "apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts"
       - "contracts/**"
       - "control_plane/object_family_register.yaml"
