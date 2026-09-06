@@ -30,9 +30,10 @@ related:
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 23c3487a1731f9558a6efc7143be65966f59efd5
+  base_commit: 5efb430268fb59fccc0b1332d187615f5c063b10
+  branch_merge_base: 23c3487a1731f9558a6efc7143be65966f59efd5
   previous_contract_blob: 154f67fbb69ad179b062e02fc3f1bbf85fc497dd
-  target_path_history: "Only implementation commit observed: 2c7062a51fdb4b5b2c0a76bfb02bf502fc3d9161; no later target-path commit through current main"
+  target_path_history: "Only implementation commit observed: 2c7062a51fdb4b5b2c0a76bfb02bf502fc3d9161; no later target-path commit through current main@5efb430268fb59fccc0b1332d187615f5c063b10"
   source_packet_pr: 2398
   source_packet_head: 9b200d2733d899c1ca69e4b014fd9430362249f9
   source_packet_merge_commit: 6f582f8bbbc0934b69ee433c4b092c96af611436
@@ -48,7 +49,7 @@ evidence_snapshot:
   fixture_corpus: "14 cases: 7 validator PASS cases (one matching profile, five single-dimension drifts, one multi-drift case) and 7 DENY cases; PASS cases produce both replay PASS and replay FAIL outcomes"
   historical_hosted_run: "GitHub Actions run 31351078454, job 93341901442, success; associated with PR head 9b200d2733d899c1ca69e4b014fd9430362249f9 and checked out merge ref 53797f6dec766029dee0a9d379747ead29cf9977"
   historical_run_observation: "11 focused tests passed, fixture CLI returned cases=14/failures=0/suite_match=true, and generated-receipt integrity returned valid with review=pending"
-  current_main_hosted_run: "NEEDS VERIFICATION — PR-triggered workflow readback for main@23c3487a1731f9558a6efc7143be65966f59efd5 returned no runs; the push-triggered current-main result was not established"
+  current_main_hosted_run: "NEEDS VERIFICATION — PR-triggered workflow readback for main@5efb430268fb59fccc0b1332d187615f5c063b10 returned no runs; the push-triggered current-main result was not established"
   receipt_boundary: "The 2026-08-09 receipt remains historical and immutable; it binds the pre-refresh contract bytes and is not current-main replay or review authority"
 tags: [kfm, validation, pipeline, replay, drift, fixture, currentness]
 notes:
