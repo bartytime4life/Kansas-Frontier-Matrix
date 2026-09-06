@@ -1,0 +1,39 @@
+# Temporary source transport only; remove before product delivery.
+name: source-artifact-containment-audit
+"on":
+  push:
+    branches: [agent/source-artifact-static-containment-20260906]
+    paths: [.github/workflows/source-artifact-containment-audit.yml]
+permissions:
+  contents: read
+concurrency:
+  group: source-artifact-containment-audit-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  export-exact-base:
+    if: github.repository == 'bartytime4life/Kansas-Frontier-Matrix' && github.ref == 'refs/heads/agent/source-artifact-static-containment-20260906'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: 19809b21d393c40af7a5d978d9b010e3a8e9eb9a
+          persist-credentials: false
+      - name: Export pinned Git source, not a product test
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = 19809b21d393c40af7a5d978d9b010e3a8e9eb9a
+          test "$(git rev-parse HEAD^{tree})" = f352d622cc7c82b5706b310e439e91974e35344c
+          mkdir -p "$RUNNER_TEMP/source-export"
+          git archive --format=tar.gz HEAD > "$RUNNER_TEMP/source-export/source.tar.gz"
+          git rev-parse HEAD > "$RUNNER_TEMP/source-export/commit.txt"
+          git rev-parse HEAD^{tree} > "$RUNNER_TEMP/source-export/tree.txt"
+          cd "$RUNNER_TEMP/source-export"
+          sha256sum source.tar.gz > SHA256SUMS
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: source-artifact-containment-base-19809b21
+          path: ${{ runner.temp }}/source-export/
+          retention-days: 7
+          if-no-files-found: error
