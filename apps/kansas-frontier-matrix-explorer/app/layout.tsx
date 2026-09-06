@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { headers } from "next/headers";
 import "./globals.css";
 import "./transformation.css";
+import "../../../packages/ui/src/layer-library.css";
+import "./site-layer-library.css";
 import OperationalSpine from "./operational-spine";
 
 const fallbackBase = new URL("https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site");
