@@ -384,7 +384,7 @@ python tools/validate_all.py \
   --changed-path schemas/contracts/v1/evidence/evidence_bundle.schema.json
 ```
 
-A changed-area request with no matching path glob returns `ABSTAIN` / `NO_MATCHING_VALIDATORS` with exit `0`. That is an explicit no-selection result, not validation of the changed file.
+A direct changed-area request with no matching path glob returns `ABSTAIN` / `NO_MATCHING_VALIDATORS` with exit `0` by default. Add `--require-match` for a gated invocation; it returns `FAIL` with exit `1` so an empty selection cannot pass vacuously.
 
 The historical and Make-compatible route remains:
 
@@ -401,7 +401,7 @@ make validate
 | `python tools/validate_all.py --validate-registry` | Validates registry structure, profiles, IDs, paths, scripts, limits, and full-profile closure. | Registry configuration only. |
 | `python tools/validate_all.py --list` | Prints registry identity, digest, profiles, and validator IDs. | Inventory snapshot only. |
 | `--profile focused` | Runs SourceDescriptor, EvidenceRef, EvidenceBundle, and RuntimeResponseEnvelope validators. | Focused bounded surface. |
-| `--profile changed-area` | Selects validators whose registered path globs match supplied changed paths. | Coverage depends on maintained globs; no match is `ABSTAIN`. |
+| `--profile changed-area` | Selects validators whose registered path globs match supplied changed paths. | Coverage depends on maintained globs; no match is `ABSTAIN` by default; `--require-match` makes it `FAIL`/exit `1` for gates. |
 | `--profile release-dry-run` | Runs EvidenceBundle, LayerManifest, DecisionEnvelope, RunReceipt, and IngestReceipt validators. | Fixture validation only; not a release dry run, release decision, or publication. |
 | `--profile full` | Runs all eight registered validators and aggregates every selected result. | Registered surface only; not complete schema-tree coverage. |
 | `make schemas` | Runs `python tools/validators/_common/run_all.py`, which delegates to the full orchestrator profile. | Compatibility command; same bounded registered surface. |
@@ -415,7 +415,7 @@ The orchestrator runs every selected validator instead of stopping after the fir
 | Exit | Top-level outcome | Meaning |
 |---:|---|---|
 | `0` | `PASS` | Every selected validator returned its success code. |
-| `0` | `ABSTAIN` | Changed-area selection matched no registered validator. |
+| `0` | `ABSTAIN` | Changed-area selection matched no registered validator in the default direct-CLI mode. |
 | `1` | `FAIL` | One or more validators rejected their inputs. |
 | `2` | `ERROR` | Registry, I/O, timeout, or validator execution produced an orchestrator error. |
 
@@ -807,7 +807,7 @@ The registry is an execution-selection contract for the orchestrator. It does no
 | Profile | Registered selection | Intended use | Boundary |
 |---|---|---|---|
 | `focused` | SourceDescriptor, EvidenceRef, EvidenceBundle, RuntimeResponseEnvelope | Fast shared trust-shape checks | Not all registered validators. |
-| `changed-area` | Dynamic matches from changed repository paths and registered globs | Risk-proportionate validation | Coverage is only as complete as the globs; no match is `ABSTAIN`. |
+| `changed-area` | Dynamic matches from changed repository paths and registered globs | Risk-proportionate validation | Coverage is only as complete as the globs; no match is `ABSTAIN` by default; `--require-match` is the fail-closed gate mode. |
 | `release-dry-run` | EvidenceBundle, LayerManifest, DecisionEnvelope, RunReceipt, IngestReceipt | Release-adjacent fixture checks | Does not assemble, approve, sign, release, roll back, or publish. |
 | `full` | All eight validators in registry order | Aggregate compatibility path | Registered surface only; not the full schema tree. |
 
