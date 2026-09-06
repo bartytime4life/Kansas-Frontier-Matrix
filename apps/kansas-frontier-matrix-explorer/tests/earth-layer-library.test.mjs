@@ -1,44 +1,17 @@
 import assert from 'node:assert/strict';
 import { test, after } from 'node:test';
-import { mkdtempSync, rmSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
+import { mkdtempSync, rmSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, resolve, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { createRequire } from 'node:module';
+import { resolveDeclaredTypeScript } from './declared-typescript.mjs';
 import { spawnSync } from 'node:child_process';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../../..');
-const require = createRequire(import.meta.url);
 const app = join(root, 'apps/kansas-frontier-matrix-explorer');
-// NODE_PATH may resolve an ambient global compiler. Resolution alone is not a lock check.
-let compiler;
-let compilerVersion;
-let compilerMode = 'DECLARED_VERSION_MATCH';
-try {
-  const manifest = JSON.parse(readFileSync(join(app, 'package.json'), 'utf8'));
-  const lock = JSON.parse(readFileSync(join(app, 'package-lock.json'), 'utf8'));
-  const expected = manifest.devDependencies?.typescript;
-  if (!/^\d+\.\d+\.\d+$/.test(expected ?? '')
-      || lock.packages?.['node_modules/typescript']?.version !== expected) {
-    throw new Error('TypeScript declaration and app lock do not agree');
-  }
-  for (const directory of [app, root]) {
-    const candidate = join(directory, 'node_modules/typescript/bin/tsc');
-    if (!existsSync(candidate)) continue;
-    const installed = JSON.parse(readFileSync(join(directory, 'node_modules/typescript/package.json'), 'utf8'));
-    if (installed.version === expected) { compiler = candidate; compilerVersion = installed.version; break; }
-  }
-} catch { /* No implicit ambient/global fallback. */ }
-if (!compiler) {
-  if (process.env.KFM_ALLOW_GLOBAL_TSC !== '1') {
-    throw new Error('Declared TypeScript unavailable or app lock mismatch. Install the repository lock; an ambient diagnostic requires KFM_ALLOW_GLOBAL_TSC=1.');
-  }
-  compiler = require.resolve('typescript/bin/tsc');
-  compilerVersion = require('typescript/package.json').version;
-  compilerMode = 'AMBIENT_DIAGNOSTIC_NOT_LOCK_NATIVE';
-}
-console.log(JSON.stringify({ compilerMode, compilerVersion, compiler,
-  installedByteIntegrity: 'NOT_VERIFIED_BY_THIS_TEST' }));
+const compilerInfo = resolveDeclaredTypeScript(app);
+const { compiler } = compilerInfo;
+console.log(JSON.stringify(compilerInfo));
 const output = mkdtempSync(join(tmpdir(), 'kfm-library-unit-'));
 after(()=>rmSync(output,{recursive:true,force:true}));
 writeFileSync(join(output, 'package.json'), '{"type":"module"}');
@@ -48,7 +21,7 @@ const files = [
 ];
 const args = ['--target','ES2022','--module','ES2022','--moduleResolution','bundler','--strict',
   '--lib','ES2022,DOM,DOM.Iterable','--rootDir',root,'--outDir',output,...files.map(x=>join(root,x))];
-const build = spawnSync(process.execPath,[compiler,...args],{encoding:'utf8'});
+const build = spawnSync(process.execPath,[compiler,...args],{encoding:'utf8', cwd:output, timeout:60000});
 assert.equal(build.status,0,build.stdout+build.stderr);
 const M = await import(pathToFileURL(join(output, 'packages/ui/src/layer-library-model.js')).href);
 const S = await import(pathToFileURL(join(output, 'apps/kansas-frontier-matrix-explorer/app/site-layer-library-metadata.js')).href);
