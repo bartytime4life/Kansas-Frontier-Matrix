@@ -1,6 +1,6 @@
 # Explorer Web local development
 
-**Status:** CONFIRMED for the repository-local Explorer Web workspace at `apps/explorer-web/`; `HOLD` for locked dependency installation until an accountable build-script policy is committed and reviewed; live API integration, deployment, release, and publication remain outside this runbook.
+**Status:** CONFIRMED for the repository-local Explorer Web workspace at `apps/explorer-web/`; `HOLD` for any dependency build script not explicitly allowed by the committed version-specific policy; live API integration, deployment, release, and publication remain outside this runbook.
 
 Use this runbook to inspect the locked JavaScript workspace, identify the current installation hold, and—only after that hold is resolved—start the local Explorer Web development server and run the checks that directly cover the app. Run all commands from the repository root unless a step says otherwise.
 
@@ -27,7 +27,9 @@ The reported Node version must satisfy `>=22.13 <23`. Run pnpm from inside the r
 ## Install the locked workspace
 
 > [!WARNING]
-> **Current repository checkpoint: `HOLD`.** At `main@1b8efb6d34871abc98c62cb7793921672f334aa4` on 2026-08-30, the three hosted Explorer jobs stop at the command below with `ERR_PNPM_IGNORED_BUILDS` before the build, test, or keyboard/focus steps run. pnpm reports ignored scripts for `esbuild`, `unrs-resolver`, and `workerd`, while the tracked workspace configuration contains no approved-build policy. The repository has not established accountable authority to approve those dependency scripts. Do not run interactive `pnpm approve-builds`, add an allowlist, use `--ignore-scripts`, or relax the workflow merely to bypass this hold.
+> **Current repository checkpoint: `HOLD` for denied build scripts.** At `main@19809b21d393c40af7a5d978d9b010e3a8e9eb9a`, the workspace carries a version-specific `allowBuilds` policy. It allows `esbuild@0.28.2` and denies `esbuild@0.18.20`, `esbuild@0.25.12`, `esbuild@0.28.1`, `unrs-resolver@1.12.2`, and `workerd@1.20260828.1`. An `ERR_PNPM_IGNORED_BUILDS` result therefore means the reported package/version is outside the approved set, not that no policy exists. Keep the install and dependent checks at `HOLD`; route the exact package/version through dependency and supply-chain review. Do not run interactive `pnpm approve-builds`, add a broad allowlist, use `--ignore-scripts`, or relax the workflow merely to bypass the hold.
+
+> The source of truth is [`pnpm-workspace.yaml`](../../pnpm-workspace.yaml); version-specific decisions must remain synchronized with the lockfile and review record.
 
 ```bash
 pnpm install --frozen-lockfile
@@ -73,7 +75,7 @@ Do not use root `pnpm build`, `pnpm test`, or `pnpm lint` as Explorer validation
 |---|---|---|
 | Corepack or pnpm selects another version | Root `package.json` still declares `pnpm@11.17.0` | Re-enable Corepack from the repository root; do not edit the pin merely to bypass the mismatch. |
 | Install wants to rewrite `pnpm-lock.yaml` | Manifest and lockfile are out of sync | Stop. Reconcile the dependency change in its own reviewed change rather than using an unlocked install. |
-| Install reports `ERR_PNPM_IGNORED_BUILDS` | The tracked workspace has no reviewed approval policy for one or more dependency build scripts | Keep the install and all dependent checks at `HOLD`. Route the exact package/version set through dependency and supply-chain review; do not approve scripts interactively or weaken the locked install. |
+| Install reports `ERR_PNPM_IGNORED_BUILDS` | The reported package/version is denied by the committed version-specific `allowBuilds` policy | Keep install and dependent checks at `HOLD`. Route the exact package/version through dependency and supply-chain review; do not approve scripts interactively or weaken the locked install. |
 | Vite cannot start | The printed port is already occupied | Stop the conflicting local process or use an explicit local-only port for manual development. Browser tests still require free port `4173`. |
 | Browser tests cannot launch | Local Chromium is absent or an explicit executable is invalid | Install Playwright Chromium, or set `KFM_CHROMIUM_EXECUTABLE` to a verified local executable. Do not commit machine-specific paths. |
 | Tests pass but a trust-bearing state looks wrong | Fixture, adapter, and finite-outcome inputs may disagree | Treat the UI as a consumer. Correct the owning contract, fixture, policy, evidence, or release artifact through its own reviewed path; do not make the UI invent authority. |
