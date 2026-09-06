@@ -1,0 +1,96 @@
+{
+  "receipt_id": "genrec-docs-root-readme-currentness-20260906",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "README.md"
+  ],
+  "artifact_hashes": {
+    "README.md": "sha256:dd898b86d1324464875ef5579f7eed9b137648461967c89d2a18c52a6e3c1a62"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5"
+  },
+  "prompt_or_contract": "sha256:92e9245e1f039c95bf8d535219398e0c5c33de92d5835dbd85e5c08f804a9d3c",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub",
+      "Notion",
+      "Google Drive"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/11cb4b51125db18d952d9f00e997beab89791cea/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/11cb4b51125db18d952d9f00e997beab89791cea/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4319",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4321",
+      "https://docs.google.com/document/d/1uTqdIEFZE2cq3gyISetoRYM6LIlnKqTc3FobtEx7Cbs/edit?usp=drivesdk",
+      "https://app.notion.com/p/3c9a92021bf68195b8b1f3a8d694b447?pvs=204"
+    ]
+  },
+  "truth_labels": {
+    "README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-repin-readback",
+      "outcome": "PASS",
+      "reason": "GitHub main was re-pinned to 11cb4b51125db18d952d9f00e997beab89791cea; the root README's prior 48f6ce5123d4f7cbc199761bda6596c0d2df1b42 snapshot was read back as stale."
+    },
+    {
+      "gate": "directory-placement",
+      "outcome": "PASS",
+      "reason": "The existing repository-root README remains the repository-wide orientation and validation entry point under accepted ADR-0029 and the Directory Rules lineage."
+    },
+    {
+      "gate": "focused-markdown-preflight",
+      "outcome": "PASS",
+      "reason": "The branch readback confirmed one H1, balanced fenced-code delimiters, the new current-main pin in all three intended snapshot references, the two current open-PR references, and no remaining old snapshot hash."
+    },
+    {
+      "gate": "native-repository-validation",
+      "outcome": "SKIPPED",
+      "reason": "No local checkout or repository-native validator runtime was available in this authoring session; hosted PR checks and independent human review remain pending."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-main-root-readme",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/11cb4b51125db18d952d9f00e997beab89791cea/README.md"
+    },
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/11cb4b51125db18d952d9f00e997beab89791cea/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "drive-directory-rules-lineage",
+      "validated": true,
+      "evidence_ref": "https://docs.google.com/document/d/1uTqdIEFZE2cq3gyISetoRYM6LIlnKqTc3FobtEx7Cbs/edit?usp=drivesdk"
+    },
+    {
+      "id": "notion-repository-workbench",
+      "validated": true,
+      "evidence_ref": "https://app.notion.com/p/3c9a92021bf68195b8b1f3a8d694b447?pvs=204"
+    },
+    {
+      "id": "open-pr-overlap-readback",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4319"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-09-06T05:16:09.808Z",
+  "emitter": "kfm-root-readme-currentness-agent",
+  "notes": "This receipt binds the AI-authored root README bytes on the draft branch. The change only re-pins the dated repository evidence snapshot, refreshes its review date, and records the two open PRs observed during review. It does not change application behavior, contracts, policy, source data, release, deployment, publication, or repository settings. The receipt is process memory, excludes its own bytes, and does not authorize review, ready-for-review, merge, or release."
+}
