@@ -315,9 +315,14 @@ def orchestrate(
     profile: str,
     changed_paths: Sequence[str] = (),
     requested_ids: Sequence[str] = (),
+    require_match: bool = False,
     include_timing: bool = False,
     verbose: bool = False,
 ) -> tuple[int, dict[str, object]]:
+    if require_match and profile != "changed-area":
+        raise RegistryError(
+            "require_match is only supported for the changed-area profile"
+        )
     selected, mode = select_validators(
         registry,
         profile=profile,
@@ -334,21 +339,25 @@ def orchestrate(
             "mode": mode,
             "changed_paths": list(changed_paths),
             "requested_validator_ids": list(requested_ids),
+            "require_match": require_match,
         },
         "registered_count": len(registry.validators),
         "selected_count": len(selected),
         "timing_included": include_timing,
     }
     if not selected:
+        empty_selection_code = (
+            EXIT_VALIDATION_FAILURE if require_match else EXIT_PASS
+        )
         base.update({
-            "outcome": "ABSTAIN",
+            "outcome": "FAIL" if require_match else "ABSTAIN",
             "reason_code": "NO_MATCHING_VALIDATORS",
-            "exit_code": EXIT_PASS,
+            "exit_code": empty_selection_code,
             "results": [],
         })
         if include_timing:
             base["total_duration_ms"] = int(round((time.monotonic() - started) * 1000))
-        return EXIT_PASS, base
+        return empty_selection_code, base
 
     results = [
         _run_one(item, repo_root=repo_root, include_timing=include_timing, verbose=verbose)
@@ -383,6 +392,11 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--validator", action="append", default=[])
     parser.add_argument("--changed-path", action="append", default=[])
     parser.add_argument("--changed-path-file", type=Path)
+    parser.add_argument(
+        "--require-match",
+        action="store_true",
+        help="Fail when changed-area selection matches no registered validator",
+    )
     parser.add_argument("--registry", type=Path, default=DEFAULT_REGISTRY)
     parser.add_argument("--repo-root", type=Path)
     parser.add_argument("--output", type=Path)
@@ -426,6 +440,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             profile=args.profile,
             changed_paths=normalize_changed_paths(changed),
             requested_ids=args.validator,
+            require_match=args.require_match,
             include_timing=args.include_timing,
             verbose=args.verbose,
         )
