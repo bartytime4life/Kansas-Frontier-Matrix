@@ -92,7 +92,7 @@ Operational meaning remains owned by the relevant contracts/, schemas/, policy/,
 | Placement | CONFIRMED — existing child of the canonical examples/ responsibility root |
 | Maturity | README_ONLY — the current direct-child inventory contains no style fragment, manifest, fixture, test, or executable child |
 | Prior target blob | be6be36f96576cfeec9c053eec87108dd5a00f94 |
-| Current-main evidence pin | main@4a2ddb9abe7ae64aad7c2d650478a7a14af1b73c |
+| Current-main evidence pin | main@61368f63707df32d3f796a29028e66e715d083c9 |
 | Runtime / executable entrypoint | NOT ESTABLISHED |
 | Public/release readiness | DENY BY PLACEMENT for treating this lane as a released or authoritative surface |
 | Ownership / stewardship | NEEDS VERIFICATION — documentation ownership and independent specialist review are not established here |
