@@ -48,6 +48,7 @@ class WesternKansasObservationAssessmentTests(unittest.TestCase):
     def test_timezone_less_source_timestamp_is_finite_error(self) -> None:
         candidate = copy.deepcopy(self.cases["observed_streamflow"])
         candidate["sources"][0]["observation_end"] = "2026-07-28T23:59:59"
+        candidate["outcome"] = "ERROR"
         result = assess(candidate)
         self.assertEqual(result.outcome, "ERROR")
         self.assertEqual(result.reason_codes, ("TEMPORAL_ORDER_INVALID",))
