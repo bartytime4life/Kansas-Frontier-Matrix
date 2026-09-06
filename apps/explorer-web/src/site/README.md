@@ -13,8 +13,13 @@ The composition:
 - mounts the existing renderer-neutral `map_runtime` selection-to-Evidence-Drawer bridge with deterministic synthetic cases;
 - mounts the existing finite `MapRuntimePort` trust-status presenter in the normal map workspace through the dependency-free `NullMapRuntime`;
 - records the current MapLibre package, candidate, and HOLD posture without activating `maplibre-gl` in Explorer;
-- projects its existing public anchors through a code-owned workspace registry; and
+- projects its existing public anchors through a code-owned workspace registry;
+- builds the fixed illustrative SVG stage with namespace-aware DOM nodes and text content rather than parsing an HTML string; and
 - composes existing finite-state features into one text-first public trust surface.
+
+## DOM safety boundary
+
+The illustrative map is a fixed browser composition, not an HTML template. The renderer creates SVG nodes in the SVG namespace, sets attributes individually, and assigns visible labels through text content. Keep dynamic trust-bearing material out of this helper; evidence and state continue through the existing typed, text-first projections. This hardening does not activate MapLibre or establish a governed data path.
 
 ## Unified Workspace UI-01 bounded slice
 

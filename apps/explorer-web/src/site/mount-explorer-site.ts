@@ -145,25 +145,114 @@ function option(document: Document, select: HTMLSelectElement, value: string, la
   select.append(node);
 }
 
-function mapArtwork(document: Document): HTMLElement {
-  const figure = el(document, "figure", "map-artwork");
-  figure.setAttribute("aria-label", "Illustrative Kansas map stage; decorative geometry is not factual map data.");
-  figure.innerHTML = `
-    <svg viewBox="0 0 760 410" role="img" aria-labelledby="map-art-title map-art-desc">
-      <title id="map-art-title">Illustrative Kansas evidence map</title>
-      <desc id="map-art-desc">A decorative Kansas outline with survey grid, river paths, and evidence markers.</desc>
-      <defs><pattern id="grid" width="34" height="34" patternUnits="userSpaceOnUse"><path d="M34 0H0V34" fill="none" stroke="currentColor" opacity=".13"/></pattern></defs>
-      <path class="map-shape" d="M96 75 650 80 666 304 115 327 88 154Z"/>
-      <path class="map-grid" d="M96 75 650 80 666 304 115 327 88 154Z"/>
-      <path class="river" d="M112 216C210 170 250 250 355 205S530 146 646 229"/>
-      <path class="river river--minor" d="M220 92c56 42 40 90 94 120s91 57 126 106"/>
-      <g class="marker"><circle cx="355" cy="205" r="20"/><circle cx="355" cy="205" r="6"/></g>
-      <g class="marker marker--secondary"><circle cx="526" cy="171" r="14"/><circle cx="526" cy="171" r="5"/></g>
-      <text x="120" y="120">SYNTHETIC MAP STAGE</text><text x="120" y="145">Rendered features scope requests — not claims</text>
-    </svg>`;
-  return figure;
+const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
+
+function svgElement(
+  document: Document,
+  tagName: string,
+  attributes: Readonly<Record<string, string>> = {},
+): SVGElement {
+  const node = document.createElementNS(SVG_NAMESPACE, tagName);
+  for (const [name, value] of Object.entries(attributes)) {
+    node.setAttribute(name, value);
+  }
+  return node;
 }
 
+function svgText(
+  document: Document,
+  value: string,
+  attributes: Readonly<Record<string, string>> = {},
+): SVGElement {
+  const node = svgElement(document, "text", attributes);
+  node.textContent = value;
+  return node;
+}
+
+function mapArtwork(document: Document): HTMLElement {
+  const figure = el(document, "figure", "map-artwork");
+  figure.setAttribute(
+    "aria-label",
+    "Illustrative Kansas map stage; decorative geometry is not factual map data.",
+  );
+
+  const svg = svgElement(document, "svg", {
+    viewBox: "0 0 760 410",
+    role: "img",
+    "aria-labelledby": "map-art-title map-art-desc",
+  });
+  const title = svgElement(document, "title", { id: "map-art-title" });
+  title.textContent = "Illustrative Kansas evidence map";
+  const description = svgElement(document, "desc", { id: "map-art-desc" });
+  description.textContent =
+    "A decorative Kansas outline with survey grid, river paths, and evidence markers.";
+
+  const defs = svgElement(document, "defs");
+  const pattern = svgElement(document, "pattern", {
+    id: "grid",
+    width: "34",
+    height: "34",
+    patternUnits: "userSpaceOnUse",
+  });
+  pattern.append(
+    svgElement(document, "path", {
+      d: "M34 0H0V34",
+      fill: "none",
+      stroke: "currentColor",
+      opacity: ".13",
+    }),
+  );
+  defs.append(pattern);
+
+  const mapShape = svgElement(document, "path", {
+    class: "map-shape",
+    d: "M96 75 650 80 666 304 115 327 88 154Z",
+  });
+  const mapGrid = svgElement(document, "path", {
+    class: "map-grid",
+    d: "M96 75 650 80 666 304 115 327 88 154Z",
+  });
+  const river = svgElement(document, "path", {
+    class: "river",
+    d: "M112 216C210 170 250 250 355 205S530 146 646 229",
+  });
+  const minorRiver = svgElement(document, "path", {
+    class: "river river--minor",
+    d: "M220 92c56 42 40 90 94 120s91 57 126 106",
+  });
+
+  const marker = svgElement(document, "g", { class: "marker" });
+  marker.append(
+    svgElement(document, "circle", { cx: "355", cy: "205", r: "20" }),
+    svgElement(document, "circle", { cx: "355", cy: "205", r: "6" }),
+  );
+  const secondaryMarker = svgElement(document, "g", {
+    class: "marker marker--secondary",
+  });
+  secondaryMarker.append(
+    svgElement(document, "circle", { cx: "526", cy: "171", r: "14" }),
+    svgElement(document, "circle", { cx: "526", cy: "171", r: "5" }),
+  );
+
+  svg.append(
+    defs,
+    title,
+    description,
+    mapShape,
+    mapGrid,
+    river,
+    minorRiver,
+    marker,
+    secondaryMarker,
+    svgText(document, "SYNTHETIC MAP STAGE", { x: "120", y: "120" }),
+    svgText(document, "Rendered features scope requests — not claims", {
+      x: "120",
+      y: "145",
+    }),
+  );
+  figure.append(svg);
+  return figure;
+}
 function domainDetail(document: Document, domain: KnowledgeDomain): HTMLElement {
   const article = el(document, "article", "domain-detail card");
   article.id = `domain-${domain.id}`;
