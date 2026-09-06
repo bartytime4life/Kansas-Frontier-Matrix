@@ -93,6 +93,7 @@ import {
   importPreviewAudit,
   type LocalImportPreview,
 } from "./import-preview";
+import { parseSavedWorkspaces } from "./workspace-storage";
 
 type ViewState = { center: [number, number]; zoom: number; bearing: number; pitch: number };
 type MapBoundsState = { west: number; south: number; east: number; north: number };
@@ -568,8 +569,9 @@ export default function Home() {
   useEffect(() => {
     const restoreSavedWorkspaces = window.setTimeout(() => {
       try {
-        const stored = JSON.parse(window.localStorage.getItem(WORKSPACE_STORAGE_KEY) ?? "[]");
-        if (Array.isArray(stored)) setSavedWorkspaces(stored.slice(0, 8));
+        const restored = parseSavedWorkspaces(window.localStorage.getItem(WORKSPACE_STORAGE_KEY));
+        setSavedWorkspaces(restored as WorkspaceSnapshot[]);
+
       } catch { /* Device-local workspace storage is optional. */ }
     }, 0);
     return () => window.clearTimeout(restoreSavedWorkspaces);
@@ -2440,9 +2442,12 @@ export default function Home() {
     setReportGeneratedAt(new Date().toISOString());
     const savedView = snapshot.view;
     if (savedView && Array.isArray(savedView.center) && savedView.center.length === 2) {
+      const restoredView = restoredLocationCameraRedaction
+        ? { center: [...KANSAS_VIEW.center] as [number, number], zoom: KANSAS_VIEW.zoom, bearing: KANSAS_VIEW.bearing, pitch: KANSAS_VIEW.pitch }
+        : { center: [...savedView.center] as [number, number], zoom: savedView.zoom, bearing: savedView.bearing, pitch: savedView.pitch };
       locationDerivedViewRef.current = restoredLocationCameraRedaction;
       setLocationCameraRedacted(restoredLocationCameraRedaction);
-      updateRendererNeutralView({ center: [...savedView.center] as [number, number], zoom: savedView.zoom, bearing: savedView.bearing, pitch: savedView.pitch });
+      updateRendererNeutralView(restoredView);
     }
     const restoredSelection = snapshot.selection ? copyFeature(LAYER_REGISTRY.find((layer) => layer.id === snapshot.selection?.layerId) ?? LAYER_REGISTRY[0], snapshot.selection.featureId) : null;
     selectedRef.current = restoredSelection;
