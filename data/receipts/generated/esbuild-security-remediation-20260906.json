@@ -8,7 +8,7 @@
   ],
   "artifact_hashes": {
     ".github/workflows/esbuild-security.yml": "sha256:3b0ed47d2dd4ad82299597396e53eff539847d8a99f69286204bf24ff7d2fb3d",
-    "apps/kansas-frontier-matrix-explorer/docs/esbuild-security-remediation.md": "sha256:f1fcdb25f90e081cea3e31a96b39bbdb1a0a6e4279635e658a3afbab409389ba",
+    "apps/kansas-frontier-matrix-explorer/docs/esbuild-security-remediation.md": "sha256:ab54852cf2953a60951f9e725b8804c132e94684de15eddb35e7e21151cc1f7d",
     "apps/kansas-frontier-matrix-explorer/tests/esbuild-security.test.mjs": "sha256:9532475a74eedc84ee08b8bc634e6e48430211ea87779a4714e377e7f1f2b946"
   },
   "model_identity": {
@@ -60,8 +60,8 @@
     },
     {
       "gate": "Corrected exact-head esbuild-security hosted workflow",
-      "outcome": "SKIPPED",
-      "reason": "The corrected test is published in the new candidate head; rerun result is pending."
+      "outcome": "PASS",
+      "reason": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/34013210029: pnpm and npm jobs passed installation and runtime probes."
     }
   ],
   "policy_decisions": [
@@ -105,5 +105,5 @@
   "links": {
     "adr_link": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/docs/adr/ADR-0029-where-does-new-work-live.md"
   },
-  "notes": "Initial exact-head run 34013101178 failed two guard-fixture assertions; the candidate corrected both. Local validation remains unavailable and the corrected hosted rerun is pending."
+  "notes": "Initial exact-head run 34013101178 failed two guard-fixture assertions; corrected head run 34013210029 passed both pnpm and npm installation/runtime jobs. Local validation remained unavailable."
 }
