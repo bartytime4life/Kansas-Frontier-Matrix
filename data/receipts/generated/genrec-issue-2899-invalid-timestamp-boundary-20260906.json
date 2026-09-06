@@ -1,0 +1,123 @@
+{
+  "receipt_id": "genrec-issue-2899-invalid-timestamp-boundary-20260906",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/western-kansas-observation-assessment.yml",
+    "contracts/domains/hydrology/western_kansas_observation_assessment.md",
+    "fixtures/domains/hydrology/western_kansas_observation_assessment/cases.json",
+    "tools/validators/evidence/validate_western_kansas_observation_assessment.py",
+    "tests/validators/test_western_kansas_observation_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/western-kansas-observation-assessment.yml": "sha256:a6d76b1f796c9dff155c6382f25d8ee05f9074f388853ca8d5802a1c40835a3d",
+    "contracts/domains/hydrology/western_kansas_observation_assessment.md": "sha256:a644a11c87a3cedfaea7b0301b649e5abf72efea3d52b794591b6c7609b4717c",
+    "fixtures/domains/hydrology/western_kansas_observation_assessment/cases.json": "sha256:4a67a5dd445ef5d3473a3353d2a20bd207acde9f8baf27f8ae7bd0c4e80ae4cf",
+    "tools/validators/evidence/validate_western_kansas_observation_assessment.py": "sha256:0f827d6eebc8e0493a085581370c838db6d9e0bd915f0342327bd41c09122bbd",
+    "tests/validators/test_western_kansas_observation_assessment.py": "sha256:0b4b47f6ecf38a26ec53a7b092342081989e8cb54008de669de5d1ac99f5a039"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5"
+  },
+  "prompt_or_contract": "sha256:7c1478dda9c843c00d98a7a4e460a2d774152448854116a192fdb6443a8cbaf4",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Notion connector",
+      "Google Drive connector",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:7c1478dda9c843c00d98a7a4e460a2d774152448854116a192fdb6443a8cbaf4"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:main@19809b21d393c40af7a5d978d9b010e3a8e9eb9a",
+      "repo:issue/2899",
+      "repo:pull/4093@closed-unmerged",
+      "notion:KFM Repository Workbench@read-only",
+      "google-drive:KFM Contributor Reliability System@read-only"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/western-kansas-observation-assessment.yml": "PROPOSED",
+    "contracts/domains/hydrology/western_kansas_observation_assessment.md": "PROPOSED",
+    "fixtures/domains/hydrology/western_kansas_observation_assessment/cases.json": "PROPOSED",
+    "tools/validators/evidence/validate_western_kansas_observation_assessment.py": "PROPOSED",
+    "tests/validators/test_western_kansas_observation_assessment.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "historical-receipt-preservation",
+      "outcome": "PASS",
+      "reason": "The pre-existing current-binding receipt is left unchanged and remains historical process memory."
+    },
+    {
+      "gate": "artifact-byte-binding",
+      "outcome": "PASS",
+      "reason": "SHA-256 values were recomputed over the five changed non-self artifacts from the exact branch readback."
+    },
+    {
+      "gate": "focused-profile-validation",
+      "outcome": "SKIPPED",
+      "reason": "Exact-head hosted CI runs after the draft pull request opens."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "The dedicated workflow is expected to execute on the draft pull request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Hydrology, evidence, validation, CI, source, policy, and release review remain pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0014-temporal-vocabulary--six-time-kinds-tracked.md",
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "current-main",
+      "validated": true,
+      "evidence_ref": "repo:main@19809b21d393c40af7a5d978d9b010e3a8e9eb9a"
+    },
+    {
+      "id": "issue-2899",
+      "validated": true,
+      "evidence_ref": "repo:issue/2899"
+    },
+    {
+      "id": "prior-closed-attempt",
+      "validated": true,
+      "evidence_ref": "repo:pull/4093@closed-unmerged"
+    },
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@19809b21d393c40af7a5d978d9b010e3a8e9eb9a"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-06T00:00:00Z",
+  "emitter": "OpenAI Codex via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0014-temporal-vocabulary--six-time-kinds-tracked.md",
+    "drift_register_entry": null
+  },
+  "notes": "Bounded implementation slice for issue #2899. The validator now keeps malformed or timezone-less timestamps inside the finite ERROR boundary using the existing TEMPORAL_ORDER_INVALID code. The change is synthetic and no-network only; it admits no source, changes no policy, and grants no lifecycle, merge, release, deployment, publication, or public-use authority. The broader western-Kansas observation envelope issue remains open for separate review."
+}
