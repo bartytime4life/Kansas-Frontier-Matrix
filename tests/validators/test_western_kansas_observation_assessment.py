@@ -40,6 +40,18 @@ class WesternKansasObservationAssessmentTests(unittest.TestCase):
         self.assertEqual(result.outcome, "STALE")
         self.assertEqual(result.reason_codes, ("OBSERVATION_STALE",))
 
+    def test_timezone_less_analysis_timestamp_is_finite_error(self) -> None:
+        result = assess(copy.deepcopy(self.cases["timezone_less_analysis_timestamp"]))
+        self.assertEqual(result.outcome, "ERROR")
+        self.assertEqual(result.reason_codes, ("TEMPORAL_ORDER_INVALID",))
+
+    def test_timezone_less_source_timestamp_is_finite_error(self) -> None:
+        candidate = copy.deepcopy(self.cases["observed_streamflow"])
+        candidate["sources"][0]["observation_end"] = "2026-07-28T23:59:59"
+        result = assess(candidate)
+        self.assertEqual(result.outcome, "ERROR")
+        self.assertEqual(result.reason_codes, ("TEMPORAL_ORDER_INVALID",))
+
     def test_groundwater_shortcuts_abstain(self) -> None:
         usdm = assess(copy.deepcopy(self.cases["deny_usdm_groundwater_inference"]))
         flow = assess(copy.deepcopy(self.cases["deny_streamflow_groundwater_inference"]))
