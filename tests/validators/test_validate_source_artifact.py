@@ -17,7 +17,9 @@ from unittest import mock
 
 from jsonschema import Draft202012Validator, FormatChecker
 
+from tools.source_artifacts import content_addressed_store as cas
 from tools.source_artifacts.content_addressed_store import object_path, store, verify
+from tools.validators import validate_source_artifact as artifact_validator
 from tools.validators.validate_source_artifact import (
     FIXTURE_ROOT,
     MAX_METADATA_BYTES,
@@ -192,6 +194,126 @@ class SourceArtifactTests(unittest.TestCase):
             code = main(["--fixtures"])
         self.assertEqual(code, 0, stream.getvalue())
         self.assertNotIn("FIXTURE_POLARITY_ERROR", stream.getvalue())
+
+    def test_store_keeps_validated_payload_when_source_changes(self) -> None:
+        original = self.api_payload.read_bytes()
+        ensure_safe_root = cas._ensure_safe_root
+        for mutation in ("replace", "grow", "remove", "symlink"):
+            with self.subTest(mutation=mutation):
+                # Restore a regular source before each capture.
+                self.api_payload.unlink(missing_ok=True)
+                self.api_payload.write_bytes(original)
+                store_root = self.root / f"store-{mutation}"
+
+                def mutate_source(path: Path) -> None:
+                    ensure_safe_root(path)
+                    self.api_payload.unlink()
+                    if mutation == "replace":
+                        self.api_payload.write_bytes(b"x" * len(original))
+                    elif mutation == "grow":
+                        self.api_payload.write_bytes(original + b"unvalidated suffix")
+                    elif mutation == "symlink":
+                        replacement = self.root / "unvalidated-payload.bin"
+                        replacement.write_bytes(b"unvalidated symlink bytes")
+                        self.api_payload.symlink_to(replacement)
+
+                with mock.patch.object(cas, "_ensure_safe_root", side_effect=mutate_source):
+                    destination = store(self.api_metadata, self.api_payload, store_root)
+                self.assertEqual(destination.read_bytes(), original)
+                self.assertEqual(verify(self.api_metadata, store_root), destination)
+
+    def test_store_keeps_metadata_identity_captured_by_strict_reader(self) -> None:
+        original = self.api_payload.read_bytes()
+        read_json_object = artifact_validator.read_json_object
+        replacement = copy.deepcopy(self.api_case["metadata"])
+        replacement_digest = "sha256:" + hashlib.sha256(b"replacement").hexdigest()
+        replacement["content_digest"] = replacement_digest
+        replacement["artifact_id"] = f"source-artifact:{replacement_digest}"
+        replacement["immutable_storage_ref"] = f"cas:{replacement_digest}"
+        replacement["byte_length"] = len(b"replacement")
+
+        def mutate_metadata(path: Path):
+            captured = read_json_object(path)
+            path.write_text(json.dumps(replacement), encoding="utf-8")
+            return captured
+
+        store_root = self.root / "store"
+        with mock.patch.object(artifact_validator, "read_json_object", side_effect=mutate_metadata):
+            destination = store(self.api_metadata, self.api_payload, store_root)
+        self.assertEqual(destination, object_path(store_root, self.api_case["metadata"]))
+        self.assertEqual(destination.read_bytes(), original)
+        self.assertFalse(object_path(store_root, replacement).exists())
+
+    def test_store_never_reopens_validated_input_paths(self) -> None:
+        read_bytes, read_text = Path.read_bytes, Path.read_text
+
+        def reject_payload_reopen(path: Path):
+            if path == self.api_payload:
+                raise AssertionError("payload reopened after bounded validation")
+            return read_bytes(path)
+
+        def reject_metadata_reopen(path: Path, *args, **kwargs):
+            if path == self.api_metadata:
+                raise AssertionError("metadata reopened after strict validation")
+            return read_text(path, *args, **kwargs)
+
+        with (
+            mock.patch.object(Path, "read_bytes", reject_payload_reopen),
+            mock.patch.object(Path, "read_text", reject_metadata_reopen),
+        ):
+            destination = store(self.api_metadata, self.api_payload, self.root / "store")
+        self.assertEqual(destination.read_bytes(), self.api_case["payload_text"].encode())
+
+    def test_store_rejects_invalid_payload_before_creating_root(self) -> None:
+        self.api_payload.write_bytes(b"unvalidated bytes")
+        store_root = self.root / "store"
+        with self.assertRaisesRegex(ValueError, "metadata/payload pair failed SourceArtifact validation"):
+            store(self.api_metadata, self.api_payload, store_root)
+        self.assertFalse(store_root.exists())
+
+    def test_store_rejects_duplicate_metadata_before_creating_root(self) -> None:
+        text = self.api_metadata.read_text(encoding="utf-8")
+        self.api_metadata.write_text(text.replace("{", '{"schema_version":"1.0.0",', 1), encoding="utf-8")
+        store_root = self.root / "store"
+        with self.assertRaisesRegex(ValueError, "metadata/payload pair failed SourceArtifact validation"):
+            store(self.api_metadata, self.api_payload, store_root)
+        self.assertFalse(store_root.exists())
+
+    def test_store_rejects_unreadable_unsafe_and_over_budget_payloads(self) -> None:
+        original = self.api_payload.read_bytes()
+        for kind in ("missing", "symlink", "over-budget"):
+            with self.subTest(kind=kind):
+                candidate = self.root / f"{kind}.bin"
+                if kind == "symlink":
+                    candidate.symlink_to(self.api_payload)
+                elif kind == "over-budget":
+                    candidate.write_bytes(original)
+                store_root = self.root / f"store-{kind}"
+                with mock.patch.object(artifact_validator, "MAX_PAYLOAD_BYTES", len(original) - 1):
+                    with self.assertRaisesRegex(ValueError, "metadata/payload pair failed SourceArtifact validation"):
+                        store(self.api_metadata, candidate, store_root)
+                self.assertFalse(store_root.exists())
+
+    def test_store_preserves_empty_payload_schema_rejection(self) -> None:
+        metadata = copy.deepcopy(self.api_case["metadata"])
+        digest = "sha256:" + hashlib.sha256(b"").hexdigest()
+        metadata.update(content_digest=digest, artifact_id=f"source-artifact:{digest}",
+                        immutable_storage_ref=f"cas:{digest}", byte_length=0)
+        self.api_payload.write_bytes(b"")
+        metadata_path = self._write_metadata(metadata)
+        store_root = self.root / "store"
+        with self.assertRaisesRegex(ValueError, "metadata/payload pair failed SourceArtifact validation"):
+            store(metadata_path, self.api_payload, store_root)
+        self.assertFalse(store_root.exists())
+
+    def test_store_refuses_to_overwrite_existing_corrupt_object(self) -> None:
+        store_root = self.root / "store"
+        destination = store(self.api_metadata, self.api_payload, store_root)
+        destination.write_bytes(b"existing corrupt bytes")
+        with self.assertRaisesRegex(ValueError, "existing object bytes do not match digest identity"):
+            store(self.api_metadata, self.api_payload, store_root)
+        self.assertEqual(destination.read_bytes(), b"existing corrupt bytes")
+        self.assertEqual(list(store_root.rglob("*.tmp-*")), [])
 
     def test_content_addressed_store_is_deterministic_and_detects_tampering(self) -> None:
         store_root = self.root / "store"

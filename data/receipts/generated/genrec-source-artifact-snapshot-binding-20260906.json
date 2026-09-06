@@ -1,0 +1,121 @@
+{
+  "receipt_id": "genrec-source-artifact-snapshot-binding-20260906",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tools/source_artifacts/content_addressed_store.py",
+    "tools/validators/validate_source_artifact.py",
+    "tests/validators/test_validate_source_artifact.py",
+    "tools/source_artifacts/README.md"
+  ],
+  "artifact_hashes": {
+    "tools/source_artifacts/content_addressed_store.py": "sha256:04eb205d9a14d8ad85c14038a0bfb265f755eefb02afdf3e412673d9c438cd43",
+    "tools/validators/validate_source_artifact.py": "sha256:4de824363f7796e27b49b23ad6387b82d0ac9de374403482745b7573c4fb873f",
+    "tests/validators/test_validate_source_artifact.py": "sha256:9f7dc2a6b70829aeab88febe28c3bf8656d0645b080d031e08e0479e333bdea4",
+    "tools/source_artifacts/README.md": "sha256:3e956ae3cfd91d0095b947ae4cbc5c7c2dfb52c8d55297851faef6db88e12927"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Pro",
+    "version": "not exposed"
+  },
+  "prompt_or_contract": "sha256:56a0f983ffaebaca01ba88b3dbc7e654a240b0730e5d66342bdc988e8b6cc9db",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub",
+      "Notion",
+      "Google_Drive",
+      "container"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/47368ada45506fddc353fd1b116ff3fc4097f98c/tools/source_artifacts/content_addressed_store.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/47368ada45506fddc353fd1b116ff3fc4097f98c/tools/validators/validate_source_artifact.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/47368ada45506fddc353fd1b116ff3fc4097f98c/tests/validators/test_validate_source_artifact.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/47368ada45506fddc353fd1b116ff3fc4097f98c/docs/doctrine/directory-rules.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/47368ada45506fddc353fd1b116ff3fc4097f98c/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/47368ada45506fddc353fd1b116ff3fc4097f98c/CONTRIBUTING.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/47368ada45506fddc353fd1b116ff3fc4097f98c/.github/workflows/source-artifact-validation.yml",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/34005200246",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3374",
+      "https://docs.google.com/document/d/1uTqdIEFZE2cq3gyISetoRYM6LIlnKqTc3FobtEx7Cbs/edit",
+      "https://app.notion.com/p/3c9a92021bf68195b8b1f3a8d694b447"
+    ]
+  },
+  "truth_labels": {
+    "tools/source_artifacts/content_addressed_store.py": "CONFIRMED",
+    "tools/validators/validate_source_artifact.py": "CONFIRMED",
+    "tests/validators/test_validate_source_artifact.py": "CONFIRMED",
+    "tools/source_artifacts/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Exact current-base source import",
+      "outcome": "PASS",
+      "reason": "Archive artifact 9980706723 ZIP SHA-256 28057b3db65b9d0195d220447a21e6bc89e3af09185ad6b7255656edb718eb6c verified; extracted Git index tree e19f7bc811670a5a480a220cb17e772b5986185c exactly matches main@47368ada45506fddc353fd1b116ff3fc4097f98c."
+    },
+    {
+      "gate": "Pristine base SourceArtifact suite",
+      "outcome": "PASS",
+      "reason": "13 existing unittest tests passed on unchanged base code and tests, Python 3.13.5 / jsonschema 4.26.0."
+    },
+    {
+      "gate": "New regression overlay against unchanged same-base implementation",
+      "outcome": "FAIL",
+      "reason": "Expected negative control, not a pristine-main test failure: 21 test methods produced five assertion failures and one FileNotFoundError across source replacement/growth/symlink/removal, metadata replacement and forbidden input reopen cases."
+    },
+    {
+      "gate": "Candidate SourceArtifact and bounded-reader suites",
+      "outcome": "PASS",
+      "reason": "21 SourceArtifact unittest tests and 40 short-read tests passed with no skips or errors. Eight new SourceArtifact methods include four source-mutation subcases, metadata identity, no reopens, invalid inputs, existing-object corruption and preservation of empty-payload schema rejection. No findings or schemas mocked; fixtures are synthetic."
+    },
+    {
+      "gate": "Native SourceArtifact fixture profile",
+      "outcome": "PASS",
+      "reason": "All 14 cases retained their exact valid/invalid polarity and expected finding codes. These overlap the unittest coverage and are not 14 additional unique tests."
+    },
+    {
+      "gate": "Syntax, schema and protected-input comparison",
+      "outcome": "PASS",
+      "reason": "Changed Python ASTs, SourceArtifact Draft 2020-12 meta-schema, whitespace and final newlines checked. Schema, bounded reader, pyproject.toml and existing source-artifact-validation workflow bytes are unchanged. That workflow already watches and discovers the expanded test module."
+    },
+    {
+      "gate": "Repository topology differential",
+      "outcome": "FAIL",
+      "reason": "Pristine exact-base and staged candidate reports have identical outcomes and finding fingerprints: 127 findings, 122 baselined warnings, five FAIL_NEW_DRIFT findings, zero invariant failures. Both exit 1. Only tracked_path_count rises by one for this receipt. Inherited failures remain failures; no baseline or policy edits."
+    },
+    {
+      "gate": "GeneratedReceipt validation",
+      "outcome": "PASS",
+      "reason": "Native validate_generated_receipt.py passes against current schema and all four local artifact SHA-256 bindings; the receipt fixture profile also passes. Human review remains pending; no review claim is required or fabricated."
+    },
+    {
+      "gate": "Hosted product validation and independent review",
+      "outcome": "SKIPPED",
+      "reason": "NOT_RUN. Hosted run 34005200246 exported the exact source tree only; it is not a product test. Local Python 3.13.5 tests do not prove the locked Python 3.11 CI environment, full repository checks, independent review or production concurrency."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "adopted-directory-rules",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/47368ada45506fddc353fd1b116ff3fc4097f98c/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "current-store-reopen-gap",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/47368ada45506fddc353fd1b116ff3fc4097f98c/tools/source_artifacts/content_addressed_store.py"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-09-06T02:04:22.341574+00:00",
+  "emitter": "kfm-source-artifact-snapshot-binding-author",
+  "notes": "Branch agent/source-artifact-snapshot-binding-20260906. Existing tools/ owns validation and local CAS; existing tests/ owns regression enforcement; data/receipts/generated owns this authoring receipt under adopted ADR-0029. No new schema, contract, policy, registry or authority home. Store now consumes the same strict metadata and bounded payload capture that passed validation, rather than reopening either path. Result-only validate_artifact API, error behavior, digest semantics and byte limits remain unchanged. SourceArtifact schema still forbids empty payloads. README documents the behavior and concurrency limits. The temporary branch-scoped read-only source-export workflow is removed in the product commit; no permanent workflow change is necessary. Drive remains lineage and Notion coordination, not implementation authority. Delivery is branch-only; do not bypass the #4024 draft-delivery incident. No merge, source activation, review approval, lifecycle promotion, settings, release, deployment or publication. Revert the product commit as one unit if rejected and retain this receipt in Git history; rollback restores the demonstrated reopen defect. Exact captured-byte binding is not an atomic filesystem snapshot, concurrent destination protection or ancestor-symlink race resistance."
+}
