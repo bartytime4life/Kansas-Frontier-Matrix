@@ -1,0 +1,34 @@
+{
+  "receipt_id": "genrec-explorer-owner-review-bf1335ad",
+  "contract_version": "3.0.0",
+  "artifact_paths": ["apps/kansas-frontier-matrix-explorer/eslint-react-context.mjs", "apps/kansas-frontier-matrix-explorer/eslint.config.mjs", "apps/kansas-frontier-matrix-explorer/package.json", "docs/quality/explorer-eslint10-compatibility.md", "tests/ui/test_explorer_lint_compat.mjs"],
+  "artifact_hashes": {
+    "apps/kansas-frontier-matrix-explorer/eslint-react-context.mjs": "sha256:40bfe2fd0609f16968e800e55446f11326cba0105da364503ed79f2c666ed347",
+    "apps/kansas-frontier-matrix-explorer/eslint.config.mjs": "sha256:e6b59d1d3ff43eeb7bceb80ec2d2bb1c6cf757f0a7d3ab8869f311ec6d214762",
+    "apps/kansas-frontier-matrix-explorer/package.json": "sha256:69932bdfd7f2f82b876406dbe1bb93965c1f0cae3b1d1f81dc93ab005317b783",
+    "docs/quality/explorer-eslint10-compatibility.md": "sha256:d72c92e69a5f0e942d2b46191ad0ad24ff1bb6476a095328e21be7ea13be3af0",
+    "tests/ui/test_explorer_lint_compat.mjs": "sha256:de1d8866a2e4fed0e3dac4beaa6713562fb16bc618fca1ea2579c228674ae1c8"
+  },
+  "model_identity": {"provider": "OpenAI", "model": "GPT-6 Pro", "version": "exact runtime build identifier not exposed"},
+  "prompt_or_contract": "sha256:1e0a879f0fe0d4bc4b5c5545879a6edc0a8a13cc274f7309358c67464a7e3ab5",
+  "parameters": {"seed": null, "temperature": null, "top_p": null, "max_tokens": null, "tools_enabled": ["GitHub", "Notion", "Google Drive", "container"]},
+  "inputs": {
+    "evidence_hashes": ["sha256:ec5dfb16119462d2d30f801fcea9d3e70c1574766b81603c547278cf5f00029f"],
+    "evidence_refs": ["repo:bf1335ad7250dec6334f62ad86d1032f0df7ef61", "repo:a120361953ae574c4c1df8ea805a69677c9fab78", "conversation:owner-continuation-after-bf1335ad-handoff", "github-actions:33999766487"]
+  },
+  "truth_labels": {"apps/kansas-frontier-matrix-explorer/eslint-react-context.mjs": "CONFIRMED", "apps/kansas-frontier-matrix-explorer/eslint.config.mjs": "CONFIRMED", "apps/kansas-frontier-matrix-explorer/package.json": "CONFIRMED", "docs/quality/explorer-eslint10-compatibility.md": "CONFIRMED", "tests/ui/test_explorer_lint_compat.mjs": "CONFIRMED"},
+  "validation_gates": [
+    {"gate": "owner-review-of-presented-handoff", "outcome": "PASS", "reason": "The repository owner responded to the bf1335ad implementation/evidence handoff with: Make all the changes. I have reviewed it. This supplemental receipt records that review for the five exact presented lint artifacts; it does not rewrite the earlier pending receipt or extend review to newly authored integration fixes."},
+    {"gate": "prior-exact-source-validation", "outcome": "PASS", "reason": "Run 33999766487 previously validated these exact five artifact bytes at bf1335ad. This is historical execution evidence, not a new run or whole-repository green claim."},
+    {"gate": "native-review-receipt-validation", "outcome": "SKIPPED", "reason": "Native replay with --require-review-claim follows this receipt commit; no result is preclaimed."},
+    {"gate": "pr-lifecycle-and-deployment", "outcome": "SKIPPED", "reason": "Artifact review and implementation continuation are not proof that #4024's delivery path is safe, an authorization to waive #4228, or a release/deployment/source-admission decision."}
+  ],
+  "policy_decisions": [],
+  "citations": [{"id": "presented-exact-source-evidence", "validated": true, "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33999766487"}],
+  "human_review": {"reviewer_ids": ["@bartytime4life"], "state": "approved", "timestamp": "2026-09-06T00:43:15Z"},
+  "override_record": null,
+  "created_at": "2026-09-06T00:43:15Z",
+  "emitter": "ChatGPT GPT-6 Pro; supplemental owner-review recorder",
+  "links": {"pr_number": null, "adr_link": null, "drift_register_entry": null},
+  "notes": "The timestamp records this review acknowledgement, not an independently verified message-send time. This is repository-owner review reported directly in the conversation, not a fabricated independent reviewer or a GitHub submitted review. The five bindings are unchanged at bf1335ad and a1203619 and in the combined candidate. The statement also permits the requested integration continuation; it does not pre-approve the subsequently written compiler selector, tests, integration document or generated receipts. Earlier review/pending statements remain historical at their own checkpoints. No permission or lifecycle control is overridden."
+}
