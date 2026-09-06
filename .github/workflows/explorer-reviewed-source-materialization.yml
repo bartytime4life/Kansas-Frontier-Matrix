@@ -1,0 +1,62 @@
+# Temporary task-owned authoring transport. Never merge; no ref/commit/PR writes.
+name: explorer-reviewed-source-materialization
+on:
+  push:
+    branches: [validation/explorer-reviewed-integration-20260905]
+    paths: [.github/workflows/explorer-reviewed-source-materialization.yml]
+permissions:
+  contents: read
+jobs:
+  materialize-two-blobs:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: b434a8ea606d44d3903da79cab08c5e08e824165
+          persist-credentials: false
+      - name: Verify exact preimages and create only two unreferenced Git blobs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = b434a8ea606d44d3903da79cab08c5e08e824165
+          python3 - <<'PY'
+          import base64,hashlib,json,os,pathlib,urllib.request
+          app='apps/kansas-frontier-matrix-explorer/'
+          entries=[(app+'app/page.tsx','a3c3501b7029ae271435d8a3b66b5e573dcafc4c3e71832d96534669c16db59d','77246111b182f6dae6323906f89b53b47b1d9f9bae2c728fc31e5d8271ceb3fa',[
+            ('}, [announce, compareLeft, compareRight]);','}, [announce, compareLeft, compareRight, setVisibility]);'),
+            ('}, [announce, compareLeft, compareRight, fitRendererNeutralBounds]);','}, [announce, compareLeft, compareRight, fitRendererNeutralBounds, setVisibility]);'),
+            ('}, [openSelection, updateRendererNeutralView]);','}, [openSelection, setVisibility, updateRendererNeutralView]);'),
+            ('}, [applyRendererNeutralView]);','}, [applyRendererNeutralView, requestedLayers, setVisibility]);')]),
+            (app+'tests/earth-layer-library.app.mjs','672bfe6877a7051563f7a51023cdf610ef41431fa3afb69bd541e4e9d38610d6','54e2eb3a325c2ff52c363d0406fe547853325d7edec9b319b50aa476d2a028da',[
+            ('} catch(error) {\n  await page.screenshot','} catch {\n  await page.screenshot')])]
+          result=[]
+          for path,before,after,edits in entries:
+            data=pathlib.Path(path).read_bytes()
+            assert hashlib.sha256(data).hexdigest()==before,path
+            text=data.decode()
+            for old,new in edits:
+              assert text.count(old)==1,(path,old)
+              text=text.replace(old,new)
+            content=text.encode()
+            assert hashlib.sha256(content).hexdigest()==after,path
+            expected=hashlib.sha1(b'blob '+str(len(content)).encode()+b'\0'+content).hexdigest()
+            payload=json.dumps({'content':base64.b64encode(content).decode(),'encoding':'base64'}).encode()
+            request=urllib.request.Request('https://api.github.com/repos/bartytime4life/Kansas-Frontier-Matrix/git/blobs',data=payload,method='POST',headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json','Content-Type':'application/json'})
+            with urllib.request.urlopen(request,timeout=30) as response: actual=json.load(response)['sha']
+            assert actual==expected
+            result.append({'path':path,'before_sha256':before,'after_sha256':after,'git_blob':actual})
+          out=pathlib.Path(os.environ['RUNNER_TEMP'])/'warning-fix';out.mkdir()
+          (out/'blob-manifest.json').write_text(json.dumps(result,indent=2)+'\n')
+          print(json.dumps(result,indent=2))
+          PY
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: explorer-warning-fix-blobs
+          path: ${{ runner.temp }}/warning-fix/
+          retention-days: 14
+          if-no-files-found: error
