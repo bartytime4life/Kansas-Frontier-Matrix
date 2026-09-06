@@ -12,7 +12,7 @@
   ],
   "artifact_hashes": {
     ".github/workflows/window-ordering-lint-profile.yml": "sha256:1ce7bdac7180abd016d61f3e8019b775af5fcf2b6ab914242413de0cbcb4ddd8",
-    "contracts/validation/window_ordering_lint_profile.md": "sha256:21c7ee9c33a2a02cf0922f0b0ed2df48ccd7c5ebd2028cfbe1966adca0889f9a",
+    "contracts/validation/window_ordering_lint_profile.md": "sha256:3e6e23d118b484501d390a4c7fd1820e46d220c756460b5c24b5b82e39f5b817",
     "docs/intake/exploratory/pass-18-window-ordering-lint-source-map.md": "sha256:624f3485db5ef89de39a0ef11dfed8ac859b2d540aae836fce4526c843857543",
     "fixtures/contracts/v1/validation/window_ordering_lint_profile/cases.json": "sha256:4a1ffb395f1bd73a394d517fa5b148e7e15dc8a0e2ddee86bd3f457f5dc874a5",
     "schemas/contracts/v1/validation/window_ordering_lint_profile.schema.json": "sha256:27dfddf65887f2be3eb9b2dfba97dc03bb1c48b10dbc70a1ef76a65c3c5c248a",
@@ -24,7 +24,7 @@
     "model": "GPT-5",
     "version": "2026-08-11"
   },
-  "prompt_or_contract": "sha256:21c7ee9c33a2a02cf0922f0b0ed2df48ccd7c5ebd2028cfbe1966adca0889f9a",
+  "prompt_or_contract": "sha256:3e6e23d118b484501d390a4c7fd1820e46d220c756460b5c24b5b82e39f5b817",
   "parameters": {
     "seed": null,
     "temperature": null,
@@ -96,5 +96,5 @@
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Additive, inactive, fixture-only WindowOrderingLintCandidate packet derived from supplied Pass 18 card KFM-P18-INV-132. It conservatively inspects inert SQL text for ordinary window clauses, explicit primary ordering, a distinct final tie-breaker, duplicate keys, bounded clause counts, and exact input identity while abstaining on named windows and complex expressions. It never executes SQL, resolves tables or columns, proves uniqueness, compares results, computes analytics, creates evidence, decides policy or review, promotes, releases, deploys, publishes, or authorizes public use."
+  "notes": "Additive, inactive, fixture-only WindowOrderingLintCandidate packet derived from supplied Pass 18 card KFM-P18-INV-132. On 2026-09-06, the contract artifact binding was refreshed after a repository-currentness reconciliation; semantic rules, validator behavior, fixtures, and workflow scope remain unchanged. It conservatively inspects inert SQL text for ordinary window clauses, explicit primary ordering, a distinct final tie-breaker, duplicate keys, bounded clause counts, and exact input identity while abstaining on named windows and complex expressions. It never executes SQL, resolves tables or columns, proves uniqueness, compares results, computes analytics, creates evidence, decides policy or review, promotes, releases, deploys, publishes, or authorizes public use."
 }
