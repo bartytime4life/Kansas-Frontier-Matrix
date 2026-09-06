@@ -106,6 +106,7 @@ def _has_symlink_component(path: Path) -> bool:
 
 
 def read_regular_bytes(path: Path, limit: int) -> tuple[bytes | None, list[Finding]]:
+    """Read through EOF within the byte budget; never accept a short-read prefix."""
     if _has_symlink_component(path):
         return None, [Finding("UNSAFE_FILE", "/", "input must be a regular file")]
     descriptor: int | None = None
@@ -120,10 +121,13 @@ def read_regular_bytes(path: Path, limit: int) -> tuple[bytes | None, list[Findi
         metadata = os.fstat(descriptor)
         if not stat.S_ISREG(metadata.st_mode):
             return None, [Finding("UNSAFE_FILE", "/", "input must be a regular file")]
-        data = os.read(descriptor, limit + 1)
-        if len(data) > limit:
-            return None, [Finding("FILE_TOO_LARGE", "/", "input exceeds parser budget")]
-        return data, []
+        data = bytearray()
+        while len(data) <= limit:
+            chunk = os.read(descriptor, min(64 * 1024, limit + 1 - len(data)))
+            if not chunk:
+                return bytes(data), []
+            data.extend(chunk)
+        return None, [Finding("FILE_TOO_LARGE", "/", "input exceeds parser budget")]
     except OSError:
         return None, [Finding("READ_ERROR", "/", "input could not be read safely")]
     finally:
