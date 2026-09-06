@@ -50,7 +50,7 @@ help:
 	@echo "  validator-full        Run every registered validator once"
 	@echo "  validator-focused     Run the focused trust-spine profile"
 	@echo "  validator-release-profile Run the release-adjacent fixture profile; no release effect"
-	@echo "  validator-changed-area Select validators from CHANGED_PATH_FILE"
+	@echo "  validator-changed-area Select validators from CHANGED_PATH_FILE; fail when none match"
 	@echo "  validator-registry-check Validate the registry without running validators"
 	@echo
 	@echo "Implemented local runtime targets:"
@@ -97,7 +97,7 @@ validator-changed-area:
 		echo "ERROR: set CHANGED_PATH_FILE to a newline-delimited repository path list" >&2; \
 		exit 2; \
 	fi
-	$(KFM_VALIDATION_ENV) $(VALIDATOR_ORCHESTRATOR) --profile changed-area --changed-path-file "$(CHANGED_PATH_FILE)"
+	$(KFM_VALIDATION_ENV) $(VALIDATOR_ORCHESTRATOR) --profile changed-area --changed-path-file "$(CHANGED_PATH_FILE)" --require-match
 
 validator-registry-check:
 	$(KFM_VALIDATION_ENV) $(VALIDATOR_ORCHESTRATOR) --validate-registry
