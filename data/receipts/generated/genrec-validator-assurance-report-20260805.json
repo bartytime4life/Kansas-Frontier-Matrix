@@ -28,7 +28,7 @@
   "artifact_hashes": {
     ".github/workflows/validator-assurance-report.yml": "sha256:82985b48ceaabe23102e86761c819e52adaf65483228cc4cb2ef9307a4269186",
     "contracts/validation/README.md": "sha256:4838b71dc020c5cbca4b71de0134a38e24f285b8b95df52a617f3102f74cad4f",
-    "contracts/validation/validator_assurance_report.md": "sha256:9969330a5b0d9a29f6209eddbbaa875bf30ae50dbfd20498161a1bf1e6236fd4",
+    "contracts/validation/validator_assurance_report.md": "sha256:041832d020e7ce17356f552ed490f822fe82dc3291e0eb4a3a77b227cd05bf39",
     "fixtures/contracts/v1/validation/validator_assurance_report/README.md": "sha256:053447decf36f1cc3e475a14d7011a7add3ada000d2140d679dffb2b7955fc2f",
     "fixtures/contracts/v1/validation/validator_assurance_report/invalid/expected_findings_manifest.json": "sha256:3cccdccda1fa3fdaf42593e5923f4c3c2d3217df7be82536fd41f25b3e09c97e",
     "fixtures/contracts/v1/validation/validator_assurance_report/invalid/invalid_governance_overclaim.json": "sha256:20e79c3ebc8ef3001f96f9a8e4f99803a3d295e9d21d840cba9b495c386eec00",
@@ -158,5 +158,5 @@
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Synthetic fixture-first implementation of KFM-TRIAD-063. The slice records bounded adversarial/mutation assurance evidence and surviving semantic gaps without selecting a mutation engine, establishing a universal threshold, approving a validator, or authorizing merge, policy, promotion, release, or publication. Proposed branch: agent/validator-assurance-report-20260805. Base: 9cc9342942afdcbdb917bd787b13aa088725a781."
+  "notes": "Original synthetic fixture-first authoring receipt for KFM-TRIAD-063, created 2026-08-05. The contract artifact binding was re-sealed on 2026-09-06 for the documentation-only currentness refresh; no schema, fixture, validator, workflow, registry, or live mutation campaign changed."
 }
