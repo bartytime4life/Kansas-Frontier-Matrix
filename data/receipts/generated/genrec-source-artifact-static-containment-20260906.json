@@ -1,0 +1,118 @@
+{
+  "receipt_id": "genrec-source-artifact-static-containment-20260906",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tools/source_artifacts/content_addressed_store.py",
+    "tests/validators/test_validate_source_artifact.py",
+    "tools/source_artifacts/README.md"
+  ],
+  "artifact_hashes": {
+    "tools/source_artifacts/content_addressed_store.py": "sha256:96b19fe64597092d00fa975724669d314a4c00bfa9dcd1ae18bc30a1f898760b",
+    "tests/validators/test_validate_source_artifact.py": "sha256:40ff0a1064693df1b6d08122e8b4cee6653095a17d89c38c2f89fdaff78e45ff",
+    "tools/source_artifacts/README.md": "sha256:8de4b185434b0f79144ec101b019e35031071a6210870cc8bcf9758893a32ea2"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Pro",
+    "version": "not exposed"
+  },
+  "prompt_or_contract": "sha256:08f7525dafe9d16bd1886017eda748e67b6b632ca535042f7eaa6ab39050825b",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub",
+      "Notion",
+      "Google_Drive",
+      "container"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/19809b21d393c40af7a5d978d9b010e3a8e9eb9a/tools/source_artifacts/content_addressed_store.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/19809b21d393c40af7a5d978d9b010e3a8e9eb9a/tests/validators/test_validate_source_artifact.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/19809b21d393c40af7a5d978d9b010e3a8e9eb9a/tools/source_artifacts/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/19809b21d393c40af7a5d978d9b010e3a8e9eb9a/docs/doctrine/directory-rules.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/19809b21d393c40af7a5d978d9b010e3a8e9eb9a/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/19809b21d393c40af7a5d978d9b010e3a8e9eb9a/CONTRIBUTING.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3374",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024#issuecomment-5555562994",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/34007756039",
+      "https://docs.google.com/document/d/1uTqdIEFZE2cq3gyISetoRYM6LIlnKqTc3FobtEx7Cbs/edit",
+      "https://app.notion.com/p/3c9a92021bf68195b8b1f3a8d694b447"
+    ]
+  },
+  "truth_labels": {
+    "tools/source_artifacts/content_addressed_store.py": "CONFIRMED",
+    "tests/validators/test_validate_source_artifact.py": "CONFIRMED",
+    "tools/source_artifacts/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Exact current-base source import",
+      "outcome": "PASS",
+      "reason": "Source artifact 9981495314 ZIP SHA-256 47c994f25c5e553970daf00ccda06f909bde81caba81b39f61c7231a0b1b8a09 verified. Archive SHA-256 9b6ff036d44b8968be1cbfa172e7d2eafab7dc8011438196be8c931b80a03d0d. Full extracted tracked tree f352d622cc7c82b5706b310e439e91974e35344c matches main@19809b21d393c40af7a5d978d9b010e3a8e9eb9a. Source export is not product validation."
+    },
+    {
+      "gate": "Pristine base SourceArtifact tests",
+      "outcome": "PASS",
+      "reason": "21 existing tests passed on unchanged current-base implementation and tests."
+    },
+    {
+      "gate": "New regression overlay on unchanged same-base implementation",
+      "outcome": "FAIL",
+      "reason": "Expected negative control, not pristine-main suite failure: 30 methods report 17 failing subcases and 10 errors. These are multiple static-containment/identity observations, not 27 distinct defects. Existing 21 methods remain unchanged."
+    },
+    {
+      "gate": "Candidate SourceArtifact and bounded-reader tests",
+      "outcome": "PASS",
+      "reason": "30 SourceArtifact tests, including nine new methods, and 40 existing short-read tests pass without skips/errors. Root/algorithm/shard symlinks, dangling links, non-directories, outside payload reads, malformed identities, finite CLI failure, and relative-root no-network round trips are exercised."
+    },
+    {
+      "gate": "Native fixture polarity",
+      "outcome": "PASS",
+      "reason": "All 14 SourceArtifact fixture cases and the GeneratedReceipt fixture profile pass; fixture cases overlap unit coverage and are not additional unique tests."
+    },
+    {
+      "gate": "Changed syntax and diff hygiene",
+      "outcome": "PASS",
+      "reason": "Both Python ASTs parse; git diff --check passes. SourceArtifact and GeneratedReceipt Draft 2020-12 meta-schemas pass. The four-file diff preserves schemas, source validator, reader, byte budgets, input capture, dependency manifests, topology policy and permanent workflow bytes."
+    },
+    {
+      "gate": "Repository topology differential",
+      "outcome": "FAIL",
+      "reason": "Pristine exact-base and final candidate validators both exit 1 / FAIL_INVARIANT. Complete finding and baseline arrays match: 127 findings, 122 baselined warnings, five new drift findings, zero invariant-count findings. Candidate adds only one tracked receipt (14515 to 14516 paths). This proves unchanged inherited failure, not a passing repository. No baseline/register edits or waiver."
+    },
+    {
+      "gate": "GeneratedReceipt native validation",
+      "outcome": "PASS",
+      "reason": "Native GeneratedReceipt validator confirms all three exact artifact hashes, integrity=bound, review=pending, review_claim=absent; fixture profile also passes. No human review or approval is inferred."
+    },
+    {
+      "gate": "Hosted product validation and independent review",
+      "outcome": "SKIPPED",
+      "reason": "NOT_RUN at authoring. Run 34007756039 exports source only. Local Linux Python 3.13.5/jsonschema 4.26.0/PyYAML 6.0.3 is not the repository Python 3.11 hosted environment. No independent reviewer approval is claimed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "adopted-directory-rules",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/19809b21d393c40af7a5d978d9b010e3a8e9eb9a/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "current-local-store",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/19809b21d393c40af7a5d978d9b010e3a8e9eb9a/tools/source_artifacts/content_addressed_store.py"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-09-06T03:03:37.067183+00:00",
+  "emitter": "kfm-source-artifact-static-containment-author",
+  "notes": "Branch agent/source-artifact-static-containment-20260906. Existing tools/, tests/ and data/receipts/generated/ responsibility roots under adopted ADR-0029; no new canonical home or authority. Static directory checks precede child creation and payload reads, including the formerly omitted sha256 ancestor. Canonical lowercase digest grammar is enforced before path construction. Captured-input binding and valid identity semantics are preserved. README records behavior and caller-controlled-directory limitation. This does not prevent concurrent ancestor replacement, make verification metadata a fully admitted SourceArtifact, provide production CAS locking, or establish source rights, source admission, lifecycle promotion or public serving. Temporary branch-scoped source-export workflow at transport commit 8e9fae617a75ff90c6dd96d04c8fe370b2b4950d is removed from the delivered product tree. No permanent workflow, schema, contract, policy, dependency, topology baseline, correction register, settings, release or deployment change. Branch-only delivery preserves the uncleared #4024 PR-state boundary; the issue being closed is not proof that the path was cleared. Review and hosted evidence remain separate. Rollback: abandon the unmerged branch or reverse the four-file product diff while retaining receipt history and keeping the temporary workflow absent; this restores the known containment defect."
+}
