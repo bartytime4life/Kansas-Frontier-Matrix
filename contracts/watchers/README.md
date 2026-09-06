@@ -48,10 +48,10 @@ notes:
 
 [![Status: proposed inactive](https://img.shields.io/badge/status-proposed%20inactive-d4a72c?style=flat-square)](#status)
 [![Authority: semantic meaning](https://img.shields.io/badge/authority-semantic%20meaning-1f6feb?style=flat-square)](#authority-and-inheritance)
-[![Boundary: non-publisher](https://img.shields.io/badge/boundary-non--publisher-6e7781?style=flat-square)](#non-authority)
+[![Boundary: non-publisher](https://img.shields.io/badge/boundary-non--publisher-6e7781?style=flat-square)](#trust-and-safety-boundary)
 [![Network: denied](https://img.shields.io/badge/network-denied-b42318?style=flat-square)](#trust-and-safety-boundary)
 
-**Quick navigation:** [Purpose](#purpose) · [Authority and inheritance](#authority-and-inheritance) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Responsibility split](#responsibility-split) · [Finite watcher boundary](#finite-watcher-boundary) · [Trust and safety](#trust-and-safety-boundary) · [Inputs and outputs](#inputs-and-outputs) · [Validation](#validation) · [Open verification](#open-verification) · [Rollback](#rollback) · [References](#references)
+**Quick navigation:** [Purpose](#purpose) · [Authority and inheritance](#authority-and-inheritance) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Responsibility split](#responsibility-split) · [Finite watcher boundary](#finite-watcher-boundary) · [Trust and safety](#trust-and-safety-boundary) · [Inputs and outputs](#inputs-and-outputs) · [Exposure, mutation, and retention](#exposure-mutation-and-retention) · [Validation](#validation) · [Open verification](#open-verification) · [Rollback](#rollback) · [References](#references)
 
 ## Purpose
 
@@ -208,6 +208,19 @@ Unknown rights, sensitivity, sovereignty, source authority, or harmful precision
 | Prohibited outputs | Direct RAW, PROCESSED, CATALOG, TRIPLET, PUBLISHED, release, notification, public-alert, or deployment writes |
 
 Preserve the lifecycle boundary RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED. A watcher is an upstream candidate signal, not a bypass around admission, evidence, policy, review, correction, or release.
+
+
+[Back to top](#top)
+
+## Exposure, mutation, and retention
+
+| Concern | Boundary |
+|---|---|
+| Exposure | Public metadata and maintainer navigation only. Contract prose is not a public data, API, map, AI, notification, or release interface. |
+| Mutation | Versioned Markdown changes proceed through repository review. This README cannot mutate the registry, schema, policy, lifecycle, receipt, release, or publication state it references. |
+| Retention | Preserve contract history, supersession references, correction context, and rollback pointers. Runtime captures, receipts, proofs, and release records remain in their governed data families; this directory is not a cache or an output store. |
+
+A child contract owns its own semantic detail. This README owns only the directory boundary and cross-root routing.
 
 [Back to top](#top)
 
