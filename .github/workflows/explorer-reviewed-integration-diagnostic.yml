@@ -18,7 +18,7 @@ jobs:
       matrix:
         include:
           - lane: candidate
-            source: d550c452382c626bc871d921199af5dea2fabaa7
+            source: 71d0250bdd293ee2b5c367c901afd6d50402e010
           - lane: main
             source: a9a53470e385350b795f6d978ad3e7a5811961c5
     env:
@@ -47,10 +47,33 @@ jobs:
           test "$(git rev-parse HEAD)" = '${{ matrix.source }}'
           git rev-parse HEAD > "$out/head.txt"
           git diff --check a9a53470e385350b795f6d978ad3e7a5811961c5 HEAD
-          git diff --exit-code a9a53470e385350b795f6d978ad3e7a5811961c5 HEAD -- apps/kansas-frontier-matrix-explorer/scripts/build-verified.sh apps/kansas-frontier-matrix-explorer/tests/build-verified.test.mjs pnpm-workspace.yaml > "$out/protected-main-parity.log"
+          git diff --exit-code a9a53470e385350b795f6d978ad3e7a5811961c5 HEAD -- apps/kansas-frontier-matrix-explorer/scripts/build-verified.sh apps/kansas-frontier-matrix-explorer/tests/build-verified.test.mjs pnpm-workspace.yaml apps/explorer-web .github/workflows/accessibility.yml docs/doctrine/directory-rules.md tools/validators/directory_governance/repository_topology_baseline.json catalog/corrections.yml > "$out/protected-main-parity.log"
           sha256sum package.json pnpm-workspace.yaml pnpm-lock.yaml apps/kansas-frontier-matrix-explorer/package.json apps/kansas-frontier-matrix-explorer/package-lock.json > "$out/install-inputs.sha256"
           git diff --binary a9a53470e385350b795f6d978ad3e7a5811961c5 HEAD > "$out/product.patch"
           git diff --name-only -z a9a53470e385350b795f6d978ad3e7a5811961c5 HEAD | xargs -0 -r sha256sum > "$out/product.sha256"
+          if test '${{ matrix.lane }}' = candidate; then
+            git merge-base --is-ancestor a9a53470e385350b795f6d978ad3e7a5811961c5 HEAD
+            git merge-base --is-ancestor bf1335ad7250dec6334f62ad86d1032f0df7ef61 HEAD
+            git merge-base --is-ancestor 8e4167852d9037cc308ee744501f2172a6ee44f9 HEAD
+            git diff --name-only a9a53470e385350b795f6d978ad3e7a5811961c5 HEAD > "$out/product-paths.txt"
+            tar -czf "$out/product-source.tgz" -T "$out/product-paths.txt"
+            python3 - <<'PY'
+          import json,subprocess,pathlib,hashlib
+          source='9091952f2adfb8b1aca26c9d3f9dabb121ad073f'
+          receipt=json.loads(pathlib.Path('data/receipts/generated/genrec-explorer-combined-integration-9091952f.json').read_text())
+          changed=set(subprocess.check_output(['git','diff','--name-only','a9a53470e385350b795f6d978ad3e7a5811961c5','HEAD']).decode().splitlines())
+          assert set(receipt['artifact_paths'])=={p for p in changed if not p.startswith('data/receipts/generated/')}
+          for path in receipt['artifact_paths']:
+            current=pathlib.Path(path).read_bytes()
+            assert current==subprocess.check_output(['git','show',source+':'+path]),path
+            assert 'sha256:'+hashlib.sha256(current).hexdigest()==receipt['artifact_hashes'][path],path
+          for path,marker in [('apps/kansas-frontier-matrix-explorer/tests/earth-layer-library.test.mjs',"const card ="),('apps/kansas-frontier-matrix-explorer/tests/site-requested-layer-state.test.mjs',"const initial =")]:
+            before=subprocess.check_output(['git','show','d550c452382c626bc871d921199af5dea2fabaa7:'+path]).decode()
+            after=pathlib.Path(path).read_text()
+            assert before[before.index(marker):]==after[after.index(marker):],path
+          print('ALL_29_CURRENT_ARTIFACT_BINDINGS_AND_EXISTING_ASSERTIONS_PRESERVED')
+          PY
+          fi
           corepack enable
           node --version > "$out/node.txt"
           pnpm --version > "$out/pnpm.txt"
@@ -98,6 +121,12 @@ jobs:
             fi
             kill "$server_pid" 2>/dev/null || true
             trap - EXIT
+            run_gate python-bootstrap python3 tools/ci/install_python_ci.py project-test
+            run_gate combined-receipt python3 tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-explorer-combined-integration-9091952f.json --repo-root . --artifact-git-ref 9091952f2adfb8b1aca26c9d3f9dabb121ad073f
+            run_gate owner-review-receipt python3 tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-explorer-owner-review-bf1335ad.json --repo-root . --artifact-git-ref a120361953ae574c4c1df8ea805a69677c9fab78 --require-review-claim
+            run_gate historical-library-receipt python3 tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-earth-layer-library-app-integration-698b8331.json --repo-root . --artifact-git-ref 698b833109e3b58bcb9ef5321cb9a8a49a3823e6
+            run_gate historical-baseline-receipt python3 tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-explorer-ts7-worker-baseline-repair-673a0fd6.json --repo-root . --artifact-git-ref 673a0fd60dfca321e3c2fbe8a889a3bcafb4a1c8
+            run_gate historical-lint-receipt python3 tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-explorer-eslint10-context-a1203619.json --repo-root . --artifact-git-ref a120361953ae574c4c1df8ea805a69677c9fab78
           fi
           run_gate topology python3 tools/validators/directory_governance/validate_repository_topology.py --repo-root . --trusted-baseline-ref a9a53470e385350b795f6d978ad3e7a5811961c5 --format json
           run_gate immutable git diff --exit-code
