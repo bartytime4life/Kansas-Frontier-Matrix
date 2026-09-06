@@ -1,0 +1,35 @@
+{
+  "receipt_id": "genrec-explorer-compiler-entrypoint-7e2a2f90",
+  "contract_version": "3.0.0",
+  "artifact_paths": ["apps/kansas-frontier-matrix-explorer/tests/declared-typescript.mjs", "apps/kansas-frontier-matrix-explorer/tests/declared-typescript.test.mjs", "docs/quality/explorer-reviewed-integration.md"],
+  "artifact_hashes": {
+    "apps/kansas-frontier-matrix-explorer/tests/declared-typescript.mjs": "sha256:a3a907a14ef2d6a8736669bb8a006a4eae277e5c8f03aa533916287d7b22d884",
+    "apps/kansas-frontier-matrix-explorer/tests/declared-typescript.test.mjs": "sha256:68ac1bfedee57c383fc90cf157927416e21ca2b55fe09b9c29aa11f62616f18c",
+    "docs/quality/explorer-reviewed-integration.md": "sha256:6edd15616b9b2fbce5efc149d08a27fd2e85c2d707cf4b610e2d103c11435eb2"
+  },
+  "model_identity": {"provider": "OpenAI", "model": "GPT-6 Pro", "version": "exact runtime build identifier not exposed"},
+  "prompt_or_contract": "sha256:1e0a879f0fe0d4bc4b5c5545879a6edc0a8a13cc274f7309358c67464a7e3ab5",
+  "parameters": {"seed": null, "temperature": null, "top_p": null, "max_tokens": null, "tools_enabled": ["GitHub", "Notion", "Google Drive", "container", "web"]},
+  "inputs": {
+    "evidence_hashes": ["sha256:fb2bac727d9e40b639214e63d836dfd5683e14bcee6b5a788bd5dcb48adfde36", "sha256:550ef3ece2085af977fb526ea86e7967649b047a9453387b69ec4e8f9da926f2"],
+    "evidence_refs": ["repo:7e2a2f90b0420ae0863e12ba237b65edc3d50c0d", "repo:71d0250bdd293ee2b5c367c901afd6d50402e010", "repo:9091952f2adfb8b1aca26c9d3f9dabb121ad073f", "github-actions:34002156577", "receipt:genrec-explorer-combined-integration-9091952f", "receipt:genrec-explorer-owner-review-bf1335ad"]
+  },
+  "truth_labels": {"apps/kansas-frontier-matrix-explorer/tests/declared-typescript.mjs": "PROPOSED", "apps/kansas-frontier-matrix-explorer/tests/declared-typescript.test.mjs": "PROPOSED", "docs/quality/explorer-reviewed-integration.md": "PROPOSED"},
+  "validation_gates": [
+    {"gate": "prior-combined-execution", "outcome": "PASS", "reason": "Run 34002156577 checks literal 71d0250 and a9a53470 independently. Both application builds, candidate full typecheck, 26 lint regressions, actual 14-case app browser suite, 460 Explorer Web unit tests and 128 Web browser tests pass. Browser errors and off-origin requests are zero. All five native receipt replays, including the owner approval claim, pass. These are prior-head results, not execution of this correction."},
+    {"gate": "prior-node-selector", "outcome": "FAIL", "reason": "The new literal bin comparison in the selector rejects the installed entrypoint. Both root Node and actual npm test return 51 pass and 2 module failures before Library assertions. The failure is preserved in run 34002156577 rather than suppressed or relabeled."},
+    {"gate": "normalized-selector-local-tests", "outcome": "PASS", "reason": "17 focused resolver tests pass under local Node 22.16.0. Equivalent relative paths must resolve to one package-confined real file; absolute, escaping and different existing files remain rejected. Package and lock fixture metadata are independent. No compiler version, production config, dependency lock or existing Library assertion changes."},
+    {"gate": "corrected-head-hosted-execution", "outcome": "SKIPPED", "reason": "Hosted full application execution and native receipt replay at 7e2a2f90 and the receipt-only descendant follow emission. Do not preclaim success."},
+    {"gate": "topology", "outcome": "FAIL", "reason": "Prior same-run candidate and main have identical complete topology finding and baseline/stale arrays: zero invariant violations, five new-drift groups, 122 baselined warnings, five stale entries. These failures remain unwaived and require separate #4228 authority."},
+    {"gate": "new-correction-human-review", "outcome": "SKIPPED", "reason": "Owner review of the presented bf1335ad handoff is recorded separately and validated. The subsequently authored entrypoint correction is not represented as pre-reviewed."},
+    {"gate": "pr-lifecycle-deployment-publication", "outcome": "SKIPPED", "reason": "No PR lifecycle, main write, settings change, deployment, source/renderer activation or publication is authorized by this correction receipt."}
+  ],
+  "policy_decisions": [],
+  "citations": [{"id": "preceding-exact-source-run", "validated": true, "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/34002156577"}],
+  "human_review": {"reviewer_ids": [], "state": "pending", "timestamp": null},
+  "override_record": null,
+  "created_at": "2026-09-06T00:54:00Z",
+  "emitter": "ChatGPT GPT-6 Pro; append-only integration correction recorder",
+  "links": {"pr_number": null, "adr_link": null, "drift_register_entry": null},
+  "notes": "This is a three-artifact forward correction at exact source 7e2a2f90b0420ae0863e12ba237b65edc3d50c0d. It supplies current bindings for these three paths, while genrec-explorer-combined-integration-9091952f supplies the other 26 unchanged current paths and historical bindings for the earlier three. The ordered union covers all 29 current non-receipt integration files. Native replay must validate each receipt against its own named source and compare the resulting current overlay to the actual checkout. No historical receipt is rewritten. Owner artifact review and new correction review remain distinct."
+}
