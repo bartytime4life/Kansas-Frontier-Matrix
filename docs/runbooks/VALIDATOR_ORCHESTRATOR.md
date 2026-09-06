@@ -90,6 +90,17 @@ python tools/validate_all.py \
   --changed-path schemas/contracts/v1/runtime/decision_envelope.schema.json
 ```
 
+The direct changed-area profile preserves an empty-selection `ABSTAIN` by
+default. Add `--require-match` when the caller is a gate and must fail if no
+registered validator is selected:
+
+```bash
+python tools/validate_all.py \
+  --profile changed-area \
+  --changed-path contracts/runtime/decision_envelope.md \
+  --require-match
+```
+
 Select exact registered IDs:
 
 ```bash
@@ -119,7 +130,7 @@ python tools/validate_all.py --profile full --include-timing
 | Profile | Selection law | Empty selection |
 |---|---|---|
 | `focused` | Small trust-spine subset declared in the registry. | Configuration error. |
-| `changed-area` | Every validator whose registered path glob matches at least one supplied changed path. | `ABSTAIN` with `NO_MATCHING_VALIDATORS`, exit `0`; this is not represented as a validator pass. |
+| `changed-area` | Every validator whose registered path glob matches at least one supplied changed path. | Defaults to `ABSTAIN` with `NO_MATCHING_VALIDATORS`, exit `0`; `--require-match` changes an empty selection to `FAIL`, exit `1`. |
 | `release-dry-run` | Release-adjacent evidence, decision, receipt, bounded catalog-closure, ReleaseManifest, and release proof-pack closure fixture validators. | Configuration error. |
 | `full` | Every registered validator exactly once, in registry order. | Configuration error. |
 
@@ -170,7 +181,7 @@ The ReleaseProofPackClosure changed-area globs cover its existing contract, sche
 |---|---:|---|
 | `PASS` | `0` | Every selected child validator exited `0`. |
 | `ABSTAIN` | `0` | The `changed-area` profile matched no registered validator. No pass claim is made. |
-| `FAIL` | `1` | The orchestrator completed and at least one child validator exited `1`. |
+| `FAIL` | `1` | The orchestrator completed with a child rejection, or a required changed-area selection matched nothing. |
 | `ERROR` | `2` | Registry, path, I/O, timeout, or child-system failure occurred; or a child exited outside `0`/`1`. |
 
 Downstream callers must preserve the distinction between exit `1` and exit `2`. An arbitrary nonzero exit is not proof of a reviewed validation rejection.
@@ -259,7 +270,7 @@ New callers should use `tools/validate_all.py` and choose the profile or explici
 - Child timeout: child result `ERROR`, aggregate exit `2`.
 - Child exit `1`: child result `FAIL`, aggregate exit `1` unless another child errors.
 - Child exit `2` or any other code: child result `ERROR`, aggregate exit `2`.
-- Changed-area no match: `ABSTAIN`, exit `0`, with no false all-pass statement.
+- Changed-area no match: `ABSTAIN`, exit `0`, by default with no false all-pass statement; `--require-match` returns `FAIL`, exit `1`.
 
 ## Rollback
 
