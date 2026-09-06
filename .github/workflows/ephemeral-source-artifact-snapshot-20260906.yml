@@ -1,0 +1,37 @@
+# Temporary branch-only evidence transport; remove before final handoff.
+# Directory Rules: .github owns repository automation, not source or release authority.
+# No credentials persist; no dependency scripts, sources, release, or deployment run.
+name: ephemeral-source-artifact-snapshot-20260906
+"on":
+  push:
+    branches: [agent/source-artifact-snapshot-binding-20260906]
+    paths: [.github/workflows/ephemeral-source-artifact-snapshot-20260906.yml]
+permissions:
+  contents: read
+jobs:
+  export-pinned-source:
+    if: github.ref == 'refs/heads/agent/source-artifact-snapshot-binding-20260906'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: 47368ada45506fddc353fd1b116ff3fc4097f98c
+          persist-credentials: false
+      - name: Export exact reviewed base without credentials or generated files
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = 47368ada45506fddc353fd1b116ff3fc4097f98c
+          mkdir -p "$RUNNER_TEMP/kfm-source-snapshot"
+          git rev-parse HEAD > "$RUNNER_TEMP/kfm-source-snapshot/commit.txt"
+          git rev-parse HEAD^{tree} > "$RUNNER_TEMP/kfm-source-snapshot/tree.txt"
+          git archive --format=tar HEAD | gzip -n > "$RUNNER_TEMP/kfm-source-snapshot/source.tar.gz"
+          cd "$RUNNER_TEMP/kfm-source-snapshot"
+          sha256sum source.tar.gz > SHA256SUMS
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: source-artifact-snapshot-base-47368ada
+          path: ${{ runner.temp }}/kfm-source-snapshot/
+          retention-days: 7
+          if-no-files-found: error
