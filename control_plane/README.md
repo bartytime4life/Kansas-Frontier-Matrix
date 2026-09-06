@@ -1,45 +1,51 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/control-plane-readme
 title: control_plane/ — Machine-Readable Governance Index Root
-version: v0.6
+version: v0.7
 type: README
 status: "draft; repository-grounded; canonical-root-confirmed; directory-rules-v2-adopted; required-register-packet-enforced; mixed-validation-profiles; register-population-partial; specialized-projections-present; non-authoritative"
 owners: "OWNER_TBD — Control-plane steward · Register steward · Architecture steward · Docs steward · affected authority-root owners · Validation/CI steward; CODEOWNERS routes /control_plane/ to @bartytime4life"
 created: 2026-06-24
-updated: 2026-08-22
-supersedes: v0.5 control-plane root README at the same path
+updated: 2026-09-06
+supersedes: v0.6 control-plane root README at the same path
 prepared_under_prompt: KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0
 policy_label: "repository-facing; control-plane; machine-registers; authority-index; no-parallel-authority; no-direct-public-path; cite-or-abstain; correction-aware; rollback-aware"
 current_path: control_plane/README.md
 owning_root: control_plane/
 responsibility: document the machine-readable governance projection root its authority boundary current bounded inventory validation profiles correction controls and no-direct-public-path posture without creating or changing indexed authority
-truth_posture: CONFIRMED existing control-plane root stable identity accepted ADR-0006 ADR-0007 and ADR-0029 adopted Directory Rules v2 required register packet split validation profiles pinned MRTS-01 snapshot pinned M01 program baseline current direct-child inventory dedicated workflows CODEOWNERS routing and Makefile entrypoints / PROPOSED maturity vocabulary semantic closure consumer admission and incomplete-family closure order / UNKNOWN external consumers branch-protection enforcement production behavior and public effects / NEEDS VERIFICATION accountable owners independent review field-level schemas full population reference closure correction propagation and retirement drills
+truth_posture: CONFIRMED existing control-plane root stable identity accepted ADR-0006 ADR-0007 and ADR-0029 adopted Directory Rules v2 required register packet split validation profiles pinned MRTS-01 snapshot pinned M01 program baseline current direct-child inventory including the topology-correction projection dedicated workflows current-main validation readback CODEOWNERS routing and Makefile entrypoints / PROPOSED maturity vocabulary semantic closure consumer admission and incomplete-family closure order / UNKNOWN external consumers branch-protection enforcement production behavior and public effects / NEEDS VERIFICATION accountable owners independent review field-level schemas full population reference closure correction propagation and retirement drills
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   repository_id: "1059091169"
   visibility: public
   base_ref: main
-  base_commit: 6aa1ce50dfc4e818e5f33d47fff24b6d06a1c91e
-  prior_blob: a7bbfddc0f257194c42b75046da6eccf976980e0
+  base_commit: 1e69410cfd871e1ec004eedcd23f845eff435137
+  prior_blob: 51026faa37b2ebe940472e1d513a25cd0832c692
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   directory_rules_sha256: sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e
-  adr_0029_blob: b01322ef64f8c2b1ecb41de7ef4685b97cfa2a62
+  adr_0029_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
   register_meta_contract_test_blob: 83e74c1c657d06f9c7b4bd256419a8aa8868d173
-  docs_control_plane_workflow_blob: 20302d5d3f603116ab92ce31a992f35e9fa9474e
-  object_family_workflow_blob: 84cd4808c2a74729c7d3a2bb525051a9967e40cb
+  docs_control_plane_workflow_blob: ed0d3b50a12931b67cad005cd99433924c829fa3
+  object_family_workflow_blob: d33526513b9dff1943333ebbb2a3e4c6b4263409
   root_registry_blob: 024f668b5f0a9239bafa4f8b09e2afd86300ff8c
-  path_alias_register_blob: 8a6503fb1c7f419e362cf2ced44ace66eff1aa4d
+  path_alias_register_blob: 6ad6840bd47eb8b176d03f9e946c16453fc4caee
   domain_lane_register_blob: 1bfc6f91cfa713a5e3d51ece011b63b46310734f
-  object_family_register_blob: 94dfa446a8a955dc7c62e26da7dc0d4c0255cf90
+  object_family_register_blob: 03bba0769738d29bbc4c9481ba34c6c7b8366941
   cross_domain_seam_register_blob: dc87ea9c2ab11cc10e51cf4e8284c030e7c9ab29
   required_registers: "9"
   required_meta_profile_registers: "8"
   required_schema_profile_registers: "1"
   required_registers_with_entries: "3"
   required_registers_empty: "6"
-  direct_child_entries: "28"
-  direct_child_files: "26"
+  direct_child_entries: "29"
+  direct_child_files: "27"
   direct_child_directories: "2"
+  repository_topology_correction_register_blob: b48e8df74a2b9d8c2599ce256ef5156687b98dbf
+  repository_governance_parity_blob: 06214b4c66164a82c614a02dd2a0632465ac6cd6
+  repository_governance_parity_workflow_blob: 37189a82d3ed78800318847384ea931e87561696
+  control_plane_registry_packet_workflow_blob: 095f644f739a555ea7e30530048f8270c81b7712
+  validator_suite_workflow_blob: 4241e6e17582232777ea5f93a188fb80d30b17ad
+  current_validation_runs: "docs-control-plane=34015364349 PASS; control-plane-registry-packet=34015364270 PASS; object-family-register=34015364272 PASS; trust-spine-baseline=34015364322 PASS; validator-suite=34015364283 FAIL; repository-governance-parity=34015364324 FAIL; program-baseline=34015364273 FAIL; schema-validation=34015364300 FAIL"
 related:
   - ../README.md
   - ../docs/doctrine/directory-rules.md
@@ -63,6 +69,9 @@ related:
   - ../.github/workflows/cross-domain-seam-register.yml
   - ../.github/workflows/trust-spine-baseline.yml
   - ../.github/workflows/program-baseline.yml
+  - ../.github/workflows/control-plane-registry-packet.yml
+  - ../.github/workflows/repository-governance-parity.yml
+  - ../.github/workflows/validator-suite.yml
   - ../Makefile
   - program_baseline.json
   - trust_spine_baseline.yaml
@@ -70,7 +79,7 @@ related:
   - registers/README.md
 tags: [kfm, control-plane, machine-registers, governance-index, crosswalks, authority, directory-rules-v2, drift, verification, deprecation, policy-gates, release-state, validation, correction, rollback]
 notes:
-  - "v0.6 is a same-path extension of v0.5 that indexes the proposed M01 program baseline without changing authority."
+  - "v0.7 repins the same-path README to current main, reconciles the direct-child map, records the topology-correction projection, and adds named current-main validation outcomes without changing authority."
   - "The first twelve H2 sections implement the adopted Directory Rules v2 ROOT_FULL field order."
   - "A validation pass proves only the boundary exercised by that validator."
   - "This README does not populate or activate a register, create authority, amend an ADR, approve policy, change release state, promote lifecycle data, expose a public route, or publish."
@@ -150,12 +159,14 @@ Authority is referential here. When a reference does not resolve, is stale, or c
 
 | Finding | Truth status | Current bounded result |
 |---|---:|---|
-| Root and README | `CONFIRMED` | Existing same-path root README with stable `kfm://doc/control-plane-readme` identity. |
+| Root and README | `CONFIRMED` | Existing same-path root README with stable `kfm://doc/control-plane-readme` identity; current main readback is `main@1e69410cfd871e1ec004eedcd23f845eff435137`. |
 | Placement authority | `CONFIRMED / ACCEPTED` | ADR-0029 adopts exact Directory Rules v2 bytes and makes `docs/doctrine/directory-rules.md` the writable human placement authority. |
 | Required register packet | `CONFIRMED` | Nine files are required: eight legacy metadata-profile files and one schema-governed object-family register. |
 | Required register population | `CONFIRMED BOUNDED` | Three required registers are nonempty; six remain empty. |
 | Dedicated projection profiles | `CONFIRMED` | Root, path-alias, domain-lane, cross-domain-seam, object-family, and trust-spine baseline projections have dedicated validation surfaces. |
 | Supplemental matrices and watcher registry | `CONFIRMED / BOUNDED` | Present, mostly `PROPOSED_INACTIVE`, documented-only, or unresolved; no activation or release is implied. |
+| Topology-correction projection | `CONFIRMED BOUNDED` | One proposed consume-once transition is present; its decision record has no accepted commit, and the projection cannot suppress live findings or authorize edits. |
+| Current-main validation | `CONFIRMED BOUNDED` | Named profiles pass or fail as recorded below; no result creates authority, waives topology, or establishes release/publication readiness. |
 | Repository-control projection | `STALE / PROJECTION ONLY` | `repository_control_state.yaml` records an older observation and cannot authorize or prohibit this current scoped change. |
 | Review routing | `CONFIRMED ROUTING` | CODEOWNERS routes `/control_plane/` to `@bartytime4life`; independent enforcement remains `NEEDS VERIFICATION`. |
 | Direct public use | `DENY` | Raw registers are not normal public truth surfaces. |
@@ -166,6 +177,7 @@ Authority is referential here. When a reference does not resolve, is stale, or c
 2. **Mixed profiles.** YAML metadata files, schema-governed JSON-shaped content, direct JSON matrices, and nested Markdown lanes do not share one validation contract.
 3. **Sparse versus authoritative wording.** A canonical path can still be incomplete, proposed, stale, or consumer-unready.
 4. **Historical projections.** A machine projection tied to an older observation is evidence about that observation, not current repository authority.
+5. **Current validation is mixed.** The control-plane packet, object-family, and trust-spine profiles pass their named current-main runs; validator-suite, governance parity, M01 program baseline, and schema validation remain failed for bounded, separate reasons.
 
 [Back to top](#top)
 
@@ -308,6 +320,21 @@ Validation is layered; each result proves only its named boundary.
 | Boundary aggregate | `make boundary-guards` | Required-register test plus API/renderer/connector boundary tests. | Full repository validation or publication readiness. |
 | General schema/contract baseline | `make validate` | Configured aggregate validators and schema/contract tests. | Every control-plane profile or consumer. |
 
+### Current exact-head readback — `main@1e69410cfd871e1ec004eedcd23f845eff435137`
+
+These are current GitHub Actions observations for the pinned main commit, not a claim that the repository is globally green.
+
+| Surface | Run | Result | Bounded observation |
+|---|---:|---|---|
+| [`docs-control-plane`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/34015364349) | 34015364349 | `PASS` | `validate-control-plane-yaml`, `registers-schema`, and `adr-index-coherence` passed. |
+| [`control-plane-registry-packet`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/34015364270) | 34015364270 | `PASS` | The required control-plane packet profile passed. |
+| [`object-family-register`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/34015364272) | 34015364272 | `PASS` | The dedicated object-family profile passed; this does not resolve the projection's 11 conflicted required families. |
+| [`trust-spine-baseline`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/34015364322) | 34015364322 | `PASS` | The pinned trust-spine profile passed its named checks. |
+| [`validator-suite`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/34015364283) | 34015364283 | `FAIL` | Topology reported 0 invariant violations, 5 new-drift findings, 122 baselined warnings, and 5 stale fingerprints; the aggregate remains failed. |
+| [`repository-governance-parity`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/34015364324) | 34015364324 | `FAIL` | Expected-topology parity mismatched current evidence; the lane-cache regression also failed. |
+| [`program-baseline`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/34015364273) | 34015364273 | `FAIL` | `GENERATED_RECEIPT_INVALID` reports `ARTIFACT_DIGEST_MISMATCH` at `/artifact_paths/1`; the projection validator itself returned no findings. |
+| [`schema-validation`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/34015364300) | 34015364300 | `FAIL` | After schema parsing, the aggregate suite hit `SyntaxError: expected ':'` in `tests/validators/test_validator_orchestrator.py:307`. |
+
 ### Required review checks
 
 - [ ] The target file is the correct projection family and does not create parallel authority.
@@ -327,7 +354,9 @@ Validation is layered; each result proves only its named boundary.
 - field-level schemas and semantic validators are uneven across families;
 - no general cross-register path/ID/digest resolver is established;
 - no general human-versus-machine drift comparator is established;
-- consumer inventory, stale-cache behavior, and correction propagation remain incomplete.
+- consumer inventory, stale-cache behavior, correction propagation, and current expected-topology parity remain incomplete;
+- the M01 program-baseline receipt currently has an artifact digest mismatch;
+- the aggregate schema/fixture lane currently has a validator-test syntax error.
 
 [Back to top](#top)
 
@@ -419,6 +448,7 @@ control_plane/
 ├── release_state_register.yaml
 ├── repository_control_state.yaml
 ├── repository_governance_parity.yaml
+├── repository_topology_correction_register.yaml
 ├── root_registry.yaml
 ├── source_authority_register.yaml
 ├── trust_spine_baseline.yaml
@@ -436,15 +466,15 @@ Child READMEs own deeper detail. Do not duplicate deep trees here.
 
 | Field | Value |
 |---|---|
-| Evidence inspection date | 2026-08-22 |
-| Repository snapshot | `main@6aa1ce50dfc4e818e5f33d47fff24b6d06a1c91e` |
-| Prior README blob | `a7bbfddc0f257194c42b75046da6eccf976980e0` |
-| Direct children inspected | 28: 26 files, two directories, including the proposed M01 packet |
+| Evidence inspection date | 2026-09-06 |
+| Repository snapshot | `main@1e69410cfd871e1ec004eedcd23f845eff435137` |
+| Prior README blob | `51026faa37b2ebe940472e1d513a25cd0832c692` |
+| Direct children inspected | 29: 27 files, two directories, including the topology-correction projection |
 | Required registers | 9: three nonempty, six empty |
-| Open overlapping README PR | None found in bounded current search |
-| Historical matching branch | One historical branch; no open PR |
-| Local repository checkout | Available for bounded no-network validation |
-| Workflow definitions and tests | Focused local profile executed; hosted exact-head execution remains separate |
+| Open overlapping README PR | None found in two bounded GitHub searches on 2026-09-06 |
+| Historical matching branch | Not relied on for this currentness update |
+| Local repository checkout | Not used; GitHub file and current-main Actions readback were used |
+| Workflow definitions and tests | Current exact-head run IDs and bounded failures are recorded in the validation table above |
 | Human review | Pending |
 
 Re-review when a required register is added, moved, populated, or retired; validation scope changes; a consumer begins relying on new fields; ADR-0029 migration state changes; public/governed projections are added; or a risk-based review trigger occurs.
@@ -461,7 +491,7 @@ Re-review when a required register is added, moved, populated, or retired; valid
 |---|---:|---|---|
 | [`document_registry.yaml`](document_registry.yaml) | 1 entry | legacy metadata | Minimal document index only. |
 | [`source_authority_register.yaml`](source_authority_register.yaml) | empty | legacy metadata | Does not establish source identity, rights, or activation. |
-| [`object_family_register.yaml`](object_family_register.yaml) | 19 entries | dedicated schema | Structural catalog passes; nine workflow-watch path bindings remain failed. No object-family authority. |
+| [`object_family_register.yaml`](object_family_register.yaml) | 19 entries | dedicated schema | Dedicated current-main profile passes; the projection declares 11 conflicted required families. No object-family authority. |
 | [`domain_lane_register.yaml`](domain_lane_register.yaml) | 13 entries | legacy metadata + dedicated workflow | Placement projection; no steward or readiness authority. |
 | [`policy_gate_register.yaml`](policy_gate_register.yaml) | empty | legacy metadata | Does not create policy gates or decisions. |
 | [`release_state_register.yaml`](release_state_register.yaml) | empty | legacy metadata | Does not create release or rollback state. |
@@ -477,8 +507,10 @@ Re-review when a required register is added, moved, populated, or retired; valid
 | `path_alias_register.yaml` | Active legacy-to-canonical mapping for Directory Rules. | Cannot close consumers or authorize tombstone/deletion. |
 | `cross_domain_seam_register.yaml` | Five high-risk seams, all held unresolved. | Cannot authorize a join or lower policy/sensitivity. |
 | `trust_spine_baseline.yaml` | Proposed pinned MRTS-01 authority and implementation evidence projection. | Cannot create authority, accept decisions, waive drift, activate sources, or change release/publication state. |
-| `program_baseline.json` | Proposed pinned M01 authority, ownership, tracker/PR overlap, Drive-lineage, validation, and rollback projection. | Cannot mutate issues, create authority, accept decisions, waive failures, activate sources, or change release/publication state. |
+| `program_baseline.json` | Proposed pinned M01 authority, ownership, tracker/PR overlap, Drive-lineage, validation, and rollback projection; current-main run `34015364273` fails its generated-receipt artifact digest check. | Cannot mutate issues, create authority, accept decisions, waive failures, activate sources, or change release/publication state. |
 | `repository_control_state.yaml` | Historical repository-control observation. | Cannot authorize itself; stale for current state. |
+| `repository_governance_parity.yaml` | Proposed validation projection; its expected topology (0 new drift / 127 baselined warnings / 0 stale) does not match the current-main observed result (5 / 122 / 5), so the parity run fails closed. | Cannot amend Directory Rules, expand a baseline, or turn an inherited hold into a pass. |
+| `repository_topology_correction_register.yaml` | One proposed KFM-TOPO-004 consume-once transition with equal 43-member path sets; no accepted commit is recorded. | Cannot suppress live findings, authorize unregistered edits, migrate/delete, release, or publish. |
 | `watcher_registry.json` | Placeholder and inactive soil candidate. | No source activation, RAW admission, release, or publication. |
 | `hash_profile_readiness_matrix.json` | Candidate hash profiles, mostly spec-only/inactive. | No shared activation or migration decision. |
 | `graph_runtime_compatibility_matrix.json` | One unresolved runtime row. | No runtime selection or execution authority. |
@@ -682,19 +714,21 @@ Revert the M01 program-baseline instance, contract, schema, fixture cases, valid
 
 | Evidence | Observation | Status / limit |
 |---|---|---|
-| Prior README | v0.5 at blob `a7bbfddc0f257194c42b75046da6eccf976980e0`. | `CONFIRMED` |
+| Prior README | v0.6 at blob `51026faa37b2ebe940472e1d513a25cd0832c692`. | `CONFIRMED` |
 | Directory Rules | Exact v2 bytes define `control_plane/` as governance-projection root. | `CONFIRMED adopted via ADR-0029` |
-| ADR-0029 | Current record says `accepted` and pins the adopted digest. | `CONFIRMED / ACCEPTED` |
+| ADR-0029 | Current record at blob `a4de0d7a96b78da59cfc499d1025e1508afd8dd9` says `accepted` and pins the adopted digest. | `CONFIRMED / ACCEPTED` |
 | Required-register test | Eight legacy metadata files plus one object-family schema profile. | `CONFIRMED executable source` |
 | `docs-control-plane.yml` | Direct root YAML parse, required-register test, ADR-index coherence. | `CONFIRMED workflow definition` |
-| Dedicated projection workflows | Root, alias, lane, seam, object-family, trust-spine, governance-parity, and M01 program-baseline checks exist. | `CONFIRMED definitions`; not release authority |
+| Dedicated projection workflows | Root, alias, lane, seam, object-family, trust-spine, governance-parity, control-plane-packet, validator-suite, and M01 program-baseline checks exist at the current snapshot. | `CONFIRMED definitions`; not release authority |
 | Makefile | `boundary-guards` includes required-register tests; trust-spine and M01 program baselines are separate bounded profiles. | `CONFIRMED wiring` |
 | CODEOWNERS | `/control_plane/` routes to `@bartytime4life`. | `CONFIRMED routing`; enforcement unverified |
 | Required registers | Three nonempty; six empty. | `CONFIRMED bounded inventory` |
-| Direct-child listing | 28 entries after this slice: 26 files and two directories. | `CONFIRMED review-worktree inventory`; proposed M01 path was absent at the pinned base |
-| Repository-topology validator | Pinned current-main run reports nine unbaselined drift findings and thirteen stale fingerprints. | `CONFIRMED FAIL`; inherited and not waived |
+| Topology-correction register | One proposed consume-once transition is present; no accepted commit is recorded and no live finding is suppressed. | `CONFIRMED / PROPOSED projection only` |
+| Current-main Actions readback | Named pass/fail results are listed in the validation table; current topology remains 5 new drift / 122 baselined warnings / 5 stale fingerprints. | `CONFIRMED bounded; not global release evidence` |
+| Direct-child listing | 29 entries at current main: 27 files and two directories, including `repository_topology_correction_register.yaml`. | `CONFIRMED current-main inventory` |
+| Repository-topology validator | Current main run `34015364283` reports 0 invariant violations, 5 new-drift findings, 122 baselined warnings, and 5 stale fingerprints. | `CONFIRMED FAIL`; inherited/current mismatch and not waived |
 | Repository-control projection | Older observation and main SHA. | `CONFIRMED present / STALE` |
-| Open-PR search | No open overlapping README PR found. | `CONFIRMED bounded search` |
+| Open-PR search | Two targeted current GitHub searches returned no open `control_plane/README.md` overlap. | `CONFIRMED bounded search` |
 | Runtime/deployment/external consumers | Not inspected. | `UNKNOWN / NEEDS VERIFICATION` |
 
 [Back to top](#top)
@@ -725,6 +759,13 @@ Revert the M01 program-baseline instance, contract, schema, fixture cases, valid
 ---
 
 ## Change history
+
+### v0.7 — 2026-09-06
+
+- repinned the README to current `main@1e69410cfd871e1ec004eedcd23f845eff435137` and updated current blob bindings;
+- corrected the direct-child inventory from 28 to 29 entries and added the existing `repository_topology_correction_register.yaml` to the map;
+- recorded current exact-head pass/fail observations without treating any profile as global release, publication, or merge authority;
+- preserved the proposed correction register, inherited topology failures, historical receipts, and all no-self-authority/no-public-path boundaries.
 
 ### v0.6 — 2026-08-22
 
@@ -770,10 +811,10 @@ Revert the M01 program-baseline instance, contract, schema, fixture cases, valid
 
 ## Status summary
 
-`control_plane/` is the canonical machine-readable governance-projection root under Directory Rules v2 as adopted by ADR-0029. Current repository evidence establishes a mixed nine-file required register packet, three nonempty required registers, six empty required registers, dedicated root/alias/domain/seam/object-family validation profiles, a pinned historical MRTS-01 trust-spine snapshot, a pinned proposed M01 program baseline, specialized inactive readiness matrices, CODEOWNERS routing, and bounded Makefile/CI entrypoints.
+`control_plane/` is the canonical machine-readable governance-projection root under Directory Rules v2 as adopted by ADR-0029. Current repository evidence establishes a mixed nine-file required register packet, three nonempty required registers, six empty required registers, 29 direct children (27 files and two directories), dedicated root/alias/domain/seam/object-family validation profiles, a pinned historical MRTS-01 trust-spine snapshot, a pinned proposed M01 program baseline, a proposed topology-correction projection, specialized inactive readiness matrices, CODEOWNERS routing, and bounded Makefile/CI entrypoints.
 
-That evidence does **not** establish a complete or semantically closed control plane. Six required register bodies are empty; several supplemental files are placeholders, historical observations, or deliberately inactive; schema and reference closure are uneven; JSON and nested-lane coverage are not unified; consumers and correction propagation are incomplete; and no raw register is a public truth surface.
+That evidence does **not** establish a complete or semantically closed control plane. Six required register bodies are empty; the object-family projection declares eleven conflicted required families; the topology-correction entry has no accepted commit; schema and reference closure are uneven; JSON and nested-lane coverage are not unified; consumers and correction propagation are incomplete; and no raw register is a public truth surface. Current main's named validation is mixed: the control-plane packet, object-family, and trust-spine profiles pass, while validator-suite, governance parity, M01 program-baseline receipt integrity, and schema validation remain failed for their recorded bounded reasons.
 
-The next safe corrections are separately attributable: close the nine object-family workflow-watch gaps through their owning workflow, reconcile the nine topology findings without baseline expansion, and append current deltas to issues #2768 and #2874. None of those follow-ups should be folded into this baseline packet or treated as authority for broad activation.
+The next safe corrections are separately attributable: reconcile the expected-topology/parity projection with the current evidence without expanding the baseline, repair the M01 receipt binding, and repair the aggregate validator-test syntax issue. None of those follow-ups should be folded into this README update, used to consume the proposed correction entry, or treated as authority for broad activation.
 
 <p align="right"><a href="#top">Back to top</a></p>
