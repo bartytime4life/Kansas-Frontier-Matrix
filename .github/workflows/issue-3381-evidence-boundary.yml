@@ -1,5 +1,5 @@
 # Temporary diagnostic transport for #3381. Never merge this branch.
-# Read-only literal source checkout; no PR mutation, deployment, or source access.
+# Literal source pins, read-only credentials, no PR-state or deployment actions.
 name: issue-3381-evidence-boundary
 "on":
   push:
@@ -10,41 +10,44 @@ permissions:
 concurrency:
   group: issue-3381-evidence-boundary-${{ github.ref }}
   cancel-in-progress: false
+env:
+  PYTHONHASHSEED: '0'
+  PYTHONDONTWRITEBYTECODE: '1'
+  PYTHONUNBUFFERED: '1'
+  KFM_NO_NETWORK: '1'
+  TZ: UTC
 jobs:
-  baseline:
+  candidate:
+    name: exact-head-resolver-and-contracts
     runs-on: ubuntu-24.04
     timeout-minutes: 10
-    env:
-      PYTHONHASHSEED: '0'
-      PYTHONDONTWRITEBYTECODE: '1'
-      PYTHONUNBUFFERED: '1'
-      KFM_NO_NETWORK: '1'
-      TZ: UTC
     steps:
-      - name: Check out literal main source without credentials
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - name: Check out literal product head without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba80582576410c181273ba90b1
         with:
-          ref: 94e976ff281ff5033c1c91ada417ab1d0c445f7b
+          ref: 721d03466ab7968e32da529cdfb5481e99bbb3dc
           fetch-depth: 0
           persist-credentials: false
       - name: Set up repository Python
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
         with:
           python-version: '3.11'
-      - name: Preserve exact source and toolchain
+      - name: Pin source and install declared dependencies
         shell: bash
         run: |
           set -euo pipefail
           out="$RUNNER_TEMP/evidence-boundary"
           mkdir -p "$out"
-          test "$(git rev-parse HEAD)" = 94e976ff281ff5033c1c91ada417ab1d0c445f7b
+          test "$(git rev-parse HEAD)" = 721d03466ab7968e32da529cdfb5481e99bbb3dc
           git rev-parse HEAD HEAD^{tree} > "$out/source.txt"
-          git ls-files -s > "$out/source-index.txt"
-          git archive --format=tar.gz HEAD > "$out/source.tar.gz"
-          sha256sum "$out/source.tar.gz" > "$out/source.sha256"
+          git diff --name-status 94e976ff281ff5033c1c91ada417ab1d0c445f7b HEAD > "$out/changed-paths.txt"
+          git diff --binary 94e976ff281ff5033c1c91ada417ab1d0c445f7b HEAD > "$out/product.patch"
+          git diff --name-only 94e976ff281ff5033c1c91ada417ab1d0c445f7b HEAD > "$out/product-paths.txt"
+          tar -czf "$out/product-source.tgz" -T "$out/product-paths.txt"
+          while IFS= read -r path; do sha256sum "$path"; done < "$out/product-paths.txt" > "$out/product.sha256"
           python --version > "$out/python-version.txt"
           python tools/ci/install_python_ci.py project-test > "$out/install.log" 2>&1
-      - name: Collect exact-main results without hiding failures
+      - name: Collect every gate with its real exit status
         shell: bash
         run: |
           set -euo pipefail
@@ -60,23 +63,159 @@ jobs:
           }
           gate resolver make evidence-resolver
           gate deny make evidence-resolver-deny
+          gate timestamp python -m unittest tests.packages.evidence_resolver.test_timestamp_boundary --verbose
           gate runtime python -m unittest tests.packages.evidence_resolver.test_runtime_projection_fixtures --verbose
-          gate topology python tools/validators/directory_governance/validate_repository_topology.py --repo-root . --trusted-baseline-ref 94e976ff281ff5033c1c91ada417ab1d0c445f7b --format json
-          gate diff-check git diff --check
+          gate contracts python -m pytest tests/schemas tests/contracts -q
+          gate evidence-bundle python tools/validators/validate_evidence_bundle.py --fixtures
+          gate verification-history python tools/validators/validate_verification_state_history.py --fixtures
+          gate receipt python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-issue-3381-timestamp-offsets-aaa8cb1f.json --repo-root . --artifact-git-ref aaa8cb1feaf3cc12634898213e9480b0eb623a72
+          gate diff-check git diff --check 94e976ff281ff5033c1c91ada417ab1d0c445f7b HEAD
+          gate protected-inputs git diff --exit-code 94e976ff281ff5033c1c91ada417ab1d0c445f7b HEAD -- .github schemas contracts fixtures tools/validators policy apps package.json pnpm-lock.yaml pnpm-workspace.yaml pyproject.toml docs/doctrine docs/adr control_plane
+          gate receipt-only git diff --exit-code aaa8cb1feaf3cc12634898213e9480b0eb623a72 HEAD -- packages tests
           gate unchanged git diff --exit-code
           cat "$out/gates.tsv" >> "$GITHUB_STEP_SUMMARY"
-      - name: Preserve source and raw results
+      - name: Preserve product and raw gate results
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          name: issue-3381-main-94e976ff
+          name: issue-3381-product-721d0346
           path: ${{ runner.temp }}/evidence-boundary
           if-no-files-found: error
           retention-days: 14
-      - name: Enforce collected outcomes
+      - name: Enforce all candidate gates
         if: always()
         shell: bash
         run: |
           set -euo pipefail
           test -s "$RUNNER_TEMP/evidence-boundary/gates.tsv"
+          test "$(wc -l < "$RUNNER_TEMP/evidence-boundary/gates.tsv")" -eq 12
           awk -F '\t' '$2 != 0 { failed = 1 } END { exit failed }' "$RUNNER_TEMP/evidence-boundary/gates.tsv"
+  negative-control:
+    name: exact-main-must-fail-22-new-subcases
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Check out literal unfixed main
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: 94e976ff281ff5033c1c91ada417ab1d0c445f7b
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Set up matching Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.11'
+      - name: Require the exact expected regression failures, not arbitrary failure
+        shell: bash
+        run: |
+          set -euo pipefail
+          out="$RUNNER_TEMP/negative-control"
+          mkdir -p "$out"
+          test "$(git rev-parse HEAD)" = 94e976ff281ff5033c1c91ada417ab1d0c445f7b
+          git rev-parse HEAD > "$out/source.txt"
+          git show 721d03466ab7968e32da529cdfb5481e99bbb3dc:tests/packages/evidence_resolver/test_timestamp_boundary.py > tests/packages/evidence_resolver/test_timestamp_boundary.py
+          sha256sum tests/packages/evidence_resolver/test_timestamp_boundary.py > "$out/test-source.sha256"
+          python - <<'PY' > "$out/control.log" 2>&1
+          import json
+          import os
+          from pathlib import Path
+          import unittest
+          suite = unittest.defaultTestLoader.loadTestsFromName(
+              'tests.packages.evidence_resolver.test_timestamp_boundary'
+          )
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          record = {
+              'base': '94e976ff281ff5033c1c91ada417ab1d0c445f7b',
+              'test_source': '721d03466ab7968e32da529cdfb5481e99bbb3dc',
+              'tests': result.testsRun,
+              'failed_subcases': len(result.failures),
+              'errors': len(result.errors),
+              'skipped': len(result.skipped),
+          }
+          Path(os.environ['RUNNER_TEMP'], 'negative-control', 'result.json').write_text(
+              json.dumps(record, indent=2) + '\n', encoding='utf-8'
+          )
+          assert result.testsRun == 5, record
+          assert len(result.failures) == 22, record
+          assert not result.errors and not result.skipped, record
+          assert all('ERROR' in trace and 'RESOLVED' in trace for _, trace in result.failures)
+          print('EXPECTED_REGRESSION_CONTROL_PASS; original implementation remains defective')
+          PY
+          rm tests/packages/evidence_resolver/test_timestamp_boundary.py
+          git diff --exit-code > "$out/unchanged.log"
+          cat "$out/result.json" >> "$GITHUB_STEP_SUMMARY"
+      - name: Preserve exact negative-control evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: issue-3381-negative-control
+          path: ${{ runner.temp }}/negative-control
+          if-no-files-found: error
+          retention-days: 14
+  topology-parity:
+    name: inherited-topology-failures-must-match
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Check out literal candidate
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: 721d03466ab7968e32da529cdfb5481e99bbb3dc
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Set up matching Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.11'
+      - name: Compare complete finding arrays without waiving either failure
+        shell: bash
+        run: |
+          set -euo pipefail
+          out="$RUNNER_TEMP/topology-parity"
+          mkdir -p "$out"
+          test "$(git rev-parse HEAD)" = 721d03466ab7968e32da529cdfb5481e99bbb3dc
+          git worktree add --detach "$RUNNER_TEMP/evidence-main" 94e976ff281ff5033c1c91ada417ab1d0c445f7b
+          set +e
+          python tools/validators/directory_governance/validate_repository_topology.py --repo-root . --trusted-baseline-ref 94e976ff281ff5033c1c91ada417ab1d0c445f7b --format json > "$out/candidate.json" 2> "$out/candidate.stderr"
+          candidate_status=$?
+          python "$RUNNER_TEMP/evidence-main/tools/validators/directory_governance/validate_repository_topology.py" --repo-root "$RUNNER_TEMP/evidence-main" --trusted-baseline-ref 94e976ff281ff5033c1c91ada417ab1d0c445f7b --format json > "$out/main.json" 2> "$out/main.stderr"
+          main_status=$?
+          set -e
+          printf 'candidate\t%s\nmain\t%s\n' "$candidate_status" "$main_status" > "$out/raw-exits.tsv"
+          test "$candidate_status" -eq 1
+          test "$main_status" -eq 1
+          python - <<'PY' > "$out/parity.log" 2>&1
+          import json
+          import os
+          from pathlib import Path
+          out = Path(os.environ['RUNNER_TEMP'], 'topology-parity')
+          candidate = json.loads((out / 'candidate.json').read_text())
+          main = json.loads((out / 'main.json').read_text())
+          assert candidate['outcome'] == main['outcome'] == 'FAIL_INVARIANT'
+          assert candidate['counts'] == main['counts'] == {
+              'baselined_warning': 122, 'fail_invariant': 0,
+              'fail_new_drift': 5, 'finding': 127,
+          }
+          normalize = lambda rows: sorted(json.dumps(row, sort_keys=True) for row in rows)
+          assert normalize(candidate['findings']) == normalize(main['findings'])
+          assert candidate['baseline']['stale_fingerprints'] == main['baseline']['stale_fingerprints']
+          record = {
+              'candidate': '721d03466ab7968e32da529cdfb5481e99bbb3dc',
+              'main': '94e976ff281ff5033c1c91ada417ab1d0c445f7b',
+              'comparison': 'PASS_IDENTICAL_INHERITED_FINDINGS',
+              'candidate_topology': 'FAIL', 'main_topology': 'FAIL',
+              'counts': candidate['counts'],
+          }
+          (out / 'parity.json').write_text(json.dumps(record, indent=2) + '\n')
+          print(json.dumps(record, indent=2))
+          PY
+          git diff --exit-code > "$out/unchanged.log"
+          cat "$out/parity.log" >> "$GITHUB_STEP_SUMMARY"
+      - name: Preserve both failed reports and bounded comparison
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: issue-3381-topology-parity
+          path: ${{ runner.temp }}/topology-parity
+          if-no-files-found: error
+          retention-days: 14
