@@ -89,7 +89,7 @@ test('workspace pnpm lock contains no affected esbuild package, binary or snapsh
 
 test('standalone npm retains the parent-scoped remediation', async () => {
   const manifest = await json(path.join(app, 'package.json'));
-  assert.deepEqual(manifest.overrides?.['@esbuild-kit/core-utils@3.3.2'], { esbuild: fixed });
+  assert.deepEqual(manifest.overrides?.['@esbuild-kit/core-utils'], { esbuild: fixed });
 });
 
 test('workspace retains existing build-script decisions', workspaceOnly, async () => {
@@ -110,7 +110,7 @@ test('workspace guard rejects additive approvals and spoofed denials', () => {
     reviewedWorkspace.replace(denied, `#${denied}`),
     reviewedWorkspace + 'allowBuilds: {}\n',
     reviewedWorkspace + '  esbuild: "0.28.2"\n',
-    reviewedWorkspace.replace('"0.28.2"\n', '"0.18.20"\n'),
+    reviewedWorkspace.replace('"esbuild@0.28.2": true', '"esbuild@0.28.2": false'),
   ];
   for (const mutation of mutations) {
     assert.notEqual(mutation, reviewedWorkspace);
