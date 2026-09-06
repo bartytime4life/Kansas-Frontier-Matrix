@@ -18,7 +18,7 @@ jobs:
       matrix:
         include:
           - lane: candidate
-            source: b434a8ea606d44d3903da79cab08c5e08e824165
+            source: 56f711df986b62a20bc3f0841e76679c7f90bf54
           - lane: main
             source: a9a53470e385350b795f6d978ad3e7a5811961c5
     env:
@@ -59,7 +59,7 @@ jobs:
             tar -czf "$out/product-source.tgz" -T "$out/product-paths.txt"
             python3 - <<'PY'
           import json,subprocess,pathlib,hashlib,os
-          receipts=[('genrec-explorer-combined-integration-9091952f.json','9091952f2adfb8b1aca26c9d3f9dabb121ad073f'),('genrec-explorer-compiler-entrypoint-7e2a2f90.json','7e2a2f90b0420ae0863e12ba237b65edc3d50c0d')]
+          receipts=[('genrec-explorer-combined-integration-9091952f.json','9091952f2adfb8b1aca26c9d3f9dabb121ad073f'),('genrec-explorer-compiler-entrypoint-7e2a2f90.json','7e2a2f90b0420ae0863e12ba237b65edc3d50c0d'),('genrec-explorer-callback-dependencies-20260905.json','56f711df986b62a20bc3f0841e76679c7f90bf54')]
           overlay={}
           for name,source in receipts:
             receipt=json.loads((pathlib.Path('data/receipts/generated')/name).read_text())
@@ -71,7 +71,7 @@ jobs:
           assert len(overlay)==29 and set(overlay)=={p for p in changed if not p.startswith('data/receipts/generated/')}
           for path,binding in overlay.items():
             assert hashlib.sha256(pathlib.Path(path).read_bytes()).hexdigest()==binding['sha256'],path
-          for path,marker in [('apps/kansas-frontier-matrix-explorer/tests/earth-layer-library.test.mjs',"const card ="),('apps/kansas-frontier-matrix-explorer/tests/site-requested-layer-state.test.mjs',"const initial =")]:
+          for path,marker in [('apps/kansas-frontier-matrix-explorer/tests/earth-layer-library.test.mjs','const card ='),('apps/kansas-frontier-matrix-explorer/tests/site-requested-layer-state.test.mjs','const initial =')]:
             before=subprocess.check_output(['git','show','d550c452382c626bc871d921199af5dea2fabaa7:'+path]).decode()
             after=pathlib.Path(path).read_text()
             assert before[before.index(marker):]==after[after.index(marker):],path
@@ -118,6 +118,7 @@ jobs:
           run_gate app-types pnpm --filter kansas-frontier-matrix-explorer exec tsc --noEmit
           run_gate app-lint pnpm --filter kansas-frontier-matrix-explorer run lint
           run_gate lint-json pnpm --filter kansas-frontier-matrix-explorer exec eslint . --ignore-pattern dist --ignore-pattern .next --ignore-pattern public/maplibre --format json
+          run_gate zero-warning-lint pnpm --filter kansas-frontier-matrix-explorer run lint --max-warnings 0
           run_gate web-build pnpm --filter explorer-web run build
           run_gate web-unit pnpm --filter explorer-web run test:unit
           run_gate web-browser pnpm --filter explorer-web run test:browser
@@ -143,6 +144,7 @@ jobs:
             run_gate python-bootstrap python3 tools/ci/install_python_ci.py project-test
             run_gate combined-receipt python3 tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-explorer-combined-integration-9091952f.json --repo-root . --artifact-git-ref 9091952f2adfb8b1aca26c9d3f9dabb121ad073f
             run_gate correction-receipt python3 tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-explorer-compiler-entrypoint-7e2a2f90.json --repo-root . --artifact-git-ref 7e2a2f90b0420ae0863e12ba237b65edc3d50c0d
+            run_gate callback-receipt python3 tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-explorer-callback-dependencies-20260905.json --repo-root . --artifact-git-ref 56f711df986b62a20bc3f0841e76679c7f90bf54
             run_gate owner-review-receipt python3 tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-explorer-owner-review-bf1335ad.json --repo-root . --artifact-git-ref a120361953ae574c4c1df8ea805a69677c9fab78 --require-review-claim
             run_gate historical-library-receipt python3 tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-earth-layer-library-app-integration-698b8331.json --repo-root . --artifact-git-ref 698b833109e3b58bcb9ef5321cb9a8a49a3823e6
             run_gate historical-baseline-receipt python3 tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-explorer-ts7-worker-baseline-repair-673a0fd6.json --repo-root . --artifact-git-ref 673a0fd60dfca321e3c2fbe8a889a3bcafb4a1c8
