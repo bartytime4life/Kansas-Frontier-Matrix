@@ -56,7 +56,7 @@ reviewed inputs.
 
 Local repository command validation was unavailable in this session because
 the command runner was rejected by an environment usage limit. The exact-head
-hosted workflow must supply that result. The initial exact-head run `34013101178` failed two static guard assertions: the standalone key still used the pre-merge version-qualified npm shape, and one workspace mutation was a no-op after the merged override moved to `package.json`. The candidate now corrects both cases; the rerun is the authoritative result.
+hosted workflow must supply that result. The initial exact-head run `34013101178` failed two static guard assertions: the standalone key still used the pre-merge version-qualified npm shape, and one workspace mutation was a no-op after the merged override moved to `package.json`. The candidate now corrects both cases; the rerun is the authoritative result. The corrected exact-head [workflow run 34013210029](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/34013210029) passed both the pnpm and npm jobs, including installation and runtime probes.
 
 The prior merged PR's record reports
 partial hosted validation and a failed topology validator; this follow-up
