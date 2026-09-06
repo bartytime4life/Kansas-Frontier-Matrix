@@ -23,7 +23,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Check out literal product head without persisted credentials
-        uses: actions/checkout@3d3c42e5aac5ba80582576410c181273ba90b1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           ref: 721d03466ab7968e32da529cdfb5481e99bbb3dc
           fetch-depth: 0
@@ -116,6 +116,7 @@ jobs:
           git show 721d03466ab7968e32da529cdfb5481e99bbb3dc:tests/packages/evidence_resolver/test_timestamp_boundary.py > tests/packages/evidence_resolver/test_timestamp_boundary.py
           sha256sum tests/packages/evidence_resolver/test_timestamp_boundary.py > "$out/test-source.sha256"
           python - <<'PY' > "$out/control.log" 2>&1
+          from collections import Counter
           import json
           import os
           from pathlib import Path
@@ -124,6 +125,7 @@ jobs:
               'tests.packages.evidence_resolver.test_timestamp_boundary'
           )
           result = unittest.TextTestRunner(verbosity=2).run(suite)
+          failure_counts = Counter(test.test_case._testMethodName for test, _ in result.failures)
           record = {
               'base': '94e976ff281ff5033c1c91ada417ab1d0c445f7b',
               'test_source': '721d03466ab7968e32da529cdfb5481e99bbb3dc',
@@ -131,6 +133,7 @@ jobs:
               'failed_subcases': len(result.failures),
               'errors': len(result.errors),
               'skipped': len(result.skipped),
+              'failure_counts': dict(failure_counts),
           }
           Path(os.environ['RUNNER_TEMP'], 'negative-control', 'result.json').write_text(
               json.dumps(record, indent=2) + '\n', encoding='utf-8'
@@ -138,7 +141,11 @@ jobs:
           assert result.testsRun == 5, record
           assert len(result.failures) == 22, record
           assert not result.errors and not result.skipped, record
-          assert all('ERROR' in trace and 'RESOLVED' in trace for _, trace in result.failures)
+          assert failure_counts == {
+              'test_offsets_reject_overflowing_components': 16,
+              'test_invalid_timestamp_is_error_for_every_policy_context': 4,
+              'test_fixture_adapter_rejects_timestamp_after_matching_digest': 2,
+          }, record
           print('EXPECTED_REGRESSION_CONTROL_PASS; original implementation remains defective')
           PY
           rm tests/packages/evidence_resolver/test_timestamp_boundary.py
