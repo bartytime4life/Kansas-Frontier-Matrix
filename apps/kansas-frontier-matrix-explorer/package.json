@@ -43,5 +43,10 @@
     "wrangler": "4.127.1"
   },
   "type": "module",
-  "displayName": "Kansas Frontier Matrix"
+  "displayName": "Kansas Frontier Matrix",
+  "overrides": {
+    "@esbuild-kit/core-utils": {
+      "esbuild": "0.25.12"
+    }
+  }
 }
