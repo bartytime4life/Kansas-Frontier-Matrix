@@ -1,0 +1,113 @@
+{
+  "receipt_id": "genrec-contract-object-map-currentness-20260906",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "contracts/OBJECT_MAP.md"
+  ],
+  "artifact_hashes": {
+    "contracts/OBJECT_MAP.md": "sha256:aa4cf0ebe44abb33f4e56afa93f3a5d05353c8d59c1d9f1f32cb1529253fb16d"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "current-session"
+  },
+  "prompt_or_contract": "sha256:4b9a275235020b83bd3ad9d3786c20e9f19a59bd8c5fd84f4a6330d72b15bb62",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Notion connector",
+      "Google Drive connector"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Full_Atlas_seed_cards.md (lineage-only reference)"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9683ac6cbe385938dbeb66c9f61d82f8de770423/contracts/OBJECT_MAP.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9683ac6cbe385938dbeb66c9f61d82f8de770423/control_plane/object_family_register.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9683ac6cbe385938dbeb66c9f61d82f8de770423/apps/governed-api/src/governed_api/routes/registry.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9683ac6cbe385938dbeb66c9f61d82f8de770423/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "gdrive://1uTqdIEFZE2cq3gyISetoRYM6LIlnKqTc3FobtEx7Cbs",
+      "gdrive://1yJpf-Rvb0kAcfgPQjU0kllsMMg4DDlB6",
+      "notion://3c9a9202-1bf6-8195-b8b1-f3a8d694b447"
+    ]
+  },
+  "truth_labels": {
+    "contracts/OBJECT_MAP.md": "PROPOSED; bounded maintainer crosswalk; not authority",
+    "main@9683ac6cbe385938dbeb66c9f61d82f8de770423": "CONFIRMED repository checkpoint",
+    "control_plane/object_family_register.yaml": "PROPOSED; navigational index only",
+    "governed-api route registry": "CONFIRMED path registration; finite ABSTAIN stubs only"
+  },
+  "validation_gates": [
+    {
+      "gate": "remote-target-byte-readback",
+      "outcome": "PASS",
+      "reason": "The updated Markdown read back byte-for-byte from the draft branch before receipt creation."
+    },
+    {
+      "gate": "bounded-map-structure",
+      "outcome": "PASS",
+      "reason": "Overlay markers, current-main pin, stale UI validator corrections, and newline termination were checked."
+    },
+    {
+      "gate": "local-repository-native-tests",
+      "outcome": "SKIPPED",
+      "reason": "No local repository checkout or execution runner was used in this connector pass."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pending after draft pull request creation."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9683ac6cbe385938dbeb66c9f61d82f8de770423/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "drive-directory-rules-lineage",
+      "validated": true,
+      "evidence_ref": "gdrive://1uTqdIEFZE2cq3gyISetoRYM6LIlnKqTc3FobtEx7Cbs"
+    },
+    {
+      "id": "drive-contributor-reliability-lineage",
+      "validated": true,
+      "evidence_ref": "gdrive://1yJpf-Rvb0kAcfgPQjU0kllsMMg4DDlB6"
+    },
+    {
+      "id": "notion-authority-model-coordination",
+      "validated": true,
+      "evidence_ref": "notion://3c5a9202-1bf6-811b-a9c2-d923215f11b7"
+    },
+    {
+      "id": "repository-workbench-coordination",
+      "validated": true,
+      "evidence_ref": "notion://3c9a9202-1bf6-8195-b8b1-f3a8d694b447"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-06T16:06:43.208Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub connector",
+  "notes": "Generated for one AI-authored documentation artifact. It records provenance and bounded checks only; it is not factual proof, policy permission, human approval, release authority, deployment evidence, publication authority, or public-use authorization. Hosted checks and human review remain pending."
+}
