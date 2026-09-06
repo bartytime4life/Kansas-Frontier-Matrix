@@ -72,11 +72,13 @@
     }
   ],
   "human_review": {
-    "state": "pending",
-    "reviewer_ids": [],
-    "timestamp": null
+    "state": "approved",
+    "reviewer_ids": [
+      "bartytime4life"
+    ],
+    "timestamp": "2026-09-06T00:12:47Z"
   },
   "created_at": "2026-09-05T19:29:50.674788+00:00",
   "emitter": "kfm-directory-modernization-author",
-  "notes": "Branch-only app build-composition cleanup under adopted DIR-EXEC-001, DIR-DEP-003 and existing app-local tests. Base repinned from d1b430ca51887777766050e5582659ab34322286 to 8b9c52d88687986879c8f87d7e3835f6a58bbacd: only workers README and its receipt changed; target dependencies unchanged. Guard proves only presence of the sibling facade file, not transitive closure, compilation, renderer capability, release, deployment or Site operation. Existing npm/pnpm manifests, both locks and all pnpm build-script decisions are unchanged. No rule adoption, topology baseline/frozen-catalog changes, PR, merge, settings, source activation or publication. Revert guard/tests/guide together; retain this receipt as historical evidence."
+  "notes": "Branch-only app build-composition cleanup under adopted DIR-EXEC-001, DIR-DEP-003 and existing app-local tests. Base repinned from d1b430ca51887777766050e5582659ab34322286 to 8b9c52d88687986879c8f87d7e3835f6a58bbacd: only workers README and its receipt changed; target dependencies unchanged. Guard proves only presence of the sibling facade file, not transitive closure, compilation, renderer capability, release, deployment or Site operation. Existing npm/pnpm manifests, both locks and all pnpm build-script decisions are unchanged. No rule adoption, topology baseline/frozen-catalog changes, PR, merge, settings, source activation or publication. Revert guard/tests/guide together; retain this receipt as historical evidence. Project-owner artifact review was explicitly recorded on 2026-09-05 after exact current-main matched validation and independent assistant review. Approval is artifact-review evidence only; it does not authorize a ready transition, merge, deployment, release, publication, source activation, topology waiver, or Directory Rules adoption."
 }
