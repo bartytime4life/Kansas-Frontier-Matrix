@@ -1,13 +1,13 @@
 {
   "artifact_hashes": {
-    ".github/workflows/action-point-reference-check.yml": "sha256:d1d8e0366ee67a563b9e1eb5fca3cac274f89a5b6be34ff32dbc2edb34e74ff3",
-    "contracts/validation/action_point_reference_check.md": "sha256:9af6288661154fa4059dafbb1ae15b29d05a5a0217b340e8759179318b5cfd3d",
-    "docs/intake/exploratory/cairnwake-action-point-reference-check-source-map.md": "sha256:9d6750874c8b6b59da74004a043e1b09cdafc6d4bc362a3001061ace57d84b8e",
-    "fixtures/contracts/v1/validation/action_point_reference_check/cases.json": "sha256:d78638bcae29d53a94ed100d1391ec7fe40f54b0bc922bb75a505e3412509642",
-    "schemas/contracts/v1/validation/action_point_reference_check.schema.json": "sha256:5614f5830b7c01c8f13deb4394ee081224fae461b65c774dcae10c904aaa388b",
-    "tests/validators/test_validate_action_point_reference_check.py": "sha256:6627460970f8d682269b668b33cdf88084d23c15820659cfc783150fc73454bb",
-    "tools/generators/action_point_reference_check/build_action_point_reference_check.py": "sha256:f2ffc72ac7e5f262cc83344c0475fa9f8e73ab7b2de2c6784e62a8ac98f85103",
-    "tools/validators/validate_action_point_reference_check.py": "sha256:0e88068d1ad334d5cfbe343a7d99240ea7e1aa16c2dfbb9f0b2463d8afa973b8"
+    ".github/workflows/action-point-reference-check.yml": "sha256:3798d6a43f7ed545e45c609029c7e3b2b0e691d171563d562ac3c56f52c0b5cc",
+    "contracts/validation/action_point_reference_check.md": "sha256:aa0cdf8ce9503c98492d35548e4d8c27292fbb09e4fbaf13e1cbab0b2a4f5bc3",
+    "docs/intake/exploratory/cairnwake-action-point-reference-check-source-map.md": "sha256:9a53f3369963ce8f5ceb2196bb461d3c2ff831b17407b7b48daee001c475b0cb",
+    "fixtures/contracts/v1/validation/action_point_reference_check/cases.json": "sha256:51f45b4456cf086cc6dba062ba40fed3c6a513fd92a34dc46ea051e1f82d7629",
+    "schemas/contracts/v1/validation/action_point_reference_check.schema.json": "sha256:5bbd2b6520cf6d6cafac5177c3bd05ac94dc6dbe2b51b42fc4d248ae1f3b476e",
+    "tests/validators/test_validate_action_point_reference_check.py": "sha256:b9a92e77c25b123a712ff4266db5ff93454a324e135b3ef4f3bb4ed535846c18",
+    "tools/generators/action_point_reference_check/build_action_point_reference_check.py": "sha256:f5caed482e37d44309a4c3a8e60d6e2dab6ecea51d61997bf695cf63d25c9b0d",
+    "tools/validators/validate_action_point_reference_check.py": "sha256:3e43c0c29c0e045c9e5ac7ba8c06708418b3daa6e00ad24d6dbc2e6b9702783d"
   },
   "artifact_paths": [
     ".github/workflows/action-point-reference-check.yml",
@@ -57,7 +57,7 @@
     "provider": "OpenAI",
     "version": "2026-08-25"
   },
-  "notes": "Authoring provenance for an additive, inactive, fixture-only ActionPointReferenceCheck candidate derived from a read-only external idea source. The receipt excludes itself from artifact hashes. The profile does not dereference a live source, execute an action, grant authority, or create a merge, release, deployment, publication, or public-use decision. Base main was 46d50eaa9ac2b6ef11d83c1ed7b5bd459a56f31e.",
+  "notes": "Authoring provenance for an additive, inactive, fixture-only ActionPointReferenceCheck candidate derived from a read-only external idea source. The 2026-09-06 currentness refresh re-bound all eight artifact hashes to the current-main packet at eaae135d8f4508c0712e3c6e151d7168a46f54ab and updated the contract binding; semantic rules, schema, fixtures, builder, validator, and workflow behavior remain unchanged. The receipt excludes itself from artifact hashes. The profile does not dereference a live source, execute an action, grant authority, or create a merge, release, deployment, publication, or public-use decision. The original authoring base and gates remain historical provenance.",
   "parameters": {
     "seed": null,
     "temperature": null,
@@ -65,7 +65,7 @@
     "top_p": null
   },
   "policy_decisions": ["docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"],
-  "prompt_or_contract": "sha256:bb826ac4175c32a95c6ff2b69212fb08eb08a3267fa70095d6cdb70e0ac09a75",
+  "prompt_or_contract": "sha256:aa0cdf8ce9503c98492d35548e4d8c27292fbb09e4fbaf13e1cbab0b2a4f5bc3",
   "receipt_id": "genrec-cairnwake-action-point-reference-check-20260825",
   "truth_labels": {
     ".github/workflows/action-point-reference-check.yml": "PROPOSED",
