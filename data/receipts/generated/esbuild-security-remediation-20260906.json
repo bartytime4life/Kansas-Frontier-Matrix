@@ -8,8 +8,8 @@
   ],
   "artifact_hashes": {
     ".github/workflows/esbuild-security.yml": "sha256:3b0ed47d2dd4ad82299597396e53eff539847d8a99f69286204bf24ff7d2fb3d",
-    "apps/kansas-frontier-matrix-explorer/docs/esbuild-security-remediation.md": "sha256:4c94f304520b4dfc587981313bc95c2bf286137557838d8297f86b57a0f2c28d",
-    "apps/kansas-frontier-matrix-explorer/tests/esbuild-security.test.mjs": "sha256:de28cb741731a0cba1e8c655e1bbfaec16e058a415b96e7402f480648851c82a"
+    "apps/kansas-frontier-matrix-explorer/docs/esbuild-security-remediation.md": "sha256:f1fcdb25f90e081cea3e31a96b39bbdb1a0a6e4279635e658a3afbab409389ba",
+    "apps/kansas-frontier-matrix-explorer/tests/esbuild-security.test.mjs": "sha256:9532475a74eedc84ee08b8bc634e6e48430211ea87779a4714e377e7f1f2b946"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -54,9 +54,14 @@
       "reason": "The local command runner was rejected by the environment usage limit; hosted exact-head validation is required."
     },
     {
-      "gate": "Exact-head esbuild-security hosted workflow",
+      "gate": "Initial exact-head esbuild-security hosted workflow",
+      "outcome": "FAIL",
+      "reason": "Run 34013101178 exposed two guard-fixture defects; the corrected candidate is being rerun."
+    },
+    {
+      "gate": "Corrected exact-head esbuild-security hosted workflow",
       "outcome": "SKIPPED",
-      "reason": "The workflow runs after the review branch is published."
+      "reason": "The corrected test is published in the new candidate head; rerun result is pending."
     }
   ],
   "policy_decisions": [
@@ -100,5 +105,5 @@
   "links": {
     "adr_link": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/docs/adr/ADR-0029-where-does-new-work-live.md"
   },
-  "notes": "The direct dependency repair is already on current main; this branch adds regression proof. Local validation was unavailable and hosted exact-head validation is pending."
+  "notes": "Initial exact-head run 34013101178 failed two guard-fixture assertions; the candidate corrected both. Local validation remains unavailable and the corrected hosted rerun is pending."
 }
