@@ -1,0 +1,82 @@
+# Temporary diagnostic transport for #3381. Never merge this branch.
+# Read-only literal source checkout; no PR mutation, deployment, or source access.
+name: issue-3381-evidence-boundary
+"on":
+  push:
+    branches: [validation/issue-3381-evidence-boundary-20260905]
+    paths: [.github/workflows/issue-3381-evidence-boundary.yml]
+permissions:
+  contents: read
+concurrency:
+  group: issue-3381-evidence-boundary-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  baseline:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      PYTHONHASHSEED: '0'
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONUNBUFFERED: '1'
+      KFM_NO_NETWORK: '1'
+      TZ: UTC
+    steps:
+      - name: Check out literal main source without credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: 94e976ff281ff5033c1c91ada417ab1d0c445f7b
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.11'
+      - name: Preserve exact source and toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          out="$RUNNER_TEMP/evidence-boundary"
+          mkdir -p "$out"
+          test "$(git rev-parse HEAD)" = 94e976ff281ff5033c1c91ada417ab1d0c445f7b
+          git rev-parse HEAD HEAD^{tree} > "$out/source.txt"
+          git ls-files -s > "$out/source-index.txt"
+          git archive --format=tar.gz HEAD > "$out/source.tar.gz"
+          sha256sum "$out/source.tar.gz" > "$out/source.sha256"
+          python --version > "$out/python-version.txt"
+          python tools/ci/install_python_ci.py project-test > "$out/install.log" 2>&1
+      - name: Collect exact-main results without hiding failures
+        shell: bash
+        run: |
+          set -euo pipefail
+          out="$RUNNER_TEMP/evidence-boundary"
+          : > "$out/gates.tsv"
+          gate() {
+            local name="$1"; shift
+            set +e
+            "$@" > "$out/$name.log" 2>&1
+            local code=$?
+            set -e
+            printf '%s\t%s\n' "$name" "$code" | tee -a "$out/gates.tsv"
+          }
+          gate resolver make evidence-resolver
+          gate deny make evidence-resolver-deny
+          gate runtime python -m unittest tests.packages.evidence_resolver.test_runtime_projection_fixtures --verbose
+          gate topology python tools/validators/directory_governance/validate_repository_topology.py --repo-root . --trusted-baseline-ref 94e976ff281ff5033c1c91ada417ab1d0c445f7b --format json
+          gate diff-check git diff --check
+          gate unchanged git diff --exit-code
+          cat "$out/gates.tsv" >> "$GITHUB_STEP_SUMMARY"
+      - name: Preserve source and raw results
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: issue-3381-main-94e976ff
+          path: ${{ runner.temp }}/evidence-boundary
+          if-no-files-found: error
+          retention-days: 14
+      - name: Enforce collected outcomes
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s "$RUNNER_TEMP/evidence-boundary/gates.tsv"
+          awk -F '\t' '$2 != 0 { failed = 1 } END { exit failed }' "$RUNNER_TEMP/evidence-boundary/gates.tsv"
