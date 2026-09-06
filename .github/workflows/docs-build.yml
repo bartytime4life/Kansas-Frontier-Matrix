@@ -11,8 +11,28 @@ name: docs-build
 
 on:
   pull_request:
+    paths:
+      - "**/*.md"
+      - "**/*.markdown"
+      - "docs/**"
+      - "mkdocs.yml"
+      - "mkdocs.yaml"
+      - "docusaurus.config.*"
+      - "docs/requirements.txt"
+      - "requirements-docs.txt"
+      - ".github/workflows/docs-build.yml"
   push:
     branches: [main]
+    paths:
+      - "**/*.md"
+      - "**/*.markdown"
+      - "docs/**"
+      - "mkdocs.yml"
+      - "mkdocs.yaml"
+      - "docusaurus.config.*"
+      - "docs/requirements.txt"
+      - "requirements-docs.txt"
+      - ".github/workflows/docs-build.yml"
   workflow_dispatch:
 
 permissions:

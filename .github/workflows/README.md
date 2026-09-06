@@ -2,11 +2,11 @@
 doc_id: kfm://doc/github-workflows-readme
 title: .github/workflows README
 type: README
-version: v0.17
+version: v0.18
 status: draft; repository-grounded workflow governance reference; exact filename inventory; static and hosted behavior bounded
 owners: ["@bartytime4life"]
 created: 2026-07-08
-updated: 2026-08-31
+updated: 2026-09-06
 policy_label: public; github-actions; workflow-governance; fail-closed; non-publisher
 owning_root: .github/
 responsibility: GitHub Actions orchestration, trigger and permission boundaries, check-name stability, CI maturity disclosure, and workflow inventory accountability
@@ -14,10 +14,10 @@ truth_posture: cite-or-abstain; a workflow file, green job, commit, or pull requ
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   read_ref: main
-  read_commit: 1b654851dc58e2ea3104bf90072604148f91a84c
-  workflows_tree: a2f098500f1e35d05351222d9171ecead497c161
+  read_commit: 4a2ddb9abe7ae64aad7c2d650478a7a14af1b73c
+  workflows_tree: f0cc4efee0649f20c0d2c2006642270c50076042
   readme_prior_blob: 0b19d140a568114f4cef66cf7dac04df2d4e9585
-  current_workflow_files: 482
+  current_workflow_files: 486
   workflow_security_rules: 20
   workflow_security_baseline_entries: 0
   workflow_security_result_at_read_commit: NOT RUN
@@ -44,7 +44,7 @@ related:
   - ../../contracts/README.md
   - ../../release/README.md
 notes:
-  - "The 482-file count is exact for the pinned Git tree. The twenty-rule static ratchet and empty implementation-waiver baseline exist at that ref, but the ratchet was not executed for this documentation refresh."
+  - "The 486-file count is exact for the pinned Git tree. The twenty-rule static ratchet and empty implementation-waiver baseline exist at that ref, but the ratchet was not executed for this documentation refresh."
   - "The v0.14 detailed forty-four-workflow classification and action inventory remain historical process evidence in Git history, not current-tree evidence."
   - "Workflow filenames and green checks are orchestration evidence only; they do not create policy, review, release, lifecycle, or publication authority."
 [/KFM_META_BLOCK_V2] -->
@@ -63,7 +63,7 @@ notes:
 | Item | Current repository-grounded statement |
 |---|---|
 | Responsibility | GitHub Actions orchestration under the `.github/` platform-integration root. |
-| Inventory | 482 tracked `.yml` workflows and this README at the pinned tree. |
+| Inventory | 486 tracked `.yml` workflows and this README at the pinned tree. |
 | Static guardrail profile | 20 repository-owned rules with an empty implementation-waiver baseline. |
 | Exact-current static result | `NOT RUN` for the pinned read commit; do not inherit the older 425-workflow result. |
 | Hosted and ruleset state | `NEEDS VERIFICATION`; inspect GitHub object state at the exact ref. |
@@ -121,18 +121,18 @@ The workflow layer is a **non-publisher**. Watchers, drift detectors, documentat
 
 ## Status and evidence boundary
 
-This edition was prepared against `main@1b654851dc58e2ea3104bf90072604148f91a84c` and workflow tree `a2f098500f1e35d05351222d9171ecead497c161` on 2026-08-31.
+This edition was prepared against `main@4a2ddb9abe7ae64aad7c2d650478a7a14af1b73c` and workflow tree `f0cc4efee0649f20c0d2c2006642270c50076042` on 2026-09-06.
 
 **CONFIRMED for that snapshot:**
 
-- the workflow subtree contains one README and **482 tracked `.yml` workflow files**;
+- the workflow subtree contains one README and **486 tracked `.yml` workflow files**;
 - the subtree contains no `.yaml` workflows, non-Markdown companion files, or nested directories;
 - the old v0.14 README blob remains in Git history;
 - the current tree includes rapidly expanded domain, source, evidence, policy, review, artifact, map, runtime, and governance lanes;
 - the 20-rule workflow-security scanner, empty implementation-waiver baseline, Make targets, and `security.yml` and `validator-suite.yml` bindings exist at the pinned ref;
 - this documentation change does not modify workflow YAML or a GitHub repository setting.
 
-**NEEDS VERIFICATION for the pinned 482-workflow tree:**
+**NEEDS VERIFICATION for the pinned 486-workflow tree:**
 
 - every trigger and path filter;
 - every permission and write scope;
@@ -151,10 +151,10 @@ A filename proves only that bytes exist. It does not establish that the lane is 
 
 | Inventory fact | Current value | Interpretation |
 |---|---:|---|
-| Workflow files | **482** | Exact count of tracked `.yml` files in the pinned tree. |
+| Workflow files | **486** | Exact count of tracked `.yml` files in the pinned tree. |
 | Workflow README files | **1** | This file. |
 | Alternative `.yaml` workflow files | **0 observed** | The pinned workflow tree contains `.yml` files and this README. |
-| Growth since the v0.16 snapshot | **57** | New workflow files since the prior 425-file inventory; growth is maintenance pressure, not maturity. |
+| Growth since the v0.16 snapshot | **61** | New workflow files since the prior 425-file inventory; growth is maintenance pressure, not maturity. |
 | Prior documented workflow set | **44** | Historical v0.14 classification; no longer a complete current inventory. |
 | Net growth since prior detailed snapshot | **438** | Inventory delta only; it does not establish coverage or readiness. |
 | Deterministic static guardrails | **20** | Repository-owned local source rules; not hosted or runtime proof. |
@@ -167,6 +167,10 @@ Regenerate the count from the Git index whenever workflows change:
 ```bash
 git ls-files '.github/workflows/*.yml' | wc -l
 ```
+
+## Trigger fan-out control boundary
+
+The pinned tree contains 486 workflow files. This revision narrows four responsibility-owned lanes to changed-path triggers: `object-family-register` watches its own workflow plus object-family inputs; `docs-build` watches documentation/build-contract inputs; `docs-control-plane` watches control-plane and documentation governance inputs; and `link-check` watches Markdown plus its validator/test inputs. Manual dispatch remains available for each lane. This is a bounded reduction, not a complete trigger audit, required-check map, or shared-install redesign.
 
 ## Find and assess a workflow
 
@@ -417,7 +421,7 @@ Before merge, close or revert the unmerged workflow change without weakening unr
 
 ## Open verification items
 
-- **NEEDS VERIFICATION** — behavioral review of commands, trigger reachability, secrets/OIDC, network, caches, artifacts, and write effects for all 482 files.
+- **NEEDS VERIFICATION** — behavioral review of commands, trigger reachability, secrets/OIDC, network, caches, artifacts, and write effects for all 486 files.
 - **NEEDS VERIFICATION** — exact-current execution of the twenty-rule static ratchet for all 482 workflow files.
 - **NEEDS VERIFICATION** — current rulesets and exact required-check coupling.
 - **NEEDS VERIFICATION** — recent hosted outcomes, failure causes, logs, rerun state, and artifact retention.
@@ -434,6 +438,7 @@ Before merge, close or revert the unmerged workflow change without weakening unr
 | Date | Version | Change |
 |---|---|---|
 | 2026-08-31 | v0.17 | Re-pinned the subtree to `main@1b654851…`; recorded 482 `.yml` workflows and 57-file growth since v0.16; separated the empty waiver baseline from an unrun exact-current scan; added practical discovery, evidence-routing, repository-supported validation, and review guidance; and removed the badge wall. |
+| 2026-09-06 | v0.18 | Re-pinned the subtree to `main@4a2ddb9…` and `486` tracked `.yml` workflows; narrowed four responsibility-owned lanes to changed-path triggers while retaining manual dispatch, check names, and historical evidence; complete trigger reachability, required-check mapping, and shared-install consolidation remain open. |
 | 2026-08-12 | v0.16 | Re-pinned the subtree to `main@bff35f5…`; recorded the exact 425-workflow count; added a deterministic twenty-rule workflow-security ratchet with inherited-drift accounting; and kept hosted conclusions, ruleset state, and runtime maturity explicitly unverified. |
 | 2026-08-08 | v0.15 | Re-pinned the subtree to `main@d4586ec…`; recorded the exact 191-workflow count; superseded the 44-file classification as current inventory while preserving it in Git history; separated filename facts from unverified per-workflow behavior; and retained the non-publisher, threat-preflight, validation, review, and rollback contracts. |
 | 2026-08-03 | v0.14 | Reconciled promotion workflow documentation with a bounded fixture-only ReviewRecord candidate inside the prior 44-workflow snapshot. |

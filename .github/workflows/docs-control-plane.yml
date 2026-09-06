@@ -12,8 +12,26 @@ name: docs-control-plane
 
 on:
   pull_request:
+    paths:
+      - "control_plane/**"
+      - "docs/**"
+      - "pyproject.toml"
+      - "tools/ci/install_python_ci.py"
+      - "tools/validators/validate_adr_index.py"
+      - "tests/policy/test_control_plane_register_meta_contract.py"
+      - "tests/validators/test_validate_adr_index.py"
+      - ".github/workflows/docs-control-plane.yml"
   push:
     branches: [main]
+    paths:
+      - "control_plane/**"
+      - "docs/**"
+      - "pyproject.toml"
+      - "tools/ci/install_python_ci.py"
+      - "tools/validators/validate_adr_index.py"
+      - "tests/policy/test_control_plane_register_meta_contract.py"
+      - "tests/validators/test_validate_adr_index.py"
+      - ".github/workflows/docs-control-plane.yml"
   workflow_dispatch:
 
 permissions:

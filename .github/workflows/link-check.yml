@@ -10,8 +10,20 @@ name: link-check
 
 "on":
   pull_request:
+    paths:
+      - "**/*.md"
+      - "**/*.markdown"
+      - ".github/workflows/link-check.yml"
+      - "tools/validators/docs/link-check/**"
+      - "tests/validators/docs/link-check/**"
   push:
     branches: [main]
+    paths:
+      - "**/*.md"
+      - "**/*.markdown"
+      - ".github/workflows/link-check.yml"
+      - "tools/validators/docs/link-check/**"
+      - "tests/validators/docs/link-check/**"
   workflow_dispatch:
 
 permissions:
