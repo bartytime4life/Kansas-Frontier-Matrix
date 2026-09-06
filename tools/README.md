@@ -295,8 +295,8 @@ The orchestrator's confirmed contract is:
 | Execution environment | `KFM_NO_NETWORK=1`, deterministic hash seed, UTC, no bytecode writes, captured output, per-validator timeout |
 | Default report | Stable, sorted JSON without timing; optional `--include-timing` is explicitly nondeterministic |
 | Validator result mapping | Return `0` -> `PASS`; `1` -> `FAIL`; other return or timeout -> `ERROR` |
-| Orchestrator exits | `0` for `PASS` or no-match `ABSTAIN`; `1` for validation failure; `2` for orchestrator/configuration/I/O error |
-| No-match changed-area result | `ABSTAIN` with reason `NO_MATCHING_VALIDATORS`; this is not proof that an unselected area is valid |
+| Orchestrator exits | Default no-match is `ABSTAIN`/exit `0`; `--require-match` makes an empty changed-area selection `FAIL`/exit `1`; other failures remain `1` and configuration/I/O errors remain `2` |
+| No-match changed-area result | Direct CLI defaults to `ABSTAIN` with reason `NO_MATCHING_VALIDATORS`; callers using `--require-match` receive `FAIL`/exit `1` so a gate cannot pass vacuously |
 | Output write | Optional caller-supplied path, temporary-file replacement, symlink denial |
 
 The root entrypoint is canonical for new callers. [`tools/validators/_common/run_all.py`](validators/_common/run_all.py) is retained as the historical aggregate compatibility surface used by `make schemas` and existing workflow expectations.
