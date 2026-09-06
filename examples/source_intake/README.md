@@ -2,15 +2,15 @@
 doc_id: kfm://doc/examples/source-intake/readme
 title: Source Intake Examples README
 type: standard
-version: v0.2.0
+version: v0.3.0
 status: draft
 owners: NEEDS VERIFICATION - examples, source, ingest, connector, registry, evidence, policy, and docs stewardship assignments; default GitHub review route is @bartytime4life
 created: NEEDS VERIFICATION - greenfield stub existed before 2026-06-30 expansion
-updated: 2026-07-24
+updated: 2026-09-06
 policy_label: public-review
-related: [../README.md, usgs_nwis_walkthrough.md, ../ingest_receipts/README.md, ../evidence_bundles/README.md, ../../docs/sources/README.md, ../../docs/sources/ADMISSION_PROCESS.md, ../../docs/sources/SOURCE_DESCRIPTOR_STANDARD.md, ../../docs/sources/catalog/README.md, ../../connectors/README.md, ../../data/registry/sources/README.md, ../../data/raw/README.md, ../../data/receipts/ingest/README.md, ../../contracts/runtime/decision_envelope.md, ../../docs/doctrine/truth-posture.md, ../../docs/doctrine/directory-rules.md, ../../.github/CODEOWNERS]
+related: [../README.md, usgs_nwis_walkthrough.md, ../ingest_receipts/README.md, ../evidence_bundles/README.md, ../../docs/sources/README.md, ../../docs/sources/ADMISSION_PROCESS.md, ../../docs/sources/SOURCE_DESCRIPTOR_STANDARD.md, ../../docs/sources/catalog/README.md, ../../connectors/README.md, ../../data/registry/sources/README.md, ../../data/raw/README.md, ../../data/receipts/ingest/README.md, ../../contracts/runtime/decision_envelope.md, ../../docs/doctrine/truth-posture.md, ../../docs/doctrine/directory-rules.md, ../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md, ../../.github/CODEOWNERS]
 tags: [kfm, examples, source-intake, source-admission, pre-raw, sourcedescriptor, sourceactivationdecision, sourceintakerecord, source-role, rights, sensitivity, connectors, raw, quarantine, ingest-receipts, static-walkthrough, non-authoritative, fail-closed, cite-or-abstain]
-notes: ["The current v0.1.0 README had already replaced the historical greenfield stub at `examples/source_intake/README.md`; v0.2.0 modernizes that substantive baseline in place.", "One synthetic child walkthrough is confirmed at `examples/source_intake/usgs_nwis_walkthrough.md`; no runnable package, fixture mirror, operational admission, or public release is established.", "Source-intake examples are illustrative and review aids only; operational source admission doctrine lives under `docs/sources/`, SourceDescriptor/source-registry authority lives under `data/registry/sources/` or ADR-accepted registry homes, connector implementation belongs under `connectors/`, RAW captures belong under `data/raw/`, and ingest process memory belongs under `data/receipts/ingest/`.", "Examples must not become SourceDescriptors, SourceActivationDecisions, SourceIntakeRecords, emitted receipts, RAW payloads, quarantine records, proof records, catalog records, policy decisions, release decisions, public artifacts, governed API responses, or source truth by placement.", "README presence does not prove example payload inventory, source schemas, validators, fixtures, CI checks, source activation, connector runtime behavior, policy enforcement, evidence closure, release linkage, or governed route behavior."]
+notes: ["The current v0.2.0 README had already replaced the historical greenfield stub at `examples/source_intake/README.md`; v0.3.0 refreshes that substantive baseline in place against current `main` evidence.", "At current `main`, the lane contains exactly this README and `usgs_nwis_walkthrough.md`; no runnable package, fixture mirror, operational admission, or public release is established.", "Source-intake examples are illustrative and review aids only; operational source admission doctrine lives under `docs/sources/`, SourceDescriptor/source-registry authority lives under `data/registry/sources/` or ADR-accepted registry homes, connector implementation belongs under `connectors/`, RAW captures belong under `data/raw/`, and ingest process memory belongs under `data/receipts/ingest/`.", "Examples must not become SourceDescriptors, SourceActivationDecisions, SourceIntakeRecords, emitted receipts, RAW payloads, quarantine records, proof records, catalog records, policy decisions, release decisions, public artifacts, governed API responses, or source truth by placement.", "README presence does not prove example payload inventory, source schemas, validators, fixtures, CI checks, source activation, connector runtime behavior, policy enforcement, evidence closure, release linkage, or governed route behavior.", "Drive proposal material and Notion coordination remain lineage/input only; current GitHub files and accepted repository decisions remain implementation and governance authority."]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -58,21 +58,24 @@ This folder should make reviewers faster. It should not become a shortcut around
 
 ## Path posture
 
-The target is a substantive v0.1.0 README, not a placeholder. Repository evidence pinned for this revision:
+The target is a substantive v0.2.0 README, not a placeholder. Repository evidence pinned for this revision:
 
 | Evidence | Observation | Status |
 |---|---|---|
-| Target at `fc0f77ac32103ee355c1e595b6e554267930ed14` | v0.1.0, 352 lines, blob `6cfd4f4d1f6dd128a24b320b283380435f760446`. | `CONFIRMED` |
+| Current default branch `main@61368f63707df32d3f796a29028e66e715d083c9` | Current branch tip read immediately before this revision; merge of PR #4342 at `2026-09-06T18:32:44Z`. | `CONFIRMED` |
+| Target at current `main` | v0.2.0, 442 lines, blob `45ba3a401a05981e576250bd342c6caa7a4399e5`. | `CONFIRMED` |
 | Historical lineage | Target metadata records that v0.1.0 replaced a greenfield stub. | `CONFIRMED metadata claim`; original creation date remains `NEEDS VERIFICATION` |
-| Child walkthrough | [`usgs_nwis_walkthrough.md`](usgs_nwis_walkthrough.md), blob `a7b1f2b9cf23a5a7cf4822f9281f8728c7164934`, is a synthetic static walkthrough with `operational_admission_state: none`. | `CONFIRMED bounded read` |
-| Open pull-request overlap | No open pull request matching `source_intake` surfaced before authoring. | `CONFIRMED bounded search`; not an exhaustive branch audit |
+| Direct-child inventory | The current `examples/source_intake/` directory contains only [`README.md`](README.md) and [`usgs_nwis_walkthrough.md`](usgs_nwis_walkthrough.md); the child blob is `3681e2d2937300066a9cffb0eac0aa3a445fc713`. | `CONFIRMED bounded directory read` |
+| Open pull-request overlap | No open pull request matching `source_intake` surfaced in the repository-scoped search before authoring. | `CONFIRMED bounded search`; not an exhaustive branch audit |
 
-Directory Rules place worked examples under the `examples/` responsibility root. `source_intake` is a lane within that root, not a new authority root. The file therefore remains in place; this change creates no parallel schema, contract, policy, registry, connector, receipt, proof, release, or publication home.
+ADR-0029 is the accepted repository decision that makes `docs/doctrine/directory-rules.md` the single writable human-readable Directory Rules authority. Its preserved internal document-control block still says `PROPOSED_FOR_ADOPTION`; this README records that metadata conflict rather than silently collapsing it. The adopted responsibility model places worked examples under the `examples/` root. `source_intake` is a lane within that root, not a new authority root, so the file remains in place and this change creates no parallel schema, contract, policy, registry, connector, receipt, proof, release, or publication home.
 
 Current placement evidence also establishes that:
 
-- [`../README.md`](../README.md) defines the root maturity vocabulary and non-authority boundary;
+- [`../README.md`](../README.md) defines the root maturity vocabulary and non-authority boundary (current blob `749dfd2f387589f8ef1edd639a13f066eb2d2958`);
 - [`../../docs/sources/ADMISSION_PROCESS.md`](../../docs/sources/ADMISSION_PROCESS.md) defines the pre-RAW admission membrane;
+- [`../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md`](../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) records the accepted Directory Rules decision and compatibility boundary;
+- [`../../docs/doctrine/directory-rules.md`](../../docs/doctrine/directory-rules.md) is the canonical rules path (current blob `fd49a0b83e55cef52c1124281f093e263526898d`); its preserved internal `PROPOSED_FOR_ADOPTION` label is recorded as a conflict above;
 - [`../../docs/sources/SOURCE_DESCRIPTOR_STANDARD.md`](../../docs/sources/SOURCE_DESCRIPTOR_STANDARD.md) fixes source role, rights, and sensitivity at admission;
 - [`../../data/registry/sources/README.md`](../../data/registry/sources/README.md) describes source-registry authority;
 - [`../../connectors/README.md`](../../connectors/README.md) keeps connector implementation separate from publication;
@@ -350,14 +353,14 @@ Before adding or changing examples here, verify:
 
 | Check | Result | Boundary |
 |---|---|---|
-| Baseline and child walkthrough read | `PASS` | Exact pinned files; not a recursive repository inventory. |
-| Markdown heading, fence, table, and fragment source checks | `PASS` for this revision | Source validation; not host-render or semantic execution. |
-| Repository-relative link targets | `PASS` for checked destinations | Exact pinned paths; external content freshness is not implied. |
-| Badge retrieval and SVG content type | `PASS` for the five admitted badges | Network availability can change. |
-| Secret/sensitive-pattern review | `PASS` for this documentation change | Not a substitute for repository-wide secret or sensitivity scanning. |
-| [`docs-build.yml`](../../.github/workflows/docs-build.yml) | `WORKFLOW_HOLD` by definition | No accepted docs generator/build command or preview artifact. |
-| [`link-check.yml`](../../.github/workflows/link-check.yml) | `WORKFLOW_HOLD` by definition | No accepted executable link/anchor checker. |
-| [`accessibility.yml`](../../.github/workflows/accessibility.yml) | `WORKFLOW_HOLD` by definition | No axe or keyboard-navigation execution. |
+| Exact current-main branch and target-lane read | `PASS` | `main@61368f63707df32d3f796a29028e66e715d083c9`; direct-child listing returned exactly the README and walkthrough; target blob `45ba3a401a05981e576250bd342c6caa7a4399e5`, child blob `3681e2d2937300066a9cffb0eac0aa3a445fc713`; not a recursive repository inventory. |
+| Markdown source sanity | `PASS` | One H1, six balanced fenced-block delimiters, final newline, and no conflict markers; source-level only, not host render or semantic execution. |
+| Repository-relative link targets | `PASS` | All 21 extracted local file links resolved on `main` during this update; fragments were not host-rendered. External freshness is not implied. |
+| Badge retrieval and SVG content type | `NOT RUN` | This currentness refresh did not re-fetch external badge URLs; no badge availability claim is made. |
+| Secret/sensitive-pattern review | `PASS (bounded manual review)` | Documentation-only source review; not a repository-wide secret or sensitivity scan. |
+| [`docs-build.yml`](../../.github/workflows/docs-build.yml) | `WORKFLOW_HOLD` by definition | Workflow definition still holds until an accepted docs generator/build and preview artifact exist. |
+| [`link-check.yml`](../../.github/workflows/link-check.yml) | `DEFINED / NOT RUN` | The current workflow defines deterministic no-network local Markdown target checking for changed docs; no hosted run was fetched in this update. |
+| [`accessibility.yml`](../../.github/workflows/accessibility.yml) | `PARTIAL / NOT RUN` | `keyboard-navigation` is executable by workflow definition; `axe` remains an explicit hold; no hosted run or WCAG claim is made. |
 | GitHub-rendered visual inspection | `NEEDS VERIFICATION` | Required before claiming a host-render pass. |
 | Runnable source-intake behavior, schema validation, fixture parity, connector execution, or operational admission | `UNKNOWN / NEEDS VERIFICATION` | This lane remains static and non-authoritative. |
 
@@ -388,18 +391,27 @@ Maintenance rules:
 
 | Item | Status | Notes |
 |---|---:|---|
-| Target baseline | CONFIRMED | v0.1.0 at blob `6cfd4f4d1f6dd128a24b320b283380435f760446`; already substantive, with historical stub lineage retained. |
-| Directory placement | CONFIRMED doctrine | `examples/` owns worked examples; `source_intake` is a lane, not an authority root. |
+| Target baseline | CONFIRMED | v0.2.0 at current blob `45ba3a401a05981e576250bd342c6caa7a4399e5`; 442 lines; substantive, with historical stub lineage retained. |
+| Directory placement | CONFIRMED accepted decision / CONFLICTED metadata label | ADR-0029 adopts the canonical `docs/doctrine/directory-rules.md` path and the `examples/` responsibility root; the canonical file still preserves `PROPOSED_FOR_ADOPTION` in its internal block. |
 | Current maturity | CONFIRMED `STATIC_WALKTHROUGH` | README plus one synthetic, non-operational USGS/NWIS walkthrough. |
-| Child walkthrough | CONFIRMED | [`usgs_nwis_walkthrough.md`](usgs_nwis_walkthrough.md) declares `operational_admission_state: none` and `ALLOW_TO_RAW_EXAMPLE` as instructional only. |
+| Direct-child inventory | CONFIRMED bounded read | The lane contains exactly the README and walkthrough at the current `main` ref. |
+| Child walkthrough | CONFIRMED | [`usgs_nwis_walkthrough.md`](usgs_nwis_walkthrough.md), blob `3681e2d2937300066a9cffb0eac0aa3a445fc713`, declares `operational_admission_state: none` and `ALLOW_TO_RAW_EXAMPLE` as instructional only. |
 | Source admission and descriptor doctrine | CONFIRMED documents | Admission is pre-RAW; source role, rights, and sensitivity are fixed there and fail closed when unresolved. |
 | Public runtime vocabulary | CONFIRMED contract | `ANSWER`, `ABSTAIN`, `DENY`, `ERROR`; pre-runtime `HOLD`/`QUARANTINE` remain distinct. |
 | Dedicated stewardship assignments | NEEDS VERIFICATION | CODEOWNERS provides only a default GitHub review route. |
-| Examples-specific schema, validator, accepted link checker, accessibility execution, fixture parity, connector execution, or runtime parity | NEEDS VERIFICATION | No such maturity is claimed. |
+| Examples-specific schema, validator, fixture parity, accessibility execution, connector execution, or runtime parity | NEEDS VERIFICATION | The bounded link-target read passed, but no hosted workflow result or operational maturity is claimed. |
 | Operational admission | None | Example placement cannot admit a source or write RAW/quarantine/receipt state. |
 | Release/publication authority | None | No data, source, connector, policy, proof, release, or public artifact changes in this revision. |
 
 ## Change history
+
+### v0.3.0 — 2026-09-06
+
+- re-pinned the README and its direct child inventory to current `main@61368f63707df32d3f796a29028e66e715d083c9`;
+- refreshed the current target, child walkthrough, root README, Directory Rules, ADR, CODEOWNERS, and workflow evidence anchors;
+- recorded the accepted ADR-0029 versus preserved Directory Rules metadata conflict explicitly;
+- replaced stale workflow claims with the current documentation-link and partial-accessibility boundaries; and
+- changed documentation only; no source admission, connector execution, RAW capture, receipt emission, release, deployment, publication, or repository-settings action occurred.
 
 ### v0.2.0 — 2026-07-24
 
@@ -421,19 +433,23 @@ Maintenance rules:
 
 | Source | Status | Supports | Limits |
 |---|---|---|---|
-| Previous target at `fc0f77ac32103ee355c1e595b6e554267930ed14` | CONFIRMED | v0.1.0 substantive baseline, blob `6cfd4f4d1f6dd128a24b320b283380435f760446`. | Historical creation date remains `NEEDS VERIFICATION`. |
-| [`../README.md`](../README.md) | CONFIRMED v0.3.0 root contract, blob `d3fbce80c82106935288d59a708bbb1a0118591e` | `examples/` authority boundary and maturity vocabulary. | Root-wide runtime and recursive inventory remain bounded. |
-| [`usgs_nwis_walkthrough.md`](usgs_nwis_walkthrough.md) | CONFIRMED static walkthrough, blob `a7b1f2b9cf23a5a7cf4822f9281f8728c7164934` | Synthetic markers, source-role separation, instructional outcome, and `operational_admission_state: none`. | No live endpoint, connector run, admission, RAW write, receipt, or hydrologic truth. |
-| [`../../docs/sources/ADMISSION_PROCESS.md`](../../docs/sources/ADMISSION_PROCESS.md) | CONFIRMED draft standard | Pre-RAW membrane, SourceDescriptor, SourceActivationDecision, SourceIntakeRecord, and fail-closed routing. | Open ADRs and proposed paths remain as labeled there. |
+| Current repository branch `main@61368f63707df32d3f796a29028e66e715d083c9` | CONFIRMED | Exact comparison base read immediately before authoring; merge of PR #4342 at `2026-09-06T18:32:44Z`. | Point-in-time pin; refresh before follow-up work. |
+| Current target at `main` | CONFIRMED | v0.2.0 README, 442 lines, blob `45ba3a401a05981e576250bd342c6caa7a4399e5`. | Historical creation date remains `NEEDS VERIFICATION`. |
+| Previous target at `fc0f77ac32103ee355c1e595b6e554267930ed14` | CONFIRMED historical | v0.1.0 substantive baseline, blob `6cfd4f4d1f6dd128a24b320b283380435f760446`. | Historical creation date remains `NEEDS VERIFICATION`. |
+| Current direct-child directory read | CONFIRMED | Exactly `README.md` and `usgs_nwis_walkthrough.md`; child blob `3681e2d2937300066a9cffb0eac0aa3a445fc713`. | Bounded direct-child read, not recursive inventory. |
+| [`../README.md`](../README.md) | CONFIRMED bounded read | Current examples-root contract at blob `749dfd2f387589f8ef1edd639a13f066eb2d2958`; it records the source-intake lane as `STATIC_WALKTHROUGH`. | Its embedded evidence snapshot predates current `main`; not a recursive currentness proof. |
+| [`usgs_nwis_walkthrough.md`](usgs_nwis_walkthrough.md) | CONFIRMED static walkthrough | Synthetic markers, source-role separation, instructional outcome, and `operational_admission_state: none`. | No live endpoint, connector run, admission, RAW write, receipt, or hydrologic truth. |
+| [`../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md`](../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) | ACCEPTED decision | `docs/doctrine/directory-rules.md` is the single writable human-readable Directory Rules authority and `examples/` is the worked-example responsibility root. | Does not prove executable topology enforcement or runtime maturity. |
+| [`../../docs/doctrine/directory-rules.md`](../../docs/doctrine/directory-rules.md) | CONFLICTED metadata / adopted bytes | Canonical rules content and placement protocol; internal document-control block still says `PROPOSED_FOR_ADOPTION`. | ADR-0029 acceptance is the higher authority; metadata conflict remains open. |
+| [`../../docs/sources/ADMISSION_PROCESS.md`](../../docs/sources/ADMISSION_PROCESS.md) | CONFIRMED active draft standard | Pre-RAW membrane, SourceDescriptor, SourceActivationDecision, SourceIntakeRecord, and fail-closed routing. | Open ADRs and proposed paths remain as labeled there. |
 | [`../../docs/sources/SOURCE_DESCRIPTOR_STANDARD.md`](../../docs/sources/SOURCE_DESCRIPTOR_STANDARD.md) | CONFIRMED draft standard | Admission-time source role, rights, sensitivity, cadence, access, steward, and citation posture. | Machine shape and implementation maturity remain bounded by that document. |
 | [`../../contracts/runtime/decision_envelope.md`](../../contracts/runtime/decision_envelope.md) | CONFIRMED contract text | Public runtime outcomes are `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`. | Does not define source-admission disposition storage. |
 | [`../../connectors/README.md`](../../connectors/README.md) | CONFIRMED README | Connector/admission support remains separate from promotion/publication. | Does not prove source-specific runtime execution. |
 | [`../../data/registry/sources/README.md`](../../data/registry/sources/README.md) | CONFIRMED README | Registry is an admission and authority-control surface. | Inventory, schemas, and validators remain as labeled there. |
 | [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) | CONFIRMED routing | Default review route is `@bartytime4life`; no dedicated `/examples/` rule. | Not proof of stewardship, enforcement, independence, or approval. |
-| [`../../.github/workflows/docs-build.yml`](../../.github/workflows/docs-build.yml) | CONFIRMED workflow definition | Docs build/preview are explicit readiness holds. | No render or publication. |
-| [`../../.github/workflows/link-check.yml`](../../.github/workflows/link-check.yml) | CONFIRMED workflow definition | Link checking is an explicit readiness hold. | No accepted link/anchor checker. |
-| [`../../.github/workflows/accessibility.yml`](../../.github/workflows/accessibility.yml) | CONFIRMED workflow definition | Accessibility jobs are explicit readiness holds. | No axe or keyboard validation. |
-| Directory Rules and [`directory-rules.md`](../../docs/doctrine/directory-rules.md) | CONFIRMED doctrine | `examples/` is the responsibility root for worked examples; lifecycle and authority boundaries remain separate. | Does not itself establish runtime maturity. |
+| [`../../.github/workflows/docs-build.yml`](../../.github/workflows/docs-build.yml) | CONFIRMED workflow definition | Docs build/preview remain explicit readiness holds. | No render, preview artifact, or publication. |
+| [`../../.github/workflows/link-check.yml`](../../.github/workflows/link-check.yml) | CONFIRMED workflow definition | Current workflow defines a bounded no-network local Markdown link check for changed docs. | No hosted run was fetched in this revision; external targets remain unverified. |
+| [`../../.github/workflows/accessibility.yml`](../../.github/workflows/accessibility.yml) | CONFIRMED workflow definition | Keyboard-navigation has a bounded Explorer Web job; `axe` remains an explicit hold. | No hosted run, whole-app audit, or WCAG conformance is claimed. |
 | Recursive tree, local execution, deployments, production telemetry, and consumer inventory | UNKNOWN | No claim. | Requires separate evidence. |
 
 Exact reads and bounded searches do not replace a recursive tree, dependency install, example run, deterministic fixture suite, CI history, deployed-consumer inventory, runtime telemetry, or host-render review.
