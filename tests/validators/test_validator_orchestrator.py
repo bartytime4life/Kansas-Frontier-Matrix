@@ -282,7 +282,29 @@ class ValidatorOrchestratorTests(unittest.TestCase):
         self.assertEqual(report["reason_code"], "NO_MATCHING_VALIDATORS")
         self.assertEqual(report["selected_count"], 0)
 
-    def test_duplicate_validator_id_is_rejected(self) -> None:
+    def test_changed_area_without_match_fails_when_required(self) -> None:
+        entry = self._entry(
+            "alpha-check",
+            self._script("validate_alpha.py", 0),
+            glob="contracts/alpha/**",
+        )
+        registry = self._load(self._registry([entry]))
+
+        code, report = orchestrator.orchestrate(
+            registry,
+            repo_root=self.root,
+            profile="changed-area",
+            changed_paths=("docs/example.md",),
+            require_match=True,
+        )
+
+        self.assertEqual(code, 1)
+        self.assertEqual(report["outcome"], "FAIL")
+        self.assertEqual(report["reason_code"], "NO_MATCHING_VALIDATORS")
+        self.assertEqual(report["selection"]["require_match"], True)
+        self.assertEqual(report["selected_count"], 0)
+
+    def test_duplicate_validator_id_is_rejected(self) -> None
         script = self._script("validate_alpha.py", 0)
         entries = [self._entry("alpha-check", script), self._entry("alpha-check", script)]
         path = self._registry(entries, profiles={
