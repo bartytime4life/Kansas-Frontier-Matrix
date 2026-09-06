@@ -1,0 +1,202 @@
+# Branch-only validation with independent pinned-main attribution.
+# No source admission, PR lifecycle, repository writes or deployment permissions.
+name: earth-layer-library-app-validation
+on:
+  push:
+    branches: [agent/earth-layer-library-readback-20260905]
+    paths:
+      - .github/workflows/earth-layer-library-app-validation.yml
+      - apps/kansas-frontier-matrix-explorer/**
+      - packages/ui/src/**
+      - data/receipts/generated/genrec-earth-layer-library-*
+permissions:
+  contents: read
+concurrency:
+  group: earth-layer-library-app-validation-${{ github.ref }}
+  cancel-in-progress: true
+env:
+  CI: 'true'
+  DO_NOT_TRACK: '1'
+  CLOUDFLARE_SEND_METRICS: 'false'
+  WRANGLER_SEND_METRICS: 'false'
+jobs:
+  native-app:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - kind: candidate
+            ref: ''
+          - kind: pinned-main
+            ref: 8b9c52d88687986879c8f87d7e3835f6a58bbacd
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ matrix.ref || github.sha }}
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Record exact source, lineage and current artifact hashes
+        shell: bash
+        env:
+          KIND: ${{ matrix.kind }}
+        run: |
+          set -euo pipefail
+          out="$RUNNER_TEMP/earth-library-app"
+          mkdir -p "$out"
+          git rev-parse HEAD | tee "$out/head.txt"
+          git status --short --untracked-files=no > "$out/worktree-before.txt"
+          if test "$KIND" = candidate; then
+            git merge-base --is-ancestor 34a9348ce7882284a5843f414368b92ade9d79db HEAD
+            git merge-base --is-ancestor 8b9c52d88687986879c8f87d7e3835f6a58bbacd HEAD
+            test -z "$(git ls-files '*earth-library-authoring*')"
+            git diff --stat 8b9c52d88687986879c8f87d7e3835f6a58bbacd...HEAD > "$out/diff-stat.txt"
+            git diff --name-status 8b9c52d88687986879c8f87d7e3835f6a58bbacd...HEAD > "$out/diff-name-status.txt"
+            git diff --name-only 8b9c52d88687986879c8f87d7e3835f6a58bbacd...HEAD \
+              | grep -v '^data/receipts/generated/genrec-earth-layer-library-20260905-a7374a0d9e32.json$' \
+              | grep -v '^data/receipts/generated/genrec-earth-layer-library-app-integration-' \
+              | sort > "$out/current-artifact-paths.txt"
+            while IFS= read -r path; do
+              test -f "$path"
+              sha256sum "$path"
+            done < "$out/current-artifact-paths.txt" > "$out/current-artifact-sha256.txt"
+          else
+            test "$(git rev-parse HEAD)" = 8b9c52d88687986879c8f87d7e3835f6a58bbacd
+          fi
+          sha256sum package.json pnpm-workspace.yaml pnpm-lock.yaml apps/kansas-frontier-matrix-explorer/package.json apps/kansas-frontier-matrix-explorer/package-lock.json > "$out/locks.sha256"
+      - name: Diff hygiene
+        if: always()
+        shell: bash
+        run: |
+          set -o pipefail
+          git diff --check 8b9c52d88687986879c8f87d7e3835f6a58bbacd...HEAD 2>&1 | tee "$RUNNER_TEMP/earth-library-app/diff-check.log"
+      - name: Root registry validator
+        if: always()
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -o pipefail
+          python tools/validators/directory_governance/validate_root_registry.py 2>&1 | tee "$RUNNER_TEMP/earth-library-app/root-registry.log"
+      - name: Repository topology ratchet
+        if: always()
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -o pipefail
+          python tools/validators/directory_governance/validate_repository_topology.py --format text 2>&1 | tee "$RUNNER_TEMP/earth-library-app/topology.log"
+      - name: Bounded topology diagnostics
+        if: always()
+        shell: bash
+        run: |
+          set +e
+          python tools/validators/directory_governance/render_repository_topology_diagnostics.py 2>&1 | tee "$RUNNER_TEMP/earth-library-app/topology-diagnostics.log"
+          exit 0
+      - name: Historical receipt preservation check
+        if: ${{ always() && matrix.kind == 'candidate' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --exit-code 34a9348ce7882284a5843f414368b92ade9d79db...HEAD -- \
+            data/receipts/generated/genrec-earth-layer-library-20260905-a7374a0d9e32.json \
+            > "$RUNNER_TEMP/earth-library-app/historical-receipt-diff.txt"
+      - name: Install repository hash-locked Python validation profile
+        if: ${{ always() && matrix.kind == 'candidate' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/ci/install_python_ci.py project-test 2>&1 | tee "$RUNNER_TEMP/earth-library-app/python-bootstrap.log"
+      - name: Validate current integration receipt when present
+        if: ${{ always() && matrix.kind == 'candidate' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          out="$RUNNER_TEMP/earth-library-app"
+          shopt -s nullglob
+          receipts=(data/receipts/generated/genrec-earth-layer-library-app-integration-*.json)
+          if ((${#receipts[@]} == 0)); then
+            printf '%s\n' 'CURRENT_INTEGRATION_RECEIPT_NOT_YET_PRESENT' | tee "$out/current-receipt.log"
+            exit 0
+          fi
+          if ((${#receipts[@]} != 1)); then
+            printf 'expected exactly one current integration receipt, found %s\n' "${#receipts[@]}" | tee "$out/current-receipt.log"
+            exit 1
+          fi
+          python tools/validators/validate_generated_receipt.py "${receipts[0]}" \
+            --repo-root . \
+            --artifact-git-ref 698b833109e3b58bcb9ef5321cb9a8a49a3823e6 \
+            2>&1 | tee "$out/current-receipt.log"
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: '22'
+          package-manager-cache: false
+      - name: Install exact frozen workspace without build-policy changes
+        id: install
+        shell: bash
+        run: |
+          set -euo pipefail
+          corepack enable
+          pnpm install --frozen-lockfile
+          sha256sum -c "$RUNNER_TEMP/earth-library-app/locks.sha256"
+      - name: Native Library and synchronous owner tests
+        if: ${{ !cancelled() && steps.install.outcome == 'success' && matrix.kind == 'candidate' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --test apps/kansas-frontier-matrix-explorer/tests/earth-layer-library.test.mjs apps/kansas-frontier-matrix-explorer/tests/site-requested-layer-state.test.mjs 2>&1 | tee "$RUNNER_TEMP/earth-library-app/library-node.log"
+      - name: Build the existing Explorer in the complete locked workspace
+        id: build
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          pnpm --filter kansas-frontier-matrix-explorer build 2>&1 | tee "$RUNNER_TEMP/earth-library-app/build.log"
+      - name: Existing application Node regression suite from explicit repository root
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Identical invocation/cwd on both pins. TS7 file-list compilation must
+          # not inherit an unrelated app tsconfig. No ignored test failures.
+          node --test apps/kansas-frontier-matrix-explorer/tests/*.test.mjs 2>&1 | tee "$RUNNER_TEMP/earth-library-app/app-node.log"
+      - name: Native complete application typecheck
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          pnpm --filter kansas-frontier-matrix-explorer exec tsc --noEmit 2>&1 | tee "$RUNNER_TEMP/earth-library-app/typecheck.log"
+      - name: Install locked Playwright Chromium
+        id: browser
+        if: ${{ !cancelled() && steps.install.outcome == 'success' && matrix.kind == 'candidate' }}
+        run: pnpm exec playwright install --with-deps chromium
+      - name: Actual HTTP app composition and browser interactions
+        if: ${{ !cancelled() && steps.build.outcome == 'success' && steps.browser.outcome == 'success' && matrix.kind == 'candidate' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          pnpm --filter kansas-frontier-matrix-explorer exec vite --host 127.0.0.1 --port 4173 --strictPort > "$RUNNER_TEMP/earth-library-app/server.log" 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          ready=0
+          for attempt in $(seq 1 90); do
+            if curl --fail --silent --max-time 3 http://127.0.0.1:4173/ > /dev/null; then ready=1; break; fi
+            kill -0 "$server_pid"
+            sleep 2
+          done
+          test "$ready" = 1
+          KFM_APP_URL=http://127.0.0.1:4173 KFM_APP_OUTPUT="$RUNNER_TEMP/earth-library-app/browser" node apps/kansas-frontier-matrix-explorer/tests/earth-layer-library.app.mjs 2>&1 | tee "$RUNNER_TEMP/earth-library-app/browser.log"
+      - name: Verify dependency, build policy and validator readback immutability
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          sha256sum -c "$RUNNER_TEMP/earth-library-app/locks.sha256"
+          git status --short --untracked-files=no | tee "$RUNNER_TEMP/earth-library-app/worktree-after.txt"
+          test -z "$(git status --short --untracked-files=no)"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: earth-library-${{ matrix.kind }}-${{ github.sha }}
+          path: ${{ runner.temp }}/earth-library-app/
+          retention-days: 14
+          if-no-files-found: error

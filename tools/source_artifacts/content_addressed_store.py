@@ -16,7 +16,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO_ROOT))
 
-from tools.validators.validate_source_artifact import validate_artifact
+from tools.validators.validate_source_artifact import load_validated_artifact
 
 
 def _load_metadata(path: Path) -> dict[str, object]:
@@ -50,17 +50,14 @@ def _ensure_safe_root(store_root: Path) -> None:
 
 
 def store(metadata_path: Path, payload_path: Path, store_root: Path) -> Path:
-    result = validate_artifact(metadata_path, payload_path)
-    if not result.ok:
-        raise ValueError("metadata/payload pair failed SourceArtifact validation")
-    metadata = _load_metadata(metadata_path)
+    # Never reopen the input paths after validation: they may have changed.
+    metadata, payload = load_validated_artifact(metadata_path, payload_path)
     _ensure_safe_root(store_root)
     destination = object_path(store_root, metadata)
     destination.parent.mkdir(parents=True, exist_ok=True)
     for parent in (destination.parent, destination.parent.parent):
         if parent.is_symlink():
             raise ValueError("store shard contains a symlink")
-    payload = payload_path.read_bytes()
     if destination.exists():
         if not destination.is_file() or destination.is_symlink():
             raise ValueError("existing object path is unsafe")

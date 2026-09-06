@@ -142,10 +142,14 @@ def _semantic_findings(candidate: Mapping[str, object]) -> list[Finding]:
     return findings
 
 
-def validate_artifact(metadata_path: Path, payload_path: Path | None = None) -> ValidationResult:
+def _validate_artifact_snapshot(
+    metadata_path: Path, payload_path: Path | None = None,
+) -> tuple[ValidationResult, dict[str, object] | None, bytes | None]:
+    """Evaluate the captured inputs once; retain the bytes behind the result."""
+    payload: bytes | None = None
     candidate, findings = read_json_object(metadata_path)
     if candidate is None:
-        return ValidationResult(tuple(sorted(findings)))
+        return ValidationResult(tuple(sorted(findings))), None, None
     findings.extend(schema_findings(SCHEMA_PATH, candidate))
     findings.extend(_semantic_findings(candidate))
     if payload_path is not None:
@@ -157,7 +161,26 @@ def validate_artifact(metadata_path: Path, payload_path: Path | None = None) -> 
                 findings.append(Finding("PAYLOAD_LENGTH_MISMATCH", "/byte_length", "declared length differs"))
             if candidate.get("content_digest") != _sha256(payload):
                 findings.append(Finding("PAYLOAD_DIGEST_MISMATCH", "/content_digest", "declared digest differs"))
-    return ValidationResult(tuple(sorted(set(findings))))
+    return ValidationResult(tuple(sorted(set(findings)))), candidate, payload
+
+
+def validate_artifact(metadata_path: Path, payload_path: Path | None = None) -> ValidationResult:
+    """Keep the existing result-only API and optional-payload validation behavior."""
+    result, _, _ = _validate_artifact_snapshot(metadata_path, payload_path)
+    return result
+
+
+def load_validated_artifact(metadata_path: Path, payload_path: Path) -> tuple[dict[str, object], bytes]:
+    """Return only the metadata and exact bounded payload that passed validation.
+
+    Callers must consume these captured values rather than reopen the paths.
+    This binds storage to the bytes checked, not to an atomic filesystem snapshot
+    or to source admission, evidence, lifecycle, release, or publication authority.
+    """
+    result, metadata, payload = _validate_artifact_snapshot(metadata_path, payload_path)
+    if not result.ok or metadata is None or payload is None:
+        raise ValueError("metadata/payload pair failed SourceArtifact validation")
+    return metadata, payload
 
 
 def _read_fixture_array(path: Path) -> list[Mapping[str, object]]:

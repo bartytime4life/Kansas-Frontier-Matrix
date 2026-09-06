@@ -1,0 +1,120 @@
+{
+  "receipt_id": "genrec-explorer-eslint10-context-a1203619",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/kansas-frontier-matrix-explorer/eslint-react-context.mjs",
+    "apps/kansas-frontier-matrix-explorer/eslint.config.mjs",
+    "apps/kansas-frontier-matrix-explorer/package.json",
+    "docs/quality/explorer-eslint10-compatibility.md",
+    "tests/ui/test_explorer_lint_compat.mjs"
+  ],
+  "artifact_hashes": {
+    "apps/kansas-frontier-matrix-explorer/eslint-react-context.mjs": "sha256:40bfe2fd0609f16968e800e55446f11326cba0105da364503ed79f2c666ed347",
+    "apps/kansas-frontier-matrix-explorer/eslint.config.mjs": "sha256:e6b59d1d3ff43eeb7bceb80ec2d2bb1c6cf757f0a7d3ab8869f311ec6d214762",
+    "apps/kansas-frontier-matrix-explorer/package.json": "sha256:69932bdfd7f2f82b876406dbe1bb93965c1f0cae3b1d1f81dc93ab005317b783",
+    "docs/quality/explorer-eslint10-compatibility.md": "sha256:d72c92e69a5f0e942d2b46191ad0ad24ff1bb6476a095328e21be7ea13be3af0",
+    "tests/ui/test_explorer_lint_compat.mjs": "sha256:de1d8866a2e4fed0e3dac4beaa6713562fb16bc618fca1ea2579c228674ae1c8"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Astra Pro",
+    "version": "exact runtime build identifier is not exposed"
+  },
+  "prompt_or_contract": "sha256:644d2b0637355a597db858f6afae23581e40912869afb094c9cc3ea5b2c0e0e2",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": ["GitHub", "Notion", "Google Drive", "web", "container"]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:dbd9c8a3e9f1f122f55cc73677ac45a525267515f8061b6030393350c5bc3a64",
+      "sha256:25a9c5a2bb9bc9994d988777f26b51db32983af372989280d40d8f3b14987474",
+      "sha256:57d77805c87b942c9ebf1ebc98d22bd1567422b25995b23d33349249e6c8a9cb"
+    ],
+    "evidence_refs": [
+      "repo:agent/explorer-eslint10-context-20260905@a120361953ae574c4c1df8ea805a69677c9fab78",
+      "repo:agent/explorer-baseline-ts7-worker-types-20260905@343a516812596f0b29fdb1a56b3a549edbe43490",
+      "repo:main@8b9c52d88687986879c8f87d7e3835f6a58bbacd",
+      "repo:main@94e976ff281ff5033c1c91ada417ab1d0c445f7b",
+      "github-actions:33999495382",
+      "github-actions:33999252652",
+      "https://eslint.org/docs/latest/use/migrate-to-10.0.0",
+      "https://github.com/eslint/rewrite/blob/main/packages/compat/src/fixup-rules.js",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4228"
+    ]
+  },
+  "truth_labels": {
+    "apps/kansas-frontier-matrix-explorer/eslint-react-context.mjs": "CONFIRMED",
+    "apps/kansas-frontier-matrix-explorer/eslint.config.mjs": "CONFIRMED",
+    "apps/kansas-frontier-matrix-explorer/package.json": "CONFIRMED",
+    "docs/quality/explorer-eslint10-compatibility.md": "CONFIRMED",
+    "tests/ui/test_explorer_lint_compat.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "exact-source-and-scope",
+      "outcome": "PASS",
+      "reason": "Run 33999495382 checks out literal a120361953ae574c4c1df8ea805a69677c9fab78, captures five changed artifact SHA-256 values relative to frozen prerequisite 343a516812596f0b29fdb1a56b3a549edbe43490, and validates whitespace. Diagnostic workflow changes live on a separate non-delivery branch and are absent from product scope."
+    },
+    {
+      "gate": "frozen-workspace-install-and-immutability",
+      "outcome": "PASS",
+      "reason": "Candidate, frozen prerequisite and historical main 8b9c52d each install with pnpm --frozen-lockfile. Root manifest, pnpm workspace policy, pnpm lock and app package lock hashes remain unchanged, and git diff --exit-code passes after execution. This lint unit changes no dependencies or lock bytes."
+    },
+    {
+      "gate": "complete-app-build-node-typecheck",
+      "outcome": "PASS",
+      "reason": "Exact candidate builds, passes all 32 application Node tests invoked from the repository root, and passes full tsc --noEmit. Frozen prerequisite independently passes these same lanes; historical main independently reproduces 12 Node failures and three Worker type errors. The npm test aggregate is not claimed as executed; its historical cwd assumptions are unchanged."
+    },
+    {
+      "gate": "app-lint",
+      "outcome": "PASS",
+      "reason": "Unchanged application lint command exits 0. JSON readback contains 38 files, zero errors and zero warnings. Frozen prerequisite independently retains the React getFilename crash; historical main retains the TS7 classic-API incompatibility. This is a local narrow context bridge, not general upstream plugin support."
+    },
+    {
+      "gate": "lint-contract-and-posttest",
+      "outcome": "PASS",
+      "reason": "All 26 regressions pass through both explicit test:lint and posttest commands. Effective configuration equality covers JS, ESM, JSX, TS and TSX; retained React, Hooks, TypeScript, import and accessibility negative fixtures report their original severities. Syntax errors remain fatal and CLI rule violations exit 1. Exceptions propagate. The unadapted negative control runs in a fresh process to avoid React version-cache contamination. The complete React rule inventory and metadata are preserved; execution of every disabled rule is not claimed."
+    },
+    {
+      "gate": "repository-topology",
+      "outcome": "FAIL",
+      "reason": "Candidate, frozen prerequisite and historical main have identical findings and stale-fingerprint arrays: 0 invariant violations, 5 new-drift findings, 122 baselined warnings and 5 stale entries. Raw subjects are path-grammar:uppercase, catalog/, scaffold-only-leaf-directories, data/maps/, and doc-id:kfm://doc/NEEDS-VERIFICATION. Candidate tracks 14479 paths, prerequisite 14476, historical main 14474. Identical inherited failure is attribution, not a waiver. The diagnostic aggregate intentionally remains failed."
+    },
+    {
+      "gate": "new-main-integration",
+      "outcome": "SKIPPED",
+      "reason": "Main advanced independently to 94e976ff281ff5033c1c91ada417ab1d0c445f7b during this task. Its eight changed paths do not overlap the lint unit or prerequisite app/lock repair, but this product remains stacked on frozen 343a516 and does not integrate the four new main commits. Validation of new main is a separate post-receipt evidence step and must not be preclaimed."
+    },
+    {
+      "gate": "generated-receipt-native-validation",
+      "outcome": "SKIPPED",
+      "reason": "This add-only receipt is created after the exact-source application run. Native replay against a120361953ae574c4c1df8ea805a69677c9fab78 follows in post-commit evidence; do not rewrite this authoring-time observation after that run."
+    },
+    {
+      "gate": "independent-human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending. The user's implementation request is not a fabricated approval of these newly authored bytes."
+    },
+    {
+      "gate": "runtime-release-deployment-publication",
+      "outcome": "SKIPPED",
+      "reason": "No PR lifecycle action, public Site mutation, browser/GPU proof, source or renderer activation, release, deployment, publication, settings change or topology correction authorization is part of this lint unit."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {"id": "eslint-context-api", "validated": true, "evidence_ref": "https://eslint.org/docs/latest/use/migrate-to-10.0.0"},
+    {"id": "matched-exact-source-run", "validated": true, "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33999495382"}
+  ],
+  "human_review": {"reviewer_ids": [], "state": "pending", "timestamp": null},
+  "override_record": null,
+  "created_at": "2026-09-05T23:49:36.617394+00:00",
+  "emitter": "ChatGPT GPT-6 Astra Pro; GitHub connector branch authoring and exact-source validation",
+  "links": {"pr_number": null, "adr_link": null, "drift_register_entry": null},
+  "notes": "Five-file lint-only unit stacked on the frozen TS7/Worker prerequisite. The receipt does not supersede the prerequisite's historical six-file receipt, which remains replayable at its own artifact source. Product source is a120361953ae574c4c1df8ea805a69677c9fab78; this receipt-only commit changes none of its five artifacts. Initial b7c3a2c fixture/test-script failures remain recorded in run 33999252652 and branch history; they are not relabeled as passes. Existing lint rules, severities, options, ignores, dependencies, compiler version, build-script policy, validators, topology baseline and correction register remain unchanged by this unit. Human review and delivery-state authorization remain separate. Keep both original frozen branches intact."
+}

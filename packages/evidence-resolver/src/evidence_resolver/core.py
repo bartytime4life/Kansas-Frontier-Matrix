@@ -31,7 +31,8 @@ _DIGEST = re.compile(r"^sha256:[a-f0-9]{64}$")
 _BUNDLE_ID = re.compile(r"^[a-z][a-z0-9_:.-]*$")
 _RFC3339 = re.compile(
     r"^\d{4}-\d{2}-\d{2}[Tt]\d{2}:\d{2}:\d{2}"
-    r"(?:\.\d+)?(?:[Zz]|[+-]\d{2}:\d{2})$"
+    # Reject offset overflow before fromisoformat can normalize it.
+    r"(?:\.\d+)?(?:[Zz]|[+-](?:[01]\d|2[0-3]):[0-5]\d)$"
 )
 _REF_KINDS = frozenset({"measurement", "record", "dataset", "artifact"})
 _POLICY_OUTCOMES = frozenset({"ANSWER", "ABSTAIN", "DENY", "ERROR"})

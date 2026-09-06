@@ -1,0 +1,7 @@
+/* The dialog is mounted in document.body, outside the map command bar's
+ * compact typography and small-screen hiding rules. Only its trigger lives here. */
+.map-command-bar .site-layer-library-host { display: inline-block; }
+@media (max-width: 720px) {
+  .map-command-bar { flex-wrap: wrap; gap: 6px; justify-content: center; }
+  .map-command-bar > div { flex-wrap: wrap; justify-content: center; }
+}

@@ -1,0 +1,174 @@
+{
+  "receipt_id": "genrec-earth-layer-library-a7374a0d9e32",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/kansas-frontier-matrix-explorer/app/site-layer-library-metadata.ts",
+    "apps/kansas-frontier-matrix-explorer/app/site-layer-library.tsx",
+    "apps/kansas-frontier-matrix-explorer/docs/earth-layer-library-integration.md",
+    "apps/kansas-frontier-matrix-explorer/tests/earth-layer-library.browser.py",
+    "apps/kansas-frontier-matrix-explorer/tests/earth-layer-library.test.mjs",
+    "packages/ui/src/README.md",
+    "packages/ui/src/layer-library-model.ts",
+    "packages/ui/src/layer-library-view.ts",
+    "packages/ui/src/layer-library.css"
+  ],
+  "artifact_hashes": {
+    "apps/kansas-frontier-matrix-explorer/app/site-layer-library-metadata.ts": "sha256:ded8b57c7eeabc8af2445714efbe2fdc0760d023149c85ed890b1ce5cff36e36",
+    "apps/kansas-frontier-matrix-explorer/app/site-layer-library.tsx": "sha256:8c90384db822cb1841fa1edc4ff4a82c336573406a214a4ba1688a9e9d5cde09",
+    "apps/kansas-frontier-matrix-explorer/docs/earth-layer-library-integration.md": "sha256:56eb92b3cbc8d8e05baf16aa72d1ddb4b36960375c0f51feeaf50cf2de0e0903",
+    "apps/kansas-frontier-matrix-explorer/tests/earth-layer-library.browser.py": "sha256:445b49e7af658a606c526e3a81de7dca69973f33d3a006f0980b099763d64d08",
+    "apps/kansas-frontier-matrix-explorer/tests/earth-layer-library.test.mjs": "sha256:f6a6064268a746b1d73c55a2573ee78f4a3a865001a9f9fce83ee29d912871d5",
+    "packages/ui/src/README.md": "sha256:af3e0510b4f260acaea3381641febd96c6e5db9e34988695cde40579f4699a63",
+    "packages/ui/src/layer-library-model.ts": "sha256:740dc616d2af0d2b3cfaeba1482cf0122d398bb7365a9b18f0a85f5301929803",
+    "packages/ui/src/layer-library-view.ts": "sha256:f3dc39812f5b97338102162b17b83076be8ad3244415892cae0de7c43ab2c828",
+    "packages/ui/src/layer-library.css": "sha256:255eef794dc659e276a6abb67861ba7f393f02dff5ec00c67a70827b05c0efeb"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Pro",
+    "version": "not-exposed"
+  },
+  "prompt_or_contract": "sha256:8859f0f33abbab0f55e1dba5e486108d6bb8cdc261ef3a0e01dd348414b4243e",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "Google_Drive",
+      "Notion",
+      "container"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:c783c264d1cf8c027fff95e5c579eec57d837800b3f1e524c1b6f4ae523cb6af"
+    ],
+    "attached_docs": [
+      "KFM_Earth_Layer_Library_Candidate_2026-09-05.zip",
+      "KFM_Earth_Layer_Library_Handoff_2026-09-05.md",
+      "KFM_Earth_Layer_Library_Validation_2026-09-05.json"
+    ],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/cbd6d82bad962a58ab62cfb776ee31696b575107/docs/doctrine/directory-rules.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/cbd6d82bad962a58ab62cfb776ee31696b575107/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/cbd6d82bad962a58ab62cfb776ee31696b575107/CONTRIBUTING.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/cbd6d82bad962a58ab62cfb776ee31696b575107/data/receipts/generated/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/cbd6d82bad962a58ab62cfb776ee31696b575107/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4228",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/compare/3d6b8a6e81ed65a726156feae67fa73875b5b069...cbd6d82bad962a58ab62cfb776ee31696b575107"
+    ]
+  },
+  "truth_labels": {
+    "apps/kansas-frontier-matrix-explorer/app/site-layer-library-metadata.ts": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/app/site-layer-library.tsx": "NEEDS VERIFICATION",
+    "apps/kansas-frontier-matrix-explorer/docs/earth-layer-library-integration.md": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/tests/earth-layer-library.browser.py": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/tests/earth-layer-library.test.mjs": "PROPOSED",
+    "packages/ui/src/README.md": "PROPOSED",
+    "packages/ui/src/layer-library-model.ts": "PROPOSED",
+    "packages/ui/src/layer-library-view.ts": "PROPOSED",
+    "packages/ui/src/layer-library.css": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "original-candidate-replay",
+      "outcome": "PASS",
+      "reason": "Fresh 37 Node and 21 Chromium DOM cases; original manifest 37 entries checked. Candidate export, not current main."
+    },
+    {
+      "gate": "revised-source-unit-tests",
+      "outcome": "PASS",
+      "reason": "47 Node cases with explicit KFM_ALLOW_GLOBAL_TSC=1; Node 22.16.0, ambient TypeScript 5.8.3; not app-declared 7.0.2."
+    },
+    {
+      "gate": "revised-browser-component-tests",
+      "outcome": "PASS",
+      "reason": "27 Chromium 144.0.7559.96 DOM cases; injected CommonJS modules, synthetic host; zero extra network requests and zero owned DOM nodes after each of 50 teardown cycles."
+    },
+    {
+      "gate": "strict-model-view-metadata-typecheck",
+      "outcome": "PASS",
+      "reason": "TypeScript 5.8.3 ES2022/DOM diagnostic; not locked app build or React typing."
+    },
+    {
+      "gate": "wrapper-syntax",
+      "outcome": "PASS",
+      "reason": "TSX parse only; no React scheduling, commit, paint or actual host atomicity proof."
+    },
+    {
+      "gate": "ambient-compiler-default-refusal",
+      "outcome": "PASS",
+      "reason": "After repair, default invocation exits 1 without matching app manifest/lock/local compiler; explicit diagnostic exits 0 and reports compiler identity. Original NODE_PATH gap was not a lock-native success."
+    },
+    {
+      "gate": "patch-hygiene-and-reversal",
+      "outcome": "PASS",
+      "reason": "git diff --check and reverse applicability in a minimal source-export harness, not a full checkout."
+    },
+    {
+      "gate": "lock-native-app-build-lint-tests",
+      "outcome": "SKIPPED",
+      "reason": "BLOCKED: no successful full checkout/locked toolchain; local Git DNS failed. No dependency or build-script policy modified."
+    },
+    {
+      "gate": "repository-native-topology-generated-receipt-validation",
+      "outcome": "SKIPPED",
+      "reason": "NOT_RUN: native full validators not materialized/executed. Local JSON/hash checks do not substitute for conformance."
+    },
+    {
+      "gate": "hosted-ci-and-independent-review",
+      "outcome": "SKIPPED",
+      "reason": "NOT_RUN at receipt emission; pending human review. No approval, ready or merge authority."
+    },
+    {
+      "gate": "sites-renderer-publication",
+      "outcome": "SKIPPED",
+      "reason": "NOT_RUN: no Sites draft/preview/version inspection; app entrypoints unchanged; no GPU, live data, source admission, release, deployment or publication."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "repository-placement-and-control-1",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/cbd6d82bad962a58ab62cfb776ee31696b575107/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "repository-placement-and-control-2",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/cbd6d82bad962a58ab62cfb776ee31696b575107/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "repository-placement-and-control-3",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/cbd6d82bad962a58ab62cfb776ee31696b575107/CONTRIBUTING.md"
+    },
+    {
+      "id": "repository-placement-and-control-4",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/cbd6d82bad962a58ab62cfb776ee31696b575107/data/receipts/generated/README.md"
+    },
+    {
+      "id": "repository-placement-and-control-5",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/cbd6d82bad962a58ab62cfb776ee31696b575107/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-05T18:36:52.356348Z",
+  "emitter": "KFM Earth Layer Library continuation authoring assistant",
+  "links": {
+    "pr_number": null,
+    "adr_link": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/cbd6d82bad962a58ab62cfb776ee31696b575107/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Process memory only, not evidence authority, policy approval or release. This receipt covers nine authored code/test/documentation paths; it does not self-hash. Prompt hash covers only the literal continuation request. Sampling/model build parameters are unavailable. Delivery base cbd6d82bad962a58ab62cfb776ee31696b575107; authoring pin 3d6b8a6e81ed65a726156feae67fa73875b5b069. The four-commit advance changes five non-overlapping paths. New callback is boolean acknowledged compare-and-set; the prior unapplied void callback must not be used. Wrapper remains dormant; readback confirms requested port state, not React commit or rendering. No page/layout/lock/workflow/renderer/temporal/KanPlan/frozen-root changes. Stop at branch-only absent independent permitted PR creator. #4024 closed metadata does not prove control exit; #4228 Stage 1B remains HOLD and Stage 2 unauthorized. Rollback the complete task commit after checking intervening edits; do not delete saved workspaces or restore revoked access."
+}
