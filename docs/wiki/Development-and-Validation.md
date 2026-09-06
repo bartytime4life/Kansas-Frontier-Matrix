@@ -163,7 +163,7 @@ The canonical thin entry point is `tools/validate_all.py`. Its registry and impl
 | `make validator-focused` | Registry-declared trust-spine subset | Narrower than the full profile |
 | `make validator-full` | Every registered validator once, in registry order | Does not claim every repository checker is registered |
 | `make validator-release-profile` | Release-adjacent fixture validators | No release, promotion, or publication effect |
-| `make validator-changed-area CHANGED_PATH_FILE=<file>` | Glob matches against newline-delimited changed paths | No match returns `ABSTAIN`, exit `0`, not `PASS` |
+| `make validator-changed-area CHANGED_PATH_FILE=<file>` | Glob matches against newline-delimited changed paths | Uses `--require-match`; an empty normalized path set returns `FAIL`, exit `1` rather than a vacuous pass |
 
 Direct CLI examples:
 
@@ -198,7 +198,7 @@ The orchestrator's aggregate outcomes are finite:
 |---|---:|---|
 | `PASS` | `0` | Every selected child exited `0` |
 | `ABSTAIN` | `0` | Changed-area selection matched no registered validator; no pass claim is made |
-| `FAIL` | `1` | At least one child reported a governed validation failure |
+| `FAIL` | `1` | A child reported a governed validation failure, or a required changed-area selection matched nothing |
 | `ERROR` | `2` | Registry, path, I/O, timeout, or child-system error |
 
 Preserve the distinction between `FAIL` and `ERROR`. An arbitrary nonzero exit is not automatically a reviewed rejection.
@@ -281,7 +281,7 @@ Then:
 1. inspect the selected validator IDs;
 2. add direct package, subsystem, documentation, policy, or workflow checks that the registry does not cover;
 3. run deterministic negative cases;
-4. record any no-match `ABSTAIN`;
+4. preserve direct-CLI no-match `ABSTAIN` results; the Make target uses `--require-match` and returns `FAIL`/exit `1`;
 5. compare the exact final head—not an earlier local commit—to the intended base;
 6. inspect hosted checks after the draft pull request is created.
 
@@ -355,7 +355,7 @@ KFM's trust boundaries require deterministic negative cases.
 | Watcher or connector attempts publication | `DENY` |
 | Missing release, correction, or rollback support | `HOLD` |
 | Invalid path or parallel authority home | `HOLD` or `DENY` |
-| Changed-area profile matches nothing | `ABSTAIN`; no false all-pass claim |
+| Direct changed-area CLI matches nothing | `ABSTAIN` by default; a gated invocation using `--require-match` returns `FAIL`/exit `1` |
 | Root JavaScript hold scripts run | Intentional nonzero `WORKFLOW_HOLD` |
 
 A positive fixture without its meaningful negative counterpart is usually incomplete evidence for a fail-closed boundary.
