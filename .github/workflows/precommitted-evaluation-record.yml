@@ -13,6 +13,7 @@ name: precommitted-evaluation-record
       - "tests/validators/test_validate_precommitted_evaluation_record.py"
       - "docs/intake/exploratory/cairnwake-precommitted-evaluation-source-map.md"
       - "packages/hashing/**"
+      - "data/receipts/generated/genrec-contract-precommitted-evaluation-record-currentness-20260906.json"
       - "data/receipts/generated/genrec-cairnwake-precommitted-evaluation-*.json"
   push:
     branches: [main]
@@ -26,6 +27,7 @@ name: precommitted-evaluation-record
       - "tests/validators/test_validate_precommitted_evaluation_record.py"
       - "docs/intake/exploratory/cairnwake-precommitted-evaluation-source-map.md"
       - "packages/hashing/**"
+      - "data/receipts/generated/genrec-contract-precommitted-evaluation-record-currentness-20260906.json"
       - "data/receipts/generated/genrec-cairnwake-precommitted-evaluation-*.json"
   workflow_dispatch:
 
@@ -55,6 +57,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          fetch-depth: 0
 
       - name: Set up repository Python
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
@@ -77,10 +80,15 @@ jobs:
           python tools/generators/precommitted_evaluation_record/build_precommitted_evaluation_record.py --case valid-scored-with-interventions
           python tools/validators/validate_precommitted_evaluation_record.py --fixtures
 
-      - name: Verify generated authoring receipt integrity
+      - name: Verify historical authoring receipt integrity
         run: |
           set -euo pipefail
-          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-cairnwake-precommitted-evaluation-20260825.json --repo-root .
+          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-cairnwake-precommitted-evaluation-20260825.json --repo-root . --artifact-git-ref 6af91c7d4cc132b53a747736c2109e5561ff2c04
+
+      - name: Verify currentness authoring receipt integrity
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-contract-precommitted-evaluation-record-currentness-20260906.json --repo-root .
 
       - name: Record trust boundary
         if: always()
