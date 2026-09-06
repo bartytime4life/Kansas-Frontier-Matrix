@@ -32,7 +32,7 @@
       "evidence_ref": "notion:https://app.notion.com/p/3c9a92021bf68195b8b1f3a8d694b447"
     }
   ],
-  "created_at": "2026-09-06T18:34:02.124Z",
+  "created_at": "2026-09-06T18:35:32.028Z",
   "emitter": "Codex (GPT-5) via ChatGPT",
   "human_review": {
     "reviewer_ids": [],
@@ -42,8 +42,8 @@
   "inputs": {
     "attached_docs": [],
     "evidence_refs": [
-      "repo:main@4a2ddb9abe7ae64aad7c2d650478a7a14af1b73c",
-      "repo:codex/ci-fanout-controls-20260906@05622cb4fd4e818fa01870a091f9d88af79814be",
+      "repo:main@61368f63707df32d3f796a29028e66e715d083c9",
+      "repo:codex/ci-fanout-controls-20260906@92c43170501e3e2865201186645eda3d236e0f2e",
       "drive:1yJpf-Rvb0kAcfgPQjU0kllsMMg4DDlB6",
       "notion:https://app.notion.com/p/3c9a92021bf68195b8b1f3a8d694b447"
     ]
@@ -58,7 +58,7 @@
     "provider": "OpenAI",
     "version": "2026-09-06"
   },
-  "notes": "Authoring provenance for a bounded CI workflow-fanout control slice. The receipt excludes itself from artifact hashes and binds the five modified paths to the exact draft branch head. The change preserves historical workflow/run evidence, manual dispatch, workflow/job names, repository permissions, and ruleset/settings state. No merge, release, deployment, promotion, publication, source activation, or repository setting change is created. Local make workflow-security execution is pending because the connected runtime could not provide a checkout; hosted exact-head checks and independent human review remain pending.",
+  "notes": "Authoring provenance for a bounded CI workflow-fanout control slice. The receipt excludes itself from artifact hashes and binds the five modified paths to the exact draft branch tree. The change preserves historical workflow/run evidence, manual dispatch, workflow/job names, repository permissions, and ruleset/settings state. No merge, release, deployment, promotion, publication, source activation, or repository setting change is created. Local make workflow-security execution is pending because the connected runtime could not provide a checkout; hosted exact-head checks and independent human review remain pending.",
   "parameters": {
     "seed": null,
     "temperature": null,
@@ -83,9 +83,9 @@
   },
   "validation_gates": [
     {
-      "gate": "exact-base-and-head-pin",
+      "gate": "current-main-and-head-pin",
       "outcome": "PASS",
-      "reason": "Branch head 05622cb4fd4e818fa01870a091f9d88af79814be has exact base 4a2ddb9abe7ae64aad7c2d650478a7a14af1b73c and one commit of ancestry."
+      "reason": "The branch retains its prior head 92c43170501e3e2865201186645eda3d236e0f2e; the final branch commit will be a descendant of current main@61368f63707df32d3f796a29028e66e715d083c9 with the intended five-path tree plus this receipt."
     },
     {
       "gate": "changed-path-and-trigger-structure",
