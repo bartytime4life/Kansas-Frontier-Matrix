@@ -11,12 +11,17 @@ name: temporal-view-state-validation
       - "fixtures/contracts/v1/common/temporal_view_state/**"
       - "packages/temporal/**"
       - "tools/validators/validate_temporal_view_state.py"
-      - "tests/validators/test_validate_temporal_view_state.py"
+      - "tests/validators/test_validate_temporal_view_state*.py"
+      - "tests/ci/test_temporal_view_state_workflow.py"
       - "tests/schemas/test_common_contracts.py"
       - "apps/explorer-web/src/features/temporal/**"
       - "apps/explorer-web/src/site/workspace-context.ts"
       - "apps/explorer-web/tests/temporal-kernel.test.ts"
+      - "apps/explorer-web/tests/temporal-boundary-regression.test.ts"
+      - "apps/explorer-web/tests/workspace-context.test.ts"
       - "apps/explorer-web/package.json"
+      - "package.json"
+      - "pnpm-workspace.yaml"
       - "pnpm-lock.yaml"
   push:
     branches:
@@ -28,12 +33,17 @@ name: temporal-view-state-validation
       - "fixtures/contracts/v1/common/temporal_view_state/**"
       - "packages/temporal/**"
       - "tools/validators/validate_temporal_view_state.py"
-      - "tests/validators/test_validate_temporal_view_state.py"
+      - "tests/validators/test_validate_temporal_view_state*.py"
+      - "tests/ci/test_temporal_view_state_workflow.py"
       - "tests/schemas/test_common_contracts.py"
       - "apps/explorer-web/src/features/temporal/**"
       - "apps/explorer-web/src/site/workspace-context.ts"
       - "apps/explorer-web/tests/temporal-kernel.test.ts"
+      - "apps/explorer-web/tests/temporal-boundary-regression.test.ts"
+      - "apps/explorer-web/tests/workspace-context.test.ts"
       - "apps/explorer-web/package.json"
+      - "package.json"
+      - "pnpm-workspace.yaml"
       - "pnpm-lock.yaml"
   workflow_dispatch:
 
@@ -45,6 +55,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
+  COREPACK_ENABLE_STRICT: "1"
   KFM_NO_NETWORK: "1"
   PIP_DISABLE_PIP_VERSION_CHECK: "1"
   PIP_NO_INPUT: "1"
@@ -75,13 +86,17 @@ jobs:
         shell: bash
         run: python tools/ci/install_python_ci.py project-test
 
+      - name: Check temporal workflow coverage and safety contract
+        shell: bash
+        run: python -m pytest -q tests/ci/test_temporal_view_state_workflow.py
+
       - name: Run focused TemporalViewState validator tests
         shell: bash
         run: |
           set -euo pipefail
           python -m unittest discover \
             --start-directory tests/validators \
-            --pattern 'test_validate_temporal_view_state.py' \
+            --pattern 'test_validate_temporal_view_state*.py' \
             --verbose
 
       - name: Run non-vacuous TemporalViewState fixture profile
@@ -109,21 +124,35 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: "22.13.1"
+          node-version: "22.23.2"
           package-manager-cache: false
 
       - name: Enable pinned workspace package manager
         shell: bash
-        run: corepack enable
+        run: |
+          set -euo pipefail
+          node --version
+          corepack --version
+          corepack enable
+          pnpm --version
 
       - name: Install locked Explorer dependencies
         shell: bash
         run: pnpm install --frozen-lockfile --filter explorer-web...
 
+      - name: Build Explorer with strict TypeScript checking
+        shell: bash
+        run: pnpm --filter explorer-web build
+
       - name: Run temporal adapter tests
         shell: bash
         working-directory: apps/explorer-web
-        run: pnpm exec vitest run tests/temporal-kernel.test.ts
+        run: |
+          set -euo pipefail
+          pnpm exec vitest run \
+            tests/temporal-kernel.test.ts \
+            tests/temporal-boundary-regression.test.ts \
+            tests/workspace-context.test.ts
 
       - name: Record validation boundary
         if: always()
