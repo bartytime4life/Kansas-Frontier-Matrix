@@ -13,7 +13,7 @@
     "contracts/domains/hydrology/western_kansas_observation_assessment.md": "sha256:a644a11c87a3cedfaea7b0301b649e5abf72efea3d52b794591b6c7609b4717c",
     "fixtures/domains/hydrology/western_kansas_observation_assessment/cases.json": "sha256:4a67a5dd445ef5d3473a3353d2a20bd207acde9f8baf27f8ae7bd0c4e80ae4cf",
     "tools/validators/evidence/validate_western_kansas_observation_assessment.py": "sha256:3f42064b8b5c76b25a100501fb68984124d919d33aa8adf7c6ce9c5830684748",
-    "tests/validators/test_western_kansas_observation_assessment.py": "sha256:0b4b47f6ecf38a26ec53a7b092342081989e8cb54008de669de5d1ac99f5a039"
+    "tests/validators/test_western_kansas_observation_assessment.py": "sha256:89b781f8a190ffcec183f587ba673cc599ddfd70652923f7ab6182723410ccf6"
   },
   "model_identity": {
     "provider": "OpenAI",
