@@ -94,6 +94,15 @@ def _instant(value: str) -> datetime:
     return parsed.astimezone(timezone.utc)
 
 
+def _try_instant(value: Any) -> datetime | None:
+    if not isinstance(value, str):
+        return None
+    try:
+        return _instant(value)
+    except (TypeError, ValueError, OverflowError):
+        return None
+
+
 def _deep_update(target: dict[str, Any], overrides: Mapping[str, Any]) -> None:
     for key, value in overrides.items():
         current = target.get(key)
@@ -113,17 +122,29 @@ def candidate_from_case(base_candidate: Mapping[str, Any], case: Mapping[str, An
 
 def _source_semantic_reasons(candidate: Mapping[str, Any]) -> list[str]:
     reasons: list[str] = []
-    analysis_time = _instant(candidate["analysis_time"])
+    analysis_time = _try_instant(candidate["analysis_time"])
+    if analysis_time is None:
+        return ["TEMPORAL_ORDER_INVALID"]
+
     max_age_days = int(candidate["max_age_days"])
     claim = candidate["claim"]
     evidence_refs = set(claim["tuple_evidence_refs"])
     source_refs: set[str] = set()
 
     for source in candidate["sources"]:
-        observed_start = _instant(source["observation_start"])
-        observed_end = _instant(source["observation_end"])
-        publication = _instant(source["publication_time"])
-        retrieval = _instant(source["retrieval_time"])
+        source_refs.add(source["evidence_ref"])
+        observed_start = _try_instant(source["observation_start"])
+        observed_end = _try_instant(source["observation_end"])
+        publication = _try_instant(source["publication_time"])
+        retrieval = _try_instant(source["retrieval_time"])
+        if (
+            observed_start is None
+            or observed_end is None
+            or publication is None
+            or retrieval is None
+        ):
+            reasons.append("TEMPORAL_ORDER_INVALID")
+            continue
         if not (observed_start <= observed_end <= publication <= retrieval <= analysis_time):
             reasons.append("TEMPORAL_ORDER_INVALID")
 
@@ -131,8 +152,15 @@ def _source_semantic_reasons(candidate: Mapping[str, Any]) -> list[str]:
         valid_end = source.get("valid_end")
         if (valid_start is None) != (valid_end is None):
             reasons.append("TEMPORAL_ORDER_INVALID")
-        elif valid_start is not None and _instant(valid_start) > _instant(valid_end):
-            reasons.append("TEMPORAL_ORDER_INVALID")
+        elif valid_start is not None:
+            parsed_valid_start = _try_instant(valid_start)
+            parsed_valid_end = _try_instant(valid_end)
+            if (
+                parsed_valid_start is None
+                or parsed_valid_end is None
+                or parsed_valid_start > parsed_valid_end
+            ):
+                reasons.append("TEMPORAL_ORDER_INVALID")
 
         revision = source["revision_status"]
         if revision == "CORRECTED" and (
@@ -150,8 +178,6 @@ def _source_semantic_reasons(candidate: Mapping[str, Any]) -> list[str]:
             age_days = (analysis_time - observed_end).total_seconds() / 86400
             if age_days > max_age_days:
                 reasons.append("OBSERVATION_STALE")
-
-        source_refs.add(source["evidence_ref"])
 
     if not source_refs.issubset(evidence_refs):
         reasons.append("TUPLE_EVIDENCE_INCOMPLETE")

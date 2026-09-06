@@ -75,6 +75,11 @@ The validator requires:
 A recent publication cannot make an older observation fresh. Freshness is
 computed from `observation_end`, `analysis_time`, and `max_age_days`.
 
+The validator parses every declared instant defensively. A malformed or
+timezone-less value remains inside the finite result boundary as `ERROR` with
+`TEMPORAL_ORDER_INVALID`; parser exceptions are not exposed as execution
+failures.
+
 ## Spatial and join rules
 
 Every source records support kind, support identifier, CRS, method, unit, and
