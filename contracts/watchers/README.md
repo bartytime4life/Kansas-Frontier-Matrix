@@ -51,7 +51,7 @@ notes:
 [![Boundary: non-publisher](https://img.shields.io/badge/boundary-non--publisher-6e7781?style=flat-square)](#trust-and-safety-boundary)
 [![Network: denied](https://img.shields.io/badge/network-denied-b42318?style=flat-square)](#trust-and-safety-boundary)
 
-**Quick navigation:** [Purpose](#purpose) · [Authority and inheritance](#authority-and-inheritance) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Responsibility split](#responsibility-split) · [Finite watcher boundary](#finite-watcher-boundary) · [Trust and safety](#trust-and-safety-boundary) · [Inputs and outputs](#inputs-and-outputs) · [Exposure, mutation, and retention](#exposure-mutation-and-retention) · [Validation](#validation) · [Open verification](#open-verification) · [Rollback](#rollback) · [References](#references)
+**Quick navigation:** [Purpose](#purpose) · [Authority and inheritance](#authority-and-inheritance) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Responsibility split](#responsibility-split) · [Finite watcher boundary](#finite-watcher-boundary) · [Trust and safety](#trust-and-safety-boundary) · [Inputs and outputs](#inputs-and-outputs) · [Exposure, mutation, and retention](#exposure-mutation-and-retention) · [Validation](#validation) · [Open verification](#open-verification) · [Rollback](#review-triggers-and-rollback) · [References](#references)
 
 ## Purpose
 
