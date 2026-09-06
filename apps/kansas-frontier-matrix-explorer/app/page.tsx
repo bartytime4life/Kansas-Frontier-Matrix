@@ -1044,7 +1044,7 @@ export default function Home() {
   const showComparedLayers = useCallback(() => {
     setVisibility((current) => ({ ...current, [compareLeft.id]: true, [compareRight.id]: true }));
     announce(`Showing ${compareLeft.title} and ${compareRight.title}; other visible layers were preserved`);
-  }, [announce, compareLeft, compareRight]);
+  }, [announce, compareLeft, compareRight, setVisibility]);
 
   const fitComparedLayers = useCallback(() => {
     const bounds: [number, number, number, number] = [
@@ -1056,7 +1056,7 @@ export default function Home() {
     setVisibility((current) => ({ ...current, [compareLeft.id]: true, [compareRight.id]: true }));
     fitRendererNeutralBounds(bounds);
     announce("Framed both comparison layers in renderer-neutral camera state; visibility changed only in this browser");
-  }, [announce, compareLeft, compareRight, fitRendererNeutralBounds]);
+  }, [announce, compareLeft, compareRight, fitRendererNeutralBounds, setVisibility]);
 
   const copyLayerComparison = useCallback(async () => {
     const summarize = (layer: LayerRecord) => ({
@@ -1371,7 +1371,7 @@ export default function Home() {
       center: focus,
       zoom: Math.max(mapRuntimeRef.current?.getSnapshot().camera.zoom ?? KANSAS_VIEW.zoom, 7),
     });
-  }, [openSelection, updateRendererNeutralView]);
+  }, [openSelection, setVisibility, updateRendererNeutralView]);
 
   const openGuidedExample = useCallback((example: (typeof GUIDED_EXAMPLES)[number]) => {
     yearRef.current = example.year;
@@ -1583,7 +1583,7 @@ export default function Home() {
         setSelected(null);
         setRightOpen(false);
       }
-  }, [applyRendererNeutralView]);
+  }, [applyRendererNeutralView, requestedLayers, setVisibility]);
 
   useEffect(() => {
     const restore = window.setTimeout(restoreExplorerFromUrl, 0);

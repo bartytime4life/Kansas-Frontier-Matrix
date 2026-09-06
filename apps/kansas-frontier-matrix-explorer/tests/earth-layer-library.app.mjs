@@ -183,7 +183,7 @@ try {
   await run('no browser application errors or off-origin source requests', async()=>{
     assert.deepEqual(errors,[]);assert.deepEqual(external,[]);
   });
-} catch(error) {
+} catch {
   await page.screenshot({path:path.join(output,'failure.png')}).catch(()=>{});
   await writeFile(path.join(output,'failure.html'),await page.content().catch(()=>''));
   process.exitCode=1;
