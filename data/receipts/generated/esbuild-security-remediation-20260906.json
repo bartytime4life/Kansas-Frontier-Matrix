@@ -1,0 +1,109 @@
+{
+  "receipt_id": "esbuild-security-remediation-20260906",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/esbuild-security.yml",
+    "apps/kansas-frontier-matrix-explorer/docs/esbuild-security-remediation.md",
+    "apps/kansas-frontier-matrix-explorer/tests/esbuild-security.test.mjs"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/esbuild-security.yml": "sha256:3b0ed47d2dd4ad82299597396e53eff539847d8a99f69286204bf24ff7d2fb3d",
+    "apps/kansas-frontier-matrix-explorer/docs/esbuild-security-remediation.md": "sha256:ab54852cf2953a60951f9e725b8804c132e94684de15eddb35e7e21151cc1f7d",
+    "apps/kansas-frontier-matrix-explorer/tests/esbuild-security.test.mjs": "sha256:9532475a74eedc84ee08b8bc634e6e48430211ea87779a4714e377e7f1f2b946"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5"
+  },
+  "prompt_or_contract": "sha256:54307f990e6b59ef6424875750654595403660194b3c4dfc364b532efcd35edd",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "github",
+      "notion",
+      "google-drive"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix@11cb4b51125db18d952d9f00e997beab89791cea",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3366",
+      "https://github.com/advisories/GHSA-67mh-4wv8-2f99",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4318",
+      "https://drive.google.com/file/d/1yJpf-Rvb0kAcfgPQjU0kllsMMg4DDlB6/view",
+      "https://app.notion.com/p/3c9a9202-1bf6-8195-b8b1-f3a8d694b447?pvs=204"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/esbuild-security.yml": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/docs/esbuild-security-remediation.md": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/tests/esbuild-security.test.mjs": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Current-main merged remediation readback",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Local repository command validation",
+      "outcome": "SKIPPED",
+      "reason": "The local command runner was rejected by the environment usage limit; hosted exact-head validation is required."
+    },
+    {
+      "gate": "Initial exact-head esbuild-security hosted workflow",
+      "outcome": "FAIL",
+      "reason": "Run 34013101178 exposed two guard-fixture defects; the corrected candidate is being rerun."
+    },
+    {
+      "gate": "Corrected exact-head esbuild-security hosted workflow",
+      "outcome": "PASS",
+      "reason": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/34013210029: pnpm and npm jobs passed installation and runtime probes."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-where-does-new-work-live.md",
+    "package.json#pnpm.overrides — existing parent-scoped remediation retained",
+    "pnpm-workspace.yaml#allowBuilds — six existing version-specific decisions retained",
+    "docs/runbooks/ui_LOCAL_DEV.md — denied build-script policy remains fail-closed"
+  ],
+  "citations": [
+    {
+      "id": "https://github.com/advisories/GHSA-67mh-4wv8-2f99",
+      "validated": true,
+      "evidence_ref": "GHSA-67mh-4wv8-2f99"
+    },
+    {
+      "id": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4318",
+      "validated": true,
+      "evidence_ref": "main@11cb4b51125db18d952d9f00e997beab89791cea"
+    },
+    {
+      "id": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3366",
+      "validated": true,
+      "evidence_ref": "issue #3366"
+    },
+    {
+      "id": "https://drive.google.com/file/d/1yJpf-Rvb0kAcfgPQjU0kllsMMg4DDlB6/view",
+      "validated": true,
+      "evidence_ref": "KFM Contributor Reliability System; read-only"
+    },
+    {
+      "id": "https://app.notion.com/p/3c9a9202-1bf6-8195-b8b1-f3a8d694b447?pvs=204",
+      "validated": true,
+      "evidence_ref": "KFM Repository Workbench; coordination-only"
+    }
+  ],
+  "human_review": {
+    "state": "pending"
+  },
+  "created_at": "2026-09-06T05:05:03.701Z",
+  "emitter": "Codex",
+  "links": {
+    "adr_link": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/docs/adr/ADR-0029-where-does-new-work-live.md"
+  },
+  "notes": "Initial exact-head run 34013101178 failed two guard-fixture assertions; corrected head run 34013210029 passed both pnpm and npm installation/runtime jobs. Local validation remained unavailable."
+}
