@@ -5,6 +5,7 @@
 # lineage rules, exact synthetic byte binding, and a local reference CAS.
 # It does not admit or activate a source, resolve evidence, mutate lifecycle
 # state, release, deploy, or publish.
+# Shared local-reader tests also cover the KFMGeoManifest helper, not its full profile.
 name: source-artifact-validation
 
 "on":
@@ -14,6 +15,9 @@ name: source-artifact-validation
       - "schemas/contracts/v1/source/source_artifact.schema.json"
       - "fixtures/contracts/v1/source/source_artifact/**"
       - "tools/validators/validate_source_artifact.py"
+      - "tools/validators/_source_artifact.py"
+      - "tools/validators/evidence/_kfm_geo_manifest.py"
+      - "tests/validators/test_artifact_reader_short_reads.py"
       - "tools/source_artifacts/**"
       - "tests/validators/test_validate_source_artifact.py"
       - "data/receipts/generated/genrec-source-artifact-validation-*.json"
@@ -25,6 +29,9 @@ name: source-artifact-validation
       - "schemas/contracts/v1/source/source_artifact.schema.json"
       - "fixtures/contracts/v1/source/source_artifact/**"
       - "tools/validators/validate_source_artifact.py"
+      - "tools/validators/_source_artifact.py"
+      - "tools/validators/evidence/_kfm_geo_manifest.py"
+      - "tests/validators/test_artifact_reader_short_reads.py"
       - "tools/source_artifacts/**"
       - "tests/validators/test_validate_source_artifact.py"
       - "data/receipts/generated/genrec-source-artifact-validation-*.json"
@@ -74,6 +81,14 @@ jobs:
           python -m unittest discover \
             --start-directory tests/validators \
             --pattern 'test_validate_source_artifact.py' \
+            --verbose
+
+      - name: Run bounded local-reader regressions
+        shell: bash
+        run: |
+          python -m unittest discover \
+            --start-directory tests/validators \
+            --pattern 'test_artifact_reader_short_reads.py' \
             --verbose
 
       - name: Validate exact fixture polarity and byte binding
