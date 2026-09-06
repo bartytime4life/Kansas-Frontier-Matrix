@@ -16,7 +16,7 @@ current_path: contracts/watchers/watcher_gate_packet.md
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 23c3487a1731f9558a6efc7143be65966f59efd5
+  base_commit: eaae135d8f4508c0712e3c6e151d7168a46f54ab
   prior_blob: 32f09f1f00ca1781f8c048aacb6faff4399b83fe
   adjacent_directory_readme_blob: c673297e6939663d7becc1e1ed3eeb0f32f1e894
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
@@ -71,7 +71,7 @@ vocabulary and its inactive posture.
 
 | Field | Current bounded state |
 |---|---|
-| Repository authority | GitHub main@23c3487a1731f9558a6efc7143be65966f59efd5 |
+| Repository authority | GitHub main@eaae135d8f4508c0712e3c6e151d7168a46f54ab |
 | Prior target bytes | Blob 32f09f1f00ca1781f8c048aacb6faff4399b83fe at this path |
 | Contract state | draft; PROPOSED_INACTIVE; fixture-first; no-network; no-release-authority |
 | Semantic owner | contracts/watchers/ |
@@ -247,12 +247,11 @@ The dedicated workflow currently:
 4. validates the generated authoring receipt;
 5. emits a review-only summary.
 
-The latest current-main push at 23c3487a1731f9558a6efc7143be65966f59efd5
-recorded successful general repository checks for contracts-validate
-(run 34044602363), docs-meta-block (run 34044602227), and
-docs-control-plane (run 34044602439). That push did not change a
-watcher-gate path, so no exact-current-main watcher-gate-packet execution is
-claimed here. The dedicated PR workflow is the relevant exact-head evidence for
+The latest current-main push at eaae135d8f4508c0712e3c6e151d7168a46f54ab
+recorded contracts-validate success (run 34045268724), docs-meta-block
+success (run 34045268821), docs-control-plane queued (run 34045268640), and
+link-check pending (run 34045268730). That push did not change a watcher-gate
+path, so no exact-current-main watcher-gate-packet execution is claimed here. The dedicated PR workflow is the relevant exact-head evidence for
 this revision.
 
 A green focused result would prove only schema shape, profile and packet
