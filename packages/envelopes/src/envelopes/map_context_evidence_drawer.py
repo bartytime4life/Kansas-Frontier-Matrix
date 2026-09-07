@@ -79,7 +79,7 @@ _REASON_TEXT: Final[dict[str, str]] = {
     "MISSING_EVIDENCE": "drawer payload requires abstention",
     "STALE_EVIDENCE": "drawer payload requires abstention",
     "CITATION_UNRESOLVED": "drawer payload requires abstention",
-    "RIGHTS_UNRESOLVED": "drawer payload requires abstention",
+    "RIGHTS_UNRESOLVED": "drawer payload denied because source rights are unresolved",
     "HELD_EVIDENCE": "drawer payload requires abstention",
     "SUPERSEDED_EVIDENCE": "drawer payload requires abstention",
     "WITHDRAWN_EVIDENCE": "drawer payload requires abstention",
@@ -110,6 +110,17 @@ def _array(value: object) -> list[object]:
     ):
         return list(value)
     return []
+
+
+def _history_is_empty(value: object) -> bool:
+    if value is None:
+        return True
+    if not isinstance(value, Mapping) or set(value) != {
+        "negative_outcomes",
+        "corrections",
+    }:
+        return False
+    return value.get("negative_outcomes") == [] and value.get("corrections") == []
 
 
 def _parse_utc(value: object, field: str) -> tuple[str, datetime]:
@@ -221,7 +232,7 @@ def _trust_matches(
             and policy == "DENY"
             and not refs
             and not citations
-            and not history
+            and _history_is_empty(history)
         )
     if outcome == "ERROR":
         return (
@@ -229,7 +240,7 @@ def _trust_matches(
             and policy == "ERROR"
             and not refs
             and not citations
-            and not history
+            and _history_is_empty(history)
         )
     return False
 

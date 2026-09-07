@@ -34,8 +34,8 @@
     "fixtures/ui/evidence_drawer_payload/invalid/deny-missing-evidence.expected_code.txt": "sha256:102ec17e51f383fc5525298f35959f69889daf4b928f57707cc2f14d27132c58",
     "fixtures/ui/evidence_drawer_payload/invalid/deny-missing-evidence.json": "sha256:cb89ee8c9c08789b232550f5b5e12d835bb8a42b63b0b7970b9a8bcad83004d0",
     "fixtures/ui/evidence_drawer_payload/valid/abstain-source-drift-review.json": "sha256:8c8afcbe451932721865bf1fe4004c574293918f29aca683377c8fc8c080ec5d",
-    "packages/envelopes/src/envelopes/map_context_evidence_drawer.py": "sha256:b6b748183e29497871bc2a303e9f191f3d92a6fecb6cb8e3eb1be912c3c06f00",
-    "tests/packages/envelopes/test_map_context_evidence_drawer_admission.py": "sha256:5005338338ce8f72824be694a8cdb9c26d8870d9fb3d61930f781eaa2e1f3050",
+    "packages/envelopes/src/envelopes/map_context_evidence_drawer.py": "sha256:9c52dc8af950d2e330e51ba30f7efd20b95e9c7f81ac68f1d16025028bf12829",
+    "tests/packages/envelopes/test_map_context_evidence_drawer_admission.py": "sha256:6ee3d6eb07858f67fe3c06c6900baf7fd2458c51405c83cf2d52d5bf8e695479",
     "tests/validators/test_validate_evidence_drawer_payload.py": "sha256:532b17733b4ad1e04c78ca0a5919d821f9023ce4c1cd5c327c02cf3860e0561b",
     "tools/validators/ui/validate_evidence_drawer_payload.py": "sha256:2523acfdb0a73298c1a7b2be0ebeb11ee4ce0fb1aea3498b9fbc6d88c2f9d43f"
   },
@@ -104,7 +104,7 @@
     {
       "gate": "map-context-admission-parity",
       "outcome": "PASS",
-      "reason": "Fifteen deterministic map-context admission tests and all eight manifest cases passed without network access; held evidence with contradictory trust and upstream or denial reasons relabeled as abstentions fail closed."
+      "reason": "Sixteen deterministic map-context admission tests and all eight manifest cases passed without network access; valid unresolved-rights denials preserve fixed denial copy with explicit empty history, while actual history content and contradictory trust fail closed."
     },
     {
       "gate": "wire-contract-parity",
@@ -175,5 +175,5 @@
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Successor authoring provenance for held-evidence trust-label and non-current freshness parity, finite DENY reason exclusivity, UPSTREAM_ERROR outcome exclusivity, published wire-contract closure, and complete current-artifact workflow coverage. This receipt binds synthetic public-safe candidate bytes only; it is not evidence, policy approval, human review, merge authority, release authority, deployment authority, publication authority, or public-use permission."
+  "notes": "Successor authoring provenance for held-evidence trust-label and non-current freshness parity, finite DENY reason exclusivity, UPSTREAM_ERROR outcome exclusivity, safe unresolved-rights denial copy with explicit empty-history parity, published wire-contract closure, and complete current-artifact workflow coverage. This receipt binds synthetic public-safe candidate bytes only; it is not evidence, policy approval, human review, merge authority, release authority, deployment authority, publication authority, or public-use permission."
 }

@@ -265,6 +265,46 @@ def test_denial_reason_cannot_be_reclassified_as_abstention(reason_code: str) ->
     assert "ABSTAIN_DENIAL_CANARY_a40e61" not in json.dumps(candidate)
 
 
+def test_rights_denial_uses_fixed_denial_copy_without_payload_reflection() -> None:
+    case = CASES["cases"][0]
+    context = _load(str(case["map_context"]))
+    payload = _load(
+        "fixtures/ui/evidence_drawer_payload/valid/deny-source-quarantined-rights.json"
+    )
+
+    candidate = build_map_context_evidence_drawer_admission_candidate(
+        decision_id="decision:render:rights-denial-valid",
+        evaluated_at=str(case["evaluated_at"]),
+        map_context=context,
+        drawer_payload=payload,
+        allow_system_test=True,
+    )
+
+    assert candidate["outcome"] == "DENY"
+    assert candidate["reason_code"] == "RIGHTS_UNRESOLVED"
+    assert candidate["reasons"] == [
+        "drawer payload denied because source rights are unresolved"
+    ]
+    assert candidate["obligations"] == ["DISPLAY_SAFE_DENIAL"]
+    assert candidate["evidence_refs"] == []
+    assert "STEWARD_ONLY_QUARANTINE" not in json.dumps(candidate)
+
+    leaking_payload = _load(
+        "fixtures/ui/evidence_drawer_payload/invalid/deny-history-leak.json"
+    )
+    rejected = build_map_context_evidence_drawer_admission_candidate(
+        decision_id="decision:render:rights-denial-history-leak",
+        evaluated_at=str(case["evaluated_at"]),
+        map_context=context,
+        drawer_payload=leaking_payload,
+        allow_system_test=True,
+    )
+    assert rejected["outcome"] == "ERROR"
+    assert rejected["reason_code"] == "DRAWER_TRUST_STATE_MISMATCH"
+    assert rejected["evidence_refs"] == []
+    assert "kfm:evidence:synthetic:denied-001" not in json.dumps(rejected)
+
+
 @pytest.mark.parametrize(
     ("field", "value", "code"),
     [
