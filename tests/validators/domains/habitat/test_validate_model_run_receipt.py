@@ -95,6 +95,7 @@ class HabitatModelRunReceiptTests(unittest.TestCase):
         self.assertNotIn("synthetic-suitability", rendered)
 
     def test_cli_fixture_replay_and_parser_error(self) -> None:
+        manifest = validator.load_fixtures()
         command = [sys.executable, str(Path(validator.__file__)), "--fixtures"]
         first = subprocess.run(command, cwd=ROOT, check=False, capture_output=True)
         second = subprocess.run(command, cwd=ROOT, check=False, capture_output=True)
@@ -105,6 +106,21 @@ class HabitatModelRunReceiptTests(unittest.TestCase):
         payload = json.loads(first.stdout)
         self.assertEqual(24, payload["case_count"])
         self.assertTrue(payload["suite_match"])
+        self.assertEqual("NONE", payload["authority"])
+        self.assertEqual(validator.PROFILE, payload["profile"])
+        self.assertEqual(list(validator.NON_EFFECTS), payload["non_effects"])
+        self.assertEqual(
+            [
+                {
+                    "case_id": case["case_id"],
+                    "match": True,
+                    "outcome": case["expected_outcome"],
+                }
+                for case in manifest["cases"]
+            ],
+            payload["cases"],
+        )
+        self.assertNotIn(b"synthetic-suitability", first.stdout)
         self.assertEqual(
             (json.dumps(payload, sort_keys=True, separators=(",", ":")) + "\n").encode(
                 "utf-8"
