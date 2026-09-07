@@ -133,20 +133,20 @@ COORDINATE_PAIR_PATTERN = re.compile(
     r"([+-]?\d{1,3}(?:\.\d+)?)(?![\w.])"
 )
 CARDINAL_PREFIX_COORDINATE_PATTERN = re.compile(
-    r"(?i)(?<![\w.])([NS])\s*(\d{1,2}(?:\.\d+)?)"
+    r"(?i)(?<![\w.])([NS])\s*(\d{1,3}(?:\.\d+)?)"
     r"(?:\s*,\s*|\s+)([EW])\s*(\d{1,3}(?:\.\d+)?)(?![\w.])"
 )
 CARDINAL_SUFFIX_COORDINATE_PATTERN = re.compile(
-    r"(?i)(?<![\w.])(\d{1,2}(?:\.\d+)?)\s*([NS])"
+    r"(?i)(?<![\w.])(\d{1,3}(?:\.\d+)?)\s*([NS])"
     r"(?:\s*,\s*|\s+)(\d{1,3}(?:\.\d+)?)\s*([EW])(?![\w.])"
 )
 CARDINAL_PREFIX_LONGITUDE_LATITUDE_PATTERN = re.compile(
     r"(?i)(?<![\w.])([EW])\s*(\d{1,3}(?:\.\d+)?)"
-    r"(?:\s*,\s*|\s+)([NS])\s*(\d{1,2}(?:\.\d+)?)(?![\w.])"
+    r"(?:\s*,\s*|\s+)([NS])\s*(\d{1,3}(?:\.\d+)?)(?![\w.])"
 )
 CARDINAL_SUFFIX_LONGITUDE_LATITUDE_PATTERN = re.compile(
     r"(?i)(?<![\w.])(\d{1,3}(?:\.\d+)?)\s*([EW])"
-    r"(?:\s*,\s*|\s+)(\d{1,2}(?:\.\d+)?)\s*([NS])(?![\w.])"
+    r"(?:\s*,\s*|\s+)(\d{1,3}(?:\.\d+)?)\s*([NS])(?![\w.])"
 )
 WKT_POINT_PATTERN = re.compile(
     r"(?i)\bpoint\s*\(\s*[+-]?\d{1,3}(?:\.\d+)?\s+"
