@@ -292,6 +292,136 @@ class RegistryLaneDiscoveryIndexTests(unittest.TestCase):
             json.loads(result.stdout),
         )
 
+    def test_cli_writes_regular_output(self) -> None:
+        tempdir, root = self._fixture(
+            (("sources", True), ("agriculture", True)), include_noise=False
+        )
+        self.addCleanup(tempdir.cleanup)
+        output = Path(tempdir.name) / "generated" / "index.json"
+
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(GENERATOR_PATH),
+                "--registry-root",
+                str(root),
+                "--output",
+                str(output),
+            ],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+
+        self.assertEqual(0, result.returncode)
+        self.assertEqual("", result.stdout)
+        self.assertEqual("", result.stderr)
+        parsed = json.loads(output.read_text(encoding="utf-8"))
+        self.assertEqual("kfm.registry-lane-discovery-index.v1", parsed["profile"])
+        self.assertEqual(["agriculture", "sources"], [row["lane"] for row in parsed["lanes"]])
+
+    def test_cli_rejects_symlinked_output_without_overwriting_target(self) -> None:
+        tempdir, root = self._fixture((("sources", True),), include_noise=False)
+        self.addCleanup(tempdir.cleanup)
+        target = Path(tempdir.name) / "external.json"
+        target.write_text("sentinel\n", encoding="utf-8")
+        output = Path(tempdir.name) / "index.json"
+        output.symlink_to(target)
+
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(GENERATOR_PATH),
+                "--registry-root",
+                str(root),
+                "--output",
+                str(output),
+            ],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+
+        self.assertEqual(2, result.returncode)
+        self.assertEqual("", result.stderr)
+        self.assertEqual("sentinel\n", target.read_text(encoding="utf-8"))
+        self.assertEqual(
+            {
+                "authority_created": False,
+                "error": "output path must not be a symlink",
+                "outcome": "ERROR",
+                "profile": "kfm.registry-lane-discovery-index.v1",
+            },
+            json.loads(result.stdout),
+        )
+
+    def test_cli_rejects_broken_symlinked_output(self) -> None:
+        tempdir, root = self._fixture((("sources", True),), include_noise=False)
+        self.addCleanup(tempdir.cleanup)
+        output = Path(tempdir.name) / "index.json"
+        output.symlink_to(Path(tempdir.name) / "missing.json")
+
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(GENERATOR_PATH),
+                "--registry-root",
+                str(root),
+                "--output",
+                str(output),
+            ],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+
+        self.assertEqual(2, result.returncode)
+        self.assertEqual("", result.stderr)
+        self.assertEqual(
+            {
+                "authority_created": False,
+                "error": "output path must not be a symlink",
+                "outcome": "ERROR",
+                "profile": "kfm.registry-lane-discovery-index.v1",
+            },
+            json.loads(result.stdout),
+        )
+
+    def test_cli_rejects_symlinked_output_parent_without_writing_target(self) -> None:
+        tempdir, root = self._fixture((("sources", True),), include_noise=False)
+        self.addCleanup(tempdir.cleanup)
+        external = Path(tempdir.name) / "external"
+        external.mkdir()
+        linked_parent = Path(tempdir.name) / "linked"
+        linked_parent.symlink_to(external, target_is_directory=True)
+
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(GENERATOR_PATH),
+                "--registry-root",
+                str(root),
+                "--output",
+                str(linked_parent / "index.json"),
+            ],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+
+        self.assertEqual(2, result.returncode)
+        self.assertEqual("", result.stderr)
+        self.assertFalse((external / "index.json").exists())
+        self.assertEqual(
+            {
+                "authority_created": False,
+                "error": "output path parent must not be a symlink",
+                "outcome": "ERROR",
+                "profile": "kfm.registry-lane-discovery-index.v1",
+            },
+            json.loads(result.stdout),
+        )
+
     def test_missing_registry_root_fails_closed(self) -> None:
         tempdir = tempfile.TemporaryDirectory()
         self.addCleanup(tempdir.cleanup)

@@ -85,6 +85,16 @@ def render_index(index: dict[str, Any]) -> str:
     return json.dumps(index, sort_keys=True, separators=(",", ":")) + "\n"
 
 
+def _write_output(path: Path, content: str) -> None:
+    if path.is_symlink():
+        raise RegistryDiscoveryError("output path must not be a symlink")
+    absolute_path = path if path.is_absolute() else Path.cwd() / path
+    if any(parent.is_symlink() for parent in absolute_path.parents):
+        raise RegistryDiscoveryError("output path parent must not be a symlink")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(content, encoding="utf-8")
+
+
 def _parser() -> argparse.ArgumentParser:
     repo_root = Path(__file__).resolve().parents[2]
     parser = argparse.ArgumentParser(
@@ -108,8 +118,7 @@ def main(argv: list[str] | None = None) -> int:
         if args.output is None:
             sys.stdout.write(output)
         else:
-            args.output.parent.mkdir(parents=True, exist_ok=True)
-            args.output.write_text(output, encoding="utf-8")
+            _write_output(args.output, output)
     except (OSError, RegistryDiscoveryError) as exc:
         print(
             json.dumps(
