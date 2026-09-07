@@ -5,7 +5,6 @@ import {
   hasSinglePublicKnowledgeDomainConsumer,
   isPublicKnowledgeDomainOwnedConsumerCurrent,
   isPublicKnowledgeDomainRetryGenerationCurrent,
-  isPublicKnowledgeDomainSyncGenerationCurrent,
   resolvePublicKnowledgeDomainRetryPlan,
   resolvePublicKnowledgeDomainManualSelectionTransition,
   resolvePublicKnowledgeDomainUrlConsumerCommit,
@@ -127,11 +126,6 @@ describe("public Knowledge-domain deep-link release", () => {
     expect(isPublicKnowledgeDomainRetryGenerationCurrent(4, 4)).toBe(true);
     expect(isPublicKnowledgeDomainRetryGenerationCurrent(5, 4)).toBe(false);
     expect(isPublicKnowledgeDomainRetryGenerationCurrent(6, 4)).toBe(false);
-  });
-
-  it("rejects final observations from a reentered Knowledge sync", () => {
-    expect(isPublicKnowledgeDomainSyncGenerationCurrent(9, 9)).toBe(true);
-    expect(isPublicKnowledgeDomainSyncGenerationCurrent(10, 9)).toBe(false);
   });
 
   it("invalidates ownership when a Knowledge control is remounted", () => {
@@ -525,7 +519,7 @@ describe("public Knowledge-domain deep-link release", () => {
       clickIndex,
     );
     const focusGenerationGuardIndex = mainSource.indexOf(
-      "isPublicKnowledgeDomainSyncGenerationCurrent(",
+      "isPublicWorkspaceNavigationSyncGenerationCurrent(",
       clickIndex,
     );
     const focusRestoreIndex = mainSource.indexOf(
@@ -533,7 +527,7 @@ describe("public Knowledge-domain deep-link release", () => {
       clickIndex,
     );
     const finalSyncGenerationGuardIndex = mainSource.indexOf(
-      "isPublicKnowledgeDomainSyncGenerationCurrent(",
+      "isPublicWorkspaceNavigationSyncGenerationCurrent(",
       finalReadinessIndex,
     );
     expect(focusGenerationGuardIndex).toBeGreaterThan(clickIndex);

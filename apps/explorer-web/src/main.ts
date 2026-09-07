@@ -8,6 +8,7 @@ import { mountExplorerSite } from "./site/mount-explorer-site";
 import { mountSyntheticFocusWorkspace } from "./site/mount-synthetic-focus-workspace";
 import { mountPublicTrustSurface } from "./site/trust-surface";
 import {
+  isPublicWorkspaceNavigationSyncGenerationCurrent,
   mountPublicWorkspaceNavigation,
   resolvePublicEvidenceFreeMapCaseId,
   resolvePublicKnowledgeDomainSelectionTransition,
@@ -30,7 +31,6 @@ import {
   hasSinglePublicKnowledgeDomainConsumer,
   isPublicKnowledgeDomainOwnedConsumerCurrent,
   isPublicKnowledgeDomainRetryGenerationCurrent,
-  isPublicKnowledgeDomainSyncGenerationCurrent,
   resolvePublicKnowledgeDomainRetryPlan,
   resolvePublicKnowledgeDomainManualSelectionTransition,
   resolvePublicKnowledgeDomainUrlConsumerCommit,
@@ -62,7 +62,7 @@ let pendingMapDeepLinkRetry: number | null = null;
 let pendingKnowledgeDomainDeepLinkRetry: number | null = null;
 let mapDeepLinkRetryGeneration = 0;
 let knowledgeDomainDeepLinkRetryGeneration = 0;
-let knowledgeDomainSyncGeneration = 0;
+let workspaceNavigationSyncGeneration = 0;
 let mapDeepLinkRetryState: PublicMapCaseRetryState = Object.freeze({
   attemptsRemaining: PUBLIC_MAP_CASE_DEEP_LINK_RETRY_LIMIT,
   urlHref: null,
@@ -227,12 +227,22 @@ root.addEventListener(
 );
 
 const syncWorkspaceNavigation = (): void => {
+  const currentWorkspaceNavigationSyncGeneration =
+    ++workspaceNavigationSyncGeneration;
   const currentUrl = new URL(window.location.href);
   const safeUrl = sanitizePublicWorkspaceNavigationUrl(currentUrl);
   if (safeUrl.href !== currentUrl.href) {
     window.history.replaceState(window.history.state, "", safeUrl.toString());
   }
   syncPublicWorkspaceNavigation(navigation, safeUrl);
+  if (
+    !isPublicWorkspaceNavigationSyncGenerationCurrent(
+      workspaceNavigationSyncGeneration,
+      currentWorkspaceNavigationSyncGeneration,
+    )
+  ) {
+    return;
+  }
 
   const mapTransition = resolvePublicMapCaseUrlTransition(
     safeUrl,
@@ -272,6 +282,14 @@ const syncWorkspaceNavigation = (): void => {
           ? document.activeElement
           : null;
       mapCaseButton.click();
+      if (
+        !isPublicWorkspaceNavigationSyncGenerationCurrent(
+          workspaceNavigationSyncGeneration,
+          currentWorkspaceNavigationSyncGeneration,
+        )
+      ) {
+        return;
+      }
       const selectionApplied = mapCaseButton.disabled;
       activeDeepLinkMapCaseId = resolvePublicMapCaseUrlConsumerCommit(
         mapTransition,
@@ -307,8 +325,14 @@ const syncWorkspaceNavigation = (): void => {
     }
   }
 
-  const currentKnowledgeDomainSyncGeneration =
-    ++knowledgeDomainSyncGeneration;
+  if (
+    !isPublicWorkspaceNavigationSyncGenerationCurrent(
+      workspaceNavigationSyncGeneration,
+      currentWorkspaceNavigationSyncGeneration,
+    )
+  ) {
+    return;
+  }
   const currentDomainId = resolveSinglePublicKnowledgeDomainControlId(
     Array.from(
       root.querySelectorAll<HTMLButtonElement>(
@@ -385,9 +409,9 @@ const syncWorkspaceNavigation = (): void => {
           : null;
       domainButton.click();
       if (
-        isPublicKnowledgeDomainSyncGenerationCurrent(
-          knowledgeDomainSyncGeneration,
-          currentKnowledgeDomainSyncGeneration,
+        isPublicWorkspaceNavigationSyncGenerationCurrent(
+          workspaceNavigationSyncGeneration,
+          currentWorkspaceNavigationSyncGeneration,
         ) &&
         priorFocus?.isConnected
       ) {
@@ -424,9 +448,9 @@ const syncWorkspaceNavigation = (): void => {
   const currentUrlAfterSelection = new URL(window.location.href);
   const requestUrlCurrent = currentUrlAfterSelection.href === safeUrl.href;
   if (
-    !isPublicKnowledgeDomainSyncGenerationCurrent(
-      knowledgeDomainSyncGeneration,
-      currentKnowledgeDomainSyncGeneration,
+    !isPublicWorkspaceNavigationSyncGenerationCurrent(
+      workspaceNavigationSyncGeneration,
+      currentWorkspaceNavigationSyncGeneration,
     )
   ) {
     return;

@@ -94,20 +94,6 @@ export function isPublicKnowledgeDomainRetryGenerationCurrent(
 }
 
 /**
- * Accept final observations from a Knowledge navigation pass only while that
- * pass is still the newest one. A domain control may synchronously dispatch a
- * browser-navigation event from its click handler; the nested pass then owns
- * the current URL and DOM state, so the interrupted outer pass must not
- * overwrite its ownership or retry decision when the click returns.
- */
-export function isPublicKnowledgeDomainSyncGenerationCurrent(
-  activeGeneration: number,
-  candidateGeneration: number,
-): boolean {
-  return activeGeneration === candidateGeneration;
-}
-
-/**
  * Keep established URL ownership only while the exact Knowledge control that
  * accepted it remains mounted. A remounted control with the same catalog ID is
  * a new consumer and must prove the visible selection independently.

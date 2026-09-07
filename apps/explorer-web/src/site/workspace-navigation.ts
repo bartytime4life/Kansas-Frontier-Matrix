@@ -22,6 +22,19 @@ export type PublicWorkspaceNavigationState = Readonly<{
 }>;
 
 /**
+ * Accept state from a workspace-navigation pass only while it remains the
+ * newest pass. A programmatic Map or Knowledge selection can synchronously
+ * dispatch browser navigation; the nested pass then owns the current URL,
+ * DOM, focus, and retry state.
+ */
+export function isPublicWorkspaceNavigationSyncGenerationCurrent(
+  activeGeneration: number,
+  candidateGeneration: number,
+): boolean {
+  return activeGeneration === candidateGeneration;
+}
+
+/**
  * Resolve one browser URL against the existing public workspace registry and
  * public-safe context parser. A valid context must already match its section
  * anchor; rejected or absent context can only fall back to ordinary public

@@ -9,6 +9,7 @@ import {
   serializePublicWorkspaceContext,
 } from "../src/site/workspace-context";
 import {
+  isPublicWorkspaceNavigationSyncGenerationCurrent,
   resolvePublicEvidenceFreeMapCaseId,
   resolvePublicKnowledgeDomainSelectionTransition,
   resolvePublicWorkspaceNavigationState,
@@ -51,6 +52,15 @@ function contextUrl(context: unknown, hash: string): URL {
 }
 
 describe("Explorer public workspace navigation integration", () => {
+  it("rejects state from a reentered workspace synchronization", () => {
+    expect(isPublicWorkspaceNavigationSyncGenerationCurrent(12, 12)).toBe(
+      true,
+    );
+    expect(isPublicWorkspaceNavigationSyncGenerationCurrent(13, 12)).toBe(
+      false,
+    );
+  });
+
   it("matches a validated public-safe deep link to the canonical workspace", () => {
     expect(
       resolvePublicWorkspaceNavigationState(contextUrl(knowledgeContext, "#knowledge")),
@@ -347,6 +357,41 @@ describe("Explorer public workspace navigation integration", () => {
     expect(sanitized.hash).toBe("#map");
     expect(decodeURIComponent(sanitized.toString())).not.toContain(
       "kfm:evidence:restricted-canary",
+    );
+  });
+
+  it("stops a reentered Map pass before stale Knowledge synchronization", () => {
+    const workspaceSyncIndex = mainSource.indexOf(
+      "const syncWorkspaceNavigation = (): void => {",
+    );
+    const generationCaptureIndex = mainSource.indexOf(
+      "const currentWorkspaceNavigationSyncGeneration =",
+      workspaceSyncIndex,
+    );
+    const mapClickIndex = mainSource.indexOf(
+      "mapCaseButton.click()",
+      generationCaptureIndex,
+    );
+    const postMapClickGenerationGuardIndex = mainSource.indexOf(
+      "isPublicWorkspaceNavigationSyncGenerationCurrent(",
+      mapClickIndex,
+    );
+    const mapSelectionCommitIndex = mainSource.indexOf(
+      "const selectionApplied = mapCaseButton.disabled",
+      mapClickIndex,
+    );
+    const knowledgeReadIndex = mainSource.indexOf(
+      "const currentDomainId = resolveSinglePublicKnowledgeDomainControlId(",
+      postMapClickGenerationGuardIndex,
+    );
+    expect(generationCaptureIndex).toBeGreaterThan(workspaceSyncIndex);
+    expect(mapClickIndex).toBeGreaterThan(generationCaptureIndex);
+    expect(postMapClickGenerationGuardIndex).toBeGreaterThan(mapClickIndex);
+    expect(mapSelectionCommitIndex).toBeGreaterThan(
+      postMapClickGenerationGuardIndex,
+    );
+    expect(knowledgeReadIndex).toBeGreaterThan(
+      postMapClickGenerationGuardIndex,
     );
   });
 
