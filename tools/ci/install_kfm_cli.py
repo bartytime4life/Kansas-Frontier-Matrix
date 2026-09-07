@@ -247,7 +247,9 @@ def install() -> None:
     environment["PYTHONNOUSERSITE"] = "1"
     deadline = time.monotonic() + INSTALL_TIMEOUT_SECONDS
     for command_number, command in enumerate(build_commands()):
-        if command_number == 1:
+        if command_number == 0:
+            validate_lockfile()
+        else:
             validate_local_package()
         remaining_seconds = deadline - time.monotonic()
         if remaining_seconds <= 0:

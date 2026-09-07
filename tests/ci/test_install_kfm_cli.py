@@ -441,6 +441,26 @@ class InstallKfmCliTests(unittest.TestCase):
                 module.install()
         self.assertEqual(1, run.call_count)
 
+    def test_install_revalidates_lockfile_before_dependency_install(self) -> None:
+        changed = module.CliInstallConfigurationError("CLI_LOCKFILE_UNSAFE")
+        with (
+            mock.patch.object(
+                module,
+                "validate_lockfile",
+                side_effect=(None, changed),
+            ) as validate_lockfile,
+            mock.patch.object(module, "validate_local_package"),
+            mock.patch.object(module.time, "monotonic", return_value=100.0),
+            mock.patch.object(module.subprocess, "run") as run,
+        ):
+            with self.assertRaisesRegex(
+                module.CliInstallConfigurationError,
+                "^CLI_LOCKFILE_UNSAFE$",
+            ):
+                module.install()
+        self.assertEqual(2, validate_lockfile.call_count)
+        run.assert_not_called()
+
     def test_install_revalidates_local_package_before_editable_install(self) -> None:
         changed = module.CliInstallConfigurationError(
             "CLI_LOCAL_PACKAGE_ENTRY_UNSAFE"
