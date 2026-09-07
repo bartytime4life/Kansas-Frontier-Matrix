@@ -180,7 +180,7 @@ def _write_output(path: Path, content: str) -> None:
                 output_fd = os.open(
                     path.name,
                     flags | os.O_CREAT | os.O_EXCL,
-                    0o666,
+                    0o644,
                     dir_fd=parent_fd,
                 )
             else:

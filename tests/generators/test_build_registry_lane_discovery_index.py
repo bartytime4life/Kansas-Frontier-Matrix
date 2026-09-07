@@ -323,6 +323,7 @@ class RegistryLaneDiscoveryIndexTests(unittest.TestCase):
         parsed = json.loads(output.read_text(encoding="utf-8"))
         self.assertEqual("kfm.registry-lane-discovery-index.v1", parsed["profile"])
         self.assertEqual(["agriculture", "sources"], [row["lane"] for row in parsed["lanes"]])
+        self.assertEqual(0, output.stat().st_mode & 0o022)
 
     def test_cli_rejects_symlinked_output_without_overwriting_target(self) -> None:
         tempdir, root = self._fixture((("sources", True),), include_noise=False)
