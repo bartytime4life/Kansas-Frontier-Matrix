@@ -113,6 +113,18 @@ class RegistryLaneDiscoveryIndexTests(unittest.TestCase):
         ):
             build_registry_lane_discovery_index(root)
 
+    def test_symlinked_registry_root_fails_closed(self) -> None:
+        tempdir, root = self._fixture((("sources", True),), include_noise=False)
+        self.addCleanup(tempdir.cleanup)
+        linked_root = Path(tempdir.name) / "registry-link"
+        linked_root.symlink_to(root, target_is_directory=True)
+
+        with self.assertRaisesRegex(
+            RegistryDiscoveryError,
+            "registry root must not be a symlink",
+        ):
+            build_registry_lane_discovery_index(linked_root)
+
     def test_symlink_error_uses_lexically_first_visible_lane(self) -> None:
         tempdir, root = self._fixture((("sources", True),), include_noise=False)
         self.addCleanup(tempdir.cleanup)
@@ -147,6 +159,36 @@ class RegistryLaneDiscoveryIndexTests(unittest.TestCase):
             {
                 "authority_created": False,
                 "error": "registry lane must not be a symlink: linked",
+                "outcome": "ERROR",
+                "profile": "kfm.registry-lane-discovery-index.v1",
+            },
+            json.loads(result.stdout),
+        )
+
+    def test_cli_rejects_symlinked_registry_root_without_exposing_target(self) -> None:
+        tempdir, root = self._fixture((("sources", True),), include_noise=False)
+        self.addCleanup(tempdir.cleanup)
+        linked_root = Path(tempdir.name) / "registry-link"
+        linked_root.symlink_to(root, target_is_directory=True)
+
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(GENERATOR_PATH),
+                "--registry-root",
+                str(linked_root),
+            ],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+
+        self.assertEqual(2, result.returncode)
+        self.assertEqual("", result.stderr)
+        self.assertEqual(
+            {
+                "authority_created": False,
+                "error": "registry root must not be a symlink",
                 "outcome": "ERROR",
                 "profile": "kfm.registry-lane-discovery-index.v1",
             },
