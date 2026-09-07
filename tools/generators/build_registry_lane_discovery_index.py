@@ -44,11 +44,16 @@ def build_registry_lane_discovery_index(registry_root: Path) -> dict[str, Any]:
             f"registry root is not a directory: {registry_root}"
         )
 
-    lanes = [
-        _lane_record(registry_root, entry)
-        for entry in registry_root.iterdir()
-        if entry.is_dir() and not entry.name.startswith(".")
-    ]
+    lanes = []
+    for entry in registry_root.iterdir():
+        if entry.name.startswith("."):
+            continue
+        if entry.is_symlink():
+            raise RegistryDiscoveryError(
+                f"registry lane must not be a symlink: {entry.name}"
+            )
+        if entry.is_dir():
+            lanes.append(_lane_record(registry_root, entry))
     lanes.sort(key=lambda item: item["lane"])
 
     return {

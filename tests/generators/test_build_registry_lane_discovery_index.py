@@ -99,6 +99,46 @@ class RegistryLaneDiscoveryIndexTests(unittest.TestCase):
         with self.assertRaisesRegex(RegistryDiscoveryError, "unsupported registry lane"):
             build_registry_lane_discovery_index(root)
 
+    def test_symlinked_lane_fails_closed(self) -> None:
+        tempdir, root = self._fixture((("sources", True),), include_noise=False)
+        self.addCleanup(tempdir.cleanup)
+        external = Path(tempdir.name) / "external"
+        external.mkdir()
+        (external / "README.md").write_text("# external\n", encoding="utf-8")
+        (root / "linked").symlink_to(external, target_is_directory=True)
+
+        with self.assertRaisesRegex(
+            RegistryDiscoveryError,
+            "registry lane must not be a symlink: linked",
+        ):
+            build_registry_lane_discovery_index(root)
+
+    def test_cli_rejects_symlinked_lane_with_deterministic_error(self) -> None:
+        tempdir, root = self._fixture((("sources", True),), include_noise=False)
+        self.addCleanup(tempdir.cleanup)
+        external = Path(tempdir.name) / "external"
+        external.mkdir()
+        (root / "linked").symlink_to(external, target_is_directory=True)
+
+        result = subprocess.run(
+            [sys.executable, str(GENERATOR_PATH), "--registry-root", str(root)],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+
+        self.assertEqual(2, result.returncode)
+        self.assertEqual("", result.stderr)
+        self.assertEqual(
+            {
+                "authority_created": False,
+                "error": "registry lane must not be a symlink: linked",
+                "outcome": "ERROR",
+                "profile": "kfm.registry-lane-discovery-index.v1",
+            },
+            json.loads(result.stdout),
+        )
+
     def test_missing_registry_root_fails_closed(self) -> None:
         tempdir = tempfile.TemporaryDirectory()
         self.addCleanup(tempdir.cleanup)
