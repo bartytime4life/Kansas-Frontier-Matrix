@@ -170,6 +170,30 @@ class InstallPythonCiTests(unittest.TestCase):
                     ):
                         module.profiles_for_workflow(workflow)
 
+    def test_workflow_profile_parser_rejects_logging_path_traversal(self) -> None:
+        with tempfile.TemporaryDirectory(
+            prefix=".install-python-profile-",
+            dir=REPO_ROOT / ".github/workflows",
+        ) as directory:
+            workflow = Path(directory) / "profile.yml"
+            for log_path in (
+                "../workspace-file",
+                "nested/../../workspace-file",
+                "./python-bootstrap.log",
+                "nested/./python-bootstrap.log",
+            ):
+                with self.subTest(log_path=log_path):
+                    workflow.write_text(
+                        "python tools/ci/install_python_ci.py project-test "
+                        f'2>&1 | tee "$RUNNER_TEMP/{log_path}"\n',
+                        encoding="utf-8",
+                    )
+                    with self.assertRaisesRegex(
+                        module.InstallConfigurationError,
+                        "PROFILE_UNKNOWN",
+                    ):
+                        module.profiles_for_workflow(workflow)
+
     def test_workflow_profile_parser_rejects_unknown_pipelined_profile(self) -> None:
         with tempfile.TemporaryDirectory(
             prefix=".install-python-profile-",
