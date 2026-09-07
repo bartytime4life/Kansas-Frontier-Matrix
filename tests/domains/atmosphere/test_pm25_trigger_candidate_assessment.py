@@ -79,6 +79,32 @@ def test_schema_findings_report_bounded_truncation() -> None:
     assert result == module.validate_payload(payload)
 
 
+def test_schema_findings_only_mark_actual_truncation() -> None:
+    payload = materialize(MANIFEST["cases"][0])
+    payload["subject"]["evidence_refs"] = [""] * 48
+
+    exact_limit = module.validate_payload(payload)
+
+    assert exact_limit.outcome == "DENY"
+    assert len(exact_limit.findings) == module.MAX_SCHEMA_FINDINGS
+    assert all(
+        finding.code != "PM25_TRIGGER_SCHEMA_FINDINGS_TRUNCATED"
+        for finding in exact_limit.findings
+    )
+
+    payload["subject"]["evidence_refs"] = [""] * 49
+    over_limit = module.validate_payload(payload)
+
+    assert over_limit.outcome == "DENY"
+    assert sum(
+        finding.code == "PM25_TRIGGER_SCHEMA_INVALID"
+        for finding in over_limit.findings
+    ) == module.MAX_SCHEMA_FINDINGS
+    assert over_limit.findings.count(
+        module.Finding("PM25_TRIGGER_SCHEMA_FINDINGS_TRUNCATED", "/")
+    ) == 1
+
+
 def test_identity_is_deterministic() -> None:
     assert materialize(MANIFEST["cases"][0]) == materialize(MANIFEST["cases"][0])
 
