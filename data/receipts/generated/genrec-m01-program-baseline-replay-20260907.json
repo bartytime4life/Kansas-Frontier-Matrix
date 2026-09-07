@@ -1,0 +1,144 @@
+{
+  "receipt_id": "genrec-m01-program-baseline-replay-20260907",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "Makefile"
+  ],
+  "artifact_hashes": {
+    "Makefile": "sha256:f58531d838b63cbf749594a85dd0482e1e16d39e48bcb5456859383601326e28"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "2026-09-07"
+  },
+  "prompt_or_contract": "sha256:79c3d85a826161a2a29ffc3d4d275570ac2ebe685a378506e15ab012bcc01e09",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector and local Git repository inspection",
+      "Google Drive read-only milestone doctrine inspection",
+      "Notion coordination search and readback",
+      "deterministic no-network repository validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:5fda1f0b17d5790b1653fce8168b2b2bc116473d3c30fddb8f8082f5c5133567"
+    ],
+    "attached_docs": [
+      "KFM 37-Milestone Governed Delivery Orchestrator v1.0",
+      "KFM Hourly Milestone Orchestrator v1.0"
+    ],
+    "evidence_refs": [
+      "repo:main@05293236fd4c9538d4b9dc8afb16fa9ac847c132",
+      "repo:Makefile@05293236fd4c9538d4b9dc8afb16fa9ac847c132",
+      "repo:data/receipts/generated/genrec-program-baseline-m01-20260822.json@05293236fd4c9538d4b9dc8afb16fa9ac847c132",
+      "repo:Makefile@3b3e8c4193cbaea0b53465774a79a12336ca8f56",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@05293236fd4c9538d4b9dc8afb16fa9ac847c132",
+      "repo:docs/doctrine/directory-rules.md@05293236fd4c9538d4b9dc8afb16fa9ac847c132",
+      "repo:tools/validators/validate_generated_receipt.py@05293236fd4c9538d4b9dc8afb16fa9ac847c132",
+      "github://bartytime4life/Kansas-Frontier-Matrix/issues/3365",
+      "https://docs.google.com/document/d/1UcPOllhuhNMg2eXV6g881zekMlj92ivxKh0bOiP7iFA/edit",
+      "https://docs.google.com/document/d/1mlL_QRA2IEDXIsaD8loMesbxaFTEgYIjhHJn4yI4WnY/edit"
+    ]
+  },
+  "truth_labels": {
+    "Makefile": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "authority-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Current main 05293236fd4c9538d4b9dc8afb16fa9ac847c132, issue 3365, issues 2768 and 2874, accepted ADR-0029, adopted Directory Rules, the open pull-request queue, and plausible program-baseline branches were inspected before authoring; no active path overlap was found."
+    },
+    {
+      "gate": "historical-receipt-source-replay",
+      "outcome": "PASS",
+      "reason": "All nine artifact hashes in genrec-program-baseline-m01-20260822 match exact ancestor commit 3b3e8c4193cbaea0b53465774a79a12336ca8f56, while current-tree validation reproduces digest mismatches for the later-mutated Makefile and control_plane/README.md."
+    },
+    {
+      "gate": "m01-program-baseline-profile",
+      "outcome": "PASS",
+      "reason": "make program-baseline passes ten focused tests, one positive and six exact negative fixture cases, the canonical projection, and nine-artifact historical receipt integrity after the bounded Makefile correction."
+    },
+    {
+      "gate": "generated-receipt-replay-regression",
+      "outcome": "PASS",
+      "reason": "The focused exact-ancestor replay and invalid-ref generated-receipt tests pass without network access."
+    },
+    {
+      "gate": "diff-hygiene",
+      "outcome": "PASS",
+      "reason": "git diff --check reports no whitespace errors."
+    },
+    {
+      "gate": "changed-area-topology",
+      "outcome": "FAIL",
+      "reason": "The changed-area orchestrator selects repository-topology and returns the inherited exact-base result: 127 findings, 122 baselined warnings, five new-drift findings, five stale fingerprints, and zero invariant-count findings. Base and candidate finding and stale-fingerprint arrays are identical; no baseline is expanded or waived."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks begin only after the review branch and draft pull request are published."
+    },
+    {
+      "gate": "accountable-human-review",
+      "outcome": "SKIPPED",
+      "reason": "Independent human review remains pending; this receipt and the local pass do not authorize merge or milestone closure."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "m01-coordination-issue",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3365"
+    },
+    {
+      "id": "m01-original-receipt",
+      "validated": true,
+      "evidence_ref": "repo:data/receipts/generated/genrec-program-baseline-m01-20260822.json@05293236fd4c9538d4b9dc8afb16fa9ac847c132"
+    },
+    {
+      "id": "historical-replay-validator",
+      "validated": true,
+      "evidence_ref": "repo:tools/validators/validate_generated_receipt.py@05293236fd4c9538d4b9dc8afb16fa9ac847c132"
+    },
+    {
+      "id": "directory-rules-authority",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@05293236fd4c9538d4b9dc8afb16fa9ac847c132"
+    },
+    {
+      "id": "drive-milestone-orchestrator",
+      "validated": true,
+      "evidence_ref": "https://docs.google.com/document/d/1UcPOllhuhNMg2eXV6g881zekMlj92ivxKh0bOiP7iFA/edit"
+    },
+    {
+      "id": "notion-milestone-coordination",
+      "validated": true,
+      "evidence_ref": "https://app.notion.com/p/3caa92021bf68175b831f4db50876e6a?pvs=204"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-07T14:58:33Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Bounded M01 receipt-replay correction. The Makefile now validates the immutable 2026-08-22 program-baseline receipt against the one exact ancestor whose bytes match all nine recorded hashes. The historical receipt is unchanged. No authority, schema, policy, source, lifecycle, public surface, release, deployment, publication, repository setting, review state, issue state, or milestone state is changed. Rollback is a same-path revert of this Makefile line and removal of this new provenance receipt before merge, or a reviewed revert after merge."
+}
