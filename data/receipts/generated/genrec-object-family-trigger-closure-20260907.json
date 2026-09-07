@@ -5,7 +5,7 @@
     ".github/workflows/object-family-register.yml"
   ],
   "artifact_hashes": {
-    ".github/workflows/object-family-register.yml": "sha256:2d9cc44e90f662735065487d1ecb473d0c7e8091350d26d0c7e372803bae8fec"
+    ".github/workflows/object-family-register.yml": "sha256:3d48b486e1f9ec95699327a2e731c8f432276330af06aa13362a17c15000ddc1"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -32,7 +32,8 @@
       "github:https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4345",
       "github:https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/34052434769",
       "drive:1yJpf-Rvb0kAcfgPQjU0kllsMMg4DDlB6",
-      "notion:https://app.notion.com/p/3d3a92021bf681baac61e5bd385d561d"
+      "notion:https://app.notion.com/p/3d3a92021bf681baac61e5bd385d561d",
+      "github:https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/34080765306"
     ]
   },
   "truth_labels": {
@@ -58,6 +59,16 @@
       "gate": "bounded-fanout-negative-control",
       "outcome": "PASS",
       "reason": "Workflow files outside the register's declared workflow_paths remain excluded; the repair restores semantic input closure without restoring every-workflow-file fan-out."
+    },
+    {
+      "gate": "predecessor-hosted-focused-validation",
+      "outcome": "PASS",
+      "reason": "At predecessor head fbab1432b2baae2170f537b372b87a2cb7e35391, run 34080765306 passed the focused 16-test object-family profile, fixture polarity, and current-register validation. It failed only because the workflow still verified the superseded 2026-08-25 receipt after its own bytes changed."
+    },
+    {
+      "gate": "successor-receipt-input-closure",
+      "outcome": "PASS",
+      "reason": "The workflow now validates the successor repair receipt and watches that exact receipt path on both pull_request and push. The successor receipt binds the final workflow bytes."
     },
     {
       "gate": "complete-repository-validation",
@@ -96,9 +107,9 @@
   "created_at": "2026-09-07T03:43:40Z",
   "emitter": "ChatGPT",
   "links": {
-    "pr_number": null,
+    "pr_number": 4359,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Follow-up repair for PR #4345. The merged self-only object-family workflow filter contradicted the pre-existing executable closure test and produced 17 failures. This patch lists the exact workflow surfaces declared by the register on both events, preserving bounded fan-out for unrelated workflow edits. The receipt excludes itself from hashes. Drive remains read-only lineage and Notion remains coordination. Revert this commit to restore the merged #4345 filter; do not alter history, repository protections, deployment settings, release state, or publication state."
+  "notes": "Follow-up repair for PR #4345. The merged self-only object-family workflow filter contradicted the pre-existing executable closure test and produced 17 failures. This patch lists the exact workflow surfaces declared by the register on both events, preserving bounded fan-out for unrelated workflow edits. The receipt excludes itself from hashes. Drive remains read-only lineage and Notion remains coordination. Revert this commit to restore the merged #4345 filter; do not alter history, repository protections, deployment settings, release state, or publication state. Hosted predecessor evidence confirmed that the explicit 17-path repair closes the focused object-family tests; the remaining digest failure came from verifying the superseded 2026-08-25 receipt. The workflow now verifies and watches this successor repair receipt."
 }
