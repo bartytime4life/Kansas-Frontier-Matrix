@@ -38,8 +38,8 @@
     "fixtures/contracts/v1/domains/people-dna-land/historical_person_place_event_resolution/valid/high_anchor.json": "sha256:88c1142ba69dcdd2cfc235ccd73c18995d22d190f8fc337e4311d6ed81a3db74",
     "fixtures/contracts/v1/domains/people-dna-land/historical_person_place_event_resolution/valid/weak_abstain.json": "sha256:07ccc53dd676ba96a60952bc983d7a29fe9776e91b633878fd9decd5d005b3f6",
     "schemas/contracts/v1/domains/people-dna-land/historical_person_place_event_resolution.schema.json": "sha256:4c2bca7c98898576b6642e269e78ee008369e06eb7ebefa76d89099dcc670b8a",
-    "tests/validators/test_validate_historical_person_place_event_resolution.py": "sha256:c747a3cefd8f2c9759929a7d087f5394fd1d89b2d8994501901790d75cd34e4e",
-    "tools/validators/validate_historical_person_place_event_resolution.py": "sha256:039536b640868aedb0c30b314743a819ff59e228ccc1fa286e0e05679b758198"
+    "tests/validators/test_validate_historical_person_place_event_resolution.py": "sha256:9a79273bbb9a3d503bc2bba37ec82167c701d0c520fe05f2490a960b72e12c53",
+    "tools/validators/validate_historical_person_place_event_resolution.py": "sha256:df367fc7d0f22e8692b70acc0547c201ede29529426d6c3c0ae421fc52f1d779"
   },
   "model_identity": {
     "provider": "OpenAI",

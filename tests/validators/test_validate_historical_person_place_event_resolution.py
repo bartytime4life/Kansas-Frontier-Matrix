@@ -11,6 +11,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 VALIDATOR_PATH = REPO_ROOT / "tools/validators/validate_historical_person_place_event_resolution.py"
@@ -97,6 +98,39 @@ class HistoricalResolutionTests(unittest.TestCase):
 
         self.assertIsNone(value)
         self.assertEqual({finding.code for finding in findings}, {"INPUT_NOT_REGULAR_FILE"})
+
+    @unittest.skipUnless(os.open in os.supports_dir_fd, "requires directory-relative open")
+    def test_parent_swap_cannot_redirect_open_candidate(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            parent = root / "parent"
+            parent.mkdir()
+            candidate = parent / "candidate.json"
+            expected = self.load("valid/high_anchor.json")
+            candidate.write_text(json.dumps(expected), encoding="utf-8")
+            attacker = root / "attacker"
+            attacker.mkdir()
+            (attacker / candidate.name).write_text("not-json", encoding="utf-8")
+            moved_parent = root / "held-parent"
+            real_open = os.open
+            swapped = False
+
+            def swapping_open(path, flags, mode=0o777, *, dir_fd=None):
+                nonlocal swapped
+                if path == candidate.name and dir_fd is not None and not swapped:
+                    parent.rename(moved_parent)
+                    parent.symlink_to(attacker, target_is_directory=True)
+                    swapped = True
+                if dir_fd is None:
+                    return real_open(path, flags, mode)
+                return real_open(path, flags, mode, dir_fd=dir_fd)
+
+            with mock.patch.object(module.os, "open", side_effect=swapping_open):
+                value, findings = module.load_candidate(candidate)
+
+        self.assertTrue(swapped)
+        self.assertEqual(findings, [])
+        self.assertEqual(value, expected)
 
     def test_explicit_candidate_oversize_fails_closed(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

@@ -9,6 +9,7 @@ review, release, or publication.
 from __future__ import annotations
 
 import argparse
+import errno
 import hashlib
 import json
 import math
@@ -30,6 +31,7 @@ PROFILE_ID = "kfm-people-dna-land-historical-person-place-event-resolution-v1"
 OBJECT_FAMILY = "HistoricalPersonPlaceEventResolutionCandidate"
 MAX_JSON_BYTES = 2 * 1024 * 1024
 MAX_SCHEMA_FINDINGS = 50
+SUPPORTS_SECURE_DIR_FD = hasattr(os, "O_NOFOLLOW") and os.open in os.supports_dir_fd
 COUNTABLE_AUTHORITIES = frozenset({"lcnaf", "viaf", "isni", "wikidata"})
 PRIMARY_ORDER = ("lcnaf", "viaf", "isni", "wikidata", "local")
 FORBIDDEN_RAW_DNA_KEYS = frozenset({
@@ -53,6 +55,14 @@ class DuplicateKeyError(ValueError):
 
 
 class NonFiniteNumberError(ValueError):
+    pass
+
+
+class InputNotRegularFileError(OSError):
+    pass
+
+
+class InputTooLargeError(OSError):
     pass
 
 
@@ -85,37 +95,72 @@ def candidate_spec_hash(candidate: Mapping[str, Any]) -> str:
     return "sha256:" + hashlib.sha256(canonical_json_bytes(payload)).hexdigest()
 
 
-def _has_symlink_component(path: Path) -> bool:
+def _open_bounded_regular_file(path: Path) -> bytes:
+    """Read a regular file while holding no-follow descriptors for its parents."""
+    if not SUPPORTS_SECURE_DIR_FD:
+        raise InputNotRegularFileError
+
     absolute_path = path.absolute()
-    return any(
-        component.is_symlink()
-        for component in (absolute_path, *absolute_path.parents)
-    )
+    parts = absolute_path.parts
+    if len(parts) < 2:
+        raise InputNotRegularFileError
 
+    directory_flags = os.O_RDONLY
+    for flag_name in ("O_CLOEXEC", "O_DIRECTORY", "O_NOFOLLOW"):
+        directory_flags |= getattr(os, flag_name, 0)
+    file_flags = os.O_RDONLY
+    for flag_name in ("O_BINARY", "O_CLOEXEC", "O_NONBLOCK", "O_NOFOLLOW"):
+        file_flags |= getattr(os, flag_name, 0)
 
-def load_candidate(path: Path) -> tuple[dict[str, Any] | None, list[Finding]]:
+    directory_descriptor = os.open(parts[0], directory_flags)
     descriptor = -1
     try:
-        absolute_path = path.absolute()
-        if _has_symlink_component(absolute_path):
-            return None, [Finding("INPUT_NOT_REGULAR_FILE", "$")]
+        for component in parts[1:-1]:
+            try:
+                child_descriptor = os.open(
+                    component,
+                    directory_flags,
+                    dir_fd=directory_descriptor,
+                )
+            except OSError as error:
+                if error.errno in {errno.ELOOP, errno.ENOTDIR}:
+                    raise InputNotRegularFileError from error
+                raise
+            os.close(directory_descriptor)
+            directory_descriptor = child_descriptor
 
-        flags = os.O_RDONLY
-        for flag_name in ("O_BINARY", "O_CLOEXEC", "O_NONBLOCK", "O_NOFOLLOW"):
-            flags |= getattr(os, flag_name, 0)
-        descriptor = os.open(absolute_path, flags)
+        try:
+            descriptor = os.open(
+                parts[-1],
+                file_flags,
+                dir_fd=directory_descriptor,
+            )
+        except OSError as error:
+            if error.errno in {errno.ELOOP, errno.ENOTDIR}:
+                raise InputNotRegularFileError from error
+            raise
+
         metadata = os.fstat(descriptor)
         if not stat.S_ISREG(metadata.st_mode):
-            return None, [Finding("INPUT_NOT_REGULAR_FILE", "$")]
+            raise InputNotRegularFileError
         if metadata.st_size > MAX_JSON_BYTES:
-            return None, [Finding("INPUT_TOO_LARGE", "$")]
+            raise InputTooLargeError
 
         with os.fdopen(descriptor, "rb") as handle:
             descriptor = -1
             payload = handle.read(MAX_JSON_BYTES + 1)
         if len(payload) > MAX_JSON_BYTES:
-            return None, [Finding("INPUT_TOO_LARGE", "$")]
+            raise InputTooLargeError
+        return payload
+    finally:
+        if descriptor >= 0:
+            os.close(descriptor)
+        os.close(directory_descriptor)
 
+
+def load_candidate(path: Path) -> tuple[dict[str, Any] | None, list[Finding]]:
+    try:
+        payload = _open_bounded_regular_file(path)
         value = json.loads(
             payload.decode("utf-8"),
             object_pairs_hook=_reject_duplicate_keys,
@@ -128,11 +173,12 @@ def load_candidate(path: Path) -> tuple[dict[str, Any] | None, list[Finding]]:
         return None, [Finding("JSON_DUPLICATE_KEY", "$")]
     except NonFiniteNumberError:
         return None, [Finding("JSON_NONFINITE_NUMBER", "$")]
+    except InputNotRegularFileError:
+        return None, [Finding("INPUT_NOT_REGULAR_FILE", "$")]
+    except InputTooLargeError:
+        return None, [Finding("INPUT_TOO_LARGE", "$")]
     except (OSError, UnicodeError, RecursionError, ValueError):
         return None, [Finding("INPUT_UNREADABLE", "$")]
-    finally:
-        if descriptor >= 0:
-            os.close(descriptor)
     if not isinstance(value, dict):
         return None, [Finding("CANDIDATE_NOT_OBJECT", "$")]
     return value, []
