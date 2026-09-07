@@ -327,6 +327,36 @@ class OccurrenceEvidenceTests(unittest.TestCase):
             result.findings,
         )
 
+    def test_non_exact_public_geometry_requires_transform_disclosure(self) -> None:
+        canonical = _load("valid/valid_modeled_context.json")
+        for invalid_method in (None, "", " synthetic grid centroid for fixture only"):
+            with self.subTest(invalid_method=invalid_method):
+                candidate = copy.deepcopy(canonical)
+                candidate["geometry"]["public_safe_geometry"][
+                    "generalization_method"
+                ] = invalid_method
+                candidate["spec_hash"] = validator.compute_occurrence_spec_hash(candidate)
+                candidate["occurrence_evidence_id"] = (
+                    "kfm://occurrence/" + candidate["spec_hash"].split(":", 1)[1]
+                )
+
+                result = validator.validate_candidate(candidate)
+
+                self.assertIn(
+                    validator.Finding(
+                        "geom.public_transform_method_required",
+                        "/geometry/public_safe_geometry/generalization_method",
+                    ),
+                    result.findings,
+                )
+                self.assertIn(
+                    validator.Finding(
+                        "schema.validation_check_mismatch",
+                        "/validation/checks/geometry_public_safe",
+                    ),
+                    result.findings,
+                )
+
     def test_occurrence_identity_is_deterministic(self) -> None:
         candidate = _load("valid/valid_observed_open.json")
         reordered = dict(reversed(list(candidate.items())))

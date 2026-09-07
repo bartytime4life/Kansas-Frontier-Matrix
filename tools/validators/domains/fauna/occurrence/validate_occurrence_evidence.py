@@ -249,6 +249,7 @@ def _geometry_findings(
     if isinstance(public_safe, Mapping):
         public_precision = public_safe.get("precision_class")
         public_type = public_safe.get("geometry_type")
+        generalization_method = public_safe.get("generalization_method")
         admitted_precisions = PUBLIC_GEOMETRY_PRECISIONS.get(public_type)
         if (
             admitted_precisions is not None
@@ -258,6 +259,16 @@ def _geometry_findings(
                 findings,
                 "geom.public_geometry_precision_mismatch",
                 "/geometry/public_safe_geometry/precision_class",
+            )
+        if public_precision != "exact" and not (
+            isinstance(generalization_method, str)
+            and generalization_method.strip()
+            and generalization_method == generalization_method.strip()
+        ):
+            _add(
+                findings,
+                "geom.public_transform_method_required",
+                "/geometry/public_safe_geometry/generalization_method",
             )
         if generalization and public_precision == "exact":
             _add(
