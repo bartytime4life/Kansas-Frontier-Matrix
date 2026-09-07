@@ -269,8 +269,15 @@ class HabitatModelRunReceiptTests(unittest.TestCase):
             self.assertEqual(b"", completed.stderr)
         self.assertEqual(first.stdout, second.stdout)
         payload = json.loads(first.stdout)
+        self.assertEqual(
+            {"authority", "findings", "input", "non_effects", "outcome", "profile"},
+            set(payload),
+        )
         self.assertEqual("PASS", payload["outcome"])
         self.assertEqual("NONE", payload["authority"])
+        self.assertEqual(validator.PROFILE, payload["profile"])
+        self.assertEqual(list(validator.NON_EFFECTS), payload["non_effects"])
+        self.assertEqual([], payload["findings"])
         self.assertEqual(path.name, payload["input"])
         self.assertEqual(
             (json.dumps(payload, sort_keys=True, separators=(",", ":")) + "\n").encode(
@@ -309,8 +316,24 @@ class HabitatModelRunReceiptTests(unittest.TestCase):
                         self.assertNotIn(sentinel.encode("utf-8"), completed.stdout)
                     self.assertEqual(first.stdout, second.stdout)
                     payload = json.loads(first.stdout)
+                    self.assertEqual(
+                        {
+                            "authority",
+                            "findings",
+                            "input",
+                            "non_effects",
+                            "outcome",
+                            "profile",
+                        },
+                        set(payload),
+                    )
                     self.assertEqual(expected_outcome, payload["outcome"])
                     self.assertEqual("NONE", payload["authority"])
+                    self.assertEqual(validator.PROFILE, payload["profile"])
+                    self.assertEqual(
+                        list(validator.NON_EFFECTS), payload["non_effects"]
+                    )
+                    self.assertTrue(payload["findings"])
                     self.assertEqual(path.name, payload["input"])
                     self.assertEqual(
                         (
