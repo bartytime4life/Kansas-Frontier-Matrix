@@ -1,7 +1,7 @@
 # KFM Archaeology domain CI workflow.
-# Status: one bounded synthetic ThreeDDocumentation paradata validation slice is
-# executable; broader Archaeology validation, proof, and release-dry-run
-# producers remain explicit holds.
+# Status: bounded synthetic ThreeDDocumentation paradata and CandidateFeature
+# safety validation slices are executable; broader Archaeology proof and
+# release-dry-run producers remain explicit holds.
 #
 # Authority boundary:
 # - This workflow executes synthetic, no-network paradata fixtures without
@@ -84,6 +84,35 @@ jobs:
           python tools/validators/domains/archaeology/validate_three_d_documentation.py \
             --fixtures
 
+      - name: Validate bounded synthetic CandidateFeature safety
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          required_paths=(
+            "contracts/domains/archaeology/candidate_feature.md"
+            "schemas/contracts/v1/domains/archaeology/candidate_feature.schema.json"
+            "fixtures/domains/archaeology/synthetic_candidate_feature/README.md"
+            "tools/validators/archaeology/validate_candidate_feature.py"
+            "tests/domains/archaeology/test_candidate_not_site.py"
+          )
+
+          for required_path in "${required_paths[@]}"; do
+            if [[ ! -f "$required_path" ]]; then
+              echo "::error::Required CandidateFeature validation artifact is missing: $required_path"
+              exit 1
+            fi
+          done
+
+          python -m py_compile \
+            tools/validators/archaeology/validate_candidate_feature.py \
+            tests/domains/archaeology/test_candidate_not_site.py
+          python -m unittest \
+            tests.domains.archaeology.test_candidate_not_site \
+            --verbose
+          python tools/validators/archaeology/validate_candidate_feature.py \
+            --fixtures
+
       - name: Record bounded Archaeology validation scope
         if: always()
         shell: bash
@@ -93,11 +122,13 @@ jobs:
 
           Job status: `${{ job.status }}`
 
-          `SUBSTANTIVE_SCOPE: three-d-documentation-paradata`
+          `SUBSTANTIVE_SCOPE: three-d-documentation-paradata, candidate-feature-safety`
 
-          This job executes one deterministic, synthetic, no-network paradata
-          suite covering acquisition, processing, scale, georeference,
-          interpretation, asset roles, and governance-reference coherence.
+          This job executes deterministic, synthetic, no-network suites covering
+          ThreeDDocumentation acquisition, processing, scale, georeference,
+          interpretation, asset roles, and governance-reference coherence, plus
+          CandidateFeature candidate-only identity, opaque governed references,
+          evidence/correction binding, and protected-location leakage denial.
 
           A successful job proves fixture-profile conformance only. It does not
           read a 3D asset, validate archaeological truth or site identity, expose
