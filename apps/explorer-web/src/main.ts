@@ -312,6 +312,25 @@ const syncWorkspaceNavigation = (): void => {
       ),
     ).map((button) => button.dataset.domainId),
   );
+  const domainButtons = Array.from(
+    root.querySelectorAll<HTMLButtonElement>("button[data-domain-id]"),
+  );
+  if (activeDeepLinkKnowledgeDomainId !== null) {
+    const ownedDomainButtons = domainButtons.filter(
+      (button) => button.dataset.domainId === activeDeepLinkKnowledgeDomainId,
+    );
+    const mountedOwnedConsumer =
+      ownedDomainButtons.length === 1 ? ownedDomainButtons[0] : undefined;
+    if (
+      !isPublicKnowledgeDomainOwnedConsumerCurrent(
+        activeDeepLinkKnowledgeDomainConsumer,
+        mountedOwnedConsumer,
+      )
+    ) {
+      activeDeepLinkKnowledgeDomainId = null;
+      activeDeepLinkKnowledgeDomainConsumer = null;
+    }
+  }
   const domainTransition = resolvePublicKnowledgeDomainSelectionTransition(
     safeUrl,
     activeDeepLinkKnowledgeDomainId,
@@ -320,9 +339,6 @@ const syncWorkspaceNavigation = (): void => {
   const domainIdToSelect = domainTransition.domainIdToSelect;
   const requestedDomainId = domainTransition.activeDeepLinkDomainId;
   const domainConsumerId = domainIdToSelect ?? requestedDomainId;
-  const domainButtons = Array.from(
-    root.querySelectorAll<HTMLButtonElement>("button[data-domain-id]"),
-  );
   const domainConsumerIsUnique =
     domainConsumerId !== null &&
     hasSinglePublicKnowledgeDomainConsumer(

@@ -152,6 +152,28 @@ describe("public Knowledge-domain deep-link release", () => {
     ).toBe(false);
   });
 
+  it("clears a replaced owner before resolving context-removal cleanup", () => {
+    const acceptedControl = Object.freeze({ domainId: "archaeology" });
+    const remountedControl = Object.freeze({ domainId: "archaeology" });
+    const currentOwner = isPublicKnowledgeDomainOwnedConsumerCurrent(
+      acceptedControl,
+      remountedControl,
+    )
+      ? "archaeology"
+      : null;
+
+    expect(
+      resolvePublicKnowledgeDomainSelectionTransition(
+        new URL("https://example.invalid/explorer?lang=en#knowledge"),
+        currentOwner,
+        "archaeology",
+      ),
+    ).toEqual({
+      activeDeepLinkDomainId: null,
+      domainIdToSelect: null,
+    });
+  });
+
   it("commits URL ownership after the existing control applies the domain", () => {
     const transition = resolvePublicKnowledgeDomainSelectionTransition(
       contextUrl(["archaeology"]),
@@ -394,6 +416,14 @@ describe("public Knowledge-domain deep-link release", () => {
     expect(mainSource).toContain(
       "activeDeepLinkKnowledgeDomainConsumer =\n    activeDeepLinkKnowledgeDomainId !== null",
     );
+    const ownershipValidationIndex = mainSource.indexOf(
+      "const mountedOwnedConsumer =",
+    );
+    const domainTransitionIndex = mainSource.indexOf(
+      "const domainTransition = resolvePublicKnowledgeDomainSelectionTransition(",
+    );
+    expect(ownershipValidationIndex).toBeGreaterThan(-1);
+    expect(domainTransitionIndex).toBeGreaterThan(ownershipValidationIndex);
     expect(mainSource).toContain(
       '!button.disabled && button.getAttribute("aria-pressed") === "true"',
     );
