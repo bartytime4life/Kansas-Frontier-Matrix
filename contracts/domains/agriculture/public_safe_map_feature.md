@@ -114,8 +114,9 @@ to or separated from either magnitude. For range-checked numeric and cardinal
 pairs, leading zeroes are removed before numeric evaluation, so padded valid
 coordinates remain denied while padded out-of-range lookalikes are not
 misclassified. Degrees-minutes-seconds cardinal pairs are also denied in either
-coordinate order and prefix/suffix form when they use ASCII, typographic, or
-Unicode prime minute/second marks. Their degrees are axis-bound, minutes and
+coordinate order and any per-axis prefix/suffix direction combination when they
+use ASCII, typographic, or Unicode prime minute/second marks. Decimal cardinal
+pairs use the same independent direction-placement rule. Their degrees are axis-bound, minutes and
 seconds must be below sixty, and nonzero components cannot exceed the 90/180
 degree boundaries.
 Protected identifier values are denied at every length. A complete scalar that
