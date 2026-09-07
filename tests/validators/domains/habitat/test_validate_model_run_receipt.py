@@ -254,6 +254,49 @@ class HabitatModelRunReceiptTests(unittest.TestCase):
             first.stdout,
         )
 
+    def test_cli_denial_and_error_outputs_are_deterministic(self) -> None:
+        sentinel = "do-not-echo-deterministic-candidate"
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            denied = root / "schema-denied.json"
+            denied.write_text(json.dumps({"secret": sentinel}), encoding="utf-8")
+            malformed = root / "malformed.json"
+            malformed.write_text(f'{{"secret":"{sentinel}"', encoding="utf-8")
+
+            for path, expected_code, expected_outcome in (
+                (denied, 1, "DENY"),
+                (malformed, 2, "ERROR"),
+            ):
+                with self.subTest(outcome=expected_outcome):
+                    command = [sys.executable, str(Path(validator.__file__)), str(path)]
+                    first = subprocess.run(
+                        command, cwd=ROOT, check=False, capture_output=True
+                    )
+                    second = subprocess.run(
+                        command, cwd=ROOT, check=False, capture_output=True
+                    )
+
+                    for completed in (first, second):
+                        self.assertEqual(
+                            expected_code, completed.returncode, completed.stderr
+                        )
+                        self.assertEqual(b"", completed.stderr)
+                        self.assertNotIn(sentinel.encode("utf-8"), completed.stdout)
+                    self.assertEqual(first.stdout, second.stdout)
+                    payload = json.loads(first.stdout)
+                    self.assertEqual(expected_outcome, payload["outcome"])
+                    self.assertEqual("NONE", payload["authority"])
+                    self.assertEqual(path.name, payload["input"])
+                    self.assertEqual(
+                        (
+                            json.dumps(
+                                payload, sort_keys=True, separators=(",", ":")
+                            )
+                            + "\n"
+                        ).encode("utf-8"),
+                        first.stdout,
+                    )
+
     def test_cli_denial_exit_is_distinct_from_input_error(self) -> None:
         sentinel = "do-not-echo-schema-denied-value"
         with tempfile.TemporaryDirectory() as directory:
