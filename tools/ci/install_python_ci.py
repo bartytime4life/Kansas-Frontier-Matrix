@@ -31,6 +31,17 @@ MIGRATION_MANIFEST = "tools/ci/python-dependency-lock-migration.json"
 MIGRATION_SCHEMA = "kfm.python-dependency-lock-migration.v1"
 MIGRATION_ID = "scorecard-pinned-dependencies-20260812"
 MIGRATION_ENTRY_COUNT = 387
+GIT_REPOSITORY_CONTEXT_VARIABLES = (
+    "GIT_ALTERNATE_OBJECT_DIRECTORIES",
+    "GIT_CEILING_DIRECTORIES",
+    "GIT_COMMON_DIR",
+    "GIT_DIR",
+    "GIT_DISCOVERY_ACROSS_FILESYSTEM",
+    "GIT_INDEX_FILE",
+    "GIT_OBJECT_DIRECTORY",
+    "GIT_REPLACE_REF_BASE",
+    "GIT_WORK_TREE",
+)
 HASH_LINE = re.compile(r"^\s+--hash=sha256:[0-9a-f]{64}(?: \\)?$")
 FULL_SHA256 = re.compile(r"^sha256:[0-9a-f]{64}$")
 RECEIPT_SHA256 = re.compile(r"^sha256:[0-9a-f]{32,64}$")
@@ -72,6 +83,14 @@ def _unique_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
 
 def _sha256_bytes(raw: bytes) -> str:
     return "sha256:" + hashlib.sha256(raw).hexdigest()
+
+
+def _repository_git_environment() -> dict[str, str]:
+    environment = {
+        key: value for key, value in os.environ.items() if not key.startswith("GIT_")
+    }
+    environment["GIT_NO_REPLACE_OBJECTS"] = "1"
+    return environment
 
 
 @dataclass(frozen=True)
@@ -270,6 +289,7 @@ def _read_commit_workflows(
             input=("\n".join(specs) + "\n").encode("ascii"),
             stdout=subprocess.PIPE,
             stderr=subprocess.DEVNULL,
+            env=_repository_git_environment(),
             timeout=30,
         )
     except (OSError, subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:
@@ -313,6 +333,7 @@ def verify_workflow_receipts() -> None:
         ("git", "merge-base", "--is-ancestor", base_commit, migration_head),
         check=True,
         cwd=REPO_ROOT,
+        env=_repository_git_environment(),
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
     )

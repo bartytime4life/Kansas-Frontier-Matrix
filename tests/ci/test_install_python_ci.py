@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import os
 import sys
 import tempfile
 import unittest
@@ -102,7 +103,10 @@ class InstallPythonCiTests(unittest.TestCase):
             ),
             mock.patch.dict(
                 module.os.environ,
-                {"KFM_MIGRATION_HEAD": migration_head},
+                {
+                    "KFM_MIGRATION_HEAD": migration_head,
+                    "GIT_DIR": str(REPO_ROOT / ".missing-git-dir"),
+                },
             ),
             self.assertRaises(module.InstallConfigurationError) as raised,
         ):
@@ -184,6 +188,10 @@ class InstallPythonCiTests(unittest.TestCase):
             }
             for path in paths
         }
+        ambient_git_context = {
+            variable: f"unsafe-{variable.lower()}"
+            for variable in module.GIT_REPOSITORY_CONTEXT_VARIABLES
+        }
 
         with (
             mock.patch.object(
@@ -193,8 +201,15 @@ class InstallPythonCiTests(unittest.TestCase):
             ),
             mock.patch.dict(
                 module.os.environ,
-                {"KFM_MIGRATION_HEAD": migration_head},
+                {"KFM_MIGRATION_HEAD": migration_head, **ambient_git_context},
             ),
+            mock.patch.object(
+                module.subprocess,
+                "run",
+                return_value=module.subprocess.CompletedProcess(
+                    args=("git", "merge-base"), returncode=0
+                ),
+            ) as git_run,
             mock.patch.object(
                 module,
                 "_read_commit_workflows",
@@ -212,6 +227,24 @@ class InstallPythonCiTests(unittest.TestCase):
             read_commit_workflows.call_args_list,
         )
         path_parser.assert_not_called()
+        self.assertEqual(
+            (
+                "git",
+                "merge-base",
+                "--is-ancestor",
+                manifest["base_commit"],
+                migration_head,
+            ),
+            git_run.call_args.args[0],
+        )
+        self.assertTrue(
+            set(module.GIT_REPOSITORY_CONTEXT_VARIABLES).isdisjoint(
+                git_run.call_args.kwargs["env"]
+            )
+        )
+        self.assertEqual(
+            "1", git_run.call_args.kwargs["env"]["GIT_NO_REPLACE_OBJECTS"]
+        )
 
     def test_commit_workflow_batch_reader_preserves_blob_boundaries(self) -> None:
         paths = (".github/workflows/a.yml", ".github/workflows/b.yaml")
@@ -229,7 +262,16 @@ class InstallPythonCiTests(unittest.TestCase):
             args=("git", "cat-file", "--batch"), returncode=0, stdout=output
         )
 
-        with mock.patch.object(module.subprocess, "run", return_value=completed) as run:
+        ambient_git_context = {
+            variable: f"unsafe-{variable.lower()}"
+            for variable in module.GIT_REPOSITORY_CONTEXT_VARIABLES
+        }
+        with (
+            mock.patch.dict(os.environ, ambient_git_context),
+            mock.patch.object(
+                module.subprocess, "run", return_value=completed
+            ) as run,
+        ):
             self.assertEqual(
                 dict(zip(paths, blobs, strict=True)),
                 module._read_commit_workflows("1" * 40, paths),
@@ -249,6 +291,14 @@ class InstallPythonCiTests(unittest.TestCase):
             run.call_args.kwargs["input"],
         )
         self.assertEqual(30, run.call_args.kwargs["timeout"])
+        self.assertTrue(
+            set(module.GIT_REPOSITORY_CONTEXT_VARIABLES).isdisjoint(
+                run.call_args.kwargs["env"]
+            )
+        )
+        self.assertEqual(
+            "1", run.call_args.kwargs["env"]["GIT_NO_REPLACE_OBJECTS"]
+        )
 
     def test_commit_workflow_batch_reader_rejects_missing_blob(self) -> None:
         completed = module.subprocess.CompletedProcess(
