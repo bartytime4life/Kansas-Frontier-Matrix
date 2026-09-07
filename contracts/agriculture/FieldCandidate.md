@@ -227,6 +227,8 @@ Until that decision exists:
 > [!WARNING]
 > A `FieldCandidate` is not a survey-confirmed field. Treating it as one is a source-role collapse and must be denied at promotion.
 
+---
+
 ## Sensitivity and release posture
 
 `FieldCandidate` is field-level and review-sensitive by default.
@@ -240,6 +242,8 @@ Current Agriculture references converge on this minimum posture:
 - aggregate outputs must use an `AggregationReceipt` where applicable and must not be reverse-joined to a single candidate.
 
 A `FieldCandidate` may be useful internally for validation, deduplication, review, and aggregation. That does not make it public.
+
+---
 
 ## Lifecycle boundary
 
