@@ -81,6 +81,13 @@ class InstallPythonCiTests(unittest.TestCase):
 
     def test_migration_hash_failure_reports_every_mismatched_workflow(self) -> None:
         manifest, entries = module.load_workflow_migration_manifest(REPO_ROOT)
+        migration_head = module.subprocess.run(
+            ("git", "rev-parse", "HEAD"),
+            check=True,
+            cwd=REPO_ROOT,
+            stdout=module.subprocess.PIPE,
+            text=True,
+        ).stdout.strip()
         paths = tuple(entries)[:2]
         mismatched_entries = {
             path: {**entries[path], "current_sha256": "sha256:" + "0" * 64}
@@ -95,7 +102,7 @@ class InstallPythonCiTests(unittest.TestCase):
             ),
             mock.patch.dict(
                 module.os.environ,
-                {"KFM_MIGRATION_HEAD": manifest["base_commit"]},
+                {"KFM_MIGRATION_HEAD": migration_head},
             ),
             self.assertRaises(module.InstallConfigurationError) as raised,
         ):
@@ -108,6 +115,13 @@ class InstallPythonCiTests(unittest.TestCase):
 
     def test_migration_validation_checks_each_reused_profile_once(self) -> None:
         manifest, entries = module.load_workflow_migration_manifest(REPO_ROOT)
+        migration_head = module.subprocess.run(
+            ("git", "rev-parse", "HEAD"),
+            check=True,
+            cwd=REPO_ROOT,
+            stdout=module.subprocess.PIPE,
+            text=True,
+        ).stdout.strip()
         paths = tuple(
             path
             for path, entry in entries.items()
@@ -132,7 +146,7 @@ class InstallPythonCiTests(unittest.TestCase):
             ),
             mock.patch.dict(
                 module.os.environ,
-                {"KFM_MIGRATION_HEAD": manifest["base_commit"]},
+                {"KFM_MIGRATION_HEAD": migration_head},
             ),
             mock.patch.object(module, "validate_lockfile") as validate_lockfile,
             mock.patch.object(module, "_validate_local_specs") as validate_local_specs,
@@ -141,6 +155,117 @@ class InstallPythonCiTests(unittest.TestCase):
 
         validate_lockfile.assert_called_once()
         validate_local_specs.assert_called_once_with(module.PROFILES["project-test"])
+
+    def test_migration_validation_reads_exact_commits_in_two_batches(self) -> None:
+        manifest, entries = module.load_workflow_migration_manifest(REPO_ROOT)
+        migration_head = module.subprocess.run(
+            ("git", "rev-parse", "HEAD"),
+            check=True,
+            cwd=REPO_ROOT,
+            stdout=module.subprocess.PIPE,
+            text=True,
+        ).stdout.strip()
+        paths = tuple(entries)[:2]
+        selected_entries = {path: entries[path] for path in paths}
+        base_workflows = {
+            path: module.subprocess.run(
+                ("git", "show", f'{manifest["base_commit"]}:{path}'),
+                check=True,
+                cwd=REPO_ROOT,
+                stdout=module.subprocess.PIPE,
+            ).stdout
+            for path in paths
+        }
+        head_workflows = {path: (REPO_ROOT / path).read_bytes() for path in paths}
+        selected_entries = {
+            path: {
+                **selected_entries[path],
+                "current_sha256": module._sha256_bytes(head_workflows[path]),
+            }
+            for path in paths
+        }
+
+        with (
+            mock.patch.object(
+                module,
+                "load_workflow_migration_manifest",
+                return_value=(manifest, selected_entries),
+            ),
+            mock.patch.dict(
+                module.os.environ,
+                {"KFM_MIGRATION_HEAD": migration_head},
+            ),
+            mock.patch.object(
+                module,
+                "_read_commit_workflows",
+                side_effect=(base_workflows, head_workflows),
+            ) as read_commit_workflows,
+            mock.patch.object(module, "profiles_for_workflow") as path_parser,
+        ):
+            module.verify_workflow_receipts()
+
+        self.assertEqual(
+            [
+                mock.call(manifest["base_commit"], paths),
+                mock.call(migration_head, paths),
+            ],
+            read_commit_workflows.call_args_list,
+        )
+        path_parser.assert_not_called()
+
+    def test_commit_workflow_batch_reader_preserves_blob_boundaries(self) -> None:
+        paths = (".github/workflows/a.yml", ".github/workflows/b.yaml")
+        blobs = (b"name: a\n\n", b"name: b\nrun: value")
+        output = b"".join(
+            b"0" * 40
+            + b" blob "
+            + str(len(blob)).encode("ascii")
+            + b"\n"
+            + blob
+            + b"\n"
+            for blob in blobs
+        )
+        completed = module.subprocess.CompletedProcess(
+            args=("git", "cat-file", "--batch"), returncode=0, stdout=output
+        )
+
+        with mock.patch.object(module.subprocess, "run", return_value=completed) as run:
+            self.assertEqual(
+                dict(zip(paths, blobs, strict=True)),
+                module._read_commit_workflows("1" * 40, paths),
+            )
+
+        self.assertEqual(
+            (
+                "1" * 40
+                + ":"
+                + paths[0]
+                + "\n"
+                + "1" * 40
+                + ":"
+                + paths[1]
+                + "\n"
+            ).encode("ascii"),
+            run.call_args.kwargs["input"],
+        )
+        self.assertEqual(30, run.call_args.kwargs["timeout"])
+
+    def test_commit_workflow_batch_reader_rejects_missing_blob(self) -> None:
+        completed = module.subprocess.CompletedProcess(
+            args=("git", "cat-file", "--batch"),
+            returncode=0,
+            stdout=b"1" * 40 + b":.github/workflows/missing.yml missing\n",
+        )
+        with (
+            mock.patch.object(module.subprocess, "run", return_value=completed),
+            self.assertRaisesRegex(
+                module.InstallConfigurationError,
+                "MIGRATION_GIT_OUTPUT_INVALID",
+            ),
+        ):
+            module._read_commit_workflows(
+                "1" * 40, (".github/workflows/missing.yml",)
+            )
 
     def test_lock_validation_rejects_unhashed_and_remote_sources(self) -> None:
         remote = (

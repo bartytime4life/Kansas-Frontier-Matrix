@@ -215,8 +215,16 @@ def profiles_for_workflow(workflow_path: Path) -> frozenset[str]:
         raise InstallConfigurationError("WORKFLOW_UNSAFE")
     try:
         workflow_path.resolve().relative_to(REPO_ROOT / ".github/workflows")
-        text = workflow_path.read_text(encoding="utf-8")
+        raw = workflow_path.read_bytes()
     except (OSError, UnicodeError, ValueError) as exc:
+        raise InstallConfigurationError("WORKFLOW_UNREADABLE") from exc
+    return _profiles_for_workflow_bytes(raw)
+
+
+def _profiles_for_workflow_bytes(raw: bytes) -> frozenset[str]:
+    try:
+        text = raw.decode("utf-8")
+    except UnicodeError as exc:
         raise InstallConfigurationError("WORKFLOW_UNREADABLE") from exc
     marker = "python tools/ci/install_python_ci.py "
     profiles: set[str] = set()
@@ -248,6 +256,51 @@ def profiles_for_workflow(workflow_path: Path) -> frozenset[str]:
     return frozenset(profiles)
 
 
+def _read_commit_workflows(
+    commit_sha: str, workflow_paths: Sequence[str]
+) -> dict[str, bytes]:
+    """Read workflow blobs from one exact commit in a single Git process."""
+
+    specs = [f"{commit_sha}:{path}" for path in workflow_paths]
+    try:
+        result = subprocess.run(
+            ("git", "cat-file", "--batch"),
+            check=True,
+            cwd=REPO_ROOT,
+            input=("\n".join(specs) + "\n").encode("ascii"),
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+            timeout=30,
+        )
+    except (OSError, subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:
+        raise InstallConfigurationError("MIGRATION_GIT_READ_FAILED") from exc
+
+    raw = result.stdout
+    offset = 0
+    workflows: dict[str, bytes] = {}
+    for workflow_path in workflow_paths:
+        header_end = raw.find(b"\n", offset)
+        if header_end < 0:
+            raise InstallConfigurationError("MIGRATION_GIT_OUTPUT_INVALID")
+        header = raw[offset:header_end].split()
+        if (
+            len(header) != 3
+            or header[1] != b"blob"
+            or not header[2].isdigit()
+        ):
+            raise InstallConfigurationError("MIGRATION_GIT_OUTPUT_INVALID")
+        size = int(header[2])
+        start = header_end + 1
+        end = start + size
+        if end >= len(raw) or raw[end : end + 1] != b"\n":
+            raise InstallConfigurationError("MIGRATION_GIT_OUTPUT_INVALID")
+        workflows[workflow_path] = raw[start:end]
+        offset = end + 1
+    if offset != len(raw):
+        raise InstallConfigurationError("MIGRATION_GIT_OUTPUT_INVALID")
+    return workflows
+
+
 def verify_workflow_receipts() -> None:
     """Verify changed workflows through their immutable receipts plus new locks."""
 
@@ -263,30 +316,22 @@ def verify_workflow_receipts() -> None:
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
     )
+    workflow_paths = tuple(entries)
+    base_workflows = _read_commit_workflows(base_commit, workflow_paths)
+    head_workflows = _read_commit_workflows(migration_head, workflow_paths)
     current_hash_mismatches: list[str] = []
     validated_profiles: set[str] = set()
     for workflow_path, entry in entries.items():
-        workflow = REPO_ROOT / workflow_path
-        profile_names = profiles_for_workflow(workflow)
+        current_bytes = head_workflows[workflow_path]
+        profile_names = _profiles_for_workflow_bytes(current_bytes)
         if profile_names != frozenset(entry["profiles"]):
             raise InstallConfigurationError("MIGRATION_PROFILE_MISMATCH")
-        prior_bytes = subprocess.run(
-            (
-                "git",
-                "show",
-                f"{base_commit}:{workflow_path}",
-            ),
-            check=True,
-            cwd=REPO_ROOT,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.DEVNULL,
-        ).stdout
+        prior_bytes = base_workflows[workflow_path]
         if _sha256_bytes(prior_bytes) != entry["base_sha256"]:
             raise InstallConfigurationError("MIGRATION_BASE_HASH_MISMATCH")
         old_prefix = b"python -m pip install"
         if old_prefix not in prior_bytes:
             raise InstallConfigurationError("PRIOR_WORKFLOW_INSTALL_MISSING")
-        current_bytes = workflow.read_bytes()
         if _sha256_bytes(current_bytes) != entry["current_sha256"]:
             current_hash_mismatches.append(workflow_path)
         if old_prefix in current_bytes:
