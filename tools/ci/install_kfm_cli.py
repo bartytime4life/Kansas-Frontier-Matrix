@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import os
 import re
+import stat
 import subprocess
 import sys
 import time
@@ -175,18 +176,23 @@ def validate_local_package(path: Path = LOCAL_PACKAGE) -> None:
                 raise CliInstallConfigurationError(
                     "CLI_LOCAL_PACKAGE_ENTRY_LIMIT_EXCEEDED"
                 )
-            if entry.is_symlink():
+            entry_stat = entry.stat(follow_symlinks=False)
+            if stat.S_ISLNK(entry_stat.st_mode):
                 raise CliInstallConfigurationError("CLI_LOCAL_PACKAGE_ENTRY_UNSAFE")
-            if not (entry.is_file() or entry.is_dir()):
-                raise CliInstallConfigurationError(
-                    "CLI_LOCAL_PACKAGE_ENTRY_TYPE_UNSAFE"
-                )
-            if entry.is_file():
-                total_bytes += entry.stat().st_size
+            if stat.S_ISREG(entry_stat.st_mode):
+                if entry_stat.st_nlink != 1:
+                    raise CliInstallConfigurationError(
+                        "CLI_LOCAL_PACKAGE_ENTRY_LINK_UNSAFE"
+                    )
+                total_bytes += entry_stat.st_size
                 if total_bytes > MAX_LOCAL_PACKAGE_BYTES:
                     raise CliInstallConfigurationError(
                         "CLI_LOCAL_PACKAGE_SIZE_LIMIT_EXCEEDED"
                     )
+            elif not stat.S_ISDIR(entry_stat.st_mode):
+                raise CliInstallConfigurationError(
+                    "CLI_LOCAL_PACKAGE_ENTRY_TYPE_UNSAFE"
+                )
     except OSError as exc:
         raise CliInstallConfigurationError("CLI_LOCAL_PACKAGE_UNREADABLE") from exc
 
