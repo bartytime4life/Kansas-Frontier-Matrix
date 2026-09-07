@@ -16,7 +16,7 @@
     ".github/workflows/evidence-drawer-payload.yml": "sha256:cac838a8f42be6c53e1b9b40051a8e1b241b95d6a05946be6b8a625adbeeb9fb",
     "apps/explorer-web/src/adapters/GovernedClient.ts": "sha256:aa568e4bbe13722cd616d41fd059f62985f7fad09d15e8f5c3daeec719dfdbaa",
     "apps/explorer-web/tests/evidence-drawer.test.ts": "sha256:7db7684fb49f767d8eaafb5de227b5f46c9719008d090ca598925aca94aa69b2",
-    "contracts/ui/evidence_drawer_payload.md": "sha256:4d951364652b18ce76083eaef4e6d8902b71e56517342a3525d6bacaeab7ca50",
+    "contracts/ui/evidence_drawer_payload.md": "sha256:4b2697c1ea259e2733e11a8e3ab667ef358770050b6fcf2d2a76d4793176de13",
     "fixtures/ui/evidence_drawer_payload/invalid/abstain-held-with-released-state.expected_code.txt": "sha256:28e87cd8a49246eb1d87a8b9b4413e3af4cc528300a587789b642bdd6e5b00ba",
     "fixtures/ui/evidence_drawer_payload/invalid/abstain-held-with-released-state.json": "sha256:639899491ec417719cc1f5a3534b5f98acadf1c3012e1619c72514d06cf23802",
     "fixtures/ui/evidence_drawer_payload/valid/abstain-source-drift-review.json": "sha256:8c8afcbe451932721865bf1fe4004c574293918f29aca683377c8fc8c080ec5d",
@@ -28,7 +28,7 @@
     "model": "GPT-5",
     "version": "2026-09-07"
   },
-  "prompt_or_contract": "sha256:4d951364652b18ce76083eaef4e6d8902b71e56517342a3525d6bacaeab7ca50",
+  "prompt_or_contract": "sha256:4b2697c1ea259e2733e11a8e3ab667ef358770050b6fcf2d2a76d4793176de13",
   "parameters": {
     "seed": null,
     "temperature": null,
