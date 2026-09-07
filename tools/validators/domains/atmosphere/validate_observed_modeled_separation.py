@@ -15,6 +15,7 @@ import argparse
 from dataclasses import dataclass
 from datetime import datetime
 import json
+import math
 from pathlib import Path
 import sys
 from typing import Sequence
@@ -214,8 +215,11 @@ def _validate_measurement(
     for field in ("parameter", "unit"):
         if not is_nonempty_string(measurement.get(field)):
             add_finding(findings, f"MEASUREMENT_{field.upper()}_INVALID", f"$.measurement.{field}")
-    if not is_finite_number(measurement.get("value")):
+    value = measurement.get("value")
+    if not is_finite_number(value):
         add_finding(findings, "MEASUREMENT_VALUE_INVALID", "$.measurement.value")
+    elif value == 0 and math.copysign(1.0, value) < 0:
+        add_finding(findings, "MEASUREMENT_NEGATIVE_ZERO", "$.measurement.value")
     if not modeled:
         period = measurement.get("averaging_period_minutes")
         if (
