@@ -43,8 +43,8 @@ snapshots when monthly coverage or spatial footprints change.
   release, or publish.
 - `REVIEW` means only that declared snapshot metadata differs. It does not establish that the
   upstream change is correct, material to a public claim, or safe to release.
-- `HOLD` is required when the prior snapshot or rights posture is unresolved, or when monthly
-  coverage regresses.
+- `HOLD` is required when the prior snapshot or rights posture is unresolved, monthly
+  coverage regresses, or the current snapshot's retrieval time predates the prior snapshot.
 - Exact source bytes, record-level claims, and release decisions remain outside this contract.
 
 ## Required fields
@@ -88,7 +88,7 @@ The validator computes the exact sorted set:
 |---|---|
 | `NO_CHANGE` | Prior/current snapshots are comparable, rights are verified, all compared fields match, and reason includes `SNAPSHOTS_MATCH`. |
 | `REVIEW` | Rights are verified, coverage did not regress, at least one computed dimension changed, and reason includes `MATERIAL_CHANGE_DETECTED`. |
-| `HOLD` | Prior snapshot missing, rights unresolved, or monthly coverage regressed; no materiality claim is made. |
+| `HOLD` | Prior snapshot missing, rights unresolved, monthly coverage regressed, or retrieval time regressed; no materiality claim is made. |
 | `ERROR` | Operational failure; no change claim is made. |
 
 ## Deterministic validation

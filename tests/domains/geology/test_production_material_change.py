@@ -9,11 +9,13 @@ import pytest
 from jsonschema import Draft202012Validator
 
 from tools.validators.domains.geology.validate_production_material_change import (
+    Finding,
     REPO_ROOT,
     SCHEMA_PATH,
     canonical_spec_hash,
     expected_assessment_id,
     validate_file,
+    validate_payload,
 )
 
 FIXTURES = (
@@ -75,6 +77,32 @@ def test_material_change_dimensions_are_exact() -> None:
         "MANIFEST_DIGEST",
         "RECORD_COUNT",
     ]
+
+
+def test_retrieval_time_regression_requires_hold() -> None:
+    packet = json.loads(
+        (VALID / "material_change_review.json").read_text(encoding="utf-8")
+    )
+    packet["current_snapshot"]["retrieved_at"] = "2026-03-31T12:00:00Z"
+    packet["spec_hash"] = canonical_spec_hash(packet)
+    packet["assessment_id"] = expected_assessment_id(packet)
+
+    result = validate_payload(packet)
+    assert Finding(
+        "RETRIEVAL_TIME_REGRESSION_REQUIRES_HOLD",
+        "/assessment/outcome",
+    ) in result.findings
+
+    packet["assessment"].update(
+        outcome="HOLD",
+        material_change=None,
+        change_dimensions=[],
+        reason_codes=["RETRIEVAL_TIME_REGRESSION"],
+    )
+    packet["spec_hash"] = canonical_spec_hash(packet)
+    packet["assessment_id"] = expected_assessment_id(packet)
+    result = validate_payload(packet)
+    assert result.ok, result.findings
 
 
 def test_cli_returns_zero_for_valid_fixture() -> None:

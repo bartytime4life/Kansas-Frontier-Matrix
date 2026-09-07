@@ -286,6 +286,7 @@ def _semantic_findings(candidate: Mapping[str, Any]) -> list[Finding]:
         prior is not None and prior.get("rights_state") != "VERIFIED"
     )
     coverage_regression = False
+    retrieval_time_regression = False
     computed_dimensions: list[str] = []
     if prior is not None:
         computed_dimensions = _computed_dimensions(prior, current)
@@ -296,6 +297,13 @@ def _semantic_findings(candidate: Mapping[str, Any]) -> list[Finding]:
             and current_month is not None
             and current_month < prior_month
         )
+        prior_retrieved_at = _parse_datetime(prior.get("retrieved_at"))
+        current_retrieved_at = _parse_datetime(current.get("retrieved_at"))
+        retrieval_time_regression = (
+            prior_retrieved_at is not None
+            and current_retrieved_at is not None
+            and current_retrieved_at < prior_retrieved_at
+        )
 
     reason_set = {item for item in reasons if isinstance(item, str)}
     if outcome == "NO_CHANGE":
@@ -305,6 +313,13 @@ def _semantic_findings(candidate: Mapping[str, Any]) -> list[Finding]:
             findings.append(Finding("NO_CHANGE_WITH_UNRESOLVED_RIGHTS", "/assessment/outcome"))
         if coverage_regression:
             findings.append(Finding("NO_CHANGE_WITH_COVERAGE_REGRESSION", "/assessment/outcome"))
+        if retrieval_time_regression:
+            findings.append(
+                Finding(
+                    "RETRIEVAL_TIME_REGRESSION_REQUIRES_HOLD",
+                    "/assessment/outcome",
+                )
+            )
         if material_change is not False:
             findings.append(Finding("NO_CHANGE_MATERIALITY_INVALID", "/assessment/material_change"))
         if dimensions != []:
@@ -320,6 +335,13 @@ def _semantic_findings(candidate: Mapping[str, Any]) -> list[Finding]:
             findings.append(Finding("REVIEW_WITH_UNRESOLVED_RIGHTS", "/assessment/outcome"))
         if coverage_regression:
             findings.append(Finding("COVERAGE_REGRESSION_REQUIRES_HOLD", "/assessment/outcome"))
+        if retrieval_time_regression:
+            findings.append(
+                Finding(
+                    "RETRIEVAL_TIME_REGRESSION_REQUIRES_HOLD",
+                    "/assessment/outcome",
+                )
+            )
         if material_change is not True:
             findings.append(Finding("REVIEW_MATERIALITY_INVALID", "/assessment/material_change"))
         if not computed_dimensions:
@@ -340,6 +362,8 @@ def _semantic_findings(candidate: Mapping[str, Any]) -> list[Finding]:
             expected_reasons.add("RIGHTS_STATE_UNRESOLVED")
         if coverage_regression:
             expected_reasons.add("COVERAGE_REGRESSION")
+        if retrieval_time_regression:
+            expected_reasons.add("RETRIEVAL_TIME_REGRESSION")
         if not expected_reasons:
             findings.append(Finding("HOLD_WITHOUT_BLOCKER", "/assessment"))
         elif not reason_set.intersection(expected_reasons):
