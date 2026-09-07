@@ -413,6 +413,20 @@ def _semantic_findings(candidate: Mapping[str, Any]) -> list[Finding]:
                 )
             )
     elif outcome == "ERROR":
+        if prior is None:
+            findings.append(
+                Finding(
+                    "PRIOR_SNAPSHOT_MISSING_REQUIRES_HOLD",
+                    "/assessment/outcome",
+                )
+            )
+        if rights_unresolved:
+            findings.append(
+                Finding(
+                    "RIGHTS_STATE_UNRESOLVED_REQUIRES_HOLD",
+                    "/assessment/outcome",
+                )
+            )
         if coverage_regression:
             findings.append(
                 Finding(

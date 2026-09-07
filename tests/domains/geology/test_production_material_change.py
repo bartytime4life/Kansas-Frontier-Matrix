@@ -168,6 +168,43 @@ def test_operational_error_cannot_conceal_coverage_regression() -> None:
 
 
 @pytest.mark.parametrize(
+    ("mutation", "expected_finding"),
+    (
+        (
+            "missing_prior",
+            Finding(
+                "PRIOR_SNAPSHOT_MISSING_REQUIRES_HOLD",
+                "/assessment/outcome",
+            ),
+        ),
+        (
+            "unresolved_rights",
+            Finding(
+                "RIGHTS_STATE_UNRESOLVED_REQUIRES_HOLD",
+                "/assessment/outcome",
+            ),
+        ),
+    ),
+)
+def test_operational_error_cannot_conceal_hold_blockers(
+    mutation: str,
+    expected_finding: Finding,
+) -> None:
+    packet = json.loads(
+        (VALID / "operational_error.json").read_text(encoding="utf-8")
+    )
+    if mutation == "missing_prior":
+        packet["prior_snapshot"] = None
+    else:
+        packet["current_snapshot"]["rights_state"] = "UNKNOWN"
+    packet["spec_hash"] = canonical_spec_hash(packet)
+    packet["assessment_id"] = expected_assessment_id(packet)
+
+    result = validate_payload(packet)
+    assert result.findings == (expected_finding,)
+
+
+@pytest.mark.parametrize(
     ("fixture", "concealing_reason", "expected_finding"),
     (
         (
