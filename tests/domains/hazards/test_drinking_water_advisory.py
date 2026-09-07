@@ -824,7 +824,7 @@ class DrinkingWaterAdvisoryTests(unittest.TestCase):
         )
         self.assertEqual(completed.returncode, 0, completed.stderr)
         rows = [json.loads(line) for line in completed.stdout.splitlines() if line.strip()]
-        self.assertEqual(len(rows), 20)
+        self.assertEqual(len(rows), 21)
         self.assertEqual({row["outcome"] for row in rows}, {"PASS", "DENY", "ERROR"})
 
     def test_cli_rejects_ambiguous_fixture_modes(self) -> None:
