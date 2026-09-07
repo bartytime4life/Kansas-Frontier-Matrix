@@ -61,6 +61,24 @@ def test_all_fixture_cases_match_exactly() -> None:
         assert [{"code": item.code, "path": item.path} for item in result.findings] == case["expected_findings"], case["case_id"]
 
 
+def test_schema_findings_report_bounded_truncation() -> None:
+    payload = materialize(MANIFEST["cases"][0])
+    payload["subject"]["evidence_refs"] = [""] * 80
+
+    result = module.validate_payload(payload)
+
+    assert result.outcome == "DENY"
+    assert sum(
+        finding.code == "PM25_TRIGGER_SCHEMA_INVALID"
+        for finding in result.findings
+    ) == module.MAX_SCHEMA_FINDINGS
+    assert module.Finding(
+        "PM25_TRIGGER_SCHEMA_FINDINGS_TRUNCATED",
+        "/",
+    ) in result.findings
+    assert result == module.validate_payload(payload)
+
+
 def test_identity_is_deterministic() -> None:
     assert materialize(MANIFEST["cases"][0]) == materialize(MANIFEST["cases"][0])
 

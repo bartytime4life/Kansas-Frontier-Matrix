@@ -100,10 +100,24 @@ def _schema_findings(value: Mapping[str, Any]) -> tuple[Finding, ...]:
     try:
         schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
         Draft202012Validator.check_schema(schema)
-        errors = list(islice(Draft202012Validator(schema, format_checker=FormatChecker()).iter_errors(value), MAX_SCHEMA_FINDINGS))
+        errors = list(
+            islice(
+                Draft202012Validator(
+                    schema,
+                    format_checker=FormatChecker(),
+                ).iter_errors(value),
+                MAX_SCHEMA_FINDINGS + 1,
+            )
+        )
     except (OSError, UnicodeError, json.JSONDecodeError, ValueError, RecursionError):
         return (Finding("PM25_TRIGGER_SCHEMA_UNAVAILABLE", "/"),)
-    return tuple(sorted(Finding("PM25_TRIGGER_SCHEMA_INVALID", _pointer(error.absolute_path)) for error in errors))
+    findings = [
+        Finding("PM25_TRIGGER_SCHEMA_INVALID", _pointer(error.absolute_path))
+        for error in errors[:MAX_SCHEMA_FINDINGS]
+    ]
+    if len(errors) > MAX_SCHEMA_FINDINGS:
+        findings.append(Finding("PM25_TRIGGER_SCHEMA_FINDINGS_TRUNCATED", "/"))
+    return tuple(sorted(findings))
 
 
 def _identity_subject(value: Mapping[str, Any]) -> dict[str, Any]:
