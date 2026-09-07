@@ -9,8 +9,8 @@
     "tools/validators/docs/validate_contract_object_map_lifecycle.py"
   ],
   "artifact_hashes": {
-    ".github/workflows/contract-object-map-lifecycle.yml": "sha256:6b263bfcfd99a7a23c5cbf3672cb465f79e8d9bbaa2a1c426b6dcb0b5be48292",
-    "contracts/OBJECT_MAP.md": "sha256:8a27c7f07811b616a8395686e356d471141ba18d20a7dd8ad16d2be8359b2f1b",
+    ".github/workflows/contract-object-map-lifecycle.yml": "sha256:39feae3674d839001d721afe5ccf01b7bc018673adf42d392428851f1ceb9b78",
+    "contracts/OBJECT_MAP.md": "sha256:aa4cf0ebe44abb33f4e56afa93f3a5d05353c8d59c1d9f1f32cb1529253fb16d",
     "docs/intake/exploratory/resource-lifecycle-object-map-source-map.md": "sha256:07f5fdcf7e063151485bb0b7fda55b5527669fb22534cfcc1aacbf0dcdf08ec0",
     "tests/docs/test_contract_object_map_lifecycle.py": "sha256:ae3065d249e0b534c30b40c6a595e39bbe4e0b83acf52048030ed0edd11bddfe",
     "tools/validators/docs/validate_contract_object_map_lifecycle.py": "sha256:4977818016d6a794ea128467c166a5b18cce2c3a17f1f1286dff2c511ea71825"
@@ -20,7 +20,7 @@
     "model": "GPT-5",
     "version": "2026-08-10"
   },
-  "prompt_or_contract": "sha256:8a27c7f07811b616a8395686e356d471141ba18d20a7dd8ad16d2be8359b2f1b",
+  "prompt_or_contract": "sha256:aa4cf0ebe44abb33f4e56afa93f3a5d05353c8d59c1d9f1f32cb1529253fb16d",
   "parameters": {
     "seed": null,
     "temperature": null,
@@ -71,7 +71,7 @@
     {"gate": "documentation-metadata-validation", "outcome": "PASS", "reason": "Both bounded metadata blocks passed the required profile."},
     {"gate": "workflow-yaml-parse", "outcome": "PASS"},
     {"gate": "no-network-boundary", "outcome": "PASS"},
-    {"gate": "generated-receipt-artifact-hash-replay", "outcome": "SKIPPED", "reason": "Receipt hashes regenerated after PR #2871 changed the validator and focused test; replay is pending on the updated exact head."},
+    {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS", "reason": "All five current Git artifacts were replayed byte-for-byte; the workflow and OBJECT_MAP digests were resealed after later governed repository updates."},
     {"gate": "hosted-exact-head-ci", "outcome": "SKIPPED", "reason": "Updated exact-head CI is pending after receipt regeneration."},
     {"gate": "human-review", "outcome": "SKIPPED", "reason": "Pending on the draft pull request."}
   ],
@@ -101,5 +101,5 @@
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Originally emitted for the EXP-012 documentation-and-validation slice, then hash-regenerated after merged PR #2871 aligned the bounded route-parity validator/test to the current RuntimeResponseEnvelope response shape. This receipt remains process memory, not proof or release authority. The slice performs no source admission, lifecycle mutation, resource publication, HTTP or authorization design, evidence resolution, policy evaluation, review approval, release, deployment, publication, or public-use authorization."
+  "notes": "Originally emitted for the EXP-012 documentation-and-validation slice, then hash-regenerated after merged PR #2871 aligned the bounded route-parity validator/test to the current RuntimeResponseEnvelope response shape. The workflow and OBJECT_MAP pins were later resealed against the exact governed branch artifacts after deterministic byte replay. This receipt remains process memory, not proof or release authority. The slice performs no source admission, lifecycle mutation, resource publication, HTTP or authorization design, evidence resolution, policy evaluation, review approval, release, deployment, publication, or public-use authorization."
 }
