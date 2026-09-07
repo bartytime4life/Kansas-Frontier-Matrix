@@ -79,6 +79,33 @@ class InstallPythonCiTests(unittest.TestCase):
         self.assertEqual(module.MIGRATION_ENTRY_COUNT, len(entries))
         self.assertEqual(sorted(entries), list(entries))
 
+    def test_migration_hash_failure_reports_every_mismatched_workflow(self) -> None:
+        manifest, entries = module.load_workflow_migration_manifest(REPO_ROOT)
+        paths = tuple(entries)[:2]
+        mismatched_entries = {
+            path: {**entries[path], "current_sha256": "sha256:" + "0" * 64}
+            for path in paths
+        }
+
+        with (
+            mock.patch.object(
+                module,
+                "load_workflow_migration_manifest",
+                return_value=(manifest, mismatched_entries),
+            ),
+            mock.patch.dict(
+                module.os.environ,
+                {"KFM_MIGRATION_HEAD": manifest["base_commit"]},
+            ),
+            self.assertRaises(module.InstallConfigurationError) as raised,
+        ):
+            module.verify_workflow_receipts()
+
+        self.assertEqual(
+            "MIGRATION_CURRENT_HASH_MISMATCH:" + ",".join(paths),
+            str(raised.exception),
+        )
+
     def test_lock_validation_rejects_unhashed_and_remote_sources(self) -> None:
         remote = (
             "thing @ https://example.invalid/thing.whl "
