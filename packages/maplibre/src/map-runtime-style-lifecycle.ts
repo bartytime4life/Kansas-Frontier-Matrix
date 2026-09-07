@@ -7,6 +7,8 @@ export const MAP_RUNTIME_STYLE_LAYER_PROFILE =
   "kfm.map-runtime-style-layer.v1" as const;
 export const MAP_RUNTIME_STYLE_PLAN_PROFILE =
   "kfm.map-runtime-style-plan.v1" as const;
+export const MAP_RUNTIME_STYLE_COORDINATOR_PROFILE =
+  "kfm.map-runtime-style-coordinator.v1" as const;
 
 const MAX_STYLE_SOURCES = 256;
 const MAX_STYLE_LAYERS = 512;
@@ -43,6 +45,32 @@ export type MapRuntimeStyleLifecyclePlan = Readonly<{
   current: MapRuntimeStyleState;
   target: MapRuntimeStyleState;
   actions: readonly MapRuntimeStyleLifecycleAction[];
+}>;
+
+export type MapRuntimeStyleLifecycleTicket = Readonly<{
+  profile: typeof MAP_RUNTIME_STYLE_COORDINATOR_PROFILE;
+  revision: number;
+  plan: MapRuntimeStyleLifecyclePlan;
+}>;
+
+export type MapRuntimeStyleLifecycleExecutor = (
+  plan: MapRuntimeStyleLifecyclePlan,
+  signal: AbortSignal,
+) => void | Promise<void>;
+
+export type MapRuntimeStyleLifecycleCoordinator = Readonly<{
+  getState(): MapRuntimeStyleState;
+  requiresReconciliation(): boolean;
+  plan(target: MapRuntimeStyleState): MapRuntimeStyleLifecycleTicket;
+  commit(ticket: MapRuntimeStyleLifecycleTicket): MapRuntimeStyleState;
+  reject(ticket: MapRuntimeStyleLifecycleTicket): MapRuntimeStyleState;
+  execute(
+    ticket: MapRuntimeStyleLifecycleTicket,
+    executor: MapRuntimeStyleLifecycleExecutor,
+  ): Promise<MapRuntimeStyleState>;
+  cancel(ticket: MapRuntimeStyleLifecycleTicket): MapRuntimeStyleState;
+  reconcile(observed: MapRuntimeStyleState): MapRuntimeStyleState;
+  dispose(): void;
 }>;
 
 /**
@@ -269,6 +297,189 @@ export function planMapRuntimeStyleLifecycle(
     current: frozenCurrent,
     target: frozenTarget,
     actions: Object.freeze(actions),
+  });
+}
+
+/**
+ * Serializes application of lifecycle plans at an injected renderer boundary.
+ *
+ * A plan becomes confirmed state only after the exact ticket is committed or
+ * its executor succeeds. Any started execution that fails or is cancelled may
+ * have partially changed the renderer, so planning fails closed until an
+ * observed renderer state is explicitly reconciled. This coordinator neither
+ * acquires a renderer nor admits source/layer payloads.
+ */
+export function createMapRuntimeStyleLifecycleCoordinator(
+  initial: MapRuntimeStyleState = {
+    profile: MAP_RUNTIME_STYLE_PROFILE,
+    sources: [],
+    layers: [],
+  },
+): MapRuntimeStyleLifecycleCoordinator {
+  let current = freezeMapRuntimeStyleState(initial);
+  let pending: MapRuntimeStyleLifecycleTicket | null = null;
+  let executing: MapRuntimeStyleLifecycleTicket | null = null;
+  let executionController: AbortController | null = null;
+  const cancelledTickets = new Set<MapRuntimeStyleLifecycleTicket>();
+  let reconciliationRequired = false;
+  let nextRevision = 1;
+  let disposed = false;
+
+  function requireActive(): void {
+    if (disposed) {
+      throw new MapRuntimePortError(
+        "MAP_RUNTIME_DISPOSED",
+        "Map runtime style lifecycle coordinator is disposed.",
+      );
+    }
+  }
+
+  function requireReconciled(): void {
+    if (reconciliationRequired) {
+      throw new MapRuntimePortError(
+        "MAP_RUNTIME_STYLE_RECONCILIATION_REQUIRED",
+        "Map runtime style lifecycle requires renderer reconciliation.",
+      );
+    }
+  }
+
+  function requirePending(
+    ticket: MapRuntimeStyleLifecycleTicket,
+  ): MapRuntimeStyleLifecycleTicket {
+    requireActive();
+    if (ticket !== pending) {
+      invalid("Map runtime style lifecycle ticket is stale or invalid.");
+    }
+    return ticket;
+  }
+
+  return Object.freeze({
+    getState(): MapRuntimeStyleState {
+      return current;
+    },
+
+    requiresReconciliation(): boolean {
+      return reconciliationRequired;
+    },
+
+    plan(target: MapRuntimeStyleState): MapRuntimeStyleLifecycleTicket {
+      requireActive();
+      requireReconciled();
+      if (executing !== null) {
+        invalid("Map runtime style lifecycle execution is in progress.");
+      }
+      if (!Number.isSafeInteger(nextRevision)) {
+        invalid("Map runtime style lifecycle revision is exhausted.");
+      }
+      const ticket = Object.freeze({
+        profile: MAP_RUNTIME_STYLE_COORDINATOR_PROFILE,
+        revision: nextRevision,
+        plan: planMapRuntimeStyleLifecycle(current, target),
+      });
+      nextRevision += 1;
+      pending = ticket;
+      return ticket;
+    },
+
+    commit(ticket: MapRuntimeStyleLifecycleTicket): MapRuntimeStyleState {
+      const accepted = requirePending(ticket);
+      current = accepted.plan.target;
+      pending = null;
+      return current;
+    },
+
+    reject(ticket: MapRuntimeStyleLifecycleTicket): MapRuntimeStyleState {
+      requirePending(ticket);
+      pending = null;
+      return current;
+    },
+
+    async execute(
+      ticket: MapRuntimeStyleLifecycleTicket,
+      executor: MapRuntimeStyleLifecycleExecutor,
+    ): Promise<MapRuntimeStyleState> {
+      const accepted = requirePending(ticket);
+      if (typeof executor !== "function") {
+        invalid("Map runtime style lifecycle executor is invalid.");
+      }
+      pending = null;
+      executing = accepted;
+      const controller = new AbortController();
+      executionController = controller;
+
+      try {
+        await executor(accepted.plan, controller.signal);
+      } catch {
+        if (disposed) requireActive();
+        if (cancelledTickets.delete(accepted)) {
+          throw new MapRuntimePortError(
+            "MAP_RUNTIME_STYLE_LIFECYCLE_CANCELLED",
+            "Map runtime style lifecycle execution was cancelled.",
+          );
+        }
+        if (executing !== accepted || executionController !== controller) {
+          invalid("Map runtime style lifecycle execution state is invalid.");
+        }
+        executing = null;
+        executionController = null;
+        reconciliationRequired = true;
+        throw new MapRuntimePortError(
+          "MAP_RUNTIME_STYLE_LIFECYCLE_FAILED",
+          "Map runtime style lifecycle execution failed.",
+        );
+      }
+
+      if (disposed) requireActive();
+      if (cancelledTickets.delete(accepted)) {
+        throw new MapRuntimePortError(
+          "MAP_RUNTIME_STYLE_LIFECYCLE_CANCELLED",
+          "Map runtime style lifecycle execution was cancelled.",
+        );
+      }
+      if (executing !== accepted || executionController !== controller) {
+        invalid("Map runtime style lifecycle execution state is invalid.");
+      }
+      current = accepted.plan.target;
+      executing = null;
+      executionController = null;
+      return current;
+    },
+
+    cancel(ticket: MapRuntimeStyleLifecycleTicket): MapRuntimeStyleState {
+      requireActive();
+      if (ticket !== executing || executionController === null) {
+        invalid("Map runtime style lifecycle ticket is not executing.");
+      }
+      const controller = executionController;
+      cancelledTickets.add(ticket);
+      executing = null;
+      executionController = null;
+      reconciliationRequired = true;
+      controller.abort();
+      return current;
+    },
+
+    reconcile(observed: MapRuntimeStyleState): MapRuntimeStyleState {
+      requireActive();
+      if (executing !== null) {
+        invalid("Map runtime style lifecycle execution is in progress.");
+      }
+      current = freezeMapRuntimeStyleState(observed);
+      pending = null;
+      reconciliationRequired = false;
+      return current;
+    },
+
+    dispose(): void {
+      if (disposed) return;
+      disposed = true;
+      pending = null;
+      executing = null;
+      const controller = executionController;
+      executionController = null;
+      cancelledTickets.clear();
+      controller?.abort();
+    },
   });
 }
 

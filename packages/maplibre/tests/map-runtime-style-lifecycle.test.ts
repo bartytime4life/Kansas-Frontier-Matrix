@@ -1,10 +1,12 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  MAP_RUNTIME_STYLE_COORDINATOR_PROFILE,
   MAP_RUNTIME_STYLE_LAYER_PROFILE,
   MAP_RUNTIME_STYLE_PLAN_PROFILE,
   MAP_RUNTIME_STYLE_PROFILE,
   MAP_RUNTIME_STYLE_SOURCE_PROFILE,
+  createMapRuntimeStyleLifecycleCoordinator,
   freezeMapRuntimeStyleState,
   planMapRuntimeStyleLifecycle,
   type MapRuntimeStyleState,
@@ -317,5 +319,179 @@ describe("renderer-neutral source and layer lifecycle", () => {
     expect(() => freezeMapRuntimeStyleState(candidate as never)).toThrow(
       expect.objectContaining({ code: "MAP_RUNTIME_STATE_INVALID" }),
     );
+  });
+});
+
+describe("renderer-neutral style lifecycle coordination", () => {
+  it("advances confirmed state only for the exact pending ticket", () => {
+    const initial = style([["roads", "v1"]], [["roads-line", "roads"]]);
+    const coordinator = createMapRuntimeStyleLifecycleCoordinator(initial);
+    const stale = coordinator.plan(style([["roads", "v2"]], []));
+    const latest = coordinator.plan(
+      style([["places", "v1"]], [["places-label", "places"]]),
+    );
+
+    expect(stale).toMatchObject({
+      profile: MAP_RUNTIME_STYLE_COORDINATOR_PROFILE,
+      revision: 1,
+    });
+    expect(latest.revision).toBe(2);
+    expect(coordinator.getState()).toEqual(freezeMapRuntimeStyleState(initial));
+    expect(() => coordinator.commit(stale)).toThrow(
+      expect.objectContaining({ code: "MAP_RUNTIME_STATE_INVALID" }),
+    );
+    expect(coordinator.commit(latest)).toBe(latest.plan.target);
+    expect(coordinator.getState()).toBe(latest.plan.target);
+    expect(Object.isFrozen(latest)).toBe(true);
+  });
+
+  it("commits only after asynchronous renderer execution succeeds", async () => {
+    const coordinator = createMapRuntimeStyleLifecycleCoordinator();
+    const target = style([["roads", "v1"]], [["roads-line", "roads"]]);
+    const ticket = coordinator.plan(target);
+    const empty = freezeMapRuntimeStyleState(style([], []));
+    let observedSignal: AbortSignal | undefined;
+
+    const result = await coordinator.execute(ticket, async (plan, signal) => {
+      observedSignal = signal;
+      expect(plan).toBe(ticket.plan);
+      expect(coordinator.getState()).toEqual(empty);
+      await Promise.resolve();
+    });
+
+    expect(observedSignal?.aborted).toBe(false);
+    expect(result).toBe(ticket.plan.target);
+    expect(coordinator.getState()).toBe(ticket.plan.target);
+    expect(coordinator.requiresReconciliation()).toBe(false);
+  });
+
+  it("fails closed for a partial renderer failure until reconciliation", async () => {
+    const initial = style([["roads", "v1"]], [["roads-line", "roads"]]);
+    const target = style([["roads", "v2"]], [["roads-line", "roads"]]);
+    const coordinator = createMapRuntimeStyleLifecycleCoordinator(initial);
+    const ticket = coordinator.plan(target);
+
+    await expect(
+      coordinator.execute(ticket, () => {
+        throw new Error("renderer detail must not escape");
+      }),
+    ).rejects.toMatchObject({
+      code: "MAP_RUNTIME_STYLE_LIFECYCLE_FAILED",
+      message: "Map runtime style lifecycle execution failed.",
+    });
+    expect(coordinator.getState()).toEqual(freezeMapRuntimeStyleState(initial));
+    expect(coordinator.requiresReconciliation()).toBe(true);
+    expect(() => coordinator.plan(target)).toThrow(
+      expect.objectContaining({
+        code: "MAP_RUNTIME_STYLE_RECONCILIATION_REQUIRED",
+      }),
+    );
+
+    const observed = style([], []);
+    expect(coordinator.reconcile(observed)).toEqual(
+      freezeMapRuntimeStyleState(observed),
+    );
+    expect(coordinator.requiresReconciliation()).toBe(false);
+    expect(coordinator.reject(coordinator.plan(target))).toEqual(
+      freezeMapRuntimeStyleState(observed),
+    );
+  });
+
+  it("serializes renderer execution", async () => {
+    const coordinator = createMapRuntimeStyleLifecycleCoordinator();
+    const ticket = coordinator.plan(
+      style([["roads", "v1"]], [["roads-line", "roads"]]),
+    );
+    let finish: (() => void) | undefined;
+    const execution = coordinator.execute(
+      ticket,
+      () => new Promise<void>((resolve) => {
+        finish = resolve;
+      }),
+    );
+
+    expect(() => coordinator.plan(style([], []))).toThrow(
+      expect.objectContaining({ code: "MAP_RUNTIME_STATE_INVALID" }),
+    );
+    expect(() => coordinator.commit(ticket)).toThrow(
+      expect.objectContaining({ code: "MAP_RUNTIME_STATE_INVALID" }),
+    );
+    await expect(coordinator.execute(ticket, () => undefined)).rejects.toMatchObject({
+      code: "MAP_RUNTIME_STATE_INVALID",
+    });
+
+    finish?.();
+    await expect(execution).resolves.toBe(ticket.plan.target);
+  });
+
+  it("cancels exact work and contains late renderer completion", async () => {
+    const initial = style([["roads", "v1"]], [["roads-line", "roads"]]);
+    const coordinator = createMapRuntimeStyleLifecycleCoordinator(initial);
+    const cancelled = coordinator.plan(style([], []));
+    let finishCancelled: (() => void) | undefined;
+    let cancelledSignal: AbortSignal | undefined;
+    const cancelledExecution = coordinator.execute(
+      cancelled,
+      (_plan, signal) => new Promise<void>((resolve) => {
+        cancelledSignal = signal;
+        finishCancelled = resolve;
+      }),
+    );
+
+    expect(coordinator.cancel(cancelled)).toEqual(
+      freezeMapRuntimeStyleState(initial),
+    );
+    expect(cancelledSignal?.aborted).toBe(true);
+    expect(coordinator.requiresReconciliation()).toBe(true);
+
+    coordinator.reconcile(initial);
+    const replacement = coordinator.plan(
+      style([["roads", "v2"]], [["roads-line", "roads"]]),
+    );
+    await expect(
+      coordinator.execute(replacement, () => undefined),
+    ).resolves.toBe(replacement.plan.target);
+
+    finishCancelled?.();
+    await expect(cancelledExecution).rejects.toMatchObject({
+      code: "MAP_RUNTIME_STYLE_LIFECYCLE_CANCELLED",
+      message: "Map runtime style lifecycle execution was cancelled.",
+    });
+    expect(coordinator.getState()).toBe(replacement.plan.target);
+  });
+
+  it("disposes idempotently and prevents late completion from committing", async () => {
+    const initial = style([["roads", "v1"]], [["roads-line", "roads"]]);
+    const coordinator = createMapRuntimeStyleLifecycleCoordinator(initial);
+    const ticket = coordinator.plan(style([], []));
+    let finish: (() => void) | undefined;
+    let signal: AbortSignal | undefined;
+    let abortEvents = 0;
+    const execution = coordinator.execute(
+      ticket,
+      (_plan, nextSignal) => new Promise<void>((resolve) => {
+        signal = nextSignal;
+        nextSignal.addEventListener("abort", () => {
+          abortEvents += 1;
+        });
+        finish = resolve;
+      }),
+    );
+
+    coordinator.dispose();
+    coordinator.dispose();
+    expect(signal?.aborted).toBe(true);
+    expect(abortEvents).toBe(1);
+    expect(coordinator.getState()).toEqual(freezeMapRuntimeStyleState(initial));
+    expect(() => coordinator.plan(style([], []))).toThrow(
+      expect.objectContaining({ code: "MAP_RUNTIME_DISPOSED" }),
+    );
+
+    finish?.();
+    await expect(execution).rejects.toMatchObject({
+      code: "MAP_RUNTIME_DISPOSED",
+      message: "Map runtime style lifecycle coordinator is disposed.",
+    });
+    expect(coordinator.getState()).toEqual(freezeMapRuntimeStyleState(initial));
   });
 });
