@@ -46,6 +46,7 @@ FIXTURE_ROOT = ROOT / "fixtures" / "domains" / "fauna" / "occurrence_evidence"
 MANIFEST_PATH = FIXTURE_ROOT / "expected_findings_manifest.json"
 SCOPE = "fauna-occurrence-evidence-draft-v1"
 MAX_SCHEMA_FINDINGS = 100
+FIXTURE_BUCKETS = frozenset({"semantic_invalid", "valid"})
 
 DIRECT_BASIS = frozenset(
     {
@@ -443,6 +444,39 @@ def validate_file(path: Path | str) -> ValidationResult:
     return validate_candidate(candidate)
 
 
+def _fixture_path(relative_path: str) -> Path | None:
+    """Return a canonical in-corpus fixture path without opening the file."""
+
+    candidate = Path(relative_path)
+    if (
+        not relative_path
+        or candidate.is_absolute()
+        or candidate.as_posix() != relative_path
+        or len(candidate.parts) != 2
+        or candidate.parts[0] not in FIXTURE_BUCKETS
+        or candidate.suffix != ".json"
+    ):
+        return None
+
+    fixture_path = FIXTURE_ROOT / candidate
+    try:
+        fixture_root = FIXTURE_ROOT.resolve()
+        bucket_path = FIXTURE_ROOT / candidate.parts[0]
+        expected_parent = bucket_path.resolve()
+        resolved_path = fixture_path.resolve()
+    except (OSError, RuntimeError):
+        return None
+    if (
+        FIXTURE_ROOT.is_symlink()
+        or bucket_path.is_symlink()
+        or fixture_path.is_symlink()
+        or expected_parent.parent != fixture_root
+        or resolved_path.parent != expected_parent
+    ):
+        return None
+    return fixture_path
+
+
 def validate_fixture_manifest() -> ValidationResult:
     """Replay every declared fixture and compare exact expected findings."""
 
@@ -461,6 +495,7 @@ def validate_fixture_manifest() -> ValidationResult:
 
     findings: list[Finding] = []
     declared_paths: list[str] = []
+    replay_cases: list[tuple[int, Path, list[Any]]] = []
     for index, case in enumerate(cases):
         if not isinstance(case, Mapping):
             _add(findings, "schema.fixture_case_invalid", f"/cases/{index}")
@@ -471,7 +506,28 @@ def validate_fixture_manifest() -> ValidationResult:
             _add(findings, "schema.fixture_case_invalid", f"/cases/{index}")
             continue
         declared_paths.append(relative_path)
-        fixture_path = FIXTURE_ROOT / relative_path
+        fixture_path = _fixture_path(relative_path)
+        if fixture_path is None:
+            _add(findings, "schema.fixture_path_invalid", f"/cases/{index}/path")
+            continue
+        replay_cases.append((index, fixture_path, expected))
+
+    if declared_paths != sorted(set(declared_paths)):
+        _add(findings, "schema.fixture_paths_not_canonical", "/cases")
+
+    actual_paths = sorted(
+        str(path.relative_to(FIXTURE_ROOT))
+        for folder in (FIXTURE_ROOT / "valid", FIXTURE_ROOT / "semantic_invalid")
+        for path in folder.glob("*.json")
+    )
+    if declared_paths != actual_paths:
+        _add(findings, "schema.fixture_inventory_mismatch", "/cases")
+
+    # Fail closed on the complete path inventory before any candidate is opened.
+    if findings:
+        return ValidationResult(tuple(sorted(set(findings))))
+
+    for index, fixture_path, expected in replay_cases:
         actual = validate_file(fixture_path).findings
         expected_pairs: list[Finding] = []
         for expected_index, item in enumerate(expected):
@@ -498,17 +554,6 @@ def validate_fixture_manifest() -> ValidationResult:
                 "schema.fixture_outcome_mismatch",
                 f"/cases/{index}",
             )
-
-    if declared_paths != sorted(set(declared_paths)):
-        _add(findings, "schema.fixture_paths_not_canonical", "/cases")
-
-    actual_paths = sorted(
-        str(path.relative_to(FIXTURE_ROOT))
-        for folder in (FIXTURE_ROOT / "valid", FIXTURE_ROOT / "semantic_invalid")
-        for path in folder.glob("*.json")
-    )
-    if declared_paths != actual_paths:
-        _add(findings, "schema.fixture_inventory_mismatch", "/cases")
 
     return ValidationResult(tuple(sorted(set(findings))))
 

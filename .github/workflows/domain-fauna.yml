@@ -75,6 +75,7 @@ jobs:
 
           python -m unittest --verbose \
             tests.domains.fauna.test_fauna_smoke \
+            tests.domains.fauna.test_occurrence_evidence \
             tests.domains.fauna.test_public_safe_migration_fixture
 
       - name: Record Fauna validation scope
@@ -86,10 +87,14 @@ jobs:
 
           `VALIDATION_SCOPE: synthetic-public-safe-fixture-only`
 
-          This job runs the accepted deterministic standard-library suites in
+          This job runs the accepted deterministic no-network suites in
           `tests/domains/fauna/test_fauna_smoke.py` and
+          `tests/domains/fauna/test_occurrence_evidence.py` and
           `tests/domains/fauna/test_public_safe_migration_fixture.py`. They read only
           small synthetic fixtures and block network calls in the test boundary.
+          The occurrence-evidence suite additionally enforces source-role truth,
+          rights/taxonomy gate consistency, geoprivacy semantics, deterministic
+          identity, and manifest path containment before candidate reads.
           The migration suite additionally enforces generalized public-safe route
           geometry, fixture-only references, non-telemetry semantics, seasonal
           windows, and fail-closed malformed-coordinate handling.

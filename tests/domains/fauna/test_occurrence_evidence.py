@@ -91,6 +91,30 @@ class OccurrenceEvidenceTests(unittest.TestCase):
         self.assertTrue(result.ok, result.findings)
         self.assertEqual("PASS", result.outcome)
 
+    def test_manifest_rejects_unsafe_paths_before_candidate_reads(self) -> None:
+        manifest = json.loads(validator.MANIFEST_PATH.read_text(encoding="utf-8"))
+        unsafe_paths = (
+            "../outside.json",
+            "/tmp/outside.json",
+            "valid/nested/outside.json",
+            "valid\\outside.json",
+        )
+        for unsafe_path in unsafe_paths:
+            with self.subTest(unsafe_path=unsafe_path):
+                candidate = copy.deepcopy(manifest)
+                candidate["cases"][0]["path"] = unsafe_path
+                with (
+                    mock.patch.object(validator, "load_json_file", return_value=candidate),
+                    mock.patch.object(validator, "validate_file") as validate_file,
+                ):
+                    result = validator.validate_fixture_manifest()
+
+                validate_file.assert_not_called()
+                self.assertIn(
+                    validator.Finding("schema.fixture_path_invalid", "/cases/0/path"),
+                    result.findings,
+                )
+
     def test_valid_profiles_preserve_non_public_states(self) -> None:
         for relative_path in (
             "valid/valid_observed_open.json",
