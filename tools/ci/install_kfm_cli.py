@@ -246,7 +246,9 @@ def install() -> None:
     environment["PIP_NO_INPUT"] = "1"
     environment["PYTHONNOUSERSITE"] = "1"
     deadline = time.monotonic() + INSTALL_TIMEOUT_SECONDS
-    for command in build_commands():
+    for command_number, command in enumerate(build_commands()):
+        if command_number == 1:
+            validate_local_package()
         remaining_seconds = deadline - time.monotonic()
         if remaining_seconds <= 0:
             raise CliInstallConfigurationError("CLI_INSTALL_TIMEOUT")

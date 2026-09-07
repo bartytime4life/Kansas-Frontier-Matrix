@@ -441,6 +441,28 @@ class InstallKfmCliTests(unittest.TestCase):
                 module.install()
         self.assertEqual(1, run.call_count)
 
+    def test_install_revalidates_local_package_before_editable_install(self) -> None:
+        changed = module.CliInstallConfigurationError(
+            "CLI_LOCAL_PACKAGE_ENTRY_UNSAFE"
+        )
+        with (
+            mock.patch.object(module, "validate_lockfile"),
+            mock.patch.object(
+                module,
+                "validate_local_package",
+                side_effect=(None, changed),
+            ) as validate_local_package,
+            mock.patch.object(module.time, "monotonic", side_effect=(100.0, 100.0)),
+            mock.patch.object(module.subprocess, "run") as run,
+        ):
+            with self.assertRaisesRegex(
+                module.CliInstallConfigurationError,
+                "^CLI_LOCAL_PACKAGE_ENTRY_UNSAFE$",
+            ):
+                module.install()
+        self.assertEqual(2, validate_local_package.call_count)
+        self.assertEqual(1, run.call_count)
+
     def test_install_command_failure_uses_finite_error_and_stops(self) -> None:
         failed = module.subprocess.CalledProcessError(
             returncode=1,
