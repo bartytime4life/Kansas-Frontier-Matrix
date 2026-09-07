@@ -1,0 +1,28 @@
+{
+  "candidate_feature_id": "arc-candidate-synthetic-duplicate-refs",
+  "object_type": "CandidateFeature",
+  "truth_state": "CANDIDATE",
+  "candidate_type": "ANOMALY",
+  "origin_method": "REMOTE_SENSING",
+  "source_refs": [
+    "kfm://source/synthetic/duplicate-source",
+    "kfm://source/synthetic/duplicate-source"
+  ],
+  "evidence_refs": [
+    "kfm://evidence/synthetic/duplicate-evidence",
+    "kfm://evidence/synthetic/duplicate-evidence"
+  ],
+  "observation_refs": [
+    "kfm://observation/synthetic/duplicate-observation",
+    "kfm://observation/synthetic/duplicate-observation"
+  ],
+  "correction_refs": [
+    "kfm://correction/synthetic/duplicate-correction",
+    "kfm://correction/synthetic/duplicate-correction"
+  ],
+  "review_state": "NEEDS_REVIEW",
+  "sensitivity_class": "WITHHELD",
+  "spatial_precision_class": "WITHHELD",
+  "lifecycle_state": "WORK",
+  "confidence_statement": "Synthetic duplicate-reference denial fixture."
+}

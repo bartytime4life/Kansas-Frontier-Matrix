@@ -387,6 +387,21 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
         payload.pop("observation_refs", None)
         self.assertEqual(validate_candidate_feature(payload), [])
 
+    def test_duplicate_reference_fixture_fails_closed_for_every_array(self) -> None:
+        payload = _load(FIXTURE_ROOT / "duplicate_references_deny.json")
+        self.assertEqual(
+            set(validate_candidate_feature(payload)),
+            {
+                f"{field} must not contain duplicate references"
+                for field in (
+                    "source_refs",
+                    "evidence_refs",
+                    "observation_refs",
+                    "correction_refs",
+                )
+            },
+        )
+
     def test_superseded_candidate_requires_correction_binding(self) -> None:
         payload = _load(
             FIXTURE_ROOT / "superseded_without_correction_deny.json"
@@ -461,9 +476,14 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
                 location["allOf"][0]["pattern"],
                 REFERENCE_FAMILY_PATTERNS[field].pattern,
             )
-        self.assertEqual(properties["evidence_refs"]["minItems"], 1)
-        self.assertEqual(properties["observation_refs"]["minItems"], 1)
-        self.assertEqual(properties["correction_refs"]["minItems"], 1)
+        for field in (
+            "source_refs",
+            "evidence_refs",
+            "observation_refs",
+            "correction_refs",
+        ):
+            self.assertEqual(properties[field]["minItems"], 1)
+            self.assertTrue(properties[field]["uniqueItems"])
         evidence_conditional = schema["allOf"][0]
         self.assertEqual(evidence_conditional["then"]["required"], ["evidence_refs"])
         correction_conditional = schema["allOf"][1]

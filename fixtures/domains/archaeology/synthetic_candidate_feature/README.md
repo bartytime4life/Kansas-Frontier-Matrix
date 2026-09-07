@@ -61,6 +61,9 @@ burial, sacred-place, collection-security, or culturally restricted data.
 - `empty_observation_refs_deny.json` proves that an explicitly present
   observation binding cannot be an empty array; absent observations must be
   represented by omitting the optional field.
+- `duplicate_references_deny.json` proves that source, evidence, observation,
+  and correction bindings cannot inflate apparent closure by repeating the
+  same governed reference.
 - `superseded_without_correction_deny.json` proves that a superseded candidate
   cannot lose its governed correction or withdrawal lineage.
 
@@ -78,7 +81,7 @@ strict-end opaque-reference, protected-locator-token, and reference-family bound
 conditional EvidenceRef binding; and supersession
 correction binding; malformed-reference finite denial; and nonempty governed
 evidence, observation, and correction bindings; malformed-vocabulary and
-null-scalar finite denial; and
+null-scalar finite denial; unique governed-reference bindings; and
 schema-aligned strict-end `spec_hash` and deterministic Unicode-safe confidence-statement
 validation. It
 does not confirm a site,

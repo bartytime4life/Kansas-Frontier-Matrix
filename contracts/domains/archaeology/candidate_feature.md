@@ -6,7 +6,7 @@ version: v0.3
 status: draft
 owners: OWNER_TBD — Archaeology steward · Contract steward · Evidence steward · Schema steward · Policy steward · Review steward · Validation steward · Release steward · Docs steward
 created: 2026-06-20
-updated: 2026-09-01
+updated: 2026-09-07
 policy_label: public; contracts; domains; archaeology; candidate-feature; semantic-contract; sensitive-lane
 tags: [kfm, contracts, archaeology, candidate-feature, candidate, evidence, review, policy, sensitivity, lifecycle, governance]
 related:
@@ -231,6 +231,7 @@ The current schema does not require these fields. They are `PROPOSED` semantic r
 - exact or sensitive location exposure fails closed unless policy and review authorize a specific public-safe transform;
 - governed-reference paths cannot serve as an alternate channel for protected locator material, including compact locator-token-plus-digit forms;
 - governed references must bind to the object family required by their field, carry a non-empty segmented opaque identity, and end strictly without terminal line-break material;
+- governed source, evidence, observation, and correction arrays must contain unique references so repetition cannot inflate apparent support or lineage closure;
 - optional observation bindings must be omitted when absent and non-empty when present;
 - supporting observations remain distinct from the candidate object;
 - supporting context from other domains can inform but cannot independently confirm archaeology truth;

@@ -370,6 +370,7 @@ def validate_fixture_suite() -> int:
         FIXTURE_ROOT / "non_string_reference_deny.json": "opaque kfm:// references",
         FIXTURE_ROOT / "empty_evidence_refs_deny.json": "evidence_refs must contain",
         FIXTURE_ROOT / "empty_observation_refs_deny.json": "observation_refs must contain",
+        FIXTURE_ROOT / "duplicate_references_deny.json": "must not contain duplicate references",
         FIXTURE_ROOT / "non_string_vocabulary_deny.json": "candidate_type is not in",
         FIXTURE_ROOT / "malformed_spec_hash_deny.json": "spec_hash must match",
         FIXTURE_ROOT / "spec_hash_line_terminator_deny.json": "spec_hash must match",
