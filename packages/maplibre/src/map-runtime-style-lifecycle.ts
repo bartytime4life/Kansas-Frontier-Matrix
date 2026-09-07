@@ -13,6 +13,8 @@ export const MAP_RUNTIME_STYLE_COORDINATOR_PROFILE =
 const MAX_STYLE_SOURCES = 256;
 const MAX_STYLE_LAYERS = 512;
 const SAFE_IDENTIFIER = /^[a-z0-9][a-z0-9._:-]{0,127}$/;
+export const DEFAULT_MAP_RUNTIME_STYLE_LIFECYCLE_DEADLINE_MS = 10_000;
+const MAX_MAP_RUNTIME_STYLE_LIFECYCLE_DEADLINE_MS = 60_000;
 
 export type MapRuntimeStyleSource = Readonly<{
   profile: typeof MAP_RUNTIME_STYLE_SOURCE_PROFILE;
@@ -358,13 +360,24 @@ export function createMapRuntimeStyleLifecycleCoordinator(
     sources: [],
     layers: [],
   },
+  executionDeadlineMs = DEFAULT_MAP_RUNTIME_STYLE_LIFECYCLE_DEADLINE_MS,
 ): MapRuntimeStyleLifecycleCoordinator {
+  if (
+    !Number.isSafeInteger(executionDeadlineMs) ||
+    executionDeadlineMs < 1 ||
+    executionDeadlineMs > MAX_MAP_RUNTIME_STYLE_LIFECYCLE_DEADLINE_MS
+  ) {
+    invalid("Map runtime style lifecycle execution deadline is invalid.");
+  }
+
   let current = freezeMapRuntimeStyleState(initial);
   let pending: MapRuntimeStyleLifecycleTicket | null = null;
   let executing: MapRuntimeStyleLifecycleTicket | null = null;
   let executionController: AbortController | null = null;
   let interruptExecution: (() => void) | null = null;
+  let executionDeadline: ReturnType<typeof setTimeout> | null = null;
   const cancelledTickets = new Set<MapRuntimeStyleLifecycleTicket>();
+  const timedOutTickets = new Set<MapRuntimeStyleLifecycleTicket>();
   let reconciliationRequired = false;
   let nextRevision = 1;
   let disposed = false;
@@ -461,6 +474,25 @@ export function createMapRuntimeStyleLifecycleCoordinator(
           );
       });
       interruptExecution = interrupt;
+      const deadline = setTimeout(() => {
+        if (
+          executing !== accepted ||
+          executionController !== controller ||
+          interruptExecution !== interrupt ||
+          executionDeadline !== deadline
+        ) {
+          return;
+        }
+        timedOutTickets.add(accepted);
+        executing = null;
+        executionController = null;
+        interruptExecution = null;
+        executionDeadline = null;
+        reconciliationRequired = true;
+        controller.abort();
+        interrupt();
+      }, executionDeadlineMs);
+      executionDeadline = deadline;
 
       try {
         await Promise.race([
@@ -469,6 +501,12 @@ export function createMapRuntimeStyleLifecycleCoordinator(
         ]);
       } catch {
         if (disposed) requireActive();
+        if (timedOutTickets.delete(accepted)) {
+          throw new MapRuntimePortError(
+            "MAP_RUNTIME_STYLE_LIFECYCLE_TIMEOUT",
+            "Map runtime style lifecycle execution timed out.",
+          );
+        }
         if (cancelledTickets.delete(accepted)) {
           throw new MapRuntimePortError(
             "MAP_RUNTIME_STYLE_LIFECYCLE_CANCELLED",
@@ -478,13 +516,16 @@ export function createMapRuntimeStyleLifecycleCoordinator(
         if (
           executing !== accepted ||
           executionController !== controller ||
-          interruptExecution !== interrupt
+          interruptExecution !== interrupt ||
+          executionDeadline !== deadline
         ) {
           invalid("Map runtime style lifecycle execution state is invalid.");
         }
         executing = null;
         executionController = null;
         interruptExecution = null;
+        executionDeadline = null;
+        clearTimeout(deadline);
         reconciliationRequired = true;
         throw new MapRuntimePortError(
           "MAP_RUNTIME_STYLE_LIFECYCLE_FAILED",
@@ -493,6 +534,12 @@ export function createMapRuntimeStyleLifecycleCoordinator(
       }
 
       if (disposed) requireActive();
+      if (timedOutTickets.delete(accepted)) {
+        throw new MapRuntimePortError(
+          "MAP_RUNTIME_STYLE_LIFECYCLE_TIMEOUT",
+          "Map runtime style lifecycle execution timed out.",
+        );
+      }
       if (cancelledTickets.delete(accepted)) {
         throw new MapRuntimePortError(
           "MAP_RUNTIME_STYLE_LIFECYCLE_CANCELLED",
@@ -502,7 +549,8 @@ export function createMapRuntimeStyleLifecycleCoordinator(
       if (
         executing !== accepted ||
         executionController !== controller ||
-        interruptExecution !== interrupt
+        interruptExecution !== interrupt ||
+        executionDeadline !== deadline
       ) {
         invalid("Map runtime style lifecycle execution state is invalid.");
       }
@@ -510,6 +558,8 @@ export function createMapRuntimeStyleLifecycleCoordinator(
       executing = null;
       executionController = null;
       interruptExecution = null;
+      executionDeadline = null;
+      clearTimeout(deadline);
       return current;
     },
 
@@ -518,17 +568,21 @@ export function createMapRuntimeStyleLifecycleCoordinator(
       if (
         ticket !== executing ||
         executionController === null ||
-        interruptExecution === null
+        interruptExecution === null ||
+        executionDeadline === null
       ) {
         invalid("Map runtime style lifecycle ticket is not executing.");
       }
       const controller = executionController;
       const interrupt = interruptExecution;
+      const deadline = executionDeadline;
       cancelledTickets.add(ticket);
       executing = null;
       executionController = null;
       interruptExecution = null;
+      executionDeadline = null;
       reconciliationRequired = true;
+      clearTimeout(deadline);
       controller.abort();
       interrupt();
       return current;
@@ -552,9 +606,13 @@ export function createMapRuntimeStyleLifecycleCoordinator(
       executing = null;
       const controller = executionController;
       const interrupt = interruptExecution;
+      const deadline = executionDeadline;
       executionController = null;
       interruptExecution = null;
+      executionDeadline = null;
       cancelledTickets.clear();
+      timedOutTickets.clear();
+      if (deadline !== null) clearTimeout(deadline);
       controller?.abort();
       interrupt?.();
     },

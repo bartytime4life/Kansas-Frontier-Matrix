@@ -1,6 +1,7 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import {
+  DEFAULT_MAP_RUNTIME_STYLE_LIFECYCLE_DEADLINE_MS,
   MAP_RUNTIME_STYLE_COORDINATOR_PROFILE,
   MAP_RUNTIME_STYLE_LAYER_PROFILE,
   MAP_RUNTIME_STYLE_PLAN_PROFILE,
@@ -456,6 +457,62 @@ describe("renderer-neutral style lifecycle coordination", () => {
     expect(coordinator.getState()).toBe(ticket.plan.target);
     expect(coordinator.requiresReconciliation()).toBe(false);
   });
+
+  it("times out abort-ignoring renderer execution and requires reconciliation", async () => {
+    vi.useFakeTimers();
+    try {
+      expect(DEFAULT_MAP_RUNTIME_STYLE_LIFECYCLE_DEADLINE_MS).toBe(10_000);
+      const initial = style([["roads", "v1"]], [["roads-line", "roads"]]);
+      const coordinator = createMapRuntimeStyleLifecycleCoordinator(initial, 25);
+      const ticket = coordinator.plan(style([], []));
+      let finish: (() => void) | undefined;
+      let signal: AbortSignal | undefined;
+      const execution = coordinator.execute(
+        ticket,
+        (_plan, nextSignal) => new Promise<void>((resolve) => {
+          signal = nextSignal;
+          finish = resolve;
+        }),
+      );
+      const rejection = expect(execution).rejects.toMatchObject({
+        code: "MAP_RUNTIME_STYLE_LIFECYCLE_TIMEOUT",
+        message: "Map runtime style lifecycle execution timed out.",
+      });
+
+      expect(vi.getTimerCount()).toBe(1);
+      await vi.advanceTimersByTimeAsync(24);
+      expect(signal?.aborted).toBe(false);
+      expect(coordinator.requiresReconciliation()).toBe(false);
+
+      await vi.advanceTimersByTimeAsync(1);
+      await rejection;
+      expect(signal?.aborted).toBe(true);
+      expect(vi.getTimerCount()).toBe(0);
+      expect(coordinator.getState()).toEqual(
+        freezeMapRuntimeStyleState(initial),
+      );
+      expect(coordinator.requiresReconciliation()).toBe(true);
+
+      finish?.();
+      await Promise.resolve();
+      expect(coordinator.getState()).toEqual(
+        freezeMapRuntimeStyleState(initial),
+      );
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it.each([0, -1, 1.5, 60_001, Number.POSITIVE_INFINITY])(
+    "rejects an invalid lifecycle execution deadline (%s)",
+    (deadline) => {
+      expect(() =>
+        createMapRuntimeStyleLifecycleCoordinator(undefined, deadline),
+      ).toThrow(
+        expect.objectContaining({ code: "MAP_RUNTIME_STATE_INVALID" }),
+      );
+    },
+  );
 
   it("fails closed for a partial renderer failure until reconciliation", async () => {
     const initial = style([["roads", "v1"]], [["roads-line", "roads"]]);
