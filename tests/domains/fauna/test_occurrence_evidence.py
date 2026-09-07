@@ -120,14 +120,18 @@ class OccurrenceEvidenceTests(unittest.TestCase):
 
     def test_manifest_rejects_non_regular_candidate_before_read(self) -> None:
         manifest = {
+            "authority_boundary": "Synthetic test manifest only.",
             "cases": [
                 {
                     "path": "valid/case.json",
                     "expected_findings": [
                         {"code": "schema.input_invalid", "path": "/"}
                     ],
+                    "expected_outcome": "ERROR",
                 }
-            ]
+            ],
+            "schema_version": "1.0.0",
+            "scope": validator.SCOPE,
         }
         with tempfile.TemporaryDirectory() as temporary_directory:
             fixture_root = Path(temporary_directory)
@@ -145,6 +149,84 @@ class OccurrenceEvidenceTests(unittest.TestCase):
             validator.Finding("schema.fixture_path_invalid", "/cases/0/path"),
             result.findings,
         )
+
+    def test_manifest_contract_is_preflighted_before_candidate_reads(self) -> None:
+        manifest = json.loads(validator.MANIFEST_PATH.read_text(encoding="utf-8"))
+        variants = []
+
+        root_extra = copy.deepcopy(manifest)
+        root_extra["runtime_hint"] = True
+        variants.append(
+            (
+                root_extra,
+                validator.Finding("schema.fixture_manifest_invalid", "/"),
+            )
+        )
+
+        wrong_scope = copy.deepcopy(manifest)
+        wrong_scope["scope"] = "fauna-occurrence-evidence-live"
+        variants.append(
+            (
+                wrong_scope,
+                validator.Finding("schema.fixture_manifest_invalid", "/"),
+            )
+        )
+
+        case_extra = copy.deepcopy(manifest)
+        case_extra["cases"][0]["runtime_hint"] = True
+        variants.append(
+            (
+                case_extra,
+                validator.Finding("schema.fixture_case_invalid", "/cases/0"),
+            )
+        )
+
+        expectation_extra = copy.deepcopy(manifest)
+        expectation_extra["cases"][0]["expected_findings"][0]["detail"] = "unsafe"
+        variants.append(
+            (
+                expectation_extra,
+                validator.Finding(
+                    "schema.fixture_expectation_invalid",
+                    "/cases/0/expected_findings/0",
+                ),
+            )
+        )
+
+        noncanonical = copy.deepcopy(manifest)
+        noncanonical["cases"][0]["expected_findings"].reverse()
+        variants.append(
+            (
+                noncanonical,
+                validator.Finding(
+                    "schema.fixture_expectations_not_canonical",
+                    "/cases/0/expected_findings",
+                ),
+            )
+        )
+
+        outcome_mismatch = copy.deepcopy(manifest)
+        outcome_mismatch["cases"][0]["expected_outcome"] = "PASS"
+        variants.append(
+            (
+                outcome_mismatch,
+                validator.Finding(
+                    "schema.fixture_expected_outcome_mismatch",
+                    "/cases/0/expected_outcome",
+                ),
+            )
+        )
+
+        for candidate, expected_finding in variants:
+            with self.subTest(expected_finding=expected_finding):
+                with (
+                    mock.patch.object(validator, "load_json_file", return_value=candidate),
+                    mock.patch.object(validator, "validate_file") as validate_file,
+                ):
+                    result = validator.validate_fixture_manifest()
+
+                validate_file.assert_not_called()
+                self.assertIn(expected_finding, result.findings)
 
     def test_valid_profiles_preserve_non_public_states(self) -> None:
         for relative_path in (

@@ -47,6 +47,13 @@ MANIFEST_PATH = FIXTURE_ROOT / "expected_findings_manifest.json"
 SCOPE = "fauna-occurrence-evidence-draft-v1"
 MAX_SCHEMA_FINDINGS = 100
 FIXTURE_BUCKETS = frozenset({"semantic_invalid", "valid"})
+MANIFEST_KEYS = frozenset(
+    {"authority_boundary", "cases", "schema_version", "scope"}
+)
+MANIFEST_CASE_KEYS = frozenset(
+    {"expected_findings", "expected_outcome", "path"}
+)
+MANIFEST_EXPECTATION_KEYS = frozenset({"code", "path"})
 
 DIRECT_BASIS = frozenset(
     {
@@ -487,7 +494,15 @@ def validate_fixture_manifest() -> ValidationResult:
         manifest = load_json_file(MANIFEST_PATH)
     except (JsonInputError, OSError, UnicodeError, ValueError, RecursionError):
         return ValidationResult((Finding("schema.fixture_manifest_invalid", "/"),))
-    if not isinstance(manifest, Mapping):
+    if not isinstance(manifest, Mapping) or set(manifest) != MANIFEST_KEYS:
+        return ValidationResult((Finding("schema.fixture_manifest_invalid", "/"),))
+    authority_boundary = manifest.get("authority_boundary")
+    if (
+        not isinstance(authority_boundary, str)
+        or not authority_boundary.strip()
+        or manifest.get("schema_version") != "1.0.0"
+        or manifest.get("scope") != SCOPE
+    ):
         return ValidationResult((Finding("schema.fixture_manifest_invalid", "/"),))
 
     cases = manifest.get("cases")
@@ -496,22 +511,63 @@ def validate_fixture_manifest() -> ValidationResult:
 
     findings: list[Finding] = []
     declared_paths: list[str] = []
-    replay_cases: list[tuple[int, Path, list[Any]]] = []
+    replay_cases: list[tuple[int, Path, tuple[Finding, ...]]] = []
     for index, case in enumerate(cases):
-        if not isinstance(case, Mapping):
+        if not isinstance(case, Mapping) or set(case) != MANIFEST_CASE_KEYS:
             _add(findings, "schema.fixture_case_invalid", f"/cases/{index}")
             continue
         relative_path = case.get("path")
         expected = case.get("expected_findings")
-        if not isinstance(relative_path, str) or not isinstance(expected, list):
+        expected_outcome = case.get("expected_outcome")
+        if (
+            not isinstance(relative_path, str)
+            or not isinstance(expected, list)
+            or expected_outcome not in {"PASS", "ERROR"}
+        ):
             _add(findings, "schema.fixture_case_invalid", f"/cases/{index}")
             continue
+
+        expected_pairs: list[Finding] = []
+        for expected_index, item in enumerate(expected):
+            if not isinstance(item, Mapping) or set(item) != MANIFEST_EXPECTATION_KEYS:
+                _add(
+                    findings,
+                    "schema.fixture_expectation_invalid",
+                    f"/cases/{index}/expected_findings/{expected_index}",
+                )
+                continue
+            code = item.get("code")
+            path = item.get("path")
+            if not isinstance(code, str) or not code or not isinstance(path, str) or not path:
+                _add(
+                    findings,
+                    "schema.fixture_expectation_invalid",
+                    f"/cases/{index}/expected_findings/{expected_index}",
+                )
+                continue
+            expected_pairs.append(Finding(code, path))
+
+        canonical_expected = tuple(sorted(set(expected_pairs)))
+        if tuple(expected_pairs) != canonical_expected:
+            _add(
+                findings,
+                "schema.fixture_expectations_not_canonical",
+                f"/cases/{index}/expected_findings",
+            )
+        derived_outcome = "PASS" if not expected_pairs else "ERROR"
+        if expected_outcome != derived_outcome:
+            _add(
+                findings,
+                "schema.fixture_expected_outcome_mismatch",
+                f"/cases/{index}/expected_outcome",
+            )
+
         declared_paths.append(relative_path)
         fixture_path = _fixture_path(relative_path)
         if fixture_path is None:
             _add(findings, "schema.fixture_path_invalid", f"/cases/{index}/path")
             continue
-        replay_cases.append((index, fixture_path, expected))
+        replay_cases.append((index, fixture_path, canonical_expected))
 
     if declared_paths != sorted(set(declared_paths)):
         _add(findings, "schema.fixture_paths_not_canonical", "/cases")
@@ -530,26 +586,7 @@ def validate_fixture_manifest() -> ValidationResult:
 
     for index, fixture_path, expected in replay_cases:
         actual = validate_file(fixture_path).findings
-        expected_pairs: list[Finding] = []
-        for expected_index, item in enumerate(expected):
-            if not isinstance(item, Mapping):
-                _add(
-                    findings,
-                    "schema.fixture_expectation_invalid",
-                    f"/cases/{index}/expected_findings/{expected_index}",
-                )
-                continue
-            code = item.get("code")
-            path = item.get("path")
-            if not isinstance(code, str) or not isinstance(path, str):
-                _add(
-                    findings,
-                    "schema.fixture_expectation_invalid",
-                    f"/cases/{index}/expected_findings/{expected_index}",
-                )
-                continue
-            expected_pairs.append(Finding(code, path))
-        if tuple(sorted(expected_pairs)) != actual:
+        if expected != actual:
             _add(
                 findings,
                 "schema.fixture_outcome_mismatch",
