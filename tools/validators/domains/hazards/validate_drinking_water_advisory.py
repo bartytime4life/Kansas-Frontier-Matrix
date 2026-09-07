@@ -503,6 +503,13 @@ def _semantic_findings(candidate: Mapping[str, Any]) -> list[Finding]:
         findings.append(Finding("CURRENT_RECORD_REQUIRED", "/source_surface/current_record_present"))
 
     if status == "RESCINDED":
+        if outcome != "FETCHED":
+            findings.append(
+                Finding(
+                    "RESCINDED_SOURCE_OUTCOME_REQUIRED",
+                    "/source_surface/source_check_outcome",
+                )
+            )
         if not previous_present:
             findings.append(
                 Finding(
