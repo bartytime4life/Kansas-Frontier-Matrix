@@ -87,13 +87,13 @@
     },
     {
       "gate": "generated-receipt-integrity",
-      "outcome": "SKIPPED",
-      "reason": "The exact-head workflow validates this receipt against repository bytes."
+      "outcome": "PASS",
+      "reason": "Exact implementation head d3da0ae432ce8e76835c39c2c6da32ebf43c1513 reported GENERATED_RECEIPT_VALID with six bound artifacts and no review claim."
     },
     {
       "gate": "hosted-exact-head-ci",
-      "outcome": "SKIPPED",
-      "reason": "Hosted CI begins after the draft pull request is opened."
+      "outcome": "PASS",
+      "reason": "Exact implementation head d3da0ae432ce8e76835c39c2c6da32ebf43c1513 passed Fauna–Habitat run 34090331550 with 86 tests and the updated six-artifact receipt integrity check."
     },
     {
       "gate": "human-domain-policy-release-review",

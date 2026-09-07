@@ -182,6 +182,11 @@
       "gate": "canonical-validator-workflow-propagation",
       "outcome": "PASS",
       "reason": "All four join workflows watch the canonical domain-lane validator and its governance schema on pull-request and main-push triggers. The propagation guard verifies both dependencies in every workflow and synthetic omissions detect removal from either trigger."
+    },
+    {
+      "gate": "hosted-workflow-propagation-head",
+      "outcome": "PASS",
+      "reason": "Exact implementation head d3da0ae432ce8e76835c39c2c6da32ebf43c1513 passed cross-lane run 34090331671 (79 tests and 19-artifact receipt integrity), Fauna–Habitat run 34090331550 (86 tests and 6-artifact receipt integrity), Soil–Agriculture run 34090331590 (85 tests), and Soil–Hydrology run 34090331624 (85 tests); contract-drift run 34090331789 also passed."
     }
   ]
 }
