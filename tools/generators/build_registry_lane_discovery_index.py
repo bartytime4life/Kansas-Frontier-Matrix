@@ -91,6 +91,16 @@ def _write_output(path: Path, content: str) -> None:
     absolute_path = path if path.is_absolute() else Path.cwd() / path
     if any(parent.is_symlink() for parent in absolute_path.parents):
         raise RegistryDiscoveryError("output path parent must not be a symlink")
+    if any(
+        parent.exists() and not parent.is_dir()
+        for parent in absolute_path.parents
+    ):
+        raise RegistryDiscoveryError("output path parent must be a directory")
+    if path.exists():
+        if not path.is_file():
+            raise RegistryDiscoveryError("output path must be a regular file")
+        if path.stat(follow_symlinks=False).st_nlink > 1:
+            raise RegistryDiscoveryError("output path must not be hard linked")
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(content, encoding="utf-8")
 

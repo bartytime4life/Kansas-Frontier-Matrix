@@ -422,6 +422,123 @@ class RegistryLaneDiscoveryIndexTests(unittest.TestCase):
             json.loads(result.stdout),
         )
 
+    def test_cli_rejects_hard_linked_output_without_overwriting_target(self) -> None:
+        tempdir, root = self._fixture((("sources", True),), include_noise=False)
+        self.addCleanup(tempdir.cleanup)
+        target = Path(tempdir.name) / "external.json"
+        target.write_text("sentinel\n", encoding="utf-8")
+        output = Path(tempdir.name) / "index.json"
+        output.hardlink_to(target)
+
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(GENERATOR_PATH),
+                "--registry-root",
+                str(root),
+                "--output",
+                str(output),
+            ],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+
+        self.assertEqual(2, result.returncode)
+        self.assertEqual("", result.stderr)
+        self.assertEqual("sentinel\n", target.read_text(encoding="utf-8"))
+        self.assertEqual(
+            {
+                "authority_created": False,
+                "error": "output path must not be hard linked",
+                "outcome": "ERROR",
+                "profile": "kfm.registry-lane-discovery-index.v1",
+            },
+            json.loads(result.stdout),
+        )
+
+    def test_cli_rejects_directory_output_with_stable_error(self) -> None:
+        tempdir, root = self._fixture((("sources", True),), include_noise=False)
+        self.addCleanup(tempdir.cleanup)
+        output = Path(tempdir.name) / "output"
+        output.mkdir()
+
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(GENERATOR_PATH),
+                "--registry-root",
+                str(root),
+                "--output",
+                str(output),
+            ],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+
+        self.assertEqual(2, result.returncode)
+        self.assertEqual("", result.stderr)
+        self.assertEqual(
+            "output path must be a regular file",
+            json.loads(result.stdout)["error"],
+        )
+
+    def test_cli_rejects_non_directory_output_parent_with_stable_error(self) -> None:
+        tempdir, root = self._fixture((("sources", True),), include_noise=False)
+        self.addCleanup(tempdir.cleanup)
+        parent = Path(tempdir.name) / "output"
+        parent.write_text("not a directory\n", encoding="utf-8")
+
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(GENERATOR_PATH),
+                "--registry-root",
+                str(root),
+                "--output",
+                str(parent / "index.json"),
+            ],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+
+        self.assertEqual(2, result.returncode)
+        self.assertEqual("", result.stderr)
+        self.assertEqual(
+            "output path parent must be a directory",
+            json.loads(result.stdout)["error"],
+        )
+
+    def test_cli_overwrites_existing_regular_output(self) -> None:
+        tempdir, root = self._fixture((("sources", True),), include_noise=False)
+        self.addCleanup(tempdir.cleanup)
+        output = Path(tempdir.name) / "index.json"
+        output.write_text("stale\n", encoding="utf-8")
+
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(GENERATOR_PATH),
+                "--registry-root",
+                str(root),
+                "--output",
+                str(output),
+            ],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+
+        self.assertEqual(0, result.returncode)
+        self.assertEqual("", result.stdout)
+        self.assertEqual("", result.stderr)
+        self.assertEqual(
+            "kfm.registry-lane-discovery-index.v1",
+            json.loads(output.read_text(encoding="utf-8"))["profile"],
+        )
+
     def test_missing_registry_root_fails_closed(self) -> None:
         tempdir = tempfile.TemporaryDirectory()
         self.addCleanup(tempdir.cleanup)
