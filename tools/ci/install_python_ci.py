@@ -218,7 +218,8 @@ def profiles_for_workflow(workflow_path: Path) -> frozenset[str]:
     for line in text.splitlines():
         if marker not in line:
             continue
-        profile_name = line.split(marker, 1)[1].strip()
+        invocation = line.split(marker, 1)[1].lstrip()
+        profile_name = invocation.split(maxsplit=1)[0] if invocation else ""
         if profile_name == "verify-workflows":
             continue
         profiles.add(profile_name)

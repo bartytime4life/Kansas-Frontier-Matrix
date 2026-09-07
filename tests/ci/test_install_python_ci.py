@@ -129,6 +129,41 @@ class InstallPythonCiTests(unittest.TestCase):
         self.assertEqual(1, counts["all-local-test"])
         self.assertEqual(2, counts["geoparquet-pyarrow-25"])
 
+    def test_workflow_profile_parser_accepts_logging_pipeline(self) -> None:
+        with tempfile.TemporaryDirectory(
+            prefix=".install-python-profile-",
+            dir=REPO_ROOT / ".github/workflows",
+        ) as directory:
+            workflow = Path(directory) / "profile.yml"
+            workflow.write_text(
+                "python tools/ci/install_python_ci.py project-test "
+                '2>&1 | tee "$RUNNER_TEMP/python-bootstrap.log"\n',
+                encoding="utf-8",
+            )
+
+            self.assertEqual(
+                frozenset({"project-test"}),
+                module.profiles_for_workflow(workflow),
+            )
+
+    def test_workflow_profile_parser_rejects_unknown_pipelined_profile(self) -> None:
+        with tempfile.TemporaryDirectory(
+            prefix=".install-python-profile-",
+            dir=REPO_ROOT / ".github/workflows",
+        ) as directory:
+            workflow = Path(directory) / "profile.yml"
+            workflow.write_text(
+                "python tools/ci/install_python_ci.py project-tests "
+                '2>&1 | tee "$RUNNER_TEMP/python-bootstrap.log"\n',
+                encoding="utf-8",
+            )
+
+            with self.assertRaisesRegex(
+                module.InstallConfigurationError,
+                "PROFILE_UNKNOWN",
+            ):
+                module.profiles_for_workflow(workflow)
+
 
 if __name__ == "__main__":
     unittest.main()
