@@ -841,7 +841,7 @@
     {
       "path": ".github/workflows/domain-archaeology.yml",
       "base_sha256": "sha256:2d78e98feeb6f31056b029a60d72e73a9ed7b9cbe7f2f079b07d5381f3a17cc6",
-      "current_sha256": "sha256:e3b1ae18c526925f84ab3179ac318c055d47eea98c77f6867182026456e2c771",
+      "current_sha256": "sha256:996b8d7dae838ac580f8392317b89ec01422903fd40be4c82851cce012ab16dc",
       "profiles": [
         "project-test"
       ],
