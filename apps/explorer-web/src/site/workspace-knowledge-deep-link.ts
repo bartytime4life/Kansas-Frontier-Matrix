@@ -94,6 +94,18 @@ export function isPublicKnowledgeDomainRetryGenerationCurrent(
 }
 
 /**
+ * Keep established URL ownership only while the exact Knowledge control that
+ * accepted it remains mounted. A remounted control with the same catalog ID is
+ * a new consumer and must prove the visible selection independently.
+ */
+export function isPublicKnowledgeDomainOwnedConsumerCurrent(
+  ownedConsumer: object | null,
+  mountedConsumer: object | undefined,
+): boolean {
+  return ownedConsumer !== null && mountedConsumer === ownedConsumer;
+}
+
+/**
  * Commit URL ownership only after the existing Knowledge control is enabled
  * and visibly applies the requested domain. This readiness proof is required
  * even when the requested domain was already selected before synchronization;
@@ -104,8 +116,12 @@ export function resolvePublicKnowledgeDomainUrlConsumerCommit(
   transition: PublicKnowledgeDomainSelectionTransition,
   selectedDomainId: string | null,
   consumerReady: boolean,
+  ownedConsumerCurrent: boolean,
 ): string | null {
-  if (transition.activeDeepLinkDomainId !== null && !consumerReady) {
+  if (
+    transition.activeDeepLinkDomainId !== null &&
+    (!consumerReady || !ownedConsumerCurrent)
+  ) {
     return null;
   }
   if (

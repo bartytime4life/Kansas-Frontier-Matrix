@@ -3,6 +3,7 @@ import mainSource from "../src/main.ts?raw";
 import {
   PUBLIC_KNOWLEDGE_DOMAIN_DEEP_LINK_RETRY_LIMIT,
   hasSinglePublicKnowledgeDomainConsumer,
+  isPublicKnowledgeDomainOwnedConsumerCurrent,
   isPublicKnowledgeDomainRetryGenerationCurrent,
   resolvePublicKnowledgeDomainRetryPlan,
   resolvePublicKnowledgeDomainManualSelectionTransition,
@@ -127,6 +128,30 @@ describe("public Knowledge-domain deep-link release", () => {
     expect(isPublicKnowledgeDomainRetryGenerationCurrent(6, 4)).toBe(false);
   });
 
+  it("invalidates ownership when a Knowledge control is remounted", () => {
+    const acceptedControl = Object.freeze({ domainId: "archaeology" });
+    const remountedControl = Object.freeze({ domainId: "archaeology" });
+
+    expect(
+      isPublicKnowledgeDomainOwnedConsumerCurrent(
+        acceptedControl,
+        acceptedControl,
+      ),
+    ).toBe(true);
+    expect(
+      isPublicKnowledgeDomainOwnedConsumerCurrent(
+        acceptedControl,
+        remountedControl,
+      ),
+    ).toBe(false);
+    expect(
+      isPublicKnowledgeDomainOwnedConsumerCurrent(acceptedControl, undefined),
+    ).toBe(false);
+    expect(
+      isPublicKnowledgeDomainOwnedConsumerCurrent(null, remountedControl),
+    ).toBe(false);
+  });
+
   it("commits URL ownership after the existing control applies the domain", () => {
     const transition = resolvePublicKnowledgeDomainSelectionTransition(
       contextUrl(["archaeology"]),
@@ -139,6 +164,7 @@ describe("public Knowledge-domain deep-link release", () => {
       resolvePublicKnowledgeDomainUrlConsumerCommit(
         transition,
         "archaeology",
+        true,
         true,
       ),
     ).toBe("archaeology");
@@ -157,10 +183,16 @@ describe("public Knowledge-domain deep-link release", () => {
         transition,
         "hydrology",
         true,
+        true,
       ),
     ).toBeNull();
     expect(
-      resolvePublicKnowledgeDomainUrlConsumerCommit(transition, null, true),
+      resolvePublicKnowledgeDomainUrlConsumerCommit(
+        transition,
+        null,
+        true,
+        true,
+      ),
     ).toBeNull();
   });
 
@@ -173,7 +205,12 @@ describe("public Knowledge-domain deep-link release", () => {
 
     expect(transition.domainIdToSelect).toBeNull();
     expect(
-      resolvePublicKnowledgeDomainUrlConsumerCommit(transition, null, true),
+      resolvePublicKnowledgeDomainUrlConsumerCommit(
+        transition,
+        null,
+        true,
+        true,
+      ),
     ).toBe("archaeology");
   });
 
@@ -190,6 +227,7 @@ describe("public Knowledge-domain deep-link release", () => {
         transition,
         "people_dna_land",
         false,
+        true,
       ),
     ).toBeNull();
     expect(
@@ -197,8 +235,26 @@ describe("public Knowledge-domain deep-link release", () => {
         transition,
         "people_dna_land",
         true,
+        true,
       ),
     ).toBe("people_dna_land");
+  });
+
+  it("releases established ownership for a replacement Knowledge control", () => {
+    const transition = resolvePublicKnowledgeDomainSelectionTransition(
+      contextUrl(["archaeology"]),
+      "archaeology",
+      "archaeology",
+    );
+
+    expect(
+      resolvePublicKnowledgeDomainUrlConsumerCommit(
+        transition,
+        "archaeology",
+        true,
+        false,
+      ),
+    ).toBeNull();
   });
 
   it("preserves ownership during programmatic restoration of the same domain", () => {
@@ -331,6 +387,12 @@ describe("public Knowledge-domain deep-link release", () => {
     );
     expect(mainSource).toContain(
       "requestedDomainId === null || consumerReady",
+    );
+    expect(mainSource).toContain(
+      "isPublicKnowledgeDomainOwnedConsumerCurrent(\n      activeDeepLinkKnowledgeDomainConsumer,",
+    );
+    expect(mainSource).toContain(
+      "activeDeepLinkKnowledgeDomainConsumer =\n    activeDeepLinkKnowledgeDomainId !== null",
     );
     expect(mainSource).toContain(
       '!button.disabled && button.getAttribute("aria-pressed") === "true"',

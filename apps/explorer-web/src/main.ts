@@ -28,6 +28,7 @@ import {
 import {
   PUBLIC_KNOWLEDGE_DOMAIN_DEEP_LINK_RETRY_LIMIT,
   hasSinglePublicKnowledgeDomainConsumer,
+  isPublicKnowledgeDomainOwnedConsumerCurrent,
   isPublicKnowledgeDomainRetryGenerationCurrent,
   resolvePublicKnowledgeDomainRetryPlan,
   resolvePublicKnowledgeDomainManualSelectionTransition,
@@ -55,6 +56,7 @@ mountPublicWorkspaceNavigation(navigation);
 let activeDeepLinkMapCaseId: "missing" | null = null;
 let activeDeepLinkMapCaseConsumer: HTMLButtonElement | null = null;
 let activeDeepLinkKnowledgeDomainId: string | null = null;
+let activeDeepLinkKnowledgeDomainConsumer: HTMLButtonElement | null = null;
 let pendingMapDeepLinkRetry: number | null = null;
 let pendingKnowledgeDomainDeepLinkRetry: number | null = null;
 let mapDeepLinkRetryGeneration = 0;
@@ -201,6 +203,9 @@ const releaseDeepLinkKnowledgeOwnershipOnManualSelection = (
     !button.disabled && button.getAttribute("aria-pressed") === "true",
   );
   activeDeepLinkKnowledgeDomainId = transition.activeDeepLinkDomainId;
+  if (activeDeepLinkKnowledgeDomainId === null) {
+    activeDeepLinkKnowledgeDomainConsumer = null;
+  }
   if (
     transition.replacementUrl !== null &&
     transition.replacementUrl.href !== currentUrl.href
@@ -331,6 +336,13 @@ const syncWorkspaceNavigation = (): void => {
           (button) => button.dataset.domainId === domainConsumerId,
         );
   const consumerReady = domainButton !== undefined && !domainButton.disabled;
+  const ownedConsumerCurrent =
+    activeDeepLinkKnowledgeDomainId === null ||
+    domainIdToSelect !== null ||
+    isPublicKnowledgeDomainOwnedConsumerCurrent(
+      activeDeepLinkKnowledgeDomainConsumer,
+      domainButton,
+    );
   if (requestedDomainId !== null && !consumerReady) {
     scheduleKnowledgeDomainDeepLinkRetry(safeUrl);
   }
@@ -367,9 +379,16 @@ const syncWorkspaceNavigation = (): void => {
       domainTransition,
       selectedDomainId,
       requestedDomainId === null || consumerReady,
+      requestedDomainId === null || ownedConsumerCurrent,
     );
+  activeDeepLinkKnowledgeDomainConsumer =
+    activeDeepLinkKnowledgeDomainId !== null && domainButton !== undefined
+      ? domainButton
+      : null;
   if (activeDeepLinkKnowledgeDomainId !== null || requestedDomainId === null) {
     cancelPendingKnowledgeDomainDeepLinkRetry();
+  } else {
+    scheduleKnowledgeDomainDeepLinkRetry(safeUrl);
   }
 };
 const syncWorkspaceNavigationFromBrowser = (): void => {
