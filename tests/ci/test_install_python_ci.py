@@ -146,6 +146,30 @@ class InstallPythonCiTests(unittest.TestCase):
                 module.profiles_for_workflow(workflow),
             )
 
+    def test_workflow_profile_parser_rejects_unsupported_trailing_tokens(self) -> None:
+        with tempfile.TemporaryDirectory(
+            prefix=".install-python-profile-",
+            dir=REPO_ROOT / ".github/workflows",
+        ) as directory:
+            workflow = Path(directory) / "profile.yml"
+            for invocation in (
+                "project-test typo",
+                "project-test audit-tool",
+                "project-test 2>&1",
+                'project-test 2>&1 | tee "$RUNNER_TEMP/python-bootstrap.log" trailing',
+                'project-test | tee "$RUNNER_TEMP/python-bootstrap.log"',
+            ):
+                with self.subTest(invocation=invocation):
+                    workflow.write_text(
+                        f"python tools/ci/install_python_ci.py {invocation}\n",
+                        encoding="utf-8",
+                    )
+                    with self.assertRaisesRegex(
+                        module.InstallConfigurationError,
+                        "PROFILE_UNKNOWN",
+                    ):
+                        module.profiles_for_workflow(workflow)
+
     def test_workflow_profile_parser_rejects_unknown_pipelined_profile(self) -> None:
         with tempfile.TemporaryDirectory(
             prefix=".install-python-profile-",

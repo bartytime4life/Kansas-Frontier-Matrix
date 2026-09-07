@@ -35,6 +35,10 @@ HASH_LINE = re.compile(r"^\s+--hash=sha256:[0-9a-f]{64}(?: \\)?$")
 FULL_SHA256 = re.compile(r"^sha256:[0-9a-f]{64}$")
 RECEIPT_SHA256 = re.compile(r"^sha256:[0-9a-f]{32,64}$")
 COMMIT_SHA = re.compile(r"^[0-9a-f]{40}$")
+WORKFLOW_PROFILE_INVOCATION = re.compile(
+    r"(?P<profile>[a-z0-9][a-z0-9-]*)"
+    r'(?:\s+2>&1\s+\|\s+tee\s+"\$RUNNER_TEMP/[A-Za-z0-9._/-]+")?'
+)
 FORBIDDEN_LOCK_TEXT = (
     "--extra-index-url",
     "--index-url",
@@ -219,7 +223,8 @@ def profiles_for_workflow(workflow_path: Path) -> frozenset[str]:
         if marker not in line:
             continue
         invocation = line.split(marker, 1)[1].lstrip()
-        profile_name = invocation.split(maxsplit=1)[0] if invocation else ""
+        match = WORKFLOW_PROFILE_INVOCATION.fullmatch(invocation)
+        profile_name = match.group("profile") if match is not None else ""
         if profile_name == "verify-workflows":
             continue
         profiles.add(profile_name)
