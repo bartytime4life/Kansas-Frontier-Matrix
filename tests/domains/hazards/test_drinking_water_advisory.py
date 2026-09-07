@@ -285,6 +285,38 @@ class DrinkingWaterAdvisoryTests(unittest.TestCase):
             },
         )
 
+    def test_rescinded_status_requires_fetched_source_outcome(self) -> None:
+        candidate = copy.deepcopy(self.valid["valid_authoritative_rescission"])
+        candidate["source_surface"]["source_check_outcome"] = "NOT_MODIFIED"
+        candidate["source_surface"]["snapshot_complete"] = False
+        candidate = validator.assign_identity(candidate)
+
+        result = validator.validate_payload(candidate)
+
+        self.assertEqual(result.outcome, "DENY")
+        self.assertEqual(
+            {(finding.code, finding.path) for finding in result.findings},
+            {
+                ("RESCISSION_REQUIRED", "/advisory"),
+                (
+                    "NOT_MODIFIED_CURRENT_REQUIRED",
+                    "/source_surface/current_record_present",
+                ),
+                (
+                    "RESCINDED_SOURCE_OUTCOME_REQUIRED",
+                    "/source_surface/source_check_outcome",
+                ),
+                (
+                    "SCHEMA_INVALID",
+                    "/source_surface/current_record_present",
+                ),
+                (
+                    "SCHEMA_INVALID",
+                    "/source_surface/source_check_outcome",
+                ),
+            },
+        )
+
     def test_only_complete_snapshot_mode_can_claim_completeness(self) -> None:
         for source_mode in ("INCREMENTAL_FEED", "SINGLE_EVENT"):
             with self.subTest(source_mode=source_mode):
