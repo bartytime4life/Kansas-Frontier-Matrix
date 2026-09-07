@@ -161,6 +161,36 @@ CARDINAL_SUFFIX_LONGITUDE_LATITUDE_PATTERN = re.compile(
     rf"({CARDINAL_LATITUDE_MAGNITUDE}){OPTIONAL_CARDINAL_DEGREE_SIGN}"
     rf"\s*([NS])(?![\w.])"
 )
+DMS_MINUTE_MARK = r"['’′]"
+DMS_SECOND_MARK = r'(?:["”″]|′′)'
+DMS_LATITUDE_MAGNITUDE = (
+    rf"0*\d{{1,2}}\s*°\s*0*\d{{1,2}}\s*{DMS_MINUTE_MARK}\s*"
+    rf"0*\d{{1,2}}(?:\.\d+)?\s*{DMS_SECOND_MARK}"
+)
+DMS_LONGITUDE_MAGNITUDE = (
+    rf"0*\d{{1,3}}\s*°\s*0*\d{{1,2}}\s*{DMS_MINUTE_MARK}\s*"
+    rf"0*\d{{1,2}}(?:\.\d+)?\s*{DMS_SECOND_MARK}"
+)
+DMS_MAGNITUDE_COMPONENTS = re.compile(
+    rf"\A\s*(0*\d{{1,3}})\s*°\s*(0*\d{{1,2}})\s*{DMS_MINUTE_MARK}"
+    rf"\s*(0*\d{{1,2}}(?:\.\d+)?)\s*{DMS_SECOND_MARK}\s*\Z"
+)
+DMS_PREFIX_COORDINATE_PATTERN = re.compile(
+    rf"(?i)(?<![\w.])([NS])\s*({DMS_LATITUDE_MAGNITUDE})"
+    rf"(?:\s*,\s*|\s+)([EW])\s*({DMS_LONGITUDE_MAGNITUDE})(?![\w.])"
+)
+DMS_SUFFIX_COORDINATE_PATTERN = re.compile(
+    rf"(?i)(?<![\w.])({DMS_LATITUDE_MAGNITUDE})\s*([NS])"
+    rf"(?:\s*,\s*|\s+)({DMS_LONGITUDE_MAGNITUDE})\s*([EW])(?![\w.])"
+)
+DMS_PREFIX_LONGITUDE_LATITUDE_PATTERN = re.compile(
+    rf"(?i)(?<![\w.])([EW])\s*({DMS_LONGITUDE_MAGNITUDE})"
+    rf"(?:\s*,\s*|\s+)([NS])\s*({DMS_LATITUDE_MAGNITUDE})(?![\w.])"
+)
+DMS_SUFFIX_LONGITUDE_LATITUDE_PATTERN = re.compile(
+    rf"(?i)(?<![\w.])({DMS_LONGITUDE_MAGNITUDE})\s*([EW])"
+    rf"(?:\s*,\s*|\s+)({DMS_LATITUDE_MAGNITUDE})\s*([NS])(?![\w.])"
+)
 WKT_POINT_PATTERN = re.compile(
     rf"(?i)\bpoint\s*\(\s*{SIGNED_COORDINATE_MAGNITUDE}\s+"
     rf"{SIGNED_COORDINATE_MAGNITUDE}\s*\)"
@@ -235,10 +265,35 @@ def _cardinal_magnitude(value: str) -> float:
     return float(stripped or "0")
 
 
+def _dms_magnitude_in_range(value: str, maximum_degrees: float) -> bool:
+    match = DMS_MAGNITUDE_COMPONENTS.fullmatch(value)
+    if match is None:
+        return False
+    degrees, minutes, seconds = (
+        _cardinal_magnitude(component) for component in match.groups()
+    )
+    if minutes >= 60 or seconds >= 60:
+        return False
+    return (
+        degrees < maximum_degrees
+        or (degrees == maximum_degrees and minutes == 0 and seconds == 0)
+    )
+
+
 def _contains_coordinate_literal(value: str) -> bool:
-    value = _normalize_decimal_digits(value)
+    value = _normalize_decimal_digits(unicodedata.normalize("NFKC", value))
     if LABELED_COORDINATE_PATTERN.search(value) or WKT_POINT_PATTERN.search(value):
         return True
+    for pattern, latitude_group, longitude_group in (
+        (DMS_PREFIX_COORDINATE_PATTERN, 2, 4),
+        (DMS_SUFFIX_COORDINATE_PATTERN, 1, 3),
+        (DMS_PREFIX_LONGITUDE_LATITUDE_PATTERN, 4, 2),
+        (DMS_SUFFIX_LONGITUDE_LATITUDE_PATTERN, 3, 1),
+    ):
+        for match in pattern.finditer(value):
+            if (_dms_magnitude_in_range(match.group(latitude_group), 90)
+                    and _dms_magnitude_in_range(match.group(longitude_group), 180)):
+                return True
     for pattern, latitude_group, longitude_group in (
         (CARDINAL_PREFIX_COORDINATE_PATTERN, 2, 4),
         (CARDINAL_SUFFIX_COORDINATE_PATTERN, 1, 3),
