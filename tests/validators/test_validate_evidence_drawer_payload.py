@@ -188,6 +188,22 @@ class EvidenceDrawerPayloadValidatorTests(unittest.TestCase):
         )
         self.assertIn("DENY_HISTORY_LEAK", {item.code for item in findings})
 
+    def test_denied_projection_requires_denial_reason(self) -> None:
+        for name in ("deny-sensitive.json", "deny-source-quarantined-rights.json"):
+            with self.subTest(name=name):
+                self.assertEqual(
+                    (),
+                    MODULE.validate_payload(MODULE.FIXTURES_ROOT / "valid" / name),
+                )
+
+        findings = MODULE.validate_payload(
+            MODULE.FIXTURES_ROOT / "invalid/deny-missing-evidence.json"
+        )
+        self.assertEqual(
+            {"DENY_REASON_INVALID"},
+            {item.code for item in findings},
+        )
+
     def test_validator_is_deterministic_and_no_network(self) -> None:
         path = MODULE.FIXTURES_ROOT / "valid/answer-corrected.json"
         with mock.patch.object(socket, "create_connection", side_effect=AssertionError("network denied")), mock.patch.object(

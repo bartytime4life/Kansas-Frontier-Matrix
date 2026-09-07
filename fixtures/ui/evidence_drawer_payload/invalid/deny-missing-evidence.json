@@ -1,0 +1,25 @@
+{
+  "profile": "kfm.explorer.evidence-drawer.public-safe.v1",
+  "id": "kfm:drawer:fixture:deny-missing-evidence",
+  "outcome": "DENY",
+  "reason_code": "MISSING_EVIDENCE",
+  "title": "DENY_REASON_MISMATCH_CANARY_26e6e8",
+  "summary": "DENY_REASON_MISMATCH_CANARY_26e6e8",
+  "evidence_refs": [],
+  "citations": [],
+  "limitations": [
+    "DENY_REASON_MISMATCH_CANARY_26e6e8"
+  ],
+  "trust_state": {
+    "source_role": "official",
+    "policy": "DENY",
+    "review": "PENDING",
+    "release": "UNRELEASED",
+    "freshness": "UNKNOWN",
+    "correction": "NONE"
+  },
+  "history": {
+    "negative_outcomes": [],
+    "corrections": []
+  }
+}

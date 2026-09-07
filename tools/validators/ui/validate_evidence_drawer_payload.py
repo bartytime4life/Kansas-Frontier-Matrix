@@ -323,8 +323,20 @@ def _semantic_findings(payload: Mapping[str, object]) -> list[Finding]:
             findings.append(Finding("SUPERSEDED_STATE_INVALID", "/trust_state/correction", "superseded abstention requires SUPERSEDED correction state"))
 
     elif outcome == "DENY":
-        if reason == "SUPPORTED" or trust_map.get("policy") != "DENY":
-            findings.append(Finding("DENY_STATE_INVALID", "/outcome", "DENY requires non-supported reason and DENY policy"))
+        if reason not in {
+            "POLICY_DENIED",
+            "RIGHTS_UNRESOLVED",
+            "SENSITIVE_DETAIL_RESTRICTED",
+        }:
+            findings.append(
+                Finding(
+                    "DENY_REASON_INVALID",
+                    "/reason_code",
+                    "DENY requires a policy, rights, or sensitive-detail reason",
+                )
+            )
+        if trust_map.get("policy") != "DENY":
+            findings.append(Finding("DENY_STATE_INVALID", "/outcome", "DENY requires DENY policy"))
         if refs_list or citations_list:
             findings.append(Finding("DENY_SUPPORT_LEAK", "/evidence_refs", "DENY cannot expose current support"))
         if negatives or corrections:

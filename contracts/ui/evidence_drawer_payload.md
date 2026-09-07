@@ -179,7 +179,7 @@ Unknown fields, invalid HTTPS citations, control characters, oversized arrays, d
 |---|---|---|
 | `ANSWER` | `SUPPORTED`; nonempty evidence and citations; policy `ALLOW`; review `REVIEWED`; release `RELEASED`; freshness `CURRENT`. | Render governed title/summary, support, citations, limitations, trust labels, and safe history. |
 | `ABSTAIN` | Non-supported reason; policy `ABSTAIN`; reason-specific trust-state parity applies. In particular, `HELD_EVIDENCE` requires review `PENDING`, release `UNRELEASED`, and non-`CURRENT` freshness. | Render fixed reason copy; may retain safe evidence refs and bounded history where the reason permits it. |
-| `DENY` | Non-supported reason; policy `DENY`; no evidence refs, citations, or history. | Render fixed no-leak copy only. |
+| `DENY` | `POLICY_DENIED`, `RIGHTS_UNRESOLVED`, or `SENSITIVE_DETAIL_RESTRICTED`; policy `DENY`; no evidence refs, citations, or history. | Render fixed no-leak copy only. |
 | `ERROR` | `UPSTREAM_ERROR`; policy `ERROR`; no evidence refs, citations, or history. | Render fixed error copy only; never fall back to an answer. |
 
 `SUPPORTED` is valid only for `ANSWER`. A malformed or internally contradictory payload becomes the app-local `INVALID_PAYLOAD` error state and no input values are reflected.
@@ -203,8 +203,9 @@ Rules:
 9. `ABSTAIN / STALE_EVIDENCE` must declare `trust_state.freshness: STALE`; contradictory current-freshness labels fail closed.
 10. `ABSTAIN / WITHDRAWN_EVIDENCE` and `ABSTAIN / REVOKED_EVIDENCE` must declare `trust_state.release: WITHDRAWN`; contradictory released labels fail closed.
 11. `ABSTAIN / HELD_EVIDENCE` must declare `trust_state.review: PENDING`, `trust_state.release: UNRELEASED`, and a freshness other than `CURRENT`; held evidence cannot simultaneously claim completed review, release, or current support.
-12. Only terminal correction targets may be current answer support; every terminal target must appear in `evidence_refs`.
-13. Intermediate correction targets remain superseded history and never become simultaneous current support.
+12. `DENY` accepts only policy, unresolved-rights, or sensitive-detail reasons; missing, stale, citation, lifecycle, and upstream-error reasons cannot be relabeled as denials.
+13. Only terminal correction targets may be current answer support; every terminal target must appear in `evidence_refs`.
+14. Intermediate correction targets remain superseded history and never become simultaneous current support.
 
 This is declaration validation only. The profile does not dereference a correction registry, authenticate a notice, prove timestamps, or establish that a public cache was invalidated.
 

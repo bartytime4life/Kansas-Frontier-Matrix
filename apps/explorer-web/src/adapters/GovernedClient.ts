@@ -146,6 +146,11 @@ const REASON_CODES = new Set<EvidenceDrawerReasonCode>([
   "WITHDRAWN_EVIDENCE",
   "REVOKED_EVIDENCE",
 ]);
+const DENY_REASON_CODES = new Set<EvidenceDrawerReasonCode>([
+  "POLICY_DENIED",
+  "RIGHTS_UNRESOLVED",
+  "SENSITIVE_DETAIL_RESTRICTED",
+]);
 const NEGATIVE_REASON_CODES = new Set([
   "HELD_EVIDENCE",
   "POLICY_DENIED",
@@ -505,7 +510,7 @@ function outcomeCombinationIsValid(
 
   if (outcome === "DENY") {
     return (
-      reasonCode !== "SUPPORTED" &&
+      DENY_REASON_CODES.has(reasonCode) &&
       evidenceRefs.length === 0 &&
       citations.length === 0 &&
       trustState.policy === "DENY" &&
