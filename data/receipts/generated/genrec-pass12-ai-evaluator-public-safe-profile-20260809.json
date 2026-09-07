@@ -12,7 +12,7 @@
   ],
   "artifact_hashes": {
     ".github/workflows/ai-evaluator-harness.yml": "sha256:3027e2198d591f806648c4ef6b3ded3d5dd8b7904001fc3c4516a4c850e61d5d",
-    "contracts/ai/evaluator_harness/README.md": "sha256:9cc6708a806fbc845a4f70b8c6719282f44c3f3373dfa7402640da9bbf83148d",
+    "contracts/ai/evaluator_harness/README.md": "sha256:7c0e938854aee7b666d505836e1c322ddd5fcef71228d0b54c6b7419fa33ae23",
     "docs/intake/exploratory/pass12-ai-evaluator-public-safe-profile-source-map.md": "sha256:4bc245c10c287be283d3410cadd481f845377a5970e16dda5442c610810d7a0d",
     "fixtures/contracts/v1/ai/evaluator_harness/cases.json": "sha256:63c3bfd8312097df524fd45f411bf1c73ab3a6256c74bae2a1aff3aa73422e13",
     "schemas/contracts/v1/ai/evaluator_harness.schema.json": "sha256:55cc78fd860ed357a1af7d03130454c8a0d1dd16a6ca081cf0c86a5b2b78b1da",
