@@ -433,8 +433,8 @@ describe("public Knowledge-domain deep-link release", () => {
     expect(mainSource).toContain(
       "requestedDomainId !== null && !consumerReady",
     );
-    expect(mainSource).toContain(
-      "requestedDomainId === null || consumerReady",
+    expect(mainSource).not.toContain(
+      "requestedDomainId === null || consumerReady,",
     );
     expect(mainSource).toContain(
       "isPublicKnowledgeDomainOwnedConsumerCurrent(\n      activeDeepLinkKnowledgeDomainConsumer,",
@@ -483,14 +483,26 @@ describe("public Knowledge-domain deep-link release", () => {
       "const consumerReadyAfterSelection =",
       clickIndex,
     );
+    const finalConsumerQueryIndex = mainSource.indexOf(
+      "const mountedDomainConsumersAfterSelection =",
+      clickIndex,
+    );
     const ownershipCommitIndex = mainSource.indexOf(
       "resolvePublicKnowledgeDomainUrlConsumerCommit(",
       clickIndex,
     );
+    expect(finalConsumerQueryIndex).toBeGreaterThan(clickIndex);
     expect(finalReadinessIndex).toBeGreaterThan(clickIndex);
+    expect(finalReadinessIndex).toBeGreaterThan(finalConsumerQueryIndex);
     expect(ownershipCommitIndex).toBeGreaterThan(finalReadinessIndex);
     expect(mainSource).toContain(
       "requestedDomainId === null || consumerReadyAfterSelection",
+    );
+    expect(mainSource).toContain(
+      "isPublicKnowledgeDomainOwnedConsumerCurrent(\n      domainButton ?? null,\n      mountedConsumerAfterSelection,",
+    );
+    expect(mainSource).toContain(
+      "activeDeepLinkKnowledgeDomainId !== null &&\n    mountedConsumerAfterSelection !== undefined",
     );
     expect(mainSource).toContain(
       'button[data-domain-id][aria-pressed="true"]',

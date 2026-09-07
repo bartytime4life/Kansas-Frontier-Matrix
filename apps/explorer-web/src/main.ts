@@ -390,8 +390,25 @@ const syncWorkspaceNavigation = (): void => {
       ),
     ).map((button) => button.dataset.domainId),
   );
+  const mountedDomainConsumersAfterSelection =
+    requestedDomainId === null
+      ? []
+      : Array.from(
+          root.querySelectorAll<HTMLButtonElement>("button[data-domain-id]"),
+        ).filter(
+          (button) => button.dataset.domainId === requestedDomainId,
+        );
+  const mountedConsumerAfterSelection =
+    mountedDomainConsumersAfterSelection.length === 1
+      ? mountedDomainConsumersAfterSelection[0]
+      : undefined;
   const consumerReadyAfterSelection =
-    domainButton !== undefined && !domainButton.disabled;
+    mountedConsumerAfterSelection !== undefined &&
+    isPublicKnowledgeDomainOwnedConsumerCurrent(
+      domainButton ?? null,
+      mountedConsumerAfterSelection,
+    ) &&
+    !mountedConsumerAfterSelection.disabled;
   activeDeepLinkKnowledgeDomainId =
     resolvePublicKnowledgeDomainUrlConsumerCommit(
       domainTransition,
@@ -400,8 +417,9 @@ const syncWorkspaceNavigation = (): void => {
       requestedDomainId === null || ownedConsumerCurrent,
     );
   activeDeepLinkKnowledgeDomainConsumer =
-    activeDeepLinkKnowledgeDomainId !== null && domainButton !== undefined
-      ? domainButton
+    activeDeepLinkKnowledgeDomainId !== null &&
+    mountedConsumerAfterSelection !== undefined
+      ? mountedConsumerAfterSelection
       : null;
   if (activeDeepLinkKnowledgeDomainId !== null || requestedDomainId === null) {
     cancelPendingKnowledgeDomainDeepLinkRetry();
