@@ -44,6 +44,11 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Install declared test dependencies
+        run: |
+          set -euo pipefail
+          python tools/ci/install_python_ci.py project-test
+
       - name: Run accepted deterministic Fauna fixture suite
         shell: bash
         env:
