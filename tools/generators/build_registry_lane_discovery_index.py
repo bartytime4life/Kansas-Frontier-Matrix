@@ -40,6 +40,11 @@ def _lane_record(root: Path, entry: Path) -> dict[str, Any]:
 def build_registry_lane_discovery_index(registry_root: Path) -> dict[str, Any]:
     if registry_root.is_symlink():
         raise RegistryDiscoveryError("registry root must not be a symlink")
+    absolute_root = (
+        registry_root if registry_root.is_absolute() else Path.cwd() / registry_root
+    )
+    if any(parent.is_symlink() for parent in absolute_root.parents):
+        raise RegistryDiscoveryError("registry root parent must not be a symlink")
     registry_root = registry_root.resolve()
     if not registry_root.is_dir():
         raise RegistryDiscoveryError(
