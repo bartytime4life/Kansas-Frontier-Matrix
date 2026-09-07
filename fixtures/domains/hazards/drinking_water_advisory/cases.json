@@ -474,7 +474,7 @@
         {"path": "/source_surface/source_check_outcome", "value": "STATUS_CHECK_FAILED"}
       ],
       "expected_outcome": "DENY",
-      "expected_findings": ["RESCISSION_REQUIRED", "SCHEMA_INVALID", "SNAPSHOT_COMPLETENESS_UNVERIFIED", "SOURCE_FAILURE_FALSE_CLEAR"]
+      "expected_findings": ["RESCINDED_SOURCE_OUTCOME_REQUIRED", "RESCISSION_REQUIRED", "SCHEMA_INVALID", "SNAPSHOT_COMPLETENESS_UNVERIFIED", "SOURCE_FAILURE_FALSE_CLEAR"]
     },
     {
       "name": "expiry_as_rescission",
