@@ -522,7 +522,8 @@ def validate_fixture_manifest() -> ValidationResult:
         if (
             not isinstance(relative_path, str)
             or not isinstance(expected, list)
-            or expected_outcome not in {"PASS", "ERROR"}
+            or not isinstance(expected_outcome, str)
+            or expected_outcome not in ("PASS", "ERROR")
         ):
             _add(findings, "schema.fixture_case_invalid", f"/cases/{index}")
             continue

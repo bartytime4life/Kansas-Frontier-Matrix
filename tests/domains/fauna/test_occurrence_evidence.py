@@ -217,6 +217,15 @@ class OccurrenceEvidenceTests(unittest.TestCase):
             )
         )
 
+        malformed_outcome = copy.deepcopy(manifest)
+        malformed_outcome["cases"][0]["expected_outcome"] = ["ERROR"]
+        variants.append(
+            (
+                malformed_outcome,
+                validator.Finding("schema.fixture_case_invalid", "/cases/0"),
+            )
+        )
+
         for candidate, expected_finding in variants:
             with self.subTest(expected_finding=expected_finding):
                 with (
