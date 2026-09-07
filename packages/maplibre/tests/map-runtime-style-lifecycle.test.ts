@@ -12,7 +12,7 @@ import {
 
 function style(
   sources: readonly [sourceId: string, revision: string][],
-  layers: readonly [layerId: string, sourceId: string][],
+  layers: readonly [layerId: string, sourceId: string, revision?: string][],
 ): MapRuntimeStyleState {
   return {
     profile: MAP_RUNTIME_STYLE_PROFILE,
@@ -21,10 +21,11 @@ function style(
       sourceId,
       revision,
     })),
-    layers: layers.map(([layerId, sourceId], order) => ({
+    layers: layers.map(([layerId, sourceId, revision = "v1"], order) => ({
       profile: MAP_RUNTIME_STYLE_LAYER_PROFILE,
       layerId,
       sourceId,
+      revision,
       order,
     })),
   };
@@ -70,6 +71,7 @@ describe("renderer-neutral source and layer lifecycle", () => {
             profile: MAP_RUNTIME_STYLE_LAYER_PROFILE,
             layerId: "roads-line",
             sourceId: "roads",
+            revision: "v1",
             order: 0,
           },
         },
@@ -79,6 +81,7 @@ describe("renderer-neutral source and layer lifecycle", () => {
             profile: MAP_RUNTIME_STYLE_LAYER_PROFILE,
             layerId: "places-label",
             sourceId: "places",
+            revision: "v1",
             order: 1,
           },
         },
@@ -140,6 +143,7 @@ describe("renderer-neutral source and layer lifecycle", () => {
           profile: MAP_RUNTIME_STYLE_LAYER_PROFILE,
           layerId: "hillshade",
           sourceId: "terrain",
+          revision: "v1",
           order: 0,
         },
       },
@@ -149,6 +153,7 @@ describe("renderer-neutral source and layer lifecycle", () => {
           profile: MAP_RUNTIME_STYLE_LAYER_PROFILE,
           layerId: "contours",
           sourceId: "terrain",
+          revision: "v1",
           order: 1,
         },
       },
@@ -180,6 +185,7 @@ describe("renderer-neutral source and layer lifecycle", () => {
           profile: MAP_RUNTIME_STYLE_LAYER_PROFILE,
           layerId: "county-line",
           sourceId: "boundaries",
+          revision: "v1",
           order: 0,
         },
       },
@@ -189,6 +195,55 @@ describe("renderer-neutral source and layer lifecycle", () => {
           profile: MAP_RUNTIME_STYLE_LAYER_PROFILE,
           layerId: "county-fill",
           sourceId: "boundaries",
+          revision: "v1",
+          order: 1,
+        },
+      },
+    ]);
+  });
+
+  it("rebuilds a changed lower layer and every higher layer", () => {
+    const current = style(
+      [
+        ["lower-source", "v1"],
+        ["higher-source", "v1"],
+      ],
+      [
+        ["lower-layer", "lower-source", "paint-v1"],
+        ["higher-layer", "higher-source", "paint-v1"],
+      ],
+    );
+    const target = style(
+      [
+        ["lower-source", "v1"],
+        ["higher-source", "v1"],
+      ],
+      [
+        ["lower-layer", "lower-source", "paint-v2"],
+        ["higher-layer", "higher-source", "paint-v1"],
+      ],
+    );
+
+    expect(planMapRuntimeStyleLifecycle(current, target).actions).toEqual([
+      { effect: "REMOVE_LAYER", layerId: "higher-layer" },
+      { effect: "REMOVE_LAYER", layerId: "lower-layer" },
+      {
+        effect: "ADD_LAYER",
+        layer: {
+          profile: MAP_RUNTIME_STYLE_LAYER_PROFILE,
+          layerId: "lower-layer",
+          sourceId: "lower-source",
+          revision: "paint-v2",
+          order: 0,
+        },
+      },
+      {
+        effect: "ADD_LAYER",
+        layer: {
+          profile: MAP_RUNTIME_STYLE_LAYER_PROFILE,
+          layerId: "higher-layer",
+          sourceId: "higher-source",
+          revision: "paint-v1",
           order: 1,
         },
       },
@@ -236,11 +291,28 @@ describe("renderer-neutral source and layer lifecycle", () => {
           profile: MAP_RUNTIME_STYLE_LAYER_PROFILE,
           layerId: "road-line",
           sourceId: "roads",
+          revision: "v1",
           order: 1,
         },
       ],
     },
     style([["unsafe/id", "v1"]], []),
+    {
+      profile: MAP_RUNTIME_STYLE_PROFILE,
+      sources: new Array(1),
+      layers: [],
+    },
+    {
+      profile: MAP_RUNTIME_STYLE_PROFILE,
+      sources: [
+        {
+          profile: MAP_RUNTIME_STYLE_SOURCE_PROFILE,
+          sourceId: "roads",
+          revision: "v1",
+        },
+      ],
+      layers: new Array(1),
+    },
   ])("fails closed for malformed lifecycle state", (candidate) => {
     expect(() => freezeMapRuntimeStyleState(candidate as never)).toThrow(
       expect.objectContaining({ code: "MAP_RUNTIME_STATE_INVALID" }),

@@ -22,6 +22,7 @@ export type MapRuntimeStyleLayer = Readonly<{
   profile: typeof MAP_RUNTIME_STYLE_LAYER_PROFILE;
   layerId: string;
   sourceId: string;
+  revision: string;
   order: number;
 }>;
 
@@ -66,7 +67,7 @@ export function freezeMapRuntimeStyleState(
   }
 
   const sourceIds = new Set<string>();
-  const sources = state.sources.map((source) => {
+  const sources = Array.from(state.sources, (source) => {
     assertExactKeys(
       source,
       ["profile", "sourceId", "revision"],
@@ -90,10 +91,10 @@ export function freezeMapRuntimeStyleState(
 
   const layerIds = new Set<string>();
   const orders = new Set<number>();
-  const layers = state.layers.map((layer) => {
+  const layers = Array.from(state.layers, (layer) => {
     assertExactKeys(
       layer,
-      ["profile", "layerId", "sourceId", "order"],
+      ["profile", "layerId", "sourceId", "revision", "order"],
       "style layer",
     );
     if (layer.profile !== MAP_RUNTIME_STYLE_LAYER_PROFILE) {
@@ -101,6 +102,7 @@ export function freezeMapRuntimeStyleState(
     }
     assertSafeIdentifier(layer.layerId, "layerId");
     assertSafeIdentifier(layer.sourceId, "sourceId");
+    assertSafeIdentifier(layer.revision, "revision");
     if (
       typeof layer.order !== "number" ||
       !Number.isSafeInteger(layer.order) ||
@@ -123,6 +125,7 @@ export function freezeMapRuntimeStyleState(
       profile: MAP_RUNTIME_STYLE_LAYER_PROFILE,
       layerId: layer.layerId,
       sourceId: layer.sourceId,
+      revision: layer.revision,
       order: layer.order,
     });
   });
@@ -199,6 +202,7 @@ export function planMapRuntimeStyleLifecycle(
     if (
       !next ||
       next.sourceId !== layer.sourceId ||
+      next.revision !== layer.revision ||
       next.order !== layer.order ||
       replacedSourceIds.has(layer.sourceId)
     ) {
@@ -210,10 +214,27 @@ export function planMapRuntimeStyleLifecycle(
     if (
       !previous ||
       previous.sourceId !== layer.sourceId ||
+      previous.revision !== layer.revision ||
       previous.order !== layer.order ||
       replacedSourceIds.has(layer.sourceId)
     ) {
       replaceLayerIds.add(layer.layerId);
+    }
+  }
+
+  const changedOrders = [
+    ...frozenCurrent.layers,
+    ...frozenTarget.layers,
+  ]
+    .filter((layer) => replaceLayerIds.has(layer.layerId))
+    .map((layer) => layer.order);
+  const firstChangedOrder = Math.min(...changedOrders);
+  if (Number.isFinite(firstChangedOrder)) {
+    for (const layer of frozenCurrent.layers) {
+      if (layer.order >= firstChangedOrder) replaceLayerIds.add(layer.layerId);
+    }
+    for (const layer of frozenTarget.layers) {
+      if (layer.order >= firstChangedOrder) replaceLayerIds.add(layer.layerId);
     }
   }
 
