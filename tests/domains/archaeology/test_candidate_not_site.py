@@ -481,6 +481,25 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
             ["spatial_precision_class"],
         )
 
+    def test_schema_and_executable_validator_agree_on_fixture_polarity(self) -> None:
+        schema_validator = Draft202012Validator(_load(SCHEMA_PATH))
+        self.assertEqual(list(schema_validator.iter_errors(self.valid)), [])
+        self.assertEqual(validate_candidate_feature(self.valid), [])
+
+        deny_paths = sorted(FIXTURE_ROOT.glob("*_deny.json"))
+        self.assertTrue(deny_paths)
+        for deny_path in deny_paths:
+            with self.subTest(fixture=deny_path.name):
+                payload = _load(deny_path)
+                self.assertTrue(
+                    list(schema_validator.iter_errors(payload)),
+                    f"schema unexpectedly accepted {deny_path.name}",
+                )
+                self.assertTrue(
+                    validate_candidate_feature(payload),
+                    f"executable validator unexpectedly accepted {deny_path.name}",
+                )
+
     def test_fixture_cli_is_deterministic_and_local(self) -> None:
         result = subprocess.run(
             [sys.executable, str(VALIDATOR_PATH), "--fixtures"],
