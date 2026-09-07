@@ -35,6 +35,17 @@ class Finding:
 Validator = Callable[[object], list[Finding]]
 
 
+class _BoundedJsonInteger(int):
+    """An integer that retains whether its source token spelled negative zero."""
+
+    def __new__(cls, raw_value: str | int) -> _BoundedJsonInteger:
+        instance = super().__new__(cls, raw_value)
+        instance.was_negative_zero = (
+            isinstance(raw_value, str) and raw_value.startswith("-") and instance == 0
+        )
+        return instance
+
+
 def is_nonempty_string(value: object) -> bool:
     return isinstance(value, str) and bool(value.strip())
 
@@ -45,6 +56,20 @@ def is_finite_number(value: object) -> bool:
     if isinstance(value, int):
         return True
     return isinstance(value, float) and math.isfinite(value)
+
+
+def is_negative_zero(value: object) -> bool:
+    """Return whether a parsed JSON number retained a negative zero sign."""
+
+    if isinstance(value, bool):
+        return False
+    if isinstance(value, _BoundedJsonInteger):
+        return value.was_negative_zero
+    return (
+        isinstance(value, float)
+        and value == 0
+        and math.copysign(1.0, value) < 0
+    )
 
 
 def add_finding(findings: set[Finding], code: str, path: str) -> None:
@@ -66,7 +91,7 @@ def find_undeclared_fields(
 def _parse_bounded_int(raw_value: str) -> int:
     if len(raw_value.lstrip("-")) > MAX_JSON_INTEGER_DIGITS:
         raise ValueError("JSON integer exceeds the configured digit limit")
-    return int(raw_value)
+    return _BoundedJsonInteger(raw_value)
 
 
 def _parse_finite_float(raw_value: str) -> float:

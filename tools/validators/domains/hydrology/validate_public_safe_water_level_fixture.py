@@ -19,6 +19,7 @@ from tools.validators._common.public_safe_fixture import (
     add_finding,
     find_undeclared_fields,
     is_finite_number,
+    is_negative_zero,
     is_nonempty_string,
     run_cli,
     validate_fixture_file,
@@ -407,7 +408,7 @@ def validate_candidate(candidate: object) -> list[Finding]:
             add_finding(findings, "MEASUREMENT_VALUE_OUT_OF_RANGE", "$.measurement.value")
         else:
             decimal_value = Decimal(str(value))
-            if decimal_value.is_zero() and decimal_value.is_signed():
+            if is_negative_zero(value):
                 add_finding(
                     findings,
                     "MEASUREMENT_NEGATIVE_ZERO",

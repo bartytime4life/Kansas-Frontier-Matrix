@@ -6,6 +6,7 @@ from __future__ import annotations
 import copy
 import json
 import socket
+import tempfile
 import unittest
 import urllib.request
 from pathlib import Path
@@ -419,6 +420,19 @@ class HydrologyWaterLevelFixtureTests(unittest.TestCase):
 
         candidate["measurement"]["value"] = 0.0  # type: ignore[index]
         self.assertEqual(validate_candidate(candidate), [])
+
+    def test_fixture_parser_preserves_integer_negative_zero(self) -> None:
+        fixture_text = VALID_FIXTURE.read_text(encoding="utf-8").replace(
+            '"value": 12.5',
+            '"value": -0',
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            fixture = Path(directory) / "negative-zero.json"
+            fixture.write_text(fixture_text, encoding="utf-8")
+            self.assertIn(
+                Finding("MEASUREMENT_NEGATIVE_ZERO", "$.measurement.value"),
+                validate_file(fixture),
+            )
 
     def test_temporal_provenance_is_canonical_and_monotonic(self) -> None:
         candidate = _load_candidate()
