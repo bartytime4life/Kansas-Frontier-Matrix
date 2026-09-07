@@ -1,5 +1,5 @@
 {
-  "receipt_id": "genrec-habitat-model-run-receipt-20260810",
+  "receipt_id": "genrec-habitat-model-run-receipt-20260907",
   "contract_version": "3.0.0",
   "artifact_paths": [
     ".github/workflows/habitat-model-run-receipt.yml",
@@ -16,13 +16,13 @@
     "docs/intake/exploratory/habitat-model-run-receipt-source-map.md": "sha256:6128a385928d422602f29bd08bdd2a0cc29c8eda0fdb08fa6d399a4678a99435",
     "fixtures/contracts/v1/domains/habitat/model_run_receipt/cases.json": "sha256:c85ff7f0b92e578d54ce260f66b1c7463b1bf492b1ac4f7760532e1951001b2e",
     "schemas/contracts/v1/domains/habitat/model_run_receipt.schema.json": "sha256:717e5e6bc6ecb8ba814fe0bc243eeff3cfac6aaed6565dcddab4b9b56b3e05b0",
-    "tests/validators/domains/habitat/test_validate_model_run_receipt.py": "sha256:a3a2c9a22d63df8f7c7074c27df3a3a2974c3ce21a5ef00ed88cd4069c059ac6",
+    "tests/validators/domains/habitat/test_validate_model_run_receipt.py": "sha256:b86ede3740f96c673bd0af480b4e9ff06381f70f9dfa5a9e38f9b3de11016fba",
     "tools/validators/domains/habitat/validate_model_run_receipt.py": "sha256:217b4e6529efe6d5c06629e05998b5cdc1023d28047099c9424f68ca04d831c2"
   },
   "model_identity": {
     "provider": "OpenAI",
     "model": "GPT-5",
-    "version": "2026-08-10"
+    "version": "2026-09-07"
   },
   "prompt_or_contract": "sha256:f611914064a5691dab68c6dff79c19c4df943e93a9141335cc27fef7a332401f",
   "parameters": {
@@ -32,8 +32,7 @@
     "max_tokens": null,
     "tools_enabled": [
       "GitHub connector repository inspection and draft pull-request publishing",
-      "Google Drive research discovery with private identifiers withheld",
-      "local git and deterministic no-network repository validation"
+      "local deterministic no-network candidate compilation and hash verification"
     ]
   },
   "inputs": {
@@ -68,7 +67,7 @@
     {
       "gate": "focused-model-run-receipt-suite",
       "outcome": "PASS",
-      "reason": "Fourteen tests, forty subtests, and twenty-four exact fixture cases passed, including sensitive-value-safe three-way CLI outcome mapping with root-type separation, deterministic failure-reason ordering, mixed-known-offset chronology, known-UTC acceptance, and unknown-local-offset denial at every governed timestamp field."
+      "reason": "Seventeen tests, forty-five subtests, and twenty-four exact fixture cases passed, including outcome-bound public finding codes for deterministic DENY and ERROR carriers; parent-path-independent public-safe carrier output; raw-byte deterministic carrier and fixture-replay envelopes with exact profile, non-authority, non-effect, key-set, ordering, outcome, and payload-nondisclosure assertions; sensitive-value-safe three-way CLI outcome mapping with root-type separation; deterministic failure-reason ordering; mixed-known-offset chronology; known-UTC acceptance; and unknown-local-offset denial at every governed timestamp field."
     },
     {
       "gate": "completed-failed-source-role-and-non-authority-boundary",
@@ -119,12 +118,12 @@
     "timestamp": null
   },
   "override_record": null,
-  "created_at": "2026-08-10T17:32:38Z",
-  "emitter": "OpenAI GPT-5 via ChatGPT GitHub and Google Drive connectors",
+  "created_at": "2026-09-07T14:37:09Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub connector",
   "links": {
-    "pr_number": null,
+    "pr_number": 4383,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Completes the existing Habitat ModelRunReceipt schema and validator scaffolds as a closed fixture-only profile, including deterministic failure-reason ordering and fail-closed denial of RFC 3339 unknown local offsets at started, completed, and recorded timestamps. Private research contributed only to candidate discovery; public provenance contains no private identifiers or copied private content. The profile performs no model run, evidence resolution, policy or review decision, lifecycle transition, release, deployment, or publication."
+  "notes": "Successor provenance receipt for the Habitat ModelRunReceipt deterministic CLI test bytes reviewed on 2026-09-07. It supersedes only the current authored-byte binding; genrec-habitat-model-run-receipt-20260810 remains immutable and authoritative for its historical bytes. The profile performs no model run, evidence resolution, policy or review decision, lifecycle transition, release, deployment, or publication."
 }
