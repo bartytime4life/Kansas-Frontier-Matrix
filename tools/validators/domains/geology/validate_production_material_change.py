@@ -368,6 +368,27 @@ def _semantic_findings(candidate: Mapping[str, Any]) -> list[Finding]:
             findings.append(Finding("HOLD_WITHOUT_BLOCKER", "/assessment"))
         elif not reason_set.intersection(expected_reasons):
             findings.append(Finding("HOLD_REASON_MISMATCH", "/assessment/reason_codes"))
+        if prior is None and "PRIOR_SNAPSHOT_MISSING" not in reason_set:
+            findings.append(
+                Finding(
+                    "PRIOR_SNAPSHOT_REASON_REQUIRED",
+                    "/assessment/reason_codes",
+                )
+            )
+        if rights_unresolved and "RIGHTS_STATE_UNRESOLVED" not in reason_set:
+            findings.append(
+                Finding(
+                    "RIGHTS_STATE_REASON_REQUIRED",
+                    "/assessment/reason_codes",
+                )
+            )
+        if coverage_regression and "COVERAGE_REGRESSION" not in reason_set:
+            findings.append(
+                Finding(
+                    "COVERAGE_REGRESSION_REASON_REQUIRED",
+                    "/assessment/reason_codes",
+                )
+            )
         if (
             retrieval_time_regression
             and "RETRIEVAL_TIME_REGRESSION" not in reason_set

@@ -150,6 +150,44 @@ def test_operational_error_cannot_conceal_retrieval_time_regression() -> None:
     )
 
 
+@pytest.mark.parametrize(
+    ("fixture", "concealing_reason", "expected_finding"),
+    (
+        (
+            "prior_missing_hold.json",
+            "RIGHTS_STATE_UNRESOLVED",
+            Finding("PRIOR_SNAPSHOT_REASON_REQUIRED", "/assessment/reason_codes"),
+        ),
+        (
+            "rights_unresolved_hold.json",
+            "PRIOR_SNAPSHOT_MISSING",
+            Finding("RIGHTS_STATE_REASON_REQUIRED", "/assessment/reason_codes"),
+        ),
+        (
+            "coverage_regression_hold.json",
+            "RIGHTS_STATE_UNRESOLVED",
+            Finding(
+                "COVERAGE_REGRESSION_REASON_REQUIRED",
+                "/assessment/reason_codes",
+            ),
+        ),
+    ),
+)
+def test_hold_requires_every_applicable_blocker_reason(
+    fixture: str,
+    concealing_reason: str,
+    expected_finding: Finding,
+) -> None:
+    packet = json.loads((VALID / fixture).read_text(encoding="utf-8"))
+    packet["current_snapshot"]["rights_state"] = "UNKNOWN"
+    packet["assessment"]["reason_codes"] = [concealing_reason]
+    packet["spec_hash"] = canonical_spec_hash(packet)
+    packet["assessment_id"] = expected_assessment_id(packet)
+
+    result = validate_payload(packet)
+    assert expected_finding in result.findings
+
+
 def test_cli_returns_zero_for_valid_fixture() -> None:
     proc = subprocess.run(
         [sys.executable, str(VALIDATOR), str(VALID / "material_change_review.json")],

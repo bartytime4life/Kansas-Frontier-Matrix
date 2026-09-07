@@ -45,8 +45,9 @@ snapshots when monthly coverage or spatial footprints change.
   upstream change is correct, material to a public claim, or safe to release.
 - `HOLD` is required when the prior snapshot or rights posture is unresolved, monthly
   coverage regresses, or the current snapshot's retrieval time predates the prior snapshot.
-- A retrieval-time regression must be named explicitly with
-  `RETRIEVAL_TIME_REGRESSION`, even when another HOLD blocker also applies.
+- Every applicable HOLD blocker must be named explicitly, even when multiple blockers apply:
+  `PRIOR_SNAPSHOT_MISSING`, `RIGHTS_STATE_UNRESOLVED`, `COVERAGE_REGRESSION`, and
+  `RETRIEVAL_TIME_REGRESSION` cannot substitute for one another.
 - Exact source bytes, record-level claims, and release decisions remain outside this contract.
 
 ## Required fields
