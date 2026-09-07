@@ -155,6 +155,30 @@ def test_cli_is_finite_and_value_minimized() -> None:
     assert "synthetic-pm25-001" not in run.stdout
 
 
+def test_file_loader_denies_symlink_swap_before_open() -> None:
+    with tempfile.TemporaryDirectory() as directory:
+        root = Path(directory)
+        path = root / "assessment.json"
+        replacement = root / "replacement.json"
+        document = json.dumps(materialize(MANIFEST["cases"][0]))
+        path.write_text(document, encoding="utf-8")
+        replacement.write_text(document, encoding="utf-8")
+        real_open = module.os.open
+
+        def swap_then_open(candidate: Path, flags: int) -> int:
+            path.unlink()
+            path.symlink_to(replacement)
+            return real_open(candidate, flags)
+
+        with patch.object(module.os, "open", side_effect=swap_then_open):
+            value, findings = module._read(path)
+
+    assert value is None
+    assert findings == (
+        module.Finding("PM25_TRIGGER_INPUT_SYMLINK_DENIED", "/"),
+    )
+
+
 def test_knowledge_character_and_authority_boundaries_are_explicit() -> None:
     payload = materialize(MANIFEST["cases"][0])
     assert payload["subject"]["knowledge_character"] == "OBSERVED_SENSOR"

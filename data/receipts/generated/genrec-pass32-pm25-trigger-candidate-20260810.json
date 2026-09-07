@@ -16,8 +16,8 @@
     "docs/intake/exploratory/pass-32-pm25-trigger-candidate-source-map.md": "sha256:3d32d488fea5a584bb9318adddfc1faf396d0eb1e860a2db8d90a90cdd55b981",
     "fixtures/contracts/v1/domains/atmosphere/pm25_trigger_candidate_assessment/cases.json": "sha256:0ea27e3d1d9477e77e34a676d44cff51d67fddc9beac2322194e8c0589b527af",
     "schemas/contracts/v1/domains/atmosphere/pm25_trigger_candidate_assessment.schema.json": "sha256:d0ae4515885f9614d5cf79251ad3525edbf3ee187856c292905359c79572bfa0",
-    "tests/domains/atmosphere/test_pm25_trigger_candidate_assessment.py": "sha256:771b5c624eb493d391a32e086c9ba8b601af0b71e8389af7da1c6da587b7b1ba",
-    "tools/validators/domains/atmosphere/validate_pm25_trigger_candidate_assessment.py": "sha256:3321f18372bd90f0bce882de3908efb99238f328ee192dee180923bbde485ec6"
+    "tests/domains/atmosphere/test_pm25_trigger_candidate_assessment.py": "sha256:707f0b72abdfadb9f4c57586b27c39509e45a24c8fe3e16f314453a90837e324",
+    "tools/validators/domains/atmosphere/validate_pm25_trigger_candidate_assessment.py": "sha256:4372b0c070f115751cfbc2ab9824040afdee9cd1c12388afe6a1c55bb6bd89b4"
   },
   "model_identity": {"provider": "OpenAI", "model": "Codex", "version": "GPT-5"},
   "prompt_or_contract": "sha256:8fbe7a30cbbf3222411d4e3dc10b329120a26eecc6b1b9c2a5ae86e4de5ab0f9",

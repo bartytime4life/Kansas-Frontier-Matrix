@@ -4,8 +4,11 @@ from __future__ import annotations
 
 import argparse
 import copy
+import errno
 import json
 import math
+import os
+import stat
 import sys
 from dataclasses import dataclass
 from datetime import datetime
@@ -78,20 +81,42 @@ def _pointer(parts: Iterable[Any]) -> str:
 
 
 def _read(path: Path) -> tuple[dict[str, Any] | None, tuple[Finding, ...]]:
+    descriptor = -1
     try:
         if path.is_symlink():
             return None, (Finding("PM25_TRIGGER_INPUT_SYMLINK_DENIED", "/"),)
-        if not path.is_file():
+        flags = os.O_RDONLY
+        for flag_name in ("O_BINARY", "O_CLOEXEC", "O_NONBLOCK", "O_NOFOLLOW"):
+            flags |= getattr(os, flag_name, 0)
+        try:
+            descriptor = os.open(path, flags)
+        except OSError as error:
+            if error.errno == errno.ELOOP:
+                return None, (Finding("PM25_TRIGGER_INPUT_SYMLINK_DENIED", "/"),)
+            if error.errno in {errno.ENOENT, errno.ENOTDIR}:
+                return None, (Finding("PM25_TRIGGER_FILE_NOT_FOUND", "/"),)
+            return None, (Finding("PM25_TRIGGER_JSON_INVALID", "/"),)
+        metadata = os.fstat(descriptor)
+        if not stat.S_ISREG(metadata.st_mode):
             return None, (Finding("PM25_TRIGGER_FILE_NOT_FOUND", "/"),)
-        if path.stat().st_size > MAX_BYTES:
+        if metadata.st_size > MAX_BYTES:
             return None, (Finding("PM25_TRIGGER_FILE_TOO_LARGE", "/"),)
-        value = json.loads(path.read_text(encoding="utf-8"), object_pairs_hook=_unique, parse_constant=_reject_constant, parse_float=_finite)
+        stream = os.fdopen(descriptor, "rb")
+        descriptor = -1
+        with stream:
+            raw = stream.read(MAX_BYTES + 1)
+        if len(raw) > MAX_BYTES:
+            return None, (Finding("PM25_TRIGGER_FILE_TOO_LARGE", "/"),)
+        value = json.loads(raw.decode("utf-8"), object_pairs_hook=_unique, parse_constant=_reject_constant, parse_float=_finite)
     except DuplicateKeyError:
         return None, (Finding("PM25_TRIGGER_JSON_DUPLICATE_KEY", "/"),)
     except NonFiniteNumberError:
         return None, (Finding("PM25_TRIGGER_JSON_NONFINITE_NUMBER", "/"),)
     except (OSError, UnicodeError, json.JSONDecodeError, RecursionError, ValueError):
         return None, (Finding("PM25_TRIGGER_JSON_INVALID", "/"),)
+    finally:
+        if descriptor >= 0:
+            os.close(descriptor)
     if not isinstance(value, dict):
         return None, (Finding("PM25_TRIGGER_ROOT_NOT_OBJECT", "/"),)
     return value, ()
