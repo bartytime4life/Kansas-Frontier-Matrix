@@ -293,6 +293,7 @@ def validate_candidate(candidate: object) -> list[Finding]:
             )
 
     spatial = candidate.get("spatial_support")
+    county_identifier: str | None = None
     if not isinstance(spatial, dict):
         add_finding(findings, "SPATIAL_SUPPORT_INVALID", "$.spatial_support")
     else:
@@ -324,6 +325,19 @@ def validate_candidate(candidate: object) -> list[Finding]:
             or not county_fips.isdigit()
         ):
             add_finding(findings, "COUNTY_FIPS_INVALID", "$.spatial_support.county_fips")
+        else:
+            county_identifier = county_fips
+
+    if (
+        gauge_identifier is not None
+        and county_identifier is not None
+        and gauge_identifier != county_identifier
+    ):
+        add_finding(
+            findings,
+            "GAUGE_COUNTY_IDENTITY_MISMATCH",
+            "$.spatial_support.county_fips",
+        )
 
     temporal = candidate.get("temporal_scope")
     observed: datetime | None = None

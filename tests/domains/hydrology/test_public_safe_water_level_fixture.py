@@ -258,6 +258,30 @@ class HydrologyWaterLevelFixtureTests(unittest.TestCase):
             mutated["evidence_refs"] = [value]
             self.assertIn(mismatch, validate_candidate(mutated))
 
+    def test_generalized_gauge_identity_binds_county_support(self) -> None:
+        candidate = _load_candidate()
+        candidate["spatial_support"]["county_fips"] = "88888"  # type: ignore[index]
+        mismatch = Finding(
+            "GAUGE_COUNTY_IDENTITY_MISMATCH",
+            "$.spatial_support.county_fips",
+        )
+        self.assertIn(mismatch, validate_candidate(candidate))
+
+        candidate["gauge_site_ref"] = (
+            "fixture://hydrology/gauge/generalized/88888"
+        )
+        candidate["evidence_refs"] = [  # type: ignore[index]
+            "fixture://evidence/hydrology/water-level/88888/"
+            "20260802T120000Z/synthetic-local-reference/"
+            "synthetic-water-level-gauge"
+        ]
+        candidate["record_id"] = (
+            "fixture:hydrology:water-level:88888:"
+            "synthetic-local-reference:synthetic-water-level-gauge:"
+            "20260802T120000Z"
+        )
+        self.assertEqual(validate_candidate(candidate), [])
+
     def test_evidence_references_bind_observation_time(self) -> None:
         candidate = _load_candidate()
         self.assertEqual(validate_candidate(candidate), [])
