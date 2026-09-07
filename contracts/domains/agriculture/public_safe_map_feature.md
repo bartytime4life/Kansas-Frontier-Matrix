@@ -107,8 +107,8 @@ plain whitespace separators. Latitude and longitude labels are denied whether
 they use punctuation or plain whitespace; coordinate literals remain denied
 whether integer or fractional and whether coordinate pairs use commas, whitespace,
 or cardinal-direction prefix/suffix notation. Cardinal pairs are detected in either
-latitude/longitude order and range-checked by axis so out-of-range lookalikes
-are not misclassified.
+latitude/longitude order and range-checked by axis so zero-padded valid
+coordinates remain denied while out-of-range lookalikes are not misclassified.
 Protected identifier values are denied at every length. A complete scalar that
 is shaped as a private identity label remains denied with one or more identity
 tokens, regardless of capitalization or Unicode letter width, even when it
