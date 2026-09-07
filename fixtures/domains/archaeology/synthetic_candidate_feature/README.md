@@ -50,6 +50,9 @@ burial, sacred-place, collection-security, or culturally restricted data.
 - `sensitive_subject_reference_deny.json` proves that otherwise valid governed
   reference paths cannot disclose burial, sacred-place, private-land, looting,
   or DNA-related subject clues across any CandidateFeature reference field.
+- `compact_sensitive_subject_reference_deny.json` proves that concatenating
+  common sensitive subject labels, such as `burialsite` or `privateparcel`,
+  cannot evade that denial across any CandidateFeature reference field.
 - `misbound_reference_family_deny.json` proves that a syntactically valid
   source reference cannot satisfy an EvidenceRef/EvidenceBundle binding.
 - `empty_reference_identity_deny.json` proves that a bare evidence family path

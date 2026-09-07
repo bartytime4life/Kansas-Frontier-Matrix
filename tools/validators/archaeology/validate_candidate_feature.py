@@ -133,14 +133,18 @@ KFM_REFERENCE_PATTERN = re.compile(
 # opaque identities rather than burial, sacred-place, private-land,
 # collection-security, looting-risk, sovereignty, or DNA/genomic clues.
 SENSITIVE_REFERENCE_PATTERN = re.compile(
-    r"^(?!.*[/._~-](?:[Bb][Uu][Rr][Ii][Aa][Ll]|"
-    r"[Gg][Rr][Aa][Vv][Ee](?:[Ss]|[Ss][Ii][Tt][Ee])?"
-    r"|[Hh][Uu][Mm][Aa][Nn]-[Rr][Ee][Mm][Aa][Ii][Nn][Ss]|[Ss][Aa][Cc][Rr][Ee][Dd]"
-    r"|[Pp][Rr][Ii][Vv][Aa][Tt][Ee]|[Ll][Aa][Nn][Dd][Oo][Ww][Nn][Ee][Rr]"
-    r"|[Cc][Oo][Ll][Ll][Ee][Cc][Tt][Ii][Oo][Nn]-(?:[Ss][Ee][Cc][Uu][Rr][Ii][Tt][Yy]|[Ss][Tt][Oo][Rr][Aa][Gg][Ee])"
-    r"|[Ll][Oo][Oo][Tt][Ii][Nn][Gg]|[Aa][Rr][Tt][Ii][Ff][Aa][Cc][Tt]-[Cc][Aa][Cc][Hh][Ee]"
-    r"|[Ss][Oo][Vv][Ee][Rr][Ee][Ii][Gg][Nn][Tt][Yy]|[Rr][Ii][Gg][Hh][Tt][Ss]-[Hh][Oo][Ll][Dd][Ee][Rr]"
-    r"|[Dd][Nn][Aa]|[Gg][Ee][Nn][Oo][Mm](?:[Ee]|[Ii][Cc])|"
+    r"^(?!.*[/._~-](?:[Bb][Uu][Rr][Ii][Aa][Ll](?:[Ss][Ii][Tt][Ee]|[Gg][Rr][Oo][Uu][Nn][Dd]|[Rr][Ee][Cc][Oo][Rr][Dd])?|"
+    r"[Gg][Rr][Aa][Vv][Ee](?:[Ss]|[Ss][Ii][Tt][Ee]|[Yy][Aa][Rr][Dd])?"
+    r"|[Hh][Uu][Mm][Aa][Nn][-_~]?[Rr][Ee][Mm][Aa][Ii][Nn][Ss]"
+    r"|[Ss][Aa][Cc][Rr][Ee][Dd](?:[Ss][Ii][Tt][Ee]|[Pp][Ll][Aa][Cc][Ee])?"
+    r"|[Pp][Rr][Ii][Vv][Aa][Tt][Ee](?:[Ll][Aa][Nn][Dd]|[Pp][Aa][Rr][Cc][Ee][Ll]|[Pp][Rr][Oo][Pp][Ee][Rr][Tt][Yy])?"
+    r"|[Ll][Aa][Nn][Dd][Oo][Ww][Nn][Ee][Rr]"
+    r"|[Cc][Oo][Ll][Ll][Ee][Cc][Tt][Ii][Oo][Nn][-_~]?(?:[Ss][Ee][Cc][Uu][Rr][Ii][Tt][Yy]|[Ss][Tt][Oo][Rr][Aa][Gg][Ee])"
+    r"|[Ll][Oo][Oo][Tt][Ii][Nn][Gg](?:[Rr][Ii][Ss][Kk])?"
+    r"|[Aa][Rr][Tt][Ii][Ff][Aa][Cc][Tt][-_~]?[Cc][Aa][Cc][Hh][Ee]"
+    r"|[Ss][Oo][Vv][Ee][Rr][Ee][Ii][Gg][Nn][Tt][Yy](?:[Cc][Ll][Aa][Ii][Mm])?"
+    r"|[Rr][Ii][Gg][Hh][Tt][Ss][-_~]?[Hh][Oo][Ll][Dd][Ee][Rr]"
+    r"|[Dd][Nn][Aa](?:[Ss][Aa][Mm][Pp][Ll][Ee])?|[Gg][Ee][Nn][Oo][Mm](?:[Ee]|[Ii][Cc])|"
     r"[Hh][Aa][Pp][Ll][Oo][Gg][Rr][Oo][Uu][Pp])(?:$|[0-9]|[/._~-]))"
 )
 OPAQUE_ID_PATH_PATTERN = (
@@ -379,6 +383,7 @@ def validate_fixture_suite() -> int:
         FIXTURE_ROOT / "path_locator_reference_deny.json": "protected locator material",
         FIXTURE_ROOT / "compact_locator_reference_deny.json": "protected locator material",
         FIXTURE_ROOT / "sensitive_subject_reference_deny.json": "sensitive subject clues",
+        FIXTURE_ROOT / "compact_sensitive_subject_reference_deny.json": "sensitive subject clues",
         FIXTURE_ROOT / "misbound_reference_family_deny.json": "allowed governed reference family",
         FIXTURE_ROOT / "empty_reference_identity_deny.json": "non-empty opaque identity",
         FIXTURE_ROOT / "unbound_catalog_candidate_deny.json": "evidence_refs are required",

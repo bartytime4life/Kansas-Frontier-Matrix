@@ -230,7 +230,7 @@ The current schema does not require these fields. They are `PROPOSED` semantic r
 - candidate-to-site promotion requires governed review, evidence closure, and policy checks;
 - exact or sensitive location exposure fails closed unless policy and review authorize a specific public-safe transform;
 - governed-reference paths cannot serve as an alternate channel for protected locator material, including compact locator-token-plus-digit forms;
-- governed-reference paths cannot disclose sensitive subject clues for burial or human remains, sacred or restricted places, private land, collection security, looting risk, sovereignty or rights-holder uncertainty, or DNA/genomic identity;
+- governed-reference paths cannot disclose sensitive subject clues for burial or human remains, sacred or restricted places, private land, collection security, looting risk, sovereignty or rights-holder uncertainty, or DNA/genomic identity, including compact concatenated labels such as `burialsite`, `privateparcel`, or `dnasample`;
 - governed references must bind to the object family required by their field, carry a non-empty segmented opaque identity, and end strictly without terminal line-break material;
 - governed source, evidence, observation, and correction arrays must contain unique references so repetition cannot inflate apparent support or lineage closure;
 - optional observation bindings must be omitted when absent and non-empty when present;

@@ -286,6 +286,32 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
                 )
         self.assertEqual(len(errors), len(expected_fields))
 
+    def test_compact_sensitive_subject_reference_fixture_fails_closed_in_every_field(
+        self,
+    ) -> None:
+        payload = _load(
+            FIXTURE_ROOT / "compact_sensitive_subject_reference_deny.json"
+        )
+        errors = validate_candidate_feature(payload)
+        expected_fields = {
+            "source_refs",
+            "evidence_refs",
+            "observation_refs",
+            "correction_refs",
+            "candidate_geometry_ref",
+        }
+        for field in expected_fields:
+            with self.subTest(field=field):
+                self.assertTrue(
+                    any(
+                        error.startswith(field)
+                        and "sensitive subject clues" in error
+                        for error in errors
+                    ),
+                    errors,
+                )
+        self.assertEqual(len(errors), len(expected_fields))
+
     def test_protected_locator_tokens_fail_closed_in_every_reference_field(self) -> None:
         cases = {
             "source_refs": ["kfm://source/synthetic/Latitude/000"],
