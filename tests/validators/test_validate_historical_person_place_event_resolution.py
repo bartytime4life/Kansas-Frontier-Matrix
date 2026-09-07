@@ -163,6 +163,40 @@ class HistoricalResolutionTests(unittest.TestCase):
         self.assertIsNone(value)
         self.assertEqual({finding.code for finding in findings}, {"INPUT_TOO_LARGE"})
 
+    @unittest.skipUnless(os.open in os.supports_dir_fd, "requires directory-relative open")
+    def test_parent_swap_cannot_redirect_expected_code_sidecar(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            parent = root / "parent"
+            parent.mkdir()
+            candidate = parent / "candidate.json"
+            candidate.touch()
+            sidecar = candidate.with_suffix(".expected_error.txt")
+            sidecar.write_text("SCORE_MISMATCH\n", encoding="utf-8")
+            attacker = root / "attacker"
+            attacker.mkdir()
+            (attacker / sidecar.name).write_text("RAW_DNA_FIELD_DENIED\n", encoding="utf-8")
+            moved_parent = root / "held-parent"
+            real_open = os.open
+            swapped = False
+
+            def swapping_open(path, flags, mode=0o600, *, dir_fd=None):
+                nonlocal swapped
+                del mode
+                if path == sidecar.name and dir_fd is not None and not swapped:
+                    parent.rename(moved_parent)
+                    parent.symlink_to(attacker, target_is_directory=True)
+                    swapped = True
+                if dir_fd is None:
+                    return real_open(path, flags)
+                return real_open(path, flags, dir_fd=dir_fd)
+
+            with mock.patch.object(module.os, "open", side_effect=swapping_open):
+                expected = module._expected_code(candidate)
+
+        self.assertTrue(swapped)
+        self.assertEqual(expected, "SCORE_MISMATCH")
+
     @unittest.skipUnless(hasattr(os, "mkfifo"), "requires POSIX named pipes")
     def test_explicit_candidate_nonregular_file_fails_without_blocking(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

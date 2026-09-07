@@ -95,7 +95,7 @@ def candidate_spec_hash(candidate: Mapping[str, Any]) -> str:
     return "sha256:" + hashlib.sha256(canonical_json_bytes(payload)).hexdigest()
 
 
-def _open_bounded_regular_file(path: Path) -> bytes:
+def _open_bounded_regular_file(path: Path, *, max_bytes: int = MAX_JSON_BYTES) -> bytes:
     """Read a regular file while holding no-follow descriptors for its parents."""
     if not SUPPORTS_SECURE_DIR_FD:
         raise InputNotRegularFileError
@@ -143,13 +143,13 @@ def _open_bounded_regular_file(path: Path) -> bytes:
         metadata = os.fstat(descriptor)
         if not stat.S_ISREG(metadata.st_mode):
             raise InputNotRegularFileError
-        if metadata.st_size > MAX_JSON_BYTES:
+        if metadata.st_size > max_bytes:
             raise InputTooLargeError
 
         with os.fdopen(descriptor, "rb") as handle:
             descriptor = -1
-            payload = handle.read(MAX_JSON_BYTES + 1)
-        if len(payload) > MAX_JSON_BYTES:
+            payload = handle.read(max_bytes + 1)
+        if len(payload) > max_bytes:
             raise InputTooLargeError
         return payload
     finally:
@@ -374,9 +374,8 @@ def validate_file(path: Path) -> tuple[dict[str, Any] | None, list[Finding]]:
 def _expected_code(path: Path) -> str | None:
     sidecar = path.with_suffix(".expected_error.txt")
     try:
-        if sidecar.is_symlink() or not sidecar.is_file() or sidecar.stat().st_size > 256:
-            return None
-        lines = [line.strip() for line in sidecar.read_text(encoding="utf-8").splitlines() if line.strip()]
+        payload = _open_bounded_regular_file(sidecar, max_bytes=256)
+        lines = [line.strip() for line in payload.decode("utf-8").splitlines() if line.strip()]
     except (OSError, UnicodeError):
         return None
     return lines[0] if len(lines) == 1 else None
