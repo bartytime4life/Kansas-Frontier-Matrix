@@ -132,21 +132,23 @@ COORDINATE_PAIR_PATTERN = re.compile(
     r"(?<![\w.])([+-]?\d{1,3}(?:\.\d+)?)(?:\s*,\s*|\s+)"
     r"([+-]?\d{1,3}(?:\.\d+)?)(?![\w.])"
 )
+CARDINAL_LATITUDE_MAGNITUDE = r"0*\d{1,2}(?:\.\d+)?"
+CARDINAL_LONGITUDE_MAGNITUDE = r"0*\d{1,3}(?:\.\d+)?"
 CARDINAL_PREFIX_COORDINATE_PATTERN = re.compile(
-    r"(?i)(?<![\w.])([NS])\s*(\d{1,3}(?:\.\d+)?)"
-    r"(?:\s*,\s*|\s+)([EW])\s*(\d{1,3}(?:\.\d+)?)(?![\w.])"
+    rf"(?i)(?<![\w.])([NS])\s*({CARDINAL_LATITUDE_MAGNITUDE})"
+    rf"(?:\s*,\s*|\s+)([EW])\s*({CARDINAL_LONGITUDE_MAGNITUDE})(?![\w.])"
 )
 CARDINAL_SUFFIX_COORDINATE_PATTERN = re.compile(
-    r"(?i)(?<![\w.])(\d{1,3}(?:\.\d+)?)\s*([NS])"
-    r"(?:\s*,\s*|\s+)(\d{1,3}(?:\.\d+)?)\s*([EW])(?![\w.])"
+    rf"(?i)(?<![\w.])({CARDINAL_LATITUDE_MAGNITUDE})\s*([NS])"
+    rf"(?:\s*,\s*|\s+)({CARDINAL_LONGITUDE_MAGNITUDE})\s*([EW])(?![\w.])"
 )
 CARDINAL_PREFIX_LONGITUDE_LATITUDE_PATTERN = re.compile(
-    r"(?i)(?<![\w.])([EW])\s*(\d{1,3}(?:\.\d+)?)"
-    r"(?:\s*,\s*|\s+)([NS])\s*(\d{1,3}(?:\.\d+)?)(?![\w.])"
+    rf"(?i)(?<![\w.])([EW])\s*({CARDINAL_LONGITUDE_MAGNITUDE})"
+    rf"(?:\s*,\s*|\s+)([NS])\s*({CARDINAL_LATITUDE_MAGNITUDE})(?![\w.])"
 )
 CARDINAL_SUFFIX_LONGITUDE_LATITUDE_PATTERN = re.compile(
-    r"(?i)(?<![\w.])(\d{1,3}(?:\.\d+)?)\s*([EW])"
-    r"(?:\s*,\s*|\s+)(\d{1,3}(?:\.\d+)?)\s*([NS])(?![\w.])"
+    rf"(?i)(?<![\w.])({CARDINAL_LONGITUDE_MAGNITUDE})\s*([EW])"
+    rf"(?:\s*,\s*|\s+)({CARDINAL_LATITUDE_MAGNITUDE})\s*([NS])(?![\w.])"
 )
 WKT_POINT_PATTERN = re.compile(
     r"(?i)\bpoint\s*\(\s*[+-]?\d{1,3}(?:\.\d+)?\s+"
@@ -207,6 +209,11 @@ def _strict_json_loads(text: str) -> Any:
     )
 
 
+def _cardinal_magnitude(value: str) -> float:
+    stripped = value.lstrip("0")
+    return float(stripped or "0")
+
+
 def _contains_coordinate_literal(value: str) -> bool:
     if LABELED_COORDINATE_PATTERN.search(value) or WKT_POINT_PATTERN.search(value):
         return True
@@ -217,8 +224,8 @@ def _contains_coordinate_literal(value: str) -> bool:
         (CARDINAL_SUFFIX_LONGITUDE_LATITUDE_PATTERN, 3, 1),
     ):
         for match in pattern.finditer(value):
-            latitude = float(match.group(latitude_group))
-            longitude = float(match.group(longitude_group))
+            latitude = _cardinal_magnitude(match.group(latitude_group))
+            longitude = _cardinal_magnitude(match.group(longitude_group))
             if latitude <= 90 and longitude <= 180:
                 return True
     for match in COORDINATE_PAIR_PATTERN.finditer(value):
