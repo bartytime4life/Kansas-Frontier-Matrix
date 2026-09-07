@@ -197,6 +197,23 @@ class AtmosphereObservedModeledSeparationTests(unittest.TestCase):
                 validate_candidate(candidate),
             )
 
+    def test_measurement_rejects_negative_zero_for_both_knowledge_characters(self) -> None:
+        fixtures = (
+            "air_observation_bound.json",
+            "forecast_context_bound.json",
+        )
+        for name in fixtures:
+            with self.subTest(name=name):
+                candidate = _load(VALID_DIR / name)
+                candidate["measurement"]["value"] = -0.0  # type: ignore[index]
+                self.assertEqual(
+                    validate_candidate(candidate),
+                    [Finding("MEASUREMENT_NEGATIVE_ZERO", "$.measurement.value")],
+                )
+
+                candidate["measurement"]["value"] = 0.0  # type: ignore[index]
+                self.assertEqual(validate_candidate(candidate), [])
+
     def test_low_cost_sensor_requires_caveat_and_confidence(self) -> None:
         candidate = _load(VALID_DIR / "air_observation_bound.json")
         candidate["source_role"] = "low_cost_sensor"
