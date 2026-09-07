@@ -18,7 +18,7 @@
     ".github/workflows/evidence-drawer-payload.yml": "sha256:cac838a8f42be6c53e1b9b40051a8e1b241b95d6a05946be6b8a625adbeeb9fb",
     "apps/explorer-web/src/adapters/GovernedClient.ts": "sha256:aa568e4bbe13722cd616d41fd059f62985f7fad09d15e8f5c3daeec719dfdbaa",
     "apps/explorer-web/tests/evidence-drawer.test.ts": "sha256:7db7684fb49f767d8eaafb5de227b5f46c9719008d090ca598925aca94aa69b2",
-    "contracts/ui/evidence_drawer_payload.md": "sha256:4b2697c1ea259e2733e11a8e3ab667ef358770050b6fcf2d2a76d4793176de13",
+    "contracts/ui/evidence_drawer_payload.md": "sha256:4467bc0d4318cdd97384d4e566d81a3b356cc3980a6e1cb6faadede2d4792977",
     "fixtures/ui/evidence_drawer_payload/invalid/abstain-held-with-released-state.expected_code.txt": "sha256:28e87cd8a49246eb1d87a8b9b4413e3af4cc528300a587789b642bdd6e5b00ba",
     "fixtures/ui/evidence_drawer_payload/invalid/abstain-held-with-released-state.json": "sha256:639899491ec417719cc1f5a3534b5f98acadf1c3012e1619c72514d06cf23802",
     "fixtures/ui/evidence_drawer_payload/valid/abstain-source-drift-review.json": "sha256:8c8afcbe451932721865bf1fe4004c574293918f29aca683377c8fc8c080ec5d",
@@ -32,7 +32,7 @@
     "model": "GPT-5",
     "version": "2026-09-07"
   },
-  "prompt_or_contract": "sha256:4b2697c1ea259e2733e11a8e3ab667ef358770050b6fcf2d2a76d4793176de13",
+  "prompt_or_contract": "sha256:4467bc0d4318cdd97384d4e566d81a3b356cc3980a6e1cb6faadede2d4792977",
   "parameters": {
     "seed": null,
     "temperature": null,
@@ -89,6 +89,11 @@
       "reason": "Eleven deterministic map-context admission tests and all eight manifest cases passed without network access; held evidence with reviewed or released trust now fails closed."
     },
     {
+      "gate": "wire-contract-parity",
+      "outcome": "PASS",
+      "reason": "The published UI wire contract explicitly requires HELD_EVIDENCE abstentions to remain PENDING and UNRELEASED, matching Explorer, map-context admission, and canonical validation."
+    },
+    {
       "gate": "hosted-exact-head",
       "outcome": "SKIPPED",
       "reason": "Exact-head GitHub Actions evidence remains pending on the draft pull request."
@@ -132,5 +137,5 @@
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Successor authoring provenance for held-evidence trust-label parity. This receipt binds synthetic public-safe candidate bytes only; it is not evidence, policy approval, human review, merge authority, release authority, deployment authority, publication authority, or public-use permission."
+  "notes": "Successor authoring provenance for held-evidence trust-label parity and its published wire-contract closure. This receipt binds synthetic public-safe candidate bytes only; it is not evidence, policy approval, human review, merge authority, release authority, deployment authority, publication authority, or public-use permission."
 }
