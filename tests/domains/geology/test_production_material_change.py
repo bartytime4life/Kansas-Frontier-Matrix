@@ -126,6 +126,30 @@ def test_retrieval_time_regression_requires_hold() -> None:
     assert result.ok, result.findings
 
 
+def test_operational_error_cannot_conceal_retrieval_time_regression() -> None:
+    packet = json.loads(
+        (VALID / "operational_error.json").read_text(encoding="utf-8")
+    )
+    packet["prior_snapshot"] = packet["current_snapshot"].copy()
+    packet["prior_snapshot"]["snapshot_ref"] = "kgs-production-snapshot-prior"
+    packet["prior_snapshot"]["retrieved_at"] = "2026-05-01T12:00:00Z"
+    packet["current_snapshot"]["retrieved_at"] = "2026-04-30T12:00:00Z"
+    packet["assessment"]["evidence_refs"] = sorted(
+        set(packet["assessment"]["evidence_refs"])
+        | set(packet["prior_snapshot"]["evidence_refs"])
+    )
+    packet["spec_hash"] = canonical_spec_hash(packet)
+    packet["assessment_id"] = expected_assessment_id(packet)
+
+    result = validate_payload(packet)
+    assert result.findings == (
+        Finding(
+            "RETRIEVAL_TIME_REGRESSION_REQUIRES_HOLD",
+            "/assessment/outcome",
+        ),
+    )
+
+
 def test_cli_returns_zero_for_valid_fixture() -> None:
     proc = subprocess.run(
         [sys.executable, str(VALIDATOR), str(VALID / "material_change_review.json")],

@@ -91,7 +91,7 @@ The validator computes the exact sorted set:
 | `NO_CHANGE` | Prior/current snapshots are comparable, rights are verified, all compared fields match, and reason includes `SNAPSHOTS_MATCH`. |
 | `REVIEW` | Rights are verified, coverage did not regress, at least one computed dimension changed, and reason includes `MATERIAL_CHANGE_DETECTED`. |
 | `HOLD` | Prior snapshot missing, rights unresolved, monthly coverage regressed, or retrieval time regressed; no materiality claim is made. |
-| `ERROR` | Operational failure; no change claim is made. |
+| `ERROR` | Operational failure with no retrieval-time regression; no change claim is made. A known regression must use `HOLD`. |
 
 ## Deterministic validation
 

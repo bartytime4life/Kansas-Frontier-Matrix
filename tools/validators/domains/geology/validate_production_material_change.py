@@ -379,6 +379,13 @@ def _semantic_findings(candidate: Mapping[str, Any]) -> list[Finding]:
                 )
             )
     elif outcome == "ERROR":
+        if retrieval_time_regression:
+            findings.append(
+                Finding(
+                    "RETRIEVAL_TIME_REGRESSION_REQUIRES_HOLD",
+                    "/assessment/outcome",
+                )
+            )
         if material_change is not None:
             findings.append(Finding("ERROR_MATERIALITY_MUST_BE_NULL", "/assessment/material_change"))
         if dimensions != []:
