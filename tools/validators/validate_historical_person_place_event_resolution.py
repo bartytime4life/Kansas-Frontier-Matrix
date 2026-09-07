@@ -428,17 +428,20 @@ def main(argv: Sequence[str] | None = None) -> int:
     if not args.paths:
         raise SystemExit("at least one path is required unless --fixtures is used")
     failed = False
-    for path in args.paths:
+    for input_index, path in enumerate(args.paths, start=1):
         candidate, findings = validate_file(path)
         if findings:
             failed = True
             for finding in findings:
-                print(f"HISTORICAL_RESOLUTION_INVALID file={path.name} code={finding.code} field={finding.field}")
+                print(
+                    "HISTORICAL_RESOLUTION_INVALID "
+                    f"input_index={input_index} code={finding.code} field={finding.field}"
+                )
         else:
             assert candidate is not None
             print(
                 "HISTORICAL_RESOLUTION_VALID "
-                f"file={path.name} score={candidate['score']} confidence={candidate['confidence']} "
+                f"input_index={input_index} score={candidate['score']} confidence={candidate['confidence']} "
                 f"disposition={candidate['disposition']}"
             )
     return 1 if failed else 0

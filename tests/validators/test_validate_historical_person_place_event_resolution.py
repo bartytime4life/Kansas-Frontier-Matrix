@@ -230,6 +230,29 @@ class HistoricalResolutionTests(unittest.TestCase):
                 self.assertEqual(2, result.returncode)
                 self.assertNotIn("HISTORICAL_RESOLUTION_FIXTURES_VALID", result.stdout)
 
+    def test_cli_does_not_echo_candidate_basenames(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            valid_name = "living-person-jane-doe.json"
+            invalid_name = "living-person-john-doe.json"
+            valid = root / valid_name
+            invalid = root / invalid_name
+            valid.write_bytes((FIXTURE_ROOT / "valid/high_anchor.json").read_bytes())
+            invalid.write_text("{}", encoding="utf-8")
+
+            result = subprocess.run(
+                [sys.executable, str(VALIDATOR_PATH), str(valid), str(invalid)],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+
+        self.assertEqual(1, result.returncode)
+        self.assertIn("HISTORICAL_RESOLUTION_VALID input_index=1", result.stdout)
+        self.assertIn("HISTORICAL_RESOLUTION_INVALID input_index=2", result.stdout)
+        self.assertNotIn(valid_name, result.stdout)
+        self.assertNotIn(invalid_name, result.stdout)
+
     def test_fixture_runner(self) -> None:
         self.assertEqual(module.run_fixtures(), 0)
 
