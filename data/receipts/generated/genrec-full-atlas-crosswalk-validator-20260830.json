@@ -5,12 +5,12 @@
     ".github/workflows/soil-agriculture-public-safe-context.yml": "sha256:02a454bf4dc37fca7dc009e0a7336abdeebf7c77fcf97bc2628622fe8266e280",
     ".github/workflows/soil-hydrology-public-safe-context.yml": "sha256:4914255dc12681f3ee2ab1c6ec21cf3ec1c2a31993c73ac702faf5b95f617efa",
     "contracts/joins/README.md": "sha256:0a91c1c699cbaa8cadee09dea378861cedc9c6fdb9aab6ba25655899d6abb821",
-    "contracts/joins/cross_lane_join_assessment.md": "sha256:9ba4a3b3f02030119de074d3494475a4c8b7aae6f678f2cf33ff463fdc5c3ee5",
+    "contracts/joins/cross_lane_join_assessment.md": "sha256:d96d8df6415d93db5c2171b05414c763faed4be24e5ea2d8f12445e94bfb5306",
     "docs/intake/exploratory/full-atlas-crosswalk-validator-source-map.md": "sha256:34299c5ba17f3d451d09e2d9a2f69514711a0c8ed1303f88233c56b6ded45962",
     "fixtures/contracts/v1/joins/cross_lane_join_assessment/cases.json": "sha256:7372e0d9900bc3f1d17861b3bdf0afa2570fe8436edcbd972c485257605c7b94",
     "schemas/contracts/v1/joins/cross_lane_join_assessment.schema.json": "sha256:1ad7520fc7c07514d7887e73db8ebb9ebde4df1f3f26a4f6013f5fba239e1bb7",
     "tests/joins/README.md": "sha256:55dc936fc55a19de05f0f5f15804433b5f617027292e666385af59cd31c06723",
-    "tests/joins/test_cross_lane_domain_alias_dependency_guard.py": "sha256:ca8e68e35f5f8c6b4f1bcb3a83ea17a0f8b02ff197e54669d156306414b127de",
+    "tests/joins/test_cross_lane_domain_alias_dependency_guard.py": "sha256:3933862411987dc0ee38254f5efbf5faaf2457fd7ef3764926633a30282688a2",
     "tests/joins/test_cross_lane_domain_alias_guard.py": "sha256:bd8bbc0fdfefe7e264f3b11dadd4c753ee5e225c20bcc7b5d4dad97fb6f2ff02",
     "tests/joins/test_cross_lane_scope_precedence.py": "sha256:7f5da617cb65996c876093f43b1201bc27add2508a3846fbedd8bca956acf1ce",
     "tests/joins/test_cross_lane_source_role_schema_guard.py": "sha256:9c6bd884f0c51fd7f22d517c7b4ac5a2d866edef80b36a6cf5f1ca7a8f1ebac5",
@@ -18,7 +18,7 @@
     "tests/joins/test_cross_lane_temporal_boundary_guard.py": "sha256:8a3f943cb7127682dae40c9ee9f6086aefc13efc686614e7bba8ff81b6497e6e",
     "tests/joins/test_cross_lane_workflow_propagation.py": "sha256:c4032eef18193f0485cf65d277813da21d01f986fc1ccb4a292abf7bdce18b25",
     "tests/joins/test_join_candidates.py": "sha256:6935b575cf6bafbb8d3eb24995a88d2324f978edffb9774a0dc1cb1797fe9137",
-    "tools/joins/join_candidates.py": "sha256:1f623ba149edbbfb020ea4a5aa5cf1fa32212f17fac7402eb8dc8ed4608d85e4"
+    "tools/joins/join_candidates.py": "sha256:9a15c9c5de5af97518f6eb5be20aa5429df66b8574bc1cc7d15c3ee8edfc0bfb"
   },
   "artifact_paths": [
     ".github/workflows/cross-lane-join-assessment.yml",
@@ -92,7 +92,7 @@
     "provider": "OpenAI",
     "version": "2026-08-30"
   },
-  "notes": "Successor provenance receipt for the CrossLaneJoinAssessment review unit. It binds the generic join contract, current pair-profile inventory, all seven dedicated synthetic regression files, the self-checking nine-module join-test inventory, and the generic plus three pair-specific workflows. Contract provenance now explicitly names every receipt-bound join proof module, with positive and synthetic-negative propagation checks preventing future omissions. Generic join validation triggers on every receipt-bound artifact. Disposition precedence is fail-closed: for distinct raw domains, dependency failures remain ERROR and living-person or blocked sensitive-geometry conditions remain DENY before unresolved aliases can route to review; same-domain scope routing remains first because the generic helper does not own domain-local work. Deterministic positive and synthetic-negative proof prevents alias review from downgrading stronger outcomes or hiding missing-evidence and restricted-sensitivity review obligations. Alias projection integrity also requires the exact v1/domain_lane_register/machine_projection_only envelope, exact registered targets, and rejection of self-reference, canonical-lane keys, alias chains, redirected symlink paths, and authority overclaims, YAML anchors or aliases, and projections exceeding canonical byte, node, depth, or finite-number bounds so ignored padding cannot bypass the authority owner's parsing limits. CLI validation requires exact long-option spelling and mutually exclusive fixture, derive, and file-validation modes so an explicit assessment input cannot be silently ignored. Fresh overlap reconciliation checked all 17 other open pull requests against the complete cumulative branch-path scope, the seven-path current diff, and the complete 19-artifact receipt inventory. Current-main bytes remain unchanged outside this bounded seam. Historical closed PRs remain preserved and unmerged. Exact implementation-head validation now passes the generic cross-lane and all three pair workflows through the resource-bound increment, including oversized, over-complex, over-deep, and non-finite projections. The authoritative overlap-scope phrase occurs once so synthetic omission proof cannot be satisfied by duplicate receipt prose. The historical 20260809 receipt remains immutable. This receipt creates no source, evidence, policy, review, proof, promotion, release, publication, or public-use authority.",
+  "notes": "Successor provenance receipt for the CrossLaneJoinAssessment review unit. It binds the generic join contract, current pair-profile inventory, all seven dedicated synthetic regression files, the self-checking nine-module join-test inventory, and the generic plus three pair-specific workflows. Contract provenance now explicitly names every receipt-bound join proof module, with positive and synthetic-negative propagation checks preventing future omissions. Generic join validation triggers on every receipt-bound artifact. Disposition precedence is fail-closed: for distinct raw domains, dependency failures remain ERROR and living-person or blocked sensitive-geometry conditions remain DENY before unresolved aliases can route to review; same-domain scope routing remains first because the generic helper does not own domain-local work. Deterministic positive and synthetic-negative proof prevents alias review from downgrading stronger outcomes or hiding missing-evidence and restricted-sensitivity review obligations. Alias projection integrity also requires the exact v1/domain_lane_register/machine_projection_only envelope, exact registered targets, and rejection of self-reference, canonical-lane keys, alias chains, redirected symlink paths, and authority overclaims, YAML anchors or aliases, and projections exceeding canonical byte, node, depth, or finite-number bounds so ignored padding cannot bypass the authority owner's parsing limits. CLI validation requires exact long-option spelling and mutually exclusive fixture, derive, and file-validation modes so an explicit assessment input cannot be silently ignored. Fresh overlap reconciliation checked all 17 other open pull requests against the complete cumulative branch-path scope, the seven-path current diff, and the complete 19-artifact receipt inventory. Current-main bytes remain unchanged outside this bounded seam. Historical closed PRs remain preserved and unmerged. Exact implementation-head validation now passes the generic cross-lane and all three pair workflows through the resource-bound increment, including oversized, over-complex, over-deep, and non-finite projections. The authoritative overlap-scope phrase occurs once so synthetic omission proof cannot be satisfied by duplicate receipt prose. The historical 20260809 receipt remains immutable. This receipt creates no source, evidence, policy, review, proof, promotion, release, publication, or public-use authority. The current successor increment removes the consumer's partial parallel register parser and delegates the complete projection decision to the authority-owning domain-lane validator. A copied canonical projection remains usable, while a schema-incomplete projection deterministically produces DOMAIN_ALIAS_REGISTER_UNAVAILABLE instead of being interpreted as a safe alias inventory.",
   "override_record": null,
   "parameters": {
     "max_tokens": null,
@@ -167,6 +167,16 @@
       "gate": "human-review",
       "outcome": "SKIPPED",
       "reason": "Accountable human review remains pending; this automation does not request, submit, or approve review."
+    },
+    {
+      "gate": "canonical-domain-lane-validator-delegation",
+      "outcome": "PASS",
+      "reason": "Exact implementation commit e7f18f5d37f10f7f22fc1067a2d74f98ec826f1f delegates projection loading, schema, semantic, binding, repository, and resource validation to the canonical domain-lane validator and includes deterministic copied-canonical positive plus schema-incomplete negative proof."
+    },
+    {
+      "gate": "hosted-validator-delegation-head",
+      "outcome": "SKIPPED",
+      "reason": "Hosted execution begins only after the draft pull request is opened; no hosted result is claimed by this pre-PR receipt update."
     }
   ]
 }
