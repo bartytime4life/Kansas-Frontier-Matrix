@@ -15,7 +15,7 @@
     "tools/validators/ui/validate_evidence_drawer_payload.py"
   ],
   "artifact_hashes": {
-    ".github/workflows/evidence-drawer-payload.yml": "sha256:cac838a8f42be6c53e1b9b40051a8e1b241b95d6a05946be6b8a625adbeeb9fb",
+    ".github/workflows/evidence-drawer-payload.yml": "sha256:c0864985a80cf0074f4abb80222b4620c4e3e9bbf2306fbf3ad69a6d1b6366b8",
     "apps/explorer-web/src/adapters/GovernedClient.ts": "sha256:aa568e4bbe13722cd616d41fd059f62985f7fad09d15e8f5c3daeec719dfdbaa",
     "apps/explorer-web/tests/evidence-drawer.test.ts": "sha256:7db7684fb49f767d8eaafb5de227b5f46c9719008d090ca598925aca94aa69b2",
     "contracts/ui/evidence_drawer_payload.md": "sha256:4467bc0d4318cdd97384d4e566d81a3b356cc3980a6e1cb6faadede2d4792977",
@@ -94,6 +94,11 @@
       "reason": "The published UI wire contract explicitly requires HELD_EVIDENCE abstentions to remain PENDING and UNRELEASED, matching Explorer, map-context admission, and canonical validation."
     },
     {
+      "gate": "receipt-workflow-watch-closure",
+      "outcome": "PASS",
+      "reason": "Pull-request and main-push filters watch both the map-context admission implementation family and its focused test, so changes to every current-tree receipt artifact trigger integrity replay."
+    },
+    {
       "gate": "hosted-exact-head",
       "outcome": "SKIPPED",
       "reason": "Exact-head GitHub Actions evidence remains pending on the draft pull request."
@@ -137,5 +142,5 @@
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Successor authoring provenance for held-evidence trust-label parity and its published wire-contract closure. This receipt binds synthetic public-safe candidate bytes only; it is not evidence, policy approval, human review, merge authority, release authority, deployment authority, publication authority, or public-use permission."
+  "notes": "Successor authoring provenance for held-evidence trust-label parity, published wire-contract closure, and complete current-artifact workflow coverage. This receipt binds synthetic public-safe candidate bytes only; it is not evidence, policy approval, human review, merge authority, release authority, deployment authority, publication authority, or public-use permission."
 }

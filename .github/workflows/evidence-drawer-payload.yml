@@ -16,6 +16,8 @@ name: evidence-drawer-payload
       - "apps/explorer-web/src/features/evidence_drawer/**"
       - "apps/explorer-web/tests/evidence-drawer.test.ts"
       - "apps/explorer-web/tests/browser/evidence-drawer.*"
+      - "packages/envelopes/src/envelopes/**"
+      - "tests/packages/envelopes/test_map_context_evidence_drawer_admission.py"
       - "data/receipts/generated/genrec-evidence-drawer-payload-*.json"
   push:
     branches:
@@ -31,6 +33,8 @@ name: evidence-drawer-payload
       - "apps/explorer-web/src/features/evidence_drawer/**"
       - "apps/explorer-web/tests/evidence-drawer.test.ts"
       - "apps/explorer-web/tests/browser/evidence-drawer.*"
+      - "packages/envelopes/src/envelopes/**"
+      - "tests/packages/envelopes/test_map_context_evidence_drawer_admission.py"
       - "data/receipts/generated/genrec-evidence-drawer-payload-*.json"
   workflow_dispatch:
 
