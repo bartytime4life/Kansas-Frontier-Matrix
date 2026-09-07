@@ -72,7 +72,7 @@ class DrinkingWaterAdvisoryTests(unittest.TestCase):
                 raw_case["expected_findings"],
                 raw_case["name"],
             )
-        self.assertEqual(observed, {"PASS": 5, "DENY": 13, "ERROR": 1})
+        self.assertEqual(observed, {"PASS": 5, "DENY": 14, "ERROR": 1})
 
     def test_finite_valid_status_partition(self) -> None:
         self.assertEqual(
@@ -239,6 +239,28 @@ class DrinkingWaterAdvisoryTests(unittest.TestCase):
                     {(finding.code, finding.path) for finding in result.findings},
                     expected,
                 )
+
+    def test_rescinded_status_requires_current_record_absence(self) -> None:
+        candidate = copy.deepcopy(self.valid["valid_authoritative_rescission"])
+        candidate["source_surface"]["current_record_present"] = True
+        candidate = validator.assign_identity(candidate)
+
+        result = validator.validate_payload(candidate)
+
+        self.assertEqual(result.outcome, "DENY")
+        self.assertEqual(
+            {(finding.code, finding.path) for finding in result.findings},
+            {
+                (
+                    "SCHEMA_INVALID",
+                    "/source_surface/current_record_present",
+                ),
+                (
+                    "RESCINDED_CURRENT_RECORD_PRESENT",
+                    "/source_surface/current_record_present",
+                ),
+            },
+        )
 
     def test_only_complete_snapshot_mode_can_claim_completeness(self) -> None:
         for source_mode in ("INCREMENTAL_FEED", "SINGLE_EVENT"):
@@ -724,7 +746,7 @@ class DrinkingWaterAdvisoryTests(unittest.TestCase):
         )
         self.assertEqual(completed.returncode, 0, completed.stderr)
         rows = [json.loads(line) for line in completed.stdout.splitlines() if line.strip()]
-        self.assertEqual(len(rows), 19)
+        self.assertEqual(len(rows), 20)
         self.assertEqual({row["outcome"] for row in rows}, {"PASS", "DENY", "ERROR"})
 
     def test_cli_rejects_ambiguous_fixture_modes(self) -> None:

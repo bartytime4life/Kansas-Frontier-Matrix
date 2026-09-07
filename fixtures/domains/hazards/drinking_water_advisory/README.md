@@ -12,6 +12,9 @@ An unknown-offset rescission time is also insufficient to establish
 authoritative clearance of a prior advisory.
 Only a `RESCINDED` record may carry a rescission timestamp; other statuses
 fail with a field-specific status mismatch instead of implying clearance.
+An authoritative `RESCINDED` record also requires the prior record to be
+present and the current record to be absent, so a carrier cannot clear an
+advisory while simultaneously claiming that its current source record remains.
 The marker is recognized only on a schema-valid aware date-time; a malformed
 string that merely ends in `-00:00` cannot satisfy rescission requirements.
 Semantic ordering accepts the same RFC 3339 date-time grammar and aware-offset

@@ -385,6 +385,9 @@
       },
       "then": {
         "properties": {
+          "source_surface": {
+            "properties": {"current_record_present": {"const": false}}
+          },
           "authority": {
             "properties": {
               "rescission_notice_ref": {"$ref": "#/$defs/ref"},

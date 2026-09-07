@@ -459,6 +459,15 @@
       "expected_findings": ["RESCISSION_REQUIRED", "SCHEMA_INVALID"]
     },
     {
+      "name": "rescinded_current_record_present",
+      "base": "rescinded",
+      "mutations": [
+        {"path": "/source_surface/current_record_present", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["RESCINDED_CURRENT_RECORD_PRESENT", "SCHEMA_INVALID"]
+    },
+    {
       "name": "source_failure_false_clear",
       "base": "rescinded",
       "mutations": [
@@ -476,7 +485,7 @@
         {"path": "/advisory/clears_prior_advisory", "value": true}
       ],
       "expected_outcome": "DENY",
-      "expected_findings": ["RESCISSION_REQUIRED", "SCHEMA_INVALID"]
+      "expected_findings": ["RESCINDED_CURRENT_RECORD_PRESENT", "RESCISSION_REQUIRED", "SCHEMA_INVALID"]
     },
     {
       "name": "missing_public_water_system",
