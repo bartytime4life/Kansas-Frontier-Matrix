@@ -540,7 +540,11 @@ def validate_candidate(candidate: object) -> list[Finding]:
 
 
 def validate_file(path: Path | str) -> list[Finding]:
-    return validate_fixture_file(path, validate_candidate)
+    return validate_fixture_file(
+        path,
+        validate_candidate,
+        preserve_integer_negative_zero=True,
+    )
 
 
 def main(argv: Sequence[str] | None = None) -> int:

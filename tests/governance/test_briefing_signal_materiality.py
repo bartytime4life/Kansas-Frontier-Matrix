@@ -6,6 +6,7 @@ import copy
 import io
 import json
 import socket
+import tempfile
 import unittest
 import urllib.request
 from contextlib import redirect_stdout
@@ -155,6 +156,19 @@ class BriefingSignalMaterialityTests(unittest.TestCase):
         self.assertEqual(report["status"], "FAIL")
         self.assertEqual(report["signals"], [])
         self.assertEqual(report["findings"][0]["code"], "INPUT_MATERIALITY_SCORE_MISMATCH")
+
+    def test_integer_negative_zero_cannot_bypass_materiality_validation(self):
+        fixture_text = BASE.read_text(encoding="utf-8").replace(
+            '"public_safety": 0',
+            '"public_safety": -0',
+        ).replace('"raw_score": 20', '"raw_score": 21')
+        with tempfile.TemporaryDirectory() as directory:
+            fixture = Path(directory) / "negative-zero.json"
+            fixture.write_text(fixture_text, encoding="utf-8")
+            self.assertIn(
+                ("MATERIALITY_SCORE_MISMATCH", "$.materiality.raw_score"),
+                {(finding.code, finding.path) for finding in validate_file(fixture)},
+            )
 
     def test_cli_is_deterministic_and_dry_run_only(self):
         paths = [str(path) for path in sorted(VALID_ROOT.glob("*.json"))]

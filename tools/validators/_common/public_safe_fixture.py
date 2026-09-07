@@ -91,7 +91,11 @@ def find_undeclared_fields(
 def _parse_bounded_int(raw_value: str) -> int:
     if len(raw_value.lstrip("-")) > MAX_JSON_INTEGER_DIGITS:
         raise ValueError("JSON integer exceeds the configured digit limit")
-    value = int(raw_value)
+    return int(raw_value)
+
+
+def _parse_bounded_int_preserving_negative_zero(raw_value: str) -> int:
+    value = _parse_bounded_int(raw_value)
     if value == 0 and raw_value.startswith("-"):
         return _BoundedJsonInteger(raw_value)
     return value
@@ -153,17 +157,27 @@ def _read_bounded_regular_file(path: Path) -> bytes:
             os.close(descriptor)
 
 
-def validate_fixture_file(path: Path | str, validator: Validator) -> list[Finding]:
+def validate_fixture_file(
+    path: Path | str,
+    validator: Validator,
+    *,
+    preserve_integer_negative_zero: bool = False,
+) -> list[Finding]:
     """Decode bounded, duplicate-free UTF-8 JSON and apply one domain profile."""
 
     fixture_path = Path(path)
+    integer_parser = (
+        _parse_bounded_int_preserving_negative_zero
+        if preserve_integer_negative_zero
+        else _parse_bounded_int
+    )
     try:
         raw_bytes = _read_bounded_regular_file(fixture_path)
         if len(raw_bytes) > MAX_FIXTURE_BYTES:
             return [Finding("FIXTURE_TOO_LARGE", "$")]
         candidate = json.loads(
             raw_bytes.decode("utf-8"),
-            parse_int=_parse_bounded_int,
+            parse_int=integer_parser,
             parse_float=_parse_finite_float,
             parse_constant=_reject_json_constant,
             object_pairs_hook=_reject_duplicate_keys,
