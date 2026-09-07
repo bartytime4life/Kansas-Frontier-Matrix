@@ -581,6 +581,10 @@ def test_cardinal_coordinate_pairs_with_degree_signs_are_denied():
         "98.4520°W 38.8751°N",
         "N ٣٨.٨٧٥١ °, W ٩٨.٤٥٢٠ °",
         "٩٨.٤٥٢٠ ° W, ٣٨.٨٧٥١ ° N",
+        "N 38.8751° 98.4520°W",
+        "38.8751°N W 98.4520°",
+        "W 98.4520° 38.8751°N",
+        "98.4520°W N 38.8751°",
         f"N {padding}٣٨.٨٧٥١° W {padding}٩٨.٤٥٢٠°",
     ):
         mutated = copy.deepcopy(candidate)
@@ -593,6 +597,8 @@ def test_cardinal_coordinate_pairs_with_degree_signs_are_denied():
 
     assert not module._contains_coordinate_literal("N 91° W 98°")
     assert not module._contains_coordinate_literal("181°W 91°N")
+    assert not module._contains_coordinate_literal("N 91° 98°W")
+    assert not module._contains_coordinate_literal("38°N W 181°")
 
 
 def test_degrees_minutes_seconds_cardinal_pairs_are_denied():
@@ -610,6 +616,10 @@ def test_degrees_minutes_seconds_cardinal_pairs_are_denied():
         "98°27'07\"W 38°52'30\"N",
         "N ٣٨°٥٢’٣٠” W ٩٨°٢٧’٠٧”",
         "N 90°00′00″ W 180°00′00″",
+        "N 38°52′30″ 98°27′07″W",
+        "38°52′30″N W 98°27′07″",
+        "W 98°27′07″ 38°52′30″N",
+        "98°27′07″W N 38°52′30″",
     ):
         mutated = copy.deepcopy(candidate)
         mutated["indicator"]["value"] = value
@@ -628,7 +638,9 @@ def test_degrees_minutes_seconds_cardinal_pairs_are_denied():
         "N 38°60′00″ W 98°27′07″",
         "N 38°52′60″ W 98°27′07″",
         "N 90°00′01″ W 98°27′07″",
+        "N 90°00′01″ 98°27′07″W",
         "98°27′07″W 91°00′00″N",
+        "98°27′07″W N 91°00′00″",
         "W 180°00′01″ N 38°52′30″",
     ):
         assert not module._contains_coordinate_literal(value)
