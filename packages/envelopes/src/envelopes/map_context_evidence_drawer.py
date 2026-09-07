@@ -200,6 +200,12 @@ def _trust_matches(
             and trust.get("correction") != "SUPERSEDED"
         )
     if outcome == "ABSTAIN":
+        if reason_code == "HELD_EVIDENCE":
+            return (
+                policy == "ABSTAIN"
+                and trust.get("review") == "PENDING"
+                and trust.get("release") == "UNRELEASED"
+            )
         return reason_code != "SUPPORTED" and policy == "ABSTAIN"
     if outcome == "DENY":
         return (

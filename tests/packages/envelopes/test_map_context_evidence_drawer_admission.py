@@ -175,6 +175,46 @@ def test_unpublished_selected_layer_fails_safe() -> None:
     assert candidate["reason_code"] == "SELECTED_LAYER_NOT_PUBLISHED"
 
 
+def test_held_evidence_requires_pending_unreleased_trust() -> None:
+    case = CASES["cases"][0]
+    context = _load(str(case["map_context"]))
+    valid_payload = _load(
+        "fixtures/ui/evidence_drawer_payload/valid/abstain-source-drift-review.json"
+    )
+    valid_candidate = build_map_context_evidence_drawer_admission_candidate(
+        decision_id="decision:render:held-valid",
+        evaluated_at=str(case["evaluated_at"]),
+        map_context=context,
+        drawer_payload=valid_payload,
+        allow_system_test=True,
+    )
+
+    assert valid_candidate["outcome"] == "ABSTAIN"
+    assert valid_candidate["reason_code"] == "HELD_EVIDENCE"
+    assert valid_candidate["evidence_refs"] == []
+
+    reviewed_payload = copy.deepcopy(valid_payload)
+    reviewed_payload["trust_state"]["review"] = "REVIEWED"
+    released_payload = _load(
+        "fixtures/ui/evidence_drawer_payload/invalid/abstain-held-with-released-state.json"
+    )
+    for label, payload in (
+        ("reviewed", reviewed_payload),
+        ("released", released_payload),
+    ):
+        candidate = build_map_context_evidence_drawer_admission_candidate(
+            decision_id=f"decision:render:held-invalid-{label}",
+            evaluated_at=str(case["evaluated_at"]),
+            map_context=context,
+            drawer_payload=payload,
+            allow_system_test=True,
+        )
+
+        assert candidate["outcome"] == "ERROR"
+        assert candidate["reason_code"] == "DRAWER_TRUST_STATE_MISMATCH"
+        assert candidate["evidence_refs"] == []
+
+
 @pytest.mark.parametrize(
     ("field", "value", "code"),
     [
