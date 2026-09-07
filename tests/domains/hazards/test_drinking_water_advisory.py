@@ -156,6 +156,10 @@ class DrinkingWaterAdvisoryTests(unittest.TestCase):
                     "/source_surface/previous_record_present",
                 ),
                 (
+                    "SCHEMA_INVALID",
+                    "/source_surface/previous_record_present",
+                ),
+                (
                     "SNAPSHOT_COMPLETENESS_UNVERIFIED",
                     "/source_surface/snapshot_complete",
                 ),
@@ -176,6 +180,10 @@ class DrinkingWaterAdvisoryTests(unittest.TestCase):
                     {(finding.code, finding.path) for finding in result.findings},
                     {
                         (
+                            "SCHEMA_INVALID",
+                            "/source_surface/source_mode",
+                        ),
+                        (
                             "SNAPSHOT_COMPLETENESS_OVERCLAIM",
                             "/source_surface/snapshot_complete",
                         )
@@ -194,11 +202,47 @@ class DrinkingWaterAdvisoryTests(unittest.TestCase):
             {(finding.code, finding.path) for finding in result.findings},
             {
                 (
+                    "SCHEMA_INVALID",
+                    "/source_surface/source_check_outcome",
+                ),
+                (
                     "SNAPSHOT_COMPLETENESS_UNVERIFIED",
                     "/source_surface/snapshot_complete",
                 )
             },
         )
+
+    def test_schema_rejects_unsupported_snapshot_completeness(self) -> None:
+        schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
+        schema_validator = Draft202012Validator(schema)
+        scenarios = (
+            (
+                "valid_issued",
+                {"source_mode": "INCREMENTAL_FEED"},
+                "/source_surface/source_mode",
+            ),
+            (
+                "valid_source_failure_unconfirmed",
+                {"snapshot_complete": True},
+                "/source_surface/source_check_outcome",
+            ),
+            (
+                "valid_active_not_modified",
+                {"current_record_present": False},
+                "/source_surface/current_record_present",
+            ),
+        )
+        for base_name, mutations, expected_path in scenarios:
+            with self.subTest(base_name=base_name):
+                candidate = copy.deepcopy(self.valid[base_name])
+                candidate["source_surface"].update(mutations)
+
+                errors = list(schema_validator.iter_errors(candidate))
+
+                self.assertIn(
+                    expected_path,
+                    {validator._pointer(error.absolute_path) for error in errors},
+                )
 
     def test_unknown_offsets_are_not_used_as_exact_temporal_evidence(self) -> None:
         base = self.valid["valid_authoritative_rescission"]

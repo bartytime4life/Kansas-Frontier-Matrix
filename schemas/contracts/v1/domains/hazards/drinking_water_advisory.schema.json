@@ -150,7 +150,36 @@
         "snapshot_complete": {"type": "boolean"},
         "previous_record_present": {"type": "boolean"},
         "current_record_present": {"type": "boolean"}
-      }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {"snapshot_complete": {"const": true}},
+            "required": ["snapshot_complete"]
+          },
+          "then": {
+            "properties": {
+              "source_mode": {"const": "COMPLETE_SNAPSHOT"},
+              "source_check_outcome": {"enum": ["FETCHED", "NOT_MODIFIED"]}
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "snapshot_complete": {"const": true},
+              "source_check_outcome": {"const": "NOT_MODIFIED"}
+            },
+            "required": ["snapshot_complete", "source_check_outcome"]
+          },
+          "then": {
+            "properties": {
+              "previous_record_present": {"const": true},
+              "current_record_present": {"const": true}
+            }
+          }
+        }
+      ]
     },
     "identity": {
       "type": "object",
