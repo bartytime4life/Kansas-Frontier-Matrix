@@ -447,24 +447,24 @@ def validate_file(path: Path | str) -> ValidationResult:
 def _fixture_path(relative_path: str) -> Path | None:
     """Return a canonical in-corpus fixture path without opening the file."""
 
-    candidate = Path(relative_path)
-    if (
-        not relative_path
-        or candidate.is_absolute()
-        or candidate.as_posix() != relative_path
-        or len(candidate.parts) != 2
-        or candidate.parts[0] not in FIXTURE_BUCKETS
-        or candidate.suffix != ".json"
-    ):
-        return None
-
-    fixture_path = FIXTURE_ROOT / candidate
     try:
+        candidate = Path(relative_path)
+        if (
+            not relative_path
+            or candidate.is_absolute()
+            or candidate.as_posix() != relative_path
+            or len(candidate.parts) != 2
+            or candidate.parts[0] not in FIXTURE_BUCKETS
+            or candidate.suffix != ".json"
+        ):
+            return None
+
+        fixture_path = FIXTURE_ROOT / candidate
         fixture_root = FIXTURE_ROOT.resolve()
         bucket_path = FIXTURE_ROOT / candidate.parts[0]
         expected_parent = bucket_path.resolve()
         resolved_path = fixture_path.resolve()
-    except (OSError, RuntimeError):
+    except (OSError, RuntimeError, UnicodeError, ValueError):
         return None
     if (
         FIXTURE_ROOT.is_symlink()
@@ -472,6 +472,7 @@ def _fixture_path(relative_path: str) -> Path | None:
         or fixture_path.is_symlink()
         or expected_parent.parent != fixture_root
         or resolved_path.parent != expected_parent
+        or not resolved_path.is_file()
     ):
         return None
     return fixture_path

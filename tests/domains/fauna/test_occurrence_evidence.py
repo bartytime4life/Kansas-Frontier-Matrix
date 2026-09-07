@@ -8,6 +8,7 @@ import io
 import json
 import socket
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 from unittest import mock
@@ -98,6 +99,8 @@ class OccurrenceEvidenceTests(unittest.TestCase):
             "/tmp/outside.json",
             "valid/nested/outside.json",
             "valid\\outside.json",
+            "valid/bad\x00.json",
+            "valid/bad\ud800.json",
         )
         for unsafe_path in unsafe_paths:
             with self.subTest(unsafe_path=unsafe_path):
@@ -114,6 +117,34 @@ class OccurrenceEvidenceTests(unittest.TestCase):
                     validator.Finding("schema.fixture_path_invalid", "/cases/0/path"),
                     result.findings,
                 )
+
+    def test_manifest_rejects_non_regular_candidate_before_read(self) -> None:
+        manifest = {
+            "cases": [
+                {
+                    "path": "valid/case.json",
+                    "expected_findings": [
+                        {"code": "schema.input_invalid", "path": "/"}
+                    ],
+                }
+            ]
+        }
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            fixture_root = Path(temporary_directory)
+            (fixture_root / "valid" / "case.json").mkdir(parents=True)
+            (fixture_root / "semantic_invalid").mkdir()
+            with (
+                mock.patch.object(validator, "FIXTURE_ROOT", fixture_root),
+                mock.patch.object(validator, "load_json_file", return_value=manifest),
+                mock.patch.object(validator, "validate_file") as validate_file,
+            ):
+                result = validator.validate_fixture_manifest()
+
+        validate_file.assert_not_called()
+        self.assertIn(
+            validator.Finding("schema.fixture_path_invalid", "/cases/0/path"),
+            result.findings,
+        )
 
     def test_valid_profiles_preserve_non_public_states(self) -> None:
         for relative_path in (
