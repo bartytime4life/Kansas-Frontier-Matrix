@@ -16,7 +16,7 @@
     "docs/intake/exploratory/pass-32-pm25-trigger-candidate-source-map.md": "sha256:3d32d488fea5a584bb9318adddfc1faf396d0eb1e860a2db8d90a90cdd55b981",
     "fixtures/contracts/v1/domains/atmosphere/pm25_trigger_candidate_assessment/cases.json": "sha256:0ea27e3d1d9477e77e34a676d44cff51d67fddc9beac2322194e8c0589b527af",
     "schemas/contracts/v1/domains/atmosphere/pm25_trigger_candidate_assessment.schema.json": "sha256:d0ae4515885f9614d5cf79251ad3525edbf3ee187856c292905359c79572bfa0",
-    "tests/domains/atmosphere/test_pm25_trigger_candidate_assessment.py": "sha256:f1b49f212ed6681aaeed23237e8b0ac32b2523dd9173109f539f2860a683607a",
+    "tests/domains/atmosphere/test_pm25_trigger_candidate_assessment.py": "sha256:f09ca916a1690ccaa37e752e2621deb61fe0ce50edebc3dc4c9fbddde4f9818f",
     "tools/validators/domains/atmosphere/validate_pm25_trigger_candidate_assessment.py": "sha256:575a433ccea7ffd5e7e79d5ce644fc94d258c4295c523aab7733a693d2eaa0b9"
   },
   "model_identity": {"provider": "OpenAI", "model": "Codex", "version": "GPT-5"},
