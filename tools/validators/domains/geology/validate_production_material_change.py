@@ -30,6 +30,12 @@ CHANGE_FIELDS = {
     "manifest_digest": "MANIFEST_DIGEST",
     "footprint_digest": "FOOTPRINT_DIGEST",
 }
+HOLD_BLOCKER_REASONS = {
+    "COVERAGE_REGRESSION",
+    "PRIOR_SNAPSHOT_MISSING",
+    "RETRIEVAL_TIME_REGRESSION",
+    "RIGHTS_STATE_UNRESOLVED",
+}
 
 
 class DuplicateKeyError(ValueError):
@@ -368,6 +374,13 @@ def _semantic_findings(candidate: Mapping[str, Any]) -> list[Finding]:
             findings.append(Finding("HOLD_WITHOUT_BLOCKER", "/assessment"))
         elif not reason_set.intersection(expected_reasons):
             findings.append(Finding("HOLD_REASON_MISMATCH", "/assessment/reason_codes"))
+        if reason_set.intersection(HOLD_BLOCKER_REASONS) - expected_reasons:
+            findings.append(
+                Finding(
+                    "HOLD_REASON_NOT_APPLICABLE",
+                    "/assessment/reason_codes",
+                )
+            )
         if prior is None and "PRIOR_SNAPSHOT_MISSING" not in reason_set:
             findings.append(
                 Finding(

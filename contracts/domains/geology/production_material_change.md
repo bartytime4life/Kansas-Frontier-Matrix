@@ -47,7 +47,8 @@ snapshots when monthly coverage or spatial footprints change.
   coverage regresses, or the current snapshot's retrieval time predates the prior snapshot.
 - Every applicable HOLD blocker must be named explicitly, even when multiple blockers apply:
   `PRIOR_SNAPSHOT_MISSING`, `RIGHTS_STATE_UNRESOLVED`, `COVERAGE_REGRESSION`, and
-  `RETRIEVAL_TIME_REGRESSION` cannot substitute for one another.
+  `RETRIEVAL_TIME_REGRESSION` cannot substitute for one another or be asserted when
+  their corresponding condition is absent.
 - Exact source bytes, record-level claims, and release decisions remain outside this contract.
 
 ## Required fields
