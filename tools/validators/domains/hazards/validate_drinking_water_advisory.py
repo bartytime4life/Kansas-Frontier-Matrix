@@ -377,6 +377,17 @@ def _semantic_findings(candidate: Mapping[str, Any]) -> list[Finding]:
     current_present = source.get("current_record_present") is True
     clears = advisory.get("clears_prior_advisory") is True
 
+    if (
+        source.get("source_mode") != "COMPLETE_SNAPSHOT"
+        and source.get("snapshot_complete") is True
+    ):
+        findings.append(
+            Finding(
+                "SNAPSHOT_COMPLETENESS_OVERCLAIM",
+                "/source_surface/snapshot_complete",
+            )
+        )
+
     if status in CONFIRMED_STATUSES:
         if identity.get("resolution_status") != "RESOLVED" or not _present_ref(
             identity.get("public_water_system_ref")

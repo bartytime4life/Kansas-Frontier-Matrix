@@ -158,6 +158,26 @@ class DrinkingWaterAdvisoryTests(unittest.TestCase):
             },
         )
 
+    def test_only_complete_snapshot_mode_can_claim_completeness(self) -> None:
+        for source_mode in ("INCREMENTAL_FEED", "SINGLE_EVENT"):
+            with self.subTest(source_mode=source_mode):
+                candidate = copy.deepcopy(self.valid["valid_issued"])
+                candidate["source_surface"]["source_mode"] = source_mode
+                candidate = validator.assign_identity(candidate)
+
+                result = validator.validate_payload(candidate)
+
+                self.assertEqual(result.outcome, "DENY")
+                self.assertEqual(
+                    {(finding.code, finding.path) for finding in result.findings},
+                    {
+                        (
+                            "SNAPSHOT_COMPLETENESS_OVERCLAIM",
+                            "/source_surface/snapshot_complete",
+                        )
+                    },
+                )
+
     def test_unknown_offsets_are_not_used_as_exact_temporal_evidence(self) -> None:
         base = self.valid["valid_authoritative_rescission"]
         timestamp_fields = (

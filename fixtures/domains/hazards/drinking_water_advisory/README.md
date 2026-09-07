@@ -26,6 +26,9 @@ An exact expiry cannot precede the source check while a record claims an
 `ISSUED`, `ACTIVE_CONFIRMED`, or `UPDATED` current status.
 `NOT_MODIFIED` is continuity evidence only when a previous record is present;
 otherwise validation denies the claim at `previous_record_present`.
+Only `COMPLETE_SNAPSHOT` source mode may assert `snapshot_complete=true`;
+incremental and single-event carriers fail at the completeness field instead
+of overstating absence-ready source coverage.
 Input validation opens every directory and the final regular file through
 no-follow descriptors, then sizes and reads that same final descriptor. Leaf,
 ancestor, and cyclic symlinks fail closed, while a rename or symlink swap after
