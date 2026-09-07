@@ -546,6 +546,27 @@ describe("renderer-neutral style lifecycle coordination", () => {
     );
   });
 
+  it("rejects unsolicited reconciliation without bypassing a pending ticket", () => {
+    const initial = style([["roads", "v1"]], [["roads-line", "roads"]]);
+    const target = style([["roads", "v2"]], [["roads-line", "roads"]]);
+    const coordinator = createMapRuntimeStyleLifecycleCoordinator(initial);
+
+    expect(() => coordinator.reconcile(target)).toThrow(
+      expect.objectContaining({
+        code: "MAP_RUNTIME_STATE_INVALID",
+        message: "Map runtime style lifecycle reconciliation is not required.",
+      }),
+    );
+    expect(coordinator.getState()).toEqual(freezeMapRuntimeStyleState(initial));
+
+    const ticket = coordinator.plan(target);
+    expect(() => coordinator.reconcile(target)).toThrow(
+      expect.objectContaining({ code: "MAP_RUNTIME_STATE_INVALID" }),
+    );
+    expect(coordinator.getState()).toEqual(freezeMapRuntimeStyleState(initial));
+    expect(coordinator.commit(ticket)).toBe(ticket.plan.target);
+  });
+
   it("serializes renderer execution", async () => {
     const coordinator = createMapRuntimeStyleLifecycleCoordinator();
     const ticket = coordinator.plan(

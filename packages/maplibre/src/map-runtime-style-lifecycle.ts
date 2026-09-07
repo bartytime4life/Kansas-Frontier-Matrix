@@ -593,6 +593,9 @@ export function createMapRuntimeStyleLifecycleCoordinator(
       if (executing !== null) {
         invalid("Map runtime style lifecycle execution is in progress.");
       }
+      if (!reconciliationRequired) {
+        invalid("Map runtime style lifecycle reconciliation is not required.");
+      }
       current = freezeMapRuntimeStyleState(observed);
       pending = null;
       reconciliationRequired = false;
