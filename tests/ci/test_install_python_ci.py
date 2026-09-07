@@ -146,6 +146,41 @@ class InstallPythonCiTests(unittest.TestCase):
                 module.profiles_for_workflow(workflow),
             )
 
+    def test_workflow_profile_parser_requires_executable_command_position(self) -> None:
+        with tempfile.TemporaryDirectory(
+            prefix=".install-python-profile-",
+            dir=REPO_ROOT / ".github/workflows",
+        ) as directory:
+            workflow = Path(directory) / "profile.yml"
+            for prefix in ("", "run: ", "- run: "):
+                with self.subTest(prefix=prefix):
+                    workflow.write_text(
+                        f"{prefix}python tools/ci/install_python_ci.py project-test\n",
+                        encoding="utf-8",
+                    )
+                    self.assertEqual(
+                        frozenset({"project-test"}),
+                        module.profiles_for_workflow(workflow),
+                    )
+
+            workflow.write_text(
+                "# python tools/ci/install_python_ci.py project-test\n",
+                encoding="utf-8",
+            )
+            self.assertEqual(frozenset(), module.profiles_for_workflow(workflow))
+
+            for prefix in ('run: echo "', "timeout 30 "):
+                with self.subTest(rejected_prefix=prefix):
+                    workflow.write_text(
+                        f"{prefix}python tools/ci/install_python_ci.py project-test\n",
+                        encoding="utf-8",
+                    )
+                    with self.assertRaisesRegex(
+                        module.InstallConfigurationError,
+                        "WORKFLOW_PROFILE_INVOCATION_INVALID",
+                    ):
+                        module.profiles_for_workflow(workflow)
+
     def test_workflow_profile_parser_rejects_unsupported_trailing_tokens(self) -> None:
         with tempfile.TemporaryDirectory(
             prefix=".install-python-profile-",

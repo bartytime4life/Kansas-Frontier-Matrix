@@ -223,7 +223,13 @@ def profiles_for_workflow(workflow_path: Path) -> frozenset[str]:
     for line in text.splitlines():
         if marker not in line:
             continue
-        invocation = line.split(marker, 1)[1].lstrip()
+        prefix, invocation = line.split(marker, 1)
+        stripped_prefix = prefix.strip()
+        if stripped_prefix.startswith("#"):
+            continue
+        if stripped_prefix not in {"", "run:", "- run:"}:
+            raise InstallConfigurationError("WORKFLOW_PROFILE_INVOCATION_INVALID")
+        invocation = invocation.lstrip()
         match = WORKFLOW_PROFILE_INVOCATION.fullmatch(invocation)
         if match is not None and match.group("log_path") is not None:
             if any(
