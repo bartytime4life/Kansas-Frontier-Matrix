@@ -524,15 +524,28 @@ describe("public Knowledge-domain deep-link release", () => {
       "resolvePublicKnowledgeDomainUrlConsumerCommit(",
       clickIndex,
     );
-    const syncGenerationGuardIndex = mainSource.indexOf(
+    const focusGenerationGuardIndex = mainSource.indexOf(
       "isPublicKnowledgeDomainSyncGenerationCurrent(",
       clickIndex,
     );
+    const focusRestoreIndex = mainSource.indexOf(
+      "priorFocus.focus()",
+      clickIndex,
+    );
+    const finalSyncGenerationGuardIndex = mainSource.indexOf(
+      "isPublicKnowledgeDomainSyncGenerationCurrent(",
+      finalReadinessIndex,
+    );
+    expect(focusGenerationGuardIndex).toBeGreaterThan(clickIndex);
+    expect(focusRestoreIndex).toBeGreaterThan(focusGenerationGuardIndex);
+    expect(finalReadinessIndex).toBeGreaterThan(focusRestoreIndex);
     expect(finalConsumerQueryIndex).toBeGreaterThan(clickIndex);
     expect(finalReadinessIndex).toBeGreaterThan(clickIndex);
     expect(finalReadinessIndex).toBeGreaterThan(finalConsumerQueryIndex);
-    expect(syncGenerationGuardIndex).toBeGreaterThan(finalReadinessIndex);
-    expect(ownershipCommitIndex).toBeGreaterThan(syncGenerationGuardIndex);
+    expect(finalSyncGenerationGuardIndex).toBeGreaterThan(finalReadinessIndex);
+    expect(ownershipCommitIndex).toBeGreaterThan(
+      finalSyncGenerationGuardIndex,
+    );
     expect(ownershipCommitIndex).toBeGreaterThan(finalReadinessIndex);
     expect(mainSource).toContain(
       "requestedDomainId === null || consumerReadyAfterSelection",

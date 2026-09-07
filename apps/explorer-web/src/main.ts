@@ -384,7 +384,15 @@ const syncWorkspaceNavigation = (): void => {
           ? document.activeElement
           : null;
       domainButton.click();
-      if (priorFocus?.isConnected) priorFocus.focus();
+      if (
+        isPublicKnowledgeDomainSyncGenerationCurrent(
+          knowledgeDomainSyncGeneration,
+          currentKnowledgeDomainSyncGeneration,
+        ) &&
+        priorFocus?.isConnected
+      ) {
+        priorFocus.focus();
+      }
     }
   }
   const selectedDomainId = resolveSinglePublicKnowledgeDomainControlId(
