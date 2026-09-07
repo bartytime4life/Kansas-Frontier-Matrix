@@ -5,8 +5,10 @@ from __future__ import annotations
 import copy
 import importlib.util
 import json
+import os
 import subprocess
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -81,10 +83,44 @@ class HistoricalResolutionTests(unittest.TestCase):
         self.assertIn("RAW_DNA_FIELD_DENIED", codes)
         self.assertIn("PRIVATE_OR_PRECISE_FIELD_DENIED", codes)
 
+    def test_explicit_candidate_below_symlinked_directory_fails_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            target = root / "target"
+            target.mkdir()
+            candidate = target / "candidate.json"
+            candidate.write_bytes((FIXTURE_ROOT / "valid/high_anchor.json").read_bytes())
+            linked = root / "linked"
+            linked.symlink_to(target, target_is_directory=True)
+
+            value, findings = module.load_candidate(linked / candidate.name)
+
+        self.assertIsNone(value)
+        self.assertEqual({finding.code for finding in findings}, {"INPUT_NOT_REGULAR_FILE"})
+
+    def test_explicit_candidate_oversize_fails_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            candidate = Path(directory) / "oversized.json"
+            candidate.write_bytes(b" " * (module.MAX_JSON_BYTES + 1))
+
+            value, findings = module.load_candidate(candidate)
+
+        self.assertIsNone(value)
+        self.assertEqual({finding.code for finding in findings}, {"INPUT_TOO_LARGE"})
+
+    @unittest.skipUnless(hasattr(os, "mkfifo"), "requires POSIX named pipes")
+    def test_explicit_candidate_nonregular_file_fails_without_blocking(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            candidate = Path(directory) / "candidate.json"
+            os.mkfifo(candidate)
+
+            value, findings = module.load_candidate(candidate)
+
+        self.assertIsNone(value)
+        self.assertEqual({finding.code for finding in findings}, {"INPUT_NOT_REGULAR_FILE"})
+
     def test_fixture_runner_rejects_symlinked_lanes_before_filtering(self) -> None:
         with self.subTest("synthetic symlinked fixture inventory"):
-            import tempfile
-
             with tempfile.TemporaryDirectory() as directory:
                 root = Path(directory)
                 (root / "valid").symlink_to(FIXTURE_ROOT / "valid", target_is_directory=True)

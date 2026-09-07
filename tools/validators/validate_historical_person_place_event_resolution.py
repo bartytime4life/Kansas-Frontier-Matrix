@@ -12,7 +12,9 @@ import argparse
 import hashlib
 import json
 import math
+import os
 import re
+import stat
 import sys
 from dataclasses import dataclass
 from itertools import islice
@@ -83,14 +85,39 @@ def candidate_spec_hash(candidate: Mapping[str, Any]) -> str:
     return "sha256:" + hashlib.sha256(canonical_json_bytes(payload)).hexdigest()
 
 
+def _has_symlink_component(path: Path) -> bool:
+    absolute_path = path.absolute()
+    return any(
+        component.is_symlink()
+        for component in (absolute_path, *absolute_path.parents)
+    )
+
+
 def load_candidate(path: Path) -> tuple[dict[str, Any] | None, list[Finding]]:
+    descriptor = -1
     try:
-        if path.is_symlink() or not path.is_file():
+        absolute_path = path.absolute()
+        if _has_symlink_component(absolute_path):
             return None, [Finding("INPUT_NOT_REGULAR_FILE", "$")]
-        if path.stat().st_size > MAX_JSON_BYTES:
+
+        flags = os.O_RDONLY
+        for flag_name in ("O_BINARY", "O_CLOEXEC", "O_NONBLOCK", "O_NOFOLLOW"):
+            flags |= getattr(os, flag_name, 0)
+        descriptor = os.open(absolute_path, flags)
+        metadata = os.fstat(descriptor)
+        if not stat.S_ISREG(metadata.st_mode):
+            return None, [Finding("INPUT_NOT_REGULAR_FILE", "$")]
+        if metadata.st_size > MAX_JSON_BYTES:
             return None, [Finding("INPUT_TOO_LARGE", "$")]
+
+        with os.fdopen(descriptor, "rb") as handle:
+            descriptor = -1
+            payload = handle.read(MAX_JSON_BYTES + 1)
+        if len(payload) > MAX_JSON_BYTES:
+            return None, [Finding("INPUT_TOO_LARGE", "$")]
+
         value = json.loads(
-            path.read_text(encoding="utf-8"),
+            payload.decode("utf-8"),
             object_pairs_hook=_reject_duplicate_keys,
             parse_constant=_reject_nonfinite,
             parse_float=_parse_finite_float,
@@ -103,6 +130,9 @@ def load_candidate(path: Path) -> tuple[dict[str, Any] | None, list[Finding]]:
         return None, [Finding("JSON_NONFINITE_NUMBER", "$")]
     except (OSError, UnicodeError, RecursionError, ValueError):
         return None, [Finding("INPUT_UNREADABLE", "$")]
+    finally:
+        if descriptor >= 0:
+            os.close(descriptor)
     if not isinstance(value, dict):
         return None, [Finding("CANDIDATE_NOT_OBJECT", "$")]
     return value, []
