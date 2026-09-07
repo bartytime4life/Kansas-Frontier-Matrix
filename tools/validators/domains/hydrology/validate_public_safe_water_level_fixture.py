@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 from datetime import datetime
-from decimal import Decimal
 from pathlib import Path
 import re
 import sys
@@ -21,6 +20,7 @@ from tools.validators._common.public_safe_fixture import (
     is_finite_number,
     is_negative_zero,
     is_nonempty_string,
+    number_as_decimal,
     run_cli,
     validate_fixture_file,
 )
@@ -407,7 +407,7 @@ def validate_candidate(candidate: object) -> list[Finding]:
         if not is_finite_number(value) or not -10_000 <= value <= 10_000:
             add_finding(findings, "MEASUREMENT_VALUE_OUT_OF_RANGE", "$.measurement.value")
         else:
-            decimal_value = Decimal(str(value))
+            decimal_value = number_as_decimal(value)
             if is_negative_zero(value):
                 add_finding(
                     findings,
@@ -543,6 +543,7 @@ def validate_file(path: Path | str) -> list[Finding]:
     return validate_fixture_file(
         path,
         validate_candidate,
+        preserve_float_lexical_identity=True,
         preserve_integer_negative_zero=True,
     )
 

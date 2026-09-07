@@ -434,6 +434,25 @@ class HydrologyWaterLevelFixtureTests(unittest.TestCase):
                 validate_file(fixture),
             )
 
+    def test_fixture_parser_distinguishes_underflow_from_negative_zero(self) -> None:
+        fixture_text = VALID_FIXTURE.read_text(encoding="utf-8").replace(
+            '"value": 12.5',
+            '"value": -1e-400',
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            fixture = Path(directory) / "underflow.json"
+            fixture.write_text(fixture_text, encoding="utf-8")
+            findings = validate_file(fixture)
+
+        self.assertIn(
+            Finding("MEASUREMENT_PRECISION_EXCEEDED", "$.measurement.value"),
+            findings,
+        )
+        self.assertNotIn(
+            Finding("MEASUREMENT_NEGATIVE_ZERO", "$.measurement.value"),
+            findings,
+        )
+
     def test_temporal_provenance_is_canonical_and_monotonic(self) -> None:
         candidate = _load_candidate()
         candidate["temporal_scope"]["source_time"] = "2026-08-02T11:59:59Z"  # type: ignore[index]

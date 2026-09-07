@@ -14,6 +14,7 @@ import os
 import stat
 import sys
 from dataclasses import dataclass
+from decimal import Decimal
 from pathlib import Path
 from typing import Callable, Sequence
 
@@ -46,6 +47,21 @@ class _BoundedJsonInteger(int):
         return instance
 
 
+class _BoundedJsonFloat(float):
+    """A float retaining its exact finite JSON decimal for opted-in profiles."""
+
+    def __new__(cls, raw_value: str) -> _BoundedJsonFloat:
+        value = float(raw_value)
+        if not math.isfinite(value):
+            raise ValueError("JSON number is not finite")
+        instance = super().__new__(cls, value)
+        instance.decimal_value = Decimal(raw_value)
+        instance.was_negative_zero = (
+            instance.decimal_value.is_zero() and instance.decimal_value.is_signed()
+        )
+        return instance
+
+
 def is_nonempty_string(value: object) -> bool:
     return isinstance(value, str) and bool(value.strip())
 
@@ -65,11 +81,21 @@ def is_negative_zero(value: object) -> bool:
         return False
     if isinstance(value, _BoundedJsonInteger):
         return value.was_negative_zero
+    if isinstance(value, _BoundedJsonFloat):
+        return value.was_negative_zero
     return (
         isinstance(value, float)
         and value == 0
         and math.copysign(1.0, value) < 0
     )
+
+
+def number_as_decimal(value: int | float) -> Decimal:
+    """Return an exact retained JSON decimal when the profile opted into it."""
+
+    if isinstance(value, _BoundedJsonFloat):
+        return value.decimal_value
+    return Decimal(str(value))
 
 
 def add_finding(findings: set[Finding], code: str, path: str) -> None:
@@ -106,6 +132,10 @@ def _parse_finite_float(raw_value: str) -> float:
     if not math.isfinite(value):
         raise ValueError("JSON number is not finite")
     return value
+
+
+def _parse_finite_float_preserving_lexeme(raw_value: str) -> float:
+    return _BoundedJsonFloat(raw_value)
 
 
 def _reject_json_constant(_raw_value: str) -> None:
@@ -162,6 +192,7 @@ def validate_fixture_file(
     validator: Validator,
     *,
     preserve_integer_negative_zero: bool = False,
+    preserve_float_lexical_identity: bool = False,
 ) -> list[Finding]:
     """Decode bounded, duplicate-free UTF-8 JSON and apply one domain profile."""
 
@@ -171,6 +202,11 @@ def validate_fixture_file(
         if preserve_integer_negative_zero
         else _parse_bounded_int
     )
+    float_parser = (
+        _parse_finite_float_preserving_lexeme
+        if preserve_float_lexical_identity
+        else _parse_finite_float
+    )
     try:
         raw_bytes = _read_bounded_regular_file(fixture_path)
         if len(raw_bytes) > MAX_FIXTURE_BYTES:
@@ -178,7 +214,7 @@ def validate_fixture_file(
         candidate = json.loads(
             raw_bytes.decode("utf-8"),
             parse_int=integer_parser,
-            parse_float=_parse_finite_float,
+            parse_float=float_parser,
             parse_constant=_reject_json_constant,
             object_pairs_hook=_reject_duplicate_keys,
         )
