@@ -345,6 +345,71 @@ class HabitatModelRunReceiptTests(unittest.TestCase):
                         first.stdout,
                     )
 
+    def test_cli_public_output_is_independent_of_parent_path(self) -> None:
+        manifest = validator.load_fixtures()
+        candidate = validator.materialize_case(manifest, manifest["cases"][0])
+        sentinel = "do-not-echo-location-independent-candidate"
+        cases = (
+            ("pass.json", json.dumps(candidate), 0, "PASS"),
+            ("deny.json", json.dumps({"secret": sentinel}), 1, "DENY"),
+            ("error.json", f'{{"secret":"{sentinel}"', 2, "ERROR"),
+        )
+        with tempfile.TemporaryDirectory() as first_directory:
+            with tempfile.TemporaryDirectory() as second_directory:
+                first_root = Path(first_directory)
+                second_root = Path(second_directory)
+                for filename, content, expected_code, expected_outcome in cases:
+                    with self.subTest(outcome=expected_outcome):
+                        first_path = first_root / filename
+                        second_path = second_root / filename
+                        first_path.write_text(content, encoding="utf-8")
+                        second_path.write_text(content, encoding="utf-8")
+
+                        first = subprocess.run(
+                            [
+                                sys.executable,
+                                str(Path(validator.__file__)),
+                                str(first_path),
+                            ],
+                            cwd=ROOT,
+                            check=False,
+                            capture_output=True,
+                        )
+                        second = subprocess.run(
+                            [
+                                sys.executable,
+                                str(Path(validator.__file__)),
+                                str(second_path),
+                            ],
+                            cwd=ROOT,
+                            check=False,
+                            capture_output=True,
+                        )
+
+                        for completed in (first, second):
+                            self.assertEqual(
+                                expected_code,
+                                completed.returncode,
+                                completed.stderr,
+                            )
+                            self.assertEqual(b"", completed.stderr)
+                            self.assertNotIn(
+                                sentinel.encode("utf-8"), completed.stdout
+                            )
+                            self.assertNotIn(
+                                str(first_root).encode("utf-8"),
+                                completed.stdout,
+                            )
+                            self.assertNotIn(
+                                str(second_root).encode("utf-8"),
+                                completed.stdout,
+                            )
+                        self.assertEqual(first.stdout, second.stdout)
+                        payload = json.loads(first.stdout)
+                        self.assertEqual(expected_outcome, payload["outcome"])
+                        self.assertEqual("NONE", payload["authority"])
+                        self.assertEqual(filename, payload["input"])
+
     def test_cli_denial_exit_is_distinct_from_input_error(self) -> None:
         sentinel = "do-not-echo-schema-denied-value"
         with tempfile.TemporaryDirectory() as directory:

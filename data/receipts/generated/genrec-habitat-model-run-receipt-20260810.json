@@ -16,7 +16,7 @@
     "docs/intake/exploratory/habitat-model-run-receipt-source-map.md": "sha256:6128a385928d422602f29bd08bdd2a0cc29c8eda0fdb08fa6d399a4678a99435",
     "fixtures/contracts/v1/domains/habitat/model_run_receipt/cases.json": "sha256:c85ff7f0b92e578d54ce260f66b1c7463b1bf492b1ac4f7760532e1951001b2e",
     "schemas/contracts/v1/domains/habitat/model_run_receipt.schema.json": "sha256:717e5e6bc6ecb8ba814fe0bc243eeff3cfac6aaed6565dcddab4b9b56b3e05b0",
-    "tests/validators/domains/habitat/test_validate_model_run_receipt.py": "sha256:2756d15df29641583b20a936a6e751c8c0f107a10bda80a2cdc9fb3ff396b1f9",
+    "tests/validators/domains/habitat/test_validate_model_run_receipt.py": "sha256:32b4b4fcb5e2f8803547668420e568b6274a314d8ee7320d7839119f7fa78780",
     "tools/validators/domains/habitat/validate_model_run_receipt.py": "sha256:217b4e6529efe6d5c06629e05998b5cdc1023d28047099c9424f68ca04d831c2"
   },
   "model_identity": {
@@ -68,7 +68,7 @@
     {
       "gate": "focused-model-run-receipt-suite",
       "outcome": "PASS",
-      "reason": "Sixteen tests, forty-two subtests, and twenty-four exact fixture cases passed, including raw-byte deterministic carrier and fixture-replay envelopes with exact profile, non-authority, non-effect, key-set, ordering, outcome, and payload-nondisclosure assertions; sensitive-value-safe three-way CLI outcome mapping with root-type separation; deterministic failure-reason ordering; mixed-known-offset chronology; known-UTC acceptance; and unknown-local-offset denial at every governed timestamp field."
+      "reason": "Seventeen tests, forty-five subtests, and twenty-four exact fixture cases passed, including parent-path-independent public-safe carrier output; raw-byte deterministic carrier and fixture-replay envelopes with exact profile, non-authority, non-effect, key-set, ordering, outcome, and payload-nondisclosure assertions; sensitive-value-safe three-way CLI outcome mapping with root-type separation; deterministic failure-reason ordering; mixed-known-offset chronology; known-UTC acceptance; and unknown-local-offset denial at every governed timestamp field."
     },
     {
       "gate": "completed-failed-source-role-and-non-authority-boundary",
