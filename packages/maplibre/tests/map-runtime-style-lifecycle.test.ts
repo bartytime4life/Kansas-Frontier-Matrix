@@ -403,13 +403,16 @@ describe("renderer-neutral style lifecycle coordination", () => {
     const execution = coordinator.execute(ticket, execute);
 
     coordinator.cancel(ticket);
-    finishFirst?.();
 
     await expect(execution).rejects.toMatchObject({
       code: "MAP_RUNTIME_STYLE_LIFECYCLE_CANCELLED",
     });
     expect(effects).toEqual([ticket.plan.actions[0].effect]);
     expect(coordinator.requiresReconciliation()).toBe(true);
+
+    finishFirst?.();
+    await Promise.resolve();
+    expect(effects).toEqual([ticket.plan.actions[0].effect]);
   });
 
   it("advances confirmed state only for the exact pending ticket", () => {
@@ -533,6 +536,11 @@ describe("renderer-neutral style lifecycle coordination", () => {
     expect(cancelledSignal?.aborted).toBe(true);
     expect(coordinator.requiresReconciliation()).toBe(true);
 
+    await expect(cancelledExecution).rejects.toMatchObject({
+      code: "MAP_RUNTIME_STYLE_LIFECYCLE_CANCELLED",
+      message: "Map runtime style lifecycle execution was cancelled.",
+    });
+
     coordinator.reconcile(initial);
     const replacement = coordinator.plan(
       style([["roads", "v2"]], [["roads-line", "roads"]]),
@@ -542,10 +550,7 @@ describe("renderer-neutral style lifecycle coordination", () => {
     ).resolves.toBe(replacement.plan.target);
 
     finishCancelled?.();
-    await expect(cancelledExecution).rejects.toMatchObject({
-      code: "MAP_RUNTIME_STYLE_LIFECYCLE_CANCELLED",
-      message: "Map runtime style lifecycle execution was cancelled.",
-    });
+    await Promise.resolve();
     expect(coordinator.getState()).toBe(replacement.plan.target);
   });
 
@@ -576,11 +581,13 @@ describe("renderer-neutral style lifecycle coordination", () => {
       expect.objectContaining({ code: "MAP_RUNTIME_DISPOSED" }),
     );
 
-    finish?.();
     await expect(execution).rejects.toMatchObject({
       code: "MAP_RUNTIME_DISPOSED",
       message: "Map runtime style lifecycle coordinator is disposed.",
     });
+
+    finish?.();
+    await Promise.resolve();
     expect(coordinator.getState()).toEqual(freezeMapRuntimeStyleState(initial));
   });
 });

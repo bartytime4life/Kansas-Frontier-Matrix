@@ -347,8 +347,10 @@ export function createMapRuntimeStyleLifecycleExecutor(
  * A plan becomes confirmed state only after the exact ticket is committed or
  * its executor succeeds. Any started execution that fails or is cancelled may
  * have partially changed the renderer, so planning fails closed until an
- * observed renderer state is explicitly reconciled. This coordinator neither
- * acquires a renderer nor admits source/layer payloads.
+ * observed renderer state is explicitly reconciled. Cancellation and disposal
+ * settle the coordinator promise without waiting for an abort-ignoring renderer;
+ * that renderer's eventual completion remains detached from confirmed state.
+ * This coordinator neither acquires a renderer nor admits source/layer payloads.
  */
 export function createMapRuntimeStyleLifecycleCoordinator(
   initial: MapRuntimeStyleState = {
@@ -361,6 +363,7 @@ export function createMapRuntimeStyleLifecycleCoordinator(
   let pending: MapRuntimeStyleLifecycleTicket | null = null;
   let executing: MapRuntimeStyleLifecycleTicket | null = null;
   let executionController: AbortController | null = null;
+  let interruptExecution: (() => void) | null = null;
   const cancelledTickets = new Set<MapRuntimeStyleLifecycleTicket>();
   let reconciliationRequired = false;
   let nextRevision = 1;
@@ -447,9 +450,23 @@ export function createMapRuntimeStyleLifecycleCoordinator(
       executing = accepted;
       const controller = new AbortController();
       executionController = controller;
+      let interrupt!: () => void;
+      const interrupted = new Promise<never>((_resolve, reject) => {
+        interrupt = () =>
+          reject(
+            new MapRuntimePortError(
+              "MAP_RUNTIME_STYLE_LIFECYCLE_CANCELLED",
+              "Map runtime style lifecycle execution was cancelled.",
+            ),
+          );
+      });
+      interruptExecution = interrupt;
 
       try {
-        await executor(accepted.plan, controller.signal);
+        await Promise.race([
+          executor(accepted.plan, controller.signal),
+          interrupted,
+        ]);
       } catch {
         if (disposed) requireActive();
         if (cancelledTickets.delete(accepted)) {
@@ -458,11 +475,16 @@ export function createMapRuntimeStyleLifecycleCoordinator(
             "Map runtime style lifecycle execution was cancelled.",
           );
         }
-        if (executing !== accepted || executionController !== controller) {
+        if (
+          executing !== accepted ||
+          executionController !== controller ||
+          interruptExecution !== interrupt
+        ) {
           invalid("Map runtime style lifecycle execution state is invalid.");
         }
         executing = null;
         executionController = null;
+        interruptExecution = null;
         reconciliationRequired = true;
         throw new MapRuntimePortError(
           "MAP_RUNTIME_STYLE_LIFECYCLE_FAILED",
@@ -477,26 +499,38 @@ export function createMapRuntimeStyleLifecycleCoordinator(
           "Map runtime style lifecycle execution was cancelled.",
         );
       }
-      if (executing !== accepted || executionController !== controller) {
+      if (
+        executing !== accepted ||
+        executionController !== controller ||
+        interruptExecution !== interrupt
+      ) {
         invalid("Map runtime style lifecycle execution state is invalid.");
       }
       current = accepted.plan.target;
       executing = null;
       executionController = null;
+      interruptExecution = null;
       return current;
     },
 
     cancel(ticket: MapRuntimeStyleLifecycleTicket): MapRuntimeStyleState {
       requireActive();
-      if (ticket !== executing || executionController === null) {
+      if (
+        ticket !== executing ||
+        executionController === null ||
+        interruptExecution === null
+      ) {
         invalid("Map runtime style lifecycle ticket is not executing.");
       }
       const controller = executionController;
+      const interrupt = interruptExecution;
       cancelledTickets.add(ticket);
       executing = null;
       executionController = null;
+      interruptExecution = null;
       reconciliationRequired = true;
       controller.abort();
+      interrupt();
       return current;
     },
 
@@ -517,9 +551,12 @@ export function createMapRuntimeStyleLifecycleCoordinator(
       pending = null;
       executing = null;
       const controller = executionController;
+      const interrupt = interruptExecution;
       executionController = null;
+      interruptExecution = null;
       cancelledTickets.clear();
       controller?.abort();
+      interrupt?.();
     },
   });
 }
