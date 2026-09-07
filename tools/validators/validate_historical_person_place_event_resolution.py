@@ -50,6 +50,15 @@ class Finding:
     field: str
 
 
+@dataclass(frozen=True)
+class FileIdentity:
+    device: int
+    inode: int
+    size: int
+    modified_ns: int
+    changed_ns: int
+
+
 class DuplicateKeyError(ValueError):
     pass
 
@@ -113,6 +122,16 @@ def _file_flags() -> int:
     return flags
 
 
+def _file_identity(metadata: os.stat_result) -> FileIdentity:
+    return FileIdentity(
+        device=metadata.st_dev,
+        inode=metadata.st_ino,
+        size=metadata.st_size,
+        modified_ns=metadata.st_mtime_ns,
+        changed_ns=metadata.st_ctime_ns,
+    )
+
+
 def _open_secure_directory(path: Path) -> int:
     if not SUPPORTS_SECURE_DIR_FD:
         raise InputNotRegularFileError
@@ -148,6 +167,7 @@ def _open_bounded_regular_at(
     name: str,
     *,
     max_bytes: int = MAX_JSON_BYTES,
+    expected_identity: FileIdentity | None = None,
 ) -> bytes:
     if not SUPPORTS_SECURE_DIR_FD or name in {"", ".", ".."} or os.sep in name:
         raise InputNotRegularFileError
@@ -168,12 +188,18 @@ def _open_bounded_regular_at(
         metadata = os.fstat(descriptor)
         if not stat.S_ISREG(metadata.st_mode):
             raise InputNotRegularFileError
+        identity = _file_identity(metadata)
+        if expected_identity is not None and identity != expected_identity:
+            raise InputNotRegularFileError
         if metadata.st_size > max_bytes:
             raise InputTooLargeError
 
         with os.fdopen(descriptor, "rb") as handle:
             descriptor = -1
             payload = handle.read(max_bytes + 1)
+            identity_after_read = _file_identity(os.fstat(handle.fileno()))
+        if identity_after_read != identity:
+            raise InputNotRegularFileError
         if len(payload) > max_bytes:
             raise InputTooLargeError
         return payload
@@ -426,21 +452,31 @@ def _expected_code(path: Path) -> str | None:
     return lines[0] if len(lines) == 1 else None
 
 
-def _fixture_lane_inventory(directory_descriptor: int) -> list[str]:
+def _fixture_lane_inventory(directory_descriptor: int) -> dict[str, FileIdentity]:
     try:
         names = os.listdir(directory_descriptor)
+        inventory: dict[str, FileIdentity] = {}
         for name in names:
             metadata = os.stat(name, dir_fd=directory_descriptor, follow_symlinks=False)
             if not stat.S_ISREG(metadata.st_mode):
                 raise FixtureInventoryError
-        return sorted(name for name in names if name.endswith(".json"))
+            inventory[name] = _file_identity(metadata)
+        return inventory
     except (OSError, TypeError, ValueError) as error:
         raise FixtureInventoryError from error
 
 
-def _validate_fixture_at(directory_descriptor: int, name: str) -> list[Finding]:
+def _validate_fixture_at(
+    directory_descriptor: int,
+    name: str,
+    expected_identity: FileIdentity,
+) -> list[Finding]:
     try:
-        payload = _open_bounded_regular_at(directory_descriptor, name)
+        payload = _open_bounded_regular_at(
+            directory_descriptor,
+            name,
+            expected_identity=expected_identity,
+        )
     except InputNotRegularFileError:
         return [Finding("INPUT_NOT_REGULAR_FILE", "$")]
     except InputTooLargeError:
@@ -453,10 +489,22 @@ def _validate_fixture_at(directory_descriptor: int, name: str) -> list[Finding]:
     return validate_candidate(candidate)
 
 
-def _expected_code_at(directory_descriptor: int, candidate_name: str) -> str | None:
+def _expected_code_at(
+    directory_descriptor: int,
+    candidate_name: str,
+    inventory: Mapping[str, FileIdentity],
+) -> str | None:
     sidecar_name = Path(candidate_name).with_suffix(".expected_error.txt").name
+    expected_identity = inventory.get(sidecar_name)
+    if expected_identity is None:
+        return None
     try:
-        payload = _open_bounded_regular_at(directory_descriptor, sidecar_name, max_bytes=256)
+        payload = _open_bounded_regular_at(
+            directory_descriptor,
+            sidecar_name,
+            max_bytes=256,
+            expected_identity=expected_identity,
+        )
         lines = [line.strip() for line in payload.decode("utf-8").splitlines() if line.strip()]
     except (OSError, UnicodeError):
         return None
@@ -477,8 +525,10 @@ def run_fixtures(root: Path = FIXTURE_ROOT) -> int:
                 raise FixtureInventoryError
         valid_descriptor = os.open("valid", _directory_flags(), dir_fd=root_descriptor)
         invalid_descriptor = os.open("invalid", _directory_flags(), dir_fd=root_descriptor)
-        valid_names = _fixture_lane_inventory(valid_descriptor)
-        invalid_names = _fixture_lane_inventory(invalid_descriptor)
+        valid_inventory = _fixture_lane_inventory(valid_descriptor)
+        invalid_inventory = _fixture_lane_inventory(invalid_descriptor)
+        valid_names = sorted(name for name in valid_inventory if name.endswith(".json"))
+        invalid_names = sorted(name for name in invalid_inventory if name.endswith(".json"))
     except (OSError, FixtureInventoryError, InputNotRegularFileError):
         for descriptor in (invalid_descriptor, valid_descriptor, root_descriptor):
             if descriptor >= 0:
@@ -491,11 +541,11 @@ def run_fixtures(root: Path = FIXTURE_ROOT) -> int:
             print("HISTORICAL_RESOLUTION_FIXTURES_ERROR nonempty valid and invalid lanes required")
             return 2
         for name in valid_names:
-            if _validate_fixture_at(valid_descriptor, name):
+            if _validate_fixture_at(valid_descriptor, name, valid_inventory[name]):
                 failures.append(f"valid/{name}")
         for name in invalid_names:
-            findings = _validate_fixture_at(invalid_descriptor, name)
-            expected = _expected_code_at(invalid_descriptor, name)
+            findings = _validate_fixture_at(invalid_descriptor, name, invalid_inventory[name])
+            expected = _expected_code_at(invalid_descriptor, name, invalid_inventory)
             if expected is None or expected not in {finding.code for finding in findings}:
                 failures.append(f"invalid/{name}")
         if failures:

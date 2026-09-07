@@ -248,6 +248,35 @@ class HistoricalResolutionTests(unittest.TestCase):
         self.assertTrue(swapped)
         self.assertEqual(result, 0)
 
+    @unittest.skipUnless(os.open in os.supports_dir_fd, "requires directory-relative open")
+    def test_fixture_runner_rejects_regular_file_replacement_after_inventory(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory) / "fixtures"
+            shutil.copytree(FIXTURE_ROOT, root)
+            candidate = root / "valid/conflict_hold.json"
+            replacement = root / "replacement.json"
+            replacement.write_bytes((FIXTURE_ROOT / "valid/high_anchor.json").read_bytes())
+            held_candidate = root / "valid/held-conflict.json"
+            real_open = os.open
+            swapped = False
+
+            def swapping_open(path, flags, mode=0o600, *, dir_fd=None):
+                nonlocal swapped
+                del mode
+                if path == candidate.name and dir_fd is not None and not swapped:
+                    candidate.rename(held_candidate)
+                    replacement.rename(candidate)
+                    swapped = True
+                if dir_fd is None:
+                    return real_open(path, flags)
+                return real_open(path, flags, dir_fd=dir_fd)
+
+            with mock.patch.object(module.os, "open", side_effect=swapping_open):
+                result = module.run_fixtures(root)
+
+        self.assertTrue(swapped)
+        self.assertEqual(result, 1)
+
     def test_cli_rejects_abbreviated_fixture_options(self) -> None:
         option = "--fixtures"
         for stop in range(3, len(option)):
