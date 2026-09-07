@@ -386,7 +386,10 @@
       "then": {
         "properties": {
           "source_surface": {
-            "properties": {"current_record_present": {"const": false}}
+            "properties": {
+              "previous_record_present": {"const": true},
+              "current_record_present": {"const": false}
+            }
           },
           "authority": {
             "properties": {
