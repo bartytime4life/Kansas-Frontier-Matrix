@@ -410,6 +410,46 @@
           }
         }
       }
+    },
+    {
+      "if": {
+        "properties": {
+          "source_surface": {
+            "properties": {"source_check_outcome": {"const": "SOURCE_CONFLICT"}},
+            "required": ["source_check_outcome"]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "advisory": {
+            "properties": {
+              "normalized_status": {"const": "SOURCE_CONFLICT"},
+              "clears_prior_advisory": {"const": false}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "advisory": {
+            "properties": {"normalized_status": {"const": "SOURCE_CONFLICT"}},
+            "required": ["normalized_status"]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "source_surface": {
+            "properties": {"source_check_outcome": {"const": "SOURCE_CONFLICT"}}
+          },
+          "advisory": {
+            "properties": {"clears_prior_advisory": {"const": false}}
+          }
+        }
+      }
     }
   ],
   "x-kfm": {

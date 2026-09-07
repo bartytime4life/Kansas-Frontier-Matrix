@@ -27,6 +27,9 @@ An exact expiry cannot precede the source check while a record claims an
 `NOT_MODIFIED` is continuity evidence only when both the previous and current
 records are present; validation denies either missing side at its record-presence
 field even when the carrier does not claim a complete snapshot.
+`SOURCE_CONFLICT` is also bidirectional: the normalized status and source-check
+outcome must both declare the conflict, so downstream consumers cannot mistake
+a fetched carrier for an unresolved source contradiction.
 Only `COMPLETE_SNAPSHOT` source mode may assert `snapshot_complete=true`;
 incremental and single-event carriers fail at the completeness field instead
 of overstating absence-ready source coverage. A failed or conflicting source

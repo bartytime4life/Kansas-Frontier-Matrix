@@ -72,7 +72,7 @@ class DrinkingWaterAdvisoryTests(unittest.TestCase):
                 raw_case["expected_findings"],
                 raw_case["name"],
             )
-        self.assertEqual(observed, {"PASS": 5, "DENY": 12, "ERROR": 1})
+        self.assertEqual(observed, {"PASS": 5, "DENY": 13, "ERROR": 1})
 
     def test_finite_valid_status_partition(self) -> None:
         self.assertEqual(
@@ -192,6 +192,53 @@ class DrinkingWaterAdvisoryTests(unittest.TestCase):
                 ),
             },
         )
+
+    def test_source_conflict_status_and_outcome_are_bidirectional(self) -> None:
+        scenarios = (
+            (
+                "advisory",
+                "normalized_status",
+                "SOURCE_CONFLICT",
+                {
+                    (
+                        "SCHEMA_INVALID",
+                        "/source_surface/source_check_outcome",
+                    ),
+                    (
+                        "SOURCE_CONFLICT_OUTCOME_REQUIRED",
+                        "/source_surface/source_check_outcome",
+                    ),
+                },
+            ),
+            (
+                "source_surface",
+                "source_check_outcome",
+                "SOURCE_CONFLICT",
+                {
+                    (
+                        "SCHEMA_INVALID",
+                        "/advisory/normalized_status",
+                    ),
+                    (
+                        "SOURCE_CONFLICT_REQUIRED",
+                        "/advisory",
+                    ),
+                },
+            ),
+        )
+        for section, field, value, expected in scenarios:
+            with self.subTest(section=section):
+                candidate = copy.deepcopy(self.valid["valid_identity_conflict"])
+                candidate[section][field] = value
+                candidate = validator.assign_identity(candidate)
+
+                result = validator.validate_payload(candidate)
+
+                self.assertEqual(result.outcome, "DENY")
+                self.assertEqual(
+                    {(finding.code, finding.path) for finding in result.findings},
+                    expected,
+                )
 
     def test_only_complete_snapshot_mode_can_claim_completeness(self) -> None:
         for source_mode in ("INCREMENTAL_FEED", "SINGLE_EVENT"):
@@ -677,7 +724,7 @@ class DrinkingWaterAdvisoryTests(unittest.TestCase):
         )
         self.assertEqual(completed.returncode, 0, completed.stderr)
         rows = [json.loads(line) for line in completed.stdout.splitlines() if line.strip()]
-        self.assertEqual(len(rows), 18)
+        self.assertEqual(len(rows), 19)
         self.assertEqual({row["outcome"] for row in rows}, {"PASS", "DENY", "ERROR"})
 
     def test_cli_rejects_ambiguous_fixture_modes(self) -> None:

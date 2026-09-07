@@ -441,6 +441,15 @@
       "expected_findings": []
     },
     {
+      "name": "source_conflict_status_without_source_outcome",
+      "base": "identity_conflict",
+      "mutations": [
+        {"path": "/advisory/normalized_status", "value": "SOURCE_CONFLICT"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["SCHEMA_INVALID", "SOURCE_CONFLICT_OUTCOME_REQUIRED"]
+    },
+    {
       "name": "missing_rescission_notice",
       "base": "rescinded",
       "mutations": [

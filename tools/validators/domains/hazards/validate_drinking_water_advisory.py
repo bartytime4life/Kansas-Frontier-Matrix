@@ -466,6 +466,14 @@ def _semantic_findings(candidate: Mapping[str, Any]) -> list[Finding]:
     elif status == "ACTIVE_CONFIRMED" and outcome not in {"FETCHED", "NOT_MODIFIED"}:
         findings.append(Finding("CURRENT_SOURCE_REQUIRED", "/source_surface/source_check_outcome"))
 
+    if status == "SOURCE_CONFLICT" and outcome != "SOURCE_CONFLICT":
+        findings.append(
+            Finding(
+                "SOURCE_CONFLICT_OUTCOME_REQUIRED",
+                "/source_surface/source_check_outcome",
+            )
+        )
+
     if outcome == "NOT_MODIFIED":
         if not previous_present:
             findings.append(
