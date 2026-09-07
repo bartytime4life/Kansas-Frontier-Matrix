@@ -566,6 +566,35 @@ def test_cardinal_coordinate_pairs_are_denied_in_both_orders():
     )
 
 
+def test_cardinal_coordinate_pairs_with_degree_signs_are_denied():
+    module = _module()
+    manifest = json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))
+    candidate = module.materialize_case(
+        manifest, _case(manifest, "valid_county_crop_observation")
+    )
+
+    padding = "٠" * 4096
+    for value in (
+        "N 38.8751° W 98.4520°",
+        "38.8751°N 98.4520°W",
+        "W 98.4520° N 38.8751°",
+        "98.4520°W 38.8751°N",
+        "N ٣٨.٨٧٥١ °, W ٩٨.٤٥٢٠ °",
+        "٩٨.٤٥٢٠ ° W, ٣٨.٨٧٥١ ° N",
+        f"N {padding}٣٨.٨٧٥١° W {padding}٩٨.٤٥٢٠°",
+    ):
+        mutated = copy.deepcopy(candidate)
+        mutated["indicator"]["value"] = value
+        mutated["spec_hash"], mutated["id"] = module.canonical_identity(mutated)
+        result = module.validate_payload(mutated)
+        assert [(finding.code, finding.path) for finding in result.findings] == [
+            ("AG_MAP_HARMFUL_PRECISION_DENIED", "/indicator/value")
+        ]
+
+    assert not module._contains_coordinate_literal("N 91° W 98°")
+    assert not module._contains_coordinate_literal("181°W 91°N")
+
+
 def test_malformed_json_returns_machine_readable_denial(tmp_path, capsys):
     module = _module()
     candidate_path = tmp_path / "malformed.json"
