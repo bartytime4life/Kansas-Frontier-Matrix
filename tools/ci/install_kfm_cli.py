@@ -27,6 +27,7 @@ MAX_LOCK_LINE_LENGTH = 1_024
 MAX_LOCK_LINES = 8_192
 MAX_REQUIREMENTS = 128
 MAX_HASHES_PER_REQUIREMENT = 32
+MAX_LOCAL_PACKAGE_ENTRIES = 512
 INSTALL_TIMEOUT_SECONDS = 300
 UNSAFE_PYTHON_ENVIRONMENT = {"PYTHONHOME", "PYTHONPATH", "PYTHONUSERBASE"}
 NONCANONICAL_LINE_BREAKS = ("\v", "\f", "\x1c", "\x1d", "\x1e", "\x85", "\u2028", "\u2029")
@@ -167,8 +168,13 @@ def validate_local_package(path: Path = LOCAL_PACKAGE) -> None:
     if not metadata.is_file():
         raise CliInstallConfigurationError("CLI_LOCAL_PACKAGE_METADATA_MISSING")
     try:
-        if any(entry.is_symlink() for entry in path.rglob("*")):
-            raise CliInstallConfigurationError("CLI_LOCAL_PACKAGE_ENTRY_UNSAFE")
+        for entry_number, entry in enumerate(path.rglob("*"), start=1):
+            if entry_number > MAX_LOCAL_PACKAGE_ENTRIES:
+                raise CliInstallConfigurationError(
+                    "CLI_LOCAL_PACKAGE_ENTRY_LIMIT_EXCEEDED"
+                )
+            if entry.is_symlink():
+                raise CliInstallConfigurationError("CLI_LOCAL_PACKAGE_ENTRY_UNSAFE")
     except OSError as exc:
         raise CliInstallConfigurationError("CLI_LOCAL_PACKAGE_UNREADABLE") from exc
 

@@ -306,6 +306,30 @@ class InstallKfmCliTests(unittest.TestCase):
             ):
                 module.validate_local_package(package)
 
+    def test_local_package_bounds_entry_count(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp) / "repository"
+            package = root / "packages/kfm-cli"
+            package.mkdir(parents=True)
+            (package / "pyproject.toml").write_text(
+                "[build-system]\n",
+                encoding="utf-8",
+            )
+            for index in range(module.MAX_LOCAL_PACKAGE_ENTRIES):
+                (package / f"entry-{index:03d}.txt").write_text(
+                    "synthetic\n",
+                    encoding="utf-8",
+                )
+
+            with (
+                mock.patch.object(module, "REPO_ROOT", root),
+                self.assertRaisesRegex(
+                    module.CliInstallConfigurationError,
+                    "^CLI_LOCAL_PACKAGE_ENTRY_LIMIT_EXCEEDED$",
+                ),
+            ):
+                module.validate_local_package(package)
+
     def test_install_executes_argument_vectors_without_a_shell(self) -> None:
         with (
             mock.patch.object(module.time, "monotonic", side_effect=(100.0, 100.0, 150.0)),
