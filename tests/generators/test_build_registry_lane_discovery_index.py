@@ -87,6 +87,31 @@ class RegistryLaneDiscoveryIndexTests(unittest.TestCase):
         self.assertTrue(by_lane["sources"]["readme_present"])
         self.assertFalse(by_lane["datasets"]["readme_present"])
 
+    def test_symlinked_lane_readme_fails_closed(self) -> None:
+        tempdir, root = self._fixture((("sources", False),), include_noise=False)
+        self.addCleanup(tempdir.cleanup)
+        external = Path(tempdir.name) / "external-readme.md"
+        external.write_text("# external\n", encoding="utf-8")
+        (root / "sources" / "README.md").symlink_to(external)
+
+        with self.assertRaisesRegex(
+            RegistryDiscoveryError,
+            "registry lane README must not be a symlink: sources",
+        ):
+            build_registry_lane_discovery_index(root)
+
+    def test_broken_symlinked_lane_readme_fails_closed(self) -> None:
+        tempdir, root = self._fixture((("sources", False),), include_noise=False)
+        self.addCleanup(tempdir.cleanup)
+        missing = Path(tempdir.name) / "missing-readme.md"
+        (root / "sources" / "README.md").symlink_to(missing)
+
+        with self.assertRaisesRegex(
+            RegistryDiscoveryError,
+            "registry lane README must not be a symlink: sources",
+        ):
+            build_registry_lane_discovery_index(root)
+
     def test_hidden_directories_are_excluded(self) -> None:
         tempdir, root = self._fixture((("sources", True),))
         self.addCleanup(tempdir.cleanup)
@@ -173,6 +198,32 @@ class RegistryLaneDiscoveryIndexTests(unittest.TestCase):
             {
                 "authority_created": False,
                 "error": "registry lane must not be a symlink: linked",
+                "outcome": "ERROR",
+                "profile": "kfm.registry-lane-discovery-index.v1",
+            },
+            json.loads(result.stdout),
+        )
+
+    def test_cli_rejects_symlinked_lane_readme_without_exposing_target(self) -> None:
+        tempdir, root = self._fixture((("sources", False),), include_noise=False)
+        self.addCleanup(tempdir.cleanup)
+        external = Path(tempdir.name) / "external-readme.md"
+        external.write_text("# external\n", encoding="utf-8")
+        (root / "sources" / "README.md").symlink_to(external)
+
+        result = subprocess.run(
+            [sys.executable, str(GENERATOR_PATH), "--registry-root", str(root)],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+
+        self.assertEqual(2, result.returncode)
+        self.assertEqual("", result.stderr)
+        self.assertEqual(
+            {
+                "authority_created": False,
+                "error": "registry lane README must not be a symlink: sources",
                 "outcome": "ERROR",
                 "profile": "kfm.registry-lane-discovery-index.v1",
             },

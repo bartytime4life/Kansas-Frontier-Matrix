@@ -30,10 +30,15 @@ def _lane_record(root: Path, entry: Path) -> dict[str, Any]:
     name = entry.name
     if not LANE_NAME_RE.fullmatch(name):
         raise RegistryDiscoveryError(f"unsupported registry lane name: {name}")
+    readme = entry / "README.md"
+    if readme.is_symlink():
+        raise RegistryDiscoveryError(
+            f"registry lane README must not be a symlink: {name}"
+        )
     return {
         "lane": name,
         "path": (Path("data") / "registry" / name).as_posix(),
-        "readme_present": (entry / "README.md").is_file(),
+        "readme_present": readme.is_file(),
     }
 
 
