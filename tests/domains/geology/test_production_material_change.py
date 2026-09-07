@@ -150,6 +150,23 @@ def test_operational_error_cannot_conceal_retrieval_time_regression() -> None:
     )
 
 
+def test_operational_error_cannot_conceal_coverage_regression() -> None:
+    packet = json.loads(
+        (VALID / "operational_error.json").read_text(encoding="utf-8")
+    )
+    packet["prior_snapshot"]["coverage_end"] = "2025-12"
+    packet["spec_hash"] = canonical_spec_hash(packet)
+    packet["assessment_id"] = expected_assessment_id(packet)
+
+    result = validate_payload(packet)
+    assert result.findings == (
+        Finding(
+            "COVERAGE_REGRESSION_REQUIRES_HOLD",
+            "/assessment/outcome",
+        ),
+    )
+
+
 @pytest.mark.parametrize(
     ("fixture", "concealing_reason", "expected_finding"),
     (

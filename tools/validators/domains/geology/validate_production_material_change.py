@@ -413,6 +413,13 @@ def _semantic_findings(candidate: Mapping[str, Any]) -> list[Finding]:
                 )
             )
     elif outcome == "ERROR":
+        if coverage_regression:
+            findings.append(
+                Finding(
+                    "COVERAGE_REGRESSION_REQUIRES_HOLD",
+                    "/assessment/outcome",
+                )
+            )
         if retrieval_time_regression:
             findings.append(
                 Finding(
