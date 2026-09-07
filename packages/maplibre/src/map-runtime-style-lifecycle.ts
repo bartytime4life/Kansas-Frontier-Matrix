@@ -459,6 +459,11 @@ export function createMapRuntimeStyleLifecycleCoordinator(
       if (typeof executor !== "function") {
         invalid("Map runtime style lifecycle executor is invalid.");
       }
+      if (accepted.plan.actions.length === 0) {
+        pending = null;
+        current = accepted.plan.target;
+        return current;
+      }
       pending = null;
       executing = accepted;
       const controller = new AbortController();

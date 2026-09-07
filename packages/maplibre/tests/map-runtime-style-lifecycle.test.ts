@@ -458,6 +458,33 @@ describe("renderer-neutral style lifecycle coordination", () => {
     expect(coordinator.requiresReconciliation()).toBe(false);
   });
 
+  it("commits an empty plan without entering the renderer boundary", async () => {
+    vi.useFakeTimers();
+    try {
+      const initial = style(
+        [["roads", "v1"]],
+        [["roads-line", "roads"]],
+      );
+      const coordinator = createMapRuntimeStyleLifecycleCoordinator(initial);
+      const ticket = coordinator.plan(initial);
+      let executions = 0;
+
+      expect(ticket.plan.actions).toEqual([]);
+      const result = await coordinator.execute(ticket, () => {
+        executions += 1;
+        throw new Error("empty plans must not reach the renderer");
+      });
+
+      expect(executions).toBe(0);
+      expect(vi.getTimerCount()).toBe(0);
+      expect(result).toBe(ticket.plan.target);
+      expect(coordinator.getState()).toBe(ticket.plan.target);
+      expect(coordinator.requiresReconciliation()).toBe(false);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it("times out abort-ignoring renderer execution and requires reconciliation", async () => {
     vi.useFakeTimers();
     try {
