@@ -390,11 +390,13 @@ const syncWorkspaceNavigation = (): void => {
       ),
     ).map((button) => button.dataset.domainId),
   );
+  const consumerReadyAfterSelection =
+    domainButton !== undefined && !domainButton.disabled;
   activeDeepLinkKnowledgeDomainId =
     resolvePublicKnowledgeDomainUrlConsumerCommit(
       domainTransition,
       selectedDomainId,
-      requestedDomainId === null || consumerReady,
+      requestedDomainId === null || consumerReadyAfterSelection,
       requestedDomainId === null || ownedConsumerCurrent,
     );
   activeDeepLinkKnowledgeDomainConsumer =

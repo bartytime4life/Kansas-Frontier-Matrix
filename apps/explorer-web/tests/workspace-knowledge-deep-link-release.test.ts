@@ -479,12 +479,19 @@ describe("public Knowledge-domain deep-link release", () => {
     );
     expect(knowledgeRetryClearIndex).toBeGreaterThan(staleGenerationGuardIndex);
     const clickIndex = mainSource.indexOf("domainButton.click()");
-    expect(
-      mainSource.indexOf(
-        "resolvePublicKnowledgeDomainUrlConsumerCommit(",
-        clickIndex,
-      ),
-    ).toBeGreaterThan(clickIndex);
+    const finalReadinessIndex = mainSource.indexOf(
+      "const consumerReadyAfterSelection =",
+      clickIndex,
+    );
+    const ownershipCommitIndex = mainSource.indexOf(
+      "resolvePublicKnowledgeDomainUrlConsumerCommit(",
+      clickIndex,
+    );
+    expect(finalReadinessIndex).toBeGreaterThan(clickIndex);
+    expect(ownershipCommitIndex).toBeGreaterThan(finalReadinessIndex);
+    expect(mainSource).toContain(
+      "requestedDomainId === null || consumerReadyAfterSelection",
+    );
     expect(mainSource).toContain(
       'button[data-domain-id][aria-pressed="true"]',
     );
