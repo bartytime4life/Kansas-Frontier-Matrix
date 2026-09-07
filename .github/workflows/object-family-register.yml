@@ -4,12 +4,31 @@
 # dependencies. A green result proves navigational index consistency only; it
 # does not select conflicting candidates, add object-family authority, or
 # authorize policy, evidence, release, deployment, promotion, or publication.
+# Trigger boundary: watch the exact workflow surfaces declared by the register;
+# do not restore the repository-wide .github/workflows/** fan-out trigger.
 name: object-family-register
 
 "on":
   pull_request:
     paths:
       - ".github/workflows/object-family-register.yml"
+      - ".github/workflows/ai-receipt.yml"
+      - ".github/workflows/evidence-bundle-projection-aggregate.yml"
+      - ".github/workflows/generated-runtime-proof-artifact.yml"
+      - ".github/workflows/layer-manifest-admission.yml"
+      - ".github/workflows/layer-manifest.yml"
+      - ".github/workflows/policy-decision-semantics-v1.yml"
+      - ".github/workflows/policy-decision-vocabulary.yml"
+      - ".github/workflows/promotion-receipt.yml"
+      - ".github/workflows/proof-pack-closure.yml"
+      - ".github/workflows/release-bound-run-receipt.yml"
+      - ".github/workflows/release-manifest.yml"
+      - ".github/workflows/rollback-card.yml"
+      - ".github/workflows/runtime-verification-contract.yml"
+      - ".github/workflows/schema-validation.yml"
+      - ".github/workflows/soil-domain-validation-report.yml"
+      - ".github/workflows/source-activation-decision-validate.yml"
+      - ".github/workflows/source-descriptor-validate.yml"
       - "apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts"
       - "contracts/**"
       - "control_plane/object_family_register.yaml"
@@ -32,11 +51,29 @@ name: object-family-register
       - "tools/proof_pack/proof_pack_check.py"
       - "tools/validators/**"
       - "data/receipts/generated/genrec-object-family-register-*.json"
+      - "data/receipts/generated/genrec-object-family-trigger-closure-20260907.json"
   push:
     branches:
       - main
     paths:
       - ".github/workflows/object-family-register.yml"
+      - ".github/workflows/ai-receipt.yml"
+      - ".github/workflows/evidence-bundle-projection-aggregate.yml"
+      - ".github/workflows/generated-runtime-proof-artifact.yml"
+      - ".github/workflows/layer-manifest-admission.yml"
+      - ".github/workflows/layer-manifest.yml"
+      - ".github/workflows/policy-decision-semantics-v1.yml"
+      - ".github/workflows/policy-decision-vocabulary.yml"
+      - ".github/workflows/promotion-receipt.yml"
+      - ".github/workflows/proof-pack-closure.yml"
+      - ".github/workflows/release-bound-run-receipt.yml"
+      - ".github/workflows/release-manifest.yml"
+      - ".github/workflows/rollback-card.yml"
+      - ".github/workflows/runtime-verification-contract.yml"
+      - ".github/workflows/schema-validation.yml"
+      - ".github/workflows/soil-domain-validation-report.yml"
+      - ".github/workflows/source-activation-decision-validate.yml"
+      - ".github/workflows/source-descriptor-validate.yml"
       - "apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts"
       - "contracts/**"
       - "control_plane/object_family_register.yaml"
@@ -59,6 +96,7 @@ name: object-family-register
       - "tools/proof_pack/proof_pack_check.py"
       - "tools/validators/**"
       - "data/receipts/generated/genrec-object-family-register-*.json"
+      - "data/receipts/generated/genrec-object-family-trigger-closure-20260907.json"
   workflow_dispatch:
 
 permissions:
@@ -126,7 +164,7 @@ jobs:
         run: |
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-object-family-register-evidence-ref-workflow-parity-20260825.json \
+            data/receipts/generated/genrec-object-family-trigger-closure-20260907.json \
             --repo-root .
 
       - name: Record validation boundary
