@@ -109,9 +109,11 @@ whether integer or fractional and whether coordinate pairs use commas, whitespac
 or cardinal-direction prefix/suffix notation. Cardinal pairs are detected in either
 latitude/longitude order and range-checked by axis. Arbitrarily long runs of
 leading zeroes cannot bypass labeled, WKT point, numeric-pair, or cardinal-pair
-scanning. For range-checked numeric and cardinal pairs, leading zeroes are
-removed before numeric evaluation, so padded valid coordinates remain denied
-while padded out-of-range lookalikes are not misclassified.
+scanning. Decimal cardinal pairs remain denied when a degree sign is adjacent
+to or separated from either magnitude. For range-checked numeric and cardinal
+pairs, leading zeroes are removed before numeric evaluation, so padded valid
+coordinates remain denied while padded out-of-range lookalikes are not
+misclassified.
 Protected identifier values are denied at every length. A complete scalar that
 is shaped as a private identity label remains denied with one or more identity
 tokens, regardless of capitalization or Unicode letter width, even when it
