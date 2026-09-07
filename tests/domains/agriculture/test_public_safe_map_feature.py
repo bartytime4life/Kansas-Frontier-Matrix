@@ -496,6 +496,10 @@ def test_cardinal_coordinate_pairs_are_denied_in_both_orders():
         "0038.8751N 0098.4520W",
         "W 0098.4520 N 0038.8751",
         "0098.4520W 0038.8751N",
+        "N ٠٣٨.٨٧٥١ W ٠٩٨.٤٥٢٠",
+        "٠٣٨.٨٧٥١N ٠٩٨.٤٥٢٠W",
+        "W ۰۰۹۸.۴۵۲۰ N ۰۰۳۸.۸۷۵۱",
+        "००९८.४५२०W ००३८.८७५१N",
     ):
         mutated = copy.deepcopy(candidate)
         mutated["indicator"]["value"] = value
@@ -520,6 +524,13 @@ def test_cardinal_coordinate_pairs_are_denied_in_both_orders():
     )
     assert not module._contains_coordinate_literal(
         f"N {padding}91 W {padding}98"
+    )
+    unicode_padding = "٠" * 4096
+    assert module._contains_coordinate_literal(
+        f"N {unicode_padding}٣٨.٨٧٥١ W {unicode_padding}٩٨.٤٥٢٠"
+    )
+    assert not module._contains_coordinate_literal(
+        f"N {unicode_padding}٩١ W {unicode_padding}٩٨"
     )
 
 
