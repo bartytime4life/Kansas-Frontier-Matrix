@@ -16,23 +16,23 @@
   ],
   "artifact_hashes": {
     ".github/workflows/evidence-drawer-payload.yml": "sha256:c0864985a80cf0074f4abb80222b4620c4e3e9bbf2306fbf3ad69a6d1b6366b8",
-    "apps/explorer-web/src/adapters/GovernedClient.ts": "sha256:aa568e4bbe13722cd616d41fd059f62985f7fad09d15e8f5c3daeec719dfdbaa",
-    "apps/explorer-web/tests/evidence-drawer.test.ts": "sha256:7db7684fb49f767d8eaafb5de227b5f46c9719008d090ca598925aca94aa69b2",
-    "contracts/ui/evidence_drawer_payload.md": "sha256:4467bc0d4318cdd97384d4e566d81a3b356cc3980a6e1cb6faadede2d4792977",
+    "apps/explorer-web/src/adapters/GovernedClient.ts": "sha256:dcf4dd54d07996028336f7facc4cabb6c5290d5e052608ce5eba956e846d9ca2",
+    "apps/explorer-web/tests/evidence-drawer.test.ts": "sha256:2229766cb1c0d9a465bbf0ed25b54ff183e4f96ae70a256a06725a6fac5573cc",
+    "contracts/ui/evidence_drawer_payload.md": "sha256:715017df14b1f061c839fdc74af78e014526d44be9da182936492627e0fe9aa4",
     "fixtures/ui/evidence_drawer_payload/invalid/abstain-held-with-released-state.expected_code.txt": "sha256:28e87cd8a49246eb1d87a8b9b4413e3af4cc528300a587789b642bdd6e5b00ba",
     "fixtures/ui/evidence_drawer_payload/invalid/abstain-held-with-released-state.json": "sha256:639899491ec417719cc1f5a3534b5f98acadf1c3012e1619c72514d06cf23802",
     "fixtures/ui/evidence_drawer_payload/valid/abstain-source-drift-review.json": "sha256:8c8afcbe451932721865bf1fe4004c574293918f29aca683377c8fc8c080ec5d",
-    "packages/envelopes/src/envelopes/map_context_evidence_drawer.py": "sha256:bf5e7b9e3fdcdeee8a48a8763dd374cc9aa093c84fff255e5bec1cd32c001aec",
-    "tests/packages/envelopes/test_map_context_evidence_drawer_admission.py": "sha256:01fce36ecf94525258ef037bcf9aca033da06a34107df74b91a76654d0113acd",
-    "tests/validators/test_validate_evidence_drawer_payload.py": "sha256:49ec53bd59b45648ea1232aec661d3cee78df240f8962d07005372e402daba19",
-    "tools/validators/ui/validate_evidence_drawer_payload.py": "sha256:fff1996555bc4b01019da784a8df33b195365b322640a7078142954ee22d2af6"
+    "packages/envelopes/src/envelopes/map_context_evidence_drawer.py": "sha256:01f4aeccc54e51630e7c27333fae68d043945907628d64ca9e908352ffae33d7",
+    "tests/packages/envelopes/test_map_context_evidence_drawer_admission.py": "sha256:4fb2dcbf6c5cb322a6c75f806e67d045546cef51b9cb246452f491083177299b",
+    "tests/validators/test_validate_evidence_drawer_payload.py": "sha256:2e24539792301c7c59388bee8b64d4c524b8816835a495334a59ebc6922c287f",
+    "tools/validators/ui/validate_evidence_drawer_payload.py": "sha256:736fa237a043e93f5cfa5f19621a56552c7d15ddc9ee331def18a5c561148712"
   },
   "model_identity": {
     "provider": "OpenAI",
     "model": "GPT-5",
     "version": "2026-09-07"
   },
-  "prompt_or_contract": "sha256:4467bc0d4318cdd97384d4e566d81a3b356cc3980a6e1cb6faadede2d4792977",
+  "prompt_or_contract": "sha256:715017df14b1f061c839fdc74af78e014526d44be9da182936492627e0fe9aa4",
   "parameters": {
     "seed": null,
     "temperature": null,
@@ -81,17 +81,17 @@
     {
       "gate": "explorer-projection",
       "outcome": "PASS",
-      "reason": "Twenty focused Evidence Drawer tests and all 463 Explorer unit tests passed; TypeScript and the Vite production build passed."
+      "reason": "Twenty-one focused Evidence Drawer tests and all 463 Explorer unit tests passed; TypeScript and the Vite production build passed."
     },
     {
       "gate": "map-context-admission-parity",
       "outcome": "PASS",
-      "reason": "Eleven deterministic map-context admission tests and all eight manifest cases passed without network access; held evidence with reviewed or released trust now fails closed."
+      "reason": "Eleven deterministic map-context admission tests and all eight manifest cases passed without network access; held evidence with reviewed, released, or current trust now fails closed."
     },
     {
       "gate": "wire-contract-parity",
       "outcome": "PASS",
-      "reason": "The published UI wire contract explicitly requires HELD_EVIDENCE abstentions to remain PENDING and UNRELEASED, matching Explorer, map-context admission, and canonical validation."
+      "reason": "The published UI wire contract explicitly requires HELD_EVIDENCE abstentions to remain PENDING, UNRELEASED, and non-CURRENT, matching Explorer, map-context admission, and canonical validation."
     },
     {
       "gate": "receipt-workflow-watch-closure",
@@ -142,5 +142,5 @@
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Successor authoring provenance for held-evidence trust-label parity, published wire-contract closure, and complete current-artifact workflow coverage. This receipt binds synthetic public-safe candidate bytes only; it is not evidence, policy approval, human review, merge authority, release authority, deployment authority, publication authority, or public-use permission."
+  "notes": "Successor authoring provenance for held-evidence trust-label and non-current freshness parity, published wire-contract closure, and complete current-artifact workflow coverage. This receipt binds synthetic public-safe candidate bytes only; it is not evidence, policy approval, human review, merge authority, release authority, deployment authority, publication authority, or public-use permission."
 }
