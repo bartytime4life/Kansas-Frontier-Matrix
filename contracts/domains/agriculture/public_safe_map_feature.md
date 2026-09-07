@@ -106,14 +106,28 @@ evidence reference. Protected identifiers remain denied with punctuation or
 plain whitespace separators. Latitude and longitude labels are denied whether
 they use punctuation or plain whitespace; coordinate literals remain denied
 whether integer or fractional and whether coordinate pairs use commas, whitespace,
-or cardinal-direction prefix/suffix notation. Cardinal pairs are range-checked as
-latitude then longitude so out-of-range lookalikes are not misclassified.
+or cardinal-direction prefix/suffix notation. Cardinal pairs are detected in either
+latitude/longitude order and range-checked by axis. Arbitrarily long runs of
+leading zeroes cannot bypass labeled, WKT point, numeric-pair, or cardinal-pair
+scanning. Decimal cardinal pairs remain denied when a degree sign is adjacent
+to or separated from either magnitude. For range-checked numeric and cardinal
+pairs, leading zeroes are removed before numeric evaluation, so padded valid
+coordinates remain denied while padded out-of-range lookalikes are not
+misclassified. Degrees-minutes-seconds cardinal pairs are also denied in either
+coordinate order and any per-axis prefix/suffix direction combination when they
+use ASCII, typographic, or Unicode prime minute/second marks. Decimal cardinal
+pairs use the same independent direction-placement rule. Their degrees are axis-bound, minutes and
+seconds must be below sixty, and nonzero components cannot exceed the 90/180
+degree boundaries.
 Protected identifier values are denied at every length. A complete scalar that
 is shaped as a private identity label remains denied with one or more identity
 tokens, regardless of capitalization or Unicode letter width, even when it
 omits an ID suffix or uses whitespace, colon, equals, or hash delimiters.
 Compatibility-equivalent Unicode forms are normalized before scalar scanning,
 so full-width labels, delimiters, and identifiers cannot bypass the same rules.
+Unicode decimal digits are canonicalized to ASCII before coordinate scanning,
+so Arabic-Indic, extended Arabic-Indic, Devanagari, and equivalent zero padding
+cannot evade the same axis grammar and range checks.
 Descriptive aggregate prose may mention field, farm,
 parcel, operator, well, permit, or water-right concepts without being recast as
 an identity label; explicit protected identifiers and coordinate literals
