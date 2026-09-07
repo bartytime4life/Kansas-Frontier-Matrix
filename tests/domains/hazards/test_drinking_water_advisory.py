@@ -154,7 +154,11 @@ class DrinkingWaterAdvisoryTests(unittest.TestCase):
                 (
                     "NOT_MODIFIED_PRIOR_REQUIRED",
                     "/source_surface/previous_record_present",
-                )
+                ),
+                (
+                    "SNAPSHOT_COMPLETENESS_UNVERIFIED",
+                    "/source_surface/snapshot_complete",
+                ),
             },
         )
 
@@ -177,6 +181,24 @@ class DrinkingWaterAdvisoryTests(unittest.TestCase):
                         )
                     },
                 )
+
+    def test_failed_source_check_cannot_claim_snapshot_completeness(self) -> None:
+        candidate = copy.deepcopy(self.valid["valid_source_failure_unconfirmed"])
+        candidate["source_surface"]["snapshot_complete"] = True
+        candidate = validator.assign_identity(candidate)
+
+        result = validator.validate_payload(candidate)
+
+        self.assertEqual(result.outcome, "DENY")
+        self.assertEqual(
+            {(finding.code, finding.path) for finding in result.findings},
+            {
+                (
+                    "SNAPSHOT_COMPLETENESS_UNVERIFIED",
+                    "/source_surface/snapshot_complete",
+                )
+            },
+        )
 
     def test_unknown_offsets_are_not_used_as_exact_temporal_evidence(self) -> None:
         base = self.valid["valid_authoritative_rescission"]

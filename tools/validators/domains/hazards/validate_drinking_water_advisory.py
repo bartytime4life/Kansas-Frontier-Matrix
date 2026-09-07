@@ -387,6 +387,19 @@ def _semantic_findings(candidate: Mapping[str, Any]) -> list[Finding]:
                 "/source_surface/snapshot_complete",
             )
         )
+    snapshot_complete = source.get("snapshot_complete") is True
+    snapshot_supported = outcome == "FETCHED" or (
+        outcome == "NOT_MODIFIED"
+        and previous_present
+        and current_present
+    )
+    if snapshot_complete and not snapshot_supported:
+        findings.append(
+            Finding(
+                "SNAPSHOT_COMPLETENESS_UNVERIFIED",
+                "/source_surface/snapshot_complete",
+            )
+        )
 
     if status in CONFIRMED_STATUSES:
         if identity.get("resolution_status") != "RESOLVED" or not _present_ref(
