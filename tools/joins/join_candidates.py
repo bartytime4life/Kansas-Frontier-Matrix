@@ -9,8 +9,8 @@ from __future__ import annotations
 
 import argparse
 import copy
+import importlib.util
 import json
-import math
 import sqlite3
 import sys
 from collections.abc import Mapping, Sequence
@@ -19,9 +19,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any
 
-import yaml
 from jsonschema import Draft202012Validator, FormatChecker
-from yaml.events import AliasEvent
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 HASHING_SRC = REPO_ROOT / "packages" / "hashing" / "src"
@@ -38,6 +36,10 @@ from hashing import (  # noqa: E402
 SCHEMA_PATH = REPO_ROOT / "schemas/contracts/v1/joins/cross_lane_join_assessment.schema.json"
 CASES_PATH = REPO_ROOT / "fixtures/contracts/v1/joins/cross_lane_join_assessment/cases.json"
 DOMAIN_LANE_REGISTER_PATH = REPO_ROOT / "control_plane/domain_lane_register.yaml"
+DOMAIN_LANE_REGISTER_VALIDATOR_PATH = (
+    REPO_ROOT
+    / "tools/validators/directory_governance/validate_domain_lane_register.py"
+)
 DOMAIN_LANE_REGISTER_MAX_BYTES = 4 * 1024 * 1024
 DOMAIN_LANE_REGISTER_MAX_NODES = 8_192
 DOMAIN_LANE_REGISTER_MAX_DEPTH = 64
@@ -53,52 +55,6 @@ RULE_ORDER = (
     "SOURCE_ROLES_COMPATIBLE",
 )
 SENSITIVITY_RANK = {"PUBLIC_SAFE": 0, "INTERNAL": 1, "RESTRICTED": 2, "PROHIBITED": 3}
-
-
-class _UniqueKeySafeLoader(yaml.SafeLoader):
-    """Safe YAML loader aligned with the canonical projection validator."""
-
-    def compose_node(self, parent: object, index: object) -> yaml.Node:
-        if self.check_event(AliasEvent):
-            raise yaml.constructor.ConstructorError(
-                "while composing a node",
-                None,
-                "YAML aliases are not allowed in the domain lane register",
-                self.peek_event().start_mark,
-            )
-        return super().compose_node(parent, index)
-
-
-def _construct_unique_mapping(
-    loader: _UniqueKeySafeLoader, node: yaml.nodes.MappingNode, deep: bool = False
-) -> Mapping[object, object]:
-    seen: set[object] = set()
-    for key_node, _ in node.value:
-        key = loader.construct_object(key_node, deep=deep)
-        try:
-            duplicate = key in seen
-        except TypeError as exc:
-            raise yaml.constructor.ConstructorError(
-                "while constructing a mapping",
-                node.start_mark,
-                "found an unhashable mapping key",
-                key_node.start_mark,
-            ) from exc
-        if duplicate:
-            raise yaml.constructor.ConstructorError(
-                "while constructing a mapping",
-                node.start_mark,
-                "found a duplicate mapping key",
-                key_node.start_mark,
-            )
-        seen.add(key)
-    return yaml.SafeLoader.construct_mapping(loader, node, deep=deep)
-
-
-_UniqueKeySafeLoader.add_constructor(
-    yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG,
-    _construct_unique_mapping,
-)
 
 
 @dataclass(frozen=True, order=True)
@@ -215,58 +171,49 @@ def _source_role_conflict(left: Mapping[str, Any], right: Mapping[str, Any]) -> 
     return left.get("source_role") != right.get("source_role")
 
 
-def _domain_lane_projection_is_bounded(value: object) -> bool:
-    pending = [(value, 0)]
-    visited = 0
-    while pending:
-        current, depth = pending.pop()
-        visited += 1
-        if (
-            visited > DOMAIN_LANE_REGISTER_MAX_NODES
-            or depth > DOMAIN_LANE_REGISTER_MAX_DEPTH
-        ):
-            return False
-        if isinstance(current, float) and not math.isfinite(current):
-            return False
-        if isinstance(current, Mapping):
-            pending.extend((child, depth + 1) for child in current.values())
-        elif isinstance(current, list):
-            pending.extend((child, depth + 1) for child in current)
-    return True
+def _canonical_domain_lane_validator() -> object:
+    """Load the authority-owning validator without creating a parallel package API."""
+    validator_path = DOMAIN_LANE_REGISTER_VALIDATOR_PATH
+    if validator_path.is_symlink() or not validator_path.is_file():
+        raise ValueError("domain lane register validator unavailable")
+    module_name = "_kfm_domain_lane_register_validator"
+    specification = importlib.util.spec_from_file_location(module_name, validator_path)
+    if specification is None or specification.loader is None:
+        raise ValueError("domain lane register validator unavailable")
+    module = importlib.util.module_from_spec(specification)
+    prior = sys.modules.get(module_name)
+    sys.modules[module_name] = module
+    try:
+        specification.loader.exec_module(module)
+    finally:
+        if prior is None:
+            sys.modules.pop(module_name, None)
+        else:
+            sys.modules[module_name] = prior
+    return module
 
 
 def _unresolved_domain_aliases(path: Path | None = None) -> Mapping[str, str]:
-    """Read unresolved aliases as a fail-closed dependency, never identity authority.
+    """Consume aliases only after the canonical projection validator passes.
 
-    The domain-lane register is a projection-only review aid. If it cannot be
-    read or parsed, the helper cannot safely prove that two raw domain names are
-    distinct governed lanes, so the dependency failure must propagate instead
-    of being treated as an empty alias set.
+    The domain-lane register is a projection-only review aid. Its authority
+    owner must validate the complete document; a partial consumer-side parser
+    must not reinterpret schema-invalid or semantically noncanonical bytes as
+    evidence that an alias collision is absent.
     """
     register_path = DOMAIN_LANE_REGISTER_PATH if path is None else path
-    if register_path.is_symlink():
-        raise ValueError("domain lane register unavailable")
     try:
-        if (
-            not register_path.is_file()
-            or register_path.stat().st_size > DOMAIN_LANE_REGISTER_MAX_BYTES
-        ):
+        validator = _canonical_domain_lane_validator()
+        value, load_findings = validator.load(register_path)
+        if value is None or load_findings:
             raise ValueError("domain lane register unavailable")
-        value = yaml.load(
-            register_path.read_text(encoding="utf-8"),
-            Loader=_UniqueKeySafeLoader,
-        )
-    except (OSError, UnicodeError, yaml.YAMLError, RecursionError) as exc:
+        result = validator.validate(register_path, repo_root=REPO_ROOT)
+    except Exception as exc:
         raise ValueError("domain lane register unavailable") from exc
-    if not _domain_lane_projection_is_bounded(value):
+    if not result.ok:
         raise ValueError("domain lane register unavailable")
+
     document = _mapping(value)
-    if (
-        document.get("version") != "v1"
-        or document.get("registry") != "domain_lane_register"
-        or document.get("authority") != "machine_projection_only"
-    ):
-        raise ValueError("domain lane alias projection invalid")
     aliases = document.get("unresolved_aliases")
     entries = document.get("entries")
     if not isinstance(aliases, Mapping) or not isinstance(entries, list):

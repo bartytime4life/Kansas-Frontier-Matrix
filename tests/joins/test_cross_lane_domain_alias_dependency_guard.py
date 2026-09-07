@@ -236,15 +236,24 @@ def test_duplicate_alias_name_fails_closed(tmp_path: Path, monkeypatch) -> None:
         "unresolved_aliases:\n  air: atmosphere\n  air: geology\n",
     )
 
-def test_custom_valid_alias_projection_resolves_registered_target(tmp_path: Path) -> None:
+def test_canonical_projection_copy_remains_usable(tmp_path: Path) -> None:
     projection = tmp_path / "domain_lane_register.yaml"
-    projection.write_text(
-        AUTHORITY_ENVELOPE
-        + "unresolved_aliases:\n  air: atmosphere\nentries:\n  - lane_id: atmosphere\n",
-        encoding="utf-8",
-    )
+    projection.write_bytes(MODULE.DOMAIN_LANE_REGISTER_PATH.read_bytes())
 
-    assert MODULE._unresolved_domain_aliases(projection) == {"air": "atmosphere"}
+    assert MODULE._unresolved_domain_aliases(projection) == {
+        "air": "atmosphere",
+        "settlement": "settlements-infrastructure",
+        "transport": "roads-rail-trade",
+    }
+
+
+def test_schema_incomplete_projection_fails_closed(tmp_path: Path, monkeypatch) -> None:
+    _assert_projection_fails_closed(
+        _base_candidate(),
+        tmp_path,
+        monkeypatch,
+        "unresolved_aliases:\n  air: atmosphere\nentries:\n  - lane_id: atmosphere\n",
+    )
 
 
 def test_missing_authority_envelope_fails_closed(tmp_path: Path, monkeypatch) -> None:
