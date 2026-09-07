@@ -136,21 +136,30 @@ COORDINATE_PAIR_PATTERN = re.compile(
 )
 CARDINAL_LATITUDE_MAGNITUDE = r"0*\d{1,2}(?:\.\d+)?"
 CARDINAL_LONGITUDE_MAGNITUDE = UNSIGNED_COORDINATE_MAGNITUDE
+OPTIONAL_CARDINAL_DEGREE_SIGN = r"\s*°?"
 CARDINAL_PREFIX_COORDINATE_PATTERN = re.compile(
     rf"(?i)(?<![\w.])([NS])\s*({CARDINAL_LATITUDE_MAGNITUDE})"
-    rf"(?:\s*,\s*|\s+)([EW])\s*({CARDINAL_LONGITUDE_MAGNITUDE})(?![\w.])"
+    rf"{OPTIONAL_CARDINAL_DEGREE_SIGN}(?:\s*,\s*|\s+)"
+    rf"([EW])\s*({CARDINAL_LONGITUDE_MAGNITUDE})"
+    rf"{OPTIONAL_CARDINAL_DEGREE_SIGN}(?![\w.])"
 )
 CARDINAL_SUFFIX_COORDINATE_PATTERN = re.compile(
-    rf"(?i)(?<![\w.])({CARDINAL_LATITUDE_MAGNITUDE})\s*([NS])"
-    rf"(?:\s*,\s*|\s+)({CARDINAL_LONGITUDE_MAGNITUDE})\s*([EW])(?![\w.])"
+    rf"(?i)(?<![\w.])({CARDINAL_LATITUDE_MAGNITUDE})"
+    rf"{OPTIONAL_CARDINAL_DEGREE_SIGN}\s*([NS])(?:\s*,\s*|\s+)"
+    rf"({CARDINAL_LONGITUDE_MAGNITUDE}){OPTIONAL_CARDINAL_DEGREE_SIGN}"
+    rf"\s*([EW])(?![\w.])"
 )
 CARDINAL_PREFIX_LONGITUDE_LATITUDE_PATTERN = re.compile(
     rf"(?i)(?<![\w.])([EW])\s*({CARDINAL_LONGITUDE_MAGNITUDE})"
-    rf"(?:\s*,\s*|\s+)([NS])\s*({CARDINAL_LATITUDE_MAGNITUDE})(?![\w.])"
+    rf"{OPTIONAL_CARDINAL_DEGREE_SIGN}(?:\s*,\s*|\s+)"
+    rf"([NS])\s*({CARDINAL_LATITUDE_MAGNITUDE})"
+    rf"{OPTIONAL_CARDINAL_DEGREE_SIGN}(?![\w.])"
 )
 CARDINAL_SUFFIX_LONGITUDE_LATITUDE_PATTERN = re.compile(
-    rf"(?i)(?<![\w.])({CARDINAL_LONGITUDE_MAGNITUDE})\s*([EW])"
-    rf"(?:\s*,\s*|\s+)({CARDINAL_LATITUDE_MAGNITUDE})\s*([NS])(?![\w.])"
+    rf"(?i)(?<![\w.])({CARDINAL_LONGITUDE_MAGNITUDE})"
+    rf"{OPTIONAL_CARDINAL_DEGREE_SIGN}\s*([EW])(?:\s*,\s*|\s+)"
+    rf"({CARDINAL_LATITUDE_MAGNITUDE}){OPTIONAL_CARDINAL_DEGREE_SIGN}"
+    rf"\s*([NS])(?![\w.])"
 )
 WKT_POINT_PATTERN = re.compile(
     rf"(?i)\bpoint\s*\(\s*{SIGNED_COORDINATE_MAGNITUDE}\s+"
