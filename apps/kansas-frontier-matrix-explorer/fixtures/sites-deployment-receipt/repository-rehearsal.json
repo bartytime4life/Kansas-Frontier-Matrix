@@ -1,0 +1,11 @@
+{
+  "profile": "kfm.sites.deployment-receipt.v1", "schema_version": "1.0.0", "mode": "REPOSITORY_REHEARSAL", "outcome": "READY_FOR_OPERATOR", "recorded_at": "2026-09-07T17:24:35Z",
+  "site": { "project_id": "appgprj_6a870a079c1c8191abb7401ef092a181", "slug": "kansas-frontier-matrix-explorer", "public_url": "https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site", "previous_version_id": null, "candidate_version_id": null, "final_version_id": null },
+  "source": { "repository": "bartytime4life/Kansas-Frontier-Matrix", "revision": "ec203a9ba11fb83b52245f9523ce36cc1ec6ac66", "artifact_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" },
+  "checks": {
+    "frozen_install": { "outcome": "PASS", "evidence": "Synthetic fixture; replace with exact branch command and result." }, "build": { "outcome": "PASS", "evidence": "Synthetic fixture; replace with exact branch command and result." }, "tests": { "outcome": "PASS", "evidence": "Synthetic fixture; replace with exact branch command and result." }, "lint": { "outcome": "PASS", "evidence": "Synthetic fixture; replace with exact branch command and result." },
+    "desktop_smoke": { "outcome": "NOT_RUN", "evidence": "Reserved for separately authorized operator preview/readback." }, "mobile_smoke": { "outcome": "NOT_RUN", "evidence": "Reserved for separately authorized operator preview/readback." }, "restricted_state": { "outcome": "PASS", "evidence": "Synthetic negative-test expectation; no live Site inspected." }
+  },
+  "rollback": { "target_version_id": null, "procedure": "Restore target_version_id through the existing Site version history, then re-run identity, access, desktop/mobile, restricted-state, and core-flow smoke checks.", "rehearsal_outcome": "PASS", "operator_restore_confirmed": false },
+  "authority": { "live_transition_performed": false, "second_site_created": false, "vercel_mutated": false, "release_authorized": false, "publication_authorized": false }
+}
