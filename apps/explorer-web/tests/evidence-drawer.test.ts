@@ -7,6 +7,7 @@ import heldFixture from "../../../fixtures/ui/evidence_drawer_payload/valid/abst
 import supersededFixture from "../../../fixtures/ui/evidence_drawer_payload/valid/abstain-superseded.json";
 import denyFixture from "../../../fixtures/ui/evidence_drawer_payload/valid/deny-sensitive.json";
 import invalidDenyReasonFixture from "../../../fixtures/ui/evidence_drawer_payload/invalid/deny-missing-evidence.json";
+import invalidAbstainUpstreamFixture from "../../../fixtures/ui/evidence_drawer_payload/invalid/abstain-upstream-error.json";
 import errorFixture from "../../../fixtures/ui/evidence_drawer_payload/valid/error-upstream.json";
 import invalidExtraFieldFixture from "../../../fixtures/ui/evidence_drawer_payload/invalid/extra-field.json";
 import invalidMissingEvidenceFixture from "../../../fixtures/ui/evidence_drawer_payload/invalid/answer-missing-evidence.json";
@@ -278,6 +279,20 @@ describe("Explorer Evidence Drawer governed projection", () => {
     expect(
       result.trustLabels.some((label) => label.startsWith("Correction: ")),
     ).toBe(false);
+    expect(JSON.stringify(result)).not.toContain(forbiddenCanary);
+  });
+
+  it("fails closed when an upstream error is relabeled as an abstention", () => {
+    const forbiddenCanary = "ABSTAIN_UPSTREAM_CANARY_d3b092";
+    const result = resolveEvidenceDrawer(invalidAbstainUpstreamFixture);
+
+    expect(result).toMatchObject({
+      outcome: "ERROR",
+      code: "INVALID_PAYLOAD",
+    });
+    expect(result.evidenceRefs).toEqual([]);
+    expect(result.citations).toEqual([]);
+    expect(result.historyLabels).toEqual([]);
     expect(JSON.stringify(result)).not.toContain(forbiddenCanary);
   });
 

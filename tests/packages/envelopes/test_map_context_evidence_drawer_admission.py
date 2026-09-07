@@ -218,6 +218,27 @@ def test_held_evidence_requires_pending_unreleased_trust() -> None:
         assert candidate["evidence_refs"] == []
 
 
+def test_upstream_error_cannot_be_reclassified_as_abstention() -> None:
+    case = CASES["cases"][0]
+    context = _load(str(case["map_context"]))
+    payload = _load(
+        "fixtures/ui/evidence_drawer_payload/invalid/abstain-upstream-error.json"
+    )
+
+    candidate = build_map_context_evidence_drawer_admission_candidate(
+        decision_id="decision:render:abstain-upstream-invalid",
+        evaluated_at=str(case["evaluated_at"]),
+        map_context=context,
+        drawer_payload=payload,
+        allow_system_test=True,
+    )
+
+    assert candidate["outcome"] == "ERROR"
+    assert candidate["reason_code"] == "DRAWER_TRUST_STATE_MISMATCH"
+    assert candidate["evidence_refs"] == []
+    assert "ABSTAIN_UPSTREAM_CANARY_d3b092" not in json.dumps(candidate)
+
+
 @pytest.mark.parametrize(
     ("field", "value", "code"),
     [

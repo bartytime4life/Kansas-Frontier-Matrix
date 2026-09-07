@@ -207,7 +207,7 @@ def _trust_matches(
                 and trust.get("release") == "UNRELEASED"
                 and trust.get("freshness") != "CURRENT"
             )
-        return reason_code != "SUPPORTED" and policy == "ABSTAIN"
+        return reason_code not in {"SUPPORTED", "UPSTREAM_ERROR"} and policy == "ABSTAIN"
     if outcome == "DENY":
         return (
             reason_code in {

@@ -8,6 +8,8 @@
     "contracts/ui/evidence_drawer_payload.md",
     "fixtures/ui/evidence_drawer_payload/invalid/abstain-held-with-released-state.expected_code.txt",
     "fixtures/ui/evidence_drawer_payload/invalid/abstain-held-with-released-state.json",
+    "fixtures/ui/evidence_drawer_payload/invalid/abstain-upstream-error.expected_code.txt",
+    "fixtures/ui/evidence_drawer_payload/invalid/abstain-upstream-error.json",
     "fixtures/ui/evidence_drawer_payload/invalid/deny-missing-evidence.expected_code.txt",
     "fixtures/ui/evidence_drawer_payload/invalid/deny-missing-evidence.json",
     "fixtures/ui/evidence_drawer_payload/valid/abstain-source-drift-review.json",
@@ -18,25 +20,27 @@
   ],
   "artifact_hashes": {
     ".github/workflows/evidence-drawer-payload.yml": "sha256:c0864985a80cf0074f4abb80222b4620c4e3e9bbf2306fbf3ad69a6d1b6366b8",
-    "apps/explorer-web/src/adapters/GovernedClient.ts": "sha256:d8b02812559b59b4c9385eef9e7ab4be7d59dbd20e3f69b6425ffd0121d2adc7",
-    "apps/explorer-web/tests/evidence-drawer.test.ts": "sha256:a32e612c59adcdf672a4970ecf32c4d1a7cd00a822a78734b18992fc6378901c",
-    "contracts/ui/evidence_drawer_payload.md": "sha256:10829557b00b4e8fd6b03bc735f138a5cb9cdf6f2473a21552e44e7fa7fb44d1",
+    "apps/explorer-web/src/adapters/GovernedClient.ts": "sha256:3f53a91153e79cd9dff50f4cd158df14ad9bee39763e70bd5963a5a43275df60",
+    "apps/explorer-web/tests/evidence-drawer.test.ts": "sha256:8e5f1a9c94ee7d6ebb7e220646d1be7e00d983cb5612c95aeea1a6884b700b7f",
+    "contracts/ui/evidence_drawer_payload.md": "sha256:835295f05379f2c94852c339781b69d69aea059fbee45d767d3ae372d047d40e",
     "fixtures/ui/evidence_drawer_payload/invalid/abstain-held-with-released-state.expected_code.txt": "sha256:28e87cd8a49246eb1d87a8b9b4413e3af4cc528300a587789b642bdd6e5b00ba",
     "fixtures/ui/evidence_drawer_payload/invalid/abstain-held-with-released-state.json": "sha256:639899491ec417719cc1f5a3534b5f98acadf1c3012e1619c72514d06cf23802",
+    "fixtures/ui/evidence_drawer_payload/invalid/abstain-upstream-error.expected_code.txt": "sha256:32fbeee33d6c4924b2bbd8a47f835315e08a2b5e2f0de346e9363accd33ba86c",
+    "fixtures/ui/evidence_drawer_payload/invalid/abstain-upstream-error.json": "sha256:fba02c9739c56927db6fa80e090922a5cd75740f4b6c654d16d59ff47eb8a1de",
     "fixtures/ui/evidence_drawer_payload/invalid/deny-missing-evidence.expected_code.txt": "sha256:102ec17e51f383fc5525298f35959f69889daf4b928f57707cc2f14d27132c58",
     "fixtures/ui/evidence_drawer_payload/invalid/deny-missing-evidence.json": "sha256:cb89ee8c9c08789b232550f5b5e12d835bb8a42b63b0b7970b9a8bcad83004d0",
     "fixtures/ui/evidence_drawer_payload/valid/abstain-source-drift-review.json": "sha256:8c8afcbe451932721865bf1fe4004c574293918f29aca683377c8fc8c080ec5d",
-    "packages/envelopes/src/envelopes/map_context_evidence_drawer.py": "sha256:01f4aeccc54e51630e7c27333fae68d043945907628d64ca9e908352ffae33d7",
-    "tests/packages/envelopes/test_map_context_evidence_drawer_admission.py": "sha256:4fb2dcbf6c5cb322a6c75f806e67d045546cef51b9cb246452f491083177299b",
-    "tests/validators/test_validate_evidence_drawer_payload.py": "sha256:3e2332b474c4befcab5a2cd073b071a1c28be447df887f8b615a2a408777093f",
-    "tools/validators/ui/validate_evidence_drawer_payload.py": "sha256:f57fe8c62f50025a11c483333d9300feba137806f2ff87673d927e9d722f82da"
+    "packages/envelopes/src/envelopes/map_context_evidence_drawer.py": "sha256:63bd28d1827538301ca3b7a42dfd6b197e700e2408a0fa4ab8d71c4c7cffacee",
+    "tests/packages/envelopes/test_map_context_evidence_drawer_admission.py": "sha256:86b74802acd089fee48a14f3690769bb566580597f72818e07ca1cba55dd67b9",
+    "tests/validators/test_validate_evidence_drawer_payload.py": "sha256:919b8d94158c83fe9d6ce2e7f0b519294754f2be0bab07be0070e36ce79f9187",
+    "tools/validators/ui/validate_evidence_drawer_payload.py": "sha256:21839481370c38fc05abb14a37906cc20a44b5d65a2110ade9a89a3355c225e3"
   },
   "model_identity": {
     "provider": "OpenAI",
     "model": "GPT-5",
     "version": "2026-09-07"
   },
-  "prompt_or_contract": "sha256:10829557b00b4e8fd6b03bc735f138a5cb9cdf6f2473a21552e44e7fa7fb44d1",
+  "prompt_or_contract": "sha256:835295f05379f2c94852c339781b69d69aea059fbee45d767d3ae372d047d40e",
   "parameters": {
     "seed": null,
     "temperature": null,
@@ -65,6 +69,8 @@
     "contracts/ui/evidence_drawer_payload.md": "PROPOSED",
     "fixtures/ui/evidence_drawer_payload/invalid/abstain-held-with-released-state.expected_code.txt": "PROPOSED",
     "fixtures/ui/evidence_drawer_payload/invalid/abstain-held-with-released-state.json": "PROPOSED",
+    "fixtures/ui/evidence_drawer_payload/invalid/abstain-upstream-error.expected_code.txt": "PROPOSED",
+    "fixtures/ui/evidence_drawer_payload/invalid/abstain-upstream-error.json": "PROPOSED",
     "fixtures/ui/evidence_drawer_payload/invalid/deny-missing-evidence.expected_code.txt": "PROPOSED",
     "fixtures/ui/evidence_drawer_payload/invalid/deny-missing-evidence.json": "PROPOSED",
     "fixtures/ui/evidence_drawer_payload/valid/abstain-source-drift-review.json": "PROPOSED",
@@ -77,27 +83,27 @@
     {
       "gate": "candidate-artifact-hash-closure",
       "outcome": "PASS",
-      "reason": "Thirteen public-safe workflow, contract, implementation, fixture, and test artifacts are SHA-256 bound."
+      "reason": "Fifteen public-safe workflow, contract, implementation, fixture, and test artifacts are SHA-256 bound."
     },
     {
       "gate": "canonical-payload-validator",
       "outcome": "PASS",
-      "reason": "Twelve valid and thirteen expected-failure fixtures plus seventeen focused validator tests passed without network access."
+      "reason": "Twelve valid and fourteen expected-failure fixtures plus eighteen focused validator tests passed without network access."
     },
     {
       "gate": "explorer-projection",
       "outcome": "PASS",
-      "reason": "Twenty-two focused Evidence Drawer tests and all 465 Explorer unit tests passed; TypeScript and the Vite production build passed."
+      "reason": "Twenty-three focused Evidence Drawer tests and all 466 Explorer unit tests passed; TypeScript and the Vite production build passed."
     },
     {
       "gate": "map-context-admission-parity",
       "outcome": "PASS",
-      "reason": "Eleven deterministic map-context admission tests and all eight manifest cases passed without network access; held evidence with reviewed, released, or current trust now fails closed."
+      "reason": "Twelve deterministic map-context admission tests and all eight manifest cases passed without network access; held evidence with reviewed, released, or current trust and upstream errors relabeled as abstentions fail closed."
     },
     {
       "gate": "wire-contract-parity",
       "outcome": "PASS",
-      "reason": "The published UI wire contract limits DENY to policy, unresolved-rights, and sensitive-detail reasons, matching Explorer, map-context admission, and canonical validation."
+      "reason": "The published UI wire contract limits DENY to policy, unresolved-rights, and sensitive-detail reasons and reserves UPSTREAM_ERROR for ERROR, matching Explorer, map-context admission, and canonical validation."
     },
     {
       "gate": "receipt-workflow-watch-closure",
@@ -138,6 +144,11 @@
       "id": "repo:deny-reason-negative-fixture",
       "validated": true,
       "evidence_ref": "fixtures/ui/evidence_drawer_payload/invalid/deny-missing-evidence.json"
+    },
+    {
+      "id": "repo:abstain-upstream-negative-fixture",
+      "validated": true,
+      "evidence_ref": "fixtures/ui/evidence_drawer_payload/invalid/abstain-upstream-error.json"
     }
   ],
   "human_review": {
@@ -153,5 +164,5 @@
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Successor authoring provenance for held-evidence trust-label and non-current freshness parity, finite DENY reason partition, published wire-contract closure, and complete current-artifact workflow coverage. This receipt binds synthetic public-safe candidate bytes only; it is not evidence, policy approval, human review, merge authority, release authority, deployment authority, publication authority, or public-use permission."
+  "notes": "Successor authoring provenance for held-evidence trust-label and non-current freshness parity, finite DENY reason partition, UPSTREAM_ERROR outcome exclusivity, published wire-contract closure, and complete current-artifact workflow coverage. This receipt binds synthetic public-safe candidate bytes only; it is not evidence, policy approval, human review, merge authority, release authority, deployment authority, publication authority, or public-use permission."
 }

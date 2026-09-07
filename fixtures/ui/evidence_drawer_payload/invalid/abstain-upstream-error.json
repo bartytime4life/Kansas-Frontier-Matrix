@@ -1,0 +1,25 @@
+{
+  "profile": "kfm.explorer.evidence-drawer.public-safe.v1",
+  "id": "kfm:drawer:fixture:abstain-upstream-error",
+  "outcome": "ABSTAIN",
+  "reason_code": "UPSTREAM_ERROR",
+  "title": "ABSTAIN_UPSTREAM_CANARY_d3b092",
+  "summary": "ABSTAIN_UPSTREAM_CANARY_d3b092",
+  "evidence_refs": [],
+  "citations": [],
+  "limitations": [
+    "ABSTAIN_UPSTREAM_CANARY_d3b092"
+  ],
+  "trust_state": {
+    "source_role": "context",
+    "policy": "ABSTAIN",
+    "review": "PENDING",
+    "release": "UNRELEASED",
+    "freshness": "UNKNOWN",
+    "correction": "NONE"
+  },
+  "history": {
+    "negative_outcomes": [],
+    "corrections": []
+  }
+}

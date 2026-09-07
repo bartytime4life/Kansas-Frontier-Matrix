@@ -281,8 +281,8 @@ def _semantic_findings(payload: Mapping[str, object]) -> list[Finding]:
             )
 
     elif outcome == "ABSTAIN":
-        if reason == "SUPPORTED" or trust_map.get("policy") != "ABSTAIN":
-            findings.append(Finding("ABSTAIN_STATE_INVALID", "/outcome", "ABSTAIN requires non-supported reason and ABSTAIN policy"))
+        if reason in {"SUPPORTED", "UPSTREAM_ERROR"} or trust_map.get("policy") != "ABSTAIN":
+            findings.append(Finding("ABSTAIN_STATE_INVALID", "/outcome", "ABSTAIN requires an abstention reason and ABSTAIN policy"))
         if reason == "STALE_EVIDENCE" and trust_map.get("freshness") != "STALE":
             findings.append(
                 Finding(

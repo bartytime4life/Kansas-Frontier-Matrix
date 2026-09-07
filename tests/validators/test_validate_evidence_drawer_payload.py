@@ -204,6 +204,20 @@ class EvidenceDrawerPayloadValidatorTests(unittest.TestCase):
             {item.code for item in findings},
         )
 
+    def test_upstream_error_is_exclusive_to_error_outcome(self) -> None:
+        self.assertEqual(
+            (),
+            MODULE.validate_payload(MODULE.FIXTURES_ROOT / "valid/error-upstream.json"),
+        )
+
+        findings = MODULE.validate_payload(
+            MODULE.FIXTURES_ROOT / "invalid/abstain-upstream-error.json"
+        )
+        self.assertEqual(
+            {"ABSTAIN_STATE_INVALID"},
+            {item.code for item in findings},
+        )
+
     def test_validator_is_deterministic_and_no_network(self) -> None:
         path = MODULE.FIXTURES_ROOT / "valid/answer-corrected.json"
         with mock.patch.object(socket, "create_connection", side_effect=AssertionError("network denied")), mock.patch.object(

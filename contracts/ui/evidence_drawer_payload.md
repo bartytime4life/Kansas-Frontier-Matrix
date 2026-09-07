@@ -178,11 +178,11 @@ Unknown fields, invalid HTTPS citations, control characters, oversized arrays, d
 | Outcome | Required state | Browser posture |
 |---|---|---|
 | `ANSWER` | `SUPPORTED`; nonempty evidence and citations; policy `ALLOW`; review `REVIEWED`; release `RELEASED`; freshness `CURRENT`. | Render governed title/summary, support, citations, limitations, trust labels, and safe history. |
-| `ABSTAIN` | Non-supported reason; policy `ABSTAIN`; reason-specific trust-state parity applies. In particular, `HELD_EVIDENCE` requires review `PENDING`, release `UNRELEASED`, and non-`CURRENT` freshness. | Render fixed reason copy; may retain safe evidence refs and bounded history where the reason permits it. |
+| `ABSTAIN` | An abstention or evidence-lifecycle reason other than `SUPPORTED` or `UPSTREAM_ERROR`; policy `ABSTAIN`; reason-specific trust-state parity applies. In particular, `HELD_EVIDENCE` requires review `PENDING`, release `UNRELEASED`, and non-`CURRENT` freshness. | Render fixed reason copy; may retain safe evidence refs and bounded history where the reason permits it. |
 | `DENY` | `POLICY_DENIED`, `RIGHTS_UNRESOLVED`, or `SENSITIVE_DETAIL_RESTRICTED`; policy `DENY`; no evidence refs, citations, or history. | Render fixed no-leak copy only. |
 | `ERROR` | `UPSTREAM_ERROR`; policy `ERROR`; no evidence refs, citations, or history. | Render fixed error copy only; never fall back to an answer. |
 
-`SUPPORTED` is valid only for `ANSWER`. A malformed or internally contradictory payload becomes the app-local `INVALID_PAYLOAD` error state and no input values are reflected.
+`SUPPORTED` is valid only for `ANSWER`, and `UPSTREAM_ERROR` is valid only for `ERROR`; an abstention cannot mask an upstream failure. A malformed or internally contradictory payload becomes the app-local `INVALID_PAYLOAD` error state and no input values are reflected.
 
 ---
 
