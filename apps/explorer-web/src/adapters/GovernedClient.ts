@@ -454,6 +454,7 @@ function historyCombinationIsValid(
     return (
       trustState.review === "PENDING" &&
       trustState.release === "UNRELEASED" &&
+      trustState.freshness !== "CURRENT" &&
       history.negativeOutcomes.some((item) => item.state === "HELD")
     );
   }

@@ -122,6 +122,7 @@ describe("Explorer Evidence Drawer governed projection", () => {
   it.each([
     ["review", "REVIEWED"],
     ["release", "RELEASED"],
+    ["freshness", "CURRENT"],
   ] as const)(
     "fails closed when held evidence declares %s=%s",
     (field, value) => {

@@ -205,6 +205,7 @@ def _trust_matches(
                 policy == "ABSTAIN"
                 and trust.get("review") == "PENDING"
                 and trust.get("release") == "UNRELEASED"
+                and trust.get("freshness") != "CURRENT"
             )
         return reason_code != "SUPPORTED" and policy == "ABSTAIN"
     if outcome == "DENY":

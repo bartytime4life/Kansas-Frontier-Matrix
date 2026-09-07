@@ -129,7 +129,11 @@ class EvidenceDrawerPayloadValidatorTests(unittest.TestCase):
         )
         self.assertEqual([], MODULE._semantic_findings(source))
 
-        for field, value in (("review", "REVIEWED"), ("release", "RELEASED")):
+        for field, value in (
+            ("review", "REVIEWED"),
+            ("release", "RELEASED"),
+            ("freshness", "CURRENT"),
+        ):
             with self.subTest(field=field):
                 payload = json.loads(json.dumps(source))
                 payload["trust_state"][field] = value

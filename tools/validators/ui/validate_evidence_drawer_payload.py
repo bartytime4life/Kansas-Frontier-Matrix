@@ -302,12 +302,13 @@ def _semantic_findings(payload: Mapping[str, object]) -> list[Finding]:
         if reason == "HELD_EVIDENCE" and (
             trust_map.get("review") != "PENDING"
             or trust_map.get("release") != "UNRELEASED"
+            or trust_map.get("freshness") == "CURRENT"
         ):
             findings.append(
                 Finding(
                     "HELD_STATE_INVALID",
                     "/trust_state",
-                    "held abstention requires review=PENDING and release=UNRELEASED",
+                    "held abstention requires review=PENDING, release=UNRELEASED, and non-CURRENT freshness",
                 )
             )
         required_state = {

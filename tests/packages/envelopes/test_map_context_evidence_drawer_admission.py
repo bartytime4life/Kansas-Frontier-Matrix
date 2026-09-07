@@ -198,9 +198,12 @@ def test_held_evidence_requires_pending_unreleased_trust() -> None:
     released_payload = _load(
         "fixtures/ui/evidence_drawer_payload/invalid/abstain-held-with-released-state.json"
     )
+    current_payload = copy.deepcopy(valid_payload)
+    current_payload["trust_state"]["freshness"] = "CURRENT"
     for label, payload in (
         ("reviewed", reviewed_payload),
         ("released", released_payload),
+        ("current", current_payload),
     ):
         candidate = build_map_context_evidence_drawer_admission_candidate(
             decision_id=f"decision:render:held-invalid-{label}",
