@@ -6,6 +6,8 @@ name: soil-hydrology-public-safe-context
     paths:
       - ".github/workflows/soil-hydrology-public-safe-context.yml"
       - "control_plane/domain_lane_register.yaml"
+      - "tools/validators/directory_governance/validate_domain_lane_register.py"
+      - "schemas/contracts/v1/governance/domain_lane_register.schema.json"
       - "contracts/cross_domain/soil_hydrology/**"
       - "fixtures/contracts/v1/joins/soil_hydrology_public_safe_context/**"
       - "tests/cross_domain/soil_hydrology/**"
@@ -20,6 +22,8 @@ name: soil-hydrology-public-safe-context
     paths:
       - ".github/workflows/soil-hydrology-public-safe-context.yml"
       - "control_plane/domain_lane_register.yaml"
+      - "tools/validators/directory_governance/validate_domain_lane_register.py"
+      - "schemas/contracts/v1/governance/domain_lane_register.schema.json"
       - "contracts/cross_domain/soil_hydrology/**"
       - "fixtures/contracts/v1/joins/soil_hydrology_public_safe_context/**"
       - "tests/cross_domain/soil_hydrology/**"

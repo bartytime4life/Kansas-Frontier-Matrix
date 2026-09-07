@@ -6,6 +6,8 @@ name: fauna-habitat-public-safe-assignment
     paths:
       - ".github/workflows/fauna-habitat-public-safe-assignment.yml"
       - "control_plane/domain_lane_register.yaml"
+      - "tools/validators/directory_governance/validate_domain_lane_register.py"
+      - "schemas/contracts/v1/governance/domain_lane_register.schema.json"
       - "contracts/cross_domain/fauna_habitat/**"
       - "fixtures/contracts/v1/joins/fauna_habitat_public_safe_assignment/**"
       - "tests/cross_domain/fauna_habitat/**"
@@ -21,6 +23,8 @@ name: fauna-habitat-public-safe-assignment
     paths:
       - ".github/workflows/fauna-habitat-public-safe-assignment.yml"
       - "control_plane/domain_lane_register.yaml"
+      - "tools/validators/directory_governance/validate_domain_lane_register.py"
+      - "schemas/contracts/v1/governance/domain_lane_register.schema.json"
       - "contracts/cross_domain/fauna_habitat/**"
       - "fixtures/contracts/v1/joins/fauna_habitat_public_safe_assignment/**"
       - "tests/cross_domain/fauna_habitat/**"

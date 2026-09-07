@@ -27,6 +27,8 @@ WORKFLOWS = (
 )
 REQUIRED_TRIGGER_PATHS = (
     "control_plane/domain_lane_register.yaml",
+    "tools/validators/directory_governance/validate_domain_lane_register.py",
+    "schemas/contracts/v1/governance/domain_lane_register.schema.json",
     "fixtures/contracts/v1/joins/cross_lane_join_assessment/**",
     "tests/joins/**",
 )
@@ -302,6 +304,16 @@ def test_synthetic_missing_readme_guard_is_detected() -> None:
             "pull_request",
             '      - "tests/joins/**"\n',
             "pull_request: missing path tests/joins/**",
+        ),
+        (
+            "pull_request",
+            '      - "tools/validators/directory_governance/validate_domain_lane_register.py"\n',
+            "pull_request: missing path tools/validators/directory_governance/validate_domain_lane_register.py",
+        ),
+        (
+            "push",
+            '      - "schemas/contracts/v1/governance/domain_lane_register.schema.json"\n',
+            "push: missing path schemas/contracts/v1/governance/domain_lane_register.schema.json",
         ),
     ),
 )
