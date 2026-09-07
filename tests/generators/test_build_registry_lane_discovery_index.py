@@ -28,6 +28,7 @@ _SPEC.loader.exec_module(_MODULE)
 RegistryDiscoveryError = _MODULE.RegistryDiscoveryError
 build_registry_lane_discovery_index = _MODULE.build_registry_lane_discovery_index
 render_index = _MODULE.render_index
+write_output = _MODULE._write_output
 
 
 class RegistryLaneDiscoveryIndexTests(unittest.TestCase):
@@ -591,6 +592,63 @@ class RegistryLaneDiscoveryIndexTests(unittest.TestCase):
         payload = json.loads(stdout.getvalue())
         self.assertEqual("registry discovery I/O failed", payload["error"])
         self.assertNotIn(leaked_detail, stdout.getvalue())
+
+    def test_output_swap_after_validation_fails_without_touching_target(self) -> None:
+        tempdir = tempfile.TemporaryDirectory()
+        self.addCleanup(tempdir.cleanup)
+        target = Path(tempdir.name) / "external.json"
+        target.write_text("sentinel\n", encoding="utf-8")
+        output = Path(tempdir.name) / "index.json"
+        output.write_text("stale\n", encoding="utf-8")
+        original_open = _MODULE.os.open
+        swapped = False
+
+        def racing_open(file, flags, mode=0o777, *, dir_fd=None):
+            nonlocal swapped
+            if file == output.name and flags & _MODULE.os.O_WRONLY and not swapped:
+                swapped = True
+                output.unlink()
+                output.symlink_to(target)
+            return original_open(file, flags, mode, dir_fd=dir_fd)
+
+        with mock.patch.object(_MODULE.os, "open", side_effect=racing_open):
+            with self.assertRaisesRegex(
+                RegistryDiscoveryError,
+                "output path changed during validation",
+            ):
+                write_output(output, "replacement\n")
+
+        self.assertTrue(swapped)
+        self.assertEqual("sentinel\n", target.read_text(encoding="utf-8"))
+
+    def test_output_parent_swap_after_validation_fails_closed(self) -> None:
+        tempdir = tempfile.TemporaryDirectory()
+        self.addCleanup(tempdir.cleanup)
+        parent = Path(tempdir.name) / "generated"
+        parent.mkdir()
+        external = Path(tempdir.name) / "external"
+        external.mkdir()
+        output = parent / "index.json"
+        original_open = _MODULE.os.open
+        swapped = False
+
+        def racing_open(file, flags, mode=0o777, *, dir_fd=None):
+            nonlocal swapped
+            if file == parent.name and dir_fd is not None and not swapped:
+                swapped = True
+                parent.rmdir()
+                parent.symlink_to(external, target_is_directory=True)
+            return original_open(file, flags, mode, dir_fd=dir_fd)
+
+        with mock.patch.object(_MODULE.os, "open", side_effect=racing_open):
+            with self.assertRaisesRegex(
+                RegistryDiscoveryError,
+                "output path parent changed during validation",
+            ):
+                write_output(output, "replacement\n")
+
+        self.assertTrue(swapped)
+        self.assertFalse((external / "index.json").exists())
 
     def test_render_is_deterministic(self) -> None:
         tempdir, root = self._fixture(
