@@ -175,8 +175,8 @@
     },
     {
       "gate": "hosted-validator-delegation-head",
-      "outcome": "SKIPPED",
-      "reason": "Hosted execution begins only after the draft pull request is opened; no hosted result is claimed by this pre-PR receipt update."
+      "outcome": "PASS",
+      "reason": "Exact branch head ec2a795f430845bd86ee7c6b6ecc0c0dba12653f passed cross-lane run 34082477228 (20/20 fixtures, 77 tests), Fauna–Habitat run 34082477271 (20/20 generic plus 10/10 pair fixtures, 84 tests), Soil–Agriculture run 34082477237 (20/20 generic plus 7/7 pair fixtures, 83 tests), and Soil–Hydrology run 34082477337 (20/20 generic plus 7/7 pair fixtures, 83 tests); contract drift and generated-receipt integrity passed."
     }
   ]
 }
