@@ -8,6 +8,7 @@ import sys
 import tempfile
 from pathlib import Path
 from typing import Any
+from unittest.mock import patch
 
 from jsonschema import Draft202012Validator
 
@@ -103,6 +104,22 @@ def test_schema_findings_only_mark_actual_truncation() -> None:
     assert over_limit.findings.count(
         module.Finding("PM25_TRIGGER_SCHEMA_FINDINGS_TRUNCATED", "/")
     ) == 1
+
+
+def test_invalid_schema_metadata_fails_closed() -> None:
+    payload = materialize(MANIFEST["cases"][0])
+
+    with patch.object(
+        module.Draft202012Validator,
+        "check_schema",
+        side_effect=module.SchemaError("synthetic invalid schema"),
+    ):
+        result = module.validate_payload(payload)
+
+    assert result == module.Result(
+        "DENY",
+        (module.Finding("PM25_TRIGGER_SCHEMA_UNAVAILABLE", "/"),),
+    )
 
 
 def test_identity_is_deterministic() -> None:

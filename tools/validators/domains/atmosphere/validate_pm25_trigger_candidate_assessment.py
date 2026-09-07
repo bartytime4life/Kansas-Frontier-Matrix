@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import Any, Iterable, Mapping, Sequence
 
 from jsonschema import Draft202012Validator, FormatChecker
+from jsonschema.exceptions import SchemaError
 
 ROOT = Path(__file__).resolve().parents[4]
 HASH_SRC = ROOT / "packages/hashing/src"
@@ -109,7 +110,7 @@ def _schema_findings(value: Mapping[str, Any]) -> tuple[Finding, ...]:
                 MAX_SCHEMA_FINDINGS + 1,
             )
         )
-    except (OSError, UnicodeError, json.JSONDecodeError, ValueError, RecursionError):
+    except (OSError, UnicodeError, json.JSONDecodeError, ValueError, RecursionError, SchemaError):
         return (Finding("PM25_TRIGGER_SCHEMA_UNAVAILABLE", "/"),)
     findings = [
         Finding("PM25_TRIGGER_SCHEMA_INVALID", _pointer(error.absolute_path))
