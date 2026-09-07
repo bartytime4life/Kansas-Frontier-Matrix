@@ -118,11 +118,16 @@ def _receipt_trigger_findings(workflow_source: str, receipt_source: str) -> list
 
 def _receipt_authority_findings(receipt_source: str) -> list[str]:
     payload = json.loads(receipt_source)
-    artifact_paths = payload.get("artifact_paths", [])
+    collections = (
+        ("artifact_paths", payload.get("artifact_paths", [])),
+        ("artifact_hashes", payload.get("artifact_hashes", {})),
+        ("truth_labels", payload.get("truth_labels", {})),
+    )
     return [
-        f"receipt: canonical authority artifact missing {path}"
+        f"receipt: canonical authority artifact missing from {collection_name} {path}"
+        for collection_name, collection in collections
         for path in REQUIRED_RECEIPT_AUTHORITY_PATHS
-        if path not in artifact_paths
+        if path not in collection
     ]
 
 
@@ -213,15 +218,24 @@ def test_cross_lane_receipt_binds_canonical_authority_artifacts() -> None:
     assert _receipt_authority_findings(RECEIPT.read_text(encoding="utf-8")) == []
 
 
+@pytest.mark.parametrize(
+    "collection_name", ("artifact_paths", "artifact_hashes", "truth_labels")
+)
 @pytest.mark.parametrize("artifact_path", REQUIRED_RECEIPT_AUTHORITY_PATHS)
 def test_synthetic_missing_canonical_authority_artifact_is_detected(
     artifact_path: str,
+    collection_name: str,
 ) -> None:
     payload = json.loads(RECEIPT.read_text(encoding="utf-8"))
-    payload["artifact_paths"].remove(artifact_path)
-    payload["artifact_hashes"].pop(artifact_path)
-    payload["truth_labels"].pop(artifact_path)
-    expected = f"receipt: canonical authority artifact missing {artifact_path}"
+    collection = payload[collection_name]
+    if isinstance(collection, list):
+        collection.remove(artifact_path)
+    else:
+        collection.pop(artifact_path)
+    expected = (
+        f"receipt: canonical authority artifact missing from "
+        f"{collection_name} {artifact_path}"
+    )
     assert _receipt_authority_findings(json.dumps(payload)) == [expected]
 
 
