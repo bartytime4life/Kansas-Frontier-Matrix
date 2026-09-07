@@ -387,6 +387,7 @@
         "properties": {
           "source_surface": {
             "properties": {
+              "source_check_outcome": {"const": "FETCHED"},
               "previous_record_present": {"const": true},
               "current_record_present": {"const": false}
             }
