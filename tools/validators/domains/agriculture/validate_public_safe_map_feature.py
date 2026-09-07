@@ -209,12 +209,23 @@ def _strict_json_loads(text: str) -> Any:
     )
 
 
+def _normalize_decimal_digits(value: str) -> str:
+    normalized: list[str] = []
+    for character in value:
+        try:
+            normalized.append(str(unicodedata.decimal(character)))
+        except ValueError:
+            normalized.append(character)
+    return "".join(normalized)
+
+
 def _cardinal_magnitude(value: str) -> float:
     stripped = value.lstrip("0")
     return float(stripped or "0")
 
 
 def _contains_coordinate_literal(value: str) -> bool:
+    value = _normalize_decimal_digits(value)
     if LABELED_COORDINATE_PATTERN.search(value) or WKT_POINT_PATTERN.search(value):
         return True
     for pattern, latitude_group, longitude_group in (
