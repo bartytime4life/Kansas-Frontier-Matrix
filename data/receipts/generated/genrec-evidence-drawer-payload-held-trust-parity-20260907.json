@@ -8,6 +8,8 @@
     "contracts/ui/evidence_drawer_payload.md",
     "fixtures/ui/evidence_drawer_payload/invalid/abstain-held-with-released-state.expected_code.txt",
     "fixtures/ui/evidence_drawer_payload/invalid/abstain-held-with-released-state.json",
+    "fixtures/ui/evidence_drawer_payload/invalid/deny-missing-evidence.expected_code.txt",
+    "fixtures/ui/evidence_drawer_payload/invalid/deny-missing-evidence.json",
     "fixtures/ui/evidence_drawer_payload/valid/abstain-source-drift-review.json",
     "packages/envelopes/src/envelopes/map_context_evidence_drawer.py",
     "tests/packages/envelopes/test_map_context_evidence_drawer_admission.py",
@@ -16,23 +18,25 @@
   ],
   "artifact_hashes": {
     ".github/workflows/evidence-drawer-payload.yml": "sha256:c0864985a80cf0074f4abb80222b4620c4e3e9bbf2306fbf3ad69a6d1b6366b8",
-    "apps/explorer-web/src/adapters/GovernedClient.ts": "sha256:dcf4dd54d07996028336f7facc4cabb6c5290d5e052608ce5eba956e846d9ca2",
-    "apps/explorer-web/tests/evidence-drawer.test.ts": "sha256:2229766cb1c0d9a465bbf0ed25b54ff183e4f96ae70a256a06725a6fac5573cc",
-    "contracts/ui/evidence_drawer_payload.md": "sha256:715017df14b1f061c839fdc74af78e014526d44be9da182936492627e0fe9aa4",
+    "apps/explorer-web/src/adapters/GovernedClient.ts": "sha256:d8b02812559b59b4c9385eef9e7ab4be7d59dbd20e3f69b6425ffd0121d2adc7",
+    "apps/explorer-web/tests/evidence-drawer.test.ts": "sha256:a32e612c59adcdf672a4970ecf32c4d1a7cd00a822a78734b18992fc6378901c",
+    "contracts/ui/evidence_drawer_payload.md": "sha256:10829557b00b4e8fd6b03bc735f138a5cb9cdf6f2473a21552e44e7fa7fb44d1",
     "fixtures/ui/evidence_drawer_payload/invalid/abstain-held-with-released-state.expected_code.txt": "sha256:28e87cd8a49246eb1d87a8b9b4413e3af4cc528300a587789b642bdd6e5b00ba",
     "fixtures/ui/evidence_drawer_payload/invalid/abstain-held-with-released-state.json": "sha256:639899491ec417719cc1f5a3534b5f98acadf1c3012e1619c72514d06cf23802",
+    "fixtures/ui/evidence_drawer_payload/invalid/deny-missing-evidence.expected_code.txt": "sha256:102ec17e51f383fc5525298f35959f69889daf4b928f57707cc2f14d27132c58",
+    "fixtures/ui/evidence_drawer_payload/invalid/deny-missing-evidence.json": "sha256:cb89ee8c9c08789b232550f5b5e12d835bb8a42b63b0b7970b9a8bcad83004d0",
     "fixtures/ui/evidence_drawer_payload/valid/abstain-source-drift-review.json": "sha256:8c8afcbe451932721865bf1fe4004c574293918f29aca683377c8fc8c080ec5d",
     "packages/envelopes/src/envelopes/map_context_evidence_drawer.py": "sha256:01f4aeccc54e51630e7c27333fae68d043945907628d64ca9e908352ffae33d7",
     "tests/packages/envelopes/test_map_context_evidence_drawer_admission.py": "sha256:4fb2dcbf6c5cb322a6c75f806e67d045546cef51b9cb246452f491083177299b",
-    "tests/validators/test_validate_evidence_drawer_payload.py": "sha256:2e24539792301c7c59388bee8b64d4c524b8816835a495334a59ebc6922c287f",
-    "tools/validators/ui/validate_evidence_drawer_payload.py": "sha256:736fa237a043e93f5cfa5f19621a56552c7d15ddc9ee331def18a5c561148712"
+    "tests/validators/test_validate_evidence_drawer_payload.py": "sha256:3e2332b474c4befcab5a2cd073b071a1c28be447df887f8b615a2a408777093f",
+    "tools/validators/ui/validate_evidence_drawer_payload.py": "sha256:f57fe8c62f50025a11c483333d9300feba137806f2ff87673d927e9d722f82da"
   },
   "model_identity": {
     "provider": "OpenAI",
     "model": "GPT-5",
     "version": "2026-09-07"
   },
-  "prompt_or_contract": "sha256:715017df14b1f061c839fdc74af78e014526d44be9da182936492627e0fe9aa4",
+  "prompt_or_contract": "sha256:10829557b00b4e8fd6b03bc735f138a5cb9cdf6f2473a21552e44e7fa7fb44d1",
   "parameters": {
     "seed": null,
     "temperature": null,
@@ -61,6 +65,8 @@
     "contracts/ui/evidence_drawer_payload.md": "PROPOSED",
     "fixtures/ui/evidence_drawer_payload/invalid/abstain-held-with-released-state.expected_code.txt": "PROPOSED",
     "fixtures/ui/evidence_drawer_payload/invalid/abstain-held-with-released-state.json": "PROPOSED",
+    "fixtures/ui/evidence_drawer_payload/invalid/deny-missing-evidence.expected_code.txt": "PROPOSED",
+    "fixtures/ui/evidence_drawer_payload/invalid/deny-missing-evidence.json": "PROPOSED",
     "fixtures/ui/evidence_drawer_payload/valid/abstain-source-drift-review.json": "PROPOSED",
     "packages/envelopes/src/envelopes/map_context_evidence_drawer.py": "PROPOSED",
     "tests/packages/envelopes/test_map_context_evidence_drawer_admission.py": "PROPOSED",
@@ -71,17 +77,17 @@
     {
       "gate": "candidate-artifact-hash-closure",
       "outcome": "PASS",
-      "reason": "Eleven public-safe workflow, contract, implementation, fixture, and test artifacts are SHA-256 bound."
+      "reason": "Thirteen public-safe workflow, contract, implementation, fixture, and test artifacts are SHA-256 bound."
     },
     {
       "gate": "canonical-payload-validator",
       "outcome": "PASS",
-      "reason": "Twelve valid and twelve expected-failure fixtures plus sixteen focused validator tests passed without network access."
+      "reason": "Twelve valid and thirteen expected-failure fixtures plus seventeen focused validator tests passed without network access."
     },
     {
       "gate": "explorer-projection",
       "outcome": "PASS",
-      "reason": "Twenty-one focused Evidence Drawer tests and all 463 Explorer unit tests passed; TypeScript and the Vite production build passed."
+      "reason": "Twenty-two focused Evidence Drawer tests and all 465 Explorer unit tests passed; TypeScript and the Vite production build passed."
     },
     {
       "gate": "map-context-admission-parity",
@@ -91,7 +97,7 @@
     {
       "gate": "wire-contract-parity",
       "outcome": "PASS",
-      "reason": "The published UI wire contract explicitly requires HELD_EVIDENCE abstentions to remain PENDING, UNRELEASED, and non-CURRENT, matching Explorer, map-context admission, and canonical validation."
+      "reason": "The published UI wire contract limits DENY to policy, unresolved-rights, and sensitive-detail reasons, matching Explorer, map-context admission, and canonical validation."
     },
     {
       "gate": "receipt-workflow-watch-closure",
@@ -127,6 +133,11 @@
       "id": "repo:held-negative-fixture",
       "validated": true,
       "evidence_ref": "fixtures/ui/evidence_drawer_payload/invalid/abstain-held-with-released-state.json"
+    },
+    {
+      "id": "repo:deny-reason-negative-fixture",
+      "validated": true,
+      "evidence_ref": "fixtures/ui/evidence_drawer_payload/invalid/deny-missing-evidence.json"
     }
   ],
   "human_review": {
@@ -142,5 +153,5 @@
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Successor authoring provenance for held-evidence trust-label and non-current freshness parity, published wire-contract closure, and complete current-artifact workflow coverage. This receipt binds synthetic public-safe candidate bytes only; it is not evidence, policy approval, human review, merge authority, release authority, deployment authority, publication authority, or public-use permission."
+  "notes": "Successor authoring provenance for held-evidence trust-label and non-current freshness parity, finite DENY reason partition, published wire-contract closure, and complete current-artifact workflow coverage. This receipt binds synthetic public-safe candidate bytes only; it is not evidence, policy approval, human review, merge authority, release authority, deployment authority, publication authority, or public-use permission."
 }
