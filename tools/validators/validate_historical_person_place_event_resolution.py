@@ -63,6 +63,9 @@ class FileIdentity:
 class DirectoryIdentity:
     device: int
     inode: int
+    size: int
+    modified_ns: int
+    changed_ns: int
 
 
 class DuplicateKeyError(ValueError):
@@ -139,7 +142,13 @@ def _file_identity(metadata: os.stat_result) -> FileIdentity:
 
 
 def _directory_identity(metadata: os.stat_result) -> DirectoryIdentity:
-    return DirectoryIdentity(device=metadata.st_dev, inode=metadata.st_ino)
+    return DirectoryIdentity(
+        device=metadata.st_dev,
+        inode=metadata.st_ino,
+        size=metadata.st_size,
+        modified_ns=metadata.st_mtime_ns,
+        changed_ns=metadata.st_ctime_ns,
+    )
 
 
 def _open_secure_directory(path: Path) -> int:
@@ -464,6 +473,7 @@ def _expected_code(path: Path) -> str | None:
 
 def _fixture_lane_inventory(directory_descriptor: int) -> dict[str, FileIdentity]:
     try:
+        identity_before = _directory_identity(os.fstat(directory_descriptor))
         names = os.listdir(directory_descriptor)
         inventory: dict[str, FileIdentity] = {}
         for name in names:
@@ -471,6 +481,8 @@ def _fixture_lane_inventory(directory_descriptor: int) -> dict[str, FileIdentity
             if not stat.S_ISREG(metadata.st_mode):
                 raise FixtureInventoryError
             inventory[name] = _file_identity(metadata)
+        if _directory_identity(os.fstat(directory_descriptor)) != identity_before:
+            raise FixtureInventoryError
         return inventory
     except (OSError, TypeError, ValueError) as error:
         raise FixtureInventoryError from error

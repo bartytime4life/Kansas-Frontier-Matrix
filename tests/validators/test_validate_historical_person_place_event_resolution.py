@@ -309,6 +309,31 @@ class HistoricalResolutionTests(unittest.TestCase):
         self.assertTrue(swapped)
         self.assertEqual(result, 2)
 
+    @unittest.skipUnless(os.stat in os.supports_dir_fd, "requires directory-relative stat")
+    def test_fixture_runner_rejects_lane_mutation_during_inventory(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory) / "fixtures"
+            shutil.copytree(FIXTURE_ROOT, root)
+            injected = root / "injected.json"
+            injected.write_bytes((FIXTURE_ROOT / "valid/high_anchor.json").read_bytes())
+            real_stat = os.stat
+            mutated = False
+
+            def mutating_stat(path, *, dir_fd=None, follow_symlinks=True):
+                nonlocal mutated
+                if path == "conflict_hold.json" and dir_fd is not None and not mutated:
+                    injected.rename(root / "valid/injected.json")
+                    mutated = True
+                if dir_fd is None:
+                    return real_stat(path, follow_symlinks=follow_symlinks)
+                return real_stat(path, dir_fd=dir_fd, follow_symlinks=follow_symlinks)
+
+            with mock.patch.object(module.os, "stat", side_effect=mutating_stat):
+                result = module.run_fixtures(root)
+
+        self.assertTrue(mutated)
+        self.assertEqual(result, 2)
+
     def test_cli_rejects_abbreviated_fixture_options(self) -> None:
         option = "--fixtures"
         for stop in range(3, len(option)):
