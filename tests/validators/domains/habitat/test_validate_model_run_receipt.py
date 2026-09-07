@@ -96,12 +96,21 @@ class HabitatModelRunReceiptTests(unittest.TestCase):
 
     def test_cli_fixture_replay_and_parser_error(self) -> None:
         command = [sys.executable, str(Path(validator.__file__)), "--fixtures"]
-        first = subprocess.run(command, cwd=ROOT, check=False, capture_output=True, text=True)
-        second = subprocess.run(command, cwd=ROOT, check=False, capture_output=True, text=True)
-        self.assertEqual(0, first.returncode, first.stderr)
+        first = subprocess.run(command, cwd=ROOT, check=False, capture_output=True)
+        second = subprocess.run(command, cwd=ROOT, check=False, capture_output=True)
+        for completed in (first, second):
+            self.assertEqual(0, completed.returncode, completed.stderr)
+            self.assertEqual(b"", completed.stderr)
         self.assertEqual(first.stdout, second.stdout)
-        self.assertIn('"case_count":24', first.stdout)
-        self.assertIn('"suite_match":true', first.stdout)
+        payload = json.loads(first.stdout)
+        self.assertEqual(24, payload["case_count"])
+        self.assertTrue(payload["suite_match"])
+        self.assertEqual(
+            (json.dumps(payload, sort_keys=True, separators=(",", ":")) + "\n").encode(
+                "utf-8"
+            ),
+            first.stdout,
+        )
 
         with tempfile.TemporaryDirectory() as directory:
             invalid = Path(directory) / "invalid.json"
