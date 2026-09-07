@@ -133,7 +133,12 @@ def _spatial_temporal_match(left: Mapping[str, Any], right: Mapping[str, Any], t
     if None in {left_start, left_end, right_start, right_end}:
         return False
     tolerance = timedelta(seconds=tolerance_seconds if isinstance(tolerance_seconds, int) else 0)
-    return left_start <= right_end + tolerance and right_start <= left_end + tolerance
+    # Compare signed gaps instead of adding to an endpoint.  Addition can
+    # overflow for schema-valid year-9999 timestamps before a decision exists.
+    return (
+        left_start - right_end <= tolerance
+        and right_start - left_end <= tolerance
+    )
 
 
 def _temporal_boundary_ambiguous(

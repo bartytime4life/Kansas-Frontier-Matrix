@@ -8,7 +8,7 @@
     "schemas/contracts/v1/governance/domain_lane_register.schema.json": "sha256:7e67370d2cbde2da1e691f2e38722fbfcf306b34b3460bc2fd61d916ce47d9bf",
     "tools/validators/directory_governance/validate_domain_lane_register.py": "sha256:646b28ca03d4daabfe835cbf38b72f1bcf9946ddf5e99fb34895624b85483dba",
     "contracts/joins/README.md": "sha256:0a91c1c699cbaa8cadee09dea378861cedc9c6fdb9aab6ba25655899d6abb821",
-    "contracts/joins/cross_lane_join_assessment.md": "sha256:611dd3ffc13bd59e3f21e68bc8b4bd7eaefb494c64881967b0ba802dc72e44b3",
+    "contracts/joins/cross_lane_join_assessment.md": "sha256:fc7d486e0c9ef63206aac693a31629c79c9e8072fb3669ac6b2b154c21a7e97b",
     "docs/intake/exploratory/full-atlas-crosswalk-validator-source-map.md": "sha256:34299c5ba17f3d451d09e2d9a2f69514711a0c8ed1303f88233c56b6ded45962",
     "fixtures/contracts/v1/joins/cross_lane_join_assessment/cases.json": "sha256:7372e0d9900bc3f1d17861b3bdf0afa2570fe8436edcbd972c485257605c7b94",
     "schemas/contracts/v1/joins/cross_lane_join_assessment.schema.json": "sha256:1ad7520fc7c07514d7887e73db8ebb9ebde4df1f3f26a4f6013f5fba239e1bb7",
@@ -18,10 +18,10 @@
     "tests/joins/test_cross_lane_scope_precedence.py": "sha256:7f5da617cb65996c876093f43b1201bc27add2508a3846fbedd8bca956acf1ce",
     "tests/joins/test_cross_lane_source_role_schema_guard.py": "sha256:9c6bd884f0c51fd7f22d517c7b4ac5a2d866edef80b36a6cf5f1ca7a8f1ebac5",
     "tests/joins/test_cross_lane_synthetic_role_guard.py": "sha256:f63cf5320fe45d5848bc03f747a2eaf073c66932eb584349ab0e6d9d96c4e7ef",
-    "tests/joins/test_cross_lane_temporal_boundary_guard.py": "sha256:8a3f943cb7127682dae40c9ee9f6086aefc13efc686614e7bba8ff81b6497e6e",
+    "tests/joins/test_cross_lane_temporal_boundary_guard.py": "sha256:7348ee079748b63f5beb0f0395b996beacca6a70030c41ca03a6f1639b0c15dc",
     "tests/joins/test_cross_lane_workflow_propagation.py": "sha256:c97918f757dd5702de23a12b85f80a894e2e27e01bedd0b7fd1bcc5e08fbaec2",
     "tests/joins/test_join_candidates.py": "sha256:6935b575cf6bafbb8d3eb24995a88d2324f978edffb9774a0dc1cb1797fe9137",
-    "tools/joins/join_candidates.py": "sha256:9a15c9c5de5af97518f6eb5be20aa5429df66b8574bc1cc7d15c3ee8edfc0bfb"
+    "tools/joins/join_candidates.py": "sha256:e68604391b40612bc8ab0f9ab0303be420346cf7ea953736557a71393971a108"
   },
   "artifact_paths": [
     ".github/workflows/cross-lane-join-assessment.yml",
@@ -98,7 +98,7 @@
     "provider": "OpenAI",
     "version": "2026-08-30"
   },
-  "notes": "Successor provenance receipt for the CrossLaneJoinAssessment review unit. It binds the generic join contract, current pair-profile inventory, all seven dedicated synthetic regression files, the self-checking nine-module join-test inventory, and the generic plus three pair-specific workflows. Contract provenance now explicitly names every receipt-bound join proof module, with positive and synthetic-negative propagation checks preventing future omissions. Generic join validation triggers on every receipt-bound artifact. Disposition precedence is fail-closed: for distinct raw domains, dependency failures remain ERROR and living-person or blocked sensitive-geometry conditions remain DENY before unresolved aliases can route to review; same-domain scope routing remains first because the generic helper does not own domain-local work. Deterministic positive and synthetic-negative proof prevents alias review from downgrading stronger outcomes or hiding missing-evidence and restricted-sensitivity review obligations. Alias projection integrity also requires the exact v1/domain_lane_register/machine_projection_only envelope, exact registered targets, and rejection of self-reference, canonical-lane keys, alias chains, redirected symlink paths, and authority overclaims, YAML anchors or aliases, and projections exceeding canonical byte, node, depth, or finite-number bounds so ignored padding cannot bypass the authority owner's parsing limits. CLI validation requires exact long-option spelling and mutually exclusive fixture, derive, and file-validation modes so an explicit assessment input cannot be silently ignored. Fresh overlap reconciliation checked all 15 other open pull requests against the complete cumulative branch-path scope, the nine-path current diff, and the complete 22-artifact receipt inventory. Current-main bytes remain unchanged outside this bounded seam. Historical closed PRs remain preserved and unmerged. Exact implementation-head validation now passes the generic cross-lane and all three pair workflows through the resource-bound increment, including oversized, over-complex, over-deep, and non-finite projections. The authoritative overlap-scope phrase occurs once so synthetic omission proof cannot be satisfied by duplicate receipt prose. The historical 20260809 receipt remains immutable. This receipt creates no source, evidence, policy, review, proof, promotion, release, publication, or public-use authority. The current successor increment removes the consumer's partial parallel register parser and delegates the complete projection decision to the authority-owning domain-lane validator. A copied canonical projection remains usable, while a schema-incomplete projection deterministically produces DOMAIN_ALIAS_REGISTER_UNAVAILABLE instead of being interpreted as a safe alias inventory.",
+  "notes": "Successor provenance receipt for the CrossLaneJoinAssessment review unit. It binds the generic join contract, current pair-profile inventory, all seven dedicated synthetic regression files, the self-checking nine-module join-test inventory, and the generic plus three pair-specific workflows. Contract provenance now explicitly names every receipt-bound join proof module, with positive and synthetic-negative propagation checks preventing future omissions. Generic join validation triggers on every receipt-bound artifact. Disposition precedence is fail-closed: for distinct raw domains, dependency failures remain ERROR and living-person or blocked sensitive-geometry conditions remain DENY before unresolved aliases can route to review; same-domain scope routing remains first because the generic helper does not own domain-local work. Deterministic positive and synthetic-negative proof prevents alias review from downgrading stronger outcomes or hiding missing-evidence and restricted-sensitivity review obligations. Alias projection integrity also requires the exact v1/domain_lane_register/machine_projection_only envelope, exact registered targets, and rejection of self-reference, canonical-lane keys, alias chains, redirected symlink paths, and authority overclaims, YAML anchors or aliases, and projections exceeding canonical byte, node, depth, or finite-number bounds so ignored padding cannot bypass the authority owner's parsing limits. CLI validation requires exact long-option spelling and mutually exclusive fixture, derive, and file-validation modes so an explicit assessment input cannot be silently ignored. Fresh overlap reconciliation checked all 15 other open pull requests against the complete cumulative branch-path scope, the nine-path current diff, and the complete 22-artifact receipt inventory. Current-main bytes remain unchanged outside this bounded seam. Historical closed PRs remain preserved and unmerged. Exact implementation-head validation now passes the generic cross-lane and all three pair workflows through the resource-bound increment, including oversized, over-complex, over-deep, and non-finite projections. The authoritative overlap-scope phrase occurs once so synthetic omission proof cannot be satisfied by duplicate receipt prose. The historical 20260809 receipt remains immutable. This receipt creates no source, evidence, policy, review, proof, promotion, release, publication, or public-use authority. The current successor increment removes the consumer's partial parallel register parser and delegates the complete projection decision to the authority-owning domain-lane validator. A copied canonical projection remains usable, while a schema-incomplete projection deterministically produces DOMAIN_ALIAS_REGISTER_UNAVAILABLE instead of being interpreted as a safe alias inventory. Spatial-temporal tolerance now compares signed interval gaps instead of adding to endpoint timestamps, preserving deterministic candidate-or-abstain behavior across the schema's year-9999 boundary.",
   "override_record": null,
   "parameters": {
     "max_tokens": null,
@@ -145,7 +145,7 @@
     {
       "gate": "active-work-and-overlap-reconciliation",
       "outcome": "PASS",
-      "reason": "Fresh current-state reconciliation checked all 15 other open pull requests against all 20 cumulative branch paths, the complete 10-path current diff, and all 22 receipt-bound artifacts; no path, object-family, or authority collision was found."
+      "reason": "Fresh current-state reconciliation checked all 15 other open pull requests against all 20 cumulative branch paths, the complete 11-path current diff, and all 22 receipt-bound artifacts; no path, object-family, or authority collision was found."
     },
     {
       "gate": "current-main-regression-reproduction",
@@ -206,6 +206,11 @@
       "gate": "hosted-canonical-authority-artifact-binding-head",
       "outcome": "PASS",
       "reason": "Exact implementation head 8b495c8aeede2ab40196eb62ec5188ee8ee59222 passed cross-lane run 34110982234 (20/20 fixtures, 83 tests, and 22-artifact receipt integrity), Fauna–Habitat run 34110982395 (20/20 generic plus 10/10 pair fixtures, 90 tests, and six-artifact pair receipt integrity), Soil–Agriculture run 34110982305 (20/20 generic plus 7/7 pair fixtures and 89 tests), Soil–Hydrology run 34110982405 (20/20 generic plus 7/7 pair fixtures and 89 tests), and contract-drift run 34110982329."
+    },
+    {
+      "gate": "temporal-tolerance-overflow-safety",
+      "outcome": "PASS",
+      "reason": "Spatial-temporal tolerance uses signed interval-gap comparison rather than endpoint addition. Deterministic schema-valid year-9999 cases prove that an exact 86,400-second gap remains eligible and an 86,401-second gap abstains without arithmetic overflow."
     }
   ]
 }
