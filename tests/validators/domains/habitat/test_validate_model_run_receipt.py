@@ -225,6 +225,32 @@ class HabitatModelRunReceiptTests(unittest.TestCase):
                         payload["findings"],
                     )
 
+    def test_cli_valid_file_output_is_deterministic(self) -> None:
+        manifest = validator.load_fixtures()
+        candidate = validator.materialize_case(manifest, manifest["cases"][0])
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "candidate.json"
+            path.write_text(json.dumps(candidate), encoding="utf-8")
+            command = [sys.executable, str(Path(validator.__file__)), str(path)]
+            first = subprocess.run(
+                command, cwd=ROOT, check=False, capture_output=True, text=True
+            )
+            second = subprocess.run(
+                command, cwd=ROOT, check=False, capture_output=True, text=True
+            )
+
+        self.assertEqual(0, first.returncode, first.stderr)
+        self.assertEqual("", first.stderr)
+        self.assertEqual(first.stdout, second.stdout)
+        payload = json.loads(first.stdout)
+        self.assertEqual("PASS", payload["outcome"])
+        self.assertEqual("NONE", payload["authority"])
+        self.assertEqual(path.name, payload["input"])
+        self.assertEqual(
+            json.dumps(payload, sort_keys=True, separators=(",", ":")) + "\n",
+            first.stdout,
+        )
+
     def test_cli_denial_exit_is_distinct_from_input_error(self) -> None:
         sentinel = "do-not-echo-schema-denied-value"
         with tempfile.TemporaryDirectory() as directory:
