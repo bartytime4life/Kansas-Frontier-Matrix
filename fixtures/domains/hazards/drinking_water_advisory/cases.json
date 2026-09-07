@@ -485,7 +485,7 @@
         {"path": "/advisory/clears_prior_advisory", "value": true}
       ],
       "expected_outcome": "DENY",
-      "expected_findings": ["RESCINDED_CURRENT_RECORD_PRESENT", "RESCISSION_REQUIRED", "SCHEMA_INVALID"]
+      "expected_findings": ["RESCINDED_CURRENT_RECORD_PRESENT", "RESCINDED_SOURCE_OUTCOME_REQUIRED", "RESCISSION_REQUIRED", "SCHEMA_INVALID"]
     },
     {
       "name": "missing_public_water_system",
