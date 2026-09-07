@@ -472,7 +472,7 @@ def test_whitespace_labeled_coordinate_literals_are_denied():
         ]
 
 
-def test_cardinal_coordinate_pairs_are_denied():
+def test_cardinal_coordinate_pairs_are_denied_in_both_orders():
     module = _module()
     manifest = json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))
     candidate = module.materialize_case(
@@ -484,6 +484,10 @@ def test_cardinal_coordinate_pairs_are_denied():
         "N38.8751,W98.4520",
         "38.8751N 98.4520W",
         "ｎ 38.8751 ｗ 98.4520",
+        "W 98.4520 N 38.8751",
+        "W98.4520,N38.8751",
+        "98.4520W 38.8751N",
+        "ｗ 98.4520 ｎ 38.8751",
     ):
         mutated = copy.deepcopy(candidate)
         mutated["indicator"]["value"] = value
@@ -495,6 +499,8 @@ def test_cardinal_coordinate_pairs_are_denied():
 
     assert not module._contains_coordinate_literal("N 91 W 98")
     assert not module._contains_coordinate_literal("38N 181W")
+    assert not module._contains_coordinate_literal("W 181 N 38")
+    assert not module._contains_coordinate_literal("98W 91N")
 
 
 def test_malformed_json_returns_machine_readable_denial(tmp_path, capsys):
