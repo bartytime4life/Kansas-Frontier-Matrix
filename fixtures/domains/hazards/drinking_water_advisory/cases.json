@@ -468,6 +468,15 @@
       "expected_findings": ["RESCINDED_CURRENT_RECORD_PRESENT", "SCHEMA_INVALID"]
     },
     {
+      "name": "rescinded_last_confirmed_status_missing",
+      "base": "rescinded",
+      "mutations": [
+        {"path": "/advisory/last_confirmed_status", "value": null}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["LAST_CONFIRMED_STATUS_REQUIRED", "RESCISSION_REQUIRED", "SCHEMA_INVALID"]
+    },
+    {
       "name": "source_failure_false_clear",
       "base": "rescinded",
       "mutations": [

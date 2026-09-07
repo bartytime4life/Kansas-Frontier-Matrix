@@ -524,9 +524,22 @@ def _semantic_findings(candidate: Mapping[str, Any]) -> list[Finding]:
                     "/source_surface/current_record_present",
                 )
             )
+        if advisory.get("last_confirmed_status") not in {
+            "ISSUED",
+            "ACTIVE_CONFIRMED",
+            "UPDATED",
+        }:
+            findings.append(
+                Finding(
+                    "LAST_CONFIRMED_STATUS_REQUIRED",
+                    "/advisory/last_confirmed_status",
+                )
+            )
         required_rescission = (
             outcome == "FETCHED"
             and previous_present
+            and advisory.get("last_confirmed_status")
+            in {"ISSUED", "ACTIVE_CONFIRMED", "UPDATED"}
             and _present_ref(authority.get("rescission_notice_ref"))
             and _present_ref(authority.get("rescission_authority_ref"))
             and authority.get("rescission_authority_status") == "CONFIRMED"

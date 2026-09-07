@@ -72,7 +72,7 @@ class DrinkingWaterAdvisoryTests(unittest.TestCase):
                 raw_case["expected_findings"],
                 raw_case["name"],
             )
-        self.assertEqual(observed, {"PASS": 5, "DENY": 14, "ERROR": 1})
+        self.assertEqual(observed, {"PASS": 5, "DENY": 15, "ERROR": 1})
 
     def test_finite_valid_status_partition(self) -> None:
         self.assertEqual(
@@ -313,6 +313,29 @@ class DrinkingWaterAdvisoryTests(unittest.TestCase):
                 (
                     "SCHEMA_INVALID",
                     "/source_surface/source_check_outcome",
+                ),
+            },
+        )
+
+    def test_rescinded_requires_last_confirmed_status(self) -> None:
+        candidate = copy.deepcopy(self.valid["valid_authoritative_rescission"])
+        candidate["advisory"]["last_confirmed_status"] = None
+        candidate = validator.assign_identity(candidate)
+
+        result = validator.validate_payload(candidate)
+
+        self.assertEqual(result.outcome, "DENY")
+        self.assertEqual(
+            {(finding.code, finding.path) for finding in result.findings},
+            {
+                (
+                    "LAST_CONFIRMED_STATUS_REQUIRED",
+                    "/advisory/last_confirmed_status",
+                ),
+                ("RESCISSION_REQUIRED", "/advisory"),
+                (
+                    "SCHEMA_INVALID",
+                    "/advisory/last_confirmed_status",
                 ),
             },
         )

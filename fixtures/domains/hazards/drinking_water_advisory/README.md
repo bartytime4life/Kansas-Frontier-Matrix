@@ -15,6 +15,9 @@ fail with a field-specific status mismatch instead of implying clearance.
 An authoritative `RESCINDED` record also requires the prior record to be
 present and the current record to be absent, so a carrier cannot clear an
 advisory while simultaneously claiming that its current source record remains.
+A rescinded carrier must retain its last confirmed issued or active lifecycle
+status, so Catalog and Explorer can interpret the terminal transition without
+losing its prior state context.
 The marker is recognized only on a schema-valid aware date-time; a malformed
 string that merely ends in `-00:00` cannot satisfy rescission requirements.
 Semantic ordering accepts the same RFC 3339 date-time grammar and aware-offset

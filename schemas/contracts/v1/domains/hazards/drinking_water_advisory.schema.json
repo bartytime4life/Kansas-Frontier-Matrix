@@ -401,6 +401,9 @@
           },
           "advisory": {
             "properties": {
+              "last_confirmed_status": {
+                "enum": ["ISSUED", "ACTIVE_CONFIRMED", "UPDATED"]
+              },
               "rescinded_at": {"$ref": "#/$defs/aware_datetime"},
               "clears_prior_advisory": {"const": true}
             }
