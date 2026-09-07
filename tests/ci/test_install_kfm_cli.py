@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import os
 import sys
 import tempfile
 import unittest
@@ -326,6 +327,27 @@ class InstallKfmCliTests(unittest.TestCase):
                 self.assertRaisesRegex(
                     module.CliInstallConfigurationError,
                     "^CLI_LOCAL_PACKAGE_ENTRY_LIMIT_EXCEEDED$",
+                ),
+            ):
+                module.validate_local_package(package)
+
+    @unittest.skipUnless(hasattr(os, "mkfifo"), "POSIX FIFO support required")
+    def test_local_package_rejects_non_regular_entry(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp) / "repository"
+            package = root / "packages/kfm-cli"
+            package.mkdir(parents=True)
+            (package / "pyproject.toml").write_text(
+                "[build-system]\n",
+                encoding="utf-8",
+            )
+            os.mkfifo(package / "synthetic.fifo")
+
+            with (
+                mock.patch.object(module, "REPO_ROOT", root),
+                self.assertRaisesRegex(
+                    module.CliInstallConfigurationError,
+                    "^CLI_LOCAL_PACKAGE_ENTRY_TYPE_UNSAFE$",
                 ),
             ):
                 module.validate_local_package(package)

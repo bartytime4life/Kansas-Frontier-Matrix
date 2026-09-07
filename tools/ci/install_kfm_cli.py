@@ -175,6 +175,10 @@ def validate_local_package(path: Path = LOCAL_PACKAGE) -> None:
                 )
             if entry.is_symlink():
                 raise CliInstallConfigurationError("CLI_LOCAL_PACKAGE_ENTRY_UNSAFE")
+            if not (entry.is_file() or entry.is_dir()):
+                raise CliInstallConfigurationError(
+                    "CLI_LOCAL_PACKAGE_ENTRY_TYPE_UNSAFE"
+                )
     except OSError as exc:
         raise CliInstallConfigurationError("CLI_LOCAL_PACKAGE_UNREADABLE") from exc
 
