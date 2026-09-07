@@ -46,6 +46,8 @@ FIXTURE_ROOT = ROOT / "fixtures" / "domains" / "fauna" / "occurrence_evidence"
 MANIFEST_PATH = FIXTURE_ROOT / "expected_findings_manifest.json"
 SCOPE = "fauna-occurrence-evidence-draft-v1"
 MAX_SCHEMA_FINDINGS = 100
+MAX_FIXTURE_CASES = 64
+MAX_EXPECTED_FINDINGS = 100
 FIXTURE_BUCKETS = frozenset({"semantic_invalid", "valid"})
 MANIFEST_KEYS = frozenset(
     {"authority_boundary", "cases", "schema_version", "scope"}
@@ -508,6 +510,10 @@ def validate_fixture_manifest() -> ValidationResult:
     cases = manifest.get("cases")
     if not isinstance(cases, list):
         return ValidationResult((Finding("schema.fixture_manifest_invalid", "/cases"),))
+    if len(cases) > MAX_FIXTURE_CASES:
+        return ValidationResult(
+            (Finding("schema.fixture_case_limit_exceeded", "/cases"),)
+        )
 
     findings: list[Finding] = []
     declared_paths: list[str] = []
@@ -526,6 +532,13 @@ def validate_fixture_manifest() -> ValidationResult:
             or expected_outcome not in ("PASS", "ERROR")
         ):
             _add(findings, "schema.fixture_case_invalid", f"/cases/{index}")
+            continue
+        if len(expected) > MAX_EXPECTED_FINDINGS:
+            _add(
+                findings,
+                "schema.fixture_expectation_limit_exceeded",
+                f"/cases/{index}/expected_findings",
+            )
             continue
 
         expected_pairs: list[Finding] = []

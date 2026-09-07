@@ -237,6 +237,45 @@ class OccurrenceEvidenceTests(unittest.TestCase):
                 validate_file.assert_not_called()
                 self.assertIn(expected_finding, result.findings)
 
+    def test_manifest_workload_is_bounded_before_candidate_reads(self) -> None:
+        manifest = json.loads(validator.MANIFEST_PATH.read_text(encoding="utf-8"))
+
+        too_many_cases = copy.deepcopy(manifest)
+        too_many_cases["cases"] = [
+            copy.deepcopy(manifest["cases"][0])
+            for _ in range(validator.MAX_FIXTURE_CASES + 1)
+        ]
+
+        too_many_expectations = copy.deepcopy(manifest)
+        too_many_expectations["cases"][0]["expected_findings"] = [
+            {"code": f"fixture.synthetic_{index}", "path": "/"}
+            for index in range(validator.MAX_EXPECTED_FINDINGS + 1)
+        ]
+
+        variants = (
+            (
+                too_many_cases,
+                validator.Finding("schema.fixture_case_limit_exceeded", "/cases"),
+            ),
+            (
+                too_many_expectations,
+                validator.Finding(
+                    "schema.fixture_expectation_limit_exceeded",
+                    "/cases/0/expected_findings",
+                ),
+            ),
+        )
+        for candidate, expected_finding in variants:
+            with self.subTest(expected_finding=expected_finding):
+                with (
+                    mock.patch.object(validator, "load_json_file", return_value=candidate),
+                    mock.patch.object(validator, "validate_file") as validate_file,
+                ):
+                    result = validator.validate_fixture_manifest()
+
+                validate_file.assert_not_called()
+                self.assertIn(expected_finding, result.findings)
+
     def test_valid_profiles_preserve_non_public_states(self) -> None:
         for relative_path in (
             "valid/valid_observed_open.json",
