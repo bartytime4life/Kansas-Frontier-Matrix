@@ -304,7 +304,7 @@ class ValidatorOrchestratorTests(unittest.TestCase):
         self.assertEqual(report["selection"]["require_match"], True)
         self.assertEqual(report["selected_count"], 0)
 
-    def test_duplicate_validator_id_is_rejected(self) -> None
+    def test_duplicate_validator_id_is_rejected(self) -> None:
         script = self._script("validate_alpha.py", 0)
         entries = [self._entry("alpha-check", script), self._entry("alpha-check", script)]
         path = self._registry(entries, profiles={
