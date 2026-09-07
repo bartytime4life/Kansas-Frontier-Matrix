@@ -229,11 +229,37 @@ describe("public Knowledge-domain deep-link release", () => {
     expect(
       resolvePublicKnowledgeDomainUrlConsumerCommit(
         transition,
-        null,
+        "archaeology",
         true,
         true,
       ),
     ).toBe("archaeology");
+  });
+
+  it("releases established ownership when final visible selection changes", () => {
+    const transition = resolvePublicKnowledgeDomainSelectionTransition(
+      contextUrl(["archaeology"]),
+      "archaeology",
+      "archaeology",
+    );
+
+    expect(transition.domainIdToSelect).toBeNull();
+    expect(
+      resolvePublicKnowledgeDomainUrlConsumerCommit(
+        transition,
+        null,
+        true,
+        true,
+      ),
+    ).toBeNull();
+    expect(
+      resolvePublicKnowledgeDomainUrlConsumerCommit(
+        transition,
+        "hydrology",
+        true,
+        true,
+      ),
+    ).toBeNull();
   });
 
   it("keeps an already-selected but disabled domain consumer unowned", () => {

@@ -125,8 +125,8 @@ export function resolvePublicKnowledgeDomainUrlConsumerCommit(
     return null;
   }
   if (
-    transition.domainIdToSelect !== null &&
-    selectedDomainId !== transition.domainIdToSelect
+    transition.activeDeepLinkDomainId !== null &&
+    selectedDomainId !== transition.activeDeepLinkDomainId
   ) {
     return null;
   }
