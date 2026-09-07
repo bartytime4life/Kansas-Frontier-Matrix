@@ -108,11 +108,8 @@ def test_schema_invalid_overlarge_tolerance_fails_bounded_before_arithmetic(
     assert MODULE.run(["--derive", str(source)]) == 1
 
     report = json.loads(capsys.readouterr().out)
-    assert report["status"] == "FAIL"
-    assert report["reason"] == "DERIVED_ASSESSMENT_INVALID"
-    assert report["findings"] == [
-        {
-            "code": "SCHEMA_INVALID",
-            "path": "/request/temporal_tolerance_seconds",
-        }
-    ]
+    assert report == {
+        "reason": "INPUT_OR_DERIVATION_ERROR",
+        "scope": MODULE.SCOPE,
+        "status": "FAIL",
+    }

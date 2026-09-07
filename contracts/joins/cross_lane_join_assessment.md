@@ -91,7 +91,7 @@ For `SPATIAL_TEMPORAL`, zero-tolerance intervals that only touch at `left.valid_
 
 Positive tolerances are evaluated as signed interval gaps instead of by adding seconds to an endpoint timestamp. This preserves the schema's full date-time range, including year-9999 endpoints: a gap at or below the declared bound can remain eligible, while a larger gap deterministically abstains without an arithmetic exception.
 
-Before constructing a `timedelta`, derivation also screens the tolerance as a non-boolean integer in the schema's inclusive `0..86400` range. Invalid values remain schema failures and the `--derive` CLI emits its bounded `DERIVED_ASSESSMENT_INVALID` envelope instead of leaking an arithmetic traceback.
+Before constructing a `timedelta`, derivation also screens the tolerance as a non-boolean integer in the schema's inclusive `0..86400` range. Invalid values remain non-authoritative inputs; if canonical sealing rejects one before schema evaluation, the `--derive` CLI emits its bounded `INPUT_OR_DERIVATION_ERROR` envelope instead of leaking an arithmetic traceback.
 
 Disposition precedence preserves mandatory trust routes. Same-domain scope routing remains first because the generic cross-lane helper does not own domain-local work. For distinct raw domains, unavailable dependencies produce `ERROR`, and living-person or blocked sensitive geometry produces `DENY`. Missing EvidenceRefs then retain `EVIDENCE_REF_MISSING`, and restricted generalized context retains `SENSITIVITY_REVIEW_REQUIRED`, before an unresolved alias collision can route the request to alias review. Alias review never downgrades a system error or privacy/sensitivity denial, and never hides evidence or sensitivity-review obligations.
 
