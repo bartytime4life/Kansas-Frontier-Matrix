@@ -30,6 +30,7 @@ import {
   hasSinglePublicKnowledgeDomainConsumer,
   isPublicKnowledgeDomainOwnedConsumerCurrent,
   isPublicKnowledgeDomainRetryGenerationCurrent,
+  isPublicKnowledgeDomainSyncGenerationCurrent,
   resolvePublicKnowledgeDomainRetryPlan,
   resolvePublicKnowledgeDomainManualSelectionTransition,
   resolvePublicKnowledgeDomainUrlConsumerCommit,
@@ -61,6 +62,7 @@ let pendingMapDeepLinkRetry: number | null = null;
 let pendingKnowledgeDomainDeepLinkRetry: number | null = null;
 let mapDeepLinkRetryGeneration = 0;
 let knowledgeDomainDeepLinkRetryGeneration = 0;
+let knowledgeDomainSyncGeneration = 0;
 let mapDeepLinkRetryState: PublicMapCaseRetryState = Object.freeze({
   attemptsRemaining: PUBLIC_MAP_CASE_DEEP_LINK_RETRY_LIMIT,
   urlHref: null,
@@ -305,6 +307,8 @@ const syncWorkspaceNavigation = (): void => {
     }
   }
 
+  const currentKnowledgeDomainSyncGeneration =
+    ++knowledgeDomainSyncGeneration;
   const currentDomainId = resolveSinglePublicKnowledgeDomainControlId(
     Array.from(
       root.querySelectorAll<HTMLButtonElement>(
@@ -411,6 +415,14 @@ const syncWorkspaceNavigation = (): void => {
     !mountedConsumerAfterSelection.disabled;
   const currentUrlAfterSelection = new URL(window.location.href);
   const requestUrlCurrent = currentUrlAfterSelection.href === safeUrl.href;
+  if (
+    !isPublicKnowledgeDomainSyncGenerationCurrent(
+      knowledgeDomainSyncGeneration,
+      currentKnowledgeDomainSyncGeneration,
+    )
+  ) {
+    return;
+  }
   activeDeepLinkKnowledgeDomainId =
     resolvePublicKnowledgeDomainUrlConsumerCommit(
       domainTransition,

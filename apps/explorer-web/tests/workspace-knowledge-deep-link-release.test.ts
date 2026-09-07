@@ -5,6 +5,7 @@ import {
   hasSinglePublicKnowledgeDomainConsumer,
   isPublicKnowledgeDomainOwnedConsumerCurrent,
   isPublicKnowledgeDomainRetryGenerationCurrent,
+  isPublicKnowledgeDomainSyncGenerationCurrent,
   resolvePublicKnowledgeDomainRetryPlan,
   resolvePublicKnowledgeDomainManualSelectionTransition,
   resolvePublicKnowledgeDomainUrlConsumerCommit,
@@ -126,6 +127,11 @@ describe("public Knowledge-domain deep-link release", () => {
     expect(isPublicKnowledgeDomainRetryGenerationCurrent(4, 4)).toBe(true);
     expect(isPublicKnowledgeDomainRetryGenerationCurrent(5, 4)).toBe(false);
     expect(isPublicKnowledgeDomainRetryGenerationCurrent(6, 4)).toBe(false);
+  });
+
+  it("rejects final observations from a reentered Knowledge sync", () => {
+    expect(isPublicKnowledgeDomainSyncGenerationCurrent(9, 9)).toBe(true);
+    expect(isPublicKnowledgeDomainSyncGenerationCurrent(10, 9)).toBe(false);
   });
 
   it("invalidates ownership when a Knowledge control is remounted", () => {
@@ -518,9 +524,15 @@ describe("public Knowledge-domain deep-link release", () => {
       "resolvePublicKnowledgeDomainUrlConsumerCommit(",
       clickIndex,
     );
+    const syncGenerationGuardIndex = mainSource.indexOf(
+      "isPublicKnowledgeDomainSyncGenerationCurrent(",
+      clickIndex,
+    );
     expect(finalConsumerQueryIndex).toBeGreaterThan(clickIndex);
     expect(finalReadinessIndex).toBeGreaterThan(clickIndex);
     expect(finalReadinessIndex).toBeGreaterThan(finalConsumerQueryIndex);
+    expect(syncGenerationGuardIndex).toBeGreaterThan(finalReadinessIndex);
+    expect(ownershipCommitIndex).toBeGreaterThan(syncGenerationGuardIndex);
     expect(ownershipCommitIndex).toBeGreaterThan(finalReadinessIndex);
     expect(mainSource).toContain(
       "requestedDomainId === null || consumerReadyAfterSelection",
