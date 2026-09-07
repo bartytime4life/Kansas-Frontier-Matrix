@@ -352,6 +352,27 @@ class InstallKfmCliTests(unittest.TestCase):
             ):
                 module.validate_local_package(package)
 
+    def test_local_package_bounds_aggregate_file_size(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp) / "repository"
+            package = root / "packages/kfm-cli"
+            package.mkdir(parents=True)
+            (package / "pyproject.toml").write_text(
+                "[build-system]\n",
+                encoding="utf-8",
+            )
+            with (package / "synthetic.bin").open("wb") as stream:
+                stream.truncate(module.MAX_LOCAL_PACKAGE_BYTES)
+
+            with (
+                mock.patch.object(module, "REPO_ROOT", root),
+                self.assertRaisesRegex(
+                    module.CliInstallConfigurationError,
+                    "^CLI_LOCAL_PACKAGE_SIZE_LIMIT_EXCEEDED$",
+                ),
+            ):
+                module.validate_local_package(package)
+
     def test_install_executes_argument_vectors_without_a_shell(self) -> None:
         with (
             mock.patch.object(module.time, "monotonic", side_effect=(100.0, 100.0, 150.0)),
