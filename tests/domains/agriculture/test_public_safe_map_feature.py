@@ -472,6 +472,38 @@ def test_whitespace_labeled_coordinate_literals_are_denied():
         ]
 
 
+def test_arbitrary_zero_padding_is_denied_across_noncardinal_coordinate_forms():
+    module = _module()
+    manifest = json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))
+    candidate = module.materialize_case(
+        manifest, _case(manifest, "valid_county_crop_observation")
+    )
+
+    padding = "0" * 4096
+    unicode_padding = "٠" * 4096
+    for value in (
+        "lat 000038.8751",
+        "longitude=-000098.4520",
+        "POINT(000098.4520 000038.8751)",
+        "000038.8751 -000098.4520",
+        "lat ٠٠٠٠٣٨.٨٧٥١",
+        "POINT(٠٠٠٠٩٨.٤٥٢٠ ٠٠٠٠٣٨.٨٧٥١)",
+        f"latitude {padding}38.8751",
+        f"POINT({unicode_padding}٩٨.٤٥٢٠ {unicode_padding}٣٨.٨٧٥١)",
+        f"{unicode_padding}٣٨.٨٧٥١ -{unicode_padding}٩٨.٤٥٢٠",
+    ):
+        mutated = copy.deepcopy(candidate)
+        mutated["indicator"]["value"] = value
+        mutated["spec_hash"], mutated["id"] = module.canonical_identity(mutated)
+        result = module.validate_payload(mutated)
+        assert [(finding.code, finding.path) for finding in result.findings] == [
+            ("AG_MAP_HARMFUL_PRECISION_DENIED", "/indicator/value")
+        ]
+
+    assert not module._contains_coordinate_literal("000181 000091")
+    assert not module._contains_coordinate_literal("٠٠٠١٨١ ٠٠٠٠٩١")
+
+
 def test_cardinal_coordinate_pairs_are_denied_in_both_orders():
     module = _module()
     manifest = json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))
