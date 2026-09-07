@@ -113,6 +113,20 @@ class RegistryLaneDiscoveryIndexTests(unittest.TestCase):
         ):
             build_registry_lane_discovery_index(root)
 
+    def test_symlink_error_uses_lexically_first_visible_lane(self) -> None:
+        tempdir, root = self._fixture((("sources", True),), include_noise=False)
+        self.addCleanup(tempdir.cleanup)
+        external = Path(tempdir.name) / "external"
+        external.mkdir()
+        (root / "zeta").symlink_to(external, target_is_directory=True)
+        (root / "alpha").symlink_to(external, target_is_directory=True)
+
+        with self.assertRaisesRegex(
+            RegistryDiscoveryError,
+            "registry lane must not be a symlink: alpha",
+        ):
+            build_registry_lane_discovery_index(root)
+
     def test_cli_rejects_symlinked_lane_with_deterministic_error(self) -> None:
         tempdir, root = self._fixture((("sources", True),), include_noise=False)
         self.addCleanup(tempdir.cleanup)

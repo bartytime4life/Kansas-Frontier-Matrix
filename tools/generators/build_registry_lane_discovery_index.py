@@ -45,7 +45,7 @@ def build_registry_lane_discovery_index(registry_root: Path) -> dict[str, Any]:
         )
 
     lanes = []
-    for entry in registry_root.iterdir():
+    for entry in sorted(registry_root.iterdir(), key=lambda item: item.name):
         if entry.name.startswith("."):
             continue
         if entry.is_symlink():
