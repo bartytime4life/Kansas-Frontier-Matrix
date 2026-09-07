@@ -91,7 +91,10 @@ def find_undeclared_fields(
 def _parse_bounded_int(raw_value: str) -> int:
     if len(raw_value.lstrip("-")) > MAX_JSON_INTEGER_DIGITS:
         raise ValueError("JSON integer exceeds the configured digit limit")
-    return _BoundedJsonInteger(raw_value)
+    value = int(raw_value)
+    if value == 0 and raw_value.startswith("-"):
+        return _BoundedJsonInteger(raw_value)
+    return value
 
 
 def _parse_finite_float(raw_value: str) -> float:
