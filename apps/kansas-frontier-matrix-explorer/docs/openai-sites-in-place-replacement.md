@@ -13,7 +13,7 @@ current_path: apps/kansas-frontier-matrix-explorer/docs/openai-sites-in-place-re
 owning_root: apps/
 responsibility: "Describe the bounded, reversible operator procedure for replacing the existing OpenAI Sites version of this application in place without creating repository, Vercel, source-admission, release, or KFM-publication effects."
 truth_posture: cite-or-abstain
-repository_checkpoint: ec203a9ba11fb83b52245f9523ce36cc1ec6ac66
+repository_checkpoint: 1408e45b4ba43c77e3ebab25078d4b9f9e3752fa
 related:
   - ../README.md
   - ../.openai/hosting.json
@@ -39,9 +39,10 @@ notes:
 
 This revision is the first repository-reliability slice tracked by
 [issue #4418](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4418).
-It is pinned to `main@ec203a9ba11fb83b52245f9523ce36cc1ec6ac66` after PR #4420.
-The advance from `daf554239d8f22b7825a7e8700b70ad71c14b3b0` changed only
-`contracts/correction/correction_impact_assessment.md` and does not overlap this
+It is pinned to `main@1408e45b4ba43c77e3ebab25078d4b9f9e3752fa` after PR #4420.
+The advances from `daf554239d8f22b7825a7e8700b70ad71c14b3b0` changed only
+`contracts/correction/correction_impact_assessment.md` and
+`contracts/correction/correction_propagation_plan.md`; neither overlaps this
 app-local handoff.
 
 The normative receipt shape is
