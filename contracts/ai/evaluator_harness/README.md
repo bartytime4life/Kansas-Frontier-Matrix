@@ -47,7 +47,7 @@ The validator is fail-closed and returns only bounded outcomes:
 - `ERROR` records an evaluator, schema, or explicit policy error. It must not fall back to `PASS`.
 - `HOLD` or `DENY` policy outcomes cannot produce `PASS`.
 - A non-deterministic or network-enabled record returns `DENY`, even when the schema would also reject it.
-- Missing evidence or metrics, a derived-profile mismatch, or inconsistent declared results returns `DENY`.
+- Schema-invalid records, including missing or empty required collections, return `ERROR`; derived-profile mismatches and inconsistent declared results return `DENY`.
 - Generic declared metrics use explicit `{name,value,threshold,comparison}` records; no hidden composite score is authoritative.
 
 The evaluator intentionally stops before human review and before every KFM promotion gate.
