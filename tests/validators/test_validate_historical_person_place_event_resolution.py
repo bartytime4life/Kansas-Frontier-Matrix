@@ -115,15 +115,16 @@ class HistoricalResolutionTests(unittest.TestCase):
             real_open = os.open
             swapped = False
 
-            def swapping_open(path, flags, mode=0o777, *, dir_fd=None):
+            def swapping_open(path, flags, mode=0o600, *, dir_fd=None):
                 nonlocal swapped
+                del mode
                 if path == candidate.name and dir_fd is not None and not swapped:
                     parent.rename(moved_parent)
                     parent.symlink_to(attacker, target_is_directory=True)
                     swapped = True
                 if dir_fd is None:
-                    return real_open(path, flags, mode)
-                return real_open(path, flags, mode, dir_fd=dir_fd)
+                    return real_open(path, flags)
+                return real_open(path, flags, dir_fd=dir_fd)
 
             with mock.patch.object(module.os, "open", side_effect=swapping_open):
                 value, findings = module.load_candidate(candidate)
