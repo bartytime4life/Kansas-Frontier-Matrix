@@ -405,12 +405,20 @@ def validate_candidate(candidate: object) -> list[Finding]:
         value = measurement.get("value")
         if not is_finite_number(value) or not -10_000 <= value <= 10_000:
             add_finding(findings, "MEASUREMENT_VALUE_OUT_OF_RANGE", "$.measurement.value")
-        elif Decimal(str(value)).as_tuple().exponent < -MAX_MEASUREMENT_DECIMAL_PLACES:
-            add_finding(
-                findings,
-                "MEASUREMENT_PRECISION_EXCEEDED",
-                "$.measurement.value",
-            )
+        else:
+            decimal_value = Decimal(str(value))
+            if decimal_value.is_zero() and decimal_value.is_signed():
+                add_finding(
+                    findings,
+                    "MEASUREMENT_NEGATIVE_ZERO",
+                    "$.measurement.value",
+                )
+            elif decimal_value.as_tuple().exponent < -MAX_MEASUREMENT_DECIMAL_PLACES:
+                add_finding(
+                    findings,
+                    "MEASUREMENT_PRECISION_EXCEEDED",
+                    "$.measurement.value",
+                )
         if measurement.get("unit") != "ft":
             add_finding(findings, "MEASUREMENT_UNIT_INVALID", "$.measurement.unit")
         datum_ref = measurement.get("datum_ref")

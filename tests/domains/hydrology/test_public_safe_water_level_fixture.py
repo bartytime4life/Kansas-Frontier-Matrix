@@ -408,6 +408,18 @@ class HydrologyWaterLevelFixtureTests(unittest.TestCase):
             candidate["measurement"]["value"] = value  # type: ignore[index]
             self.assertIn(expected, validate_candidate(candidate))
 
+    def test_measurement_rejects_negative_zero(self) -> None:
+        candidate = _load_candidate()
+        candidate["measurement"]["value"] = -0.0  # type: ignore[index]
+
+        self.assertIn(
+            Finding("MEASUREMENT_NEGATIVE_ZERO", "$.measurement.value"),
+            validate_candidate(candidate),
+        )
+
+        candidate["measurement"]["value"] = 0.0  # type: ignore[index]
+        self.assertEqual(validate_candidate(candidate), [])
+
     def test_temporal_provenance_is_canonical_and_monotonic(self) -> None:
         candidate = _load_candidate()
         candidate["temporal_scope"]["source_time"] = "2026-08-02T11:59:59Z"  # type: ignore[index]
