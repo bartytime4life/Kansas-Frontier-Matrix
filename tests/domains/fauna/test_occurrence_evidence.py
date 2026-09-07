@@ -314,6 +314,40 @@ class OccurrenceEvidenceTests(unittest.TestCase):
             candidate["occurrence_evidence_id"],
         )
 
+    def test_accepted_taxon_name_must_be_canonical_identity_text(self) -> None:
+        canonical = _load("valid/valid_observed_open.json")
+        accepted_name = canonical["taxon"]["accepted_scientific_name"]
+        variants = (
+            f" {accepted_name}",
+            f"{accepted_name} ",
+            accepted_name.replace("i", "i\N{COMBINING ACUTE ACCENT}", 1),
+        )
+        for noncanonical_name in variants:
+            with self.subTest(noncanonical_name=repr(noncanonical_name)):
+                candidate = copy.deepcopy(canonical)
+                candidate["taxon"]["accepted_scientific_name"] = noncanonical_name
+                candidate["spec_hash"] = validator.compute_occurrence_spec_hash(candidate)
+                candidate["occurrence_evidence_id"] = (
+                    "kfm://occurrence/" + candidate["spec_hash"].split(":", 1)[1]
+                )
+
+                result = validator.validate_candidate(candidate)
+
+                self.assertIn(
+                    validator.Finding(
+                        "taxon.accepted_name_not_canonical",
+                        "/taxon/accepted_scientific_name",
+                    ),
+                    result.findings,
+                )
+                self.assertIn(
+                    validator.Finding(
+                        "schema.validation_check_mismatch",
+                        "/validation/checks/taxonomy_normalized",
+                    ),
+                    result.findings,
+                )
+
     def test_source_role_cannot_masquerade_as_observation(self) -> None:
         candidate = _load("valid/valid_observed_open.json")
         candidate["source_role"] = "modeled"

@@ -13,6 +13,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+import unicodedata
 from dataclasses import dataclass
 from itertools import islice
 from pathlib import Path
@@ -205,6 +206,8 @@ def _taxonomy_normalized(taxon: Mapping[str, Any]) -> bool:
     return (
         isinstance(accepted, str)
         and accepted.strip()
+        and accepted == accepted.strip()
+        and unicodedata.is_normalized("NFC", accepted)
         and accepted.strip().upper() not in {"UNKNOWN", "UNRESOLVED"}
     )
 
@@ -332,9 +335,17 @@ def _semantic_findings(candidate: Mapping[str, Any]) -> list[Finding]:
 
     taxonomy_normalized = _taxonomy_normalized(taxon)
     if not taxonomy_normalized:
+        accepted_name = taxon.get("accepted_scientific_name")
+        finding_code = (
+            "taxon.accepted_name_not_canonical"
+            if isinstance(accepted_name, str)
+            and accepted_name.strip()
+            and accepted_name.strip().upper() not in {"UNKNOWN", "UNRESOLVED"}
+            else "taxon.accepted_name_unresolved"
+        )
         _add(
             findings,
-            "taxon.accepted_name_unresolved",
+            finding_code,
             "/taxon/accepted_scientific_name",
         )
 
