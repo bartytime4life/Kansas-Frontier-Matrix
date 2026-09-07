@@ -9,6 +9,8 @@ import sys
 import unittest
 from pathlib import Path
 
+from jsonschema import Draft202012Validator
+
 from tools.validators.archaeology.validate_candidate_feature import (
     CANDIDATE_ID_PATTERN,
     CANDIDATE_TYPES,
@@ -415,6 +417,7 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
 
     def test_schema_projects_same_fail_closed_boundary(self) -> None:
         schema = _load(SCHEMA_PATH)
+        Draft202012Validator.check_schema(schema)
         properties = schema["properties"]
         self.assertEqual(properties["object_type"], {"const": "CandidateFeature"})
         self.assertEqual(properties["truth_state"], {"const": "CANDIDATE"})
