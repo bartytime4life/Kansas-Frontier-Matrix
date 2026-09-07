@@ -492,6 +492,10 @@ def test_cardinal_coordinate_pairs_are_denied_in_both_orders():
         "038.8751N 098.4520W",
         "W 098.4520 N 038.8751",
         "098.4520W 038.8751N",
+        "N 0038.8751 W 0098.4520",
+        "0038.8751N 0098.4520W",
+        "W 0098.4520 N 0038.8751",
+        "0098.4520W 0038.8751N",
     ):
         mutated = copy.deepcopy(candidate)
         mutated["indicator"]["value"] = value
@@ -507,6 +511,16 @@ def test_cardinal_coordinate_pairs_are_denied_in_both_orders():
     assert not module._contains_coordinate_literal("98W 91N")
     assert not module._contains_coordinate_literal("N 091 W 098")
     assert not module._contains_coordinate_literal("098W 091N")
+    padding = "0" * 4096
+    assert module._contains_coordinate_literal(
+        f"N {padding}38.8751 W {padding}98.4520"
+    )
+    assert module._contains_coordinate_literal(
+        f"{padding}98.4520W {padding}38.8751N"
+    )
+    assert not module._contains_coordinate_literal(
+        f"N {padding}91 W {padding}98"
+    )
 
 
 def test_malformed_json_returns_machine_readable_denial(tmp_path, capsys):
