@@ -188,6 +188,7 @@ describe("public Knowledge-domain deep-link release", () => {
         "archaeology",
         true,
         true,
+        true,
       ),
     ).toBe("archaeology");
   });
@@ -206,12 +207,14 @@ describe("public Knowledge-domain deep-link release", () => {
         "hydrology",
         true,
         true,
+        true,
       ),
     ).toBeNull();
     expect(
       resolvePublicKnowledgeDomainUrlConsumerCommit(
         transition,
         null,
+        true,
         true,
         true,
       ),
@@ -232,6 +235,7 @@ describe("public Knowledge-domain deep-link release", () => {
         "archaeology",
         true,
         true,
+        true,
       ),
     ).toBe("archaeology");
   });
@@ -250,12 +254,14 @@ describe("public Knowledge-domain deep-link release", () => {
         null,
         true,
         true,
+        true,
       ),
     ).toBeNull();
     expect(
       resolvePublicKnowledgeDomainUrlConsumerCommit(
         transition,
         "hydrology",
+        true,
         true,
         true,
       ),
@@ -276,12 +282,14 @@ describe("public Knowledge-domain deep-link release", () => {
         "people_dna_land",
         false,
         true,
+        true,
       ),
     ).toBeNull();
     expect(
       resolvePublicKnowledgeDomainUrlConsumerCommit(
         transition,
         "people_dna_land",
+        true,
         true,
         true,
       ),
@@ -299,6 +307,25 @@ describe("public Knowledge-domain deep-link release", () => {
       resolvePublicKnowledgeDomainUrlConsumerCommit(
         transition,
         "archaeology",
+        true,
+        false,
+        true,
+      ),
+    ).toBeNull();
+  });
+
+  it("rejects ownership when selection rewrites the requested URL", () => {
+    const transition = resolvePublicKnowledgeDomainSelectionTransition(
+      contextUrl(["archaeology"]),
+      null,
+      "hydrology",
+    );
+
+    expect(
+      resolvePublicKnowledgeDomainUrlConsumerCommit(
+        transition,
+        "archaeology",
+        true,
         true,
         false,
       ),
@@ -503,6 +530,12 @@ describe("public Knowledge-domain deep-link release", () => {
     );
     expect(mainSource).toContain(
       "activeDeepLinkKnowledgeDomainId !== null &&\n    mountedConsumerAfterSelection !== undefined",
+    );
+    expect(mainSource).toContain(
+      "const requestUrlCurrent = currentUrlAfterSelection.href === safeUrl.href",
+    );
+    expect(mainSource).toContain(
+      "requestUrlCurrent ? safeUrl : currentUrlAfterSelection",
     );
     expect(mainSource).toContain(
       'button[data-domain-id][aria-pressed="true"]',

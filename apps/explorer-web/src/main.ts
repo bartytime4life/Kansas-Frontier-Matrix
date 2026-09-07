@@ -409,12 +409,15 @@ const syncWorkspaceNavigation = (): void => {
       mountedConsumerAfterSelection,
     ) &&
     !mountedConsumerAfterSelection.disabled;
+  const currentUrlAfterSelection = new URL(window.location.href);
+  const requestUrlCurrent = currentUrlAfterSelection.href === safeUrl.href;
   activeDeepLinkKnowledgeDomainId =
     resolvePublicKnowledgeDomainUrlConsumerCommit(
       domainTransition,
       selectedDomainId,
       requestedDomainId === null || consumerReadyAfterSelection,
       requestedDomainId === null || ownedConsumerCurrent,
+      requestedDomainId === null || requestUrlCurrent,
     );
   activeDeepLinkKnowledgeDomainConsumer =
     activeDeepLinkKnowledgeDomainId !== null &&
@@ -424,7 +427,9 @@ const syncWorkspaceNavigation = (): void => {
   if (activeDeepLinkKnowledgeDomainId !== null || requestedDomainId === null) {
     cancelPendingKnowledgeDomainDeepLinkRetry();
   } else {
-    scheduleKnowledgeDomainDeepLinkRetry(safeUrl);
+    scheduleKnowledgeDomainDeepLinkRetry(
+      requestUrlCurrent ? safeUrl : currentUrlAfterSelection,
+    );
   }
 };
 const syncWorkspaceNavigationFromBrowser = (): void => {

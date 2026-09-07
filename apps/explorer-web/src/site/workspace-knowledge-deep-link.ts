@@ -106,21 +106,23 @@ export function isPublicKnowledgeDomainOwnedConsumerCurrent(
 }
 
 /**
- * Commit URL ownership only after the existing Knowledge control is enabled
- * and visibly applies the requested domain. This readiness proof is required
- * even when the requested domain was already selected before synchronization;
- * an absent, disabled, or ineffective control leaves ownership clear and
- * retryable instead of treating an unavailable consumer as restored.
+ * Commit URL ownership only after the existing Knowledge control is enabled,
+ * visibly applies the requested domain, and the browser still carries the URL
+ * that requested it. These proofs are required even when the requested domain
+ * was already selected before synchronization. An absent, disabled, replaced,
+ * ineffective, or history-rewriting control leaves ownership clear and
+ * retryable instead of treating a stale request as restored.
  */
 export function resolvePublicKnowledgeDomainUrlConsumerCommit(
   transition: PublicKnowledgeDomainSelectionTransition,
   selectedDomainId: string | null,
   consumerReady: boolean,
   ownedConsumerCurrent: boolean,
+  requestUrlCurrent: boolean,
 ): string | null {
   if (
     transition.activeDeepLinkDomainId !== null &&
-    (!consumerReady || !ownedConsumerCurrent)
+    (!consumerReady || !ownedConsumerCurrent || !requestUrlCurrent)
   ) {
     return null;
   }
