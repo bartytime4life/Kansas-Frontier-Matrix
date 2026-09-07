@@ -58,6 +58,17 @@ export type MapRuntimeStyleLifecycleExecutor = (
   signal: AbortSignal,
 ) => void | Promise<void>;
 
+export type MapRuntimeStyleLifecycleActionExecutorContext = Readonly<{
+  index: number;
+  total: number;
+  signal: AbortSignal;
+}>;
+
+export type MapRuntimeStyleLifecycleActionExecutor = (
+  action: MapRuntimeStyleLifecycleAction,
+  context: MapRuntimeStyleLifecycleActionExecutorContext,
+) => void | Promise<void>;
+
 export type MapRuntimeStyleLifecycleCoordinator = Readonly<{
   getState(): MapRuntimeStyleState;
   requiresReconciliation(): boolean;
@@ -301,6 +312,35 @@ export function planMapRuntimeStyleLifecycle(
 }
 
 /**
+ * Adapt a renderer's single-action boundary to the lifecycle coordinator.
+ *
+ * Actions are awaited strictly in plan order. Cancellation is checked before
+ * and after every action so a renderer that ignores AbortSignal cannot allow
+ * a later source/layer operation to start. The coordinator remains responsible
+ * for ticket ownership, confirmed state, and reconciliation after cancellation.
+ */
+export function createMapRuntimeStyleLifecycleExecutor(
+  executeAction: MapRuntimeStyleLifecycleActionExecutor,
+): MapRuntimeStyleLifecycleExecutor {
+  if (typeof executeAction !== "function") {
+    invalid("Map runtime style lifecycle action executor is invalid.");
+  }
+
+  return async (plan, signal): Promise<void> => {
+    for (let index = 0; index < plan.actions.length; index += 1) {
+      requireLifecycleExecutionActive(signal);
+      const context = Object.freeze({
+        index,
+        total: plan.actions.length,
+        signal,
+      });
+      await executeAction(plan.actions[index], context);
+      requireLifecycleExecutionActive(signal);
+    }
+  };
+}
+
+/**
  * Serializes application of lifecycle plans at an injected renderer boundary.
  *
  * A plan becomes confirmed state only after the exact ticket is committed or
@@ -489,6 +529,15 @@ function assertSafeIdentifier(
 ): asserts value is string {
   if (typeof value !== "string" || !SAFE_IDENTIFIER.test(value)) {
     invalid(`Map runtime style ${field} is invalid.`);
+  }
+}
+
+function requireLifecycleExecutionActive(signal: AbortSignal): void {
+  if (signal.aborted) {
+    throw new MapRuntimePortError(
+      "MAP_RUNTIME_STYLE_LIFECYCLE_CANCELLED",
+      "Map runtime style lifecycle execution was cancelled.",
+    );
   }
 }
 

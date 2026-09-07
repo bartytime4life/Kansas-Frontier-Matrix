@@ -6,6 +6,7 @@ import {
   MAP_RUNTIME_STYLE_PLAN_PROFILE,
   MAP_RUNTIME_STYLE_PROFILE,
   MAP_RUNTIME_STYLE_SOURCE_PROFILE,
+  createMapRuntimeStyleLifecycleExecutor,
   createMapRuntimeStyleLifecycleCoordinator,
   freezeMapRuntimeStyleState,
   planMapRuntimeStyleLifecycle,
@@ -323,6 +324,93 @@ describe("renderer-neutral source and layer lifecycle", () => {
 });
 
 describe("renderer-neutral style lifecycle coordination", () => {
+  it("executes lifecycle actions sequentially with immutable progress", async () => {
+    const plan = planMapRuntimeStyleLifecycle(
+      style([["roads", "v1"]], [["roads-line", "roads"]]),
+      style([["places", "v1"]], [["places-label", "places"]]),
+    );
+    const observed: Array<{
+      effect: string;
+      index: number;
+      total: number;
+      frozen: boolean;
+    }> = [];
+    let active = 0;
+
+    const execute = createMapRuntimeStyleLifecycleExecutor(
+      async (action, context) => {
+        active += 1;
+        expect(active).toBe(1);
+        observed.push({
+          effect: action.effect,
+          index: context.index,
+          total: context.total,
+          frozen: Object.isFrozen(context),
+        });
+        await Promise.resolve();
+        active -= 1;
+      },
+    );
+
+    await execute(plan, new AbortController().signal);
+
+    expect(observed).toEqual(
+      plan.actions.map((action, index) => ({
+        effect: action.effect,
+        index,
+        total: plan.actions.length,
+        frozen: true,
+      })),
+    );
+  });
+
+  it("does not start actions when execution is already cancelled", async () => {
+    const plan = planMapRuntimeStyleLifecycle(
+      style([], []),
+      style([["roads", "v1"]], [["roads-line", "roads"]]),
+    );
+    const controller = new AbortController();
+    controller.abort();
+    let calls = 0;
+    const execute = createMapRuntimeStyleLifecycleExecutor(() => {
+      calls += 1;
+    });
+
+    await expect(execute(plan, controller.signal)).rejects.toMatchObject({
+      code: "MAP_RUNTIME_STYLE_LIFECYCLE_CANCELLED",
+    });
+    expect(calls).toBe(0);
+  });
+
+  it("stops before the next action when an active action ignores cancellation", async () => {
+    const coordinator = createMapRuntimeStyleLifecycleCoordinator(
+      style([["roads", "v1"]], [["roads-line", "roads"]]),
+    );
+    const ticket = coordinator.plan(
+      style([["places", "v1"]], [["places-label", "places"]]),
+    );
+    let finishFirst: (() => void) | undefined;
+    const effects: string[] = [];
+    const execute = createMapRuntimeStyleLifecycleExecutor(
+      (action) => {
+        effects.push(action.effect);
+        return new Promise<void>((resolve) => {
+          finishFirst = resolve;
+        });
+      },
+    );
+    const execution = coordinator.execute(ticket, execute);
+
+    coordinator.cancel(ticket);
+    finishFirst?.();
+
+    await expect(execution).rejects.toMatchObject({
+      code: "MAP_RUNTIME_STYLE_LIFECYCLE_CANCELLED",
+    });
+    expect(effects).toEqual([ticket.plan.actions[0].effect]);
+    expect(coordinator.requiresReconciliation()).toBe(true);
+  });
+
   it("advances confirmed state only for the exact pending ticket", () => {
     const initial = style([["roads", "v1"]], [["roads-line", "roads"]]);
     const coordinator = createMapRuntimeStyleLifecycleCoordinator(initial);
