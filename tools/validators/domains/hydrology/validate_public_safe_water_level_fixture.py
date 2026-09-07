@@ -21,6 +21,7 @@ from tools.validators._common.public_safe_fixture import (
     is_negative_zero,
     is_nonempty_string,
     number_as_decimal,
+    number_has_redundant_fractional_zero,
     number_uses_exponent_lexeme,
     run_cli,
     validate_fixture_file,
@@ -425,6 +426,12 @@ def validate_candidate(candidate: object) -> list[Finding]:
                 add_finding(
                     findings,
                     "MEASUREMENT_EXPONENT_NOT_CANONICAL",
+                    "$.measurement.value",
+                )
+            elif number_has_redundant_fractional_zero(value):
+                add_finding(
+                    findings,
+                    "MEASUREMENT_TRAILING_ZERO_NOT_CANONICAL",
                     "$.measurement.value",
                 )
         if measurement.get("unit") != "ft":

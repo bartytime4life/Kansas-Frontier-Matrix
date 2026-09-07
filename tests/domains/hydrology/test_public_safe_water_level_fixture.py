@@ -460,8 +460,8 @@ class HydrologyWaterLevelFixtureTests(unittest.TestCase):
         )
         valid_text = VALID_FIXTURE.read_text(encoding="utf-8")
         for exponent_value, plain_value in (
-            ("1e2", "100.0"),
-            ("1E+2", "100.0"),
+            ("1e2", "100"),
+            ("1E+2", "100"),
             ("1e-2", "0.01"),
         ):
             with self.subTest(exponent_value=exponent_value):
@@ -481,6 +481,37 @@ class HydrologyWaterLevelFixtureTests(unittest.TestCase):
                         encoding="utf-8",
                     )
                     self.assertNotIn(expected, validate_file(plain_fixture))
+
+    def test_fixture_parser_rejects_redundant_fractional_zeros(self) -> None:
+        expected = Finding(
+            "MEASUREMENT_TRAILING_ZERO_NOT_CANONICAL",
+            "$.measurement.value",
+        )
+        valid_text = VALID_FIXTURE.read_text(encoding="utf-8")
+        for redundant_value, canonical_value in (
+            ("12.50", "12.5"),
+            ("12.0", "12"),
+            ("0.0", "0"),
+        ):
+            with self.subTest(redundant_value=redundant_value):
+                with tempfile.TemporaryDirectory() as directory:
+                    redundant_fixture = Path(directory) / "redundant.json"
+                    redundant_fixture.write_text(
+                        valid_text.replace(
+                            '"value": 12.5', f'"value": {redundant_value}'
+                        ),
+                        encoding="utf-8",
+                    )
+                    self.assertIn(expected, validate_file(redundant_fixture))
+
+                    canonical_fixture = Path(directory) / "canonical.json"
+                    canonical_fixture.write_text(
+                        valid_text.replace(
+                            '"value": 12.5', f'"value": {canonical_value}'
+                        ),
+                        encoding="utf-8",
+                    )
+                    self.assertNotIn(expected, validate_file(canonical_fixture))
 
     def test_temporal_provenance_is_canonical_and_monotonic(self) -> None:
         candidate = _load_candidate()

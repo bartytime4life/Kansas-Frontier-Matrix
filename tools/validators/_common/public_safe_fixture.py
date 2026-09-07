@@ -105,6 +105,17 @@ def number_uses_exponent_lexeme(value: object) -> bool:
     return isinstance(value, _BoundedJsonFloat) and "e" in value.raw_value.lower()
 
 
+def number_has_redundant_fractional_zero(value: object) -> bool:
+    """Return whether an opted-in plain-decimal float ends in a zero."""
+
+    return (
+        isinstance(value, _BoundedJsonFloat)
+        and "e" not in value.raw_value.lower()
+        and "." in value.raw_value
+        and value.raw_value.endswith("0")
+    )
+
+
 def add_finding(findings: set[Finding], code: str, path: str) -> None:
     findings.add(Finding(code=code, path=path))
 
