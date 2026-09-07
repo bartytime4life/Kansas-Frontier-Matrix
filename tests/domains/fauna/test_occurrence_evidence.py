@@ -302,6 +302,31 @@ class OccurrenceEvidenceTests(unittest.TestCase):
         self.assertEqual("withheld", held["geometry"]["public_safe_geometry"]["geometry_type"])
         self.assertFalse(held["sensitivity"]["exact_location_public_safe"])
 
+    def test_public_geometry_type_and_precision_must_agree(self) -> None:
+        candidate = _load("valid/valid_modeled_context.json")
+        candidate["geometry"]["public_safe_geometry"]["precision_class"] = "county"
+        candidate["spec_hash"] = validator.compute_occurrence_spec_hash(candidate)
+        candidate["occurrence_evidence_id"] = (
+            "kfm://occurrence/" + candidate["spec_hash"].split(":", 1)[1]
+        )
+
+        result = validator.validate_candidate(candidate)
+
+        self.assertIn(
+            validator.Finding(
+                "geom.public_geometry_precision_mismatch",
+                "/geometry/public_safe_geometry/precision_class",
+            ),
+            result.findings,
+        )
+        self.assertIn(
+            validator.Finding(
+                "schema.validation_check_mismatch",
+                "/validation/checks/geometry_public_safe",
+            ),
+            result.findings,
+        )
+
     def test_occurrence_identity_is_deterministic(self) -> None:
         candidate = _load("valid/valid_observed_open.json")
         reordered = dict(reversed(list(candidate.items())))

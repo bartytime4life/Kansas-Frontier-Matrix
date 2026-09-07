@@ -84,6 +84,12 @@ ROLE_BASIS = {
 RAW_ARTIFACT_ROLES = frozenset(
     {"observed", "regulatory", "administrative", "candidate"}
 )
+PUBLIC_GEOMETRY_PRECISIONS = {
+    "point": frozenset({"exact", "generalized_point"}),
+    "grid": frozenset({"grid"}),
+    "county": frozenset({"county"}),
+    "withheld": frozenset({"withheld"}),
+}
 
 
 @dataclass(frozen=True, order=True)
@@ -243,6 +249,16 @@ def _geometry_findings(
     if isinstance(public_safe, Mapping):
         public_precision = public_safe.get("precision_class")
         public_type = public_safe.get("geometry_type")
+        admitted_precisions = PUBLIC_GEOMETRY_PRECISIONS.get(public_type)
+        if (
+            admitted_precisions is not None
+            and public_precision not in admitted_precisions
+        ):
+            _add(
+                findings,
+                "geom.public_geometry_precision_mismatch",
+                "/geometry/public_safe_geometry/precision_class",
+            )
         if generalization and public_precision == "exact":
             _add(
                 findings,
