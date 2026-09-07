@@ -85,7 +85,13 @@ def validate_candidate(candidate: object) -> list[Finding]:
 def validate_file(path: Path | str) -> ValidationResult:
     """Decode one bounded JSON file and retain the profile's finite outcomes."""
 
-    findings = tuple(validate_fixture_file(path, validate_candidate))
+    findings = tuple(
+        validate_fixture_file(
+            path,
+            validate_candidate,
+            preserve_negative_zero_int=True,
+        )
+    )
     return ValidationResult(outcome_for_findings(findings), findings)
 
 

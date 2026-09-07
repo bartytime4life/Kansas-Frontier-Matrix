@@ -191,6 +191,33 @@ class AirObservationValidatorEntrypointTests(unittest.TestCase):
             low_cost_findings,
         )
 
+    def test_file_parser_rejects_integer_negative_zero(self) -> None:
+        candidate = self._bound_observation()
+        measurement = deepcopy(candidate["measurement"])
+        self.assertIsInstance(measurement, dict)
+        measurement["value"] = "__NUMBER__"
+        candidate["measurement"] = measurement
+        template = json.dumps(candidate)
+        self.assertEqual(template.count('"__NUMBER__"'), 1)
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            cases = {
+                "-0": ValidationResult(
+                    "DENY",
+                    (Finding("MEASUREMENT_NEGATIVE_ZERO", "$.measurement.value"),),
+                ),
+                "0": ValidationResult("PASS", ()),
+            }
+            for lexeme, expected in cases.items():
+                with self.subTest(lexeme=lexeme):
+                    path = root / f"{lexeme.replace('-', 'negative-')}.json"
+                    path.write_text(
+                        template.replace('"__NUMBER__"', lexeme),
+                        encoding="utf-8",
+                    )
+                    self.assertEqual(validate_file(path), expected)
+
     def test_unresolved_observation_preserves_abstain(self) -> None:
         result = validate_file(VALID_DIR / "air_observation_unresolved.json")
         self.assertEqual(result.outcome, "ABSTAIN")
