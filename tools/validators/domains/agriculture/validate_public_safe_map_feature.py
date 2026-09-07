@@ -161,6 +161,30 @@ CARDINAL_SUFFIX_LONGITUDE_LATITUDE_PATTERN = re.compile(
     rf"({CARDINAL_LATITUDE_MAGNITUDE}){OPTIONAL_CARDINAL_DEGREE_SIGN}"
     rf"\s*([NS])(?![\w.])"
 )
+CARDINAL_PREFIX_LATITUDE_SUFFIX_LONGITUDE_PATTERN = re.compile(
+    rf"(?i)(?<![\w.])([NS])\s*({CARDINAL_LATITUDE_MAGNITUDE})"
+    rf"{OPTIONAL_CARDINAL_DEGREE_SIGN}(?:\s*,\s*|\s+)"
+    rf"({CARDINAL_LONGITUDE_MAGNITUDE}){OPTIONAL_CARDINAL_DEGREE_SIGN}"
+    rf"\s*([EW])(?![\w.])"
+)
+CARDINAL_SUFFIX_LATITUDE_PREFIX_LONGITUDE_PATTERN = re.compile(
+    rf"(?i)(?<![\w.])({CARDINAL_LATITUDE_MAGNITUDE})"
+    rf"{OPTIONAL_CARDINAL_DEGREE_SIGN}\s*([NS])(?:\s*,\s*|\s+)"
+    rf"([EW])\s*({CARDINAL_LONGITUDE_MAGNITUDE})"
+    rf"{OPTIONAL_CARDINAL_DEGREE_SIGN}(?![\w.])"
+)
+CARDINAL_PREFIX_LONGITUDE_SUFFIX_LATITUDE_PATTERN = re.compile(
+    rf"(?i)(?<![\w.])([EW])\s*({CARDINAL_LONGITUDE_MAGNITUDE})"
+    rf"{OPTIONAL_CARDINAL_DEGREE_SIGN}(?:\s*,\s*|\s+)"
+    rf"({CARDINAL_LATITUDE_MAGNITUDE}){OPTIONAL_CARDINAL_DEGREE_SIGN}"
+    rf"\s*([NS])(?![\w.])"
+)
+CARDINAL_SUFFIX_LONGITUDE_PREFIX_LATITUDE_PATTERN = re.compile(
+    rf"(?i)(?<![\w.])({CARDINAL_LONGITUDE_MAGNITUDE})"
+    rf"{OPTIONAL_CARDINAL_DEGREE_SIGN}\s*([EW])(?:\s*,\s*|\s+)"
+    rf"([NS])\s*({CARDINAL_LATITUDE_MAGNITUDE})"
+    rf"{OPTIONAL_CARDINAL_DEGREE_SIGN}(?![\w.])"
+)
 DMS_MINUTE_MARK = r"['’′]"
 DMS_SECOND_MARK = r'(?:["”″]|′′)'
 DMS_LATITUDE_MAGNITUDE = (
@@ -190,6 +214,22 @@ DMS_PREFIX_LONGITUDE_LATITUDE_PATTERN = re.compile(
 DMS_SUFFIX_LONGITUDE_LATITUDE_PATTERN = re.compile(
     rf"(?i)(?<![\w.])({DMS_LONGITUDE_MAGNITUDE})\s*([EW])"
     rf"(?:\s*,\s*|\s+)({DMS_LATITUDE_MAGNITUDE})\s*([NS])(?![\w.])"
+)
+DMS_PREFIX_LATITUDE_SUFFIX_LONGITUDE_PATTERN = re.compile(
+    rf"(?i)(?<![\w.])([NS])\s*({DMS_LATITUDE_MAGNITUDE})"
+    rf"(?:\s*,\s*|\s+)({DMS_LONGITUDE_MAGNITUDE})\s*([EW])(?![\w.])"
+)
+DMS_SUFFIX_LATITUDE_PREFIX_LONGITUDE_PATTERN = re.compile(
+    rf"(?i)(?<![\w.])({DMS_LATITUDE_MAGNITUDE})\s*([NS])"
+    rf"(?:\s*,\s*|\s+)([EW])\s*({DMS_LONGITUDE_MAGNITUDE})(?![\w.])"
+)
+DMS_PREFIX_LONGITUDE_SUFFIX_LATITUDE_PATTERN = re.compile(
+    rf"(?i)(?<![\w.])([EW])\s*({DMS_LONGITUDE_MAGNITUDE})"
+    rf"(?:\s*,\s*|\s+)({DMS_LATITUDE_MAGNITUDE})\s*([NS])(?![\w.])"
+)
+DMS_SUFFIX_LONGITUDE_PREFIX_LATITUDE_PATTERN = re.compile(
+    rf"(?i)(?<![\w.])({DMS_LONGITUDE_MAGNITUDE})\s*([EW])"
+    rf"(?:\s*,\s*|\s+)([NS])\s*({DMS_LATITUDE_MAGNITUDE})(?![\w.])"
 )
 WKT_POINT_PATTERN = re.compile(
     rf"(?i)\bpoint\s*\(\s*{SIGNED_COORDINATE_MAGNITUDE}\s+"
@@ -289,6 +329,10 @@ def _contains_coordinate_literal(value: str) -> bool:
         (DMS_SUFFIX_COORDINATE_PATTERN, 1, 3),
         (DMS_PREFIX_LONGITUDE_LATITUDE_PATTERN, 4, 2),
         (DMS_SUFFIX_LONGITUDE_LATITUDE_PATTERN, 3, 1),
+        (DMS_PREFIX_LATITUDE_SUFFIX_LONGITUDE_PATTERN, 2, 3),
+        (DMS_SUFFIX_LATITUDE_PREFIX_LONGITUDE_PATTERN, 1, 4),
+        (DMS_PREFIX_LONGITUDE_SUFFIX_LATITUDE_PATTERN, 3, 2),
+        (DMS_SUFFIX_LONGITUDE_PREFIX_LATITUDE_PATTERN, 4, 1),
     ):
         for match in pattern.finditer(value):
             if (_dms_magnitude_in_range(match.group(latitude_group), 90)
@@ -299,6 +343,10 @@ def _contains_coordinate_literal(value: str) -> bool:
         (CARDINAL_SUFFIX_COORDINATE_PATTERN, 1, 3),
         (CARDINAL_PREFIX_LONGITUDE_LATITUDE_PATTERN, 4, 2),
         (CARDINAL_SUFFIX_LONGITUDE_LATITUDE_PATTERN, 3, 1),
+        (CARDINAL_PREFIX_LATITUDE_SUFFIX_LONGITUDE_PATTERN, 2, 3),
+        (CARDINAL_SUFFIX_LATITUDE_PREFIX_LONGITUDE_PATTERN, 1, 4),
+        (CARDINAL_PREFIX_LONGITUDE_SUFFIX_LATITUDE_PATTERN, 3, 2),
+        (CARDINAL_SUFFIX_LONGITUDE_PREFIX_LATITUDE_PATTERN, 4, 1),
     ):
         for match in pattern.finditer(value):
             latitude = _cardinal_magnitude(match.group(latitude_group))
