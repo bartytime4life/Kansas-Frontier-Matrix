@@ -60,7 +60,7 @@ notes:
 > **Owner:** `OWNER_TBD`  
 > **Path:** `contracts/ai/focus_mode_request/`  
 > **Path posture:** `CONFIRMED` as a present request-semantic lane; canonical Focus contract/schema ownership is `NEEDS VERIFICATION` because overlapping schema lanes remain.  
-> **Truth posture:** The target README, sibling request/response contract directories, schema files, policy files, Explorer Focus parser/tests, and governed-API registry were checked against `main@55a5e20c4fe613acbf7c1aa9e6a9b6e5db7c7ca6`. The repository proves a bounded client-side Focus slice, not a live governed Focus transaction.
+> **Truth posture:** The target README, sibling request/response contract directories, schema files, policy files, Explorer Focus parser/tests, and governed-API registry were checked against `main@3466896546341e7a77cc71c9e995177c4345bd0c`. The repository proves a bounded client-side Focus slice, not a live governed Focus transaction.
 
 ---
 
@@ -240,7 +240,7 @@ The repository currently proves only the bounded fixture-first client side of th
 
 ## Validation
 
-The following were checked at `main@55a5e20c4fe613acbf7c1aa9e6a9b6e5db7c7ca6`:
+The following were checked at `main@3466896546341e7a77cc71c9e995177c4345bd0c`:
 
 - this README and sibling request/response contract directories are present;
 - both overlapping Focus schema lanes are present and their request/response files are permissive `PROPOSED` scaffolds;
@@ -300,7 +300,7 @@ Rollback target: prior README blob `c22fb8778d0f4bca4a0214c36ca6ce7ca06460ae`.
 |---|---|
 | Review date | `2026-09-07` |
 | Repository | `bartytime4life/Kansas-Frontier-Matrix` |
-| Base ref | `main@55a5e20c4fe613acbf7c1aa9e6a9b6e5db7c7ca6` |
+| Base ref | `main@3466896546341e7a77cc71c9e995177c4345bd0c` |
 | Prior target blob | `c22fb8778d0f4bca4a0214c36ca6ce7ca06460ae` |
 | Directory rules blob | `fd49a0b83e55cef52c1124281f093e263526898d` |
 | Change posture | Documentation-only refresh; draft PR recommended; no merge, release, deployment, or publication claimed. |
