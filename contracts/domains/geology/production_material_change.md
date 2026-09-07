@@ -97,6 +97,8 @@ The validator computes the exact sorted set:
 
 Governed HOLD blocker reason codes are exclusive to `HOLD`. A `NO_CHANGE`, `REVIEW`, or
 `ERROR` packet that asserts one fails closed even when its other outcome evidence is valid.
+The primary claim codes are likewise outcome-bound: `SNAPSHOTS_MATCH` belongs to
+`NO_CHANGE`, `MATERIAL_CHANGE_DETECTED` to `REVIEW`, and `OPERATIONAL_ERROR` to `ERROR`.
 
 ## Deterministic validation
 

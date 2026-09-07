@@ -36,6 +36,11 @@ HOLD_BLOCKER_REASONS = {
     "RETRIEVAL_TIME_REGRESSION",
     "RIGHTS_STATE_UNRESOLVED",
 }
+OUTCOME_REASON_OWNERS = {
+    "MATERIAL_CHANGE_DETECTED": "REVIEW",
+    "OPERATIONAL_ERROR": "ERROR",
+    "SNAPSHOTS_MATCH": "NO_CHANGE",
+}
 
 
 class DuplicateKeyError(ValueError):
@@ -452,6 +457,16 @@ def _semantic_findings(candidate: Mapping[str, Any]) -> list[Finding]:
         findings.append(
             Finding(
                 "HOLD_REASON_REQUIRES_HOLD_OUTCOME",
+                "/assessment/reason_codes",
+            )
+        )
+    if any(
+        reason in reason_set and outcome != owning_outcome
+        for reason, owning_outcome in OUTCOME_REASON_OWNERS.items()
+    ):
+        findings.append(
+            Finding(
+                "OUTCOME_REASON_CODE_MISMATCH",
                 "/assessment/reason_codes",
             )
         )
