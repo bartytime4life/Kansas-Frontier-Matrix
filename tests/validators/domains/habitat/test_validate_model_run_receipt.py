@@ -295,9 +295,19 @@ class HabitatModelRunReceiptTests(unittest.TestCase):
             malformed = root / "malformed.json"
             malformed.write_text(f'{{"secret":"{sentinel}"', encoding="utf-8")
 
-            for path, expected_code, expected_outcome in (
-                (denied, 1, "DENY"),
-                (malformed, 2, "ERROR"),
+            for path, expected_code, expected_outcome, expected_finding in (
+                (
+                    denied,
+                    1,
+                    "DENY",
+                    {"code": "MODEL_RUN_SCHEMA_INVALID", "path": "/"},
+                ),
+                (
+                    malformed,
+                    2,
+                    "ERROR",
+                    {"code": "MODEL_RUN_JSON_INVALID", "path": "/"},
+                ),
             ):
                 with self.subTest(outcome=expected_outcome):
                     command = [sys.executable, str(Path(validator.__file__)), str(path)]
@@ -333,7 +343,7 @@ class HabitatModelRunReceiptTests(unittest.TestCase):
                     self.assertEqual(
                         list(validator.NON_EFFECTS), payload["non_effects"]
                     )
-                    self.assertTrue(payload["findings"])
+                    self.assertEqual([expected_finding], payload["findings"])
                     self.assertEqual(path.name, payload["input"])
                     self.assertEqual(
                         (
