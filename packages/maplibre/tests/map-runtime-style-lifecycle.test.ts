@@ -367,8 +367,9 @@ describe("renderer-neutral style lifecycle coordination", () => {
   it("does not start actions when execution is already cancelled", async () => {
     const plan = planMapRuntimeStyleLifecycle(
       style([], []),
-      style([["roads", "v1"]], [["roads-line", "roads"]]),
+      style([], []),
     );
+    expect(plan.actions).toEqual([]);
     const controller = new AbortController();
     controller.abort();
     let calls = 0;

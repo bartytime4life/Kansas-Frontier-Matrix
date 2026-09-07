@@ -327,6 +327,7 @@ export function createMapRuntimeStyleLifecycleExecutor(
   }
 
   return async (plan, signal): Promise<void> => {
+    requireLifecycleExecutionActive(signal);
     for (let index = 0; index < plan.actions.length; index += 1) {
       requireLifecycleExecutionActive(signal);
       const context = Object.freeze({
