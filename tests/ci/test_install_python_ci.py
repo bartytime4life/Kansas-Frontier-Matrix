@@ -106,6 +106,42 @@ class InstallPythonCiTests(unittest.TestCase):
             str(raised.exception),
         )
 
+    def test_migration_validation_checks_each_reused_profile_once(self) -> None:
+        manifest, entries = module.load_workflow_migration_manifest(REPO_ROOT)
+        paths = tuple(
+            path
+            for path, entry in entries.items()
+            if entry["profiles"] == ["project-test"]
+        )[:2]
+        self.assertEqual(2, len(paths))
+        repeated_profile_entries = {
+            path: {
+                **entries[path],
+                "current_sha256": module._sha256_bytes(
+                    (REPO_ROOT / path).read_bytes()
+                ),
+            }
+            for path in paths
+        }
+
+        with (
+            mock.patch.object(
+                module,
+                "load_workflow_migration_manifest",
+                return_value=(manifest, repeated_profile_entries),
+            ),
+            mock.patch.dict(
+                module.os.environ,
+                {"KFM_MIGRATION_HEAD": manifest["base_commit"]},
+            ),
+            mock.patch.object(module, "validate_lockfile") as validate_lockfile,
+            mock.patch.object(module, "_validate_local_specs") as validate_local_specs,
+        ):
+            module.verify_workflow_receipts()
+
+        validate_lockfile.assert_called_once()
+        validate_local_specs.assert_called_once_with(module.PROFILES["project-test"])
+
     def test_lock_validation_rejects_unhashed_and_remote_sources(self) -> None:
         remote = (
             "thing @ https://example.invalid/thing.whl "

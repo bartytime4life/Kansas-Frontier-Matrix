@@ -264,6 +264,7 @@ def verify_workflow_receipts() -> None:
         stderr=subprocess.DEVNULL,
     )
     current_hash_mismatches: list[str] = []
+    validated_profiles: set[str] = set()
     for workflow_path, entry in entries.items():
         workflow = REPO_ROOT / workflow_path
         profile_names = profiles_for_workflow(workflow)
@@ -290,10 +291,11 @@ def verify_workflow_receipts() -> None:
             current_hash_mismatches.append(workflow_path)
         if old_prefix in current_bytes:
             raise InstallConfigurationError("MIGRATION_INSTALL_UNCHANGED")
-        for profile_name in profile_names:
+        for profile_name in sorted(profile_names - validated_profiles):
             profile = PROFILES[profile_name]
             validate_lockfile(_lock_path(profile))
             _validate_local_specs(profile)
+            validated_profiles.add(profile_name)
     if current_hash_mismatches:
         raise InstallConfigurationError(
             "MIGRATION_CURRENT_HASH_MISMATCH:"
