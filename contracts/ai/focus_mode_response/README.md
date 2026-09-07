@@ -2,41 +2,41 @@
 doc_id: kfm://doc/contracts-ai-focus-mode-response-readme
 title: contracts/ai/focus_mode_response/ — Focus Mode Response Contract
 type: readme
-version: v0.1
+version: v0.2
 status: draft
 owners: OWNER_TBD — Governed AI steward · Contract steward · Schema steward · Policy steward · Evidence steward · API steward · UI steward · Docs steward
 created: 2026-06-20
-updated: 2026-06-20
+updated: 2026-09-07
 policy_label: public; contracts; ai; focus-mode; response-contract; semantic-contract; finite-outcome; cite-or-abstain
 related:
-  - ../../README.md
   - ../focus_mode_request/README.md
+  - ../../focus_mode/focus_mode_payload.md
   - ../../../docs/architecture/governed-ai/FOCUS_FLOW.md
   - ../../../docs/architecture/governed-ai/ADAPTER_CONTRACT.md
-  - ../../../contracts/focus_mode/focus_mode_payload.md
-  - ../../../schemas/contracts/v1/focus/
+  - ../../../contracts/runtime/runtime_response_envelope.md
+  - ../../../contracts/runtime/ai_receipt.md
+  - ../../../contracts/evidence/citation_validation_report.md
   - ../../../schemas/contracts/v1/ai/
-  - ../../../schemas/contracts/v1/evidence/
-  - ../../../schemas/contracts/v1/policy/
+  - ../../../schemas/contracts/v1/focus/
   - ../../../schemas/contracts/v1/runtime/
+  - ../../../schemas/contracts/v1/evidence/
   - ../../../policy/focus/
-  - ../../../data/receipts/ai/
-  - ../../../data/proofs/
-  - ../../../release/
+  - ../../../apps/workers/src/ai_focus_worker/
+  - ../../../tools/validators/
+  - ../../../.github/workflows/
 tags: [kfm, contracts, ai, governed-ai, focus-mode, focus-mode-response, runtime-response-envelope, evidence-bundle, policy-decision, citation-validation, ai-receipt, finite-outcome, cite-or-abstain, semantic-contract, governance]
 notes:
-  - "Draft directory README for the requested contracts/ai/focus_mode_response path."
-  - "Path posture is PROPOSED / NEEDS VERIFICATION: Focus Flow points to schemas/contracts/v1/focus/ and runtime envelope schemas as proposed homes; older semantic payload contract exists under contracts/focus_mode/."
-  - "This README defines response-side semantic boundaries, not machine schema, prompt text, raw model output, adapter code, policy, receipts, release state, API route implementation, or UI behavior."
-  - "Focus Mode responses are finite governed envelopes; generated language must be subordinate to EvidenceBundle, PolicyDecision, review state, release state, and CitationValidationReport."
-  - "Raw model output must never be returned directly to public clients."
+  - "This README records semantic intent and current repository evidence; it is not a machine schema or a live Focus implementation."
+  - "Focus-specific response schemas remain permissive PROPOSED scaffolds. The runtime, citation-report, and AIReceipt validators are bounded local proof surfaces, not authorization or publication systems."
+  - "The Focus worker is a comment-only placeholder and no live Governed API Focus route or provider-backed transaction is registered."
+  - "Google Drive doctrine corroborates evidence-first and trust-membrane principles; GitHub repository evidence controls paths, status, and implementation claims."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # Focus Mode Response Contract
 
-> Directory contract for the semantic meaning of a Focus Mode response: a finite, policy-checked, citation-validated, receipted response envelope. It is not raw model output, not a prompt result, not a released payload by itself, not an API route, and not UI behavior.
+> Semantic contract for the meaning and trust boundary of a Focus Mode response. It describes a finite governed response envelope; it is not raw model output, a prompt result, a machine schema, an API route, a worker implementation, a released payload, or UI behavior.
 
 <p>
   <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
@@ -47,243 +47,228 @@ notes:
   <img alt="Truth: cite or abstain" src="https://img.shields.io/badge/truth-cite--or--abstain-green">
 </p>
 
-`contracts/ai/focus_mode_response/`
+\`contracts/ai/focus_mode_response/\`
 
 ## Quick jumps
 
-[Status](#status) · [Scope](#scope) · [Path posture](#path-posture) · [Repo fit](#repo-fit) · [Accepted outputs](#accepted-outputs) · [Exclusions](#exclusions) · [Response semantics](#response-semantics) · [Outcome carriers](#outcome-carriers) · [Citation and policy gates](#citation-and-policy-gates) · [Lifecycle and trust boundary](#lifecycle-and-trust-boundary) · [Validation](#validation) · [Evidence basis](#evidence-basis) · [Rollback](#rollback) · [Definition of done](#definition-of-done)
+[Status](#status) · [Scope and authority](#scope-and-authority) · [Current implementation snapshot](#current-implementation-snapshot) · [Response semantics](#response-semantics) · [Proposed gates](#proposed-gates) · [Lifecycle](#lifecycle) · [Validation](#validation) · [Evidence basis](#evidence-basis) · [Open verification](#open-verification) · [Rollback](#rollback)
 
 ---
 
 ## Status
 
 > [!IMPORTANT]
-> **Status:** `draft` / directory README  
-> **Owner:** `OWNER_TBD`  
-> **Path:** `contracts/ai/focus_mode_response/`  
-> **Path posture:** `PROPOSED` / `NEEDS VERIFICATION`  
-> **Truth posture:** `CONFIRMED` current README path and file update; Focus Mode response flow and governed-AI invariants are supported by architecture docs; machine schema, validators, fixtures, routes, policy bundles, receipts, CI behavior, UI rendering, and runtime implementation remain `NEEDS VERIFICATION`.
+> **Status:** \`draft\` / \`repository-grounded\` / \`implementation-bounded\`  
+> **Path:** \`contracts/ai/focus_mode_response/\`  
+> **Path posture:** the README path and file are confirmed; the canonical semantic/schema home is unresolved.  
+> **Execution posture:** bounded fixture-first validators and client-local Focus proof exist; no live Governed API Focus route, provider adapter, or worker transaction is established.  
+> **Authority posture:** local validation can prove declared shape and consistency only. It does not resolve evidence, execute policy, authenticate review, persist receipts, authorize a public answer, release, publish, or mutate lifecycle state.
+
+This document is intentionally conservative. It keeps the intended Focus response semantics visible while separating them from repository facts that are still proposed, placeholder-only, or unimplemented.
 
 ---
 
-## Scope
+## Scope and authority
 
-`contracts/ai/focus_mode_response/` is the requested semantic contract directory for Focus Mode response meaning.
+The target directory owns the semantic meaning of a Focus Mode response:
 
-A Focus Mode response is the governed envelope returned after request scope validation, policy precheck, evidence resolution, adapter execution, citation validation, and policy postcheck. It may carry a cited answer, an abstention, a denial, or an error. It must always preserve finite outcome semantics and auditability.
+- one finite outcome: \`ANSWER\`, \`ABSTAIN\`, \`DENY\`, or \`ERROR\`;
+- evidence and citation boundaries for an \`ANSWER\`;
+- safe reason handling for non-answer outcomes;
+- separation between generated language, policy state, evidence state, receipts, release, and publication.
 
-This directory describes response semantics and trust boundaries. It does not define JSON Schema, prompt templates, adapter code, policy code, API routes, model behavior, released payloads, public UI rendering, AIReceipt storage, proof closure, or publication authority.
+It does not own:
 
----
+- JSON Schema or another machine-readable shape;
+- prompt text or provider configuration;
+- model adapter code;
+- evidence resolution or EvidenceBundle storage;
+- policy evaluation;
+- API route or worker execution;
+- AIReceipt persistence;
+- UI rendering;
+- release, rollback, or publication authority.
 
-## Path posture
+The authority split is deliberate:
 
-The requested path is:
+| Surface | What it may establish | What it may not establish |
+|---|---|---|
+| This README | Semantic intent and trust boundaries. | Runtime readiness or schema enforcement. |
+| JSON Schema | Machine shape, required fields, and closed-field behavior where the schema is closed. | Evidence truth, policy approval, release, or publication. |
+| Local validator and fixtures | Deterministic local shape/fixture checks. | Evidence resolution, authenticated review, policy execution, or public-answer authority. |
+| Policy bundle/evaluator | Policy decisions when an active evaluator exists. | Evidence truth or release by itself. |
+| Runtime/API/worker | Executable composition when wired and independently tested. | Publication authority without release controls. |
+| Receipt and review records | Traceability and review evidence. | Proof closure or permission to publish on their own. |
 
-```text
-contracts/ai/focus_mode_response/
-```
-
-Related paths in current repo evidence include:
-
-```text
-contracts/ai/focus_mode_request/README.md
-contracts/focus_mode/focus_mode_payload.md
-docs/architecture/governed-ai/FOCUS_FLOW.md
-schemas/contracts/v1/focus/              # PROPOSED in Focus Flow
-schemas/contracts/v1/runtime/            # PROPOSED runtime envelope home
-policy/focus/                            # PROPOSED in Focus Flow
-```
-
-This README does not settle whether the canonical semantic contract home should live under `contracts/ai/focus_mode_response/`, `contracts/focus_mode/`, `contracts/runtime/`, or another accepted path. Any migration or consolidation must use an ADR or migration note.
-
----
-
-## Repo fit
-
-```text
-contracts/
-├── ai/
-│   ├── focus_mode_request/
-│   │   └── README.md
-│   └── focus_mode_response/
-│       └── README.md
-└── focus_mode/
-    └── focus_mode_payload.md
-```
-
-Adjacent responsibility roots:
-
-| Root | Relationship to this directory |
-|---|---|
-| `../focus_mode_request/README.md` | Request-side semantic contract that precedes this response contract. |
-| `../../../docs/architecture/governed-ai/FOCUS_FLOW.md` | Governs request → policy → evidence → adapter → citation → policy → envelope flow. |
-| `../../../docs/architecture/governed-ai/ADAPTER_CONTRACT.md` | Defines adapter boundary, finite outcomes, receipts, and no raw model output. |
-| `../../../contracts/focus_mode/focus_mode_payload.md` | Older semantic contract for released Focus Mode payload projection, not response envelope semantics. |
-| `../../../schemas/contracts/v1/focus/` | Proposed machine schema home for Focus Mode request/response shapes. |
-| `../../../schemas/contracts/v1/runtime/` | Proposed runtime response envelope schema home. |
-| `../../../policy/focus/` | Proposed policy postcheck and response restriction home. |
-| `../../../data/proofs/` | EvidenceBundle and proof families. |
-| `../../../data/receipts/ai/` | Proposed AIReceipt/run trace output; not proof closure. |
-| `../../../release/` | Release state and rollback posture. |
+Do not select a canonical contract family by filename similarity. The repository currently contains parallel Focus, AI, runtime, evidence, and UI paths with different status and authority.
 
 ---
 
-## Accepted outputs
+## Current implementation snapshot
 
-| Response element | Required posture |
-|---|---|
-| `outcome` | Required closed enum: `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR`. Unknown values fail closed. |
-| `answer_text` | Allowed only for `ANSWER`; every consequential claim must cite validated evidence. |
-| `citations[]` | Required for `ANSWER`; every citation must resolve through CitationValidationReport to EvidenceBundle. |
-| `evidence_used[]` | Required for `ANSWER`; references EvidenceBundle IDs actually used. |
-| `policy_decisions[]` | Required where policy allowed, denied, restricted, or shaped response content. |
-| `abstain_reason` | Required for `ABSTAIN`; must identify evidence gap, staleness, conflict, or citation failure. |
-| `deny_reason` | Required for `DENY`; must be safe to display and must not leak restricted details. |
-| `error_code` | Required for `ERROR`; must be finite and actionable without leaking internals. |
-| `citation_validation_report_id` | Required before `ANSWER`; may also appear for `ABSTAIN` caused by citation failure. |
-| `ai_receipt_id` | Required when adapter/model was invoked; records bounded context and outcome path. |
-| `correlation_id` | Required for audit trail and request/response pairing. |
+The following is the repository-grounded state at the time of this update.
 
----
+| Surface | Current state | Boundary |
+|---|---|---|
+| \`contracts/ai/focus_mode_response/README.md\` | This draft semantic contract. | Does not enforce a machine shape. |
+| \`schemas/contracts/v1/ai/focus_mode_response.schema.json\` | \`PROPOSED\` permissive scaffold; empty \`properties\`, \`additionalProperties: true\`. | Not a closed Focus response schema. |
+| \`schemas/contracts/v1/focus/focus_response.schema.json\` | \`PROPOSED\` permissive scaffold; empty \`properties\`, \`additionalProperties: true\`. | Not a closed Focus response schema. |
+| \`schemas/contracts/v1/focus/runtime_response_envelope.schema.json\` | \`PROPOSED\` compatibility alias to the runtime envelope schema. | Not a second canonical machine shape. |
+| \`schemas/contracts/v1/runtime/runtime_response_envelope.schema.json\` | \`PROPOSED\` but closed, with a validator and valid/invalid fixtures. | Bounded runtime-envelope proof; no live Focus route. |
+| \`schemas/contracts/v1/evidence/citation_validation_report.schema.json\` | \`PROPOSED_FIXTURE_FIRST\`; closed report shape with a 27-case fixture suite. | Does not resolve citations or grant public-answer authority. |
+| \`schemas/contracts/v1/runtime/ai_receipt.schema.json\` | \`PROPOSED\`; closed receipt shape with nine required fields. | No Focus receipt emitter or store is wired. |
+| \`policy/focus/focus_response.rego\` | Package-only scaffold. | No active Focus response evaluator rules are established. |
+| \`apps/workers/src/ai_focus_worker/main.py\` | Comment-only greenfield placeholder. | No executable worker, queue, schedule, health check, or emitted artifact. |
+| \`docs/architecture/governed-ai/FOCUS_FLOW.md\` | Repository-grounded architecture hold. | Records no live Focus route, no provider integration, and no release/publication. |
 
-## Exclusions
-
-| Does not belong here | Correct home |
-|---|---|
-| JSON Schema for FocusModeResponse or RuntimeResponseEnvelope | `../../../schemas/contracts/v1/focus/` or `../../../schemas/contracts/v1/runtime/`. |
-| Raw model provider output | Adapter trace stores / receipts after policy filtering; never public response. |
-| Prompt templates | Template registry or adapter configuration after accepted placement. |
-| Model adapter code | Governed AI adapter implementation roots after accepted placement. |
-| Policy postcheck rules | `../../../policy/focus/` or accepted policy home. |
-| EvidenceBundle content | `../../../data/proofs/` and evidence workflows. |
-| AIReceipt records | `../../../data/receipts/ai/` or accepted receipt home. |
-| Released Focus Mode payloads | `../../../data/published/` after release gates. |
-| API routes and DTO implementation | Governed API/app roots after verification. |
-| Public UI rendering | Governed UI roots after release and policy gates. |
+The existence of a validator, fixture, or workflow is evidence of a bounded local check—not evidence that the full Focus transaction is live.
 
 ---
 
 ## Response semantics
 
-A Focus Mode response is valid only when it is a governed envelope. It is not whatever the model returns.
+A Focus Mode response is intended to be a governed envelope, never whatever a model provider returns. The target semantic rules are:
 
-Minimum semantic rules:
+- exactly one finite outcome is present;
+- \`ANSWER\` contains only claims supported by the evidence actually used;
+- citations identify evidence that a CitationValidationReport can validate;
+- \`ABSTAIN\` does not substitute unsupported claims for missing, stale, conflicting, or unresolved evidence;
+- \`DENY\` is safe to display and does not leak restricted geometry, identities, source internals, or sensitive detail;
+- \`ERROR\` is bounded and does not silently downgrade to \`ANSWER\`;
+- policy postcheck occurs after candidate generation and before any user-facing display;
+- an adapter invocation is traceable to a receipt when receipt infrastructure is actually wired;
+- public clients consume governed envelopes, never raw provider output.
 
-- exactly one finite outcome must be present;
-- `ANSWER` requires resolved EvidenceBundle support and passing citation validation;
-- `ABSTAIN` must not emit substitute claims;
-- `DENY` must not leak restricted geometry, identities, source internals, or sensitive detail;
-- `ERROR` must be bounded and must not silently downgrade to `ANSWER`;
-- policy postcheck must run after the adapter candidate and before user display;
-- every adapter invocation must be receipted;
-- public clients must receive governed envelopes, never raw model output.
+### Semantic outcome carriers
 
----
+These fields describe the intended Focus response meaning. They are not currently enforced by either permissive Focus-specific schema.
 
-## Outcome carriers
-
-| Outcome | Allowed response content | Required carrier fields |
+| Outcome | Semantic content | Intended carrier fields |
 |---|---|---|
-| `ANSWER` | Cited answer text, evidence references, policy state, citation report, receipt. | `answer_text`, `citations[]`, `evidence_used[]`, `policy_decisions[]`, `citation_validation_report_id`, `ai_receipt_id` when adapter invoked. |
-| `ABSTAIN` | Evidence-gap or citation-failure explanation; optional next safe action. | `abstain_reason`, optional `evidence_gap[]`, optional `citation_validation_report_id`, `ai_receipt_id` when adapter invoked. |
-| `DENY` | Safe denial reason and optional generalized alternative pointer. | `deny_reason`, `policy_decisions[]`, `ai_receipt_id` if adapter was invoked before postcheck denial. |
-| `ERROR` | Finite diagnostic code and safe message. | `error_code`, `correlation_id`, no claim leakage. |
+| \`ANSWER\` | Cited answer supported by the evidence actually used. | \`answer_text\`, \`citations[]\`, \`evidence_used[]\`, policy decisions, citation report reference, and receipt linkage when an adapter was invoked. |
+| \`ABSTAIN\` | Safe explanation of an evidence, freshness, conflict, or citation gap. | \`abstain_reason\`, optional evidence-gap detail, optional citation report reference, and receipt linkage when applicable. |
+| \`DENY\` | Safe policy denial or restricted-scope response. | \`deny_reason\`, policy decision detail that is safe to disclose, and receipt linkage if an adapter ran before denial. |
+| \`ERROR\` | Bounded operational or validation failure. | \`error_code\`, correlation/request identity, and no claim leakage. |
+
+### Machine-carrier mismatch that must be resolved
+
+The currently proposed machine contracts are separate families:
+
+- RuntimeResponseEnvelope requires \`id\`, \`spec_hash\`, \`version\`, \`issued_at\`, \`outcome\`, \`reason_code\`, \`evidence_refs\`, \`policy_state\`, \`freshness\`, and \`correction_state\`; it optionally carries \`precision_actually_used\`.
+- It does not currently carry \`answer_text\`, \`citations[]\`, \`ai_receipt_id\`, or an \`ai_receipt_ref\`.
+- AIReceipt separately requires \`id\`, \`run_id\`, \`adapter\`, \`model_ref\`, \`inputs_digest\`, \`outputs_digest\`, \`policy_decision_ref\`, \`citation_validation_ref\`, and \`outcome\`.
+- CitationValidationReport is a separate declaration/report family.
+
+An implementation must choose and document an adapter or migration between these families. Do not silently merge the Focus semantic fields into RuntimeResponseEnvelope or treat one family as the authority of the others.
 
 ---
 
-## Citation and policy gates
+## Proposed gates
 
-A response may not be treated as an `ANSWER` unless all of these are true:
+The intended orchestration is:
 
-1. request scope was valid;
-2. policy precheck allowed the request;
-3. EvidenceRef values resolved to EvidenceBundle;
-4. adapter received only admissible bounded context;
-5. candidate answer cited evidence spans;
-6. CitationValidationReport passed;
-7. policy postcheck allowed the cited candidate;
-8. receipt linkage was recorded;
-9. output envelope passed schema validation.
+1. validate request scope and permitted operation;
+2. run policy precheck;
+3. resolve admissible EvidenceRef values to the EvidenceBundle actually used;
+4. pass only bounded context to an approved adapter;
+5. build a candidate with claim-to-evidence references;
+6. produce and validate a CitationValidationReport;
+7. run policy postcheck over the candidate;
+8. record receipt linkage when the adapter/receipt path is wired;
+9. validate the selected response carrier before user-facing use.
 
-Any failed gate produces `ABSTAIN`, `DENY`, or `ERROR`, depending on the gate and reason.
+A failed gate maps to a finite outcome:
+
+| Failure class | Safe outcome |
+|---|---|
+| Missing, stale, conflicting, or unresolved evidence | \`ABSTAIN\` |
+| Scope or policy restriction | \`DENY\` |
+| Tooling, validation, or composition failure | \`ERROR\` |
+
+This is proposed orchestration, not a claim that the repository currently executes the sequence. The current citation validator explicitly does not perform evidence resolution, policy evaluation, review authentication, release verification, lifecycle mutation, publication, or public-answer authorization.
 
 ---
 
-## Lifecycle and trust boundary
+## Lifecycle
 
-```mermaid
-flowchart LR
-  REQ[FocusModeRequest] --> SCOPE[Scope validation]
-  SCOPE --> POL1[Policy precheck]
-  POL1 --> ER[EvidenceBundle resolution]
-  ER --> ADP[Adapter candidate]
-  ADP --> CITE[CitationValidationReport]
-  CITE --> POL2[Policy postcheck]
-  POL2 --> ENV[FocusModeResponse / RuntimeResponseEnvelope]
-  ENV --> REC[AIReceipt / run receipt]
-  ENV --> UI[Governed UI rendering]
-```
+The following is the intended trust boundary, not a live route diagram:
 
-This directory defines response-side semantics. It does not authorize direct model output, direct RAW/WORK/QUARANTINE reads, direct public display from candidate stores, or release.
+~~~mermaid
+flowchart TD
+  A["Request and scope"] --> B["Policy precheck and evidence"]
+  B --> C["Bounded adapter candidate"]
+  C --> D["Citation validation"]
+  D --> E["Policy postcheck"]
+  E --> F["Finite response envelope"]
+  F --> G["Receipt, review, release, and publication gates"]
+~~~
+
+No node in this diagram is established as a live Focus transaction by this README.
 
 ---
 
 ## Validation
 
-Before relying on this directory, verify:
+Run the focused local checks from the repository root when changing the corresponding implementation surfaces:
 
-- canonical contract home is resolved by Directory Rules, ADR, or migration note;
-- matching FocusModeResponse and RuntimeResponseEnvelope schemas exist and validate in accepted schema homes;
-- outcome enum is closed and fail-closed;
-- `ANSWER` requires EvidenceBundle references and passing CitationValidationReport;
-- `ABSTAIN`, `DENY`, and `ERROR` each have required reason/code fields;
-- policy postcheck is enforced after adapter candidate generation;
-- response envelope cannot include raw model output or restricted details;
-- every adapter invocation has AIReceipt linkage;
-- public API/UI surfaces consume only governed envelopes;
-- public clients do not read raw, work, quarantine, canonical stores, unpublished candidates, vector indexes, graph stores, credentials, or raw provider responses.
+~~~bash
+KFM_NO_NETWORK=1 python -m pytest -q tests/validators/test_validate_citation_validation_report.py
+KFM_NO_NETWORK=1 python tools/validators/citation/validate_citation_validation_report.py --fixtures
+
+KFM_NO_NETWORK=1 python -m unittest tests.validators.test_validate_runtime_response_envelope -v
+KFM_NO_NETWORK=1 python tools/validators/validate_runtime_response_envelope.py --fixtures
+
+KFM_NO_NETWORK=1 python -m unittest tests.validators.test_validate_ai_receipt -v
+KFM_NO_NETWORK=1 python tools/validators/validate_ai_receipt.py --fixtures
+~~~
+
+The repository also has focused citation-validation and runtime-response HTTP-binding workflows. Those workflows are fixture/declaration lanes with explicit no-network and no-publication boundaries; there is no dedicated end-to-end Focus response workflow.
+
+A green local check proves only the bounded assertion covered by that validator or fixture suite. It does not prove evidence closure, model approval, policy execution, route health, receipt persistence, independent review, release, or publication.
 
 ---
 
 ## Evidence basis
 
-| Source | Status | Supports | Limits |
-|---|---|---|---|
-| `contracts/ai/focus_mode_response/README.md` before this edit | `CONFIRMED` | Target file existed but was blank. | No contract content before this edit. |
-| `contracts/ai/focus_mode_request/README.md` | `CONFIRMED` | Request-side companion contract, accepted inputs, finite outcomes, and governed request path. | Request contract is not response contract. |
-| `docs/architecture/governed-ai/FOCUS_FLOW.md` | `CONFIRMED` | Focus Mode flow, finite outcomes, citation validation, policy postcheck, and envelope response path. | Specific paths and implementation details remain proposed. |
-| `docs/architecture/governed-ai/ADAPTER_CONTRACT.md` | `CONFIRMED` | Evidence outranks generation, no browser-to-model path, cite-or-abstain, finite outcomes, receipts, and adapter as interpretive layer. | TypeScript-like surfaces and file paths remain proposed. |
-| `contracts/focus_mode/focus_mode_payload.md` | `CONFIRMED` | Existing semantic payload contract distinguishes FocusModePayload from machine schema and requires evidence, policy, promotion, finite outcomes, and public-safe payload handling. | Payload projection is not the same as response envelope. |
-| `contracts/README.md` | `CONFIRMED` | Contracts define semantic meaning; schemas define machine shape. | Root README is brief and does not settle AI contract pathing. |
+| Repository evidence | What it supports | Important limit |
+|---|---|---|
+| \`docs/architecture/governed-ai/FOCUS_FLOW.md\` | Focus architecture status, finite outcomes, fixture-first client proof, and the no-live-route/no-release hold. | Architecture is not runtime wiring. |
+| \`schemas/contracts/v1/runtime/runtime_response_envelope.schema.json\` and \`tools/validators/validate_runtime_response_envelope.py\` | A proposed, closed runtime envelope and bounded local validator/fixture lane. | No Focus-specific field convergence or live route. |
+| \`schemas/contracts/v1/evidence/citation_validation_report.schema.json\`, \`contracts/evidence/citation_validation_report.md\`, and \`tools/validators/citation/validate_citation_validation_report.py\` | Proposed fixture-first citation declaration/report surface and explicit validator limits. | No evidence resolution, policy/review/release/publication authority. |
+| \`schemas/contracts/v1/runtime/ai_receipt.schema.json\`, \`contracts/runtime/ai_receipt.md\`, and \`tools/validators/validate_ai_receipt.py\` | Proposed receipt shape and bounded local consistency checks. | No emitter, store, or authorization effect. |
+| \`schemas/contracts/v1/ai/focus_mode_response.schema.json\` and \`schemas/contracts/v1/focus/focus_response.schema.json\` | Focus-specific schema paths exist. | Both remain permissive \`PROPOSED\` scaffolds, not enforceable response contracts. |
+| \`policy/focus/focus_response.rego\` | Focus policy path exists. | Current file is package-only; no active evaluator rules are established. |
+| \`apps/workers/src/ai_focus_worker/README.md\` and \`main.py\` | Focus worker lane is documented as placeholder-only. | No executable worker or live route. |
+| \`contracts/focus_mode/focus_mode_payload.md\` | Older semantic Focus payload family exists. | It is not automatically the authority for this response envelope. |
+| Google Drive: *Kansas Frontier Matrix — AI Build Operating Contract* | Corroborating evidence-first, finite-outcome, trust-membrane, and publication-separation doctrine. | Drive doctrine does not establish GitHub paths, schema status, runtime wiring, or release readiness. |
+
+---
+
+## Open verification
+
+The contract is not complete until the following are independently resolved and evidenced:
+
+- [ ] Owners replace \`OWNER_TBD\` for semantic contract, schema, policy, evidence, API, UI, and release responsibilities.
+- [ ] An ADR or migration note resolves the canonical semantic and machine-contract homes.
+- [ ] Focus response semantics are reconciled with RuntimeResponseEnvelope, CitationValidationReport, and AIReceipt without silently merging object families.
+- [ ] A strict, accepted Focus response schema or an explicit adapter to an accepted runtime envelope exists.
+- [ ] EvidenceBundle resolution, citation validation, and policy pre/postcheck are executable and tested together.
+- [ ] A live Governed API Focus route and worker/provider integration exist with health, error, and rollback behavior.
+- [ ] AIReceipt emission, persistence, and linkage are implemented; receipt presence is not mistaken for proof closure.
+- [ ] API and UI surfaces consume only governed envelopes and never raw provider output.
+- [ ] Independent review, release, publication, and rollback evidence exists for any public surface.
+- [ ] CI covers the accepted Focus contract path and fails closed on schema, citation, policy, and outcome regressions.
 
 ---
 
 ## Rollback
 
-Rollback is required if this README is used to justify returning raw model output, bypassing citation validation, bypassing policy postcheck, treating receipts as proof closure, schema authority, policy authority, released-payload authority, API route implementation, UI rendering, or publication authority.
-
-Rollback target: initial blank file content SHA `8b137891791fe96927ad78e64b0aad7bded08bdc`.
-
----
-
-## Definition of done
-
-- [ ] Owners are confirmed and `OWNER_TBD` is replaced.
-- [ ] Canonical AI/Focus response contract home is resolved by ADR or migration note.
-- [ ] Matching FocusModeResponse and RuntimeResponseEnvelope schemas exist in accepted schema homes.
-- [ ] `ANSWER` validation requires EvidenceBundle references and passing CitationValidationReport.
-- [ ] `ABSTAIN`, `DENY`, and `ERROR` validation requires bounded reason/code fields.
-- [ ] Policy postcheck is implemented and verified.
-- [ ] Response envelopes cannot carry raw provider output or restricted details.
-- [ ] AIReceipt/run receipt linkage is implemented and verified.
-- [ ] Tests deny direct model output, direct browser-to-model path, and direct RAW/WORK/QUARANTINE access.
-- [ ] Public API/UI surfaces consume only governed envelopes, never raw model output.
+This update is documentation-only. Revert the single README commit to roll it back; no schema, policy, worker, runtime, receipt, release, or source-of-truth file was changed, and no target-specific receipt was found or updated.
 
 ---
 
 ## Status summary
 
-`contracts/ai/focus_mode_response/` is a draft semantic contract directory for Focus Mode response meaning. It is not the machine schema, not raw model output, not prompt text, not adapter code, not policy code, not a released payload contract, not an API implementation, not UI rendering, not an AIReceipt store, not a release decision, and not publication authority.
+\`contracts/ai/focus_mode_response/\` is a draft, repository-grounded semantic contract directory. It records the intended finite outcome and evidence/policy trust boundaries while keeping current implementation limits explicit: Focus-specific schemas are permissive proposed scaffolds, runtime/citation/receipt validators are bounded local proof surfaces, the Focus worker is a placeholder, and no live Focus route or provider-backed transaction is established.
 
 <p align="right"><a href="#top">Back to top</a></p>
