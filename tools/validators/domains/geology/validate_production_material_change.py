@@ -368,6 +368,16 @@ def _semantic_findings(candidate: Mapping[str, Any]) -> list[Finding]:
             findings.append(Finding("HOLD_WITHOUT_BLOCKER", "/assessment"))
         elif not reason_set.intersection(expected_reasons):
             findings.append(Finding("HOLD_REASON_MISMATCH", "/assessment/reason_codes"))
+        if (
+            retrieval_time_regression
+            and "RETRIEVAL_TIME_REGRESSION" not in reason_set
+        ):
+            findings.append(
+                Finding(
+                    "RETRIEVAL_TIME_REGRESSION_REASON_REQUIRED",
+                    "/assessment/reason_codes",
+                )
+            )
     elif outcome == "ERROR":
         if material_change is not None:
             findings.append(Finding("ERROR_MATERIALITY_MUST_BE_NULL", "/assessment/material_change"))

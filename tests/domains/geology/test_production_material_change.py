@@ -104,6 +104,27 @@ def test_retrieval_time_regression_requires_hold() -> None:
     result = validate_payload(packet)
     assert result.ok, result.findings
 
+    packet["current_snapshot"]["rights_state"] = "UNKNOWN"
+    packet["assessment"]["reason_codes"] = ["RIGHTS_STATE_UNRESOLVED"]
+    packet["spec_hash"] = canonical_spec_hash(packet)
+    packet["assessment_id"] = expected_assessment_id(packet)
+    result = validate_payload(packet)
+    assert result.findings == (
+        Finding(
+            "RETRIEVAL_TIME_REGRESSION_REASON_REQUIRED",
+            "/assessment/reason_codes",
+        ),
+    )
+
+    packet["assessment"]["reason_codes"] = [
+        "RETRIEVAL_TIME_REGRESSION",
+        "RIGHTS_STATE_UNRESOLVED",
+    ]
+    packet["spec_hash"] = canonical_spec_hash(packet)
+    packet["assessment_id"] = expected_assessment_id(packet)
+    result = validate_payload(packet)
+    assert result.ok, result.findings
+
 
 def test_cli_returns_zero_for_valid_fixture() -> None:
     proc = subprocess.run(
