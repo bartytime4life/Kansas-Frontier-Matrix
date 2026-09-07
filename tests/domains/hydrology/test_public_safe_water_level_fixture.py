@@ -513,6 +513,38 @@ class HydrologyWaterLevelFixtureTests(unittest.TestCase):
                     )
                     self.assertNotIn(expected, validate_file(canonical_fixture))
 
+    def test_fixture_parser_classifies_meaningful_precision_before_lexical_form(
+        self,
+    ) -> None:
+        expected_codes = {
+            "12.500": "MEASUREMENT_TRAILING_ZERO_NOT_CANONICAL",
+            "1.000e-2": "MEASUREMENT_EXPONENT_NOT_CANONICAL",
+            "0.0010": "MEASUREMENT_PRECISION_EXCEEDED",
+        }
+        governed_codes = frozenset(expected_codes.values())
+        valid_text = VALID_FIXTURE.read_text(encoding="utf-8")
+
+        for raw_value, expected_code in expected_codes.items():
+            with self.subTest(raw_value=raw_value):
+                with tempfile.TemporaryDirectory() as directory:
+                    fixture = Path(directory) / "classified.json"
+                    fixture.write_text(
+                        valid_text.replace(
+                            '"value": 12.5', f'"value": {raw_value}'
+                        ),
+                        encoding="utf-8",
+                    )
+                    findings = validate_file(fixture)
+
+                self.assertEqual(
+                    {
+                        finding.code
+                        for finding in findings
+                        if finding.code in governed_codes
+                    },
+                    {expected_code},
+                )
+
     def test_temporal_provenance_is_canonical_and_monotonic(self) -> None:
         candidate = _load_candidate()
         candidate["temporal_scope"]["source_time"] = "2026-08-02T11:59:59Z"  # type: ignore[index]

@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 from datetime import datetime
+from decimal import Decimal
 from pathlib import Path
 import re
 import sys
@@ -124,6 +125,20 @@ _CANONICAL_EVIDENCE_TIMESTAMP_SEGMENT = re.compile(
 _EVIDENCE_TIMESTAMP_SEGMENT_SHAPE = re.compile(
     r"\A[0-9]{8}t[0-9]{6}z\Z", re.IGNORECASE
 )
+
+
+def _meaningful_decimal_places(value: Decimal) -> int:
+    """Count value precision without treating redundant zeros as precision."""
+
+    if value.is_zero():
+        return 0
+    decimal_tuple = value.as_tuple()
+    trailing_zeros = 0
+    for digit in reversed(decimal_tuple.digits):
+        if digit != 0:
+            break
+        trailing_zeros += 1
+    return max(0, -(decimal_tuple.exponent + trailing_zeros))
 
 
 def _is_canonical_evidence_timestamp(segment: str) -> bool:
@@ -416,7 +431,10 @@ def validate_candidate(candidate: object) -> list[Finding]:
                     "MEASUREMENT_NEGATIVE_ZERO",
                     "$.measurement.value",
                 )
-            elif decimal_value.as_tuple().exponent < -MAX_MEASUREMENT_DECIMAL_PLACES:
+            elif (
+                _meaningful_decimal_places(decimal_value)
+                > MAX_MEASUREMENT_DECIMAL_PLACES
+            ):
                 add_finding(
                     findings,
                     "MEASUREMENT_PRECISION_EXCEEDED",
