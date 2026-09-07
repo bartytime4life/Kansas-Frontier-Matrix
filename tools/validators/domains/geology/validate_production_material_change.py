@@ -448,6 +448,14 @@ def _semantic_findings(candidate: Mapping[str, Any]) -> list[Finding]:
         if "OPERATIONAL_ERROR" not in reason_set:
             findings.append(Finding("ERROR_REASON_REQUIRED", "/assessment/reason_codes"))
 
+    if outcome != "HOLD" and reason_set.intersection(HOLD_BLOCKER_REASONS):
+        findings.append(
+            Finding(
+                "HOLD_REASON_REQUIRES_HOLD_OUTCOME",
+                "/assessment/reason_codes",
+            )
+        )
+
     governance = _mapping(candidate.get("governance"))
     required_true = (
         "source_roles_preserved",

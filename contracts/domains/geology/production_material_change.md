@@ -95,6 +95,9 @@ The validator computes the exact sorted set:
 | `HOLD` | Prior snapshot missing, rights unresolved, monthly coverage regressed, or retrieval time regressed; no materiality claim is made. |
 | `ERROR` | Operational failure with a prior snapshot, verified rights, and no coverage or retrieval-time regression; no change claim is made. Any known HOLD blocker must use `HOLD`. |
 
+Governed HOLD blocker reason codes are exclusive to `HOLD`. A `NO_CHANGE`, `REVIEW`, or
+`ERROR` packet that asserts one fails closed even when its other outcome evidence is valid.
+
 ## Deterministic validation
 
 ```bash

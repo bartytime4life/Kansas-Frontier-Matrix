@@ -267,6 +267,34 @@ def test_hold_rejects_inapplicable_blocker_reasons(
     )
 
 
+@pytest.mark.parametrize(
+    ("fixture", "hold_reason"),
+    (
+        ("no_change.json", "PRIOR_SNAPSHOT_MISSING"),
+        ("material_change_review.json", "RIGHTS_STATE_UNRESOLVED"),
+        ("operational_error.json", "COVERAGE_REGRESSION"),
+    ),
+)
+def test_non_hold_outcomes_reject_hold_blocker_reasons(
+    fixture: str,
+    hold_reason: str,
+) -> None:
+    packet = json.loads((VALID / fixture).read_text(encoding="utf-8"))
+    packet["assessment"]["reason_codes"] = sorted(
+        [*packet["assessment"]["reason_codes"], hold_reason]
+    )
+    packet["spec_hash"] = canonical_spec_hash(packet)
+    packet["assessment_id"] = expected_assessment_id(packet)
+
+    result = validate_payload(packet)
+    assert result.findings == (
+        Finding(
+            "HOLD_REASON_REQUIRES_HOLD_OUTCOME",
+            "/assessment/reason_codes",
+        ),
+    )
+
+
 def test_cli_returns_zero_for_valid_fixture() -> None:
     proc = subprocess.run(
         [sys.executable, str(VALIDATOR), str(VALID / "material_change_review.json")],
