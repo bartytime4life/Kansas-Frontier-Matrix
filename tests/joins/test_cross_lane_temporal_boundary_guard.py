@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import copy
+import json
 import importlib.util
 import sys
 from pathlib import Path
@@ -94,3 +95,24 @@ def test_maximum_year_gap_beyond_tolerance_abstains_without_overflow() -> None:
     assert decision["status"] == "NO_JOIN_CANDIDATE"
     assert decision["reason_codes"] == ["JOIN_PREDICATE_NOT_SATISFIED"]
     assert decision["matched"] is False
+
+def test_schema_invalid_overlarge_tolerance_fails_bounded_before_arithmetic(
+    tmp_path: Path,
+    capsys,
+) -> None:
+    candidate = _spatial_candidate()
+    candidate["request"]["temporal_tolerance_seconds"] = 10**100
+    source = tmp_path / "overlarge-tolerance.json"
+    source.write_text(json.dumps(candidate), encoding="utf-8")
+
+    assert MODULE.run(["--derive", str(source)]) == 1
+
+    report = json.loads(capsys.readouterr().out)
+    assert report["status"] == "FAIL"
+    assert report["reason"] == "DERIVED_ASSESSMENT_INVALID"
+    assert report["findings"] == [
+        {
+            "code": "SCHEMA_INVALID",
+            "path": "/request/temporal_tolerance_seconds",
+        }
+    ]

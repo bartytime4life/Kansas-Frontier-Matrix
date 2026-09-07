@@ -42,6 +42,7 @@ notes:
   - "The generic seam does not own a repository-wide source-role crosswalk. Equal roles may continue to candidate proof, but any unequal role vector abstains for pair/domain-owned compatibility review."
   - "Zero-tolerance SPATIAL_TEMPORAL intervals that only touch at one boundary abstain; this profile does not invent repository-wide interval-boundary inclusivity."
   - "Positive-tolerance SPATIAL_TEMPORAL comparison uses bounded interval-gap arithmetic; schema-valid maximum-year endpoints cannot overflow before a deterministic candidate or abstention."
+  - "Temporal tolerance is screened against the schema range before arithmetic; invalid booleans, non-integers, negatives, and values above 86,400 fail validation without an unbounded runtime exception."
   - "CLI modes are mutually exclusive and long options require exact spelling; fixture or derive mode never silently ignores an explicit assessment file."
   - "The related proof inventory names every receipt-bound tests/joins/test_*.py module; deterministic propagation proof rejects omissions."
 [/KFM_META_BLOCK_V2] -->
@@ -89,6 +90,8 @@ The unresolved-alias projection is also a validator dependency. If `control_plan
 For `SPATIAL_TEMPORAL`, zero-tolerance intervals that only touch at `left.valid_to == right.valid_from` or `right.valid_to == left.valid_from` also fail `JOIN_PREDICATE_MATCHED`. The shared `TemporalWindow` contract explicitly treats boundary inclusivity as compatibility-significant rather than globally settled, so this join profile must not silently choose closed-interval semantics. Boundary-touch inputs therefore return `ABSTAIN` / `NO_JOIN_CANDIDATE` with reason `TEMPORAL_BOUNDARY_AMBIGUOUS` and obligation `ROUTE_TO_PAIR_TEMPORAL_SEMANTICS`. A genuine interval overlap remains eligible, and a positive declared tolerance remains an explicit bounded comparison rule rather than an implied repository-wide time convention.
 
 Positive tolerances are evaluated as signed interval gaps instead of by adding seconds to an endpoint timestamp. This preserves the schema's full date-time range, including year-9999 endpoints: a gap at or below the declared bound can remain eligible, while a larger gap deterministically abstains without an arithmetic exception.
+
+Before constructing a `timedelta`, derivation also screens the tolerance as a non-boolean integer in the schema's inclusive `0..86400` range. Invalid values remain schema failures and the `--derive` CLI emits its bounded `DERIVED_ASSESSMENT_INVALID` envelope instead of leaking an arithmetic traceback.
 
 Disposition precedence preserves mandatory trust routes. Same-domain scope routing remains first because the generic cross-lane helper does not own domain-local work. For distinct raw domains, unavailable dependencies produce `ERROR`, and living-person or blocked sensitive geometry produces `DENY`. Missing EvidenceRefs then retain `EVIDENCE_REF_MISSING`, and restricted generalized context retains `SENSITIVITY_REVIEW_REQUIRED`, before an unresolved alias collision can route the request to alias review. Alias review never downgrades a system error or privacy/sensitivity denial, and never hides evidence or sensitivity-review obligations.
 

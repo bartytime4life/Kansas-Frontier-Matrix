@@ -46,6 +46,7 @@ DOMAIN_LANE_REGISTER_MAX_DEPTH = 64
 IDENTITY_PREFIX = "kfm:cross-lane-join-assessment:"
 CANDIDATE_PREFIX = "kfm:join-candidate:"
 SCOPE = "cross-lane-join-assessment-fixture-only-v1"
+MAX_TEMPORAL_TOLERANCE_SECONDS = 86_400
 RULE_ORDER = (
     "DEPENDENCIES_READY",
     "EVIDENCE_REFS_PRESENT",
@@ -132,7 +133,13 @@ def _spatial_temporal_match(left: Mapping[str, Any], right: Mapping[str, Any], t
     right_start, right_end = _time(right.get("valid_from")), _time(right.get("valid_to"))
     if None in {left_start, left_end, right_start, right_end}:
         return False
-    tolerance = timedelta(seconds=tolerance_seconds if isinstance(tolerance_seconds, int) else 0)
+    if (
+        isinstance(tolerance_seconds, bool)
+        or not isinstance(tolerance_seconds, int)
+        or not 0 <= tolerance_seconds <= MAX_TEMPORAL_TOLERANCE_SECONDS
+    ):
+        return False
+    tolerance = timedelta(seconds=tolerance_seconds)
     # Compare signed gaps instead of adding to an endpoint.  Addition can
     # overflow for schema-valid year-9999 timestamps before a decision exists.
     return (
