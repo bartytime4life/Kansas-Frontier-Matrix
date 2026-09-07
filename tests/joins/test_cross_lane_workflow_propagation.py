@@ -32,6 +32,11 @@ REQUIRED_TRIGGER_PATHS = (
     "fixtures/contracts/v1/joins/cross_lane_join_assessment/**",
     "tests/joins/**",
 )
+REQUIRED_RECEIPT_AUTHORITY_PATHS = (
+    "control_plane/domain_lane_register.yaml",
+    "schemas/contracts/v1/governance/domain_lane_register.schema.json",
+    "tools/validators/directory_governance/validate_domain_lane_register.py",
+)
 CROSS_LANE_TEST_GLOB = "tests/joins/test_cross_lane_*.py"
 CUMULATIVE_REVIEW_PATH_COUNT = 20
 _TRIGGER_RE = re.compile(
@@ -109,6 +114,16 @@ def _receipt_trigger_findings(workflow_source: str, receipt_source: str) -> list
                 )
 
     return findings
+
+
+def _receipt_authority_findings(receipt_source: str) -> list[str]:
+    payload = json.loads(receipt_source)
+    artifact_paths = payload.get("artifact_paths", [])
+    return [
+        f"receipt: canonical authority artifact missing {path}"
+        for path in REQUIRED_RECEIPT_AUTHORITY_PATHS
+        if path not in artifact_paths
+    ]
 
 
 def _overlap_scope_findings(receipt_source: str) -> list[str]:
@@ -194,6 +209,22 @@ def test_cross_lane_receipt_validator_triggers_for_every_bound_artifact() -> Non
     ) == []
 
 
+def test_cross_lane_receipt_binds_canonical_authority_artifacts() -> None:
+    assert _receipt_authority_findings(RECEIPT.read_text(encoding="utf-8")) == []
+
+
+@pytest.mark.parametrize("artifact_path", REQUIRED_RECEIPT_AUTHORITY_PATHS)
+def test_synthetic_missing_canonical_authority_artifact_is_detected(
+    artifact_path: str,
+) -> None:
+    payload = json.loads(RECEIPT.read_text(encoding="utf-8"))
+    payload["artifact_paths"].remove(artifact_path)
+    payload["artifact_hashes"].pop(artifact_path)
+    payload["truth_labels"].pop(artifact_path)
+    expected = f"receipt: canonical authority artifact missing {artifact_path}"
+    assert _receipt_authority_findings(json.dumps(payload)) == [expected]
+
+
 def test_receipt_overlap_gate_covers_complete_review_unit() -> None:
     assert _overlap_scope_findings(RECEIPT.read_text(encoding="utf-8")) == []
 
@@ -202,7 +233,7 @@ def test_receipt_overlap_gate_covers_complete_review_unit() -> None:
     ("complete_scope", "partial_scope"),
     (
         ("all 20 cumulative branch paths", "the latest three changed paths"),
-        ("all 19 receipt-bound artifacts", "selected receipt artifacts"),
+        ("all 22 receipt-bound artifacts", "selected receipt artifacts"),
     ),
 )
 def test_synthetic_partial_overlap_scope_is_detected(
