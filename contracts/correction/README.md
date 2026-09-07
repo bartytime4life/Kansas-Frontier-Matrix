@@ -2,32 +2,57 @@
 doc_id: kfm://doc/contracts-correction-readme
 title: contracts/correction/ — Correction Semantic Contracts
 type: readme
-version: v0.2
-status: draft
+version: v0.3
+status: draft; repository-grounded; current-state-reconciled; placement-conflicted; bounded-shape-only; non-release; non-publication
 owners: OWNER_TBD — Correction steward · Release steward · Governance steward · Contract steward · Schema steward · Policy steward · Docs steward
 created: 2026-06-20
-updated: 2026-06-20
-policy_label: public; contracts; correction; semantic-contracts; first-class-corrections; rollback-aware
+updated: 2026-09-07
+policy_label: public; contracts; correction; semantic-contracts; first-class-corrections; rollback-aware; placement-conflicted
 related:
   - ../README.md
   - ../release/README.md
   - ./correction_notice.md
+  - ./correction_impact_assessment.md
+  - ./correction_propagation_plan.md
+  - ./supersession_notice.md
+  - ../../schemas/contracts/v1/correction/
   - ../../schemas/contracts/v1/correction/correction_notice.schema.json
+  - ../../schemas/contracts/v1/corrections/README.md
+  - ../../schemas/contracts/v1/corrections/correction_notice_candidate.schema.json
   - ../../docs/doctrine/corrections-first-class.md
   - ../../docs/architecture/publication/CORRECTION.md
   - ../../docs/architecture/contract-schema-policy-split.md
+  - ../../docs/runbooks/EVIDENCE_CORRECTION.md
+  - ../../docs/registers/RELEASE_STATE.md
   - ../../policy/correction/
   - ../../policy/release/
   - ../../fixtures/correction/correction_notice/
-  - ../../tools/validators/correction/validate_correction_notice.py
+  - ../../tools/validators/correction/
+  - ../../tests/validators/correction/
+  - ../../release/correction_notices/
   - ../../release/
   - ../../data/proofs/
-tags: [kfm, contracts, correction, correction-notice, supersession, rollback, withdrawal, release, publication, semantic-contracts, first-class-corrections, auditability, governance]
+tags: [kfm, contracts, correction, correction-notice, supersession, rollback, withdrawal, release, publication, semantic-contracts, first-class-corrections, auditability, governance, placement-conflict]
 notes:
-  - "Expanded from a short stub into a correction-family semantic-contract directory README."
+  - "Current GitHub evidence is pinned to main@daf554239d8f22b7825a7e8700b70ad71c14b3b0; this folder contains five direct semantic-contract files."
   - "Correction doctrine is CONFIRMED: corrections are first-class, append-only, public-visible where appropriate, and silent mutation of published artifacts is forbidden."
-  - "Current correction_notice schema is CONFIRMED present but explicitly a greenfield placeholder; field completeness, validators, fixtures, policy behavior, and CI enforcement remain NEEDS VERIFICATION."
-  - "This directory defines semantic meaning only; schemas, policy, tests, release state, proof closure, runtime behavior, and public UI/API behavior remain separate authority roots."
+  - "CorrectionNotice and SupersessionNotice remain paired to PROPOSED thin schemas; CorrectionImpactAssessment and CorrectionPropagationPlan have richer PROPOSED schema surfaces but remain non-executing planning contracts."
+  - "The singular correction schema lane is the active candidate referenced by the paired contract; the plural corrections lane is compatibility/candidate material and is not selected as authority here."
+  - "Google Drive and Notion records are read-only doctrine/coordination lineage; GitHub repository evidence controls implementation claims and currentness."
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  visibility: public
+  base_ref: main
+  base_commit: daf554239d8f22b7825a7e8700b70ad71c14b3b0
+  target_baseline_blob: 0e48db075585ad2e4406cd50492d2a08af64ecc4
+  direct_lane_files_confirmed:
+    - contracts/correction/README.md @ 0e48db075585ad2e4406cd50492d2a08af64ecc4
+    - contracts/correction/correction_impact_assessment.md @ c397c83f558299388f9d5ca0a9c58deffb3f8c86
+    - contracts/correction/correction_notice.md @ 4716f2bc6e714ad2ab873d95144417d7855f5beb
+    - contracts/correction/correction_propagation_plan.md @ b61e7fb0ecd0e68588a29642f3c47e0cb810eff9
+    - contracts/correction/supersession_notice.md @ 22f1fdb4a82063b7e66d0478fcc83cb03a89d68b
+  inventory_method: authenticated GitHub Contents and exact file reads against the pinned base
+  boundary_note: "Drive/Notion lineage is read-only; this README does not accept a contract, schema, policy, validator, release, or publication authority."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -49,27 +74,29 @@ notes:
 
 ## Quick jumps
 
-[Status](#status) · [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current directory snapshot](#current-directory-snapshot) · [Contract inventory](#contract-inventory) · [Correction doctrine](#correction-doctrine) · [Lifecycle and trust boundary](#lifecycle-and-trust-boundary) · [Validation](#validation) · [Evidence basis](#evidence-basis) · [Rollback](#rollback) · [Definition of done](#definition-of-done)
+[Status](#status) · [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current directory snapshot](#current-directory-snapshot) · [Contract inventory](#contract-inventory) · [Correction doctrine](#correction-doctrine) · [Lifecycle and trust boundary](#lifecycle-and-trust-boundary) · [Validation](#validation) · [Evidence basis](#evidence-basis) · [Rollback](#rollback) · [Definition of done](#definition-of-done) · [Changelog](#changelog)
 
 ---
 
 ## Status
 
 > [!IMPORTANT]
-> **Status:** `draft` / directory README  
+> **Status:** `draft` / repository-grounded semantic-contract index  
 > **Owner:** `OWNER_TBD`  
 > **Path:** `contracts/correction/`  
-> **Truth posture:** `CONFIRMED` current path, current update, correction doctrine, and presence of a placeholder `correction_notice` schema; full correction contract inventory, validator behavior, fixture coverage, policy behavior, release integration, public UI/API behavior, and CI enforcement remain `NEEDS VERIFICATION`.
+> **Truth posture:** `CONFIRMED` five-file direct semantic lane, `CorrectionNotice` contract path, singular correction schema family, correction validator, minimal correction fixtures, and release correction-notice index; `PROPOSED` most machine shapes and policy/release/runtime integration; `CONFLICTED` correction-vs-release semantic placement and singular-vs-plural schema compatibility; `NEEDS VERIFICATION` accountable owners, accepted ADR/path authority, complete test binding, policy enforcement, evidence closure, downstream propagation, and public-surface behavior.
 
 ---
 
 ## Scope
 
-`contracts/correction/` is the semantic contract family for KFM correction objects.
+`contracts/correction/` is the semantic contract family and coordination index for KFM correction objects.
 
-It describes the meanings, invariants, review posture, and trust boundaries for correction-related artifacts such as `CorrectionNotice`, correction summaries, supersession links, withdrawal context, affected-asset pointers, and rollback-adjacent relationships.
+It describes meaning, invariants, review posture, and trust boundaries for `CorrectionNotice`, `CorrectionImpactAssessment`, `CorrectionPropagationPlan`, `SupersessionNotice`, withdrawal context, affected-carrier pointers, and rollback-adjacent relationships.
 
-This folder does **not** execute corrections. It does not mutate release records, repoint public aliases, invalidate caches, issue policy decisions, close evidence, publish correction notices, run validators, or render UI badges.
+`CorrectionNotice` records a defect or required change in a released or release-facing claim. `CorrectionImpactAssessment` inventories downstream carriers; `CorrectionPropagationPlan` describes bounded invalidation/rebuild obligations; and `SupersessionNotice` records replacement lineage. These artifacts remain non-executing unless separately accepted implementation and release authority exists.
+
+This folder does **not** execute corrections, mutate release records, repoint public aliases, invalidate caches, issue policy decisions, close evidence, publish correction notices, authorize rollback, or render UI badges. Semantic meaning belongs here; machine shape, policy, validation, fixtures, evidence, release state, runtime behavior, and public presentation remain separate authority surfaces.
 
 ---
 
@@ -78,18 +105,31 @@ This folder does **not** execute corrections. It does not mutate release records
 ```text
 contracts/
 ├── correction/
-│   └── README.md
+│   ├── README.md
+│   ├── correction_impact_assessment.md
+│   ├── correction_notice.md
+│   ├── correction_propagation_plan.md
+│   └── supersession_notice.md
 └── release/
     ├── README.md
-    ├── correction_notice.md
+    ├── release_manifest.md
     ├── rollback_card.md
     └── withdrawal_notice.md
 
-schemas/
-└── contracts/
-    └── v1/
-        └── correction/
-            └── correction_notice.schema.json
+schemas/contracts/v1/
+├── correction/
+│   ├── README.md
+│   ├── correction_notice.schema.json
+│   ├── correction_impact_assessment.schema.json
+│   ├── correction_propagation_plan.schema.json
+│   └── supersession_notice.schema.json
+└── corrections/
+    ├── README.md
+    └── correction_notice_candidate.schema.json
+
+fixtures/correction/correction_notice/
+tools/validators/correction/
+release/correction_notices/
 ```
 
 Adjacent responsibility roots:
@@ -97,18 +137,20 @@ Adjacent responsibility roots:
 | Root | Relationship to this folder |
 |---|---|
 | `../README.md` | Root contracts guidance: semantic meaning only. |
-| `../release/README.md` | Release-family semantic contracts, including release governance, rollback, corrections, and withdrawals. |
-| `../../schemas/contracts/v1/correction/correction_notice.schema.json` | Current machine-shape placeholder for correction notices. |
-| `../../policy/correction/`, `../../policy/release/` | Admissibility and release/correction decisions. |
-| `../../fixtures/correction/correction_notice/` | Schema-declared fixture root; existence/coverage remain `NEEDS VERIFICATION`. |
-| `../../tools/validators/correction/validate_correction_notice.py` | Schema-declared validator path; existence/behavior remain `NEEDS VERIFICATION`. |
+| `../release/README.md` | Release-family semantic contracts and a documented correction/release placement seam; no direct `contracts/release/correction_notice.md` was observed at the pinned base. |
+| `../../schemas/contracts/v1/correction/` | Singular correction schema family currently paired to the correction contracts; shapes remain mixed/proposed. |
+| `../../schemas/contracts/v1/corrections/` | Plural compatibility/index lane with a candidate schema; not selected as correction authority by this README. |
+| `../../policy/correction/`, `../../policy/release/` | Admissibility, review, rights, sensitivity, release, withdrawal, and rollback decisions. |
+| `../../fixtures/correction/correction_notice/` | Current minimal positive/negative fixture lane for the thin `CorrectionNotice` schema. |
+| `../../tools/validators/correction/` | Correction validators exist for `CorrectionNotice`, `CorrectionImpactAssessment`, and `CorrectionPropagationPlan`; behavior remains bounded to their declared profiles. |
+| `../../tests/validators/correction/` | Current direct test inventory includes impact-assessment coverage; dedicated `CorrectionNotice` test file was not observed. |
+| `../../release/correction_notices/` | Release/publication record index with `.gitkeep`, README, and domain sublanes; not semantic contract prose. |
 | `../../docs/doctrine/corrections-first-class.md` | Governing correction doctrine. |
-| `../../docs/architecture/publication/CORRECTION.md` | Publication correction flow and architecture posture. |
-| `../../release/` | Release state, current aliases, manifests, and rollback targets. |
+| `../../docs/runbooks/EVIDENCE_CORRECTION.md` | Human intake, classification, bounded validation, and held operational correction guidance. |
 | `../../data/proofs/` | EvidenceBundle/proof support for corrected claims. |
 
 > [!NOTE]
-> There is a known relationship to `contracts/release/`, whose README currently lists `correction_notice.md` as a release-family file. This README does not settle whether `CorrectionNotice` is canonical under `contracts/correction/`, `contracts/release/`, or both via compatibility. Treat that relationship as `NEEDS VERIFICATION` unless an ADR or migration note resolves it.
+> `contracts/release/README.md`, `release/correction_notices/README.md`, and the correction runbook preserve a relationship between semantic correction meaning and release/publication records. This README does not settle whether any `CorrectionNotice` meaning is duplicated under the release family; an accepted ADR or migration note is still required.
 
 ---
 
@@ -144,25 +186,31 @@ Adjacent responsibility roots:
 ## Current directory snapshot
 
 > [!NOTE]
-> This snapshot is based on current-session file inspection, not a complete repository inventory.
+> This snapshot is based on authenticated GitHub Contents inspection at `main@daf554239d8f22b7825a7e8700b70ad71c14b3b0`. It is current for that base commit, not a permanent absence claim.
 
 | File | Status | What it proves | What it does not prove |
 |---|---|---|---|
 | `contracts/correction/README.md` | `CONFIRMED` | This directory README exists and states correction-family boundaries. | Does not prove object contracts, validators, fixtures, or policy are complete. |
-| `contracts/correction/correction_notice.md` | `UNKNOWN` | Not inspected in this task. | Requires separate inventory. |
-| `contracts/release/correction_notice.md` | `LINEAGE / NEEDS VERIFICATION` | Release README lists it as part of release-family contracts. | Does not settle canonical correction contract home. |
+| `contracts/correction/correction_notice.md` | `CONFIRMED path; DRAFT semantic contract` | The object-level `CorrectionNotice` semantic contract exists and explicitly pairs to the singular schema/fixture/validator surfaces. | Does not make the schema complete or authorize correction/release execution. |
+| `contracts/correction/correction_impact_assessment.md` | `CONFIRMED path; PROPOSED-INACTIVE` | A non-authoritative downstream-carrier assessment contract exists. | Does not execute impact assessment or prove release closure. |
+| `contracts/correction/correction_propagation_plan.md` | `CONFIRMED path; PROPOSED / FIXTURE-ONLY` | A non-executing propagation-planning contract exists. | Does not invalidate, rebuild, repoint, publish, or roll back carriers. |
+| `contracts/correction/supersession_notice.md` | `CONFIRMED path; DRAFT semantic contract` | A supersession-lineage contract exists and pairs to a proposed schema. | Does not prove a supersession validator or fixture lane exists. |
+| Other direct `contracts/correction/*` entries | `NOT OBSERVED at base` | The exact Contents response returned no other direct entries. | Does not prevent later additions or prove recursive absence elsewhere. |
 
 ---
 
 ## Contract inventory
 
-| Contract family | Current evidence | Status | Notes |
+The direct correction folder contains semantic contracts only. The machine-shape, validation, fixture, test, policy, evidence, release, and public-surface columns are deliberately separate.
+
+| Contract family | Semantic contract | Machine / validation surfaces observed | Current posture |
 |---|---|---|---|
-| `CorrectionNotice` | Schema exists at `schemas/contracts/v1/correction/correction_notice.schema.json`. | `CONFIRMED placeholder schema` | Schema says greenfield placeholder; only `id` is required. |
-| `SupersessionRecord` | Doctrine describes supersession as a correction pattern. | `PROPOSED / NEEDS VERIFICATION` | Separate schema/contract not verified here. |
-| `WithdrawalNotice` | Release README lists `withdrawal_notice.md`. | `LINEAGE / NEEDS VERIFICATION` | May live under release family. |
-| `RollbackCard` / rollback target | Release README lists rollback card and doctrine requires rollback targets. | `CONFIRMED release-family lineage` | Execution and schema behavior not verified here. |
-| `RedactionReceipt` | Doctrine references sensitivity-change correction posture. | `PROPOSED / NEEDS VERIFICATION` | Receipt home and schema not verified here. |
+| `CorrectionNotice` | `contracts/correction/correction_notice.md` | `schemas/contracts/v1/correction/correction_notice.schema.json` (`PROPOSED`, `id`-only required, additional properties allowed); `tools/validators/correction/validate_correction_notice.py`; `fixtures/correction/correction_notice/valid/minimal.json`; `fixtures/correction/correction_notice/invalid/missing_id.json` | `CONFIRMED paths; BOUNDED SHAPE ONLY`. The fixture/validator lane proves only the current thin schema profile; no dedicated correction-notice test file was observed. |
+| `CorrectionImpactAssessment` | `contracts/correction/correction_impact_assessment.md` | `schemas/contracts/v1/correction/correction_impact_assessment.schema.json` (closed object with required assessment, policy, rollback, carrier, and authorization fields); `tools/validators/correction/validate_correction_impact_assessment.py`; `tests/validators/correction/test_correction_impact_assessment.py` | `PROPOSED-INACTIVE / FIXTURE-ONLY`. Richer shape exists, but execution, policy authority, and release closure remain unproven. |
+| `CorrectionPropagationPlan` | `contracts/correction/correction_propagation_plan.md` | `schemas/contracts/v1/correction/correction_propagation_plan.schema.json` (closed object with plan, release, surface, entry, governance, and spec fields); `tools/validators/correction/validate_correction_propagation_plan.py` | `PROPOSED / FIXTURE-ONLY / NO-NETWORK / NON-EXECUTING`. No dedicated test file was observed in the direct correction validator-test directory. |
+| `SupersessionNotice` | `contracts/correction/supersession_notice.md` | `schemas/contracts/v1/correction/supersession_notice.schema.json` (`PROPOSED`, `id`-only required, additional properties allowed); schema declares `tools/validators/correction/validate_supersession_notice.py`, but that path and a dedicated fixture README were not observed at the pinned base. | `DRAFT semantic contract; BOUNDED SCHEMA STUB`. |
+| Plural candidate lane | No paired semantic contract selected | `schemas/contracts/v1/corrections/correction_notice_candidate.schema.json` plus `schemas/contracts/v1/corrections/README.md` | `PROPOSED COMPATIBILITY MATERIAL`; not an alternate authority. |
+| Release correction records | Not semantic contract prose | `release/correction_notices/README.md`, `.gitkeep`, and domain sublanes | `RELEASE/PUBLICATION INDEX`; records and decisions require separate release authority. |
 
 ---
 
@@ -171,51 +219,58 @@ Adjacent responsibility roots:
 Correction contracts must preserve these rules:
 
 - corrections are first-class, named operations;
-- silent replacement is a defect;
-- correction history is append-only;
-- prior releases, manifests, and proof packs remain inspectable;
-- public visibility is required where a public artifact or claim was corrected, superseded, withdrawn, stale, or redacted;
-- every release must have a correction path and rollback target before public exposure;
-- correction does not bypass the trust membrane;
-- cite-or-abstain survives correction;
-- rights and sensitivity changes fail closed when policy/evidence is insufficient;
-- AI-authored correction prose requires receipt linkage and must remain evidence-subordinate.
+- silent replacement of a released claim or artifact is a defect;
+- correction and supersession history is append-only;
+- prior releases, manifests, evidence bundles, proof packs, and receipts remain inspectable;
+- `CorrectionNotice` names the defect, affected claim/release, correction disposition, and required lineage; it does not itself authorize publication;
+- `CorrectionImpactAssessment` and `CorrectionPropagationPlan` make affected carriers and required invalidation/rebuild work explicit; they do not execute that work;
+- `SupersessionNotice` records replacement lineage without deleting the superseded object;
+- public visibility is required where a public artifact or claim was corrected, superseded, withdrawn, stale, or redacted, subject to sensitive-detail controls;
+- every public release needs a correction path and rollback target before exposure;
+- evidence, rights, sensitivity, review, policy, and release gates fail closed when required inputs are missing;
+- cite-or-abstain survives correction, and AI-authored correction prose remains receipt-linked and evidence-subordinate;
+- schema validity, validator PASS, or fixture success is not evidence of correction issuance, policy approval, release, publication, or downstream propagation.
 
 ---
 
 ## Lifecycle and trust boundary
 
 ```mermaid
-flowchart LR
-  DETECT[Detect defect / dispute / source update / rights change] --> NOTICE[CorrectionNotice semantic contract]
-  NOTICE --> SCHEMA[schemas/contracts/v1/correction]
-  NOTICE --> REVIEW[ReviewRecord / steward review]
-  NOTICE --> EVID[EvidenceBundle repair or ABSTAIN]
-  NOTICE --> POLICY[PolicyDecision]
-  POLICY --> RELEASE[ReleaseManifest supersession or withdrawal]
-  RELEASE --> ROLLBACK[Rollback target / alias movement]
-  RELEASE --> PUBLIC[Governed API/UI notice]
+flowchart TD
+  DETECT[Defect or source change] --> NOTICE[CorrectionNotice meaning]
+  NOTICE --> IMPACT[Impact assessment]
+  IMPACT --> PLAN[Propagation plan]
+  PLAN --> REVIEW[Evidence review and policy decision]
+  REVIEW --> RELEASE[Release correction or supersession record]
+  RELEASE --> PUBLIC[Governed public notice / safe derivative]
+  RELEASE --> ROLLBACK[Rollback target and correction receipt]
 ```
 
-Contracts describe meaning. They do not validate schema shape, perform rollback, modify public aliases, emit public notices, invalidate derivatives, or publish.
+Contracts describe meaning. They do not validate schema shape, perform impact assessment, invalidate derivatives, modify public aliases, emit public notices, execute rollback, or publish. Those transitions require separately governed validators, policy decisions, evidence closure, release records, receipts, and accountable review.
 
 ---
 
 ## Validation
 
-Before relying on this directory, verify:
+### Evidence checks completed for this README
 
-- canonical placement of `CorrectionNotice` between `contracts/correction/` and `contracts/release/`;
-- complete semantic contract file for `CorrectionNotice`;
-- schema completeness beyond the current greenfield placeholder;
-- validator implementation and fixture coverage;
-- policy bundles for correction, release, sensitivity, rights, stale evidence, withdrawal, and rollback;
-- ReviewRecord linkage and separation-of-duties behavior;
-- EvidenceBundle references resolve for corrected claims;
-- ReleaseManifest and rollback target are required before publication;
-- public UI/API surfaces show stale, superseded, withdrawn, or corrected state without exposing restricted content;
-- AI-authored public summaries have generated-receipt linkage where applicable;
-- tests prove silent mutation of published artifacts fails closed.
+- [x] Re-pinned `main` to `daf554239d8f22b7825a7e8700b70ad71c14b3b0` and recorded the target baseline blob.
+- [x] Confirmed the five direct semantic files under `contracts/correction/`.
+- [x] Confirmed the singular correction schema family, plural compatibility candidate lane, correction validator directory, minimal `CorrectionNotice` fixtures, and release correction-notice index.
+- [x] Confirmed the correction/release placement seam remains unresolved and is not selected by this README.
+- [x] Confirmed Google Drive and Notion material is read-only doctrine/coordination lineage rather than implementation authority.
+
+### Still required before treating correction behavior as accepted
+
+- [ ] Confirm accountable owners and resolve canonical semantic placement between `contracts/correction/`, `contracts/release/`, and release correction records through an accepted ADR or migration note.
+- [ ] Decide whether the thin `CorrectionNotice` and `SupersessionNotice` schemas are sufficient or expand them with domain-reviewed fields, policy, evidence, review, rights, sensitivity, and release bindings.
+- [ ] Run and record validator/fixture checks for each supported profile; add dedicated `CorrectionNotice` and `SupersessionNotice` tests or document the accepted coverage boundary.
+- [ ] Verify policy bundles, ReviewRecord/PolicyDecision linkage, EvidenceBundle closure, rights/sensitivity handling, and separation of duties.
+- [ ] Verify correction propagation to catalog, cache, index, tile, graph, API, map, Focus Mode, story, export, and citation surfaces where applicable.
+- [ ] Verify ReleaseManifest, correction notice, supersession/withdrawal state, rollback target, receipts, and public-safe disclosure before publication.
+- [ ] Prove silent mutation of a published artifact fails closed under repository-native tests and hosted validation.
+
+This README records presence and declared boundaries; it does not claim that unchecked behavior is implemented.
 
 ---
 
@@ -223,37 +278,48 @@ Before relying on this directory, verify:
 
 | Source | Status | Supports | Limits |
 |---|---|---|---|
-| Prior `contracts/correction/README.md` scaffold | `CONFIRMED` | Target file existed as a correction-family stub. | Stub did not define scope, exclusions, evidence basis, or validation. |
-| `schemas/contracts/v1/correction/correction_notice.schema.json` | `CONFIRMED placeholder` | Current schema path exists; x-kfm metadata points to contract doc, fixtures, validator, policy; only `id` is required. | Schema explicitly says greenfield placeholder; field completeness and behavior are not proven. |
-| `docs/doctrine/corrections-first-class.md` | `CONFIRMED doctrine` | Corrections are first-class; silent replacement is a defect; append-only history, public visibility, and rollback path are required. | Many implementation paths/fields remain proposed or verification-bound. |
-| `docs/architecture/publication/CORRECTION.md` | `CONFIRMED doctrine / PROPOSED implementation` | Correction is a publication requirement, not an afterthought; correction flow and defect classes preserve trust membrane and cite-or-abstain. | Route names, schema homes, and implementation maturity remain proposed unless separately verified. |
-| `contracts/release/README.md` | `CONFIRMED` | Release contracts include release manifests, promotion decisions, rollback, corrections, and withdrawals, with schema/policy split. | It creates a placement relationship that remains unresolved with this correction directory. |
-| `docs/architecture/contract-schema-policy-split.md` | `CONFIRMED` | Meaning, shape, admissibility, and enforceability remain separate layers. | Does not verify correction-specific runtime implementation. |
+| `contracts/correction/README.md` at baseline blob `0e48db075585ad2e4406cd50492d2a08af64ecc4` | `CONFIRMED` | Target was an existing correction-family README; this update uses the exact blob as rollback baseline. | Prior README assertions were stale on direct inventory, validator presence, and fixture presence. |
+| `contracts/correction/` Contents at `main@daf554239d8f22b7825a7e8700b70ad71c14b3b0` | `CONFIRMED` | Direct lane contains exactly five semantic files observed in the current base. | Point-in-time inventory; not a permanent absence claim. |
+| `contracts/correction/correction_notice.md` and `supersession_notice.md` | `CONFIRMED paths; DRAFT` | Current semantic meanings and declared pairings exist. | Both remain draft; `SupersessionNotice` declares a validator/fixture path not found at the pinned base. |
+| `contracts/correction/correction_impact_assessment.md` and `correction_propagation_plan.md` | `CONFIRMED paths; PROPOSED` | Non-executing planning contracts define downstream-carrier and propagation boundaries. | They do not authorize or perform correction, invalidation, release, rollback, or publication. |
+| `schemas/contracts/v1/correction/` | `CONFIRMED family; mixed maturity` | Singular schemas exist; impact/propagation are structured closed shapes while notice/supersession remain thin `id`-only stubs. | Schema presence does not establish accepted authority or runtime integration. |
+| `schemas/contracts/v1/corrections/` | `PROPOSED compatibility lane` | Plural README and candidate schema are visible as a compatibility/index surface. | This README does not select the plural lane or allow duplicate authority. |
+| `tools/validators/correction/`, `fixtures/correction/correction_notice/`, and `tests/validators/correction/` | `CONFIRMED paths; bounded coverage` | Notice validator and minimal positive/negative fixtures exist; direct test inventory includes impact-assessment coverage. | No dedicated Notice test, Supersession validator, or Supersession fixture README was observed at the pinned base. |
+| `contracts/release/README.md` and `release/correction_notices/README.md` | `CONFIRMED adjacent lanes` | Release semantics and public correction-record indexing are separate from semantic contract prose. | Placement and release-authority decisions remain unresolved or separately governed. |
+| `docs/doctrine/corrections-first-class.md`, `docs/runbooks/EVIDENCE_CORRECTION.md`, and `docs/architecture/publication/CORRECTION.md` | `CONFIRMED doctrine / bounded guidance` | First-class append-only corrections, cite-or-abstain, held operational correction, and publication trust boundaries. | Documentation does not prove executable implementation or current route behavior. |
+| `KFM Issue 4228 — Frozen Catalog Correction-Mechanism Decision Package` (Google Drive; read-only) | `READ-ONLY LINEAGE` | Trusted-base, exact-transition, fail-closed, two-stage correction design and explicit no-self-authorization boundary. | The package labels itself historical/readback-only and its repository pins are stale; it cannot authorize current implementation. |
+| `KFM Issue #4228 — Frozen Catalog Correction-Mechanism Decision Package` and `KFM Repository Workbench` (Notion; read-only coordination) | `COORDINATION LINEAGE` | Stage 1B hold, GitHub-as-authority, branch-first containment, and separation of decision, implementation, release, and publication transitions. | Notion pages are unverified coordination records with stale historical pins; no Notion content is treated as repository authority here. |
 
 ---
 
 ## Rollback
 
-Rollback is required if this README is used to claim implementation maturity, schema completeness, policy enforcement, validator coverage, public-route behavior, canonical object placement, or release/rollback execution that has not been verified.
+Rollback is required if this README is used to claim accepted schema authority, policy enforcement, validator completeness, correction issuance, downstream invalidation, canonical correction/release placement, release/rollback execution, public publication, or permission to silently mutate published artifacts.
 
-Rollback target: prior stub content SHA `5f6cc23a4588eda1c1c1634d3d5a6881ab3cc462`.
+Rollback target: baseline target blob `0e48db075585ad2e4406cd50492d2a08af64ecc4` at `main@daf554239d8f22b7825a7e8700b70ad71c14b3b0`; revert the single-file branch commit to restore the prior README.
 
 ---
 
 ## Definition of done
 
+- [x] Current `main` pin, target baseline blob, direct five-file inventory, and adjacent correction/release surfaces are recorded.
+- [x] The README separates semantic contracts from schemas, policy, validators, fixtures, tests, evidence, release records, and public behavior.
+- [x] CorrectionNotice, impact assessment, propagation plan, and supersession boundaries are documented without granting execution authority.
+- [x] Google Drive and Notion material is labeled read-only lineage/coordination rather than repository authority.
 - [ ] Owners are confirmed and `OWNER_TBD` is replaced.
-- [ ] Canonical correction contract placement is resolved between correction and release roots.
-- [ ] `CorrectionNotice` semantic contract is complete.
-- [ ] `CorrectionNotice` schema is expanded beyond greenfield placeholder or gap is intentionally accepted.
-- [ ] Validator implementation and fixtures are verified.
-- [ ] Correction/release/sensitivity/rights policy bundles are linked and tested.
-- [ ] EvidenceBundle, ReviewRecord, PolicyDecision, ReleaseManifest, and rollback linkages are testable.
-- [ ] Public notice behavior is verified without exposing restricted details.
-- [ ] Silent mutation of published artifacts is covered by tests.
-- [ ] AI-authored correction prose requires receipt linkage where applicable.
+- [ ] Canonical correction placement is resolved between correction and release roots.
+- [ ] Schema maturity, validator coverage, fixture coverage, and dedicated tests are accepted by accountable stewards.
+- [ ] Policy, evidence, rights, sensitivity, review, release, correction-propagation, rollback, and public-safe disclosure linkages are executable and verified.
+- [ ] Silent mutation of published artifacts fails closed in repository-native and hosted validation.
+- [x] This folder is not presented as a schema home, policy engine, validator package, fixture store, release-state root, rollback executor, public API surface, public UI surface, or publication authority.
 
 ---
+
+## Changelog
+
+| Version | Change |
+|---|---|
+| `v0.3` — 2026-09-07 | Reconciled the README with current GitHub contents, expanded the direct contract inventory, recorded mixed schema/validator/fixture maturity, separated release correction records from semantic contracts, and labeled Drive/Notion lineage as non-authoritative. |
 
 ## Status summary
 
