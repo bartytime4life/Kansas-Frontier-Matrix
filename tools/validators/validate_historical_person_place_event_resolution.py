@@ -102,7 +102,7 @@ def _open_bounded_regular_file(path: Path) -> bytes:
 
     absolute_path = path.absolute()
     parts = absolute_path.parts
-    if len(parts) < 2:
+    if len(parts) < 2 or ".." in parts:
         raise InputNotRegularFileError
 
     directory_flags = os.O_RDONLY

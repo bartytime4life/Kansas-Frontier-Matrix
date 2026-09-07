@@ -99,6 +99,26 @@ class HistoricalResolutionTests(unittest.TestCase):
         self.assertIsNone(value)
         self.assertEqual({finding.code for finding in findings}, {"INPUT_NOT_REGULAR_FILE"})
 
+    def test_parent_traversal_is_rejected_before_open(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            parent = root / "parent"
+            child = parent / "child"
+            child.mkdir(parents=True)
+            candidate = parent / "candidate.json"
+            candidate.write_bytes((FIXTURE_ROOT / "valid/high_anchor.json").read_bytes())
+            traversing_candidate = child / ".." / candidate.name
+
+            with mock.patch.object(
+                module.os,
+                "open",
+                side_effect=AssertionError("parent traversal reached os.open"),
+            ):
+                value, findings = module.load_candidate(traversing_candidate)
+
+        self.assertIsNone(value)
+        self.assertEqual({finding.code for finding in findings}, {"INPUT_NOT_REGULAR_FILE"})
+
     @unittest.skipUnless(os.open in os.supports_dir_fd, "requires directory-relative open")
     def test_parent_swap_cannot_redirect_open_candidate(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
