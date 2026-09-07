@@ -170,7 +170,7 @@ class InstallPythonCiTests(unittest.TestCase):
                     ):
                         module.profiles_for_workflow(workflow)
 
-    def test_workflow_profile_parser_rejects_logging_path_traversal(self) -> None:
+    def test_workflow_profile_parser_rejects_noncanonical_logging_paths(self) -> None:
         with tempfile.TemporaryDirectory(
             prefix=".install-python-profile-",
             dir=REPO_ROOT / ".github/workflows",
@@ -181,6 +181,9 @@ class InstallPythonCiTests(unittest.TestCase):
                 "nested/../../workspace-file",
                 "./python-bootstrap.log",
                 "nested/./python-bootstrap.log",
+                "/absolute-looking.log",
+                "nested//python-bootstrap.log",
+                "nested/",
             ):
                 with self.subTest(log_path=log_path):
                     workflow.write_text(

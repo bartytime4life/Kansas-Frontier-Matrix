@@ -226,7 +226,10 @@ def profiles_for_workflow(workflow_path: Path) -> frozenset[str]:
         invocation = line.split(marker, 1)[1].lstrip()
         match = WORKFLOW_PROFILE_INVOCATION.fullmatch(invocation)
         if match is not None and match.group("log_path") is not None:
-            if any(part in {".", ".."} for part in match.group("log_path").split("/")):
+            if any(
+                part in {"", ".", ".."}
+                for part in match.group("log_path").split("/")
+            ):
                 match = None
         profile_name = match.group("profile") if match is not None else ""
         if profile_name == "verify-workflows":
