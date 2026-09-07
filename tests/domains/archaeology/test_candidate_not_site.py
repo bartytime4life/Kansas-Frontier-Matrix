@@ -530,8 +530,14 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
             timeout=20,
         )
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-        self.assertIn("PASS", result.stdout)
-        self.assertIn("EXPECTED_FAIL", result.stdout)
+        self.assertIn(f"PASS {FIXTURE_ROOT / 'valid.json'}", result.stdout)
+
+        deny_paths = sorted(FIXTURE_ROOT.glob("*_deny.json"))
+        self.assertTrue(deny_paths)
+        for deny_path in deny_paths:
+            with self.subTest(fixture=deny_path.name):
+                self.assertIn(f"EXPECTED_FAIL {deny_path}:", result.stdout)
+        self.assertEqual(result.stdout.count("EXPECTED_FAIL "), len(deny_paths))
 
 
 if __name__ == "__main__":
