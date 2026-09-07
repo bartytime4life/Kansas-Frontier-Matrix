@@ -62,6 +62,8 @@ def validate_lockfile(path: Path = LOCKFILE) -> None:
     if path.is_symlink() or not path.is_file():
         raise CliInstallConfigurationError("CLI_LOCKFILE_UNSAFE")
     try:
+        if path.stat(follow_symlinks=False).st_nlink != 1:
+            raise CliInstallConfigurationError("CLI_LOCKFILE_LINK_UNSAFE")
         with path.open("rb") as stream:
             raw = stream.read(LOCK_LIMIT_BYTES + 1)
     except OSError as exc:

@@ -136,6 +136,23 @@ class InstallKfmCliTests(unittest.TestCase):
             ):
                 module.validate_lockfile(path)
 
+    def test_lock_validation_rejects_hard_linked_lock(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            alias = Path(temp) / "alias.lock"
+            alias.write_text(
+                "demo==1.0 \\\n"
+                f"    --hash=sha256:{'0' * 64}\n",
+                encoding="utf-8",
+            )
+            path = Path(temp) / "python-cli.lock"
+            os.link(alias, path)
+
+            with self.assertRaisesRegex(
+                module.CliInstallConfigurationError,
+                "^CLI_LOCKFILE_LINK_UNSAFE$",
+            ):
+                module.validate_lockfile(path)
+
     def test_lock_validation_bounds_requirement_count(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             path = Path(temp) / "excessive-requirements.lock"
@@ -200,6 +217,7 @@ class InstallKfmCliTests(unittest.TestCase):
         path = mock.Mock()
         path.is_symlink.return_value = False
         path.is_file.return_value = True
+        path.stat.return_value.st_nlink = 1
         stream = mock.MagicMock()
         stream.__enter__.return_value.read.return_value = (
             b"x" * (module.LOCK_LIMIT_BYTES + 1)
