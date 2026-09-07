@@ -283,6 +283,29 @@ class InstallKfmCliTests(unittest.TestCase):
             ):
                 module.validate_local_package(package)
 
+    def test_local_package_rejects_symlinked_nested_entry(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp) / "repository"
+            package = root / "packages/kfm-cli"
+            source = package / "src/kfm_cli"
+            source.mkdir(parents=True)
+            (package / "pyproject.toml").write_text(
+                "[build-system]\n",
+                encoding="utf-8",
+            )
+            outside_source = Path(temp) / "outside.py"
+            outside_source.write_text("VALUE = 1\n", encoding="utf-8")
+            (source / "linked.py").symlink_to(outside_source)
+
+            with (
+                mock.patch.object(module, "REPO_ROOT", root),
+                self.assertRaisesRegex(
+                    module.CliInstallConfigurationError,
+                    "^CLI_LOCAL_PACKAGE_ENTRY_UNSAFE$",
+                ),
+            ):
+                module.validate_local_package(package)
+
     def test_install_executes_argument_vectors_without_a_shell(self) -> None:
         with (
             mock.patch.object(module.time, "monotonic", side_effect=(100.0, 100.0, 150.0)),

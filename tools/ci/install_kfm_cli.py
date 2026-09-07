@@ -166,6 +166,11 @@ def validate_local_package(path: Path = LOCAL_PACKAGE) -> None:
         raise CliInstallConfigurationError("CLI_LOCAL_PACKAGE_METADATA_UNSAFE")
     if not metadata.is_file():
         raise CliInstallConfigurationError("CLI_LOCAL_PACKAGE_METADATA_MISSING")
+    try:
+        if any(entry.is_symlink() for entry in path.rglob("*")):
+            raise CliInstallConfigurationError("CLI_LOCAL_PACKAGE_ENTRY_UNSAFE")
+    except OSError as exc:
+        raise CliInstallConfigurationError("CLI_LOCAL_PACKAGE_UNREADABLE") from exc
 
 
 def build_commands(executable: str | None = None) -> tuple[tuple[str, ...], ...]:
