@@ -1,17 +1,25 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "kfm://contracts/atmosphere/air-observation.schema.json",
-  "title": "Air Observation",
-  "description": "PROPOSED scaffold created from the current docs/domains markdown inventory.",
-  "type": "object",
-  "additionalProperties": true,
-  "properties": {},
+  "title": "AirObservation compatibility mirror",
+  "description": "Compatibility mirror for the canonical Atmosphere AirObservation schema. This contracts-root path must not evolve independently; the canonical machine shape remains under schemas/contracts/v1/domains/atmosphere/.",
+  "$ref": "https://schemas.kfm.local/contracts/v1/domains/atmosphere/air_observation.schema.json",
   "x-kfm": {
-    "status": "PROPOSED",
+    "status": "MIRROR",
     "path": "contracts/atmosphere/air-observation.schema.json",
+    "canonical_schema": "schemas/contracts/v1/domains/atmosphere/air_observation.schema.json",
+    "contract_doc": "contracts/domains/atmosphere/AirObservation.md",
+    "profile_doc": "docs/domains/atmosphere/OBSERVED_MODELED_SEPARATION.md",
+    "validator": "tools/validators/domains/atmosphere/validate_air_observation.py",
+    "compatibility_role": "Legacy contracts-root filename retained as a one-way schema mirror only.",
     "source_docs": [
-      "docs/domains/atmosphere/FILE_SYSTEM_PLAN.md"
+      "contracts/atmosphere/README.md",
+      "docs/domains/atmosphere/FILE_SYSTEM_PLAN.md",
+      "schemas/contracts/v1/domains/atmosphere/README.md"
     ],
-    "contract_doc": null
+    "direct_edits": "DENY",
+    "independent_fields": "DENY",
+    "retirement_condition": "NEEDS VERIFICATION after consumer inventory and mirror parity coverage",
+    "public_release_authority": false
   }
 }
