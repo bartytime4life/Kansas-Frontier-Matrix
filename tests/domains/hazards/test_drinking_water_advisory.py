@@ -262,6 +262,29 @@ class DrinkingWaterAdvisoryTests(unittest.TestCase):
             },
         )
 
+    def test_rescinded_status_requires_previous_record_presence(self) -> None:
+        candidate = copy.deepcopy(self.valid["valid_authoritative_rescission"])
+        candidate["source_surface"]["previous_record_present"] = False
+        candidate = validator.assign_identity(candidate)
+
+        result = validator.validate_payload(candidate)
+
+        self.assertEqual(result.outcome, "DENY")
+        self.assertEqual(
+            {(finding.code, finding.path) for finding in result.findings},
+            {
+                ("RESCISSION_REQUIRED", "/advisory"),
+                (
+                    "RESCINDED_PRIOR_RECORD_REQUIRED",
+                    "/source_surface/previous_record_present",
+                ),
+                (
+                    "SCHEMA_INVALID",
+                    "/source_surface/previous_record_present",
+                ),
+            },
+        )
+
     def test_only_complete_snapshot_mode_can_claim_completeness(self) -> None:
         for source_mode in ("INCREMENTAL_FEED", "SINGLE_EVENT"):
             with self.subTest(source_mode=source_mode):
