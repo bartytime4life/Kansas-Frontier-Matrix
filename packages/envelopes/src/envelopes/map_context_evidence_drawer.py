@@ -88,6 +88,9 @@ _REASON_TEXT: Final[dict[str, str]] = {
     "SENSITIVE_DETAIL_RESTRICTED": "drawer payload denied",
     "UPSTREAM_ERROR": "drawer payload reported an upstream error",
 }
+_DENY_REASON_CODES: Final[frozenset[str]] = frozenset(
+    {"POLICY_DENIED", "RIGHTS_UNRESOLVED", "SENSITIVE_DETAIL_RESTRICTED"}
+)
 
 _OBLIGATIONS: Final[dict[str, tuple[str, ...]]] = {
     "ANSWER": ("DISPLAY_CITATIONS", "PRESERVE_LIMITATIONS"),
@@ -207,14 +210,14 @@ def _trust_matches(
                 and trust.get("release") == "UNRELEASED"
                 and trust.get("freshness") != "CURRENT"
             )
-        return reason_code not in {"SUPPORTED", "UPSTREAM_ERROR"} and policy == "ABSTAIN"
+        return (
+            reason_code not in {"SUPPORTED", "UPSTREAM_ERROR"}
+            and reason_code not in _DENY_REASON_CODES
+            and policy == "ABSTAIN"
+        )
     if outcome == "DENY":
         return (
-            reason_code in {
-                "POLICY_DENIED",
-                "RIGHTS_UNRESOLVED",
-                "SENSITIVE_DETAIL_RESTRICTED",
-            }
+            reason_code in _DENY_REASON_CODES
             and policy == "DENY"
             and not refs
             and not citations

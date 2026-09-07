@@ -1,0 +1,25 @@
+{
+  "profile": "kfm.explorer.evidence-drawer.public-safe.v1",
+  "id": "kfm:drawer:fixture:abstain-policy-denied",
+  "outcome": "ABSTAIN",
+  "reason_code": "POLICY_DENIED",
+  "title": "ABSTAIN_DENIAL_CANARY_a40e61",
+  "summary": "ABSTAIN_DENIAL_CANARY_a40e61",
+  "evidence_refs": [],
+  "citations": [],
+  "limitations": [
+    "ABSTAIN_DENIAL_CANARY_a40e61"
+  ],
+  "trust_state": {
+    "source_role": "context",
+    "policy": "ABSTAIN",
+    "review": "PENDING",
+    "release": "UNRELEASED",
+    "freshness": "UNKNOWN",
+    "correction": "NONE"
+  },
+  "history": {
+    "negative_outcomes": [],
+    "corrections": []
+  }
+}

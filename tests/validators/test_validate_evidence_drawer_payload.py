@@ -218,6 +218,26 @@ class EvidenceDrawerPayloadValidatorTests(unittest.TestCase):
             {item.code for item in findings},
         )
 
+    def test_denial_reasons_are_exclusive_to_deny_outcome(self) -> None:
+        source = json.loads(
+            (
+                MODULE.FIXTURES_ROOT
+                / "invalid/abstain-policy-denied.json"
+            ).read_text(encoding="utf-8")
+        )
+        for reason in (
+            "POLICY_DENIED",
+            "RIGHTS_UNRESOLVED",
+            "SENSITIVE_DETAIL_RESTRICTED",
+        ):
+            with self.subTest(reason=reason):
+                payload = json.loads(json.dumps(source))
+                payload["reason_code"] = reason
+                self.assertEqual(
+                    {"ABSTAIN_STATE_INVALID"},
+                    {item.code for item in MODULE._semantic_findings(payload)},
+                )
+
     def test_validator_is_deterministic_and_no_network(self) -> None:
         path = MODULE.FIXTURES_ROOT / "valid/answer-corrected.json"
         with mock.patch.object(socket, "create_connection", side_effect=AssertionError("network denied")), mock.patch.object(

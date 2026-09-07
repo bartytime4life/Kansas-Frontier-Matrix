@@ -504,6 +504,7 @@ function outcomeCombinationIsValid(
     return (
       reasonCode !== "SUPPORTED" &&
       reasonCode !== "UPSTREAM_ERROR" &&
+      !DENY_REASON_CODES.has(reasonCode) &&
       trustState.policy === "ABSTAIN" &&
       historyCombinationIsValid(outcome, reasonCode, evidenceRefs, trustState, history)
     );

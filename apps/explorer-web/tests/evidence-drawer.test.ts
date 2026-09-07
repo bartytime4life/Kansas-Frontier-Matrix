@@ -7,6 +7,7 @@ import heldFixture from "../../../fixtures/ui/evidence_drawer_payload/valid/abst
 import supersededFixture from "../../../fixtures/ui/evidence_drawer_payload/valid/abstain-superseded.json";
 import denyFixture from "../../../fixtures/ui/evidence_drawer_payload/valid/deny-sensitive.json";
 import invalidDenyReasonFixture from "../../../fixtures/ui/evidence_drawer_payload/invalid/deny-missing-evidence.json";
+import invalidAbstainDenyFixture from "../../../fixtures/ui/evidence_drawer_payload/invalid/abstain-policy-denied.json";
 import invalidAbstainUpstreamFixture from "../../../fixtures/ui/evidence_drawer_payload/invalid/abstain-upstream-error.json";
 import errorFixture from "../../../fixtures/ui/evidence_drawer_payload/valid/error-upstream.json";
 import invalidExtraFieldFixture from "../../../fixtures/ui/evidence_drawer_payload/invalid/extra-field.json";
@@ -251,6 +252,27 @@ describe("Explorer Evidence Drawer governed projection", () => {
   it("fails closed when denial carries an abstention reason", () => {
     const forbiddenCanary = "DENY_REASON_MISMATCH_CANARY_26e6e8";
     const result = resolveEvidenceDrawer(invalidDenyReasonFixture);
+
+    expect(result).toMatchObject({
+      outcome: "ERROR",
+      code: "INVALID_PAYLOAD",
+    });
+    expect(result.evidenceRefs).toEqual([]);
+    expect(result.citations).toEqual([]);
+    expect(result.historyLabels).toEqual([]);
+    expect(JSON.stringify(result)).not.toContain(forbiddenCanary);
+  });
+
+  it.each([
+    "POLICY_DENIED",
+    "RIGHTS_UNRESOLVED",
+    "SENSITIVE_DETAIL_RESTRICTED",
+  ] as const)("fails closed when abstention carries denial reason %s", (reasonCode) => {
+    const forbiddenCanary = "ABSTAIN_DENIAL_CANARY_a40e61";
+    const result = resolveEvidenceDrawer({
+      ...invalidAbstainDenyFixture,
+      reason_code: reasonCode,
+    });
 
     expect(result).toMatchObject({
       outcome: "ERROR",

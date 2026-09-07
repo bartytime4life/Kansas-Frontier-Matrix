@@ -240,6 +240,32 @@ def test_upstream_error_cannot_be_reclassified_as_abstention() -> None:
 
 
 @pytest.mark.parametrize(
+    "reason_code",
+    ("POLICY_DENIED", "RIGHTS_UNRESOLVED", "SENSITIVE_DETAIL_RESTRICTED"),
+)
+def test_denial_reason_cannot_be_reclassified_as_abstention(reason_code: str) -> None:
+    case = CASES["cases"][0]
+    context = _load(str(case["map_context"]))
+    payload = _load(
+        "fixtures/ui/evidence_drawer_payload/invalid/abstain-policy-denied.json"
+    )
+    payload["reason_code"] = reason_code
+
+    candidate = build_map_context_evidence_drawer_admission_candidate(
+        decision_id=f"decision:render:abstain-denial-invalid:{reason_code.lower()}",
+        evaluated_at=str(case["evaluated_at"]),
+        map_context=context,
+        drawer_payload=payload,
+        allow_system_test=True,
+    )
+
+    assert candidate["outcome"] == "ERROR"
+    assert candidate["reason_code"] == "DRAWER_TRUST_STATE_MISMATCH"
+    assert candidate["evidence_refs"] == []
+    assert "ABSTAIN_DENIAL_CANARY_a40e61" not in json.dumps(candidate)
+
+
+@pytest.mark.parametrize(
     ("field", "value", "code"),
     [
         ("decision_id", "Bad ID", "DECISION_ID_INVALID"),

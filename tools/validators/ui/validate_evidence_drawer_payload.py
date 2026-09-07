@@ -25,6 +25,9 @@ SCHEMA_PATH = REPO_ROOT / "schemas/contracts/v1/ui/evidence_drawer_payload.schem
 FIXTURES_ROOT = REPO_ROOT / "fixtures/ui/evidence_drawer_payload"
 MAX_JSON_BYTES = 256 * 1024
 MAX_SCHEMA_FINDINGS = 50
+DENY_REASON_CODES = frozenset(
+    {"POLICY_DENIED", "RIGHTS_UNRESOLVED", "SENSITIVE_DETAIL_RESTRICTED"}
+)
 
 
 @dataclass(frozen=True, order=True)
@@ -281,7 +284,7 @@ def _semantic_findings(payload: Mapping[str, object]) -> list[Finding]:
             )
 
     elif outcome == "ABSTAIN":
-        if reason in {"SUPPORTED", "UPSTREAM_ERROR"} or trust_map.get("policy") != "ABSTAIN":
+        if reason in {"SUPPORTED", "UPSTREAM_ERROR"} | DENY_REASON_CODES or trust_map.get("policy") != "ABSTAIN":
             findings.append(Finding("ABSTAIN_STATE_INVALID", "/outcome", "ABSTAIN requires an abstention reason and ABSTAIN policy"))
         if reason == "STALE_EVIDENCE" and trust_map.get("freshness") != "STALE":
             findings.append(
@@ -323,11 +326,7 @@ def _semantic_findings(payload: Mapping[str, object]) -> list[Finding]:
             findings.append(Finding("SUPERSEDED_STATE_INVALID", "/trust_state/correction", "superseded abstention requires SUPERSEDED correction state"))
 
     elif outcome == "DENY":
-        if reason not in {
-            "POLICY_DENIED",
-            "RIGHTS_UNRESOLVED",
-            "SENSITIVE_DETAIL_RESTRICTED",
-        }:
+        if reason not in DENY_REASON_CODES:
             findings.append(
                 Finding(
                     "DENY_REASON_INVALID",
