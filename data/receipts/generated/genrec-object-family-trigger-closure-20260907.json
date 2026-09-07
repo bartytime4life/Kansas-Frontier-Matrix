@@ -1,0 +1,115 @@
+{
+  "receipt_id": "genrec-object-family-trigger-closure-20260907",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/object-family-register.yml"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/object-family-register.yml": "sha256:3d48b486e1f9ec95699327a2e731c8f432276330af06aa13362a17c15000ddc1"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "not exposed"
+  },
+  "prompt_or_contract": "sha256:940fc6e9eb31792e52fd25e29eec4f25633c6af2a8ddb07dab836bcab8687baa",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector (read-only guidance)",
+      "Notion connector (coordination)"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:.github/workflows/object-family-register.yml@27a7d7556b85eda0aebd44c8c4cce9b773604093",
+      "repo:control_plane/object_family_register.yaml@27a7d7556b85eda0aebd44c8c4cce9b773604093",
+      "repo:tests/validators/test_validate_object_family_register.py@27a7d7556b85eda0aebd44c8c4cce9b773604093",
+      "github:https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4345",
+      "github:https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/34052434769",
+      "drive:1yJpf-Rvb0kAcfgPQjU0kllsMMg4DDlB6",
+      "notion:https://app.notion.com/p/3d3a92021bf681baac61e5bd385d561d",
+      "github:https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/34080765306"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/object-family-register.yml": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-and-candidate-pin",
+      "outcome": "PASS",
+      "reason": "The task-owned branch was one commit ahead and zero behind 27a7d7556b85eda0aebd44c8c4cce9b773604093; the pre-repair candidate head was a3e1964b4b775770f31cdd7d1e1cd8aec0d996fb."
+    },
+    {
+      "gate": "hosted-regression-diagnosis",
+      "outcome": "PASS",
+      "reason": "PR #4345 run 34052434769 failed all 17 unique workflow_paths declared by control_plane/object_family_register.yaml because the merged filter watched only object-family-register.yml."
+    },
+    {
+      "gate": "explicit-workflow-input-closure",
+      "outcome": "PASS",
+      "reason": "All 17 unique declared workflow paths are listed exactly in both pull_request.paths and push.paths. The broad .github/workflows/** pattern remains absent."
+    },
+    {
+      "gate": "bounded-fanout-negative-control",
+      "outcome": "PASS",
+      "reason": "Workflow files outside the register's declared workflow_paths remain excluded; the repair restores semantic input closure without restoring every-workflow-file fan-out."
+    },
+    {
+      "gate": "predecessor-hosted-focused-validation",
+      "outcome": "PASS",
+      "reason": "At predecessor head fbab1432b2baae2170f537b372b87a2cb7e35391, run 34080765306 passed the focused 16-test object-family profile, fixture polarity, and current-register validation. It failed only because the workflow still verified the superseded 2026-08-25 receipt after its own bytes changed."
+    },
+    {
+      "gate": "successor-receipt-input-closure",
+      "outcome": "PASS",
+      "reason": "The workflow now validates the successor repair receipt and watches that exact receipt path on both pull_request and push. The successor receipt binds the final workflow bytes."
+    },
+    {
+      "gate": "complete-repository-validation",
+      "outcome": "SKIPPED",
+      "reason": "No full checkout is available in this execution. Repository-native workflow-security, topology, aggregate tests, and generated-receipt validation remain for hosted exact-head execution."
+    },
+    {
+      "gate": "hosted-and-independent-review",
+      "outcome": "SKIPPED",
+      "reason": "At receipt emission, the repair is branch-only. Exact-head hosted results and independent human review do not yet exist; no readiness, approval, merge, release, deployment, or settings transition is authorized."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "declared-object-family-workflow-surfaces",
+      "validated": true,
+      "evidence_ref": "repo:control_plane/object_family_register.yaml@27a7d7556b85eda0aebd44c8c4cce9b773604093"
+    },
+    {
+      "id": "existing-input-closure-test",
+      "validated": true,
+      "evidence_ref": "repo:tests/validators/test_validate_object_family_register.py@27a7d7556b85eda0aebd44c8c4cce9b773604093"
+    },
+    {
+      "id": "exact-merged-regression-run",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/34052434769"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-09-07T03:43:40Z",
+  "emitter": "ChatGPT",
+  "links": {
+    "pr_number": 4359,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Follow-up repair for PR #4345. The merged self-only object-family workflow filter contradicted the pre-existing executable closure test and produced 17 failures. This patch lists the exact workflow surfaces declared by the register on both events, preserving bounded fan-out for unrelated workflow edits. The receipt excludes itself from hashes. Drive remains read-only lineage and Notion remains coordination. Revert this commit to restore the merged #4345 filter; do not alter history, repository protections, deployment settings, release state, or publication state. Hosted predecessor evidence confirmed that the explicit 17-path repair closes the focused object-family tests; the remaining digest failure came from verifying the superseded 2026-08-25 receipt. The workflow now verifies and watches this successor repair receipt."
+}
