@@ -124,16 +124,18 @@ PRIVATE_IDENTITY_LABEL_PATTERN = re.compile(
     r"(?:\s+|\s*[:=#]\s*)"
     r"[^\W_](?:[^\W_]|[.'’/\-])*(?:\s+[^\W_](?:[^\W_]|[.'’/\-])*)*\s*)\Z"
 )
+UNSIGNED_COORDINATE_MAGNITUDE = r"0*\d{1,3}(?:\.\d+)?"
+SIGNED_COORDINATE_MAGNITUDE = rf"[+-]?{UNSIGNED_COORDINATE_MAGNITUDE}"
 LABELED_COORDINATE_PATTERN = re.compile(
     r"(?i)\b(?:lat(?:itude)?|lon(?:gitude)?)(?:\s*[:=]\s*|\s+)"
-    r"[+-]?\d{1,3}(?:\.\d+)?\b"
+    rf"{SIGNED_COORDINATE_MAGNITUDE}\b"
 )
 COORDINATE_PAIR_PATTERN = re.compile(
-    r"(?<![\w.])([+-]?\d{1,3}(?:\.\d+)?)(?:\s*,\s*|\s+)"
-    r"([+-]?\d{1,3}(?:\.\d+)?)(?![\w.])"
+    rf"(?<![\w.])({SIGNED_COORDINATE_MAGNITUDE})(?:\s*,\s*|\s+)"
+    rf"({SIGNED_COORDINATE_MAGNITUDE})(?![\w.])"
 )
 CARDINAL_LATITUDE_MAGNITUDE = r"0*\d{1,2}(?:\.\d+)?"
-CARDINAL_LONGITUDE_MAGNITUDE = r"0*\d{1,3}(?:\.\d+)?"
+CARDINAL_LONGITUDE_MAGNITUDE = UNSIGNED_COORDINATE_MAGNITUDE
 CARDINAL_PREFIX_COORDINATE_PATTERN = re.compile(
     rf"(?i)(?<![\w.])([NS])\s*({CARDINAL_LATITUDE_MAGNITUDE})"
     rf"(?:\s*,\s*|\s+)([EW])\s*({CARDINAL_LONGITUDE_MAGNITUDE})(?![\w.])"
@@ -151,8 +153,8 @@ CARDINAL_SUFFIX_LONGITUDE_LATITUDE_PATTERN = re.compile(
     rf"(?:\s*,\s*|\s+)({CARDINAL_LATITUDE_MAGNITUDE})\s*([NS])(?![\w.])"
 )
 WKT_POINT_PATTERN = re.compile(
-    r"(?i)\bpoint\s*\(\s*[+-]?\d{1,3}(?:\.\d+)?\s+"
-    r"[+-]?\d{1,3}(?:\.\d+)?\s*\)"
+    rf"(?i)\bpoint\s*\(\s*{SIGNED_COORDINATE_MAGNITUDE}\s+"
+    rf"{SIGNED_COORDINATE_MAGNITUDE}\s*\)"
 )
 EVIDENCE_REF_PATTERN = re.compile(
     r"^evidence:synthetic:agriculture:[a-z0-9]+(?:-[a-z0-9]+)*:v[1-9][0-9]*$"
