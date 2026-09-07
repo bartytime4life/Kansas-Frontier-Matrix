@@ -69,6 +69,9 @@
         "allOf": [
           {
             "pattern": "^kfm://(?:source|source-descriptor|source-record)/[A-Za-z0-9][A-Za-z0-9._~-]*(?:/[A-Za-z0-9][A-Za-z0-9._~-]*)*(?![\\s\\S])"
+          },
+          {
+            "pattern": "^(?!.*[/._~-](?:[Bb][Uu][Rr][Ii][Aa][Ll]|[Gg][Rr][Aa][Vv][Ee](?:[Ss]|[Ss][Ii][Tt][Ee])?|[Hh][Uu][Mm][Aa][Nn]-[Rr][Ee][Mm][Aa][Ii][Nn][Ss]|[Ss][Aa][Cc][Rr][Ee][Dd]|[Pp][Rr][Ii][Vv][Aa][Tt][Ee]|[Ll][Aa][Nn][Dd][Oo][Ww][Nn][Ee][Rr]|[Cc][Oo][Ll][Ll][Ee][Cc][Tt][Ii][Oo][Nn]-(?:[Ss][Ee][Cc][Uu][Rr][Ii][Tt][Yy]|[Ss][Tt][Oo][Rr][Aa][Gg][Ee])|[Ll][Oo][Oo][Tt][Ii][Nn][Gg]|[Aa][Rr][Tt][Ii][Ff][Aa][Cc][Tt]-[Cc][Aa][Cc][Hh][Ee]|[Ss][Oo][Vv][Ee][Rr][Ee][Ii][Gg][Nn][Tt][Yy]|[Rr][Ii][Gg][Hh][Tt][Ss]-[Hh][Oo][Ll][Dd][Ee][Rr]|[Dd][Nn][Aa]|[Gg][Ee][Nn][Oo][Mm](?:[Ee]|[Ii][Cc])|[Hh][Aa][Pp][Ll][Oo][Gg][Rr][Oo][Uu][Pp])(?:$|[0-9]|[/._~-]))"
           }
         ]
       }
@@ -83,6 +86,9 @@
         "allOf": [
           {
             "pattern": "^kfm://(?:evidence|evidence-ref|evidence-bundle)/[A-Za-z0-9][A-Za-z0-9._~-]*(?:/[A-Za-z0-9][A-Za-z0-9._~-]*)*(?![\\s\\S])"
+          },
+          {
+            "pattern": "^(?!.*[/._~-](?:[Bb][Uu][Rr][Ii][Aa][Ll]|[Gg][Rr][Aa][Vv][Ee](?:[Ss]|[Ss][Ii][Tt][Ee])?|[Hh][Uu][Mm][Aa][Nn]-[Rr][Ee][Mm][Aa][Ii][Nn][Ss]|[Ss][Aa][Cc][Rr][Ee][Dd]|[Pp][Rr][Ii][Vv][Aa][Tt][Ee]|[Ll][Aa][Nn][Dd][Oo][Ww][Nn][Ee][Rr]|[Cc][Oo][Ll][Ll][Ee][Cc][Tt][Ii][Oo][Nn]-(?:[Ss][Ee][Cc][Uu][Rr][Ii][Tt][Yy]|[Ss][Tt][Oo][Rr][Aa][Gg][Ee])|[Ll][Oo][Oo][Tt][Ii][Nn][Gg]|[Aa][Rr][Tt][Ii][Ff][Aa][Cc][Tt]-[Cc][Aa][Cc][Hh][Ee]|[Ss][Oo][Vv][Ee][Rr][Ee][Ii][Gg][Nn][Tt][Yy]|[Rr][Ii][Gg][Hh][Tt][Ss]-[Hh][Oo][Ll][Dd][Ee][Rr]|[Dd][Nn][Aa]|[Gg][Ee][Nn][Oo][Mm](?:[Ee]|[Ii][Cc])|[Hh][Aa][Pp][Ll][Oo][Gg][Rr][Oo][Uu][Pp])(?:$|[0-9]|[/._~-]))"
           }
         ]
       }
@@ -97,6 +103,9 @@
         "allOf": [
           {
             "pattern": "^kfm://observation/[A-Za-z0-9][A-Za-z0-9._~-]*(?:/[A-Za-z0-9][A-Za-z0-9._~-]*)*(?![\\s\\S])"
+          },
+          {
+            "pattern": "^(?!.*[/._~-](?:[Bb][Uu][Rr][Ii][Aa][Ll]|[Gg][Rr][Aa][Vv][Ee](?:[Ss]|[Ss][Ii][Tt][Ee])?|[Hh][Uu][Mm][Aa][Nn]-[Rr][Ee][Mm][Aa][Ii][Nn][Ss]|[Ss][Aa][Cc][Rr][Ee][Dd]|[Pp][Rr][Ii][Vv][Aa][Tt][Ee]|[Ll][Aa][Nn][Dd][Oo][Ww][Nn][Ee][Rr]|[Cc][Oo][Ll][Ll][Ee][Cc][Tt][Ii][Oo][Nn]-(?:[Ss][Ee][Cc][Uu][Rr][Ii][Tt][Yy]|[Ss][Tt][Oo][Rr][Aa][Gg][Ee])|[Ll][Oo][Oo][Tt][Ii][Nn][Gg]|[Aa][Rr][Tt][Ii][Ff][Aa][Cc][Tt]-[Cc][Aa][Cc][Hh][Ee]|[Ss][Oo][Vv][Ee][Rr][Ee][Ii][Gg][Nn][Tt][Yy]|[Rr][Ii][Gg][Hh][Tt][Ss]-[Hh][Oo][Ll][Dd][Ee][Rr]|[Dd][Nn][Aa]|[Gg][Ee][Nn][Oo][Mm](?:[Ee]|[Ii][Cc])|[Hh][Aa][Pp][Ll][Oo][Gg][Rr][Oo][Uu][Pp])(?:$|[0-9]|[/._~-]))"
           }
         ]
       }
@@ -107,6 +116,9 @@
       "allOf": [
         {
           "pattern": "^kfm://geometry/[A-Za-z0-9][A-Za-z0-9._~-]*(?:/[A-Za-z0-9][A-Za-z0-9._~-]*)*(?![\\s\\S])"
+        },
+        {
+          "pattern": "^(?!.*[/._~-](?:[Bb][Uu][Rr][Ii][Aa][Ll]|[Gg][Rr][Aa][Vv][Ee](?:[Ss]|[Ss][Ii][Tt][Ee])?|[Hh][Uu][Mm][Aa][Nn]-[Rr][Ee][Mm][Aa][Ii][Nn][Ss]|[Ss][Aa][Cc][Rr][Ee][Dd]|[Pp][Rr][Ii][Vv][Aa][Tt][Ee]|[Ll][Aa][Nn][Dd][Oo][Ww][Nn][Ee][Rr]|[Cc][Oo][Ll][Ll][Ee][Cc][Tt][Ii][Oo][Nn]-(?:[Ss][Ee][Cc][Uu][Rr][Ii][Tt][Yy]|[Ss][Tt][Oo][Rr][Aa][Gg][Ee])|[Ll][Oo][Oo][Tt][Ii][Nn][Gg]|[Aa][Rr][Tt][Ii][Ff][Aa][Cc][Tt]-[Cc][Aa][Cc][Hh][Ee]|[Ss][Oo][Vv][Ee][Rr][Ee][Ii][Gg][Nn][Tt][Yy]|[Rr][Ii][Gg][Hh][Tt][Ss]-[Hh][Oo][Ll][Dd][Ee][Rr]|[Dd][Nn][Aa]|[Gg][Ee][Nn][Oo][Mm](?:[Ee]|[Ii][Cc])|[Hh][Aa][Pp][Ll][Oo][Gg][Rr][Oo][Uu][Pp])(?:$|[0-9]|[/._~-]))"
         }
       ]
     },
@@ -164,6 +176,9 @@
         "allOf": [
           {
             "pattern": "^kfm://(?:correction|correction-notice|rollback)/[A-Za-z0-9][A-Za-z0-9._~-]*(?:/[A-Za-z0-9][A-Za-z0-9._~-]*)*(?![\\s\\S])"
+          },
+          {
+            "pattern": "^(?!.*[/._~-](?:[Bb][Uu][Rr][Ii][Aa][Ll]|[Gg][Rr][Aa][Vv][Ee](?:[Ss]|[Ss][Ii][Tt][Ee])?|[Hh][Uu][Mm][Aa][Nn]-[Rr][Ee][Mm][Aa][Ii][Nn][Ss]|[Ss][Aa][Cc][Rr][Ee][Dd]|[Pp][Rr][Ii][Vv][Aa][Tt][Ee]|[Ll][Aa][Nn][Dd][Oo][Ww][Nn][Ee][Rr]|[Cc][Oo][Ll][Ll][Ee][Cc][Tt][Ii][Oo][Nn]-(?:[Ss][Ee][Cc][Uu][Rr][Ii][Tt][Yy]|[Ss][Tt][Oo][Rr][Aa][Gg][Ee])|[Ll][Oo][Oo][Tt][Ii][Nn][Gg]|[Aa][Rr][Tt][Ii][Ff][Aa][Cc][Tt]-[Cc][Aa][Cc][Hh][Ee]|[Ss][Oo][Vv][Ee][Rr][Ee][Ii][Gg][Nn][Tt][Yy]|[Rr][Ii][Gg][Hh][Tt][Ss]-[Hh][Oo][Ll][Dd][Ee][Rr]|[Dd][Nn][Aa]|[Gg][Ee][Nn][Oo][Mm](?:[Ee]|[Ii][Cc])|[Hh][Aa][Pp][Ll][Oo][Gg][Rr][Oo][Uu][Pp])(?:$|[0-9]|[/._~-]))"
           }
         ]
       }

@@ -128,6 +128,21 @@ KFM_REFERENCE_PATTERN = re.compile(
     r"[Nn][Oo][Rr][Tt][Hh][Ii][Nn][Gg]|[Uu][Tt][Mm]|[Mm][Gg][Rr][Ss])"
     r"(?:$|[0-9]|[/._~-]))kfm://[A-Za-z0-9][A-Za-z0-9._~/-]*(?![\s\S])"
 )
+# Even without coordinates, a semantic path label can disclose why a location
+# or record is protected. Public-safe candidate references therefore use
+# opaque identities rather than burial, sacred-place, private-land,
+# collection-security, looting-risk, sovereignty, or DNA/genomic clues.
+SENSITIVE_REFERENCE_PATTERN = re.compile(
+    r"^(?!.*[/._~-](?:[Bb][Uu][Rr][Ii][Aa][Ll]|"
+    r"[Gg][Rr][Aa][Vv][Ee](?:[Ss]|[Ss][Ii][Tt][Ee])?"
+    r"|[Hh][Uu][Mm][Aa][Nn]-[Rr][Ee][Mm][Aa][Ii][Nn][Ss]|[Ss][Aa][Cc][Rr][Ee][Dd]"
+    r"|[Pp][Rr][Ii][Vv][Aa][Tt][Ee]|[Ll][Aa][Nn][Dd][Oo][Ww][Nn][Ee][Rr]"
+    r"|[Cc][Oo][Ll][Ll][Ee][Cc][Tt][Ii][Oo][Nn]-(?:[Ss][Ee][Cc][Uu][Rr][Ii][Tt][Yy]|[Ss][Tt][Oo][Rr][Aa][Gg][Ee])"
+    r"|[Ll][Oo][Oo][Tt][Ii][Nn][Gg]|[Aa][Rr][Tt][Ii][Ff][Aa][Cc][Tt]-[Cc][Aa][Cc][Hh][Ee]"
+    r"|[Ss][Oo][Vv][Ee][Rr][Ee][Ii][Gg][Nn][Tt][Yy]|[Rr][Ii][Gg][Hh][Tt][Ss]-[Hh][Oo][Ll][Dd][Ee][Rr]"
+    r"|[Dd][Nn][Aa]|[Gg][Ee][Nn][Oo][Mm](?:[Ee]|[Ii][Cc])|"
+    r"[Hh][Aa][Pp][Ll][Oo][Gg][Rr][Oo][Uu][Pp])(?:$|[0-9]|[/._~-]))"
+)
 OPAQUE_ID_PATH_PATTERN = (
     r"[A-Za-z0-9][A-Za-z0-9._~-]*(?:/[A-Za-z0-9][A-Za-z0-9._~-]*)*"
 )
@@ -181,7 +196,11 @@ def _is_bounded_string(value: Any, allowed: frozenset[str]) -> bool:
 def _is_opaque_kfm_ref(value: Any) -> bool:
     """Return whether a value is an opaque governed reference, not a locator."""
 
-    return isinstance(value, str) and KFM_REFERENCE_PATTERN.fullmatch(value) is not None
+    return (
+        isinstance(value, str)
+        and KFM_REFERENCE_PATTERN.fullmatch(value) is not None
+        and SENSITIVE_REFERENCE_PATTERN.match(value) is not None
+    )
 
 
 def _validate_refs(value: Any, field: str, *, required: bool = False) -> list[str]:
@@ -197,7 +216,7 @@ def _validate_refs(value: Any, field: str, *, required: bool = False) -> list[st
         if not _is_opaque_kfm_ref(ref):
             errors.append(
                 f"{field} entries must be opaque kfm:// references without query, "
-                "fragment, or protected locator material"
+                "fragment, protected locator material, or sensitive subject clues"
             )
             continue
         if REFERENCE_FAMILY_PATTERNS[field].fullmatch(ref) is None:
@@ -306,7 +325,8 @@ def validate_candidate_feature(payload: Any) -> list[str]:
     ):
         errors.append(
             "candidate_geometry_ref must be an opaque governed kfm:// reference "
-            "without query, fragment, or protected locator material"
+            "without query, fragment, protected locator material, or sensitive "
+            "subject clues"
         )
     elif (
         "candidate_geometry_ref" in payload
@@ -358,6 +378,7 @@ def validate_fixture_suite() -> int:
         FIXTURE_ROOT / "reference_line_terminator_deny.json": "opaque kfm:// references",
         FIXTURE_ROOT / "path_locator_reference_deny.json": "protected locator material",
         FIXTURE_ROOT / "compact_locator_reference_deny.json": "protected locator material",
+        FIXTURE_ROOT / "sensitive_subject_reference_deny.json": "sensitive subject clues",
         FIXTURE_ROOT / "misbound_reference_family_deny.json": "allowed governed reference family",
         FIXTURE_ROOT / "empty_reference_identity_deny.json": "non-empty opaque identity",
         FIXTURE_ROOT / "unbound_catalog_candidate_deny.json": "evidence_refs are required",

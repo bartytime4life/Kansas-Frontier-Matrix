@@ -47,6 +47,9 @@ burial, sacred-place, collection-security, or culturally restricted data.
   coordinate-system, or other protected locator tokens through its path.
 - `compact_locator_reference_deny.json` proves that joining a locator token
   directly to digits, such as `lat39`, cannot evade the protected-path rule.
+- `sensitive_subject_reference_deny.json` proves that otherwise valid governed
+  reference paths cannot disclose burial, sacred-place, private-land, looting,
+  or DNA-related subject clues across any CandidateFeature reference field.
 - `misbound_reference_family_deny.json` proves that a syntactically valid
   source reference cannot satisfy an EvidenceRef/EvidenceBundle binding.
 - `empty_reference_identity_deny.json` proves that a bare evidence family path
@@ -77,7 +80,8 @@ python -m unittest tests.domains.archaeology.test_candidate_not_site
 Passing these checks proves only the schema-aligned, strict-end candidate identifier,
 candidate-type vocabulary, spatial-precision vocabulary, and geometry-reference
 precision binding; bounded candidate discriminator; inline location denial;
-strict-end opaque-reference, protected-locator-token, and reference-family boundaries;
+strict-end opaque-reference, protected-locator-token, sensitive-subject-token,
+and reference-family boundaries;
 conditional EvidenceRef binding; and supersession
 correction binding; malformed-reference finite denial; and nonempty governed
 evidence, observation, and correction bindings; malformed-vocabulary and

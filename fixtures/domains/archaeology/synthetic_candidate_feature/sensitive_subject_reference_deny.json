@@ -1,0 +1,25 @@
+{
+  "candidate_feature_id": "arc-candidate-synthetic-sensitive-reference",
+  "object_type": "CandidateFeature",
+  "truth_state": "CANDIDATE",
+  "candidate_type": "ANOMALY",
+  "origin_method": "REMOTE_SENSING",
+  "source_refs": [
+    "kfm://source/synthetic/private-parcel-7"
+  ],
+  "evidence_refs": [
+    "kfm://evidence/synthetic/burial-record"
+  ],
+  "observation_refs": [
+    "kfm://observation/synthetic/sacred-place"
+  ],
+  "correction_refs": [
+    "kfm://correction/synthetic/dna-note"
+  ],
+  "candidate_geometry_ref": "kfm://geometry/synthetic/looting-risk",
+  "review_state": "NEEDS_REVIEW",
+  "sensitivity_class": "WITHHELD",
+  "spatial_precision_class": "WITHHELD",
+  "lifecycle_state": "WORK",
+  "confidence_statement": "Synthetic sensitive-reference denial fixture."
+}

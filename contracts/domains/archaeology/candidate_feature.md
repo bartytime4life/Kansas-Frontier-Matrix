@@ -205,7 +205,7 @@ The current schema does not require these fields. They are `PROPOSED` semantic r
 | `source_roles` | Source roles supporting, contextualizing, or contesting the candidate. |
 | `evidence_refs` | Evidence, EvidenceRef, or EvidenceBundle references with a non-empty opaque identity where available; source references and bare family paths cannot substitute. |
 | `observation_refs` | Observation-family references for RemoteSensingAnomaly, LiDARCandidate, GeophysicsObservation, field observation, or archival observation records; when present, the binding must contain at least one governed reference. |
-| `candidate_geometry_ref` | Internal geometry/support-scope reference whose opaque identifier must not encode latitude, longitude, bounding-box, coordinate-system, or similar locator tokens, including compact digit-suffixed forms such as `lat39`; public-safe generalization remains required before public exposure. |
+| `candidate_geometry_ref` | Internal geometry/support-scope reference whose opaque identifier must not encode latitude, longitude, bounding-box, coordinate-system, sensitive subject clues, or similar protected tokens, including compact digit-suffixed forms such as `lat39`; public-safe generalization remains required before public exposure. |
 | `spatial_precision_class` | Precision bucket or generalization class; exact coordinate handling must be policy-gated. |
 | `temporal_scope` | Valid/observed/source/retrieval/review time context where material. |
 | `confidence_statement` | Bounded confidence or uncertainty note containing at least one portable, non-surrogate BMP content code point outside the schema's Unicode 15.0 Cc/Cf/separator and Default-Ignorable deny set; supplementary characters may accompany that content but cannot alone satisfy the field; must not be treated as confirmation. |
@@ -230,6 +230,7 @@ The current schema does not require these fields. They are `PROPOSED` semantic r
 - candidate-to-site promotion requires governed review, evidence closure, and policy checks;
 - exact or sensitive location exposure fails closed unless policy and review authorize a specific public-safe transform;
 - governed-reference paths cannot serve as an alternate channel for protected locator material, including compact locator-token-plus-digit forms;
+- governed-reference paths cannot disclose sensitive subject clues for burial or human remains, sacred or restricted places, private land, collection security, looting risk, sovereignty or rights-holder uncertainty, or DNA/genomic identity;
 - governed references must bind to the object family required by their field, carry a non-empty segmented opaque identity, and end strictly without terminal line-break material;
 - governed source, evidence, observation, and correction arrays must contain unique references so repetition cannot inflate apparent support or lineage closure;
 - optional observation bindings must be omitted when absent and non-empty when present;
