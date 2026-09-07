@@ -595,6 +595,45 @@ def test_cardinal_coordinate_pairs_with_degree_signs_are_denied():
     assert not module._contains_coordinate_literal("181°W 91°N")
 
 
+def test_degrees_minutes_seconds_cardinal_pairs_are_denied():
+    module = _module()
+    manifest = json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))
+    candidate = module.materialize_case(
+        manifest, _case(manifest, "valid_county_crop_observation")
+    )
+
+    padding = "٠" * 4096
+    for value in (
+        "N 38°52'30\" W 98°27'07\"",
+        "38°52′30″N 98°27′07″W",
+        "W 98°27′07″ N 38°52′30″",
+        "98°27'07\"W 38°52'30\"N",
+        "N ٣٨°٥٢’٣٠” W ٩٨°٢٧’٠٧”",
+        "N 90°00′00″ W 180°00′00″",
+    ):
+        mutated = copy.deepcopy(candidate)
+        mutated["indicator"]["value"] = value
+        mutated["spec_hash"], mutated["id"] = module.canonical_identity(mutated)
+        result = module.validate_payload(mutated)
+        assert [(finding.code, finding.path) for finding in result.findings] == [
+            ("AG_MAP_HARMFUL_PRECISION_DENIED", "/indicator/value")
+        ]
+
+    assert module._contains_coordinate_literal(
+        f"N {padding}٣٨°{padding}٥٢′{padding}٣٠″ "
+        f"W {padding}٩٨°{padding}٢٧′{padding}٠٧″"
+    )
+
+    for value in (
+        "N 38°60′00″ W 98°27′07″",
+        "N 38°52′60″ W 98°27′07″",
+        "N 90°00′01″ W 98°27′07″",
+        "98°27′07″W 91°00′00″N",
+        "W 180°00′01″ N 38°52′30″",
+    ):
+        assert not module._contains_coordinate_literal(value)
+
+
 def test_malformed_json_returns_machine_readable_denial(tmp_path, capsys):
     module = _module()
     candidate_path = tmp_path / "malformed.json"
