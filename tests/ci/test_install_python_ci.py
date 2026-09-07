@@ -245,6 +245,34 @@ class InstallPythonCiTests(unittest.TestCase):
         self.assertEqual(
             "1", git_run.call_args.kwargs["env"]["GIT_NO_REPLACE_OBJECTS"]
         )
+        self.assertEqual(
+            module.GIT_OPERATION_TIMEOUT_SECONDS,
+            git_run.call_args.kwargs["timeout"],
+        )
+
+    def test_migration_ancestry_failures_are_stable_and_bounded(self) -> None:
+        cases = (
+            (
+                module.subprocess.CalledProcessError(1, ("git", "merge-base")),
+                "MIGRATION_ANCESTRY_INVALID",
+            ),
+            (
+                module.subprocess.TimeoutExpired(("git", "merge-base"), 30),
+                "MIGRATION_GIT_READ_FAILED",
+            ),
+            (OSError("git unavailable"), "MIGRATION_GIT_READ_FAILED"),
+        )
+        for error, expected in cases:
+            with (
+                self.subTest(error=type(error).__name__),
+                mock.patch.object(module.subprocess, "run", side_effect=error) as run,
+                self.assertRaisesRegex(module.InstallConfigurationError, expected),
+            ):
+                module._require_migration_ancestry("1" * 40, "2" * 40)
+            self.assertEqual(
+                module.GIT_OPERATION_TIMEOUT_SECONDS,
+                run.call_args.kwargs["timeout"],
+            )
 
     def test_commit_workflow_batch_reader_preserves_blob_boundaries(self) -> None:
         paths = (".github/workflows/a.yml", ".github/workflows/b.yaml")
@@ -290,7 +318,10 @@ class InstallPythonCiTests(unittest.TestCase):
             ).encode("ascii"),
             run.call_args.kwargs["input"],
         )
-        self.assertEqual(30, run.call_args.kwargs["timeout"])
+        self.assertEqual(
+            module.GIT_OPERATION_TIMEOUT_SECONDS,
+            run.call_args.kwargs["timeout"],
+        )
         self.assertTrue(
             set(module.GIT_REPOSITORY_CONTEXT_VARIABLES).isdisjoint(
                 run.call_args.kwargs["env"]

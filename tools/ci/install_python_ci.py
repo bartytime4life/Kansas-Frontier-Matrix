@@ -31,6 +31,7 @@ MIGRATION_MANIFEST = "tools/ci/python-dependency-lock-migration.json"
 MIGRATION_SCHEMA = "kfm.python-dependency-lock-migration.v1"
 MIGRATION_ID = "scorecard-pinned-dependencies-20260812"
 MIGRATION_ENTRY_COUNT = 387
+GIT_OPERATION_TIMEOUT_SECONDS = 30
 GIT_REPOSITORY_CONTEXT_VARIABLES = (
     "GIT_ALTERNATE_OBJECT_DIRECTORIES",
     "GIT_CEILING_DIRECTORIES",
@@ -290,7 +291,7 @@ def _read_commit_workflows(
             stdout=subprocess.PIPE,
             stderr=subprocess.DEVNULL,
             env=_repository_git_environment(),
-            timeout=30,
+            timeout=GIT_OPERATION_TIMEOUT_SECONDS,
         )
     except (OSError, subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:
         raise InstallConfigurationError("MIGRATION_GIT_READ_FAILED") from exc
@@ -321,6 +322,23 @@ def _read_commit_workflows(
     return workflows
 
 
+def _require_migration_ancestry(base_commit: str, migration_head: str) -> None:
+    try:
+        subprocess.run(
+            ("git", "merge-base", "--is-ancestor", base_commit, migration_head),
+            check=True,
+            cwd=REPO_ROOT,
+            env=_repository_git_environment(),
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            timeout=GIT_OPERATION_TIMEOUT_SECONDS,
+        )
+    except subprocess.CalledProcessError as exc:
+        raise InstallConfigurationError("MIGRATION_ANCESTRY_INVALID") from exc
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise InstallConfigurationError("MIGRATION_GIT_READ_FAILED") from exc
+
+
 def verify_workflow_receipts() -> None:
     """Verify changed workflows through their immutable receipts plus new locks."""
 
@@ -329,14 +347,7 @@ def verify_workflow_receipts() -> None:
     migration_head = os.environ.get("KFM_MIGRATION_HEAD", "")
     if not COMMIT_SHA.fullmatch(migration_head):
         raise InstallConfigurationError("MIGRATION_HEAD_INVALID")
-    subprocess.run(
-        ("git", "merge-base", "--is-ancestor", base_commit, migration_head),
-        check=True,
-        cwd=REPO_ROOT,
-        env=_repository_git_environment(),
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL,
-    )
+    _require_migration_ancestry(base_commit, migration_head)
     workflow_paths = tuple(entries)
     base_workflows = _read_commit_workflows(base_commit, workflow_paths)
     head_workflows = _read_commit_workflows(migration_head, workflow_paths)
