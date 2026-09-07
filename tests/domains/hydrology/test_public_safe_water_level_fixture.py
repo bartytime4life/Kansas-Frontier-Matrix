@@ -453,6 +453,35 @@ class HydrologyWaterLevelFixtureTests(unittest.TestCase):
             findings,
         )
 
+    def test_fixture_parser_rejects_noncanonical_exponent_notation(self) -> None:
+        expected = Finding(
+            "MEASUREMENT_EXPONENT_NOT_CANONICAL",
+            "$.measurement.value",
+        )
+        valid_text = VALID_FIXTURE.read_text(encoding="utf-8")
+        for exponent_value, plain_value in (
+            ("1e2", "100.0"),
+            ("1E+2", "100.0"),
+            ("1e-2", "0.01"),
+        ):
+            with self.subTest(exponent_value=exponent_value):
+                with tempfile.TemporaryDirectory() as directory:
+                    exponent_fixture = Path(directory) / "exponent.json"
+                    exponent_fixture.write_text(
+                        valid_text.replace(
+                            '"value": 12.5', f'"value": {exponent_value}'
+                        ),
+                        encoding="utf-8",
+                    )
+                    self.assertIn(expected, validate_file(exponent_fixture))
+
+                    plain_fixture = Path(directory) / "plain.json"
+                    plain_fixture.write_text(
+                        valid_text.replace('"value": 12.5', f'"value": {plain_value}'),
+                        encoding="utf-8",
+                    )
+                    self.assertNotIn(expected, validate_file(plain_fixture))
+
     def test_temporal_provenance_is_canonical_and_monotonic(self) -> None:
         candidate = _load_candidate()
         candidate["temporal_scope"]["source_time"] = "2026-08-02T11:59:59Z"  # type: ignore[index]

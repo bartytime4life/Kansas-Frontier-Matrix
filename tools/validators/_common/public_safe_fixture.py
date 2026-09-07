@@ -55,6 +55,7 @@ class _BoundedJsonFloat(float):
         if not math.isfinite(value):
             raise ValueError("JSON number is not finite")
         instance = super().__new__(cls, value)
+        instance.raw_value = raw_value
         instance.decimal_value = Decimal(raw_value)
         instance.was_negative_zero = (
             instance.decimal_value.is_zero() and instance.decimal_value.is_signed()
@@ -96,6 +97,12 @@ def number_as_decimal(value: int | float) -> Decimal:
     if isinstance(value, _BoundedJsonFloat):
         return value.decimal_value
     return Decimal(str(value))
+
+
+def number_uses_exponent_lexeme(value: object) -> bool:
+    """Return whether an opted-in JSON float used exponent notation."""
+
+    return isinstance(value, _BoundedJsonFloat) and "e" in value.raw_value.lower()
 
 
 def add_finding(findings: set[Finding], code: str, path: str) -> None:

@@ -21,6 +21,7 @@ from tools.validators._common.public_safe_fixture import (
     is_negative_zero,
     is_nonempty_string,
     number_as_decimal,
+    number_uses_exponent_lexeme,
     run_cli,
     validate_fixture_file,
 )
@@ -418,6 +419,12 @@ def validate_candidate(candidate: object) -> list[Finding]:
                 add_finding(
                     findings,
                     "MEASUREMENT_PRECISION_EXCEEDED",
+                    "$.measurement.value",
+                )
+            elif number_uses_exponent_lexeme(value):
+                add_finding(
+                    findings,
+                    "MEASUREMENT_EXPONENT_NOT_CANONICAL",
                     "$.measurement.value",
                 )
         if measurement.get("unit") != "ft":
