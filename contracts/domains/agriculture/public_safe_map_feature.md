@@ -117,6 +117,9 @@ tokens, regardless of capitalization or Unicode letter width, even when it
 omits an ID suffix or uses whitespace, colon, equals, or hash delimiters.
 Compatibility-equivalent Unicode forms are normalized before scalar scanning,
 so full-width labels, delimiters, and identifiers cannot bypass the same rules.
+Unicode decimal digits are canonicalized to ASCII before coordinate scanning,
+so Arabic-Indic, extended Arabic-Indic, Devanagari, and equivalent zero padding
+cannot evade the same axis grammar and range checks.
 Descriptive aggregate prose may mention field, farm,
 parcel, operator, well, permit, or water-right concepts without being recast as
 an identity label; explicit protected identifiers and coordinate literals
