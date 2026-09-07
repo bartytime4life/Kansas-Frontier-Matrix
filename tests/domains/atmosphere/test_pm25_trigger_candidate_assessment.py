@@ -179,6 +179,30 @@ def test_file_loader_denies_symlink_swap_before_open() -> None:
     )
 
 
+def test_file_loader_denies_in_place_change_during_read() -> None:
+    with tempfile.TemporaryDirectory() as directory:
+        path = Path(directory) / "assessment.json"
+        document = json.dumps(materialize(MANIFEST["cases"][0]))
+        path.write_text(document, encoding="utf-8")
+        real_fstat = module.os.fstat
+        fstat_calls = 0
+
+        def mutate_before_second_fstat(descriptor: int) -> module.os.stat_result:
+            nonlocal fstat_calls
+            fstat_calls += 1
+            if fstat_calls == 2:
+                path.write_text(document + " ", encoding="utf-8")
+            return real_fstat(descriptor)
+
+        with patch.object(module.os, "fstat", side_effect=mutate_before_second_fstat):
+            value, findings = module._read(path)
+
+    assert value is None
+    assert findings == (
+        module.Finding("PM25_TRIGGER_INPUT_CHANGED_DURING_READ", "/"),
+    )
+
+
 def test_knowledge_character_and_authority_boundaries_are_explicit() -> None:
     payload = materialize(MANIFEST["cases"][0])
     assert payload["subject"]["knowledge_character"] == "OBSERVED_SENSOR"

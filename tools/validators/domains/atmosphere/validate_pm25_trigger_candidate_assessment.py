@@ -55,6 +55,25 @@ class Result:
         return self.outcome == "PASS"
 
 
+@dataclass(frozen=True)
+class FileIdentity:
+    device: int
+    inode: int
+    size: int
+    modified_ns: int
+    changed_ns: int
+
+
+def _file_identity(metadata: os.stat_result) -> FileIdentity:
+    return FileIdentity(
+        device=metadata.st_dev,
+        inode=metadata.st_ino,
+        size=metadata.st_size,
+        modified_ns=metadata.st_mtime_ns,
+        changed_ns=metadata.st_ctime_ns,
+    )
+
+
 def _unique(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
     out: dict[str, Any] = {}
     for key, value in pairs:
@@ -99,12 +118,16 @@ def _read(path: Path) -> tuple[dict[str, Any] | None, tuple[Finding, ...]]:
         metadata = os.fstat(descriptor)
         if not stat.S_ISREG(metadata.st_mode):
             return None, (Finding("PM25_TRIGGER_FILE_NOT_FOUND", "/"),)
+        identity = _file_identity(metadata)
         if metadata.st_size > MAX_BYTES:
             return None, (Finding("PM25_TRIGGER_FILE_TOO_LARGE", "/"),)
         stream = os.fdopen(descriptor, "rb")
         descriptor = -1
         with stream:
             raw = stream.read(MAX_BYTES + 1)
+            identity_after_read = _file_identity(os.fstat(stream.fileno()))
+        if identity_after_read != identity:
+            return None, (Finding("PM25_TRIGGER_INPUT_CHANGED_DURING_READ", "/"),)
         if len(raw) > MAX_BYTES:
             return None, (Finding("PM25_TRIGGER_FILE_TOO_LARGE", "/"),)
         value = json.loads(raw.decode("utf-8"), object_pairs_hook=_unique, parse_constant=_reject_constant, parse_float=_finite)
