@@ -7,31 +7,36 @@
 #   or make generated previews authoritative.
 # - Rendered documentation belongs only in a non-authoritative generated lane and
 #   requires an explicit publication handoff before public use.
+# Trigger boundary: readiness reads docs/ and markers, not arbitrary Markdown.
+# Retain preview-manifest and deployment-workflow markers when narrowing fan-out.
+# Watching a marker does not enable a generator, preview, or publication.
 name: docs-build
 
 on:
   pull_request:
     paths:
-      - "**/*.md"
-      - "**/*.markdown"
       - "docs/**"
       - "mkdocs.yml"
       - "mkdocs.yaml"
       - "docusaurus.config.*"
       - "docs/requirements.txt"
       - "requirements-docs.txt"
+      - "artifacts/docs/**"
+      - ".github/workflows/pages.yml"
+      - ".github/workflows/deploy-docs.yml"
       - ".github/workflows/docs-build.yml"
   push:
     branches: [main]
     paths:
-      - "**/*.md"
-      - "**/*.markdown"
       - "docs/**"
       - "mkdocs.yml"
       - "mkdocs.yaml"
       - "docusaurus.config.*"
       - "docs/requirements.txt"
       - "requirements-docs.txt"
+      - "artifacts/docs/**"
+      - ".github/workflows/pages.yml"
+      - ".github/workflows/deploy-docs.yml"
       - ".github/workflows/docs-build.yml"
   workflow_dispatch:
 

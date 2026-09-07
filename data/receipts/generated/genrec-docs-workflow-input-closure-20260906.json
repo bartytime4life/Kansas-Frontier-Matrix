@@ -1,0 +1,131 @@
+{
+  "receipt_id": "genrec-docs-workflow-input-closure-20260906",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/docs-build.yml",
+    ".github/workflows/docs-control-plane.yml",
+    "tests/validators/test_documentation_workflow_input_closure.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/docs-build.yml": "sha256:23ef5d3eb0c774cb19566d1368a434057eddb2abed5a41bf90f3d8bb0b77b220",
+    ".github/workflows/docs-control-plane.yml": "sha256:8dc6a525d8b5fddc9b0cf17262de19d15e16563951002d731c9c474d80bf8089",
+    "tests/validators/test_documentation_workflow_input_closure.py": "sha256:ad3dcbdb3be200103d949385362d34f25b236df53aa725020bc0c26ae514652a"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Astra Pro",
+    "version": "not exposed"
+  },
+  "prompt_or_contract": "sha256:ae7fa23b5842de9791818b3141371253dd852a00d72cd8b4e3a91fcda463256b",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector (read-only guidance)",
+      "Notion connector (coordination)",
+      "local Python and Bash"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:docs/doctrine/directory-rules.md@27a7d7556b85eda0aebd44c8c4cce9b773604093",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@27a7d7556b85eda0aebd44c8c4cce9b773604093",
+      "repo:.github/workflows/docs-build.yml@27a7d7556b85eda0aebd44c8c4cce9b773604093",
+      "repo:.github/workflows/docs-control-plane.yml@27a7d7556b85eda0aebd44c8c4cce9b773604093",
+      "repo:tools/ci/install_python_ci.py@27a7d7556b85eda0aebd44c8c4cce9b773604093",
+      "repo:pyproject.toml@27a7d7556b85eda0aebd44c8c4cce9b773604093",
+      "repo:tests/policy/test_control_plane_register_meta_contract.py@27a7d7556b85eda0aebd44c8c4cce9b773604093",
+      "repo:schemas/contracts/v1/governance/object_family_register.schema.json@27a7d7556b85eda0aebd44c8c4cce9b773604093",
+      "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@27a7d7556b85eda0aebd44c8c4cce9b773604093",
+      "github:https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024",
+      "drive:1uTqdIEFZE2cq3gyISetoRYM6LIlnKqTc3FobtEx7Cbs",
+      "notion:https://app.notion.com/p/3c9a92021bf68195b8b1f3a8d694b447"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/docs-build.yml": "PROPOSED",
+    ".github/workflows/docs-control-plane.yml": "PROPOSED",
+    "tests/validators/test_documentation_workflow_input_closure.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "source-byte-authentication",
+      "outcome": "PASS",
+      "reason": "Both original workflow copies and the receipt schema reproduce the Git blob IDs read from the exact base. This is a partial local snapshot, not a full checkout."
+    },
+    {
+      "gate": "base-regression-negative-control",
+      "outcome": "PASS",
+      "reason": "The final nine-method profile produces exactly seven expected failures, zero errors, and zero skips on unchanged base workflows: missing inputs, blanket Markdown triggers, and missing test wiring."
+    },
+    {
+      "gate": "candidate-unittest",
+      "outcome": "PASS",
+      "reason": "Nine unittest methods pass on Python 3.13.5 with PyYAML 6.0.3; includes 70 individual required-input removal negatives."
+    },
+    {
+      "gate": "unchanged-job-boundaries",
+      "outcome": "PASS",
+      "reason": "All five original job definitions and all non-trigger top-level fields are equal after removing the single added unittest step. Original commands, install profiles, action pins, permissions, runners, concurrency, and holds are unchanged."
+    },
+    {
+      "gate": "syntax-and-readiness-probes",
+      "outcome": "PASS",
+      "reason": "bash -n accepts all 15 run blocks. Python 3.11 AST syntax checks pass. 16 isolated no-network Bash probes preserve explicit holds and readiness rejections; these are not rendered-document or publication passes."
+    },
+    {
+      "gate": "receipt-schema-and-artifact-binding",
+      "outcome": "PASS",
+      "reason": "Exact repository Draft 2020-12 schema with format checking, artifact-map parity, and full SHA-256 recomputation pass. This is not the complete repository-native receipt validator."
+    },
+    {
+      "gate": "complete-repository-validation",
+      "outcome": "SKIPPED",
+      "reason": "No full checkout is available. Full workflow-security/topology, native aggregate tests, and native receipt-validator execution were not run. No inherited failure is called passing."
+    },
+    {
+      "gate": "hosted-and-independent-review",
+      "outcome": "SKIPPED",
+      "reason": "No exact-head hosted evidence or independent human review exists at receipt emission. Delivery is branch-only under issue #4024; no PR, ready, approval, merge, settings, or deployment transition is authorized."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "adopted-directory-rules",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@27a7d7556b85eda0aebd44c8c4cce9b773604093"
+    },
+    {
+      "id": "inspected-docs-build-inputs",
+      "validated": true,
+      "evidence_ref": "repo:.github/workflows/docs-build.yml@27a7d7556b85eda0aebd44c8c4cce9b773604093"
+    },
+    {
+      "id": "inspected-control-plane-inputs",
+      "validated": true,
+      "evidence_ref": "repo:tests/policy/test_control_plane_register_meta_contract.py@27a7d7556b85eda0aebd44c8c4cce9b773604093"
+    },
+    {
+      "id": "branch-first-delivery-boundary",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-09-07T00:40:01Z",
+  "emitter": "ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Branch candidate: restore documentation-workflow input closure and remove only docs-build blanket Markdown triggers. docs-build still watches docs/, generator/configuration inputs, preview artifacts, and deployment-workflow readiness markers. The control-plane profile also watches declared packaging, schema-support, and pytest-configuration inputs; watched paths are not assertions of existence or activation. For an examples/viewer_styles/README.md-only change, the proposed docs-build profile excludes one workflow with two held jobs; actual hosted savings are not measured. Comments and the executable test docstring document the behavior change; no separate authority document is created. The receipt excludes itself from hashes. Model revision and generation parameters are not exposed; the prompt hash covers the direct user request only. No formal PolicyDecision record was consulted or invented. Human review remains pending. Revert the bounded commit to restore the previous filters and remove the new profile; do not change topology baselines, protections, deployment history, or publication state."
+}

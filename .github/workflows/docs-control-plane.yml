@@ -8,6 +8,8 @@
 #   the checked revision.
 # - It does not make register entries authoritative, resolve contradictions,
 #   approve policy, change release state, promote lifecycle artifacts, or publish.
+# Trigger boundary: include locked installs, declared packaging inputs, pytest
+# configuration, and schema-profile support. These watches grant no authority.
 name: docs-control-plane
 
 on:
@@ -15,22 +17,56 @@ on:
     paths:
       - "control_plane/**"
       - "docs/**"
+      - "schemas/contracts/v1/governance/object_family_register.schema.json"
       - "pyproject.toml"
+      - "README.md"
+      - "LICENSE"
+      - "src/kfm/**"
+      - "conftest.py"
+      - "tests/conftest.py"
+      - "tests/policy/conftest.py"
+      - "tests/validators/conftest.py"
+      - "pytest.ini"
+      - "tox.ini"
+      - "setup.cfg"
       - "tools/ci/install_python_ci.py"
+      - "tools/ci/python-test.lock"
       - "tools/validators/validate_adr_index.py"
+      - "tools/validators/control_plane/validate_object_family_register.py"
       - "tests/policy/test_control_plane_register_meta_contract.py"
       - "tests/validators/test_validate_adr_index.py"
+      - "tests/validators/test_validate_object_family_register.py"
+      - "tests/validators/test_documentation_workflow_input_closure.py"
+      - ".github/workflows/docs-build.yml"
+      - ".github/workflows/object-family-register.yml"
       - ".github/workflows/docs-control-plane.yml"
   push:
     branches: [main]
     paths:
       - "control_plane/**"
       - "docs/**"
+      - "schemas/contracts/v1/governance/object_family_register.schema.json"
       - "pyproject.toml"
+      - "README.md"
+      - "LICENSE"
+      - "src/kfm/**"
+      - "conftest.py"
+      - "tests/conftest.py"
+      - "tests/policy/conftest.py"
+      - "tests/validators/conftest.py"
+      - "pytest.ini"
+      - "tox.ini"
+      - "setup.cfg"
       - "tools/ci/install_python_ci.py"
+      - "tools/ci/python-test.lock"
       - "tools/validators/validate_adr_index.py"
+      - "tools/validators/control_plane/validate_object_family_register.py"
       - "tests/policy/test_control_plane_register_meta_contract.py"
       - "tests/validators/test_validate_adr_index.py"
+      - "tests/validators/test_validate_object_family_register.py"
+      - "tests/validators/test_documentation_workflow_input_closure.py"
+      - ".github/workflows/docs-build.yml"
+      - ".github/workflows/object-family-register.yml"
       - ".github/workflows/docs-control-plane.yml"
   workflow_dispatch:
 
@@ -67,6 +103,9 @@ jobs:
 
       - name: Install pinned YAML parser
         run: python tools/ci/install_python_ci.py test-dependencies
+
+      - name: Test documentation workflow input closure
+        run: python -m unittest discover --start-directory tests/validators --pattern 'test_documentation_workflow_input_closure.py' --verbose
 
       - name: Parse every control-plane YAML file
         shell: bash
