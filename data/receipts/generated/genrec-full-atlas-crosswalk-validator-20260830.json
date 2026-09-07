@@ -201,6 +201,11 @@
       "gate": "hosted-workflow-propagation-head",
       "outcome": "PASS",
       "reason": "Exact implementation head d3da0ae432ce8e76835c39c2c6da32ebf43c1513 passed cross-lane run 34090331671 (79 tests and 19-artifact receipt integrity), Fauna–Habitat run 34090331550 (86 tests and 6-artifact receipt integrity), Soil–Agriculture run 34090331590 (85 tests), and Soil–Hydrology run 34090331624 (85 tests); contract-drift run 34090331789 also passed."
+    },
+    {
+      "gate": "hosted-canonical-authority-artifact-binding-head",
+      "outcome": "PASS",
+      "reason": "Exact implementation head 8b495c8aeede2ab40196eb62ec5188ee8ee59222 passed cross-lane run 34110982234 (20/20 fixtures, 83 tests, and 22-artifact receipt integrity), Fauna–Habitat run 34110982395 (20/20 generic plus 10/10 pair fixtures, 90 tests, and six-artifact pair receipt integrity), Soil–Agriculture run 34110982305 (20/20 generic plus 7/7 pair fixtures and 89 tests), Soil–Hydrology run 34110982405 (20/20 generic plus 7/7 pair fixtures and 89 tests), and contract-drift run 34110982329."
     }
   ]
 }
