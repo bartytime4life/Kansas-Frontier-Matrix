@@ -166,6 +166,33 @@ class DrinkingWaterAdvisoryTests(unittest.TestCase):
             },
         )
 
+    def test_not_modified_requires_current_record(self) -> None:
+        candidate = copy.deepcopy(self.valid["valid_active_not_modified"])
+        candidate["source_surface"]["snapshot_complete"] = False
+        candidate["source_surface"]["current_record_present"] = False
+        candidate = validator.assign_identity(candidate)
+
+        result = validator.validate_payload(candidate)
+
+        self.assertEqual(result.outcome, "DENY")
+        self.assertEqual(
+            {(finding.code, finding.path) for finding in result.findings},
+            {
+                (
+                    "CURRENT_RECORD_REQUIRED",
+                    "/source_surface/current_record_present",
+                ),
+                (
+                    "NOT_MODIFIED_CURRENT_REQUIRED",
+                    "/source_surface/current_record_present",
+                ),
+                (
+                    "SCHEMA_INVALID",
+                    "/source_surface/current_record_present",
+                ),
+            },
+        )
+
     def test_only_complete_snapshot_mode_can_claim_completeness(self) -> None:
         for source_mode in ("INCREMENTAL_FEED", "SINGLE_EVENT"):
             with self.subTest(source_mode=source_mode):
@@ -228,7 +255,10 @@ class DrinkingWaterAdvisoryTests(unittest.TestCase):
             ),
             (
                 "valid_active_not_modified",
-                {"current_record_present": False},
+                {
+                    "snapshot_complete": False,
+                    "current_record_present": False,
+                },
                 "/source_surface/current_record_present",
             ),
         )

@@ -494,7 +494,7 @@
         {"path": "/source_surface/current_record_present", "value": false}
       ],
       "expected_outcome": "DENY",
-      "expected_findings": ["CURRENT_RECORD_REQUIRED", "SCHEMA_INVALID", "SNAPSHOT_COMPLETENESS_UNVERIFIED", "SOURCE_ABSENCE_FALSE_CLEAR"]
+      "expected_findings": ["CURRENT_RECORD_REQUIRED", "NOT_MODIFIED_CURRENT_REQUIRED", "SCHEMA_INVALID", "SNAPSHOT_COMPLETENESS_UNVERIFIED", "SOURCE_ABSENCE_FALSE_CLEAR"]
     },
     {
       "name": "rescission_authority_unconfirmed",

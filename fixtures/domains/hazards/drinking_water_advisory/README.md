@@ -24,8 +24,9 @@ it; independently knowable issue, check, expiry, and rescission bounds remain
 enforced.
 An exact expiry cannot precede the source check while a record claims an
 `ISSUED`, `ACTIVE_CONFIRMED`, or `UPDATED` current status.
-`NOT_MODIFIED` is continuity evidence only when a previous record is present;
-otherwise validation denies the claim at `previous_record_present`.
+`NOT_MODIFIED` is continuity evidence only when both the previous and current
+records are present; validation denies either missing side at its record-presence
+field even when the carrier does not claim a complete snapshot.
 Only `COMPLETE_SNAPSHOT` source mode may assert `snapshot_complete=true`;
 incremental and single-event carriers fail at the completeness field instead
 of overstating absence-ready source coverage. A failed or conflicting source

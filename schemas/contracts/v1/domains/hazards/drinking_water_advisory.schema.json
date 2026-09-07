@@ -167,10 +167,9 @@
         {
           "if": {
             "properties": {
-              "snapshot_complete": {"const": true},
               "source_check_outcome": {"const": "NOT_MODIFIED"}
             },
-            "required": ["snapshot_complete", "source_check_outcome"]
+            "required": ["source_check_outcome"]
           },
           "then": {
             "properties": {
