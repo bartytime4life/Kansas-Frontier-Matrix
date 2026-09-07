@@ -451,7 +451,11 @@ function historyCombinationIsValid(
     return trustState.freshness === "STALE";
   }
   if (outcome === "ABSTAIN" && reasonCode === "HELD_EVIDENCE") {
-    return history.negativeOutcomes.some((item) => item.state === "HELD");
+    return (
+      trustState.review === "PENDING" &&
+      trustState.release === "UNRELEASED" &&
+      history.negativeOutcomes.some((item) => item.state === "HELD")
+    );
   }
   if (outcome === "ABSTAIN" && reasonCode === "WITHDRAWN_EVIDENCE") {
     return (

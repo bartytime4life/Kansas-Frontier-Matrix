@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import answerFixture from "../../../fixtures/ui/evidence_drawer_payload/valid/answer-corrected.json";
 import abstainFixture from "../../../fixtures/ui/evidence_drawer_payload/valid/abstain-stale.json";
 import revokedFixture from "../../../fixtures/ui/evidence_drawer_payload/valid/abstain-revoked.json";
+import heldFixture from "../../../fixtures/ui/evidence_drawer_payload/valid/abstain-source-drift-review.json";
 import supersededFixture from "../../../fixtures/ui/evidence_drawer_payload/valid/abstain-superseded.json";
 import denyFixture from "../../../fixtures/ui/evidence_drawer_payload/valid/deny-sensitive.json";
 import errorFixture from "../../../fixtures/ui/evidence_drawer_payload/valid/error-upstream.json";
@@ -115,6 +116,39 @@ describe("Explorer Evidence Drawer governed projection", () => {
       expect(result.citations).toEqual([]);
       expect(result.historyLabels).toEqual([]);
       expect(JSON.stringify(result)).not.toContain("kfm:evidence:synthetic:revoked-001");
+    },
+  );
+
+  it.each([
+    ["review", "REVIEWED"],
+    ["release", "RELEASED"],
+  ] as const)(
+    "fails closed when held evidence declares %s=%s",
+    (field, value) => {
+      expect(resolveEvidenceDrawer(heldFixture)).toMatchObject({
+        outcome: "ABSTAIN",
+        code: "HELD_EVIDENCE",
+      });
+
+      const contradictoryHeldState = {
+        ...heldFixture,
+        trust_state: {
+          ...heldFixture.trust_state,
+          [field]: value,
+        },
+      };
+      const result = resolveEvidenceDrawer(contradictoryHeldState);
+
+      expect(result).toMatchObject({
+        outcome: "ERROR",
+        code: "INVALID_PAYLOAD",
+      });
+      expect(result.evidenceRefs).toEqual([]);
+      expect(result.citations).toEqual([]);
+      expect(result.historyLabels).toEqual([]);
+      expect(JSON.stringify(result)).not.toContain(
+        "kfm:evidence:synthetic:source-drift-held-001",
+      );
     },
   );
 

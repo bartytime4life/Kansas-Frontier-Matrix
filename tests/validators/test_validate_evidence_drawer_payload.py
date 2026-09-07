@@ -120,6 +120,25 @@ class EvidenceDrawerPayloadValidatorTests(unittest.TestCase):
                     {item.code for item in findings},
                 )
 
+    def test_held_abstention_requires_pending_unreleased_state(self) -> None:
+        source = json.loads(
+            (
+                MODULE.FIXTURES_ROOT
+                / "valid/abstain-source-drift-review.json"
+            ).read_text(encoding="utf-8")
+        )
+        self.assertEqual([], MODULE._semantic_findings(source))
+
+        for field, value in (("review", "REVIEWED"), ("release", "RELEASED")):
+            with self.subTest(field=field):
+                payload = json.loads(json.dumps(source))
+                payload["trust_state"][field] = value
+                findings = MODULE._semantic_findings(payload)
+                self.assertEqual(
+                    {"HELD_STATE_INVALID"},
+                    {item.code for item in findings},
+                )
+
     def test_negative_state_reason_must_match(self) -> None:
         findings = MODULE.validate_payload(
             MODULE.FIXTURES_ROOT / "invalid/negative-state-reason-mismatch.json"

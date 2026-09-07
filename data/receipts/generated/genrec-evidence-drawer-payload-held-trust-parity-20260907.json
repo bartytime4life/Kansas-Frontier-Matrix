@@ -1,0 +1,125 @@
+{
+  "receipt_id": "genrec-evidence-drawer-payload-held-trust-parity-20260907",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/evidence-drawer-payload.yml",
+    "apps/explorer-web/src/adapters/GovernedClient.ts",
+    "apps/explorer-web/tests/evidence-drawer.test.ts",
+    "contracts/ui/evidence_drawer_payload.md",
+    "fixtures/ui/evidence_drawer_payload/invalid/abstain-held-with-released-state.expected_code.txt",
+    "fixtures/ui/evidence_drawer_payload/invalid/abstain-held-with-released-state.json",
+    "fixtures/ui/evidence_drawer_payload/valid/abstain-source-drift-review.json",
+    "tests/validators/test_validate_evidence_drawer_payload.py",
+    "tools/validators/ui/validate_evidence_drawer_payload.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/evidence-drawer-payload.yml": "sha256:cac838a8f42be6c53e1b9b40051a8e1b241b95d6a05946be6b8a625adbeeb9fb",
+    "apps/explorer-web/src/adapters/GovernedClient.ts": "sha256:aa568e4bbe13722cd616d41fd059f62985f7fad09d15e8f5c3daeec719dfdbaa",
+    "apps/explorer-web/tests/evidence-drawer.test.ts": "sha256:7db7684fb49f767d8eaafb5de227b5f46c9719008d090ca598925aca94aa69b2",
+    "contracts/ui/evidence_drawer_payload.md": "sha256:4d951364652b18ce76083eaef4e6d8902b71e56517342a3525d6bacaeab7ca50",
+    "fixtures/ui/evidence_drawer_payload/invalid/abstain-held-with-released-state.expected_code.txt": "sha256:28e87cd8a49246eb1d87a8b9b4413e3af4cc528300a587789b642bdd6e5b00ba",
+    "fixtures/ui/evidence_drawer_payload/invalid/abstain-held-with-released-state.json": "sha256:639899491ec417719cc1f5a3534b5f98acadf1c3012e1619c72514d06cf23802",
+    "fixtures/ui/evidence_drawer_payload/valid/abstain-source-drift-review.json": "sha256:8c8afcbe451932721865bf1fe4004c574293918f29aca683377c8fc8c080ec5d",
+    "tests/validators/test_validate_evidence_drawer_payload.py": "sha256:49ec53bd59b45648ea1232aec661d3cee78df240f8962d07005372e402daba19",
+    "tools/validators/ui/validate_evidence_drawer_payload.py": "sha256:fff1996555bc4b01019da784a8df33b195365b322640a7078142954ee22d2af6"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-09-07"
+  },
+  "prompt_or_contract": "sha256:4d951364652b18ce76083eaef4e6d8902b71e56517342a3525d6bacaeab7ca50",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "TypeScript 7.0.2",
+      "Node.js 24.19.0 local compatibility run",
+      "Python 3 no-network validator"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [],
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:main@27a7d7556b85eda0aebd44c8c4cce9b773604093",
+      "receipt:genrec-evidence-drawer-payload-derived-disclosure-20260902",
+      "fixture:ui/evidence-drawer-payload/valid/abstain-source-drift-review"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/evidence-drawer-payload.yml": "PROPOSED",
+    "apps/explorer-web/src/adapters/GovernedClient.ts": "PROPOSED",
+    "apps/explorer-web/tests/evidence-drawer.test.ts": "PROPOSED",
+    "contracts/ui/evidence_drawer_payload.md": "PROPOSED",
+    "fixtures/ui/evidence_drawer_payload/invalid/abstain-held-with-released-state.expected_code.txt": "PROPOSED",
+    "fixtures/ui/evidence_drawer_payload/invalid/abstain-held-with-released-state.json": "PROPOSED",
+    "fixtures/ui/evidence_drawer_payload/valid/abstain-source-drift-review.json": "PROPOSED",
+    "tests/validators/test_validate_evidence_drawer_payload.py": "PROPOSED",
+    "tools/validators/ui/validate_evidence_drawer_payload.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "candidate-artifact-hash-closure",
+      "outcome": "PASS",
+      "reason": "Nine public-safe workflow, contract, implementation, fixture, and test artifacts are SHA-256 bound."
+    },
+    {
+      "gate": "canonical-payload-validator",
+      "outcome": "PASS",
+      "reason": "Twelve valid and twelve expected-failure fixtures plus sixteen focused validator tests passed without network access."
+    },
+    {
+      "gate": "explorer-projection",
+      "outcome": "PASS",
+      "reason": "Twenty focused Evidence Drawer tests and all 463 Explorer unit tests passed; TypeScript and the Vite production build passed."
+    },
+    {
+      "gate": "hosted-exact-head",
+      "outcome": "SKIPPED",
+      "reason": "Exact-head GitHub Actions evidence remains pending on the draft pull request."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Accountable human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "repo:prior-evidence-drawer-authoring-receipt",
+      "validated": true,
+      "evidence_ref": "data/receipts/generated/genrec-evidence-drawer-payload-derived-disclosure-20260902.json"
+    },
+    {
+      "id": "repo:held-positive-fixture",
+      "validated": true,
+      "evidence_ref": "fixtures/ui/evidence_drawer_payload/valid/abstain-source-drift-review.json"
+    },
+    {
+      "id": "repo:held-negative-fixture",
+      "validated": true,
+      "evidence_ref": "fixtures/ui/evidence_drawer_payload/invalid/abstain-held-with-released-state.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-07T03:18:49Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Successor authoring provenance for held-evidence trust-label parity. This receipt binds synthetic public-safe candidate bytes only; it is not evidence, policy approval, human review, merge authority, release authority, deployment authority, publication authority, or public-use permission."
+}

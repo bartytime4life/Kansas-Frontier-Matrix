@@ -84,10 +84,17 @@ jobs:
             --repo-root . \
             --artifact-git-ref 1cc7b74e9c924437f7bb1a26db8f73cc34559715
 
-      - name: Validate current generated authoring receipt integrity
+      - name: Replay prior generated authoring receipt against current-main baseline
         run: |
           python tools/validators/validate_generated_receipt.py \
             data/receipts/generated/genrec-evidence-drawer-payload-derived-disclosure-20260902.json \
+            --repo-root . \
+            --artifact-git-ref 27a7d7556b85eda0aebd44c8c4cce9b773604093
+
+      - name: Validate current held trust parity authoring receipt integrity
+        run: |
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-evidence-drawer-payload-held-trust-parity-20260907.json \
             --repo-root .
 
       - name: Record trust boundary
