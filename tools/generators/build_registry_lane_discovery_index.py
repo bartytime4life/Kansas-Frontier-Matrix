@@ -52,9 +52,7 @@ def build_registry_lane_discovery_index(registry_root: Path) -> dict[str, Any]:
         raise RegistryDiscoveryError("registry root parent must not be a symlink")
     registry_root = registry_root.resolve()
     if not registry_root.is_dir():
-        raise RegistryDiscoveryError(
-            f"registry root is not a directory: {registry_root}"
-        )
+        raise RegistryDiscoveryError("registry root is not a directory")
 
     lanes = []
     for entry in sorted(registry_root.iterdir(), key=lambda item: item.name):
@@ -130,13 +128,18 @@ def main(argv: list[str] | None = None) -> int:
         else:
             _write_output(args.output, output)
     except (OSError, RegistryDiscoveryError) as exc:
+        error = (
+            str(exc)
+            if isinstance(exc, RegistryDiscoveryError)
+            else "registry discovery I/O failed"
+        )
         print(
             json.dumps(
                 {
                     "profile": PROFILE,
                     "outcome": "ERROR",
                     "authority_created": False,
-                    "error": str(exc),
+                    "error": error,
                 },
                 sort_keys=True,
                 separators=(",", ":"),

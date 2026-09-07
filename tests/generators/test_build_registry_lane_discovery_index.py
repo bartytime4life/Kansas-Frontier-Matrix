@@ -1,12 +1,15 @@
 from __future__ import annotations
 
 import importlib.util
+import io
 import json
 import subprocess
 import sys
 import tempfile
 import unittest
+from contextlib import redirect_stdout
 from pathlib import Path
+from unittest import mock
 
 GENERATOR_PATH = (
     Path(__file__).resolve().parents[2]
@@ -543,8 +546,51 @@ class RegistryLaneDiscoveryIndexTests(unittest.TestCase):
         tempdir = tempfile.TemporaryDirectory()
         self.addCleanup(tempdir.cleanup)
         missing = Path(tempdir.name) / "data" / "registry"
-        with self.assertRaisesRegex(RegistryDiscoveryError, "not a directory"):
+        with self.assertRaisesRegex(
+            RegistryDiscoveryError, "^registry root is not a directory$"
+        ):
             build_registry_lane_discovery_index(missing)
+
+    def test_cli_missing_registry_root_does_not_expose_caller_path(self) -> None:
+        tempdir = tempfile.TemporaryDirectory()
+        self.addCleanup(tempdir.cleanup)
+        missing = Path(tempdir.name) / "sensitive-caller-path" / "registry"
+
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(GENERATOR_PATH),
+                "--registry-root",
+                str(missing),
+            ],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+
+        self.assertEqual(2, result.returncode)
+        self.assertEqual("", result.stderr)
+        self.assertEqual(
+            "registry root is not a directory",
+            json.loads(result.stdout)["error"],
+        )
+        self.assertNotIn(str(missing), result.stdout)
+
+    def test_cli_unexpected_os_error_does_not_expose_details(self) -> None:
+        stdout = io.StringIO()
+        leaked_detail = "/private/caller/location"
+
+        with mock.patch.object(
+            _MODULE,
+            "build_registry_lane_discovery_index",
+            side_effect=OSError(f"permission denied: {leaked_detail}"),
+        ), redirect_stdout(stdout):
+            returncode = _MODULE.main(["--registry-root", "registry"])
+
+        self.assertEqual(2, returncode)
+        payload = json.loads(stdout.getvalue())
+        self.assertEqual("registry discovery I/O failed", payload["error"])
+        self.assertNotIn(leaked_detail, stdout.getvalue())
 
     def test_render_is_deterministic(self) -> None:
         tempdir, root = self._fixture(
