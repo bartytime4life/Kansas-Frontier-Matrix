@@ -45,6 +45,10 @@ SCHEMA_PATH = (
 FIXTURE_ROOT = ROOT / "fixtures" / "domains" / "fauna" / "occurrence_evidence"
 MANIFEST_PATH = FIXTURE_ROOT / "expected_findings_manifest.json"
 SCOPE = "fauna-occurrence-evidence-draft-v1"
+FIXTURE_AUTHORITY_BOUNDARY = (
+    "Fixture replay proves deterministic schema and semantic findings only; "
+    "it does not admit, release, or publish fauna data."
+)
 MAX_SCHEMA_FINDINGS = 100
 MAX_FIXTURE_CASES = 64
 MAX_EXPECTED_FINDINGS = 100
@@ -498,10 +502,8 @@ def validate_fixture_manifest() -> ValidationResult:
         return ValidationResult((Finding("schema.fixture_manifest_invalid", "/"),))
     if not isinstance(manifest, Mapping) or set(manifest) != MANIFEST_KEYS:
         return ValidationResult((Finding("schema.fixture_manifest_invalid", "/"),))
-    authority_boundary = manifest.get("authority_boundary")
     if (
-        not isinstance(authority_boundary, str)
-        or not authority_boundary.strip()
+        manifest.get("authority_boundary") != FIXTURE_AUTHORITY_BOUNDARY
         or manifest.get("schema_version") != "1.0.0"
         or manifest.get("scope") != SCOPE
     ):

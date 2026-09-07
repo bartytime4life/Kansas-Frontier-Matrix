@@ -120,7 +120,7 @@ class OccurrenceEvidenceTests(unittest.TestCase):
 
     def test_manifest_rejects_non_regular_candidate_before_read(self) -> None:
         manifest = {
-            "authority_boundary": "Synthetic test manifest only.",
+            "authority_boundary": validator.FIXTURE_AUTHORITY_BOUNDARY,
             "cases": [
                 {
                     "path": "valid/case.json",
@@ -168,6 +168,17 @@ class OccurrenceEvidenceTests(unittest.TestCase):
         variants.append(
             (
                 wrong_scope,
+                validator.Finding("schema.fixture_manifest_invalid", "/"),
+            )
+        )
+
+        false_authority = copy.deepcopy(manifest)
+        false_authority["authority_boundary"] = (
+            "Fixture replay approves admission, release, and publication."
+        )
+        variants.append(
+            (
+                false_authority,
                 validator.Finding("schema.fixture_manifest_invalid", "/"),
             )
         )
