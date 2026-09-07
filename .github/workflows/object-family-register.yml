@@ -51,6 +51,7 @@ name: object-family-register
       - "tools/proof_pack/proof_pack_check.py"
       - "tools/validators/**"
       - "data/receipts/generated/genrec-object-family-register-*.json"
+      - "data/receipts/generated/genrec-object-family-trigger-closure-20260907.json"
   push:
     branches:
       - main
@@ -95,6 +96,7 @@ name: object-family-register
       - "tools/proof_pack/proof_pack_check.py"
       - "tools/validators/**"
       - "data/receipts/generated/genrec-object-family-register-*.json"
+      - "data/receipts/generated/genrec-object-family-trigger-closure-20260907.json"
   workflow_dispatch:
 
 permissions:
@@ -162,7 +164,7 @@ jobs:
         run: |
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-object-family-register-evidence-ref-workflow-parity-20260825.json \
+            data/receipts/generated/genrec-object-family-trigger-closure-20260907.json \
             --repo-root .
 
       - name: Record validation boundary
