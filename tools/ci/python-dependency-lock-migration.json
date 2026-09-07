@@ -845,7 +845,9 @@
       "profiles": [
         "project-test"
       ],
-      "superseded_receipt_sha256s": []
+      "superseded_receipt_sha256s": [
+        "sha256:e3b1ae18c526925f84ab3179ac318c055d47eea98c77f6867182026456e2c771"
+      ]
     },
     {
       "path": ".github/workflows/domain-atmosphere.yml",

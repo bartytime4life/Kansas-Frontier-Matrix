@@ -500,7 +500,7 @@
     ".github/workflows/docs-document-graph.yml": "sha256:4847eafef90fa75cd1b19f298ee769e43e49b38ffa94d500bc21ab369852bf48",
     ".github/workflows/docs-meta-block.yml": "sha256:6c71bdc5df73fa056b97bc2d76c2c573c71cebf0b0e335c98295717012595da8",
     ".github/workflows/docs-stale-scan.yml": "sha256:df56457565e31e68f002f974eac3d8982a04d1cc3647d1c55384452dffc7cc74",
-    ".github/workflows/domain-archaeology.yml": "sha256:996b8d7dae838ac580f8392317b89ec01422903fd40be4c82851cce012ab16dc",
+    ".github/workflows/domain-archaeology.yml": "sha256:e3b1ae18c526925f84ab3179ac318c055d47eea98c77f6867182026456e2c771",
     ".github/workflows/domain-atmosphere.yml": "sha256:c980026191234c255519c96d79f0012f572fe9b915c8b7621215d295be4dbacb",
     ".github/workflows/domain-context-map-assessment.yml": "sha256:532d1551d2e82dab728eb250334c1a90c2739c93c776c607971b5cc2cc63571f",
     ".github/workflows/domain-geology.yml": "sha256:482856d8e161d67eeddb4e8a4ee9ce27740ebbeca1bb70670788610ad8143431",
@@ -811,9 +811,9 @@
     "tools/ci/README.md": "sha256:8622263ce178926ef4dec664c773bf68431db94810c6d1410a37bc0cdbc23876",
     "tools/ci/install_python_ci.py": "sha256:274b8d80f64fcae6f2af30f47c1f2afffd689292bb147597df68561ab31b3f74",
     "tools/ci/python-audit.lock": "sha256:347745e591a7d8917c342242ff11f80fe9f7d8dd19e96ce9065bc98aa9da5baa",
-    "tools/ci/python-dependency-lock-migration.json": "sha256:491ed1252103db4ecc798411e788ba9c2de1fb9ddd155a610ce17a636acb5deb",
+    "tools/ci/python-dependency-lock-migration.json": "sha256:867bd2bb21c0f32c692942df958cb64beecf68b0c858a5fa5c89f167660c9092",
     "tools/ci/python-test.lock": "sha256:0b6a75d22d8a37fce550794ffaf314a9b75f4f0e6de0bc7e94ca6ae9bda67ef8",
-    "tools/validators/validate_generated_receipt.py": "sha256:2c9c98788ba9b29fce0155b4f96a92c821d58771d1c0fbb9f13b084651062362"
+    "tools/validators/validate_generated_receipt.py": "sha256:a62fc30dc8f060ad2d0357365c8d8c8b4a5ff2d754c07d94f9e33d9fac581d12"
   },
   "model_identity": {
     "provider": "OpenAI",
