@@ -442,7 +442,13 @@ def outcome_for_findings(findings: Sequence[Finding]) -> str:
 
 
 def validate_file(path: Path | str) -> ValidationResult:
-    findings = tuple(validate_fixture_file(path, validate_candidate))
+    findings = tuple(
+        validate_fixture_file(
+            path,
+            validate_candidate,
+            preserve_negative_zero_int=True,
+        )
+    )
     return ValidationResult(outcome_for_findings(findings), findings)
 
 

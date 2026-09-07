@@ -237,6 +237,42 @@ class AtmosphereObservedModeledSeparationTests(unittest.TestCase):
         reordered = dict(reversed(list(copy.deepcopy(candidate).items())))
         self.assertEqual(validate_candidate(reordered), expected)
 
+    def test_file_parser_rejects_all_negative_zero_lexemes(self) -> None:
+        fixtures = (
+            "air_observation_bound.json",
+            "forecast_context_bound.json",
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            for name in fixtures:
+                candidate = _load(VALID_DIR / name)
+                candidate["measurement"]["value"] = "__NUMBER__"  # type: ignore[index]
+                template = json.dumps(candidate)
+                self.assertEqual(template.count('"__NUMBER__"'), 1)
+
+                for raw_value in ("-0", "-0.0", "-0e0"):
+                    with self.subTest(name=name, raw_value=raw_value):
+                        path = Path(directory) / f"{name}-{raw_value}.json"
+                        path.write_text(
+                            template.replace('"__NUMBER__"', raw_value),
+                            encoding="utf-8",
+                        )
+                        self.assertEqual(
+                            validate_file(path),
+                            ValidationResult(
+                                "DENY",
+                                (Finding("MEASUREMENT_NEGATIVE_ZERO", "$.measurement.value"),),
+                            ),
+                        )
+
+                for raw_value in ("0", "0.0", "0e0"):
+                    with self.subTest(name=name, raw_value=raw_value):
+                        path = Path(directory) / f"{name}-positive-{raw_value}.json"
+                        path.write_text(
+                            template.replace('"__NUMBER__"', raw_value),
+                            encoding="utf-8",
+                        )
+                        self.assertEqual(validate_file(path), ValidationResult("PASS", ()))
+
     def test_parser_rejects_duplicate_nonfinite_and_nonobject_json(self) -> None:
         cases = (
             b'{"object_type":"AirObservation","object_type":"ForecastContext"}',

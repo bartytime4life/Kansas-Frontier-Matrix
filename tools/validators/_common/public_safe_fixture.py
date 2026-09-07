@@ -69,6 +69,13 @@ def _parse_bounded_int(raw_value: str) -> int:
     return int(raw_value)
 
 
+def _parse_bounded_int_preserving_negative_zero(raw_value: str) -> int | float:
+    """Retain the sign of JSON integer -0 for opt-in semantic validators."""
+
+    value = _parse_bounded_int(raw_value)
+    return -0.0 if raw_value == "-0" else value
+
+
 def _parse_finite_float(raw_value: str) -> float:
     value = float(raw_value)
     if not math.isfinite(value):
@@ -125,7 +132,12 @@ def _read_bounded_regular_file(path: Path) -> bytes:
             os.close(descriptor)
 
 
-def validate_fixture_file(path: Path | str, validator: Validator) -> list[Finding]:
+def validate_fixture_file(
+    path: Path | str,
+    validator: Validator,
+    *,
+    preserve_negative_zero_int: bool = False,
+) -> list[Finding]:
     """Decode bounded, duplicate-free UTF-8 JSON and apply one domain profile."""
 
     fixture_path = Path(path)
@@ -135,7 +147,11 @@ def validate_fixture_file(path: Path | str, validator: Validator) -> list[Findin
             return [Finding("FIXTURE_TOO_LARGE", "$")]
         candidate = json.loads(
             raw_bytes.decode("utf-8"),
-            parse_int=_parse_bounded_int,
+            parse_int=(
+                _parse_bounded_int_preserving_negative_zero
+                if preserve_negative_zero_int
+                else _parse_bounded_int
+            ),
             parse_float=_parse_finite_float,
             parse_constant=_reject_json_constant,
             object_pairs_hook=_reject_duplicate_keys,
