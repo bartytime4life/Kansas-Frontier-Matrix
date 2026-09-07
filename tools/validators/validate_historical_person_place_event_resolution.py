@@ -66,6 +66,10 @@ class InputTooLargeError(OSError):
     pass
 
 
+class FixtureInventoryError(OSError):
+    pass
+
+
 def _reject_duplicate_keys(pairs: list[tuple[str, object]]) -> dict[str, object]:
     result: dict[str, object] = {}
     for key, value in pairs:
@@ -95,31 +99,36 @@ def candidate_spec_hash(candidate: Mapping[str, Any]) -> str:
     return "sha256:" + hashlib.sha256(canonical_json_bytes(payload)).hexdigest()
 
 
-def _open_bounded_regular_file(path: Path, *, max_bytes: int = MAX_JSON_BYTES) -> bytes:
-    """Read a regular file while holding no-follow descriptors for its parents."""
+def _directory_flags() -> int:
+    flags = os.O_RDONLY
+    for flag_name in ("O_CLOEXEC", "O_DIRECTORY", "O_NOFOLLOW"):
+        flags |= getattr(os, flag_name, 0)
+    return flags
+
+
+def _file_flags() -> int:
+    flags = os.O_RDONLY
+    for flag_name in ("O_BINARY", "O_CLOEXEC", "O_NONBLOCK", "O_NOFOLLOW"):
+        flags |= getattr(os, flag_name, 0)
+    return flags
+
+
+def _open_secure_directory(path: Path) -> int:
     if not SUPPORTS_SECURE_DIR_FD:
         raise InputNotRegularFileError
 
     absolute_path = path.absolute()
     parts = absolute_path.parts
-    if len(parts) < 2 or ".." in parts:
+    if not parts or ".." in parts:
         raise InputNotRegularFileError
 
-    directory_flags = os.O_RDONLY
-    for flag_name in ("O_CLOEXEC", "O_DIRECTORY", "O_NOFOLLOW"):
-        directory_flags |= getattr(os, flag_name, 0)
-    file_flags = os.O_RDONLY
-    for flag_name in ("O_BINARY", "O_CLOEXEC", "O_NONBLOCK", "O_NOFOLLOW"):
-        file_flags |= getattr(os, flag_name, 0)
-
-    directory_descriptor = os.open(parts[0], directory_flags)
-    descriptor = -1
+    directory_descriptor = os.open(parts[0], _directory_flags())
     try:
-        for component in parts[1:-1]:
+        for component in parts[1:]:
             try:
                 child_descriptor = os.open(
                     component,
-                    directory_flags,
+                    _directory_flags(),
                     dir_fd=directory_descriptor,
                 )
             except OSError as error:
@@ -128,11 +137,27 @@ def _open_bounded_regular_file(path: Path, *, max_bytes: int = MAX_JSON_BYTES) -
                 raise
             os.close(directory_descriptor)
             directory_descriptor = child_descriptor
+        return directory_descriptor
+    except BaseException:
+        os.close(directory_descriptor)
+        raise
 
+
+def _open_bounded_regular_at(
+    directory_descriptor: int,
+    name: str,
+    *,
+    max_bytes: int = MAX_JSON_BYTES,
+) -> bytes:
+    if not SUPPORTS_SECURE_DIR_FD or name in {"", ".", ".."} or os.sep in name:
+        raise InputNotRegularFileError
+
+    descriptor = -1
+    try:
         try:
             descriptor = os.open(
-                parts[-1],
-                file_flags,
+                name,
+                _file_flags(),
                 dir_fd=directory_descriptor,
             )
         except OSError as error:
@@ -155,12 +180,24 @@ def _open_bounded_regular_file(path: Path, *, max_bytes: int = MAX_JSON_BYTES) -
     finally:
         if descriptor >= 0:
             os.close(descriptor)
+
+
+def _open_bounded_regular_file(path: Path, *, max_bytes: int = MAX_JSON_BYTES) -> bytes:
+    """Read a regular file while holding no-follow descriptors for its parents."""
+    absolute_path = path.absolute()
+    parts = absolute_path.parts
+    if len(parts) < 2 or ".." in parts:
+        raise InputNotRegularFileError
+
+    directory_descriptor = _open_secure_directory(Path(*parts[:-1]))
+    try:
+        return _open_bounded_regular_at(directory_descriptor, parts[-1], max_bytes=max_bytes)
+    finally:
         os.close(directory_descriptor)
 
 
-def load_candidate(path: Path) -> tuple[dict[str, Any] | None, list[Finding]]:
+def _load_candidate_payload(payload: bytes) -> tuple[dict[str, Any] | None, list[Finding]]:
     try:
-        payload = _open_bounded_regular_file(path)
         value = json.loads(
             payload.decode("utf-8"),
             object_pairs_hook=_reject_duplicate_keys,
@@ -173,15 +210,23 @@ def load_candidate(path: Path) -> tuple[dict[str, Any] | None, list[Finding]]:
         return None, [Finding("JSON_DUPLICATE_KEY", "$")]
     except NonFiniteNumberError:
         return None, [Finding("JSON_NONFINITE_NUMBER", "$")]
+    except (UnicodeError, RecursionError, ValueError):
+        return None, [Finding("INPUT_UNREADABLE", "$")]
+    if not isinstance(value, dict):
+        return None, [Finding("CANDIDATE_NOT_OBJECT", "$")]
+    return value, []
+
+
+def load_candidate(path: Path) -> tuple[dict[str, Any] | None, list[Finding]]:
+    try:
+        payload = _open_bounded_regular_file(path)
     except InputNotRegularFileError:
         return None, [Finding("INPUT_NOT_REGULAR_FILE", "$")]
     except InputTooLargeError:
         return None, [Finding("INPUT_TOO_LARGE", "$")]
     except (OSError, UnicodeError, RecursionError, ValueError):
         return None, [Finding("INPUT_UNREADABLE", "$")]
-    if not isinstance(value, dict):
-        return None, [Finding("CANDIDATE_NOT_OBJECT", "$")]
-    return value, []
+    return _load_candidate_payload(payload)
 
 
 def _pointer(parts: Iterable[object]) -> str:
@@ -381,35 +426,88 @@ def _expected_code(path: Path) -> str | None:
     return lines[0] if len(lines) == 1 else None
 
 
-def run_fixtures(root: Path = FIXTURE_ROOT) -> int:
+def _fixture_lane_inventory(directory_descriptor: int) -> list[str]:
     try:
-        if root.is_symlink() or any(path.is_symlink() for path in root.rglob("*")):
-            print("HISTORICAL_RESOLUTION_FIXTURES_ERROR symlinked fixture paths denied")
-            return 2
+        names = os.listdir(directory_descriptor)
+        for name in names:
+            metadata = os.stat(name, dir_fd=directory_descriptor, follow_symlinks=False)
+            if not stat.S_ISREG(metadata.st_mode):
+                raise FixtureInventoryError
+        return sorted(name for name in names if name.endswith(".json"))
+    except (OSError, TypeError, ValueError) as error:
+        raise FixtureInventoryError from error
+
+
+def _validate_fixture_at(directory_descriptor: int, name: str) -> list[Finding]:
+    try:
+        payload = _open_bounded_regular_at(directory_descriptor, name)
+    except InputNotRegularFileError:
+        return [Finding("INPUT_NOT_REGULAR_FILE", "$")]
+    except InputTooLargeError:
+        return [Finding("INPUT_TOO_LARGE", "$")]
     except OSError:
+        return [Finding("INPUT_UNREADABLE", "$")]
+    candidate, findings = _load_candidate_payload(payload)
+    if candidate is None:
+        return findings
+    return validate_candidate(candidate)
+
+
+def _expected_code_at(directory_descriptor: int, candidate_name: str) -> str | None:
+    sidecar_name = Path(candidate_name).with_suffix(".expected_error.txt").name
+    try:
+        payload = _open_bounded_regular_at(directory_descriptor, sidecar_name, max_bytes=256)
+        lines = [line.strip() for line in payload.decode("utf-8").splitlines() if line.strip()]
+    except (OSError, UnicodeError):
+        return None
+    return lines[0] if len(lines) == 1 else None
+
+
+def run_fixtures(root: Path = FIXTURE_ROOT) -> int:
+    root_descriptor = valid_descriptor = invalid_descriptor = -1
+    try:
+        root_descriptor = _open_secure_directory(root)
+        root_names = os.listdir(root_descriptor)
+        for name in root_names:
+            metadata = os.stat(name, dir_fd=root_descriptor, follow_symlinks=False)
+            if name in {"valid", "invalid"}:
+                if not stat.S_ISDIR(metadata.st_mode):
+                    raise FixtureInventoryError
+            elif not stat.S_ISREG(metadata.st_mode):
+                raise FixtureInventoryError
+        valid_descriptor = os.open("valid", _directory_flags(), dir_fd=root_descriptor)
+        invalid_descriptor = os.open("invalid", _directory_flags(), dir_fd=root_descriptor)
+        valid_names = _fixture_lane_inventory(valid_descriptor)
+        invalid_names = _fixture_lane_inventory(invalid_descriptor)
+    except (OSError, FixtureInventoryError, InputNotRegularFileError):
+        for descriptor in (invalid_descriptor, valid_descriptor, root_descriptor):
+            if descriptor >= 0:
+                os.close(descriptor)
         print("HISTORICAL_RESOLUTION_FIXTURES_ERROR fixture inventory unreadable")
         return 2
-    valid_paths = sorted((root / "valid").glob("*.json"))
-    invalid_paths = sorted((root / "invalid").glob("*.json"))
-    failures: list[str] = []
-    if not valid_paths or not invalid_paths:
-        print("HISTORICAL_RESOLUTION_FIXTURES_ERROR nonempty valid and invalid lanes required")
-        return 2
-    for path in valid_paths:
-        _, findings = validate_file(path)
-        if findings:
-            failures.append(f"valid/{path.name}")
-    for path in invalid_paths:
-        _, findings = validate_file(path)
-        expected = _expected_code(path)
-        if expected is None or expected not in {finding.code for finding in findings}:
-            failures.append(f"invalid/{path.name}")
-    if failures:
-        for item in failures:
-            print(f"HISTORICAL_RESOLUTION_FIXTURE_POLARITY_FAIL file={item}")
-        return 1
-    print(f"HISTORICAL_RESOLUTION_FIXTURES_VALID valid={len(valid_paths)} invalid={len(invalid_paths)}")
-    return 0
+    try:
+        failures: list[str] = []
+        if not valid_names or not invalid_names:
+            print("HISTORICAL_RESOLUTION_FIXTURES_ERROR nonempty valid and invalid lanes required")
+            return 2
+        for name in valid_names:
+            if _validate_fixture_at(valid_descriptor, name):
+                failures.append(f"valid/{name}")
+        for name in invalid_names:
+            findings = _validate_fixture_at(invalid_descriptor, name)
+            expected = _expected_code_at(invalid_descriptor, name)
+            if expected is None or expected not in {finding.code for finding in findings}:
+                failures.append(f"invalid/{name}")
+        if failures:
+            for item in failures:
+                print(f"HISTORICAL_RESOLUTION_FIXTURE_POLARITY_FAIL file={item}")
+            return 1
+        print(f"HISTORICAL_RESOLUTION_FIXTURES_VALID valid={len(valid_names)} invalid={len(invalid_names)}")
+        return 0
+    finally:
+        for descriptor in (invalid_descriptor, valid_descriptor, root_descriptor):
+            if descriptor >= 0:
+                os.close(descriptor)
 
 
 def build_parser() -> argparse.ArgumentParser:

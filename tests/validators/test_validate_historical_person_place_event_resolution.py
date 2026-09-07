@@ -6,6 +6,7 @@ import copy
 import importlib.util
 import json
 import os
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -215,6 +216,37 @@ class HistoricalResolutionTests(unittest.TestCase):
                 (root / "valid").symlink_to(FIXTURE_ROOT / "valid", target_is_directory=True)
                 (root / "invalid").symlink_to(FIXTURE_ROOT / "invalid", target_is_directory=True)
                 self.assertEqual(module.run_fixtures(root), 2)
+
+    @unittest.skipUnless(os.open in os.supports_dir_fd, "requires directory-relative open")
+    def test_fixture_runner_root_swap_cannot_redirect_inventory_reads(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            parent = Path(directory)
+            root = parent / "fixtures"
+            shutil.copytree(FIXTURE_ROOT, root)
+            attacker = parent / "attacker"
+            shutil.copytree(FIXTURE_ROOT, attacker)
+            for path in (attacker / "valid").glob("*.json"):
+                path.write_text("{}", encoding="utf-8")
+            held_root = parent / "held-fixtures"
+            real_open = os.open
+            swapped = False
+
+            def swapping_open(path, flags, mode=0o600, *, dir_fd=None):
+                nonlocal swapped
+                del mode
+                if path == "conflict_hold.json" and dir_fd is not None and not swapped:
+                    root.rename(held_root)
+                    attacker.rename(root)
+                    swapped = True
+                if dir_fd is None:
+                    return real_open(path, flags)
+                return real_open(path, flags, dir_fd=dir_fd)
+
+            with mock.patch.object(module.os, "open", side_effect=swapping_open):
+                result = module.run_fixtures(root)
+
+        self.assertTrue(swapped)
+        self.assertEqual(result, 0)
 
     def test_cli_rejects_abbreviated_fixture_options(self) -> None:
         option = "--fixtures"
