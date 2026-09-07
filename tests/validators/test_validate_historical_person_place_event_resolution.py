@@ -277,6 +277,38 @@ class HistoricalResolutionTests(unittest.TestCase):
         self.assertTrue(swapped)
         self.assertEqual(result, 1)
 
+    @unittest.skipUnless(os.open in os.supports_dir_fd, "requires directory-relative open")
+    def test_fixture_runner_rejects_lane_replacement_after_root_inventory(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            parent = Path(directory)
+            root = parent / "fixtures"
+            shutil.copytree(FIXTURE_ROOT, root)
+            attacker_lane = parent / "attacker-valid"
+            shutil.copytree(FIXTURE_ROOT / "valid", attacker_lane)
+            replacement_payload = (FIXTURE_ROOT / "valid/high_anchor.json").read_bytes()
+            for path in attacker_lane.glob("*.json"):
+                path.write_bytes(replacement_payload)
+            held_lane = parent / "held-valid"
+            real_open = os.open
+            swapped = False
+
+            def swapping_open(path, flags, mode=0o600, *, dir_fd=None):
+                nonlocal swapped
+                del mode
+                if path == "valid" and dir_fd is not None and not swapped:
+                    (root / "valid").rename(held_lane)
+                    attacker_lane.rename(root / "valid")
+                    swapped = True
+                if dir_fd is None:
+                    return real_open(path, flags)
+                return real_open(path, flags, dir_fd=dir_fd)
+
+            with mock.patch.object(module.os, "open", side_effect=swapping_open):
+                result = module.run_fixtures(root)
+
+        self.assertTrue(swapped)
+        self.assertEqual(result, 2)
+
     def test_cli_rejects_abbreviated_fixture_options(self) -> None:
         option = "--fixtures"
         for stop in range(3, len(option)):

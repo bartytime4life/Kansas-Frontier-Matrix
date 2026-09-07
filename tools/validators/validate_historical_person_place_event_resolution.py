@@ -59,6 +59,12 @@ class FileIdentity:
     changed_ns: int
 
 
+@dataclass(frozen=True)
+class DirectoryIdentity:
+    device: int
+    inode: int
+
+
 class DuplicateKeyError(ValueError):
     pass
 
@@ -130,6 +136,10 @@ def _file_identity(metadata: os.stat_result) -> FileIdentity:
         modified_ns=metadata.st_mtime_ns,
         changed_ns=metadata.st_ctime_ns,
     )
+
+
+def _directory_identity(metadata: os.stat_result) -> DirectoryIdentity:
+    return DirectoryIdentity(device=metadata.st_dev, inode=metadata.st_ino)
 
 
 def _open_secure_directory(path: Path) -> int:
@@ -516,15 +526,23 @@ def run_fixtures(root: Path = FIXTURE_ROOT) -> int:
     try:
         root_descriptor = _open_secure_directory(root)
         root_names = os.listdir(root_descriptor)
+        lane_identities: dict[str, DirectoryIdentity] = {}
         for name in root_names:
             metadata = os.stat(name, dir_fd=root_descriptor, follow_symlinks=False)
             if name in {"valid", "invalid"}:
                 if not stat.S_ISDIR(metadata.st_mode):
                     raise FixtureInventoryError
+                lane_identities[name] = _directory_identity(metadata)
             elif not stat.S_ISREG(metadata.st_mode):
                 raise FixtureInventoryError
+        if set(lane_identities) != {"valid", "invalid"}:
+            raise FixtureInventoryError
         valid_descriptor = os.open("valid", _directory_flags(), dir_fd=root_descriptor)
+        if _directory_identity(os.fstat(valid_descriptor)) != lane_identities["valid"]:
+            raise FixtureInventoryError
         invalid_descriptor = os.open("invalid", _directory_flags(), dir_fd=root_descriptor)
+        if _directory_identity(os.fstat(invalid_descriptor)) != lane_identities["invalid"]:
+            raise FixtureInventoryError
         valid_inventory = _fixture_lane_inventory(valid_descriptor)
         invalid_inventory = _fixture_lane_inventory(invalid_descriptor)
         valid_names = sorted(name for name in valid_inventory if name.endswith(".json"))
