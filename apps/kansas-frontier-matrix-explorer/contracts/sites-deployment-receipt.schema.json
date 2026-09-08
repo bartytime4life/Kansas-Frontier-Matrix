@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kfm://schema/apps/kansas-frontier-matrix-explorer/sites-deployment-receipt/v1",
+  "title": "Sites deployment rehearsal and operator readback receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["profile", "schema_version", "mode", "outcome", "recorded_at", "site", "source", "checks", "rollback", "authority"],
+  "properties": {
+    "profile": { "const": "kfm.sites.deployment-receipt.v1" },
+    "schema_version": { "const": "1.0.0" },
+    "mode": { "enum": ["REPOSITORY_REHEARSAL", "OPERATOR_READBACK"] },
+    "outcome": { "enum": ["READY_FOR_OPERATOR", "HOLD", "DEPLOYED", "ROLLED_BACK", "ERROR"] },
+    "recorded_at": { "type": "string", "format": "date-time" },
+    "site": { "type": "object", "additionalProperties": false, "required": ["project_id", "slug", "public_url", "previous_version_id", "candidate_version_id", "final_version_id"], "properties": {
+      "project_id": { "const": "appgprj_6a870a079c1c8191abb7401ef092a181" },
+      "slug": { "const": "kansas-frontier-matrix-explorer" },
+      "public_url": { "const": "https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site" },
+      "previous_version_id": { "type": ["string", "null"] }, "candidate_version_id": { "type": ["string", "null"] }, "final_version_id": { "type": ["string", "null"] }
+    }},
+    "source": { "type": "object", "additionalProperties": false, "required": ["repository", "revision", "artifact_sha256"], "properties": {
+      "repository": { "const": "bartytime4life/Kansas-Frontier-Matrix" },
+      "revision": { "type": "string", "pattern": "^[0-9a-f]{40}$" }, "artifact_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+    }},
+    "checks": { "type": "object", "additionalProperties": false, "required": ["frozen_install", "build", "tests", "lint", "desktop_smoke", "mobile_smoke", "restricted_state"], "properties": {
+      "frozen_install": { "$ref": "#/$defs/check" }, "build": { "$ref": "#/$defs/check" }, "tests": { "$ref": "#/$defs/check" }, "lint": { "$ref": "#/$defs/check" }, "desktop_smoke": { "$ref": "#/$defs/check" }, "mobile_smoke": { "$ref": "#/$defs/check" }, "restricted_state": { "$ref": "#/$defs/check" }
+    }},
+    "rollback": { "type": "object", "additionalProperties": false, "required": ["target_version_id", "procedure", "rehearsal_outcome", "operator_restore_confirmed"], "properties": {
+      "target_version_id": { "type": ["string", "null"] }, "procedure": { "const": "Restore target_version_id through the existing Site version history, then re-run identity, access, desktop/mobile, restricted-state, and core-flow smoke checks." }, "rehearsal_outcome": { "enum": ["PASS", "FAIL", "NOT_RUN"] }, "operator_restore_confirmed": { "type": "boolean" }
+    }},
+    "authority": { "type": "object", "additionalProperties": false, "required": ["live_transition_performed", "second_site_created", "vercel_mutated", "release_authorized", "publication_authorized"], "properties": {
+      "live_transition_performed": { "type": "boolean" }, "second_site_created": { "const": false }, "vercel_mutated": { "const": false }, "release_authorized": { "const": false }, "publication_authorized": { "const": false }
+    }}
+  },
+  "$defs": { "check": { "type": "object", "additionalProperties": false, "required": ["outcome", "evidence"], "properties": { "outcome": { "enum": ["PASS", "FAIL", "NOT_RUN"] }, "evidence": { "type": "string", "minLength": 1 } } } }
+}

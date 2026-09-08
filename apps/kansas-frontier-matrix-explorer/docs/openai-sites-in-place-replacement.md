@@ -2,18 +2,18 @@
 doc_id: kfm://doc/apps/kansas-frontier-matrix-explorer/openai-sites-in-place-replacement
 title: OpenAI Sites In-Place Replacement Handoff
 type: app-local operational handoff
-version: v0.1.0
-status: READY_FOR_SITES_EXECUTION / HOLD_NO_SITES_MUTATION_SURFACE
+version: v0.2.0
+status: REPOSITORY_HANDOFF_ONLY / HOLD_NO_SITES_MUTATION_SURFACE
 owners:
   - "@bartytime4life — verified repository owner; intended Site-owner review route; Sites ownership and restore capability NEEDS VERIFICATION"
 created: 2026-09-04
-updated: 2026-09-04
+updated: 2026-09-07
 policy_label: public; fixture-only; no protected precision
 current_path: apps/kansas-frontier-matrix-explorer/docs/openai-sites-in-place-replacement.md
 owning_root: apps/
 responsibility: "Describe the bounded, reversible operator procedure for replacing the existing OpenAI Sites version of this application in place without creating repository, Vercel, source-admission, release, or KFM-publication effects."
 truth_posture: cite-or-abstain
-repository_checkpoint: 7c5d4125c277536258be6345e366efae59dbe5d6
+repository_checkpoint: 1408e45b4ba43c77e3ebab25078d4b9f9e3752fa
 related:
   - ../README.md
   - ../.openai/hosting.json
@@ -29,13 +29,27 @@ notes:
   - "A Site deployment is an external Sites version transition, not a KFM source admission, release, or knowledge-publication transition."
 [/KFM_META_BLOCK_V2] -->
 
-# OpenAI Sites In-Place Replacement Handoff
+# OpenAI Sites In-Place Deployment Handoff
 
-> **Status:** `READY_FOR_SITES_EXECUTION / HOLD_NO_SITES_MUTATION_SURFACE`
+> **Status:** `REPOSITORY_HANDOFF_ONLY / HOLD_NO_SITES_MUTATION_SURFACE`
 >
 > Use this procedure only from the **Edit** session of the existing OpenAI Site.
 > The repository change that carries this handoff does not deploy, restore, or
 > otherwise mutate that Site.
+
+This revision is the first repository-reliability slice tracked by
+[issue #4418](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4418).
+It is pinned to `main@1408e45b4ba43c77e3ebab25078d4b9f9e3752fa` after PR #4420.
+The advances from `daf554239d8f22b7825a7e8700b70ad71c14b3b0` changed only
+`contracts/correction/correction_impact_assessment.md` and
+`contracts/correction/correction_propagation_plan.md`; neither overlaps this
+app-local handoff.
+
+The normative receipt shape is
+[`../contracts/sites-deployment-receipt.schema.json`](../contracts/sites-deployment-receipt.schema.json).
+The fixture and validator prove that a repository rehearsal cannot claim a live
+transition, invent Site version IDs, create a second Site, mutate Vercel, or
+authorize release/publication. They do not prove a live Site build or smoke test.
 
 ## Goal
 
@@ -197,6 +211,19 @@ require their own reviewed decision.
 
 ## Required receipt shape
 
+Repository rehearsals and later operator readbacks must validate against the
+app-local schema:
+
+```bash
+node --test tests/sites-deployment-receipt.test.mjs
+node scripts/validate-sites-deployment-receipt.mjs fixtures/sites-deployment-receipt/repository-rehearsal.json
+```
+
+The checked-in receipt is synthetic. Its placeholder artifact digest and check
+evidence must never be reused as operational proof. A separately authorized
+operator readback must bind the deployed candidate bytes to a real SHA-256 digest
+and the exact Git commit from which those bytes were built.
+
 ```json
 {
   "terminal_state": "PUBLISHED_SITE_VERSION|HOLD|ROLLED_BACK|ERROR",
@@ -307,3 +334,12 @@ This procedure must not:
 - GitHub repository homepage metadata still points at a non-authoritative host;
   [issue #4246](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4246)
   holds that settings-only transition pending explicit authorization and readback.
+
+### Issue #4418 repository boundary
+
+Repository validation does not satisfy desktop/mobile browser smoke testing.
+Operator smoke coverage must include the core map, workspace save/restore,
+evidence inspection, public-safe report/export, shared-URL restoration, and
+restricted identifiers across rendered, persisted, exported, analytics, and
+shared-URL state. A skipped or unavailable check remains `NOT_RUN` and holds a
+`DEPLOYED` or `ROLLED_BACK` receipt. This handoff creates no live transition.
