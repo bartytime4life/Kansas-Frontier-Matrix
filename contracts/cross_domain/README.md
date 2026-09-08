@@ -2,7 +2,7 @@
 doc_id: kfm://doc/contracts-cross-domain-readme
 title: contracts/cross_domain/ — Cross-Domain Semantic Contracts
 type: readme
-version: v0.2
+version: v0.2.1
 status: draft; repository-grounded; mixed-maturity; non-publisher
 owners: OWNER_TBD — Contract steward · Architecture steward · Participating domain stewards
 created: 2026-06-20
@@ -10,7 +10,7 @@ updated: 2026-09-07
 owning_root: contracts/
 responsibility: Index cross-domain semantic contracts while preserving domain ownership and the separation of candidate assessment, evidence, policy, review, and release.
 truth_posture: CONFIRMED pinned inventory and adopted placement; PROPOSED or draft child contracts; execution and public readiness not established by this README.
-evidence_snapshot: bartytime4life/Kansas-Frontier-Matrix@ec203a9ba11fb83b52245f9523ce36cc1ec6ac66
+evidence_snapshot: bartytime4life/Kansas-Frontier-Matrix@6087d07b49362540e437dc666d1cbaa6eb6b82c3
 prior_blob: 58c2f1bfaa4f9b49676c339b2977a1c46ffcf88a
 policy_label: repository-facing; cross-domain; semantic-contracts; cite-or-abstain; no-parallel-authority
 related:
@@ -24,7 +24,7 @@ related:
   - ../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../../control_plane/cross_domain_seam_register.yaml
 notes:
-  - "Same-path README revision only; no child contract, schema, policy, validator, fixture, test, register, or public behavior changes."
+  - "Same-path README revision plus generated authoring provenance; no child contract, schema, policy, validator, fixture, test, register, or public behavior changes."
   - "The adopted cross_domain container is not an unresolved naming proposal. Mapping existing pair directories to registered seam IDs remains separate work."
   - "Presence, declared contract status, executed validation, and permission to publish are independent claims."
 [/KFM_META_BLOCK_V2] -->
@@ -51,7 +51,7 @@ notes:
 
 | Concern | Bounded status |
 |---|---|
-| Evidence checkpoint | `main@ec203a9ba11fb83b52245f9523ce36cc1ec6ac66`, inspected 2026-09-07 |
+| Evidence checkpoint | `main@6087d07b49362540e437dc666d1cbaa6eb6b82c3`, rechecked 2026-09-07 CT |
 | Document | `draft`; directory index and semantic-boundary guidance, not a new contract family |
 | Owning responsibility | `contracts/` owns semantic meaning and interface promises |
 | Container placement | **CONFIRMED adopted pattern** under Directory Rules v2 §12.5 and accepted ADR-0029 |
@@ -141,22 +141,22 @@ EvidenceBundles, process receipts, proofs, source records, or release decisions.
 
 ## Current directory snapshot
 
-The complete tracked subtree at the evidence checkpoint is:
+The direct children at the evidence checkpoint are shown below, following
+Directory Rules `DIR-README-003`. The contract inventory links the deeper files.
 
 ```text
 contracts/cross_domain/
 ├── README.md
 ├── knowledge_character.md
 ├── fauna_habitat/
-│   └── public_safe_assignment_profile.md
 ├── soil_agriculture/
-│   └── public_safe_context_profile.md
 └── soil_hydrology/
-    └── public_safe_context_profile.md
 ```
 
-This corrects the older README-only inventory. It proves tracked presence at the
-pinned commit, not complete cross-domain coverage or production readiness.
+The recursive inventory contains five Markdown files: this README and the four
+contracts below. This corrects the older README-only inventory. It proves tracked
+presence at the pinned commit, not complete cross-domain coverage or production
+readiness.
 
 ## Contract inventory
 
@@ -273,11 +273,16 @@ hold, create evidence, or approve publication.
 
 ## Validation
 
-For a README-only change, verify the pinned inventory, adopted placement basis,
-relative links, heading anchors, truth labels, candidate/public separation, and
-single-file scope. Record actual commands, results, unrun checks, and the exact
-base/head in the delivery evidence; do not inherit a green result from an older
-commit or infer one from a workflow definition.
+For a documentation-only change, verify the pinned inventory, adopted placement
+basis, relative links, heading anchors, truth labels, candidate/public separation,
+and the README plus required authoring-receipt scope. Record actual commands,
+results, unrun checks, and the exact base/head in the delivery evidence; do not
+inherit a green result from an older commit or infer one from a workflow definition.
+
+AI-authored revisions require provenance in the existing
+[generated-receipt lane](../../data/receipts/generated/README.md), with final
+artifact hashes and pending human review. Validate the receipt's schema and
+artifact binding separately; neither is independent approval or release proof.
 
 For changes to a pair profile or its implementation, use a provisioned repository
 environment following [CONTRIBUTING](../../CONTRIBUTING.md). The existing focused
@@ -310,7 +315,7 @@ does not assert complete coverage.
 | Pinned target and recursive child-tree reads | Five-file inventory and immediately prior README blob | Not a repository-wide capability census |
 | [Directory Rules](../../docs/doctrine/directory-rules.md) and [ADR-0029](../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) | Adopted semantic root, seam placement, identity, data/release separation | No automatic acceptance of a child profile or seam alias |
 | [Parent README](../README.md), four child contracts, and [generic join contract](../joins/cross_lane_join_assessment.md) | Meaning, local statuses, ownership and candidate boundaries | Historical self-descriptions are not current implementation proof |
-| Linked schema, validator headers/imports, test definitions, and fixture-directory listing | Existing machine-shape and code-bearing companion surfaces | Not a full code audit or executed schema/test/policy result |
+| Linked schema, validator headers/imports, test definitions, and fixture path/header reads | Existing machine-shape and code-bearing companion surfaces | Not a full code audit or executed schema/test/policy result |
 | [Seam register](../../control_plane/cross_domain_seam_register.yaml) | Five held entries, partial projection, null contract mappings, non-effects | Not semantic adoption, complete coverage, or public-join permission |
 | [Drive Directory Rules](https://docs.google.com/document/d/1uTqdIEFZE2cq3gyISetoRYM6LIlnKqTc3FobtEx7Cbs/edit) | Read-only responsibility-root and authority-separation lineage | Adopted repository doctrine controls current placement |
 | [Notion Repository Workbench](https://app.notion.com/p/3c9a92021bf68195b8b1f3a8d694b447) and [CONTRIBUTING](../../CONTRIBUTING.md) | Coordination and bounded delivery context | No implementation, approval, merge, deployment, or publication authority by coordination prose |
@@ -324,15 +329,19 @@ EvidenceBundle resolution, runtime validation, or independent approval.
 
 The immediately preceding target is the **nonblank** README blob
 `58c2f1bfaa4f9b49676c339b2977a1c46ffcf88a` at
-`ec203a9ba11fb83b52245f9523ce36cc1ec6ac66`. The older blank-file rollback reference
-is historical and is not the rollback target for this revision.
+`6087d07b49362540e437dc666d1cbaa6eb6b82c3`. The earlier task-branch revision is
+retained in commit `deadb826d5f96025ce0d73622a906e9764e05fba`; it is not current
+main. The older blank-file rollback reference is historical, not the target for
+this revision.
 
 Before integration, preserve or withdraw the task branch through the applicable
-delivery controls. After integration, use a reviewed forward revert of the
-README-only commit, or restore only this path from the recorded blob. Do not
-reset current main, rewrite history, remove child contracts, clear registry holds,
-or revert unrelated work. Any later contract migration requires its own rollback
-and consumer-impact evidence.
+delivery controls. After integration, use a reviewed forward correction or revert
+of the documentation changes, restoring only this README from the recorded blob
+where appropriate. Preserve the generated receipt as historical provenance;
+corrections to its assertions must remain traceable. Do not reset current main,
+rewrite history, remove child contracts, clear registry holds, or revert unrelated
+work. Any later contract migration requires its own rollback and consumer-impact
+evidence.
 
 ## Definition of done
 
@@ -341,7 +350,9 @@ from unresolved seam mappings; all five tracked files are indexed; verified
 companions are linked; original heading anchors and document identity remain;
 child statuses and non-publisher effects are preserved; and rollback targets the
 immediately preceding nonblank file. The delivery record must establish the
-actual one-file diff, bounded checks, and exact remote readback.
+actual README-and-receipt diff, bounded checks, and exact remote readback. The
+direct-child map, linked deeper inventory, and receipt artifact hash must agree
+with the delivered bytes.
 
 **Still open beyond this README:** accountable stewardship and independent
 review; registered directory-to-seam mappings; KnowledgeCharacter enum/schema/

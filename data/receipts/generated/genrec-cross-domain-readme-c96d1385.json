@@ -1,0 +1,260 @@
+{
+  "receipt_id": "genrec-cross-domain-readme-c96d1385a584e185",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "contracts/cross_domain/README.md"
+  ],
+  "artifact_hashes": {
+    "contracts/cross_domain/README.md": "sha256:c96d1385a584e185c81036b9f63ce19a7e00950773844c0ef8781c10a7bb1ffb"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Astra Pro",
+    "version": "UNKNOWN"
+  },
+  "prompt_or_contract": "sha256:1f71e27a1fc6fc605039fc1904598d58418e2443360eb831d87e49b9a8968704",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "Google_Drive",
+      "Notion",
+      "container"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "repo:bartytime4life/Kansas-Frontier-Matrix:contracts/cross_domain/README.md@6087d07b49362540e437dc666d1cbaa6eb6b82c3",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:contracts/README.md@6087d07b49362540e437dc666d1cbaa6eb6b82c3",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:contracts/cross_domain/knowledge_character.md@6087d07b49362540e437dc666d1cbaa6eb6b82c3",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:contracts/cross_domain/fauna_habitat/public_safe_assignment_profile.md@6087d07b49362540e437dc666d1cbaa6eb6b82c3",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:contracts/cross_domain/soil_agriculture/public_safe_context_profile.md@6087d07b49362540e437dc666d1cbaa6eb6b82c3",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:contracts/cross_domain/soil_hydrology/public_safe_context_profile.md@6087d07b49362540e437dc666d1cbaa6eb6b82c3",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:contracts/joins/cross_lane_join_assessment.md@6087d07b49362540e437dc666d1cbaa6eb6b82c3",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:schemas/contracts/v1/joins/cross_lane_join_assessment.schema.json@6087d07b49362540e437dc666d1cbaa6eb6b82c3",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:control_plane/cross_domain_seam_register.yaml@6087d07b49362540e437dc666d1cbaa6eb6b82c3",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/doctrine/directory-rules.md@6087d07b49362540e437dc666d1cbaa6eb6b82c3",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@6087d07b49362540e437dc666d1cbaa6eb6b82c3",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:CONTRIBUTING.md@6087d07b49362540e437dc666d1cbaa6eb6b82c3",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:.github/PULL_REQUEST_TEMPLATE.md@6087d07b49362540e437dc666d1cbaa6eb6b82c3",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:data/receipts/generated/README.md@6087d07b49362540e437dc666d1cbaa6eb6b82c3",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:schemas/contracts/v1/receipts/generated_receipt.schema.json@6087d07b49362540e437dc666d1cbaa6eb6b82c3",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:tools/validators/cross_domain/fauna_habitat/validate_public_safe_assignment.py@6087d07b49362540e437dc666d1cbaa6eb6b82c3",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:tools/validators/cross_domain/soil_agriculture/validate_public_safe_context.py@6087d07b49362540e437dc666d1cbaa6eb6b82c3",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:tools/validators/cross_domain/soil_hydrology/validate_public_safe_context.py@6087d07b49362540e437dc666d1cbaa6eb6b82c3",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:tests/cross_domain/fauna_habitat/test_public_safe_assignment.py@6087d07b49362540e437dc666d1cbaa6eb6b82c3",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:tests/cross_domain/soil_agriculture/test_public_safe_context.py@6087d07b49362540e437dc666d1cbaa6eb6b82c3",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:tests/cross_domain/soil_hydrology/test_public_safe_context.py@6087d07b49362540e437dc666d1cbaa6eb6b82c3",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:fixtures/contracts/v1/joins/fauna_habitat_public_safe_assignment/cases.json@6087d07b49362540e437dc666d1cbaa6eb6b82c3",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:fixtures/contracts/v1/joins/soil_agriculture_public_safe_context/cases.json@6087d07b49362540e437dc666d1cbaa6eb6b82c3",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:fixtures/contracts/v1/joins/soil_hydrology_public_safe_context/cases.json@6087d07b49362540e437dc666d1cbaa6eb6b82c3",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:contracts/cross_domain/README.md@deadb826d5f96025ce0d73622a906e9764e05fba",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024#issuecomment-5578126400",
+      "https://api.github.com/repos/bartytime4life/Kansas-Frontier-Matrix/rulesets/15484585"
+    ],
+    "attached_docs": [
+      "https://docs.google.com/document/d/1uTqdIEFZE2cq3gyISetoRYM6LIlnKqTc3FobtEx7Cbs/edit",
+      "https://app.notion.com/p/3c9a92021bf68195b8b1f3a8d694b447"
+    ]
+  },
+  "truth_labels": {
+    "contracts/cross_domain/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "pinned_source_and_inventory_readback",
+      "outcome": "PASS",
+      "reason": "Current-main recursive contract inventory confirms five Markdown files; four child contracts, generic contract/schema, three validator modules, test definitions, fixture headers, and five held registry entries inspected. Presence is not executed conformance."
+    },
+    {
+      "gate": "bounded_markdown_structure_and_links",
+      "outcome": "PASS",
+      "reason": "Python/MarkdownIt/PyYAML: one H1; all 18 legacy headings retained plus top; 17 fragment links; 21 distinct repository-relative targets resolved against commit-pinned connector evidence; direct-child-only tree; 8 tables; three balanced fences; shell example syntax; metadata and final newline."
+    },
+    {
+      "gate": "followup_whitespace",
+      "outcome": "PASS",
+      "reason": "git diff --no-index --check between exact inherited README blob and revised README emitted no diagnostics. This is a bounded file comparison, not a full checkout validation."
+    },
+    {
+      "gate": "receipt_schema_and_artifact_binding",
+      "outcome": "PASS",
+      "reason": "Exact source schema blob fba21ed27ebccf1362fe397fe0c3ebd85e072685 checked with Draft202012Validator and FormatChecker; exact artifact/path/truth-label parity and SHA-256; negative schema and binding controls reject deliberately invalid candidates."
+    },
+    {
+      "gate": "repository_native_and_cross_domain_execution",
+      "outcome": "SKIPPED",
+      "reason": "No full Git checkout; source reads and bounded local document validation only. Native receipt CLI, pytest, make validate, topology, generic join and pair-profile suites were not run."
+    },
+    {
+      "gate": "hosted_exact_head_and_visual_rendering",
+      "outcome": "SKIPPED",
+      "reason": "Not established at receipt creation. HTML parsing/render construction is not GitHub/browser visual QA or hosted CI success."
+    },
+    {
+      "gate": "independent_human_review",
+      "outcome": "SKIPPED",
+      "reason": "Pending. No reviewer approval or override is asserted."
+    },
+    {
+      "gate": "draft_pr_delivery_control",
+      "outcome": "SKIPPED",
+      "reason": "HOLD at draft creation: #4024 comment 5578126400 records the prior #4423 failed-authorization merge; current Protect ruleset 15484585 has zero required approvals and no required-status-check rule. An independent one-shot delivery boundary is not established. Safe branch authoring is retained; no PR, ready, approval, or merge call is issued by this handoff."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "source-1",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:contracts/cross_domain/README.md@6087d07b49362540e437dc666d1cbaa6eb6b82c3"
+    },
+    {
+      "id": "source-2",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:contracts/README.md@6087d07b49362540e437dc666d1cbaa6eb6b82c3"
+    },
+    {
+      "id": "source-3",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:contracts/cross_domain/knowledge_character.md@6087d07b49362540e437dc666d1cbaa6eb6b82c3"
+    },
+    {
+      "id": "source-4",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:contracts/cross_domain/fauna_habitat/public_safe_assignment_profile.md@6087d07b49362540e437dc666d1cbaa6eb6b82c3"
+    },
+    {
+      "id": "source-5",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:contracts/cross_domain/soil_agriculture/public_safe_context_profile.md@6087d07b49362540e437dc666d1cbaa6eb6b82c3"
+    },
+    {
+      "id": "source-6",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:contracts/cross_domain/soil_hydrology/public_safe_context_profile.md@6087d07b49362540e437dc666d1cbaa6eb6b82c3"
+    },
+    {
+      "id": "source-7",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:contracts/joins/cross_lane_join_assessment.md@6087d07b49362540e437dc666d1cbaa6eb6b82c3"
+    },
+    {
+      "id": "source-8",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:schemas/contracts/v1/joins/cross_lane_join_assessment.schema.json@6087d07b49362540e437dc666d1cbaa6eb6b82c3"
+    },
+    {
+      "id": "source-9",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:control_plane/cross_domain_seam_register.yaml@6087d07b49362540e437dc666d1cbaa6eb6b82c3"
+    },
+    {
+      "id": "source-10",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:docs/doctrine/directory-rules.md@6087d07b49362540e437dc666d1cbaa6eb6b82c3"
+    },
+    {
+      "id": "source-11",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@6087d07b49362540e437dc666d1cbaa6eb6b82c3"
+    },
+    {
+      "id": "source-12",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:CONTRIBUTING.md@6087d07b49362540e437dc666d1cbaa6eb6b82c3"
+    },
+    {
+      "id": "source-13",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:.github/PULL_REQUEST_TEMPLATE.md@6087d07b49362540e437dc666d1cbaa6eb6b82c3"
+    },
+    {
+      "id": "source-14",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:data/receipts/generated/README.md@6087d07b49362540e437dc666d1cbaa6eb6b82c3"
+    },
+    {
+      "id": "source-15",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:schemas/contracts/v1/receipts/generated_receipt.schema.json@6087d07b49362540e437dc666d1cbaa6eb6b82c3"
+    },
+    {
+      "id": "source-16",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:tools/validators/cross_domain/fauna_habitat/validate_public_safe_assignment.py@6087d07b49362540e437dc666d1cbaa6eb6b82c3"
+    },
+    {
+      "id": "source-17",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:tools/validators/cross_domain/soil_agriculture/validate_public_safe_context.py@6087d07b49362540e437dc666d1cbaa6eb6b82c3"
+    },
+    {
+      "id": "source-18",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:tools/validators/cross_domain/soil_hydrology/validate_public_safe_context.py@6087d07b49362540e437dc666d1cbaa6eb6b82c3"
+    },
+    {
+      "id": "source-19",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:tests/cross_domain/fauna_habitat/test_public_safe_assignment.py@6087d07b49362540e437dc666d1cbaa6eb6b82c3"
+    },
+    {
+      "id": "source-20",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:tests/cross_domain/soil_agriculture/test_public_safe_context.py@6087d07b49362540e437dc666d1cbaa6eb6b82c3"
+    },
+    {
+      "id": "source-21",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:tests/cross_domain/soil_hydrology/test_public_safe_context.py@6087d07b49362540e437dc666d1cbaa6eb6b82c3"
+    },
+    {
+      "id": "source-22",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:fixtures/contracts/v1/joins/fauna_habitat_public_safe_assignment/cases.json@6087d07b49362540e437dc666d1cbaa6eb6b82c3"
+    },
+    {
+      "id": "source-23",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:fixtures/contracts/v1/joins/soil_agriculture_public_safe_context/cases.json@6087d07b49362540e437dc666d1cbaa6eb6b82c3"
+    },
+    {
+      "id": "source-24",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:fixtures/contracts/v1/joins/soil_hydrology_public_safe_context/cases.json@6087d07b49362540e437dc666d1cbaa6eb6b82c3"
+    },
+    {
+      "id": "source-25",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:contracts/cross_domain/README.md@deadb826d5f96025ce0d73622a906e9764e05fba"
+    },
+    {
+      "id": "source-26",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024#issuecomment-5578126400"
+    },
+    {
+      "id": "source-27",
+      "validated": true,
+      "evidence_ref": "https://api.github.com/repos/bartytime4life/Kansas-Frontier-Matrix/rulesets/15484585"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-08T04:23:22Z",
+  "emitter": "chatgpt-kfm-cross-domain-readme-reconciliation",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Reuses existing task branch agent/docs-cross-domain-contracts-readme-20260907 at deadb826d5f96025ce0d73622a906e9764e05fba; inherited README blob 7edb5927c0b8c7ba33019e4688b584e4121e99d4 was reconstructed byte-exactly before the follow-up. This receipt records current reconciliation of the final document, not an invented reconstruction of earlier generation or validation. Current evidence main@6087d07b49362540e437dc666d1cbaa6eb6b82c3; historical merge base ec203a9ba11fb83b52245f9523ce36cc1ec6ac66; main rollback README blob 58c2f1bfaa4f9b49676c339b2977a1c46ffcf88a. v0.2.1 refreshes the evidence pin, fixes the direct-child tree, adds provenance guidance and makes rollback/packet scope accurate. Existing child semantics, seam holds, and all code/schema/policy/fixture/test bytes are unchanged. Root contracts/ owns meaning; data/receipts/generated/ owns authoring process memory. No source activation, release, deployment, promotion, publication, settings, ready, approval, or merge action is authorized. Citations validated means source retrieval, sometimes a bounded excerpt, not complete implementation or runtime certification. Sampling settings and runtime model revision are unavailable. Local checks are ad hoc and do not replace the repository-native validators. Delivery stops at VALIDATED_BRANCH_ONLY with a prepared PR description; final GitHub state must be read independently. This does not identify the incident initiator, prove prevention, or establish independent review. The new control observation does not freeze unrelated safe branch authoring or authorize settings changes. Receipt binds document bytes, not itself, avoiding recursive self-hashing."
+}
