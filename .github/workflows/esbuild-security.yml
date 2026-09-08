@@ -14,7 +14,7 @@ on:
       - data/receipts/generated/esbuild-security-*.json
       - .github/workflows/esbuild-security.yml
   push:
-    branches: [main]
+    branches: [main, agent/esbuild-security-pnpm11-20260908]
     paths:
       - package.json
       - pnpm-workspace.yaml

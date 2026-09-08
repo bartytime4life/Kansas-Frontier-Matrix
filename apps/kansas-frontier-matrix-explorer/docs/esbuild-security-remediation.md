@@ -2,7 +2,7 @@
 doc_id: kfm://doc/explorer/esbuild-security-remediation
 title: Explorer esbuild remediation regression guard
 type: app-maintenance-note
-version: 0.2.0
+version: 0.3.0
 status: branch candidate; independent review pending
 owning_root: apps/
 responsibility: regression coverage for the merged esbuild dependency remediation
@@ -12,7 +12,97 @@ updated: 2026-09-08
 
 # esbuild remediation regression guard
 
-## September 8 dependency-update follow-up
+## Current candidate: effective pnpm 11 override and dual-lock repair
+
+This follow-up starts from `main@03138e81f19b801cf6d16d767a4c0e01ab36d717`,
+which merged [PR #4427](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4427).
+It is authored on `agent/esbuild-security-pnpm11-20260908`. The merge of #4427
+is historical repository state, not evidence that its remaining checks passed.
+
+At that base, `pnpm-lock.yaml` contains affected esbuild `0.18.20` entries,
+while the remediation text is still under `package.json#pnpm.overrides`.
+The standalone Explorer npm lock also describes older direct dependencies
+than its manifest. These are distinct failures: an ineffective workspace
+security setting and a stale standalone installation graph.
+
+The candidate moves the existing parent-scoped override, without broadening it,
+to the effective configuration described in the [pnpm 11 release notes](https://pnpm.io/blog/releases/11.0):
+
+```yaml
+# pnpm-workspace.yaml
+overrides:
+  "@esbuild-kit/core-utils>esbuild": "0.25.12"
+```
+
+The ignored root `pnpm` field is removed. The standalone npm override remains
+in the app manifest. Native regeneration of both existing lockfiles preserves
+the current direct dependency declarations; this is not a rollback of the nine
+updates in #4427. All seven existing version-specific `allowBuilds` decisions
+remain unchanged, including both Workerd denials. No wildcard approval,
+interactive approval, security-floor waiver, or relaxed validation install is
+introduced.
+
+### Regression closure
+
+The existing app-local security suite now also rejects ignored root pnpm
+settings, missing/duplicated/broadened lockfile overrides, and stale, missing,
+or extra standalone dependency declarations. Its workspace snapshot includes
+the effective override and the unchanged build decisions. Negative mutations
+exercise the guards rather than accepting text merely because it names a fix.
+The existing all-platform esbuild inventory and resolver, cross-origin, and
+synthetic Drizzle probes remain enforced.
+
+Native candidate generation is recorded in
+[run 34248375449](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/34248375449),
+with authoring inputs at `9cc310123cf9eacb4628ac409698a6e7cf928d04`.
+Generation uses pinned pnpm `11.17.0` and the runner's recorded Node 22/npm
+versions. Lock-only authoring disables dependency scripts; subsequent validation
+uses frozen pnpm installation and standalone `npm ci`, not unlocked installs.
+The generation job checks input hashes, requires an unchanged pnpm importer
+section, runs security/runtime probes and the Explorer build/unit and MapLibre
+unit consumers, and binds emitted bytes to SHA-256 and Git blob identities.
+These are candidate-generation results, not final-commit CI or independent
+approval. Read the final branch-head workflow result separately.
+
+The temporary exact-branch generation workflow is removed in the final repair
+commit. Its isolated generation job has read-only credentials. A separate
+checkout-free job stores only the two generated, unreferenced Git blobs; it
+calls no branch, pull-request, review, merge, release, or deployment API.
+The final tree retains only the existing read-only security workflow, with an
+exact branch trigger so the committed repair can be checked without a PR.
+No generated credentials, logs, or intermediate package trees are committed.
+
+### Delivery, limits, and rollback
+
+The current delivery target is branch-only while
+[issue #4024](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024)
+holds the implicated PR-state mutation path. Successful security probes do not
+supply independent review, merge authority, advisory closure, browser/platform
+coverage, or production-readiness evidence. The separately observed
+object-family-register, aggregate validator-suite, and MapLibre performance
+failures are not waived or claimed fixed by this dependency slice.
+
+Placement is same-path maintenance under adopted
+[ADR-0029](../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md)
+and the [Directory Rules](../../../docs/doctrine/directory-rules.md): existing
+root package-manager files, the app-owned test/document consumers, and the
+platform-owned read-only workflow. No parallel policy, schema, registry, or
+release home is created.
+
+The final delta changes seven existing files: root `package.json`,
+`pnpm-workspace.yaml`, `pnpm-lock.yaml`, the app's `package-lock.json`, this note,
+the app-local security test, and `.github/workflows/esbuild-security.yml`.
+Before integration, preserve or close the candidate without modifying main.
+After separately authorized integration, revert this seven-file delta together
+through a reviewed change; restoring the base reintroduces the known dependency
+regression and is not itself a security remedy. The temporary workflow must
+remain absent. No rollback was executed.
+
+## Historical September 8 Workerd installation repair
+
+This section records the earlier #4427 repair. Statements about its unresolved
+esbuild failure describe that earlier head; the current candidate above is a
+separate repair, not a rewrite of its validation history.
 
 [PR #4427](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4427)
 rebased to `3224b240811b602fda57b86e9a39ba1e31ecffc3` on
@@ -37,82 +127,74 @@ blob-verified copies of the affected files. This is not a full checkout,
 locked dependency installation, browser test, or Workerd compatibility proof.
 Hosted results must be read at the pushed head, separately from review.
 
-**Separate unresolved security failure:** at the rebased head, the
+**Separate unresolved security failure at that head:** the
 [esbuild guard](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/34239490070/job/102105690197)
 rejects `@esbuild/android-arm64@0.18.20` in the pnpm lock. The install log
-also warns that pnpm 11 ignores `package.json#pnpm.overrides`. This repair
-does not change the lockfile, waive the patched floor, claim that the override
-is effective, or close the security finding. Correcting the override location,
-regenerating the lock with the pinned package manager, and passing both
-resolver/runtime probes remain required before integration.
+also warns that pnpm 11 ignores `package.json#pnpm.overrides`. That repair
+did not change the lockfile, waive the patched floor, establish an effective
+override, or close the security finding. Override relocation and native lock
+regeneration remained necessary after the three-file Workerd correction.
 
-Placement is same-path maintenance of the root package-manager configuration
-and its existing app-local test/document consumers; no new responsibility
-root or authority home is added. Rollback this follow-up's three files
-together to the rebased head; the nine dependency updates are independent
-pre-existing changes and are not reverted by this follow-up.
+Its same-path placement and three-file rollback preserve the nine pre-existing
+dependency updates. That rollback is separate from the current seven-file
+follow-up described above.
 
-## Current finding
+## Historical September 6 baseline
 
 The following remediation and validation record describes the September 6
-baseline, not the current dependency tree. The September 8 finding above
-supersedes its implication that the current pnpm lock is remediated.
+baseline, not the current dependency tree. It does not establish that the
+post-#4427 pnpm lock was remediated.
 
 [PR #4318](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4318) merged the bounded dependency repair into
-`main`. At the current authoring base `main@11cb4b51125db18d952d9f00e997beab89791cea`, the direct path
+`main`. At the authoring base `main@11cb4b51125db18d952d9f00e997beab89791cea`, the direct path
 `drizzle-kit@0.31.10` → `@esbuild-kit/esm-loader@2.6.5` →
 `@esbuild-kit/core-utils@3.3.2` resolves to `esbuild@0.25.12` in both
-lockfiles. The root pnpm override is in `package.json` under
-`pnpm.overrides`; the standalone npm override is in the Explorer
-`package.json`.
+lockfiles. The root pnpm override was in `package.json` under
+`pnpm.overrides`; the standalone npm override was in the Explorer
+`package.json`. That root configuration location is superseded by the current
+candidate's effective workspace setting.
 
 [GHSA-67mh-4wv8-2f99](https://github.com/advisories/GHSA-67mh-4wv8-2f99) affects esbuild through `0.24.2`;
 `0.25.0` is the first patched release. The finding describes permissive
 cross-origin reads from the development server; it does not prove that KFM
 exposed a production development server.
 
-The quality gap addressed here is missing executable regression coverage after
-that merged repair. This candidate does not duplicate the manifests or
-lockfiles and does not claim alert closure or complete dependency
-modernization. The deprecated `@esbuild-kit` packages remain a separate
-upstream replacement follow-up.
+The quality gap addressed in that slice was missing executable regression
+coverage after the merged repair. It did not claim alert closure or complete
+dependency modernization. The deprecated `@esbuild-kit` packages remain a
+separate upstream replacement follow-up.
 
 ## Guarded invariants
 
-- All inventoried esbuild and platform-binary versions in the pnpm and npm
-  locks must meet the patched floor.
-- The root pnpm and standalone npm parent-scoped overrides must remain present
-  and resolve to `0.25.12`.
-- The six original version-specific `allowBuilds` decisions plus the September 8
-  exact-version Workerd denial are compared byte-for-byte; no approval is added
-  and no denial is spoofed or removed.
-- Runtime probes resolve the actual loader edge, transform synthetic
-  TypeScript, check the loopback development server's cross-origin response
-  headers, and generate synthetic Drizzle SQL without a database.
+- All inventoried esbuild and platform-binary versions in both locks must meet
+  the patched floor, not merely the currently installed platform.
+- Effective pnpm workspace and standalone npm parent-scoped overrides must
+  remain present and resolve to `0.25.12`.
+- All seven existing version-specific build decisions remain unchanged.
+- The standalone npm lock root must agree with every direct dependency section.
+- Runtime probes resolve the actual loader edge, transform synthetic TypeScript,
+  check loopback development-server cross-origin response headers, and generate
+  synthetic Drizzle SQL without a database.
 
-## Validation and boundaries
+## Validation and historical boundaries
 
 `tests/esbuild-security.test.mjs` performs static checks by default and
 enables runtime probes only with `KFM_ESBUILD_RUNTIME_PROBE=1`. The
 read-only [workflow](../../../.github/workflows/esbuild-security.yml) runs
 the static checks, frozen pnpm install, standalone npm `ci`, and runtime
-probes. Lockfile checksums ensure the install commands do not rewrite the
-reviewed inputs.
+probes. Lockfile checksums ensure validation installs do not rewrite inputs.
 
-Local repository command validation was unavailable in this session because
-the command runner was rejected by an environment usage limit. The exact-head
-hosted workflow must supply that result. The initial exact-head run `34013101178` failed two static guard assertions: the standalone key still used the pre-merge version-qualified npm shape, and one workspace mutation was a no-op after the merged override moved to `package.json`. The candidate now corrects both cases; the rerun is the authoritative result. The corrected exact-head [workflow run 34013210029](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/34013210029) passed both the pnpm and npm jobs, including installation and runtime probes.
+The September 6 record reported local command validation unavailable due to an
+environment usage limit. Initial hosted run `34013101178` failed two static
+guards: the standalone key used a pre-merge npm shape, and one workspace
+mutation was a no-op after the override moved to `package.json`. Corrected
+[run 34013210029](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/34013210029)
+passed both package-manager jobs, including installation and runtime probes.
+Those results belong to that historical revision, not the current candidate.
+The prior merged PR's partial validation and failed topology validator are not
+relabelled as passing.
 
-The prior merged PR's record reports
-partial hosted validation and a failed topology validator; this follow-up
-does not relabel those outcomes.
-
-This is one security/quality proof slice for [issue #3366](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3366).
-It changes only tests, read-only CI, documentation, and a generated receipt.
-No source admission, policy authority, data lifecycle, release, deployment,
-publication, repository settings, or review requirement is changed.
-
-Before authorized integration, close the draft or restore the preimages. After
-separately authorized integration, revert the four candidate files together
-if needed; do not remove the guard to obtain green CI or broaden build-script
-admission.
+This remains security/quality work for
+[issue #3366](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3366).
+It grants no source admission, data-lifecycle transition, release, deployment,
+publication, repository-settings change, or independent review approval.
