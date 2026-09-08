@@ -1,7 +1,5 @@
-# Temporary branch-only authoring aid for the post-#4427 repair.
-# Generate and test with a read-only token. A separate, checkout-free job stores
-# two unreferenced Git blobs only; no approval, PR, or ref-update API is called.
-# Remove this workflow after independently inspecting and committing the blobs.
+# Temporary branch-only authoring aid; remove before final handoff.
+# Generation has read-only credentials. Storage creates only unreferenced blobs.
 name: esbuild-lock-candidate
 on:
   push:
@@ -101,7 +99,7 @@ jobs:
         run: |
           set -euo pipefail
           python3 - <<'PY'
-          import base64, gzip, hashlib, json, os, pathlib, subprocess
+          import base64, gzip, hashlib, json, os, pathlib
           report = {'kind': 'candidate-generation-diagnostic', 'source_head': os.environ['GITHUB_SHA'],
                     'run_id': os.environ['GITHUB_RUN_ID'], 'files': [], 'approval': False}
           with open(os.environ['GITHUB_OUTPUT'], 'a') as out:
@@ -159,6 +157,7 @@ jobs:
               with opener.open(request, timeout=30) as response:
                   result = json.load(response)
               assert result['sha'] == blob, 'stored object differs from validated candidate'
-              print(json.dumps({'path': path, 'git_blob': blob, 'sha256': digest, 'bytes': len(data),
-                                'source_head': os.environ['GITHUB_SHA'], 'run_id': os.environ['GITHUB_RUN_ID'],
-                                'ref_updated': False, 'approval': False}))
+              record = {'path': path, 'git_blob': blob, 'sha256': digest, 'bytes': len(data),
+                        'source_head': os.environ['GITHUB_SHA'], 'run_id': os.environ['GITHUB_RUN_ID'],
+                        'ref_updated': False, 'approval': False}
+              print('::notice title=' + key + ' candidate::' + json.dumps(record))
