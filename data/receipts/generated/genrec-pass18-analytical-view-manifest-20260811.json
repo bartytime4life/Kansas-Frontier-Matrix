@@ -157,9 +157,9 @@
   "created_at": "2026-08-11T23:56:00Z",
   "emitter": "OpenAI GPT-5 via ChatGPT GitHub and Google Drive connectors",
   "links": {
-    "pr_number": null,
+    "pr_number": 4442,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Additive, inactive, fixture-only analytical-view manifest. It records definition, upstream, hidden semantics, validation, refresh, mutation-guard, correction, and rollback declarations without storing raw SQL or endpoints, creating a view, executing a query, mutating or refreshing data, or creating evidence, policy, review, promotion, release, deployment, publication, or public-use authority. On 2026-09-08, the semantic contract documentation was reconciled with current main and the contract digest was refreshed; the original 2026-08-11 authoring identity, inputs, and validation history remain unchanged."
+  "notes": "Additive, inactive, fixture-only analytical-view manifest. It records definition, upstream, hidden semantics, validation, refresh, mutation-guard, correction, and rollback declarations without storing raw SQL or endpoints, creating a view, executing a query, mutating or refreshing data, or creating evidence, policy, review, promotion, release, deployment, publication, or public-use authority. On 2026-09-08, PR #4442 reconciled the semantic contract documentation with current main and refreshed the contract digest; the original 2026-08-11 authoring identity, inputs, and validation history remain unchanged."
 }
