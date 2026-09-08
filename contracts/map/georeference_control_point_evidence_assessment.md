@@ -19,6 +19,7 @@ related:
   - ../../.github/workflows/map-georeference-control-point-evidence.yml
   - ../../docs/intake/exploratory/pass-18-georeference-control-point-evidence-source-map.md
   - ../../data/receipts/generated/genrec-pass18-georeference-control-point-evidence-20260811.json
+  - ../../data/receipts/generated/genrec-georeference-control-point-evidence-contract-currentness-20260908.json
   - georeference_control_point_set.md
   - georeference_spatial_distribution.md
   - georeference_transform_quality.md
@@ -54,7 +55,7 @@ The current repository contains a closed JSON Schema, a deterministic no-network
 | Deterministic evaluation | [Validator](../../tools/validators/map/validate_georeference_control_point_evidence_assessment.py) | Input safety, coherence findings, recommendation derivation, identity checks, outcome precedence, and diagnostics. |
 | Synthetic examples | [Fixture manifest](../../fixtures/contracts/v1/map/georeference_control_point_evidence_assessment/cases.json) | One common synthetic base plus exact mutations and expected findings for 34 cases. |
 | Executable proof | [Focused tests](../../tests/map/test_georeference_control_point_evidence_assessment.py) | Four-way polarity, identity, summary, input-safety, no-network, false-authority, and redacted-diagnostic assertions. |
-| Hosted orchestration | [Dedicated workflow](../../.github/workflows/map-georeference-control-point-evidence.yml) | Focused tests, exact fixture replay, and authoring-receipt integrity for relevant changes. |
+| Hosted orchestration | [Dedicated workflow](../../.github/workflows/map-georeference-control-point-evidence.yml) | Focused tests, exact fixture replay, historical receipt replay at its originating commit, and current receipt integrity for relevant changes. |
 
 No surface in this table owns real imagery, survey measurements, resolved evidence, policy, review approval, release state, or public-use authority.
 
