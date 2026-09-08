@@ -73,14 +73,8 @@
       "outcome": "PASS",
       "reason": "Bounded object-name, exact-path, branch, pull-request, and open-work probes found no checked-path GeographyCrosswalk implementation or same-purpose active work at authoring time."
     },
-    {
-      "gate": "json-and-workflow-yaml-parse",
-      "outcome": "PASS"
-    },
-    {
-      "gate": "draft-2020-12-schema-meta-validation",
-      "outcome": "PASS"
-    },
+    { "gate": "json-and-workflow-yaml-parse", "outcome": "PASS" },
+    { "gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS" },
     {
       "gate": "focused-unittest-and-fixture-suite",
       "outcome": "PASS",
@@ -96,10 +90,7 @@
       "outcome": "PASS",
       "reason": "Both metadata blocks and local links passed; review-only registry add-candidate warnings remain non-blocking."
     },
-    {
-      "gate": "no-network-non-reflection-and-no-geometry-boundary",
-      "outcome": "PASS"
-    },
+    { "gate": "no-network-non-reflection-and-no-geometry-boundary", "outcome": "PASS" },
     {
       "gate": "generated-receipt-artifact-hash-replay",
       "outcome": "PASS",
