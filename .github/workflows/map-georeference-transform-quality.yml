@@ -11,6 +11,7 @@ name: map-georeference-transform-quality
       - "tests/map/test_georeference_transform_quality.py"
       - "docs/intake/exploratory/georeference-transform-quality-source-map.md"
       - "data/receipts/generated/genrec-georeference-transform-quality-20260806.json"
+      - "data/receipts/generated/genrec-georeference-transform-quality-contract-20260908.json"
   push:
     branches: [main]
     paths:
@@ -22,6 +23,7 @@ name: map-georeference-transform-quality
       - "tests/map/test_georeference_transform_quality.py"
       - "docs/intake/exploratory/georeference-transform-quality-source-map.md"
       - "data/receipts/generated/genrec-georeference-transform-quality-20260806.json"
+      - "data/receipts/generated/genrec-georeference-transform-quality-contract-20260908.json"
   workflow_dispatch:
 
 permissions:
@@ -43,6 +45,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          fetch-depth: 0 # Required for exact-ancestor historical receipt replay.
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.11"
@@ -51,4 +54,14 @@ jobs:
       - run: python tools/ci/install_python_ci.py project-test
       - run: python -m pytest -q tests/map/test_georeference_transform_quality.py
       - run: python tools/validators/map/validate_georeference_transform_quality.py --fixtures
-      - run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-georeference-transform-quality-20260806.json --repo-root .
+      - name: Validate historical authoring receipt at its exact ancestor
+        run: >-
+          python tools/validators/validate_generated_receipt.py
+          data/receipts/generated/genrec-georeference-transform-quality-20260806.json
+          --repo-root .
+          --artifact-git-ref b18a60f99b7854d8f0647c57eb784a6ad8957532
+      - name: Validate current contract and workflow receipt
+        run: >-
+          python tools/validators/validate_generated_receipt.py
+          data/receipts/generated/genrec-georeference-transform-quality-contract-20260908.json
+          --repo-root .

@@ -1,0 +1,196 @@
+{
+  "receipt_id": "genrec:georeference-transform-quality-contract:20260908",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/map-georeference-transform-quality.yml",
+    "contracts/map/georeference_transform_quality.md"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/map-georeference-transform-quality.yml": "sha256:40354380baaca1bdccae845fd00327113805dc0fcd5b270f26f87e12cc770b8c",
+    "contracts/map/georeference_transform_quality.md": "sha256:d38e6911a27fb6873bd0896bf9aa98357a31ec1131d3a47f4c22c25e720961c2"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Astra Pro",
+    "version": "UNKNOWN - exact runtime build not exposed"
+  },
+  "prompt_or_contract": "sha256:80caf0573f6b46e3de6a62d480c0180a6805f8c27d6ef2c1c3510f224c7a2ee5",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "tools_enabled": [
+      "GitHub",
+      "Google_Drive",
+      "Notion",
+      "container"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "Google Drive: Directory Rules (read-only lineage)",
+      "Notion: KFM Repository Workbench (coordination only)"
+    ],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/af724db2278bc59395ca3817622df43e7be767b9/docs/doctrine/directory-rules.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/af724db2278bc59395ca3817622df43e7be767b9/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/af724db2278bc59395ca3817622df43e7be767b9/contracts/map/georeference_transform_quality.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/af724db2278bc59395ca3817622df43e7be767b9/schemas/contracts/v1/map/georeference_transform_quality.schema.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/af724db2278bc59395ca3817622df43e7be767b9/fixtures/contracts/v1/map/georeference_transform_quality/cases.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/af724db2278bc59395ca3817622df43e7be767b9/tools/validators/map/validate_georeference_transform_quality.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/af724db2278bc59395ca3817622df43e7be767b9/tools/generators/project_georeference_transform_quality.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/af724db2278bc59395ca3817622df43e7be767b9/contracts/map/georeference_control_point_set.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/af724db2278bc59395ca3817622df43e7be767b9/contracts/map/georeference_control_point_evidence_assessment.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/af724db2278bc59395ca3817622df43e7be767b9/contracts/map/georeference_spatial_distribution.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/af724db2278bc59395ca3817622df43e7be767b9/.github/workflows/map-georeference-transform-quality.yml",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/af724db2278bc59395ca3817622df43e7be767b9/data/receipts/generated/genrec-georeference-transform-quality-20260806.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/af724db2278bc59395ca3817622df43e7be767b9/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/af724db2278bc59395ca3817622df43e7be767b9/tools/validators/validate_generated_receipt.py",
+      "git:ancestor@b18a60f99b7854d8f0647c57eb784a6ad8957532",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024#issuecomment-5578126400"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/map-georeference-transform-quality.yml": "PROPOSED",
+    "contracts/map/georeference_transform_quality.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "exact-source-blobs",
+      "outcome": "PASS",
+      "reason": "Reconstructed core validator, schema, fixtures, tests, prior contract, prior workflow, and receipt schema match connector-reported Git blob identities."
+    },
+    {
+      "gate": "focused-pytest",
+      "outcome": "PASS",
+      "reason": "10 unchanged repository tests passed under Python 3.13.5 in a verified partial snapshot, not a full checkout or Python 3.11 environment."
+    },
+    {
+      "gate": "fixture-exact-polarity",
+      "outcome": "PASS",
+      "reason": "10 cases matched exactly: 2 READY, 3 HOLD, 5 ERROR. Expected negative cases are not approved transforms."
+    },
+    {
+      "gate": "bounded-contract-and-workflow-checks",
+      "outcome": "PASS",
+      "reason": "14 named local checks passed, including numerical/decision/reader/CLI boundaries, ten fixtures under socket/DNS denial, metadata/link checks, and five workflow run-block Bash syntax checks."
+    },
+    {
+      "gate": "historical-artifact-hashes-and-remote-ancestry",
+      "outcome": "PASS",
+      "reason": "All seven original receipt SHA-256 bindings match connector-verified artifact bytes at b18a60f99b7854d8f0647c57eb784a6ad8957532; GitHub compare confirms it is an ancestor of the pinned base. Not a local native Git replay."
+    },
+    {
+      "gate": "receipt-schema-and-current-byte-parity",
+      "outcome": "PASS",
+      "reason": "Draft 2020-12 schema with format checking, exact path/hash/truth-label key parity, and both changed-file SHA-256 digests verified locally."
+    },
+    {
+      "gate": "diff-and-rollback-hygiene",
+      "outcome": "PASS",
+      "reason": "Scoped diff whitespace and forward/reverse patch applicability checked against the partial local base snapshot."
+    },
+    {
+      "gate": "native-receipt-cli-and-history-checkout",
+      "outcome": "SKIPPED",
+      "reason": "Full validator dependency closure, exact remote Git history replay, and checkout performance were not executed locally; the workflow retains these explicit checks."
+    },
+    {
+      "gate": "supported-python-and-hosted-ci",
+      "outcome": "SKIPPED",
+      "reason": "Python 3.11, repository-wide checks, and exact-head hosted execution not run. No inherited check is called passing."
+    },
+    {
+      "gate": "independent-review-and-pr-delivery",
+      "outcome": "SKIPPED",
+      "reason": "Independent review remains pending. Current #4024 evidence leaves the implicated PR delivery path held; no ready, merge, or settings authority is exercised."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "repo-1",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/af724db2278bc59395ca3817622df43e7be767b9/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "repo-2",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/af724db2278bc59395ca3817622df43e7be767b9/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "repo-3",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/af724db2278bc59395ca3817622df43e7be767b9/contracts/map/georeference_transform_quality.md"
+    },
+    {
+      "id": "repo-4",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/af724db2278bc59395ca3817622df43e7be767b9/schemas/contracts/v1/map/georeference_transform_quality.schema.json"
+    },
+    {
+      "id": "repo-5",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/af724db2278bc59395ca3817622df43e7be767b9/fixtures/contracts/v1/map/georeference_transform_quality/cases.json"
+    },
+    {
+      "id": "repo-6",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/af724db2278bc59395ca3817622df43e7be767b9/tools/validators/map/validate_georeference_transform_quality.py"
+    },
+    {
+      "id": "repo-7",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/af724db2278bc59395ca3817622df43e7be767b9/tools/generators/project_georeference_transform_quality.py"
+    },
+    {
+      "id": "repo-8",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/af724db2278bc59395ca3817622df43e7be767b9/contracts/map/georeference_control_point_set.md"
+    },
+    {
+      "id": "repo-9",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/af724db2278bc59395ca3817622df43e7be767b9/contracts/map/georeference_control_point_evidence_assessment.md"
+    },
+    {
+      "id": "repo-10",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/af724db2278bc59395ca3817622df43e7be767b9/contracts/map/georeference_spatial_distribution.md"
+    },
+    {
+      "id": "repo-11",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/af724db2278bc59395ca3817622df43e7be767b9/.github/workflows/map-georeference-transform-quality.yml"
+    },
+    {
+      "id": "repo-12",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/af724db2278bc59395ca3817622df43e7be767b9/data/receipts/generated/genrec-georeference-transform-quality-20260806.json"
+    },
+    {
+      "id": "repo-13",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/af724db2278bc59395ca3817622df43e7be767b9/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    },
+    {
+      "id": "repo-14",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/af724db2278bc59395ca3817622df43e7be767b9/tools/validators/validate_generated_receipt.py"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-08T05:29:15Z",
+  "emitter": "ChatGPT / GPT-6 Astra Pro",
+  "links": {
+    "pr_number": null,
+    "adr_link": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/af724db2278bc59395ca3817622df43e7be767b9/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Documentation and receipt-check wiring only; the machine profile, numerical code, fixtures, tests, thresholds, and projection adapter are unchanged. The historical genrec-georeference-transform-quality-20260806.json remains byte-for-byte unchanged and is checked against its original ancestor rather than rewritten. The current receipt binds only the two artifacts authored in this revision and does not claim authorship of unchanged historical files. Full-history checkout is limited to the existing focused workflow to satisfy native exact-ancestor replay; its hosted time/cost remains unmeasured. Initial audit base 6087d07b49362540e437dc666d1cbaa6eb6b82c3 was re-pinned to af724db2278bc59395ca3817622df43e7be767b9 after PR 4425; its three disjoint files change the neighboring qualitative evidence contract, workflow, and receipt only. That contract was re-read; numeric dependencies and these target paths are unchanged. Local validation used connector-authenticated reconstructed blobs because container DNS could not retrieve a full checkout. Socket/DNS denial covers the ten tested numeric fixtures, not every program or CI installation operation. The CONFIRMED document label applies only to pinned source behavior and checked interpretations; it does not imply profile adoption, production fitness, or approval. No policy, source, evidence, review, release, deployment, promotion, publication, or public-use authority is created. Rollback restores the prior contract and workflow; it does not rewrite historical receipts or operate on data. Branch-only is the safe terminal state while the PR-state path remains incident-quarantined; the user-requested PR is not claimed delivered."
+}
