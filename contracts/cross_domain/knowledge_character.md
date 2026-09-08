@@ -2,52 +2,49 @@
 doc_id: kfm://contract/cross-domain/knowledge-character
 title: contracts/cross_domain/knowledge_character.md — KnowledgeCharacter Cross-Domain Contract
 type: contract
-version: v0.2
-status: draft
+version: v0.3
+status: draft; repository-grounded; domain-preserving; non-publisher
 owners: OWNER_TBD — Architecture steward · Atmosphere steward · Source steward · Contract steward · Schema steward · Policy steward · Validation steward · Docs steward
 created: 2026-06-20
-updated: 2026-06-20
-policy_label: public; contracts; cross-domain; knowledge-character; semantic-contract; source-role-anti-collapse; evidence-aware
+updated: 2026-09-07
+owning_root: contracts/
+responsibility: Preserve object-level epistemic meaning across domain boundaries without defining a global enum or replacing domain, schema, registry, policy, evidence, or release authority.
+truth_posture: CONFIRMED pinned source inspection; PROPOSED semantic realization; bounded fixture implementation is not production or publication proof.
+evidence_snapshot: bartytime4life/Kansas-Frontier-Matrix@6087d07b49362540e437dc666d1cbaa6eb6b82c3
+prior_blob: 4f7eac28c9697c588dd9da35edb29f778fa43aae
+policy_label: repository-facing; public-safe-documentation; cross-domain; semantic-contract; source-role-anti-collapse; evidence-aware
 related:
   - ./README.md
-  - ../common/identity_token.md
-  - ../common/spec_hash.md
-  - ../../docs/domains/atmosphere/VERIFICATION_BACKLOG.md
+  - ../domains/atmosphere/knowledge_character.md
   - ../../docs/domains/atmosphere/KNOWLEDGE_CHARACTERS.md
   - ../../docs/domains/atmosphere/KNOWLEDGE_CHARACTER_REGISTRY.md
-  - ../../docs/architecture/cross-domain/multi-domain-placement.md
-  - ../../docs/architecture/domain-placement-law.md
-  - ../../docs/architecture/contract-schema-policy-split.md
-  - ../../schemas/contracts/v1/
-  - ../../policy/
-  - ../../tools/validators/
-  - ../../fixtures/
-  - ../../tests/
-  - ../../data/registry/sources/
-  - ../../data/proofs/
-  - ../../release/
-tags: [kfm, contracts, cross-domain, knowledge-character, source-role, anti-collapse, atmosphere, evidence, policy, release, governance]
+  - ../../docs/adr/ADR-XXXX-atmosphere-knowledge-character-vocabulary.md
+  - ../../docs/doctrine/directory-rules.md
+  - ../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../schemas/contracts/v1/domains/atmosphere/knowledge_character.schema.json
+  - ../../data/registry/sources/atmosphere/knowledge_character.json
+  - ../../tools/validators/domains/atmosphere/validate_knowledge_character.py
+  - ../../tools/validators/_common/public_safe_fixture.py
+  - ../../fixtures/domains/atmosphere/knowledge_character/README.md
+  - ../../tests/domains/atmosphere/test_knowledge_character_registry.py
 notes:
-  - "Expanded from a scaffold sourced from docs/domains/atmosphere/VERIFICATION_BACKLOG.md."
-  - "Knowledge-character vocabulary is currently best evidenced in Atmosphere docs; this cross-domain contract records the broader semantic pattern without claiming a verified cross-domain schema."
-  - "No paired schemas/contracts/v1/cross_domain/knowledge_character.schema.json or validator was verified in this task."
-  - "Canonical enum values and machine-registry home remain OPEN / NEEDS VERIFICATION in the Atmosphere registry docs."
+  - "Same-path contract-documentation update only. No enum, schema, registry, policy, validator, fixture, workflow, runtime, source admission, or release behavior changes."
+  - "The Atmosphere vocabulary names an umbrella term plus eleven specific characters. Its implemented fixture profile covers six, not the full vocabulary and not a global cross-domain enum."
+  - "The paired Atmosphere schema is permissive and the machine registry is a placeholder; their presence is not semantic enforcement or accepted registry placement."
+  - "This revision preserves document identity and existing headings. Steward assignment, complete vocabulary acceptance, consumer closure, and production enforcement remain open."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # KnowledgeCharacter Cross-Domain Contract
 
-> Semantic contract for `knowledge_character`, a cross-domain source-role anti-collapse marker that records what epistemic kind a governed KFM object is, so measurements, models, regulatory records, summaries, masks, advisories, and derived fusions are not silently treated as interchangeable truth.
+> Semantic contract for `knowledge_character`: preserve what kind of knowledge an
+> object represents when it crosses a domain boundary. A measurement, model,
+> regulatory record, advisory, mask, summary, or fusion product must not silently
+> become another kind of evidence.
 
-<p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Owner: OWNER_TBD" src="https://img.shields.io/badge/owner-OWNER__TBD-lightgrey">
-  <img alt="Family: cross-domain" src="https://img.shields.io/badge/family-cross--domain-blue">
-  <img alt="Schema: not verified" src="https://img.shields.io/badge/schema-not__verified-orange">
-  <img alt="Enum: open" src="https://img.shields.io/badge/enum-OPEN-red">
-  <img alt="Authority: semantic" src="https://img.shields.io/badge/authority-semantic__contract-green">
-</p>
+**Draft semantic contract · Fixture implementation is bounded · No global enum ·
+No publication authority**
 
 `contracts/cross_domain/knowledge_character.md`
 
@@ -59,274 +56,391 @@ notes:
 
 ## Status
 
-> [!IMPORTANT]
-> **Status:** `draft` / semantic contract  
-> **Owner:** `OWNER_TBD`  
-> **Contract path:** `contracts/cross_domain/knowledge_character.md`  
-> **Schema path:** `UNKNOWN / NEEDS VERIFICATION`  
-> **Truth posture:** `CONFIRMED` current contract path, current update, scaffold source, Atmosphere knowledge-character vocabulary evidence, and cross-domain placement doctrine. Cross-domain schema, validator, fixture coverage, policy behavior, canonical enum values, machine-registry home, and downstream usage remain `NEEDS VERIFICATION`.
+The source-inspection checkpoint is
+`main@6087d07b49362540e437dc666d1cbaa6eb6b82c3`. Status statements below are
+bounded to that commit, not a continuously updated deployment report.
 
----
+| Surface | Verified posture | What remains outside this evidence |
+|---|---|---|
+| This cross-domain contract | Existing draft semantic document; same-path revision | Does not assign stewardship, freeze a global vocabulary, or authorize a join |
+| Atmosphere domain contract and human vocabulary | Present, draft; domain-specific meaning and anti-collapse requirements | Vocabulary acceptance and complete implementation |
+| Atmosphere machine schema | Present, `PROPOSED`, empty `properties`, `additionalProperties: true` | Closed enum, required character, and semantic enforcement |
+| Atmosphere machine-registry file | Present, `PROPOSED` placeholder | Accepted registry home, complete values, and operational lookup |
+| Atmosphere validator and focused test module | Present executable source for a frozen six-character synthetic profile | Whole-vocabulary coverage, current hosted results, and live consumer enforcement |
+| Stewardship, policy, evidence resolution, release, and public use | `NEEDS VERIFICATION` for this contract's complete realization | No approval or operational readiness follows from this document |
+
+Pointers and exact distinctions are in [Schema and registry posture](#schema-and-registry-posture)
+and [Validation](#validation). Source inspection is not a test pass. Any local or
+hosted execution result must be reported separately with its exact scope and ref.
 
 ## Meaning
 
-`knowledge_character` is a semantic marker for the epistemic character of a KFM object.
+`knowledge_character` answers: **What epistemic kind does this object represent?**
 
-It answers this question:
+It is an object-level semantic attribute, not merely display text. The
+[Atmosphere explainer](../../docs/domains/atmosphere/KNOWLEDGE_CHARACTERS.md)
+constrains its meaning by source role, evidence, time, and release state. This
+cross-domain contract preserves that discipline when consumers cite, compare,
+join, derive, display, export, or interpret another domain's objects.
 
-> What kind of knowledge is this object: observed, reported, regulatory, modeled, derived, advisory, contextual, network metadata, or something else that must not collapse into another kind?
+Keep the following concerns separate:
 
-The immediate evidence for this contract comes from the Atmosphere lane, where knowledge character is used to prevent acute authority collapse between observed sensor readings, public AQI reports, regulatory archives, low-cost sensors, atmospheric model fields, remote-sensing masks, climate/anomaly context, derived fusion, meteorological context, alert/advisory context, and network/site context.
+| Concern | Question | Boundary |
+|---|---|---|
+| Source role | What authority kind does the admitted source represent? | Preserve the source descriptor and its governing vocabulary; do not infer a replacement from a character label |
+| Knowledge character | What kind of knowledge does this particular object represent? | Retain the owning domain's meaning and profile/version context |
+| Evidence | What admissible support substantiates the claim? | A label or nonempty reference does not resolve `EvidenceRef` to `EvidenceBundle` |
+| Policy, review, and release | May this use or exposure proceed? | These require their own decisions; character, schema validity, and fixture success do not grant permission |
 
-This cross-domain contract records the broader semantic discipline: when a KFM object crosses domain boundaries, the consumer must know what epistemic class the object belongs to before using it as evidence, publishing it, joining it, rendering it, or passing it to an AI surface.
-
----
+The [Atmosphere domain contract](../domains/atmosphere/knowledge_character.md)
+owns its domain-specific semantic expectations. This file does not copy that
+ownership into a second global authority. It also does not replace
+`SourceDescriptor.source_role` or turn an object character into a source catalog.
 
 ## Repo fit
 
-```text
-contracts/
-└── cross_domain/
-    ├── README.md
-    └── knowledge_character.md
+The owning responsibility root is `contracts/`: semantic meaning and interface
+promises. [Directory Rules](../../docs/doctrine/directory-rules.md), adopted by
+[ADR-0029](../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md),
+require shared definitions to be referenced rather than copied (§12.1), and
+cross-domain seams to remain under their owning roots (§12.5).
 
-schemas/
-└── contracts/
-    └── v1/
-        └── <topic-or-domain>/knowledge_character.schema.json  # NEEDS VERIFICATION
-```
+Section 12.5 explicitly uses `contracts/cross_domain/<seam_id>/`. The existing
+`cross_domain` container is therefore not merely an unresolved spelling
+proposal. This broad semantic file remains at its existing tracked path for
+compatibility; this revision does not register it as a seam, choose a new seam
+ID, relocate it, or declare every existing descendant path conformant.
+Registered-seam mapping or an authority-changing move requires separate
+placement and migration evidence.
 
-Adjacent responsibility roots:
+| Responsibility | Existing reference | Relationship |
+|---|---|---|
+| Cross-domain navigation | [Directory README](./README.md) | Navigation, not a source of current implementation proof; its June inventory and placement commentary predate this checkpoint |
+| Atmosphere meaning | [Domain contract](../domains/atmosphere/knowledge_character.md) | Domain-owned vocabulary-record semantics |
+| Human explanation | [Knowledge characters](../../docs/domains/atmosphere/KNOWLEDGE_CHARACTERS.md) | Explainer, rationale, and qualified working glosses |
+| Human index | [Registry index](../../docs/domains/atmosphere/KNOWLEDGE_CHARACTER_REGISTRY.md) | Thin index; not machine data or an independently writable vocabulary |
+| Vocabulary decision | [Unassigned vocabulary ADR](../../docs/adr/ADR-XXXX-atmosphere-knowledge-character-vocabulary.md) | `proposed` / `not-assigned`, not acceptance authority |
 
-| Root | Relationship to this contract |
-|---|---|
-| `./README.md` | Cross-domain contract directory boundary and anti-parallel-authority rules. |
-| `../../docs/domains/atmosphere/KNOWLEDGE_CHARACTERS.md` | Canonical Atmosphere prose explainer for the current vocabulary evidence. |
-| `../../docs/domains/atmosphere/KNOWLEDGE_CHARACTER_REGISTRY.md` | Atmosphere registry index and open enum/machine-registry posture. |
-| `../../docs/domains/atmosphere/VERIFICATION_BACKLOG.md` | Source scaffold and verification backlog for knowledge-character enforcement. |
-| `../../schemas/contracts/v1/` | Machine-shape root. No paired cross-domain schema was verified here. |
-| `../../policy/` | Deny/abstain/restrict behavior for anti-collapse and release gates. |
-| `../../tools/validators/`, `../../fixtures/`, `../../tests/` | Enforceability homes. |
-| `../../data/registry/sources/` | SourceDescriptor records that may declare or support knowledge character. |
-| `../../data/proofs/` | EvidenceBundle/proof support. |
-| `../../release/` | Release state and public posture. |
-
----
+No parallel schema, policy, source registry, proof, receipt, release, or public
+interface home is created. Older proposed `contracts/<topic>/...` placement
+prose must not override the adopted rule.
 
 ## Schema and registry posture
 
-No paired cross-domain schema was verified in this task.
+The verified machine-shape evidence is the **Atmosphere** schema, not an
+established cross-domain KnowledgeCharacter schema.
 
-The Atmosphere registry docs state that:
-
-- the terms are confirmed as ubiquitous language for Atmosphere;
-- exact machine enum values are open;
-- the machine-readable registry home is open / ADR-class;
-- the human-readable registry index is not the machine artifact;
-- validators and policy enforcement are proposed / need verification.
-
-| Artifact | Status | Notes |
+| Artifact | Current source evidence | Safe interpretation |
 |---|---|---|
-| `contracts/cross_domain/knowledge_character.md` | `CONFIRMED` current contract path | This file. |
-| `schemas/contracts/v1/cross_domain/knowledge_character.schema.json` | `UNKNOWN / NOT FOUND IN SEARCH` | No paired schema verified. |
-| `contracts/domains/atmosphere/knowledge_character.md` | `NEEDS VERIFICATION` | Mentioned as desired evidence in the Atmosphere backlog, not verified here. |
-| `schemas/contracts/v1/domains/atmosphere/knowledge_character.schema.json` | `NEEDS VERIFICATION` | Mentioned as desired evidence in the Atmosphere backlog. |
-| Machine registry home | `OPEN / ADR-class` | Atmosphere registry says placement needs ADR. |
-| Canonical enum values | `OPEN` | Atmosphere registry flags enum values as open. |
+| [Atmosphere schema](../../schemas/contracts/v1/domains/atmosphere/knowledge_character.schema.json) | Object schema with empty properties, no required character or enum, and additional properties allowed; marked `PROPOSED` | A JSON object can satisfy this scaffold without carrying a valid character; schema validity is not anti-collapse validation |
+| [Atmosphere registry placeholder](../../data/registry/sources/atmosphere/knowledge_character.json) | Status, source-document pointer, path, and placeholder note only | Neither a closed vocabulary nor an operational registry; existing source-registry placement does not settle vocabulary authority |
+| [Vocabulary ADR candidate](../../docs/adr/ADR-XXXX-atmosphere-knowledge-character-vocabulary.md) | Explicitly unassigned and proposed; distinguishes eleven candidate values from six fixture bindings | Does not accept the enum, fix a global role crosswalk, or authorize release |
+| [Bounded fixture validator](../../tools/validators/domains/atmosphere/validate_knowledge_character.py) | Six explicit `FIXTURE_CHARACTER_RULES` entries in Python | Independent fixture-profile checks, not implementation of the permissive schema or an accepted global registry |
 
----
+A separate cross-domain machine schema, accepted global enum, and operational
+registry are **not established by this revision**. This is an evidence limit,
+not an exhaustive absence claim. Do not create a second machine home merely to
+make the Markdown and directory trees look symmetrical.
+
+The older domain contract and human index retain source-era statements that
+validator existence was unverified. The executable source above resolves that
+bounded existence question. It does not resolve their vocabulary, registry,
+policy, consumer, or release acceptance questions.
 
 ## Accepted uses
 
-| Use | Allowed? | Rule |
-|---|---:|---|
-| Preventing source-role or epistemic collapse | Yes | Consumers must preserve and check knowledge character before treating data as evidence. |
-| Labeling a cross-domain join input | Yes | Carry per-input knowledge character; do not collapse derived fusion into observation. |
-| Public UI/API/AI disclosure of evidence type | Conditional | Display only governed, public-safe labels and caveats. |
-| Driving DENY/ABSTAIN for invalid transformations | Yes | Policy/validator must deny or abstain when a record masquerades as another knowledge type. |
-| Replacing SourceDescriptor source role | No | SourceDescriptor source role remains fixed at admission and separate from object-level knowledge character. |
-| Proving evidence validity | No | EvidenceBundle/proofs are required. |
-| Freezing machine enum values | No | Enum values remain open until ADR/schema/registry closure. |
+These are draft semantic uses, not automatic permission to process or publish.
 
----
+| Use | Contract boundary |
+|---|---|
+| Describe an object's epistemic kind | Retain the owning domain, vocabulary/profile context, and uncertainty |
+| Carry labels across a cross-domain boundary | Preserve each input's character and source role; do not normalize them into assumed equivalents |
+| Specify validators and negative cases | Distinguish current fixture checks from proposed full-vocabulary enforcement |
+| Display evidence type in an API, map, Evidence Drawer, export, or AI answer | Only through governed, policy-safe, released support with the relevant caveats |
+| Support correction review | Preserve prior characterization and affected evidence/consumer lineage |
+| Replace source role, prove evidence, accept a vocabulary, or authorize publication | Not permitted by this contract |
 
 ## Exclusions
 
-| Does not belong in `knowledge_character` | Correct owner / surface |
-|---|---|
-| Full source descriptor | `data/registry/sources/` and source contracts. |
-| Machine enum registry artifact | Accepted registry/control-plane/data home after ADR. |
-| JSON Schema | `schemas/contracts/v1/<topic-or-domain>/...`. |
-| Policy deny logic | `policy/<topic-or-domain>/...`. |
-| Validator implementation | `tools/validators/<topic-or-domain>/...`. |
-| Fixtures and tests | `fixtures/`, `tests/`. |
-| Evidence/proof body | `data/proofs/`. |
-| Release/public posture | `release/` and release contracts. |
-| Public UI/API implementation | Governed app/API/UI roots. |
-| Domain-specific vocabulary ownership | Owning domain docs/contracts remain authoritative for their own terms. |
+Machine schemas remain in `schemas/`; executable admissibility rules in
+`policy/`; validator code in `tools/`; test inputs and executable conformance in
+`fixtures/` and `tests/`; governed instances and accountability objects in the
+appropriate `data/` lanes; release and correction decisions in their owning
+release surfaces. Adopted Directory Rules define those responsibilities.
 
----
+This contract contains none of the following authorities: a source descriptor,
+a machine enum registry, a policy decision, an EvidenceBundle, a proof pack, a
+release manifest, a public runtime, or a domain-wide source-role crosswalk.
+The existing registry placeholder is not permission to establish one here.
 
 ## Recommended fields
 
-These fields are `PROPOSED` for future schema/registry work unless already accepted elsewhere:
+The following names are retained as **PROPOSED semantic requirements**, not a
+required wire payload. An owning schema/profile must define exact types,
+cardinality, identity participation, and versioning before implementation.
 
-| Field | Semantic role | Why it matters |
+| Proposed field | Semantic purpose | Current fixture-profile distinction |
 |---|---|---|
-| `knowledge_character` | Closed or registry-backed label for epistemic kind. | Prevents observed/modeled/regulatory/advisory/derived collapse. |
-| `source_role_ref` | Link to SourceDescriptor/source role basis. | Preserves admission-time source-role boundary. |
-| `evidence_ref` | Link to evidence supporting the label. | Enables cite-or-abstain. |
-| `time_basis` | Time kind used to characterize the object. | Prevents observed/published/effective/release-time collapse. |
-| `release_caveat` | Public-safe caveat required for some characters. | Supports UI/API/AI exposure without overclaiming. |
-| `fusion_basis` | Per-input characters for derived fusion. | Prevents fusion output from masquerading as observation. |
-| `policy_decision_ref` | Linked deny/allow/restrict/abstain decision. | Keeps policy authority separate from the label. |
-| `review_state` | Steward review status for contentious labels. | Supports governance and correction. |
+| `knowledge_character` | Scoped label for the object's epistemic kind | The Atmosphere fixture accepts exactly one of its six strings, not the full proposed vocabulary |
+| `source_role_ref` | Preserve source-role and descriptor basis | The fixture instead carries `source_role` and `source_descriptor_ref`; this is not an alias declaration |
+| `evidence_ref` | Support the characterization with admissible evidence | The fixture uses plural `evidence_refs`; nonempty strings are checked but not resolved |
+| `time_basis` | Keep observed, issued, valid, retrieval, baseline, and release time distinct where material | No such field or temporal validation is established in this frozen fixture shape |
+| `release_caveat` | Carry the caveat required for the intended exposure | Fixture `limitations` are fixed synthetic-profile values, not public release approval |
+| `fusion_basis` | Retain every input's character, source role, and lineage | `DERIVED_FUSION` is outside the six-character fixture profile |
+| `policy_decision_ref` | Refer to a separate admissibility decision | No live policy evaluation or decision resolution occurs in the profile |
+| `review_state` | Preserve qualified review status | Fixture `governance.review_state` is `fixture_only`, not steward approval |
 
----
+A display label is not an identity token. No new hashing algorithm or universal
+identity recipe is selected here. Where characterization participates in
+identity or release meaning, follow the owning identity and correction contracts
+rather than silently changing the label or regenerating a digest.
 
 ## Invariants
 
-A `knowledge_character` contract must preserve these invariants:
+A consuming contract must preserve these boundaries; the presence of this list
+is not proof that every boundary is currently enforced.
 
-- the label is epistemic, not decorative;
-- the label must not be edited in place when it participates in identity or release posture;
-- re-characterizing a record is a new governed identity or correction path, not a mutation;
-- one knowledge character must not masquerade as another;
-- missing or unknown knowledge character fails closed where material;
-- model fields are not observations;
-- public AQI reports are not concentrations;
-- AOD/remote-sensing masks are not PM2.5 ground truth;
-- low-cost sensor outputs need public caveats before release;
-- alert/advisory context is not life-safety authority;
-- derived fusion must retain per-input lineage;
-- public and AI surfaces must cite, caveat, abstain, deny, or redirect rather than overclaim.
-
----
+1. Knowledge character is epistemic, not decorative. Preserve domain meaning;
+   missing, unknown, or conflicting state fails closed where material.
+2. Source role, character, evidence, confidence, policy, review, and release are
+   distinct. Neither a label nor a successful fixture check can substitute for
+   any of the others.
+3. Do not silently edit identity-bearing or release-significant characterization.
+   Material re-characterization requires the owning correction/supersession
+   procedure, replacement identity where required, provenance, and rollback.
+4. Model output is not observation; AQI is not concentration; AOD or a mask is not
+   ground PM2.5; regulatory archives retain their vintage; low-cost readings
+   retain correction, confidence, limitations, and caveats before public use.
+5. Fusion preserves per-input characters and lineage; an advisory reference is
+   not KFM life-safety authority; site metadata is not an observed value and must
+   not expose protected precision by relabeling it as context.
+6. Public and AI surfaces use governed evidence and released artifacts. They
+   cite, qualify, abstain, deny, or redirect under their own finite contracts,
+   rather than turn character labels or visual plausibility into truth.
 
 ## Atmosphere vocabulary basis
 
-Atmosphere currently provides the strongest evidence for this contract.
+The [human explainer](../../docs/domains/atmosphere/KNOWLEDGE_CHARACTERS.md)
+names **twelve terms: the umbrella phrase `Knowledge character` plus eleven
+specific characters**. Its working glosses and typical source-role associations
+are explicitly **INFERRED guidance**, not verbatim source definitions or an
+accepted global mapping. The table below preserves that status.
 
-| Knowledge character | Role in Atmosphere docs | Cross-domain caution |
+| Character | Source working gloss and cross-domain caution | Frozen six-character profile |
 |---|---|---|
-| `OBSERVED_SENSOR` | Direct instrument reading. | Must not be confused with model, advisory, or aggregate context. |
-| `PUBLIC_AQI_REPORT` | Agency AQI report. | AQI is not concentration. |
-| `REGULATORY_ARCHIVE` | Archived regulatory dataset/determination. | Preserve vintage and regulatory context. |
-| `LOW_COST_SENSOR` | Community/consumer-grade reading. | Public caveats/confidence/limitations required. |
-| `ATMOSPHERIC_MODEL_FIELD` | NWP/CTM/reanalysis/model output. | Never an observation. |
-| `REMOTE_SENSING_MASK` | Satellite raster/mask/AOD/smoke/fire product. | AOD is not PM2.5; masks are not ground truth. |
-| `CLIMATE_ANOMALY_CONTEXT` | Departure-from-baseline context. | Not a per-place event by itself. |
-| `DERIVED_FUSION` | Multi-source blended product. | Must carry per-input knowledge characters. |
-| `METEOROLOGICAL_CONTEXT` | Supporting meteorology. | Context does not become the variable it supports. |
-| `ALERT_AND_ADVISORY_CONTEXT` | Advisory context. | Not the official alerting authority. |
-| `NETWORK_AND_SITE_CONTEXT` | Network/site metadata. | Metadata is not observation value. |
+| `OBSERVED_SENSOR` | Instrument reading; do not substitute model, advisory, or aggregate context | Included |
+| `PUBLIC_AQI_REPORT` | Agency AQI report; not a concentration | Included |
+| `REGULATORY_ARCHIVE` | Regulatory archive/determination; preserve vintage | Not covered |
+| `LOW_COST_SENSOR` | Community-grade reading; retain correction, confidence, limitations, and caveats | Not covered |
+| `ATMOSPHERIC_MODEL_FIELD` | Model/reanalysis/forecast field; not observation | Included |
+| `REMOTE_SENSING_MASK` | Satellite raster, mask, or proxy; not ground PM2.5 | Included |
+| `CLIMATE_ANOMALY_CONTEXT` | Baseline-relative context; not a local event or occurrence by itself | Not covered |
+| `DERIVED_FUSION` | Multi-source derivative; preserve each input's character and lineage | Not covered |
+| `METEOROLOGICAL_CONTEXT` | Supporting meteorology; not automatically the variable it supports | Not covered |
+| `ALERT_AND_ADVISORY_CONTEXT` | Advisory/referral context; not KFM alerting authority | Included |
+| `NETWORK_AND_SITE_CONTEXT` | Network/site metadata; not observation, and precision remains governed | Included |
 
----
+“Not covered” means outside **this fixture profile**, not an invalid concept in
+all KFM domains. Passing one of those five values to the frozen validator yields
+an unknown-character finding; it does not settle the vocabulary proposal.
+
+The exact fixture bindings include lowercase roles such as `observed`,
+`regulatory`, `modeled`, `observed_remote_sensing`, and `administrative`.
+These local bindings must not be exported as a universal source-role enum or
+cross-domain equivalence rule. Keep casing, profile identity, and domain
+meaning intact until a separately governed compatibility mapping exists.
 
 ## Cross-domain semantics
 
-Knowledge character becomes cross-domain when one domain consumes another domain's object or derivative.
+Knowledge character crosses a boundary when another domain consumes the object
+or a derivative. The examples below are semantic requirements, **not claims of
+implemented joins, routes, layers, or released products**.
 
-Examples:
-
-| Cross-domain use | Required behavior |
+| Proposed use | Required preservation |
 |---|---|
-| Atmosphere smoke mask used by Hazards | Preserve `REMOTE_SENSING_MASK`; do not treat as confirmed fire or life-safety alert. |
-| Atmosphere model field used by Agriculture | Preserve `ATMOSPHERIC_MODEL_FIELD`; do not treat forecast/model cell as observed field condition. |
-| Climate anomaly used by Habitat/Fauna | Preserve `CLIMATE_ANOMALY_CONTEXT`; carry baseline/reference period and avoid per-occurrence overclaim. |
-| Derived fusion used by public Focus Mode | Preserve `DERIVED_FUSION` and all per-input characters; include caveats or abstain. |
-| Alert/advisory reference used by public UI | Preserve official-source boundary; redirect to authority and avoid life-safety instructions. |
+| Atmosphere smoke mask used by Hazards | Preserve `REMOTE_SENSING_MASK`; not confirmed fire, observed exposure, or life-safety instruction |
+| Atmosphere model field used by Agriculture | Preserve `ATMOSPHERIC_MODEL_FIELD`; not observed field condition or crop truth |
+| Climate anomaly used by Habitat/Fauna | Preserve baseline/reference period and `CLIMATE_ANOMALY_CONTEXT`; not per-occurrence evidence by itself |
+| Fusion used by Focus Mode | Preserve `DERIVED_FUSION`, per-input characters, source roles, methods, and limitations; narrow or abstain without admissible evidence |
+| Advisory reference used by a public UI | Preserve issuing-source and time context; redirect to the official authority rather than issue a KFM alert |
 
----
+Each endpoint retains its domain-owned facts, evidence support, time, rights,
+sensitivity, and correction lineage. A derived output needs its own declared
+meaning and provenance; it must not overwrite the inputs' characterization.
+Most-restrictive applicable policy and sensitivity obligations survive the
+composition. Resolving a reference, matching a cell, or assigning a character
+alone does not authorize the relation or its public use.
 
 ## Lifecycle
 
-```mermaid
-flowchart LR
-  SOURCE[SourceDescriptor / source role] --> ADMIT[Admission assigns or supports character]
-  ADMIT --> OBJECT[Domain object carries knowledge_character]
-  OBJECT --> EVID[EvidenceRef / EvidenceBundle]
-  OBJECT --> POLICY[Policy guard / deny / abstain]
-  OBJECT --> JOIN[Cross-domain join or fusion]
-  JOIN --> RELEASE[Review + release gate]
-  RELEASE --> PUBLIC[Public API / UI / AI caveat or abstain]
+```text
+RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 ```
 
-Lifecycle notes:
+Character is carried with the governed object; it is not another lifecycle
+stage. Source admission establishes the source-role context. The owning domain
+contract must determine when object characterization is assigned and frozen.
+The Atmosphere explainer refers both to admission and to WORK normalization;
+this revision does not invent a universal assignment phase to erase that
+wording tension, and the fixture validator tests neither transition.
 
-- Knowledge character is set at or derived from admission/evidence context.
-- It must travel with the object through joins and derived products.
-- Re-characterization requires correction/supersession, not silent mutation.
-- Public exposure requires caveats, policy checks, and release state where applicable.
+Before a consequential public claim, the consumer must resolve `EvidenceRef`
+to an admissible `EvidenceBundle` and satisfy rights, sensitivity, validation,
+provenance, integrity, proof/receipt, policy, review, release, correction, and
+rollback obligations. Promotion is a governed transition, not a file move.
 
----
+Public clients use governed APIs and released artifacts, never internal or
+unreleased stores. Maps, tiles, graphs, summaries, and AI carry qualified
+interpretations; none creates knowledge-character or evidence authority.
+Corrections preserve old and replacement character state and update affected
+consumers through the owning correction procedure rather than silent relabeling.
 
 ## Validation
 
-Before relying on this contract, verify:
+### Implemented fixture boundary
 
-- canonical placement of cross-domain vs domain-specific knowledge-character contract;
-- paired schema or machine registry exists and is accepted;
-- canonical enum values are resolved by ADR or accepted registry;
-- every SourceDescriptor or object requiring a character has exactly one where material;
-- validators deny AQI-as-concentration, AOD-as-PM2.5, model-as-observed, advisory-as-alert-authority, and low-cost-sensor-without-caveat cases;
-- derived fusion carries per-input `knowledge_character` values;
-- public UI/API/AI surfaces expose caveats and freshness labels where needed;
-- release gates fail closed for missing/unknown/conflicting character;
-- corrections/supersessions exist for re-characterization.
+The [validator](../../tools/validators/domains/atmosphere/validate_knowledge_character.py)
+implements `kfm-atmosphere-knowledge-character-fixture-v1`.
+Its [fixture README](../../fixtures/domains/atmosphere/knowledge_character/README.md)
+and [focused test module](../../tests/domains/atmosphere/test_knowledge_character_registry.py)
+declare six positive JSON cases, five negative cases with exact expected-error
+sidecars, and 14 test methods. Missing, unknown, and multiple character cases
+are constructed in memory by the tests, not stored as registry entries.
 
----
+The inspected implementation checks the character's object-family, source-role,
+claim-kind, parameter, unit, intended-use, and exact limitation pairing. It
+requires bounded, unique, nonempty evidence-reference strings and a nonempty
+source-descriptor reference. **It does not resolve those references.**
+
+Spatial support is restricted to `generalized_county` and a five-ASCII-digit
+`county_fips`. This checks shape, not the existence of the county, Kansas
+membership, real geometry, or the validity of a spatial relationship. Declared
+precise-site forms and location aliases are rejected; the profile does not
+perform a real-data generalization or sensitivity-adjudication process.
+
+The governance constants remain `fixture_only` rights/review/rollback,
+`public_safe_fixture` sensitivity, `not_released` release, and exact boolean
+`promotion_eligible: false`. These are fixture constraints, not findings about
+real-world rights, approval, or release readiness.
+
+| Negative case | Named finding |
+|---|---|
+| Model impersonates observation | `MODEL_AS_OBSERVATION_DENIED` |
+| AQI impersonates concentration | `AQI_AS_CONCENTRATION_DENIED` |
+| AOD impersonates ground PM2.5 | `AOD_AS_PM25_DENIED` |
+| Advisory impersonates life-safety guidance | `ADVISORY_AS_LIFE_SAFETY_DENIED` |
+| Precise site exposure | `PRECISE_SITE_EXPOSURE_DENIED` |
+| Missing / unknown / multiple character | `KNOWLEDGE_CHARACTER_MISSING` / `KNOWLEDGE_CHARACTER_UNKNOWN` / `KNOWLEDGE_CHARACTER_MULTIPLE` |
+
+The [shared fixture helper](../../tools/validators/_common/public_safe_fixture.py)
+owns bounded JSON parsing and CLI serialization. Output is **`PASS` or `FAIL`**
+with sorted code/path findings; exit codes are `0` for no findings, `1` for
+findings, and `2` for missing arguments. A finding ending in `_DENIED` does not
+turn that `FAIL` into a PolicyDecision or a public `DENY` response. The separate
+API/AI `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR` vocabulary is not this CLI's
+result enum.
+
+### Reproduction and remaining proof
+
+From a repository checkout containing the pinned implementation and fixtures,
+the existing fixture documentation gives this focused command:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
+  python tests/domains/atmosphere/test_knowledge_character_registry.py --verbose
+```
+
+The test module explicitly patches selected socket and URL-opening entry points
+and asserts no calls for its validation path. `KFM_NO_NETWORK=1` by itself is
+not proof of a network sandbox. The command and source inventory are not a
+claim that this revision ran the suite or that hosted checks passed.
+
+Full realization still needs accepted vocabulary and registry placement,
+non-placeholder schema constraints, proof for all intended characters,
+domain-owned source-role compatibility, time and identity/correction tests,
+live evidence and policy integration, governed consumer coverage, and release
+and rollback evidence. Low-cost-sensor caveats and fusion lineage must not be
+reported as covered by this six-character validator.
 
 ## No-loss preservation
 
-| Existing scaffold element | Disposition | Reason |
-|---|---|---|
-| Scaffold source path | `KEEP + GROUND` | The file was created from Atmosphere verification backlog references. |
-| Proposed status | `KEEP + EXPAND` | Implementation and schema maturity remain unverified. |
-| Source documents list | `KEEP + EXPAND` | Added registry, explainer, placement, and contract-schema-policy split docs. |
-| Machine-shape warning | `KEEP + STRENGTHEN` | Added explicit schema/registry/validator unknowns. |
-| Replace-before-canonical note | `KEEP + IMPLEMENT` | Replaced scaffold with reviewed semantic content while retaining verification warnings. |
-
----
+| Prior element | Disposition |
+|---|---|
+| Document ID, target path, top anchor, and existing section headings | Retained; no rename or compatibility migration |
+| Epistemic/source-role distinction, eleven candidate characters, cross-domain examples | Retained with source qualification and explicit coverage boundaries |
+| Machine-shape and registry warnings | Reconciled: actual scaffold/placeholder presence replaces blanket unknowns without claiming acceptance |
+| Validator uncertainty | Replaced by verified bounded source inventory; execution and production claims remain separate |
+| Identity, evidence, sensitivity, public-use, correction, and rollback controls | Retained; no runtime or authority change |
+| Historical scaffold and older evidence ledger | Retained in Git history; no claim that earlier “reviewed” wording proves independent approval |
 
 ## Evidence basis
 
-| Source | Status | Supports | Limits |
-|---|---|---|---|
-| Prior `contracts/cross_domain/knowledge_character.md` scaffold | `CONFIRMED` | Target file existed and identified Atmosphere verification backlog as source. | Scaffold did not define authoritative semantics. |
-| `contracts/cross_domain/README.md` | `CONFIRMED` | Cross-domain contracts coordinate meaning without absorbing domain ownership or creating new authority. | Does not prove individual contract inventory. |
-| `docs/domains/atmosphere/VERIFICATION_BACKLOG.md` | `CONFIRMED` | Atmosphere carries acute anti-collapse requirements and lists knowledge-character verification items. | Backlog rows are not implementation proof. |
-| `docs/domains/atmosphere/KNOWLEDGE_CHARACTERS.md` | `CONFIRMED doctrine / PROPOSED implementation` | Defines knowledge character, anti-collapse rule, and Atmosphere vocabulary. | Machine enum and registry remain open. |
-| `docs/domains/atmosphere/KNOWLEDGE_CHARACTER_REGISTRY.md` | `CONFIRMED index / OPEN registry posture` | Controlled vocabulary index and explicit warning that enum/machine registry are open. | Human-readable index is not the machine artifact. |
-| `docs/architecture/cross-domain/multi-domain-placement.md` | `CONFIRMED doctrine / PROPOSED paths` | Cross-domain semantic contracts belong under `contracts/<topic>/...` and must avoid picked-domain ownership. | Topic naming remains review-bound. |
+The repository links above were inspected at the immutable checkpoint in
+[Status](#status). They support the following separate claims:
 
----
+| Evidence | Supports | Does not establish |
+|---|---|---|
+| Prior target blob `4f7eac28c9697c588dd9da35edb29f778fa43aae` | Existing v0.2 semantic content and preservation baseline | An accepted global vocabulary or independent review |
+| Accepted ADR-0029 and adopted Directory Rules | Responsibility-root and cross-domain placement law | Vocabulary acceptance or a new seam registration |
+| Atmosphere contract, explainer, and human index | Domain meaning, eleven specific terms, source-qualified glosses, and open decisions | Machine enforcement merely through prose |
+| Unassigned vocabulary ADR candidate | Explicit proposed scope and six-versus-eleven implementation distinction | Accepted decision or global enum |
+| Atmosphere schema and registry placeholder | Their actual limited machine content | Closed vocabulary, reference resolution, or complete registry |
+| Validator, shared helper, fixture README, and focused tests | Bounded field checks, finding/CLI semantics, declared fixture inventory, and executable test source | Current test success, live policy/evidence behavior, or release |
+
+Read-only lineage consulted: **KFM Atmosphere / Air PDF-Only Architecture Report
+(2026-04-21)**, executive determination and whole-domain architecture; the
+Google Drive **Directory Rules** document; and Notion's **KFM Hourly Atmosphere
+Domain Builder v1.0** coordination page. The PDF proposes a broader
+fourteen-character taxonomy; the repository explainer's eleven specific terms
+and the six-code fixture profile are different scopes, not interchangeable
+inventories. No extra PDF term is silently admitted here.
+
+The PDF's no-mounted-repository statements describe its historical authoring
+session, not this repository. Drive supplies lineage, Notion coordinates work,
+and current GitHub bytes establish implementation. None of those source labels
+substitutes for adoption, review, validation, or release evidence.
 
 ## Rollback
 
-Rollback is required if this contract is used to claim a verified schema, canonical enum, implemented validator, machine registry, policy enforcement, public release, or domain-independent authority that has not been verified.
+This documentation revision changes no runtime, schema, registry, fixture,
+policy, or release object. Before integration, leave the branch unmerged to
+withhold the change. After integration, use a separately reviewed forward
+revert of this documentation commit; do not rewrite history or automatically
+revert unrelated work.
 
-Rollback target: prior scaffold content SHA `2669244a79eb46070324196e00346bb2ee41a0eb`.
+The exact prior-content target is Git blob
+`4f7eac28c9697c588dd9da35edb29f778fa43aae` at the inspected base. The earlier
+scaffold blob `2669244a79eb46070324196e00346bb2ee41a0eb` is historical lineage,
+not the immediate rollback target.
 
----
+Correct or withdraw this revision if it is used to assert an accepted global
+enum, full-vocabulary validation, resolved evidence, policy permission,
+independent review, or public release that the evidence does not support.
+Rolling back prose does not undo a data correction or a release; those require
+their own governed operations.
 
 ## Definition of done
 
-- [ ] Owners are confirmed and `OWNER_TBD` is replaced.
-- [ ] Canonical placement is resolved: cross-domain contract, domain contract, or both with compatibility rules.
-- [ ] Machine registry home is resolved by ADR or accepted placement note.
-- [ ] Canonical enum values are accepted and versioned.
-- [ ] Paired schema exists and references this contract or approved canonical contract.
-- [ ] Validators and fixtures enforce anti-collapse and negative cases.
-- [ ] Policy denies/abstains on missing, conflicting, or misused knowledge character.
-- [ ] SourceDescriptor and object-family contracts link the character to evidence/source role/time/release state.
-- [ ] Public UI/API/AI surfaces show caveats/freshness and do not overclaim.
-- [ ] Re-characterization routes through CorrectionNotice/SupersessionNotice rather than in-place mutation.
+This same-path documentation update is distinct from completing the capability.
+The capability remains open until:
 
----
+- [ ] Steward assignments, cross-domain/domain responsibilities, and any needed seam mapping are accepted.
+- [ ] Canonical vocabulary values, versions, and machine-registry placement are decided without creating parallel authority.
+- [ ] Schema and validator coverage match the intended vocabulary, including the five characters outside the current fixture profile.
+- [ ] Source-role compatibility, evidence resolution, temporal semantics, and identity/correction behavior are verified in their owning profiles.
+- [ ] Policy and public API/UI/AI consumers preserve caveats, freshness, sensitivity, and fail-closed outcomes with actual tests.
+- [ ] Review, release, correction, supersession, and rollback are independently evidenced for any public use.
+
+Safe, reversible documentation and fixture authoring need not wait for those
+later capability gates; adopting a vocabulary or publishing claims does.
 
 ## Status summary
 
-`knowledge_character` is a semantic anti-collapse marker for epistemic kind. It is not source role itself, not EvidenceBundle, not a schema registry, not policy approval, not proof of truth, not public release permission, and not a display-only tag.
+`knowledge_character` is a domain-preserving epistemic marker, not source role,
+EvidenceBundle, schema registry, policy approval, proof of truth, release
+permission, or a cosmetic badge. Atmosphere supplies draft vocabulary plus a
+real but deliberately bounded six-character fixture implementation. This
+contract documents their relationship without promoting either into global or
+public authority.
 
 <p align="right"><a href="#top">Back to top</a></p>

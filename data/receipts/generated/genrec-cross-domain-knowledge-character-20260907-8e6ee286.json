@@ -1,0 +1,189 @@
+{
+  "receipt_id": "genrec-cross-domain-knowledge-character-20260907-8e6ee286",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "contracts/cross_domain/knowledge_character.md"
+  ],
+  "artifact_hashes": {
+    "contracts/cross_domain/knowledge_character.md": "sha256:8e6ee286c39c0d6de63869b005beb312385f48dc353c2f2c22ebf8a56954c5ea"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Astra Pro",
+    "version": "UNKNOWN: runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e9bb584070e8a43e5d6650b7f74dfd1823f46a7151c4e732cd31b110dd49ef7e",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "Google Drive",
+      "Notion",
+      "local Python"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6087d07b49362540e437dc666d1cbaa6eb6b82c3/contracts/cross_domain/knowledge_character.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6087d07b49362540e437dc666d1cbaa6eb6b82c3/contracts/domains/atmosphere/knowledge_character.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6087d07b49362540e437dc666d1cbaa6eb6b82c3/docs/domains/atmosphere/KNOWLEDGE_CHARACTERS.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6087d07b49362540e437dc666d1cbaa6eb6b82c3/docs/domains/atmosphere/KNOWLEDGE_CHARACTER_REGISTRY.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6087d07b49362540e437dc666d1cbaa6eb6b82c3/docs/adr/ADR-XXXX-atmosphere-knowledge-character-vocabulary.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6087d07b49362540e437dc666d1cbaa6eb6b82c3/docs/doctrine/directory-rules.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6087d07b49362540e437dc666d1cbaa6eb6b82c3/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6087d07b49362540e437dc666d1cbaa6eb6b82c3/schemas/contracts/v1/domains/atmosphere/knowledge_character.schema.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6087d07b49362540e437dc666d1cbaa6eb6b82c3/data/registry/sources/atmosphere/knowledge_character.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6087d07b49362540e437dc666d1cbaa6eb6b82c3/tools/validators/domains/atmosphere/validate_knowledge_character.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6087d07b49362540e437dc666d1cbaa6eb6b82c3/tools/validators/_common/public_safe_fixture.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6087d07b49362540e437dc666d1cbaa6eb6b82c3/fixtures/domains/atmosphere/knowledge_character/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6087d07b49362540e437dc666d1cbaa6eb6b82c3/tests/domains/atmosphere/test_knowledge_character_registry.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6087d07b49362540e437dc666d1cbaa6eb6b82c3/CONTRIBUTING.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6087d07b49362540e437dc666d1cbaa6eb6b82c3/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ],
+    "attached_docs": [
+      "Google Drive: Directory Rules (read-only lineage)",
+      "Google Drive: KFM Atmosphere / Air PDF-Only Architecture Report, 2026-04-21 (read-only lineage)",
+      "Notion: KFM Hourly Atmosphere Domain Builder v1.0 (read-only coordination)"
+    ]
+  },
+  "truth_labels": {
+    "contracts/cross_domain/knowledge_character.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "session-documentation-attempt-1",
+      "outcome": "FAIL",
+      "reason": "Session harness expected the literal wording not a universal, while the document states No global enum. Corrected the phrase assertion; not a repository content or implementation failure."
+    },
+    {
+      "gate": "session-documentation-final",
+      "outcome": "PASS",
+      "reason": "16 session-local checks: Markdown and metadata, 18 preserved H2 headings, unique anchors, code fences, command syntax only, 13 connector-verified relative-link targets, six-versus-eleven vocabulary coverage, and exact-source scaffold diagnostic."
+    },
+    {
+      "gate": "unmodified-atmosphere-schema-diagnostic",
+      "outcome": "PASS",
+      "reason": "Reconstruction matches Git blob 9ad7a17e27c349695dd43ce1c48653ae5019f193. Draft202012Validator accepts both an empty object and an arbitrary character, and rejects an array. This confirms the documented permissiveness, not semantic enforcement."
+    },
+    {
+      "gate": "generated-receipt-schema-format-and-integrity",
+      "outcome": "PASS",
+      "reason": "Local JSON Schema and FormatChecker validation against byte-exact schema blob fba21ed27ebccf1362fe397fe0c3ebd85e072685; artifact maps and full SHA-256 match final Markdown bytes; pending review and no override preserved. Not the full repository-native receipt CLI."
+    },
+    {
+      "gate": "repository-native-validation",
+      "outcome": "SKIPPED",
+      "reason": "No complete checkout or reconstructed dependency closure. Atmosphere tests, native receipt CLI, repository-wide suites, live policy/evidence, and browser/runtime checks were not run."
+    },
+    {
+      "gate": "hosted-exact-head-validation",
+      "outcome": "SKIPPED",
+      "reason": "No hosted execution result is asserted by this authoring receipt; later exact-head readback belongs in the delivery handoff."
+    },
+    {
+      "gate": "independent-human-review",
+      "outcome": "SKIPPED",
+      "reason": "No independent review performed; human_review.state remains pending."
+    },
+    {
+      "gate": "draft-pr-delivery",
+      "outcome": "SKIPPED",
+      "reason": "Issue #4024 remains open; the failed #4405 one-shot draft canary and subsequent #4423 failed-control merge do not establish a safe delivery path. Preserve branch-only work; no PR lifecycle call authorized by this receipt."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "repo-source-01",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6087d07b49362540e437dc666d1cbaa6eb6b82c3/contracts/cross_domain/knowledge_character.md"
+    },
+    {
+      "id": "repo-source-02",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6087d07b49362540e437dc666d1cbaa6eb6b82c3/contracts/domains/atmosphere/knowledge_character.md"
+    },
+    {
+      "id": "repo-source-03",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6087d07b49362540e437dc666d1cbaa6eb6b82c3/docs/domains/atmosphere/KNOWLEDGE_CHARACTERS.md"
+    },
+    {
+      "id": "repo-source-04",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6087d07b49362540e437dc666d1cbaa6eb6b82c3/docs/domains/atmosphere/KNOWLEDGE_CHARACTER_REGISTRY.md"
+    },
+    {
+      "id": "repo-source-05",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6087d07b49362540e437dc666d1cbaa6eb6b82c3/docs/adr/ADR-XXXX-atmosphere-knowledge-character-vocabulary.md"
+    },
+    {
+      "id": "repo-source-06",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6087d07b49362540e437dc666d1cbaa6eb6b82c3/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "repo-source-07",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6087d07b49362540e437dc666d1cbaa6eb6b82c3/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "repo-source-08",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6087d07b49362540e437dc666d1cbaa6eb6b82c3/schemas/contracts/v1/domains/atmosphere/knowledge_character.schema.json"
+    },
+    {
+      "id": "repo-source-09",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6087d07b49362540e437dc666d1cbaa6eb6b82c3/data/registry/sources/atmosphere/knowledge_character.json"
+    },
+    {
+      "id": "repo-source-10",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6087d07b49362540e437dc666d1cbaa6eb6b82c3/tools/validators/domains/atmosphere/validate_knowledge_character.py"
+    },
+    {
+      "id": "repo-source-11",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6087d07b49362540e437dc666d1cbaa6eb6b82c3/tools/validators/_common/public_safe_fixture.py"
+    },
+    {
+      "id": "repo-source-12",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6087d07b49362540e437dc666d1cbaa6eb6b82c3/fixtures/domains/atmosphere/knowledge_character/README.md"
+    },
+    {
+      "id": "repo-source-13",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6087d07b49362540e437dc666d1cbaa6eb6b82c3/tests/domains/atmosphere/test_knowledge_character_registry.py"
+    },
+    {
+      "id": "repo-source-14",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6087d07b49362540e437dc666d1cbaa6eb6b82c3/CONTRIBUTING.md"
+    },
+    {
+      "id": "repo-source-15",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6087d07b49362540e437dc666d1cbaa6eb6b82c3/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-08T04:22:26Z",
+  "emitter": "kfm-knowledge-character-documentation-author",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Scope is one same-path semantic-documentation correction plus this required authoring receipt under data/receipts/generated/. Source inspection confirms bounded implementation; the document remains a draft, not a global enum or public authority. prompt_or_contract hashes only the current explicit user request as UTF-8 without a final newline; no prompt text or hidden reasoning is stored. Null generation parameters and model version UNKNOWN reflect unavailable runtime metadata. Citation validated means the pinned source was read, not that it was accepted or independently reviewed. Schema, validator, registry, policy, source activation, runtime, settings, release and publication are unchanged. No PolicyDecision instance was consulted or invented. No full-checkout or native test pass is claimed. Local tools: Python 3.13.5, markdown-it-py 4.2.0, PyYAML 6.0.3, jsonschema 4.26.0. Rollback: leave the branch unintegrated or prepare a reviewed forward revert of this bounded unit; prior document blob 4f7eac28c9697c588dd9da35edb29f778fa43aae. Delivery hold evidence: issue #4024 comments 5573149685 and 5578126400. No merge, ready, approval, auto-merge, deployment, promotion, publication or settings action."
+}
