@@ -2,8 +2,8 @@
 doc_id: kfm://doc/tests-fixtures-maplibre-readme
 title: MapLibre Test Fixtures README
 type: test-fixture-readme
-version: v0.1
-status: draft; placeholder-replaced; PROPOSED / NEEDS VERIFICATION
+version: v0.2
+status: draft; indexed; executable no-network sublanes confirmed
 owners:
   - OWNER_TBD - Map steward
   - OWNER_TBD - UI steward
@@ -11,9 +11,12 @@ owners:
   - OWNER_TBD - Fixture steward
   - OWNER_TBD - QA steward
 created: 2026-07-06
-updated: 2026-07-06
+updated: 2026-09-08
 policy_label: public-doc; tests; fixtures; maplibre; synthetic-only; no-network; renderer-not-truth; release-gated
-tags: [kfm, tests, fixtures, maplibre, baselines, bad-baselines, invalid, tiny, visual-regression, renderer-boundary, no-network, PASS, ABSTAIN, DENY, ERROR]
+owning_root: tests/
+responsibility: index synthetic MapLibre test-fixture sublanes without owning renderer, policy, evidence, release, or publication state
+truth_posture: CONFIRMED executable no-network envelope and source-metadata sublanes; HOLD visual/runtime baseline and release claims
+tags: [kfm, tests, fixtures, maplibre, performance-envelope, source-metadata, baselines, bad-baselines, invalid, tiny, visual-regression, renderer-boundary, no-network, PASS, ABSTAIN, DENY, ERROR]
 related:
   - ../README.md
   - ../../README.md
@@ -21,6 +24,8 @@ related:
   - ./bad-baselines/README.md
   - ./invalid/README.md
   - ./tiny/README.md
+  - ./perf-envelope/README.md
+  - ./source-metadata/README.md
   - ../../domains/fauna/visual/README.md
   - ../../../docs/Master_MapLibre_Components-Functions-Features_v2.1_FULL.md
   - ../../../apps/explorer-web/src/features/layer_catalog/README.md
@@ -31,14 +36,14 @@ notes:
   - "This README replaces placeholder content at tests/fixtures/maplibre/README.md."
   - "This parent lane indexes MapLibre fixture sublanes. It is not a renderer implementation, screenshot archive, release store, evidence store, policy home, schema home, or public map root."
   - "MapLibre fixtures are synthetic test carriers only; they do not make screenshots, styles, tiles, rendered maps, or baselines into truth authority."
-  - "Executable tests, payload inventory, runner wiring, CI jobs, and pass rates remain NEEDS VERIFICATION."
+  - "The performance-envelope and source-metadata child lanes have executable no-network validators and tests; visual/runtime fixture lanes remain held."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # MapLibre test fixtures
 
-> Parent README for unit-test-scoped MapLibre fixtures under `tests/fixtures/maplibre/`. This lane indexes tiny smoke fixtures, expected baselines, invalid cases, and intentionally bad baseline canaries while preserving the boundary that MapLibre renders governed outputs but does not create truth, evidence, policy, release, or public-map authority.
+> Parent README for unit-test-scoped MapLibre fixtures under `tests/fixtures/maplibre/`. This lane indexes executable configuration/projection fixtures and held visual/runtime fixture lanes while preserving the boundary that MapLibre renders governed outputs but does not create truth, evidence, policy, release, or public-map authority.
 
 <p>
   <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
@@ -49,12 +54,12 @@ notes:
 </p>
 
 **Path:** `tests/fixtures/maplibre/README.md`  
-**Status:** draft / placeholder replaced / PROPOSED until executable tests are verified  
+**Status:** draft / executable no-network configuration and projection sublanes verified
 **Owning root:** `tests/`  
 **Lane family:** `fixtures/maplibre`  
-**Child lanes:** `baselines/`, `bad-baselines/`, `invalid/`, `tiny/`  
+**Child lanes:** `perf-envelope/`, `source-metadata/`, `baselines/`, `bad-baselines/`, `invalid/`, `tiny/`
 **Default posture:** deterministic, synthetic, no-network, public-safe fixtures only  
-**Truth posture:** CONFIRMED target file existed as placeholder content before replacement; CONFIRMED child README coverage exists for `baselines/`, `bad-baselines/`, `invalid/`, and `tiny/`; CONFIRMED `tests/fixtures/` is unit-test-scoped by repo doctrine; NEEDS VERIFICATION for executable tests, fixture payload inventory, runner wiring, CI coverage, and pass rates.
+**Truth posture:** CONFIRMED child README coverage; CONFIRMED executable no-network performance-envelope and source-metadata fixture profiles; HOLD browser/runtime baselines and release claims.
 
 ---
 
@@ -67,7 +72,9 @@ This directory should help maintainers route fixture material to the right child
 - `tiny/` for the smallest synthetic smoke fixtures;
 - `baselines/` for expected visual/rendering baseline fixtures;
 - `invalid/` for malformed, incomplete, rejected, or fail-closed fixture cases;
-- `bad-baselines/` for intentionally bad baseline canaries that must fail or require review.
+- `bad-baselines/` for intentionally bad baseline canaries that must fail or require review;
+- `perf-envelope/` for the closed v1 performance-configuration machine contract; and
+- `source-metadata/` for the bounded local renderer projection profile.
 
 This parent README is an index and boundary document. It is not a renderer implementation, UI implementation, screenshot archive, style or tile authority, release store, evidence store, policy home, schema home, or public map artifact root.
 
@@ -84,6 +91,8 @@ This parent README is an index and boundary document. It is not a renderer imple
 | Expected visual baselines | `tests/fixtures/maplibre/baselines/` | Child lane for expected states. |
 | Invalid fixtures | `tests/fixtures/maplibre/invalid/` | Child lane for malformed/fail-closed examples. |
 | Bad baseline canaries | `tests/fixtures/maplibre/bad-baselines/` | Child lane for rejected baseline examples. |
+| Performance-envelope cases | `tests/fixtures/maplibre/perf-envelope/` | Executable positive/negative configuration fixtures; not measured performance. |
+| Source-metadata cases | `tests/fixtures/maplibre/source-metadata/` | Executable local projection fixtures; not source or release authority. |
 | Visual and UI tests | `tests/` consumer lanes | Consumers, not fixture authority. |
 | Renderer implementation | `packages/maplibre/` | Not owned here. |
 | UI implementation | `apps/explorer-web/`, `packages/ui/` | Not owned here. |
@@ -100,6 +109,8 @@ This parent README is an index and boundary document. It is not a renderer imple
 | [`baselines/`](./baselines/README.md) | Expected visual/rendering baseline manifests and expected-state notes. | Invalid cases or rejected baseline canaries. |
 | [`invalid/`](./invalid/README.md) | Malformed, incomplete, rejected, or fail-closed fixture cases. | Approved expected baselines. |
 | [`bad-baselines/`](./bad-baselines/README.md) | Intentionally bad visual baseline canaries that must fail or require review. | Normal expected baselines. |
+| [`perf-envelope/`](./perf-envelope/README.md) | Valid and invalid v1 performance-envelope configuration examples. | Runtime metrics, screenshots, or accepted benchmark baselines. |
+| [`source-metadata/`](./source-metadata/README.md) | Local source-metadata projection and digest-comparison examples. | Source admission, rights approval, evidence, or release records. |
 
 ---
 
@@ -144,6 +155,8 @@ Do not place these materials in this parent lane:
 | malformed or fail-closed examples | `./invalid/` |
 | intentionally bad visual-baseline canaries | `./bad-baselines/` |
 | tiny smoke fixtures | `./tiny/` |
+| performance-envelope machine-shape examples | `./perf-envelope/` |
+| source-metadata projection examples | `./source-metadata/` |
 | renderer implementation | `packages/maplibre/` or accepted renderer root |
 | UI implementation | `apps/explorer-web/` or `packages/ui/` |
 | release records | `release/` |
@@ -164,21 +177,31 @@ tests/fixtures/maplibre/
 |   `-- README.md
 |-- invalid/
 |   `-- README.md
+|-- perf-envelope/
+|   |-- README.md
+|   |-- valid/
+|   `-- invalid/
+|-- source-metadata/
+|   |-- README.md
+|   |-- valid/
+|   |-- invalid/
+|   `-- edge/
 `-- tiny/
     `-- README.md
 ```
 
-The layout reflects README coverage verified during authoring. Fixture payload inventory remains NEEDS VERIFICATION.
+The executable child READMEs define their exact fixture inventories. The visual
+baseline/tiny lanes remain documentation-only or held unless their own files say
+otherwise.
 
 ---
 
 ## Run posture
 
-No executable runner was verified while authoring this README.
-
 ```bash
-: "PROPOSED / NEEDS VERIFICATION"
-pytest tests/ui tests/domains tests/fixtures/maplibre
+python tools/validators/maplibre/validate_perf_envelope.py --fixtures
+python tools/validators/maplibre/validate_source_metadata.py --fixtures
+python -m pytest -q tests/maplibre/test_perf_envelope_contract.py
 ```
 
 Default runs should be deterministic, local, no-network, and finite-outcome only.
@@ -192,6 +215,7 @@ Default runs should be deterministic, local, no-network, and finite-outcome only
 - [ ] Keep expected baselines in `baselines/`.
 - [ ] Keep invalid cases in `invalid/`.
 - [ ] Keep intentionally bad visual-baseline canaries in `bad-baselines/`.
+- [ ] Keep performance-envelope and source-metadata cases in their named lanes.
 - [ ] Do not store screenshots, real map artifacts, release records, policy rules, schemas, implementation code, secrets, or public payloads here.
 - [ ] Link to consumer tests only after verification.
 - [ ] Update this README when child lanes, fixture payloads, tests, or runner wiring are verified.
@@ -207,7 +231,8 @@ Default runs should be deterministic, local, no-network, and finite-outcome only
 | Child `bad-baselines/` README | CONFIRMED during authoring. |
 | Child `invalid/` README | CONFIRMED during authoring. |
 | Child `tiny/` README | CONFIRMED during authoring. |
-| Fixture payload inventory | NEEDS VERIFICATION. |
-| Consumer tests | NEEDS VERIFICATION. |
-| Runner and CI wiring | NEEDS VERIFICATION. |
-| Tests and validators | NOT RUN. |
+| Child `perf-envelope/` README and JSON fixtures | CONFIRMED; two valid and fourteen invalid cases. |
+| Child `source-metadata/` README and JSON fixtures | CONFIRMED; dedicated case inventory. |
+| Performance-envelope tests and validator | CONFIRMED executable locally and wired to `schema-validation`. |
+| Source-metadata tests and validator | CONFIRMED executable and wired to its dedicated workflow. |
+| Browser/runtime baseline fixtures | HOLD; documentation-only lanes are not performance evidence. |

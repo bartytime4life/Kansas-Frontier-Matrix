@@ -6,11 +6,11 @@
 doc_id: kfm://doc/schemas-readme
 title: schemas/ — Canonical Machine-Shape Root and Compatibility Boundary
 type: README
-version: v0.6
+version: v0.7
 status: draft; repository-grounded; canonical-machine-shape-root; adopted-directory-rules-aligned; registry-driven-validation-surface; compatibility-debt-visible; non-semantic; non-policy; non-release
 owner: NEEDS VERIFICATION — explicit CODEOWNERS routing is @bartytime4life; no independently verified schema-steward assignment, required-review enforcement, or separation-of-duties control was established
-created: NEEDS VERIFICATION — a short root stub existed before v0.2
-updated: 2026-08-09
+created: 2026-09-07
+updated: 2026-09-08
 supersedes: v0.5 schema-root boundary and aggregate-runner guide
 policy_label: repository-facing; schemas; json-schema; machine-shape; no-parallel-authority; fail-closed; correction-aware; rollback-aware
 current_path: schemas/README.md
@@ -67,13 +67,13 @@ related:
   - ../docs/registers/DRIFT_REGISTER.md
   - ../data/receipts/generated/README.md
 notes:
-  - "v0.6 reconciles the schema root with the registry-driven validator orchestrator, eight-validator full profile, changed-area and release-dry-run profiles, and current workflow definitions."
+  - "v0.7 records the closed MapLibre performance-envelope configuration schema and focused fixture/test/CI binding while retaining the eight-validator aggregate profile."
   - "The first twelve H2 sections preserve the adopted Directory Rules folder-README contract and the stable anchors used by v0.5."
   - "ADR-0029 accepts the exact Directory Rules v2 bytes at docs/doctrine/directory-rules.md; the embedded pre-adoption status string remains part of those pinned bytes."
   - "schemas/contracts/v1 is the current configured v1 validation surface, while ADR-0001 remains proposed and ADR-0002 remains effectively proposed."
   - "Root-level atmosphere, biotopes, evidence, governance, maplibre, and people-dna-land lanes are compatibility or migration surfaces, not silently promoted parallel authority."
   - "tools/validate_all.py is the canonical operator entrypoint; tools/validators/_common/run_all.py is a compatibility entrypoint used by make schemas."
-  - "This change updates documentation only; it changes no schema, semantic contract, fixture payload, validator, workflow, policy, lifecycle object, release state, deployment, or public surface."
+  - "This dependency-closed slice changes the MapLibre envelope schema, its fixture-bound validator/tests, workflow checks, and boundary documentation; it changes no semantic contract, policy, lifecycle object, release state, deployment, or public surface."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -191,9 +191,9 @@ Public clients use governed APIs and released artifacts. They do not treat schem
 | `schemas/tests/` | **CONFIRMED compatibility/documentation lane** | Executable tests run from accepted test roots, currently including `tests/schemas/` and `tests/contracts/`. |
 | `schemas/evidence/` | **CONFIRMED transitional compatibility lane** | Root-level evidence schemas remain migration debt; compatibility files must not evolve independently. |
 | `schemas/governance/` | **CONFIRMED transitional compatibility lane** | Permissive or compatibility shapes do not prove accepted governance contracts. |
-| `schemas/maplibre/` | **CONFIRMED transitional compatibility lane** | Permissive placeholders remain readiness-held; path presence is not renderer or release proof. |
+| `schemas/maplibre/` | **CONFIRMED transitional mixed-maturity lane** | The performance-envelope configuration schema is closed and fixture-tested; seven trust-output placeholders remain held. Path presence is not renderer or release proof. |
 | `schemas/people-dna-land/` | **CONFIRMED transitional sensitive-domain lane** | Migration requires privacy, policy, domain, and public-safe denial review. |
-| `schema-validation` workflow | **CONFIRMED command-bearing definition** | Checks all schema JSON, canonical v1 identity, eight configured fixture families, aggregate validators, and schema/contract tests. |
+| `schema-validation` workflow | **CONFIRMED command-bearing definition** | Checks all schema JSON, canonical v1 identity, nine aggregate fixture families, the focused MapLibre envelope contract, aggregate validators, and schema/contract tests. |
 | `validator-suite` workflow | **CONFIRMED command-bearing definition** | Tests shared-runner semantics, generated-receipt validation, MaterialChangeAssessment, aggregate validation, and one reviewed EvidenceBundle rejection canary. |
 | Current PR-run results | **NEEDS VERIFICATION per revision** | Workflow definitions are not proof that this branch passed. |
 | Complete recursive schema inventory | **UNKNOWN in this README update** | The topology below is a bounded direct-child view, not a complete schema census. |
@@ -437,7 +437,7 @@ Default reports omit timing so identical selected outputs can produce identical 
 [`schema-validation.yml`](../.github/workflows/schema-validation.yml) currently:
 
 1. installs the declared test dependencies on Python 3.11;
-2. requires the compatibility inventory to match eight configured schema/fixture families;
+2. requires the compatibility inventory to match nine configured schema/fixture families;
 3. requires nonempty valid and invalid fixture lanes;
 4. requires reviewed rejection evidence—per-fixture `.expected_error.txt` sidecars or the LayerManifest expectation manifest;
 5. parses every JSON file under `schemas/`;
@@ -532,7 +532,7 @@ Any temporary consolidation of duties must be explicit, reviewed, bounded, and r
 | [`schemas/tests/`](./tests/) | Compatibility placement index; executable schema tests are elsewhere. |
 | [`schemas/evidence/`](./evidence/) | Transitional evidence-schema compatibility lane. |
 | [`schemas/governance/`](./governance/) | Transitional governance-schema compatibility lane. |
-| [`schemas/maplibre/`](./maplibre/) | Transitional MapLibre schema lane and readiness-held placeholders. |
+| [`schemas/maplibre/`](./maplibre/) | Transitional MapLibre lane with one closed configuration schema and seven readiness-held placeholders. |
 | [`schemas/people-dna-land/`](./people-dna-land/) | Sensitive-domain compatibility lane requiring migration and policy review. |
 | [`contracts/`](../contracts/) | Semantic meaning and claim limits. |
 | [`fixtures/`](../fixtures/) | Valid, invalid, negative, edge, and golden examples. |
@@ -637,7 +637,7 @@ schemas/
 │   └── v1/                      # current configured v1 machine-schema tree
 ├── evidence/                    # transitional compatibility lane
 ├── governance/                  # transitional compatibility lane
-├── maplibre/                    # transitional compatibility + permissive placeholders
+├── maplibre/                    # transitional: closed config + held placeholders
 ├── people-dna-land/             # sensitive-domain transitional compatibility
 ├── policy/                      # compatibility/documentation lane
 └── tests/                       # compatibility/documentation lane
@@ -656,7 +656,7 @@ This is a **bounded direct-child view**, not a complete recursive inventory or c
 | `tests/` | Compatibility/documentation | Do not move executable tests here without an accepted ownership/migration decision. |
 | `evidence/` | Transitional compatibility | Migrate or freeze against versioned evidence families; do not add divergent fields. |
 | `governance/` | Transitional compatibility | Treat permissive shapes as incomplete; do not infer governance maturity. |
-| `maplibre/` | Transitional compatibility | Treat accept-any-object schemas as readiness-held placeholders. |
+| `maplibre/` | Transitional mixed maturity | Use the closed envelope shape only for its tracked configuration; treat the seven accept-any-object trust-output schemas as held placeholders. |
 | `people-dna-land/` | Transitional compatibility / sensitive | Require domain, policy, privacy, security, and migration review before change. |
 
 ### Current documentation reconciliation
@@ -934,7 +934,10 @@ A version directory or registry entry does not by itself prove semantic versioni
 
 ### Documentation rollback
 
-Before merge, close or abandon the draft PR and branch. After merge, revert the README-only commit or restore prior blob `7e29afc982af13b3dea313bb524664b520b07beb`. Because v0.6 changes documentation only, do not roll back the pre-existing registry, orchestrator, Make, workflow, schema, or fixture behavior merely to match the older README.
+Before merge, close or abandon the draft PR and branch. After an authorized
+merge, revert the dependency-closed envelope schema, validator, fixtures, tests,
+workflow bindings, and documentation together. Do not roll back unrelated
+registry, orchestrator, Make, policy, lifecycle, release, or public behavior.
 
 ### Schema correction triggers
 

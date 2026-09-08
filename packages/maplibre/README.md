@@ -2,67 +2,17 @@
 doc_id: kfm://doc/packages-maplibre-readme
 title: packages/maplibre/ — MapLibre Package, Adapter, Distribution, and Compatibility Boundary
 type: readme
-version: v1.7
+version: v1.8
 status: draft
 owners: OWNER_TBD — Package steward · MapLibre adapter steward · Map-runtime steward · UI steward · Governed API steward · Contract steward · Schema steward · Policy steward · Security steward · Privacy/sensitivity reviewer · Dependency steward · Supply-chain steward · Validation steward · Release steward · Migration steward · CI steward · Docs steward
 created: 2026-08-23
-updated: 2026-08-29
+updated: 2026-09-08
 policy_label: "public-doctrine; package-boundary; maplibre; renderer-adapter; exact-dependency-admitted; concrete-adapter-initial-slice; vite-worker-configured; bounded-browser-fixture-implemented; legacy-cdn-harness-retired; null-runtime-implemented; browser-readiness-hold; private-npm-package; workspace-enrolled; distribution-not-authorized; accepted-single-importer; accepted-renderer-family; renderer-downstream; fail-closed; no-truth-authority; no-publication-authority; rollback-aware"
 current_path: packages/maplibre/README.md
 owning_root: packages/
 responsibility: Document current package metadata, accepted renderer-boundary ownership, dependency and distribution posture, consumer compatibility, and held concrete-renderer work without becoming runtime, policy, release, or publication authority.
-truth_posture: CONFIRMED accepted ADR-0006 package-owned seam, accepted ADR-0007 renderer family, renderer-neutral MapRuntimePort, deterministic NullMapRuntime, exact maplibre-gl 6.6.0 package dependency and lock closure, minimal package-owned MapLibreAdapter lifecycle/camera slice, Vite worker configuration, package-local positive and fail-closed tests, bounded real-browser fixture evidence, Sites-derived Explorer fail-closed use of the package-owned NullMapRuntime, acquisition profile v14 structural HOLD with raw acquisition confined to packages/maplibre, and retired CDN/global performance acquisition / HOLD full Sites consumer capability migration, Explorer production activation, governed performance execution, authenticated browser, broader CSP, PMTiles, terrain, accessibility, long-session, release, deployment, and publication evidence / CONFLICTED stale packages/maplibre-runtime references, legacy apps/web workflow filter, permissive performance schema, and trust-shaped candidate builders under artifacts/perf / NEEDS VERIFICATION owners, license/provenance review, broader browser probes, performance authority, correction, and rollback
-evidence_snapshot:
-  snapshot_role: exact_main_contradiction_repair
-  repository: bartytime4life/Kansas-Frontier-Matrix
-  repository_id: "1059091169"
-  visibility: public
-  base_ref: main
-  base_commit: 5f7950c6fa36b497d182ffd48b43e627f8b8e8f5
-  prior_blob: 69b7a6c58be963e9952e74ee0e7f74150d8ce033
-  source_readme_blob: 4d6eb645bb653ca7148542ade3664b0ebcbc5bb3
-  package_metadata_blob: f6d450af19c33011e159e123c8a07ca2bca6dfd3
-  source_entry_blob: 08a48ac008665317833a9476b21cd35b1679c595
-  map_runtime_port_blob: 2f267f0f5e542f64131bbf43b5af1dbbfc3d4348
-  null_map_runtime_blob: f67d5f90fe58ce49b5e6496cd4398688e35b6399
-  root_package_metadata_blob: 5cba790c88c40b885cc65fe2d585f3205aa1ef9d
-  root_pnpm_lock_blob: 18226b77b6ae0e06d9607f15dee2303ee5c6653d
-  packages_root_blob: 7b672f4d834b648f4b30ce7e2e9a5e214efa2c71
-  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
-  maplibre_architecture_blob: a897b1b0a464bedeabdd8556d19be6e207038f6e
-  adapter_adr_blob: 4bf4292dc05a85fd4cd829c491808b13894bc223
-  sole_renderer_adr_blob: 2482eea382fd97e68544bb04bc2e2ea1e1cedebe
-  config_readme_blob: 40bb91dd6b810b70f50bdba07b58d78fcb125ad2
-  map_runtime_readme_blob: 81edd6d824b394b5f115fc488d03c0b2136cbf40
-  validator_readme_blob: 7d29f8e5b5c215a5848803d87fd9f4c7549be105
-  perf_workflow_blob: 8f5f93b261f89633b3399bb995e6a93ad7df8c27
-  perf_smoke_blob: ac2522686546b7428ad0cc5c8cd76860ab285998
-  perf_retirement_test_blob: ca7ab38ff784f7b25ae4bb446e4f30d817164013
-  acquisition_inventory_blob: 2c6d2b709e2cf4a519b32c2274820008a18ad0f4
-  bounded_browser_spec_blob: f7af3d92e7fb5cc446f2eb60efc4d1a67277b965
-  perf_schema_blob: 511e7f34ca84390fd5d000326ab33c46c3050fc4
-  perf_validator_blob: 1f9e0f785a701da2a2b8f52bf73f4e97866d951d
-  maplibre_tests_readme_blob: b20a14eae605017b7d7f210f1c27768cacbd411a
-  maplibre_fixtures_readme_blob: 3b6796d242157b22c8b6d2c1621c0b02178841f9
-  bounded_path_checks:
-    - packages/maplibre/README.md exists at version v1.4 before this correction
-    - packages/maplibre/src/README.md exists at version v1.5 on the pinned base and records the dependency, adapter, Vite worker seam, bounded hosted browser fixture, retired legacy harness, and remaining performance hold
-    - packages/maplibre/package.json exists with name @kfm/maplibre, private true, version 0.0.0, exact maplibre-gl 6.6.0, focused scripts, and explicit root, adapter, and Vite-adapter exports
-    - packages/maplibre/src/index.ts exports map-runtime-port and null-map-runtime; explicit subpaths export the effectful adapter and Vite worker binding
-    - repository root package.json includes workspaces apps/* and packages/*
-    - repository root lint, test, and build scripts are TODO echo placeholders
-    - repository root contains MapLibre performance/proof script entry points and Playwright/pixelmatch/pngjs development dependencies; maplibre:perf now terminates with a finite hold before renderer, browser, network, or artifact acquisition
-    - root package.json pins pnpm 11.17.0 and Node >=22.13 <23; pnpm-lock.yaml exists
-    - packages/maplibre package metadata has focused test scripts, exact dependency closure, explicit exports, sideEffects metadata, and remains private with no publishConfig
-    - packages/maplibre/src/maplibre-adapter.ts and maplibre-vite-adapter.ts implement bounded renderer construction, camera, finite failures, teardown, and Vite worker setup; source/layer/style/protocol modules remain absent
-    - packages/maplibre/tests contains seven focused tests across adapter and Vite-adapter suites; tests/maplibre also contains executable acquisition, readiness, source-metadata, negative-path, and legacy-harness-retirement coverage
-    - tests/maplibre/README.md and tests/fixtures/maplibre/README.md exist as draft documentation lanes
-    - packages/maplibre-runtime/README.md was not found
-    - Explorer Web source and tests import @kfm/maplibre through explicit TypeScript and Vite aliases; the Sites-derived Explorer now imports the package-owned renderer-neutral root and fail-closes through NullMapRuntime without direct MapLibre acquisition
-    - ADR-0006 and ADR-0007 are accepted architecture decisions; the package-owned dependency and initial adapter are implemented while production runtime readiness remains held
-    - scripts/maplibre-smoke-perf.mjs is a finite exit-3 hold that names the retired external-CDN behavior and performs no renderer, browser, network, source, screenshot, receipt, or artifact acquisition
-    - .github/workflows/maplibre-perf-governance.yml watches packages/maplibre/** and apps/explorer-web/**, retains a legacy apps/web/** filter, executes five static negative-path and retirement checks without installing a browser, and explicitly holds performance execution
-    - schemas/maplibre/perf-envelope.schema.json is an open object scaffold with additionalProperties true and no required fields
+truth_posture: CONFIRMED accepted ADR-0006 package-owned seam, accepted ADR-0007 renderer family, renderer-neutral MapRuntimePort, deterministic NullMapRuntime, exact maplibre-gl 6.6.0 package dependency and lock closure, minimal package-owned MapLibreAdapter lifecycle/camera slice, Vite worker configuration, package-local positive and fail-closed tests, closed performance-envelope machine schema with no-network fixtures/tests, bounded real-browser fixture evidence, Sites-derived Explorer fail-closed use of the package-owned NullMapRuntime, acquisition profile v14 structural HOLD with raw acquisition confined to packages/maplibre, and retired CDN/global performance acquisition / HOLD full Sites consumer capability migration, Explorer production activation, governed performance execution, authenticated browser, broader CSP, PMTiles, terrain, accessibility, long-session, release, deployment, and publication evidence / CONFLICTED stale packages/maplibre-runtime references, seven permissive trust-output performance schemas, legacy apps/web workflow filter, and trust-shaped candidate builders under artifacts/perf / NEEDS VERIFICATION owners, license/provenance review, broader browser probes, performance authority, correction, and rollback
+evidence_snapshot: "base main@b30210971c41073a9a2e36b5a0d7d451ef43d592; current bounded schema/fixture/test/workflow reconciliation on 2026-09-08; prior detailed snapshot remains in Git history"
 related:
   - src/README.md
   - src/index.ts
@@ -86,7 +36,10 @@ related:
   - ../../tools/validators/maplibre/validate_perf_envelope.py
   - ../../tests/maplibre/README.md
   - ../../tests/fixtures/maplibre/README.md
+  - ../../tests/fixtures/maplibre/perf-envelope/README.md
+  - ../../tests/maplibre/test_perf_envelope_contract.py
   - ../../.github/workflows/maplibre-perf-governance.yml
+  - ../../.github/workflows/schema-validation.yml
   - ../../scripts/maplibre-smoke-perf.mjs
   - ../../tests/maplibre/test_legacy_perf_harness_retirement.py
   - ../../tools/validators/maplibre/assess_acquisition_inventory.py
@@ -193,14 +146,14 @@ The merged [`src/README.md`](src/README.md) governs source placement, module dec
 | Acquisition conformance | **STRUCTURAL HOLD / CONFORMING** | Profile v14 detects raw acquisition only in the accepted package seam. Sites renderer capabilities and runtime probes remain held. |
 | Package consumers | **CONFIRMED / MIXED CAPABILITY** | Explorer Web uses explicit TypeScript/Vite aliases; the Sites Explorer imports the root facade and runs `NullMapRuntime` while full capability migration remains held. |
 | Package-local tests | **IMPLEMENTED / FOCUSED** | Seven deterministic tests cover lifecycle/camera success, invalid container, construction/error, in-flight disposal, Vite worker ordering, and factory forwarding. |
-| MapLibre test lane | **IMPLEMENTED / MIXED MATURITY** | Executable acquisition, v6-readiness, source-metadata, negative-path, and harness-retirement tests exist; full performance and operational proof remain held. |
-| MapLibre fixture lane | **CONFIRMED draft documentation** | `tests/fixtures/maplibre/README.md` documents synthetic fixtures; payload coverage and consumers remain unproved. |
+| MapLibre test lane | **IMPLEMENTED / MIXED MATURITY** | Executable acquisition, v6-readiness, source-metadata, envelope-contract, scalar-negative, and harness-retirement tests exist; full performance and operational proof remain held. |
+| MapLibre fixture lane | **IMPLEMENTED / MIXED MATURITY** | The envelope and source-metadata profiles have executable synthetic no-network fixtures; visual/runtime baseline lanes remain held. |
 | ADR-0006 | **CONFIRMED accepted architecture / STRUCTURAL HOLD** | Raw renderer acquisition is confined to the package seam; the Sites-derived Explorer fail-closes through the root facade while full consumer capability migration remains held. |
 | ADR-0007 | **CONFIRMED accepted architecture** | The selected renderer family is followed; plugins, protocols, browser readiness, and operations remain held. |
 | Referenced runtime package | **NOT FOUND at named README path** | `packages/maplibre-runtime/README.md` remains unresolved architecture drift. |
 | Performance harness | **RETIRED / FINITE HOLD** | The root command exits `3` before renderer, browser, network, source, screenshot, receipt, or artifact acquisition; retirement guards fail if legacy acquisition markers return. |
-| Performance workflow | **CONFIRMED executable hold gate** | It runs five deterministic negative-path and retirement checks without installing dependencies or a browser; performance, render, attestation, proof, release, correction, and rollback stages remain held. |
-| Performance schema | **CONFIRMED permissive scaffold** | It permits any object and proves no package API, descriptor, or admission contract. |
+| Performance workflow | **CONFIRMED executable hold gate** | It runs nine deterministic scalar, retirement, and export checks plus strict envelope inventory checks without installing dependencies or a browser; performance, render, attestation, proof, release, correction, and rollback stages remain held. |
+| Performance schema | **CONFIRMED closed config shape** | It validates the repository-owned v1 threshold configuration; it does not validate package APIs, observed benchmarks, descriptors, or admission contracts. |
 | Package publication | **NOT AUTHORIZED** | `private: true` blocks normal npm publication intent; no internal artifact-distribution process is established. |
 
 ### Truth posture
@@ -237,7 +190,9 @@ The merged [`src/README.md`](src/README.md) governs source placement, module dec
 - The prior helper-only blanket no-network wording versus the required effects of a browser renderer.
 - Accepted `packages/maplibre/` ownership versus repeated references to absent `packages/maplibre-runtime/`.
 - ADR-0007's accepted renderer family and implemented exact dependency versus still-unaccepted plugin, exception, and broader supply-chain mechanisms.
-- Canonical `schemas/contracts/v1/maplibre/` doctrine versus permissive `schemas/maplibre/` performance scaffolding.
+- Canonical versioned-family doctrine versus the transitional `schemas/maplibre/`
+  lane, where the envelope configuration is closed but seven trust-output shapes
+  remain permissive.
 - `tests/maplibre/` versus `tests/packages/maplibre/` as the executable test home.
 - The performance workflow retains a legacy `apps/web/**` filter alongside the confirmed `apps/explorer-web/**` consumer path.
 - Bounded package/Explorer workflow coverage versus still-unproved broader browser, performance, and operational readiness.
@@ -420,12 +375,14 @@ ADR-0007 accepts MapLibre GL JS as the sole normal browser-renderer family, and 
 
 ### 5. Schema-home drift
 
-MapLibre doctrine points to `schemas/contracts/v1/maplibre/`; performance tooling validates against permissive `schemas/maplibre/perf-envelope.schema.json`.
+MapLibre doctrine points to versioned canonical families; current performance
+tooling validates the repository-owned configuration against a closed but
+transitional `schemas/maplibre/perf-envelope.schema.json`.
 
 **Required resolution:**
 
-- decide whether the performance schema migrates, remains a bounded legacy scaffold, or becomes a declared compatibility surface;
-- do not present the permissive scaffold as package API validation;
+- decide whether the performance schema migrates or remains a declared compatibility surface;
+- do not present configuration validity as package API or benchmark validation;
 - avoid divergent definitions.
 
 ### 6. Test-home drift
@@ -1215,7 +1172,7 @@ It does not by itself prove:
 
 - the workflow watches the package and confirmed Explorer consumer but remains a bounded static/negative-path gate;
 - the former public-CDN harness is retired and regression-guarded; performance execution remains `NOT_RUN`;
-- the schema is permissive;
+- the envelope machine schema is closed, while canonical placement and benchmark semantics remain held;
 - trust-like outputs use `artifacts/perf/`;
 - package use is established only for the bounded adapter and browser fixture, not production composition.
 
@@ -1586,7 +1543,7 @@ Until review and browser gates close, describe the package as a **private packag
 | MAPLIBRE-PKG-049 | Add dependency/license/vulnerability CI. | PROPOSED |
 | MAPLIBRE-PKG-050 | Update CI to watch `packages/maplibre/**`. | RESOLVED — bounded performance workflow watches package paths |
 | MAPLIBRE-PKG-051 | Resolve `apps/web/**` versus `apps/explorer-web/**`. | PARTIAL — workflow watches the confirmed Explorer path, but the legacy `apps/web/**` filter remains |
-| MAPLIBRE-PKG-052 | Resolve permissive performance schema posture. | CONFLICTED |
+| MAPLIBRE-PKG-052 | Resolve permissive performance schema posture. | PARTIAL — envelope machine shape is closed; canonical placement, semantic authority, and seven trust-output schemas remain held |
 | MAPLIBRE-PKG-053 | Resolve `artifacts/perf/` trust-artifact placement. | CONFLICTED |
 | MAPLIBRE-PKG-054 | Inventory consumers and owners. | PARTIAL — Explorer Web imports confirmed |
 | MAPLIBRE-PKG-055 | Add consumer contract tests. | PARTIAL — bounded Explorer port/evidence/status tests exist |
@@ -1613,7 +1570,9 @@ For this README change:
 - revert the documentation commit; or
 - restore the prior blob recorded in the evidence snapshot.
 
-No package behavior changes because this revision changes documentation only.
+The v1.8 README correction changes no package behavior. Its accompanying
+performance-envelope schema/fixture/test slice validates configuration outside
+the package and does not activate renderer behavior.
 
 ### Future package rollback
 
