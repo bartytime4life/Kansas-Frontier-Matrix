@@ -28,6 +28,6 @@
     "maplibre-gl": "6.6.0"
   },
   "devDependencies": {
-    "vitest": "4.1.11"
+    "vitest": "5.0.0"
   }
 }
