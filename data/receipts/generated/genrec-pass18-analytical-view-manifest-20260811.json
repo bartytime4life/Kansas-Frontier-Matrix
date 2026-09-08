@@ -12,7 +12,7 @@
   ],
   "artifact_hashes": {
     ".github/workflows/analytical-view-manifest.yml": "sha256:da09e41f930e890c127601d6d6d46732ff67795fa5161f9fe0c6221ea7d4a6db",
-    "contracts/data/analytical_view_manifest.md": "sha256:405d8a679732c7bc9f620588e412df9e1721402d298ecf922ef34f9708a994c2",
+    "contracts/data/analytical_view_manifest.md": "sha256:0a114e5a90889321bca66d36990fb913fe3d1a11ad3536f6065b91311825e107",
     "docs/intake/exploratory/pass-18-analytical-view-manifest-source-map.md": "sha256:be96b8658646299ceaa784aa9868d9ca354bd04d5b1441e7e0c3207c4ac8c349",
     "fixtures/contracts/v1/data/analytical_view_manifest/cases.json": "sha256:b0bcd0d13b8c63dc7302d26c73809bab663a9428f297a9cb2093ca919527df7a",
     "schemas/contracts/v1/data/analytical_view_manifest.schema.json": "sha256:d4b7ac533a60a73960422696e62fef99ec81c1b6cd5f5de91553bb6a38cec81b",
@@ -24,7 +24,7 @@
     "model": "GPT-5",
     "version": "2026-08-11"
   },
-  "prompt_or_contract": "sha256:405d8a679732c7bc9f620588e412df9e1721402d298ecf922ef34f9708a994c2",
+  "prompt_or_contract": "sha256:0a114e5a90889321bca66d36990fb913fe3d1a11ad3536f6065b91311825e107",
   "parameters": {
     "seed": null,
     "temperature": null,
@@ -161,5 +161,5 @@
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Additive, inactive, fixture-only analytical-view manifest. It records definition, upstream, hidden semantics, validation, refresh, mutation-guard, correction, and rollback declarations without storing raw SQL or endpoints, creating a view, executing a query, mutating or refreshing data, or creating evidence, policy, review, promotion, release, deployment, publication, or public-use authority."
+  "notes": "Additive, inactive, fixture-only analytical-view manifest. It records definition, upstream, hidden semantics, validation, refresh, mutation-guard, correction, and rollback declarations without storing raw SQL or endpoints, creating a view, executing a query, mutating or refreshing data, or creating evidence, policy, review, promotion, release, deployment, publication, or public-use authority. On 2026-09-08, the semantic contract documentation was reconciled with current main and the contract digest was refreshed; the original 2026-08-11 authoring identity, inputs, and validation history remain unchanged."
 }
