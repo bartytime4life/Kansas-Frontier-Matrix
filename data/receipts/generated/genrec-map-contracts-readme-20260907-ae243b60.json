@@ -1,0 +1,154 @@
+{
+  "receipt_id": "genrec-map-contracts-readme-20260907-ae243b60",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "contracts/map/README.md"
+  ],
+  "artifact_hashes": {
+    "contracts/map/README.md": "sha256:ae243b60f3bbde495c24f8dcbdfc0310e42e5f0f44b6a244d88404aea032a5a9"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Astra Pro",
+    "version": "UNKNOWN: runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:6ceafa96a5063f83155c8685946d17180225bc3c9fac0980deac1014d4a1ceda",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "Google_Drive",
+      "Notion",
+      "local Python"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/6087d07b49362540e437dc666d1cbaa6eb6b82c3/contracts/map",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6087d07b49362540e437dc666d1cbaa6eb6b82c3/contracts/map/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6087d07b49362540e437dc666d1cbaa6eb6b82c3/contracts/map/map_release_manifest/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6087d07b49362540e437dc666d1cbaa6eb6b82c3/contracts/release/map_release_manifest.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6087d07b49362540e437dc666d1cbaa6eb6b82c3/docs/doctrine/directory-rules.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6087d07b49362540e437dc666d1cbaa6eb6b82c3/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6087d07b49362540e437dc666d1cbaa6eb6b82c3/tools/validators/map/validate_representation_fitness_assessment.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6087d07b49362540e437dc666d1cbaa6eb6b82c3/tests/validators/map/test_representation_fitness_assessment.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6087d07b49362540e437dc666d1cbaa6eb6b82c3/fixtures/contracts/v1/map/representation_fitness_assessment/cases.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6087d07b49362540e437dc666d1cbaa6eb6b82c3/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ],
+    "attached_docs": [
+      "Drive: Directory Rules (read-only lineage)",
+      "Drive: Master MapLibre Components-Functions-Features v2.0, 2026-05-16 (read-only lineage)",
+      "Notion: KFM Repository Workbench (read-only coordination)"
+    ]
+  },
+  "truth_labels": {
+    "contracts/map/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Documentation structure, metadata, inventory, links and hygiene",
+      "outcome": "PASS",
+      "reason": "19 focused documentation checks before receipt emission; 11 original H2 headings retained; 12 leaf contracts indexed; 28 repository link targets checked against pinned reads. No full-tree link crawl or Mermaid rendering. An initial local harness exit-code assumption was corrected: git no-index returned 1 for differing files with no whitespace diagnostics; a bad-whitespace probe returned 3 with diagnostics."
+    },
+    {
+      "gate": "RepresentationFitnessAssessment existing focused tests",
+      "outcome": "PASS",
+      "reason": "5 tests pass on Python 3.13.5 in a reconstructed three-file subset whose Git blobs match the pinned repository. Pytest plugin autoload disabled and repository configuration not loaded. Not full-checkout or pinned CI validation."
+    },
+    {
+      "gate": "RepresentationFitnessAssessment existing fixture CLI",
+      "outcome": "PASS",
+      "reason": "Five expected cases match: two FIT and three HOLD. HOLD remains HOLD; CLI PASS is expectation matching, not public-use authority. Five instrumented network entrypoints recorded zero calls across tests and CLI."
+    },
+    {
+      "gate": "Generated receipt shape, format and artifact binding",
+      "outcome": "PASS",
+      "reason": "Standalone Draft202012Validator with FormatChecker against exact schema blob fba21ed27ebccf1362fe397fe0c3ebd85e072685; artifact/truth-label maps match and full SHA-256 is recomputed. Not the repository-native receipt CLI."
+    },
+    {
+      "gate": "Repository-native receipt CLI and full map/repository suites",
+      "outcome": "SKIPPED",
+      "reason": "No full checkout or locked repository environment; documentation plus authoring receipt only. No inherited or unrun check is reported as passing."
+    },
+    {
+      "gate": "Hosted exact-head CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Not established at authoring. Human review remains pending; later remote observations belong to the handoff."
+    },
+    {
+      "gate": "Live runtime, sources, policy, rights, release and rollback rehearsal",
+      "outcome": "SKIPPED",
+      "reason": "Outside this documentation change; no live effects or public-use claims."
+    },
+    {
+      "gate": "Draft PR delivery",
+      "outcome": "SKIPPED",
+      "reason": "Issue #4024 retains the incident-quarantined PR delivery boundary; no proven independent safe path was established. Preserve validated branch, no canary or successor PR."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "contracts/map/README.md",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6087d07b49362540e437dc666d1cbaa6eb6b82c3/contracts/map/README.md"
+    },
+    {
+      "id": "contracts/map/map_release_manifest/README.md",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6087d07b49362540e437dc666d1cbaa6eb6b82c3/contracts/map/map_release_manifest/README.md"
+    },
+    {
+      "id": "contracts/release/map_release_manifest.md",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6087d07b49362540e437dc666d1cbaa6eb6b82c3/contracts/release/map_release_manifest.md"
+    },
+    {
+      "id": "docs/doctrine/directory-rules.md",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6087d07b49362540e437dc666d1cbaa6eb6b82c3/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6087d07b49362540e437dc666d1cbaa6eb6b82c3/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "tools/validators/map/validate_representation_fitness_assessment.py",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6087d07b49362540e437dc666d1cbaa6eb6b82c3/tools/validators/map/validate_representation_fitness_assessment.py"
+    },
+    {
+      "id": "tests/validators/map/test_representation_fitness_assessment.py",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6087d07b49362540e437dc666d1cbaa6eb6b82c3/tests/validators/map/test_representation_fitness_assessment.py"
+    },
+    {
+      "id": "fixtures/contracts/v1/map/representation_fitness_assessment/cases.json",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6087d07b49362540e437dc666d1cbaa6eb6b82c3/fixtures/contracts/v1/map/representation_fitness_assessment/cases.json"
+    },
+    {
+      "id": "schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6087d07b49362540e437dc666d1cbaa6eb6b82c3/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-08T04:51:45Z",
+  "emitter": "kfm-map-contracts-readme-maintenance",
+  "links": {
+    "pr_number": null,
+    "adr_link": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6087d07b49362540e437dc666d1cbaa6eb6b82c3/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Same-path README v0.2; owning root contracts/. Only companion is this generated-work receipt under data/receipts/generated/ per CONTRIBUTING. Restores navigation for twelve existing map contracts, preserves two compatibility pointers, and routes map-release semantics to contracts/release/. Pinned base 6087d07b49362540e437dc666d1cbaa6eb6b82c3; prior README blob 4416722f89251682990db51522d9ce8ee00a4369. Inventory is CONFIRMED; authored prose remains draft/PROPOSED pending independent review. No child semantics, schema, policy, validator, fixture, dependency, workflow, registry, map asset, source, runtime, release, deployment, or publication bytes change. Do not treat this receipt as proof, a PolicyDecision, approval, or permission to cross #4024. Prior README may be restored by a separately reviewed forward revert after authorized integration; provenance remains in Git history. Drive and Notion were read-only. No private reasoning, source payloads, exact sensitive locations, or credential material is included."
+}
