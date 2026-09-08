@@ -10,7 +10,7 @@
   ],
   "artifact_hashes": {
     ".github/workflows/taxonomic-concept-lineage.yml": "sha256:076b886325c915d721b99f5cb69bcb45cd58b158fd14f79d67e29ee2623f5dc8",
-    "contracts/crosswalks/taxonomy/taxonomic_concept_lineage.md": "sha256:892d9e04f2460d54577e7ffd896829f465536d27684e77c642df286e986eede8",
+    "contracts/crosswalks/taxonomy/taxonomic_concept_lineage.md": "sha256:0cc7f8d17bf2e03f26f4a1347ea5bca87b611de84fcbef29a6cfe7ce18ca7ef3",
     "schemas/contracts/v1/crosswalks/taxonomy/taxonomic_concept_lineage.schema.json": "sha256:964611a2a4b710dad4ae6edac36f857ba53d28f35007915c6d6afeaf3cdab02e",
     "tests/validators/test_validate_taxonomic_concept_lineage.py": "sha256:a3c6ce9a6463097849774033dcbe566389c705b0732f0ded9f8ea8b3e7ae2dfd",
     "tools/validators/validate_taxonomic_concept_lineage.py": "sha256:68fc3ecca3bad1f6823c922b5335fd880d5b4ac99b811aa159fe92669503cd9a"
@@ -95,9 +95,9 @@
   "created_at": "2026-08-05T20:25:00Z",
   "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
   "links": {
-    "pr_number": null,
+    "pr_number": 4436,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Synthetic fixture-first implementation of KFM-TRIAD-060. This receipt grants no truth, source, evidence, policy, review, merge, promotion, release, deployment, publication, or public-use authority."
+  "notes": "Synthetic fixture-first implementation of KFM-TRIAD-060. On 2026-09-08 the contract artifact digest was refreshed for documentation-only PR #4436; the original authoring identity remains lineage and does not attribute that revision. This receipt grants no truth, source, evidence, policy, review, merge, promotion, release, deployment, publication, or public-use authority."
 }
