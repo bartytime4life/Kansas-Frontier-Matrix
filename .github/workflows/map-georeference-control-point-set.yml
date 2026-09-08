@@ -11,6 +11,7 @@ name: map-georeference-control-point-set
       - "tests/map/test_georeference_control_point_set.py"
       - "docs/intake/exploratory/georeference-control-point-set-source-map.md"
       - "data/receipts/generated/genrec-georeference-control-point-set-20260806.json"
+      - "data/receipts/generated/genrec-gcp-set-contract-20260908.json"
   push:
     branches: [main]
     paths:
@@ -22,6 +23,7 @@ name: map-georeference-control-point-set
       - "tests/map/test_georeference_control_point_set.py"
       - "docs/intake/exploratory/georeference-control-point-set-source-map.md"
       - "data/receipts/generated/genrec-georeference-control-point-set-20260806.json"
+      - "data/receipts/generated/genrec-gcp-set-contract-20260908.json"
   workflow_dispatch:
 
 permissions:
@@ -57,10 +59,12 @@ jobs:
         run: python -m pytest -q tests/map/test_georeference_control_point_set.py
       - name: Run exact fixture polarity
         run: python tools/validators/map/validate_georeference_control_point_set.py --fixtures
+      # The original August receipt remains immutable authoring history.
+      # Validate this edition's changed artifacts rather than rewriting that history.
       - name: Verify generated authoring receipt integrity
         run: >-
           python tools/validators/validate_generated_receipt.py
-          data/receipts/generated/genrec-georeference-control-point-set-20260806.json
+          data/receipts/generated/genrec-gcp-set-contract-20260908.json
           --repo-root .
       - name: Record trust boundary
         if: always()

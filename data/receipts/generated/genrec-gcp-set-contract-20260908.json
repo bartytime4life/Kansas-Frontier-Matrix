@@ -1,0 +1,145 @@
+{
+  "receipt_id": "genrec:gcp-set-contract:20260908",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/map-georeference-control-point-set.yml",
+    "contracts/map/georeference_control_point_set.md"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/map-georeference-control-point-set.yml": "sha256:c2c143699a59288220243edc45ffb52d46b4b3d29422da7c37307f365f9b721c",
+    "contracts/map/georeference_control_point_set.md": "sha256:a66ebdb18cd3ee21d4cd0ecf07f87ba0f3a62d87ec94c2b72bae78607fae1f6d"
+  },
+  "model_identity": {
+    "provider": "openai",
+    "model": "GPT-6 Astra Pro",
+    "version": "UNKNOWN"
+  },
+  "prompt_or_contract": "sha256:6ae1f43aa3f9d06f5345b278fd1715d10d81a0c5259efdcc21ed6ee8bb8fd8bb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "tools_enabled": [
+      "GitHub",
+      "Google Drive",
+      "Notion",
+      "container"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:25a77df1d1b8f802d96c53da5af0d733ce85c2e2c8e855265286a113fba7fba4",
+      "sha256:3368e785f65eafb9ace8bcb2481022f885873b7abf6cd4bc6ba08c7b801c9889",
+      "sha256:373ce8cda8e35de3e3cc275bfca81774f1c1b3c87e696b277601256024e61055",
+      "sha256:89fa0882d229a1e74c4cdc7ab1b928e95b49957cb07deef0d220a5e4fdb64b4f",
+      "sha256:f3222f0bd904104604f146e381cbf0aef985d02f72652a2a642169b7dcc4974d",
+      "sha256:f3f128cab9915c401b4b03fdfde3c70959b8ac945fa7cb35218ae7c102211280",
+      "sha256:a9c9a61b168b7bc9ecc66bd644889ea37a975d05fdb84731ed4df572d0f9c345"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "git:main@6087d07b49362540e437dc666d1cbaa6eb6b82c3",
+      "schemas/contracts/v1/map/georeference_control_point_set.schema.json",
+      "tools/validators/map/validate_georeference_control_point_set.py",
+      "tests/map/test_georeference_control_point_set.py",
+      "fixtures/contracts/v1/map/georeference_control_point_set/cases.json",
+      "fixtures/contracts/v1/map/georeference_control_point_set/valid.json",
+      "tools/generators/project_georeference_transform_quality.py",
+      "contracts/map/georeference_control_point_evidence_assessment.md",
+      "docs/doctrine/directory-rules.md",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "data/receipts/generated/genrec-georeference-control-point-set-20260806.json",
+      "https://docs.google.com/document/d/1uTqdIEFZE2cq3gyISetoRYM6LIlnKqTc3FobtEx7Cbs/edit",
+      "https://app.notion.com/p/3c9a92021bf68195b8b1f3a8d694b447",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024#issuecomment-5578126400"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/map-georeference-control-point-set.yml": "PROPOSED",
+    "contracts/map/georeference_control_point_set.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "authenticated-file-byte-parity",
+      "outcome": "PASS",
+      "reason": "Seven original files reproduced locally with exact connector-returned Git blob SHAs. This is a sparse evidence snapshot, not a complete repository checkout."
+    },
+    {
+      "gate": "focused-pytest",
+      "outcome": "PASS",
+      "reason": "All 11 unchanged repository tests passed on Python 3.13.5 / pytest 9.0.2 / jsonschema 4.26.0. Python 3.11 execution was not available."
+    },
+    {
+      "gate": "fixture-exact-polarity",
+      "outcome": "PASS",
+      "reason": "11 unchanged cases matched exact expectations: 2 VALID, 9 ERROR. The standalone valid.json CLI also returned VALID."
+    },
+    {
+      "gate": "contract-semantic-probes",
+      "outcome": "PASS",
+      "reason": "12 temporary probes checked inclusive edges, fractional resources, negative synthetic targets, decision precedence/order, governance shape, and identity dependencies. These are not new committed test cases."
+    },
+    {
+      "gate": "markdown-and-links",
+      "outcome": "PASS",
+      "reason": "Parsed metadata and Markdown; preserved all four prior H2 anchors; checked 12 links against connector-read paths and two inspected target anchors; golden identities match the original test vector."
+    },
+    {
+      "gate": "workflow-change-boundary",
+      "outcome": "PASS",
+      "reason": "YAML structural comparison permits only two added receipt trigger paths and replacement of the receipt argument; all five run blocks pass bash -n. Permissions, events, check names, action pins, installation, tests, and fixture commands remain unchanged."
+    },
+    {
+      "gate": "receipt-schema-and-byte-parity",
+      "outcome": "PASS",
+      "reason": "Exact fetched receipt schema, FormatChecker, artifact/hash/truth-label key parity, non-self-reference, and full SHA-256 digests checked locally. This is not execution of the complete repository-native receipt CLI."
+    },
+    {
+      "gate": "native-and-hosted-validation",
+      "outcome": "SKIPPED",
+      "reason": "Full repository checkout, Python 3.11, native receipt CLI, workflow-security/topology checks, repository-wide tests, and exact-head hosted CI remain unproved."
+    },
+    {
+      "gate": "independent-review-and-draft-delivery",
+      "outcome": "SKIPPED",
+      "reason": "Review remains pending. #4024 delivery control is unresolved; no PR lifecycle operation is authorized by this receipt."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "GCP_SCHEMA",
+      "validated": true,
+      "evidence_ref": "schemas/contracts/v1/map/georeference_control_point_set.schema.json@6087d07b49362540e437dc666d1cbaa6eb6b82c3"
+    },
+    {
+      "id": "GCP_VALIDATOR",
+      "validated": true,
+      "evidence_ref": "tools/validators/map/validate_georeference_control_point_set.py@6087d07b49362540e437dc666d1cbaa6eb6b82c3"
+    },
+    {
+      "id": "GCP_TESTS",
+      "validated": true,
+      "evidence_ref": "tests/map/test_georeference_control_point_set.py@6087d07b49362540e437dc666d1cbaa6eb6b82c3"
+    },
+    {
+      "id": "DIRECTORY_AUTHORITY",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@6087d07b49362540e437dc666d1cbaa6eb6b82c3"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-08T05:01:27Z",
+  "emitter": "openai/GPT-6 Astra Pro",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Same-path semantic documentation and the directly coupled authoring-receipt workflow argument only. The historical August receipt is retained unchanged; its workflow digest already differs from the pinned current workflow. This receipt describes this edition, does not re-author unchanged schemas/tests/fixtures, and does not retroactively approve prior work. Drive supplied Directory Rules lineage; Notion supplied coordination; GitHub supplied current implementation and incident evidence. Model build identifier and generation parameters are unavailable. Policy was not evaluated. The documented numeric-context/parser limitation remains unresolved; no algorithm, schema version, permissions, required checks, source, runtime, or publication state was changed."
+}
