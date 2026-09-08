@@ -1,163 +1,64 @@
-# Temporary branch-only authoring aid; remove before final handoff.
-# Generation has read-only credentials. Storage creates only unreferenced blobs.
+# Temporary read-only candidate readback; remove before final handoff.
 name: esbuild-lock-candidate
 on:
   push:
     branches: [agent/esbuild-security-pnpm11-20260908]
-    paths:
-      - package.json
-      - pnpm-workspace.yaml
-      - apps/kansas-frontier-matrix-explorer/tests/esbuild-security.test.mjs
-      - .github/workflows/esbuild-lock-candidate.yml
+    paths: [.github/workflows/esbuild-lock-candidate.yml]
 permissions:
   contents: read
-concurrency:
-  group: esbuild-lock-candidate-${{ github.ref }}
-  cancel-in-progress: false
+  checks: read
 jobs:
-  generate:
-    if: github.repository == 'bartytime4life/Kansas-Frontier-Matrix' && github.ref == 'refs/heads/agent/esbuild-security-pnpm11-20260908'
-    runs-on: ubuntu-24.04
-    timeout-minutes: 20
-    outputs:
-      pnpm_data: ${{ steps.candidate.outputs.pnpm_data }}
-      npm_data: ${{ steps.candidate.outputs.npm_data }}
-      pnpm_sha256: ${{ steps.candidate.outputs.pnpm_sha256 }}
-      npm_sha256: ${{ steps.candidate.outputs.npm_sha256 }}
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-        with:
-          persist-credentials: false
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
-        with:
-          node-version: '22'
-          package-manager-cache: false
-      - name: Generate native candidate locks without dependency scripts
-        shell: bash
-        run: |
-          set -euo pipefail
-          test -z "$(git status --porcelain)"
-          git rev-parse HEAD
-          node --version
-          npm --version
-          corepack enable
-          test "$(pnpm --version)" = 11.17.0
-          sha256sum package.json pnpm-workspace.yaml apps/kansas-frontier-matrix-explorer/package.json > "$RUNNER_TEMP/inputs.sha256"
-          pnpm install --lockfile-only --ignore-scripts --no-frozen-lockfile
-          app="$RUNNER_TEMP/kfm-esbuild-standalone"
-          mkdir -p "$app/tests"
-          cp apps/kansas-frontier-matrix-explorer/{package.json,package-lock.json} "$app/"
-          cp apps/kansas-frontier-matrix-explorer/tests/esbuild-security.test.mjs "$app/tests/"
-          (cd "$app" && npm install --package-lock-only --ignore-scripts --no-fund --no-audit)
-          cp "$app/package-lock.json" apps/kansas-frontier-matrix-explorer/package-lock.json
-          sha256sum -c "$RUNNER_TEMP/inputs.sha256"
-          python3 - <<'PY'
-          import pathlib, subprocess
-          paths = {'pnpm-lock.yaml', 'apps/kansas-frontier-matrix-explorer/package-lock.json'}
-          changed = set(subprocess.check_output(['git', 'diff', '--name-only'], text=True).splitlines())
-          assert changed == paths, changed
-          before = subprocess.check_output(['git', 'show', 'HEAD:pnpm-lock.yaml'], text=True)
-          after = pathlib.Path('pnpm-lock.yaml').read_text()
-          def importers(text):
-              return text.split('\nimporters:\n', 1)[1].split('\npackages:\n', 1)[0]
-          assert importers(before) == importers(after), 'direct pnpm resolutions changed'
-          PY
-          git diff --check
-          git diff --stat
-          git diff -- pnpm-lock.yaml
-      - name: Verify frozen pnpm installation and runtime security probes
-        shell: bash
-        run: |
-          set -euo pipefail
-          sha256sum pnpm-lock.yaml apps/kansas-frontier-matrix-explorer/package-lock.json > "$RUNNER_TEMP/locks.sha256"
-          KFM_ESBUILD_REQUIRE_WORKSPACE=1 node --test apps/kansas-frontier-matrix-explorer/tests/esbuild-security.test.mjs
-          pnpm install --frozen-lockfile
-          KFM_ESBUILD_REQUIRE_WORKSPACE=1 KFM_ESBUILD_RUNTIME_PROBE=1 node --test apps/kansas-frontier-matrix-explorer/tests/esbuild-security.test.mjs
-          sha256sum -c "$RUNNER_TEMP/inputs.sha256"
-          sha256sum -c "$RUNNER_TEMP/locks.sha256"
-      - name: Verify standalone npm installation and runtime security probes
-        shell: bash
-        run: |
-          set -euo pipefail
-          cd "$RUNNER_TEMP/kfm-esbuild-standalone"
-          sha256sum package-lock.json > "$RUNNER_TEMP/npm-lock.sha256"
-          npm ci --no-fund --no-audit --loglevel=error
-          KFM_ESBUILD_RUNTIME_PROBE=1 node --test tests/esbuild-security.test.mjs
-          sha256sum -c "$RUNNER_TEMP/npm-lock.sha256"
-      - name: Check workspace build and unit consumers
-        shell: bash
-        run: |
-          set -euo pipefail
-          pnpm --dir apps/explorer-web run build
-          pnpm --dir apps/explorer-web run test:unit
-          pnpm --dir packages/maplibre run test
-          sha256sum -c "$RUNNER_TEMP/inputs.sha256"
-          sha256sum -c "$RUNNER_TEMP/locks.sha256"
-      - name: Bind candidate bytes to this generation run
-        id: candidate
-        shell: bash
-        run: |
-          set -euo pipefail
-          python3 - <<'PY'
-          import base64, gzip, hashlib, json, os, pathlib
-          report = {'kind': 'candidate-generation-diagnostic', 'source_head': os.environ['GITHUB_SHA'],
-                    'run_id': os.environ['GITHUB_RUN_ID'], 'files': [], 'approval': False}
-          with open(os.environ['GITHUB_OUTPUT'], 'a') as out:
-              for key, path in [('pnpm', 'pnpm-lock.yaml'), ('npm', 'apps/kansas-frontier-matrix-explorer/package-lock.json')]:
-                  data = pathlib.Path(path).read_bytes()
-                  assert 0 < len(data) <= 2_000_000
-                  digest = hashlib.sha256(data).hexdigest()
-                  blob = hashlib.sha1(b'blob ' + str(len(data)).encode() + b'\0' + data).hexdigest()
-                  print(key + '_data=' + base64.b64encode(gzip.compress(data, mtime=0)).decode(), file=out)
-                  print(key + '_sha256=' + digest, file=out)
-                  report['files'].append({'path': path, 'bytes': len(data), 'sha256': digest, 'git_blob': blob})
-          print(json.dumps(report, indent=2))
-          PY
-  store-candidate-blobs:
-    needs: generate
+  readback:
     if: github.repository == 'bartytime4life/Kansas-Frontier-Matrix' && github.ref == 'refs/heads/agent/esbuild-security-pnpm11-20260908'
     runs-on: ubuntu-24.04
     timeout-minutes: 3
-    permissions:
-      contents: write
-    # No checkout, package installation, repository code, or ref mutation here.
     steps:
-      - name: Store validated candidate bytes as unreferenced Git objects only
+      - name: Read and verify the two previously validated native lock objects
         env:
           GH_TOKEN: ${{ github.token }}
-          PNPM_DATA: ${{ needs.generate.outputs.pnpm_data }}
-          NPM_DATA: ${{ needs.generate.outputs.npm_data }}
-          PNPM_SHA256: ${{ needs.generate.outputs.pnpm_sha256 }}
-          NPM_SHA256: ${{ needs.generate.outputs.npm_sha256 }}
         shell: python
         run: |
-          import base64, gzip, hashlib, io, json, os, urllib.request
-          assert os.environ['GITHUB_REPOSITORY'] == 'bartytime4life/Kansas-Frontier-Matrix'
-          assert os.environ['GITHUB_REF'] == 'refs/heads/agent/esbuild-security-pnpm11-20260908'
+          import base64, hashlib, json, os, re, urllib.request
+          root = 'https://api.github.com/repos/bartytime4life/Kansas-Frontier-Matrix/'
           class NoRedirect(urllib.request.HTTPRedirectHandler):
               def redirect_request(self, *args, **kwargs):
                   raise RuntimeError('redirect refused')
           opener = urllib.request.build_opener(NoRedirect)
-          for key, path in [('PNPM', 'pnpm-lock.yaml'), ('NPM', 'apps/kansas-frontier-matrix-explorer/package-lock.json')]:
-              encoded = os.environ[key + '_DATA']
-              assert 0 < len(encoded) <= 500_000
-              packed = base64.b64decode(encoded, validate=True)
-              with gzip.GzipFile(fileobj=io.BytesIO(packed)) as stream:
-                  data = stream.read(2_000_001)
-              assert 0 < len(data) <= 2_000_000
-              digest = hashlib.sha256(data).hexdigest()
-              assert digest == os.environ[key + '_SHA256']
-              blob = hashlib.sha1(b'blob ' + str(len(data)).encode() + b'\0' + data).hexdigest()
-              body = json.dumps({'content': data.decode('utf-8'), 'encoding': 'utf-8'}).encode()
-              request = urllib.request.Request(
-                  'https://api.github.com/repos/bartytime4life/Kansas-Frontier-Matrix/git/blobs',
-                  data=body, method='POST', headers={
-                      'Authorization': 'Bearer ' + os.environ['GH_TOKEN'],
-                      'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'})
-              with opener.open(request, timeout=30) as response:
-                  result = json.load(response)
-              assert result['sha'] == blob, 'stored object differs from validated candidate'
-              record = {'path': path, 'git_blob': blob, 'sha256': digest, 'bytes': len(data),
-                        'source_head': os.environ['GITHUB_SHA'], 'run_id': os.environ['GITHUB_RUN_ID'],
-                        'ref_updated': False, 'approval': False}
-              print('::notice title=' + key + ' candidate::' + json.dumps(record))
+          def get(suffix):
+              req = urllib.request.Request(root + suffix, headers={
+                  'Authorization': 'Bearer ' + os.environ['GH_TOKEN'],
+                  'Accept': 'application/vnd.github+json'})
+              with opener.open(req, timeout=30) as response:
+                  data = response.read(3_000_001)
+              assert len(data) <= 3_000_000
+              return json.loads(data)
+          annotations = get('check-runs/102136662673/annotations?per_page=10')
+          assert len(annotations) == 2
+          expected = {'pnpm-lock.yaml', 'apps/kansas-frontier-matrix-explorer/package-lock.json'}
+          seen = set()
+          for annotation in annotations:
+              record = json.loads(annotation['message'])
+              assert record['path'] in expected and record['path'] not in seen
+              seen.add(record['path'])
+              assert record['source_head'] == '9cc310123cf9eacb4628ac409698a6e7cf928d04'
+              assert record['run_id'] == '34248375449'
+              assert record['ref_updated'] is False and record['approval'] is False
+              sha = record['git_blob']
+              assert re.fullmatch('[0-9a-f]{40}', sha)
+              obj = get('git/blobs/' + sha)
+              assert obj['encoding'] == 'base64'
+              data = base64.b64decode(obj['content'])
+              assert len(data) == record['bytes']
+              assert hashlib.sha256(data).hexdigest() == record['sha256']
+              assert hashlib.sha1(b'blob ' + str(len(data)).encode() + b'\0' + data).hexdigest() == sha
+              record['readback_verified'] = True
+              print('CANDIDATE_VERIFIED ' + json.dumps(record, sort_keys=True))
+              text = data.decode('utf-8')
+              if record['path'] == 'pnpm-lock.yaml':
+                  print('PNPM_HEADER ' + json.dumps(text.split('importers:', 1)[0]))
+                  entries = sorted(set(re.findall(r'^  [\x27\x22]?((?:esbuild|@esbuild/[^@\s:\x27\x22]+)@[^\s:\x27\x22]+)[\x27\x22]?:', text, re.M)))
+                  print('PNPM_ESBUILD_ENTRIES ' + json.dumps(entries))
+              else:
+                  lock = json.loads(text)
+                  print('NPM_ROOT ' + json.dumps(lock['packages'][''], sort_keys=True))
+          assert seen == expected
