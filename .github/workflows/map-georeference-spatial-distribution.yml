@@ -11,6 +11,7 @@ name: map-georeference-spatial-distribution
       - "tests/map/test_georeference_spatial_distribution.py"
       - "docs/intake/exploratory/georeference-spatial-distribution-source-map.md"
       - "data/receipts/generated/genrec-georeference-spatial-distribution-20260806.json"
+      - "data/receipts/generated/genrec-georeference-spatial-distribution-docs-20260908.json"
   push:
     branches: [main]
     paths:
@@ -22,6 +23,7 @@ name: map-georeference-spatial-distribution
       - "tests/map/test_georeference_spatial_distribution.py"
       - "docs/intake/exploratory/georeference-spatial-distribution-source-map.md"
       - "data/receipts/generated/genrec-georeference-spatial-distribution-20260806.json"
+      - "data/receipts/generated/genrec-georeference-spatial-distribution-docs-20260908.json"
   workflow_dispatch:
 
 permissions:
@@ -62,10 +64,11 @@ jobs:
         run: python -m pytest -q tests/map/test_georeference_spatial_distribution.py
       - name: Run exact fixture polarity
         run: python tools/validators/map/validate_georeference_spatial_distribution.py --fixtures
-      - name: Verify generated authoring receipt integrity
+      # Original receipt remains historical; this receipt binds the current seven-path packet.
+      - name: Verify current packet receipt integrity
         run: >-
           python tools/validators/validate_generated_receipt.py
-          data/receipts/generated/genrec-georeference-spatial-distribution-20260806.json
+          data/receipts/generated/genrec-georeference-spatial-distribution-docs-20260908.json
           --repo-root .
       - name: Record trust boundary
         if: always()
