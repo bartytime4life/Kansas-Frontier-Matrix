@@ -37,11 +37,37 @@ allowBuilds:
   "unrs-resolver@1.12.2": false
   "workerd@1.20260828.1": false
   "workerd@1.20260903.1": false
+overrides:
+  "@esbuild-kit/core-utils>esbuild": "0.25.12"
 `;
 
 function assertWorkspacePolicy(workspace) {
   assert.equal(workspace, reviewedWorkspace,
     'workspace policy or override differs from the reviewed snapshot');
+}
+
+// pnpm 11 no longer reads package.json#pnpm. Keeping a security setting
+// there must not pass merely because the intended text is still present.
+function assertNoIgnoredPnpmSettings(manifest) {
+  assert.equal(Object.hasOwn(manifest, 'pnpm'), false,
+    'pnpm 11 settings belong in pnpm-workspace.yaml, not package.json#pnpm');
+}
+
+// This is a guard for pnpm's generated lock format, not a general YAML parser.
+function assertPnpmLockOverride(text) {
+  const blocks = [...text.matchAll(/^overrides:\n((?:[ \t]+[^\n]*\n)*)/gm)];
+  assert.equal(blocks.length, 1, 'lock must contain exactly one overrides block');
+  assert.equal(blocks[0][1], "  '@esbuild-kit/core-utils>esbuild': 0.25.12\n",
+    'generated lock must retain the exact parent-scoped remediation');
+}
+
+function assertNpmManifestParity(manifest, lock) {
+  assert.equal(lock.lockfileVersion, 3);
+  assert.ok(lock.packages?.[''], 'standalone npm lock root must be present');
+  for (const section of ['dependencies', 'devDependencies', 'optionalDependencies']) {
+    assert.deepEqual(lock.packages[''][section] ?? {}, manifest[section] ?? {},
+      `standalone npm lock ${section} differs from package.json`);
+  }
 }
 
 function isPatched(version) {
@@ -97,9 +123,65 @@ test('workspace retains existing build-script decisions', workspaceOnly, async (
   assertWorkspacePolicy(await read(path.join(root, 'pnpm-workspace.yaml')));
 });
 
-test('workspace root retains the parent-scoped remediation', workspaceOnly, async () => {
-  const manifest = await json(path.join(root, 'package.json'));
-  assert.deepEqual(manifest.pnpm?.overrides, { '@esbuild-kit/core-utils>esbuild': fixed });
+test('workspace uses the pnpm 11 configuration home', workspaceOnly, async () => {
+  assertNoIgnoredPnpmSettings(await json(path.join(root, 'package.json')));
+});
+
+test('workspace pnpm lock records the exact parent-scoped override', workspaceOnly, async () => {
+  assertPnpmLockOverride(await read(path.join(root, 'pnpm-lock.yaml')));
+});
+
+test('pnpm override guard rejects ignored, missing, duplicated and broadened settings', () => {
+  assert.doesNotThrow(() => assertNoIgnoredPnpmSettings({}));
+  for (const pnpm of [{}, { overrides: { '@esbuild-kit/core-utils>esbuild': fixed } }]) {
+    assert.throws(() => assertNoIgnoredPnpmSettings({ pnpm }), { code: 'ERR_ASSERTION' });
+  }
+  const block = "overrides:\n  '@esbuild-kit/core-utils>esbuild': 0.25.12\n";
+  assert.doesNotThrow(() => assertPnpmLockOverride(block));
+  const mutations = [
+    '', block + block, block.replace('0.25.12', '0.18.20'),
+    block.replace('0.25.12', '^0.25.12'),
+    block.replace("'@esbuild-kit/core-utils>esbuild'", 'esbuild'),
+    block.replace('overrides:', '# overrides:'),
+    block + '  another-package: 1.0.0\n',
+  ];
+  for (const mutation of mutations) {
+    assert.notEqual(mutation, block);
+    assert.throws(() => assertPnpmLockOverride(mutation), { code: 'ERR_ASSERTION' });
+  }
+  const override = '  "@esbuild-kit/core-utils>esbuild": "0.25.12"\n';
+  for (const replacement of ['', '#' + override, '  esbuild: "0.25.12"\n',
+    '  "@esbuild-kit/core-utils>esbuild": "0.18.20"\n']) {
+    const mutation = reviewedWorkspace.replace(override, replacement);
+    assert.notEqual(mutation, reviewedWorkspace);
+    assert.throws(() => assertWorkspacePolicy(mutation), { code: 'ERR_ASSERTION' });
+  }
+});
+
+test('standalone npm lock agrees with every direct dependency declaration', async () => {
+  assertNpmManifestParity(await json(path.join(app, 'package.json')),
+    await json(path.join(app, 'package-lock.json')));
+});
+
+test('standalone lock guard rejects stale, missing and extra direct dependencies', () => {
+  const manifest = { dependencies: { next: '16.3.4' },
+    devDependencies: { typescript: 'npm:@typescript/typescript6@6.0.2' },
+    optionalDependencies: { 'synthetic-optional': '1.0.0' } };
+  const lock = { lockfileVersion: 3, packages: { '': structuredClone(manifest) } };
+  assert.doesNotThrow(() => assertNpmManifestParity(manifest, lock));
+  for (const section of ['dependencies', 'devDependencies', 'optionalDependencies']) {
+    const key = Object.keys(manifest[section])[0];
+    for (const mode of ['stale', 'missing', 'extra']) {
+      const mutation = structuredClone(lock);
+      if (mode === 'stale') mutation.packages[''][section][key] = '0.0.0';
+      if (mode === 'missing') delete mutation.packages[''][section][key];
+      if (mode === 'extra') mutation.packages[''][section]['unexpected'] = '1.0.0';
+      assert.notDeepEqual(mutation, lock);
+      assert.throws(() => assertNpmManifestParity(manifest, mutation), { code: 'ERR_ASSERTION' });
+    }
+  }
+  assert.throws(() => assertNpmManifestParity(manifest,
+    { lockfileVersion: 3, packages: {} }), { code: 'ERR_ASSERTION' });
 });
 
 test('workspace guard rejects additive approvals and spoofed denials', () => {
