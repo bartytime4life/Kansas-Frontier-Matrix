@@ -27,8 +27,9 @@
 # - The repository pnpm lock records the exact package-owned MapLibre dependency
 #   state. It is not evidence that the held browser runtime is ready.
 # Inputs:
-# - MapLibre scripts, placeholder schemas/validators, config, fixture/test lanes,
-#   package/Make commands, renderer/docs boundaries, and candidate trust builders.
+# - MapLibre scripts, the closed envelope schema plus held trust-output schemas,
+#   validators, config, fixture/test lanes, package/Make commands, renderer/docs
+#   boundaries, and candidate trust builders.
 # Outputs:
 # - GitHub job conclusion, logs, annotations, and step summary only. No screenshot,
 #   receipt, attestation, proof, release record, correction, rollback, or artifact upload.
@@ -256,15 +257,18 @@ jobs:
             "schemas/maplibre/perf-rollback-plan.schema.json"
             "schemas/maplibre/render-diff-report.schema.json"
             "tests/fixtures/maplibre/README.md"
+            "tests/fixtures/maplibre/perf-envelope/README.md"
             "tests/maplibre/README.md"
             "tests/maplibre/perf_fixture_builder.py"
             "tests/maplibre/test_assess_acquisition_inventory.py"
             "tests/maplibre/test_legacy_perf_harness_retirement.py"
             "tests/maplibre/test_package_exports.py"
+            "tests/maplibre/test_perf_envelope_contract.py"
             "tests/maplibre/test_perf_governance_negative_paths.py"
             "tests/maplibre/test_validate_v6_readiness.py"
             "tools/validators/maplibre/README.md"
             "tools/validators/maplibre/assess_acquisition_inventory.py"
+            "tools/validators/maplibre/validate_perf_envelope.py"
             "tools/validators/maplibre/validate_perf_governance.py"
             "tools/validators/maplibre/validate_v6_readiness.py"
           )
@@ -278,6 +282,7 @@ jobs:
 
           python - <<'PY'
           import json
+          import math
           import re
           from pathlib import Path
 
@@ -425,6 +430,7 @@ jobs:
 
           fixture_root = Path("tests/fixtures/maplibre")
           source_metadata_root = fixture_root / "source-metadata"
+          perf_envelope_root = fixture_root / "perf-envelope"
           source_metadata_payloads = sorted(
               path
               for path in source_metadata_root.rglob("*")
@@ -463,6 +469,41 @@ jobs:
                       "JSON fixture payloads."
                   )
 
+          perf_envelope_payloads = sorted(
+              path
+              for path in perf_envelope_root.rglob("*")
+              if path.is_file() and path.name not in {"README.md", ".gitkeep"}
+          )
+          perf_envelope_companions = (
+              Path("schemas/maplibre/perf-envelope.schema.json"),
+              Path("tests/maplibre/test_perf_envelope_contract.py"),
+              Path("tools/validators/maplibre/validate_perf_envelope.py"),
+          )
+          missing_perf_envelope_companions = [
+              path for path in perf_envelope_companions if not path.is_file()
+          ]
+          if missing_perf_envelope_companions:
+              raise SystemExit(
+                  "MapLibre performance-envelope fixtures require their schema, test, "
+                  "and validator boundaries:\n"
+                  + "\n".join(str(path) for path in missing_perf_envelope_companions)
+              )
+          unsupported_perf_envelope_payloads = [
+              path for path in perf_envelope_payloads if path.suffix != ".json"
+          ]
+          if unsupported_perf_envelope_payloads:
+              raise SystemExit(
+                  "MapLibre performance-envelope fixture payloads must remain JSON-only:\n"
+                  + "\n".join(str(path) for path in unsupported_perf_envelope_payloads)
+              )
+          for polarity in ("valid", "invalid"):
+              polarity_payloads = sorted((perf_envelope_root / polarity).glob("*.json"))
+              if not polarity_payloads:
+                  raise SystemExit(
+                      "MapLibre performance-envelope fixture polarity is empty: "
+                      f"{perf_envelope_root / polarity}"
+                  )
+
           unclassified_fixture_payloads = sorted(
               path
               for path in fixture_root.rglob("*")
@@ -470,6 +511,7 @@ jobs:
                   path.is_file()
                   and path.name not in {"README.md", ".gitkeep"}
                   and source_metadata_root not in path.parents
+                  and perf_envelope_root not in path.parents
               )
           )
           if unclassified_fixture_payloads:
@@ -527,11 +569,51 @@ jobs:
               "additionalProperties": True,
           }
           for path in schema_paths:
+              if path.name == "perf-envelope.schema.json":
+                  continue
               if json.loads(path.read_text(encoding="utf-8")) != placeholder_schema:
                   raise SystemExit(
                       f"{path} is no longer the reviewed accept-any-object placeholder. "
                       "Wire its contract, valid/invalid fixtures, and validator deliberately."
                   )
+
+          envelope_schema = json.loads(
+              Path("schemas/maplibre/perf-envelope.schema.json").read_text(
+                  encoding="utf-8"
+              )
+          )
+          expected_envelope_fields = {
+              "object_type",
+              "schema_version",
+              "domain",
+              "policy_posture",
+              "thresholds",
+              "notes",
+          }
+          expected_threshold_fields = {
+              "avg_frame_ms",
+              "p95_frame_ms",
+              "idle_ms",
+              "load_ms",
+              "render_pixel_delta_ratio",
+          }
+          threshold_schema = envelope_schema.get("properties", {}).get("thresholds", {})
+          if (
+              envelope_schema.get("$schema")
+              != "https://json-schema.org/draft/2020-12/schema"
+              or envelope_schema.get("additionalProperties") is not False
+              or set(envelope_schema.get("required", [])) != expected_envelope_fields
+              or set(envelope_schema.get("properties", {})) != expected_envelope_fields
+              or threshold_schema.get("additionalProperties") is not False
+              or set(threshold_schema.get("required", []))
+              != expected_threshold_fields
+              or set(threshold_schema.get("properties", {}))
+              != expected_threshold_fields
+          ):
+              raise SystemExit(
+                  "The MapLibre performance-envelope schema lost its reviewed closed v1 "
+                  "field inventory. Reconcile schema, fixtures, tests, and consumers."
+              )
 
           schema_wrappers = {
               "validate_perf_correction_notice.py",
@@ -591,12 +673,39 @@ jobs:
                   encoding="utf-8"
               )
           )
-          if envelope.get("object_type") != "PerfEnvelope" or not isinstance(
-              envelope.get("thresholds"), dict
+          thresholds = envelope.get("thresholds")
+          if (
+              set(envelope) != expected_envelope_fields
+              or envelope.get("object_type") != "PerfEnvelope"
+              or envelope.get("schema_version") != "v1"
+              or envelope.get("domain") != "maplibre"
+              or envelope.get("policy_posture") != "public_safe"
+              or not isinstance(thresholds, dict)
+              or set(thresholds) != expected_threshold_fields
+              or any(
+                  isinstance(thresholds[field], bool)
+                  or not isinstance(thresholds[field], (int, float))
+                  or not math.isfinite(thresholds[field])
+                  or thresholds[field] <= 0
+                  for field in (
+                      "avg_frame_ms",
+                      "p95_frame_ms",
+                      "idle_ms",
+                      "load_ms",
+                  )
+              )
+              or isinstance(thresholds["render_pixel_delta_ratio"], bool)
+              or not isinstance(
+                  thresholds["render_pixel_delta_ratio"], (int, float)
+              )
+              or not math.isfinite(thresholds["render_pixel_delta_ratio"])
+              or not 0 <= thresholds["render_pixel_delta_ratio"] <= 1
+              or not isinstance(envelope.get("notes"), list)
+              or not envelope["notes"]
           ):
               raise SystemExit(
-                  "MapLibre performance envelope identity/threshold shape changed. Review its "
-                  "contract and meaningful schema before changing CI."
+                  "The tracked MapLibre performance envelope violates its reviewed v1 "
+                  "identity, field inventory, or numeric boundary."
               )
 
           dev_dependencies = package.get("devDependencies", {})
@@ -699,6 +808,10 @@ jobs:
                   "under the dedicated no-network validator lane."
               )
           print(
+              f"Classified {len(perf_envelope_payloads)} performance-envelope JSON "
+              "payloads under the schema-validation fixture lane."
+          )
+          print(
               "Classified the structural MapLibre acquisition inventory under its "
               "dedicated no-network workflow and test lane."
           )
@@ -707,7 +820,7 @@ jobs:
               "the briefing implementation campaign."
           )
           print("No unclassified MapLibre performance fixture payloads exist.")
-          print("All eight MapLibre perf schemas remain accept-any-object placeholders.")
+          print("The performance-envelope schema is closed; seven trust-output schemas remain placeholders.")
           print("Governance verifiers remain placeholders and the aggregate command remains no-argument.")
           print("The legacy live-CDN browser harness is retired and fails with a finite HOLD.")
           print("Attestation remains unsigned; proof/release outcomes remain candidate builders in artifacts/.")
@@ -723,8 +836,8 @@ jobs:
             echo "- Outcome: WORKFLOW_SKIPPED_EXPLICIT for browser/perf/render/trust stages."
             echo "- Gate: WORKFLOW_HOLD"
             echo "- Toolchain: the reviewed pnpm workspace lock is accepted as dependency state only; no dependency install or browser run occurred."
-            echo "- Fixture boundary: source-metadata JSON fixtures and the v6-readiness fixture pack remain governed by their dedicated no-network workflow/campaign and are not runtime/performance baselines."
-            echo "- Blockers: no governed performance/baseline fixtures; permissive schemas; placeholder governance verifiers; unsigned attestation; unaccepted trust-output roots. The legacy live-CDN harness is retired."
+            echo "- Fixture boundary: performance-envelope schema fixtures are synthetic configuration cases; source-metadata JSON fixtures and the v6-readiness pack remain governed by their dedicated no-network workflow/campaign. None is a runtime performance baseline."
+            echo "- Blockers: no governed runtime/baseline fixtures; seven trust-output schemas and the aggregate governance verifiers remain placeholders; attestation is unsigned; trust-output roots are unaccepted. The legacy live-CDN harness is retired."
             echo "- Safety: no browser, server, external source, screenshot, receipt, attestation, proof, release object, correction, rollback, failure bundle, or artifact upload was produced."
           } >> "$GITHUB_STEP_SUMMARY"
           echo "::notice::WORKFLOW_HOLD — MapLibre runtime performance governance is not release-grade."
