@@ -151,9 +151,9 @@
   "created_at": "2026-08-11T01:48:50Z",
   "emitter": "OpenAI Codex via ChatGPT Work",
   "links": {
-    "pr_number": null,
+    "pr_number": 4437,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Fixture-only GeographyCrosswalk packet derived from Pass 20 KFM-IDX-APP-008, the consolidated atlas vocabulary, and merged GeographyVersion semantics. It declares digest-bound version pairs, forward-only finite relations, integer-millionth weights, evidence references, disclosures, and deterministic identity while preserving geography, geometry, mapping, evidence, policy, review, release, publication, deployment, and public-use boundaries. On 2026-09-08 the contract artifact digest was refreshed for a documentation-only follow-up; the original authoring identity and validation record remain lineage and do not attribute that revision."
+  "notes": "Fixture-only GeographyCrosswalk packet derived from Pass 20 KFM-IDX-APP-008, the consolidated atlas vocabulary, and merged GeographyVersion semantics. It declares digest-bound version pairs, forward-only finite relations, integer-millionth weights, evidence references, disclosures, and deterministic identity while preserving geography, geometry, mapping, evidence, policy, review, release, publication, deployment, and public-use boundaries. On 2026-09-08 the contract artifact digest was refreshed for a documentation-only PR #4437; the original authoring identity and validation record remain lineage and do not attribute that revision."
 }
