@@ -36,6 +36,7 @@ allowBuilds:
   "esbuild@0.28.2": true
   "unrs-resolver@1.12.2": false
   "workerd@1.20260828.1": false
+  "workerd@1.20260903.1": false
 `;
 
 function assertWorkspacePolicy(workspace) {
@@ -115,6 +116,23 @@ test('workspace guard rejects additive approvals and spoofed denials', () => {
   for (const mutation of mutations) {
     assert.notEqual(mutation, reviewedWorkspace);
     assert.throws(() => assertWorkspacePolicy(mutation), { code: 'ERR_ASSERTION' });
+  }
+});
+
+test('workspace guard rejects missing or broadened workerd decisions', () => {
+  for (const version of ['1.20260828.1', '1.20260903.1']) {
+    const denied = `  "workerd@${version}": false\n`;
+    assert.ok(reviewedWorkspace.includes(denied));
+    const mutations = [
+      reviewedWorkspace.replace(denied, ''),
+      reviewedWorkspace.replace(denied, `#${denied}`),
+      reviewedWorkspace.replace(denied, `  "workerd@${version}": true\n`),
+      reviewedWorkspace.replace(denied, '  workerd: false\n'),
+    ];
+    for (const mutation of mutations) {
+      assert.notEqual(mutation, reviewedWorkspace);
+      assert.throws(() => assertWorkspacePolicy(mutation), { code: 'ERR_ASSERTION' });
+    }
   }
 });
 
