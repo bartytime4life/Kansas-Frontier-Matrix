@@ -2,208 +2,223 @@
 doc_id: kfm://doc/contracts-layers-readme
 title: contracts/layers — Layer Semantic Contract Compatibility README
 type: readme
-version: v0.1
-status: draft
+version: v0.2
+status: draft; repository-grounded; compatibility-orientation; mixed-maturity; non-publisher
 owners: OWNER_TBD — Layer steward · Contract steward · Data steward · UI steward · Evidence steward · Policy steward · Release steward · Docs steward · Directory Rules reviewer
 created: 2026-06-24
-updated: 2026-06-24
-policy_label: public-with-gates; contracts; layers; semantic-contracts; compatibility; map-first; renderer-boundary; release-gated; schema-home-conflicted
+updated: 2026-09-07
+policy_label: public-with-gates; contracts; layers; compatibility; map-first; renderer-boundary; release-gated; family-routing-unresolved
+owning_root: contracts/
+current_path: contracts/layers/README.md
+responsibility: Orient maintainers to existing layer semantics, paired schemas, candidate validation, and fixture-only admission without creating a second writable object-contract authority.
+truth_posture: cite-or-abstain; document presence, implemented checks, approval, release, and public use remain separate
+evidence_snapshot: bartytime4life/Kansas-Frontier-Matrix@6087d07b49362540e437dc666d1cbaa6eb6b82c3
+prior_blob: b340d48ba17b7d303b0863f1574bbacbad2c17ea
+authority_basis: Accepted ADR-0029; docs/doctrine/directory-rules.md blob fd49a0b83e55cef52c1124281f093e263526898d; DIR-AUTHROOT-001 and DIR-AUTHROOT-002
+supersedes: v0.1 of this README only; no object contract, schema, policy, runtime, or release state
 related:
   - ../README.md
   - ../data/layer_manifest.md
   - ../data/layer_descriptor.md
   - ../data/layer_catalog_item.md
+  - ../runtime/layer_manifest_admission.md
+  - ../../docs/doctrine/directory-rules.md
+  - ../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
   - ../../docs/architecture/ui/LAYERING.md
-  - ../../docs/architecture/map-master/LAYER_LIFECYCLE.md
-  - ../../docs/architecture/map-shell.md
-  - ../../docs/architecture/ui/MAP_RUNTIME_BOUNDARY.md
-  - ../../docs/architecture/contract-schema-policy-split.md
-  - ../../docs/standards/MAP_TRUST_STATES.md
-  - ../../docs/standards/OGC-API-TILES.md
-  - ../../schemas/contracts/v1/layers/
-  - ../../schemas/contracts/v1/data/
-  - ../../policy/layers/
-  - ../../policy/data/
-  - ../../tests/fixtures/layers/
-  - ../../data/registry/layers/
-  - ../../data/published/layers/
-  - ../../release/
-tags: [kfm, contracts, layers, layer-manifest, layer-descriptor, layer-catalog-item, maplibre, map-first, renderer-boundary, evidence-bundle, policy-decision, release-manifest, rollback, schema-home-conflicted]
+  - ../../schemas/contracts/v1/layers/README.md
+  - ../../schemas/contracts/v1/data/layer_manifest.schema.json
+  - ../../tools/validators/data/validate_layer_manifest.py
+  - ../../tests/validators/test_validate_layer_manifest.py
+  - ../../apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts
+  - ../../data/registry/layers/README.md
+tags: [kfm, contracts, layers, layer-manifest, layer-descriptor, layer-catalog-item, maplibre, evidence, policy, release, rollback, compatibility]
 notes:
-  - "Directory README for the `contracts/layers/` compatibility/orientation path."
-  - "Layer object contracts currently verified in this session live under `contracts/data/` (`layer_manifest.md`, `layer_descriptor.md`, `layer_catalog_item.md`); UI layering doctrine proposes a `schemas/contracts/v1/layers/` schema home."
-  - "This README preserves the schema/contract placement conflict instead of treating the requested path as resolved canonical authority."
-  - "A layer is a derived surface and renderer boundary carrier, not source truth, policy approval, release approval, EvidenceBundle, AI output, or runtime implementation."
-  - "Previous file content was a short stub; rollback target is blob SHA `5a9510af8c9a4386a5d738788c63697627ad0ee5`."
+  - "Same-path documentation reconciliation; contracts/layers/ contains only this README at the pinned snapshot."
+  - "The adopted root split and default schemas/contracts/v1/<family>/ route are established; the data-versus-layers family migration is not settled here."
+  - "The data LayerManifest has a dual-profile schema and deterministic validator; parallel layers schemas remain permissive PROPOSED scaffolds."
+  - "The runtime admission evaluator is a separate fixture-only projection, not a live resolver, registry writer, loader, or release decision."
+  - "No source, dependency, renderer, policy, public data, release, or deployment is activated by this update."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # contracts/layers
 
-> Compatibility and orientation README for KFM layer semantic contracts: layer catalog items, renderer-facing descriptors, layer manifests, legends, tile/asset manifests, and map-trust carriers that remain downstream of evidence, policy, review, release, correction, and rollback.
+> Find the existing layer contracts and their actual validation boundaries without creating a second contract home. Layers, legends, styles, tiles, screenshots, exports, and AI summaries remain downstream carriers of governed evidence, not truth or publication authority.
 
-<p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Root: contracts" src="https://img.shields.io/badge/root-contracts-blue">
-  <img alt="Family: layers" src="https://img.shields.io/badge/family-layers-0a7ea4">
-  <img alt="Authority: semantic meaning" src="https://img.shields.io/badge/authority-semantic__meaning-blueviolet">
-  <img alt="Schema home: conflicted" src="https://img.shields.io/badge/schema__home-CONFLICTED-red">
-  <img alt="Renderer: downstream" src="https://img.shields.io/badge/renderer-downstream__of__trust-green">
-</p>
+**Status:** repository-grounded draft; compatibility/orientation only. **Owning root:** `contracts/`. **Stewardship:** `OWNER_TBD`; this update assigns no reviewer or approval authority.
 
-**Status:** draft compatibility/orientation README  
-**Owners:** `OWNER_TBD` — Layer steward · Contract steward · Data steward · UI steward · Evidence steward · Policy steward · Release steward · Docs steward · Directory Rules reviewer  
-**Path:** `contracts/layers/README.md`  
-**Verified adjacent contracts:** `contracts/data/layer_manifest.md`, `contracts/data/layer_descriptor.md`, `contracts/data/layer_catalog_item.md`  
-**Truth posture:** CONFIRMED stub replaced · CONFIRMED layer contracts exist under `contracts/data/` · CONFIRMED UI layering doctrine proposes `schemas/contracts/v1/layers/` · CONFLICTED schema/contract home until ADR or migration resolves it
+**Evidence snapshot:** `main@6087d07b49362540e437dc666d1cbaa6eb6b82c3`. Current-state statements below are bounded to that snapshot, not a claim that every referenced capability has been executed or released.
 
 ## Quick jumps
 
-[Scope](#scope) · [Repo fit](#repo-fit) · [Current contract surface](#current-contract-surface) · [Object family meanings](#object-family-meanings) · [Anti-collapse rules](#anti-collapse-rules) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Layer trust rules](#layer-trust-rules) · [Migration checklist](#migration-checklist) · [Rollback](#rollback)
-
----
+[Scope](#scope) · [Repo fit](#repo-fit) · [Current contract surface](#current-contract-surface) · [Object family meanings](#object-family-meanings) · [Anti-collapse rules](#anti-collapse-rules) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Layer trust rules](#layer-trust-rules) · [Validation](#validation) · [Migration checklist](#migration-checklist) · [Open verification](#open-verification) · [Evidence basis](#evidence-basis) · [Rollback](#rollback)
 
 ## Scope
 
-`contracts/layers/` is a compatibility and orientation path for layer-related semantic contracts.
+`contracts/layers/` remains a compatibility and orientation lane. Its only tracked child at the evidence snapshot is this README. The object-level meanings of `LayerManifest`, `LayerDescriptor`, and `LayerCatalogItem` remain in `contracts/data/`; do not duplicate them here.
 
-It exists because KFM has two inspected layer placement signals:
+Two different placement questions must stay separate:
 
-1. object-level semantic contracts for `LayerManifest` and `LayerDescriptor` are currently under `contracts/data/`; and
-2. UI layering doctrine names a proposed `schemas/contracts/v1/layers/` schema family and describes layer objects as a map-shell object family.
-
-This README must not pretend that the conflict is solved. Until an ADR or migration resolves the contract/schema home, this path should be used as a **lane guide and compatibility pointer**, not as an uncontrolled duplicate of the `contracts/data/` layer contracts.
+1. **Root responsibility is established.** Accepted [ADR-0029](../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts [Directory Rules](../../docs/doctrine/directory-rules.md). Section 9.3 separates semantic meaning in `contracts/`, machine shape in `schemas/`, and admissibility in `policy/`. `DIR-AUTHROOT-001` already defaults machine schemas to `schemas/contracts/v1/<family>/`; `DIR-AUTHROOT-002` permits semantic Markdown here.
+2. **Layer-family convergence remains unresolved.** Paired data-family schemas and parallel `schemas/contracts/v1/layers/` scaffolds both exist. [ADR-0001](../../docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) remains proposed for routing, compatibility, migration, and enforcement. This README does not accept that ADR, choose a new family home, or authorize a move.
 
 > [!IMPORTANT]
-> A KFM layer is a derived map/display surface. It can carry release, proof, policy, rights, freshness, sensitivity, and rollback references at point of use, but it is not source truth, not an EvidenceBundle, not policy, not release approval, not a tile renderer, and not an AI answer.
-
----
+> A manifest can carry evidence, rights, sensitivity, policy, review, release, correction, and rollback references without proving that any reference resolves or that any operation is authorized. Schema validity and a layer toggle are not publication.
 
 ## Repo fit
 
-| Responsibility | Expected or related path | Relationship to this README |
+| Responsibility | Inspected surface | Boundary |
 |---|---|---|
-| Contracts root | [`../README.md`](../README.md) | Defines semantic contract meaning and separates schemas, policy, validation, and source data. |
-| Layer compatibility/orientation path | `contracts/layers/` | This directory; does not resolve schema/contract home conflict alone. |
-| Verified layer manifest contract | [`../data/layer_manifest.md`](../data/layer_manifest.md) | Current semantic contract for governed layer-version manifests. |
-| Verified layer descriptor contract | [`../data/layer_descriptor.md`](../data/layer_descriptor.md) | Current semantic contract for renderer-facing layer descriptors. |
-| Verified layer catalog item contract | `../data/layer_catalog_item.md` | Current catalog/discovery companion; not reverified in this task. |
-| UI layer doctrine | `../../docs/architecture/ui/LAYERING.md` | Defines layer doctrine and proposed `schemas/contracts/v1/layers/` homes. |
-| Machine schemas — proposed layer home | `../../schemas/contracts/v1/layers/` | PROPOSED by UI layering doctrine; not verified as canonical. |
-| Machine schemas — current data home | `../../schemas/contracts/v1/data/` | Current paired schema home named by inspected layer contracts; conflict remains. |
-| Layer policy | `../../policy/layers/`, `../../policy/data/` | Admissibility and layer trust gates; behavior NEEDS VERIFICATION. |
-| Tests and fixtures | `../../tests/fixtures/layers/`, `../../fixtures/data/` | Proof and examples; not contract authority. |
-| Layer registry | `../../data/registry/layers/` | Append-only layer registry; not contract prose. |
-| Published artifacts | `../../data/published/layers/`, `../../data/published/pmtiles/`, `../../data/published/geoparquet/` | Released carriers; not semantic truth. |
-| Release and rollback | `../../release/` | Promotion, manifests, correction, withdrawal, and rollback authority. |
-| Runtime/UI code | `../../apps/`, `../../packages/`, `../../pipelines/` | Downstream rendering/execution; not semantic authority. |
+| Semantic root | [Contracts README](../README.md) | Meaning and interface promises, not machine shape or permission. |
+| Layer object meaning | [Manifest](../data/layer_manifest.md), [descriptor](../data/layer_descriptor.md), [catalog item](../data/layer_catalog_item.md) | Existing object contracts under `contracts/data/`; all three were opened for this update. |
+| Paired candidate shape | [Data LayerManifest schema](../../schemas/contracts/v1/data/layer_manifest.schema.json) | Legacy permissive profile plus strict inactive fixture profile. |
+| Parallel layer shapes | [Layer schema family](../../schemas/contracts/v1/layers/README.md) | Existing proposal scaffolds, not an adopted replacement for the paired data schemas. |
+| Candidate validation | [LayerManifest validator](../../tools/validators/data/validate_layer_manifest.py) and [tests](../../tests/validators/test_validate_layer_manifest.py) | Local schema and deterministic checks; not reference resolution or release. |
+| Admission projection meaning | [Runtime admission contract](../runtime/layer_manifest_admission.md) | Separate fixture-only eligibility/denial boundary. |
+| Admission implementation | [Explorer evaluator](../../apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts) | Returns finite results with no registry mutation or MapLibre source creation. |
+| Layer registry | [Registry README](../../data/registry/layers/README.md) | Identity/routing/control records; this review does not establish append-only enforcement or a live registry resolver. |
+| Architecture | [UI layering reference](../../docs/architecture/ui/LAYERING.md) | Explanatory lineage; its older whole-runtime checkpoint must not substitute for current code or runtime evidence. |
 
----
+Policy rules remain under `policy/`; lifecycle instances, receipts, proofs, catalog projections, and released data carriers remain under their governed `data/` lanes; release decisions and rollback records remain under `release/`. Runtime implementation remains outside this contract lane. These are responsibility boundaries, not claims that those systems are operational.
 
 ## Current contract surface
 
-| Object or lane | Current verified contract path | Meaning | Placement posture |
-|---|---|---|---|
-| `LayerManifest` | `contracts/data/layer_manifest.md` | Governed manifest for a versioned layer payload and its source-role, evidence, integrity, lifecycle, policy, review, release, freshness, sensitivity, correction, and rollback context. | CONFIRMED path; schema home CONFLICTED / NEEDS VERIFICATION. |
-| `LayerDescriptor` | `contracts/data/layer_descriptor.md` | Renderer-facing descriptor boundary that lets an adapter reference a released or candidate layer while carrying trust references. | CONFIRMED path; schema home CONFLICTED / NEEDS VERIFICATION. |
-| `LayerCatalogItem` | `contracts/data/layer_catalog_item.md` | Catalog/list metadata companion for discovery and trust badges. | Search-confirmed; not re-fetched in this task. |
-| `LegendDescriptor` | PROPOSED | Evidence-aware legend semantics: classes, ramps, units, trust state, scale dependencies, and sensitivity constraints. | PROPOSED. |
-| `StyleManifest` | PROPOSED | Style, sprites, glyphs, class styling, sensitive styling constraints, and renderer-safe presentation. | PROPOSED. |
-| `TileArtifactManifest` | PROPOSED | PMTiles, MVT, COG, GeoParquet, 3D Tiles, or related asset digest/signature semantics. | PROPOSED. |
-| `MapReleaseManifest` | `release/` family | Binds layer, style, tile assets, evidence, policy, promotion, and rollback. | Release root; not this folder. |
+| Object/profile | Evidence and maturity | What a consumer may conclude |
+|---|---|---|
+| `LayerManifest` semantic contract | **CONFIRMED / DRAFT:** existing data-family contract, v0.3. | Defines a versioned representation and distinct source/evidence/policy/review/release/artifact/time/exposure/lineage references. |
+| Data `LayerManifest` strict profile | **CONFIRMED / IMPLEMENTED, bounded:** schema and validator for `PROPOSED_INACTIVE` / `FIXTURE_ONLY` candidates. | Applicable shape and local deterministic rules can be checked; no public use follows. |
+| Data `LayerManifest` legacy profile | **CONFIRMED / IMPLEMENTED, permissive:** no `object_type`; `id` required; extra properties allowed. | Backward compatibility only; strict semantic checks are intentionally not applied. |
+| `LayerDescriptor` | **CONFIRMED / DRAFT:** [paired data schema](../../schemas/contracts/v1/data/layer_descriptor.schema.json) requires only `id`, with optional string `version` and `spec_hash` and extra properties allowed. | Renderer-facing meaning exists; the placeholder shape does not enforce full trust semantics. |
+| `LayerCatalogItem` | **CONFIRMED / DRAFT:** [paired data schema](../../schemas/contracts/v1/data/layer_catalog_item.schema.json) has the same minimal shape. | Discovery/list meaning exists; listing does not authorize loading or exposure. |
+| Parallel `layers/` schemas | **CONFIRMED / DRAFT:** [manifest](../../schemas/contracts/v1/layers/layer_manifest.schema.json), [descriptor](../../schemas/contracts/v1/layers/layer_descriptor.schema.json), and [catalog item](../../schemas/contracts/v1/layers/layer_catalog_item.schema.json) each have `properties: {}`, `additionalProperties: true`, no required fields, and `contract_doc: null`. | Even an empty object can satisfy these scaffolds; do not present their validation as substantive layer validation. |
+| Runtime admission projection | **CONFIRMED / IMPLEMENTED, bounded:** separate synthetic evaluator, including selection-to-layer matching. | Eligibility or refusal within that fixture profile only; never real registration, reference authentication, or publication. |
 
----
+The schema family's `layer_descriptor.fauna-profile.example.json` is an example carrier, not another schema or a released fauna layer. Domain profiles and adjacent `LegendDescriptor`, `StyleManifest`, `TileArtifactManifest`, and `MapReleaseManifest` families are outside this subtree's inventory. Their repository-wide maturity is **NOT INSPECTED** here; this README neither declares them absent nor commissions duplicate definitions.
+
+### Candidate validation is not runtime admission
+
+The strict data manifest remains `lifecycle_state: CANDIDATE`. Its validator checks content-derived identity, reference ordering/uniqueness and role separation, floating-reference denial, representation/zoom/bounds consistency, temporal ordering, declared exposure constraints, and false-valued governance flags. See the existing [contract](../data/layer_manifest.md) for field-level meaning instead of copying its schema here.
+
+Its `PUBLIC` audience and `APPROVED` rights fields are candidate declarations. A passing fixture does not establish actual rights clearance, public-safe geometry, authenticated review, or an issued release. Artifact references are not artifact-byte verification; budgets are not measured performance; drawer/Focus flags are not implemented or authorized user interactions.
+
+The separate admission evaluator holds legacy and inactive profiles and candidate lifecycle state. Its positive case uses a **synthetic released-runtime projection**, not a way to promote the strict candidate by changing labels. Even on `PASS`, the result fixes `authority: "NONE"`, `registryMutated: false`, `maplibreSourceCreated: false`, and retains `RUNTIME_REGISTRATION_NOT_EXECUTED`. Selection admission additionally rejects a projection for a different selected layer. Neither evaluator resolves real evidence or authenticates its carried release assertions.
 
 ## Object family meanings
 
-Layer contracts may define meanings for:
-
-- **catalog discovery** — what a user or API can see about an available layer;
-- **renderer handoff** — what a MapLibre or map adapter may safely render;
-- **layer manifesting** — what exact version of a layer payload exists and what it is backed by;
-- **legend and style safety** — what symbology means and whether it exposes sensitive precision;
-- **tile/asset integrity** — which artifacts were built, signed, checked, released, superseded, corrected, or withdrawn;
-- **feature interaction trust** — what happens when a user selects a feature and requests an EvidenceBundle, Evidence Drawer view, export, or Focus Mode handoff.
-
-All of those meanings remain downstream of evidence and policy. None of them create underlying domain truth.
-
----
+| Meaning | Object or boundary | Must not become |
+|---|---|---|
+| Catalog discovery | `LayerCatalogItem` describes what can be listed and what trust state must be visible. | Payload, renderer command, or permission to load. |
+| Renderer handoff | `LayerDescriptor` describes a representation-facing reference and its trust context. | Source truth, evidence resolution, or a renderer implementation. |
+| Layer manifesting | `LayerManifest` binds an exact representation/version and its supporting references. | Release approval, policy execution, or verified artifact bytes. |
+| Admission projection | The runtime contract describes fixture-only eligibility and finite denial. | A registry writer, live loader, or authenticated release decision. |
+| Legend, style, and asset interpretation | Existing owner contracts must explain classes, ramps, units, scale, transforms, and integrity claims. | A new writable family under this compatibility lane. |
+| Feature interaction | A selection supplies context for governed evidence, export, or Focus handling. | Evidence inferred from rendered geometry or untrusted feature properties. |
 
 ## Anti-collapse rules
 
-| Do not collapse layers into | Why |
+| Keep separate from layer metadata | Why |
 |---|---|
-| Source data | Layers are derived carriers, not RAW or canonical source records. |
-| EvidenceBundle | Layers may reference EvidenceBundle; they are not proof closure. |
-| SourceDescriptor | Layers may cite sources; they do not define source identity, rights, cadence, or authority. |
-| PolicyDecision | Layer meaning does not decide allow/deny/restrict/abstain. |
-| ReleaseManifest | A layer manifest/descriptor is not publication approval by itself. |
-| Renderer implementation | MapLibre style/source config is downstream execution, not semantic authority. |
-| Public tile artifact | PMTiles, COG, GeoParquet, MVT, or 3D Tiles are emitted carriers, not contracts. |
-| AI answer | Generated language can explain released layer evidence but cannot create evidence or release state. |
-| Domain object truth | Flora, fauna, geology, hydrology, hazards, people, settlement, and other domains own their object meanings. |
-
----
+| Source data and `SourceDescriptor` | A derived representation neither captures RAW source bytes nor admits source identity, rights, cadence, or authority. |
+| `EvidenceRef` and `EvidenceBundle` | A carried locator must resolve to admissible support; neither a layer nor a catalog hit supplies evidence closure. |
+| `PolicyDecision` and review | A field, boolean, fixture assertion, or successful check does not execute policy or authenticate independent approval. |
+| Release and promotion decisions | A manifest, commit, PR, or successful render is not a governed transition to `PUBLISHED`. |
+| Receipts and proofs | A record of an action does not establish all of the action's evidentiary or release preconditions. |
+| Renderer and published artifacts | Style JSON, PMTiles, COG, GeoParquet, MVT, scenes, and screenshots are carriers, not semantic or domain truth. |
+| Domain meanings and AI answers | Domain owners retain object meaning; generated explanations remain subordinate to admissible evidence. |
 
 ## Accepted inputs
 
-Until the placement conflict is resolved, durable content under `contracts/layers/` should be conservative:
+This existing README may be maintained in place. Short compatibility, migration, and backlink notes may document a separately governed change, but must identify their scope, authority, consumers, and rollback. They must not silently become new object contracts or parallel registries.
 
-| Accepted item | Purpose | Required posture |
-|---|---|---|
-| `README.md` | Compatibility/orientation guide and migration boundary. | Accepted. |
-| Short migration notes | Explain movement between `contracts/data/` and `contracts/layers/` if an ADR selects a home. | Temporary; preserve rollback. |
-| Backlink audit notes | List inbound references to old layer contract paths during cleanup. | Temporary. |
-| Future layer object contracts | Only after ADR/migration confirms this path as canonical. | PROPOSED until schema/policy/test-linked. |
-
----
+New authoritative layer contracts here require an explicit family-routing decision or governed migration with dependency closure. That condition does **not** freeze safe same-path corrections to the existing data contracts, their paired schemas, tests, or this orientation guide.
 
 ## Exclusions
 
-| Do not put this here | Correct home | Reason |
-|---|---|---|
-| RAW, WORK, QUARANTINE, PROCESSED, CATALOG, or PUBLISHED data | `../../data/<phase>/...` | Lifecycle data is not contract meaning. |
-| PMTiles, COG, GeoParquet, MVT, 3D Tiles, sprites, glyphs, or style JSON artifacts | `../../data/published/`, style/runtime roots | Emitted carriers and runtime assets are not contracts. |
-| JSON Schema | `../../schemas/contracts/v1/layers/` or `../../schemas/contracts/v1/data/` after ADR | Schemas own machine shape. |
-| Policy rules | `../../policy/layers/`, `../../policy/data/`, `../../policy/sensitivity/` | Policy owns admissibility and exposure. |
-| Fixtures, validators, tests | `../../fixtures/`, `../../tests/`, `../../tools/validators/` | Proof and execution live outside contracts. |
-| Release manifests, rollback cards, correction notices | `../../release/` | Publication is a governed state transition. |
-| Map UI code, adapters, SDKs, pipelines | `../../apps/`, `../../packages/`, `../../pipelines/` | Runtime delivery is downstream of contracts. |
-
----
+| Excluded material | Owning responsibility |
+|---|---|
+| RAW, WORK, QUARANTINE, PROCESSED, CATALOG, or PUBLISHED instances | Governed lifecycle lanes under `data/`, not semantic Markdown. |
+| Machine schemas or duplicated executable shapes | `schemas/`; retain the existing paired family until an authorized change. |
+| Executable policy, access rules, or sensitivity decisions | Policy rule source under `policy/`; decision records with their governed process or release. |
+| Fixtures, validators, test code | Existing fixture, validator, and test roots; examples do not become authority. |
+| Tiles, raster/vector assets, sprites, glyphs, or style JSON | Governed data/artifact and runtime owners, not this directory. |
+| Release-instance manifests, correction notices, withdrawal or rollback records | `release/` or the accepted instance family; their semantic definitions remain contracts. |
+| Map UI, adapters, SDKs, pipeline code, or model clients | Existing implementation roots, not the contract compatibility lane. |
 
 ## Layer trust rules
 
-Minimum rules for any KFM layer surface:
+The lifecycle remains `RAW -> WORK/QUARANTINE -> PROCESSED -> CATALOG/TRIPLET -> PUBLISHED`. Promotion is a governed transition, not a file move, schema pass, or layer toggle.
 
-- the renderer is downstream of trust, never upstream of it;
-- every public or semi-public layer must point to release, evidence, policy, freshness, rights, sensitivity, review, correction, and rollback support;
-- unresolved EvidenceRef, missing PolicyDecision, missing release state, stale/degraded freshness, unclear rights, or sensitive exposure should surface as `ABSTAIN`, `DENY`, `ERROR`, generalized output, or withheld output according to policy;
-- feature clicks must resolve through governed APIs, not direct canonical/internal stores;
-- a layer can be visually persuasive and still not be authoritative;
-- screenshots, exports, legends, tiles, styles, cached vectors, and AI summaries are downstream carriers and must preserve trust state.
+Public clients consume governed APIs or released public-safe artifacts, never RAW, WORK, QUARANTINE, unpublished internal stores, or direct model output. Consequential claims resolve `EvidenceRef -> EvidenceBundle`; insufficient support must remain visible rather than be replaced by plausible prose or renderer properties.
 
----
+Before exposure, preserve source role, geographic and temporal scope, attribution, rights, sensitivity, evidence, policy, review, release, correction, and rollback context. Observation time, source-update time, evaluation time, and release time must not silently substitute for each other. Unknown coverage is not zero; stale or superseded support is not current support.
+
+> [!WARNING]
+> **Style is not access control.** Hiding a layer, lowering opacity, filtering features, suppressing a popup, or restricting zoom does not protect data already delivered to a browser. Sensitive fields and geometry require policy-directed withholding, redaction, generalization, aggregation, staged access, or denial before delivery, with transform reasons and lineage preserved.
+
+Feature clicks route through governed evidence handling. Exports, comparison views, cached vectors, legends, and AI summaries must preserve applicable restrictions and correction lineage. A correction or withdrawal requires governed propagation; this README does not implement cache invalidation or rollback execution.
+
+### Finite outcomes stay local to their contract
+
+| Surface | Vocabulary | Meaning and limit |
+|---|---|---|
+| Data manifest validator | `PASS` / `FAIL` / `ERROR` | Applicable local checks pass, conformance fails, or evaluation cannot safely complete. Not policy or release outcomes. |
+| Fixture runtime admission | `PASS` / `HOLD` / `DENY` / `ERROR` | Synthetic eligibility or a finite refusal. No side effect or authority is created. |
+| Governed answer design | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` | User-facing interpretation must follow its own governing contract; not an automatic translation of validator output. |
+
+Candidate trust states such as `CANDIDATE`, `DEGRADED`, `STALE`, and `HELD` are metadata, not the same enum as validator results, release states, or answer outcomes. Apply the specific consumer and policy rules; do not invent a universal status conversion in this README.
+
+## Validation
+
+For changes to the paired data manifest, the inspected validator and test entrypoints are:
+
+```bash
+python -m unittest tests.validators.test_validate_layer_manifest --verbose
+python tools/validators/data/validate_layer_manifest.py --fixtures
+```
+
+Run these from a complete repository checkout with its declared dependencies. The fixture runner checks expected outcomes and finding codes as well as fixture inventory; negative fixtures must retain their expected failure polarity. Do not run the permissive parallel `layers/` schemas instead and call that equivalent validation.
+
+This README update was checked as documentation against connector-read, commit-pinned evidence. It does not report these repository-native commands, hosted CI, browser tests, or end-to-end source/release checks as passed. The accompanying authoring receipt records executed checks and unrun coverage separately.
 
 ## Migration checklist
 
-If `contracts/layers/` becomes canonical through ADR or migration:
+Before changing family routing or making `contracts/layers/` an object-contract authority:
 
-- [ ] Decide whether `contracts/data/layer_manifest.md`, `contracts/data/layer_descriptor.md`, and `contracts/data/layer_catalog_item.md` move here or remain data-family contracts.
-- [ ] Decide matching schema home: `schemas/contracts/v1/layers/` versus `schemas/contracts/v1/data/`.
-- [ ] Preserve redirects or compatibility notes from old paths.
-- [ ] Update docs, schema `$id`s, fixture paths, validator references, policy imports, and tests.
-- [ ] Keep release, data registry, published artifacts, and runtime code out of contracts.
-- [ ] Record the change in ADR / migration notes and rollback plan.
-- [ ] Prove with tests that public UI and APIs still use governed released layer envelopes.
+- [ ] Record the exact accepted decision or governed migration scope, owners, source and destination paths, and rollback.
+- [ ] Decide independently whether each semantic contract stays under `contracts/data/` and how each parallel schema is retained, profiled, redirected, or retired.
+- [ ] Inventory consumers, schema `$id` and `$ref` relationships, contract metadata, registries, fixtures, validator bindings, tests, and inbound documentation links.
+- [ ] Preserve the legacy profile deliberately or provide explicit breaking-change impact, migration, compatibility tests, and rollback; do not silently apply strict rules to old instances.
+- [ ] Preserve the candidate-validation versus runtime-admission distinction and selection-to-layer binding, including deterministic negative fixtures.
+- [ ] Update affected references atomically, retaining compatibility pointers and established document IDs/anchors where required.
+- [ ] Keep data instances, executable policy, released artifacts, release decisions, and runtime code outside contract prose; verify applicable public-path and correction behavior before any later activation.
 
----
+No migration is performed or accepted by this update.
+
+## Open verification
+
+Family convergence, descriptor/catalog field completeness and operative validation, live source/evidence resolution, rights and sensitivity enforcement, release authentication, artifact/signature verification, public loading, and correction/rollback execution require their own current evidence. The existence of a metadata-declared validator path is not implementation proof.
+
+The wider Explorer and MapLibre runtime are **NOT INSPECTED** for readiness in this documentation slice. Do not copy older architecture claims that the renderer is absent, or interpret fixture admission as proof that all present runtime consumers are governed. Independent review and hosted exact-head validation remain separate handoff checks.
+
+## Evidence basis
+
+Repository links above are interpreted at the pinned commit, not as floating evidence of future state. Implementation findings come from the actual schemas and evaluators; accepted placement comes from ADR-0029 and its exact adopted Directory Rules bytes. Older architecture and object-contract checkpoints are lineage where current code differs.
+
+| External workspace source inspected | Role and limit |
+|---|---|
+| Google Drive: *Direct plan for building KFM*, document `1xykJzHwdYevZPdk2R1keDtPjKssAUgwxmDhm5pbOO0A`, modified 2026-05-03 | Planning lineage for released-layer → governed API → EvidenceBundle → Evidence Drawer and bounded Focus. Its historical path and stack proposals do not override accepted decisions or current code. |
+| Notion: *Close governed MapLibre runtime probe matrix*, page `3c9a9202-1bf6-8146-ab6a-ca4e03139382` | Coordination evidence that configuration/fixture progress and runtime-probe readiness are separate. Its PR and CI summaries are not re-certified here as current GitHub state. |
+
+The original `Directory Rules.pdf` was not located in the bounded Drive search. Placement is based on the accepted, exact-byte repository adoption, not an inferred PDF revision. Drive was read-only; this README does not turn Notion coordination or source plans into repository authority.
 
 ## Rollback
 
-Rollback is required if this README is used to treat `contracts/layers/` as resolved canonical authority without ADR, or if layer contracts are used to bypass source evidence, policy, sensitivity, review, release, correction, or rollback gates.
+Restore this README from **blob `b340d48ba17b7d303b0863f1574bbacbad2c17ea`**, as recorded at the evidence snapshot, or revert the scoped update through review. Retain the generated-work receipt as historical accountability; do not rewrite it as approval or erase the authoring trail.
 
-Rollback target for this replacement: previous stub blob SHA `5a9510af8c9a4386a5d738788c63697627ad0ee5`.
+The former stub blob `5a9510af8c9a4386a5d738788c63697627ad0ee5` remains v0.1 lineage, not the rollback target for v0.2. Restore the complete previous README rather than discarding its intervening content.
 
-<p align="right"><a href="#top">Back to top</a></p>
+This documentation change has no schema, data, registry, policy, runtime, release, deployment, or publication state to roll back. A later functional migration must supply its own rollback and correction evidence.
+
+[Back to top](#top)
