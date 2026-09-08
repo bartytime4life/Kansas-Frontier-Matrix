@@ -1,4 +1,4 @@
-# Read-only CI proof for the merged esbuild remediation.
+# Read-only CI proof for the esbuild remediation candidate and later merged revisions.
 # This workflow does not merge, release, deploy, publish, or dismiss alerts.
 name: esbuild-security
 on:

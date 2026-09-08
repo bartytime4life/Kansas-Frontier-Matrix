@@ -2,19 +2,47 @@
 doc_id: kfm://doc/explorer/esbuild-security-remediation
 title: Explorer esbuild remediation regression guard
 type: app-maintenance-note
-version: 0.3.0
+version: 0.3.1
 status: branch candidate; independent review pending
 owning_root: apps/
-responsibility: regression coverage for the merged esbuild dependency remediation
+responsibility: regression coverage for the esbuild dependency remediation candidate
 truth_posture: cite-or-abstain; candidate validation is not advisory closure
 updated: 2026-09-08
 [/KFM_META_BLOCK_V2] -->
 
 # esbuild remediation regression guard
 
+## Current branch reconciliation — 2026-09-08
+
+The preserved candidate branch was reconciled with
+`main@2bddc4b4e453a7396d654d5f988911e9ee3af1ef` by non-force merge
+commit `1cf5d24ae72566703b4b206e846f1c11d38af22e`. Its exact parents are
+the previously validated candidate
+`fdabf5797b13e6bf7bf178fc236c916dba88da74` and that current
+`main` commit. The 16 incoming commits changed ten unrelated
+cross-domain, taxonomy, workflow, and generated-receipt paths; none overlaps
+the seven-file esbuild candidate. At the merge commit the seven candidate
+blobs remained byte-identical, and the branch became five commits ahead and
+zero behind `main`.
+
+The exact pre-reconciliation candidate
+[run 34249165957](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/34249165957)
+passed both the frozen pnpm-workspace job and the standalone `npm ci` job,
+including static guards and runtime probes. The merge itself changed only
+incoming non-esbuild paths, so the security workflow's path filter did not
+rerun. This documentation refresh deliberately enters the existing path
+filter so the new branch head receives a separate hosted result. Read that
+result from GitHub; do not infer it from the earlier run or this text.
+
+No pull request was opened. Issue #4024 still holds this execution path at
+`VALIDATED_BRANCH_ONLY`; branch reconciliation and a passing check do not
+authorize draft creation, ready-for-review, approval, merge to `main`,
+advisory dismissal, release, deployment, or publication.
+
 ## Current candidate: effective pnpm 11 override and dual-lock repair
 
-This follow-up starts from `main@03138e81f19b801cf6d16d767a4c0e01ab36d717`,
+This follow-up originally started from
+`main@03138e81f19b801cf6d16d767a4c0e01ab36d717`,
 which merged [PR #4427](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4427).
 It is authored on `agent/esbuild-security-pnpm11-20260908`. The merge of #4427
 is historical repository state, not evidence that its remaining checks passed.
@@ -70,6 +98,9 @@ checkout-free job stores only the two generated, unreferenced Git blobs; it
 calls no branch, pull-request, review, merge, release, or deployment API.
 The final tree retains only the existing read-only security workflow, with an
 exact branch trigger so the committed repair can be checked without a PR.
+That named-branch push selector is branch-only validation plumbing. Before any
+separately authorized integration PR, remove the selector and validate through
+the pull-request trigger; do not carry it into `main` unintentionally.
 No generated credentials, logs, or intermediate package trees are committed.
 
 ### Delivery, limits, and rollback
@@ -96,7 +127,8 @@ Before integration, preserve or close the candidate without modifying main.
 After separately authorized integration, revert this seven-file delta together
 through a reviewed change; restoring the base reintroduces the known dependency
 regression and is not itself a security remedy. The temporary workflow must
-remain absent. No rollback was executed.
+remain absent, and the named-branch push selector must be removed before any
+separately authorized integration. No rollback was executed.
 
 ## Historical September 8 Workerd installation repair
 
