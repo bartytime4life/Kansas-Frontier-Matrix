@@ -304,7 +304,7 @@ Reviewers should also confirm that the schema, validator, test, workflow, and re
 
 Acceptance of this document revision requires:
 
-- one-file scope unless executable behavior is intentionally changed;
+- the semantic edit is confined to this file; a generated-receipt digest refresh may accompany it;
 - no unsupported validator claim;
 - exact preservation of the non-authority boundary;
 - review through the repository `CODEOWNERS` route; and
