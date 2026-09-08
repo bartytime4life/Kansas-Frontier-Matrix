@@ -65,8 +65,12 @@ jobs:
         run: python tools/validators/data/validate_baseline_cohort_assessment.py --fixtures
       - name: Run focused tests
         run: python -m pytest tests/data/test_baseline_cohort_assessment.py -q --strict-config --strict-markers
-      - name: Validate generated authoring receipt
-        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-baseline-cohort-assessment-20260810.json --repo-root .
+      - name: Replay immutable authoring receipt
+        run: >-
+          python tools/validators/validate_generated_receipt.py
+          data/receipts/generated/genrec-baseline-cohort-assessment-20260810.json
+          --repo-root .
+          --artifact-git-ref 978cd53371014e9bd5c659787de0eba9b32094b7
       - name: Record trust boundary
         if: always()
         run: |
