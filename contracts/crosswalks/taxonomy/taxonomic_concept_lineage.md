@@ -1,13 +1,16 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/contracts-crosswalks-taxonomy-concept-lineage
 title: Taxonomic Concept and Name-Usage Lineage Contract
-type: semantic-contract; taxonomy-crosswalk; name-usage; concept-lineage
-version: v0.2.0
-status: draft; PROPOSED; repository-grounded; fixture-first; no-taxonomic-or-release-authority
+type: semantic-contract
+version: v0.2.1
+status: draft; PROPOSED; repository-grounded; executable-fixture-profile; human-review-hold; no-taxonomic-or-release-authority
 owners: OWNER_TBD — Taxonomy steward · Flora steward · Fauna steward · Contracts steward · Schema steward · Validation steward
 created: 2026-08-05
 updated: 2026-09-08
-policy_label: public; contracts; crosswalks; taxonomy; non-authoritative
+owning_root: contracts/
+policy_label: public; contracts; crosswalks; taxonomy; non-authoritative; fixture-scoped-validation
+responsibility: Define cross-domain meaning and anti-collapse invariants for source-native name usages, taxon concepts, typed concept relations, and reversible reconciliation decisions without creating taxonomic, occurrence, source, policy, review, or release authority.
+truth_posture: cite-or-abstain
 related:
   - ./README.md
   - ../../../schemas/contracts/v1/crosswalks/taxonomy/taxonomic_concept_lineage.schema.json
@@ -15,13 +18,16 @@ related:
   - ../../../tests/validators/test_validate_taxonomic_concept_lineage.py
   - ../../../.github/workflows/taxonomic-concept-lineage.yml
   - ../../../data/receipts/generated/genrec-taxonomic-concept-lineage-20260805.json
+  - ../../../data/receipts/generated/genrec-taxonomic-concept-lineage-contract-currentness-20260908.json
   - ../../source/plants_taxa_drift_assessment.md
   - ../../../docs/intake/exploratory/new-ideas-4-25-source-map.md
   - ../../../docs/kfm_full_atlas_seed_cards.md
+  - ../../../docs/intake/exploratory/full-atlas-semantic-disposition-crosswalk.md
 notes:
   - "Implements the bounded KFM-TRIAD-060 gap retained from New Ideas 4-25-26."
   - "A scientific-name string is never treated as timeless taxon identity."
   - "v0.2.0 documents the exact schema, validator, test, workflow, and downstream boundary present at main@b20d25d2e2012881049fa96c3d65611ff5616bdc; it changes no executable behavior."
+  - "v0.2.1 repairs current metadata conformance after merged PR #4436 and moves subsequent integrity binding to a new currentness receipt without rewriting the retained 2026-08-05 receipt again."
 [/KFM_META_BLOCK_V2] -->
 
 # Taxonomic Concept and Name-Usage Lineage
@@ -54,16 +60,17 @@ It must not be interpreted as:
 
 ## 2. Repository binding
 
-The current binding is frozen to repository `main` at commit `b20d25d2e2012881049fa96c3d65611ff5616bdc` for this documentation revision.
+The current binding is frozen to repository `main` at commit `2bddc4b4e453a7396d654d5f988911e9ee3af1ef` for this documentation revision.
 
 | Responsibility | Current repository object | Binding |
 |---|---|---|
-| Semantic meaning | This contract | Document profile `v0.2.0`; prior blob `732f8827c44199fbb4cb8dd7cd5bf8cf360a387a` |
+| Semantic meaning | This contract | Document profile `v0.2.1`; prior blob `a9c50d8567f4cbd3f9e470145c6414f468d4a827` |
 | Machine shape | [`taxonomic_concept_lineage.schema.json`](../../../schemas/contracts/v1/crosswalks/taxonomy/taxonomic_concept_lineage.schema.json) | JSON Schema Draft 2020-12; packet `schema_version` is exactly `1.0.0`; blob `a9896bb2582ed33a92442b1623245c43c1ee4a34` |
 | Validation | [`validate_taxonomic_concept_lineage.py`](../../../tools/validators/validate_taxonomic_concept_lineage.py) | Local, no-network validation; blob `47a42651c164214ecddcc31ac4a82db16ad85b3d` |
 | Executable examples | [`test_validate_taxonomic_concept_lineage.py`](../../../tests/validators/test_validate_taxonomic_concept_lineage.py) | Six unit tests with embedded compressed synthetic vectors; blob `6e0ae104b630e0fded68124e92b1ea7c9c89aed0` |
 | CI | [`taxonomic-concept-lineage.yml`](../../../.github/workflows/taxonomic-concept-lineage.yml) | Path-scoped Python 3.11 workflow; blob `8a497185f1e16e2530d3adffe6fef4227acc8cd6` |
-| Authoring provenance | [`genrec-taxonomic-concept-lineage-20260805.json`](../../../data/receipts/generated/genrec-taxonomic-concept-lineage-20260805.json) | Generated-receipt record; blob `aed40ed567b76563d76c3545150aed9ee140f3fb` |
+| Retained authoring provenance | [`genrec-taxonomic-concept-lineage-20260805.json`](../../../data/receipts/generated/genrec-taxonomic-concept-lineage-20260805.json) | Post-PR #4436 receipt bytes are retained without another in-place refresh; blob `3fae4f0aabe2580114177f6622d3213dc8a60fb6` |
+| Currentness provenance | [`genrec-taxonomic-concept-lineage-contract-currentness-20260908.json`](../../../data/receipts/generated/genrec-taxonomic-concept-lineage-contract-currentness-20260908.json) | Binds this metadata/currentness repair, the workflow pointer, and the current unchanged packet companions; human review remains pending |
 | Downstream reference | [`plants_taxa_drift_assessment.md`](../../source/plants_taxa_drift_assessment.md) | Consumes an opaque `taxonomic_concept_lineage_ref`; it does not dereference or establish live taxonomy authority |
 
 The existing `contracts/crosswalks/taxonomy/` lane owns semantic crosswalk meaning. The paired schema, validator, tests, workflow, and receipt remain in their existing responsibility roots. This revision creates no new root, authority lane, schema family, or compatibility path.
@@ -268,7 +275,7 @@ The test module currently contains six tests. Its synthetic vectors are compress
 
 The schema metadata declares `fixtures/contracts/v1/crosswalks/taxonomy/taxonomic_concept_lineage/` as `fixtures_root`, but that directory is absent at the frozen repository commit. The workflow and generated receipt also do not include standalone fixture files. Until a dependency-closed follow-up adds and wires that root, the embedded test vectors are the only executable examples and the declared fixture root is repository drift.
 
-The path-scoped workflow runs the dedicated unit test module and validates the generated authoring receipt. A passing run proves only that this proposed local profile satisfies those checks at that commit.
+The path-scoped workflow runs the dedicated unit test module and validates the current packet receipt. The retained 2026-08-05 receipt remains process history rather than the mutable integrity target for later revisions. A passing run proves only that this proposed local profile satisfies those checks at that commit.
 
 ## 10. Known enforcement gaps
 
@@ -284,10 +291,23 @@ The current schema and validator do **not** enforce:
 - a live taxonomy authority, live-source retrieval, source admission, or evidence closure;
 - rights, sensitivity, conservation, policy, review, promotion, release, or publication decisions; or
 - downstream dereferencing of `taxonomic_concept_lineage_ref` in the PLANTS taxa-drift assessment family.
+- single-revision replay of the retained 2026-08-05 receipt: PR #4436 refreshed its contract digest in place while retaining its authoring-time workflow digest, so no one Git revision satisfies both bindings. The separate currentness receipt binds the retained bytes and becomes the CI pointer without erasing that provenance limitation.
 
 These are explicit limits, not implied validator behavior. Any executable expansion requires a dependency-closed change to the contract, schema, validator, positive and negative fixtures, tests, workflow paths, and generated receipt as applicable.
 
-## 11. Validation
+## 11. Evidence and coordination lineage
+
+| Source | Supports | Limits |
+|---|---|---|
+| GitHub `main@2bddc4b4e453a7396d654d5f988911e9ee3af1ef` and [merged PR #4436](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4436) | Current implementation bytes, the v0.2 semantic reconciliation, and the observed merge event. | Merge and green CI are not independent taxonomic, policy, review, or release approval. |
+| [Repository source map](../../../docs/intake/exploratory/new-ideas-4-25-source-map.md), [KFM-TRIAD-060](../../../docs/kfm_full_atlas_seed_cards.md#kfm-triad-060--taxonomic-concept-and-name-usage-lineage), and [semantic disposition](../../../docs/intake/exploratory/full-atlas-semantic-disposition-crosswalk.md) | Proposal lineage and the current `EXECUTABLE_FIXTURE_PROFILE` / `HUMAN_REVIEW/HOLD` classification. | Proposed/partial lineage does not establish a live authority. |
+| [Drive: New Ideas 4-25-26](https://docs.google.com/document/d/1uTY-mR9y3ReKdvbwsjAy0PeVtScN118_7hqDFPpYi_k/edit?usp=drivesdk) | Read-only proposal material about taxonomic backbones, native identifiers, accepted/synonym relationships, provenance, licensing, and crosswalks. | It does not define the exact KFM object-family names or prove that external authority facts remain current. |
+| [Drive: Flora builder](https://docs.google.com/document/d/1SdZMLyyPbzywH4KUmEpuPsRic8_rFyQrIowns45vVfU/edit?usp=drivesdk) and [Drive: Fauna builder](https://docs.google.com/document/d/1RKUhZRdssRFWNFWzcsrHFahB4xAMCxiGafclb1_xNkA/edit?usp=drivesdk) | Domain guidance that synonymy must preserve source-native names and historical identity while taxonomy remains distinct from occurrence evidence. | Read-only coordination lineage is subordinate to repository evidence. |
+| [Notion: Flora builder](https://app.notion.com/p/3caa92021bf6815db884de68502fb21f) and [Notion: Fauna builder](https://app.notion.com/p/3caa92021bf6811b8926dc0010d67672) | Current coordination statements for plant/animal ownership and non-collapse rules. | Both pages are unverified coordination records, not implementation or approval authority. |
+
+GitHub remains implementation authority. Drive supplies read-only proposal lineage, and Notion supplies coordination context. None supplies source admission, taxonomic acceptance, review approval, or publication permission.
+
+## 12. Validation
 
 Run the dedicated suite from the repository root:
 
@@ -300,11 +320,11 @@ python -m unittest discover \
 
 Reviewers should also confirm that the schema, validator, test, workflow, and receipt paths still resolve; the target workflow is triggered for the changed path; and no overlapping pull request changes this object family.
 
-## 12. Acceptance and rollback
+## 13. Acceptance and rollback
 
 Acceptance of this document revision requires:
 
-- the semantic edit is confined to this file; a generated-receipt digest refresh may accompany it;
+- the semantic edit is confined to this file; a currentness receipt and its workflow pointer may accompany it without rewriting the retained 2026-08-05 receipt again;
 - no unsupported validator claim;
 - exact preservation of the non-authority boundary;
 - review through the repository `CODEOWNERS` route; and
