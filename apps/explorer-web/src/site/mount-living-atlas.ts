@@ -75,10 +75,33 @@ function createId(prefix: string): string {
   return `${prefix}:${Date.now().toString(36)}`;
 }
 
-function readDrafts<T>(key: string): readonly T[] {
+function isPersistedDraft<T>(
+  value: unknown,
+  profile: string,
+): value is T {
+  if (typeof value !== "object" || value === null) return false;
+  const record = value as Record<string, unknown>;
+  if (
+    record.profile !== profile ||
+    typeof record.id !== "string" ||
+    typeof record.snapshot !== "object" ||
+    record.snapshot === null
+  ) {
+    return false;
+  }
+  return (record.snapshot as Record<string, unknown>).profile ===
+    "kfm.explorer.map-snapshot.v1";
+}
+
+function readDrafts<T>(key: string, profile: string): readonly T[] {
   try {
     const value = window.localStorage.getItem(key);
-    return value === null ? [] : (JSON.parse(value) as readonly T[]);
+    if (value === null) return [];
+    const parsed: unknown = JSON.parse(value);
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter((entry): entry is T =>
+      isPersistedDraft<T>(entry, profile),
+    );
   } catch {
     return [];
   }
@@ -100,8 +123,18 @@ export function mountLivingAtlasWorkspace(
   let snapshot = createInitialSnapshot();
   let previewTimeId = snapshot.committedTimeId;
   let runtime: MapRuntimePort | null = null;
-  let reports = [...readDrafts<ReportDraft>("kfm.explorer.report-drafts.v1")];
-  let stories = [...readDrafts<StoryScene>("kfm.explorer.story-scenes.v1")];
+  let reports = [
+    ...readDrafts<ReportDraft>(
+      "kfm.explorer.report-drafts.v1",
+      "kfm.explorer.report-draft.v1",
+    ),
+  ];
+  let stories = [
+    ...readDrafts<StoryScene>(
+      "kfm.explorer.story-scenes.v1",
+      "kfm.explorer.story-scene.v1",
+    ),
+  ];
 
   const workspace = el(document, "div", "living-atlas");
   workspace.dataset.component = "living-atlas-workspace";
@@ -406,8 +439,16 @@ export function mountLivingAtlasWorkspace(
     const view = findAtlasView(viewId);
     if (view === null) return;
     if (view.status === "DESIGN_DATA_HOLD") {
+      const selectedLayerId = view.layerIds[0] ?? null;
+      const evidence = findEvidenceForLayer(selectedLayerId);
+      snapshot = cloneSnapshot(snapshot, {
+        activeViewId: view.id,
+        selectedLayerId,
+        evidenceRefs: evidence?.evidenceRefs ?? Object.freeze([]),
+      });
       runtimeState.textContent = `HELD · ${view.statusReason}`;
-      renderEvidence(view.layerIds[0] ?? null);
+      renderEvidence(selectedLayerId);
+      renderViews();
       return;
     }
     const requestedRepresentation = view.representation;
