@@ -128,7 +128,25 @@ describe("Living Atlas governed foundation", () => {
   it("returns only the four finite Focus outcomes", () => {
     expect(evaluateFocusSelection("layer:kansas-frame").outcome).toBe("ANSWER");
     expect(evaluateFocusSelection("layer:watershed-storage").outcome).toBe("ABSTAIN");
+    expect(
+      evaluateFocusSelection(
+        "layer:weather-window",
+        false,
+        "view:weather-window",
+      ),
+    ).toMatchObject({
+      outcome: "ABSTAIN",
+      reasonCode: "VIEW_DATA_HELD",
+      evidenceRefs: [],
+    });
     expect(evaluateFocusSelection("layer:protected-context").outcome).toBe("DENY");
+    expect(
+      evaluateFocusSelection(
+        "layer:protected-context",
+        false,
+        "view:archaeology",
+      ).outcome,
+    ).toBe("DENY");
     expect(evaluateFocusSelection("layer:does-not-exist").outcome).toBe("ERROR");
     expect(evaluateFocusSelection("layer:kansas-frame", true).outcome).toBe("ERROR");
   });

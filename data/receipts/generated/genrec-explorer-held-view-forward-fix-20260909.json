@@ -1,0 +1,173 @@
+{
+  "receipt_id": "genrec:explorer-held-view-forward-fix:20260909",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/explorer-web/src/features/living_atlas/README.md",
+    "apps/explorer-web/src/features/living_atlas/registry.ts",
+    "apps/explorer-web/src/site/README.md",
+    "apps/explorer-web/src/site/mount-living-atlas.ts",
+    "apps/explorer-web/tests/browser/living-atlas.spec.ts",
+    "apps/explorer-web/tests/living-atlas.test.ts"
+  ],
+  "artifact_hashes": {
+    "apps/explorer-web/src/features/living_atlas/README.md": "sha256:9c1e8c10ac28089c6ba25fe0a908417754af04fea42f647f40d67f5b69168c05",
+    "apps/explorer-web/src/features/living_atlas/registry.ts": "sha256:5c991a786c716e36394056743b5fa9b48b17fefbb843493673ae2968b760a294",
+    "apps/explorer-web/src/site/README.md": "sha256:a346457c0cae79cf6e70e675a0728957527b6c42e0dcc08e917fd4955193c4e1",
+    "apps/explorer-web/src/site/mount-living-atlas.ts": "sha256:0cf4223407cc66445e0f4acacea591517ce9413601977ebf6234b36b60e822fd",
+    "apps/explorer-web/tests/browser/living-atlas.spec.ts": "sha256:2653cd22152c9d78950f56862c81d2fd800ebd9952f32c97991b53934d042b7a",
+    "apps/explorer-web/tests/living-atlas.test.ts": "sha256:95183a21a501963a2084482f84bba24d260e51b2ee566461663aa2fff5b874b8"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5"
+  },
+  "prompt_or_contract": "sha256:ead51acd0bd604b90e205c01d65cd3348c5b2b53377883482e5ab398c052b2cd",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "filesystem",
+      "git",
+      "GitHub connector",
+      "Google Drive connector",
+      "Notion connector"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:63a6dd9b659350fdf60ba0dd610610f4f6afa891feb9223c684df25dbd634ae5"
+    ],
+    "attached_docs": [
+      "KFM Explorer — Living Atlas Interface, Default Views and Animation Design — v0.1",
+      "Kansas Frontier Matrix — AI Build Operating Contract"
+    ],
+    "evidence_refs": [
+      "git:c5f4419381c9afcd8ce5ca2b64ef6d72bb4057c6:docs/doctrine/directory-rules.md",
+      "git:3e75c4092e104161846fcf1ad2b7671a5dbf0a56@tree:02982f447857470ebf6dc74501ed9e129f15b575",
+      "github:bartytime4life/Kansas-Frontier-Matrix/pull/4446#issuecomment-5597233231",
+      "github:bartytime4life/Kansas-Frontier-Matrix/issues/4024#issuecomment-5597240274",
+      "drive:1aivNyfMjQ8urQO6vjt4YvkT1ltF1t7fxCahEcnGV4Dw"
+    ]
+  },
+  "truth_labels": {
+    "apps/explorer-web/src/features/living_atlas/README.md": "CONFIRMED",
+    "apps/explorer-web/src/features/living_atlas/registry.ts": "CONFIRMED",
+    "apps/explorer-web/src/site/README.md": "CONFIRMED",
+    "apps/explorer-web/src/site/mount-living-atlas.ts": "CONFIRMED",
+    "apps/explorer-web/tests/browser/living-atlas.spec.ts": "NEEDS VERIFICATION",
+    "apps/explorer-web/tests/living-atlas.test.ts": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Human disposition and separate-route authority",
+      "outcome": "PASS",
+      "reason": "The repository owner recorded FORWARD_FIX_ROUTE / DRAFT_ONLY on PR #4446 and issue #4024; independent review, ready, merge, release, deployment, publication, and settings authority remain pending."
+    },
+    {
+      "gate": "Immutable correction comparison",
+      "outcome": "PASS",
+      "reason": "The four implementation/test files match preserved correction head 3e75c4092e104161846fcf1ad2b7671a5dbf0a56 byte-for-byte; the quarantined ref was not modified."
+    },
+    {
+      "gate": "Pinned runtime and frozen installation",
+      "outcome": "PASS",
+      "reason": "Isolated Node 22.13.1, repository-pinned pnpm 11.17.0, and pnpm install --frozen-lockfile completed without tracked dependency or lockfile changes."
+    },
+    {
+      "gate": "Focused Living Atlas unit tests",
+      "outcome": "PASS",
+      "reason": "One file and seven tests passed, including held-view ABSTAIN, DENY precedence, malformed selection ERROR, simulated adapter ERROR, and network-free style assertions."
+    },
+    {
+      "gate": "Explorer affected-package unit tests",
+      "outcome": "PASS",
+      "reason": "All 58 Explorer unit files and 474 tests passed under Node 22.13.1."
+    },
+    {
+      "gate": "Explorer TypeScript and Vite build",
+      "outcome": "PASS",
+      "reason": "TypeScript no-emit and production Vite build passed under Node 22.13.1; Vite emitted only its existing non-fatal large-chunk warning."
+    },
+    {
+      "gate": "MapLibre package unit tests",
+      "outcome": "PASS",
+      "reason": "All four MapLibre test files and 55 tests passed under Node 22.13.1."
+    },
+    {
+      "gate": "Explorer Playwright browser test",
+      "outcome": "SKIPPED",
+      "reason": "ENVIRONMENTAL / NOT RUN: the pinned Chromium executable was absent and three Playwright CDN download attempts timed out. No browser behavior result is inferred; exact-head hosted replay is required."
+    },
+    {
+      "gate": "Repository boundary guards",
+      "outcome": "PASS",
+      "reason": "All 18 policy, Explorer, connector/non-publisher, and governed-API boundary tests passed with KFM_NO_NETWORK=1."
+    },
+    {
+      "gate": "Aggregate schema validators",
+      "outcome": "PASS",
+      "reason": "All nine selected validators passed with KFM_NO_NETWORK=1; validator-registry validation also passed with 26 registered validators."
+    },
+    {
+      "gate": "Repository reference path check",
+      "outcome": "PASS",
+      "reason": "All 49 unique repository artifact and workbench feature paths referenced by the Living Atlas connection registry exist."
+    },
+    {
+      "gate": "Repository topology",
+      "outcome": "FAIL",
+      "reason": "INHERITED: current main and the candidate produced identical FAIL_INVARIANT summaries: 127 findings, 121 baselined warnings, and the same six FAIL_NEW_DRIFT fingerprints. This slice adds no authority root or topology path."
+    },
+    {
+      "gate": "Hosted exact-head checks",
+      "outcome": "SKIPPED",
+      "reason": "No remote candidate head or draft PR existed when this receipt was emitted."
+    },
+    {
+      "gate": "Generated receipt validation and diff hygiene",
+      "outcome": "PASS",
+      "reason": "The final-byte artifact bindings, generated-receipt fixture lane, target receipt, and git diff --check passed before delivery."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "Accepted Directory Rules via ADR-0029 at main@c5f4419",
+      "validated": true,
+      "evidence_ref": "git:c5f4419381c9afcd8ce5ca2b64ef6d72bb4057c6:docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "Preserved #4446 branch-only correction",
+      "validated": true,
+      "evidence_ref": "git:3e75c4092e104161846fcf1ad2b7671a5dbf0a56@tree:02982f447857470ebf6dc74501ed9e129f15b575"
+    },
+    {
+      "id": "Human forward-fix disposition",
+      "validated": true,
+      "evidence_ref": "github:bartytime4life/Kansas-Frontier-Matrix/pull/4446#issuecomment-5597233231"
+    },
+    {
+      "id": "KFM Explorer Living Atlas Design v0.1",
+      "validated": true,
+      "evidence_ref": "drive:1aivNyfMjQ8urQO6vjt4YvkT1ltF1t7fxCahEcnGV4Dw"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-09T06:56:40Z",
+  "emitter": "OpenAI Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "This new receipt records a separately authorized fresh-main forward fix and does not rewrite the merged #4446 receipt or the preserved branch-only correction. Held views now force Focus and later layer inspection to ABSTAIN / VIEW_DATA_HELD with empty evidence references, while protected-layer DENY and ERROR precedence remain finite and fail closed. Report drafts retain reproducible held view/selection identity but exclude held evidence. Availability, representation, evidence eligibility, freshness, correction, review, release, and runtime outcome remain separate dimensions. No source, connector, pipeline, lifecycle data, policy decision, review approval, release, deployment, publication, homepage, or repository setting is changed."
+}

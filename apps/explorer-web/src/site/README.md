@@ -83,7 +83,7 @@ Refresh `catalog.ts` again when repository authority, feature inventory, or matu
 
 The Living Atlas exposes 14 repository-backed candidates and 10 existing workbench links as non-loadable discovery metadata. Available connector, declarative `pipeline_specs/`, and contract paths retain distinct visible labels; missing stages stay absent rather than being fabricated. Candidate maturity is not runtime availability, representation, review, or release state; real source admission and `EvidenceBundle` transport remain separate held work.
 
-The catalog search moves to the first rail panel containing a match, held map tools expose `HELD` in their button text, and inspecting a repository candidate clears any prior selected runtime layer and evidence references before report/story capture. These are browser-composition behaviors only; they do not activate a connector, pipeline, layer, tool, source, or publication path.
+The catalog search moves to the first rail panel containing a match, held map tools expose `HELD` in their button text, and inspecting a repository candidate clears any prior selected runtime layer and evidence references before report/story capture. A selected design/data-held view constrains subsequent layer inspection and Focus evaluation to `ABSTAIN / VIEW_DATA_HELD` with empty eligible evidence; protected-layer `DENY` remains higher precedence. Draft reports keep the held view and selection identity while excluding held evidence references. These are browser-composition behaviors only; they do not activate a connector, pipeline, layer, tool, source, or publication path.
 
 ## Trust boundary
 
@@ -119,11 +119,13 @@ pnpm run test:unit
 pnpm run test:browser
 ```
 
-The catalog and Living Atlas tests check identifier/path uniqueness, the thirteen-domain inventory, all 18 views, 24 layers, 14 repository connections, four map controls, and 10 workbench links; source/evidence binding; declarative pipeline-specification labels; sensitive-detail denial; network-free style construction; multiscale time; and finite Focus outcomes. Browser checks also cover visible holds, matching-panel search, workbench handoff, and stale-evidence clearing before draft capture. Workspace tests cover registry/context/URL behavior. Renderer, trust-surface, and Evidence Drawer tests preserve the no-network boundary, finite negative states, unique DOM identity, accessible relationships, and error suppression.
+The catalog and Living Atlas tests check identifier/path uniqueness, the thirteen-domain inventory, all 18 views, 24 layers, 14 repository connections, four map controls, and 10 workbench links; source/evidence binding; declarative pipeline-specification labels; held-view abstention; sensitive-detail denial precedence; network-free style construction; multiscale time; and finite Focus outcomes. Browser checks also cover visible holds, matching-panel search, workbench handoff, held-view inspection, and evidence exclusion before draft capture. Workspace tests cover registry/context/URL behavior. Renderer, trust-surface, and Evidence Drawer tests preserve the no-network boundary, finite negative states, unique DOM identity, accessible relationships, and error suppression.
 
 ## Rollback
 
 For the repository catalog/preflight slice, revert the Living Atlas connection/type exports, controller and CSS changes, catalog pin, paired unit/browser tests, affected READMEs, and generated receipt together. No source, data-lifecycle, renderer-activation, API, policy, review, release, deployment, promotion, or publication transition is required.
+
+For the held-view forward fix, revert the registry evaluator, Living Atlas mount calls, paired unit/browser assertions, these README notes, and the forward-fix generated receipt as one bounded change. Do not alter or repurpose the preserved branch-only correction head; no data migration or external-state rollback is involved.
 
 For UI-02, restore `src/main.ts`, remove `trust-state-primitives.ts`, `trust-surface.ts`, `site-trust.css`, and their tests, restore this README, and revert the bounded Evidence Drawer identity/error-presentation repair. UI-01 navigation/context behavior and the independently merged Focus Mode request surface remain intact. No data migration, renderer transition, API transition, source transition, policy action, release action, deployment action, or publication action is required.
 
