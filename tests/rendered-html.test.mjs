@@ -146,6 +146,10 @@ test("adds bounded smoke, water, elevation, tile, and scene navigation features"
   assert.match(page, /params\.set\("fov"/);
   assert.match(mapInterface, /Terrain \+ hillshade[\s\S]*CONTEXT ONLY/);
   assert.match(page, /3D SOURCE LEDGER/);
+  assert.match(page, /TERRAIN INVESTIGATION/);
+  assert.match(page, /queryTerrainElevation\(coordinate, \{ exaggerated: false \}\)/);
+  assert.match(page, /Renderer preview only—not analytical elevation or report evidence/);
+  assert.match(css, /\.terrain-profile-preview/);
   assert.match(page, /STRUCTURE_3D_SOURCE/);
   assert.match(runtime, /ACTIVE_TERRAIN_SOURCE/);
   assert.match(runtime, /LIBERTY_STRUCTURES_3D_LAYER_ID = "building-3d"/);

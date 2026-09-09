@@ -183,6 +183,7 @@ type TemporalMode = "snapshot" | "moving-window" | "event-stepping" | "accumulat
 type TemporalStepRule = "available-events" | "regular-calendar";
 type PlaybackSpeed = 0.5 | 1 | 2;
 type BoxDragMode = "zoom" | "report-area";
+type TerrainProfileSample = Readonly<{ distanceMiles: number; elevationMeters: number }>;
 type RepositoryView = "updates" | "functions" | "scenario" | "runtime" | "transitions" | "readiness" | "sources";
 type SourceObservatoryView = "candidates" | "corpus" | "gaps";
 type GovernedRoute = "/bootstrap" | "/layers" | "/evidence" | "/focus";
@@ -812,6 +813,7 @@ export default function Home() {
   const [measurementGeometryMode, setMeasurementGeometryMode] = useState<MeasureMode>(null);
   const [measureUnit, setMeasureUnit] = useState<MeasureUnit>("imperial");
   const [measurement, setMeasurement] = useState("Select a measurement tool");
+  const [terrainProfile, setTerrainProfile] = useState<readonly TerrainProfileSample[]>([]);
   const [mapUtilityOpen, setMapUtilityOpen] = useState(false);
   const [mapContextOpen, setMapContextOpen] = useState(false);
   const composerRef = useRef<HTMLElement>(null);
@@ -3392,7 +3394,7 @@ export default function Home() {
     const nextBearing = mode === "2d" ? 0 : currentBearing;
 
     projectionRef.current = nextProjection;
-    verticalExaggerationRef.current = mode === "terrain" ? 1.35 : 1;
+    verticalExaggerationRef.current = 1;
     atmospherePresetRef.current = nextAtmosphere;
     lightAzimuthRef.current = mode === "terrain" ? 235 : mode === "globe" ? 225 : 210;
     fieldOfViewRef.current = nextFieldOfView;
@@ -3411,6 +3413,45 @@ export default function Home() {
     }
     map?.easeTo({ pitch: nextPitch, bearing: nextBearing, duration: motionDuration(500) });
     announce(`${mode === "terrain" ? "Terrain 3D display" : mode === "globe" ? "Globe display" : "2D evidence display"} applied · active time and selection preserved`);
+  };
+
+  const startTerrainInvestigation = () => {
+    activateMapRepresentation("terrain");
+    openMapUtility("scene");
+    toggleMeasure("distance");
+    announce("Terrain investigation ready at physical 1× scale. Draw a line on the map, finish it, then preview the display profile.");
+  };
+
+  const previewTerrainProfile = () => {
+    const map = mapRef.current;
+    const line = measureCoordinatesRef.current;
+    if (!map || terrainState !== "READY" || measurementGeometryModeRef.current !== "distance" || line.length < 2) {
+      announce("Finish a two-point or longer line while Terrain 3D is ready before previewing a profile");
+      return;
+    }
+
+    const samples: TerrainProfileSample[] = [];
+    let cumulativeMiles = 0;
+    for (let segmentIndex = 1; segmentIndex < line.length; segmentIndex += 1) {
+      const start = line[segmentIndex - 1];
+      const end = line[segmentIndex];
+      const segmentMiles = distanceMiles(start, end);
+      const steps = 8;
+      for (let step = segmentIndex === 1 ? 0 : 1; step <= steps; step += 1) {
+        const fraction = step / steps;
+        const coordinate: [number, number] = [
+          start[0] + (end[0] - start[0]) * fraction,
+          start[1] + (end[1] - start[1]) * fraction,
+        ];
+        const elevation = map.queryTerrainElevation(coordinate, { exaggerated: false });
+        if (elevation !== null && Number.isFinite(elevation)) {
+          samples.push({ distanceMiles: cumulativeMiles + segmentMiles * fraction, elevationMeters: elevation });
+        }
+      }
+      cumulativeMiles += segmentMiles;
+    }
+    setTerrainProfile(samples);
+    announce(samples.length ? "Display terrain profile previewed from unexaggerated renderer samples" : "No display elevation samples were available for this line");
   };
 
   const retryTerrain = () => {
@@ -3944,6 +3985,7 @@ export default function Home() {
   };
 
   const toggleMeasure = (mode: Exclude<MeasureMode, null>) => {
+    setTerrainProfile([]);
     if (measureMode === mode) {
       setMeasureMode(null);
       setMeasurementGeometryMode(null);
@@ -4008,6 +4050,7 @@ export default function Home() {
     setMeasureMode(null);
     setMeasurementGeometryMode(null);
     setMeasurement("Select a measurement tool");
+    setTerrainProfile([]);
     mapRef.current?.doubleClickZoom.enable();
     if (mapRef.current?.isStyleLoaded()) updateMeasurementSource(mapRef.current, buildMeasurementData([], null));
     announce("Screen measurement cleared");
@@ -5251,6 +5294,23 @@ export default function Home() {
                     ["tile-matrix-grid", "Tile matrix"],
                   ] as const).map(([id, label]) => <button key={id} type="button" aria-pressed={visibility[id]} onClick={() => toggleSceneLayer(id)}><i aria-hidden="true" />{label}</button>)}
                 </div>
+
+                <section className="terrain-investigation" aria-labelledby="terrain-investigation-title">
+                  <header><div><span>TERRAIN INVESTIGATION</span><h4 id="terrain-investigation-title">Relief → transect → profile → evidence</h4></div><strong>1× PHYSICAL DEFAULT</strong></header>
+                  <ol><li data-complete={scenePreset === "elevation-3d"}>Enable real display relief</li><li data-complete={measurementGeometryMode === "distance" && measureCoordinatesRef.current.length >= 2}>Draw and finish a transect</li><li data-complete={terrainProfile.length > 0}>Preview unexaggerated samples</li><li data-complete={Boolean(selected)}>Select a feature for evidence</li></ol>
+                  <div className="terrain-investigation-actions"><button type="button" onClick={startTerrainInvestigation}>Start terrain investigation</button><button type="button" onClick={previewTerrainProfile} disabled={terrainState !== "READY" || measurementGeometryMode !== "distance" || measureCoordinatesRef.current.length < 2}>Preview display profile</button></div>
+                  {terrainProfile.length > 0 ? <div className="terrain-profile-preview" aria-label="Display-only terrain profile">
+                    <header><strong>{terrainProfile.length} samples</strong><span>{terrainProfile.at(-1)?.distanceMiles.toFixed(1)} mi transect · exaggeration ignored</span></header>
+                    <div>{terrainProfile.map((sample, index) => {
+                      const elevations = terrainProfile.map((item) => item.elevationMeters);
+                      const minimum = Math.min(...elevations);
+                      const maximum = Math.max(...elevations);
+                      const height = maximum === minimum ? 50 : 18 + ((sample.elevationMeters - minimum) / (maximum - minimum)) * 72;
+                      return <i key={`${sample.distanceMiles}-${index}`} style={{ height: `${height}%` }} title={`${sample.distanceMiles.toFixed(1)} mi · ${sample.elevationMeters.toFixed(0)} m`} />;
+                    })}</div>
+                    <footer><span>{Math.min(...terrainProfile.map((sample) => sample.elevationMeters)).toFixed(0)} m</span><span>Renderer preview only—not analytical elevation or report evidence</span><span>{Math.max(...terrainProfile.map((sample) => sample.elevationMeters)).toFixed(0)} m</span></footer>
+                  </div> : <p>Draw a line with two or more points and finish it. The preview samples the active display DEM at unexaggerated scale; the governed analytical 3DEP profile remains held.</p>}
+                </section>
 
                 <div className="scene-control-grid">
                   <section className="scene-height-control" aria-labelledby="scene-height-title">

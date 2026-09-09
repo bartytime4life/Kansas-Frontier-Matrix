@@ -2468,6 +2468,24 @@ body { font-size: 14px; }
 .terrain-source-ledger article p, .terrain-source-law { color: var(--muted); font-size: 12px; line-height: 1.45; }
 .terrain-source-ledger article a { color: var(--water); font-size: 12px; font-weight: 800; }
 .terrain-source-law { margin: 0; border-top: 1px solid var(--line); padding: 10px; }
+.terrain-investigation { display: grid; gap: 11px; border: 1px solid rgba(224, 186, 109, .38); border-radius: 11px; background: linear-gradient(135deg, rgba(224, 186, 109, .08), rgba(7, 31, 36, .76)); padding: 12px; }
+.terrain-investigation > header { display: flex; justify-content: space-between; gap: 12px; }
+.terrain-investigation > header div { display: grid; gap: 4px; }
+.terrain-investigation > header span, .terrain-investigation > header > strong { color: var(--gold); font-size: 12px; font-weight: 900; letter-spacing: .09em; }
+.terrain-investigation h4 { margin: 0; font-size: 16px; }
+.terrain-investigation ol { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin: 0; padding: 0; list-style: none; counter-reset: terrain-step; }
+.terrain-investigation li { counter-increment: terrain-step; min-height: 54px; border: 1px solid var(--line); border-radius: 8px; color: var(--muted); padding: 8px; font-size: 12px; line-height: 1.35; }
+.terrain-investigation li::before { content: counter(terrain-step); display: block; color: var(--dim); font-weight: 900; }
+.terrain-investigation li[data-complete="true"] { border-color: rgba(115, 199, 210, .45); color: var(--ink); }
+.terrain-investigation li[data-complete="true"]::before { content: "✓"; color: var(--water); }
+.terrain-investigation-actions { display: flex; flex-wrap: wrap; gap: 7px; }
+.terrain-investigation-actions button { min-height: 36px; border: 1px solid rgba(224, 186, 109, .5); border-radius: 7px; background: rgba(224, 186, 109, .08); color: var(--gold-soft); padding: 0 11px; font-weight: 850; }
+.terrain-investigation-actions button:disabled { opacity: .45; }
+.terrain-investigation > p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
+.terrain-profile-preview { display: grid; gap: 6px; border: 1px solid rgba(115, 199, 210, .28); border-radius: 8px; background: rgba(1, 15, 20, .72); padding: 9px; }
+.terrain-profile-preview > header, .terrain-profile-preview > footer { display: flex; justify-content: space-between; gap: 8px; color: var(--muted); font-size: 12px; }
+.terrain-profile-preview > div { display: flex; align-items: end; gap: 2px; height: 92px; border-bottom: 1px solid rgba(115, 199, 210, .35); }
+.terrain-profile-preview i { flex: 1; min-width: 2px; background: linear-gradient(#e0ba6d, #4daeba); border-radius: 2px 2px 0 0; }
 
 @media (max-width: 1100px) {
   :root { --topbar: 96px; }
@@ -2494,6 +2512,7 @@ body { font-size: 14px; }
   .qwen-map-launch > span:nth-child(2) { display: none; }
   .status-bar span:nth-child(2) { display: none; }
   .terrain-source-ledger article dl { grid-template-columns: 1fr; }
+  .terrain-investigation ol { grid-template-columns: 1fr 1fr; }
   .scene-structures-body { grid-template-columns: 1fr; }
   .scene-structures-body > div { grid-template-columns: 1fr; }
 }
