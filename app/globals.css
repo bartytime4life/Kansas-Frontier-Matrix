@@ -2494,6 +2494,22 @@ body { font-size: 14px; }
 .map-view-mode-strip button b, .map-view-mode-strip button span { color: inherit; font-size: 13px; font-weight: 750; }
 .map-view-mode-strip button[data-active="true"] { border-color: #50c6d5; background: rgba(32, 118, 132, .18); color: #f4dfae; }
 
+.terrain-scene-passport { position: absolute; z-index: 22; top: 62px; left: 50%; width: min(520px, calc(100% - 520px)); border: 1px solid rgba(76, 186, 201, .42); border-radius: 8px; background: rgba(2, 20, 27, .92); box-shadow: 0 15px 42px rgba(0, 0, 0, .38); padding: 10px 12px; transform: translateX(-50%); backdrop-filter: blur(12px); }
+.terrain-scene-passport > header { display: flex; align-items: start; justify-content: space-between; gap: 14px; }
+.terrain-scene-passport > header > div { display: grid; gap: 2px; }
+.terrain-scene-passport > header span { color: var(--water); font-size: 10px; font-weight: 900; letter-spacing: .12em; }
+.terrain-scene-passport > header strong { color: #edf7f3; font-family: Georgia, "Times New Roman", serif; font-size: 15px; }
+.terrain-scene-passport > header b { color: var(--water); font-size: 10px; letter-spacing: .08em; white-space: nowrap; }
+.terrain-scene-passport[data-state="error"] > header b { color: #f2ae7e; }
+.terrain-scene-passport dl { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 9px 0 0; border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+.terrain-scene-passport dl > div { min-width: 0; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 6px 7px; }
+.terrain-scene-passport dt { color: var(--dim); font-size: 10px; }
+.terrain-scene-passport dd { overflow: hidden; margin: 2px 0 0; color: var(--ink); font-size: 11px; font-weight: 750; text-overflow: ellipsis; white-space: nowrap; }
+.terrain-scene-passport > p { margin: 8px 0; color: var(--muted); font-size: 11px; line-height: 1.4; }
+.terrain-scene-passport > div:last-child { display: flex; gap: 7px; }
+.terrain-scene-passport button { min-height: 30px; border: 1px solid rgba(115, 199, 210, .4); border-radius: 5px; background: rgba(7, 36, 42, .82); color: #dff5f5; padding: 0 9px; font: inherit; font-size: 11px; font-weight: 800; cursor: pointer; }
+.terrain-scene-passport button:first-child { border-color: rgba(224, 186, 109, .58); color: var(--gold-soft); }
+
 .map-tool-rail { top: 72px; right: auto; left: 12px; width: 48px; }
 .map-tool-group { border-radius: 7px; background: rgba(2, 20, 27, .9); }
 .map-tool-group > button { min-height: 42px; border-radius: 4px; }
@@ -2559,6 +2575,7 @@ body { font-size: 14px; }
   .top-context, .header-workflows { display: none; }
   .mobile-primary-tabs { grid-area: mobile; }
   .map-view-mode-strip { max-width: calc(100% - 148px); }
+  .terrain-scene-passport { width: min(520px, calc(100% - 300px)); }
 }
 
 @media (max-width: 760px) {
@@ -2569,6 +2586,9 @@ body { font-size: 14px; }
   .new-from-map-label, .new-from-map-caret { display: none; }
   .map-view-mode-strip { top: 8px; right: 8px; left: 8px; max-width: none; transform: none; overflow-x: auto; }
   .map-view-mode-strip button { min-width: 88px; padding-inline: 8px; }
+  .terrain-scene-passport { top: 54px; right: 8px; left: 60px; width: auto; transform: none; }
+  .terrain-scene-passport dl { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .terrain-scene-passport > p { display: none; }
   .map-tool-rail { top: 58px; left: 8px; }
   .maplibregl-ctrl-top-right { top: 58px; right: 8px; }
   .layer-panel, .evidence-drawer { top: auto; right: 0; bottom: var(--status); left: 0; width: 100%; height: min(72dvh, 620px); max-height: none; border-radius: 18px 18px 0 0; transform: translateY(105%); }

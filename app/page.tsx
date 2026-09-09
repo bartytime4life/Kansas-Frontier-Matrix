@@ -4995,6 +4995,23 @@ export default function Home() {
             <button type="button" aria-pressed={projection === "globe"} data-active={projection === "globe"} onClick={() => activateMapRepresentation("globe")}><b>Globe</b><span>◎</span></button>
             <button type="button" aria-pressed={mapUtilityOpen && mapUtilityView === "compare"} data-active={mapUtilityOpen && mapUtilityView === "compare"} onClick={() => mapUtilityOpen && mapUtilityView === "compare" ? closeMapUtility() : activateMapRepresentation("compare")}><b>Compare</b><span>A/B</span></button>
           </nav>
+          {scenePreset === "elevation-3d" && <aside className="terrain-scene-passport" data-state={terrainState.toLowerCase()} aria-label="Terrain scene passport">
+            <header>
+              <div><span>TERRAIN SCENE PASSPORT</span><strong>Smoky Hills relief</strong></div>
+              <b>{terrainState === "READY" ? "DEM READY" : terrainState === "ERROR" ? "DEM UNAVAILABLE" : "LOADING DEM"}</b>
+            </header>
+            <dl>
+              <div><dt>Vertical scale</dt><dd>{verticalExaggeration.toFixed(1)}× {verticalExaggeration === 1 ? "physical" : "display"}</dd></div>
+              <div><dt>Camera</dt><dd>{Math.round(view.pitch)}° pitch · {Math.round((view.bearing + 360) % 360)}° bearing</dd></div>
+              <div><dt>Carrier</dt><dd>External Terrarium DEM</dd></div>
+              <div><dt>Evidence</dt><dd>Display context only</dd></div>
+            </dl>
+            <p>Relief is observed from the renderer. Vertical datum, analytical spacing, and KFM source admission are not asserted.</p>
+            <div>
+              <button type="button" onClick={startTerrainInvestigation}>Profile a transect</button>
+              <button type="button" onClick={() => openMapUtility("scene")}>Inspect terrain method</button>
+            </div>
+          </aside>}
           <aside className="map-legend-dock" aria-label="Visible map legend">
             <header>
               <div><span>VISIBLE LAYERS</span><strong>{visibleCount} active</strong></div>

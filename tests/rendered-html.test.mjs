@@ -151,6 +151,9 @@ test("adds bounded smoke, water, elevation, tile, and scene navigation features"
   assert.match(page, /queryTerrainElevation\(coordinate, \{ exaggerated: false \}\)/);
   assert.match(page, /Renderer preview only—not analytical elevation or report evidence/);
   assert.match(css, /\.terrain-profile-preview/);
+  assert.match(page, /TERRAIN SCENE PASSPORT/);
+  assert.match(page, /Vertical datum, analytical spacing, and KFM source admission are not asserted/);
+  assert.match(css, /\.terrain-scene-passport/);
   assert.match(page, /STRUCTURE_3D_SOURCE/);
   assert.match(runtime, /ACTIVE_TERRAIN_SOURCE/);
   assert.match(runtime, /LIBERTY_STRUCTURES_3D_LAYER_ID = "building-3d"/);
