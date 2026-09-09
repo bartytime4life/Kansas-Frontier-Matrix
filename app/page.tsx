@@ -137,6 +137,19 @@ import {
 } from "./workspace-model";
 import { STRUCTURE_3D_SOURCE, TERRAIN_SOURCES } from "./terrain-sources";
 import { EXTERNAL_CONTEXT_SOURCES } from "./external-context-sources";
+import {
+  applyOfficialContextState,
+  defaultOfficialContextOpacity,
+  defaultOfficialContextVisibility,
+  OFFICIAL_CONTEXT_BY_ID,
+  OFFICIAL_CONTEXT_BY_SOURCE_ID,
+  OFFICIAL_CONTEXT_INTERACTIVE_LAYER_IDS,
+  OFFICIAL_CONTEXT_SOURCES,
+  type OfficialContextFeedId,
+  type OfficialContextId,
+  type OfficialContextPayload,
+  type OfficialContextState,
+} from "./live-context";
 
 if (!LAYER_REGISTRY.some((layer) => layer.id === COUNTY_STARTER_LAYER.id)) {
   const extentIndex = LAYER_REGISTRY.findIndex((layer) => layer.id === "kansas-extent");
@@ -308,7 +321,7 @@ const BASEMAP_CONTEXT_LAYER: LayerRecord = {
 
 const DOMAIN_HOLDS = Object.freeze([
   { domain: "Soil", state: "HELD", detail: "No admitted public-safe soil adapter is connected in this Site." },
-  { domain: "Weather", state: "UNAVAILABLE", detail: "No live weather or forecast source is admitted; current-condition claims remain disabled." },
+  { domain: "Weather", state: "PUBLIC-SAFE", detail: "NWS alert areas and current radar are available as optional official operational context; they are not admitted evidence, forecasts, or an all-clear." },
   { domain: "Smoke", state: "UNAVAILABLE", detail: "No live smoke or fire feed is admitted; the synthetic smoke fixture remains separate." },
   { domain: "Air Quality", state: "HELD", detail: "No governed air-quality source, freshness contract, or public-safe release is connected." },
   { domain: "Natural Resources", state: "HELD", detail: "No public-safe resource inventory or rights-cleared layer is connected." },
@@ -320,7 +333,7 @@ const DOMAIN_HOLDS = Object.freeze([
   { domain: "Archaeology", state: "RESTRICTED", detail: "No precise archaeology layer is exposed; generalized story seams remain the safe extension point." },
   { domain: "Historical Geography", state: "HELD", detail: "No admitted historical boundary or archival map layer is connected." },
   { domain: "People / Land", state: "RESTRICTED", detail: "The Site does not expose person-level, parcel-level, or sensitive land detail." },
-  { domain: "Terrain / Elevation", state: "PUBLIC-SAFE", detail: "External DEM terrain is display context only; governed KFM elevation evidence remains held." },
+  { domain: "Terrain / Elevation", state: "PUBLIC-SAFE", detail: "External DEM terrain plus optional USGS 3DEP hillshade are display context only; governed KFM elevation evidence remains held." },
   { domain: "Imagery", state: "PUBLIC-SAFE", detail: "Optional attributed imagery is display context only; it is never KFM evidence." },
 ] as const);
 
@@ -339,6 +352,9 @@ const MAPLIBRE_RUNTIME_ASSET_URLS = [MAPLIBRE_WORKER_URL, "/maplibre/maplibre-gl
 const SUPPORTED_CONTEXT_BOUNDS = Object.freeze({ west: -104.8, south: 34.8, east: -92, north: 42.2 });
 const defaultVisibility = Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, layer.defaultVisibility]));
 const defaultOpacity = Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, layer.defaultOpacity]));
+const defaultOfficialVisibility = defaultOfficialContextVisibility();
+const defaultOfficialOpacity = defaultOfficialContextOpacity();
+const defaultOfficialStates = Object.fromEntries(OFFICIAL_CONTEXT_SOURCES.map((source) => [source.id, "idle"])) as Record<OfficialContextId, OfficialContextState>;
 const defaultOrder = LAYER_REGISTRY.map((layer) => layer.id);
 const interactiveLayerIds = LAYER_REGISTRY.flatMap((layer) => layer.renderers.filter((renderer) => renderer.interactive).map((renderer) => renderer.id));
 const layerDomains = ["ALL", ...Array.from(new Set([...LAYER_REGISTRY.map((layer) => layer.domain), ...DOMAIN_HOLDS.map((hold) => hold.domain)])).sort()] as const;
@@ -538,6 +554,7 @@ const copyFeature = (layer: LayerRecord, featureId: string): SelectedContext | n
 
 type BasemapFeatureCandidate = {
   id?: string | number | null;
+  source?: string;
   sourceLayer?: string;
   properties?: Record<string, unknown> | null;
   geometry?: Geometry | null;
@@ -546,35 +563,57 @@ type BasemapFeatureCandidate = {
 const buildBasemapContext = (candidate: BasemapFeatureCandidate, longitude: number, latitude: number): SelectedContext | null => {
   if (!candidate.geometry) return null;
   const properties = candidate.properties ?? {};
+  const officialSource = typeof candidate.source === "string" ? OFFICIAL_CONTEXT_BY_SOURCE_ID[candidate.source] : undefined;
   const sourceLayer = typeof candidate.sourceLayer === "string" && candidate.sourceLayer.trim() !== ""
     ? candidate.sourceLayer
-    : "vector layer";
-  const titleCandidate = [properties["name:en"], properties.name, properties.name_en, properties.ref, properties.class, properties.type]
+    : officialSource?.shortTitle ?? "vector layer";
+  const titleCandidate = [properties["name:en"], properties.name, properties.name_en, properties.event, properties.headline, properties.monitoringLocationId, properties.ref, properties.class, properties.type]
     .find((value): value is string => typeof value === "string" && value.trim() !== "");
   const title = titleCandidate?.trim() ?? `${sourceLayer} feature`;
-  const featureId = `basemap:${sourceLayer}:${String(candidate.id ?? `${title}:${longitude.toFixed(4)},${latitude.toFixed(4)}`)}`.slice(0, 180);
+  const featureId = `${officialSource ? "official-context" : "basemap"}:${sourceLayer}:${String(candidate.id ?? `${title}:${longitude.toFixed(4)},${latitude.toFixed(4)}`)}`.slice(0, 180);
+  const contextLayer: LayerRecord = officialSource ? {
+    ...BASEMAP_CONTEXT_LAYER,
+    id: `official-context-${officialSource.id}`,
+    title: officialSource.title,
+    description: officialSource.boundary,
+    domain: officialSource.domain,
+    category: officialSource.id === "census-counties" ? "Boundaries & places"
+      : officialSource.id === "usgs-streamflow" ? "Hydrology & water"
+        : officialSource.id === "usgs-3dep-hillshade" ? "Geology & landforms"
+          : "Weather & hazards",
+    sourceType: officialSource.kind === "OPERATIONAL_WMS" ? "Raster" : "GeoJSON",
+    sourceId: officialSource.sourceId,
+    datasetName: officialSource.title,
+    attribution: officialSource.attribution,
+    validTimeExtent: officialSource.freshness,
+    sourceTime: officialSource.freshness,
+    releaseTime: "External operational context",
+    evidenceReference: "No KFM EvidenceBundle attached",
+    sensitivityNote: officialSource.boundary,
+    correctionNote: officialSource.fallback,
+  } : BASEMAP_CONTEXT_LAYER;
   return {
     kind: "basemap",
     featureId,
-    layerId: BASEMAP_CONTEXT_LAYER.id,
-    layer: BASEMAP_CONTEXT_LAYER,
+    layerId: contextLayer.id,
+    layer: contextLayer,
     properties: {
       fid: featureId,
       title,
-      summary: `A real geographic feature returned by the selected vector basemap (${sourceLayer}). It is useful for orientation and map interaction, but no KFM EvidenceBundle is attached.`,
+      summary: officialSource ? `${officialSource.title} returned this current map-context feature. It is useful for orientation and situational awareness, but no KFM EvidenceBundle is attached.` : `A real geographic feature returned by the selected vector basemap (${sourceLayer}). It is useful for orientation and map interaction, but no KFM EvidenceBundle is attached.`,
       sourceRole: "external display context",
-      sourceOrganization: "OpenFreeMap / OpenMapTiles / OpenStreetMap",
+      sourceOrganization: officialSource?.organization ?? "OpenFreeMap / OpenMapTiles / OpenStreetMap",
       citation: "No KFM EvidenceBundle attached",
       spatialScope: "Provider-rendered map feature inside the Kansas context extent",
-      temporalScope: "Provider-defined; not resolved by KFM",
-      lastUpdate: "Provider-defined",
+      temporalScope: officialSource?.freshness ?? "Provider-defined; not resolved by KFM",
+      lastUpdate: officialSource?.freshness ?? "Provider-defined",
       freshnessState: "EXTERNAL_PROVIDER",
       evidenceState: "MISSING_EVIDENCE",
       reviewState: "NOT_KFM_REVIEWED",
       releaseState: "GENERALIZED",
-      rights: "Use remains subject to the external provider's attribution and terms.",
-      generalizationNote: "Geometry is rendered by an external basemap and is not a KFM released artifact.",
-      uncertainty: "The Site does not resolve provider lineage, update time, completeness, or claim support for this feature.",
+      rights: `Use remains subject to ${officialSource?.organization ?? "the external provider"}'s attribution and terms.`,
+      generalizationNote: officialSource?.boundary ?? "Geometry is rendered by an external basemap and is not a KFM released artifact.",
+      uncertainty: officialSource?.fallback ?? "The Site does not resolve provider lineage, update time, completeness, or claim support for this feature.",
       correctionState: "EXTERNAL_PROVIDER_STATE_UNKNOWN",
       relatedLayers: "",
       year: 2026,
@@ -700,6 +739,10 @@ export default function Home() {
   const hoveredRef = useRef<{ source: string; id: string | number } | null>(null);
   const visibilityRef = useRef(defaultVisibility);
   const opacityRef = useRef(defaultOpacity);
+  const officialVisibilityRef = useRef(defaultOfficialVisibility);
+  const officialOpacityRef = useRef(defaultOfficialOpacity);
+  const officialPayloadsRef = useRef<Partial<Record<OfficialContextFeedId, OfficialContextPayload>>>({});
+  const officialRequestsRef = useRef(new Set<OfficialContextFeedId>());
   const orderRef = useRef(defaultOrder);
   const yearRef = useRef<number>(2026);
   const mapEvidenceFilterRef = useRef<RegistryEvidenceFilter>("ALL");
@@ -750,6 +793,11 @@ export default function Home() {
 
   const [visibility, setVisibility] = useState<Record<string, boolean>>(defaultVisibility);
   const [opacity, setOpacity] = useState<Record<string, number>>(defaultOpacity);
+  const [officialVisibility, setOfficialVisibility] = useState<Record<OfficialContextId, boolean>>(defaultOfficialVisibility);
+  const [officialOpacity, setOfficialOpacity] = useState<Record<OfficialContextId, number>>(defaultOfficialOpacity);
+  const [officialStates, setOfficialStates] = useState<Record<OfficialContextId, OfficialContextState>>(defaultOfficialStates);
+  const [officialPayloads, setOfficialPayloads] = useState<Partial<Record<OfficialContextFeedId, OfficialContextPayload>>>({});
+  const [officialErrors, setOfficialErrors] = useState<Partial<Record<OfficialContextId, string>>>({});
   const [layerOrder, setLayerOrder] = useState<string[]>(defaultOrder);
   const [basemap, setBasemap] = useState<BasemapKey>("standard");
   const [view, setView] = useState<ViewState>(KANSAS_VIEW);
@@ -912,6 +960,9 @@ export default function Home() {
 
   useEffect(() => { visibilityRef.current = visibility; }, [visibility]);
   useEffect(() => { opacityRef.current = opacity; }, [opacity]);
+  useEffect(() => { officialVisibilityRef.current = officialVisibility; }, [officialVisibility]);
+  useEffect(() => { officialOpacityRef.current = officialOpacity; }, [officialOpacity]);
+  useEffect(() => { officialPayloadsRef.current = officialPayloads; }, [officialPayloads]);
   useEffect(() => { orderRef.current = layerOrder; }, [layerOrder]);
   useEffect(() => { yearRef.current = year; }, [year]);
   useEffect(() => { mapEvidenceFilterRef.current = mapEvidenceFilter; }, [mapEvidenceFilter]);
@@ -967,6 +1018,9 @@ export default function Home() {
 
   const activeLayers = useMemo(() => LAYER_REGISTRY.filter((layer) => visibility[layer.id]), [visibility]);
   const visibleCount = activeLayers.length;
+  const visibleOfficialSources = useMemo(() => OFFICIAL_CONTEXT_SOURCES.filter((source) => officialVisibility[source.id]), [officialVisibility]);
+  const visibleOfficialCount = visibleOfficialSources.length;
+  const officialFeatureCount = useMemo(() => Object.values(officialPayloads).reduce((total, payload) => total + (payload?.featureCount ?? 0), 0), [officialPayloads]);
   const mapContextRecords = useMemo(() => activeLayers.flatMap((layer) => layer.data.features.filter((feature) => (
     isFeatureAvailableAtTime(layer, feature.properties.year, year)
     && feature.properties.focusLng >= mapViewportBounds.west
@@ -1083,6 +1137,27 @@ export default function Home() {
       return !query || `${connection.layer.title} ${connection.layer.id} ${connection.layer.sourceId} ${connection.layer.domain} ${connection.layer.sourceType}`.toLowerCase().includes(query);
     });
   }, [connectionFilter, connectionQuery, sourceConnections]);
+  const officialContextConnections = useMemo(() => OFFICIAL_CONTEXT_SOURCES.map((source) => {
+    const payload = source.apiPath ? officialPayloads[source.id as OfficialContextFeedId] : undefined;
+    return {
+      source,
+      visible: officialVisibility[source.id],
+      state: officialStates[source.id],
+      featureCount: payload?.featureCount,
+      retrievedAt: payload?.retrievedAt,
+      limitation: payload?.limitation,
+    };
+  }), [officialPayloads, officialStates, officialVisibility]);
+  const filteredOfficialContextConnections = useMemo(() => {
+    const query = connectionQuery.trim().toLowerCase();
+    return officialContextConnections.filter((connection) => {
+      if (connectionFilter === "VISIBLE" && !connection.visible) return false;
+      if (connectionFilter === "READY" && connection.state !== "ready" && connection.state !== "partial" && connection.state !== "empty") return false;
+      if (connectionFilter === "ERROR" && connection.state !== "error") return false;
+      const searchable = `${connection.source.title} ${connection.source.id} ${connection.source.organization} ${connection.source.kind} ${connection.source.endpointLabel}`.toLowerCase();
+      return !query || searchable.includes(query);
+    });
+  }, [connectionFilter, connectionQuery, officialContextConnections]);
   const externalContextConnections = useMemo(() => EXTERNAL_CONTEXT_SOURCES.map((source) => {
     const active = source.activatesWhen.some((activation) => (
       activation === "elevation-3d" ? scenePreset === "elevation-3d" : basemap === activation
@@ -1443,6 +1518,8 @@ export default function Home() {
     if (redactLocationCamera) params.set("privacy", "location-camera-redacted");
     params.set("l", activeLayers.map((layer) => layer.id).join(","));
     params.set("o", LAYER_REGISTRY.map((layer) => `${layer.id}:${(opacity[layer.id] ?? layer.defaultOpacity).toFixed(2)}`).join(","));
+    params.set("ctx", visibleOfficialSources.map((source) => source.id).join(","));
+    params.set("ctxo", OFFICIAL_CONTEXT_SOURCES.map((source) => `${source.id}:${(officialOpacity[source.id] ?? source.defaultOpacity).toFixed(2)}`).join(","));
     params.set("t", String(year));
     if (mapEvidenceFilter !== "ALL") params.set("ef", mapEvidenceFilter);
     params.set("base", basemap);
@@ -1473,12 +1550,79 @@ export default function Home() {
       params.set("focusIntent", focusIntent);
     }
     return params;
-  }, [activeLayers, analysisArea, atmospherePreset, basemap, compareLeft.id, compareRight.id, compareTimeA, compareTimeB, currentWorkspace, drawerView, fieldOfView, focusIntent, focusStage, gestureMode, layerOrder, lightAzimuth, locationCameraRedacted, mapEvidenceFilter, mapUtilityOpen, mapUtilityView, measureUnit, opacity, projection, rightOpen, scenePreset, selected, verticalExaggeration, view, year]);
+  }, [activeLayers, analysisArea, atmospherePreset, basemap, compareLeft.id, compareRight.id, compareTimeA, compareTimeB, currentWorkspace, drawerView, fieldOfView, focusIntent, focusStage, gestureMode, layerOrder, lightAzimuth, locationCameraRedacted, mapEvidenceFilter, mapUtilityOpen, mapUtilityView, measureUnit, officialOpacity, opacity, projection, rightOpen, scenePreset, selected, verticalExaggeration, view, visibleOfficialSources, year]);
 
   const announce = useCallback((message: string) => {
     setToast(message);
     window.setTimeout(() => setToast(""), 3600);
   }, []);
+
+  const refreshOfficialContext = useCallback(async (feed: OfficialContextFeedId) => {
+    if (officialRequestsRef.current.has(feed)) return;
+    const source = OFFICIAL_CONTEXT_BY_ID[feed];
+    officialRequestsRef.current.add(feed);
+    setOfficialStates((current) => ({ ...current, [feed]: "loading" }));
+    setOfficialErrors((current) => ({ ...current, [feed]: undefined }));
+    try {
+      const response = await fetch(source.apiPath!, { cache: "no-store", headers: { Accept: "application/json" } });
+      const candidate = await response.json() as Partial<OfficialContextPayload> & { error?: string };
+      const validState = candidate.state === "ready" || candidate.state === "empty" || candidate.state === "partial";
+      if (!response.ok || candidate.feed !== feed || !validState || typeof candidate.featureCount !== "number" || !candidate.data || candidate.data.type !== "FeatureCollection" || !Array.isArray(candidate.data.features)) {
+        throw new Error(candidate.error ?? `Fixed source adapter returned HTTP ${response.status}.`);
+      }
+      const payload = candidate as OfficialContextPayload;
+      officialPayloadsRef.current = { ...officialPayloadsRef.current, [feed]: payload };
+      setOfficialPayloads(officialPayloadsRef.current);
+      setOfficialStates((current) => ({ ...current, [feed]: payload.state }));
+      const map = mapRef.current;
+      if (map?.isStyleLoaded()) applyOfficialContextState(map, officialVisibilityRef.current, officialOpacityRef.current, officialPayloadsRef.current);
+      announce(payload.featureCount === 0
+        ? `${source.shortTitle}: zero mapped features at ${new Date(payload.retrievedAt).toLocaleTimeString()}—not an all-clear`
+        : `${source.shortTitle}: ${payload.featureCount} official context features refreshed`);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Official context request failed.";
+      setOfficialStates((current) => ({ ...current, [feed]: "error" }));
+      setOfficialErrors((current) => ({ ...current, [feed]: message }));
+      announce(`${source.shortTitle} unavailable; no fallback inference was used`);
+    } finally {
+      officialRequestsRef.current.delete(feed);
+    }
+  }, [announce]);
+
+  const setOfficialContextVisible = useCallback((id: OfficialContextId, visible: boolean) => {
+    const next = { ...officialVisibilityRef.current, [id]: visible };
+    officialVisibilityRef.current = next;
+    setOfficialVisibility(next);
+    const source = OFFICIAL_CONTEXT_BY_ID[id];
+    if (source.apiPath && visible && !officialPayloadsRef.current[id as OfficialContextFeedId]) void refreshOfficialContext(id as OfficialContextFeedId);
+    const map = mapRef.current;
+    if (map?.isStyleLoaded()) {
+      try {
+        applyOfficialContextState(map, next, officialOpacityRef.current, officialPayloadsRef.current);
+        if (!source.apiPath) setOfficialStates((current) => ({ ...current, [id]: "ready" }));
+      } catch (error) {
+        setOfficialStates((current) => ({ ...current, [id]: "error" }));
+        setOfficialErrors((current) => ({ ...current, [id]: error instanceof Error ? error.message : "Raster context could not be applied." }));
+      }
+    }
+  }, [refreshOfficialContext]);
+
+  const setOfficialContextOpacity = useCallback((id: OfficialContextId, value: number) => {
+    const next = { ...officialOpacityRef.current, [id]: clamp(value, 0.1, 1) };
+    officialOpacityRef.current = next;
+    setOfficialOpacity(next);
+    const map = mapRef.current;
+    if (map?.isStyleLoaded()) applyOfficialContextState(map, officialVisibilityRef.current, next, officialPayloadsRef.current);
+  }, []);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      for (const source of OFFICIAL_CONTEXT_SOURCES) {
+        if (source.apiPath && officialVisibilityRef.current[source.id]) void refreshOfficialContext(source.id as OfficialContextFeedId);
+      }
+    }, 40);
+    return () => window.clearTimeout(timer);
+  }, [refreshOfficialContext]);
 
   const dismissMapUtilityWithoutFocus = useCallback(() => {
     mapUtilityReturnRef.current = null;
@@ -2167,6 +2311,23 @@ export default function Home() {
       const nextOpacity = { ...defaultOpacity, ...restoredOpacity };
       opacityRef.current = nextOpacity;
       setOpacity(nextOpacity);
+      const knownOfficialIds = new Set<OfficialContextId>(OFFICIAL_CONTEXT_SOURCES.map((source) => source.id));
+      const restoredOfficialIds = params.get("ctx")?.split(",").filter((id): id is OfficialContextId => knownOfficialIds.has(id as OfficialContextId)) ?? [];
+      const nextOfficialVisibility = params.has("ctx")
+        ? Object.fromEntries(OFFICIAL_CONTEXT_SOURCES.map((source) => [source.id, restoredOfficialIds.includes(source.id)])) as Record<OfficialContextId, boolean>
+        : defaultOfficialVisibility;
+      officialVisibilityRef.current = nextOfficialVisibility;
+      setOfficialVisibility(nextOfficialVisibility);
+      const officialOpacityPairs = params.get("ctxo")?.split(",").map((pair) => pair.split(":")) ?? [];
+      const restoredOfficialOpacity = Object.fromEntries(officialOpacityPairs
+        .filter(([id, value]) => knownOfficialIds.has(id as OfficialContextId) && typeof value === "string" && value.trim() !== "" && Number.isFinite(Number(value)))
+        .map(([id, value]) => [id, clamp(Number(value), 0.1, 1)]));
+      const nextOfficialOpacity = { ...defaultOfficialOpacity, ...restoredOfficialOpacity };
+      officialOpacityRef.current = nextOfficialOpacity;
+      setOfficialOpacity(nextOfficialOpacity);
+      for (const source of OFFICIAL_CONTEXT_SOURCES) {
+        if (nextOfficialVisibility[source.id] && source.apiPath && !officialPayloadsRef.current[source.id as OfficialContextFeedId]) void refreshOfficialContext(source.id as OfficialContextFeedId);
+      }
       const restoredYear = Number(params.get("t"));
       const nextYear = TIME_STEPS.includes(restoredYear as (typeof TIME_STEPS)[number]) ? restoredYear : 2026;
       yearRef.current = nextYear;
@@ -2177,7 +2338,7 @@ export default function Home() {
       mapEvidenceFilterRef.current = nextEvidenceFilter;
       setMapEvidenceFilter(nextEvidenceFilter);
       const restoredBasemap = params.get("base");
-      const nextBasemap: BasemapKey = restoredBasemap === "standard" || restoredBasemap === "imagery" || restoredBasemap === "midnight" || restoredBasemap === "prairie" || restoredBasemap === "streets" ? restoredBasemap : "standard";
+      const nextBasemap: BasemapKey = restoredBasemap === "standard" || restoredBasemap === "imagery" || restoredBasemap === "midnight" || restoredBasemap === "prairie" || restoredBasemap === "streets" || restoredBasemap === "topo" ? restoredBasemap : "standard";
       basemapRef.current = nextBasemap;
       setBasemap(nextBasemap);
       const restoredProjection = params.get("proj");
@@ -2280,7 +2441,7 @@ export default function Home() {
         setSelected(null);
         setRightOpen(false);
       }
-  }, []);
+  }, [refreshOfficialContext]);
 
   useEffect(() => {
     const restore = window.setTimeout(restoreExplorerFromUrl, 0);
@@ -2407,6 +2568,7 @@ export default function Home() {
           hoveredRef.current = null;
           map.getCanvas().style.cursor = "";
           applyRegistryState(map, visibilityRef.current, opacityRef.current, yearRef.current, orderRef.current, mapEvidenceFilterRef.current);
+          applyOfficialContextState(map, officialVisibilityRef.current, officialOpacityRef.current, officialPayloadsRef.current);
           setElevationExaggeration(map, verticalExaggerationRef.current);
           map.setProjection({ type: projectionRef.current });
           applySceneEnvironment(map, atmospherePresetRef.current, lightAzimuthRef.current);
@@ -2437,6 +2599,7 @@ export default function Home() {
 
         map.on("mousemove", (event) => {
           if (scenePresetRef.current === "elevation-3d" && topographicOverlayRef.current) {
+            // @ts-expect-error MapLibre runtime accepts the unexaggerated query option; bundled types currently omit it.
             const elevationMeters = map.queryTerrainElevation([event.lngLat.lng, event.lngLat.lat], { exaggerated: false });
             setTerrainElevationReading(elevationMeters !== null && Number.isFinite(elevationMeters) ? {
               longitude: event.lngLat.lng,
@@ -2447,7 +2610,9 @@ export default function Home() {
           }
           const availableLayers = interactiveLayerIds.filter((id) => map.getLayer(id));
           const candidate = (availableLayers.length ? map.queryRenderedFeatures(event.point, { layers: availableLayers }) : [])[0];
-          const externalCandidate = candidate ? null : map.queryRenderedFeatures(event.point).find((feature) => {
+          const availableOfficialLayers = OFFICIAL_CONTEXT_INTERACTIVE_LAYER_IDS.filter((id) => map.getLayer(id));
+          const officialCandidate = candidate || !availableOfficialLayers.length ? null : map.queryRenderedFeatures(event.point, { layers: availableOfficialLayers })[0];
+          const externalCandidate = candidate ? null : officialCandidate ?? map.queryRenderedFeatures(event.point).find((feature) => {
             const sourceId = typeof feature.source === "string" ? feature.source : "";
             const isSiteLocal = sourceId.startsWith("kfm-") || LAYER_REGISTRY.some((layer) => layer.sourceId === sourceId);
             return !isSiteLocal && Boolean(feature.geometry) && Boolean(feature.properties && Object.keys(feature.properties).length);
@@ -2463,11 +2628,12 @@ export default function Home() {
           if (!candidate) {
             if (hoveredRef.current) map.setFeatureState(hoveredRef.current, { hover: false });
             hoveredRef.current = null;
-            const externalTitle = String(externalCandidate?.properties?.name ?? externalCandidate?.properties?.name_en ?? externalCandidate?.properties?.class ?? "Basemap feature");
+            const externalTitle = String(externalCandidate?.properties?.name ?? externalCandidate?.properties?.name_en ?? externalCandidate?.properties?.event ?? externalCandidate?.properties?.monitoringLocationId ?? externalCandidate?.properties?.class ?? "Basemap feature");
+            const officialSource = externalCandidate?.source ? OFFICIAL_CONTEXT_BY_SOURCE_ID[externalCandidate.source] : undefined;
             setHoverSummary({
               id: `external:${externalCandidate?.source ?? "context"}:${externalTitle}`,
               title: externalTitle,
-              subtitle: "External basemap context",
+              subtitle: officialSource?.shortTitle ?? "External basemap context",
               state: "No KFM evidence attached",
               x: Math.max(8, Math.min(event.point.x + 18, map.getCanvas().clientWidth - 270)),
               y: Math.max(8, Math.min(event.point.y + 18, map.getCanvas().clientHeight - 112)),
@@ -2527,7 +2693,9 @@ export default function Home() {
           const candidate = renderedCandidates[0];
           if (!candidate) {
             setMapQueryCandidates([]);
-            const externalCandidate = map.queryRenderedFeatures(event.point).find((feature) => {
+            const availableOfficialLayers = OFFICIAL_CONTEXT_INTERACTIVE_LAYER_IDS.filter((id) => map.getLayer(id));
+            const officialCandidate = availableOfficialLayers.length ? map.queryRenderedFeatures(event.point, { layers: availableOfficialLayers })[0] : undefined;
+            const externalCandidate = officialCandidate ?? map.queryRenderedFeatures(event.point).find((feature) => {
               const sourceId = typeof feature.source === "string" ? feature.source : "";
               const isSiteLocal = sourceId.startsWith("kfm-") || LAYER_REGISTRY.some((layer) => layer.sourceId === sourceId);
               return !isSiteLocal && Boolean(feature.geometry) && Boolean(feature.properties && Object.keys(feature.properties).length);
@@ -2544,7 +2712,7 @@ export default function Home() {
               const title = document.createElement("strong");
               title.textContent = context.properties.title;
               const state = document.createElement("span");
-              state.textContent = "Basemap context · no KFM evidence";
+              state.textContent = `${OFFICIAL_CONTEXT_BY_SOURCE_ID[externalCandidate?.source ?? ""]?.shortTitle ?? "Basemap context"} · no KFM evidence`;
               popupNode.append(title, state);
               popupRef.current = new maplibregl.Popup({ closeButton: true, closeOnClick: false, maxWidth: "280px" })
                 .setLngLat(event.lngLat)
@@ -2659,7 +2827,8 @@ export default function Home() {
           const message = event.error?.message || "The map reported an unknown rendering error.";
           const sourceId = (event as typeof event & { sourceId?: string }).sourceId;
           const affectedLayer = sourceId ? LAYER_REGISTRY.find((layer) => layer.sourceId === sourceId) : undefined;
-          if (basemapRef.current === "standard" && !styleFallbackAttempted && (!sourceId || (!affectedLayer && sourceId !== TERRAIN_SOURCE_ID && sourceId !== TERRAIN_COLOR_SOURCE_ID))) {
+          const affectedOfficialContext = sourceId ? OFFICIAL_CONTEXT_BY_SOURCE_ID[sourceId] : undefined;
+          if (basemapRef.current === "standard" && !styleFallbackAttempted && (!sourceId || (!affectedLayer && !affectedOfficialContext && sourceId !== TERRAIN_SOURCE_ID && sourceId !== TERRAIN_COLOR_SOURCE_ID))) {
             styleFallbackAttempted = true;
             runtimeError = null;
             degradedReason = `Standard vector basemap unavailable; switched to the local MapLibre style. ${message}`;
@@ -2683,6 +2852,16 @@ export default function Home() {
             announce("Topographic height overlay is unavailable; Terrain 3D remains active");
             return;
           }
+          if (affectedOfficialContext) {
+            setOfficialStates((current) => ({ ...current, [affectedOfficialContext.id]: "error" }));
+            setOfficialErrors((current) => ({ ...current, [affectedOfficialContext.id]: message }));
+            setRuntime({ kind: "degraded", message: `${affectedOfficialContext.shortTitle} is unavailable; other map and evidence paths remain usable. ${message}` });
+            return;
+          }
+          if (sourceId === "usgs-topo-context") {
+            setRuntime({ kind: "degraded", message: `USGS topographic basemap is unavailable; site-local evidence layers remain usable. ${message}` });
+            return;
+          }
           setMaplibreProbe((current) => ({ ...current, error: message }));
           if (affectedLayer) {
             setSourceStates((current) => ({ ...current, [affectedLayer.id]: "error" }));
@@ -2698,6 +2877,10 @@ export default function Home() {
             setTerrainState("READY");
           }
           if (!event.sourceId) return;
+          const officialSource = OFFICIAL_CONTEXT_BY_SOURCE_ID[event.sourceId];
+          if (officialSource && !officialSource.apiPath && event.isSourceLoaded) {
+            setOfficialStates((current) => ({ ...current, [officialSource.id]: "ready" }));
+          }
           const layer = LAYER_REGISTRY.find((candidate) => candidate.sourceId === event.sourceId);
           if (!layer) return;
           setSourceActivity((current) => ({
@@ -2746,6 +2929,12 @@ export default function Home() {
     applyRegistryState(map, visibility, opacity, year, layerOrder, mapEvidenceFilter);
     setElevationExaggeration(map, verticalExaggerationRef.current);
   }, [visibility, opacity, year, layerOrder, mapEvidenceFilter]);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map?.isStyleLoaded()) return;
+    applyOfficialContextState(map, officialVisibility, officialOpacity, officialPayloads);
+  }, [officialOpacity, officialPayloads, officialVisibility, styleReady]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -3537,7 +3726,7 @@ export default function Home() {
     for (let segmentIndex = 1; segmentIndex < line.length; segmentIndex += 1) {
       const start = line[segmentIndex - 1];
       const end = line[segmentIndex];
-      const segmentMiles = distanceMiles(start, end);
+      const segmentMiles = distanceMiles([start, end]);
       const steps = 8;
       for (let step = segmentIndex === 1 ? 0 : 1; step <= steps; step += 1) {
         const fraction = step / steps;
@@ -3545,6 +3734,7 @@ export default function Home() {
           start[0] + (end[0] - start[0]) * fraction,
           start[1] + (end[1] - start[1]) * fraction,
         ];
+        // @ts-expect-error MapLibre runtime accepts the unexaggerated query option; bundled types currently omit it.
         const elevation = map.queryTerrainElevation(coordinate, { exaggerated: false });
         if (elevation !== null && Number.isFinite(elevation)) {
           samples.push({ distanceMiles: cumulativeMiles + segmentMiles * fraction, elevationMeters: elevation });
@@ -3785,7 +3975,7 @@ export default function Home() {
     const savedOrder = Array.isArray(snapshot.layerOrder) ? snapshot.layerOrder.filter((id) => knownLayerIds.has(id)) : [];
     const nextOrder = [...savedOrder, ...defaultOrder.filter((id) => !savedOrder.includes(id))];
     const nextYear = TIME_STEPS.includes(snapshot.year as (typeof TIME_STEPS)[number]) ? snapshot.year : 2026;
-    const nextBasemap: BasemapKey = snapshot.basemap === "standard" || snapshot.basemap === "imagery" || snapshot.basemap === "midnight" || snapshot.basemap === "prairie" || snapshot.basemap === "streets" ? snapshot.basemap : "standard";
+    const nextBasemap: BasemapKey = snapshot.basemap === "standard" || snapshot.basemap === "imagery" || snapshot.basemap === "midnight" || snapshot.basemap === "prairie" || snapshot.basemap === "streets" || snapshot.basemap === "topo" ? snapshot.basemap : "standard";
     const nextProjection = snapshot.projection === "globe" ? "globe" : "mercator";
     // Legacy snapshots predate the marker, so fail closed instead of exposing a possibly location-derived camera.
     const restoredLocationCameraRedaction = snapshot.locationCameraRedacted !== false;
@@ -3998,6 +4188,7 @@ export default function Home() {
     }
     try {
       applyRegistryState(map, visibilityRef.current, opacityRef.current, yearRef.current, orderRef.current, mapEvidenceFilterRef.current);
+      applyOfficialContextState(map, officialVisibilityRef.current, officialOpacityRef.current, officialPayloadsRef.current);
       setElevationExaggeration(map, verticalExaggerationRef.current);
       map.setProjection({ type: projectionRef.current });
       applySceneEnvironment(map, atmospherePresetRef.current, lightAzimuthRef.current);
@@ -4028,6 +4219,8 @@ export default function Home() {
   const resetExplorer = () => {
     visibilityRef.current = defaultVisibility;
     opacityRef.current = defaultOpacity;
+    officialVisibilityRef.current = defaultOfficialVisibility;
+    officialOpacityRef.current = defaultOfficialOpacity;
     orderRef.current = defaultOrder;
     yearRef.current = 2026;
     mapEvidenceFilterRef.current = "ALL";
@@ -4040,6 +4233,12 @@ export default function Home() {
     gestureModeRef.current = "cooperative";
     setVisibility(defaultVisibility);
     setOpacity(defaultOpacity);
+    setOfficialVisibility(defaultOfficialVisibility);
+    setOfficialOpacity(defaultOfficialOpacity);
+    setOfficialErrors({});
+    for (const source of OFFICIAL_CONTEXT_SOURCES) {
+      if (source.defaultVisibility && source.apiPath && !officialPayloadsRef.current[source.id as OfficialContextFeedId]) void refreshOfficialContext(source.id as OfficialContextFeedId);
+    }
     setLayerOrder(defaultOrder);
     setYear(2026);
     setPreviewYear(2026);
@@ -4998,6 +5197,20 @@ export default function Home() {
             <div className="active-chips">{activeLayers.map((layer) => <button key={layer.id} type="button" onClick={() => zoomToLayer(layer)}>{layer.title}<span>↗</span></button>)}</div>
           </section>
 
+          <section className="official-context-catalog" aria-labelledby="official-context-title">
+            <header><div><span>OFFICIAL OPERATIONAL CONTEXT</span><h2 id="official-context-title">Real Kansas source connections</h2></div><strong>{visibleOfficialCount}/{OFFICIAL_CONTEXT_SOURCES.length} ON</strong></header>
+            <p>Live and current official sources may be drawn for orientation. They stay outside KFM admission, reports, exports, and EvidenceBundles.</p>
+            <div className="official-context-list">{OFFICIAL_CONTEXT_SOURCES.map((source) => {
+              const payload = source.apiPath ? officialPayloads[source.id as OfficialContextFeedId] : undefined;
+              const state = officialStates[source.id];
+              return <article key={source.id} className="official-context-row" data-state={state} data-visible={officialVisibility[source.id]}>
+                <div className="official-context-primary"><label className="visibility-switch"><input type="checkbox" checked={officialVisibility[source.id]} aria-label={`${officialVisibility[source.id] ? "Hide" : "Show"} ${source.title}`} onChange={(event) => setOfficialContextVisible(source.id, event.target.checked)} /><span aria-hidden="true" /></label><i style={{ "--swatch": source.color } as React.CSSProperties} /><div><strong>{source.shortTitle}</strong><small>{source.organization}</small></div><b>{state.toUpperCase()}</b></div>
+                <details><summary>Source, freshness + controls</summary><p>{source.boundary}</p><dl><div><dt>Endpoint</dt><dd>{source.endpointLabel}</dd></div><div><dt>Freshness</dt><dd>{payload?.upstreamUpdatedAt ? new Date(payload.upstreamUpdatedAt).toLocaleString() : source.freshness}</dd></div><div><dt>Features</dt><dd>{payload ? payload.featureCount : source.apiPath ? "NOT LOADED" : "RASTER TILES"}</dd></div><div><dt>Role</dt><dd>{source.evidenceRole.replaceAll("_", " ")}</dd></div></dl><label className="opacity-control"><span>Opacity <b>{Math.round(officialOpacity[source.id] * 100)}%</b></span><input type="range" min="10" max="100" value={Math.round(officialOpacity[source.id] * 100)} onChange={(event) => setOfficialContextOpacity(source.id, Number(event.target.value) / 100)} /></label>{payload?.limitation && <p className="official-context-warning">{payload.limitation}</p>}{officialErrors[source.id] && <p className="official-context-error">Unavailable: {officialErrors[source.id]}. No fallback inference was used.</p>}<div className="official-context-actions">{source.apiPath && <button type="button" disabled={state === "loading"} onClick={() => void refreshOfficialContext(source.id as OfficialContextFeedId)}>{state === "loading" ? "Refreshing…" : "Refresh"}</button>}<a href={source.sourceUrl} target="_blank" rel="noreferrer">Primary source ↗</a></div></details>
+              </article>;
+            })}</div>
+            <footer><code>OFFICIAL SOURCE → FIXED ADAPTER / WMS → MAPLIBRE</code><span>Evidence held at admission, release, and EvidenceBundle gates · <a href="https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3393" target="_blank" rel="noreferrer">governance issue #3393 ↗</a></span></footer>
+          </section>
+
           <section className="catalog-quick-lenses" aria-labelledby="quick-lenses-title">
             <div className="section-row"><h2 id="quick-lenses-title">Quick lenses</h2><span>Layers + time + style</span></div>
             <div>{MAP_VIEW_PROFILES.map((profile) => <button key={profile.id} type="button" aria-pressed={activeViewProfileId === profile.id} onClick={() => applyViewProfile(profile)}><strong>{profile.title}</strong><small>{profile.visibleLayerIds.length} layers · {profile.year}</small></button>)}</div>
@@ -5050,7 +5263,7 @@ export default function Home() {
             <div className="map-command-facts" aria-label="Current investigation context">
               <span><small>SCOPE</small><b>{selected?.properties.title ?? activeAtlasView?.scope ?? "Kansas statewide"}</b></span>
               <span><small>TIME</small><b>{formatTimelineStep(year)}</b></span>
-              <span><small>LAYERS</small><b>{visibleCount} active</b></span>
+              <span><small>LAYERS</small><b>{visibleCount} registry · {visibleOfficialCount} context</b></span>
             </div>
             <div className="map-command-status">
               <span data-runtime={runtime.kind}><i /> {runtime.kind === "ready" ? "MAP READY" : runtime.kind === "loading" ? "MAP STARTING" : runtime.kind === "degraded" ? "MAP DEGRADED" : runtime.kind === "unsupported" ? "MAP UNSUPPORTED" : "MAP UNAVAILABLE"}</span>
@@ -5097,7 +5310,7 @@ export default function Home() {
               {activeLayers.length === 0 && <p>No layers are visible. Open Layer Catalog to choose a starting stack.</p>}
             </div>
             {activeLayers.length > 4 && <footer>+{activeLayers.length - 4} more in Layer Catalog</footer>}
-            <p className="map-legend-note">{basemap === "standard" ? "OpenFreeMap vector context · counties, places, roads, rail, water, and labels are display context; KFM overlays remain explicit." : basemap === "imagery" ? "Satellite imagery is display context only · overlays are synthetic or generalized." : basemap === "streets" ? "OpenStreetMap reference only · overlays are synthetic or generalized." : "Site-local display style · overlays are synthetic or generalized."}</p>
+            <p className="map-legend-note">{basemap === "standard" ? "OpenFreeMap vector context · counties, places, roads, rail, water, and labels are display context; KFM overlays remain explicit." : basemap === "imagery" ? "Satellite imagery is display context only · overlays are synthetic or generalized." : basemap === "streets" ? "OpenStreetMap reference only · overlays are synthetic or generalized." : basemap === "topo" ? "USGS The National Map topographic tiles are display context only · KFM evidence remains separate." : "Site-local display style · overlays are synthetic or generalized."}</p>
           </aside>
           <button className="qwen-map-launch" type="button" onClick={qwenOpen ? closeQwenCompanion : openQwenCompanion} aria-expanded={qwenOpen} aria-controls="qwen-map-panel" data-open={qwenOpen}>
             <span className="qwen-launch-mark" aria-hidden="true">Q</span>
@@ -5496,17 +5709,29 @@ export default function Home() {
               </section>}
 
               {mapUtilityView === "connections" && <section id="map-utility-view-connections" role="tabpanel" aria-labelledby="map-utility-tab-connections" className="map-utility-section source-connections-section">
-                <div className="map-utility-section-heading"><span>SOURCE CONNECTIONS</span><h3>Network context + local registry</h3><p>See which external display carriers the browser may request, then inspect each site-local registry connection, loaded GeoJSON source, renderer, and compatible record count. External context remains separate from KFM evidence.</p></div>
+                <div className="map-utility-section-heading"><span>SOURCE CONNECTIONS</span><h3>Official feeds + network context + local registry</h3><p>Inspect bounded official adapters and raster services, external display carriers, and every site-local registry connection. Operational context remains separate from KFM evidence.</p></div>
                 <div className="source-connection-summary" aria-label="Source connection summary">
                   <article><span>READY</span><strong>{sourceStateCounts.ready}/{LAYER_REGISTRY.length}</strong><small>MapLibre sources loaded</small></article>
                   <article><span>VISIBLE</span><strong>{visibleCount}</strong><small>Registry layers drawing now</small></article>
                   <article><span>RENDERERS</span><strong>{LAYER_REGISTRY.reduce((count, layer) => count + layer.renderers.length, 0)}</strong><small>Style layers connected</small></article>
-                  <article><span>NETWORK</span><strong>{activeExternalContextCount}/{EXTERNAL_CONTEXT_SOURCES.length}</strong><small>External carriers selected</small></article>
+                  <article><span>NETWORK</span><strong>{visibleOfficialCount + activeExternalContextCount}/{OFFICIAL_CONTEXT_SOURCES.length + EXTERNAL_CONTEXT_SOURCES.length}</strong><small>Official + external carriers selected</small></article>
                 </div>
                 <div className="source-connection-toolbar">
                   <label><i aria-hidden="true">⌕</i><span className="sr-only">Search source connections</span><input type="search" value={connectionQuery} onChange={(event) => setConnectionQuery(event.target.value)} placeholder="Layer, source ID, domain, or format" /></label>
                   <label><span className="sr-only">Filter source connections</span><select value={connectionFilter} onChange={(event) => setConnectionFilter(event.target.value as typeof connectionFilter)}><option value="ALL">All connections</option><option value="VISIBLE">Visible only</option><option value="READY">Ready only</option><option value="ERROR">Errors only</option></select></label>
                 </div>
+                <section className="official-connection-ledger" aria-labelledby="official-connection-ledger-title">
+                  <header><div><span>OFFICIAL SOURCE PIPELINES</span><h4 id="official-connection-ledger-title">Fixed Kansas adapters + disclosed raster services</h4></div><strong>{officialFeatureCount} FEATURES</strong></header>
+                  <p>Only allowlisted endpoints are connected. Feed failures stay visible; zero features is time-stamped and never interpreted as statewide safety or completeness.</p>
+                  <div className="official-connection-grid">{filteredOfficialContextConnections.map(({ source, visible, state, featureCount, retrievedAt, limitation }) => <article className="official-connection-card" key={source.id} data-state={state}>
+                    <header><div><span>{source.kind.replaceAll("_", " ")}</span><h5>{source.title}</h5><code>{source.endpointLabel}</code></div><strong>{state.toUpperCase()}</strong></header>
+                    <div className="official-connection-path"><span>OFFICIAL</span><i>→</i><span>{source.apiPath ? "FIXED ADAPTER" : "WMS / TILES"}</span><i>→</i><span>MAP CONTEXT</span><i>⊣</i><span>EVIDENCE HELD</span></div>
+                    <dl><div><dt>Mapped</dt><dd>{featureCount ?? (source.apiPath ? "NOT LOADED" : "RASTER")}</dd></div><div><dt>Retrieved</dt><dd>{retrievedAt ? new Date(retrievedAt).toLocaleString() : source.freshness}</dd></div><div><dt>Cadence</dt><dd>{source.cadence}</dd></div><div><dt>Evidence role</dt><dd>{source.evidenceRole.replaceAll("_", " ")}</dd></div></dl>
+                    <p>{limitation ?? source.boundary}</p><aside><strong>Failure boundary</strong><span>{source.fallback}</span></aside>
+                    <footer><button type="button" onClick={() => setOfficialContextVisible(source.id, !visible)}>{visible ? "Hide" : "Show"}</button>{source.apiPath && <button type="button" disabled={state === "loading"} onClick={() => void refreshOfficialContext(source.id as OfficialContextFeedId)}>Refresh</button>}<a href={source.sourceUrl} target="_blank" rel="noreferrer">Source ↗</a></footer>
+                  </article>)}</div>
+                  <footer className="official-pipeline-contract"><span>Governance: <a href="https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3393" target="_blank" rel="noreferrer">#3393 source-family decision</a></span><span>Hydrology: <a href="https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3372" target="_blank" rel="noreferrer">#3372 governed slice</a></span><span>Deployment: <a href="https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4418" target="_blank" rel="noreferrer">#4418 receipt hold</a></span></footer>
+                </section>
                 <section className="external-context-ledger" aria-labelledby="external-context-ledger-title">
                   <header><div><span>EXTERNAL NETWORK CONTEXT</span><h4 id="external-context-ledger-title">Browser-requested display carriers</h4></div><strong>{activeExternalContextCount} SELECTED</strong></header>
                   <p>Only the selected carriers make map requests. The local Midnight and Prairie styles make no basemap request. Rendering success proves display availability only—not source admission, fitness, accuracy, freshness, or evidence support.</p>
@@ -5527,7 +5752,7 @@ export default function Home() {
                     <dl><div><dt>Time-compatible</dt><dd>{compatibleCount}</dd></div><div><dt>In viewport</dt><dd>{viewportCount}</dd></div><div><dt>Source probe</dt><dd>{probeCount === undefined ? "NOT RUN" : `${probeCount} UNIQUE`}</dd></div><div><dt>Attribution</dt><dd>{layer.attribution}</dd></div></dl>
                     <footer><button type="button" onClick={() => setVisibility((current) => { const next = { ...current, [layer.id]: !current[layer.id] }; visibilityRef.current = next; return next; })}>{visible ? "Hide" : "Show"}</button><button type="button" onClick={() => zoomToLayer(layer)}>Fit</button><button type="button" onClick={() => probeSourceConnection(layer)} disabled={state !== "ready"}>Probe source</button><button type="button" onClick={() => inspectSourceConnection(layer)}>Records</button></footer>
                   </article>)}
-                  {filteredSourceConnections.length === 0 && filteredExternalContextConnections.length === 0 && <div className="map-utility-empty"><strong>No source connections match</strong><p>Clear the search or choose another connection state.</p></div>}
+                  {filteredSourceConnections.length === 0 && filteredExternalContextConnections.length === 0 && filteredOfficialContextConnections.length === 0 && <div className="map-utility-empty"><strong>No source connections match</strong><p>Clear the search or choose another connection state.</p></div>}
                 </div>
                 <aside className="map-utility-boundary" data-tone="warning"><strong>Connection status is renderer health, not source admission.</strong><p>Registry cards expose site-local fixtures. The current view may contact only the external carriers disclosed above; provider resources and availability remain external. A READY source or successful query does not prove rights, freshness, evidence, policy approval, release, or publication.</p></aside>
               </section>}

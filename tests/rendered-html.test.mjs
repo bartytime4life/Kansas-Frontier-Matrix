@@ -34,7 +34,7 @@ test("renders the map-first Kansas explorer shell", async () => {
   assert.match(html, /Build report/i);
   assert.match(html, /bounded demonstration data/i);
   assert.match(html, /Repository briefing/i);
-  assert.match(html, /main@(?:<!-- -->)?5d83579/i);
+  assert.match(html, /main@(?:<!-- -->)?f1a4156/i);
   assert.match(html, /Scenario review/i);
   assert.match(html, /Runtime lab/i);
   assert.match(html, /Source observatory/i);
@@ -589,7 +589,7 @@ test("resolves Focus outcomes and temporal scope with fail-closed precedence", a
 test("keeps repository updates pinned and boundary-labeled", async () => {
   const updates = await readFile(new URL("../app/repository-updates.ts", import.meta.url), "utf8");
 
-  assert.match(updates, /5d835798e09a4dd14735779cb44206a8a3e8b2d3/);
+  assert.match(updates, /f1a415639a57985f859fa66e6ca73cd5c349aa78/);
   assert.match(updates, /Local geodata inspection now fails closed on malformed or stale input/);
   assert.match(updates, /All 105 Kansas counties now have public locator starters/);
   assert.match(updates, /Time A \/ Time B comparison preserves report scope/);
@@ -772,8 +772,8 @@ test("keeps every top-level external map carrier in a display-only disclosure re
   }).outputText;
   const registry = await import(`data:text/javascript;base64,${Buffer.from(javascript).toString("base64")}`);
 
-  assert.equal(registry.EXTERNAL_CONTEXT_SOURCES.length, 4);
-  assert.equal(new Set(registry.EXTERNAL_CONTEXT_SOURCES.map((record) => record.id)).size, 4);
+  assert.equal(registry.EXTERNAL_CONTEXT_SOURCES.length, 5);
+  assert.equal(new Set(registry.EXTERNAL_CONTEXT_SOURCES.map((record) => record.id)).size, 5);
   assert.equal(registry.EXTERNAL_CONTEXT_SOURCES.every((record) => record.requestUrl.startsWith("https://")), true);
   assert.equal(registry.EXTERNAL_CONTEXT_SOURCES.every((record) => record.sourceUrl.startsWith("https://")), true);
   assert.equal(registry.EXTERNAL_CONTEXT_SOURCES.every((record) => record.attribution.length > 0 && record.fallback.length > 0), true);
@@ -782,9 +782,53 @@ test("keeps every top-level external map carrier in a display-only disclosure re
   assert.match(runtime, /externalContextSource\("openfreemap-liberty"\)/);
   assert.match(runtime, /externalContextSource\("esri-world-imagery"\)/);
   assert.match(runtime, /externalContextSource\("openstreetmap-standard"\)/);
+  assert.match(runtime, /externalContextSource\("usgs-national-map-topo"\)/);
   assert.match(terrain, /externalContextSource\("aws-mapzen-terrarium"\)/);
   assert.match(page, /Browser-requested display carriers/);
   assert.match(page, /NO REQUEST FROM CURRENT VIEW/);
+});
+
+test("connects five bounded official Kansas context sources without admitting evidence", async () => {
+  const ts = await import("typescript");
+  const registrySource = await readFile(new URL("../app/live-context.ts", import.meta.url), "utf8");
+  const route = await readFile(new URL("../app/api/live-context/route.ts", import.meta.url), "utf8");
+  const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  const javascript = ts.transpileModule(registrySource, {
+    compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
+    fileName: "live-context.ts",
+  }).outputText;
+  const registry = await import(`data:text/javascript;base64,${Buffer.from(javascript).toString("base64")}`);
+
+  assert.deepEqual(registry.OFFICIAL_CONTEXT_SOURCES.map((record) => record.id), ["census-counties", "usgs-streamflow", "usgs-3dep-hillshade", "nws-alerts", "nws-radar"]);
+  assert.deepEqual(registry.OFFICIAL_CONTEXT_SOURCES.filter((record) => record.defaultVisibility).map((record) => record.id), ["census-counties", "usgs-streamflow"]);
+  assert.equal(registry.OFFICIAL_CONTEXT_SOURCES.every((record) => record.evidenceRole === "EXTERNAL_CONTEXT_ONLY"), true);
+  assert.match(page, /OFFICIAL OPERATIONAL CONTEXT/);
+  assert.match(page, /Real Kansas source connections/);
+  assert.match(page, /params\.set\("ctx"/);
+  assert.match(page, /params\.set\("ctxo"/);
+  assert.match(page, /zero mapped features[\s\S]*not an all-clear/i);
+  assert.match(page, /governance issue #3393/);
+  assert.match(route, /STATE%3D%2720%27/);
+  assert.match(route, /state_code/);
+  assert.match(route, /datetime/);
+  assert.match(route, /KansasFrontierMatrixExplorer\/1\.0/);
+  assert.match(route, /MAX_NWS_ZONE_REQUESTS = 36/);
+  assert.match(route, /forecast\|county\|fire/);
+  assert.match(route, /KSZ\|KSC/);
+  assert.match(route, /Unknown live-context feed/);
+  assert.doesNotMatch(route, /searchParams\.get\("url"\)/);
+  assert.match(css, /\.official-context-catalog/);
+  assert.match(css, /\.official-connection-ledger/);
+});
+
+test("the built official-context adapter rejects unknown feeds without network access", async () => {
+  const workerUrl = new URL("../dist/server/index.js", import.meta.url);
+  workerUrl.searchParams.set("test", `official-${process.pid}-${Date.now()}`);
+  const { default: worker } = await import(workerUrl.href);
+  const response = await worker.fetch(new Request("http://localhost/api/live-context?feed=arbitrary"), {}, { waitUntil() {}, passThroughOnException() {} });
+  assert.equal(response.status, 400);
+  assert.match(await response.text(), /fixed allowlist/i);
 });
 
 test("reviews and redacts public-safe exports before download", async () => {

@@ -2,9 +2,10 @@ export type ExternalContextSourceId =
   | "openfreemap-liberty"
   | "esri-world-imagery"
   | "openstreetmap-standard"
+  | "usgs-national-map-topo"
   | "aws-mapzen-terrarium";
 
-export type ExternalContextActivation = "standard" | "imagery" | "streets" | "elevation-3d";
+export type ExternalContextActivation = "standard" | "imagery" | "streets" | "topo" | "elevation-3d";
 
 export type ExternalContextSource = Readonly<{
   id: ExternalContextSourceId;
@@ -82,6 +83,23 @@ export const EXTERNAL_CONTEXT_SOURCES: readonly ExternalContextSource[] = Object
     exportEffect: "ATTRIBUTION_ONLY",
     fallback: "A failed tile request leaves the local styles and site-local evidence layers available.",
     boundary: "Raster tiles provide normal interactive navigation context only; the Site does not prefetch or offer offline use. Completeness, update time, legal status, routing, and KFM evidence support are not asserted.",
+  }),
+  Object.freeze({
+    id: "usgs-national-map-topo",
+    title: "USGS The National Map topographic context",
+    organization: "U.S. Geological Survey",
+    kind: "RASTER_BASEMAP",
+    capabilities: Object.freeze(["BASEMAP"] as const),
+    activatesWhen: Object.freeze(["topo"] as const),
+    requestMode: "OPT_IN_NETWORK",
+    requestUrl: "https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/{z}/{y}/{x}",
+    endpointLabel: "basemap.nationalmap.gov · USGSTopo",
+    sourceUrl: "https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer",
+    attribution: "USGS The National Map",
+    evidenceRole: "DISPLAY_CONTEXT_ONLY",
+    exportEffect: "ATTRIBUTION_ONLY",
+    fallback: "A failed USGS topographic tile request leaves local styles and site-local evidence layers available.",
+    boundary: "The National Map tiles are cartographic display context. Contours, names, symbology, currency, scale fitness, and KFM evidence support are not asserted by this Site.",
   }),
   Object.freeze({
     id: "aws-mapzen-terrarium",

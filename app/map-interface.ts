@@ -9,7 +9,7 @@ export type MapViewProfile = Readonly<{
   summary: string;
   visibleLayerIds: readonly string[];
   year: number;
-  basemap: "standard" | "imagery" | "midnight" | "prairie" | "streets";
+  basemap: "standard" | "imagery" | "midnight" | "prairie" | "streets" | "topo";
   projection: "mercator" | "globe";
 }>;
 

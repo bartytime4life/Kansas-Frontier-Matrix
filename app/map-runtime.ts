@@ -10,12 +10,13 @@ import { externalContextSource } from "./external-context-sources";
 import { LAYER_REGISTRY, type EvidenceState } from "./explorer-data";
 import { ACTIVE_TERRAIN_SOURCE } from "./terrain-sources";
 
-export type BasemapKey = "standard" | "imagery" | "midnight" | "prairie" | "streets";
+export type BasemapKey = "standard" | "imagery" | "midnight" | "prairie" | "streets" | "topo";
 export type AtmospherePreset = "night" | "dusk" | "clear";
 
 const openFreeMapContext = externalContextSource("openfreemap-liberty");
 const esriImageryContext = externalContextSource("esri-world-imagery");
 const openStreetMapContext = externalContextSource("openstreetmap-standard");
+const usgsTopoContext = externalContextSource("usgs-national-map-topo");
 
 export const BASEMAPS: Record<BasemapKey, { title: string; note: string; style: StyleSpecification | string }> = {
   standard: {
@@ -100,6 +101,31 @@ export const BASEMAPS: Record<BasemapKey, { title: string; note: string; style: 
           "raster-contrast": 0.04,
           "raster-fade-duration": 180,
         },
+      }],
+    },
+  },
+  topo: {
+    title: "USGS topographic map",
+    note: "The National Map · display context · not evidence",
+    style: {
+      version: 8,
+      name: "KFM USGS Topographic Context",
+      sources: {
+        "usgs-topo-context": {
+          type: "raster",
+          tiles: [usgsTopoContext.requestUrl],
+          tileSize: 256,
+          attribution: usgsTopoContext.attribution,
+          bounds: [-104.8, 34.8, -92, 42.2],
+          minzoom: 4,
+          maxzoom: 16,
+        },
+      },
+      layers: [{
+        id: "usgs-topo-context-raster",
+        type: "raster",
+        source: "usgs-topo-context",
+        paint: { "raster-opacity": 0.94, "raster-fade-duration": 120 },
       }],
     },
   },

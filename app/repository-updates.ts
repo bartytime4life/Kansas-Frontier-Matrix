@@ -28,15 +28,15 @@ export type RepositoryUpdate = Readonly<{
 export const REPOSITORY_SNAPSHOT = Object.freeze({
   repository: "bartytime4life/Kansas-Frontier-Matrix",
   ref: "main",
-  commit: "5d835798e09a4dd14735779cb44206a8a3e8b2d3",
-  shortCommit: "5d83579",
-  inspectedAt: "2026-08-31T11:07:55Z",
+  commit: "f1a415639a57985f859fa66e6ca73cd5c349aa78",
+  shortCommit: "f1a4156",
+  inspectedAt: "2026-09-09 · live GitHub readback",
   counts: Object.freeze({
     knowledgeDomains: 13,
     explorerFeatureFamilies: 38,
     mapFunctions: 20,
     countyPlanningLanes: 105,
-    repositoryUpdates: 17,
+    repositoryUpdates: 18,
     transitionBoundaries: 4,
     readinessGates: 7,
   }),
@@ -45,6 +45,20 @@ export const REPOSITORY_SNAPSHOT = Object.freeze({
 const repoAtSnapshot = `https://github.com/${REPOSITORY_SNAPSHOT.repository}/blob/${REPOSITORY_SNAPSHOT.commit}`;
 
 export const REPOSITORY_UPDATES: readonly RepositoryUpdate[] = Object.freeze([
+  Object.freeze({
+    id: "current-main-live-readback",
+    area: "Repository control plane",
+    title: "Current main is pinned with green UI checks and unresolved release gates",
+    state: "NEEDS VERIFICATION",
+    maturity: "PARTIAL",
+    date: "9 Sep 2026",
+    summary:
+      "Live GitHub readback pins main at f1a4156 with zero open pull requests. UI build, keyboard behavior, source-descriptor validation, and rights-presence checks are green on the exact head.",
+    boundary:
+      "Repository-topology, governance-parity, object-family-register, generated-receipt integrity, and dependency audit checks remain red. Accessibility axe coverage is a workflow hold. Green checks are bounded execution evidence—not release, review, deployment, or publication authority.",
+    sourceLabel: "Exact current main commit",
+    sourceUrl: `https://github.com/${REPOSITORY_SNAPSHOT.repository}/commit/${REPOSITORY_SNAPSHOT.commit}`,
+  }),
   Object.freeze({
     id: "local-import-review-hardening",
     area: "Explorer security and privacy",
