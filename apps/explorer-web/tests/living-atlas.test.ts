@@ -1,8 +1,11 @@
 import { describe, expect, it } from "vitest";
 import {
+  ATLAS_WORKBENCH_TOOLS,
   ATLAS_VIEWS,
   EVIDENCE_RECORDS,
   LAYER_RECORDS,
+  MAP_INTERACTION_TOOLS,
+  REPOSITORY_LAYER_CONNECTIONS,
   SOURCE_DESCRIPTORS,
   TEMPORAL_EXTENTS,
   createInitialSnapshot,
@@ -38,6 +41,52 @@ describe("Living Atlas governed foundation", () => {
       representation: "CATALOG_ONLY",
       trustState: "DENIED",
     });
+  });
+
+  it("maps repository layer candidates without treating them as runtime admission", () => {
+    expect(REPOSITORY_LAYER_CONNECTIONS).toHaveLength(14);
+    expect(
+      REPOSITORY_LAYER_CONNECTIONS.filter(
+        (entry) => entry.state === "FIXTURE_ONLY",
+      ).map((entry) => entry.id),
+    ).toEqual(["connection:wbd-huc12"]);
+    expect(
+      REPOSITORY_LAYER_CONNECTIONS.every(
+        (entry) => entry.artifacts.length >= 3,
+      ),
+    ).toBe(true);
+    expect(
+      REPOSITORY_LAYER_CONNECTIONS.flatMap((entry) => entry.artifacts).every(
+        (entry) => !entry.path.match(/^(https?:|data:|blob:|file:)/i),
+      ),
+    ).toBe(true);
+    expect(
+      REPOSITORY_LAYER_CONNECTIONS.every((entry) =>
+        entry.relatedToolIds.every((id) =>
+          ATLAS_WORKBENCH_TOOLS.some((tool) => tool.id === id),
+        ),
+      ),
+    ).toBe(true);
+  });
+
+  it("keeps map tools finite and binds workbenches to feature paths", () => {
+    expect(MAP_INTERACTION_TOOLS.map((tool) => tool.id)).toEqual([
+      "select",
+      "draw",
+      "measure",
+      "profile",
+    ]);
+    expect(
+      MAP_INTERACTION_TOOLS.filter(
+        (tool) => tool.state === "AVAILABLE_IN_SITE",
+      ).map((tool) => tool.id),
+    ).toEqual(["select"]);
+    expect(ATLAS_WORKBENCH_TOOLS).toHaveLength(10);
+    expect(
+      ATLAS_WORKBENCH_TOOLS.every((tool) =>
+        tool.featurePath.startsWith("apps/explorer-web/src/features/"),
+      ),
+    ).toBe(true);
   });
 
   it("separates a multiscale time preview vocabulary from the committed snapshot", () => {

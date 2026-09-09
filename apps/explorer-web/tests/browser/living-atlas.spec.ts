@@ -43,3 +43,55 @@ test("keeps held layers finite and captures only draft map state", async ({
   await expect(workspace.locator(".atlas-draft-card").first()).toContainText("DRAFT");
   await expect(workspace.getByRole("button", { name: /publish/i })).toHaveCount(0);
 });
+
+test("exposes repository layer lineage and keeps candidate data unadmitted", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const workspace = page.locator('[data-component="living-atlas-workspace"]');
+
+  await workspace.getByRole("button", { name: "Layers" }).click();
+  const candidate = workspace.locator(".atlas-connection-card", {
+    hasText: "WBD HUC12 watershed boundaries",
+  });
+  await expect(candidate).toContainText("FIXTURE_ONLY");
+  await candidate.getByRole("button", { name: "Inspect connection" }).click();
+  const drawer = workspace.getByRole("complementary", {
+    name: "Evidence Drawer",
+  });
+  await expect(drawer).toContainText("FIXTURE_ONLY · NOT ADMITTED");
+  await expect(drawer.getByRole("link", { name: /CONNECTOR/ })).toHaveAttribute(
+    "href",
+    /connectors\/usgs\/wbd_huc/,
+  );
+  await expect(drawer.getByRole("link", { name: /PIPELINE/ })).toHaveAttribute(
+    "href",
+    /pipeline_specs\/hydrology\/wbd_huc12_ingest\.yaml/,
+  );
+});
+
+test("connects Living Atlas tools to the repository feature catalog", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const workspace = page.locator('[data-component="living-atlas-workspace"]');
+
+  await workspace.locator(".atlas-interaction-bar").getByRole("button", {
+    name: "Measure",
+  }).click();
+  await expect(workspace.getByRole("status").filter({ hasText: "Measure HELD" })).toContainText(
+    "projection, units, uncertainty",
+  );
+
+  await workspace.getByRole("button", { name: "Tools" }).click();
+  await expect(workspace.locator(".atlas-tool-card")).toHaveCount(14);
+  const hucTool = workspace.locator(".atlas-tool-card", {
+    hasText: "HUC crosswalk explorer",
+  });
+  await hucTool.getByRole("button", { name: "Open workbench catalog" }).click();
+  const features = page.locator("#features");
+  await expect(features.getByRole("status")).toHaveText(
+    /1 of \d+ feature families shown/,
+  );
+  await expect(features.getByRole("heading", { name: "HUC crosswalk explorer" })).toBeVisible();
+});
