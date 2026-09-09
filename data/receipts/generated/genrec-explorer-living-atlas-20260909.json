@@ -1,0 +1,188 @@
+{
+  "receipt_id": "genrec:explorer-living-atlas:20260909",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/explorer-web/README.md",
+    "apps/explorer-web/src/README.md",
+    "apps/explorer-web/src/features/living_atlas/README.md",
+    "apps/explorer-web/src/features/living_atlas/index.ts",
+    "apps/explorer-web/src/features/living_atlas/map-style.ts",
+    "apps/explorer-web/src/features/living_atlas/registry.ts",
+    "apps/explorer-web/src/features/living_atlas/types.ts",
+    "apps/explorer-web/src/main.ts",
+    "apps/explorer-web/src/site/README.md",
+    "apps/explorer-web/src/site/catalog.ts",
+    "apps/explorer-web/src/site/mount-explorer-site.ts",
+    "apps/explorer-web/src/site/mount-living-atlas.ts",
+    "apps/explorer-web/src/site/site-living-atlas.css",
+    "apps/explorer-web/tests/browser/living-atlas.spec.ts",
+    "apps/explorer-web/tests/explorer-site-catalog.test.ts",
+    "apps/explorer-web/tests/explorer-site-security.test.ts",
+    "apps/explorer-web/tests/living-atlas.test.ts",
+    "packages/maplibre/src/maplibre-adapter.ts",
+    "packages/maplibre/src/maplibre-vite-adapter.ts",
+    "packages/maplibre/tests/maplibre-adapter.test.ts"
+  ],
+  "artifact_hashes": {
+    "apps/explorer-web/README.md": "sha256:883a719f8d2d47c7a27d0d6db7728dbaed3f129f59f7981cfac05c2a013b1f4b",
+    "apps/explorer-web/src/README.md": "sha256:50a18af1b9f83003b26a87287dde90433ac39c321adcd9d886fbb6949f5834c0",
+    "apps/explorer-web/src/features/living_atlas/README.md": "sha256:728718085d51a0cd93189e70984acc11e9d8a6c6c277f7507f1642ef190abe62",
+    "apps/explorer-web/src/features/living_atlas/index.ts": "sha256:d52675ab649a719300ba878390c2e4d83ca72626fb19a3a0d95419989ca37c55",
+    "apps/explorer-web/src/features/living_atlas/map-style.ts": "sha256:76b8b0c17de7687db6ab411d61635c736c13c7302086089a3f49a15113427e09",
+    "apps/explorer-web/src/features/living_atlas/registry.ts": "sha256:e57780615f4d62aa0113fb78c831dd5e7723452763b00b98ea9756694b7e4e64",
+    "apps/explorer-web/src/features/living_atlas/types.ts": "sha256:a41e64bf457bd4f08dc4ac1b478d0b5319df5442ca0d0b03b42ca6ff0f06de5f",
+    "apps/explorer-web/src/main.ts": "sha256:b7ec81710ff8e94f1925348bb44cf82166395b31b735ffabdf0d4cd668541644",
+    "apps/explorer-web/src/site/README.md": "sha256:b1c753fc80804119d985931f146d1c497f56f905a42949e4df518bbb66459581",
+    "apps/explorer-web/src/site/catalog.ts": "sha256:8e0f8d9c09161076789e921824f38c4d518475ae8fc623e10c606de707560290",
+    "apps/explorer-web/src/site/mount-explorer-site.ts": "sha256:0828095b3071172d2b30485d343ffb52000531a0c2c818039b09032583f46a54",
+    "apps/explorer-web/src/site/mount-living-atlas.ts": "sha256:aabc3cc2e7540fbe881dc0a6cb5e71acf81dc0267fd599d6ffa5fbc15b1d9e2b",
+    "apps/explorer-web/src/site/site-living-atlas.css": "sha256:b6c209ac53837b2ec29bf1eb81b0793804afc52077c743ec49f18f6dbe59d67a",
+    "apps/explorer-web/tests/browser/living-atlas.spec.ts": "sha256:66ee44f1c6d06f40a4983a168ad2f2ef67928b762cd6506fc21a954384da5820",
+    "apps/explorer-web/tests/explorer-site-catalog.test.ts": "sha256:542fd01bfb5bc8d099e34f8d031391788d46383fb0bcaadb1fe59851a952b45a",
+    "apps/explorer-web/tests/explorer-site-security.test.ts": "sha256:bc1a2356b14dabb4feeb29eb605429cf58e0ffb026121df5a04659638af9de97",
+    "apps/explorer-web/tests/living-atlas.test.ts": "sha256:e86383e561e6e6cab0e763db9f5ed0711de7c7c6038ba73c864751f145dc8f66",
+    "packages/maplibre/src/maplibre-adapter.ts": "sha256:f8501a4005f6cd6153877827f616abd4457723b0fa55296b636d7b0881bce3ab",
+    "packages/maplibre/src/maplibre-vite-adapter.ts": "sha256:15666629922ff1a9d06cdbb0824410efe24b85cad731cab3fa3b6fa4047ee28d",
+    "packages/maplibre/tests/maplibre-adapter.test.ts": "sha256:c917b464d7056bb6aae306e64a538af8da94f74e809f640f3262f88c95a892a0"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5"
+  },
+  "prompt_or_contract": "sha256:8a0485d6a2ca8473b1d4a9c762cd3382a69aa3b4c3b484490d649e2a00820712",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "filesystem",
+      "git",
+      "GitHub connector",
+      "Google Drive connector",
+      "Notion connector",
+      "PDF extraction"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:175f2bb1c4972c4d93e7c599ec99ab36c6f38855b2ba7fd968b668b405c954b1",
+      "sha256:77f56ec1ab632b76c7728cfb250330271b7dc8948db95c8c0594c92ad9ca6b36",
+      "sha256:43d0c6fea4cc64edb87238a13ac49b639934a82dcef0fab2ef49217add0ba8cf",
+      "sha256:d948332b6c5bfcdd956cf6264f7bcb88d6881ac00ca8afc2534a02d288d4b3c2",
+      "sha256:cc899a7a57cbadb5870709be07d9b0dbfd01712cd794d63dc4d640485970419a",
+      "sha256:309cf67311059c549e144ae9961b2f49eddf1caab8739a51b47ae88c2f5c1c90",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
+    ],
+    "attached_docs": [
+      "Pasted markdown(20260909-011137).md",
+      "KFM MapLibre Operating Architecture Governed UI AI Interaction Manual REVISED",
+      "Kansas Frontier Matrix Pipeline Living Implementation Manual v0.3",
+      "Kansas Frontier Matrix Implementation Reference",
+      "KFM Encyclopedia",
+      "Master MapLibre Components-Functions-Features"
+    ],
+    "evidence_refs": [
+      "git:d0fb0d3cfa9fe25b5d450abc76068d63c23efab6:docs/doctrine/directory-rules.md",
+      "drive:1aivNyfMjQ8urQO6vjt4YvkT1ltF1t7fxCahEcnGV4Dw",
+      "notion:3d2a9202-1bf6-81d6-8e6d-fad0564d8687"
+    ]
+  },
+  "truth_labels": {
+    "apps/explorer-web/README.md": "PROPOSED",
+    "apps/explorer-web/src/README.md": "PROPOSED",
+    "apps/explorer-web/src/features/living_atlas/README.md": "PROPOSED",
+    "apps/explorer-web/src/features/living_atlas/index.ts": "CONFIRMED",
+    "apps/explorer-web/src/features/living_atlas/map-style.ts": "CONFIRMED",
+    "apps/explorer-web/src/features/living_atlas/registry.ts": "CONFIRMED",
+    "apps/explorer-web/src/features/living_atlas/types.ts": "CONFIRMED",
+    "apps/explorer-web/src/main.ts": "NEEDS VERIFICATION",
+    "apps/explorer-web/src/site/README.md": "PROPOSED",
+    "apps/explorer-web/src/site/catalog.ts": "CONFIRMED",
+    "apps/explorer-web/src/site/mount-explorer-site.ts": "NEEDS VERIFICATION",
+    "apps/explorer-web/src/site/mount-living-atlas.ts": "NEEDS VERIFICATION",
+    "apps/explorer-web/src/site/site-living-atlas.css": "NEEDS VERIFICATION",
+    "apps/explorer-web/tests/browser/living-atlas.spec.ts": "NEEDS VERIFICATION",
+    "apps/explorer-web/tests/explorer-site-catalog.test.ts": "CONFIRMED",
+    "apps/explorer-web/tests/explorer-site-security.test.ts": "CONFIRMED",
+    "apps/explorer-web/tests/living-atlas.test.ts": "CONFIRMED",
+    "packages/maplibre/src/maplibre-adapter.ts": "CONFIRMED",
+    "packages/maplibre/src/maplibre-vite-adapter.ts": "CONFIRMED",
+    "packages/maplibre/tests/maplibre-adapter.test.ts": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Explorer unit tests",
+      "outcome": "PASS",
+      "reason": "57 files and 468 tests passed locally on 2026-09-09."
+    },
+    {
+      "gate": "MapLibre package tests",
+      "outcome": "PASS",
+      "reason": "4 files and 54 tests passed locally on 2026-09-09."
+    },
+    {
+      "gate": "Explorer TypeScript and Vite build",
+      "outcome": "PASS",
+      "reason": "TypeScript no-emit and production Vite build passed; Vite reported a non-fatal large-chunk warning."
+    },
+    {
+      "gate": "Explorer renderer and internal-store policy boundary",
+      "outcome": "PASS",
+      "reason": "The two focused policy tests passed locally."
+    },
+    {
+      "gate": "Explorer Playwright browser suite",
+      "outcome": "FAIL",
+      "reason": "All cases were blocked before launch because the required Playwright Chromium executable is absent from this environment; no browser behavior result was inferred."
+    },
+    {
+      "gate": "Visual and responsive browser inspection",
+      "outcome": "SKIPPED",
+      "reason": "No compatible system or agent-browser executable was available."
+    },
+    {
+      "gate": "Hosted exact-head checks",
+      "outcome": "SKIPPED",
+      "reason": "Draft PR checks had not yet run when the receipt was emitted."
+    },
+    {
+      "gate": "git diff --check",
+      "outcome": "PASS",
+      "reason": "No whitespace errors were reported before receipt emission."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "docs/doctrine/directory-rules.md@d0fb0d3cfa9fe25b5d450abc76068d63c23efab6",
+      "validated": true,
+      "evidence_ref": "git:d0fb0d3cfa9fe25b5d450abc76068d63c23efab6:docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "KFM Explorer Living Atlas Design v0.1",
+      "validated": true,
+      "evidence_ref": "drive:1aivNyfMjQ8urQO6vjt4YvkT1ltF1t7fxCahEcnGV4Dw"
+    },
+    {
+      "id": "KFM Explorer Living Atlas Notion design record",
+      "validated": true,
+      "evidence_ref": "notion:3d2a9202-1bf6-81d6-8e6d-fad0564d8687"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-09T19:06:00Z",
+  "emitter": "OpenAI Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md",
+    "drift_register_entry": null
+  },
+  "notes": "This receipt records authoring provenance only. The implementation is a draft, network-free, site-local Living Atlas slice over main@d0fb0d3cfa9fe25b5d450abc76068d63c23efab6. It does not admit external sources, release data, verify precise Kansas claims, grant protected access, deploy, publish, approve, merge, or establish production readiness. Terrain 3D, Compare composition, external-source adapters, exact-head browser execution, accessibility audit, performance, long-session, offline, hosted checks, deployment, release, correction propagation, and rollback drills remain held or need verification."
+}

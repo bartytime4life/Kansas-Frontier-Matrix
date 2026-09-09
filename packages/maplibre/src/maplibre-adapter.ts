@@ -1,6 +1,6 @@
 import "maplibre-gl/dist/maplibre-gl.css";
 
-import { Map as MapLibreMap } from "maplibre-gl";
+import { Map as MapLibreMap, type StyleSpecification } from "maplibre-gl";
 
 import {
   MAP_RUNTIME_PORT_PROFILE,
@@ -26,6 +26,46 @@ function createEmptyStyle() {
   return { version: 8 as const, sources: {}, layers: [] };
 }
 
+export type MapLibreSafeStyle = StyleSpecification;
+
+const STYLE_RESOURCE_KEYS = new Set([
+  "data",
+  "glyphs",
+  "sprite",
+  "tiles",
+  "url",
+  "urls",
+]);
+
+function containsExternalStyleResource(value: unknown, key = ""): boolean {
+  if (typeof value === "string") {
+    return (
+      STYLE_RESOURCE_KEYS.has(key) ||
+      /^(?:https?:|data:|blob:|file:|pmtiles:)/i.test(value.trim())
+    );
+  }
+  if (Array.isArray(value)) {
+    return value.some((item) => containsExternalStyleResource(item, key));
+  }
+  if (typeof value !== "object" || value === null) return false;
+  return Object.entries(value).some(([childKey, child]) =>
+    containsExternalStyleResource(child, childKey),
+  );
+}
+
+function cloneSafeInlineStyle(
+  style: StyleSpecification | undefined,
+): StyleSpecification {
+  if (style === undefined) return createEmptyStyle();
+  if (containsExternalStyleResource(style)) {
+    throw new MapRuntimePortError(
+      "MAP_RUNTIME_INITIALIZATION_FAILED",
+      "Map runtime style must not contain an external resource locator.",
+    );
+  }
+  return JSON.parse(JSON.stringify(style)) as StyleSpecification;
+}
+
 function supportsWebGL2(): boolean {
   if (typeof document === "undefined") return false;
   try {
@@ -45,6 +85,11 @@ export type MapLibreAdapterOptions = Readonly<{
   interactive?: boolean;
   /** Bounded wait for MapLibre's load/error initialization signals. */
   initializationDeadlineMs?: number;
+  /**
+   * Optional already-reviewed, inline-only style. External URLs and protocol
+   * locators fail closed before renderer acquisition.
+   */
+  style?: StyleSpecification;
 }>;
 
 function camerasEqual(left: MapRuntimeCamera, right: MapRuntimeCamera): boolean {
@@ -60,11 +105,11 @@ function camerasEqual(left: MapRuntimeCamera, right: MapRuntimeCamera): boolean 
 /**
  * Minimal package-owned MapLibre implementation of the accepted MapRuntimePort.
  *
- * This first slice owns only renderer construction, camera synchronization,
- * finite lifecycle state, and teardown. It starts with an inline empty style,
- * performs no source discovery, and exposes no raw MapLibre values. Source,
- * layer, selection, protocol, plugin, worker, and external-style admission stay
- * out of scope until separately governed inputs and browser probes exist.
+ * This slice owns renderer construction, a bounded inline-only style input,
+ * camera synchronization, finite lifecycle state, and teardown. It performs no
+ * source discovery or transport and exposes no raw MapLibre values. External
+ * source, layer, protocol, plugin, worker, and style admission stay out of scope
+ * until separately governed inputs and browser probes exist.
  */
 export class MapLibreAdapter implements MapRuntimePort {
   readonly profile = MAP_RUNTIME_PORT_PROFILE;
@@ -72,6 +117,7 @@ export class MapLibreAdapter implements MapRuntimePort {
   private readonly containerId: string;
   private readonly interactive: boolean;
   private readonly initializationDeadlineMs: number;
+  private readonly style: StyleSpecification;
   private state: MapRuntimeState = "IDLE";
   private camera: MapRuntimeCamera = DEFAULT_MAP_RUNTIME_CAMERA;
   private selection: MapFeatureSelection | null = null;
@@ -94,6 +140,7 @@ export class MapLibreAdapter implements MapRuntimePort {
     }
     this.containerId = options.containerId;
     this.interactive = options.interactive ?? true;
+    this.style = cloneSafeInlineStyle(options.style);
     const initializationDeadlineMs =
       options.initializationDeadlineMs ??
       DEFAULT_MAPLIBRE_INITIALIZATION_DEADLINE_MS;
@@ -132,10 +179,10 @@ export class MapLibreAdapter implements MapRuntimePort {
     try {
       this.notifySnapshot();
     } catch {
-      if (this.state !== "DISPOSED") this.failInitialization();
+      if (!this.isDisposed()) this.failInitialization();
       return initialization;
     }
-    if (this.state === "DISPOSED") return initialization;
+    if (this.isDisposed()) return initialization;
 
     if (!supportsWebGL2()) {
       this.failInitialization();
@@ -145,7 +192,7 @@ export class MapLibreAdapter implements MapRuntimePort {
     try {
       const map = new MapLibreMap({
         container: this.containerId,
-        style: createEmptyStyle(),
+        style: this.style,
         center: [this.camera.longitude, this.camera.latitude],
         zoom: this.camera.zoom,
         bearing: this.camera.bearing,
@@ -169,19 +216,19 @@ export class MapLibreAdapter implements MapRuntimePort {
       const loadSubscription = map.on("load", () => {
         loadSubscription.unsubscribe();
         this.rendererUnsubscribers.delete(loadSubscription.unsubscribe);
-        if (this.state === "DISPOSED") return;
+        if (this.isDisposed()) return;
         try {
           this.camera = this.readRendererCamera(map);
           this.state = "READY";
           this.reason = null;
           this.clearInitializationDeadline();
           const snapshot = this.notifySnapshot();
-          if (this.state === "DISPOSED") return;
+          if (this.isDisposed()) return;
           this.initialization = null;
           this.rejectInitialization = null;
           resolveInitialization(snapshot);
         } catch {
-          if (this.state !== "DISPOSED") this.failInitialization();
+          if (!this.isDisposed()) this.failInitialization();
         }
       });
       this.rendererUnsubscribers.add(loadSubscription.unsubscribe);
@@ -364,6 +411,10 @@ export class MapLibreAdapter implements MapRuntimePort {
         "Map runtime has been disposed.",
       );
     }
+  }
+
+  private isDisposed(): boolean {
+    return this.state === "DISPOSED";
   }
 
   private assertReady(): void {

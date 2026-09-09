@@ -2,11 +2,11 @@
 doc_id: kfm://app/explorer-web/readme
 title: Explorer Web App README
 type: app-readme
-version: v0.7
+version: v0.8
 status: draft
 owners: OWNER_TBD — Apps steward · UI steward · Map steward · Governed API steward · Policy steward · Accessibility steward · Docs steward
 created: 2026-06-16
-updated: 2026-09-05
+updated: 2026-09-09
 policy_label: public
 owning_root: apps/
 responsibility: "Orient maintainers to the existing Explorer Web application, its actual composition, package boundaries, local commands, validation, and remaining graduation gates."
@@ -14,7 +14,7 @@ truth_posture: "CONFIRMED pinned source and configuration / PROPOSED canonical-s
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 3d6b8a6e81ed65a726156feae67fa73875b5b069
+  base_commit: d0fb0d3cfa9fe25b5d450abc76068d63c23efab6
   target_prior_blob: 561f78ea224338b3a1748d5689a2f56bfe7a1359
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   entrypoint_blob: 787c5182777b7f26d281e7e2851344b504a70d1c
@@ -40,9 +40,10 @@ related:
 tags: [kfm, apps, explorer-web, map-first, governed-ui, evidence-drawer, focus-mode, temporal, finite-outcomes, fail-closed]
 notes:
   - "v0.7 corrects the obsolete renderer-dependency absence claim: the package pins maplibre-gl 6.6.0 and owns a concrete adapter and Vite worker wrapper; the normal Explorer composition still uses NullMapRuntime."
+  - "v0.8 records the first Living Atlas composition candidate: a network-free package-owned MapLibre canvas, typed 18-view and 24-layer registries, source observatory, deep-time preview/commit, evidence inspection, finite Focus outcomes, and draft-only report/story capture."
   - "Source inspection and test definitions are not fresh build, browser, hosted-CI, dependency-admission, deployment, release, or publication proof."
   - "The temporal conformance adapter is bounded implementation of a proposed shared profile, not a live synchronized temporal Explorer."
-  - "This same-path documentation update preserves the document identity and numbered navigation anchors; application code, code-owned catalog snapshots, dependencies, and authority decisions are unchanged."
+  - "v0.8 preserves the established app and package responsibility roots while changing the normal composition, code-owned catalog, package adapter input boundary, tests, and documentation; source admission and authority decisions remain unchanged."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -54,7 +55,7 @@ notes:
 [Current state](#0-current-evidence-snapshot) · [Boundary](#3-authority-boundary) · [Surfaces](#7-shell-surfaces) · [Run locally](#12-inspection-path) · [Validation](#13-validation-expectations) · [Open work](#15-open-verification-items)
 
 > [!IMPORTANT]
-> **The normal page is not a live MapLibre map.** It mounts `NullMapRuntime` and an explicitly illustrative synthetic map stage. The shared package already pins MapLibre GL JS **6.6.0** and contains a concrete adapter and Vite worker wrapper, but their presence and isolated browser fixture do not activate them in the normal page. Renderer activation, governed layer delivery, and production readiness remain separate work.
+> **The normal page now has a bounded MapLibre composition candidate.** It mounts the package-owned adapter with inline, network-free, explicitly synthetic/generalized GeoJSON. The legacy `NullMapRuntime` and illustrative SVG remain below it as finite trust-state fixtures. This does not admit an external source, prove a released layer, or establish deployment or production readiness.
 
 > [!CAUTION]
 > **This README does not establish a released or deployed product.** The baseline remains `ABSTAIN / NO_GOVERNED_RESPONSE`. Synthetic `ANSWER`, `REVIEWED`, or `RELEASED` examples demonstrate presentation states, not actual observations, approvals, or releases. Maps, tiles, screenshots, and generated language remain downstream of evidence and governance.
@@ -68,14 +69,14 @@ notes:
 
 ## 0. Current evidence snapshot
 
-**Source review:** `main@3d6b8a6e81ed65a726156feae67fa73875b5b069`, 2026-09-05. The table records source/configuration inspected at that commit. It does not report a newly executed build, test suite, browser session, or hosted workflow.
+**Implementation base:** `main@d0fb0d3cfa9fe25b5d450abc76068d63c23efab6`, 2026-09-09. The Living Atlas work is a draft branch candidate over that immutable base; it is not a merged release, deployment, or public-operation claim.
 
 | Surface | CONFIRMED at the pinned source | Limit |
 |---|---|---|
 | Workspace | [App manifest](./package.json) defines Vite, TypeScript, Vitest, and Playwright commands. [Root manifest](../../package.json) pins `pnpm@11.17.0`; both declare Node `>=22.13 <23`. | Configured commands are not execution results. |
 | Normal composition | [`src/main.ts`](./src/main.ts) mounts the site, public workspace navigation, synthetic Focus workspace, and shared trust surface. | No production route tree or live governed transport is established by that wiring. |
-| Normal map stage | [`mount-explorer-site.ts`](./src/site/mount-explorer-site.ts) creates `NullMapRuntime` and decorative SVG geometry, with synthetic feature-selection cases and finite runtime-state controls. | `READY` in the null runtime is not GPU readiness, real terrain, or released-layer loading. |
-| Shared renderer package | [`packages/maplibre/package.json`](../../packages/maplibre/package.json) pins `maplibre-gl@6.6.0`; the [concrete adapter](../../packages/maplibre/src/maplibre-adapter.ts) and [Vite worker wrapper](../../packages/maplibre/src/maplibre-vite-adapter.ts) exist. | Package presence is distinct from admission evidence, default-app activation, source/layer admission, and public release. |
+| Normal map stage | [`mount-living-atlas.ts`](./src/site/mount-living-atlas.ts) mounts a package-owned MapLibre canvas with site-local inline geometry, 18 views, 24 layer records, visible holds, evidence inspection, time preview/commit, and draft-only report/story capture. | The geometry demonstrates product behavior only; it is not a factual Kansas dataset, legal boundary, live condition, precise sensitive location, or released artifact. |
+| Shared renderer package | [`packages/maplibre/package.json`](../../packages/maplibre/package.json) pins `maplibre-gl@6.7.0`; the adapter accepts cloned inline-only styles and rejects external URL/protocol resources before renderer acquisition. | Bounded site-local activation is distinct from external source admission, broader browser readiness, released-layer delivery, and public release. |
 | Isolated renderer fixture | [`maplibre-vite-adapter.spec.ts`](./tests/browser/maplibre-vite-adapter.spec.ts) defines local-asset boot, canvas/CSS, disposal, external-request, and unavailable-WebGL2 checks. | A test definition is not a fresh PASS. Its fixture is not the normal application or a production map. |
 | Evidence and Focus | [`GovernedClient.ts`](./src/adapters/GovernedClient.ts) is a fixture-only projection adapter; the [site composition](./src/site/README.md) documents injected synthetic Focus and evidence cases. | A defensive parser is not a network client, EvidenceBundle authentication, policy execution, or a live Qwen/Ollama connection. |
 | Public workspace context | The [site context/navigation boundary](./src/site/README.md) separates public URL context from in-memory evidence-bearing context. | URL state supplies bounded navigation input, not evidence or access eligibility. |
@@ -89,7 +90,7 @@ notes:
 ```text
 CONFIRMED SOURCE
   configured app-local build/test commands
-  local composition using NullMapRuntime and synthetic evidence/Focus cases
+  network-free Living Atlas MapLibre composition plus retained NullMapRuntime and synthetic evidence/Focus cases
   package-owned MapLibre dependency, adapter, and Vite worker wrapper
   isolated renderer browser-test definitions
   bounded public navigation and temporal-conformance implementation
@@ -99,7 +100,7 @@ PROPOSED
   ungraduated shared temporal profile and live integrated workflows
 
 HOLD / SEPARATE GATES
-  concrete renderer activation in the normal composition
+  external source/layer admission and production renderer graduation
   governed source/layer delivery, live evidence/model transport, public release
 
 UNKNOWN IN THIS REVIEW
@@ -150,7 +151,7 @@ apps/explorer-web/
 
 [ADR-0029](../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts the exact [Directory Rules](../../docs/doctrine/directory-rules.md) bytes and establishes the doctrine path as the single writable human authority. Deployable applications belong under `apps/`; reusable renderer code belongs under `packages/`. The legacy architecture-path rules are read-only compatibility, not an alternative authority.
 
-This is a same-path app README update. Its paired authoring receipt belongs in the established [`data/receipts/generated/`](../../data/receipts/generated/README.md) process-memory lane. Neither change accepts ADR-0005, assigns unverified stewards, creates a new root, or alters lifecycle ownership. Human review and any independent-review requirement remain separate from authorship.
+This implementation stays inside the existing app composition and package-owned renderer seam. Its authoring receipt belongs in the established [`data/receipts/generated/`](../../data/receipts/generated/README.md) process-memory lane. The change does not accept ADR-0005, assign unverified stewards, create a new authority root, or alter lifecycle ownership. Human review and any independent-review requirement remain separate from authorship.
 
 ## 3. Authority boundary
 
@@ -223,8 +224,8 @@ The temporal adapter separates requested state from committed frame context. Its
 | Family | Current bounded surface | Integration limit |
 |---|---|---|
 | Shell and navigation | Four public anchor regions, sanitized public context, bounded deep-link handling | Anchors are not authenticated production routes |
-| Map | Null-runtime status and synthetic feature-to-drawer cases | No real renderer or admitted layer in the normal composition |
-| Shared renderer | Package-owned concrete adapter, Vite worker wrapper, isolated browser fixture | Normal-page activation and source/layer delivery remain separate |
+| Map | Package-owned MapLibre canvas over bounded inline fixtures; retained null-runtime and feature-to-drawer laboratories | No external/admitted data, terrain source, regulatory geometry, or precise sensitive detail |
+| Shared renderer | Package-owned concrete adapter, Vite worker wrapper, safe inline-style boundary, isolated browser fixture | Broader source/layer delivery and production readiness remain separate |
 | Evidence and trust | Defensive payload projections, shared six-label trust grammar, evidence/correction history | No live EvidenceBundle resolver or policy execution |
 | Focus | Mounted synthetic question workspace and bounded response cases | No source retrieval or direct/live model invocation |
 | Temporal | Proposed-profile conformance adapter and frame-state reducer | No claim of composed playback or map/chart/report synchronization |
@@ -393,7 +394,7 @@ AI-authored work must include a receipt that binds the final artifact bytes and 
 - [ ] Authentication, CSP/CORS, operations, diagnostics, and exposure are verified for the actual deployed environment.
 - [ ] Review, release, correction propagation, and rollback have their own evidence; public operation is not inferred from tests or prose.
 
-For this documentation-only revision, rollback is a reviewed revert of the README and paired authoring-receipt change. Git history retains the prior document and receipt. Do not revert independent renderer, temporal, dependency, or Sites work as a side effect.
+For this bounded Living Atlas candidate, rollback is a reviewed revert of the app composition, Living Atlas feature/style files, package inline-style boundary, paired tests, documentation, and generated receipt. The retained renderer-neutral laboratories and Git history preserve the earlier behavior; no data, release, deployment, or publication rollback is created.
 
 ## 15. Open verification items
 
@@ -401,7 +402,7 @@ For this documentation-only revision, rollback is a reviewed revert of the READM
 |---|---|
 | Canonical shell decision | ADR-0005 is still proposed; this README does not accept it |
 | Owners and review separation | Preserve `OWNER_TBD`; review routing is not an authenticated stewardship assignment or independent approval |
-| Default renderer activation | Package and worker-wrapper source exist; the normal composition still uses NullMapRuntime |
+| Default renderer graduation | Bounded inline MapLibre activation is implemented; exact-head browser, CSP, performance, long-session, offline, real-source, and deployment evidence remain open |
 | Governed layers and artifacts | Synthetic fixtures and local boot tests do not establish source admission, released layers, Range/CORS/cache behavior, or public-safe delivery |
 | Live evidence and Focus | Fixture projections do not establish live EvidenceBundle resolution, citation validation, or governed model transport |
 | Temporal integration | Adapter presence does not establish live playback, resolver-backed committed frames, or cross-surface synchronization |
@@ -413,6 +414,6 @@ For this documentation-only revision, rollback is a reviewed revert of the READM
 
 ## Status summary
 
-Explorer Web is a **bounded, executable-source browser workspace**, not an inert placeholder and not a demonstrated live map product. Its normal page remains synthetic and renderer-neutral. The shared MapLibre dependency, concrete adapter, worker wrapper, browser fixture, and temporal-conformance surface are present; their presence must not be confused with normal-page activation, admitted data, model-backed answers, deployment, approval, or publication.
+Explorer Web is a **bounded, executable-source browser workspace**, not a demonstrated live-data product. Its normal page now composes MapLibre through the accepted package seam using only site-local synthetic/generalized fixtures. That activation, the retained trust laboratories, and the temporal/draft workflows must not be confused with admitted data, factual Kansas claims, model-backed answers, deployment, approval, release, or publication.
 
 [Back to top](#top)

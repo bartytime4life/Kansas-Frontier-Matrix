@@ -3,6 +3,7 @@ import "./site/site-foundation-b.css";
 import "./site/site-map.css";
 import "./site/site-catalog.css";
 import "./site/site-trust.css";
+import "./site/site-living-atlas.css";
 import "./site/site-responsive.css";
 import { mountExplorerSite } from "./site/mount-explorer-site";
 import { mountSyntheticFocusWorkspace } from "./site/mount-synthetic-focus-workspace";

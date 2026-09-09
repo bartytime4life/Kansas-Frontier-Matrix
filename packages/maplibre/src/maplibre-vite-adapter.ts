@@ -7,6 +7,8 @@ import {
   type MapLibreAdapterOptions,
 } from "./maplibre-adapter";
 
+export type { MapLibreSafeStyle } from "./maplibre-adapter";
+
 let workerConfigured = false;
 
 /**

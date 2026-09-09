@@ -25,6 +25,10 @@ import {
   type FeatureMaturity,
   type KnowledgeDomain,
 } from "./catalog";
+import {
+  mountLivingAtlasWorkspace,
+  type LivingAtlasController,
+} from "./mount-living-atlas";
 
 export type ExplorerSiteController = Readonly<{ destroy: () => void }>;
 
@@ -287,6 +291,7 @@ export function mountExplorerSite(root: HTMLElement): ExplorerSiteController {
   const mapRuntime = createNullMapRuntime();
   let mapFixture: MapEvidenceFixtureController | null = null;
   let mapRuntimeStatus: MapRuntimeTrustStatusController | null = null;
+  let livingAtlas: LivingAtlasController | null = null;
   root.className = "kfm-explorer-root";
   document.documentElement.dataset.kfmExplorer = "true";
 
@@ -294,43 +299,29 @@ export function mountExplorerSite(root: HTMLElement): ExplorerSiteController {
   const header = el(document, "header", "site-header");
   const headerInner = el(document, "div", "site-header__inner");
   const brand = el(document, "a", "brand");
-  brand.href = "#top";
+  brand.href = "#map";
   brand.append(text(document, "span", "KFM", "brand__mark"), text(document, "span", "Kansas Frontier Matrix", "brand__name"));
   const nav = el(document, "nav", "site-nav");
   nav.setAttribute("aria-label", "Explorer sections");
   [["Map", "#map"], ["Knowledge", "#knowledge"], ["Features", "#features"], ["Trust", "#trust"]].forEach(([label, href]) => nav.append(link(document, label, href)));
   const headerState = el(document, "div", "header-state");
-  headerState.append(chip(document, "Shell", baseline.outcome, "caution"), chip(document, "Renderer", "HOLD", "critical"));
+  headerState.append(chip(document, "Shell", baseline.outcome, "caution"), chip(document, "Renderer", "Bounded demo", "positive"));
   headerInner.append(brand, nav, headerState);
   header.append(headerInner);
 
   const main = el(document, "main", "site-main");
   main.id = "explorer-main";
-  const hero = el(document, "section", "hero section-shell");
-  hero.id = "top";
-  const heroCopy = el(document, "div", "hero__copy");
-  const title = text(document, "h1", "Explore Kansas knowledge without losing the evidence");
-  title.id = "explorer-title";
-  heroCopy.append(
-    text(document, "p", "Kansas-first · map-first · time-aware · evidence-first", "eyebrow"),
-    title,
-    text(document, "p", "KFM connects place, time, sources, policy, review, release, correction, and rollback in one trust-visible browser shell.", "hero__summary"),
-    el(document, "div", "hero__actions"),
-  );
-  heroCopy.lastElementChild?.append(link(document, "Open map workspace", "#map", "button button--primary"), link(document, "Browse all features", "#features", "button button--secondary"));
-  const posture = el(document, "aside", "posture card");
-  posture.setAttribute("aria-label", "Current Explorer posture");
-  posture.append(text(document, "p", "Current composed posture", "eyebrow"), text(document, "p", `${baseline.outcome} / ${baseline.code}`, "posture__outcome"), text(document, "p", baseline.message), text(document, "p", "Repository-grounded synthetic proof. No live KFM data, source activation, model runtime, renderer admission, release, or publication.", "guardrail"));
-  hero.append(heroCopy, posture);
-  main.append(hero);
-
-  const mapSection = el(document, "section", "section-shell");
+  const mapSection = el(document, "section", "section-shell atlas-section-shell");
   mapSection.id = "map";
-  mapSection.append(heading(document, "Map workspace", "A governed map starts with the evidence boundary", "The stage is renderer-neutral. Its controls exercise the existing strict selection-to-Evidence-Drawer bridge without importing MapLibre."));
+  const livingAtlasHost = el(document, "div");
+  livingAtlasHost.dataset.component = "living-atlas-host";
+  mapSection.append(livingAtlasHost);
+  const legacyProof = el(document, "section", "legacy-map-proof");
+  legacyProof.append(heading(document, "Trust-state laboratory", "The mature finite-outcome proofs remain directly inspectable", "Below the bounded MapLibre composition, these renderer-neutral fixtures preserve supported, missing, denied, mismatched, stale, withdrawn, and error behavior."));
   const mapGrid = el(document, "div", "map-grid");
   const mapCard = el(document, "div", "map-card card");
   const mapToolbar = el(document, "div", "map-toolbar");
-  mapToolbar.append(chip(document, "Interaction", "Synthetic"), chip(document, "Evidence bridge", "Active", "positive"), chip(document, "MapLibre", "HOLD", "critical"));
+  mapToolbar.append(chip(document, "Interaction", "Synthetic"), chip(document, "Evidence bridge", "Active", "positive"), chip(document, "MapLibre", "Bounded above", "positive"));
   mapCard.append(mapToolbar, mapArtwork(document));
   const runtime = el(document, "aside", "runtime-card card");
   const runtimeStatusHost = el(document, "div", "runtime-status-host");
@@ -363,23 +354,24 @@ export function mountExplorerSite(root: HTMLElement): ExplorerSiteController {
   });
   runtime.append(
     text(document, "p", "Renderer gate", "eyebrow"),
-    text(document, "h3", "MapLibre integration remains governed"),
-    text(document, "p", "The package-owned adapter is present, but Explorer activation, dependency review, and authenticated browser probes remain separate gates."),
+    text(document, "h3", "Renderer trust states remain finite"),
+    text(document, "p", "The package-owned MapLibre adapter now powers the site-local canvas above. These controls independently prove renderer-neutral degraded and withdrawn behavior."),
     chip(document, "Candidate", CURRENT_MAPLIBRE_READINESS.readinessCandidate),
     chip(document, "Package", "Present"),
-    chip(document, "Browser evidence", "Pending", "critical"),
-    text(document, "p", "This workspace still exercises the dependency-free NullMapRuntime and finite renderer-neutral status contract. READY does not establish MapLibre readiness, release, deployment, or publication authority.", "guardrail"),
+    chip(document, "Browser evidence", "Branch verification required", "caution"),
+    text(document, "p", "This laboratory exercises the dependency-free NullMapRuntime and finite renderer-neutral status contract. Neither its READY state nor the bounded canvas establishes source, release, deployment, or publication authority.", "guardrail"),
     runtimeStatusHost,
     runtimeControls,
     link(document, "Open governance issue #2957", `https://github.com/${REPOSITORY_SNAPSHOT.repository}/issues/${CURRENT_MAPLIBRE_READINESS.governanceIssue}`, "text-link"),
   );
   mapGrid.append(mapCard, runtime);
-  mapSection.append(mapGrid);
+  legacyProof.append(mapGrid);
   const lab = el(document, "div", "selection-lab card");
   lab.append(text(document, "p", "Deterministic interaction lab", "eyebrow"), text(document, "h3", "Map click → governed evidence outcome"), text(document, "p", "Exercise supported, missing, restricted, mismatched, and resolver-error paths. Rendered properties never become evidence."));
   const fixtureHost = el(document, "div", "selection-lab__fixture");
   lab.append(fixtureHost);
-  mapSection.append(lab);
+  legacyProof.append(lab);
+  mapSection.append(legacyProof);
   main.append(mapSection);
   mapFixture = mountMapFeatureEvidenceFixture(fixtureHost, mapCases, async (selection) => {
     await Promise.resolve();
@@ -474,10 +466,13 @@ export function mountExplorerSite(root: HTMLElement): ExplorerSiteController {
   const footer = el(document, "footer", "site-footer");
   footer.append(text(document, "p", "Kansas Frontier Matrix · governed synthetic Explorer composition"), text(document, "p", "Not for emergency, legal-title, regulatory, or life-safety decisions."));
   root.replaceChildren(skip, header, main, footer);
+  livingAtlas = mountLivingAtlasWorkspace(livingAtlasHost);
 
   return Object.freeze({
     destroy: () => {
       cleanup.forEach((fn) => fn());
+      livingAtlas?.destroy();
+      livingAtlas = null;
       mapRuntimeStatus?.destroy();
       mapRuntimeStatus = null;
       mapRuntime.dispose();

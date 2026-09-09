@@ -12,14 +12,15 @@ The composition:
 - presents KFM's evidence, finite-outcome, time, correction, accessibility, and trust-membrane principles;
 - mounts the existing renderer-neutral `map_runtime` selection-to-Evidence-Drawer bridge with deterministic synthetic cases;
 - mounts the existing finite `MapRuntimePort` trust-status presenter in the normal map workspace through the dependency-free `NullMapRuntime`;
-- records the current MapLibre package, candidate, and HOLD posture without activating `maplibre-gl` in Explorer;
+- mounts the package-owned MapLibre adapter with an inline-only site-local style and no external resources;
+- presents 18 typed default-view records, 24 typed layer/evidence records, explicit data holds, Source Observatory, deep-time preview/commit, and draft-only report/story capture;
 - projects its existing public anchors through a code-owned workspace registry;
 - builds the fixed illustrative SVG stage with namespace-aware DOM nodes and text content rather than parsing an HTML string; and
 - composes existing finite-state features into one text-first public trust surface.
 
 ## DOM safety boundary
 
-The illustrative map is a fixed browser composition, not an HTML template. The renderer creates SVG nodes in the SVG namespace, sets attributes individually, and assigns visible labels through text content. Keep dynamic trust-bearing material out of this helper; evidence and state continue through the existing typed, text-first projections. This hardening does not activate MapLibre or establish a governed data path.
+The retained illustrative map is a fixed browser composition, not an HTML template. It creates SVG nodes in the SVG namespace, sets attributes individually, and assigns visible labels through text content. Keep dynamic trust-bearing material out of this helper; evidence and state continue through typed, text-first projections. This legacy laboratory does not establish a governed data path.
 
 ## Unified Workspace UI-01 bounded slice
 
@@ -62,13 +63,13 @@ The website feature catalog is refreshed against:
 
 - repository: `bartytime4life/Kansas-Frontier-Matrix`
 - ref: `main`
-- commit: `90e8a1b231b2c07ae6346ce75ecd42a172ef67e7`
-- recorded at: `2026-08-28T14:33:53Z`
+- commit: `d0fb0d3cfa9fe25b5d450abc76068d63c23efab6`
+- recorded at: `2026-09-08T18:05:34Z`
 - Explorer path: `apps/explorer-web/`
 - MapLibre package home: `packages/maplibre/`
-- exact MapLibre package version present: `6.6.0`
+- exact MapLibre package version present: `6.7.0`
 - package-owned `MapLibreAdapter`: present
-- Explorer browser runtime activated: no
+- Explorer browser runtime activated: bounded site-local branch candidate
 - authenticated browser evidence complete: no
 - readiness state: `HOLD`
 
@@ -92,13 +93,13 @@ This composition does not:
 - import `maplibre-gl` or create a second renderer acquisition seam; or
 - claim that fixture-first feature slices are live production routes.
 
-The concrete package-owned adapter is present, but Explorer activation and browser-readiness evidence remain separate governed changes after their own gates close.
+The concrete package-owned adapter is active only for the bounded inline Living Atlas candidate. External source admission, broader browser-readiness evidence, deployment, and release remain separate governed changes.
 
 ## Renderer-neutral runtime status
 
 The map workspace now exposes the existing finite runtime-state presenter at its normal point of use. The synthetic controls exercise `IDLE`, `READY`, `STALE`, `WITHDRAWN`, and `ERROR` through `NullMapRuntime`; every non-`READY` state blocks candidate-selection eligibility, and critical states remain text-first assertive alerts.
 
-This is consumer-migration and accessibility proof for the KFM-owned port only. It performs no network, DOM renderer, WebGL, worker, tile, source, evidence, policy, release, deployment, or publication work. The package and initial `MapLibreAdapter` are present, but this Explorer composition still uses `NullMapRuntime`; activation and issue #2906 browser readiness remain on HOLD.
+This retained laboratory is consumer-migration and accessibility proof for the KFM-owned port only. The sibling Living Atlas composition uses `MapLibreAdapter` with no external resources; the laboratory still uses `NullMapRuntime` so stale, withdrawn, error, and recovery behavior remain deterministic. External tiles/sources, governed delivery, issue #2906 broader browser readiness, release, deployment, and publication remain on HOLD.
 
 Implementation baseline: `main@8c943018a0cd59b06b5a623e15b9a9068a3513f4`.
 
@@ -112,7 +113,7 @@ pnpm run test:unit
 pnpm run test:browser
 ```
 
-The catalog tests check identifier/path uniqueness, the thirteen-domain inventory, sensitive-domain safeguards, filtering, exact refreshed snapshot/link binding, and preservation of the MapLibre HOLD. Workspace tests cover registry/context/URL behavior. The Explorer runtime-status browser test covers normal-shell mounting, text-first state and reason fields, selection blocking, assertive critical states, recovery, and preservation of the renderer HOLD. Trust-surface and Evidence Drawer tests cover the consistent public grammar, finite negative states, malformed metadata, no-network boundaries, unique DOM identity, accessible trigger relationships, error-state suppression, and browser presentation.
+The catalog and Living Atlas tests check identifier/path uniqueness, the thirteen-domain inventory, all 18 views and 24 layers, source/evidence binding, sensitive-detail denial, network-free style construction, multiscale time, and finite Focus outcomes. Workspace tests cover registry/context/URL behavior. Renderer, trust-surface, and Evidence Drawer tests preserve the no-network boundary, finite negative states, unique DOM identity, accessible relationships, and error suppression. Browser execution remains a separate required check when a compatible Chromium binary is available.
 
 ## Rollback
 

@@ -2,13 +2,13 @@
 export const REPOSITORY_SNAPSHOT = Object.freeze({
   repository: "bartytime4life/Kansas-Frontier-Matrix",
   ref: "main",
-  commit: "90e8a1b231b2c07ae6346ce75ecd42a172ef67e7",
-  commitRecordedAt: "2026-08-28T14:33:53Z",
+  commit: "d0fb0d3cfa9fe25b5d450abc76068d63c23efab6",
+  commitRecordedAt: "2026-09-08T18:05:34Z",
   explorerPath: "apps/explorer-web",
   mapLibre: Object.freeze({
     family: "MapLibre GL JS",
     packageHome: "packages/maplibre",
-    readinessCandidate: "6.6.0",
+    readinessCandidate: "6.7.0",
     readinessState: "HOLD" as const,
     packagePresent: true,
     adapterImplemented: true,
@@ -21,11 +21,11 @@ export const REPOSITORY_SNAPSHOT = Object.freeze({
 
 /** Current MapLibre readiness facts at the pinned repository snapshot. */
 export const CURRENT_MAPLIBRE_READINESS = Object.freeze({
-  evidenceCommit: "90e8a1b231b2c07ae6346ce75ecd42a172ef67e7",
-  evidenceRecordedAt: "2026-08-28T14:33:53Z",
+  evidenceCommit: "d0fb0d3cfa9fe25b5d450abc76068d63c23efab6",
+  evidenceRecordedAt: "2026-09-08T18:05:34Z",
   family: "MapLibre GL JS",
   packageHome: "packages/maplibre",
-  readinessCandidate: "6.6.0",
+  readinessCandidate: "6.7.0",
   readinessState: "HOLD" as const,
   packagePresent: true,
   adapterImplemented: true,
@@ -66,6 +66,7 @@ const rows: readonly FeatureRow[] = [
   ["pmtiles-diagnostics", "PMTiles range diagnostics", "Map and layers", "FIXTURE_FIRST", "Archive, range, index, and render verification for governed artifacts.", "pmtiles_range_diagnostics", "pmtiles tiles range"],
   ["stac-inspector", "STAC conformance inspector", "Map and layers", "FIXTURE_FIRST", "Read-only release-facing STAC metadata inspection.", "stac_conformance_inspector", "stac catalog metadata"],
   ["view-registry", "View registry inspector", "Map and layers", "FIXTURE_FIRST", "Read-only inspection of governed view projections.", "view_registry_inspector", "view registry projection"],
+  ["living-atlas", "Living Atlas workspace", "Map and layers", "FIXTURE_FIRST", "Map-first site-local composition with 18 views, 24 governed layer records, deep-time preview/commit, evidence inspection, and draft-only reports and stories.", "living_atlas", "living atlas views layers timeline reports stories"],
   ["maplibre-runtime", "MapLibre browser runtime", "Map and layers", "HOLD", "The package-owned adapter is present; Explorer activation and authenticated browser proof remain open.", "packages/maplibre", "maplibre renderer adapter hold"],
   ["evidence-drawer", "Evidence Drawer", "Evidence and trust", "VERIFIED_SLICE", "Keyboard-operable evidence, citation, limitation, and correction inspection.", "evidence_drawer", "evidence citations correction"],
   ["evidence-tooltip", "Evidence tooltip", "Evidence and trust", "FIXTURE_FIRST", "Compact finite evidence support summary.", "evidence_tooltip", "evidence tooltip support"],

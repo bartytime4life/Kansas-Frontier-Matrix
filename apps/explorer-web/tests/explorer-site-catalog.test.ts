@@ -37,10 +37,10 @@ describe("Explorer repository catalog", () => {
     );
     expect(runtime?.maturity).toBe("HOLD");
     expect(REPOSITORY_SNAPSHOT).toMatchObject({
-      commit: "90e8a1b231b2c07ae6346ce75ecd42a172ef67e7",
-      commitRecordedAt: "2026-08-28T14:33:53Z",
+      commit: "d0fb0d3cfa9fe25b5d450abc76068d63c23efab6",
+      commitRecordedAt: "2026-09-08T18:05:34Z",
       mapLibre: {
-        readinessCandidate: "6.6.0",
+        readinessCandidate: "6.7.0",
         readinessState: "HOLD",
         packagePresent: true,
         adapterImplemented: true,
@@ -49,9 +49,9 @@ describe("Explorer repository catalog", () => {
       },
     });
     expect(CURRENT_MAPLIBRE_READINESS).toMatchObject({
-      evidenceCommit: "90e8a1b231b2c07ae6346ce75ecd42a172ef67e7",
-      evidenceRecordedAt: "2026-08-28T14:33:53Z",
-      readinessCandidate: "6.6.0",
+      evidenceCommit: "d0fb0d3cfa9fe25b5d450abc76068d63c23efab6",
+      evidenceRecordedAt: "2026-09-08T18:05:34Z",
+      readinessCandidate: "6.7.0",
       readinessState: "HOLD",
       packagePresent: true,
       adapterImplemented: true,
@@ -61,6 +61,13 @@ describe("Explorer repository catalog", () => {
     expect(repositoryUrl("apps/explorer-web")).toContain(
       `/tree/${REPOSITORY_SNAPSHOT.commit}/apps/explorer-web`,
     );
+  });
+
+  it("catalogs the map-first Living Atlas as fixture-first work", () => {
+    expect(FEATURE_CATALOG.find((entry) => entry.id === "living-atlas")).toMatchObject({
+      maturity: "FIXTURE_FIRST",
+      path: "apps/explorer-web/src/features/living_atlas",
+    });
   });
 
   it("finds cross-domain and maturity-filtered feature slices", () => {
