@@ -91,7 +91,7 @@ export const validateTerrainSourceRegistry = (): readonly string[] => {
   const issues: string[] = [];
   const ids = new Set<string>();
 
-  for (const source of TERRAIN_SOURCES) {
+  for (const source of TERRAIN_SOURCES as readonly TerrainSourceRecord[]) {
     if (ids.has(source.id)) issues.push(`duplicate id: ${source.id}`);
     ids.add(source.id);
     if (!source.sourceUrl.startsWith("https://")) {
