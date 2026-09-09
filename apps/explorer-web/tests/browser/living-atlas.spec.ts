@@ -43,3 +43,42 @@ test("keeps held layers finite and captures only draft map state", async ({
   await expect(workspace.locator(".atlas-draft-card").first()).toContainText("DRAFT");
   await expect(workspace.getByRole("button", { name: /publish/i })).toHaveCount(0);
 });
+
+test("recovers from malformed persisted draft collections", async ({ page }) => {
+  await page.addInitScript(() => {
+    window.localStorage.setItem("kfm.explorer.report-drafts.v1", JSON.stringify({ stale: true }));
+    window.localStorage.setItem("kfm.explorer.story-scenes.v1", JSON.stringify([null, "stale"]));
+  });
+
+  await page.goto("/");
+  const workspace = page.locator('[data-component="living-atlas-workspace"]');
+  await expect(workspace).toBeVisible();
+  await expect(workspace.getByRole("heading", { name: "Kansas Living Atlas" })).toBeVisible();
+});
+
+test("keeps held-view evidence, Focus, and report snapshots aligned", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const workspace = page.locator('[data-component="living-atlas-workspace"]');
+
+  await workspace.getByRole("button", { name: "Layers" }).click();
+  const protectedLayer = workspace.locator(".atlas-layer-row", {
+    hasText: "Protected-context envelope",
+  });
+  await protectedLayer.getByRole("button", { name: "Inspect" }).click();
+  await expect(workspace.getByRole("complementary", { name: "Evidence Drawer" })).toContainText(
+    "DENY · PROTECTED_SPATIAL_DETAIL",
+  );
+
+  await workspace.getByRole("button", { name: "Views" }).click();
+  await workspace.getByRole("button", { name: /Weather Window/ }).click();
+  await expect(workspace.getByRole("complementary", { name: "Evidence Drawer" })).toContainText(
+    "Year-specific weather observations",
+  );
+  await workspace.getByRole("button", { name: "Ask Focus for bounded next steps" }).click();
+  await expect(workspace.getByRole("status").filter({ hasText: "ABSTAIN" })).toBeVisible();
+
+  await workspace.getByRole("button", { name: "Create report draft" }).click();
+  await expect(workspace.locator(".atlas-draft-card").first()).toContainText("view:weather-window");
+});

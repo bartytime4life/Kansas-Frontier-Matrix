@@ -158,6 +158,27 @@ describe("package-owned MapLibreAdapter", () => {
     expect(renderer.instances).toHaveLength(0);
   });
 
+  it("fails closed when serialization reveals an external locator", () => {
+    expect(() =>
+      createMapLibreAdapter({
+        containerId: "safe-map",
+        style: {
+          version: 8,
+          sources: {
+            external: {
+              type: "geojson",
+              data: new URL("https://example.invalid/data.geojson") as never,
+            },
+          },
+          layers: [],
+        },
+      }),
+    ).toThrow(
+      expect.objectContaining({ code: "MAP_RUNTIME_INITIALIZATION_FAILED" }),
+    );
+    expect(renderer.instances).toHaveLength(0);
+  });
+
   it("fails closed for relative resource paths as well as absolute URLs", () => {
     expect(() =>
       createMapLibreAdapter({
