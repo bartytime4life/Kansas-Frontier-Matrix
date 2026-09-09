@@ -5152,7 +5152,7 @@ export default function Home() {
             aria-labelledby="map-utility-title"
           >
             <header className="map-utility-heading">
-              <div><p className="panel-kicker">MAP WORKBENCH</p><h2 id="map-utility-title">{mapUtilityView === "report" ? "Custom report builder" : mapUtilityView === "places" ? "Places + investigation trails" : mapUtilityView === "scene" ? "Scene + 3D lab" : mapUtilityView === "connections" ? "Source connections" : mapUtilityView === "import" ? "Local import preview" : "Map tools"}</h2><span>{mapUtilityView === "report" ? "Turn the current map, time, layers, and selected data into a usable report." : mapUtilityView === "places" ? "Capture complete map states as ordered, device-local investigation stops and move through them without changing KFM authority." : mapUtilityView === "connections" ? "Inspect the live relationship between the layer registry, MapLibre sources, renderers, and visible records." : mapUtilityView === "import" ? "Inspect KML or GeoJSON locally, preview supported geometry, and keep admission and publication effects at none." : "Inspect, navigate, explore scenes, query sources, compare, display, measure, export, and diagnose the active map."}</span></div>
+              <div><p className="panel-kicker">MAP WORKBENCH</p><h2 id="map-utility-title">{mapUtilityView === "report" ? "Custom report builder" : mapUtilityView === "places" ? "Places + investigation trails" : mapUtilityView === "scene" ? "Map display" : mapUtilityView === "connections" ? "Source connections" : mapUtilityView === "import" ? "Local import preview" : "Map tools"}</h2><span>{mapUtilityView === "report" ? "Turn the current map, time, layers, and selected data into a usable report." : mapUtilityView === "places" ? "Capture complete map states as ordered, device-local investigation stops and move through them without changing KFM authority." : mapUtilityView === "scene" ? "Use verified renderer controls and see which 3D capabilities are display-only or held." : mapUtilityView === "connections" ? "Inspect the live relationship between the layer registry, MapLibre sources, renderers, and visible records." : mapUtilityView === "import" ? "Inspect KML or GeoJSON locally, preview supported geometry, and keep admission and publication effects at none." : "Inspect, navigate, query sources, compare, display, measure, export, and diagnose the active map."}</span></div>
               <button className="icon-close" type="button" onClick={closeMapUtility} aria-label="Close Map Workbench">×</button>
             </header>
             <nav className="map-utility-tabs" role="tablist" aria-label="Map Workbench views">
@@ -5346,32 +5346,21 @@ export default function Home() {
               </section>}
 
               {mapUtilityView === "scene" && <section id="map-utility-view-scene" role="tabpanel" aria-labelledby="map-utility-tab-scene" className="map-utility-section scene-lab-section">
-                <div className="map-utility-section-heading"><span>SCENE + 3D LAB</span><h3>Globe, terrain, structures + camera</h3><p>Compose reversible MapLibre scenes with globe projection, external DEM terrain, source-height Liberty structures, optional synthetic extrusions, atmosphere, field of view, and camera orbit. Governed operational sources stay held.</p></div>
+                <div className="map-utility-section-heading"><span>MAP REPRESENTATION</span><h3>Verified renderer controls</h3><p>Change the live MapLibre canvas. Controls shown here either alter the renderer now or clearly report why a capability is unavailable.</p></div>
 
-                <section className="scene-preset-grid" aria-label="Map scene presets">
+                <section className="scene-preset-grid verified-representation-grid" aria-label="Verified map representations">
                   {([
-                    ["overview-2d", "2D overview", "Default evidence-first camera"],
-                    ["globe-overview", "Globe overview", "Projection + atmosphere"],
-                    ["water-systems", "Water systems", "Basins + directional corridors"],
-                    ["smoke-context", "Smoke timeline", "Synthetic plume context"],
-                    ["elevation-3d", "Terrain 3D", "Real DEM · optional exaggeration"],
-                    ["tile-grid", "Tile grid", "Viewport diagnostics"],
-                  ] as const).map(([id, title, detail]) => <button key={id} type="button" aria-pressed={scenePreset === id} onClick={() => applyScenePreset(id)}><span>{id === "elevation-3d" ? "3D" : id === "globe-overview" ? "◎" : id === "tile-grid" ? "XYZ" : id === "smoke-context" ? "AIR" : id === "water-systems" ? "H₂O" : "2D"}</span><strong>{title}</strong><small>{detail}</small></button>)}
+                    ["2d", "2D map", "Mercator · terrain off"],
+                    ["terrain", "Terrain 3D", terrainState === "READY" ? "DEM ready" : terrainState === "ERROR" ? "DEM unavailable" : "Loading DEM"],
+                    ["globe", "Globe", "Globe projection"],
+                  ] as const).map(([id, title, detail]) => <button key={id} type="button" aria-pressed={id === "terrain" ? scenePreset === "elevation-3d" : id === "globe" ? projection === "globe" : projection === "mercator" && scenePreset !== "elevation-3d"} onClick={() => activateMapRepresentation(id)}><span>{id === "terrain" ? "3D" : id === "globe" ? "◎" : "2D"}</span><strong>{title}</strong><small>{detail}</small></button>)}
                 </section>
 
-                <div className="scene-layer-toggles" role="group" aria-label="Advanced layer visibility">
-                  {([
-                    ["watershed-context", "Watersheds"],
-                    ["smoke-context", "Smoke"],
-                    ["fire-context", "Fire"],
-                    ["hazards-context", "Hazards"],
-                    ["habitat-connectivity", "Habitat"],
-                    ["people-dna-context", "People + DNA"],
-                    ["transport-context", "Rail + roads"],
-                    ["elevation-concept", "Elevation"],
-                    ["tile-matrix-grid", "Tile matrix"],
-                  ] as const).map(([id, label]) => <button key={id} type="button" aria-pressed={visibility[id]} onClick={() => toggleSceneLayer(id)}><i aria-hidden="true" />{label}</button>)}
-                </div>
+                <section className="renderer-capability-list" aria-label="Renderer capability status">
+                  <article data-state="ready"><span>WORKS NOW</span><strong>2D, globe, camera, measurement</strong><small>Direct MapLibre state changes</small></article>
+                  <article data-state={terrainState === "ERROR" ? "held" : "context"}><span>{terrainState === "READY" ? "DISPLAY ONLY" : terrainState}</span><strong>Terrain relief + profile preview</strong><small>External DEM; not KFM evidence</small></article>
+                  <article data-state="held"><span>HELD</span><strong>Smoke, fire, habitat, people/DNA animation</strong><small>No admitted live sources; controls removed</small></article>
+                </section>
 
                 <section className="terrain-investigation" aria-labelledby="terrain-investigation-title">
                   <header><div><span>TERRAIN INVESTIGATION</span><h4 id="terrain-investigation-title">Relief → transect → profile → evidence</h4></div><strong>1× PHYSICAL DEFAULT</strong></header>
@@ -5392,9 +5381,9 @@ export default function Home() {
 
                 <div className="scene-control-grid">
                   <section className="scene-height-control" aria-labelledby="scene-height-title">
-                    <header><div><strong id="scene-height-title">{scenePreset === "elevation-3d" ? "Terrain exaggeration" : "Relative vertical scale"}</strong><small>{scenePreset === "elevation-3d" ? "External DEM display only" : "Synthetic extrusion only"}</small></div><output htmlFor="scene-height">{verticalExaggeration.toFixed(1)}×</output></header>
-                    <input id="scene-height" type="range" min={scenePreset === "elevation-3d" ? "0.1" : "0"} max="2" step="0.1" value={verticalExaggeration} onChange={(event) => { const next = Number(event.target.value); verticalExaggerationRef.current = next; setVerticalExaggeration(next); }} />
-                    <div><span>{scenePreset === "elevation-3d" ? "0.1×" : "Flat"}</span><span>1×</span><span>2×</span></div>
+                    <header><div><strong id="scene-height-title">Terrain exaggeration</strong><small>{scenePreset === "elevation-3d" ? "External DEM display only" : "Enable Terrain 3D to adjust"}</small></div><output htmlFor="scene-height">{scenePreset === "elevation-3d" ? `${verticalExaggeration.toFixed(1)}×` : "OFF"}</output></header>
+                    <input id="scene-height" type="range" min="0.1" max="2" step="0.1" value={verticalExaggeration} disabled={scenePreset !== "elevation-3d" || terrainState === "ERROR"} onChange={(event) => { const next = Number(event.target.value); verticalExaggerationRef.current = next; setVerticalExaggeration(next); }} />
+                    <div><span>0.1×</span><span>1× physical</span><span>2×</span></div>
                     {scenePreset === "elevation-3d" && <div className="terrain-exaggeration-presets" role="group" aria-label="Terrain exaggeration presets">
                       {[1, 1.35, 1.75, 2].map((scale) => <button key={scale} type="button" aria-pressed={verticalExaggeration === scale} onClick={() => { verticalExaggerationRef.current = scale; setVerticalExaggeration(scale); }}>{scale.toFixed(scale === 1 ? 0 : 2).replace(/0$/, "")}×</button>)}
                     </div>}
@@ -5404,51 +5393,6 @@ export default function Home() {
                     <div><button type="button" onClick={() => orientSceneCamera(48, -18)}>Oblique NW</button><button type="button" onClick={() => orientSceneCamera(54, 28)}>Oblique SE</button><button type="button" onClick={() => orientSceneCamera(0, view.bearing)}>Top down</button><button type="button" onClick={() => orientSceneCamera(view.pitch, 0)}>North up</button><button type="button" onClick={() => sceneOrbiting ? stopSceneOrbit() : startSceneOrbit()} aria-pressed={sceneOrbiting}>{sceneOrbiting ? "Stop orbit" : "Orbit 90°"}</button><button type="button" disabled={!selected} onClick={() => selected && mapRef.current?.easeTo({ center: [selected.properties.focusLng, selected.properties.focusLat], zoom: Math.max(view.zoom, 8.5), pitch: 58, bearing: -24, duration: motionDuration(650) })}>Focus selection</button></div>
                   </section>
                 </div>
-
-                <section className="scene-structures-control" data-state={structures3DState} aria-labelledby="scene-structures-title">
-                  <header><div><strong id="scene-structures-title">Liberty structures 3D</strong><small>Height-backed buildings · zoom 13+</small></div><output>{structures3DEnabled ? structures3DState : "OFF"}</output></header>
-                  <div className="scene-structures-body">
-                    <button type="button" aria-pressed={structures3DEnabled} onClick={toggleStructureExtrusions}>{structures3DEnabled ? "Hide structures" : "Show structures 3D"}</button>
-                    <div aria-label="Structure focus locations">{STRUCTURE_FOCUS_PRESETS.map((preset) => <button key={preset.id} type="button" onClick={() => focusStructureScene(preset)}>{preset.label}</button>)}</div>
-                    <p>Uses the OpenFreeMap Liberty building layer only where its vector tiles provide a height attribute. Missing heights remain in the base 2D map; the Site does not invent them.</p>
-                  </div>
-                </section>
-
-                <div className="scene-environment-grid">
-                  <section className="scene-atmosphere-control" aria-labelledby="scene-atmosphere-title">
-                    <header><div><strong id="scene-atmosphere-title">Sky + atmosphere</strong><small>MapLibre style environment</small></div><output>{atmospherePreset.toUpperCase()}</output></header>
-                    <div>{(["night", "dusk", "clear"] as const).map((preset) => <button key={preset} type="button" aria-pressed={atmospherePreset === preset} onClick={() => { atmospherePresetRef.current = preset; setAtmospherePreset(preset); }}>{preset}</button>)}</div>
-                  </section>
-                  <section className="scene-optics-control" aria-labelledby="scene-optics-title">
-                    <header><div><strong id="scene-optics-title">Light + optics</strong><small>Extrusion illumination and vertical FOV</small></div></header>
-                    <label><span>Light azimuth <output>{Math.round(lightAzimuth)}°</output></span><input type="range" min="0" max="359" step="1" value={lightAzimuth} onChange={(event) => { const next = Number(event.target.value); lightAzimuthRef.current = next; setLightAzimuth(next); }} /></label>
-                    <label><span>Field of view <output>{fieldOfView.toFixed(0)}°</output></span><input type="range" min="20" max="60" step="1" value={fieldOfView} onChange={(event) => { const next = Number(event.target.value); fieldOfViewRef.current = next; setFieldOfView(next); }} /></label>
-                  </section>
-                  <section className="scene-motion-control" aria-labelledby="scene-motion-title">
-                    <header><div><strong id="scene-motion-title">Dynamic map effects</strong><small>Decorative MapLibre paint transitions</small></div><output>{reducedMotion ? "REDUCED MOTION" : dynamicEffects ? "RUNNING" : "PAUSED"}</output></header>
-                    <div className="scene-motion-body">
-                      <button type="button" aria-pressed={dynamicEffects && !reducedMotion} disabled={reducedMotion} onClick={() => { setDynamicEffects((current) => !current); announce(dynamicEffects ? "Dynamic map effects paused" : "Dynamic map effects resumed"); }}>{dynamicEffects ? "Pause effects" : "Resume effects"}</button>
-                      <ul><li>Directional water shimmer</li><li>Smoke, fire + hazard pulse</li><li>Rail, road + city movement cues</li><li>Habitat breathing effect</li></ul>
-                      <p>{reducedMotion ? "Your reduced-motion preference has paused continuous effects." : "Motion changes paint only. It never changes geometry, time, evidence state, source data, or report results."}</p>
-                    </div>
-                  </section>
-                </div>
-
-                <section className="scene-time-strip" aria-labelledby="scene-time-title">
-                  <header><strong id="scene-time-title">Smoke context time</strong><small>Exact fixture years · not current conditions</small></header>
-                  <div>{([2022, 2024, 2026] as const).map((step) => <button key={step} type="button" aria-pressed={year === step} onClick={() => { yearRef.current = step; setYear(step); setPreviewYear(step); setPlaying(false); }}>{step}</button>)}</div>
-                </section>
-
-                <section className="scene-tile-ledger" aria-labelledby="tile-ledger-title">
-                  <header><div><span>VIEWPORT DIAGNOSTICS</span><h4 id="tile-ledger-title">Tile matrix reader</h4></div><strong>{maplibreProbe.tilesLoaded ? "SETTLED" : "WORKING"}</strong></header>
-                  <div className="scene-metrics">
-                    <article><span>CENTER XYZ</span><strong>{centerTile.label}</strong><small>Web Mercator address at floor zoom</small></article>
-                    <article><span>SOURCES</span><strong>{sourceStateCounts.ready}/{LAYER_REGISTRY.length}</strong><small>Site-local GeoJSON ready</small></article>
-                    <article><span>RENDER MODE</span><strong>{projection.toUpperCase()}</strong><small>{Math.round(view.pitch)}° pitch · {atmospherePreset} sky</small></article>
-                    <article><span>CARRIER</span><strong>{scenePreset === "elevation-3d" ? "REMOTE DEM" : structures3DEnabled ? "VECTOR HEIGHTS" : "VECTOR / LOCAL"}</strong><small>{scenePreset === "elevation-3d" ? "AWS Terrain Tiles display context · not evidence" : structures3DEnabled ? "OpenFreeMap Liberty building attributes · display context" : "Vector basemap plus site-local GeoJSON fixtures"}</small></article>
-                  </div>
-                  <p>The optional grid is a labeled GeoJSON simulation for viewport, selection, and matrix-orientation testing. It is not proof of a tile request, cache hit, archive range response, or KFM source admission. Terrain 3D adds a real DEM display carrier only when explicitly activated; Structures 3D reads only height attributes already supplied by Liberty tiles.</p>
-                </section>
 
                 <section className="terrain-source-ledger" aria-labelledby="terrain-source-ledger-title">
                   <header><div><span>3D SOURCE LEDGER</span><h4 id="terrain-source-ledger-title">Terrain, structures, authoritative candidate + renderer contract</h4></div><strong>{scenePreset === "elevation-3d" ? terrainState : "ROLE-SEPARATED"}</strong></header>

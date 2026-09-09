@@ -128,14 +128,12 @@ test("adds bounded smoke, water, elevation, tile, and scene navigation features"
   assert.match(runtime, /setSky/);
   assert.match(runtime, /setLight/);
   assert.match(runtime, /lngLatToTile/);
-  assert.match(page, /SCENE \+ 3D LAB/);
-  assert.match(page, /Relative vertical scale/);
-  assert.match(page, /MapLibre globe overview/);
+  assert.match(page, /MAP REPRESENTATION/);
+  assert.match(page, /Verified renderer controls/);
+  assert.match(page, /No admitted live sources; controls removed/);
   assert.match(page, /setVerticalFieldOfView/);
   assert.match(page, /Started a reversible 90° MapLibre camera orbit/);
-  assert.match(page, /Terrain 3D adds a real DEM display carrier only when explicitly activated/);
-  assert.match(page, /Liberty structures 3D/);
-  assert.match(page, /Focus Wichita/);
+  assert.match(page, /External DEM; not KFM evidence/);
   assert.match(page, /new maplibregl\.NavigationControl/);
   assert.match(page, /new maplibregl\.FullscreenControl/);
   assert.match(page, /aria-label="Unified map controls"/);
@@ -161,9 +159,8 @@ test("adds bounded smoke, water, elevation, tile, and scene navigation features"
   assert.match(runtime, /neither duplicates the layer nor invents a client-side height/);
   assert.match(mapInterface, /Offline \/ PMTiles[\s\S]*HOLD/);
   assert.match(css, /\.scene-preset-grid/);
-  assert.match(css, /\.scene-tile-ledger/);
+  assert.match(css, /\.renderer-capability-list/);
   assert.match(css, /\.source-connection-card/);
-  assert.match(css, /\.scene-environment-grid/);
 });
 
 test("keeps representation switching atomic across 2D, terrain, and globe", async () => {
@@ -214,14 +211,12 @@ test("adds governed living systems, hazards, people, transport, settlement, and 
   assert.match(runtime, /applyDynamicMapEffects/);
   assert.match(runtime, /water-context-flow/);
   assert.match(runtime, /transport-context-rail/);
-  assert.match(page, /Dynamic map effects/);
+  assert.doesNotMatch(page, /<strong id="scene-motion-title">Dynamic map effects/);
   assert.match(page, /prefers-reduced-motion: reduce/);
   assert.match(page, /requestAnimationFrame\(renderEffects\)/);
-  assert.match(page, /Motion changes paint only/);
   assert.match(mapInterface, /Habitat \+ living systems/);
   assert.match(mapInterface, /People, movement \+ places/);
   assert.match(about, /Broad relationships, bounded claims/);
-  assert.match(css, /\.scene-motion-control/);
 });
 
 test("makes the Explorer faster to compose, filter, and investigate across domains", async () => {
