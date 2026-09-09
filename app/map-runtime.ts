@@ -7,6 +7,7 @@ import type {
   StyleSpecification,
 } from "maplibre-gl";
 import { LAYER_REGISTRY, type EvidenceState } from "./explorer-data";
+import { ACTIVE_TERRAIN_SOURCE } from "./terrain-sources";
 
 export type BasemapKey = "standard" | "imagery" | "midnight" | "prairie" | "streets";
 export type AtmospherePreset = "night" | "dusk" | "clear";
@@ -185,7 +186,7 @@ export type TerrainPresentationState = "OFF" | "LOADING" | "READY" | "ERROR";
 
 /**
  * Real elevation presentation is opt-in and remains a display carrier. The
- * AWS Terrain Tiles source is not a KFM release and never changes evidence,
+ * The active terrain carrier is not a KFM release and never changes evidence,
  * feature identity, or reported numeric source values.
  */
 export const setTerrainPresentation = (
@@ -205,11 +206,11 @@ export const setTerrainPresentation = (
     if (!map.getSource(TERRAIN_SOURCE_ID)) {
       map.addSource(TERRAIN_SOURCE_ID, {
         type: "raster-dem",
-        tiles: ["https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png"],
-        tileSize: 256,
-        maxzoom: 15,
-        encoding: "terrarium",
-        attribution: "AWS Terrain Tiles · Mapzen",
+        tiles: [ACTIVE_TERRAIN_SOURCE.tileTemplate!],
+        tileSize: ACTIVE_TERRAIN_SOURCE.tileSize!,
+        maxzoom: ACTIVE_TERRAIN_SOURCE.maxZoom!,
+        encoding: ACTIVE_TERRAIN_SOURCE.encoding,
+        attribution: ACTIVE_TERRAIN_SOURCE.attribution,
       });
     }
     if (!map.getLayer(TERRAIN_HILLSHADE_LAYER_ID)) {

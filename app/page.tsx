@@ -129,6 +129,7 @@ import {
   type StoryScene,
   type TrustState,
 } from "./workspace-model";
+import { TERRAIN_SOURCES } from "./terrain-sources";
 
 if (!LAYER_REGISTRY.some((layer) => layer.id === COUNTY_STARTER_LAYER.id)) {
   const extentIndex = LAYER_REGISTRY.findIndex((layer) => layer.id === "kansas-extent");
@@ -314,7 +315,7 @@ const DOMAIN_HOLDS = Object.freeze([
   { domain: "Imagery", state: "PUBLIC-SAFE", detail: "Optional attributed imagery is display context only; it is never KFM evidence." },
 ] as const);
 
-const KANSAS_VIEW: ViewState = { center: [-98.38, 38.48], zoom: 5.45, bearing: 0, pitch: 0 };
+const KANSAS_VIEW: ViewState = { center: [-98.05, 38.72], zoom: 7.15, bearing: -20, pitch: 55 };
 const EXPECTED_MAPLIBRE_VERSION = "6.6.0";
 const MAPLIBRE_WORKER_URL = "/maplibre/maplibre-gl-worker.mjs";
 const MAPLIBRE_RUNTIME_ASSET_URLS = [MAPLIBRE_WORKER_URL, "/maplibre/maplibre-gl-shared.mjs"] as const;
@@ -687,11 +688,11 @@ export default function Home() {
   const mapEvidenceFilterRef = useRef<RegistryEvidenceFilter>("ALL");
   const basemapRef = useRef<BasemapKey>("standard");
   const projectionRef = useRef<"mercator" | "globe">("mercator");
-  const scenePresetRef = useRef<ScenePresetId>("overview-2d");
-  const verticalExaggerationRef = useRef(1);
-  const atmospherePresetRef = useRef<AtmospherePreset>("night");
-  const lightAzimuthRef = useRef(210);
-  const fieldOfViewRef = useRef(36);
+  const scenePresetRef = useRef<ScenePresetId>("elevation-3d");
+  const verticalExaggerationRef = useRef(1.2);
+  const atmospherePresetRef = useRef<AtmospherePreset>("dusk");
+  const lightAzimuthRef = useRef(235);
+  const fieldOfViewRef = useRef(44);
   const gestureModeRef = useRef<"cooperative" | "direct">("cooperative");
   const sceneOrbitTimerRef = useRef<number | null>(null);
   const placeTourTimerRef = useRef<number | null>(null);
@@ -733,12 +734,12 @@ export default function Home() {
   const [layerOrder, setLayerOrder] = useState<string[]>(defaultOrder);
   const [basemap, setBasemap] = useState<BasemapKey>("standard");
   const [view, setView] = useState<ViewState>(KANSAS_VIEW);
-  const [scenePreset, setScenePreset] = useState<ScenePresetId>("overview-2d");
-  const [terrainState, setTerrainState] = useState<TerrainPresentationState>("OFF");
-  const [verticalExaggeration, setVerticalExaggeration] = useState(1);
-  const [atmospherePreset, setAtmospherePreset] = useState<AtmospherePreset>("night");
-  const [lightAzimuth, setLightAzimuth] = useState(210);
-  const [fieldOfView, setFieldOfView] = useState(36);
+  const [scenePreset, setScenePreset] = useState<ScenePresetId>("elevation-3d");
+  const [terrainState, setTerrainState] = useState<TerrainPresentationState>("LOADING");
+  const [verticalExaggeration, setVerticalExaggeration] = useState(1.2);
+  const [atmospherePreset, setAtmospherePreset] = useState<AtmospherePreset>("dusk");
+  const [lightAzimuth, setLightAzimuth] = useState(235);
+  const [fieldOfView, setFieldOfView] = useState(44);
   const [gestureMode, setGestureMode] = useState<"cooperative" | "direct">("cooperative");
   const [sceneOrbiting, setSceneOrbiting] = useState(false);
   const [dynamicEffects, setDynamicEffects] = useState(true);
@@ -775,8 +776,8 @@ export default function Home() {
   const [hoverSummary, setHoverSummary] = useState<HoverSummary | null>(null);
   const [primaryWorkspace, setPrimaryWorkspace] = useState<PrimaryWorkspace>("map");
   const [workspaceSnapshot, setWorkspaceSnapshot] = useState<MapSnapshot | null>(null);
-  const [leftOpen, setLeftOpen] = useState(false);
-  const [leftPanelMode, setLeftPanelMode] = useState<LeftPanelMode>("views");
+  const [leftOpen, setLeftOpen] = useState(true);
+  const [leftPanelMode, setLeftPanelMode] = useState<LeftPanelMode>("layers");
   const [rightOpen, setRightOpen] = useState(false);
   const [timelineOpen, setTimelineOpen] = useState(true);
   const [drawerView, setDrawerView] = useState<DrawerView>("evidence");
@@ -4393,7 +4394,7 @@ export default function Home() {
         </div>
         <div className="top-actions">
           <div className="map-context-composer">
-            <button ref={composerTriggerRef} className="new-from-map-action" type="button" aria-expanded={mapContextOpen} aria-controls="map-context-card" onClick={() => { setMapContextOpen((current) => !current); setHelpOpen(false); }} title="Create from the current map context"><span aria-hidden="true">＋</span><span className="new-from-map-label">New from map</span><span className="new-from-map-caret" aria-hidden="true">⌄</span></button>
+            <button ref={composerTriggerRef} className="new-from-map-action" type="button" aria-expanded={mapContextOpen} aria-controls="map-context-card" onClick={() => { setMapContextOpen((current) => !current); setHelpOpen(false); }} title="Create from the current map context"><span aria-hidden="true">＋</span><span className="new-from-map-label">Compose</span><span className="new-from-map-caret" aria-hidden="true">⌄</span></button>
             {mapContextOpen && <aside ref={composerRef} id="map-context-card" className="map-context-card" role="dialog" aria-modal="false" aria-labelledby="map-context-title">
               <header>
                 <div><span>CONTEXT COMPOSER</span><h2 id="map-context-title">Map context ready</h2></div>
@@ -4811,10 +4812,10 @@ export default function Home() {
           </div>
           <nav className="map-view-mode-strip" aria-label="Map representation">
             <span className="map-view-mode-heading">MAP REPRESENTATION <small>{mapRepresentationLabel}</small></span>
-            <button type="button" aria-pressed={projection === "mercator" && scenePreset !== "elevation-3d"} data-active={projection === "mercator" && scenePreset !== "elevation-3d"} onClick={() => activateMapRepresentation("2d")}><b>2D</b><span>Inspect</span></button>
-            <button type="button" aria-pressed={scenePreset === "elevation-3d"} data-active={scenePreset === "elevation-3d"} onClick={() => activateMapRepresentation("terrain")}><b>3D</b><span>DEM terrain</span></button>
-            <button type="button" aria-pressed={projection === "globe"} data-active={projection === "globe"} onClick={() => activateMapRepresentation("globe")}><b>◎</b><span>Globe</span></button>
-            <button type="button" aria-pressed={mapUtilityOpen && mapUtilityView === "compare"} data-active={mapUtilityOpen && mapUtilityView === "compare"} onClick={() => mapUtilityOpen && mapUtilityView === "compare" ? closeMapUtility() : activateMapRepresentation("compare")}><b>A/B</b><span>Compare</span></button>
+            <button type="button" aria-pressed={projection === "mercator" && scenePreset !== "elevation-3d"} data-active={projection === "mercator" && scenePreset !== "elevation-3d"} onClick={() => activateMapRepresentation("2d")}><b>2D</b><span>Map</span></button>
+            <button type="button" aria-pressed={scenePreset === "elevation-3d"} data-active={scenePreset === "elevation-3d"} onClick={() => activateMapRepresentation("terrain")}><b>Terrain 3D</b><span>{verticalExaggeration.toFixed(1)}×</span></button>
+            <button type="button" aria-pressed={projection === "globe"} data-active={projection === "globe"} onClick={() => activateMapRepresentation("globe")}><b>Globe</b><span>◎</span></button>
+            <button type="button" aria-pressed={mapUtilityOpen && mapUtilityView === "compare"} data-active={mapUtilityOpen && mapUtilityView === "compare"} onClick={() => mapUtilityOpen && mapUtilityView === "compare" ? closeMapUtility() : activateMapRepresentation("compare")}><b>Compare</b><span>A/B</span></button>
           </nav>
           <aside className="map-legend-dock" aria-label="Visible map legend">
             <header>
@@ -5225,6 +5226,18 @@ export default function Home() {
                   <p>The optional grid is a labeled GeoJSON simulation for viewport, selection, and matrix-orientation testing. It is not proof of a tile request, cache hit, archive range response, or KFM source admission. Terrain 3D adds a real DEM display carrier only when explicitly activated.</p>
                 </section>
 
+                <section className="terrain-source-ledger" aria-labelledby="terrain-source-ledger-title">
+                  <header><div><span>TERRAIN SOURCE LEDGER</span><h4 id="terrain-source-ledger-title">Display carrier, authoritative candidate + renderer contract</h4></div><strong>ROLE-SEPARATED</strong></header>
+                  <div>{TERRAIN_SOURCES.map((source) => <article key={source.id} data-status={source.status}>
+                    <header><span>{source.organization}</span><strong>{source.status.replaceAll("_", " ")}</strong></header>
+                    <h5>{source.title}</h5>
+                    <dl><div><dt>Role</dt><dd>{source.role}</dd></div><div><dt>Resolution</dt><dd>{source.resolution}</dd></div><div><dt>Format</dt><dd>{source.format}</dd></div><div><dt>Coverage</dt><dd>{source.coverage}</dd></div></dl>
+                    <p>{source.boundary}</p>
+                    <a href={source.sourceUrl} target="_blank" rel="noreferrer">Open primary source ↗</a>
+                  </article>)}</div>
+                  <p className="terrain-source-law">Rendered relief is visual context. Only a pinned, lineage-preserving, reviewed and released KFM artifact may support an elevation claim.</p>
+                </section>
+
                 <aside className="map-utility-boundary" data-tone="warning"><strong>3D preserves the 2D evidence path.</strong><p>Terrain 3D samples an external raster DEM for display and may exaggerate it; it does not change source elevation values or assert KFM release. The optional “Elevation extrusion concept” layer remains a separate synthetic fixture and is never enabled by Terrain mode. Smoke is not an advisory or exposure surface. Water is not flow, storage, quality, flood, or legal-water authority. Select any visible feature to inspect the same Evidence Drawer used in 2D.</p></aside>
               </section>}
 
@@ -5530,6 +5543,9 @@ export default function Home() {
         </section>
 
         <footer className="status-bar" aria-label="Map status">
+          <span><b>{activeAtlasView?.title ?? "Terrain & Landforms"}</b> · {selected?.properties.title ?? "Central Kansas"}</span>
+          <span>{mapRepresentationLabel}</span>
+          <span>MapLibre {EXPECTED_MAPLIBRE_VERSION} · terrain context only</span>
         </footer>
       </main>
 

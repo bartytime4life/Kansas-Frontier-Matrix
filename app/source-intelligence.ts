@@ -49,6 +49,8 @@ export const SOURCE_ADMISSION_BY_ID: Readonly<Record<string, SourceAdmissionStat
   "SRC-CAND-KS-GIS": "candidate",
   "SRC-CAND-MESONET": "held",
   "SRC-CAND-KDHE-WQ": "candidate",
+  "SRC-CAND-AWS-TERRAIN": "context-only",
+  "SRC-CAND-USGS-3DEP": "candidate",
 });
 
 export type SourceGap = Readonly<{
@@ -63,7 +65,7 @@ export type SourceGap = Readonly<{
 export const CORPUS_SNAPSHOT = Object.freeze({
   inspectedAt: "2026-09-08",
   sourceCount: 12,
-  candidateCount: 11,
+  candidateCount: 13,
   gapCount: 7,
   rule: "Drive references inform doctrine and proposals; current repository and runtime evidence decide implementation claims.",
 });
@@ -191,6 +193,8 @@ export const SOURCE_CANDIDATES: readonly SourceCandidate[] = Object.freeze([
   Object.freeze({ id: "SRC-CAND-KS-GIS", title: "State of Kansas government GIS family", organization: "Kansas agencies / KDOT", domain: "Roads & infrastructure", cadence: "Dataset-specific", sourceRole: "Governing + operational context", dataModes: ["Vector", "Services"], value: "State-maintained transportation and public-administration context.", cannotProve: "A service layer cannot establish ownership, legal status, operational condition, routing safety, or unrestricted infrastructure detail.", nextGate: "Inventory each service, resolve agency authority, terms, versioning, sensitivity, field meaning, and offline failure behavior.", sourceUrl: "https://www.ksdot.gov/about/our-organization/divisions/planning-and-development/kansas-maps-and-gis-resources", checkedAt: "2026-09-08", layerId: "transport-context", featureId: "transport-i70-context" }),
   Object.freeze({ id: "SRC-CAND-MESONET", title: "Kansas Mesonet observations", organization: "Kansas State University", domain: "Atmosphere", cadence: "Near-real-time", sourceRole: "Observation", dataModes: ["API", "Time series"], value: "Kansas-specific station context for time-aware environmental observation patterns.", cannotProve: "A station value is not an official alert, statewide condition, forecast, or life-safety instruction.", nextGate: "Verify access terms, quality flags, station identity, latency, outage behavior, redistribution rights, and stale thresholds.", sourceUrl: "https://mesonet.k-state.edu/", checkedAt: "2026-09-08" }),
   Object.freeze({ id: "SRC-CAND-KDHE-WQ", title: "Kansas water-quality information family", organization: "Kansas Department of Health and Environment", domain: "Hydrology", cadence: "Program-specific", sourceRole: "Regulatory + observational context", dataModes: ["Reports", "Tables", "Services"], value: "State regulatory and monitoring context for water-quality evidence lanes.", cannotProve: "A program page or monitoring result cannot establish current safety for an unscoped location or use.", nextGate: "Separate regulatory designations, monitoring results, advisory products, dates, parameters, methods, and geographic scope.", sourceUrl: "https://www.kdhe.ks.gov/1096/Water-Quality-Information-Resources", checkedAt: "2026-09-08" }),
+  Object.freeze({ id: "SRC-CAND-AWS-TERRAIN", title: "Terrain Tiles · Terrarium", organization: "AWS Open Data / Mapzen", domain: "Terrain / Elevation", cadence: "Community-maintained mosaic", sourceRole: "External display carrier", dataModes: ["Raster DEM", "Terrarium tiles"], value: "Key-free RGB elevation tiles that MapLibre can decode directly for reversible 3D terrain and hillshade.", cannotProve: "A successfully rendered surface is not an admitted KFM elevation value, survey result, USGS product identity, accuracy statement, or release.", nextGate: "Keep it context-only; monitor availability and attribution, retain 2D parity, and never export sampled values as evidence.", sourceUrl: "https://registry.opendata.aws/terrain-tiles/", checkedAt: "2026-09-09" }),
+  Object.freeze({ id: "SRC-CAND-USGS-3DEP", title: "3DEP 1/3 arc-second Digital Elevation Model", organization: "U.S. Geological Survey", domain: "Terrain / Elevation", cadence: "Continuously maintained seamless product", sourceRole: "Authoritative elevation candidate", dataModes: ["COG", "WCS", "Image service"], value: "Approximately 10 m national seamless bare-earth elevation suitable for a Kansas terrain artifact after a governed, reproducible transform.", cannotProve: "A catalog page or raw DEM cannot by itself prove the exact source tile, vertical datum, transform, renderer compatibility, accuracy for a selected point, or KFM release.", nextGate: "Pin product/version and Kansas coverage, record datum and lineage, transform to a MapLibre-compatible DEM carrier, validate performance and 2D parity, then complete admission and release review.", sourceUrl: "https://data.usgs.gov/datacatalog/data/USGS%3A3a81321b-c153-416f-98b7-cc8e5f0e17c3", checkedAt: "2026-09-09" }),
 ]);
 
 export const SOURCE_GAPS: readonly SourceGap[] = Object.freeze([
@@ -199,7 +203,7 @@ export const SOURCE_GAPS: readonly SourceGap[] = Object.freeze([
   Object.freeze({ id: "GAP-P1-008", priority: "P1", title: "No released PMTiles, MVT, COG, or governed API adapter", disposition: "DEFER DEPENDENCY", reason: "The Explorer currently uses bounded site-local GeoJSON fixtures.", unlock: "Admitted artifact, manifest, rights, exact-negative failures, correction propagation, and performance proof." }),
   Object.freeze({ id: "GAP-P2-009", priority: "P2", title: "County Focus Mode packages remain plans", disposition: "DEFER POLICY", reason: "No county-specific admitted data or release package is present.", unlock: "Source descriptors, review owners, policy, EvidenceBundles, generalized geometry, and release evidence." }),
   Object.freeze({ id: "GAP-P2-007", priority: "P2", title: "Swipe comparison has no compatible pair", disposition: "DEFER DATA", reason: "No aligned, rights-cleared, released or explicitly demonstrated comparison pair exists.", unlock: "Paired sources, temporal alignment, attribution/export rules, and keyboard/text alternative." }),
-  Object.freeze({ id: "GAP-P3-006", priority: "P3", title: "Terrain and hillshade are data-gated", disposition: "DEFER DATA", reason: "No audited raster DEM or release-linked terrain manifest exists.", unlock: "Audited DEM, rights, attribution, performance budget, release linkage, and evidence-parity 2D fallback." }),
+  Object.freeze({ id: "GAP-P3-006", priority: "P3", title: "Terrain display carrier is active; evidence admission remains gated", disposition: "IMPLEMENTED", reason: "An attributed Terrarium carrier now supports opt-in 3D display with a 2D fallback, while USGS 3DEP remains a separately identified candidate.", unlock: "For evidence use: pin a 3DEP product/version, preserve datum and transform lineage, validate a MapLibre-compatible derivative, close rights and performance review, and attach release evidence." }),
   Object.freeze({ id: "GAP-P1-011", priority: "P1", title: "Source discovery is not source admission", disposition: "NEEDS DECISION", reason: "Drive catalogs and external source lists can tempt the UI to imply live data readiness.", unlock: "A source-intake carrier, accountable disposition, rights and sensitivity review, stable version identity, and no-public-effect default." }),
 ]);
 

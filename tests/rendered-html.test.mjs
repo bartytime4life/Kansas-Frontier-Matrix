@@ -58,7 +58,7 @@ test("centers the primary workflow on map-scoped custom reports", async () => {
   assert.match(source, /Report \.html/);
   assert.match(source, /Data \.json/);
   assert.match(source, /setReportLayerIds\(activeLayers\.map/);
-  assert.match(source, /const \[leftOpen, setLeftOpen\] = useState\(false\)/);
+  assert.match(source, /const \[leftOpen, setLeftOpen\] = useState\(true\)/);
   assert.match(about, /Start with a question, finish with a report/);
   assert.match(about, /EVIDENCE STATES/);
   assert.match(css, /\.report-builder-grid/);
@@ -140,7 +140,9 @@ test("adds bounded smoke, water, elevation, tile, and scene navigation features"
   assert.match(page, /params\.set\("zscale"/);
   assert.match(page, /params\.set\("sky"/);
   assert.match(page, /params\.set\("fov"/);
-  assert.match(mapInterface, /Terrain \+ hillshade[\s\S]*HOLD/);
+  assert.match(mapInterface, /Terrain \+ hillshade[\s\S]*CONTEXT ONLY/);
+  assert.match(page, /TERRAIN SOURCE LEDGER/);
+  assert.match(runtime, /ACTIVE_TERRAIN_SOURCE/);
   assert.match(mapInterface, /Offline \/ PMTiles[\s\S]*HOLD/);
   assert.match(css, /\.scene-preset-grid/);
   assert.match(css, /\.scene-tile-ledger/);
@@ -246,7 +248,7 @@ test("adds a MapLibre area-of-interest workflow and browser-local camera history
   assert.match(page, /Shift-drag locked a browser-local MapLibre report area/);
   assert.match(page, /compatible_record_count/);
   assert.match(css, /\.analysis-area-card/);
-  assert.match(mapInterface, /Terrain \+ hillshade[\s\S]*HOLD/);
+  assert.match(mapInterface, /Terrain \+ hillshade[\s\S]*CONTEXT ONLY/);
   assert.match(mapInterface, /Offline \/ PMTiles[\s\S]*HOLD/);
 });
 
@@ -826,7 +828,7 @@ test("keeps the complete function inventory three-axis and runtime seam fail clo
   assert.match(page, /Function and interface navigator/);
   assert.match(page, /record\.action === "OPEN_TIMELINE"/);
   assert.match(page, /All 38 repository feature families/);
-  assert.match(page, /New from map/);
+  assert.match(page, /Compose/);
   assert.match(page, /<Link className="about-action"/);
   assert.match(page, /ANALYSIS_RECIPES/);
 });
