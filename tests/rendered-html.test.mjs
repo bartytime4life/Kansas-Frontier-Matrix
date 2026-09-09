@@ -59,6 +59,8 @@ test("centers the primary workflow on map-scoped custom reports", async () => {
   assert.match(source, /Data \.json/);
   assert.match(source, /setReportLayerIds\(activeLayers\.map/);
   assert.match(source, /const \[leftOpen, setLeftOpen\] = useState\(true\)/);
+  assert.match(source, /const \[leftPanelMode, setLeftPanelMode\] = useState<LeftPanelMode>\("views"\)/);
+  assert.match(source, /const KANSAS_VIEW: ViewState = \{ center: \[-98\.38, 38\.48\], zoom: 5\.45, bearing: 0, pitch: 0 \}/);
   assert.match(about, /Start with a question, finish with a report/);
   assert.match(about, /EVIDENCE STATES/);
   assert.match(css, /\.report-builder-grid/);
@@ -131,6 +133,8 @@ test("adds bounded smoke, water, elevation, tile, and scene navigation features"
   assert.match(page, /setVerticalFieldOfView/);
   assert.match(page, /Started a reversible 90° MapLibre camera orbit/);
   assert.match(page, /Terrain 3D adds a real DEM display carrier only when explicitly activated/);
+  assert.match(page, /Liberty structures 3D/);
+  assert.match(page, /Focus Wichita/);
   assert.match(page, /new maplibregl\.NavigationControl/);
   assert.match(page, /new maplibregl\.FullscreenControl/);
   assert.match(page, /aria-label="Unified map controls"/);
@@ -141,8 +145,12 @@ test("adds bounded smoke, water, elevation, tile, and scene navigation features"
   assert.match(page, /params\.set\("sky"/);
   assert.match(page, /params\.set\("fov"/);
   assert.match(mapInterface, /Terrain \+ hillshade[\s\S]*CONTEXT ONLY/);
-  assert.match(page, /TERRAIN SOURCE LEDGER/);
+  assert.match(page, /3D SOURCE LEDGER/);
+  assert.match(page, /STRUCTURE_3D_SOURCE/);
   assert.match(runtime, /ACTIVE_TERRAIN_SOURCE/);
+  assert.match(runtime, /LIBERTY_STRUCTURES_3D_LAYER_ID = "building-3d"/);
+  assert.match(runtime, /layer\?\.type !== "fill-extrusion"/);
+  assert.match(runtime, /neither duplicates the layer nor invents a client-side height/);
   assert.match(mapInterface, /Offline \/ PMTiles[\s\S]*HOLD/);
   assert.match(css, /\.scene-preset-grid/);
   assert.match(css, /\.scene-tile-ledger/);

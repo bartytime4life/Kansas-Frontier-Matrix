@@ -26,9 +26,11 @@ import {
   distanceMiles,
   lngLatToTile,
   reorderRegistryLayers,
+  setStructureExtrusions,
   setTerrainPresentation,
   setElevationExaggeration,
   TERRAIN_SOURCE_ID,
+  type Structures3DState,
   type TerrainPresentationState,
   updateAnalysisAreaSource,
   updateImportPreviewSource,
@@ -129,7 +131,7 @@ import {
   type StoryScene,
   type TrustState,
 } from "./workspace-model";
-import { TERRAIN_SOURCES } from "./terrain-sources";
+import { STRUCTURE_3D_SOURCE, TERRAIN_SOURCES } from "./terrain-sources";
 
 if (!LAYER_REGISTRY.some((layer) => layer.id === COUNTY_STARTER_LAYER.id)) {
   const extentIndex = LAYER_REGISTRY.findIndex((layer) => layer.id === "kansas-extent");
@@ -315,7 +317,12 @@ const DOMAIN_HOLDS = Object.freeze([
   { domain: "Imagery", state: "PUBLIC-SAFE", detail: "Optional attributed imagery is display context only; it is never KFM evidence." },
 ] as const);
 
-const KANSAS_VIEW: ViewState = { center: [-98.05, 38.72], zoom: 7.15, bearing: -20, pitch: 55 };
+const KANSAS_VIEW: ViewState = { center: [-98.38, 38.48], zoom: 5.45, bearing: 0, pitch: 0 };
+const STRUCTURE_FOCUS_PRESETS = Object.freeze([
+  Object.freeze({ id: "wichita", label: "Focus Wichita", center: [-97.3375, 37.6872] as [number, number], bearing: -24 }),
+  Object.freeze({ id: "topeka", label: "Focus Topeka", center: [-95.689, 39.0473] as [number, number], bearing: 28 }),
+  Object.freeze({ id: "ellsworth", label: "Focus Ellsworth", center: [-98.2306, 38.7306] as [number, number], bearing: -18 }),
+] as const);
 const EXPECTED_MAPLIBRE_VERSION = "6.6.0";
 const MAPLIBRE_WORKER_URL = "/maplibre/maplibre-gl-worker.mjs";
 const MAPLIBRE_RUNTIME_ASSET_URLS = [MAPLIBRE_WORKER_URL, "/maplibre/maplibre-gl-shared.mjs"] as const;
@@ -688,11 +695,12 @@ export default function Home() {
   const mapEvidenceFilterRef = useRef<RegistryEvidenceFilter>("ALL");
   const basemapRef = useRef<BasemapKey>("standard");
   const projectionRef = useRef<"mercator" | "globe">("mercator");
-  const scenePresetRef = useRef<ScenePresetId>("elevation-3d");
-  const verticalExaggerationRef = useRef(1.2);
-  const atmospherePresetRef = useRef<AtmospherePreset>("dusk");
-  const lightAzimuthRef = useRef(235);
-  const fieldOfViewRef = useRef(44);
+  const scenePresetRef = useRef<ScenePresetId>("overview-2d");
+  const verticalExaggerationRef = useRef(1);
+  const atmospherePresetRef = useRef<AtmospherePreset>("night");
+  const lightAzimuthRef = useRef(210);
+  const fieldOfViewRef = useRef(36);
+  const structures3DRef = useRef(false);
   const gestureModeRef = useRef<"cooperative" | "direct">("cooperative");
   const sceneOrbitTimerRef = useRef<number | null>(null);
   const placeTourTimerRef = useRef<number | null>(null);
@@ -734,12 +742,14 @@ export default function Home() {
   const [layerOrder, setLayerOrder] = useState<string[]>(defaultOrder);
   const [basemap, setBasemap] = useState<BasemapKey>("standard");
   const [view, setView] = useState<ViewState>(KANSAS_VIEW);
-  const [scenePreset, setScenePreset] = useState<ScenePresetId>("elevation-3d");
-  const [terrainState, setTerrainState] = useState<TerrainPresentationState>("LOADING");
-  const [verticalExaggeration, setVerticalExaggeration] = useState(1.2);
-  const [atmospherePreset, setAtmospherePreset] = useState<AtmospherePreset>("dusk");
-  const [lightAzimuth, setLightAzimuth] = useState(235);
-  const [fieldOfView, setFieldOfView] = useState(44);
+  const [scenePreset, setScenePreset] = useState<ScenePresetId>("overview-2d");
+  const [terrainState, setTerrainState] = useState<TerrainPresentationState>("OFF");
+  const [verticalExaggeration, setVerticalExaggeration] = useState(1);
+  const [atmospherePreset, setAtmospherePreset] = useState<AtmospherePreset>("night");
+  const [lightAzimuth, setLightAzimuth] = useState(210);
+  const [fieldOfView, setFieldOfView] = useState(36);
+  const [structures3DEnabled, setStructures3DEnabled] = useState(false);
+  const [structures3DState, setStructures3DState] = useState<Structures3DState>("OFF");
   const [gestureMode, setGestureMode] = useState<"cooperative" | "direct">("cooperative");
   const [sceneOrbiting, setSceneOrbiting] = useState(false);
   const [dynamicEffects, setDynamicEffects] = useState(true);
@@ -777,7 +787,7 @@ export default function Home() {
   const [primaryWorkspace, setPrimaryWorkspace] = useState<PrimaryWorkspace>("map");
   const [workspaceSnapshot, setWorkspaceSnapshot] = useState<MapSnapshot | null>(null);
   const [leftOpen, setLeftOpen] = useState(true);
-  const [leftPanelMode, setLeftPanelMode] = useState<LeftPanelMode>("layers");
+  const [leftPanelMode, setLeftPanelMode] = useState<LeftPanelMode>("views");
   const [rightOpen, setRightOpen] = useState(false);
   const [timelineOpen, setTimelineOpen] = useState(true);
   const [drawerView, setDrawerView] = useState<DrawerView>("evidence");
@@ -896,6 +906,7 @@ export default function Home() {
   useEffect(() => { atmospherePresetRef.current = atmospherePreset; }, [atmospherePreset]);
   useEffect(() => { lightAzimuthRef.current = lightAzimuth; }, [lightAzimuth]);
   useEffect(() => { fieldOfViewRef.current = fieldOfView; }, [fieldOfView]);
+  useEffect(() => { structures3DRef.current = structures3DEnabled; }, [structures3DEnabled]);
   useEffect(() => { gestureModeRef.current = gestureMode; }, [gestureMode]);
   useEffect(() => { boxDragModeRef.current = boxDragMode; }, [boxDragMode]);
   useEffect(() => { importPreviewRef.current = importPreview; }, [importPreview]);
@@ -1008,11 +1019,12 @@ export default function Home() {
       ?? LIVING_ATLAS_VIEWS.find((atlasView) => atlasView.id === "kansas-overview"),
     [activeViewProfileId],
   );
-  const mapRepresentationLabel = scenePreset === "elevation-3d"
+  const primaryRepresentationLabel = scenePreset === "elevation-3d"
     ? `Terrain 3D · ${terrainState === "READY" ? "DEM" : terrainState === "ERROR" ? "unavailable" : "loading"}`
     : projection === "globe"
       ? "Globe"
       : "2D";
+  const mapRepresentationLabel = `${primaryRepresentationLabel}${structures3DEnabled ? ` · Structures 3D ${structures3DState === "READY" ? "ready" : structures3DState.toLowerCase()}` : ""}`;
   const temporalComparison = useMemo(
     () => buildTemporalComparison(activeLayers, compareTimeA, compareTimeB),
     [activeLayers, compareTimeA, compareTimeB],
@@ -2356,6 +2368,7 @@ export default function Home() {
           applySceneEnvironment(map, atmospherePresetRef.current, lightAzimuthRef.current);
           map.setVerticalFieldOfView(fieldOfViewRef.current);
           setTerrainState(setTerrainPresentation(map, scenePresetRef.current === "elevation-3d", verticalExaggerationRef.current));
+          setStructures3DState(setStructureExtrusions(map, structures3DRef.current));
           const currentSelection = selectedRef.current;
           if (currentSelection) {
             const mismatch = isFeatureTimeMismatch(currentSelection.layer.temporal, currentSelection.properties.year, yearRef.current);
@@ -2683,6 +2696,15 @@ export default function Home() {
     }
     setTerrainState(setTerrainPresentation(map, scenePreset === "elevation-3d", verticalExaggeration));
   }, [scenePreset, styleReady, verticalExaggeration]);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map?.isStyleLoaded()) {
+      setStructures3DState(structures3DEnabled ? "UNAVAILABLE" : "OFF");
+      return;
+    }
+    setStructures3DState(setStructureExtrusions(map, structures3DEnabled));
+  }, [structures3DEnabled, styleReady]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -3256,7 +3278,7 @@ export default function Home() {
         basemap: "standard" as BasemapKey,
         projection: "mercator" as const,
         camera: { center: [-98.38, 38.48] as [number, number], zoom: 5.8, bearing: -18, pitch: 52 },
-        scale: 1.2,
+        scale: 1,
         atmosphere: "dusk" as AtmospherePreset,
         lightAzimuth: 235,
         fieldOfView: 44,
@@ -3316,6 +3338,38 @@ export default function Home() {
     mapRef.current?.easeTo({ pitch, bearing, duration: motionDuration(450) });
   };
 
+  const toggleStructureExtrusions = () => {
+    const next = !structures3DEnabled;
+    structures3DRef.current = next;
+    setStructures3DEnabled(next);
+    if (next && basemapRef.current !== "standard") {
+      basemapRef.current = "standard";
+      setBasemap("standard");
+      setStructures3DState("UNAVAILABLE");
+    } else if (mapRef.current?.isStyleLoaded()) {
+      setStructures3DState(setStructureExtrusions(mapRef.current, next));
+    }
+    announce(next ? "Height-backed Liberty structures enabled above zoom 13" : "3D structures hidden");
+  };
+
+  const focusStructureScene = (preset: (typeof STRUCTURE_FOCUS_PRESETS)[number]) => {
+    stopSceneOrbit(false);
+    structures3DRef.current = true;
+    basemapRef.current = "standard";
+    projectionRef.current = "mercator";
+    scenePresetRef.current = "overview-2d";
+    atmospherePresetRef.current = "dusk";
+    fieldOfViewRef.current = 44;
+    setStructures3DEnabled(true);
+    setBasemap("standard");
+    setProjection("mercator");
+    setScenePreset("overview-2d");
+    setAtmospherePreset("dusk");
+    setFieldOfView(44);
+    mapRef.current?.easeTo({ center: preset.center, zoom: 15.2, pitch: 60, bearing: preset.bearing, duration: motionDuration(700) });
+    announce(`${preset.label} structure view applied · source height attributes only`);
+  };
+
   const activateMapRepresentation = (mode: "2d" | "terrain" | "globe" | "compare") => {
     if (mode === "compare") {
       openMapUtility("compare");
@@ -3335,7 +3389,7 @@ export default function Home() {
     const nextBearing = mode === "2d" ? 0 : currentBearing;
 
     projectionRef.current = nextProjection;
-    verticalExaggerationRef.current = mode === "terrain" ? 1.2 : 1;
+    verticalExaggerationRef.current = 1;
     atmospherePresetRef.current = nextAtmosphere;
     lightAzimuthRef.current = mode === "terrain" ? 235 : mode === "globe" ? 225 : 210;
     fieldOfViewRef.current = nextFieldOfView;
@@ -3416,6 +3470,7 @@ export default function Home() {
     mapEvidenceFilterRef.current = "ALL";
     basemapRef.current = profile.basemap;
     projectionRef.current = profile.projection;
+    verticalExaggerationRef.current = 1;
     atmospherePresetRef.current = nextAtmosphere;
     fieldOfViewRef.current = nextFieldOfView;
     setVisibility(nextVisibility);
@@ -3426,6 +3481,7 @@ export default function Home() {
     setBasemap(profile.basemap);
     setProjection(profile.projection);
     setScenePreset(nextScenePreset);
+    setVerticalExaggeration(1);
     setAtmospherePreset(nextAtmosphere);
     setFieldOfView(nextFieldOfView);
     setMapQueryCandidates([]);
@@ -5151,7 +5207,7 @@ export default function Home() {
               </section>}
 
               {mapUtilityView === "scene" && <section id="map-utility-view-scene" role="tabpanel" aria-labelledby="map-utility-tab-scene" className="map-utility-section scene-lab-section">
-                <div className="map-utility-section-heading"><span>SCENE + 3D LAB</span><h3>Globe, terrain, atmosphere + camera</h3><p>Compose reversible MapLibre scenes with globe projection, external DEM terrain, optional synthetic extrusions, sky, directional light, field of view, and camera orbit. Governed operational sources stay held.</p></div>
+                <div className="map-utility-section-heading"><span>SCENE + 3D LAB</span><h3>Globe, terrain, structures + camera</h3><p>Compose reversible MapLibre scenes with globe projection, external DEM terrain, source-height Liberty structures, optional synthetic extrusions, atmosphere, field of view, and camera orbit. Governed operational sources stay held.</p></div>
 
                 <section className="scene-preset-grid" aria-label="Map scene presets">
                   {([
@@ -5190,6 +5246,15 @@ export default function Home() {
                   </section>
                 </div>
 
+                <section className="scene-structures-control" data-state={structures3DState} aria-labelledby="scene-structures-title">
+                  <header><div><strong id="scene-structures-title">Liberty structures 3D</strong><small>Height-backed buildings · zoom 13+</small></div><output>{structures3DEnabled ? structures3DState : "OFF"}</output></header>
+                  <div className="scene-structures-body">
+                    <button type="button" aria-pressed={structures3DEnabled} onClick={toggleStructureExtrusions}>{structures3DEnabled ? "Hide structures" : "Show structures 3D"}</button>
+                    <div aria-label="Structure focus locations">{STRUCTURE_FOCUS_PRESETS.map((preset) => <button key={preset.id} type="button" onClick={() => focusStructureScene(preset)}>{preset.label}</button>)}</div>
+                    <p>Uses the OpenFreeMap Liberty building layer only where its vector tiles provide a height attribute. Missing heights remain in the base 2D map; the Site does not invent them.</p>
+                  </div>
+                </section>
+
                 <div className="scene-environment-grid">
                   <section className="scene-atmosphere-control" aria-labelledby="scene-atmosphere-title">
                     <header><div><strong id="scene-atmosphere-title">Sky + atmosphere</strong><small>MapLibre style environment</small></div><output>{atmospherePreset.toUpperCase()}</output></header>
@@ -5221,14 +5286,14 @@ export default function Home() {
                     <article><span>CENTER XYZ</span><strong>{centerTile.label}</strong><small>Web Mercator address at floor zoom</small></article>
                     <article><span>SOURCES</span><strong>{sourceStateCounts.ready}/{LAYER_REGISTRY.length}</strong><small>Site-local GeoJSON ready</small></article>
                     <article><span>RENDER MODE</span><strong>{projection.toUpperCase()}</strong><small>{Math.round(view.pitch)}° pitch · {atmospherePreset} sky</small></article>
-                    <article><span>CARRIER</span><strong>{scenePreset === "elevation-3d" ? "REMOTE DEM" : "VECTOR / LOCAL"}</strong><small>{scenePreset === "elevation-3d" ? "AWS Terrain Tiles display context · not evidence" : "Vector basemap plus site-local GeoJSON fixtures"}</small></article>
+                    <article><span>CARRIER</span><strong>{scenePreset === "elevation-3d" ? "REMOTE DEM" : structures3DEnabled ? "VECTOR HEIGHTS" : "VECTOR / LOCAL"}</strong><small>{scenePreset === "elevation-3d" ? "AWS Terrain Tiles display context · not evidence" : structures3DEnabled ? "OpenFreeMap Liberty building attributes · display context" : "Vector basemap plus site-local GeoJSON fixtures"}</small></article>
                   </div>
-                  <p>The optional grid is a labeled GeoJSON simulation for viewport, selection, and matrix-orientation testing. It is not proof of a tile request, cache hit, archive range response, or KFM source admission. Terrain 3D adds a real DEM display carrier only when explicitly activated.</p>
+                  <p>The optional grid is a labeled GeoJSON simulation for viewport, selection, and matrix-orientation testing. It is not proof of a tile request, cache hit, archive range response, or KFM source admission. Terrain 3D adds a real DEM display carrier only when explicitly activated; Structures 3D reads only height attributes already supplied by Liberty tiles.</p>
                 </section>
 
                 <section className="terrain-source-ledger" aria-labelledby="terrain-source-ledger-title">
-                  <header><div><span>TERRAIN SOURCE LEDGER</span><h4 id="terrain-source-ledger-title">Display carrier, authoritative candidate + renderer contract</h4></div><strong>ROLE-SEPARATED</strong></header>
-                  <div>{TERRAIN_SOURCES.map((source) => <article key={source.id} data-status={source.status}>
+                  <header><div><span>3D SOURCE LEDGER</span><h4 id="terrain-source-ledger-title">Terrain, structures, authoritative candidate + renderer contract</h4></div><strong>ROLE-SEPARATED</strong></header>
+                  <div>{[...TERRAIN_SOURCES, STRUCTURE_3D_SOURCE].map((source) => <article key={source.id} data-status={source.status}>
                     <header><span>{source.organization}</span><strong>{source.status.replaceAll("_", " ")}</strong></header>
                     <h5>{source.title}</h5>
                     <dl><div><dt>Role</dt><dd>{source.role}</dd></div><div><dt>Resolution</dt><dd>{source.resolution}</dd></div><div><dt>Format</dt><dd>{source.format}</dd></div><div><dt>Coverage</dt><dd>{source.coverage}</dd></div></dl>
@@ -5238,7 +5303,7 @@ export default function Home() {
                   <p className="terrain-source-law">Rendered relief is visual context. Only a pinned, lineage-preserving, reviewed and released KFM artifact may support an elevation claim.</p>
                 </section>
 
-                <aside className="map-utility-boundary" data-tone="warning"><strong>3D preserves the 2D evidence path.</strong><p>Terrain 3D samples an external raster DEM for display and may exaggerate it; it does not change source elevation values or assert KFM release. The optional “Elevation extrusion concept” layer remains a separate synthetic fixture and is never enabled by Terrain mode. Smoke is not an advisory or exposure surface. Water is not flow, storage, quality, flood, or legal-water authority. Select any visible feature to inspect the same Evidence Drawer used in 2D.</p></aside>
+                <aside className="map-utility-boundary" data-tone="warning"><strong>3D preserves the 2D evidence path.</strong><p>Terrain 3D samples an external raster DEM for display and may exaggerate it; Structures 3D extrudes only provider-supplied building heights. Neither changes evidence, fills missing heights, or asserts a KFM release. The optional “Elevation extrusion concept” layer remains a separate synthetic fixture. Select any visible feature to inspect the same Evidence Drawer used in 2D.</p></aside>
               </section>}
 
               {mapUtilityView === "connections" && <section id="map-utility-view-connections" role="tabpanel" aria-labelledby="map-utility-tab-connections" className="map-utility-section source-connections-section">
@@ -5543,7 +5608,7 @@ export default function Home() {
         </section>
 
         <footer className="status-bar" aria-label="Map status">
-          <span><b>{activeAtlasView?.title ?? "Terrain & Landforms"}</b> · {selected?.properties.title ?? "Central Kansas"}</span>
+          <span><b>{activeAtlasView?.title ?? "Kansas Overview"}</b> · {selected?.properties.title ?? "Kansas statewide"}</span>
           <span>{mapRepresentationLabel}</span>
           <span>MapLibre {EXPECTED_MAPLIBRE_VERSION} · terrain context only</span>
         </footer>

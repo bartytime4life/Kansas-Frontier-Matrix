@@ -73,3 +73,16 @@ export const TERRAIN_SOURCES: readonly TerrainSourceRecord[] = Object.freeze([
 
 export const ACTIVE_TERRAIN_SOURCE = TERRAIN_SOURCES[0];
 
+export const STRUCTURE_3D_SOURCE: TerrainSourceRecord = Object.freeze({
+  id: "structures-openfreemap-liberty",
+  title: "OpenFreeMap Liberty building extrusion",
+  organization: "OpenFreeMap / OpenMapTiles / OpenStreetMap",
+  status: "ACTIVE_CONTEXT",
+  role: "Provider-height 3D structures display carrier",
+  resolution: "Vector-tile building coverage; attributes vary by place",
+  format: "MVT building source layer + MapLibre fill-extrusion",
+  coverage: "Global display context, including Kansas where mapped",
+  sourceUrl: "https://github.com/hyperknot/openfreemap",
+  attribution: "OpenFreeMap · OpenMapTiles · OpenStreetMap contributors",
+  boundary: "Visible only at city-scale zoom when the Liberty style supplies its building-3d layer. The Site neither fills missing heights nor treats building geometry as KFM evidence.",
+});

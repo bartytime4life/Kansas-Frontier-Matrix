@@ -631,8 +631,8 @@ input[type="range"] { accent-color: var(--gold); }
 .scene-layer-toggles button[aria-pressed="true"] { border-color: rgba(115,199,210,.42); background: rgba(115,199,210,.065); color: var(--water); }
 .scene-layer-toggles button[aria-pressed="true"] i { background: currentColor; box-shadow: 0 0 0 3px rgba(115,199,210,.08); }
 .scene-control-grid { display: grid; grid-template-columns: minmax(0,1.25fr) minmax(0,1fr); gap: 7px; }
-.scene-height-control, .scene-camera-controls, .scene-time-strip, .scene-tile-ledger, .scene-atmosphere-control, .scene-optics-control, .scene-motion-control { overflow: hidden; border: 1px solid var(--line); border-radius: 11px; background: rgba(255,255,255,.018); }
-.scene-height-control > header, .scene-camera-controls > header, .scene-time-strip > header, .scene-atmosphere-control > header, .scene-optics-control > header, .scene-motion-control > header { display: flex; align-items: flex-start; justify-content: space-between; gap: 9px; border-bottom: 1px solid var(--line); padding: 9px; }
+.scene-height-control, .scene-camera-controls, .scene-time-strip, .scene-tile-ledger, .scene-atmosphere-control, .scene-optics-control, .scene-motion-control, .scene-structures-control { overflow: hidden; border: 1px solid var(--line); border-radius: 11px; background: rgba(255,255,255,.018); }
+.scene-height-control > header, .scene-camera-controls > header, .scene-time-strip > header, .scene-atmosphere-control > header, .scene-optics-control > header, .scene-motion-control > header, .scene-structures-control > header { display: flex; align-items: flex-start; justify-content: space-between; gap: 9px; border-bottom: 1px solid var(--line); padding: 9px; }
 .scene-height-control header > div, .scene-camera-controls > header, .scene-time-strip > header, .scene-atmosphere-control header > div, .scene-optics-control header > div, .scene-motion-control header > div { font-size: 12px; }
 .scene-height-control header > div, .scene-atmosphere-control header > div, .scene-optics-control header > div, .scene-motion-control header > div { display: grid; gap: 3px; }
 .scene-height-control small, .scene-camera-controls small, .scene-time-strip small, .scene-atmosphere-control small, .scene-optics-control small, .scene-motion-control small { color: var(--dim); font-size: 12px; line-height: 1.35; text-align: right; }
@@ -655,6 +655,17 @@ input[type="range"] { accent-color: var(--gold); }
 .scene-optics-control input { width: 100%; accent-color: var(--gold); }
 .scene-motion-control { grid-column: 1 / -1; }
 .scene-motion-control output { color: var(--water); font-size: 12px; font-weight: 900; }
+.scene-structures-control[data-state="READY"] { border-color: rgba(115,199,210,.44); box-shadow: inset 3px 0 rgba(115,199,210,.72); }
+.scene-structures-control > header > div { display: grid; gap: 3px; }
+.scene-structures-control > header strong { font-size: 12px; }
+.scene-structures-control > header small { color: var(--dim); font-size: 12px; }
+.scene-structures-control output { color: var(--water); font-size: 12px; font-weight: 900; }
+.scene-structures-body { display: grid; grid-template-columns: auto minmax(0,1fr); gap: 8px; align-items: start; padding: 9px; }
+.scene-structures-body > button, .scene-structures-body > div button { min-height: 36px; border: 1px solid var(--line); border-radius: 8px; background: rgba(0,0,0,.1); color: var(--muted); padding: 0 10px; font-size: 12px; font-weight: 850; }
+.scene-structures-body > button[aria-pressed="true"] { border-color: rgba(115,199,210,.48); background: rgba(115,199,210,.08); color: var(--water); }
+.scene-structures-body > div { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 5px; }
+.scene-structures-body > div button:hover { border-color: rgba(224,186,109,.42); color: var(--gold-soft); }
+.scene-structures-body p { grid-column: 1 / -1; margin: 0; color: var(--dim); font-size: 12px; line-height: 1.45; }
 .scene-motion-body { display: grid; grid-template-columns: minmax(110px,.35fr) minmax(0,1fr); gap: 8px; padding: 8px; }
 .scene-motion-body button { min-height: 42px; border: 1px solid rgba(115,199,210,.38); border-radius: 8px; background: rgba(115,199,210,.07); color: var(--water); font-size: 12px; font-weight: 900; }
 .scene-motion-body button:disabled { opacity: .55; cursor: not-allowed; }
@@ -2477,4 +2488,6 @@ body { font-size: 14px; }
   .qwen-map-launch > span:nth-child(2) { display: none; }
   .status-bar span:nth-child(2) { display: none; }
   .terrain-source-ledger article dl { grid-template-columns: 1fr; }
+  .scene-structures-body { grid-template-columns: 1fr; }
+  .scene-structures-body > div { grid-template-columns: 1fr; }
 }

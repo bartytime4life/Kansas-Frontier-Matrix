@@ -183,10 +183,12 @@ export type RegistryEvidenceFilter = EvidenceState | "ALL";
 export const TERRAIN_SOURCE_ID = "kfm-terrain-dem";
 export const TERRAIN_HILLSHADE_LAYER_ID = "kfm-terrain-hillshade";
 export type TerrainPresentationState = "OFF" | "LOADING" | "READY" | "ERROR";
+export const LIBERTY_STRUCTURES_3D_LAYER_ID = "building-3d";
+export type Structures3DState = "OFF" | "READY" | "UNAVAILABLE" | "ERROR";
 
 /**
  * Real elevation presentation is opt-in and remains a display carrier. The
- * The active terrain carrier is not a KFM release and never changes evidence,
+ * active terrain carrier is not a KFM release and never changes evidence,
  * feature identity, or reported numeric source values.
  */
 export const setTerrainPresentation = (
@@ -232,6 +234,25 @@ export const setTerrainPresentation = (
     const safeExaggeration = Math.max(0.1, Math.min(3, Number.isFinite(exaggeration) ? exaggeration : 1));
     map.setTerrain({ source: TERRAIN_SOURCE_ID, exaggeration: safeExaggeration });
     return "LOADING";
+  } catch {
+    return "ERROR";
+  }
+};
+
+/**
+ * Controls the height-backed building extrusion already carried by OpenFreeMap
+ * Liberty. That style reads render_height/render_min_height directly, so the
+ * Site neither duplicates the layer nor invents a client-side height.
+ */
+export const setStructureExtrusions = (
+  map: MapLibreMap,
+  enabled: boolean,
+): Structures3DState => {
+  try {
+    const layer = map.getLayer(LIBERTY_STRUCTURES_3D_LAYER_ID);
+    if (!map.getSource("openmaptiles") || layer?.type !== "fill-extrusion") return enabled ? "UNAVAILABLE" : "OFF";
+    map.setLayoutProperty(LIBERTY_STRUCTURES_3D_LAYER_ID, "visibility", enabled ? "visible" : "none");
+    return enabled ? "READY" : "OFF";
   } catch {
     return "ERROR";
   }
