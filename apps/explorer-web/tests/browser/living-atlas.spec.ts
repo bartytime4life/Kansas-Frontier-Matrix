@@ -82,3 +82,99 @@ test("keeps held-view evidence, Focus, and report snapshots aligned", async ({
   await workspace.getByRole("button", { name: "Create report draft" }).click();
   await expect(workspace.locator(".atlas-draft-card").first()).toContainText("view:weather-window");
 });
+
+test("exposes repository layer lineage and keeps candidate data unadmitted", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const workspace = page.locator('[data-component="living-atlas-workspace"]');
+
+  await workspace.getByRole("button", { name: "Layers" }).click();
+  const runtimeLayer = workspace.locator(".atlas-layer-row", {
+    hasText: "Generalized Kansas extent",
+  });
+  await runtimeLayer.getByRole("button", { name: "Inspect" }).click();
+  await expect(
+    workspace.getByRole("complementary", { name: "Evidence Drawer" }),
+  ).toContainText("Generalized Kansas extent");
+  const candidate = workspace.locator(".atlas-connection-card", {
+    hasText: "WBD HUC12 watershed boundaries",
+  });
+  await expect(candidate).toContainText("FIXTURE_ONLY");
+  await candidate.getByRole("button", { name: "Inspect connection" }).click();
+  const drawer = workspace.getByRole("complementary", {
+    name: "Evidence Drawer",
+  });
+  await expect(drawer).toContainText("FIXTURE_ONLY · NOT ADMITTED");
+  await expect(drawer.getByRole("link", { name: /CONNECTOR/ })).toHaveAttribute(
+    "href",
+    /\/tree\/[^/]+\/connectors\/usgs\/wbd_huc$/,
+  );
+  await expect(drawer.getByRole("link", { name: /PIPELINE/ })).toHaveAttribute(
+    "href",
+    /\/blob\/[^/]+\/pipeline_specs\/hydrology\/wbd_huc12_ingest\.yaml$/,
+  );
+
+  await workspace.getByRole("button", { name: "New from map" }).click();
+  await workspace.getByRole("button", { name: "Create report draft" }).click();
+  const latestDraft = await page.evaluate(() => {
+    const raw = window.localStorage.getItem("kfm.explorer.report-drafts.v1");
+    return raw === null ? null : (JSON.parse(raw) as Array<{
+      snapshot: { selectedLayerId: string | null; evidenceRefs: string[] };
+      includedEvidenceRefs: string[];
+    }>)[0];
+  });
+  expect(latestDraft?.snapshot.selectedLayerId).toBeNull();
+  expect(latestDraft?.snapshot.evidenceRefs).toEqual([]);
+  expect(latestDraft?.includedEvidenceRefs).toEqual([]);
+});
+
+test("connects Living Atlas tools to the repository feature catalog", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const workspace = page.locator('[data-component="living-atlas-workspace"]');
+
+  const heldMeasure = workspace.locator(".atlas-interaction-bar").getByRole("button", {
+    name: "Measure · HELD",
+    exact: true,
+  });
+  await expect(heldMeasure).toHaveAttribute("title", /projection, units, uncertainty/);
+  await heldMeasure.focus();
+  await expect(heldMeasure).toBeFocused();
+  await heldMeasure.click();
+  await expect(workspace.getByRole("status").filter({ hasText: "Measure HELD" })).toContainText(
+    "projection, units, uncertainty",
+  );
+
+  const features = page.locator("#features");
+  await features.getByLabel("Filter by feature area").selectOption("Evidence and trust");
+  await features.getByLabel("Filter by maturity").selectOption("VERIFIED_SLICE");
+  await workspace.getByRole("button", { name: "Tools" }).click();
+  await expect(workspace.locator(".atlas-tool-card")).toHaveCount(14);
+  const hucTool = workspace.locator(".atlas-tool-card", {
+    hasText: "HUC crosswalk explorer",
+  });
+  await hucTool.getByRole("button", { name: "Open workbench catalog" }).click();
+  await expect(features.getByLabel("Filter by feature area")).toHaveValue("ALL");
+  await expect(features.getByLabel("Filter by maturity")).toHaveValue("ALL");
+  await expect(features.getByRole("status")).toHaveText(
+    /1 of \d+ feature families shown/,
+  );
+  await expect(features.getByRole("heading", { name: "HUC crosswalk explorer" })).toBeVisible();
+});
+
+test("reveals the matching catalog panel when searching from another tab", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const workspace = page.locator('[data-component="living-atlas-workspace"]');
+
+  await workspace.getByLabel("Search Living Atlas catalog").fill("Measure");
+
+  await expect(workspace.getByRole("button", { name: "Tools" })).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
+  await expect(workspace.locator(".atlas-tool-card", { hasText: "Measure" })).toBeVisible();
+});

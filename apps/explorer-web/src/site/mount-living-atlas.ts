@@ -1,17 +1,22 @@
 import type { MapRuntimePort } from "@kfm/maplibre";
 import { createViteMapLibreAdapter } from "@kfm/maplibre/vite-adapter";
 import {
+  ATLAS_WORKBENCH_TOOLS,
   ATLAS_VIEWS,
   EVIDENCE_RECORDS,
   LAYER_RECORDS,
+  MAP_INTERACTION_TOOLS,
+  REPOSITORY_LAYER_CONNECTIONS,
   SOURCE_DESCRIPTORS,
   TEMPORAL_EXTENTS,
   createInitialSnapshot,
   createLivingAtlasStyle,
   evaluateFocusSelection,
+  findAtlasWorkbenchTool,
   findAtlasView,
   findEvidenceForLayer,
   findLayerRecord,
+  findRepositoryLayerConnection,
   findSourceDescriptor,
   findTemporalExtent,
   type MapRepresentation,
@@ -19,6 +24,7 @@ import {
   type ReportDraft,
   type StoryScene,
 } from "../features/living_atlas";
+import { repositoryUrl } from "./catalog";
 
 export type LivingAtlasController = Readonly<{ destroy: () => void }>;
 
@@ -57,6 +63,20 @@ function button(
   node.type = "button";
   node.textContent = label;
   node.dataset.atlasAction = action;
+  return node;
+}
+
+function repositoryLink(
+  document: Document,
+  label: string,
+  path: string,
+): HTMLAnchorElement {
+  const node = el(document, "a");
+  const route = /(?:^|\/)[^/]+\.[^/]+$/.test(path) ? "blob" : "tree";
+  node.href = repositoryUrl(path, route);
+  node.target = "_blank";
+  node.rel = "noreferrer";
+  node.textContent = label;
   return node;
 }
 
@@ -153,8 +173,8 @@ export function mountLivingAtlasWorkspace(
   });
   const search = el(document, "input", "atlas-search");
   search.type = "search";
-  search.placeholder = "Search views or layers";
-  search.setAttribute("aria-label", "Search Living Atlas views and layers");
+  search.placeholder = "Search views, layers, tools, or sources";
+  search.setAttribute("aria-label", "Search Living Atlas catalog");
   topbar.append(identity, modeNav, search, button(document, "New from map", "composer:open", "atlas-primary-action"));
 
   const mapMode = el(document, "div", "atlas-mode-panel atlas-mode-panel--map");
@@ -162,7 +182,7 @@ export function mountLivingAtlasWorkspace(
   const leftRail = el(document, "aside", "atlas-left-rail");
   leftRail.setAttribute("aria-label", "Atlas catalog");
   const railTabs = el(document, "div", "atlas-rail-tabs");
-  ["Views", "Layers", "Places", "Sources"].forEach((label) => {
+  ["Views", "Layers", "Places", "Tools", "Sources"].forEach((label) => {
     const node = button(document, label, `rail:${label.toLowerCase()}`);
     node.setAttribute("aria-pressed", String(label === "Views"));
     railTabs.append(node);
@@ -186,7 +206,10 @@ export function mountLivingAtlasWorkspace(
   const layersPanel = el(document, "div", "atlas-rail-panel");
   layersPanel.dataset.railPanel = "layers";
   layersPanel.hidden = true;
-  layersPanel.append(text(document, "h2", "Layer catalog"));
+  layersPanel.append(
+    text(document, "h2", "Layer catalog"),
+    text(document, "p", `${LAYER_RECORDS.length} bounded runtime records · ${REPOSITORY_LAYER_CONNECTIONS.length} repository candidates`, "atlas-muted"),
+  );
   const layerList = el(document, "div", "atlas-layer-list");
   LAYER_RECORDS.forEach((record) => {
     const state = snapshot.layers.find((entry) => entry.id === record.id)!;
@@ -204,7 +227,20 @@ export function mountLivingAtlasWorkspace(
     row.append(toggle, copy, inspect);
     layerList.append(row);
   });
-  layersPanel.append(layerList);
+  layersPanel.append(layerList, text(document, "h3", "Repository layer candidates", "atlas-section-label"));
+  const connectionList = el(document, "div", "atlas-connection-list");
+  REPOSITORY_LAYER_CONNECTIONS.forEach((candidate) => {
+    const card = el(document, "article", "atlas-connection-card");
+    card.dataset.searchText = `${candidate.name} ${candidate.domain} ${candidate.source} ${candidate.state}`.toLowerCase();
+    card.append(
+      text(document, "strong", candidate.name),
+      text(document, "small", `${candidate.state} · ${candidate.domain}`),
+      text(document, "p", candidate.summary),
+      button(document, "Inspect connection", `connection:${candidate.id}`),
+    );
+    connectionList.append(card);
+  });
+  layersPanel.append(connectionList);
 
   const placesPanel = el(document, "div", "atlas-rail-panel");
   placesPanel.dataset.railPanel = "places";
@@ -215,12 +251,48 @@ export function mountLivingAtlasWorkspace(
     text(document, "p", "County locator samples are synthetic and intentionally unnamed.", "atlas-muted"),
   );
 
+  const toolsPanel = el(document, "div", "atlas-rail-panel");
+  toolsPanel.dataset.railPanel = "tools";
+  toolsPanel.hidden = true;
+  toolsPanel.append(
+    text(document, "h2", "Tools and workbenches"),
+    text(document, "p", "Available tools open a bounded in-site workflow. Held tools explain their missing contracts instead of simulating results.", "atlas-muted"),
+    text(document, "h3", "Map interaction", "atlas-section-label"),
+  );
+  const interactionToolList = el(document, "div", "atlas-tool-list");
+  MAP_INTERACTION_TOOLS.forEach((tool) => {
+    const card = el(document, "article", "atlas-tool-card");
+    card.dataset.searchText = `${tool.name} ${tool.summary} ${tool.state}`.toLowerCase();
+    card.append(
+      text(document, "strong", tool.name),
+      text(document, "small", tool.state),
+      text(document, "p", tool.summary),
+      button(document, tool.state === "AVAILABLE_IN_SITE" ? "Open layer selection" : "Why held", `interaction:${tool.id}`),
+    );
+    interactionToolList.append(card);
+  });
+  toolsPanel.append(interactionToolList, text(document, "h3", "Repository workbenches", "atlas-section-label"));
+  const workbenchList = el(document, "div", "atlas-tool-list");
+  ATLAS_WORKBENCH_TOOLS.forEach((tool) => {
+    const card = el(document, "article", "atlas-tool-card");
+    card.dataset.searchText = `${tool.name} ${tool.summary} ${tool.maturity}`.toLowerCase();
+    card.append(
+      text(document, "strong", tool.name),
+      text(document, "small", tool.maturity),
+      text(document, "p", tool.summary),
+      button(document, "Open workbench catalog", `workbench:${tool.id}`),
+      repositoryLink(document, "Inspect source boundary", tool.featurePath),
+    );
+    workbenchList.append(card);
+  });
+  toolsPanel.append(workbenchList);
+
   const sourcesPanel = el(document, "div", "atlas-rail-panel");
   sourcesPanel.dataset.railPanel = "sources";
   sourcesPanel.hidden = true;
   sourcesPanel.append(
     text(document, "h2", "Source Observatory"),
-    text(document, "p", "Candidates are visible without being silently admitted.", "atlas-muted"),
+    text(document, "p", `Candidates are visible without being silently admitted. ${REPOSITORY_LAYER_CONNECTIONS.length} layer connections expose their repository lineage in the Layers tab.`, "atlas-muted"),
   );
   SOURCE_DESCRIPTORS.forEach((source) => {
     const card = el(document, "article", "atlas-source-card");
@@ -240,7 +312,7 @@ export function mountLivingAtlasWorkspace(
     }
     sourcesPanel.append(card);
   });
-  railPanels.append(viewsPanel, layersPanel, placesPanel, sourcesPanel);
+  railPanels.append(viewsPanel, layersPanel, placesPanel, toolsPanel, sourcesPanel);
   leftRail.append(railTabs, railPanels);
 
   const mapStage = el(document, "section", "atlas-map-stage");
@@ -257,6 +329,16 @@ export function mountLivingAtlasWorkspace(
     node.setAttribute("aria-pressed", String(value === snapshot.representation));
     representationBar.append(node);
   });
+  const interactionBar = el(document, "div", "atlas-interaction-bar");
+  interactionBar.setAttribute("aria-label", "Map interaction tools");
+  MAP_INTERACTION_TOOLS.forEach((tool) => {
+    const label = tool.state === "HELD" ? `${tool.name} · HELD` : tool.name;
+    const node = button(document, label, `interaction:${tool.id}`);
+    node.dataset.toolState = tool.state;
+    node.setAttribute("aria-pressed", String(tool.id === "select"));
+    node.title = tool.statusReason;
+    interactionBar.append(node);
+  });
   const mapCanvas = el(document, "div", "atlas-map-canvas");
   mapCanvas.id = "kfm-living-atlas-map";
   const mapNotice = el(document, "div", "atlas-map-notice");
@@ -268,7 +350,7 @@ export function mountLivingAtlasWorkspace(
     text(document, "span", "No external tiles, live observations, legal boundaries, or precise sensitive locations."),
     runtimeState,
   );
-  mapStage.append(representationBar, mapCanvas, mapNotice);
+  mapStage.append(representationBar, interactionBar, mapCanvas, mapNotice);
 
   const evidence = el(document, "aside", "atlas-evidence-drawer");
   evidence.setAttribute("aria-label", "Evidence Drawer");
@@ -305,6 +387,29 @@ export function mountLivingAtlasWorkspace(
     );
   };
   renderEvidence(null);
+
+  const renderConnection = (connectionId: string): void => {
+    const candidate = findRepositoryLayerConnection(connectionId);
+    if (candidate === null) return;
+    const links = el(document, "div", "atlas-artifact-links");
+    candidate.artifacts.forEach((entry) => {
+      links.append(repositoryLink(document, `${entry.kind} · ${entry.label}`, entry.path));
+    });
+    evidence.replaceChildren(
+      text(document, "p", "Connection Inspector", "eyebrow"),
+      text(document, "h2", candidate.name),
+      text(document, "p", `${candidate.state} · NOT ADMITTED`, "atlas-outcome"),
+      text(document, "p", candidate.summary),
+      text(document, "h3", "Why it is held"),
+      text(document, "p", candidate.statusReason),
+      text(document, "h3", "Cannot prove"),
+      text(document, "p", candidate.cannotProve),
+      text(document, "h3", "Next gate"),
+      text(document, "p", candidate.nextGate),
+      text(document, "h3", "Repository lineage"),
+      links,
+    );
+  };
 
   const timeline = el(document, "div", "atlas-timeline");
   const timelineCopy = el(document, "div");
@@ -448,7 +553,12 @@ export function mountLivingAtlasWorkspace(
       });
       runtimeState.textContent = `HELD · ${view.statusReason}`;
       renderEvidence(selectedLayerId);
-      renderViews();
+      viewList.querySelectorAll<HTMLButtonElement>("button").forEach((node) => {
+        node.setAttribute(
+          "aria-pressed",
+          String(node.dataset.atlasAction === `view:${view.id}`),
+        );
+      });
       return;
     }
     const requestedRepresentation = view.representation;
@@ -533,6 +643,41 @@ export function mountLivingAtlasWorkspace(
     modeNav.querySelectorAll<HTMLButtonElement>("button").forEach((node) => node.setAttribute("aria-pressed", String(node.dataset.atlasAction === `mode:${mode}`)));
   };
 
+  const activateRail = (panel: string): void => {
+    railPanels.querySelectorAll<HTMLElement>("[data-rail-panel]").forEach((node) => {
+      node.hidden = node.dataset.railPanel !== panel;
+    });
+    railTabs.querySelectorAll<HTMLButtonElement>("button").forEach((node) => {
+      node.setAttribute("aria-pressed", String(node.dataset.atlasAction === `rail:${panel}`));
+    });
+  };
+
+  const openWorkbench = (toolId: string): void => {
+    const tool = findAtlasWorkbenchTool(toolId);
+    if (tool === null) return;
+    const section = document.getElementById("features");
+    const featureSearch = section?.querySelector<HTMLInputElement>(
+      '[aria-label="Search Explorer features"]',
+    );
+    const featureArea = section?.querySelector<HTMLSelectElement>(
+      '[aria-label="Filter by feature area"]',
+    );
+    const featureMaturity = section?.querySelector<HTMLSelectElement>(
+      '[aria-label="Filter by maturity"]',
+    );
+    if (!section || !featureSearch || !featureArea || !featureMaturity) {
+      runtimeState.textContent = `ERROR · ${tool.name} catalog target is unavailable`;
+      return;
+    }
+    featureArea.value = "ALL";
+    featureMaturity.value = "ALL";
+    featureSearch.value = tool.catalogQuery;
+    featureSearch.dispatchEvent(new Event("input", { bubbles: true }));
+    section.scrollIntoView({ block: "start" });
+    featureSearch.focus();
+    runtimeState.textContent = `Opened ${tool.name} in the repository feature catalog`;
+  };
+
   const exportReport = (id: string): void => {
     const draft = reports.find((entry) => entry.id === id);
     if (!draft) return;
@@ -550,15 +695,30 @@ export function mountLivingAtlasWorkspace(
     const action = target.dataset.atlasAction ?? "";
     if (action.startsWith("mode:")) activateMode(action.slice(5));
     else if (action.startsWith("rail:")) {
-      const panel = action.slice(5);
-      railPanels.querySelectorAll<HTMLElement>("[data-rail-panel]").forEach((node) => { node.hidden = node.dataset.railPanel !== panel; });
-      railTabs.querySelectorAll<HTMLButtonElement>("button").forEach((node) => node.setAttribute("aria-pressed", String(node === target)));
+      activateRail(action.slice(5));
     } else if (action.startsWith("view:")) activateView(action.slice(5));
     else if (action.startsWith("inspect:")) {
       const layerId = action.slice(8);
       const claim = findEvidenceForLayer(layerId);
       snapshot = cloneSnapshot(snapshot, { selectedLayerId: layerId, evidenceRefs: claim?.evidenceRefs ?? Object.freeze([]) });
       renderEvidence(layerId);
+    } else if (action.startsWith("connection:")) {
+      snapshot = cloneSnapshot(snapshot, {
+        selectedLayerId: null,
+        evidenceRefs: Object.freeze([]),
+      });
+      renderConnection(action.slice("connection:".length));
+    } else if (action.startsWith("workbench:")) {
+      openWorkbench(action.slice("workbench:".length));
+    } else if (action.startsWith("interaction:")) {
+      const tool = MAP_INTERACTION_TOOLS.find((entry) => entry.id === action.slice("interaction:".length));
+      if (!tool) return;
+      if (tool.id === "select") {
+        activateRail("layers");
+        runtimeState.textContent = "Select ready · choose Inspect on a bounded layer or repository connection";
+      } else {
+        runtimeState.textContent = `${tool.name} HELD · ${tool.statusReason}`;
+      }
     } else if (action.startsWith("representation:")) {
       const requested = action.slice(15) as MapRepresentation;
       if (requested === "TERRAIN_3D" || requested === "COMPARE") {
@@ -608,6 +768,24 @@ export function mountLivingAtlasWorkspace(
     workspace.querySelectorAll<HTMLElement>("[data-search-text]").forEach((node) => {
       node.hidden = query.length > 0 && !(node.dataset.searchText ?? "").includes(query);
     });
+    if (query.length === 0) return;
+
+    const currentPanel = Array.from(
+      railPanels.querySelectorAll<HTMLElement>("[data-rail-panel]"),
+    ).find((panel) => !panel.hidden);
+    const currentMatch = currentPanel?.querySelector<HTMLElement>(
+      "[data-search-text]:not([hidden])",
+    );
+    if (currentMatch) return;
+
+    const matchingPanel = Array.from(
+      railPanels.querySelectorAll<HTMLElement>("[data-rail-panel]"),
+    ).find((panel) =>
+      panel.querySelector<HTMLElement>("[data-search-text]:not([hidden])"),
+    );
+    if (matchingPanel?.dataset.railPanel) {
+      activateRail(matchingPanel.dataset.railPanel);
+    }
   };
 
   const handleKeydown = (event: KeyboardEvent): void => {

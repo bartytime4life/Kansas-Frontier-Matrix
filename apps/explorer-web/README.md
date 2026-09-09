@@ -14,7 +14,7 @@ truth_posture: "CONFIRMED pinned source and configuration / PROPOSED canonical-s
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 033103a0afe80f85a823973951b3b7d15abb7a8b
+  base_commit: f99736c0cd4b91592cc6e85531129c86f4dcbecb
   target_prior_blob: 561f78ea224338b3a1748d5689a2f56bfe7a1359
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   entrypoint_blob: 787c5182777b7f26d281e7e2851344b504a70d1c
@@ -44,6 +44,7 @@ notes:
   - "Source inspection and test definitions are not fresh build, browser, hosted-CI, dependency-admission, deployment, release, or publication proof."
   - "The temporal conformance adapter is bounded implementation of a proposed shared profile, not a live synchronized temporal Explorer."
   - "v0.8 preserves the established app and package responsibility roots while changing the normal composition, code-owned catalog, package adapter input boundary, tests, and documentation; source admission and authority decisions remain unchanged."
+  - "The repository catalog/preflight extension adds 14 non-loadable connection cards, visible tool holds, 10 workbench links, matching-panel search, and stale-evidence clearing; it does not fulfill the held real-data acceptance slice."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -69,13 +70,13 @@ notes:
 
 ## 0. Current evidence snapshot
 
-**Implementation base:** `main@033103a0afe80f85a823973951b3b7d15abb7a8b`, 2026-09-09. The Living Atlas work is a draft branch candidate over that immutable base and preserves the merged terrain source-ledger slice; it is not a merged release, deployment, or public-operation claim.
+**Implementation base:** `main@f99736c0cd4b91592cc6e85531129c86f4dcbecb`, 2026-09-09. The Living Atlas repository catalog/preflight work is a draft branch candidate over that immutable base; the pin is not a green-build, merge, release, deployment, or public-operation claim.
 
 | Surface | CONFIRMED at the pinned source | Limit |
 |---|---|---|
 | Workspace | [App manifest](./package.json) defines Vite, TypeScript, Vitest, and Playwright commands. [Root manifest](../../package.json) pins `pnpm@11.17.0`; both declare Node `>=22.13 <23`. | Configured commands are not execution results. |
 | Normal composition | [`src/main.ts`](./src/main.ts) mounts the site, public workspace navigation, synthetic Focus workspace, and shared trust surface. | No production route tree or live governed transport is established by that wiring. |
-| Normal map stage | [`mount-living-atlas.ts`](./src/site/mount-living-atlas.ts) mounts a package-owned MapLibre canvas with site-local inline geometry, 18 views, 24 layer records, visible holds, evidence inspection, time preview/commit, and draft-only report/story capture. | The geometry demonstrates product behavior only; it is not a factual Kansas dataset, legal boundary, live condition, precise sensitive location, or released artifact. |
+| Normal map stage | [`mount-living-atlas.ts`](./src/site/mount-living-atlas.ts) mounts a package-owned MapLibre canvas with site-local inline geometry, 18 views, 24 runtime layer records, 14 non-loadable repository connections, visible tool holds, 10 workbench links, evidence inspection, time preview/commit, and draft-only report/story capture. | The geometry and catalog demonstrate bounded product behavior only; they are not factual Kansas data, source admission, a released layer, a working spatial-analysis tool, or the design's real-data acceptance slice. |
 | Shared renderer package | [`packages/maplibre/package.json`](../../packages/maplibre/package.json) pins `maplibre-gl@6.7.0`; the adapter accepts cloned inline-only styles and rejects external URL/protocol resources before renderer acquisition. | Bounded site-local activation is distinct from external source admission, broader browser readiness, released-layer delivery, and public release. |
 | Isolated renderer fixture | [`maplibre-vite-adapter.spec.ts`](./tests/browser/maplibre-vite-adapter.spec.ts) defines local-asset boot, canvas/CSS, disposal, external-request, and unavailable-WebGL2 checks. | A test definition is not a fresh PASS. Its fixture is not the normal application or a production map. |
 | Evidence and Focus | [`GovernedClient.ts`](./src/adapters/GovernedClient.ts) is a fixture-only projection adapter; the [site composition](./src/site/README.md) documents injected synthetic Focus and evidence cases. | A defensive parser is not a network client, EvidenceBundle authentication, policy execution, or a live Qwen/Ollama connection. |
@@ -108,7 +109,7 @@ UNKNOWN IN THIS REVIEW
   deployment, operations, public availability, and release posture
 ```
 
-**Keep snapshot scopes separate.** The [site README](./src/site/README.md) records its code-owned catalog snapshot at `90e8a1b231b2c07ae6346ce75ecd42a172ef67e7`. Updating this application README does not update `catalog.ts`, refresh the website's source links, or deploy a Site. Likewise, historical implementation notes inside ADRs are not current-code inventories; their decision status and acceptance scope remain controlling.
+**Keep snapshot scopes separate.** The [site README](./src/site/README.md) and `catalog.ts` record the code-owned catalog snapshot at `f99736c0cd4b91592cc6e85531129c86f4dcbecb`. That pin identifies inspected source; it does not deploy a Site or establish passing checks. Historical implementation notes inside ADRs are not current-code inventories; their decision status and acceptance scope remain controlling.
 
 [Back to top](#top)
 

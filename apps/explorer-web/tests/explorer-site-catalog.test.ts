@@ -37,8 +37,8 @@ describe("Explorer repository catalog", () => {
     );
     expect(runtime?.maturity).toBe("HOLD");
     expect(REPOSITORY_SNAPSHOT).toMatchObject({
-      commit: "033103a0afe80f85a823973951b3b7d15abb7a8b",
-      commitRecordedAt: "2026-09-09T02:12:08Z",
+      commit: "f99736c0cd4b91592cc6e85531129c86f4dcbecb",
+      commitRecordedAt: "2026-09-09T03:45:35Z",
       mapLibre: {
         readinessCandidate: "6.7.0",
         readinessState: "HOLD",
@@ -60,6 +60,9 @@ describe("Explorer repository catalog", () => {
     });
     expect(repositoryUrl("apps/explorer-web")).toContain(
       `/tree/${REPOSITORY_SNAPSHOT.commit}/apps/explorer-web`,
+    );
+    expect(repositoryUrl("contracts/data/layer_manifest.md", "blob")).toContain(
+      `/blob/${REPOSITORY_SNAPSHOT.commit}/contracts/data/layer_manifest.md`,
     );
   });
 

@@ -187,3 +187,48 @@ export type PolicyDecision = Readonly<{
   proposedActions: readonly string[];
   generated: false;
 }>;
+
+export type RepositoryConnectionState =
+  | "FIXTURE_ONLY"
+  | "CAPTURE_FIXTURE"
+  | "PROPOSED_INACTIVE"
+  | "DOCUMENTED_ONLY";
+
+export type RepositoryArtifactRef = Readonly<{
+  kind: "CONNECTOR" | "PIPELINE_SPEC" | "CONTRACT";
+  label: string;
+  path: string;
+}>;
+
+export type RepositoryLayerConnection = Readonly<{
+  id: string;
+  name: string;
+  domain: string;
+  geometryType: LayerRecord["geometryType"];
+  source: string;
+  state: RepositoryConnectionState;
+  summary: string;
+  statusReason: string;
+  cannotProve: string;
+  nextGate: string;
+  artifacts: readonly RepositoryArtifactRef[];
+  relatedToolIds: readonly string[];
+}>;
+
+export type MapInteractionTool = Readonly<{
+  id: "select" | "draw" | "measure" | "profile";
+  name: string;
+  state: "AVAILABLE_IN_SITE" | "HELD";
+  summary: string;
+  statusReason: string;
+}>;
+
+export type AtlasWorkbenchTool = Readonly<{
+  id: string;
+  name: string;
+  maturity: "FIXTURE_FIRST" | "DOCUMENTED";
+  summary: string;
+  featurePath: string;
+  catalogQuery: string;
+  relatedLayerConnectionIds: readonly string[];
+}>;
