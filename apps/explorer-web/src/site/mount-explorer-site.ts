@@ -358,7 +358,7 @@ export function mountExplorerSite(root: HTMLElement): ExplorerSiteController {
     text(document, "p", "The package-owned MapLibre adapter now powers the site-local canvas above. These controls independently prove renderer-neutral degraded and withdrawn behavior."),
     chip(document, "Candidate", CURRENT_MAPLIBRE_READINESS.readinessCandidate),
     chip(document, "Package", "Present"),
-    chip(document, "Browser evidence", "Branch verification required", "caution"),
+    chip(document, "Browser evidence", "Pending", "critical"),
     text(document, "p", "This laboratory exercises the dependency-free NullMapRuntime and finite renderer-neutral status contract. Neither its READY state nor the bounded canvas establishes source, release, deployment, or publication authority.", "guardrail"),
     runtimeStatusHost,
     runtimeControls,
