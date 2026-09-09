@@ -1,0 +1,141 @@
+{
+  "receipt_id": "genrec:explorer-repository-connections:20260909",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/explorer-web/src/features/living_atlas/connections.ts",
+    "apps/explorer-web/src/features/living_atlas/index.ts",
+    "apps/explorer-web/src/features/living_atlas/types.ts",
+    "apps/explorer-web/src/site/catalog.ts",
+    "apps/explorer-web/src/site/mount-living-atlas.ts",
+    "apps/explorer-web/src/site/site-living-atlas.css",
+    "apps/explorer-web/tests/browser/living-atlas.spec.ts",
+    "apps/explorer-web/tests/explorer-site-catalog.test.ts",
+    "apps/explorer-web/tests/living-atlas.test.ts"
+  ],
+  "artifact_hashes": {
+    "apps/explorer-web/src/features/living_atlas/connections.ts": "sha256:580be1d6925fa171d5ba8bc4f3a55f8e83dd396b06a897f636634926970b096e",
+    "apps/explorer-web/src/features/living_atlas/index.ts": "sha256:4b417991c938c08d21f10c67507dda5c2942a3bc0c51666b69b1ad21e5b589bb",
+    "apps/explorer-web/src/features/living_atlas/types.ts": "sha256:3f16f67f4dc6f6cf9620e984db7ef7f6e7ea9fc6f319d903f36f7aed9cdebfc0",
+    "apps/explorer-web/src/site/catalog.ts": "sha256:8aa092c181157e7812764aacbad4633081f277cddbf5dc939b04cb7f81a69f3a",
+    "apps/explorer-web/src/site/mount-living-atlas.ts": "sha256:fa176ff1194b2e253996e820e71ca41c159c11aed91865e92933960777f321b3",
+    "apps/explorer-web/src/site/site-living-atlas.css": "sha256:95c76c8b4e29b4d13a23f5068d229e078f5fc9bd29828ffd51d06a9b6dc80544",
+    "apps/explorer-web/tests/browser/living-atlas.spec.ts": "sha256:921801358f2e70e1a9d4c573696589333a237bafc8ee872cd2642c60e1a566b0",
+    "apps/explorer-web/tests/explorer-site-catalog.test.ts": "sha256:64e1f9da67f189ac404aca8284329fad57aeb5754e479410ec7d8e802a7b4005",
+    "apps/explorer-web/tests/living-atlas.test.ts": "sha256:5f690a0d87408a912b974b36a132bff4daf30b8c876598e78a96faa103a7550e"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5"
+  },
+  "prompt_or_contract": "sha256:ead51acd0bd604b90e205c01d65cd3348c5b2b53377883482e5ab398c052b2cd",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "filesystem",
+      "git",
+      "GitHub connector",
+      "Google Drive connector"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:b05d63b0390f874b6061a5a688b9cdc83022d625b12553c98d71c1b6730384a4",
+      "sha256:63a6dd9b659350fdf60ba0dd610610f4f6afa891feb9223c684df25dbd634ae5"
+    ],
+    "attached_docs": [
+      "KFM_Full_Atlas_seed_cards.md",
+      "KFM Explorer — Living Atlas Interface, Default Views and Animation Design — v0.1"
+    ],
+    "evidence_refs": [
+      "git:46388727e50ed51efbfd1e724ff35eef12a5f1b1:docs/doctrine/directory-rules.md",
+      "git:46388727e50ed51efbfd1e724ff35eef12a5f1b1:pipeline_specs/hydrology/wbd_huc12_ingest.yaml",
+      "git:46388727e50ed51efbfd1e724ff35eef12a5f1b1:connectors/usgs/wbd_huc/README.md",
+      "drive:1aivNyfMjQ8urQO6vjt4YvkT1ltF1t7fxCahEcnGV4Dw"
+    ]
+  },
+  "truth_labels": {
+    "apps/explorer-web/src/features/living_atlas/connections.ts": "CONFIRMED",
+    "apps/explorer-web/src/features/living_atlas/index.ts": "CONFIRMED",
+    "apps/explorer-web/src/features/living_atlas/types.ts": "CONFIRMED",
+    "apps/explorer-web/src/site/catalog.ts": "CONFIRMED",
+    "apps/explorer-web/src/site/mount-living-atlas.ts": "NEEDS VERIFICATION",
+    "apps/explorer-web/src/site/site-living-atlas.css": "NEEDS VERIFICATION",
+    "apps/explorer-web/tests/browser/living-atlas.spec.ts": "NEEDS VERIFICATION",
+    "apps/explorer-web/tests/explorer-site-catalog.test.ts": "CONFIRMED",
+    "apps/explorer-web/tests/living-atlas.test.ts": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Explorer unit tests",
+      "outcome": "PASS",
+      "reason": "58 files and 474 tests passed locally on 2026-09-09."
+    },
+    {
+      "gate": "Explorer TypeScript and Vite build",
+      "outcome": "PASS",
+      "reason": "TypeScript no-emit and the production Vite build passed; Vite reported a non-fatal large-chunk warning."
+    },
+    {
+      "gate": "Repository connection path check",
+      "outcome": "PASS",
+      "reason": "Every connector, pipeline, contract, and Explorer feature path referenced by the registry exists at the implementation base."
+    },
+    {
+      "gate": "Explorer Playwright browser suite",
+      "outcome": "FAIL",
+      "reason": "Four Living Atlas cases were blocked before launch because the required Playwright Chromium executable is absent; no browser behavior result was inferred."
+    },
+    {
+      "gate": "Repository policy suite",
+      "outcome": "FAIL",
+      "reason": "The sparse working tree omitted unrelated scripts, schemas, registries, and doctrine paths required by 47 policy cases; 14 cases passed and the result was not used as change evidence."
+    },
+    {
+      "gate": "Hosted exact-head checks",
+      "outcome": "SKIPPED",
+      "reason": "Draft pull-request checks had not run when this receipt was emitted."
+    },
+    {
+      "gate": "git diff --check",
+      "outcome": "PASS",
+      "reason": "No whitespace errors were reported before receipt emission."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "docs/doctrine/directory-rules.md@46388727e50ed51efbfd1e724ff35eef12a5f1b1",
+      "validated": true,
+      "evidence_ref": "git:46388727e50ed51efbfd1e724ff35eef12a5f1b1:docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "WBD HUC12 fixture-first pipeline@46388727e50ed51efbfd1e724ff35eef12a5f1b1",
+      "validated": true,
+      "evidence_ref": "git:46388727e50ed51efbfd1e724ff35eef12a5f1b1:pipeline_specs/hydrology/wbd_huc12_ingest.yaml"
+    },
+    {
+      "id": "KFM Explorer Living Atlas Design v0.1",
+      "validated": true,
+      "evidence_ref": "drive:1aivNyfMjQ8urQO6vjt4YvkT1ltF1t7fxCahEcnGV4Dw"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-09T03:41:45Z",
+  "emitter": "OpenAI Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "This receipt records authoring provenance only. The change maps existing repository capabilities into 14 unadmitted layer connections and 10 workbench links while preserving the 24-layer bounded runtime registry. Only Select is available as a map interaction; Draw AOI, Measure, and Profile remain explicit holds. No connector, pipeline, source, lifecycle write, release, deployment, publication, or live-data behavior is activated."
+}
