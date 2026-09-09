@@ -359,7 +359,7 @@ export function mountExplorerSite(root: HTMLElement): ExplorerSiteController {
     chip(document, "Candidate", CURRENT_MAPLIBRE_READINESS.readinessCandidate),
     chip(document, "Package", "Present"),
     chip(document, "Browser evidence", "Pending", "critical"),
-    text(document, "p", "This laboratory exercises the dependency-free NullMapRuntime and finite renderer-neutral status contract. Neither its READY state nor the bounded canvas establishes source, release, deployment, or publication authority.", "guardrail"),
+    text(document, "p", "This laboratory exercises the dependency-free NullMapRuntime and finite renderer-neutral status contract. READY does not establish MapLibre readiness, source admission, release, deployment, or publication authority.", "guardrail"),
     runtimeStatusHost,
     runtimeControls,
     link(document, "Open governance issue #2957", `https://github.com/${REPOSITORY_SNAPSHOT.repository}/issues/${CURRENT_MAPLIBRE_READINESS.governanceIssue}`, "text-link"),

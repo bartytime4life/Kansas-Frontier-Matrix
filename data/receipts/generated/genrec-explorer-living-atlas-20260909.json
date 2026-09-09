@@ -34,7 +34,7 @@
     "apps/explorer-web/src/main.ts": "sha256:9c63e8ee9095dd88f3f429ac899e9a37e038480a43ef9793d40a19bc91889264",
     "apps/explorer-web/src/site/README.md": "sha256:c7f7b1b2ab7f2c8010d6b7bb331b9a964b7b32d148ff6a8b018723cbc2e8aa34",
     "apps/explorer-web/src/site/catalog.ts": "sha256:d71a5b4888b4d8962fe827bcf8662c2a285a166a35e00ab432cb3c6551aab2c4",
-    "apps/explorer-web/src/site/mount-explorer-site.ts": "sha256:f23d6fca413a53e6ab0a17608a2652662b71ba83124222e46c2935130359ca1c",
+    "apps/explorer-web/src/site/mount-explorer-site.ts": "sha256:7e4373ebbc31980a93443cc2734194381c196c08025b6d2d2fc09df007c19fe3",
     "apps/explorer-web/src/site/mount-living-atlas.ts": "sha256:aabc3cc2e7540fbe881dc0a6cb5e71acf81dc0267fd599d6ffa5fbc15b1d9e2b",
     "apps/explorer-web/src/site/site-living-atlas.css": "sha256:b6c209ac53837b2ec29bf1eb81b0793804afc52077c743ec49f18f6dbe59d67a",
     "apps/explorer-web/tests/browser/living-atlas.spec.ts": "sha256:66ee44f1c6d06f40a4983a168ad2f2ef67928b762cd6506fc21a954384da5820",
