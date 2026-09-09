@@ -25,7 +25,7 @@ export interface TerrainSourceRecord {
 /**
  * Source roles are intentionally separate:
  * - DISPLAY_CONTEXT can support reversible rendering, never an evidence claim.
- * - AUTHORITATIVE_CANDIDATE still needs a pinned product and admission receipt.
+ * - AUTHORITATIVE_CANDIDATE may be pinned but still needs admission and release decisions.
  * - IMPLEMENTATION_SPEC describes renderer compatibility, not data authority.
  */
 export const TERRAIN_SOURCES = Object.freeze([
@@ -48,18 +48,18 @@ export const TERRAIN_SOURCES = Object.freeze([
       "A directly compatible, key-free display carrier. It must not become a KFM elevation measurement, evidence record, or release claim.",
   }),
   Object.freeze({
-    id: "terrain-usgs-3dep-13arc",
-    title: "USGS 3DEP 1/3 arc-second DEM",
+    id: "terrain-usgs-3dep-1m-x56y429",
+    title: "USGS 3DEP 1 m · 14 x56y429 · KS Statewide 2018",
     organization: "U.S. Geological Survey",
     role: "AUTHORITATIVE_CANDIDATE",
-    resolution: "Approximately 10 m",
-    format: "Cloud Optimized GeoTIFF and National Map services",
-    coverage: "United States, including Kansas",
+    resolution: "1 m cells · 10,012 × 10,012 including border",
+    format: "Float32 GeoTIFF · NAVD88 metres · nodata −999999",
+    coverage: "One nominal 10 km tile intersecting the public-safe Ellsworth pilot area",
     sourceUrl:
-      "https://data.usgs.gov/datacatalog/data/USGS%3A3a81321b-c153-416f-98b7-cc8e5f0e17c3",
+      "https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/1m/Projects/KS_Statewide_2018_A18/metadata/USGS_1M_14_x56y429_KS_Statewide_2018_A18.xml",
     attribution: "U.S. Geological Survey 3D Elevation Program",
     boundary:
-      "Admission requires a pinned product and datum, a reproducible MapLibre-compatible derivative, lineage, performance proof, 2D parity, and release review.",
+      "Fixture-only HOLD. Exact tile and metadata hashes are recorded, but delivered-tile geoid, applicable numeric vertical accuracy, human review, source admission, runtime loading, and release remain unresolved.",
   }),
   Object.freeze({
     id: "terrain-maplibre-raster-dem",
@@ -101,6 +101,13 @@ export const validateTerrainSourceRegistry = (): readonly string[] => {
       if (!("tileTemplate" in source) || !("encoding" in source)) {
         issues.push(`display carrier is missing tile metadata: ${source.id}`);
       }
+    } else if (
+      "tileTemplate" in source ||
+      "encoding" in source ||
+      "tileSize" in source ||
+      "maxZoom" in source
+    ) {
+      issues.push(`non-display record must not expose runtime tile metadata: ${source.id}`);
     }
   }
 

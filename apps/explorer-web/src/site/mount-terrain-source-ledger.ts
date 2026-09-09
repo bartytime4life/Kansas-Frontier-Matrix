@@ -4,8 +4,14 @@ import {
   type TerrainSourceRole,
 } from "./terrain-source-registry";
 
+export const TERRAIN_MODE_POSTURE = Object.freeze([
+  Object.freeze({ label: "2D", detail: "parity path", active: false }),
+  Object.freeze({ label: "Terrain 3D", detail: "fixture-only HOLD", active: false }),
+  Object.freeze({ label: "3DEP", detail: "admission candidate", active: false }),
+] as const);
+
 const ROLE_LABELS: Readonly<Record<TerrainSourceRole, string>> = Object.freeze({
-  DISPLAY_CONTEXT: "ACTIVE CONTEXT",
+  DISPLAY_CONTEXT: "DISPLAY CONTEXT",
   AUTHORITATIVE_CANDIDATE: "CANDIDATE",
   IMPLEMENTATION_SPEC: "RENDERER SPEC",
 });
@@ -94,11 +100,7 @@ export const mountTerrainSourceLedger = (
   const modeStrip = document.createElement("div");
   modeStrip.className = "terrain-mode-strip";
   modeStrip.setAttribute("aria-label", "Terrain implementation posture");
-  for (const [label, detail, active] of [
-    ["2D", "parity path", false],
-    ["Terrain 3D", "display contract", true],
-    ["3DEP", "admission candidate", false],
-  ] as const) {
+  for (const { label, detail, active } of TERRAIN_MODE_POSTURE) {
     const item = document.createElement("span");
     item.dataset.active = String(active);
     const name = document.createElement("b");

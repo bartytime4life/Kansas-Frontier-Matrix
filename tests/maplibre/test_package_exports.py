@@ -2,7 +2,6 @@ import json
 import subprocess
 from pathlib import Path
 
-
 REPO_ROOT = Path(__file__).resolve().parents[2]
 PACKAGE_ROOT = REPO_ROOT / "packages" / "maplibre"
 EXPECTED_EXPORTS = {
@@ -14,6 +13,7 @@ EXPECTED_ROOT_EXPORTS = {
     'export * from "./map-runtime-port";',
     'export * from "./map-runtime-terrain-fallback";',
     'export * from "./null-map-runtime";',
+    'export * from "./terrain-elevation-sample";',
 }
 
 
@@ -42,6 +42,29 @@ def test_root_facade_reexports_only_renderer_neutral_modules() -> None:
     root_statements = {line.strip() for line in root_source.splitlines() if line.strip()}
 
     assert root_statements == EXPECTED_ROOT_EXPORTS
+
+
+def test_terrain_sampler_has_no_network_filesystem_or_renderer_surface() -> None:
+    source = (PACKAGE_ROOT / "src" / "terrain-elevation-sample.ts").read_text()
+
+    for forbidden in (
+        "fetch(",
+        "XMLHttpRequest",
+        "WebSocket",
+        "EventSource",
+        "globalThis.fetch",
+        "navigator.sendBeacon",
+        "node:fs",
+        "node:http",
+        "node:https",
+        "document.",
+        "window.fetch",
+        "setTerrain",
+        "tileTemplate",
+        "http://",
+        "https://",
+    ):
+        assert forbidden not in source
 
 
 def test_node_resolves_root_and_adapter_subpaths_through_package_exports() -> None:

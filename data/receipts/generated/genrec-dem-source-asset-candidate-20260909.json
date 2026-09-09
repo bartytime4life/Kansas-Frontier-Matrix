@@ -1,0 +1,265 @@
+{
+  "receipt_id": "genrec-dem-source-asset-candidate-20260909",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/dem-source-asset-candidate.yml",
+    "apps/explorer-web/src/features/living_atlas/connections.ts",
+    "apps/explorer-web/src/site/mount-terrain-source-ledger.ts",
+    "apps/explorer-web/src/site/terrain-source-registry.ts",
+    "apps/explorer-web/tests/living-atlas.test.ts",
+    "apps/explorer-web/tests/terrain-source-registry.test.ts",
+    "contracts/spatial-foundation/dem_source_asset_candidate.md",
+    "fixtures/contracts/v1/spatial-foundation/dem_source_asset_candidate/cases.json",
+    "fixtures/contracts/v1/spatial-foundation/dem_source_asset_candidate/evidence-projection-snapshot.json",
+    "packages/maplibre/src/index.ts",
+    "packages/maplibre/src/map-runtime-terrain-fallback.ts",
+    "packages/maplibre/src/terrain-elevation-sample.ts",
+    "packages/maplibre/tests/map-runtime-terrain-fallback.test.ts",
+    "packages/maplibre/tests/terrain-elevation-sample.test.ts",
+    "schemas/contracts/v1/spatial-foundation/dem_source_asset_candidate.schema.json",
+    "tests/maplibre/test_package_exports.py",
+    "tests/validators/test_validate_dem_source_asset_candidate.py",
+    "tools/validators/validate_dem_source_asset_candidate.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/dem-source-asset-candidate.yml": "sha256:04d61a7c2e7e4c4e9f63001b8dd1f3891125ac943746f63f88bec2e14bdd4d29",
+    "apps/explorer-web/src/features/living_atlas/connections.ts": "sha256:89f574d1d744204a647d0ddcd4845a950c37945f3a0c1225f3c760f495c83a29",
+    "apps/explorer-web/src/site/mount-terrain-source-ledger.ts": "sha256:078bb81d2a0f05f8b3291e523c8d4dbc6db49f54bb6eac00e03e904e3997cdee",
+    "apps/explorer-web/src/site/terrain-source-registry.ts": "sha256:fd96971b1d6001183b71713ed3733ca69d09d4b6fc47592eb4d0e4a5f84cbe06",
+    "apps/explorer-web/tests/living-atlas.test.ts": "sha256:fe4a9d44ffc60558ae8f9787786e1051184c80190af48ca39626d3242a2a2eb5",
+    "apps/explorer-web/tests/terrain-source-registry.test.ts": "sha256:59bc798f5619e933fb21c4cd40eddc10ebe0ef2eae3d7d4df2c1d8f513121763",
+    "contracts/spatial-foundation/dem_source_asset_candidate.md": "sha256:ed72d79b63ab3cd504ce25fa3623c5293844c47039f322fdc4ccc3db3abea553",
+    "fixtures/contracts/v1/spatial-foundation/dem_source_asset_candidate/cases.json": "sha256:5b26b0024373c1064b8d2a0aac73e64ddab3ea6bcee2f15ae4ebc54d63df984c",
+    "fixtures/contracts/v1/spatial-foundation/dem_source_asset_candidate/evidence-projection-snapshot.json": "sha256:e6d42da0f85c86b86bb7cdff682a95ad8247851d00e259ef3d2eb5bf2b9d134d",
+    "packages/maplibre/src/index.ts": "sha256:22747e5fa64023c2b8d56fc506a9faf53f801c1897e48ea89b1785196853feef",
+    "packages/maplibre/src/map-runtime-terrain-fallback.ts": "sha256:72f22d2d859105b13cb2a73110c50e078dd9defc0cafec542197c93d1bae9c81",
+    "packages/maplibre/src/terrain-elevation-sample.ts": "sha256:a84fc9eb8285577e1b7f037d26293dd7ecf11a7e01c59f5d6bdea951600e06f4",
+    "packages/maplibre/tests/map-runtime-terrain-fallback.test.ts": "sha256:cc873ff32f89534b12b3b4e0eb1a771f796d7cbc6e6552f6fd29eb0fe92778ca",
+    "packages/maplibre/tests/terrain-elevation-sample.test.ts": "sha256:18519162178412fb84c1da03c16d6c8457fff7394a5a5ba4adde996e8edcca67",
+    "schemas/contracts/v1/spatial-foundation/dem_source_asset_candidate.schema.json": "sha256:8817fdf0ce3afa2c40430d021e68d1830af7f3202f5d80c26d32c360c0d9f592",
+    "tests/maplibre/test_package_exports.py": "sha256:747c9f9d81bbcdbb6f33e091b2d28c3f6d04b72988adad86737fdcc4f5320937",
+    "tests/validators/test_validate_dem_source_asset_candidate.py": "sha256:6d17d882930a449667df7787ac55e1e497af8b17c43fad699ab5e0fc924e1e9b",
+    "tools/validators/validate_dem_source_asset_candidate.py": "sha256:8b1958d98d61d9addf41076872fd6109d1a80e3883d1051c3376afe13423bc88"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-09-09"
+  },
+  "prompt_or_contract": "sha256:b3aac4d2b67bc92f55b8697be8ec0be96609980c0bfa1e425962af349d780bac",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector",
+      "Notion connector",
+      "local PDF and raster inspection",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:8d923dc122ee99303201acb07c9fc49c190b19545a75768384f49ccb4e975cd7",
+      "sha256:b2125a3c069284a48feef0e1d9935b13ae1426ce5e7aab3e3e914c23cec00d00",
+      "sha256:21660a5f497c64430e7a8dda1613de9bd6e7329ab84f20183fc9490682f1f06e",
+      "sha256:add44226c3e31c2f459cba04e6d66e5de06eb177b26cb79dd0f793a37bc35fd7",
+      "sha256:26c87451192736bc8e0c265973b4fa80e9f5c7373fbad4d4842653c994f930e3",
+      "sha256:2758b570dc4fd857948295be3a8c339ebe26db23bc573cd197e5e09e1f7fa452",
+      "sha256:eb955e5bc73a565ca5249c6b7401aa003a87c4578b12169619c3d1a62c7205d2"
+    ],
+    "attached_docs": [
+      "KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf",
+      "Kansas_Frontier_Matrix_Pipeline_Living_Implementation_Manual_v0.3.pdf",
+      "Kansas Frontier Matrix Implementation Reference.pdf",
+      "Master MapLibre Components-Functions-Features.pdf",
+      "KFM_Full_Atlas_seed_cards.md"
+    ],
+    "evidence_refs": [
+      "drive:1aivNyfMjQ8urQO6vjt4YvkT1ltF1t7fxCahEcnGV4Dw",
+      "notion:3d2a9202-1bf6-81d6-8e6d-fad0564d8687",
+      "repo:docs/sources/catalog/usgs/3dep-elevation.md@277c851940f48ef127d53e813eaa98361fd4e872",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@277c851940f48ef127d53e813eaa98361fd4e872",
+      "https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/1m/Projects/KS_Statewide_2018_A18/TIFF/USGS_1M_14_x56y429_KS_Statewide_2018_A18.tif",
+      "https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/1m/Projects/KS_Statewide_2018_A18/metadata/USGS_1M_14_x56y429_KS_Statewide_2018_A18.xml",
+      "https://index.nationalmap.gov/arcgis/rest/services/3DEPElevationIndex/MapServer/24",
+      "https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/metadata/KS_Statewide_2018_A18/vertical_accuracy/USGS/14/USGS_USGS_KS_Statewide_2018_UTM14_VA.txt",
+      "https://www.usgs.gov/3d-elevation-program/about-3dep-products-services",
+      "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/State_County/MapServer/0",
+      "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/State_County/MapServer/1"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/dem-source-asset-candidate.yml": "PROPOSED",
+    "apps/explorer-web/src/features/living_atlas/connections.ts": "PROPOSED",
+    "apps/explorer-web/src/site/mount-terrain-source-ledger.ts": "PROPOSED",
+    "apps/explorer-web/src/site/terrain-source-registry.ts": "PROPOSED",
+    "apps/explorer-web/tests/living-atlas.test.ts": "PROPOSED",
+    "apps/explorer-web/tests/terrain-source-registry.test.ts": "PROPOSED",
+    "contracts/spatial-foundation/dem_source_asset_candidate.md": "PROPOSED",
+    "fixtures/contracts/v1/spatial-foundation/dem_source_asset_candidate/cases.json": "PROPOSED",
+    "fixtures/contracts/v1/spatial-foundation/dem_source_asset_candidate/evidence-projection-snapshot.json": "PROPOSED",
+    "packages/maplibre/src/index.ts": "PROPOSED",
+    "packages/maplibre/src/map-runtime-terrain-fallback.ts": "PROPOSED",
+    "packages/maplibre/src/terrain-elevation-sample.ts": "PROPOSED",
+    "packages/maplibre/tests/map-runtime-terrain-fallback.test.ts": "PROPOSED",
+    "packages/maplibre/tests/terrain-elevation-sample.test.ts": "PROPOSED",
+    "schemas/contracts/v1/spatial-foundation/dem_source_asset_candidate.schema.json": "PROPOSED",
+    "tests/maplibre/test_package_exports.py": "PROPOSED",
+    "tests/validators/test_validate_dem_source_asset_candidate.py": "PROPOSED",
+    "tools/validators/validate_dem_source_asset_candidate.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "exact-usgs-asset-byte-inspection",
+      "outcome": "PASS",
+      "reason": "The exact 297,030,205-byte GeoTIFF and 14,400-byte XML asset were inspected and bound to full SHA-256 digests outside ordinary fixture validation. No source bytes are stored by this slice."
+    },
+    {
+      "gate": "usgs-3dep-index-lineage",
+      "outcome": "PASS",
+      "reason": "An author-time 5,003-byte project-and-envelope response observation returned one intersecting source work unit, KS_Statewide_B10_2018; its minimized content-addressed projection preserves source CRS, NAVD88, GEOID12B, collection interval, QL2, and 1 m GSD at source-work-unit scope without claiming the mutable service still returns those bytes."
+    },
+    {
+      "gate": "independent-kansas-ellsworth-coverage-and-crs-reconciliation",
+      "outcome": "PASS",
+      "reason": "Author-time Census TIGERweb observations plus a content-addressed local projection independently establish that the inspection point intersects Kansas (GEOID 20) and Ellsworth County (GEOID 20053); deterministic GRS80 Transverse Mercator checks reconcile the XML WGS84 envelope, delivered EPSG:26914 grid, nominal 10 km footprint, and sampled cell."
+    },
+    {
+      "gate": "metadata-bound-rights-classification",
+      "outcome": "PASS",
+      "reason": "The constraints-aware public-domain classification is bound to the exact USGS metadata digest and preserves the abstract, access-constraints, and use-constraints extraction paths plus disclaimer, no-warranty, and no-endorsement caveats."
+    },
+    {
+      "gate": "offline-evidence-projection-snapshot",
+      "outcome": "PASS",
+      "reason": "The 2,717-byte repository snapshot is bound by SHA-256 and reproduces every minimized 3DEP and Census projection used by the candidate; raw mutable service responses remain explicitly unstored author-time observations."
+    },
+    {
+      "gate": "project-vertical-accuracy-evidence",
+      "outcome": "PASS",
+      "reason": "The hash-bound UTM 14 report records 708 NVA and 492 VVA checkpoints, but its multi-work-unit project scope is explicitly not treated as tile-applicable accuracy; the candidate remains HOLD."
+    },
+    {
+      "gate": "closed-candidate-fixture-profile",
+      "outcome": "PASS",
+      "reason": "One exact HOLD candidate and thirty-three fail-closed identity, evidence, rights, frozen-capture chronology, numeric-domain, asset, date, CRS, vertical, coverage, sample, authority, arithmetic, and deterministic-identity cases passed exact polarity checks."
+    },
+    {
+      "gate": "focused-python-tests",
+      "outcome": "PASS",
+      "reason": "Twenty-one focused tests passed: seventeen candidate-validator tests plus four renderer-neutral package-export tests in an isolated Python environment."
+    },
+    {
+      "gate": "maplibre-fixture-sampling-tests",
+      "outcome": "PASS",
+      "reason": "Eighty-three MapLibre package tests passed, including fixture-bound nearest-cell Terrarium decoding, source-validity-mask nodata abstention, default 1.0 display exaggeration, unexaggerated reported values, safe-integer window limits, and invalid-input controls."
+    },
+    {
+      "gate": "explorer-held-readback-tests",
+      "outcome": "PASS",
+      "reason": "Twelve focused Explorer tests passed with the 3DEP connection and every terrain mode at FIXTURE_ONLY/HOLD, no runtime tile metadata, and no terrain activation."
+    },
+    {
+      "gate": "workflow-syntax-and-authority-boundary",
+      "outcome": "PASS",
+      "reason": "The path-scoped workflow parsed successfully, includes held Explorer type-checking, and grants contents:read only; it contains no release, deployment, publication, secret, or mutation step."
+    },
+    {
+      "gate": "generated-receipt-integrity",
+      "outcome": "PASS",
+      "reason": "The repository GENERATED_RECEIPT validator bound all listed SHA-256 values to final local artifact bytes."
+    },
+    {
+      "gate": "repository-wide-test-suite",
+      "outcome": "SKIPPED",
+      "reason": "This bounded slice ran its new validator, MapLibre package, Explorer readback, package-export, and receipt checks; unrelated repository-wide suites were not run."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed exact draft-branch head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human source, spatial, vertical-reference, accuracy, contract, and security review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "drive:living-atlas-master",
+      "validated": true,
+      "evidence_ref": "drive:1aivNyfMjQ8urQO6vjt4YvkT1ltF1t7fxCahEcnGV4Dw"
+    },
+    {
+      "id": "notion:living-atlas-implementation",
+      "validated": true,
+      "evidence_ref": "notion:3d2a9202-1bf6-81d6-8e6d-fad0564d8687"
+    },
+    {
+      "id": "repository:usgs-3dep-source-guidance",
+      "validated": true,
+      "evidence_ref": "repo:docs/sources/catalog/usgs/3dep-elevation.md@277c851940f48ef127d53e813eaa98361fd4e872"
+    },
+    {
+      "id": "repository:adr-0029-directory-rules-v2",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@277c851940f48ef127d53e813eaa98361fd4e872"
+    },
+    {
+      "id": "usgs:exact-dem-geotiff",
+      "validated": true,
+      "evidence_ref": "https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/1m/Projects/KS_Statewide_2018_A18/TIFF/USGS_1M_14_x56y429_KS_Statewide_2018_A18.tif"
+    },
+    {
+      "id": "usgs:exact-dem-metadata",
+      "validated": true,
+      "evidence_ref": "https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/1m/Projects/KS_Statewide_2018_A18/metadata/USGS_1M_14_x56y429_KS_Statewide_2018_A18.xml"
+    },
+    {
+      "id": "usgs:3dep-index-work-unit",
+      "validated": true,
+      "evidence_ref": "https://index.nationalmap.gov/arcgis/rest/services/3DEPElevationIndex/MapServer/24"
+    },
+    {
+      "id": "usgs:utm14-vertical-accuracy-report",
+      "validated": true,
+      "evidence_ref": "https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/metadata/KS_Statewide_2018_A18/vertical_accuracy/USGS/14/USGS_USGS_KS_Statewide_2018_UTM14_VA.txt"
+    },
+    {
+      "id": "usgs:3dep-rights-and-products",
+      "validated": true,
+      "evidence_ref": "https://www.usgs.gov/3d-elevation-program/about-3dep-products-services"
+    },
+    {
+      "id": "census:tigerweb-state-coverage",
+      "validated": true,
+      "evidence_ref": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/State_County/MapServer/0"
+    },
+    {
+      "id": "census:tigerweb-ellsworth-county-coverage",
+      "validated": true,
+      "evidence_ref": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/State_County/MapServer/1"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-09T22:15:51Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "One exact public USGS 3DEP 1 m standard DEM tile is preserved as a fixture-only candidate. The packet proves deterministic identity, metadata closure, source-work-unit lineage, and minimized offline sampling only. It remains HOLD because the delivered-tile geoid, tile-applicable numeric vertical accuracy, and human review are unresolved. It grants no source descriptor, connector execution, remote acquisition, admission, activation, EvidenceBundle, lifecycle write, runtime terrain, numeric-sample authority, survey or engineering claim, release, deployment, publication, or public-use authority."
+}
