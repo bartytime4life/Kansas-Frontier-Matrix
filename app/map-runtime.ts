@@ -187,6 +187,8 @@ export type RegistryEvidenceFilter = EvidenceState | "ALL";
 
 export const TERRAIN_SOURCE_ID = "kfm-terrain-dem";
 export const TERRAIN_HILLSHADE_LAYER_ID = "kfm-terrain-hillshade";
+export const TERRAIN_COLOR_SOURCE_ID = "kfm-terrain-color-dem";
+export const TERRAIN_COLOR_RELIEF_LAYER_ID = "kfm-terrain-color-relief";
 export type TerrainPresentationState = "OFF" | "LOADING" | "READY" | "ERROR";
 export const LIBERTY_STRUCTURES_3D_LAYER_ID = "building-3d";
 export type Structures3DState = "OFF" | "READY" | "UNAVAILABLE" | "ERROR";
@@ -241,6 +243,57 @@ export const setTerrainPresentation = (
     return "LOADING";
   } catch {
     return "ERROR";
+  }
+};
+
+/** Adds a quantitative color ramp over the active terrain using unexaggerated
+ * DEM elevations. The ramp is a visual reading aid, not analytical evidence. */
+export const setTerrainHeightOverlay = (map: MapLibreMap, enabled: boolean): boolean => {
+  try {
+    if (!enabled) {
+      if (map.getLayer(TERRAIN_COLOR_RELIEF_LAYER_ID)) {
+        map.setLayoutProperty(TERRAIN_COLOR_RELIEF_LAYER_ID, "visibility", "none");
+      }
+      return false;
+    }
+    if (!map.getSource(TERRAIN_COLOR_SOURCE_ID)) {
+      map.addSource(TERRAIN_COLOR_SOURCE_ID, {
+        type: "raster-dem",
+        tiles: [ACTIVE_TERRAIN_SOURCE.tileTemplate!],
+        tileSize: ACTIVE_TERRAIN_SOURCE.tileSize!,
+        maxzoom: ACTIVE_TERRAIN_SOURCE.maxZoom!,
+        encoding: ACTIVE_TERRAIN_SOURCE.encoding,
+        attribution: ACTIVE_TERRAIN_SOURCE.attribution,
+      });
+    }
+    if (!map.getLayer(TERRAIN_COLOR_RELIEF_LAYER_ID)) {
+      const firstSymbolLayerId = map.getStyle().layers?.find((layer) => layer.type === "symbol")?.id;
+      map.addLayer({
+        id: TERRAIN_COLOR_RELIEF_LAYER_ID,
+        type: "color-relief",
+        source: TERRAIN_COLOR_SOURCE_ID,
+        layout: { visibility: "visible" },
+        paint: {
+          "color-relief-opacity": 0.58,
+          "color-relief-color": [
+            "interpolate", ["linear"], ["elevation"],
+            200, "#163d59",
+            300, "#1f6f78",
+            400, "#5a916a",
+            500, "#a5a95d",
+            650, "#d0a957",
+            800, "#c87945",
+            1000, "#9e5145",
+            1250, "#f1e5cf",
+          ],
+        },
+      }, firstSymbolLayerId);
+    } else {
+      map.setLayoutProperty(TERRAIN_COLOR_RELIEF_LAYER_ID, "visibility", "visible");
+    }
+    return true;
+  } catch {
+    return false;
   }
 };
 

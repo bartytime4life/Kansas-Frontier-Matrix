@@ -124,6 +124,8 @@ test("adds bounded smoke, water, elevation, tile, and scene navigation features"
   assert.match(explorerSource, /not observed smoke, a forecast, an advisory/i);
   assert.match(explorerSource, /not a fetched vector tile, PMTiles archive/i);
   assert.match(runtime, /setElevationExaggeration/);
+  assert.match(runtime, /type: "color-relief"/);
+  assert.match(runtime, /"color-relief-color"/);
   assert.match(runtime, /applySceneEnvironment/);
   assert.match(runtime, /setSky/);
   assert.match(runtime, /setLight/);
@@ -150,6 +152,10 @@ test("adds bounded smoke, water, elevation, tile, and scene navigation features"
   assert.match(page, /Renderer preview only—not analytical elevation or report evidence/);
   assert.match(css, /\.terrain-profile-preview/);
   assert.match(page, /TERRAIN SCENE PASSPORT/);
+  assert.match(page, /TOPOGRAPHIC HEIGHT/);
+  assert.match(page, /Lock for report/);
+  assert.match(page, /queryTerrainElevation\(\[event\.lngLat\.lng, event\.lngLat\.lat\], \{ exaggerated: false \}\)/);
+  assert.match(page, /colorRampMeters/);
   assert.match(page, /Vertical datum, analytical spacing, and KFM source admission are not asserted/);
   assert.match(css, /\.terrain-scene-passport/);
   assert.match(page, /STRUCTURE_3D_SOURCE/);

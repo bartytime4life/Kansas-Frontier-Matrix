@@ -2516,9 +2516,30 @@ body { font-size: 14px; }
 .terrain-scene-passport dt { color: var(--dim); font-size: 10px; }
 .terrain-scene-passport dd { overflow: hidden; margin: 2px 0 0; color: var(--ink); font-size: 11px; font-weight: 750; text-overflow: ellipsis; white-space: nowrap; }
 .terrain-scene-passport > p { margin: 8px 0; color: var(--muted); font-size: 11px; line-height: 1.4; }
-.terrain-scene-passport > div:last-child { display: flex; gap: 7px; }
+.terrain-passport-actions { display: flex; flex-wrap: wrap; gap: 7px; }
 .terrain-scene-passport button { min-height: 30px; border: 1px solid rgba(115, 199, 210, .4); border-radius: 5px; background: rgba(7, 36, 42, .82); color: #dff5f5; padding: 0 9px; font: inherit; font-size: 11px; font-weight: 800; cursor: pointer; }
 .terrain-scene-passport button:first-child { border-color: rgba(224, 186, 109, .58); color: var(--gold-soft); }
+.terrain-cursor-reading { display: flex; align-items: baseline; gap: 8px; margin-top: 8px; border-top: 1px solid var(--line); padding-top: 7px; color: var(--muted); font-size: 11px; }
+.terrain-cursor-reading strong { color: var(--gold-soft); font-size: 16px; }
+
+.terrain-height-instrument { display: grid; gap: 10px; border: 1px solid rgba(115, 199, 210, .34); border-radius: 10px; background: rgba(4, 28, 33, .7); padding: 11px; }
+.terrain-height-instrument > header { display: flex; align-items: start; justify-content: space-between; gap: 12px; }
+.terrain-height-instrument > header > div { display: grid; gap: 3px; }
+.terrain-height-instrument > header span { color: var(--water); font-size: 10px; font-weight: 900; letter-spacing: .1em; }
+.terrain-height-instrument h4 { margin: 0; font-size: 15px; }
+.terrain-height-instrument > header button { min-width: 58px; min-height: 32px; border: 1px solid var(--gold); border-radius: 6px; background: rgba(224, 186, 109, .08); color: var(--gold-soft); font-weight: 900; }
+.terrain-height-instrument > header button[aria-checked="true"] { background: rgba(80, 198, 213, .18); color: #eafcfc; }
+.terrain-height-instrument button:disabled { opacity: .42; }
+.terrain-height-ramp { display: grid; grid-template-columns: repeat(5, 1fr); color: var(--muted); font-size: 10px; }
+.terrain-height-ramp i { grid-column: 1 / -1; height: 13px; border-radius: 3px; background: linear-gradient(90deg, #163d59, #1f6f78, #5a916a, #a5a95d, #d0a957, #c87945, #9e5145, #f1e5cf); }
+.terrain-height-ramp span { padding-top: 4px; text-align: center; }
+.terrain-height-readout { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 10px; }
+.terrain-height-readout > div { display: grid; gap: 2px; }
+.terrain-height-readout small { color: var(--dim); font-size: 10px; font-weight: 900; }
+.terrain-height-readout strong { color: var(--gold-soft); font-size: 20px; }
+.terrain-height-readout span, .terrain-height-instrument > p { color: var(--muted); font-size: 11px; line-height: 1.4; }
+.terrain-height-readout button { min-height: 34px; border: 1px solid rgba(115, 199, 210, .45); border-radius: 6px; background: rgba(7, 36, 42, .82); color: var(--ink); padding: 0 10px; font-weight: 800; }
+.terrain-height-instrument > p { margin: 0; border-top: 1px solid var(--line); padding-top: 8px; }
 
 .map-tool-rail { top: 72px; right: auto; left: 12px; width: 48px; }
 .map-tool-group { border-radius: 7px; background: rgba(2, 20, 27, .9); }

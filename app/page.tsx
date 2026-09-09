@@ -27,9 +27,12 @@ import {
   lngLatToTile,
   reorderRegistryLayers,
   setStructureExtrusions,
+  setTerrainHeightOverlay,
   setTerrainPresentation,
   setElevationExaggeration,
   TERRAIN_HILLSHADE_LAYER_ID,
+  TERRAIN_COLOR_RELIEF_LAYER_ID,
+  TERRAIN_COLOR_SOURCE_ID,
   TERRAIN_SOURCE_ID,
   type Structures3DState,
   type TerrainPresentationState,
@@ -185,6 +188,7 @@ type TemporalStepRule = "available-events" | "regular-calendar";
 type PlaybackSpeed = 0.5 | 1 | 2;
 type BoxDragMode = "zoom" | "report-area";
 type TerrainProfileSample = Readonly<{ distanceMiles: number; elevationMeters: number }>;
+type TerrainElevationReading = Readonly<{ longitude: number; latitude: number; meters: number; feet: number }>;
 type RepositoryView = "updates" | "functions" | "scenario" | "runtime" | "transitions" | "readiness" | "sources";
 type SourceObservatoryView = "candidates" | "corpus" | "gaps";
 type GovernedRoute = "/bootstrap" | "/layers" | "/evidence" | "/focus";
@@ -703,6 +707,7 @@ export default function Home() {
   const projectionRef = useRef<"mercator" | "globe">("mercator");
   const scenePresetRef = useRef<ScenePresetId>("elevation-3d");
   const verticalExaggerationRef = useRef(1);
+  const topographicOverlayRef = useRef(false);
   const atmospherePresetRef = useRef<AtmospherePreset>("dusk");
   const lightAzimuthRef = useRef(235);
   const fieldOfViewRef = useRef(44);
@@ -750,6 +755,9 @@ export default function Home() {
   const [view, setView] = useState<ViewState>(KANSAS_VIEW);
   const [scenePreset, setScenePreset] = useState<ScenePresetId>("elevation-3d");
   const [terrainState, setTerrainState] = useState<TerrainPresentationState>("LOADING");
+  const [topographicOverlay, setTopographicOverlay] = useState(false);
+  const [terrainElevationReading, setTerrainElevationReading] = useState<TerrainElevationReading | null>(null);
+  const [lockedTerrainElevation, setLockedTerrainElevation] = useState<TerrainElevationReading | null>(null);
   const [verticalExaggeration, setVerticalExaggeration] = useState(1);
   const [atmospherePreset, setAtmospherePreset] = useState<AtmospherePreset>("dusk");
   const [lightAzimuth, setLightAzimuth] = useState(235);
@@ -2404,6 +2412,7 @@ export default function Home() {
           applySceneEnvironment(map, atmospherePresetRef.current, lightAzimuthRef.current);
           map.setVerticalFieldOfView(fieldOfViewRef.current);
           setTerrainState(setTerrainPresentation(map, scenePresetRef.current === "elevation-3d", verticalExaggerationRef.current));
+          setTerrainHeightOverlay(map, scenePresetRef.current === "elevation-3d" && topographicOverlayRef.current);
           setStructures3DState(setStructureExtrusions(map, structures3DRef.current));
           const currentSelection = selectedRef.current;
           if (currentSelection) {
@@ -2427,6 +2436,15 @@ export default function Home() {
         });
 
         map.on("mousemove", (event) => {
+          if (scenePresetRef.current === "elevation-3d" && topographicOverlayRef.current) {
+            const elevationMeters = map.queryTerrainElevation([event.lngLat.lng, event.lngLat.lat], { exaggerated: false });
+            setTerrainElevationReading(elevationMeters !== null && Number.isFinite(elevationMeters) ? {
+              longitude: event.lngLat.lng,
+              latitude: event.lngLat.lat,
+              meters: elevationMeters,
+              feet: elevationMeters * 3.28084,
+            } : null);
+          }
           const availableLayers = interactiveLayerIds.filter((id) => map.getLayer(id));
           const candidate = (availableLayers.length ? map.queryRenderedFeatures(event.point, { layers: availableLayers }) : [])[0];
           const externalCandidate = candidate ? null : map.queryRenderedFeatures(event.point).find((feature) => {
@@ -2480,7 +2498,10 @@ export default function Home() {
             hoveredRef.current = null;
           }
         });
-        map.getCanvas().addEventListener("mouseleave", () => setHoverSummary(null));
+        map.getCanvas().addEventListener("mouseleave", () => {
+          setHoverSummary(null);
+          setTerrainElevationReading(null);
+        });
 
         map.on("click", (event) => {
           if (measureModeRef.current) {
@@ -2638,7 +2659,7 @@ export default function Home() {
           const message = event.error?.message || "The map reported an unknown rendering error.";
           const sourceId = (event as typeof event & { sourceId?: string }).sourceId;
           const affectedLayer = sourceId ? LAYER_REGISTRY.find((layer) => layer.sourceId === sourceId) : undefined;
-          if (basemapRef.current === "standard" && !styleFallbackAttempted && (!sourceId || (!affectedLayer && sourceId !== TERRAIN_SOURCE_ID))) {
+          if (basemapRef.current === "standard" && !styleFallbackAttempted && (!sourceId || (!affectedLayer && sourceId !== TERRAIN_SOURCE_ID && sourceId !== TERRAIN_COLOR_SOURCE_ID))) {
             styleFallbackAttempted = true;
             runtimeError = null;
             degradedReason = `Standard vector basemap unavailable; switched to the local MapLibre style. ${message}`;
@@ -2653,6 +2674,13 @@ export default function Home() {
             setTerrainState("ERROR");
             degradedReason = `Terrain DEM is unavailable; the 2D map remains usable. ${message}`;
             setRuntime({ kind: "degraded", message: degradedReason });
+            return;
+          }
+          if (sourceId === TERRAIN_COLOR_SOURCE_ID) {
+            topographicOverlayRef.current = false;
+            setTopographicOverlay(false);
+            setTerrainElevationReading(null);
+            announce("Topographic height overlay is unavailable; Terrain 3D remains active");
             return;
           }
           setMaplibreProbe((current) => ({ ...current, error: message }));
@@ -3443,10 +3471,12 @@ export default function Home() {
     if (map?.isStyleLoaded()) {
       if (mode !== "terrain") {
         setTerrainState(setTerrainPresentation(map, false, 1));
+        setTerrainHeightOverlay(map, false);
       }
       map.setProjection({ type: nextProjection });
       if (mode === "terrain") {
         setTerrainState(setTerrainPresentation(map, true, 1));
+        setTerrainHeightOverlay(map, topographicOverlayRef.current);
       }
       applySceneEnvironment(map, nextAtmosphere, lightAzimuthRef.current);
       map.setVerticalFieldOfView(nextFieldOfView);
@@ -3475,6 +3505,23 @@ export default function Home() {
     openMapUtility("scene");
     toggleMeasure("distance");
     announce("Terrain investigation ready at physical 1× scale. Draw a line on the map, finish it, then preview the display profile.");
+  };
+
+  const toggleTopographicHeightOverlay = () => {
+    const next = !topographicOverlayRef.current;
+    const map = mapRef.current;
+    if (next && (!map?.isStyleLoaded() || terrainState === "ERROR")) {
+      announce("Height overlay is waiting for the terrain DEM");
+      return;
+    }
+    topographicOverlayRef.current = next;
+    setTopographicOverlay(next);
+    if (map) setTerrainHeightOverlay(map, next && scenePresetRef.current === "elevation-3d");
+    if (!next) {
+      setTerrainElevationReading(null);
+      setLockedTerrainElevation(null);
+    }
+    announce(next ? "Topographic height colors enabled · move over the map to read unexaggerated elevation" : "Topographic height colors disabled");
   };
 
   const previewTerrainProfile = () => {
@@ -4373,7 +4420,21 @@ export default function Home() {
           : { zoom: view.zoom, bearing: view.bearing, pitch: view.pitch },
         representation: mapRepresentationLabel,
         scene: scenePreset,
-        terrain: { state: terrainState, exaggeration: verticalExaggeration, sourceRole: "external DEM display context · not evidence" },
+        terrain: {
+          state: terrainState,
+          exaggeration: verticalExaggeration,
+          sourceRole: "external DEM display context · not evidence",
+          heightOverlay: {
+            enabled: topographicOverlay,
+            method: "MapLibre color-relief from the active raster-dem; cursor and locked readings query unexaggerated terrain elevation.",
+            colorRampMeters: [200, 300, 400, 500, 650, 800, 1000, 1250],
+            lockedReading: lockedTerrainElevation ? {
+              elevationMeters: lockedTerrainElevation.meters,
+              elevationFeet: lockedTerrainElevation.feet,
+              coordinate: locationCameraRedacted ? "WITHHELD_BROWSER_LOCATION" : [lockedTerrainElevation.longitude, lockedTerrainElevation.latitude],
+            } : null,
+          },
+        },
         projection,
         basemap,
         viewport: reportScope === "VIEWPORT" ? mapViewportBounds : null,
@@ -4414,7 +4475,10 @@ export default function Home() {
         "Protected geometry is not reconstructed; location-derived camera coordinates remain withheld.",
         ...Array.from(new Set(records.map((record) => `${record.title}: ${record.generalization} ${record.uncertainty}`))),
       ] : null,
-      attribution: reportLayerSummary.map((layer) => ({ layer: layer.title, source: layer.attribution })),
+      attribution: [
+        ...reportLayerSummary.map((layer) => ({ layer: layer.title, source: layer.attribution })),
+        ...(topographicOverlay ? [{ layer: "Topographic height overlay", source: TERRAIN_SOURCES[0].attribution }] : []),
+      ],
     };
   };
 
@@ -4444,7 +4508,13 @@ export default function Home() {
       const records = report.records ?? [];
       const findings = report.findings ?? [];
       const limitations = report.limitations ?? [];
+      const heightOverlay = report.mapContext.terrain.heightOverlay;
+      const lockedHeight = heightOverlay.lockedReading;
+      const heightSection = heightOverlay.enabled
+        ? `<section><h2>Terrain height overlay</h2><p><strong>Color relief:</strong> active, based on unexaggerated DEM elevation.</p>${lockedHeight ? `<p><strong>Locked reading:</strong> ${escapeReportHtml(lockedHeight.elevationFeet.toFixed(0))} ft / ${escapeReportHtml(lockedHeight.elevationMeters.toFixed(0))} m</p>` : "<p>No cursor elevation was locked for this report.</p>"}<p class="boundary">External display DEM. Confirm vertical datum, product version, and survey requirements before using this value as authoritative evidence.</p></section>`
+        : "";
       content = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escapeReportHtml(report.title)}</title><style>body{font:15px/1.55 Inter,system-ui,sans-serif;color:#17201d;max-width:1100px;margin:0 auto;padding:48px}header{border-bottom:3px solid #b88b38;padding-bottom:22px;margin-bottom:28px}h1{font-size:36px;letter-spacing:-.04em;margin:0 0 8px}h2{margin-top:34px}small,.muted{color:#607069}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.metric{border:1px solid #ccd6d1;padding:15px}.metric strong{display:block;font-size:24px}table{width:100%;border-collapse:collapse;font-size:13px}th,td{border-bottom:1px solid #dce3df;padding:10px;text-align:left;vertical-align:top}th{background:#f1f5f2}code{font-size:11px}li{margin:8px 0}.boundary{border-left:4px solid #b88b38;background:#f7f3ea;padding:14px 18px}@media print{body{padding:0}.boundary{break-inside:avoid}}@media(max-width:700px){body{padding:24px}.metrics{grid-template-columns:1fr 1fr}table{display:block;overflow:auto}}</style></head><body><header><small>KANSAS FRONTIER MATRIX · CUSTOM MAP REPORT</small><h1>${escapeReportHtml(report.title)}</h1><p>${escapeReportHtml(report.scope.replaceAll("_", " "))} · active time ${escapeReportHtml(report.activeTime.label)} · generated ${escapeReportHtml(generatedAt)}</p></header>${report.summary ? `<section><h2>Report summary</h2><div class="metrics"><div class="metric"><small>MATCHED RECORDS</small><strong>${report.summary.matchedRecords}</strong></div><div class="metric"><small>INCLUDED RECORDS</small><strong>${report.summary.includedRecords}</strong></div><div class="metric"><small>LAYERS</small><strong>${report.summary.includedLayers}</strong></div><div class="metric"><small>EVIDENCE STATES</small><strong>${Object.keys(report.summary.evidenceStates).length}</strong></div></div></section>` : ""}${findings.length ? `<section><h2>Findings</h2><ol>${findings.map((finding) => `<li>${escapeReportHtml(finding)}</li>`).join("")}</ol></section>` : ""}<section><h2>Time A / Time B catalog availability</h2><div class="metrics"><div class="metric"><small>TIME A</small><strong>${escapeReportHtml(formatTimelineStep(report.temporalComparison.timeA))}</strong><span>${report.temporalComparison.timeARecordCount} records</span></div><div class="metric"><small>TIME B</small><strong>${escapeReportHtml(formatTimelineStep(report.temporalComparison.timeB))}</strong><span>${report.temporalComparison.timeBRecordCount} records</span></div><div class="metric"><small>DELTA</small><strong>${report.temporalComparison.recordDelta >= 0 ? "+" : ""}${report.temporalComparison.recordDelta}</strong><span>catalog records</span></div><div class="metric"><small>CHANGED LAYERS</small><strong>${report.temporalComparison.changedLayerCount}</strong><span>under temporal rules</span></div></div><p class="boundary">Catalog availability only—not observed change, imagery analysis, causation, or proof of an event.</p></section>${records.length ? `<section><h2>Included records</h2><table><thead><tr><th>Record</th><th>Layer / time</th><th>Evidence</th><th>Summary</th></tr></thead><tbody>${records.map((record) => `<tr><td><strong>${escapeReportHtml(record.title)}</strong><br><code>${escapeReportHtml(record.id)}</code></td><td>${escapeReportHtml(record.layer)}<br>${escapeReportHtml(record.year)}</td><td>${escapeReportHtml(record.evidenceState)}<br><code>${escapeReportHtml(record.evidenceReference)}</code></td><td>${escapeReportHtml(record.summary)}</td></tr>`).join("")}</tbody></table></section>` : ""}${limitations.length ? `<section><h2>Limitations</h2><ul>${limitations.map((limitation) => `<li>${escapeReportHtml(limitation)}</li>`).join("")}</ul></section>` : ""}<section><h2>Attribution</h2><ul>${report.attribution.map((item) => `<li><strong>${escapeReportHtml(item.layer)}:</strong> ${escapeReportHtml(item.source)}</li>`).join("")}</ul></section><p class="boundary">This report is a browser-generated public-safe demonstration artifact. It does not release, publish, admit, or authorize KFM data.</p></body></html>`;
+      if (heightSection) content = content.replace("<section><h2>Time A / Time B", `${heightSection}<section><h2>Time A / Time B`);
       mime = "text/html";
     }
     const url = URL.createObjectURL(new Blob([content], { type: mime }));
@@ -5007,10 +5077,12 @@ export default function Home() {
               <div><dt>Evidence</dt><dd>Display context only</dd></div>
             </dl>
             <p>Relief is observed from the renderer. Vertical datum, analytical spacing, and KFM source admission are not asserted.</p>
-            <div>
+            <div className="terrain-passport-actions">
+              <button type="button" aria-pressed={topographicOverlay} onClick={toggleTopographicHeightOverlay}>{topographicOverlay ? "Hide height colors" : "Show height colors"}</button>
               <button type="button" onClick={startTerrainInvestigation}>Profile a transect</button>
               <button type="button" onClick={() => openMapUtility("scene")}>Inspect terrain method</button>
             </div>
+            {topographicOverlay && <output className="terrain-cursor-reading" aria-live="polite">{terrainElevationReading ? <><strong>{terrainElevationReading.feet.toFixed(0)} ft</strong><span>{terrainElevationReading.meters.toFixed(0)} m · unexaggerated DEM</span></> : <span>Move over the map to read elevation</span>}</output>}
           </aside>}
           <aside className="map-legend-dock" aria-label="Visible map legend">
             <header>
@@ -5360,6 +5432,16 @@ export default function Home() {
                   <article data-state="ready"><span>WORKS NOW</span><strong>2D, globe, camera, measurement</strong><small>Direct MapLibre state changes</small></article>
                   <article data-state={terrainState === "ERROR" ? "held" : "context"}><span>{terrainState === "READY" ? "DISPLAY ONLY" : terrainState}</span><strong>Terrain relief + profile preview</strong><small>External DEM; not KFM evidence</small></article>
                   <article data-state="held"><span>HELD</span><strong>Smoke, fire, habitat, people/DNA animation</strong><small>No admitted live sources; controls removed</small></article>
+                </section>
+
+                <section className="terrain-height-instrument" aria-labelledby="terrain-height-title">
+                  <header><div><span>TOPOGRAPHIC HEIGHT</span><h4 id="terrain-height-title">Elevation color overlay</h4></div><button type="button" role="switch" aria-checked={topographicOverlay} disabled={scenePreset !== "elevation-3d" || terrainState === "ERROR"} onClick={toggleTopographicHeightOverlay}>{topographicOverlay ? "ON" : "OFF"}</button></header>
+                  <div className="terrain-height-ramp" aria-label="Elevation color scale from 200 to 1,250 meters"><i /><span>200 m</span><span>400 m</span><span>650 m</span><span>1,000 m</span><span>1,250 m</span></div>
+                  <div className="terrain-height-readout">
+                    <div><small>CURSOR ELEVATION</small><strong>{terrainElevationReading ? `${terrainElevationReading.feet.toFixed(0)} ft` : "Move over map"}</strong><span>{terrainElevationReading ? `${terrainElevationReading.meters.toFixed(0)} m · ${terrainElevationReading.latitude.toFixed(5)}, ${terrainElevationReading.longitude.toFixed(5)}` : "Uses the active unexaggerated DEM"}</span></div>
+                    <button type="button" disabled={!terrainElevationReading} onClick={() => { setLockedTerrainElevation(terrainElevationReading); announce("Elevation reading locked into the current report context"); }}>Lock for report</button>
+                  </div>
+                  {lockedTerrainElevation && <p><strong>Report reading:</strong> {lockedTerrainElevation.feet.toFixed(0)} ft / {lockedTerrainElevation.meters.toFixed(0)} m at {lockedTerrainElevation.latitude.toFixed(5)}, {lockedTerrainElevation.longitude.toFixed(5)}. External display DEM; verify against an admitted elevation source before making an authoritative claim.</p>}
                 </section>
 
                 <section className="terrain-investigation" aria-labelledby="terrain-investigation-title">
