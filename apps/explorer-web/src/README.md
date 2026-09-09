@@ -13,8 +13,8 @@ responsibility: 'Define the Explorer Web source-layout boundary and record curre
 truth_posture: 'CONFIRMED source inventory and bounded local/fixture-first slices / PROPOSED broader route and integration shape / UNKNOWN fresh execution, deployment, release, and public operation'
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
-  main_commit: d0fb0d3cfa9fe25b5d450abc76068d63c23efab6
-  main_tree: c0e40dc0fbedb4415488e5561222ae96f015c81e
+  main_commit: 033103a0afe80f85a823973951b3b7d15abb7a8b
+  main_tree: b21256c6f574b8f289cd806035ca268e012d2393
   target_prior_blob: a79d96b196d8b95208e209ccd74e51c02e7d146f
   parent_app_readme_blob: bd022e91d998685820f6c3b0965bdffbfd355726
   entrypoint_blob: 787c5182777b7f26d281e7e2851344b504a70d1c
@@ -112,18 +112,18 @@ notes:
 
 ## 0. Current evidence snapshot
 
-**Implementation base:** [`main@d0fb0d3cfa9fe25b5d450abc76068d63c23efab6`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/d0fb0d3cfa9fe25b5d450abc76068d63c23efab6), observed 2026-09-09. The Living Atlas work is a draft branch candidate over that immutable base; it does not establish merge, deployment, release, or publication.
+**Implementation base:** [`main@033103a0afe80f85a823973951b3b7d15abb7a8b`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/033103a0afe80f85a823973951b3b7d15abb7a8b), observed 2026-09-09. The Living Atlas work is a draft branch candidate over that immutable base and preserves the merged terrain source ledger; it does not establish merge, deployment, release, or publication.
 
 | Surface | Confirmed at the pinned source | Limit |
 |---|---|---|
 | `apps/explorer-web/src/` | Six direct entries: `README.md`, `main.ts`, `adapters/`, `features/`, `site/`, and `viewer_templates/`. | Directory shape is not a production route inventory. |
 | `main.ts` | Mounts the repository-grounded site composition, four public workspace anchors, URL/hash navigation, the synthetic Focus workspace, and the shared Trust surface. | Local composition and anchor navigation do not establish a production router, live transport, or public operation. |
-| `site/` | Contains 18 non-README source/style files, including the Living Atlas composition, workspace registry/context/deep links, code-owned catalog, retained `NullMapRuntime` laboratory, trust primitives, and responsive/map styles. | Synthetic/local inputs remain bounded fixtures and presentation state; they are not live evidence or released layers. |
+| `site/` | Contains 21 non-README source/style files, including the Living Atlas composition, terrain source ledger, workspace registry/context/deep links, code-owned catalog, retained `NullMapRuntime` laboratory, trust primitives, and responsive/map styles. | Synthetic/local inputs remain bounded fixtures and presentation state; they are not live evidence or released layers. |
 | `adapters/` | Current directory contains 25 adapter/projection files plus its README, including `GovernedClient.ts`, map-runtime/evidence bridges, and domain/diagnostic projections. | App-local parsers and projections are not a live Governed API transport or policy/release authority. |
 | `features/` | Contains 40 child feature directories, including the typed `living_atlas/` registry/style boundary plus existing shell, trust/time, map/layers, evidence/Focus, story/compare/export, settings/diagnostics, review, and fixture-first projections. | Directory count does not mean every feature is live, externally sourced, released, or production-ready. |
 | `viewer_templates/` | Four JSON style templates plus its README are present for default, compare, review, and story views. | Templates are deterministic presentation inputs, not released layer manifests or renderer admission. |
 | `apps/explorer-web/package.json` | The app declares `build`, `test`, `test:unit`, and `test:browser` scripts with Node `>=22.13 <23`; the package manifest is pinned at blob `25b67b10eb4d208b780eb456853257d051a2ce39`. | Declared commands are not execution results. |
-| `apps/explorer-web/tests/` | 57 direct `*.test.ts` files plus a `browser/` fixture directory are present. | Unit definitions and fixture doubles do not prove GPU/source readiness, hosting, or deployment; browser execution requires a compatible runtime. |
+| `apps/explorer-web/tests/` | 58 direct `*.test.ts` files plus a `browser/` fixture directory are present. | Unit definitions and fixture doubles do not prove GPU/source readiness, hosting, or deployment; browser execution requires a compatible runtime. |
 | Renderer boundary | `packages/maplibre/` contains MapLibre GL JS `6.7.0`; normal composition acquires it only through `@kfm/maplibre/vite-adapter` with an inline-only style. | Bounded activation is distinct from real-source admission, full browser readiness, deployment, or release. |
 | Static policy guard | `tests/policy/test_explorer_web_adapter_boundary.py` scans Explorer source for raw renderer imports and forbidden internal-store path literals. | The guard is source evidence; this README does not claim the command was run at the current head. |
 
@@ -225,11 +225,11 @@ A route, component, adapter, export flow, or map interaction should not render c
 | Current area | Verified repository responsibility | Maturity limit |
 |---|---|---|
 | `main.ts` | Mounts the site composition, four public workspace anchors, URL/hash synchronization, the synthetic Focus workspace, and the shared Trust surface. | Local deterministic composition; not a production router, live transport, deployment, release, or publication path. |
-| `site/` | Owns the app-local Map, Reports, Stories, Knowledge, Features, and Trust composition, code-owned catalog, workspace context/deep links, Living Atlas controller, retained trust-state laboratory, and site styles. | Synthetic/local inputs do not establish live data, authentication, evidence authority, released layers, or public operation. |
+| `site/` | Owns the app-local Map, Reports, Stories, Knowledge, Features, and Trust composition, terrain source ledger, code-owned catalog, workspace context/deep links, Living Atlas controller, retained trust-state laboratory, and site styles. | Synthetic/local inputs do not establish live data, authentication, evidence authority, released layers, or public operation. |
 | `adapters/` | Owns 25 app-local adapter/projection files, including `GovernedClient.ts`, map-runtime/evidence bridges, citation/redaction/reveal projections, and domain/diagnostic projections. | Bounded parsers and projections are not live Governed API transport, policy execution, release authority, or renderer authority. |
 | `features/` | Contains 40 child feature directories, including the Living Atlas registry/style boundary and existing shell, trust/time, map/layers, evidence/Focus, story/compare/export, settings/diagnostics, review, and other fixture-first slices. | Child directories and tests prove only their bounded slice; they do not create production routes, admitted sources, or live services by count. |
 | `viewer_templates/` | Contains four deterministic JSON style templates for default, compare, review, and story views. | Templates are not released layer manifests, admitted renderer configuration, or publication authority. |
-| Paired test lane | `apps/explorer-web/tests/` contains 57 direct test files plus browser fixtures for workspace, temporal, map/evidence, trust, feature, and boundary behavior. | Unit execution and file presence do not prove unavailable browser, GPU, source, hosting, or production readiness. |
+| Paired test lane | `apps/explorer-web/tests/` contains 58 direct test files plus browser fixtures for workspace, temporal, map/evidence, trust, feature, and boundary behavior. | Unit execution and file presence do not prove unavailable browser, GPU, source, hosting, or production readiness. |
 
 There is no `routes/` directory in this source tree. Workspace anchors and navigation are bounded browser composition, not a claim of a production router. `src/adapters/MapLibreAdapter.ts` remains a renderer boundary note; the package-owned implementation stays outside `src/`, and the normal page acquires it only through the accepted Vite adapter seam.
 
@@ -323,7 +323,7 @@ For source changes under `apps/explorer-web/src/`:
 
 - [ ] Owners are confirmed and `OWNER_TBD` is replaced.
 - [x] The bounded `src/` entrypoint and app-local build/test scripts are present at the pinned source.
-- [x] The current six-entry `src/` boundary, 25 adapter/projection files, 40 feature directories, 18 site files, four viewer templates, and 57 direct app test files are recorded as structural evidence.
+- [x] The current six-entry `src/` boundary, 25 adapter/projection files, 40 feature directories, 21 site files, four viewer templates, and 58 direct app test files are recorded as structural evidence.
 - [x] Bounded workspace/deep-link, temporal, Evidence Drawer, Focus, layer, export, diagnostics, trust, story, and map-runtime test definitions are present in the app test lane.
 - [x] A policy test scans renderer imports and direct internal-store path literals.
 - [x] The current `site/`, `adapters/`, `features/`, and `viewer_templates/` responsibilities and maturity limits are documented without promoting file counts into route or production claims.
@@ -350,7 +350,7 @@ For source changes under `apps/explorer-web/src/`:
 
 The target file began as an empty placeholder. Earlier README versions correctly established the `src/` boundary but later became stale as `site/`, `adapters/`, `features/`, `viewer_templates/`, and their tests were added.
 
-This v0.5 revision re-pins the implementation base to main@d0fb0d3cfa9fe25b5d450abc76068d63c23efab6 and records the bounded Living Atlas composition candidate. It does not promote local code or tests into claims about a production router, live transport, admitted external sources, complete browser readiness, deployment, release, publication, or public operation. It preserves the source-tree identity and records provenance in the required generated receipt.
+This v0.5 revision re-pins the implementation base to main@033103a0afe80f85a823973951b3b7d15abb7a8b, preserves the terrain source-ledger slice, and records the bounded Living Atlas composition candidate. It does not promote local code or tests into claims about a production router, live transport, admitted external sources, complete browser readiness, deployment, release, publication, or public operation. It preserves the source-tree identity and records provenance in the required generated receipt.
 
 </details>
 

@@ -14,7 +14,7 @@ truth_posture: "CONFIRMED pinned source and configuration / PROPOSED canonical-s
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: d0fb0d3cfa9fe25b5d450abc76068d63c23efab6
+  base_commit: 033103a0afe80f85a823973951b3b7d15abb7a8b
   target_prior_blob: 561f78ea224338b3a1748d5689a2f56bfe7a1359
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   entrypoint_blob: 787c5182777b7f26d281e7e2851344b504a70d1c
@@ -69,7 +69,7 @@ notes:
 
 ## 0. Current evidence snapshot
 
-**Implementation base:** `main@d0fb0d3cfa9fe25b5d450abc76068d63c23efab6`, 2026-09-09. The Living Atlas work is a draft branch candidate over that immutable base; it is not a merged release, deployment, or public-operation claim.
+**Implementation base:** `main@033103a0afe80f85a823973951b3b7d15abb7a8b`, 2026-09-09. The Living Atlas work is a draft branch candidate over that immutable base and preserves the merged terrain source-ledger slice; it is not a merged release, deployment, or public-operation claim.
 
 | Surface | CONFIRMED at the pinned source | Limit |
 |---|---|---|

@@ -63,8 +63,8 @@ The website feature catalog is refreshed against:
 
 - repository: `bartytime4life/Kansas-Frontier-Matrix`
 - ref: `main`
-- commit: `d0fb0d3cfa9fe25b5d450abc76068d63c23efab6`
-- recorded at: `2026-09-08T18:05:34Z`
+- commit: `033103a0afe80f85a823973951b3b7d15abb7a8b`
+- recorded at: `2026-09-09T02:12:08Z`
 - Explorer path: `apps/explorer-web/`
 - MapLibre package home: `packages/maplibre/`
 - exact MapLibre package version present: `6.7.0`

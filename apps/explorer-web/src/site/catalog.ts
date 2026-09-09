@@ -2,8 +2,8 @@
 export const REPOSITORY_SNAPSHOT = Object.freeze({
   repository: "bartytime4life/Kansas-Frontier-Matrix",
   ref: "main",
-  commit: "d0fb0d3cfa9fe25b5d450abc76068d63c23efab6",
-  commitRecordedAt: "2026-09-08T18:05:34Z",
+  commit: "033103a0afe80f85a823973951b3b7d15abb7a8b",
+  commitRecordedAt: "2026-09-09T02:12:08Z",
   explorerPath: "apps/explorer-web",
   mapLibre: Object.freeze({
     family: "MapLibre GL JS",
@@ -21,8 +21,8 @@ export const REPOSITORY_SNAPSHOT = Object.freeze({
 
 /** Current MapLibre readiness facts at the pinned repository snapshot. */
 export const CURRENT_MAPLIBRE_READINESS = Object.freeze({
-  evidenceCommit: "d0fb0d3cfa9fe25b5d450abc76068d63c23efab6",
-  evidenceRecordedAt: "2026-09-08T18:05:34Z",
+  evidenceCommit: "033103a0afe80f85a823973951b3b7d15abb7a8b",
+  evidenceRecordedAt: "2026-09-09T02:12:08Z",
   family: "MapLibre GL JS",
   packageHome: "packages/maplibre",
   readinessCandidate: "6.7.0",
