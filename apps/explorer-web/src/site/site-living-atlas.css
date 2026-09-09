@@ -26,6 +26,7 @@
 .atlas-layer-row button { min-height: 2rem; padding: .25rem .45rem; font-size: .72rem; }
 .atlas-section-label { margin: 1.15rem 0 .55rem; color: var(--prairie-soft); font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; }
 .atlas-connection-card, .atlas-tool-card { display: grid; gap: .4rem; border: 1px solid var(--line); border-radius: .7rem; padding: .65rem; }
+.atlas-connection-card small, .atlas-tool-card small { color: var(--caution); font-size: .7rem; font-weight: 750; }
 .atlas-connection-card p, .atlas-tool-card p { margin: 0; color: var(--muted); font-size: .75rem; line-height: 1.45; }
 .atlas-connection-card button, .atlas-tool-card button { min-height: 2rem; padding: .25rem .45rem; font-size: .72rem; text-align: left; }
 .atlas-tool-card a, .atlas-artifact-links a { color: var(--river); font-size: .75rem; line-height: 1.4; }
@@ -39,16 +40,6 @@
 .atlas-map-canvas canvas { outline: none; }
 .atlas-representation-bar { position: absolute; z-index: 5; top: .65rem; left: .65rem; flex-wrap: wrap; border: 1px solid var(--line); border-radius: .78rem; padding: .3rem; background: rgb(7 21 23 / 88%); backdrop-filter: blur(12px); }
 .atlas-representation-bar button { min-height: 2.1rem; }
-.atlas-interaction-bar { position: absolute; z-index: 5; top: .65rem; right: .65rem; flex-wrap: wrap; justify-content: flex-end; border: 1px solid var(--line); border-radius: .78rem; padding: .3rem; background: rgb(7 21 23 / 88%); backdrop-filter: blur(12px); }
-.atlas-interaction-bar button { min-height: 2.1rem; }
-.atlas-interaction-bar button[data-tool-state="HELD"] { border-style: dashed; color: var(--caution); }
-.atlas-section-label { margin: 1rem 0 .5rem; color: var(--prairie-soft); font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; }
-.atlas-connection-card, .atlas-tool-card { display: grid; gap: .4rem; border: 1px solid var(--line); border-radius: .7rem; padding: .65rem; }
-.atlas-connection-card small, .atlas-tool-card small { color: var(--caution); font-size: .7rem; font-weight: 750; }
-.atlas-connection-card p, .atlas-tool-card p { margin: 0; color: var(--muted); font-size: .74rem; line-height: 1.45; }
-.atlas-connection-card button, .atlas-tool-card button { min-height: 2rem; text-align: left; }
-.atlas-tool-card a, .atlas-artifact-links a { color: var(--river); font-size: .74rem; }
-.atlas-artifact-links { display: grid; gap: .45rem; }
 .atlas-interaction-bar { position: absolute; z-index: 5; top: .65rem; right: .65rem; flex-wrap: wrap; justify-content: flex-end; border: 1px solid var(--line); border-radius: .78rem; padding: .3rem; background: rgb(7 21 23 / 88%); backdrop-filter: blur(12px); }
 .atlas-interaction-bar button { min-height: 2.1rem; }
 .atlas-interaction-bar button[data-tool-state="HELD"] { border-style: dashed; color: var(--caution); }

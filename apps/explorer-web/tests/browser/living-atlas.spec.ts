@@ -62,11 +62,11 @@ test("exposes repository layer lineage and keeps candidate data unadmitted", asy
   await expect(drawer).toContainText("FIXTURE_ONLY · NOT ADMITTED");
   await expect(drawer.getByRole("link", { name: /CONNECTOR/ })).toHaveAttribute(
     "href",
-    /connectors\/usgs\/wbd_huc/,
+    /\/tree\/[^/]+\/connectors\/usgs\/wbd_huc$/,
   );
   await expect(drawer.getByRole("link", { name: /PIPELINE/ })).toHaveAttribute(
     "href",
-    /pipeline_specs\/hydrology\/wbd_huc12_ingest\.yaml/,
+    /\/blob\/[^/]+\/pipeline_specs\/hydrology\/wbd_huc12_ingest\.yaml$/,
   );
 });
 
@@ -83,13 +83,17 @@ test("connects Living Atlas tools to the repository feature catalog", async ({
     "projection, units, uncertainty",
   );
 
+  const features = page.locator("#features");
+  await features.getByLabel("Filter by feature area").selectOption("Evidence and trust");
+  await features.getByLabel("Filter by maturity").selectOption("VERIFIED_SLICE");
   await workspace.getByRole("button", { name: "Tools" }).click();
   await expect(workspace.locator(".atlas-tool-card")).toHaveCount(14);
   const hucTool = workspace.locator(".atlas-tool-card", {
     hasText: "HUC crosswalk explorer",
   });
   await hucTool.getByRole("button", { name: "Open workbench catalog" }).click();
-  const features = page.locator("#features");
+  await expect(features.getByLabel("Filter by feature area")).toHaveValue("ALL");
+  await expect(features.getByLabel("Filter by maturity")).toHaveValue("ALL");
   await expect(features.getByRole("status")).toHaveText(
     /1 of \d+ feature families shown/,
   );

@@ -72,7 +72,8 @@ function repositoryLink(
   path: string,
 ): HTMLAnchorElement {
   const node = el(document, "a");
-  node.href = repositoryUrl(path);
+  const route = /(?:^|\/)[^/]+\.[^/]+$/.test(path) ? "blob" : "tree";
+  node.href = repositoryUrl(path, route);
   node.target = "_blank";
   node.rel = "noreferrer";
   node.textContent = label;
@@ -611,10 +612,18 @@ export function mountLivingAtlasWorkspace(
     const featureSearch = section?.querySelector<HTMLInputElement>(
       '[aria-label="Search Explorer features"]',
     );
-    if (!section || !featureSearch) {
+    const featureArea = section?.querySelector<HTMLSelectElement>(
+      '[aria-label="Filter by feature area"]',
+    );
+    const featureMaturity = section?.querySelector<HTMLSelectElement>(
+      '[aria-label="Filter by maturity"]',
+    );
+    if (!section || !featureSearch || !featureArea || !featureMaturity) {
       runtimeState.textContent = `ERROR · ${tool.name} catalog target is unavailable`;
       return;
     }
+    featureArea.value = "ALL";
+    featureMaturity.value = "ALL";
     featureSearch.value = tool.catalogQuery;
     featureSearch.dispatchEvent(new Event("input", { bubbles: true }));
     section.scrollIntoView({ block: "start" });

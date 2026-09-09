@@ -61,6 +61,9 @@ describe("Explorer repository catalog", () => {
     expect(repositoryUrl("apps/explorer-web")).toContain(
       `/tree/${REPOSITORY_SNAPSHOT.commit}/apps/explorer-web`,
     );
+    expect(repositoryUrl("contracts/data/layer_manifest.md", "blob")).toContain(
+      `/blob/${REPOSITORY_SNAPSHOT.commit}/contracts/data/layer_manifest.md`,
+    );
   });
 
   it("catalogs the map-first Living Atlas as fixture-first work", () => {

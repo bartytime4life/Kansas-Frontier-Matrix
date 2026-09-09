@@ -177,7 +177,10 @@ export function filterFeatures(query: FeatureQuery = {}): readonly FeatureEntry[
 export function findDomain(id: string): KnowledgeDomain | null {
   return KNOWLEDGE_DOMAINS.find((entry) => entry.id === id) ?? null;
 }
-export function repositoryUrl(path: string): string {
+export function repositoryUrl(
+  path: string,
+  route: "tree" | "blob" = "tree",
+): string {
   const encoded = path.split("/").map(encodeURIComponent).join("/");
-  return `https://github.com/${REPOSITORY_SNAPSHOT.repository}/tree/${REPOSITORY_SNAPSHOT.commit}/${encoded}`;
+  return `https://github.com/${REPOSITORY_SNAPSHOT.repository}/${route}/${REPOSITORY_SNAPSHOT.commit}/${encoded}`;
 }
