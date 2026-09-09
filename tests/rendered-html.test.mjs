@@ -163,6 +163,14 @@ test("adds bounded smoke, water, elevation, tile, and scene navigation features"
   assert.match(css, /\.scene-environment-grid/);
 });
 
+test("keeps representation switching atomic across 2D, terrain, and globe", async () => {
+  const source = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  assert.match(source, /map\?\.stop\(\)/);
+  assert.match(source, /scenePresetRef\.current = nextScenePreset/);
+  assert.match(source, /setTerrainPresentation\(map, false, 1\)[\s\S]+map\.setProjection[\s\S]+setTerrainPresentation\(map, true, 1\)/);
+  assert.match(source, /map\.triggerRepaint\(\)/);
+});
+
 test("adds governed living systems, hazards, people, transport, settlement, and dynamic MapLibre layers", async () => {
   const ts = await import("typescript");
   const explorerSource = await readFile(new URL("../app/explorer-data.ts", import.meta.url), "utf8");

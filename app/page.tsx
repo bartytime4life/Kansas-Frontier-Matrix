@@ -3417,6 +3417,10 @@ export default function Home() {
 
     stopSceneOrbit(false);
     const map = mapRef.current;
+    // A second representation choice must cancel the first camera transition.
+    // Otherwise MapLibre can finish an older ease after React has already
+    // selected the newer mode, leaving the controls and canvas disagreeing.
+    map?.stop();
     const currentBearing = map?.getBearing() ?? view.bearing;
     const currentPitch = map?.getPitch() ?? view.pitch;
     const nextProjection = mode === "globe" ? "globe" : "mercator";
@@ -3427,10 +3431,28 @@ export default function Home() {
     const nextBearing = mode === "2d" ? 0 : currentBearing;
 
     projectionRef.current = nextProjection;
+    scenePresetRef.current = nextScenePreset;
     verticalExaggerationRef.current = 1;
     atmospherePresetRef.current = nextAtmosphere;
     lightAzimuthRef.current = mode === "terrain" ? 235 : mode === "globe" ? 225 : 210;
     fieldOfViewRef.current = nextFieldOfView;
+
+    // Commit renderer state as one transaction before scheduling React's
+    // presentation updates. This makes repeated 2D ↔ terrain ↔ globe changes
+    // idempotent and prevents a stale effect or style event from winning.
+    if (map?.isStyleLoaded()) {
+      if (mode !== "terrain") {
+        setTerrainState(setTerrainPresentation(map, false, 1));
+      }
+      map.setProjection({ type: nextProjection });
+      if (mode === "terrain") {
+        setTerrainState(setTerrainPresentation(map, true, 1));
+      }
+      applySceneEnvironment(map, nextAtmosphere, lightAzimuthRef.current);
+      map.setVerticalFieldOfView(nextFieldOfView);
+      map.triggerRepaint();
+    }
+
     setProjection(nextProjection);
     setScenePreset(nextScenePreset);
     setVerticalExaggeration(verticalExaggerationRef.current);
@@ -3444,7 +3466,7 @@ export default function Home() {
         return next;
       });
     }
-    map?.easeTo({ pitch: nextPitch, bearing: nextBearing, duration: motionDuration(500) });
+    map?.easeTo({ pitch: nextPitch, bearing: nextBearing, duration: motionDuration(420), essential: false });
     announce(`${mode === "terrain" ? "Terrain 3D display" : mode === "globe" ? "Globe display" : "2D evidence display"} applied · active time and selection preserved`);
   };
 
