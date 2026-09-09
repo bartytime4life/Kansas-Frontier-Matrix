@@ -23,6 +23,15 @@ export type TerrainSourceRecord = Readonly<{
 const activeTerrainContext = externalContextSource("aws-mapzen-terrarium");
 
 /**
+ * The upstream Terrarium pyramid contains isolated, implausible high-zoom
+ * samples around the default Smoky Hills camera (including a sharp negative
+ * discontinuity near Ellsworth). MapLibre turns those samples into vertical
+ * terrain walls. Zoom 11 is the highest inspected level that keeps this view
+ * continuous, so deeper map zooms deliberately overzoom the clean z11 DEM.
+ */
+export const TERRARIUM_RENDER_MAX_ZOOM = 11;
+
+/**
  * Terrain sources stay explicit and role-separated:
  * - ACTIVE_CONTEXT may be requested by MapLibre for visual terrain only.
  * - CANDIDATE is authoritative source material that still needs a governed
@@ -36,16 +45,16 @@ export const TERRAIN_SOURCES: readonly TerrainSourceRecord[] = Object.freeze([
     organization: activeTerrainContext.organization,
     status: "ACTIVE_CONTEXT",
     role: "Key-free raster DEM display carrier",
-    resolution: "Source-dependent global mosaic; visual context only",
+    resolution: "Source-dependent global mosaic; renderer capped at zoom 11 for continuity; visual context only",
     format: "256 px Terrarium PNG raster-dem tiles",
     coverage: "Global",
     sourceUrl: activeTerrainContext.sourceUrl,
     tileTemplate: activeTerrainContext.requestUrl,
     encoding: "terrarium",
     tileSize: 256,
-    maxZoom: 15,
+    maxZoom: TERRARIUM_RENDER_MAX_ZOOM,
     attribution: activeTerrainContext.attribution,
-    boundary: activeTerrainContext.boundary,
+    boundary: `${activeTerrainContext.boundary} High-zoom upstream discontinuities are excluded by a renderer safety cap; closer views overzoom the inspected continuous DEM level instead.`,
   }),
   Object.freeze({
     id: "terrain-usgs-3dep-13arc",

@@ -784,6 +784,9 @@ test("keeps every top-level external map carrier in a display-only disclosure re
   assert.match(runtime, /externalContextSource\("openstreetmap-standard"\)/);
   assert.match(runtime, /externalContextSource\("usgs-national-map-topo"\)/);
   assert.match(terrain, /externalContextSource\("aws-mapzen-terrarium"\)/);
+  assert.match(terrain, /TERRARIUM_RENDER_MAX_ZOOM = 11/);
+  assert.match(terrain, /deeper map zooms deliberately overzoom the clean z11 DEM/);
+  assert.match(terrain, /maxZoom: TERRARIUM_RENDER_MAX_ZOOM/);
   assert.match(page, /Browser-requested display carriers/);
   assert.match(page, /NO REQUEST FROM CURRENT VIEW/);
 });
