@@ -133,7 +133,7 @@
   "created_at": "2026-09-09T03:41:45Z",
   "emitter": "OpenAI Codex",
   "links": {
-    "pr_number": null,
+    "pr_number": 4446,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
