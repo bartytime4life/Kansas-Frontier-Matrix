@@ -811,6 +811,7 @@ export default function Home() {
   const [toolsExpanded, setToolsExpanded] = useState(false);
   const [measureMode, setMeasureMode] = useState<MeasureMode>(null);
   const [measurementGeometryMode, setMeasurementGeometryMode] = useState<MeasureMode>(null);
+  const [measureCoordinateCount, setMeasureCoordinateCount] = useState(0);
   const [measureUnit, setMeasureUnit] = useState<MeasureUnit>("imperial");
   const [measurement, setMeasurement] = useState("Select a measurement tool");
   const [terrainProfile, setTerrainProfile] = useState<readonly TerrainProfileSample[]>([]);
@@ -2456,6 +2457,7 @@ export default function Home() {
             measureCoordinatesRef.current = measureModeRef.current === "point"
               ? [[event.lngLat.lng, event.lngLat.lat]]
               : [...measureCoordinatesRef.current, [event.lngLat.lng, event.lngLat.lat]];
+            setMeasureCoordinateCount(measureCoordinatesRef.current.length);
             const coordinates = measureCoordinatesRef.current;
             updateMeasurementSource(map, buildMeasurementData(coordinates, measureModeRef.current));
             setMeasurement(measurementLabelFor(measureModeRef.current, coordinates, measureUnitRef.current));
@@ -2889,6 +2891,7 @@ export default function Home() {
         measureModeRef.current = null;
         measurementGeometryModeRef.current = null;
         measureCoordinatesRef.current = [];
+        setMeasureCoordinateCount(0);
         setMeasureMode(null);
         setMeasurementGeometryMode(null);
         setMeasurement("Measurement cancelled");
@@ -3731,6 +3734,7 @@ export default function Home() {
     measureModeRef.current = null;
     measurementGeometryModeRef.current = restoredMeasurement?.mode ?? null;
     measureCoordinatesRef.current = restoredMeasurement ? restoredMeasurement.coordinates.map(([longitude, latitude]) => [longitude, latitude] as [number, number]) : [];
+    setMeasureCoordinateCount(measureCoordinatesRef.current.length);
     setMeasureMode(null);
     setMeasurementGeometryMode(restoredMeasurement?.mode ?? null);
     setMeasurement(restoredMeasurement?.label ?? "Select a measurement tool");
@@ -3957,6 +3961,7 @@ export default function Home() {
     measureModeRef.current = null;
     measurementGeometryModeRef.current = null;
     measureCoordinatesRef.current = [];
+    setMeasureCoordinateCount(0);
     setMeasurement("Select a measurement tool");
     mapRef.current?.doubleClickZoom.enable();
     locationDerivedViewRef.current = false;
@@ -3992,6 +3997,7 @@ export default function Home() {
       measureModeRef.current = null;
       measurementGeometryModeRef.current = null;
       measureCoordinatesRef.current = [];
+      setMeasureCoordinateCount(0);
       setMeasurement("Measurement cancelled");
       mapRef.current?.doubleClickZoom.enable();
       if (mapRef.current?.isStyleLoaded()) updateMeasurementSource(mapRef.current, buildMeasurementData([], null));
@@ -4002,6 +4008,7 @@ export default function Home() {
     measureModeRef.current = mode;
     measurementGeometryModeRef.current = mode;
     measureCoordinatesRef.current = [];
+    setMeasureCoordinateCount(0);
     setMeasurement(`Click the map to start measuring ${mode}`);
     setToolsExpanded(false);
     setMapQueryCandidates([]);
@@ -4019,6 +4026,7 @@ export default function Home() {
       return;
     }
     measureCoordinatesRef.current = measureCoordinatesRef.current.slice(0, -1);
+    setMeasureCoordinateCount(measureCoordinatesRef.current.length);
     if (!measureModeRef.current) {
       measureModeRef.current = mode;
       setMeasureMode(mode);
@@ -4047,6 +4055,7 @@ export default function Home() {
     measureModeRef.current = null;
     measurementGeometryModeRef.current = null;
     measureCoordinatesRef.current = [];
+    setMeasureCoordinateCount(0);
     setMeasureMode(null);
     setMeasurementGeometryMode(null);
     setMeasurement("Select a measurement tool");
@@ -5297,8 +5306,8 @@ export default function Home() {
 
                 <section className="terrain-investigation" aria-labelledby="terrain-investigation-title">
                   <header><div><span>TERRAIN INVESTIGATION</span><h4 id="terrain-investigation-title">Relief → transect → profile → evidence</h4></div><strong>1× PHYSICAL DEFAULT</strong></header>
-                  <ol><li data-complete={scenePreset === "elevation-3d"}>Enable real display relief</li><li data-complete={measurementGeometryMode === "distance" && measureCoordinatesRef.current.length >= 2}>Draw and finish a transect</li><li data-complete={terrainProfile.length > 0}>Preview unexaggerated samples</li><li data-complete={Boolean(selected)}>Select a feature for evidence</li></ol>
-                  <div className="terrain-investigation-actions"><button type="button" onClick={startTerrainInvestigation}>Start terrain investigation</button><button type="button" onClick={previewTerrainProfile} disabled={terrainState !== "READY" || measurementGeometryMode !== "distance" || measureCoordinatesRef.current.length < 2}>Preview display profile</button></div>
+                  <ol><li data-complete={scenePreset === "elevation-3d"}>Enable real display relief</li><li data-complete={measurementGeometryMode === "distance" && measureCoordinateCount >= 2}>Draw and finish a transect</li><li data-complete={terrainProfile.length > 0}>Preview unexaggerated samples</li><li data-complete={Boolean(selected)}>Select a feature for evidence</li></ol>
+                  <div className="terrain-investigation-actions"><button type="button" onClick={startTerrainInvestigation}>Start terrain investigation</button><button type="button" onClick={previewTerrainProfile} disabled={terrainState !== "READY" || measurementGeometryMode !== "distance" || measureCoordinateCount < 2}>Preview display profile</button></div>
                   {terrainProfile.length > 0 ? <div className="terrain-profile-preview" aria-label="Display-only terrain profile">
                     <header><strong>{terrainProfile.length} samples</strong><span>{terrainProfile.at(-1)?.distanceMiles.toFixed(1)} mi transect · exaggeration ignored</span></header>
                     <div>{terrainProfile.map((sample, index) => {
