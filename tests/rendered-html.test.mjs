@@ -59,8 +59,9 @@ test("centers the primary workflow on map-scoped custom reports", async () => {
   assert.match(source, /Data \.json/);
   assert.match(source, /setReportLayerIds\(activeLayers\.map/);
   assert.match(source, /const \[leftOpen, setLeftOpen\] = useState\(true\)/);
-  assert.match(source, /const \[leftPanelMode, setLeftPanelMode\] = useState<LeftPanelMode>\("views"\)/);
-  assert.match(source, /const KANSAS_VIEW: ViewState = \{ center: \[-98\.38, 38\.48\], zoom: 5\.45, bearing: 0, pitch: 0 \}/);
+  assert.match(source, /const \[leftPanelMode, setLeftPanelMode\] = useState<LeftPanelMode>\("layers"\)/);
+  assert.match(source, /const KANSAS_VIEW: ViewState = \{ center: \[-98\.24, 38\.68\], zoom: 9\.15, bearing: -24, pitch: 63 \}/);
+  assert.match(source, /restoredScene[^\n]+\? restoredScene : "elevation-3d"/);
   assert.match(about, /Start with a question, finish with a report/);
   assert.match(about, /EVIDENCE STATES/);
   assert.match(css, /\.report-builder-grid/);

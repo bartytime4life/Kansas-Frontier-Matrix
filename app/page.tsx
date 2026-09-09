@@ -2177,19 +2177,22 @@ export default function Home() {
       projectionRef.current = nextProjection;
       setProjection(nextProjection);
       const restoredScene = params.get("scene");
-      const nextScenePreset: ScenePresetId = restoredScene === "globe-overview" || restoredScene === "water-systems" || restoredScene === "smoke-context" || restoredScene === "elevation-3d" || restoredScene === "tile-grid" ? restoredScene : "overview-2d";
+      const nextScenePreset: ScenePresetId = restoredScene === "overview-2d" || restoredScene === "globe-overview" || restoredScene === "water-systems" || restoredScene === "smoke-context" || restoredScene === "elevation-3d" || restoredScene === "tile-grid" ? restoredScene : "elevation-3d";
+      scenePresetRef.current = nextScenePreset;
       setScenePreset(nextScenePreset);
-      const nextVerticalExaggeration = clamp(parseNumber(params.get("zscale"), nextScenePreset === "elevation-3d" ? 1.35 : 1), 0, 2);
+      const nextVerticalExaggeration = clamp(parseNumber(params.get("zscale"), 1), 0, 2);
       verticalExaggerationRef.current = nextVerticalExaggeration;
       setVerticalExaggeration(nextVerticalExaggeration);
       const restoredAtmosphere = params.get("sky");
-      const nextAtmosphere: AtmospherePreset = restoredAtmosphere === "dusk" || restoredAtmosphere === "clear" ? restoredAtmosphere : "night";
+      const nextAtmosphere: AtmospherePreset = restoredAtmosphere === "dusk" || restoredAtmosphere === "clear" || restoredAtmosphere === "night"
+        ? restoredAtmosphere
+        : nextScenePreset === "elevation-3d" ? "dusk" : "night";
       atmospherePresetRef.current = nextAtmosphere;
       setAtmospherePreset(nextAtmosphere);
-      const nextLightAzimuth = clamp(parseNumber(params.get("light"), 210), 0, 359);
+      const nextLightAzimuth = clamp(parseNumber(params.get("light"), nextScenePreset === "elevation-3d" ? 235 : 210), 0, 359);
       lightAzimuthRef.current = nextLightAzimuth;
       setLightAzimuth(nextLightAzimuth);
-      const nextFieldOfView = clamp(parseNumber(params.get("fov"), 36), 20, 60);
+      const nextFieldOfView = clamp(parseNumber(params.get("fov"), nextScenePreset === "elevation-3d" ? 44 : 36), 20, 60);
       fieldOfViewRef.current = nextFieldOfView;
       setFieldOfView(nextFieldOfView);
       const nextGestureMode = params.get("gestures") === "direct" ? "direct" : "cooperative";
