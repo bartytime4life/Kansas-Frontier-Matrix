@@ -37,8 +37,8 @@ describe("Explorer repository catalog", () => {
     );
     expect(runtime?.maturity).toBe("HOLD");
     expect(REPOSITORY_SNAPSHOT).toMatchObject({
-      commit: "46388727e50ed51efbfd1e724ff35eef12a5f1b1",
-      commitRecordedAt: "2026-09-09T03:14:08Z",
+      commit: "f99736c0cd4b91592cc6e85531129c86f4dcbecb",
+      commitRecordedAt: "2026-09-09T03:45:35Z",
       mapLibre: {
         readinessCandidate: "6.7.0",
         readinessState: "HOLD",

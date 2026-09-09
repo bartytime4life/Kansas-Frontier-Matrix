@@ -44,6 +44,45 @@ test("keeps held layers finite and captures only draft map state", async ({
   await expect(workspace.getByRole("button", { name: /publish/i })).toHaveCount(0);
 });
 
+test("recovers from malformed persisted draft collections", async ({ page }) => {
+  await page.addInitScript(() => {
+    window.localStorage.setItem("kfm.explorer.report-drafts.v1", JSON.stringify({ stale: true }));
+    window.localStorage.setItem("kfm.explorer.story-scenes.v1", JSON.stringify([null, "stale"]));
+  });
+
+  await page.goto("/");
+  const workspace = page.locator('[data-component="living-atlas-workspace"]');
+  await expect(workspace).toBeVisible();
+  await expect(workspace.getByRole("heading", { name: "Kansas Living Atlas" })).toBeVisible();
+});
+
+test("keeps held-view evidence, Focus, and report snapshots aligned", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const workspace = page.locator('[data-component="living-atlas-workspace"]');
+
+  await workspace.getByRole("button", { name: "Layers" }).click();
+  const protectedLayer = workspace.locator(".atlas-layer-row", {
+    hasText: "Protected-context envelope",
+  });
+  await protectedLayer.getByRole("button", { name: "Inspect" }).click();
+  await expect(workspace.getByRole("complementary", { name: "Evidence Drawer" })).toContainText(
+    "DENY · PROTECTED_SPATIAL_DETAIL",
+  );
+
+  await workspace.getByRole("button", { name: "Views" }).click();
+  await workspace.getByRole("button", { name: /Weather Window/ }).click();
+  await expect(workspace.getByRole("complementary", { name: "Evidence Drawer" })).toContainText(
+    "Year-specific weather observations",
+  );
+  await workspace.getByRole("button", { name: "Ask Focus for bounded next steps" }).click();
+  await expect(workspace.getByRole("status").filter({ hasText: "ABSTAIN" })).toBeVisible();
+
+  await workspace.getByRole("button", { name: "Create report draft" }).click();
+  await expect(workspace.locator(".atlas-draft-card").first()).toContainText("view:weather-window");
+});
+
 test("exposes repository layer lineage and keeps candidate data unadmitted", async ({
   page,
 }) => {
@@ -51,6 +90,13 @@ test("exposes repository layer lineage and keeps candidate data unadmitted", asy
   const workspace = page.locator('[data-component="living-atlas-workspace"]');
 
   await workspace.getByRole("button", { name: "Layers" }).click();
+  const runtimeLayer = workspace.locator(".atlas-layer-row", {
+    hasText: "Generalized Kansas extent",
+  });
+  await runtimeLayer.getByRole("button", { name: "Inspect" }).click();
+  await expect(
+    workspace.getByRole("complementary", { name: "Evidence Drawer" }),
+  ).toContainText("Generalized Kansas extent");
   const candidate = workspace.locator(".atlas-connection-card", {
     hasText: "WBD HUC12 watershed boundaries",
   });
@@ -68,6 +114,19 @@ test("exposes repository layer lineage and keeps candidate data unadmitted", asy
     "href",
     /\/blob\/[^/]+\/pipeline_specs\/hydrology\/wbd_huc12_ingest\.yaml$/,
   );
+
+  await workspace.getByRole("button", { name: "New from map" }).click();
+  await workspace.getByRole("button", { name: "Create report draft" }).click();
+  const latestDraft = await page.evaluate(() => {
+    const raw = window.localStorage.getItem("kfm.explorer.report-drafts.v1");
+    return raw === null ? null : (JSON.parse(raw) as Array<{
+      snapshot: { selectedLayerId: string | null; evidenceRefs: string[] };
+      includedEvidenceRefs: string[];
+    }>)[0];
+  });
+  expect(latestDraft?.snapshot.selectedLayerId).toBeNull();
+  expect(latestDraft?.snapshot.evidenceRefs).toEqual([]);
+  expect(latestDraft?.includedEvidenceRefs).toEqual([]);
 });
 
 test("connects Living Atlas tools to the repository feature catalog", async ({
@@ -76,9 +135,14 @@ test("connects Living Atlas tools to the repository feature catalog", async ({
   await page.goto("/");
   const workspace = page.locator('[data-component="living-atlas-workspace"]');
 
-  await workspace.locator(".atlas-interaction-bar").getByRole("button", {
-    name: "Measure",
-  }).click();
+  const heldMeasure = workspace.locator(".atlas-interaction-bar").getByRole("button", {
+    name: "Measure · HELD",
+    exact: true,
+  });
+  await expect(heldMeasure).toHaveAttribute("title", /projection, units, uncertainty/);
+  await heldMeasure.focus();
+  await expect(heldMeasure).toBeFocused();
+  await heldMeasure.click();
   await expect(workspace.getByRole("status").filter({ hasText: "Measure HELD" })).toContainText(
     "projection, units, uncertainty",
   );
@@ -98,4 +162,19 @@ test("connects Living Atlas tools to the repository feature catalog", async ({
     /1 of \d+ feature families shown/,
   );
   await expect(features.getByRole("heading", { name: "HUC crosswalk explorer" })).toBeVisible();
+});
+
+test("reveals the matching catalog panel when searching from another tab", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const workspace = page.locator('[data-component="living-atlas-workspace"]');
+
+  await workspace.getByLabel("Search Living Atlas catalog").fill("Measure");
+
+  await expect(workspace.getByRole("button", { name: "Tools" })).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
+  await expect(workspace.locator(".atlas-tool-card", { hasText: "Measure" })).toBeVisible();
 });

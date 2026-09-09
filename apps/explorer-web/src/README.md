@@ -13,7 +13,7 @@ responsibility: 'Define the Explorer Web source-layout boundary and record curre
 truth_posture: 'CONFIRMED source inventory and bounded local/fixture-first slices / PROPOSED broader route and integration shape / UNKNOWN fresh execution, deployment, release, and public operation'
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
-  main_commit: 033103a0afe80f85a823973951b3b7d15abb7a8b
+  main_commit: f99736c0cd4b91592cc6e85531129c86f4dcbecb
   main_tree: b21256c6f574b8f289cd806035ca268e012d2393
   target_prior_blob: a79d96b196d8b95208e209ccd74e51c02e7d146f
   parent_app_readme_blob: bd022e91d998685820f6c3b0965bdffbfd355726
@@ -51,6 +51,7 @@ notes:
   - 'Counts are structural evidence only; a file, feature directory, test definition, package, or viewer template does not prove route integration, a fresh pass, production data, release, deployment, or publication.'
   - 'The normal composition mounts the package-owned MapLibre adapter through the Vite seam with a network-free inline Living Atlas style; the retained trust-state laboratory still uses NullMapRuntime.'
   - 'v0.5 adds the app-owned Living Atlas registry and composition while preserving external-source, production-browser, deployment, release, and publication holds.'
+  - 'The repository catalog/preflight extension adds non-loadable connection lineage, visibly held tools, workbench links, matching-panel search, and stale-evidence clearing without admitting a source or layer.'
   - 'This documentation change is scoped to apps/explorer-web/src/README.md; its generated receipt is the only provenance companion. The parent app README and its own evidence snapshot remain related surfaces, not silently rewritten here.'
   - 'src/ is the app implementation source-layout boundary only; it must not become a public API, lifecycle data store, policy root, release authority, schema/contract home, model-runtime surface, or shared package root.'
 [/KFM_META_BLOCK_V2] -->
@@ -112,7 +113,7 @@ notes:
 
 ## 0. Current evidence snapshot
 
-**Implementation base:** [`main@033103a0afe80f85a823973951b3b7d15abb7a8b`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/033103a0afe80f85a823973951b3b7d15abb7a8b), observed 2026-09-09. The Living Atlas work is a draft branch candidate over that immutable base and preserves the merged terrain source ledger; it does not establish merge, deployment, release, or publication.
+**Implementation base:** [`main@f99736c0cd4b91592cc6e85531129c86f4dcbecb`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/f99736c0cd4b91592cc6e85531129c86f4dcbecb), observed 2026-09-09. The Living Atlas repository catalog/preflight work is a draft branch candidate over that immutable base; the pin does not establish a green build, merge, deployment, release, or publication.
 
 | Surface | Confirmed at the pinned source | Limit |
 |---|---|---|
@@ -350,7 +351,7 @@ For source changes under `apps/explorer-web/src/`:
 
 The target file began as an empty placeholder. Earlier README versions correctly established the `src/` boundary but later became stale as `site/`, `adapters/`, `features/`, `viewer_templates/`, and their tests were added.
 
-This v0.5 revision re-pins the implementation base to main@033103a0afe80f85a823973951b3b7d15abb7a8b, preserves the terrain source-ledger slice, and records the bounded Living Atlas composition candidate. It does not promote local code or tests into claims about a production router, live transport, admitted external sources, complete browser readiness, deployment, release, publication, or public operation. It preserves the source-tree identity and records provenance in the required generated receipt.
+This revision re-pins the implementation base to main@f99736c0cd4b91592cc6e85531129c86f4dcbecb and records the bounded Living Atlas repository catalog/preflight candidate. It does not promote local code or tests into claims about a production router, live transport, admitted external sources, complete browser readiness, deployment, release, publication, or public operation. It preserves the source-tree identity and records provenance in the required generated receipt.
 
 </details>
 

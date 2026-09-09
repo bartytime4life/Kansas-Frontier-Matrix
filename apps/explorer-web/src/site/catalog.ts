@@ -2,8 +2,8 @@
 export const REPOSITORY_SNAPSHOT = Object.freeze({
   repository: "bartytime4life/Kansas-Frontier-Matrix",
   ref: "main",
-  commit: "46388727e50ed51efbfd1e724ff35eef12a5f1b1",
-  commitRecordedAt: "2026-09-09T03:14:08Z",
+  commit: "f99736c0cd4b91592cc6e85531129c86f4dcbecb",
+  commitRecordedAt: "2026-09-09T03:45:35Z",
   explorerPath: "apps/explorer-web",
   mapLibre: Object.freeze({
     family: "MapLibre GL JS",

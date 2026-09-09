@@ -43,10 +43,10 @@ export const REPOSITORY_LAYER_CONNECTIONS: readonly RepositoryLayerConnection[] 
       nextGate: "Complete source, rights, sensitivity, evidence, review, and release decisions for an exact WBD edition.",
       artifacts: [
         artifact("CONNECTOR", "WBD/HUC connector lane", "connectors/usgs/wbd_huc"),
-        artifact("PIPELINE", "Fixture-first HUC12 pipeline", "pipeline_specs/hydrology/wbd_huc12_ingest.yaml"),
+        artifact("PIPELINE_SPEC", "Fixture-first HUC12 pipeline", "pipeline_specs/hydrology/wbd_huc12_ingest.yaml"),
         artifact("CONTRACT", "HUC12 ingest candidate", "contracts/domains/hydrology/wbd_huc12_ingest_candidate.md"),
       ],
-      relatedToolIds: ["huc-crosswalk", "layer-catalog"],
+      relatedToolIds: ["huc-crosswalk", "layer-catalog", "provenance"],
     }),
     connection({
       id: "connection:nwis-observations",
@@ -61,10 +61,10 @@ export const REPOSITORY_LAYER_CONNECTIONS: readonly RepositoryLayerConnection[] 
       nextGate: "Bind an active descriptor and exact service semantics while preserving site identity, units, qualifiers, observation time, and corrections.",
       artifacts: [
         artifact("CONNECTOR", "NWIS captured-input lane", "connectors/usgs/water_data"),
-        artifact("PIPELINE", "Inactive NWIS ingest candidate", "pipeline_specs/hydrology/ingest_usgs_nwis.yaml"),
+        artifact("PIPELINE_SPEC", "Inactive NWIS ingest candidate", "pipeline_specs/hydrology/ingest_usgs_nwis.yaml"),
         artifact("CONTRACT", "NWIS county capture", "contracts/domains/hydrology/nwis_county_capture.md"),
       ],
-      relatedToolIds: ["streamflow-qc", "source-watchlist"],
+      relatedToolIds: ["streamflow-qc", "source-watchlist", "provenance"],
     }),
     connection({
       id: "connection:nhdplus-network",
@@ -79,7 +79,7 @@ export const REPOSITORY_LAYER_CONNECTIONS: readonly RepositoryLayerConnection[] 
       nextGate: "Preserve COMID, release vintage, geometry lineage, modeled VAA roles, topology, review, and release evidence.",
       artifacts: [
         artifact("CONNECTOR", "NHDPlus HR connector lane", "connectors/usgs/nhdplus_hr"),
-        artifact("PIPELINE", "Inactive NHDPlus ingest", "pipeline_specs/hydrology/nhdplus_hr_ingest.yaml"),
+        artifact("PIPELINE_SPEC", "Inactive NHDPlus ingest", "pipeline_specs/hydrology/nhdplus_hr_ingest.yaml"),
         artifact("CONTRACT", "Network revision contract", "contracts/domains/hydrology/nhdplus_network_revision.md"),
       ],
       relatedToolIds: ["huc-crosswalk", "layer-lineage"],
@@ -97,7 +97,7 @@ export const REPOSITORY_LAYER_CONNECTIONS: readonly RepositoryLayerConnection[] 
       nextGate: "Resolve exact surface, version, effective date, regulatory fields, CRS, datum, rights, routing, and release review.",
       artifacts: [
         artifact("CONNECTOR", "NFHL product lane", "connectors/fema/nfhl"),
-        artifact("PIPELINE", "Inactive NFHL context", "pipeline_specs/hydrology/nfhl_context.yaml"),
+        artifact("PIPELINE_SPEC", "Inactive NFHL context", "pipeline_specs/hydrology/nfhl_context.yaml"),
         artifact("CONTRACT", "Layer admission boundary", "contracts/runtime/layer_manifest_admission.md"),
       ],
       relatedToolIds: ["source-watchlist", "layer-lineage"],
@@ -133,7 +133,7 @@ export const REPOSITORY_LAYER_CONNECTIONS: readonly RepositoryLayerConnection[] 
       nextGate: "Resolve canonical connector placement, exact map edition, source role, scale, fields, rights, validation, and release.",
       artifacts: [
         artifact("CONNECTOR", "KGS bedrock compatibility lane", "connectors/kgs_bedrock"),
-        artifact("PIPELINE", "Inactive bedrock units", "pipeline_specs/geology/bedrock_units.spec.yaml"),
+        artifact("PIPELINE_SPEC", "Inactive bedrock units", "pipeline_specs/geology/bedrock_units.spec.yaml"),
         artifact("CONTRACT", "Layer manifest", "contracts/data/layer_manifest.md"),
       ],
       relatedToolIds: ["layer-catalog", "layer-lineage"],
@@ -151,7 +151,7 @@ export const REPOSITORY_LAYER_CONNECTIONS: readonly RepositoryLayerConnection[] 
       nextGate: "Resolve canonical placement and bind the exact edition, scale, classification, source role, contracts, tests, review, and release.",
       artifacts: [
         artifact("CONNECTOR", "KGS surficial compatibility lane", "connectors/kgs_surficial"),
-        artifact("PIPELINE", "Inactive surficial units", "pipeline_specs/geology/surficial_units.spec.yaml"),
+        artifact("PIPELINE_SPEC", "Inactive surficial units", "pipeline_specs/geology/surficial_units.spec.yaml"),
         artifact("CONTRACT", "Surficial contract boundary", "contracts/domains/geology/sublanes/surficial"),
       ],
       relatedToolIds: ["layer-catalog", "layer-lineage"],
@@ -169,7 +169,7 @@ export const REPOSITORY_LAYER_CONNECTIONS: readonly RepositoryLayerConnection[] 
       nextGate: "Resolve canonical placement, identity, public-safe precision, rights, source role, schemas, tests, review, and release.",
       artifacts: [
         artifact("CONNECTOR", "WWC5 compatibility lane", "connectors/kgs_kdhe_wwc5"),
-        artifact("PIPELINE", "Inactive well-log pipeline", "pipeline_specs/geology/well_logs.spec.yaml"),
+        artifact("PIPELINE_SPEC", "Inactive well-log pipeline", "pipeline_specs/geology/well_logs.spec.yaml"),
         artifact("CONTRACT", "Well-log reference", "contracts/domains/geology/WellLogReference.md"),
       ],
       relatedToolIds: ["layer-catalog", "source-watchlist"],
@@ -187,7 +187,7 @@ export const REPOSITORY_LAYER_CONNECTIONS: readonly RepositoryLayerConnection[] 
       nextGate: "Pin an edition and bind road identity, classifications, geometry quality, rights, tests, review, and release.",
       artifacts: [
         artifact("CONNECTOR", "TIGER/Line connector lane", "connectors/tiger_line"),
-        artifact("PIPELINE", "Inactive TIGER roads", "pipeline_specs/roads-rail-trade/tiger_roads.yaml"),
+        artifact("PIPELINE_SPEC", "Inactive TIGER roads", "pipeline_specs/roads-rail-trade/tiger_roads.yaml"),
         artifact("CONTRACT", "Road segment", "contracts/domains/roads-rail-trade/road_segment.md"),
       ],
       relatedToolIds: ["layer-catalog", "layer-lineage"],
@@ -205,7 +205,7 @@ export const REPOSITORY_LAYER_CONNECTIONS: readonly RepositoryLayerConnection[] 
       nextGate: "Bind an exact feed/version and preserve event identity, validity, corrections, geometry, access semantics, review, and release.",
       artifacts: [
         artifact("CONNECTOR", "WZDx connector lane", "connectors/wzdx"),
-        artifact("PIPELINE", "Inactive WZDx v4", "pipeline_specs/roads-rail-trade/wzdx_v4.yaml"),
+        artifact("PIPELINE_SPEC", "Inactive WZDx v4", "pipeline_specs/roads-rail-trade/wzdx_v4.yaml"),
         artifact("CONTRACT", "Restriction event", "contracts/domains/roads-rail-trade/restriction_event.md"),
       ],
       relatedToolIds: ["source-watchlist", "layer-lineage"],
@@ -223,7 +223,7 @@ export const REPOSITORY_LAYER_CONNECTIONS: readonly RepositoryLayerConnection[] 
       nextGate: "Resolve connector topology and bind component roles, issue/valid time, source identity, rights, safety review, evidence, and release.",
       artifacts: [
         artifact("CONNECTOR", "HMS smoke boundary", "connectors/noaa-hms-smoke"),
-        artifact("PIPELINE", "Inactive HMS smoke", "pipeline_specs/hazards/noaa_hms_smoke.yaml"),
+        artifact("PIPELINE_SPEC", "Inactive HMS smoke", "pipeline_specs/hazards/noaa_hms_smoke.yaml"),
         artifact("CONTRACT", "Smoke context", "contracts/domains/atmosphere/smoke-context.md"),
       ],
       relatedToolIds: ["source-watchlist", "layer-lineage"],
@@ -241,7 +241,7 @@ export const REPOSITORY_LAYER_CONNECTIONS: readonly RepositoryLayerConnection[] 
       nextGate: "Resolve topology and bind exact API resources, identifiers, issue/valid times, caching, failure modes, rights, review, and release.",
       artifacts: [
         artifact("CONNECTOR", "NWS API product lane", "connectors/nws-api"),
-        artifact("PIPELINE", "Inactive NWS alert context", "pipeline_specs/hazards/nws_alerts_context.yaml"),
+        artifact("PIPELINE_SPEC", "Inactive NWS alert context", "pipeline_specs/hazards/nws_alerts_context.yaml"),
         artifact("CONTRACT", "Temporal authority envelope", "contracts/evidence/temporal_authority_envelope.md"),
       ],
       relatedToolIds: ["source-watchlist", "layer-lineage"],
@@ -326,15 +326,15 @@ const workbench = (
   });
 
 export const ATLAS_WORKBENCH_TOOLS: readonly AtlasWorkbenchTool[] = Object.freeze([
-  workbench({ id: "layer-catalog", name: "Layer Catalog", maturity: "DOCUMENTED", summary: "Discover layer rights, time, evidence, release, and representation context.", featurePath: "apps/explorer-web/src/features/layer_catalog", catalogQuery: "Layer Catalog", relatedLayerConnectionIds: ["connection:kgs-bedrock", "connection:tiger-roads"] }),
+  workbench({ id: "layer-catalog", name: "Layer Catalog", maturity: "DOCUMENTED", summary: "Discover layer rights, time, evidence, release, and representation context.", featurePath: "apps/explorer-web/src/features/layer_catalog", catalogQuery: "Layer Catalog", relatedLayerConnectionIds: ["connection:wbd-huc12", "connection:kgs-bedrock", "connection:kgs-surficial", "connection:wwc5-wells", "connection:tiger-roads"] }),
   workbench({ id: "huc-crosswalk", name: "HUC crosswalk explorer", maturity: "FIXTURE_FIRST", summary: "Inspect bounded HUC and COMID identifier relationships without treating joins as hydrologic proof.", featurePath: "apps/explorer-web/src/features/huc_crosswalk_explorer", catalogQuery: "HUC crosswalk explorer", relatedLayerConnectionIds: ["connection:wbd-huc12", "connection:nhdplus-network"] }),
   workbench({ id: "streamflow-qc", name: "Streamflow quality dashboard", maturity: "FIXTURE_FIRST", summary: "Inspect quality, freshness, qualifiers, and correction state for streamflow observations.", featurePath: "apps/explorer-web/src/features/streamflow_qc_dashboard", catalogQuery: "Streamflow quality dashboard", relatedLayerConnectionIds: ["connection:nwis-observations"] }),
   workbench({ id: "soil-change", name: "Soil yearly change viewer", maturity: "FIXTURE_FIRST", summary: "Compare bounded soil projections while preserving component, horizon, method, and time identity.", featurePath: "apps/explorer-web/src/features/soil_yearly_change_viewer", catalogQuery: "Soil yearly change viewer", relatedLayerConnectionIds: ["connection:smap-soil-moisture"] }),
   workbench({ id: "ndvi-change", name: "County NDVI change panel", maturity: "FIXTURE_FIRST", summary: "Review vegetation-change projections with materiality and readiness limitations visible.", featurePath: "apps/explorer-web/src/features/county_ndvi_change_panel", catalogQuery: "County NDVI change panel", relatedLayerConnectionIds: ["connection:hls-ndvi"] }),
-  workbench({ id: "source-watchlist", name: "Source availability watchlist", maturity: "FIXTURE_FIRST", summary: "Inspect availability and staleness signals without activating a source.", featurePath: "apps/explorer-web/src/features/source_availability_watchlist", catalogQuery: "Source availability watchlist", relatedLayerConnectionIds: ["connection:nwis-observations", "connection:nws-alerts", "connection:hms-smoke"] }),
+  workbench({ id: "source-watchlist", name: "Source availability watchlist", maturity: "FIXTURE_FIRST", summary: "Inspect availability and staleness signals without activating a source.", featurePath: "apps/explorer-web/src/features/source_availability_watchlist", catalogQuery: "Source availability watchlist", relatedLayerConnectionIds: ["connection:nwis-observations", "connection:nfhl-context", "connection:wwc5-wells", "connection:wzdx-work-zones", "connection:hms-smoke", "connection:nws-alerts"] }),
   workbench({ id: "stac-inspector", name: "STAC conformance inspector", maturity: "FIXTURE_FIRST", summary: "Inspect release-facing STAC metadata without reading raw or quarantine material.", featurePath: "apps/explorer-web/src/features/stac_conformance_inspector", catalogQuery: "STAC conformance inspector", relatedLayerConnectionIds: ["connection:three-dep-terrain", "connection:hls-ndvi", "connection:smap-soil-moisture"] }),
   workbench({ id: "pmtiles-diagnostics", name: "PMTiles range diagnostics", maturity: "FIXTURE_FIRST", summary: "Verify archive, range, index, and render behavior for governed artifacts.", featurePath: "apps/explorer-web/src/features/pmtiles_range_diagnostics", catalogQuery: "PMTiles range diagnostics", relatedLayerConnectionIds: ["connection:three-dep-terrain"] }),
-  workbench({ id: "layer-lineage", name: "Layer lineage timeline", maturity: "FIXTURE_FIRST", summary: "Inspect derivation, correction, supersession, and release lineage.", featurePath: "apps/explorer-web/src/features/layer_lineage_timeline", catalogQuery: "Layer lineage timeline", relatedLayerConnectionIds: ["connection:nhdplus-network", "connection:nfhl-context", "connection:wzdx-work-zones", "connection:hms-smoke"] }),
+  workbench({ id: "layer-lineage", name: "Layer lineage timeline", maturity: "FIXTURE_FIRST", summary: "Inspect derivation, correction, supersession, and release lineage.", featurePath: "apps/explorer-web/src/features/layer_lineage_timeline", catalogQuery: "Layer lineage timeline", relatedLayerConnectionIds: ["connection:nhdplus-network", "connection:nfhl-context", "connection:kgs-bedrock", "connection:kgs-surficial", "connection:tiger-roads", "connection:wzdx-work-zones", "connection:hms-smoke", "connection:nws-alerts"] }),
   workbench({ id: "provenance", name: "Provenance citations", maturity: "FIXTURE_FIRST", summary: "Inspect bounded provenance and citation projections for eligible evidence.", featurePath: "apps/explorer-web/src/features/provenance_citations", catalogQuery: "Provenance citations", relatedLayerConnectionIds: ["connection:wbd-huc12", "connection:nwis-observations"] }),
 ]);
 

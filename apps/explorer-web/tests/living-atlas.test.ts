@@ -61,9 +61,36 @@ describe("Living Atlas governed foundation", () => {
       ),
     ).toBe(true);
     expect(
+      REPOSITORY_LAYER_CONNECTIONS.flatMap((entry) => entry.artifacts)
+        .filter((entry) => entry.path.startsWith("pipeline_specs/"))
+        .every((entry) => entry.kind === "PIPELINE_SPEC"),
+    ).toBe(true);
+    expect(
       REPOSITORY_LAYER_CONNECTIONS.every((entry) =>
         entry.relatedToolIds.every((id) =>
           ATLAS_WORKBENCH_TOOLS.some((tool) => tool.id === id),
+        ),
+      ),
+    ).toBe(true);
+    expect(
+      REPOSITORY_LAYER_CONNECTIONS.every((connection) =>
+        connection.relatedToolIds.every((toolId) =>
+          ATLAS_WORKBENCH_TOOLS.some(
+            (tool) =>
+              tool.id === toolId &&
+              tool.relatedLayerConnectionIds.includes(connection.id),
+          ),
+        ),
+      ),
+    ).toBe(true);
+    expect(
+      ATLAS_WORKBENCH_TOOLS.every((tool) =>
+        tool.relatedLayerConnectionIds.every((connectionId) =>
+          REPOSITORY_LAYER_CONNECTIONS.some(
+            (connection) =>
+              connection.id === connectionId &&
+              connection.relatedToolIds.includes(tool.id),
+          ),
         ),
       ),
     ).toBe(true);

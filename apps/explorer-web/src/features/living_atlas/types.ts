@@ -195,7 +195,7 @@ export type RepositoryConnectionState =
   | "DOCUMENTED_ONLY";
 
 export type RepositoryArtifactRef = Readonly<{
-  kind: "CONNECTOR" | "PIPELINE" | "CONTRACT";
+  kind: "CONNECTOR" | "PIPELINE_SPEC" | "CONTRACT";
   label: string;
   path: string;
 }>;

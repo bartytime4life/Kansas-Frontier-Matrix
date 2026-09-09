@@ -6,6 +6,8 @@ This feature owns the Explorer-specific registries and serializable draft object
 
 - 18 investigation views with explicit demo or design/data-hold states;
 - 24 layer records with source, evidence, temporal, representation, scale, opacity, and warning fields;
+- 14 repository-backed layer candidates whose available connector, declarative pipeline-specification, and contract lineage remains non-loadable and not admitted;
+- four map-interaction controls with visible point-of-use state (Select available; Draw AOI, Measure, and Profile held) and ten links into the existing workbench catalog;
 - official source-family candidates that remain distinct from admitted sources;
 - multiscale temporal presets from deep time to the present operational window;
 - `MapSnapshot`, `ReportDraft`, `StoryScene`, `PolicyDecision`, and visible trust-state types;
@@ -13,10 +15,12 @@ This feature owns the Explorer-specific registries and serializable draft object
 
 The renderer is downstream of these records. The inline style is an interaction fixture, not a Kansas factual dataset, and every mapped feature carries a fixture marker. External portals are ordinary links in Source Observatory; they are not fetched, scraped, or promoted by this feature.
 
+Repository connection state is a bounded catalog-maturity label, not runtime availability, representation, review, release, or finite-response state. Those dimensions remain separate future contracts; the connection cards cannot load candidate data. Some candidates have no repository `pipeline_specs/` artifact, which is left visibly absent rather than invented. Connection-to-workbench references are reciprocal, inspecting a connection clears any prior runtime-layer selection and evidence references before a draft can be captured, and catalog search reveals the first matching rail panel instead of leaving matches hidden behind the current tab.
+
 ## Directory Rules basis
 
 `apps/explorer-web/src/features/living_atlas/` is colocated with the independently deployable Explorer because this registry composes one application's public-safe views and drafts. Reusable renderer acquisition remains in `packages/maplibre/`. Canonical source, evidence, policy, schema, release, proof, receipt, and published-data authority remains in its existing governed root.
 
 ## Validation boundary
 
-Unit tests check registry identity, source/layer/evidence closure, hold/deny semantics, temporal ordering, finite Focus outcomes, and the absence of external URLs in the inline style. Browser checks prove only local adapter construction, canvas visibility, view/layer/time interactions, draft creation, and graceful finite failure. They do not establish source or renderer admission, real-data correctness, GPU parity, terrain, comparison, accessibility closure, performance, long-session stability, release, deployment, or publication.
+Unit tests check registry identity, source/layer/evidence closure, exact `pipeline_specs/` labeling, hold/deny semantics, temporal ordering, finite Focus outcomes, repository-path locality, and the absence of external URLs in the inline style. Browser checks prove only local adapter construction, canvas visibility, view/layer/time interactions, visible held controls, cross-panel catalog search, workbench handoff, stale-evidence clearing, draft creation, and graceful finite failure. They do not establish source or renderer admission, real-data correctness, GPU parity, terrain, comparison, accessibility closure, performance, long-session stability, release, deployment, or publication.
