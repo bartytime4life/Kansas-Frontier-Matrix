@@ -44,6 +44,7 @@
       "western-kansas-observation-assessment",
       "kansas-transportation-geometry-source-assessment",
       "repository-governance-parity",
+      "repository-issue-mutation-intent",
       "trust-spine-fixture-slice",
       "ci-conformance-report",
       "pnpm-dependency-readiness",
@@ -437,6 +438,23 @@
         "data/receipts/generated/genrec-repository-governance-parity-*.json"
       ],
       "timeout_seconds": 180,
+      "artifact_refs": []
+    },
+    {
+      "id": "repository-issue-mutation-intent",
+      "description": "Validate the fixture-only, target-pinned ADD_LABEL needs-review repository issue mutation intent and compact readback receipt without a network or writer surface.",
+      "script": "tools/validators/repository_control/validate_issue_mutation_intent.py",
+      "args": [
+        "--fixtures"
+      ],
+      "path_globs": [
+        "contracts/governance/repository_issue_mutation_intent.md",
+        "schemas/contracts/v1/governance/repository_issue_mutation_intent.schema.json",
+        "fixtures/contracts/v1/governance/repository_issue_mutation_intent/**",
+        "tests/validators/test_repository_issue_mutation_intent.py",
+        "tools/validators/repository_control/validate_issue_mutation_intent.py"
+      ],
+      "timeout_seconds": 120,
       "artifact_refs": []
     },
     {

@@ -1,0 +1,119 @@
+{
+  "attempt": {
+    "error_code": null,
+    "request_emitted": false,
+    "response_status": null,
+    "status": "NOT_REQUESTED",
+    "transport": "NONE"
+  },
+  "claims": {
+    "authority_authenticated": false,
+    "deterministic_evaluation": true,
+    "external_state_authenticated": false,
+    "live_mutation_adapter_present": false,
+    "mutation_verified": false,
+    "pull_request_lifecycle_changed": false,
+    "release_deployment_promotion_or_publication_changed": false,
+    "repository_settings_changed": false,
+    "subject_execution_authenticated": false,
+    "validator_external_mutation_performed": false,
+    "validator_network_accessed": false
+  },
+  "evaluated_at": "2026-09-09T16:00:00Z",
+  "execution_mode": "FIXTURE_ONLY_DECLARATION",
+  "intent": {
+    "action": {
+      "label": "needs-review",
+      "type": "ADD_LABEL"
+    },
+    "authority": {
+      "actor_class": "ISSUE_MAINTAINER",
+      "expires_at": "2026-09-09T18:00:00Z",
+      "reference": "fixture://authority/issue-maintenance/9001"
+    },
+    "expected": {
+      "expected_head_sha": null,
+      "revision": "2026-09-09T14:55:00Z",
+      "state": "OPEN"
+    },
+    "idempotency_key": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "intent_id": "kfm:repository-issue-mutation-intent:f80a85ba76617ffb8c2f14e308aa22501999045a579d6d12d70bbf0ffb938af1",
+    "repository": {
+      "full_name": "bartytime4life/Kansas-Frontier-Matrix",
+      "repository_id": 1059091169
+    },
+    "target": {
+      "issue_node_id": "I_fixture_issue_9001",
+      "issue_number": 9001,
+      "kind": "ISSUE"
+    }
+  },
+  "object_type": "RepositoryIssueMutationIntentCandidate",
+  "preflight": {
+    "authority": {
+      "actor_class": "ISSUE_MAINTAINER",
+      "decision": "ALLOW",
+      "expires_at": "2026-09-09T18:00:00Z",
+      "reference": "fixture://authority/issue-maintenance/9001"
+    },
+    "observed_at": "2026-09-09T15:00:00Z",
+    "read_only": true,
+    "replay": {
+      "idempotency_key": null,
+      "intent_fingerprint": null,
+      "previous_outcome": null,
+      "status": "UNSEEN"
+    },
+    "repository": {
+      "full_name": "bartytime4life/Kansas-Frontier-Matrix",
+      "repository_id": 1059091169
+    },
+    "target": {
+      "head_sha": null,
+      "issue_node_id": "I_fixture_issue_9001",
+      "issue_number": 9001,
+      "kind": "ISSUE",
+      "labels": [
+        "governance",
+        "needs-review"
+      ],
+      "revision": "2026-09-09T14:55:00Z",
+      "state": "OPEN"
+    }
+  },
+  "profile": "kfm.governance.repository-control.issue-mutation-intent.v1",
+  "readback": {
+    "observed_at": "2026-09-09T15:01:00Z",
+    "repository": {
+      "full_name": "bartytime4life/Kansas-Frontier-Matrix",
+      "repository_id": 1059091169
+    },
+    "target": {
+      "head_sha": null,
+      "issue_node_id": "I_fixture_issue_9001",
+      "issue_number": 9001,
+      "kind": "ISSUE",
+      "labels": [
+        "governance",
+        "needs-review"
+      ],
+      "revision": "2026-09-09T14:55:00Z",
+      "state": "OPEN"
+    }
+  },
+  "receipt": {
+    "applied": false,
+    "attempted": false,
+    "intent_fingerprint": "sha256:f80a85ba76617ffb8c2f14e308aa22501999045a579d6d12d70bbf0ffb938af1",
+    "outcome": "NO_OP",
+    "readback_fingerprint": "sha256:89e9642f31440c29d5fb2513dacf10c3f7d3eb49b14b05aa9a5784962dbf1823",
+    "readback_status": "EXACT",
+    "reason_codes": [
+      "ACTION_ALREADY_SATISFIED"
+    ],
+    "receipt_id": "kfm:repository-issue-mutation-receipt:17e0523bbf8f42ad74c6e7a805b80c6680375faa9d4bb1350c67ee122865543c",
+    "target_fingerprint": "sha256:53b197668fb2448c9bd5a2b19b60aa570115edabe05bf17462d6e2074aad6e40"
+  },
+  "schema_version": "1.0.0",
+  "spec_hash": "sha256:17e0523bbf8f42ad74c6e7a805b80c6680375faa9d4bb1350c67ee122865543c"
+}
