@@ -21,8 +21,14 @@ export default function SnapshotMap({ snapshot, label, syncCamera, onCameraChang
   const onMove = useRef(onCameraChange);
   const syncing = useRef(false);
   const [status, setStatus] = useState("Loading map context…");
-  current.current = snapshot;
-  onMove.current = onCameraChange;
+
+  useEffect(() => {
+    current.current = snapshot;
+  }, [snapshot]);
+
+  useEffect(() => {
+    onMove.current = onCameraChange;
+  }, [onCameraChange]);
 
   useEffect(() => {
     if (!container.current) return;
@@ -36,7 +42,7 @@ export default function SnapshotMap({ snapshot, label, syncCamera, onCameraChang
       const opacity = Object.fromEntries(state.visibleLayers.map((layer) => [layer.id, layer.opacity]));
       applyRegistryState(map, visible, opacity, state.committedTime.start, state.visibleLayers.map((layer) => layer.id), state.evidenceFilter ?? "ALL");
       map.setProjection({ type: state.projection });
-      setTerrainPresentation(map, state.representation === "Terrain 3D", 1.2);
+      setTerrainPresentation(map, state.representation === "Terrain 3D", 1.35);
       updateAnalysisAreaSource(map, state.area.kind === "aoi" ? state.area.bounds : undefined);
       const selectedLayer = LAYER_REGISTRY.find((layer) => layer.id === state.selection?.layerId);
       const selected = selectedLayer?.data.features.find((feature) => feature.properties.fid === state.selection?.featureId);
@@ -79,7 +85,7 @@ export default function SnapshotMap({ snapshot, label, syncCamera, onCameraChang
     const visible = Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, snapshot.visibleLayers.some((item) => item.id === layer.id)]));
     applyRegistryState(map, visible, Object.fromEntries(snapshot.visibleLayers.map((layer) => [layer.id, layer.opacity])), snapshot.committedTime.start, snapshot.visibleLayers.map((layer) => layer.id), snapshot.evidenceFilter ?? "ALL");
     map.setProjection({ type: snapshot.projection });
-    setTerrainPresentation(map, snapshot.representation === "Terrain 3D", 1.2);
+    setTerrainPresentation(map, snapshot.representation === "Terrain 3D", 1.35);
     updateAnalysisAreaSource(map, snapshot.area.kind === "aoi" ? snapshot.area.bounds : undefined);
     syncing.current = true;
     if (snapshot.camera.center !== "WITHHELD_BROWSER_LOCATION") map.jumpTo(snapshot.camera as Camera);

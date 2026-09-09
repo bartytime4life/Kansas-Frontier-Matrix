@@ -29,6 +29,7 @@ import {
   setStructureExtrusions,
   setTerrainPresentation,
   setElevationExaggeration,
+  TERRAIN_HILLSHADE_LAYER_ID,
   TERRAIN_SOURCE_ID,
   type Structures3DState,
   type TerrainPresentationState,
@@ -696,7 +697,7 @@ export default function Home() {
   const basemapRef = useRef<BasemapKey>("standard");
   const projectionRef = useRef<"mercator" | "globe">("mercator");
   const scenePresetRef = useRef<ScenePresetId>("overview-2d");
-  const verticalExaggerationRef = useRef(1);
+  const verticalExaggerationRef = useRef(1.35);
   const atmospherePresetRef = useRef<AtmospherePreset>("night");
   const lightAzimuthRef = useRef(210);
   const fieldOfViewRef = useRef(36);
@@ -744,7 +745,7 @@ export default function Home() {
   const [view, setView] = useState<ViewState>(KANSAS_VIEW);
   const [scenePreset, setScenePreset] = useState<ScenePresetId>("overview-2d");
   const [terrainState, setTerrainState] = useState<TerrainPresentationState>("OFF");
-  const [verticalExaggeration, setVerticalExaggeration] = useState(1);
+  const [verticalExaggeration, setVerticalExaggeration] = useState(1.35);
   const [atmospherePreset, setAtmospherePreset] = useState<AtmospherePreset>("night");
   const [lightAzimuth, setLightAzimuth] = useState(210);
   const [fieldOfView, setFieldOfView] = useState(36);
@@ -1909,7 +1910,7 @@ export default function Home() {
         : projection === "globe"
           ? "Globe"
           : "2D";
-    const redactCamera = locationCameraRedacted || locationDerivedViewRef.current;
+    const redactCamera = locationCameraRedacted;
     const evidenceRefs = Array.from(new Set([
       ...mapContextRecords.map((feature) => feature.properties.citation),
       ...(selected ? [selected.properties.citation] : []),
@@ -1963,6 +1964,8 @@ export default function Home() {
       policy: policyDecisionFromEvidenceState(selected?.properties.evidenceState),
     };
   }, [analysisArea, basemap, compareTimeA, compareTimeB, layerOrder, locationCameraRedacted, mapContextRecords, mapEvidenceFilter, compareLeftId, compareRightId, mapUtilityOpen, mapUtilityView, mapViewportBounds, opacity, projection, scenePreset, selected, supportedMapContextCount, view, visibility, year]);
+
+  const comparisonSnapshot = useMemo(() => captureMapSnapshot(), [captureMapSnapshot]);
 
   const openPrimaryWorkspace = useCallback((mode: Exclude<PrimaryWorkspace, "map">, freshFromMap = false) => {
     if (freshFromMap || !workspaceSnapshot) setWorkspaceSnapshot(freshFromMap ? captureMapSnapshot() : readDraftSnapshot(mode) ?? captureMapSnapshot());
@@ -2039,7 +2042,7 @@ export default function Home() {
     setRightOpen(Boolean(context));
     if (mapRef.current?.isStyleLoaded()) updateSelectionSource(mapRef.current, context?.geometry ?? null);
     announce(`Opened story scene “${scene.title}” on the map; evidence and policy state remain unchanged`);
-  }, [allEvidenceRecords, announce, layerOrder, opacity, selectStoredFeature]);
+  }, [allEvidenceRecords, announce, layerOrder, opacity]);
 
   const clearSelectionState = useCallback(() => {
     setFocusStage("outcome");
@@ -2146,7 +2149,7 @@ export default function Home() {
       const restoredScene = params.get("scene");
       const nextScenePreset: ScenePresetId = restoredScene === "globe-overview" || restoredScene === "water-systems" || restoredScene === "smoke-context" || restoredScene === "elevation-3d" || restoredScene === "tile-grid" ? restoredScene : "overview-2d";
       setScenePreset(nextScenePreset);
-      const nextVerticalExaggeration = clamp(parseNumber(params.get("zscale"), 1), 0, 2);
+      const nextVerticalExaggeration = clamp(parseNumber(params.get("zscale"), nextScenePreset === "elevation-3d" ? 1.35 : 1), 0, 2);
       verticalExaggerationRef.current = nextVerticalExaggeration;
       setVerticalExaggeration(nextVerticalExaggeration);
       const restoredAtmosphere = params.get("sky");
@@ -3234,7 +3237,7 @@ export default function Home() {
         basemap: "standard" as BasemapKey,
         projection: "mercator" as const,
         camera: { ...KANSAS_VIEW },
-        scale: 1,
+        scale: 1.35,
         atmosphere: "night" as AtmospherePreset,
         lightAzimuth: 210,
         fieldOfView: 36,
@@ -3389,7 +3392,7 @@ export default function Home() {
     const nextBearing = mode === "2d" ? 0 : currentBearing;
 
     projectionRef.current = nextProjection;
-    verticalExaggerationRef.current = 1;
+    verticalExaggerationRef.current = mode === "terrain" ? 1.35 : 1;
     atmospherePresetRef.current = nextAtmosphere;
     lightAzimuthRef.current = mode === "terrain" ? 235 : mode === "globe" ? 225 : 210;
     fieldOfViewRef.current = nextFieldOfView;
@@ -3408,6 +3411,21 @@ export default function Home() {
     }
     map?.easeTo({ pitch: nextPitch, bearing: nextBearing, duration: motionDuration(500) });
     announce(`${mode === "terrain" ? "Terrain 3D display" : mode === "globe" ? "Globe display" : "2D evidence display"} applied · active time and selection preserved`);
+  };
+
+  const retryTerrain = () => {
+    const map = mapRef.current;
+    if (!map?.isStyleLoaded()) {
+      setTerrainState("LOADING");
+      setRuntime({ kind: "loading", message: "Waiting for the map style before retrying terrain…" });
+      return;
+    }
+    if (map.getLayer(TERRAIN_HILLSHADE_LAYER_ID)) map.removeLayer(TERRAIN_HILLSHADE_LAYER_ID);
+    map.setTerrain(null);
+    if (map.getSource(TERRAIN_SOURCE_ID)) map.removeSource(TERRAIN_SOURCE_ID);
+    setTerrainState(setTerrainPresentation(map, true, verticalExaggerationRef.current));
+    setRuntime({ kind: "loading", message: "Retrying the attributed AWS Terrain Tiles DEM…" });
+    announce("Terrain source retry started; the 2D evidence path remains available");
   };
 
   const startSceneOrbit = () => {
@@ -5239,6 +5257,9 @@ export default function Home() {
                     <header><div><strong id="scene-height-title">{scenePreset === "elevation-3d" ? "Terrain exaggeration" : "Relative vertical scale"}</strong><small>{scenePreset === "elevation-3d" ? "External DEM display only" : "Synthetic extrusion only"}</small></div><output htmlFor="scene-height">{verticalExaggeration.toFixed(1)}×</output></header>
                     <input id="scene-height" type="range" min={scenePreset === "elevation-3d" ? "0.1" : "0"} max="2" step="0.1" value={verticalExaggeration} onChange={(event) => { const next = Number(event.target.value); verticalExaggerationRef.current = next; setVerticalExaggeration(next); }} />
                     <div><span>{scenePreset === "elevation-3d" ? "0.1×" : "Flat"}</span><span>1×</span><span>2×</span></div>
+                    {scenePreset === "elevation-3d" && <div className="terrain-exaggeration-presets" role="group" aria-label="Terrain exaggeration presets">
+                      {[1, 1.35, 1.75, 2].map((scale) => <button key={scale} type="button" aria-pressed={verticalExaggeration === scale} onClick={() => { verticalExaggerationRef.current = scale; setVerticalExaggeration(scale); }}>{scale.toFixed(scale === 1 ? 0 : 2).replace(/0$/, "")}×</button>)}
+                    </div>}
                   </section>
                   <section className="scene-camera-controls" aria-label="3D camera orientation">
                     <header><strong>Camera</strong><small>{Math.round(view.pitch)}° pitch · {Math.round(view.bearing)}° bearing</small></header>
@@ -5292,7 +5313,11 @@ export default function Home() {
                 </section>
 
                 <section className="terrain-source-ledger" aria-labelledby="terrain-source-ledger-title">
-                  <header><div><span>3D SOURCE LEDGER</span><h4 id="terrain-source-ledger-title">Terrain, structures, authoritative candidate + renderer contract</h4></div><strong>ROLE-SEPARATED</strong></header>
+                  <header><div><span>3D SOURCE LEDGER</span><h4 id="terrain-source-ledger-title">Terrain, structures, authoritative candidate + renderer contract</h4></div><strong>{scenePreset === "elevation-3d" ? terrainState : "ROLE-SEPARATED"}</strong></header>
+                  {scenePreset === "elevation-3d" && <div className="terrain-runtime-actions" role="status" aria-live="polite">
+                    <p><strong>Live terrain:</strong> {terrainState === "READY" ? `DEM ready at ${verticalExaggeration.toFixed(2)}×` : terrainState === "ERROR" ? "DEM request failed; the 2D evidence path remains usable." : "Requesting attributed Terrarium elevation tiles…"}</p>
+                    {terrainState === "ERROR" && <button type="button" onClick={retryTerrain}>Retry terrain source</button>}
+                  </div>}
                   <div>{[...TERRAIN_SOURCES, STRUCTURE_3D_SOURCE].map((source) => <article key={source.id} data-status={source.status}>
                     <header><span>{source.organization}</span><strong>{source.status.replaceAll("_", " ")}</strong></header>
                     <h5>{source.title}</h5>
@@ -5365,7 +5390,7 @@ export default function Home() {
 
               {mapUtilityView === "compare" && <section id="map-utility-view-compare" role="tabpanel" aria-labelledby="map-utility-tab-compare" className="map-utility-section layer-compare-section">
                 <div className="map-utility-section-heading"><span>COMPARE</span><h3>Time + layer investigation</h3><p>Compare catalog availability across two times, then inspect two registry layers without flattening source role, release posture, or sensitivity into a single score.</p></div>
-                <SynchronizedComparison snapshot={captureMapSnapshot()} layerA={compareLeft.id} layerB={compareRight.id} timeA={compareTimeA} timeB={compareTimeB} />
+                <SynchronizedComparison snapshot={comparisonSnapshot} layerA={compareLeft.id} layerB={compareRight.id} timeA={compareTimeA} timeB={compareTimeB} />
                 <section className="temporal-compare-lab" aria-labelledby="temporal-compare-title">
                   <header><div><span>TIME A / TIME B</span><h4 id="temporal-compare-title">Catalog availability comparison</h4></div><strong>{temporalComparison.changedLayerCount} CHANGED</strong></header>
                   <div className="temporal-compare-selectors">

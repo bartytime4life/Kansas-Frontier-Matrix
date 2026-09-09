@@ -2450,6 +2450,12 @@ body { font-size: 14px; }
 .terrain-source-ledger > header h4 { margin: 0; font-size: 15px; }
 .terrain-source-ledger > header > strong { align-self: start; color: var(--gold); font-size: 12px; }
 .terrain-source-ledger > div { display: grid; gap: 7px; padding: 8px; }
+.terrain-exaggeration-presets { display: flex !important; flex-wrap: wrap; justify-content: flex-start !important; gap: 6px; margin-top: 8px; }
+.terrain-exaggeration-presets button, .terrain-runtime-actions button { border: 1px solid rgba(115, 199, 210, .42); border-radius: 7px; background: rgba(7, 32, 36, .88); color: var(--ink); padding: 7px 10px; font: inherit; font-size: 12px; font-weight: 800; cursor: pointer; }
+.terrain-exaggeration-presets button[aria-pressed="true"] { border-color: var(--gold); color: var(--gold); }
+.terrain-runtime-actions { border-bottom: 1px solid var(--line); padding: 10px !important; }
+.terrain-runtime-actions p { margin: 0; }
+.terrain-runtime-actions button { justify-self: start; margin-top: 8px; }
 .terrain-source-ledger article { border: 1px solid var(--line); border-radius: 8px; background: rgba(255, 255, 255, .018); padding: 10px; }
 .terrain-source-ledger article[data-status="ACTIVE_CONTEXT"] { border-color: rgba(115, 199, 210, .42); box-shadow: inset 3px 0 #73c7d2; }
 .terrain-source-ledger article > header { display: flex; justify-content: space-between; gap: 8px; color: var(--dim); font-size: 12px; }

@@ -161,11 +161,15 @@ export default function ReportStoryWorkspaces({
   }, []);
 
   useEffect(() => {
+    let active = true;
     try {
       if (mode === "reports") window.localStorage.setItem(REPORT_STORAGE_KEY, JSON.stringify(report));
       else window.localStorage.setItem(STORY_STORAGE_KEY, JSON.stringify(story));
-      setStorageState("saved");
-    } catch { setStorageState("unavailable"); }
+      window.setTimeout(() => { if (active) setStorageState("saved"); }, 0);
+    } catch {
+      window.setTimeout(() => { if (active) setStorageState("unavailable"); }, 0);
+    }
+    return () => { active = false; };
   }, [mode, report, story]);
 
   useEffect(() => {
