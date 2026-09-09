@@ -79,6 +79,16 @@ test("keeps held-view evidence, Focus, and report snapshots aligned", async ({
   await workspace.getByRole("button", { name: "Ask Focus for bounded next steps" }).click();
   await expect(workspace.getByRole("status").filter({ hasText: "ABSTAIN" })).toBeVisible();
 
+  await workspace.getByRole("button", { name: "Layers" }).click();
+  const availableLayer = workspace.locator(".atlas-layer-row", {
+    hasText: "Generalized Kansas extent",
+  });
+  await availableLayer.getByRole("button", { name: "Inspect" }).click();
+  await expect(
+    workspace.getByRole("complementary", { name: "Evidence Drawer" }),
+  ).toContainText("ABSTAIN · VIEW_DATA_HELD");
+
+  await workspace.getByRole("button", { name: "New from map" }).click();
   await workspace.getByRole("button", { name: "Create report draft" }).click();
   await expect(workspace.locator(".atlas-draft-card").first()).toContainText("view:weather-window");
   const latestDraft = await page.evaluate(() => {
@@ -94,7 +104,7 @@ test("keeps held-view evidence, Focus, and report snapshots aligned", async ({
   });
   expect(latestDraft?.snapshot).toMatchObject({
     activeViewId: "view:weather-window",
-    selectedLayerId: "layer:weather-window",
+    selectedLayerId: "layer:kansas-frame",
     evidenceRefs: [],
   });
   expect(latestDraft?.includedEvidenceRefs).toEqual([]);

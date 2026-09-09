@@ -134,7 +134,11 @@ describe("Living Atlas governed foundation", () => {
         false,
         "view:weather-window",
       ),
-    ).toMatchObject({ outcome: "ABSTAIN", reasonCode: "VIEW_DATA_HELD" });
+    ).toMatchObject({
+      outcome: "ABSTAIN",
+      reasonCode: "VIEW_DATA_HELD",
+      evidenceRefs: [],
+    });
     expect(evaluateFocusSelection("layer:protected-context").outcome).toBe("DENY");
     expect(
       evaluateFocusSelection(

@@ -703,8 +703,15 @@ export function mountLivingAtlasWorkspace(
     } else if (action.startsWith("view:")) activateView(action.slice(5));
     else if (action.startsWith("inspect:")) {
       const layerId = action.slice(8);
-      const claim = findEvidenceForLayer(layerId);
-      snapshot = cloneSnapshot(snapshot, { selectedLayerId: layerId, evidenceRefs: claim?.evidenceRefs ?? Object.freeze([]) });
+      const decision = evaluateFocusSelection(
+        layerId,
+        false,
+        snapshot.activeViewId,
+      );
+      snapshot = cloneSnapshot(snapshot, {
+        selectedLayerId: layerId,
+        evidenceRefs: decision.evidenceRefs,
+      });
       renderEvidence(layerId);
     } else if (action.startsWith("connection:")) {
       snapshot = cloneSnapshot(snapshot, {

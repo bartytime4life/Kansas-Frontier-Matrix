@@ -27,11 +27,11 @@
     "apps/explorer-web/src/features/living_atlas/types.ts": "sha256:617f8acbaf1c6414a18d933fc6b9010de8c4ac47f0c8821ece3c645829d4ab7e",
     "apps/explorer-web/src/site/README.md": "sha256:f1ea6859547acf8f42baa95b8423e034720dcad2455721ec984e1b349a78c2e9",
     "apps/explorer-web/src/site/catalog.ts": "sha256:b505ca706c70fdf6dd59ed5a8d704b39f174e63a6569fef9a4c79690dfb1df8c",
-    "apps/explorer-web/src/site/mount-living-atlas.ts": "sha256:6a3e2bd4d6015d53b8b5bf623941fab22def13f4b0e62b261d1d67e6c4e9cd5b",
+    "apps/explorer-web/src/site/mount-living-atlas.ts": "sha256:0cf4223407cc66445e0f4acacea591517ce9413601977ebf6234b36b60e822fd",
     "apps/explorer-web/src/site/site-living-atlas.css": "sha256:5b630252af843a04875465fa9cc2784b1eca615440f99912f1d54193026f1c48",
-    "apps/explorer-web/tests/browser/living-atlas.spec.ts": "sha256:ba774c976a7250856b2fdef030564d86f09902eeea9738f62fa5652d5fdb73d2",
+    "apps/explorer-web/tests/browser/living-atlas.spec.ts": "sha256:2653cd22152c9d78950f56862c81d2fd800ebd9952f32c97991b53934d042b7a",
     "apps/explorer-web/tests/explorer-site-catalog.test.ts": "sha256:f0ac79a4504061741cd05bf32b7bb2b54f04381d87e26d36560fcae955d573d2",
-    "apps/explorer-web/tests/living-atlas.test.ts": "sha256:fcfbf4f1c2452fb2d5f14365ed3ef014a54fbbf6a3128847f209a9239630b0fd"
+    "apps/explorer-web/tests/living-atlas.test.ts": "sha256:95183a21a501963a2084482f84bba24d260e51b2ee566461663aa2fff5b874b8"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -165,7 +165,7 @@
     "timestamp": null
   },
   "override_record": null,
-  "created_at": "2026-09-09T05:06:00Z",
+  "created_at": "2026-09-09T05:13:00Z",
   "emitter": "OpenAI Codex",
   "links": {
     "pr_number": 4446,
