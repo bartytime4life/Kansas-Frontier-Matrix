@@ -1,10 +1,12 @@
 import "./site/site-foundation-a.css";
 import "./site/site-foundation-b.css";
 import "./site/site-map.css";
+import "./site/site-terrain.css";
 import "./site/site-catalog.css";
 import "./site/site-trust.css";
 import "./site/site-responsive.css";
 import { mountExplorerSite } from "./site/mount-explorer-site";
+import { mountTerrainSourceLedger } from "./site/mount-terrain-source-ledger";
 import { mountSyntheticFocusWorkspace } from "./site/mount-synthetic-focus-workspace";
 import { mountPublicTrustSurface } from "./site/trust-surface";
 import {
@@ -43,6 +45,7 @@ if (root === null) {
 }
 
 const site = mountExplorerSite(root);
+mountTerrainSourceLedger(root);
 const navigation = root.querySelector<HTMLElement>(".site-nav");
 const trustSection = root.querySelector<HTMLElement>("#trust");
 
