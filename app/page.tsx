@@ -320,7 +320,10 @@ const DOMAIN_HOLDS = Object.freeze([
   { domain: "Imagery", state: "PUBLIC-SAFE", detail: "Optional attributed imagery is display context only; it is never KFM evidence." },
 ] as const);
 
-const KANSAS_VIEW: ViewState = { center: [-98.38, 38.48], zoom: 5.45, bearing: 0, pitch: 0 };
+// Open on the Smoky Hills as an investigation surface, not a distant state
+// overview. The oblique camera makes the real DEM legible immediately while
+// Kansas extent remains one click away on the map rail.
+const KANSAS_VIEW: ViewState = { center: [-98.24, 38.68], zoom: 9.15, bearing: -24, pitch: 63 };
 const STRUCTURE_FOCUS_PRESETS = Object.freeze([
   Object.freeze({ id: "wichita", label: "Focus Wichita", center: [-97.3375, 37.6872] as [number, number], bearing: -24 }),
   Object.freeze({ id: "topeka", label: "Focus Topeka", center: [-95.689, 39.0473] as [number, number], bearing: 28 }),
@@ -698,11 +701,11 @@ export default function Home() {
   const mapEvidenceFilterRef = useRef<RegistryEvidenceFilter>("ALL");
   const basemapRef = useRef<BasemapKey>("standard");
   const projectionRef = useRef<"mercator" | "globe">("mercator");
-  const scenePresetRef = useRef<ScenePresetId>("overview-2d");
-  const verticalExaggerationRef = useRef(1.35);
-  const atmospherePresetRef = useRef<AtmospherePreset>("night");
-  const lightAzimuthRef = useRef(210);
-  const fieldOfViewRef = useRef(36);
+  const scenePresetRef = useRef<ScenePresetId>("elevation-3d");
+  const verticalExaggerationRef = useRef(1);
+  const atmospherePresetRef = useRef<AtmospherePreset>("dusk");
+  const lightAzimuthRef = useRef(235);
+  const fieldOfViewRef = useRef(44);
   const structures3DRef = useRef(false);
   const gestureModeRef = useRef<"cooperative" | "direct">("cooperative");
   const sceneOrbitTimerRef = useRef<number | null>(null);
@@ -745,12 +748,12 @@ export default function Home() {
   const [layerOrder, setLayerOrder] = useState<string[]>(defaultOrder);
   const [basemap, setBasemap] = useState<BasemapKey>("standard");
   const [view, setView] = useState<ViewState>(KANSAS_VIEW);
-  const [scenePreset, setScenePreset] = useState<ScenePresetId>("overview-2d");
-  const [terrainState, setTerrainState] = useState<TerrainPresentationState>("OFF");
-  const [verticalExaggeration, setVerticalExaggeration] = useState(1.35);
-  const [atmospherePreset, setAtmospherePreset] = useState<AtmospherePreset>("night");
-  const [lightAzimuth, setLightAzimuth] = useState(210);
-  const [fieldOfView, setFieldOfView] = useState(36);
+  const [scenePreset, setScenePreset] = useState<ScenePresetId>("elevation-3d");
+  const [terrainState, setTerrainState] = useState<TerrainPresentationState>("LOADING");
+  const [verticalExaggeration, setVerticalExaggeration] = useState(1);
+  const [atmospherePreset, setAtmospherePreset] = useState<AtmospherePreset>("dusk");
+  const [lightAzimuth, setLightAzimuth] = useState(235);
+  const [fieldOfView, setFieldOfView] = useState(44);
   const [structures3DEnabled, setStructures3DEnabled] = useState(false);
   const [structures3DState, setStructures3DState] = useState<Structures3DState>("OFF");
   const [gestureMode, setGestureMode] = useState<"cooperative" | "direct">("cooperative");
@@ -790,7 +793,7 @@ export default function Home() {
   const [primaryWorkspace, setPrimaryWorkspace] = useState<PrimaryWorkspace>("map");
   const [workspaceSnapshot, setWorkspaceSnapshot] = useState<MapSnapshot | null>(null);
   const [leftOpen, setLeftOpen] = useState(true);
-  const [leftPanelMode, setLeftPanelMode] = useState<LeftPanelMode>("views");
+  const [leftPanelMode, setLeftPanelMode] = useState<LeftPanelMode>("layers");
   const [rightOpen, setRightOpen] = useState(false);
   const [timelineOpen, setTimelineOpen] = useState(true);
   const [drawerView, setDrawerView] = useState<DrawerView>("evidence");

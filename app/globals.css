@@ -2461,6 +2461,20 @@ body { font-size: 14px; }
 .explorer-shell[data-left="true"][data-right="true"] { grid-template-columns: minmax(0, 1fr); }
 .map-stage { grid-column: 1; grid-row: 1; }
 .timeline-panel { grid-column: 1; }
+.map-stage::after {
+  content: "SMOKY HILLS · KANOPOLIS / ELLSWORTH";
+  position: absolute;
+  z-index: 12;
+  right: 18px;
+  bottom: 15px;
+  pointer-events: none;
+  color: rgba(232, 243, 239, .76);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 12px;
+  font-style: italic;
+  letter-spacing: .14em;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, .92);
+}
 .layer-panel, .evidence-drawer { position: absolute; z-index: 31; grid-column: auto; grid-row: auto; border: 1px solid rgba(72, 177, 193, .35); border-radius: 8px; background: rgba(3, 22, 28, .94); box-shadow: 0 18px 56px rgba(0, 0, 0, .48); backdrop-filter: blur(14px); }
 .layer-panel { top: 12px; bottom: auto; left: 74px; width: var(--left); height: min(560px, calc(100% - 96px)); transform: translateX(calc(-100% - 90px)); }
 .explorer-shell[data-left="true"] .layer-panel { transform: translateX(0); }
