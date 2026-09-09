@@ -2,19 +2,19 @@
 doc_id: kfm://app/explorer-web/src/readme
 title: Explorer Web Source Tree README
 type: app-readme
-version: v0.4.1
+version: v0.5
 status: draft
 owners: OWNER_TBD — Apps steward · UI steward · Map steward · Governed API steward · Policy steward · Docs steward
 created: 2026-06-16
-updated: 2026-09-06
+updated: 2026-09-09
 policy_label: public
 owning_root: apps/
 responsibility: 'Define the Explorer Web source-layout boundary and record current repository-grounded composition, adapters, features, templates, tests, and maturity limits.'
 truth_posture: 'CONFIRMED source inventory and bounded local/fixture-first slices / PROPOSED broader route and integration shape / UNKNOWN fresh execution, deployment, release, and public operation'
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
-  main_commit: 0bcfbcea8fd8e8f9af344ce6d1a1c9fceb82310e
-  main_tree: c0e40dc0fbedb4415488e5561222ae96f015c81e
+  main_commit: 033103a0afe80f85a823973951b3b7d15abb7a8b
+  main_tree: b21256c6f574b8f289cd806035ca268e012d2393
   target_prior_blob: a79d96b196d8b95208e209ccd74e51c02e7d146f
   parent_app_readme_blob: bd022e91d998685820f6c3b0965bdffbfd355726
   entrypoint_blob: 787c5182777b7f26d281e7e2851344b504a70d1c
@@ -49,7 +49,8 @@ notes:
   - 'v0.4 re-pins this source-tree README to current main and records the actual direct-child, adapter, feature, site, template, package, and test surfaces observed there.'
   - 'v0.4.1 re-pins the evidence snapshot to main@0bcfbcea8fd8e8f9af344ce6d1a1c9fceb82310e and refreshes the site/features directory anchors observed 2026-09-06; structural counts and bounded maturity claims are unchanged.'
   - 'Counts are structural evidence only; a file, feature directory, test definition, package, or viewer template does not prove route integration, a fresh pass, production data, release, deployment, or publication.'
-  - 'The package-owned MapLibre implementation and dependency are present, while src/adapters/MapLibreAdapter.ts remains a boundary note and the normal Explorer composition uses NullMapRuntime.'
+  - 'The normal composition mounts the package-owned MapLibre adapter through the Vite seam with a network-free inline Living Atlas style; the retained trust-state laboratory still uses NullMapRuntime.'
+  - 'v0.5 adds the app-owned Living Atlas registry and composition while preserving external-source, production-browser, deployment, release, and publication holds.'
   - 'This documentation change is scoped to apps/explorer-web/src/README.md; its generated receipt is the only provenance companion. The parent app README and its own evidence snapshot remain related surfaces, not silently rewritten here.'
   - 'src/ is the app implementation source-layout boundary only; it must not become a public API, lifecycle data store, policy root, release authority, schema/contract home, model-runtime surface, or shared package root.'
 [/KFM_META_BLOCK_V2] -->
@@ -81,7 +82,7 @@ notes:
 > **Owners:** `OWNER_TBD` — Apps steward · UI steward · Map steward · Governed API steward · Policy steward · Docs steward  
 > **Path:** `apps/explorer-web/src/README.md`  
 > **Responsibility root:** `apps/` — deployable application surfaces  
-> **Truth posture:** CONFIRMED repository-grounded local composition, app-local adapters and feature slices, deterministic fixtures, and positive/negative tests / HOLD functional renderer and live trust-bearing transport / UNKNOWN deployment and public operation
+> **Truth posture:** CONFIRMED repository-grounded local composition, bounded inline MapLibre path, app-local adapters and feature slices, deterministic fixtures, and positive/negative unit tests / HOLD external source delivery and live trust-bearing transport / UNKNOWN browser execution, deployment and public operation
 
 > [!CAUTION]
 > Code under `apps/explorer-web/src/` must not directly read lifecycle data roots, canonical/internal stores, direct model runtime outputs, or local source files as user-facing truth. Claim-bearing UI should render only governed API envelopes, released or bounded-safe layer artifacts, EvidenceBundle-derived payloads, and finite states.
@@ -111,19 +112,19 @@ notes:
 
 ## 0. Current evidence snapshot
 
-**Repository pin:** [`main@0bcfbcea8fd8e8f9af344ce6d1a1c9fceb82310e`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/0bcfbcea8fd8e8f9af344ce6d1a1c9fceb82310e), tree `c0e40dc0fbedb4415488e5561222ae96f015c81e`, observed 2026-09-06. This table records source/configuration evidence at that exact ref; it does not assert a fresh build, unit run, browser session, hosted check, deployment, release, or publication.
+**Implementation base:** [`main@033103a0afe80f85a823973951b3b7d15abb7a8b`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/033103a0afe80f85a823973951b3b7d15abb7a8b), observed 2026-09-09. The Living Atlas work is a draft branch candidate over that immutable base and preserves the merged terrain source ledger; it does not establish merge, deployment, release, or publication.
 
 | Surface | Confirmed at the pinned source | Limit |
 |---|---|---|
 | `apps/explorer-web/src/` | Six direct entries: `README.md`, `main.ts`, `adapters/`, `features/`, `site/`, and `viewer_templates/`. | Directory shape is not a production route inventory. |
 | `main.ts` | Mounts the repository-grounded site composition, four public workspace anchors, URL/hash navigation, the synthetic Focus workspace, and the shared Trust surface. | Local composition and anchor navigation do not establish a production router, live transport, or public operation. |
-| `site/` | Current directory contains 16 non-README source/style files, including workspace registry/context/deep-link modules, the code-owned catalog, `NullMapRuntime` composition, trust primitives, and responsive/map styles. | Synthetic/local inputs remain bounded fixtures and presentation state; they are not live evidence or released layers. |
+| `site/` | Contains 21 non-README source/style files, including the Living Atlas composition, terrain source ledger, workspace registry/context/deep links, code-owned catalog, retained `NullMapRuntime` laboratory, trust primitives, and responsive/map styles. | Synthetic/local inputs remain bounded fixtures and presentation state; they are not live evidence or released layers. |
 | `adapters/` | Current directory contains 25 adapter/projection files plus its README, including `GovernedClient.ts`, map-runtime/evidence bridges, and domain/diagnostic projections. | App-local parsers and projections are not a live Governed API transport or policy/release authority. |
-| `features/` | Current directory contains 39 child feature directories plus its README, spanning shell, trust/time, map/layers, evidence/Focus, story/compare/export, settings/diagnostics, review, and fixture-first domain/projection surfaces. | Directory count does not mean every feature is mounted, routed, live, or production-ready. |
+| `features/` | Contains 40 child feature directories, including the typed `living_atlas/` registry/style boundary plus existing shell, trust/time, map/layers, evidence/Focus, story/compare/export, settings/diagnostics, review, and fixture-first projections. | Directory count does not mean every feature is live, externally sourced, released, or production-ready. |
 | `viewer_templates/` | Four JSON style templates plus its README are present for default, compare, review, and story views. | Templates are deterministic presentation inputs, not released layer manifests or renderer admission. |
 | `apps/explorer-web/package.json` | The app declares `build`, `test`, `test:unit`, and `test:browser` scripts with Node `>=22.13 <23`; the package manifest is pinned at blob `25b67b10eb4d208b780eb456853257d051a2ce39`. | Declared commands are not execution results. |
-| `apps/explorer-web/tests/` | 55 direct `*.test.ts` files plus a `browser/` fixture directory are present. | Test definitions and fixture doubles do not prove a fresh pass, GPU/source readiness, hosting, or deployment. |
-| Renderer boundary | `packages/maplibre/` contains the package-owned MapLibre GL JS `6.6.0` dependency and concrete adapter surface; `src/adapters/MapLibreAdapter.ts` is a boundary note, and normal site composition uses `NullMapRuntime`. | Package presence and isolated fixtures are distinct from default-app activation, dependency admission, real sources, browser readiness, or release. |
+| `apps/explorer-web/tests/` | 58 direct `*.test.ts` files plus a `browser/` fixture directory are present. | Unit definitions and fixture doubles do not prove GPU/source readiness, hosting, or deployment; browser execution requires a compatible runtime. |
+| Renderer boundary | `packages/maplibre/` contains MapLibre GL JS `6.7.0`; normal composition acquires it only through `@kfm/maplibre/vite-adapter` with an inline-only style. | Bounded activation is distinct from real-source admission, full browser readiness, deployment, or release. |
 | Static policy guard | `tests/policy/test_explorer_web_adapter_boundary.py` scans Explorer source for raw renderer imports and forbidden internal-store path literals. | The guard is source evidence; this README does not claim the command was run at the current head. |
 
 [Back to top](#top)
@@ -133,9 +134,9 @@ notes:
 
 `apps/explorer-web/src/` is the implementation source tree for the Explorer Web app.
 
-At the pinned source it holds the local entrypoint, repository-grounded site composition, URL/workspace context and navigation, app-local boundary adapters, 39 child feature directories, and bounded viewer templates for the map-first shell.
+At this branch candidate it holds the local entrypoint, repository-grounded site composition, URL/workspace context and navigation, app-local boundary adapters, 40 child feature directories, and bounded viewer templates for the map-first shell.
 
-This README defines the source-tree boundary. The current repository evidence supports bounded local, synthetic, and fixture-first interaction slices; it does not prove a production route tree, live Governed API transport, default-app renderer activation, deployment wiring, release, publication, or public operation.
+This README defines the source-tree boundary. The current evidence supports bounded local, synthetic, fixture-first interaction and inline renderer slices; it does not prove a production route tree, live Governed API transport, external source admission, complete browser readiness, deployment wiring, release, publication, or public operation.
 
 [Back to top](#top)
 
@@ -224,13 +225,13 @@ A route, component, adapter, export flow, or map interaction should not render c
 | Current area | Verified repository responsibility | Maturity limit |
 |---|---|---|
 | `main.ts` | Mounts the site composition, four public workspace anchors, URL/hash synchronization, the synthetic Focus workspace, and the shared Trust surface. | Local deterministic composition; not a production router, live transport, deployment, release, or publication path. |
-| `site/` | Owns the app-local Map, Knowledge, Features, and Trust composition, code-owned catalog, workspace registry/context/deep links, trust-state primitives, `NullMapRuntime` presentation, and site styles. | Synthetic/local inputs do not establish live data, authentication, evidence authority, released layers, or public operation. |
+| `site/` | Owns the app-local Map, Reports, Stories, Knowledge, Features, and Trust composition, terrain source ledger, code-owned catalog, workspace context/deep links, Living Atlas controller, retained trust-state laboratory, and site styles. | Synthetic/local inputs do not establish live data, authentication, evidence authority, released layers, or public operation. |
 | `adapters/` | Owns 25 app-local adapter/projection files, including `GovernedClient.ts`, map-runtime/evidence bridges, citation/redaction/reveal projections, and domain/diagnostic projections. | Bounded parsers and projections are not live Governed API transport, policy execution, release authority, or renderer authority. |
-| `features/` | Contains 39 child feature directories for shell, trust/time, map/layers, evidence/Focus, story/compare/export, settings/diagnostics, review, and additional fixture-first domain/projection slices. | Child directories and tests prove only the individually bounded slice when its own evidence supports that claim; they do not create production routes or live services by count. |
+| `features/` | Contains 40 child feature directories, including the Living Atlas registry/style boundary and existing shell, trust/time, map/layers, evidence/Focus, story/compare/export, settings/diagnostics, review, and other fixture-first slices. | Child directories and tests prove only their bounded slice; they do not create production routes, admitted sources, or live services by count. |
 | `viewer_templates/` | Contains four deterministic JSON style templates for default, compare, review, and story views. | Templates are not released layer manifests, admitted renderer configuration, or publication authority. |
-| Paired test lane | `apps/explorer-web/tests/` contains 55 direct test files plus browser fixtures for workspace, temporal, map/evidence, trust, feature, and boundary behavior. | File presence is not a fresh test result; browser doubles do not prove GPU, source, hosting, or production readiness. |
+| Paired test lane | `apps/explorer-web/tests/` contains 58 direct test files plus browser fixtures for workspace, temporal, map/evidence, trust, feature, and boundary behavior. | Unit execution and file presence do not prove unavailable browser, GPU, source, hosting, or production readiness. |
 
-There is no `routes/` directory in this source tree. Workspace anchors and navigation are bounded browser composition, not a claim of a production router. `src/adapters/MapLibreAdapter.ts` is a renderer boundary note; package-owned MapLibre implementation remains outside `src/`, while the normal site composition retains `NullMapRuntime`.
+There is no `routes/` directory in this source tree. Workspace anchors and navigation are bounded browser composition, not a claim of a production router. `src/adapters/MapLibreAdapter.ts` remains a renderer boundary note; the package-owned implementation stays outside `src/`, and the normal page acquires it only through the accepted Vite adapter seam.
 
 ## 8. Diagram
 
@@ -322,7 +323,7 @@ For source changes under `apps/explorer-web/src/`:
 
 - [ ] Owners are confirmed and `OWNER_TBD` is replaced.
 - [x] The bounded `src/` entrypoint and app-local build/test scripts are present at the pinned source.
-- [x] The current six-entry `src/` boundary, 25 adapter/projection files, 39 feature directories, 16 site files, four viewer templates, and 55 direct app test files are recorded as structural evidence.
+- [x] The current six-entry `src/` boundary, 25 adapter/projection files, 40 feature directories, 21 site files, four viewer templates, and 58 direct app test files are recorded as structural evidence.
 - [x] Bounded workspace/deep-link, temporal, Evidence Drawer, Focus, layer, export, diagnostics, trust, story, and map-runtime test definitions are present in the app test lane.
 - [x] A policy test scans renderer imports and direct internal-store path literals.
 - [x] The current `site/`, `adapters/`, `features/`, and `viewer_templates/` responsibilities and maturity limits are documented without promoting file counts into route or production claims.
@@ -338,7 +339,7 @@ For source changes under `apps/explorer-web/src/`:
 |---|---|
 | Commission a production route inventory and router | Current workspace anchors/navigation are bounded composition, not a verified production route tree. |
 | Implement and validate live Governed API transport | Required for trust-bearing integration beyond deterministic fixtures and defensive projections. |
-| Admit and activate a functional renderer path | Package-owned MapLibre implementation exists, but `src/adapters/MapLibreAdapter.ts` is only a boundary note and the default composition retains `NullMapRuntime`; dependency/source/browser readiness remains held. |
+| Graduate the renderer path | Bounded inline MapLibre activation exists through the accepted package seam; external source admission, exact-head browser evidence, CSP/performance/long-session/offline proof, deployment, and release remain held. |
 | Graduate bounded export behavior | App-local behavior is not proof of a public download or released artifact path. |
 | Verify deployment, authentication, CSP, and operations | Required before any public-availability claim. |
 | Reconcile parent/app-level evidence snapshots | The parent README is a related authority surface with its own snapshot; this PR intentionally does not rewrite it. |
@@ -349,13 +350,13 @@ For source changes under `apps/explorer-web/src/`:
 
 The target file began as an empty placeholder. Earlier README versions correctly established the `src/` boundary but later became stale as `site/`, `adapters/`, `features/`, `viewer_templates/`, and their tests were added.
 
-This v0.4.1 currentness correction re-pins the source snapshot to main@0bcfbcea8fd8e8f9af344ce6d1a1c9fceb82310e with tree c0e40dc0fbedb4415488e5561222ae96f015c81e and preserves the existing bounded inventory and maturity limits. It does not promote source evidence into claims about a production router, live transport, default renderer activation, deployment, release, publication, or public operation. It preserves the prior source-tree identity and keeps the documentation change limited to this README, with provenance in the required generated receipt.
+This v0.5 revision re-pins the implementation base to main@033103a0afe80f85a823973951b3b7d15abb7a8b, preserves the terrain source-ledger slice, and records the bounded Living Atlas composition candidate. It does not promote local code or tests into claims about a production router, live transport, admitted external sources, complete browser readiness, deployment, release, publication, or public operation. It preserves the source-tree identity and records provenance in the required generated receipt.
 
 </details>
 
 ## Status summary
 
-`apps/explorer-web/src/` holds a current, repository-grounded local composition with bounded workspace navigation, app-local adapters, 39 feature directories, viewer templates, and fixture/test surfaces. The repository has configured build/test lanes, but this documentation update does not claim fresh execution.
+`apps/explorer-web/src/` holds a repository-grounded local composition with bounded workspace navigation, a site-local Living Atlas MapLibre candidate, app-local adapters, 40 feature directories, viewer templates, and fixture/test surfaces. Local unit and build results must remain distinct from unavailable browser, hosted, deployment, and release evidence.
 
 It must stay downstream of governed APIs, policy decisions, EvidenceBundle closure, release state, correction/rollback controls, and renderer adapter boundaries without becoming source truth, release authority, policy authority, lifecycle store, schema/contract home, model-output surface, or parallel shell authority.
 
