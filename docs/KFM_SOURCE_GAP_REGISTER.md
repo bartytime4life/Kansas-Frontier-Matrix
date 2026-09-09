@@ -1,6 +1,6 @@
 # KFM Explorer Source Ledger, Gap Register, and Traceability
 
-Audit date: 2026-08-24
+Audit date: 2026-09-09
 Target: existing Site `kansas-frontier-matrix-explorer`
 Truth rule: the current mounted Site proves current behavior; Drive documents support doctrine or proposals but do not prove implementation.
 
@@ -29,9 +29,9 @@ Searches also found duplicate retained artifacts, including two identical Pass 1
 
 `CONFIRMED` from the mounted Site checkout:
 
-- MapLibre GL JS `6.4.1` is the installed browser renderer.
+- MapLibre GL JS `6.6.0` is the installed browser renderer, with same-origin worker assets.
 - The MapLibre instance stays mounted while the Layer Catalog, Evidence Drawer, timeline, tools, and responsive sheets change state.
-- Eleven registry-driven, site-local GeoJSON layers cover public-safe demonstration categories: boundaries/places, hydrology, ecology, geology, agriculture, atmosphere, communities, transport, historical geography, generalized planning, and diagnostics.
+- Twenty-two registry-driven, site-local GeoJSON layers cover public-safe demonstration categories: boundaries/places, hydrology, ecology, geology, agriculture, atmosphere, fire and hazards, people/DNA governance, communities, transport, historical geography, generalized planning, and diagnostics. This count includes the 105-record county starter locator layer.
 - Stable source, layer, renderer, and feature IDs are used; GeoJSON sources use `promoteId: "fid"`.
 - Style switching restores custom sources, layers, selection, measurement state, and draw order.
 - Layer search, visibility, opacity, legends, metadata, attribution, zoom, draw order, valid-time notes, freshness, release labels, sensitivity notes, and unavailable-time explanations are working.
@@ -42,7 +42,8 @@ Searches also found duplicate retained artifacts, including two identical Pass 1
 - URL state preserves camera, visible layers, opacity, time, basemap, projection, layer order, workspace, map-workbench view, selection, Drawer/Focus state, and a restored privacy-redaction marker.
 - Responsive panels become focus-trapped modal sheets on compact layouts; map status has a screen-reader live region; reduced-motion and forced-colors handling exist.
 - Focus Mode is a deterministic site-local adapter with no direct browser-to-model endpoint.
-- Globe projection is available as context; terrain and swipe comparison were described as unavailable because no audited data dependency exists.
+- Globe projection is available as context. Opt-in Terrain 3D and hillshade use the explicitly disclosed AWS / Mapzen Terrarium carrier with a 2D fallback; the carrier remains display context, not admitted elevation evidence. Swipe comparison remains held because no compatible admitted pair exists.
+- The Sources workbench discloses every browser-requested basemap and terrain carrier from `app/external-context-sources.ts`, including activation, endpoint host, attribution, fallback, and evidence/export boundaries.
 - Source errors are isolated to the affected registry layer when MapLibre supplies a source ID; unrecoverable runtime errors fail visibly.
 
 ## Gap register
@@ -129,19 +130,32 @@ Searches also found duplicate retained artifacts, including two identical Pass 1
 - Rollback: not applicable to this audit.
 - Disposition: `ALREADY_PRESENT`.
 
-### `GAP-P3-006` — Terrain and hillshade
+### `GAP-P3-006` — Terrain display carrier implemented; elevation evidence still gated
 
 - Category: Advanced rendering.
 - Sources: `SRC-MAP-OPS` §§10–11 marks terrain conditional; `SRC-MAP-MASTER` treats advanced rendering as gated.
-- Current Site evidence: no audited raster-DEM source or release-linked terrain manifest.
-- Desired state: only after evidence-parity 2D fallback, rights, attribution, performance, and release linkage exist.
+- Current Site evidence: the optional AWS / Mapzen Terrarium carrier provides attributed MapLibre terrain and hillshade, reports loading/error state, and preserves the 2D evidence path. USGS 3DEP is cataloged separately as the authoritative candidate.
+- Desired state: keep the current carrier context-only. Any claim-bearing elevation layer still requires a pinned source product, datum and transform lineage, a reproducible artifact, accuracy/fitness review, performance evidence, EvidenceBundle linkage, and release authority.
 - Truth label: `NEEDS VERIFICATION`.
-- Data/service/UI dependencies: audited DEM/raster tiles, source manifest, fallback, device gate, attribution.
+- Data/service/UI dependencies for evidence use: admitted DEM artifact, source manifest, datum/transform record, device and performance gate, EvidenceBundle, review, and release receipt.
 - Rights/sensitivity / accessibility / performance: review required / 2D equivalent required / material GPU and network impact.
 - Effort / risk / priority: large / medium-high / P3.
-- Acceptance: not defined until source admission and performance budgets exist.
-- Rollback: feature flag and removal of DEM source/layers.
-- Disposition: `DEFER_DATA`.
+- Acceptance: context-only presentation remains reversible, attributed, excluded from reportable elevation claims, and paired with a usable 2D fallback. Evidence use remains undefined until admission and performance budgets exist.
+- Rollback: stop selecting Terrain 3D; removal of the external carrier returns the Site to 2D without changing evidence records.
+- Disposition: `CONTEXT_ONLY_IMPLEMENTED`; `DEFER_DATA` for claim-bearing elevation.
+
+### `GAP-P1-012` — External display endpoints lacked one runtime disclosure registry
+
+- Category: Source transparency / runtime architecture.
+- Current Site evidence: basemap and terrain URLs, attribution, activation rules, fallback text, and evidence exclusions were spread across renderer modules and interface copy.
+- Desired state: one typed source of truth drives renderer configuration and the user-visible Sources disclosure.
+- Truth label: `CONFIRMED`.
+- User / trust value: makes network behavior inspectable and prevents a display carrier from being mistaken for an admitted evidence source.
+- Dependencies: existing MapLibre basemap and terrain configuration; no new service or data dependency.
+- Rights / sensitivity: no new data is exposed; provider attribution and external status remain explicit.
+- Acceptance: every external request URL is HTTPS, has attribution and fallback text, is marked `DISPLAY_CONTEXT_ONLY`, and is rendered in the Sources workbench.
+- Rollback: restore endpoint literals in the renderer modules and remove the disclosure cards.
+- Disposition: `IMPLEMENTED`.
 
 ### `GAP-P2-007` — Swipe/raster comparison
 
@@ -208,7 +222,8 @@ Searches also found duplicate retained artifacts, including two identical Pass 1
 | History restoration | `SRC-MAP-OPS`, `SRC-MAP-MASTER` | `GAP-P1-003` | Browser-local state | Prevents URL/UI trust mismatch | `app/page.tsx` | Source guard and browser back/forward check | History entries are created only when the user shares | Remove `popstate` handler |
 | Desktop Escape path | `SRC-MAP-OPS`, `SRC-MAP-MASTER` | `GAP-P1-004` | UI state only | No trust-state change | `app/page.tsx` | Keyboard browser check | Does not turn desktop side panels into modal dialogs | Remove key handler |
 | Unsupported-browser fail-visible path | `SRC-MAP-OPS`, `SRC-MAP-MASTER` | Reliability acceptance criterion | Capability probe only | `ERROR`; catalog and trust text remain available | `app/page.tsx` | Browser environment without WebGL2 | Interactive map requires WebGL2 | Remove the preflight capability check |
-| Visible advanced-capability gates | `SRC-MAP-OPS`, `SRC-MAP-MASTER` | `GAP-P3-006`, `GAP-P2-007` | No data added | `UNKNOWN` / unavailable remains visible | `app/page.tsx`, `app/globals.css` | Render/build check | Terrain and swipe remain intentionally unavailable | Remove explanatory gate block |
+| Visible advanced-capability gates | `SRC-MAP-OPS`, `SRC-MAP-MASTER` | `GAP-P3-006`, `GAP-P2-007` | External terrain context only; no KFM evidence data added | `CONTEXT ONLY` / unavailable remains visible | `app/page.tsx`, `app/globals.css` | Render/build check | Terrain is display-only; swipe remains held | Remove explanatory gate block |
+| External context source registry | Provider primary references + renderer configuration | `GAP-P1-012` | Four external display carriers; context only | Explicitly excluded from KFM evidence | `app/external-context-sources.ts`, `app/map-runtime.ts`, `app/terrain-sources.ts`, `app/page.tsx`, `app/globals.css` | Registry contract, TypeScript, rendered-shell checks | Runtime availability and provider lineage remain external | Restore endpoint literals and remove disclosure cards |
 
 ## Remaining boundary
 
@@ -218,5 +233,5 @@ Searches also found duplicate retained artifacts, including two identical Pass 1
 - `NEEDS RIGHTS REVIEW`: any external county, ecology, infrastructure, parcel, archive, or imagery source.
 - `NEEDS ARCHITECTURE DECISION`: real adapter and manifest contract; short-link service; production comparison architecture.
 - `NEEDS GOVERNED BACKEND`: released EvidenceBundle resolution, governed API, model adapter, citation validation, AIReceipt/audit linkage.
-- `EXPERIMENTAL`: terrain, advanced 3D, point clouds, offline mode, field capture.
+- `EXPERIMENTAL`: governed terrain evidence, advanced 3D, point clouds, offline mode, field capture.
 - `NOT RECOMMENDED`: direct browser-to-model access, client database access, precise protected locations, invented live status, or treating Drive proposals as releases.

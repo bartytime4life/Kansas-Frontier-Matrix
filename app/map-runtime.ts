@@ -6,17 +6,22 @@ import type {
   Map as MapLibreMap,
   StyleSpecification,
 } from "maplibre-gl";
+import { externalContextSource } from "./external-context-sources";
 import { LAYER_REGISTRY, type EvidenceState } from "./explorer-data";
 import { ACTIVE_TERRAIN_SOURCE } from "./terrain-sources";
 
 export type BasemapKey = "standard" | "imagery" | "midnight" | "prairie" | "streets";
 export type AtmospherePreset = "night" | "dusk" | "clear";
 
+const openFreeMapContext = externalContextSource("openfreemap-liberty");
+const esriImageryContext = externalContextSource("esri-world-imagery");
+const openStreetMapContext = externalContextSource("openstreetmap-standard");
+
 export const BASEMAPS: Record<BasemapKey, { title: string; note: string; style: StyleSpecification | string }> = {
   standard: {
     title: "Standard vector context",
     note: "OpenFreeMap · OpenMapTiles · OpenStreetMap · display context · not evidence",
-    style: "https://tiles.openfreemap.org/styles/liberty",
+    style: openFreeMapContext.requestUrl,
   },
   imagery: {
     title: "Satellite imagery",
@@ -27,9 +32,9 @@ export const BASEMAPS: Record<BasemapKey, { title: string; note: string; style: 
       sources: {
         "esri-imagery": {
           type: "raster",
-          tiles: ["https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"],
+          tiles: [esriImageryContext.requestUrl],
           tileSize: 256,
-          attribution: "Tiles © Esri",
+          attribution: esriImageryContext.attribution,
           bounds: [-104.8, 34.8, -92, 42.2],
           minzoom: 4,
           maxzoom: 19,
@@ -77,9 +82,9 @@ export const BASEMAPS: Record<BasemapKey, { title: string; note: string; style: 
       sources: {
         "osm-context": {
           type: "raster",
-          tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
+          tiles: [openStreetMapContext.requestUrl],
           tileSize: 256,
-          attribution: "© OpenStreetMap contributors",
+          attribution: openStreetMapContext.attribution,
           bounds: [-104.8, 34.8, -92, 42.2],
           minzoom: 4,
           maxzoom: 19,

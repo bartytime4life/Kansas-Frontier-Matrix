@@ -1,3 +1,5 @@
+import { externalContextSource } from "./external-context-sources";
+
 export type TerrainSourceStatus = "ACTIVE_CONTEXT" | "CANDIDATE" | "IMPLEMENTATION_SPEC";
 
 export type TerrainSourceRecord = Readonly<{
@@ -18,6 +20,8 @@ export type TerrainSourceRecord = Readonly<{
   boundary: string;
 }>;
 
+const activeTerrainContext = externalContextSource("aws-mapzen-terrarium");
+
 /**
  * Terrain sources stay explicit and role-separated:
  * - ACTIVE_CONTEXT may be requested by MapLibre for visual terrain only.
@@ -28,20 +32,20 @@ export type TerrainSourceRecord = Readonly<{
 export const TERRAIN_SOURCES: readonly TerrainSourceRecord[] = Object.freeze([
   Object.freeze({
     id: "terrain-aws-mapzen-terrarium",
-    title: "Terrain Tiles · Terrarium",
-    organization: "AWS Open Data / Mapzen",
+    title: activeTerrainContext.title,
+    organization: activeTerrainContext.organization,
     status: "ACTIVE_CONTEXT",
     role: "Key-free raster DEM display carrier",
     resolution: "Source-dependent global mosaic; visual context only",
     format: "256 px Terrarium PNG raster-dem tiles",
     coverage: "Global",
-    sourceUrl: "https://registry.opendata.aws/terrain-tiles/",
-    tileTemplate: "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png",
+    sourceUrl: activeTerrainContext.sourceUrl,
+    tileTemplate: activeTerrainContext.requestUrl,
     encoding: "terrarium",
     tileSize: 256,
     maxZoom: 15,
-    attribution: "Terrain Tiles · Mapzen · AWS Open Data",
-    boundary: "Active only when Terrain 3D is selected. It is external display context, not admitted KFM evidence or a source of reportable elevation values.",
+    attribution: activeTerrainContext.attribution,
+    boundary: activeTerrainContext.boundary,
   }),
   Object.freeze({
     id: "terrain-usgs-3dep-13arc",

@@ -66,7 +66,7 @@ export const CORPUS_SNAPSHOT = Object.freeze({
   inspectedAt: "2026-09-08",
   sourceCount: 12,
   candidateCount: 13,
-  gapCount: 7,
+  gapCount: 8,
   rule: "Drive references inform doctrine and proposals; current repository and runtime evidence decide implementation claims.",
 });
 
@@ -205,6 +205,7 @@ export const SOURCE_GAPS: readonly SourceGap[] = Object.freeze([
   Object.freeze({ id: "GAP-P2-007", priority: "P2", title: "Swipe comparison has no compatible pair", disposition: "DEFER DATA", reason: "No aligned, rights-cleared, released or explicitly demonstrated comparison pair exists.", unlock: "Paired sources, temporal alignment, attribution/export rules, and keyboard/text alternative." }),
   Object.freeze({ id: "GAP-P3-006", priority: "P3", title: "Terrain display carrier is active; evidence admission remains gated", disposition: "IMPLEMENTED", reason: "An attributed Terrarium carrier now supports opt-in 3D display with a 2D fallback, while USGS 3DEP remains a separately identified candidate.", unlock: "For evidence use: pin a 3DEP product/version, preserve datum and transform lineage, validate a MapLibre-compatible derivative, close rights and performance review, and attach release evidence." }),
   Object.freeze({ id: "GAP-P1-011", priority: "P1", title: "Source discovery is not source admission", disposition: "NEEDS DECISION", reason: "Drive catalogs and external source lists can tempt the UI to imply live data readiness.", unlock: "A source-intake carrier, accountable disposition, rights and sensitivity review, stable version identity, and no-public-effect default." }),
+  Object.freeze({ id: "GAP-P1-012", priority: "P1", title: "External display endpoints lacked one runtime disclosure registry", disposition: "IMPLEMENTED", reason: "Basemap and terrain URLs, activation rules, attribution, fallbacks, and evidence exclusions were spread across renderer modules and interface copy.", unlock: "One typed registry now drives external renderer configuration and the visible Sources disclosure without admitting any carrier as KFM evidence." }),
 ]);
 
 export const SOURCE_DOMAINS = Object.freeze(["ALL", ...Array.from(new Set(SOURCE_CANDIDATES.map((source) => source.domain))).sort()]);

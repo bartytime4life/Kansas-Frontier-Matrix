@@ -22,6 +22,25 @@ fit together.
 The application runs as a single-route Vinext site with MapLibre GL JS. D1 and
 R2 are intentionally unbound in the current deployment.
 
+## External network disclosure
+
+The map can request four external display carriers. Their endpoints,
+activation rules, attribution, fallbacks, and evidence exclusions live in one
+typed registry: `app/external-context-sources.ts`. The Sources workbench shows
+the same registry and distinguishes the carrier selected by the current view
+from site-local GeoJSON sources.
+
+| Carrier | Activation | Purpose | KFM evidence effect |
+|---|---|---|---|
+| OpenFreeMap Liberty | Default Standard basemap | Vector geography and provider-supplied building heights | Display context only; attribution only in outward artifacts |
+| Esri World Imagery | User selects Satellite imagery | Raster imagery reference | Display context only; no acquisition or change claim |
+| OpenStreetMap raster | User selects OpenStreetMap context | Normal interactive raster navigation reference; no offline or bulk fetching | Display context only; no routing or legal-status claim |
+| AWS / Mapzen Terrarium | User selects Terrain 3D | Raster DEM terrain and hillshade | Display context only; no sampled elevation or KFM release claim |
+
+The local Midnight and Prairie styles make no basemap request. A failed
+external carrier preserves the site-local layers, evidence text, and report
+path; terrain failure returns to the 2D evidence path.
+
 ## Prerequisites
 
 - Node.js `>=22.13.0`
@@ -40,6 +59,8 @@ Scripts that need writable project-scoped home, npm, XDG, and temporary paths us
 ## Implementation shape
 
 - edit site code under `app/`
+- `app/external-context-sources.ts` is the single inventory for every
+  browser-requested basemap and terrain carrier
 - `app/chatgpt-auth.ts` provides optional dispatch-owned ChatGPT sign-in helpers
 - `.openai/hosting.json` declares optional Sites D1 and R2 bindings
 - `vite.config.ts` simulates declared bindings for local development
@@ -47,6 +68,8 @@ Scripts that need writable project-scoped home, npm, XDG, and temporary paths us
 - `db/schema.ts` starts intentionally empty
 - `examples/d1/` contains an optional D1 example surface
 - `drizzle.config.ts` supports local migration generation when needed
+- `docs/KFM_SOURCE_GAP_REGISTER.md` records implemented, context-only, and held
+  source boundaries; it is not a release ledger
 
 ## Workspace Auth Headers
 

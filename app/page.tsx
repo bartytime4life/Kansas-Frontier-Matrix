@@ -133,6 +133,7 @@ import {
   type TrustState,
 } from "./workspace-model";
 import { STRUCTURE_3D_SOURCE, TERRAIN_SOURCES } from "./terrain-sources";
+import { EXTERNAL_CONTEXT_SOURCES } from "./external-context-sources";
 
 if (!LAYER_REGISTRY.some((layer) => layer.id === COUNTY_STARTER_LAYER.id)) {
   const extentIndex = LAYER_REGISTRY.findIndex((layer) => layer.id === "kansas-extent");
@@ -1071,6 +1072,29 @@ export default function Home() {
       return !query || `${connection.layer.title} ${connection.layer.id} ${connection.layer.sourceId} ${connection.layer.domain} ${connection.layer.sourceType}`.toLowerCase().includes(query);
     });
   }, [connectionFilter, connectionQuery, sourceConnections]);
+  const externalContextConnections = useMemo(() => EXTERNAL_CONTEXT_SOURCES.map((source) => {
+    const active = source.activatesWhen.some((activation) => (
+      activation === "elevation-3d" ? scenePreset === "elevation-3d" : basemap === activation
+    ));
+    let state: "READY" | "REQUESTING" | "ERROR" | "NOT_SELECTED" = "NOT_SELECTED";
+    if (active && source.id === "aws-mapzen-terrarium") {
+      state = terrainState === "READY" ? "READY" : terrainState === "ERROR" ? "ERROR" : "REQUESTING";
+    } else if (active) {
+      state = styleReady && maplibreProbe.tilesLoaded ? "READY" : runtime.kind === "error" ? "ERROR" : "REQUESTING";
+    }
+    return { source, active, state };
+  }), [basemap, maplibreProbe.tilesLoaded, runtime.kind, scenePreset, styleReady, terrainState]);
+  const filteredExternalContextConnections = useMemo(() => {
+    const query = connectionQuery.trim().toLowerCase();
+    return externalContextConnections.filter((connection) => {
+      if (connectionFilter === "VISIBLE" && !connection.active) return false;
+      if (connectionFilter === "READY" && connection.state !== "READY") return false;
+      if (connectionFilter === "ERROR" && connection.state !== "ERROR") return false;
+      const searchable = `${connection.source.title} ${connection.source.id} ${connection.source.organization} ${connection.source.kind} ${connection.source.endpointLabel} ${connection.source.capabilities.join(" ")}`.toLowerCase();
+      return !query || searchable.includes(query);
+    });
+  }, [connectionFilter, connectionQuery, externalContextConnections]);
+  const activeExternalContextCount = externalContextConnections.filter((connection) => connection.active).length;
   const centerTile = useMemo(() => lngLatToTile(view.center[0], view.center[1], view.zoom), [view.center, view.zoom]);
   const maplibreCapabilityChecks = useMemo(() => {
     const state = (ready: boolean, failed = false): "READY" | "CHECKING" | "ERROR" => failed ? "ERROR" : ready ? "READY" : "CHECKING";
@@ -5401,17 +5425,30 @@ export default function Home() {
               </section>}
 
               {mapUtilityView === "connections" && <section id="map-utility-view-connections" role="tabpanel" aria-labelledby="map-utility-tab-connections" className="map-utility-section source-connections-section">
-                <div className="map-utility-section-heading"><span>SOURCE CONNECTIONS</span><h3>Registry → source → renderer → records</h3><p>Inspect each active MapLibre connection, query its loaded GeoJSON source, fit its declared bounds, or route directly to its compatible record index. The standard vector basemap is a separate external display context and is not included in the local registry cards below.</p></div>
+                <div className="map-utility-section-heading"><span>SOURCE CONNECTIONS</span><h3>Network context + local registry</h3><p>See which external display carriers the browser may request, then inspect each site-local registry connection, loaded GeoJSON source, renderer, and compatible record count. External context remains separate from KFM evidence.</p></div>
                 <div className="source-connection-summary" aria-label="Source connection summary">
                   <article><span>READY</span><strong>{sourceStateCounts.ready}/{LAYER_REGISTRY.length}</strong><small>MapLibre sources loaded</small></article>
                   <article><span>VISIBLE</span><strong>{visibleCount}</strong><small>Registry layers drawing now</small></article>
                   <article><span>RENDERERS</span><strong>{LAYER_REGISTRY.reduce((count, layer) => count + layer.renderers.length, 0)}</strong><small>Style layers connected</small></article>
-                  <article><span>PROBED</span><strong>{Object.keys(sourceProbeCounts).length}</strong><small>Explicit source queries</small></article>
+                  <article><span>NETWORK</span><strong>{activeExternalContextCount}/{EXTERNAL_CONTEXT_SOURCES.length}</strong><small>External carriers selected</small></article>
                 </div>
                 <div className="source-connection-toolbar">
                   <label><i aria-hidden="true">⌕</i><span className="sr-only">Search source connections</span><input type="search" value={connectionQuery} onChange={(event) => setConnectionQuery(event.target.value)} placeholder="Layer, source ID, domain, or format" /></label>
                   <label><span className="sr-only">Filter source connections</span><select value={connectionFilter} onChange={(event) => setConnectionFilter(event.target.value as typeof connectionFilter)}><option value="ALL">All connections</option><option value="VISIBLE">Visible only</option><option value="READY">Ready only</option><option value="ERROR">Errors only</option></select></label>
                 </div>
+                <section className="external-context-ledger" aria-labelledby="external-context-ledger-title">
+                  <header><div><span>EXTERNAL NETWORK CONTEXT</span><h4 id="external-context-ledger-title">Browser-requested display carriers</h4></div><strong>{activeExternalContextCount} SELECTED</strong></header>
+                  <p>Only the selected carriers make map requests. The local Midnight and Prairie styles make no basemap request. Rendering success proves display availability only—not source admission, fitness, accuracy, freshness, or evidence support.</p>
+                  <div className="external-context-grid">
+                    {filteredExternalContextConnections.map(({ source, active, state }) => <article className="external-context-card" key={source.id} data-state={state.toLowerCase()}>
+                      <header><div><span>{source.kind.replaceAll("_", " ")} · {source.requestMode.replaceAll("_", " ")}</span><h5>{source.title}</h5><code>{source.endpointLabel}</code></div><strong>{state.replaceAll("_", " ")}</strong></header>
+                      <dl><div><dt>Capability</dt><dd>{source.capabilities.join(" · ").replaceAll("_", " ")}</dd></div><div><dt>Evidence role</dt><dd>{source.evidenceRole.replaceAll("_", " ")}</dd></div><div><dt>Export effect</dt><dd>{source.exportEffect.replaceAll("_", " ")}</dd></div><div><dt>Attribution</dt><dd>{source.attribution}</dd></div></dl>
+                      <p>{source.boundary}</p><aside><strong>Fallback</strong><span>{source.fallback}</span></aside>
+                      <footer><span>{active ? "SELECTED BY CURRENT VIEW" : "NO REQUEST FROM CURRENT VIEW"}</span><a href={source.sourceUrl} target="_blank" rel="noreferrer">Open source record ↗</a></footer>
+                    </article>)}
+                  </div>
+                </section>
+                <div className="source-connection-subheading"><span>SITE-LOCAL REGISTRY</span><strong>{Object.keys(sourceProbeCounts).length} explicitly probed</strong></div>
                 <div className="source-connection-list">
                   {filteredSourceConnections.map(({ layer, state, activity, visible, compatibleCount, viewportCount, probeCount }) => <article key={layer.id} className="source-connection-card" data-state={state} data-visible={visible}>
                     <header><div><span>{layer.domain} · {layer.sourceType}</span><h4>{layer.title}</h4><code>{layer.sourceId}</code></div><strong>{state.toUpperCase()}</strong></header>
@@ -5419,9 +5456,9 @@ export default function Home() {
                     <dl><div><dt>Time-compatible</dt><dd>{compatibleCount}</dd></div><div><dt>In viewport</dt><dd>{viewportCount}</dd></div><div><dt>Source probe</dt><dd>{probeCount === undefined ? "NOT RUN" : `${probeCount} UNIQUE`}</dd></div><div><dt>Attribution</dt><dd>{layer.attribution}</dd></div></dl>
                     <footer><button type="button" onClick={() => setVisibility((current) => { const next = { ...current, [layer.id]: !current[layer.id] }; visibilityRef.current = next; return next; })}>{visible ? "Hide" : "Show"}</button><button type="button" onClick={() => zoomToLayer(layer)}>Fit</button><button type="button" onClick={() => probeSourceConnection(layer)} disabled={state !== "ready"}>Probe source</button><button type="button" onClick={() => inspectSourceConnection(layer)}>Records</button></footer>
                   </article>)}
-                  {filteredSourceConnections.length === 0 && <div className="map-utility-empty"><strong>No source connections match</strong><p>Clear the search or choose another connection state.</p></div>}
+                  {filteredSourceConnections.length === 0 && filteredExternalContextConnections.length === 0 && <div className="map-utility-empty"><strong>No source connections match</strong><p>Clear the search or choose another connection state.</p></div>}
                 </div>
-                <aside className="map-utility-boundary" data-tone="warning"><strong>Connection status is renderer health, not source admission.</strong><p>Registry cards expose site-local fixtures. The default vector context contacts tiles.openfreemap.org for the style and its declared tile, glyph, and sprite resources; Terrain 3D contacts the AWS Terrain Tiles endpoint only when enabled. A READY source or successful query does not prove rights, freshness, evidence, policy approval, release, or publication.</p></aside>
+                <aside className="map-utility-boundary" data-tone="warning"><strong>Connection status is renderer health, not source admission.</strong><p>Registry cards expose site-local fixtures. The current view may contact only the external carriers disclosed above; provider resources and availability remain external. A READY source or successful query does not prove rights, freshness, evidence, policy approval, release, or publication.</p></aside>
               </section>}
 
               {mapUtilityView === "import" && <section id="map-utility-view-import" role="tabpanel" aria-labelledby="map-utility-tab-import" className="map-utility-section import-preview-section">
@@ -5569,7 +5606,7 @@ export default function Home() {
                 <div className="map-status-list" aria-label="MapLibre repository status">{MAPLIBRE_REPOSITORY_STATUS.map((status) => <article className="map-status-row" key={status.id} data-state={status.state}><div><span>{status.label}</span><p>{status.detail}</p></div><strong>{status.state}</strong></article>)}</div>
                 <div className="map-utility-actions"><button type="button" onClick={reapplyRendererState}>Reapply local state</button><button type="button" onClick={restoreLastKnownGoodView}>Restore prior camera</button><button type="button" onClick={() => void copyMapDiagnostics()}>Copy redacted diagnostics</button></div>
                 <div className="map-control-group"><header><strong>Capability gates</strong><span>Honest interfaces for unavailable work</span></header><div className="map-capability-grid">{MAP_CAPABILITY_GATES.map((gate) => <article className="map-capability-card" key={gate.id}><header><strong>{gate.title}</strong><span>{gate.state}</span></header><p>{gate.reason}</p><small>{gate.safeInterface}</small></article>)}</div></div>
-                <aside className="map-utility-boundary"><strong>Renderer evidence boundary</strong><p>This Site runs MapLibre {EXPECTED_MAPLIBRE_VERSION} with same-origin worker assets, an external vector display context, optional external DEM terrain, and site-local GeoJSON fixtures. GitHub proves an exact dependency, a bounded concrete adapter, the renderer-neutral port, and deterministic Null runtime; broader authenticated, performance, terrain, accessibility, and long-session readiness remain held.</p></aside>
+                <aside className="map-utility-boundary"><strong>Renderer evidence boundary</strong><p>This Site runs MapLibre {EXPECTED_MAPLIBRE_VERSION} with same-origin worker assets, a selected external basemap or local style, optional external DEM terrain, and site-local GeoJSON fixtures. GitHub proves an exact dependency, a bounded concrete adapter, the renderer-neutral port, and deterministic Null runtime; broader authenticated, performance, governed-terrain, accessibility, and long-session readiness remain held.</p></aside>
               </section>}
             </div>
           </aside>

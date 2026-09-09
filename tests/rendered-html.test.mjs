@@ -747,6 +747,33 @@ test("keeps source discovery separate from admission and map ranges explicit", a
   assert.match(runtime, /setLayerZoomRange\(renderer\.id, record\.minZoom, record\.maxZoom\)/);
 });
 
+test("keeps every top-level external map carrier in a display-only disclosure registry", async () => {
+  const ts = await import("typescript");
+  const source = await readFile(new URL("../app/external-context-sources.ts", import.meta.url), "utf8");
+  const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  const runtime = await readFile(new URL("../app/map-runtime.ts", import.meta.url), "utf8");
+  const terrain = await readFile(new URL("../app/terrain-sources.ts", import.meta.url), "utf8");
+  const javascript = ts.transpileModule(source, {
+    compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
+    fileName: "external-context-sources.ts",
+  }).outputText;
+  const registry = await import(`data:text/javascript;base64,${Buffer.from(javascript).toString("base64")}`);
+
+  assert.equal(registry.EXTERNAL_CONTEXT_SOURCES.length, 4);
+  assert.equal(new Set(registry.EXTERNAL_CONTEXT_SOURCES.map((record) => record.id)).size, 4);
+  assert.equal(registry.EXTERNAL_CONTEXT_SOURCES.every((record) => record.requestUrl.startsWith("https://")), true);
+  assert.equal(registry.EXTERNAL_CONTEXT_SOURCES.every((record) => record.sourceUrl.startsWith("https://")), true);
+  assert.equal(registry.EXTERNAL_CONTEXT_SOURCES.every((record) => record.attribution.length > 0 && record.fallback.length > 0), true);
+  assert.equal(registry.EXTERNAL_CONTEXT_SOURCES.every((record) => record.evidenceRole === "DISPLAY_CONTEXT_ONLY"), true);
+  assert.equal(registry.EXTERNAL_CONTEXT_SOURCES.every((record) => record.exportEffect === "ATTRIBUTION_ONLY"), true);
+  assert.match(runtime, /externalContextSource\("openfreemap-liberty"\)/);
+  assert.match(runtime, /externalContextSource\("esri-world-imagery"\)/);
+  assert.match(runtime, /externalContextSource\("openstreetmap-standard"\)/);
+  assert.match(terrain, /externalContextSource\("aws-mapzen-terrarium"\)/);
+  assert.match(page, /Browser-requested display carriers/);
+  assert.match(page, /NO REQUEST FROM CURRENT VIEW/);
+});
+
 test("reviews and redacts public-safe exports before download", async () => {
   const ts = await import("typescript");
   const source = await readFile(new URL("../app/export-center.ts", import.meta.url), "utf8");
