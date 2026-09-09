@@ -81,6 +81,23 @@ test("keeps held-view evidence, Focus, and report snapshots aligned", async ({
 
   await workspace.getByRole("button", { name: "Create report draft" }).click();
   await expect(workspace.locator(".atlas-draft-card").first()).toContainText("view:weather-window");
+  const latestDraft = await page.evaluate(() => {
+    const raw = window.localStorage.getItem("kfm.explorer.report-drafts.v1");
+    return raw === null ? null : (JSON.parse(raw) as Array<{
+      snapshot: {
+        activeViewId: string;
+        selectedLayerId: string | null;
+        evidenceRefs: string[];
+      };
+      includedEvidenceRefs: string[];
+    }>)[0];
+  });
+  expect(latestDraft?.snapshot).toMatchObject({
+    activeViewId: "view:weather-window",
+    selectedLayerId: "layer:weather-window",
+    evidenceRefs: [],
+  });
+  expect(latestDraft?.includedEvidenceRefs).toEqual([]);
 });
 
 test("exposes repository layer lineage and keeps candidate data unadmitted", async ({
