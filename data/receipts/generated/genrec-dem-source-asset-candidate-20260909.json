@@ -22,23 +22,23 @@
     "tools/validators/validate_dem_source_asset_candidate.py"
   ],
   "artifact_hashes": {
-    ".github/workflows/dem-source-asset-candidate.yml": "sha256:04d61a7c2e7e4c4e9f63001b8dd1f3891125ac943746f63f88bec2e14bdd4d29",
+    ".github/workflows/dem-source-asset-candidate.yml": "sha256:59e439c1c21dd76dd06d4e2c03f8cfcebff4ad962485db85f7efd0aff5c67b46",
     "apps/explorer-web/src/features/living_atlas/connections.ts": "sha256:89f574d1d744204a647d0ddcd4845a950c37945f3a0c1225f3c760f495c83a29",
     "apps/explorer-web/src/site/mount-terrain-source-ledger.ts": "sha256:078bb81d2a0f05f8b3291e523c8d4dbc6db49f54bb6eac00e03e904e3997cdee",
     "apps/explorer-web/src/site/terrain-source-registry.ts": "sha256:fd96971b1d6001183b71713ed3733ca69d09d4b6fc47592eb4d0e4a5f84cbe06",
     "apps/explorer-web/tests/living-atlas.test.ts": "sha256:fe4a9d44ffc60558ae8f9787786e1051184c80190af48ca39626d3242a2a2eb5",
     "apps/explorer-web/tests/terrain-source-registry.test.ts": "sha256:59bc798f5619e933fb21c4cd40eddc10ebe0ef2eae3d7d4df2c1d8f513121763",
-    "contracts/spatial-foundation/dem_source_asset_candidate.md": "sha256:ed72d79b63ab3cd504ce25fa3623c5293844c47039f322fdc4ccc3db3abea553",
-    "fixtures/contracts/v1/spatial-foundation/dem_source_asset_candidate/cases.json": "sha256:5b26b0024373c1064b8d2a0aac73e64ddab3ea6bcee2f15ae4ebc54d63df984c",
+    "contracts/spatial-foundation/dem_source_asset_candidate.md": "sha256:4deb507b63d549fab489b3ab1707cfe3b0c790068314370fa02bf123fe4d83f3",
+    "fixtures/contracts/v1/spatial-foundation/dem_source_asset_candidate/cases.json": "sha256:d47166bcab2e7b0ef97da341501d3a4fe5f439daa7aa84885dae92ba15cea820",
     "fixtures/contracts/v1/spatial-foundation/dem_source_asset_candidate/evidence-projection-snapshot.json": "sha256:e6d42da0f85c86b86bb7cdff682a95ad8247851d00e259ef3d2eb5bf2b9d134d",
-    "packages/maplibre/src/index.ts": "sha256:22747e5fa64023c2b8d56fc506a9faf53f801c1897e48ea89b1785196853feef",
+    "packages/maplibre/src/index.ts": "sha256:16b411d29f8297802367f2656480afef924df94b4850a5c8d6e2797cfb843b51",
     "packages/maplibre/src/map-runtime-terrain-fallback.ts": "sha256:72f22d2d859105b13cb2a73110c50e078dd9defc0cafec542197c93d1bae9c81",
-    "packages/maplibre/src/terrain-elevation-sample.ts": "sha256:a84fc9eb8285577e1b7f037d26293dd7ecf11a7e01c59f5d6bdea951600e06f4",
+    "packages/maplibre/src/terrain-elevation-sample.ts": "sha256:5502eabdd3e0b97161ca0eab8298d36304e3fcb99215890079d38aa79e9aced6",
     "packages/maplibre/tests/map-runtime-terrain-fallback.test.ts": "sha256:cc873ff32f89534b12b3b4e0eb1a771f796d7cbc6e6552f6fd29eb0fe92778ca",
-    "packages/maplibre/tests/terrain-elevation-sample.test.ts": "sha256:18519162178412fb84c1da03c16d6c8457fff7394a5a5ba4adde996e8edcca67",
+    "packages/maplibre/tests/terrain-elevation-sample.test.ts": "sha256:c08918d1e78aa7cc601338cd3b1079344f6f9ed6475dccfd0d79ada32387de3a",
     "schemas/contracts/v1/spatial-foundation/dem_source_asset_candidate.schema.json": "sha256:8817fdf0ce3afa2c40430d021e68d1830af7f3202f5d80c26d32c360c0d9f592",
-    "tests/maplibre/test_package_exports.py": "sha256:747c9f9d81bbcdbb6f33e091b2d28c3f6d04b72988adad86737fdcc4f5320937",
-    "tests/validators/test_validate_dem_source_asset_candidate.py": "sha256:6d17d882930a449667df7787ac55e1e497af8b17c43fad699ab5e0fc924e1e9b",
+    "tests/maplibre/test_package_exports.py": "sha256:63c9973023ba155c8c36f01292b6942c12403b594e87f2481297d13f7da9ba03",
+    "tests/validators/test_validate_dem_source_asset_candidate.py": "sha256:478949d22a92a5abba7ec58e008d7ab518db664a9fbf7c73d13f0951bcb0e744",
     "tools/validators/validate_dem_source_asset_candidate.py": "sha256:8b1958d98d61d9addf41076872fd6109d1a80e3883d1051c3376afe13423bc88"
   },
   "model_identity": {
@@ -145,17 +145,17 @@
     {
       "gate": "closed-candidate-fixture-profile",
       "outcome": "PASS",
-      "reason": "One exact HOLD candidate and thirty-three fail-closed identity, evidence, rights, frozen-capture chronology, numeric-domain, asset, date, CRS, vertical, coverage, sample, authority, arithmetic, and deterministic-identity cases passed exact polarity checks."
+      "reason": "One exact HOLD candidate and forty-nine fail-closed identity, evidence, rights, frozen-capture chronology, numeric-domain, posture, authority/effect, asset, date, CRS, vertical, coverage, sample, arithmetic, and deterministic-identity cases passed exact polarity checks."
     },
     {
       "gate": "focused-python-tests",
       "outcome": "PASS",
-      "reason": "Twenty-one focused tests passed: seventeen candidate-validator tests plus four renderer-neutral package-export tests in an isolated Python environment."
+      "reason": "Twenty-two focused tests passed: eighteen candidate-validator tests plus four renderer-neutral package-export tests in an isolated Python environment."
     },
     {
       "gate": "maplibre-fixture-sampling-tests",
       "outcome": "PASS",
-      "reason": "Eighty-three MapLibre package tests passed, including fixture-bound nearest-cell Terrarium decoding, source-validity-mask nodata abstention, default 1.0 display exaggeration, unexaggerated reported values, safe-integer window limits, and invalid-input controls."
+      "reason": "Eighty-eight MapLibre package tests passed, including an exact-candidate-only package facade, fixture-bound nearest-cell Terrarium decoding, source-validity-mask nodata abstention, default 1.0 display exaggeration, unexaggerated reported values, safe-integer window limits, and invalid-identity/input controls."
     },
     {
       "gate": "explorer-held-readback-tests",
@@ -165,7 +165,7 @@
     {
       "gate": "workflow-syntax-and-authority-boundary",
       "outcome": "PASS",
-      "reason": "The path-scoped workflow parsed successfully, includes held Explorer type-checking, and grants contents:read only; it contains no release, deployment, publication, secret, or mutation step."
+      "reason": "The path-scoped workflow parsed successfully, activates the shared Python startup egress guard for every validation step after dependency installation, includes held Explorer type-checking, and grants contents:read only; it contains no release, deployment, publication, secret, or mutation step."
     },
     {
       "gate": "generated-receipt-integrity",
@@ -257,7 +257,7 @@
   "created_at": "2026-09-09T22:15:51Z",
   "emitter": "OpenAI GPT-5 via ChatGPT",
   "links": {
-    "pr_number": null,
+    "pr_number": 4452,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },

@@ -1,15 +1,24 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  TERRAIN_ELEVATION_EXACT_ARTIFACT_DIGEST,
+  TERRAIN_ELEVATION_EXACT_ARTIFACT_ID,
+  TERRAIN_ELEVATION_EXACT_CANDIDATE_ID,
+  TERRAIN_ELEVATION_EXACT_SOURCE_NODATA,
+  TERRAIN_ELEVATION_EXACT_VERTICAL_DATUM,
   TERRAIN_ELEVATION_SAMPLE_ENCODING,
   TERRAIN_ELEVATION_SAMPLE_EXECUTION_MODE,
   TERRAIN_ELEVATION_SAMPLE_METHOD,
   TERRAIN_ELEVATION_SAMPLE_PROFILE,
   TERRAIN_ELEVATION_SAMPLE_UNITS,
   TERRAIN_ELEVATION_VALIDITY_MASK_METHOD,
-  type TerrainElevationSampleRequest,
-  sampleTerrariumElevationNearestCell,
+  sampleExactDemCandidateFixture,
 } from "../src/index";
+import * as publicMapLibre from "../src/index";
+import {
+  __testOnlySampleTerrariumElevationNearestCell as sampleTerrariumElevationNearestCell,
+  type TerrainElevationSampleRequest,
+} from "../src/terrain-elevation-sample";
 import candidateSuite from "../../../fixtures/contracts/v1/spatial-foundation/dem_source_asset_candidate/cases.json";
 
 const candidateFixture = candidateSuite.base_candidate;
@@ -22,17 +31,17 @@ const sourcePixel = Object.freeze({
   rawElevation: inspectionSample.source_elevation.value,
   terrariumRgb: inspectionSample.fixture_encoding.rgb as readonly number[],
 });
-const artifactDigest = candidateFixture.assets.raster_tiff.content_sha256;
-const candidateId = candidateFixture.candidate_id;
+const artifactDigest = TERRAIN_ELEVATION_EXACT_ARTIFACT_DIGEST;
+const candidateId = TERRAIN_ELEVATION_EXACT_CANDIDATE_ID;
 const baseRequest: TerrainElevationSampleRequest = {
   profile: TERRAIN_ELEVATION_SAMPLE_PROFILE,
   executionMode: TERRAIN_ELEVATION_SAMPLE_EXECUTION_MODE,
   samplingMethod: TERRAIN_ELEVATION_SAMPLE_METHOD,
   encoding: TERRAIN_ELEVATION_SAMPLE_ENCODING,
   candidateId,
-  artifactId: candidateFixture.assets.raster_tiff.filename,
+  artifactId: TERRAIN_ELEVATION_EXACT_ARTIFACT_ID,
   artifactDigest,
-  verticalDatum: candidateFixture.vertical_reference.datum_name,
+  verticalDatum: TERRAIN_ELEVATION_EXACT_VERTICAL_DATUM,
   units: TERRAIN_ELEVATION_SAMPLE_UNITS,
   cellSize: {
     value: candidateFixture.raster_grid.cell_size_x,
@@ -49,23 +58,36 @@ const baseRequest: TerrainElevationSampleRequest = {
     inspectionSample.fixture_encoding.validity_mask_value,
   ]),
   validityMaskMethod: TERRAIN_ELEVATION_VALIDITY_MASK_METHOD,
-  sourceNodataValue: inspectionSample.fixture_encoding.source_nodata_value,
+  sourceNodataValue: TERRAIN_ELEVATION_EXACT_SOURCE_NODATA,
   sample: { column: sourcePixel.column, row: sourcePixel.row },
 };
 
 describe("fixture-only Terrarium elevation sampling", () => {
-  it("decodes the hash-bound public-safe inspection fixture without asserting provenance verification", () => {
-    const result = sampleTerrariumElevationNearestCell(baseRequest);
+  it("exposes only the exact candidate fixture through the package facade", () => {
+    expect("sampleTerrariumElevationNearestCell" in publicMapLibre).toBe(false);
+    expect("__testOnlySampleTerrariumElevationNearestCell" in publicMapLibre).toBe(
+      false,
+    );
+
+    const result = sampleExactDemCandidateFixture();
+
+    expect(candidateFixture.candidate_id).toBe(TERRAIN_ELEVATION_EXACT_CANDIDATE_ID);
+    expect(candidateFixture.assets.raster_tiff.filename).toBe(
+      TERRAIN_ELEVATION_EXACT_ARTIFACT_ID,
+    );
+    expect(candidateFixture.assets.raster_tiff.content_sha256).toBe(
+      TERRAIN_ELEVATION_EXACT_ARTIFACT_DIGEST,
+    );
 
     expect(result).toEqual({
       profile: TERRAIN_ELEVATION_SAMPLE_PROFILE,
       executionMode: "FIXTURE_ONLY",
       status: "ANSWER",
       reason: null,
-      candidateId,
-      artifactId: candidateFixture.assets.raster_tiff.filename,
-      artifactDigest,
-      verticalDatum: "NAVD88",
+      candidateId: TERRAIN_ELEVATION_EXACT_CANDIDATE_ID,
+      artifactId: TERRAIN_ELEVATION_EXACT_ARTIFACT_ID,
+      artifactDigest: TERRAIN_ELEVATION_EXACT_ARTIFACT_DIGEST,
+      verticalDatum: TERRAIN_ELEVATION_EXACT_VERTICAL_DATUM,
       units: "metre",
       cellSize: { value: 1, units: "metre" },
       encoding: "TERRARIUM",
@@ -75,7 +97,7 @@ describe("fixture-only Terrarium elevation sampling", () => {
       valueExaggerated: false,
       provenanceVerified: false,
       validityMaskMethod: "SOURCE_NODATA_COMPARISON_BEFORE_ENCODING",
-      sourceNodataValue: -999999,
+      sourceNodataValue: TERRAIN_ELEVATION_EXACT_SOURCE_NODATA,
       sourceElevation: 469.4609375,
       nodata: false,
     });
@@ -97,10 +119,7 @@ describe("fixture-only Terrarium elevation sampling", () => {
   it.each([0.25, 1, 2, 5, 100])(
     "keeps source elevation unexaggerated at %sx display exaggeration",
     (displayExaggeration) => {
-      const result = sampleTerrariumElevationNearestCell({
-        ...baseRequest,
-        displayExaggeration,
-      });
+      const result = sampleExactDemCandidateFixture(displayExaggeration);
 
       expect(result.status).toBe("ANSWER");
       expect(result.sourceElevation).toBe(469.4609375);
@@ -253,6 +272,34 @@ describe("fixture-only Terrarium elevation sampling", () => {
     { field: "sampling method", request: { ...baseRequest, samplingMethod: "BILINEAR" } },
     { field: "encoding", request: { ...baseRequest, encoding: "MAPBOX" } },
     { field: "digest", request: { ...baseRequest, artifactDigest: "sha256:bad" } },
+    {
+      field: "candidate identity mismatch",
+      request: {
+        ...baseRequest,
+        candidateId:
+          "kfm:dem-source-asset-candidate:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      },
+    },
+    {
+      field: "artifact identity mismatch",
+      request: { ...baseRequest, artifactId: "other-dem.tif" },
+    },
+    {
+      field: "valid but wrong digest",
+      request: {
+        ...baseRequest,
+        artifactDigest:
+          "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      },
+    },
+    {
+      field: "vertical datum mismatch",
+      request: { ...baseRequest, verticalDatum: "NAVD88_OTHER" },
+    },
+    {
+      field: "source nodata mismatch",
+      request: { ...baseRequest, sourceNodataValue: -32768 },
+    },
     { field: "datum", request: { ...baseRequest, verticalDatum: "" } },
     {
       field: "cell size",

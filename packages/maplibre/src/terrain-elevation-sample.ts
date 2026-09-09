@@ -9,6 +9,14 @@ export const TERRAIN_ELEVATION_SAMPLE_ENCODING = "TERRARIUM" as const;
 export const TERRAIN_ELEVATION_SAMPLE_UNITS = "metre" as const;
 export const TERRAIN_ELEVATION_VALIDITY_MASK_METHOD =
   "SOURCE_NODATA_COMPARISON_BEFORE_ENCODING" as const;
+export const TERRAIN_ELEVATION_EXACT_CANDIDATE_ID =
+  "kfm:dem-source-asset-candidate:e3ebb5873588926de04806b002c795c343cd441e97a9605697f7ce920525f08c" as const;
+export const TERRAIN_ELEVATION_EXACT_ARTIFACT_ID =
+  "USGS_1M_14_x56y429_KS_Statewide_2018_A18.tif" as const;
+export const TERRAIN_ELEVATION_EXACT_ARTIFACT_DIGEST =
+  "sha256:8d923dc122ee99303201acb07c9fc49c190b19545a75768384f49ccb4e975cd7" as const;
+export const TERRAIN_ELEVATION_EXACT_VERTICAL_DATUM = "NAVD88" as const;
+export const TERRAIN_ELEVATION_EXACT_SOURCE_NODATA = -999999 as const;
 
 export type TerrainRgb = readonly [red: number, green: number, blue: number];
 
@@ -17,10 +25,10 @@ export type TerrainElevationSampleRequest = Readonly<{
   executionMode: typeof TERRAIN_ELEVATION_SAMPLE_EXECUTION_MODE;
   samplingMethod: typeof TERRAIN_ELEVATION_SAMPLE_METHOD;
   encoding: typeof TERRAIN_ELEVATION_SAMPLE_ENCODING;
-  candidateId: string;
-  artifactId: string;
-  artifactDigest: string;
-  verticalDatum: string;
+  candidateId: typeof TERRAIN_ELEVATION_EXACT_CANDIDATE_ID;
+  artifactId: typeof TERRAIN_ELEVATION_EXACT_ARTIFACT_ID;
+  artifactDigest: typeof TERRAIN_ELEVATION_EXACT_ARTIFACT_DIGEST;
+  verticalDatum: typeof TERRAIN_ELEVATION_EXACT_VERTICAL_DATUM;
   units: typeof TERRAIN_ELEVATION_SAMPLE_UNITS;
   cellSize: Readonly<{
     value: number;
@@ -175,13 +183,13 @@ function validateRequest(
     request.samplingMethod !== TERRAIN_ELEVATION_SAMPLE_METHOD ||
     request.encoding !== TERRAIN_ELEVATION_SAMPLE_ENCODING ||
     request.units !== TERRAIN_ELEVATION_SAMPLE_UNITS ||
-    typeof request.candidateId !== "string" ||
+    request.candidateId !== TERRAIN_ELEVATION_EXACT_CANDIDATE_ID ||
     !SAFE_ID.test(request.candidateId) ||
-    typeof request.artifactId !== "string" ||
+    request.artifactId !== TERRAIN_ELEVATION_EXACT_ARTIFACT_ID ||
     !SAFE_ID.test(request.artifactId) ||
-    typeof request.artifactDigest !== "string" ||
+    request.artifactDigest !== TERRAIN_ELEVATION_EXACT_ARTIFACT_DIGEST ||
     !SHA256.test(request.artifactDigest) ||
-    typeof request.verticalDatum !== "string" ||
+    request.verticalDatum !== TERRAIN_ELEVATION_EXACT_VERTICAL_DATUM ||
     !SAFE_DATUM.test(request.verticalDatum)
   ) {
     invalid("Terrain elevation sample identity or metadata is invalid.");
@@ -190,7 +198,7 @@ function validateRequest(
     !isRecord(request.cellSize) ||
     !hasExactFields(request.cellSize, CELL_SIZE_FIELDS) ||
     !isFiniteNumber(request.cellSize.value) ||
-    request.cellSize.value <= 0 ||
+    request.cellSize.value !== 1 ||
     request.cellSize.units !== TERRAIN_ELEVATION_SAMPLE_UNITS
   ) {
     invalid("Terrain elevation sample cell size is invalid.");
@@ -205,7 +213,7 @@ function validateRequest(
     !isNumericBuffer(request.rgb) ||
     !isNumericBuffer(request.validityMask) ||
     request.validityMaskMethod !== TERRAIN_ELEVATION_VALIDITY_MASK_METHOD ||
-    !isFiniteNumber(request.sourceNodataValue)
+    request.sourceNodataValue !== TERRAIN_ELEVATION_EXACT_SOURCE_NODATA
   ) {
     invalid("Terrain elevation sample raster is invalid.");
   }
@@ -304,13 +312,14 @@ function commonResult(
 }
 
 /**
- * Samples an in-memory Terrarium fixture at the nearest cell.
+ * Internal conformance seam for sampling an in-memory Terrarium fixture.
  *
- * This helper performs no acquisition, source admission, renderer mutation,
- * network access, or filesystem access. Display exaggeration is disclosed but
- * is never applied to the decoded source elevation.
+ * It is intentionally omitted from the package root facade. It performs no
+ * acquisition, source admission, renderer mutation, network access, or
+ * filesystem access. Display exaggeration is disclosed but is never applied
+ * to the decoded source elevation.
  */
-export function sampleTerrariumElevationNearestCell(
+export function __testOnlySampleTerrariumElevationNearestCell(
   request: TerrainElevationSampleRequest,
 ): TerrainElevationSampleResult {
   validateRequest(request);
@@ -350,4 +359,43 @@ export function sampleTerrariumElevationNearestCell(
     sourceElevation,
     nodata: false,
   });
+}
+
+/**
+ * Decodes only the exact, one-cell Ellsworth candidate fixture.
+ *
+ * The public package surface accepts no caller-controlled source identity,
+ * digest, raster bytes, mask, grid geometry, datum, or nodata value. The
+ * returned value remains non-authoritative because this offline function does
+ * not independently verify lineage or activate runtime sampling.
+ */
+export function sampleExactDemCandidateFixture(
+  displayExaggeration?: number,
+): TerrainElevationSampleAnswer {
+  const result = __testOnlySampleTerrariumElevationNearestCell({
+    profile: TERRAIN_ELEVATION_SAMPLE_PROFILE,
+    executionMode: TERRAIN_ELEVATION_SAMPLE_EXECUTION_MODE,
+    samplingMethod: TERRAIN_ELEVATION_SAMPLE_METHOD,
+    encoding: TERRAIN_ELEVATION_SAMPLE_ENCODING,
+    candidateId: TERRAIN_ELEVATION_EXACT_CANDIDATE_ID,
+    artifactId: TERRAIN_ELEVATION_EXACT_ARTIFACT_ID,
+    artifactDigest: TERRAIN_ELEVATION_EXACT_ARTIFACT_DIGEST,
+    verticalDatum: TERRAIN_ELEVATION_EXACT_VERTICAL_DATUM,
+    units: TERRAIN_ELEVATION_SAMPLE_UNITS,
+    cellSize: { value: 1, units: TERRAIN_ELEVATION_SAMPLE_UNITS },
+    width: 1,
+    height: 1,
+    sourceWindowOrigin: { column: 6934, row: 2909 },
+    rgb: [129, 213, 118],
+    validityMask: [1],
+    validityMaskMethod: TERRAIN_ELEVATION_VALIDITY_MASK_METHOD,
+    sourceNodataValue: TERRAIN_ELEVATION_EXACT_SOURCE_NODATA,
+    sample: { column: 6934, row: 2909 },
+    ...(displayExaggeration === undefined ? {} : { displayExaggeration }),
+  });
+
+  if (result.status !== "ANSWER") {
+    invalid("Exact terrain elevation fixture unexpectedly abstained.");
+  }
+  return result;
 }

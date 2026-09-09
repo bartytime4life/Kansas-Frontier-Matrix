@@ -597,8 +597,88 @@
       "expected": {"status": "DENY", "review_outcome": null, "finding_codes": ["SCHEMA_INVALID"]}
     },
     {
-      "case_id": "invalid-authority-effect",
+      "case_id": "invalid-profile-status",
+      "tamper": [{"path": "profile_status", "value": "ACTIVE"}],
+      "expected": {"status": "DENY", "review_outcome": null, "finding_codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "case_id": "invalid-execution-mode",
+      "tamper": [{"path": "execution_mode", "value": "LIVE"}],
+      "expected": {"status": "DENY", "review_outcome": null, "finding_codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "case_id": "invalid-authority",
+      "tamper": [{"path": "authority", "value": "SOURCE_ADMISSION"}],
+      "expected": {"status": "DENY", "review_outcome": null, "finding_codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "case_id": "invalid-review-outcome",
+      "tamper": [{"path": "review.outcome", "value": "APPROVED"}],
+      "expected": {"status": "DENY", "review_outcome": null, "finding_codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "case_id": "invalid-human-review-state",
+      "tamper": [{"path": "review.human_review", "value": "APPROVED"}],
+      "expected": {"status": "DENY", "review_outcome": null, "finding_codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "case_id": "invalid-effect-source-descriptor-created",
+      "tamper": [{"path": "effects.source_descriptor_created", "value": true}],
+      "expected": {"status": "DENY", "review_outcome": null, "finding_codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "case_id": "invalid-effect-source-activated",
       "tamper": [{"path": "effects.source_activated", "value": true}],
+      "expected": {"status": "DENY", "review_outcome": null, "finding_codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "case_id": "invalid-effect-source-admitted",
+      "tamper": [{"path": "effects.source_admitted", "value": true}],
+      "expected": {"status": "DENY", "review_outcome": null, "finding_codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "case_id": "invalid-effect-runtime-load-allowed",
+      "tamper": [{"path": "effects.runtime_load_allowed", "value": true}],
+      "expected": {"status": "DENY", "review_outcome": null, "finding_codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "case_id": "invalid-effect-runtime-sample-authorized",
+      "tamper": [{"path": "effects.runtime_sample_authorized", "value": true}],
+      "expected": {"status": "DENY", "review_outcome": null, "finding_codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "case_id": "invalid-effect-evidence-bundle-resolved",
+      "tamper": [{"path": "effects.evidence_bundle_resolved", "value": true}],
+      "expected": {"status": "DENY", "review_outcome": null, "finding_codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "case_id": "invalid-effect-lifecycle-write-allowed",
+      "tamper": [{"path": "effects.lifecycle_write_allowed", "value": true}],
+      "expected": {"status": "DENY", "review_outcome": null, "finding_codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "case_id": "invalid-effect-promotion-allowed",
+      "tamper": [{"path": "effects.promotion_allowed", "value": true}],
+      "expected": {"status": "DENY", "review_outcome": null, "finding_codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "case_id": "invalid-effect-release-allowed",
+      "tamper": [{"path": "effects.release_allowed", "value": true}],
+      "expected": {"status": "DENY", "review_outcome": null, "finding_codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "case_id": "invalid-effect-deployment-allowed",
+      "tamper": [{"path": "effects.deployment_allowed", "value": true}],
+      "expected": {"status": "DENY", "review_outcome": null, "finding_codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "case_id": "invalid-effect-publication-allowed",
+      "tamper": [{"path": "effects.publication_allowed", "value": true}],
+      "expected": {"status": "DENY", "review_outcome": null, "finding_codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "case_id": "invalid-effect-public-use-allowed",
+      "tamper": [{"path": "effects.public_use_allowed", "value": true}],
       "expected": {"status": "DENY", "review_outcome": null, "finding_codes": ["SCHEMA_INVALID"]}
     },
     {

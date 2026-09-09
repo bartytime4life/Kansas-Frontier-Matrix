@@ -101,9 +101,11 @@ Validation denies the candidate when identity, digest, date, coverage, CRS, vert
 - the public-safe inspection point must fall inside the declared tile bounds;
 - the fixture decoding error must remain within one Terrarium quantization step;
 - nodata is carried by a source-comparison validity mask, never by a potentially colliding Terrarium RGB sentinel;
+- the package-root decoder accepts only the hard-bound one-cell candidate fixture and optional display exaggeration; caller-supplied identity, digest, raster bytes, validity mask, grid, datum, and nodata remain confined to the package's internal conformance seam;
 - omitted display exaggeration defaults to exactly `1.0`, while any supplied exaggeration remains display-only;
 - the reported numeric sample is never exaggerated; and
-- any activation, admission, runtime loading, EvidenceBundle resolution, lifecycle write, promotion, release, deployment, publication, or public-use effect is forbidden.
+- any activation, admission, runtime loading, EvidenceBundle resolution, lifecycle write, promotion, release, deployment, publication, or public-use effect is forbidden; and
+- each closed authority/effect flag plus the `PROPOSED_INACTIVE`, `FIXTURE_ONLY`, `NONE`, and `HOLD` posture has an explicit fail-closed mutation fixture.
 
 ## Current disposition
 

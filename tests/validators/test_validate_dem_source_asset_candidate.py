@@ -15,6 +15,8 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 VALIDATOR = REPO_ROOT / "tools/validators/validate_dem_source_asset_candidate.py"
 FIXTURES = REPO_ROOT / "fixtures/contracts/v1/spatial-foundation/dem_source_asset_candidate/cases.json"
 SCHEMA = REPO_ROOT / "schemas/contracts/v1/spatial-foundation/dem_source_asset_candidate.schema.json"
+WORKFLOW = REPO_ROOT / ".github/workflows/dem-source-asset-candidate.yml"
+NO_NETWORK_GUARD = REPO_ROOT / "tools/ci/kfm_no_network/sitecustomize.py"
 
 spec = importlib.util.spec_from_file_location("dem_source_asset_candidate_validator", VALIDATOR)
 assert spec and spec.loader
@@ -43,13 +45,33 @@ class DemSourceAssetCandidateTests(unittest.TestCase):
         self.assertEqual("FIXTURE_ONLY", schema["x-kfm"]["execution_mode"])
         self.assertEqual("NONE", schema["x-kfm"]["authority"])
 
+    def test_workflow_activates_shared_python_no_network_guard(self) -> None:
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        guard = (
+            "PYTHONPATH: ${{ github.workspace }}/tools/ci/kfm_no_network:"
+            "${{ github.workspace }}"
+        )
+        self.assertTrue(NO_NETWORK_GUARD.is_file())
+        self.assertEqual(3, workflow.count(guard))
+        for step_name in (
+            "Validate exact inactive DEM candidate",
+            "Verify renderer-neutral package exports",
+            "Verify generated authoring receipt",
+        ):
+            self.assertIn(
+                f"- name: {step_name}\n"
+                "        env:\n"
+                f"          {guard}\n",
+                workflow,
+            )
+
     def test_fixture_suite_has_exact_polarity(self) -> None:
         ok, report = module.run_fixture_suite()
         self.assertTrue(ok, report)
-        self.assertEqual(34, len(report["cases"]))
+        self.assertEqual(50, len(report["cases"]))
         statuses = [case["actual_status"] for case in report["cases"]]
         self.assertEqual(1, statuses.count("PASS"))
-        self.assertEqual(33, statuses.count("DENY"))
+        self.assertEqual(49, statuses.count("DENY"))
         self.assertTrue(all(case["ok"] for case in report["cases"]))
 
     def test_exact_ellsworth_candidate_passes_only_as_hold(self) -> None:
@@ -290,6 +312,23 @@ class DemSourceAssetCandidateTests(unittest.TestCase):
     def test_all_authority_effects_remain_false(self) -> None:
         candidate = self.by_id["valid-exact-ellsworth-tile-hold"]["candidate"]
         self.assertTrue(all(value is False for value in candidate["effects"].values()))
+        expected_effect_cases = {
+            "invalid-effect-" + key.replace("_", "-") for key in candidate["effects"]
+        }
+        actual_effect_cases = {
+            case_id
+            for case_id in self.by_id
+            if case_id.startswith("invalid-effect-")
+        }
+        self.assertEqual(expected_effect_cases, actual_effect_cases)
+        for case_id in expected_effect_cases:
+            result = module.validate_document(self.by_id[case_id]["candidate"])
+            self.assertEqual("DENY", result.status, case_id)
+            self.assertEqual(
+                {"SCHEMA_INVALID"},
+                {finding.code for finding in result.findings},
+                case_id,
+            )
         serialized = json.loads(module._serialize(module.validate_document(candidate)))
         self.assertEqual("NONE", serialized["authority"])
         self.assertEqual("FIXTURE_ONLY", serialized["execution_mode"])
