@@ -57,13 +57,22 @@ function cloneSafeInlineStyle(
   style: StyleSpecification | undefined,
 ): StyleSpecification {
   if (style === undefined) return createEmptyStyle();
-  if (containsExternalStyleResource(style)) {
+  let cloned: unknown;
+  try {
+    cloned = JSON.parse(JSON.stringify(style)) as unknown;
+  } catch {
+    throw new MapRuntimePortError(
+      "MAP_RUNTIME_INITIALIZATION_FAILED",
+      "Map runtime style must be JSON-serializable.",
+    );
+  }
+  if (containsExternalStyleResource(cloned)) {
     throw new MapRuntimePortError(
       "MAP_RUNTIME_INITIALIZATION_FAILED",
       "Map runtime style must not contain an external resource locator.",
     );
   }
-  return JSON.parse(JSON.stringify(style)) as StyleSpecification;
+  return cloned as StyleSpecification;
 }
 
 function supportsWebGL2(): boolean {
