@@ -370,7 +370,11 @@ export function mountLivingAtlasWorkspace(
       renderEvidence(null);
       return;
     }
-    const policy = evaluateFocusSelection(layerId);
+    const policy = evaluateFocusSelection(
+      layerId,
+      false,
+      snapshot.activeViewId,
+    );
     evidence.replaceChildren(
       text(document, "p", "Evidence Drawer", "eyebrow"),
       text(document, "h2", record.name),
@@ -545,11 +549,11 @@ export function mountLivingAtlasWorkspace(
     if (view === null) return;
     if (view.status === "DESIGN_DATA_HOLD") {
       const selectedLayerId = view.layerIds[0] ?? null;
-      const evidence = findEvidenceForLayer(selectedLayerId);
+      const decision = evaluateFocusSelection(selectedLayerId, false, view.id);
       snapshot = cloneSnapshot(snapshot, {
         activeViewId: view.id,
         selectedLayerId,
-        evidenceRefs: evidence?.evidenceRefs ?? Object.freeze([]),
+        evidenceRefs: decision.evidenceRefs,
       });
       runtimeState.textContent = `HELD · ${view.statusReason}`;
       renderEvidence(selectedLayerId);
@@ -699,8 +703,15 @@ export function mountLivingAtlasWorkspace(
     } else if (action.startsWith("view:")) activateView(action.slice(5));
     else if (action.startsWith("inspect:")) {
       const layerId = action.slice(8);
-      const claim = findEvidenceForLayer(layerId);
-      snapshot = cloneSnapshot(snapshot, { selectedLayerId: layerId, evidenceRefs: claim?.evidenceRefs ?? Object.freeze([]) });
+      const decision = evaluateFocusSelection(
+        layerId,
+        false,
+        snapshot.activeViewId,
+      );
+      snapshot = cloneSnapshot(snapshot, {
+        selectedLayerId: layerId,
+        evidenceRefs: decision.evidenceRefs,
+      });
       renderEvidence(layerId);
     } else if (action.startsWith("connection:")) {
       snapshot = cloneSnapshot(snapshot, {
@@ -740,7 +751,11 @@ export function mountLivingAtlasWorkspace(
       writeDrafts("kfm.explorer.story-scenes.v1", stories);
       renderStories();
     } else if (action === "focus:run" || action === "focus:error") {
-      const decision = evaluateFocusSelection(snapshot.selectedLayerId, action === "focus:error");
+      const decision = evaluateFocusSelection(
+        snapshot.selectedLayerId,
+        action === "focus:error",
+        snapshot.activeViewId,
+      );
       const result = text(document, "p", `${decision.outcome} · ${decision.summary}`, `atlas-focus-result atlas-outcome--${decision.outcome.toLowerCase()}`);
       result.setAttribute("role", "status");
       evidence.append(result);

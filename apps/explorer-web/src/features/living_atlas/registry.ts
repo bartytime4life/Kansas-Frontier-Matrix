@@ -294,6 +294,7 @@ export function createInitialSnapshot(now = new Date()): MapSnapshot {
 export function evaluateFocusSelection(
   layerId: string | null,
   simulateAdapterError = false,
+  activeViewId: string | null = null,
 ): PolicyDecision {
   if (simulateAdapterError) {
     return Object.freeze({ profile: "kfm.explorer.policy-decision.v1", outcome: "ERROR", reasonCode: "DEMO_ADAPTER_ERROR", summary: "The deterministic demonstration adapter failed. No factual fallback was produced.", evidenceRefs: Object.freeze([]), proposedActions: Object.freeze(["Retry the bounded demonstration or inspect diagnostics."]), generated: false });
@@ -307,6 +308,10 @@ export function evaluateFocusSelection(
   }
   if (evidence.policyStatus === "DENY") {
     return Object.freeze({ profile: "kfm.explorer.policy-decision.v1", outcome: "DENY", reasonCode: "PROTECTED_SPATIAL_DETAIL", summary: "Policy blocks disclosure of the selected detail.", evidenceRefs: Object.freeze([]), proposedActions: Object.freeze(["Use the public-safe generalized context or request authorized review outside this public surface."]), generated: false });
+  }
+  const activeView = activeViewId === null ? null : findAtlasView(activeViewId);
+  if (activeView?.status === "DESIGN_DATA_HOLD") {
+    return Object.freeze({ profile: "kfm.explorer.policy-decision.v1", outcome: "ABSTAIN", reasonCode: "VIEW_DATA_HELD", summary: `${activeView.name} remains held: ${activeView.statusReason}`, evidenceRefs: Object.freeze([]), proposedActions: Object.freeze(["Complete the view's source, evidence, review, and release gates before requesting interpretation."]), generated: false });
   }
   if (evidence.policyStatus === "ABSTAIN" || evidence.evidenceRefs.length === 0) {
     return Object.freeze({ profile: "kfm.explorer.policy-decision.v1", outcome: "ABSTAIN", reasonCode: "SOURCE_OR_RELEASE_HELD", summary: "The selected layer is held or lacks evidence eligible for this demonstration.", evidenceRefs: Object.freeze([]), proposedActions: Object.freeze(["Complete the next admission gate shown in Source Observatory."]), generated: false });
