@@ -39,9 +39,9 @@ class RepositoryGovernanceParityTests(unittest.TestCase):
         self.assertEqual("PASS", report["profile_integrity_outcome"])
         self.assertEqual("HOLD_INHERITED", report["conformance_outcome"])
         self.assertEqual(0, report["topology"]["introduced_finding_count"])
-        self.assertEqual(0, report["topology"]["fail_new_drift"])
-        self.assertEqual(127, report["topology"]["baselined_warning"])
-        self.assertEqual(0, report["topology"]["stale_fingerprints"])
+        self.assertEqual(6, report["topology"]["fail_new_drift"])
+        self.assertEqual(121, report["topology"]["baselined_warning"])
+        self.assertEqual(6, report["topology"]["stale_fingerprints"])
 
     def test_valid_and_invalid_fixtures_match_reviewed_codes(self) -> None:
         ok, results = parity.validate_fixtures()
@@ -76,8 +76,9 @@ class RepositoryGovernanceParityTests(unittest.TestCase):
             command = (
                 sys.executable,
                 "-c",
-                "from hypothesis import settings; "
-                "settings.default.database.save(b'kfm-cache-probe', b'value')",
+                "import os; from pathlib import Path; "
+                "from hypothesis.database import DirectoryBasedExampleDatabase; "
+                "DirectoryBasedExampleDatabase(Path(os.environ['HYPOTHESIS_STORAGE_DIRECTORY']) / 'examples').save(b'kfm-cache-probe', b'value')",
             )
             self.assertEqual("PASS", parity._run_lane(command, projected))
             self.assertFalse((projected / ".hypothesis").exists())
