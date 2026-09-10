@@ -273,6 +273,14 @@ type HoverSummary = Readonly<{
   x: number;
   y: number;
 }>;
+type OfficialSourceSearchItem = Readonly<{
+  id: string;
+  kind: "source";
+  title: string;
+  subtitle: string;
+  officialContextId: OfficialContextId;
+}>;
+type GlobalSearchItem = SearchItem | OfficialSourceSearchItem;
 
 type SelectedContext = {
   kind: "registry" | "basemap";
@@ -560,6 +568,55 @@ type BasemapFeatureCandidate = {
   geometry?: Geometry | null;
 };
 
+const stringContextProperty = (properties: Record<string, unknown>, key: string) => {
+  const value = properties[key];
+  return typeof value === "string" && value.trim() !== "" ? value.trim() : null;
+};
+
+const numberContextProperty = (properties: Record<string, unknown>, key: string) => {
+  const value = properties[key];
+  return typeof value === "number" && Number.isFinite(value) ? value : null;
+};
+
+const officialContextSummary = (source: OfficialContextId, title: string, properties: Record<string, unknown>) => {
+  if (source === "census-counties") {
+    const population = numberContextProperty(properties, "populationEstimate");
+    const estimate = population === null
+      ? "The ACS population estimate was unavailable, so no population value is inferred."
+      : `The 2024 ACS 5-year population estimate is ${Math.round(population).toLocaleString("en-US")}.`;
+    return `${title} is shown from 2026 Census TIGERweb county geometry. ${estimate} Geometry and population use separate vintages and remain external context without a KFM EvidenceBundle.`;
+  }
+  if (source === "usgs-streamflow") {
+    const value = stringContextProperty(properties, "displayValue") ?? "not reported";
+    const observedAt = stringContextProperty(properties, "observedAt");
+    return `${title} reported ${value}${observedAt ? ` at ${new Date(observedAt).toLocaleString()}` : ""}. USGS values may be provisional, revised, delayed, or incomplete; this is not flood guidance or KFM evidence.`;
+  }
+  if (source === "usgs-earthquakes") {
+    const magnitude = numberContextProperty(properties, "magnitude");
+    const depth = numberContextProperty(properties, "depthKilometers");
+    const observedAt = stringContextProperty(properties, "observedAt");
+    return `${magnitude === null ? "Magnitude not reported" : `Magnitude ${magnitude.toFixed(1)}`}${depth === null ? "" : ` · ${depth.toFixed(1)} km depth`}${observedAt ? ` · ${new Date(observedAt).toLocaleString()}` : ""}. USGS catalog values can be revised; this is external situational context, not an alert, forecast, or KFM evidence.`;
+  }
+  if (source === "nws-alerts") {
+    const severity = stringContextProperty(properties, "severity") ?? "severity not supplied";
+    const area = stringContextProperty(properties, "zoneName") ?? stringContextProperty(properties, "areaDesc");
+    const expires = stringContextProperty(properties, "expires");
+    return `${title} · ${severity}${area ? ` · ${area}` : ""}${expires ? ` · expires ${new Date(expires).toLocaleString()}` : ""}. Consult the National Weather Service for decisions; this map is not a warning-delivery service or KFM evidence.`;
+  }
+  return `${title} was returned by an official external context connection. It is useful for orientation and situational awareness, but no KFM EvidenceBundle is attached.`;
+};
+
+const officialContextTime = (source: OfficialContextId, properties: Record<string, unknown>, fallback: string) => {
+  if (source === "census-counties") return "2026 TIGERweb geography · 2024 ACS 5-year population estimate";
+  if (source === "usgs-streamflow" || source === "usgs-earthquakes") return stringContextProperty(properties, "observedAt") ?? fallback;
+  if (source === "nws-alerts") {
+    const effective = stringContextProperty(properties, "effective");
+    const expires = stringContextProperty(properties, "expires");
+    return effective && expires ? `${effective} through ${expires}` : effective ?? expires ?? fallback;
+  }
+  return fallback;
+};
+
 const buildBasemapContext = (candidate: BasemapFeatureCandidate, longitude: number, latitude: number): SelectedContext | null => {
   if (!candidate.geometry) return null;
   const properties = candidate.properties ?? {};
@@ -567,7 +624,7 @@ const buildBasemapContext = (candidate: BasemapFeatureCandidate, longitude: numb
   const sourceLayer = typeof candidate.sourceLayer === "string" && candidate.sourceLayer.trim() !== ""
     ? candidate.sourceLayer
     : officialSource?.shortTitle ?? "vector layer";
-  const titleCandidate = [properties["name:en"], properties.name, properties.name_en, properties.event, properties.headline, properties.monitoringLocationId, properties.ref, properties.class, properties.type]
+  const titleCandidate = [properties["name:en"], properties.name, properties.name_en, properties.event, properties.headline, properties.place, properties.monitoringLocationId, properties.ref, properties.class, properties.type]
     .find((value): value is string => typeof value === "string" && value.trim() !== "");
   const title = titleCandidate?.trim() ?? `${sourceLayer} feature`;
   const featureId = `${officialSource ? "official-context" : "basemap"}:${sourceLayer}:${String(candidate.id ?? `${title}:${longitude.toFixed(4)},${latitude.toFixed(4)}`)}`.slice(0, 180);
@@ -579,7 +636,7 @@ const buildBasemapContext = (candidate: BasemapFeatureCandidate, longitude: numb
     domain: officialSource.domain,
     category: officialSource.id === "census-counties" ? "Boundaries & places"
       : officialSource.id === "usgs-streamflow" ? "Hydrology & water"
-        : officialSource.id === "usgs-3dep-hillshade" ? "Geology & landforms"
+        : officialSource.id === "usgs-3dep-hillshade" || officialSource.id === "usgs-earthquakes" ? "Geology & landforms"
           : "Weather & hazards",
     sourceType: officialSource.kind === "OPERATIONAL_WMS" ? "Raster" : "GeoJSON",
     sourceId: officialSource.sourceId,
@@ -600,13 +657,13 @@ const buildBasemapContext = (candidate: BasemapFeatureCandidate, longitude: numb
     properties: {
       fid: featureId,
       title,
-      summary: officialSource ? `${officialSource.title} returned this current map-context feature. It is useful for orientation and situational awareness, but no KFM EvidenceBundle is attached.` : `A real geographic feature returned by the selected vector basemap (${sourceLayer}). It is useful for orientation and map interaction, but no KFM EvidenceBundle is attached.`,
+      summary: officialSource ? officialContextSummary(officialSource.id, title, properties) : `A real geographic feature returned by the selected vector basemap (${sourceLayer}). It is useful for orientation and map interaction, but no KFM EvidenceBundle is attached.`,
       sourceRole: "external display context",
       sourceOrganization: officialSource?.organization ?? "OpenFreeMap / OpenMapTiles / OpenStreetMap",
       citation: "No KFM EvidenceBundle attached",
       spatialScope: "Provider-rendered map feature inside the Kansas context extent",
-      temporalScope: officialSource?.freshness ?? "Provider-defined; not resolved by KFM",
-      lastUpdate: officialSource?.freshness ?? "Provider-defined",
+      temporalScope: officialSource ? officialContextTime(officialSource.id, properties, officialSource.freshness) : "Provider-defined; not resolved by KFM",
+      lastUpdate: officialSource ? stringContextProperty(properties, "retrievedAt") ?? officialSource.freshness : "Provider-defined",
       freshnessState: "EXTERNAL_PROVIDER",
       evidenceState: "MISSING_EVIDENCE",
       reviewState: "NOT_KFM_REVIEWED",
@@ -1021,6 +1078,14 @@ export default function Home() {
   const visibleOfficialSources = useMemo(() => OFFICIAL_CONTEXT_SOURCES.filter((source) => officialVisibility[source.id]), [officialVisibility]);
   const visibleOfficialCount = visibleOfficialSources.length;
   const officialFeatureCount = useMemo(() => Object.values(officialPayloads).reduce((total, payload) => total + (payload?.featureCount ?? 0), 0), [officialPayloads]);
+  const visibleRefreshableOfficialCount = useMemo(() => visibleOfficialSources.filter((source) => source.apiPath).length, [visibleOfficialSources]);
+  const officialReadyCount = useMemo(() => Object.values(officialStates).filter((state) => state === "ready" || state === "partial" || state === "empty").length, [officialStates]);
+  const officialLoadingCount = useMemo(() => Object.values(officialStates).filter((state) => state === "loading").length, [officialStates]);
+  const officialLatestRetrievedAt = useMemo(() => Object.values(officialPayloads)
+    .map((payload) => payload?.retrievedAt)
+    .filter((value): value is string => Boolean(value))
+    .sort()
+    .at(-1) ?? null, [officialPayloads]);
   const mapContextRecords = useMemo(() => activeLayers.flatMap((layer) => layer.data.features.filter((feature) => (
     isFeatureAvailableAtTime(layer, feature.properties.year, year)
     && feature.properties.focusLng >= mapViewportBounds.west
@@ -1384,10 +1449,14 @@ export default function Home() {
       return matchesDomain && matchesQuery;
     }).map((layer) => layer.id));
   }, [debouncedLayerQuery, layerDomain]);
-  const searchResults = useMemo(() => {
+  const searchResults = useMemo<GlobalSearchItem[]>(() => {
     const query = debouncedGlobalQuery.trim().toLowerCase();
     if (!query) return [];
-    return SEARCH_INDEX.filter((item) => `${item.title} ${item.subtitle}`.toLowerCase().includes(query)).slice(0, 7);
+    const mapResults: GlobalSearchItem[] = SEARCH_INDEX.filter((item) => `${item.title} ${item.subtitle}`.toLowerCase().includes(query));
+    const sourceResults: GlobalSearchItem[] = OFFICIAL_CONTEXT_SOURCES
+      .filter((source) => `${source.title} ${source.shortTitle} ${source.organization} ${source.domain} ${source.endpointLabel}`.toLowerCase().includes(query))
+      .map((source) => ({ id: `source:${source.id}`, kind: "source", title: source.shortTitle, subtitle: `${source.organization} · ${source.domain}`, officialContextId: source.id }));
+    return [...sourceResults, ...mapResults].slice(0, 7);
   }, [debouncedGlobalQuery]);
   const filteredRepositoryUpdates = useMemo(() => {
     const query = repositoryQuery.trim().toLowerCase();
@@ -1614,6 +1683,25 @@ export default function Home() {
     const map = mapRef.current;
     if (map?.isStyleLoaded()) applyOfficialContextState(map, officialVisibilityRef.current, next, officialPayloadsRef.current);
   }, []);
+
+  const refreshVisibleOfficialContext = useCallback(() => {
+    const feeds = OFFICIAL_CONTEXT_SOURCES.filter((source) => source.apiPath && officialVisibilityRef.current[source.id]);
+    if (feeds.length === 0) {
+      announce("Turn on an official data layer before refreshing");
+      return;
+    }
+    feeds.forEach((source) => { void refreshOfficialContext(source.id as OfficialContextFeedId); });
+    announce(`Refreshing ${feeds.length} visible official connection${feeds.length === 1 ? "" : "s"}`);
+  }, [announce, refreshOfficialContext]);
+
+  const hideAllOfficialContext = useCallback(() => {
+    const next = Object.fromEntries(OFFICIAL_CONTEXT_SOURCES.map((source) => [source.id, false])) as Record<OfficialContextId, boolean>;
+    officialVisibilityRef.current = next;
+    setOfficialVisibility(next);
+    const map = mapRef.current;
+    if (map?.isStyleLoaded()) applyOfficialContextState(map, next, officialOpacityRef.current, officialPayloadsRef.current);
+    announce("Official context hidden; loaded snapshots remain available on this page");
+  }, [announce]);
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -3151,8 +3239,14 @@ export default function Home() {
     return () => document.removeEventListener("keydown", handleEscape);
   }, [guidedStartOpen, helpOpen, isCompact, mapContextOpen, mapUtilityOpen, repositoryOpen, rightOpen, storyOpen, toolsExpanded, closeMapUtility, closeRightPanel, closeStoryTrail, dismissGuidedStart]);
 
-  const chooseSearchResult = (item: SearchItem) => {
+  const chooseSearchResult = (item: GlobalSearchItem) => {
     setGlobalQuery("");
+    if (item.kind === "source") {
+      setLeftPanelMode("layers");
+      setOfficialContextVisible(item.officialContextId, true);
+      announce(`Opened ${item.title} in official data connections`);
+      return;
+    }
     if (item.kind === "feature" && item.featureId) {
       selectStoredFeature(item.layerId, item.featureId);
       return;
@@ -4824,14 +4918,14 @@ export default function Home() {
         </nav>
         <div className="global-search">
           <label>
-            <span className="sr-only">Search current layers and demonstration features</span>
+            <span className="sr-only">Search current places, layers, features, and official data sources</span>
             <span aria-hidden="true">⌕</span>
-            <input ref={globalSearchInputRef} value={globalQuery} onChange={(event) => setGlobalQuery(event.target.value)} type="search" placeholder="Search places, layers, feature IDs…" aria-describedby="global-search-help" title="Search · shortcut /" />
+            <input ref={globalSearchInputRef} value={globalQuery} onChange={(event) => setGlobalQuery(event.target.value)} type="search" placeholder="Search places, layers, official data…" aria-describedby="global-search-help" title="Search · shortcut /" />
           </label>
           <span id="global-search-help" className="sr-only">Search results appear as keyboard-focusable buttons.</span>
           {globalQuery && <div className="search-results" id="global-search-results" aria-label="Search results">
             {searchResults.map((item) => <button type="button" key={item.id} onClick={() => chooseSearchResult(item)}><span>{item.kind}</span><strong>{item.title}</strong><small>{item.subtitle}</small></button>)}
-            {searchResults.length === 0 && <p>No current layer, place, dataset, or feature ID matches.</p>}
+            {searchResults.length === 0 && <p>No current place, layer, feature, or official source matches.</p>}
           </div>}
         </div>
         <div className="top-context" aria-label="Current map context">
@@ -5200,6 +5294,10 @@ export default function Home() {
           <section className="official-context-catalog" aria-labelledby="official-context-title">
             <header><div><span>OFFICIAL OPERATIONAL CONTEXT</span><h2 id="official-context-title">Real Kansas source connections</h2></div><strong>{visibleOfficialCount}/{OFFICIAL_CONTEXT_SOURCES.length} ON</strong></header>
             <p>Live and current official sources may be drawn for orientation. They stay outside KFM admission, reports, exports, and EvidenceBundles.</p>
+            <div className="official-context-pulse" aria-label="Official data connection status">
+              <div><span><small>LOADED FEATURES</small><strong>{officialFeatureCount.toLocaleString("en-US")}</strong></span><span><small>CONNECTIONS</small><strong>{officialReadyCount}/{OFFICIAL_CONTEXT_SOURCES.length} checked</strong></span><span><small>LAST RETRIEVAL</small><strong>{officialLatestRetrievedAt ? new Date(officialLatestRetrievedAt).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) : "Not yet"}</strong></span></div>
+              <nav aria-label="Official data actions"><button type="button" disabled={visibleRefreshableOfficialCount === 0 || officialLoadingCount > 0} onClick={refreshVisibleOfficialContext}>{officialLoadingCount > 0 ? "Refreshing…" : "Refresh visible"}</button><button type="button" disabled={visibleOfficialCount === 0} onClick={hideAllOfficialContext}>Hide all</button></nav>
+            </div>
             <div className="official-context-list">{OFFICIAL_CONTEXT_SOURCES.map((source) => {
               const payload = source.apiPath ? officialPayloads[source.id as OfficialContextFeedId] : undefined;
               const state = officialStates[source.id];
@@ -5269,7 +5367,7 @@ export default function Home() {
               <span data-runtime={runtime.kind}><i /> {runtime.kind === "ready" ? "MAP READY" : runtime.kind === "loading" ? "MAP STARTING" : runtime.kind === "degraded" ? "MAP DEGRADED" : runtime.kind === "unsupported" ? "MAP UNSUPPORTED" : "MAP UNAVAILABLE"}</span>
               <small>{BASEMAPS[basemap].title} · {mapRepresentationLabel}</small>
             </div>
-            <div className="map-command-actions"><button type="button" onClick={saveCurrentWorkspace}>Save view</button><button type="button" onClick={() => openPrimaryWorkspace("reports", true)}>Build report</button></div>
+            <div className="map-command-actions"><button type="button" onClick={() => { setLeftPanelMode("layers"); announce("Opened layers and official data connections"); }}>Data</button><button type="button" onClick={saveCurrentWorkspace}>Save view</button><button type="button" onClick={() => openPrimaryWorkspace("reports", true)}>Build report</button></div>
           </div>
           <nav className="map-view-mode-strip" aria-label="Map representation">
             <span className="map-view-mode-heading">MAP REPRESENTATION <small>{mapRepresentationLabel}</small></span>

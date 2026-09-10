@@ -791,7 +791,7 @@ test("keeps every top-level external map carrier in a display-only disclosure re
   assert.match(page, /NO REQUEST FROM CURRENT VIEW/);
 });
 
-test("connects five bounded official Kansas context sources without admitting evidence", async () => {
+test("connects six bounded official Kansas context sources without admitting evidence", async () => {
   const ts = await import("typescript");
   const registrySource = await readFile(new URL("../app/live-context.ts", import.meta.url), "utf8");
   const route = await readFile(new URL("../app/api/live-context/route.ts", import.meta.url), "utf8");
@@ -803,18 +803,25 @@ test("connects five bounded official Kansas context sources without admitting ev
   }).outputText;
   const registry = await import(`data:text/javascript;base64,${Buffer.from(javascript).toString("base64")}`);
 
-  assert.deepEqual(registry.OFFICIAL_CONTEXT_SOURCES.map((record) => record.id), ["census-counties", "usgs-streamflow", "usgs-3dep-hillshade", "nws-alerts", "nws-radar"]);
+  assert.deepEqual(registry.OFFICIAL_CONTEXT_SOURCES.map((record) => record.id), ["census-counties", "usgs-streamflow", "usgs-earthquakes", "usgs-3dep-hillshade", "nws-alerts", "nws-radar"]);
   assert.deepEqual(registry.OFFICIAL_CONTEXT_SOURCES.filter((record) => record.defaultVisibility).map((record) => record.id), ["census-counties", "usgs-streamflow"]);
   assert.equal(registry.OFFICIAL_CONTEXT_SOURCES.every((record) => record.evidenceRole === "EXTERNAL_CONTEXT_ONLY"), true);
   assert.match(page, /OFFICIAL OPERATIONAL CONTEXT/);
   assert.match(page, /Real Kansas source connections/);
+  assert.match(page, /Refresh visible/);
+  assert.match(page, /Search places, layers, official data/);
   assert.match(page, /params\.set\("ctx"/);
   assert.match(page, /params\.set\("ctxo"/);
   assert.match(page, /zero mapped features[\s\S]*not an all-clear/i);
   assert.match(page, /governance issue #3393/);
   assert.match(route, /STATE%3D%2720%27/);
+  assert.match(route, /2024\/acs\/acs5\/profile/);
+  assert.match(route, /DP05_0001E/);
   assert.match(route, /state_code/);
   assert.match(route, /datetime/);
+  assert.match(route, /earthquake\.usgs\.gov\/fdsnws\/event\/1\/query/);
+  assert.match(route, /minlatitude/);
+  assert.match(route, /maxlongitude/);
   assert.match(route, /KansasFrontierMatrixExplorer\/1\.0/);
   assert.match(route, /MAX_NWS_ZONE_REQUESTS = 36/);
   assert.match(route, /forecast\|county\|fire/);
@@ -832,6 +839,51 @@ test("the built official-context adapter rejects unknown feeds without network a
   const response = await worker.fetch(new Request("http://localhost/api/live-context?feed=arbitrary"), {}, { waitUntil() {}, passThroughOnException() {} });
   assert.equal(response.status, 400);
   assert.match(await response.text(), /fixed allowlist/i);
+});
+
+test("the built official-context adapter joins dated Census population and bounds USGS earthquakes", async () => {
+  const workerUrl = new URL("../dist/server/index.js", import.meta.url);
+  workerUrl.searchParams.set("test", `official-data-${process.pid}-${Date.now()}`);
+  const { default: worker } = await import(workerUrl.href);
+  const originalFetch = globalThis.fetch;
+  const upstreamCalls = [];
+  globalThis.fetch = async (input) => {
+    const url = String(input);
+    upstreamCalls.push(url);
+    if (url.includes("tigerweb.geo.census.gov")) return new Response(JSON.stringify({
+      type: "FeatureCollection",
+      features: [{ type: "Feature", geometry: { type: "Polygon", coordinates: [[[-98, 38], [-97, 38], [-97, 39], [-98, 39], [-98, 38]]] }, properties: { GEOID: "20053", BASENAME: "Ellsworth", STATE: "20", COUNTY: "053" } }],
+    }), { headers: { "content-type": "application/json" } });
+    if (url.includes("api.census.gov")) return new Response(JSON.stringify([
+      ["NAME", "DP05_0001E", "state", "county"],
+      ["Ellsworth County, Kansas", "6118", "20", "053"],
+    ]), { headers: { "content-type": "application/json" } });
+    if (url.includes("earthquake.usgs.gov")) return new Response(JSON.stringify({
+      type: "FeatureCollection",
+      metadata: { count: 1 },
+      features: [{ type: "Feature", id: "us-test", geometry: { type: "Point", coordinates: [-98.1, 38.7, 5.4] }, properties: { title: "M 2.1 - central Kansas", place: "central Kansas", mag: 2.1, magType: "ml", time: 1789000000000, updated: 1789000300000, status: "reviewed", type: "earthquake", url: "https://earthquake.usgs.gov/earthquakes/eventpage/us-test" } }],
+    }), { headers: { "content-type": "application/json" } });
+    throw new Error(`Unexpected upstream request: ${url}`);
+  };
+  try {
+    const countyResponse = await worker.fetch(new Request("http://localhost/api/live-context?feed=census-counties"), {}, { waitUntil() {}, passThroughOnException() {} });
+    assert.equal(countyResponse.status, 200);
+    const countyPayload = await countyResponse.json();
+    assert.equal(countyPayload.state, "ready");
+    assert.equal(countyPayload.data.features[0].properties.populationEstimate, 6118);
+    assert.equal(countyPayload.data.features[0].properties.populationEstimateYear, 2024);
+
+    const earthquakeResponse = await worker.fetch(new Request("http://localhost/api/live-context?feed=usgs-earthquakes"), {}, { waitUntil() {}, passThroughOnException() {} });
+    assert.equal(earthquakeResponse.status, 200);
+    const earthquakePayload = await earthquakeResponse.json();
+    assert.equal(earthquakePayload.featureCount, 1);
+    assert.equal(earthquakePayload.data.features[0].properties.magnitude, 2.1);
+    assert.equal(earthquakePayload.data.features[0].properties.depthKilometers, 5.4);
+    assert.equal(upstreamCalls.some((url) => url.includes("eventtype=earthquake")), true);
+    assert.equal(upstreamCalls.some((url) => url.includes("minlatitude=36.9") && url.includes("maxlongitude=-94.5")), true);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
 });
 
 test("reviews and redacts public-safe exports before download", async () => {

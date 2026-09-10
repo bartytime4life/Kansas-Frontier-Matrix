@@ -4,14 +4,17 @@ import type { Feature, FeatureCollection, Geometry, GeoJsonProperties } from "ge
 export const dynamic = "force-dynamic";
 
 const CENSUS_URL = "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/State_County/MapServer/1/query?where=STATE%3D%2720%27&outFields=GEOID%2CNAME%2CBASENAME%2CSTATE%2CCOUNTY&returnGeometry=true&outSR=4326&geometryPrecision=5&maxAllowableOffset=0.001&f=geojson";
+const CENSUS_ACS_URL = "https://api.census.gov/data/2024/acs/acs5/profile?get=NAME%2CDP05_0001E&for=county%3A%2A&in=state%3A20";
 const USGS_URL = "https://api.waterdata.usgs.gov/ogcapi/v0/collections/latest-continuous/items";
+const USGS_EARTHQUAKE_URL = "https://earthquake.usgs.gov/fdsnws/event/1/query";
 const NWS_ALERTS_URL = "https://api.weather.gov/alerts/active?area=KS";
 const NWS_USER_AGENT = "KansasFrontierMatrixExplorer/1.0 (https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site)";
 const MAX_RESPONSE_BYTES = 8 * 1024 * 1024;
 const MAX_NWS_ZONE_REQUESTS = 36;
 const MAX_NWS_FEATURES = 160;
+const MAX_EARTHQUAKE_FEATURES = 250;
 
-type Feed = "census-counties" | "usgs-streamflow" | "nws-alerts";
+type Feed = "census-counties" | "usgs-streamflow" | "usgs-earthquakes" | "nws-alerts";
 type JsonRecord = Record<string, unknown>;
 
 class UpstreamError extends Error {
@@ -23,8 +26,12 @@ class UpstreamError extends Error {
 const isRecord = (value: unknown): value is JsonRecord => Boolean(value) && typeof value === "object" && !Array.isArray(value);
 const asString = (value: unknown) => typeof value === "string" ? value : null;
 const asNumber = (value: unknown) => typeof value === "number" && Number.isFinite(value) ? value : null;
+const asNumeric = (value: unknown) => {
+  const parsed = typeof value === "number" ? value : typeof value === "string" && value.trim() !== "" ? Number(value) : Number.NaN;
+  return Number.isFinite(parsed) ? parsed : null;
+};
 
-const fetchBoundedJson = async (url: string, timeoutMs: number, init?: RequestInit): Promise<JsonRecord> => {
+const fetchBoundedJsonValue = async (url: string, timeoutMs: number, init?: RequestInit): Promise<unknown> => {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
   try {
@@ -34,9 +41,7 @@ const fetchBoundedJson = async (url: string, timeoutMs: number, init?: RequestIn
     if (declaredLength > MAX_RESPONSE_BYTES) throw new UpstreamError("Official upstream response exceeded the bounded adapter limit.");
     const body = await response.arrayBuffer();
     if (body.byteLength > MAX_RESPONSE_BYTES) throw new UpstreamError("Official upstream response exceeded the bounded adapter limit.");
-    const parsed = JSON.parse(new TextDecoder().decode(body)) as unknown;
-    if (!isRecord(parsed)) throw new UpstreamError("Official upstream response was not a JSON object.");
-    return parsed;
+    return JSON.parse(new TextDecoder().decode(body)) as unknown;
   } catch (error) {
     if (error instanceof UpstreamError) throw error;
     if (error instanceof Error && error.name === "AbortError") throw new UpstreamError("Official upstream request timed out.", true);
@@ -44,6 +49,18 @@ const fetchBoundedJson = async (url: string, timeoutMs: number, init?: RequestIn
   } finally {
     clearTimeout(timeout);
   }
+};
+
+const fetchBoundedJson = async (url: string, timeoutMs: number, init?: RequestInit): Promise<JsonRecord> => {
+  const parsed = await fetchBoundedJsonValue(url, timeoutMs, init);
+  if (!isRecord(parsed)) throw new UpstreamError("Official upstream response was not a JSON object.");
+  return parsed;
+};
+
+const fetchBoundedJsonArray = async (url: string, timeoutMs: number, init?: RequestInit): Promise<unknown[]> => {
+  const parsed = await fetchBoundedJsonValue(url, timeoutMs, init);
+  if (!Array.isArray(parsed)) throw new UpstreamError("Official upstream response was not a JSON array.");
+  return parsed;
 };
 
 const collectionFeatures = (payload: JsonRecord): JsonRecord[] => Array.isArray(payload.features)
@@ -74,12 +91,32 @@ const envelope = (
 const censusCounties = async () => {
   const retrievedAt = new Date().toISOString();
   const payload = await fetchBoundedJson(CENSUS_URL, 25_000);
+  let populationByGeoid = new Map<string, number>();
+  let populationUnavailable = false;
+  try {
+    const rows = await fetchBoundedJsonArray(CENSUS_ACS_URL, 15_000);
+    const header = Array.isArray(rows[0]) ? rows[0].map((value) => String(value)) : [];
+    const populationIndex = header.indexOf("DP05_0001E");
+    const stateIndex = header.indexOf("state");
+    const countyIndex = header.indexOf("county");
+    if (populationIndex < 0 || stateIndex < 0 || countyIndex < 0) throw new UpstreamError("Census ACS response omitted required population join fields.");
+    populationByGeoid = new Map(rows.slice(1).flatMap((candidate) => {
+      if (!Array.isArray(candidate)) return [];
+      const state = asString(candidate[stateIndex]);
+      const county = asString(candidate[countyIndex]);
+      const population = asNumeric(candidate[populationIndex]);
+      return state && county && population !== null && population >= 0 ? [[`${state}${county}`, Math.round(population)] as const] : [];
+    }));
+  } catch {
+    populationUnavailable = true;
+  }
   const features: Feature<Geometry, GeoJsonProperties>[] = collectionFeatures(payload).flatMap((candidate) => {
     if (!isRecord(candidate.geometry) || candidate.geometry.type !== "Polygon" && candidate.geometry.type !== "MultiPolygon") return [];
     const properties = isRecord(candidate.properties) ? candidate.properties : {};
     const geoid = asString(properties.GEOID);
     const name = asString(properties.BASENAME) ?? asString(properties.NAME);
     if (!geoid || !name) return [];
+    const populationEstimate = populationByGeoid.get(geoid) ?? null;
     return [{
       type: "Feature" as const,
       id: geoid,
@@ -90,6 +127,9 @@ const censusCounties = async () => {
         geoid,
         stateFips: asString(properties.STATE) ?? geoid.slice(0, 2),
         countyFips: asString(properties.COUNTY) ?? geoid.slice(2),
+        populationEstimate,
+        populationEstimateYear: populationEstimate === null ? null : 2024,
+        populationEstimateProduct: populationEstimate === null ? null : "ACS 5-year DP05_0001E",
         sourceOrganization: "U.S. Census Bureau",
         evidenceRole: "EXTERNAL_CONTEXT_ONLY",
         vintage: "2026",
@@ -101,9 +141,10 @@ const censusCounties = async () => {
     "census-counties",
     { type: "FeatureCollection", features },
     CENSUS_URL,
-    "Kansas-only Census TIGERweb State_County geometry, generalized by the adapter to approximately 0.001 degrees. Current context is not historical boundary authority or KFM evidence.",
+    `Kansas-only Census TIGERweb State_County geometry, generalized by the adapter to approximately 0.001 degrees. ${populationUnavailable ? "The ACS population request was unavailable; no population values were inferred. " : `${populationByGeoid.size} county GEOIDs were joined to the 2024 ACS 5-year DP05_0001E population estimate. `}Boundary vintage and population estimate year remain distinct. Current context is not historical boundary authority, a current population count, or KFM evidence.`,
     retrievedAt,
     null,
+    populationUnavailable || populationByGeoid.size < features.length,
   );
 };
 
@@ -169,6 +210,74 @@ const latestStreamflow = async () => {
     retrievedAt,
     newestTimestamp,
     truncated,
+    truncated,
+  );
+};
+
+const recentEarthquakes = async () => {
+  const retrievedAt = new Date().toISOString();
+  const start = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+  const url = new URL(USGS_EARTHQUAKE_URL);
+  url.searchParams.set("format", "geojson");
+  url.searchParams.set("eventtype", "earthquake");
+  url.searchParams.set("starttime", start);
+  url.searchParams.set("minlatitude", "36.9");
+  url.searchParams.set("maxlatitude", "40.1");
+  url.searchParams.set("minlongitude", "-102.1");
+  url.searchParams.set("maxlongitude", "-94.5");
+  url.searchParams.set("orderby", "time");
+  url.searchParams.set("limit", String(MAX_EARTHQUAKE_FEATURES));
+  const payload = await fetchBoundedJson(url.toString(), 15_000);
+  let newestTimestamp: string | null = null;
+  const catalogFeatures = collectionFeatures(payload);
+  const features: Feature<Geometry, GeoJsonProperties>[] = catalogFeatures.slice(0, MAX_EARTHQUAKE_FEATURES).flatMap((candidate) => {
+    if (!isRecord(candidate.geometry) || candidate.geometry.type !== "Point" || !Array.isArray(candidate.geometry.coordinates)) return [];
+    const coordinates = candidate.geometry.coordinates;
+    const longitude = asNumeric(coordinates[0]);
+    const latitude = asNumeric(coordinates[1]);
+    const depthKilometers = asNumeric(coordinates[2]);
+    if (longitude === null || latitude === null || longitude < -102.1 || longitude > -94.5 || latitude < 36.9 || latitude > 40.1) return [];
+    const properties = isRecord(candidate.properties) ? candidate.properties : {};
+    const eventId = asString(candidate.id) ?? asString(properties.code);
+    const observedMilliseconds = asNumeric(properties.time);
+    if (!eventId || observedMilliseconds === null) return [];
+    const observedAt = new Date(observedMilliseconds).toISOString();
+    if (!newestTimestamp || observedAt > newestTimestamp) newestTimestamp = observedAt;
+    const magnitude = asNumeric(properties.mag);
+    return [{
+      type: "Feature" as const,
+      id: eventId,
+      geometry: { type: "Point" as const, coordinates: [longitude, latitude] },
+      properties: {
+        featureId: `usgs-earthquake-${eventId}`,
+        name: asString(properties.title) ?? asString(properties.place) ?? `USGS event ${eventId}`,
+        place: asString(properties.place),
+        magnitude,
+        magnitudeType: asString(properties.magType),
+        depthKilometers,
+        observedAt,
+        updatedAt: asNumeric(properties.updated) === null ? null : new Date(asNumeric(properties.updated)!).toISOString(),
+        reviewStatus: asString(properties.status),
+        eventType: asString(properties.type),
+        detailUrl: asString(properties.url),
+        tsunamiFlag: asNumeric(properties.tsunami),
+        sourceOrganization: "U.S. Geological Survey",
+        evidenceRole: "EXTERNAL_CONTEXT_ONLY",
+        retrievedAt,
+      },
+    }];
+  });
+  const metadata = isRecord(payload.metadata) ? payload.metadata : {};
+  const totalCount = asNumeric(metadata.count);
+  const truncated = (totalCount ?? catalogFeatures.length) > features.length;
+  return envelope(
+    "usgs-earthquakes",
+    { type: "FeatureCollection", features },
+    url.toString(),
+    `${features.length} USGS catalog event${features.length === 1 ? "" : "s"} returned for the Kansas bounding window over the past 30 days. Locations, depths, magnitudes, and review status may change. This is not an earthquake alert, hazard forecast, or KFM evidence.`,
+    retrievedAt,
+    newestTimestamp,
+    false,
     truncated,
   );
 };
@@ -244,15 +353,15 @@ const activeNwsAlerts = async () => {
   );
 };
 
-const cacheSeconds: Record<Feed, number> = { "census-counties": 86_400, "usgs-streamflow": 120, "nws-alerts": 30 };
+const cacheSeconds: Record<Feed, number> = { "census-counties": 86_400, "usgs-streamflow": 120, "usgs-earthquakes": 300, "nws-alerts": 30 };
 
 export async function GET(request: NextRequest) {
   const feed = request.nextUrl.searchParams.get("feed");
-  if (feed !== "census-counties" && feed !== "usgs-streamflow" && feed !== "nws-alerts") {
+  if (feed !== "census-counties" && feed !== "usgs-streamflow" && feed !== "usgs-earthquakes" && feed !== "nws-alerts") {
     return NextResponse.json({ error: "Unknown live-context feed. The adapter accepts only its fixed allowlist." }, { status: 400, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } });
   }
   try {
-    const result = feed === "census-counties" ? await censusCounties() : feed === "usgs-streamflow" ? await latestStreamflow() : await activeNwsAlerts();
+    const result = feed === "census-counties" ? await censusCounties() : feed === "usgs-streamflow" ? await latestStreamflow() : feed === "usgs-earthquakes" ? await recentEarthquakes() : await activeNwsAlerts();
     return NextResponse.json(result, { headers: { "Cache-Control": `public, max-age=0, s-maxage=${cacheSeconds[feed]}, stale-while-revalidate=${cacheSeconds[feed]}`, "X-KFM-Context-State": result.state, "X-Content-Type-Options": "nosniff" } });
   } catch (error) {
     const timeout = error instanceof UpstreamError && error.timeout;

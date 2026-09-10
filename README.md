@@ -41,6 +41,27 @@ The local Midnight and Prairie styles make no basemap request. A failed
 external carrier preserves the site-local layers, evidence text, and report
 path; terrain failure returns to the 2D evidence path.
 
+## Official Kansas context adapters
+
+The Layer Catalog also exposes six fixed, source-specific connections. Search
+finds these sources directly, the Data action opens their controls, and the
+connection pulse reports loaded feature counts and retrieval time. Browser
+requests cannot supply an arbitrary upstream URL.
+
+| Connection | Default | Added context | Explicit boundary |
+|---|---:|---|---|
+| Census counties + ACS population | On | 2026 TIGERweb geometry joined by GEOID to the 2024 ACS 5-year population estimate | Separate vintages; not a current population count or EvidenceBundle |
+| USGS streamflow | On | Latest Kansas discharge values from a bounded rolling 24-hour request | Provisional context; not flood guidance |
+| USGS earthquakes | Off | Bounded 30-day Kansas-area event catalog with magnitude and depth | Catalog values can change; not an alert or hazard forecast |
+| USGS 3DEP hillshade | Off | Current multidirectional hillshade tiles | Rendered relief only; no elevation sample, datum, or accuracy claim |
+| NWS alert areas | Off | Active Kansas alerts and bounded affected-zone geometry | Not a warning-delivery service or an all-clear |
+| NWS/NCEP radar | Off | Current CONUS reflectivity mosaic | Pixels do not establish precipitation rate, sweep time, or forecast |
+
+Every connection is `EXTERNAL_CONTEXT_ONLY`. It is excluded from KFM reports,
+exports, source admission, release state, and EvidenceBundle resolution. Failed,
+partial, empty, and refreshed states remain visible instead of being converted
+into inferred facts.
+
 ## Prerequisites
 
 - Node.js `>=22.13.0`

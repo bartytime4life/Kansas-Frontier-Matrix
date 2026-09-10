@@ -1,8 +1,8 @@
 import type { FeatureCollection } from "geojson";
 import type { GeoJSONSource, LayerSpecification, Map as MapLibreMap } from "maplibre-gl";
 
-export type OfficialContextId = "census-counties" | "usgs-streamflow" | "usgs-3dep-hillshade" | "nws-alerts" | "nws-radar";
-export type OfficialContextFeedId = "census-counties" | "usgs-streamflow" | "nws-alerts";
+export type OfficialContextId = "census-counties" | "usgs-streamflow" | "usgs-earthquakes" | "usgs-3dep-hillshade" | "nws-alerts" | "nws-radar";
+export type OfficialContextFeedId = "census-counties" | "usgs-streamflow" | "usgs-earthquakes" | "nws-alerts";
 export type OfficialContextState = "idle" | "loading" | "ready" | "empty" | "partial" | "error";
 
 export type OfficialContextPayload = Readonly<{
@@ -47,8 +47,8 @@ export type OfficialContextSource = Readonly<{
 export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object.freeze([
   Object.freeze({
     id: "census-counties",
-    title: "Census 2026 Kansas county boundaries",
-    shortTitle: "County boundaries",
+    title: "Census Kansas counties + population",
+    shortTitle: "Counties + population",
     organization: "U.S. Census Bureau",
     domain: "Boundaries & places",
     kind: "SNAPSHOT_GEOJSON",
@@ -56,18 +56,18 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
     layerIds: Object.freeze(["external-census-counties-fill", "external-census-counties-line"]),
     interactiveLayerIds: Object.freeze(["external-census-counties-fill"]),
     apiPath: "/api/live-context?feed=census-counties",
-    endpointLabel: "tigerweb.geo.census.gov · State_County (1)",
+    endpointLabel: "TIGERweb State_County + 2024 ACS 5-year profile",
     sourceUrl: "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/State_County/MapServer/1",
-    serviceUrl: "https://tigerweb.geo.census.gov/tigerwebmain/TIGERweb_main.html",
-    cadence: "Current TIGERweb service; pinned 2026 vintage in this adapter",
-    freshness: "Jan. 1, 2026 vintage",
+    serviceUrl: "https://www.census.gov/programs-surveys/acs/data.html",
+    cadence: "2026 TIGERweb boundary snapshot + 2024 ACS 5-year population estimate",
+    freshness: "2026 geography · 2024 ACS 5-year estimate",
     defaultVisibility: true,
     defaultOpacity: 0.72,
     color: "#8fd8d0",
     attribution: "U.S. Census Bureau TIGERweb",
     evidenceRole: "EXTERNAL_CONTEXT_ONLY",
-    boundary: "Official county geometry is fetched through a fixed, Kansas-only adapter. It is not a KFM release, historical boundary authority, parcel layer, or claim-bearing EvidenceBundle.",
-    fallback: "If Census TIGERweb is unavailable, the overlay reports an error and remains empty; no substitute boundary is presented as equivalent.",
+    boundary: "Official county geometry and a separately dated ACS population estimate are joined by Census GEOID through a fixed, Kansas-only adapter. They are not a KFM release, historical boundary authority, parcel layer, current population count, or claim-bearing EvidenceBundle.",
+    fallback: "If TIGERweb is unavailable, the overlay remains empty. If ACS is unavailable, county geometry remains visible with a PARTIAL state and no inferred population value.",
   }),
   Object.freeze({
     id: "usgs-streamflow",
@@ -92,6 +92,30 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
     evidenceRole: "EXTERNAL_CONTEXT_ONLY",
     boundary: "Values are current-awareness context and may be provisional, delayed, revised, or incomplete. They are not flood warnings, certified statistics, admitted KFM observations, or an all-stations inventory.",
     fallback: "A timeout, malformed response, or upstream error becomes an explicit unavailable state; the Site never converts it into zero flow or a statewide all-clear.",
+  }),
+  Object.freeze({
+    id: "usgs-earthquakes",
+    title: "USGS recent earthquakes near Kansas",
+    shortTitle: "Recent earthquakes",
+    organization: "U.S. Geological Survey",
+    domain: "Geology & hazards",
+    kind: "OPERATIONAL_GEOJSON",
+    sourceId: "external-usgs-earthquakes",
+    layerIds: Object.freeze(["external-usgs-earthquakes-points"]),
+    interactiveLayerIds: Object.freeze(["external-usgs-earthquakes-points"]),
+    apiPath: "/api/live-context?feed=usgs-earthquakes",
+    endpointLabel: "earthquake.usgs.gov · FDSN event query",
+    sourceUrl: "https://earthquake.usgs.gov/fdsnws/event/1/",
+    serviceUrl: "https://earthquake.usgs.gov/earthquakes/search/",
+    cadence: "USGS event catalog; bounded rolling 30-day request",
+    freshness: "Events reported or revised within the past 30 days",
+    defaultVisibility: false,
+    defaultOpacity: 0.92,
+    color: "#f2a65a",
+    attribution: "U.S. Geological Survey Earthquake Hazards Program",
+    evidenceRole: "EXTERNAL_CONTEXT_ONLY",
+    boundary: "Catalog locations, times, depths, and magnitudes may be preliminary, reviewed, revised, or deleted. This display is not an earthquake alert, felt-report service, hazard forecast, emergency guide, or admitted KFM observation.",
+    fallback: "An unavailable or empty catalog is shown as such; it is never interpreted as proof that no earthquake occurred or that seismic risk is absent.",
   }),
   Object.freeze({
     id: "usgs-3dep-hillshade",
@@ -202,6 +226,14 @@ export const applyOfficialContextState = (
     "circle-color": ["case", ["==", ["get", "approvalStatus"], "Approved"], "#5fe1b0", streamflow.color],
     "circle-radius": ["interpolate", ["linear"], ["zoom"], 4, 3.5, 10, 7.5, 14, 11],
     "circle-opacity": 0.92, "circle-stroke-color": "#07171a", "circle-stroke-width": 1.6,
+  } });
+
+  const earthquakes = OFFICIAL_CONTEXT_BY_ID["usgs-earthquakes"];
+  ensureGeoJsonSource(map, earthquakes, payloads["usgs-earthquakes"]?.data ?? emptyCollection());
+  ensureLayer(map, { id: earthquakes.layerIds[0], type: "circle", source: earthquakes.sourceId, paint: {
+    "circle-color": ["interpolate", ["linear"], ["coalesce", ["get", "magnitude"], 0], 0, "#ffd7a8", 2, earthquakes.color, 4, "#ef6b45", 6, "#d9364f"],
+    "circle-radius": ["interpolate", ["linear"], ["zoom"], 4, ["interpolate", ["linear"], ["coalesce", ["get", "magnitude"], 0], 0, 3, 3, 7, 6, 12], 10, ["interpolate", ["linear"], ["coalesce", ["get", "magnitude"], 0], 0, 5, 3, 11, 6, 18]],
+    "circle-opacity": 0.92, "circle-stroke-color": "#27130a", "circle-stroke-width": 1.5,
   } });
 
   const alerts = OFFICIAL_CONTEXT_BY_ID["nws-alerts"];
