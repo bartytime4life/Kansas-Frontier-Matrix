@@ -8,6 +8,8 @@
     "tests/validators/docs/critical-structure/README.md",
     "tests/validators/docs/critical-structure/test_critical_structure.py",
     "tests/validators/governance/test_validator_suite_guardrail_attribution.py",
+    "tests/validators/test_validate_fixture_root_contract.py",
+    "tools/validators/_fixture_root_contract_checks.py",
     "tools/validators/docs/README.md",
     "tools/validators/docs/critical-structure/README.md",
     "tools/validators/docs/critical-structure/check_critical_structure.py",
@@ -20,6 +22,8 @@
     "tests/validators/docs/critical-structure/README.md": "sha256:7ab022ca67b0b859a6f272f63888ee405f1dd9d0ea78ba9845976be261f00e68",
     "tests/validators/docs/critical-structure/test_critical_structure.py": "sha256:da1c6c55520a04def797f81cedd1f314a447d03d140268a23f9001fad45c7ce4",
     "tests/validators/governance/test_validator_suite_guardrail_attribution.py": "sha256:c3ede1ed3e988f73c6ff2a647b1bcbe778943426bfd7b62223301e59864666bf",
+    "tests/validators/test_validate_fixture_root_contract.py": "sha256:5b94a84016f1eb631ad318d9bbfd5ddcb880ad207749fca1bf854ce5f97fe417",
+    "tools/validators/_fixture_root_contract_checks.py": "sha256:1a14fcd2f4489ce8f737e8b41ab844922852a4be9999d0682b1baf740e7b378c",
     "tools/validators/docs/README.md": "sha256:dc004a8d5eb81be7519bedb8100d9fe7d7c083e5de690e4004882b3d635856ff",
     "tools/validators/docs/critical-structure/README.md": "sha256:08ae2bac61c295d73c541f081b660b12d1313f9c1c36d5e123cb5e9e96219bdd",
     "tools/validators/docs/critical-structure/check_critical_structure.py": "sha256:ecae324893965bceec3b732acb4b28a8caf87cbd9305dc8acb3336c0c030b291",
@@ -61,6 +65,9 @@
       "repo:CONTRIBUTING.md@648f6fc0abaed6b787bb60f669f89b9e38162ec9#blob=6560b9937f54c24dbcdf0f38c2ac154ad6dead23",
       "repo:commit/b93ed1ce2bea6e4bdb93d97e4812273fa8796885",
       "repo:issues/3377",
+      "repo:issues/4024",
+      "repo:pull/4455",
+      "repo:commit/84eb5151c903c13b96f440a5c652dec5e94ccb64",
       "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@648f6fc0abaed6b787bb60f669f89b9e38162ec9",
       "repo:docs/doctrine/directory-rules.md@648f6fc0abaed6b787bb60f669f89b9e38162ec9",
       "repo:.github/workflows/validator-suite.yml@648f6fc0abaed6b787bb60f669f89b9e38162ec9",
@@ -77,6 +84,8 @@
     "tests/validators/docs/critical-structure/README.md": "PROPOSED",
     "tests/validators/docs/critical-structure/test_critical_structure.py": "PROPOSED",
     "tests/validators/governance/test_validator_suite_guardrail_attribution.py": "PROPOSED",
+    "tests/validators/test_validate_fixture_root_contract.py": "PROPOSED",
+    "tools/validators/_fixture_root_contract_checks.py": "PROPOSED",
     "tools/validators/docs/README.md": "PROPOSED",
     "tools/validators/docs/critical-structure/README.md": "PROPOSED",
     "tools/validators/docs/critical-structure/check_critical_structure.py": "PROPOSED",
@@ -97,6 +106,11 @@
       "gate": "validator-registry-and-workflow-attribution",
       "outcome": "PASS",
       "reason": "The canonical 28-validator registry validated, thirteen orchestrator tests passed, and four validator-suite attribution and read-only-permission tests passed."
+    },
+    {
+      "gate": "fixture-root-contract-integration",
+      "outcome": "PASS",
+      "reason": "The first exact-head hosted run identified the new sentinel as an undeclared non-fixture validator. The allowlist now pins its exact deterministic arguments; eight focused tests and the live 28-validator fixture-root contract pass."
     },
     {
       "gate": "focused-markdown-links",
@@ -121,7 +135,12 @@
     {
       "gate": "hosted-exact-head-ci",
       "outcome": "SKIPPED",
-      "reason": "Hosted checks require the pushed exact draft-branch head."
+      "reason": "The first draft head proved the new sentinel, registry, workflow-security, generated-receipt, and aggregate steps, then exposed a fixture-root integration gap that is corrected locally in this revision. The pull request was merged before the correction could be published, so no hosted pull-request run exists for the corrected branch-only head."
+    },
+    {
+      "gate": "delivery-transition-control",
+      "outcome": "FAIL",
+      "reason": "PR 4455 was created and independently verified as draft, then became ready and merged at 2026-09-10T01:40:56Z without requested readiness or merge authority. The single restoration attempt was refused because the PR was already merged. Incident 4024 remains open; no revert, reopen, or same-path successor is authorized by this receipt."
     },
     {
       "gate": "human-review",
@@ -168,9 +187,9 @@
   "created_at": "2026-09-10T01:04:47Z",
   "emitter": "OpenAI Codex (GPT-5) via ChatGPT",
   "links": {
-    "pr_number": null,
+    "pr_number": 4455,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "M16 issue 3377 draft slice: repair one confirmed contributor-contract self-insertion and add a bounded local-only regression sentinel to the existing validator suite. This does not interpret document claims, change repository settings, resolve inherited topology or dependency debt, approve review, merge, admit or activate a source, release, deploy, promote, or publish."
+  "notes": "M16 issue 3377 slice: repair one confirmed contributor-contract self-insertion and add a bounded local-only regression sentinel to the existing validator suite. The first hosted draft-head run exposed a fixture-root contract classification gap. PR 4455 then merged through the unresolved issue 4024 transition incident without requested readiness or merge authority. The three-file corrective follow-up is preserved on the same branch and is not a same-path successor PR. This receipt does not interpret document claims, change repository settings, authorize or approve the observed merge, resolve inherited topology or dependency debt, admit or activate a source, release, deploy, promote, or publish."
 }

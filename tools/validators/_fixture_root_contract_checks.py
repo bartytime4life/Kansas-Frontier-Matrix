@@ -7,6 +7,13 @@ from typing import Any, Mapping
 
 FIXTURE_EXECUTION_ARGUMENTS = frozenset({"--fixtures", "--cases"})
 NON_FIXTURE_ARGUMENTS: dict[str, tuple[str, ...]] = {
+    "critical-doc-structure": (
+        "--repo-root",
+        ".",
+        "--format",
+        "json",
+        "CONTRIBUTING.md",
+    ),
     "pipeline-spec-declarations": (),
     "pnpm-dependency-readiness": (
         "validate-repository",
