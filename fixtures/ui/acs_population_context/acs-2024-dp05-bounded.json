@@ -1,0 +1,12 @@
+{
+  "dataset": "ACS 2024 5-year Data Profiles",
+  "vintage": "2024",
+  "retrieved_at": "2026-09-10T00:00:00Z",
+  "status": "AVAILABLE",
+  "sites_source_commit": "459916cb3622385b2b0d19b83e7fb666966d9ab3",
+  "sites_archive_sha256": "ca1ae92ada5ea03191094224131bc06fcd820e3185db383bd61482d65887ba76",
+  "rows": [
+    { "GEOID": "20053", "NAME": "Ellsworth County, Kansas", "DP05_0001E": "6242" },
+    { "GEOID": "20169", "NAME": "Saline County, Kansas", "DP05_0001E": "54224" }
+  ]
+}
