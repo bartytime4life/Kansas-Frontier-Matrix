@@ -1,0 +1,212 @@
+{
+  "receipt_id": "genrec:oidc-vercel-alias-followup:20260910",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/kansas-frontier-matrix-explorer/README.md",
+    "apps/kansas-frontier-matrix-explorer/tests/hosting-boundary.test.mjs"
+  ],
+  "artifact_hashes": {
+    "apps/kansas-frontier-matrix-explorer/README.md": "sha256:589794b38992db8be5face05b54711a32b6f17fe1ba80bf3e856fe06cee1c3e6",
+    "apps/kansas-frontier-matrix-explorer/tests/hosting-boundary.test.mjs": "sha256:1ba7736ccf6e4c73d9f11e564a6a3057b6624a499368445a4ecc8e8ca9f3f422"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Astra Pro",
+    "version": "separate build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:c391f4bebb587a916247d47697c53f1a43138bd8e9aaa0049898b791cec69885",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Notion connector",
+      "Google Drive connector",
+      "Vercel read-only connector",
+      "web research",
+      "local filesystem and tests"
+    ],
+    "validation_environment": {
+      "python": "3.13.5",
+      "node": "v22.16.0",
+      "jsonschema": "4.26.0",
+      "referencing": "0.37.0",
+      "frozen_dependency_install": "NOT_RUN",
+      "workspace": "Git-blob-verified dependency subset; not a complete checkout"
+    }
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:35090a9982bab1e07c5643858c7b16f400c1539ac63f3fca93b8470303404a79",
+      "sha256:3a792800eb199caf8b22f6b41bf6c9526377629a30697eb0da77ec6dff0cf126",
+      "sha256:425e998e5584a7e400e99c963aba019b33ff685f9fa26b5b474d8758a3160b2a",
+      "sha256:69b5c29469a0e07733c0a2e92e8f99deedacf0715ba20e0417377b40fd1ecf99",
+      "sha256:69db76034bfcc5dedca42babad67ec3b5751d1e391de0f5976023f5ade85cb08",
+      "sha256:72f6983a46b7bf53c62919b82d9625c09f94599fb594e700b9397773b4702a7c",
+      "sha256:a0956f2bf0a88cf2751ec11fd5a74ef700c70dcfe74f5352a37ebf35460b2dbd",
+      "sha256:b2ca3677c797f6006864cf604eee0ad15713d2d2b5f8b8b8b6f74a683095f428",
+      "sha256:d45f91122687d0d81f371e27c7280aeb6a031f423246235811e5b6042ecfb613",
+      "sha256:e09d7bda976221e3f7a55445e1bf2e0c815d7499115c9d20fb4b64f6ec6b9fb1",
+      "sha256:f2182354fd541f765e5514d85b7b44b2915cab9873e1c27ec78207c31f0ce3b2"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "git:feaa1da0a00506b10bf45cc5a5cb8e697ede8aea:apps/kansas-frontier-matrix-explorer/tests/hosting-boundary.test.mjs",
+      "git:feaa1da0a00506b10bf45cc5a5cb8e697ede8aea:apps/kansas-frontier-matrix-explorer/README.md",
+      "git:feaa1da0a00506b10bf45cc5a5cb8e697ede8aea:docs/security/SECRETS.md",
+      "git:feaa1da0a00506b10bf45cc5a5cb8e697ede8aea:data/receipts/generated/README.md",
+      "git:feaa1da0a00506b10bf45cc5a5cb8e697ede8aea:docs/doctrine/directory-rules.md",
+      "git:feaa1da0a00506b10bf45cc5a5cb8e697ede8aea:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "git:feaa1da0a00506b10bf45cc5a5cb8e697ede8aea:tools/validators/validate_generated_receipt.py",
+      "git:feaa1da0a00506b10bf45cc5a5cb8e697ede8aea:tools/validators/_common/local_resolver.py",
+      "git:feaa1da0a00506b10bf45cc5a5cb8e697ede8aea:tools/ci/install_python_ci.py",
+      "git:feaa1da0a00506b10bf45cc5a5cb8e697ede8aea:schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024",
+      "notion:3d4a9202-1bf6-8173-b577-dc97cac9c288",
+      "drive:10V7GxyZ6WP5ZxbrOJpfmYebcRhe5ZWBpb4EPMDOpGgg",
+      "https://vercel.com/docs/cli/integration",
+      "https://vercel.com/docs/project-configuration/git-configuration",
+      "vercel:list_projects:2026-09-10:kfm,usgs:GitHub-link-present"
+    ]
+  },
+  "truth_labels": {
+    "apps/kansas-frontier-matrix-explorer/README.md": "CONFIRMED",
+    "apps/kansas-frontier-matrix-explorer/tests/hosting-boundary.test.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "exact-source acquisition",
+      "outcome": "PASS",
+      "reason": "Twelve source input blobs matched the GitHub-reported Git object hashes at feaa1da0a00506b10bf45cc5a5cb8e697ede8aea. The local tree is a dependency subset, not a full clone."
+    },
+    {
+      "gate": "alias regression red-to-green",
+      "outcome": "PASS",
+      "reason": "The new test failed before the correction with Missing expected exception for vc deploy; after correction it passed. Cases cover standalone vc, command chaining, pnpm exec, explicit/quoted paths and uppercase spelling; longer vc-report.mjs/vcs.mjs names and next build remain accepted."
+    },
+    {
+      "gate": "complete hosting-boundary test file",
+      "outcome": "PASS",
+      "reason": "node --test tests/hosting-boundary.test.mjs: original five tests passed; final six tests passed with zero skips. Both previously unrun identity/handoff source tests ran using actual hash-verified repository files, not substitutes."
+    },
+    {
+      "gate": "native generated-receipt validation",
+      "outcome": "PASS",
+      "reason": "Unmodified repository-native validate_generated_receipt.py and its exact imported helper/schema blobs validated this new two-artifact receipt: integrity=bound, review=pending, review_claim=absent. Executed in a Git-blob-verified dependency subset with local jsonschema/referencing, not a complete schema-registry audit or frozen-install environment."
+    },
+    {
+      "gate": "native receipt negative controls",
+      "outcome": "PASS",
+      "reason": "Appending a synthetic comment to the bound test file caused ARTIFACT_DIGEST_MISMATCH (exit 1); original corrected bytes were restored. --require-review-claim rejected the pending receipt with REVIEW_CLAIM_MISSING (exit 1). Final ordinary validation passed; no approval was invented."
+    },
+    {
+      "gate": "source syntax and whitespace",
+      "outcome": "PASS",
+      "reason": "node --check passed for the final test file. git diff --no-index --check emitted no whitespace diagnostics for each changed artifact and the new receipt (exit 1 denotes no-index differences). No real repository-wide diff or test result is implied by the isolated dependency subset."
+    },
+    {
+      "gate": "whole-repository and live validation",
+      "outcome": "SKIPPED",
+      "reason": "Full clone unavailable because container GitHub DNS failed. Whole make workflow-security, full schema registry/native fixture corpus, frozen dependency install, app build/browser, hosted exact-head checks, cloud token exchange and remote Vercel disconnection were not run. Prior Python test counts are not inherited as new results."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "git:feaa1da0a00506b10bf45cc5a5cb8e697ede8aea:apps/kansas-frontier-matrix-explorer/tests/hosting-boundary.test.mjs",
+      "validated": true,
+      "evidence_ref": "git:feaa1da0a00506b10bf45cc5a5cb8e697ede8aea:apps/kansas-frontier-matrix-explorer/tests/hosting-boundary.test.mjs"
+    },
+    {
+      "id": "git:feaa1da0a00506b10bf45cc5a5cb8e697ede8aea:apps/kansas-frontier-matrix-explorer/README.md",
+      "validated": true,
+      "evidence_ref": "git:feaa1da0a00506b10bf45cc5a5cb8e697ede8aea:apps/kansas-frontier-matrix-explorer/README.md"
+    },
+    {
+      "id": "git:feaa1da0a00506b10bf45cc5a5cb8e697ede8aea:docs/security/SECRETS.md",
+      "validated": true,
+      "evidence_ref": "git:feaa1da0a00506b10bf45cc5a5cb8e697ede8aea:docs/security/SECRETS.md"
+    },
+    {
+      "id": "git:feaa1da0a00506b10bf45cc5a5cb8e697ede8aea:data/receipts/generated/README.md",
+      "validated": true,
+      "evidence_ref": "git:feaa1da0a00506b10bf45cc5a5cb8e697ede8aea:data/receipts/generated/README.md"
+    },
+    {
+      "id": "git:feaa1da0a00506b10bf45cc5a5cb8e697ede8aea:docs/doctrine/directory-rules.md",
+      "validated": true,
+      "evidence_ref": "git:feaa1da0a00506b10bf45cc5a5cb8e697ede8aea:docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "git:feaa1da0a00506b10bf45cc5a5cb8e697ede8aea:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "validated": true,
+      "evidence_ref": "git:feaa1da0a00506b10bf45cc5a5cb8e697ede8aea:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "git:feaa1da0a00506b10bf45cc5a5cb8e697ede8aea:tools/validators/validate_generated_receipt.py",
+      "validated": true,
+      "evidence_ref": "git:feaa1da0a00506b10bf45cc5a5cb8e697ede8aea:tools/validators/validate_generated_receipt.py"
+    },
+    {
+      "id": "git:feaa1da0a00506b10bf45cc5a5cb8e697ede8aea:tools/validators/_common/local_resolver.py",
+      "validated": true,
+      "evidence_ref": "git:feaa1da0a00506b10bf45cc5a5cb8e697ede8aea:tools/validators/_common/local_resolver.py"
+    },
+    {
+      "id": "git:feaa1da0a00506b10bf45cc5a5cb8e697ede8aea:tools/ci/install_python_ci.py",
+      "validated": true,
+      "evidence_ref": "git:feaa1da0a00506b10bf45cc5a5cb8e697ede8aea:tools/ci/install_python_ci.py"
+    },
+    {
+      "id": "git:feaa1da0a00506b10bf45cc5a5cb8e697ede8aea:schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "validated": true,
+      "evidence_ref": "git:feaa1da0a00506b10bf45cc5a5cb8e697ede8aea:schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    },
+    {
+      "id": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024"
+    },
+    {
+      "id": "notion:3d4a9202-1bf6-8173-b577-dc97cac9c288",
+      "validated": true,
+      "evidence_ref": "notion:3d4a9202-1bf6-8173-b577-dc97cac9c288"
+    },
+    {
+      "id": "drive:10V7GxyZ6WP5ZxbrOJpfmYebcRhe5ZWBpb4EPMDOpGgg",
+      "validated": true,
+      "evidence_ref": "drive:10V7GxyZ6WP5ZxbrOJpfmYebcRhe5ZWBpb4EPMDOpGgg"
+    },
+    {
+      "id": "https://vercel.com/docs/cli/integration",
+      "validated": true,
+      "evidence_ref": "https://vercel.com/docs/cli/integration"
+    },
+    {
+      "id": "https://vercel.com/docs/project-configuration/git-configuration",
+      "validated": true,
+      "evidence_ref": "https://vercel.com/docs/project-configuration/git-configuration"
+    },
+    {
+      "id": "vercel:list_projects:2026-09-10:kfm,usgs:GitHub-link-present",
+      "validated": true,
+      "evidence_ref": "vercel:list_projects:2026-09-10:kfm,usgs:GitHub-link-present"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-10T22:26:12Z",
+  "emitter": "ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Follow-up on the existing agent/oidc-guardrails-vercel-retirement-20260910 branch, parent feaa1da0a00506b10bf45cc5a5cb8e697ede8aea, main 77c11c2db9c8c5b7c56e6c4335c429079cac79f2. Same-path app-local test and README under apps/; new authoring receipt uses existing data/receipts/generated/ under adopted ADR-0029 responsibility law and the lane README. No new authority root, schema, validator relaxation, workflow, permission, dependency, cloud identity, Site identity, source admission, release, deployment or publication. This records bounded source validation only. It does not prove cloud enforcement, transitive/indirect script coverage or remote disconnection. Vercel readback still returned kfm and usgs linked to KFM; their two deployment-disable manifests remain byte-identical. Notion still records a Site identity conflict, which these source tests do not resolve. Drive remains design lineage; broad publish examples were not imported. Keep the original generated receipt immutable; replay it against its original exact commit. Delivery remains branch-only under #4024. Rollback is a reviewed revert of this follow-up, preserving the parent branch and both deployment-disable files. No approval, PR lifecycle action, merge, settings change or external unlink is asserted. prompt_or_contract hashes the current user instruction only."
+}

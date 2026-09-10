@@ -96,6 +96,9 @@ const assertNoDirectVercelIntegration = (manifest) => {
   }
   for (const command of Object.values(manifest.scripts ?? {})) {
     assert.doesNotMatch(command, /\bvercel\b/i);
+    // Vercel also exposes `vc`. This is a conservative source-text guard,
+    // not a shell parser or proof that indirect scripts cannot deploy.
+    assert.doesNotMatch(command, /(?:^|[\s;&|("'`])(?:[\w./-]+\/)?vc(?=$|[\s;&|)"'`])/i);
   }
 };
 
@@ -133,4 +136,26 @@ test("Vercel retirement: negative controls reject activation and integration", (
   assert.throws(() => assertNoDirectVercelIntegration({ scripts: { deploy: "npx vercel --prod" } }));
   // Library authorship is not hosting integration: do not remove Next.js by name.
   assertNoDirectVercelIntegration({ dependencies: { next: "0.0.0-fixture" }, scripts: { test: "node --test" } });
+});
+
+test("Vercel retirement: CLI aliases cannot bypass script checks", () => {
+  for (const command of [
+    "vc deploy",
+    "vc --prod",
+    "pnpm exec vc deploy",
+    "npm test && vc deploy",
+    "/usr/local/bin/vc --prod",
+    '"/opt/tools/vc" deploy',
+    "VC deploy",
+  ]) {
+    assert.throws(
+      () => assertNoDirectVercelIntegration({ scripts: { deploy: command } }),
+      { name: "AssertionError" },
+      `must reject explicit Vercel CLI alias: ${command}`,
+    );
+  }
+  // Do not mistake a longer script/file name for the standalone CLI alias.
+  for (const command of ["node scripts/vc-report.mjs", "node scripts/vcs.mjs", "next build"]) {
+    assertNoDirectVercelIntegration({ scripts: { test: command } });
+  }
 });

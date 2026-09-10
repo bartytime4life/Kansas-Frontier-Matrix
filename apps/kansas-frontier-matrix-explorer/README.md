@@ -142,6 +142,21 @@ actions tied to the current ChatGPT user. Leave public content anonymous.
 - `node --test tests/hosting-boundary.test.mjs`: verify Sites identity, replacement handoff, and host non-effects
 - `npm run db:generate`: generate Drizzle migrations after schema changes
 
+The direct hosting-boundary command runs source-level checks without installing
+packages or building the app. It checks repository-pinned Site identity and
+handoff text, both disable-only Vercel manifests, direct Vercel dependency
+names/npm aliases, and manifest script text containing `vercel` or the `vc` CLI
+alias (including explicit paths). The alias is documented in the
+[Vercel CLI examples](https://vercel.com/docs/cli/integration); those examples are
+reference evidence, not commands to run for this application. Regression fixtures
+must reject `vc deploy` while accepting longer names such as `vc-report.mjs`.
+
+These conservative text checks do not parse arbitrary shell, inspect transitive
+dependencies or indirectly invoked scripts, authenticate the live Site, or prove
+remote Git integration removal. Keep the deployment-disable manifests until
+remote unlinking and consumer/test repair are separately verified. A passing
+source test does not resolve the Site-identity hold in issue #4418.
+
 Use build commands for targeted diagnosis after a remote failure, not as part of the normal checkpoint path.
 
 The timeout defaults can be overridden for a controlled canary with `SITES_INSTALL_TIMEOUT`, `SITES_INSTALL_KILL_AFTER`, `SITES_BUILD_TIMEOUT`, and `SITES_BUILD_KILL_AFTER`. A timeout fails the command; the helpers never retry an unchanged install or build.
