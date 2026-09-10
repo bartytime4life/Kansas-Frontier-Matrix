@@ -205,7 +205,7 @@ test("keeps held-view evidence, Focus, and report snapshots aligned", async ({
   });
   expect(outOfTimeHeldDraft?.includedEvidenceRefs).toEqual([]);
 
-  await workspace.getByRole("button", { name: "Map" }).click();
+  await workspace.getByRole("button", { name: "Map", exact: true }).click();
   await workspace.getByRole("button", { name: "Layers" }).click();
   const availableLayer = workspace.locator(".atlas-layer-row", {
     hasText: "Generalized Kansas extent",

@@ -40,7 +40,7 @@
     "apps/explorer-web/src/site/README.md": "sha256:f5442fa91b53ace6820e8b2d53716eb36d37fc05d62e41ca5a66e58667923307",
     "apps/explorer-web/src/site/mount-living-atlas.ts": "sha256:0e95940bd95c2c7f65aa3fac7bc3da9c48f78ee974d7a98e5b6b4ea6e5533b17",
     "apps/explorer-web/tests/acs-population-context.test.ts": "sha256:58b56f616af56e5b0395eda95e1ec54f13667138f5737fc128b66bd14f6e878f",
-    "apps/explorer-web/tests/browser/living-atlas.spec.ts": "sha256:4bcb3b015cc0f4ccfd2a08f1a662201670b3a7929a32d47d16320a5a0d2e47af",
+    "apps/explorer-web/tests/browser/living-atlas.spec.ts": "sha256:242de1675a06817fe5743301d371e469ea7d1cc8453f8d8b74850cc0fbf73b4c",
     "apps/explorer-web/tests/living-atlas-persistence.test.ts": "sha256:ade5820da684e7bca451e945bef0c4c9e9f68536b6fc691758cad9a090fcf30b",
     "apps/explorer-web/tests/living-atlas.test.ts": "sha256:5085451c9f9cf0b4b0b6e8852043393907b6c314e16d56963e5c9aa0e068cc7d",
     "docs/intake/NEW_IDEAS_INDEX.md": "sha256:cca7286ec13e22ca2954994e40582f148d58f4bfed3ee6e254d24b3e36d64e56",
