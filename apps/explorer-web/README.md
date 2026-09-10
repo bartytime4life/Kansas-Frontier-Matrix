@@ -2,7 +2,7 @@
 doc_id: kfm://app/explorer-web/readme
 title: Explorer Web App README
 type: app-readme
-version: v0.8
+version: v0.9
 status: draft
 owners: OWNER_TBD — Apps steward · UI steward · Map steward · Governed API steward · Policy steward · Accessibility steward · Docs steward
 created: 2026-06-16
@@ -14,13 +14,13 @@ truth_posture: "CONFIRMED pinned source and configuration / PROPOSED canonical-s
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: f99736c0cd4b91592cc6e85531129c86f4dcbecb
-  target_prior_blob: 561f78ea224338b3a1748d5689a2f56bfe7a1359
+  base_commit: 976935b8b55c66976a028b7880d1cbc57c0c3582
+  target_prior_blob: 221d9e607fd64f10477c460f8c53429df2663995
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
-  entrypoint_blob: 787c5182777b7f26d281e7e2851344b504a70d1c
-  site_mount_blob: 7a4164e9ade0e77aeac0d0ef01d5e89df5cb9799
-  explorer_manifest_blob: 25b67b10eb4d208b780eb456853257d051a2ce39
-  maplibre_manifest_blob: f6d450af19c33011e159e123c8a07ca2bca6dfd3
+  entrypoint_blob: 15bbac95c802e9bcbf4c6e630f08c18c3c741f72
+  site_mount_blob: 5669507760d4caf164504ec74bac406c1f5ff2de
+  explorer_manifest_blob: e3ef41da15915d23fb8872a7ba881d66cf892093
+  maplibre_manifest_blob: 03a24dc1669151863192db30778f30faac0ec5b4
 related:
   - ../README.md
   - ./src/README.md
@@ -45,6 +45,7 @@ notes:
   - "The temporal conformance adapter is bounded implementation of a proposed shared profile, not a live synchronized temporal Explorer."
   - "v0.8 preserves the established app and package responsibility roots while changing the normal composition, code-owned catalog, package adapter input boundary, tests, and documentation; source admission and authority decisions remain unchanged."
   - "The branch candidate extends the repository catalog/preflight surface to 15 non-loadable connection cards, visible tool holds, 10 workbench links, matching-panel search, and stale-evidence clearing; it does not fulfill the held real-data acceptance slice."
+  - "v0.9 re-pins the repository snapshot after PR #4459 merged and records the forward temporal-policy and persisted-draft corrections separately; the merge is not human review, release, deployment, or publication evidence."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -70,13 +71,13 @@ notes:
 
 ## 0. Current evidence snapshot
 
-**Implementation base:** `main@4b950cb352b90406ab470dd722947580b2218df9`, 2026-09-10. The Living Atlas repository catalog/preflight work is a draft branch candidate over that immutable base; the pin is not a green-build, merge, release, deployment, or public-operation claim.
+**Implementation base:** `main@976935b8b55c66976a028b7880d1cbc57c0c3582`, 2026-09-10. This is the immutable merge of PR #4459; the pin is not a green-build, authorized-transition, human-review, release, deployment, or public-operation claim. The corrections described in v0.9 remain a separate reviewable change over that base.
 
 | Surface | CONFIRMED at the pinned source | Limit |
 |---|---|---|
 | Workspace | [App manifest](./package.json) defines Vite, TypeScript, Vitest, and Playwright commands. [Root manifest](../../package.json) pins `pnpm@11.17.0`; both declare Node `>=22.13 <23`. | Configured commands are not execution results. |
 | Normal composition | [`src/main.ts`](./src/main.ts) mounts the site, public workspace navigation, synthetic Focus workspace, and shared trust surface. | No production route tree or live governed transport is established by that wiring. |
-| Normal map stage | [`mount-living-atlas.ts`](./src/site/mount-living-atlas.ts) mounts a package-owned MapLibre canvas with site-local inline geometry, 18 views, 24 runtime layer records, 14 non-loadable repository connections, visible tool holds, 10 workbench links, evidence inspection, time preview/commit, and draft-only report/story capture. | The geometry and catalog demonstrate bounded product behavior only; they are not factual Kansas data, source admission, a released layer, a working spatial-analysis tool, or the design's real-data acceptance slice. |
+| Normal map stage | [`mount-living-atlas.ts`](./src/site/mount-living-atlas.ts) mounts a package-owned MapLibre canvas with site-local inline geometry, 18 views, 24 runtime layer records, 15 non-loadable repository connections, visible tool holds, 10 workbench links, evidence inspection, time preview/commit, and draft-only report/story capture. | The geometry and catalog demonstrate bounded product behavior only; they are not factual Kansas data, source admission, a released layer, a working spatial-analysis tool, or the design's real-data acceptance slice. |
 | Shared renderer package | [`packages/maplibre/package.json`](../../packages/maplibre/package.json) pins `maplibre-gl@6.7.0`; the adapter accepts cloned inline-only styles and rejects external URL/protocol resources before renderer acquisition. | Bounded site-local activation is distinct from external source admission, broader browser readiness, released-layer delivery, and public release. |
 | Isolated renderer fixture | [`maplibre-vite-adapter.spec.ts`](./tests/browser/maplibre-vite-adapter.spec.ts) defines local-asset boot, canvas/CSS, disposal, external-request, and unavailable-WebGL2 checks. | A test definition is not a fresh PASS. Its fixture is not the normal application or a production map. |
 | Evidence and Focus | [`GovernedClient.ts`](./src/adapters/GovernedClient.ts) is a fixture-only projection adapter; the [site composition](./src/site/README.md) documents injected synthetic Focus and evidence cases. | A defensive parser is not a network client, EvidenceBundle authentication, policy execution, or a live Qwen/Ollama connection. |
@@ -86,7 +87,7 @@ notes:
 | Shell decision | [ADR-0005](../../docs/adr/ADR-0005-apps-explorer-web-is-the-canonical-map-first-shell.md) remains `proposed`; [ADR-0006](../../docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md) accepts the package-owned renderer boundary. | Architecture acceptance, dependency admission, implementation, activation, and release are different transitions. |
 | Deployment and public operation | No deployment or live-site observation was performed for this README revision. | Hosting, authentication, CSP/CORS, service health, public data, release, and rollback readiness remain UNKNOWN here. |
 
-The current branch candidate—not the pinned source above—adds a fifteenth, documented-only earthquake connection and binds committed time to exact-bucket or timeless fixture visibility. It does not add an admitted source or factual map layer.
+The pinned merge adds a fifteenth, documented-only earthquake connection and binds committed time to exact-bucket or timeless fixture visibility. The forward correction preserves compatible context, keeps protected-detail `DENY` above temporal abstention, and strictly validates persisted draft collections. None of these changes adds an admitted source or factual map layer.
 
 ### Maturity summary
 

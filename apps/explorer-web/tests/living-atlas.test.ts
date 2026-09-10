@@ -67,7 +67,8 @@ describe("Living Atlas governed foundation", () => {
     ).toMatchObject({
       state: "DOCUMENTED_ONLY",
       geometryType: "POINT",
-      statusReason: expect.stringContaining("placement remains ADR-class"),
+      statusReason: expect.stringContaining("Accepted connector and lifecycle responsibility roots"),
+      nextGate: expect.stringContaining("canonical earthquake source identity"),
       cannotProve: expect.stringContaining("prediction"),
     });
     expect(
@@ -233,5 +234,53 @@ describe("Living Atlas governed foundation", () => {
       .toBe(false);
     expect(committed.layers.find((entry) => entry.id === "layer:kansas-frame")?.visible)
       .toBe(true);
+  });
+
+  it("keeps same-time commits idempotent", () => {
+    const snapshot = createInitialSnapshot(new Date("2026-09-10T00:00:00.000Z"));
+    const selected = Object.freeze({
+      ...snapshot,
+      selectedLayerId: "layer:county-locators",
+      evidenceRefs: evaluateFocusSelection("layer:county-locators").evidenceRefs,
+    });
+    const committed = commitSnapshotTime(
+      selected,
+      selected.committedTimeId,
+      new Date("2026-09-10T01:00:00.000Z"),
+    );
+
+    expect(committed).toBe(selected);
+    expect(committed.selectedLayerId).toBe("layer:county-locators");
+    expect(committed.evidenceRefs).toEqual(selected.evidenceRefs);
+    expect(committed.capturedAt).toBe("2026-09-10T00:00:00.000Z");
+  });
+
+  it("preserves compatible timeless evidence and protected DENY across time", () => {
+    const snapshot = createInitialSnapshot(new Date("2026-09-10T00:00:00.000Z"));
+    const timeless = Object.freeze({
+      ...snapshot,
+      selectedLayerId: "layer:kansas-frame",
+      evidenceRefs: evaluateFocusSelection("layer:kansas-frame").evidenceRefs,
+    });
+    const committedTimeless = commitSnapshotTime(
+      timeless,
+      "time:1900s",
+      new Date("2026-09-10T01:00:00.000Z"),
+    );
+    expect(committedTimeless.selectedLayerId).toBe("layer:kansas-frame");
+    expect(committedTimeless.evidenceRefs).toEqual(timeless.evidenceRefs);
+
+    const denied = Object.freeze({
+      ...snapshot,
+      selectedLayerId: "layer:protected-context",
+      evidenceRefs: Object.freeze([]),
+    });
+    const committedDenied = commitSnapshotTime(
+      denied,
+      "time:1900s",
+      new Date("2026-09-10T01:00:00.000Z"),
+    );
+    expect(committedDenied.selectedLayerId).toBe("layer:protected-context");
+    expect(committedDenied.evidenceRefs).toEqual([]);
   });
 });

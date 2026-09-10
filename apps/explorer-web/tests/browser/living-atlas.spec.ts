@@ -73,18 +73,58 @@ test("clears out-of-time selection and evidence when the committed map time chan
     .toContainText("Inspect before interpretation");
 });
 
+test("preserves timeless selection and evidence across committed time changes", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const workspace = page.locator('[data-component="living-atlas-workspace"]');
+
+  await workspace.getByRole("button", { name: "Layers" }).click();
+  const timelessLayer = workspace.locator(".atlas-layer-row", {
+    hasText: "Generalized Kansas extent",
+  });
+  await timelessLayer.getByRole("button", { name: "Inspect" }).click();
+  await expect(workspace.getByRole("complementary", { name: "Evidence Drawer" }))
+    .toContainText("Generalized Kansas extent");
+
+  await workspace.getByRole("slider", { name: "Preview atlas time" }).fill("10");
+  await workspace.getByRole("button", { name: "Apply time" }).click();
+  await expect(workspace.getByRole("complementary", { name: "Evidence Drawer" }))
+    .toContainText("Generalized Kansas extent");
+
+  await workspace.getByRole("button", { name: "New from map" }).click();
+  await workspace.getByRole("button", { name: "Create report draft" }).click();
+  const draft = await page.evaluate(() => {
+    const raw = window.localStorage.getItem("kfm.explorer.report-drafts.v2");
+    return raw === null ? null : (JSON.parse(raw) as Array<{
+      snapshot: {
+        committedTimeId: string;
+        selectedLayerId: string | null;
+        evidenceRefs: string[];
+      };
+      includedEvidenceRefs: string[];
+    }>)[0];
+  });
+  expect(draft?.snapshot).toMatchObject({
+    committedTimeId: "time:1900s",
+    selectedLayerId: "layer:kansas-frame",
+  });
+  expect(draft?.snapshot.evidenceRefs.length).toBeGreaterThan(0);
+  expect(draft?.includedEvidenceRefs).toEqual(draft?.snapshot.evidenceRefs);
+});
+
 test("recovers from malformed persisted draft collections", async ({ page }) => {
   await page.addInitScript(() => {
-    window.localStorage.setItem("kfm.explorer.report-drafts.v2", JSON.stringify({ stale: true }));
-    window.localStorage.setItem("kfm.explorer.story-scenes.v2", JSON.stringify([null, "stale"]));
-    window.localStorage.setItem("kfm.explorer.report-drafts.v1", JSON.stringify([{
+    window.localStorage.setItem("kfm.explorer.report-drafts.v2", JSON.stringify([{
       profile: "kfm.explorer.report-draft.v1",
-      id: "report:legacy-pre-temporal-invariant",
-      snapshot: {
-        profile: "kfm.explorer.map-snapshot.v1",
-        selectedLayerId: "layer:county-locators",
-        evidenceRefs: ["evidence:stale-out-of-time"],
-      },
+      id: "report:shallow-v2",
+      snapshot: { profile: "kfm.explorer.map-snapshot.v1" },
+      publishable: true,
+    }]));
+    window.localStorage.setItem("kfm.explorer.story-scenes.v2", JSON.stringify([{
+      profile: "kfm.explorer.story-scene.v1",
+      id: "story:shallow-v2",
+      snapshot: { profile: "kfm.explorer.map-snapshot.v1" },
     }]));
   });
 
@@ -92,6 +132,34 @@ test("recovers from malformed persisted draft collections", async ({ page }) => 
   const workspace = page.locator('[data-component="living-atlas-workspace"]');
   await expect(workspace).toBeVisible();
   await expect(workspace.getByRole("heading", { name: "Kansas Living Atlas" })).toBeVisible();
+  await workspace.getByRole("button", { name: "Reports" }).click();
+  await expect(workspace.locator(".atlas-draft-card")).toHaveCount(0);
+  await workspace.getByRole("button", { name: "Stories" }).click();
+  await expect(workspace.locator(".atlas-draft-card")).toHaveCount(0);
+});
+
+test("loads valid legacy drafts only when the v2 collection is absent", async ({ page }) => {
+  await page.goto("/");
+  const workspace = page.locator('[data-component="living-atlas-workspace"]');
+
+  await workspace.getByRole("button", { name: "New from map" }).click();
+  await workspace.getByRole("button", { name: "Create report draft" }).click();
+  await page.evaluate(() => {
+    const current = window.localStorage.getItem("kfm.explorer.report-drafts.v2");
+    if (current !== null) {
+      window.localStorage.setItem("kfm.explorer.report-drafts.v1", current);
+    }
+    window.localStorage.removeItem("kfm.explorer.report-drafts.v2");
+  });
+
+  await page.reload();
+  await workspace.getByRole("button", { name: "Reports" }).click();
+  await expect(workspace.locator(".atlas-draft-card")).toHaveCount(1);
+
+  await page.evaluate(() => {
+    window.localStorage.setItem("kfm.explorer.report-drafts.v2", "malformed");
+  });
+  await page.reload();
   await workspace.getByRole("button", { name: "Reports" }).click();
   await expect(workspace.locator(".atlas-draft-card")).toHaveCount(0);
 });
@@ -112,6 +180,10 @@ test("keeps held-view evidence, Focus, and report snapshots aligned", async ({
   );
 
   await workspace.getByRole("button", { name: "Views" }).click();
+  await workspace.getByRole("button", { name: /Archaeology & Cultural Landscapes/ }).click();
+  await expect(workspace.getByRole("complementary", { name: "Evidence Drawer" })).toContainText(
+    "DENY · PROTECTED_SPATIAL_DETAIL",
+  );
   await workspace.getByRole("button", { name: /Weather Window/ }).click();
   await expect(workspace.getByRole("complementary", { name: "Evidence Drawer" })).toContainText(
     "Inspect before interpretation",
@@ -133,10 +205,7 @@ test("keeps held-view evidence, Focus, and report snapshots aligned", async ({
   });
   expect(outOfTimeHeldDraft?.includedEvidenceRefs).toEqual([]);
 
-  await workspace.getByRole("button", { name: "Map" }).click();
-  await workspace.getByRole("button", { name: "Ask Focus for bounded next steps" }).click();
-  await expect(workspace.getByRole("status").filter({ hasText: "ABSTAIN" })).toBeVisible();
-
+  await workspace.getByRole("button", { name: "Map", exact: true }).click();
   await workspace.getByRole("button", { name: "Layers" }).click();
   const availableLayer = workspace.locator(".atlas-layer-row", {
     hasText: "Generalized Kansas extent",
@@ -145,6 +214,8 @@ test("keeps held-view evidence, Focus, and report snapshots aligned", async ({
   await expect(
     workspace.getByRole("complementary", { name: "Evidence Drawer" }),
   ).toContainText("ABSTAIN · VIEW_DATA_HELD");
+  await workspace.getByRole("button", { name: "Ask Focus for bounded next steps" }).click();
+  await expect(workspace.getByRole("status").filter({ hasText: "ABSTAIN" })).toBeVisible();
 
   await workspace.getByRole("button", { name: "New from map" }).click();
   await workspace.getByRole("button", { name: "Create report draft" }).click();

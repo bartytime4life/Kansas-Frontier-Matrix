@@ -49,7 +49,11 @@ NO_AUTHORITY_FLAGS = (
 )
 REPO_ROOT = Path(__file__).resolve().parents[2]
 WORKFLOW_PATH = REPO_ROOT / ".github/workflows/census-county-reference-candidate.yml"
-AUTHORING_MERGE_REF = "648f6fc0abaed6b787bb60f669f89b9e38162ec9"
+CENSUS_RECEIPT_NAME = "genrec-census-county-reference-candidate-20260910.json"
+CENSUS_CORRECTION_MERGE_REF = "b307481d14b68472975fc382a0d2e8caf9777615"
+CENSUS_RECEIPT_STEP_NAME = (
+    "Replay immutable corrected authoring receipt at the PR 4454 merge"
+)
 
 
 def _unexpected_network(*_args, **_kwargs):
@@ -277,7 +281,7 @@ class CensusCartographicBoundaryCountiesTests(unittest.TestCase):
 
 
 class CensusCountyReferenceWorkflowBindingTests(unittest.TestCase):
-    def test_workflow_replays_immutable_receipt_at_exact_merge_ref(self) -> None:
+    def test_workflow_replays_corrected_receipt_at_exact_merge_ref(self) -> None:
         workflow = yaml.safe_load(WORKFLOW_PATH.read_text(encoding="utf-8"))
         steps = workflow["jobs"]["validate-reference-candidate"]["steps"]
 
@@ -294,15 +298,16 @@ class CensusCountyReferenceWorkflowBindingTests(unittest.TestCase):
             step
             for step in steps
             if "validate_generated_receipt.py" in str(step.get("run", ""))
-            and "genrec-census-county-reference-candidate-20260910.json"
-            in str(step.get("run", ""))
+            and CENSUS_RECEIPT_NAME in str(step.get("run", ""))
         ]
         self.assertEqual(len(receipt_steps), 1)
-        receipt_command = receipt_steps[0]["run"]
+        self.assertEqual(receipt_steps[0]["name"], CENSUS_RECEIPT_STEP_NAME)
+        receipt_command = str(receipt_steps[0]["run"])
+        self.assertIn("--repo-root .", receipt_command)
         artifact_refs = re.findall(
             r"--artifact-git-ref\s+([0-9a-f]{40})", receipt_command
         )
-        self.assertEqual(artifact_refs, [AUTHORING_MERGE_REF])
+        self.assertEqual(artifact_refs, [CENSUS_CORRECTION_MERGE_REF])
 
 
 if __name__ == "__main__":

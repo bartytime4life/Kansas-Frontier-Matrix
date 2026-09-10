@@ -20,7 +20,10 @@ import {
   findRepositoryLayerConnection,
   findSourceDescriptor,
   findTemporalExtent,
+  isPersistedReportDraft,
+  isPersistedStoryScene,
   isLayerTemporallyCompatible,
+  parsePersistedDraftCollection,
   type MapRepresentation,
   type MapSnapshot,
   type ReportDraft,
@@ -156,33 +159,21 @@ function createId(prefix: string): string {
   return `${prefix}:${Date.now().toString(36)}`;
 }
 
-function isPersistedDraft<T>(
-  value: unknown,
-  profile: string,
-): value is T {
-  if (typeof value !== "object" || value === null) return false;
-  const record = value as Record<string, unknown>;
-  if (
-    record.profile !== profile ||
-    typeof record.id !== "string" ||
-    typeof record.snapshot !== "object" ||
-    record.snapshot === null
-  ) {
-    return false;
-  }
-  return (record.snapshot as Record<string, unknown>).profile ===
-    "kfm.explorer.map-snapshot.v1";
-}
-
-function readDrafts<T>(key: string, profile: string): readonly T[] {
+function readDrafts<T>(
+  key: string,
+  legacyKey: string,
+  guard: (value: unknown) => value is T,
+): readonly T[] {
   try {
-    const value = window.localStorage.getItem(key);
-    if (value === null) return [];
-    const parsed: unknown = JSON.parse(value);
-    if (!Array.isArray(parsed)) return [];
-    return parsed.filter((entry): entry is T =>
-      isPersistedDraft<T>(entry, profile),
+    const current = parsePersistedDraftCollection(
+      window.localStorage.getItem(key),
+      guard,
     );
+    if (current !== null) return current;
+    return parsePersistedDraftCollection(
+      window.localStorage.getItem(legacyKey),
+      guard,
+    ) ?? Object.freeze([]);
   } catch {
     return [];
   }
@@ -209,13 +200,15 @@ export function mountLivingAtlasWorkspace(
   let reports = [
     ...readDrafts<ReportDraft>(
       "kfm.explorer.report-drafts.v2",
-      "kfm.explorer.report-draft.v1",
+      "kfm.explorer.report-drafts.v1",
+      isPersistedReportDraft,
     ),
   ];
   let stories = [
     ...readDrafts<StoryScene>(
       "kfm.explorer.story-scenes.v2",
-      "kfm.explorer.story-scene.v1",
+      "kfm.explorer.story-scenes.v1",
+      isPersistedStoryScene,
     ),
   ];
 
@@ -680,11 +673,19 @@ export function mountLivingAtlasWorkspace(
     if (view === null) return;
     if (view.status === "DESIGN_DATA_HOLD") {
       const candidateLayerId = view.layerIds[0] ?? null;
+      const candidateDecision = evaluateFocusSelection(
+        candidateLayerId,
+        false,
+        view.id,
+      );
       const selectedLayerId = candidateLayerId !== null &&
-          layerMatchesCommittedTime(candidateLayerId)
+          (candidateDecision.outcome === "DENY" ||
+            layerMatchesCommittedTime(candidateLayerId))
         ? candidateLayerId
         : null;
-      const decision = evaluateFocusSelection(selectedLayerId, false, view.id);
+      const decision = selectedLayerId === candidateLayerId
+        ? candidateDecision
+        : evaluateFocusSelection(null, false, view.id);
       snapshot = cloneSnapshot(snapshot, {
         activeViewId: view.id,
         selectedLayerId,
@@ -846,7 +847,12 @@ export function mountLivingAtlasWorkspace(
     } else if (action.startsWith("view:")) activateView(action.slice(5));
     else if (action.startsWith("inspect:")) {
       const layerId = action.slice(8);
-      if (!layerMatchesCommittedTime(layerId)) {
+      const decision = evaluateFocusSelection(
+        layerId,
+        false,
+        snapshot.activeViewId,
+      );
+      if (decision.outcome !== "DENY" && !layerMatchesCommittedTime(layerId)) {
         snapshot = cloneSnapshot(snapshot, {
           selectedLayerId: null,
           evidenceRefs: Object.freeze([]),
@@ -855,11 +861,6 @@ export function mountLivingAtlasWorkspace(
         runtimeState.textContent = "ABSTAIN · Layer is outside the committed time bucket";
         return;
       }
-      const decision = evaluateFocusSelection(
-        layerId,
-        false,
-        snapshot.activeViewId,
-      );
       snapshot = cloneSnapshot(snapshot, {
         selectedLayerId: layerId,
         evidenceRefs: decision.evidenceRefs,
@@ -901,7 +902,7 @@ export function mountLivingAtlasWorkspace(
       snapshot = commitSnapshotTime(snapshot, previewTimeId);
       timeDetail.textContent = `Committed to map snapshot · ${new Date().toLocaleTimeString()}`;
       refreshLayerControls();
-      renderEvidence(null);
+      renderEvidence(snapshot.selectedLayerId);
       initializeRuntime();
     } else if (action === "composer:open") composer.hidden = false;
     else if (action === "composer:close") composer.hidden = true;

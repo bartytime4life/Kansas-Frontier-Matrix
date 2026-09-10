@@ -42,4 +42,4 @@ receipts/
 
 # Local/CI test artifacts
 artifacts/qa/*.xml
-test-results/
+/apps/explorer-web/test-results/

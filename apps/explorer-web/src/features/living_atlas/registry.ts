@@ -276,6 +276,19 @@ export function commitSnapshotTime(
   committedTimeId: string,
   now = new Date(),
 ): MapSnapshot {
+  if (snapshot.committedTimeId === committedTimeId) return snapshot;
+  const selectedLayer = snapshot.selectedLayerId === null
+    ? null
+    : findLayerRecord(snapshot.selectedLayerId);
+  const selectedDecision = evaluateFocusSelection(
+    snapshot.selectedLayerId,
+    false,
+    snapshot.activeViewId,
+  );
+  const selectionRemainsValid = selectedLayer !== null && (
+    selectedDecision.outcome === "DENY" ||
+    isLayerTemporallyCompatible(selectedLayer.temporalExtentId, committedTimeId)
+  );
   return Object.freeze({
     ...snapshot,
     capturedAt: now.toISOString(),
@@ -288,8 +301,10 @@ export function commitSnapshotTime(
           isLayerTemporallyCompatible(record.temporalExtentId, committedTimeId),
       });
     })),
-    selectedLayerId: null,
-    evidenceRefs: Object.freeze([]),
+    selectedLayerId: selectionRemainsValid ? snapshot.selectedLayerId : null,
+    evidenceRefs: selectionRemainsValid
+      ? snapshot.evidenceRefs
+      : Object.freeze([]),
   });
 }
 

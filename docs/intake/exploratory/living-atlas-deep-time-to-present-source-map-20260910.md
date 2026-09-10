@@ -31,7 +31,7 @@ Research date: **2026-09-10 UTC**
 
 Repository evidence base: `main@4b950cb352b90406ab470dd722947580b2218df9`
 
-Local candidate patch: **current working tree; not represented by the baseline SHA and not authoritative until committed and reviewed**
+Repository implementation checkpoint: **PR #4459 head `973dfa72d4bf36e3314af0aed58b883e3d6f0685`, merged as `976935b8b55c66976a028b7880d1cbc57c0c3582`; the merge does not establish human review, transition authorization, release, or deployment, and forward corrections remain separately reviewable**
 
 Prepared for: Kansas Frontier Matrix Living Atlas
 
@@ -62,7 +62,7 @@ The public frontend-to-backend data path remains intentionally blocked. At the r
 | First external point candidate | USGS Earthquake Catalog | No key, official GeoJSON, explicit origin/update times, generally public-domain posture, bounded point geometry. |
 | Public earthquake layer today | No public layer; API remains `ABSTAIN / NOT_IMPLEMENTED` | Source/evidence/policy/release dependency closure does not exist. |
 | Repository payload posture | `HOLD`; no real response is committed | Repository `fixtures/` are not an ownership path for real source exports, and the frontend adapter area does not own source intake. |
-| Delivery split | Connector-placement ADR first | Resolve source ownership and lifecycle roots before connector code; contract/pipeline, release/API, and UI binding remain separate reviewable changes. |
+| Delivery split | Source-identity and ownership decision first | Accepted Directory Rules already assign connector and lifecycle responsibility roots; resolve the USGS earthquake canonical source ID, standalone-versus-USGS-family placement, ownership, rights, and admission before connector code. Contract/pipeline, release/API, and UI binding remain separate reviewable changes. |
 | Archaeological coordinates | Default public posture is `DENY` / withhold exact geometry | The authoritative policy engine must decide; client-side hiding is never an adequate control. |
 | Historic map dates | Edition snapshots | Publication/revision dates must not be presented as feature-validity intervals. |
 | Present day | Multiple clocks | Latest origin, provider update, retrieval, review, and KFM release are separate states. |
@@ -71,7 +71,7 @@ The public frontend-to-backend data path remains intentionally blocked. At the r
 
 The review used four evidence classes:
 
-- the pinned `main` GitHub tree for baseline implementation claims, kept separate from the uncommitted local candidate patch;
+- the pinned pre-implementation `main` tree plus the exact PR #4459 head and merge commits, kept distinct from any later forward correction;
 - the mutable Drive design and Notion delivery ledger, read as planning context rather than release evidence;
 - the supplied KFM architecture, GIS, PostGIS, geostatistics, archaeology, and source-planning documents;
 - current official source documentation and machine endpoints from the source organizations listed below.
@@ -152,8 +152,8 @@ The source remains on `HOLD`. Repository topology establishes that `fixtures/` m
 
 Work must be split at the ownership boundary:
 
-1. **Connector-placement ADR:** select the canonical connector root and owners for source configuration, credentials if ever required, RAW/WORK/QUARANTINE, processed output, schemas, and receipts. Do not infer a path from the current README placeholder.
-2. **Server-side connector and lifecycle:** after the ADR and source/rights review, retrieve only through the connector, hash exact bytes, record query and retrieval/source-generation metadata, preserve preferred IDs plus aliases and revisions, validate bounded values, capture update/tombstone behavior, and hand off deterministically through RAW → WORK/QUARANTINE → PROCESSED.
+1. **Source-identity and ownership decision:** preserve the accepted `connectors/` and lifecycle/schema/receipt responsibility roots; decide the canonical USGS earthquake source ID, standalone `connectors/usgs-earthquake/` versus a sublane under `connectors/usgs/`, owners, rights posture, and admission boundary. Do not infer those unresolved identities from the current README placeholder.
+2. **Server-side connector and lifecycle:** after that decision and source/rights review, retrieve only through the connector, hash exact bytes, record query and retrieval/source-generation metadata, preserve preferred IDs plus aliases and revisions, validate bounded values, capture update/tombstone behavior, and hand off deterministically through RAW → WORK/QUARANTINE → PROCESSED.
 3. **Contracts, evidence, and release:** separately add the accepted EarthquakeEvent contract/schema, SourceDescriptor, catalog/triplet closure, EvidenceBundles, citation and policy results, manifests, review, correction, rollback, and release.
 4. **API and UI:** only a released carrier may feed the prospective `layer:usgs-earthquake-events`; the browser must not fetch USGS directly or treat the coarse `time:present` identifier as event-time filtering.
 
@@ -184,13 +184,13 @@ The browser never reads RAW/WORK/QUARANTINE, treats rendered properties as evide
 |---|---|---|
 | Frontend | At the baseline SHA, `apps/explorer-web` has MapLibre, 18 views, coarse deep-time navigation, local drafts, and a Source Observatory. Its inline map is synthetic/generalized. | Consume only finite governed responses or released carriers; apply exact temporal predicates and show source role, uncertainty, rights, correction, stale, and no-data states. |
 | Frontend boundary | No USGS payload, parser, runtime connection, or layer is claimed. Frontend adapter placement was rejected as the wrong source owner. | Consume only governed API responses or released carriers; keep source acquisition and lifecycle writes outside the frontend. |
-| Source connector | `connectors/usgs-earthquake` is README-only; canonical placement and ownership are unresolved. | Keep implementation on `HOLD` until an ADR selects the connector, RAW/WORK/QUARANTINE, processed, schema, and receipt roots; then implement server-side retrieval, hashes, retries/caching, alias reconciliation, update/tombstone capture, and lifecycle handoff. |
+| Source connector | `connectors/usgs-earthquake` is README-only; accepted responsibility roots exist, while canonical source identity, standalone-versus-USGS-family placement, ownership, rights, and admission are unresolved. | Keep implementation on `HOLD` until those source-specific decisions are reviewed; then implement server-side retrieval, hashes, retries/caching, alias reconciliation, update/tombstone capture, and lifecycle handoff in the accepted roots. |
 | Pipeline | `pipeline_specs/hazards/usgs_earthquake.yaml` is disabled and unbound. | Add event contract/schema, normalization, Kansas polygon post-filter, identity/revision model, quality checks, deterministic transforms, and no-network replay. |
 | Evidence/policy/release | No dependency-closed earthquake packet exists. | Complete rights and sensitivity review, SourceDescriptor activation, EvidenceBundle and citation binding, PolicyDecision, ReleaseManifest, corrections, withdrawal, and rollback. |
 | Backend | At the baseline SHA, `/bootstrap`, `/layers`, and `/evidence` return finite `ABSTAIN / NOT_IMPLEMENTED`. | Only after the release packet exists, add versioned layer/feature and evidence-resolver routes with `ANSWER/ABSTAIN/DENY/ERROR`; Focus consumes a `MapContextEnvelope` and returns citations plus an `AIReceipt`. |
 | Map delivery | No admitted earthquake LayerManifest, StyleManifest, TileArtifactManifest, or carrier exists. | Create the prospective `layer:usgs-earthquake-events` identity and bind exact carrier/style bytes, hashes, geometry policy, time model, source/evidence refs, release, stale behavior, and rollback. Do not reuse the existing polygon `layer:hazard-context`. |
 | Security boundary | No browser-to-source or browser-to-model path is authorized. | Enforce CSP/CORS, reverse-proxy allowlists, TLS, credential separation, hashed style/sprite/glyph assets, no secrets in style JSON, and redacted permalinks/telemetry. |
-| GitHub delivery | Draft-PR workflow is available; current main has unrelated known CI failures. | Keep source-admission, connector/pipeline, release/API, UI binding, and deployment as separate reviewable changes. |
+| GitHub delivery | PR #4459 merged without the exact transition record required by its advisory repository-control check; current main also has inherited topology debt. | Preserve that event as incident evidence, use a separate draft repair PR, and keep source-admission, connector/pipeline, release/API, UI binding, and deployment as separate reviewable changes. |
 | Sites | Saved v15 and repository source are divergent; two project IDs are unresolved. | Resolve target identity, restore exact source parity, then run build, browser, accessibility, security, deployment-readback, and rollback checks under separate authorization. |
 
 ## Work packages
@@ -212,7 +212,7 @@ The browser never reads RAW/WORK/QUARANTINE, treats rendered properties as evide
 
 ### WP2 — earthquake dependency closure
 
-- Accept a connector-placement ADR that names the source, lifecycle, schema, receipt, and ownership roots; keep real exports out of `fixtures/` and source acquisition out of the frontend.
+- Accept a source-specific decision for canonical USGS earthquake identity, standalone-versus-family placement, ownership, rights, and admission while preserving the already accepted connector, lifecycle, schema, and receipt roots; keep real exports out of `fixtures/` and source acquisition out of the frontend.
 - Verify the exact service, credit, terms, MIME type, cache semantics, and update policy before any governed capture.
 - Define a restrictive EarthquakeEvent contract/schema that separates origin parameters from modeled ShakeMap/PAGER/focal-mechanism and crowdsourced DYFI products.
 - Create a KFM canonical identity plus source-alias table; treat alias overlap as the reconciliation key.
@@ -322,13 +322,13 @@ This link list is not a SourceDescriptor registry, rights decision, citation rep
 | Item | State |
 |---|---|
 | Research and source map | Bounded candidate inventory for this checkpoint; not exhaustive, admitted, or released |
-| ACS/Sites forward corrections | Implemented locally; review pending |
+| ACS/Sites forward corrections | Merged in PR #4459; merge authorization and independent human review were not established by the recorded receipt |
 | USGS earthquake source research | External official-API research only; `HOLD`; no real payload, adapter, fixture, evidence, or release committed |
-| Earthquake connector placement | ADR required before implementation; lifecycle/API/UI work remains split |
+| Earthquake connector decision | Canonical source ID, standalone-versus-USGS-family placement, ownership, rights, and admission require review; accepted responsibility roots remain unchanged |
 | Public map points | Held pending dependency closure |
 | Governed API earthquake answer | Held pending evidence/policy/release |
 | Deep-time geometry | Held; explicit gap required before 1.8 Ga |
-| Notion coordination update | Pending draft-PR URL |
+| Notion coordination update | Delivery-hub checkpoint exists; re-pin it to the latest exact GitHub repair evidence |
 | Google Drive design | Revision 28 inspected as mutable planning context; unchanged |
-| GitHub draft pull request | Pending verification and push |
+| GitHub pull request | PR #4459 merged as `976935b8b55c66976a028b7880d1cbc57c0c3582`; forward correction remains a separate draft-review boundary |
 | Deployment | Not requested; not performed |
