@@ -1,12 +1,12 @@
 # KFM validator-suite workflow.
 #
 # Responsibility:
-#   Run the repository-owned aggregate schema validators, exercise the bounded
-#   workflow-security and directory-topology ratchets, exercise the bounded
-#   GENERATED_RECEIPT integrity validator, run the focused MaterialChangeAssessment
-#   profile, and prove that the reviewed invalid EvidenceBundle canary is rejected
-#   for its expected schema reason rather than treating any arbitrary command
-#   failure as fail-closed.
+#   Run the repository-owned aggregate schema validators; exercise the bounded
+#   critical-document structure, workflow-security, and directory-topology
+#   ratchets; exercise the bounded GENERATED_RECEIPT integrity validator; run
+#   the focused MaterialChangeAssessment profile; and prove that the reviewed
+#   invalid EvidenceBundle canary is rejected for its expected schema reason
+#   rather than treating any arbitrary command failure as fail-closed.
 #
 # Trigger and trust boundary:
 #   Pull requests, pushes to main, and explicit dispatch. Pull-request content
@@ -18,9 +18,9 @@
 # Inputs:
 #   The root Makefile and pyproject, tools/validators/_common/run_all.py, its
 #   configured validator scripts and fixtures, the workflow and path baselines,
-#   their focused unit tests, the focused shared-runner,
-#   generated-receipt, and MaterialChangeAssessment tests, and the reviewed
-#   EvidenceBundle invalid fixture plus expected-error sidecar.
+#   their focused unit tests, the enrolled critical Markdown, the focused
+#   shared-runner, generated-receipt, and MaterialChangeAssessment tests, and
+#   the reviewed EvidenceBundle invalid fixture plus expected-error sidecar.
 #
 # Outputs and outcomes:
 #   GitHub job conclusions, logs, and step summaries only. This workflow emits
@@ -100,6 +100,13 @@ jobs:
         run: |
           set -euo pipefail
           make validator-registry-check
+
+      - name: Enforce critical-document structure sentinel
+        if: ${{ !cancelled() }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          make docs-critical-structure
 
       - name: Enforce workflow-security ratchet
         shell: bash
@@ -212,7 +219,8 @@ jobs:
             echo "- Generated-receipt commands: focused no-network unittest suite plus \`python tools/validators/validate_generated_receipt.py --fixtures\`."
             echo "- Material-change commands: focused no-network unittest suite plus \`python tools/validators/validate_material_change_assessment.py --fixtures\`."
             echo "- Aggregate command: \`make schemas\`."
-            echo "- Repository guardrails run as three separately attributable fail-closed steps: \`make validator-registry-check\`, \`make workflow-security\`, then \`make repository-topology\`."
+            echo "- Repository guardrails run as four separately attributable fail-closed steps: \`make validator-registry-check\`, \`make docs-critical-structure\`, \`make workflow-security\`, then \`make repository-topology\`."
+            echo "- The critical-document structure sentinel checks only explicit enrolled files for bounded corruption shapes; it does not interpret claims or grant governance authority."
             echo "- Independent validation stages use \`!cancelled()\` so one inherited guardrail failure does not erase execution truth for later trust-bearing checks; each failure still contributes to the final job conclusion."
             echo "- Inherited violations are exact reviewed baselines: new drift and stale baseline entries fail; a pass does not resolve the inherited backlog."
             echo "- Shared JSON Schema runner fixture mode requires sorted, nonempty valid and invalid lanes; expected schema rejection is distinct from harness or polarity failure."

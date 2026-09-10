@@ -11,7 +11,7 @@
 KFM_VALIDATION_ENV := KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC
 VALIDATOR_ORCHESTRATOR := python tools/validate_all.py
 
-.PHONY: help validate test schemas validators validator-list validator-full validator-focused validator-release-profile validator-changed-area validator-registry-check workflow-security repository-topology repository-governance-parity repository-guardrails trust-spine-baseline program-baseline control-plane-registry-packet trust-spine-fixture-slice ci-conformance-report policy fixtures release-dry-run proof-slice catalog publish-check evidence-resolver evidence-resolver-deny hazards-validate deny-test ui-build api-run governed-api-dev governed-api-smoke governed-api-verify boundary-guards boundary-guards-ci maplibre-perf maplibre-govern maplibre-proof maplibre-clean
+.PHONY: help validate test schemas validators validator-list validator-full validator-focused validator-release-profile validator-changed-area validator-registry-check docs-critical-structure workflow-security repository-topology repository-governance-parity repository-guardrails trust-spine-baseline program-baseline control-plane-registry-packet trust-spine-fixture-slice ci-conformance-report policy fixtures release-dry-run proof-slice catalog publish-check evidence-resolver evidence-resolver-deny hazards-validate deny-test ui-build api-run governed-api-dev governed-api-smoke governed-api-verify boundary-guards boundary-guards-ci maplibre-perf maplibre-govern maplibre-proof maplibre-clean
 
 help:
 	@echo "KFM repository targets"
@@ -20,6 +20,7 @@ help:
 	@echo "  validate              Run aggregate schema validators and schema/contract tests"
 	@echo "  schemas               Run configured aggregate validators against fixtures"
 	@echo "  test                  Run repository schema and contract tests"
+	@echo "  docs-critical-structure Test and run the critical-document structure sentinel"
 	@echo "  workflow-security     Test and run the 20-rule workflow-security ratchet"
 	@echo "  repository-topology  Test and run the 20-rule directory-topology ratchet"
 	@echo "  repository-governance-parity Validate the MRTS-04 parity and inherited-drift profile"
@@ -101,6 +102,10 @@ validator-changed-area:
 
 validator-registry-check:
 	$(KFM_VALIDATION_ENV) $(VALIDATOR_ORCHESTRATOR) --validate-registry
+
+docs-critical-structure:
+	$(KFM_VALIDATION_ENV) python -m unittest discover --start-directory tests/validators/docs/critical-structure --pattern 'test_*.py' --verbose
+	$(KFM_VALIDATION_ENV) python tools/validators/docs/critical-structure/check_critical_structure.py --repo-root . --format text CONTRIBUTING.md
 
 workflow-security:
 	KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC python -m unittest discover --start-directory tests/validators/governance --pattern 'test_validate_workflow_security.py' --verbose
