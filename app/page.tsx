@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import type { Feature, Geometry } from "geojson";
-import type { GeoJSONSource, Map as MapLibreMap, Popup, ScaleControl } from "maplibre-gl";
+import type { GeoJSONSource, Map as MapLibreMap, MapSourceDataEvent, Popup, ScaleControl } from "maplibre-gl";
 import {
   CATEGORY_ORDER,
   findFeature,
@@ -157,12 +157,30 @@ import {
   OFFICIAL_CONTEXT_PRESENT_FRAME,
   OFFICIAL_CONTEXT_SOURCES,
   OFFICIAL_CONTEXT_TEMPORAL_SUPPORT,
+  noaaRadarObservationTimeIsApplied,
   officialContextVisibilityForFrame,
+  setNoaaRadarObservationTime,
   type OfficialContextFeedId,
   type OfficialContextId,
   type OfficialContextPayload,
   type OfficialContextState,
 } from "./live-context";
+import {
+  isNoaaRadarManifest,
+  nextNoaaRadarFrameIndex,
+  noaaRadarFrameAgeMinutes,
+  noaaRadarManifestIsFresh,
+  NOAA_RADAR_FRAME_API_PATH,
+  NOAA_RADAR_LEGEND_URL,
+  NOAA_RADAR_MAX_LOOP_FRAMES,
+  NOAA_RADAR_PRODUCT_TITLE,
+  NOAA_RADAR_SOURCE_TITLE,
+  selectNoaaRadarLoopFrames,
+  type NoaaRadarLoopSpanMinutes,
+  type NoaaRadarManifest,
+  type NoaaRadarManifestState,
+  type NoaaRadarPlaybackSpeed,
+} from "./noaa-radar";
 
 if (!LAYER_REGISTRY.some((layer) => layer.id === COUNTY_STARTER_LAYER.id)) {
   const extentIndex = LAYER_REGISTRY.findIndex((layer) => layer.id === "kansas-extent");
@@ -215,6 +233,7 @@ type DrawerView = "evidence" | "metadata" | "lineage" | "focus";
 type LeftPanelMode = "views" | "layers" | "places" | "stories";
 type MeasureMode = "point" | "distance" | "area" | null;
 type PlaybackSpeed = 0.5 | 1 | 2;
+type NoaaRadarFrameLoadState = "idle" | "loading" | "ready" | "error";
 type BoxDragMode = "zoom" | "report-area";
 type TerrainProfileSample = Readonly<{ distanceMiles: number; elevationMeters: number }>;
 type TerrainElevationReading = Readonly<{ longitude: number; latitude: number; meters: number; feet: number }>;
@@ -388,7 +407,7 @@ const BASEMAP_CONTEXT_LAYER: LayerRecord = {
 
 const DOMAIN_HOLDS = Object.freeze([
   { domain: "Soil", state: "HELD", detail: "No admitted public-safe soil adapter is connected in this Site." },
-  { domain: "Weather", state: "PUBLIC-SAFE", detail: "NWS alert areas and current radar are available as optional official operational context; they are not admitted evidence, forecasts, or an all-clear." },
+  { domain: "Weather", state: "PUBLIC-SAFE", detail: "NWS alert areas and a time-enabled NOAA radar loop are available as optional official operational context; they are not admitted evidence, forecasts, or an all-clear." },
   { domain: "Smoke", state: "UNAVAILABLE", detail: "No live smoke or fire feed is admitted; the synthetic smoke fixture remains separate." },
   { domain: "Air Quality", state: "HELD", detail: "No governed air-quality source, freshness contract, or public-safe release is connected." },
   { domain: "Natural Resources", state: "HELD", detail: "No public-safe resource inventory or rights-cleared layer is connected." },
@@ -422,6 +441,16 @@ const defaultOpacity = Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.i
 const defaultOfficialVisibility = defaultOfficialContextVisibility();
 const defaultOfficialOpacity = defaultOfficialContextOpacity();
 const defaultOfficialStates = Object.fromEntries(OFFICIAL_CONTEXT_SOURCES.map((source) => [source.id, "idle"])) as Record<OfficialContextId, OfficialContextState>;
+const officialContextRuntimeVisibility = (
+  visibility: Record<OfficialContextId, boolean>,
+  frame: number,
+  noaaRadarReady: boolean,
+  noaaRadarFrameTime: string | null,
+) => {
+  const next = officialContextVisibilityForFrame(visibility, frame);
+  next["nws-radar"] = next["nws-radar"] && noaaRadarReady && Boolean(noaaRadarFrameTime);
+  return next;
+};
 const defaultOrder = LAYER_REGISTRY.map((layer) => layer.id);
 const interactiveLayerIds = LAYER_REGISTRY.flatMap((layer) => layer.renderers.filter((renderer) => renderer.interactive).map((renderer) => renderer.id));
 const layerDomains = ["ALL", ...Array.from(new Set([...LAYER_REGISTRY.map((layer) => layer.domain), ...DOMAIN_HOLDS.map((hold) => hold.domain)])).sort()] as const;
@@ -765,6 +794,16 @@ const formatTimelineStep = (value: number) => {
   return value.toLocaleString("en-US");
 };
 
+const formatNoaaRadarLocalTime = (value: string) => new Intl.DateTimeFormat(undefined, {
+  month: "short",
+  day: "numeric",
+  hour: "numeric",
+  minute: "2-digit",
+  timeZoneName: "short",
+}).format(new Date(value));
+
+const formatNoaaRadarUtcTime = (value: string) => `${value.slice(0, 10)} · ${value.slice(11, 16)}Z`;
+
 const timelineEraLabel = (value: number) => {
   if (value <= -4_000_000_000) return "Hadean eon context";
   if (value <= -2_500_000_000) return "Archean eon context";
@@ -860,6 +899,16 @@ export default function Home() {
   const officialOpacityRef = useRef(defaultOfficialOpacity);
   const officialPayloadsRef = useRef<Partial<Record<OfficialContextFeedId, OfficialContextPayload>>>({});
   const officialRequestsRef = useRef(new Set<OfficialContextFeedId>());
+  const noaaRadarRequestRef = useRef<AbortController | null>(null);
+  const noaaRadarLastRequestAtRef = useRef(0);
+  const noaaRadarReadyRef = useRef(false);
+  const noaaRadarManifestRef = useRef<NoaaRadarManifest | null>(null);
+  const noaaRadarFrameTimeRef = useRef<string | null>(null);
+  const noaaRadarPendingFrameTimeRef = useRef<string | null>(null);
+  const noaaRadarRequestedTimeRef = useRef<string | null>(null);
+  const noaaRadarFollowLatestRef = useRef(true);
+  const noaaRadarFrameLoadCleanupRef = useRef<(() => void) | null>(null);
+  const noaaRadarFrameFailureRef = useRef<((message: string) => void) | null>(null);
   const orderRef = useRef(defaultOrder);
   const yearRef = useRef<number>(2026);
   const temporalQueryRef = useRef<TemporalSweepQuery>({
@@ -922,6 +971,17 @@ export default function Home() {
   const [officialStates, setOfficialStates] = useState<Record<OfficialContextId, OfficialContextState>>(defaultOfficialStates);
   const [officialPayloads, setOfficialPayloads] = useState<Partial<Record<OfficialContextFeedId, OfficialContextPayload>>>({});
   const [officialErrors, setOfficialErrors] = useState<Partial<Record<OfficialContextId, string>>>({});
+  const [noaaRadarManifestState, setNoaaRadarManifestState] = useState<NoaaRadarManifestState>("idle");
+  const [noaaRadarManifest, setNoaaRadarManifest] = useState<NoaaRadarManifest | null>(null);
+  const [noaaRadarManifestError, setNoaaRadarManifestError] = useState("");
+  const [noaaRadarFrameTime, setNoaaRadarFrameTime] = useState<string | null>(null);
+  const [noaaRadarPendingFrameTime, setNoaaRadarPendingFrameTime] = useState<string | null>(null);
+  const [noaaRadarLoopSpan, setNoaaRadarLoopSpan] = useState<NoaaRadarLoopSpanMinutes>(60);
+  const [noaaRadarPlaybackSpeed, setNoaaRadarPlaybackSpeed] = useState<NoaaRadarPlaybackSpeed>(1);
+  const [noaaRadarPlaying, setNoaaRadarPlaying] = useState(false);
+  const [noaaRadarFollowLatest, setNoaaRadarFollowLatest] = useState(true);
+  const [noaaRadarFrameLoadState, setNoaaRadarFrameLoadState] = useState<NoaaRadarFrameLoadState>("idle");
+  const [noaaRadarClock, setNoaaRadarClock] = useState(() => Date.now());
   const [layerOrder, setLayerOrder] = useState<string[]>(defaultOrder);
   const [basemap, setBasemap] = useState<BasemapKey>("standard");
   const [view, setView] = useState<ViewState>(KANSAS_VIEW);
@@ -1094,6 +1154,10 @@ export default function Home() {
   useEffect(() => { officialVisibilityRef.current = officialVisibility; }, [officialVisibility]);
   useEffect(() => { officialOpacityRef.current = officialOpacity; }, [officialOpacity]);
   useEffect(() => { officialPayloadsRef.current = officialPayloads; }, [officialPayloads]);
+  useEffect(() => { noaaRadarManifestRef.current = noaaRadarManifest; }, [noaaRadarManifest]);
+  useEffect(() => { noaaRadarFrameTimeRef.current = noaaRadarFrameTime; }, [noaaRadarFrameTime]);
+  useEffect(() => { noaaRadarPendingFrameTimeRef.current = noaaRadarPendingFrameTime; }, [noaaRadarPendingFrameTime]);
+  useEffect(() => { noaaRadarFollowLatestRef.current = noaaRadarFollowLatest; }, [noaaRadarFollowLatest]);
   useEffect(() => { orderRef.current = layerOrder; }, [layerOrder]);
   useEffect(() => { yearRef.current = year; }, [year]);
   useEffect(() => {
@@ -1117,7 +1181,10 @@ export default function Home() {
     const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
     const syncPreference = () => {
       setReducedMotion(preference.matches);
-      if (preference.matches) setPlaying(false);
+      if (preference.matches) {
+        setPlaying(false);
+        setNoaaRadarPlaying(false);
+      }
     };
     syncPreference();
     preference.addEventListener("change", syncPreference);
@@ -1135,6 +1202,8 @@ export default function Home() {
 
   useEffect(() => () => {
     if (placeTourTimerRef.current !== null) window.clearTimeout(placeTourTimerRef.current);
+    noaaRadarRequestRef.current?.abort();
+    noaaRadarFrameLoadCleanupRef.current?.();
   }, []);
 
   const dismissGuidedStart = useCallback(() => {
@@ -1215,9 +1284,15 @@ export default function Home() {
   useEffect(() => { temporalQueryRef.current = temporalQuery; }, [temporalQuery]);
   const visibleOfficialSources = useMemo(() => OFFICIAL_CONTEXT_SOURCES.filter((source) => officialVisibility[source.id]), [officialVisibility]);
   const visibleOfficialCount = visibleOfficialSources.length;
+  const noaaRadarManifestFresh = noaaRadarManifestIsFresh(noaaRadarManifest, noaaRadarClock);
+  const noaaRadarRenderable = Boolean(noaaRadarFrameTime && noaaRadarManifestFresh);
+  useEffect(() => {
+    noaaRadarReadyRef.current = noaaRadarRenderable;
+    if (!noaaRadarRenderable) setNoaaRadarPlaying(false);
+  }, [noaaRadarRenderable]);
   const effectiveOfficialVisibility = useMemo(
-    () => officialContextVisibilityForFrame(officialVisibility, temporalQuery.frame),
-    [officialVisibility, temporalQuery.frame],
+    () => officialContextRuntimeVisibility(officialVisibility, temporalQuery.frame, noaaRadarRenderable, noaaRadarFrameTime),
+    [noaaRadarFrameTime, noaaRadarRenderable, officialVisibility, temporalQuery.frame],
   );
   const withheldOfficialCount = temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME ? 0 : visibleOfficialCount;
   const selectedIsHeldOfficialContext = Boolean(
@@ -1230,14 +1305,65 @@ export default function Home() {
     && (selectedIsHeldOfficialContext || !isFeatureAvailableForTemporalQuery(selected.layer, selected.properties.year, temporalQuery)),
   );
   const officialFeatureCount = useMemo(() => Object.values(officialPayloads).reduce((total, payload) => total + (payload?.featureCount ?? 0), 0), [officialPayloads]);
-  const visibleRefreshableOfficialCount = useMemo(() => visibleOfficialSources.filter((source) => source.apiPath).length, [visibleOfficialSources]);
+  const visibleRefreshableOfficialCount = useMemo(() => visibleOfficialSources.filter((source) => source.apiPath || source.id === "nws-radar").length, [visibleOfficialSources]);
   const officialReadyCount = useMemo(() => Object.values(officialStates).filter((state) => state === "ready" || state === "partial" || state === "empty").length, [officialStates]);
   const officialLoadingCount = useMemo(() => Object.values(officialStates).filter((state) => state === "loading").length, [officialStates]);
   const officialLatestRetrievedAt = useMemo(() => Object.values(officialPayloads)
     .map((payload) => payload?.retrievedAt)
     .filter((value): value is string => Boolean(value))
+    .concat(noaaRadarManifest?.retrievedAt ?? [])
     .sort()
-    .at(-1) ?? null, [officialPayloads]);
+    .at(-1) ?? null, [noaaRadarManifest?.retrievedAt, officialPayloads]);
+  const noaaRadarLoopFrames = useMemo(
+    () => selectNoaaRadarLoopFrames(noaaRadarManifest?.frames ?? [], noaaRadarLoopSpan, NOAA_RADAR_MAX_LOOP_FRAMES),
+    [noaaRadarLoopSpan, noaaRadarManifest?.frames],
+  );
+  const noaaRadarLatestFrame = noaaRadarLoopFrames.at(-1) ?? null;
+  const noaaRadarFrameIndex = noaaRadarFrameTime ? noaaRadarLoopFrames.indexOf(noaaRadarFrameTime) : -1;
+  const noaaRadarActiveFrame = noaaRadarFrameIndex >= 0 ? noaaRadarLoopFrames[noaaRadarFrameIndex] : null;
+  const noaaRadarAgeMinutes = noaaRadarActiveFrame ? noaaRadarFrameAgeMinutes(noaaRadarActiveFrame, noaaRadarClock) : null;
+  const noaaRadarLatestAgeMinutes = noaaRadarLatestFrame ? noaaRadarFrameAgeMinutes(noaaRadarLatestFrame, noaaRadarClock) : null;
+  const noaaRadarSelectedAtPresent = officialVisibility["nws-radar"] && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME;
+  const noaaRadarSelectedIsLatest = Boolean(noaaRadarActiveFrame && noaaRadarLatestFrame && noaaRadarActiveFrame === noaaRadarLatestFrame);
+  const noaaRadarFrameError = noaaRadarManifestError
+    || (noaaRadarManifest && !noaaRadarManifestFresh ? "The newest advertised NOAA observation is more than 15 minutes old." : "")
+    || (noaaRadarFrameLoadState === "error" ? officialErrors["nws-radar"] ?? "The requested NOAA radar image did not finish loading." : "");
+  const noaaRadarDisplayState = noaaRadarManifestState === "loading"
+    ? "LOADING FRAMES"
+    : noaaRadarManifestState === "error" && noaaRadarRenderable
+      ? "FROZEN"
+      : noaaRadarManifestState === "error"
+        ? "UNAVAILABLE"
+        : noaaRadarManifest && !noaaRadarManifestFresh
+          ? "UNAVAILABLE"
+        : noaaRadarFrameLoadState === "error" && noaaRadarRenderable
+          ? "FROZEN"
+          : noaaRadarFrameLoadState === "error"
+            ? "UNAVAILABLE"
+        : noaaRadarFrameLoadState === "loading"
+          ? "BUFFERING"
+          : noaaRadarPlaying
+            ? "PLAYING"
+            : noaaRadarFollowLatest && noaaRadarSelectedIsLatest
+              ? "LATEST"
+              : "PAUSED";
+  const noaaRadarFrameHeadline = noaaRadarPendingFrameTime && noaaRadarFrameLoadState === "loading"
+    ? `Buffering ${formatNoaaRadarLocalTime(noaaRadarPendingFrameTime)}`
+    : noaaRadarActiveFrame
+      ? formatNoaaRadarLocalTime(noaaRadarActiveFrame)
+      : noaaRadarManifestState === "loading"
+        ? "Discovering exact frames…"
+        : "No observation selected";
+  const noaaRadarFrameDetail = noaaRadarPendingFrameTime && noaaRadarFrameLoadState === "loading"
+    ? `${formatNoaaRadarUtcTime(noaaRadarPendingFrameTime)} requested · ${noaaRadarFrameTime ? `last confirmed ${formatNoaaRadarLocalTime(noaaRadarFrameTime)}` : "no confirmed image yet"}`
+    : noaaRadarActiveFrame
+      ? `${formatNoaaRadarUtcTime(noaaRadarActiveFrame)} · ${noaaRadarAgeMinutes ?? "?"} min ago`
+      : "Radar remains hidden until NOAA supplies a valid frame list";
+  const noaaRadarCrossDomainSources = [
+    effectiveOfficialVisibility["nws-alerts"] && (officialPayloads["nws-alerts"]?.featureCount ?? 0) > 0 ? "active alert areas" : null,
+    effectiveOfficialVisibility["usgs-streamflow"] && (officialPayloads["usgs-streamflow"]?.featureCount ?? 0) > 0 ? "streamflow observations" : null,
+    effectiveOfficialVisibility["usgs-earthquakes"] && (officialPayloads["usgs-earthquakes"]?.featureCount ?? 0) > 0 ? "recent earthquake records" : null,
+  ].filter((value): value is string => Boolean(value));
   const mapContextRecords = useMemo(() => activeLayers.flatMap((layer) => layer.data.features.filter((feature) => (
     isFeatureAvailableForTemporalQuery(layer, feature.properties.year, temporalQuery)
     && feature.properties.focusLng >= mapViewportBounds.west
@@ -1756,6 +1882,12 @@ export default function Home() {
     params.set("o", LAYER_REGISTRY.map((layer) => `${layer.id}:${(opacity[layer.id] ?? layer.defaultOpacity).toFixed(2)}`).join(","));
     params.set("ctx", visibleOfficialSources.map((source) => source.id).join(","));
     params.set("ctxo", OFFICIAL_CONTEXT_SOURCES.map((source) => `${source.id}:${(officialOpacity[source.id] ?? source.defaultOpacity).toFixed(2)}`).join(","));
+    if (officialVisibility["nws-radar"] && noaaRadarFrameTime) {
+      params.set("radarTime", noaaRadarFrameTime);
+      params.set("radarSpan", String(noaaRadarLoopSpan));
+      params.set("radarSpeed", String(noaaRadarPlaybackSpeed));
+      params.set("radarFollow", noaaRadarFollowLatest ? "latest" : "selected");
+    }
     params.set("t", String(year));
     params.set("tm", temporalMode);
     params.set("tstep", temporalStepRule);
@@ -1793,7 +1925,7 @@ export default function Home() {
       params.set("focusIntent", focusIntent);
     }
     return params;
-  }, [activeLayers, analysisArea, atmospherePreset, basemap, compareLeft.id, compareRight.id, compareTimeA, compareTimeB, currentWorkspace, drawerView, dynamicEffects, fieldOfView, focusIntent, focusStage, gestureMode, layerOrder, lightAzimuth, locationCameraRedacted, mapEvidenceFilter, mapUtilityOpen, mapUtilityView, measureUnit, movingWindowFrames, officialOpacity, opacity, playbackDirection, playbackLoopMode, projection, rightOpen, scenePreset, selected, sweepRangeEnd, sweepRangeStart, temporalMode, temporalStepRule, verticalExaggeration, view, visibleOfficialSources, year]);
+  }, [activeLayers, analysisArea, atmospherePreset, basemap, compareLeft.id, compareRight.id, compareTimeA, compareTimeB, currentWorkspace, drawerView, dynamicEffects, fieldOfView, focusIntent, focusStage, gestureMode, layerOrder, lightAzimuth, locationCameraRedacted, mapEvidenceFilter, mapUtilityOpen, mapUtilityView, measureUnit, movingWindowFrames, noaaRadarFollowLatest, noaaRadarFrameTime, noaaRadarLoopSpan, noaaRadarPlaybackSpeed, officialOpacity, officialVisibility, opacity, playbackDirection, playbackLoopMode, projection, rightOpen, scenePreset, selected, sweepRangeEnd, sweepRangeStart, temporalMode, temporalStepRule, verticalExaggeration, view, visibleOfficialSources, year]);
 
   const announce = useCallback((message: string) => {
     setToast(message);
@@ -1869,6 +2001,242 @@ export default function Home() {
     announce("Loaded a cross-domain event stack from 1885 to the operational-present frame; all claims remain source-specific");
   }, [announce, commitTemporalFrame]);
 
+  const applyNoaaRadarFrame = useCallback((observedAt: string, announceChange = false) => {
+    const currentManifest = noaaRadarManifestRef.current;
+    if (!currentManifest?.frames.includes(observedAt) || !noaaRadarManifestIsFresh(currentManifest, Date.now())) {
+      noaaRadarReadyRef.current = false;
+      noaaRadarPendingFrameTimeRef.current = null;
+      setNoaaRadarPendingFrameTime(null);
+      setNoaaRadarPlaying(false);
+      setNoaaRadarFrameLoadState("error");
+      setOfficialStates((current) => ({ ...current, "nws-radar": "error" }));
+      setOfficialErrors((current) => ({ ...current, "nws-radar": "The requested observation is not in a fresh NOAA frame manifest; radar remains withheld." }));
+      const map = mapRef.current;
+      if (map && styleGenerationReadyRef.current) applyOfficialContextState(
+        map,
+        officialContextRuntimeVisibility(officialVisibilityRef.current, temporalQueryRef.current.frame, false, null),
+        officialOpacityRef.current,
+        officialPayloadsRef.current,
+      );
+      return;
+    }
+    const previousConfirmedFrame = noaaRadarFrameTimeRef.current;
+    noaaRadarPendingFrameTimeRef.current = observedAt;
+    setNoaaRadarPendingFrameTime(observedAt);
+    noaaRadarFrameLoadCleanupRef.current?.();
+    noaaRadarFrameLoadCleanupRef.current = null;
+    noaaRadarFrameFailureRef.current = null;
+    const map = mapRef.current;
+    if (!map || !styleGenerationReadyRef.current) {
+      setNoaaRadarFrameLoadState("idle");
+      return;
+    }
+    try {
+      setNoaaRadarFrameLoadState("loading");
+      setOfficialStates((current) => ({ ...current, "nws-radar": "loading" }));
+      let settled = false;
+      let timeout = 0;
+      const onSourceData = (event: MapSourceDataEvent) => {
+        if (event.sourceId !== OFFICIAL_CONTEXT_BY_ID["nws-radar"].sourceId || !event.tile || !event.isSourceLoaded) return;
+        if (!noaaRadarObservationTimeIsApplied(map, observedAt)) return;
+        if (!noaaRadarManifestRef.current?.frames.includes(observedAt) || !noaaRadarManifestIsFresh(noaaRadarManifestRef.current, Date.now())) {
+          finish("error", "The NOAA frame manifest became stale before the requested image settled.");
+          return;
+        }
+        finish("ready");
+      };
+      const finish = (state: "ready" | "error", failureMessage = "The selected NOAA frame did not finish loading.") => {
+        if (settled) return;
+        settled = true;
+        map.off("sourcedata", onSourceData);
+        window.clearTimeout(timeout);
+        noaaRadarFrameLoadCleanupRef.current = null;
+        noaaRadarFrameFailureRef.current = null;
+        if (noaaRadarPendingFrameTimeRef.current === observedAt) {
+          noaaRadarPendingFrameTimeRef.current = null;
+          setNoaaRadarPendingFrameTime(null);
+        }
+        setNoaaRadarFrameLoadState(state);
+        if (state === "ready") {
+          noaaRadarFrameTimeRef.current = observedAt;
+          noaaRadarReadyRef.current = true;
+          setNoaaRadarFrameTime(observedAt);
+          setOfficialStates((current) => ({ ...current, "nws-radar": "ready" }));
+          setOfficialErrors((current) => ({ ...current, "nws-radar": undefined }));
+          applyOfficialContextState(
+            map,
+            officialContextRuntimeVisibility(officialVisibilityRef.current, temporalQueryRef.current.frame, noaaRadarReadyRef.current, observedAt),
+            officialOpacityRef.current,
+            officialPayloadsRef.current,
+          );
+          if (announceChange) announce(`NOAA radar frame ${formatNoaaRadarLocalTime(observedAt)} selected; no interpolation`);
+        } else {
+          setNoaaRadarPlaying(false);
+          noaaRadarReadyRef.current = Boolean(previousConfirmedFrame);
+          if (previousConfirmedFrame) {
+            try { setNoaaRadarObservationTime(map, previousConfirmedFrame); } catch { noaaRadarReadyRef.current = false; }
+          }
+          applyOfficialContextState(
+            map,
+            officialContextRuntimeVisibility(officialVisibilityRef.current, temporalQueryRef.current.frame, noaaRadarReadyRef.current, previousConfirmedFrame),
+            officialOpacityRef.current,
+            officialPayloadsRef.current,
+          );
+          setOfficialStates((current) => ({ ...current, "nws-radar": "error" }));
+          setOfficialErrors((current) => ({ ...current, "nws-radar": `${failureMessage} Playback is paused${previousConfirmedFrame ? " on the last confirmed observation" : " and radar is withheld"}.` }));
+        }
+      };
+      map.on("sourcedata", onSourceData);
+      noaaRadarFrameFailureRef.current = (message) => finish("error", message);
+      timeout = window.setTimeout(() => finish("error"), 12_000);
+      noaaRadarFrameLoadCleanupRef.current = () => {
+        if (settled) return;
+        settled = true;
+        map.off("sourcedata", onSourceData);
+        window.clearTimeout(timeout);
+        noaaRadarFrameFailureRef.current = null;
+      };
+      const sourceUpdate = setNoaaRadarObservationTime(map, observedAt);
+      if (sourceUpdate === null) throw new Error("The fixed NOAA raster source could not be initialized.");
+      if (previousConfirmedFrame || !officialVisibilityRef.current["nws-radar"] || temporalQueryRef.current.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME) {
+        applyOfficialContextState(
+          map,
+          officialContextRuntimeVisibility(officialVisibilityRef.current, temporalQueryRef.current.frame, noaaRadarReadyRef.current, previousConfirmedFrame),
+          officialOpacityRef.current,
+          officialPayloadsRef.current,
+        );
+      }
+      if (sourceUpdate === "unchanged" && previousConfirmedFrame === observedAt) window.requestAnimationFrame(() => finish("ready"));
+    } catch (error) {
+      noaaRadarFrameFailureRef.current?.(error instanceof Error ? error.message : "The NOAA radar frame could not be applied.");
+    }
+  }, [announce]);
+
+  const refreshNoaaRadarManifest = useCallback(async (quiet = false) => {
+    if (temporalQueryRef.current.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME) {
+      noaaRadarReadyRef.current = false;
+      setNoaaRadarPlaying(false);
+      if (!quiet) announce(`NOAA radar remains held outside ${formatTimelineStep(OFFICIAL_CONTEXT_PRESENT_FRAME)}; switch to Present before refreshing frames`);
+      return;
+    }
+    if (noaaRadarRequestRef.current) return;
+    const requestStartedAt = Date.now();
+    if (requestStartedAt - noaaRadarLastRequestAtRef.current < 60_000) {
+      if (!quiet) announce("NOAA radar frames were checked less than a minute ago; the bounded retry window is still active");
+      return;
+    }
+    noaaRadarLastRequestAtRef.current = requestStartedAt;
+    const controller = new AbortController();
+    noaaRadarRequestRef.current = controller;
+    const firstLoad = !noaaRadarFrameTimeRef.current;
+    if (firstLoad) {
+      setNoaaRadarManifestState("loading");
+      setOfficialStates((current) => ({ ...current, "nws-radar": "loading" }));
+    }
+    setNoaaRadarManifestError("");
+    setOfficialErrors((current) => ({ ...current, "nws-radar": undefined }));
+    try {
+      const response = await fetch(NOAA_RADAR_FRAME_API_PATH, { cache: "no-store", signal: controller.signal, headers: { Accept: "application/json" } });
+      const candidate = await response.json() as unknown;
+      if (!response.ok || !isNoaaRadarManifest(candidate)) throw new Error("The fixed NOAA frame adapter returned an invalid or unavailable manifest.");
+      const manifestCheckedAt = Date.now();
+      if (candidate.freshness !== "current" || !noaaRadarManifestIsFresh(candidate, manifestCheckedAt)) throw new Error("The newest NOAA radar observation is more than 15 minutes old.");
+      const latest = candidate.frames.at(-1)!;
+      const requested = noaaRadarRequestedTimeRef.current;
+      let current = noaaRadarFrameTimeRef.current;
+      if (current && !candidate.frames.includes(current)) {
+        current = null;
+        noaaRadarFrameTimeRef.current = null;
+        setNoaaRadarFrameTime(null);
+      }
+      noaaRadarManifestRef.current = candidate;
+      setNoaaRadarManifest(candidate);
+      setNoaaRadarManifestState("ready");
+      setNoaaRadarClock(manifestCheckedAt);
+      if (requested && !candidate.frames.includes(requested) && !noaaRadarFollowLatestRef.current) {
+        const message = "The exact NOAA observation requested by this shared view is no longer available in the rolling manifest.";
+        noaaRadarRequestedTimeRef.current = null;
+        noaaRadarReadyRef.current = false;
+        noaaRadarFrameTimeRef.current = null;
+        setNoaaRadarFrameTime(null);
+        setNoaaRadarFrameLoadState("error");
+        setOfficialStates((currentStates) => ({ ...currentStates, "nws-radar": "error" }));
+        setOfficialErrors((currentErrors) => ({ ...currentErrors, "nws-radar": message }));
+        const map = mapRef.current;
+        if (map && styleGenerationReadyRef.current) applyOfficialContextState(
+          map,
+          officialContextRuntimeVisibility(officialVisibilityRef.current, temporalQueryRef.current.frame, false, null),
+          officialOpacityRef.current,
+          officialPayloadsRef.current,
+        );
+        if (!quiet) announce(`${message} Choose Latest to load a current frame.`);
+        return;
+      }
+      const target = requested && candidate.frames.includes(requested)
+        ? requested
+        : noaaRadarFollowLatestRef.current || !current || !candidate.frames.includes(current)
+          ? latest
+          : current;
+      noaaRadarRequestedTimeRef.current = null;
+      noaaRadarReadyRef.current = Boolean(current);
+      applyNoaaRadarFrame(target);
+      if (!quiet) announce(`${candidate.frames.length} exact NOAA radar observations loaded; newest ${formatNoaaRadarLocalTime(latest)}`);
+    } catch (error) {
+      if (error instanceof Error && error.name === "AbortError") return;
+      const message = error instanceof Error ? error.message : "NOAA radar frames are unavailable.";
+      const lastManifest = noaaRadarManifestRef.current;
+      noaaRadarReadyRef.current = Boolean(noaaRadarFrameTimeRef.current && noaaRadarManifestIsFresh(lastManifest, Date.now()));
+      setNoaaRadarManifestState("error");
+      setNoaaRadarManifestError(message);
+      setNoaaRadarPlaying(false);
+      setOfficialStates((current) => ({ ...current, "nws-radar": "error" }));
+      setOfficialErrors((current) => ({ ...current, "nws-radar": message }));
+      if (!quiet) announce("NOAA radar loop unavailable; no untimed or synthetic fallback was used");
+    } finally {
+      if (noaaRadarRequestRef.current === controller) noaaRadarRequestRef.current = null;
+    }
+  }, [announce, applyNoaaRadarFrame]);
+
+  const stepNoaaRadar = useCallback((direction: "forward" | "reverse") => {
+    if (!noaaRadarManifestFresh || noaaRadarLoopFrames.length < 2) return;
+    const currentIndex = Math.max(0, noaaRadarFrameIndex);
+    const nextIndex = nextNoaaRadarFrameIndex(noaaRadarLoopFrames.length, currentIndex, direction, false);
+    if (nextIndex === null) {
+      setNoaaRadarPlaying(false);
+      announce(`Reached the ${direction === "forward" ? "newest" : "oldest"} NOAA radar observation in this loop`);
+      return;
+    }
+    setNoaaRadarPlaying(false);
+    setNoaaRadarFollowLatest(nextIndex === noaaRadarLoopFrames.length - 1);
+    applyNoaaRadarFrame(noaaRadarLoopFrames[nextIndex], true);
+  }, [announce, applyNoaaRadarFrame, noaaRadarFrameIndex, noaaRadarLoopFrames, noaaRadarManifestFresh]);
+
+  const jumpNoaaRadarToLatest = useCallback(() => {
+    if (!noaaRadarLatestFrame || !noaaRadarManifestFresh) {
+      void refreshNoaaRadarManifest();
+      return;
+    }
+    setNoaaRadarPlaying(false);
+    setNoaaRadarFollowLatest(true);
+    applyNoaaRadarFrame(noaaRadarLatestFrame, true);
+  }, [applyNoaaRadarFrame, noaaRadarLatestFrame, noaaRadarManifestFresh, refreshNoaaRadarManifest]);
+
+  const toggleNoaaRadarPlayback = useCallback(() => {
+    if (noaaRadarPlaying) {
+      setNoaaRadarPlaying(false);
+      announce("NOAA radar loop paused");
+      return;
+    }
+    if (reducedMotion) {
+      announce("Automatic radar playback is off for reduced motion; previous and next observation controls remain available");
+      return;
+    }
+    if (!noaaRadarRenderable || noaaRadarLoopFrames.length < 2 || noaaRadarFrameLoadState === "loading") return;
+    setNoaaRadarFollowLatest(false);
+    setNoaaRadarPlaying(true);
+    announce(`NOAA radar loop started with ${noaaRadarLoopFrames.length} exact observations and no interpolation`);
+  }, [announce, noaaRadarFrameLoadState, noaaRadarLoopFrames.length, noaaRadarPlaying, noaaRadarRenderable, reducedMotion]);
+
   const refreshOfficialContext = useCallback(async (feed: OfficialContextFeedId) => {
     if (officialRequestsRef.current.has(feed)) return;
     const source = OFFICIAL_CONTEXT_BY_ID[feed];
@@ -1887,7 +2255,7 @@ export default function Home() {
       setOfficialPayloads(officialPayloadsRef.current);
       setOfficialStates((current) => ({ ...current, [feed]: payload.state }));
       const map = mapRef.current;
-      if (map && styleGenerationReadyRef.current) applyOfficialContextState(map, officialContextVisibilityForFrame(officialVisibilityRef.current, temporalQueryRef.current.frame), officialOpacityRef.current, officialPayloadsRef.current);
+      if (map && styleGenerationReadyRef.current) applyOfficialContextState(map, officialContextRuntimeVisibility(officialVisibilityRef.current, temporalQueryRef.current.frame, noaaRadarReadyRef.current, noaaRadarFrameTimeRef.current), officialOpacityRef.current, officialPayloadsRef.current);
       announce(payload.featureCount === 0
         ? `${source.shortTitle}: zero mapped features at ${new Date(payload.retrievedAt).toLocaleTimeString()}—not an all-clear`
         : `${source.shortTitle}: ${payload.featureCount} official context features refreshed`);
@@ -1902,47 +2270,65 @@ export default function Home() {
   }, [announce]);
 
   const setOfficialContextVisible = useCallback((id: OfficialContextId, visible: boolean) => {
+    if (id === "nws-radar" && visible) {
+      noaaRadarReadyRef.current = Boolean(
+        noaaRadarFrameTimeRef.current
+        && noaaRadarManifestIsFresh(noaaRadarManifestRef.current, Date.now()),
+      );
+      setNoaaRadarClock(Date.now());
+    }
     const next = { ...officialVisibilityRef.current, [id]: visible };
     officialVisibilityRef.current = next;
     setOfficialVisibility(next);
     const source = OFFICIAL_CONTEXT_BY_ID[id];
     if (source.apiPath && visible && !officialPayloadsRef.current[id as OfficialContextFeedId]) void refreshOfficialContext(id as OfficialContextFeedId);
+    if (id === "nws-radar" && visible && temporalQueryRef.current.frame === OFFICIAL_CONTEXT_PRESENT_FRAME) void refreshNoaaRadarManifest();
+    if (id === "nws-radar" && !visible) setNoaaRadarPlaying(false);
     const map = mapRef.current;
     if (map && styleGenerationReadyRef.current) {
       try {
-        applyOfficialContextState(map, officialContextVisibilityForFrame(next, temporalQueryRef.current.frame), officialOpacityRef.current, officialPayloadsRef.current);
-        if (!source.apiPath) setOfficialStates((current) => ({ ...current, [id]: "ready" }));
+        applyOfficialContextState(map, officialContextRuntimeVisibility(next, temporalQueryRef.current.frame, noaaRadarReadyRef.current, noaaRadarFrameTimeRef.current), officialOpacityRef.current, officialPayloadsRef.current);
+        if (!source.apiPath && id !== "nws-radar") setOfficialStates((current) => ({ ...current, [id]: "ready" }));
       } catch (error) {
         setOfficialStates((current) => ({ ...current, [id]: "error" }));
         setOfficialErrors((current) => ({ ...current, [id]: error instanceof Error ? error.message : "Raster context could not be applied." }));
       }
     }
-  }, [refreshOfficialContext]);
+  }, [refreshNoaaRadarManifest, refreshOfficialContext]);
 
   const setOfficialContextOpacity = useCallback((id: OfficialContextId, value: number) => {
     const next = { ...officialOpacityRef.current, [id]: clamp(value, 0.1, 1) };
     officialOpacityRef.current = next;
     setOfficialOpacity(next);
     const map = mapRef.current;
-    if (map && styleGenerationReadyRef.current) applyOfficialContextState(map, officialContextVisibilityForFrame(officialVisibilityRef.current, temporalQueryRef.current.frame), next, officialPayloadsRef.current);
+    if (map && styleGenerationReadyRef.current) applyOfficialContextState(map, officialContextRuntimeVisibility(officialVisibilityRef.current, temporalQueryRef.current.frame, noaaRadarReadyRef.current, noaaRadarFrameTimeRef.current), next, officialPayloadsRef.current);
   }, []);
 
   const refreshVisibleOfficialContext = useCallback(() => {
     const feeds = OFFICIAL_CONTEXT_SOURCES.filter((source) => source.apiPath && officialVisibilityRef.current[source.id]);
-    if (feeds.length === 0) {
+    const radarSelected = officialVisibilityRef.current["nws-radar"];
+    const radarRefreshable = radarSelected && temporalQueryRef.current.frame === OFFICIAL_CONTEXT_PRESENT_FRAME;
+    if (feeds.length === 0 && !radarSelected) {
       announce("Turn on an official data layer before refreshing");
       return;
     }
     feeds.forEach((source) => { void refreshOfficialContext(source.id as OfficialContextFeedId); });
-    announce(`Refreshing ${feeds.length} visible official connection${feeds.length === 1 ? "" : "s"}`);
-  }, [announce, refreshOfficialContext]);
+    if (radarRefreshable) void refreshNoaaRadarManifest(true);
+    const connectionCount = feeds.length + (radarRefreshable ? 1 : 0);
+    if (connectionCount === 0) {
+      announce("NOAA radar remains held outside Present; no visible official connection was refreshed");
+      return;
+    }
+    announce(`Refreshing ${connectionCount} visible official connection${connectionCount === 1 ? "" : "s"}`);
+  }, [announce, refreshNoaaRadarManifest, refreshOfficialContext]);
 
   const hideAllOfficialContext = useCallback(() => {
     const next = Object.fromEntries(OFFICIAL_CONTEXT_SOURCES.map((source) => [source.id, false])) as Record<OfficialContextId, boolean>;
     officialVisibilityRef.current = next;
     setOfficialVisibility(next);
+    setNoaaRadarPlaying(false);
     const map = mapRef.current;
-    if (map && styleGenerationReadyRef.current) applyOfficialContextState(map, officialContextVisibilityForFrame(next, temporalQueryRef.current.frame), officialOpacityRef.current, officialPayloadsRef.current);
+    if (map && styleGenerationReadyRef.current) applyOfficialContextState(map, officialContextRuntimeVisibility(next, temporalQueryRef.current.frame, noaaRadarReadyRef.current, noaaRadarFrameTimeRef.current), officialOpacityRef.current, officialPayloadsRef.current);
     announce("Official context hidden; loaded snapshots remain available on this page");
   }, [announce]);
 
@@ -2683,6 +3069,19 @@ export default function Home() {
       const nextOfficialOpacity = { ...defaultOfficialOpacity, ...restoredOfficialOpacity };
       officialOpacityRef.current = nextOfficialOpacity;
       setOfficialOpacity(nextOfficialOpacity);
+      const restoredRadarSpan = Number(params.get("radarSpan"));
+      setNoaaRadarLoopSpan(restoredRadarSpan === 30 || restoredRadarSpan === 120 ? restoredRadarSpan : 60);
+      const restoredRadarSpeed = Number(params.get("radarSpeed"));
+      setNoaaRadarPlaybackSpeed(restoredRadarSpeed === 0.5 || restoredRadarSpeed === 2 ? restoredRadarSpeed : 1);
+      const restoredRadarTime = params.get("radarTime");
+      const normalizedRadarTime = restoredRadarTime && Number.isFinite(Date.parse(restoredRadarTime))
+        ? new Date(Date.parse(restoredRadarTime)).toISOString()
+        : null;
+      noaaRadarRequestedTimeRef.current = normalizedRadarTime;
+      const restoredRadarFollowLatest = params.get("radarFollow") !== "selected";
+      noaaRadarFollowLatestRef.current = restoredRadarFollowLatest;
+      setNoaaRadarFollowLatest(restoredRadarFollowLatest);
+      setNoaaRadarPlaying(false);
       for (const source of OFFICIAL_CONTEXT_SOURCES) {
         if (nextOfficialVisibility[source.id] && source.apiPath && !officialPayloadsRef.current[source.id as OfficialContextFeedId]) void refreshOfficialContext(source.id as OfficialContextFeedId);
       }
@@ -2691,6 +3090,7 @@ export default function Home() {
       yearRef.current = nextYear;
       setYear(nextYear);
       setPreviewYear(nextYear);
+      if (nextOfficialVisibility["nws-radar"] && nextYear === OFFICIAL_CONTEXT_PRESENT_FRAME) void refreshNoaaRadarManifest(true);
       const restoredTemporalMode = params.get("tm");
       const nextTemporalMode: TemporalSweepMode = restoredTemporalMode === "moving-window" || restoredTemporalMode === "event-stepping" || restoredTemporalMode === "accumulation" || restoredTemporalMode === "comparison" ? restoredTemporalMode : "snapshot";
       setTemporalMode(nextTemporalMode);
@@ -2818,7 +3218,7 @@ export default function Home() {
         setSelected(null);
         setRightOpen(false);
       }
-  }, [refreshOfficialContext]);
+  }, [refreshNoaaRadarManifest, refreshOfficialContext]);
 
   useEffect(() => {
     const restore = window.setTimeout(restoreExplorerFromUrl, 0);
@@ -2946,7 +3346,11 @@ export default function Home() {
           hoveredRef.current = null;
           map.getCanvas().style.cursor = "";
           applyRegistryState(map, visibilityRef.current, opacityRef.current, yearRef.current, orderRef.current, mapEvidenceFilterRef.current, temporalQueryRef.current);
-          applyOfficialContextState(map, officialContextVisibilityForFrame(officialVisibilityRef.current, temporalQueryRef.current.frame), officialOpacityRef.current, officialPayloadsRef.current);
+          noaaRadarReadyRef.current = Boolean(
+            noaaRadarFrameTimeRef.current
+            && noaaRadarManifestIsFresh(noaaRadarManifestRef.current, Date.now()),
+          );
+          applyOfficialContextState(map, officialContextRuntimeVisibility(officialVisibilityRef.current, temporalQueryRef.current.frame, noaaRadarReadyRef.current, noaaRadarFrameTimeRef.current), officialOpacityRef.current, officialPayloadsRef.current);
           setElevationExaggeration(map, verticalExaggerationRef.current);
           map.setProjection({ type: projectionRef.current });
           applySceneEnvironment(map, atmospherePresetRef.current, lightAzimuthRef.current);
@@ -3221,6 +3625,19 @@ export default function Home() {
             setRuntime({ kind: "degraded", message: degradedReason });
             return;
           }
+          if (affectedOfficialContext?.id === "nws-radar") {
+            setNoaaRadarPlaying(false);
+            const failCurrentRadarFrame = noaaRadarFrameFailureRef.current;
+            if (failCurrentRadarFrame) {
+              failCurrentRadarFrame(message);
+            } else {
+              setNoaaRadarFrameLoadState("error");
+              setOfficialStates((current) => ({ ...current, "nws-radar": "error" }));
+              setOfficialErrors((current) => ({ ...current, "nws-radar": message }));
+            }
+            setRuntime({ kind: "degraded", message: `${affectedOfficialContext.shortTitle} is unavailable; other map and evidence paths remain usable. ${message}` });
+            return;
+          }
           runtimeError = message;
           if (sourceId) failedSourceIds.add(sourceId);
           if (sourceId === TERRAIN_SOURCE_ID) {
@@ -3262,7 +3679,7 @@ export default function Home() {
           }
           if (!event.sourceId) return;
           const officialSource = OFFICIAL_CONTEXT_BY_SOURCE_ID[event.sourceId];
-          if (officialSource && !officialSource.apiPath && event.isSourceLoaded) {
+          if (officialSource && officialSource.id !== "nws-radar" && !officialSource.apiPath && event.isSourceLoaded) {
             setOfficialStates((current) => ({ ...current, [officialSource.id]: "ready" }));
           }
           const layer = LAYER_REGISTRY.find((candidate) => candidate.sourceId === event.sourceId);
@@ -3331,8 +3748,17 @@ export default function Home() {
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !styleGenerationReadyRef.current) return;
+    if (noaaRadarPendingFrameTime) {
+      if (!noaaRadarSelectedAtPresent) applyOfficialContextState(map, effectiveOfficialVisibility, officialOpacity, officialPayloads);
+      else if (noaaRadarFrameLoadState !== "loading") applyNoaaRadarFrame(noaaRadarPendingFrameTime);
+      return;
+    }
+    if (noaaRadarRenderable && noaaRadarFrameTime && !noaaRadarObservationTimeIsApplied(map, noaaRadarFrameTime)) {
+      applyNoaaRadarFrame(noaaRadarFrameTime);
+      return;
+    }
     applyOfficialContextState(map, effectiveOfficialVisibility, officialOpacity, officialPayloads);
-  }, [effectiveOfficialVisibility, officialOpacity, officialPayloads, styleReady]);
+  }, [applyNoaaRadarFrame, effectiveOfficialVisibility, noaaRadarFrameLoadState, noaaRadarFrameTime, noaaRadarPendingFrameTime, noaaRadarRenderable, noaaRadarSelectedAtPresent, officialOpacity, officialPayloads, styleReady]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -3387,6 +3813,11 @@ export default function Home() {
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
+    const pendingRadarFrame = noaaRadarPendingFrameTimeRef.current;
+    noaaRadarFrameLoadCleanupRef.current?.();
+    noaaRadarFrameLoadCleanupRef.current = null;
+    noaaRadarFrameFailureRef.current = null;
+    if (pendingRadarFrame) setNoaaRadarFrameLoadState("idle");
     styleGenerationReadyRef.current = false;
     setPlaying(false);
     map.setStyle(BASEMAPS[basemap].style);
@@ -3452,7 +3883,69 @@ export default function Home() {
   }, [playbackDirection, playbackLoopMode, playbackSpeed, playing, reducedMotion, temporalMode, temporalSequence]);
 
   useEffect(() => {
-    const pauseWhenHidden = () => { if (document.hidden) setPlaying(false); };
+    if (!noaaRadarManifest) return;
+    setNoaaRadarClock(Date.now());
+    const timer = window.setInterval(() => setNoaaRadarClock(Date.now()), 60_000);
+    return () => window.clearInterval(timer);
+  }, [noaaRadarManifest]);
+
+  useEffect(() => {
+    if (!noaaRadarSelectedAtPresent) {
+      setNoaaRadarPlaying(false);
+      noaaRadarFrameLoadCleanupRef.current?.();
+      noaaRadarFrameLoadCleanupRef.current = null;
+      noaaRadarFrameFailureRef.current = null;
+      noaaRadarPendingFrameTimeRef.current = null;
+      setNoaaRadarPendingFrameTime(null);
+      const map = mapRef.current;
+      if (map && styleGenerationReadyRef.current) {
+        if (noaaRadarFrameTimeRef.current) {
+          try { setNoaaRadarObservationTime(map, noaaRadarFrameTimeRef.current); } catch { noaaRadarReadyRef.current = false; }
+        }
+        applyOfficialContextState(
+          map,
+          officialContextRuntimeVisibility(officialVisibilityRef.current, temporalQueryRef.current.frame, false, null),
+          officialOpacityRef.current,
+          officialPayloadsRef.current,
+        );
+      }
+      setNoaaRadarFrameLoadState(noaaRadarFrameTimeRef.current ? "ready" : "idle");
+      return;
+    }
+    void refreshNoaaRadarManifest(true);
+    const timer = window.setInterval(() => { void refreshNoaaRadarManifest(true); }, 240_000);
+    return () => window.clearInterval(timer);
+  }, [noaaRadarSelectedAtPresent, refreshNoaaRadarManifest]);
+
+  useEffect(() => {
+    if (!noaaRadarSelectedAtPresent || noaaRadarPendingFrameTime || noaaRadarFrameLoadState === "error" || noaaRadarLoopFrames.length === 0 || noaaRadarFrameIndex >= 0) return;
+    const confirmedOutsideSelectedSpan = Boolean(noaaRadarFrameTime && noaaRadarManifest?.frames.includes(noaaRadarFrameTime));
+    if (!noaaRadarFollowLatest && !confirmedOutsideSelectedSpan) return;
+    const next = noaaRadarLoopFrames.at(-1)!;
+    setNoaaRadarFollowLatest(true);
+    applyNoaaRadarFrame(next);
+  }, [applyNoaaRadarFrame, noaaRadarFollowLatest, noaaRadarFrameIndex, noaaRadarFrameLoadState, noaaRadarFrameTime, noaaRadarLoopFrames, noaaRadarManifest?.frames, noaaRadarPendingFrameTime, noaaRadarSelectedAtPresent]);
+
+  useEffect(() => {
+    if (!noaaRadarPlaying || !noaaRadarRenderable || reducedMotion || noaaRadarFrameLoadState === "loading" || noaaRadarLoopFrames.length < 2) return;
+    const currentIndex = Math.max(0, noaaRadarFrameIndex);
+    const nextIndex = nextNoaaRadarFrameIndex(noaaRadarLoopFrames.length, currentIndex, "forward", true);
+    if (nextIndex === null) {
+      setNoaaRadarPlaying(false);
+      return;
+    }
+    const atNewestFrame = currentIndex === noaaRadarLoopFrames.length - 1;
+    const delay = (atNewestFrame ? 1_500 : 700) / noaaRadarPlaybackSpeed;
+    const timer = window.setTimeout(() => applyNoaaRadarFrame(noaaRadarLoopFrames[nextIndex]), delay);
+    return () => window.clearTimeout(timer);
+  }, [applyNoaaRadarFrame, noaaRadarFrameIndex, noaaRadarFrameLoadState, noaaRadarLoopFrames, noaaRadarPlaybackSpeed, noaaRadarPlaying, noaaRadarRenderable, reducedMotion]);
+
+  useEffect(() => {
+    const pauseWhenHidden = () => {
+      if (!document.hidden) return;
+      setPlaying(false);
+      setNoaaRadarPlaying(false);
+    };
     document.addEventListener("visibilitychange", pauseWhenHidden);
     return () => document.removeEventListener("visibilitychange", pauseWhenHidden);
   }, []);
@@ -4652,7 +5145,14 @@ export default function Home() {
     }
     try {
       applyRegistryState(map, visibilityRef.current, opacityRef.current, yearRef.current, orderRef.current, mapEvidenceFilterRef.current, temporalQueryRef.current);
-      applyOfficialContextState(map, officialContextVisibilityForFrame(officialVisibilityRef.current, temporalQueryRef.current.frame), officialOpacityRef.current, officialPayloadsRef.current);
+      noaaRadarReadyRef.current = Boolean(
+        noaaRadarFrameTimeRef.current
+        && noaaRadarManifestIsFresh(noaaRadarManifestRef.current, Date.now()),
+      );
+      if (noaaRadarReadyRef.current && noaaRadarFrameTimeRef.current && !noaaRadarObservationTimeIsApplied(map, noaaRadarFrameTimeRef.current)) {
+        applyNoaaRadarFrame(noaaRadarFrameTimeRef.current);
+      }
+      applyOfficialContextState(map, officialContextRuntimeVisibility(officialVisibilityRef.current, temporalQueryRef.current.frame, noaaRadarReadyRef.current, noaaRadarFrameTimeRef.current), officialOpacityRef.current, officialPayloadsRef.current);
       setElevationExaggeration(map, verticalExaggerationRef.current);
       map.setProjection({ type: projectionRef.current });
       applySceneEnvironment(map, atmospherePresetRef.current, lightAzimuthRef.current);
@@ -4701,6 +5201,28 @@ export default function Home() {
     setOfficialVisibility(defaultOfficialVisibility);
     setOfficialOpacity(defaultOfficialOpacity);
     setOfficialErrors({});
+    noaaRadarRequestRef.current?.abort();
+    noaaRadarRequestRef.current = null;
+    noaaRadarLastRequestAtRef.current = 0;
+    noaaRadarReadyRef.current = false;
+    noaaRadarManifestRef.current = null;
+    noaaRadarFrameTimeRef.current = null;
+    noaaRadarPendingFrameTimeRef.current = null;
+    noaaRadarRequestedTimeRef.current = null;
+    noaaRadarFollowLatestRef.current = true;
+    noaaRadarFrameLoadCleanupRef.current?.();
+    noaaRadarFrameLoadCleanupRef.current = null;
+    noaaRadarFrameFailureRef.current = null;
+    setNoaaRadarManifestState("idle");
+    setNoaaRadarManifest(null);
+    setNoaaRadarManifestError("");
+    setNoaaRadarFrameTime(null);
+    setNoaaRadarPendingFrameTime(null);
+    setNoaaRadarLoopSpan(60);
+    setNoaaRadarPlaybackSpeed(1);
+    setNoaaRadarPlaying(false);
+    setNoaaRadarFollowLatest(true);
+    setNoaaRadarFrameLoadState("idle");
     for (const source of OFFICIAL_CONTEXT_SOURCES) {
       if (source.defaultVisibility && source.apiPath && !officialPayloadsRef.current[source.id as OfficialContextFeedId]) void refreshOfficialContext(source.id as OfficialContextFeedId);
     }
@@ -5709,7 +6231,7 @@ export default function Home() {
               const heldAtFrame = officialVisibility[source.id] && !effectiveOfficialVisibility[source.id];
               return <article key={source.id} className="official-context-row" data-state={state} data-visible={officialVisibility[source.id]} data-held={heldAtFrame}>
                 <div className="official-context-primary"><label className="visibility-switch"><input type="checkbox" checked={officialVisibility[source.id]} aria-label={`${officialVisibility[source.id] ? "Hide" : "Show"} ${source.title}`} onChange={(event) => setOfficialContextVisible(source.id, event.target.checked)} /><span aria-hidden="true" /></label><i style={{ "--swatch": source.color } as React.CSSProperties} /><div><strong>{source.shortTitle}</strong><small>{source.organization}{heldAtFrame ? ` · held until ${formatTimelineStep(OFFICIAL_CONTEXT_PRESENT_FRAME)}` : ""}</small></div><b>{heldAtFrame ? "HELD" : state.toUpperCase()}</b></div>
-                <details><summary>Source, freshness + controls</summary><p>{source.boundary}</p><dl><div><dt>Endpoint</dt><dd>{source.endpointLabel}</dd></div><div><dt>Freshness</dt><dd>{payload?.upstreamUpdatedAt ? new Date(payload.upstreamUpdatedAt).toLocaleString() : source.freshness}</dd></div><div><dt>Features</dt><dd>{payload ? payload.featureCount : source.apiPath ? "NOT LOADED" : "RASTER TILES"}</dd></div><div><dt>Temporal support</dt><dd>{OFFICIAL_CONTEXT_TEMPORAL_SUPPORT[source.id].axis.replaceAll("-", " ")} · {OFFICIAL_CONTEXT_TEMPORAL_SUPPORT[source.id].limitation}</dd></div><div><dt>Role</dt><dd>{source.evidenceRole.replaceAll("_", " ")}</dd></div></dl><label className="opacity-control"><span>Opacity <b>{Math.round(officialOpacity[source.id] * 100)}%</b></span><input type="range" min="10" max="100" value={Math.round(officialOpacity[source.id] * 100)} onChange={(event) => setOfficialContextOpacity(source.id, Number(event.target.value) / 100)} /></label>{payload?.limitation && <p className="official-context-warning">{payload.limitation}</p>}{officialErrors[source.id] && <p className="official-context-error">Unavailable: {officialErrors[source.id]}. No fallback inference was used.</p>}<div className="official-context-actions">{source.apiPath && <button type="button" disabled={state === "loading"} onClick={() => void refreshOfficialContext(source.id as OfficialContextFeedId)}>{state === "loading" ? "Refreshing…" : "Refresh"}</button>}<a href={source.sourceUrl} target="_blank" rel="noreferrer">Primary source ↗</a></div></details>
+                <details><summary>Source, freshness + controls</summary><p>{source.boundary}</p><dl><div><dt>Endpoint</dt><dd>{source.endpointLabel}</dd></div><div><dt>Freshness</dt><dd>{source.id === "nws-radar" && noaaRadarLatestFrame ? formatNoaaRadarLocalTime(noaaRadarLatestFrame) : payload?.upstreamUpdatedAt ? new Date(payload.upstreamUpdatedAt).toLocaleString() : source.freshness}</dd></div><div><dt>Features / frames</dt><dd>{source.id === "nws-radar" ? noaaRadarManifest ? `${noaaRadarManifest.frameCount} OBSERVATIONS` : "NOT LOADED" : payload ? payload.featureCount : source.apiPath ? "NOT LOADED" : "RASTER TILES"}</dd></div><div><dt>Temporal support</dt><dd>{OFFICIAL_CONTEXT_TEMPORAL_SUPPORT[source.id].axis.replaceAll("-", " ")} · {OFFICIAL_CONTEXT_TEMPORAL_SUPPORT[source.id].limitation}</dd></div><div><dt>Role</dt><dd>{source.evidenceRole.replaceAll("_", " ")}</dd></div></dl><label className="opacity-control"><span>Opacity <b>{Math.round(officialOpacity[source.id] * 100)}%</b></span><input type="range" min="10" max="100" value={Math.round(officialOpacity[source.id] * 100)} onChange={(event) => setOfficialContextOpacity(source.id, Number(event.target.value) / 100)} /></label>{payload?.limitation && <p className="official-context-warning">{payload.limitation}</p>}{officialErrors[source.id] && <p className="official-context-error">Unavailable: {officialErrors[source.id]}. No fallback inference was used.</p>}<div className="official-context-actions">{source.apiPath && <button type="button" disabled={state === "loading"} onClick={() => void refreshOfficialContext(source.id as OfficialContextFeedId)}>{state === "loading" ? "Refreshing…" : "Refresh"}</button>}{source.id === "nws-radar" && <button type="button" disabled={noaaRadarManifestState === "loading"} onClick={() => void refreshNoaaRadarManifest()}>{noaaRadarManifestState === "loading" ? "Loading frames…" : "Refresh frames"}</button>}<a href={source.sourceUrl} target="_blank" rel="noreferrer">Primary source ↗</a></div></details>
               </article>;
             })}</div>
             <footer><code>OFFICIAL SOURCE → FIXED ADAPTER / WMS → MAPLIBRE</code><span>Evidence held at admission, release, and EvidenceBundle gates · <a href="https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3393" target="_blank" rel="noreferrer">governance issue #3393 ↗</a></span></footer>
@@ -5757,7 +6279,7 @@ export default function Home() {
           </div>
         </aside>
 
-        <section className="map-stage" aria-label="Kansas MapLibre Explorer">
+        <section className="map-stage" data-radar-loop={noaaRadarSelectedAtPresent} aria-label="Kansas MapLibre Explorer">
           <div className="mission-band map-command-bar">
             <div className="map-command-identity">
               <span className="map-command-eyebrow">ACTIVE INVESTIGATION</span>
@@ -5800,6 +6322,59 @@ export default function Home() {
               <button type="button" onClick={() => openMapUtility("scene")}>Inspect terrain method</button>
             </div>
             {topographicOverlay && <output className="terrain-cursor-reading" aria-live="polite">{terrainElevationReading ? <><strong>{terrainElevationReading.feet.toFixed(0)} ft</strong><span>{terrainElevationReading.meters.toFixed(0)} m · unexaggerated DEM</span></> : <span>Move over the map to read elevation</span>}</output>}
+          </aside>}
+          {noaaRadarSelectedAtPresent && <aside
+            className="noaa-radar-loop"
+            data-state={noaaRadarDisplayState.toLowerCase().replaceAll(" ", "-")}
+            tabIndex={0}
+            aria-label="NOAA observed radar loop controls"
+            onKeyDown={(event) => {
+              if (event.target !== event.currentTarget) return;
+              if (event.key === " ") { event.preventDefault(); toggleNoaaRadarPlayback(); }
+              if (event.key === "ArrowLeft") { event.preventDefault(); stepNoaaRadar("reverse"); }
+              if (event.key === "ArrowRight") { event.preventDefault(); stepNoaaRadar("forward"); }
+              if (event.key === "Home") { event.preventDefault(); jumpNoaaRadarToLatest(); }
+            }}
+          >
+            <header>
+              <div><span>OBSERVED RADAR · EXTERNAL CONTEXT</span><strong>{NOAA_RADAR_PRODUCT_TITLE}</strong></div>
+              <b>{noaaRadarDisplayState}</b>
+            </header>
+            <div className="noaa-radar-frame" role="status" aria-live={noaaRadarPlaying ? "off" : "polite"} aria-busy={noaaRadarFrameLoadState === "loading"} aria-atomic="true">
+              <div><strong>{noaaRadarFrameHeadline}</strong><small>{noaaRadarFrameDetail}</small></div>
+              <span>{noaaRadarLoopFrames.length > 0 ? `${noaaRadarFrameIndex >= 0 ? noaaRadarFrameIndex + 1 : 0} / ${noaaRadarLoopFrames.length}` : "0 / 0"}</span>
+            </div>
+            <div className="noaa-radar-transport" aria-label="Radar playback">
+              <button type="button" onClick={() => stepNoaaRadar("reverse")} disabled={!noaaRadarRenderable || noaaRadarFrameIndex <= 0 || noaaRadarFrameLoadState === "loading"} aria-label="Previous NOAA radar observation">‹</button>
+              <button className="noaa-radar-play" type="button" aria-pressed={noaaRadarPlaying} onClick={toggleNoaaRadarPlayback} disabled={reducedMotion || noaaRadarLoopFrames.length < 2 || noaaRadarManifestState === "loading" || !noaaRadarRenderable}>{noaaRadarPlaying ? "Ⅱ Pause" : "▶ Play"}</button>
+              <button type="button" onClick={() => stepNoaaRadar("forward")} disabled={!noaaRadarRenderable || noaaRadarFrameIndex < 0 || noaaRadarFrameIndex >= noaaRadarLoopFrames.length - 1 || noaaRadarFrameLoadState === "loading"} aria-label="Next NOAA radar observation">›</button>
+              <input type="range" min="0" max={Math.max(0, noaaRadarLoopFrames.length - 1)} value={Math.max(0, noaaRadarFrameIndex)} disabled={!noaaRadarRenderable || noaaRadarLoopFrames.length < 2 || noaaRadarFrameLoadState === "loading"} onChange={(event) => {
+                const nextIndex = Number(event.target.value);
+                const nextFrame = noaaRadarLoopFrames[nextIndex];
+                if (!nextFrame) return;
+                setNoaaRadarPlaying(false);
+                setNoaaRadarFollowLatest(nextIndex === noaaRadarLoopFrames.length - 1);
+                applyNoaaRadarFrame(nextFrame);
+              }} aria-label="Select an exact NOAA radar observation" aria-valuetext={noaaRadarActiveFrame ? `${formatNoaaRadarLocalTime(noaaRadarActiveFrame)}; ${formatNoaaRadarUtcTime(noaaRadarActiveFrame)}` : "No radar frame available"} />
+              <button className="noaa-radar-live" type="button" aria-pressed={noaaRadarFollowLatest && noaaRadarSelectedIsLatest} onClick={jumpNoaaRadarToLatest}>Latest</button>
+            </div>
+            <div className="noaa-radar-settings">
+              <label><span>Loop</span><select value={noaaRadarLoopSpan} onChange={(event) => { setNoaaRadarPlaying(false); setNoaaRadarLoopSpan(Number(event.target.value) as NoaaRadarLoopSpanMinutes); }}><option value={30}>30 min</option><option value={60}>1 hour</option><option value={120}>2 hours</option></select></label>
+              <label><span>Speed</span><select value={noaaRadarPlaybackSpeed} onChange={(event) => setNoaaRadarPlaybackSpeed(Number(event.target.value) as NoaaRadarPlaybackSpeed)}><option value={0.5}>0.5×</option><option value={1}>1×</option><option value={2}>2×</option></select></label>
+              <label><span>Opacity</span><input type="range" min="10" max="100" value={Math.round(officialOpacity["nws-radar"] * 100)} onChange={(event) => setOfficialContextOpacity("nws-radar", Number(event.target.value) / 100)} aria-valuetext={`${Math.round(officialOpacity["nws-radar"] * 100)} percent`} /></label>
+              <button type="button" onClick={() => void refreshNoaaRadarManifest()} disabled={noaaRadarManifestState === "loading"}>Refresh</button>
+            </div>
+            <details className="noaa-radar-legend">
+              <summary>Reflectivity legend + source</summary>
+              <img src={NOAA_RADAR_LEGEND_URL} width="272" height="21" loading="lazy" alt="NOAA base-reflectivity color legend in dBZ" />
+              <p>Transparent pixels mean no displayed echo. Missing or unavailable imagery is not interpreted as clear weather. Exact observations are stepped without interpolation. A settled request means MapLibre reported no source error; it does not prove complete radar coverage.</p>
+              <dl><div><dt>Source</dt><dd>{NOAA_RADAR_SOURCE_TITLE}</dd></div><div><dt>Cadence</dt><dd>{noaaRadarManifest ? `${Math.round(noaaRadarManifest.nominalCadenceSeconds / 60)} min observed median` : "Discovered from NOAA"}</dd></div><div><dt>Latest age</dt><dd>{noaaRadarLatestAgeMinutes === null ? "Unknown" : `${noaaRadarLatestAgeMinutes} min`}</dd></div><div><dt>Gaps</dt><dd>{noaaRadarManifest ? noaaRadarManifest.gapCount : "Unknown"}</dd></div></dl>
+              {noaaRadarCrossDomainSources.length > 0 && <p><strong>Co-visible operational context:</strong> {noaaRadarCrossDomainSources.join(" · ")}. Each source keeps its own observation or retrieval clock; visual overlap does not establish correlation, lag, direction, or causation.</p>}
+              <a href={OFFICIAL_CONTEXT_BY_ID["nws-radar"].sourceUrl} target="_blank" rel="noreferrer">Open NOAA nowCOAST ↗</a>
+            </details>
+            {noaaRadarFrameError && <div className="noaa-radar-error" role="alert"><strong>{noaaRadarRenderable ? "Frozen on the last confirmed observation" : "Radar withheld"}</strong><span>{noaaRadarFrameError} No untimed or synthetic fallback was used.</span></div>}
+            {reducedMotion && <p className="noaa-radar-motion-note">Reduced motion is active. Automatic looping is off; exact-frame stepping remains available.</p>}
+            <footer>Situational display only · not an emergency warning service · times remain separate from the atlas year</footer>
           </aside>}
           <aside className="map-legend-dock" aria-label="Visible map legend">
             <header>

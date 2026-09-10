@@ -47,6 +47,32 @@ visibility choices so the same sources return on Present. Historical playback
 never relabels current Census, USGS, NWS, terrain, or radar context as archival
 data.
 
+### NOAA observed-radar loop
+
+The optional radar control uses the NOAA nowCOAST WMS endpoint
+`https://nowcoast.noaa.gov/geoserver/weather_radar/wms` and its NWS/OAR MRMS
+`conus_base_reflectivity_mosaic` product. The fixed server adapter at
+`/api/noaa-radar/frames` reads the product's WMS capabilities document and
+accepts only its explicit advertised ISO observation times. MapLibre then asks
+for each selected image with that exact `TIME`; the Site does not invent
+intermediate times, interpolate imagery, or make an untimed “latest” request.
+
+The dock can step or play up to 32 available observations from a rolling
+30-minute, 1-hour, or 2-hour view. Its default is 1 hour. Availability,
+retention, and cadence remain controlled by NOAA and can change; the interface
+reports the discovered median cadence and gaps rather than promising a fixed
+archive. The frame manifest is checked every four minutes while radar is
+selected, with retries bounded to no more than once per minute.
+
+An upstream, contract, or tile failure pauses the loop and either freezes the
+last still-valid exact observation with a visible error or withholds radar.
+Radar is also withheld once NOAA's newest advertised observation is more than
+15 minutes old. No synthetic image, nearest-time substitution, or prior frame
+relabeled as current is used. This layer is observational display context only:
+rendered colors are not converted to rainfall, storm motion, warning status, or
+forecast, and the loop is not an emergency or warning-delivery service. Use
+official NWS products for weather decisions.
+
 ## External network disclosure
 
 The map can request four external display carriers. Their endpoints,
@@ -80,7 +106,7 @@ requests cannot supply an arbitrary upstream URL.
 | USGS earthquakes | Off | Bounded 30-day Kansas-area event catalog with magnitude and depth | Catalog values can change; not an alert or hazard forecast |
 | USGS 3DEP hillshade | Off | Current multidirectional hillshade tiles | Rendered relief only; no elevation sample, datum, or accuracy claim |
 | NWS alert areas | Off | Active Kansas alerts and bounded affected-zone geometry | Not a warning-delivery service or an all-clear |
-| NWS/NCEP radar | Off | Current CONUS reflectivity mosaic | Pixels do not establish precipitation rate, sweep time, or forecast |
+| NOAA nowCOAST radar | Off | Recent CONUS base-reflectivity observations at exact NOAA-advertised times, with 30-minute, 1-hour, and 2-hour loop views | Context only; pixels do not establish rainfall rate, storm motion, warning status, forecast, or an emergency all-clear |
 
 Every connection is `EXTERNAL_CONTEXT_ONLY`. It is excluded from KFM reports,
 exports, source admission, release state, and EvidenceBundle resolution. Failed,
@@ -90,7 +116,11 @@ into inferred facts.
 ## Backend connection posture
 
 - `/api/live-context` is the allowlisted server adapter for four JSON feeds;
-  the two raster products are requested by MapLibre only when selected.
+  the USGS 3DEP raster product is requested by MapLibre only when selected.
+- `/api/noaa-radar/frames` is a fixed, read-only NOAA nowCOAST capabilities
+  adapter. It accepts no caller-supplied endpoint, bounds time and response
+  size, and returns no synthetic or untimed fallback. Exact-time WMS radar
+  images are requested by MapLibre only when the user selects the layer.
 - `/api/repository-status` reads only the public `main` branch identity for
   `bartytime4life/Kansas-Frontier-Matrix`. It accepts no caller-supplied URL,
   bounds response size and time, caches briefly, and fails closed.
@@ -123,6 +153,9 @@ Scripts that need writable project-scoped home, npm, XDG, and temporary paths us
 - `app/external-context-sources.ts` is the single inventory for every
   browser-requested basemap and terrain carrier
 - `app/api/live-context/route.ts` contains the fixed official-context adapter
+- `app/noaa-radar.ts` owns the NOAA nowCOAST product contract, explicit-time
+  parsing, recent-window selection, and exact-time WMS request construction
+- `app/api/noaa-radar/frames/route.ts` exposes the bounded radar frame manifest
 - `app/api/repository-status/route.ts` contains the fixed read-only GitHub
   currentness check
 - `app/chatgpt-auth.ts` provides optional dispatch-owned ChatGPT sign-in helpers

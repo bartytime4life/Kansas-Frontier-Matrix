@@ -1,6 +1,6 @@
 # KFM Explorer Source Ledger, Gap Register, and Traceability
 
-Audit date: 2026-09-09
+Audit date: 2026-09-09; NOAA radar-loop implementation note updated 2026-09-10
 Target: existing Site `kansas-frontier-matrix-explorer`
 Truth rule: the current mounted Site proves current behavior; Drive documents support doctrine or proposals but do not prove implementation.
 
@@ -44,6 +44,7 @@ Searches also found duplicate retained artifacts, including two identical Pass 1
 - Focus Mode is a deterministic site-local adapter with no direct browser-to-model endpoint.
 - Globe projection is available as context. Opt-in Terrain 3D and hillshade use the explicitly disclosed AWS / Mapzen Terrarium carrier with a 2D fallback; the carrier remains display context, not admitted elevation evidence. Swipe comparison remains held because no compatible admitted pair exists.
 - The Sources workbench discloses every browser-requested basemap and terrain carrier from `app/external-context-sources.ts`, including activation, endpoint host, attribution, fallback, and evidence/export boundaries.
+- The optional NOAA nowCOAST/NWS/OAR MRMS CONUS base-reflectivity layer uses a fixed capabilities adapter and exact advertised observation times. It offers bounded recent 30-minute, 1-hour, and 2-hour playback, reports observed cadence/gaps, never interpolates frames, and remains `EXTERNAL_CONTEXT_ONLY`.
 - Source errors are isolated to the affected registry layer when MapLibre supplies a source ID; unrecoverable runtime errors fail visibly.
 
 ## Gap register
@@ -224,7 +225,7 @@ Searches also found duplicate retained artifacts, including two identical Pass 1
 | Unsupported-browser fail-visible path | `SRC-MAP-OPS`, `SRC-MAP-MASTER` | Reliability acceptance criterion | Capability probe only | `ERROR`; catalog and trust text remain available | `app/page.tsx` | Browser environment without WebGL2 | Interactive map requires WebGL2 | Remove the preflight capability check |
 | Visible advanced-capability gates | `SRC-MAP-OPS`, `SRC-MAP-MASTER` | `GAP-P3-006`, `GAP-P2-007` | External terrain context only; no KFM evidence data added | `CONTEXT ONLY` / unavailable remains visible | `app/page.tsx`, `app/globals.css` | Render/build check | Terrain is display-only; swipe remains held | Remove explanatory gate block |
 | External context source registry | Provider primary references + renderer configuration | `GAP-P1-012` | Four external display carriers; context only | Explicitly excluded from KFM evidence | `app/external-context-sources.ts`, `app/map-runtime.ts`, `app/terrain-sources.ts`, `app/page.tsx`, `app/globals.css` | Registry contract, TypeScript, rendered-shell checks | Runtime availability and provider lineage remain external | Restore endpoint literals and remove disclosure cards |
-| Official Kansas context adapters | Census TIGERweb + 2024 ACS 5-year, USGS Water Data, USGS Earthquake Hazards, USGS 3DEP, NOAA/NWS alerts and NCEP radar | `GAP-P1-012` | Six fixed connections; Census geometry/population join plus bounded current context | `EXTERNAL_CONTEXT_ONLY`; excluded from KFM reports, exports, admission, release, and EvidenceBundles | `app/live-context.ts`, `app/api/live-context/route.ts`, `app/page.tsx`, `app/globals.css` | Fixed-allowlist route, registry, rendered-shell, TypeScript, and unknown-feed negative check | Live availability, provider revision, separate vintages, and scientific fitness remain external; zero is never an all-clear | Remove adapter/registry additions and retain site-local layers |
+| Official Kansas context adapters | Census TIGERweb + 2024 ACS 5-year, USGS Water Data, USGS Earthquake Hazards, USGS 3DEP, NOAA/NWS alerts, and NOAA nowCOAST/NWS/OAR MRMS radar | `GAP-P1-012` | Six fixed connections; Census geometry/population join, bounded current context, and an exact-time rolling recent radar window | `EXTERNAL_CONTEXT_ONLY`; excluded from KFM reports, exports, admission, release, and EvidenceBundles | `app/live-context.ts`, `app/api/live-context/route.ts`, `app/noaa-radar.ts`, `app/api/noaa-radar/frames/route.ts`, `app/page.tsx`, `app/globals.css` | Fixed-allowlist routes, explicit-time parser and URL guards, registry, rendered shell, TypeScript, and unknown-feed negative check | NOAA controls frame retention and cadence; radar is frozen or withheld on failure and withheld when the newest observation exceeds 15 minutes; no rainfall, storm-motion, warning, forecast, or emergency-status inference | Remove adapter/registry additions and retain site-local layers |
 
 ## Remaining boundary
 

@@ -2828,9 +2828,107 @@ body { font-size: 14px; }
 .availability-bars { height: 58px; }
 .availability-bars i { max-width: none; }
 
+/* Exact NOAA observation loop. This subordinate clock never replaces the
+   atlas year and never turns an external display carrier into KFM evidence. */
+.noaa-radar-loop {
+  position: absolute;
+  z-index: 19;
+  bottom: 14px;
+  left: 50%;
+  display: grid;
+  width: min(760px, calc(100% - 190px));
+  max-height: 230px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  gap: 8px;
+  border: 1px solid rgba(115, 199, 210, .42);
+  border-top: 3px solid var(--water);
+  border-radius: 12px;
+  background: rgba(3, 22, 27, .95);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, .5);
+  padding: 10px 12px 9px;
+  transform: translateX(-50%);
+  backdrop-filter: blur(18px);
+}
+.noaa-radar-loop:focus-visible { outline: 3px solid var(--gold-soft); outline-offset: 3px; }
+.noaa-radar-loop[data-state="frozen"],
+.noaa-radar-loop[data-state="unavailable"] { border-color: rgba(255, 155, 136, .62); border-top-color: var(--red); }
+.noaa-radar-loop > header,
+.noaa-radar-frame,
+.noaa-radar-transport,
+.noaa-radar-settings { display: flex; align-items: center; gap: 8px; }
+.noaa-radar-loop > header { justify-content: space-between; }
+.noaa-radar-loop > header div { display: grid; gap: 2px; min-width: 0; }
+.noaa-radar-loop > header span { color: var(--water); font-size: 10px; font-weight: 950; letter-spacing: .12em; }
+.noaa-radar-loop > header strong { overflow: hidden; color: var(--ink); font-family: Georgia, "Times New Roman", serif; font-size: 15px; text-overflow: ellipsis; white-space: nowrap; }
+.noaa-radar-loop > header > b { flex: none; border: 1px solid rgba(115, 199, 210, .42); border-radius: 999px; color: var(--water); padding: 5px 8px; font-size: 10px; letter-spacing: .08em; }
+.noaa-radar-loop[data-state="frozen"] > header > b,
+.noaa-radar-loop[data-state="unavailable"] > header > b { border-color: rgba(255, 155, 136, .42); color: var(--red); }
+.noaa-radar-frame { justify-content: space-between; border-top: 1px solid var(--line); padding-top: 7px; }
+.noaa-radar-frame > div { display: grid; min-width: 0; gap: 2px; }
+.noaa-radar-frame strong { overflow: hidden; color: var(--gold-soft); font-size: 13px; text-overflow: ellipsis; white-space: nowrap; }
+.noaa-radar-frame small { color: var(--dim); font-size: 11px; }
+.noaa-radar-frame > span { flex: none; color: var(--muted); font-size: 11px; font-weight: 850; }
+.noaa-radar-transport { display: grid; grid-template-columns: 40px 78px 40px minmax(130px, 1fr) 64px; }
+.noaa-radar-transport button,
+.noaa-radar-settings button {
+  min-height: 38px;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, .025);
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 850;
+}
+.noaa-radar-transport button:not(:disabled):hover,
+.noaa-radar-settings button:not(:disabled):hover { border-color: rgba(224, 186, 109, .5); color: var(--gold-soft); }
+.noaa-radar-transport button:disabled,
+.noaa-radar-settings button:disabled { opacity: .38; }
+.noaa-radar-transport .noaa-radar-play { border-color: rgba(224, 186, 109, .45); background: rgba(224, 186, 109, .08); color: var(--gold-soft); }
+.noaa-radar-transport .noaa-radar-live[aria-pressed="true"] { border-color: rgba(131, 198, 160, .52); background: rgba(131, 198, 160, .09); color: var(--green); }
+.noaa-radar-transport input { width: 100%; min-width: 0; }
+.noaa-radar-settings { display: grid; grid-template-columns: 1fr 1fr minmax(150px, 1.5fr) auto; }
+.noaa-radar-settings label { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 6px; min-width: 0; }
+.noaa-radar-settings label > span { color: var(--dim); font-size: 10px; font-weight: 900; text-transform: uppercase; }
+.noaa-radar-settings select {
+  min-width: 0;
+  width: 100%;
+  min-height: 32px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--panel-strong);
+  color: var(--muted);
+  padding: 0 7px;
+  font-size: 11px;
+}
+.noaa-radar-settings input { width: 100%; min-width: 0; }
+.noaa-radar-settings button { min-height: 32px; padding: 0 10px; }
+.noaa-radar-legend { border-top: 1px solid var(--line); }
+.noaa-radar-legend summary { cursor: pointer; color: var(--water); padding: 7px 0 0; font-size: 11px; font-weight: 850; }
+.noaa-radar-legend img { display: block; max-width: 100%; height: auto; margin-top: 8px; border-radius: 4px; background: white; }
+.noaa-radar-legend p { margin: 7px 0 0; color: var(--dim); font-size: 11px; line-height: 1.45; }
+.noaa-radar-legend p strong { color: var(--gold-soft); }
+.noaa-radar-legend dl { display: grid; grid-template-columns: 1fr 1fr; margin: 8px 0 0; border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+.noaa-radar-legend dl div { border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 6px; }
+.noaa-radar-legend dt { color: var(--dim); font-size: 9px; text-transform: uppercase; }
+.noaa-radar-legend dd { margin: 3px 0 0; color: var(--muted); font-size: 10px; }
+.noaa-radar-legend a { display: inline-flex; margin-top: 8px; color: var(--water); font-size: 11px; font-weight: 850; }
+.noaa-radar-error { display: grid; gap: 2px; border-left: 3px solid var(--red); background: rgba(255, 155, 136, .06); padding: 7px 8px; }
+.noaa-radar-error strong { color: var(--red); font-size: 11px; }
+.noaa-radar-error span { color: var(--muted); font-size: 10px; line-height: 1.4; }
+.noaa-radar-motion-note { margin: 0; border-left: 2px solid var(--gold); color: var(--gold-soft); padding-left: 8px; font-size: 10px; }
+.noaa-radar-loop > footer { color: var(--dim); font-size: 10px; line-height: 1.35; }
+.map-stage[data-radar-loop="true"] .qwen-map-launch { bottom: 252px; }
+.map-stage[data-radar-loop="true"] .map-legend-dock,
+.map-stage[data-radar-loop="true"] .measurement-readout { bottom: 252px; }
+.map-stage[data-radar-loop="true"] .maplibregl-ctrl-bottom-left,
+.map-stage[data-radar-loop="true"] .maplibregl-ctrl-bottom-right { bottom: 252px; }
+.map-stage[data-radar-loop="true"]::after { bottom: 252px; }
+
 @media (max-width: 1180px) {
   .timeline-detail { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   .timeline-sweep-setup { grid-column: 1 / -1; }
+  .noaa-radar-loop { width: min(700px, calc(100% - 120px)); }
 }
 
 @media (max-width: 760px) {
@@ -2839,6 +2937,30 @@ body { font-size: 14px; }
   .timeline-semantic-controls { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .timeline-range-controls { grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); }
   .timeline-range-controls > strong { grid-column: 1 / -1; }
+  .noaa-radar-loop {
+    right: 8px;
+    bottom: calc(62px + env(safe-area-inset-bottom));
+    left: 8px;
+    width: auto;
+    max-height: min(48dvh, 440px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 9px;
+    transform: none;
+  }
+  .noaa-radar-loop > header strong { font-size: 14px; }
+  .noaa-radar-transport { grid-template-columns: 42px 78px 42px minmax(80px, 1fr) 60px; }
+  .noaa-radar-transport button,
+  .noaa-radar-settings button,
+  .noaa-radar-settings select { min-height: 44px; }
+  .noaa-radar-settings { grid-template-columns: 1fr 1fr; }
+  .noaa-radar-settings label:nth-child(3) { grid-column: 1 / -1; }
+  .map-stage[data-radar-loop="true"] .map-mobile-actions { bottom: calc(8px + env(safe-area-inset-bottom)); }
+  .map-stage[data-radar-loop="true"] .maplibregl-ctrl-bottom-left,
+  .map-stage[data-radar-loop="true"] .maplibregl-ctrl-bottom-right,
+  .map-stage[data-radar-loop="true"]::after { bottom: calc(min(48dvh, 440px) + 74px + env(safe-area-inset-bottom)); }
+  .map-stage[data-radar-loop="true"] .qwen-map-launch,
+  .map-stage[data-radar-loop="true"] .measurement-readout { bottom: calc(min(48dvh, 440px) + 74px + env(safe-area-inset-bottom)); }
 }
 
 @media (max-width: 500px) {
@@ -2847,4 +2969,9 @@ body { font-size: 14px; }
   .timeline-change-list,
   .timeline-primary-actions,
   .timeline-live-context dl { grid-template-columns: minmax(0, 1fr); }
+  .noaa-radar-transport { grid-template-columns: 42px 1fr 42px 62px; }
+  .noaa-radar-transport input { grid-column: 1 / -1; grid-row: 2; }
+  .noaa-radar-frame small { font-size: 10px; }
+  .noaa-radar-legend dl { grid-template-columns: 1fr; }
+  .map-stage[data-radar-loop="true"] .qwen-map-launch { bottom: calc(min(48dvh, 440px) + 74px + env(safe-area-inset-bottom)); }
 }

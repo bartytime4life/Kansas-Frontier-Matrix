@@ -795,13 +795,16 @@ test("keeps every top-level external map carrier in a display-only disclosure re
 test("connects six bounded official Kansas context sources without admitting evidence", async () => {
   const ts = await import("typescript");
   const registrySource = await readFile(new URL("../app/live-context.ts", import.meta.url), "utf8");
+  const radarSource = await readFile(new URL("../app/noaa-radar.ts", import.meta.url), "utf8");
   const route = await readFile(new URL("../app/api/live-context/route.ts", import.meta.url), "utf8");
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
-  const javascript = ts.transpileModule(registrySource, {
+  const compile = (source, fileName) => ts.transpileModule(source, {
     compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
-    fileName: "live-context.ts",
+    fileName,
   }).outputText;
+  const radarUrl = `data:text/javascript;base64,${Buffer.from(compile(radarSource, "noaa-radar.ts")).toString("base64")}`;
+  const javascript = compile(registrySource.replace('from "./noaa-radar";', `from "${radarUrl}";`), "live-context.ts");
   const registry = await import(`data:text/javascript;base64,${Buffer.from(javascript).toString("base64")}`);
 
   assert.deepEqual(registry.OFFICIAL_CONTEXT_SOURCES.map((record) => record.id), ["census-counties", "usgs-streamflow", "usgs-earthquakes", "usgs-3dep-hillshade", "nws-alerts", "nws-radar"]);
@@ -833,6 +836,56 @@ test("connects six bounded official Kansas context sources without admitting evi
   assert.match(css, /\.official-connection-ledger/);
 });
 
+test("adds an exact-time NOAA nowCOAST radar loop and a fail-closed control surface", async () => {
+  const radar = await readFile(new URL("../app/noaa-radar.ts", import.meta.url), "utf8");
+  const route = await readFile(new URL("../app/api/noaa-radar/frames/route.ts", import.meta.url), "utf8");
+  const liveContext = await readFile(new URL("../app/live-context.ts", import.meta.url), "utf8");
+  const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+
+  assert.match(radar, /NOAA_RADAR_PRODUCT_ID = "conus_base_reflectivity_mosaic"/);
+  assert.match(radar, /nowcoast\.noaa\.gov\/geoserver\/weather_radar\/wms\?service=WMS&version=1\.3\.0&request=GetCapabilities/);
+  assert.match(radar, /rawTokens\.some\(\(value\) => value\.includes\("\/"\)\)/);
+  assert.match(radar, /unsupported interval/);
+  assert.match(radar, /requires an exact advertised observation timestamp/);
+  assert.match(radar, /parameters\.push\(`time=\$\{encodeURIComponent\(normalized\)\}`\)/);
+  assert.match(radar, /interpolation: false/);
+  assert.match(route, /MAX_CAPABILITIES_BYTES = 512 \* 1024/);
+  assert.match(route, /REQUEST_TIMEOUT_MS = 12_000/);
+  assert.match(route, /did not match the fixed WMS contract/);
+  assert.match(route, /No synthetic or untimed fallback was used/);
+  assert.match(route, /"Cache-Control": "no-store"/);
+  assert.doesNotMatch(route, /searchParams\.get\(|new URL\(request\.url\)/);
+  assert.match(liveContext, /axis: "provider-observation-loop"/);
+  assert.match(liveContext, /setNoaaRadarObservationTime/);
+  assert.match(liveContext, /noaaRadarTileUrl\(observedAt\)/);
+  assert.doesNotMatch([radar, route, liveContext].join("\n"), /opengeo\.ncep\.noaa\.gov|conus_bref_qcd/);
+
+  assert.match(page, /aria-label="NOAA observed radar loop controls"/);
+  assert.match(page, /aria-label="Previous NOAA radar observation"/);
+  assert.match(page, /aria-label="Next NOAA radar observation"/);
+  assert.match(page, /aria-label="Select an exact NOAA radar observation"/);
+  assert.match(page, /<option value=\{30\}>30 min<\/option><option value=\{60\}>1 hour<\/option><option value=\{120\}>2 hours<\/option>/);
+  assert.match(page, /<option value=\{0\.5\}>0\.5×<\/option><option value=\{1\}>1×<\/option><option value=\{2\}>2×<\/option>/);
+  assert.match(page, /Reflectivity legend \+ source/);
+  assert.match(page, /noaaRadarManifestIsFresh/);
+  assert.match(page, /newest NOAA radar observation is more than 15 minutes old/i);
+  assert.match(page, /Each source keeps its own observation or retrieval clock; visual overlap does not establish correlation, lag, direction, or causation/);
+  assert.match(page, /A settled request means MapLibre reported no source error; it does not prove complete radar coverage/);
+  assert.match(page, /noaaRadarPendingFrameTimeRef/);
+  assert.match(page, /noaaRadarFrameFailureRef/);
+  assert.match(page, /temporalQueryRef\.current\.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME[\s\S]*NOAA radar remains held outside/);
+  assert.match(page, /event\.sourceId !== OFFICIAL_CONTEXT_BY_ID\["nws-radar"\]\.sourceId \|\| !event\.tile \|\| !event\.isSourceLoaded/);
+  assert.match(page, /if \(!noaaRadarObservationTimeIsApplied\(map, observedAt\)\) return/);
+  assert.match(page, /pendingRadarFrame[\s\S]*noaaRadarFrameLoadCleanupRef\.current\?\.\(\)[\s\S]*setNoaaRadarFrameLoadState\("idle"\)[\s\S]*map\.setStyle/);
+  assert.match(page, /Reduced motion is active\. Automatic looping is off/);
+  assert.match(page, /times remain separate from the atlas year/);
+  assert.match(css, /\.noaa-radar-loop/);
+  assert.match(css, /\.noaa-radar-transport/);
+  assert.match(css, /\.noaa-radar-legend/);
+  assert.match(css, /@media \(max-width: 760px\)[\s\S]*\.noaa-radar-loop/);
+});
+
 test("checks current GitHub main through one fixed read-only backend route", async () => {
   const route = await readFile(new URL("../app/api/repository-status/route.ts", import.meta.url), "utf8");
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
@@ -857,6 +910,43 @@ test("the built official-context adapter rejects unknown feeds without network a
   const response = await worker.fetch(new Request("http://localhost/api/live-context?feed=arbitrary"), {}, { waitUntil() {}, passThroughOnException() {} });
   assert.equal(response.status, 400);
   assert.match(await response.text(), /fixed allowlist/i);
+});
+
+test("the built NOAA radar adapter returns explicit observations and fails closed", async () => {
+  const workerUrl = new URL("../dist/server/index.js", import.meta.url);
+  workerUrl.searchParams.set("test", `radar-${process.pid}-${Date.now()}`);
+  const { default: worker } = await import(workerUrl.href);
+  const originalFetch = globalThis.fetch;
+  const upstreamCalls = [];
+  const capabilitiesUrl = "https://nowcoast.noaa.gov/geoserver/weather_radar/wms?service=WMS&version=1.3.0&request=GetCapabilities";
+  const baseTime = Math.floor(Date.now() / 240_000) * 240_000;
+  const expectedFrames = [-2, -1, 0].map((offset) => new Date(baseTime + offset * 240_000).toISOString());
+  const xml = `<?xml version="1.0"?><WMS_Capabilities><Capability><Layer><Layer><Name>conus_base_reflectivity_mosaic</Name><Dimension name="time" default="${expectedFrames[2]}">${expectedFrames[2]},${expectedFrames[0]},${expectedFrames[1]}</Dimension></Layer></Layer></Capability></WMS_Capabilities>`;
+  try {
+    globalThis.fetch = async (input) => {
+      upstreamCalls.push(String(input));
+      return new Response(xml, { headers: { "content-type": "application/xml" } });
+    };
+    const readyResponse = await worker.fetch(new Request("http://localhost/api/noaa-radar/frames?url=https://example.invalid/untimed"), {}, { waitUntil() {}, passThroughOnException() {} });
+    assert.equal(readyResponse.status, 200);
+    const manifest = await readyResponse.json();
+    assert.deepEqual(manifest.frames, expectedFrames);
+    assert.equal(manifest.interpolation, false);
+    assert.equal(manifest.evidenceRole, "EXTERNAL_CONTEXT_ONLY");
+    assert.deepEqual(upstreamCalls, [capabilitiesUrl]);
+
+    globalThis.fetch = async () => new Response("Unavailable", { status: 503, headers: { "content-type": "text/plain" } });
+    const errorResponse = await worker.fetch(new Request("http://localhost/api/noaa-radar/frames?case=upstream-error"), {}, { waitUntil() {}, passThroughOnException() {} });
+    assert.equal(errorResponse.status, 502);
+    assert.equal(errorResponse.headers.get("cache-control"), "no-store");
+    const error = await errorResponse.json();
+    assert.equal(error.state, "error");
+    assert.equal(error.code, "NOAA_RADAR_UNAVAILABLE");
+    assert.equal(error.message, "NOAA radar frames are temporarily unavailable. No synthetic or untimed fallback was used.");
+    assert.equal("frames" in error, false);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
 });
 
 test("the built official-context adapter joins dated Census population and bounds USGS earthquakes", async () => {

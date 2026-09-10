@@ -1,5 +1,6 @@
 import type { FeatureCollection } from "geojson";
-import type { GeoJSONSource, LayerSpecification, Map as MapLibreMap } from "maplibre-gl";
+import type { GeoJSONSource, LayerSpecification, Map as MapLibreMap, RasterTileSource } from "maplibre-gl";
+import { noaaRadarTileUrl } from "./noaa-radar";
 
 export type OfficialContextId = "census-counties" | "usgs-streamflow" | "usgs-earthquakes" | "usgs-3dep-hillshade" | "nws-alerts" | "nws-radar";
 export type OfficialContextFeedId = "census-counties" | "usgs-streamflow" | "usgs-earthquakes" | "nws-alerts";
@@ -167,27 +168,26 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
   }),
   Object.freeze({
     id: "nws-radar",
-    title: "NWS/NCEP current CONUS radar reflectivity",
-    shortTitle: "Current radar",
-    organization: "NOAA National Weather Service / NCEP",
+    title: "NOAA nowCOAST CONUS radar reflectivity loop",
+    shortTitle: "NOAA radar loop",
+    organization: "NOAA nowCOAST · NWS/OAR MRMS",
     domain: "Weather & hazards",
     kind: "OPERATIONAL_WMS",
     sourceId: "external-nws-radar",
     layerIds: Object.freeze(["external-nws-radar-raster"]),
     interactiveLayerIds: Object.freeze([]),
-    mapUrl: "https://opengeo.ncep.noaa.gov/geoserver/conus/conus_bref_qcd/ows?service=WMS&version=1.1.1&request=GetMap&layers=conus_bref_qcd&styles=&bbox={bbox-epsg-3857}&width=256&height=256&srs=EPSG:3857&format=image/png&transparent=true",
-    endpointLabel: "opengeo.ncep.noaa.gov · conus_bref_qcd",
-    sourceUrl: "https://www.weather.gov/gis/cloudgiswebservices",
-    serviceUrl: "https://opengeo.ncep.noaa.gov/geoserver/conus/conus_bref_qcd/ows",
-    cadence: "Operational WMS tiles; provider-controlled refresh",
-    freshness: "Current mosaic as labeled by the upstream service",
+    endpointLabel: "nowcoast.noaa.gov · conus_base_reflectivity_mosaic",
+    sourceUrl: "https://nowcoast.noaa.gov/",
+    serviceUrl: "https://nowcoast.noaa.gov/geoserver/weather_radar/wms",
+    cadence: "Time-enabled MRMS mosaic; cadence is discovered from advertised observations (currently about four minutes)",
+    freshness: "Exact available observation times loaded from the fixed NOAA WMS capabilities adapter",
     defaultVisibility: false,
     defaultOpacity: 0.68,
     color: "#f2c14e",
-    attribution: "NOAA/NWS/NCEP OpenGeo",
+    attribution: "NOAA nowCOAST · NWS/OAR MRMS",
     evidenceRole: "EXTERNAL_CONTEXT_ONLY",
-    boundary: "Radar is a visual operational mosaic. The Site does not resolve sweep time, beam blockage, quality flags, precipitation rate, forecast, warning status, or KFM evidence support from these pixels.",
-    fallback: "Failed WMS tiles remain transparent and the status stays provider-dependent; users should consult official NWS products for decisions.",
+    boundary: "Observed 1 km CONUS base-reflectivity mosaics are shown at exact NOAA-advertised frame times. The Site does not infer values from rendered colors, interpolate frames, resolve beam blockage or quality flags, convert reflectivity to rainfall, predict motion, determine warning status, or create KFM evidence support.",
+    fallback: "If the frame manifest or requested WMS tiles fail, the radar is frozen or withheld with a visible error; no prior frame is relabeled as current and no synthetic radar is substituted. Consult official NWS products for decisions.",
   }),
 ]);
 
@@ -197,7 +197,7 @@ export const OFFICIAL_CONTEXT_INTERACTIVE_LAYER_IDS = Object.freeze(OFFICIAL_CON
 export const OFFICIAL_CONTEXT_PRESENT_FRAME = 2026;
 
 export type OfficialContextTemporalSupport = Readonly<{
-  axis: "joined-source-snapshot" | "rolling-retrieval-window" | "provider-current-mosaic";
+  axis: "joined-source-snapshot" | "rolling-retrieval-window" | "provider-current-mosaic" | "provider-observation-loop";
   supportedFrames: readonly number[];
   limitation: string;
 }>;
@@ -232,9 +232,9 @@ export const OFFICIAL_CONTEXT_TEMPORAL_SUPPORT: Readonly<Record<OfficialContextI
     limitation: "Active-alert snapshot at retrieval time; expired historical alerts are not requested.",
   }),
   "nws-radar": Object.freeze({
-    axis: "provider-current-mosaic",
+    axis: "provider-observation-loop",
     supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]),
-    limitation: "Provider-current radar mosaic with no archived sweep-time selection in this Site.",
+    limitation: "A bounded recent observation-time loop is available only inside the operational-present atlas frame. It is not a historical archive or a released KFM time series.",
   }),
 });
 
@@ -299,9 +299,9 @@ export const applyOfficialContextState = (
   ensureLayer(map, { id: alerts.layerIds[0], type: "fill", source: alerts.sourceId, paint: { "fill-color": severityColor, "fill-opacity": 0.34 } });
   ensureLayer(map, { id: alerts.layerIds[1], type: "line", source: alerts.sourceId, paint: { "line-color": severityColor, "line-width": 2.4, "line-opacity": 0.94 } });
 
-  for (const raster of [OFFICIAL_CONTEXT_BY_ID["usgs-3dep-hillshade"], OFFICIAL_CONTEXT_BY_ID["nws-radar"]]) {
-    if (!map.getSource(raster.sourceId)) map.addSource(raster.sourceId, { type: "raster", tiles: [raster.mapUrl!], tileSize: 256, attribution: raster.attribution, minzoom: 3, maxzoom: raster.id === "nws-radar" ? 12 : 16 });
-    ensureLayer(map, { id: raster.layerIds[0], type: "raster", source: raster.sourceId, paint: { "raster-opacity": raster.defaultOpacity, "raster-fade-duration": raster.id === "nws-radar" ? 0 : 120 } }, firstRegistryLayer(map));
+  for (const raster of [OFFICIAL_CONTEXT_BY_ID["usgs-3dep-hillshade"]]) {
+    if (!map.getSource(raster.sourceId)) map.addSource(raster.sourceId, { type: "raster", tiles: [raster.mapUrl!], tileSize: 256, attribution: raster.attribution, minzoom: 3, maxzoom: 16 });
+    ensureLayer(map, { id: raster.layerIds[0], type: "raster", source: raster.sourceId, paint: { "raster-opacity": raster.defaultOpacity, "raster-fade-duration": 120 } }, firstRegistryLayer(map));
   }
 
   for (const source of OFFICIAL_CONTEXT_SOURCES) {
@@ -317,4 +317,31 @@ export const applyOfficialContextState = (
       if (layer?.type === "raster") map.setPaintProperty(layerId, "raster-opacity", safeOpacity);
     }
   }
+};
+
+/** Checks the renderer source without mutating or reloading it. */
+export const noaaRadarObservationTimeIsApplied = (map: MapLibreMap, observedAt: string): boolean => {
+  const radar = OFFICIAL_CONTEXT_BY_ID["nws-radar"];
+  const source = map.getSource(radar.sourceId) as RasterTileSource | undefined;
+  return Boolean(source && map.getLayer(radar.layerIds[0]) && source.serialize().tiles?.[0] === noaaRadarTileUrl(observedAt));
+};
+
+/** Switches the fixed NOAA raster source to one advertised observation time.
+ * Invalid timestamps are rejected, and the tile URL never omits TIME. */
+export const setNoaaRadarObservationTime = (map: MapLibreMap, observedAt: string): "changed" | "unchanged" | null => {
+  const radar = OFFICIAL_CONTEXT_BY_ID["nws-radar"];
+  const tileUrl = noaaRadarTileUrl(observedAt);
+  let source = map.getSource(radar.sourceId) as RasterTileSource | undefined;
+  let changed = false;
+  if (!source) {
+    map.addSource(radar.sourceId, { type: "raster", tiles: [tileUrl], tileSize: 256, attribution: radar.attribution, minzoom: 3, maxzoom: 12 });
+    source = map.getSource(radar.sourceId) as RasterTileSource | undefined;
+    changed = true;
+  } else if (typeof source.setTiles === "function" && source.serialize().tiles?.[0] !== tileUrl) {
+    source.setTiles([tileUrl]);
+    changed = true;
+  }
+  ensureLayer(map, { id: radar.layerIds[0], type: "raster", source: radar.sourceId, paint: { "raster-opacity": radar.defaultOpacity, "raster-fade-duration": 0 } }, firstRegistryLayer(map));
+  if (!source) return null;
+  return changed ? "changed" : "unchanged";
 };

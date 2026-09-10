@@ -3,17 +3,21 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import ts from "typescript";
 
-const compileModule = async (name) => {
+const compileModuleUrl = async (name, transform = (source) => source) => {
   const source = await readFile(new URL(`../app/${name}.ts`, import.meta.url), "utf8");
-  const output = ts.transpileModule(source, {
+  const output = ts.transpileModule(transform(source), {
     compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
     fileName: `${name}.ts`,
   }).outputText;
-  return import(`data:text/javascript;base64,${Buffer.from(output).toString("base64")}`);
+  return `data:text/javascript;base64,${Buffer.from(output).toString("base64")}`;
 };
 
-const temporal = await compileModule("temporal-sweep");
-const official = await compileModule("live-context");
+const temporal = await import(await compileModuleUrl("temporal-sweep"));
+const radarModuleUrl = await compileModuleUrl("noaa-radar");
+const official = await import(await compileModuleUrl("live-context", (source) => source.replace(
+  'from "./noaa-radar";',
+  `from "${radarModuleUrl}";`,
+)));
 
 const feature = (fid, title, year) => ({
   type: "Feature",
