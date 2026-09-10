@@ -1,4 +1,5 @@
 import type { EvidenceState, LayerRecord } from "./explorer-data";
+import type { TemporalStepRule, TemporalSweepMode } from "./temporal-sweep";
 
 export type { LayerRecord };
 
@@ -82,6 +83,16 @@ export type MapSnapshot = Readonly<{
   basemap: string;
   evidenceFilter?: EvidenceState | "ALL";
   comparison?: Readonly<{ layerA: string; layerB: string; timeA: number; timeB: number }>;
+  temporalSweep?: Readonly<{
+    mode: TemporalSweepMode;
+    frame: number;
+    rangeStart: number;
+    rangeEnd: number;
+    windowStart: number;
+    windowFrames: number;
+    stepRule: TemporalStepRule;
+    interpolation: false;
+  }>;
   committedTime: TemporalExtent;
   visibleLayers: readonly Readonly<{
     id: string;
@@ -211,6 +222,9 @@ const sceneSnapshot = (
   ...snapshot,
   id: `${snapshot.id}-${id}`,
   committedTime: { start: time, end: time, label, mode: "instant" },
+  temporalSweep: { mode: "snapshot", frame: time, rangeStart: time, rangeEnd: time, windowStart: time, windowFrames: 1, stepRule: "available-events", interpolation: false },
+  comparison: undefined,
+  evidenceFilter: "ALL",
   evidenceRefs: [evidenceRef],
   area: { kind: "viewport", label: record?.spatialScope ?? "Kansas demonstration context" },
   camera: { center: record?.displayFocus ?? [-98.38, 38.48], zoom: record ? 6.4 : 5.4, bearing: 0, pitch: 0 },

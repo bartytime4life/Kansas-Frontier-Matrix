@@ -30,6 +30,15 @@ export function validMapSnapshot(value: unknown): value is MapSnapshot {
   if (!["2D", "Terrain 3D", "Globe", "Compare"].includes(String(value.representation)) || !["mercator", "globe"].includes(String(value.projection)) || !Object.hasOwn(BASEMAPS, String(value.basemap))) return false;
   if (value.evidenceFilter !== undefined && !["ALL", "ANSWER", "MISSING_EVIDENCE", "SOURCE_STALE", "GENERALIZED_GEOMETRY", "RESTRICTED_ACCESS", "DENIED_BY_POLICY", "CORRECTED", "SUPERSEDED", "ERROR"].includes(String(value.evidenceFilter))) return false;
   if (value.comparison !== undefined && (!object(value.comparison) || !layerIds.has(String(value.comparison.layerA)) || !layerIds.has(String(value.comparison.layerB)) || !number(value.comparison.timeA) || !number(value.comparison.timeB))) return false;
+  if (value.temporalSweep !== undefined) {
+    if (!object(value.temporalSweep)) return false;
+    const sweep = value.temporalSweep;
+    if (!["snapshot", "moving-window", "event-stepping", "accumulation", "comparison"].includes(String(sweep.mode))
+      || !["available-events", "regular-calendar"].includes(String(sweep.stepRule))
+      || !number(sweep.frame) || !number(sweep.rangeStart) || !number(sweep.rangeEnd) || !number(sweep.windowStart) || !number(sweep.windowFrames)
+      || sweep.rangeStart > sweep.frame || sweep.frame > sweep.rangeEnd || sweep.windowStart < sweep.rangeStart || sweep.windowStart > sweep.frame
+      || !Number.isInteger(sweep.windowFrames) || sweep.windowFrames < 1 || sweep.windowFrames > 8 || sweep.interpolation !== false) return false;
+  }
   const time = value.committedTime;
   if (!number(time.start) || !number(time.end) || time.start > time.end || time.start < -4540000000 || time.end > new Date().getFullYear() || !text(time.label) || !["instant", "interval", "cumulative", "timeless", "unknown"].includes(String(time.mode))) return false;
   if (!Array.isArray(value.visibleLayers) || value.visibleLayers.length > LAYER_REGISTRY.length || !value.visibleLayers.every((layer) => object(layer) && layerIds.has(String(layer.id)) && text(layer.title) && text(layer.domain) && number(layer.order) && number(layer.opacity) && layer.opacity >= 0 && layer.opacity <= 1 && text(layer.trustState))) return false;

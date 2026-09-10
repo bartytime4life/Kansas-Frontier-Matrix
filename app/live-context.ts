@@ -194,6 +194,63 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
 export const OFFICIAL_CONTEXT_BY_ID = Object.freeze(Object.fromEntries(OFFICIAL_CONTEXT_SOURCES.map((source) => [source.id, source])) as Record<OfficialContextId, OfficialContextSource>);
 export const OFFICIAL_CONTEXT_BY_SOURCE_ID = Object.freeze(Object.fromEntries(OFFICIAL_CONTEXT_SOURCES.map((source) => [source.sourceId, source])) as Record<string, OfficialContextSource>);
 export const OFFICIAL_CONTEXT_INTERACTIVE_LAYER_IDS = Object.freeze(OFFICIAL_CONTEXT_SOURCES.flatMap((source) => source.interactiveLayerIds));
+export const OFFICIAL_CONTEXT_PRESENT_FRAME = 2026;
+
+export type OfficialContextTemporalSupport = Readonly<{
+  axis: "joined-source-snapshot" | "rolling-retrieval-window" | "provider-current-mosaic";
+  supportedFrames: readonly number[];
+  limitation: string;
+}>;
+
+/** Source-specific support declarations. A shared 2026 atlas tick represents
+ * the operational-present UI frame; it is not asserted as every source's
+ * observation, publication, or acquisition year. */
+export const OFFICIAL_CONTEXT_TEMPORAL_SUPPORT: Readonly<Record<OfficialContextId, OfficialContextTemporalSupport>> = Object.freeze({
+  "census-counties": Object.freeze({
+    axis: "joined-source-snapshot",
+    supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]),
+    limitation: "2026 TIGERweb geometry is joined to a separately dated 2024 ACS estimate; the combined carrier is not a 2024 historical snapshot.",
+  }),
+  "usgs-streamflow": Object.freeze({
+    axis: "rolling-retrieval-window",
+    supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]),
+    limitation: "Latest values retrieved from a rolling current window; no historical series is connected.",
+  }),
+  "usgs-earthquakes": Object.freeze({
+    axis: "rolling-retrieval-window",
+    supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]),
+    limitation: "Events come from a rolling 30-day request and may be revised; no historical archive query is connected.",
+  }),
+  "usgs-3dep-hillshade": Object.freeze({
+    axis: "provider-current-mosaic",
+    supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]),
+    limitation: "Provider-current mosaic with no pinned acquisition-time slice in this Site.",
+  }),
+  "nws-alerts": Object.freeze({
+    axis: "rolling-retrieval-window",
+    supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]),
+    limitation: "Active-alert snapshot at retrieval time; expired historical alerts are not requested.",
+  }),
+  "nws-radar": Object.freeze({
+    axis: "provider-current-mosaic",
+    supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]),
+    limitation: "Provider-current radar mosaic with no archived sweep-time selection in this Site.",
+  }),
+});
+
+/**
+ * Official adapters in this Site expose one current snapshot or rolling window,
+ * not a historical archive. Preserve each user's visibility intent while
+ * withholding those carriers whenever the committed atlas frame is not the
+ * operational-present frame.
+ */
+export const officialContextVisibilityForFrame = (
+  visibility: Record<OfficialContextId, boolean>,
+  frame: number,
+): Record<OfficialContextId, boolean> => Object.fromEntries(OFFICIAL_CONTEXT_SOURCES.map((source) => [
+  source.id,
+  OFFICIAL_CONTEXT_TEMPORAL_SUPPORT[source.id].supportedFrames.includes(frame) && visibility[source.id] === true,
+])) as Record<OfficialContextId, boolean>;
 
 export const defaultOfficialContextVisibility = (): Record<OfficialContextId, boolean> => Object.fromEntries(OFFICIAL_CONTEXT_SOURCES.map((source) => [source.id, source.defaultVisibility])) as Record<OfficialContextId, boolean>;
 export const defaultOfficialContextOpacity = (): Record<OfficialContextId, number> => Object.fromEntries(OFFICIAL_CONTEXT_SOURCES.map((source) => [source.id, source.defaultOpacity])) as Record<OfficialContextId, number>;

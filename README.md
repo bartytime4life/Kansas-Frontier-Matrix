@@ -24,6 +24,29 @@ fit together.
 The application runs as a single-route Vinext site with MapLibre GL JS. D1 and
 R2 are intentionally unbound in the current deployment.
 
+## Temporal sweep
+
+The shared map clock now supports committed snapshot, moving-window,
+event-stepping, accumulation, and A/B comparison modes. A user can bound the
+sweep range, choose event dates or every atlas tick, step forward or backward,
+set playback speed and boundary behavior, and capture the committed frame in a
+report, workspace, URL, or story draft. The frame readout lists entered and
+exited records and describes cross-domain co-presence as an association only.
+
+`app/temporal-sweep.ts` owns the pure sequence, interval, accumulation,
+playback, and frame-summary rules. `app/map-runtime.ts` translates the same
+query into MapLibre filters, while every catalog, evidence, nearby, report, and
+selection surface uses that query rather than a separate display-only clock.
+No mode interpolates geometry or values, carries an exact observation forward,
+or treats co-presence as correlation or causation.
+
+The official context connections below expose only a current snapshot or a
+rolling current window. They therefore fail closed outside the committed 2026
+operational-present frame: MapLibre hides their layers but preserves the user's
+visibility choices so the same sources return on Present. Historical playback
+never relabels current Census, USGS, NWS, terrain, or radar context as archival
+data.
+
 ## External network disclosure
 
 The map can request four external display carriers. Their endpoints,

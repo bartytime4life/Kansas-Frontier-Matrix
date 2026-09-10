@@ -56,12 +56,19 @@ test("report creation includes only evidence inside the captured feature scope",
 
 test("shared or stored snapshots reject unknown layers, references and invalid cameras", () => {
   assert.equal(storage.validMapSnapshot(snapshot), true);
+  assert.equal(storage.validMapSnapshot({
+    ...snapshot,
+    committedTime: { start: 2024, end: 2026, label: "2024 to 2026 moving window", mode: "interval" },
+    temporalSweep: { mode: "moving-window", frame: 2026, rangeStart: 2022, rangeEnd: 2026, windowStart: 2024, windowFrames: 2, stepRule: "available-events", interpolation: false },
+  }), true);
   for (const patch of [
     { visibleLayers: [{ ...snapshot.visibleLayers[0], id: "foreign-source" }] },
     { evidenceRefs: ["fabricated-released-claim"] },
     { camera: { ...snapshot.camera, center: [500, 38] } },
     { visibleLayers: [{ ...snapshot.visibleLayers[0], opacity: 8 }] },
     { committedTime: { ...snapshot.committedTime, start: Infinity } },
+    { temporalSweep: { mode: "moving-window", frame: 2026, rangeStart: 2022, rangeEnd: 2024, windowStart: 2024, windowFrames: 2, stepRule: "available-events", interpolation: false } },
+    { temporalSweep: { mode: "snapshot", frame: 2026, rangeStart: 2026, rangeEnd: 2026, windowStart: 2026, windowFrames: 1, stepRule: "available-events", interpolation: true } },
     { evidenceFilter: "UNREVIEWED_BYPASS" },
   ]) assert.equal(storage.validMapSnapshot({ ...snapshot, ...patch }), false);
 });
@@ -76,6 +83,8 @@ test("the four trust scenes bind distinct matching feature, time, camera and pol
   const story = model.createTrustStory(snapshot, evidence);
   assert.equal(storage.validStoryDraft(JSON.parse(JSON.stringify(story))), true);
   assert.deepEqual(story.scenes.map((scene) => scene.snapshot.committedTime.start), [2026, 2024, 1910, 2026]);
+  assert.deepEqual(story.scenes.map((scene) => scene.snapshot.temporalSweep.frame), [2026, 2024, 1910, 2026]);
+  assert.equal(story.scenes.every((scene) => scene.snapshot.temporalSweep.mode === "snapshot" && scene.snapshot.temporalSweep.interpolation === false), true);
   assert.deepEqual(story.scenes.map((scene) => scene.snapshot.selection.featureId), ["atmo-topeka-2026", "atmo-hays-2024", "history-route-1910", "planning-generalized-envelope"]);
   assert.equal(story.scenes[3].snapshot.policy.outcome, "DENY");
   assert.equal(story.scenes.every((scene) => scene.snapshot.sourceBackedCount === 0), true);

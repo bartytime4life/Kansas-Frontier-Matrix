@@ -4,9 +4,34 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { Map as MapLibreMap } from "maplibre-gl";
 import { LAYER_REGISTRY } from "./explorer-data";
 import { applyRegistryState, BASEMAPS, setTerrainPresentation, updateAnalysisAreaSource, updateSelectionSource } from "./map-runtime";
+import { isFeatureAvailableForTemporalQuery, type TemporalSweepQuery } from "./temporal-sweep";
 import type { MapSnapshot } from "./workspace-model";
 
 type Camera = { center: [number, number]; zoom: number; bearing: number; pitch: number };
+
+const temporalQueryForSnapshot = (snapshot: MapSnapshot): TemporalSweepQuery => snapshot.temporalSweep
+  ? {
+    mode: snapshot.temporalSweep.mode,
+    frame: snapshot.temporalSweep.frame,
+    rangeStart: snapshot.temporalSweep.rangeStart,
+    rangeEnd: snapshot.temporalSweep.rangeEnd,
+    windowStart: snapshot.temporalSweep.windowStart,
+  }
+  : {
+    mode: "snapshot",
+    frame: snapshot.committedTime.start,
+    rangeStart: snapshot.committedTime.start,
+    rangeEnd: snapshot.committedTime.end,
+    windowStart: snapshot.committedTime.start,
+  };
+
+const selectionForSnapshot = (snapshot: MapSnapshot, query: TemporalSweepQuery) => {
+  const layer = LAYER_REGISTRY.find((candidate) => candidate.id === snapshot.selection?.layerId);
+  const selected = layer?.data.features.find((feature) => feature.properties.fid === snapshot.selection?.featureId);
+  if (!layer || !selected || !snapshot.visibleLayers.some((item) => item.id === layer.id)) return null;
+  if (snapshot.evidenceFilter && snapshot.evidenceFilter !== "ALL" && selected.properties.evidenceState !== snapshot.evidenceFilter) return null;
+  return isFeatureAvailableForTemporalQuery(layer, selected.properties.year, query) ? selected : null;
+};
 
 /** Read-only rendering adapter: snapshots never admit sources or emit findings. */
 export default function SnapshotMap({ snapshot, label, syncCamera, onCameraChange }: {
@@ -40,13 +65,12 @@ export default function SnapshotMap({ snapshot, label, syncCamera, onCameraChang
       const state = current.current;
       const visible = Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, state.visibleLayers.some((item) => item.id === layer.id)]));
       const opacity = Object.fromEntries(state.visibleLayers.map((layer) => [layer.id, layer.opacity]));
-      applyRegistryState(map, visible, opacity, state.committedTime.start, state.visibleLayers.map((layer) => layer.id), state.evidenceFilter ?? "ALL");
+      const query = temporalQueryForSnapshot(state);
+      applyRegistryState(map, visible, opacity, query.frame, state.visibleLayers.map((layer) => layer.id), state.evidenceFilter ?? "ALL", query);
       map.setProjection({ type: state.projection });
       setTerrainPresentation(map, state.representation === "Terrain 3D", 1.35);
       updateAnalysisAreaSource(map, state.area.kind === "aoi" ? state.area.bounds : undefined);
-      const selectedLayer = LAYER_REGISTRY.find((layer) => layer.id === state.selection?.layerId);
-      const selected = selectedLayer?.data.features.find((feature) => feature.properties.fid === state.selection?.featureId);
-      updateSelectionSource(map, selected ?? null);
+      updateSelectionSource(map, selectionForSnapshot(state, query));
     };
     import("maplibre-gl").then((lib) => {
       if (disposed || !container.current) return;
@@ -83,15 +107,15 @@ export default function SnapshotMap({ snapshot, label, syncCamera, onCameraChang
     const map = mapRef.current;
     if (!map?.isStyleLoaded()) return;
     const visible = Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, snapshot.visibleLayers.some((item) => item.id === layer.id)]));
-    applyRegistryState(map, visible, Object.fromEntries(snapshot.visibleLayers.map((layer) => [layer.id, layer.opacity])), snapshot.committedTime.start, snapshot.visibleLayers.map((layer) => layer.id), snapshot.evidenceFilter ?? "ALL");
+    const query = temporalQueryForSnapshot(snapshot);
+    applyRegistryState(map, visible, Object.fromEntries(snapshot.visibleLayers.map((layer) => [layer.id, layer.opacity])), query.frame, snapshot.visibleLayers.map((layer) => layer.id), snapshot.evidenceFilter ?? "ALL", query);
     map.setProjection({ type: snapshot.projection });
     setTerrainPresentation(map, snapshot.representation === "Terrain 3D", 1.35);
     updateAnalysisAreaSource(map, snapshot.area.kind === "aoi" ? snapshot.area.bounds : undefined);
     syncing.current = true;
     if (snapshot.camera.center !== "WITHHELD_BROWSER_LOCATION") map.jumpTo(snapshot.camera as Camera);
     syncing.current = false;
-    const layer = LAYER_REGISTRY.find((item) => item.id === snapshot.selection?.layerId);
-    updateSelectionSource(map, layer?.data.features.find((feature) => feature.properties.fid === snapshot.selection?.featureId) ?? null);
+    updateSelectionSource(map, selectionForSnapshot(snapshot, query));
   }, [snapshot]);
 
   useEffect(() => {
@@ -116,6 +140,7 @@ export function SynchronizedComparison({ snapshot, layerA, layerB, timeA, timeB 
     const time = index === 0 ? timeA : timeB;
     return { ...snapshot, id: `comparison-${index}`, representation: "2D", projection: "mercator", selection: null,
       committedTime: { start: time, end: time, label: String(time), mode: "instant" },
+      temporalSweep: { mode: "snapshot", frame: time, rangeStart: time, rangeEnd: time, windowStart: time, windowFrames: 1, stepRule: "available-events", interpolation: false },
       visibleLayers: [{ id, title: layer.title, domain: layer.domain, order: 0, opacity: 0.85, trustState: "Site-local demo" }],
     };
   }), [snapshot, layerA, layerB, timeA, timeB]);

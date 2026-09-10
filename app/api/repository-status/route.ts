@@ -61,7 +61,8 @@ export async function GET() {
 
     const parsed = await readBoundedJson(response);
     const commit = isRecord(parsed) && isRecord(parsed.commit) ? parsed.commit : null;
-    const sha = commit ? asString(commit.sha) : null;
+    if (!commit) throw new Error("GitHub omitted main commit metadata.");
+    const sha = asString(commit.sha);
     if (!sha || !/^[0-9a-f]{40}$/i.test(sha)) throw new Error("GitHub omitted a valid main commit identity.");
 
     const nestedCommit = isRecord(commit.commit) ? commit.commit : null;

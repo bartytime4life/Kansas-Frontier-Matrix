@@ -9,6 +9,7 @@ import type {
 import { externalContextSource } from "./external-context-sources";
 import { LAYER_REGISTRY, type EvidenceState } from "./explorer-data";
 import { ACTIVE_TERRAIN_SOURCE } from "./terrain-sources";
+import type { TemporalSweepQuery } from "./temporal-sweep";
 
 export type BasemapKey = "standard" | "imagery" | "midnight" | "prairie" | "streets" | "topo";
 export type AtmospherePreset = "night" | "dusk" | "clear";
@@ -198,10 +199,22 @@ const addSystemLayers = (map: MapLibreMap) => {
   }
 };
 
-const temporalFilter = (year: number, mode: "exact" | "through"): FilterSpecification =>
-  mode === "exact"
-    ? (["==", ["get", "year"], year] as FilterSpecification)
-    : (["<=", ["get", "year"], year] as FilterSpecification);
+const temporalFilter = (
+  year: number,
+  mode: "exact" | "through",
+  query?: TemporalSweepQuery,
+): FilterSpecification => {
+  const frame = query?.frame ?? year;
+  if (query?.mode === "moving-window" && mode === "exact") {
+    return ["all", [">=", ["get", "year"], query.windowStart], ["<=", ["get", "year"], frame]] as FilterSpecification;
+  }
+  if (query?.mode === "accumulation") {
+    return ["all", [">=", ["get", "year"], query.rangeStart], ["<=", ["get", "year"], frame]] as FilterSpecification;
+  }
+  return mode === "exact"
+    ? (["==", ["get", "year"], frame] as FilterSpecification)
+    : (["<=", ["get", "year"], frame] as FilterSpecification);
+};
 
 const mergeFilters = (...filters: Array<FilterSpecification | undefined>): FilterSpecification | undefined => {
   const activeFilters = filters.filter((filter): filter is FilterSpecification => Boolean(filter));
@@ -349,6 +362,28 @@ const evidenceFilterForRecord = (record: (typeof LAYER_REGISTRY)[number], eviden
   return clusteredRecordMatches ? undefined : ["==", ["get", "fid"], "__no_matching_feature__"] as FilterSpecification;
 };
 
+/** Update only renderer filters during time playback. Sources, paint, zoom
+ * ranges, and draw order remain untouched so large registries do not churn on
+ * every frame. */
+export const applyTemporalRegistryFilters = (
+  map: MapLibreMap,
+  year: number,
+  evidenceFilter: RegistryEvidenceFilter = "ALL",
+  temporalQuery?: TemporalSweepQuery,
+) => {
+  for (const record of LAYER_REGISTRY) {
+    for (const renderer of record.renderers) {
+      if (!map.getLayer(renderer.id)) continue;
+      const filter = mergeFilters(
+        renderer.baseFilter,
+        record.temporal ? temporalFilter(year, record.temporal.mode, temporalQuery) : undefined,
+        evidenceFilterForRecord(record, evidenceFilter),
+      );
+      map.setFilter(renderer.id, filter ?? null);
+    }
+  }
+};
+
 export const applyRegistryState = (
   map: MapLibreMap,
   visibility: Record<string, boolean>,
@@ -356,6 +391,7 @@ export const applyRegistryState = (
   year: number,
   order: string[],
   evidenceFilter: RegistryEvidenceFilter = "ALL",
+  temporalQuery?: TemporalSweepQuery,
 ) => {
   for (const record of LAYER_REGISTRY) {
     if (!map.getSource(record.sourceId)) {
@@ -375,7 +411,7 @@ export const applyRegistryState = (
       map.setLayoutProperty(renderer.id, "visibility", visibility[record.id] ? "visible" : "none");
       const filter = mergeFilters(
         renderer.baseFilter,
-        record.temporal ? temporalFilter(year, record.temporal.mode) : undefined,
+        record.temporal ? temporalFilter(year, record.temporal.mode, temporalQuery) : undefined,
         evidenceFilterForRecord(record, evidenceFilter),
       );
       map.setFilter(renderer.id, filter ?? null);
@@ -423,24 +459,27 @@ export const applyDynamicMapEffects = (
   const wave = active ? (Math.sin(phase * 2.1) + 1) / 2 : 0.5;
   const slowWave = active ? (Math.sin(phase * 0.82) + 1) / 2 : 0.5;
   const travelStep = active ? Math.floor(phase * 5) % 4 : 0;
+  const waterWidth = active ? 1.8 + wave * 1.05 : 2.2;
+  const fireWidth = active ? 1.25 + wave * 1.15 : 1.6;
+  const roadWidth = active ? 2 + wave * 0.55 : 2.2;
+  const metroRadius = active ? 6.6 + wave * 1.2 : 7;
+  const regionalRadius = active ? 5.1 + wave * 0.7 : 5.5;
+  const localRadius = active ? 4.2 + wave * 0.5 : 4.5;
 
-  setPaintIfPresent(map, "water-context-flow", "line-opacity", (opacity["water-context"] ?? 0.9) * (0.68 + wave * 0.3));
-  setPaintIfPresent(map, "water-context-flow", "line-width", 1.8 + wave * 1.05);
-  setPaintIfPresent(map, "smoke-context-fill", "fill-opacity", (opacity["smoke-context"] ?? 0.28) * (0.72 + slowWave * 0.28));
+  setPaintIfPresent(map, "water-context-flow", "line-opacity", (opacity["water-context"] ?? 0.9) * (active ? 0.68 + wave * 0.3 : 1));
+  setPaintIfPresent(map, "water-context-flow", "line-width", waterWidth);
+  setPaintIfPresent(map, "smoke-context-fill", "fill-opacity", (opacity["smoke-context"] ?? 0.28) * (active ? 0.72 + slowWave * 0.28 : 1));
   setPaintIfPresent(map, "smoke-context-outline", "line-dasharray", travelStep % 2 === 0 ? [2, 2] : [1.5, 2.5]);
-  setPaintIfPresent(map, "fire-context-fill", "fill-opacity", (opacity["fire-context"] ?? 0.24) * (0.68 + wave * 0.32));
-  setPaintIfPresent(map, "fire-context-outline", "line-width", 1.25 + wave * 1.15);
-  setPaintIfPresent(map, "hazards-context-fill", "fill-opacity", (opacity["hazards-context"] ?? 0.12) * (0.72 + slowWave * 0.28));
-  setPaintIfPresent(map, "habitat-connectivity-fill", "fill-opacity", (opacity["habitat-connectivity"] ?? 0.22) * (0.84 + slowWave * 0.16));
-  setPaintIfPresent(map, "transport-context-road", "line-width", 2 + wave * 0.55);
-  setPaintIfPresent(map, "transport-context-rail", "line-dasharray", [3 + travelStep, 2, 1, 2]);
+  setPaintIfPresent(map, "fire-context-fill", "fill-opacity", (opacity["fire-context"] ?? 0.24) * (active ? 0.68 + wave * 0.32 : 1));
+  setPaintIfPresent(map, "fire-context-outline", "line-width", ["case", ["boolean", ["feature-state", "hover"], false], fireWidth + 2, fireWidth]);
+  setPaintIfPresent(map, "hazards-context-fill", "fill-opacity", (opacity["hazards-context"] ?? 0.12) * (active ? 0.72 + slowWave * 0.28 : 1));
+  setPaintIfPresent(map, "habitat-connectivity-fill", "fill-opacity", (opacity["habitat-connectivity"] ?? 0.22) * (active ? 0.84 + slowWave * 0.16 : 1));
+  setPaintIfPresent(map, "transport-context-road", "line-width", ["case", ["boolean", ["feature-state", "hover"], false], roadWidth + 2, roadWidth]);
+  setPaintIfPresent(map, "transport-context-rail", "line-dasharray", active ? [3 + travelStep, 2, 1, 2] : [4, 2]);
   setPaintIfPresent(map, "communities-points", "circle-radius", [
-    "match",
-    ["get", "settlementClass"],
-    "METRO", 6.6 + wave * 1.2,
-    "REGIONAL", 5.1 + wave * 0.7,
-    "LOCAL", 4.2 + wave * 0.5,
-    5,
+    "+",
+    ["match", ["get", "settlementClass"], "METRO", metroRadius, "REGIONAL", regionalRadius, "LOCAL", localRadius, 5],
+    ["case", ["boolean", ["feature-state", "hover"], false], 3, 0],
   ]);
 };
 

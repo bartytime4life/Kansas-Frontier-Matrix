@@ -19,6 +19,7 @@ import {
 import {
   applyDynamicMapEffects,
   applyRegistryState,
+  applyTemporalRegistryFilters,
   applySceneEnvironment,
   areaSquareMiles,
   BASEMAPS,
@@ -45,9 +46,6 @@ import {
   type RegistryEvidenceFilter,
 } from "./map-runtime";
 import {
-  inspectableFeatureId,
-  isFeatureAvailableAtTime,
-  isLayerAvailableAtTime,
   MAP_CAPABILITY_GATES,
   MAP_VIEW_PROFILES,
   MAPLIBRE_REPOSITORY_STATUS,
@@ -90,7 +88,6 @@ import {
   FOCUS_INTENTS,
   focusIntentNarrative,
   focusResultForState,
-  isFeatureTimeMismatch,
   type FocusActionProposal,
   type FocusIntentId,
   type FocusStage,
@@ -110,6 +107,19 @@ import {
 } from "./planning-scenario";
 import { ANALYSIS_RECIPES, type AnalysisRecipe } from "./analysis-recipes";
 import { buildTemporalComparison } from "./temporal-comparison";
+import {
+  buildTemporalFrameSummary,
+  buildTemporalQuery,
+  buildTemporalSequence,
+  isFeatureAvailableForTemporalQuery,
+  nextTemporalFrame,
+  temporalRecordsForQuery,
+  type TemporalLoopMode,
+  type TemporalPlaybackDirection,
+  type TemporalStepRule,
+  type TemporalSweepMode,
+  type TemporalSweepQuery,
+} from "./temporal-sweep";
 import { COUNTY_STARTER_LAYER } from "./county-starter-slice";
 import { buildQwenPrompt, type QwenMapContext } from "./qwen-context";
 import {
@@ -144,7 +154,10 @@ import {
   OFFICIAL_CONTEXT_BY_ID,
   OFFICIAL_CONTEXT_BY_SOURCE_ID,
   OFFICIAL_CONTEXT_INTERACTIVE_LAYER_IDS,
+  OFFICIAL_CONTEXT_PRESENT_FRAME,
   OFFICIAL_CONTEXT_SOURCES,
+  OFFICIAL_CONTEXT_TEMPORAL_SUPPORT,
+  officialContextVisibilityForFrame,
   type OfficialContextFeedId,
   type OfficialContextId,
   type OfficialContextPayload,
@@ -174,6 +187,11 @@ if (!SEARCH_INDEX.some((item) => item.id === `layer:${COUNTY_STARTER_LAYER.id}`)
   })));
 }
 
+const KNOWN_TEMPORAL_FRAMES = new Set<number>([
+  ...TIME_STEPS,
+  ...LAYER_REGISTRY.flatMap((layer) => layer.temporal?.years ?? []),
+]);
+
 type ViewState = { center: [number, number]; zoom: number; bearing: number; pitch: number };
 type MapBoundsState = { west: number; south: number; east: number; north: number };
 type RuntimeState = { kind: "loading" | "ready" | "degraded" | "error" | "unsupported"; message: string };
@@ -196,8 +214,6 @@ type MapLibreRuntimeProbe = {
 type DrawerView = "evidence" | "metadata" | "lineage" | "focus";
 type LeftPanelMode = "views" | "layers" | "places" | "stories";
 type MeasureMode = "point" | "distance" | "area" | null;
-type TemporalMode = "snapshot" | "moving-window" | "event-stepping" | "accumulation" | "comparison";
-type TemporalStepRule = "available-events" | "regular-calendar";
 type PlaybackSpeed = 0.5 | 1 | 2;
 type BoxDragMode = "zoom" | "report-area";
 type TerrainProfileSample = Readonly<{ distanceMiles: number; elevationMeters: number }>;
@@ -242,6 +258,15 @@ type WorkspaceSnapshot = Readonly<{
   temporalComparison?: {
     timeA: number;
     timeB: number;
+  };
+  temporalSweep?: {
+    mode: TemporalSweepMode;
+    stepRule: TemporalStepRule;
+    rangeStart: number;
+    rangeEnd: number;
+    windowFrames: number;
+    direction: TemporalPlaybackDirection;
+    loopMode: TemporalLoopMode;
   };
   report: {
     title: string;
@@ -298,6 +323,32 @@ type SelectedContext = {
   properties: FeatureProperties;
   geometry: Feature<Geometry>;
 };
+
+const officialContextIdForSelection = (selection: SelectedContext | null): OfficialContextId | null => {
+  if (!selection?.featureId.startsWith("official-context:")) return null;
+  return OFFICIAL_CONTEXT_SOURCES.find((source) => selection.layerId === `official-context-${source.id}`)?.id ?? null;
+};
+
+const selectionCarrierIsVisible = (
+  selection: SelectedContext | null,
+  registryVisibility: Record<string, boolean>,
+  officialVisibility: Record<OfficialContextId, boolean>,
+  frame: number,
+) => {
+  if (!selection) return false;
+  if (selection.kind === "registry") return registryVisibility[selection.layerId] === true;
+  const officialContextId = officialContextIdForSelection(selection);
+  return officialContextId
+    ? officialContextVisibilityForFrame(officialVisibility, frame)[officialContextId] === true
+    : true;
+};
+
+const selectionPassesEvidenceFilter = (selection: SelectedContext | null, filter: RegistryEvidenceFilter) => (
+  !selection
+  || selection.kind !== "registry"
+  || filter === "ALL"
+  || selection.properties.evidenceState === filter
+);
 
 const BASEMAP_CONTEXT_LAYER: LayerRecord = {
   id: "basemap-context",
@@ -799,6 +850,7 @@ const anchorDistanceMiles = (left: Pick<FeatureProperties, "focusLng" | "focusLa
 export default function Home() {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
+  const styleGenerationReadyRef = useRef(false);
   const popupRef = useRef<Popup | null>(null);
   const scaleControlRef = useRef<ScaleControl | null>(null);
   const hoveredRef = useRef<{ source: string; id: string | number } | null>(null);
@@ -810,6 +862,13 @@ export default function Home() {
   const officialRequestsRef = useRef(new Set<OfficialContextFeedId>());
   const orderRef = useRef(defaultOrder);
   const yearRef = useRef<number>(2026);
+  const temporalQueryRef = useRef<TemporalSweepQuery>({
+    mode: "snapshot",
+    frame: 2026,
+    rangeStart: TIME_STEPS[0],
+    rangeEnd: TIME_STEPS.at(-1)!,
+    windowStart: 2026,
+  });
   const mapEvidenceFilterRef = useRef<RegistryEvidenceFilter>("ALL");
   const basemapRef = useRef<BasemapKey>("standard");
   const projectionRef = useRef<"mercator" | "globe">("mercator");
@@ -930,9 +989,14 @@ export default function Home() {
   const [previewYear, setPreviewYear] = useState<number>(2026);
   const [mapEvidenceFilter, setMapEvidenceFilter] = useState<RegistryEvidenceFilter>("ALL");
   const [playing, setPlaying] = useState(false);
-  const [temporalMode, setTemporalMode] = useState<TemporalMode>("snapshot");
+  const [temporalMode, setTemporalMode] = useState<TemporalSweepMode>("snapshot");
   const [temporalStepRule, setTemporalStepRule] = useState<TemporalStepRule>("available-events");
   const [playbackSpeed, setPlaybackSpeed] = useState<PlaybackSpeed>(1);
+  const [playbackDirection, setPlaybackDirection] = useState<TemporalPlaybackDirection>("forward");
+  const [playbackLoopMode, setPlaybackLoopMode] = useState<TemporalLoopMode>("stop");
+  const [sweepRangeStart, setSweepRangeStart] = useState<number>(TIME_STEPS[0]);
+  const [sweepRangeEnd, setSweepRangeEnd] = useState<number>(TIME_STEPS.at(-1)!);
+  const [movingWindowFrames, setMovingWindowFrames] = useState(3);
   const [toolsExpanded, setToolsExpanded] = useState(false);
   const [measureMode, setMeasureMode] = useState<MeasureMode>(null);
   const [measurementGeometryMode, setMeasurementGeometryMode] = useState<MeasureMode>(null);
@@ -1032,6 +1096,10 @@ export default function Home() {
   useEffect(() => { officialPayloadsRef.current = officialPayloads; }, [officialPayloads]);
   useEffect(() => { orderRef.current = layerOrder; }, [layerOrder]);
   useEffect(() => { yearRef.current = year; }, [year]);
+  useEffect(() => {
+    setSweepRangeStart((current) => Math.min(current, year));
+    setSweepRangeEnd((current) => Math.max(current, year));
+  }, [year]);
   useEffect(() => { mapEvidenceFilterRef.current = mapEvidenceFilter; }, [mapEvidenceFilter]);
   useEffect(() => { basemapRef.current = basemap; }, [basemap]);
   useEffect(() => { projectionRef.current = projection; }, [projection]);
@@ -1047,7 +1115,10 @@ export default function Home() {
   useEffect(() => { importPreviewVisibleRef.current = importPreviewVisible; }, [importPreviewVisible]);
   useEffect(() => {
     const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const syncPreference = () => setReducedMotion(preference.matches);
+    const syncPreference = () => {
+      setReducedMotion(preference.matches);
+      if (preference.matches) setPlaying(false);
+    };
     syncPreference();
     preference.addEventListener("change", syncPreference);
     return () => preference.removeEventListener("change", syncPreference);
@@ -1085,8 +1156,79 @@ export default function Home() {
 
   const activeLayers = useMemo(() => LAYER_REGISTRY.filter((layer) => visibility[layer.id]), [visibility]);
   const visibleCount = activeLayers.length;
+  const temporalSequence = useMemo(() => buildTemporalSequence(
+    activeLayers,
+    TIME_STEPS,
+    sweepRangeStart,
+    sweepRangeEnd,
+    temporalStepRule,
+  ), [activeLayers, sweepRangeEnd, sweepRangeStart, temporalStepRule]);
+  const timelineSteps = useMemo(() => [...new Set([...TIME_STEPS, ...temporalSequence])].sort((left, right) => left - right), [temporalSequence]);
+  const temporalQuery = useMemo(() => buildTemporalQuery(
+    temporalMode,
+    temporalMode === "comparison" ? compareTimeB : year,
+    sweepRangeStart,
+    sweepRangeEnd,
+    temporalSequence,
+    movingWindowFrames,
+  ), [compareTimeB, movingWindowFrames, sweepRangeEnd, sweepRangeStart, temporalMode, temporalSequence, year]);
+  const temporalFrameIndex = temporalSequence.indexOf(temporalQuery.frame);
+  const comparisonTemporalFrame = temporalMode === "comparison"
+    ? compareTimeA
+    : nextTemporalFrame(
+      temporalSequence,
+      temporalQuery.frame,
+      playbackDirection === "forward" ? "reverse" : "forward",
+      "stop",
+    );
+  const comparisonTemporalQuery = useMemo(() => comparisonTemporalFrame === null ? null : buildTemporalQuery(
+    temporalMode,
+    comparisonTemporalFrame,
+    sweepRangeStart,
+    sweepRangeEnd,
+    temporalSequence,
+    movingWindowFrames,
+  ), [comparisonTemporalFrame, movingWindowFrames, sweepRangeEnd, sweepRangeStart, temporalMode, temporalSequence]);
+  const temporalMetricLayers = useMemo(() => mapEvidenceFilter === "ALL"
+    ? activeLayers
+    : activeLayers.map((layer) => ({
+      ...layer,
+      data: {
+        ...layer.data,
+        features: layer.data.features.filter((feature) => feature.properties.evidenceState === mapEvidenceFilter),
+      },
+    })), [activeLayers, mapEvidenceFilter]);
+  const temporalFrameSummary = useMemo(
+    () => buildTemporalFrameSummary(temporalMetricLayers, temporalQuery, comparisonTemporalQuery),
+    [comparisonTemporalQuery, temporalMetricLayers, temporalQuery],
+  );
+  const temporalScopeLabel = temporalMode === "moving-window"
+    ? `${formatTimelineStep(temporalQuery.windowStart)} to ${formatTimelineStep(temporalQuery.frame)}`
+    : temporalMode === "accumulation"
+      ? `${formatTimelineStep(temporalQuery.rangeStart)} through ${formatTimelineStep(temporalQuery.frame)}`
+      : temporalMode === "comparison"
+        ? `${formatTimelineStep(compareTimeA)} ↔ ${formatTimelineStep(compareTimeB)}`
+      : formatTimelineStep(temporalQuery.frame);
+  const temporalFramePosition = temporalFrameIndex >= 0 ? temporalFrameIndex + 1 : null;
+  const previousSweepFrame = nextTemporalFrame(temporalSequence, temporalQuery.frame, "reverse", "stop");
+  const nextSweepFrame = nextTemporalFrame(temporalSequence, temporalQuery.frame, "forward", "stop");
+  useEffect(() => { temporalQueryRef.current = temporalQuery; }, [temporalQuery]);
   const visibleOfficialSources = useMemo(() => OFFICIAL_CONTEXT_SOURCES.filter((source) => officialVisibility[source.id]), [officialVisibility]);
   const visibleOfficialCount = visibleOfficialSources.length;
+  const effectiveOfficialVisibility = useMemo(
+    () => officialContextVisibilityForFrame(officialVisibility, temporalQuery.frame),
+    [officialVisibility, temporalQuery.frame],
+  );
+  const withheldOfficialCount = temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME ? 0 : visibleOfficialCount;
+  const selectedIsHeldOfficialContext = Boolean(
+    selected
+    && selected.featureId.startsWith("official-context:")
+    && temporalQuery.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME,
+  );
+  const selectedTimeMismatch = Boolean(
+    selected
+    && (selectedIsHeldOfficialContext || !isFeatureAvailableForTemporalQuery(selected.layer, selected.properties.year, temporalQuery)),
+  );
   const officialFeatureCount = useMemo(() => Object.values(officialPayloads).reduce((total, payload) => total + (payload?.featureCount ?? 0), 0), [officialPayloads]);
   const visibleRefreshableOfficialCount = useMemo(() => visibleOfficialSources.filter((source) => source.apiPath).length, [visibleOfficialSources]);
   const officialReadyCount = useMemo(() => Object.values(officialStates).filter((state) => state === "ready" || state === "partial" || state === "empty").length, [officialStates]);
@@ -1097,12 +1239,12 @@ export default function Home() {
     .sort()
     .at(-1) ?? null, [officialPayloads]);
   const mapContextRecords = useMemo(() => activeLayers.flatMap((layer) => layer.data.features.filter((feature) => (
-    isFeatureAvailableAtTime(layer, feature.properties.year, year)
+    isFeatureAvailableForTemporalQuery(layer, feature.properties.year, temporalQuery)
     && feature.properties.focusLng >= mapViewportBounds.west
     && feature.properties.focusLng <= mapViewportBounds.east
     && feature.properties.focusLat >= mapViewportBounds.south
     && feature.properties.focusLat <= mapViewportBounds.north
-  ))), [activeLayers, mapViewportBounds, year]);
+  ))), [activeLayers, mapViewportBounds, temporalQuery]);
   const supportedMapContextCount = useMemo(() => mapContextRecords.filter((feature) => (
     (feature.properties.evidenceState === "ANSWER" || feature.properties.evidenceState === "CORRECTED") && feature.properties.sourceRole === "source-backed-context"
   )).length, [mapContextRecords]);
@@ -1178,15 +1320,21 @@ export default function Home() {
     () => temporalComparison.layers.filter((layer) => layer.timeARecordCount > 0 || layer.timeBRecordCount > 0),
     [temporalComparison],
   );
-  const temporalNoData = useMemo(() => activeLayers.filter((layer) => layer.temporal?.mode === "exact" && !layer.temporal.years.includes(year)), [activeLayers, year]);
-  const availabilityByStep = useMemo(() => Object.fromEntries(TIME_STEPS.map((step) => [step, activeLayers.filter((layer) => isLayerAvailableAtTime(layer, step)).length])), [activeLayers]);
+  const temporalNoData = useMemo(() => activeLayers.filter((layer) => layer.temporal && !layer.data.features.some((feature) => (
+    isFeatureAvailableForTemporalQuery(layer, feature.properties.year, temporalQuery)
+  ))), [activeLayers, temporalQuery]);
+  const availabilityByStep = useMemo(() => Object.fromEntries(timelineSteps.map((step) => {
+    if (step < Math.min(sweepRangeStart, sweepRangeEnd) || step > Math.max(sweepRangeStart, sweepRangeEnd)) return [step, 0];
+    const query = buildTemporalQuery(temporalMode, step, sweepRangeStart, sweepRangeEnd, temporalSequence, movingWindowFrames);
+    return [step, temporalRecordsForQuery(temporalMetricLayers, query, true).length];
+  })), [movingWindowFrames, sweepRangeEnd, sweepRangeStart, temporalMetricLayers, temporalMode, temporalSequence, timelineSteps]);
   const sourceStateCounts = useMemo(() => ({
     ready: Object.values(sourceStates).filter((state) => state === "ready").length,
     loading: Object.values(sourceStates).filter((state) => state === "loading").length,
     error: Object.values(sourceStates).filter((state) => state === "error").length,
   }), [sourceStates]);
   const sourceConnections = useMemo(() => LAYER_REGISTRY.map((layer) => {
-    const compatibleFeatures = layer.data.features.filter((feature) => isFeatureAvailableAtTime(layer, feature.properties.year, year));
+    const compatibleFeatures = layer.data.features.filter((feature) => isFeatureAvailableForTemporalQuery(layer, feature.properties.year, temporalQuery));
     const viewportFeatures = compatibleFeatures.filter((feature) => (
       feature.properties.focusLng >= mapViewportBounds.west
       && feature.properties.focusLng <= mapViewportBounds.east
@@ -1202,7 +1350,7 @@ export default function Home() {
       viewportCount: viewportFeatures.length,
       probeCount: sourceProbeCounts[layer.id],
     };
-  }), [mapViewportBounds, sourceActivity, sourceProbeCounts, sourceStates, visibility, year]);
+  }), [mapViewportBounds, sourceActivity, sourceProbeCounts, sourceStates, temporalQuery, visibility]);
   const filteredSourceConnections = useMemo(() => {
     const query = connectionQuery.trim().toLowerCase();
     return sourceConnections.filter((connection) => {
@@ -1217,12 +1365,14 @@ export default function Home() {
     return {
       source,
       visible: officialVisibility[source.id],
+      activeAtFrame: effectiveOfficialVisibility[source.id],
       state: officialStates[source.id],
       featureCount: payload?.featureCount,
       retrievedAt: payload?.retrievedAt,
       limitation: payload?.limitation,
+      temporalSupport: OFFICIAL_CONTEXT_TEMPORAL_SUPPORT[source.id],
     };
-  }), [officialPayloads, officialStates, officialVisibility]);
+  }), [effectiveOfficialVisibility, officialPayloads, officialStates, officialVisibility]);
   const filteredOfficialContextConnections = useMemo(() => {
     const query = connectionQuery.trim().toLowerCase();
     return officialContextConnections.filter((connection) => {
@@ -1311,7 +1461,7 @@ export default function Home() {
       .filter((layer) => mapFeatureLayer === "ALL" || layer.id === mapFeatureLayer)
       .filter((layer) => !inspectVisibleLayersOnly || visibility[layer.id])
       .flatMap((layer) => layer.data.features
-        .filter((feature) => isFeatureAvailableAtTime(layer, feature.properties.year, year))
+        .filter((feature) => isFeatureAvailableForTemporalQuery(layer, feature.properties.year, temporalQuery))
         .filter((feature) => mapEvidenceFilter === "ALL" || feature.properties.evidenceState === mapEvidenceFilter)
         .map((feature) => ({ layer, feature })))
       .filter(({ feature }) => !inspectViewportOnly || (
@@ -1321,19 +1471,19 @@ export default function Home() {
         && feature.properties.focusLat <= mapViewportBounds.north
       ))
       .filter(({ layer, feature }) => !query || `${feature.properties.title} ${feature.properties.fid} ${feature.properties.evidenceState} ${layer.title}`.toLowerCase().includes(query));
-  }, [inspectViewportOnly, inspectVisibleLayersOnly, mapEvidenceFilter, mapFeatureLayer, mapFeatureQuery, mapViewportBounds, visibility, year]);
+  }, [inspectViewportOnly, inspectVisibleLayersOnly, mapEvidenceFilter, mapFeatureLayer, mapFeatureQuery, mapViewportBounds, temporalQuery, visibility]);
   const mapCompatibleFeatureCount = useMemo(() => LAYER_REGISTRY.reduce((count, layer) => count + layer.data.features.filter((feature) => (
-    isFeatureAvailableAtTime(layer, feature.properties.year, year)
+    isFeatureAvailableForTemporalQuery(layer, feature.properties.year, temporalQuery)
     && (mapEvidenceFilter === "ALL" || feature.properties.evidenceState === mapEvidenceFilter)
-  )).length, 0), [mapEvidenceFilter, year]);
+  )).length, 0), [mapEvidenceFilter, temporalQuery]);
   const nearbyContext = useMemo(() => {
-    if (!selected) return [];
+    if (!selected || selectedTimeMismatch) return [];
     const perLayerCount = new Map<string, number>();
     return LAYER_REGISTRY
       .filter((layer) => !nearbyVisibleLayersOnly || visibility[layer.id])
       .flatMap((layer) => layer.data.features
         .filter((feature) => feature.properties.fid !== selected.featureId)
-        .filter((feature) => isFeatureAvailableAtTime(layer, feature.properties.year, year))
+        .filter((feature) => isFeatureAvailableForTemporalQuery(layer, feature.properties.year, temporalQuery))
         .filter((feature) => mapEvidenceFilter === "ALL" || feature.properties.evidenceState === mapEvidenceFilter)
         .map((feature) => ({ layer, feature, distanceMiles: anchorDistanceMiles(selected.properties, feature.properties) })))
       .filter((row) => row.distanceMiles <= nearbyRadiusMiles)
@@ -1345,7 +1495,7 @@ export default function Home() {
         return true;
       })
       .slice(0, 16);
-  }, [mapEvidenceFilter, nearbyRadiusMiles, nearbyVisibleLayersOnly, selected, visibility, year]);
+  }, [mapEvidenceFilter, nearbyRadiusMiles, nearbyVisibleLayersOnly, selected, selectedTimeMismatch, temporalQuery, visibility]);
   const qwenContext = useMemo<QwenMapContext>(() => ({
     camera: {
       center: [Number(view.center[0].toFixed(5)), Number(view.center[1].toFixed(5))],
@@ -1356,7 +1506,7 @@ export default function Home() {
       representation: mapRepresentationLabel,
     },
     basemap: { key: basemap, title: BASEMAPS[basemap].title, note: BASEMAPS[basemap].note },
-    time: { value: year, label: formatTimelineStep(year), era: timelineEraLabel(year) },
+    time: { value: temporalQuery.frame, label: temporalScopeLabel, era: `${timelineEraLabel(temporalQuery.frame)} · ${temporalMode.replaceAll("-", " ")}` },
     visibleLayers: activeLayers.slice(0, 14).map((layer) => ({
       id: layer.id,
       title: layer.title,
@@ -1366,7 +1516,7 @@ export default function Home() {
       publicStatus: layer.publicStatus,
       freshnessState: layer.freshnessState,
     })),
-    selection: selected ? {
+    selection: selected && !selectedTimeMismatch ? {
       featureId: selected.featureId,
       title: selected.properties.title,
       layerId: selected.layerId,
@@ -1384,14 +1534,14 @@ export default function Home() {
       distanceMiles: Number(row.distanceMiles.toFixed(1)),
       evidenceState: row.feature.properties.evidenceState,
     })),
-  }), [activeLayers, basemap, mapRepresentationLabel, nearbyContext, projection, selected, view, year]);
+  }), [activeLayers, basemap, mapRepresentationLabel, nearbyContext, projection, selected, selectedTimeMismatch, temporalMode, temporalQuery.frame, temporalScopeLabel, view]);
   const qwenPrompt = useMemo(() => buildQwenPrompt(qwenQuestion, qwenContext), [qwenContext, qwenQuestion]);
   const analysisAreaRecordCount = useMemo(() => analysisArea
     ? LAYER_REGISTRY.reduce((count, layer) => count + layer.data.features.filter((feature) => (
-      isFeatureAvailableAtTime(layer, feature.properties.year, year)
+      isFeatureAvailableForTemporalQuery(layer, feature.properties.year, temporalQuery)
       && isFeatureInsideBounds(feature.properties, analysisArea)
     )).length, 0)
-    : 0, [analysisArea, year]);
+    : 0, [analysisArea, temporalQuery]);
   const matchesReportRecord = useCallback((layer: LayerRecord, properties: FeatureProperties) => {
     const query = reportQuery.trim().toLowerCase();
     if (!reportLayerIds.includes(layer.id)) return false;
@@ -1413,10 +1563,10 @@ export default function Home() {
     return LAYER_REGISTRY
       .filter((layer) => reportLayerIds.includes(layer.id))
       .flatMap((layer) => layer.data.features
-        .filter((feature) => isFeatureAvailableAtTime(layer, feature.properties.year, year))
+        .filter((feature) => isFeatureAvailableForTemporalQuery(layer, feature.properties.year, temporalQuery))
         .filter((feature) => matchesReportRecord(layer, feature.properties))
         .map((feature) => ({ layer, properties: feature.properties })))
-  }, [matchesReportRecord, reportLayerIds, year]);
+  }, [matchesReportRecord, reportLayerIds, temporalQuery]);
   const reportEvidenceCounts = useMemo(() => reportRecords.reduce<Record<string, number>>((counts, record) => {
     counts[record.properties.evidenceState] = (counts[record.properties.evidenceState] ?? 0) + 1;
     return counts;
@@ -1443,14 +1593,14 @@ export default function Home() {
     const bounded = reportRecords.length - supported;
     const mostRepresented = [...reportLayerSummary].sort((left, right) => right.recordCount - left.recordCount)[0];
     return [
-      `${reportRecords.length} record${reportRecords.length === 1 ? "" : "s"} match the ${reportScope === "VIEWPORT" ? "current map extent" : reportScope === "ANALYSIS_AREA" ? "locked area-of-interest" : reportScope === "VISIBLE_LAYERS" ? "visible-layer" : "selected-feature"} scope at ${formatTimelineStep(year)}.`,
+      `${reportRecords.length} record${reportRecords.length === 1 ? "" : "s"} match the ${reportScope === "VIEWPORT" ? "current map extent" : reportScope === "ANALYSIS_AREA" ? "locked area-of-interest" : reportScope === "VISIBLE_LAYERS" ? "visible-layer" : "selected-feature"} scope for ${temporalScopeLabel}.`,
       `${supported} record${supported === 1 ? "" : "s"} carry supported or corrected evidence states; ${bounded} remain generalized, missing, stale, restricted, denied, superseded, or error states.`,
       mostRepresented
         ? `${mostRepresented.title} contributes the largest share of this report (${mostRepresented.recordCount} record${mostRepresented.recordCount === 1 ? "" : "s"}).`
         : "No records match the current report filters; widen the map, change time, or include another layer.",
       `${reportTemporalComparison.changedLayerCount} included layer${reportTemporalComparison.changedLayerCount === 1 ? " changes" : "s change"} catalog availability between ${formatTimelineStep(compareTimeA)} and ${formatTimelineStep(compareTimeB)}. This is fixture availability under declared temporal rules, not observed change or imagery analysis.`,
     ];
-  }, [compareTimeA, compareTimeB, reportEvidenceCounts, reportLayerSummary, reportRecords.length, reportScope, reportTemporalComparison.changedLayerCount, year]);
+  }, [compareTimeA, compareTimeB, reportEvidenceCounts, reportLayerSummary, reportRecords.length, reportScope, reportTemporalComparison.changedLayerCount, temporalScopeLabel]);
   const filteredLayerIds = useMemo(() => {
     const query = debouncedLayerQuery.trim().toLowerCase();
     return new Set(LAYER_REGISTRY.filter((layer) => {
@@ -1516,9 +1666,8 @@ export default function Home() {
 
   const selectedLabel = selected?.properties.title ?? "Statewide Kansas";
   const selectedEvidence = selected ? evidenceLabels[selected.properties.evidenceState] : null;
-  const selectedLayerHidden = Boolean(selected && selected.kind === "registry" && visibility[selected.layerId] !== true);
-  const selectedTimeMismatch = Boolean(selected && isFeatureTimeMismatch(selected.layer.temporal, selected.properties.year, year));
-  const selectedEvidenceFiltered = Boolean(selected && mapEvidenceFilter !== "ALL" && selected.properties.evidenceState !== mapEvidenceFilter);
+  const selectedLayerHidden = Boolean(selected && !selectionCarrierIsVisible(selected, visibility, officialVisibility, temporalQuery.frame));
+  const selectedEvidenceFiltered = Boolean(selected && !selectionPassesEvidenceFilter(selected, mapEvidenceFilter));
   const activeFocus = focusResultForState(selected?.properties.evidenceState ?? "MISSING_EVIDENCE", selectedTimeMismatch);
   const focusGates = useMemo(() => buildFocusGateTrace({
     state: selected?.properties.evidenceState ?? "MISSING_EVIDENCE",
@@ -1554,7 +1703,15 @@ export default function Home() {
     projection,
     basemap,
     layerOrder,
-    activeYear: year,
+    temporalSweep: {
+      mode: temporalMode,
+      frame: temporalQuery.frame,
+      rangeStart: temporalQuery.rangeStart,
+      rangeEnd: temporalQuery.rangeEnd,
+      windowStart: temporalQuery.windowStart,
+      stepRule: temporalStepRule,
+      interpolation: false,
+    },
     workspace: currentWorkspace,
     layers: activeLayers.map((layer) => ({
       id: layer.id,
@@ -1565,7 +1722,7 @@ export default function Home() {
       generalization: layer.sensitivityNote,
       correction: layer.correctionNote,
     })),
-    selection: selected ? {
+    selection: selected && !selectedTimeMismatch ? {
       featureId: selected.featureId,
       title: selected.properties.title,
       layerId: selected.layerId,
@@ -1583,7 +1740,7 @@ export default function Home() {
       geometry: selected.geometry.geometry,
       generalization: selected.properties.generalizationNote,
     } : null,
-  }), [activeLayers, basemap, currentWorkspace, layerOrder, locationCameraRedacted, opacity, projection, selected, view, year]);
+  }), [activeLayers, basemap, currentWorkspace, layerOrder, locationCameraRedacted, opacity, projection, selected, selectedTimeMismatch, temporalMode, temporalQuery, temporalStepRule, view]);
   const exportReview = useMemo(() => buildExportReview(exportGeneratedAt), [buildExportReview, exportGeneratedAt]);
 
   const buildExplorerParams = useCallback(() => {
@@ -1600,6 +1757,13 @@ export default function Home() {
     params.set("ctx", visibleOfficialSources.map((source) => source.id).join(","));
     params.set("ctxo", OFFICIAL_CONTEXT_SOURCES.map((source) => `${source.id}:${(officialOpacity[source.id] ?? source.defaultOpacity).toFixed(2)}`).join(","));
     params.set("t", String(year));
+    params.set("tm", temporalMode);
+    params.set("tstep", temporalStepRule);
+    params.set("trange", `${sweepRangeStart},${sweepRangeEnd}`);
+    params.set("twindow", String(movingWindowFrames));
+    params.set("tdir", playbackDirection);
+    params.set("tloop", playbackLoopMode);
+    params.set("motion", dynamicEffects ? "on" : "off");
     if (mapEvidenceFilter !== "ALL") params.set("ef", mapEvidenceFilter);
     params.set("base", basemap);
     params.set("proj", projection);
@@ -1629,12 +1793,81 @@ export default function Home() {
       params.set("focusIntent", focusIntent);
     }
     return params;
-  }, [activeLayers, analysisArea, atmospherePreset, basemap, compareLeft.id, compareRight.id, compareTimeA, compareTimeB, currentWorkspace, drawerView, fieldOfView, focusIntent, focusStage, gestureMode, layerOrder, lightAzimuth, locationCameraRedacted, mapEvidenceFilter, mapUtilityOpen, mapUtilityView, measureUnit, officialOpacity, opacity, projection, rightOpen, scenePreset, selected, verticalExaggeration, view, visibleOfficialSources, year]);
+  }, [activeLayers, analysisArea, atmospherePreset, basemap, compareLeft.id, compareRight.id, compareTimeA, compareTimeB, currentWorkspace, drawerView, dynamicEffects, fieldOfView, focusIntent, focusStage, gestureMode, layerOrder, lightAzimuth, locationCameraRedacted, mapEvidenceFilter, mapUtilityOpen, mapUtilityView, measureUnit, movingWindowFrames, officialOpacity, opacity, playbackDirection, playbackLoopMode, projection, rightOpen, scenePreset, selected, sweepRangeEnd, sweepRangeStart, temporalMode, temporalStepRule, verticalExaggeration, view, visibleOfficialSources, year]);
 
   const announce = useCallback((message: string) => {
     setToast(message);
     window.setTimeout(() => setToast(""), 3600);
   }, []);
+
+  const commitTemporalFrame = useCallback((next: number, message?: string) => {
+    setSweepRangeStart((current) => Math.min(current, next));
+    setSweepRangeEnd((current) => Math.max(current, next));
+    yearRef.current = next;
+    setYear(next);
+    setPreviewYear(next);
+    if (temporalMode === "comparison") setCompareTimeB(next);
+    if (message) announce(message);
+  }, [announce, temporalMode]);
+
+  const stepTemporalSweep = useCallback((direction: TemporalPlaybackDirection) => {
+    const next = nextTemporalFrame(temporalSequence, year, direction, "stop");
+    if (next === null) {
+      setPlaying(false);
+      announce(`Reached the ${direction === "forward" ? "end" : "start"} of the selected sweep range`);
+      return;
+    }
+    setPlaying(false);
+    commitTemporalFrame(next, `Committed ${formatTimelineStep(next)}; map, evidence, report, and story context moved together`);
+  }, [announce, commitTemporalFrame, temporalSequence, year]);
+
+  const toggleTemporalPlayback = useCallback(() => {
+    if (playing) {
+      setPlaying(false);
+      announce("Time sweep paused");
+      return;
+    }
+    if (reducedMotion) {
+      announce("Automatic sweep is off for reduced motion; use previous and next frame controls");
+      return;
+    }
+    if (temporalMode === "snapshot" || temporalMode === "comparison") return;
+    const next = nextTemporalFrame(temporalSequence, year, playbackDirection, playbackLoopMode);
+    if (next === null) {
+      const restart = temporalSequence[playbackDirection === "forward" ? 0 : temporalSequence.length - 1];
+      if (restart !== undefined) commitTemporalFrame(restart);
+    }
+    setPlaying(true);
+    announce(`Time sweep started ${playbackDirection}; ${temporalSequence.length} bounded frame${temporalSequence.length === 1 ? "" : "s"}`);
+  }, [announce, commitTemporalFrame, playbackDirection, playbackLoopMode, playing, reducedMotion, temporalMode, temporalSequence, year]);
+
+  const loadTemporalEventStack = useCallback(() => {
+    const eventLayerIds = new Set([
+      "historical-context",
+      "atmosphere-observations",
+      "smoke-context",
+      "fire-context",
+      "hazards-context",
+      "watershed-context",
+      "water-context",
+      "communities",
+    ]);
+    const nextVisibility = Object.fromEntries(LAYER_REGISTRY.map((layer) => [
+      layer.id,
+      visibilityRef.current[layer.id] || eventLayerIds.has(layer.id),
+    ]));
+    visibilityRef.current = nextVisibility;
+    setVisibility(nextVisibility);
+    setTemporalMode("event-stepping");
+    setTemporalStepRule("available-events");
+    setSweepRangeStart(1885);
+    setSweepRangeEnd(OFFICIAL_CONTEXT_PRESENT_FRAME);
+    setPlaybackDirection("forward");
+    setPlaybackLoopMode("stop");
+    commitTemporalFrame(1885);
+    setPlaying(false);
+    announce("Loaded a cross-domain event stack from 1885 to the operational-present frame; all claims remain source-specific");
+  }, [announce, commitTemporalFrame]);
 
   const refreshOfficialContext = useCallback(async (feed: OfficialContextFeedId) => {
     if (officialRequestsRef.current.has(feed)) return;
@@ -1654,7 +1887,7 @@ export default function Home() {
       setOfficialPayloads(officialPayloadsRef.current);
       setOfficialStates((current) => ({ ...current, [feed]: payload.state }));
       const map = mapRef.current;
-      if (map?.isStyleLoaded()) applyOfficialContextState(map, officialVisibilityRef.current, officialOpacityRef.current, officialPayloadsRef.current);
+      if (map && styleGenerationReadyRef.current) applyOfficialContextState(map, officialContextVisibilityForFrame(officialVisibilityRef.current, temporalQueryRef.current.frame), officialOpacityRef.current, officialPayloadsRef.current);
       announce(payload.featureCount === 0
         ? `${source.shortTitle}: zero mapped features at ${new Date(payload.retrievedAt).toLocaleTimeString()}—not an all-clear`
         : `${source.shortTitle}: ${payload.featureCount} official context features refreshed`);
@@ -1675,9 +1908,9 @@ export default function Home() {
     const source = OFFICIAL_CONTEXT_BY_ID[id];
     if (source.apiPath && visible && !officialPayloadsRef.current[id as OfficialContextFeedId]) void refreshOfficialContext(id as OfficialContextFeedId);
     const map = mapRef.current;
-    if (map?.isStyleLoaded()) {
+    if (map && styleGenerationReadyRef.current) {
       try {
-        applyOfficialContextState(map, next, officialOpacityRef.current, officialPayloadsRef.current);
+        applyOfficialContextState(map, officialContextVisibilityForFrame(next, temporalQueryRef.current.frame), officialOpacityRef.current, officialPayloadsRef.current);
         if (!source.apiPath) setOfficialStates((current) => ({ ...current, [id]: "ready" }));
       } catch (error) {
         setOfficialStates((current) => ({ ...current, [id]: "error" }));
@@ -1691,7 +1924,7 @@ export default function Home() {
     officialOpacityRef.current = next;
     setOfficialOpacity(next);
     const map = mapRef.current;
-    if (map?.isStyleLoaded()) applyOfficialContextState(map, officialVisibilityRef.current, next, officialPayloadsRef.current);
+    if (map && styleGenerationReadyRef.current) applyOfficialContextState(map, officialContextVisibilityForFrame(officialVisibilityRef.current, temporalQueryRef.current.frame), next, officialPayloadsRef.current);
   }, []);
 
   const refreshVisibleOfficialContext = useCallback(() => {
@@ -1709,7 +1942,7 @@ export default function Home() {
     officialVisibilityRef.current = next;
     setOfficialVisibility(next);
     const map = mapRef.current;
-    if (map?.isStyleLoaded()) applyOfficialContextState(map, next, officialOpacityRef.current, officialPayloadsRef.current);
+    if (map && styleGenerationReadyRef.current) applyOfficialContextState(map, officialContextVisibilityForFrame(next, temporalQueryRef.current.frame), officialOpacityRef.current, officialPayloadsRef.current);
     announce("Official context hidden; loaded snapshots remain available on this page");
   }, [announce]);
 
@@ -1851,12 +2084,11 @@ export default function Home() {
   }, [announce, compareLeft, compareRight, visibility, year]);
 
   const applyComparisonTime = useCallback((nextYear: number, label: "A" | "B") => {
-    yearRef.current = nextYear;
-    setYear(nextYear);
-    setPreviewYear(nextYear);
     setPlaying(false);
+    setTemporalMode("snapshot");
+    commitTemporalFrame(nextYear);
     announce(`Applied Time ${label}: ${formatTimelineStep(nextYear)} to the map`);
-  }, [announce]);
+  }, [announce, commitTemporalFrame]);
 
   const copyTemporalComparison = useCallback(async () => {
     try {
@@ -1951,8 +2183,7 @@ export default function Home() {
         return;
       }
       setPlaying(false);
-      setYear(proposal.targetYear);
-      setPreviewYear(proposal.targetYear);
+      commitTemporalFrame(proposal.targetYear);
       announce(`Applied view-only time change to ${formatTimelineStep(proposal.targetYear)}`);
       return;
     }
@@ -1975,7 +2206,7 @@ export default function Home() {
     const targetView: DrawerView = proposal.kind === "OPEN_METADATA" ? "metadata" : proposal.kind === "OPEN_LINEAGE" ? "lineage" : "evidence";
     activateDrawerView(targetView, true);
     announce("Applied review-navigation action only");
-  }, [activateDrawerView, announce, selected]);
+  }, [activateDrawerView, announce, commitTemporalFrame, selected]);
 
   const closeRepository = useCallback(() => {
     setRepositoryOpen(false);
@@ -2136,23 +2367,22 @@ export default function Home() {
     const focus: [number, number] = [context.properties.focusLng, context.properties.focusLat];
     mapRef.current?.easeTo({ center: focus, zoom: Math.max(mapRef.current.getZoom(), 7), duration: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 700 });
     if (mapRef.current?.isStyleLoaded()) {
-      const mismatch = isFeatureTimeMismatch(context.layer.temporal, context.properties.year, yearRef.current);
+      const mismatch = !isFeatureAvailableForTemporalQuery(context.layer, context.properties.year, temporalQueryRef.current);
       const filtered = mapEvidenceFilterRef.current !== "ALL" && context.properties.evidenceState !== mapEvidenceFilterRef.current;
       updateSelectionSource(mapRef.current, mismatch || filtered ? null : context.geometry);
     }
   }, [openSelection]);
 
   const openGuidedExample = useCallback((example: (typeof GUIDED_EXAMPLES)[number]) => {
-    yearRef.current = example.year;
-    setYear(example.year);
-    setPreviewYear(example.year);
+    setTemporalMode("snapshot");
+    commitTemporalFrame(example.year);
     setPlaying(false);
     setLeftOpen(false);
     setTimelineOpen(false);
     dismissGuidedStart();
     selectStoredFeature(example.layerId, example.featureId);
     announce(`Opened ${example.title} guided example at ${example.year}`);
-  }, [announce, dismissGuidedStart, selectStoredFeature]);
+  }, [announce, commitTemporalFrame, dismissGuidedStart, selectStoredFeature]);
 
   const openStoryStep = useCallback((requestedIndex: number) => {
     const nextIndex = Math.max(0, Math.min(KFM_STORY_TRAIL.length - 1, requestedIndex));
@@ -2162,14 +2392,13 @@ export default function Home() {
     setGuidedStartOpen(false);
     setHelpOpen(false);
     setPlaying(false);
-    yearRef.current = step.year;
-    setYear(step.year);
-    setPreviewYear(step.year);
+    setTemporalMode("snapshot");
+    commitTemporalFrame(step.year);
     setLeftOpen(false);
     setTimelineOpen(false);
     selectStoredFeature(step.layerId, step.featureId);
     announce(`Story step ${nextIndex + 1} of ${KFM_STORY_TRAIL.length}: ${step.eyebrow}`);
-  }, [announce, selectStoredFeature]);
+  }, [announce, commitTemporalFrame, selectStoredFeature]);
 
   const startStoryTrail = useCallback(() => {
     setMapContextOpen(false);
@@ -2191,18 +2420,23 @@ export default function Home() {
           ? "Globe"
           : "2D";
     const redactCamera = locationCameraRedacted;
+    const capturedSelection = selected && !selectedTimeMismatch ? selected : null;
     const evidenceRefs = Array.from(new Set([
       ...mapContextRecords.map((feature) => feature.properties.citation),
-      ...(selected ? [selected.properties.citation] : []),
+      ...(capturedSelection ? [capturedSelection.properties.citation] : []),
     ]));
-    const selectedTrustState = selected ? trustStateFromEvidenceState(selected.properties.evidenceState, selected.properties.sourceRole) : undefined;
+    const selectedTrustState = capturedSelection ? trustStateFromEvidenceState(capturedSelection.properties.evidenceState, capturedSelection.properties.sourceRole) : undefined;
+    const capturedSweepMode: TemporalSweepMode = representation === "Compare" ? "comparison" : temporalMode;
+    const capturedSweepFrame = capturedSweepMode === "comparison" ? compareTimeB : temporalQuery.frame;
+    const capturedRangeStart = capturedSweepMode === "comparison" ? Math.min(compareTimeA, compareTimeB) : temporalQuery.rangeStart;
+    const capturedRangeEnd = capturedSweepMode === "comparison" ? Math.max(compareTimeA, compareTimeB) : temporalQuery.rangeEnd;
     return {
       id: `snapshot-${globalThis.crypto?.randomUUID?.() ?? Date.now()}`,
       createdAt,
-      area: redactCamera && !selected
+      area: redactCamera && !capturedSelection
         ? { kind: "viewport", label: "Map extent withheld after browser location" }
-        : selected
-        ? { kind: "selection", label: `${selected.properties.title} · ${selected.properties.spatialScope}` }
+        : capturedSelection
+        ? { kind: "selection", label: `${capturedSelection.properties.title} · ${capturedSelection.properties.spatialScope}` }
         : analysisArea
           ? { kind: "aoi", label: "Locked browser-local area of interest", bounds: { ...analysisArea } }
           : { kind: "viewport", label: "Current Kansas map viewport", bounds: { ...mapViewportBounds } },
@@ -2214,6 +2448,16 @@ export default function Home() {
       basemap,
       evidenceFilter: mapEvidenceFilter,
       comparison: representation === "Compare" ? { layerA: compareLeftId, layerB: compareRightId, timeA: compareTimeA, timeB: compareTimeB } : undefined,
+      temporalSweep: {
+        mode: capturedSweepMode,
+        frame: capturedSweepFrame,
+        rangeStart: capturedRangeStart,
+        rangeEnd: capturedRangeEnd,
+        windowStart: capturedSweepMode === "moving-window" ? temporalQuery.windowStart : capturedRangeStart,
+        windowFrames: movingWindowFrames,
+        stepRule: temporalStepRule,
+        interpolation: false,
+      },
       committedTime: representation === "Compare"
         ? {
           start: Math.min(compareTimeA, compareTimeB),
@@ -2222,18 +2466,26 @@ export default function Home() {
           mode: "interval",
           uncertainty: "Catalog availability comparison only; no interpolation or observed-change claim.",
         }
-        : { start: year, end: year, label: `${formatTimelineStep(year)} · ${timelineEraLabel(year)}`, mode: "instant" },
+        : temporalMode === "moving-window" || temporalMode === "accumulation"
+          ? {
+            start: temporalMode === "moving-window" ? temporalQuery.windowStart : temporalQuery.rangeStart,
+            end: temporalQuery.frame,
+            label: `${formatTimelineStep(temporalMode === "moving-window" ? temporalQuery.windowStart : temporalQuery.rangeStart)} ↔ ${formatTimelineStep(temporalQuery.frame)} · ${temporalMode.replace("-", " ")}`,
+            mode: temporalMode === "accumulation" ? "cumulative" : "interval",
+            uncertainty: "Feature-filtered site context only; no interpolation, resampling, causal inference, or source admission.",
+          }
+          : { start: temporalQuery.frame, end: temporalQuery.frame, label: `${formatTimelineStep(temporalQuery.frame)} · ${timelineEraLabel(temporalQuery.frame)}`, mode: "instant" },
       visibleLayers: layerOrder
         .filter((layerId) => visibility[layerId])
         .map((layerId, order) => {
           const layer = LAYER_REGISTRY.find((candidate) => candidate.id === layerId)!;
           return { id: layer.id, title: layer.title, domain: layer.domain, order, opacity: opacity[layer.id] ?? layer.defaultOpacity, trustState: trustStateForLayer(layer) };
         }),
-      selection: selected && selectedTrustState ? {
-        featureId: selected.featureId,
-        layerId: selected.layerId,
-        title: selected.properties.title,
-        evidenceReference: selected.properties.citation,
+      selection: capturedSelection && selectedTrustState ? {
+        featureId: capturedSelection.featureId,
+        layerId: capturedSelection.layerId,
+        title: capturedSelection.properties.title,
+        evidenceReference: capturedSelection.properties.citation,
         trustState: selectedTrustState,
       } : null,
       evidenceRefs,
@@ -2243,7 +2495,7 @@ export default function Home() {
       boundedCount: Math.max(0, mapContextRecords.length - supportedMapContextCount),
       policy: policyDecisionFromEvidenceState(selected?.properties.evidenceState),
     };
-  }, [analysisArea, basemap, compareTimeA, compareTimeB, layerOrder, locationCameraRedacted, mapContextRecords, mapEvidenceFilter, compareLeftId, compareRightId, mapUtilityOpen, mapUtilityView, mapViewportBounds, opacity, projection, scenePreset, selected, supportedMapContextCount, view, visibility, year]);
+  }, [analysisArea, basemap, compareTimeA, compareTimeB, layerOrder, locationCameraRedacted, mapContextRecords, mapEvidenceFilter, compareLeftId, compareRightId, mapUtilityOpen, mapUtilityView, mapViewportBounds, movingWindowFrames, opacity, projection, scenePreset, selected, selectedTimeMismatch, supportedMapContextCount, temporalMode, temporalQuery, temporalStepRule, view, visibility]);
 
   const comparisonSnapshot = useMemo(() => captureMapSnapshot(), [captureMapSnapshot]);
 
@@ -2269,6 +2521,9 @@ export default function Home() {
 
   const applyStoryScene = useCallback((scene: StoryScene) => {
     const snapshot = scene.snapshot;
+    const snapshotSweep = snapshot.temporalSweep;
+    const sceneFrame = snapshotSweep?.frame ?? snapshot.committedTime.end;
+    const sceneSweepMode: TemporalSweepMode = snapshotSweep?.mode ?? (snapshot.representation === "Compare" ? "comparison" : "snapshot");
     const referencedRecord = allEvidenceRecords.find((record) => scene.evidenceRefs.includes(record.citation));
     const visibleIds = new Set(snapshot.visibleLayers.map((layer) => layer.id));
     if (referencedRecord) visibleIds.add(referencedRecord.layerId);
@@ -2282,7 +2537,7 @@ export default function Home() {
     visibilityRef.current = nextVisibility;
     opacityRef.current = nextOpacity;
     orderRef.current = nextOrder;
-    yearRef.current = snapshot.committedTime.start;
+    yearRef.current = sceneFrame;
     projectionRef.current = snapshot.projection;
     const snapshotBasemap = Object.prototype.hasOwnProperty.call(BASEMAPS, snapshot.basemap)
       ? snapshot.basemap as BasemapKey
@@ -2291,9 +2546,14 @@ export default function Home() {
     setVisibility(nextVisibility);
     setOpacity(nextOpacity);
     setLayerOrder(nextOrder);
-    setYear(snapshot.committedTime.start);
-    setPreviewYear(snapshot.committedTime.start);
+    setYear(sceneFrame);
+    setPreviewYear(sceneFrame);
     setPlaying(false);
+    setTemporalMode(sceneSweepMode);
+    setTemporalStepRule(snapshotSweep?.stepRule ?? "available-events");
+    setSweepRangeStart(snapshotSweep?.rangeStart ?? Math.min(snapshot.committedTime.start, sceneFrame));
+    setSweepRangeEnd(snapshotSweep?.rangeEnd ?? Math.max(snapshot.committedTime.end, sceneFrame));
+    setMovingWindowFrames(snapshotSweep?.windowFrames ?? 3);
     setProjection(snapshot.projection);
     setBasemap(snapshotBasemap);
     setAnalysisArea(snapshot.area.kind === "aoi" && snapshot.area.bounds ? { ...snapshot.area.bounds } : null);
@@ -2301,9 +2561,9 @@ export default function Home() {
     setMapEvidenceFilter(snapshot.evidenceFilter ?? "ALL");
     mapEvidenceFilterRef.current = snapshot.evidenceFilter ?? "ALL";
     setCompareTimeA(snapshot.comparison?.timeA ?? snapshot.committedTime.start);
-    setCompareTimeB(snapshot.comparison?.timeB ?? snapshot.committedTime.end);
+    setCompareTimeB(snapshot.comparison?.timeB ?? sceneFrame);
     if (snapshot.comparison) { setCompareLeftId(snapshot.comparison.layerA); setCompareRightId(snapshot.comparison.layerB); }
-    setMapUtilityView("compare");
+    setMapUtilityView(snapshot.representation === "Compare" ? "compare" : "navigate");
     setMapUtilityOpen(snapshot.representation === "Compare");
     setPrimaryWorkspace("map");
     if (snapshot.camera.center !== "WITHHELD_BROWSER_LOCATION") {
@@ -2427,10 +2687,27 @@ export default function Home() {
         if (nextOfficialVisibility[source.id] && source.apiPath && !officialPayloadsRef.current[source.id as OfficialContextFeedId]) void refreshOfficialContext(source.id as OfficialContextFeedId);
       }
       const restoredYear = Number(params.get("t"));
-      const nextYear = TIME_STEPS.includes(restoredYear as (typeof TIME_STEPS)[number]) ? restoredYear : 2026;
+      const nextYear = KNOWN_TEMPORAL_FRAMES.has(restoredYear) ? restoredYear : 2026;
       yearRef.current = nextYear;
       setYear(nextYear);
       setPreviewYear(nextYear);
+      const restoredTemporalMode = params.get("tm");
+      const nextTemporalMode: TemporalSweepMode = restoredTemporalMode === "moving-window" || restoredTemporalMode === "event-stepping" || restoredTemporalMode === "accumulation" || restoredTemporalMode === "comparison" ? restoredTemporalMode : "snapshot";
+      setTemporalMode(nextTemporalMode);
+      setTemporalStepRule(params.get("tstep") === "regular-calendar" ? "regular-calendar" : "available-events");
+      const restoredSweepRange = params.get("trange")?.split(",").map(Number) ?? [];
+      const validSweepRange = restoredSweepRange.length === 2
+        && restoredSweepRange.every((value) => TIME_STEPS.includes(value as (typeof TIME_STEPS)[number]))
+        && restoredSweepRange[0] <= nextYear
+        && restoredSweepRange[1] >= nextYear
+        && restoredSweepRange[0] <= restoredSweepRange[1];
+      setSweepRangeStart(validSweepRange ? restoredSweepRange[0] : TIME_STEPS[0]);
+      setSweepRangeEnd(validSweepRange ? restoredSweepRange[1] : TIME_STEPS.at(-1)!);
+      setMovingWindowFrames(clamp(Math.round(parseNumber(params.get("twindow"), 3)), 1, 8));
+      setPlaybackDirection(params.get("tdir") === "reverse" ? "reverse" : "forward");
+      setPlaybackLoopMode(params.get("tloop") === "loop" ? "loop" : "stop");
+      setDynamicEffects(params.get("motion") !== "off");
+      setPlaying(false);
       const restoredEvidenceFilter = params.get("ef");
       const nextEvidenceFilter: RegistryEvidenceFilter = restoredEvidenceFilter && restoredEvidenceFilter in evidenceLabels ? restoredEvidenceFilter as EvidenceState : "ALL";
       mapEvidenceFilterRef.current = nextEvidenceFilter;
@@ -2471,7 +2748,9 @@ export default function Home() {
       const restoredWorkspace = params.get("ws");
       setCurrentWorkspace(restoredWorkspace === "knowledge" || restoredWorkspace === "features" || restoredWorkspace === "trust" ? restoredWorkspace : "explore");
       const restoredMapUtilityView = params.get("maptab");
-      const nextMapUtilityView: MapUtilityView = restoredMapUtilityView === "report" || restoredMapUtilityView === "inspect" || restoredMapUtilityView === "places" || restoredMapUtilityView === "scene" || restoredMapUtilityView === "connections" || restoredMapUtilityView === "import" || restoredMapUtilityView === "compare" || restoredMapUtilityView === "display" || restoredMapUtilityView === "measure" || restoredMapUtilityView === "export" || restoredMapUtilityView === "diagnostics" ? restoredMapUtilityView : "navigate";
+      const nextMapUtilityView: MapUtilityView = nextTemporalMode === "comparison"
+        ? "compare"
+        : restoredMapUtilityView === "report" || restoredMapUtilityView === "inspect" || restoredMapUtilityView === "places" || restoredMapUtilityView === "scene" || restoredMapUtilityView === "connections" || restoredMapUtilityView === "import" || restoredMapUtilityView === "compare" || restoredMapUtilityView === "display" || restoredMapUtilityView === "measure" || restoredMapUtilityView === "export" || restoredMapUtilityView === "diagnostics" ? restoredMapUtilityView : "navigate";
       setMapUtilityView(nextMapUtilityView);
       const restoredCompareIds = params.get("compare")?.split(",") ?? [];
       if (restoredCompareIds.length === 2 && restoredCompareIds.every((id) => knownLayerIds.has(id)) && restoredCompareIds[0] !== restoredCompareIds[1]) {
@@ -2488,7 +2767,7 @@ export default function Home() {
       }
       if (nextMapUtilityView === "export") setExportGeneratedAt(new Date().toISOString());
       if (nextMapUtilityView === "report") setReportGeneratedAt(new Date().toISOString());
-      const restoredMapUtilityOpen = params.get("mapui") === "open";
+      const restoredMapUtilityOpen = nextTemporalMode === "comparison" || params.get("mapui") === "open";
       setMapUtilityOpen(restoredMapUtilityOpen);
       if (restoredMapUtilityOpen && compactRef.current) {
         setLeftOpen(false);
@@ -2663,10 +2942,11 @@ export default function Home() {
         };
 
         const syncStyle = () => {
+          styleGenerationReadyRef.current = true;
           hoveredRef.current = null;
           map.getCanvas().style.cursor = "";
-          applyRegistryState(map, visibilityRef.current, opacityRef.current, yearRef.current, orderRef.current, mapEvidenceFilterRef.current);
-          applyOfficialContextState(map, officialVisibilityRef.current, officialOpacityRef.current, officialPayloadsRef.current);
+          applyRegistryState(map, visibilityRef.current, opacityRef.current, yearRef.current, orderRef.current, mapEvidenceFilterRef.current, temporalQueryRef.current);
+          applyOfficialContextState(map, officialContextVisibilityForFrame(officialVisibilityRef.current, temporalQueryRef.current.frame), officialOpacityRef.current, officialPayloadsRef.current);
           setElevationExaggeration(map, verticalExaggerationRef.current);
           map.setProjection({ type: projectionRef.current });
           applySceneEnvironment(map, atmospherePresetRef.current, lightAzimuthRef.current);
@@ -2676,9 +2956,10 @@ export default function Home() {
           setStructures3DState(setStructureExtrusions(map, structures3DRef.current));
           const currentSelection = selectedRef.current;
           if (currentSelection) {
-            const mismatch = isFeatureTimeMismatch(currentSelection.layer.temporal, currentSelection.properties.year, yearRef.current);
-            const layerVisible = currentSelection.kind === "basemap" || visibilityRef.current[currentSelection.layerId] === true;
-            const filtered = mapEvidenceFilterRef.current !== "ALL" && currentSelection.properties.evidenceState !== mapEvidenceFilterRef.current;
+            const mismatch = (currentSelection.featureId.startsWith("official-context:") && temporalQueryRef.current.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME)
+              || !isFeatureAvailableForTemporalQuery(currentSelection.layer, currentSelection.properties.year, temporalQueryRef.current);
+            const layerVisible = selectionCarrierIsVisible(currentSelection, visibilityRef.current, officialVisibilityRef.current, temporalQueryRef.current.frame);
+            const filtered = !selectionPassesEvidenceFilter(currentSelection, mapEvidenceFilterRef.current);
             updateSelectionSource(map, mismatch || !layerVisible || filtered ? null : currentSelection.geometry);
           }
           updateMeasurementSource(map, buildMeasurementData(measureCoordinatesRef.current, measurementGeometryModeRef.current));
@@ -2763,6 +3044,11 @@ export default function Home() {
           }
         });
         map.getCanvas().addEventListener("mouseleave", () => {
+          if (hoveredRef.current && map.getSource(hoveredRef.current.source)) {
+            try { map.setFeatureState(hoveredRef.current, { hover: false }); } catch { /* Source teardown can race a pointer exit. */ }
+          }
+          hoveredRef.current = null;
+          map.getCanvas().style.cursor = "";
           setHoverSummary(null);
           setTerrainElevationReading(null);
         });
@@ -3015,6 +3301,7 @@ export default function Home() {
     return () => {
       disposed = true;
       popupRef.current?.remove();
+      styleGenerationReadyRef.current = false;
       if (sceneOrbitTimerRef.current !== null) window.clearTimeout(sceneOrbitTimerRef.current);
       mapRef.current?.remove();
       mapRef.current = null;
@@ -3023,26 +3310,39 @@ export default function Home() {
 
   useEffect(() => {
     const map = mapRef.current;
-    if (!map || !map.isStyleLoaded()) return;
-    applyRegistryState(map, visibility, opacity, year, layerOrder, mapEvidenceFilter);
+    if (!map || !styleGenerationReadyRef.current) return;
+    applyRegistryState(map, visibility, opacity, yearRef.current, layerOrder, mapEvidenceFilter, temporalQueryRef.current);
     setElevationExaggeration(map, verticalExaggerationRef.current);
-  }, [visibility, opacity, year, layerOrder, mapEvidenceFilter]);
+  }, [layerOrder, mapEvidenceFilter, opacity, visibility]);
 
   useEffect(() => {
     const map = mapRef.current;
-    if (!map?.isStyleLoaded()) return;
-    applyOfficialContextState(map, officialVisibility, officialOpacity, officialPayloads);
-  }, [officialOpacity, officialPayloads, officialVisibility, styleReady]);
+    if (!map || !styleGenerationReadyRef.current) return;
+    const hovered = hoveredRef.current;
+    if (hovered && map.getSource(hovered.source)) {
+      try { map.setFeatureState(hovered, { hover: false }); } catch { /* A filtered or replaced source has no hover state to clear. */ }
+    }
+    hoveredRef.current = null;
+    setHoverSummary(null);
+    map.getCanvas().style.cursor = "";
+    applyTemporalRegistryFilters(map, year, mapEvidenceFilter, temporalQuery);
+  }, [mapEvidenceFilter, temporalQuery, year]);
 
   useEffect(() => {
     const map = mapRef.current;
-    if (!map?.isStyleLoaded()) return;
+    if (!map || !styleGenerationReadyRef.current) return;
+    applyOfficialContextState(map, effectiveOfficialVisibility, officialOpacity, officialPayloads);
+  }, [effectiveOfficialVisibility, officialOpacity, officialPayloads, styleReady]);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !styleGenerationReadyRef.current) return;
     setElevationExaggeration(map, verticalExaggeration);
   }, [verticalExaggeration]);
 
   useEffect(() => {
     const map = mapRef.current;
-    if (!map?.isStyleLoaded()) {
+    if (!map || !styleGenerationReadyRef.current) {
       setTerrainState(scenePreset === "elevation-3d" ? "LOADING" : "OFF");
       return;
     }
@@ -3051,7 +3351,7 @@ export default function Home() {
 
   useEffect(() => {
     const map = mapRef.current;
-    if (!map?.isStyleLoaded()) {
+    if (!map || !styleGenerationReadyRef.current) {
       setStructures3DState(structures3DEnabled ? "UNAVAILABLE" : "OFF");
       return;
     }
@@ -3060,7 +3360,7 @@ export default function Home() {
 
   useEffect(() => {
     const map = mapRef.current;
-    if (!map?.isStyleLoaded() || !styleReady) return;
+    if (!map || !styleGenerationReadyRef.current) return;
     let animationFrame = 0;
     let lastFrame = 0;
     const effectsActive = dynamicEffects && !reducedMotion;
@@ -3071,7 +3371,7 @@ export default function Home() {
     }
 
     const renderEffects = (timestamp: number) => {
-      if (timestamp - lastFrame >= 80 && map.isStyleLoaded()) {
+      if (timestamp - lastFrame >= 80 && styleGenerationReadyRef.current) {
         applyDynamicMapEffects(map, timestamp, opacity, true);
         lastFrame = timestamp;
       }
@@ -3080,13 +3380,15 @@ export default function Home() {
     animationFrame = window.requestAnimationFrame(renderEffects);
     return () => {
       window.cancelAnimationFrame(animationFrame);
-      if (map.isStyleLoaded()) applyDynamicMapEffects(map, 0, opacity, false);
+      if (styleGenerationReadyRef.current) applyDynamicMapEffects(map, 0, opacity, false);
     };
   }, [dynamicEffects, opacity, reducedMotion, styleReady]);
 
   useEffect(() => {
     const map = mapRef.current;
-    if (!map || !map.isStyleLoaded()) return;
+    if (!map) return;
+    styleGenerationReadyRef.current = false;
+    setPlaying(false);
     map.setStyle(BASEMAPS[basemap].style);
     setStyleReady(false);
     setTerrainState(scenePresetRef.current === "elevation-3d" ? "LOADING" : "OFF");
@@ -3095,21 +3397,26 @@ export default function Home() {
   }, [basemap]);
 
   useEffect(() => {
+    const selectionVisible = Boolean(selected && !selectedTimeMismatch && !selectedLayerHidden && !selectedEvidenceFiltered);
+    if (!selectionVisible) {
+      popupRef.current?.remove();
+      popupRef.current = null;
+    }
     const map = mapRef.current;
-    if (!map?.isStyleLoaded()) return;
-    updateSelectionSource(map, selected && !selectedTimeMismatch && !selectedLayerHidden && !selectedEvidenceFiltered ? selected.geometry : null);
+    if (!map || !styleGenerationReadyRef.current) return;
+    updateSelectionSource(map, selectionVisible && selected ? selected.geometry : null);
   }, [selected, selectedEvidenceFiltered, selectedLayerHidden, selectedTimeMismatch]);
 
   useEffect(() => {
     const map = mapRef.current;
-    if (!map?.isStyleLoaded()) return;
+    if (!map || !styleGenerationReadyRef.current) return;
     map.setProjection({ type: projection });
     setMaplibreProbe((current) => ({ ...current, projection }));
   }, [projection]);
 
   useEffect(() => {
     const map = mapRef.current;
-    if (!map?.isStyleLoaded()) return;
+    if (!map || !styleGenerationReadyRef.current) return;
     applySceneEnvironment(map, atmospherePreset, lightAzimuth);
     map.setVerticalFieldOfView(fieldOfView);
   }, [atmospherePreset, fieldOfView, lightAzimuth]);
@@ -3130,18 +3437,19 @@ export default function Home() {
   }, [leftOpen, rightOpen, timelineOpen]);
 
   useEffect(() => {
-    if (!playing || temporalMode === "snapshot" || temporalMode === "comparison") return;
+    if (!playing || reducedMotion || temporalMode === "snapshot" || temporalMode === "comparison") return;
     const timer = window.setInterval(() => {
-      const index = TIME_STEPS.indexOf(yearRef.current as (typeof TIME_STEPS)[number]);
-      const nextIndex = Math.min(TIME_STEPS.length - 1, index + 1);
-      const next = TIME_STEPS[nextIndex];
-      if (nextIndex === index) setPlaying(false);
+      const next = nextTemporalFrame(temporalSequence, yearRef.current, playbackDirection, playbackLoopMode);
+      if (next === null) {
+        setPlaying(false);
+        return;
+      }
       yearRef.current = next;
       setYear(next);
       setPreviewYear(next);
     }, 1300 / playbackSpeed);
     return () => window.clearInterval(timer);
-  }, [playing, playbackSpeed, temporalMode, temporalStepRule]);
+  }, [playbackDirection, playbackLoopMode, playbackSpeed, playing, reducedMotion, temporalMode, temporalSequence]);
 
   useEffect(() => {
     const pauseWhenHidden = () => { if (document.hidden) setPlaying(false); };
@@ -3521,9 +3829,11 @@ export default function Home() {
   };
 
   const inspectLayer = (layer: LayerRecord, returnElement: HTMLElement) => {
-    const featureId = inspectableFeatureId(layer, year);
+    const featureId = [...layer.data.features]
+      .filter((feature) => isFeatureAvailableForTemporalQuery(layer, feature.properties.year, temporalQuery))
+      .sort((left, right) => right.properties.year - left.properties.year)[0]?.properties.fid ?? null;
     if (!featureId) {
-      announce(`${layer.title} has no feature compatible with ${formatTimelineStep(year)}`);
+      announce(`${layer.title} has no feature compatible with ${temporalScopeLabel}`);
       return;
     }
     setMapFeatureQuery("");
@@ -3684,7 +3994,6 @@ export default function Home() {
     stopSceneOrbit(false);
     const nextVisibility = Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, scene.layers.includes(layer.id)]));
     visibilityRef.current = nextVisibility;
-    yearRef.current = 2026;
     basemapRef.current = scene.basemap;
     projectionRef.current = scene.projection;
     verticalExaggerationRef.current = scene.scale;
@@ -3692,8 +4001,8 @@ export default function Home() {
     lightAzimuthRef.current = scene.lightAzimuth;
     fieldOfViewRef.current = scene.fieldOfView;
     setVisibility(nextVisibility);
-    setYear(2026);
-    setPreviewYear(2026);
+    setTemporalMode("snapshot");
+    commitTemporalFrame(2026);
     setPlaying(false);
     setBasemap(scene.basemap);
     setProjection(scene.projection);
@@ -3947,7 +4256,6 @@ export default function Home() {
     const nextFieldOfView = profile.id === "elevation" ? 44 : profile.projection === "globe" ? 42 : 36;
     stopSceneOrbit(false);
     visibilityRef.current = nextVisibility;
-    yearRef.current = profile.year;
     mapEvidenceFilterRef.current = "ALL";
     basemapRef.current = profile.basemap;
     projectionRef.current = profile.projection;
@@ -3955,10 +4263,10 @@ export default function Home() {
     atmospherePresetRef.current = nextAtmosphere;
     fieldOfViewRef.current = nextFieldOfView;
     setVisibility(nextVisibility);
-    setYear(profile.year);
-    setPreviewYear(profile.year);
+    commitTemporalFrame(profile.year);
     setMapEvidenceFilter("ALL");
     setPlaying(false);
+    setTemporalMode("snapshot");
     setBasemap(profile.basemap);
     setProjection(profile.projection);
     setScenePreset(nextScenePreset);
@@ -4011,7 +4319,6 @@ export default function Home() {
     const nextVisibility = Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, recipe.layerIds.includes(layer.id)]));
     stopSceneOrbit(false);
     visibilityRef.current = nextVisibility;
-    yearRef.current = recipe.year;
     mapEvidenceFilterRef.current = "ALL";
     basemapRef.current = recipe.basemap;
     projectionRef.current = "mercator";
@@ -4019,10 +4326,10 @@ export default function Home() {
     lightAzimuthRef.current = 210;
     fieldOfViewRef.current = 36;
     setVisibility(nextVisibility);
-    setYear(recipe.year);
-    setPreviewYear(recipe.year);
+    commitTemporalFrame(recipe.year);
     setMapEvidenceFilter("ALL");
     setPlaying(false);
+    setTemporalMode("snapshot");
     setBasemap(recipe.basemap);
     setProjection("mercator");
     setScenePreset("overview-2d");
@@ -4080,6 +4387,15 @@ export default function Home() {
         : { mode: measurementGeometryMode, unit: measureUnit, label: measurement, coordinates: measureCoordinatesRef.current.map(([longitude, latitude]) => [longitude, latitude] as [number, number]) },
       analysisArea: analysisArea ? { ...analysisArea } : null,
       temporalComparison: { timeA: compareTimeA, timeB: compareTimeB },
+      temporalSweep: {
+        mode: temporalMode,
+        stepRule: temporalStepRule,
+        rangeStart: sweepRangeStart,
+        rangeEnd: sweepRangeEnd,
+        windowFrames: movingWindowFrames,
+        direction: playbackDirection,
+        loopMode: playbackLoopMode,
+      },
       report: {
         title: reportTitle,
         scope: reportScope,
@@ -4104,7 +4420,7 @@ export default function Home() {
     const nextOpacity = Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, clamp(Number(snapshot.opacity?.[layer.id] ?? layer.defaultOpacity), .1, 1)]));
     const savedOrder = Array.isArray(snapshot.layerOrder) ? snapshot.layerOrder.filter((id) => knownLayerIds.has(id)) : [];
     const nextOrder = [...savedOrder, ...defaultOrder.filter((id) => !savedOrder.includes(id))];
-    const nextYear = TIME_STEPS.includes(snapshot.year as (typeof TIME_STEPS)[number]) ? snapshot.year : 2026;
+    const nextYear = KNOWN_TEMPORAL_FRAMES.has(snapshot.year) ? snapshot.year : 2026;
     const nextBasemap: BasemapKey = snapshot.basemap === "standard" || snapshot.basemap === "imagery" || snapshot.basemap === "midnight" || snapshot.basemap === "prairie" || snapshot.basemap === "streets" || snapshot.basemap === "topo" ? snapshot.basemap : "standard";
     const nextProjection = snapshot.projection === "globe" ? "globe" : "mercator";
     // Legacy snapshots predate the marker, so fail closed instead of exposing a possibly location-derived camera.
@@ -4135,6 +4451,22 @@ export default function Home() {
     setPreviewYear(nextYear);
     setMapEvidenceFilter(nextMapEvidenceFilter);
     setPlaying(false);
+    const savedSweep = snapshot.temporalSweep;
+    const savedSweepMode = savedSweep?.mode;
+    const nextSavedSweepMode: TemporalSweepMode = savedSweepMode === "moving-window" || savedSweepMode === "event-stepping" || savedSweepMode === "accumulation" || savedSweepMode === "comparison" ? savedSweepMode : "snapshot";
+    setTemporalMode(nextSavedSweepMode);
+    setTemporalStepRule(savedSweep?.stepRule === "regular-calendar" ? "regular-calendar" : "available-events");
+    const savedSweepRangeValid = savedSweep
+      && TIME_STEPS.includes(savedSweep.rangeStart as (typeof TIME_STEPS)[number])
+      && TIME_STEPS.includes(savedSweep.rangeEnd as (typeof TIME_STEPS)[number])
+      && savedSweep.rangeStart <= nextYear
+      && savedSweep.rangeEnd >= nextYear
+      && savedSweep.rangeStart <= savedSweep.rangeEnd;
+    setSweepRangeStart(savedSweepRangeValid ? savedSweep.rangeStart : TIME_STEPS[0]);
+    setSweepRangeEnd(savedSweepRangeValid ? savedSweep.rangeEnd : TIME_STEPS.at(-1)!);
+    setMovingWindowFrames(clamp(Math.round(savedSweep?.windowFrames ?? 3), 1, 8));
+    setPlaybackDirection(savedSweep?.direction === "reverse" ? "reverse" : "forward");
+    setPlaybackLoopMode(savedSweep?.loopMode === "loop" ? "loop" : "stop");
     setBasemap(nextBasemap);
     setProjection(nextProjection);
     setScenePreset(nextScenePreset);
@@ -4174,6 +4506,8 @@ export default function Home() {
     const savedComparison = snapshot.temporalComparison;
     setCompareTimeA(savedComparison && TIME_STEPS.includes(savedComparison.timeA as (typeof TIME_STEPS)[number]) ? savedComparison.timeA : 1910);
     setCompareTimeB(savedComparison && TIME_STEPS.includes(savedComparison.timeB as (typeof TIME_STEPS)[number]) ? savedComparison.timeB : 2026);
+    setMapUtilityView(nextSavedSweepMode === "comparison" ? "compare" : "navigate");
+    setMapUtilityOpen(nextSavedSweepMode === "comparison");
     setReportTitle(snapshot.report?.title || "Kansas map data report");
     setReportScope(snapshot.report?.scope === "SELECTION" || snapshot.report?.scope === "VISIBLE_LAYERS" || (snapshot.report?.scope === "ANALYSIS_AREA" && nextAnalysisArea) ? snapshot.report.scope : "VIEWPORT");
     setReportDetail(snapshot.report?.detail === "EXECUTIVE" || snapshot.report?.detail === "TECHNICAL" ? snapshot.report.detail : "STANDARD");
@@ -4312,22 +4646,23 @@ export default function Home() {
 
   const reapplyRendererState = () => {
     const map = mapRef.current;
-    if (!map?.isStyleLoaded()) {
+    if (!map || !styleGenerationReadyRef.current) {
       announce("Style is not ready; renderer state was not changed");
       return;
     }
     try {
-      applyRegistryState(map, visibilityRef.current, opacityRef.current, yearRef.current, orderRef.current, mapEvidenceFilterRef.current);
-      applyOfficialContextState(map, officialVisibilityRef.current, officialOpacityRef.current, officialPayloadsRef.current);
+      applyRegistryState(map, visibilityRef.current, opacityRef.current, yearRef.current, orderRef.current, mapEvidenceFilterRef.current, temporalQueryRef.current);
+      applyOfficialContextState(map, officialContextVisibilityForFrame(officialVisibilityRef.current, temporalQueryRef.current.frame), officialOpacityRef.current, officialPayloadsRef.current);
       setElevationExaggeration(map, verticalExaggerationRef.current);
       map.setProjection({ type: projectionRef.current });
       applySceneEnvironment(map, atmospherePresetRef.current, lightAzimuthRef.current);
       map.setVerticalFieldOfView(fieldOfViewRef.current);
       const currentSelection = selectedRef.current;
       const selectionAvailable = currentSelection
-        && (currentSelection.kind === "basemap" || visibilityRef.current[currentSelection.layerId] === true)
-        && !isFeatureTimeMismatch(currentSelection.layer.temporal, currentSelection.properties.year, yearRef.current)
-        && (mapEvidenceFilterRef.current === "ALL" || currentSelection.properties.evidenceState === mapEvidenceFilterRef.current);
+        && selectionCarrierIsVisible(currentSelection, visibilityRef.current, officialVisibilityRef.current, temporalQueryRef.current.frame)
+        && !(currentSelection.featureId.startsWith("official-context:") && temporalQueryRef.current.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME)
+        && isFeatureAvailableForTemporalQuery(currentSelection.layer, currentSelection.properties.year, temporalQueryRef.current)
+        && selectionPassesEvidenceFilter(currentSelection, mapEvidenceFilterRef.current);
       updateSelectionSource(map, selectionAvailable ? currentSelection.geometry : null);
       updateMeasurementSource(map, buildMeasurementData(measureCoordinatesRef.current, measurementGeometryModeRef.current));
       updateAnalysisAreaSource(map, analysisAreaRef.current);
@@ -4372,6 +4707,16 @@ export default function Home() {
     setLayerOrder(defaultOrder);
     setYear(2026);
     setPreviewYear(2026);
+    setTemporalMode("snapshot");
+    setTemporalStepRule("available-events");
+    setPlaybackSpeed(1);
+    setPlaybackDirection("forward");
+    setPlaybackLoopMode("stop");
+    setSweepRangeStart(TIME_STEPS[0]);
+    setSweepRangeEnd(TIME_STEPS.at(-1)!);
+    setMovingWindowFrames(3);
+    setPlaying(false);
+    setDynamicEffects(true);
     setMapEvidenceFilter("ALL");
     setCompareTimeA(1910);
     setCompareTimeB(2026);
@@ -4740,7 +5085,14 @@ export default function Home() {
       detail: reportDetail,
       scope: reportScope,
       filters: { query: reportQuery || null, mapEvidenceState: mapEvidenceFilter, evidenceState: reportEvidenceFilter, layerIds: reportLayerIds },
-      activeTime: { value: year, label: formatTimelineStep(year) },
+      activeTime: {
+        value: temporalQuery.frame,
+        label: temporalScopeLabel,
+        mode: temporalMode,
+        start: temporalMode === "moving-window" ? temporalQuery.windowStart : temporalMode === "accumulation" ? temporalQuery.rangeStart : temporalQuery.frame,
+        end: temporalQuery.frame,
+        interpolation: "OFF",
+      },
       temporalComparison: reportTemporalComparison,
       mapContext: {
         center: locationCameraRedacted ? "WITHHELD_BROWSER_LOCATION" : view.center,
@@ -4776,7 +5128,7 @@ export default function Home() {
         coordinates: locationCameraRedacted ? "WITHHELD_BROWSER_LOCATION" : measureCoordinatesRef.current.map(([longitude, latitude]) => [longitude, latitude] as [number, number]),
         approximation: "Browser-local screen measurement; not survey-grade or evidence.",
       } : null,
-      selection: selected ? { id: selected.featureId, kind: selected.kind, title: selected.properties.title, layer: selected.layer.title, evidenceState: selected.properties.evidenceState, evidenceReference: selected.properties.citation } : null,
+      selection: selected && !selectedTimeMismatch ? { id: selected.featureId, kind: selected.kind, title: selected.properties.title, layer: selected.layer.title, evidenceState: selected.properties.evidenceState, evidenceReference: selected.properties.citation, timeCompatible: true } : null,
       summary: reportSections.summary ? {
         matchedRecords: reportRecords.length,
         includedRecords: records.length,
@@ -4966,7 +5318,7 @@ export default function Home() {
         </div>
         <div className="top-context" aria-label="Current map context">
           <span><small>AREA</small><strong>{selectedLabel}</strong></span>
-          <span><small>TIME</small><strong>{formatTimelineStep(year)}</strong></span>
+          <span><small>TIME</small><strong>{temporalScopeLabel}</strong></span>
           <span className="release-indicator" data-selection-state={selected?.properties.evidenceState ?? "DEMONSTRATION"} title="Visible selection posture; not release or publication authority"><i /> {selected ? selectedEvidence?.label.toUpperCase() : "DEMONSTRATION"}</span>
         </div>
         <div className="top-actions">
@@ -4982,7 +5334,7 @@ export default function Home() {
                 <div><dt>Area</dt><dd>{selected ? selected.properties.spatialScope : analysisArea ? "Locked analysis area" : "Current viewport"}</dd></div>
                 <div><dt>Representation</dt><dd>{mapRepresentationLabel}</dd></div>
                 <div><dt>Layers</dt><dd>{visibleCount} visible</dd></div>
-                <div><dt>Time</dt><dd>{formatTimelineStep(year)}</dd></div>
+                <div><dt>Time</dt><dd>{temporalScopeLabel}</dd></div>
                 <div><dt>Inspectable</dt><dd>{mapContextRecords.length} records</dd></div>
                 <div><dt>Evidence</dt><dd>{supportedMapContextCount} source-backed · {mapContextRecords.length - supportedMapContextCount} bounded</dd></div>
               </dl>
@@ -5345,7 +5697,7 @@ export default function Home() {
           </section>
 
           <section className="official-context-catalog" aria-labelledby="official-context-title">
-            <header><div><span>OFFICIAL OPERATIONAL CONTEXT</span><h2 id="official-context-title">Real Kansas source connections</h2></div><strong>{visibleOfficialCount}/{OFFICIAL_CONTEXT_SOURCES.length} ON</strong></header>
+            <header><div><span>OFFICIAL OPERATIONAL CONTEXT</span><h2 id="official-context-title">Real Kansas source connections</h2></div><strong>{withheldOfficialCount > 0 ? `${visibleOfficialCount} SELECTED · HELD` : `${visibleOfficialCount}/${OFFICIAL_CONTEXT_SOURCES.length} ON`}</strong></header>
             <p>Live and current official sources may be drawn for orientation. They stay outside KFM admission, reports, exports, and EvidenceBundles.</p>
             <div className="official-context-pulse" aria-label="Official data connection status">
               <div><span><small>LOADED FEATURES</small><strong>{officialFeatureCount.toLocaleString("en-US")}</strong></span><span><small>CONNECTIONS</small><strong>{officialReadyCount}/{OFFICIAL_CONTEXT_SOURCES.length} checked</strong></span><span><small>LAST RETRIEVAL</small><strong>{officialLatestRetrievedAt ? new Date(officialLatestRetrievedAt).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) : "Not yet"}</strong></span></div>
@@ -5354,9 +5706,10 @@ export default function Home() {
             <div className="official-context-list">{OFFICIAL_CONTEXT_SOURCES.map((source) => {
               const payload = source.apiPath ? officialPayloads[source.id as OfficialContextFeedId] : undefined;
               const state = officialStates[source.id];
-              return <article key={source.id} className="official-context-row" data-state={state} data-visible={officialVisibility[source.id]}>
-                <div className="official-context-primary"><label className="visibility-switch"><input type="checkbox" checked={officialVisibility[source.id]} aria-label={`${officialVisibility[source.id] ? "Hide" : "Show"} ${source.title}`} onChange={(event) => setOfficialContextVisible(source.id, event.target.checked)} /><span aria-hidden="true" /></label><i style={{ "--swatch": source.color } as React.CSSProperties} /><div><strong>{source.shortTitle}</strong><small>{source.organization}</small></div><b>{state.toUpperCase()}</b></div>
-                <details><summary>Source, freshness + controls</summary><p>{source.boundary}</p><dl><div><dt>Endpoint</dt><dd>{source.endpointLabel}</dd></div><div><dt>Freshness</dt><dd>{payload?.upstreamUpdatedAt ? new Date(payload.upstreamUpdatedAt).toLocaleString() : source.freshness}</dd></div><div><dt>Features</dt><dd>{payload ? payload.featureCount : source.apiPath ? "NOT LOADED" : "RASTER TILES"}</dd></div><div><dt>Role</dt><dd>{source.evidenceRole.replaceAll("_", " ")}</dd></div></dl><label className="opacity-control"><span>Opacity <b>{Math.round(officialOpacity[source.id] * 100)}%</b></span><input type="range" min="10" max="100" value={Math.round(officialOpacity[source.id] * 100)} onChange={(event) => setOfficialContextOpacity(source.id, Number(event.target.value) / 100)} /></label>{payload?.limitation && <p className="official-context-warning">{payload.limitation}</p>}{officialErrors[source.id] && <p className="official-context-error">Unavailable: {officialErrors[source.id]}. No fallback inference was used.</p>}<div className="official-context-actions">{source.apiPath && <button type="button" disabled={state === "loading"} onClick={() => void refreshOfficialContext(source.id as OfficialContextFeedId)}>{state === "loading" ? "Refreshing…" : "Refresh"}</button>}<a href={source.sourceUrl} target="_blank" rel="noreferrer">Primary source ↗</a></div></details>
+              const heldAtFrame = officialVisibility[source.id] && !effectiveOfficialVisibility[source.id];
+              return <article key={source.id} className="official-context-row" data-state={state} data-visible={officialVisibility[source.id]} data-held={heldAtFrame}>
+                <div className="official-context-primary"><label className="visibility-switch"><input type="checkbox" checked={officialVisibility[source.id]} aria-label={`${officialVisibility[source.id] ? "Hide" : "Show"} ${source.title}`} onChange={(event) => setOfficialContextVisible(source.id, event.target.checked)} /><span aria-hidden="true" /></label><i style={{ "--swatch": source.color } as React.CSSProperties} /><div><strong>{source.shortTitle}</strong><small>{source.organization}{heldAtFrame ? ` · held until ${formatTimelineStep(OFFICIAL_CONTEXT_PRESENT_FRAME)}` : ""}</small></div><b>{heldAtFrame ? "HELD" : state.toUpperCase()}</b></div>
+                <details><summary>Source, freshness + controls</summary><p>{source.boundary}</p><dl><div><dt>Endpoint</dt><dd>{source.endpointLabel}</dd></div><div><dt>Freshness</dt><dd>{payload?.upstreamUpdatedAt ? new Date(payload.upstreamUpdatedAt).toLocaleString() : source.freshness}</dd></div><div><dt>Features</dt><dd>{payload ? payload.featureCount : source.apiPath ? "NOT LOADED" : "RASTER TILES"}</dd></div><div><dt>Temporal support</dt><dd>{OFFICIAL_CONTEXT_TEMPORAL_SUPPORT[source.id].axis.replaceAll("-", " ")} · {OFFICIAL_CONTEXT_TEMPORAL_SUPPORT[source.id].limitation}</dd></div><div><dt>Role</dt><dd>{source.evidenceRole.replaceAll("_", " ")}</dd></div></dl><label className="opacity-control"><span>Opacity <b>{Math.round(officialOpacity[source.id] * 100)}%</b></span><input type="range" min="10" max="100" value={Math.round(officialOpacity[source.id] * 100)} onChange={(event) => setOfficialContextOpacity(source.id, Number(event.target.value) / 100)} /></label>{payload?.limitation && <p className="official-context-warning">{payload.limitation}</p>}{officialErrors[source.id] && <p className="official-context-error">Unavailable: {officialErrors[source.id]}. No fallback inference was used.</p>}<div className="official-context-actions">{source.apiPath && <button type="button" disabled={state === "loading"} onClick={() => void refreshOfficialContext(source.id as OfficialContextFeedId)}>{state === "loading" ? "Refreshing…" : "Refresh"}</button>}<a href={source.sourceUrl} target="_blank" rel="noreferrer">Primary source ↗</a></div></details>
               </article>;
             })}</div>
             <footer><code>OFFICIAL SOURCE → FIXED ADAPTER / WMS → MAPLIBRE</code><span>Evidence held at admission, release, and EvidenceBundle gates · <a href="https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3393" target="_blank" rel="noreferrer">governance issue #3393 ↗</a></span></footer>
@@ -5377,13 +5730,13 @@ export default function Home() {
               const layers = layerOrder.map((id) => LAYER_REGISTRY.find((layer) => layer.id === id)).filter((layer): layer is LayerRecord => Boolean(layer && layer.category === category && filteredLayerIds.has(layer.id)));
               if (!layers.length) return null;
               return <section className="catalog-group" key={category}><header className="catalog-group-heading"><h2>{category}</h2><div><button type="button" onClick={() => setLayerGroupVisibility(layers.map((layer) => layer.id), true)}>Show all</button><button type="button" onClick={() => setLayerGroupVisibility(layers.map((layer) => layer.id), false)}>Hide all</button></div></header>{layers.map((layer) => {
-                const noData = layer.temporal?.mode === "exact" && !layer.temporal.years.includes(year);
+                const noData = Boolean(layer.temporal && !layer.data.features.some((feature) => isFeatureAvailableForTemporalQuery(layer, feature.properties.year, temporalQuery)));
                 const expanded = expandedLayers.has(layer.id);
                 return <article className="layer-row" key={layer.id} data-active={visibility[layer.id]} data-state={sourceStates[layer.id]}>
                   <div className="layer-primary">
                     <label className="visibility-switch"><input type="checkbox" aria-label={`${visibility[layer.id] ? "Hide" : "Show"} ${layer.title}`} checked={visibility[layer.id]} onChange={(event) => setVisibility((current) => ({ ...current, [layer.id]: event.target.checked }))} /><span aria-hidden="true" /></label>
                     <i className={`legend-swatch ${layer.legend[0].shape}`} style={{ "--swatch": layer.legend[0].color } as React.CSSProperties} aria-hidden="true" />
-                    <button className="layer-title" type="button" onClick={() => setExpandedLayers((current) => { const next = new Set(current); if (next.has(layer.id)) next.delete(layer.id); else next.add(layer.id); return next; })} aria-expanded={expanded}><strong>{layer.title}</strong><small>{noData ? `No ${layer.temporal?.label.toLowerCase()} data for ${formatTimelineStep(year)}` : `${layer.releaseState} · ${layer.releaseTime}`}</small></button>
+                    <button className="layer-title" type="button" onClick={() => setExpandedLayers((current) => { const next = new Set(current); if (next.has(layer.id)) next.delete(layer.id); else next.add(layer.id); return next; })} aria-expanded={expanded}><strong>{layer.title}</strong><small>{noData ? `No ${layer.temporal?.label.toLowerCase()} data for ${temporalScopeLabel}` : `${layer.releaseState} · ${layer.releaseTime}`}</small></button>
                     <span className={`trust-badge state-${layer.releaseState.toLowerCase()}`}>{layer.releaseState}</span>
                   </div>
                   {expanded && <div className="layer-detail">
@@ -5413,7 +5766,7 @@ export default function Home() {
             </div>
             <div className="map-command-facts" aria-label="Current investigation context">
               <span><small>SCOPE</small><b>{selected?.properties.title ?? activeAtlasView?.scope ?? "Kansas statewide"}</b></span>
-              <span><small>TIME</small><b>{formatTimelineStep(year)}</b></span>
+              <span><small>TIME</small><b>{temporalScopeLabel}</b></span>
               <span><small>LAYERS</small><b>{visibleCount} registry · {visibleOfficialCount} context</b></span>
             </div>
             <div className="map-command-status">
@@ -5475,7 +5828,7 @@ export default function Home() {
             </header>
             <div className="qwen-context-strip" aria-label="Qwen context scope">
               <span><small>VIEW</small><strong>{mapRepresentationLabel}</strong></span>
-              <span><small>TIME</small><strong>{formatTimelineStep(year)}</strong></span>
+              <span><small>TIME</small><strong>{temporalScopeLabel}</strong></span>
               <span><small>LAYERS</small><strong>{visibleCount}</strong></span>
               <span><small>SELECTION</small><strong>{selected ? "1" : "0"}</strong></span>
             </div>
@@ -5499,7 +5852,7 @@ export default function Home() {
 
           {(runtime.kind === "loading" || runtime.kind === "error" || runtime.kind === "unsupported") && <div className={`runtime-overlay ${runtime.kind}`} role="status" aria-live="assertive"><span className="runtime-spinner" aria-hidden="true" /><strong>{runtime.kind === "loading" ? "Preparing spatial explorer" : runtime.kind === "unsupported" ? "Map runtime unsupported" : "Map runtime unavailable"}</strong><p>{runtime.message}</p>{runtime.kind === "error" && <button type="button" onClick={() => window.location.reload()}>Reload map</button>}</div>}
           {runtime.kind === "degraded" && <div className="runtime-degraded-banner" role="status" aria-live="polite"><strong>Partial map degradation</strong><span>{runtime.message}</span></div>}
-          {temporalNoData.length > 0 && <div className="no-time-data" role="status"><strong>No {formatTimelineStep(year)} observation in {temporalNoData.map((layer) => layer.title).join(", ")}</strong><span>Other active layers remain visible; choose an available tick in the timeline.</span></div>}
+          {temporalNoData.length > 0 && <div className="no-time-data" role="status"><strong>No compatible record for {temporalScopeLabel} in {temporalNoData.map((layer) => layer.title).join(", ")}</strong><span>Other active layers remain visible; choose an available frame or change the sweep semantics.</span></div>}
 
           {runtime.kind === "ready" && guidedStartOpen && <aside className="guided-start" aria-labelledby="guided-start-title">
             <header>
@@ -5641,7 +5994,7 @@ export default function Home() {
                     <fieldset className="report-control-group"><legend>Included layers</legend>
                       <div className="report-layer-actions"><button type="button" onClick={() => setReportLayerIds(activeLayers.map((layer) => layer.id))}>Use visible</button><button type="button" onClick={() => setReportLayerIds(LAYER_REGISTRY.map((layer) => layer.id))}>Select all</button><button type="button" onClick={() => setReportLayerIds([])}>Clear</button></div>
                       <div className="report-layer-list">{LAYER_REGISTRY.map((layer) => {
-                        const compatibleCount = layer.data.features.filter((feature) => isFeatureAvailableAtTime(layer, feature.properties.year, year)).length;
+                        const compatibleCount = layer.data.features.filter((feature) => isFeatureAvailableForTemporalQuery(layer, feature.properties.year, temporalQuery)).length;
                         return <label key={layer.id} data-visible={visibility[layer.id]}><input type="checkbox" checked={reportLayerIds.includes(layer.id)} onChange={(event) => setReportLayerIds((current) => event.target.checked ? [...new Set([...current, layer.id])] : current.filter((id) => id !== layer.id))} /><span><strong>{layer.title}</strong><small>{layer.domain} · {compatibleCount} time-compatible · {visibility[layer.id] ? "visible" : "hidden"}</small></span></label>;
                       })}</div>
                     </fieldset>
@@ -5654,7 +6007,7 @@ export default function Home() {
                   </div>
 
                   <article className="report-preview" aria-live="polite">
-                    <header><div><span>LIVE REPORT PREVIEW</span><h4>{reportTitle.trim() || "Kansas map data report"}</h4><p>{reportScope.replaceAll("_", " ")} · {formatTimelineStep(year)} · {reportDetail}</p></div><strong>{reportRecords.length} RECORD{reportRecords.length === 1 ? "" : "S"}</strong></header>
+                    <header><div><span>LIVE REPORT PREVIEW</span><h4>{reportTitle.trim() || "Kansas map data report"}</h4><p>{reportScope.replaceAll("_", " ")} · {temporalScopeLabel} · {reportDetail}</p></div><strong>{reportRecords.length} RECORD{reportRecords.length === 1 ? "" : "S"}</strong></header>
                     {(reportQuery || reportEvidenceFilter !== "ALL") && <div className="report-active-filters"><span>ACTIVE FILTERS</span>{reportQuery && <b>Search: {reportQuery}</b>}{reportEvidenceFilter !== "ALL" && <b>{reportEvidenceFilter.replaceAll("_", " ")}</b>}<button type="button" onClick={() => { setReportQuery(""); setReportEvidenceFilter("ALL"); }}>Clear</button></div>}
                     {reportSections.summary && <div className="report-metrics" aria-label="Report summary metrics"><article><span>Records</span><strong>{reportRecords.length}</strong></article><article><span>Layers</span><strong>{reportLayerSummary.length}</strong></article><article><span>States</span><strong>{Object.keys(reportEvidenceCounts).length}</strong></article><article><span>Selection</span><strong>{selected ? "1" : "0"}</strong></article></div>}
                     {measurementGeometryMode && <section className="report-preview-section"><span>MEASUREMENT INPUT</span><p>{measurement} · {measureUnit === "imperial" ? "miles / square miles" : "kilometers / square kilometers"}. Browser-local approximation is carried into JSON as a report input, not as evidence.</p></section>}
@@ -5719,7 +6072,7 @@ export default function Home() {
               {mapUtilityView === "places" && <section id="map-utility-view-places" role="tabpanel" aria-labelledby="map-utility-tab-places" className="map-utility-section places-trail-section">
                 <div className="map-utility-section-heading"><span>PLACES + TRAILS</span><h3>Build a reusable spatial investigation</h3><p>Save the current camera, time, layer order, opacity, scene, report area, comparison, report setup, and selection as one ordered stop. Revisit a stop or play the sequence as a guided trail.</p></div>
                 <article className="place-capture-card">
-                  <header><div><span>CURRENT MAP STATE</span><strong>{formatTimelineStep(year)} · {visibleCount} visible layers</strong></div><small>{selected ? `Selected: ${selected.properties.title}` : "No selected feature"}</small></header>
+                  <header><div><span>CURRENT MAP STATE</span><strong>{temporalScopeLabel} · {visibleCount} visible layers</strong></div><small>{selected ? `Selected: ${selected.properties.title}` : "No selected feature"}</small></header>
                   <div className="workspace-save-row"><input type="text" value={workspaceName} maxLength={50} onChange={(event) => setWorkspaceName(event.target.value)} placeholder="Place or investigation step name" /><button type="button" onClick={saveCurrentWorkspace}>Add place</button></div>
                 </article>
                 <div className="place-trail-controls" aria-label="Places trail controls">
@@ -5744,7 +6097,7 @@ export default function Home() {
                 <div className="map-utility-section-heading"><span>INSPECT</span><h3>Feature index + context receipt</h3><p>Hover is a preview only. A click or explicit Inspect action commits one stable registry feature before the Evidence Drawer opens.</p></div>
                 <article className="map-utility-card map-context-card">
                   <header><span>MAP CONTEXT</span><strong>{selected?.properties.title ?? "No committed selection"}</strong></header>
-                  <dl><div><dt>Active time</dt><dd>{formatTimelineStep(year)}</dd></div><div><dt>Visible layers</dt><dd>{visibleCount}</dd></div><div><dt>Selection</dt><dd>{selected ? selected.properties.evidenceState : "NONE"}</dd></div><div><dt>Halo</dt><dd>{selectedLayerHidden ? "HIDDEN LAYER" : selectedTimeMismatch ? "OUTSIDE TIME" : selectedEvidenceFiltered ? "FILTERED" : selected ? "VISIBLE" : "NONE"}</dd></div></dl>
+                  <dl><div><dt>Active time</dt><dd>{temporalScopeLabel}</dd></div><div><dt>Visible layers</dt><dd>{visibleCount}</dd></div><div><dt>Selection</dt><dd>{selected ? selected.properties.evidenceState : "NONE"}</dd></div><div><dt>Halo</dt><dd>{selectedLayerHidden ? "HIDDEN LAYER" : selectedTimeMismatch ? "OUTSIDE TIME" : selectedEvidenceFiltered ? "FILTERED" : selected ? "VISIBLE" : "NONE"}</dd></div></dl>
                   <button type="button" onClick={() => void copyMapContextReceipt()}>Copy 15-minute map context receipt</button>
                 </article>
 
@@ -5770,7 +6123,7 @@ export default function Home() {
                   <label><input type="checkbox" checked={inspectVisibleLayersOnly} onChange={(event) => setInspectVisibleLayersOnly(event.target.checked)} /><span>Visible layers only</span></label>
                   <button type="button" onClick={fitIndexedFeatures} disabled={!mapFeatureIndex.length}>Fit results</button>
                 </div>
-                <div className="map-feature-count"><span>{mapFeatureIndex.length} compatible feature{mapFeatureIndex.length === 1 ? "" : "s"}</span><small>Active time {formatTimelineStep(year)} · untimed, exact, and through-time semantics applied</small></div>
+                <div className="map-feature-count"><span>{mapFeatureIndex.length} compatible feature{mapFeatureIndex.length === 1 ? "" : "s"}</span><small>Active time {temporalScopeLabel} · {temporalMode.replaceAll("-", " ")} semantics applied</small></div>
                 <div className="map-feature-list">
                   {mapFeatureIndex.slice(0, 60).map(({ layer, feature }) => <article className="map-feature-row" key={`${layer.id}:${feature.properties.fid}`} data-visible={visibility[layer.id]}>
                     <header><span>{layer.title} · {feature.properties.year}</span><strong>{feature.properties.title}</strong><small>{feature.properties.evidenceState}</small></header>
@@ -5874,10 +6227,10 @@ export default function Home() {
                 <section className="official-connection-ledger" aria-labelledby="official-connection-ledger-title">
                   <header><div><span>OFFICIAL SOURCE PIPELINES</span><h4 id="official-connection-ledger-title">Fixed Kansas adapters + disclosed raster services</h4></div><strong>{officialFeatureCount} FEATURES</strong></header>
                   <p>Only allowlisted endpoints are connected. Feed failures stay visible; zero features is time-stamped and never interpreted as statewide safety or completeness.</p>
-                  <div className="official-connection-grid">{filteredOfficialContextConnections.map(({ source, visible, state, featureCount, retrievedAt, limitation }) => <article className="official-connection-card" key={source.id} data-state={state}>
-                    <header><div><span>{source.kind.replaceAll("_", " ")}</span><h5>{source.title}</h5><code>{source.endpointLabel}</code></div><strong>{state.toUpperCase()}</strong></header>
+                  <div className="official-connection-grid">{filteredOfficialContextConnections.map(({ source, visible, activeAtFrame, state, featureCount, retrievedAt, limitation, temporalSupport }) => <article className="official-connection-card" key={source.id} data-state={state} data-held={visible && !activeAtFrame}>
+                    <header><div><span>{source.kind.replaceAll("_", " ")}</span><h5>{source.title}</h5><code>{source.endpointLabel}</code></div><strong>{visible && !activeAtFrame ? "HELD" : state.toUpperCase()}</strong></header>
                     <div className="official-connection-path"><span>OFFICIAL</span><i>→</i><span>{source.apiPath ? "FIXED ADAPTER" : "WMS / TILES"}</span><i>→</i><span>MAP CONTEXT</span><i>⊣</i><span>EVIDENCE HELD</span></div>
-                    <dl><div><dt>Mapped</dt><dd>{featureCount ?? (source.apiPath ? "NOT LOADED" : "RASTER")}</dd></div><div><dt>Retrieved</dt><dd>{retrievedAt ? new Date(retrievedAt).toLocaleString() : source.freshness}</dd></div><div><dt>Cadence</dt><dd>{source.cadence}</dd></div><div><dt>Evidence role</dt><dd>{source.evidenceRole.replaceAll("_", " ")}</dd></div></dl>
+                    <dl><div><dt>Mapped</dt><dd>{featureCount ?? (source.apiPath ? "NOT LOADED" : "RASTER")}</dd></div><div><dt>Retrieved</dt><dd>{retrievedAt ? new Date(retrievedAt).toLocaleString() : source.freshness}</dd></div><div><dt>Cadence</dt><dd>{source.cadence}</dd></div><div><dt>Temporal support</dt><dd>{temporalSupport.axis.replaceAll("-", " ")} · {temporalSupport.supportedFrames.map(formatTimelineStep).join(", ")}</dd></div><div><dt>Evidence role</dt><dd>{source.evidenceRole.replaceAll("_", " ")}</dd></div></dl>
                     <p>{limitation ?? source.boundary}</p><aside><strong>Failure boundary</strong><span>{source.fallback}</span></aside>
                     <footer><button type="button" onClick={() => setOfficialContextVisible(source.id, !visible)}>{visible ? "Hide" : "Show"}</button>{source.apiPath && <button type="button" disabled={state === "loading"} onClick={() => void refreshOfficialContext(source.id as OfficialContextFeedId)}>Refresh</button>}<a href={source.sourceUrl} target="_blank" rel="noreferrer">Source ↗</a></footer>
                   </article>)}</div>
@@ -5949,7 +6302,7 @@ export default function Home() {
                   <div className="temporal-compare-selectors">
                     <label><span>Time A</span><select value={compareTimeA} onChange={(event) => setCompareTimeA(Number(event.target.value))}>{TIME_STEPS.map((step) => <option key={`a:${step}`} value={step}>{formatTimelineStep(step)}</option>)}</select></label>
                     <span aria-hidden="true">→</span>
-                    <label><span>Time B</span><select value={compareTimeB} onChange={(event) => setCompareTimeB(Number(event.target.value))}>{TIME_STEPS.map((step) => <option key={`b:${step}`} value={step}>{formatTimelineStep(step)}</option>)}</select></label>
+                    <label><span>Time B</span><select value={compareTimeB} onChange={(event) => { const next = Number(event.target.value); setCompareTimeB(next); if (temporalMode === "comparison") { yearRef.current = next; setYear(next); setPreviewYear(next); } }}>{TIME_STEPS.map((step) => <option key={`b:${step}`} value={step}>{formatTimelineStep(step)}</option>)}</select></label>
                   </div>
                   <div className="temporal-compare-metrics" aria-label="Temporal catalog comparison summary">
                     <article><span>TIME A RECORDS</span><strong>{temporalComparison.timeARecordCount}</strong><small>{temporalComparison.timeALayerCount} layers</small></article>
@@ -6012,16 +6365,17 @@ export default function Home() {
                 <div className="export-review-summary" aria-label="Export review summary">
                   <article><span>FORMAT</span><strong>PUBLIC SAFE V2</strong><small>Site-local demonstration</small></article>
                   <article><span>LAYERS</span><strong>{activeLayers.length}</strong><small>Each keeps attribution</small></article>
-                  <article><span>SELECTION</span><strong>{selected ? "1" : "0"}</strong><small>{selected?.properties.evidenceState ?? "MAP CONTEXT ONLY"}</small></article>
+                  <article><span>SELECTION</span><strong>{selected && !selectedTimeMismatch ? "1" : "0"}</strong><small>{selectedTimeMismatch ? "OUT-OF-TIME SELECTION HELD" : selected?.properties.evidenceState ?? "MAP CONTEXT ONLY"}</small></article>
                   <article data-state={exportReview.withheldFeatureCount ? "REDACTED" : "PASS"}><span>WITHHELD</span><strong>{exportReview.withheldFeatureCount}</strong><small>Protected geometry count</small></article>
                 </div>
                 <div className="export-preflight" aria-label="Export preflight checks">
                   {exportReview.checks.map((check) => <article key={check.id} data-state={check.state}><span>{check.label}</span><p>{check.detail}</p><strong>{check.state}</strong></article>)}
                 </div>
                 <div className="map-control-group temporal-axis-inspector"><header><strong>Temporal-axis inspector</strong><span>Axes stay separate</span></header><dl>
-                  <div><dt>Active map time</dt><dd>{formatTimelineStep(year)}</dd></div>
+                  <div><dt>Active map time</dt><dd>{temporalScopeLabel}</dd></div>
                   <div><dt>Feature / source year</dt><dd>{selected?.properties.year ?? "NO SELECTION"}</dd></div>
-                  <div><dt>Temporal query mode</dt><dd>{selected?.layer.temporal?.mode ?? "layer-specific / untimed"}</dd></div>
+                  <div><dt>Sweep query</dt><dd>{temporalMode.replaceAll("-", " ")} · {temporalStepRule.replaceAll("-", " ")} · interpolation off</dd></div>
+                  <div><dt>Layer temporal rule</dt><dd>{selected?.layer.temporal?.mode ?? "layer-specific / untimed"}</dd></div>
                   <div><dt>Source time</dt><dd>{selected?.layer.sourceTime ?? "NO SELECTION"}</dd></div>
                   <div><dt>Last update</dt><dd>{selected?.properties.lastUpdate ?? "NO SELECTION"}</dd></div>
                   <div><dt>Release time</dt><dd>{selected?.layer.releaseTime ?? "NO SELECTION"}</dd></div>
@@ -6064,7 +6418,7 @@ export default function Home() {
             <button type="button" onClick={() => openAtlasPanel("views")}>Views <b>{LIVING_ATLAS_VIEWS.length}</b></button>
             <button type="button" onClick={() => openAtlasPanel("layers")}>Layers <b>{visibleCount}</b></button>
             <button type="button" onClick={() => { if (selected) { setCurrentWorkspace("trust"); dismissMapUtilityWithoutFocus(); setRightOpen(true); setLeftOpen(false); setTimelineOpen(false); } }} disabled={!selected}>Evidence</button>
-            <button type="button" onClick={() => { setCurrentWorkspace("explore"); dismissMapUtilityWithoutFocus(); setTimelineOpen(true); setLeftOpen(false); setRightOpen(false); }}>Time <b>{formatTimelineStep(year)}</b></button>
+            <button type="button" onClick={() => { setCurrentWorkspace("explore"); dismissMapUtilityWithoutFocus(); setTimelineOpen(true); setLeftOpen(false); setRightOpen(false); }}>Time <b>{temporalScopeLabel}</b></button>
             <button type="button" onClick={() => openPrimaryWorkspace("reports", true)}>Report</button>
           </div>
 
@@ -6080,7 +6434,7 @@ export default function Home() {
             <div className="drawer-state"><span className="state-icon" aria-hidden="true">{["ANSWER", "CORRECTED"].includes(selected.properties.evidenceState) ? "✓" : ["DENIED_BY_POLICY", "RESTRICTED_ACCESS", "ERROR"].includes(selected.properties.evidenceState) ? "!" : "○"}</span><span><small>{selected.properties.evidenceState}</small><strong>{selectedEvidence?.label}</strong></span></div>
             <p className="state-explanation">{selectedEvidence?.explanation}</p>
             {selected.kind === "basemap" && <div className="notice external-context-notice"><strong>Basemap context only</strong><p>This is real geographic context from the selected external display provider. It is not a KFM EvidenceBundle, released layer, source admission, scientific validation, or citation for a claim.</p></div>}
-            {selectedTimeMismatch && <div className="drawer-time-warning" role="status"><strong>Selection is outside active time</strong><span>Source {formatTimelineStep(selected.properties.year)} · active {formatTimelineStep(year)}. The normal map halo is hidden while the record stays available for inspection.</span></div>}
+            {selectedTimeMismatch && <div className="drawer-time-warning" role="status"><strong>Selection is outside active time</strong><span>{selectedIsHeldOfficialContext ? `Current official context is held outside ${formatTimelineStep(OFFICIAL_CONTEXT_PRESENT_FRAME)}` : `Source ${formatTimelineStep(selected.properties.year)} · active ${temporalScopeLabel}`}. The normal map halo is hidden while the record stays available for inspection.</span></div>}
             {selectedLayerHidden && <div className="drawer-time-warning" role="status"><strong>Selected layer is hidden</strong><span>{selected.layer.title} remains available for inspection, but its normal map halo is hidden until the layer is visible again.</span></div>}
             {selectedEvidenceFiltered && <div className="drawer-time-warning" role="status"><strong>Selection is outside the map evidence filter</strong><span>The record remains available for inspection, but its map geometry and halo stay hidden until the {mapEvidenceFilter.replaceAll("_", " ")} filter is cleared or changed.</span></div>}
             <div className="drawer-tabs" role="tablist" aria-label="Evidence Drawer views">
@@ -6129,7 +6483,7 @@ export default function Home() {
                   <div className="focus-context" aria-label="Focus context rail">
                     <span>Feature <code>{selected.featureId}</code></span>
                     <span>Layer <code>{selected.layerId}</code></span>
-                    <span>Active / source time <code>{formatTimelineStep(year)} / {formatTimelineStep(selected.properties.year)}</code></span>
+                    <span>Active / source time <code>{temporalScopeLabel} / {formatTimelineStep(selected.properties.year)}</code></span>
                     <span>Camera <code>z{view.zoom.toFixed(1)} · {projection}</code></span>
                     <span>Visible layers <code>{visibleCount} · bounded IDs</code></span>
                     <span>Release / review <code>{selected.properties.releaseState} · {selected.properties.reviewState}</code></span>
@@ -6173,16 +6527,85 @@ export default function Home() {
 
         <section ref={timelineRef} className="timeline-panel" aria-label="Timeline and temporal controls" aria-hidden={isCompact && !timelineOpen || undefined} inert={isCompact && !timelineOpen} aria-modal={isCompact && timelineOpen || undefined} role={isCompact && timelineOpen ? "dialog" : undefined}>
           <div className="timeline-compact">
-            <button className="timeline-toggle" type="button" aria-expanded={timelineOpen} onClick={() => { if (timelineOpen) { closeTimelinePanel(); return; } setTimelineOpen(true); if (isCompact) { dismissMapUtilityWithoutFocus(); setLeftOpen(false); setRightOpen(false); } }}><span>COMMITTED TIME</span><strong>{formatTimelineStep(year)}</strong><small>{previewYear === year ? timelineEraLabel(year) : `Previewing ${formatTimelineStep(previewYear)}`}</small></button>
+            <button className="timeline-toggle" type="button" aria-expanded={timelineOpen} onClick={() => { if (timelineOpen) { closeTimelinePanel(); return; } setTimelineOpen(true); if (isCompact) { dismissMapUtilityWithoutFocus(); setLeftOpen(false); setRightOpen(false); } }}>
+              <span>TIME SWEEP</span>
+              <strong>{temporalScopeLabel}</strong>
+              <small>{previewYear === year ? `${temporalMode.replaceAll("-", " ")} · ${timelineEraLabel(year)}` : `Previewing ${formatTimelineStep(previewYear)}`}</small>
+            </button>
             <div className="timeline-controls">
-              <button type="button" disabled={TIME_STEPS.indexOf(year as (typeof TIME_STEPS)[number]) === 0} onClick={() => { const next = TIME_STEPS[Math.max(0, TIME_STEPS.indexOf(year as (typeof TIME_STEPS)[number]) - 1)]; yearRef.current = next; setYear(next); setPreviewYear(next); setPlaying(false); }} aria-label="Previous committed time">‹</button>
-              <button type="button" aria-pressed={playing} disabled={temporalMode === "snapshot" || temporalMode === "comparison"} onClick={() => setPlaying((current) => !current)} aria-label={playing ? "Pause timeline" : "Play timeline"}>{playing ? "Ⅱ" : "▶"}</button>
-              <button type="button" disabled={TIME_STEPS.indexOf(year as (typeof TIME_STEPS)[number]) === TIME_STEPS.length - 1} onClick={() => { const next = TIME_STEPS[Math.min(TIME_STEPS.length - 1, TIME_STEPS.indexOf(year as (typeof TIME_STEPS)[number]) + 1)]; yearRef.current = next; setYear(next); setPreviewYear(next); setPlaying(false); }} aria-label="Next committed time">›</button>
+              <button type="button" disabled={temporalMode === "comparison" || previousSweepFrame === null} onClick={() => stepTemporalSweep("reverse")} aria-label="Previous sweep frame">‹</button>
+              <button type="button" aria-pressed={playing} disabled={reducedMotion || temporalMode === "snapshot" || temporalMode === "comparison" || temporalSequence.length < 2} onClick={toggleTemporalPlayback} aria-label={playing ? "Pause time sweep" : "Play time sweep"}>{playing ? "Ⅱ" : "▶"}</button>
+              <button type="button" disabled={temporalMode === "comparison" || nextSweepFrame === null} onClick={() => stepTemporalSweep("forward")} aria-label="Next sweep frame">›</button>
             </div>
-            <div className="timeline-track"><input type="range" min="0" max={TIME_STEPS.length - 1} value={TIME_STEPS.indexOf(previewYear as (typeof TIME_STEPS)[number])} onChange={(event) => { setPreviewYear(TIME_STEPS[Number(event.target.value)]); setPlaying(false); }} aria-label="Preview demonstration time before committing" aria-valuetext={`Preview ${formatTimelineStep(previewYear)}; committed ${formatTimelineStep(year)}`} /><div className="timeline-ticks" style={{ "--timeline-columns": TIME_STEPS.length } as React.CSSProperties}>{TIME_STEPS.map((step) => <button key={step} type="button" data-active={step === previewYear} data-committed={step === year} data-major={TIMELINE_MAJOR_STEPS.has(step)} onClick={() => { setPreviewYear(step); setPlaying(false); }} aria-label={`Preview ${formatTimelineStep(step)}; ${timelineEraLabel(step)}`} title={`${formatTimelineStep(step)} · ${timelineEraLabel(step)}`}>{TIMELINE_MAJOR_STEPS.has(step) ? <span>{formatTimelineStep(step)}</span> : <i aria-hidden="true" />}</button>)}</div></div>
-            <div className="timeline-commit-actions"><button type="button" disabled={previewYear === year} onClick={() => { yearRef.current = previewYear; setYear(previewYear); setPlaying(false); announce(`Committed ${formatTimelineStep(previewYear)} to the map, evidence, report, and story context`); }}>Commit time</button><button className="timeline-reset" type="button" onClick={() => { yearRef.current = 2026; setYear(2026); setPreviewYear(2026); setPlaying(false); }}>Present</button></div>
+            <div className="timeline-track">
+              <input type="range" min="0" max={timelineSteps.length - 1} value={Math.max(0, timelineSteps.indexOf(previewYear))} onChange={(event) => { setPreviewYear(timelineSteps[Number(event.target.value)]); setPlaying(false); }} aria-label="Preview demonstration time before committing" aria-valuetext={`Preview ${formatTimelineStep(previewYear)}; committed ${temporalScopeLabel}`} />
+              <div className="timeline-ticks" style={{ "--timeline-columns": timelineSteps.length } as React.CSSProperties}>{timelineSteps.map((step) => <button key={step} type="button" aria-current={step === temporalQuery.frame ? "step" : undefined} aria-pressed={step === previewYear} data-active={step === previewYear} data-committed={step === temporalQuery.frame} data-major={TIMELINE_MAJOR_STEPS.has(step as (typeof TIME_STEPS)[number])} data-in-range={step >= sweepRangeStart && step <= sweepRangeEnd} onClick={() => { setPreviewYear(step); setPlaying(false); }} aria-label={`Preview ${formatTimelineStep(step)}; ${timelineEraLabel(step)}${step === temporalQuery.frame ? "; committed frame" : ""}${step < sweepRangeStart || step > sweepRangeEnd ? "; outside sweep range and will expand it if committed" : ""}`} title={`${formatTimelineStep(step)} · ${timelineEraLabel(step)}`}>{TIMELINE_MAJOR_STEPS.has(step as (typeof TIME_STEPS)[number]) ? <span>{formatTimelineStep(step)}</span> : <i aria-hidden="true" />}</button>)}</div>
+            </div>
+            <div className="timeline-commit-actions">
+              <button type="button" disabled={previewYear === temporalQuery.frame} onClick={() => { setPlaying(false); commitTemporalFrame(previewYear, `Committed ${formatTimelineStep(previewYear)} to the map, evidence, report, and story context`); }}>Commit</button>
+              <button className="timeline-reset" type="button" onClick={() => { setPlaying(false); commitTemporalFrame(OFFICIAL_CONTEXT_PRESENT_FRAME, "Returned to the operational-present frame"); }}>Present</button>
+            </div>
           </div>
-          {timelineOpen && <div className="timeline-detail"><div><span>FULL TEMPORAL CAPACITY · 4.54 GA BP TO 2026 · CURRENT DATE 9 SEP 2026</span><strong>Preview: {timelineEraLabel(previewYear)} · {formatTimelineStep(previewYear)}</strong><p>Scrubbing changes preview only. Commit time to filter layers and bind report, story, selection, and evidence context. Deep-time and intermediate ticks are capacity markers, not claims that current fixtures contain data. Discrete historical editions and observations are never interpolated.</p><div className="timeline-semantic-controls"><label>Mode<select value={temporalMode} onChange={(event) => { setPlaying(false); setTemporalMode(event.target.value as TemporalMode); }}><option value="snapshot">Snapshot</option><option value="moving-window">Moving window</option><option value="event-stepping">Event stepping</option><option value="accumulation">Accumulation</option><option value="comparison">Range / comparison</option></select></label><label>Step<select value={temporalStepRule} onChange={(event) => setTemporalStepRule(event.target.value as TemporalStepRule)}><option value="available-events">Available times</option><option value="regular-calendar">Regular index</option></select></label><label>Speed<select value={playbackSpeed} onChange={(event) => setPlaybackSpeed(Number(event.target.value) as PlaybackSpeed)}><option value={0.5}>0.5×</option><option value={1}>1×</option><option value={2}>2×</option></select></label></div><div className="timeline-era-jumps" aria-label="Preview named time ranges">{TIMELINE_JUMPS.map((jump) => <button key={jump.label} type="button" data-active={jump.year === previewYear} onClick={() => { setPreviewYear(jump.year); setPlaying(false); }}>{jump.label}<small>{formatTimelineStep(jump.year)}</small></button>)}</div></div><div><span>COMMITTED FRAME · {temporalMode.replaceAll("-", " ").toUpperCase()}</span><strong>{formatTimelineStep(year)} · {playing ? "playing; pauses when hidden" : "paused"}</strong><p>Committed availability: {availabilityByStep[year] ?? 0} layers. Preview availability: {availabilityByStep[previewYear] ?? 0} layers. Only the committed frame controls map filters and evidence scope.</p><div className="availability-bars" aria-label="Available layer count by time; gold is preview and an outline marks committed time">{TIME_STEPS.map((step) => <i key={step} data-active={step === previewYear} data-committed={step === year} title={`${formatTimelineStep(step)} · ${availabilityByStep[step]} available layer${availabilityByStep[step] === 1 ? "" : "s"}`} style={{ height: `${Math.min(44, 14 + availabilityByStep[step] * 5)}px` }}><b>{availabilityByStep[step]}</b></i>)}</div></div><button className="icon-close timeline-close" type="button" onClick={closeTimelinePanel} aria-label="Close timeline">×</button></div>}
+
+          {timelineOpen && <div className="timeline-detail">
+            <section className="timeline-sweep-setup" aria-labelledby="timeline-sweep-title">
+              <header><span>SEMANTIC TIME SWEEP</span><strong id="timeline-sweep-title">Sweep declared temporal context without inventing continuity</strong></header>
+              <p>Preview is harmless; Commit changes the shared map clock. Exact features are filtered atomically and are never interpolated or carried forward; “through” layers retain their declared persistence rule. Gaps remain gaps.</p>
+              <div className="timeline-semantic-controls">
+                <label>Mode<select value={temporalMode} onChange={(event) => { const nextMode = event.target.value as TemporalSweepMode; setPlaying(false); setTemporalMode(nextMode); if (nextMode === "comparison") { commitTemporalFrame(compareTimeB); setMapUtilityView("compare"); setMapUtilityOpen(true); setMapContextOpen(false); } }}><option value="snapshot">Snapshot</option><option value="moving-window">Moving window</option><option value="event-stepping">Event stepping</option><option value="accumulation">Accumulation</option><option value="comparison">A / B comparison</option></select></label>
+                <label>Step<select value={temporalStepRule} onChange={(event) => { setPlaying(false); setTemporalStepRule(event.target.value as TemporalStepRule); }}><option value="available-events">Event dates + bounds</option><option value="regular-calendar">All atlas ticks</option></select></label>
+                <label>Frame cadence<select value={playbackSpeed} onChange={(event) => setPlaybackSpeed(Number(event.target.value) as PlaybackSpeed)}><option value={0.5}>Slow · 2.6 s</option><option value={1}>Normal · 1.3 s</option><option value={2}>Fast · 0.65 s</option></select></label>
+                <label>Direction<select value={playbackDirection} onChange={(event) => { setPlaying(false); setPlaybackDirection(event.target.value as TemporalPlaybackDirection); }}><option value="forward">Forward</option><option value="reverse">Reverse</option></select></label>
+                <label>At boundary<select value={playbackLoopMode} onChange={(event) => setPlaybackLoopMode(event.target.value as TemporalLoopMode)}><option value="stop">Stop</option><option value="loop">Loop</option></select></label>
+                <label>Window<select value={movingWindowFrames} disabled={temporalMode !== "moving-window"} onChange={(event) => setMovingWindowFrames(Number(event.target.value))}><option value={2}>2 frames</option><option value={3}>3 frames</option><option value={5}>5 frames</option></select></label>
+              </div>
+              <div className="timeline-range-controls" aria-label="Sweep range">
+                <label><span>Start</span><select value={sweepRangeStart} onChange={(event) => { const next = Number(event.target.value); setPlaying(false); if (next <= year) setSweepRangeStart(next); }}>{TIME_STEPS.map((step) => <option key={`start:${step}`} value={step} disabled={step > year}>{formatTimelineStep(step)}</option>)}</select></label>
+                <span aria-hidden="true">→</span>
+                <label><span>End</span><select value={sweepRangeEnd} onChange={(event) => { const next = Number(event.target.value); setPlaying(false); if (next >= year) setSweepRangeEnd(next); }}>{TIME_STEPS.map((step) => <option key={`end:${step}`} value={step} disabled={step < year}>{formatTimelineStep(step)}</option>)}</select></label>
+                <strong>{temporalSequence.length} frame{temporalSequence.length === 1 ? "" : "s"}</strong>
+              </div>
+              <p className="timeline-axis-note"><strong>FULL TEMPORAL CAPACITY · 4.54 GA BP TO 2026</strong> · Deep-time and intermediate ticks are capacity markers, not claims. Frame spacing and cadence are ordinal, not proportional to elapsed time. The active query uses each layer’s declared feature-year axis; source, retrieval, release, review, and correction clocks remain separate metadata.</p>
+              <div className="timeline-motion-controls">
+                <label><input type="checkbox" checked={dynamicEffects && !reducedMotion} disabled={reducedMotion} onChange={(event) => setDynamicEffects(event.target.checked)} /> Ambient layer motion</label>
+                <small>{reducedMotion ? "System reduced-motion is active: autoplay and ambient movement are off; stepping remains available." : "Presentation only: water, smoke, fire, rail, and place motion does not encode velocity, intensity, or measured change."}</small>
+              </div>
+              <div className="timeline-era-jumps" aria-label="Preview named time ranges">{TIMELINE_JUMPS.map((jump) => <button key={jump.label} type="button" data-active={jump.year === previewYear} onClick={() => { setPreviewYear(jump.year); setPlaying(false); }}>{jump.label}<small>{formatTimelineStep(jump.year)}</small></button>)}</div>
+              <div className="timeline-primary-actions"><button type="button" onClick={loadTemporalEventStack}>Load event stack</button><button type="button" onClick={() => openPrimaryWorkspace("stories", true)}>Capture frame for story</button></div>
+            </section>
+
+            <section className="timeline-frame-readout" aria-labelledby="timeline-frame-title">
+              <header role="status" aria-live="polite" aria-atomic="true"><span>COMMITTED FRAME</span><strong id="timeline-frame-title">{temporalScopeLabel}</strong><small>{playing ? `Playing ${playbackDirection}; pauses when hidden` : "Paused"} · {temporalFramePosition ?? "off-sequence"}/{temporalSequence.length}</small></header>
+              <div className="timeline-frame-metrics">
+                <article><span>REGISTRY RECORDS</span><strong>{temporalFrameSummary.timedRecordCount}</strong></article>
+                <article><span>DOMAINS</span><strong>{temporalFrameSummary.activeDomainCount}</strong></article>
+                <article><span>ENTERED</span><strong>{temporalFrameSummary.entered.length}</strong></article>
+                <article><span>EXITED</span><strong>{temporalFrameSummary.exited.length}</strong></article>
+              </div>
+              <div className="timeline-change-list">
+                <div><span>{comparisonTemporalFrame === null ? "NO ADJACENT REFERENCE FRAME" : `ENTERED FROM ${formatTimelineStep(comparisonTemporalFrame)}`}</span>{temporalFrameSummary.entered.slice(0, 3).map((record) => <small key={`in:${record.id}`}>+ {record.title} · {record.domain}</small>)}{temporalFrameSummary.entered.length === 0 && <small>No entered records</small>}</div>
+                <div><span>EXITED</span>{temporalFrameSummary.exited.slice(0, 3).map((record) => <small key={`out:${record.id}`}>− {record.title} · {record.domain}</small>)}{temporalFrameSummary.exited.length === 0 && <small>No exited records</small>}</div>
+              </div>
+              <div className="timeline-domain-links"><span>VISIBLE REGISTRY CO-PRESENCE</span>{temporalFrameSummary.domainPairs.slice(0, 4).map((pair) => <small key={pair.id}>{pair.leftDomain} ({pair.leftRecordCount}) ↔ {pair.rightDomain} ({pair.rightRecordCount})</small>)}{temporalFrameSummary.domainPairs.length === 0 && <small>Show time-aware layers from at least two domains to form a shared-frame link.</small>}<p>Counts use visible registry layers and the evidence filter, not viewport or zoom. Shared frame is not spatial overlap, correlation, direction, lag, or causation.</p></div>
+              <div className="availability-bars" aria-label="Time-aware record count by ordinal timeline frame; gold is preview and an outline marks committed time">{timelineSteps.map((step) => <i key={step} data-active={step === previewYear} data-committed={step === temporalQuery.frame} data-in-range={step >= sweepRangeStart && step <= sweepRangeEnd} title={`${formatTimelineStep(step)} · ${availabilityByStep[step]} compatible time-aware record${availabilityByStep[step] === 1 ? "" : "s"}`} style={{ height: `${Math.min(52, 12 + availabilityByStep[step] * 5)}px` }}><b>{availabilityByStep[step]}</b></i>)}</div>
+            </section>
+
+            <section className="timeline-live-context" data-held={withheldOfficialCount > 0} aria-labelledby="timeline-live-title">
+              <header><span>REAL OFFICIAL CONTEXT</span><strong id="timeline-live-title">{withheldOfficialCount > 0 ? `${withheldOfficialCount} current source${withheldOfficialCount === 1 ? "" : "s"} held` : `${visibleOfficialCount} selected · ${officialFeatureCount} loaded features`}</strong></header>
+              {withheldOfficialCount > 0
+                ? <p>Selected current-only official overlays do not rewind. They are temporarily hidden from this historical frame and will return at {formatTimelineStep(OFFICIAL_CONTEXT_PRESENT_FRAME)} without changing your source choices.</p>
+                : <p>{officialReadyCount}/{OFFICIAL_CONTEXT_SOURCES.length} official adapters have a settled state. Latest Site retrieval: {officialLatestRetrievedAt ? `${officialLatestRetrievedAt.slice(0, 19).replace("T", " ")} UTC` : "not yet retrieved"}.</p>}
+              <dl>
+                <div><dt>Phenomenon clock</dt><dd>{temporalScopeLabel}</dd></div>
+                <div><dt>Live-source clock</dt><dd>{year === OFFICIAL_CONTEXT_PRESENT_FRAME ? "Operational present only" : "WITHHELD FROM HISTORICAL FRAME"}</dd></div>
+                <div><dt>Interpolation</dt><dd>OFF</dd></div>
+                <div><dt>Authority effect</dt><dd>NONE · context only</dd></div>
+              </dl>
+              <p className="timeline-reference-note">Untimed registry layers, the selected basemap, and interactive terrain remain present-day orientation context across frames; they are excluded from entered/exited metrics and cannot prove historical persistence. Choose Midnight or Prairie to avoid an external basemap request.</p>
+              <p className="timeline-trust-note">A time sweep changes renderer filters and captured context. It cannot admit, correct, approve, release, deploy, or publish data.</p>
+            </section>
+            <button className="icon-close timeline-close" type="button" onClick={closeTimelinePanel} aria-label="Close timeline">×</button>
+          </div>}
         </section>
 
         <footer className="status-bar" aria-label="Map status">

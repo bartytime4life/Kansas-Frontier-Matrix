@@ -912,6 +912,7 @@ test("reviews and redacts public-safe exports before download", async () => {
     fileName: "export-center.ts",
   }).outputText;
   const exports = await import(`data:text/javascript;base64,${Buffer.from(javascript).toString("base64")}`);
+  const temporalSweep = { mode: "snapshot", frame: 2026, rangeStart: 1885, rangeEnd: 2026, windowStart: 2026, stepRule: "available-events", interpolation: false };
 
   const protectedReview = exports.buildPublicSafeExport({
     exportedAt: "2026-08-24T18:30:00.000Z",
@@ -920,7 +921,7 @@ test("reviews and redacts public-safe exports before download", async () => {
     projection: "mercator",
     basemap: "midnight",
     layerOrder: ["planning"],
-    activeYear: 2026,
+    temporalSweep,
     workspace: "trust",
     layers: [{ id: "planning", title: "Planning", opacity: 1, attribution: "Site fixture", releaseState: "HELD", generalization: "Generalized", correction: "NONE" }],
     selection: {
@@ -957,13 +958,39 @@ test("reviews and redacts public-safe exports before download", async () => {
     projection: "mercator",
     basemap: "midnight",
     layerOrder: ["planning"],
-    activeYear: 2026,
+    temporalSweep,
     workspace: "trust",
     layers: [{ id: "planning", title: "Planning", opacity: 1, attribution: "", releaseState: "HELD", generalization: "Generalized", correction: "NONE" }],
     selection: null,
   });
   assert.equal(blockedReview.downloadAllowed, false);
   assert.equal(blockedReview.checks.find((check) => check.id === "attribution").state, "BLOCK");
+});
+
+test("binds a governed temporal sweep to map filters, live-source holds, comparison, stories, and exports", async () => {
+  const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  const runtime = await readFile(new URL("../app/map-runtime.ts", import.meta.url), "utf8");
+  const liveContext = await readFile(new URL("../app/live-context.ts", import.meta.url), "utf8");
+  const exportCenter = await readFile(new URL("../app/export-center.ts", import.meta.url), "utf8");
+  const workspaceModel = await readFile(new URL("../app/workspace-model.ts", import.meta.url), "utf8");
+  const snapshotMap = await readFile(new URL("../app/snapshot-map.tsx", import.meta.url), "utf8");
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+
+  assert.match(page, /SEMANTIC TIME SWEEP/);
+  assert.match(page, /applyTemporalRegistryFilters/);
+  assert.match(page, /setTemporalMode\("snapshot"\)[\s\S]+selectStoredFeature\(example\.layerId/);
+  assert.match(page, /selection\.kind !== "registry"[\s\S]+filter === "ALL"/);
+  assert.match(page, /officialContextIdForSelection/);
+  assert.match(page, /aria-current=\{step === temporalQuery\.frame \? "step" : undefined\}/);
+  assert.match(runtime, /map\.setFilter\(renderer\.id, filter \?\? null\)/);
+  assert.match(liveContext, /OFFICIAL_CONTEXT_TEMPORAL_SUPPORT/);
+  assert.match(liveContext, /supportedFrames\.includes\(frame\)/);
+  assert.match(exportCenter, /sweepMode: input\.temporalSweep\.mode/);
+  assert.match(exportCenter, /interpolation: input\.temporalSweep\.interpolation/);
+  assert.match(workspaceModel, /temporalSweep\?: Readonly/);
+  assert.match(snapshotMap, /temporalQueryForSnapshot/);
+  assert.match(snapshotMap, /applyRegistryState\([\s\S]+query\.frame[\s\S]+query\)/);
+  assert.match(css, /\.timeline-sweep-setup/);
 });
 
 test("keeps the complete function inventory three-axis and runtime seam fail closed", async () => {

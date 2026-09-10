@@ -1,6 +1,7 @@
 import type { Geometry } from "geojson";
 import type { EvidenceState, ReleaseState } from "./explorer-data";
 import type { BasemapKey } from "./map-runtime";
+import type { TemporalStepRule, TemporalSweepMode } from "./temporal-sweep";
 
 export type ExportCheckState = "PASS" | "NOTICE" | "REDACTED" | "BLOCK";
 
@@ -47,7 +48,15 @@ export type PublicSafeExportInput = Readonly<{
   projection: "mercator" | "globe";
   basemap: BasemapKey;
   layerOrder: readonly string[];
-  activeYear: number;
+  temporalSweep: Readonly<{
+    mode: TemporalSweepMode;
+    frame: number;
+    rangeStart: number;
+    rangeEnd: number;
+    windowStart: number;
+    stepRule: TemporalStepRule;
+    interpolation: false;
+  }>;
   workspace: "explore" | "knowledge" | "features" | "trust";
   layers: readonly ExportLayerInput[];
   selection: ExportSelectionInput | null;
@@ -77,7 +86,7 @@ export const buildPublicSafeExport = (input: PublicSafeExportInput) => {
       : evidenceClosed
         ? { id: "evidence", label: "Evidence closure", state: "PASS", detail: "The selected fixture carries its bounded demonstration EvidenceRef." }
         : { id: "evidence", label: "Evidence closure", state: "NOTICE", detail: `${input.selection.evidenceState} remains explicit; the export does not promote it into support.` }),
-    Object.freeze({ id: "time", label: "Temporal disclosure", state: "PASS", detail: "Active time, feature/source year, query mode, source time, release time, and update time remain separate." }),
+    Object.freeze({ id: "time", label: "Temporal disclosure", state: "PASS", detail: `Sweep ${input.temporalSweep.mode}, frame, range, window, stepping rule, feature/source year, source time, release time, and update time remain explicit; interpolation is off.` }),
     Object.freeze(hasAttribution
       ? { id: "attribution", label: "Attribution", state: "PASS", detail: "Every visible layer includes its attribution string." }
       : { id: "attribution", label: "Attribution", state: "BLOCK", detail: "At least one visible layer lacks attribution; download must remain unavailable." }),
@@ -97,14 +106,20 @@ export const buildPublicSafeExport = (input: PublicSafeExportInput) => {
       ? { center: "WITHHELD_BROWSER_LOCATION", zoom: "WITHHELD", bearing: "WITHHELD", pitch: "WITHHELD", projection: input.projection, basemap: input.basemap, layerOrder: input.layerOrder }
       : { center: input.view.center, zoom: input.view.zoom, bearing: input.view.bearing, pitch: input.view.pitch, projection: input.projection, basemap: input.basemap, layerOrder: input.layerOrder },
     temporalQuery: {
-      activeYear: input.activeYear,
-      mode: input.selection?.temporalMode ?? "layer-specific",
+      activeYear: input.temporalSweep.frame,
+      sweepMode: input.temporalSweep.mode,
+      rangeStart: input.temporalSweep.rangeStart,
+      rangeEnd: input.temporalSweep.rangeEnd,
+      windowStart: input.temporalSweep.windowStart,
+      stepRule: input.temporalSweep.stepRule,
+      interpolation: input.temporalSweep.interpolation,
+      layerMode: input.selection?.temporalMode ?? "layer-specific",
       featureOrSourceYear: input.selection?.sourceYear ?? null,
       sourceTime: input.selection?.sourceTime ?? "SELECTION_NOT_PRESENT",
       releaseTime: input.selection?.releaseTime ?? "SELECTION_NOT_PRESENT",
       lastUpdate: input.selection?.lastUpdate ?? "SELECTION_NOT_PRESENT",
       geographyVersion: "site-local-generalized-v1",
-      limitation: "Layer-specific temporal semantics remain authoritative for this demonstration view.",
+      limitation: "The sweep uses the declared feature-year axis. Source, observation, retrieval, release, review, and correction time remain separate metadata; layer-specific temporal semantics remain authoritative.",
     },
     layers: input.layers,
     selection: input.selection ? {
@@ -139,6 +154,6 @@ export const buildPublicSafeExport = (input: PublicSafeExportInput) => {
     checks,
     downloadAllowed: checks.every((check) => check.state !== "BLOCK"),
     withheldFeatureCount: isProtected ? 1 : 0,
-    filename: `kfm-public-safe-view-${input.activeYear}.json`,
+    filename: `kfm-public-safe-view-${input.temporalSweep.frame}.json`,
   });
 };
