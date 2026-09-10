@@ -2,6 +2,7 @@ import { MapRuntimePortError } from "./map-runtime-port";
 
 export const MAP_RUNTIME_TERRAIN_FALLBACK_PROFILE =
   "kfm.map-runtime-terrain-fallback.v1" as const;
+export const MAP_RUNTIME_DEFAULT_TERRAIN_EXAGGERATION = 1 as const;
 
 export const MAP_RUNTIME_TERRAIN_MODES = ["FLAT", "TERRAIN"] as const;
 export type MapRuntimeTerrainMode =

@@ -49,7 +49,16 @@ describe("Living Atlas governed foundation", () => {
       REPOSITORY_LAYER_CONNECTIONS.filter(
         (entry) => entry.state === "FIXTURE_ONLY",
       ).map((entry) => entry.id),
-    ).toEqual(["connection:wbd-huc12"]);
+    ).toEqual(["connection:wbd-huc12", "connection:three-dep-terrain"]);
+    expect(
+      REPOSITORY_LAYER_CONNECTIONS.find(
+        (entry) => entry.id === "connection:three-dep-terrain",
+      ),
+    ).toMatchObject({
+      state: "FIXTURE_ONLY",
+      statusReason: expect.stringContaining("no source descriptor"),
+      cannotProve: expect.stringContaining("admission"),
+    });
     expect(
       REPOSITORY_LAYER_CONNECTIONS.every(
         (entry) => entry.artifacts.length >= 3,

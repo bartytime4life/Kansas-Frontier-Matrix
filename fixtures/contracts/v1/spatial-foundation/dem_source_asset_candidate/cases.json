@@ -1,0 +1,695 @@
+{
+  "schema_version": "1.0.0",
+  "scope": "spatial-foundation.dem-source-asset-candidate",
+  "base_candidate": {
+    "schema_version": "1.0.0",
+    "object_type": "DemSourceAssetCandidate",
+    "profile": "kfm.spatial-foundation.dem-source-asset-candidate.v1",
+    "profile_status": "PROPOSED_INACTIVE",
+    "execution_mode": "FIXTURE_ONLY",
+    "authority": "NONE",
+    "candidate_id": "kfm:dem-source-asset-candidate:e3ebb5873588926de04806b002c795c343cd441e97a9605697f7ce920525f08c",
+    "source_identity": {
+      "organization": "U.S. Geological Survey",
+      "program": "3D Elevation Program",
+      "product_family": "USGS_3DEP_STANDARD_1_METER_DEM",
+      "project_id": "KS_Statewide_2018_A18",
+      "project_numeric_id": 76296,
+      "tile_id": "USGS_1M_14_x56y429_KS_Statewide_2018_A18",
+      "source_role": "MODELED",
+      "product_role": "BARE_EARTH_ELEVATION_SURFACE",
+      "rights": "PUBLIC_DOMAIN_WITH_USGS_METADATA_CONSTRAINTS",
+      "rights_evidence": {
+        "status": "VERIFIED",
+        "classification": "PUBLIC_DOMAIN_WITH_USGS_METADATA_CONSTRAINTS",
+        "evidence_asset_ref": "assets.metadata_xml",
+        "evidence_content_sha256": "sha256:b2125a3c069284a48feef0e1d9935b13ae1426ce5e7aab3e3e914c23cec00d00",
+        "public_domain_xpath": "/metadata/idinfo/descript/abstract",
+        "public_domain_assertion": "ALL_3DEP_PRODUCTS_PUBLIC_DOMAIN",
+        "access_constraints_xpath": "/metadata/idinfo/accconst",
+        "access_constraints_assertion": "NONE_SUBJECT_TO_USGS_STANDARD_DISCLAIMER",
+        "use_constraints_xpath": "/metadata/idinfo/useconst",
+        "use_constraints_assertion": "NO_ACCURACY_WARRANTY_AND_NO_ENDORSEMENT_IMPLICATION"
+      },
+      "sensitivity": "PUBLIC_NON_SENSITIVE"
+    },
+    "assets": {
+      "raster_tiff": {
+        "locator": "https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/1m/Projects/KS_Statewide_2018_A18/TIFF/USGS_1M_14_x56y429_KS_Statewide_2018_A18.tif",
+        "filename": "USGS_1M_14_x56y429_KS_Statewide_2018_A18.tif",
+        "media_type": "image/tiff",
+        "content_sha256": "sha256:8d923dc122ee99303201acb07c9fc49c190b19545a75768384f49ccb4e975cd7",
+        "byte_length": 297030205,
+        "retrieved_at": "2026-09-09T20:09:59Z",
+        "http_last_modified": "2026-02-13T12:09:06Z"
+      },
+      "metadata_xml": {
+        "locator": "https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/1m/Projects/KS_Statewide_2018_A18/metadata/USGS_1M_14_x56y429_KS_Statewide_2018_A18.xml",
+        "filename": "USGS_1M_14_x56y429_KS_Statewide_2018_A18.xml",
+        "media_type": "application/xml",
+        "content_sha256": "sha256:b2125a3c069284a48feef0e1d9935b13ae1426ce5e7aab3e3e914c23cec00d00",
+        "byte_length": 14400,
+        "retrieved_at": "2026-09-09T20:09:59Z",
+        "http_last_modified": "2026-02-13T12:14:31Z"
+      }
+    },
+    "evidence_captures": {
+      "three_dep_index_query": {
+        "locator": "https://index.nationalmap.gov/arcgis/rest/services/3DEPElevationIndex/MapServer/24/query?where=project+%3D+%27KS_Statewide_2018_A18%27&geometry=-98.31032245799997%2C38.66581613100004%2C-98.19437523299996%2C38.75666181200006&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=%2A&returnGeometry=false&f=json",
+        "media_type": "application/json;charset=UTF-8",
+        "content_sha256": "sha256:add44226c3e31c2f459cba04e6d66e5de06eb177b26cb79dd0f793a37bc35fd7",
+        "byte_length": 5003,
+        "retrieved_at": "2026-09-09T21:19:42Z",
+        "raw_response_stored": false,
+        "remote_byte_identity_scope": "AUTHOR_TIME_OBSERVATION_ONLY",
+        "projection_snapshot": {
+          "repository_path": "fixtures/contracts/v1/spatial-foundation/dem_source_asset_candidate/evidence-projection-snapshot.json",
+          "content_sha256": "sha256:e6d42da0f85c86b86bb7cdff682a95ad8247851d00e259ef3d2eb5bf2b9d134d",
+          "byte_length": 2717,
+          "json_pointer": "/projections/three_dep_index_query"
+        },
+        "captured_projection": {
+          "feature_count": 1,
+          "query_envelope": {
+            "west": -98.31032245799997,
+            "south": 38.66581613100004,
+            "east": -98.19437523299996,
+            "north": 38.75666181200006
+          },
+          "project": "KS_Statewide_2018_A18",
+          "project_id": 76296,
+          "work_unit": "KS_Statewide_B10_2018",
+          "work_unit_id": 209920,
+          "collection_start": "2018-04-30",
+          "collection_end": "2019-03-20",
+          "quality_level": "QL 2",
+          "specification": "USGS Lidar Base Specification 1.2",
+          "acquisition_method": "linear-mode lidar",
+          "dem_gsd_meters": 1,
+          "horizontal_crs_code": 3744,
+          "vertical_crs_code": 5703,
+          "geoid": "GEOID12B",
+          "source_dem_publication_date": "2021-07-06",
+          "one_meter_category": "Meets"
+        }
+      },
+      "census_state_point_query": {
+        "locator": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/State_County/MapServer/0/query?where=STUSAB%3D%27KS%27&geometry=-98.23%2C38.73&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=GEOID%2CSTATE%2CSTUSAB%2CNAME&returnGeometry=false&f=json",
+        "media_type": "application/json;charset=UTF-8",
+        "content_sha256": "sha256:26c87451192736bc8e0c265973b4fa80e9f5c7373fbad4d4842653c994f930e3",
+        "byte_length": 503,
+        "retrieved_at": "2026-09-09T21:19:42Z",
+        "raw_response_stored": false,
+        "remote_byte_identity_scope": "AUTHOR_TIME_OBSERVATION_ONLY",
+        "projection_snapshot": {
+          "repository_path": "fixtures/contracts/v1/spatial-foundation/dem_source_asset_candidate/evidence-projection-snapshot.json",
+          "content_sha256": "sha256:e6d42da0f85c86b86bb7cdff682a95ad8247851d00e259ef3d2eb5bf2b9d134d",
+          "byte_length": 2717,
+          "json_pointer": "/projections/census_state_point_query"
+        },
+        "captured_projection": {
+          "feature_count": 1,
+          "longitude": -98.23,
+          "latitude": 38.73,
+          "state_geoid": "20",
+          "state_code": "20",
+          "state_abbreviation": "KS",
+          "state_name": "Kansas"
+        }
+      },
+      "census_county_point_query": {
+        "locator": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/State_County/MapServer/1/query?where=STATE%3D%2720%27&geometry=-98.23%2C38.73&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=GEOID%2CSTATE%2CCOUNTY%2CNAME&returnGeometry=false&f=json",
+        "media_type": "application/json;charset=UTF-8",
+        "content_sha256": "sha256:2758b570dc4fd857948295be3a8c339ebe26db23bc573cd197e5e09e1f7fa452",
+        "byte_length": 513,
+        "retrieved_at": "2026-09-09T21:19:42Z",
+        "raw_response_stored": false,
+        "remote_byte_identity_scope": "AUTHOR_TIME_OBSERVATION_ONLY",
+        "projection_snapshot": {
+          "repository_path": "fixtures/contracts/v1/spatial-foundation/dem_source_asset_candidate/evidence-projection-snapshot.json",
+          "content_sha256": "sha256:e6d42da0f85c86b86bb7cdff682a95ad8247851d00e259ef3d2eb5bf2b9d134d",
+          "byte_length": 2717,
+          "json_pointer": "/projections/census_county_point_query"
+        },
+        "captured_projection": {
+          "feature_count": 1,
+          "longitude": -98.23,
+          "latitude": 38.73,
+          "county_geoid": "20053",
+          "state_code": "20",
+          "county_code": "053",
+          "county_name": "Ellsworth County"
+        }
+      },
+      "census_states_layer_metadata": {
+        "locator": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/State_County/MapServer/0?f=pjson",
+        "media_type": "text/plain;charset=UTF-8",
+        "content_sha256": "sha256:eb955e5bc73a565ca5249c6b7401aa003a87c4578b12169619c3d1a62c7205d2",
+        "byte_length": 7696,
+        "retrieved_at": "2026-09-09T21:19:42Z",
+        "raw_response_stored": false,
+        "remote_byte_identity_scope": "AUTHOR_TIME_OBSERVATION_ONLY",
+        "projection_snapshot": {
+          "repository_path": "fixtures/contracts/v1/spatial-foundation/dem_source_asset_candidate/evidence-projection-snapshot.json",
+          "content_sha256": "sha256:e6d42da0f85c86b86bb7cdff682a95ad8247851d00e259ef3d2eb5bf2b9d134d",
+          "byte_length": 2717,
+          "json_pointer": "/projections/census_states_layer_metadata"
+        },
+        "captured_projection": {
+          "layer_id": 0,
+          "layer_name": "States",
+          "geometry_type": "esriGeometryPolygon",
+          "description": "States (or statistically equivalent entities); January 1, 2026 vintage",
+          "source": "U.S. Census Bureau",
+          "vintage": "2026-01-01"
+        }
+      }
+    },
+    "evidence_capture_session": {
+      "capture_completed_at": "2026-09-09T21:19:42Z",
+      "candidate_frozen_at": "2026-09-09T22:15:51Z",
+      "clock": "UTC",
+      "all_capture_times_equal_completed": true
+    },
+    "temporal_identity": {
+      "tile_publication_date": "2023-06-12",
+      "tile_metadata_temporal_range": {
+        "start": "2017-12-14",
+        "end": "2020-07-25",
+        "currentness_basis": "publication date",
+        "treated_as_source_observation_interval": false
+      },
+      "source_observation_interval": {
+        "status": "VERIFIED",
+        "start": "2018-04-30",
+        "end": "2019-03-20",
+        "scope": "SOLE_INTERSECTING_SOURCE_WORK_UNIT",
+        "evidence_capture_ref": "evidence_captures.three_dep_index_query"
+      }
+    },
+    "spatial_coverage": {
+      "wgs84_bbox": {
+        "west": -98.31032245799997,
+        "south": 38.66581613100004,
+        "east": -98.19437523299996,
+        "north": 38.75666181200006
+      },
+      "wgs84_bbox_source_asset": "metadata_xml",
+      "nominal_projected_bounds": {
+        "x_min": 560000,
+        "y_min": 4280000,
+        "x_max": 570000,
+        "y_max": 4290000,
+        "units": "metre"
+      },
+      "coordinate_transform": {
+        "source_crs": "EPSG:4326",
+        "target_crs": "EPSG:26914",
+        "method": "GRS80_TRANSVERSE_MERCATOR_FORWARD_INVERSE_SERIES",
+        "datum_operation": "NAD83_WGS84_NULL_APPROXIMATION",
+        "implementation_version": "KFM_PURE_PYTHON_UTM_V1",
+        "point_tolerance_m": 0.001,
+        "bbox_tolerance_degrees": 1e-8
+      },
+      "kansas_state_point_intersection": {
+        "status": "VERIFIED",
+        "method": "AUTHORITATIVE_CENSUS_TIGERWEB_POINT_IN_POLYGON",
+        "evidence_capture_ref": "evidence_captures.census_state_point_query",
+        "state_geoid": "20",
+        "state_abbreviation": "KS",
+        "state_name": "Kansas",
+        "boundary_vintage": "2026-01-01"
+      },
+      "ellsworth_county_point_intersection": {
+        "status": "VERIFIED",
+        "method": "AUTHORITATIVE_CENSUS_TIGERWEB_POINT_IN_POLYGON",
+        "evidence_capture_ref": "evidence_captures.census_county_point_query",
+        "county_geoid": "20053",
+        "state_code": "20",
+        "county_code": "053",
+        "county_name": "Ellsworth County"
+      },
+      "public_safe_pilot_point": {
+        "longitude": -98.23,
+        "latitude": 38.73,
+        "label": "Ellsworth County public-safe pilot point",
+        "sensitivity": "PUBLIC_NON_SENSITIVE"
+      }
+    },
+    "delivered_crs": {
+      "status": "VERIFIED",
+      "authority": "EPSG",
+      "code": 26914,
+      "name": "NAD83 / UTM zone 14N",
+      "datum": "North American Datum of 1983",
+      "realization_status": "BOUND_BY_EPSG_IDENTITY",
+      "axis_units": "metre",
+      "evidence_asset": "raster_tiff",
+      "evidence_method": "GEOTIFF_TAGS_AND_LOCAL_RASTER_INSPECTION"
+    },
+    "vertical_reference": {
+      "datum_status": "VERIFIED",
+      "datum_name": "NAVD88",
+      "datum_authority": "EPSG",
+      "datum_code": 5703,
+      "units": "metre",
+      "tile_metadata_asset": "metadata_xml",
+      "delivered_tile_geoid": {
+        "status": "UNRESOLVED",
+        "model": null,
+        "scope": "DELIVERED_TILE",
+        "evidence": null
+      },
+      "source_work_unit_geoid": {
+        "status": "VERIFIED",
+        "model": "GEOID12B",
+        "scope": "SOURCE_WORK_UNIT_ONLY",
+        "evidence_capture_ref": "evidence_captures.three_dep_index_query"
+      }
+    },
+    "raster_grid": {
+      "cell_size_x": 1,
+      "cell_size_y": 1,
+      "units": "metre",
+      "width": 10012,
+      "height": 10012,
+      "band_count": 1,
+      "data_type": "Float32",
+      "pixel_interpretation": "AREA",
+      "affine_transform": [1, 0, 559994.0000061383, 0, -1, 4290006.000008625],
+      "storage_bounds": {
+        "x_min": 559994.0000061383,
+        "y_min": 4279994.000008625,
+        "x_max": 570006.0000061383,
+        "y_max": 4290006.000008625,
+        "units": "metre"
+      },
+      "nodata": {
+        "kind": "NUMERIC",
+        "value": -999999,
+        "verified_from": "GEOTIFF_GDAL_NODATA_TAG",
+        "verified_asset": "raster_tiff"
+      }
+    },
+    "vertical_accuracy": {
+      "status": "UNRESOLVED",
+      "method": null,
+      "statistic": null,
+      "value": null,
+      "units": null,
+      "scope": "UNRESOLVED",
+      "authoritative_evidence": null,
+      "applicability": "NOT_ESTABLISHED",
+      "available_project_report": {
+        "locator": "https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/metadata/KS_Statewide_2018_A18/vertical_accuracy/USGS/14/USGS_USGS_KS_Statewide_2018_UTM14_VA.txt",
+        "content_sha256": "sha256:21660a5f497c64430e7a8dda1613de9bd6e7329ab84f20183fc9490682f1f06e",
+        "byte_length": 200101,
+        "retrieved_at": "2026-09-09T20:48:34Z",
+        "http_last_modified": "2024-08-29T03:07:55Z",
+        "scope": "PROJECT_UTM14_MULTI_WORK_UNIT",
+        "reported_units": "centimetre",
+        "normalized_units": "metre",
+        "normalization": "CENTIMETRE_TO_METRE_DIVIDE_BY_100",
+        "nva_checkpoint_count": 708,
+        "nva_rmsez": 0.0864,
+        "nva_accuracy_95": 0.1694,
+        "vva_checkpoint_count": 492,
+        "vva_percentile_95": 0.2397,
+        "includes_source_work_unit": true,
+        "applicability_to_delivered_tile": "NOT_ESTABLISHED"
+      }
+    },
+    "lineage": {
+      "status": "VERIFIED_SOURCE_WORK_UNIT",
+      "match_method": "EXACT_PROJECT_AND_TILE_ENVELOPE_INTERSECTION",
+      "matched_feature_count": 1,
+      "evidence_capture_ref": "evidence_captures.three_dep_index_query",
+      "work_unit": "KS_Statewide_B10_2018",
+      "work_unit_id": 209920,
+      "collection_start": "2018-04-30",
+      "collection_end": "2019-03-20",
+      "quality_level": "QL2",
+      "specification": "USGS Lidar Base Specification 1.2",
+      "acquisition_method": "linear-mode lidar",
+      "dem_gsd_meters": 1,
+      "source_horizontal_crs": {
+        "authority": "EPSG",
+        "code": 3744,
+        "name": "NAD83(HARN) / UTM zone 14N"
+      },
+      "source_vertical_crs": {
+        "authority": "EPSG",
+        "code": 5703,
+        "name": "NAVD88 height"
+      },
+      "source_geoid": "GEOID12B",
+      "source_dem_publication_date": "2021-07-06",
+      "vertical_accuracy_status": "UNRESOLVED"
+    },
+    "inspection_sample": {
+      "role": "PUBLIC_SAFE_OFFLINE_INSPECTION_FIXTURE",
+      "sampling_method": "NEAREST_CELL",
+      "coordinate_transform_ref": "spatial_coverage.coordinate_transform",
+      "longitude": -98.23,
+      "latitude": 38.73,
+      "projected_x": 566928.7523695905,
+      "projected_y": 4287096.470552446,
+      "row": 2909,
+      "column": 6934,
+      "source_elevation": {
+        "value": 469.4603271484375,
+        "units": "metre",
+        "vertical_datum": "NAVD88",
+        "nodata": false
+      },
+      "fixture_encoding": {
+        "encoding": "TERRARIUM",
+        "rgb": [129, 213, 118],
+        "decoded_value_m": 469.4609375,
+        "quantization_error_m": 0.0006103515625,
+        "source_nodata_value": -999999,
+        "validity_mask_method": "SOURCE_NODATA_COMPARISON_BEFORE_ENCODING",
+        "validity_mask_value": 1
+      },
+      "display_default_exaggeration": 1,
+      "reported_value_exaggerated": false,
+      "runtime_sample_authorized": false
+    },
+    "blockers": [
+      "GEOID_MODEL_UNRESOLVED",
+      "HUMAN_REVIEW_REQUIRED",
+      "VERTICAL_ACCURACY_UNRESOLVED"
+    ],
+    "review": {
+      "outcome": "HOLD",
+      "human_review": "PENDING_HUMAN_REVIEW",
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    "effects": {
+      "source_descriptor_created": false,
+      "source_activated": false,
+      "source_admitted": false,
+      "runtime_load_allowed": false,
+      "runtime_sample_authorized": false,
+      "evidence_bundle_resolved": false,
+      "lifecycle_write_allowed": false,
+      "promotion_allowed": false,
+      "release_allowed": false,
+      "deployment_allowed": false,
+      "publication_allowed": false,
+      "public_use_allowed": false
+    },
+    "non_effects": [
+      "does_not_fetch_or_store_remote_dem_bytes",
+      "does_not_create_or_activate_a_source_descriptor",
+      "does_not_admit_or_promote_lifecycle_state",
+      "does_not_enable_maplibre_terrain_or_runtime_sampling",
+      "does_not_resolve_evidence_or_accuracy",
+      "does_not_release_deploy_publish_or_authorize_public_use"
+    ],
+    "spec_hash": "sha256:e3ebb5873588926de04806b002c795c343cd441e97a9605697f7ce920525f08c"
+  },
+  "cases": [
+    {
+      "case_id": "valid-exact-ellsworth-tile-hold",
+      "expected": {"status": "PASS", "review_outcome": "HOLD", "finding_codes": []}
+    },
+    {
+      "case_id": "invalid-raster-digest-missing",
+      "deletions": ["assets.raster_tiff.content_sha256"],
+      "expected": {"status": "DENY", "review_outcome": null, "finding_codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "case_id": "invalid-asset-tile-identity",
+      "mutations": [{"path": "assets.raster_tiff.filename", "value": "USGS_1M_14_x56y430_KS_Statewide_2018_A18.tif"}],
+      "expected": {"status": "DENY", "review_outcome": "HOLD", "finding_codes": ["ASSET_TILE_ID_MISMATCH"]}
+    },
+    {
+      "case_id": "invalid-project-identity-drift",
+      "mutations": [{"path": "source_identity.project_id", "value": "KS_Statewide_2019_OTHER"}],
+      "expected": {"status": "DENY", "review_outcome": "HOLD", "finding_codes": ["INDEX_CAPTURE_LINEAGE_MISMATCH", "PROJECT_IDENTITY_MISMATCH"]}
+    },
+    {
+      "case_id": "invalid-authoritative-asset-locator",
+      "mutations": [{"path": "assets.metadata_xml.locator", "value": "https://example.org/USGS_1M_14_x56y429_KS_Statewide_2018_A18.xml"}],
+      "expected": {"status": "DENY", "review_outcome": "HOLD", "finding_codes": ["ASSET_LOCATOR_MISMATCH"]}
+    },
+    {
+      "case_id": "invalid-authoritative-asset-bytes",
+      "mutations": [{"path": "assets.metadata_xml.content_sha256", "value": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}],
+      "expected": {"status": "DENY", "review_outcome": "HOLD", "finding_codes": ["ASSET_BYTES_MISMATCH", "RIGHTS_EVIDENCE_MISMATCH"]}
+    },
+    {
+      "case_id": "invalid-asset-retrieval-chronology",
+      "mutations": [{"path": "assets.raster_tiff.retrieved_at", "value": "2020-01-01T00:00:00Z"}],
+      "expected": {"status": "DENY", "review_outcome": "HOLD", "finding_codes": ["ASSET_RETRIEVAL_BEFORE_LAST_MODIFIED"]}
+    },
+    {
+      "case_id": "invalid-index-capture-bytes",
+      "mutations": [{"path": "evidence_captures.three_dep_index_query.byte_length", "value": 5004}],
+      "expected": {"status": "DENY", "review_outcome": "HOLD", "finding_codes": ["EVIDENCE_CAPTURE_BYTES_MISMATCH"]}
+    },
+    {
+      "case_id": "invalid-capture-chronology-before-census-vintage",
+      "mutations": [
+        {"path": "evidence_captures.three_dep_index_query.retrieved_at", "value": "2020-01-01T00:00:00Z"},
+        {"path": "evidence_captures.census_state_point_query.retrieved_at", "value": "2020-01-01T00:00:00Z"},
+        {"path": "evidence_captures.census_county_point_query.retrieved_at", "value": "2020-01-01T00:00:00Z"},
+        {"path": "evidence_captures.census_states_layer_metadata.retrieved_at", "value": "2020-01-01T00:00:00Z"}
+      ],
+      "expected": {"status": "DENY", "review_outcome": "HOLD", "finding_codes": ["CENSUS_VINTAGE_AFTER_CAPTURE", "EVIDENCE_CAPTURE_CHRONOLOGY_INVALID"]}
+    },
+    {
+      "case_id": "invalid-capture-after-authoring-cutoff",
+      "mutations": [
+        {"path": "evidence_captures.three_dep_index_query.retrieved_at", "value": "2099-01-01T00:00:00Z"},
+        {"path": "evidence_captures.census_state_point_query.retrieved_at", "value": "2099-01-01T00:00:00Z"},
+        {"path": "evidence_captures.census_county_point_query.retrieved_at", "value": "2099-01-01T00:00:00Z"},
+        {"path": "evidence_captures.census_states_layer_metadata.retrieved_at", "value": "2099-01-01T00:00:00Z"}
+      ],
+      "expected": {"status": "DENY", "review_outcome": "HOLD", "finding_codes": ["EVIDENCE_CAPTURE_AFTER_AUTHORING_CUTOFF", "EVIDENCE_CAPTURE_CHRONOLOGY_INVALID"]}
+    },
+    {
+      "case_id": "invalid-index-capture-projection",
+      "mutations": [{"path": "evidence_captures.three_dep_index_query.captured_projection.work_unit_id", "value": 1}],
+      "expected": {"status": "DENY", "review_outcome": "HOLD", "finding_codes": ["EVIDENCE_CAPTURE_PROJECTION_MISMATCH", "EVIDENCE_PROJECTION_SNAPSHOT_MISMATCH", "INDEX_CAPTURE_LINEAGE_MISMATCH"]}
+    },
+    {
+      "case_id": "invalid-projection-snapshot-binding",
+      "mutations": [{"path": "evidence_captures.three_dep_index_query.projection_snapshot.content_sha256", "value": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}],
+      "expected": {"status": "DENY", "review_outcome": "HOLD", "finding_codes": ["EVIDENCE_PROJECTION_SNAPSHOT_MISMATCH"]}
+    },
+    {
+      "case_id": "invalid-rights-evidence-binding",
+      "mutations": [{"path": "source_identity.rights_evidence.evidence_content_sha256", "value": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}],
+      "expected": {"status": "DENY", "review_outcome": "HOLD", "finding_codes": ["RIGHTS_EVIDENCE_MISMATCH"]}
+    },
+    {
+      "case_id": "invalid-temporal-identity-conflated",
+      "mutations": [
+        {"path": "temporal_identity.source_observation_interval.start", "value": "2023-06-12"},
+        {"path": "temporal_identity.source_observation_interval.end", "value": "2023-06-12"},
+        {"path": "lineage.collection_start", "value": "2023-06-12"},
+        {"path": "lineage.collection_end", "value": "2023-06-12"}
+      ],
+      "expected": {"status": "DENY", "review_outcome": "HOLD", "finding_codes": ["INDEX_CAPTURE_LINEAGE_MISMATCH", "SOURCE_OBSERVATION_LINEAGE_MISMATCH", "TEMPORAL_IDENTITY_CONFLATED"]}
+    },
+    {
+      "case_id": "invalid-incomplete-delivered-crs",
+      "mutations": [{"path": "delivered_crs.name", "value": "NAD83 datum"}],
+      "expected": {"status": "DENY", "review_outcome": null, "finding_codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "case_id": "invalid-geoid-blocker-omitted",
+      "mutations": [{"path": "blockers", "value": ["HUMAN_REVIEW_REQUIRED", "VERTICAL_ACCURACY_UNRESOLVED"]}],
+      "expected": {"status": "DENY", "review_outcome": null, "finding_codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "case_id": "invalid-accuracy-blocker-omitted",
+      "mutations": [{"path": "blockers", "value": ["GEOID_MODEL_UNRESOLVED", "HUMAN_REVIEW_REQUIRED"]}],
+      "expected": {"status": "DENY", "review_outcome": null, "finding_codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "case_id": "invalid-program-accuracy-substitution",
+      "mutations": [
+        {"path": "vertical_accuracy.status", "value": "VERIFIED"},
+        {"path": "vertical_accuracy.method", "value": "program specification"},
+        {"path": "vertical_accuracy.statistic", "value": "RMSEz"},
+        {"path": "vertical_accuracy.value", "value": 0.1},
+        {"path": "vertical_accuracy.units", "value": "metre"},
+        {"path": "vertical_accuracy.scope", "value": "PROGRAM"},
+        {"path": "vertical_accuracy.authoritative_evidence", "value": "https://www.usgs.gov/3d-elevation-program/about-3dep-products-services"},
+        {"path": "vertical_accuracy.applicability", "value": "EXPLICITLY_BOUND"},
+        {"path": "blockers", "value": ["GEOID_MODEL_UNRESOLVED", "HUMAN_REVIEW_REQUIRED"]}
+      ],
+      "expected": {"status": "DENY", "review_outcome": null, "finding_codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "case_id": "invalid-project-accuracy-report-internal-mismatch",
+      "mutations": [{"path": "vertical_accuracy.available_project_report.nva_accuracy_95", "value": 0.5}],
+      "expected": {"status": "DENY", "review_outcome": "HOLD", "finding_codes": ["ACCURACY_REPORT_FACTS_MISMATCH", "ACCURACY_REPORT_INTERNAL_MISMATCH"]}
+    },
+    {
+      "case_id": "invalid-pilot-point-outside-tile",
+      "mutations": [
+        {"path": "spatial_coverage.public_safe_pilot_point.longitude", "value": -100},
+        {"path": "inspection_sample.longitude", "value": -100}
+      ],
+      "expected": {"status": "DENY", "review_outcome": "HOLD", "finding_codes": ["COVERAGE_POINT_OUTSIDE_TILE", "ELLSWORTH_COVERAGE_EVIDENCE_MISMATCH", "KANSAS_COVERAGE_EVIDENCE_MISMATCH", "SAMPLE_CRS_TRANSFORM_MISMATCH", "SAMPLE_INSPECTION_FACTS_MISMATCH"]}
+    },
+    {
+      "case_id": "invalid-kansas-state-capture",
+      "mutations": [{"path": "evidence_captures.census_state_point_query.captured_projection.longitude", "value": -99}],
+      "expected": {"status": "DENY", "review_outcome": "HOLD", "finding_codes": ["EVIDENCE_CAPTURE_PROJECTION_MISMATCH", "EVIDENCE_PROJECTION_SNAPSHOT_MISMATCH", "KANSAS_COVERAGE_EVIDENCE_MISMATCH"]}
+    },
+    {
+      "case_id": "invalid-ellsworth-county-capture",
+      "mutations": [{"path": "evidence_captures.census_county_point_query.captured_projection.longitude", "value": -99}],
+      "expected": {"status": "DENY", "review_outcome": "HOLD", "finding_codes": ["ELLSWORTH_COVERAGE_EVIDENCE_MISMATCH", "EVIDENCE_CAPTURE_PROJECTION_MISMATCH", "EVIDENCE_PROJECTION_SNAPSHOT_MISMATCH"]}
+    },
+    {
+      "case_id": "invalid-metadata-footprint-transform",
+      "mutations": [
+        {"path": "spatial_coverage.wgs84_bbox.east", "value": -98.19337523299996},
+        {"path": "evidence_captures.three_dep_index_query.captured_projection.query_envelope.east", "value": -98.19337523299996}
+      ],
+      "expected": {"status": "DENY", "review_outcome": "HOLD", "finding_codes": ["COVERAGE_CRS_TRANSFORM_MISMATCH", "EVIDENCE_CAPTURE_PROJECTION_MISMATCH", "EVIDENCE_PROJECTION_SNAPSHOT_MISMATCH"]}
+    },
+    {
+      "case_id": "invalid-projected-coordinate-magnitude",
+      "mutations": [{"path": "spatial_coverage.nominal_projected_bounds.x_min", "value": 1e100}],
+      "expected": {"status": "DENY", "review_outcome": "HOLD", "finding_codes": ["NUMERIC_DOMAIN_INVALID"]}
+    },
+    {
+      "case_id": "invalid-jcs-safe-integer-domain",
+      "tamper": [{"path": "raster_grid.width", "value": 9007199254740992}],
+      "expected": {"status": "DENY", "review_outcome": "HOLD", "finding_codes": ["NUMERIC_DOMAIN_INVALID"]}
+    },
+    {
+      "case_id": "invalid-sample-cross-crs-transform",
+      "mutations": [{"path": "inspection_sample.projected_x", "value": 566900}],
+      "expected": {"status": "DENY", "review_outcome": "HOLD", "finding_codes": ["SAMPLE_CRS_TRANSFORM_MISMATCH", "SAMPLE_INSPECTION_FACTS_MISMATCH", "SAMPLE_PIXEL_LOCATION_MISMATCH"]}
+    },
+    {
+      "case_id": "invalid-storage-bounds",
+      "mutations": [{"path": "raster_grid.storage_bounds.x_min", "value": 559994.0020061383}],
+      "expected": {"status": "DENY", "review_outcome": "HOLD", "finding_codes": ["RASTER_GRID_BOUNDS_MISMATCH"]}
+    },
+    {
+      "case_id": "invalid-sample-validity-mask-binding",
+      "mutations": [{"path": "inspection_sample.fixture_encoding.source_nodata_value", "value": -32768}],
+      "expected": {"status": "DENY", "review_outcome": "HOLD", "finding_codes": ["SAMPLE_VALIDITY_MASK_MISMATCH"]}
+    },
+    {
+      "case_id": "invalid-footprint-order",
+      "mutations": [{"path": "spatial_coverage.wgs84_bbox.east", "value": -99}],
+      "expected": {"status": "DENY", "review_outcome": "HOLD", "finding_codes": ["COVERAGE_BOUNDS_INVALID", "COVERAGE_POINT_OUTSIDE_TILE", "METADATA_INDEX_ENVELOPE_MISMATCH"]}
+    },
+    {
+      "case_id": "invalid-sample-decoding",
+      "mutations": [{"path": "inspection_sample.fixture_encoding.decoded_value_m", "value": 470}],
+      "expected": {"status": "DENY", "review_outcome": "HOLD", "finding_codes": ["SAMPLE_ENCODING_MISMATCH", "SAMPLE_INSPECTION_FACTS_MISMATCH"]}
+    },
+    {
+      "case_id": "invalid-sample-exaggeration-claim",
+      "tamper": [{"path": "inspection_sample.reported_value_exaggerated", "value": true}],
+      "expected": {"status": "DENY", "review_outcome": null, "finding_codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "case_id": "invalid-profile-status",
+      "tamper": [{"path": "profile_status", "value": "ACTIVE"}],
+      "expected": {"status": "DENY", "review_outcome": null, "finding_codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "case_id": "invalid-execution-mode",
+      "tamper": [{"path": "execution_mode", "value": "LIVE"}],
+      "expected": {"status": "DENY", "review_outcome": null, "finding_codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "case_id": "invalid-authority",
+      "tamper": [{"path": "authority", "value": "SOURCE_ADMISSION"}],
+      "expected": {"status": "DENY", "review_outcome": null, "finding_codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "case_id": "invalid-review-outcome",
+      "tamper": [{"path": "review.outcome", "value": "APPROVED"}],
+      "expected": {"status": "DENY", "review_outcome": null, "finding_codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "case_id": "invalid-human-review-state",
+      "tamper": [{"path": "review.human_review", "value": "APPROVED"}],
+      "expected": {"status": "DENY", "review_outcome": null, "finding_codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "case_id": "invalid-effect-source-descriptor-created",
+      "tamper": [{"path": "effects.source_descriptor_created", "value": true}],
+      "expected": {"status": "DENY", "review_outcome": null, "finding_codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "case_id": "invalid-effect-source-activated",
+      "tamper": [{"path": "effects.source_activated", "value": true}],
+      "expected": {"status": "DENY", "review_outcome": null, "finding_codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "case_id": "invalid-effect-source-admitted",
+      "tamper": [{"path": "effects.source_admitted", "value": true}],
+      "expected": {"status": "DENY", "review_outcome": null, "finding_codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "case_id": "invalid-effect-runtime-load-allowed",
+      "tamper": [{"path": "effects.runtime_load_allowed", "value": true}],
+      "expected": {"status": "DENY", "review_outcome": null, "finding_codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "case_id": "invalid-effect-runtime-sample-authorized",
+      "tamper": [{"path": "effects.runtime_sample_authorized", "value": true}],
+      "expected": {"status": "DENY", "review_outcome": null, "finding_codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "case_id": "invalid-effect-evidence-bundle-resolved",
+      "tamper": [{"path": "effects.evidence_bundle_resolved", "value": true}],
+      "expected": {"status": "DENY", "review_outcome": null, "finding_codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "case_id": "invalid-effect-lifecycle-write-allowed",
+      "tamper": [{"path": "effects.lifecycle_write_allowed", "value": true}],
+      "expected": {"status": "DENY", "review_outcome": null, "finding_codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "case_id": "invalid-effect-promotion-allowed",
+      "tamper": [{"path": "effects.promotion_allowed", "value": true}],
+      "expected": {"status": "DENY", "review_outcome": null, "finding_codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "case_id": "invalid-effect-release-allowed",
+      "tamper": [{"path": "effects.release_allowed", "value": true}],
+      "expected": {"status": "DENY", "review_outcome": null, "finding_codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "case_id": "invalid-effect-deployment-allowed",
+      "tamper": [{"path": "effects.deployment_allowed", "value": true}],
+      "expected": {"status": "DENY", "review_outcome": null, "finding_codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "case_id": "invalid-effect-publication-allowed",
+      "tamper": [{"path": "effects.publication_allowed", "value": true}],
+      "expected": {"status": "DENY", "review_outcome": null, "finding_codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "case_id": "invalid-effect-public-use-allowed",
+      "tamper": [{"path": "effects.public_use_allowed", "value": true}],
+      "expected": {"status": "DENY", "review_outcome": null, "finding_codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "case_id": "invalid-source-role",
+      "tamper": [{"path": "source_identity.source_role", "value": "OBSERVED"}],
+      "expected": {"status": "DENY", "review_outcome": null, "finding_codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "case_id": "invalid-candidate-identity",
+      "tamper": [{"path": "candidate_id", "value": "kfm:dem-source-asset-candidate:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"}],
+      "expected": {"status": "DENY", "review_outcome": "HOLD", "finding_codes": ["CANDIDATE_ID_MISMATCH"]}
+    }
+  ]
+}

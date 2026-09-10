@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  MAP_RUNTIME_DEFAULT_TERRAIN_EXAGGERATION,
   MAP_RUNTIME_TERRAIN_COORDINATOR_PROFILE,
   MAP_RUNTIME_TERRAIN_FALLBACK_PROFILE,
   MAP_RUNTIME_TERRAIN_TRANSITION_PROFILE,
@@ -17,6 +18,10 @@ const terrainRequest = {
 } as const;
 
 describe("renderer-neutral terrain fallback", () => {
+  it("declares one-times terrain exaggeration as the presentation default", () => {
+    expect(MAP_RUNTIME_DEFAULT_TERRAIN_EXAGGERATION).toBe(1);
+  });
+
   it("retains flat mode without requiring terrain capabilities", () => {
     const state = resolveMapRuntimeTerrainState(
       {

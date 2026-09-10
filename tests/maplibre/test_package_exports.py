@@ -2,7 +2,6 @@ import json
 import subprocess
 from pathlib import Path
 
-
 REPO_ROOT = Path(__file__).resolve().parents[2]
 PACKAGE_ROOT = REPO_ROOT / "packages" / "maplibre"
 EXPECTED_EXPORTS = {
@@ -10,10 +9,19 @@ EXPECTED_EXPORTS = {
     "@kfm/maplibre/adapter": "src/maplibre-adapter.ts",
     "@kfm/maplibre/vite-adapter": "src/maplibre-vite-adapter.ts",
 }
-EXPECTED_ROOT_EXPORTS = {
+EXPECTED_ROOT_WILDCARD_EXPORTS = {
     'export * from "./map-runtime-port";',
     'export * from "./map-runtime-terrain-fallback";',
     'export * from "./null-map-runtime";',
+}
+EXPECTED_TERRAIN_ROOT_EXPORTS = {
+    "TERRAIN_ELEVATION_EXACT_ARTIFACT_DIGEST",
+    "TERRAIN_ELEVATION_EXACT_ARTIFACT_ID",
+    "TERRAIN_ELEVATION_EXACT_CANDIDATE_ID",
+    "TERRAIN_ELEVATION_EXACT_SOURCE_NODATA",
+    "TERRAIN_ELEVATION_EXACT_VERTICAL_DATUM",
+    "sampleExactDemCandidateFixture",
+    "TerrainElevationSampleAnswer",
 }
 
 
@@ -41,7 +49,38 @@ def test_root_facade_reexports_only_renderer_neutral_modules() -> None:
     root_source = (PACKAGE_ROOT / "src" / "index.ts").read_text()
     root_statements = {line.strip() for line in root_source.splitlines() if line.strip()}
 
-    assert root_statements == EXPECTED_ROOT_EXPORTS
+    assert EXPECTED_ROOT_WILDCARD_EXPORTS <= root_statements
+    assert 'export * from "./terrain-elevation-sample";' not in root_statements
+    assert all(name in root_source for name in EXPECTED_TERRAIN_ROOT_EXPORTS)
+    for internal_name in (
+        "__testOnlySampleTerrariumElevationNearestCell",
+        "sampleTerrariumElevationNearestCell",
+        "TerrainElevationSampleRequest",
+    ):
+        assert internal_name not in root_source
+
+
+def test_terrain_sampler_has_no_network_filesystem_or_renderer_surface() -> None:
+    source = (PACKAGE_ROOT / "src" / "terrain-elevation-sample.ts").read_text()
+
+    for forbidden in (
+        "fetch(",
+        "XMLHttpRequest",
+        "WebSocket",
+        "EventSource",
+        "globalThis.fetch",
+        "navigator.sendBeacon",
+        "node:fs",
+        "node:http",
+        "node:https",
+        "document.",
+        "window.fetch",
+        "setTerrain",
+        "tileTemplate",
+        "http://",
+        "https://",
+    ):
+        assert forbidden not in source
 
 
 def test_node_resolves_root_and_adapter_subpaths_through_package_exports() -> None:
