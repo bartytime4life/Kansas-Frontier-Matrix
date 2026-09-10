@@ -66,6 +66,7 @@ contract in `contracts/domains/hydrology/`:
 - `correction_notice.schema.json`
 - `hydro-crosswalk-manifest.schema.json`
 - `layer_manifest.schema.json`
+- `living_waters_fixture_packet.schema.json`
 - `promotion_decision.schema.json`
 - `release_manifest.schema.json`
 - `rollback_card.schema.json`
@@ -73,6 +74,11 @@ contract in `contracts/domains/hydrology/`:
 
 Their placement and pairing remain separate review work. This index does not
 promote them or create parallel semantic authority.
+
+`living_waters_fixture_packet.schema.json` is a closed synthetic test carrier,
+not a replacement for the still-proposed HUC, reach, gauge, flow-observation,
+or hydrograph contracts. It exists only to exercise their first combined
+finite-state boundary without admitting or activating a source.
 
 `evidence_drawer_payload.schema.json` is excluded from that unresolved list:
 it is now an explicit, field-free `$ref` projection to
