@@ -38,7 +38,7 @@
     "apps/explorer-web/src/features/living_atlas/persistence.ts": "sha256:a59336df8ec72e8d0c5196fc50934538b97a93ca1aac4197761f1196b048dc26",
     "apps/explorer-web/src/features/living_atlas/registry.ts": "sha256:256ceb1a63c9247e0da3617e55c92f1cd879a12e0e05a087b8778fbde68f773a",
     "apps/explorer-web/src/site/README.md": "sha256:f5442fa91b53ace6820e8b2d53716eb36d37fc05d62e41ca5a66e58667923307",
-    "apps/explorer-web/src/site/mount-living-atlas.ts": "sha256:0e95940bd95c2c7f65aa3fac7bc3da9c48f78ee974d7a98e5b6b4ea6e5533b17",
+    "apps/explorer-web/src/site/mount-living-atlas.ts": "sha256:522e59c3651d59b4cbbba9070089f543ffde0aaeb8d71c3cbd930d737a5f5cef",
     "apps/explorer-web/tests/acs-population-context.test.ts": "sha256:58b56f616af56e5b0395eda95e1ec54f13667138f5737fc128b66bd14f6e878f",
     "apps/explorer-web/tests/browser/living-atlas.spec.ts": "sha256:242de1675a06817fe5743301d371e469ea7d1cc8453f8d8b74850cc0fbf73b4c",
     "apps/explorer-web/tests/living-atlas-persistence.test.ts": "sha256:88c57810e69367fcdcfbd7f6362f58f9e404146e24797a13a718bd50deb9433d",
