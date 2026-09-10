@@ -17,10 +17,10 @@
     ".github/workflows/census-county-reference-candidate.yml": "sha256:d7f4e487ceddd0ff1e423871c930cb9a90cd36a33ac9e85247604ad072108a9c",
     "apps/explorer-web/src/site/mount-living-atlas.ts": "sha256:532466931fde671e6cae94b00d7429852d6de0d137407069c5b928b74e2aeecd",
     "apps/explorer-web/src/site/reference-geography-source-registry.ts": "sha256:07e267df0a63d8589c0b3fc3405a9068b372ff6e4ca558413e7f8ec4cfb3fb53",
-    "apps/explorer-web/tests/browser/reference-geography.spec.ts": "sha256:d9c4dc308e8db2e874300f251e43992570e00152ef1539a1bb8c01ee9ac91ec2",
+    "apps/explorer-web/tests/browser/reference-geography.spec.ts": "sha256:68ebcb414312008b948186d6ed59656e43171575faf475708beae539281aa632",
     "apps/explorer-web/tests/reference-geography-source-registry.test.ts": "sha256:c3f2a9f88442941c0d3b6bfbff3f1dcde81bf31af38073429e831ef220936ee6",
     "data/registry/sources/settlements-infrastructure/census_cartographic_boundary_counties_2025_500k.source.json": "sha256:16d5b210c3ec7851c60e5cb5ebe1f6ce8b451ca3e9791292618d3e60f1bc90a1",
-    "docs/sources/catalog/census/README.md": "sha256:52aac256f43ded67f10b588384eaa6a76ef9bac28c1706ab7bebd1d6227d1fcd",
+    "docs/sources/catalog/census/README.md": "sha256:be2cf73e3836a240075f2a12edc7d96c413029b9cda6c1a528d36be6a3b8c8b7",
     "docs/sources/catalog/census/cartographic-boundary-files.md": "sha256:84339beec7953d979345f5095a64ee1726f5fe4ae038c14fef5178c5e134fa3f",
     "tests/source/test_census_cartographic_boundary_counties.py": "sha256:b7642f33cafaa7d3f84dceeeae19f92266b8ab022756651207153ccda408393e",
     "tools/validators/source/census_cartographic_boundary_counties.py": "sha256:b086f6aa3c474401f8f8c84e8c121b990387bc3615bb3a2125bbd0e755e4726c"
@@ -106,7 +106,7 @@
     {
       "gate": "documentation-metadata-and-local-links",
       "outcome": "PASS",
-      "reason": "Both changed Census documents passed the required metadata-block profile; the new product page passed local-link validation. External links were classified but not requested by that repository-local checker."
+      "reason": "Both changed Census documents passed the required metadata-block profile and local-link validation. Three inherited stale references promoted by the changed-file ratchet were corrected to existing repository targets. External links were classified but not requested by that repository-local checker."
     },
     {
       "gate": "workflow-security",
@@ -126,7 +126,7 @@
     {
       "gate": "hosted-exact-head-ci",
       "outcome": "SKIPPED",
-      "reason": "Pending branch push and draft pull-request creation."
+      "reason": "Draft PR #4453 exists. Hosted CI evaluates the exact pushed head after this receipt is finalized, so no future hosted result is encoded as receipt-local validation; inspect the PR checks directly."
     },
     {
       "gate": "independent-human-review",
@@ -169,9 +169,9 @@
   "created_at": "2026-09-10T00:39:25Z",
   "emitter": "OpenAI Codex GPT-5 via ChatGPT Work Mode",
   "links": {
-    "pr_number": null,
+    "pr_number": 4453,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Base main is 0d0dbf355370fa7271feabba8f5b6c9f35fdb3a8, which includes merged terrain PR #4452. This slice makes one real, byte-verified Census county reference visible as a non-loadable source connection in the Explorer and records its exact identity, 105 Kansas GEOIDs, scope, limitations, and repository lineage. It does not commit or publish county geometry, activate a connector, issue an admission or EvidenceBundle, approve policy, create a MapLibre source, release, deploy, publish, merge, or change repository settings. The existing map remains synthetic and makes no external data request. The archive remains caller-supplied for bounded offline verification until an accountable steward approves a custody lane. The receipt excludes itself from artifact hashes. Rollback before any release is an ordinary reviewed revert of this candidate branch; no external runtime or published state exists to roll back."
+  "notes": "Base main is 0d0dbf355370fa7271feabba8f5b6c9f35fdb3a8, which includes merged terrain PR #4452. Draft PR #4453 makes one real, byte-verified Census county reference visible as a non-loadable source connection in the Explorer and records its exact identity, 105 Kansas GEOIDs, scope, limitations, and repository lineage. It does not commit or publish county geometry, activate a connector, issue an admission or EvidenceBundle, approve policy, create a MapLibre source, release, deploy, publish, merge, or change repository settings. The existing map remains synthetic and makes no external data request. The archive remains caller-supplied for bounded offline verification until an accountable steward approves a custody lane. The receipt excludes itself from artifact hashes. Rollback before any release is an ordinary reviewed revert of this candidate branch; no external runtime or published state exists to roll back."
 }

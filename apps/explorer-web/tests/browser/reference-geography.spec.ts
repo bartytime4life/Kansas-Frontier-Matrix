@@ -14,7 +14,9 @@ test("exposes the byte-verified county reference while keeping the map held", as
   await page.goto("/");
   const workspace = page.locator('[data-component="living-atlas-workspace"]');
 
-  await workspace.getByRole("button", { name: "Places" }).click();
+  await workspace
+    .getByRole("button", { name: "Places", exact: true })
+    .click();
   const candidate = workspace
     .locator('[data-rail-panel="places"]')
     .locator("[data-reference-geography]", {
@@ -50,7 +52,9 @@ test("lists the same candidate in the Source Observatory", async ({ page }) => {
   await page.goto("/");
   const workspace = page.locator('[data-component="living-atlas-workspace"]');
 
-  await workspace.getByRole("button", { name: "Sources" }).click();
+  await workspace
+    .getByRole("button", { name: "Sources", exact: true })
+    .click();
   const candidate = workspace
     .locator('[data-rail-panel="sources"]')
     .locator("[data-reference-geography]", {

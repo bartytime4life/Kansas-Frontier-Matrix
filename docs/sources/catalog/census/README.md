@@ -20,10 +20,10 @@ related:
   - docs/doctrine/truth-posture.md
   - docs/doctrine/trust-membrane.md
   - docs/doctrine/lifecycle-law.md
-  - docs/domains/frontier-matrix/README.md
+  - docs/domains/README.md
   - docs/domains/settlements-infrastructure/README.md
   - docs/domains/people-dna-land/README.md
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
   - connectors/census/README.md
   - schemas/contracts/v1/source/source-descriptor.json
 tags: [kfm, sources, catalog, census, tiger, frontier-matrix]
@@ -269,10 +269,10 @@ The table below lists files and folders that complete the Census source family a
 - Truth Posture (cite-or-abstain) — [`../../doctrine/truth-posture.md`](../../../doctrine/truth-posture.md) _(PROPOSED)_
 - Trust Membrane — [`../../doctrine/trust-membrane.md`](../../../doctrine/trust-membrane.md) _(PROPOSED)_
 - Lifecycle Law — [`../../doctrine/lifecycle-law.md`](../../../doctrine/lifecycle-law.md) _(PROPOSED)_
-- Frontier Matrix domain README — [`../../domains/frontier-matrix/README.md`](../../../domains/frontier-matrix/README.md) _(PROPOSED)_
+- Domain-lane index — [`docs/domains/`](../../../domains/README.md) _(no standalone `frontier-matrix` lane is present)_
 - Settlements / Infrastructure domain README — [`../../domains/settlements-infrastructure/README.md`](../../../domains/settlements-infrastructure/README.md) _(PROPOSED)_
 - People / Genealogy / DNA / Land domain README — [`../../domains/people-dna-land/README.md`](../../../domains/people-dna-land/README.md) _(PROPOSED)_
-- ADR-0001 — Schema home — [`../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) _(PROPOSED)_
+- ADR-0001 — Schema home — [`ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md`](../../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) _(PROPOSED)_
 - Census connector README — [`../../../connectors/census/README.md`](../../../../connectors/census/README.md) _(PROPOSED)_
 - Source-descriptor schema — [`../../../schemas/contracts/v1/source/source-descriptor.json`](../../../../schemas/contracts/v1/source/source-descriptor.json) _(PROPOSED)_
 
@@ -335,6 +335,6 @@ PROPOSED minimum citation surface, illustrative — bind in `EvidenceBundle` and
 
 ---
 
-> **Related:** [`../SOURCE_DESCRIPTOR_STANDARD.md`](../../SOURCE_DESCRIPTOR_STANDARD.md) · [`./README.md`](../README.md) · [`../../doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) · [`../../domains/frontier-matrix/README.md`](../../../domains/frontier-matrix/README.md)
+> **Related:** [`../SOURCE_DESCRIPTOR_STANDARD.md`](../../SOURCE_DESCRIPTOR_STANDARD.md) · [`./README.md`](../README.md) · [`../../doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) · [`docs/domains/`](../../../domains/README.md)
 > **Last updated:** 2026-09-10 _(bounded catalog-link update; family review still pending)_
 > **Back to top:** [Census Source Family](#census-source-family)
