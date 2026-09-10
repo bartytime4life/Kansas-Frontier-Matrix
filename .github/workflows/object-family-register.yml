@@ -161,7 +161,8 @@ jobs:
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
             data/receipts/generated/genrec-object-family-register-evidence-ref-workflow-parity-20260825.json \
-            --repo-root .
+            --repo-root . \
+            --artifact-git-ref 49d6b59d2d52a156b339410fce6f731ca63080a8
 
       - name: Record validation boundary
         if: always()
@@ -172,6 +173,7 @@ jobs:
             echo
             echo "- Result: ${{ job.status }}."
             echo "- Scope: the exact sixteen-family milestone set, three retained families, schema shape, canonical ordering, relationship closure, responsibility-root placement, path existence, per-surface status, and structural classification."
+            echo "- Receipt boundary: the immutable 2026-08-25 authoring receipt is checked against its pinned authoring commit."
             echo "- Known gaps: eleven required families retain unresolved candidate conflicts; EvidenceRef identity remains partial, and WithdrawalNotice remains structurally partial."
             echo "- Boundary: the register is a navigational index. It cannot select conflicting candidates, add, rename, remove, approve, release, deploy, promote, or publish an object family."
           } >> "$GITHUB_STEP_SUMMARY"
