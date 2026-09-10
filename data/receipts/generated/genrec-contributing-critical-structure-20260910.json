@@ -1,0 +1,176 @@
+{
+  "receipt_id": "genrec-contributing-critical-structure-20260910",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/validator-suite.yml",
+    "CONTRIBUTING.md",
+    "Makefile",
+    "tests/validators/docs/critical-structure/README.md",
+    "tests/validators/docs/critical-structure/test_critical_structure.py",
+    "tests/validators/governance/test_validator_suite_guardrail_attribution.py",
+    "tools/validators/docs/README.md",
+    "tools/validators/docs/critical-structure/README.md",
+    "tools/validators/docs/critical-structure/check_critical_structure.py",
+    "tools/validators/validator_registry.json"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/validator-suite.yml": "sha256:75d5079e3842f7fd1bfb04a75d888d5c3a3cf0faebdec55f8c904af308e6d84f",
+    "CONTRIBUTING.md": "sha256:c04df72139330593ce9302170389da99a60e1c7ac13f571358e15dc51d81798e",
+    "Makefile": "sha256:6dcd92cbe365a4266ed3c6b45c23200ebe63d2018250884e0734b5a22fb4fb2c",
+    "tests/validators/docs/critical-structure/README.md": "sha256:7ab022ca67b0b859a6f272f63888ee405f1dd9d0ea78ba9845976be261f00e68",
+    "tests/validators/docs/critical-structure/test_critical_structure.py": "sha256:da1c6c55520a04def797f81cedd1f314a447d03d140268a23f9001fad45c7ce4",
+    "tests/validators/governance/test_validator_suite_guardrail_attribution.py": "sha256:c3ede1ed3e988f73c6ff2a647b1bcbe778943426bfd7b62223301e59864666bf",
+    "tools/validators/docs/README.md": "sha256:dc004a8d5eb81be7519bedb8100d9fe7d7c083e5de690e4004882b3d635856ff",
+    "tools/validators/docs/critical-structure/README.md": "sha256:08ae2bac61c295d73c541f081b660b12d1313f9c1c36d5e123cb5e9e96219bdd",
+    "tools/validators/docs/critical-structure/check_critical_structure.py": "sha256:ecae324893965bceec3b732acb4b28a8caf87cbd9305dc8acb3336c0c030b291",
+    "tools/validators/validator_registry.json": "sha256:8b23d75477fbad06ec25717be6e84d5330a05c9752726f171ce73a3bed771611"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-5)",
+    "version": "2026-09-10"
+  },
+  "prompt_or_contract": "sha256:90be511f0dc943705a95cd48e8fc0dcc325dda167fd9a77d0eec1b8a8893fedf",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector",
+      "Notion connector",
+      "local repository inspection",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:a0f243299080e6ad0f6ecb10358a117356cc7e8164dca57ae3f6fc04149a2bd6",
+      "sha256:060b20d6e28197faa8a9034ccb5a29b63621f73ebdeea1d2d77d31b23c2149e0",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:425e998e5584a7e400e99c963aba019b33ff685f9fa26b5b474d8758a3160b2a"
+    ],
+    "attached_docs": [
+      "KFM_Greenfield_Commissioning_Plan_v2_FULL(1).pdf",
+      "Kansas_Frontier_Matrix_Pipeline_Living_Implementation_Manual_v0.3.pdf",
+      "Kansas Frontier Matrix Implementation Reference.pdf",
+      "Master MapLibre Components-Functions-Features.pdf"
+    ],
+    "evidence_refs": [
+      "repo:CONTRIBUTING.md@648f6fc0abaed6b787bb60f669f89b9e38162ec9#blob=6560b9937f54c24dbcdf0f38c2ac154ad6dead23",
+      "repo:commit/b93ed1ce2bea6e4bdb93d97e4812273fa8796885",
+      "repo:issues/3377",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@648f6fc0abaed6b787bb60f669f89b9e38162ec9",
+      "repo:docs/doctrine/directory-rules.md@648f6fc0abaed6b787bb60f669f89b9e38162ec9",
+      "repo:.github/workflows/validator-suite.yml@648f6fc0abaed6b787bb60f669f89b9e38162ec9",
+      "drive:1UcPOllhuhNMg2eXV6g881zekMlj92ivxKh0bOiP7iFA",
+      "drive:1aivNyfMjQ8urQO6vjt4YvkT1ltF1t7fxCahEcnGV4Dw",
+      "notion:3c9a9202-1bf6-8195-b8b1-f3a8d694b447",
+      "notion:3d6a9202-1bf6-810c-ae1d-ce9467ecbc67"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/validator-suite.yml": "PROPOSED",
+    "CONTRIBUTING.md": "PROPOSED",
+    "Makefile": "PROPOSED",
+    "tests/validators/docs/critical-structure/README.md": "PROPOSED",
+    "tests/validators/docs/critical-structure/test_critical_structure.py": "PROPOSED",
+    "tests/validators/governance/test_validator_suite_guardrail_attribution.py": "PROPOSED",
+    "tools/validators/docs/README.md": "PROPOSED",
+    "tools/validators/docs/critical-structure/README.md": "PROPOSED",
+    "tools/validators/docs/critical-structure/check_critical_structure.py": "PROPOSED",
+    "tools/validators/validator_registry.json": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "contributor-contract-reconstruction",
+      "outcome": "PASS",
+      "reason": "The exact 35,665-byte self-insertion was removed while preserving the later September contributor-contract updates; the repaired file is 35,666 bytes, 609 newline-terminated lines, and has SHA-256 c04df72139330593ce9302170389da99a60e1c7ac13f571358e15dc51d81798e."
+    },
+    {
+      "gate": "critical-document-structure-focused-tests",
+      "outcome": "PASS",
+      "reason": "Twenty-two standard-library tests passed, including the live repaired document and deterministic positive, negative, parser-boundary, path-safety, no-network, and operational-error cases."
+    },
+    {
+      "gate": "validator-registry-and-workflow-attribution",
+      "outcome": "PASS",
+      "reason": "The canonical 28-validator registry validated, thirteen orchestrator tests passed, and four validator-suite attribution and read-only-permission tests passed."
+    },
+    {
+      "gate": "focused-markdown-links",
+      "outcome": "PASS",
+      "reason": "The local-only link checker passed four changed Markdown documents with 50 local targets; one external target was classified as unverified without network access."
+    },
+    {
+      "gate": "workflow-security",
+      "outcome": "PASS",
+      "reason": "Nineteen focused tests passed and the twenty-rule scanner reported PASS for 487 workflows with no invariant, new-drift, warning, or stale-baseline finding."
+    },
+    {
+      "gate": "repository-baseline-validation",
+      "outcome": "PASS",
+      "reason": "The repository make validate surface passed nine aggregate fixture validators plus 498 schema and contract tests with 53 subtests."
+    },
+    {
+      "gate": "repository-topology",
+      "outcome": "SKIPPED",
+      "reason": "The final staged-index scan exceeded the validator's local 30-second Git-object query budget, so branch acceptance is unavailable locally; pre-rebase main 0d0dbf355370fa7271feabba8f5b6c9f35fdb3a8 independently carried six new and six stale topology fingerprints tracked by issue 4228. Final-base and exact-head hosted attribution remains pending."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed exact draft-branch head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human docs, tooling, CI, and security review remains pending on the draft pull request; this receipt is not approval."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "repository:corrupted-contributor-contract",
+      "validated": true,
+      "evidence_ref": "repo:CONTRIBUTING.md@648f6fc0abaed6b787bb60f669f89b9e38162ec9#blob=6560b9937f54c24dbcdf0f38c2ac154ad6dead23"
+    },
+    {
+      "id": "repository:m16-quality-baseline-issue",
+      "validated": true,
+      "evidence_ref": "repo:issues/3377"
+    },
+    {
+      "id": "repository:adr-0029-directory-governance",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@648f6fc0abaed6b787bb60f669f89b9e38162ec9"
+    },
+    {
+      "id": "drive:milestone-delivery-orchestrator",
+      "validated": true,
+      "evidence_ref": "drive:1UcPOllhuhNMg2eXV6g881zekMlj92ivxKh0bOiP7iFA"
+    },
+    {
+      "id": "notion:repository-workbench",
+      "validated": true,
+      "evidence_ref": "notion:3c9a9202-1bf6-8195-b8b1-f3a8d694b447"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-10T01:04:47Z",
+  "emitter": "OpenAI Codex (GPT-5) via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "M16 issue 3377 draft slice: repair one confirmed contributor-contract self-insertion and add a bounded local-only regression sentinel to the existing validator suite. This does not interpret document claims, change repository settings, resolve inherited topology or dependency debt, approve review, merge, admit or activate a source, release, deploy, promote, or publish."
+}

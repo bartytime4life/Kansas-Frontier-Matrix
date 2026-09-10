@@ -50,6 +50,7 @@
       "pnpm-dependency-readiness",
       "pipeline-spec-declarations",
       "pipeline-spec-declaration-fixtures",
+      "critical-doc-structure",
       "workflow-security",
       "repository-topology"
     ]
@@ -576,6 +577,31 @@
         "schemas/contracts/v1/pipeline_spec_declaration.schema.json",
         "tests/validators/test_validate_pipeline_spec_declarations.py",
         "tools/validators/validate_pipeline_spec_declarations.py",
+        "tools/validators/validator_registry.json"
+      ],
+      "timeout_seconds": 120,
+      "artifact_refs": []
+    },
+    {
+      "id": "critical-doc-structure",
+      "description": "Validate bounded structural invariants for explicitly enrolled critical Markdown without network or write effects.",
+      "script": "tools/validators/docs/critical-structure/check_critical_structure.py",
+      "args": [
+        "--repo-root",
+        ".",
+        "--format",
+        "json",
+        "CONTRIBUTING.md"
+      ],
+      "path_globs": [
+        ".github/workflows/validator-suite.yml",
+        "CONTRIBUTING.md",
+        "Makefile",
+        "data/receipts/generated/genrec-contributing-critical-structure-*.json",
+        "tests/validators/docs/critical-structure/**",
+        "tests/validators/governance/test_validator_suite_guardrail_attribution.py",
+        "tools/validators/docs/README.md",
+        "tools/validators/docs/critical-structure/**",
         "tools/validators/validator_registry.json"
       ],
       "timeout_seconds": 120,

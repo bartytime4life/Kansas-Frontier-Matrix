@@ -43,6 +43,7 @@
     "attached_docs": [],
     "evidence_refs": [
       "repo:main@648f6fc0abaed6b787bb60f669f89b9e38162ec9",
+      "repo:main@84eb5151c903c13b96f440a5c652dec5e94ccb64",
       "repo:pull/4453@df20c4e338c8ac5ddcfa663b5b231c8ac8713db6",
       "repo:pull/4454@8afee7933de5b58de3db5dc4f090da6ba77f0a47",
       "repo:pull/4455@5383f38a7d1727b0c2112128afd63cf5faa1af40",
@@ -134,7 +135,7 @@
       "evidence_ref": "repo:pull/4454@8afee7933de5b58de3db5dc4f090da6ba77f0a47"
     },
     {
-      "id": "repository:overlapping-contributor-guide-repair",
+      "id": "repository:merged-contributor-guide-repair",
       "validated": true,
       "evidence_ref": "repo:pull/4455@5383f38a7d1727b0c2112128afd63cf5faa1af40"
     },
@@ -162,5 +163,5 @@
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Post-merge repair for inherited failures surfaced by PR #4453. This bounded branch fixes dependency audit, MapLibre readiness, object-family receipt replay, and the adjacent esbuild security guard. Overlapping Explorer/Census and contributor-guide repairs are intentionally left to open draft PRs #4454 and #4455. Repository topology remains an explicit governance HOLD: this receipt does not accept, suppress, or rebaseline catalog drift and grants no review, merge, release, deployment, promotion, publication, or source-admission authority."
+  "notes": "Post-merge repair for inherited failures surfaced by PR #4453. This bounded branch fixes dependency audit, MapLibre readiness, object-family receipt replay, and the adjacent esbuild security guard. The overlapping Explorer/Census repair remains in PR #4454; the contributor-guide repair landed separately through PR #4455. Repository topology remains an explicit governance HOLD: this receipt does not accept, suppress, or rebaseline catalog drift and grants no review, merge, release, deployment, promotion, publication, or source-admission authority."
 }
