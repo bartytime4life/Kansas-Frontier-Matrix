@@ -6,10 +6,10 @@ This feature owns the Explorer-specific registries and serializable draft object
 
 - 18 investigation views with explicit demo or design/data-hold states;
 - 24 layer records with source, evidence, temporal, representation, scale, opacity, and warning fields;
-- 14 repository-backed layer candidates whose available connector, declarative pipeline-specification, and contract lineage remains non-loadable and not admitted;
+- 15 repository-backed layer candidates whose available connector, declarative pipeline-specification, and contract lineage remains non-loadable and not admitted; the USGS earthquake entry records a README-only, placement-unresolved connector and inactive pipeline without committing a source export to UI fixtures;
 - four map-interaction controls with visible point-of-use state (Select available; Draw AOI, Measure, and Profile held) and ten links into the existing workbench catalog;
 - official source-family candidates that remain distinct from admitted sources;
-- multiscale temporal presets from deep time to the present operational window;
+- multiscale temporal presets from deep time to the present operational window; committing a preset re-renders only exact-bucket or timeless fixture layers, disables out-of-time toggles/inspection, and clears prior selection/evidence rather than changing a label alone;
 - `MapSnapshot`, `ReportDraft`, `StoryScene`, `PolicyDecision`, and visible trust-state types;
 - a network-free inline MapLibre style containing only bounded synthetic/generalized geometry.
 
@@ -25,4 +25,4 @@ A design/data-held view is also an active fail-closed constraint. Selecting or i
 
 ## Validation boundary
 
-Unit tests check registry identity, source/layer/evidence closure, exact `pipeline_specs/` labeling, held-view abstention, denial precedence, temporal ordering, finite Focus outcomes, repository-path locality, and the absence of external URLs in the inline style. Browser checks prove only local adapter construction, canvas visibility, view/layer/time interactions, visible held controls, cross-panel catalog search, workbench handoff, stale-evidence clearing, held-view evidence exclusion from draft capture, and graceful finite failure. They do not establish source or renderer admission, real-data correctness, GPU parity, terrain, comparison, accessibility closure, performance, long-session stability, release, deployment, or publication.
+Unit tests check registry identity, source/layer/evidence closure, exact `pipeline_specs/` labeling, held-view abstention, denial precedence, temporal ordering and commit invariants, finite Focus outcomes, repository-path locality, and the absence of external URLs in the inline style. Browser checks define local adapter construction, canvas visibility, view/layer/time interactions, out-of-time selection clearing, legacy-draft exclusion, visible held controls, cross-panel catalog search, workbench handoff, held-view evidence exclusion from draft capture, and graceful finite failure. They do not establish source or renderer admission, public earthquake rendering, complete or current earthquake data, GPU parity, terrain, comparison, accessibility closure, performance, long-session stability, release, deployment, or publication.

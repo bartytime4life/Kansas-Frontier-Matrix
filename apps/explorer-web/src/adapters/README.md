@@ -6,7 +6,7 @@ version: v0.4
 status: draft
 owners: OWNER_TBD — Apps steward · UI steward · Map steward · Governed API steward · Policy steward · Docs steward
 created: 2026-06-16
-updated: 2026-08-28
+updated: 2026-09-10
 policy_label: public
 owning_root: apps/
 responsibility: define Explorer Web app-local adapter boundaries and record verified bounded adapter implementations
@@ -36,7 +36,8 @@ notes:
   - "v0.2 updates the uploaded Explorer Web adapters README into a current repo-aware adapter-boundary contract."
   - "GovernedClient.ts now implements one closed, fixture-only Evidence Drawer projection parser with bounded fields, HTTPS citation checks, finite-outcome invariants, and no network behavior."
   - "planning-scenario-projection.ts implements one closed, synthetic fixture-only planning-scenario display parser with reference closure, finite negative outcomes, and false authority flags."
-  - "Live governed API transport, canonical schema binding, renderer wrappers, other adapters, runtime wiring, and deployment behavior remain NEEDS VERIFICATION."
+  - "AcsPopulationContextAdapter.ts implements bounded, transport-free, external-context fixture reconciliation without evidence, report, export, source-admission, release, or publication authority."
+  - "Live governed API transport, canonical schema binding, renderer wrappers, runtime wiring, and deployment behavior remain NEEDS VERIFICATION."
   - "Adapters may translate between Explorer Web UI code and governed API envelopes, renderer ports, evidence payloads, layer manifests, export requests, and diagnostics; they must not become source truth, policy authority, release authority, lifecycle storage, schema/contract authority, direct model surface, or renderer authority."
   - "Claim-bearing UI state must come from governed API envelopes, released or bounded-safe layer artifacts, EvidenceBundle-derived payloads, and finite states; adapters must not directly read RAW/WORK/QUARANTINE/PROCESSED/CATALOG/TRIPLET/PUBLISHED data roots or canonical/internal stores."
 [/KFM_META_BLOCK_V2] -->
@@ -111,7 +112,7 @@ Adapters should isolate integration details so route and component code can rema
 - export requests into governed export payloads;
 - diagnostics and telemetry into safe, non-secret UI diagnostics.
 
-Bounded Evidence Drawer and planning-scenario fixture parsers are implemented. Other adapters and live transport remain unproved.
+Bounded Evidence Drawer, planning-scenario, and ACS population fixture parsers are implemented. Live transport and broader runtime binding remain unproved.
 
 [Back to top](#top)
 
@@ -128,8 +129,10 @@ Bounded Evidence Drawer and planning-scenario fixture parsers are implemented. O
 | `apps/explorer-web/tests/evidence-drawer.test.ts` | **CONFIRMED bounded tests** | Covers accepted and rejected projections, negative-state no-leak behavior, size limits, and direct-store/network source guards. | Browser E2E behavior or complete accessibility. |
 | `apps/explorer-web/src/adapters/planning-scenario-projection.ts` | **CONFIRMED bounded executable** | Validates one closed, synthetic fixture-only scenario projection, evidence-reference closure, false authority flags, and finite outcomes without network access. | Scenario computation, policy or evidence resolution, live transport, recommendation authority, or production readiness. |
 | `apps/explorer-web/tests/planning-scenario-review.test.ts` | **CONFIRMED bounded tests** | Covers manifest-to-UI convergence, available and finite negative outcomes, malformed no-leak behavior, and transport/lifecycle/model/action source guards. | A live governed API integration, production route, recommendation behavior, or complete accessibility. |
+| `apps/explorer-web/src/adapters/AcsPopulationContextAdapter.ts` | **CONFIRMED bounded executable** | Reconciles one pinned ACS fixture, rejects non-`AVAILABLE` status, duplicate GEOIDs, vintage drift, and unsafe integer values, and emits context-only population fields. | Live Census transport, evidence authority, reporting/export eligibility, source admission, release, or publication. |
+| `apps/explorer-web/tests/acs-population-context.test.ts` | **CONFIRMED bounded tests** | Covers exact-vintage reconciliation, unknown status, complete duplicate rejection, safe integers, no-authority flags, and no network/storage mutation path. | Hosted replay, browser rendering, or production data availability. |
 | Uploaded adapter Markdown | **CONFIRMED source text for this update** | Provided the base adapter-boundary contract updated here. | Does not prove live implementation. |
-| Other adapter files and live transport | **NEEDS VERIFICATION** | Checkable by repo scan, import-boundary tests, fixtures, package scripts, and runtime evidence. | Not claimed by this README. |
+| Live transport and broader runtime binding | **NEEDS VERIFICATION** | Checkable by import-boundary tests, fixtures, package scripts, governed API evidence, and runtime evidence. | Not claimed by this README. |
 
 [Back to top](#top)
 

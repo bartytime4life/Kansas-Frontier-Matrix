@@ -2,9 +2,15 @@
 
 Status: **SAVED / NOT DEPLOYED**
 
-This record captures the review boundary for ChatGPT Sites project `appgprj_6aa0b1c41bc08191bfd86003920f1631` without asserting GitHub source parity, source admission, release, publication, or deployment.
+This record captures the observed saved-version boundary for ChatGPT Sites project `appgprj_6aa0b1c41bc08191bfd86003920f1631` without asserting that it is the repository-configured deployment target, GitHub source parity, source admission, release, publication, or deployment.
 
-## Immutable checkpoint
+> **Identity conflict — deployment held.** The saved v15 observation is associated with `appgprj_6aa0b1c41bc08191bfd86003920f1631`, while the repository hosting manifest, deployment receipt contract, validator, and app documentation pin `appgprj_6a870a079c1c8191abb7401ef092a181`. The two IDs are not treated as aliases. Deployment and rollback claims remain blocked until an authorized operator resolves the target identity and records the decision.
+
+## Observed saved-version checkpoint
+
+Observation window: **2026-09-10 UTC**. The connected Sites inspection exposed the project, version, source-commit, and archive identifiers below but did not return a separately durable observation receipt or exact response timestamp. “Current production” is therefore a time-bounded observation, not an immutable fact.
+
+Observation source: connected Sites project/version inspection for `appgprj_6aa0b1c41bc08191bfd86003920f1631`; repository comparison against `apps/kansas-frontier-matrix-explorer/contracts/sites-deployment-receipt.schema.json`, `scripts/validate-sites-deployment-receipt.mjs`, and `tests/hosting-boundary.test.mjs` at `main@4b950cb352b90406ab470dd722947580b2218df9`.
 
 - Site: https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site
 - Saved Site version: `15`

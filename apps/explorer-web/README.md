@@ -6,7 +6,7 @@ version: v0.8
 status: draft
 owners: OWNER_TBD — Apps steward · UI steward · Map steward · Governed API steward · Policy steward · Accessibility steward · Docs steward
 created: 2026-06-16
-updated: 2026-09-09
+updated: 2026-09-10
 policy_label: public
 owning_root: apps/
 responsibility: "Orient maintainers to the existing Explorer Web application, its actual composition, package boundaries, local commands, validation, and remaining graduation gates."
@@ -44,7 +44,7 @@ notes:
   - "Source inspection and test definitions are not fresh build, browser, hosted-CI, dependency-admission, deployment, release, or publication proof."
   - "The temporal conformance adapter is bounded implementation of a proposed shared profile, not a live synchronized temporal Explorer."
   - "v0.8 preserves the established app and package responsibility roots while changing the normal composition, code-owned catalog, package adapter input boundary, tests, and documentation; source admission and authority decisions remain unchanged."
-  - "The repository catalog/preflight extension adds 14 non-loadable connection cards, visible tool holds, 10 workbench links, matching-panel search, and stale-evidence clearing; it does not fulfill the held real-data acceptance slice."
+  - "The branch candidate extends the repository catalog/preflight surface to 15 non-loadable connection cards, visible tool holds, 10 workbench links, matching-panel search, and stale-evidence clearing; it does not fulfill the held real-data acceptance slice."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -70,7 +70,7 @@ notes:
 
 ## 0. Current evidence snapshot
 
-**Implementation base:** `main@f99736c0cd4b91592cc6e85531129c86f4dcbecb`, 2026-09-09. The Living Atlas repository catalog/preflight work is a draft branch candidate over that immutable base; the pin is not a green-build, merge, release, deployment, or public-operation claim.
+**Implementation base:** `main@4b950cb352b90406ab470dd722947580b2218df9`, 2026-09-10. The Living Atlas repository catalog/preflight work is a draft branch candidate over that immutable base; the pin is not a green-build, merge, release, deployment, or public-operation claim.
 
 | Surface | CONFIRMED at the pinned source | Limit |
 |---|---|---|
@@ -85,6 +85,8 @@ notes:
 | CI | [`ui-build.yml`](../../.github/workflows/ui-build.yml) defines separate filtered build and test jobs after frozen installation. | Workflow definitions and older green runs do not establish the current head's result or required-check enforcement. |
 | Shell decision | [ADR-0005](../../docs/adr/ADR-0005-apps-explorer-web-is-the-canonical-map-first-shell.md) remains `proposed`; [ADR-0006](../../docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md) accepts the package-owned renderer boundary. | Architecture acceptance, dependency admission, implementation, activation, and release are different transitions. |
 | Deployment and public operation | No deployment or live-site observation was performed for this README revision. | Hosting, authentication, CSP/CORS, service health, public data, release, and rollback readiness remain UNKNOWN here. |
+
+The current branch candidate—not the pinned source above—adds a fifteenth, documented-only earthquake connection and binds committed time to exact-bucket or timeless fixture visibility. It does not add an admitted source or factual map layer.
 
 ### Maturity summary
 

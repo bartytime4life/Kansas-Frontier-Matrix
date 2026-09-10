@@ -103,6 +103,24 @@ export const REPOSITORY_LAYER_CONNECTIONS: readonly RepositoryLayerConnection[] 
       relatedToolIds: ["source-watchlist", "layer-lineage"],
     }),
     connection({
+      id: "connection:usgs-earthquakes",
+      name: "USGS earthquake catalog candidate",
+      domain: "hazards",
+      geometryType: "POINT",
+      source: "USGS Earthquake Catalog",
+      state: "DOCUMENTED_ONLY",
+      summary: "The repository contains a README-only connector boundary and an inactive, unbound earthquake pipeline declaration; no source export is committed to UI fixtures.",
+      statusReason: "Connector placement remains ADR-class and unresolved. Source admission, canonical event identity, rights approval, lifecycle writes, EvidenceBundles, governed API answers, release, and publication are unimplemented.",
+      cannotProve: "Earthquake prediction, event completeness, exact Kansas jurisdiction membership, current conditions, impacts, safety, source activation, or public release.",
+      nextGate: "Resolve connector placement before code; then review source rights and define canonical alias/revision semantics before contracts, schemas, governed capture, deterministic transforms, evidence, policy, release, correction, and rollback.",
+      artifacts: [
+        artifact("CONNECTOR", "USGS earthquake connector boundary", "connectors/usgs-earthquake"),
+        artifact("PIPELINE_SPEC", "Inactive earthquake pipeline", "pipeline_specs/hazards/usgs_earthquake.yaml"),
+        artifact("CONTRACT", "Runtime layer admission", "contracts/runtime/layer_manifest_admission.md"),
+      ],
+      relatedToolIds: ["source-watchlist", "layer-lineage", "provenance"],
+    }),
+    connection({
       id: "connection:three-dep-terrain",
       name: "3DEP elevation and terrain",
       domain: "geology",
@@ -331,11 +349,11 @@ export const ATLAS_WORKBENCH_TOOLS: readonly AtlasWorkbenchTool[] = Object.freez
   workbench({ id: "streamflow-qc", name: "Streamflow quality dashboard", maturity: "FIXTURE_FIRST", summary: "Inspect quality, freshness, qualifiers, and correction state for streamflow observations.", featurePath: "apps/explorer-web/src/features/streamflow_qc_dashboard", catalogQuery: "Streamflow quality dashboard", relatedLayerConnectionIds: ["connection:nwis-observations"] }),
   workbench({ id: "soil-change", name: "Soil yearly change viewer", maturity: "FIXTURE_FIRST", summary: "Compare bounded soil projections while preserving component, horizon, method, and time identity.", featurePath: "apps/explorer-web/src/features/soil_yearly_change_viewer", catalogQuery: "Soil yearly change viewer", relatedLayerConnectionIds: ["connection:smap-soil-moisture"] }),
   workbench({ id: "ndvi-change", name: "County NDVI change panel", maturity: "FIXTURE_FIRST", summary: "Review vegetation-change projections with materiality and readiness limitations visible.", featurePath: "apps/explorer-web/src/features/county_ndvi_change_panel", catalogQuery: "County NDVI change panel", relatedLayerConnectionIds: ["connection:hls-ndvi"] }),
-  workbench({ id: "source-watchlist", name: "Source availability watchlist", maturity: "FIXTURE_FIRST", summary: "Inspect availability and staleness signals without activating a source.", featurePath: "apps/explorer-web/src/features/source_availability_watchlist", catalogQuery: "Source availability watchlist", relatedLayerConnectionIds: ["connection:nwis-observations", "connection:nfhl-context", "connection:wwc5-wells", "connection:wzdx-work-zones", "connection:hms-smoke", "connection:nws-alerts"] }),
+  workbench({ id: "source-watchlist", name: "Source availability watchlist", maturity: "FIXTURE_FIRST", summary: "Inspect availability and staleness signals without activating a source.", featurePath: "apps/explorer-web/src/features/source_availability_watchlist", catalogQuery: "Source availability watchlist", relatedLayerConnectionIds: ["connection:nwis-observations", "connection:nfhl-context", "connection:usgs-earthquakes", "connection:wwc5-wells", "connection:wzdx-work-zones", "connection:hms-smoke", "connection:nws-alerts"] }),
   workbench({ id: "stac-inspector", name: "STAC conformance inspector", maturity: "FIXTURE_FIRST", summary: "Inspect release-facing STAC metadata without reading raw or quarantine material.", featurePath: "apps/explorer-web/src/features/stac_conformance_inspector", catalogQuery: "STAC conformance inspector", relatedLayerConnectionIds: ["connection:three-dep-terrain", "connection:hls-ndvi", "connection:smap-soil-moisture"] }),
   workbench({ id: "pmtiles-diagnostics", name: "PMTiles range diagnostics", maturity: "FIXTURE_FIRST", summary: "Verify archive, range, index, and render behavior for governed artifacts.", featurePath: "apps/explorer-web/src/features/pmtiles_range_diagnostics", catalogQuery: "PMTiles range diagnostics", relatedLayerConnectionIds: ["connection:three-dep-terrain"] }),
-  workbench({ id: "layer-lineage", name: "Layer lineage timeline", maturity: "FIXTURE_FIRST", summary: "Inspect derivation, correction, supersession, and release lineage.", featurePath: "apps/explorer-web/src/features/layer_lineage_timeline", catalogQuery: "Layer lineage timeline", relatedLayerConnectionIds: ["connection:nhdplus-network", "connection:nfhl-context", "connection:kgs-bedrock", "connection:kgs-surficial", "connection:tiger-roads", "connection:wzdx-work-zones", "connection:hms-smoke", "connection:nws-alerts"] }),
-  workbench({ id: "provenance", name: "Provenance citations", maturity: "FIXTURE_FIRST", summary: "Inspect bounded provenance and citation projections for eligible evidence.", featurePath: "apps/explorer-web/src/features/provenance_citations", catalogQuery: "Provenance citations", relatedLayerConnectionIds: ["connection:wbd-huc12", "connection:nwis-observations"] }),
+  workbench({ id: "layer-lineage", name: "Layer lineage timeline", maturity: "FIXTURE_FIRST", summary: "Inspect derivation, correction, supersession, and release lineage.", featurePath: "apps/explorer-web/src/features/layer_lineage_timeline", catalogQuery: "Layer lineage timeline", relatedLayerConnectionIds: ["connection:nhdplus-network", "connection:nfhl-context", "connection:usgs-earthquakes", "connection:kgs-bedrock", "connection:kgs-surficial", "connection:tiger-roads", "connection:wzdx-work-zones", "connection:hms-smoke", "connection:nws-alerts"] }),
+  workbench({ id: "provenance", name: "Provenance citations", maturity: "FIXTURE_FIRST", summary: "Inspect bounded provenance and citation projections for eligible evidence.", featurePath: "apps/explorer-web/src/features/provenance_citations", catalogQuery: "Provenance citations", relatedLayerConnectionIds: ["connection:wbd-huc12", "connection:nwis-observations", "connection:usgs-earthquakes"] }),
 ]);
 
 export const findRepositoryLayerConnection = (

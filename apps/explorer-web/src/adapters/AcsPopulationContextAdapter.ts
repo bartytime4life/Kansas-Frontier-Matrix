@@ -71,15 +71,15 @@ function validRetrievedAt(value: unknown): boolean {
 export function reconcileAcsPopulationContext(
   countyReferences: readonly CountyReference[],
   input: Fixture,
-  options: Readonly<{ expectedVintage?: string; stale?: boolean }> = {},
+  options: Readonly<{ stale?: boolean }> = {},
 ): readonly AcsPopulationContext[] {
-  if (input.status === "UNAVAILABLE") {
-    return Object.freeze([result("UNAVAILABLE", "ACS context is unavailable; no zero or fallback value was produced.")]);
+  if (input.status !== "AVAILABLE") {
+    return Object.freeze([result("UNAVAILABLE", "ACS context is not explicitly AVAILABLE; no zero or fallback value was produced.")]);
   }
   if (input.sites_source_commit !== SITES_SOURCE_COMMIT || input.sites_archive_sha256 !== SITES_ARCHIVE_SHA256) {
     return Object.freeze([result("SOURCE_CHECKPOINT_MISMATCH", "The Sites source commit or saved archive digest does not match the reviewed v15 checkpoint.")]);
   }
-  if (input.dataset !== EXPECTED_DATASET || input.vintage !== (options.expectedVintage ?? EXPECTED_VINTAGE)) {
+  if (input.dataset !== EXPECTED_DATASET || input.vintage !== EXPECTED_VINTAGE) {
     return Object.freeze([result("UNEXPECTED_VINTAGE", "The ACS dataset identity or vintage does not match the pinned context contract.")]);
   }
   if (!validRetrievedAt(input.retrieved_at)) {
@@ -100,6 +100,13 @@ export function reconcileAcsPopulationContext(
     references.set(county.geoid, county);
   }
 
+  const rowCounts = new Map<string, number>();
+  for (const rawRow of input.rows) {
+    if (isRecord(rawRow) && typeof rawRow.GEOID === "string" && GEOID.test(rawRow.GEOID)) {
+      rowCounts.set(rawRow.GEOID, (rowCounts.get(rawRow.GEOID) ?? 0) + 1);
+    }
+  }
+
   const seenRows = new Set<string>();
   const output: AcsPopulationContext[] = [];
   for (const rawRow of input.rows) {
@@ -109,8 +116,9 @@ export function reconcileAcsPopulationContext(
     }
     const geoid = rawRow.GEOID;
     const county = references.get(geoid);
-    if (seenRows.has(geoid) || duplicateReferences.has(geoid)) {
+    if ((rowCounts.get(geoid) ?? 0) > 1 || duplicateReferences.has(geoid)) {
       output.push(result("DUPLICATE_GEOID", "Duplicate GEOID identity prevents a deterministic county join.", { geoid, countyName: county?.name }));
+      seenRows.add(geoid);
       continue;
     }
     seenRows.add(geoid);
@@ -118,12 +126,15 @@ export function reconcileAcsPopulationContext(
       output.push(result("UNMATCHED_GEOID", "The ACS GEOID has no matching county in the repository-owned reference projection.", { geoid }));
       continue;
     }
-    if (typeof rawRow[VARIABLE] !== "string" || !NON_NEGATIVE_INTEGER.test(rawRow[VARIABLE])) {
+    const population = typeof rawRow[VARIABLE] === "string" && NON_NEGATIVE_INTEGER.test(rawRow[VARIABLE])
+      ? Number(rawRow[VARIABLE])
+      : Number.NaN;
+    if (!Number.isSafeInteger(population)) {
       output.push(result("MALFORMED_ESTIMATE", "The ACS population estimate is missing or malformed; no value was inferred.", { geoid, countyName: county.name }));
       continue;
     }
     output.push(result("JOINED", "ACS aggregate population context joined by exact county GEOID.", {
-      geoid, countyName: county.name, population: Number(rawRow[VARIABLE]),
+      geoid, countyName: county.name, population,
     }));
   }
 
