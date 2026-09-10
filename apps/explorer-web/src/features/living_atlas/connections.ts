@@ -110,9 +110,9 @@ export const REPOSITORY_LAYER_CONNECTIONS: readonly RepositoryLayerConnection[] 
       source: "USGS Earthquake Catalog",
       state: "DOCUMENTED_ONLY",
       summary: "The repository contains a README-only connector boundary and an inactive, unbound earthquake pipeline declaration; no source export is committed to UI fixtures.",
-      statusReason: "Connector placement remains ADR-class and unresolved. Source admission, canonical event identity, rights approval, lifecycle writes, EvidenceBundles, governed API answers, release, and publication are unimplemented.",
+      statusReason: "Accepted connector and lifecycle responsibility roots exist, but canonical earthquake source identity, standalone-versus-USGS-family placement, ownership, rights approval, admission, lifecycle writes, EvidenceBundles, governed API answers, release, and publication are unresolved or unimplemented.",
       cannotProve: "Earthquake prediction, event completeness, exact Kansas jurisdiction membership, current conditions, impacts, safety, source activation, or public release.",
-      nextGate: "Resolve connector placement before code; then review source rights and define canonical alias/revision semantics before contracts, schemas, governed capture, deterministic transforms, evidence, policy, release, correction, and rollback.",
+      nextGate: "Resolve canonical earthquake source identity, standalone-versus-USGS-family placement, ownership, and rights before code; then define alias/revision semantics before contracts, schemas, governed capture, deterministic transforms, evidence, policy, release, correction, and rollback.",
       artifacts: [
         artifact("CONNECTOR", "USGS earthquake connector boundary", "connectors/usgs-earthquake"),
         artifact("PIPELINE_SPEC", "Inactive earthquake pipeline", "pipeline_specs/hazards/usgs_earthquake.yaml"),

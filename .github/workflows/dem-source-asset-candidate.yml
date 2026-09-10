@@ -70,6 +70,7 @@ jobs:
       - name: Check out candidate packet
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Set up Python 3.11
@@ -116,13 +117,14 @@ jobs:
           PYTHONPATH: ${{ github.workspace }}/tools/ci/kfm_no_network:${{ github.workspace }}
         run: python -m pytest -q tests/maplibre/test_package_exports.py
 
-      - name: Verify generated authoring receipt
+      - name: Replay immutable authoring receipt at the PR 4452 merge
         env:
           PYTHONPATH: ${{ github.workspace }}/tools/ci/kfm_no_network:${{ github.workspace }}
         run: >-
           python tools/validators/validate_generated_receipt.py
           data/receipts/generated/genrec-dem-source-asset-candidate-20260909.json
           --repo-root .
+          --artifact-git-ref 0d0dbf355370fa7271feabba8f5b6c9f35fdb3a8
 
       - name: Record authority boundary
         if: always()
@@ -133,6 +135,7 @@ jobs:
             echo
             echo "- Result: ${{ job.status }}."
             echo "- Scope: one hash-bound USGS 3DEP tile, authoritative metadata, closed fixture validation, and pure offline numeric sampling."
+            echo "- Receipt boundary: the immutable authoring receipt is replayed against PR #4452 merge commit 0d0dbf355370fa7271feabba8f5b6c9f35fdb3a8."
             echo "- Disposition: HOLD pending delivered-tile geoid, applicable vertical accuracy, and human review."
             echo "- Boundary: no source descriptor, activation, admission, remote raster request, runtime terrain, EvidenceBundle, lifecycle write, release, deployment, publication, or public-use authority."
           } >> "$GITHUB_STEP_SUMMARY"

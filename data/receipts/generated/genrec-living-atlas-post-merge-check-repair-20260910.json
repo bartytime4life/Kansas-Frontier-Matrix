@@ -1,0 +1,213 @@
+{
+  "receipt_id": "genrec:living-atlas-post-merge-check-repair:20260910",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/census-county-reference-candidate.yml",
+    ".github/workflows/dem-source-asset-candidate.yml",
+    ".gitignore",
+    "apps/explorer-web/README.md",
+    "apps/explorer-web/src/adapters/README.md",
+    "apps/explorer-web/src/adapters/acs-population-context-adapter.ts",
+    "apps/explorer-web/src/features/living_atlas/README.md",
+    "apps/explorer-web/src/features/living_atlas/connections.ts",
+    "apps/explorer-web/src/features/living_atlas/index.ts",
+    "apps/explorer-web/src/features/living_atlas/persistence.ts",
+    "apps/explorer-web/src/features/living_atlas/registry.ts",
+    "apps/explorer-web/src/site/README.md",
+    "apps/explorer-web/src/site/mount-living-atlas.ts",
+    "apps/explorer-web/tests/acs-population-context.test.ts",
+    "apps/explorer-web/tests/browser/living-atlas.spec.ts",
+    "apps/explorer-web/tests/living-atlas-persistence.test.ts",
+    "apps/explorer-web/tests/living-atlas.test.ts",
+    "docs/intake/NEW_IDEAS_INDEX.md",
+    "docs/intake/exploratory/living-atlas-deep-time-to-present-source-map-20260910.md",
+    "docs/intake/new-ideas-register.md",
+    "tests/source/test_census_cartographic_boundary_counties.py",
+    "tests/validators/test_validate_dem_source_asset_candidate.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/census-county-reference-candidate.yml": "sha256:a8a9bfe0cdd2b015cf26372a35eb5f3bc654dfe6adfb6f99b6d2f951a82794fa",
+    ".github/workflows/dem-source-asset-candidate.yml": "sha256:443f5db6f3e0f9657de9990becaf66a962ada4483028bbceb26366d4b5f4dc3f",
+    ".gitignore": "sha256:6d76410aa4aac55297f9b0ca4e3796ec03576c52ef4829c01d254cb637adb2f9",
+    "apps/explorer-web/README.md": "sha256:6a1cf94b52b7bb5a113985b0a0395415564ac3a097661f5b5826c07e5b4fb96f",
+    "apps/explorer-web/src/adapters/README.md": "sha256:b09cd02a97577fa2831b0f5ba42805e3f322a4a0ddb4edc60cda49e4d059aaa5",
+    "apps/explorer-web/src/adapters/acs-population-context-adapter.ts": "sha256:1bdd630e4a170eca1f90d7a6bb19cc3582701a2c741ab443beea645ad3c310bb",
+    "apps/explorer-web/src/features/living_atlas/README.md": "sha256:a15c825b8643c338a7dee18583b388f38b63cee73405329cf67db3c03b448487",
+    "apps/explorer-web/src/features/living_atlas/connections.ts": "sha256:4a2f64d2b8cb09052b9a5751d73d0296240746f0c415baa69da70d680ad4bf5b",
+    "apps/explorer-web/src/features/living_atlas/index.ts": "sha256:caff8582395709e8338531eca1b57d49faff1b6ac406aa087460f4082923382f",
+    "apps/explorer-web/src/features/living_atlas/persistence.ts": "sha256:8061dbe427045fda290b28953da9482f79c9ac3d22cb3ed6ed009a6c2dc60dca",
+    "apps/explorer-web/src/features/living_atlas/registry.ts": "sha256:256ceb1a63c9247e0da3617e55c92f1cd879a12e0e05a087b8778fbde68f773a",
+    "apps/explorer-web/src/site/README.md": "sha256:f5442fa91b53ace6820e8b2d53716eb36d37fc05d62e41ca5a66e58667923307",
+    "apps/explorer-web/src/site/mount-living-atlas.ts": "sha256:0e95940bd95c2c7f65aa3fac7bc3da9c48f78ee974d7a98e5b6b4ea6e5533b17",
+    "apps/explorer-web/tests/acs-population-context.test.ts": "sha256:58b56f616af56e5b0395eda95e1ec54f13667138f5737fc128b66bd14f6e878f",
+    "apps/explorer-web/tests/browser/living-atlas.spec.ts": "sha256:4bcb3b015cc0f4ccfd2a08f1a662201670b3a7929a32d47d16320a5a0d2e47af",
+    "apps/explorer-web/tests/living-atlas-persistence.test.ts": "sha256:ade5820da684e7bca451e945bef0c4c9e9f68536b6fc691758cad9a090fcf30b",
+    "apps/explorer-web/tests/living-atlas.test.ts": "sha256:5085451c9f9cf0b4b0b6e8852043393907b6c314e16d56963e5c9aa0e068cc7d",
+    "docs/intake/NEW_IDEAS_INDEX.md": "sha256:cca7286ec13e22ca2954994e40582f148d58f4bfed3ee6e254d24b3e36d64e56",
+    "docs/intake/exploratory/living-atlas-deep-time-to-present-source-map-20260910.md": "sha256:4cfe079f740a7218f89ea212264b88bd56396a4be7b8b6f19e9362777990160d",
+    "docs/intake/new-ideas-register.md": "sha256:c6537c10d85c091cd81836de7f889cad67b2b84b45dc35e0b51b124e874d7a53",
+    "tests/source/test_census_cartographic_boundary_counties.py": "sha256:f1d332d32db92b201b67091792151c88ca43c166af35e2877a98f03ecd2a9aee",
+    "tests/validators/test_validate_dem_source_asset_candidate.py": "sha256:66487f2432d7ba6f2106fb9a3003ed801a923d5ed66e1fac278fded8f8c660ec"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5"
+  },
+  "prompt_or_contract": "sha256:880acc1574b30d6c8f74ac902d32141a22bd12b4c842b65faf7a3f67d712a65a",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "filesystem",
+      "git",
+      "GitHub connector",
+      "Google Drive connector",
+      "Notion connector"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:a3b6acadbeb124a4c4c55a88199e13ea24290269a66203cd6905cace4d7a0bf2",
+      "sha256:391dacbd65c9ce5232d734c252045b3a90d78ab5fcbd9ac018dc021d0c9d0bd9",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbba6f3e56579693a272571e6e",
+      "sha256:060b20d6e28197faa8a9034ccb5a29b63621f73ebdeea1d2d77d31b23c2149e0"
+    ],
+    "attached_docs": [
+      "6362a3d8-b9b4-42c6-bdb4-269461383cce.png"
+    ],
+    "evidence_refs": [
+      "git:976935b8b55c66976a028b7880d1cbc57c0c3582",
+      "github:bartytime4life/Kansas-Frontier-Matrix:pull:4459:head:973dfa72d4bf36e3314af0aed58b883e3d6f0685",
+      "github:bartytime4life/Kansas-Frontier-Matrix:actions:run:34519470204",
+      "github:bartytime4life/Kansas-Frontier-Matrix:actions:run:34519306099",
+      "drive:1aivNyfMjQ8urQO6vjt4YvkT1ltF1t7fxCahEcnGV4Dw:revision:ANLCKQmbIBJeJfnrOGXeMIJuOArSxn-NabGKw6bcmPhOJcflq9uhJl5GWGSorXzULXW5iIFeGYR1lr57U6Fq__F0Wgeb1LMx6xe0llimt6g",
+      "notion:3d6a9202-1bf6-816c-ae0e-c1ccbd15e21e:observed:2026-09-10T19:16:53.727Z"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/census-county-reference-candidate.yml": "CONFIRMED",
+    ".github/workflows/dem-source-asset-candidate.yml": "CONFIRMED",
+    ".gitignore": "CONFIRMED",
+    "apps/explorer-web/README.md": "CONFIRMED",
+    "apps/explorer-web/src/adapters/README.md": "CONFIRMED",
+    "apps/explorer-web/src/adapters/acs-population-context-adapter.ts": "CONFIRMED",
+    "apps/explorer-web/src/features/living_atlas/README.md": "CONFIRMED",
+    "apps/explorer-web/src/features/living_atlas/connections.ts": "CONFIRMED",
+    "apps/explorer-web/src/features/living_atlas/index.ts": "CONFIRMED",
+    "apps/explorer-web/src/features/living_atlas/persistence.ts": "CONFIRMED",
+    "apps/explorer-web/src/features/living_atlas/registry.ts": "CONFIRMED",
+    "apps/explorer-web/src/site/README.md": "CONFIRMED",
+    "apps/explorer-web/src/site/mount-living-atlas.ts": "NEEDS VERIFICATION",
+    "apps/explorer-web/tests/acs-population-context.test.ts": "CONFIRMED",
+    "apps/explorer-web/tests/browser/living-atlas.spec.ts": "NEEDS VERIFICATION",
+    "apps/explorer-web/tests/living-atlas-persistence.test.ts": "CONFIRMED",
+    "apps/explorer-web/tests/living-atlas.test.ts": "CONFIRMED",
+    "docs/intake/NEW_IDEAS_INDEX.md": "PROPOSED",
+    "docs/intake/exploratory/living-atlas-deep-time-to-present-source-map-20260910.md": "PROPOSED",
+    "docs/intake/new-ideas-register.md": "PROPOSED",
+    "tests/source/test_census_cartographic_boundary_counties.py": "CONFIRMED",
+    "tests/validators/test_validate_dem_source_asset_candidate.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Explorer unit tests",
+      "outcome": "PASS",
+      "reason": "All 61 unit-test files and 499 tests passed locally."
+    },
+    {
+      "gate": "Explorer TypeScript and Vite production build",
+      "outcome": "PASS",
+      "reason": "TypeScript no-emit and the Vite production build passed; Vite reported a non-fatal large-chunk warning."
+    },
+    {
+      "gate": "Receipt workflow bindings and candidate validators",
+      "outcome": "PASS",
+      "reason": "All 24 focused Python tests passed, and both immutable receipts validated against their exact authoring or correction merge commits."
+    },
+    {
+      "gate": "Workflow security",
+      "outcome": "PASS",
+      "reason": "All 19 workflow-security tests passed and the 488-workflow static scan reported zero invariant, new-drift, or baseline findings."
+    },
+    {
+      "gate": "Critical Markdown structure",
+      "outcome": "PASS",
+      "reason": "The focused validator passed all seven changed Markdown documents with zero findings."
+    },
+    {
+      "gate": "Living Atlas Playwright behavior",
+      "outcome": "FAIL",
+      "reason": "The local runner has no installed Playwright Chromium executable, so all listed cases were blocked before page launch; exact-toolchain hosted replay is required."
+    },
+    {
+      "gate": "Changed-area repository topology",
+      "outcome": "FAIL",
+      "reason": "Six current-main topology aggregates remain unresolved. This repair removes one uppercase path but does not authorize catalog baseline mutation, ruleset weakening, or redirect retirement."
+    },
+    {
+      "gate": "Pinned local toolchain",
+      "outcome": "FAIL",
+      "reason": "The local runner exposes Node 24.19.0 and pnpm 11.19.0; the repository requires Node >=22.13 <23 and pins pnpm 11.17.0."
+    },
+    {
+      "gate": "Hosted exact-head checks",
+      "outcome": "SKIPPED",
+      "reason": "The follow-up pull request did not yet exist when this receipt was emitted."
+    },
+    {
+      "gate": "Human review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and is not inferred from automated review, merge state, or local validation."
+    },
+    {
+      "gate": "git diff --check",
+      "outcome": "PASS",
+      "reason": "The complete staged repair reported no whitespace errors before receipt emission."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "KFM Directory Rules and ADR-0029 at the repair base",
+      "validated": true,
+      "evidence_ref": "git:976935b8b55c66976a028b7880d1cbc57c0c3582:docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "Historical PR #4459 generation receipt",
+      "validated": true,
+      "evidence_ref": "git:976935b8b55c66976a028b7880d1cbc57c0c3582:data/receipts/generated/genrec-living-atlas-temporal-source-map-20260910.json"
+    },
+    {
+      "id": "GitHub PR #4459 and exact-head workflow logs",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4459"
+    },
+    {
+      "id": "KFM Explorer Living Atlas Design v0.1 connector revision",
+      "validated": true,
+      "evidence_ref": "drive:1aivNyfMjQ8urQO6vjt4YvkT1ltF1t7fxCahEcnGV4Dw:revision:ANLCKQmbIBJeJfnrOGXeMIJuOArSxn-NabGKw6bcmPhOJcflq9uhJl5GWGSorXzULXW5iIFeGYR1lr57U6Fq__F0Wgeb1LMx6xe0llimt6g"
+    },
+    {
+      "id": "Mutable Notion real-data delivery hub observation",
+      "validated": false,
+      "evidence_ref": "notion:3d6a9202-1bf6-816c-ae0e-c1ccbd15e21e:observed:2026-09-10T19:16:53.727Z"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-10T19:48:39Z",
+  "emitter": "OpenAI Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "This forward receipt records the repair proposal only and grants no approval, transition, release, deployment, or publication authority. It preserves the PR #4459 receipt as historical evidence, replays older DEM and Census receipts at their exact authoring boundaries, restores protected-detail DENY precedence, fixes Focus sequencing, preserves compatible temporal context, and strictly validates persisted drafts with a bounded legacy fallback. The obsolete uppercase ACS adapter path is removed and replaced by the hash-bound lowercase path listed above. PR #4459 merged without an exact transition record or recorded human approval; that event remains an incident rather than retroactive authorization."
+}

@@ -3,6 +3,7 @@ from __future__ import annotations
 import copy
 import importlib.util
 import json
+import re
 import subprocess
 import sys
 import tempfile
@@ -10,6 +11,7 @@ import unittest
 from pathlib import Path
 
 from jsonschema import Draft202012Validator
+import yaml
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 VALIDATOR = REPO_ROOT / "tools/validators/validate_dem_source_asset_candidate.py"
@@ -17,6 +19,9 @@ FIXTURES = REPO_ROOT / "fixtures/contracts/v1/spatial-foundation/dem_source_asse
 SCHEMA = REPO_ROOT / "schemas/contracts/v1/spatial-foundation/dem_source_asset_candidate.schema.json"
 WORKFLOW = REPO_ROOT / ".github/workflows/dem-source-asset-candidate.yml"
 NO_NETWORK_GUARD = REPO_ROOT / "tools/ci/kfm_no_network/sitecustomize.py"
+DEM_RECEIPT_NAME = "genrec-dem-source-asset-candidate-20260909.json"
+DEM_AUTHORING_MERGE_REF = "0d0dbf355370fa7271feabba8f5b6c9f35fdb3a8"
+DEM_RECEIPT_STEP_NAME = "Replay immutable authoring receipt at the PR 4452 merge"
 
 spec = importlib.util.spec_from_file_location("dem_source_asset_candidate_validator", VALIDATOR)
 assert spec and spec.loader
@@ -56,7 +61,7 @@ class DemSourceAssetCandidateTests(unittest.TestCase):
         for step_name in (
             "Validate exact inactive DEM candidate",
             "Verify renderer-neutral package exports",
-            "Verify generated authoring receipt",
+            DEM_RECEIPT_STEP_NAME,
         ):
             self.assertIn(
                 f"- name: {step_name}\n"
@@ -64,6 +69,34 @@ class DemSourceAssetCandidateTests(unittest.TestCase):
                 f"          {guard}\n",
                 workflow,
             )
+
+    def test_workflow_replays_immutable_receipt_at_exact_merge_ref(self) -> None:
+        workflow = yaml.safe_load(WORKFLOW.read_text(encoding="utf-8"))
+        steps = workflow["jobs"]["validate"]["steps"]
+
+        checkout_steps = [
+            step
+            for step in steps
+            if str(step.get("uses", "")).startswith("actions/checkout@")
+        ]
+        self.assertEqual(len(checkout_steps), 1)
+        self.assertEqual(checkout_steps[0]["with"]["fetch-depth"], 0)
+        self.assertFalse(checkout_steps[0]["with"]["persist-credentials"])
+
+        receipt_steps = [
+            step
+            for step in steps
+            if "validate_generated_receipt.py" in str(step.get("run", ""))
+            and DEM_RECEIPT_NAME in str(step.get("run", ""))
+        ]
+        self.assertEqual(len(receipt_steps), 1)
+        self.assertEqual(receipt_steps[0]["name"], DEM_RECEIPT_STEP_NAME)
+        receipt_command = str(receipt_steps[0]["run"])
+        self.assertIn("--repo-root .", receipt_command)
+        artifact_refs = re.findall(
+            r"--artifact-git-ref\s+([0-9a-f]{40})", receipt_command
+        )
+        self.assertEqual(artifact_refs, [DEM_AUTHORING_MERGE_REF])
 
     def test_fixture_suite_has_exact_polarity(self) -> None:
         ok, report = module.run_fixture_suite()

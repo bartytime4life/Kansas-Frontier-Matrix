@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 
 import fixture from "../../../fixtures/ui/acs_population_context/acs-2024-dp05-bounded.json";
-import adapterSource from "../src/adapters/AcsPopulationContextAdapter.ts?raw";
-import { reconcileAcsPopulationContext } from "../src/adapters/AcsPopulationContextAdapter";
+import adapterSource from "../src/adapters/acs-population-context-adapter.ts?raw";
+import { reconcileAcsPopulationContext } from "../src/adapters/acs-population-context-adapter";
 
 const counties = Object.freeze([
   Object.freeze({ geoid: "20053", name: "Ellsworth County" }),
@@ -35,7 +35,7 @@ describe("ACS population context reconciliation", () => {
     expect(reconcileAcsPopulationContext(counties, { ...fixture, vintage: "2023" })[0]).toMatchObject({ state: "UNEXPECTED_VINTAGE", population: null });
   });
 
-  it("fails closed when the saved Sites comparison checkpoint drifts", () => {
+  it("fails closed when the saved Sites archive-content checkpoint drifts", () => {
     expect(reconcileAcsPopulationContext(counties, { ...fixture, sites_source_commit: "0".repeat(40) })[0]).toMatchObject({
       state: "SOURCE_CHECKPOINT_MISMATCH", population: null,
     });

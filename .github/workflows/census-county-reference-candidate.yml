@@ -75,12 +75,12 @@ jobs:
           python -m pytest -q -p no:cacheprovider \
             tests/source/test_census_cartographic_boundary_counties.py
 
-      - name: Replay immutable authoring receipt at the PR 4453 merge
+      - name: Replay immutable corrected authoring receipt at the PR 4454 merge
         run: |
           python tools/validators/validate_generated_receipt.py \
             data/receipts/generated/genrec-census-county-reference-candidate-20260910.json \
             --repo-root . \
-            --artifact-git-ref 648f6fc0abaed6b787bb60f669f89b9e38162ec9
+            --artifact-git-ref b307481d14b68472975fc382a0d2e8caf9777615
 
       - name: Record validation boundary
         if: always()
@@ -90,6 +90,6 @@ jobs:
             echo
             echo "- Result: ${{ job.status }}"
             echo "- Scope: descriptor shape, synthetic no-network inspector tests, and receipt-byte closure"
-            echo "- Receipt boundary: the immutable authoring receipt is replayed against PR #4453 merge commit 648f6fc0abaed6b787bb60f669f89b9e38162ec9"
+            echo "- Receipt boundary: the immutable corrected authoring receipt is replayed against PR #4454 merge commit b307481d14b68472975fc382a0d2e8caf9777615"
             echo "- Boundary: not source custody, admission, rights approval, evidence, release, map activation, or publication"
           } >> "$GITHUB_STEP_SUMMARY"

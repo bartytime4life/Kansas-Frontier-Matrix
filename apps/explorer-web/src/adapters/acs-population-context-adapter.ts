@@ -1,5 +1,5 @@
 /**
- * Transport-free reconciliation adapter for the saved Sites v15 ACS context.
+ * Transport-free reconciliation adapter for pinned Sites archive ACS content.
  *
  * This adapter joins a bounded ACS fixture to an already-owned county reference
  * projection. It does not fetch TIGERweb geometry, admit a source, resolve
@@ -77,7 +77,7 @@ export function reconcileAcsPopulationContext(
     return Object.freeze([result("UNAVAILABLE", "ACS context is not explicitly AVAILABLE; no zero or fallback value was produced.")]);
   }
   if (input.sites_source_commit !== SITES_SOURCE_COMMIT || input.sites_archive_sha256 !== SITES_ARCHIVE_SHA256) {
-    return Object.freeze([result("SOURCE_CHECKPOINT_MISMATCH", "The Sites source commit or saved archive digest does not match the reviewed v15 checkpoint.")]);
+    return Object.freeze([result("SOURCE_CHECKPOINT_MISMATCH", "The Sites source commit or saved archive digest does not match the pinned archive-content checkpoint.")]);
   }
   if (input.dataset !== EXPECTED_DATASET || input.vintage !== EXPECTED_VINTAGE) {
     return Object.freeze([result("UNEXPECTED_VINTAGE", "The ACS dataset identity or vintage does not match the pinned context contract.")]);
