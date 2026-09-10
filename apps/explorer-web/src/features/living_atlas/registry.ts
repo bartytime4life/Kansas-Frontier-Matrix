@@ -264,6 +264,35 @@ export function findAtlasView(id: string): AtlasView | null {
   return ATLAS_VIEWS.find((entry) => entry.id === id) ?? null;
 }
 
+export function isLayerTemporallyCompatible(
+  temporalExtentId: string,
+  committedTimeId: string,
+): boolean {
+  return temporalExtentId === "time:timeless" || temporalExtentId === committedTimeId;
+}
+
+export function commitSnapshotTime(
+  snapshot: MapSnapshot,
+  committedTimeId: string,
+  now = new Date(),
+): MapSnapshot {
+  return Object.freeze({
+    ...snapshot,
+    capturedAt: now.toISOString(),
+    committedTimeId,
+    layers: Object.freeze(snapshot.layers.map((state) => {
+      const record = findLayerRecord(state.id);
+      return Object.freeze({
+        ...state,
+        visible: state.visible && record !== null &&
+          isLayerTemporallyCompatible(record.temporalExtentId, committedTimeId),
+      });
+    })),
+    selectedLayerId: null,
+    evidenceRefs: Object.freeze([]),
+  });
+}
+
 export function createInitialSnapshot(now = new Date()): MapSnapshot {
   const defaultView = ATLAS_VIEWS[0]!;
   return Object.freeze({

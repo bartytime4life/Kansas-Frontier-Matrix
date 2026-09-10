@@ -13,7 +13,7 @@ The composition:
 - mounts the existing renderer-neutral `map_runtime` selection-to-Evidence-Drawer bridge with deterministic synthetic cases;
 - mounts the existing finite `MapRuntimePort` trust-status presenter in the normal map workspace through the dependency-free `NullMapRuntime`;
 - mounts the package-owned MapLibre adapter with an inline-only site-local style and no external resources;
-- presents 18 typed default-view records, 24 typed layer/evidence records, explicit data holds, Source Observatory, deep-time preview/commit, and draft-only report/story capture;
+- presents 18 typed default-view records, 24 typed layer/evidence records, explicit data holds, a Source Observatory with 15 repository candidates, deep-time preview/commit, and draft-only report/story capture;
 - projects its existing public anchors through a code-owned workspace registry;
 - builds the fixed illustrative SVG stage with namespace-aware DOM nodes and text content rather than parsing an HTML string; and
 - composes existing finite-state features into one text-first public trust surface.
@@ -81,9 +81,9 @@ Refresh `catalog.ts` again when repository authority, feature inventory, or matu
 
 ## Repository catalog/preflight slice
 
-The Living Atlas exposes 14 repository-backed candidates and 10 existing workbench links as non-loadable discovery metadata. Available connector, declarative `pipeline_specs/`, and contract paths retain distinct visible labels; missing stages stay absent rather than being fabricated. Candidate maturity is not runtime availability, representation, review, or release state; real source admission and `EvidenceBundle` transport remain separate held work.
+The Living Atlas exposes 15 repository-backed candidates and 10 existing workbench links as non-loadable discovery metadata. Available connector, declarative `pipeline_specs/`, and contract paths retain distinct visible labels; missing stages stay absent rather than being fabricated. Candidate maturity is not runtime availability, representation, review, or release state; real source admission and `EvidenceBundle` transport remain separate held work.
 
-The catalog search moves to the first rail panel containing a match, held map tools expose `HELD` in their button text, and inspecting a repository candidate clears any prior selected runtime layer and evidence references before report/story capture. A selected design/data-held view constrains subsequent layer inspection and Focus evaluation to `ABSTAIN / VIEW_DATA_HELD` with empty eligible evidence; protected-layer `DENY` remains higher precedence. Draft reports keep the held view and selection identity while excluding held evidence references. These are browser-composition behaviors only; they do not activate a connector, pipeline, layer, tool, source, or publication path.
+The catalog search moves to the first rail panel containing a match, held map tools expose `HELD` in their button text, and inspecting a repository candidate clears any prior selected runtime layer and evidence references before report/story capture. A selected design/data-held view constrains subsequent layer inspection and Focus evaluation to `ABSTAIN / VIEW_DATA_HELD` with empty eligible evidence; protected-layer `DENY` remains higher precedence. A committed time change disables out-of-time layer controls, clears incompatible visible state, selection, and evidence, and rebuilds the inline map; v2 local-storage keys deliberately leave pre-invariant v1 drafts unread. Draft reports keep only the current bounded snapshot. These are browser-composition behaviors only; they do not activate a connector, pipeline, layer, tool, source, or publication path.
 
 ## Trust boundary
 
@@ -119,7 +119,7 @@ pnpm run test:unit
 pnpm run test:browser
 ```
 
-The catalog and Living Atlas tests check identifier/path uniqueness, the thirteen-domain inventory, all 18 views, 24 layers, 14 repository connections, four map controls, and 10 workbench links; source/evidence binding; declarative pipeline-specification labels; held-view abstention; sensitive-detail denial precedence; network-free style construction; multiscale time; and finite Focus outcomes. Browser checks also cover visible holds, matching-panel search, workbench handoff, held-view inspection, and evidence exclusion before draft capture. Workspace tests cover registry/context/URL behavior. Renderer, trust-surface, and Evidence Drawer tests preserve the no-network boundary, finite negative states, unique DOM identity, accessible relationships, and error suppression.
+The catalog and Living Atlas tests check identifier/path uniqueness, the thirteen-domain inventory, all 18 views, 24 layers, 15 repository connections, four map controls, and 10 workbench links; source/evidence binding; declarative pipeline-specification labels; held-view abstention; sensitive-detail denial precedence; network-free style construction; multiscale time; and finite Focus outcomes. Browser checks also cover visible holds, matching-panel search, workbench handoff, held-view inspection, and evidence exclusion before draft capture. Workspace tests cover registry/context/URL behavior. Renderer, trust-surface, and Evidence Drawer tests preserve the no-network boundary, finite negative states, unique DOM identity, accessible relationships, and error suppression.
 
 ## Rollback
 

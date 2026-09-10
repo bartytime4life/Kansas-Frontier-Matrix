@@ -9,6 +9,7 @@ import {
   REPOSITORY_LAYER_CONNECTIONS,
   SOURCE_DESCRIPTORS,
   TEMPORAL_EXTENTS,
+  commitSnapshotTime,
   createInitialSnapshot,
   createLivingAtlasStyle,
   evaluateFocusSelection,
@@ -19,6 +20,7 @@ import {
   findRepositoryLayerConnection,
   findSourceDescriptor,
   findTemporalExtent,
+  isLayerTemporallyCompatible,
   type MapRepresentation,
   type MapSnapshot,
   type ReportDraft,
@@ -202,15 +204,17 @@ export function mountLivingAtlasWorkspace(
   let snapshot = createInitialSnapshot();
   let previewTimeId = snapshot.committedTimeId;
   let runtime: MapRuntimePort | null = null;
+  let unsubscribeRuntime: (() => void) | null = null;
+  let runtimeGeneration = 0;
   let reports = [
     ...readDrafts<ReportDraft>(
-      "kfm.explorer.report-drafts.v1",
+      "kfm.explorer.report-drafts.v2",
       "kfm.explorer.report-draft.v1",
     ),
   ];
   let stories = [
     ...readDrafts<StoryScene>(
-      "kfm.explorer.story-scenes.v1",
+      "kfm.explorer.story-scenes.v2",
       "kfm.explorer.story-scene.v1",
     ),
   ];
@@ -621,29 +625,52 @@ export function mountLivingAtlasWorkspace(
   workspace.append(topbar, mapMode, reportsMode, storiesMode, composer);
   host.replaceChildren(workspace);
 
+  const layerMatchesCommittedTime = (layerId: string): boolean => {
+    const record = findLayerRecord(layerId);
+    return record !== null && isLayerTemporallyCompatible(
+      record.temporalExtentId,
+      snapshot.committedTimeId,
+    );
+  };
+
   const refreshLayerControls = (): void => {
     layerList.querySelectorAll<HTMLInputElement>("[data-layer-toggle]").forEach((control) => {
-      control.checked = snapshot.layers.find((entry) => entry.id === control.dataset.layerToggle)?.visible ?? false;
+      const layerId = control.dataset.layerToggle ?? "";
+      const record = findLayerRecord(layerId);
+      const temporallyCompatible = layerMatchesCommittedTime(layerId);
+      control.checked = temporallyCompatible &&
+        (snapshot.layers.find((entry) => entry.id === layerId)?.visible ?? false);
+      control.disabled = record?.availability !== "AVAILABLE" || !temporallyCompatible;
     });
   };
 
   const initializeRuntime = (): void => {
+    const generation = ++runtimeGeneration;
+    unsubscribeRuntime?.();
+    unsubscribeRuntime = null;
     runtime?.dispose();
     mapCanvas.replaceChildren();
     runtimeState.textContent = "Map runtime initializing…";
-    runtime = createViteMapLibreAdapter({
+    const nextRuntime = createViteMapLibreAdapter({
       containerId: mapCanvas.id,
       interactive: true,
-      style: createLivingAtlasStyle(snapshot.representation, snapshot.layers),
+      style: createLivingAtlasStyle(
+        snapshot.representation,
+        snapshot.layers,
+        snapshot.committedTimeId,
+      ),
       initializationDeadlineMs: 8_000,
     });
-    cleanup.push(runtime.subscribeSnapshot((state) => {
+    runtime = nextRuntime;
+    unsubscribeRuntime = nextRuntime.subscribeSnapshot((state) => {
+      if (generation !== runtimeGeneration || runtime !== nextRuntime) return;
       runtimeState.textContent = `Renderer ${state.state}${state.reason === null ? "" : ` · ${state.reason}`}`;
       if (state.state === "READY") {
         snapshot = cloneSnapshot(snapshot, { camera: state.camera });
       }
-    }));
-    void runtime.initialize(snapshot.camera).catch(() => {
+    });
+    void nextRuntime.initialize(snapshot.camera).catch(() => {
+      if (generation !== runtimeGeneration || runtime !== nextRuntime) return;
       runtimeState.textContent = "Renderer ERROR · no factual fallback";
     });
   };
@@ -652,7 +679,11 @@ export function mountLivingAtlasWorkspace(
     const view = findAtlasView(viewId);
     if (view === null) return;
     if (view.status === "DESIGN_DATA_HOLD") {
-      const selectedLayerId = view.layerIds[0] ?? null;
+      const candidateLayerId = view.layerIds[0] ?? null;
+      const selectedLayerId = candidateLayerId !== null &&
+          layerMatchesCommittedTime(candidateLayerId)
+        ? candidateLayerId
+        : null;
       const decision = evaluateFocusSelection(selectedLayerId, false, view.id);
       snapshot = cloneSnapshot(snapshot, {
         activeViewId: view.id,
@@ -677,10 +708,18 @@ export function mountLivingAtlasWorkspace(
       representation: usableRepresentation,
       camera: view.camera,
       committedTimeId: view.temporalExtentId,
-      layers: Object.freeze(snapshot.layers.map((state) => Object.freeze({
-        ...state,
-        visible: view.layerIds.includes(state.id) && findLayerRecord(state.id)?.availability === "AVAILABLE",
-      }))),
+      layers: Object.freeze(snapshot.layers.map((state) => {
+        const record = findLayerRecord(state.id);
+        return Object.freeze({
+          ...state,
+          visible: view.layerIds.includes(state.id) &&
+            record?.availability === "AVAILABLE" &&
+            isLayerTemporallyCompatible(
+              record.temporalExtentId,
+              view.temporalExtentId,
+            ),
+        });
+      })),
       selectedLayerId: null,
       evidenceRefs: Object.freeze([]),
     });
@@ -718,7 +757,7 @@ export function mountLivingAtlasWorkspace(
       publishable: false,
     });
     reports = [draft, ...reports];
-    writeDrafts("kfm.explorer.report-drafts.v1", reports);
+    writeDrafts("kfm.explorer.report-drafts.v2", reports);
     renderReports();
     composer.hidden = true;
     activateMode("reports");
@@ -738,7 +777,7 @@ export function mountLivingAtlasWorkspace(
       lifecycle: "DRAFT",
     });
     stories = [...stories, scene];
-    writeDrafts("kfm.explorer.story-scenes.v1", stories);
+    writeDrafts("kfm.explorer.story-scenes.v2", stories);
     renderStories();
     composer.hidden = true;
     activateMode("stories");
@@ -807,6 +846,15 @@ export function mountLivingAtlasWorkspace(
     } else if (action.startsWith("view:")) activateView(action.slice(5));
     else if (action.startsWith("inspect:")) {
       const layerId = action.slice(8);
+      if (!layerMatchesCommittedTime(layerId)) {
+        snapshot = cloneSnapshot(snapshot, {
+          selectedLayerId: null,
+          evidenceRefs: Object.freeze([]),
+        });
+        renderEvidence(null);
+        runtimeState.textContent = "ABSTAIN · Layer is outside the committed time bucket";
+        return;
+      }
       const decision = evaluateFocusSelection(
         layerId,
         false,
@@ -850,15 +898,18 @@ export function mountLivingAtlasWorkspace(
         initializeRuntime();
       }
     } else if (action === "time:commit") {
-      snapshot = cloneSnapshot(snapshot, { committedTimeId: previewTimeId });
+      snapshot = commitSnapshotTime(snapshot, previewTimeId);
       timeDetail.textContent = `Committed to map snapshot · ${new Date().toLocaleTimeString()}`;
+      refreshLayerControls();
+      renderEvidence(null);
+      initializeRuntime();
     } else if (action === "composer:open") composer.hidden = false;
     else if (action === "composer:close") composer.hidden = true;
     else if (action === "create:report") createReport();
     else if (action === "create:story") createStory();
     else if (action === "create:trust-story") {
       stories = [...stories, ...seedTrustStory()];
-      writeDrafts("kfm.explorer.story-scenes.v1", stories);
+      writeDrafts("kfm.explorer.story-scenes.v2", stories);
       renderStories();
     } else if (action === "focus:run" || action === "focus:error") {
       const decision = evaluateFocusSelection(
@@ -876,6 +927,11 @@ export function mountLivingAtlasWorkspace(
     const control = event.target as HTMLInputElement;
     const layerId = control.dataset.layerToggle;
     if (!layerId) return;
+    if (!layerMatchesCommittedTime(layerId)) {
+      control.checked = false;
+      runtimeState.textContent = "ABSTAIN · Layer is outside the committed time bucket";
+      return;
+    }
     snapshot = cloneSnapshot(snapshot, { layers: Object.freeze(snapshot.layers.map((state) => state.id === layerId ? Object.freeze({ ...state, visible: control.checked }) : state)) });
     initializeRuntime();
   };
@@ -930,11 +986,15 @@ export function mountLivingAtlasWorkspace(
     () => document.removeEventListener("keydown", handleKeydown),
   );
 
+  refreshLayerControls();
   initializeRuntime();
 
   return Object.freeze({
     destroy: () => {
       cleanup.forEach((fn) => fn());
+      runtimeGeneration += 1;
+      unsubscribeRuntime?.();
+      unsubscribeRuntime = null;
       runtime?.dispose();
       runtime = null;
       host.replaceChildren();

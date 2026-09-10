@@ -24,8 +24,10 @@ describe("ACS population context reconciliation", () => {
   it("does not convert an empty or unavailable response into zero population", () => {
     const empty = reconcileAcsPopulationContext(counties, { ...fixture, rows: [] });
     const unavailable = reconcileAcsPopulationContext(counties, { ...fixture, status: "UNAVAILABLE" });
+    const unknown = reconcileAcsPopulationContext(counties, { ...fixture, status: "PARTIAL" });
     expect(empty).toEqual([expect.objectContaining({ state: "EMPTY_RESPONSE", population: null })]);
     expect(unavailable).toEqual([expect.objectContaining({ state: "UNAVAILABLE", population: null })]);
+    expect(unknown).toEqual([expect.objectContaining({ state: "UNAVAILABLE", population: null })]);
   });
 
   it("fails closed on stale or unexpected vintage", () => {
@@ -50,8 +52,19 @@ describe("ACS population context reconciliation", () => {
       ],
     };
     expect(reconcileAcsPopulationContext([...counties, { geoid: "20001", name: "Allen County" }], input).map((item) => item.state)).toEqual([
-      "JOINED", "DUPLICATE_GEOID", "UNMATCHED_GEOID", "MALFORMED_ESTIMATE", "MISSING_ACS_ROW",
+      "DUPLICATE_GEOID", "DUPLICATE_GEOID", "UNMATCHED_GEOID", "MALFORMED_ESTIMATE", "MISSING_ACS_ROW",
     ]);
+  });
+
+  it("rejects population strings that cannot be represented as safe integers", () => {
+    const output = reconcileAcsPopulationContext(counties, {
+      ...fixture,
+      rows: [{ GEOID: "20053", DP05_0001E: "9007199254740993" }],
+    });
+    expect(output[0]).toMatchObject({
+      state: "MALFORMED_ESTIMATE",
+      population: null,
+    });
   });
 
   it("contains no network, storage, evidence resolution, report, export, or lifecycle mutation path", () => {

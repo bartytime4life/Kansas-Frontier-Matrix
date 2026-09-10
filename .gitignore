@@ -42,3 +42,4 @@ receipts/
 
 # Local/CI test artifacts
 artifacts/qa/*.xml
+test-results/

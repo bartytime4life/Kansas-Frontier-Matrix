@@ -10,6 +10,7 @@ import {
   TEMPORAL_EXTENTS,
   createInitialSnapshot,
   createLivingAtlasStyle,
+  commitSnapshotTime,
   evaluateFocusSelection,
 } from "../src/features/living_atlas";
 
@@ -44,7 +45,7 @@ describe("Living Atlas governed foundation", () => {
   });
 
   it("maps repository layer candidates without treating them as runtime admission", () => {
-    expect(REPOSITORY_LAYER_CONNECTIONS).toHaveLength(14);
+    expect(REPOSITORY_LAYER_CONNECTIONS).toHaveLength(15);
     expect(
       REPOSITORY_LAYER_CONNECTIONS.filter(
         (entry) => entry.state === "FIXTURE_ONLY",
@@ -58,6 +59,16 @@ describe("Living Atlas governed foundation", () => {
       state: "FIXTURE_ONLY",
       statusReason: expect.stringContaining("no source descriptor"),
       cannotProve: expect.stringContaining("admission"),
+    });
+    expect(
+      REPOSITORY_LAYER_CONNECTIONS.find(
+        (entry) => entry.id === "connection:usgs-earthquakes",
+      ),
+    ).toMatchObject({
+      state: "DOCUMENTED_ONLY",
+      geometryType: "POINT",
+      statusReason: expect.stringContaining("placement remains ADR-class"),
+      cannotProve: expect.stringContaining("prediction"),
     });
     expect(
       REPOSITORY_LAYER_CONNECTIONS.every(
@@ -162,9 +173,65 @@ describe("Living Atlas governed foundation", () => {
 
   it("creates a network-free inline MapLibre style", () => {
     const snapshot = createInitialSnapshot();
-    const style = createLivingAtlasStyle("GLOBE", snapshot.layers);
+    const style = createLivingAtlasStyle(
+      "GLOBE",
+      snapshot.layers,
+      snapshot.committedTimeId,
+    );
     expect(style.projection).toMatchObject({ type: "globe" });
     expect(JSON.stringify(style)).not.toMatch(/https?:|pmtiles:|data:|blob:|file:/i);
     expect(Object.values(style.sources ?? {}).every((source) => source.type === "geojson")).toBe(true);
+  });
+
+  it("applies committed time to map visibility while preserving timeless context", () => {
+    const snapshot = createInitialSnapshot();
+    const layerStates = snapshot.layers.map((entry) => Object.freeze({
+      ...entry,
+      visible: [
+        "layer:kansas-frame",
+        "layer:county-locators",
+        "layer:rail-study",
+      ].includes(entry.id),
+    }));
+    const modern = createLivingAtlasStyle("2D", layerStates, "time:modern");
+    const twentiethCentury = createLivingAtlasStyle(
+      "2D",
+      layerStates,
+      "time:1900s",
+    );
+    const visibility = (style: ReturnType<typeof createLivingAtlasStyle>, id: string) =>
+      style.layers?.find((entry) => entry.id === id)?.layout?.visibility;
+
+    expect(visibility(modern, "layer:kansas-frame")).toBe("visible");
+    expect(visibility(modern, "layer:county-locators")).toBe("visible");
+    expect(visibility(modern, "layer:rail-study")).toBe("none");
+    expect(visibility(twentiethCentury, "layer:kansas-frame")).toBe("visible");
+    expect(visibility(twentiethCentury, "layer:county-locators")).toBe("none");
+    expect(visibility(twentiethCentury, "layer:rail-study")).toBe("visible");
+  });
+
+  it("clears stale selection and evidence when committing a different time bucket", () => {
+    const snapshot = createInitialSnapshot(new Date("2026-09-10T00:00:00.000Z"));
+    const selected = Object.freeze({
+      ...snapshot,
+      selectedLayerId: "layer:county-locators",
+      evidenceRefs: Object.freeze(["evidence:site-local-county-locators"]),
+    });
+    const committed = commitSnapshotTime(
+      selected,
+      "time:1900s",
+      new Date("2026-09-10T01:00:00.000Z"),
+    );
+
+    expect(committed).toMatchObject({
+      committedTimeId: "time:1900s",
+      selectedLayerId: null,
+      evidenceRefs: [],
+      capturedAt: "2026-09-10T01:00:00.000Z",
+    });
+    expect(committed.layers.find((entry) => entry.id === "layer:county-locators")?.visible)
+      .toBe(false);
+    expect(committed.layers.find((entry) => entry.id === "layer:kansas-frame")?.visible)
+      .toBe(true);
   });
 });

@@ -1,6 +1,6 @@
 import type { MapLibreSafeStyle } from "@kfm/maplibre/vite-adapter";
 
-import { LAYER_RECORDS } from "./registry";
+import { isLayerTemporallyCompatible, LAYER_RECORDS } from "./registry";
 import type { MapLayerState, MapRepresentation } from "./types";
 
 type Position = [number, number];
@@ -101,6 +101,7 @@ function layerState(
 export function createLivingAtlasStyle(
   representation: MapRepresentation,
   states: readonly MapLayerState[],
+  committedTimeId = "time:modern",
 ): MapLibreSafeStyle {
   const renderable = LAYER_RECORDS.filter(
     (record) => record.representation === "MAPLIBRE_INLINE",
@@ -143,6 +144,10 @@ export function createLivingAtlasStyle(
       },
       ...renderable.map((record) => {
         const state = layerState(states, record.id);
+        const temporallyCompatible = isLayerTemporallyCompatible(
+          record.temporalExtentId,
+          committedTimeId,
+        );
         const filter: ["==", ["get", string], string] | undefined =
           record.id === "layer:kansas-frame"
             ? undefined
@@ -158,7 +163,10 @@ export function createLivingAtlasStyle(
                   ? "kfm-domain-polygons"
                   : "kfm-domain-lines",
           filter,
-          layout: { visibility: state.visible ? "visible" : "none" },
+          layout: {
+            visibility:
+              state.visible && temporallyCompatible ? "visible" : "none",
+          },
         } as const;
         if (record.geometryType === "POINT") {
           return {
