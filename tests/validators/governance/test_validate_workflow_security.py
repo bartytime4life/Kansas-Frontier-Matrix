@@ -9,7 +9,7 @@ import tempfile
 import unittest
 from datetime import date
 from pathlib import Path
-from contextlib import redirect_stdout
+from contextlib import ExitStack, redirect_stdout
 from unittest import mock
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -469,6 +469,156 @@ jobs:
         report = json.loads(first.stdout)
         self.assertEqual("PASS", report["outcome"])
         self.assertNotIn("duration", first.stdout)
+
+    def _duplicate_key_cases(self) -> dict[str, tuple[str, str]]:
+        """Synthetic parser controls; none establishes GitHub runtime semantics."""
+        safe = self._safe_workflow()
+        credential = "          persist-credentials: false"
+        step = "      - uses: actions/checkout@" + "a" * 40
+        return {
+            "persist-false-true": (safe.replace(credential, credential + "\n          persist-credentials: true # duplicate"), "persist-credentials"),
+            "persist-true-false": (safe.replace(credential, "          persist-credentials: true\n" + credential + " # duplicate"), "persist-credentials"),
+            "persist-same-value": (safe.replace(credential, credential + "\n" + credential + " # duplicate"), "persist-credentials"),
+            "job-permissions-inline": (safe.replace("    steps:", "    permissions: {contents: read}\n    permissions: {contents: write} # duplicate\n    steps:"), "permissions"),
+            "job-permissions-block": (safe.replace("    steps:", "    permissions:\n      contents: read\n    permissions: # duplicate\n      contents: write\n    steps:"), "permissions"),
+            "permission-member": (safe.replace("    steps:", "    permissions:\n      contents: write\n      contents: read # duplicate\n    steps:"), "contents"),
+            "with-block": (safe.replace(credential, credential + "\n        with: # duplicate\n          persist-credentials: true"), "with"),
+            "with-empty-override": (safe.replace(credential, credential + "\n        with: {} # duplicate"), "with"),
+            "step-first-key": (safe.replace(step, step + "\n        uses: actions/checkout@" + "a" * 40 + " # duplicate"), "uses"),
+            "run-first-key": (safe.replace("      - run: python -m unittest", "      - run: echo first\n        run: echo second # duplicate"), "run"),
+            "after-leading-run": (safe.replace("      - run: python -m unittest", "      - run: echo safe\n        env:\n          FLAG: first\n        env: # duplicate\n          FLAG: second"), "env"),
+            "duplicate-job-id": (safe + safe.split("jobs:\n", 1)[1].replace("  validate:", "  validate: # duplicate", 1), "validate"),
+            "duplicate-steps": (safe + "    steps: # duplicate\n" + safe.split("    steps:\n", 1)[1], "steps"),
+            "duplicate-trigger": (safe.replace("  pull_request:", "  pull_request:\n  pull_request: # duplicate"), "pull_request"),
+        }
+
+    def test_duplicate_mapping_keys_fail_with_exact_invariant_diagnostics(self) -> None:
+        for name, (text, key) in self._duplicate_key_cases().items():
+            with self.subTest(case=name):
+                self._write("duplicate.yml", text)
+                findings, count = module.scan(self.root)
+                self.assertEqual(1, count)
+                self.assertEqual(1, len(findings), findings)
+                finding = findings[0]
+                line = next(i + 1 for i, value in enumerate(text.strip().splitlines()) if "# duplicate" in value)
+                self.assertEqual("KFM-WF-001", finding.rule_id)
+                self.assertEqual(line, finding.line)
+                self.assertEqual(f"yaml-line={line}", finding.subject)
+                self.assertEqual(module._digest(f"DUPLICATE_MAPPING_KEY:{key}"), finding.evidence_sha256)
+                code, report = module.evaluate(findings, count, {}, as_of=date(2026, 9, 10))
+                self.assertEqual((1, "FAIL_INVARIANT"), (code, report["outcome"]))
+                self.assertEqual("FAIL_INVARIANT", report["findings"][0]["disposition"])
+
+    def test_duplicate_inline_security_members_fail_closed(self) -> None:
+        safe = self._safe_workflow()
+        for key, text in {
+            "with": safe.replace("        with:\n          persist-credentials: false", "        with: {persist-credentials: false, persist-credentials: true}"),
+            "permissions": safe.replace("    steps:", "    permissions: {contents: read, contents: write}\n    steps:"),
+        }.items():
+            with self.subTest(key=key):
+                self._write("inline.yml", text)
+                findings, count = module.scan(self.root)
+                self.assertEqual(1, len(findings), findings)
+                self.assertEqual("KFM-WF-001", findings[0].rule_id)
+                self.assertEqual(module._digest(f"AMBIGUOUS_INLINE_MAPPING:{key}"), findings[0].evidence_sha256)
+                code, report = module.evaluate(findings, count, {})
+                self.assertEqual((1, "FAIL_INVARIANT"), (code, report["outcome"]))
+
+    def test_duplicate_scope_controls_remain_pass(self) -> None:
+        safe = self._safe_workflow()
+        checkout = safe.split("    steps:\n", 1)[1].split("      - run:", 1)[0]
+        job = safe.split("jobs:\n", 1)[1].replace("  validate:", "  other:", 1)
+        cases = {
+            "unique": safe,
+            "separate-jobs": safe + job,
+            "separate-steps": safe.replace("      - run:", checkout + "      - run:"),
+            "separate-child-maps": safe.replace("        with:", "        env:\n          FLAG: first\n        with:\n          FLAG: second"),
+            "empty-dash-items": safe.replace("      - uses:", "      -\n        uses:").replace("      - run:", "      -\n        run:"),
+            "inline-unique": safe.replace("        with:\n          persist-credentials: false", "        with: {persist-credentials: 'false'}"),
+            "comments": safe.replace("          persist-credentials: false", "          persist-credentials: false\n          # persist-credentials: true\n          # with: {}"),
+        }
+        for key in ("path", "cache-dependency-path"):
+            cases[key] = safe.replace("          persist-credentials: false", "          persist-credentials: false\n          " + key + ": |\n            entry: first\n            entry: second")
+        for marker in ("|", "|-", "|+", ">", ">-", ">+"):
+            cases["run-" + marker] = safe.replace("      - run: python -m unittest", "      - run: " + marker + "\n          entry: first\n          entry: second")
+        for name, text in cases.items():
+            with self.subTest(case=name):
+                self._write("safe.yml", text)
+                findings, count = module.scan(self.root)
+                self.assertEqual((), findings)
+                code, report = module.evaluate(findings, count, {})
+                self.assertEqual((0, "PASS"), (code, report["outcome"]))
+
+    def test_top_level_duplicate_fingerprint_remains_stable(self) -> None:
+        text = self._safe_workflow() + "name: shadowed\n"
+        self._write("top.yml", text)
+        findings, _ = module.scan(self.root)
+        line = len(text.strip().splitlines())
+        self.assertEqual((module._finding("KFM-WF-001", ".github/workflows/top.yml", f"yaml-line={line}", "DUPLICATE_TOP_LEVEL_KEY:name", line),), findings)
+
+    def test_duplicate_invariant_cannot_be_baselined(self) -> None:
+        text, _ = self._duplicate_key_cases()["persist-false-true"]
+        self._write("duplicate.yml", text)
+        findings, count = module.scan(self.root)
+        self.assertEqual(1, len(findings))
+        finding = findings[0]
+        self.assertEqual("KFM-WF-001", finding.rule_id)
+        self.assertFalse(module.RULE_BY_ID[finding.rule_id].baseline_allowed)
+        payload = module.candidate_baseline(findings, owner="test", closure_ref="fixture", generated_from_ref="fixture", expires_on="2026-12-31")
+        self.assertEqual([], payload["entries"])
+        entry = {key: getattr(finding, key) for key in ("evidence_sha256", "fingerprint", "path", "rule_id", "subject")}
+        entry["expires_on"] = "2026-12-31"
+        payload["entries"] = [entry]
+        baseline = self.root / "forged-baseline.json"
+        baseline.write_text(json.dumps(payload), encoding="utf-8")
+        with self.assertRaisesRegex(module.BaselineError, "waive an invariant"):
+            module.load_baseline(baseline)
+        code, report = module.evaluate(findings, count, {finding.fingerprint: entry})
+        self.assertEqual((1, "FAIL_INVARIANT"), (code, report["outcome"]))
+        output = io.StringIO()
+        with redirect_stdout(output):
+            code = module.main(["--repo-root", str(self.root), "--emit-baseline"])
+        self.assertEqual((2, "ERROR_VALIDATOR"), (code, json.loads(output.getvalue())["outcome"]))
+
+    def test_duplicate_cli_exit_and_json_are_deterministic(self) -> None:
+        for name in ("persist-false-true", "job-permissions-inline", "with-block"):
+            with self.subTest(case=name):
+                text, _ = self._duplicate_key_cases()[name]
+                self._write("duplicate.yml", text)
+                command = [sys.executable, "-B", str(MODULE_PATH), "--repo-root", str(self.root), "--no-baseline"]
+                first = subprocess.run(command, capture_output=True, text=True, check=False, timeout=10)
+                second = subprocess.run(command, capture_output=True, text=True, check=False, timeout=10)
+                self.assertEqual((1, 1), (first.returncode, second.returncode))
+                self.assertEqual("", first.stderr + second.stderr)
+                self.assertEqual(first.stdout, second.stdout)
+                report = json.loads(first.stdout)
+                self.assertEqual("FAIL_INVARIANT", report["outcome"])
+                self.assertEqual(["KFM-WF-001"], [item["rule_id"] for item in report["findings"]])
+                self.assertTrue(all(value is False for value in report["authority"].values()))
+
+    def test_duplicate_scan_remains_read_only_local_and_non_executing(self) -> None:
+        text, _ = self._duplicate_key_cases()["persist-false-true"]
+        self._write("duplicate.yml", text.replace("python -m unittest", "echo should-not-run > sentinel.txt"))
+        before = {path.relative_to(self.root): path.read_bytes() for path in self.root.rglob("*") if path.is_file()}
+        original_open = io.open
+
+        def read_only_open(file, mode="r", *args, **kwargs):
+            self.assertFalse(any(flag in mode for flag in "wax+"), mode)
+            return original_open(file, mode, *args, **kwargs)
+
+        with ExitStack() as stack:
+            for target in ("socket.socket", "socket.create_connection", "urllib.request.urlopen", "subprocess.Popen", "os.system"):
+                blocked = stack.enter_context(mock.patch(target, side_effect=AssertionError("forbidden scanner side effect")))
+                stack.callback(blocked.assert_not_called)
+            stack.enter_context(mock.patch("io.open", side_effect=read_only_open))
+            stack.enter_context(mock.patch("builtins.open", side_effect=read_only_open))
+            output = io.StringIO()
+            with redirect_stdout(output):
+                code = module.main(["--repo-root", str(self.root), "--no-baseline"])
+            self.assertEqual((1, "FAIL_INVARIANT"), (code, json.loads(output.getvalue())["outcome"]))
+        after = {path.relative_to(self.root): path.read_bytes() for path in self.root.rglob("*") if path.is_file()}
+        self.assertEqual(before, after)
+
 
 
 if __name__ == "__main__":

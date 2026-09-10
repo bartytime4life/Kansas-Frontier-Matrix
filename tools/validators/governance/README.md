@@ -21,6 +21,18 @@ other partially interpretable structures as `KFM-WF-001` instead of reporting
 a false pass. Inline comments, quoted runner values, and dot or bracket
 expression properties are normalized before security checks.
 
+Block mapping keys must be unique within their own scope, including job IDs,
+job permissions, step keys, and checkout `with` inputs. Even equal-valued
+repetitions fail `KFM-WF-001`; first- or last-value precedence cannot waive
+ambiguity. Separate jobs and sequence items may reuse keys, and supported
+literal/folded scalar bodies are not mappings. Inline `permissions` and `with`
+values must pass the existing flat-map parser, including unique-member checks;
+malformed or unsupported inline forms fail closed rather than falling back to
+partial security interpretation. These findings are unwaivable invariants.
+The synthetic controls in
+[`test_validate_workflow_security.py`](../../../tests/validators/governance/test_validate_workflow_security.py)
+exercise scanner behavior only, not GitHub's downstream YAML interpretation.
+
 At the ratchet's pinned `main@c2594045856765c8b155020d9cd2e95b5db873f2`
 snapshot, 424 tracked workflows passed all twenty rules with an empty
 implementation-waiver baseline. That result is historical evidence, not a
