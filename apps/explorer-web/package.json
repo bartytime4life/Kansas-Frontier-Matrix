@@ -13,6 +13,9 @@
     "test:unit": "vitest run tests/*.test.ts",
     "test:browser": "playwright test --config=playwright.config.ts"
   },
+  "dependencies": {
+    "@kfm/maplibre": "workspace:*"
+  },
   "devDependencies": {
     "@types/node": "26.4.1",
     "playwright": "1.63.0",

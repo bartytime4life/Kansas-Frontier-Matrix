@@ -20,10 +20,10 @@ related:
   - docs/doctrine/truth-posture.md
   - docs/doctrine/trust-membrane.md
   - docs/doctrine/lifecycle-law.md
-  - docs/domains/frontier-matrix/README.md
+  - docs/domains/README.md
   - docs/domains/settlements-infrastructure/README.md
   - docs/domains/people-dna-land/README.md
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
   - connectors/census/README.md
   - schemas/contracts/v1/source/source-descriptor.json
 tags: [kfm, sources, catalog, census, tiger, frontier-matrix]
@@ -78,7 +78,7 @@ It is **not** the SourceDescriptor itself. SourceDescriptor records live as mach
 
 ## 2. Repo fit
 
-**Proposed path:** `docs/sources/catalog/census.md`
+**Current tracked path:** `docs/sources/catalog/census/README.md`
 **Authority root:** `docs/` (the human-facing control plane, per Directory Rules §6.1) → `docs/sources/` (source-descriptor standards, source families).
 **Directory Rules basis:** Directory Rules §6.1 names `docs/sources/` for "source-descriptor standards, source families." The `catalog/` subdivision is a PROPOSED organizational refinement that groups per-source-family landing pages alongside the umbrella `SOURCE_DESCRIPTOR_STANDARD.md`. Verify against repo evidence or pin via ADR / per-root README.
 
@@ -223,11 +223,11 @@ The doctrine's common-error classes map directly onto Census. Each is paired wit
 
 ## 9. Proposed paths
 
-The table below lists files and folders that complete the Census source family across responsibility roots. **All paths below are PROPOSED** until verified against mounted-repo evidence; an ADR is required where Directory Rules §2.4 applies.
+The table below lists files and folders that complete the Census source family across responsibility roots. Paths remain **PROPOSED** unless a row identifies current repository evidence; an ADR is required where Directory Rules §2.4 applies.
 
 | Purpose | Proposed path | Status | Notes |
 |---|---|---|---|
-| This catalog entry | `docs/sources/catalog/census.md` | PROPOSED | `catalog/` subdivision is PROPOSED; verify against repo or open ADR. |
+| This catalog entry | `docs/sources/catalog/census/README.md` | CONFIRMED | Current tracked path; canonical-home authority remains subject to the open verification item below. |
 | Source-descriptor standard (umbrella) | `docs/sources/SOURCE_DESCRIPTOR_STANDARD.md` | PROPOSED | Named in project lineage. |
 | `SourceDescriptor` records | `data/registry/sources/census/<vintage>/<product>.json` | PROPOSED | One per product × vintage; signed and checksummed. |
 | Connector | `connectors/census/` | PROPOSED | Output to `data/raw/<domain>/<source_id>/<run_id>/`. Must not write to `data/processed/`, `data/catalog/`, or `data/published/`. |
@@ -259,7 +259,7 @@ The table below lists files and folders that complete the Census source family a
 
 ## 11. Related docs
 
-> Relative paths assume this file is located at `docs/sources/catalog/census.md`. Link validity is **PROPOSED** until repo evidence is verified.
+> Relative paths resolve from the current tracked file at `docs/sources/catalog/census/README.md`; posture labels on the referenced material remain unchanged.
 
 - Verified bounded county reference slice — [`Cartographic Boundary Files`](./cartographic-boundary-files.md) (**HOLD; not released or runtime-bound**)
 - Source-descriptor umbrella standard — [`../SOURCE_DESCRIPTOR_STANDARD.md`](../../SOURCE_DESCRIPTOR_STANDARD.md) _(PROPOSED)_
@@ -269,10 +269,10 @@ The table below lists files and folders that complete the Census source family a
 - Truth Posture (cite-or-abstain) — [`../../doctrine/truth-posture.md`](../../../doctrine/truth-posture.md) _(PROPOSED)_
 - Trust Membrane — [`../../doctrine/trust-membrane.md`](../../../doctrine/trust-membrane.md) _(PROPOSED)_
 - Lifecycle Law — [`../../doctrine/lifecycle-law.md`](../../../doctrine/lifecycle-law.md) _(PROPOSED)_
-- Frontier Matrix domain README — [`../../domains/frontier-matrix/README.md`](../../../domains/frontier-matrix/README.md) _(PROPOSED)_
+- Domain-lane index — [`docs/domains/`](../../../domains/README.md) _(no standalone `frontier-matrix` lane is present)_
 - Settlements / Infrastructure domain README — [`../../domains/settlements-infrastructure/README.md`](../../../domains/settlements-infrastructure/README.md) _(PROPOSED)_
 - People / Genealogy / DNA / Land domain README — [`../../domains/people-dna-land/README.md`](../../../domains/people-dna-land/README.md) _(PROPOSED)_
-- ADR-0001 — Schema home — [`../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) _(PROPOSED)_
+- ADR-0001 — Schema home — [`ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md`](../../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) _(PROPOSED)_
 - Census connector README — [`../../../connectors/census/README.md`](../../../../connectors/census/README.md) _(PROPOSED)_
 - Source-descriptor schema — [`../../../schemas/contracts/v1/source/source-descriptor.json`](../../../../schemas/contracts/v1/source/source-descriptor.json) _(PROPOSED)_
 
@@ -335,6 +335,6 @@ PROPOSED minimum citation surface, illustrative — bind in `EvidenceBundle` and
 
 ---
 
-> **Related:** [`../SOURCE_DESCRIPTOR_STANDARD.md`](../../SOURCE_DESCRIPTOR_STANDARD.md) · [`./README.md`](../README.md) · [`../../doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) · [`../../domains/frontier-matrix/README.md`](../../../domains/frontier-matrix/README.md)
+> **Related:** [`../SOURCE_DESCRIPTOR_STANDARD.md`](../../SOURCE_DESCRIPTOR_STANDARD.md) · [`./README.md`](../README.md) · [`../../doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) · [`docs/domains/`](../../../domains/README.md)
 > **Last updated:** 2026-09-10 _(bounded catalog-link update; family review still pending)_
 > **Back to top:** [Census Source Family](#census-source-family)

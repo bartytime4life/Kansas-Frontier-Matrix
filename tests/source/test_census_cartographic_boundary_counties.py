@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import io
+import re
 import socket
 import struct
 import tempfile
@@ -11,6 +12,8 @@ import urllib.request
 import zipfile
 from pathlib import Path
 from unittest.mock import patch
+
+import yaml
 
 from tools.validators.source.census_cartographic_boundary_counties import (
     ARCHIVE_BASENAME,
@@ -44,6 +47,9 @@ NO_AUTHORITY_FLAGS = (
     "public_release_allowed",
     "map_runtime_binding_allowed",
 )
+REPO_ROOT = Path(__file__).resolve().parents[2]
+WORKFLOW_PATH = REPO_ROOT / ".github/workflows/census-county-reference-candidate.yml"
+AUTHORING_MERGE_REF = "648f6fc0abaed6b787bb60f669f89b9e38162ec9"
 
 
 def _unexpected_network(*_args, **_kwargs):
@@ -268,6 +274,35 @@ class CensusCartographicBoundaryCountiesTests(unittest.TestCase):
             summary["profile"],
             "kfm.census.cartographic-boundary-counties.archive-inspection.v1",
         )
+
+
+class CensusCountyReferenceWorkflowBindingTests(unittest.TestCase):
+    def test_workflow_replays_immutable_receipt_at_exact_merge_ref(self) -> None:
+        workflow = yaml.safe_load(WORKFLOW_PATH.read_text(encoding="utf-8"))
+        steps = workflow["jobs"]["validate-reference-candidate"]["steps"]
+
+        checkout_steps = [
+            step
+            for step in steps
+            if str(step.get("uses", "")).startswith("actions/checkout@")
+        ]
+        self.assertEqual(len(checkout_steps), 1)
+        self.assertEqual(checkout_steps[0]["with"]["fetch-depth"], 0)
+        self.assertFalse(checkout_steps[0]["with"]["persist-credentials"])
+
+        receipt_steps = [
+            step
+            for step in steps
+            if "validate_generated_receipt.py" in str(step.get("run", ""))
+            and "genrec-census-county-reference-candidate-20260910.json"
+            in str(step.get("run", ""))
+        ]
+        self.assertEqual(len(receipt_steps), 1)
+        receipt_command = receipt_steps[0]["run"]
+        artifact_refs = re.findall(
+            r"--artifact-git-ref\s+([0-9a-f]{40})", receipt_command
+        )
+        self.assertEqual(artifact_refs, [AUTHORING_MERGE_REF])
 
 
 if __name__ == "__main__":
