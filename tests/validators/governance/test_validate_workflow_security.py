@@ -79,6 +79,79 @@ jobs:
         self.assertEqual(20, report["rule_count"])
         self.assertFalse(report["authority"]["authorizes_repository_write"])
 
+    def test_oidc_workflow_scope_is_denied(self) -> None:
+        self._write(
+            "oidc-workflow.yml",
+            self._safe_workflow().replace(
+                "  contents: read", "  contents: read\n  id-token: write"
+            ),
+        )
+        self._rules("KFM-WF-008", "KFM-WF-009")
+
+    def test_oidc_job_scope_is_denied_even_with_dispatch_or_environment(self) -> None:
+        for trigger in ("pull_request", "workflow_dispatch"):
+            for environment in ("", "    environment: production\n"):
+                with self.subTest(trigger=trigger, environment=bool(environment)):
+                    path = self._write(
+                        "oidc-job.yml",
+                        self._safe_workflow()
+                        .replace("  pull_request:", f"  {trigger}:")
+                        .replace(
+                            "    steps:",
+                            environment + "    permissions:\n"
+                            "      contents: read\n      id-token: write\n    steps:",
+                        ),
+                    )
+                    try:
+                        self._rules("KFM-WF-009")
+                        findings, count = module.scan(self.root)
+                        code, report = module.evaluate(findings, count, {})
+                        self.assertEqual(1, code)
+                        self.assertEqual("FAIL_INVARIANT", report["outcome"])
+                    finally:
+                        path.unlink()
+
+    def test_oidc_invariant_cannot_be_baselined(self) -> None:
+        self._write(
+            "oidc-waiver.yml",
+            self._safe_workflow().replace(
+                "    steps:",
+                "    permissions:\n      id-token: write\n    steps:",
+            ),
+        )
+        findings, count = module.scan(self.root)
+        finding = next(item for item in findings if item.rule_id == "KFM-WF-009")
+        payload = json.loads(BASELINE_PATH.read_text(encoding="utf-8"))
+        entry = {
+            "evidence_sha256": finding.evidence_sha256,
+            "expires_on": "2099-12-31",
+            "fingerprint": finding.fingerprint,
+            "path": finding.path,
+            "rule_id": finding.rule_id,
+            "subject": finding.subject,
+        }
+        payload["entries"] = [entry]
+        baseline = self.root / "oidc-baseline.json"
+        baseline.write_text(json.dumps(payload, sort_keys=True), encoding="utf-8")
+        with self.assertRaisesRegex(module.BaselineError, "waive an invariant"):
+            module.load_baseline(baseline)
+        # Defense in depth: an already-parsed waiver cannot override the rule either.
+        code, report = module.evaluate(findings, count, {finding.fingerprint: entry})
+        self.assertEqual(1, code)
+        self.assertEqual("FAIL_INVARIANT", report["outcome"])
+
+    def test_oidc_permission_mentions_in_comments_do_not_grant_access(self) -> None:
+        self._write(
+            "oidc-comment.yml",
+            self._safe_workflow().replace(
+                "  contents: read",
+                "  contents: read  # no id-token: write\n  # id-token: write",
+            ).replace(
+                "    steps:", "    # permissions: {id-token: write}\n    steps:"
+            ),
+        )
+        self.assertEqual(set(), self._rules())
+
     def test_action_container_checkout_permission_and_timeout_rules(self) -> None:
         self._write(
             "unsafe.yml",

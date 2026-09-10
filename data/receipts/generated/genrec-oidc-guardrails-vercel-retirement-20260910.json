@@ -1,0 +1,168 @@
+{
+  "receipt_id": "genrec:oidc-guardrails-vercel-retirement:20260910",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".gitignore",
+    "apps/kansas-frontier-matrix-explorer/tests/hosting-boundary.test.mjs",
+    "docs/security/SECRETS.md",
+    "tests/validators/governance/test_validate_workflow_security.py"
+  ],
+  "artifact_hashes": {
+    ".gitignore": "sha256:6db7077514212464ad43a6b584443f43918b1b5cfa2c696ff59732bda1ba03ce",
+    "apps/kansas-frontier-matrix-explorer/tests/hosting-boundary.test.mjs": "sha256:e09d7bda976221e3f7a55445e1bf2e0c815d7499115c9d20fb4b64f6ec6b9fb1",
+    "docs/security/SECRETS.md": "sha256:19f1c2e666ccea03ff73ef6a2e49d418ceb4b420658c46fa95f1045b90567635",
+    "tests/validators/governance/test_validate_workflow_security.py": "sha256:0e629f222cd15d4cfdab97eca25d2137053b78961afd8cb9ce1b2e6244c6291d"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Astra Pro",
+    "version": "not exposed"
+  },
+  "prompt_or_contract": "sha256:2f29afbc4147d5187110aecec77cdbe2a45fb66a4f2c8d78b519d7cb774c3327",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector (read only)",
+      "Notion connector (read only)",
+      "Vercel connector (read only)",
+      "official web documentation",
+      "isolated local source-subset validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:6d76410aa4aac55297f9b0ca4e3796ec03576c52ef4829c01d254cb637adb2f9",
+      "sha256:3ce09bde4ff7331437a7def3d5f591bed7931e7b010ec770fad3a18ef8dfa84a",
+      "sha256:cd81ef1266f2fa56dd7238d10cff3071d6628a891c269d84b57dbbd69801d5e3",
+      "sha256:2b9ad10cdc2090cd1e4388d57582b726d2b3fffb42f3f99b47f6713a4edc1f3b"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "git:77c11c2db9c8c5b7c56e6c4335c429079cac79f2:docs/doctrine/directory-rules.md",
+      "git:77c11c2db9c8c5b7c56e6c4335c429079cac79f2:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "git:77c11c2db9c8c5b7c56e6c4335c429079cac79f2:tools/validators/governance/validate_workflow_security.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024",
+      "drive:10V7GxyZ6WP5ZxbrOJpfmYebcRhe5ZWBpb4EPMDOpGgg",
+      "notion:3d4a9202-1bf6-8173-b577-dc97cac9c288",
+      "https://docs.github.com/en/actions/reference/security/oidc",
+      "https://docs.github.com/en/actions/how-tos/secure-your-work/security-harden-deployments/oidc-in-aws",
+      "https://learn.microsoft.com/en-us/entra/workload-id/workload-identity-federation-create-trust",
+      "https://docs.cloud.google.com/iam/docs/workload-identity-federation-with-deployment-pipelines",
+      "https://vercel.com/docs/project-configuration/git-configuration"
+    ]
+  },
+  "truth_labels": {
+    ".gitignore": "CONFIRMED",
+    "apps/kansas-frontier-matrix-explorer/tests/hosting-boundary.test.mjs": "CONFIRMED",
+    "docs/security/SECRETS.md": "PROPOSED",
+    "tests/validators/governance/test_validate_workflow_security.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "source subset identity",
+      "outcome": "PASS",
+      "reason": "Materialized original scanner, baseline, tests, security document, ignore policy, app manifest and hosting tests matched connector-reported Git blob identities before edits. This is not a full repository checkout."
+    },
+    {
+      "gate": "workflow-security fixture subset",
+      "outcome": "PASS",
+      "reason": "21 tests passed, including four added OIDC tests; job-level denial covers pull_request/workflow_dispatch with and without an environment. The two tests requiring a complete workflow tree were deliberately NOT RUN."
+    },
+    {
+      "gate": "OIDC negative controls",
+      "outcome": "PASS",
+      "reason": "The new tests detected both in-memory weakenings: allowing id-token in the write allowlist and permitting a KFM-WF-009 baseline waiver. Scanner bytes were not changed."
+    },
+    {
+      "gate": "Vercel retirement source tests",
+      "outcome": "PASS",
+      "reason": "Three new Node tests passed using node --test --test-name-pattern=\"Vercel retirement:\" tests/hosting-boundary.test.mjs. They check both disable-only manifests and direct app SDK/CLI/script declarations, with negative controls. The two existing hosting/handoff tests were NOT RUN in the partial workspace."
+    },
+    {
+      "gate": "ignore scope and whitespace",
+      "outcome": "PASS",
+      "reason": "git check-ignore --no-index ignores root/app/connector .vercel/project.json examples but not the two vercel.json guards. git diff --check passed in the exact-source subset."
+    },
+    {
+      "gate": "whole-repository and hosted validation",
+      "outcome": "SKIPPED",
+      "reason": "Network cloning was unavailable. Full make workflow-security, repository-native receipt validator, full app build/test, hosted exact-head checks, browser/runtime, cloud exchange and remote disconnection were not run."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "git:77c11c2db9c8c5b7c56e6c4335c429079cac79f2:docs/doctrine/directory-rules.md",
+      "validated": true,
+      "evidence_ref": "git:77c11c2db9c8c5b7c56e6c4335c429079cac79f2:docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "git:77c11c2db9c8c5b7c56e6c4335c429079cac79f2:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "validated": true,
+      "evidence_ref": "git:77c11c2db9c8c5b7c56e6c4335c429079cac79f2:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "git:77c11c2db9c8c5b7c56e6c4335c429079cac79f2:tools/validators/governance/validate_workflow_security.py",
+      "validated": true,
+      "evidence_ref": "git:77c11c2db9c8c5b7c56e6c4335c429079cac79f2:tools/validators/governance/validate_workflow_security.py"
+    },
+    {
+      "id": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024"
+    },
+    {
+      "id": "drive:10V7GxyZ6WP5ZxbrOJpfmYebcRhe5ZWBpb4EPMDOpGgg",
+      "validated": true,
+      "evidence_ref": "drive:10V7GxyZ6WP5ZxbrOJpfmYebcRhe5ZWBpb4EPMDOpGgg"
+    },
+    {
+      "id": "notion:3d4a9202-1bf6-8173-b577-dc97cac9c288",
+      "validated": true,
+      "evidence_ref": "notion:3d4a9202-1bf6-8173-b577-dc97cac9c288"
+    },
+    {
+      "id": "https://docs.github.com/en/actions/reference/security/oidc",
+      "validated": true,
+      "evidence_ref": "https://docs.github.com/en/actions/reference/security/oidc"
+    },
+    {
+      "id": "https://docs.github.com/en/actions/how-tos/secure-your-work/security-harden-deployments/oidc-in-aws",
+      "validated": true,
+      "evidence_ref": "https://docs.github.com/en/actions/how-tos/secure-your-work/security-harden-deployments/oidc-in-aws"
+    },
+    {
+      "id": "https://learn.microsoft.com/en-us/entra/workload-id/workload-identity-federation-create-trust",
+      "validated": true,
+      "evidence_ref": "https://learn.microsoft.com/en-us/entra/workload-id/workload-identity-federation-create-trust"
+    },
+    {
+      "id": "https://docs.cloud.google.com/iam/docs/workload-identity-federation-with-deployment-pipelines",
+      "validated": true,
+      "evidence_ref": "https://docs.cloud.google.com/iam/docs/workload-identity-federation-with-deployment-pipelines"
+    },
+    {
+      "id": "https://vercel.com/docs/project-configuration/git-configuration",
+      "validated": true,
+      "evidence_ref": "https://vercel.com/docs/project-configuration/git-configuration"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-10T21:55:40Z",
+  "emitter": "ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Authoring record only, against main@77c11c2db9c8c5b7c56e6c4335c429079cac79f2. prompt_or_contract hashes the current user instruction, not private system instructions. Delivery target is VALIDATED_BRANCH_ONLY under the open #4024 control incident; no PR lifecycle action or independent review is asserted. No workflow permissions, scanner rules, dependency versions, Site identity, cloud trust, repository settings, source admission, release, promotion, deployment, publication, or Vercel project state are changed. Vercel read-only discovery still showed kfm and usgs linked to this repository. Both existing disable-only vercel.json files are preserved; no active Vercel integration was found in the inspected app manifest/search results, so this is exclusion and regression hardening, not a claim of complete service removal. Historical receipts are preserved. Rollback is a normal reviewed revert of this change; do not delete the existing deployment-disable guards. Receipt schema conformance alone would not authenticate evidence or authorize merge."
+}

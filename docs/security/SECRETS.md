@@ -2,11 +2,11 @@
 doc_id: kfm://doc/security-secrets
 title: Secrets Management
 type: standard
-version: v0.1
+version: v0.2
 status: draft
 owners: Security steward; Infra steward; Docs steward (placeholder — confirm in CODEOWNERS)
 created: 2026-05-13
-updated: 2026-05-13
+updated: 2026-09-10
 policy_label: public
 related:
   - docs/doctrine/directory-rules.md
@@ -21,7 +21,8 @@ tags: [kfm, security, secrets, governance, deny-by-default]
 notes:
   - "Doctrine-level claims are CONFIRMED from attached KFM materials."
   - "Implementation specifics (secret store choice, rotation cadence, owner teams) are PROPOSED or NEEDS VERIFICATION until a repo is inspected."
-  - "External-tool syntax (cosign, GitHub Actions OIDC) is described from KFM source materials, not from a live web check."
+  - "Section 9 was reconciled with main@77c11c2db9c8c5b7c56e6c4335c429079cac79f2 and official provider documentation on 2026-09-10; no token permission or provider was activated."
+  - "Other historical implementation assertions in this draft remain NEEDS VERIFICATION; this is not a whole-system security audit."
 [/KFM_META_BLOCK_V2] -->
 
 # 🔐 Secrets Management
@@ -39,7 +40,7 @@ notes:
 | :------------- | :-------------------------------------------------------------------- |
 | **Status**     | Draft — doctrine-level CONFIRMED; implementation NEEDS VERIFICATION   |
 | **Owners**     | Security steward + Infra steward (placeholder — confirm in CODEOWNERS) |
-| **Last updated** | 2026-05-13                                                          |
+| **Last updated** | 2026-09-10                                                          |
 | **Authority**  | Sits below `docs/doctrine/*`; refines `infra/` and `configs/` rules   |
 
 ---
@@ -118,7 +119,7 @@ If this document conflicts with any of those, this document is wrong and must be
 | **Secret** | Any value whose disclosure would let an outside party impersonate KFM, falsify provenance, bypass policy, or read restricted data. |
 | **Secret store** | An environment-specific, access-controlled, auditable system that holds secrets at rest. The repository is **not** a secret store. |
 | **Reference-by-name** | A non-secret identifier (e.g., `${PURPLEAIR_API_KEY}`, `secrets.COSIGN_KEY`) that resolves to a real secret at runtime via a secret store or CI variable system. |
-| **OIDC-minted credential** | A short-lived credential issued to a CI job by an OIDC trust chain (e.g., GitHub Actions → cloud provider), bound to repo, ref, job, and audience, with a short TTL. **CONFIRMED** as the preferred CI credential mode in KFM source materials. |
+| **OIDC-minted credential** | A provider credential obtained through federated identity exchange. Its permitted operations and lifetime depend on provider policy. Preferred KFM direction, not enabled CI capability; see §9. |
 | **Keyless signing** | Cosign signing using an ephemeral Fulcio-issued certificate against an OIDC identity, with the signature anchored in the Rekor transparency log. **CONFIRMED** as the preferred KFM signing mode. |
 | **Trust membrane** | The boundary that separates governed APIs and released artifacts (public-facing) from raw/work/quarantine stores, canonical stores, model runtimes, and **credentials** (internal-only). |
 
@@ -134,7 +135,7 @@ The following statements are **CONFIRMED** from attached KFM materials. They are
 2. **Deny by default at the exposure boundary.** Public UI, normal clients, and any externally reachable surface (reverse proxy, VPN, home firewall) must default to deny. Admin shortcuts must be justified, constrained, documented, and **kept out of the normal public path**.
 3. **No browser access to credentials.** Browsers, public UI, MapLibre/Cesium clients, popups, exports, telemetry payloads, and AI response envelopes must not read, embed, log, or surface credentials, raw store handles, model runtime endpoints, or internal service handles.
 4. **No secrets in catalog metadata or source-visible outputs.** API keys for upstream sources (e.g., third-party sensor networks) must be passed by header from server-side code and must never be emitted in STAC, DCAT, PROV records, tile metadata, or any public catalog artifact.
-5. **CI uses short-lived, least-privilege OIDC credentials** bound to repository, ref, job, and audience — not long-lived broad PATs or shared API keys.
+5. **CI should prefer short-lived, least-privilege federation when an operation is separately authorized.** This is intended direction, not current activation: the inspected workflow guard denies `id-token: write` at every scope; see §9. Broad PATs or shared keys are not a workaround.
 6. **Signing prefers keyless.** Cosign keyless (OIDC + Fulcio + Rekor) is the default. Keyed signing using a CI secret or HSM is **supported**; offline signing is **PROPOSED** and **NEEDS VERIFICATION** for KFM workflows.
 7. **Telemetry is safe by construction.** No secrets, no prompt text, no raw evidence, no restricted geometry, and no full EvidenceBundle copies in telemetry payloads. Diagnostics may show schema/policy status; they must not leak credentials, prompts, or store handles.
 8. **Local AI runtimes (Ollama and similar) sit behind the governed API.** They must not receive public client traffic and must not read canonical or raw stores directly. Their runtime keys are secrets and follow the same rules as every other secret.
@@ -202,7 +203,7 @@ KFM does not treat all secrets identically. The class determines store, rotation
 | Class | Examples | Typical store | Rotation cadence | Blast radius if leaked |
 | :--- | :--- | :--- | :--- | :--- |
 | **Signing keys** | Cosign signing key, HSM/KMS key reference | KMS / HSM (preferred); CI secret only when KMS unavailable | On schedule + on suspicion; key reference recorded in receipts | Forged attestations; loss of provenance trust |
-| **CI-issued credentials** | OIDC-minted cloud tokens, ephemeral registry pushes | OIDC trust chain (no stored value) | Per-job (TTL minutes) | Job-scoped impersonation |
+| **CI-issued credentials** | OIDC-minted cloud tokens, ephemeral registry pushes | OIDC trust chain (no stored value) | Separate token/session lifetimes per reviewed provider profile | Granted operations during credential validity |
 | **Source / connector API keys** | Third-party sensor networks, hosted geocoders, weather APIs | Secret store, server-side only | Per source policy; minimum quarterly (**PROPOSED**) | Source revocation; rate-limit lockout; attribution risk |
 | **Deployment credentials** | Reverse-proxy auth, VPN material, infra automation tokens | Secret store + infra config plane | Per environment policy (**PROPOSED**) | Service compromise; lateral movement |
 | **Database / store credentials** | Postgres / graph store / object store credentials | Secret store; injected at startup | On schedule + on personnel change | Direct read/write of canonical data |
@@ -228,7 +229,7 @@ The table below is **CONFIRMED at the doctrinal level** by `docs/doctrine/direct
 | `runtime/` | ❌ No | ✅ Yes (via adapter config) | Model runtime keys are injected; never committed. |
 | `apps/` source code | ❌ No | ✅ Yes (env var lookups) | Code reads `process.env.X` / `os.environ['X']` from runtime, not from disk in repo. |
 | `tests/`, `fixtures/` | ⚠️ Only obvious mock markers | ✅ Yes | Mock keys MUST be unambiguous (e.g., `MOCK-COSIGN-DEV-ONLY`, never a real-looking value). |
-| `.github/workflows/`, CI configs | ❌ No (secret bodies) | ✅ Yes (`${{ secrets.X }}`) | CI must use OIDC-minted credentials wherever the provider supports them. |
+| `.github/workflows/`, CI configs | ❌ No (secret bodies) | ✅ Yes (`${{ secrets.X }}`) | Prefer federation only after reviewed enablement; current token permission remains denied under §9. |
 | Repo root, top-level dotfiles | ❌ Absolutely not | n/a | `.env`, `*.pem`, `*.key`, `id_rsa`, `cosign.key` are blocked at pre-commit and CI. |
 | `data/raw`, `data/work`, `data/quarantine` | ❌ No (and not addressable from clients) | n/a | Lifecycle invariant. |
 | Public artifacts (STAC, DCAT, PROV, tiles, exports) | ❌ Never | ❌ Never | Even reference-by-name strings must not leak into catalog metadata. |
@@ -298,35 +299,156 @@ stateDiagram-v2
 
 ## 9. CI/CD Secrets — OIDC-First
 
-KFM source materials state, **CONFIRMED**: *"CI tools need short-lived least-privilege OIDC credentials"* bound to repo, ref, job, and audience with short TTL; tool allowlists pin command, args, image, and digest; broad long-lived credentials in map/tile workflows are an anti-pattern.
+### 9.1 Current boundary and preferred future mode
 
-### 9.1 Preferred mode
+**CONFIRMED SOURCE CHECKPOINT:** at `main@77c11c2db9c8c5b7c56e6c4335c429079cac79f2`,
+[`validate_workflow_security.py`](../../tools/validators/governance/validate_workflow_security.py)
+allows only `pull-requests` and `security-events` write scopes. `KFM-WF-009`
+rejects `id-token: write` at workflow and job scope and cannot be baselined.
+Workflow-global writes also trigger `KFM-WF-008`. A dispatch trigger or an
+`environment: production` declaration does not exempt a job. The unchanged
+[`Scorecard workflow`](../../.github/workflows/scorecard.yml) disables external
+result publication and does not request an OIDC token.
 
-- CI jobs request a credential at runtime via OIDC trust chain to the target system (cloud provider, container registry, signing service).
-- The credential is **short-TTL**, **scoped to the job**, and **never written to disk** or to logs.
-- The OIDC subject claim is recorded in the receipt or job log, so receipts can be traced to the exact CI run.
+**PROPOSED DIRECTION, NOT ACTIVATION:** use short-lived federation for a separately
+approved operation where the destination supports it. This document grants no
+permission, selects no provider, and changes no cloud trust policy. Do not amend
+the scanner allowlist or substitute a durable credential merely to make an
+example run. Existing signing preferences elsewhere in this draft are not proof
+of a running signer.
+
+GitHub's `id-token: write` permits requesting an identity token; it is not cloud
+resource-write permission. Authentication, resource authorization, artifact
+integrity, source/evidence review, and KFM release approval remain separate. [O1]
 
 ### 9.2 Acceptable fallback
 
-When a target system does not yet support OIDC federation, a long-lived credential **may** be stored in the CI secret system, subject to:
-
-| Requirement | Doctrine |
-| :--- | :--- |
-| Least privilege | Scoped to the smallest action set that completes the job. |
-| Short rotation | At minimum quarterly (**PROPOSED**); shorter where supported. |
-| Audited | Issuance and rotation recorded. |
-| Documented | Listed in a deprecation register with a target migration date. |
+For an already authorized operation whose destination lacks federation, a
+credential fallback requires scoped permissions, a named owner, audited rotation,
+and a documented migration/retirement plan. Quarterly rotation is a historical
+**PROPOSED** default, not a verified operational cadence. No fallback is authorized
+by this document, and it must not bypass current workflow or release controls.
 
 ### 9.3 Forbidden CI patterns
 
-- Echoing a secret into a log (`echo "$SECRET"`, `set -x` with secret env vars, `printenv` dumps).
-- Writing a secret to a workspace file that is later uploaded as an artifact.
-- Passing a secret on a command line where it appears in process listings.
-- Sharing a secret across unrelated jobs because "it's easier."
-- Using a long-lived PAT where OIDC federation is available.
+- Logging secrets or raw JWTs, dumping environments, or uploading credential files.
+- Passing secrets in command-line arguments or sharing them across unrelated jobs.
+- Granting token permission to untrusted candidate execution, widening subject
+  matches to all repository contexts, or treating an environment name as proof
+  of independently enforced approval.
+- Treating cloud login, a signature, a green check, or a commit as source admission,
+  independent review, release, deployment, or publication authority.
 
-> [!CAUTION]
-> Job logs are evidence. If a job log contains a secret, the job log is a leak. Pre-commit and CI must scan logs and artifacts for high-entropy strings and known token formats; matches block promotion.
+### 9.4 Provider reference corrections — inactive
+
+The references below were checked on **2026-09-10**. These are configuration
+requirements for later review, not deployment recipes or evidence of KFM accounts.
+The GitHub issuer is `https://token.actions.githubusercontent.com`. [O1]
+
+| Destination | Identity exchange | Separate authorization and restriction |
+|---|---|---|
+| AWS | OIDC provider plus IAM role trust allowing `sts:AssumeRoleWithWebIdentity`; standard AWS audience `sts.amazonaws.com`. | Prefer exact `StringEquals` audience/subject conditions for one intended context. Resource permissions are separate from role trust. Do not invent support for arbitrary GitHub claim condition keys. [O2] |
+| Microsoft Entra / Azure | Federated credential with exact issuer, subject, and audience; recommended audience `api://AzureADTokenExchange`. | The ordinary GitHub setup selects Environment, Branch, Pull request, or Tag, not a generic workflow-file selector. Resource role assignment is separate. Specialized claim-expression capabilities require their own current review. [O3] |
+| Google Cloud | Workload identity pool/provider, explicit attribute mapping such as `google.subject=assertion.sub`, and restrictive attribute conditions. | Prefer immutable repository/owner IDs where supported; a provider resource name is not an IAM principal. Direct resource access and service-account impersonation are distinct options. [O4] |
+
+Google Cloud identifier forms are distinct; placeholders below are **not configured
+KFM identities**. `PROJECT_NUMBER` belongs to the project containing the pool.
+The attribute-based form requires that attribute to have been mapped. [O4]
+
+```text
+Provider:
+projects/PROJECT_NUMBER/locations/global/workloadIdentityPools/POOL_ID/providers/PROVIDER_ID
+Principal:
+principal://iam.googleapis.com/projects/PROJECT_NUMBER/locations/global/workloadIdentityPools/POOL_ID/subject/SUBJECT
+Attribute-selected principal set:
+principalSet://iam.googleapis.com/projects/PROJECT_NUMBER/locations/global/workloadIdentityPools/POOL_ID/attribute.repository_id/REPOSITORY_ID
+```
+
+With service-account impersonation, the external principal receives
+`roles/iam.workloadIdentityUser` on the service account; resource access is granted
+separately to that account. Do not bind a provider URI as though it were a principal. [O4]
+
+**Subject currentness:** verify the repository's actual default/custom/immutable
+subject configuration before proposing a trust condition. GitHub documents
+immutable owner/repository IDs in defaults for repositories created after
+2026-07-15, with opt-in and rename/transfer behavior for older repositories.
+Environment-based subjects differ from branch-based subjects, and `job_workflow_ref`
+identifies a reusable workflow. KFM's actual OIDC subject configuration remains
+**UNKNOWN** here; no token was requested. [O1]
+
+### 9.5 Review packet and receipt correlation — proposed
+
+Before any future enablement, identify one real destination and operation, its
+resource scope, exact issuer/audience/subject policy, workflow revision, allowed
+events/refs, environment controls, owner, and independent review. State where
+each restriction is enforced; unsupported conditions must remain unsupported.
+Specify identity-token and exchanged-credential lifetimes separately, with
+revocation behavior for both future exchanges and already-issued credentials.
+Keep privileged signing/publication separate from untrusted build execution.
+
+The `sub` claim alone is **not an exact-run identifier**. A proposed operation
+receipt should correlate allowlisted repository/owner IDs, workflow ref and SHA,
+`run_id`, `run_attempt`, source commit, artifact digest, approved target/operation,
+policy reference, outcome, and readback. These are receipt design requirements,
+not an adopted new schema. Record verified values or explicit unknowns; do not
+promote a caller-supplied claim into authentication evidence. Do not preserve raw
+JWTs, bearer tokens, authorization headers, or credential files. [O1]
+
+Offline negative fixtures should reject wrong issuer/audience/identity/context,
+expired or unverified credentials, and missing operation approval. Such fixtures
+cannot prove provider enforcement. A later authorized live canary must separately
+verify allowed and denied exchanges and the bounded resource operation, without
+admitting sources or publishing data merely because authentication succeeded.
+
+### 9.6 Retirement of Vercel integration
+
+Vercel is not an implementation or hosting target for this change. On 2026-09-10,
+read-only Vercel discovery still returned the `kfm` and `usgs` projects linked to
+this repository. Their remote disconnection was **not** performed or proved.
+Preserve the two existing disable-only manifests:
+[`Explorer`](../../apps/kansas-frontier-matrix-explorer/vercel.json) and
+[`USGS connector`](../../connectors/usgs/vercel.json). Removing
+`git.deploymentEnabled: false` while those links remain could restore automatic
+deployments. Local `.vercel/` state belongs in ignore policy, not Git; ignoring it
+does not disconnect a remote integration. [V1]
+
+The existing [`hosting-boundary.test.mjs`](../../apps/kansas-frontier-matrix-explorer/tests/hosting-boundary.test.mjs)
+now checks both manifests remain disable-only and the Explorer manifest declares
+no direct Vercel SDK/CLI or deployment command, with negative controls. This is a
+bounded source check, not a transitive-dependency audit or live deployment proof.
+Library authorship is not hosting integration: do not remove Next.js or replace
+the existing Sites application solely because a vendor maintains a dependency.
+A later guard-deletion change requires verified remote unlinking and reference/test
+repair first; retain historical receipts and non-deployment assertions.
+
+### 9.7 Validation, lineage, and rollback
+
+The existing [`workflow-security tests`](../../tests/validators/governance/test_validate_workflow_security.py)
+include explicit global/job token denial, invariant-waiver rejection, and
+comment-only negative-control cases. Run `make workflow-security` from a complete
+checkout; do not describe fixture-only execution as a whole-repository pass.
+Run `node --test tests/hosting-boundary.test.mjs` from the Explorer app for its
+source-level boundary checks. Neither command grants deployment authority.
+
+This is a same-path clarification under accepted ADR-0029. `docs/` owns the human
+explanation, `tests/` owns workflow regressions, application-local tests own the
+hosting check, and `DIR-ROOT-001` places disposable local state in ignore policy.
+No schema/policy home or lifecycle authority changes. Revert this scoped change
+through normal review to roll back; do not restore active deployment integration,
+weaken the scanner, delete historical receipts, or remove the two off switches.
+
+[Drive's earlier OIDC/signing proposal](https://docs.google.com/document/d/10V7GxyZ6WP5ZxbrOJpfmYebcRhe5ZWBpb4EPMDOpGgg/edit)
+is design lineage only; its broad write/publish examples are not imported.
+[Notion's deployment/rollback item](https://app.notion.com/p/3d4a92021bf68173b577dc97cac9c288)
+is coordination evidence, not proof of current Site identity or release. Source
+code, actual provider configuration, and authenticated transition records govern
+their respective claims.
+
+[O1]: https://docs.github.com/en/actions/reference/security/oidc
+[O2]: https://docs.github.com/en/actions/how-tos/secure-your-work/security-harden-deployments/oidc-in-aws
+[O3]: https://learn.microsoft.com/en-us/entra/workload-id/workload-identity-federation-create-trust
+[O4]: https://docs.cloud.google.com/iam/docs/workload-identity-federation-with-deployment-pipelines
+[V1]: https://vercel.com/docs/project-configuration/git-configuration
 
 [⬆ Back to top](#-secrets-management)
 
@@ -337,6 +459,8 @@ When a target system does not yet support OIDC federation, a long-lived credenti
 Signing keys are the **highest-blast-radius secrets** in KFM because they back attestations that the rest of the system treats as evidence.
 
 ### 10.1 Preferred: keyless
+
+The following is source-derived signing direction, not evidence of an active signer. The current CI token denial in §9 still applies.
 
 **CONFIRMED** from KFM source materials:
 
@@ -619,6 +743,6 @@ cosign.key
 
 > 🗂️ **Related docs:** [`directory-rules.md`](../doctrine/directory-rules.md) · [`THREAT_MODEL.md`](./THREAT_MODEL.md) · [`INCIDENT_RESPONSE.md`](./INCIDENT_RESPONSE.md) · [`SIGNING.md`](../standards/SIGNING.md)
 >
-> 📅 **Last updated:** 2026-05-13 · **Doc version:** v0.1 · **Status:** draft · **Owners:** Security steward + Infra steward (placeholder)
+> 📅 **Last updated:** 2026-09-10 · **Doc version:** v0.2 · **Status:** draft · **Owners:** Security steward + Infra steward (placeholder)
 >
 > ⬆ [Back to top](#-secrets-management)

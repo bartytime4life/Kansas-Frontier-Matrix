@@ -13,6 +13,10 @@ node_modules/
 dist/
 .turbo/
 
+# Retired host: exclude local Vercel link/cache state, not tracked disable guards.
+# This ignore rule does not disconnect the remote Git integration.
+.vercel/
+
 # Data lifecycle — never commit these
 data/raw/**
 data/work/**

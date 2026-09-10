@@ -78,3 +78,59 @@ test("replacement handoff pins integrity, validation, rollback, and non-effect e
   assert.match(handoff, /Site rollback does not rewrite Git history/i);
   assert.match(handoff, /does not define Site platform behavior, grant deployment authority/i);
 });
+
+// These are source-level retirement guards, not proof of remote disconnection.
+const assertDisableOnly = (config) => {
+  assert.deepEqual(config, {
+    $schema: "https://openapi.vercel.sh/vercel.json",
+    git: { deploymentEnabled: false },
+  });
+};
+
+const assertNoDirectVercelIntegration = (manifest) => {
+  for (const section of ["dependencies", "devDependencies", "optionalDependencies", "peerDependencies"]) {
+    for (const [name, specifier] of Object.entries(manifest[section] ?? {})) {
+      assert.doesNotMatch(name, /^(?:vercel$|@vercel\/)/i);
+      assert.doesNotMatch(String(specifier), /^npm:(?:vercel(?:@|$)|@vercel\/)/i);
+    }
+  }
+  for (const command of Object.values(manifest.scripts ?? {})) {
+    assert.doesNotMatch(command, /\bvercel\b/i);
+  }
+};
+
+test("Vercel retirement: both retained manifests are disable-only", async () => {
+  for (const url of [
+    files.vercel,
+    new URL("../../../connectors/usgs/vercel.json", import.meta.url),
+  ]) {
+    assertDisableOnly(JSON.parse(await readText(url)));
+  }
+});
+
+test("Vercel retirement: Explorer has no direct SDK, CLI, or deployment script", async () => {
+  const manifest = JSON.parse(await readText(new URL("../package.json", import.meta.url)));
+  assertNoDirectVercelIntegration(manifest);
+});
+
+test("Vercel retirement: negative controls reject activation and integration", () => {
+  assert.throws(() => assertDisableOnly({ git: { deploymentEnabled: true } }));
+  assert.throws(() => assertDisableOnly({
+    $schema: "https://openapi.vercel.sh/vercel.json",
+    git: { deploymentEnabled: false },
+    builds: [],
+  }));
+  for (const section of ["dependencies", "devDependencies", "optionalDependencies", "peerDependencies"]) {
+    for (const dependency of [
+      { vercel: "0.0.0-fixture" },
+      { "@vercel/analytics": "0.0.0-fixture" },
+      { alias: "npm:@vercel/analytics@0.0.0-fixture" },
+      { alias: "npm:vercel@0.0.0-fixture" },
+    ]) {
+      assert.throws(() => assertNoDirectVercelIntegration({ [section]: dependency }));
+    }
+  }
+  assert.throws(() => assertNoDirectVercelIntegration({ scripts: { deploy: "npx vercel --prod" } }));
+  // Library authorship is not hosting integration: do not remove Next.js by name.
+  assertNoDirectVercelIntegration({ dependencies: { next: "0.0.0-fixture" }, scripts: { test: "node --test" } });
+});
