@@ -2918,17 +2918,281 @@ body { font-size: 14px; }
 .noaa-radar-error span { color: var(--muted); font-size: 10px; line-height: 1.4; }
 .noaa-radar-motion-note { margin: 0; border-left: 2px solid var(--gold); color: var(--gold-soft); padding-left: 8px; font-size: 10px; }
 .noaa-radar-loop > footer { color: var(--dim); font-size: 10px; line-height: 1.35; }
-.map-stage[data-radar-loop="true"] .qwen-map-launch { bottom: 252px; }
-.map-stage[data-radar-loop="true"] .map-legend-dock,
-.map-stage[data-radar-loop="true"] .measurement-readout { bottom: 252px; }
-.map-stage[data-radar-loop="true"] .maplibregl-ctrl-bottom-left,
-.map-stage[data-radar-loop="true"] .maplibregl-ctrl-bottom-right { bottom: 252px; }
-.map-stage[data-radar-loop="true"]::after { bottom: 252px; }
+
+/* River Pulse uses a second, exact observation clock. The glass instrument is
+   deliberately distinct from the atlas timeline and keeps gaps visible. */
+.hydrology-observatory {
+  position: absolute;
+  z-index: 19;
+  bottom: 14px;
+  left: 50%;
+  isolation: isolate;
+  display: grid;
+  width: min(900px, calc(100% - 190px));
+  max-height: 288px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  gap: 9px;
+  border: 1px solid rgba(91, 211, 225, .54);
+  border-top: 3px solid #62d8e5;
+  border-radius: 13px;
+  background:
+    radial-gradient(circle at 8% -30%, rgba(74, 218, 231, .22), transparent 38%),
+    radial-gradient(circle at 92% 130%, rgba(224, 186, 109, .13), transparent 42%),
+    linear-gradient(145deg, rgba(2, 27, 34, .98), rgba(3, 18, 24, .97));
+  box-shadow: 0 22px 64px rgba(0, 0, 0, .58), inset 0 1px rgba(230, 255, 255, .06), 0 0 28px rgba(63, 190, 207, .1);
+  padding: 11px 13px 10px;
+  transform: translateX(-50%);
+  scrollbar-color: rgba(98, 216, 229, .46) rgba(1, 15, 20, .25);
+  backdrop-filter: blur(20px) saturate(1.18);
+}
+.hydrology-observatory::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: -3px;
+  bottom: 0;
+  left: -22%;
+  width: 20%;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(174, 245, 250, .12), transparent);
+  opacity: 0;
+  transform: skewX(-18deg);
+}
+.hydrology-observatory[data-playing="true"]::before { opacity: 1; animation: hydrology-sweep 3.8s linear infinite; }
+.hydrology-observatory:focus-visible { outline: 3px solid var(--gold-soft); outline-offset: 3px; }
+.hydrology-observatory[data-state="stale"],
+.hydrology-observatory[data-state="partial"] { border-color: rgba(224, 186, 109, .62); border-top-color: var(--gold); }
+.hydrology-observatory[data-state="empty"],
+.hydrology-observatory[data-state="error"] { border-color: rgba(255, 155, 136, .64); border-top-color: var(--red); }
+.hydrology-header,
+.hydrology-clock,
+.hydrology-transport,
+.hydrology-settings,
+.hydrology-hydrograph > header { display: flex; align-items: center; gap: 9px; }
+.hydrology-header,
+.hydrology-clock,
+.hydrology-hydrograph > header { justify-content: space-between; }
+.hydrology-identity,
+.hydrology-clock > div,
+.hydrology-hydrograph > header > div { display: grid; gap: 2px; min-width: 0; }
+.hydrology-identity > span,
+.hydrology-clock > div > span,
+.hydrology-hydrograph > header span {
+  color: #80dbe5;
+  font-size: 10px;
+  font-weight: 950;
+  letter-spacing: .13em;
+}
+.hydrology-identity > strong,
+.hydrology-hydrograph > header strong {
+  overflow: hidden;
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 16px;
+  letter-spacing: -.015em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.hydrology-header-actions { display: flex; align-items: center; gap: 7px; flex: none; }
+.hydrology-state {
+  border: 1px solid rgba(98, 216, 229, .44);
+  border-radius: 999px;
+  background: rgba(98, 216, 229, .06);
+  color: #95e7ed;
+  padding: 5px 8px;
+  font-size: 10px;
+  letter-spacing: .08em;
+}
+.hydrology-observatory[data-state="stale"] .hydrology-state,
+.hydrology-observatory[data-state="partial"] .hydrology-state { border-color: rgba(224, 186, 109, .46); color: var(--gold-soft); }
+.hydrology-observatory[data-state="empty"] .hydrology-state,
+.hydrology-observatory[data-state="error"] .hydrology-state { border-color: rgba(255, 155, 136, .48); color: var(--red); }
+.hydrology-header-actions button,
+.hydrology-transport button {
+  min-height: 36px;
+  border: 1px solid rgba(221, 236, 226, .24);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, .03);
+  color: var(--muted);
+  padding: 0 10px;
+  font-size: 11px;
+  font-weight: 850;
+}
+.hydrology-header-actions button:not(:disabled):hover,
+.hydrology-transport button:not(:disabled):hover { border-color: rgba(98, 216, 229, .58); background: rgba(98, 216, 229, .09); color: #ddfbfc; }
+.hydrology-header-actions button:focus-visible,
+.hydrology-transport button:focus-visible,
+.hydrology-settings select:focus-visible,
+.live-observation-switcher button:focus-visible { outline: 3px solid var(--gold-soft); outline-offset: 2px; }
+.hydrology-clock { border-top: 1px solid rgba(221, 236, 226, .13); border-bottom: 1px solid rgba(221, 236, 226, .13); padding: 7px 0; }
+.hydrology-clock strong { overflow: hidden; color: var(--gold-soft); font-size: 13px; text-overflow: ellipsis; white-space: nowrap; }
+.hydrology-clock small { color: var(--dim); font-size: 10px; }
+.hydrology-clock > span { flex: none; color: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; font-weight: 850; }
+.hydrology-transport { display: grid; grid-template-columns: 40px 82px 40px minmax(150px, 1fr) 66px; }
+.hydrology-transport .hydrology-play { border-color: rgba(224, 186, 109, .5); background: rgba(224, 186, 109, .09); color: var(--gold-soft); }
+.hydrology-transport .hydrology-play[aria-pressed="true"] { border-color: rgba(98, 216, 229, .62); background: rgba(98, 216, 229, .13); color: #d8fbfd; box-shadow: 0 0 18px rgba(98, 216, 229, .13); }
+.hydrology-transport .hydrology-latest[aria-pressed="true"] { border-color: rgba(131, 198, 160, .56); background: rgba(131, 198, 160, .1); color: #b5e8c9; }
+.hydrology-transport input { width: 100%; min-width: 0; accent-color: #62d8e5; }
+.hydrology-settings { display: grid; grid-template-columns: minmax(120px, .7fr) minmax(105px, .55fr) minmax(230px, 1.75fr); }
+.hydrology-settings label { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 7px; min-width: 0; }
+.hydrology-settings label > span { color: var(--dim); font-size: 10px; font-weight: 900; letter-spacing: .06em; text-transform: uppercase; }
+.hydrology-settings select {
+  min-width: 0;
+  width: 100%;
+  min-height: 34px;
+  border: 1px solid rgba(221, 236, 226, .18);
+  border-radius: 7px;
+  background: #08232a;
+  color: #dcebe8;
+  padding: 0 8px;
+  font-size: 11px;
+}
+.hydrology-settings select:not(:disabled):hover { border-color: rgba(98, 216, 229, .46); }
+.hydrology-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+.hydrology-stats article {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 2px 8px;
+  overflow: hidden;
+  border: 1px solid rgba(221, 236, 226, .13);
+  border-radius: 8px;
+  background: linear-gradient(120deg, rgba(98, 216, 229, .055), rgba(255, 255, 255, .012));
+  padding: 7px 9px;
+}
+.hydrology-stats article::after { content: ""; position: absolute; inset: 0 auto 0 0; width: 2px; background: #62d8e5; }
+.hydrology-stats article:nth-child(2)::after { background: var(--red); }
+.hydrology-stats article:nth-child(3)::after { background: var(--gold); }
+.hydrology-stats span { align-self: center; color: var(--dim); font-size: 9px; font-weight: 950; letter-spacing: .08em; }
+.hydrology-stats strong { grid-row: 1 / 3; grid-column: 2; align-self: center; color: #dffbfc; font-size: 20px; font-variant-numeric: tabular-nums; }
+.hydrology-stats small { color: var(--muted); font-size: 10px; }
+.hydrology-message { display: grid; gap: 3px; border-left: 3px solid var(--gold); background: rgba(224, 186, 109, .07); padding: 8px 9px; }
+.hydrology-message strong { color: var(--gold-soft); font-size: 11px; }
+.hydrology-message span { color: var(--muted); font-size: 10px; line-height: 1.45; }
+.hydrology-message[data-state="error"],
+.hydrology-message[data-state="empty"] { border-left-color: var(--red); background: rgba(255, 155, 136, .07); }
+.hydrology-message[data-state="error"] strong,
+.hydrology-message[data-state="empty"] strong { color: var(--red); }
+.hydrology-legend { border-top: 1px solid var(--line); }
+.hydrology-legend summary { cursor: pointer; color: #92e5eb; padding: 7px 0 0; font-size: 11px; font-weight: 850; }
+.hydrology-legend summary:hover { color: #d9fbfd; }
+.hydrology-legend-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; margin-top: 8px; }
+.hydrology-legend-grid section { min-width: 0; border: 1px solid var(--line); border-radius: 8px; background: rgba(255, 255, 255, .018); padding: 8px; }
+.hydrology-legend-grid section > strong { color: var(--gold-soft); font-size: 9px; letter-spacing: .07em; }
+.hydrology-legend-grid p { margin: 6px 0 0; color: var(--dim); font-size: 9px; line-height: 1.42; }
+.hydrology-size-key,
+.hydrology-trend-key,
+.hydrology-quality-key { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 9px; margin-top: 7px; color: var(--muted); font-size: 10px; }
+.hydrology-size-key span,
+.hydrology-quality-key span { display: inline-flex; align-items: center; gap: 5px; }
+.hydrology-size-key i,
+.hydrology-quality-key i { display: inline-block; flex: none; border: 2px solid #6ee3ed; border-radius: 50%; background: rgba(98, 216, 229, .22); box-shadow: 0 0 7px rgba(98, 216, 229, .24); }
+.hydrology-size-key i[data-size="small"] { width: 7px; height: 7px; }
+.hydrology-size-key i[data-size="medium"] { width: 11px; height: 11px; }
+.hydrology-size-key i[data-size="large"] { width: 15px; height: 15px; }
+.hydrology-trend-key [data-trend="rising"] { color: #76e6e7; }
+.hydrology-trend-key [data-trend="falling"] { color: #ffb28e; }
+.hydrology-trend-key [data-trend="steady"] { color: #dbe9e5; }
+.hydrology-trend-key [data-trend="unknown"] { color: var(--dim); }
+.hydrology-quality-key [data-quality="approved"] i { width: 9px; height: 9px; border-color: var(--green); background: var(--green); }
+.hydrology-quality-key [data-quality="provisional"] i { width: 9px; height: 9px; border-color: var(--gold); background: transparent; }
+.hydrology-quality-key [data-quality="missing"] i { width: 9px; height: 9px; border-color: var(--red); border-style: dashed; background: transparent; box-shadow: none; }
+.hydrology-hydrograph { display: grid; gap: 8px; border-top: 1px solid rgba(98, 216, 229, .28); padding-top: 9px; }
+.hydrology-hydrograph > header small { color: var(--dim); font-size: 10px; }
+.hydrology-hydrograph > header > b { flex: none; border: 1px solid rgba(98, 216, 229, .34); border-radius: 999px; color: #9ce8ed; padding: 5px 8px; font-size: 9px; letter-spacing: .08em; }
+.hydrology-hydrograph figure { margin: 0; }
+.hydrology-chart {
+  display: block;
+  width: 100%;
+  height: 118px;
+  overflow: visible;
+  border: 1px solid rgba(98, 216, 229, .18);
+  border-radius: 8px;
+  background:
+    linear-gradient(rgba(98, 216, 229, .025), rgba(98, 216, 229, .005)),
+    repeating-linear-gradient(90deg, transparent 0, transparent calc(12.5% - 1px), rgba(221, 236, 226, .035) 12.5%);
+}
+.hydrology-chart-grid { stroke: rgba(221, 236, 226, .13); stroke-width: 1; }
+.hydrology-chart-segment { stroke: #64e2eb; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 0 4px rgba(71, 215, 228, .56)); }
+.hydrology-observatory[data-playing="true"] .hydrology-chart-segment { stroke-dasharray: 5 3; animation: hydrology-flow 1.2s linear infinite; }
+.hydrology-chart-cursor { stroke: rgba(244, 223, 174, .72); stroke-width: 1; stroke-dasharray: 3 3; }
+.hydrology-chart-latest { fill: #08232a; stroke: var(--green); stroke-width: 2.5; }
+.hydrology-chart-active { fill: var(--gold-soft); stroke: #08232a; stroke-width: 2.5; filter: drop-shadow(0 0 6px rgba(244, 223, 174, .72)); }
+.hydrology-chart-caption { display: grid; grid-template-columns: 1fr auto 1fr; gap: 8px; margin-top: 4px; color: var(--dim); font-size: 9px; }
+.hydrology-chart-caption strong { color: var(--muted); text-align: center; }
+.hydrology-chart-caption span:last-child { text-align: right; }
+.hydrology-hydrograph-summary { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 0; border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+.hydrology-hydrograph-summary div { min-width: 0; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 7px; }
+.hydrology-hydrograph-summary dt { color: var(--dim); font-size: 9px; letter-spacing: .05em; text-transform: uppercase; }
+.hydrology-hydrograph-summary dd { overflow: hidden; margin: 3px 0 0; color: var(--gold-soft); font-size: 11px; font-variant-numeric: tabular-nums; font-weight: 850; text-overflow: ellipsis; white-space: nowrap; }
+.hydrology-hydrograph-empty { display: grid; gap: 3px; border: 1px dashed rgba(255, 155, 136, .42); border-radius: 8px; background: rgba(255, 155, 136, .04); padding: 14px; text-align: center; }
+.hydrology-hydrograph-empty strong { color: var(--red); font-size: 11px; }
+.hydrology-hydrograph-empty span,
+.hydrology-chart-boundary,
+.hydrology-motion-note,
+.hydrology-boundary { margin: 0; color: var(--dim); font-size: 9px; line-height: 1.45; }
+.hydrology-chart-boundary { border-left: 2px solid rgba(98, 216, 229, .48); padding-left: 8px; }
+.hydrology-motion-note { border-left: 2px solid var(--gold); color: var(--gold-soft); padding-left: 8px; }
+.hydrology-boundary { border-top: 1px solid var(--line); padding-top: 7px; }
+
+/* Switches between live instruments when more than one operational carrier is
+   visible. Placement follows the active dock rather than a radar-only flag. */
+.live-observation-switcher {
+  position: absolute;
+  z-index: 20;
+  bottom: calc(var(--live-dock-clearance, 252px) + 4px);
+  left: 50%;
+  display: inline-flex;
+  gap: 3px;
+  max-width: calc(100% - 24px);
+  border: 1px solid rgba(98, 216, 229, .34);
+  border-radius: 999px;
+  background: rgba(2, 19, 25, .92);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, .38);
+  padding: 3px;
+  transform: translateX(-50%);
+  backdrop-filter: blur(14px);
+}
+.live-observation-switcher button {
+  min-height: 30px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  padding: 0 11px;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .05em;
+  white-space: nowrap;
+}
+.live-observation-switcher button:hover { color: var(--ink); }
+.live-observation-switcher button[aria-pressed="true"],
+.live-observation-switcher button[data-active="true"] { border-color: rgba(98, 216, 229, .52); background: linear-gradient(135deg, rgba(98, 216, 229, .18), rgba(224, 186, 109, .09)); color: #e2fbfc; box-shadow: inset 0 1px rgba(255, 255, 255, .06); }
+
+.map-stage[data-live-dock="true"] { --live-dock-clearance: 252px; }
+.map-stage[data-live-dock="true"]:has(.hydrology-observatory) { --live-dock-clearance: 310px; }
+.map-stage[data-live-dock="true"] .qwen-map-launch,
+.map-stage[data-live-dock="true"] .map-legend-dock,
+.map-stage[data-live-dock="true"] .measurement-readout,
+.map-stage[data-live-dock="true"] .maplibregl-ctrl-bottom-left,
+.map-stage[data-live-dock="true"] .maplibregl-ctrl-bottom-right,
+.map-stage[data-live-dock="true"]::after { bottom: var(--live-dock-clearance); }
+
+@keyframes hydrology-sweep {
+  0% { left: -24%; }
+  100% { left: 110%; }
+}
+@keyframes hydrology-flow {
+  to { stroke-dashoffset: -16; }
+}
 
 @media (max-width: 1180px) {
   .timeline-detail { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   .timeline-sweep-setup { grid-column: 1 / -1; }
   .noaa-radar-loop { width: min(700px, calc(100% - 120px)); }
+  .hydrology-observatory { width: min(820px, calc(100% - 120px)); }
 }
 
 @media (max-width: 760px) {
@@ -2937,7 +3201,8 @@ body { font-size: 14px; }
   .timeline-semantic-controls { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .timeline-range-controls { grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); }
   .timeline-range-controls > strong { grid-column: 1 / -1; }
-  .noaa-radar-loop {
+  .noaa-radar-loop,
+  .hydrology-observatory {
     right: 8px;
     bottom: calc(62px + env(safe-area-inset-bottom));
     left: 8px;
@@ -2949,18 +3214,23 @@ body { font-size: 14px; }
     transform: none;
   }
   .noaa-radar-loop > header strong { font-size: 14px; }
+  .hydrology-identity > strong,
+  .hydrology-hydrograph > header strong { font-size: 14px; }
   .noaa-radar-transport { grid-template-columns: 42px 78px 42px minmax(80px, 1fr) 60px; }
   .noaa-radar-transport button,
   .noaa-radar-settings button,
   .noaa-radar-settings select { min-height: 44px; }
   .noaa-radar-settings { grid-template-columns: 1fr 1fr; }
   .noaa-radar-settings label:nth-child(3) { grid-column: 1 / -1; }
-  .map-stage[data-radar-loop="true"] .map-mobile-actions { bottom: calc(8px + env(safe-area-inset-bottom)); }
-  .map-stage[data-radar-loop="true"] .maplibregl-ctrl-bottom-left,
-  .map-stage[data-radar-loop="true"] .maplibregl-ctrl-bottom-right,
-  .map-stage[data-radar-loop="true"]::after { bottom: calc(min(48dvh, 440px) + 74px + env(safe-area-inset-bottom)); }
-  .map-stage[data-radar-loop="true"] .qwen-map-launch,
-  .map-stage[data-radar-loop="true"] .measurement-readout { bottom: calc(min(48dvh, 440px) + 74px + env(safe-area-inset-bottom)); }
+  .hydrology-header-actions button,
+  .hydrology-transport button,
+  .hydrology-settings select { min-height: 44px; }
+  .hydrology-settings { grid-template-columns: 1fr 1fr; }
+  .hydrology-station-control { grid-column: 1 / -1; }
+  .hydrology-legend-grid { grid-template-columns: minmax(0, 1fr); }
+  .map-stage[data-live-dock="true"] { --live-dock-clearance: calc(min(48dvh, 440px) + 74px + env(safe-area-inset-bottom)); }
+  .map-stage[data-live-dock="true"] .map-mobile-actions { bottom: calc(8px + env(safe-area-inset-bottom)); }
+  .live-observation-switcher { bottom: calc(var(--live-dock-clearance) + 4px); }
 }
 
 @media (max-width: 500px) {
@@ -2973,5 +3243,24 @@ body { font-size: 14px; }
   .noaa-radar-transport input { grid-column: 1 / -1; grid-row: 2; }
   .noaa-radar-frame small { font-size: 10px; }
   .noaa-radar-legend dl { grid-template-columns: 1fr; }
-  .map-stage[data-radar-loop="true"] .qwen-map-launch { bottom: calc(min(48dvh, 440px) + 74px + env(safe-area-inset-bottom)); }
+  .hydrology-header { align-items: flex-start; }
+  .hydrology-header-actions { flex-direction: column; align-items: stretch; }
+  .hydrology-transport { grid-template-columns: 42px 1fr 42px 66px; }
+  .hydrology-transport input { grid-column: 1 / -1; grid-row: 2; min-height: 28px; }
+  .hydrology-settings { grid-template-columns: minmax(0, 1fr); }
+  .hydrology-station-control { grid-column: auto; }
+  .hydrology-stats article { grid-template-columns: minmax(0, 1fr) auto; padding-inline: 7px; }
+  .hydrology-stats span { font-size: 8px; }
+  .hydrology-stats strong { font-size: 17px; }
+  .hydrology-stats small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .hydrology-chart-caption { grid-template-columns: 1fr 1fr; }
+  .hydrology-chart-caption strong { display: none; }
+  .hydrology-hydrograph-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .live-observation-switcher button { min-height: 34px; padding-inline: 10px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hydrology-observatory::before,
+  .hydrology-observatory[data-playing="true"] .hydrology-chart-segment { animation: none; }
+  .hydrology-observatory::before { display: none; }
 }

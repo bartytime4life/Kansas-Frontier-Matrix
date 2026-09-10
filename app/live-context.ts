@@ -2,8 +2,8 @@ import type { FeatureCollection } from "geojson";
 import type { GeoJSONSource, LayerSpecification, Map as MapLibreMap, RasterTileSource } from "maplibre-gl";
 import { noaaRadarTileUrl } from "./noaa-radar";
 
-export type OfficialContextId = "census-counties" | "usgs-streamflow" | "usgs-earthquakes" | "usgs-3dep-hillshade" | "nws-alerts" | "nws-radar";
-export type OfficialContextFeedId = "census-counties" | "usgs-streamflow" | "usgs-earthquakes" | "nws-alerts";
+export type OfficialContextId = "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-3dhp-hydrography" | "usgs-wbd-watersheds" | "noaa-nwm-analysis" | "noaa-nwm-short-range" | "usgs-earthquakes" | "usgs-3dep-hillshade" | "nws-alerts" | "nws-radar";
+export type OfficialContextFeedId = "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-earthquakes" | "nws-alerts";
 export type OfficialContextState = "idle" | "loading" | "ready" | "empty" | "partial" | "error";
 
 export type OfficialContextPayload = Readonly<{
@@ -29,6 +29,7 @@ export type OfficialContextSource = Readonly<{
   layerIds: readonly string[];
   interactiveLayerIds: readonly string[];
   apiPath?: `/api/live-context?feed=${OfficialContextFeedId}`;
+  managedAdapterPath?: string;
   mapUrl?: string;
   endpointLabel: string;
   sourceUrl: string;
@@ -72,27 +73,147 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
   }),
   Object.freeze({
     id: "usgs-streamflow",
-    title: "USGS current Kansas streamflow observations",
-    shortTitle: "Current streamflow",
+    title: "USGS River Pulse observations + history",
+    shortTitle: "River Pulse",
     organization: "U.S. Geological Survey",
     domain: "Living waters",
     kind: "OPERATIONAL_GEOJSON",
     sourceId: "external-usgs-streamflow",
-    layerIds: Object.freeze(["external-usgs-streamflow-points"]),
+    layerIds: Object.freeze(["external-usgs-streamflow-glow", "external-usgs-streamflow-points", "external-usgs-streamflow-labels"]),
     interactiveLayerIds: Object.freeze(["external-usgs-streamflow-points"]),
-    apiPath: "/api/live-context?feed=usgs-streamflow",
-    endpointLabel: "api.waterdata.usgs.gov · latest-continuous",
-    sourceUrl: "https://api.waterdata.usgs.gov/ogcapi/v0/collections/latest-continuous",
-    serviceUrl: "https://api.waterdata.usgs.gov/ogcapi/v0/",
-    cadence: "Upstream latest-value collection; refreshed on demand",
-    freshness: "Most recent values in the past 24 hours",
+    managedAdapterPath: "/api/hydrology/streamflow?mode=network&range=24h",
+    endpointLabel: "api.waterdata.usgs.gov · OGC API v1 continuous + daily",
+    sourceUrl: "https://api.waterdata.usgs.gov/ogcapi/v1/collections/continuous",
+    serviceUrl: "https://api.waterdata.usgs.gov/ogcapi/v1/",
+    cadence: "Instantaneous observations, commonly 15-minute; daily means for the one-year selected-station view",
+    freshness: "Bounded 24-hour network window + on-demand selected-station history",
     defaultVisibility: true,
     defaultOpacity: 0.92,
     color: "#55d9ec",
     attribution: "U.S. Geological Survey Water Data APIs",
     evidenceRole: "EXTERNAL_CONTEXT_ONLY",
-    boundary: "Values are current-awareness context and may be provisional, delayed, revised, or incomplete. They are not flood warnings, certified statistics, admitted KFM observations, or an all-stations inventory.",
-    fallback: "A timeout, malformed response, or upstream error becomes an explicit unavailable state; the Site never converts it into zero flow or a statewide all-clear.",
+    boundary: "The map steps exact USGS samples without interpolation. Statewide playback is a deterministic, bounded gauge sample; longer histories are station-specific. Values may be provisional, delayed, revised, qualified, or incomplete. Discharge is not comparable across differently sized basins and is not painted onto ungauged reaches. This is not flood guidance, a certified statistic, an admitted KFM observation, or an all-stations inventory.",
+    fallback: "A timeout, malformed response, missing sample, or upstream error becomes an explicit unavailable or gap state; the Site never converts it into zero flow, carries a future value backward, or declares a statewide all-clear.",
+  }),
+  Object.freeze({
+    id: "noaa-nwps-gauges",
+    title: "NOAA NWPS observations + forecasts",
+    shortTitle: "NWPS gauges + forecast",
+    organization: "NOAA National Water Prediction Service",
+    domain: "Living waters",
+    kind: "OPERATIONAL_GEOJSON",
+    sourceId: "external-noaa-nwps-gauges",
+    layerIds: Object.freeze(["external-noaa-nwps-gauges-halo", "external-noaa-nwps-gauges-points"]),
+    interactiveLayerIds: Object.freeze(["external-noaa-nwps-gauges-points"]),
+    managedAdapterPath: "/api/hydrology/noaa?mode=network",
+    endpointLabel: "api.water.noaa.gov · NWPS v1 gauges + NWM reach series",
+    sourceUrl: "https://api.water.noaa.gov/nwps/v1/gauges",
+    serviceUrl: "https://water.noaa.gov/about/api",
+    cadence: "Provider operational observations, forecasts, and model series",
+    freshness: "Exact provider valid times; rolling availability discovered on request",
+    defaultVisibility: false,
+    defaultOpacity: 0.86,
+    color: "#b995ff",
+    attribution: "NOAA National Water Prediction Service",
+    evidenceRole: "EXTERNAL_CONTEXT_ONLY",
+    boundary: "Observed, forecast, and modeled series retain separate source-role labels and valid times. Flood categories appear only when NOAA supplies them. The NWPS API is operational and does not provide a durable general historical archive; this Site is not a warning service, inundation map, emergency guide, or KFM EvidenceBundle.",
+    fallback: "Sentinel values, invalid dates, missing geometry, and failed requests are withheld. A missing or stale NOAA record is never shown as normal, safe, or zero flow.",
+  }),
+  Object.freeze({
+    id: "usgs-3dhp-hydrography",
+    title: "USGS 3D Hydrography Program network",
+    shortTitle: "3DHP hydrography",
+    organization: "U.S. Geological Survey",
+    domain: "Living waters",
+    kind: "OPERATIONAL_WMS",
+    sourceId: "external-usgs-3dhp-hydrography",
+    layerIds: Object.freeze(["external-usgs-3dhp-hydrography-raster"]),
+    interactiveLayerIds: Object.freeze([]),
+    mapUrl: "https://3dhp.nationalmap.gov/arcgis/rest/services/usgs_3dhp_all/MapServer/export?bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&size=256%2C256&format=png32&transparent=true&layers=show%3A50%2C60&f=image",
+    endpointLabel: "3dhp.nationalmap.gov · usgs_3dhp_all flowlines + waterbodies",
+    sourceUrl: "https://3dhp.nationalmap.gov/arcgis/rest/services/usgs_3dhp_all/MapServer",
+    serviceUrl: "https://www.usgs.gov/3d-hydrography-program",
+    cadence: "Provider-current transitional 3DHP/NHD service",
+    freshness: "Current published service mosaic; feature vintages vary by collection area",
+    defaultVisibility: true,
+    defaultOpacity: 0.78,
+    color: "#5bd6e7",
+    attribution: "USGS The National Map · 3D Hydrography Program",
+    evidenceRole: "EXTERNAL_CONTEXT_ONLY",
+    boundary: "This image carrier renders provider flowlines and waterbodies. 3DHP is transitional and can include legacy NHD-sourced work units; current Kansas samples do not support a claim that displayed reaches carry meaningful elevation or 3D geometry. It is not a vector analysis surface, velocity measurement, complete topology proof, site-specific regulatory determination, or KFM release.",
+    fallback: "Failed or slow map-service tiles stay transparent. The Site does not draw substitute streams, infer downstream direction, or extend gauge values along the network.",
+  }),
+  Object.freeze({
+    id: "usgs-wbd-watersheds",
+    title: "USGS/NRCS Watershed Boundary Dataset",
+    shortTitle: "WBD watersheds",
+    organization: "U.S. Geological Survey · USDA NRCS",
+    domain: "Living waters",
+    kind: "OPERATIONAL_WMS",
+    sourceId: "external-usgs-wbd-watersheds",
+    layerIds: Object.freeze(["external-usgs-wbd-watersheds-raster"]),
+    interactiveLayerIds: Object.freeze([]),
+    mapUrl: "https://hydro.nationalmap.gov/arcgis/rest/services/wbd/MapServer/export?bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&size=256%2C256&format=png32&transparent=true&layers=show%3A4%2C5%2C6&f=image",
+    endpointLabel: "hydro.nationalmap.gov · WBD HUC8/HUC10/HUC12",
+    sourceUrl: "https://hydro.nationalmap.gov/arcgis/rest/services/wbd/MapServer",
+    serviceUrl: "https://www.usgs.gov/national-hydrography/watershed-boundary-dataset",
+    cadence: "Published legacy national watershed service; WBD is no longer maintained as a current USGS product",
+    freshness: "Current service availability does not establish a current boundary vintage",
+    defaultVisibility: false,
+    defaultOpacity: 0.58,
+    color: "#74cdbd",
+    attribution: "USGS Watershed Boundary Dataset · USDA NRCS",
+    evidenceRole: "EXTERNAL_CONTEXT_ONLY",
+    boundary: "Scale-dependent HUC8, HUC10, and HUC12 boundaries are rendered from the published legacy WBD service for watershed identity and orientation. USGS now classifies WBD as a legacy product no longer maintained. These images are not selected-vector geometry, a basin condition estimate, a site-specific regulatory boundary, or a KFM EvidenceBundle.",
+    fallback: "Unavailable watershed tiles remain transparent. Gauge observations are never generalized into watershed-wide conditions when this carrier is visible.",
+  }),
+  Object.freeze({
+    id: "noaa-nwm-analysis",
+    title: "NOAA NWM high-flow analysis guidance",
+    shortTitle: "NWM high-flow analysis",
+    organization: "NOAA Office of Water Prediction",
+    domain: "Living waters",
+    kind: "OPERATIONAL_WMS",
+    sourceId: "external-noaa-nwm-analysis",
+    layerIds: Object.freeze(["external-noaa-nwm-analysis-raster"]),
+    interactiveLayerIds: Object.freeze([]),
+    mapUrl: "https://maps.water.noaa.gov/server/rest/services/nwm/ana_high_flow_magnitude/MapServer/export?bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&size=256%2C256&format=png32&transparent=true&f=image",
+    endpointLabel: "NOAA HydroVIS · ana_high_flow_magnitude",
+    sourceUrl: "https://maps.water.noaa.gov/server/rest/services/nwm/ana_high_flow_magnitude/MapServer",
+    serviceUrl: "https://water.noaa.gov/about/nwm",
+    cadence: "Provider-current hourly National Water Model analysis summary",
+    freshness: "Current service snapshot; exact historic frames are not advertised by this map carrier",
+    defaultVisibility: false,
+    defaultOpacity: 0.7,
+    color: "#62d7c6",
+    attribution: "NOAA National Water Model · HydroVIS",
+    evidenceRole: "EXTERNAL_CONTEXT_ONLY",
+    boundary: "This provider-rendered layer is modeled high-flow analysis guidance, not a gauge observation, warning polygon, observed inundation extent, or KFM evidence. Its service metadata does not advertise a selectable time axis, so the Site does not animate or relabel it as historical.",
+    fallback: "Unavailable tiles remain transparent and are never interpreted as no high flow. Consult official NWS products for decisions.",
+  }),
+  Object.freeze({
+    id: "noaa-nwm-short-range",
+    title: "NOAA NWM next-18-hour maximum high-flow guidance",
+    shortTitle: "NWM 18-hour outlook",
+    organization: "NOAA Office of Water Prediction",
+    domain: "Living waters",
+    kind: "OPERATIONAL_WMS",
+    sourceId: "external-noaa-nwm-short-range",
+    layerIds: Object.freeze(["external-noaa-nwm-short-range-raster"]),
+    interactiveLayerIds: Object.freeze([]),
+    mapUrl: "https://maps.water.noaa.gov/server/rest/services/nwm/srf_18hr_max_high_flow_magnitude/MapServer/export?bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&size=256%2C256&format=png32&transparent=true&f=image",
+    endpointLabel: "NOAA HydroVIS · srf_18hr_max_high_flow_magnitude",
+    sourceUrl: "https://maps.water.noaa.gov/server/rest/services/nwm/srf_18hr_max_high_flow_magnitude/MapServer",
+    serviceUrl: "https://water.noaa.gov/about/nwm",
+    cadence: "Provider-current hourly short-range National Water Model summary",
+    freshness: "Maximum modeled guidance for the provider's current next-18-hour window",
+    defaultVisibility: false,
+    defaultOpacity: 0.72,
+    color: "#bd9cff",
+    attribution: "NOAA National Water Model · HydroVIS",
+    evidenceRole: "EXTERNAL_CONTEXT_ONLY",
+    boundary: "This is a modeled maximum over a forecast window—not an observation, official River Forecast Center forecast, warning, deterministic outcome, floodplain, or KFM evidence. The raster carrier exposes no selectable historic time axis in its current service metadata.",
+    fallback: "Missing tiles or an empty-looking image are never labeled safe. The Site withholds failed imagery and does not synthesize forecast values.",
   }),
   Object.freeze({
     id: "usgs-earthquakes",
@@ -197,7 +318,7 @@ export const OFFICIAL_CONTEXT_INTERACTIVE_LAYER_IDS = Object.freeze(OFFICIAL_CON
 export const OFFICIAL_CONTEXT_PRESENT_FRAME = 2026;
 
 export type OfficialContextTemporalSupport = Readonly<{
-  axis: "joined-source-snapshot" | "rolling-retrieval-window" | "provider-current-mosaic" | "provider-observation-loop";
+  axis: "joined-source-snapshot" | "rolling-retrieval-window" | "provider-current-mosaic" | "provider-observation-loop" | "provider-observation-history" | "provider-forecast-series";
   supportedFrames: readonly number[];
   limitation: string;
 }>;
@@ -212,9 +333,34 @@ export const OFFICIAL_CONTEXT_TEMPORAL_SUPPORT: Readonly<Record<OfficialContextI
     limitation: "2026 TIGERweb geometry is joined to a separately dated 2024 ACS estimate; the combined carrier is not a 2024 historical snapshot.",
   }),
   "usgs-streamflow": Object.freeze({
-    axis: "rolling-retrieval-window",
+    axis: "provider-observation-history",
     supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]),
-    limitation: "Latest values retrieved from a rolling current window; no historical series is connected.",
+    limitation: "A separate ISO-time River Pulse clock provides exact recent instantaneous observations plus selected-station instantaneous and daily history. It remains subordinate to the operational-present atlas frame and is not a pinned KFM release.",
+  }),
+  "noaa-nwps-gauges": Object.freeze({
+    axis: "provider-forecast-series",
+    supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]),
+    limitation: "Operational observations, forecasts, and NWM model series retain provider valid times and separate roles. NWPS is not a durable historical archive; this carrier is held outside the operational-present atlas frame.",
+  }),
+  "usgs-3dhp-hydrography": Object.freeze({
+    axis: "provider-current-mosaic",
+    supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]),
+    limitation: "Provider-current transitional 3DHP/NHD image service; collection-area vintages are not exposed as selectable historical slices.",
+  }),
+  "usgs-wbd-watersheds": Object.freeze({
+    axis: "provider-current-mosaic",
+    supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]),
+    limitation: "Published legacy HUC boundary image service; USGS no longer maintains WBD as a current product, and boundary vintages are not exposed as historical watershed snapshots in this Site.",
+  }),
+  "noaa-nwm-analysis": Object.freeze({
+    axis: "provider-current-mosaic",
+    supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]),
+    limitation: "Provider-current NWM analysis summary with no time-enabled map-service axis; never replayed as a historic observation.",
+  }),
+  "noaa-nwm-short-range": Object.freeze({
+    axis: "provider-current-mosaic",
+    supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]),
+    limitation: "Provider-current next-18-hour maximum modeled guidance with no time-enabled map-service axis; never replayed as an observation.",
   }),
   "usgs-earthquakes": Object.freeze({
     axis: "rolling-retrieval-window",
@@ -279,10 +425,30 @@ export const applyOfficialContextState = (
 
   const streamflow = OFFICIAL_CONTEXT_BY_ID["usgs-streamflow"];
   ensureGeoJsonSource(map, streamflow, payloads["usgs-streamflow"]?.data ?? emptyCollection());
-  ensureLayer(map, { id: streamflow.layerIds[0], type: "circle", source: streamflow.sourceId, paint: {
-    "circle-color": ["case", ["==", ["get", "approvalStatus"], "Approved"], "#5fe1b0", streamflow.color],
-    "circle-radius": ["interpolate", ["linear"], ["zoom"], 4, 3.5, 10, 7.5, 14, 11],
-    "circle-opacity": 0.92, "circle-stroke-color": "#07171a", "circle-stroke-width": 1.6,
+  ensureLayer(map, { id: streamflow.layerIds[0], type: "circle", source: streamflow.sourceId, filter: ["!=", ["get", "missing"], true], paint: {
+    "circle-color": ["case", ["==", ["get", "trend"], "rising"], "#67e8f9", ["==", ["get", "trend"], "falling"], "#f3c969", ["==", ["get", "trend"], "steady"], "#72d5a7", streamflow.color],
+    "circle-radius": ["interpolate", ["linear"], ["zoom"], 4, ["interpolate", ["linear"], ["coalesce", ["get", "visualMagnitude"], 0], 0, 7, 4, 20], 10, ["interpolate", ["linear"], ["coalesce", ["get", "visualMagnitude"], 0], 0, 12, 4, 34]],
+    "circle-blur": 0.72, "circle-opacity": 0.3,
+  } });
+  ensureLayer(map, { id: streamflow.layerIds[1], type: "circle", source: streamflow.sourceId, paint: {
+    "circle-color": ["case", ["==", ["get", "missing"], true], "#17343b", ["==", ["get", "trend"], "rising"], "#55e6ff", ["==", ["get", "trend"], "falling"], "#f0c56c", ["==", ["get", "trend"], "steady"], "#73cfa8", streamflow.color],
+    "circle-radius": ["interpolate", ["linear"], ["zoom"], 4, ["interpolate", ["linear"], ["coalesce", ["get", "visualMagnitude"], 0], 0, 3.5, 4, 8.5], 10, ["interpolate", ["linear"], ["coalesce", ["get", "visualMagnitude"], 0], 0, 6, 4, 13]],
+    "circle-opacity": ["case", ["==", ["get", "missing"], true], 0.38, 0.96],
+    "circle-stroke-color": ["case", ["==", ["get", "selected"], true], "#ffe5a4", ["==", ["get", "missing"], true], "#a4bdc2", ["==", ["get", "approvalStatus"], "Approved"], "#d5fff0", "#f3c969"],
+    "circle-stroke-width": ["case", ["==", ["get", "selected"], true], 3.4, ["==", ["get", "missing"], true], 2.2, 1.4],
+  } });
+  ensureLayer(map, { id: streamflow.layerIds[2], type: "symbol", source: streamflow.sourceId, minzoom: 8.5, layout: {
+    "text-field": ["coalesce", ["get", "stationName"], ["get", "name"], ["get", "monitoringLocationId"]], "text-size": 10.5, "text-offset": [0, 1.25], "text-anchor": "top", "text-optional": true,
+  }, paint: { "text-color": "#d8f7f7", "text-halo-color": "#04171b", "text-halo-width": 1.5, "text-opacity": 0.86 } });
+
+  const nwps = OFFICIAL_CONTEXT_BY_ID["noaa-nwps-gauges"];
+  ensureGeoJsonSource(map, nwps, payloads["noaa-nwps-gauges"]?.data ?? emptyCollection());
+  ensureLayer(map, { id: nwps.layerIds[0], type: "circle", source: nwps.sourceId, paint: {
+    "circle-color": nwps.color, "circle-radius": ["interpolate", ["linear"], ["zoom"], 4, 8, 10, 18], "circle-blur": 0.82, "circle-opacity": 0.24,
+  } });
+  ensureLayer(map, { id: nwps.layerIds[1], type: "circle", source: nwps.sourceId, paint: {
+    "circle-color": ["match", ["downcase", ["coalesce", ["get", "floodCategory"], ""]], "major", "#d9364f", "moderate", "#ef6b45", "minor", "#f2a65a", "action", "#f2c14e", nwps.color],
+    "circle-radius": ["interpolate", ["linear"], ["zoom"], 4, 3.4, 10, 7.5, 14, 10], "circle-opacity": 0.9, "circle-stroke-color": ["case", ["==", ["get", "hasForecast"], true], "#e7d9ff", "#172e36"], "circle-stroke-width": ["case", ["==", ["get", "hasForecast"], true], 2.2, 1.2],
   } });
 
   const earthquakes = OFFICIAL_CONTEXT_BY_ID["usgs-earthquakes"];
@@ -299,7 +465,7 @@ export const applyOfficialContextState = (
   ensureLayer(map, { id: alerts.layerIds[0], type: "fill", source: alerts.sourceId, paint: { "fill-color": severityColor, "fill-opacity": 0.34 } });
   ensureLayer(map, { id: alerts.layerIds[1], type: "line", source: alerts.sourceId, paint: { "line-color": severityColor, "line-width": 2.4, "line-opacity": 0.94 } });
 
-  for (const raster of [OFFICIAL_CONTEXT_BY_ID["usgs-3dep-hillshade"]]) {
+  for (const raster of [OFFICIAL_CONTEXT_BY_ID["usgs-3dhp-hydrography"], OFFICIAL_CONTEXT_BY_ID["usgs-wbd-watersheds"], OFFICIAL_CONTEXT_BY_ID["noaa-nwm-analysis"], OFFICIAL_CONTEXT_BY_ID["noaa-nwm-short-range"], OFFICIAL_CONTEXT_BY_ID["usgs-3dep-hillshade"]]) {
     if (!map.getSource(raster.sourceId)) map.addSource(raster.sourceId, { type: "raster", tiles: [raster.mapUrl!], tileSize: 256, attribution: raster.attribution, minzoom: 3, maxzoom: 16 });
     ensureLayer(map, { id: raster.layerIds[0], type: "raster", source: raster.sourceId, paint: { "raster-opacity": raster.defaultOpacity, "raster-fade-duration": 120 } }, firstRegistryLayer(map));
   }
@@ -311,10 +477,11 @@ export const applyOfficialContextState = (
       map.setLayoutProperty(layerId, "visibility", visible);
       const safeOpacity = Math.max(0.1, Math.min(1, opacity[source.id] ?? source.defaultOpacity));
       const layer = map.getLayer(layerId);
-      if (layer?.type === "circle") map.setPaintProperty(layerId, "circle-opacity", safeOpacity);
+      if (layer?.type === "circle") map.setPaintProperty(layerId, "circle-opacity", layerId.endsWith("-glow") || layerId.endsWith("-halo") ? safeOpacity * 0.3 : safeOpacity);
       if (layer?.type === "fill") map.setPaintProperty(layerId, "fill-opacity", source.id === "census-counties" ? safeOpacity * 0.08 : safeOpacity);
       if (layer?.type === "line") map.setPaintProperty(layerId, "line-opacity", safeOpacity);
       if (layer?.type === "raster") map.setPaintProperty(layerId, "raster-opacity", safeOpacity);
+      if (layer?.type === "symbol") map.setPaintProperty(layerId, "text-opacity", safeOpacity);
     }
   }
 };

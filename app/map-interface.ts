@@ -26,7 +26,7 @@ export const MAP_VIEW_PROFILES: readonly MapViewProfile[] = Object.freeze([
   Object.freeze({
     id: "water",
     title: "Water + places",
-    summary: "Hydrology, county starter locators, and community context without implying monitoring or current conditions.",
+    summary: "Generalized local water context plus optional official USGS observations, 3DHP hydrography, WBD watersheds, and NOAA forecast/model context—each with its own role and clock.",
     visibleLayerIds: Object.freeze(["kansas-extent", "county-starter-points", "watershed-context", "water-context", "communities"]),
     year: 2026,
     basemap: "midnight",
@@ -121,7 +121,7 @@ export const MAP_CAPABILITY_GATES = Object.freeze([
   Object.freeze({ id: "terrain", title: "Terrain + hillshade", state: "CONTEXT ONLY", reason: "An attributed external Terrarium carrier supports reversible display; USGS 3DEP is cataloged separately and remains unadmitted.", safeInterface: "3D terrain and hillshade with explicit source links, 2D parity, and no reportable elevation claims" }),
   Object.freeze({ id: "compare", title: "Swipe compare", state: "HOLD", reason: "No aligned, independently supported, rights-cleared comparison pair is admitted.", safeInterface: "Separate A/B context requirements remain visible" }),
   Object.freeze({ id: "offline", title: "Offline / PMTiles", state: "HOLD", reason: "No admitted archive, ETag/range proof, release-scoped cache manifest, expiry, or correction path.", safeInterface: "Display-only readiness and source diagnostics" }),
-  Object.freeze({ id: "live", title: "Governed live sources", state: "HOLD", reason: "No authenticated source adapter, freshness envelope, policy execution, or released public transport is proven.", safeInterface: "Site-local GeoJSON fixtures remain explicit" }),
+  Object.freeze({ id: "live", title: "Governed live sources", state: "EXTERNAL CONTEXT", reason: "Fixed read-only USGS and NOAA adapters now expose bounded operational context, but that context is not admitted KFM evidence, a durable archive, or a warning service.", safeInterface: "Exact observations, provider forecasts, modeled guidance, retrieval times, provisional states, and visible gaps remain distinct" }),
 ]);
 
 export const isFeatureAvailableAtTime = (layer: Pick<LayerRecord, "temporal">, featureYear: number, activeYear: number) => {

@@ -6,7 +6,9 @@ fit together.
 
 ## Current public scope
 
-- The map uses site-local synthetic or generalized GeoJSON demonstration data.
+- Core KFM layers use site-local synthetic or generalized GeoJSON demonstration
+  data. Optional, clearly separated official USGS, NOAA, Census, and NWS layers
+  are external operational context, not admitted KFM evidence.
 - The default Kansas Overview may show an attributed OpenStreetMap context basemap; it is display context, not evidence.
 - Nothing in this build is a released operational KFM dataset.
 - Evidence resolution fails closed: missing, stale, restricted, denied, and
@@ -40,12 +42,51 @@ selection surface uses that query rather than a separate display-only clock.
 No mode interpolates geometry or values, carries an exact observation forward,
 or treats co-presence as correlation or causation.
 
-The official context connections below expose only a current snapshot or a
-rolling current window. They therefore fail closed outside the committed 2026
-operational-present frame: MapLibre hides their layers but preserves the user's
-visibility choices so the same sources return on Present. Historical playback
-never relabels current Census, USGS, NWS, terrain, or radar context as archival
-data.
+The atlas timeline and provider observation clocks are separate. Operational
+context therefore fails closed outside the committed 2026 operational-present
+atlas frame, even when a provider can return recent or station-specific
+history. MapLibre hides those layers but preserves the user's visibility
+choices so the same sources return on Present. This prevents a USGS observation
+from being relabeled as an atlas edition merely because their calendar years
+match.
+
+Each adapter keeps the clocks it can support distinct: observation or forecast
+valid time, provider publication or last-modified time, Site retrieval time,
+and KFM release time. A missing clock remains missing. Spatial overlap between
+radar, gauges, modeled guidance, watersheds, and other domains is an inspection
+cue only; it does not establish correlation, lag, direction, or causation.
+
+### River Pulse and temporal hydrology
+
+River Pulse uses the fixed `/api/hydrology/streamflow` adapter for the USGS
+Water Data APIs' OGC API v1 collections. The statewide view requests discharge
+parameter `00060` for a rolling 24-hour window and deterministically samples at
+most 72 geographically distributed Kansas stream gauges. Selected-station
+views provide 7-day and 30-day continuous series; the 1-year view uses daily
+mean statistic `00003`. These ranges are bounded displays, not an all-stations
+inventory or a permanent local archive.
+
+The display sequence is sampled from actual returned observation timestamps;
+it inserts no synthetic frame times. At a frame cursor, a station's most recent
+sample is usable only within the declared tolerance, with its true observation
+time and age retained. Outside that tolerance the marker becomes explicitly
+missing. Hydrograph paths break at nulls and large time gaps. No linear, spline,
+spatial, or cross-source interpolation is performed, and provisional USGS
+values remain labeled as subject to revision.
+
+Marker size uses a bounded logarithmic display of discharge to keep low and
+high flows legible together. It is not flood severity: raw cubic-feet-per-second
+values are not directly comparable across differently sized basins and are
+never painted onto 3DHP reaches or generalized into WBD watershed conditions.
+Flood categories are displayed only when NOAA supplies them.
+
+The fixed `/api/hydrology/noaa` adapter establishes three distinct NWPS modes:
+a Kansas gauge-status network, one-gauge observed and official NWS forecast
+series, and one-reach National Water Model analysis-assimilation and short-range
+series. The latter are modeled guidance, not gauge observations or official
+River Forecast Center forecasts. NWPS is an operational service rather than a
+durable general history archive, so all valid, issue, generation, and retrieval
+times remain explicit and gaps are not backfilled.
 
 ### NOAA observed-radar loop
 
@@ -75,7 +116,7 @@ official NWS products for weather decisions.
 
 ## External network disclosure
 
-The map can request four external display carriers. Their endpoints,
+The map can request five external display carriers. Their endpoints,
 activation rules, attribution, fallbacks, and evidence exclusions live in one
 typed registry: `app/external-context-sources.ts`. The Sources workbench shows
 the same registry and distinguishes the carrier selected by the current view
@@ -86,6 +127,7 @@ from site-local GeoJSON sources.
 | OpenFreeMap Liberty | Default Standard basemap | Vector geography and provider-supplied building heights | Display context only; attribution only in outward artifacts |
 | Esri World Imagery | User selects Satellite imagery | Raster imagery reference | Display context only; no acquisition or change claim |
 | OpenStreetMap raster | User selects OpenStreetMap context | Normal interactive raster navigation reference; no offline or bulk fetching | Display context only; no routing or legal-status claim |
+| USGS National Map Topo | User selects USGS topo | Raster topographic reference | Display context only; no feature, contour, or legal-status claim |
 | AWS / Mapzen Terrarium | User selects Terrain 3D | Raster DEM terrain and hillshade | Display context only; no sampled elevation or KFM release claim |
 
 The local Midnight and Prairie styles make no basemap request. A failed
@@ -94,7 +136,7 @@ path; terrain failure returns to the 2D evidence path.
 
 ## Official Kansas context adapters
 
-The Layer Catalog also exposes six fixed, source-specific connections. Search
+The Layer Catalog also exposes eleven fixed, source-specific connections. Search
 finds these sources directly, the Data action opens their controls, and the
 connection pulse reports loaded feature counts and retrieval time. Browser
 requests cannot supply an arbitrary upstream URL.
@@ -102,7 +144,12 @@ requests cannot supply an arbitrary upstream URL.
 | Connection | Default | Added context | Explicit boundary |
 |---|---:|---|---|
 | Census counties + ACS population | On | 2026 TIGERweb geometry joined by GEOID to the 2024 ACS 5-year population estimate | Separate vintages; not a current population count or EvidenceBundle |
-| USGS streamflow | On | Latest Kansas discharge values from a bounded rolling 24-hour request | Provisional context; not flood guidance |
+| USGS River Pulse | On | Bounded Kansas discharge `00060` observations from USGS Water Data API v1, with exact-frame playback and selected-station history | Samples may be provisional, qualified, delayed, revised, missing, or truncated; not flood guidance or an all-stations inventory |
+| NOAA NWPS gauges + forecast | Off | Operational Kansas gauge status plus separately labeled observations and forecasts | NWPS is not a durable general archive or warning-delivery service; flood categories appear only when supplied by NOAA |
+| USGS 3DHP hydrography | On | Provider-rendered flowlines and waterbodies for network orientation | Transitional/current image carrier, not queryable analysis topology; gauge values are never extended along it |
+| USGS/NRCS WBD watersheds | Off | Scale-dependent HUC8, HUC10, and HUC12 boundary context from the published legacy service | USGS no longer maintains WBD as a current product; image carrier, not selected-vector geometry or a basin condition estimate |
+| NOAA NWM high-flow analysis | Off | Provider-current modeled analysis-guidance snapshot | Not a gauge observation or warning; the map service advertises no selectable historical time axis |
+| NOAA NWM 18-hour outlook | Off | Provider-current maximum modeled high-flow guidance for the next-18-hour window | Not an official RFC forecast or deterministic outcome; the map service advertises no selectable historical time axis |
 | USGS earthquakes | Off | Bounded 30-day Kansas-area event catalog with magnitude and depth | Catalog values can change; not an alert or hazard forecast |
 | USGS 3DEP hillshade | Off | Current multidirectional hillshade tiles | Rendered relief only; no elevation sample, datum, or accuracy claim |
 | NWS alert areas | Off | Active Kansas alerts and bounded affected-zone geometry | Not a warning-delivery service or an all-clear |
@@ -115,8 +162,18 @@ into inferred facts.
 
 ## Backend connection posture
 
-- `/api/live-context` is the allowlisted server adapter for four JSON feeds;
-  the USGS 3DEP raster product is requested by MapLibre only when selected.
+- `/api/hydrology/streamflow` is the fixed, read-only USGS Water Data API v1
+  adapter for bounded statewide discharge and selected-station history. It
+  allowlists OGC collection paths and query shapes, limits response size and
+  records, validates station identifiers, and returns no synthetic, zero-flow,
+  or stale fallback.
+- `/api/hydrology/noaa` is the fixed, read-only NOAA NWPS adapter for Kansas
+  network, validated gauge, and validated NWM reach modes. Observed, official
+  forecast, analysis-assimilation, and short-range model records retain distinct
+  roles and valid times; sentinel values are normalized to missing.
+- `/api/live-context` remains an allowlisted adapter for four JSON feeds; River
+  Pulse now uses the dedicated USGS v1 route above. USGS 3DHP, WBD, and 3DEP and
+  NOAA NWM raster products are requested by MapLibre only when selected.
 - `/api/noaa-radar/frames` is a fixed, read-only NOAA nowCOAST capabilities
   adapter. It accepts no caller-supplied endpoint, bounds time and response
   size, and returns no synthetic or untimed fallback. Exact-time WMS radar
@@ -153,6 +210,16 @@ Scripts that need writable project-scoped home, npm, XDG, and temporary paths us
 - `app/external-context-sources.ts` is the single inventory for every
   browser-requested basemap and terrain carrier
 - `app/api/live-context/route.ts` contains the fixed official-context adapter
+- `app/streamflow.ts` validates USGS bundles, selects actual frame times, builds
+  tolerance-bounded map frames, and breaks hydrographs across gaps
+- `app/hydrology-observatory.tsx` owns the accessible River Pulse transport,
+  completeness readout, legends, station selection, and hydrograph
+- `app/api/hydrology/streamflow/route.ts` exposes bounded USGS Water Data API v1
+  network and selected-station queries
+- `app/noaa-hydrology.ts` validates the bounded NOAA Kansas gauge network for
+  MapLibre
+- `app/api/hydrology/noaa/route.ts` exposes bounded NWPS network, gauge, and NWM
+  reach modes without caller-supplied upstream URLs
 - `app/noaa-radar.ts` owns the NOAA nowCOAST product contract, explicit-time
   parsing, recent-window selection, and exact-time WMS request construction
 - `app/api/noaa-radar/frames/route.ts` exposes the bounded radar frame manifest

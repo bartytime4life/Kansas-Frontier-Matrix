@@ -792,7 +792,7 @@ test("keeps every top-level external map carrier in a display-only disclosure re
   assert.match(page, /NO REQUEST FROM CURRENT VIEW/);
 });
 
-test("connects six bounded official Kansas context sources without admitting evidence", async () => {
+test("connects eleven bounded official Kansas context sources without admitting evidence", async () => {
   const ts = await import("typescript");
   const registrySource = await readFile(new URL("../app/live-context.ts", import.meta.url), "utf8");
   const radarSource = await readFile(new URL("../app/noaa-radar.ts", import.meta.url), "utf8");
@@ -807,9 +807,27 @@ test("connects six bounded official Kansas context sources without admitting evi
   const javascript = compile(registrySource.replace('from "./noaa-radar";', `from "${radarUrl}";`), "live-context.ts");
   const registry = await import(`data:text/javascript;base64,${Buffer.from(javascript).toString("base64")}`);
 
-  assert.deepEqual(registry.OFFICIAL_CONTEXT_SOURCES.map((record) => record.id), ["census-counties", "usgs-streamflow", "usgs-earthquakes", "usgs-3dep-hillshade", "nws-alerts", "nws-radar"]);
-  assert.deepEqual(registry.OFFICIAL_CONTEXT_SOURCES.filter((record) => record.defaultVisibility).map((record) => record.id), ["census-counties", "usgs-streamflow"]);
+  assert.deepEqual(registry.OFFICIAL_CONTEXT_SOURCES.map((record) => record.id), [
+    "census-counties",
+    "usgs-streamflow",
+    "noaa-nwps-gauges",
+    "usgs-3dhp-hydrography",
+    "usgs-wbd-watersheds",
+    "noaa-nwm-analysis",
+    "noaa-nwm-short-range",
+    "usgs-earthquakes",
+    "usgs-3dep-hillshade",
+    "nws-alerts",
+    "nws-radar",
+  ]);
+  assert.deepEqual(registry.OFFICIAL_CONTEXT_SOURCES.filter((record) => record.defaultVisibility).map((record) => record.id), ["census-counties", "usgs-streamflow", "usgs-3dhp-hydrography"]);
   assert.equal(registry.OFFICIAL_CONTEXT_SOURCES.every((record) => record.evidenceRole === "EXTERNAL_CONTEXT_ONLY"), true);
+  assert.equal(registry.OFFICIAL_CONTEXT_SOURCES.filter((record) => record.domain === "Living waters").length, 6);
+  assert.match(registry.OFFICIAL_CONTEXT_BY_ID["usgs-streamflow"].serviceUrl, /^https:\/\/api\.waterdata\.usgs\.gov\/ogcapi\/v1\//);
+  assert.match(registry.OFFICIAL_CONTEXT_BY_ID["usgs-3dhp-hydrography"].mapUrl, /^https:\/\/3dhp\.nationalmap\.gov\/[\s\S]*usgs_3dhp_all\/MapServer\/export/);
+  assert.match(registry.OFFICIAL_CONTEXT_BY_ID["usgs-wbd-watersheds"].mapUrl, /wbd\/MapServer\/export/);
+  assert.match(registry.OFFICIAL_CONTEXT_BY_ID["noaa-nwm-analysis"].boundary, /does not advertise a selectable time axis/i);
+  assert.match(registry.OFFICIAL_CONTEXT_BY_ID["noaa-nwm-short-range"].boundary, /modeled maximum over a forecast window/i);
   assert.match(page, /OFFICIAL OPERATIONAL CONTEXT/);
   assert.match(page, /Real Kansas source connections/);
   assert.match(page, /Refresh visible/);
@@ -834,6 +852,104 @@ test("connects six bounded official Kansas context sources without admitting evi
   assert.doesNotMatch(route, /searchParams\.get\("url"\)/);
   assert.match(css, /\.official-context-catalog/);
   assert.match(css, /\.official-connection-ledger/);
+});
+
+test("adds bounded exact-time streamflow, NOAA hydrology roles, and a gap-aware River Pulse workbench", async () => {
+  const streamflow = await readFile(new URL("../app/streamflow.ts", import.meta.url), "utf8");
+  const usgsRoute = await readFile(new URL("../app/api/hydrology/streamflow/route.ts", import.meta.url), "utf8");
+  const noaaHydrology = await readFile(new URL("../app/noaa-hydrology.ts", import.meta.url), "utf8");
+  const noaaRoute = await readFile(new URL("../app/api/hydrology/noaa/route.ts", import.meta.url), "utf8");
+  const observatory = await readFile(new URL("../app/hydrology-observatory.tsx", import.meta.url), "utf8");
+  const livingAtlas = await readFile(new URL("../app/living-atlas.ts", import.meta.url), "utf8");
+  const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+
+  assert.match(usgsRoute, /USGS_API_ORIGIN = "https:\/\/api\.waterdata\.usgs\.gov"/);
+  assert.match(usgsRoute, /OGC_ROOT = "\/ogcapi\/v1\/collections"/);
+  assert.match(usgsRoute, /latest-continuous\/items/);
+  assert.match(usgsRoute, /continuous\/items/);
+  assert.match(usgsRoute, /daily\/items/);
+  assert.match(usgsRoute, /monitoring-locations\/items/);
+  assert.match(usgsRoute, /ALLOWED_UPSTREAM_PATHS/);
+  assert.match(usgsRoute, /NETWORK_STATION_CAP = 72/);
+  assert.match(usgsRoute, /geographicallySpread/);
+  assert.match(usgsRoute, /Network mode supports only range=24h and parameter 00060/);
+  assert.match(usgsRoute, /const statisticId = daily \? "00003" : null/);
+  assert.match(usgsRoute, /one-year view uses USGS daily values with statistic 00003 \(daily mean\)/i);
+  assert.doesNotMatch(usgsRoute, /searchParams\.get\("url"\)/);
+
+  assert.match(streamflow, /STREAMFLOW_MAX_DISPLAY_FRAMES = 96/);
+  assert.match(streamflow, /Returns a bounded sample of actual observation times; no synthetic timestamps are inserted/);
+  assert.match(streamflow, /held only within the caller-declared tolerance and are never interpolated/);
+  assert.match(streamflow, /Null values and time deltas larger[\s\S]*terminate a fragment instead of visually bridging missing data/);
+  assert.match(streamflow, /interpolation: false/);
+
+  assert.match(noaaRoute, /KANSAS_GAUGES_URL = `\$\{NWPS_BASE\}\/gauges\?bbox\.xmin=-102\.0517/);
+  assert.match(noaaRoute, /type HydrologyMode = "network" \| "gauge" \| "reach"/);
+  assert.match(noaaRoute, /OFFICIAL_NWS_OBSERVATION/);
+  assert.match(noaaRoute, /OFFICIAL_NWS_FORECAST/);
+  assert.match(noaaRoute, /analysis_assimilation/);
+  assert.match(noaaRoute, /short_range/);
+  assert.match(noaaRoute, /analysis\/assimilation is not a gauge observation/i);
+  assert.match(noaaRoute, /short-range NWM output is not an official River Forecast Center forecast/i);
+  assert.match(noaaRoute, /candidate === -999 \|\| candidate === -9999/);
+  assert.doesNotMatch(noaaRoute, /searchParams\.get\("url"\)/);
+  assert.match(noaaHydrology, /sourceRole: "OFFICIAL_NWS_OBSERVATION" \| "OFFICIAL_NWS_FORECAST"/);
+  assert.match(noaaHydrology, /floodCategory: gauge\.observed\.floodCategory \?\? gauge\.forecast\.floodCategory/);
+
+  assert.match(observatory, /aria-label="River Pulse streamflow observation controls"/);
+  assert.match(observatory, /aria-label="Select an exact streamflow observation frame"/);
+  assert.match(observatory, /Marker area uses a logarithmic ft³\/s scale/);
+  assert.match(observatory, /Raw discharge is not a flood category/);
+  assert.match(observatory, /Exact values · gaps break the path/);
+  assert.match(observatory, /no value interpolation/);
+  assert.match(page, /<HydrologyObservatory/);
+  assert.match(page, /mode=station&range=\$\{requestedRange\}&station=\$\{encodeURIComponent\(stationId!\)\}&parameter=00060/);
+  assert.match(page, /params\.set\("hydroRange"/);
+  assert.match(page, /params\.set\("hydroStation"/);
+  assert.match(css, /\.hydrology-observatory/);
+  assert.match(css, /\.hydrology-chart-segment/);
+  assert.match(livingAtlas, /Exact USGS samples \+ provider-current GIS/);
+  assert.match(livingAtlas, /No gauge value is generalized to a reach or basin/);
+});
+
+test("the built hydrology adapters reject invalid query shapes before any upstream request", async () => {
+  const workerUrl = new URL("../dist/server/index.js", import.meta.url);
+  workerUrl.searchParams.set("test", `hydrology-invalid-${process.pid}-${Date.now()}`);
+  const { default: worker } = await import(workerUrl.href);
+  const originalFetch = globalThis.fetch;
+  let upstreamCalls = 0;
+  try {
+    globalThis.fetch = async () => {
+      upstreamCalls += 1;
+      throw new Error("Invalid hydrology queries must not reach an upstream service.");
+    };
+
+    const usgsResponse = await worker.fetch(
+      new Request("http://localhost/api/hydrology/streamflow?mode=network&range=1y&url=https://example.invalid"),
+      {},
+      { waitUntil() {}, passThroughOnException() {} },
+    );
+    assert.equal(usgsResponse.status, 400);
+    const usgsError = await usgsResponse.json();
+    assert.equal(usgsError.code, "USGS_STREAMFLOW_INVALID_QUERY");
+    assert.equal(usgsError.interpolation, false);
+    assert.equal(usgsError.evidenceRole, "EXTERNAL_CONTEXT_ONLY");
+
+    const noaaResponse = await worker.fetch(
+      new Request("http://localhost/api/hydrology/noaa?mode=gauge&lid=bad&url=https://example.invalid"),
+      {},
+      { waitUntil() {}, passThroughOnException() {} },
+    );
+    assert.equal(noaaResponse.status, 400);
+    const noaaError = await noaaResponse.json();
+    assert.equal(noaaError.error.code, "INVALID_LID");
+    assert.equal(noaaError.recordCount, 0);
+    assert.match(noaaError.limitation, /No synthetic, cached-stale, cross-source, or untimed fallback was used/);
+    assert.equal(upstreamCalls, 0);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
 });
 
 test("adds an exact-time NOAA nowCOAST radar loop and a fail-closed control surface", async () => {
