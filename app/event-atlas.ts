@@ -5,7 +5,7 @@ export const EVENT_MAX_HOURS = 24;
 export const RADAR_STEP_MS = 300_000;
 export type RadarProduct = "n0r" | "n0q";
 export type RadarScan = { time: string; product: RadarProduct; artifact: string };
-export type SmokeProperties = { start: string; end: string; startMs: number; endMs: number; density: "Light" | "Medium" | "Heavy" | "NA"; satellite: string; artifact: string };
+export type SmokeProperties = { start: string; end: string; startMs: number; endMs: number; density: "Light" | "Medium" | "Heavy" | "NA"; satellite: string; artifact: string; featureId?: string };
 export type SmokeCollection = FeatureCollection<Polygon, SmokeProperties>;
 export type EventManifest = {
   format: "kfm-event-atlas-v1"; start: string; end: string; retrievedAt: string;

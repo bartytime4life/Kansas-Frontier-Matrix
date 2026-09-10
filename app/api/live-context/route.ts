@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import type { Feature, FeatureCollection, Geometry, GeoJsonProperties } from "geojson";
+import { EVENT_BOUNDS, intervalDays, parseSmokeKml, smokeUrl } from "../../event-atlas";
+import { boundedFetch } from "../event-atlas/upstream";
 
 export const dynamic = "force-dynamic";
 
@@ -8,13 +10,15 @@ const CENSUS_ACS_URL = "https://api.census.gov/data/2024/acs/acs5/profile?get=NA
 const USGS_URL = "https://api.waterdata.usgs.gov/ogcapi/v0/collections/latest-continuous/items";
 const USGS_EARTHQUAKE_URL = "https://earthquake.usgs.gov/fdsnws/event/1/query";
 const NWS_ALERTS_URL = "https://api.weather.gov/alerts/active?area=KS";
+const RASPBERRY_SHAKE_STATION_URL = "https://data.raspberryshake.org/fdsnws/station/1/query";
 const NWS_USER_AGENT = "KansasFrontierMatrixExplorer/1.0 (https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site)";
 const MAX_RESPONSE_BYTES = 8 * 1024 * 1024;
 const MAX_NWS_ZONE_REQUESTS = 36;
 const MAX_NWS_FEATURES = 160;
 const MAX_EARTHQUAKE_FEATURES = 250;
+const MAX_RASPBERRY_SHAKE_STATIONS = 250;
 
-type Feed = "census-counties" | "usgs-streamflow" | "usgs-earthquakes" | "nws-alerts";
+type Feed = "census-counties" | "usgs-streamflow" | "usgs-earthquakes" | "nws-alerts" | "noaa-hms-smoke" | "raspberry-shake-stations";
 type JsonRecord = Record<string, unknown>;
 
 class UpstreamError extends Error {
@@ -353,15 +357,149 @@ const activeNwsAlerts = async () => {
   );
 };
 
-const cacheSeconds: Record<Feed, number> = { "census-counties": 86_400, "usgs-streamflow": 120, "usgs-earthquakes": 300, "nws-alerts": 30 };
+const currentHmsSmoke = async () => {
+  const retrievedAt = new Date().toISOString();
+  const endMs = Date.now();
+  const startMs = endMs - 24 * 60 * 60 * 1000;
+  const start = new Date(startMs).toISOString();
+  const end = new Date(endMs).toISOString();
+  const days = intervalDays(start, end);
+  const results = await Promise.all(days.map(async (day) => {
+    const artifact = smokeUrl(day);
+    try {
+      const response = await boundedFetch(artifact, 2 * 1024 * 1024);
+      return { day, artifact, collection: parseSmokeKml(response.text(), artifact), error: null };
+    } catch (error) {
+      return { day, artifact, collection: null, error: error instanceof Error ? error.message : "NOAA HMS publication unavailable." };
+    }
+  }));
+  const failures = results.filter((result) => result.error).map((result) => `${result.day}: ${result.error}`);
+  if (failures.length === results.length) throw new UpstreamError(`NOAA HMS smoke publications were unavailable for the bounded window (${failures.join("; ")}).`);
+  const seen = new Set<string>();
+  const features: Feature<Geometry, GeoJsonProperties>[] = [];
+  let newestTimestamp: string | null = null;
+  for (const result of results) {
+    for (const feature of result.collection?.features ?? []) {
+      if (feature.properties.endMs <= startMs || feature.properties.startMs >= endMs) continue;
+      const key = JSON.stringify([feature.properties.start, feature.properties.end, feature.properties.density, feature.geometry]);
+      if (seen.has(key)) continue;
+      seen.add(key);
+      const featureId = `noaa-hms-smoke-${feature.properties.startMs}-${features.length}`;
+      features.push({
+        ...feature,
+        id: featureId,
+        properties: { ...feature.properties, featureId },
+      });
+      if (!newestTimestamp || feature.properties.end > newestTimestamp) newestTimestamp = feature.properties.end;
+    }
+  }
+  const data: FeatureCollection = { type: "FeatureCollection", features };
+  return envelope(
+    "noaa-hms-smoke",
+    data,
+    "NOAA HMS Smoke Polygons KML (daily publications)",
+    `NOAA HMS satellite-analyzed smoke polygons intersecting Kansas during the rolling 24-hour window ${start} through ${end}. ${failures.length ? `Unavailable daily publication${failures.length === 1 ? "" : "s"}: ${failures.join("; ")}. ` : ""}Density and Start/End are provider fields. A polygon is not a fire perimeter, plume altitude, surface PM2.5, exposure, measured transport, health guidance, warning, or all-clear; missing polygons do not prove clear air.`,
+    retrievedAt,
+    newestTimestamp,
+    failures.length > 0,
+  );
+};
+
+const normalizedFdsnHeader = (line: string) => line.replace(/^\s*#\s*/, "").split("|").map((value) => value.trim().toLowerCase().replace(/[^a-z0-9]/g, ""));
+
+const raspberryShakeStations = async () => {
+  const retrievedAt = new Date().toISOString();
+  const url = new URL(RASPBERRY_SHAKE_STATION_URL);
+  url.searchParams.set("net", "AM");
+  url.searchParams.set("level", "station");
+  url.searchParams.set("minlat", String(EVENT_BOUNDS[1]));
+  url.searchParams.set("maxlat", String(EVENT_BOUNDS[3]));
+  url.searchParams.set("minlon", String(EVENT_BOUNDS[0]));
+  url.searchParams.set("maxlon", String(EVENT_BOUNDS[2]));
+  url.searchParams.set("format", "text");
+  const response = await boundedFetch(url.toString(), 2 * 1024 * 1024);
+  const lines = response.text().split(/\r?\n/).filter((line) => line.trim() !== "");
+  const headerIndex = lines.findIndex((line) => {
+    const header = normalizedFdsnHeader(line);
+    return header.includes("network") && header.includes("station") && header.includes("latitude") && header.includes("longitude");
+  });
+  if (headerIndex < 0) throw new UpstreamError("Raspberry Shake FDSN station response omitted its required text header.");
+  const header = normalizedFdsnHeader(lines[headerIndex]);
+  const fieldIndex = (...names: string[]) => names.map((name) => header.indexOf(name)).find((index) => index >= 0) ?? -1;
+  const networkIndex = fieldIndex("network");
+  const stationIndex = fieldIndex("station");
+  const latitudeIndex = fieldIndex("latitude");
+  const longitudeIndex = fieldIndex("longitude");
+  const elevationIndex = fieldIndex("elevation", "elevationm");
+  const siteNameIndex = fieldIndex("sitename", "stationname", "name");
+  const startIndex = fieldIndex("starttime");
+  const endIndex = fieldIndex("endtime");
+  const features: Feature<Geometry, GeoJsonProperties>[] = [];
+  let skipped = 0;
+  let validRows = 0;
+  for (const line of lines.slice(headerIndex + 1)) {
+    if (line.trimStart().startsWith("#")) continue;
+    const values = line.split("|").map((value) => value.trim());
+    const network = networkIndex >= 0 ? values[networkIndex] : "";
+    const station = stationIndex >= 0 ? values[stationIndex] : "";
+    const latitude = latitudeIndex >= 0 ? asNumeric(values[latitudeIndex]) : null;
+    const longitude = longitudeIndex >= 0 ? asNumeric(values[longitudeIndex]) : null;
+    if (!network || !station || latitude === null || longitude === null || latitude < EVENT_BOUNDS[1] || latitude > EVENT_BOUNDS[3] || longitude < EVENT_BOUNDS[0] || longitude > EVENT_BOUNDS[2]) {
+      skipped += 1;
+      continue;
+    }
+    validRows += 1;
+    if (features.length >= MAX_RASPBERRY_SHAKE_STATIONS) continue;
+    const featureId = `raspberry-shake-${network}-${station}`;
+    const elevation = elevationIndex >= 0 ? asNumeric(values[elevationIndex]) : null;
+    const startTime = startIndex >= 0 && values[startIndex] ? values[startIndex] : null;
+    const endTime = endIndex >= 0 && values[endIndex] ? values[endIndex] : null;
+    const siteName = siteNameIndex >= 0 && values[siteNameIndex] ? values[siteNameIndex] : `${network}.${station}`;
+    features.push({
+      type: "Feature",
+      id: featureId,
+      geometry: { type: "Point", coordinates: [longitude, latitude] },
+      properties: {
+        featureId,
+        name: siteName,
+        network,
+        station,
+        latitude,
+        longitude,
+        elevationMeters: elevation,
+        startTime,
+        endTime,
+        dataRole: "FDSN station metadata",
+        waveformAvailability: "FDSN archive is delayed by at least 30 minutes; this map does not stream waveform samples.",
+        stationViewUrl: "https://stationview.raspberryshake.org/",
+        sourceOrganization: "Raspberry Shake · FDSN AM network",
+        evidenceRole: "EXTERNAL_CONTEXT_ONLY",
+        retrievedAt,
+      },
+    });
+  }
+  const truncated = validRows > features.length;
+  return envelope(
+    "raspberry-shake-stations",
+    { type: "FeatureCollection", features },
+    url.toString(),
+    `Raspberry Shake AM station metadata inside the Kansas bounding window. ${validRows} valid station row${validRows === 1 ? "" : "s"} were found; ${skipped} malformed or out-of-bounds row${skipped === 1 ? "" : "s"} were withheld${truncated ? ` and the ${MAX_RASPBERRY_SHAKE_STATIONS}-station cap was reached` : ""}. FDSN station metadata and archived miniSEED are not a realtime waveform stream; the provider documents a separate realtime service, a delay boundary, rate limits, raw-count response handling, and no fdsnws-event service. This layer is station context only, not an earthquake alert, measurement, warning, or KFM evidence.`,
+    retrievedAt,
+    null,
+    skipped > 0 || truncated,
+    truncated,
+  );
+};
+
+const cacheSeconds: Record<Feed, number> = { "census-counties": 86_400, "usgs-streamflow": 120, "usgs-earthquakes": 300, "nws-alerts": 30, "noaa-hms-smoke": 900, "raspberry-shake-stations": 900 };
 
 export async function GET(request: NextRequest) {
   const feed = request.nextUrl.searchParams.get("feed");
-  if (feed !== "census-counties" && feed !== "usgs-streamflow" && feed !== "usgs-earthquakes" && feed !== "nws-alerts") {
+  if (feed !== "census-counties" && feed !== "usgs-streamflow" && feed !== "usgs-earthquakes" && feed !== "nws-alerts" && feed !== "noaa-hms-smoke" && feed !== "raspberry-shake-stations") {
     return NextResponse.json({ error: "Unknown live-context feed. The adapter accepts only its fixed allowlist." }, { status: 400, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } });
   }
   try {
-    const result = feed === "census-counties" ? await censusCounties() : feed === "usgs-streamflow" ? await latestStreamflow() : feed === "usgs-earthquakes" ? await recentEarthquakes() : await activeNwsAlerts();
+    const result = feed === "census-counties" ? await censusCounties() : feed === "usgs-streamflow" ? await latestStreamflow() : feed === "usgs-earthquakes" ? await recentEarthquakes() : feed === "nws-alerts" ? await activeNwsAlerts() : feed === "noaa-hms-smoke" ? await currentHmsSmoke() : await raspberryShakeStations();
     return NextResponse.json(result, { headers: { "Cache-Control": `public, max-age=0, s-maxage=${cacheSeconds[feed]}, stale-while-revalidate=${cacheSeconds[feed]}`, "X-KFM-Context-State": result.state, "X-Content-Type-Options": "nosniff" } });
   } catch (error) {
     const timeout = error instanceof UpstreamError && error.timeout;

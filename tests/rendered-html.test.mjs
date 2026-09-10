@@ -132,7 +132,7 @@ test("adds bounded smoke, water, elevation, tile, and scene navigation features"
   assert.match(runtime, /lngLatToTile/);
   assert.match(page, /MAP REPRESENTATION/);
   assert.match(page, /Verified renderer controls/);
-  assert.match(page, /No admitted live sources; controls removed/);
+  assert.match(page, /HMS smoke · Shake stations · hazard overlays/);
   assert.match(page, /setVerticalFieldOfView/);
   assert.match(page, /Started a reversible 90° MapLibre camera orbit/);
   assert.match(page, /External DEM; not KFM evidence/);
@@ -792,7 +792,7 @@ test("keeps every top-level external map carrier in a display-only disclosure re
   assert.match(page, /NO REQUEST FROM CURRENT VIEW/);
 });
 
-test("connects eleven bounded official Kansas context sources without admitting evidence", async () => {
+test("connects fourteen bounded official Kansas context sources without admitting evidence", async () => {
   const ts = await import("typescript");
   const registrySource = await readFile(new URL("../app/live-context.ts", import.meta.url), "utf8");
   const radarSource = await readFile(new URL("../app/noaa-radar.ts", import.meta.url), "utf8");
@@ -816,7 +816,10 @@ test("connects eleven bounded official Kansas context sources without admitting 
     "noaa-nwm-analysis",
     "noaa-nwm-short-range",
     "usgs-earthquakes",
+    "noaa-hms-smoke",
+    "raspberry-shake-stations",
     "usgs-3dep-hillshade",
+    "usgs-3dep-slope",
     "nws-alerts",
     "nws-radar",
   ]);
@@ -828,6 +831,11 @@ test("connects eleven bounded official Kansas context sources without admitting 
   assert.match(registry.OFFICIAL_CONTEXT_BY_ID["usgs-wbd-watersheds"].mapUrl, /wbd\/MapServer\/export/);
   assert.match(registry.OFFICIAL_CONTEXT_BY_ID["noaa-nwm-analysis"].boundary, /does not advertise a selectable time axis/i);
   assert.match(registry.OFFICIAL_CONTEXT_BY_ID["noaa-nwm-short-range"].boundary, /modeled maximum over a forecast window/i);
+  assert.match(registry.OFFICIAL_CONTEXT_BY_ID["noaa-hms-smoke"].apiPath, /feed=noaa-hms-smoke/);
+  assert.match(registry.OFFICIAL_CONTEXT_BY_ID["noaa-hms-smoke"].boundary, /fire perimeter[\s\S]*surface PM2\.5/i);
+  assert.match(registry.OFFICIAL_CONTEXT_BY_ID["raspberry-shake-stations"].serviceUrl, /stationview\.raspberryshake\.org/);
+  assert.match(registry.OFFICIAL_CONTEXT_BY_ID["raspberry-shake-stations"].boundary, /not realtime/i);
+  assert.match(registry.OFFICIAL_CONTEXT_BY_ID["usgs-3dep-slope"].mapUrl, /rasterFunction.*Slope/);
   assert.match(page, /OFFICIAL OPERATIONAL CONTEXT/);
   assert.match(page, /Real Kansas source connections/);
   assert.match(page, /Refresh visible/);
@@ -842,6 +850,11 @@ test("connects eleven bounded official Kansas context sources without admitting 
   assert.match(route, /state_code/);
   assert.match(route, /datetime/);
   assert.match(route, /earthquake\.usgs\.gov\/fdsnws\/event\/1\/query/);
+  assert.match(route, /NOAA HMS smoke publications/);
+  assert.match(route, /data\.raspberryshake\.org\/fdsnws\/station\/1\/query/);
+  assert.match(route, /MAX_RASPBERRY_SHAKE_STATIONS = 250/);
+  assert.match(route, /normalizedFdsnHeader/);
+  assert.match(route, /FDSN archive is delayed by at least 30 minutes/);
   assert.match(route, /minlatitude/);
   assert.match(route, /maxlongitude/);
   assert.match(route, /KansasFrontierMatrixExplorer\/1\.0/);

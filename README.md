@@ -7,8 +7,9 @@ fit together.
 ## Current public scope
 
 - Core KFM layers use site-local synthetic or generalized GeoJSON demonstration
-  data. Optional, clearly separated official USGS, NOAA, Census, and NWS layers
-  are external operational context, not admitted KFM evidence.
+  data. Optional, clearly separated official USGS, NOAA, Census, NWS, and
+  Raspberry Shake layers are external operational context, not admitted KFM
+  evidence.
 - The default Kansas Overview may show an attributed OpenStreetMap context basemap; it is display context, not evidence.
 - Nothing in this build is a released operational KFM dataset.
 - Evidence resolution fails closed: missing, stale, restricted, denied, and
@@ -60,10 +61,12 @@ Connected external-only carriers:
   modern Census county geometry. The independent 1934–1996 edition control is
   not an operating-date or reserve claim. This is an older source compilation.
 
-HRRR modeled smoke transport, native NOAA scan decoding, georeferenced historical
-cartographic editions and qualified habitat/migration products remain explicit
-next integrations. No GitHub/Notion/Drive write, source admission, or production
-deployment is implied. The Site/repository identity conflict remains unresolved.
+HRRR modeled smoke transport, surface air-quality observations, native NOAA scan
+decoding, georeferenced historical cartographic editions, qualified
+habitat/migration products, and Raspberry Shake waveform retrieval remain
+explicit next integrations. HMS smoke polygons, station metadata, and dynamic
+3DEP LiDAR-derived hillshade/slope are context connections only; they do not
+create a KFM release, alert, measurement, or evidence answer.
 
 Validation: `node --test tests/event-atlas.test.mjs tests/streamflow.test.mjs
 tests/rendered-html.test.mjs` plus the standard Sites build and TypeScript check.
@@ -182,7 +185,7 @@ path; terrain failure returns to the 2D evidence path.
 
 ## Official Kansas context adapters
 
-The Layer Catalog also exposes eleven fixed, source-specific connections. Search
+The Layer Catalog also exposes fourteen fixed, source-specific connections. Search
 finds these sources directly, the Data action opens their controls, and the
 connection pulse reports loaded feature counts and retrieval time. Browser
 requests cannot supply an arbitrary upstream URL.
@@ -197,7 +200,10 @@ requests cannot supply an arbitrary upstream URL.
 | NOAA NWM high-flow analysis | Off | Provider-current modeled analysis-guidance snapshot | Not a gauge observation or warning; the map service advertises no selectable historical time axis |
 | NOAA NWM 18-hour outlook | Off | Provider-current maximum modeled high-flow guidance for the next-18-hour window | Not an official RFC forecast or deterministic outcome; the map service advertises no selectable historical time axis |
 | USGS earthquakes | Off | Bounded 30-day Kansas-area event catalog with magnitude and depth | Catalog values can change; not an alert or hazard forecast |
-| USGS 3DEP hillshade | Off | Current multidirectional hillshade tiles | Rendered relief only; no elevation sample, datum, or accuracy claim |
+| NOAA HMS smoke footprints | Off | Dated qualitative smoke polygons from the rolling 24-hour provider window | Not surface PM2.5, plume altitude, measured transport, a fire perimeter, warning, health advisory, or all-clear |
+| Raspberry Shake stations | Off | Kansas-bounded FDSN AM station metadata with StationView handoff | Not realtime waveforms, an event catalog, alert, calibrated measurement, or KFM evidence |
+| USGS 3DEP LiDAR hillshade | Off | Dynamic multidirectional hillshade from the current 3DEP elevation mosaic | Rendered relief only; no work-unit, point-cloud, datum, pulse-spacing, or accuracy claim |
+| USGS 3DEP LiDAR slope | Off | Dynamic slope visualization from the same 3DEP service | Image context only; no numeric slope/elevation or source-artifact claim |
 | NWS alert areas | Off | Active Kansas alerts and bounded affected-zone geometry | Not a warning-delivery service or an all-clear |
 | NOAA nowCOAST radar | Off | Recent CONUS base-reflectivity observations at exact NOAA-advertised times, with 30-minute, 1-hour, and 2-hour loop views | Context only; pixels do not establish rainfall rate, storm motion, warning status, forecast, or an emergency all-clear |
 
@@ -217,9 +223,11 @@ into inferred facts.
   network, validated gauge, and validated NWM reach modes. Observed, official
   forecast, analysis-assimilation, and short-range model records retain distinct
   roles and valid times; sentinel values are normalized to missing.
-- `/api/live-context` remains an allowlisted adapter for four JSON feeds; River
-  Pulse now uses the dedicated USGS v1 route above. USGS 3DHP, WBD, and 3DEP and
-  NOAA NWM raster products are requested by MapLibre only when selected.
+- `/api/live-context` remains an allowlisted adapter for six JSON feeds,
+  including the bounded NOAA HMS smoke and Raspberry Shake station connections;
+  River Pulse now uses the dedicated USGS v1 route above. USGS 3DHP, WBD, 3DEP
+  LiDAR-derived hillshade/slope, and NOAA NWM raster products are requested by
+  MapLibre only when selected.
 - `/api/noaa-radar/frames` is a fixed, read-only NOAA nowCOAST capabilities
   adapter. It accepts no caller-supplied endpoint, bounds time and response
   size, and returns no synthetic or untimed fallback. Exact-time WMS radar

@@ -2,8 +2,8 @@ import type { FeatureCollection } from "geojson";
 import type { GeoJSONSource, LayerSpecification, Map as MapLibreMap, RasterTileSource } from "maplibre-gl";
 import { noaaRadarTileUrl } from "./noaa-radar";
 
-export type OfficialContextId = "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-3dhp-hydrography" | "usgs-wbd-watersheds" | "noaa-nwm-analysis" | "noaa-nwm-short-range" | "usgs-earthquakes" | "usgs-3dep-hillshade" | "nws-alerts" | "nws-radar";
-export type OfficialContextFeedId = "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-earthquakes" | "nws-alerts";
+export type OfficialContextId = "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-3dhp-hydrography" | "usgs-wbd-watersheds" | "noaa-nwm-analysis" | "noaa-nwm-short-range" | "usgs-earthquakes" | "noaa-hms-smoke" | "raspberry-shake-stations" | "usgs-3dep-hillshade" | "usgs-3dep-slope" | "nws-alerts" | "nws-radar";
+export type OfficialContextFeedId = "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-earthquakes" | "nws-alerts" | "noaa-hms-smoke" | "raspberry-shake-stations";
 export type OfficialContextState = "idle" | "loading" | "ready" | "empty" | "partial" | "error";
 
 export type OfficialContextPayload = Readonly<{
@@ -240,9 +240,57 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
     fallback: "An unavailable or empty catalog is shown as such; it is never interpreted as proof that no earthquake occurred or that seismic risk is absent.",
   }),
   Object.freeze({
+    id: "noaa-hms-smoke",
+    title: "NOAA HMS satellite-analyzed smoke footprints",
+    shortTitle: "HMS smoke footprints",
+    organization: "NOAA Hazard Mapping System",
+    domain: "Fire, smoke & hazards",
+    kind: "OPERATIONAL_GEOJSON",
+    sourceId: "external-noaa-hms-smoke",
+    layerIds: Object.freeze(["external-noaa-hms-smoke-fill", "external-noaa-hms-smoke-line"]),
+    interactiveLayerIds: Object.freeze(["external-noaa-hms-smoke-fill"]),
+    apiPath: "/api/live-context?feed=noaa-hms-smoke",
+    endpointLabel: "satepsanone.nesdis.noaa.gov · HMS Smoke_Polygons KML",
+    sourceUrl: "https://satepsanone.nesdis.noaa.gov/pub/FIRE/web/HMS/Smoke_Polygons/KML/",
+    serviceUrl: "https://www.ospo.noaa.gov/products/land/hms.html",
+    cadence: "Daily analyst KML publications; bounded rolling 24-hour map window",
+    freshness: "Provider Start/End intervals and density category from retrieved KML",
+    defaultVisibility: false,
+    defaultOpacity: 0.38,
+    color: "#d67d62",
+    attribution: "NOAA Hazard Mapping System smoke polygons",
+    evidenceRole: "EXTERNAL_CONTEXT_ONLY",
+    boundary: "The map draws only NOAA HMS polygons whose provider Start/End intervals intersect the bounded rolling 24-hour window and Kansas bounds. Density is qualitative provider metadata. A footprint is not a fire perimeter, plume altitude, surface PM2.5, exposure, measured transport, health guidance, warning, or all-clear; this layer remains outside KFM evidence and releases.",
+    fallback: "A failed daily publication becomes PARTIAL or ERROR, and an empty intersection remains time-stamped. The Site never substitutes a forecast/model, carries a polygon forward, or treats missing smoke as clear air.",
+  }),
+  Object.freeze({
+    id: "raspberry-shake-stations",
+    title: "Raspberry Shake AM station network",
+    shortTitle: "Raspberry Shake stations",
+    organization: "Raspberry Shake · FDSN AM network",
+    domain: "Geology & hazards",
+    kind: "OPERATIONAL_GEOJSON",
+    sourceId: "external-raspberry-shake-stations",
+    layerIds: Object.freeze(["external-raspberry-shake-stations-halo", "external-raspberry-shake-stations-points", "external-raspberry-shake-stations-labels"]),
+    interactiveLayerIds: Object.freeze(["external-raspberry-shake-stations-points"]),
+    apiPath: "/api/live-context?feed=raspberry-shake-stations",
+    endpointLabel: "data.raspberryshake.org · FDSN station/1 query",
+    sourceUrl: "https://manual.raspberryshake.org/fdsn.html",
+    serviceUrl: "https://stationview.raspberryshake.org/",
+    cadence: "Station metadata on demand; archived waveforms are provider-delayed and realtime streaming is a separate service",
+    freshness: "FDSN station inventory retrieved at request time",
+    defaultVisibility: false,
+    defaultOpacity: 0.9,
+    color: "#c4a2ff",
+    attribution: "Raspberry Shake · FDSN AM network",
+    evidenceRole: "EXTERNAL_CONTEXT_ONLY",
+    boundary: "The active map connection is a bounded FDSN station metadata snapshot: network, station, coordinates, elevation, site name, and provider time bounds. FDSN is not realtime, the provider documents a delay boundary and no fdsnws-event service, and waveform counts require response metadata and a separate bounded adapter. StationView is linked for provider realtime inspection. This layer is not an earthquake alert, waveform measurement, warning, or KFM evidence.",
+    fallback: "Malformed, out-of-bounds, capped, or unavailable station rows remain explicit. No station is invented, no waveform is inferred from a marker, and no absence of stations is treated as absence of seismic activity.",
+  }),
+  Object.freeze({
     id: "usgs-3dep-hillshade",
-    title: "USGS 3DEP multidirectional hillshade",
-    shortTitle: "3DEP hillshade",
+    title: "USGS 3DEP LiDAR-derived multidirectional hillshade",
+    shortTitle: "3DEP LiDAR hillshade",
     organization: "U.S. Geological Survey",
     domain: "Terrain & landforms",
     kind: "OPERATIONAL_WMS",
@@ -260,8 +308,32 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
     color: "#d7c7a0",
     attribution: "USGS 3D Elevation Program",
     evidenceRole: "EXTERNAL_CONTEXT_ONLY",
-    boundary: "The service renders a hillshade image from 3DEP. It is not a native raster-dem terrain source, point-elevation answer, pinned source tile, datum assertion, accuracy certificate, or admitted KFM elevation artifact.",
+    boundary: "The service renders a provider-current hillshade from the 3DEP elevation mosaic, whose source products include LiDAR point clouds and derived DEMs. It is not a native raster-dem terrain source, point-elevation answer, pinned work-unit tile, pulse-spacing or vertical-datum assertion, accuracy certificate, or admitted KFM elevation artifact.",
     fallback: "Slow or failed image-service tiles remain transparent. The existing 2D map and Terrarium display terrain remain available without substituting a numeric 3DEP claim.",
+  }),
+  Object.freeze({
+    id: "usgs-3dep-slope",
+    title: "USGS 3DEP LiDAR-derived slope context",
+    shortTitle: "3DEP slope",
+    organization: "U.S. Geological Survey",
+    domain: "Terrain & landforms",
+    kind: "OPERATIONAL_WMS",
+    sourceId: "external-usgs-3dep-slope",
+    layerIds: Object.freeze(["external-usgs-3dep-slope-raster"]),
+    interactiveLayerIds: Object.freeze([]),
+    mapUrl: "https://elevation.nationalmap.gov/arcgis/rest/services/3DEPElevation/ImageServer/exportImage?bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&size=256%2C256&format=png32&renderingRule=%7B%22rasterFunction%22%3A%22Slope%22%7D&f=image",
+    endpointLabel: "elevation.nationalmap.gov · 3DEPElevation · Slope raster function",
+    sourceUrl: "https://elevation.nationalmap.gov/arcgis/rest/services/3DEPElevation/ImageServer",
+    serviceUrl: "https://www.usgs.gov/3d-elevation-program/about-3dep-products-services",
+    cadence: "USGS dynamic 3DEP service; provider-controlled refresh",
+    freshness: "Current published 3DEP service mosaic",
+    defaultVisibility: false,
+    defaultOpacity: 0.34,
+    color: "#e0a56c",
+    attribution: "USGS 3D Elevation Program",
+    evidenceRole: "EXTERNAL_CONTEXT_ONLY",
+    boundary: "This optional slope visualization is dynamically derived by the USGS 3DEP service. It provides terrain-form context and does not expose raw point clouds, establish a selected work-unit identity, prove a vertical datum or accuracy for a pixel, or create a KFM elevation or hazard claim.",
+    fallback: "If the slope raster function is unavailable, the layer remains transparent and the attributed 2D/Terrarium display path remains available. No numeric slope or elevation value is inferred from image colors.",
   }),
   Object.freeze({
     id: "nws-alerts",
@@ -367,10 +439,25 @@ export const OFFICIAL_CONTEXT_TEMPORAL_SUPPORT: Readonly<Record<OfficialContextI
     supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]),
     limitation: "Events come from a rolling 30-day request and may be revised; no historical archive query is connected.",
   }),
+  "noaa-hms-smoke": Object.freeze({
+    axis: "rolling-retrieval-window",
+    supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]),
+    limitation: "Daily NOAA HMS publications are intersected with a rolling 24-hour window; provider Start/End intervals are retained, but no historical smoke archive or model/transport series is connected.",
+  }),
+  "raspberry-shake-stations": Object.freeze({
+    axis: "rolling-retrieval-window",
+    supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]),
+    limitation: "FDSN station metadata is retrieved on demand. Archived waveforms have provider latency and realtime inspection belongs to StationView/separate services; the atlas clock is not a seismic waveform history.",
+  }),
   "usgs-3dep-hillshade": Object.freeze({
     axis: "provider-current-mosaic",
     supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]),
     limitation: "Provider-current mosaic with no pinned acquisition-time slice in this Site.",
+  }),
+  "usgs-3dep-slope": Object.freeze({
+    axis: "provider-current-mosaic",
+    supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]),
+    limitation: "Provider-current dynamically derived slope visualization with no pinned work-unit or acquisition-time slice in this Site.",
   }),
   "nws-alerts": Object.freeze({
     axis: "rolling-retrieval-window",
@@ -459,13 +546,31 @@ export const applyOfficialContextState = (
     "circle-opacity": 0.92, "circle-stroke-color": "#27130a", "circle-stroke-width": 1.5,
   } });
 
+  const smoke = OFFICIAL_CONTEXT_BY_ID["noaa-hms-smoke"];
+  ensureGeoJsonSource(map, smoke, payloads["noaa-hms-smoke"]?.data ?? emptyCollection());
+  const smokeColor = ["match", ["get", "density"], "Heavy", "#df6b51", "Medium", "#d79862", "Light", "#b9c47b", "#8b9aa0"] as unknown as string;
+  ensureLayer(map, { id: smoke.layerIds[0], type: "fill", source: smoke.sourceId, paint: { "fill-color": smokeColor, "fill-opacity": 0.32 } });
+  ensureLayer(map, { id: smoke.layerIds[1], type: "line", source: smoke.sourceId, paint: { "line-color": smokeColor, "line-width": ["interpolate", ["linear"], ["zoom"], 4, 0.7, 9, 1.8], "line-opacity": 0.74 } });
+
+  const raspberryShake = OFFICIAL_CONTEXT_BY_ID["raspberry-shake-stations"];
+  ensureGeoJsonSource(map, raspberryShake, payloads["raspberry-shake-stations"]?.data ?? emptyCollection());
+  ensureLayer(map, { id: raspberryShake.layerIds[0], type: "circle", source: raspberryShake.sourceId, paint: {
+    "circle-color": raspberryShake.color, "circle-radius": ["interpolate", ["linear"], ["zoom"], 4, 9, 10, 20], "circle-blur": 0.8, "circle-opacity": 0.24,
+  } });
+  ensureLayer(map, { id: raspberryShake.layerIds[1], type: "circle", source: raspberryShake.sourceId, paint: {
+    "circle-color": raspberryShake.color, "circle-radius": ["interpolate", ["linear"], ["zoom"], 4, 3.8, 10, 7.2, 14, 9], "circle-opacity": 0.94, "circle-stroke-color": "#271d3f", "circle-stroke-width": 1.4,
+  } });
+  ensureLayer(map, { id: raspberryShake.layerIds[2], type: "symbol", source: raspberryShake.sourceId, minzoom: 8.5, layout: {
+    "text-field": ["coalesce", ["get", "name"], ["get", "station"]], "text-size": 10.5, "text-offset": [0, 1.25], "text-anchor": "top", "text-optional": true,
+  }, paint: { "text-color": "#eadfff", "text-halo-color": "#100d1d", "text-halo-width": 1.5, "text-opacity": 0.86 } });
+
   const alerts = OFFICIAL_CONTEXT_BY_ID["nws-alerts"];
   ensureGeoJsonSource(map, alerts, payloads["nws-alerts"]?.data ?? emptyCollection());
   const severityColor = ["match", ["get", "severity"], "Extreme", "#d9364f", "Severe", "#ef6b45", "Moderate", "#f2c14e", "Minor", "#78c6d0", "#b78ad7"] as unknown as string;
   ensureLayer(map, { id: alerts.layerIds[0], type: "fill", source: alerts.sourceId, paint: { "fill-color": severityColor, "fill-opacity": 0.34 } });
   ensureLayer(map, { id: alerts.layerIds[1], type: "line", source: alerts.sourceId, paint: { "line-color": severityColor, "line-width": 2.4, "line-opacity": 0.94 } });
 
-  for (const raster of [OFFICIAL_CONTEXT_BY_ID["usgs-3dhp-hydrography"], OFFICIAL_CONTEXT_BY_ID["usgs-wbd-watersheds"], OFFICIAL_CONTEXT_BY_ID["noaa-nwm-analysis"], OFFICIAL_CONTEXT_BY_ID["noaa-nwm-short-range"], OFFICIAL_CONTEXT_BY_ID["usgs-3dep-hillshade"]]) {
+  for (const raster of [OFFICIAL_CONTEXT_BY_ID["usgs-3dhp-hydrography"], OFFICIAL_CONTEXT_BY_ID["usgs-wbd-watersheds"], OFFICIAL_CONTEXT_BY_ID["noaa-nwm-analysis"], OFFICIAL_CONTEXT_BY_ID["noaa-nwm-short-range"], OFFICIAL_CONTEXT_BY_ID["usgs-3dep-hillshade"], OFFICIAL_CONTEXT_BY_ID["usgs-3dep-slope"]]) {
     if (!map.getSource(raster.sourceId)) map.addSource(raster.sourceId, { type: "raster", tiles: [raster.mapUrl!], tileSize: 256, attribution: raster.attribution, minzoom: 3, maxzoom: 16 });
     ensureLayer(map, { id: raster.layerIds[0], type: "raster", source: raster.sourceId, paint: { "raster-opacity": raster.defaultOpacity, "raster-fade-duration": 120 } }, firstRegistryLayer(map));
   }
