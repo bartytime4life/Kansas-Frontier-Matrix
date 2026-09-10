@@ -6,11 +6,15 @@ version: v1
 status: draft
 owners: placeholder — frontier-matrix steward + people-land steward + docs steward
 created: 2026-05-13
-updated: 2026-05-13
+updated: 2026-09-10
 policy_label: public
+owning_root: docs/
+responsibility: human-facing Census source-family catalog and navigation; no source admission, policy, evidence, release, publication, or runtime authority
+truth_posture: "CONFIRMED current family catalog and bounded 2025 county archive inspection / PROPOSED product mappings and source implementations / HOLD unreviewed activation, release, publication, and runtime bindings / NEEDS VERIFICATION rights, ownership, implementation, and consumer closure"
 related:
   - docs/sources/SOURCE_DESCRIPTOR_STANDARD.md
   - docs/sources/catalog/README.md
+  - docs/sources/catalog/census/cartographic-boundary-files.md
   - docs/doctrine/directory-rules.md
   - docs/doctrine/authority-ladder.md
   - docs/doctrine/truth-posture.md
@@ -25,7 +29,7 @@ related:
 tags: [kfm, sources, catalog, census, tiger, frontier-matrix]
 notes:
   - "Path `docs/sources/catalog/` is a PROPOSED subdivision of `docs/sources/` (Directory Rules §6.1 names `docs/sources/`; not the `catalog/` segment). Verify against repo or open an ADR."
-  - "Owners and updated date are placeholders pending docs-steward review."
+  - "Owners remain placeholders pending docs-steward review; the 2026-09-10 update only adds the bounded cartographic-boundary reference-slice link and current metadata fields."
 [/KFM_META_BLOCK_V2] -->
 
 # Census Source Family
@@ -40,7 +44,7 @@ notes:
 [![Lifecycle: RAW → PUBLISHED](https://img.shields.io/badge/Lifecycle-RAW%20%E2%86%92%20PUBLISHED-success)](#5-admission-lifecycle)
 [![Doc: draft](https://img.shields.io/badge/Doc-draft-yellow)](#)
 
-**Status:** PROPOSED · **Owners:** _placeholder — frontier-matrix steward + people-land steward + docs steward_ · **Updated:** 2026-05-13 _(placeholder)_
+**Status:** PROPOSED · **Owners:** _placeholder — frontier-matrix steward + people-land steward + docs steward_ · **Updated:** 2026-09-10 _(bounded catalog-link update; family review still pending)_
 
 ## Quick jump
 
@@ -257,6 +261,7 @@ The table below lists files and folders that complete the Census source family a
 
 > Relative paths assume this file is located at `docs/sources/catalog/census.md`. Link validity is **PROPOSED** until repo evidence is verified.
 
+- Verified bounded county reference slice — [`Cartographic Boundary Files`](./cartographic-boundary-files.md) (**HOLD; not released or runtime-bound**)
 - Source-descriptor umbrella standard — [`../SOURCE_DESCRIPTOR_STANDARD.md`](../../SOURCE_DESCRIPTOR_STANDARD.md) _(PROPOSED)_
 - Source-catalog index — [`./README.md`](../README.md) _(PROPOSED)_
 - Directory Rules — [`../../doctrine/directory-rules.md`](../../../doctrine/directory-rules.md)
@@ -331,5 +336,5 @@ PROPOSED minimum citation surface, illustrative — bind in `EvidenceBundle` and
 ---
 
 > **Related:** [`../SOURCE_DESCRIPTOR_STANDARD.md`](../../SOURCE_DESCRIPTOR_STANDARD.md) · [`./README.md`](../README.md) · [`../../doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) · [`../../domains/frontier-matrix/README.md`](../../../domains/frontier-matrix/README.md)
-> **Last updated:** 2026-05-13 _(placeholder — review on next docs sweep)_
+> **Last updated:** 2026-09-10 _(bounded catalog-link update; family review still pending)_
 > **Back to top:** [Census Source Family](#census-source-family)

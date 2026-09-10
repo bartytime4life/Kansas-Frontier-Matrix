@@ -25,6 +25,7 @@ import {
   type StoryScene,
 } from "../features/living_atlas";
 import { repositoryUrl } from "./catalog";
+import { KANSAS_COUNTY_REFERENCE_CANDIDATE } from "./reference-geography-source-registry";
 
 export type LivingAtlasController = Readonly<{ destroy: () => void }>;
 
@@ -78,6 +79,64 @@ function repositoryLink(
   node.rel = "noreferrer";
   node.textContent = label;
   return node;
+}
+
+function externalLink(
+  document: Document,
+  label: string,
+  href: string,
+): HTMLAnchorElement {
+  const node = el(document, "a");
+  node.href = href;
+  node.target = "_blank";
+  node.rel = "noreferrer";
+  node.textContent = label;
+  return node;
+}
+
+function referenceGeographyCard(
+  document: Document,
+  context: "layers" | "places" | "sources",
+): HTMLElement {
+  const candidate = KANSAS_COUNTY_REFERENCE_CANDIDATE;
+  const card = el(
+    document,
+    "article",
+    context === "layers" ? "atlas-connection-card" : "atlas-source-card",
+  );
+  card.dataset.referenceGeography = candidate.id;
+  card.dataset.searchText = [
+    candidate.title,
+    candidate.organization,
+    candidate.state,
+    candidate.source.vintage,
+    candidate.source.scale,
+    "Kansas counties Census GEOID reference geography",
+  ].join(" ").toLowerCase();
+  card.append(
+    text(document, "strong", candidate.title),
+    text(
+      document,
+      "small",
+      `${candidate.state} · ${candidate.coverage.featureCount} Kansas counties`,
+    ),
+    text(
+      document,
+      "p",
+      context === "places"
+        ? "Verified source bytes and county identities are inspectable. The map remains synthetic until release gates close."
+        : context === "layers"
+          ? "The exact Census archive and Kansas county identity inventory are verified; runtime geometry remains held."
+        : candidate.summary,
+    ),
+    button(
+      document,
+      "Inspect verified candidate",
+      `reference-geography:${candidate.id}`,
+    ),
+    externalLink(document, "Official Census archive", candidate.source.archiveUrl),
+  );
+  return card;
 }
 
 function cloneSnapshot(
@@ -240,6 +299,7 @@ export function mountLivingAtlasWorkspace(
     );
     connectionList.append(card);
   });
+  connectionList.append(referenceGeographyCard(document, "layers"));
   layersPanel.append(connectionList);
 
   const placesPanel = el(document, "div", "atlas-rail-panel");
@@ -249,6 +309,8 @@ export function mountLivingAtlasWorkspace(
     text(document, "h2", "Places"),
     text(document, "p", "Statewide generalized fixture extent"),
     text(document, "p", "County locator samples are synthetic and intentionally unnamed.", "atlas-muted"),
+    text(document, "h3", "Verified reference candidate", "atlas-section-label"),
+    referenceGeographyCard(document, "places"),
   );
 
   const toolsPanel = el(document, "div", "atlas-rail-panel");
@@ -312,6 +374,10 @@ export function mountLivingAtlasWorkspace(
     }
     sourcesPanel.append(card);
   });
+  sourcesPanel.append(
+    text(document, "h3", "Byte-verified external reference", "atlas-section-label"),
+    referenceGeographyCard(document, "sources"),
+  );
   railPanels.append(viewsPanel, layersPanel, placesPanel, toolsPanel, sourcesPanel);
   leftRail.append(railTabs, railPanels);
 
@@ -412,6 +478,44 @@ export function mountLivingAtlasWorkspace(
       text(document, "p", candidate.nextGate),
       text(document, "h3", "Repository lineage"),
       links,
+    );
+  };
+
+  const renderReferenceGeography = (candidateId: string): void => {
+    const candidate = KANSAS_COUNTY_REFERENCE_CANDIDATE;
+    if (candidateId !== candidate.id) return;
+    const links = el(document, "div", "atlas-artifact-links");
+    (
+      [
+        ["SOURCE DESCRIPTOR", candidate.artifactPaths.sourceDescriptor],
+        ["PRODUCT DOCUMENTATION", candidate.artifactPaths.productDocumentation],
+        ["OFFLINE VALIDATOR", candidate.artifactPaths.archiveValidator],
+        ["VALIDATOR TESTS", candidate.artifactPaths.archiveValidatorTests],
+        ["AUTHORING RECEIPT", candidate.artifactPaths.validationReceipt],
+      ] as const
+    ).forEach(([label, path]) => {
+      links.append(repositoryLink(document, label, path));
+    });
+    const bbox = candidate.coverage.bbox.join(", ");
+    evidence.replaceChildren(
+      text(document, "p", "Reference Geography Inspector", "eyebrow"),
+      text(document, "h2", candidate.title),
+      text(document, "p", "HOLD · NOT RELEASED", "atlas-outcome"),
+      text(document, "p", candidate.summary),
+      text(document, "h3", "Verified inspection"),
+      text(
+        document,
+        "p",
+        `${candidate.coverage.featureCount} unique Kansas GEOIDs · ${candidate.coverage.filter} · ${candidate.source.vintage} vintage · ${candidate.source.scale} · ${candidate.source.crs}.`,
+      ),
+      text(document, "p", `Kansas extent: ${bbox}. Archive SHA-256: ${candidate.source.archiveSha256}.`),
+      text(document, "h3", "Cannot prove"),
+      text(document, "p", candidate.limitations.join(" ")),
+      text(document, "h3", "Next gate"),
+      text(document, "p", candidate.nextGate),
+      text(document, "h3", "Repository lineage"),
+      links,
+      externalLink(document, "Inspect exact Census archive", candidate.source.archiveUrl),
     );
   };
 
@@ -719,6 +823,12 @@ export function mountLivingAtlasWorkspace(
         evidenceRefs: Object.freeze([]),
       });
       renderConnection(action.slice("connection:".length));
+    } else if (action.startsWith("reference-geography:")) {
+      snapshot = cloneSnapshot(snapshot, {
+        selectedLayerId: null,
+        evidenceRefs: Object.freeze([]),
+      });
+      renderReferenceGeography(action.slice("reference-geography:".length));
     } else if (action.startsWith("workbench:")) {
       openWorkbench(action.slice("workbench:".length));
     } else if (action.startsWith("interaction:")) {

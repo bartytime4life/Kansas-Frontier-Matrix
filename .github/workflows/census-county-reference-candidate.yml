@@ -1,0 +1,93 @@
+# Validate the non-authoritative Census county reference candidate offline.
+# This workflow never downloads source bytes, admits a source, emits evidence,
+# creates a map source, releases data, publishes, deploys, or changes policy.
+name: census-county-reference-candidate
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/census-county-reference-candidate.yml"
+      - "apps/explorer-web/src/site/mount-living-atlas.ts"
+      - "apps/explorer-web/src/site/reference-geography-source-registry.ts"
+      - "apps/explorer-web/tests/reference-geography-source-registry.test.ts"
+      - "apps/explorer-web/tests/browser/reference-geography.spec.ts"
+      - "data/registry/sources/settlements-infrastructure/census_cartographic_boundary_counties_2025_500k.source.json"
+      - "data/receipts/generated/genrec-census-county-reference-candidate-20260910.json"
+      - "docs/sources/catalog/census/**"
+      - "tests/source/test_census_cartographic_boundary_counties.py"
+      - "tools/validators/source/census_cartographic_boundary_counties.py"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/census-county-reference-candidate.yml"
+      - "apps/explorer-web/src/site/mount-living-atlas.ts"
+      - "apps/explorer-web/src/site/reference-geography-source-registry.ts"
+      - "apps/explorer-web/tests/reference-geography-source-registry.test.ts"
+      - "apps/explorer-web/tests/browser/reference-geography.spec.ts"
+      - "data/registry/sources/settlements-infrastructure/census_cartographic_boundary_counties_2025_500k.source.json"
+      - "data/receipts/generated/genrec-census-county-reference-candidate-20260910.json"
+      - "docs/sources/catalog/census/**"
+      - "tests/source/test_census_cartographic_boundary_counties.py"
+      - "tools/validators/source/census_cartographic_boundary_counties.py"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: census-county-reference-candidate-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  TZ: UTC
+
+jobs:
+  validate-reference-candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install declared schema and test dependencies
+        run: python tools/ci/install_python_ci.py project-test
+
+      - name: Validate descriptor and deterministic offline inspector
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_source_descriptor.py \
+            data/registry/sources/settlements-infrastructure/census_cartographic_boundary_counties_2025_500k.source.json
+          python -m pytest -q -p no:cacheprovider \
+            tests/source/test_census_cartographic_boundary_counties.py
+
+      - name: Validate pending authoring receipt
+        run: |
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-census-county-reference-candidate-20260910.json \
+            --repo-root .
+
+      - name: Record validation boundary
+        if: always()
+        run: |
+          {
+            echo "### Census county reference candidate"
+            echo
+            echo "- Result: ${{ job.status }}"
+            echo "- Scope: descriptor shape, synthetic no-network inspector tests, and receipt-byte closure"
+            echo "- Boundary: not source custody, admission, rights approval, evidence, release, map activation, or publication"
+          } >> "$GITHUB_STEP_SUMMARY"
