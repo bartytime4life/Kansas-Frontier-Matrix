@@ -23,8 +23,54 @@ fit together.
 - Candidate source records link to their checked official portals, while keeping
   source discovery explicitly separate from admission, activation, and release.
 
-The application runs as a single-route Vinext site with MapLibre GL JS. D1 and
+The application runs as a Vinext site with MapLibre GL JS. D1 and
 R2 are intentionally unbound in the current deployment.
+
+## Date-bound Event Observatory
+
+`/observatory` is the real-data animation workspace within this existing Site,
+linked from the map command bar and navigation drawer. It is separate from the
+synthetic atlas/evidence clock, so no current-only atlas context can leak into
+historical replay. `/observatory/sources` contains the cited source and coverage
+research from primary providers, Drive, Notion, GitHub and supplied references.
+
+The event clock supports 1/6/24-hour intervals since 1995, starts paused, uses
+actual radar artifacts and observation/interval boundaries, shows coverage gaps,
+and provides layer opacity/order, stepping, speed, loop, Central/UTC labels,
+reduced-motion controls and query replay links. Live access is an explicit Recent
+hour refresh, not an automatically refreshing/follow-latest stream. Replay links
+do not freeze provider revisions and are not KFM EvidenceBundles.
+
+Connected external-only carriers:
+
+- NOAA/NWS-derived IEM N0R/N0Q mosaics, admitted by exact archive filenames before
+  WMS rendering. TIME is mandatory; no latest or nearest-frame fallback. Upstream
+  data are rendered in Mercator to match the fixed Kansas image-source bounds.
+- NOAA HMS actual KML polygons, filtered by Start/End and Kansas intersection;
+  actual footprint changes, not invented wind vectors or surface PM2.5.
+- USGS API v1 selected-station continuous discharge with an absolute historical
+  end time, a 30-minute bounded hold and a gap-aware hydrograph.
+- NASA Terra MODIS daily satellite backgrounds; both advertised date and tile
+  actual-time header are verified. These are not historical boundary maps.
+- KGS cached surface-geology raster and its actual unit legend; cache edition
+  remains unconfirmed, and the cache is not relabeled as newer GeMS data.
+- GBIF annual Plantae/Animalia record-density hexagons. Source zoom is capped at
+  six before delivery; no exact occurrence points or sensitive-taxon drilldown.
+- USGS historical mine-map symbols grouped by county upstream, then joined to
+  modern Census county geometry. The independent 1934–1996 edition control is
+  not an operating-date or reserve claim. This is an older source compilation.
+
+HRRR modeled smoke transport, native NOAA scan decoding, georeferenced historical
+cartographic editions and qualified habitat/migration products remain explicit
+next integrations. No GitHub/Notion/Drive write, source admission, or production
+deployment is implied. The Site/repository identity conflict remains unresolved.
+
+Validation: `node --test tests/event-atlas.test.mjs tests/streamflow.test.mjs
+tests/rendered-html.test.mjs` plus the standard Sites build and TypeScript check.
+Live route checks on 2026-09-10 confirmed a June 7, 2023 manifest (72 radar frames,
+two Kansas-intersecting smoke intervals), a May 5, 2007 radar image, dated NASA
+and GBIF tiles, the 1984 county aggregate (26 symbols), and 97 USGS continuous
+samples for a May 2024 station interval. No browser visual QA was performed.
 
 ## Temporal sweep
 

@@ -35,6 +35,7 @@ type ParsedQuery = Readonly<{
   parameterCode: ParameterCode;
   stationId: string | null;
   stationNumber: string | null;
+  archiveEnd: string | null;
 }>;
 
 type Collection = Readonly<{
@@ -528,12 +529,14 @@ const singleQueryValue = (request: NextRequest, name: string, required: boolean)
 };
 
 const parseQuery = (request: NextRequest): ParsedQuery => {
-  const allowed = new Set(["mode", "range", "station", "parameter"]);
+  const allowed = new Set(["mode", "range", "station", "parameter", "end"]);
   for (const key of request.nextUrl.searchParams.keys()) {
     if (!allowed.has(key)) throw new QueryError("The request contained an unsupported query parameter.");
   }
   const mode = singleQueryValue(request, "mode", true);
   const range = singleQueryValue(request, "range", true);
+  const archiveEnd = singleQueryValue(request, "end", false);
+  if (archiveEnd && (!ISO_TIMESTAMP_PATTERN.test(archiveEnd) || !archiveEnd.endsWith("Z") || !Number.isFinite(Date.parse(archiveEnd)) || new Date(archiveEnd).toISOString().replace(".000Z", "Z") !== archiveEnd.replace(".000Z", "Z") || Date.parse(archiveEnd) > Date.now() || Date.parse(archiveEnd) < Date.parse("1900-01-01T00:00:00Z"))) throw new QueryError("end must be an exact past UTC timestamp since 1900.");
   if (mode !== "network" && mode !== "station") throw new QueryError("mode must be network or station.");
   if (range !== "24h" && range !== "7d" && range !== "30d" && range !== "1y") {
     throw new QueryError("range must be 24h, 7d, 30d, or 1y.");
@@ -542,10 +545,10 @@ const parseQuery = (request: NextRequest): ParsedQuery => {
   if (mode === "network") {
     const parameter = singleQueryValue(request, "parameter", false);
     const station = singleQueryValue(request, "station", false);
-    if (range !== "24h" || parameter && parameter !== "00060" || station !== null) {
+    if (range !== "24h" || parameter && parameter !== "00060" || station !== null || archiveEnd !== null) {
       throw new QueryError("Network mode supports only range=24h and parameter 00060, without a station.");
     }
-    return { mode, range, parameterCode: "00060", stationId: null, stationNumber: null };
+    return { mode, range, parameterCode: "00060", stationId: null, stationNumber: null, archiveEnd: null };
   }
 
   const stationId = singleQueryValue(request, "station", true);
@@ -559,6 +562,7 @@ const parseQuery = (request: NextRequest): ParsedQuery => {
     parameterCode: parameter as ParameterCode,
     stationId,
     stationNumber: match[1],
+    archiveEnd,
   };
 };
 
@@ -589,7 +593,7 @@ const parserContract = (
   feed: "usgs-streamflow" as const,
   state: partial ? "partial" as const : observations.length === 0 ? "empty" as const : "ready" as const,
   query: {
-    mode: query.range === "1y" ? "historical-series" as const : "recent-series" as const,
+    mode: query.range === "1y" || query.archiveEnd ? "historical-series" as const : "recent-series" as const,
     start: queryStart,
     end: queryEnd,
     parameterCode: "00060" as const,
@@ -770,7 +774,7 @@ const errorResponse = (status: number, code: string, message: string) => NextRes
 export async function GET(request: NextRequest) {
   try {
     const query = parseQuery(request);
-    const queryEndDate = new Date();
+    const queryEndDate = query.archiveEnd ? new Date(query.archiveEnd) : new Date();
     const queryEnd = queryEndDate.toISOString();
     const queryStart = subtractRange(queryEndDate, query.range).toISOString();
     const bundle = query.mode === "network"
