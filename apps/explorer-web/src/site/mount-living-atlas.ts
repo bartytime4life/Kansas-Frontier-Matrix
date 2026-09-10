@@ -900,7 +900,7 @@ export function mountLivingAtlasWorkspace(
       }
     } else if (action === "time:commit") {
       snapshot = commitSnapshotTime(snapshot, previewTimeId);
-      timeDetail.textContent = `Committed to map snapshot · ${new Date().toLocaleTimeString()}`;
+      timeDetail.textContent = `Committed to map snapshot · ${new Date(snapshot.capturedAt).toLocaleTimeString()}`;
       refreshLayerControls();
       renderEvidence(snapshot.selectedLayerId);
       initializeRuntime();
