@@ -441,6 +441,43 @@ const DOMAIN_HOLDS = Object.freeze([
   { domain: "Imagery", state: "PUBLIC-SAFE", detail: "Optional attributed imagery is display context only; it is never KFM evidence." },
 ] as const);
 
+type PriorityContextGroup = Readonly<{
+  id: "seismic" | "hydrology" | "smoke";
+  title: string;
+  description: string;
+  sourceIds: readonly OfficialContextId[];
+}>;
+
+const PRIORITY_CONTEXT_GROUPS: readonly PriorityContextGroup[] = Object.freeze([
+  Object.freeze({
+    id: "seismic",
+    title: "Earthquakes + seismic context",
+    description: "USGS recent catalog events and Raspberry Shake station locations. Neither connection is an alert or warning.",
+    sourceIds: Object.freeze(["usgs-earthquakes", "raspberry-shake-stations"] as const),
+  }),
+  Object.freeze({
+    id: "hydrology",
+    title: "Hydrology + water systems",
+    description: "Gauge observations, NOAA NWPS status, hydrography, watershed boundaries, and clearly labeled NWM model context.",
+    sourceIds: Object.freeze(["usgs-streamflow", "noaa-nwps-gauges", "usgs-3dhp-hydrography", "usgs-wbd-watersheds", "noaa-nwm-analysis", "noaa-nwm-short-range"] as const),
+  }),
+  Object.freeze({
+    id: "smoke",
+    title: "Smoke + weather context",
+    description: "NOAA HMS smoke footprints with NWS alerts and the exact-time NOAA radar loop kept as separate source roles.",
+    sourceIds: Object.freeze(["noaa-hms-smoke", "nws-alerts", "nws-radar"] as const),
+  }),
+]);
+
+const officialContextStateLabel = (state: OfficialContextState) => ({
+  idle: "NOT LOADED",
+  loading: "LOADING",
+  ready: "READY",
+  empty: "NO RESULTS",
+  partial: "PARTIAL",
+  error: "UNAVAILABLE",
+}[state]);
+
 // Open on the Smoky Hills as an investigation surface, not a distant state
 // overview. The oblique camera makes the real DEM legible immediately while
 // Kansas extent remains one click away on the map rail.
@@ -2607,6 +2644,11 @@ export default function Home() {
       }
     }
   }, [refreshNoaaHydrologyNetwork, refreshNoaaRadarManifest, refreshOfficialContext, refreshStreamflow, streamflowRange, streamflowSelectedStationId]);
+
+  const setPriorityContextGroupVisible = useCallback((sourceIds: readonly OfficialContextId[], visible: boolean) => {
+    sourceIds.forEach((sourceId) => setOfficialContextVisible(sourceId, visible));
+    announce(`${visible ? "Showing" : "Hiding"} ${sourceIds.length} connected context layers`);
+  }, [announce, setOfficialContextVisible]);
 
   const setOfficialContextOpacity = useCallback((id: OfficialContextId, value: number) => {
     const next = { ...officialOpacityRef.current, [id]: clamp(value, 0.1, 1) };
@@ -6607,6 +6649,51 @@ export default function Home() {
               <div><span><small>LOADED FEATURES</small><strong>{officialFeatureCount.toLocaleString("en-US")}</strong></span><span><small>CONNECTIONS</small><strong>{officialReadyCount}/{OFFICIAL_CONTEXT_SOURCES.length} checked</strong></span><span><small>LAST RETRIEVAL</small><strong>{officialLatestRetrievedAt ? new Date(officialLatestRetrievedAt).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) : "Not yet"}</strong></span></div>
               <nav aria-label="Official data actions"><button type="button" disabled={visibleRefreshableOfficialCount === 0 || officialLoadingCount > 0} onClick={refreshVisibleOfficialContext}>{officialLoadingCount > 0 ? "Refreshing…" : "Refresh visible"}</button><button type="button" disabled={visibleOfficialCount === 0} onClick={hideAllOfficialContext}>Hide all</button></nav>
             </div>
+            <section className="priority-context-deck" aria-labelledby="priority-context-title">
+              <header>
+                <div><span>PRIORITY CONNECTIONS</span><h3 id="priority-context-title">Earthquakes, water + smoke</h3></div>
+                <small>Toggle a source directly</small>
+              </header>
+              <p className="priority-context-intro">The controls below keep the most actionable map connections visible. Open a source row for opacity, freshness, limits, and provider links.</p>
+              <div className="priority-context-groups">
+                {PRIORITY_CONTEXT_GROUPS.map((group) => {
+                  const visibleSources = group.sourceIds.filter((sourceId) => officialVisibility[sourceId]);
+                  const featureCount = group.sourceIds.reduce((total, sourceId) => total + (officialPayloads[sourceId as OfficialContextFeedId]?.featureCount ?? 0), 0);
+                  const allVisible = visibleSources.length === group.sourceIds.length;
+                  return <article className="priority-context-group" key={group.id} data-active={visibleSources.length > 0}>
+                    <header>
+                      <div><strong>{group.title}</strong><small>{visibleSources.length}/{group.sourceIds.length} selected{featureCount > 0 ? ` · ${featureCount.toLocaleString("en-US")} loaded` : ""}</small></div>
+                      <span>{allVisible ? "FULL" : visibleSources.length ? "PARTIAL" : "OFF"}</span>
+                    </header>
+                    <p>{group.description}</p>
+                    <div className="priority-context-source-list">
+                      {group.sourceIds.map((sourceId) => {
+                        const source = OFFICIAL_CONTEXT_BY_ID[sourceId];
+                        const state = officialStates[sourceId];
+                        const heldAtFrame = officialVisibility[sourceId] && !effectiveOfficialVisibility[sourceId];
+                        return <button
+                          className="priority-context-source"
+                          key={sourceId}
+                          type="button"
+                          aria-pressed={officialVisibility[sourceId]}
+                          data-active={officialVisibility[sourceId]}
+                          data-state={state}
+                          onClick={() => setOfficialContextVisible(sourceId, !officialVisibility[sourceId])}
+                          title={`${officialVisibility[sourceId] ? "Hide" : "Show"} ${source.title}`}
+                        >
+                          <i aria-hidden="true" />
+                          <span><strong>{source.shortTitle}</strong><small>{heldAtFrame ? "HELD" : officialContextStateLabel(state)}</small></span>
+                        </button>;
+                      })}
+                    </div>
+                    <footer>
+                      <button type="button" onClick={() => setPriorityContextGroupVisible(group.sourceIds, true)} disabled={allVisible}>Show all</button>
+                      <button type="button" onClick={() => setPriorityContextGroupVisible(group.sourceIds, false)} disabled={visibleSources.length === 0}>Hide all</button>
+                    </footer>
+                  </article>;
+                })}
+              </div>
+            </section>
             <div className="official-context-list">{OFFICIAL_CONTEXT_SOURCES.map((source) => {
               const payload = source.apiPath || source.managedAdapterPath ? officialPayloads[source.id as OfficialContextFeedId] : undefined;
               const state = officialStates[source.id];
@@ -6640,7 +6727,7 @@ export default function Home() {
                   <div className="layer-primary">
                     <label className="visibility-switch"><input type="checkbox" aria-label={`${visibility[layer.id] ? "Hide" : "Show"} ${layer.title}`} checked={visibility[layer.id]} onChange={(event) => setVisibility((current) => ({ ...current, [layer.id]: event.target.checked }))} /><span aria-hidden="true" /></label>
                     <i className={`legend-swatch ${layer.legend[0].shape}`} style={{ "--swatch": layer.legend[0].color } as React.CSSProperties} aria-hidden="true" />
-                    <button className="layer-title" type="button" onClick={() => setExpandedLayers((current) => { const next = new Set(current); if (next.has(layer.id)) next.delete(layer.id); else next.add(layer.id); return next; })} aria-expanded={expanded}><strong>{layer.title}</strong><small>{noData ? `No ${layer.temporal?.label.toLowerCase()} data for ${temporalScopeLabel}` : `${layer.releaseState} · ${layer.releaseTime}`}</small></button>
+                    <button className="layer-title" type="button" onClick={() => setExpandedLayers((current) => { const next = new Set(current); if (next.has(layer.id)) next.delete(layer.id); else next.add(layer.id); return next; })} aria-expanded={expanded} title={`${expanded ? "Hide" : "Show"} controls for ${layer.title}`}><strong>{layer.title}</strong><small>{noData ? `No ${layer.temporal?.label.toLowerCase()} data for ${temporalScopeLabel}` : `${layer.releaseState} · ${layer.releaseTime}`}</small><em>{expanded ? "Hide controls" : "Controls"} <span aria-hidden="true">{expanded ? "⌃" : "⌄"}</span></em></button>
                     <span className={`trust-badge state-${layer.releaseState.toLowerCase()}`}>{layer.releaseState}</span>
                   </div>
                   {expanded && <div className="layer-detail">

@@ -153,6 +153,13 @@ test("adds bounded smoke, water, elevation, tile, and scene navigation features"
   assert.match(css, /\.terrain-profile-preview/);
   assert.match(page, /TERRAIN SCENE PASSPORT/);
   assert.match(page, /TOPOGRAPHIC HEIGHT/);
+  assert.match(page, /PRIORITY_CONTEXT_GROUPS/);
+  assert.match(page, /Earthquakes, water \+ smoke/);
+  assert.match(page, /setPriorityContextGroupVisible/);
+  assert.match(page, /priority-context-source/);
+  assert.match(css, /\.priority-context-deck/);
+  assert.match(css, /\.priority-context-source-list/);
+  assert.match(page, /Hide controls/);
   assert.match(page, /Lock for report/);
   assert.match(page, /queryTerrainElevation\(\[event\.lngLat\.lng, event\.lngLat\.lat\], \{ exaggerated: false \}\)/);
   assert.match(page, /colorRampMeters/);
