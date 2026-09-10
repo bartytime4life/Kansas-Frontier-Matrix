@@ -1,6 +1,9 @@
 packages:
   - "apps/*"
   - "packages/*"
+overrides:
+  "@esbuild-kit/core-utils>esbuild": "0.25.12"
+  "miniflare>sharp": "0.35.4"
 allowBuilds:
   "esbuild@0.18.20": false
   "esbuild@0.25.12": false

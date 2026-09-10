@@ -78,7 +78,7 @@ It is **not** the SourceDescriptor itself. SourceDescriptor records live as mach
 
 ## 2. Repo fit
 
-**Proposed path:** `docs/sources/catalog/census.md`
+**Current tracked path:** `docs/sources/catalog/census/README.md`
 **Authority root:** `docs/` (the human-facing control plane, per Directory Rules §6.1) → `docs/sources/` (source-descriptor standards, source families).
 **Directory Rules basis:** Directory Rules §6.1 names `docs/sources/` for "source-descriptor standards, source families." The `catalog/` subdivision is a PROPOSED organizational refinement that groups per-source-family landing pages alongside the umbrella `SOURCE_DESCRIPTOR_STANDARD.md`. Verify against repo evidence or pin via ADR / per-root README.
 
@@ -223,11 +223,11 @@ The doctrine's common-error classes map directly onto Census. Each is paired wit
 
 ## 9. Proposed paths
 
-The table below lists files and folders that complete the Census source family across responsibility roots. **All paths below are PROPOSED** until verified against mounted-repo evidence; an ADR is required where Directory Rules §2.4 applies.
+The table below lists files and folders that complete the Census source family across responsibility roots. Paths remain **PROPOSED** unless a row identifies current repository evidence; an ADR is required where Directory Rules §2.4 applies.
 
 | Purpose | Proposed path | Status | Notes |
 |---|---|---|---|
-| This catalog entry | `docs/sources/catalog/census.md` | PROPOSED | `catalog/` subdivision is PROPOSED; verify against repo or open ADR. |
+| This catalog entry | `docs/sources/catalog/census/README.md` | CONFIRMED | Current tracked path; canonical-home authority remains subject to the open verification item below. |
 | Source-descriptor standard (umbrella) | `docs/sources/SOURCE_DESCRIPTOR_STANDARD.md` | PROPOSED | Named in project lineage. |
 | `SourceDescriptor` records | `data/registry/sources/census/<vintage>/<product>.json` | PROPOSED | One per product × vintage; signed and checksummed. |
 | Connector | `connectors/census/` | PROPOSED | Output to `data/raw/<domain>/<source_id>/<run_id>/`. Must not write to `data/processed/`, `data/catalog/`, or `data/published/`. |
@@ -259,7 +259,7 @@ The table below lists files and folders that complete the Census source family a
 
 ## 11. Related docs
 
-> Relative paths assume this file is located at `docs/sources/catalog/census.md`. Link validity is **PROPOSED** until repo evidence is verified.
+> Relative paths resolve from the current tracked file at `docs/sources/catalog/census/README.md`; posture labels on the referenced material remain unchanged.
 
 - Verified bounded county reference slice — [`Cartographic Boundary Files`](./cartographic-boundary-files.md) (**HOLD; not released or runtime-bound**)
 - Source-descriptor umbrella standard — [`../SOURCE_DESCRIPTOR_STANDARD.md`](../../SOURCE_DESCRIPTOR_STANDARD.md) _(PROPOSED)_

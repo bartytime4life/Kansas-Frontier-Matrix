@@ -2,15 +2,37 @@
 doc_id: kfm://doc/explorer/esbuild-security-remediation
 title: Explorer esbuild remediation regression guard
 type: app-maintenance-note
-version: 0.2.0
-status: branch candidate; independent review pending
+version: 0.3.0
+status: draft repair; independent review pending
 owning_root: apps/
 responsibility: regression coverage for the merged esbuild dependency remediation
 truth_posture: cite-or-abstain; candidate validation is not advisory closure
-updated: 2026-09-08
+updated: 2026-09-10
 [/KFM_META_BLOCK_V2] -->
 
 # esbuild remediation regression guard
+
+## September 10 dependency-audit repair
+
+The current repair closes the unresolved pnpm 11 override-location failure
+recorded below. It moves the exact
+`@esbuild-kit/core-utils>esbuild@0.25.12` override from the ignored
+`package.json#pnpm.overrides` location to `pnpm-workspace.yaml#overrides`,
+then regenerates the workspace lock with pnpm 11.17.0. The resolved pnpm graph
+contains no esbuild version below the patched `0.25.0` floor.
+
+The same dependency-audit repair pins Miniflare's vulnerable transitive Sharp
+edge to `sharp@0.35.4` in both package-manager graphs, pins the standalone
+Explorer's transitive `fflate` edge to `0.7.5`, and synchronizes its stale
+npm lock with the existing manifest. These overrides are dependency-resolution
+constraints; they do not approve install scripts or broaden runtime authority.
+
+Local Node 22.23.2 checks passed the static guard, frozen pnpm install,
+standalone npm CI dry run, and both audit classifiers with zero reported
+vulnerabilities. Runtime probes and exact-head hosted checks remain required
+on the draft pull request. Rollback requires restoring the root and Explorer
+manifests, both locks, `pnpm-workspace.yaml`, this guard, and this note
+together; removing the guard alone is not a valid rollback.
 
 ## September 8 dependency-update follow-up
 
@@ -37,7 +59,7 @@ blob-verified copies of the affected files. This is not a full checkout,
 locked dependency installation, browser test, or Workerd compatibility proof.
 Hosted results must be read at the pushed head, separately from review.
 
-**Separate unresolved security failure:** at the rebased head, the
+**Historical security failure resolved by the September 10 candidate:** at the rebased head, the
 [esbuild guard](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/34239490070/job/102105690197)
 rejects `@esbuild/android-arm64@0.18.20` in the pnpm lock. The install log
 also warns that pnpm 11 ignores `package.json#pnpm.overrides`. This repair
@@ -81,8 +103,9 @@ upstream replacement follow-up.
 
 - All inventoried esbuild and platform-binary versions in the pnpm and npm
   locks must meet the patched floor.
-- The root pnpm and standalone npm parent-scoped overrides must remain present
-  and resolve to `0.25.12`.
+- The pnpm-workspace and standalone npm parent-scoped overrides must remain
+  present in their package-manager-specific authority locations and resolve
+  to `0.25.12`.
 - The six original version-specific `allowBuilds` decisions plus the September 8
   exact-version Workerd denial are compared byte-for-byte; no approval is added
   and no denial is spoofed or removed.

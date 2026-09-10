@@ -29,6 +29,9 @@ const workspaceOnly = { skip: inWorkspace ? false : 'standalone app; workspace p
 const reviewedWorkspace = `packages:
   - "apps/*"
   - "packages/*"
+overrides:
+  "@esbuild-kit/core-utils>esbuild": "0.25.12"
+  "miniflare>sharp": "0.35.4"
 allowBuilds:
   "esbuild@0.18.20": false
   "esbuild@0.25.12": false
@@ -97,9 +100,27 @@ test('workspace retains existing build-script decisions', workspaceOnly, async (
   assertWorkspacePolicy(await read(path.join(root, 'pnpm-workspace.yaml')));
 });
 
-test('workspace root retains the parent-scoped remediation', workspaceOnly, async () => {
+test('workspace retains the parent-scoped remediation in pnpm 11 authority', workspaceOnly, async () => {
+  const workspace = await read(path.join(root, 'pnpm-workspace.yaml'));
+  assert.match(workspace, /^overrides:\n  "@esbuild-kit\/core-utils>esbuild": "0\.25\.12"$/m);
   const manifest = await json(path.join(root, 'package.json'));
-  assert.deepEqual(manifest.pnpm?.overrides, { '@esbuild-kit/core-utils>esbuild': fixed });
+  assert.equal(manifest.pnpm?.overrides, undefined,
+    'pnpm 11 overrides belong in pnpm-workspace.yaml, not package.json');
+});
+
+test('workspace guard rejects missing, vulnerable, or broadened esbuild overrides', () => {
+  const override = '  "@esbuild-kit/core-utils>esbuild": "0.25.12"\n';
+  assert.ok(reviewedWorkspace.includes(override));
+  const mutations = [
+    reviewedWorkspace.replace(override, ''),
+    reviewedWorkspace.replace(override, `#${override}`),
+    reviewedWorkspace.replace(override, '  "@esbuild-kit/core-utils>esbuild": "0.18.20"\n'),
+    reviewedWorkspace.replace(override, '  "@esbuild-kit/core-utils>esbuild": ">=0.25.12"\n'),
+  ];
+  for (const mutation of mutations) {
+    assert.notEqual(mutation, reviewedWorkspace);
+    assert.throws(() => assertWorkspacePolicy(mutation), { code: 'ERR_ASSERTION' });
+  }
 });
 
 test('workspace guard rejects additive approvals and spoofed denials', () => {
