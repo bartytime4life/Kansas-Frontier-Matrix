@@ -132,7 +132,8 @@ export function isPersistedMapSnapshot(value: unknown): value is MapSnapshot {
     value.profile !== "kfm.explorer.map-snapshot.v1" ||
     !isIsoTimestamp(value.capturedAt) ||
     !isNonEmptyString(value.area) ||
-    !REPRESENTATIONS.has(String(value.representation)) ||
+    typeof value.representation !== "string" ||
+    !REPRESENTATIONS.has(value.representation) ||
     value.basemap !== "SITE_LOCAL_ATLAS" ||
     !isMapRuntimeCamera(value.camera) ||
     !isNonEmptyString(value.committedTimeId) ||
@@ -221,7 +222,8 @@ export function isPersistedStoryScene(value: unknown): value is StoryScene {
     !Number.isSafeInteger(value.order) ||
     (value.order as number) < 1 ||
     value.lifecycle !== "DRAFT" ||
-    !STORY_MOTIONS.has(String(value.motion)) ||
+    typeof value.motion !== "string" ||
+    !STORY_MOTIONS.has(value.motion) ||
     !isPersistedMapSnapshot(value.snapshot) ||
     !isStringArray(value.evidenceRefs) ||
     !isStringArray(value.caveats)

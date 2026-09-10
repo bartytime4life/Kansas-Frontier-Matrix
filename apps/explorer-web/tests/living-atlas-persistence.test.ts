@@ -76,6 +76,16 @@ describe("Living Atlas persisted draft boundary", () => {
     expect(isPersistedReportDraft(extended)).toBe(false);
   });
 
+  it("rejects array-coerced representation and motion enum values", () => {
+    const arrayRepresentation = clone(validReport());
+    Object.assign(arrayRepresentation.snapshot, { representation: ["2D"] });
+    expect(isPersistedReportDraft(arrayRepresentation)).toBe(false);
+
+    const arrayMotion = clone(validStory());
+    Object.assign(arrayMotion, { motion: ["NONE"] });
+    expect(isPersistedStoryScene(arrayMotion)).toBe(false);
+  });
+
   it("rejects unknown time, layers, duplicate layers, and stale visibility", () => {
     const unknownTime = clone(validReport());
     unknownTime.snapshot.committedTimeId = "time:not-registered";
