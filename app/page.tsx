@@ -265,6 +265,14 @@ type MapQueryCandidate = Readonly<{
 type ScenePresetId = "overview-2d" | "globe-overview" | "water-systems" | "smoke-context" | "elevation-3d" | "tile-grid";
 type QwenMessage = Readonly<{ role: "user" | "assistant"; content: string }>;
 type QwenBridgeState = "ready" | "not-configured" | "error";
+type RepositoryConnection = Readonly<{
+  state: "idle" | "loading" | "ready" | "error";
+  liveCommit?: string;
+  shortCommit?: string;
+  commitDate?: string | null;
+  message?: string | null;
+  observedAt?: string;
+}>;
 type HoverSummary = Readonly<{
   id: string;
   title: string;
@@ -974,6 +982,8 @@ export default function Home() {
   const [featureMaturity, setFeatureMaturity] = useState<FeatureMaturity | "ALL">("ALL");
   const [repositoryQuery, setRepositoryQuery] = useState("");
   const [repositoryStateFilter, setRepositoryStateFilter] = useState<"ALL" | RepositoryUpdateState>("ALL");
+  const [repositoryConnection, setRepositoryConnection] = useState<RepositoryConnection>({ state: "idle" });
+  const [repositoryRefreshKey, setRepositoryRefreshKey] = useState(0);
   const [activeTransitionId, setActiveTransitionId] = useState(TRANSITION_BOUNDARIES[0].id);
   const [governedRoute, setGovernedRoute] = useState<GovernedRoute>("/bootstrap");
   const [governedMethod, setGovernedMethod] = useState<GovernedMethod>("GET");
@@ -3166,6 +3176,32 @@ export default function Home() {
 
   useEffect(() => {
     if (!repositoryOpen) return;
+    const controller = new AbortController();
+    setRepositoryConnection({ state: "loading" });
+    void fetch("/api/repository-status", { cache: "no-store", signal: controller.signal })
+      .then(async (response) => {
+        const payload = await response.json().catch(() => null) as Record<string, unknown> | null;
+        if (!response.ok || payload?.state !== "ready" || typeof payload.commit !== "string" || !/^[0-9a-f]{40}$/i.test(payload.commit)) {
+          throw new Error("Repository status was unavailable");
+        }
+        setRepositoryConnection({
+          state: "ready",
+          liveCommit: payload.commit.toLowerCase(),
+          shortCommit: typeof payload.shortCommit === "string" ? payload.shortCommit : payload.commit.slice(0, 7),
+          commitDate: typeof payload.commitDate === "string" ? payload.commitDate : null,
+          message: typeof payload.message === "string" ? payload.message : null,
+          observedAt: typeof payload.observedAt === "string" ? payload.observedAt : undefined,
+        });
+      })
+      .catch((error) => {
+        if (error instanceof DOMException && error.name === "AbortError") return;
+        setRepositoryConnection({ state: "error" });
+      });
+    return () => controller.abort();
+  }, [repositoryOpen, repositoryRefreshKey]);
+
+  useEffect(() => {
+    if (!repositoryOpen) return;
     const panel = repositoryPanelRef.current;
     if (!panel) return;
     const focusable = () => Array.from(panel.querySelectorAll<HTMLElement>("button:not([disabled]), input:not([disabled]), select:not([disabled]), a[href], [tabindex='0']"));
@@ -4963,6 +4999,7 @@ export default function Home() {
               <footer><span>DRAFT · NOT PUBLISHED</span><p>Site-local synthetic or generalized geometry remains distinct from official source candidates.</p></footer>
             </aside>}
           </div>
+          <button ref={repositoryButtonRef} className="status-header-action" type="button" onClick={() => { setRepositoryView("updates"); setRepositoryOpen(true); }} aria-expanded={repositoryOpen} aria-controls="repository-briefing" title="Check Site, data, and repository connections"><span aria-hidden="true">⌁</span><span>Status</span></button>
           <button className="qwen-header-action" type="button" onClick={openQwenCompanion} aria-pressed={qwenOpen} title="Ask Qwen about the current map view"><span className="qwen-glyph" aria-hidden="true">Q</span><span>Qwen</span></button>
           <button className="share-action" type="button" onClick={shareView} aria-label="Share current map view" title="Share current view">↗</button>
           <Link className="about-action" href="/about">About</Link>
@@ -4997,18 +5034,34 @@ export default function Home() {
       <div className="repository-overlay" hidden={!repositoryOpen} onMouseDown={(event) => { if (event.target === event.currentTarget) closeRepository(); }}>
         <aside ref={repositoryPanelRef} id="repository-briefing" className="repository-briefing" role="dialog" aria-modal="true" aria-labelledby="repository-briefing-title">
           <header className="repository-heading">
-            <div><p className="panel-kicker">REPOSITORY + SOURCE BRIEFING</p><h2 id="repository-briefing-title">Inspect KFM boundaries</h2><p>Current GitHub evidence and Drive-backed source ideas, translated without collapsing discovery into release.</p></div>
+            <div><p className="panel-kicker">CONNECTIONS + REPOSITORY + SOURCES</p><h2 id="repository-briefing-title">Inspect KFM boundaries</h2><p>A pinned implementation snapshot, live read-only GitHub currentness, and source ideas without collapsing discovery into release.</p></div>
             <button className="icon-close" type="button" onClick={closeRepository} aria-label="Close repository briefing">×</button>
           </header>
 
           <section className="repository-snapshot" aria-label="Repository snapshot">
-            <div className="snapshot-identity"><span>PINNED SNAPSHOT</span><strong>main@{REPOSITORY_SNAPSHOT.shortCommit}</strong><small>Inspected {REPOSITORY_SNAPSHOT.inspectedAt}</small></div>
+            <div className="snapshot-identity"><span>SITE REFERENCE SNAPSHOT</span><strong>main@{REPOSITORY_SNAPSHOT.shortCommit}</strong><small>Inspected {REPOSITORY_SNAPSHOT.inspectedAt}</small></div>
             <dl>
               <div><dt>Domains</dt><dd>{REPOSITORY_SNAPSHOT.counts.knowledgeDomains}</dd></div>
               <div><dt>Feature families</dt><dd>{REPOSITORY_SNAPSHOT.counts.explorerFeatureFamilies}</dd></div>
               <div><dt>Map functions</dt><dd>{REPOSITORY_SNAPSHOT.counts.mapFunctions}</dd></div>
               <div><dt>Current signals</dt><dd>{REPOSITORY_SNAPSHOT.counts.repositoryUpdates}</dd></div>
             </dl>
+            <div className="repository-connection" data-state={repositoryConnection.state} role="status" aria-live="polite">
+              <div>
+                <span>LIVE READ-ONLY GITHUB CHECK</span>
+                <strong>{repositoryConnection.state === "ready" ? `main@${repositoryConnection.shortCommit}` : repositoryConnection.state === "loading" ? "Checking current main…" : repositoryConnection.state === "error" ? "Live check unavailable" : "Check available"}</strong>
+                <p>{repositoryConnection.state === "ready"
+                  ? repositoryConnection.liveCommit === REPOSITORY_SNAPSHOT.commit
+                    ? "GitHub main matches the Site reference snapshot."
+                    : `GitHub main has advanced; this Site remains referenced to main@${REPOSITORY_SNAPSHOT.shortCommit}.`
+                  : repositoryConnection.state === "error"
+                    ? "The pinned snapshot remains available; no currentness claim is inferred."
+                    : "Reads fixed public repository metadata only when this briefing opens."}</p>
+              </div>
+              <button type="button" onClick={() => setRepositoryRefreshKey((current) => current + 1)} disabled={repositoryConnection.state === "loading"}>Refresh</button>
+              {repositoryConnection.state === "ready" && <small>{repositoryConnection.message ?? "Current main commit"}{repositoryConnection.observedAt ? ` · checked ${new Date(repositoryConnection.observedAt).toLocaleString()}` : ""}</small>}
+              <footer>Read-only metadata · separate Site and GitHub source histories · no automatic code sync or mutation</footer>
+            </div>
           </section>
 
           <div className="repository-scroll">

@@ -15,7 +15,9 @@ fit together.
 - “New from map” carries the current extent or selection, visible layers, time,
   representation, and evidence posture into the report or guided-story workflow.
 - The repository and source briefing reports implementation boundaries; it does
-  not release or publish data.
+  not release or publish data. When opened, it performs a bounded read-only
+  current-main check against the fixed public GitHub repository endpoint and
+  keeps the separately versioned Site source explicit.
 - Candidate source records link to their checked official portals, while keeping
   source discovery explicitly separate from admission, activation, and release.
 
@@ -62,6 +64,21 @@ exports, source admission, release state, and EvidenceBundle resolution. Failed,
 partial, empty, and refreshed states remain visible instead of being converted
 into inferred facts.
 
+## Backend connection posture
+
+- `/api/live-context` is the allowlisted server adapter for four JSON feeds;
+  the two raster products are requested by MapLibre only when selected.
+- `/api/repository-status` reads only the public `main` branch identity for
+  `bartytime4life/Kansas-Frontier-Matrix`. It accepts no caller-supplied URL,
+  bounds response size and time, caches briefly, and fails closed.
+- The GitHub repository and this Site have separate source histories. The
+  currentness check does not synchronize trees, write issues, mutate data,
+  deploy a version, or publish the Site.
+- `/api/qwen` remains unavailable until a server-reachable endpoint is
+  configured. No hosted Qwen variables are currently required for the map.
+- D1 and R2 remain unbound; reports, stories, places, and investigation
+  workspaces are device-local drafts.
+
 ## Prerequisites
 
 - Node.js `>=22.13.0`
@@ -82,6 +99,9 @@ Scripts that need writable project-scoped home, npm, XDG, and temporary paths us
 - edit site code under `app/`
 - `app/external-context-sources.ts` is the single inventory for every
   browser-requested basemap and terrain carrier
+- `app/api/live-context/route.ts` contains the fixed official-context adapter
+- `app/api/repository-status/route.ts` contains the fixed read-only GitHub
+  currentness check
 - `app/chatgpt-auth.ts` provides optional dispatch-owned ChatGPT sign-in helpers
 - `.openai/hosting.json` declares optional Sites D1 and R2 bindings
 - `vite.config.ts` simulates declared bindings for local development

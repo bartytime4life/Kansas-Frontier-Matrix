@@ -34,7 +34,7 @@ test("renders the map-first Kansas explorer shell", async () => {
   assert.match(html, /Build report/i);
   assert.match(html, /bounded demonstration data/i);
   assert.match(html, /Repository briefing/i);
-  assert.match(html, /main@(?:<!-- -->)?f1a4156/i);
+  assert.match(html, /main@(?:<!-- -->)?b2e0a98/i);
   assert.match(html, /Scenario review/i);
   assert.match(html, /Runtime lab/i);
   assert.match(html, /Source observatory/i);
@@ -589,7 +589,8 @@ test("resolves Focus outcomes and temporal scope with fail-closed precedence", a
 test("keeps repository updates pinned and boundary-labeled", async () => {
   const updates = await readFile(new URL("../app/repository-updates.ts", import.meta.url), "utf8");
 
-  assert.match(updates, /f1a415639a57985f859fa66e6ca73cd5c349aa78/);
+  assert.match(updates, /b2e0a982ad53f8f906c15d0dfb76571c8cd829f3/);
+  assert.match(updates, /separate source histories/);
   assert.match(updates, /Local geodata inspection now fails closed on malformed or stale input/);
   assert.match(updates, /All 105 Kansas counties now have public locator starters/);
   assert.match(updates, /Time A \/ Time B comparison preserves report scope/);
@@ -830,6 +831,23 @@ test("connects six bounded official Kansas context sources without admitting evi
   assert.doesNotMatch(route, /searchParams\.get\("url"\)/);
   assert.match(css, /\.official-context-catalog/);
   assert.match(css, /\.official-connection-ledger/);
+});
+
+test("checks current GitHub main through one fixed read-only backend route", async () => {
+  const route = await readFile(new URL("../app/api/repository-status/route.ts", import.meta.url), "utf8");
+  const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  const layout = await readFile(new URL("../app/layout.tsx", import.meta.url), "utf8");
+  const favicon = await readFile(new URL("../app/favicon.ico/route.ts", import.meta.url), "utf8");
+
+  assert.match(route, /api\.github\.com\/repos\/\$\{REPOSITORY\}\/branches\/\$\{REF\}/);
+  assert.match(route, /READ_ONLY_PUBLIC_METADATA/);
+  assert.match(route, /SITE_SOURCE_SEPARATE/);
+  assert.match(route, /MAX_RESPONSE_BYTES/);
+  assert.doesNotMatch(route, /searchParams\.get\("url"\)/);
+  assert.match(page, /LIVE READ-ONLY GITHUB CHECK/);
+  assert.match(page, /no automatic code sync or mutation/i);
+  assert.match(layout, /shortcut: "\/favicon\.ico"/);
+  assert.match(favicon, /content-type.*image\/svg\+xml/i);
 });
 
 test("the built official-context adapter rejects unknown feeds without network access", async () => {

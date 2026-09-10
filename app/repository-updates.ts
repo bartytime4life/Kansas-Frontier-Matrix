@@ -28,9 +28,9 @@ export type RepositoryUpdate = Readonly<{
 export const REPOSITORY_SNAPSHOT = Object.freeze({
   repository: "bartytime4life/Kansas-Frontier-Matrix",
   ref: "main",
-  commit: "f1a415639a57985f859fa66e6ca73cd5c349aa78",
-  shortCommit: "f1a4156",
-  inspectedAt: "2026-09-09 · live GitHub readback",
+  commit: "b2e0a982ad53f8f906c15d0dfb76571c8cd829f3",
+  shortCommit: "b2e0a98",
+  inspectedAt: "10 Sep 2026 · live GitHub readback",
   counts: Object.freeze({
     knowledgeDomains: 13,
     explorerFeatureFamilies: 38,
@@ -48,14 +48,14 @@ export const REPOSITORY_UPDATES: readonly RepositoryUpdate[] = Object.freeze([
   Object.freeze({
     id: "current-main-live-readback",
     area: "Repository control plane",
-    title: "Current main is pinned with green UI checks and unresolved release gates",
+    title: "Current main records the saved Sites v15 checkpoint",
     state: "NEEDS VERIFICATION",
     maturity: "PARTIAL",
-    date: "9 Sep 2026",
+    date: "10 Sep 2026",
     summary:
-      "Live GitHub readback pins main at f1a4156 with zero open pull requests. UI build, keyboard behavior, source-descriptor validation, and rights-presence checks are green on the exact head.",
+      "Live GitHub readback pins main at b2e0a98 after PR #4457 recorded the saved Sites v15 official-context capability. The Site now performs a separate read-only current-main check when its repository briefing opens.",
     boundary:
-      "Repository-topology, governance-parity, object-family-register, generated-receipt integrity, and dependency audit checks remain red. Accessibility axe coverage is a workflow hold. Green checks are bounded execution evidence—not release, review, deployment, or publication authority.",
+      "The GitHub repository and this Site retain separate source histories. A successful currentness check does not synchronize code, prove tree equivalence, admit data, approve a review, deploy a version, or authorize publication.",
     sourceLabel: "Exact current main commit",
     sourceUrl: `https://github.com/${REPOSITORY_SNAPSHOT.repository}/commit/${REPOSITORY_SNAPSHOT.commit}`,
   }),

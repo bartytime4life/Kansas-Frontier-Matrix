@@ -35,7 +35,7 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     icons: {
       icon: "/favicon.svg",
-      shortcut: "/favicon.svg",
+      shortcut: "/favicon.ico",
     },
   };
 }
