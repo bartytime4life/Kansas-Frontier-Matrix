@@ -29,12 +29,12 @@ This record backfills the governed real-data work completed in the existing Kans
 |---|---|
 | Repository baseline | `bartytime4life/Kansas-Frontier-Matrix` `main@77c11c2db9c8c5b7c56e6c4335c429079cac79f2` |
 | Site | [kansas-frontier-matrix-explorer](https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site) |
-| Site saved version | 21 |
-| Site source commit | `e4cca734aa33fd7422f49b79c1ca644095900289` |
+| Site saved version | 22 (current checkpoint; version 21 is the prior saved checkpoint) |
+| Site source commit | `05fcc2eaa31d8bf07f61529f60a68f4b7acf0d14` |
 | Site deployment state | Not deployed by this change; the owner-only Site remains the current delivery surface |
 | GitHub backfill state | This document is on the branch for the accompanying draft pull request |
 
-The Site checkpoint passed `npm run build`, `npm test` (35 tests), and scoped ESLint for all changed files with zero errors. Full-project lint remains blocked by two pre-existing React effect errors in `app/observatory/workspace.tsx`; this change did not broaden that lint debt. Browser QA was not performed.
+The Site checkpoint passed `npm run build`, `npm test` (35 tests), and scoped ESLint for all changed files with zero errors. Version 22 adds the visible priority context control deck and a clear `Controls` affordance on registry layer rows. Full-project lint remains blocked by two pre-existing React effect errors in `app/observatory/workspace.tsx`; this change did not broaden that lint debt. Browser QA was not performed.
 
 ## Site capability map
 
@@ -61,6 +61,17 @@ The repository's fixture-only `LidarDerivedProductLineageReceipt` remains the co
 The Site preserves role separation across NWS alerts, NOAA radar, NOAA/NWM model context, USGS earthquakes, streamflow/river context, smoke footprints, Raspberry Shake station context, and terrain derivatives. Layer controls expose current bounded context and its provider service, while unavailable, partial, stale, ambiguous, denied, and error states remain visible.
 
 The Site does not issue, interpret, confirm, rescind, or replace emergency, health, engineering, regulatory, or life-safety instructions. Synthetic hazard fixtures and historical frames remain distinguishable from provider context.
+
+### Priority layer controls
+
+Version 22 makes the previously buried controls discoverable in the first layer-panel view:
+
+- a visible priority deck groups **Earthquakes + seismic context**, **Hydrology + water systems**, and **Smoke + weather context**;
+- each group has direct per-source show/hide buttons, group-level Show all / Hide all actions, selected-source counts, loaded-feature counts, and READY/PARTIAL/HELD/UNAVAILABLE state labels;
+- the existing source disclosures remain the detailed control surface for opacity, freshness, provider limits, refresh actions, and official links;
+- registry layers now display an explicit **Controls** / **Hide controls** affordance so opacity, zoom, feature inspection, solo mode, and draw-order controls are not hidden behind an unlabeled title interaction.
+
+This is a presentation and discoverability improvement only. It does not change source roles, temporal holds, admission state, evidence, release, or public alert authority.
 
 ## Reliability controls
 
