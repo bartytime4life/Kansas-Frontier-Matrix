@@ -265,3 +265,98 @@ def test_summary_claims_completion_only_after_success(tmp_path: Path, outcome: s
         assert "WORKFLOW_CHECK_NOT_COMPLETED: hydrology-bounded-validation" in text
         safe_outcome = outcome if outcome in {"failure", "cancelled", "skipped"} else "unknown"
         assert f"Bounded validation outcome: {safe_outcome}." in text
+
+
+# Timestamp spelling is not chronology. These cases keep the existing UTC-Z
+# schema and compare observation instants without rewriting source strings.
+@pytest.mark.parametrize("timestamps", [
+    ("2026-09-10T12:00:00Z", "2026-09-10T12:00:00.1Z", "2026-09-10T12:00:01Z"),
+    ("2026-09-10T12:00:00.1Z", "2026-09-10T12:00:00.11Z", "2026-09-10T12:00:00.2Z"),
+    ("2026-09-10T12:00:00.09Z", "2026-09-10T12:00:00.1Z", "2026-09-10T12:00:00.1001Z"),
+    ("2026-09-10T12:00:00Z", "2026-09-10T12:00:00.0000001Z", "2026-09-10T12:00:00.0000002Z"),
+    ("2026-09-10T12:00:00.1234567890123456789012345678901Z", "2026-09-10T12:00:00.1234567890123456789012345678902Z", "2026-09-10T12:00:01Z"),
+    ("2026-12-31T23:59:59.999Z", "2027-01-01T00:00:00Z", "2027-01-01T00:00:00.001Z"),
+    ("2026-09-10t12:00:00Z", "2026-09-10T12:15:00Z", "2026-09-10t12:30:00Z"),
+])
+def test_chronology_accepts_exact_increasing_instants_without_mutation(timestamps: tuple[str, ...]) -> None:
+    payload = _valid()
+    for point, timestamp in zip(payload["series"]["points"], timestamps):
+        point["observed_at"] = timestamp
+    before = copy.deepcopy(payload)
+    assert validator.validate_payload(payload) == ()
+    assert payload == before
+
+
+@pytest.mark.parametrize("timestamps", [
+    ("2026-09-10T12:00:00.1Z", "2026-09-10T12:00:00Z", "2026-09-10T12:00:01Z"),
+    ("2026-09-10T12:00:00.000Z", "2026-09-10T12:00:00Z", "2026-09-10T12:00:01Z"),
+    ("2026-09-10T12:00:00.10Z", "2026-09-10T12:00:00.1Z", "2026-09-10T12:00:01Z"),
+    ("2026-09-10T12:00:00Z", "2026-09-10t12:00:00Z", "2026-09-10t12:00:01Z"),
+    ("2026-09-10T12:00:00Z", "2026-09-10T12:00:00Z", "2026-09-10T12:00:01Z"),
+    ("2026-09-10T12:00:00.11Z", "2026-09-10T12:00:00.1Z", "2026-09-10T12:00:00.2Z"),
+    ("2026-09-10T12:00:00.1234567890123456789012345678902Z", "2026-09-10T12:00:00.1234567890123456789012345678901Z", "2026-09-10T12:00:01Z"),
+])
+def test_chronology_rejects_reversed_or_equivalent_instants(timestamps: tuple[str, ...]) -> None:
+    payload = _valid()
+    for point, timestamp in zip(payload["series"]["points"], timestamps):
+        point["observed_at"] = timestamp
+    expected = (validator.Finding("HYDROGRAPH_TIME_ORDER_INVALID", "/series/points"),)
+    assert validator.validate_payload(payload) == expected
+    assert validator.validate_payload(payload) == expected
+
+
+@pytest.mark.parametrize("timestamp", [
+    "2026-09-10T12:00:00+00:00", "2026-09-10T12:00:00-00:00",
+    "2026-02-30T12:00:00Z", "2026-09-10T12:00:00.Z",
+])
+def test_chronology_keeps_schema_rejection_before_comparison(timestamp: str) -> None:
+    payload = _valid()
+    payload["series"]["points"][0]["observed_at"] = timestamp
+    findings = validator.validate_payload(payload)
+    assert validator.Finding("SCHEMA_INVALID", "/series/points/0/observed_at") in findings
+    assert all(item.code == "SCHEMA_INVALID" for item in findings)
+
+
+def test_chronology_matches_an_exact_fraction_oracle() -> None:
+    from fractions import Fraction
+    from itertools import product
+
+    fractions = ("", "0", "000", "001", "09", "090", "1", "10", "11", "1234567890123456789012345678901")
+    for left, right in product(fractions, repeat=2):
+        payload = _valid()
+        points = payload["series"]["points"]
+        points[0]["observed_at"] = "2026-09-10T12:00:00" + ("." + left if left else "") + "Z"
+        points[1]["observed_at"] = "2026-09-10T12:00:00" + ("." + right if right else "") + "Z"
+        # The third point stays in a later minute, so only the first pair decides.
+        expected_ok = Fraction("0." + (left or "0")) < Fraction("0." + (right or "0"))
+        findings = validator.validate_payload(payload)
+        assert (findings == ()) is expected_ok, (left, right, findings)
+
+
+@pytest.mark.parametrize("first,second,expected_exit", [
+    ("2026-09-10T12:00:00Z", "2026-09-10T12:00:00.1Z", 0),
+    ("2026-09-10T12:00:00.1Z", "2026-09-10T12:00:00Z", 1),
+    ("2026-09-10T12:00:00.000Z", "2026-09-10T12:00:00Z", 1),
+])
+def test_chronology_cli_returns_bounded_report_without_rewriting_input(
+    tmp_path: Path, first: str, second: str, expected_exit: int,
+) -> None:
+    payload = _valid()
+    payload["series"]["points"][0]["observed_at"] = first
+    payload["series"]["points"][1]["observed_at"] = second
+    candidate = tmp_path / "chronology.json"
+    before = json.dumps(payload, sort_keys=True).encode("utf-8")
+    candidate.write_bytes(before)
+    result = subprocess.run(
+        [sys.executable, str(VALIDATOR_PATH), str(candidate)], cwd=REPO_ROOT,
+        text=True, capture_output=True, timeout=10, check=False,
+    )
+    assert result.returncode == expected_exit
+    assert result.stderr == ""
+    report = json.loads(result.stdout)
+    assert report["outcome"] == ("PASS" if expected_exit == 0 else "FAIL")
+    assert report["findings"] == ([] if expected_exit == 0 else [
+        {"code": "HYDROGRAPH_TIME_ORDER_INVALID", "field": "/series/points"},
+    ])
+    assert set(report["authority"].values()) == {False}
+    assert candidate.read_bytes() == before
