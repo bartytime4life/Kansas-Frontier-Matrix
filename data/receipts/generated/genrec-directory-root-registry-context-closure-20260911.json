@@ -1,0 +1,106 @@
+{
+  "receipt_id": "genrec-directory-root-registry-context-closure-20260911",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/directory-root-registry.yml",
+    "tests/ci/test_directory_root_registry_workflow.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/directory-root-registry.yml": "sha256:5e826e4c7eeff3e7d334c951df237db8176b2b48691f71c0d6fe3c4ce2bec590",
+    "tests/ci/test_directory_root_registry_workflow.py": "sha256:14ed4f7d4e754fc2e8ad766ffc9f02c825db8f2b2827188db1c63536ccb1eeae"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Astra Pro",
+    "version": "UNKNOWN; runtime build identifier unavailable"
+  },
+  "prompt_or_contract": "sha256:c0eb0f95c262de0cf637312fe39934585c490f5ef255672af221d47e3c618e90",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub",
+      "container"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:e36b4011d9d5e723367781b2e2d380a5d2581a4ab80f2f0b3acf9c5afe2d62b2",
+      "sha256:2e491f986f3484f0a8e74c94d96fa2be294ec1b92386dab620f4a8de900e350f"
+    ],
+    "attached_docs": [
+      "KFM Contributor Reliability System: Documentation, PR Quality, and CI Hardening (planning reference, not current runtime evidence)"
+    ],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8098630620e3b978407e3e0717e09625123ae8aa/.github/workflows/directory-root-registry.yml",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8098630620e3b978407e3e0717e09625123ae8aa/tests/ci/test_directory_root_registry_workflow.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8098630620e3b978407e3e0717e09625123ae8aa/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8098630620e3b978407e3e0717e09625123ae8aa/docs/doctrine/directory-rules.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8098630620e3b978407e3e0717e09625123ae8aa/docs/doctrine/ai-build-operating-contract.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8098630620e3b978407e3e0717e09625123ae8aa/tools/validators/validate_generated_receipt.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8098630620e3b978407e3e0717e09625123ae8aa/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8098630620e3b978407e3e0717e09625123ae8aa/data/receipts/generated/genrec-topology-execution-context-20260911.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4479",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4481",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/34637911204",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/34640763851"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/directory-root-registry.yml": "PROPOSED",
+    "tests/ci/test_directory_root_registry_workflow.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "editable-source-identity",
+      "outcome": "PASS",
+      "reason": "Original workflow and test bytes match Git blobs f3b7c5fad4404c22acedce6f2ae81ab751ccffb0 and 41800d64cf9f22e98b21043ec5f6e5bbd9a11580. Earlier conflicting responses were excluded. Sparse projection only, not a full checkout."
+    },
+    {
+      "gate": "workflow-shell-regressions",
+      "outcome": "PASS",
+      "reason": "18 unittest methods passed on Python 3.13.5. Execute actual YAML run blocks with an argv-recording Python substitute in a disposable secret-free shell. Four historical calls, two current calls, mandatory native test wiring, trigger closure, read-only permissions and failure propagation are checked."
+    },
+    {
+      "gate": "negative-controls",
+      "outcome": "PASS",
+      "reason": "Original exact workflow is rejected by the new inventory test. Nine deliberately weakened workflow variants were each rejected by targeted semantic tests, with no test errors. Candidate files were not modified during mutant runs."
+    },
+    {
+      "gate": "schema-hashes-and-hygiene",
+      "outcome": "PASS",
+      "reason": "Receipt passes exact fetched Draft 2020-12 schema blob fba21ed27ebccf1362fe397fe0c3ebd85e072685 with FormatChecker. Artifact path/hash/truth-label keys match, complete SHA-256 digests recompute, Python parses under 3.11 grammar, and sparse git diff --check passes."
+    },
+    {
+      "gate": "native-combined-checkout-and-hosted-ci",
+      "outcome": "SKIPPED",
+      "reason": "Full local Git checkout unavailable due GitHub DNS resolution failure. Native topology/registry modules, historical Git replay, current diagnostic receipt integrity and hosted CI are not claimed run for this correction at emission. Existing native results are prior evidence only."
+    },
+    {
+      "gate": "independent-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending; no review, approval, merge or release claim is inferred from authoring or tests."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "directory-authority",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8098630620e3b978407e3e0717e09625123ae8aa/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-11T20:13:13Z",
+  "emitter": "ChatGPT KFM directory receipt integration correction",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Base main@8098630620e3b978407e3e0717e09625123ae8aa. Repairs the #4481/#4479 receipt-context interaction without editing any prior receipt. August and first-repair pins are retained. Diagnostic-log-safety and native-CI receipts replay at the exact previously tested ancestor 360ae6b0b9eb71ca02abe05564927104d1982343. The existing execution-context receipt binds current renderer/README/context tests; this successor binds current workflow/test bytes. Require native diagnostic, context, registry and workflow regression suites. No validator, schema, baseline, root registry, action pin, dependency, permission, source, API or Site changes. Existing exact-writer-branch trigger is retained, not expanded. Workflow comments and test docstring document behavior; adjacent README remains untouched to avoid a second binding change. Early connector file responses returned inconsistent source bodies and invalid-length object IDs; only later original bytes independently matching valid Git blob IDs f3b7c5fad4404c22acedce6f2ae81ab751ccffb0 and 41800d64cf9f22e98b21043ec5f6e5bbd9a11580 were edited. Full local checkout unavailable due GitHub DNS failure; local shell wiring uses an explicit Python substitute, not native receipt or topology validation. Native combined-checkout/hosted validation and independent review remain separate gates. Closing an unmerged draft leaves main unchanged; after separately authorized integration, coherently revert this workflow/test change while retaining receipts as lineage. Rollback reintroduces the known binding defect. No readiness, approval, merge, administrative, release, source activation, deployment, promotion or publication authority."
+}
