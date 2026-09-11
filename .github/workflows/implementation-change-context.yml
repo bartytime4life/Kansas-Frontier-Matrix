@@ -15,6 +15,8 @@ name: implementation-change-context
       - "docs/intake/exploratory/fluencyloop-change-context-source-map.md"
       - "data/receipts/generated/genrec-implementation-change-context-20260806.json"
       - "data/receipts/generated/genrec-governance-workflow-security-readme-current-state-20260831.json"
+      - "tests/ci/test_implementation_change_context_workflow.py"
+      - "data/receipts/generated/genrec-implementation-change-context-history-20260911.json"
   push:
     branches: [main]
     paths:
@@ -30,6 +32,8 @@ name: implementation-change-context
       - "docs/intake/exploratory/fluencyloop-change-context-source-map.md"
       - "data/receipts/generated/genrec-implementation-change-context-20260806.json"
       - "data/receipts/generated/genrec-governance-workflow-security-readme-current-state-20260831.json"
+      - "tests/ci/test_implementation_change_context_workflow.py"
+      - "data/receipts/generated/genrec-implementation-change-context-history-20260911.json"
   workflow_dispatch:
 
 permissions:
@@ -70,6 +74,9 @@ jobs:
       - name: Install declared test dependencies
         run: python tools/ci/install_python_ci.py project-test
 
+      - name: Test historical receipt workflow contract
+        run: python -m pytest -q tests/ci/test_implementation_change_context_workflow.py
+
       - name: Run focused deterministic tests
         run: >-
           python -m pytest -q
@@ -88,8 +95,14 @@ jobs:
             data/receipts/generated/genrec-implementation-change-context-20260806.json \
             --repo-root . \
             --artifact-git-ref 8b3b45fddc9c2bd9f49c26822cd6554d04eb5c66
+          # The shared README has evolved; retain its exact August authoring evidence.
+          # A historical replay must not replace current implementation or integrity checks.
           python tools/validators/validate_generated_receipt.py \
             data/receipts/generated/genrec-governance-workflow-security-readme-current-state-20260831.json \
+            --repo-root . \
+            --artifact-git-ref f520c20c06cdbb5de000877979070023f688abb0
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-implementation-change-context-history-20260911.json \
             --repo-root .
 
       - name: Record trust boundary
