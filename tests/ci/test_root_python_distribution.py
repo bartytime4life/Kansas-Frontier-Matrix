@@ -145,9 +145,11 @@ def test_rejects_distribution_boundary_expansion(
 
 DIST = "kfm-0.0.0.dist-info"
 WHEEL_FILES = {f"{DIST}/{name}" for name in (
-    "METADATA", "WHEEL", "RECORD", "licenses/LICENSE"
+    "METADATA", "WHEEL", "RECORD", "licenses/LICENSE", "licenses/AUTHORS.md"
 )}
-INPUT_FILES = ("LICENSE", "README.md", "pyproject.toml")
+# Hatchling 1.32.0 always adds VCS-ignore and default license-family files.
+# These exact metadata-support inputs are checked, not arbitrary globs.
+INPUT_FILES = ("LICENSE", "README.md", "pyproject.toml", "AUTHORS.md", ".gitignore")
 MAX_ARCHIVE_BYTES = 2_000_000
 
 
@@ -197,6 +199,7 @@ def _assert_metadata(raw: bytes, manifest: dict[str, Any]) -> None:
                           ("License", project["license"]["text"]),
                           ("Description-Content-Type", "text/markdown")):
         assert metadata.get_all(key) == [expected], f"metadata mismatch: {key}"
+    assert sorted(metadata.get_all("License-File", [])) == ["AUTHORS.md", "LICENSE"], "license-file metadata mismatch"
     extras = project.get("optional-dependencies", {})
     assert sorted(metadata.get_all("Provides-Extra", [])) == sorted(extras), "extra mismatch"
     expected_requirements = [Requirement(item) for item in project["dependencies"]]
@@ -215,7 +218,7 @@ def _read_sdist(path: Path, inputs: dict[str, bytes]) -> dict[str, bytes]:
     expected = {f"kfm-0.0.0/{name}" for name in (*INPUT_FILES, "PKG-INFO")}
     with tarfile.open(path, "r:gz") as archive:
         infos = archive.getmembers()
-        assert len(infos) == 4, "sdist member count mismatch"
+        assert len(infos) == len(expected), "sdist member count mismatch"
         assert {info.name for info in infos} == expected, "unexpected sdist inventory"
         assert all(info.isfile() for info in infos), "sdist links/non-files denied"
         assert sum(info.size for info in infos) <= MAX_ARCHIVE_BYTES, "sdist expansion limit"
@@ -251,6 +254,7 @@ def test_synthetic_wheel_inventory_and_record(editable: bool) -> None:
 @pytest.mark.parametrize("name", [
     "kfm.py", "kfm/__init__.py", "apps/example.py", "data/raw/example.json",
     ".env", "../outside", "/absolute", f"{DIST}/entry_points.txt",
+    f"{DIST}/licenses/NOTICE-unreviewed.txt",
 ])
 def test_archive_guard_rejects_additional_payload(name: str) -> None:
     members = _synthetic_wheel()
@@ -274,8 +278,8 @@ def test_archive_guard_rejects_changed_recorded_bytes() -> None:
         _assert_wheel(members)
 
 
-@pytest.mark.parametrize("fault", ["extra", "symlink", "changed-input", "duplicate"])
-def test_source_archive_guard_rejects_invalid_inputs(tmp_path: Path, fault: str) -> None:
+@pytest.mark.parametrize("fault", [None, "extra", "symlink", "changed-input", "duplicate"])
+def test_source_archive_guard_fixture_polarity(tmp_path: Path, fault: str | None) -> None:
     inputs = {name: b"SYNTHETIC ONLY\n" for name in INPUT_FILES}
     path = tmp_path / "candidate.tar.gz"
     with tarfile.open(path, "w:gz") as archive:
@@ -292,8 +296,11 @@ def test_source_archive_guard_rejects_invalid_inputs(tmp_path: Path, fault: str)
         if fault in {"extra", "duplicate"}:
             info = tarfile.TarInfo("../outside" if fault == "extra" else "kfm-0.0.0/README.md")
             archive.addfile(info, io.BytesIO())
-    with pytest.raises(AssertionError):
-        _read_sdist(path, inputs)
+    if fault is None:
+        assert set(_read_sdist(path, inputs)) == {*INPUT_FILES, "PKG-INFO"}
+    else:
+        with pytest.raises(AssertionError):
+            _read_sdist(path, inputs)
 
 
 def _run(args: list[str], *, cwd: Path, env: dict[str, str]) -> str:
@@ -391,7 +398,8 @@ def test_real_root_build_rebuild_and_install(tmp_path: Path) -> None:
         members = _read_wheel(artifact)
         _assert_wheel(members, editable=is_editable)
         _assert_metadata(members[f"{DIST}/METADATA"], manifest)
-        assert members[f"{DIST}/licenses/LICENSE"] == inputs["LICENSE"]
+        for name in ("LICENSE", "AUTHORS.md"):
+            assert members[f"{DIST}/licenses/{name}"] == inputs[name]
         wheel_metadata = BytesParser().parsebytes(members[f"{DIST}/WHEEL"])
         assert wheel_metadata.get_all("Root-Is-Purelib") == ["true"]
         assert wheel_metadata.get_all("Tag") == ["py3-none-any"]
@@ -426,6 +434,7 @@ def _assert_workflow(workflow: dict[str, Any]) -> None:
     assert push["branches"] == ["main", "agent/kfm-python-distribution-boundary-20260911"]
     assert set(push["paths"]) == set(workflow["on"]["pull_request"]["paths"])
     assert {"pyproject.toml", "README.md", "LICENSE", ".gitignore", "hatch.toml",
+            "AUTHORS*", "LICEN[CS]E*", "COPYING*", "NOTICE*", ".hgignore", "hatch_build.py",
             "tests/ci/test_root_python_distribution.py", "tools/ci/install_python_ci.py",
             "tools/ci/python-test.lock", ".github/workflows/root-python-distribution.yml"} == set(push["paths"])
     assert set(workflow["jobs"]) == {"artifacts"}

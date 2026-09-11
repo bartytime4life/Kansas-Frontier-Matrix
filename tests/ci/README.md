@@ -91,9 +91,14 @@ the include as redundant: falling back to discovery could select a future
 same-named module. Backend-generated metadata and license metadata are a
 separate surface and still require inspection of actual artifacts.
 
-The source-archive input allowlist is only `LICENSE`, `README.md`, and
-`pyproject.toml`. Backend-generated `PKG-INFO` is expected in an actual source
-archive. Application code, child packages, lifecycle data, fixtures, secrets,
+The explicit source-archive selector contains `LICENSE`, `README.md`, and
+`pyproject.toml`. This is not the complete archive inventory: Hatchling 1.32.0
+also adds the root `.gitignore` and default license-family `AUTHORS.md`, plus
+generated `PKG-INFO`. The real gate therefore requires exactly those six
+source-archive members and compares all five source-file bytes. Wheels require
+exact metadata members including `licenses/LICENSE` and `licenses/AUTHORS.md`;
+no arbitrary metadata or payload files are accepted. Retaining `AUTHORS.md`
+preserves the existing attribution material; it does not select or clear a license. Application code, child packages, lifecycle data, fixtures, secrets,
 commands, and import-path exposure are not part of this root distribution.
 Build hooks, forced inclusions, artifact overrides, source remapping, alternate
 `hatch.toml`, and executable exports require a separately reviewed change, not
@@ -136,6 +141,12 @@ No new responsibility root or parallel package home is introduced.
 Technical references checked on 2026-09-11:
 [Hatch file-selection rules](https://hatch.pypa.io/latest/config/build/#patterns)
 and [wheel discovery](https://hatch.pypa.io/latest/plugins/builder/wheel/#default-file-selection).
+The [source-builder inclusion rules](https://hatch.pypa.io/latest/plugins/builder/sdist/#default-file-selection)
+and [Hatchling 1.32.0 metadata implementation](https://github.com/pypa/hatch/blob/hatchling-v1.32.0/backend/src/hatchling/metadata/core.py)
+explain automatic VCS-ignore and default license-family inclusion. The first
+exact-head artifact run caught the verifier's incorrect four-member assumption;
+this correction preserves the manifest and makes the additional exact metadata
+inputs explicit rather than accepting every backend-generated extra.
 
 ## Interpret failures
 
