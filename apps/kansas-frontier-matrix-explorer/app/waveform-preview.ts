@@ -3,6 +3,7 @@ export const WAVEFORM_PREVIEW_MAX_SECONDS = 10 * 60;
 export const WAVEFORM_PREVIEW_MAX_SAMPLES = 100_000;
 export const WAVEFORM_PREVIEW_MAX_POINTS = 1_200;
 export const WAVEFORM_PREVIEW_NETWORK = "AM";
+const RECORD_CONTINUITY_TOLERANCE_MS = 2;
 
 export type WaveformGateState = "PASS" | "WARN" | "HOLD" | "DENY" | "BLOCK";
 
@@ -190,10 +191,14 @@ const parseRecord = (bytes: ArrayBuffer, offset: number): { record: ParsedRecord
   const hour = view.getUint8(24);
   const minute = view.getUint8(25);
   const second = view.getUint8(26);
-  const tenth = readUint16(view, 28, littleHeader);
+  const fraction = readUint16(view, 28, littleHeader);
   const sampleCount = readInt16(view, 30, littleHeader);
   const rateFactor = readInt16(view, 32, littleHeader);
   const rateMultiplier = readInt16(view, 34, littleHeader);
+  // Fixed-header time correction is expressed in 0.1 ms units. Bit 1 of
+  // activity flags says the correction has already been applied to the data.
+  const activityFlags = view.getUint8(36);
+  const timeCorrection = readInt32(view, 40, littleHeader);
   const blocketteCount = view.getUint8(39);
   const dataOffset = readUint16(view, 44, littleHeader);
   const blocketteOffset = readUint16(view, 46, littleHeader);
@@ -231,8 +236,12 @@ const parseRecord = (bytes: ArrayBuffer, offset: number): { record: ParsedRecord
   if (encoding < 0 || !recordSize) throw new Error("MiniSEED blockette 1000 with encoding and record length is required.");
   if (offset + recordSize > bytes.byteLength) throw new Error("MiniSEED record is truncated at its declared record length.");
   if (!Number.isFinite(sampleRate) || sampleRate <= 0 || sampleRate > 2_000) throw new Error("MiniSEED sample rate is outside the bounded preview range.");
-  const start = isoFromBTime(year, day, hour, minute, second, tenth);
-  const startEpochMs = start.epochMs + microseconds / 10_000;
+  const start = isoFromBTime(year, day, hour, minute, second, fraction);
+  const correctionApplied = (activityFlags & 0x02) !== 0;
+  const startEpochMs = start.epochMs
+    + (correctionApplied ? 0 : timeCorrection / 10)
+    // Blockette 1001 stores signed microseconds; convert to milliseconds.
+    + microseconds / 1_000;
   const startTime = new Date(startEpochMs).toISOString();
   const endEpochMs = sampleCount > 0 ? startEpochMs + ((sampleCount - 1) / sampleRate) * 1_000 : startEpochMs;
   const endTime = new Date(endEpochMs).toISOString();
@@ -290,52 +299,102 @@ const externalReferenceCount = (value: string) => {
   return (withoutNamespaces.match(/https?:\/\/[^\s"'<>]+/gi) ?? []).length;
 };
 
-const stationChannelFragment = (xml: string) => {
-  const networkMatch = tagMatch(xml, "Network");
-  if (!networkMatch) throw new Error("StationXML must include a Network element.");
-  const networkCode = attributeValue(networkMatch[1], "code");
-  const networkBody = networkMatch[2];
-  const stationMatch = tagMatch(networkBody, "Station");
-  if (!stationMatch) throw new Error("StationXML must include a Station element.");
-  const stationCode = attributeValue(stationMatch[1], "code");
-  const stationBody = stationMatch[2];
-  const channelMatch = tagMatch(stationBody, "Channel");
-  if (!channelMatch) throw new Error("StationXML must include a Channel element.");
-  return {
-    networkCode,
-    stationCode,
-    channelAttributes: channelMatch[1],
-    channelBody: channelMatch[2],
-  };
+const tagMatches = (value: string, name: string) => {
+  const pattern = new RegExp(
+    "<(?:(?:[\\w.-]+):)?" + name + "\\b([^>]*)>([\\s\\S]*?)<\\/(?:(?:[\\w.-]+):)?" + name + "\\s*>",
+    "gi",
+  );
+  return Array.from(value.matchAll(pattern), (match) => ({ attributes: match[1], body: match[2] }));
 };
 
-const parseStationXml = (xml: string): StationXmlSummary => {
-  if (!xml.trim()) throw new Error("The StationXML file is empty.");
-  if (/<!DOCTYPE|<!ENTITY|<!--|<!\[CDATA\[/i.test(xml)) throw new Error("StationXML document types, comments, and CDATA sections are not supported.");
-  const root = tagMatch(xml, "FDSNStationXML");
-  if (!root) throw new Error("The response file is not a well-formed FDSN StationXML document.");
-  const selected = stationChannelFragment(root[2]);
-  const location = attributeValue(selected.channelAttributes, "locationCode");
-  const channel = attributeValue(selected.channelAttributes, "code");
-  if (!selected.networkCode || !selected.stationCode || !channel) throw new Error("StationXML is missing a network, station, or channel code.");
-  const responseMatch = tagMatch(selected.channelBody, "Response");
+const stationXmlCandidate = (
+  networkCode: string,
+  stationCode: string,
+  channelAttributes: string,
+  channelBody: string,
+  externalReferences: number,
+): StationXmlSummary => {
+  const location = attributeValue(channelAttributes, "locationCode");
+  const channel = attributeValue(channelAttributes, "code");
+  if (!networkCode || !stationCode || !channel) throw new Error("StationXML is missing a network, station, or channel code.");
+  const responseMatch = tagMatch(channelBody, "Response");
   const sensitivityMatch = responseMatch ? tagMatch(responseMatch[2], "InstrumentSensitivity") : null;
-  const sensitivityValue = sensitivityMatch ? Number(tagText(sensitivityMatch[2], "Value")) : Number.NaN;
+  const sensitivityText = sensitivityMatch ? tagText(sensitivityMatch[2], "Value") : "";
+  const sensitivityValue = sensitivityText === "" ? Number.NaN : Number(sensitivityText);
   const inputUnit = sensitivityMatch ? tagText(sensitivityMatch[2], "InputUnits") : "";
-  const startDate = attributeValue(selected.channelAttributes, "startDate") || null;
-  const endDate = attributeValue(selected.channelAttributes, "endDate") || null;
+  const startDate = attributeValue(channelAttributes, "startDate") || null;
+  const endDate = attributeValue(channelAttributes, "endDate") || null;
   return Object.freeze({
-    network: selected.networkCode,
-    station: selected.stationCode,
+    network: networkCode,
+    station: stationCode,
     location,
     channel,
-    responsePresent: Boolean(responseMatch && sensitivityMatch && Number.isFinite(sensitivityValue)),
+    responsePresent: Boolean(responseMatch && sensitivityMatch && sensitivityText !== "" && Number.isFinite(sensitivityValue)),
     instrumentSensitivity: Number.isFinite(sensitivityValue) ? sensitivityValue : null,
     inputUnit: inputUnit || null,
     startDate,
     endDate,
-    externalReferenceCount: externalReferenceCount(xml),
+    externalReferenceCount: externalReferences,
   });
+};
+
+const parseStationXmlCandidates = (xml: string): StationXmlSummary[] => {
+  if (!xml.trim()) throw new Error("The StationXML file is empty.");
+  if (/<!DOCTYPE|<!ENTITY|<!--|<!\\[CDATA\\[/i.test(xml)) throw new Error("StationXML document types, comments, and CDATA sections are not supported.");
+  const root = tagMatch(xml, "FDSNStationXML");
+  if (!root) throw new Error("The response file is not a well-formed FDSN StationXML document.");
+  const references = externalReferenceCount(xml);
+  const candidates: StationXmlSummary[] = [];
+  for (const network of tagMatches(root[2], "Network")) {
+    const networkCode = attributeValue(network.attributes, "code");
+    for (const station of tagMatches(network.body, "Station")) {
+      const stationCode = attributeValue(station.attributes, "code");
+      for (const channel of tagMatches(station.body, "Channel")) {
+        candidates.push(stationXmlCandidate(
+          networkCode,
+          stationCode,
+          channel.attributes,
+          channel.body,
+          references,
+        ));
+      }
+    }
+  }
+  if (!candidates.length) throw new Error("StationXML must include a Network, Station, and Channel element.");
+  return candidates;
+};
+
+const stationXmlCovers = (
+  candidate: StationXmlSummary,
+  waveform: Readonly<{ startEpochMs: number; endEpochMs: number }>,
+) => {
+  const start = candidate.startDate ? Date.parse(candidate.startDate) : Number.NEGATIVE_INFINITY;
+  const end = candidate.endDate ? Date.parse(candidate.endDate) : Number.POSITIVE_INFINITY;
+  const lower = Number.isFinite(start) ? start : Number.NEGATIVE_INFINITY;
+  const upper = Number.isFinite(end) ? end : Number.POSITIVE_INFINITY;
+  return waveform.startEpochMs >= lower && waveform.endEpochMs <= upper;
+};
+
+const parseStationXml = (
+  xml: string,
+  waveform: Readonly<{
+    network: string;
+    station: string;
+    location: string;
+    channel: string;
+    startEpochMs: number;
+    endEpochMs: number;
+  }>,
+): StationXmlSummary => {
+  const candidates = parseStationXmlCandidates(xml);
+  const codeMatches = candidates.filter((candidate) => (
+    equalCode(candidate.network, waveform.network)
+    && equalCode(candidate.station, waveform.station)
+    && equalCode(candidate.location, waveform.location)
+    && equalCode(candidate.channel, waveform.channel)
+  ));
+  const timeMatch = codeMatches.find((candidate) => stationXmlCovers(candidate, waveform));
+  return timeMatch ?? codeMatches[0] ?? candidates[0];
 };
 
 const equalCode = (left: string, right: string) => left.trim() === right.trim();
@@ -370,7 +429,6 @@ export const buildLocalWaveformPreview = async (input: Readonly<{
   attribution: string | null;
 }>): Promise<WaveformPreview> => {
   const records = parseMiniSeed(input.waveformBytes);
-  const stationXml = parseStationXml(input.stationXmlText);
   const first = records[0];
   const nslc = first.nslc;
   if (records.some((record) => record.nslc !== nslc)) throw new Error("The preview accepts one NSLC channel at a time.");
@@ -380,13 +438,21 @@ export const buildLocalWaveformPreview = async (input: Readonly<{
   if (sampleCount > WAVEFORM_PREVIEW_MAX_SAMPLES) throw new Error("The waveform preview is limited to 100,000 samples.");
   const startEpochMs = Math.min(...orderedRecords.map((record) => record.startEpochMs));
   const endEpochMs = Math.max(...orderedRecords.map((record) => record.endEpochMs));
+  const stationXml = parseStationXml(input.stationXmlText, {
+    network: first.network,
+    station: first.station,
+    location: first.location,
+    channel: first.channel,
+    startEpochMs,
+    endEpochMs,
+  });
   const durationSeconds = Math.max(0, (endEpochMs - startEpochMs) / 1_000);
   if (durationSeconds > WAVEFORM_PREVIEW_MAX_SECONDS) throw new Error("The waveform preview is limited to a 10-minute window.");
   const continuity = orderedRecords.slice(1).every((record, index) => {
     const previous = orderedRecords[index];
     const expectedStart = previous.startEpochMs + (previous.sampleCount / previous.sampleRate) * 1_000;
-    const tolerance = Math.max(2, 1_000 / previous.sampleRate);
-    return Math.abs(record.startEpochMs - expectedStart) <= tolerance;
+    // Only absorb BTime/blockette timestamp precision; never a whole sample period.
+    return Math.abs(record.startEpochMs - expectedStart) <= RECORD_CONTINUITY_TOLERANCE_MS;
   });
   const stationMatches = equalCode(stationXml.network, first.network)
     && equalCode(stationXml.station, first.station)
