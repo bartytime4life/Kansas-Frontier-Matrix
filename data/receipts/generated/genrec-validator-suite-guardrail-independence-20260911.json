@@ -1,0 +1,128 @@
+{
+  "receipt_id": "genrec-validator-suite-guardrail-independence-20260911",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/validator-suite.yml",
+    "tests/validators/governance/test_validator_suite_guardrail_attribution.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/validator-suite.yml": "sha256:f91fb249f0bee887b256bf229037db8a525a93c9343776febace3939e90f2dd7",
+    "tests/validators/governance/test_validator_suite_guardrail_attribution.py": "sha256:a48185dbd18c8e18cded6b98e8d88d6e38c7b92ac1ed48e0be0896f2e6e57689"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Astra Pro",
+    "version": "not exposed by runtime"
+  },
+  "prompt_or_contract": "sha256:3b482f9e7a2f213baaa152ce4fcd2d970a805628333c0fbac784aeb40b819e9f",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local Python and Bash",
+      "official GitHub documentation via web"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "main@f9ef504b977dcb6e9601fa774bd8dad27adcf7a9",
+      ".github/workflows/validator-suite.yml@86eadc67b4709d37abab1d5e668cfcb6f2bbfb18",
+      "tests/validators/governance/test_validator_suite_guardrail_attribution.py@0cddb1e93a825c7ceadb0c3ba42d29d21d1395c8",
+      "schemas/contracts/v1/receipts/generated_receipt.schema.json@fba21ed27ebccf1362fe397fe0c3ebd85e072685",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@f9ef504b977dcb6e9601fa774bd8dad27adcf7a9",
+      "docs/doctrine/directory-rules.md@fd49a0b83e55cef52c1124281f093e263526898d",
+      "data/receipts/generated/genrec-ci-validation-independent-stage-execution-20260901.json@f9ef504b977dcb6e9601fa774bd8dad27adcf7a9",
+      "https://docs.github.com/en/actions/reference/workflows-and-actions/expressions#status-check-functions",
+      "github:issue/3377",
+      "github:issue/4024",
+      "github:pull/4482 ready event 30998136238 at 2026-09-11T20:36:35Z; merge event 30998140880 at 2026-09-11T20:36:42Z; submitted reviews empty at this readback"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/validator-suite.yml": "CONFIRMED",
+    "tests/validators/governance/test_validator_suite_guardrail_attribution.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "byte-verified-inputs",
+      "outcome": "PASS",
+      "reason": "The complete workflow, test module and receipt schema copied into a sparse local projection match their Git blob identities. PR #4483 changed neither target; base includes that merge."
+    },
+    {
+      "gate": "red-green-focused-tests",
+      "outcome": "PASS",
+      "reason": "Original four tests passed. Expanded seven tests against unchanged workflow produced three missing-condition failures. Corrected workflow passes all seven with no skips on Python 3.13.5 / PyYAML 6.0.3. Python 3.11 grammar parses; native Python 3.11 execution remains a hosted check."
+    },
+    {
+      "gate": "discriminating-negative-controls",
+      "outcome": "PASS",
+      "reason": "Local mutation exercise rejected the original workflow and 27 weakened variants through assertion failures, not test-harness errors: removed/success-only/always conditions, step/job continue-on-error, shell suppression, wrong shells, and skipping the regression step."
+    },
+    {
+      "gate": "bounded-shell-exit-propagation",
+      "outcome": "PASS",
+      "reason": "Twelve real Bash invocations use an explicit argv-recording make substitute: all four exact guardrail bodies preserve exit codes 0, 1 and 7. No real Make target or GitHub scheduler is executed by this test."
+    },
+    {
+      "gate": "receipt-schema-and-output-digests",
+      "outcome": "PASS",
+      "reason": "Validated using exact schema blob fba21ed27ebccf1362fe397fe0c3ebd85e072685, Draft 2020-12 with format checks, artifact-map parity and complete SHA-256 output digests."
+    },
+    {
+      "gate": "hosted-exact-head-and-native-receipt-entrypoint",
+      "outcome": "SKIPPED",
+      "reason": "Not run at emission. Branch-only delivery under issue #4024 pending an independent draft-creation boundary. Local projection does not contain the full native receipt-validator/import dependency closure; no native receipt-validator or Python 3.11 runtime result is claimed."
+    },
+    {
+      "gate": "repository-wide-conformance",
+      "outcome": "SKIPPED",
+      "reason": "No full checkout or repository-wide run is claimed. No baseline was changed or violation waived. The workflow change does not repair underlying topology findings or establish source/runtime/release readiness."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "repo:.github/workflows/validator-suite.yml",
+      "validated": true,
+      "evidence_ref": "f9ef504b977dcb6e9601fa774bd8dad27adcf7a9"
+    },
+    {
+      "id": "repo:tests/validators/governance/test_validator_suite_guardrail_attribution.py",
+      "validated": true,
+      "evidence_ref": "f9ef504b977dcb6e9601fa774bd8dad27adcf7a9"
+    },
+    {
+      "id": "repo:docs/doctrine/directory-rules.md",
+      "validated": true,
+      "evidence_ref": "f9ef504b977dcb6e9601fa774bd8dad27adcf7a9"
+    },
+    {
+      "id": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "validated": true,
+      "evidence_ref": "f9ef504b977dcb6e9601fa774bd8dad27adcf7a9"
+    },
+    {
+      "id": "repo:data/receipts/generated/README.md",
+      "validated": true,
+      "evidence_ref": "f9ef504b977dcb6e9601fa774bd8dad27adcf7a9"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-11T22:06:16Z",
+  "emitter": "openai/chatgpt-repository-authoring",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Process record only; no approval claim. Existing receipts remain unchanged. Workflow header/step-summary and regression-module documentation explain independent cancellation-aware execution and stub limits; no unrelated README or authority file is rewritten. Placement: .github/ platform integration (Directory Rules section 8.2), tests/ conformance, data/receipts/generated/ authoring provenance. Local shell execution proves dispatch/exit behavior, not GitHub scheduling or egress isolation. Before integration, preserve the branch without merging; if later delivered, close the draft unmerged to roll back. After authorized integration, review a paired workflow/test revert while preserving receipts. No new workflow, action/dependency version, permissions, settings, baseline, schema, validator, source admission, release, deployment, promotion, publication, or Site mutation. Delivery changed to validated branch only after intended-draft PR #4482 was observed ready then merged seven seconds later with no submitted reviews. Owner/null-App attribution does not identify the initiating client or establish authorization; #4024 remains open. No successor PR is opened through the unverified delivery path."
+}

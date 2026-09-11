@@ -22,6 +22,13 @@
 #   shared-runner, generated-receipt, and MaterialChangeAssessment tests, and
 #   the reviewed EvidenceBundle invalid fixture plus expected-error sidecar.
 #
+# Independent validation:
+#   All four guardrails and the five downstream validation stages use
+#   !cancelled() rather than implicit success() gating. One failed diagnostic
+#   must not hide another. No continue-on-error or shell suppression is allowed;
+#   bootstrap failures remain failures, and cancellation may still stop work.
+#   See https://docs.github.com/en/actions/reference/workflows-and-actions/expressions#status-check-functions
+#
 # Outputs and outcomes:
 #   GitHub job conclusions, logs, and step summaries only. This workflow emits
 #   no ValidationReport, receipt, proof, PolicyDecision, lifecycle record,
@@ -96,6 +103,7 @@ jobs:
         run: python -m unittest tests.validators.governance.test_validator_suite_guardrail_attribution --verbose
 
       - name: Validate canonical validator registry
+        if: ${{ !cancelled() }}
         shell: bash
         run: |
           set -euo pipefail
@@ -109,12 +117,14 @@ jobs:
           make docs-critical-structure
 
       - name: Enforce workflow-security ratchet
+        if: ${{ !cancelled() }}
         shell: bash
         run: |
           set -euo pipefail
           make workflow-security
 
       - name: Enforce repository-topology ratchet
+        if: ${{ !cancelled() }}
         shell: bash
         env:
           KFM_TRUSTED_BASE_REF: ${{ github.event.pull_request.base.sha || github.event.before || 'HEAD^' }}
@@ -221,7 +231,7 @@ jobs:
             echo "- Aggregate command: \`make schemas\`."
             echo "- Repository guardrails run as four separately attributable fail-closed steps: \`make validator-registry-check\`, \`make docs-critical-structure\`, \`make workflow-security\`, then \`make repository-topology\`."
             echo "- The critical-document structure sentinel checks only explicit enrolled files for bounded corruption shapes; it does not interpret claims or grant governance authority."
-            echo "- Independent validation stages use \`!cancelled()\` so one inherited guardrail failure does not erase execution truth for later trust-bearing checks; each failure still contributes to the final job conclusion."
+            echo "- All four guardrails and five downstream validation stages use \`!cancelled()\` so a prior failure does not suppress another check; each failure still contributes to the final job conclusion. Bootstrap failure is not validator success, and cancellation may stop execution."
             echo "- Inherited violations are exact reviewed baselines: new drift and stale baseline entries fail; a pass does not resolve the inherited backlog."
             echo "- Shared JSON Schema runner fixture mode requires sorted, nonempty valid and invalid lanes; expected schema rejection is distinct from harness or polarity failure."
             echo "- The aggregate runner inventory must be non-empty, unique, fixture-mode wired, and resolve to repository validator scripts."
