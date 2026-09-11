@@ -2,8 +2,8 @@
 doc_id: kfm://doc/sources/catalog/raspberry-shake-waveforms
 title: Raspberry Shake waveform preview gate
 type: source-boundary-reference
-version: v1.0.0-draft
-status: draft; branch-only; not-merged; not-released; not-deployed
+version: v1.0.1-draft
+status: draft; preview-merged; follow-up-branch-only; not-released; not-deployed
 policy_label: public
 responsibility: >
   Freeze the smallest browser-local waveform preview that can be reviewed
@@ -13,7 +13,7 @@ truth_posture: cite-or-abstain
 
 # Raspberry Shake waveform preview gate
 
-> Status: branch-only draft. This document and the preview code do not activate a Raspberry Shake source, create a KFM connector, expose a public endpoint, deploy the Site, or release an observation.
+> Status: the bounded local preview is present on main; this follow-up branch only hardens parser gates. Neither state activates a Raspberry Shake source, creates a KFM connector, exposes a public endpoint, deploys the Site, or releases an observation.
 
 ## Decision
 
@@ -76,4 +76,4 @@ Before any future provider integration, require a new record with:
 - No changed file contains a Raspberry Shake runtime URL, `fetch(`, proxy handler, cache writer, or source activation call.
 - The UI labels the output `HOLD` or `BLOCK`, never `ANSWER`, `PUBLISHED`, or `LIVE`.
 - The audit omits exact samples and exact geometry-like location data; it carries only the digest and bounded summary.
-- The branch remains unmerged, unreleased, and undeployed until an independent review accepts the gate.
+- The follow-up correction branch remains unmerged, unreleased, and undeployed until an independent review accepts the gate.

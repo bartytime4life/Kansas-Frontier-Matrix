@@ -11,20 +11,40 @@ const javascript = ts.transpileModule(source, {
 const waveform = await import(`data:text/javascript;base64,${Buffer.from(javascript).toString("base64")}`);
 if (!globalThis.crypto) globalThis.crypto = (await import("node:crypto")).webcrypto;
 
-const stationXml = (withResponse = true) => `<?xml version="1.0"?>
+const stationXml = (withResponse = true, sensitivityValue = "1") => `<?xml version="1.0"?>
 <FDSNStationXML xmlns="http://www.fdsn.org/xml/station/1" schemaVersion="1.2">
   <Network code="AM"><Station code="TEST">
     <Channel code="EHZ" locationCode="00" startDate="2026-09-01T00:00:00Z">
-      ${withResponse ? "<Response><InstrumentSensitivity><Value>1</Value><InputUnits><Name>Counts</Name></InputUnits></InstrumentSensitivity></Response>" : ""}
+      ${withResponse ? "<Response><InstrumentSensitivity><Value>" + sensitivityValue + "</Value><InputUnits><Name>Counts</Name></InputUnits></InstrumentSensitivity></Response>" : ""}
     </Channel>
   </Station></Network>
 </FDSNStationXML>`;
 
+const stationXmlWithCandidates = () => `<?xml version="1.0"?>
+<FDSNStationXML xmlns="http://www.fdsn.org/xml/station/1" schemaVersion="1.2">
+  <Network code="AM"><Station code="TEST">
+    <Channel code="EHN" locationCode="00" startDate="2026-09-01T00:00:00Z"></Channel>
+    <Channel code="EHZ" locationCode="00" startDate="2020-01-01T00:00:00Z" endDate="2021-01-01T00:00:00Z">
+      <Response><InstrumentSensitivity><Value>2</Value><InputUnits><Name>Counts</Name></InputUnits></InstrumentSensitivity></Response>
+    </Channel>
+    <Channel code="EHZ" locationCode="00" startDate="2026-09-01T00:00:00Z">
+      <Response><InstrumentSensitivity><Value>1</Value><InputUnits><Name>Counts</Name></InputUnits></InstrumentSensitivity></Response>
+    </Channel>
+  </Station></Network>
+</FDSNStationXML>`;
 const putAscii = (view, offset, value, length) => {
   for (let index = 0; index < length; index += 1) view.setUint8(offset + index, value.charCodeAt(index) || 32);
 };
 
-const miniSeedRecord = (samples = [1, -2, 3, -4], station = "TEST", second = 0) => {
+const miniSeedRecord = (
+  samples = [1, -2, 3, -4],
+  station = "TEST",
+  second = 0,
+  options = {},
+) => {
+  const { timeCorrection = 0, activityFlags = 0, microseconds = null } = options;
+  const hasMicroseconds = microseconds !== null;
+  const dataOffset = hasMicroseconds ? 64 : 56;
   const bytes = new ArrayBuffer(512);
   const view = new DataView(bytes);
   putAscii(view, 0, "000001", 6);
@@ -39,11 +59,17 @@ const miniSeedRecord = (samples = [1, -2, 3, -4], station = "TEST", second = 0) 
   view.setUint16(28, 0, false);
   view.setInt16(30, samples.length, false);
   view.setInt16(32, 1, false); view.setInt16(34, 1, false);
-  view.setUint8(39, 1);
-  view.setUint16(44, 56, false); view.setUint16(46, 48, false);
-  view.setUint16(48, 1000, false); view.setUint16(50, 0, false);
+  view.setUint8(36, activityFlags);
+  view.setInt32(40, timeCorrection, false);
+  view.setUint8(39, hasMicroseconds ? 2 : 1);
+  view.setUint16(44, dataOffset, false); view.setUint16(46, 48, false);
+  view.setUint16(48, 1000, false); view.setUint16(50, hasMicroseconds ? 56 : 0, false);
   view.setUint8(52, 3); view.setUint8(53, 1); view.setUint8(54, 9); view.setUint8(55, 0);
-  samples.forEach((sample, index) => view.setInt32(56 + index * 4, sample, false));
+  if (hasMicroseconds) {
+    view.setUint16(56, 1001, false); view.setUint16(58, 0, false);
+    view.setUint8(60, 0); view.setInt8(61, microseconds); view.setUint8(62, 0); view.setUint8(63, 0);
+  }
+  samples.forEach((sample, index) => view.setInt32(dataOffset + index * 4, sample, false));
   return bytes;
 };
 
@@ -104,7 +130,7 @@ test("rejects compressed encodings and mixed NSLC channels instead of guessing",
   }), /one NSLC channel/);
 
   const firstContiguous = new Uint8Array(miniSeedRecord([1, 2]));
-  const gap = new Uint8Array(miniSeedRecord([3, 4], "TEST", 10));
+  const gap = new Uint8Array(miniSeedRecord([3, 4], "TEST", 3));
   const gapped = new Uint8Array(firstContiguous.byteLength + gap.byteLength);
   gapped.set(firstContiguous); gapped.set(gap, firstContiguous.byteLength);
   const gappedPreview = await waveform.buildLocalWaveformPreview({
@@ -113,6 +139,47 @@ test("rejects compressed encodings and mixed NSLC channels instead of guessing",
   });
   assert.equal(gappedPreview.outcome, "BLOCK");
   assert.equal(gappedPreview.gates.find((gate) => gate.id === "continuity").state, "BLOCK");
+});
+
+
+test("applies fixed-header correction only when it is not already applied", async () => {
+  const corrected = await waveform.buildLocalWaveformPreview({
+    waveformFileName: "corrected.mseed", stationXmlFileName: "station.xml",
+    waveformBytes: miniSeedRecord([1], "TEST", 0, { timeCorrection: 10_000 }),
+    stationXmlText: stationXml(), inspectedAt: "2026-09-11T00:00:00.000Z", attribution: "User-supplied file",
+  });
+  assert.equal(corrected.startTime, "2026-09-11T00:00:01.000Z");
+
+  const alreadyApplied = await waveform.buildLocalWaveformPreview({
+    waveformFileName: "already-corrected.mseed", stationXmlFileName: "station.xml",
+    waveformBytes: miniSeedRecord([1], "TEST", 0, { timeCorrection: 10_000, activityFlags: 0x02 }),
+    stationXmlText: stationXml(), inspectedAt: "2026-09-11T00:00:00.000Z", attribution: "User-supplied file",
+  });
+  assert.equal(alreadyApplied.startTime, "2026-09-11T00:00:00.000Z");
+  assert.match(source, /microseconds \/ 1_000/);
+});
+
+test("selects the matching StationXML channel and time window", async () => {
+  const preview = await waveform.buildLocalWaveformPreview({
+    waveformFileName: "waveform.mseed", stationXmlFileName: "multi.stationxml",
+    waveformBytes: miniSeedRecord(), stationXmlText: stationXmlWithCandidates(),
+    inspectedAt: "2026-09-11T00:00:00.000Z", attribution: "User-supplied file",
+  });
+  assert.equal(preview.gates.find((gate) => gate.id === "response-metadata").state, "PASS");
+  assert.equal(preview.stationXml.channel, "EHZ");
+  assert.equal(preview.stationXml.startDate, "2026-09-01T00:00:00Z");
+  assert.equal(preview.stationXml.instrumentSensitivity, 1);
+});
+
+test("blocks an empty instrument sensitivity value", async () => {
+  const preview = await waveform.buildLocalWaveformPreview({
+    waveformFileName: "waveform.mseed", stationXmlFileName: "empty.stationxml",
+    waveformBytes: miniSeedRecord(), stationXmlText: stationXml(true, ""),
+    inspectedAt: "2026-09-11T00:00:00.000Z", attribution: "User-supplied file",
+  });
+  assert.equal(preview.stationXml.responsePresent, false);
+  assert.equal(preview.gates.find((gate) => gate.id === "response-metadata").state, "BLOCK");
+  assert.equal(preview.plotAllowed, false);
 });
 
 test("keeps the implementation browser-local and finite", async () => {
