@@ -602,8 +602,8 @@ export function mountLivingAtlasWorkspace(
   const timeLabel = text(document, "strong", findTemporalExtent(previewTimeId)?.label ?? "Unknown time");
   const timeDetail = text(document, "small", "Preview only — select Apply time to commit");
   const playbackStatus = text(document, "small", "", "atlas-playback-status");
-  playbackStatus.setAttribute("role", "status");
   playbackStatus.setAttribute("aria-live", "polite");
+  playbackStatus.setAttribute("aria-atomic", "true");
   timelineCopy.append(
     text(document, "span", "Deep-time navigator", "eyebrow"),
     timeLabel,
