@@ -1,6 +1,7 @@
 # KFM root Python distribution and repository test configuration.
-# This remains a scaffold dependency carrier with a minimal `kfm` namespace;
-# it does not establish a public API, release, or publication authority.
+# This is a metadata-only dependency carrier, not an importable `kfm` SDK.
+# It grants no public API, source admission, release, or publication authority.
+# See tests/ci/README.md#root-python-distribution-boundary for verification limits.
 
 [build-system]
 requires = ["hatchling"]
@@ -45,12 +46,15 @@ schema_version = "v1"
 pythonpath = ["."]
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/kfm"]
+# An explicit include disables package-name discovery. Exclude takes precedence,
+# so no project payload is selected, even if a matching Python module appears.
+# Backend-generated distribution metadata and license metadata remain separate.
+include = ["/pyproject.toml"]
+exclude = ["*"]
 
 [tool.hatch.build.targets.sdist]
 include = [
     "/LICENSE",
     "/README.md",
     "/pyproject.toml",
-    "/src/kfm",
 ]
