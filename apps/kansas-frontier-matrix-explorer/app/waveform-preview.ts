@@ -86,10 +86,6 @@ const text = (value: DataView, offset: number, length: number) => {
   return output.trim();
 };
 
-const finiteInteger = (value: number, label: string) => {
-  if (!Number.isInteger(value) || !Number.isFinite(value)) throw new Error("Invalid " + label + ".");
-  return value;
-};
 
 const readUint16 = (view: DataView, offset: number, littleEndian: boolean) => {
   if (offset < 0 || offset + 2 > view.byteLength) throw new Error("MiniSEED header is truncated.");
