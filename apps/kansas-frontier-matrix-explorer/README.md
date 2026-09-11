@@ -6,6 +6,8 @@ fit together.
 
 ## Current public scope
 
+This section describes the tracked repository implementation, not a fresh production observation.
+
 - The renderer-neutral shell exposes site-local synthetic or generalized GeoJSON catalog metadata; renderer source and layer loading remain held.
 - Nothing in this build is a released operational KFM dataset.
 - Evidence resolution fails closed: missing, stale, restricted, denied, and
@@ -13,6 +15,36 @@ fit together.
 - Public-safe exports preserve evidence context and withhold protected geometry.
 - The repository and source briefing reports implementation boundaries; it does
   not release or publish data.
+
+## Repository and saved Site reconciliation
+
+**Reviewed implementation pin:** `main@664e46697d4d237870f5a482904bb9acd8f11b20`, 2026-09-11. Repository code, saved Site source, and production/released state require separate evidence.
+
+| Surface | Supported statement | Not established |
+|---|---|---|
+| This checkout | The tracked Sites-derived app retains its renderer-neutral boundary. [PR #4464](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4464) merged catalog scroll, keyboard/discovery, and requested/time-compatible count affordances. | A requested or time-compatible layer is not proof of renderer delivery, source admission, or a deployed change. The eight-fixture Library projection was not expanded by #4464. |
+| Explorer Web sibling | [Explorer Web](../explorer-web/README.md) mounts a package-owned Living Atlas MapLibre composition with inline synthetic/generalized data. [The package manifest](../../packages/maplibre/package.json) pins `maplibre-gl@6.7.0`. | The sibling's renderer, test results, and catalog capabilities do not migrate into this app by documentation or shared package name. |
+| Saved Site checkpoint | The [Drive backfill](https://docs.google.com/document/d/1uROL1Hkgr15oe2nH-9B2MUXdmzt2KSBo6ay1jt5dh4s/edit) records saved v24 at source `acf6499d99bd1b7c131e79b17735f95145ef808f`, including external smoke/station context and registry/control improvements. | That checkpoint says its change did not deploy. It does not establish current production version, repository byte parity, rights clearance, or released data. Its build/test totals belong to that saved-source checkpoint only. |
+| Coordination | [Notion backfill coordination](https://app.notion.com/p/3d7a92021bf681a4ae8cc75930b302f2) and the [repository backfill record](../../docs/architecture/kfm-explorer-site-real-data-backfill-20260910.md) retain source lineage and handoff context. | Coordination text is not implementation, independent review, source admission, or a deployment receipt. Re-pin any post-merge branch before using its remaining delta. |
+
+### Source handoff gates
+
+Before a capability moves from the saved Site into a reviewable repository implementation, bind the exact source and changed paths; preserve fixed upstream allowlists, bounded payloads/time windows, finite failures, and a single owner for layer state. Do not replace the repository app wholesale or expand the fixture Library to simulate real-data integration.
+
+| Domain or surface | Required distinction and bounded next evidence |
+|---|---|
+| Smoke | Keep HMS footprints, observed air quality, forecast/model transport, and alerts separate. Retain source interval, geometry/density semantics, freshness, gaps, and artifact identity. Footprint animation is not a measured surface exposure or an inferred wind field. |
+| Hydrology | Bind the gauge/reach identity, parameter, statistic, unit, qualifier, observation time, and join confidence. An ambiguous reach join must abstain; missing, stale, and unavailable must not appear as zero flow. |
+| Terrain / LiDAR | Distinguish rendered hillshade/slope from raw point clouds and numerical elevation. Require exact work-unit/asset, acquisition date, CRS, vertical reference, units, resolution, nodata, accuracy, and derivative lineage before admitting numeric samples; keep 1x default exaggeration. |
+| Time and hazards | Separate observation, model-valid, acquisition, publication/retrieval, and UI-selection time. Preserve real frame intervals, explicit gaps, expiry/correction, and latest-selection-wins behavior; never manufacture historical coverage or an all-clear. |
+
+**Raspberry Shake provider check — 2026-09-11:** the [FDSN manual](https://manual.raspberryshake.org/fdsn.html) describes station metadata separately from miniSEED waveforms, does not support an event service, and serves data at least 30 minutes old rather than real-time streaming. The [current license](https://raspberryshake.org/license/) restricts waveform redistribution through another server and distinguishes integration/use classes. **KFM gate:** review the exact metadata, cache/proxy, attribution, waveform, and use-class permissions separately before extending this handoff. Neither endpoint reachability nor station visibility establishes redistribution permission. No permission decision or live bridge is made here.
+
+KFM does not issue, confirm, rescind, or replace emergency, health, engineering, regulatory, or life-safety instructions.
+
+### Validation and rollback boundary
+
+This refresh changes documentation only. No fresh application build, unit, browser, hosted-CI, production, saved-version, or restoration evidence is claimed. Review the documentation delta separately from all prior implementation checks. Under [issue #4024](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024), retain branch-only delivery where the PR path is quarantined; a merge elsewhere is not approval for this change. Reverting these documentation commits restores the prior text, not a prior Site runtime.
 
 ## Authoritative hosting and in-place replacement
 
@@ -41,12 +73,13 @@ separate settings-only action tracked in [issue #4246](https://github.com/bartyt
 
 The application runs as a single-route Vinext site through the package-owned
 `NullMapRuntime`. TypeScript and Vite resolve the `@kfm/maplibre` facade to the
-accepted workspace package root, following the same renderer-neutral pattern as
-`explorer-web`; the child manifest acquires no renderer or internal package by
-an external or `file:` dependency. Styles, sources, layers, workers, hit
+accepted workspace package root. Unlike this retained null-runtime boundary,
+`explorer-web` now also mounts the package-owned Vite adapter for its inline
+synthetic Living Atlas canvas. The child manifest here acquires no renderer
+or internal package by an external or `file:` dependency. Styles, sources, layers, workers, hit
 testing, and screen measurement remain held pending a dependency-closed
-consumer migration. D1 and R2 are intentionally unbound in the current
-deployment.
+consumer migration. D1 and R2 are intentionally unbound in the repository
+hosting declaration; production bindings were not inspected in this refresh.
 
 ## Prerequisites
 
@@ -54,6 +87,8 @@ deployment.
 - Linux with `flock`, `curl`, and GNU `timeout`
 
 ## Sites Lifecycle
+
+The following lifecycle describes a Sites-managed checkout. A commit to a GitHub review branch is not a Sites checkpoint or deployment command.
 
 The Sites lifecycle CLI runs the locked dependency install before returning this checkout. Edit the source under `app/`, then checkpoint when a coherent milestone is ready to inspect or share. The remote Sites builder runs `npm run build` against the pushed commit. Do not repeat install or build as a normal pre-checkpoint step.
 
