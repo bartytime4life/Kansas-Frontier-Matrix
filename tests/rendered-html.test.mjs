@@ -1255,6 +1255,39 @@ test("keeps the complete function inventory three-axis and runtime seam fail clo
   assert.match(page, /ANALYSIS_RECIPES/);
 });
 
+test("keeps the feature, connection, action, and coding registries aligned", async () => {
+  const features = await readFile(new URL("../app/site-features.ts", import.meta.url), "utf8");
+  const connections = await readFile(new URL("../app/site-connections.ts", import.meta.url), "utf8");
+  const actions = await readFile(new URL("../app/site-actions.ts", import.meta.url), "utf8");
+  const architecture = await readFile(new URL("../app/site-architecture.ts", import.meta.url), "utf8");
+  const registry = await readFile(new URL("../app/site-registry.ts", import.meta.url), "utf8");
+  const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  const docs = await readFile(new URL("../docs/SITE_FEATURE_CONNECTION_ACTION_MAP.md", import.meta.url), "utf8");
+
+  assert.match(features, /id: "earthquake-seismic-context"/);
+  assert.match(features, /id: "hydrology-river-pulse"/);
+  assert.match(features, /id: "smoke-weather-context"/);
+  assert.match(features, /id: "held-raspberry-waveform-bridge"/);
+  assert.match(connections, /CONNECTION_CODE_PATHS/);
+  assert.match(connections, /"usgs-earthquakes"/);
+  assert.match(connections, /"usgs-streamflow"/);
+  assert.match(connections, /"noaa-hms-smoke"/);
+  assert.match(connections, /"raspberry-shake-stations"/);
+  assert.match(actions, /id: "toggle-context-group"/);
+  assert.match(actions, /id: "refresh-streamflow"/);
+  assert.match(actions, /id: "refresh-radar-frames"/);
+  assert.match(actions, /id: "open-provider-source"/);
+  assert.match(architecture, /id: "registry-and-alignment"/);
+  assert.match(architecture, /route: "\/api\/live-context"/);
+  assert.match(registry, /SITE_REGISTRY_VERSION = "kfm-site-registry-v1"/);
+  assert.match(registry, /validateSiteRegistry/);
+  assert.match(page, /SITE_REGISTRY_COUNTS.features/);
+  assert.match(page, /SITE_REGISTRY_COUNTS.connections/);
+  assert.match(page, /SITE_REGISTRY_COUNTS.actions/);
+  assert.match(docs, /Alignment contract/);
+  assert.match(docs, /Held ideas intentionally scaffolded/);
+});
+
 test("carries governed map context into creation workflows and checked source portals", async () => {
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   const sources = await readFile(new URL("../app/source-intelligence.ts", import.meta.url), "utf8");

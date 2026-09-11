@@ -2772,6 +2772,7 @@ body { font-size: 14px; }
 .official-context-catalog > header > div { display: grid; gap: 3px; }
 .official-context-catalog > header span, .official-connection-ledger > header span { color: var(--water); font-size: 10px; font-weight: 950; letter-spacing: .1em; }
 .official-context-catalog h2 { margin: 0; font-size: 14px; }
+.official-context-registry-summary { color: var(--dim); font-size: 9px; letter-spacing: .04em; }
 .official-context-catalog > header > strong { color: var(--green); font-size: 11px; white-space: nowrap; }
 .official-context-catalog > p, .official-context-catalog > footer { margin: 0; color: var(--muted); padding: 8px 10px; font-size: 11px; line-height: 1.45; }
 .official-context-pulse { display: grid; gap: 8px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: rgba(4,26,30,.62); padding: 9px 10px; }

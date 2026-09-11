@@ -27,6 +27,28 @@ fit together.
 The application runs as a Vinext site with MapLibre GL JS. D1 and
 R2 are intentionally unbound in the current deployment.
 
+## Site capability registry
+
+The map-first UI, official context adapters, and workbench actions are kept
+aligned through a small typed registry layer:
+
+- `app/site-features.ts` maps user-facing features to status, source ids, action
+  ids, owning code paths, and boundaries.
+- `app/site-connections.ts` normalizes the fixed official context allowlist into
+  provider, adapter, freshness, action, and evidence-boundary records.
+- `app/site-actions.ts` describes visible control and handoff contracts without
+  replacing the handlers that own behavior.
+- `app/site-architecture.ts` maps coding surfaces and routes to verification
+  paths.
+- `app/site-registry.ts` validates cross-file references and exposes counts used
+  by the Layer Catalog.
+
+The companion map is `docs/SITE_FEATURE_CONNECTION_ACTION_MAP.md`. It is a
+traceability surface, not a new source authority: alignment with the repository,
+Drive, and Notion preserves separate version histories and does not activate
+held integrations, release external context, merge repository code, or deploy
+the Site.
+
 ## Date-bound Event Observatory
 
 `/observatory` is the real-data animation workspace within this existing Site,
