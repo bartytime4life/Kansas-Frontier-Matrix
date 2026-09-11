@@ -454,14 +454,15 @@ def _assert_workflow(workflow: dict[str, Any]) -> None:
     assert job["runs-on"] == "ubuntu-24.04" and job["timeout-minutes"] == 10
     assert job["strategy"] == {"fail-fast": False, "matrix": {"python-version": ["3.11", "3.12"]}}
     steps = job["steps"]
-    assert len(steps) == 4
+    assert len(steps) == 7
     assert set(steps[0]) == {"name", "uses", "with"}
     assert steps[0]["uses"] == "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1"
     assert steps[0]["with"] == {"persist-credentials": False}
     assert set(steps[1]) == {"name", "uses", "with"}
     assert steps[1]["uses"] == "actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97"
     assert steps[1]["with"] == {"python-version": "${{ matrix.python-version }}"}
-    assert set(steps[2]) == {"name", "run"}
+    assert set(steps[2]) == {"name", "id", "run"}
+    assert steps[2]["id"] == "bootstrap"
     assert steps[2]["run"] == ('python -m venv "$RUNNER_TEMP/kfm-root-python"\n'
                                '. "$RUNNER_TEMP/kfm-root-python/bin/activate"\n'
                                'python tools/ci/install_python_ci.py test-dependencies\n')
@@ -469,9 +470,19 @@ def _assert_workflow(workflow: dict[str, Any]) -> None:
     assert steps[3]["env"] == {"KFM_RUN_ROOT_PYTHON_ARTIFACTS": "1", "PIP_NO_INDEX": "1"}
     assert steps[3]["run"] == ('. "$RUNNER_TEMP/kfm-root-python/bin/activate"\n'
                                'python -m pytest -q -s -p no:cacheprovider --strict-config --strict-markers tests/ci/test_root_python_distribution.py\n'
-                               'python -m unittest tests/ci/test_install_python_ci.py -v\n'
-                               'make workflow-security\n'
-                               'git diff --exit-code\n')
+                               )
+    # These checks remain independent after a successful bootstrap. An installer
+    # failure must not hide security results or turn the overall job green.
+    guard = "${{ !cancelled() && steps.bootstrap.outcome == 'success' }}"
+    activate = '. "$RUNNER_TEMP/kfm-root-python/bin/activate"\n'
+    assert steps[4:] == [
+        {"name": "Verify existing installer contracts", "if": guard,
+         "run": activate + "python -m unittest tests/ci/test_install_python_ci.py -v\n"},
+        {"name": "Verify native workflow security", "if": guard,
+         "run": activate + "make workflow-security\n"},
+        {"name": "Verify tracked tree remains unchanged", "if": guard,
+         "run": "git diff --exit-code"},
+    ]
 
 
 def _load_workflow() -> dict[str, Any]:
@@ -494,7 +505,8 @@ def test_artifact_workflow_requires_real_gate_and_read_only_permissions() -> Non
 
 
 @pytest.mark.parametrize("fault", ["write", "credentials", "skip-gate", "masked-job", "masked-step",
-                                  "skip-installer-checks", "skip-workflow-security"])
+                                  "skip-installer-checks", "skip-workflow-security",
+                                  "skip-security-after-failure", "masked-security", "skip-clean-tree"])
 def test_artifact_workflow_rejects_weakened_gate(fault: str) -> None:
     workflow = _load_workflow()
     job = workflow["jobs"]["artifacts"]
@@ -506,10 +518,13 @@ def test_artifact_workflow_rejects_weakened_gate(fault: str) -> None:
         job["steps"][3]["env"].pop("KFM_RUN_ROOT_PYTHON_ARTIFACTS")
     elif fault == "masked-job":
         job["if"] = False
-    elif fault in {"skip-installer-checks", "skip-workflow-security"}:
-        command = ("python -m unittest tests/ci/test_install_python_ci.py -v\n"
-                   if fault == "skip-installer-checks" else "make workflow-security\n")
-        job["steps"][3]["run"] = job["steps"][3]["run"].replace(command, "")
+    elif fault in {"skip-installer-checks", "skip-workflow-security", "skip-clean-tree"}:
+        index = {"skip-installer-checks": 4, "skip-workflow-security": 5, "skip-clean-tree": 6}[fault]
+        job["steps"][index]["run"] = "true"
+    elif fault == "skip-security-after-failure":
+        job["steps"][5].pop("if")
+    elif fault == "masked-security":
+        job["steps"][5]["continue-on-error"] = True
     else:
         job["steps"][3]["continue-on-error"] = True
     with pytest.raises(AssertionError):

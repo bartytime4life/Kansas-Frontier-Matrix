@@ -71,6 +71,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install existing hash-locked tools in a disposable environment
+        id: bootstrap
         run: |
           python -m venv "$RUNNER_TEMP/kfm-root-python"
           . "$RUNNER_TEMP/kfm-root-python/bin/activate"
@@ -82,6 +83,16 @@ jobs:
         run: |
           . "$RUNNER_TEMP/kfm-root-python/bin/activate"
           python -m pytest -q -s -p no:cacheprovider --strict-config --strict-markers tests/ci/test_root_python_distribution.py
+      - name: Verify existing installer contracts
+        if: ${{ !cancelled() && steps.bootstrap.outcome == 'success' }}
+        run: |
+          . "$RUNNER_TEMP/kfm-root-python/bin/activate"
           python -m unittest tests/ci/test_install_python_ci.py -v
+      - name: Verify native workflow security
+        if: ${{ !cancelled() && steps.bootstrap.outcome == 'success' }}
+        run: |
+          . "$RUNNER_TEMP/kfm-root-python/bin/activate"
           make workflow-security
-          git diff --exit-code
+      - name: Verify tracked tree remains unchanged
+        if: ${{ !cancelled() && steps.bootstrap.outcome == 'success' }}
+        run: git diff --exit-code

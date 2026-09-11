@@ -187,9 +187,10 @@ runs for matching ordinary pull requests. This is workflow binding, not proof
 of a hosted result or a required status check. Inspect the exact-head jobs and
 logs before recording either outcome.
 
-The same packaging job now follows the real artifact gate with the existing
-installer contract and native workflow-security target in that disposable
-environment:
+The same packaging job follows the real artifact gate with separate installer,
+native workflow-security, and tracked-tree checks. Each runs after a successful
+bootstrap even when an earlier validation step fails, unless the run is cancelled.
+They use the existing commands without suppressing their nonzero results:
 
 ```bash
 python -m unittest tests/ci/test_install_python_ci.py -v
@@ -197,9 +198,10 @@ make workflow-security
 git diff --exit-code
 ```
 
-All three commands must succeed; no failure is masked. The workflow contract
-rejects removal of either verification command, as well as the existing
-permission, credential, real-gate, and failure-masking regressions. Trigger
+All three commands must succeed for a green job; no failure is masked. The
+workflow contract rejects missing checks, skipped security collection after a
+prior failure, and failure suppression, as well as the existing permission,
+credential, and real-gate regressions. Trigger
 scope remains packaging-focused: these supplementary checks do not replace
 their owning lanes or claim complete repository-wide trigger coverage.
 The native security target runs its regression suite and scans the checked-out
@@ -207,6 +209,19 @@ workflow tree. A pass covers the scanner's implemented static rules, not all
 possible YAML semantics, required-check enforcement, or closure of the separate
 workflow-security findings tracked under issue #3366. Neither the scanner nor
 its waiver baseline is changed by this integration.
+
+At integration head `00f3c9e4fdb4d819f27ca63c1536c37f8bf925d8`,
+[run 34622376156](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/34622376156)
+passed the real artifact gate but stopped at installer `PROFILE_UNKNOWN`, before
+the security command ran. Source inspection of `main@f6ebdec25a1942b35d08e06ab5ce9a7b37516caf`
+identified an inherited mismatch: the existing Earth Library workflow invokes
+`project-test` with a logging pipeline, while `profiles_for_workflow` treats the
+entire trailing line as a profile name. Those existing workflow/helper bytes
+are unchanged here. Separate installer-branch work already addresses that parser;
+reconcile it through its own current-main review rather than bypassing this test.
+The revised independent steps preserve the red installer result and collect the
+security and tracked-tree results separately. This note is source-level failure
+attribution, not a claim that a complete baseline workflow was rerun or repaired.
 
 ### Execute the real artifact gate
 
