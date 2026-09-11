@@ -457,7 +457,7 @@ def _assert_workflow(workflow: dict[str, Any]) -> None:
     assert len(steps) == 7
     assert set(steps[0]) == {"name", "uses", "with"}
     assert steps[0]["uses"] == "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1"
-    assert steps[0]["with"] == {"persist-credentials": False}
+    assert steps[0]["with"] == {"persist-credentials": False, "fetch-depth": 0}
     assert set(steps[1]) == {"name", "uses", "with"}
     assert steps[1]["uses"] == "actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97"
     assert steps[1]["with"] == {"python-version": "${{ matrix.python-version }}"}
@@ -506,7 +506,8 @@ def test_artifact_workflow_requires_real_gate_and_read_only_permissions() -> Non
 
 @pytest.mark.parametrize("fault", ["write", "credentials", "skip-gate", "masked-job", "masked-step",
                                   "skip-installer-checks", "skip-workflow-security",
-                                  "skip-security-after-failure", "masked-security", "skip-clean-tree"])
+                                  "skip-security-after-failure", "masked-security", "skip-clean-tree",
+                                  "missing-history", "shallow-history"])
 def test_artifact_workflow_rejects_weakened_gate(fault: str) -> None:
     workflow = _load_workflow()
     job = workflow["jobs"]["artifacts"]
@@ -514,6 +515,10 @@ def test_artifact_workflow_rejects_weakened_gate(fault: str) -> None:
         workflow["permissions"]["contents"] = "write"
     elif fault == "credentials":
         job["steps"][0]["with"]["persist-credentials"] = True
+    elif fault == "missing-history":
+        job["steps"][0]["with"].pop("fetch-depth")
+    elif fault == "shallow-history":
+        job["steps"][0]["with"]["fetch-depth"] = 1
     elif fault == "skip-gate":
         job["steps"][3]["env"].pop("KFM_RUN_ROOT_PYTHON_ARTIFACTS")
     elif fault == "masked-job":

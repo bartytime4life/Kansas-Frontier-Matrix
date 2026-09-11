@@ -40,7 +40,7 @@ re-execute or re-audit the other modules summarized below.
 | Test module | Surface under test | Confirmed assertions | Boundary |
 |---|---|---|---|
 | [`test_accessibility_workflow.py`](test_accessibility_workflow.py) | [`.github/workflows/accessibility.yml`](../../.github/workflows/accessibility.yml) | Preserves the `accessibility` name, the held `axe` job, the active `keyboard-navigation` job, the exact eight public-safe Explorer browser specifications, read-only permissions, `KFM_NO_NETWORK=1`, a 15-minute timeout, immutable action pins, and the absence of named write/secret/upload surfaces. | Parses committed YAML and checks referenced files. It does not run Playwright, prove accessibility conformance, or prove runner-level network isolation. |
-| [`test_install_python_ci.py`](test_install_python_ci.py) | [`tools/ci/install_python_ci.py`](../../tools/ci/install_python_ci.py), committed lockfiles, the migration manifest, and workflow callers | Checks the exact finite profile set, hash-required installs, pinned direct dependencies, the migration schema/ID/387-entry ledger, rejection of unhashed or remote requirements, shell-free argument-vector execution, absence of direct `python -m pip install` in workflow YAML, and known-profile use by migrated workflows. | Mocks `subprocess.run`; no package is installed. The workflow-count assertion is a repository-shape invariant, not proof that every hosted job succeeds. |
+| [`test_install_python_ci.py`](test_install_python_ci.py) | [`tools/ci/install_python_ci.py`](../../tools/ci/install_python_ci.py), committed lockfiles, the migration manifest, and workflow callers | Checks the exact finite profile set, hash-required installs, pinned direct dependencies, the migration schema/ID/387-entry ledger, rejection of unhashed or remote requirements, shell-free argument-vector execution, absence of direct `python -m pip install` in workflow YAML, and known-profile use by migrated workflows. | Uses mocks for installation and synthetic failures, plus read-only local Git for exact-commit migration tests; no package is installed by this suite. Tests reject unsupported installer invocation prefixes, trailing tokens, unknown profiles, and noncanonical logging paths. Local history must include the migration manifest base. Workflow counts and targeted historical fixtures do not prove every hosted job or the complete migration ledger. |
 | [`test_render_runtime_proof_summary.py`](test_render_runtime_proof_summary.py) | [`tools/ci/render_runtime_proof_summary.py`](../../tools/ci/render_runtime_proof_summary.py) | Checks deterministic reviewer Markdown for a synthetic soil-moisture report, visible expected/actual mismatch reporting, rejection of a contradictory `matched` flag, optional file output, and no mutation of the input object. | Uses synthetic JSON in a temporary directory. A rendered summary is reviewer aid, not proof, policy, source truth, or release authority. |
 | [`test_sync_kfm_github_wiki_contract.py`](test_sync_kfm_github_wiki_contract.py) | [`tools/docs/wiki/sync_kfm_github_wiki.ps1`](../../tools/docs/wiki/sync_kfm_github_wiki.ps1) | Checks dry-run-by-default behavior, the exact immutable source commit, the exact 16-page allowlist, exclusion of `README.md`, rejection of unexpected changed/staged paths, absence of named force/reset/clean operations, and remote-commit readback after an explicit publish path. | Reads PowerShell as text. It does not execute PowerShell, clone repositories, authenticate, push, or prove that the native wiki matches the source packet. |
 | [`test_root_python_distribution.py`](test_root_python_distribution.py) | [`pyproject.toml`](../../pyproject.toml) | Checks explicit metadata-only wheel selection, the three-file source-archive allowlist, no alternate root Hatch configuration, no root executable exports, and rejection of payload, hook, backend, or editable-path expansion. | Default checks parse TOML and inspect synthetic archives. With `KFM_RUN_ROOT_PYTHON_ARTIFACTS=1`, a separate test executes installed Hatchling and offline pip against temporary targets; missing build tools fail the requested gate. A default skip is not artifact evidence. |
@@ -72,8 +72,10 @@ python -m pytest -q -p no:cacheprovider \
 ```
 
 These tests use committed files, synthetic values, mocks, and temporary local
-files. They require no network access and should not receive credentials or
-secrets.
+files. Test execution requires no network access and should not receive
+credentials or secrets. The installer migration tests also require local Git
+history containing the exact `base_commit` in the committed migration ledger;
+a shallow export or a few copied files cannot run that history-dependent subset.
 
 ## Root Python distribution boundary
 
@@ -210,6 +212,8 @@ possible YAML semantics, required-check enforcement, or closure of the separate
 workflow-security findings tracked under issue #3366. Neither the scanner nor
 its waiver baseline is changed by this integration.
 
+### Historical pre-parser integration failure
+
 At integration head `00f3c9e4fdb4d819f27ca63c1536c37f8bf925d8`,
 [run 34622376156](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/34622376156)
 passed the real artifact gate but stopped at installer `PROFILE_UNKNOWN`, before
@@ -217,11 +221,46 @@ the security command ran. Source inspection of `main@f6ebdec25a1942b35d08e06ab5c
 identified an inherited mismatch: the existing Earth Library workflow invokes
 `project-test` with a logging pipeline, while `profiles_for_workflow` treats the
 entire trailing line as a profile name. Those existing workflow/helper bytes
-are unchanged here. Separate installer-branch work already addresses that parser;
-reconcile it through its own current-main review rather than bypassing this test.
+were unchanged at that checkpoint. The subsequent parser reconciliation below
+supersedes only the unresolved-parser claim; the red run remains historical evidence.
 The revised independent steps preserve the red installer result and collect the
 security and tracked-tree results separately. This note is source-level failure
 attribution, not a claim that a complete baseline workflow was rerun or repaired.
+
+### Preserved parser integration and history prerequisite
+
+The existing candidate from
+`automation/hourly-ci-validation/python-profile-pipeline-20260907@0314221c6ac977a41366089e43d58eecb925aa2e`
+was reconciled with `main@eca6c8a2353fbe28ace619288231a047e5d485f5`
+at `08d70e87b54c7b361e1cb5496fb53d358848018e`, then integrated into the
+packaging branch at `c2eb4a3481cdbff85e1168640864639ed0431063` for
+[PR #4468](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4468).
+The two original candidate blobs were reused unchanged, preserving their
+ancestry and existing Git-context, exact-commit, and bounded subprocess tests.
+No competing parser, new dependency, or migration-ledger rewrite was introduced.
+
+The static recognizer accepts a known profile alone or the narrowly recognized
+`2>&1 | tee "$RUNNER_TEMP/<canonical-relative-path>"` suffix. It rejects unknown
+profiles, unsupported prefixes or trailing tokens, and empty/dot/parent path
+segments. It does not execute workflow text and is not a general shell parser.
+Existing migration checks read pinned historical workflow blobs rather than
+substituting working-tree bytes; a missing ancestor must remain a failure.
+
+The packaging workflow therefore checks out the event revision with
+`fetch-depth: 0` and `persist-credentials: false`. Its existing installer tests
+need the migration ledger's exact historical base and ancestry. Negative
+workflow controls reject both omitted history configuration and a depth of one.
+Fetching history is a CI setup prerequisite, not an in-test network operation,
+a checkout of another application revision, or proof that the entire historical
+migration ledger validates at current main. The ten-minute timeout, read-only
+permissions, pinned actions, real artifact gate, and failure propagation remain.
+
+The six cumulative review paths are the four packaging paths plus the original
+installer and its test module. Roll back parser integration with a reviewed
+inverse of those two files, not a blind reconciliation-merge revert; remove the
+history/wiring follow-up only with its matching tests and guidance. Preserve
+unrelated main changes and historical failure records. Exact-head execution and
+independent review remain separate from this source-level composition record.
 
 ### Execute the real artifact gate
 
