@@ -17,8 +17,8 @@ export const MAP_VIEW_PROFILES: readonly MapViewProfile[] = Object.freeze([
   Object.freeze({
     id: "overview",
     title: "Kansas overview",
-    summary: "County starter locators, generalized extent, hydrology, ecology, current temporal fixture, and places.",
-    visibleLayerIds: Object.freeze(["kansas-extent", "county-starter-points", "watershed-context", "water-context", "prairie-context", "atmosphere-observations", "communities"]),
+    summary: "County starter locators, generalized extent, hydrology, ecology, roads, rail, current temporal fixture, and places.",
+    visibleLayerIds: Object.freeze(["kansas-extent", "county-starter-points", "watershed-context", "water-context", "prairie-context", "atmosphere-observations", "communities", "transport-context"]),
     year: 2026,
     basemap: "standard",
     projection: "mercator",

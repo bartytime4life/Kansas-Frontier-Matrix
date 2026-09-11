@@ -478,10 +478,9 @@ const officialContextStateLabel = (state: OfficialContextState) => ({
   error: "UNAVAILABLE",
 }[state]);
 
-// Open on the Smoky Hills as an investigation surface, not a distant state
-// overview. The oblique camera makes the real DEM legible immediately while
-// Kansas extent remains one click away on the map rail.
-const KANSAS_VIEW: ViewState = { center: [-98.24, 38.68], zoom: 9.15, bearing: -24, pitch: 63 };
+// Open on Kansas Overview: a paused, north-up 2D statewide orientation.
+// Terrain, globe, and local investigation cameras remain explicit actions.
+const KANSAS_VIEW: ViewState = { center: [-98.38, 38.48], zoom: 5.45, bearing: 0, pitch: 0 };
 const STRUCTURE_FOCUS_PRESETS = Object.freeze([
   Object.freeze({ id: "wichita", label: "Focus Wichita", center: [-97.3375, 37.6872] as [number, number], bearing: -24 }),
   Object.freeze({ id: "topeka", label: "Focus Topeka", center: [-95.689, 39.0473] as [number, number], bearing: 28 }),
@@ -491,8 +490,10 @@ const EXPECTED_MAPLIBRE_VERSION = "6.6.0";
 const MAPLIBRE_WORKER_URL = "/maplibre/maplibre-gl-worker.mjs";
 const MAPLIBRE_RUNTIME_ASSET_URLS = [MAPLIBRE_WORKER_URL, "/maplibre/maplibre-gl-shared.mjs"] as const;
 const SUPPORTED_CONTEXT_BOUNDS = Object.freeze({ west: -104.8, south: 34.8, east: -92, north: 42.2 });
-const defaultVisibility = Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, layer.defaultVisibility]));
+const DEFAULT_MAP_PROFILE = MAP_VIEW_PROFILES.find((profile) => profile.id === "overview")!;
+const defaultVisibility = Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, DEFAULT_MAP_PROFILE.visibleLayerIds.includes(layer.id)]));
 const defaultOpacity = Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, layer.defaultOpacity]));
+const defaultReportLayerIds = LAYER_REGISTRY.filter((layer) => defaultVisibility[layer.id]).map((layer) => layer.id);
 const defaultOfficialVisibility = defaultOfficialContextVisibility();
 const defaultOfficialOpacity = defaultOfficialContextOpacity();
 const defaultOfficialStates = Object.fromEntries(OFFICIAL_CONTEXT_SOURCES.map((source) => [source.id, "idle"])) as Record<OfficialContextId, OfficialContextState>;
@@ -1019,12 +1020,12 @@ export default function Home() {
   const mapEvidenceFilterRef = useRef<RegistryEvidenceFilter>("ALL");
   const basemapRef = useRef<BasemapKey>("standard");
   const projectionRef = useRef<"mercator" | "globe">("mercator");
-  const scenePresetRef = useRef<ScenePresetId>("elevation-3d");
+  const scenePresetRef = useRef<ScenePresetId>("overview-2d");
   const verticalExaggerationRef = useRef(1);
   const topographicOverlayRef = useRef(false);
-  const atmospherePresetRef = useRef<AtmospherePreset>("dusk");
-  const lightAzimuthRef = useRef(235);
-  const fieldOfViewRef = useRef(44);
+  const atmospherePresetRef = useRef<AtmospherePreset>("night");
+  const lightAzimuthRef = useRef(210);
+  const fieldOfViewRef = useRef(36);
   const structures3DRef = useRef(false);
   const gestureModeRef = useRef<"cooperative" | "direct">("cooperative");
   const sceneOrbitTimerRef = useRef<number | null>(null);
@@ -1092,15 +1093,15 @@ export default function Home() {
   const [layerOrder, setLayerOrder] = useState<string[]>(defaultOrder);
   const [basemap, setBasemap] = useState<BasemapKey>("standard");
   const [view, setView] = useState<ViewState>(KANSAS_VIEW);
-  const [scenePreset, setScenePreset] = useState<ScenePresetId>("elevation-3d");
-  const [terrainState, setTerrainState] = useState<TerrainPresentationState>("LOADING");
+  const [scenePreset, setScenePreset] = useState<ScenePresetId>("overview-2d");
+  const [terrainState, setTerrainState] = useState<TerrainPresentationState>("OFF");
   const [topographicOverlay, setTopographicOverlay] = useState(false);
   const [terrainElevationReading, setTerrainElevationReading] = useState<TerrainElevationReading | null>(null);
   const [lockedTerrainElevation, setLockedTerrainElevation] = useState<TerrainElevationReading | null>(null);
   const [verticalExaggeration, setVerticalExaggeration] = useState(1);
-  const [atmospherePreset, setAtmospherePreset] = useState<AtmospherePreset>("dusk");
-  const [lightAzimuth, setLightAzimuth] = useState(235);
-  const [fieldOfView, setFieldOfView] = useState(44);
+  const [atmospherePreset, setAtmospherePreset] = useState<AtmospherePreset>("night");
+  const [lightAzimuth, setLightAzimuth] = useState(210);
+  const [fieldOfView, setFieldOfView] = useState(36);
   const [structures3DEnabled, setStructures3DEnabled] = useState(false);
   const [structures3DState, setStructures3DState] = useState<Structures3DState>("OFF");
   const [gestureMode, setGestureMode] = useState<"cooperative" | "direct">("cooperative");
@@ -1227,7 +1228,7 @@ export default function Home() {
   const [reportTitle, setReportTitle] = useState("Kansas map data report");
   const [reportScope, setReportScope] = useState<ReportScope>("VIEWPORT");
   const [reportDetail, setReportDetail] = useState<ReportDetail>("STANDARD");
-  const [reportLayerIds, setReportLayerIds] = useState<string[]>(() => LAYER_REGISTRY.filter((layer) => layer.defaultVisibility).map((layer) => layer.id));
+  const [reportLayerIds, setReportLayerIds] = useState<string[]>(defaultReportLayerIds);
   const [reportSections, setReportSections] = useState<Record<ReportSection, boolean>>(defaultReportSections);
   const [reportQuery, setReportQuery] = useState("");
   const [reportEvidenceFilter, setReportEvidenceFilter] = useState<EvidenceState | "ALL">("ALL");
@@ -3500,7 +3501,7 @@ export default function Home() {
       projectionRef.current = nextProjection;
       setProjection(nextProjection);
       const restoredScene = params.get("scene");
-      const nextScenePreset: ScenePresetId = restoredScene === "overview-2d" || restoredScene === "globe-overview" || restoredScene === "water-systems" || restoredScene === "smoke-context" || restoredScene === "elevation-3d" || restoredScene === "tile-grid" ? restoredScene : "elevation-3d";
+      const nextScenePreset: ScenePresetId = restoredScene === "overview-2d" || restoredScene === "globe-overview" || restoredScene === "water-systems" || restoredScene === "smoke-context" || restoredScene === "elevation-3d" || restoredScene === "tile-grid" ? restoredScene : "overview-2d";
       scenePresetRef.current = nextScenePreset;
       setScenePreset(nextScenePreset);
       const nextVerticalExaggeration = clamp(parseNumber(params.get("zscale"), 1), 0, 2);
@@ -5059,14 +5060,18 @@ export default function Home() {
     const nextVisibility = Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, profile.visibleLayerIds.includes(layer.id)]));
     const nextScenePreset: ScenePresetId = profile.id === "smoke" ? "smoke-context" : profile.id === "elevation" ? "elevation-3d" : profile.projection === "globe" ? "globe-overview" : "overview-2d";
     const nextAtmosphere: AtmospherePreset = profile.id === "smoke" || profile.id === "hazards" || profile.id === "elevation" ? "dusk" : profile.projection === "globe" ? "clear" : "night";
+    const nextLightAzimuth = profile.id === "elevation" ? 235 : profile.projection === "globe" ? 225 : 210;
     const nextFieldOfView = profile.id === "elevation" ? 44 : profile.projection === "globe" ? 42 : 36;
     stopSceneOrbit(false);
+    mapRef.current?.stop();
     visibilityRef.current = nextVisibility;
     mapEvidenceFilterRef.current = "ALL";
     basemapRef.current = profile.basemap;
     projectionRef.current = profile.projection;
+    scenePresetRef.current = nextScenePreset;
     verticalExaggerationRef.current = 1;
     atmospherePresetRef.current = nextAtmosphere;
+    lightAzimuthRef.current = nextLightAzimuth;
     fieldOfViewRef.current = nextFieldOfView;
     setVisibility(nextVisibility);
     commitTemporalFrame(profile.year);
@@ -5078,12 +5083,31 @@ export default function Home() {
     setScenePreset(nextScenePreset);
     setVerticalExaggeration(1);
     setAtmospherePreset(nextAtmosphere);
+    setLightAzimuth(nextLightAzimuth);
     setFieldOfView(nextFieldOfView);
     setMapQueryCandidates([]);
     locationDerivedViewRef.current = false;
     setLocationCameraRedacted(false);
     clearSelectionState();
-    mapRef.current?.fitBounds([[-102.1, 36.95], [-94.55, 40.05]], { padding: 54, duration: motionDuration(600) });
+    const map = mapRef.current;
+    if (map?.isStyleLoaded()) {
+      if (nextScenePreset !== "elevation-3d") {
+        setTerrainState(setTerrainPresentation(map, false, 1));
+        setTerrainHeightOverlay(map, false);
+      } else {
+        setTerrainState(setTerrainPresentation(map, true, 1));
+        setTerrainHeightOverlay(map, topographicOverlayRef.current);
+      }
+      map.setProjection({ type: profile.projection });
+      applySceneEnvironment(map, nextAtmosphere, nextLightAzimuth);
+      map.setVerticalFieldOfView(nextFieldOfView);
+      map.triggerRepaint();
+    }
+    if (profile.id === "overview") {
+      map?.easeTo({ center: [...KANSAS_VIEW.center] as [number, number], zoom: KANSAS_VIEW.zoom, bearing: KANSAS_VIEW.bearing, pitch: KANSAS_VIEW.pitch, duration: motionDuration(600) });
+    } else {
+      map?.fitBounds([[-102.1, 36.95], [-94.55, 40.05]], { padding: 54, duration: motionDuration(600) });
+    }
     announce(`${profile.title} applied · view state only`);
   };
 
@@ -5500,6 +5524,7 @@ export default function Home() {
   };
 
   const resetExplorer = () => {
+    const map = mapRef.current;
     visibilityRef.current = defaultVisibility;
     opacityRef.current = defaultOpacity;
     officialVisibilityRef.current = defaultOfficialVisibility;
@@ -5509,10 +5534,13 @@ export default function Home() {
     mapEvidenceFilterRef.current = "ALL";
     basemapRef.current = "standard";
     projectionRef.current = "mercator";
+    scenePresetRef.current = "overview-2d";
     verticalExaggerationRef.current = 1;
+    topographicOverlayRef.current = false;
     atmospherePresetRef.current = "night";
     lightAzimuthRef.current = 210;
     fieldOfViewRef.current = 36;
+    structures3DRef.current = false;
     gestureModeRef.current = "cooperative";
     setVisibility(defaultVisibility);
     setOpacity(defaultOpacity);
@@ -5564,9 +5592,13 @@ export default function Home() {
     setProjection("mercator");
     setScenePreset("overview-2d");
     setVerticalExaggeration(1);
+    setTopographicOverlay(false);
+    setTerrainState("OFF");
     setAtmospherePreset("night");
     setLightAzimuth(210);
     setFieldOfView(36);
+    setStructures3DEnabled(false);
+    setStructures3DState("OFF");
     setGestureMode("cooperative");
     stopSceneOrbit(false);
     setMeasureMode(null);
@@ -5584,8 +5616,18 @@ export default function Home() {
     cameraHistoryIndexRef.current = 0;
     setCameraHistoryIndex(0);
     setCameraHistoryLength(1);
-    mapRef.current?.jumpTo(KANSAS_VIEW);
-    if (mapRef.current?.isStyleLoaded()) updateMeasurementSource(mapRef.current, buildMeasurementData([], null));
+    map?.stop();
+    if (map?.isStyleLoaded()) {
+      setTerrainState(setTerrainPresentation(map, false, 1));
+      setTerrainHeightOverlay(map, false);
+      setStructureExtrusions(map, false);
+      map.setProjection({ type: "mercator" });
+      applySceneEnvironment(map, "night", 210);
+      map.setVerticalFieldOfView(36);
+      map.triggerRepaint();
+      updateMeasurementSource(map, buildMeasurementData([], null));
+    }
+    map?.jumpTo(KANSAS_VIEW);
     analysisAreaRef.current = null;
     setAnalysisArea(null);
     if (mapRef.current?.isStyleLoaded()) updateAnalysisAreaSource(mapRef.current, null);
@@ -5595,7 +5637,7 @@ export default function Home() {
     setReportTitle("Kansas map data report");
     setReportScope("VIEWPORT");
     setReportDetail("STANDARD");
-    setReportLayerIds(LAYER_REGISTRY.filter((layer) => layer.defaultVisibility).map((layer) => layer.id));
+    setReportLayerIds([...defaultReportLayerIds]);
     setReportSections(defaultReportSections);
     setReportQuery("");
     setReportEvidenceFilter("ALL");

@@ -50,12 +50,12 @@ export const REPOSITORY_UPDATES: readonly RepositoryUpdate[] = Object.freeze([
   Object.freeze({
     id: "current-main-live-readback",
     area: "Repository control plane",
-    title: "Current main includes the latest soil fixture-integrity correction",
+    title: "Current main includes the latest packaging integration guardrails",
     state: "NEEDS VERIFICATION",
     maturity: "PARTIAL",
     date: "11 Sep 2026",
     summary:
-      "Live GitHub readback pins main at eca6c8a, the merge of PR #4467 for the soil support-type fixture-integrity correction. The Site still performs a separate read-only current-main check when its repository briefing opens.",
+      "Live GitHub readback pins main at b44494c, the merge of PR #4468 for metadata-only root Python distribution verification and integration guardrails. The 23-commit delta from the prior Site checkpoint touches packaging, CI, and hydrology test paths; no map UI files changed. The Site still performs a separate read-only current-main check when its repository briefing opens.",
     boundary:
       "The GitHub repository and this Site retain separate source histories. A successful currentness check does not synchronize code, prove tree equivalence, admit data, approve a review, deploy a version, or authorize publication.",
     sourceLabel: "Exact current main commit",

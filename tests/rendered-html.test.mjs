@@ -34,7 +34,7 @@ test("renders the map-first Kansas explorer shell", async () => {
   assert.match(html, /Build report/i);
   assert.match(html, /bounded demonstration data/i);
   assert.match(html, /Repository briefing/i);
-  assert.match(html, /main@(?:<!-- -->)?eca6c8a/i);
+  assert.match(html, /main@(?:<!-- -->)?b44494c/i);
   assert.match(html, /Scenario review/i);
   assert.match(html, /Runtime lab/i);
   assert.match(html, /Source observatory/i);
@@ -60,8 +60,11 @@ test("centers the primary workflow on map-scoped custom reports", async () => {
   assert.match(source, /setReportLayerIds\(activeLayers\.map/);
   assert.match(source, /const \[leftOpen, setLeftOpen\] = useState\(true\)/);
   assert.match(source, /const \[leftPanelMode, setLeftPanelMode\] = useState<LeftPanelMode>\("layers"\)/);
-  assert.match(source, /const KANSAS_VIEW: ViewState = \{ center: \[-98\.24, 38\.68\], zoom: 9\.15, bearing: -24, pitch: 63 \}/);
-  assert.match(source, /restoredScene[^\n]+\? restoredScene : "elevation-3d"/);
+  assert.match(source, /const KANSAS_VIEW: ViewState = \{ center: \[-98\.38, 38\.48\], zoom: 5\.45, bearing: 0, pitch: 0 \}/);
+  assert.match(source, /const \[scenePreset, setScenePreset\] = useState<ScenePresetId>\("overview-2d"\)/);
+  assert.match(source, /restoredScene[^\n]+\? restoredScene : "overview-2d"/);
+  assert.match(source, /const defaultReportLayerIds = LAYER_REGISTRY\.filter\(\(layer\) => defaultVisibility\[layer\.id\]\)/);
+  assert.match(mapInterface, /id: "overview"[\s\S]+transport-context/);
   assert.match(about, /Start with a question, finish with a report/);
   assert.match(about, /EVIDENCE STATES/);
   assert.match(css, /\.report-builder-grid/);
@@ -88,6 +91,7 @@ test("adds reusable analysis recipes, device-local workspaces, report filters, a
   assert.equal(layer("agriculture-context").data.features.length, 3);
   assert.equal(layer("communities").data.features.length, 12);
   assert.equal(layer("transport-context").data.features.length, 3);
+  assert.equal(["kansas-extent", "water-context", "watershed-context", "prairie-context", "atmosphere-observations", "communities", "transport-context"].every((id) => layer(id).defaultVisibility), true);
   assert.match(page, /kfm-map-workspaces-v1/);
   assert.match(page, /saveCurrentWorkspace/);
   assert.match(page, /loadSavedWorkspace/);
@@ -604,7 +608,7 @@ test("keeps repository updates pinned and boundary-labeled", async () => {
   const updates = await readFile(new URL("../app/repository-updates.ts", import.meta.url), "utf8");
   const identity = await readFile(new URL("../app/site-identity.ts", import.meta.url), "utf8");
 
-  assert.match(identity, /eca6c8a2353fbe28ace619288231a047e5d485f5/);
+  assert.match(identity, /b44494c1cf0807ed28b606e8a41b255bebdf4ad7/);
   assert.match(updates, /SITE_IDENTITY\.repositoryCommit/);
   assert.match(updates, /separate source histories/);
   assert.match(updates, /Local geodata inspection now fails closed on malformed or stale input/);

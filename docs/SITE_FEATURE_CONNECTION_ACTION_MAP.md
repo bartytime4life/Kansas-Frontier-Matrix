@@ -46,7 +46,7 @@ data, KFM evidence, policy, release, or deployment.
 | System | Authority in this alignment | What is synchronized |
 |---|---|---|
 | Sites | Current runtime and saved Site source | Registry files, UI wiring, tests, and saved version |
-| GitHub | Repository implementation and architecture authority | Documentation-only traceability record against `main@eca6c8a` after PR #4467 |
+| GitHub | Repository implementation and architecture authority | Documentation-only traceability record against `main@b44494c` after PR #4468 |
 | Google Drive | Design/reference and handoff record | Current Site checkpoint, registry file map, validation result, and next gates |
 | Notion | Coordination and knowledge capture | Current checkpoint, implementation boundaries, and follow-up ownership |
 
@@ -63,7 +63,7 @@ repository `main`, activate held integrations, merge a PR, or deploy the Site.
 - No custom domain was attached when checked on 2026-09-11. The canonical
   `chatgpt.site` host is the only domain currently represented here.
 - The current independently read repository checkpoint is
-  `bartytime4life/Kansas-Frontier-Matrix@eca6c8a` on `main`, merged by PR #4467.
+  `bartytime4life/Kansas-Frontier-Matrix@b44494c` on `main`, merged by PR #4468.
 - The Site checkout’s `.openai/hosting.json` is authoritative for this Site.
   The repository child manifest still points at legacy project
   `appgprj_6a870a079c1c8191abb7401ef092a181`; that mismatch is surfaced as

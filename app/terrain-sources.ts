@@ -24,10 +24,10 @@ const activeTerrainContext = externalContextSource("aws-mapzen-terrarium");
 
 /**
  * The upstream Terrarium pyramid contains isolated, implausible high-zoom
- * samples around the default Smoky Hills camera (including a sharp negative
- * discontinuity near Ellsworth). MapLibre turns those samples into vertical
- * terrain walls. Zoom 11 is the highest inspected level that keeps this view
- * continuous, so deeper map zooms deliberately overzoom the clean z11 DEM.
+ * samples around the prior Smoky Hills investigation camera (including a sharp
+ * negative discontinuity near Ellsworth). MapLibre turns those samples into
+ * vertical terrain walls. Zoom 11 is the highest inspected level that keeps
+ * this investigation view continuous; deeper map zooms deliberately overzoom the clean z11 DEM.
  */
 export const TERRARIUM_RENDER_MAX_ZOOM = 11;
 
