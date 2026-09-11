@@ -6,7 +6,7 @@
     "apps/explorer-web/src/site/site-living-atlas.css"
   ],
   "artifact_hashes": {
-    "apps/explorer-web/src/site/mount-living-atlas.ts": "sha256:3cc54370d5a3ed4ebf258650c32c04569c35e3d64e0fad0d75fcce0cc1400f9d",
+    "apps/explorer-web/src/site/mount-living-atlas.ts": "sha256:dab6889f7c956d4eb16d35f319dd41f57fa5c8f6cb72a9b2a56fa17e08021304",
     "apps/explorer-web/src/site/site-living-atlas.css": "sha256:419ea665e2798916c79b4a369db3b36d4d2d4a13db1656dd532db3d586b8d052"
   },
   "model_identity": {
@@ -77,8 +77,8 @@
     },
     {
       "gate": "full-explorer-build-and-vitest-suite",
-      "outcome": "SKIPPED",
-      "reason": "This receipt was authored before the new panel's pull-request CI completed. The prior projector slice passed the remote Explorer test/build, but this UI change is not claimed here."
+      "outcome": "FAIL",
+      "reason": "PR #4477 ui-build build-explorer-web caught a TypeScript target-narrowing error in the initial panel wiring; the branch is being corrected before re-validation."
     },
     {
       "gate": "source-activation-runtime-release-publication",
@@ -127,5 +127,5 @@
     "adr_link": null,
     "drift_register_entry": null
   },
-  "notes": "AI-authored fixture-first UI slice for the Kansas-first Explorer. The Layers rail now exposes the canonical synthetic Living Waters packet through the existing renderer-neutral projector. The panel is explicitly marked fixture-only, retains points only for AVAILABLE/STALE, renders finite no-results/unavailable/ambiguous states without observations, and displays visible=false plus rendererBound=false. The receipt is provenance, not approval, live hydrology proof, merge authorization, release authorization, or publication authority."
+  "notes": "AI-authored fixture-first UI slice for the Kansas-first Explorer. The Layers rail now exposes the canonical synthetic Living Waters packet through the existing renderer-neutral projector. The panel is explicitly marked fixture-only, retains points only for AVAILABLE/STALE, renders finite no-results/unavailable/ambiguous states without observations, and displays visible=false plus rendererBound=false. The receipt is provenance, not approval, live hydrology proof, merge authorization, release authorization, or publication authority. Initial PR validation found and isolated a TypeScript event-target narrowing defect; the receipt will be revalidated after the corrective commit."
 }
