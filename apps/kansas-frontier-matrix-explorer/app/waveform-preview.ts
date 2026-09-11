@@ -375,22 +375,30 @@ export const buildLocalWaveformPreview = async (input: Readonly<{
   const nslc = first.nslc;
   if (records.some((record) => record.nslc !== nslc)) throw new Error("The preview accepts one NSLC channel at a time.");
   if (records.some((record) => Math.abs(record.sampleRate - first.sampleRate) > 1e-9)) throw new Error("MiniSEED records must share one sample rate.");
-  const sampleCount = records.reduce((sum, record) => sum + record.sampleCount, 0);
+  const orderedRecords = [...records].sort((left, right) => left.startEpochMs - right.startEpochMs);
+  const sampleCount = orderedRecords.reduce((sum, record) => sum + record.sampleCount, 0);
   if (sampleCount > WAVEFORM_PREVIEW_MAX_SAMPLES) throw new Error("The waveform preview is limited to 100,000 samples.");
-  const startEpochMs = Math.min(...records.map((record) => record.startEpochMs));
-  const endEpochMs = Math.max(...records.map((record) => record.endEpochMs));
+  const startEpochMs = Math.min(...orderedRecords.map((record) => record.startEpochMs));
+  const endEpochMs = Math.max(...orderedRecords.map((record) => record.endEpochMs));
   const durationSeconds = Math.max(0, (endEpochMs - startEpochMs) / 1_000);
   if (durationSeconds > WAVEFORM_PREVIEW_MAX_SECONDS) throw new Error("The waveform preview is limited to a 10-minute window.");
+  const continuity = orderedRecords.slice(1).every((record, index) => {
+    const previous = orderedRecords[index];
+    const expectedStart = previous.startEpochMs + (previous.sampleCount / previous.sampleRate) * 1_000;
+    const tolerance = Math.max(2, 1_000 / previous.sampleRate);
+    return Math.abs(record.startEpochMs - expectedStart) <= tolerance;
+  });
   const stationMatches = equalCode(stationXml.network, first.network)
     && equalCode(stationXml.station, first.station)
     && equalCode(stationXml.location, first.location)
     && equalCode(stationXml.channel, first.channel);
-  const samples = records.flatMap((record) => record.samples);
+  const samples = orderedRecords.flatMap((record) => record.samples);
   const attribution = input.attribution?.trim() || null;
   const gates: WaveformGate[] = [
     { id: "use-class", label: "Use class", state: "PASS", detail: "Browser-local user file only; no provider retrieval is requested." },
     { id: "transport", label: "Caching / proxy", state: "PASS", detail: "No server fetch, proxy, upload, persistent cache, or provider URL is accepted." },
     { id: "window", label: "Bounded window", state: "PASS", detail: sampleCount + " samples across " + durationSeconds.toFixed(3) + " seconds; limits are 100,000 samples and 10 minutes." },
+    { id: "continuity", label: "Record continuity", state: continuity ? "PASS" : "BLOCK", detail: continuity ? "MiniSEED records are contiguous within one sample period." : "A gap or overlap was found between MiniSEED records; the preview will not connect it as a false trace." },
     { id: "attribution", label: "Attribution", state: attribution ? "PASS" : "BLOCK", detail: attribution ? "Visible attribution supplied for this browser-local inspection." : "Supply visible attribution before a waveform may be drawn." },
     { id: "redistribution", label: "Redistribution permission", state: "DENY", detail: "Raw bytes, samples, downloads, server redistribution, and derived persistence are disabled by scope." },
     { id: "response-metadata", label: "Response metadata", state: stationXml.responsePresent && stationMatches ? "PASS" : "BLOCK", detail: stationXml.responsePresent ? stationMatches ? "StationXML response and NSLC identity match the waveform." : "StationXML response exists but its NSLC does not match the waveform." : "StationXML response and InstrumentSensitivity are required; no response correction is performed." },
