@@ -340,7 +340,7 @@ const stationXmlCandidate = (
 
 const parseStationXmlCandidates = (xml: string): StationXmlSummary[] => {
   if (!xml.trim()) throw new Error("The StationXML file is empty.");
-  if (/<!DOCTYPE|<!ENTITY|<!--|<!\\[CDATA\\[/i.test(xml)) throw new Error("StationXML document types, comments, and CDATA sections are not supported.");
+  if (/<!DOCTYPE|<!ENTITY|<!--|<!\[CDATA\[/i.test(xml)) throw new Error("StationXML document types, comments, and CDATA sections are not supported.");
   const root = tagMatch(xml, "FDSNStationXML");
   if (!root) throw new Error("The response file is not a well-formed FDSN StationXML document.");
   const references = externalReferenceCount(xml);
