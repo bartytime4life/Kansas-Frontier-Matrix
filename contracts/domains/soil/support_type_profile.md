@@ -2,7 +2,7 @@
 doc_id: kfm://contract/domains/soil/support-type-profile
 title: Soil Support-Type Anti-Collapse Profile
 type: semantic-contract; domain-profile; validation-profile
-version: v0.1.1
+version: v0.1.2
 status: proposed; inactive; fixture-first; no-network; non-authoritative
 owners: OWNER_TBD — Soil steward · Contract steward · Source steward · Validation steward
 created: 2026-08-05
@@ -145,6 +145,36 @@ already invokes the [focused test file](../../../tests/validators/domains/soil/s
 and default fixture runner; no new workflow or live-source step is needed.
 Workflow configuration is not evidence of hosted execution. Its historical
 receipt check remains separate from this change's authoring receipt.
+
+### Bounded JSON and schema evaluation
+
+The file entrypoints capture at most `MAX_JSON_BYTES + 1` bytes from one open
+stream and reject payloads larger than 1 MiB before UTF-8 decoding or JSON
+parsing. `FILE_TOO_LARGE` is an `ERROR`, not an evaluated candidate `DENY`.
+Interpreter recursion or integer-conversion limits become
+`JSON_COMPLEXITY_LIMIT`; exception messages and input values are not echoed.
+This bounds a read, not filesystem snapshot consistency, CPU time, or every
+possible resource-exhaustion condition. Files must remain ordinary local inputs;
+concurrent replacement, special-file handling, and full parser isolation are
+not proved by this profile.
+
+Schemas use the same bounded, duplicate-free, finite-number JSON reader as
+profiles and candidates. A malformed/schema-invalid schema, recursion failure,
+or unresolved reference produces `SCHEMA_UNAVAILABLE`. Validation uses an
+explicit non-retrieving `referencing.Registry`, following the already declared
+`jsonschema` dependency's referencing API. In-document `$defs`/fragment references
+continue to resolve. No HTTP, file-URI, or other external reference is fetched;
+cross-document schema composition would require a separately reviewed local
+resource map rather than enabling implicit retrieval. No schema bytes or
+package versions are changed by this repair.
+
+The implementation choices are supported by the official
+[Python JSON input cautions](https://docs.python.org/3.13/library/json.html) and
+[jsonschema referencing API](https://python-jsonschema.readthedocs.io/en/stable/referencing/),
+checked 2026-09-11. These are library references, not source-admission or KFM
+release authority. The added regression controls exercise bounded reads,
+strict schema parsing, finite exceptions, and denied reference retrieval while
+retaining the existing fixture-execution and support-separation tests.
 
 ### Source and implementation boundary
 

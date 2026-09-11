@@ -355,5 +355,139 @@ class SoilFixtureExecutionTests(unittest.TestCase):
         self.assertEqual(before, {p: p.read_bytes() for p in self.root.rglob("*.json")})
 
 
+class SoilJsonBoundaryTests(unittest.TestCase):
+    """Schema evaluation is local-only and malformed inputs stay finite."""
+
+    def setUp(self) -> None:
+        self.directory = tempfile.TemporaryDirectory()
+        self.addCleanup(self.directory.cleanup)
+        self.root = Path(self.directory.name)
+        self.path = self.root / "input.json"
+        self.path.write_text("{}", encoding="utf-8")
+
+    def schema_findings(self, text: str, value=None):
+        self.path.write_text(text, encoding="utf-8")
+        return validator._schema_findings(
+            {} if value is None else value, self.path, "TEST_SCHEMA_INVALID"
+        )
+
+    def test_read_is_bounded_even_when_opened_content_has_grown(self) -> None:
+        class TrackedBytes(io.BytesIO):
+            def __init__(self, payload):
+                super().__init__(payload)
+                self.requests = []
+
+            def read(self, size=-1):
+                self.requests.append(size)
+                return super().read(size)
+
+        # The path's size observation is only two bytes; its opened stream is
+        # deliberately larger. Never use the separate stat as the read budget.
+        stream = TrackedBytes(b" " * (validator.MAX_JSON_BYTES + 20))
+        with mock.patch.object(Path, "open", return_value=stream) as opened:
+            value, findings = validator._read_object(self.path)
+        opened.assert_called_once_with("rb")
+        self.assertEqual(stream.requests, [validator.MAX_JSON_BYTES + 1])
+        self.assertIsNone(value)
+        self.assertEqual(findings, [Finding("FILE_TOO_LARGE", "/")])
+
+    def test_exact_byte_limit_is_accepted_and_one_more_is_error(self) -> None:
+        payload = b"{}" + b" " * (validator.MAX_JSON_BYTES - 2)
+        self.path.write_bytes(payload)
+        self.assertEqual(validator._read_object(self.path), ({}, []))
+        self.path.write_bytes(payload + b" ")
+        _, findings = validator._read_object(self.path)
+        self.assertEqual(findings, [Finding("FILE_TOO_LARGE", "/")])
+        self.assertEqual(validator.ValidationResult(tuple(findings)).outcome, "ERROR")
+
+    def test_byte_limit_precedes_utf8_decoding(self) -> None:
+        self.path.write_bytes(b"\xff" * (validator.MAX_JSON_BYTES + 1))
+        self.assertEqual(validator._read_object(self.path), (
+            None, [Finding("FILE_TOO_LARGE", "/")]
+        ))
+
+    def test_parser_limits_have_finite_sanitized_findings(self) -> None:
+        for exception in (ValueError, RecursionError):
+            with self.subTest(exception=exception.__name__):
+                with mock.patch.object(
+                    validator.json, "loads", side_effect=exception("PRIVATE-SENTINEL")
+                ):
+                    value, findings = validator._read_object(self.path)
+                self.assertIsNone(value)
+                self.assertEqual(findings, [Finding("JSON_COMPLEXITY_LIMIT", "/")])
+                result = validator.ValidationResult(tuple(findings))
+                self.assertEqual(result.outcome, "ERROR")
+                self.assertNotIn("PRIVATE-SENTINEL", json.dumps(validator._report(result)))
+
+    def test_duplicate_nested_schema_key_cannot_weaken_validation(self) -> None:
+        findings = self.schema_findings(
+            '{"type":"object","properties":'
+            '{"x":{"type":"integer","type":"string"}}}', {"x": "text"}
+        )
+        self.assertEqual(findings, [Finding("SCHEMA_UNAVAILABLE", "/")])
+
+    def test_nonfinite_and_malformed_schema_inputs_are_unavailable(self) -> None:
+        for text in ("{", "[]", "true", '{"maximum":NaN}',
+                     '{"minimum":Infinity}', '{"maximum":1e999}'):
+            with self.subTest(schema=text):
+                self.assertEqual(self.schema_findings(text), [
+                    Finding("SCHEMA_UNAVAILABLE", "/")
+                ])
+
+    def test_schema_error_does_not_escape_the_report(self) -> None:
+        self.assertEqual(self.schema_findings('{"type":"not-a-real-type"}'), [
+            Finding("SCHEMA_UNAVAILABLE", "/")
+        ])
+
+    def test_oversized_schema_uses_the_same_byte_budget(self) -> None:
+        self.assertEqual(self.schema_findings(
+            '{"description":"' + "x" * validator.MAX_JSON_BYTES + '"}'
+        ), [Finding("SCHEMA_UNAVAILABLE", "/")])
+
+    def test_external_references_never_attempt_retrieval(self) -> None:
+        for keyword in ("$ref", "$dynamicRef"):
+            for uri in ("https://example.invalid/schema.json",
+                        "file:///never-read-kfm-test.json", "relative.json"):
+                with self.subTest(keyword=keyword, uri=uri):
+                    with mock.patch("urllib.request.urlopen") as urlopen:
+                        with mock.patch("socket.socket") as socket:
+                            with mock.patch("socket.create_connection") as connect:
+                                findings = self.schema_findings(json.dumps({keyword: uri}))
+                    self.assertEqual(findings, [Finding("SCHEMA_UNAVAILABLE", "/")])
+                    urlopen.assert_not_called()
+                    socket.assert_not_called()
+                    connect.assert_not_called()
+
+    def test_local_fragment_resolution_preserves_validation(self) -> None:
+        schema = '{"$defs":{"value":{"type":"integer"}},"$ref":"#/$defs/value"}'
+        self.assertEqual(self.schema_findings(schema, 7), [])
+        self.assertEqual(self.schema_findings(schema, "seven"), [
+            Finding("TEST_SCHEMA_INVALID", "/")
+        ])
+        self.assertEqual(self.schema_findings('{"$ref":"#/$defs/missing"}'), [
+            Finding("SCHEMA_UNAVAILABLE", "/")
+        ])
+
+    def test_recursive_schema_failure_is_finite(self) -> None:
+        self.assertEqual(self.schema_findings('{"$ref":"#"}'), [
+            Finding("SCHEMA_UNAVAILABLE", "/")
+        ])
+
+    def test_invalid_schema_is_error_in_candidate_and_fixture_modes(self) -> None:
+        self.path.write_text('{"type":"not-a-real-type"}', encoding="utf-8")
+        for schema_path in ("PROFILE_SCHEMA_PATH", "CANDIDATE_SCHEMA_PATH"):
+            for mode in (["--candidate", str(FIXTURE_ROOT / "valid/station_soil_moisture.json")],
+                         ["--fixtures"]):
+                with self.subTest(schema=schema_path, mode=mode[0]):
+                    output = io.StringIO()
+                    with mock.patch.object(validator, schema_path, self.path):
+                        with contextlib.redirect_stdout(output):
+                            code = validator.main(mode)
+                    report = json.loads(output.getvalue())
+                    self.assertEqual((code, report["outcome"]), (1, "ERROR"))
+                    self.assertEqual(report["authority"], "NONE")
+                    self.assertNotIn("not-a-real-type", output.getvalue())
+
+
 if __name__ == "__main__":
     unittest.main()

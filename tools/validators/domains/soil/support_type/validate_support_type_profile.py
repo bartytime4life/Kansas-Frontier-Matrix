@@ -15,6 +15,9 @@ from pathlib import Path
 from typing import Any, Iterable, Sequence
 
 from jsonschema import Draft202012Validator, FormatChecker
+from jsonschema.exceptions import SchemaError
+from referencing import Registry
+from referencing.exceptions import Unresolvable
 
 REPO_ROOT = Path(__file__).resolve().parents[5]
 PROFILE_PATH = REPO_ROOT / "pipeline_specs/soil/support_type_profile.v1.json"
@@ -55,6 +58,7 @@ class ValidationResult:
             "FILE_NOT_FOUND", "FILE_READ_ERROR", "JSON_INVALID", "JSON_NOT_UTF8",
             "JSON_DUPLICATE_KEY", "JSON_NONFINITE_NUMBER", "ROOT_NOT_OBJECT",
             "SCHEMA_UNAVAILABLE", "PROFILE_INVALID", "FIXTURE_EVALUATION_ERROR",
+            "FILE_TOO_LARGE", "JSON_COMPLEXITY_LIMIT",
         }
         return "ERROR" if any(f.code in error_codes for f in self.findings) else "DENY"
 
@@ -83,10 +87,13 @@ def _read_object(path: Path) -> tuple[dict[str, Any] | None, list[Finding]]:
     try:
         if not path.is_file():
             return None, [Finding("FILE_NOT_FOUND", "/")]
-        if path.stat().st_size > MAX_JSON_BYTES:
+        # Bound the captured bytes, not a separate, raceable size observation.
+        with path.open("rb") as stream:
+            payload = stream.read(MAX_JSON_BYTES + 1)
+        if len(payload) > MAX_JSON_BYTES:
             return None, [Finding("FILE_TOO_LARGE", "/")]
         value = json.loads(
-            path.read_text(encoding="utf-8"),
+            payload.decode("utf-8"),
             object_pairs_hook=_unique_object,
             parse_constant=_reject_nonfinite,
             parse_float=_parse_float,
@@ -101,6 +108,8 @@ def _read_object(path: Path) -> tuple[dict[str, Any] | None, list[Finding]]:
         return None, [Finding("JSON_INVALID", "/")]
     except OSError:
         return None, [Finding("FILE_READ_ERROR", "/")]
+    except (RecursionError, ValueError):
+        return None, [Finding("JSON_COMPLEXITY_LIMIT", "/")]
     return (value, []) if isinstance(value, dict) else (None, [Finding("ROOT_NOT_OBJECT", "/")])
 
 
@@ -110,9 +119,9 @@ def _pointer(parts: Iterable[Any]) -> str:
 
 
 def _load_schema(path: Path) -> dict[str, Any]:
-    value = json.loads(path.read_text(encoding="utf-8"))
-    if not isinstance(value, dict):
-        raise ValueError("schema root must be an object")
+    value, findings = _read_object(path)
+    if findings or value is None:
+        raise ValueError("schema input unavailable")
     Draft202012Validator.check_schema(value)
     return value
 
@@ -145,10 +154,12 @@ def _sorted_unique_strings(value: Any) -> bool:
 def _schema_findings(value: dict[str, Any], path: Path, code: str) -> list[Finding]:
     try:
         validator = Draft202012Validator(
-            _load_schema(path), format_checker=FormatChecker()
+            _load_schema(path), format_checker=FormatChecker(),
+            # Only in-document resources resolve; never retrieve a URI.
+            registry=Registry(),
         )
         return [Finding(code, _pointer(error.absolute_path)) for error in validator.iter_errors(value)]
-    except (OSError, UnicodeError, json.JSONDecodeError, ValueError):
+    except (OSError, UnicodeError, ValueError, RecursionError, SchemaError, Unresolvable):
         return [Finding("SCHEMA_UNAVAILABLE", "/")]
 
 
