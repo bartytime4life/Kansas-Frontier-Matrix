@@ -23,7 +23,7 @@ The current provider and KFM boundaries support one narrow slice:
 - The browser may inspect one NSLC channel, a maximum 10-minute window, a maximum 100,000 samples, and a maximum 2 MiB waveform file.
 - The preview may draw bounded **raw values/counts** only when the local StationXML contains a matching response and InstrumentSensitivity and the user supplies visible attribution.
 - The preview retains only an exact-byte SHA-256, non-identifying summary metadata, and downsampled in-memory points. It does not upload, cache, proxy, download, export, persist, catalog, or publish waveform data.
-- Unsupported MiniSEED encodings (including Steim-1/Steim-2 in this first slice) stay blocked with an explicit reason. No response correction, physical-unit conversion, event detection, magnitude, alert, warning, or health/engineering interpretation is performed.
+- Unsupported MiniSEED encodings (including Steim-1/Steim-2 in this first slice), truncated records, and gaps/overlaps stay blocked with an explicit reason. No response correction, physical-unit conversion, event detection, magnitude, alert, warning, or health/engineering interpretation is performed.
 
 The resulting state is HOLD even when the local checks pass: it is an unadmitted browser preview, not a KFM observation.
 
@@ -37,7 +37,7 @@ The official boundaries are recorded here so that an implementation cannot silen
 | Caching / proxy | **DENY** for KFM raw or digital redistribution | No server route, proxy, service worker, IndexedDB/localStorage cache, R2/D1 storage, or raw-byte handoff. |
 | Attribution | **Required before local drawing** | The UI requires an explicit visible attribution string; it is carried into the redacted audit. |
 | Redistribution permission | **DENY by this slice** | No raw waveform, sample array, downloadable file, derived asset, or public URL leaves the browser. |
-| Response metadata | **Required** | Matching StationXML response plus InstrumentSensitivity is a blocking gate. The preview is raw counts/values only and never performs deconvolution. |
+| Response metadata | **Required** | Matching StationXML response plus InstrumentSensitivity is a blocking gate. The preview is raw counts/values only and never performs deconvolution. |\n| Record continuity | **Required** | A gap or overlap between records blocks drawing instead of connecting discontinuous samples into a false trace. |
 | Provenance | **PASS for local inspection** | Exact waveform bytes receive a SHA-256; NSLC, time, sample rate, encoding, StationXML filename, and inspection time are retained in the audit. |
 | Correction / rollback | **HOLD** | There is no correction, supersession, evidence, release, or rollback lane for a local preview, so it cannot become a claim-bearing record. |
 | Real-time / operational use | **DENY** | No live feed, warning, event catalog, or action-oriented output is added. |
