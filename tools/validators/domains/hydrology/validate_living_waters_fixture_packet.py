@@ -53,6 +53,21 @@ def _pointer(parts: Iterable[Any]) -> str:
     return "/" + "/".join(encoded) if encoded else "/"
 
 
+def _utc_instant_key(timestamp: str) -> tuple[str, str]:
+    """Order a schema-validated UTC-Z timestamp without losing precision.
+
+    The schema/format check must run first. Separate the fixed-width whole
+    second from its fractional digits: a raw trailing Z sorts after a decimal
+    point even though the whole second precedes its fractions. Remove only
+    insignificant trailing zeros so alternate spellings of one instant compare
+    equal. Fractional digits compare exactly without float rounding, integer
+    conversion, or datetime's microsecond truncation. Preserve the input bytes;
+    this key is not a general offset/leap-second parser or a timestamp rewrite.
+    """
+    whole_second, _, fraction = timestamp[:-1].partition(".")
+    return whole_second.upper(), fraction.rstrip("0")
+
+
 def validate_payload(payload: Mapping[str, Any]) -> tuple[Finding, ...]:
     schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
     Draft202012Validator.check_schema(schema)
@@ -80,7 +95,7 @@ def validate_payload(payload: Mapping[str, Any]) -> tuple[Finding, ...]:
             findings.add(Finding("SCENARIO_REASON_MISSING", f"/scenarios/{scenario_id}/reason_codes"))
 
     points = payload["series"]["points"]
-    timestamps = [item["observed_at"] for item in points]
+    timestamps = [_utc_instant_key(item["observed_at"]) for item in points]
     if timestamps != sorted(set(timestamps)):
         findings.add(Finding("HYDROGRAPH_TIME_ORDER_INVALID", "/series/points"))
     if payload["snapshot"]["reach_ids"] != sorted(payload["snapshot"]["reach_ids"]):
