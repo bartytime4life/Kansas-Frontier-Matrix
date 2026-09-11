@@ -2,11 +2,11 @@
 doc_id: kfm://contract/domains/soil/support-type-profile
 title: Soil Support-Type Anti-Collapse Profile
 type: semantic-contract; domain-profile; validation-profile
-version: v0.1.0
+version: v0.1.2
 status: proposed; inactive; fixture-first; no-network; non-authoritative
 owners: OWNER_TBD — Soil steward · Contract steward · Source steward · Validation steward
 created: 2026-08-05
-updated: 2026-08-05
+updated: 2026-09-11
 policy_label: public; soil; support-type; anti-collapse; non-publisher
 related:
   - ./README.md
@@ -112,9 +112,88 @@ python tools/validators/domains/soil/support_type/validate_support_type_profile.
 
 Both commands are deterministic and perform no network access.
 
+### Fixture execution contract
+
+Select exactly one CLI mode: `--candidate PATH` or `--fixtures`. Supplying both
+or neither is a usage error (exit `2`) before validation runs. `--profile PATH`
+applies to either mode; fixture mode must not silently fall back to the default
+profile. The Python fixture entrypoint retains its existing positional root and
+adds the optional keyword-only `profile_path`.
+
+A fixture run reads and validates the selected profile before evaluating any
+candidate. A missing, malformed, schema-invalid, or hash-incoherent profile
+produces `PROFILE_INVALID` plus its available diagnostic findings, with an
+`ERROR` outcome. All fixtures use that one parsed profile. This is not an atomic
+snapshot of every fixture and schema file.
+
+Both `valid/` and `invalid/` must contain JSON fixtures. A positive fixture must
+produce `PASS`; a negative fixture must be read and evaluated successfully enough
+to produce `DENY`. Malformed JSON, duplicate keys, invalid UTF-8, non-finite
+numbers, oversized/non-object inputs, disappearing files, or schema evaluation
+errors produce `FIXTURE_EVALUATION_ERROR`, never a passing negative control.
+Negative parser tests therefore belong in the focused test suite, not as broken
+JSON silently accepted by the persisted `invalid/` fixture runner.
+
+Wrong polarity retains `VALID_FIXTURE_REJECTED` or `INVALID_FIXTURE_ACCEPTED`.
+Findings remain sorted, unique code/field pairs. Evaluated runs retain JSON output
+and exit `0` for `PASS`, `1` for `DENY` or `ERROR`; no runtime or release authority
+is added. The default profile's version, digest, eight support classes, and all
+persisted positive and negative candidates remain unchanged.
+
+The existing [profile workflow](../../../.github/workflows/soil-support-type-profile.yml)
+already invokes the [focused test file](../../../tests/validators/domains/soil/support_type/test_support_type_profile.py)
+and default fixture runner; no new workflow or live-source step is needed.
+Workflow configuration is not evidence of hosted execution. Its historical
+receipt check remains separate from this change's authoring receipt.
+
+### Bounded JSON and schema evaluation
+
+The file entrypoints capture at most `MAX_JSON_BYTES + 1` bytes from one open
+stream and reject payloads larger than 1 MiB before UTF-8 decoding or JSON
+parsing. `FILE_TOO_LARGE` is an `ERROR`, not an evaluated candidate `DENY`.
+Interpreter recursion or integer-conversion limits become
+`JSON_COMPLEXITY_LIMIT`; exception messages and input values are not echoed.
+This bounds a read, not filesystem snapshot consistency, CPU time, or every
+possible resource-exhaustion condition. Files must remain ordinary local inputs;
+concurrent replacement, special-file handling, and full parser isolation are
+not proved by this profile.
+
+Schemas use the same bounded, duplicate-free, finite-number JSON reader as
+profiles and candidates. A malformed/schema-invalid schema, recursion failure,
+or unresolved reference produces `SCHEMA_UNAVAILABLE`. Validation uses an
+explicit non-retrieving `referencing.Registry`, following the already declared
+`jsonschema` dependency's referencing API. In-document `$defs`/fragment references
+continue to resolve. No HTTP, file-URI, or other external reference is fetched;
+cross-document schema composition would require a separately reviewed local
+resource map rather than enabling implicit retrieval. No schema bytes or
+package versions are changed by this repair.
+
+The implementation choices are supported by the official
+[Python JSON input cautions](https://docs.python.org/3.13/library/json.html) and
+[jsonschema referencing API](https://python-jsonschema.readthedocs.io/en/stable/referencing/),
+checked 2026-09-11. These are library references, not source-admission or KFM
+release authority. The added regression controls exercise bounded reads,
+strict schema parsing, finite exceptions, and denied reference retrieval while
+retaining the existing fixture-execution and support-separation tests.
+
+### Source and implementation boundary
+
+This repair follows the distinction between validator failure and invariant
+rejection in the *KFM Soil Architecture Extended Pro* report, page 16, and its
+fixture-first tests on page 19
+([Drive source](https://drive.google.com/file/d/1c19HxzdgZRPBaimFIg06KckEHBrhj33R/view)).
+That report is planning lineage, not authority for its proposed paths or proof
+that live Soil data is admitted. The current contract and implementation own
+this bounded `PASS` / `DENY` / `ERROR` profile; this change does not import the
+report's broader pipeline, quarantine, map, source, or release proposals.
+
 ## Rollback
 
-Before merge, close the draft pull request and delete its branch. After an
-authorized merge, revert the complete contract/schema/profile/validator/
-fixture/test/workflow/receipt slice. No source, lifecycle object, release, or
-public artifact is created.
+For this fixture-execution repair, retain the branch and its exact validation
+record while review or the PR-delivery path is held. Before integration, the
+branch may be abandoned without changing main. After an authorized integration,
+revert the paired validator, tests, and contract change together, retaining the
+authoring receipt as historical lineage. Reverting restores the older false-pass
+behavior, so prefer a bounded forward correction when possible. This repair
+does not change schemas, the profile, persisted fixtures, workflows, sources,
+release state, or public artifacts.
