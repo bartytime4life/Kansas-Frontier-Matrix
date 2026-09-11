@@ -23,7 +23,8 @@ const CATALOG_SCROLL_SELECTOR = ".layer-panel .catalog-groups";
 const CATALOG_SCROLL_TOLERANCE = 2;
 const CATALOG_ENHANCEMENT_ATTRIBUTES = [
   "tabindex", "role", "aria-label", "data-scrollable", "data-at-start", "data-at-end",
-  "data-layer-count", "data-requested-count", "data-time-compatible-count",
+  "data-layer-count", "data-current-control-count", "data-requested-count",
+  "data-time-compatible-count", "data-year",
 ] as const;
 
 function catalogScrollState(region: HTMLElement) {
@@ -37,9 +38,24 @@ function catalogScrollState(region: HTMLElement) {
 
 function syncCatalogScrollState(region: HTMLElement) {
   const state = catalogScrollState(region);
+  const currentControlCount = region.querySelectorAll<HTMLInputElement>(
+    ".visibility-switch input[type=\"checkbox\"]",
+  ).length;
+  const parsedLayerCount = Number.parseInt(region.dataset.layerCount ?? "", 10);
+  const layerCount = Number.isFinite(parsedLayerCount) ? parsedLayerCount : currentControlCount;
+  const filtered = currentControlCount !== layerCount;
+  const requestedCount = region.dataset.requestedCount ?? "0";
+  const timeCompatibleCount = region.dataset.timeCompatibleCount ?? "0";
+  const year = region.dataset.year;
+
   region.dataset.scrollable = String(state.scrollable);
   region.dataset.atStart = String(state.atStart);
   region.dataset.atEnd = String(state.atEnd);
+  region.dataset.currentControlCount = String(currentControlCount);
+  region.setAttribute(
+    "aria-label",
+    `Layer catalog: ${currentControlCount} ${filtered ? "current controls" : "controls"}${filtered ? ` from ${layerCount} registered layers` : ""}; ${requestedCount} requested visible; ${timeCompatibleCount} time-compatible${year ? ` at ${year}` : ""}. Scroll to reach all current matches.`,
+  );
 }
 
 /** Progressively expose the existing full catalog as one keyboard-scrollable region.
@@ -116,8 +132,7 @@ export default function SiteLayerLibrary(props: Props) {
     region.dataset.layerCount = String(props.layers.length);
     region.dataset.requestedCount = String(requestedCount);
     region.dataset.timeCompatibleCount = String(timeCompatibleCount);
-    region.setAttribute("aria-label",
-      `Layer catalog: ${props.layers.length} controls; ${requestedCount} requested visible; ${timeCompatibleCount} time-compatible at ${props.year}. Scroll to reach every layer.`);
+    region.dataset.year = String(props.year);
     syncCatalogScrollState(region);
   }, [props.layers.length, props.year, requestedCount, timeCompatibleCount]);
 
@@ -172,7 +187,7 @@ export default function SiteLayerLibrary(props: Props) {
     <span ref={host} className="site-layer-library-host" aria-label="Inspected fixture layer library" />
     <span className="site-layer-library-summary" role="status" aria-live="polite"
       aria-label={`${requestedCount} layers requested visible; ${timeCompatibleCount} time-compatible at ${props.year}; renderer delivery remains held.`}>
-      <span><strong>{requestedCount}</strong> requested</span><i aria-hidden="true">·</i><span><strong>{timeCompatibleCount}</strong> time match</span>
+      <span><strong>{requestedCount}</strong> requested</span><span className="site-layer-library-divider" aria-hidden="true">·</span><span><strong>{timeCompatibleCount}</strong> time match</span>
     </span>
   </span>;
 }
