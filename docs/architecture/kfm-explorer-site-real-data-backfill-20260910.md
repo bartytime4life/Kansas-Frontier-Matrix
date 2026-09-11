@@ -29,12 +29,12 @@ This record backfills the governed real-data work completed in the existing Kans
 |---|---|
 | Repository baseline | `bartytime4life/Kansas-Frontier-Matrix` `main@47de77deb845bbba948c66566d9b88696cb14f8b` |
 | Site | [kansas-frontier-matrix-explorer](https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site) |
-| Site saved version | 23 (current checkpoint; version 22 is the prior saved checkpoint) |
-| Site source commit | `f48e4b19b79973ec0acb8e668ad2ba2c50564eec` |
+| Site saved version | 24 (current checkpoint; version 23 is the prior saved checkpoint) |
+| Site source commit | `acf6499d99bd1b7c131e79b17735f95145ef808f` |
 | Site deployment state | Not deployed by this change; the owner-only Site remains the current delivery surface |
 | GitHub backfill state | PR #4463 is closed; this branch contains the updated documentation; no new PR was opened by this alignment |
 
-The Site checkpoint passed `npm run build`, `npm test` (36 tests), `npx tsc --noEmit`, and scoped ESLint for all changed files with zero errors. Version 22 adds the visible priority context control deck and a clear `Controls` affordance on registry layer rows. Version 23 adds the typed feature, connection, action, code-surface, route, and cross-reference validation registries. Full-project lint remains blocked by two pre-existing React effect errors in `app/observatory/workspace.tsx`; this change did not broaden that lint debt. Browser QA was not performed.
+The Site checkpoint passed `npm run build`, `npm test` (37 tests), `npx tsc --noEmit`, and scoped ESLint for all changed files with zero errors. Version 22 adds the visible priority context control deck and a clear `Controls` affordance on registry layer rows. Version 23 adds the typed feature, connection, action, code-surface, route, and cross-reference validation registries. Version 24 fixes the narrow-panel Layer Catalog layout: the catalog now owns one vertical scroll surface, the nested official-source scrollbar no longer crowds out the registry list, the Layers badge shows active/available counts, and shortcut controls target registered layers, priority earthquake/water/smoke context, and all source controls. Full-project lint remains blocked by two pre-existing React effect errors in `app/observatory/workspace.tsx`; this change did not broaden that lint debt. Browser QA was not performed.
 
 ## Site capability map
 
@@ -85,6 +85,13 @@ Version 23 adds a small typed registry layer inside the Site so the visible prod
 - `docs/SITE_FEATURE_CONNECTION_ACTION_MAP.md` records the alignment contract and held integration gates.
 
 The registry is traceability infrastructure. It does not add an arbitrary upstream URL path, activate Raspberry Shake waveforms, activate the fixture-only LiDAR lineage contract, change KFM source admission, or authorize deployment/publication.
+
+## Layer Catalog visibility correction
+
+Version 24 addresses the narrow-panel failure mode shown in the Layer Catalog capture. Previously, the official operational-context card and the registry layer list competed inside nested flex/scroll containers, so the source-detail disclosure could occupy the visible area while the other layer toggles collapsed below the panel. The fix gives the catalog body one vertical scroll surface, keeps the official context card and registry groups at natural height, and adds explicit shortcuts for registered layers, priority earthquake/water/smoke context, and all source controls. The registry rows retain their direct visibility toggles plus the existing opacity, zoom, feature, solo, and draw-order controls.
+
+This is a UI reliability and discoverability correction only. It does not change provider roles, evidence admission, hazard interpretation, source freshness, release state, or deployment state.
+
 ## Reliability controls
 
 The Site-side adapters use fixed provider allowlists, bounded geographic/time queries, response-size limits, strict parsers, caps on features/vertices/stations, finite cache windows, explicit provider/source identity, and no silent fallback from real context to synthetic data. The UI preserves the distinction between a provider's current context, a historical frame, a model output, and an unavailable source.
