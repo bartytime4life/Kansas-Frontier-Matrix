@@ -1,0 +1,131 @@
+# Temporary diagnostic transport only. DO NOT MERGE. Remove after evidence capture.
+# ADR-0029: .github owns orchestration; no scanner/baseline/authority changes.
+# User continuation authorizes bounded branch diagnosis, not readiness or release.
+name: kfm-topology-exact-pair-diagnostic
+"on":
+  push:
+    branches: [agent/topology-exact-pair-diagnostic-20260911]
+permissions:
+  contents: read
+concurrency:
+  group: kfm-topology-exact-pair-diagnostic-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  paired-native-scan:
+    if: ${{ github.repository == 'bartytime4life/Kansas-Frontier-Matrix' && github.ref == 'refs/heads/agent/topology-exact-pair-diagnostic-20260911' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out literal base without retained credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: 319fba274b9240128d10d9830c9f6d88c96d386d
+          path: base
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Check out literal head without retained credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: 8098630620e3b978407e3e0717e09625123ae8aa
+          path: head
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Set up Python 3.11 without package installation
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: "3.11"
+      - name: Pin bytes then run native tests and paired scans
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -B - <<'PY'
+          """One-shot read-only scanner attribution. Diagnostic transport, never a gate waiver."""
+          import ast
+          from datetime import datetime, timezone
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+          import subprocess
+          import sys
+          import tempfile
+          
+          BASE = "319fba274b9240128d10d9830c9f6d88c96d386d"
+          HEAD = "8098630620e3b978407e3e0717e09625123ae8aa"
+          SCANNER = "tools/validators/directory_governance/validate_repository_topology.py"
+          BASELINE = "tools/validators/directory_governance/repository_topology_baseline.json"
+          SCANNER_BLOB = "b7cbbb531d74af88ed79cdf8d153d261bcfaa6a3"
+          BASELINE_BLOB = "cb654a1b89e83cedc681a7b66d05ecaa0da3517a"
+          INPUTS = (SCANNER, BASELINE, "control_plane/root_registry.yaml", "control_plane/path_alias_register.yaml", "docs/doctrine/directory-rules.md", "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md")
+          
+          def emit(label, value):
+              # ASCII JSON escapes controls; escaping command introducers prevents runner injection.
+              encoded = json.dumps(value, ensure_ascii=True, sort_keys=True)
+              encoded = encoded.replace("::", r"\u003a\u003a").replace("#", r"\u0023")
+              print(label + " " + encoded, flush=True)
+          
+          def digest(raw):
+              return hashlib.sha256(raw).hexdigest()
+          
+          with tempfile.TemporaryDirectory(prefix="kfm-pair-env-") as tmp:
+              env = {"PATH": os.defpath, "HOME": tmp, "TMPDIR": tmp, "LANG": "C.UTF-8", "LC_ALL": "C.UTF-8", "TZ": "UTC", "PYTHONDONTWRITEBYTECODE": "1", "PYTHONHASHSEED": "0", "KFM_NO_NETWORK": "1", "GIT_CONFIG_GLOBAL": os.devnull, "GIT_CONFIG_NOSYSTEM": "1", "GIT_OPTIONAL_LOCKS": "0", "GIT_TERMINAL_PROMPT": "0", "GIT_NO_REPLACE_OBJECTS": "1"}
+              def run(root, argv):
+                  with tempfile.TemporaryFile() as out, tempfile.TemporaryFile() as err:
+                      p = subprocess.run(argv, cwd=root, env=env, stdin=subprocess.DEVNULL, stdout=out, stderr=err, timeout=180, check=False)
+                      out.seek(0); err.seek(0)
+                      a, b = out.read(4194305), err.read(4194305)
+                  if len(a) + len(b) > 4194304:
+                      raise RuntimeError("CAPTURE_BUDGET_EXCEEDED")
+                  return p.returncode, a, b
+              def git(root, *args):
+                  rc, out, _ = run(root, ["git", "--no-replace-objects", "-c", "core.hooksPath=/dev/null", *args])
+                  if rc: raise RuntimeError("GIT_READ_FAILED")
+                  return out
+              reports = []
+              input_sets = []
+              unit_exits = []
+              scan_exits = []
+              dates = []
+              emit("TRANSPORT", {"workflow_sha": os.environ["GITHUB_SHA"], "run_id": os.environ["GITHUB_RUN_ID"], "run_attempt": os.environ["GITHUB_RUN_ATTEMPT"], "python": sys.version, "base": BASE, "head": HEAD, "no_network_sandbox_claim": False})
+              for label, sha in (("base", BASE), ("head", HEAD)):
+                  root = Path(label).resolve(strict=True)
+                  assert git(root, "rev-parse", "HEAD").decode().strip() == sha
+                  before = git(root, "status", "--porcelain=v1", "-z", "--untracked-files=all")
+                  assert not before
+                  inputs = {p: git(root, "rev-parse", sha + ":" + p).decode().strip() for p in INPUTS}
+                  assert inputs[SCANNER] == SCANNER_BLOB
+                  assert inputs[BASELINE] == BASELINE_BLOB
+                  for p, oid in inputs.items():
+                      raw = (root / p).read_bytes()
+                      assert hashlib.sha1(b"blob " + str(len(raw)).encode() + b"\0" + raw).hexdigest() == oid
+                  rules = []
+                  tree = ast.parse((root / SCANNER).read_text())
+                  for node in ast.walk(tree):
+                      if isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and node.func.id == "Rule":
+                          rules.append([ast.literal_eval(a) for a in node.args])
+                  assert len(rules) == 20
+                  emit("SOURCE_" + label, {"commit": sha, "tree": git(root, "rev-parse", "HEAD^{tree}").decode().strip(), "inputs": inputs, "scanner_sha256": digest((root / SCANNER).read_bytes()), "rules": rules})
+                  unit, out, err = run(root, [sys.executable, "-B", "-m", "unittest", "discover", "--start-directory", "tests/validators/directory_governance", "--pattern", "test_validate_*topology.py", "--verbose"])
+                  emit("UNIT_" + label, {"exit": unit, "stdout_sha256": digest(out), "stderr_sha256": digest(err), "tail": (out + err).decode("utf-8", errors="replace")[-16000:]})
+                  day = datetime.now(timezone.utc).date().isoformat()
+                  rc, raw, err = run(root, [sys.executable, "-I", "-B", SCANNER, "--repo-root", ".", "--format", "json", "--trusted-baseline-ref", BASE])
+                  assert datetime.now(timezone.utc).date().isoformat() == day
+                  report = json.loads(raw)
+                  assert report["schema_version"] == "kfm.repository-topology-report.v1" and report["rule_count"] == 20
+                  assert rc in (0, 1, 2)
+                  expected_exit = {"PASS": 0, "FAIL_INVARIANT": 1, "FAIL_NEW_DRIFT": 1, "HOLD_UNRESOLVED": 1, "ERROR_VALIDATOR": 2}[report["outcome"]]
+                  assert rc == expected_exit
+                  assert report["authority"]["authorizes_repository_write"] is False
+                  failures = [f for f in report.get("findings", []) if f["disposition"] != "BASELINED_WARNING"]
+                  # Exclude evidence digests and evidence members from the log projection.
+                  failures = [{k: f[k] for k in ("disposition", "rule_id", "subject", "fingerprint")} for f in failures]
+                  entries = {e["fingerprint"]: e for e in json.loads((root / BASELINE).read_bytes())["entries"]}
+                  stale = [{k: entries[fp][k] for k in ("rule_id", "subject", "fingerprint")} for fp in report.get("baseline", {}).get("stale_fingerprints", [])]
+                  emit("SCAN_" + label, {"exit": rc, "outcome": report["outcome"], "counts": report.get("counts"), "tracked_path_count": report.get("tracked_path_count"), "stdout_sha256": digest(raw), "stderr_sha256": digest(err), "failures": failures, "stale": stale})
+                  assert git(root, "status", "--porcelain=v1", "-z", "--untracked-files=all") == before
+                  reports.append(report); input_sets.append(inputs); unit_exits.append(unit); scan_exits.append(rc); dates.append(day)
+              same_inputs = input_sets[0] == input_sets[1] and dates[0] == dates[1]
+              emit("COMPARISON", {"same_inputs_and_date": same_inputs, "identical_complete_findings": reports[0].get("findings") == reports[1].get("findings"), "identical_stale_fingerprints": reports[0].get("baseline", {}).get("stale_fingerprints") == reports[1].get("baseline", {}).get("stale_fingerprints"), "native_exits": scan_exits, "unit_exits": unit_exits, "both_tracked_trees_unchanged": True, "authorizes_waiver_merge_release": False})
+              # Successful comparison does not turn a native rejection into success.
+              sys.exit(2 if not same_inputs or any(unit_exits) else max(scan_exits))
+          PY
