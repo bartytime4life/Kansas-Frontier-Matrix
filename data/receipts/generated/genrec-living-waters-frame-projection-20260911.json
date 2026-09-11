@@ -1,0 +1,128 @@
+{
+  "receipt_id": "genrec-living-waters-frame-projection-20260911",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/explorer-web/src/features/living_atlas/living-waters-fixture.ts",
+    "apps/explorer-web/tests/living-waters-fixture.test.ts",
+    "apps/explorer-web/src/features/living_atlas/index.ts",
+    "apps/explorer-web/src/features/living_atlas/README.md"
+  ],
+  "artifact_hashes": {
+    "apps/explorer-web/src/features/living_atlas/living-waters-fixture.ts": "sha256:0d2ce35cb37d03880a8f318e20c58a0398996a68fb0022618949569d809b74f7",
+    "apps/explorer-web/tests/living-waters-fixture.test.ts": "sha256:59cb0d7f292754e159320d71cfdae9fcc0220f84c8cab41920ec9446f921aa06",
+    "apps/explorer-web/src/features/living_atlas/index.ts": "sha256:ed76fac3e260947c332b8f333ffa6e9012086d8f12fdce89cd7af1622c292f7b",
+    "apps/explorer-web/src/features/living_atlas/README.md": "sha256:0d793854d0b5c1388945abb9f4a446b2f39f1630f9e4de2fc95d68c05af1845e"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-5)",
+    "version": "2026-08-03"
+  },
+  "prompt_or_contract": "sha256:cc83debd81679f61f7d94b4f460c94706c6a703d3eb745f6ef90c862c27d2bc8",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "static TypeScript source check",
+      "static byte and hash checks"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Full_Atlas_seed_cards.md",
+      "GIS in Sustainable Urban Planning and Management.pdf",
+      "Archaeological 3D GIS.pdf",
+      "mastering-postgis-modern-ways-to-create-analyze-and-implement-spatial-data.pdf",
+      "A Practical Guide to Geostatistical Mapping, 2nd Edition.pdf",
+      "a-primer-of-gis-fundamental-geographic-and-cartographic-concepts.pdf",
+      "Designing Great Web APIs.pdf",
+      "Database Lifecycle Management_ Continuous Delivery for Databases.pdf",
+      "Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf",
+      "KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf",
+      "Kansas_Frontier_Matrix_Pipeline_Living_Implementation_Manual_v0.3.pdf",
+      "Master MapLibre Components-Functions-Features.pdf",
+      "maplibre3d.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/319fba274b9240128d10d9830c9f6d88c96d386d",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/319fba274b9240128d10d9830c9f6d88c96d386d/fixtures/contracts/v1/domains/hydrology/living_waters_fixture_packet/valid/first_proof.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/319fba274b9240128d10d9830c9f6d88c96d386d/schemas/contracts/v1/domains/hydrology/living_waters_fixture_packet.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/319fba274b9240128d10d9830c9f6d88c96d386d/apps/explorer-web/src/features/living_atlas/types.ts",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/319fba274b9240128d10d9830c9f6d88c96d386d/apps/explorer-web/tests/living-atlas.test.ts",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/319fba274b9240128d10d9830c9f6d88c96d386d/docs/reports/kfm-explorer-layers-animation-3d-performance-roadmap-20260911.md"
+    ]
+  },
+  "truth_labels": {
+    "canonical-fixture-and-schema": "CONFIRMED",
+    "app-local-projection-shape": "PROPOSED",
+    "source-admission-release-and-publication": "NEEDS VERIFICATION",
+    "full-app-build-and-browser-execution": "UNKNOWN"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-head-and-fixture-contract-preflight",
+      "outcome": "PASS",
+      "reason": "Re-pinned current main at 319fba274b and inspected the canonical Living Waters fixture, hydrology schema, existing Living Atlas types, registry, and tests before authoring."
+    },
+    {
+      "gate": "projector-typescript-standalone-check",
+      "outcome": "PASS",
+      "reason": "The new renderer-neutral projector passed a strict noEmit TypeScript 7.0.2 source check with ES2023 and Bundler module resolution."
+    },
+    {
+      "gate": "remote-byte-integrity",
+      "outcome": "PASS",
+      "reason": "Remote reads matched the drafted source, test, and export bytes exactly; the README was written from the current remote file and its final local hash is bound above."
+    },
+    {
+      "gate": "full-explorer-build-and-vitest-suite",
+      "outcome": "SKIPPED",
+      "reason": "A complete current-main checkout with the locked install and the new branch was not available in this scratch session; no full app build or Vitest result is claimed."
+    },
+    {
+      "gate": "source-activation-runtime-release-publication",
+      "outcome": "SKIPPED",
+      "reason": "The projector accepts only the closed synthetic packet and keeps source admission, release, publication, visibility, and renderer binding false."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the pull request."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "living-waters-fixture",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/319fba274b9240128d10d9830c9f6d88c96d386d/fixtures/contracts/v1/domains/hydrology/living_waters_fixture_packet/valid/first_proof.json"
+    },
+    {
+      "id": "living-waters-fixture-schema",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/319fba274b9240128d10d9830c9f6d88c96d386d/schemas/contracts/v1/domains/hydrology/living_waters_fixture_packet.schema.json"
+    },
+    {
+      "id": "living-atlas-ui-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/319fba274b9240128d10d9830c9f6d88c96d386d/apps/explorer-web/src/features/living_atlas/types.ts"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-11T18:30:15.000Z",
+  "emitter": "openai/codex-gpt-5",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored fixture-first implementation slice for the Kansas-first Explorer. The projection is deliberately non-authoritative: it accepts only the closed synthetic Living Waters packet, preserves explicit finite states, carries no EvidenceBundle reference, and cannot activate a source, make a release, bind a renderer, or publish a map. The receipt records provenance and reported checks; it is not approval, proof of live hydrology, merge authorization, release authorization, or publication authority."
+}
