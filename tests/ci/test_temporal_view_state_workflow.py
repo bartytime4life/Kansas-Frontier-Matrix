@@ -23,6 +23,7 @@ REQUIRED_INPUTS = (
     "apps/explorer-web/tests/temporal-kernel.test.ts",
     "apps/explorer-web/tests/temporal-boundary-regression.test.ts",
     "apps/explorer-web/tests/workspace-context.test.ts",
+    "apps/explorer-web/tests/workspace-context-temporal.test.ts",
     "apps/explorer-web/package.json",
     "package.json",
     "pnpm-workspace.yaml",
@@ -41,7 +42,8 @@ EXPLORER_COMMANDS = (
     "pnpm install --frozen-lockfile --filter explorer-web...",
     "pnpm --filter explorer-web build",
     "set -euo pipefail pnpm exec vitest run tests/temporal-kernel.test.ts "
-    "tests/temporal-boundary-regression.test.ts tests/workspace-context.test.ts",
+    "tests/temporal-boundary-regression.test.ts tests/workspace-context.test.ts "
+    "tests/workspace-context-temporal.test.ts",
 )
 
 
@@ -107,6 +109,7 @@ def test_committed_temporal_workflow_preserves_coverage_and_safety() -> None:
     "tests/ci/test_temporal_view_state_workflow.py",
     "tests/validators/test_validate_temporal_view_state_expectations.py",
     "apps/explorer-web/tests/workspace-context.test.ts",
+    "apps/explorer-web/tests/workspace-context-temporal.test.ts",
     "apps/explorer-web/tests/temporal-boundary-regression.test.ts",
 ))
 def test_omitted_regression_trigger_is_rejected(event: str, path: str) -> None:
@@ -153,5 +156,15 @@ def test_bootstrap_and_permission_regressions_are_rejected(mutation: str) -> Non
         workflow["env"]["COREPACK_INTEGRITY_KEYS"] = "0"
     else:
         steps[0]["with"]["persist-credentials"] = True
+    with pytest.raises(AssertionError):
+        _assert_contract(workflow)
+
+
+def test_omitted_calendar_test_argument_is_rejected() -> None:
+    """Trigger coverage alone must not mask omitted calendar-test execution."""
+    workflow = _workflow()
+    steps = workflow["jobs"][EXPLORER_JOB]["steps"]
+    step = next(step for step in steps if _normalized(step.get("run", "")) == EXPLORER_COMMANDS[-1])
+    step["run"] = step["run"].replace("tests/workspace-context-temporal.test.ts", "")
     with pytest.raises(AssertionError):
         _assert_contract(workflow)

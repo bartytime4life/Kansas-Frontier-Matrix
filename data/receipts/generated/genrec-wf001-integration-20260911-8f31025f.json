@@ -1,0 +1,124 @@
+{
+  "contract_version": "3.0.0",
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Astra Pro",
+    "version": "UNKNOWN; runtime build identifier unavailable"
+  },
+  "prompt_or_contract": "sha256:c4115c5a3b0b676f5cdf6507c45157da59bb787e9274c3efbf1ec3a7a41b57fb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "Google Drive",
+      "Notion",
+      "container"
+    ]
+  },
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "accepted-directory-authority",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b44494c1cf0807ed28b606e8a41b255bebdf4ad7/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "generated-work-provenance-lane",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b44494c1cf0807ed28b606e8a41b255bebdf4ad7/data/receipts/generated/README.md"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-11T17:58:49Z",
+  "emitter": "ChatGPT KFM cross-chat validation reconciliation",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "receipt_id": "genrec-wf001-integration-20260911-8f31025f",
+  "artifact_paths": [
+    "tools/validators/governance/validate_workflow_security.py",
+    "tests/validators/governance/test_validate_workflow_security.py",
+    "tools/validators/governance/README.md",
+    ".github/workflows/security.yml"
+  ],
+  "artifact_hashes": {
+    "tools/validators/governance/validate_workflow_security.py": "sha256:8f31025f66d71397ec43a118d1ea0e12c09bc7ecf56a5f08f0a5324270c58a5d",
+    "tests/validators/governance/test_validate_workflow_security.py": "sha256:ba8f927a7394fe6961000b2daf2f6a61a6916612fc1a17f79eefc559b3397369",
+    "tools/validators/governance/README.md": "sha256:53bb248c1b917513f6de565f910ddf8e8366fc5d81d28c690b58065a930d96f3",
+    ".github/workflows/security.yml": "sha256:de7d195f971d39f890df941f40bd4647213ea01544ea0a40b1716d06c3e0789e"
+  },
+  "truth_labels": {
+    "tools/validators/governance/validate_workflow_security.py": "CONFIRMED",
+    "tests/validators/governance/test_validate_workflow_security.py": "CONFIRMED",
+    "tools/validators/governance/README.md": "CONFIRMED",
+    ".github/workflows/security.yml": "CONFIRMED"
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:ec0fe2c6563604032cb2c1832cc120637b95bfd44f13b135314e33469dd7b957"
+    ],
+    "attached_docs": [
+      "KFM_M06_WF001_Separator_Review_a86e3a9_2026-09-10.zip"
+    ],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/b44494c1cf0807ed28b606e8a41b255bebdf4ad7",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b44494c1cf0807ed28b606e8a41b255bebdf4ad7/CONTRIBUTING.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b44494c1cf0807ed28b606e8a41b255bebdf4ad7/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b44494c1cf0807ed28b606e8a41b255bebdf4ad7/docs/doctrine/directory-rules.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b44494c1cf0807ed28b606e8a41b255bebdf4ad7/docs/doctrine/ai-build-operating-contract.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b44494c1cf0807ed28b606e8a41b255bebdf4ad7/data/receipts/generated/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b44494c1cf0807ed28b606e8a41b255bebdf4ad7/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/a86e3a9f58e0153aaff1a8ddb96a176eeaf198c1",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3366#issuecomment-5627630737",
+      "https://drive.google.com/file/d/1M3rGwBb6sz5ihXxLJjxDGi0pCRXKY8JM/view"
+    ]
+  },
+  "validation_gates": [
+    {
+      "gate": "preserved-parser-and-tests",
+      "outcome": "PASS",
+      "reason": "The source and test Git blobs e422a3d0d9804ca7f931f637641cc87b8042aef4 and df8b08becff06ad46c844fb7b31a17da5a2aa091 match a86e3a9f58e0153aaff1a8ddb96a176eeaf198c1 exactly. The README retains the original correction guidance unchanged. Prior author/model build is unverified; model_identity describes this continuation, not a claim about the original generation."
+    },
+    {
+      "gate": "fixture-regressions",
+      "outcome": "PASS",
+      "reason": "Fresh exact-source sparse execution: 26 fixture-only unittest methods pass on Python 3.13.5. Two full-repository methods deliberately remain NOT_RUN locally. Side-effect controls reject network entry points, shell/subprocess execution and writes in the exercised scanner boundary."
+    },
+    {
+      "gate": "duplicate-and-separator-replays",
+      "outcome": "PASS",
+      "reason": "Three canonical audit cases change from erroneous PASS to FAIL_INVARIANT; safe control remains PASS. Twelve whitespace-separator cases change from prior-branch PASS to exact KFM-WF-001 / FAIL_INVARIANT / exit 1. No GitHub production-parser or exploit claim is made."
+    },
+    {
+      "gate": "mutation-discrimination",
+      "outcome": "PASS",
+      "reason": "All six deliberate weakenings are detected with assertion failures and zero harness errors: omitted separator normalization, top-level-only detection, omitted inline guard, omitted scope reset, omitted scalar exclusion and waivable input rule. An initial combined local command timed out; the mutation experiment was rerun separately and completed successfully."
+    },
+    {
+      "gate": "security-workflow-enrollment",
+      "outcome": "PASS",
+      "reason": "Parsed old/new workflow comparison proves the only semantic delta is one unconditional, blocking unittest-discovery step before the existing ratchet. It shares the existing local-test environment and passes bash -n. All triggers, jobs, action pins, permissions, downstream scans and aggregate failure handling are unchanged. Both scanner versions report zero findings for the two combined candidate workflow files only."
+    },
+    {
+      "gate": "exact-schema-and-artifact-bindings",
+      "outcome": "PASS",
+      "reason": "Draft 2020-12 plus format checks using jsonschema 4.26.0 against exact schema blob fba21ed27ebccf1362fe397fe0c3ebd85e072685; artifact/hash/truth-map keys and complete SHA-256 digests agree. No approval inferred."
+    },
+    {
+      "gate": "repository-native-and-hosted-validation",
+      "outcome": "SKIPPED",
+      "reason": "At emission no complete Git checkout or locked dependency installation was available: GitHub DNS resolution failed. Native aggregate, exact-head hosted results and independent review remain pending; local projections are not substituted. Subsequent CI evidence belongs in an append-only PR comment, not a rewrite of this historical receipt."
+    }
+  ],
+  "notes": "Preserves the existing branch correction rather than writing a competing YAML parser. The main/branch merge base is 47de77deb845bbba948c66566d9b88696cb14f8b; neither current-main changes nor the calendar correction overlaps these paths. Scanner remains standard-library, local, read-only and non-executing with unchanged stable rule IDs and baseline. The preserved README documents the correction; the existing security workflow now enrolls the complete suite. Hosted execution remains pending at emission. This is not M06 closure, review approval or proof that every YAML form is supported. Rollback uses the reviewed five-file inverse, not a blind reconciliation-merge revert; restoring old scanner bytes reintroduces the known false pass. No new workflow, dependency, baseline waiver, repository setting, live mutation adapter, source activation, release, deployment or publication. OS-level egress isolation is unproved."
+}

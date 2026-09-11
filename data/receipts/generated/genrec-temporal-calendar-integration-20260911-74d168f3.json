@@ -1,0 +1,114 @@
+{
+  "contract_version": "3.0.0",
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Astra Pro",
+    "version": "UNKNOWN; runtime build identifier unavailable"
+  },
+  "prompt_or_contract": "sha256:c4115c5a3b0b676f5cdf6507c45157da59bb787e9274c3efbf1ec3a7a41b57fb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "Google Drive",
+      "Notion",
+      "container"
+    ]
+  },
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "accepted-directory-authority",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b44494c1cf0807ed28b606e8a41b255bebdf4ad7/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "generated-work-provenance-lane",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b44494c1cf0807ed28b606e8a41b255bebdf4ad7/data/receipts/generated/README.md"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-11T17:58:49Z",
+  "emitter": "ChatGPT KFM cross-chat validation reconciliation",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "receipt_id": "genrec-temporal-calendar-integration-20260911-74d168f3",
+  "artifact_paths": [
+    ".github/workflows/temporal-view-state-validation.yml",
+    "tests/ci/test_temporal_view_state_workflow.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/temporal-view-state-validation.yml": "sha256:74d168f3b3489135a70d1b328d47ab4645db59f2472d5c8ec6bfb1bea3264a1e",
+    "tests/ci/test_temporal_view_state_workflow.py": "sha256:25e2c6775f197a8dfa2c5b2a1b10f59b6c7396df2f6e60327ea8d27bb3d14d12"
+  },
+  "truth_labels": {
+    ".github/workflows/temporal-view-state-validation.yml": "CONFIRMED",
+    "tests/ci/test_temporal_view_state_workflow.py": "CONFIRMED"
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:89f9fcd654536f2359f3da4205fcbf186abaef3d77ca212ebc5733eb9f99a14d"
+    ],
+    "attached_docs": [
+      "KFM_temporal_branch_verification_0a3ec681.zip"
+    ],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/b44494c1cf0807ed28b606e8a41b255bebdf4ad7",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b44494c1cf0807ed28b606e8a41b255bebdf4ad7/CONTRIBUTING.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b44494c1cf0807ed28b606e8a41b255bebdf4ad7/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b44494c1cf0807ed28b606e8a41b255bebdf4ad7/docs/doctrine/directory-rules.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b44494c1cf0807ed28b606e8a41b255bebdf4ad7/docs/doctrine/ai-build-operating-contract.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b44494c1cf0807ed28b606e8a41b255bebdf4ad7/data/receipts/generated/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b44494c1cf0807ed28b606e8a41b255bebdf4ad7/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/0a3ec681181174fbbc47d01ac06c943d555f06c7",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3383#issuecomment-5627543502",
+      "https://drive.google.com/file/d/1FVyX1mne2vKRLchxiPAkvh7jGVUFO4Pg/view",
+      "https://app.notion.com/p/3d6a92021bf6816cae0ec1ccbd15e21e"
+    ]
+  },
+  "validation_gates": [
+    {
+      "gate": "temporal-regression-preservation",
+      "outcome": "PASS",
+      "reason": "Exact source/test/README blobs 99b1cfb3d12690dc0e0607b547641b2ca6c87120, 87213070ce1f4d4ef617111533963b029972ae60 and 813c3726bfb09710928151971bde634ae33671bb remain unchanged from 0a3ec681181174fbbc47d01ac06c943d555f06c7. Fresh isolated execution: 130 cases pass separately in UTC, America/Chicago and Pacific/Auckland on Node 22.16.0/TypeScript 5.8.3; unrelated imports are explicit doubles, not pinned Vitest or a browser."
+    },
+    {
+      "gate": "temporal-negative-controls",
+      "outcome": "PASS",
+      "reason": "Audited original source fails 42/130; removed calendar guard fails 36/130; removed expanded-year guard fails 6/130. Each intentional negative exits 1 with no harness error. This PASS describes test discrimination."
+    },
+    {
+      "gate": "focused-workflow-enrollment",
+      "outcome": "PASS",
+      "reason": "Original workflow contract: 26 passed. Updated contract against the old workflow: its positive assertion fails. Corrected candidate: 29 passed on Python 3.13.5/pytest 9.0.2/PyYAML 6.0.3, including omitted-calendar-trigger controls for both events and omitted-calendar-argument control. Existing bootstrap/permission controls remain."
+    },
+    {
+      "gate": "workflow-syntax-and-static-security",
+      "outcome": "PASS",
+      "reason": "Ten temporal shell blocks pass bash -n. Audited and corrected scanners each report zero findings on the two combined candidate workflow files only. No full inventory, GitHub interpretation, OS-level egress isolation or required-check enforcement is implied."
+    },
+    {
+      "gate": "exact-schema-and-artifact-bindings",
+      "outcome": "PASS",
+      "reason": "Draft 2020-12 plus format checks using jsonschema 4.26.0 against exact schema blob fba21ed27ebccf1362fe397fe0c3ebd85e072685; artifact/hash/truth-map keys and complete SHA-256 digests agree. No approval inferred."
+    },
+    {
+      "gate": "repository-native-and-hosted-validation",
+      "outcome": "SKIPPED",
+      "reason": "At emission no complete Git checkout or locked dependency installation was available: GitHub DNS resolution failed. Native aggregate, exact-head hosted results and independent review remain pending; local projections are not substituted. Subsequent CI evidence belongs in an append-only PR comment, not a rewrite of this historical receipt."
+    }
+  ],
+  "notes": "This receipt covers only the new CI enrollment; preserved calendar source, tests and README retain their original genrec-explorer-temporal-calendar-20260910-df222238 receipt unchanged. The recovered branch and main diverged by two versus 57 commits from 47de77deb845bbba948c66566d9b88696cb14f8b with no overlapping changed paths. Existing workflow name, jobs, action pins, read-only permissions, timeouts, frozen install, strict build, finite outcomes and source boundaries are retained. Rollback the two enrollment files and this receipt together; the preserved four-file calendar inverse remains independently reviewable. No model/provider call, source activation, publication, deployment, settings change, ready, approval or merge is authorized."
+}

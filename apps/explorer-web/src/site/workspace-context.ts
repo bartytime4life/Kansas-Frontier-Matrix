@@ -129,8 +129,19 @@ function parseTemporal(value: unknown): string | null | undefined {
   ) {
     return undefined;
   }
+  // Date.parse may roll impossible dates or 24:00 into another day. Validate
+  // the written calendar/clock before applying its offset; retain raw precision.
+  // This UTC round-trip is validation only, not a date-only normalization.
+  const wallClock = value.length === 10 ? `${value}T00:00:00` : value.slice(0, 19);
+  const calendarTime = Date.parse(`${wallClock}Z`);
+  if (
+    !Number.isFinite(calendarTime) ||
+    new Date(calendarTime).toISOString().slice(0, 19) !== wallClock
+  ) {
+    return undefined;
+  }
   const instant = value.length === 10 ? `${value}T00:00:00Z` : value;
-  return Number.isNaN(Date.parse(instant)) ? undefined : value;
+  return Number.isFinite(Date.parse(instant)) ? value : undefined;
 }
 
 function parseNullableId(value: unknown): string | null | undefined {
@@ -374,6 +385,11 @@ function adapterBoundary(raw: string): AdapterBoundaryResult {
     }
 
     const utc = new Date(wholeSecond - offsetMinutes * 60_000).toISOString();
+    // Offset conversion can cross the four-digit-year profile boundary.
+    // Never slice an expanded ISO year into a malformed supported instant.
+    if (!ADAPTER_AWARE_INSTANT.test(utc)) {
+      return adapterFailure("UNSUPPORTED", "NORMALIZED_YEAR_OUT_OF_RANGE");
+    }
     return {
       status: "SUPPORTED",
       code: "OK",

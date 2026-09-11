@@ -464,6 +464,70 @@ def _run_chunks(lines: Sequence[str], jobs: Sequence[Job]) -> tuple[list[tuple[s
     return chunks, frozenset(indexes)
 
 
+def _duplicate_mapping_findings(workflow: Workflow) -> list[Finding]:
+    """Reject ambiguous keys within each mapping of the canonical YAML subset.
+
+    Sequence items start fresh mappings; sibling jobs/steps may reuse keys.
+    Track scalar bodies here rather than using run_line_indexes: a leading
+    ``- run:`` must not hide subsequent mapping keys at the step-key indent.
+    This is not a general YAML parser and does not execute or load content.
+    """
+
+    findings: list[Finding] = []
+    scopes: list[tuple[int, set[str]]] = []
+    scalar_indent: int | None = None
+    for index, line in enumerate(workflow.lines):
+        if not _is_content(line):
+            continue
+        indent = _indent(line)
+        if scalar_indent is not None and indent > scalar_indent:
+            continue
+        scalar_indent = None
+        stripped = _strip_inline_comment(line.lstrip(" "))
+        item = re.match(r"^-(?: +|$)", stripped)
+        # A dash ends the previous item, including any nested child mapping.
+        while scopes and scopes[-1][0] > indent:
+            scopes.pop()
+        if item:
+            indent += item.end()
+            stripped = stripped[item.end() :]
+        # Separation before ':' does not change a plain key's identity.
+        # Normalize only for ambiguity detection, not semantic interpretation.
+        key_line = re.sub(
+            r"^([A-Za-z_][A-Za-z0-9_-]*)[ \t]+:", r"\1:", stripped, count=1
+        )
+        parsed = _key(key_line)
+        if not parsed:
+            continue
+        if not scopes or scopes[-1][0] < indent:
+            scopes.append((indent, set()))
+        key, value = parsed
+        seen = scopes[-1][1]
+        if key in seen:
+            reason = "DUPLICATE_TOP_LEVEL_KEY" if indent == 0 else "DUPLICATE_MAPPING_KEY"
+            findings.append(
+                _finding(
+                    "KFM-WF-001", workflow.path, f"yaml-line={index + 1}",
+                    f"{reason}:{key}", index + 1,
+                )
+            )
+        seen.add(key)
+        value = value.strip()
+        if value in {"|", "|-", "|+", ">", ">-", ">+"}:
+            scalar_indent = indent
+        if key in {"permissions", "with"} and value.startswith("{"):
+            # The existing flat-map parser rejects duplicate members. Do not
+            # let its None result fall back to partially interpreted security.
+            if _inline_mapping(value) is None:
+                findings.append(
+                    _finding(
+                        "KFM-WF-001", workflow.path, f"yaml-line={index + 1}",
+                        f"AMBIGUOUS_INLINE_MAPPING:{key}", index + 1,
+                    )
+                )
+    return findings
+
+
 def _structural_findings(workflow: Workflow) -> list[Finding]:
     """Reject YAML features outside the scanner's canonical, reviewed subset.
 
@@ -472,8 +536,7 @@ def _structural_findings(workflow: Workflow) -> list[Finding]:
     scanner must never partially interpret those constructs and report PASS.
     """
 
-    findings: list[Finding] = []
-    top_keys: dict[str, int] = {}
+    findings = _duplicate_mapping_findings(workflow)
     jobs_index = _top_key_index(workflow.lines, "jobs")
     jobs_end = (
         _section_end(workflow.lines, jobs_index, 0)
@@ -518,20 +581,6 @@ def _structural_findings(workflow: Workflow) -> list[Finding]:
                     index + 1,
                 )
             )
-        parsed = _key(line, 0)
-        if parsed:
-            key = parsed[0]
-            if key in top_keys:
-                findings.append(
-                    _finding(
-                        "KFM-WF-001",
-                        workflow.path,
-                        f"yaml-line={index + 1}",
-                        f"DUPLICATE_TOP_LEVEL_KEY:{key}",
-                        index + 1,
-                    )
-                )
-            top_keys[key] = index + 1
         if stripped in {"---", "..."} or stripped.startswith("%YAML"):
             findings.append(
                 _finding("KFM-WF-001", workflow.path, f"yaml-line={index + 1}", "YAML_DOCUMENT_DIRECTIVE_DENIED", index + 1)
