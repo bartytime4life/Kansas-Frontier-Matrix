@@ -132,8 +132,9 @@ const sampleRateFrom = (factor: number, multiplier: number) => {
     * Math.pow(Math.abs(multiplier), multiplier / Math.abs(multiplier));
 };
 
-const isoFromBTime = (year: number, day: number, hour: number, minute: number, second: number, tenth: number) => {
-  const epoch = Date.UTC(year, 0, 1, hour, minute, second, 0) + (day - 1) * 86_400_000 + tenth * 100;
+const isoFromBTime = (year: number, day: number, hour: number, minute: number, second: number, fraction: number) => {
+  // MiniSEED BTime stores fractional seconds in 10,000ths (0.1 ms), not tenths.
+  const epoch = Date.UTC(year, 0, 1, hour, minute, second, 0) + (day - 1) * 86_400_000 + fraction / 10;
   const date = new Date(epoch);
   if (!Number.isFinite(date.getTime())) throw new Error("MiniSEED start time is not representable.");
   return { epochMs: epoch, iso: date.toISOString() };
@@ -235,7 +236,7 @@ const parseRecord = (bytes: ArrayBuffer, offset: number): { record: ParsedRecord
   if (offset + recordSize > bytes.byteLength) throw new Error("MiniSEED record is truncated at its declared record length.");
   if (!Number.isFinite(sampleRate) || sampleRate <= 0 || sampleRate > 2_000) throw new Error("MiniSEED sample rate is outside the bounded preview range.");
   const start = isoFromBTime(year, day, hour, minute, second, tenth);
-  const startEpochMs = start.epochMs + microseconds / 1_000;
+  const startEpochMs = start.epochMs + microseconds / 10_000;
   const startTime = new Date(startEpochMs).toISOString();
   const endEpochMs = sampleCount > 0 ? startEpochMs + ((sampleCount - 1) / sampleRate) * 1_000 : startEpochMs;
   const endTime = new Date(endEpochMs).toISOString();
