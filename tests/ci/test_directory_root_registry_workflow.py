@@ -2,7 +2,9 @@
 
 The shell tests execute committed run blocks with a recording Python substitute.
 They do not execute the receipt validator or contact GitHub. Native integrity is
-checked separately by the workflow at the actual checkout.
+checked separately by the workflow at the actual checkout. The exact writer
+branch is a bounded CI delivery route, not PR-state or publication authority.
+Retire its trigger through a successor receipt, never by rewriting old hashes.
 """
 from __future__ import annotations
 
@@ -23,9 +25,12 @@ HELPER = "tools/validators/validate_generated_receipt.py"
 PREFIX = "data/receipts/generated/"
 HISTORICAL = PREFIX + "genrec-directory-root-registry-current-binding-20260815.json"
 ANCESTOR = "8d235ebc6e7e80704c0f3f93d7c04e338af6a9a1"
+REPAIR = PREFIX + "genrec-directory-root-registry-replay-20260911.json"
+REPAIR_ANCESTOR = "392f514401030c5c06bd3498eafbfc9a2eef0fe3"
+NATIVE_STEP = "Run native diagnostic regression module"
 CURRENT = (
     PREFIX + "genrec-topology-diagnostic-log-safety-20260911.json",
-    PREFIX + "genrec-directory-root-registry-replay-20260911.json",
+    PREFIX + "genrec-directory-root-registry-native-ci-20260911.json",
 )
 HISTORICAL_STEP = "Replay historical root-registry authoring receipt"
 CURRENT_STEP = "Verify current diagnostic and workflow authoring receipts"
@@ -72,7 +77,8 @@ class DirectoryRootRegistryWorkflowTests(unittest.TestCase):
 
     def test_read_only_event_and_job_boundary(self) -> None:
         self.assertEqual({"pull_request", "push", "workflow_dispatch"}, set(self.workflow["on"]))
-        self.assertEqual(["main"], self.workflow["on"]["push"]["branches"])
+        self.assertEqual(["main", "agent/topology-diagnostic-log-safety-20260911"],
+                         self.workflow["on"]["push"]["branches"])
         self.assertEqual({"contents": "read"}, self.workflow["permissions"])
         self.assertNotIn("permissions", self.job)
         self.assertEqual(10, self.job["timeout-minutes"])
@@ -94,7 +100,7 @@ class DirectoryRootRegistryWorkflowTests(unittest.TestCase):
             "tools/ci/install_python_ci.py", "tools/ci/python-test.lock",
             "tools/ci/python-dependency-lock-migration.json", "pyproject.toml",
             "tests/validators/directory_governance/test_validate_output_security_topology.py",
-            HISTORICAL, *CURRENT,
+            HISTORICAL, REPAIR, *CURRENT,
         ]
         for event in ("pull_request", "push"):
             patterns = self.workflow["on"][event]["paths"]
@@ -128,15 +134,17 @@ class DirectoryRootRegistryWorkflowTests(unittest.TestCase):
 
     def test_historical_argv_is_exact_and_ancestor_pinned(self) -> None:
         code, calls = _run(self.steps[HISTORICAL_STEP]["run"])
-        self.assertEqual((0, [[HELPER, HISTORICAL, "--repo-root", ".", "--artifact-git-ref", ANCESTOR]]),
-                         (code, calls))
+        self.assertEqual((0, [
+            [HELPER, HISTORICAL, "--repo-root", ".", "--artifact-git-ref", ANCESTOR],
+            [HELPER, REPAIR, "--repo-root", ".", "--artifact-git-ref", REPAIR_ANCESTOR],
+        ]), (code, calls))
 
     def test_current_artifacts_never_use_historical_replay(self) -> None:
         code, calls = _run(self.steps[CURRENT_STEP]["run"])
         self.assertEqual((0, [[HELPER, p, "--repo-root", "."] for p in CURRENT]), (code, calls))
 
     def test_every_receipt_failure_propagates_and_stops_later_commands(self) -> None:
-        for name, count in ((HISTORICAL_STEP, 1), (CURRENT_STEP, 2)):
+        for name, count in ((HISTORICAL_STEP, 2), (CURRENT_STEP, 2)):
             for fail_at in range(count):
                 with self.subTest(step=name, fail_at=fail_at):
                     code, calls = _run(self.steps[name]["run"], fail_at)
@@ -163,6 +171,74 @@ class DirectoryRootRegistryWorkflowTests(unittest.TestCase):
         for path in paths:
             self.assertEqual("sha256:" + hashlib.sha256((ROOT / path).read_bytes()).hexdigest(),
                              receipt["artifact_hashes"][path])
+
+
+    def test_native_diagnostic_module_is_required_before_registry_gates(self) -> None:
+        step = self.steps[NATIVE_STEP]
+        code, calls = _run(step["run"])
+        self.assertEqual((0, [["-m", "unittest", "discover", "--start-directory",
+                              "tests/validators/directory_governance", "--pattern",
+                              "test_validate_output_security_topology.py", "--verbose"]]),
+                         (code, calls))
+        self.assertEqual({"name", "run"}, set(step))
+        names = [s["name"] for s in self.job["steps"]]
+        self.assertLess(names.index("Install declared schema and test dependencies"),
+                        names.index(NATIVE_STEP))
+        for gate in ("Run focused deterministic no-network tests", "Validate fixture polarity",
+                     "Validate current register against current top-level roots", HISTORICAL_STEP):
+            self.assertLess(names.index(NATIVE_STEP), names.index(gate))
+
+    def test_every_test_step_propagates_failure(self) -> None:
+        for name in (NATIVE_STEP, "Run focused deterministic no-network tests",
+                     "Test receipt replay workflow boundary"):
+            with self.subTest(step=name):
+                step = self.steps[name]
+                self.assertEqual({"name", "run"}, set(step))
+                self.assertEqual(23, _run(step["run"], fail_at=0)[0])
+                self.assertTrue(step["run"].startswith("set -euo pipefail\n"))
+
+    def test_exact_step_inventory_and_no_optional_job(self) -> None:
+        names = [s["name"] for s in self.job["steps"]]
+        self.assertEqual(len(names), len(set(names)))
+        self.assertEqual({
+            "Check out tested revision without persisted credentials", "Set up repository Python",
+            "Record tested checkout identity", "Install declared schema and test dependencies",
+            NATIVE_STEP, "Run focused deterministic no-network tests",
+            "Test receipt replay workflow boundary", "Validate fixture polarity",
+            "Validate current register against current top-level roots", HISTORICAL_STEP,
+            CURRENT_STEP, "Verify tracked worktree stayed unchanged", "Record trust boundary",
+        }, set(names))
+        self.assertNotIn("if", self.job)
+        self.assertNotIn("continue-on-error", self.job)
+
+    def test_pinned_runtime_and_existing_bootstrap_without_publish_surfaces(self) -> None:
+        python = self.steps["Set up repository Python"]
+        self.assertEqual("actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97",
+                         python["uses"])
+        self.assertEqual("3.11", python["with"]["python-version"])
+        self.assertEqual("python tools/ci/install_python_ci.py project-test",
+                         self.steps["Install declared schema and test dependencies"]["run"])
+        self.assertEqual(2, sum("uses" in step for step in self.job["steps"]))
+        text = WORKFLOW.read_text(encoding="utf-8")
+        for forbidden in ("secrets.", "id-token:", "git push", "gh pr", "gh api", "curl ",
+                          "wget ", "upload-artifact", "workflow_run:", "pull_request_target:"):
+            self.assertNotIn(forbidden, text)
+
+    def test_checkout_identity_is_logged_without_switching_refs(self) -> None:
+        step = self.steps["Record tested checkout identity"]
+        self.assertEqual({"name", "run"}, set(step))
+        self.assertEqual("set -euo pipefail\ngit rev-parse HEAD 'HEAD^{tree}'\n"
+                         "python --version\ngit --version\n", step["run"])
+        names = [s["name"] for s in self.job["steps"]]
+        self.assertLess(names.index(step["name"]), names.index(NATIVE_STEP))
+
+    def test_tracked_worktree_integrity_follows_receipt_validation(self) -> None:
+        step = self.steps["Verify tracked worktree stayed unchanged"]
+        self.assertEqual({"name", "run"}, set(step))
+        self.assertEqual("set -euo pipefail\ngit diff --exit-code HEAD\n", step["run"])
+        names = [s["name"] for s in self.job["steps"]]
+        self.assertLess(names.index(CURRENT_STEP), names.index(step["name"]))
+        self.assertLess(names.index(step["name"]), names.index("Record trust boundary"))
 
 
 if __name__ == "__main__":

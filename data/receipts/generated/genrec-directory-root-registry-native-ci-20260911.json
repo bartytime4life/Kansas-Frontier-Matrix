@@ -1,0 +1,82 @@
+{
+  "receipt_id": "genrec-directory-root-registry-native-ci-20260911",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/directory-root-registry.yml",
+    "tests/ci/test_directory_root_registry_workflow.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/directory-root-registry.yml": "sha256:e36b4011d9d5e723367781b2e2d380a5d2581a4ab80f2f0b3acf9c5afe2d62b2",
+    "tests/ci/test_directory_root_registry_workflow.py": "sha256:2e491f986f3484f0a8e74c94d96fa2be294ec1b92386dab620f4a8de900e350f"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Astra Pro",
+    "version": "not independently exposed"
+  },
+  "prompt_or_contract": "sha256:2e8dcf33440de0c5e45e3f3797677ae84dab9ebbbc71c5cf0e6428601fb25689",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub",
+      "Notion",
+      "file_search",
+      "web",
+      "container"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/392f514401030c5c06bd3498eafbfc9a2eef0fe3",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/be6e398d33237d55b1d1a8dc4bf4cbd93413fd93",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4474#issuecomment-5639278874"
+    ],
+    "attached_docs": [
+      "KFM Contributor Reliability System: Documentation, PR Quality, and CI Hardening \u2014 proportional validation and execution/approval separation; no transferred runtime claims"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/directory-root-registry.yml": "PROPOSED",
+    "tests/ci/test_directory_root_registry_workflow.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "local-workflow-contract-tests",
+      "outcome": "PASS",
+      "reason": "Sixteen committed unittest methods passed on Python 3.13.5. Local tests run actual workflow shell blocks with an argv-recording Python substitute, not the native receipt or scanner implementation. Nine focused weakened controls were rejected without setup errors. YAML duplicate-key inspection, Bash syntax for all run blocks, Python 3.11 grammar, whitespace and exact artifact-hash/map parity passed."
+    },
+    {
+      "gate": "native-and-hosted-execution",
+      "outcome": "SKIPPED",
+      "reason": "Pending at authoring. Local Git transport cannot resolve github.com. Branch CI invokes real diagnostic/root-registry suites and native receipt replay without a PR. A trigger is not evidence of execution."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "directory-placement",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/be6e398d33237d55b1d1a8dc4bf4cbd93413fd93/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "branch-path-filter-semantics",
+      "validated": true,
+      "evidence_ref": "https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/trigger-a-workflow"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-11T19:10:39Z",
+  "emitter": "chatgpt-kfm-root-registry-native-ci",
+  "links": {
+    "pr_number": null,
+    "adr_link": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/be6e398d33237d55b1d1a8dc4bf4cbd93413fd93/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Successor binding for the exact writer-branch CI trigger, mandatory full diagnostic module, checkout identity and tracked-worktree checks. Keeps the 392f5144 repair receipt immutable and replays it at that exact ancestor, alongside the August receipt. Current diagnostic and this successor receipt use current candidate bytes. No validator, rule, baseline, schema, dependency, action pin, permission or source changes. Full checkout history costs more but carries no write authority. Workflow comments and test docstrings document this material behavior; do not edit the already bound validator README. Retire the extra exact-branch filter through a successor binding after controlled handoff. Tests use a temporary argv-recording Python substitute locally; native outcomes belong to exact-head hosted logs, not this authoring record. Independent review and #4024 PR-state delivery remain held. No ready, approval, merge, release, deployment or publication is authorized. Withdrawal leaves main untouched; later reviewed rollback must preserve receipts and account for restored validation gaps."
+}

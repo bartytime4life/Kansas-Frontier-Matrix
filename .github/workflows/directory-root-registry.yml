@@ -27,7 +27,9 @@ name: directory-root-registry
       - "data/receipts/generated/genrec-topology-diagnostic-log-safety-20260911.json"
       - "tests/validators/directory_governance/test_validate_output_security_topology.py"
   push:
-    branches: [main]
+    # Exact writer-branch validation while PR delivery is held under #4024.
+    # Retire this extra branch filter with a successor binding after handoff.
+    branches: [main, agent/topology-diagnostic-log-safety-20260911]
     paths:
       - ".github/workflows/directory-root-registry.yml"
       - "contracts/governance/root_registry.md"
@@ -85,8 +87,25 @@ jobs:
           cache: pip
           cache-dependency-path: pyproject.toml
 
+      - name: Record tested checkout identity
+        run: |
+          set -euo pipefail
+          git rev-parse HEAD 'HEAD^{tree}'
+          python --version
+          git --version
+
       - name: Install declared schema and test dependencies
         run: python tools/ci/install_python_ci.py project-test
+
+      # Execute the real module, including scanner and diagnostic regressions.
+      # A path watch alone never proves collection or native execution.
+      - name: Run native diagnostic regression module
+        run: |
+          set -euo pipefail
+          python -m unittest discover \
+            --start-directory tests/validators/directory_governance \
+            --pattern 'test_validate_output_security_topology.py' \
+            --verbose
 
       - name: Run focused deterministic no-network tests
         run: |
@@ -124,6 +143,11 @@ jobs:
             data/receipts/generated/genrec-directory-root-registry-current-binding-20260815.json \
             --repo-root . \
             --artifact-git-ref 8d235ebc6e7e80704c0f3f93d7c04e338af6a9a1
+          # Preserve the first branch-only repair receipt at its authored bytes.
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-directory-root-registry-replay-20260911.json \
+            --repo-root . \
+            --artifact-git-ref 392f514401030c5c06bd3498eafbfc9a2eef0fe3
 
       # These checks deliberately use candidate bytes, not the historical ref.
       # Later edits need a reviewed successor binding; do not rewrite old hashes
@@ -135,8 +159,13 @@ jobs:
             data/receipts/generated/genrec-topology-diagnostic-log-safety-20260911.json \
             --repo-root .
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-directory-root-registry-replay-20260911.json \
+            data/receipts/generated/genrec-directory-root-registry-native-ci-20260911.json \
             --repo-root .
+
+      - name: Verify tracked worktree stayed unchanged
+        run: |
+          set -euo pipefail
+          git diff --exit-code HEAD
 
       - name: Record trust boundary
         if: always()
@@ -145,7 +174,7 @@ jobs:
             echo "### Directory root registry"
             echo
             echo "- Result: ${{ job.status }}."
-            echo "- Receipt scope: August ancestor replay plus separately bound current diagnostic and workflow artifacts; neither is review approval."
+            echo "- Receipt scope: August and first-repair ancestor replay plus separately bound current diagnostic and workflow artifacts; neither is review approval."
             echo "- Scope: schema, adopted-doctrine digest binding, root-class invariants, canonical ordering, and top-level root coverage."
             echo "- Boundary: projection-only; no root creation, activation, write authorization, migration, release, deployment, promotion, or publication."
           } >> "$GITHUB_STEP_SUMMARY"
