@@ -6,7 +6,7 @@ version: v3.0.0
 status: repository-grounded draft
 owners: ["@bartytime4life"]
 created: 2026-05-11
-updated: 2026-09-06
+updated: 2026-09-11
 policy_label: public
 current_path: README.md
 owning_root: repository-root
@@ -15,7 +15,7 @@ truth_posture: cite-or-abstain; implementation claims require pinned repository 
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: eacff61db0cda48d15e4e7e64a0b0cd667e5d3f4
+  base_commit: a8e98dd31bc7d7785009f32612afd27ee19359e0
 related:
   - docs/doctrine/directory-rules.md
   - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
@@ -129,12 +129,13 @@ These are exploration and implementation lanes, not a promise that each theme ha
 
 ## Current posture
 
-The table below is the honest maturity snapshot for the repository at `main@eacff61db0cda48d15e4e7e64a0b0cd667e5d3f4`.
+The table below is the honest maturity snapshot for the repository at `main@a8e98dd31bc7d7785009f32612afd27ee19359e0`.
 
 | Surface | Current repository evidence | Boundary |
 |---|---|---|
 | **Repository foundation** | Responsibility roots for apps, contracts, schemas, policy, data, pipelines, runtime, docs, tests, tools, and release are present. | A path’s presence does not make it truth, policy, release, or publication authority. |
-| **KFM Explorer site app** | `apps/kansas-frontier-matrix-explorer/` contains a Vinext application, a renderer-neutral `NullMapRuntime` composition, synthetic/generalized catalog metadata, fail-closed evidence behavior, public-safe export guidance, and Sites identity metadata. | This proves tracked implementation slices. It does not prove a live renderer, live data, hosted health, release, or publication. |
+| **Repository validation at this snapshot** | The exact-main `validator-suite` run [34645138385](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/34645138385) passed its ordinary validator, documentation, workflow-security, and aggregate lanes but remained `FAIL_INVARIANT` at repository-topology because six current drift fingerprints replaced six stale baseline fingerprints. | The topology baseline was not rewritten; this inherited governance hold remains tracked by [#4228](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4228) and [#3366](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3366). |
+| **KFM Explorer site app** | `apps/kansas-frontier-matrix-explorer/` contains a Vinext application, a renderer-neutral `NullMapRuntime` composition, synthetic/generalized catalog metadata, fail-closed evidence behavior, public-safe export guidance, Sites identity metadata, and a sanitized root UI error boundary with retry/reset. | This proves tracked implementation slices. It does not prove a live renderer, live data, hosted health, release, or publication. |
 | **Explorer Web workbench** | `apps/explorer-web/` contains a Vite/TypeScript workspace with a repository-grounded local site composition, public navigation/context, shared trust surface, synthetic Focus workspace, Evidence Drawer behavior, Story Player and map-selection slices, and tests. | The production shell decision, admitted MapLibre dependency, live governed transport, and released layers remain separate gates. |
 | **MapLibre path** | Renderer-neutral ports, package/adaptor surfaces, performance governance, and synthetic validation support exist in the repository. | Functional renderer admission and a live map boot are held until their dependency, compatibility, accessibility, performance, and rollback evidence is closed. |
 | **Evidence and trust path** | Contracts, finite outcomes, defensive adapters, fail-closed fixtures, negative cases, and policy-boundary tests are present in bounded slices. | End-to-end EvidenceBundle resolution, source admission, live transport, and public release are not established by this README. |
@@ -349,7 +350,7 @@ This README does not:
 - establish rights, cultural authority, stewardship, consent, review approval, or public-use permission;
 - replace a contract, schema, policy, evidence bundle, receipt, proof, release record, or rollback card.
 
-The most important open edges are the exact packaging mismatch noted above, hosted Explorer runtime/version verification, the integrated Explorer route and transport contract, renderer admission for the held path, end-to-end evidence closure, complete accessibility and operational evidence, and governed release/publication proof.
+The most important open edges are the exact packaging mismatch noted above, hosted Explorer runtime/version verification, the integrated Explorer route and transport contract, renderer admission for the held path, end-to-end evidence closure, complete accessibility and operational evidence, and governed release/publication proof. The repository-topology ratchet is also held at this snapshot pending the separate governed correction; this PR does not reset its baseline.
 
 ## Project references
 
@@ -372,10 +373,10 @@ The most important open edges are the exact packaging mismatch noted above, host
 | Field | Value |
 |---|---|
 | Repository | `bartytime4life/Kansas-Frontier-Matrix` |
-| Evidence snapshot | `main@eacff61db0cda48d15e4e7e64a0b0cd667e5d3f4` |
+| Evidence snapshot | `main@a8e98dd31bc7d7785009f32612afd27ee19359e0` |
 | Open pull requests at review time | `0` |
-| Reviewed | Root tree, current root README, Explorer site app README/manifest, Explorer Web README/manifest, root package, Makefile, `.github/README.md`, Directory Rules, and accepted ADR-0029 |
-| Change class | Same-path public documentation and navigation modernization |
+| Reviewed | Current root tree and README, Explorer site app README/manifest/error boundary, Explorer Web README/manifest, root package, Makefile, `.github/README.md`, Directory Rules, accepted ADR-0029, and exact-main validator-suite evidence |
+| Change class | Current-main error-boundary and documentation synchronization slice |
 | No mutation implied | No source activation, settings change, release, deployment, promotion, publication, or lifecycle transition |
 | Not proved | Full repository correctness, all workflow behavior, hosted runtime health, authentication, live data, rights clearance, human approval, release readiness, or public operation |
 

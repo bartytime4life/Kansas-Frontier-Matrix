@@ -14,6 +14,21 @@ fit together.
 - The repository and source briefing reports implementation boundaries; it does
   not release or publish data.
 
+
+## Safe UI failure fallback
+
+The root Next/Vinext route now owns a fail-closed error boundary at
+[`app/error.tsx`](app/error.tsx). Unexpected rendering failures stop the view
+before it can present an unsupported result, expose only the stable code
+`KFM-UI-UNEXPECTED-ERROR` plus a sanitized correlation digest when available,
+and offer retry/reset and return actions. Raw error messages, stack traces, and
+internal paths are never rendered or logged. This is the first bounded UI slice
+tracked by [issue #4416](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4416);
+it does not add telemetry, a health endpoint, or deployment authority.
+
+Run `node --test tests/error-boundary.test.mjs` for the focused source and
+TypeScript-transpile regression checks.
+
 ## Authoritative hosting and in-place replacement
 
 | Field | Current boundary |
