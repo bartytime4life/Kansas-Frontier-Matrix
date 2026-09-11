@@ -60,7 +60,10 @@
     "temporal-playback-reducer": "PROPOSED",
     "fixture-only-preview-boundary": "CONFIRMED",
     "live-source-admission-release-publication": "NEEDS_VERIFICATION",
-    "full-explorer-build-browser-and-hosted-ci": "UNKNOWN"
+    "full-explorer-build-browser-and-hosted-ci": "UNKNOWN",
+    "full-explorer-build-and-vitest-suite": "CONFIRMED",
+    "bounded-e2e-smoke": "CONFIRMED",
+    "browser-webgl-long-session-and-performance-probes": "UNKNOWN"
   },
   "validation_gates": [
     {
@@ -80,8 +83,13 @@
     },
     {
       "gate": "full-explorer-build-and-vitest-suite",
-      "outcome": "SKIPPED",
-      "reason": "Not executed locally in this environment; the hosted PR ui-build workflow is expected to provide the exact-head build/test result."
+      "outcome": "PASS",
+      "reason": "Exact PR head 96ecbbf18edf5e6e6dedccbda7871454c7e59a8d ui-build run 34638538183 completed successfully; build-explorer-web job 103392284545 and test-explorer-web job 103392284732 both passed."
+    },
+    {
+      "gate": "bounded-e2e-smoke",
+      "outcome": "PASS",
+      "reason": "Exact PR head e2e-smoke run 34638538753 completed successfully; this is bounded smoke evidence, not full browser/WebGL/long-session or release proof."
     },
     {
       "gate": "browser-runtime-and-performance-probes",
@@ -100,8 +108,8 @@
     },
     {
       "gate": "repository-topology-ratchet",
-      "outcome": "SKIPPED",
-      "reason": "The prior exact-main/PR #4477 topology failure is retained as an orthogonal inherited gate; this slice does not modify topology or waive the ratchet."
+      "outcome": "FAIL",
+      "reason": "Exact PR head validator-suite run 34638538793 failed only in repository-topology tests; the six emitted FAIL_NEW_DRIFT subjects were path-grammar:uppercase, catalog/, scope-alias:air, scaffold-only-leaf-directories, data/maps/, and doc-id:kfm://doc/NEEDS-VERIFICATION. None is a changed path in this slice, so no topology cleanup or gate bypass was attempted."
     }
   ],
   "policy_decisions": [],
@@ -131,9 +139,9 @@
   "created_at": "2026-09-11T19:22:15.098Z",
   "emitter": "openai/codex-gpt-5",
   "links": {
-    "pr_number": null,
+    "pr_number": 4478,
     "adr_link": null,
     "drift_register_entry": null
   },
-  "notes": "AI-authored fixture-first temporal playback slice for the Kansas-first Explorer. The reducer advances only an ordered finite frame-id list, starts paused, supports explicit play/pause/step/scrub transitions, pauses at the terminal frame without looping, and preserves step controls under reduced motion. The Living Atlas wires a preview-only interval timer with hidden-document, Escape, and map-pointer pause behavior; preview never commits a map snapshot until Apply time. No live source, interpolation, MapLibre source, terrain, WebGL custom layer, warning behavior, release, deployment, or publication is created. Receipt is provenance, not approval or factual temporal proof."
+  "notes": "AI-authored fixture-first temporal playback slice for the Kansas-first Explorer. The reducer advances only an ordered finite frame-id list, starts paused, supports explicit play/pause/step/scrub transitions, pauses at the terminal frame without looping, and preserves step controls under reduced motion. The Living Atlas wires a preview-only interval timer with hidden-document, Escape, and map-pointer pause behavior; preview never commits a map snapshot until Apply time. No live source, interpolation, MapLibre source, terrain, WebGL custom layer, warning behavior, release, deployment, or publication is created. Receipt is provenance, not approval or factual temporal proof. Exact-head hosted evidence later settled: ui-build and bounded e2e-smoke passed; validator-suite failed only on the inherited six-subject topology ratchet. Browser/WebGL/long-session/performance probes remain unrun."
 }
