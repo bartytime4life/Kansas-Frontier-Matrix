@@ -17,7 +17,7 @@ test("the root error boundary fails closed and preserves a recovery action", asy
   assert.match(boundary, /code: UI_ERROR_CODE/);
   assert.match(boundary, /role="alert"/);
   assert.match(boundary, /onClick=\{reset\}/);
-  assert.match(boundary, /href="\/" /);
+  assert.match(boundary, /href="\/"/);
   assert.doesNotMatch(boundary, /error\.(?:message|stack)/);
   assert.doesNotMatch(boundary, /JSON\.stringify\(error/);
   assert.match(readme, /KFM-UI-UNEXPECTED-ERROR/);
