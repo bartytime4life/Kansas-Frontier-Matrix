@@ -2,7 +2,7 @@
 doc_id: kfm://doc/architecture/kfm-explorer-site-real-data-backfill-20260910
 title: KFM Explorer Site Real-Data Backfill — 2026-09-10
 type: architecture-reference
-version: v1.0.0-draft
+version: v1.1.0-draft
 status: draft; documentation-only; not-merged; not-released; not-for-life-safety
 owners:
   - "@bartytime4life — verified CODEOWNERS review route"
@@ -27,14 +27,14 @@ This record backfills the governed real-data work completed in the existing Kans
 
 | Surface | Checkpoint |
 |---|---|
-| Repository baseline | `bartytime4life/Kansas-Frontier-Matrix` `main@77c11c2db9c8c5b7c56e6c4335c429079cac79f2` |
+| Repository baseline | `bartytime4life/Kansas-Frontier-Matrix` `main@47de77deb845bbba948c66566d9b88696cb14f8b` |
 | Site | [kansas-frontier-matrix-explorer](https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site) |
-| Site saved version | 22 (current checkpoint; version 21 is the prior saved checkpoint) |
-| Site source commit | `05fcc2eaa31d8bf07f61529f60a68f4b7acf0d14` |
+| Site saved version | 23 (current checkpoint; version 22 is the prior saved checkpoint) |
+| Site source commit | `f48e4b19b79973ec0acb8e668ad2ba2c50564eec` |
 | Site deployment state | Not deployed by this change; the owner-only Site remains the current delivery surface |
 | GitHub backfill state | This document is on the branch for the accompanying draft pull request |
 
-The Site checkpoint passed `npm run build`, `npm test` (35 tests), and scoped ESLint for all changed files with zero errors. Version 22 adds the visible priority context control deck and a clear `Controls` affordance on registry layer rows. Full-project lint remains blocked by two pre-existing React effect errors in `app/observatory/workspace.tsx`; this change did not broaden that lint debt. Browser QA was not performed.
+The Site checkpoint passed `npm run build`, `npm test` (36 tests), `npx tsc --noEmit`, and scoped ESLint for all changed files with zero errors. Version 22 adds the visible priority context control deck and a clear `Controls` affordance on registry layer rows. Version 23 adds the typed feature, connection, action, code-surface, route, and cross-reference validation registries. Full-project lint remains blocked by two pre-existing React effect errors in `app/observatory/workspace.tsx`; this change did not broaden that lint debt. Browser QA was not performed.
 
 ## Site capability map
 
@@ -73,6 +73,18 @@ Version 22 makes the previously buried controls discoverable in the first layer-
 
 This is a presentation and discoverability improvement only. It does not change source roles, temporal holds, admission state, evidence, release, or public alert authority.
 
+## Site capability registry
+
+Version 23 adds a small typed registry layer inside the Site so the visible product surface, provider connections, coding ownership, and actions can be aligned without duplicating handler logic:
+
+- `app/site-features.ts` maps user-facing features to status, source ids, action ids, owning paths, and boundaries.
+- `app/site-connections.ts` derives a normalized connection manifest from the fixed `OFFICIAL_CONTEXT_SOURCES` allowlist.
+- `app/site-actions.ts` describes control modes, handler paths, inputs, outcomes, and safety boundaries.
+- `app/site-architecture.ts` maps code surfaces and routes to verification paths.
+- `app/site-registry.ts` validates cross-file references and exposes counts wired into the Layer Catalog.
+- `docs/SITE_FEATURE_CONNECTION_ACTION_MAP.md` records the alignment contract and held integration gates.
+
+The registry is traceability infrastructure. It does not add an arbitrary upstream URL path, activate Raspberry Shake waveforms, activate the fixture-only LiDAR lineage contract, change KFM source admission, or authorize deployment/publication.
 ## Reliability controls
 
 The Site-side adapters use fixed provider allowlists, bounded geographic/time queries, response-size limits, strict parsers, caps on features/vertices/stations, finite cache windows, explicit provider/source identity, and no silent fallback from real context to synthetic data. The UI preserves the distinction between a provider's current context, a historical frame, a model output, and an unavailable source.
