@@ -198,6 +198,56 @@ CONTEXT_MAX_BYTES = 4 * 1024 * 1024
 CONTEXT_MAX_INDEX_BYTES = 32 * 1024 * 1024
 CONTEXT_HEX = re.compile(r"[0-9a-f]{40}(?:[0-9a-f]{24})?")
 CONTEXT_EVENTS = frozenset({"pull_request", "push", "workflow_dispatch", "merge_group"})
+# Fixed labels only: do not emit source paths or decoded governance content.
+CONTEXT_INDEX_INPUTS = {
+    b"control_plane/root_registry.yaml": "root_registry",
+    b"control_plane/path_alias_register.yaml": "path_alias_register",
+    b"docs/doctrine/directory-rules.md": "directory_rules",
+    b"docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md": "directory_adoption",
+}
+
+
+def _context_index_inputs(root: Path, index: bytes) -> dict[str, object]:
+    """Bind selected *indexed* bytes, not potentially different working files.
+
+    Recompute each Git blob identity before emitting its independent SHA-256.
+    A replaced/mismatched object cannot become comparable capture evidence.
+    The native scanner remains the owner of topology and authority decisions.
+    """
+    selected: dict[str, str] = {}
+    for record in index.split(b"\0"):
+        if not record:
+            continue
+        header, path = record.split(b"\t", 1)
+        label = CONTEXT_INDEX_INPUTS.get(path)
+        if label is None:
+            continue
+        mode, oid, stage = header.decode("ascii").split(" ")
+        if (mode not in ("100644", "100755") or stage != "0"
+                or CONTEXT_HEX.fullmatch(oid) is None or label in selected):
+            raise ValueError("unsafe indexed context input")
+        selected[label] = oid
+    if set(selected) != set(CONTEXT_INDEX_INPUTS.values()):
+        raise ValueError("missing indexed context input")
+
+    result: dict[str, object] = {}
+    for label, oid in sorted(selected.items()):
+        size_raw = topology._git(root, "--no-lazy-fetch", "cat-file", "-s", oid).strip()
+        if re.fullmatch(rb"[0-9]{1,10}", size_raw) is None:
+            raise ValueError("invalid indexed context size")
+        size = int(size_raw)
+        if size > CONTEXT_MAX_BYTES:
+            raise ValueError("indexed context input too large")
+        data = topology._git(root, "--no-lazy-fetch", "cat-file", "blob", oid)
+        if len(data) != size or len(data) > CONTEXT_MAX_BYTES:
+            raise ValueError("unstable indexed context input")
+        algorithm = "sha1" if len(oid) == 40 else "sha256"
+        framed = b"blob " + str(len(data)).encode("ascii") + b"\0" + data
+        if hashlib.new(algorithm, framed).hexdigest() != oid:
+            raise ValueError("indexed context object mismatch")
+        result[label] = {"git_blob": oid, "sha256": hashlib.sha256(data).hexdigest(),
+                         "size_bytes": size}
+    return result
 
 
 def _context_digest(path: Path, root: Path) -> str:
@@ -236,10 +286,11 @@ def execution_context(repo_root: Path, baseline: Path) -> dict[str, object]:
     if len(index) > CONTEXT_MAX_INDEX_BYTES:
         raise ValueError("context index too large")
     context: dict[str, object] = {
-        "version": "kfm.topology-execution-context.v1",
+        "version": "kfm.topology-execution-context.v2",
         "checkout_commit": identities[0],
         "checkout_tree": identities[1],
         "index_sha256": hashlib.sha256(index).hexdigest(),
+        "indexed_governance": _context_index_inputs(root, index),
         "validator_file_sha256": _context_digest(Path(topology.__file__), root),
         "diagnostic_file_sha256": _context_digest(Path(__file__), root),
         "baseline_file_sha256": _context_digest(baseline, root),
