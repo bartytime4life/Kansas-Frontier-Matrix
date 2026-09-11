@@ -982,14 +982,15 @@ export function mountLivingAtlasWorkspace(
   };
 
   const handleChange = (event: Event): void => {
-    const control = event.target as HTMLInputElement | HTMLSelectElement;
-    if (control.dataset.livingWatersScenario === "true") {
-      const scenarioId = control.value as LivingWatersScenarioId;
+    const target = event.target as HTMLInputElement | HTMLSelectElement;
+    if (target.dataset.livingWatersScenario === "true") {
+      const scenarioId = target.value as LivingWatersScenarioId;
       if (LIVING_WATERS_SCENARIO_IDS.includes(scenarioId)) {
         renderLivingWatersFixture(scenarioId);
       }
       return;
     }
+    const control = target as HTMLInputElement;
     const layerId = control.dataset.layerToggle;
     if (!layerId) return;
     if (!layerMatchesCommittedTime(layerId)) {
