@@ -22,6 +22,14 @@ test("full Layer Catalog gets one bounded keyboard-scroll affordance", () => {
   assert.match(source, /dataset\.atEnd/);
 });
 
+test("filtered catalog counts and labels remain truthful", () => {
+  assert.match(source, /currentControlCount/);
+  assert.match(source, /data-current-control-count/);
+  assert.match(source, /from \$\{layerCount\} registered layers/);
+  assert.match(source, /Scroll to reach all current matches/);
+  assert.doesNotMatch(source, /Scroll to reach every layer/);
+});
+
 test("catalog enhancement remains presentational and local-only", () => {
   assert.doesNotMatch(enhancement, /\.click\s*\(/);
   assert.doesNotMatch(enhancement, /dispatchEvent|fetch\s*\(|XMLHttpRequest|WebSocket/);
@@ -35,10 +43,14 @@ test("summary distinguishes requested visibility from time compatibility", () =>
   assert.match(source, /requested visible/);
   assert.match(source, /time-compatible/);
   assert.match(source, /renderer delivery remains held/);
+  assert.match(source, /className="site-layer-library-divider"/);
+  assert.match(css, /\.site-layer-library-divider/);
+  assert.doesNotMatch(css, /site-layer-library-summary i/);
 });
 
 test("CSS preserves a single visible catalog scroller across viewports", () => {
   assert.match(css, /\.layer-panel \.catalog-groups\s*\{/);
+  assert.match(css, /overflow-y:\s*auto/);
   assert.match(css, /scrollbar-gutter:\s*stable/);
   assert.match(css, /overscroll-behavior-y:\s*contain/);
   assert.match(css, /data-at-start="false"/);
