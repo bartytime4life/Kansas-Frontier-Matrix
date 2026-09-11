@@ -26,11 +26,19 @@ KFM records notable repository changes in this file. It is a human-readable repo
 
 The previous changelog recorded only the initial implementation milestones through 2026-05-09. This modernization preserves those seed entries but does not invent a retrospective backfill for later repository activity. Use the repository's [commit history](https://github.com/bartytime4life/Kansas-Frontier-Matrix/commits/main) and [merged pull requests](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pulls?q=is%3Apr+is%3Amerged) to reconstruct repository changes, and use [`release/`](release/) for governed release state.
 
+The entries below add only selected, source-linked current work; coverage is still not a complete retrospective. Branch changes remain unreleased and must not be described as merged merely because they appear here.
+
 ## Unreleased
 
 ### Changed
 
+- 2026-09-11 — [`fc8fd2a`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/fc8fd2aaa1bc594e4b36db0fcb26e374cf6d029c): refreshed the root README against `main@664e46697d4d237870f5a482904bb9acd8f11b20`; distinguished the implemented synthetic Living Atlas MapLibre canvas and exact `6.7.0` dependency from real-data/production readiness, separated saved Site and repository evidence, corrected the Python dependency-only setup guidance, and made draft delivery conditional on the active #4024 boundary. Documentation change only; packaging itself is not repaired.
+- 2026-09-11 — [`8d11e41`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/8d11e41858c1e24bce964c8e62da10cfb42cf166): updated the Sites-derived app guide with source-handoff gates, saved-v24 evidence scope, independent consumer boundaries, and a Raspberry Shake provider/rights-review checkpoint. No source connector, permission decision, activation, live bridge, deployment, or runtime rollback was performed by this documentation change.
 - Modernized the root changelog into an evidence-bounded repository-history contract with entry categories, source-link expectations, security guidance, a historical coverage notice, and an explicit release/publication boundary.
+
+### Fixed
+
+- 2026-09-11 — [PR #4464](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4464), merge [`664e466`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/664e46697d4d237870f5a482904bb9acd8f11b20): improved the existing full Layer Catalog's scrolling and keyboard/discovery affordances, distinguished filtered/rendered control counts from registered layers, and labeled requested visibility separately from time compatibility. This records the merged implementation, not fresh browser validation, independent approval, rendered-layer delivery, source admission, or Site deployment; the eight-fixture Library projection was not expanded.
 
 ## Legacy seed milestones — 2026-05-08 to 2026-05-09
 
