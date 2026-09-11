@@ -25,7 +25,7 @@ name: contract-object-map-lifecycle
       - "tools/validators/docs/validate_contract_object_map_lifecycle.py"
       - "tests/docs/test_contract_object_map_lifecycle.py"
       - "pyproject.toml"
-      - "data/receipts/generated/genrec-contract-object-map-lifecycle-20260810.json"
+      - "data/receipts/generated/genrec-contract-object-map-currentness-20260906.json"
   push:
     branches: [main]
     paths:
@@ -50,7 +50,7 @@ name: contract-object-map-lifecycle
       - "tools/validators/docs/validate_contract_object_map_lifecycle.py"
       - "tests/docs/test_contract_object_map_lifecycle.py"
       - "pyproject.toml"
-      - "data/receipts/generated/genrec-contract-object-map-lifecycle-20260810.json"
+      - "data/receipts/generated/genrec-contract-object-map-currentness-20260906.json"
   workflow_dispatch:
 
 permissions:
@@ -110,7 +110,7 @@ jobs:
       - name: Validate generated authoring receipt integrity
         run: |
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-contract-object-map-lifecycle-20260810.json \
+            data/receipts/generated/genrec-contract-object-map-currentness-20260906.json \
             --repo-root .
       - name: Record trust boundary
         if: always()

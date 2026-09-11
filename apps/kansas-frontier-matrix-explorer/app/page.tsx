@@ -94,6 +94,7 @@ import {
   type LocalImportPreview,
 } from "./import-preview";
 import { parseSavedWorkspaces } from "./workspace-storage";
+import WaveformPreviewPanel from "./waveform-preview-panel";
 
 type ViewState = { center: [number, number]; zoom: number; bearing: number; pitch: number };
 type MapBoundsState = { west: number; south: number; east: number; north: number };
@@ -3688,6 +3689,7 @@ export default function Home() {
                   <input ref={importInputRef} type="file" accept=".kml,.geojson,.json,application/geo+json,application/vnd.google-earth.kml+xml" onChange={(event) => void inspectImportFile(event.target.files?.[0])} />
                   <span aria-hidden="true">⇧</span><strong>{importBusy ? "Inspecting file…" : "Choose or drop KML / GeoJSON"}</strong><small>Maximum 2 MB · browser memory only · raw file is never stored</small>
                 </label>
+                 <WaveformPreviewPanel />
                 {importError && <div className="import-error" role="alert"><strong>Preview blocked</strong><p>{importError}</p></div>}
                 {!importPreview && !importError && <div className="map-utility-empty import-empty"><strong>No local file inspected</strong><p>This is a structure-review surface, not a source-ingestion or upload workflow.</p></div>}
                 {importPreview && <>

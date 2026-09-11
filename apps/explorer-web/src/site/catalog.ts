@@ -2,13 +2,13 @@
 export const REPOSITORY_SNAPSHOT = Object.freeze({
   repository: "bartytime4life/Kansas-Frontier-Matrix",
   ref: "main",
-  commit: "90e8a1b231b2c07ae6346ce75ecd42a172ef67e7",
-  commitRecordedAt: "2026-08-28T14:33:53Z",
+  commit: "f99736c0cd4b91592cc6e85531129c86f4dcbecb",
+  commitRecordedAt: "2026-09-09T03:45:35Z",
   explorerPath: "apps/explorer-web",
   mapLibre: Object.freeze({
     family: "MapLibre GL JS",
     packageHome: "packages/maplibre",
-    readinessCandidate: "6.6.0",
+    readinessCandidate: "6.7.0",
     readinessState: "HOLD" as const,
     packagePresent: true,
     adapterImplemented: true,
@@ -21,11 +21,11 @@ export const REPOSITORY_SNAPSHOT = Object.freeze({
 
 /** Current MapLibre readiness facts at the pinned repository snapshot. */
 export const CURRENT_MAPLIBRE_READINESS = Object.freeze({
-  evidenceCommit: "90e8a1b231b2c07ae6346ce75ecd42a172ef67e7",
-  evidenceRecordedAt: "2026-08-28T14:33:53Z",
+  evidenceCommit: "033103a0afe80f85a823973951b3b7d15abb7a8b",
+  evidenceRecordedAt: "2026-09-09T02:12:08Z",
   family: "MapLibre GL JS",
   packageHome: "packages/maplibre",
-  readinessCandidate: "6.6.0",
+  readinessCandidate: "6.7.0",
   readinessState: "HOLD" as const,
   packagePresent: true,
   adapterImplemented: true,
@@ -66,6 +66,7 @@ const rows: readonly FeatureRow[] = [
   ["pmtiles-diagnostics", "PMTiles range diagnostics", "Map and layers", "FIXTURE_FIRST", "Archive, range, index, and render verification for governed artifacts.", "pmtiles_range_diagnostics", "pmtiles tiles range"],
   ["stac-inspector", "STAC conformance inspector", "Map and layers", "FIXTURE_FIRST", "Read-only release-facing STAC metadata inspection.", "stac_conformance_inspector", "stac catalog metadata"],
   ["view-registry", "View registry inspector", "Map and layers", "FIXTURE_FIRST", "Read-only inspection of governed view projections.", "view_registry_inspector", "view registry projection"],
+  ["living-atlas", "Living Atlas workspace", "Map and layers", "FIXTURE_FIRST", "Map-first site-local composition with 18 views, 24 governed runtime layer records, repository layer connections, workbench tools, deep-time preview/commit, evidence inspection, and draft-only reports and stories.", "living_atlas", "living atlas views layers connections tools timeline reports stories"],
   ["maplibre-runtime", "MapLibre browser runtime", "Map and layers", "HOLD", "The package-owned adapter is present; Explorer activation and authenticated browser proof remain open.", "packages/maplibre", "maplibre renderer adapter hold"],
   ["evidence-drawer", "Evidence Drawer", "Evidence and trust", "VERIFIED_SLICE", "Keyboard-operable evidence, citation, limitation, and correction inspection.", "evidence_drawer", "evidence citations correction"],
   ["evidence-tooltip", "Evidence tooltip", "Evidence and trust", "FIXTURE_FIRST", "Compact finite evidence support summary.", "evidence_tooltip", "evidence tooltip support"],
@@ -176,7 +177,10 @@ export function filterFeatures(query: FeatureQuery = {}): readonly FeatureEntry[
 export function findDomain(id: string): KnowledgeDomain | null {
   return KNOWLEDGE_DOMAINS.find((entry) => entry.id === id) ?? null;
 }
-export function repositoryUrl(path: string): string {
+export function repositoryUrl(
+  path: string,
+  route: "tree" | "blob" = "tree",
+): string {
   const encoded = path.split("/").map(encodeURIComponent).join("/");
-  return `https://github.com/${REPOSITORY_SNAPSHOT.repository}/tree/${REPOSITORY_SNAPSHOT.commit}/${encoded}`;
+  return `https://github.com/${REPOSITORY_SNAPSHOT.repository}/${route}/${REPOSITORY_SNAPSHOT.commit}/${encoded}`;
 }

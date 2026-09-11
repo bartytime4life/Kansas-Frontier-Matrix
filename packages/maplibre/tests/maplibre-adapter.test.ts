@@ -136,6 +136,66 @@ describe("package-owned MapLibreAdapter", () => {
     expect(renderer.instances).toHaveLength(0);
   });
 
+  it("fails closed before renderer acquisition for external style resources", () => {
+    expect(() =>
+      createMapLibreAdapter({
+        containerId: "safe-map",
+        style: {
+          version: 8,
+          sources: {
+            external: {
+              type: "raster",
+              tiles: ["https://example.invalid/{z}/{x}/{y}.png"],
+              tileSize: 256,
+            },
+          },
+          layers: [],
+        },
+      }),
+    ).toThrow(
+      expect.objectContaining({ code: "MAP_RUNTIME_INITIALIZATION_FAILED" }),
+    );
+    expect(renderer.instances).toHaveLength(0);
+  });
+
+  it("fails closed when serialization reveals an external locator", () => {
+    expect(() =>
+      createMapLibreAdapter({
+        containerId: "safe-map",
+        style: {
+          version: 8,
+          sources: {
+            external: {
+              type: "geojson",
+              data: new URL("https://example.invalid/data.geojson") as never,
+            },
+          },
+          layers: [],
+        },
+      }),
+    ).toThrow(
+      expect.objectContaining({ code: "MAP_RUNTIME_INITIALIZATION_FAILED" }),
+    );
+    expect(renderer.instances).toHaveLength(0);
+  });
+
+  it("fails closed for relative resource paths as well as absolute URLs", () => {
+    expect(() =>
+      createMapLibreAdapter({
+        containerId: "safe-map",
+        style: {
+          version: 8,
+          glyphs: "/fonts/{fontstack}/{range}.pbf",
+          sources: {},
+          layers: [],
+        },
+      }),
+    ).toThrow(
+      expect.objectContaining({ code: "MAP_RUNTIME_INITIALIZATION_FAILED" }),
+    );
+    expect(renderer.instances).toHaveLength(0);
+  });
+
   it("fails closed before renderer construction when WebGL2 is unavailable", async () => {
     capabilities.webgl2 = false;
     const runtime = createMapLibreAdapter({ containerId: "kfm-map-root" });
@@ -280,6 +340,47 @@ describe("package-owned MapLibreAdapter", () => {
     const retry = runtime.initialize();
     renderer.instances[0].emit("load");
     await expect(retry).resolves.toMatchObject({ state: "READY", reason: null });
+  });
+
+  it("accepts a bounded inline style without widening the runtime port", async () => {
+    const runtime = createMapLibreAdapter({
+      containerId: "safe-map",
+      style: {
+        version: 8,
+        sources: {
+          fixture: {
+            type: "geojson",
+            data: {
+              type: "FeatureCollection",
+              features: [],
+            },
+          },
+        },
+        layers: [
+          {
+            id: "background",
+            type: "background",
+            paint: { "background-color": "#071517" },
+          },
+        ],
+      },
+    });
+
+    const pending = runtime.initialize();
+    expect(renderer.instances[0]?.options.style).toMatchObject({
+      version: 8,
+      sources: { fixture: { type: "geojson" } },
+      layers: [{ id: "background", type: "background" }],
+    });
+    renderer.instances[0]?.emit("load");
+    await expect(pending).resolves.toMatchObject({ state: "READY" });
+    expect(Object.keys(runtime.getSnapshot()).sort()).toEqual([
+      "camera",
+      "profile",
+      "reason",
+      "selection",
+      "state",
+    ]);
   });
 
   it("rejects an in-flight initialization when disposed", async () => {

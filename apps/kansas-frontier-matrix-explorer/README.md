@@ -132,6 +132,12 @@ or enforce explicit server-side membership or allowlist checks.
 Use SIWC for account pages, user-specific dashboards, saved records, and write
 actions tied to the current ChatGPT user. Leave public content anonymous.
 
+## Browser-local waveform preview
+
+The Import utility includes a bounded Raspberry Shake-compatible **local file** preview. It accepts one MiniSEED file plus matching StationXML, one NSLC channel, a 10-minute/100,000-sample limit, and only the uncompressed encodings listed in `app/waveform-preview.ts`.
+
+The preview is deliberately `UNADMITTED_BROWSER_PREVIEW`: no provider URL, FDSN query, proxy, cache, upload, download, source registry entry, evidence/release handoff, response correction, event detection, or deployment is present. Matching response metadata and visible attribution are blocking checks; the resulting state remains `HOLD` even when the raw-value sparkline is available. See [`docs/sources/catalog/raspberry-shake-waveforms.md`](../../docs/sources/catalog/raspberry-shake-waveforms.md) for the provider-term and rollback gate.
+
 ## Diagnostic Commands
 
 - `npm run install:ci`: perform the one bounded lockfile install

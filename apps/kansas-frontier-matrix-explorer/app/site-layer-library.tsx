@@ -19,6 +19,83 @@ type Props = Readonly<{
   onInspect: (layerId: string) => void;
 }>;
 
+const CATALOG_SCROLL_SELECTOR = ".layer-panel .catalog-groups";
+const CATALOG_SCROLL_TOLERANCE = 2;
+const CATALOG_ENHANCEMENT_ATTRIBUTES = [
+  "tabindex", "role", "aria-label", "data-scrollable", "data-at-start", "data-at-end",
+  "data-layer-count", "data-current-control-count", "data-requested-count",
+  "data-time-compatible-count", "data-year",
+] as const;
+
+function catalogScrollState(region: HTMLElement) {
+  const scrollable = region.scrollHeight - region.clientHeight > CATALOG_SCROLL_TOLERANCE;
+  return {
+    scrollable,
+    atStart: !scrollable || region.scrollTop <= CATALOG_SCROLL_TOLERANCE,
+    atEnd: !scrollable || region.scrollTop + region.clientHeight >= region.scrollHeight - CATALOG_SCROLL_TOLERANCE,
+  };
+}
+
+function syncCatalogScrollState(region: HTMLElement) {
+  const state = catalogScrollState(region);
+  const currentControlCount = region.querySelectorAll<HTMLInputElement>(
+    ".visibility-switch input[type=\"checkbox\"]",
+  ).length;
+  const parsedLayerCount = Number.parseInt(region.dataset.layerCount ?? "", 10);
+  const layerCount = Number.isFinite(parsedLayerCount) ? parsedLayerCount : currentControlCount;
+  const filtered = currentControlCount !== layerCount;
+  const requestedCount = region.dataset.requestedCount ?? "0";
+  const timeCompatibleCount = region.dataset.timeCompatibleCount ?? "0";
+  const year = region.dataset.year;
+
+  region.dataset.scrollable = String(state.scrollable);
+  region.dataset.atStart = String(state.atStart);
+  region.dataset.atEnd = String(state.atEnd);
+  region.dataset.currentControlCount = String(currentControlCount);
+  region.setAttribute(
+    "aria-label",
+    `Layer catalog: ${currentControlCount} ${filtered ? "current controls" : "controls"}${filtered ? ` from ${layerCount} registered layers` : ""}; ${requestedCount} requested visible; ${timeCompatibleCount} time-compatible${year ? ` at ${year}` : ""}. Scroll to reach all current matches.`,
+  );
+}
+
+/** Progressively expose the existing full catalog as one keyboard-scrollable region.
+ * This adds presentation and accessibility metadata only: it never clicks a control,
+ * changes requested visibility, reads source data, or crosses the renderer boundary.
+ */
+function enhanceCatalogScrollRegion() {
+  const region = document.querySelector<HTMLElement>(CATALOG_SCROLL_SELECTOR);
+  if (!region) return;
+  const previous = new Map(CATALOG_ENHANCEMENT_ATTRIBUTES.map((name) => [name, region.getAttribute(name)]));
+  region.tabIndex = 0;
+  region.setAttribute("role", "region");
+
+  const sync = () => syncCatalogScrollState(region);
+  region.addEventListener("scroll", sync, { passive: true });
+  window.addEventListener("resize", sync, { passive: true });
+  const resizeObserver = typeof ResizeObserver === "function" ? new ResizeObserver(sync) : null;
+  resizeObserver?.observe(region);
+  const mutationObserver = typeof MutationObserver === "function" ? new MutationObserver(sync) : null;
+  mutationObserver?.observe(region, {
+    childList: true,
+    subtree: true,
+    characterData: true,
+    attributes: true,
+    attributeFilter: ["aria-expanded", "data-active", "hidden"],
+  });
+  sync();
+
+  return () => {
+    region.removeEventListener("scroll", sync);
+    window.removeEventListener("resize", sync);
+    resizeObserver?.disconnect();
+    mutationObserver?.disconnect();
+    for (const [name, value] of previous) {
+      if (value === null) region.removeAttribute(name);
+      else region.setAttribute(name, value);
+    }
+  };
+}
+
 /** A failed owner read can still show bounded supplied metadata, but the port's
  * read below must throw so controls fail closed; this fallback is never state acknowledgement. */
 function projectContext(p: Props) {
@@ -45,6 +122,20 @@ export default function SiteLayerLibrary(props: Props) {
   const members = useRef(new Set<string>());
   const epoch = useRef<number | null>(null);
   const controller = useRef<ReturnType<typeof mountLayerLibrary> | null>(null);
+  const requestedCount = props.layers.reduce((count, layer) => count + Number(props.visibility[layer.id] === true), 0);
+  const timeCompatibleCount = props.layers.reduce((count, layer) => count + Number(isLayerAvailableAtTime(layer, props.year)), 0);
+
+  useLayoutEffect(() => enhanceCatalogScrollRegion(), []);
+  useLayoutEffect(() => {
+    const region = document.querySelector<HTMLElement>(CATALOG_SCROLL_SELECTOR);
+    if (!region) return;
+    region.dataset.layerCount = String(props.layers.length);
+    region.dataset.requestedCount = String(requestedCount);
+    region.dataset.timeCompatibleCount = String(timeCompatibleCount);
+    region.dataset.year = String(props.year);
+    syncCatalogScrollState(region);
+  }, [props.layers.length, props.year, requestedCount, timeCompatibleCount]);
+
   useLayoutEffect(() => {
     if (!host.current) return;
     const context = () => projectContext(latest.current);
@@ -92,5 +183,11 @@ export default function SiteLayerLibrary(props: Props) {
   useLayoutEffect(() => {
     controller.current?.update(projectContext(latest.current));
   }, [props.layers, props.visibility, props.opacity, props.layerOrder, props.area, props.year, props.membershipEpoch]);
-  return <span ref={host} className="site-layer-library-host" aria-label="Staged layer library" />;
+  return <span className="site-layer-library-shell">
+    <span ref={host} className="site-layer-library-host" aria-label="Inspected fixture layer library" />
+    <span className="site-layer-library-summary" role="status" aria-live="polite"
+      aria-label={`${requestedCount} layers requested visible; ${timeCompatibleCount} time-compatible at ${props.year}; renderer delivery remains held.`}>
+      <span><strong>{requestedCount}</strong> requested</span><span className="site-layer-library-divider" aria-hidden="true">·</span><span><strong>{timeCompatibleCount}</strong> time match</span>
+    </span>
+  </span>;
 }

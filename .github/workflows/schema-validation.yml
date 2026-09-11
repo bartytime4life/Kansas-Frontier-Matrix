@@ -299,6 +299,15 @@ jobs:
           echo "::notice::Shared JSON Schema runner entries label expected schema rejection as EXPECTED_FAIL and reserve FAIL for harness or polarity errors; specialized validators retain their own diagnostics, and process exits plus pytest enforce the bounded result."
           make schemas
 
+      - name: Validate the MapLibre performance-envelope contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/maplibre/validate_perf_envelope.py \
+            configs/maplibre/perf-envelope.v1.json
+          python tools/validators/maplibre/validate_perf_envelope.py --fixtures
+          python -m pytest -q tests/maplibre/test_perf_envelope_contract.py
+
       - name: Run repository-owned schema and contract tests
         shell: bash
         run: |
@@ -313,7 +322,7 @@ jobs:
             echo "### Schema validation"
             echo
             echo "- Parsed every JSON file under schemas, meta-schema checked every *.schema.json file, and required canonical v1 schemas to declare unique IDs."
-            echo "- Required non-empty valid and invalid fixture lanes plus reviewed rejection expectations for every aggregate validator, ran focused DatasetVersion tests and aggregate selection checks, ran make schemas, and ran the repository-owned schema/contract tests."
+            echo "- Required non-empty valid and invalid fixture lanes plus reviewed rejection expectations for every aggregate validator, ran focused DatasetVersion tests and aggregate selection checks, ran make schemas, validated the tracked MapLibre performance envelope and its fixture polarity, and ran the repository-owned schema/contract tests."
             echo "- Shared JSON Schema runner entries print EXPECTED_FAIL for expected schema rejection and reserve FAIL for harness or polarity errors; specialized validators retain their own diagnostics, and exit status plus pytest determine the job result."
             echo "- Result: ${{ job.status }}. This proves only the tested machine-shape behavior; it does not establish semantic truth, evidence closure, source authority, policy approval, rights or sensitivity clearance, release readiness, or publication authority."
             echo "- No schema, fixture, validation report, receipt, proof, policy decision, release record, lifecycle record, or published artifact was emitted."

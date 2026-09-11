@@ -78,11 +78,16 @@ jobs:
             "tests/domains/hydrology/test_no_network_proof.py"
             "tests/domains/hydrology/test_public_safe_flow_fixture.py"
             "tests/domains/hydrology/test_public_safe_water_level_fixture.py"
+            "tests/domains/hydrology/test_living_waters_fixture_packet.py"
             "tests/domains/hydrology/test_nhdplus_hr_ambiguity.py"
             "tests/cross_domain/test_environmental_observation_boundaries.py"
             "tools/validators/domains/hydrology/README.md"
             "tools/validators/domains/hydrology/validate_public_safe_flow_fixture.py"
             "tools/validators/domains/hydrology/validate_public_safe_water_level_fixture.py"
+            "tools/validators/domains/hydrology/validate_living_waters_fixture_packet.py"
+            "schemas/contracts/v1/domains/hydrology/living_waters_fixture_packet.schema.json"
+            "fixtures/contracts/v1/domains/hydrology/living_waters_fixture_packet/valid/first_proof.json"
+            "fixtures/contracts/v1/domains/hydrology/living_waters_fixture_packet/invalid/ambiguous_join_answered.json"
             "tools/validators/domains/hydrology/validate_nhdplus_waterbody_crosswalk.py"
             "tools/ci/kfm_no_network/README.md"
             "tools/ci/kfm_no_network/sitecustomize.py"
@@ -129,6 +134,7 @@ jobs:
               test_root / "test_adaptive_threshold_proposal.py",
               test_root / "test_hydro_identity_bridge.py",
               test_root / "test_streamflow_qc_context_assessment.py",
+              test_root / "test_living_waters_fixture_packet.py",
               test_root / "test_no_network_proof.py",
           }
           test_inventory = sorted(path for path in test_root.rglob("*") if path.is_file())
@@ -258,6 +264,7 @@ jobs:
               "validate_adaptive_threshold_proposal.py",
               "validate_hydro_identity_bridge.py",
               "validate_streamflow_qc_context_assessment.py",
+              "validate_living_waters_fixture_packet.py",
           }
           expected_dedicated_validator_files = {
               "usgs_water_api_cutover/README.md",
@@ -505,6 +512,7 @@ jobs:
             tests/domains/hydrology/test_adaptive_threshold_proposal.py \
             tests/domains/hydrology/test_hydro_identity_bridge.py \
             tests/domains/hydrology/test_streamflow_qc_context_assessment.py
+            tests/domains/hydrology/test_living_waters_fixture_packet.py
 
           python tests/domains/hydrology/test_public_safe_flow_fixture.py --verbose
           python tests/domains/hydrology/test_public_safe_water_level_fixture.py --verbose
@@ -537,6 +545,17 @@ jobs:
           fi
 
           echo "EXPECTED_REJECTION: invalid Hydrology flow fixture"
+
+          python tools/validators/domains/hydrology/validate_living_waters_fixture_packet.py \
+            fixtures/contracts/v1/domains/hydrology/living_waters_fixture_packet/valid/first_proof.json
+
+          if python tools/validators/domains/hydrology/validate_living_waters_fixture_packet.py \
+            fixtures/contracts/v1/domains/hydrology/living_waters_fixture_packet/invalid/ambiguous_join_answered.json; then
+            echo "::error::The ambiguous Living Waters join was allowed to answer."
+            exit 1
+          fi
+
+          echo "EXPECTED_REJECTION: ambiguous Living Waters reach join"
 
           python tools/validators/domains/hydrology/validate_public_safe_water_level_fixture.py \
             fixtures/domains/hydrology/public_safe_water_level/valid/public_safe_water_level.json

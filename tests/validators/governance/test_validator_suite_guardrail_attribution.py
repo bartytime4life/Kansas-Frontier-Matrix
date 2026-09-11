@@ -25,6 +25,10 @@ class ValidatorSuiteGuardrailAttributionTests(unittest.TestCase):
     def test_guardrails_are_separate_fail_closed_steps(self) -> None:
         expected = [
             ("Validate canonical validator registry", "make validator-registry-check"),
+            (
+                "Enforce critical-document structure sentinel",
+                "make docs-critical-structure",
+            ),
             ("Enforce workflow-security ratchet", "make workflow-security"),
             ("Enforce repository-topology ratchet", "make repository-topology"),
         ]
@@ -62,6 +66,7 @@ class ValidatorSuiteGuardrailAttributionTests(unittest.TestCase):
 
     def test_independent_validation_stages_survive_prior_failure(self) -> None:
         expected_steps = [
+            "Enforce critical-document structure sentinel",
             "Require a non-vacuous aggregate validator inventory",
             "Test shared JSON Schema runner fixture semantics",
             "Test generated-receipt shape and artifact integrity",

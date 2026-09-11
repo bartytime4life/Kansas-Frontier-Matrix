@@ -192,6 +192,9 @@ python -m pytest -q -p no:cacheprovider \
 
 python tests/domains/hydrology/test_public_safe_flow_fixture.py --verbose
 
+python -m pytest -q -p no:cacheprovider \
+  tests/domains/hydrology/test_living_waters_fixture_packet.py
+
 python tools/validators/domains/hydrology/validate_nhdplus_waterbody_crosswalk.py --fixtures
 ```
 
@@ -235,6 +238,7 @@ VERIFICATION** and must not be inferred from the bounded pass.
 | `test_hydrology_smoke.py`, the EvidenceBundle alias schema/wrapper, and its fixture pair | CONFIRMED bounded executable slice | Local alias shape, valid/invalid polarity, and fail-closed process-level network guards. | Does not prove EvidenceRef resolution, EvidenceBundle closure, source or semantic validity, policy, proof, release, or publication. |
 | `test_aquifer_observation.py` and `test_aquifer_context_link.py` with their schemas, wrappers, and fixtures | CONFIRMED bounded executable slice | Closed local shapes, valid/invalid polarity, optional observation links, typed endpoints, responsibility separation, and network denial. | Does not prove endpoint resolution, aquifer membership, real source validity, evidence, policy, proof, release, or publication. |
 | `test_public_safe_flow_fixture.py` with its validator and fixture pair | CONFIRMED bounded executable slice | Frozen synthetic FlowObservation profile, exact fail-closed findings, 00060/ft3/s measurement shape, generalized county support, time ordering, fixture-only governance, not-flood-warning limitations, bounded parsing, CLI behavior, and network denial. | Does not prove a real observation, gauge/source identity, EvidenceBundle resolution, policy, flood warning, proof, release, or publication. |
+| `test_living_waters_fixture_packet.py` with its closed support schema, validator, and fixture pair | CONFIRMED bounded executable slice | One synthetic versioned HUC/reach context, generalized Kansas gauge identity, three-point discharge hydrograph, exact parameter/statistic/unit/qualifier semantics, distinct stale/no-results/unavailable states, and an ambiguous reach join that must abstain. | Does not validate real source bytes or identity, admit or activate a source, resolve evidence, apply policy, release, deploy, or publish. |
 | `test_nhdplus_hr_ambiguity.py` with its closed schema, semantic validator, and eight fixtures | CONFIRMED bounded executable slice | Version-bound waterbody-only scope, deterministic SHA-256 identity, exact/split/merge/complex cardinality, `ANSWER`/`ABSTAIN` polarity, duplicate and impossible-area rejection, bounded parsing, CLI behavior, and network independence. | Does not copy or validate USGS source rows, establish flowline/reach/HUC identity, admit a source, resolve evidence, apply release policy, or publish a lookup. |
 | Child README files under this subtree | CONFIRMED for files updated in this documentation pass | Provide lane-specific scope and boundary statements. | Do not prove executable tests, fixtures, validators, CI, or release wiring. |
 | `docs/domains/hydrology/DATA_LIFECYCLE.md` | CONFIRMED doctrine / PROPOSED implementation | Provides Hydrology lifecycle, source-role, source-vintage, evidence, release, correction, and rollback posture. | Concrete validators, fixtures, routes, policy runtime, and pass rates remain NEEDS VERIFICATION. |

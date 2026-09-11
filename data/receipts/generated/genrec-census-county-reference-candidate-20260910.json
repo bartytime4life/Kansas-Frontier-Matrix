@@ -1,0 +1,177 @@
+{
+  "receipt_id": "genrec-census-county-reference-candidate-20260910",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/census-county-reference-candidate.yml",
+    "apps/explorer-web/src/site/mount-living-atlas.ts",
+    "apps/explorer-web/src/site/reference-geography-source-registry.ts",
+    "apps/explorer-web/tests/browser/reference-geography.spec.ts",
+    "apps/explorer-web/tests/reference-geography-source-registry.test.ts",
+    "data/registry/sources/settlements-infrastructure/census_cartographic_boundary_counties_2025_500k.source.json",
+    "docs/sources/catalog/census/README.md",
+    "docs/sources/catalog/census/cartographic-boundary-files.md",
+    "tests/source/test_census_cartographic_boundary_counties.py",
+    "tools/validators/source/census_cartographic_boundary_counties.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/census-county-reference-candidate.yml": "sha256:d7f4e487ceddd0ff1e423871c930cb9a90cd36a33ac9e85247604ad072108a9c",
+    "apps/explorer-web/src/site/mount-living-atlas.ts": "sha256:532466931fde671e6cae94b00d7429852d6de0d137407069c5b928b74e2aeecd",
+    "apps/explorer-web/src/site/reference-geography-source-registry.ts": "sha256:07e267df0a63d8589c0b3fc3405a9068b372ff6e4ca558413e7f8ec4cfb3fb53",
+    "apps/explorer-web/tests/browser/reference-geography.spec.ts": "sha256:68ebcb414312008b948186d6ed59656e43171575faf475708beae539281aa632",
+    "apps/explorer-web/tests/reference-geography-source-registry.test.ts": "sha256:c3f2a9f88442941c0d3b6bfbff3f1dcde81bf31af38073429e831ef220936ee6",
+    "data/registry/sources/settlements-infrastructure/census_cartographic_boundary_counties_2025_500k.source.json": "sha256:16d5b210c3ec7851c60e5cb5ebe1f6ce8b451ca3e9791292618d3e60f1bc90a1",
+    "docs/sources/catalog/census/README.md": "sha256:be2cf73e3836a240075f2a12edc7d96c413029b9cda6c1a528d36be6a3b8c8b7",
+    "docs/sources/catalog/census/cartographic-boundary-files.md": "sha256:84339beec7953d979345f5095a64ee1726f5fe4ae038c14fef5178c5e134fa3f",
+    "tests/source/test_census_cartographic_boundary_counties.py": "sha256:b7642f33cafaa7d3f84dceeeae19f92266b8ab022756651207153ccda408393e",
+    "tools/validators/source/census_cartographic_boundary_counties.py": "sha256:b086f6aa3c474401f8f8c84e8c121b990387bc3615bb3a2125bbd0e755e4726c"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex GPT-5",
+    "version": "2026-09-10"
+  },
+  "prompt_or_contract": "sha256:b059fe9c15b16ad45bd511515395d4f532c0e9ba4e6f6ab0a02d5ab032d3c5fe",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector and local Git",
+      "Google Drive and Google Docs connector",
+      "Notion connector",
+      "official-source web verification",
+      "local deterministic source, schema, UI, documentation, and workflow validation"
+    ],
+    "generation_settings": "Unknown sampling values are not inferred."
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:aa976c00b181939755d0da757f4c7c2dc0103c3b3b4530fb2a91c2bb62fc777c"
+    ],
+    "attached_docs": [
+      "KFM MapLibre Operating Architecture — Governed UI / AI Interaction Manual",
+      "Kansas Frontier Matrix Pipeline Living Implementation Manual v0.3",
+      "Kansas Frontier Matrix Implementation Reference",
+      "KFM Encyclopedia",
+      "KFM Full Atlas seed cards"
+    ],
+    "evidence_refs": [
+      "repo:main@0d0dbf355370fa7271feabba8f5b6c9f35fdb3a8",
+      "https://www2.census.gov/geo/tiger/GENZ2025/shp/cb_2025_us_county_500k.zip",
+      "https://www.census.gov/geographies/mapping-files/time-series/geo/cartographic-boundary.html",
+      "https://www.census.gov/programs-surveys/geography/technical-documentation/naming-convention/cartographic-boundary-file.html",
+      "notion:https://app.notion.com/p/3d6a92021bf6816cae0ec1ccbd15e21e",
+      "gdrive:1aivNyfMjQ8urQO6vjt4YvkT1ltF1t7fxCahEcnGV4Dw"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/census-county-reference-candidate.yml": "PROPOSED",
+    "apps/explorer-web/src/site/mount-living-atlas.ts": "PROPOSED",
+    "apps/explorer-web/src/site/reference-geography-source-registry.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/reference-geography.spec.ts": "PROPOSED",
+    "apps/explorer-web/tests/reference-geography-source-registry.test.ts": "CONFIRMED",
+    "data/registry/sources/settlements-infrastructure/census_cartographic_boundary_counties_2025_500k.source.json": "PROPOSED",
+    "docs/sources/catalog/census/README.md": "PROPOSED",
+    "docs/sources/catalog/census/cartographic-boundary-files.md": "PROPOSED",
+    "tests/source/test_census_cartographic_boundary_counties.py": "CONFIRMED",
+    "tools/validators/source/census_cartographic_boundary_counties.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Refreshed to main 0d0dbf355370fa7271feabba8f5b6c9f35fdb3a8 after terrain PR #4452 merged and confirmed that this slice does not overlap its changed paths."
+    },
+    {
+      "gate": "exact-upstream-archive-inspection",
+      "outcome": "PASS",
+      "reason": "Two complete HTTPS downloads reproduced 11,758,981 bytes and SHA-256 aa976c00b181939755d0da757f4c7c2dc0103c3b3b4530fb2a91c2bb62fc777c. Offline replay verified 3,235 national records, 105 unique Kansas GEOIDs, EPSG:4269, the declared bbox, and deterministic Kansas identity and shape-record hashes."
+    },
+    {
+      "gate": "source-descriptor-schema",
+      "outcome": "PASS",
+      "reason": "The repository SourceDescriptor validator accepted the proposed descriptor with disabled activation, noassertion rights, review required, and public release false."
+    },
+    {
+      "gate": "offline-validator-tests",
+      "outcome": "PASS",
+      "reason": "Four deterministic Python tests passed with a synthetic seven-member shapefile archive, exact 105-GEOID semantics, explicit network denial, safe archive limits, and fail-closed corrupt/path cases."
+    },
+    {
+      "gate": "explorer-unit-and-build",
+      "outcome": "PASS",
+      "reason": "Explorer Web passed 482 unit tests across 59 files and the TypeScript/Vite production build on the refreshed main. The existing large-chunk warning and local Node 24 versus repository Node 22 engine warning remain visible."
+    },
+    {
+      "gate": "documentation-metadata-and-local-links",
+      "outcome": "PASS",
+      "reason": "Both changed Census documents passed the required metadata-block profile and local-link validation. Three inherited stale references promoted by the changed-file ratchet were corrected to existing repository targets. External links were classified but not requested by that repository-local checker."
+    },
+    {
+      "gate": "workflow-security",
+      "outcome": "PASS",
+      "reason": "The new path-bounded read-only workflow passed the repository security scanner with zero invariant, drift, baseline, or stale-baseline findings."
+    },
+    {
+      "gate": "local-browser-test",
+      "outcome": "SKIPPED",
+      "reason": "The browser test is authored for hosted CI, but the local runner has no Playwright browser and the official Chromium download timed out at the restricted network boundary; no local browser PASS is claimed."
+    },
+    {
+      "gate": "source-custody-admission-evidence-and-release",
+      "outcome": "SKIPPED",
+      "reason": "Intentionally not performed. No payload is committed, no RAW or QUARANTINE authority is invented, and rights, domain, EvidenceBundle, policy, release, correction, and rollback review remain open."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Draft PR #4453 exists. Hosted CI evaluates the exact pushed head after this receipt is finalized, so no future hosted result is encoded as receipt-local validation; inspect the PR checks directly."
+    },
+    {
+      "gate": "independent-human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending; this receipt is not review or approval."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0017-source-descriptor-admission-process.md",
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "census-2025-county-cartographic-archive",
+      "validated": true,
+      "evidence_ref": "https://www2.census.gov/geo/tiger/GENZ2025/shp/cb_2025_us_county_500k.zip"
+    },
+    {
+      "id": "census-cartographic-boundary-product-page",
+      "validated": true,
+      "evidence_ref": "https://www.census.gov/geographies/mapping-files/time-series/geo/cartographic-boundary.html"
+    },
+    {
+      "id": "census-cartographic-boundary-usage-description",
+      "validated": true,
+      "evidence_ref": "https://www.census.gov/programs-surveys/geography/technical-documentation/naming-convention/cartographic-boundary-file.html"
+    },
+    {
+      "id": "repository-directory-governance",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@277c851940f48ef127d53e813eaa98361fd4e872"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-10T00:39:25Z",
+  "emitter": "OpenAI Codex GPT-5 via ChatGPT Work Mode",
+  "links": {
+    "pr_number": 4453,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "The candidate was authored from main@0d0dbf355370fa7271feabba8f5b6c9f35fdb3a8 and integrated by PR #4453 as merge commit 648f6fc0abaed6b787bb60f669f89b9e38162ec9. Draft follow-up PR #4454 corrects the exact-name browser assertions and Census catalog targets discovered by hosted validation and refreshes this receipt. The merged candidate makes one real, byte-verified Census county reference visible as a non-loadable source connection in the Explorer and records its exact identity, 105 Kansas GEOIDs, scope, limitations, and repository lineage. It does not commit or publish county geometry, activate a connector, issue an admission or EvidenceBundle, approve policy, create a MapLibre source, release, deploy, publish, or change repository settings. The existing map remains synthetic and makes no external data request. The archive remains caller-supplied for bounded offline verification until an accountable steward approves a custody lane. The receipt excludes itself from artifact hashes. Rollback before any release is a focused reviewed revert of PR #4453 plus PR #4454 if integrated; no external runtime or published state exists to roll back."
+}

@@ -12,7 +12,7 @@
   ],
   "artifact_hashes": {
     ".github/workflows/geography-crosswalk.yml": "sha256:0ced7d5e81dfc950c6903df1e110b2cabaa4d3843ce1cdf2606bdc57f5e86afc",
-    "contracts/crosswalks/geography_crosswalk.md": "sha256:bc113f22823cc998c937171f9155281ff07d261e0e6025dc2072a7e63c370ba7",
+    "contracts/crosswalks/geography_crosswalk.md": "sha256:9bd1b27aea8ce4b20d23de286d3db0db9814aace60c6db221f077aaba99f55ba",
     "docs/intake/exploratory/pass-20-geography-crosswalk-source-map.md": "sha256:bdd047e69d7e78800c151b765cbc7f5458154f60bdda7a787ca1b4cc51ca7f71",
     "fixtures/contracts/v1/crosswalks/geography_crosswalk/cases.json": "sha256:db104c1ff63bec6fafa7b04854b1c98697d8b0b5ff3ce0f33383e7adbc24c739",
     "schemas/contracts/v1/crosswalks/geography_crosswalk.schema.json": "sha256:2b4c581e99c7ae1d47171090392d9fc1a39452b57964d1c9ea06347bf8eecef3",
@@ -151,9 +151,9 @@
   "created_at": "2026-08-11T01:48:50Z",
   "emitter": "OpenAI Codex via ChatGPT Work",
   "links": {
-    "pr_number": null,
+    "pr_number": 4437,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Fixture-only GeographyCrosswalk packet derived from Pass 20 KFM-IDX-APP-008, the consolidated atlas vocabulary, and merged GeographyVersion semantics. It declares digest-bound version pairs, forward-only finite relations, integer-millionth weights, evidence references, disclosures, and deterministic identity while preserving geography, geometry, mapping, evidence, policy, review, release, publication, deployment, and public-use boundaries."
+  "notes": "Fixture-only GeographyCrosswalk packet derived from Pass 20 KFM-IDX-APP-008, the consolidated atlas vocabulary, and merged GeographyVersion semantics. It declares digest-bound version pairs, forward-only finite relations, integer-millionth weights, evidence references, disclosures, and deterministic identity while preserving geography, geometry, mapping, evidence, policy, review, release, publication, deployment, and public-use boundaries. On 2026-09-08 the contract artifact digest was refreshed for a documentation-only PR #4437; the original authoring identity and validation record remain lineage and do not attribute that revision."
 }

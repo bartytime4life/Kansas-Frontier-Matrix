@@ -1,0 +1,163 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/map-georeference-control-point-evidence.yml": "sha256:5608ed043f9e880b3f479a9debe780f8a26b6f22737d408494facedfb5940122",
+    "contracts/map/georeference_control_point_evidence_assessment.md": "sha256:7fc0a6f50ccc790517987d1e9a40c7b7b9acfd420dae88dc19f2d65d8427b549"
+  },
+  "artifact_paths": [
+    ".github/workflows/map-georeference-control-point-evidence.yml",
+    "contracts/map/georeference_control_point_evidence_assessment.md"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@6087d07b49362540e437dc666d1cbaa6eb6b82c3",
+      "id": "ADR-0029-directory-rules-v2",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/intake/exploratory/pass-18-georeference-control-point-evidence-source-map.md@e8697f0048da71abe225114924e74cd44a675471",
+      "id": "pass-18-source-map",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:schemas/contracts/v1/map/georeference_control_point_evidence_assessment.schema.json@70c9df9664980fde59c620da05d2b304aaeab629",
+      "id": "georeference-control-point-evidence-schema",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:tools/validators/map/validate_georeference_control_point_evidence_assessment.py@61cb55dc23f93a5d9581ae5c9be5fdeb5ba8efb5",
+      "id": "georeference-control-point-evidence-validator",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:data/receipts/generated/genrec-pass18-georeference-control-point-evidence-20260811.json@1f19feed1bc2fb960dfa42c542ff5231036b5748",
+      "id": "historical-generated-receipt",
+      "validated": true
+    },
+    {
+      "evidence_ref": "drive:11GH5lYaa-lqXDKhG20GmiSetFgh5VWx3#pages=85-86",
+      "id": "arcgis-pro-gcp-selection-and-survey-source",
+      "validated": true
+    },
+    {
+      "evidence_ref": "attachment:a-primer-of-gis-fundamental-geographic-and-cartographic-concepts.pdf#pages=132-133,160-161",
+      "id": "gis-georeferencing-uncertainty-and-accuracy-primer",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-09-08T05:05:03Z",
+  "emitter": "Codex (GPT-5) via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "a-primer-of-gis-fundamental-geographic-and-cartographic-concepts.pdf"
+    ],
+    "evidence_refs": [
+      "repo:main@6087d07b49362540e437dc666d1cbaa6eb6b82c3",
+      "repo:contracts/map/georeference_control_point_evidence_assessment.md@8aaa4afd2a056999c322a7d7d70d39675fa0cf37",
+      "repo:schemas/contracts/v1/map/georeference_control_point_evidence_assessment.schema.json@70c9df9664980fde59c620da05d2b304aaeab629",
+      "repo:fixtures/contracts/v1/map/georeference_control_point_evidence_assessment/cases.json@f8c965f502acc35bbaa96163f08bcb0b4a93723e",
+      "repo:tools/validators/map/validate_georeference_control_point_evidence_assessment.py@61cb55dc23f93a5d9581ae5c9be5fdeb5ba8efb5",
+      "repo:tests/map/test_georeference_control_point_evidence_assessment.py@a314ed31f62965be39235762d801ac4b4b9f9c1e",
+      "repo:docs/intake/exploratory/pass-18-georeference-control-point-evidence-source-map.md@e8697f0048da71abe225114924e74cd44a675471",
+      "repo:data/receipts/generated/genrec-pass18-georeference-control-point-evidence-20260811.json@1f19feed1bc2fb960dfa42c542ff5231036b5748",
+      "github:commit/ded9a9755316fee97827d5d65b8fc26e31c2ae4b (historical receipt artifact ref)",
+      "drive:11GH5lYaa-lqXDKhG20GmiSetFgh5VWx3#pages=85-86 (GCP selection, distribution, and survey guidance; read-only lineage)",
+      "notion:https://app.notion.com/p/3c9a92021bf68195b8b1f3a8d694b447 (coordination only)"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5",
+    "provider": "OpenAI",
+    "version": "2026-09-08"
+  },
+  "notes": "Authoring provenance for the georeference control-point evidence assessment contract currentness update and its dependency-closed receipt-validation wiring. The receipt excludes itself from artifact hashes. The historical 2026-08-11 receipt remains immutable and is validated against exact originating commit ded9a9755316fee97827d5d65b8fc26e31c2ae4b; this receipt binds the refreshed contract and workflow to the current branch. No schema, fixture, validator, focused-test, runtime assessment semantics, external observation, release, deployment, publication, or public-use authority is created or changed. Human review and current-head hosted validation remain pending.",
+  "override_record": null,
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector (read-only)",
+      "Notion connector (coordination)",
+      "local PDF inspection",
+      "remote exact-ref readback"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:f6bc00795df0aae58c6600836b51c2045716b8cda58431edb4338d304222c686",
+  "receipt_id": "genrec-georeference-control-point-evidence-contract-currentness-20260908",
+  "truth_labels": {
+    ".github/workflows/map-georeference-control-point-evidence.yml": "PROPOSED",
+    "contracts/map/georeference_control_point_evidence_assessment.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-bundle-reconciliation",
+      "outcome": "PASS",
+      "reason": "The authoritative target, schema, fixtures, validator, focused tests, workflow, source map, and historical receipt were reconciled at main@6087d07b49362540e437dc666d1cbaa6eb6b82c3."
+    },
+    {
+      "gate": "drive-source-lineage",
+      "outcome": "PASS",
+      "reason": "Drive source pages 85-86 were inspected for GCP target clarity, spatial distribution, coordinate survey, and image-location matching guidance."
+    },
+    {
+      "gate": "supplied-gis-primer-inspection",
+      "outcome": "PASS",
+      "reason": "Supplied primer pages 132-133 and 160-161 were inspected for georeferencing uncertainty, process documentation, and the accuracy-versus-precision distinction."
+    },
+    {
+      "gate": "focused-pytest",
+      "outcome": "PASS",
+      "reason": "All 14 focused georeference control-point evidence assessment tests passed locally."
+    },
+    {
+      "gate": "fixture-replay",
+      "outcome": "PASS",
+      "reason": "All 34 conformance fixtures reproduced their expected envelopes exactly: 1 PASS, 8 ABSTAIN, 19 DENY, and 6 ERROR."
+    },
+    {
+      "gate": "document-and-diff-checks",
+      "outcome": "PASS",
+      "reason": "Metadata validation, relative-link resolution, and git diff whitespace checks passed."
+    },
+    {
+      "gate": "historical-receipt-exact-commit-replay",
+      "outcome": "PASS",
+      "reason": "The immutable 2026-08-11 receipt validated against its originating artifact commit ded9a9755316fee97827d5d65b8fc26e31c2ae4b."
+    },
+    {
+      "gate": "currentness-receipt-local-parity",
+      "outcome": "PASS",
+      "reason": "The currentness receipt validates against the two authored artifact hashes and the receipt schema; the receipt intentionally excludes itself."
+    },
+    {
+      "gate": "changed-area-repository-topology",
+      "outcome": "FAIL",
+      "reason": "The changed-area aggregate reports six pre-existing repository-topology findings and zero invariants; the exact same 127 findings, 121 baselined warnings, and six FAIL_NEW_DRIFT findings reproduce on clean main and are not introduced by this change."
+    },
+    {
+      "gate": "currentness-exact-head-workflow",
+      "outcome": "SKIPPED",
+      "reason": "Pending branch and draft pull-request workflow execution."
+    },
+    {
+      "gate": "independent-human-review",
+      "outcome": "SKIPPED",
+      "reason": "No human reviewer is recorded; review remains pending."
+    }
+  ]
+}

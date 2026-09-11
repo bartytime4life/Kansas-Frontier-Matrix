@@ -2,19 +2,20 @@
 doc_id: kfm://doc/tools-validators-docs-readme
 title: tools/validators/docs README
 type: README
-version: v0.8
-status: draft; five-bounded-child-executables; terminology-parity-proposed
+version: v0.9
+status: draft; six-bounded-child-executables; terminology-parity-proposed
 owner: TODO-tooling-qa-owner-plus-docs-steward-plus-ci-steward
 created: 2026-07-07
-updated: 2026-08-24
+updated: 2026-09-10
 policy_label: repository-facing; docs-validator-parent; markdown-qa; non-authoritative
 owning_root: tools/
 responsibility: parent and navigation lane for bounded documentation validators covering local links, graph connectivity, metadata blocks, freshness, terminology, opt-in assessment-axis separation, and documentation QA without deciding doctrine, evidence sufficiency, source admissibility, policy exceptions, release approval, or publication
-truth_posture: CONFIRMED bounded local-only link-check, document-graph, meta-block, stale-scan, and opt-in truth-label assessment-axis executables with synthetic tests / PROPOSED terminology-parity executable and broader assessment-document adoption / NEEDS VERIFICATION hosted exact-head results, historical baselines, steward acceptance, and required-check coupling
+truth_posture: CONFIRMED bounded local-only link-check, critical-structure, document-graph, meta-block, stale-scan, and opt-in truth-label assessment-axis executables with synthetic tests / PROPOSED terminology-parity executable and broader assessment-document adoption / NEEDS VERIFICATION hosted exact-head results, historical baselines, steward acceptance, and required-check coupling
 related:
   - ../README.md
   - ../_common/README.md
   - ./link-check/README.md
+  - ./critical-structure/README.md
   - ./document-graph/README.md
   - ./meta-block/README.md
   - ./stale-scan/README.md
@@ -26,7 +27,7 @@ related:
   - ../../../control_plane/document_registry.yaml
   - ../../../tests/validators/docs/
 notes:
-  - "This parent lane contains five bounded local-only executables: link-check, document-graph, meta-block, stale-scan, and the opt-in truth-label assessment-axis linter."
+  - "This parent lane contains six bounded local-only executables: link-check, critical-structure, document-graph, meta-block, stale-scan, and the opt-in truth-label assessment-axis linter."
   - "Documentation validators emit QA projections and cannot create truth, source admission, policy, review, release, or publication authority."
   - "Assessment-axis linting verifies only that an opted-in document keeps authority or epistemic posture separate from capability maturity; it does not interpret either value."
 [/KFM_META_BLOCK_V2] -->
@@ -45,6 +46,7 @@ notes:
 |---|---|---|
 | Parent README | **CONFIRMED** | Navigation and authority boundary only; no parent executable is claimed. |
 | `link-check/` | **CONFIRMED bounded executable** | Local inline/reference links, files, directories, images, and fragments; external URLs remain unverified. |
+| `critical-structure/` | **CONFIRMED bounded executable** | Explicitly enrolled critical Markdown; the initial profile detects contributor-contract self-insertion and boundary corruption without interpreting claims. |
 | `document-graph/` | **CONFIRMED bounded executable** | Nodes, typed edges, backlinks, reachability, generated MOCs, and registry parity. |
 | `meta-block/` | **CONFIRMED bounded executable** | `KFM_META_BLOCK_V2` structure plus review-only registry-delta candidates. |
 | `stale-scan/` | **CONFIRMED bounded executable** | Explicit-as-of freshness, review-age, placeholder-owner, temporal-marker, and review-due signals. |
@@ -58,6 +60,7 @@ notes:
 | Question | Owning child lane |
 |---|---|
 | Does a local Markdown target or fragment resolve? | `link-check/` |
+| Does an explicitly enrolled critical document retain its bounded structural invariants? | `critical-structure/` |
 | How are documents connected, and which are unreachable or identity-conflicted? | `document-graph/` |
 | Is the bounded metadata envelope structurally valid, and what registry review delta follows? | `meta-block/` |
 | Is review/freshness posture stale under an explicit as-of date and threshold? | `stale-scan/` |
@@ -105,6 +108,7 @@ Responsibility-root placement remains:
 | Lane | Pass | Warn / not applicable | Fail | Operational error |
 |---|---|---|---|---|
 | Link check | `DOC_LINK_CHECK_PASS` | informational external/unverified state | target/anchor/path failures | `ERROR` |
+| Critical structure | `DOC_CRITICAL_STRUCTURE_PASS` | none | bounded heading, duplicate-section, boundary, or final-newline failures | `ERROR` |
 | Document graph | `DOC_GRAPH_PASS` | `DOC_GRAPH_WARN` | `DOC_GRAPH_FAIL` | `ERROR` |
 | Metadata block | `DOC_META_BLOCK_PASS` | `DOC_META_BLOCK_WARN` | `DOC_META_BLOCK_FAIL` | `ERROR` |
 | Freshness scan | `DOC_STALE_SCAN_PASS` | `DOC_STALE_SCAN_WARN` | `DOC_STALE_SCAN_FAIL` | `ERROR` |
@@ -121,6 +125,13 @@ Run the bounded child suites independently:
 ```bash
 python -m unittest discover \
   --start-directory tests/validators/docs/link-check \
+  --pattern 'test_*.py' \
+  --verbose
+```
+
+```bash
+python -m unittest discover \
+  --start-directory tests/validators/docs/critical-structure \
   --pattern 'test_*.py' \
   --verbose
 ```

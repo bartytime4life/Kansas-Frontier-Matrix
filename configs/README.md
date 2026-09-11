@@ -3,12 +3,12 @@ doc_id: kfm://doc/configs-readme
 title: configs/ — Canonical Commit-Safe Configuration Root
 type: README
 subtype: canonical-root-landing-page
-version: v0.6
-prior_version: v0.5
+version: v0.7
+prior_version: v0.6
 status: repository-grounded; draft; canonical-root; mixed-maturity; non-authoritative
 owner: "@bartytime4life — CONFIRMED CODEOWNERS route and root-registry default; accepted specialist stewardship and independent approval remain NEEDS VERIFICATION"
 created: 2026-06-16
-updated: 2026-09-04
+updated: 2026-09-08
 review_date_timezone: America/Chicago
 policy_label: public-documentation; non-secret; consumer-bound; fail-closed; non-publisher
 current_path: configs/README.md
@@ -339,9 +339,10 @@ without claiming a complete configuration audit.
 
 | Surface | Inspected behavior or declaration | What it does not prove |
 |---|---|---|
-| [MapLibre envelope schema](../schemas/maplibre/perf-envelope.schema.json) | Requires a JSON object and permits additional properties; no budget fields or numerical bounds are required | Meaningful validation of the envelope's declared budgets |
-| [Envelope validator wrapper](../tools/validators/maplibre/validate_perf_envelope.py) | Delegates to the shared JSON-schema runner with the schema above | A dedicated numerical or browser-performance gate |
-| [MapLibre performance workflow](../.github/workflows/maplibre-perf-governance.yml) | Explicitly reads `configs/maplibre/perf-envelope.v1.json`; requires `object_type == PerfEnvelope` and a dictionary-valued `thresholds` | Enforcement of the five numerical envelope budgets, general runtime loading, or release readiness |
+| [MapLibre envelope schema](../schemas/maplibre/perf-envelope.schema.json) | Closes the v1 configuration identity/posture, five threshold fields and numerical domains, and bounded notes | Accepted benchmark semantics, measured performance, policy, or release authority |
+| [Envelope validator wrapper](../tools/validators/maplibre/validate_perf_envelope.py) | Delegates explicit files or the reviewed positive/negative fixture lanes to the shared JSON-schema runner using repository-rooted paths | A browser-performance or release gate |
+| [MapLibre performance workflow](../.github/workflows/maplibre-perf-governance.yml) | Checks exact schema/config field inventories, numerical domains, fixture classification, and companion wiring while preserving the no-install hold | General runtime loading, measured performance, or release readiness |
+| [MapLibre envelope contract tests](../tests/maplibre/test_perf_envelope_contract.py) | Load the tracked config, schema, validator, and two valid/fourteen invalid synthetic fixtures; exercise strict parsing and finite CLI outcomes | Renderer execution, threshold authority, or production parity |
 | [Fixture negative tests](../tests/maplibre/test_perf_governance_negative_paths.py) and [builder](../tests/maplibre/perf_fixture_builder.py) | Three tests exercise a separate in-memory fixture's frame, memory, and tile-error constraints; neither file reads the envelope | Validation of the committed envelope or actual browser measurements |
 | [Template guide](templates/README.md) | Records five placeholder payloads and unresolved consumers | Template consumption, accepted schema conformance, source admission, or release closure |
 | [Ignore rules](../.gitignore) | Ignore `configs/local/*`, except `configs/local/README.md` | Safety, existence, encryption, or runtime use of local files |
@@ -766,7 +767,7 @@ update does not mark those requirements complete for an unseen payload.
 | Accountable specialist stewardship and independent review | NEEDS VERIFICATION | Approval; assignment and qualifying review/control evidence |
 | Complete payload/template consumer map | NEEDS VERIFICATION | Operational use; pinned reads/imports/loaders and tests |
 | Root-wide identity, precedence, unknown-key or semantic contract | PROPOSED / UNKNOWN | Adoption or shared loading; accepted scope and executable cases |
-| MapLibre envelope numerical enforcement | NEEDS VERIFICATION | Performance assurance; real payload-bound checks and measured evidence |
+| MapLibre envelope machine-shape enforcement | IMPLEMENTED; hosted exact-head result pending | Performance assurance still requires benchmark authority, runtime execution, and measured evidence |
 | Template schema/semantic adequacy | NEEDS VERIFICATION | Consumption; per-template consumer and valid/invalid cases |
 | Metadata/freshness coverage for configs | CONFIRMED command-scope gap | Hosted documentation assurance; explicit inclusion or accepted equivalent |
 | Child README semantic freshness | PARTIAL | Reliance on child claims; targeted reviews, not root-date inheritance |

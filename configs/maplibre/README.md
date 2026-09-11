@@ -2,29 +2,29 @@
 doc_id: kfm://doc/configs-maplibre-readme
 title: configs/maplibre/ — MapLibre Configuration, Drift, and Consumer-Binding Boundary
 type: readme
-version: v0.5
-status: draft; repository-grounded; bounded-config-lane; runtime-HOLD; performance-HOLD; non-release; non-publication
+version: v0.6
+status: draft; repository-grounded; bounded-config-lane; machine-contract-validated; runtime-HOLD; performance-HOLD; non-release; non-publication
 owners: OWNER_TBD — configuration and MapLibre specialist stewardship
 review_route: "@bartytime4life; repository routing is not independent approval"
 created: 2026-06-16
-updated: 2026-09-04
+updated: 2026-09-08
 policy_label: public-documentation; commit-safe; non-secret; non-authoritative
 current_path: configs/maplibre/README.md
 owning_root: configs/
 root_class: canonical
 readme_profile: BOUNDARY_COMPACT
 responsibility: explain shared non-secret MapLibre configuration inputs, their actual readers, and their validation limits
-truth_posture: CONFIRMED pinned inventory and inspected source; PROPOSED documentation revision and future contract; UNKNOWN operational readiness and general config loading
+truth_posture: CONFIRMED closed v1 machine schema, tracked-config validation, synthetic fixture polarity, focused tests, and CI binding; HOLD runtime performance and release claims; UNKNOWN operational readiness and general config loading
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
-  base_commit: bb3eb695e6068b38453ca3ded8f1394a8fdebc20
-  root_tree: b17f061592f3da0b1903c5252bc1d12437fe3575
-  prior_readme_blob: 9b24a8d51013e06401cce7a02f06941feecf37e7
+  base_commit: b30210971c41073a9a2e36b5a0d7d451ef43d592
+  root_tree: 2e648bd3db2ee9891eec31c897cf71cff08f06bb
+  prior_readme_blob: 8b2b2662cd5ecb003bff98b8c983acece4129e99
   payload_blob: 2833f99b5316df91e71c0f8913bb06d70917abcf
   package_manifest_blob: f6d450af19c33011e159e123c8a07ca2bca6dfd3
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   perf_workflow_blob: 8e4c3b801fe6dbaac5e6645b054768859e84fa1e
-  method: pinned connector reads; exact-byte materialized subset for bounded offline checks; no full checkout
+  method: current full checkout; bounded offline schema, fixture, test, workflow, and documentation checks
 related:
   - ../README.md
   - ./perf-envelope.v1.json
@@ -36,16 +36,19 @@ related:
   - ../../schemas/maplibre/perf-envelope.schema.json
   - ../../tools/validators/maplibre/validate_perf_envelope.py
   - ../../.github/workflows/maplibre-perf-governance.yml
+  - ../../.github/workflows/schema-validation.yml
+  - ../../tests/fixtures/maplibre/perf-envelope/README.md
+  - ../../tests/maplibre/test_perf_envelope_contract.py
   - ../../tests/maplibre/test_perf_governance_negative_paths.py
   - ../../tests/maplibre/perf_fixture_builder.py
   - ../../data/receipts/generated/README.md
 notes:
   - "v0.5 consolidates repeated guidance while retaining the document identity and legacy heading anchors."
   - "ADR-0006 and ADR-0007 are accepted architecture decisions, not proposed decisions or runtime-readiness proofs."
-  - "The three fixture budget tests do not load or validate perf-envelope.v1.json."
-  - "The workflow reads envelope identity and threshold-object shape, not the five numerical budgets."
+  - "The tracked envelope now has closed identity, threshold, notes, type, and numerical machine-shape checks; this does not establish threshold authority or observed performance."
+  - "The legacy three-field scalar tests remain separate; the focused contract suite loads the real config, schema, validator, and fixture pack."
   - "Literal ANSWER in a candidate builder is not evidence that its named validation command ran."
-  - "No configuration payload, schema, dependency, workflow, renderer, source, release, or deployment is changed."
+  - "This slice changes no threshold value, runtime dependency, renderer, source, release, deployment, or publication state."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -64,7 +67,7 @@ see which code actually reads it. The lane inherits the
 | What is tracked here? | This README and `perf-envelope.v1.json`; no child directories at the recorded snapshot. |
 | Is MapLibre architecture accepted? | Yes: ADR-0006 owns the package seam; ADR-0007 selects the renderer family. |
 | Is a renderer version declared? | `packages/maplibre/package.json` declares exact `maplibre-gl` `6.6.0`. That is repository dependency state, not a latest-version or readiness claim. |
-| Are these thresholds fully enforced? | No. The schema accepts any JSON object; workflow shape checks and separate fixture tests do not establish numerical enforcement. |
+| Are these thresholds fully enforced? | Their v1 configuration shape and basic numerical domains are enforced by a closed schema, synthetic fixture polarity, focused tests, and CI. No benchmark methodology or measured-result enforcement is established. |
 | Does this configure a running Explorer? | No general application loader, override model, or deployed binding was established by this review. |
 | Does a successful check permit release? | No. Runtime, performance, source admission, review, release, and publication remain separate gates. |
 
@@ -74,10 +77,10 @@ see which code actually reads it. The lane inherits the
 > approve a source, plugin, sensitive geometry, release, or public endpoint.
 
 > [!NOTE]
-> All repository findings below are pinned to
-> `bb3eb695e6068b38453ca3ded8f1394a8fdebc20`, inspected on 2026-09-04. They are not
-> assertions about later `main`. See [evidence](#evidence-basis) and
-> [validation](#validation) for source identities and execution limits.
+> The implementation base is pinned to
+> `b30210971c41073a9a2e36b5a0d7d451ef43d592`, inspected on 2026-09-08. Hosted
+> results remain separate from local source-defined checks. See
+> [evidence](#evidence-basis) and [validation](#validation) for limits.
 
 **Navigate:** [Inventory](#current-repository-state) ·
 [Readers](#consumer-binding-contract) · [Thresholds](#payload-and-consumer-path) ·
@@ -232,11 +235,12 @@ name. The inspected set is deliberately bounded:
 
 | Source | What it actually does | What it does not establish |
 |---|---|---|
-| [Performance workflow](../../.github/workflows/maplibre-perf-governance.yml) | Parses the envelope; checks `object_type == "PerfEnvelope"` and that `thresholds` is an object. | Does not validate all five keys, their types, units, ranges, or measured results. |
+| [Performance workflow](../../.github/workflows/maplibre-perf-governance.yml) | Checks the closed v1 schema/config inventories, exact identity/posture, five threshold keys, numeric domains, fixture classification, and companion wiring without installing dependencies. | Does not run the JSON Schema engine, browser, or measured-result gate; those remain separate. |
 | [Render-diff builder](../../scripts/build-maplibre-render-diff.mjs) | Parses the envelope and reads `thresholds.render_pixel_delta_ratio` for screenshot comparison. | Not an active benchmark; does not consume the four time budgets. |
 | [Proof-pack builder](../../scripts/build-maplibre-perf-proof-pack.mjs) | Hashes the envelope bytes and records their path/digest. | Hashing is not threshold validation; its literal `validation_outcome: "ANSWER"` does not execute the named command. |
 | [Release-manifest builder](../../scripts/build-maplibre-perf-release-manifest.mjs) | Includes the envelope as an artifact and hashes its bytes. | Does not decide release or validate threshold semantics; output is candidate/rejected. |
-| [Envelope validator](../../tools/validators/maplibre/validate_perf_envelope.py) | Delegates supplied inputs to the existing JSON Schema runner. | The referenced schema only constrains the top level to an object. |
+| [Envelope validator](../../tools/validators/maplibre/validate_perf_envelope.py) | Runs the closed schema against explicit files or the nonempty positive/negative fixture lanes from any working directory. | Machine validity is not benchmark, policy, release, or publication authority. |
+| [Envelope contract tests](../../tests/maplibre/test_perf_envelope_contract.py) | Load the tracked config and schema; pin field inventories and fixture polarity; test numeric boundaries, strict parsing, CLI outcomes, and working-directory independence. | Do not launch MapLibre or measure a runtime. |
 | [Three budget-negative tests](../../tests/maplibre/test_perf_governance_negative_paths.py) | Exercise a separate [dataclass fixture](../../tests/maplibre/perf_fixture_builder.py). | Do **not** load `perf-envelope.v1.json` or test its five threshold fields. |
 | [Retired smoke harness](../../scripts/maplibre-smoke-perf.mjs) | Prints a finite retirement/hold message and sets exit code `3`. | Does not load the config, launch a browser, measure performance, or emit evidence. |
 
@@ -409,21 +413,20 @@ Require nonempty expected-scenario coverage before interpreting a future result.
 
 ### Current command-bearing workflow
 
-The workflow performs syntax checks, nine directly invoked negative/retirement/
-export tests, dependency-state checks, limited envelope shape inspection, and
-readiness/placeholder guards. It deliberately leaves browser, performance,
-render-diff, attestation, proof, release, correction, and rollback execution held.
-
-It also expects the eight performance schemas to retain their placeholder shape.
-Therefore strengthening an envelope schema requires a dependency-closed review of
-the schema, consumers, fixtures/tests, and workflow assumptions; editing the
-schema alone is not a complete implementation slice.
+The performance workflow performs syntax checks, nine directly invoked scalar,
+retirement, and export tests, dependency-state checks, strict envelope inventory
+inspection, fixture classification, and readiness/placeholder guards. The
+dependency-capable schema workflow separately runs the envelope validator against
+the tracked config and both fixture polarities, then executes the focused contract
+tests. Browser, performance, render-diff, attestation, proof, release, correction,
+and rollback execution remain held.
 
 ### Current holds
 
-The permissive schema, numerical enforcement, benchmark methodology, deterministic
-baselines, expected-scenario coverage, output placement, and release-grade
-verification remain unresolved. The candidate builders name outputs beneath
+Threshold authority, benchmark methodology, deterministic baselines,
+expected-scenario coverage, output placement, and release-grade verification
+remain unresolved. Seven adjacent trust-output schemas and the aggregate
+performance verifiers remain placeholders. The candidate builders name outputs beneath
 `artifacts/perf/`; those **source-coded destinations** are not proof that files
 exist, and their trust-shaped content is not canonical receipt/proof/release state.
 
@@ -490,9 +493,10 @@ this revision. A missing commit or Git error is not an empty inventory.
 | Check | Evidence / interpretation |
 |---|---|
 | Exact target directory listing | Confirms two tracked files at the pin, not ignored/external content. |
-| JSON parsing and schema evaluation on materialized payload | Confirms the existing object passes the **open** schema; not numerical validity. |
-| Schema gap probes | `{}` and an object with invalid threshold types still pass; a non-object fails. This demonstrates an inherited validation gap, not its repair. |
+| JSON parsing and schema evaluation on the tracked payload | Confirms the current object passes the closed v1 machine schema; not threshold authority or observed performance. |
+| Contract counterexamples | Missing/wrong identity, unsupported version/domain/posture, unknown/missing fields, wrong types, non-positive timings, invalid ratios, and empty/duplicate notes reject deterministically. |
 | Three existing fixture-budget negative tests | Validate their separate dataclass fields; not the tracked envelope. |
+| Validator CLI probes | Confirm explicit-file and fixture modes, strict duplicate/non-finite parsing, finite missing-input exit, and execution outside the repository working directory. |
 | Retired harness invocation | Expected exit `3` / `WORKFLOW_HOLD`; not a performance pass. |
 | README and generated receipt | Check metadata, links, anchors, fenced examples, exact artifact hash, schema, and pending review. |
 | Full workflow, native aggregate validators, topology, browser, release | Not run for this source-subset revision; no success claimed. |
@@ -509,12 +513,13 @@ beside the config or pretend this proposed record already exists.
 
 ## Required negative cases
 
-The following are **future acceptance requirements**, not a claim that tests exist:
+The first two rows are implemented for the bounded v1 configuration machine
+contract. The remaining rows are future consumer/runtime acceptance requirements:
 
 | Failure family | Required behavior |
 |---|---|
-| Missing, malformed, duplicate-key, unknown-field, or wrong-version config | Deterministic rejection or explicitly permitted conservative fallback. |
-| Wrong type, non-finite number, negative/zero/out-of-range budget | Field-specific finite rejection under the actual contract. |
+| Missing, malformed, duplicate-key, unknown-field, or wrong-version config | **IMPLEMENTED:** deterministic rejection by the focused validator/tests. |
+| Wrong type, non-finite number, negative/zero/out-of-range budget | **IMPLEMENTED:** deterministic rejection with schema and strict-parser coverage. |
 | Conflicting sources, nulls, substitutions, or unsafe path resolution | Explicit precedence or error; no permissive guessing. |
 | Unapproved endpoint/redirect, secret, sensitive log, or unadmitted plugin | Deny and provide redacted diagnostics. |
 | Internal-store reference, unreleased/withdrawn asset, missing/mismatched digest | Do not bind the public source; retain a visible reason. |
@@ -583,24 +588,23 @@ owners. No new runtime package or second config home is needed.
 
 ### Phase 1 — accept a config contract
 
-**PROPOSED next slice:** define the existing five threshold fields' meaning,
-units, bounds, finite-number rules, missing/unknown-key behavior, and version
-compatibility for a named no-network consumer. Determine the schema's accepted
-placement without creating a parallel schema authority.
+**IMPLEMENTED in v0.6 for machine shape:** the existing five fields have closed
+names, types, positive timing domains, a unit-interval pixel ratio, strict
+identity/posture, and fail-closed missing/unknown-key behavior. Measurement
+methodology and threshold authority remain held.
 
 ### Phase 2 — implement one bounded consumer
 
-Add substantive envelope validation and tests using the actual JSON shape. Keep
-it no-network and non-publishing. Prove missing/wrong/extra fields and numerical
-bounds; do not claim the dataclass fixture covers those requirements.
+**IMPLEMENTED in v0.6:** the validator and focused tests load the actual schema,
+tracked payload, and synthetic positive/negative fixtures. They remain no-network
+and non-publishing; the separate dataclass fixture is not presented as coverage.
 
 ### Phase 3 — migrate workflow paths
 
-The inspected readers already use `configs/`; no path migration is requested.
-In the future contract slice, reconcile the workflow's placeholder-schema and
-validator-inventory assumptions with the new validator and negative fixtures.
-Keep unrelated guards and named jobs unchanged unless the reviewed scope requires
-otherwise. Schema tightening must not be made to pass by suppressing its checks.
+**IMPLEMENTED in v0.6 without a path move:** the performance workflow now
+classifies the new fixture lane and recognizes one closed envelope schema plus
+seven remaining placeholders. `schema-validation` executes the validator and
+focused tests. Unrelated guards, job names, and held stages are preserved.
 
 ### Phase 4 — make performance runs hermetic or explicitly admitted
 
@@ -629,8 +633,9 @@ runtime consumers are not inferred from it.
 
 ### Contracts and schemas
 
-A documentation correction is complete only when it accurately states that the
-current schema is permissive. A production config contract remains separate work.
+The bounded v1 machine contract is closed and executable. Accepted benchmark
+semantics, threshold ownership, runtime measurement, and production release
+significance remain separate work.
 
 ### Consumer binding
 
@@ -663,7 +668,7 @@ release, or publication readiness.
 All repository paths in this table were read at the snapshot above. The original
 README was read in full through bounded line ranges before consolidation.
 
-| Evidence | Exact Git blob | What it supports |
+| Historical evidence | Exact Git blob | What it supports |
 |---|---|---|
 | Prior README | `9b24a8d51013e06401cce7a02f06941feecf37e7` | v0.4 baseline and retained navigation. |
 | Parent `configs/README.md` | `a800983eac7582a84e9dd82bc7d4baf04f552ad8` | Shared non-secret configuration responsibility. |
@@ -671,8 +676,8 @@ README was read in full through bounded line ranges before consolidation.
 | ADR-0029 | `a4de0d7a96b78da59cfc499d1025e1508afd8dd9` | Accepted adoption of the exact Directory Rules bytes. |
 | ADR-0006 / ADR-0007 | `4bf4292dc05a85fd4cd829c491808b13894bc223` / `2482eea382fd97e68544bb04bc2e2ea1e1cedebe` | Accepted package seam / renderer-family decisions, not current execution proof. |
 | Package manifest | `f6d450af19c33011e159e123c8a07ca2bca6dfd3` | Exact dependency and export declarations; repairs the prior truncated blob reference. |
-| Envelope / schema | `2833f99b5316df91e71c0f8913bb06d70917abcf` / `511e7f34ca84390fd5d000326ab33c46c3050fc4` | Current values and accept-any-object schema. |
-| Envelope wrapper | `1f9e0f785a701da2a2b8f52bf73f4e97866d951d` | Existing schema-runner delegation. |
+| Envelope / schema baseline | `2833f99b5316df91e71c0f8913bb06d70917abcf` / `511e7f34ca84390fd5d000326ab33c46c3050fc4` | Pre-v0.6 values and former accept-any-object gap; the threshold values remain unchanged. |
+| Envelope validator baseline | `1f9e0f785a701da2a2b8f52bf73f4e97866d951d` | Pre-v0.6 schema-runner wrapper without fixture binding or cwd-independent paths. |
 | Performance workflow | `8e4c3b801fe6dbaac5e6645b054768859e84fa1e` | Shape check, nine direct tests, triggers, and explicit execution holds. |
 | Fixture helper / negative tests | `f5d42f75b671e0fa07767f52fdda9661d0d721ab` / `886543d63184ff5f7fc6f14b6944eb6000ff5a10` | Separate dataclass validation, not envelope loading. |
 | Retired harness | `ac2522686546b7428ad0cc5c8cd76860ab285998` | Finite exit-3 hold. |
@@ -691,24 +696,23 @@ source, policy, or hosted run. It does not resolve EvidenceBundles, run a comple
 probe matrix, measure performance, or establish required-check enforcement.
 Code-defined destinations are not inventories of emitted objects.
 
-**No-loss record:** v0.5 preserves all original H1/H2/H3 anchors and the existing
-identity while consolidating repetitive lists. It corrects contradictory proposed
-ADR language, replaces already-resolved roadmap questions, makes reader/test
-coverage explicit, and narrows unverified runtime/absence claims. Prior content
-remains available at the recorded blob; no payload or normative authority changes.
+**No-loss record:** v0.6 preserves the existing document identity and heading
+anchors, implements the previously proposed machine-contract phases, and retains
+the runtime, evidence, policy, release, and publication boundaries. Prior content
+and the permissive-schema gap remain auditable at the recorded baseline blobs.
 
 ## Open decisions and ADR triggers
 
 ### ADR or migration discipline
 
-The immediate unresolved decision is the substantive envelope contract and its
-consumer/validator/workflow closure. New authority homes, package ownership,
+The bounded envelope machine contract and validator/workflow closure are now
+implemented. Benchmark semantics and threshold authority remain unresolved. New authority homes, package ownership,
 public access, policy, source admission, lifecycle semantics, or meaningful alias
 migrations require their own applicable decisions. This README makes none.
 
 ### No decision by convenience
 
-Do not treat an open schema, convenient endpoint, generated hash, existing
+Do not treat a schema, convenient endpoint, generated hash, existing
 filename, screenshot, or model recommendation as adoption. The correct next
 step is the bounded contract/consumer slice, not a second renderer or live map.
 
@@ -743,7 +747,7 @@ policy, data, or release state. Those require their own bounded rollback records
 
 | Item | State / first affected transition |
 |---|---|
-| Full five-field contract, numerical limits, and validator | **NEEDS VERIFICATION** before substantive config-validity claims. |
+| Full five-field machine contract, numerical domains, and validator | **IMPLEMENTED LOCALLY**; exact-head hosted results and human review remain pending. |
 | All readers, effective loading, precedence, and overrides | **UNKNOWN** beyond the inspected set; blocks general runtime-config claims. |
 | Actual performance scenarios, baselines, metrics, and coverage | **HOLD** before benchmark or regression claims. |
 | Candidate trust-output homes and real command/result binding | **HOLD** before treating outputs as proof or release support. |
