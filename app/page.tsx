@@ -510,6 +510,7 @@ const officialContextRuntimeVisibility = (
 const defaultOrder = LAYER_REGISTRY.map((layer) => layer.id);
 const interactiveLayerIds = LAYER_REGISTRY.flatMap((layer) => layer.renderers.filter((renderer) => renderer.interactive).map((renderer) => renderer.id));
 const layerDomains = ["ALL", ...Array.from(new Set([...LAYER_REGISTRY.map((layer) => layer.domain), ...DOMAIN_HOLDS.map((hold) => hold.domain)])).sort()] as const;
+const catalogCategorySlug = (category: string) => category.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 const drawerViews = ["evidence", "metadata", "lineage", "focus"] as const satisfies readonly DrawerView[];
 const drawerViewLabels: Record<DrawerView, string> = {
   evidence: "Evidence",
@@ -6639,15 +6640,34 @@ export default function Home() {
           <label className="catalog-search"><span aria-hidden="true">⌕</span><span className="sr-only">Search Layer Catalog</span><input type="search" value={layerQuery} onChange={(event) => setLayerQuery(event.target.value)} placeholder="Filter layers and datasets" /></label>
 
           <section className="active-layers" aria-labelledby="active-title">
-            <div className="section-row"><h2 id="active-title">Active layers <span>{visibleCount}/{LAYER_REGISTRY.length}</span></h2><button type="button" onClick={() => setVisibility(Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, layer.id === "kansas-extent"])))}>Clear</button></div>
+            <div className="section-row"><h2 id="active-title">Active local layers <span>{visibleCount}/{LAYER_REGISTRY.length}</span></h2><div className="active-layer-actions"><button type="button" onClick={() => { setVisibility(defaultVisibility); setOpacity(defaultOpacity); }}>Reset defaults</button><button type="button" onClick={() => setVisibility(Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, false])))}>Hide all</button></div></div>
             <div className="active-chips">{activeLayers.map((layer) => <button key={layer.id} type="button" onClick={() => zoomToLayer(layer)}>{layer.title}<span>↗</span></button>)}</div>
           </section>
 
           <nav className="catalog-section-jump" aria-label="Layer Catalog shortcuts">
             <a href="#catalog-layer-stack"><span>Layer toggles</span><b>{filteredLayerIds.size} available</b></a>
+            <a href="#catalog-domain-index-title"><span>All domains</span><b>{CATEGORY_ORDER.length} layer groups</b></a>
             <a href="#priority-context-title"><span>Priority context</span><b>Earthquake · water · smoke</b></a>
             <a href="#official-context-catalog"><span>All source controls</span><b>{OFFICIAL_CONTEXT_SOURCES.length} connections</b></a>
           </nav>
+
+          <section className="catalog-domain-index" aria-labelledby="catalog-domain-index-title">
+            <div className="section-row"><h2 id="catalog-domain-index-title">All layer domains <span>{LAYER_REGISTRY.length} layers</span></h2><small>Jump to a complete group</small></div>
+            <div className="catalog-domain-grid">
+              {CATEGORY_ORDER.map((category) => {
+                const categoryLayers = LAYER_REGISTRY.filter((layer) => layer.category === category);
+                const activeCategoryCount = categoryLayers.filter((layer) => visibility[layer.id]).length;
+                return <button key={category} type="button" data-active={activeCategoryCount > 0} onClick={() => {
+                  setLayerDomain("ALL");
+                  setLayerQuery("");
+                  window.requestAnimationFrame(() => document.getElementById(`catalog-category-${catalogCategorySlug(category)}`)?.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" }));
+                }} aria-label={`Show ${category}: ${activeCategoryCount} of ${categoryLayers.length} active`}>
+                  <strong>{category}</strong><small>{activeCategoryCount}/{categoryLayers.length} active</small>
+                </button>;
+              })}
+            </div>
+            <p>These are the site-local demonstration layers. Official live context—earthquakes, gauges, smoke, radar, watersheds, and terrain—is kept in the separate source-controls section below.</p>
+          </section>
 
           <section className="official-context-catalog" id="official-context-catalog" aria-labelledby="official-context-title">
             <header><div><span>OFFICIAL OPERATIONAL CONTEXT</span><h2 id="official-context-title">Real Kansas source connections</h2><small className="official-context-registry-summary">{SITE_REGISTRY_COUNTS.features} features · {SITE_REGISTRY_COUNTS.connections} connections · {SITE_REGISTRY_COUNTS.actions} actions</small></div><strong>{withheldOfficialCount > 0 ? `${visibleOfficialCount} SELECTED · HELD` : `${visibleOfficialCount}/${OFFICIAL_CONTEXT_SOURCES.length} ON`}</strong></header>
@@ -6721,6 +6741,7 @@ export default function Home() {
           <div className="basemap-control">
             <div className="catalog-filter-grid"><label><span>Basemap style</span><select value={basemap} onChange={(event) => setBasemap(event.target.value as BasemapKey)}>{(Object.keys(BASEMAPS) as BasemapKey[]).map((key) => <option key={key} value={key}>{BASEMAPS[key].title} · {BASEMAPS[key].note}</option>)}</select></label><label><span>Domain filter</span><select value={layerDomain} onChange={(event) => setLayerDomain(event.target.value as (typeof layerDomains)[number])}>{layerDomains.map((domain) => <option key={domain} value={domain}>{domain === "ALL" ? "All domains" : domain}</option>)}</select></label></div>
             <div className="catalog-evidence-filter"><label><span>Map evidence filter</span><select value={mapEvidenceFilter} onChange={(event) => updateMapEvidenceFilter(event.target.value as RegistryEvidenceFilter)}><option value="ALL">All evidence states</option>{(Object.keys(evidenceLabels) as EvidenceState[]).map((state) => <option key={state} value={state}>{state.replaceAll("_", " ")}</option>)}</select></label><output>{mapCompatibleFeatureCount} compatible records</output>{mapEvidenceFilter !== "ALL" && <button type="button" onClick={() => updateMapEvidenceFilter("ALL")}>Clear filter</button>}</div>
+            <div className="catalog-filter-actions"><span>{layerQuery.trim() || layerDomain !== "ALL" || mapEvidenceFilter !== "ALL" ? "Catalog filters are active" : "Showing every local domain"}</span><button type="button" disabled={!layerQuery.trim() && layerDomain === "ALL" && mapEvidenceFilter === "ALL"} onClick={() => { setLayerQuery(""); setLayerDomain("ALL"); updateMapEvidenceFilter("ALL"); }}>Clear filters</button></div>
           </div>
 
           <section className="catalog-layer-stack" id="catalog-layer-stack" aria-labelledby="catalog-layer-stack-title">
@@ -6730,9 +6751,10 @@ export default function Home() {
 
           <div className="catalog-groups">
             {CATEGORY_ORDER.map((category) => {
+              const categoryLayers = LAYER_REGISTRY.filter((layer) => layer.category === category);
               const layers = layerOrder.map((id) => LAYER_REGISTRY.find((layer) => layer.id === id)).filter((layer): layer is LayerRecord => Boolean(layer && layer.category === category && filteredLayerIds.has(layer.id)));
               if (!layers.length) return null;
-              return <section className="catalog-group" key={category}><header className="catalog-group-heading"><h2>{category}</h2><div><button type="button" onClick={() => setLayerGroupVisibility(layers.map((layer) => layer.id), true)}>Show all</button><button type="button" onClick={() => setLayerGroupVisibility(layers.map((layer) => layer.id), false)}>Hide all</button></div></header>{layers.map((layer) => {
+              return <section className="catalog-group" key={category} id={`catalog-category-${catalogCategorySlug(category)}`} aria-labelledby={`catalog-category-${catalogCategorySlug(category)}-title`}><header className="catalog-group-heading"><h2 id={`catalog-category-${catalogCategorySlug(category)}-title`}>{category} <span>{layers.length}/{categoryLayers.length}</span></h2><div><button type="button" onClick={() => setLayerGroupVisibility(layers.map((layer) => layer.id), true)}>Show all</button><button type="button" onClick={() => setLayerGroupVisibility(layers.map((layer) => layer.id), false)}>Hide all</button></div></header>{layers.map((layer) => {
                 const noData = Boolean(layer.temporal && !layer.data.features.some((feature) => isFeatureAvailableForTemporalQuery(layer, feature.properties.year, temporalQuery)));
                 const expanded = expandedLayers.has(layer.id);
                 return <article className="layer-row" key={layer.id} data-active={visibility[layer.id]} data-state={sourceStates[layer.id]}>

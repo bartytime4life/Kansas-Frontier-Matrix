@@ -239,6 +239,9 @@ test("makes the Explorer faster to compose, filter, and investigate across domai
   const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
 
   assert.match(page, /Quick lenses/);
+  assert.match(page, /All layer domains/);
+  assert.match(page, /Reset defaults/);
+  assert.match(page, /catalogCategorySlug/);
   assert.match(page, /MAP_VIEW_PROFILES\.map/);
   assert.match(page, /Map evidence filter/);
   assert.match(page, /mapCompatibleFeatureCount/);
@@ -255,6 +258,8 @@ test("makes the Explorer faster to compose, filter, and investigate across domai
   assert.match(runtime, /map\.setFilter\(renderer\.id, filter \?\? null\)/);
   assert.match(about, /discover nearby cross-domain records/i);
   assert.match(css, /\.catalog-quick-lenses/);
+  assert.match(css, /\.catalog-domain-index/);
+  assert.match(css, /catalog-groups \{ flex: none/);
   assert.match(css, /\.catalog-evidence-filter/);
   assert.match(css, /\.nearby-context-card/);
 });
