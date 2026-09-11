@@ -26,6 +26,8 @@ name: directory-root-registry
       - "pyproject.toml"
       - "data/receipts/generated/genrec-topology-diagnostic-log-safety-20260911.json"
       - "tests/validators/directory_governance/test_validate_output_security_topology.py"
+      - "tests/validators/directory_governance/test_validate_context_binding_topology.py"
+      - "data/receipts/generated/genrec-topology-execution-context-20260911.json"
   push:
     # Exact writer-branch validation while PR delivery is held under #4024.
     # Retire this extra branch filter with a successor binding after handoff.
@@ -49,6 +51,8 @@ name: directory-root-registry
       - "pyproject.toml"
       - "data/receipts/generated/genrec-topology-diagnostic-log-safety-20260911.json"
       - "tests/validators/directory_governance/test_validate_output_security_topology.py"
+      - "tests/validators/directory_governance/test_validate_context_binding_topology.py"
+      - "data/receipts/generated/genrec-topology-execution-context-20260911.json"
   workflow_dispatch:
 
 permissions:
@@ -107,6 +111,15 @@ jobs:
             --pattern 'test_validate_output_security_topology.py' \
             --verbose
 
+      # Context wrapping and display safety are separate native regression suites.
+      - name: Run native topology context regression module
+        run: |
+          set -euo pipefail
+          python -m unittest discover \
+            --start-directory tests/validators/directory_governance \
+            --pattern 'test_validate_context_binding_topology.py' \
+            --verbose
+
       - name: Run focused deterministic no-network tests
         run: |
           set -euo pipefail
@@ -149,6 +162,18 @@ jobs:
             --repo-root . \
             --artifact-git-ref 392f514401030c5c06bd3498eafbfc9a2eef0fe3
 
+          # #4479 changed the renderer/README after the diagnostic receipt; this
+          # workflow correction also supersedes the native-CI artifact binding.
+          # Both old receipts remain immutable and replay at the tested ancestor.
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-topology-diagnostic-log-safety-20260911.json \
+            --repo-root . \
+            --artifact-git-ref 360ae6b0b9eb71ca02abe05564927104d1982343
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-directory-root-registry-native-ci-20260911.json \
+            --repo-root . \
+            --artifact-git-ref 360ae6b0b9eb71ca02abe05564927104d1982343
+
       # These checks deliberately use candidate bytes, not the historical ref.
       # Later edits need a reviewed successor binding; do not rewrite old hashes
       # or move a current check behind the replay pin just to make it pass.
@@ -156,10 +181,10 @@ jobs:
         run: |
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-topology-diagnostic-log-safety-20260911.json \
+            data/receipts/generated/genrec-topology-execution-context-20260911.json \
             --repo-root .
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-directory-root-registry-native-ci-20260911.json \
+            data/receipts/generated/genrec-directory-root-registry-context-closure-20260911.json \
             --repo-root .
 
       - name: Verify tracked worktree stayed unchanged
@@ -174,7 +199,7 @@ jobs:
             echo "### Directory root registry"
             echo
             echo "- Result: ${{ job.status }}."
-            echo "- Receipt scope: August and first-repair ancestor replay plus separately bound current diagnostic and workflow artifacts; neither is review approval."
+            echo "- Receipt scope: Four immutable ancestor replays plus current execution-context and workflow successor bindings; neither is review approval."
             echo "- Scope: schema, adopted-doctrine digest binding, root-class invariants, canonical ordering, and top-level root coverage."
             echo "- Boundary: projection-only; no root creation, activation, write authorization, migration, release, deployment, promotion, or publication."
           } >> "$GITHUB_STEP_SUMMARY"

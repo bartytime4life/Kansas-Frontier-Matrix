@@ -5,6 +5,8 @@ They do not execute the receipt validator or contact GitHub. Native integrity is
 checked separately by the workflow at the actual checkout. The exact writer
 branch is a bounded CI delivery route, not PR-state or publication authority.
 Retire its trigger through a successor receipt, never by rewriting old hashes.
+The #4481/#4479 integration keeps four historical receipts separate from two
+current bindings; native context tests must run, not merely trigger CI.
 """
 from __future__ import annotations
 
@@ -28,9 +30,15 @@ ANCESTOR = "8d235ebc6e7e80704c0f3f93d7c04e338af6a9a1"
 REPAIR = PREFIX + "genrec-directory-root-registry-replay-20260911.json"
 REPAIR_ANCESTOR = "392f514401030c5c06bd3498eafbfc9a2eef0fe3"
 NATIVE_STEP = "Run native diagnostic regression module"
-CURRENT = (
+CONTEXT_STEP = "Run native topology context regression module"
+NATIVE_ANCESTOR = "360ae6b0b9eb71ca02abe05564927104d1982343"
+SUPERSEDED = (
     PREFIX + "genrec-topology-diagnostic-log-safety-20260911.json",
     PREFIX + "genrec-directory-root-registry-native-ci-20260911.json",
+)
+CURRENT = (
+    PREFIX + "genrec-topology-execution-context-20260911.json",
+    PREFIX + "genrec-directory-root-registry-context-closure-20260911.json",
 )
 HISTORICAL_STEP = "Replay historical root-registry authoring receipt"
 CURRENT_STEP = "Verify current diagnostic and workflow authoring receipts"
@@ -100,7 +108,8 @@ class DirectoryRootRegistryWorkflowTests(unittest.TestCase):
             "tools/ci/install_python_ci.py", "tools/ci/python-test.lock",
             "tools/ci/python-dependency-lock-migration.json", "pyproject.toml",
             "tests/validators/directory_governance/test_validate_output_security_topology.py",
-            HISTORICAL, REPAIR, *CURRENT,
+            "tests/validators/directory_governance/test_validate_context_binding_topology.py",
+            HISTORICAL, REPAIR, *SUPERSEDED, *CURRENT,
         ]
         for event in ("pull_request", "push"):
             patterns = self.workflow["on"][event]["paths"]
@@ -137,6 +146,8 @@ class DirectoryRootRegistryWorkflowTests(unittest.TestCase):
         self.assertEqual((0, [
             [HELPER, HISTORICAL, "--repo-root", ".", "--artifact-git-ref", ANCESTOR],
             [HELPER, REPAIR, "--repo-root", ".", "--artifact-git-ref", REPAIR_ANCESTOR],
+            *[[HELPER, path, "--repo-root", ".", "--artifact-git-ref", NATIVE_ANCESTOR]
+              for path in SUPERSEDED],
         ]), (code, calls))
 
     def test_current_artifacts_never_use_historical_replay(self) -> None:
@@ -144,7 +155,7 @@ class DirectoryRootRegistryWorkflowTests(unittest.TestCase):
         self.assertEqual((0, [[HELPER, p, "--repo-root", "."] for p in CURRENT]), (code, calls))
 
     def test_every_receipt_failure_propagates_and_stops_later_commands(self) -> None:
-        for name, count in ((HISTORICAL_STEP, 2), (CURRENT_STEP, 2)):
+        for name, count in ((HISTORICAL_STEP, 4), (CURRENT_STEP, 2)):
             for fail_at in range(count):
                 with self.subTest(step=name, fail_at=fail_at):
                     code, calls = _run(self.steps[name]["run"], fail_at)
@@ -188,8 +199,37 @@ class DirectoryRootRegistryWorkflowTests(unittest.TestCase):
                      "Validate current register against current top-level roots", HISTORICAL_STEP):
             self.assertLess(names.index(NATIVE_STEP), names.index(gate))
 
+    def test_native_context_module_is_required_before_registry_and_receipt_gates(self) -> None:
+        step = self.steps[CONTEXT_STEP]
+        code, calls = _run(step["run"])
+        self.assertEqual((0, [["-m", "unittest", "discover", "--start-directory",
+                              "tests/validators/directory_governance", "--pattern",
+                              "test_validate_context_binding_topology.py", "--verbose"]]),
+                         (code, calls))
+        self.assertEqual({"name", "run"}, set(step))
+        names = [s["name"] for s in self.job["steps"]]
+        self.assertLess(names.index(NATIVE_STEP), names.index(CONTEXT_STEP))
+        for gate in ("Run focused deterministic no-network tests", "Validate fixture polarity",
+                     "Validate current register against current top-level roots",
+                     HISTORICAL_STEP, CURRENT_STEP):
+            self.assertLess(names.index(CONTEXT_STEP), names.index(gate))
+
+    def test_historical_and_current_receipt_inventory_is_disjoint_and_complete(self) -> None:
+        historical = _run(self.steps[HISTORICAL_STEP]["run"])[1]
+        current = _run(self.steps[CURRENT_STEP]["run"])[1]
+        self.assertEqual([HISTORICAL, REPAIR, *SUPERSEDED], [args[1] for args in historical])
+        self.assertEqual(list(CURRENT), [args[1] for args in current])
+        paths = [args[1] for args in historical + current]
+        self.assertEqual(6, len(set(paths)))
+        self.assertFalse(set(SUPERSEDED) & set(CURRENT))
+        # These explicit expected refs must not drift to a mutable branch or HEAD.
+        for args in historical:
+            self.assertRegex(args[-1], r"^[0-9a-f]{40}$")
+        for args in current:
+            self.assertNotIn("--artifact-git-ref", args)
+
     def test_every_test_step_propagates_failure(self) -> None:
-        for name in (NATIVE_STEP, "Run focused deterministic no-network tests",
+        for name in (NATIVE_STEP, CONTEXT_STEP, "Run focused deterministic no-network tests",
                      "Test receipt replay workflow boundary"):
             with self.subTest(step=name):
                 step = self.steps[name]
@@ -203,7 +243,7 @@ class DirectoryRootRegistryWorkflowTests(unittest.TestCase):
         self.assertEqual({
             "Check out tested revision without persisted credentials", "Set up repository Python",
             "Record tested checkout identity", "Install declared schema and test dependencies",
-            NATIVE_STEP, "Run focused deterministic no-network tests",
+            NATIVE_STEP, CONTEXT_STEP, "Run focused deterministic no-network tests",
             "Test receipt replay workflow boundary", "Validate fixture polarity",
             "Validate current register against current top-level roots", HISTORICAL_STEP,
             CURRENT_STEP, "Verify tracked worktree stayed unchanged", "Record trust boundary",
