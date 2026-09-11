@@ -6597,7 +6597,7 @@ export default function Home() {
           <Link className="event-sidebar-link" href="/observatory">Event Observatory · real dated radar, smoke, rivers & life ↗</Link>
           <nav className="left-panel-tabs" aria-label="Living Atlas sections">
             <button type="button" aria-current={leftPanelMode === "views" ? "page" : undefined} data-active={leftPanelMode === "views"} onClick={() => setLeftPanelMode("views")}>Views <b>{LIVING_ATLAS_VIEWS.length}</b></button>
-            <button type="button" aria-current={leftPanelMode === "layers" ? "page" : undefined} data-active={leftPanelMode === "layers"} onClick={() => setLeftPanelMode("layers")}>Layers <b>{visibleCount}</b></button>
+            <button type="button" aria-current={leftPanelMode === "layers" ? "page" : undefined} data-active={leftPanelMode === "layers"} onClick={() => setLeftPanelMode("layers")}>Layers <b>{visibleCount}/{LAYER_REGISTRY.length}</b></button>
             <button type="button" aria-current={leftPanelMode === "places" ? "page" : undefined} data-active={leftPanelMode === "places"} onClick={() => setLeftPanelMode("places")}>Places <b>{savedWorkspaces.length}</b></button>
             <button type="button" aria-current={leftPanelMode === "stories" ? "page" : undefined} data-active={leftPanelMode === "stories"} onClick={() => setLeftPanelMode("stories")}>Stories <b>1</b></button>
           </nav>
@@ -6639,11 +6639,17 @@ export default function Home() {
           <label className="catalog-search"><span aria-hidden="true">⌕</span><span className="sr-only">Search Layer Catalog</span><input type="search" value={layerQuery} onChange={(event) => setLayerQuery(event.target.value)} placeholder="Filter layers and datasets" /></label>
 
           <section className="active-layers" aria-labelledby="active-title">
-            <div className="section-row"><h2 id="active-title">Active layers <span>{visibleCount}</span></h2><button type="button" onClick={() => setVisibility(Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, layer.id === "kansas-extent"])))}>Clear</button></div>
+            <div className="section-row"><h2 id="active-title">Active layers <span>{visibleCount}/{LAYER_REGISTRY.length}</span></h2><button type="button" onClick={() => setVisibility(Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, layer.id === "kansas-extent"])))}>Clear</button></div>
             <div className="active-chips">{activeLayers.map((layer) => <button key={layer.id} type="button" onClick={() => zoomToLayer(layer)}>{layer.title}<span>↗</span></button>)}</div>
           </section>
 
-          <section className="official-context-catalog" aria-labelledby="official-context-title">
+          <nav className="catalog-section-jump" aria-label="Layer Catalog shortcuts">
+            <a href="#catalog-layer-stack"><span>Layer toggles</span><b>{filteredLayerIds.size} available</b></a>
+            <a href="#priority-context-title"><span>Priority context</span><b>Earthquake · water · smoke</b></a>
+            <a href="#official-context-catalog"><span>All source controls</span><b>{OFFICIAL_CONTEXT_SOURCES.length} connections</b></a>
+          </nav>
+
+          <section className="official-context-catalog" id="official-context-catalog" aria-labelledby="official-context-title">
             <header><div><span>OFFICIAL OPERATIONAL CONTEXT</span><h2 id="official-context-title">Real Kansas source connections</h2><small className="official-context-registry-summary">{SITE_REGISTRY_COUNTS.features} features · {SITE_REGISTRY_COUNTS.connections} connections · {SITE_REGISTRY_COUNTS.actions} actions</small></div><strong>{withheldOfficialCount > 0 ? `${visibleOfficialCount} SELECTED · HELD` : `${visibleOfficialCount}/${OFFICIAL_CONTEXT_SOURCES.length} ON`}</strong></header>
             <p>Live and current official sources may be drawn for orientation. They stay outside KFM admission, reports, exports, and EvidenceBundles.</p>
             <div className="official-context-pulse" aria-label="Official data connection status">
@@ -6716,6 +6722,11 @@ export default function Home() {
             <div className="catalog-filter-grid"><label><span>Basemap style</span><select value={basemap} onChange={(event) => setBasemap(event.target.value as BasemapKey)}>{(Object.keys(BASEMAPS) as BasemapKey[]).map((key) => <option key={key} value={key}>{BASEMAPS[key].title} · {BASEMAPS[key].note}</option>)}</select></label><label><span>Domain filter</span><select value={layerDomain} onChange={(event) => setLayerDomain(event.target.value as (typeof layerDomains)[number])}>{layerDomains.map((domain) => <option key={domain} value={domain}>{domain === "ALL" ? "All domains" : domain}</option>)}</select></label></div>
             <div className="catalog-evidence-filter"><label><span>Map evidence filter</span><select value={mapEvidenceFilter} onChange={(event) => updateMapEvidenceFilter(event.target.value as RegistryEvidenceFilter)}><option value="ALL">All evidence states</option>{(Object.keys(evidenceLabels) as EvidenceState[]).map((state) => <option key={state} value={state}>{state.replaceAll("_", " ")}</option>)}</select></label><output>{mapCompatibleFeatureCount} compatible records</output>{mapEvidenceFilter !== "ALL" && <button type="button" onClick={() => updateMapEvidenceFilter("ALL")}>Clear filter</button>}</div>
           </div>
+
+          <section className="catalog-layer-stack" id="catalog-layer-stack" aria-labelledby="catalog-layer-stack-title">
+            <div className="section-row"><h2 id="catalog-layer-stack-title">Registered layers <span>{filteredLayerIds.size}/{LAYER_REGISTRY.length}</span></h2><div className="catalog-layer-stack-actions"><button type="button" disabled={filteredLayerIds.size === 0} onClick={() => setLayerGroupVisibility(Array.from(filteredLayerIds), true)}>Show all</button><button type="button" disabled={filteredLayerIds.size === 0} onClick={() => setLayerGroupVisibility(Array.from(filteredLayerIds), false)}>Hide all</button></div></div>
+            <p>Every site-local layer remains available below. Toggle visibility directly or open a row for opacity, features, zoom, and draw order.</p>
+          </section>
 
           <div className="catalog-groups">
             {CATEGORY_ORDER.map((category) => {

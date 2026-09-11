@@ -1288,6 +1288,23 @@ test("keeps the feature, connection, action, and coding registries aligned", asy
   assert.match(docs, /Held ideas intentionally scaffolded/);
 });
 
+test("keeps the complete Layer Catalog reachable in one scroll surface", async () => {
+  const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+
+  assert.match(page, /Layers <b>\{visibleCount\}\/\{LAYER_REGISTRY\.length\}<\/b>/);
+  assert.match(page, /className="catalog-section-jump"/);
+  assert.match(page, /href="#catalog-layer-stack"/);
+  assert.match(page, /href="#priority-context-title"/);
+  assert.match(page, /Earthquake · water · smoke/);
+  assert.match(page, /id="catalog-layer-stack"/);
+  assert.match(page, /Registered layers <span>\{filteredLayerIds\.size\}\/\{LAYER_REGISTRY\.length\}<\/span>/);
+  assert.match(css, /\.layer-catalog-body \{[^}]*overflow-y: auto/);
+  assert.match(css, /\.catalog-groups \{ flex: none; min-height: auto; overflow: visible;/);
+  assert.match(css, /\.official-context-catalog \{ flex: none; min-height: 0; overflow: hidden;/);
+  assert.match(css, /\.catalog-layer-stack-actions/);
+});
+
 test("carries governed map context into creation workflows and checked source portals", async () => {
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   const sources = await readFile(new URL("../app/source-intelligence.ts", import.meta.url), "utf8");
