@@ -1,12 +1,22 @@
+"""Synthetic Living Waters semantics and the owning CI execution boundary.
+
+The shell harness exercises the actual workflow block with a recording Python
+stand-in. It proves argument wiring and failure propagation, not execution of
+all Hydrology suites or runner-wide network isolation. Temporary probes never
+change fixture bytes, executable bits, source admission, or release state.
+"""
 from __future__ import annotations
 
 import copy
 import importlib.util
 import json
+import shutil
 import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+import yaml
 from jsonschema import Draft202012Validator
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -74,3 +84,184 @@ def test_cli_receipt_is_explicitly_non_authorizing() -> None:
     receipt = json.loads(result.stdout)
     assert receipt["outcome"] == "PASS"
     assert set(receipt["authority"].values()) == {False}
+
+
+WORKFLOW_PATH = REPO_ROOT / ".github/workflows/domain-hydrology.yml"
+LIVING_WATERS_TEST = "tests/domains/hydrology/test_living_waters_fixture_packet.py"
+LIVING_WATERS_MARKER = "WORKFLOW_CHECK_EXECUTED: hydrology-living-waters-fixture-packet"
+
+
+def _workflow_steps() -> tuple[dict, dict]:
+    workflow = yaml.safe_load(WORKFLOW_PATH.read_text(encoding="utf-8"))
+    steps = workflow["jobs"]["validate-hydrology"]["steps"]
+    bounded = [step for step in steps if step.get("name") == "Run bounded Hydrology schema validation"]
+    summary = [step for step in steps if step.get("name") == "Record Hydrology validation result and broader hold"]
+    assert len(bounded) == len(summary) == 1
+    return bounded[0], summary[0]
+
+
+def _bash() -> str:
+    executable = shutil.which("bash")
+    if executable is None:
+        pytest.skip("Bash is required for the Linux workflow execution contract")
+    return executable
+
+
+def _run_bounded_shell(
+    tmp_path: Path, script: str, *, pytest_status: int = 0,
+    guard_status: int = 0, accept_invalid: bool = False,
+) -> tuple[subprocess.CompletedProcess[str], list[list[str]]]:
+    # Reproduce the real 100644 input: it is a pytest argument, not a program.
+    probe = tmp_path / LIVING_WATERS_TEST
+    probe.parent.mkdir(parents=True, exist_ok=True)
+    probe.write_text("# synthetic non-executable argument probe\n", encoding="utf-8")
+    probe.chmod(0o644)
+    trace = tmp_path / "python-argv.bin"
+    trace.write_bytes(b"")
+    environment = {
+        "PATH": "/usr/bin:/bin", "HOME": str(tmp_path), "LC_ALL": "C",
+        "KFM_TEST_TRACE": str(trace), "KFM_TEST_PYTEST_STATUS": str(pytest_status),
+        "KFM_TEST_GUARD_STATUS": str(guard_status),
+        "KFM_TEST_ACCEPT_INVALID": "1" if accept_invalid else "0",
+    }
+    # Functions take precedence over PATH. No real Python or domain validator
+    # runs in this subprocess; the owning suites execute separately in pytest.
+    recorder = r"""
+python() {
+  printf '\036' >> "$KFM_TEST_TRACE"
+  printf '%s\0' "$@" >> "$KFM_TEST_TRACE"
+  if [[ "${1:-}" == "-c" ]]; then
+    return "$KFM_TEST_GUARD_STATUS"
+  fi
+  if [[ "${1:-}" == "-m" && "${2:-}" == "pytest" ]]; then
+    return "$KFM_TEST_PYTEST_STATUS"
+  fi
+  case " $* " in
+    *"/invalid/"*)
+      if [[ "$KFM_TEST_ACCEPT_INVALID" == "1" ]]; then return 0; fi
+      return 1 ;;
+  esac
+  return 0
+}
+"""
+    result = subprocess.run(
+        [_bash(), "--noprofile", "--norc", "-c", recorder + script],
+        cwd=tmp_path, env=environment, text=True, capture_output=True,
+        timeout=10, check=False,
+    )
+    calls = [
+        chunk.decode("utf-8").rstrip("\0").split("\0")
+        for chunk in trace.read_bytes().split(b"\x1e") if chunk
+    ]
+    return result, calls
+
+
+def test_workflow_runs_living_waters_with_pytest_and_reaches_later_checks(tmp_path: Path) -> None:
+    bounded, _ = _workflow_steps()
+    result, calls = _run_bounded_shell(tmp_path, bounded["run"])
+    assert result.returncode == 0, result.stderr
+    pytest_calls = [call for call in calls if call[:2] == ["-m", "pytest"]]
+    assert len(pytest_calls) == 1
+    expected_modules = [
+        "test_no_network_proof.py", "test_hydrology_smoke.py",
+        "test_aquifer_observation.py", "test_aquifer_context_link.py",
+        "test_nhdplus_hr_ambiguity.py", "test_adaptive_threshold_proposal.py",
+        "test_hydro_identity_bridge.py", "test_streamflow_qc_context_assessment.py",
+        "test_living_waters_fixture_packet.py",
+    ]
+    assert pytest_calls[0] == ["-m", "pytest", "-q", "-p", "no:cacheprovider"] + [
+        f"tests/domains/hydrology/{name}" for name in expected_modules
+    ]
+    assert ["tests/domains/hydrology/test_public_safe_flow_fixture.py", "--verbose"] in calls
+    assert ["tests/domains/hydrology/test_public_safe_water_level_fixture.py", "--verbose"] in calls
+    assert ["tests/cross_domain/test_environmental_observation_boundaries.py", "--verbose"] in calls
+    for group, name in (("valid", "first_proof"), ("invalid", "ambiguous_join_answered")):
+        assert [
+            "tools/validators/domains/hydrology/validate_living_waters_fixture_packet.py",
+            f"fixtures/contracts/v1/domains/hydrology/living_waters_fixture_packet/{group}/{name}.json",
+        ] in calls
+    assert calls[-1] == [
+        "tools/validators/domains/hydrology/validate_nhdplus_waterbody_crosswalk.py", "--fixtures",
+    ]
+    assert LIVING_WATERS_MARKER in result.stdout
+    assert "WORKFLOW_HOLD:" in result.stdout
+
+
+def test_missing_continuation_control_detects_unexecuted_living_waters(tmp_path: Path) -> None:
+    bounded, _ = _workflow_steps()
+    line = "tests/domains/hydrology/test_streamflow_qc_context_assessment.py"
+    script = bounded["run"]
+    assert line + " \\\n" in script
+    broken = script.replace(line + " \\\n", line + "\n", 1)
+    result, calls = _run_bounded_shell(tmp_path, broken)
+    assert result.returncode == 126
+    assert "Permission denied" in result.stderr
+    pytest_call = next(call for call in calls if call[:2] == ["-m", "pytest"])
+    assert LIVING_WATERS_TEST not in pytest_call
+    assert len(calls) == 2  # startup assertion and incomplete pytest invocation
+    assert "WORKFLOW_CHECK_EXECUTED:" not in result.stdout
+
+
+@pytest.mark.parametrize("exit_code", [1, 2, 5])
+def test_workflow_propagates_pytest_failure_before_later_checks(tmp_path: Path, exit_code: int) -> None:
+    bounded, _ = _workflow_steps()
+    result, calls = _run_bounded_shell(tmp_path, bounded["run"], pytest_status=exit_code)
+    assert result.returncode == exit_code
+    assert len(calls) == 2
+    assert "WORKFLOW_CHECK_EXECUTED:" not in result.stdout
+
+
+def test_workflow_stops_when_startup_guard_is_unavailable(tmp_path: Path) -> None:
+    bounded, _ = _workflow_steps()
+    result, calls = _run_bounded_shell(tmp_path, bounded["run"], guard_status=1)
+    assert result.returncode == 1
+    assert len(calls) == 1
+    assert "WORKFLOW_CHECK_EXECUTED:" not in result.stdout
+
+
+def test_workflow_rejects_an_accepted_negative_control(tmp_path: Path) -> None:
+    bounded, _ = _workflow_steps()
+    result, _ = _run_bounded_shell(tmp_path, bounded["run"], accept_invalid=True)
+    assert result.returncode == 1
+    assert "known-invalid Hydrology EvidenceBundle fixture was accepted" in result.stdout
+    assert "WORKFLOW_CHECK_EXECUTED:" not in result.stdout
+
+
+def test_summary_uses_raw_bounded_step_outcome_and_preserves_guards() -> None:
+    bounded, summary = _workflow_steps()
+    assert bounded["id"] == "bounded_validation"
+    assert bounded.get("continue-on-error", False) is False
+    assert bounded["env"]["KFM_NO_NETWORK"] == "1"
+    assert bounded["env"]["PYTHONDONTWRITEBYTECODE"] == "1"
+    assert bounded["env"]["PYTHONPATH"] == "${{ github.workspace }}/tools/ci/kfm_no_network:${{ github.workspace }}"
+    assert summary["if"] == "always()"
+    assert summary["env"]["KFM_HYDROLOGY_VALIDATION_OUTCOME"] == "${{ steps.bounded_validation.outcome }}"
+
+
+@pytest.mark.parametrize("outcome", ["success", "failure", "cancelled", "skipped", "", "PRIVATE-SENTINEL"])
+def test_summary_claims_completion_only_after_success(tmp_path: Path, outcome: str) -> None:
+    _, summary = _workflow_steps()
+    output = tmp_path / "summary.md"
+    result = subprocess.run(
+        [_bash(), "--noprofile", "--norc", "-c", summary["run"]],
+        cwd=tmp_path,
+        env={
+            "PATH": "/usr/bin:/bin", "HOME": str(tmp_path), "LC_ALL": "C",
+            "GITHUB_STEP_SUMMARY": str(output),
+            "KFM_HYDROLOGY_VALIDATION_OUTCOME": outcome,
+        },
+        text=True, capture_output=True, timeout=10, check=False,
+    )
+    assert result.returncode == 0, result.stderr
+    text = output.read_text(encoding="utf-8")
+    assert "WORKFLOW_HOLD:" in text
+    assert "PRIVATE-SENTINEL" not in text
+    if outcome == "success":
+        assert LIVING_WATERS_MARKER in text
+        assert "eleven bounded domain modules" in text
+        assert "WORKFLOW_CHECK_NOT_COMPLETED:" not in text
+    else:
+        assert "WORKFLOW_CHECK_EXECUTED:" not in text
+        assert "WORKFLOW_CHECK_NOT_COMPLETED: hydrology-bounded-validation" in text
+        safe_outcome = outcome if outcome in {"failure", "cancelled", "skipped"} else "unknown"
+        assert f"Bounded validation outcome: {safe_outcome}." in text

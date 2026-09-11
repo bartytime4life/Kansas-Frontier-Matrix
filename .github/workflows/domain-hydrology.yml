@@ -473,7 +473,7 @@ jobs:
               "Inventoried five Hydrology schema wrappers without importing or executing them; "
               "inventory is not acceptance of an executable validation suite."
           )
-          print("Confirmed six bounded semantic Hydrology fixture validators.")
+          print(f"Confirmed {len(expected_semantic_validators)} bounded semantic Hydrology fixture validators.")
           print(
               "Inventoried two dedicated Hydrology validator modules as substantive; "
               "their fixture suites remain owned by dedicated workflows."
@@ -493,6 +493,7 @@ jobs:
           echo "WORKFLOW_HOLD: broader executable Hydrology validation is not established"
 
       - name: Run bounded Hydrology schema validation
+        id: bounded_validation
         shell: bash
         env:
           KFM_NO_NETWORK: "1"
@@ -511,7 +512,7 @@ jobs:
             tests/domains/hydrology/test_nhdplus_hr_ambiguity.py \
             tests/domains/hydrology/test_adaptive_threshold_proposal.py \
             tests/domains/hydrology/test_hydro_identity_bridge.py \
-            tests/domains/hydrology/test_streamflow_qc_context_assessment.py
+            tests/domains/hydrology/test_streamflow_qc_context_assessment.py \
             tests/domains/hydrology/test_living_waters_fixture_packet.py
 
           python tests/domains/hydrology/test_public_safe_flow_fixture.py --verbose
@@ -580,12 +581,39 @@ jobs:
           echo "WORKFLOW_CHECK_EXECUTED: hydrology-adaptive-threshold-proposal"
           echo "WORKFLOW_CHECK_EXECUTED: hydrology-hydro-identity-bridge"
           echo "WORKFLOW_CHECK_EXECUTED: hydrology-streamflow-qc-context"
+          echo "WORKFLOW_CHECK_EXECUTED: hydrology-living-waters-fixture-packet"
           echo "WORKFLOW_HOLD: broader Hydrology semantics, evidence closure, proof, and release remain unestablished"
 
       - name: Record Hydrology validation result and broader hold
         if: always()
         shell: bash
+        env:
+          KFM_HYDROLOGY_VALIDATION_OUTCOME: ${{ steps.bounded_validation.outcome }}
         run: |
+          set -euo pipefail
+
+          # An always-run summary must not turn a failed/skipped step into proof.
+          # Use the raw outcome, not conclusion after continue-on-error handling.
+          outcome="${KFM_HYDROLOGY_VALIDATION_OUTCOME:-unknown}"
+          case "$outcome" in
+            success|failure|cancelled|skipped) ;;
+            *) outcome="unknown" ;;
+          esac
+          if [[ "$outcome" != "success" ]]; then
+            {
+              echo "### Hydrology validation status"
+              echo
+              echo "Bounded validation outcome: $outcome."
+              echo
+              echo 'WORKFLOW_CHECK_NOT_COMPLETED: hydrology-bounded-validation'
+              echo 'Some checks may have run; use the step log for individual results.'
+              echo 'No complete bounded-suite execution claim is made.'
+              echo
+              echo 'WORKFLOW_HOLD: broader Hydrology semantics, evidence closure, proof, and release remain unestablished'
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
           cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
           ### Hydrology validation status
 
@@ -607,9 +635,11 @@ jobs:
 
           `WORKFLOW_CHECK_EXECUTED: hydrology-streamflow-qc-context`
 
+          `WORKFLOW_CHECK_EXECUTED: hydrology-living-waters-fixture-packet`
+
           `WORKFLOW_HOLD: broader Hydrology semantics, evidence closure, proof, and release remain unestablished`
 
-          When this job is green, it has executed ten bounded domain modules
+          When the bounded validation step succeeds, it has executed eleven bounded domain modules
           and the EvidenceBundle, AquiferObservation, and AquiferContextLink
           wrappers plus the synthetic FlowObservation, datum-bound
           WaterLevelObservation, and NHDPlus waterbody crosswalk profiles
@@ -626,7 +656,7 @@ jobs:
 
           Hydrology uses the shared readiness source classifiers directly instead
           of the root-level CLI because its validator roots intentionally mix exact
-          placeholders, five inventoried schema wrappers, six bounded semantic
+          placeholders, five inventoried schema wrappers, seven bounded semantic
           validators, two dedicated validator subtrees, and PROPOSED schema/policy
           scaffolds. Every file is checked against an explicit inventory. The
           dedicated USGS Water API cutover and WBD HUC12 material-change suites
@@ -661,7 +691,9 @@ jobs:
           bound water-level profiles, the synthetic waterbody-only crosswalk
           profile, the bounded adaptive-
           threshold review proposal, the source-native identity bridge, and the
-          fixture-only streamflow QC context assessment.
+          fixture-only streamflow QC context assessment, and the synthetic
+          Living Waters packet with exact series semantics, distinct finite states,
+          and an ambiguous gauge-to-reach join that must abstain.
           It also checks that observations may remain
           unlinked and that relation records cannot absorb measurements or copied
           Geology geometry. The remaining test modules, endpoint/evidence
