@@ -9,7 +9,9 @@ finding evidence members. Exit codes are preserved from the underlying ratchet.
 from __future__ import annotations
 
 import argparse
+import json
 import os
+import re
 from pathlib import Path
 from typing import Mapping, Sequence
 
@@ -17,6 +19,7 @@ import validate_repository_topology as topology
 
 DEFAULT_MAX_ITEMS = 20
 MAX_ITEMS_LIMIT = 50
+PLAIN_LOG_TOKEN = re.compile(r"[A-Za-z0-9_./:-]+")
 FAILURE_DISPOSITIONS = frozenset(
     {"ERROR_BASELINE_MISMATCH", "FAIL_INVARIANT", "FAIL_NEW_DRIFT"}
 )
@@ -74,6 +77,20 @@ def error_reason_code(exc: BaseException, *, stage: str) -> str:
     return STAGE_REASON_CODES.get(stage, "VALIDATOR_ERROR")
 
 
+def _log_token(value: str) -> str:
+    """Encode a display token, not its underlying identity or fingerprint.
+
+    Preserve ordinary ASCII identifiers. Everything else is a reversible JSON
+    string with ASCII escapes, so CR/LF, terminal controls, bidi characters and
+    field delimiters cannot forge log structure. Escape command introducers
+    even inside a line: JSON quoting alone does not neutralize runner commands.
+    Sorting and deduplication must use the original values, before encoding.
+    """
+    if PLAIN_LOG_TOKEN.fullmatch(value) and "::" not in value:
+        return value
+    return json.dumps(value, ensure_ascii=True).replace(":", r"\u003a").replace("#", r"\u0023")
+
+
 def render_diagnostics(
     report: Mapping[str, object],
     baseline: Mapping[str, Mapping[str, object]],
@@ -117,7 +134,8 @@ def render_diagnostics(
 
     ordered = sorted(set(rows))
     rendered = [
-        f"{disposition} {rule_id} subject={subject} fingerprint={fingerprint}"
+        f"{disposition} {_log_token(rule_id)} subject={_log_token(subject)} "
+        f"fingerprint={_log_token(fingerprint)}"
         for disposition, rule_id, subject, fingerprint in ordered[:limit]
     ]
     if len(ordered) > limit:
