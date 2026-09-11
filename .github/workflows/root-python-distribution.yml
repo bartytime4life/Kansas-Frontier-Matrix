@@ -1,0 +1,73 @@
+# Build/install proof only. No PR lifecycle, release, or deployment operations.
+name: root-python-distribution
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/root-python-distribution.yml"
+      - "pyproject.toml"
+      - "README.md"
+      - "LICENSE"
+      - ".gitignore"
+      - "hatch.toml"
+      - "tests/ci/test_root_python_distribution.py"
+      - "tools/ci/install_python_ci.py"
+      - "tools/ci/python-test.lock"
+  push:
+    branches:
+      - main
+      - agent/kfm-python-distribution-boundary-20260911
+    paths:
+      - ".github/workflows/root-python-distribution.yml"
+      - "pyproject.toml"
+      - "README.md"
+      - "LICENSE"
+      - ".gitignore"
+      - "hatch.toml"
+      - "tests/ci/test_root_python_distribution.py"
+      - "tools/ci/install_python_ci.py"
+      - "tools/ci/python-test.lock"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: root-python-distribution-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  artifacts:
+    name: artifacts (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12"]
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONHASHSEED: "0"
+      PIP_DISABLE_PIP_VERSION_CHECK: "1"
+      PIP_NO_INPUT: "1"
+    steps:
+      - name: Check out exact event revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install existing hash-locked tools in a disposable environment
+        run: |
+          python -m venv "$RUNNER_TEMP/kfm-root-python"
+          . "$RUNNER_TEMP/kfm-root-python/bin/activate"
+          python tools/ci/install_python_ci.py test-dependencies
+      - name: Verify configuration, artifacts, rebuilds, and local installs
+        env:
+          KFM_RUN_ROOT_PYTHON_ARTIFACTS: "1"
+          PIP_NO_INDEX: "1"
+        run: |
+          . "$RUNNER_TEMP/kfm-root-python/bin/activate"
+          python -m pytest -q -s -p no:cacheprovider --strict-config --strict-markers tests/ci/test_root_python_distribution.py
+          git diff --exit-code

@@ -21,9 +21,11 @@ related:
 # CI helper and workflow contract tests
 
 `tests/ci/` contains focused, repository-local test modules. They check
-committed CI helpers and selected workflow or operator-script contracts; they do
-not execute a hosted GitHub Actions run, install dependencies, launch a browser,
-or publish the native GitHub Wiki.
+committed CI helpers and selected workflow or operator-script contracts. Default
+checks use local files and synthetic fixtures. The explicitly requested root
+artifact gate additionally builds distributions and installs them into temporary
+targets. These tests do not launch a browser, publish the Wiki, or approve a
+release; CI dependency bootstrap is separate from artifact verification.
 
 This is an authored directory README, not a generated test report. The test
 files and the repository surfaces they inspect remain the implementation
@@ -32,7 +34,7 @@ evidence.
 ## Selected contract inventory
 
 Use the current directory listing for the complete module inventory. This
-2026-09-11 addition covers root-distribution configuration; it does not
+2026-09-11 addition covers root-distribution configuration and an opt-in artifact gate; it does not
 re-execute or re-audit the other modules summarized below.
 
 | Test module | Surface under test | Confirmed assertions | Boundary |
@@ -41,7 +43,7 @@ re-execute or re-audit the other modules summarized below.
 | [`test_install_python_ci.py`](test_install_python_ci.py) | [`tools/ci/install_python_ci.py`](../../tools/ci/install_python_ci.py), committed lockfiles, the migration manifest, and workflow callers | Checks the exact finite profile set, hash-required installs, pinned direct dependencies, the migration schema/ID/387-entry ledger, rejection of unhashed or remote requirements, shell-free argument-vector execution, absence of direct `python -m pip install` in workflow YAML, and known-profile use by migrated workflows. | Mocks `subprocess.run`; no package is installed. The workflow-count assertion is a repository-shape invariant, not proof that every hosted job succeeds. |
 | [`test_render_runtime_proof_summary.py`](test_render_runtime_proof_summary.py) | [`tools/ci/render_runtime_proof_summary.py`](../../tools/ci/render_runtime_proof_summary.py) | Checks deterministic reviewer Markdown for a synthetic soil-moisture report, visible expected/actual mismatch reporting, rejection of a contradictory `matched` flag, optional file output, and no mutation of the input object. | Uses synthetic JSON in a temporary directory. A rendered summary is reviewer aid, not proof, policy, source truth, or release authority. |
 | [`test_sync_kfm_github_wiki_contract.py`](test_sync_kfm_github_wiki_contract.py) | [`tools/docs/wiki/sync_kfm_github_wiki.ps1`](../../tools/docs/wiki/sync_kfm_github_wiki.ps1) | Checks dry-run-by-default behavior, the exact immutable source commit, the exact 16-page allowlist, exclusion of `README.md`, rejection of unexpected changed/staged paths, absence of named force/reset/clean operations, and remote-commit readback after an explicit publish path. | Reads PowerShell as text. It does not execute PowerShell, clone repositories, authenticate, push, or prove that the native wiki matches the source packet. |
-| [`test_root_python_distribution.py`](test_root_python_distribution.py) | [`pyproject.toml`](../../pyproject.toml) | Checks explicit metadata-only wheel selection, the three-file source-archive allowlist, no alternate root Hatch configuration, no root executable exports, and rejection of payload, hook, backend, or editable-path expansion. | Parses TOML and mutates only in-memory negative fixtures. It does not execute Hatchling, build an archive, install a distribution, resolve dependencies, or prove artifact contents. |
+| [`test_root_python_distribution.py`](test_root_python_distribution.py) | [`pyproject.toml`](../../pyproject.toml) | Checks explicit metadata-only wheel selection, the three-file source-archive allowlist, no alternate root Hatch configuration, no root executable exports, and rejection of payload, hook, backend, or editable-path expansion. | Default checks parse TOML and inspect synthetic archives. With `KFM_RUN_ROOT_PYTHON_ARTIFACTS=1`, a separate test executes installed Hatchling and offline pip against temporary targets; missing build tools fail the requested gate. A default skip is not artifact evidence. |
 
 ## Run locally
 
@@ -98,9 +100,9 @@ Build hooks, forced inclusions, artifact overrides, source remapping, alternate
 a silent workaround to these assertions. The unchanged `TBD` license metadata
 is not license clearance or permission to publish a Python distribution.
 
-The focused test uses the committed manifest as its positive case and checks
-that single-boundary negative mutations are rejected. Its success establishes
-only configuration conformance. It does **not** establish Hatchling execution,
+The configuration-only tests use the committed manifest as their positive case
+and check that single-boundary negative mutations are rejected. Their success
+establishes only configuration conformance. It does **not** establish Hatchling execution,
 wheel/source-archive contents, wheel-from-source-archive rebuilding, an editable
 installation, dependency availability, CLI installation, or hosted CI.
 
@@ -113,14 +115,17 @@ source directories to Python's import path; an empty backend-generated `.pth`
 file is not directory exposure. Record the exact repository SHA, Python and
 backend versions, commands, exit codes, archive inventories and hashes, and
 metadata/extra parity. Missing build tooling is **NEEDS VERIFICATION**, not a
-passing artifact test. This change does not install that tooling or alter CI
-profiles, lockfiles, workflow permissions, release state, or Site deployment.
+passing artifact test. The focused workflow bootstraps the existing hash-locked
+`test-dependencies` profile in a disposable virtual environment before running the gate. No profile,
+lockfile, source-admission, release, or Site deployment setting is changed.
 
 The root declaration preserves all project metadata, dependency ranges, test
 extras, backend requirements, pytest configuration, and KFM lifecycle settings.
 Software distribution does not admit a source or publish KFM data. Rollback is
-a reviewed revert of the manifest, regression, and documentation together. No deployed runtime or installed environment was changed by preparing
-this candidate. Do not describe it as merged until GitHub confirms it.
+a reviewed revert of the manifest, regression, and documentation together. Build
+verification installs only into disposable local targets; no deployed runtime
+or operator workstation environment is changed. Do not describe it as merged
+until GitHub confirms it.
 
 Placement follows accepted
 [ADR-0029](../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md):
@@ -160,9 +165,60 @@ Treat direct hosted binding for those modules as **UNKNOWN** unless an exact
 workflow command or aggregate test command proves it. A broad test command may
 still collect them; do not infer that relationship from a workflow name alone.
 
-The root-distribution test is new in this bounded change. Direct hosted
-collection and required-check enforcement are **NEEDS VERIFICATION**; no
-workflow or Make target is added here.
+The focused [root-python-distribution workflow](../../.github/workflows/root-python-distribution.yml)
+explicitly collects this module on Python 3.11 and 3.12. It has read-only
+repository permission, immutable action pins, no credential persistence, no
+cache or artifact upload, and no PR-state, release, or deployment action. Its
+path-filtered pushes include main and the preserved packaging branch; it also
+runs for matching ordinary pull requests. This is workflow binding, not proof
+of a hosted result or a required status check. Inspect the exact-head jobs and
+logs before recording either outcome.
+
+### Execute the real artifact gate
+
+In a disposable environment, first install the existing reviewed lock profile:
+
+```bash
+python tools/ci/install_python_ci.py test-dependencies
+```
+
+That bootstrap may access the package index. The following verification does
+not resolve or download dependencies and fails if required tooling is missing:
+
+```bash
+KFM_RUN_ROOT_PYTHON_ARTIFACTS=1 PIP_NO_INDEX=1 \
+  python -m pytest -q -s -p no:cacheprovider --strict-config --strict-markers \
+  tests/ci/test_root_python_distribution.py
+```
+
+The test builds a wheel, source archive, and editable wheel using the real
+backend. It checks exact member inventories, wheel RECORD hashes/sizes,
+metadata/dependency/extra parity, source-byte retention, repeated-build equality,
+and a wheel rebuilt from the source archive. Temporary synthetic module,
+package, `.env`, and quarantine-shaped canaries must stay excluded. No actual
+restricted payload is used.
+
+Actual pip ordinary and editable installations use separate temporary
+`--target` directories, `--no-index`, `--no-deps`, and, for editable installation,
+`--no-build-isolation`. A fresh `-I -S` Python process processes each checked
+target; it must expose only that target and no importable root `kfm` SDK. This
+proves the bounded target-install behavior, not dependency resolution, a public
+SDK, installation of the separate CLI, every pip/OS combination, or workstation
+setup. No claim of OS-level egress isolation is made.
+
+A successful real gate prints `KFM_ROOT_PYTHON_ARTIFACT_VERIFICATION=` followed
+by source commit, tool versions, input/artifact hashes, inventories, and the
+bounded result. Artifacts remain in pytest-managed temporary directories until
+runner disposal or local cleanup; they are not uploaded by this workflow. The
+log is a review aid, not a canonical KFM proof or release record. Do not upload or publish
+the root distribution while its license and release review remain unresolved.
+
+Placement: the existing test and this README remain owned by `tests/`; the
+thin GitHub runner lives under the existing `.github/` platform root, consistent
+with the adopted Directory Rules and accepted ADR-0029. No new package,
+contract, schema, policy, or proof authority is introduced. Reverting the
+workflow and test/documentation follow-up together removes this gate without
+changing the preserved metadata-only manifest.
 
 ## Maintenance
 
