@@ -1,4 +1,5 @@
 # Bounded TemporalViewState contract, package, and Explorer conformance checks.
+# Calendar regressions are enrolled in both triggers and the real Vitest command.
 
 name: temporal-view-state-validation
 
@@ -19,6 +20,7 @@ name: temporal-view-state-validation
       - "apps/explorer-web/tests/temporal-kernel.test.ts"
       - "apps/explorer-web/tests/temporal-boundary-regression.test.ts"
       - "apps/explorer-web/tests/workspace-context.test.ts"
+      - "apps/explorer-web/tests/workspace-context-temporal.test.ts"
       - "apps/explorer-web/package.json"
       - "package.json"
       - "pnpm-workspace.yaml"
@@ -41,6 +43,7 @@ name: temporal-view-state-validation
       - "apps/explorer-web/tests/temporal-kernel.test.ts"
       - "apps/explorer-web/tests/temporal-boundary-regression.test.ts"
       - "apps/explorer-web/tests/workspace-context.test.ts"
+      - "apps/explorer-web/tests/workspace-context-temporal.test.ts"
       - "apps/explorer-web/package.json"
       - "package.json"
       - "pnpm-workspace.yaml"
@@ -152,7 +155,8 @@ jobs:
           pnpm exec vitest run \
             tests/temporal-kernel.test.ts \
             tests/temporal-boundary-regression.test.ts \
-            tests/workspace-context.test.ts
+            tests/workspace-context.test.ts \
+            tests/workspace-context-temporal.test.ts
 
       - name: Record validation boundary
         if: always()

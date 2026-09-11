@@ -37,6 +37,66 @@ UI-01 is a bounded browser-composition contract. It is not a canonical semantic 
 
 Implementation baseline for UI-01: `main@f732cbd1003898dc765a7afe4b635d710e295d17`.
 
+## Public workspace temporal validation repair
+
+The repair reviewed from `main@47de77deb845bbba948c66566d9b88696cb14f8b`
+keeps the existing context profile, fields, and URL parameter. It tightens
+calendar validation rather than adding a new clock or changing source authority.
+
+`validAt`, `observedAt`, and `asOf` must preserve a real written calendar date
+and clock. Invalid dates such as February 30, non-leap February 29, and `24:00`
+fail closed before context parsing, URL serialization, query parsing, URL
+construction, or the temporal adapter can accept them. The adapter returns
+`ERROR / PUBLIC_CONTEXT_INVALID` with no state for such a context. Validation
+checks the written local fields before applying an offset; otherwise a valid
+cross-midnight offset could be confused with an invalid calendar rollover.
+
+JavaScript parsing alone is not this application's validation contract:
+[ECMAScript's date format](https://tc39.es/ecma262/2025/multipage/numbers-and-dates.html#sec-date-time-string-format)
+permits `24:00` and expanded years. This KFM adapter's existing instant grammar
+uses four-digit years and its calendar round-trip excludes `24:00`. If a valid
+numeric offset would normalize outside that grammar, the adapter now returns
+`UNSUPPORTED / NORMALIZED_YEAR_OUT_OF_RANGE` with no state rather than slicing
+an expanded year into a malformed supported timestamp.
+
+Valid raw date strings, offsets, and one-to-nine fractional digits remain
+unchanged in public URLs. Date-only selections remain `date_only` with
+`normalized: null`; the validation-only midnight probe is never emitted as an
+observation. The existing `-00:00` raw-link preservation and adapter
+`UNSUPPORTED / UNKNOWN_TIMEZONE` outcome remain unchanged. A date-only knowledge
+cutoff still returns `AS_OF_REQUIRES_ZONED_INSTANT`. This repair does not add
+expanded-year, geologic-time, leap-second, source-admission, or release support.
+
+The [new regressions](../../tests/workspace-context-temporal.test.ts) cover all
+three time fields at the context and URL boundaries, leap/century rules,
+malformed offsets, precision retention, year-boundary normalization, and the
+existing unsupported outcomes. Run them alongside the original workspace tests
+from `apps/explorer-web/` using the repository's locked dependencies:
+
+```bash
+pnpm exec vitest run tests/workspace-context.test.ts tests/workspace-context-temporal.test.ts
+```
+
+Local authoring evidence is deliberately narrower: the exact source and new
+assertions were exercised in an isolated Node 22.16.0 harness, using TypeScript
+5.8.3 transpilation and explicit test doubles for unrelated imports. All 130
+cases passed in UTC, America/Chicago, and Pacific/Auckland. The unchanged source
+failed 42 cases; removing only the calendar guard failed 36, and removing only
+the expanded-year guard failed six. These are not pinned Vitest, real MapLibre,
+state-identity conformance, browser, hosted CI, build, or deployment results;
+those checks and independent review remain required before integration.
+
+Design traceability: the
+[Living Atlas Drive design](https://docs.google.com/document/d/1aivNyfMjQ8urQO6vjt4YvkT1ltF1t7fxCahEcnGV4Dw/edit)
+and [Notion real-data hub](https://app.notion.com/p/3d6a92021bf6816cae0ec1ccbd15e21e)
+require truthful, synchronized time across map, evidence, workspace, and export.
+They are design inputs, not proof of implementation or release. This change is
+limited to the repository's `apps/explorer-web` composition; it does not update,
+synchronize, deploy, or publish the separate saved ChatGPT Site source.
+
+Rollback this repair by reverting the two validation guards, the new regression
+file, and this section together. No data or dependency migration is involved.
+
 ## Unified Workspace UI-02 bounded slice
 
 UI-02 adds the smallest app-local shared trust grammar without moving component ownership or creating a new authority root:

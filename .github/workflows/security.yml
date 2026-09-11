@@ -59,6 +59,14 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Run workflow-security regression tests
+        env:
+          KFM_NO_NETWORK: "1"
+          PYTHONDONTWRITEBYTECODE: "1"
+          PYTHONHASHSEED: "0"
+          TZ: UTC
+        run: python3 -m unittest discover --start-directory tests/validators/governance --pattern 'test_validate_workflow_security.py' --verbose
+
       - name: Enforce the deterministic workflow-security ratchet
         env:
           KFM_NO_NETWORK: "1"
