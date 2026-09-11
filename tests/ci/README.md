@@ -82,7 +82,8 @@ not an importable SDK or the operator CLI. At the reviewed base
 `664e46697d4d237870f5a482904bb9acd8f11b20`, the old manifest selected
 `src/kfm`, although that root was absent. This correction removes that phantom
 selection without recreating `src/`, moving a package, changing a dependency,
-or claiming that installation has been demonstrated.
+or adding root executable exports. Configuration assertions and real
+build/install results remain separate evidence, as described below.
 
 The wheel target intentionally specifies `include = ["/pyproject.toml"]` and
 `exclude = ["*"]`. The explicit include disables package-name discovery;
@@ -172,9 +173,10 @@ references, not current proof of hosted collection. Re-read the exact workflow
 and aggregate commands before claiming that they collect this directory or
 any of its modules.
 
-Treat direct hosted binding for those modules as **UNKNOWN** unless an exact
-workflow command or aggregate test command proves it. A broad test command may
-still collect them; do not infer that relationship from a workflow name alone.
+For modules other than the root-distribution and installer tests explicitly
+bound below, treat direct hosted binding as **UNKNOWN** unless an exact workflow
+or aggregate command proves it. A broad command may still collect them; do not
+infer that relationship from a workflow name alone.
 
 The focused [root-python-distribution workflow](../../.github/workflows/root-python-distribution.yml)
 explicitly collects this module on Python 3.11 and 3.12. It has read-only
@@ -184,6 +186,27 @@ path-filtered pushes include main and the preserved packaging branch; it also
 runs for matching ordinary pull requests. This is workflow binding, not proof
 of a hosted result or a required status check. Inspect the exact-head jobs and
 logs before recording either outcome.
+
+The same packaging job now follows the real artifact gate with the existing
+installer contract and native workflow-security target in that disposable
+environment:
+
+```bash
+python -m unittest tests/ci/test_install_python_ci.py -v
+make workflow-security
+git diff --exit-code
+```
+
+All three commands must succeed; no failure is masked. The workflow contract
+rejects removal of either verification command, as well as the existing
+permission, credential, real-gate, and failure-masking regressions. Trigger
+scope remains packaging-focused: these supplementary checks do not replace
+their owning lanes or claim complete repository-wide trigger coverage.
+The native security target runs its regression suite and scans the checked-out
+workflow tree. A pass covers the scanner's implemented static rules, not all
+possible YAML semantics, required-check enforcement, or closure of the separate
+workflow-security findings tracked under issue #3366. Neither the scanner nor
+its waiver baseline is changed by this integration.
 
 ### Execute the real artifact gate
 

@@ -82,4 +82,6 @@ jobs:
         run: |
           . "$RUNNER_TEMP/kfm-root-python/bin/activate"
           python -m pytest -q -s -p no:cacheprovider --strict-config --strict-markers tests/ci/test_root_python_distribution.py
+          python -m unittest tests/ci/test_install_python_ci.py -v
+          make workflow-security
           git diff --exit-code

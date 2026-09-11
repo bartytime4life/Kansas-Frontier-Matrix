@@ -469,6 +469,8 @@ def _assert_workflow(workflow: dict[str, Any]) -> None:
     assert steps[3]["env"] == {"KFM_RUN_ROOT_PYTHON_ARTIFACTS": "1", "PIP_NO_INDEX": "1"}
     assert steps[3]["run"] == ('. "$RUNNER_TEMP/kfm-root-python/bin/activate"\n'
                                'python -m pytest -q -s -p no:cacheprovider --strict-config --strict-markers tests/ci/test_root_python_distribution.py\n'
+                               'python -m unittest tests/ci/test_install_python_ci.py -v\n'
+                               'make workflow-security\n'
                                'git diff --exit-code\n')
 
 
@@ -491,7 +493,8 @@ def test_artifact_workflow_requires_real_gate_and_read_only_permissions() -> Non
     _assert_workflow(_load_workflow())
 
 
-@pytest.mark.parametrize("fault", ["write", "credentials", "skip-gate", "masked-job", "masked-step"])
+@pytest.mark.parametrize("fault", ["write", "credentials", "skip-gate", "masked-job", "masked-step",
+                                  "skip-installer-checks", "skip-workflow-security"])
 def test_artifact_workflow_rejects_weakened_gate(fault: str) -> None:
     workflow = _load_workflow()
     job = workflow["jobs"]["artifacts"]
@@ -503,6 +506,10 @@ def test_artifact_workflow_rejects_weakened_gate(fault: str) -> None:
         job["steps"][3]["env"].pop("KFM_RUN_ROOT_PYTHON_ARTIFACTS")
     elif fault == "masked-job":
         job["if"] = False
+    elif fault in {"skip-installer-checks", "skip-workflow-security"}:
+        command = ("python -m unittest tests/ci/test_install_python_ci.py -v\n"
+                   if fault == "skip-installer-checks" else "make workflow-security\n")
+        job["steps"][3]["run"] = job["steps"][3]["run"].replace(command, "")
     else:
         job["steps"][3]["continue-on-error"] = True
     with pytest.raises(AssertionError):
