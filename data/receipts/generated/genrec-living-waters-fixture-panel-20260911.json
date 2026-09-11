@@ -47,9 +47,10 @@
       "github://bartytime4life/Kansas-Frontier-Matrix/blob/230d83b27397bd2fb613cdf7e009f871ce00b429/fixtures/contracts/v1/domains/hydrology/living_waters_fixture_packet/valid/first_proof.json",
       "github://bartytime4life/Kansas-Frontier-Matrix/blob/230d83b27397bd2fb613cdf7e009f871ce00b429/schemas/contracts/v1/domains/hydrology/living_waters_fixture_packet.schema.json",
       "github://bartytime4life/Kansas-Frontier-Matrix/blob/230d83b27397bd2fb613cdf7e009f871ce00b429/apps/explorer-web/src/features/living_atlas/living-waters-fixture.ts",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/3400c88e2950edb44ef850abc008107feb0cd9cc/apps/explorer-web/src/site/mount-living-atlas.ts",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/3400c88e2950edb44ef850abc008107feb0cd9cc/apps/explorer-web/src/site/site-living-atlas.css",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/230d83b27397bd2fb613cdf7e009f871ce00b429/docs/reports/kfm-explorer-layers-animation-3d-performance-roadmap-20260911.md"
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/cb2569aaf6011911766964cbbd3730745ad58634/apps/explorer-web/src/site/mount-living-atlas.ts",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/cb2569aaf6011911766964cbbd3730745ad58634/apps/explorer-web/src/site/site-living-atlas.css",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/230d83b27397bd2fb613cdf7e009f871ce00b429/docs/reports/kfm-explorer-layers-animation-3d-performance-roadmap-20260911.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/cb2569aaf6011911766964cbbd3730745ad58634"
     ]
   },
   "truth_labels": {
@@ -77,8 +78,8 @@
     },
     {
       "gate": "full-explorer-build-and-vitest-suite",
-      "outcome": "FAIL",
-      "reason": "PR #4477 ui-build build-explorer-web caught a TypeScript target-narrowing error in the initial panel wiring; the branch is being corrected before re-validation."
+      "outcome": "PASS",
+      "reason": "PR #4477 ui-build run 34635959041 completed with build-explorer-web and test-explorer-web both successful after the event-target narrowing fix."
     },
     {
       "gate": "source-activation-runtime-release-publication",
@@ -89,6 +90,11 @@
       "gate": "human-review",
       "outcome": "SKIPPED",
       "reason": "Human review remains pending on the pull request."
+    },
+    {
+      "gate": "repository-topology-ratchet",
+      "outcome": "FAIL",
+      "reason": "PR #4477 validator-suite run 34635959256 failed only in the repository-topology ratchet. The reported FAIL_NEW_DRIFT subjects were path-grammar:uppercase, catalog/, scope-alias:air, scaffold-only-leaf-directories, data/maps/, and doc-id:kfm://doc/NEEDS-VERIFICATION; none is a changed path in this slice, so no broad topology cleanup was attempted."
     }
   ],
   "policy_decisions": [],
@@ -111,7 +117,7 @@
     {
       "id": "living-waters-layer-panel",
       "validated": true,
-      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/3400c88e2950edb44ef850abc008107feb0cd9cc/apps/explorer-web/src/site/mount-living-atlas.ts"
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/cb2569aaf6011911766964cbbd3730745ad58634/apps/explorer-web/src/site/mount-living-atlas.ts"
     }
   ],
   "human_review": {
@@ -123,9 +129,9 @@
   "created_at": "2026-09-11T18:45:00.000Z",
   "emitter": "openai/codex-gpt-5",
   "links": {
-    "pr_number": null,
+    "pr_number": 4477,
     "adr_link": null,
     "drift_register_entry": null
   },
-  "notes": "AI-authored fixture-first UI slice for the Kansas-first Explorer. The Layers rail now exposes the canonical synthetic Living Waters packet through the existing renderer-neutral projector. The panel is explicitly marked fixture-only, retains points only for AVAILABLE/STALE, renders finite no-results/unavailable/ambiguous states without observations, and displays visible=false plus rendererBound=false. The receipt is provenance, not approval, live hydrology proof, merge authorization, release authorization, or publication authority. Initial PR validation found and isolated a TypeScript event-target narrowing defect; the receipt will be revalidated after the corrective commit."
+  "notes": "AI-authored fixture-first UI slice for the Kansas-first Explorer. The Layers rail exposes the canonical synthetic Living Waters packet through the existing renderer-neutral projector. The panel is explicitly marked fixture-only, retains points only for AVAILABLE/STALE, renders finite no-results/unavailable/ambiguous states without observations, and displays visible=false plus rendererBound=false. PR #4477's substantive Explorer and domain checks passed; the repository-topology ratchet remains an unresolved orthogonal gate. The receipt is provenance, not approval, live hydrology proof, merge authorization, release authorization, or publication authority."
 }
