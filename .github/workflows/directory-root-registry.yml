@@ -16,6 +16,16 @@ name: directory-root-registry
       - "tools/validators/directory_governance/**"
       - "tests/validators/directory_governance/test_validate_root_registry.py"
       - "data/receipts/generated/genrec-directory-root-registry-*.json"
+      - "tests/ci/test_directory_root_registry_workflow.py"
+      - "tools/validators/validate_generated_receipt.py"
+      - "tools/validators/_common/**"
+      - "schemas/contracts/v1/receipts/generated_receipt.schema.json"
+      - "tools/ci/install_python_ci.py"
+      - "tools/ci/*.lock"
+      - "tools/ci/python-dependency-lock-migration.json"
+      - "pyproject.toml"
+      - "data/receipts/generated/genrec-topology-diagnostic-log-safety-20260911.json"
+      - "tests/validators/directory_governance/test_validate_output_security_topology.py"
   push:
     branches: [main]
     paths:
@@ -27,6 +37,16 @@ name: directory-root-registry
       - "tools/validators/directory_governance/**"
       - "tests/validators/directory_governance/test_validate_root_registry.py"
       - "data/receipts/generated/genrec-directory-root-registry-*.json"
+      - "tests/ci/test_directory_root_registry_workflow.py"
+      - "tools/validators/validate_generated_receipt.py"
+      - "tools/validators/_common/**"
+      - "schemas/contracts/v1/receipts/generated_receipt.schema.json"
+      - "tools/ci/install_python_ci.py"
+      - "tools/ci/*.lock"
+      - "tools/ci/python-dependency-lock-migration.json"
+      - "pyproject.toml"
+      - "data/receipts/generated/genrec-topology-diagnostic-log-safety-20260911.json"
+      - "tests/validators/directory_governance/test_validate_output_security_topology.py"
   workflow_dispatch:
 
 permissions:
@@ -55,6 +75,8 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          # Historical receipt replay needs an ancestor, not a second checkout.
+          fetch-depth: 0
 
       - name: Set up repository Python
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
@@ -74,6 +96,14 @@ jobs:
             --pattern 'test_validate_root_registry.py' \
             --verbose
 
+      - name: Test receipt replay workflow boundary
+        run: |
+          set -euo pipefail
+          python -m unittest discover \
+            --start-directory tests/ci \
+            --pattern 'test_directory_root_registry_workflow.py' \
+            --verbose
+
       - name: Validate fixture polarity
         run: |
           set -euo pipefail
@@ -84,11 +114,28 @@ jobs:
           set -euo pipefail
           python tools/validators/directory_governance/validate_root_registry.py
 
-      - name: Verify current generated authoring receipt integrity
+      # Keep the August receipt immutable. Its name says "current-binding", but
+      # it describes its introduction commit, not every future README/workflow.
+      # The native validator requires an exact ancestor and regular Git blobs.
+      - name: Replay historical root-registry authoring receipt
         run: |
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
             data/receipts/generated/genrec-directory-root-registry-current-binding-20260815.json \
+            --repo-root . \
+            --artifact-git-ref 8d235ebc6e7e80704c0f3f93d7c04e338af6a9a1
+
+      # These checks deliberately use candidate bytes, not the historical ref.
+      # Later edits need a reviewed successor binding; do not rewrite old hashes
+      # or move a current check behind the replay pin just to make it pass.
+      - name: Verify current diagnostic and workflow authoring receipts
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-topology-diagnostic-log-safety-20260911.json \
+            --repo-root .
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-directory-root-registry-replay-20260911.json \
             --repo-root .
 
       - name: Record trust boundary
@@ -98,6 +145,7 @@ jobs:
             echo "### Directory root registry"
             echo
             echo "- Result: ${{ job.status }}."
+            echo "- Receipt scope: August ancestor replay plus separately bound current diagnostic and workflow artifacts; neither is review approval."
             echo "- Scope: schema, adopted-doctrine digest binding, root-class invariants, canonical ordering, and top-level root coverage."
             echo "- Boundary: projection-only; no root creation, activation, write authorization, migration, release, deployment, promotion, or publication."
           } >> "$GITHUB_STEP_SUMMARY"
