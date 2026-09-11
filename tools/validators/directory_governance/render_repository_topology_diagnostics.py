@@ -9,9 +9,11 @@ finding evidence members. Exit codes are preserved from the underlying ratchet.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import re
+import stat
 from pathlib import Path
 from typing import Mapping, Sequence
 
@@ -189,5 +191,105 @@ def main(argv: Sequence[str] | None = None) -> int:
         return 2
 
 
+# These are diagnostic bindings, never receipts, proofs or authenticated claims.
+# Use fixed field names and hash-only file identity; never echo paths, refs,
+# source/baseline content, exception text or arbitrary environment values.
+CONTEXT_MAX_BYTES = 4 * 1024 * 1024
+CONTEXT_MAX_INDEX_BYTES = 32 * 1024 * 1024
+CONTEXT_HEX = re.compile(r"[0-9a-f]{40}(?:[0-9a-f]{24})?")
+CONTEXT_EVENTS = frozenset({"pull_request", "push", "workflow_dispatch", "merge_group"})
+
+
+def _context_digest(path: Path, root: Path) -> str:
+    """Bound a regular in-checkout file read; this is not an atomic FS snapshot."""
+    absolute = Path(os.path.abspath(path))
+    relative = absolute.relative_to(root)
+    current = root
+    for part in relative.parts:
+        current = current / part
+        if current.is_symlink():
+            raise ValueError("unsafe context input")
+    flags = os.O_RDONLY | os.O_NONBLOCK | getattr(os, "O_NOFOLLOW", 0)
+    with os.fdopen(os.open(absolute, flags), "rb") as stream:
+        before = os.fstat(stream.fileno())
+        if not stat.S_ISREG(before.st_mode) or before.st_size > CONTEXT_MAX_BYTES:
+            raise ValueError("unsafe context input")
+        data = stream.read(CONTEXT_MAX_BYTES + 1)
+        after = os.fstat(stream.fileno())
+    if (len(data) > CONTEXT_MAX_BYTES or len(data) != before.st_size
+            or (before.st_ino, before.st_size, before.st_mtime_ns, before.st_ctime_ns)
+            != (after.st_ino, after.st_size, after.st_mtime_ns, after.st_ctime_ns)):
+        raise ValueError("unstable context input")
+    return hashlib.sha256(data).hexdigest()
+
+
+def execution_context(repo_root: Path, baseline: Path) -> dict[str, object]:
+    """Collect local Git/file identities without executing any scanned payload."""
+    root = repo_root.resolve(strict=True)
+    identities = []
+    for revision in ("HEAD^{commit}", "HEAD^{tree}"):
+        value = topology._git(root, "rev-parse", "--verify", revision).decode("ascii").strip()
+        if CONTEXT_HEX.fullmatch(value) is None:
+            raise ValueError("invalid context identity")
+        identities.append(value)
+    index = topology._git(root, "ls-files", "-s", "-z")
+    if len(index) > CONTEXT_MAX_INDEX_BYTES:
+        raise ValueError("context index too large")
+    context: dict[str, object] = {
+        "version": "kfm.topology-execution-context.v1",
+        "checkout_commit": identities[0],
+        "checkout_tree": identities[1],
+        "index_sha256": hashlib.sha256(index).hexdigest(),
+        "validator_file_sha256": _context_digest(Path(topology.__file__), root),
+        "diagnostic_file_sha256": _context_digest(Path(__file__), root),
+        "baseline_file_sha256": _context_digest(baseline, root),
+    }
+    for name in ("GITHUB_RUN_ID", "GITHUB_RUN_ATTEMPT"):
+        value = os.environ.get(name)
+        if value is not None and re.fullmatch(r"[1-9][0-9]{0,19}", value) is None:
+            raise ValueError("invalid run context")
+        context[name.lower()] = value
+    event = os.environ.get("GITHUB_EVENT_NAME")
+    if event is not None and event not in CONTEXT_EVENTS:
+        raise ValueError("unsupported event context")
+    context["github_event_name"] = event
+    return context
+
+
+def _context_record(repo_root: Path, baseline: Path) -> tuple[str, str] | None:
+    try:
+        payload = json.dumps(execution_context(repo_root, baseline), sort_keys=True,
+                             separators=(",", ":"), ensure_ascii=True)
+        return hashlib.sha256(payload.encode("ascii")).hexdigest(), payload
+    except (OSError, UnicodeError, ValueError, topology.TopologyError):
+        return None
+
+
+def run_with_context(argv: Sequence[str] | None = None) -> int:
+    """CLI framing only; main() remains the compatible ratchet entry point.
+
+    Context failure or change makes attribution NON_COMPARABLE, never a pass.
+    It does not suppress or replace the underlying validator's exit status.
+    Before/after agreement is not a signature or an atomic filesystem snapshot.
+    """
+    args = _parser().parse_args(argv)
+    before = _context_record(args.repo_root, args.baseline)
+    if before is None:
+        print("TOPOLOGY_CONTEXT_BEGIN status=UNAVAILABLE")
+    else:
+        print(f"TOPOLOGY_CONTEXT_BEGIN id={before[0]} payload={before[1]}")
+    code = None
+    try:
+        code = main(argv)
+        return code
+    finally:
+        after = _context_record(args.repo_root, args.baseline)
+        exit_label = str(code) if type(code) is int and code in (0, 1, 2) else "UNKNOWN"
+        if before is not None and after == before:
+            print(f"TOPOLOGY_CONTEXT_END status=UNCHANGED id={before[0]} validator_exit={exit_label}")
+        else:
+            print(f"TOPOLOGY_CONTEXT_END status=NON_COMPARABLE validator_exit={exit_label}")
+
+
 if __name__ == "__main__":
-    raise SystemExit(main())
+    raise SystemExit(run_with_context())
