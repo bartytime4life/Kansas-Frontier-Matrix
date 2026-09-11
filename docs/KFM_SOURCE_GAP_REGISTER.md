@@ -8,7 +8,7 @@ Connection checkpoint: the active Site project is
 `appgprj_6aa0b1c41bc08191bfd86003920f1631` with canonical host
 `https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site`; no custom
 domain was attached when checked. GitHub `main` was independently read at
-`664e46697d4d237870f5a482904bb9acd8f11b20`. The Site and repository remain
+`eca6c8a2353fbe28ace619288231a047e5d485f5`. The Site and repository remain
 separate source histories, and the repository child manifest still names legacy
 project `appgprj_6a870a079c1c8191abb7401ef092a181`.
 

@@ -70,26 +70,31 @@ export default function EventObservatory() {
   }, []);
 
   useEffect(() => {
+    let disposed = false;
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
     const change = () => { setReduced(media.matches); setPlaying(false); }; change(); media.addEventListener("change", change);
     const stop = () => { if (document.hidden) setPlaying(false); };
     const key = (event: KeyboardEvent) => { if (event.key === "Escape") setPlaying(false); };
     document.addEventListener("visibilitychange", stop); window.addEventListener("keydown", key);
-    const p = new URLSearchParams(window.location.search);
-    if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(p.get("start") ?? "")) setStart(p.get("start")!);
-    if ([1,6,24].includes(Number(p.get("hours")))) setHours(Number(p.get("hours")));
-    if (/^USGS-\d{8,15}$/.test(p.get("station") ?? "")) setStation(p.get("station")!);
-    if (p.has("station") && p.get("station") === "") setStation("");
-    if (p.has("layers")) { const ids = p.get("layers")!.split(","); setVisible(Object.fromEntries(TRACKS.map((t) => [t.id, ids.includes(t.id)])) as Record<TrackId,boolean>); }
-    if (p.get("base") === "satellite") setBase("satellite");
-    if (/^\d{4}$/.test(p.get("edition") ?? "") && Number(p.get("edition")) >= 1934 && Number(p.get("edition")) <= 1996) setResourceEdition(p.get("edition")!);
-    if (p.has("order")) { const ids = p.get("order")!.split(","); if (ids.length === TRACKS.length && new Set(ids).size === TRACKS.length && ids.every((id) => TRACKS.some((t) => t.id === id))) setOrder(ids as TrackId[]); }
-    if (p.has("opacity")) { const values = p.get("opacity")!.split(",").map(Number); if (values.length === TRACKS.length && values.every((v) => Number.isFinite(v) && v >= 0 && v <= 1)) setOpacity(Object.fromEntries(TRACKS.map((t,i) => [t.id,values[i]])) as Record<TrackId,number>); }
-    return () => { media.removeEventListener("change", change); document.removeEventListener("visibilitychange", stop); window.removeEventListener("keydown", key); };
+    queueMicrotask(() => {
+      if (disposed) return;
+      const p = new URLSearchParams(window.location.search);
+      if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(p.get("start") ?? "")) setStart(p.get("start")!);
+      if ([1,6,24].includes(Number(p.get("hours")))) setHours(Number(p.get("hours")));
+      if (/^USGS-\d{8,15}$/.test(p.get("station") ?? "")) setStation(p.get("station")!);
+      if (p.has("station") && p.get("station") === "") setStation("");
+      if (p.has("layers")) { const ids = p.get("layers")!.split(","); setVisible(Object.fromEntries(TRACKS.map((t) => [t.id, ids.includes(t.id)])) as Record<TrackId,boolean>); }
+      if (p.get("base") === "satellite") setBase("satellite");
+      if (/^\d{4}$/.test(p.get("edition") ?? "") && Number(p.get("edition")) >= 1934 && Number(p.get("edition")) <= 1996) setResourceEdition(p.get("edition")!);
+      if (p.has("order")) { const ids = p.get("order")!.split(","); if (ids.length === TRACKS.length && new Set(ids).size === TRACKS.length && ids.every((id) => TRACKS.some((t) => t.id === id))) setOrder(ids as TrackId[]); }
+      if (p.has("opacity")) { const values = p.get("opacity")!.split(",").map(Number); if (values.length === TRACKS.length && values.every((v) => Number.isFinite(v) && v >= 0 && v <= 1)) setOpacity(Object.fromEntries(TRACKS.map((t,i) => [t.id,values[i]])) as Record<TrackId,number>); }
+    });
+    return () => { disposed = true; media.removeEventListener("change", change); document.removeEventListener("visibilitychange", stop); window.removeEventListener("keydown", key); };
   }, []);
 
   useEffect(() => {
     let disposed = false;
+    const cachedUrls = urls.current;
     import("maplibre-gl").then((gl) => {
       if (disposed || !container.current) return;
       gl.setWorkerUrl("/maplibre/maplibre-gl-worker.mjs");
@@ -117,7 +122,7 @@ export default function EventObservatory() {
       });
       map.on("dragstart", () => setPlaying(false)); map.on("zoomstart", () => setPlaying(false));
     }).catch(() => setMapMessage("Map unavailable. WebGL2 and the map runtime are required; the source notes remain readable."));
-    return () => { disposed = true; requestRef.current?.abort(); frameRequest.current?.abort(); mapRef.current?.remove(); mapRef.current = null; for (const url of urls.current.values()) URL.revokeObjectURL(url); urls.current.clear(); };
+    return () => { disposed = true; requestRef.current?.abort(); frameRequest.current?.abort(); mapRef.current?.remove(); mapRef.current = null; for (const url of cachedUrls.values()) URL.revokeObjectURL(url); cachedUrls.clear(); };
   }, []);
 
   useEffect(() => {
@@ -131,7 +136,8 @@ export default function EventObservatory() {
 
   useEffect(() => {
     if (!visible.resources) return;
-    const controller = new AbortController(); setPlaying(false); setResourceData(null); setResourceMessage("Loading county aggregates…");
+    const controller = new AbortController();
+    queueMicrotask(() => { if (!controller.signal.aborted) { setResourceData(null); setResourceMessage("Loading county aggregates…"); } });
     const map = mapRef.current;
     if (map?.getSource("ea-resource-data")) (map.getSource("ea-resource-data") as GeoJSONSource).setData(EMPTY);
     fetch(`/api/event-atlas/resources?edition=${resourceEdition}`, { signal: controller.signal }).then(async (response) => {
@@ -234,7 +240,7 @@ export default function EventObservatory() {
         const check = () => { if (sourceIds.some((id) => sourceFailures.current.has(id))) finish(new Error("A requested source failed; the frame was withheld.")); else if (sourceIds.every((id) => map.isSourceLoaded(id))) finish(); };
         const fail = () => finish(new Error("Radar image loading was cancelled."));
         const timer = window.setTimeout(() => finish(new Error("The requested map sources did not finish loading.")), 15_000);
-        const finish = (failure?: Error) => { window.clearTimeout(timer); map.off("sourcedata", check); map.off("error", check); controller.signal.removeEventListener("abort", fail); failure ? reject(failure) : resolve(); };
+        const finish = (failure?: Error) => { window.clearTimeout(timer); map.off("sourcedata", check); map.off("error", check); controller.signal.removeEventListener("abort", fail); if (failure) reject(failure); else resolve(); };
         map.on("sourcedata", check); map.on("error", check); controller.signal.addEventListener("abort", fail, { once: true }); check();
       });
       if (token !== frameGeneration.current || controller.signal.aborted) return;

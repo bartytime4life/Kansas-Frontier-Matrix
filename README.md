@@ -32,8 +32,8 @@ fit together.
   `https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site`; no custom
   domain was attached when this checkpoint was checked on 2026-09-11.
 - The independently read GitHub checkpoint is
-  `bartytime4life/Kansas-Frontier-Matrix@664e46697d4d237870f5a482904bb9acd8f11b20`
-  (`main`, merged PR #4464).
+  `bartytime4life/Kansas-Frontier-Matrix@eca6c8a2353fbe28ace619288231a047e5d485f5`
+  (`main`, merged PR #4467).
 - The Site and GitHub repository retain separate source histories. This Site’s
   `.openai/hosting.json` is authoritative for its current binding; the GitHub
   child manifest still names legacy project `appgprj_6a870a079c1c8191abb7401ef092a181`

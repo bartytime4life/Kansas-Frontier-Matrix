@@ -25,14 +25,12 @@ import {
   BASEMAPS,
   buildMeasurementData,
   distanceMiles,
-  lngLatToTile,
   reorderRegistryLayers,
   setStructureExtrusions,
   setTerrainHeightOverlay,
   setTerrainPresentation,
   setElevationExaggeration,
   TERRAIN_HILLSHADE_LAYER_ID,
-  TERRAIN_COLOR_RELIEF_LAYER_ID,
   TERRAIN_COLOR_SOURCE_ID,
   TERRAIN_SOURCE_ID,
   type Structures3DState,
@@ -1664,7 +1662,6 @@ export default function Home() {
     });
   }, [connectionFilter, connectionQuery, externalContextConnections]);
   const activeExternalContextCount = externalContextConnections.filter((connection) => connection.active).length;
-  const centerTile = useMemo(() => lngLatToTile(view.center[0], view.center[1], view.zoom), [view.center, view.zoom]);
   const maplibreCapabilityChecks = useMemo(() => {
     const state = (ready: boolean, failed = false): "READY" | "CHECKING" | "ERROR" => failed ? "ERROR" : ready ? "READY" : "CHECKING";
     const startupFailed = Boolean(maplibreProbe.error);
@@ -4836,111 +4833,6 @@ export default function Home() {
     announce(`Fit ${mapFeatureIndex.length} compatible indexed feature${mapFeatureIndex.length === 1 ? "" : "s"}`);
   };
 
-  const applyScenePreset = (preset: ScenePresetId) => {
-    const scene = {
-      "overview-2d": {
-        layers: ["kansas-extent", "watershed-context", "water-context", "prairie-context", "atmosphere-observations", "communities"],
-        basemap: "standard" as BasemapKey,
-        projection: "mercator" as const,
-        camera: { ...KANSAS_VIEW },
-        scale: 1.35,
-        atmosphere: "night" as AtmospherePreset,
-        lightAzimuth: 210,
-        fieldOfView: 36,
-        label: "2D Kansas overview",
-      },
-      "globe-overview": {
-        layers: ["kansas-extent", "watershed-context", "water-context", "prairie-context", "atmosphere-observations", "communities"],
-        basemap: "standard" as BasemapKey,
-        projection: "globe" as const,
-        camera: { center: [-98.38, 38.48] as [number, number], zoom: 4.8, bearing: -16, pitch: 22 },
-        scale: 1,
-        atmosphere: "clear" as AtmospherePreset,
-        lightAzimuth: 225,
-        fieldOfView: 42,
-        label: "MapLibre globe overview",
-      },
-      "water-systems": {
-        layers: ["kansas-extent", "watershed-context", "water-context", "communities"],
-        basemap: "standard" as BasemapKey,
-        projection: "mercator" as const,
-        camera: { center: [-98.25, 38.55] as [number, number], zoom: 6.05, bearing: 0, pitch: 18 },
-        scale: 1,
-        atmosphere: "clear" as AtmospherePreset,
-        lightAzimuth: 195,
-        fieldOfView: 38,
-        label: "Water systems scene",
-      },
-      "smoke-context": {
-        layers: ["kansas-extent", "watershed-context", "smoke-context", "atmosphere-observations", "communities"],
-        basemap: "midnight" as BasemapKey,
-        projection: "mercator" as const,
-        camera: { center: [-97.05, 38.65] as [number, number], zoom: 6.0, bearing: -8, pitch: 28 },
-        scale: 1,
-        atmosphere: "dusk" as AtmospherePreset,
-        lightAzimuth: 248,
-        fieldOfView: 40,
-        label: "Synthetic smoke context scene",
-      },
-      "elevation-3d": {
-        layers: ["kansas-extent", "watershed-context", "water-context", "communities"],
-        basemap: "standard" as BasemapKey,
-        projection: "mercator" as const,
-        camera: { center: [-98.38, 38.48] as [number, number], zoom: 5.8, bearing: -18, pitch: 52 },
-        scale: 1,
-        atmosphere: "dusk" as AtmospherePreset,
-        lightAzimuth: 235,
-        fieldOfView: 44,
-        label: "Real DEM terrain scene",
-      },
-      "tile-grid": {
-        layers: ["kansas-extent", "tile-matrix-grid", "water-context", "communities"],
-        basemap: "midnight" as BasemapKey,
-        projection: "mercator" as const,
-        camera: { center: [-98.38, 38.48] as [number, number], zoom: 6.2, bearing: 0, pitch: 0 },
-        scale: 1,
-        atmosphere: "night" as AtmospherePreset,
-        lightAzimuth: 210,
-        fieldOfView: 36,
-        label: "Tile diagnostic grid scene",
-      },
-    }[preset];
-    stopSceneOrbit(false);
-    const nextVisibility = Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, scene.layers.includes(layer.id)]));
-    visibilityRef.current = nextVisibility;
-    basemapRef.current = scene.basemap;
-    projectionRef.current = scene.projection;
-    verticalExaggerationRef.current = scene.scale;
-    atmospherePresetRef.current = scene.atmosphere;
-    lightAzimuthRef.current = scene.lightAzimuth;
-    fieldOfViewRef.current = scene.fieldOfView;
-    setVisibility(nextVisibility);
-    setTemporalMode("snapshot");
-    commitTemporalFrame(2026);
-    setPlaying(false);
-    setBasemap(scene.basemap);
-    setProjection(scene.projection);
-    setScenePreset(preset);
-    setVerticalExaggeration(scene.scale);
-    setAtmospherePreset(scene.atmosphere);
-    setLightAzimuth(scene.lightAzimuth);
-    setFieldOfView(scene.fieldOfView);
-    setMapQueryCandidates([]);
-    locationDerivedViewRef.current = false;
-    setLocationCameraRedacted(false);
-    clearSelectionState();
-    mapRef.current?.easeTo({ ...scene.camera, duration: motionDuration(700) });
-    announce(`${scene.label} applied · reversible browser-only view state`);
-  };
-
-  const toggleSceneLayer = (layerId: "watershed-context" | "smoke-context" | "fire-context" | "hazards-context" | "habitat-connectivity" | "people-dna-context" | "transport-context" | "elevation-concept" | "tile-matrix-grid") => {
-    setVisibility((current) => {
-      const next = { ...current, [layerId]: !current[layerId] };
-      visibilityRef.current = next;
-      return next;
-    });
-  };
-
   const orientSceneCamera = (pitch: number, bearing = view.bearing) => {
     stopSceneOrbit(false);
     mapRef.current?.easeTo({ pitch, bearing, duration: motionDuration(450) });
@@ -7310,6 +7202,14 @@ export default function Home() {
                   <section className="scene-camera-controls" aria-label="3D camera orientation">
                     <header><strong>Camera</strong><small>{Math.round(view.pitch)}° pitch · {Math.round(view.bearing)}° bearing</small></header>
                     <div><button type="button" onClick={() => orientSceneCamera(48, -18)}>Oblique NW</button><button type="button" onClick={() => orientSceneCamera(54, 28)}>Oblique SE</button><button type="button" onClick={() => orientSceneCamera(0, view.bearing)}>Top down</button><button type="button" onClick={() => orientSceneCamera(view.pitch, 0)}>North up</button><button type="button" onClick={() => sceneOrbiting ? stopSceneOrbit() : startSceneOrbit()} aria-pressed={sceneOrbiting}>{sceneOrbiting ? "Stop orbit" : "Orbit 90°"}</button><button type="button" disabled={!selected} onClick={() => selected && mapRef.current?.easeTo({ center: [selected.properties.focusLng, selected.properties.focusLat], zoom: Math.max(view.zoom, 8.5), pitch: 58, bearing: -24, duration: motionDuration(650) })}>Focus selection</button></div>
+                  </section>
+                  <section className="scene-structures-control" data-state={structures3DState} aria-labelledby="scene-structures-title">
+                    <header><div><span>STRUCTURES 3D</span><strong id="scene-structures-title">Provider heights only</strong><small>{STRUCTURE_3D_SOURCE.organization} · city-scale context</small></div><output>{structures3DState}</output></header>
+                    <div className="scene-structures-body">
+                      <button type="button" role="switch" aria-checked={structures3DEnabled} onClick={toggleStructureExtrusions}>{structures3DEnabled ? "Hide structures" : "Show structures"}</button>
+                      <div role="group" aria-label="Structure focus presets">{STRUCTURE_FOCUS_PRESETS.map((preset) => <button key={preset.id} type="button" onClick={() => focusStructureScene(preset)}>{preset.label.replace("Focus ", "")}</button>)}</div>
+                      <p>{structures3DState === "READY" ? "Building heights are supplied by the active Liberty style. Missing heights remain missing." : structures3DState === "UNAVAILABLE" ? "The current basemap does not expose a height-backed building layer." : structures3DEnabled ? "Requesting the provider building layer…" : "Off by default; this display carrier does not change evidence or report measurements."}</p>
+                    </div>
                   </section>
                 </div>
 

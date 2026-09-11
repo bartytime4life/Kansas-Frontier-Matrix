@@ -166,5 +166,5 @@ test("saved Worker serves the event mixer and navigable cited research without b
   for(const label of ["Event Observatory","Layer an event","Show Radar reflectivity","Show Smoke footprint","Show Fauna occurrences","Resource-map symbols","Shared event clock"]) assert.match(html,new RegExp(label,"i"));
   assert.ok(!/checked=""[^>]*aria-label="Loop"/.test(html));
   const sources=await worker.fetch(new Request("http://localhost/observatory/sources"),env,ctx);assert.equal(sources.status,200);const report=await sources.text();
-  assert.match(report,/Sources and references/);assert.match(report,/664e46697d4d237870f5a482904bb9acd8f11b20/);assert.match(report,/HRRR flow is therefore researched but not activated/);
+  assert.match(report,/Sources and references/);assert.match(report,/eca6c8a2353fbe28ace619288231a047e5d485f5/);assert.match(report,/HRRR flow is therefore researched but not activated/);
 });

@@ -34,7 +34,7 @@ test("renders the map-first Kansas explorer shell", async () => {
   assert.match(html, /Build report/i);
   assert.match(html, /bounded demonstration data/i);
   assert.match(html, /Repository briefing/i);
-  assert.match(html, /main@(?:<!-- -->)?664e466/i);
+  assert.match(html, /main@(?:<!-- -->)?eca6c8a/i);
   assert.match(html, /Scenario review/i);
   assert.match(html, /Runtime lab/i);
   assert.match(html, /Source observatory/i);
@@ -154,6 +154,8 @@ test("adds bounded smoke, water, elevation, tile, and scene navigation features"
   assert.match(page, /TERRAIN SCENE PASSPORT/);
   assert.match(page, /TOPOGRAPHIC HEIGHT/);
   assert.match(page, /PRIORITY_CONTEXT_GROUPS/);
+  assert.match(page, /Provider heights only/);
+  assert.match(page, /role="switch" aria-checked=\{structures3DEnabled\}/);
   assert.match(page, /Earthquakes, water \+ smoke/);
   assert.match(page, /setPriorityContextGroupVisible/);
   assert.match(page, /priority-context-source/);
@@ -165,6 +167,7 @@ test("adds bounded smoke, water, elevation, tile, and scene navigation features"
   assert.match(page, /colorRampMeters/);
   assert.match(page, /Vertical datum, analytical spacing, and KFM source admission are not asserted/);
   assert.match(css, /\.terrain-scene-passport/);
+  assert.match(css, /\.scene-structures-control/);
   assert.match(page, /STRUCTURE_3D_SOURCE/);
   assert.match(runtime, /ACTIVE_TERRAIN_SOURCE/);
   assert.match(runtime, /LIBERTY_STRUCTURES_3D_LAYER_ID = "building-3d"/);
@@ -191,7 +194,6 @@ test("adds governed living systems, hazards, people, transport, settlement, and 
   const mapInterface = await readFile(new URL("../app/map-interface.ts", import.meta.url), "utf8");
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   const about = await readFile(new URL("../app/about/page.tsx", import.meta.url), "utf8");
-  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
   const compiled = ts.transpileModule(explorerSource, {
     compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
     fileName: "explorer-data.ts",
@@ -602,7 +604,7 @@ test("keeps repository updates pinned and boundary-labeled", async () => {
   const updates = await readFile(new URL("../app/repository-updates.ts", import.meta.url), "utf8");
   const identity = await readFile(new URL("../app/site-identity.ts", import.meta.url), "utf8");
 
-  assert.match(identity, /664e46697d4d237870f5a482904bb9acd8f11b20/);
+  assert.match(identity, /eca6c8a2353fbe28ace619288231a047e5d485f5/);
   assert.match(updates, /SITE_IDENTITY\.repositoryCommit/);
   assert.match(updates, /separate source histories/);
   assert.match(updates, /Local geodata inspection now fails closed on malformed or stale input/);

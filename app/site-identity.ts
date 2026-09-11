@@ -7,7 +7,7 @@ export const SITE_IDENTITY = Object.freeze({
   checkedAt: "11 Sep 2026",
   repository: "bartytime4life/Kansas-Frontier-Matrix",
   repositoryRef: "main",
-  repositoryCommit: "664e46697d4d237870f5a482904bb9acd8f11b20",
+  repositoryCommit: "eca6c8a2353fbe28ace619288231a047e5d485f5",
   repositoryManifestProjectId: "appgprj_6a870a079c1c8191abb7401ef092a181",
   repositoryManifestStatus: "LEGACY_PROJECT_ID",
   sourceRelation: "SEPARATE_SOURCE_HISTORIES",
