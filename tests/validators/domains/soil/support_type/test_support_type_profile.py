@@ -1,12 +1,17 @@
 """Deterministic tests for the inactive Soil support-type profile."""
 from __future__ import annotations
 
+import contextlib
 import copy
+import io
 import hashlib
 import json
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
+
+from tools.validators.domains.soil.support_type import validate_support_type_profile as validator
 
 from tools.validators.domains.soil.support_type.validate_support_type_profile import (
     FIXTURE_ROOT,
@@ -161,6 +166,193 @@ class SoilSupportTypeProfileTests(unittest.TestCase):
         second = validate_file(path)
         self.assertEqual(first, second)
         self.assertEqual(first.findings, tuple(sorted(first.findings)))
+
+
+class SoilFixtureExecutionTests(unittest.TestCase):
+    """Fixture execution must prove rejection, not reward evaluation failure."""
+
+    def setUp(self) -> None:
+        self.directory = tempfile.TemporaryDirectory()
+        self.addCleanup(self.directory.cleanup)
+        self.root = Path(self.directory.name)
+        for group in ("valid", "invalid"):
+            (self.root / group).mkdir()
+        self.positive = self.root / "valid/control.json"
+        self.negative = self.root / "invalid/control.json"
+        self.positive.write_bytes(
+            (FIXTURE_ROOT / "valid/station_soil_moisture.json").read_bytes()
+        )
+        self.negative.write_bytes(
+            (FIXTURE_ROOT / "invalid/station_as_satellite_grid.json").read_bytes()
+        )
+
+    def run_cli(self, *arguments: str) -> tuple[int, dict[str, object]]:
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output):
+            code = validator.main(list(arguments))
+        return code, json.loads(output.getvalue())
+
+    def test_cli_explicit_missing_profile_cannot_pass(self) -> None:
+        code, report = self.run_cli(
+            "--fixtures", "--fixture-root", str(self.root),
+            "--profile", str(self.root / "missing.json"),
+        )
+        self.assertEqual(code, 1)
+        self.assertEqual(report["outcome"], "ERROR")
+        self.assertIn(
+            {"code": "FILE_NOT_FOUND", "field": "/"}, report["findings"]
+        )
+
+    def test_cli_modes_are_exclusive_before_validation(self) -> None:
+        with mock.patch.object(validator, "validate_fixture_tree") as fixtures:
+            with mock.patch.object(validator, "validate_file") as candidate:
+                with contextlib.redirect_stderr(io.StringIO()):
+                    with self.assertRaises(SystemExit) as raised:
+                        validator.main([
+                            "--fixtures", "--candidate", str(self.negative),
+                        ])
+        self.assertEqual(raised.exception.code, 2)
+        fixtures.assert_not_called()
+        candidate.assert_not_called()
+
+    def test_cli_requires_a_mode(self) -> None:
+        with contextlib.redirect_stderr(io.StringIO()):
+            with self.assertRaises(SystemExit) as raised:
+                validator.main([])
+        self.assertEqual(raised.exception.code, 2)
+
+    def test_explicit_valid_profile_is_used_for_every_fixture(self) -> None:
+        profile = _load(PROFILE_PATH)
+        profile["profile_version"] = "1.0.1"
+        payload = json.dumps(
+            {key: value for key, value in profile.items() if key != "spec_hash"},
+            sort_keys=True, separators=(",", ":"), ensure_ascii=False,
+        ).encode("utf-8")
+        profile["spec_hash"] = "sha256:" + hashlib.sha256(payload).hexdigest()
+        profile_path = self.root / "selected-profile.json"
+        profile_path.write_text(json.dumps(profile), encoding="utf-8")
+        for path in (self.positive, self.negative):
+            candidate = _load(path)
+            candidate["profile_version"] = profile["profile_version"]
+            candidate["profile_spec_hash"] = profile["spec_hash"]
+            path.write_text(json.dumps(candidate), encoding="utf-8")
+        code, report = self.run_cli(
+            "--fixtures", "--fixture-root", str(self.root),
+            "--profile", str(profile_path),
+        )
+        self.assertEqual((code, report["outcome"]), (0, "PASS"))
+        self.assertEqual(report["findings"], [])
+        # The same candidates must fail against the default profile.
+        self.assertIn(
+            Finding("VALID_FIXTURE_REJECTED", "/valid/control.json"),
+            validate_fixture_tree(self.root),
+        )
+
+    def test_invalid_profile_stops_before_fixture_evaluation(self) -> None:
+        for content in ("{", "{}", PROFILE_PATH.read_text().replace(
+            '"profile_version": "1.0.0"', '"profile_version": "1.0.1"'
+        )):
+            with self.subTest(profile=content[:30]):
+                path = self.root / "invalid-profile.json"
+                path.write_text(content, encoding="utf-8")
+                with mock.patch.object(validator, "validate_candidate") as evaluate:
+                    findings = validate_fixture_tree(self.root, profile_path=path)
+                self.assertEqual(validator.ValidationResult(findings).outcome, "ERROR")
+                self.assertIn(Finding("PROFILE_INVALID", "/profile"), findings)
+                evaluate.assert_not_called()
+
+    def test_unreadable_negative_is_not_a_successful_rejection(self) -> None:
+        malformed = (
+            b"{", b"\xff", b'{"key":1,"key":2}', b'{"key":NaN}',
+            b'{"key":1e999}', b"[]", b" " * (validator.MAX_JSON_BYTES + 1),
+        )
+        for payload in malformed:
+            with self.subTest(payload=payload[:30]):
+                self.negative.write_bytes(payload)
+                code, report = self.run_cli(
+                    "--fixtures", "--fixture-root", str(self.root),
+                )
+                self.assertEqual((code, report["outcome"]), (1, "ERROR"))
+                self.assertEqual(report["findings"], [
+                    {"code": "FIXTURE_EVALUATION_ERROR", "field": "/invalid/control.json"}
+                ])
+
+    def test_unreadable_positive_is_an_evaluation_error(self) -> None:
+        self.positive.write_text("{", encoding="utf-8")
+        findings = validate_fixture_tree(self.root)
+        self.assertEqual(validator.ValidationResult(findings).outcome, "ERROR")
+        self.assertIn(Finding("FIXTURE_EVALUATION_ERROR", "/valid/control.json"), findings)
+
+    def test_disappearing_fixture_fails_closed(self) -> None:
+        original = validator._read_object
+
+        def read(path: Path):
+            if path == self.negative:
+                return None, [Finding("FILE_NOT_FOUND", "/")]
+            return original(path)
+
+        with mock.patch.object(validator, "_read_object", side_effect=read):
+            findings = validate_fixture_tree(self.root)
+        self.assertIn(Finding("FIXTURE_EVALUATION_ERROR", "/invalid/control.json"), findings)
+        self.assertEqual(validator.ValidationResult(findings).outcome, "ERROR")
+
+    def test_schema_failure_is_not_a_negative_control_success(self) -> None:
+        with mock.patch.object(validator, "CANDIDATE_SCHEMA_PATH", self.root / "absent.json"):
+            findings = validate_fixture_tree(self.root)
+        self.assertEqual(validator.ValidationResult(findings).outcome, "ERROR")
+        self.assertEqual(findings, (
+            Finding("FIXTURE_EVALUATION_ERROR", "/invalid/control.json"),
+            Finding("FIXTURE_EVALUATION_ERROR", "/valid/control.json"),
+        ))
+
+    def test_accepted_negative_is_still_denied(self) -> None:
+        self.negative.write_bytes(self.positive.read_bytes())
+        findings = validate_fixture_tree(self.root)
+        self.assertEqual(findings, (
+            Finding("INVALID_FIXTURE_ACCEPTED", "/invalid/control.json"),
+        ))
+        self.assertEqual(validator.ValidationResult(findings).outcome, "DENY")
+
+    def test_rejected_positive_is_still_denied(self) -> None:
+        self.positive.write_bytes(self.negative.read_bytes())
+        findings = validate_fixture_tree(self.root)
+        self.assertEqual(findings, (
+            Finding("VALID_FIXTURE_REJECTED", "/valid/control.json"),
+        ))
+
+    def test_both_fixture_polarities_remain_required(self) -> None:
+        for group in ("valid", "invalid"):
+            with self.subTest(group=group):
+                path = self.root / group / "control.json"
+                payload = path.read_bytes()
+                path.unlink()
+                try:
+                    findings = validate_fixture_tree(self.root)
+                    self.assertIn(Finding(f"{group.upper()}_FIXTURES_MISSING", f"/{group}"), findings)
+                finally:
+                    path.write_bytes(payload)
+
+    def test_candidate_cli_and_report_boundary_are_unchanged(self) -> None:
+        for path, expected, exit_code in (
+            (self.positive, "PASS", 0), (self.negative, "DENY", 1),
+        ):
+            with self.subTest(expected=expected):
+                code, report = self.run_cli("--candidate", str(path))
+                self.assertEqual((code, report["outcome"]), (exit_code, expected))
+                self.assertEqual(report["authority"], "NONE")
+                self.assertEqual(report["scope"], validator.SCOPE)
+                self.assertEqual(set(report), {"scope", "outcome", "findings", "authority", "non_effects"})
+
+    def test_fixture_check_is_repeatable_read_only_and_no_network(self) -> None:
+        before = {p: p.read_bytes() for p in self.root.rglob("*.json")}
+        with mock.patch("socket.socket", side_effect=AssertionError("network denied")):
+            with mock.patch("socket.create_connection", side_effect=AssertionError("network denied")):
+                with mock.patch("urllib.request.urlopen", side_effect=AssertionError("network denied")):
+                    first = self.run_cli("--fixtures", "--fixture-root", str(self.root))
+                    second = self.run_cli("--fixtures", "--fixture-root", str(self.root))
+        self.assertEqual(first, second)
+        self.assertEqual(first[0], 0)
+        self.assertEqual(before, {p: p.read_bytes() for p in self.root.rglob("*.json")})
 
 
 if __name__ == "__main__":

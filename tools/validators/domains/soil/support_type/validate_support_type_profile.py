@@ -54,7 +54,7 @@ class ValidationResult:
         error_codes = {
             "FILE_NOT_FOUND", "FILE_READ_ERROR", "JSON_INVALID", "JSON_NOT_UTF8",
             "JSON_DUPLICATE_KEY", "JSON_NONFINITE_NUMBER", "ROOT_NOT_OBJECT",
-            "SCHEMA_UNAVAILABLE", "PROFILE_INVALID",
+            "SCHEMA_UNAVAILABLE", "PROFILE_INVALID", "FIXTURE_EVALUATION_ERROR",
         }
         return "ERROR" if any(f.code in error_codes for f in self.findings) else "DENY"
 
@@ -260,24 +260,40 @@ def validate_file(candidate_path: Path, *, profile_path: Path = PROFILE_PATH) ->
     return validate_candidate(candidate, profile)
 
 
-def validate_fixture_tree(fixture_root: Path = FIXTURE_ROOT) -> tuple[Finding, ...]:
-    findings: list[Finding] = []
-    valid_paths = sorted((fixture_root / "valid").glob("*.json"))
-    invalid_paths = sorted((fixture_root / "invalid").glob("*.json"))
-    if not valid_paths:
-        findings.append(Finding("VALID_FIXTURES_MISSING", "/valid"))
-    if not invalid_paths:
-        findings.append(Finding("INVALID_FIXTURES_MISSING", "/invalid"))
-    findings.extend(
-        Finding("VALID_FIXTURE_REJECTED", f"/valid/{path.name}")
-        for path in valid_paths
-        if not validate_file(path).ok
-    )
-    findings.extend(
-        Finding("INVALID_FIXTURE_ACCEPTED", f"/invalid/{path.name}")
-        for path in invalid_paths
-        if validate_file(path).ok
-    )
+def validate_fixture_tree(
+    fixture_root: Path = FIXTURE_ROOT, *, profile_path: Path = PROFILE_PATH
+) -> tuple[Finding, ...]:
+    """Check both fixture polarities against one explicitly selected profile.
+
+    Invalid fixtures must be evaluated and denied. Unreadable inputs or a
+    broken evaluator cannot stand in for successful negative controls.
+    """
+    profile, findings = _read_object(profile_path)
+    if profile is not None and not findings:
+        findings = _profile_findings(profile)
+    if findings or profile is None:
+        return tuple(sorted(set([*findings, Finding("PROFILE_INVALID", "/profile")])))
+
+    # Capture the profile once so every fixture uses the same parsed input.
+    # This is not an atomic snapshot of all fixture and schema files.
+    for group, expected, mismatch in (
+        ("valid", "PASS", "VALID_FIXTURE_REJECTED"),
+        ("invalid", "DENY", "INVALID_FIXTURE_ACCEPTED"),
+    ):
+        paths = sorted((fixture_root / group).glob("*.json"))
+        if not paths:
+            findings.append(Finding(f"{group.upper()}_FIXTURES_MISSING", f"/{group}"))
+        for path in paths:
+            field = _pointer((group, path.name))
+            candidate, input_findings = _read_object(path)
+            if input_findings or candidate is None:
+                findings.append(Finding("FIXTURE_EVALUATION_ERROR", field))
+                continue
+            result = validate_candidate(candidate, profile)
+            if result.outcome == "ERROR":
+                findings.append(Finding("FIXTURE_EVALUATION_ERROR", field))
+            elif result.outcome != expected:
+                findings.append(Finding(mismatch, field))
     return tuple(sorted(set(findings)))
 
 
@@ -303,17 +319,18 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="Validate the inactive Soil support-type fixture profile."
     )
-    parser.add_argument("--candidate", type=Path)
+    mode = parser.add_mutually_exclusive_group(required=True)
+    mode.add_argument("--candidate", type=Path)
     parser.add_argument("--profile", type=Path, default=PROFILE_PATH)
-    parser.add_argument("--fixtures", action="store_true")
+    mode.add_argument("--fixtures", action="store_true")
     parser.add_argument("--fixture-root", type=Path, default=FIXTURE_ROOT)
     args = parser.parse_args(argv)
     if args.fixtures:
-        result = ValidationResult(validate_fixture_tree(args.fixture_root))
-    elif args.candidate is not None:
-        result = validate_file(args.candidate, profile_path=args.profile)
+        result = ValidationResult(validate_fixture_tree(
+            args.fixture_root, profile_path=args.profile
+        ))
     else:
-        parser.error("provide --candidate or --fixtures")
+        result = validate_file(args.candidate, profile_path=args.profile)
     print(json.dumps(_report(result), sort_keys=True))
     return 0 if result.ok else 1
 
