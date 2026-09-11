@@ -23,7 +23,7 @@
   white-space: nowrap;
 }
 .map-command-bar .site-layer-library-summary strong { color: var(--water); font-size: 9px; }
-.map-command-bar .site-layer-library-summary i { color: var(--line-strong); font-style: normal; }
+.map-command-bar .site-layer-library-divider { color: var(--line-strong); }
 
 /* The existing left rail remains the full layer-state owner. Make its single
  * catalog scroller unmistakable and keyboard reachable so lower toggles are
@@ -31,7 +31,11 @@
 .layer-panel .catalog-groups {
   position: relative;
   flex-basis: 12rem;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
   scrollbar-gutter: stable;
+  scrollbar-width: auto;
   overscroll-behavior-y: contain;
   scroll-padding-block: 38px 18px;
   touch-action: pan-y;
