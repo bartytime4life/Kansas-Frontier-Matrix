@@ -1,0 +1,195 @@
+{
+  "receipt_id": "genrec-kfm-explorer-layers-animation-roadmap-20260911",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/reports/kfm-explorer-layers-animation-3d-performance-roadmap-20260911.md"
+  ],
+  "artifact_hashes": {
+    "docs/reports/kfm-explorer-layers-animation-3d-performance-roadmap-20260911.md": "sha256:f0bd41989b412a20788c4e85fdfe274131b33465a126c4faaf7fdee0719f283d"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-5)",
+    "version": "2026-08-03"
+  },
+  "prompt_or_contract": "sha256:cc83debd81679f61f7d94b4f460c94706c6a703d3eb745f6ef90c862c27d2bc8",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Deep Research",
+      "GitHub connector",
+      "Google Drive connector",
+      "Notion connector",
+      "official web documentation",
+      "static Markdown and hash checks"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Full_Atlas_seed_cards.md",
+      "GIS in Sustainable Urban Planning and Management.pdf",
+      "Archaeological 3D GIS.pdf",
+      "mastering-postgis-modern-ways-to-create-analyze-and-implement-spatial-data.pdf",
+      "A Practical Guide to Geostatistical Mapping, 2nd Edition.pdf",
+      "a-primer-of-gis-fundamental-geographic-and-cartographic-concepts.pdf",
+      "Designing Great Web APIs.pdf",
+      "Database Lifecycle Management_ Continuous Delivery for Databases.pdf",
+      "Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf",
+      "KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf",
+      "Kansas_Frontier_Matrix_Pipeline_Living_Implementation_Manual_v0.3.pdf",
+      "Master MapLibre Components-Functions-Features.pdf",
+      "maplibre3d.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/b44494c1cf0807ed28b606e8a41b255bebdf4ad7",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b44494c1cf0807ed28b606e8a41b255bebdf4ad7/apps/explorer-web/src/site/catalog.ts",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b44494c1cf0807ed28b606e8a41b255bebdf4ad7/apps/explorer-web/src/site/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b44494c1cf0807ed28b606e8a41b255bebdf4ad7/packages/maplibre/src/map-runtime-port.ts",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b44494c1cf0807ed28b606e8a41b255bebdf4ad7/packages/maplibre/src/maplibre-adapter.ts",
+      "https://app.notion.com/p/3d2a92021bf681d68e6dfad0564d8687?pvs=204",
+      "https://app.notion.com/p/3d6a92021bf6816cae0ec1ccbd15e21e?pvs=204",
+      "https://docs.google.com/document/d/1aivNyfMjQ8urQO6vjt4YvkT1ltF1t7fxCahEcnGV4Dw/edit",
+      "https://maplibre.org/maplibre-gl-js/docs/examples/3d-terrain/",
+      "https://maplibre.org/maplibre-gl-js/docs/API/interfaces/CustomLayerInterface/",
+      "https://react.dev/reference/react/useSyncExternalStore",
+      "https://www.usgs.gov/3d-elevation-program/about-3dep-products-services",
+      "https://www.usgs.gov/3d-hydrography-program/access-3dhp-data-products",
+      "https://api.waterdata.usgs.gov/docs/ogcapi/",
+      "https://www.weather.gov/documentation/services-web-api",
+      "https://www.ncei.noaa.gov/products/radar/next-generation-weather-radar",
+      "https://www.ospo.noaa.gov/products/land/hms.html",
+      "https://www.arl.noaa.gov/hysplit/smoke-forecasting/",
+      "https://firms.modaps.eosdis.nasa.gov/",
+      "https://www.epa.gov/aqs",
+      "https://www.nrcs.usda.gov/resources/data-and-reports/soil-survey-geographic-database-ssurgo"
+    ]
+  },
+  "truth_labels": {
+    "roadmap": "PROPOSED",
+    "current-repository-state": "CONFIRMED",
+    "source-admission-and-production-readiness": "NEEDS VERIFICATION",
+    "performance-thresholds": "UNKNOWN"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-current-head-and-boundary-preflight",
+      "outcome": "PASS",
+      "reason": "Inspected the current main commit, Explorer catalog/site boundary, MapRuntimePort, MapLibre adapter, Directory Rules, generated-receipt schema, and repository contribution rules before authoring."
+    },
+    {
+      "gate": "drive-notion-source-reconciliation",
+      "outcome": "PASS",
+      "reason": "Compared the current Living Atlas and real-data coordination records with the current repository and marked stale pins as lineage rather than implementation authority."
+    },
+    {
+      "gate": "official-technical-source-review",
+      "outcome": "PASS",
+      "reason": "Reviewed current official MapLibre, React/browser, USGS, NOAA, NWS, NASA, EPA, and USDA documentation for the recommendations labeled as sourced facts."
+    },
+    {
+      "gate": "markdown-structure-and-content-hash",
+      "outcome": "PASS",
+      "reason": "Created a documentation-only Markdown report with 366 lines and SHA-256 sha256:f0bd41989b412a20788c4e85fdfe274131b33465a126c4faaf7fdee0719f283d."
+    },
+    {
+      "gate": "source-activation-runtime-release-publication",
+      "outcome": "SKIPPED",
+      "reason": "This change is a roadmap and does not activate source transport, change runtime behavior, admit data, create a release, deploy, or publish."
+    },
+    {
+      "gate": "browser-gpu-accessibility-performance-proof",
+      "outcome": "SKIPPED",
+      "reason": "The report defines these future gates; current repository evidence identifies browser activation, terrain/3D denial/fallback, authoritative performance thresholds, and long-session proof as held."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review is intentionally pending on the draft pull request and coordination pages."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-explorer-catalog",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/b44494c1cf0807ed28b606e8a41b255bebdf4ad7/apps/explorer-web/src/site/catalog.ts"
+    },
+    {
+      "id": "current-map-runtime-port",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/b44494c1cf0807ed28b606e8a41b255bebdf4ad7/packages/maplibre/src/map-runtime-port.ts"
+    },
+    {
+      "id": "current-maplibre-adapter",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/b44494c1cf0807ed28b606e8a41b255bebdf4ad7/packages/maplibre/src/maplibre-adapter.ts"
+    },
+    {
+      "id": "maplibre-terrain",
+      "validated": true,
+      "evidence_ref": "https://maplibre.org/maplibre-gl-js/docs/examples/3d-terrain/"
+    },
+    {
+      "id": "maplibre-custom-layer",
+      "validated": true,
+      "evidence_ref": "https://maplibre.org/maplibre-gl-js/docs/API/interfaces/CustomLayerInterface/"
+    },
+    {
+      "id": "react-external-store",
+      "validated": true,
+      "evidence_ref": "https://react.dev/reference/react/useSyncExternalStore"
+    },
+    {
+      "id": "usgs-3dep",
+      "validated": true,
+      "evidence_ref": "https://www.usgs.gov/3d-elevation-program/about-3dep-products-services"
+    },
+    {
+      "id": "usgs-3dhp",
+      "validated": true,
+      "evidence_ref": "https://www.usgs.gov/3d-hydrography-program/access-3dhp-data-products"
+    },
+    {
+      "id": "usgs-water-data-apis",
+      "validated": true,
+      "evidence_ref": "https://api.waterdata.usgs.gov/docs/ogcapi/"
+    },
+    {
+      "id": "nws-api",
+      "validated": true,
+      "evidence_ref": "https://www.weather.gov/documentation/services-web-api"
+    },
+    {
+      "id": "noaa-smoke-and-fire-products",
+      "validated": true,
+      "evidence_ref": "https://www.ospo.noaa.gov/products/land/hms.html"
+    },
+    {
+      "id": "epa-air-quality-system",
+      "validated": true,
+      "evidence_ref": "https://www.epa.gov/aqs"
+    },
+    {
+      "id": "nrcs-ssurgo",
+      "validated": true,
+      "evidence_ref": "https://www.nrcs.usda.gov/resources/data-and-reports/soil-survey-geographic-database-ssurgo"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-11T17:41:51.000Z",
+  "emitter": "openai/codex-gpt-5",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored documentation-only roadmap for the Kansas-first KFM Explorer. It separates confirmed repository facts, sourced technical references, recommendations, and unknowns. The receipt is provenance evidence, not approval, source admission, performance proof, release authorization, or publication. Human review remains pending."
+}
