@@ -24,7 +24,7 @@ const putAscii = (view, offset, value, length) => {
   for (let index = 0; index < length; index += 1) view.setUint8(offset + index, value.charCodeAt(index) || 32);
 };
 
-const miniSeedRecord = (samples = [1, -2, 3, -4], station = "TEST") => {
+const miniSeedRecord = (samples = [1, -2, 3, -4], station = "TEST", second = 0) => {
   const bytes = new ArrayBuffer(512);
   const view = new DataView(bytes);
   putAscii(view, 0, "000001", 6);
@@ -35,7 +35,7 @@ const miniSeedRecord = (samples = [1, -2, 3, -4], station = "TEST") => {
   putAscii(view, 18, "AM", 2);
   view.setUint16(20, 2026, false);
   view.setUint16(22, 254, false);
-  view.setUint8(24, 0); view.setUint8(25, 0); view.setUint8(26, 0);
+  view.setUint8(24, 0); view.setUint8(25, 0); view.setUint8(26, second);
   view.setUint16(28, 0, false);
   view.setInt16(30, samples.length, false);
   view.setInt16(32, 1, false); view.setInt16(34, 1, false);
@@ -102,6 +102,17 @@ test("rejects compressed encodings and mixed NSLC channels instead of guessing",
     waveformFileName: "mixed.mseed", stationXmlFileName: "station.xml", waveformBytes: combined.buffer,
     stationXmlText: stationXml(), inspectedAt: "2026-09-11T00:00:00.000Z", attribution: "User-supplied file",
   }), /one NSLC channel/);
+
+  const firstContiguous = new Uint8Array(miniSeedRecord([1, 2]));
+  const gap = new Uint8Array(miniSeedRecord([3, 4], "TEST", 10));
+  const gapped = new Uint8Array(firstContiguous.byteLength + gap.byteLength);
+  gapped.set(firstContiguous); gapped.set(gap, firstContiguous.byteLength);
+  const gappedPreview = await waveform.buildLocalWaveformPreview({
+    waveformFileName: "gapped.mseed", stationXmlFileName: "station.xml", waveformBytes: gapped.buffer,
+    stationXmlText: stationXml(), inspectedAt: "2026-09-11T00:00:00.000Z", attribution: "User-supplied file",
+  });
+  assert.equal(gappedPreview.outcome, "BLOCK");
+  assert.equal(gappedPreview.gates.find((gate) => gate.id === "continuity").state, "BLOCK");
 });
 
 test("keeps the implementation browser-local and finite", async () => {
