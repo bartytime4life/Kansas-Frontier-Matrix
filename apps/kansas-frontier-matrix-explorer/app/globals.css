@@ -1542,3 +1542,52 @@ input[type="range"] { accent-color: var(--gold); }
   .legend-swatch, .release-indicator i, .mission-band i, .status-bar i { forced-color-adjust: none; }
   .trust-badge, .drawer-state, .notice { border-width: 2px; }
 }
+
+
+/* Browser-local Raspberry Shake waveform preview. This surface is never a source or cache. */
+.waveform-preview-panel { display: grid; gap: 10px; margin-top: 12px; border-top: 1px solid rgba(229,139,240,.24); padding-top: 14px; }
+.waveform-preview-heading { display: grid; gap: 4px; }
+.waveform-preview-heading > span, .waveform-summary-grid span, .waveform-file-metadata dt { color: var(--import-accent); font-size: 8px; font-weight: 950; letter-spacing: .12em; text-transform: uppercase; }
+.waveform-preview-heading h4 { margin: 0; color: var(--text); font-size: 15px; }
+.waveform-preview-heading p, .waveform-gate-grid small, .waveform-dropzone small, .waveform-attribution-field small, .waveform-no-plot p, .waveform-notice, .waveform-error p, .waveform-check-list p, .waveform-preview-panel aside p { margin: 0; color: var(--muted); font-size: 10px; line-height: 1.45; }
+.waveform-gate-grid, .waveform-summary-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; }
+.waveform-summary-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.waveform-gate-grid article, .waveform-summary-grid article { display: grid; gap: 3px; min-width: 0; border: 1px solid var(--line); border-radius: 10px; background: rgba(255,255,255,.014); padding: 9px; }
+.waveform-gate-grid article > span { color: var(--import-accent); font-size: 8px; font-weight: 950; }
+.waveform-gate-grid strong, .waveform-summary-grid strong { min-width: 0; overflow: hidden; color: var(--text); font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+.waveform-attribution-field { display: grid; gap: 5px; color: var(--muted); font-size: 10px; font-weight: 800; }
+.waveform-attribution-field input { min-height: 34px; width: 100%; border: 1px solid var(--line-strong); border-radius: 8px; background: rgba(0,0,0,.16); color: var(--text); padding: 0 10px; font: inherit; }
+.waveform-dropzone { display: grid; place-items: center; gap: 5px; min-height: 105px; border: 1px dashed rgba(229,139,240,.52); border-radius: 11px; background: rgba(229,139,240,.04); color: var(--muted); cursor: pointer; text-align: center; padding: 14px; }
+.waveform-dropzone[data-busy="true"] { opacity: .65; pointer-events: none; }
+.waveform-dropzone input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.waveform-dropzone > span { color: var(--import-accent); font-size: 24px; line-height: 1; }
+.waveform-dropzone strong { color: var(--text); font-size: 11px; }
+.waveform-error, .waveform-notice, .waveform-no-plot { border: 1px solid var(--line); border-radius: 9px; background: rgba(255,255,255,.02); padding: 10px; }
+.waveform-error { border-color: rgba(232,119,119,.46); }
+.waveform-error strong { color: #f19a9a; font-size: 10px; }
+.waveform-notice { color: #b9e8cd; border-color: rgba(137,215,169,.34); }
+.waveform-preview-result { display: grid; gap: 9px; }
+.waveform-summary-grid article[data-state="pass"] strong { color: #a9dfbc; }
+.waveform-summary-grid article[data-state="hold"] strong { color: var(--gold); }
+.waveform-summary-grid article[data-state="block"] strong { color: #f19a9a; }
+.waveform-plot { display: grid; gap: 5px; margin: 0; border: 1px solid var(--line); border-radius: 10px; background: rgba(0,0,0,.16); padding: 8px; }
+.waveform-plot figcaption { color: var(--muted); font-size: 9px; }
+.waveform-plot svg { display: block; width: 100%; height: 150px; overflow: visible; }
+.waveform-file-metadata { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; margin: 0; }
+.waveform-file-metadata div { min-width: 0; border: 1px solid var(--line); border-radius: 8px; padding: 8px; }
+.waveform-file-metadata dd { margin: 3px 0 0; overflow-wrap: anywhere; color: var(--text); font-size: 10px; line-height: 1.35; }
+.waveform-check-list { display: grid; gap: 6px; }
+.waveform-check-list article { display: grid; gap: 4px; border: 1px solid var(--line); border-left: 3px solid var(--line-strong); border-radius: 8px; padding: 8px 9px; }
+.waveform-check-list article[data-state="pass"] { border-left-color: #85cda2; }
+.waveform-check-list article[data-state="warn"], .waveform-check-list article[data-state="hold"] { border-left-color: var(--gold); }
+.waveform-check-list article[data-state="block"] { border-left-color: #e77878; }
+.waveform-check-list header { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.waveform-check-list header span { color: var(--text); font-size: 10px; font-weight: 850; }
+.waveform-check-list header strong { font-size: 9px; letter-spacing: .1em; }
+.waveform-check-list article[data-state="pass"] header strong { color: #a9dfbc; }
+.waveform-check-list article[data-state="warn"] header strong, .waveform-check-list article[data-state="hold"] header strong { color: var(--gold); }
+.waveform-check-list article[data-state="block"] header strong { color: #f19a9a; }
+.waveform-actions { margin-top: 0; }
+@media (max-width: 760px) {
+  .waveform-gate-grid, .waveform-summary-grid, .waveform-file-metadata { grid-template-columns: 1fr 1fr; }
+}
