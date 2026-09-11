@@ -464,3 +464,103 @@
     transition: none !important;
   }
 }
+
+
+/* Root route failure fallback: safe diagnostics with a retry/reset path. */
+.kfm-error-boundary {
+  position: fixed;
+  z-index: 500;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: auto;
+  background:
+    radial-gradient(circle at 12% 8%, rgba(115, 199, 210, 0.12), transparent 32%),
+    radial-gradient(circle at 88% 92%, rgba(224, 186, 109, 0.1), transparent 36%),
+    var(--bg);
+  color: var(--ink);
+  padding: clamp(20px, 5vw, 72px);
+}
+
+.kfm-error-boundary__card {
+  display: grid;
+  gap: 16px;
+  width: min(560px, 100%);
+  border: 1px solid var(--line-strong);
+  border-radius: 24px;
+  background: var(--panel-glass);
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.46);
+  padding: clamp(24px, 5vw, 48px);
+}
+
+.kfm-error-boundary__eyebrow {
+  margin: 0;
+  color: var(--water);
+  font-size: 8px;
+  font-weight: 950;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.kfm-error-boundary__card h1 {
+  max-width: 14ch;
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(30px, 6vw, 52px);
+  letter-spacing: -0.05em;
+  line-height: 0.98;
+}
+
+.kfm-error-boundary__card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.kfm-error-boundary__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+
+.kfm-error-boundary__actions button,
+.kfm-error-boundary__actions a {
+  min-height: 42px;
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  padding: 0 16px;
+  font-size: 10px;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.kfm-error-boundary__actions button {
+  border-color: var(--gold);
+  background: var(--gold);
+  color: #102022;
+}
+
+.kfm-error-boundary__actions a {
+  display: inline-grid;
+  place-items: center;
+  color: var(--ink);
+}
+
+.kfm-error-boundary__actions button:hover,
+.kfm-error-boundary__actions a:hover {
+  border-color: var(--gold-soft);
+}
+
+.kfm-error-boundary__support {
+  border-top: 1px solid var(--line);
+  padding-top: 13px;
+  font-size: 10px !important;
+}
+
+.kfm-error-boundary__support code {
+  color: var(--gold-soft);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.95em;
+  overflow-wrap: anywhere;
+}
