@@ -6,10 +6,12 @@ still permits cancellation. A later pass must never neutralize an earlier failur
 
 Shell tests execute the workflow bodies with a bounded, argv-recording make
 substitute. They prove dispatch and exit propagation, not real validator behavior,
-GitHub expression evaluation, runner egress isolation, or repository conformance.
+GitHub expression evaluation, runner egress isolation, or repository conformance. Receipt shell checks also
+use an argv-recording substitute; native receipt validation is a separate CI step.
 """
 
 from pathlib import Path
+import shlex
 import shutil
 import subprocess
 import tempfile
@@ -29,6 +31,20 @@ GUARDRAILS = (
     ),
     ("Enforce workflow-security ratchet", "make workflow-security"),
     ("Enforce repository-topology ratchet", "make repository-topology"),
+)
+
+REPAIR_BRANCH = "agent/validator-suite-guardrail-independence-20260911"
+RECEIPT_COMMANDS = (
+    (
+        "Replay guardrail authoring receipt",
+        "historical_receipt",
+        "python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-validator-suite-guardrail-independence-20260911.json --artifact-git-ref d2e1cfd782ec190ee7b125f531845655ec28c1d1",
+    ),
+    (
+        "Validate current guardrail receipt",
+        "current_receipt",
+        "python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-validator-suite-native-receipt-20260911.json",
+    ),
 )
 
 
@@ -96,6 +112,7 @@ class ValidatorSuiteGuardrailAttributionTests(unittest.TestCase):
             "Test material-change assessment profile",
             "Run repository aggregate validators",
         ]
+        expected_steps.extend(name for name, _, _ in RECEIPT_COMMANDS)
         steps_by_name = {step.get("name"): step for step in self.steps}
 
         for step_name in expected_steps:
@@ -192,6 +209,71 @@ class ValidatorSuiteGuardrailAttributionTests(unittest.TestCase):
         self.assertEqual("run-validators", workflow["jobs"]["run-validators"]["name"])
         self.assertEqual("ensure-fail-closed", workflow["jobs"]["ensure-fail-closed"]["name"])
         self.assertEqual({"contents": "read"}, workflow["permissions"])
+
+
+    def _receipt_steps(self) -> list[dict]:
+        names = [step.get("name") for step in self.steps]
+        found = []
+        for name, step_id, command in RECEIPT_COMMANDS:
+            self.assertEqual(1, names.count(name), name)
+            step = self.steps[names.index(name)]
+            self.assertEqual(step_id, step.get("id"))
+            self.assertEqual("bash", step.get("shell"))
+            self.assertEqual("${{ !cancelled() }}", step.get("if"))
+            self.assertEqual({"KFM_NO_NETWORK": "1"}, step.get("env"))
+            self.assertEqual(["set -euo pipefail", command], self._run_lines(step))
+            self.assertNotIn("working-directory", step)
+            self.assertGreater(names.index(name), names.index("Test validator-suite guardrail attribution"))
+            found.append(step)
+        return found
+
+    def test_native_receipts_have_distinct_historical_and_current_bindings(self) -> None:
+        steps = self._receipt_steps()
+        self.assertEqual(2, len(steps))
+        # Native CLI validates ancestor existence and checks original bytes;
+        # the current binding must never be hidden behind an historical ref.
+        self.assertIn("--artifact-git-ref", steps[0]["run"])
+        self.assertNotIn("--artifact-git-ref", steps[1]["run"])
+        summary = next(s for s in self.steps if s.get("name") == "Record aggregate-validator boundary")
+        for _, step_id, _ in RECEIPT_COMMANDS:
+            self.assertIn("${{ steps." + step_id + ".outcome }}", summary["run"])
+
+    def test_exact_branch_trigger_and_full_credential_free_replay(self) -> None:
+        workflow = yaml.safe_load(self.text)
+        self.assertEqual({"pull_request", "push", "workflow_dispatch"}, set(workflow["on"]))
+        self.assertEqual({"branches": ["main", REPAIR_BRANCH]}, workflow["on"]["push"])
+        checkout = self.steps[0]
+        self.assertEqual(0, checkout["with"]["fetch-depth"])
+        self.assertIs(False, checkout["with"]["persist-credentials"])
+        self.assertNotIn("ref", checkout["with"])
+        self.assertNotIn("permissions", workflow["jobs"]["run-validators"])
+
+    @unittest.skipUnless(BASH, "Bash is required for workflow shell execution")
+    def test_native_receipt_shells_preserve_success_rejection_and_errors(self) -> None:
+        steps = self._receipt_steps()
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            executable = root / "python"
+            calls = root / "calls.txt"
+            executable.write_text(
+                '#!/bin/sh\n'
+                'printf "%s\\n" "$@" > "$KFM_TEST_CALLS"\n'
+                'exit "$KFM_TEST_EXIT"\n', encoding="utf-8",
+            )
+            executable.chmod(0o700)
+            for step, (_, _, command) in zip(steps, RECEIPT_COMMANDS):
+                for exit_code in (0, 1, 2):
+                    with self.subTest(step=step["name"], exit_code=exit_code):
+                        calls.unlink(missing_ok=True)
+                        result = subprocess.run(
+                            [BASH, "--noprofile", "--norc", "-e", "-o", "pipefail", "-c", step["run"]],
+                            cwd=root,
+                            env={"PATH": str(root), "KFM_TEST_CALLS": str(calls),
+                                 "KFM_TEST_EXIT": str(exit_code), "KFM_NO_NETWORK": "1"},
+                            capture_output=True, text=True, timeout=5, check=False,
+                        )
+                        self.assertEqual(exit_code, result.returncode, result.stderr)
+                        self.assertEqual(shlex.split(command)[1:], calls.read_text().splitlines())
 
 
 if __name__ == "__main__":
