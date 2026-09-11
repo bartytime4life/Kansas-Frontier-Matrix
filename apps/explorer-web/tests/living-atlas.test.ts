@@ -13,6 +13,13 @@ import {
   commitSnapshotTime,
   evaluateFocusSelection,
 } from "../src/features/living_atlas";
+import {
+  createInitialPlayback,
+  isPlaybackPlaying,
+  playbackFrameId,
+  playbackHasNext,
+  reducePlayback,
+} from "../src/features/temporal";
 
 describe("Living Atlas governed foundation", () => {
   it("publishes the complete bounded registry with unique bindings", () => {
@@ -283,4 +290,89 @@ describe("Living Atlas governed foundation", () => {
     expect(committedDenied.selectedLayerId).toBe("layer:protected-context");
     expect(committedDenied.evidenceRefs).toEqual([]);
   });
+  it("replays finite frames deterministically and stops at the terminal frame", () => {
+    const frames = ["time:1900s", "time:modern", "time:present"];
+    let playback = createInitialPlayback(frames);
+
+    expect(playback).toMatchObject({
+      status: "PAUSED",
+      index: 0,
+      pauseReason: "INITIAL",
+    });
+    expect(isPlaybackPlaying(playback)).toBe(false);
+    expect(playbackFrameId(playback, frames)).toBe("time:1900s");
+
+    playback = reducePlayback(playback, frames, { type: "PLAY" });
+    expect(isPlaybackPlaying(playback)).toBe(true);
+    expect(playbackHasNext(playback, frames)).toBe(true);
+
+    playback = reducePlayback(playback, frames, { type: "TICK" });
+    expect(playback).toMatchObject({ status: "PLAYING", index: 1 });
+    playback = reducePlayback(playback, frames, { type: "TICK" });
+    expect(playback).toMatchObject({ status: "PLAYING", index: 2 });
+    expect(playbackHasNext(playback, frames)).toBe(false);
+
+    playback = reducePlayback(playback, frames, { type: "TICK" });
+    expect(playback).toMatchObject({
+      status: "PAUSED",
+      index: 2,
+      pauseReason: "END_OF_TIMELINE",
+    });
+    expect(reducePlayback(playback, frames, { type: "PLAY" }).pauseReason)
+      .toBe("END_OF_TIMELINE");
+
+    playback = reducePlayback(playback, frames, { type: "STEP", delta: -1 });
+    expect(playback).toMatchObject({
+      status: "PAUSED",
+      index: 1,
+      pauseReason: "USER_STEP",
+    });
+  });
+
+  it("keeps step and scrub controls available while reduced motion pauses replay", () => {
+    const frames = ["frame:a", "frame:b", "frame:c"];
+    let playback = createInitialPlayback(frames, 0, true);
+
+    expect(playback.pauseReason).toBe("REDUCED_MOTION");
+    playback = reducePlayback(playback, frames, { type: "PLAY" });
+    expect(playback).toMatchObject({
+      status: "PAUSED",
+      index: 0,
+      pauseReason: "REDUCED_MOTION",
+    });
+
+    playback = reducePlayback(playback, frames, { type: "STEP", delta: 1 });
+    expect(playback).toMatchObject({
+      status: "PAUSED",
+      index: 1,
+      pauseReason: "USER_STEP",
+      reducedMotion: true,
+    });
+    playback = reducePlayback(playback, frames, { type: "SCRUB", index: 99 });
+    expect(playback).toMatchObject({
+      status: "PAUSED",
+      index: 2,
+      pauseReason: "SCRUB",
+    });
+
+    playback = reducePlayback(playback, frames, {
+      type: "SET_REDUCED_MOTION",
+      enabled: false,
+    });
+    expect(playback.reducedMotion).toBe(false);
+    playback = reducePlayback(playback, frames, { type: "PLAY" });
+    expect(isPlaybackPlaying(playback)).toBe(false);
+    playback = reducePlayback(playback, frames, { type: "STEP", delta: -1 });
+    playback = reducePlayback(playback, frames, { type: "PLAY" });
+    expect(isPlaybackPlaying(playback)).toBe(true);
+    playback = reducePlayback(playback, frames, { type: "VISIBILITY_HIDDEN" });
+    expect(playback.pauseReason).toBe("HIDDEN_DOCUMENT");
+    playback = reducePlayback(playback, frames, {
+      type: "PAUSE",
+      reason: "EVIDENCE_FAILURE",
+    });
+    expect(playback.pauseReason).toBe("EVIDENCE_FAILURE");
+  });
+
+
 });

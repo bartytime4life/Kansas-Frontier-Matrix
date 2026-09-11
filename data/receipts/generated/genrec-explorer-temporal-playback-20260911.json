@@ -1,0 +1,147 @@
+{
+  "receipt_id": "genrec-explorer-temporal-playback-20260911",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/explorer-web/src/features/temporal/index.ts",
+    "apps/explorer-web/src/features/temporal/playback.ts",
+    "apps/explorer-web/src/site/mount-living-atlas.ts",
+    "apps/explorer-web/src/site/site-living-atlas.css",
+    "apps/explorer-web/tests/living-atlas.test.ts"
+  ],
+  "artifact_hashes": {
+    "apps/explorer-web/src/features/temporal/index.ts": "sha256:bc96810b685ef8e98e628885e556d1bbc1b361308f12e5c527ee157a2488a4d7",
+    "apps/explorer-web/src/features/temporal/playback.ts": "sha256:7ea6b319ceae5fd8f25b497ecb404456a6d35412c045d730047ba06dc302aa25",
+    "apps/explorer-web/src/site/mount-living-atlas.ts": "sha256:3cbe2b84f9197f6554c30a439f13e0e6e827285264a750b712997afefa11a0d6",
+    "apps/explorer-web/src/site/site-living-atlas.css": "sha256:9336c3035a703ed693cf0cf66e2c83078722abaf624accccf539166e30de4888",
+    "apps/explorer-web/tests/living-atlas.test.ts": "sha256:060f360836ee84413f01dd4157c1d741388018da1e71977ec1aa483079b78570"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-5)",
+    "version": "2026-08-03"
+  },
+  "prompt_or_contract": "sha256:8d1baa3a6bd54618fbd561ded269e35ee17a6be31b1e8ddce85a08f8f27fa082",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "exact UTF-8 byte fetch",
+      "static SHA-256 binding"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Full_Atlas_seed_cards.md",
+      "GIS in Sustainable Urban Planning and Management.pdf",
+      "Archaeological 3D GIS.pdf",
+      "mastering-postgis-modern-ways-to-create-analyze-and-implement-spatial-data.pdf",
+      "A Practical Guide to Geostatistical Mapping, 2nd Edition.pdf",
+      "a-primer-of-gis-fundamental-geographic-and-cartographic-concepts.pdf",
+      "KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf",
+      "Master MapLibre Components-Functions-Features.pdf",
+      "maplibre3d.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/be6e398d33237d55b1d1a8dc4bf4cbd93413fd93",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/be6e398d33237d55b1d1a8dc4bf4cbd93413fd93/apps/explorer-web/src/features/temporal/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/be6e398d33237d55b1d1a8dc4bf4cbd93413fd93/apps/explorer-web/src/features/temporal/index.ts",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/be6e398d33237d55b1d1a8dc4bf4cbd93413fd93/apps/explorer-web/src/site/mount-living-atlas.ts",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/be6e398d33237d55b1d1a8dc4bf4cbd93413fd93/docs/reports/kfm-explorer-layers-animation-3d-performance-roadmap-20260911.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3372",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3383",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3397"
+    ]
+  },
+  "truth_labels": {
+    "current-main": "CONFIRMED",
+    "temporal-playback-reducer": "PROPOSED",
+    "fixture-only-preview-boundary": "CONFIRMED",
+    "live-source-admission-release-publication": "NEEDS_VERIFICATION",
+    "full-explorer-build-browser-and-hosted-ci": "UNKNOWN",
+    "full-explorer-build-and-vitest-suite": "CONFIRMED",
+    "bounded-e2e-smoke": "CONFIRMED",
+    "browser-webgl-long-session-and-performance-probes": "UNKNOWN"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "main was re-pinned at be6e398d33237d55b1d1a8dc4bf4cbd93413fd93; no open PRs were returned, and temporal/Explorer milestone issues #3372, #3383, and #3397 were inspected before authoring."
+    },
+    {
+      "gate": "temporal-reducer-static-boundary-check",
+      "outcome": "PASS",
+      "reason": "The reducer is renderer-neutral, finite, no-loop, timer-free, and rejects no frames, reduced motion, hidden-document, evidence-failure, and source-withdrawal states by pausing."
+    },
+    {
+      "gate": "exact-branch-byte-integrity",
+      "outcome": "PASS",
+      "reason": "All listed artifacts were fetched from the branch after edits and their exact UTF-8 content hashes are bound above."
+    },
+    {
+      "gate": "full-explorer-build-and-vitest-suite",
+      "outcome": "PASS",
+      "reason": "Exact PR head 96ecbbf18edf5e6e6dedccbda7871454c7e59a8d ui-build run 34638538183 completed successfully; build-explorer-web job 103392284545 and test-explorer-web job 103392284732 both passed."
+    },
+    {
+      "gate": "bounded-e2e-smoke",
+      "outcome": "PASS",
+      "reason": "Exact PR head e2e-smoke run 34638538753 completed successfully; this is bounded smoke evidence, not full browser/WebGL/long-session or release proof."
+    },
+    {
+      "gate": "browser-runtime-and-performance-probes",
+      "outcome": "SKIPPED",
+      "reason": "No browser, WebGL, long-session, terrain, live transport, or performance evidence was executed or claimed by this fixture-only slice."
+    },
+    {
+      "gate": "source-activation-runtime-release-publication",
+      "outcome": "SKIPPED",
+      "reason": "No source was fetched or admitted; activation, release, deployment, promotion, and publication remain outside the slice."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "No human review has occurred; any automation or merge event remains distinct from accountable approval."
+    },
+    {
+      "gate": "repository-topology-ratchet",
+      "outcome": "FAIL",
+      "reason": "Exact PR head validator-suite run 34638538793 failed only in repository-topology tests; the six emitted FAIL_NEW_DRIFT subjects were path-grammar:uppercase, catalog/, scope-alias:air, scaffold-only-leaf-directories, data/maps/, and doc-id:kfm://doc/NEEDS-VERIFICATION. None is a changed path in this slice, so no topology cleanup or gate bypass was attempted."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "temporal-feature-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/be6e398d33237d55b1d1a8dc4bf4cbd93413fd93/apps/explorer-web/src/features/temporal/README.md"
+    },
+    {
+      "id": "living-atlas-timeline-surface",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/be6e398d33237d55b1d1a8dc4bf4cbd93413fd93/apps/explorer-web/src/site/mount-living-atlas.ts"
+    },
+    {
+      "id": "roadmap-phase-2",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/be6e398d33237d55b1d1a8dc4bf4cbd93413fd93/docs/reports/kfm-explorer-layers-animation-3d-performance-roadmap-20260911.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-11T19:22:15.098Z",
+  "emitter": "openai/codex-gpt-5",
+  "links": {
+    "pr_number": 4478,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored fixture-first temporal playback slice for the Kansas-first Explorer. The reducer advances only an ordered finite frame-id list, starts paused, supports explicit play/pause/step/scrub transitions, pauses at the terminal frame without looping, and preserves step controls under reduced motion. The Living Atlas wires a preview-only interval timer with hidden-document, Escape, and map-pointer pause behavior; preview never commits a map snapshot until Apply time. No live source, interpolation, MapLibre source, terrain, WebGL custom layer, warning behavior, release, deployment, or publication is created. Receipt is provenance, not approval or factual temporal proof. Exact-head hosted evidence later settled: ui-build and bounded e2e-smoke passed; validator-suite failed only on the inherited six-subject topology ratchet. Browser/WebGL/long-session/performance probes remain unrun."
+}

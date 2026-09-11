@@ -58,6 +58,11 @@
 .atlas-timeline .eyebrow { margin: 0; }
 .atlas-timeline small { color: var(--muted); }
 .atlas-timeline input { accent-color: var(--prairie); }
+.atlas-timeline-actions { display: grid; gap: .45rem; justify-items: end; }
+.atlas-playback-controls { display: flex; align-items: center; flex-wrap: wrap; gap: .3rem; }
+.atlas-playback-controls button { min-height: 2rem; padding: .25rem .45rem; font-size: .72rem; }
+.atlas-timeline button:disabled { cursor: not-allowed; opacity: .45; }
+.atlas-playback-status { color: var(--river); font-size: .72rem; }
 .atlas-draft-workspace { min-height: 62vh; padding: clamp(1.2rem, 4vw, 3rem); }
 .atlas-draft-workspace > p { max-width: 50rem; color: var(--muted); }
 .atlas-draft-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: .75rem; margin-top: 1.2rem; }
@@ -93,5 +98,7 @@
   .atlas-left-rail { max-height: 20rem; border-right: 0; border-bottom: 1px solid var(--line); }
   .atlas-evidence-drawer { grid-column: auto; }
   .atlas-timeline { grid-column: auto; grid-template-columns: 1fr; }
+  .atlas-timeline-actions { justify-items: stretch; }
+  .atlas-playback-controls { justify-content: space-between; }
   .atlas-interaction-bar { top: 3.6rem; left: .65rem; right: auto; justify-content: flex-start; }
 }
