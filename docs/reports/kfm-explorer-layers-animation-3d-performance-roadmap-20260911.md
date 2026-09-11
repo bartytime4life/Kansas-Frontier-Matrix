@@ -12,7 +12,7 @@ The first end-to-end proof should be a small Kansas hydrology slice: one version
 
 ### Confirmed in the current repository
 
-- Current implementation authority is `bartytime4life/Kansas-Frontier-Matrix`, `main@eca6c8a2353fbe28ace619288231a047e5d485f5`.
+- Current implementation authority is `bartytime4life/Kansas-Frontier-Matrix`, `main@b44494c1cf0807ed28b606e8a41b255bebdf4ad7` (the branch was opened from the immediately preceding preflight head `eca6c8a2353fbe28ace619288231a047e5d485f5`).
 - `apps/explorer-web` has a map-first shell, 18 typed views, 24 typed layer/evidence records, source-observatory and deep-time presentation paths, and explicit HOLD states.
 - `@kfm/maplibre` is pinned to MapLibre GL JS `6.7.0` and owns the renderer seam. The adapter is intentionally bounded to an inline local style and rejects external style/resource/source paths.
 - `MapRuntimePort` is renderer-neutral; it exposes finite runtime state, trust states such as stale/abstained/denied/conflict/degraded/withdrawn/rolled-back/error, camera synchronization, and selection history/evidence references.
@@ -329,11 +329,11 @@ Record p50/p95/p99 where useful and store versioned evidence artifacts with the 
 
 ### Repository and project records
 
-- [Current Explorer catalog](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/eca6c8a2353fbe28ace619288231a047e5d485f5/apps/explorer-web/src/site/catalog.ts) — confirmed repository state and HOLD labels.
-- [Current site composition](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/eca6c8a2353fbe28ace619288231a047e5d485f5/apps/explorer-web/src/site/README.md) — confirmed map-first shell and bounded runtime status.
-- [MapRuntimePort](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/eca6c8a2353fbe28ace619288231a047e5d485f5/packages/maplibre/src/map-runtime-port.ts) — renderer-neutral boundary.
-- [MapLibre adapter](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/eca6c8a2353fbe28ace619288231a047e5d485f5/packages/maplibre/src/maplibre-adapter.ts) — bounded inline-style seam and external-resource hold.
-- [Directory Rules](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/eca6c8a2353fbe28ace619288231a047e5d485f5/docs/doctrine/directory-rules.md) — path/authority, public-boundary, and generated-artifact rules.
+- [Current Explorer catalog](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b44494c1cf0807ed28b606e8a41b255bebdf4ad7/apps/explorer-web/src/site/catalog.ts) — confirmed repository state and HOLD labels.
+- [Current site composition](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b44494c1cf0807ed28b606e8a41b255bebdf4ad7/apps/explorer-web/src/site/README.md) — confirmed map-first shell and bounded runtime status.
+- [MapRuntimePort](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b44494c1cf0807ed28b606e8a41b255bebdf4ad7/packages/maplibre/src/map-runtime-port.ts) — renderer-neutral boundary.
+- [MapLibre adapter](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b44494c1cf0807ed28b606e8a41b255bebdf4ad7/packages/maplibre/src/maplibre-adapter.ts) — bounded inline-style seam and external-resource hold.
+- [Directory Rules](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b44494c1cf0807ed28b606e8a41b255bebdf4ad7/docs/doctrine/directory-rules.md) — path/authority, public-boundary, and generated-artifact rules.
 - [Notion Living Atlas design](https://app.notion.com/p/3d2a92021bf681d68e6dfad0564d8687?pvs=204) and [Notion real-data hub](https://app.notion.com/p/3d6a92021bf6816cae0ec1ccbd15e21e?pvs=204) — current coordination/design lineage; older pins are not implementation authority.
 - [Drive Living Atlas design master](https://docs.google.com/document/d/1aivNyfMjQ8urQO6vjt4YvkT1ltF1t7fxCahEcnGV4Dw/edit) — design lineage and book-guided interface/animation requirements.
 
