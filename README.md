@@ -2,11 +2,11 @@
 doc_id: kfm://doc/root-readme
 title: Kansas Frontier Matrix — Project Home
 type: repository-readme
-version: v3.0.0
+version: v3.0.1
 status: repository-grounded draft
 owners: ["@bartytime4life"]
 created: 2026-05-11
-updated: 2026-09-06
+updated: 2026-09-11
 policy_label: public
 current_path: README.md
 owning_root: repository-root
@@ -15,7 +15,7 @@ truth_posture: cite-or-abstain; implementation claims require pinned repository 
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: eacff61db0cda48d15e4e7e64a0b0cd667e5d3f4
+  base_commit: 664e46697d4d237870f5a482904bb9acd8f11b20
 related:
   - docs/doctrine/directory-rules.md
   - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
@@ -27,7 +27,7 @@ related:
   - SECURITY.md
   - .github/README.md
 notes:
-  - "Adds a visitor-first project orientation while preserving the governed root README identity."
+  - "Preserves the visitor-first orientation, root README identity, headings, and governing boundaries. v3.0.1 reconciles current implementation, setup, and delivery guidance."
   - "Current implementation claims are bounded to the exact GitHub snapshot recorded above."
   - "The public Explorer address is linked as a project entry point; hosted availability and version state remain separately verifiable runtime claims."
 [/KFM_META_BLOCK_V2] -->
@@ -58,7 +58,7 @@ notes:
 </p>
 
 > [!NOTE]
-> KFM is an active build. The repository contains real applications, contracts, schemas, policy, validators, fixtures, tests, and workflows. Some production-facing transitions—live renderer admission, live governed transport, release, deployment, and publication—remain explicitly held or unknown.
+> KFM is an active build. The repository contains real applications, contracts, schemas, policy, validators, fixtures, tests, and workflows. Explorer Web now includes a package-owned MapLibre composition using synthetic/generalized geometry. Production renderer graduation, source admission, live governed transport, release, deployment, and publication remain separate gates, not consequences of a working canvas.
 
 **New here?** Start with [Why KFM](#why-kfm), [Explore](#start-here), [The KFM experience](#the-kfm-experience), or [Current posture](#current-posture). Contributors can jump to [Run locally](#run-locally), [Validation](#validation), and [Contributing](#contributing).
 
@@ -84,7 +84,7 @@ KFM’s public value is not a larger pile of layers. It is a more trustworthy pa
 |---|---|
 | **See the project’s public-facing Explorer** | [KFM Explorer](https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site) — the repository records this OpenAI Sites/Vinext project, slug, and public address. Hosted availability and version state require current runtime verification. |
 | **Understand the current site application** | [`apps/kansas-frontier-matrix-explorer/`](apps/kansas-frontier-matrix-explorer/) — the single-route Vinext site, synthetic/generalized catalog surface, renderer-neutral shell, fail-closed evidence behavior, and public-safe export boundary. |
-| **Study the browser workbench** | [`apps/explorer-web/`](apps/explorer-web/) — a Vite/TypeScript local composition with bounded Map, Knowledge, Features, Trust, Focus, Story, Evidence Drawer, and validation slices. |
+| **Study the browser workbench** | [`apps/explorer-web/`](apps/explorer-web/) — a Vite/TypeScript local composition with a bounded Living Atlas MapLibre canvas, Map, Knowledge, Features, Trust, Focus, Story, Evidence Drawer, and validation slices. Its inline geography is synthetic/generalized, not factual Kansas source data. |
 | **Learn the project’s rules** | [`docs/doctrine/`](docs/doctrine/), [`docs/architecture/`](docs/architecture/), and [`docs/adr/`](docs/adr/). |
 | **Make a change safely** | [`CONTRIBUTING.md`](CONTRIBUTING.md), [`Directory Rules`](docs/doctrine/directory-rules.md), and the README nearest the path you will touch. |
 | **Understand evidence and public boundaries** | [`Trust Membrane`](docs/doctrine/trust-membrane.md), [`Truth Posture`](docs/doctrine/truth-posture.md), [`Lifecycle Law`](docs/doctrine/lifecycle-law.md), and [`SECURITY.md`](SECURITY.md). |
@@ -129,17 +129,27 @@ These are exploration and implementation lanes, not a promise that each theme ha
 
 ## Current posture
 
-The table below is the honest maturity snapshot for the repository at `main@eacff61db0cda48d15e4e7e64a0b0cd667e5d3f4`.
+The table below is the honest maturity snapshot for the repository at `main@664e46697d4d237870f5a482904bb9acd8f11b20`.
 
 | Surface | Current repository evidence | Boundary |
 |---|---|---|
 | **Repository foundation** | Responsibility roots for apps, contracts, schemas, policy, data, pipelines, runtime, docs, tests, tools, and release are present. | A path’s presence does not make it truth, policy, release, or publication authority. |
 | **KFM Explorer site app** | `apps/kansas-frontier-matrix-explorer/` contains a Vinext application, a renderer-neutral `NullMapRuntime` composition, synthetic/generalized catalog metadata, fail-closed evidence behavior, public-safe export guidance, and Sites identity metadata. | This proves tracked implementation slices. It does not prove a live renderer, live data, hosted health, release, or publication. |
-| **Explorer Web workbench** | `apps/explorer-web/` contains a Vite/TypeScript workspace with a repository-grounded local site composition, public navigation/context, shared trust surface, synthetic Focus workspace, Evidence Drawer behavior, Story Player and map-selection slices, and tests. | The production shell decision, admitted MapLibre dependency, live governed transport, and released layers remain separate gates. |
-| **MapLibre path** | Renderer-neutral ports, package/adaptor surfaces, performance governance, and synthetic validation support exist in the repository. | Functional renderer admission and a live map boot are held until their dependency, compatibility, accessibility, performance, and rollback evidence is closed. |
+| **Explorer Web workbench** | The [app README](apps/explorer-web/README.md) and [Living Atlas composition](apps/explorer-web/src/site/mount-living-atlas.ts) record the package-owned MapLibre canvas, inline synthetic/generalized geometry, public navigation/context, shared trust surface, synthetic Focus, Evidence Drawer, Story/map-selection slices, temporal controls, and draft-only report/story capture. | A mounted renderer is not an admitted factual layer. Live governed transport, EvidenceBundle closure, the production-shell decision, and real-data graduation remain separate gates. |
+| **MapLibre path** | The [package manifest](packages/maplibre/package.json) pins `maplibre-gl@6.7.0` and exports the renderer-neutral facade, adapter, and Vite adapter. Explorer Web imports the package-owned Vite adapter; the Sites-derived app remains a distinct consumer. | Dependency presence and bounded composition do not establish source/protocol admission, broader browser/CSP/accessibility/performance readiness, distribution, release, or deployment. Older `6.6.0` README snapshots are historical; the pinned manifest controls the current dependency claim. |
 | **Evidence and trust path** | Contracts, finite outcomes, defensive adapters, fail-closed fixtures, negative cases, and policy-boundary tests are present in bounded slices. | End-to-end EvidenceBundle resolution, source admission, live transport, and public release are not established by this README. |
 | **AI path** | KFM treats AI as interpretive and downstream of evidence, policy, review, release, correction, and rollback. | Browser code must not become a model provider, internal-store reader, evidence authority, or publication path. A model response is never evidence by itself. |
 | **Hosting** | The repository records the OpenAI Sites/Vinext project identity and preserves the existing Explorer slug and public address. | Hosted version history, availability, authentication, CSP/CORS, observability, and production operation require current runtime evidence. |
+
+### Repository, saved Site, and published state
+
+Keep three observations separate: **repository implementation**, **saved Site version**, and **production/released state**. Do not copy capabilities, test totals, or deployment claims from one surface to another.
+
+- [PR #4464](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4464) merged on 2026-09-11 at the pinned main commit. It improves full Layer Catalog scroll/visibility affordances and labels requested visibility separately from time compatibility. It does not prove renderer delivery, enlarge the eight-fixture Library projection, or deploy the Site.
+- The [Drive Site backfill checkpoint](https://docs.google.com/document/d/1uROL1Hkgr15oe2nH-9B2MUXdmzt2KSBo6ay1jt5dh4s/edit) records saved Site v24 and additional external-context capabilities. That coordination record is not byte-equivalence with this checkout, a production observation, source admission, or release authority. The [Site guide](apps/kansas-frontier-matrix-explorer/README.md#repository-and-saved-site-reconciliation) records the handoff boundary.
+- [Issue #4024](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024) remains open at this review. No open PRs were returned by the live listing; that observation does not close the delivery-control incident or prove independent approval.
+
+For a real-data layer, preserve exact source/asset identity, rights, spatial coverage, observation or model-valid time, units, uncertainty, EvidenceBundle resolution, and correction/rollback lineage. For animation, available frames and gaps must remain explicit; a layer toggle or a timestamp selector does not prove historical coverage or authorize interpolation. See the [temporal feature boundary](apps/explorer-web/src/features/temporal/README.md).
 
 ### How to read KFM status
 
@@ -250,7 +260,7 @@ The workbench’s local composition and fixture-first tests are useful for inspe
 
 ### KFM Explorer Sites application
 
-The Sites application targets Node `>=22.13.0` and Linux helpers such as `flock`, `curl`, and GNU `timeout` for its bounded install/build scripts.
+The Sites application targets Node `>=22.13.0` and Linux helpers such as `flock`, `curl`, and GNU `timeout` for its bounded install/build scripts. The following commands are for deliberate local diagnosis, not repeated install/build steps during the normal Sites checkpoint lifecycle.
 
 ```bash
 cd apps/kansas-frontier-matrix-explorer
@@ -264,17 +274,28 @@ The project’s Sites identity, replacement, version, and rollback boundaries ar
 
 ### Python and repository validators
 
-The Python project declares Python `>=3.11`. The package manifest is still a scaffold that points Hatch at `src/kfm`, while `src/` is not currently a physical root in the verified tree. Treat packaging and release claims as a known edge until that drift is separately resolved.
+The Python project declares Python `>=3.11`. At this pin, [`pyproject.toml`](pyproject.toml) still points Hatch at `src/kfm`, while the root tree has no `src/` directory. Do not present `pip install -e ".[test]"` as a verified setup path. Repairing that distribution/placement mismatch needs its own reviewed slice; this documentation does not create a new root or a Python package.
+
+For dependency-only validator setup from the inspected manifest, without building the missing root distribution:
 
 ```bash
 python3 -m venv .venv
 . .venv/bin/activate
-python -m pip install -e ".[test]"
+python - <<'PYSETUP'
+from pathlib import Path
+import subprocess
+import sys
+import tomllib
+
+project = tomllib.loads(Path("pyproject.toml").read_text(encoding="utf-8"))["project"]
+requirements = project["dependencies"] + project["optional-dependencies"]["test"]
+subprocess.run([sys.executable, "-m", "pip", "install", *requirements], check=True)
+PYSETUP
 make validate
 git diff --check
 ```
 
-`make validate` is the repository-native aggregate validator entry point. Run the narrowest relevant target for the changed area and report its exact scope.
+This installs the manifest's declared development dependencies, not KFM itself. It is not a locked Python environment, packaging repair, or a promise that aggregate validation passes. The setup command was inspected but not executed in this documentation review. `make validate` remains the repository-native aggregate validator entry point; use the narrowest relevant target and report exact results and inherited failures.
 
 ## Validation
 
@@ -312,7 +333,7 @@ The best contribution is a small, inspectable improvement that leaves the next s
 3. Search for overlapping work and use a feature branch based on the current `main`.
 4. Preserve evidence, rights, sensitivity, time, correction, and release boundaries in code and documentation.
 5. Add focused tests, fixtures, receipts, or docs when they are direct dependencies of the change.
-6. Open a draft pull request with exact base/head evidence, performed and skipped checks, open unknowns, and a clear rollback path.
+6. Use a draft pull request only through an eligible delivery path under [`CONTRIBUTING.md`](CONTRIBUTING.md). Where [issue #4024](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024) quarantines that path, preserve the branch and exact head with performed/skipped checks and rollback notes; do not create a same-path successor PR or infer ready/merge authority. Branch authoring is not itself blocked.
 
 Good first contribution shapes include:
 
@@ -342,14 +363,14 @@ Read the [Trust Membrane](docs/doctrine/trust-membrane.md), [Truth Posture](docs
 
 This README does not:
 
-- admit a renderer dependency or claim a live MapLibre map;
+- admit a new renderer dependency or equate the implemented synthetic MapLibre canvas with real-data or production readiness;
 - create a live API, model-provider, Qwen/Ollama, or internal-store browser path;
 - activate a source or promote a lifecycle record;
 - release a dataset, publish a report, deploy a site, or change hosting/settings;
 - establish rights, cultural authority, stewardship, consent, review approval, or public-use permission;
 - replace a contract, schema, policy, evidence bundle, receipt, proof, release record, or rollback card.
 
-The most important open edges are the exact packaging mismatch noted above, hosted Explorer runtime/version verification, the integrated Explorer route and transport contract, renderer admission for the held path, end-to-end evidence closure, complete accessibility and operational evidence, and governed release/publication proof.
+The most important open edges are the exact packaging mismatch noted above, hosted Explorer runtime/version verification, the integrated Explorer route and transport contract, Sites consumer capability reconciliation, real-layer admission, end-to-end evidence closure, complete accessibility and operational evidence, and governed release/publication proof.
 
 ## Project references
 
@@ -359,7 +380,7 @@ The most important open edges are the exact packaging mismatch noted above, host
 | [`SECURITY.md`](SECURITY.md) | Vulnerability reporting and sensitive-disclosure boundary |
 | [`docs/`](docs/) | Human-readable doctrine, architecture, decisions, standards, source guidance, and runbooks |
 | [`apps/kansas-frontier-matrix-explorer/`](apps/kansas-frontier-matrix-explorer/) | Public-facing Sites application source and hosting boundary |
-| [`apps/explorer-web/`](apps/explorer-web/) | Renderer-neutral, fixture-first Explorer Web workbench |
+| [`apps/explorer-web/`](apps/explorer-web/) | Fixture-first Explorer Web workbench with the package-owned Living Atlas MapLibre composition |
 | [`apps/governed-api/`](apps/governed-api/) | Governed API implementation boundary |
 | [`packages/maplibre/`](packages/maplibre/) | MapLibre-facing package and adapter seam |
 | [`contracts/`](contracts/) and [`schemas/`](schemas/) | Meaning and machine-checkable shape |
@@ -372,11 +393,11 @@ The most important open edges are the exact packaging mismatch noted above, host
 | Field | Value |
 |---|---|
 | Repository | `bartytime4life/Kansas-Frontier-Matrix` |
-| Evidence snapshot | `main@eacff61db0cda48d15e4e7e64a0b0cd667e5d3f4` |
+| Evidence snapshot | `main@664e46697d4d237870f5a482904bb9acd8f11b20` |
 | Open pull requests at review time | `0` |
-| Reviewed | Root tree, current root README, Explorer site app README/manifest, Explorer Web README/manifest, root package, Makefile, `.github/README.md`, Directory Rules, and accepted ADR-0029 |
-| Change class | Same-path public documentation and navigation modernization |
+| Reviewed for this refresh | Root tree and README; root and MapLibre manifests; Python manifest; Explorer app documentation and Living Atlas import surface; PR #4464 metadata; open-PR listing; #4024; contribution/directory/AI-authoring guidance; Drive backfill and Notion Living Atlas coordination |
+| Change class | Same-path documentation reconciliation; no application, dependency, schema, workflow, settings, or source-adapter change |
 | No mutation implied | No source activation, settings change, release, deployment, promotion, publication, or lifecycle transition |
-| Not proved | Full repository correctness, all workflow behavior, hosted runtime health, authentication, live data, rights clearance, human approval, release readiness, or public operation |
+| Not proved | Fresh application build/unit/browser/hosted-CI results, full repository correctness, all workflow behavior, hosted runtime health, authentication, live data, rights clearance, human approval, release readiness, or public operation |
 
 Re-review this README when repository topology, Explorer identity or host, authority boundaries, package metadata, validation entry points, or the adopted Directory Rules change.
