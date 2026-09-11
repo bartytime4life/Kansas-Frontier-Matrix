@@ -289,8 +289,8 @@ const tagText = (value: string, name: string) => (tagMatch(value, name)?.[2] ?? 
   .trim();
 
 const externalReferenceCount = (value: string) => {
-  const withoutNamespaces = value.replace(/\sxmlns(?::[\\w.-]+)?\\s*=\\s*(["']).*?\\1/gi, "");
-  return (withoutNamespaces.match(/https?:\\/\\/[^\\s"'<>]+/gi) ?? []).length;
+  const withoutNamespaces = value.replace(/\sxmlns(?::[\w.-]+)?\s*=\s*(["']).*?\1/gi, "");
+  return (withoutNamespaces.match(/https?:\/\/[^\s"'<>]+/gi) ?? []).length;
 };
 
 const stationChannelFragment = (xml: string) => {
@@ -316,7 +316,7 @@ const stationChannelFragment = (xml: string) => {
 const parseStationXml = (xml: string): StationXmlSummary => {
   if (!xml.trim()) throw new Error("The StationXML file is empty.");
   if (/<!DOCTYPE|<!ENTITY/i.test(xml)) throw new Error("StationXML document types and entity declarations are not supported.");
-  if (!/<(?:(?:[\\w.-]+):)?FDSNStationXML\\b/i.test(xml)) throw new Error("The response file is not an FDSN StationXML document.");
+  if (!/<(?:(?:[\w.-]+):)?FDSNStationXML\b/i.test(xml)) throw new Error("The response file is not an FDSN StationXML document.");
   const selected = stationChannelFragment(xml);
   const location = attributeValue(selected.channelAttributes, "locationCode");
   const channel = attributeValue(selected.channelAttributes, "code");
