@@ -18,7 +18,6 @@ const gateTone = (state: WaveformGateState) => {
   return "block";
 };
 
-const displayValue = (value: number) => Number.isInteger(value) ? String(value) : value.toPrecision(6);
 
 const chartLines = (preview: WaveformPreview) => {
   if (!preview.points.length) return { low: "", high: "" };
