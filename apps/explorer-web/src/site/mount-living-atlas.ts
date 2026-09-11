@@ -33,6 +33,15 @@ import {
   type ReportDraft,
   type StoryScene,
 } from "../features/living_atlas";
+import {
+  createInitialPlayback,
+  isPlaybackPlaying,
+  playbackFrameId,
+  playbackHasNext,
+  reducePlayback,
+  type PlaybackAction,
+  type PlaybackPauseReason,
+} from "../features/temporal";
 import { repositoryUrl } from "./catalog";
 import { KANSAS_COUNTY_REFERENCE_CANDIDATE } from "./reference-geography-source-registry";
 import livingWatersFixturePacket from "../../../../fixtures/contracts/v1/domains/hydrology/living_waters_fixture_packet/valid/first_proof.json";
@@ -42,6 +51,8 @@ export type LivingAtlasController = Readonly<{ destroy: () => void }>;
 const DISPLAY_TIMES = TEMPORAL_EXTENTS.filter(
   (entry) => entry.kind === "INTERVAL",
 );
+const DISPLAY_TIME_IDS = Object.freeze(DISPLAY_TIMES.map((entry) => entry.id));
+const PLAYBACK_INTERVAL_MS = 1_200;
 
 const LIVING_WATERS_FIXTURE_PACKET: LivingWatersFixturePacket = livingWatersFixturePacket;
 
@@ -77,6 +88,13 @@ function button(
   node.textContent = label;
   node.dataset.atlasAction = action;
   return node;
+}
+
+function prefersReducedMotion(document: Document): boolean {
+  const view = document.defaultView;
+  return view !== null &&
+    typeof view.matchMedia === "function" &&
+    view.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
 function repositoryLink(
@@ -201,6 +219,12 @@ export function mountLivingAtlasWorkspace(
   const cleanup: Array<() => void> = [];
   let snapshot = createInitialSnapshot();
   let previewTimeId = snapshot.committedTimeId;
+  let playback = createInitialPlayback(
+    DISPLAY_TIME_IDS,
+    Math.max(0, DISPLAY_TIME_IDS.indexOf(previewTimeId)),
+    prefersReducedMotion(document),
+  );
+  let playbackTimer: number | null = null;
   let runtime: MapRuntimePort | null = null;
   let unsubscribeRuntime: (() => void) | null = null;
   let runtimeGeneration = 0;
@@ -577,15 +601,151 @@ export function mountLivingAtlasWorkspace(
   const timelineCopy = el(document, "div");
   const timeLabel = text(document, "strong", findTemporalExtent(previewTimeId)?.label ?? "Unknown time");
   const timeDetail = text(document, "small", "Preview only — select Apply time to commit");
-  timelineCopy.append(text(document, "span", "Deep-time navigator", "eyebrow"), timeLabel, timeDetail);
+  const playbackStatus = text(document, "small", "", "atlas-playback-status");
+  playbackStatus.setAttribute("role", "status");
+  playbackStatus.setAttribute("aria-live", "polite");
+  timelineCopy.append(
+    text(document, "span", "Deep-time navigator", "eyebrow"),
+    timeLabel,
+    timeDetail,
+    playbackStatus,
+  );
   const timeInput = el(document, "input");
   timeInput.type = "range";
   timeInput.min = "0";
   timeInput.max = String(DISPLAY_TIMES.length - 1);
   timeInput.value = String(DISPLAY_TIMES.findIndex((entry) => entry.id === previewTimeId));
   timeInput.setAttribute("aria-label", "Preview atlas time");
+  const timelineActions = el(document, "div", "atlas-timeline-actions");
+  const playbackControls = el(document, "div", "atlas-playback-controls");
+  const previousFrame = button(document, "Previous", "time:step:previous");
+  previousFrame.setAttribute("aria-label", "Show previous atlas time frame");
+  const playbackToggle = button(document, "Play preview", "time:toggle-play");
+  const nextFrame = button(document, "Next", "time:step:next");
+  nextFrame.setAttribute("aria-label", "Show next atlas time frame");
+  playbackControls.append(previousFrame, playbackToggle, nextFrame);
   const applyTime = button(document, "Apply time", "time:commit", "atlas-primary-action");
-  timeline.append(timelineCopy, timeInput, applyTime);
+  timelineActions.append(playbackControls, applyTime);
+  timeline.append(timelineCopy, timeInput, timelineActions);
+
+  const playbackPauseLabel = (reason: PlaybackPauseReason | null): string => {
+    switch (reason) {
+      case "INITIAL":
+        return "replay is off by default";
+      case "USER":
+        return "paused by user";
+      case "USER_STEP":
+        return "paused after a manual step";
+      case "SCRUB":
+        return "paused after scrubbing";
+      case "HIDDEN_DOCUMENT":
+        return "paused while the document was hidden";
+      case "REDUCED_MOTION":
+        return "paused for reduced motion";
+      case "BOUNDARY":
+        return "timeline boundary reached";
+      case "END_OF_TIMELINE":
+        return "end of finite timeline reached";
+      case "NO_FRAMES":
+        return "no replay frames are available";
+      case "EVIDENCE_FAILURE":
+        return "paused because frame evidence failed";
+      case "SOURCE_WITHDRAWN":
+        return "paused because the frame source was withdrawn";
+      case null:
+        return "preview ready";
+    }
+  };
+
+  const stopPlaybackTimer = (): void => {
+    if (playbackTimer === null) return;
+    document.defaultView?.clearInterval(playbackTimer);
+    playbackTimer = null;
+  };
+
+  const startPlaybackTimer = (): void => {
+    if (playbackTimer !== null || !isPlaybackPlaying(playback)) return;
+    const view = document.defaultView;
+    if (view === null) return;
+    playbackTimer = view.setInterval(() => {
+      dispatchPlayback({ type: "TICK" });
+    }, PLAYBACK_INTERVAL_MS);
+  };
+
+  const syncPreviewTime = (index: number, detail: string): void => {
+    const time = DISPLAY_TIMES[index];
+    if (!time) return;
+    previewTimeId = time.id;
+    timeInput.value = String(index);
+    timeLabel.textContent = time.label;
+    timeDetail.textContent = `${time.startLabel} → ${time.endLabel} · ${detail}`;
+  };
+
+  const renderPlaybackControls = (): void => {
+    const replayable = DISPLAY_TIME_IDS.includes(previewTimeId);
+    const frameId = playbackFrameId(playback, DISPLAY_TIME_IDS);
+    const frameIndex = frameId === null ? -1 : DISPLAY_TIME_IDS.indexOf(frameId);
+    const controlsEnabled = replayable && DISPLAY_TIME_IDS.length > 0;
+    const frameNumber = frameIndex < 0 ? 0 : frameIndex + 1;
+
+    timeInput.disabled = !controlsEnabled;
+    playbackToggle.disabled = !controlsEnabled || playback.reducedMotion;
+    previousFrame.disabled = !controlsEnabled || playback.index <= 0;
+    nextFrame.disabled = !controlsEnabled || !playbackHasNext(playback, DISPLAY_TIME_IDS);
+    playbackToggle.textContent = isPlaybackPlaying(playback)
+      ? "Pause"
+      : "Play preview";
+    playbackToggle.setAttribute(
+      "aria-pressed",
+      String(isPlaybackPlaying(playback)),
+    );
+    playbackToggle.setAttribute(
+      "aria-label",
+      playback.reducedMotion
+        ? "Playback disabled by reduced motion preference"
+        : isPlaybackPlaying(playback)
+          ? "Pause atlas preview replay"
+          : "Play atlas preview replay",
+    );
+
+    if (!controlsEnabled) {
+      playbackStatus.textContent = "Playback paused · this time has no finite replay frames";
+    } else if (isPlaybackPlaying(playback)) {
+      playbackStatus.textContent = `Playing fixture preview · frame ${frameNumber} of ${DISPLAY_TIMES.length} · no commit`;
+    } else {
+      playbackStatus.textContent = `Paused fixture preview · ${playbackPauseLabel(playback.pauseReason)}`;
+    }
+
+    if (isPlaybackPlaying(playback)) startPlaybackTimer();
+    else stopPlaybackTimer();
+  };
+
+  function dispatchPlayback(action: PlaybackAction): void {
+    playback = reducePlayback(playback, DISPLAY_TIME_IDS, action);
+    if (
+      action.type === "STEP" ||
+      action.type === "SCRUB" ||
+      action.type === "TICK"
+    ) {
+      syncPreviewTime(
+        playback.index,
+        isPlaybackPlaying(playback)
+          ? "preview playing · no commit"
+          : "preview only",
+      );
+    }
+    renderPlaybackControls();
+  }
+
+  function resetPlaybackForTime(timeId: string): void {
+    const index = DISPLAY_TIME_IDS.indexOf(timeId);
+    playback = reducePlayback(playback, DISPLAY_TIME_IDS, {
+      type: "RESET",
+      index: index >= 0 ? index : playback.index,
+    });
+    if (index >= 0) syncPreviewTime(index, "preview only");
+    renderPlaybackControls();
+  }
 
   mapMode.append(leftRail, mapStage, evidence, timeline);
 
@@ -784,6 +944,7 @@ export function mountLivingAtlasWorkspace(
     previewTimeId = view.temporalExtentId;
     timeInput.value = String(Math.max(0, DISPLAY_TIMES.findIndex((entry) => entry.id === previewTimeId)));
     timeLabel.textContent = findTemporalExtent(previewTimeId)?.label ?? "Unknown time";
+    resetPlaybackForTime(previewTimeId);
     viewList.querySelectorAll<HTMLButtonElement>("button").forEach((node) => node.setAttribute("aria-pressed", String(node.dataset.atlasAction === `view:${view.id}`)));
     representationBar.querySelectorAll<HTMLButtonElement>("button").forEach((node) => node.setAttribute("aria-pressed", String(node.dataset.atlasAction === `representation:${usableRepresentation}`)));
     refreshLayerControls();
@@ -955,7 +1116,18 @@ export function mountLivingAtlasWorkspace(
         representationBar.querySelectorAll<HTMLButtonElement>("button").forEach((node) => node.setAttribute("aria-pressed", String(node === target)));
         initializeRuntime();
       }
+    } else if (action === "time:toggle-play") {
+      dispatchPlayback(
+        isPlaybackPlaying(playback)
+          ? { type: "PAUSE", reason: "USER" }
+          : { type: "PLAY" },
+      );
+    } else if (action === "time:step:previous") {
+      dispatchPlayback({ type: "STEP", delta: -1 });
+    } else if (action === "time:step:next") {
+      dispatchPlayback({ type: "STEP", delta: 1 });
     } else if (action === "time:commit") {
+      dispatchPlayback({ type: "PAUSE", reason: "USER" });
       snapshot = commitSnapshotTime(snapshot, previewTimeId);
       timeDetail.textContent = `Committed to map snapshot · ${new Date(snapshot.capturedAt).toLocaleTimeString()}`;
       refreshLayerControls();
@@ -1003,11 +1175,9 @@ export function mountLivingAtlasWorkspace(
   };
 
   const handleTimePreview = (): void => {
-    const time = DISPLAY_TIMES[Number(timeInput.value)];
-    if (!time) return;
-    previewTimeId = time.id;
-    timeLabel.textContent = time.label;
-    timeDetail.textContent = `${time.startLabel} → ${time.endLabel} · preview only`;
+    const index = Number(timeInput.value);
+    if (!DISPLAY_TIMES[index]) return;
+    dispatchPlayback({ type: "SCRUB", index });
   };
 
   const handleSearch = (): void => {
@@ -1035,24 +1205,45 @@ export function mountLivingAtlasWorkspace(
     }
   };
 
+  const handleVisibility = (): void => {
+    if (document.visibilityState === "hidden") {
+      dispatchPlayback({ type: "VISIBILITY_HIDDEN" });
+    }
+  };
+
+  const handleMapPointerDown = (): void => {
+    if (isPlaybackPlaying(playback)) {
+      dispatchPlayback({ type: "PAUSE", reason: "USER" });
+    }
+  };
+
   const handleKeydown = (event: KeyboardEvent): void => {
-    if (event.key === "Escape" && !composer.hidden) composer.hidden = true;
+    if (event.key === "Escape") {
+      dispatchPlayback({ type: "PAUSE", reason: "USER" });
+      if (!composer.hidden) composer.hidden = true;
+    }
   };
 
   workspace.addEventListener("click", handleClick);
   workspace.addEventListener("change", handleChange);
   timeInput.addEventListener("input", handleTimePreview);
   search.addEventListener("input", handleSearch);
+  mapCanvas.addEventListener("pointerdown", handleMapPointerDown);
+  document.addEventListener("visibilitychange", handleVisibility);
   document.addEventListener("keydown", handleKeydown);
   cleanup.push(
     () => workspace.removeEventListener("click", handleClick),
     () => workspace.removeEventListener("change", handleChange),
     () => timeInput.removeEventListener("input", handleTimePreview),
     () => search.removeEventListener("input", handleSearch),
+    () => mapCanvas.removeEventListener("pointerdown", handleMapPointerDown),
+    () => document.removeEventListener("visibilitychange", handleVisibility),
     () => document.removeEventListener("keydown", handleKeydown),
+    stopPlaybackTimer,
   );
 
   refreshLayerControls();
+  renderPlaybackControls();
   initializeRuntime();
 
   return Object.freeze({
