@@ -158,9 +158,11 @@ def _digest(raw: bytes) -> str:
 
 
 def _assert_wheel(members: dict[str, bytes], *, editable: bool = False) -> None:
-    expected = WHEEL_FILES | ({"_kfm.pth"} if editable else set())
+    # editables 0.6 omits an empty path file. Absence is not an install failure;
+    # a legacy empty _kfm.pth is also harmless, but no path/code may be added.
+    expected = WHEEL_FILES | ({"_kfm.pth"} if editable and "_kfm.pth" in members else set())
     assert set(members) == expected, "unexpected wheel member inventory"
-    if editable:
+    if editable and "_kfm.pth" in members:
         assert not members["_kfm.pth"].strip(), "editable import-path exposure"
     record = f"{DIST}/RECORD"
     rows = list(csv.reader(io.StringIO(members[record].decode("utf-8"))))
@@ -249,6 +251,15 @@ def _synthetic_wheel(*, editable: bool = False) -> dict[str, bytes]:
 @pytest.mark.parametrize("editable", [False, True])
 def test_synthetic_wheel_inventory_and_record(editable: bool) -> None:
     _assert_wheel(_synthetic_wheel(editable=editable), editable=editable)
+
+
+def test_editable_without_path_file_is_metadata_only() -> None:
+    _assert_wheel(_synthetic_wheel(), editable=True)
+
+
+def test_noneditable_rejects_even_an_empty_path_file() -> None:
+    with pytest.raises(AssertionError, match="inventory"):
+        _assert_wheel(_synthetic_wheel(editable=True))
 
 
 @pytest.mark.parametrize("name", [
