@@ -198,6 +198,8 @@ export function reducePlayback(
         normalized.reducedMotion,
       );
   }
+
+  return normalized;
 }
 
 export function isPlaybackPlaying(state: PlaybackState): boolean {
