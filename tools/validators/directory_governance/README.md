@@ -87,6 +87,32 @@ run ID, attempt and event fields are included when present; absent values are
 explicitly null. No branch/trusted-base ref, arbitrary environment value, file
 content, evidence member or per-finding evidence digest is emitted.
 
+Context version `kfm.topology-execution-context.v2` additionally binds four
+fixed governance inputs from the **Git index**, not their working-file copies:
+`root_registry` (`control_plane/root_registry.yaml`), `path_alias_register`
+(`control_plane/path_alias_register.yaml`), `directory_rules`
+(`docs/doctrine/directory-rules.md`), and `directory_adoption`
+(`docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md`). Each fixed label
+records its Git blob ID, byte count and SHA-256. Blob framing is independently
+rehashed against the index ID before the entry is included. Missing, duplicate,
+unmerged, non-regular, oversized or mismatched objects make context unavailable;
+Git replacement bytes do not silently inherit the requested original identity.
+The new blob reads pass `--no-lazy-fetch`; missing promisor objects are not
+retrieved for context. Git must support that option for v2 context to be
+available. There is no retry with lazy fetching enabled; the native validator
+still retains its pre-existing behavior and exit status.
+No governance text, alias inventory or source path is added to the log payload.
+
+This follows the scanner's indexed-input boundary: an unstaged edit is not the
+scanned governance input. A staged change changes the corresponding blob entry
+and the whole-index digest; a change across begin/end is non-comparable. These
+four entries complement the existing on-disk validator/diagnostic/baseline
+hashes. They are not a complete captured report, proof of source authority,
+attestation of loaded code, or diagnosis of the disputed September 11 log.
+Consumers requiring these entries must require context v2; retained v1 logs
+lack that coverage and must not be upgraded by inference. `main()` and the
+ratchet's native exit and findings interface are unchanged.
+
 The end marker repeats the binding ID only when the before/after observations
 agree. Missing, unsafe, oversized or changed inputs yield `UNAVAILABLE` or
 `NON_COMPARABLE`, not attribution evidence. These context states are separate
@@ -99,7 +125,10 @@ loaded-bytecode attestation, authentication of runner metadata, or an atomic
 filesystem snapshot. The staged-index digest is not a Git tree ID. File reads
 are limited to 4 MiB regular files inside the checkout; symlinks are rejected.
 The index payload is checked against 32 MiB after the existing bounded-time Git
-helper returns. Unrelated working files and transient/concurrent filesystem
+helper returns. Each of the four blob reads is size-checked before retrieval
+and checked again on return, using the same 4 MiB limit and bounded-time Git
+helper. The return check is not a streaming memory cap on a malicious Git
+process. Unrelated working files and transient/concurrent filesystem
 changes are not a complete captured snapshot. Trusted-baseline enforcement and
 all twenty topology rules remain unchanged.
 
@@ -110,15 +139,24 @@ framing use `run_with_context()`. Tests in
 `tests/validators/directory_governance/test_validate_context_binding_topology.py`
 use real temporary Git repositories and a synthetic validator double to isolate
 binding, log safety and process exit behavior. They do not prove native topology
-conformance. Rollback removes the wrapper, its tests and this section together;
-it never resets the baseline or changes source/release authority.
+conformance. Coverage also checks exact indexed identities, unstaged/staged
+separation, malformed index entries, blob budgets, substituted bytes, a real
+local Git replacement, and native-exit preservation during input changes.
+Rollback of the v2 increment reverts its code, fixtures/tests and documentation
+together, restoring v1 framing without resetting the baseline or changing
+source/release authority. Removing the whole wrapper is a separate rollback.
 
 External implementation references (checked 2026-09-11):
 [GitHub workflow commands](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-commands),
 [GitHub workflow logs](https://docs.github.com/en/actions/how-tos/monitor-workflows/use-workflow-run-logs),
 [GitHub pull-request events](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#pull_request),
 and [OWASP logging guidance](https://cheatsheetseries.owasp.org/cheatsheets/Logging_Cheat_Sheet.html#event-collection).
-These explain transport and logging risks; they do not establish KFM run results.
+[Git index output](https://git-scm.com/docs/git-ls-files#_output),
+[Git object hashing](https://git-scm.com/docs/git-hash-object), and
+[Git no-lazy-fetch](https://git-scm.com/docs/git) document the
+indexed-versus-working-byte and object-ID mechanics used here.
+These explain transport, identity and logging risks; they do not establish KFM
+run results.
 
 Finite outcomes are `PASS`, `FAIL_NEW_DRIFT`, `FAIL_INVARIANT`, `HOLD_UNRESOLVED`, and `ERROR_VALIDATOR`.
 
