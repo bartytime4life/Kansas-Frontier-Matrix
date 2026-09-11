@@ -65,6 +65,7 @@ import {
   TRANSITION_BOUNDARIES,
   type RepositoryUpdateState,
 } from "./repository-updates";
+import { SITE_IDENTITY } from "./site-identity";
 import {
   FEATURE_AREAS,
   FEATURE_CATALOG,
@@ -6345,6 +6346,23 @@ export default function Home() {
               <div><dt>Map functions</dt><dd>{REPOSITORY_SNAPSHOT.counts.mapFunctions}</dd></div>
               <div><dt>Current signals</dt><dd>{REPOSITORY_SNAPSHOT.counts.repositoryUpdates}</dd></div>
             </dl>
+            <div className="site-identity-strip" aria-label="Site identity and domain status">
+              <div>
+                <span>SITES BINDING</span>
+                <strong>{SITE_IDENTITY.provider}</strong>
+                <small>{SITE_IDENTITY.slug} · {SITE_IDENTITY.projectId}</small>
+              </div>
+              <div>
+                <span>CANONICAL HOST</span>
+                <a href={SITE_IDENTITY.canonicalUrl} target="_blank" rel="noreferrer">{SITE_IDENTITY.canonicalUrl.replace("https://", "")}</a>
+                <small>{SITE_IDENTITY.customDomainStatus.replaceAll("_", " ")} · checked {SITE_IDENTITY.checkedAt}</small>
+              </div>
+              <div data-state="warning">
+                <span>REPOSITORY IDENTITY</span>
+                <strong>{SITE_IDENTITY.sourceRelation.replaceAll("_", " ")}</strong>
+                <small>GitHub child manifest still names {SITE_IDENTITY.repositoryManifestProjectId}; this Site binding is authoritative.</small>
+              </div>
+            </div>
             <div className="repository-connection" data-state={repositoryConnection.state} role="status" aria-live="polite">
               <div>
                 <span>LIVE READ-ONLY GITHUB CHECK</span>

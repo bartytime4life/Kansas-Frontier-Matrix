@@ -1,8 +1,16 @@
 # KFM Explorer Source Ledger, Gap Register, and Traceability
 
-Audit date: 2026-09-10; smoke, LiDAR-derived terrain, and Raspberry Shake context note added
+Audit date: 2026-09-11; Site/repository/domain checkpoint refreshed
 Target: existing Site `kansas-frontier-matrix-explorer`
 Truth rule: the current mounted Site proves current behavior; Drive documents support doctrine or proposals but do not prove implementation.
+
+Connection checkpoint: the active Site project is
+`appgprj_6aa0b1c41bc08191bfd86003920f1631` with canonical host
+`https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site`; no custom
+domain was attached when checked. GitHub `main` was independently read at
+`664e46697d4d237870f5a482904bb9acd8f11b20`. The Site and repository remain
+separate source histories, and the repository child manifest still names legacy
+project `appgprj_6a870a079c1c8191abb7401ef092a181`.
 
 ## Source ledger
 

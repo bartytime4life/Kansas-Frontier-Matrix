@@ -271,6 +271,14 @@ button:disabled { cursor: not-allowed; opacity: .42; }
 .repository-snapshot dl div { display: grid; grid-template-columns: 1fr auto; align-items: center; min-height: 46px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 8px 10px; }
 .repository-snapshot dt { color: var(--dim); font-size: 12px; font-weight: 900; letter-spacing: .06em; text-transform: uppercase; }
 .repository-snapshot dd { margin: 0; color: var(--gold-soft); font-size: 17px; font-weight: 900; }
+.site-identity-strip { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; grid-column: 1 / -1; }
+.site-identity-strip > div { display: grid; gap: 4px; min-width: 0; border: 1px solid var(--line); border-left: 2px solid var(--water); border-radius: 9px; background: rgba(115,199,210,.035); padding: 9px 10px; }
+.site-identity-strip > div[data-state="warning"] { border-left-color: var(--gold); background: rgba(224,186,109,.04); }
+.site-identity-strip span { color: var(--water); font-size: 12px; font-weight: 950; letter-spacing: .08em; }
+.site-identity-strip strong, .site-identity-strip a { overflow-wrap: anywhere; color: var(--ink); font-size: 12px; font-weight: 850; }
+.site-identity-strip a { color: var(--gold-soft); text-decoration: none; }
+.site-identity-strip a:hover, .site-identity-strip a:focus-visible { text-decoration: underline; }
+.site-identity-strip small { overflow-wrap: anywhere; color: var(--muted); font-size: 12px; line-height: 1.4; }
 .repository-connection { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 6px 14px; grid-column: 1 / -1; align-items: center; border: 1px solid var(--line); border-left: 3px solid var(--gold); border-radius: 9px; background: rgba(0,0,0,.12); padding: 10px 12px; }
 .repository-connection[data-state="ready"] { border-left-color: var(--green); }
 .repository-connection[data-state="error"] { border-left-color: var(--red); }
@@ -1753,6 +1761,7 @@ input[type="range"] { accent-color: var(--gold); }
   .repository-scroll { padding: 18px 16px 24px; }
   .repository-tabs { top: -18px; margin: -18px -16px 20px; padding: 10px 16px; }
   .repository-tabs button { min-height: 42px; font-size: 12px; }
+  .site-identity-strip { grid-template-columns: 1fr; }
   .planning-scenario-review-grid, .planning-scenario-details > div { grid-template-columns: 1fr; }
   .planning-scenario-authority { grid-template-columns: repeat(2,1fr); }
   .repository-section-heading { align-items: start; }

@@ -1,3 +1,5 @@
+import { SITE_IDENTITY } from "./site-identity";
+
 export type RepositoryUpdateState =
   | "ACCEPTED"
   | "BOUNDED PROOF"
@@ -26,11 +28,11 @@ export type RepositoryUpdate = Readonly<{
 }>;
 
 export const REPOSITORY_SNAPSHOT = Object.freeze({
-  repository: "bartytime4life/Kansas-Frontier-Matrix",
-  ref: "main",
-  commit: "b2e0a982ad53f8f906c15d0dfb76571c8cd829f3",
-  shortCommit: "b2e0a98",
-  inspectedAt: "10 Sep 2026 · live GitHub readback",
+  repository: SITE_IDENTITY.repository,
+  ref: SITE_IDENTITY.repositoryRef,
+  commit: SITE_IDENTITY.repositoryCommit,
+  shortCommit: SITE_IDENTITY.repositoryCommit.slice(0, 7),
+  inspectedAt: "11 Sep 2026 · live GitHub readback",
   counts: Object.freeze({
     knowledgeDomains: 13,
     explorerFeatureFamilies: 38,
@@ -48,12 +50,12 @@ export const REPOSITORY_UPDATES: readonly RepositoryUpdate[] = Object.freeze([
   Object.freeze({
     id: "current-main-live-readback",
     area: "Repository control plane",
-    title: "Current main records the saved Sites v15 checkpoint",
+    title: "Current main includes the latest Layer Catalog affordance fix",
     state: "NEEDS VERIFICATION",
     maturity: "PARTIAL",
-    date: "10 Sep 2026",
+    date: "11 Sep 2026",
     summary:
-      "Live GitHub readback pins main at b2e0a98 after PR #4457 recorded the saved Sites v15 official-context capability. The Site now performs a separate read-only current-main check when its repository briefing opens.",
+      "Live GitHub readback pins main at 664e466, the merge of PR #4464 for Explorer Layer Catalog scroll and visibility affordances. The Site still performs a separate read-only current-main check when its repository briefing opens.",
     boundary:
       "The GitHub repository and this Site retain separate source histories. A successful currentness check does not synchronize code, prove tree equivalence, admit data, approve a review, deploy a version, or authorize publication.",
     sourceLabel: "Exact current main commit",
