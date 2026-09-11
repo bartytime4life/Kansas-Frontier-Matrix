@@ -67,6 +67,18 @@
 .atlas-composer p { color: var(--muted); line-height: 1.5; }
 .atlas-composer button { width: 100%; margin-top: .45rem; text-align: left; }
 
+.atlas-fixture-card { display: grid; gap: .4rem; margin-top: .85rem; border: 1px dashed rgb(218 182 109 / 45%); border-radius: .7rem; background: rgb(218 182 109 / 5%); padding: .65rem; }
+.atlas-fixture-card strong { color: var(--prairie-soft); }
+.atlas-fixture-card label { color: var(--muted); font-size: .7rem; font-weight: 750; letter-spacing: .04em; text-transform: uppercase; }
+.atlas-fixture-select { min-height: 2.15rem; border: 1px solid var(--line); border-radius: .55rem; background: #071517; color: var(--ink); padding: .35rem; }
+.atlas-fixture-status, .atlas-fixture-meta, .atlas-fixture-trust { margin: 0; font-size: .72rem; line-height: 1.45; }
+.atlas-fixture-status { color: var(--river); font-weight: 800; }
+.atlas-fixture-meta, .atlas-fixture-trust { color: var(--muted); }
+.atlas-fixture-chart { display: grid; gap: .2rem; max-height: 7rem; overflow: auto; border-top: 1px solid var(--line); padding-top: .45rem; }
+.atlas-fixture-chart span { color: var(--ink); font-size: .7rem; font-variant-numeric: tabular-nums; }
+.atlas-fixture-card[data-frame-state="STALE"] .atlas-fixture-status { color: var(--caution); }
+.atlas-fixture-card[data-frame-state="NO_RESULTS"] .atlas-fixture-status, .atlas-fixture-card[data-frame-state="UNAVAILABLE"] .atlas-fixture-status, .atlas-fixture-card[data-frame-state="ABSTAIN"] .atlas-fixture-status { color: var(--critical); }
+
 @media (max-width: 1120px) {
   .atlas-topbar { grid-template-columns: 1fr auto; }
   .atlas-search { grid-column: 1 / -1; grid-row: 2; }
