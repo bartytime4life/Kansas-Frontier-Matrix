@@ -156,7 +156,7 @@ test("applies fixed-header correction only when it is not already applied", asyn
     stationXmlText: stationXml(), inspectedAt: "2026-09-11T00:00:00.000Z", attribution: "User-supplied file",
   });
   assert.equal(alreadyApplied.startTime, "2026-09-11T00:00:00.000Z");
-  assert.match(source, /microseconds \\/ 1_000/);
+  assert.match(source, /microseconds \/ 1_000/);
 });
 
 test("selects the matching StationXML channel and time window", async () => {
