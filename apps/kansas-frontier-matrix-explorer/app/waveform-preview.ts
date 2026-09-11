@@ -306,7 +306,6 @@ const stationChannelFragment = (xml: string) => {
     stationCode,
     channelAttributes: channelMatch[1],
     channelBody: channelMatch[2],
-    channelXml: channelMatch[0],
   };
 };
 
