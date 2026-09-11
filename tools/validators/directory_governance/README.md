@@ -77,6 +77,42 @@ identities disagree with the pinned implementation, classify attribution as
 rule to reconcile contradictory evidence. Test code and tests at the exact
 candidate, and re-pin before delivery.
 
+### Execution-context framing
+
+The diagnostic CLI now wraps its normal output in `TOPOLOGY_CONTEXT_BEGIN` and
+`TOPOLOGY_CONTEXT_END`. The begin payload identifies the actual checkout commit
+and tree, hashes the raw staged-index listing, and records SHA-256 digests of the
+on-disk validator, diagnostic script and selected baseline. Allowlisted GitHub
+run ID, attempt and event fields are included when present; absent values are
+explicitly null. No branch/trusted-base ref, arbitrary environment value, file
+content, evidence member or per-finding evidence digest is emitted.
+
+The end marker repeats the binding ID only when the before/after observations
+agree. Missing, unsafe, oversized or changed inputs yield `UNAVAILABLE` or
+`NON_COMPARABLE`, not attribution evidence. These context states are separate
+from validation: the original ratchet still runs and retains its exact exit
+status. Context failure cannot turn a failed ratchet into success. A successful
+ratchet with unavailable context still lacks comparable diagnostic evidence.
+
+This is a diagnostic aid, not a new receipt/proof/schema family, signature,
+loaded-bytecode attestation, authentication of runner metadata, or an atomic
+filesystem snapshot. The staged-index digest is not a Git tree ID. File reads
+are limited to 4 MiB regular files inside the checkout; symlinks are rejected.
+The index payload is checked against 32 MiB after the existing bounded-time Git
+helper returns. Unrelated working files and transient/concurrent filesystem
+changes are not a complete captured snapshot. Trusted-baseline enforcement and
+all twenty topology rules remain unchanged.
+
+The existing Makefile already invokes this CLI and discovers
+`test_validate_*topology.py`; no new workflow or dependency is needed. Direct
+Python callers of `main()` retain the previous output interface; callers needing
+framing use `run_with_context()`. Tests in
+`tests/validators/directory_governance/test_validate_context_binding_topology.py`
+use real temporary Git repositories and a synthetic validator double to isolate
+binding, log safety and process exit behavior. They do not prove native topology
+conformance. Rollback removes the wrapper, its tests and this section together;
+it never resets the baseline or changes source/release authority.
+
 External implementation references (checked 2026-09-11):
 [GitHub workflow commands](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-commands),
 [GitHub workflow logs](https://docs.github.com/en/actions/how-tos/monitor-workflows/use-workflow-run-logs),
