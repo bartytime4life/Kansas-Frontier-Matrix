@@ -549,6 +549,49 @@ jobs:
                 code, report = module.evaluate(findings, count, {})
                 self.assertEqual((0, "PASS"), (code, report["outcome"]))
 
+    def test_key_separator_spacing_cannot_hide_nested_duplicates(self) -> None:
+        cases = self._duplicate_key_cases()
+        for separator in (" ", "   ", "\t", " \t "):
+            for name in ("persist-false-true", "job-permissions-inline", "with-block"):
+                with self.subTest(case=name, separator=repr(separator)):
+                    text, key = cases[name]
+                    lines = text.strip().splitlines()
+                    index = next(i for i, line in enumerate(lines) if "# duplicate" in line)
+                    lines[index] = lines[index].replace(key + ":", key + separator + ":", 1)
+                    self._write("spacing.yml", "\n".join(lines))
+                    findings, count = module.scan(self.root)
+                    expected = module._finding(
+                        "KFM-WF-001", ".github/workflows/spacing.yml",
+                        f"yaml-line={index + 1}", f"DUPLICATE_MAPPING_KEY:{key}", index + 1,
+                    )
+                    self.assertEqual((expected,), findings)
+                    self.assertEqual(1, count)
+                    code, report = module.evaluate(findings, count, {})
+                    self.assertEqual((1, "FAIL_INVARIANT"), (code, report["outcome"]))
+                    self.assertTrue(all(value is False for value in report["authority"].values()))
+
+    def test_key_separator_normalization_preserves_scope_and_scalar_bodies(self) -> None:
+        safe = self._safe_workflow()
+        for separator in (" ", "   ", "\t", " \t "):
+            with self.subTest(separator=repr(separator)):
+                # Equal env keys belong to separate sequence-item mappings.
+                # Repeated mapping-like text inside run is scalar data only.
+                text = safe.replace(
+                    "        with:",
+                    "        env:\n          FLAG: first\n        with:",
+                ).replace(
+                    "      - run: python -m unittest",
+                    "      - run: |\n"
+                    "          entry" + separator + ": first\n"
+                    "          entry: second\n"
+                    "        env:\n          FLAG" + separator + ": second",
+                )
+                self._write("spacing-safe.yml", text)
+                findings, count = module.scan(self.root)
+                self.assertEqual((), findings)
+                code, report = module.evaluate(findings, count, {})
+                self.assertEqual((0, "PASS"), (code, report["outcome"]))
+
     def test_top_level_duplicate_fingerprint_remains_stable(self) -> None:
         text = self._safe_workflow() + "name: shadowed\n"
         self._write("top.yml", text)

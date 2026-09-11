@@ -491,7 +491,12 @@ def _duplicate_mapping_findings(workflow: Workflow) -> list[Finding]:
         if item:
             indent += item.end()
             stripped = stripped[item.end() :]
-        parsed = _key(stripped)
+        # Separation before ':' does not change a plain key's identity.
+        # Normalize only for ambiguity detection, not semantic interpretation.
+        key_line = re.sub(
+            r"^([A-Za-z_][A-Za-z0-9_-]*)[ \t]+:", r"\1:", stripped, count=1
+        )
+        parsed = _key(key_line)
         if not parsed:
             continue
         if not scopes or scopes[-1][0] < indent:

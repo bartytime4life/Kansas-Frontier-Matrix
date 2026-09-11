@@ -24,7 +24,10 @@ expression properties are normalized before security checks.
 Block mapping keys must be unique within their own scope, including job IDs,
 job permissions, step keys, and checkout `with` inputs. Even equal-valued
 repetitions fail `KFM-WF-001`; first- or last-value precedence cannot waive
-ambiguity. Separate jobs and sequence items may reuse keys, and supported
+ambiguity. Spaces or tabs separating a plain key from its colon do not create
+a different key for duplicate detection. This normalization does not widen
+semantic parsing or remove the existing tab-indentation denial.
+Separate jobs and sequence items may reuse keys, and supported
 literal/folded scalar bodies are not mappings. Inline `permissions` and `with`
 values must pass the existing flat-map parser, including unique-member checks;
 malformed or unsupported inline forms fail closed rather than falling back to
