@@ -3,7 +3,7 @@ doc_id: kfm://doc/architecture/kfm-explorer-site-real-data-backfill-20260910
 title: KFM Explorer Site Real-Data Backfill — 2026-09-10
 type: architecture-reference
 version: v1.1.0-draft
-status: draft; documentation-only; not-merged; not-released; not-for-life-safety
+status: documentation-only; branch-updated; pr-4463-closed; not-released; not-for-life-safety
 owners:
   - "@bartytime4life — verified CODEOWNERS review route"
   - "Site, source, evidence, hazards, release, and documentation stewardship NEEDS VERIFICATION"
@@ -19,7 +19,7 @@ truth_posture: cite-or-abstain
 
 # KFM Explorer Site Real-Data Backfill — 2026-09-10
 
-> **Status:** documentation-only, draft, not merged, not released, not deployed, and not for life-safety use.
+> **Status:** documentation-only, branch-updated, PR #4463 closed, not released, not deployed, and not for life-safety use.
 
 This record backfills the governed real-data work completed in the existing Kansas Frontier Matrix Explorer Site. It is a convergence note between the Site source history and the Kansas Frontier Matrix repository. It does not copy the Site source tree into this repository and does not change source admission, contracts, schemas, policy, evidence, release, or publication state.
 
@@ -32,7 +32,7 @@ This record backfills the governed real-data work completed in the existing Kans
 | Site saved version | 23 (current checkpoint; version 22 is the prior saved checkpoint) |
 | Site source commit | `f48e4b19b79973ec0acb8e668ad2ba2c50564eec` |
 | Site deployment state | Not deployed by this change; the owner-only Site remains the current delivery surface |
-| GitHub backfill state | This document is on the branch for the accompanying draft pull request |
+| GitHub backfill state | PR #4463 is closed; this branch contains the updated documentation; no new PR was opened by this alignment |
 
 The Site checkpoint passed `npm run build`, `npm test` (36 tests), `npx tsc --noEmit`, and scoped ESLint for all changed files with zero errors. Version 22 adds the visible priority context control deck and a clear `Controls` affordance on registry layer rows. Version 23 adds the typed feature, connection, action, code-surface, route, and cross-reference validation registries. Full-project lint remains blocked by two pre-existing React effect errors in `app/observatory/workspace.tsx`; this change did not broaden that lint debt. Browser QA was not performed.
 
@@ -125,4 +125,4 @@ Provider links document the source boundary; they are not an authorization to by
 
 ## Rollback
 
-Close or revert the documentation pull request if the checkpoint, provider boundary, or repository baseline is found to be inaccurate. No Site deployment or provider-side mutation is part of this backfill.
+Revert the documentation branch if the checkpoint, provider boundary, or repository baseline is found to be inaccurate. No Site deployment or provider-side mutation is part of this backfill.
