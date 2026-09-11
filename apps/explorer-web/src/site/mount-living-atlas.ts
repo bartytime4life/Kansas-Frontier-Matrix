@@ -23,7 +23,11 @@ import {
   isPersistedReportDraft,
   isPersistedStoryScene,
   isLayerTemporallyCompatible,
+  LIVING_WATERS_SCENARIO_IDS,
+  projectLivingWatersFixture,
   parsePersistedDraftCollection,
+  type LivingWatersFixturePacket,
+  type LivingWatersScenarioId,
   type MapRepresentation,
   type MapSnapshot,
   type ReportDraft,
@@ -31,12 +35,15 @@ import {
 } from "../features/living_atlas";
 import { repositoryUrl } from "./catalog";
 import { KANSAS_COUNTY_REFERENCE_CANDIDATE } from "./reference-geography-source-registry";
+import livingWatersFixturePacket from "../../../../fixtures/contracts/v1/domains/hydrology/living_waters_fixture_packet/valid/first_proof.json";
 
 export type LivingAtlasController = Readonly<{ destroy: () => void }>;
 
 const DISPLAY_TIMES = TEMPORAL_EXTENTS.filter(
   (entry) => entry.kind === "INTERVAL",
 );
+
+const LIVING_WATERS_FIXTURE_PACKET: LivingWatersFixturePacket = livingWatersFixturePacket;
 
 function el<K extends keyof HTMLElementTagNameMap>(
   document: Document,
@@ -283,7 +290,57 @@ export function mountLivingAtlasWorkspace(
     row.append(toggle, copy, inspect);
     layerList.append(row);
   });
-  layersPanel.append(layerList, text(document, "h3", "Repository layer candidates", "atlas-section-label"));
+  const livingWatersFixtureCard = el(document, "article", "atlas-fixture-card");
+  livingWatersFixtureCard.dataset.searchText = "living waters hydrology synthetic hydrograph discharge fixture".toLowerCase();
+  livingWatersFixtureCard.dataset.fixtureOnly = "true";
+  livingWatersFixtureCard.setAttribute("aria-label", "Living Waters synthetic fixture proof");
+
+  const livingWatersScenarioLabel = text(document, "label", "Scenario");
+  livingWatersScenarioLabel.htmlFor = "living-waters-scenario";
+  const livingWatersSelect = el(document, "select", "atlas-fixture-select");
+  livingWatersSelect.id = "living-waters-scenario";
+  livingWatersSelect.dataset.livingWatersScenario = "true";
+  livingWatersSelect.setAttribute("aria-label", "Living Waters fixture scenario");
+  LIVING_WATERS_SCENARIO_IDS.forEach((scenarioId) => {
+    const option = el(document, "option");
+    option.value = scenarioId;
+    option.textContent = scenarioId === "no-results"
+      ? "No results"
+      : scenarioId === "ambiguous-reach"
+        ? "Ambiguous reach"
+        : scenarioId[0].toUpperCase() + scenarioId.slice(1);
+    livingWatersSelect.append(option);
+  });
+
+  const livingWatersStatus = text(document, "p", "", "atlas-fixture-status");
+  livingWatersStatus.setAttribute("role", "status");
+  livingWatersStatus.setAttribute("aria-live", "polite");
+  const livingWatersMeta = text(document, "p", "", "atlas-fixture-meta");
+  const livingWatersTrust = text(document, "p", "", "atlas-fixture-trust");
+  const livingWatersChart = el(document, "div", "atlas-fixture-chart");
+
+  const renderLivingWatersFixture = (scenarioId: LivingWatersScenarioId): void => {
+    const frame = projectLivingWatersFixture(LIVING_WATERS_FIXTURE_PACKET, scenarioId);
+    livingWatersFixtureCard.dataset.frameState = frame.state;
+    livingWatersStatus.textContent = `${frame.state} · ${frame.displayMessage}`;
+    livingWatersMeta.textContent = `${frame.spatial.huc12} · ${frame.measurement.parameterName} · ${frame.measurement.unitCode} · ${frame.temporal.pointCount} point${frame.temporal.pointCount === 1 ? "" : "s"}`;
+    livingWatersTrust.textContent = `${frame.trust.state} · ${frame.render.representation} · visible=${String(frame.render.visible)} · rendererBound=${String(frame.render.rendererBound)}`;
+    const pointNodes = frame.measurement.points.map((point) =>
+      text(document, "span", `${point.observedAt} · ${point.value} ${frame.measurement.unitCode}`),
+    );
+    livingWatersChart.replaceChildren(
+      ...pointNodes,
+      ...(pointNodes.length === 0
+        ? [text(document, "span", "No observations are rendered for this finite state.")]
+        : []),
+    );
+  };
+
+  layersPanel.append(
+    layerList,
+    livingWatersFixtureCard,
+    text(document, "h3", "Repository layer candidates", "atlas-section-label"),
+  );
   const connectionList = el(document, "div", "atlas-connection-list");
   REPOSITORY_LAYER_CONNECTIONS.forEach((candidate) => {
     const card = el(document, "article", "atlas-connection-card");
@@ -925,7 +982,14 @@ export function mountLivingAtlasWorkspace(
   };
 
   const handleChange = (event: Event): void => {
-    const control = event.target as HTMLInputElement;
+    const control = event.target as HTMLInputElement | HTMLSelectElement;
+    if (control.dataset.livingWatersScenario === "true") {
+      const scenarioId = control.value as LivingWatersScenarioId;
+      if (LIVING_WATERS_SCENARIO_IDS.includes(scenarioId)) {
+        renderLivingWatersFixture(scenarioId);
+      }
+      return;
+    }
     const layerId = control.dataset.layerToggle;
     if (!layerId) return;
     if (!layerMatchesCommittedTime(layerId)) {
