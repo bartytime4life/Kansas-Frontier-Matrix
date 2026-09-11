@@ -312,9 +312,10 @@ const stationChannelFragment = (xml: string) => {
 
 const parseStationXml = (xml: string): StationXmlSummary => {
   if (!xml.trim()) throw new Error("The StationXML file is empty.");
-  if (/<!DOCTYPE|<!ENTITY/i.test(xml)) throw new Error("StationXML document types and entity declarations are not supported.");
-  if (!/<(?:(?:[\w.-]+):)?FDSNStationXML\b/i.test(xml)) throw new Error("The response file is not an FDSN StationXML document.");
-  const selected = stationChannelFragment(xml);
+  if (/<!DOCTYPE|<!ENTITY|<!--|<!\[CDATA\[/i.test(xml)) throw new Error("StationXML document types, comments, and CDATA sections are not supported.");
+  const root = tagMatch(xml, "FDSNStationXML");
+  if (!root) throw new Error("The response file is not a well-formed FDSN StationXML document.");
+  const selected = stationChannelFragment(root[2]);
   const location = attributeValue(selected.channelAttributes, "locationCode");
   const channel = attributeValue(selected.channelAttributes, "code");
   if (!selected.networkCode || !selected.stationCode || !channel) throw new Error("StationXML is missing a network, station, or channel code.");
