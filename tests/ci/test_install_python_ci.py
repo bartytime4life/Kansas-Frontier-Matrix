@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import os
 import sys
 import tempfile
 import unittest
@@ -79,6 +80,274 @@ class InstallPythonCiTests(unittest.TestCase):
         self.assertEqual(module.MIGRATION_ENTRY_COUNT, len(entries))
         self.assertEqual(sorted(entries), list(entries))
 
+    def test_migration_hash_failure_reports_every_mismatched_workflow(self) -> None:
+        manifest, entries = module.load_workflow_migration_manifest(REPO_ROOT)
+        migration_head = module.subprocess.run(
+            ("git", "rev-parse", "HEAD"),
+            check=True,
+            cwd=REPO_ROOT,
+            stdout=module.subprocess.PIPE,
+            text=True,
+        ).stdout.strip()
+        paths = tuple(entries)[:2]
+        mismatched_entries = {
+            path: {**entries[path], "current_sha256": "sha256:" + "0" * 64}
+            for path in paths
+        }
+
+        with (
+            mock.patch.object(
+                module,
+                "load_workflow_migration_manifest",
+                return_value=(manifest, mismatched_entries),
+            ),
+            mock.patch.dict(
+                module.os.environ,
+                {
+                    "KFM_MIGRATION_HEAD": migration_head,
+                    "GIT_DIR": str(REPO_ROOT / ".missing-git-dir"),
+                },
+            ),
+            self.assertRaises(module.InstallConfigurationError) as raised,
+        ):
+            module.verify_workflow_receipts()
+
+        self.assertEqual(
+            "MIGRATION_CURRENT_HASH_MISMATCH:" + ",".join(paths),
+            str(raised.exception),
+        )
+
+    def test_migration_validation_checks_each_reused_profile_once(self) -> None:
+        manifest, entries = module.load_workflow_migration_manifest(REPO_ROOT)
+        migration_head = module.subprocess.run(
+            ("git", "rev-parse", "HEAD"),
+            check=True,
+            cwd=REPO_ROOT,
+            stdout=module.subprocess.PIPE,
+            text=True,
+        ).stdout.strip()
+        paths = tuple(
+            path
+            for path, entry in entries.items()
+            if entry["profiles"] == ["project-test"]
+        )[:2]
+        self.assertEqual(2, len(paths))
+        repeated_profile_entries = {
+            path: {
+                **entries[path],
+                "current_sha256": module._sha256_bytes(
+                    (REPO_ROOT / path).read_bytes()
+                ),
+            }
+            for path in paths
+        }
+
+        with (
+            mock.patch.object(
+                module,
+                "load_workflow_migration_manifest",
+                return_value=(manifest, repeated_profile_entries),
+            ),
+            mock.patch.dict(
+                module.os.environ,
+                {"KFM_MIGRATION_HEAD": migration_head},
+            ),
+            mock.patch.object(module, "validate_lockfile") as validate_lockfile,
+            mock.patch.object(module, "_validate_local_specs") as validate_local_specs,
+        ):
+            module.verify_workflow_receipts()
+
+        validate_lockfile.assert_called_once()
+        validate_local_specs.assert_called_once_with(module.PROFILES["project-test"])
+
+    def test_migration_validation_reads_exact_commits_in_two_batches(self) -> None:
+        manifest, entries = module.load_workflow_migration_manifest(REPO_ROOT)
+        migration_head = module.subprocess.run(
+            ("git", "rev-parse", "HEAD"),
+            check=True,
+            cwd=REPO_ROOT,
+            stdout=module.subprocess.PIPE,
+            text=True,
+        ).stdout.strip()
+        paths = tuple(entries)[:2]
+        selected_entries = {path: entries[path] for path in paths}
+        base_workflows = {
+            path: module.subprocess.run(
+                ("git", "show", f'{manifest["base_commit"]}:{path}'),
+                check=True,
+                cwd=REPO_ROOT,
+                stdout=module.subprocess.PIPE,
+            ).stdout
+            for path in paths
+        }
+        head_workflows = {path: (REPO_ROOT / path).read_bytes() for path in paths}
+        selected_entries = {
+            path: {
+                **selected_entries[path],
+                "current_sha256": module._sha256_bytes(head_workflows[path]),
+            }
+            for path in paths
+        }
+        ambient_git_context = {
+            variable: f"unsafe-{variable.lower()}"
+            for variable in module.GIT_REPOSITORY_CONTEXT_VARIABLES
+        }
+
+        with (
+            mock.patch.object(
+                module,
+                "load_workflow_migration_manifest",
+                return_value=(manifest, selected_entries),
+            ),
+            mock.patch.dict(
+                module.os.environ,
+                {"KFM_MIGRATION_HEAD": migration_head, **ambient_git_context},
+            ),
+            mock.patch.object(
+                module.subprocess,
+                "run",
+                return_value=module.subprocess.CompletedProcess(
+                    args=("git", "merge-base"), returncode=0
+                ),
+            ) as git_run,
+            mock.patch.object(
+                module,
+                "_read_commit_workflows",
+                side_effect=(base_workflows, head_workflows),
+            ) as read_commit_workflows,
+            mock.patch.object(module, "profiles_for_workflow") as path_parser,
+        ):
+            module.verify_workflow_receipts()
+
+        self.assertEqual(
+            [
+                mock.call(manifest["base_commit"], paths),
+                mock.call(migration_head, paths),
+            ],
+            read_commit_workflows.call_args_list,
+        )
+        path_parser.assert_not_called()
+        self.assertEqual(
+            (
+                "git",
+                "merge-base",
+                "--is-ancestor",
+                manifest["base_commit"],
+                migration_head,
+            ),
+            git_run.call_args.args[0],
+        )
+        self.assertTrue(
+            set(module.GIT_REPOSITORY_CONTEXT_VARIABLES).isdisjoint(
+                git_run.call_args.kwargs["env"]
+            )
+        )
+        self.assertEqual(
+            "1", git_run.call_args.kwargs["env"]["GIT_NO_REPLACE_OBJECTS"]
+        )
+        self.assertEqual(
+            module.GIT_OPERATION_TIMEOUT_SECONDS,
+            git_run.call_args.kwargs["timeout"],
+        )
+
+    def test_migration_ancestry_failures_are_stable_and_bounded(self) -> None:
+        cases = (
+            (
+                module.subprocess.CalledProcessError(1, ("git", "merge-base")),
+                "MIGRATION_ANCESTRY_INVALID",
+            ),
+            (
+                module.subprocess.TimeoutExpired(("git", "merge-base"), 30),
+                "MIGRATION_GIT_READ_FAILED",
+            ),
+            (OSError("git unavailable"), "MIGRATION_GIT_READ_FAILED"),
+        )
+        for error, expected in cases:
+            with (
+                self.subTest(error=type(error).__name__),
+                mock.patch.object(module.subprocess, "run", side_effect=error) as run,
+                self.assertRaisesRegex(module.InstallConfigurationError, expected),
+            ):
+                module._require_migration_ancestry("1" * 40, "2" * 40)
+            self.assertEqual(
+                module.GIT_OPERATION_TIMEOUT_SECONDS,
+                run.call_args.kwargs["timeout"],
+            )
+
+    def test_commit_workflow_batch_reader_preserves_blob_boundaries(self) -> None:
+        paths = (".github/workflows/a.yml", ".github/workflows/b.yaml")
+        blobs = (b"name: a\n\n", b"name: b\nrun: value")
+        output = b"".join(
+            b"0" * 40
+            + b" blob "
+            + str(len(blob)).encode("ascii")
+            + b"\n"
+            + blob
+            + b"\n"
+            for blob in blobs
+        )
+        completed = module.subprocess.CompletedProcess(
+            args=("git", "cat-file", "--batch"), returncode=0, stdout=output
+        )
+
+        ambient_git_context = {
+            variable: f"unsafe-{variable.lower()}"
+            for variable in module.GIT_REPOSITORY_CONTEXT_VARIABLES
+        }
+        with (
+            mock.patch.dict(os.environ, ambient_git_context),
+            mock.patch.object(
+                module.subprocess, "run", return_value=completed
+            ) as run,
+        ):
+            self.assertEqual(
+                dict(zip(paths, blobs, strict=True)),
+                module._read_commit_workflows("1" * 40, paths),
+            )
+
+        self.assertEqual(
+            (
+                "1" * 40
+                + ":"
+                + paths[0]
+                + "\n"
+                + "1" * 40
+                + ":"
+                + paths[1]
+                + "\n"
+            ).encode("ascii"),
+            run.call_args.kwargs["input"],
+        )
+        self.assertEqual(
+            module.GIT_OPERATION_TIMEOUT_SECONDS,
+            run.call_args.kwargs["timeout"],
+        )
+        self.assertTrue(
+            set(module.GIT_REPOSITORY_CONTEXT_VARIABLES).isdisjoint(
+                run.call_args.kwargs["env"]
+            )
+        )
+        self.assertEqual(
+            "1", run.call_args.kwargs["env"]["GIT_NO_REPLACE_OBJECTS"]
+        )
+
+    def test_commit_workflow_batch_reader_rejects_missing_blob(self) -> None:
+        completed = module.subprocess.CompletedProcess(
+            args=("git", "cat-file", "--batch"),
+            returncode=0,
+            stdout=b"1" * 40 + b":.github/workflows/missing.yml missing\n",
+        )
+        with (
+            mock.patch.object(module.subprocess, "run", return_value=completed),
+            self.assertRaisesRegex(
+                module.InstallConfigurationError,
+                "MIGRATION_GIT_OUTPUT_INVALID",
+            ),
+        ):
+            module._read_commit_workflows(
+                "1" * 40, (".github/workflows/missing.yml",)
+            )
+
     def test_lock_validation_rejects_unhashed_and_remote_sources(self) -> None:
         remote = (
             "thing @ https://example.invalid/thing.whl "
@@ -128,6 +397,127 @@ class InstallPythonCiTests(unittest.TestCase):
         self.assertEqual(1, counts["audit-tool"])
         self.assertEqual(1, counts["all-local-test"])
         self.assertEqual(2, counts["geoparquet-pyarrow-25"])
+
+    def test_workflow_profile_parser_accepts_logging_pipeline(self) -> None:
+        with tempfile.TemporaryDirectory(
+            prefix=".install-python-profile-",
+            dir=REPO_ROOT / ".github/workflows",
+        ) as directory:
+            workflow = Path(directory) / "profile.yml"
+            workflow.write_text(
+                "python tools/ci/install_python_ci.py project-test "
+                '2>&1 | tee "$RUNNER_TEMP/python-bootstrap.log"\n',
+                encoding="utf-8",
+            )
+
+            self.assertEqual(
+                frozenset({"project-test"}),
+                module.profiles_for_workflow(workflow),
+            )
+
+    def test_workflow_profile_parser_requires_executable_command_position(self) -> None:
+        with tempfile.TemporaryDirectory(
+            prefix=".install-python-profile-",
+            dir=REPO_ROOT / ".github/workflows",
+        ) as directory:
+            workflow = Path(directory) / "profile.yml"
+            for prefix in ("", "run: ", "- run: "):
+                with self.subTest(prefix=prefix):
+                    workflow.write_text(
+                        f"{prefix}python tools/ci/install_python_ci.py project-test\n",
+                        encoding="utf-8",
+                    )
+                    self.assertEqual(
+                        frozenset({"project-test"}),
+                        module.profiles_for_workflow(workflow),
+                    )
+
+            workflow.write_text(
+                "# python tools/ci/install_python_ci.py project-test\n",
+                encoding="utf-8",
+            )
+            self.assertEqual(frozenset(), module.profiles_for_workflow(workflow))
+
+            for prefix in ('run: echo "', "timeout 30 "):
+                with self.subTest(rejected_prefix=prefix):
+                    workflow.write_text(
+                        f"{prefix}python tools/ci/install_python_ci.py project-test\n",
+                        encoding="utf-8",
+                    )
+                    with self.assertRaisesRegex(
+                        module.InstallConfigurationError,
+                        "WORKFLOW_PROFILE_INVOCATION_INVALID",
+                    ):
+                        module.profiles_for_workflow(workflow)
+
+    def test_workflow_profile_parser_rejects_unsupported_trailing_tokens(self) -> None:
+        with tempfile.TemporaryDirectory(
+            prefix=".install-python-profile-",
+            dir=REPO_ROOT / ".github/workflows",
+        ) as directory:
+            workflow = Path(directory) / "profile.yml"
+            for invocation in (
+                "project-test typo",
+                "project-test audit-tool",
+                "project-test 2>&1",
+                'project-test 2>&1 | tee "$RUNNER_TEMP/python-bootstrap.log" trailing',
+                'project-test | tee "$RUNNER_TEMP/python-bootstrap.log"',
+            ):
+                with self.subTest(invocation=invocation):
+                    workflow.write_text(
+                        f"python tools/ci/install_python_ci.py {invocation}\n",
+                        encoding="utf-8",
+                    )
+                    with self.assertRaisesRegex(
+                        module.InstallConfigurationError,
+                        "PROFILE_UNKNOWN",
+                    ):
+                        module.profiles_for_workflow(workflow)
+
+    def test_workflow_profile_parser_rejects_noncanonical_logging_paths(self) -> None:
+        with tempfile.TemporaryDirectory(
+            prefix=".install-python-profile-",
+            dir=REPO_ROOT / ".github/workflows",
+        ) as directory:
+            workflow = Path(directory) / "profile.yml"
+            for log_path in (
+                "../workspace-file",
+                "nested/../../workspace-file",
+                "./python-bootstrap.log",
+                "nested/./python-bootstrap.log",
+                "/absolute-looking.log",
+                "nested//python-bootstrap.log",
+                "nested/",
+            ):
+                with self.subTest(log_path=log_path):
+                    workflow.write_text(
+                        "python tools/ci/install_python_ci.py project-test "
+                        f'2>&1 | tee "$RUNNER_TEMP/{log_path}"\n',
+                        encoding="utf-8",
+                    )
+                    with self.assertRaisesRegex(
+                        module.InstallConfigurationError,
+                        "PROFILE_UNKNOWN",
+                    ):
+                        module.profiles_for_workflow(workflow)
+
+    def test_workflow_profile_parser_rejects_unknown_pipelined_profile(self) -> None:
+        with tempfile.TemporaryDirectory(
+            prefix=".install-python-profile-",
+            dir=REPO_ROOT / ".github/workflows",
+        ) as directory:
+            workflow = Path(directory) / "profile.yml"
+            workflow.write_text(
+                "python tools/ci/install_python_ci.py project-tests "
+                '2>&1 | tee "$RUNNER_TEMP/python-bootstrap.log"\n',
+                encoding="utf-8",
+            )
+
+            with self.assertRaisesRegex(
+                module.InstallConfigurationError,
+                "PROFILE_UNKNOWN",
+            ):
+                module.profiles_for_workflow(workflow)
 
 
 if __name__ == "__main__":
