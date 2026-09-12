@@ -8,6 +8,8 @@ owner: OWNER_TBD — governance steward and repository-control steward
 created: 2026-09-03
 updated: 2026-09-03
 policy_label: repository-facing; governance; fail-closed; non-authoritative
+owning_root: docs/
+responsibility: "Bind the repository transition control-source identity, bounded capture posture, exact authorization boundary, and rollback limits without creating merge, release, deployment, promotion, or publication authority."
 truth_posture: CONFIRMED current-main #4237 active two-validator workflow / IMPLEMENTED candidate bounded capture / PROPOSED required-check packet
 related:
   - ../../contracts/governance/repository_control_state.md
