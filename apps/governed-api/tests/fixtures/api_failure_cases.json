@@ -7,5 +7,6 @@
   {"kind":"dependency_unavailable","correlation_id":"fixture-dependency-001","outcome":"ERROR","reason_code":"DEPENDENCY_UNAVAILABLE","transport_status":503},
   {"kind":"timeout","correlation_id":"fixture-timeout-001","outcome":"ERROR","reason_code":"REQUEST_TIMEOUT","transport_status":500},
   {"kind":"cancellation","correlation_id":"fixture-cancelled-001","outcome":"ABSTAIN","reason_code":"REQUEST_CANCELLED","transport_status":422},
+  {"kind":"invalid_response","correlation_id":"fixture-invalid-001","outcome":"ERROR","reason_code":"INVALID_RESPONSE","transport_status":500},
   {"kind":"internal_defect","correlation_id":"fixture-internal-001","outcome":"ERROR","reason_code":"SAFE_RUNTIME_ERROR","transport_status":500}
 ]

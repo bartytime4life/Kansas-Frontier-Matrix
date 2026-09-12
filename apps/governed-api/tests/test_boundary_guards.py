@@ -18,11 +18,12 @@ SCHEMA_PATH = (
 )
 
 
-def _call_app(path: str, method: str = "GET"):
+def _call_app(path: str, method: str = "GET", **environ_updates):
     environ = {}
     setup_testing_defaults(environ)
     environ["REQUEST_METHOD"] = method
     environ["PATH_INFO"] = path
+    environ.update(environ_updates)
 
     status_holder = {}
 
@@ -43,6 +44,7 @@ def _assert_safe_error_envelope(payload: dict, expected_id: str) -> None:
     assert payload["version"] == "v1-stub"
     assert payload["outcome"] == "ERROR"
     assert payload["reason_code"] == "SAFE_RUNTIME_ERROR"
+    assert_jsonschema_subset(payload, json.loads(SCHEMA_PATH.read_text(encoding="utf-8")))
     assert payload["evidence_refs"] == []
     assert payload["policy_state"] == "unknown_fail_closed"
     assert payload["freshness"] == "unknown_fail_closed"
@@ -115,3 +117,36 @@ def test_no_internal_data_store_path_literals_in_api_code() -> None:
         text = py_file.read_text(encoding="utf-8")
         for marker in FORBIDDEN_INTERNAL_STORE_PATHS:
             assert marker not in text, f"Forbidden internal-store reference in {py_file}: {marker}"
+
+
+def test_registered_route_exception_returns_safe_correlated_error(monkeypatch) -> None:
+    def raises_secret() -> dict:
+        raise RuntimeError("/private/store token=never-reflect")
+
+    monkeypatch.setitem(ROUTES, "/evidence", raises_secret)
+    status, payload = _call_app(
+        "/evidence",
+        **{"kfm.correlation_id": "fixture-wsgi-001"},
+    )
+
+    assert status == "500 Internal Server Error"
+    assert payload["id"] == "fixture:failure:internal_defect:fixture-wsgi-001"
+    assert payload["outcome"] == "ERROR"
+    assert payload["reason_code"] == "SAFE_RUNTIME_ERROR"
+    assert "/private/store" not in json.dumps(payload)
+    assert "never-reflect" not in json.dumps(payload)
+
+
+def test_registered_route_invalid_response_fails_closed(monkeypatch) -> None:
+    monkeypatch.setitem(ROUTES, "/evidence", lambda: {"outcome": "ANSWER", "payload": "unsupported"})
+    status, payload = _call_app(
+        "/evidence",
+        **{"kfm.correlation_id": "fixture-invalid-wsgi-001"},
+    )
+
+    assert status == "500 Internal Server Error"
+    assert payload["id"] == "fixture:failure:invalid_response:fixture-invalid-wsgi-001"
+    assert payload["outcome"] == "ERROR"
+    assert payload["reason_code"] == "INVALID_RESPONSE"
+    assert "payload" not in payload
+    assert_jsonschema_subset(payload, json.loads(SCHEMA_PATH.read_text(encoding="utf-8")))

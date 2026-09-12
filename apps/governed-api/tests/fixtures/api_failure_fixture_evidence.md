@@ -7,8 +7,8 @@ public error-code registry.
 
 | Evidence class | Status |
 |---|---|
-| Introduced | Nine-case fixture profile, pure translator, schema/determinism/no-leak tests |
-| Inherited | WSGI 404/405 scaffold, closed envelope schema, coarse SAFE_RUNTIME_ERROR |
+| Introduced | Ten-case fixture profile; sync/async operation adapter; WSGI handler guard; schema, determinism, invalid-response, timeout, cancellation, and no-leak tests |
+| Inherited | WSGI 404/405 scaffold, closed envelope schema, Explorer root error boundary and retry/reset action |
 | Skipped | Live endpoint, provider/dependency calls, telemetry, deployment, human acceptance |
 | Not run | Hosted CI, APIsec, browser acceptance, production health, release checks |
 
@@ -18,3 +18,10 @@ Unsafe correlation input is replaced with unavailable; exception text, paths,
 stack traces, secrets, and payloads are not included. The fixture
 transport_status field is comparison metadata only and does not activate the
 inactive HTTP binding profile.
+
+The WSGI scaffold now accepts only its closed non-`ANSWER` envelope shape from
+registered handlers. A synchronous exception or invalid handler return becomes
+`500 Internal Server Error` with a safe `ERROR` envelope. The offline operation
+adapter also proves rejected async work, timeout, and cancellation mapping. It
+does not add a route, dependency call, telemetry sink, or production health
+claim.
