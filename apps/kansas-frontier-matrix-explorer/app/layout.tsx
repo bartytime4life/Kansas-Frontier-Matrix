@@ -5,6 +5,7 @@ import "./transformation.css";
 import "../../../packages/ui/src/layer-library.css";
 import "./site-layer-library.css";
 import OperationalSpine from "./operational-spine";
+import SiteRuntimeRepair from "./site-runtime-repair-client";
 
 const fallbackBase = new URL("https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site");
 
@@ -53,6 +54,7 @@ export default function RootLayout({
     <html lang="en">
       <body className="antialiased">
         <OperationalSpine />
+        <SiteRuntimeRepair />
         {children}
       </body>
     </html>
