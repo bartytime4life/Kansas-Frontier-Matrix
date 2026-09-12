@@ -1,7 +1,5 @@
 import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
-import { readFileSync, writeFileSync } from "node:fs";
-import { resolve } from "node:path";
 import { expect, test } from "playwright/test";
 
 const FIXTURE = {
@@ -152,7 +150,6 @@ test("records one bounded WebGL2 capability and teardown probe", async ({
 
   const receiptBody = JSON.stringify(receipt, null, 2);
   const receiptPath = testInfo.outputPath("maplibre-webgl-probe.receipt.json");
-  writeFileSync(receiptPath, receiptBody, "utf8");
   await testInfo.attach("maplibre-webgl-probe.receipt.json", {
     path: receiptPath,
     contentType: "application/json",
