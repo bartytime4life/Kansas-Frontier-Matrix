@@ -147,10 +147,8 @@ jobs:
           ! grep -q 'KFM-TOPO-001' topology-containment-diagnostics.txt
           grep -F 'FAIL_NEW_DRIFT KFM-TOPO-004 subject=catalog/ fingerprint=sha256:0ad45247555960029c34d1222365cbe17a5cabec278bf9f6b8f3e9572ea33e8f' topology-containment-diagnostics.txt
           grep -F 'STALE_BASELINE KFM-TOPO-004 subject=catalog/ fingerprint=sha256:521388927153c91a67ca8cead55af9d688a6064517d109aa556cffca91505006' topology-containment-diagnostics.txt
-          grep -F 'new_warning_count=1' topology-containment-diagnostics.txt
-          grep -F 'stale_baseline_count=1' topology-containment-diagnostics.txt
-          grep -F 'invariant_failure_count=0' topology-containment-diagnostics.txt
-          grep -F 'baseline_mismatch_count=0' topology-containment-diagnostics.txt
+          grep -E '^FAIL_INVARIANT: [0-9]+ tracked paths; 0 invariant; 1 new drift; [0-9]+ baselined warnings; 1 stale baseline entries$' topology-containment-diagnostics.txt
+          grep -E '^TOPOLOGY_CONTEXT_END status=UNCHANGED .* validator_exit=1$' topology-containment-diagnostics.txt
 
       - name: Prove candidate changed only one baseline identity
         shell: bash
