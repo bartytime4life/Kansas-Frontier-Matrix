@@ -1,7 +1,7 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/governance/repository-transition-control-source
 title: Repository transition control-source binding
-type: governance binding and enforcement-candidate note
+type: governance-binding-enforcement-candidate-note
 version: v1.3.1
 status: current-main workflow-active advisory; candidate bounded-input hardening; required-status-check not installed
 owner: OWNER_TBD — governance steward and repository-control steward
