@@ -1,29 +1,25 @@
-import maplibregl from "maplibre-gl";
+import { createViteMapLibreAdapter } from "@kfm/maplibre/vite-adapter";
 
 const status = document.querySelector<HTMLElement>("#probe-status");
-const container = document.querySelector<HTMLElement>("#map");
-if (status === null || container === null) {
-  throw new Error("MapLibre WebGL probe controls are missing.");
+if (status === null) {
+  throw new Error("MapLibre WebGL probe status control is missing.");
 }
 
-document.body.dataset.maplibreVersion = maplibregl.getVersion?.() ?? "unknown";
 document.body.dataset.fixtureId = "kfm-maplibre-webgl-probe-v1";
-const map = new maplibregl.Map({
-  container,
-  style: { version: 8, sources: {}, layers: [] },
+const runtime = createViteMapLibreAdapter({
+  containerId: "map",
   interactive: false,
-  attributionControl: false,
+  style: { version: 8, sources: {}, layers: [] },
 });
 
-map.once("load", () => {
-  status.dataset.state = "READY";
-  status.textContent = "State READY";
+runtime.subscribeSnapshot((snapshot) => {
+  status.dataset.state = snapshot.state;
+  status.dataset.reason = snapshot.reason ?? "NONE";
+  status.textContent = `State ${snapshot.state}; reason ${snapshot.reason ?? "NONE"}`;
 });
 
-map.on("error", (event) => {
-  status.dataset.state = "ERROR";
-  status.dataset.reason = event.error?.message ?? "MAP_ERROR";
-  status.textContent = `State ERROR; reason ${status.dataset.reason}`;
+void runtime.initialize().catch(() => {
+  // The status snapshot is the finite browser outcome.
 });
 
-window.addEventListener("pagehide", () => map.remove(), { once: true });
+window.addEventListener("pagehide", () => runtime.dispose(), { once: true });
