@@ -7,7 +7,7 @@ name: topology-diagnostics-artifact
       - agent/topology-diagnostics-20260912
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: topology-diagnostics-artifact-${{ github.ref }}
@@ -223,6 +223,68 @@ jobs:
           }, indent=2, sort_keys=True))
           PY
 
+      - name: Stage verified candidate as an unreferenced Git blob
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          python - <<'PY'
+          from __future__ import annotations
+
+          import base64
+          import hashlib
+          import json
+          import os
+          import urllib.request
+          from pathlib import Path
+
+          candidate_path = Path("repository_topology_baseline.candidate.json")
+          candidate = candidate_path.read_bytes()
+          git_blob_sha = hashlib.sha1(
+              b"blob " + str(len(candidate)).encode("ascii") + b"\0" + candidate
+          ).hexdigest()
+          candidate_sha256 = hashlib.sha256(candidate).hexdigest()
+          repository = os.environ["GITHUB_REPOSITORY"]
+          token = os.environ["GITHUB_TOKEN"]
+          payload = json.dumps({
+              "content": base64.b64encode(candidate).decode("ascii"),
+              "encoding": "base64",
+          }).encode("utf-8")
+          request = urllib.request.Request(
+              f"https://api.github.com/repos/{repository}/git/blobs",
+              data=payload,
+              method="POST",
+              headers={
+                  "Authorization": f"Bearer {token}",
+                  "Accept": "application/vnd.github+json",
+                  "X-GitHub-Api-Version": "2022-11-28",
+                  "Content-Type": "application/json",
+                  "User-Agent": "kfm-topology-candidate-stager",
+              },
+          )
+          with urllib.request.urlopen(request, timeout=30) as response:
+              result = json.loads(response.read().decode("utf-8"))
+          returned_sha = result.get("sha")
+          if returned_sha != git_blob_sha:
+              raise RuntimeError(
+                  f"staged blob mismatch: expected {git_blob_sha}, returned {returned_sha}"
+              )
+          receipt = {
+              "version": "kfm.unreferenced-git-blob.v1",
+              "repository": repository,
+              "candidate_size_bytes": len(candidate),
+              "candidate_sha256": f"sha256:{candidate_sha256}",
+              "git_blob_sha": returned_sha,
+              "ref_mutated": False,
+              "commit_created": False,
+          }
+          Path("topology-candidate-blob.json").write_text(
+              json.dumps(receipt, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          print(json.dumps(receipt, indent=2, sort_keys=True))
+          PY
+
       - name: Upload bounded candidate and receipt
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
@@ -233,5 +295,6 @@ jobs:
             topology-containment-receipt.json
             topology-containment-diagnostics.txt
             topology-baseline.patch
+            topology-candidate-blob.json
           if-no-files-found: error
           retention-days: 1
