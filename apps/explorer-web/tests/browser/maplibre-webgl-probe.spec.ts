@@ -1,5 +1,7 @@
 import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { expect, test } from "playwright/test";
 
 const FIXTURE = {
@@ -11,9 +13,7 @@ const FIXTURE = {
 } as const;
 
 const sha256 = (value: unknown) =>
-  createHash("sha256")
-    .update(JSON.stringify(value))
-    .digest("hex");
+  createHash("sha256").update(JSON.stringify(value)).digest("hex");
 
 const toolVersion = (command: string): string => {
   try {
@@ -23,14 +23,28 @@ const toolVersion = (command: string): string => {
   }
 };
 
+const lockedMapLibreVersion = (): string => {
+  const lockfile = readFileSync(
+    resolve(process.cwd(), "../../pnpm-lock.yaml"),
+    "utf8",
+  );
+  const match = lockfile.match(
+    /packages\/maplibre:\n(?:.|\n)*?\n\s+maplibre-gl:\n\s+specifier: ([^\n]+)/,
+  );
+  return match?.[1]?.trim() ?? "LOCKFILE_VERSION_UNAVAILABLE";
+};
+
 test("records one bounded WebGL2 capability and teardown probe", async ({
   page,
 }, testInfo) => {
   const externalRequests: string[] = [];
   page.on("request", (request) => {
     const url = new URL(request.url());
-    if (url.protocol === "http:" || url.protocol === "https:") {
-      if (url.hostname !== "127.0.0.1") externalRequests.push(url.href);
+    if (
+      (url.protocol === "http:" || url.protocol === "https:") &&
+      url.hostname !== "127.0.0.1"
+    ) {
+      externalRequests.push(url.href);
     }
   });
 
@@ -54,7 +68,6 @@ test("records one bounded WebGL2 capability and teardown probe", async ({
     };
     return {
       fixture_id: document.body.dataset.fixtureId ?? "MISSING",
-      maplibre_version: document.body.dataset.maplibreVersion ?? "MISSING",
       canvas: canvas
         ? { width: canvas.width, height: canvas.height }
         : null,
@@ -78,29 +91,32 @@ test("records one bounded WebGL2 capability and teardown probe", async ({
     const canvas = document.querySelector("#map canvas");
     const before = Boolean(canvas);
     window.dispatchEvent(new Event("pagehide"));
-    return { canvas_before_teardown: before };
+    return {
+      canvas_before_teardown: before,
+      canvas_after_teardown: Boolean(document.querySelector("#map canvas")),
+    };
   });
 
   const receipt = {
     schema_version: "kfm.maplibre.browser-probe.v1",
     outcome:
-      evidence.webgl2.available && externalRequests.length === 0
+      evidence.webgl2.available &&
+      externalRequests.length === 0 &&
+      teardown.canvas_after_teardown === false
         ? "PASS"
         : "FAIL",
     probe: "webgl2_failure_handling",
     source_commit: process.env.GITHUB_SHA ?? "LOCAL_UNPINNED",
     candidate: {
       package: "maplibre-gl",
-      observed_version: evidence.maplibre_version,
+      resolved_lockfile_version: lockedMapLibreVersion(),
       comparison_target: "6.9.0-canary-not-present-on-current-main",
       dependency_admission_changed: false,
     },
     browser: {
       project: testInfo.project.name,
       engine: "Chromium",
-      playwright: toolVersion("pnpm").includes("UNAVAILABLE")
-        ? "UNAVAILABLE"
-        : "package-pinned-by-workspace",
+      playwright: toolVersion("pnpm"),
       node: process.version,
       pnpm: toolVersion("pnpm"),
     },
@@ -131,4 +147,5 @@ test("records one bounded WebGL2 capability and teardown probe", async ({
   expect(evidence.webgl2.available).toBe(true);
   expect(externalRequests).toEqual([]);
   expect(teardown.canvas_before_teardown).toBe(true);
+  expect(teardown.canvas_after_teardown).toBe(false);
 });
