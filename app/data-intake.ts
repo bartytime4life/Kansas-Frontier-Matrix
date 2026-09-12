@@ -1,11 +1,13 @@
 import { OFFICIAL_CONTEXT_SOURCES } from "./live-context";
+import { SCIENCE_EVENTS } from "./science-events";
 
 export const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
 export const UPLOAD_EXTENSIONS = ["csv", "json", "geojson", "kml", "kmz", "zip", "gpkg", "tif", "tiff", "nc", "pdf", "txt", "xml", "xlsx"];
 export const REVIEW_STATES = ["submitted", "under_review", "changes_requested", "accepted", "rejected"] as const;
 export type ReviewState = typeof REVIEW_STATES[number];
 export const REVIEW_LABELS: Record<ReviewState, string> = { submitted: "Submitted", under_review: "In review", changes_requested: "Changes requested", accepted: "Accepted for preparation", rejected: "Declined" };
-export const DATA_SOURCES = [{ id: "general", title: "General KFM proposal" }, ...OFFICIAL_CONTEXT_SOURCES.map((s) => ({ id: s.id, title: s.shortTitle })), { id: "noaa-daily-weather", title: "NOAA daily weather history" }, { id: "geology", title: "Kansas mapped geology" }, { id: "flora-fauna", title: "Flora / fauna records" }, { id: "history", title: "County and historical records" }];
+const dataSourceChoices = [{ id: "general", title: "General KFM proposal" }, ...OFFICIAL_CONTEXT_SOURCES.map((s) => ({ id: s.id, title: s.shortTitle })), { id: "noaa-daily-weather", title: "NOAA daily weather history" }, { id: "noaa-storm-events", title: "NOAA storm-event archive" }, { id: "historical-networks", title: "Historical cities, roads and routes" }, { id: "flora-fauna", title: "Flora / fauna records" }, ...SCIENCE_EVENTS.map((event) => ({ id: event.id, title: `Science · ${event.title}` }))];
+export const DATA_SOURCES = [...new Map(dataSourceChoices.map((source) => [source.id, source])).values()];
 export type SubmissionFields = { title: string; sourceId: string; sourceUrl: string; description: string; license: string; sensitivity: string; startDate: string; endDate: string };
 export type Submission = SubmissionFields & { id: string; ownerName: string; fileName: string; fileBytes: number; fileSha256: string; status: ReviewState; version: number; createdAt: string; updatedAt: string };
 export type Review = { id: string; reviewerName: string; previousStatus: ReviewState; status: ReviewState; note: string; version: number; createdAt: string };

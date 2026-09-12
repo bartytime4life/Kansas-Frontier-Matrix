@@ -7,6 +7,7 @@ import { browserRenderBudget, updateGeoJSON } from "../map-performance";
 import { DataNotices } from "../map-toolbar";
 import type { Map as GLMap, GeoJSONSource } from "maplibre-gl";
 import { BASEMAPS } from "../map-runtime";
+import { SCIENCE_EVENTS, SCIENCE_SUPPORT_LABELS, scienceMeasurement, scienceProbeGeoJSON, type ScienceTrackId } from "../science-events";
 import {
   EVENT_BOUNDS,
   EVENT_EARLIEST_DAY,
@@ -30,10 +31,11 @@ type Track = { id: TrackId; name: string; axis: string; detail: string; color: s
 type ArchiveDayStatus = "checking" | "available" | "partial" | "empty" | "failed";
 type ArchiveDayLedger = Readonly<{ status: ArchiveDayStatus; supportedHours: readonly number[]; message?: string }>;
 type CalendarCellState = "supported" | "gap" | "checking" | "failed" | "unqueried" | "future";
+type TimelineLane = Readonly<{ name: string; color: string; kind: "interval" | "event" | "pinned"; detail: string; intervals: readonly (readonly [string, string])[] }>;
 const TRACKS: Track[] = [
   { id: "earthquakes", name: "USGS earthquake history", axis: "Catalog event time", color: "#f2a58f", source: "https://earthquake.usgs.gov/fdsnws/event/1/", detail: "Actual USGS earthquake catalog events within the selected day. Points appear at their event time and remain for the loaded interval. Catalog completeness varies over time; no returned event is not proof of no earthquake." },
   { id: "shake", name: "Raspberry Shake stations", axis: "Station operating epoch", color: "#ec99cf", source: "https://manual.raspberryshake.org/fdsn.html", detail: "AM network station metadata for the selected day, including closed stations where their operating epoch overlaps. This is a real station connection; waveform traces remain on the provider's service. FDSN waveform delivery is delayed at least 30 minutes and is not an earthquake catalog." },
-  { id: "weather", name: "NOAA daily weather history", axis: "Daily station summary", color: "#f1cc78", source: "https://www.ncei.noaa.gov/products/land-based-station/global-historical-climatology-network-daily", detail: "NOAA GHCN daily station records: maximum/minimum temperature and precipitation. Includes historical cooperative stations and airports. Daily summaries stay pinned to their date throughout the 24-hour sweep and do not create hourly observations." },
+  { id: "weather", name: "NOAA daily weather history", axis: "Daily station summary", color: "#f1cc78", source: "https://www.ncei.noaa.gov/products/land-based-station/global-historical-climatology-network-daily", detail: "NOAA GHCN daily station records: maximum/minimum temperature, precipitation, snowfall and snow depth. Includes historical cooperative stations and airports. Daily summaries stay pinned to their date throughout the 24-hour sweep and do not create hourly observations." },
   { id: "counties", name: "County baseline", axis: "Independent Census edition", color: "#8ed9d0", source: "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb", detail: "All 105 Kansas counties: Census geometry, population, housing units, and land/water area for the selected 2010 or 2020 edition. Click a county to inspect its baseline. The edition remains independent of the event date; it is not an 1800s boundary reconstruction." },
   { id: "radar", name: "Radar reflectivity", axis: "5-minute mosaic validity", color: "#72ddc0", source: "https://mesonet.agron.iastate.edu/docs/nexrad_composites/", detail: "NOAA/NWS → Iowa State IEM. Mosaic slots, not simultaneous scans; inputs may be 15 minutes old. Blank can mean no echo or missing coverage." },
   { id: "smoke", name: "Smoke footprint", axis: "Satellite-analysis interval", color: "#e7b783", source: "https://www.ospo.noaa.gov/products/land/hms.html", detail: "NOAA HMS polygon Start ≤ cursor < End. Light / medium / heavy / unknown column density. Not surface PM2.5, altitude, or wind-driven transport." },
@@ -59,6 +61,7 @@ const monthFormatter = new Intl.DateTimeFormat("en-US", { timeZone: "UTC", month
 const calendarDayLabel = (day: string) => dayFormatter.format(new Date(`${day}T00:00:00.000Z`));
 const calendarMonthLabel = (day: string) => monthFormatter.format(new Date(`${day}T00:00:00.000Z`));
 const hourLabel = (hour: number) => `${String(hour).padStart(2, "0")}:00`;
+const compassPoint = (bearing: number) => ["N", "NE", "E", "SE", "S", "SW", "W", "NW"][Math.round(bearing / 45) % 8];
 
 function addRaster(map: GLMap, id: string, tiles: string, maxzoom: number, attribution: string, opacity = 1, tileSize = 256) {
   map.addSource(id, { type: "raster", tiles: [tiles], tileSize, maxzoom, bounds: [...EVENT_BOUNDS], attribution });
@@ -76,6 +79,7 @@ export default function EventObservatory() {
   const generation = useRef(0), requestRef = useRef<AbortController | null>(null), frameRequest = useRef<AbortController | null>(null);
   const urls = useRef(new Map<string, string>()), frameGeneration = useRef(0);
   const radarSourceTime = useRef<string | null>(null), sourceFailures = useRef(new Set<string>());
+  const scienceProbeActiveRef = useRef(false);
   const [geologyLegend, setGeologyLegend] = useState<{ label: string; image: string }[]>([]);
   const [mapReady, setMapReady] = useState(false), [mapMessage, setMapMessage] = useState("Opening the Kansas map…");
   const [start, setStart] = useState(currentDayStart), [hours, setHours] = useState(24), [station, setStation] = useState("USGS-06889000");
@@ -96,12 +100,23 @@ export default function EventObservatory() {
   const [loadedRiverResolution, setLoadedRiverResolution] = useState<"continuous" | "daily">("continuous");
   const [riverCoverage, setRiverCoverage] = useState<RiverCoverage | null>(null), [coverageMessage, setCoverageMessage] = useState("");
   const [layersOpen, setLayersOpen] = useState(false), [detailsOpen, setDetailsOpen] = useState(false);
-  const [calendarOpen, setCalendarOpen] = useState(false), [chartsOpen, setChartsOpen] = useState(false);
+  const [calendarOpen, setCalendarOpen] = useState(false), [chartsOpen, setChartsOpen] = useState(false), [scienceOpen, setScienceOpen] = useState(false);
+  const [scienceFilter, setScienceFilter] = useState<"all" | "connected" | "archives" | "method">("all");
+  const [scienceProbeActive, setScienceProbeActive] = useState(false), [scienceProbePoints, setScienceProbePoints] = useState<readonly [number, number][]>([]);
   const [resourceEdition, setResourceEdition] = useState("1984"), [resourceData, setResourceData] = useState<GeoJSON.FeatureCollection | null>(null), [resourceMessage, setResourceMessage] = useState("Not loaded");
   const [calendarAnchor, setCalendarAnchor] = useState(currentUtcDay);
   const [calendarLedger, setCalendarLedger] = useState<Record<string, ArchiveDayLedger>>({});
   const [calendarNow, setCalendarNow] = useState(() => Date.now());
-  const frames = useMemo(() => manifest ? eventFrames(manifest, loadedRiverResolution === "daily" ? [] : river?.observations) : [], [manifest, river, loadedRiverResolution]);
+  const frames = useMemo(() => {
+    if (!manifest) return [];
+    const earthquakeTimes = contextData.earthquakes?.date === manifest.start.slice(0, 10)
+      ? contextData.earthquakes.data.features.flatMap((feature) => {
+          const time = String(feature.properties?.observedAt ?? "");
+          return Number.isFinite(Date.parse(time)) && time >= manifest.start && time < manifest.end ? [time] : [];
+        })
+      : [];
+    return [...new Set([...eventFrames(manifest, loadedRiverResolution === "daily" ? [] : river?.observations), ...earthquakeTimes])].sort();
+  }, [contextData.earthquakes, loadedRiverResolution, manifest, river]);
   const requested = cursor ?? frames[index] ?? null;
   const activeRadar = manifest && committed ? radarAt(manifest.radar.scans, committed) : null;
   const activeSmoke = useMemo(() => manifest && committed ? smokeAt(manifest.smoke.data, committed) : EMPTY, [manifest, committed]);
@@ -110,11 +125,42 @@ export default function EventObservatory() {
   const series = useMemo(() => manifest ? river?.observations.filter((o) => o.observedAt >= manifest.start && o.observedAt < manifest.end) ?? [] : [], [river, manifest]);
   const graph = useMemo(() => buildHydrographSegments(series, { width: 520, height: 100, padding: 7, gapMinutes: 30 }), [series]);
   const numbers = series.flatMap((o) => o.value === null ? [] : [o.value]);
+  const timelineLanes = useMemo<TimelineLane[]>(() => {
+    if (!manifest) return [];
+    const fullDay = [[manifest.start, manifest.end]] as const;
+    const day = manifest.start.slice(0, 10);
+    const recordIntervals = (id: ContextTrack, property: string) => contextData[id]?.date === (id === "counties" ? countyEdition : day)
+      ? contextData[id]!.data.features.flatMap((feature) => {
+          const value = String(feature.properties?.[property] ?? "");
+          return Number.isFinite(Date.parse(value)) ? [[value, value] as const] : [];
+        })
+      : [];
+    const hasContext = (id: ContextTrack) => contextData[id]?.date === (id === "counties" ? countyEdition : day) && contextData[id]!.data.features.length > 0;
+    return [
+      { name: "Radar", color: "#81dec0", kind: "interval", detail: "Exact five-minute mosaic slots", intervals: manifest.radar.scans.map((scan) => [scan.time, new Date(Date.parse(scan.time) + 300_000).toISOString()] as const) },
+      { name: "Smoke", color: "#dfb580", kind: "interval", detail: "NOAA HMS analysis intervals", intervals: manifest.smoke.data.features.map((feature) => [feature.properties.start, feature.properties.end] as const) },
+      { name: loadedRiverResolution === "daily" ? "River · daily" : "River", color: "#7edceb", kind: loadedRiverResolution === "daily" ? "pinned" : "interval", detail: loadedRiverResolution === "daily" ? "Daily mean pinned across its date" : "Exact samples held no more than 30 minutes", intervals: loadedRiverResolution === "daily" ? series.some((observation) => observation.value !== null) ? fullDay : [] : series.filter((observation) => observation.value !== null).map((observation) => [observation.observedAt, new Date(Date.parse(observation.observedAt) + 30 * 60_000).toISOString()] as const) },
+      ...(hasContext("earthquakes") ? [{ name: "Earthquakes", color: "#f2a58f", kind: "event" as const, detail: "Catalog origin-time ticks", intervals: recordIntervals("earthquakes", "observedAt") }] : []),
+      ...(hasContext("weather") ? [{ name: "Weather · daily", color: "#f1cc78", kind: "pinned" as const, detail: "Daily summaries pinned across the date; not hourly observations", intervals: fullDay }] : []),
+      ...(hasContext("shake") ? [{ name: "Shake stations", color: "#ec99cf", kind: "pinned" as const, detail: "Stations whose operating epochs overlap the date", intervals: fullDay }] : []),
+      ...(hasContext("counties") ? [{ name: `Counties · ${countyEdition}`, color: "#8ed9d0", kind: "pinned" as const, detail: "Independent Census edition", intervals: fullDay }] : []),
+      ...(visible.geology ? [{ name: "Geology · static", color: "#d6a9df", kind: "pinned" as const, detail: "Static mapped-geology context", intervals: fullDay }] : []),
+      ...(visible.flora ? [{ name: `Flora · ${day.slice(0, 4)}`, color: "#a9df75", kind: "pinned" as const, detail: "Annual occurrence aggregate", intervals: fullDay }] : []),
+      ...(visible.fauna ? [{ name: `Fauna · ${day.slice(0, 4)}`, color: "#d4b5fa", kind: "pinned" as const, detail: "Annual occurrence aggregate", intervals: fullDay }] : []),
+      ...(visible.resources && resourceData ? [{ name: `Resources · ${resourceEdition}`, color: "#e5c46b", kind: "pinned" as const, detail: "Topographic map-symbol edition", intervals: fullDay }] : []),
+      ...(baseDay ? [{ name: "Satellite · daily", color: "#a5d7cb", kind: "pinned" as const, detail: "Confirmed daily acquisition mosaic", intervals: fullDay }] : []),
+    ];
+  }, [baseDay, contextData, countyEdition, loadedRiverResolution, manifest, resourceData, resourceEdition, series, visible.fauna, visible.flora, visible.geology, visible.resources]);
   const chosen = TRACKS.find((track) => track.id === selectedTrack)!;
   const selectedCalendarDay = start.slice(0, 10);
   const calendarDays = useMemo(() => eventWeekDays(calendarAnchor), [calendarAnchor]);
   const calendarHours = useMemo(() => eventDayHours(selectedCalendarDay), [selectedCalendarDay]);
   const calendarToday = useMemo(() => new Date(calendarNow).toISOString().slice(0, 10), [calendarNow]);
+  const probeMeasurement = useMemo(() => scienceMeasurement(scienceProbePoints), [scienceProbePoints]);
+  const visibleScienceEvents = useMemo(() => SCIENCE_EVENTS.filter((event) => scienceFilter === "all"
+    || scienceFilter === "connected" && (event.support === "connected" || event.support === "mixed")
+    || scienceFilter === "archives" && (event.support === "download" || event.support === "steward")
+    || scienceFilter === "method" && (event.support === "derived" || event.support === "reference")), [scienceFilter]);
 
   const hideEventLayers = useCallback((all = true) => {
     const map = mapRef.current;
@@ -128,7 +174,7 @@ export default function EventObservatory() {
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
     const change = () => { setReduced(media.matches); setPlaying(false); }; change(); media.addEventListener("change", change);
     const stop = () => { if (document.hidden) setPlaying(false); };
-    const key = (event: KeyboardEvent) => { if (event.key === "Escape") { setPlaying(false); setLayersOpen(false); setCalendarOpen(false); setDetailsOpen(false); } };
+    const key = (event: KeyboardEvent) => { if (event.key === "Escape") { setPlaying(false); setLayersOpen(false); setCalendarOpen(false); setDetailsOpen(false); setScienceOpen(false); setScienceProbeActive(false); scienceProbeActiveRef.current = false; } };
     document.addEventListener("visibilitychange", stop); window.addEventListener("keydown", key);
     queueMicrotask(() => {
       if (disposed) return;
@@ -149,7 +195,14 @@ export default function EventObservatory() {
   }, []);
 
   useEffect(() => { if (eventDayHours(start.slice(0, 10)).length) setCalendarAnchor(start.slice(0, 10)); }, [start]);
-  useEffect(() => { const id = requestAnimationFrame(() => mapRef.current?.resize()); return () => cancelAnimationFrame(id); }, [layersOpen, detailsOpen, chartsOpen]);
+  useEffect(() => { const id = requestAnimationFrame(() => mapRef.current?.resize()); return () => cancelAnimationFrame(id); }, [layersOpen, detailsOpen, chartsOpen, scienceOpen]);
+  useEffect(() => {
+    scienceProbeActiveRef.current = scienceProbeActive;
+    const map = mapRef.current;
+    if (!map || !mapReady) return;
+    map.getCanvas().style.cursor = scienceProbeActive ? "crosshair" : "";
+    updateGeoJSON(map.getSource("ea-science-probe-data") as GeoJSONSource, scienceProbeGeoJSON(scienceProbePoints));
+  }, [mapReady, scienceProbeActive, scienceProbePoints]);
   useEffect(() => { const timer = window.setInterval(() => setCalendarNow(Date.now()), 60_000); return () => clearInterval(timer); }, []);
   useEffect(() => {
     opacityRef.current = opacity;
@@ -224,12 +277,21 @@ export default function EventObservatory() {
         for (const id of ["counties", "weather", "earthquakes", "shake"]) map.addSource(`ea-${id}-data`, { type: "geojson", data: EMPTY });
         map.addLayer({ id: "ea-counties", source: "ea-counties-data", type: "fill", layout: { visibility: "none" }, paint: { "fill-color": "#71a9a3", "fill-opacity": .25 } });
         map.addLayer({ id: "ea-county-lines", source: "ea-counties-data", type: "line", layout: { visibility: "none" }, paint: { "line-color": "#b9e9e0", "line-width": 1.3, "line-opacity": .6 } });
-        for (const id of ["weather", "earthquakes", "shake"] as const) map.addLayer({ id: `ea-${id}`, source: `ea-${id}-data`, type: "circle", layout: { visibility: "none" }, paint: { "circle-radius": id === "earthquakes" ? ["+", 4, ["*", 2, ["max", 0, ["coalesce", ["get", "magnitude"], 0]]]] : 7, "circle-color": TRACKS.find((track) => track.id === id)!.color, "circle-stroke-color": "#123336", "circle-stroke-width": 1.5 } });
+        for (const id of ["weather", "earthquakes", "shake"] as const) map.addLayer({ id: `ea-${id}`, source: `ea-${id}-data`, type: "circle", layout: { visibility: "none" }, paint: { "circle-radius": id === "earthquakes" ? ["+", 4, ["*", 2, ["max", 0, ["coalesce", ["get", "magnitude"], 0]]]] : 7, "circle-color": id === "weather" ? ["case", ["any", [">", ["coalesce", ["get", "snowfallInches"], 0], 0], [">", ["coalesce", ["get", "snowDepthInches"], 0], 0]], "#dff5ff", TRACKS.find((track) => track.id === id)!.color] : TRACKS.find((track) => track.id === id)!.color, "circle-stroke-color": "#123336", "circle-stroke-width": 1.5 } });
+        map.addSource("ea-science-probe-data", { type: "geojson", data: EMPTY });
+        map.addLayer({ id: "ea-science-probe-line", source: "ea-science-probe-data", type: "line", filter: ["==", ["get", "kind"], "line"], paint: { "line-color": "#fff0ae", "line-width": 3, "line-dasharray": [2, 1.5] } });
+        map.addLayer({ id: "ea-science-probe-points", source: "ea-science-probe-data", type: "circle", filter: ["==", ["get", "kind"], "vertex"], paint: { "circle-radius": 6, "circle-color": "#fff0ae", "circle-stroke-color": "#173237", "circle-stroke-width": 2 } });
         map.on("click", (event) => {
+          if (scienceProbeActiveRef.current) {
+            setPlaying(false);
+            const coordinate: [number, number] = [event.lngLat.lng, event.lngLat.lat];
+            setScienceProbePoints((current) => current.length >= 2 ? [coordinate] : [...current, coordinate]);
+            return;
+          }
           const features = map.queryRenderedFeatures(event.point, { layers: ["ea-weather", "ea-earthquakes", "ea-shake", "ea-counties", "ea-river"] });
           const feature = features[0]; if (!feature) return;
           const track = feature.layer.id.replace("ea-", "") as TrackId;
-          setInspectedFeature({ track, properties: feature.properties }); setSelectedTrack(track); setDetailsOpen(true); setLayersOpen(false); setPlaying(false);
+          setInspectedFeature({ track, properties: feature.properties }); setSelectedTrack(track); setDetailsOpen(true); setLayersOpen(false); setScienceOpen(false); setPlaying(false);
         });
         map.addLayer({ id: "ea-smoke-fill", source: "ea-smoke", type: "fill", layout: { visibility: "none" }, paint: { "fill-color": ["match", ["get", "density"], "Light", "#e5d9b1", "Medium", "#dca261", "Heavy", "#bd6242", "#a6acaf"], "fill-opacity": .45 } });
         map.addLayer({ id: "ea-smoke-edge", source: "ea-smoke", type: "line", layout: { visibility: "none" }, paint: { "line-color": "#f0c89b", "line-width": 1.2, "line-opacity": .7 } });
@@ -448,6 +510,8 @@ export default function EventObservatory() {
         if (type === "circle") map.setPaintProperty(layer, "circle-opacity", opacityRef.current[id] * (layer.endsWith("glow") ? .2 : 1));
         if (type === "circle") map.setPaintProperty(layer, "circle-stroke-opacity", opacityRef.current[id]);
       }
+      if (map.getLayer("ea-science-probe-line")) map.moveLayer("ea-science-probe-line");
+      if (map.getLayer("ea-science-probe-points")) map.moveLayer("ea-science-probe-points");
       setCommitted(requested); setBuffering(false);
       // Bounded look-ahead, never a latest-frame fallback. Keep at most 8
       // decoded URLs; no complete-archive prefetch or unbounded image queue.
@@ -546,6 +610,16 @@ export default function EventObservatory() {
   const nextCalendarAnchor = advanceEventDay(calendarAnchor, 7);
   const canMoveToPreviousWeek = Boolean(previousCalendarAnchor && eventWeekDays(previousCalendarAnchor).some((day) => day >= EVENT_EARLIEST_DAY));
   const canMoveToNextWeek = Boolean(nextCalendarAnchor && eventWeekDays(nextCalendarAnchor).some((day) => day <= calendarToday));
+  const beginScienceProbe = () => {
+    scienceProbeActiveRef.current = true;
+    setScienceProbeActive(true); setScienceOpen(false); setLayersOpen(false); setDetailsOpen(false); setCalendarOpen(false); setPlaying(false);
+  };
+  const finishScienceProbe = () => { scienceProbeActiveRef.current = false; setScienceProbeActive(false); };
+  const clearScienceProbe = () => { scienceProbeActiveRef.current = false; setScienceProbeActive(false); setScienceProbePoints([]); };
+  const openScienceTrack = (id: ScienceTrackId) => {
+    const track = id as TrackId;
+    setVisible((current) => ({ ...current, [track]: true })); setSelectedTrack(track); setScienceOpen(false); setDetailsOpen(true); setLayersOpen(false); setCalendarOpen(false); setPlaying(false);
+  };
 
   return <main className="event-workspace">
     <header className="event-header"><div><Link href="/">← Explorer</Link><span>KANSAS FRONTIER MATRIX</span><h1>Event Observatory</h1></div><nav className="event-source-actions"><DataNotices /><Link href="/data">Contribute data</Link><Link href="/stewards">Steward desk</Link><Link href="/observatory/sources" className="event-source-link">Sources & coverage ↗</Link></nav></header>
@@ -582,7 +656,7 @@ export default function EventObservatory() {
       <button type="button" onClick={share} disabled={!committed}>{copied ? "Replay link copied" : "Share replay"}</button>
     </form>
     <div className="event-record-range"><span>{riverCoverage ? `${riverResolution === "daily" ? "Daily means" : "Continuous"}: ${riverCoverage[riverResolution]?.start.slice(0,10) ?? "no declared record"} → ${riverCoverage[riverResolution]?.end.slice(0,10) ?? "—"}${riverCoverage.partial ? " · partial metadata" : ""}` : coverageMessage || "Choose a station to discover its record"}</span><button type="button" disabled={!riverCoverage?.daily || loading} onClick={() => { const day = riverCoverage?.daily?.start.slice(0,10); if (!day) return; setRiverResolution("daily"); setStart(`${day}T00:00`); setHours(24); void load(`${day}T00:00`,24,undefined,"daily"); }}>Oldest daily record</button><button type="button" disabled={!riverCoverage?.continuous || loading} onClick={() => { const day = riverCoverage?.continuous?.start.slice(0,10); if (!day) return; setRiverResolution("continuous"); setStart(`${day}T00:00`); setHours(24); void load(`${day}T00:00`,24,undefined,"continuous"); }}>Oldest continuous</button><button type="button" disabled={loading} onClick={loadToday}>{followToday ? "Following today · refreshes every 5 min" : "Follow today / latest"}</button></div>
-    <nav className="event-map-toolbar" aria-label="Map panels"><button type="button" aria-expanded={layersOpen} onClick={() => { setLayersOpen(!layersOpen); setDetailsOpen(false); setCalendarOpen(false); }}>Layers · {Object.values(visible).filter(Boolean).length}</button><button type="button" aria-expanded={calendarOpen} aria-controls="archive-calendar" onClick={() => { setCalendarOpen(!calendarOpen); setLayersOpen(false); setDetailsOpen(false); }}>Calendar</button><button type="button" onClick={() => { const day = advanceEventDay(selectedCalendarDay, -1); if (day && day >= EVENT_EARLIEST_DAY) selectCalendarSlot(day); }} disabled={selectedCalendarDay <= EVENT_EARLIEST_DAY}>← Day</button><button type="button" onClick={() => selectCalendarSlot(selectedCalendarDay)}>Load full 24 hours</button><button type="button" onClick={() => { const day = advanceEventDay(selectedCalendarDay, 1); if (day && day <= calendarToday) selectCalendarSlot(day); }} disabled={selectedCalendarDay >= calendarToday}>Day →</button><span /><button type="button" aria-expanded={chartsOpen} onClick={() => setChartsOpen(!chartsOpen)}>Charts</button><button type="button" aria-expanded={detailsOpen} onClick={() => { setDetailsOpen(!detailsOpen); setLayersOpen(false); setCalendarOpen(false); }}>Sources & quality</button></nav>
+    <nav className="event-map-toolbar" aria-label="Map panels"><button type="button" aria-expanded={layersOpen} onClick={() => { setLayersOpen(!layersOpen); setDetailsOpen(false); setCalendarOpen(false); setScienceOpen(false); finishScienceProbe(); }}>Layers · {Object.values(visible).filter(Boolean).length}</button><button type="button" aria-expanded={calendarOpen} aria-controls="archive-calendar" onClick={() => { setCalendarOpen(!calendarOpen); setLayersOpen(false); setDetailsOpen(false); setScienceOpen(false); finishScienceProbe(); }}>Calendar</button><button type="button" onClick={() => { const day = advanceEventDay(selectedCalendarDay, -1); if (day && day >= EVENT_EARLIEST_DAY) selectCalendarSlot(day); }} disabled={selectedCalendarDay <= EVENT_EARLIEST_DAY}>← Day</button><button type="button" onClick={() => selectCalendarSlot(selectedCalendarDay)}>Load full 24 hours</button><button type="button" onClick={() => { const day = advanceEventDay(selectedCalendarDay, 1); if (day && day <= calendarToday) selectCalendarSlot(day); }} disabled={selectedCalendarDay >= calendarToday}>Day →</button><button type="button" aria-expanded={scienceOpen} aria-controls="science-lab" onClick={() => { setScienceOpen(!scienceOpen); setLayersOpen(false); setDetailsOpen(false); setCalendarOpen(false); finishScienceProbe(); }}>Science lab · {SCIENCE_EVENTS.length}</button><span /><button type="button" aria-expanded={chartsOpen} onClick={() => { setChartsOpen(!chartsOpen); setScienceOpen(false); }}>Timeline lanes</button><button type="button" aria-expanded={detailsOpen} onClick={() => { setDetailsOpen(!detailsOpen); setLayersOpen(false); setCalendarOpen(false); setScienceOpen(false); finishScienceProbe(); }}>Sources & quality</button></nav>
     <section className="event-body" data-layers-open={layersOpen} data-details-open={detailsOpen}>
       <aside className="event-mixer" hidden={!layersOpen} aria-label="Animation layer mixer"><div className="event-panel-heading"><strong>Layers & opacity</strong><button type="button" onClick={() => setLayersOpen(false)} aria-label="Close layers">×</button></div><div className="event-section-heading"><span>LAYER MIXER</span><small>Top row draws on top</small></div>
         {order.map((id, position) => { const track = TRACKS.find((t) => t.id === id)!; return <article key={id} className="event-track" data-selected={selectedTrack === id} style={{ "--track-color": track.color } as React.CSSProperties}>
@@ -602,11 +676,27 @@ export default function EventObservatory() {
         {error && <div className="event-error" role="alert">{error}{manifest && <button type="button" onClick={() => { setVisible((current) => ({ ...current, radar: false })); setError(""); }}>Continue without radar</button>}</div>}
         {!manifest && !loading && <div className="event-intro"><span>THE PAST, IN MOTION</span><h2>Layer an event.<br />See what changed.</h2><p>Choose a date or start with a Kansas archive window. Every layer states the time it actually represents.</p>{PRESETS.map((preset) => <button key={preset.start} type="button" disabled={!mapReady} onClick={() => { setStart(preset.start); setHours(preset.hours); void load(preset.start,preset.hours); }}>{preset.label} <span>↗</span></button>)}</div>}
         <div className="event-map-legend"><span><i style={{background:"#70e0ef"}} />Discharge radius: log-scaled · color: sample trend</span><span><i style={{background:"#dca261"}} />HMS: light → medium → heavy · gray unknown</span><span>Radar colors: source reflectivity · <a href="https://mesonet.agron.iastate.edu/docs/nexrad_composites/" target="_blank" rel="noreferrer">product legend ↗</a></span></div>
+        {(scienceProbeActive || scienceProbePoints.length > 0) && <aside className="event-science-probe-readout" role="status" aria-live="polite"><span>DISTANCE / BEARING · {scienceProbePoints.length}/2 POINTS</span><strong>{probeMeasurement ? `${probeMeasurement.miles.toFixed(2)} mi · ${probeMeasurement.kilometers.toFixed(2)} km · ${probeMeasurement.bearing.toFixed(0)}° ${compassPoint(probeMeasurement.bearing)}` : scienceProbeActive ? "Click two map locations" : "Probe paused"}</strong><small>Great-circle screen measurement · approximate, not survey or evidence. A third click starts a new line.</small><div>{scienceProbeActive ? <button type="button" onClick={finishScienceProbe}>Done</button> : <button type="button" onClick={beginScienceProbe}>Edit</button>}<button type="button" onClick={clearScienceProbe}>Clear</button></div></aside>}
       </section>
+      {scienceOpen && <aside id="science-lab" className="event-science-lab" aria-label="Science event workbench">
+        <div className="event-panel-heading"><div><span className="event-kicker">SCIENCE EVENT WORKBENCH</span><strong>One map, honest clocks</strong></div><button type="button" onClick={() => setScienceOpen(false)} aria-label="Close science lab">×</button></div>
+        <p className="event-science-intro">Every phenomenon has a symbol, temporal rule, measurable quantity, source path and limitation. Connected records can be opened now; archives, steward inputs and derived products stay visible without being fabricated.</p>
+        <section className="event-science-tools" aria-labelledby="science-tools-title"><header><span>TOOLS</span><strong id="science-tools-title">Measure and compare</strong></header><div><button type="button" onClick={beginScienceProbe}><b>↔ Distance + bearing</b><small>Two map points · miles and km</small></button><button type="button" disabled={!manifest} onClick={() => { setChartsOpen(true); setScienceOpen(false); }}><b>≋ Compare timeline support</b><small>{manifest ? "Open exact intervals and gaps" : "Load an interval first"}</small></button><Link href="/?scene=elevation-3d&mapui=open&maptab=scene"><b>△ Elevation + 3D profile</b><small>Physical 1× relief and transect</small></Link><Link href="/data"><b>＋ Propose science data</b><small>Dates, units, rights and files</small></Link></div></section>
+        <section className="event-science-clock" aria-label="Science timeline rules"><span><b>{timestamp(committed)}</b><small>shared event cursor</small></span><span><b>Ticks</b><small>instant events</small></span><span><b>Bands</b><small>supported intervals</small></span><span><b>Pins</b><small>daily / annual / edition context</small></span></section>
+        <div className="event-science-filters" role="group" aria-label="Filter science phenomena"><button type="button" aria-pressed={scienceFilter === "all"} onClick={() => setScienceFilter("all")}>All {SCIENCE_EVENTS.length}</button><button type="button" aria-pressed={scienceFilter === "connected"} onClick={() => setScienceFilter("connected")}>Connected</button><button type="button" aria-pressed={scienceFilter === "archives"} onClick={() => setScienceFilter("archives")}>Archives</button><button type="button" aria-pressed={scienceFilter === "method"} onClick={() => setScienceFilter("method")}>Methods</button></div>
+        <div className="event-science-catalog">{visibleScienceEvents.map((event) => <article className="event-science-card" key={event.id} data-support={event.support}>
+          <header><i data-geometry={event.geometry} style={{ "--science-color": event.color } as React.CSSProperties} aria-hidden="true"><span>{event.glyph}</span></i><div><h3>{event.title}</h3><span>{SCIENCE_SUPPORT_LABELS[event.support]}</span></div><time data-clock={event.clockKind}>{event.clockKind}</time></header>
+          <p>{event.representation}</p>
+          <dl><div><dt>Timeline</dt><dd>{event.clock}</dd></div><div><dt>Measure</dt><dd>{event.measurement}</dd></div></dl>
+          <details><summary>Scientific limit</summary><p>{event.limitation}</p></details>
+          <footer>{event.trackId && <button type="button" data-active={visible[event.trackId]} onClick={() => openScienceTrack(event.trackId!)}>{visible[event.trackId] ? "Inspect related layer" : "Show related layer"}</button>}<a href={event.sourceUrl} target="_blank" rel="noreferrer">{event.sourceLabel} ↗</a><Link href={`/data?source=${event.id}`}>Propose data</Link></footer>
+        </article>)}</div>
+        <footer className="event-science-boundary"><strong>Absence stays visible.</strong><span>Download-only, unqueried and unsupported time remain gaps—not zeros, demos or simulated events.</span><Link href="/observatory/sources">Methods & coverage →</Link></footer>
+      </aside>}
       <aside className="event-inspector" hidden={!detailsOpen}><div className="event-panel-heading"><strong>Sources & quality</strong><button type="button" onClick={() => setDetailsOpen(false)} aria-label="Close sources">×</button></div><select aria-label="Inspect a source" value={selectedTrack} onChange={(event) => setSelectedTrack(event.target.value as TrackId)}>{TRACKS.map((track) => <option key={track.id} value={track.id}>{track.name}</option>)}</select><span className="event-kicker">LAYER PASSPORT</span><h2>{chosen.name}</h2><p>{chosen.detail}</p><dl><div><dt>Clock</dt><dd>{chosen.axis}</dd></div><div><dt>Current support</dt><dd>{trackStatus(chosen.id)}</dd></div><div><dt>Archive query</dt><dd>{manifest ? `${timestamp(manifest.start)} → ${timestamp(manifest.end)} (end excluded)` : "Not loaded"}</dd></div><div><dt>Retrieved</dt><dd>{manifest ? timestamp(manifest.retrievedAt) : "Not yet"}</dd></div></dl><a href={chosen.source} target="_blank" rel="noreferrer">Inspect source & method ↗</a>
 {contextData[chosen.id as ContextTrack] && <p>{contextData[chosen.id as ContextTrack]?.message}</p>}
         {chosen.id === "river" && <p>{loadedRiverResolution === "daily" ? "Daily mean is pinned to its source date. It does not describe changes within the day." : "Continuous samples are held at most 30 minutes. Gaps stay empty."}</p>}
-        {inspectedFeature?.track === chosen.id && <section className="event-feature-values"><h3>{String(inspectedFeature.properties.name ?? inspectedFeature.properties.stationName ?? "Selected record")}</h3><dl>{Object.entries(inspectedFeature.properties).filter(([key]) => ["geoid", "population", "housingUnits", "landSquareMiles", "waterSquareMiles", "vintage", "station", "network", "startTime", "endTime", "day", "maximumF", "minimumF", "precipitationInches", "magnitude", "observedAt", "depthKilometers", "approvalStatus"].includes(key)).map(([key,value]) => <div key={key}><dt>{({ geoid: "County FIPS", population: "Population", housingUnits: "Housing units", landSquareMiles: "Land · sq mi", waterSquareMiles: "Water · sq mi", maximumF: "Daily max · °F", minimumF: "Daily min · °F", precipitationInches: "Daily rain · in", vintage: "Census edition", startTime: "Station epoch start", endTime: "Station epoch end", observedAt: "Observation time", depthKilometers: "Depth · km" } as Record<string,string>)[key] ?? key}</dt><dd>{value === null ? "Not supplied" : typeof value === "number" ? value.toLocaleString("en-US", { maximumFractionDigits: 2 }) : String(value)}</dd></div>)}</dl></section>}
+        {inspectedFeature?.track === chosen.id && <section className="event-feature-values"><h3>{String(inspectedFeature.properties.name ?? inspectedFeature.properties.stationName ?? "Selected record")}</h3><dl>{Object.entries(inspectedFeature.properties).filter(([key]) => ["geoid", "population", "housingUnits", "landSquareMiles", "waterSquareMiles", "vintage", "station", "network", "startTime", "endTime", "day", "maximumF", "minimumF", "precipitationInches", "snowfallInches", "snowDepthInches", "magnitude", "observedAt", "depthKilometers", "approvalStatus"].includes(key)).map(([key,value]) => <div key={key}><dt>{({ geoid: "County FIPS", population: "Population", housingUnits: "Housing units", landSquareMiles: "Land · sq mi", waterSquareMiles: "Water · sq mi", maximumF: "Daily max · °F", minimumF: "Daily min · °F", precipitationInches: "Daily rain · in", snowfallInches: "Daily snowfall · in", snowDepthInches: "Snow depth · in", vintage: "Census edition", startTime: "Station epoch start", endTime: "Station epoch end", observedAt: "Observation time", depthKilometers: "Depth · km" } as Record<string,string>)[key] ?? key}</dt><dd>{value === null ? "Not supplied" : typeof value === "number" ? value.toLocaleString("en-US", { maximumFractionDigits: 2 }) : String(value)}</dd></div>)}</dl></section>}
         {chosen.id === "shake" && <a href="https://stationview.raspberryshake.org/" target="_blank" rel="noreferrer">Open Raspberry Shake waveform viewer ↗</a>}
         {chosen.id === "radar" && activeRadar && <a href={activeRadar.artifact} target="_blank" rel="noreferrer">Exact mosaic artifact ↗</a>}
         {chosen.id === "smoke" && <p className="event-small">Actual footprint changes are replayed without morphing. Wind tracers and 3D smoke require a verified modeled field and are not supplied by HMS polygons.</p>}
@@ -620,11 +710,7 @@ export default function EventObservatory() {
     </section>
     <footer className="event-timeline"><section className="event-transport"><div><span className="event-kicker">SHARED EVENT CLOCK</span><strong>{timestamp(committed)}</strong><small>{buffering ? "Requested frame is still loading" : `${frames.length} observation times / interval boundaries · no interpolation`}</small></div><div className="event-play-buttons"><button type="button" onClick={() => jump(index-1)} disabled={!frames.length || index===0}>←</button><button type="button" className="event-primary" disabled={!frames.length || !mapReady || loading || !!error || reduced} onClick={() => { if (!playing && index === frames.length-1) { setIndex(0); setCursor(frames[0] ?? null); } setPlaying(!playing); }}>{playing ? "Pause" : "Play"}</button><button type="button" onClick={() => jump(index+1)} disabled={!frames.length || index===frames.length-1}>→</button><label>Speed<select value={speed} onChange={(event) => setSpeed(Number(event.target.value))}><option value={.5}>0.5×</option><option value={1}>1×</option><option value={2}>2×</option></select></label><label><input type="checkbox" checked={loop} onChange={(event) => setLoop(event.target.checked)} /> Loop</label></div></section>
       <input className="event-scrubber" type="range" min="0" max={Math.max(0,frames.length-1)} value={index} disabled={!frames.length} onChange={(event) => jump(Number(event.target.value))} aria-label="Scrub actual event times" aria-valuetext={requested ?? "No interval loaded"} />
-      {chartsOpen && manifest && <div className="event-support-tracks" aria-label="Temporal coverage ribbons; dark spans are gaps">{([
-        { name: "Radar", color: "#81dec0", intervals: manifest.radar.scans.map((s) => [s.time, new Date(Date.parse(s.time)+300_000).toISOString()]) },
-        { name: "Smoke", color: "#dfb580", intervals: manifest.smoke.data.features.map((f) => [f.properties.start,f.properties.end]) },
-        { name: "River", color: "#7edceb", intervals: (loadedRiverResolution === "daily" ? [] : series).filter((o) => o.value !== null).map((o) => [o.observedAt,new Date(Date.parse(o.observedAt)+30*60_000).toISOString()]) },
-      ]).map((track) => <div key={track.name}><span>{track.name}</span><div>{track.intervals.map(([from,to],i) => { const duration = Date.parse(manifest.end)-Date.parse(manifest.start), left = Math.max(0,Date.parse(from)-Date.parse(manifest.start))/duration*100, right = Math.min(duration,Date.parse(to)-Date.parse(manifest.start))/duration*100; return <button key={i} type="button" aria-label={`${track.name} supported ${timestamp(from)} to ${timestamp(to)}`} title={`${timestamp(from)} → ${timestamp(to)}`} style={{left:`${left}%`,width:`${Math.max(0,right-left)}%`,background:track.color}} onClick={() => jump(Math.max(0,frames.findIndex((t) => t >= from)))} />; })}{committed && <i style={{left:`${(Date.parse(committed)-Date.parse(manifest.start))/(Date.parse(manifest.end)-Date.parse(manifest.start))*100}%`}} />}</div></div>)}</div>}
+      {chartsOpen && manifest && <div className="event-support-tracks" aria-label="Temporal coverage lanes; dark spans are gaps and hatched spans are pinned context">{timelineLanes.map((track) => <div key={track.name}><span title={track.detail}>{track.name}</span><div data-kind={track.kind}>{track.intervals.map(([from,to],i) => { const duration = Date.parse(manifest.end)-Date.parse(manifest.start), left = Math.max(0,Date.parse(from)-Date.parse(manifest.start))/duration*100, right = Math.min(duration,Date.parse(to)-Date.parse(manifest.start))/duration*100; return <button key={i} type="button" data-kind={track.kind} aria-label={`${track.name}: ${track.detail}. ${track.kind === "event" ? timestamp(from) : `${timestamp(from)} to ${timestamp(to)}`}`} title={`${track.detail} · ${track.kind === "event" ? timestamp(from) : `${timestamp(from)} → ${timestamp(to)}`}`} style={{left:`${left}%`,width:track.kind === "event" ? "3px" : `${Math.max(.15,right-left)}%`,background:track.color}} onClick={() => jump(Math.max(0,frames.findIndex((time) => time >= from)))} />; })}{committed && <i style={{left:`${(Date.parse(committed)-Date.parse(manifest.start))/(Date.parse(manifest.end)-Date.parse(manifest.start))*100}%`}} />}</div></div>)}</div>}
       <div className="event-range-labels"><span>{manifest?.start.slice(0,16).replace("T"," ")} UTC</span><span>{reduced ? "Reduced motion: use Previous, Next, or scrub" : "Pauses on map interaction, hidden tab, source failure, or Escape"}</span><span>{manifest?.end.slice(0,16).replace("T"," ")} UTC</span></div>
       {chartsOpen && series.length > 0 && <section className="event-hydrograph"><div><strong>{river?.stations[0]?.name}</strong><span>{gauge?.displayValue ?? "No supported value"} · sample {gauge?.observedAt?.slice(11,19) ?? "—"} UTC</span><small>Discharge · ft³/s · {numbers.length ? `${Math.min(...numbers).toLocaleString()}–${Math.max(...numbers).toLocaleString()}` : "no values"} · gaps &gt;30 min are broken</small></div><svg viewBox="0 0 520 100" role="img" aria-label="Historical streamflow hydrograph with gaps"><title>Selected station discharge over the loaded interval</title>{graph.map((segment,index) => <path key={index} d={segment.path} fill="none" stroke="#70e0ef" strokeWidth="2" />)}{committed && series.length > 1 && <line x1={7+(Date.parse(committed)-Date.parse(series[0].observedAt))/(Date.parse(series.at(-1)!.observedAt)-Date.parse(series[0].observedAt))*506} x2={7+(Date.parse(committed)-Date.parse(series[0].observedAt))/(Date.parse(series.at(-1)!.observedAt)-Date.parse(series[0].observedAt))*506} y1="0" y2="100" stroke="#f2d59a" strokeDasharray="3 3" />}</svg></section>}
     </footer>
