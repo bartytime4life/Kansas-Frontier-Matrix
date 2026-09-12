@@ -54,13 +54,13 @@ class RepositoryTopologyDiscoveryTests(unittest.TestCase):
         self.assertEqual([], omitted, "topology tests would silently escape native discovery")
 
     def test_legacy_filename_reproduces_the_discovery_gap(self) -> None:
-        pattern = "test_validate_*topology.py"
+        pattern = "test_validate_*topology*.py"
         self.assertFalse(fnmatch.fnmatchcase("test_repository_topology_root_status.py", pattern))
         self.assertTrue(fnmatch.fnmatchcase(ROOT_STATUS_MODULE, pattern))
 
     def test_absent_or_ambiguous_wiring_fails_closed(self) -> None:
         command = "\tpython -m unittest discover --start-directory " + TEST_DIRECTORY
-        valid = "repository-topology:\n" + command + " --pattern 'test_validate_*topology.py'\n"
+        valid = "repository-topology:\n" + command + " --pattern 'test_validate_*topology*.py'\n"
         malformed = (
             "", valid + valid,
             "repository-topology:\n\techo no-discovery\n",
@@ -76,9 +76,9 @@ class RepositoryTopologyDiscoveryTests(unittest.TestCase):
             "repository-topology:\n"
             "\tpython -m unittest discover --start-directory tests/ci --pattern 'test_*.py'; \\\n"
             "\tpython -m unittest discover --start-directory " + TEST_DIRECTORY
-            + " --pattern 'test_validate_*topology.py';\n"
+            + " --pattern 'test_validate_*topology*.py';\n"
         )
-        self.assertEqual("test_validate_*topology.py", native_pattern(text))
+        self.assertEqual("test_validate_*topology*.py", native_pattern(text))
 
 
 if __name__ == "__main__":
