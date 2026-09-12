@@ -22,7 +22,7 @@ responsibility: "Dedicated proposed decision record for schema-home family routi
 responsibility_root: docs/
 current_path: docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
 supersedes: []
-superseded_by: null
+superseded_by: []
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
