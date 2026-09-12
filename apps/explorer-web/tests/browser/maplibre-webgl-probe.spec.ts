@@ -1,5 +1,7 @@
 import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
+import { readFileSync, writeFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { expect, test } from "playwright/test";
 
 const FIXTURE = {
@@ -13,8 +15,6 @@ const FIXTURE = {
 const sha256 = (value: unknown) =>
   createHash("sha256").update(JSON.stringify(value)).digest("hex");
 
-const LOCKFILE_VERSION_UNAVAILABLE = "LOCKFILE_VERSION_UNAVAILABLE";
-
 const toolVersion = (
   command: string,
   arguments_: string[] = ["--version"],
@@ -25,6 +25,43 @@ const toolVersion = (
     return "UNAVAILABLE";
   }
 };
+
+const LOCKFILE_VERSION_UNAVAILABLE = "LOCKFILE_VERSION_UNAVAILABLE";
+
+const lockedMapLibreVersion = (lockfile?: string): string => {
+  const lines = (
+    lockfile ??
+    readFileSync(resolve(process.cwd(), "../../pnpm-lock.yaml"), "utf8")
+  ).split(/\r?\n/);
+  const importerIndex = lines.findIndex(
+    (line) => line === "  packages/maplibre:",
+  );
+  if (importerIndex === -1) return LOCKFILE_VERSION_UNAVAILABLE;
+
+  for (let index = importerIndex + 1; index < lines.length; index += 1) {
+    const line = lines[index];
+    if (/^\S/.test(line) || (line.startsWith("  ") && !line.startsWith("    "))) {
+      break;
+    }
+    if (line !== "      maplibre-gl:") continue;
+
+    for (
+      let dependencyIndex = index + 1;
+      dependencyIndex < lines.length;
+      dependencyIndex += 1
+    ) {
+      const dependencyLine = lines[dependencyIndex];
+      if (dependencyLine.length > 0 && !dependencyLine.startsWith("        ")) {
+        break;
+      }
+      const match = dependencyLine.match(/^\s{8}version:\s+(\S+)\s*$/);
+      if (match) return match[1];
+    }
+
+    return LOCKFILE_VERSION_UNAVAILABLE;
+  }
+
+  return LOCKFILE_VERSION_UNAVAILABLE;
 };
 
 test("binds the receipt version to the scoped MapLibre importer", () => {
@@ -167,6 +204,7 @@ test("records one bounded WebGL2 capability and teardown probe", async ({
 
   const receiptBody = JSON.stringify(receipt, null, 2);
   const receiptPath = testInfo.outputPath("maplibre-webgl-probe.receipt.json");
+  writeFileSync(receiptPath, receiptBody, "utf8");
   await testInfo.attach("maplibre-webgl-probe.receipt.json", {
     path: receiptPath,
     contentType: "application/json",
