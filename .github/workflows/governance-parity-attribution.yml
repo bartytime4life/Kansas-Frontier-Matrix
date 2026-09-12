@@ -1,0 +1,177 @@
+# Temporary branch-only attribution workflow. Never merge.
+name: governance-parity-attribution
+
+"on":
+  push:
+    branches:
+      - agent/topology-diagnostics-20260912
+
+permissions:
+  contents: read
+
+concurrency:
+  group: governance-parity-attribution-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  compare:
+    name: compare-mrts04-base-head-main
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - name: Check out exact PR base
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: d3f9db88d0d48291ac3810f684eeeb5b9aeca72d
+          path: base
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Check out exact PR head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: cbf5fc7d75ba364ddafaec4733d77f7f182ab81e
+          path: pr-head
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Check out current main with upstream UI repair
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: a3defbbd36b686107e7e46fd57477c6b39b4ac9d
+          path: current-main
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+
+      - name: Require identical locked Python environment
+        shell: bash
+        run: |
+          set -euo pipefail
+          sha256sum \
+            base/requirements-lock.txt \
+            pr-head/requirements-lock.txt \
+            current-main/requirements-lock.txt \
+            | tee requirements-lock-sha256.txt
+          test "$(cut -d' ' -f1 requirements-lock-sha256.txt | sort -u | wc -l)" -eq 1
+          python -m pip install --disable-pip-version-check --require-hashes \
+            -r base/requirements-lock.txt
+
+      - name: Replay exact deterministic governance profile
+        shell: bash
+        env:
+          KFM_NO_NETWORK: "1"
+          KFM_GOVERNANCE_MRTS04_THRESHOLD: "0.50"
+          PYTHONDONTWRITEBYTECODE: "1"
+          PYTHONHASHSEED: "0"
+          PYTHONUNBUFFERED: "1"
+          TZ: UTC
+        run: |
+          set -uo pipefail
+          : > governance-status.tsv
+          for lane in base pr-head current-main; do
+            set +e
+            (
+              cd "$lane"
+              python governance/tools/governance_validate.py \
+                --config governance/governance.yaml \
+                --completeness-threshold 0.87 \
+                --fixed-now 2026-03-16
+            ) > "${lane}-governance.txt" 2>&1
+            status=$?
+            set -e
+            printf '%s\t%s\n' "$lane" "$status" | tee -a governance-status.tsv
+            cat "${lane}-governance.txt"
+            git -C "$lane" diff --exit-code
+            git -C "$lane" diff --cached --exit-code
+          done
+
+      - name: Compare exact MRTS-04 outcomes
+        shell: bash
+        run: |
+          python - <<'PY'
+          from __future__ import annotations
+
+          import json
+          import re
+          from pathlib import Path
+
+          lanes = {
+              "base": "d3f9db88d0d48291ac3810f684eeeb5b9aeca72d",
+              "pr-head": "cbf5fc7d75ba364ddafaec4733d77f7f182ab81e",
+              "current-main": "a3defbbd36b686107e7e46fd57477c6b39b4ac9d",
+          }
+          statuses = {}
+          for line in Path("governance-status.tsv").read_text(encoding="utf-8").splitlines():
+              lane, value = line.split("\t", 1)
+              statuses[lane] = int(value)
+
+          pattern = re.compile(
+              r"ERROR: MRTS-04 repository denominator drift: "
+              r"(?P<numerator>\d+)/(?P<denominator>\d+)="
+              r"(?P<percent>\d+(?:\.\d+)?)% < (?P<threshold>\d+(?:\.\d+)?)%\."
+          )
+          results = {}
+          for lane, commit in lanes.items():
+              text = Path(f"{lane}-governance.txt").read_text(encoding="utf-8")
+              matches = list(pattern.finditer(text))
+              if len(matches) != 1:
+                  raise RuntimeError(f"{lane}: expected exactly one MRTS-04 failure, found {len(matches)}")
+              match = matches[0]
+              results[lane] = {
+                  "commit": commit,
+                  "exit_code": statuses[lane],
+                  "numerator": int(match.group("numerator")),
+                  "denominator": int(match.group("denominator")),
+                  "percent": match.group("percent"),
+                  "threshold": match.group("threshold"),
+              }
+
+          signatures = {
+              (
+                  row["exit_code"],
+                  row["numerator"],
+                  row["denominator"],
+                  row["percent"],
+                  row["threshold"],
+              )
+              for row in results.values()
+          }
+          if len(signatures) != 1:
+              raise RuntimeError(f"MRTS-04 outcomes differ: {results!r}")
+          signature = next(iter(signatures))
+          if signature[0] == 0:
+              raise RuntimeError("expected the deterministic profile to preserve its failing conclusion")
+
+          receipt = {
+              "version": "kfm.governance-mrts04-attribution.v1",
+              "outcome": "INHERITED_IDENTICAL",
+              "results": results,
+              "pr_changed_mrts04_outcome": False,
+              "repository_mutation_detected": False,
+          }
+          Path("governance-parity-attribution.json").write_text(
+              json.dumps(receipt, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          print(json.dumps(receipt, indent=2, sort_keys=True))
+          PY
+
+      - name: Upload bounded attribution evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: governance-parity-attribution-${{ github.run_id }}
+          path: |
+            requirements-lock-sha256.txt
+            governance-status.tsv
+            base-governance.txt
+            pr-head-governance.txt
+            current-main-governance.txt
+            governance-parity-attribution.json
+          if-no-files-found: error
+          retention-days: 1
