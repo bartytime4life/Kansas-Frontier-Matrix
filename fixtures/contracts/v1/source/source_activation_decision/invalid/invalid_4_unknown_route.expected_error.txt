@@ -1,1 +1,0 @@
-{"kind":"schema","field":"/decision/route","keyword":"enum"}

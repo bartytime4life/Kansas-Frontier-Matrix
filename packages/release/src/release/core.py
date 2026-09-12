@@ -1,1 +1,0 @@
-# release core — greenfield placeholder

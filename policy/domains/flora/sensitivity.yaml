@@ -1,6 +1,0 @@
-status: PROPOSED
-path: "policy/domains/flora/sensitivity.yaml"
-source_docs:
-  - "docs/domains/flora/SOURCE_REGISTRY.md"
-notes:
-  - "Placeholder created from the current docs/domains markdown inventory."

@@ -1,1 +1,0 @@
-# agriculture :: publish — greenfield placeholder

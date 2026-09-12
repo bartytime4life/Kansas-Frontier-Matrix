@@ -1,2 +1,0 @@
-DEPLOYMENT_REGIME_INVALID	$.calibration.applicability.deployment_regime
-TRANSFER_STATE_INVALID	$.calibration.applicability.transfer_state

@@ -1,1 +1,0 @@
-# geology :: validate — greenfield placeholder

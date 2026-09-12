@@ -1,1 +1,0 @@
-# kdwp fetcher — greenfield placeholder

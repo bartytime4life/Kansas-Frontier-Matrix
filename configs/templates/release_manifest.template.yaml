@@ -1,6 +1,0 @@
-# Release manifest template — greenfield
-release_id: TBD
-spec_hash: TBD
-candidates: []
-rollback_target: TBD
-signatures: []

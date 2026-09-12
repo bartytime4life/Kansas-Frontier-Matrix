@@ -1,1 +1,0 @@
-HIGH_CONFIDENCE_EVIDENCE_INSUFFICIENT	$.events[0].evidence_refs

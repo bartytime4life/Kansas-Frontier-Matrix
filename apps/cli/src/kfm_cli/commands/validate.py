@@ -1,1 +1,0 @@
-# kfm validate — greenfield placeholder

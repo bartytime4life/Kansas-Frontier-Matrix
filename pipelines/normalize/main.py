@@ -1,1 +1,0 @@
-# normalize stage — greenfield placeholder

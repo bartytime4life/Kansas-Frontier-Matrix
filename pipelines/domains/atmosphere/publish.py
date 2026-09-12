@@ -1,1 +1,0 @@
-# atmosphere :: publish — greenfield placeholder

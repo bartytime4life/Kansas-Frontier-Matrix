@@ -1,1 +1,0 @@
-# usgs fetcher — greenfield placeholder

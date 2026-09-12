@@ -1,1 +1,0 @@
-# noaa fetcher — greenfield placeholder

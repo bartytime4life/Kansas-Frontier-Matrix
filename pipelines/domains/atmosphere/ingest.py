@@ -1,1 +1,0 @@
-# atmosphere :: ingest — greenfield placeholder

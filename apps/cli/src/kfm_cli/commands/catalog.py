@@ -1,1 +1,0 @@
-# kfm catalog — greenfield placeholder

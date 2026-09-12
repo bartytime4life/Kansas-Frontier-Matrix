@@ -1,1 +1,0 @@
-# archaeology :: triplets — greenfield placeholder

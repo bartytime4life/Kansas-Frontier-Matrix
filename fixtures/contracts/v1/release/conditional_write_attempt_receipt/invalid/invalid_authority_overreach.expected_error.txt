@@ -1,1 +1,0 @@
-{"kind": "schema", "field": "/claims/published", "keyword": "const"}

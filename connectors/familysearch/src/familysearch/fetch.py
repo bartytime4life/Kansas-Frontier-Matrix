@@ -1,1 +1,0 @@
-# familysearch fetcher — greenfield placeholder

@@ -1,1 +1,0 @@
-# agriculture :: validate — greenfield placeholder

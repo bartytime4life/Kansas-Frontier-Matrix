@@ -1,1 +1,0 @@
-# habitat :: ingest — greenfield placeholder

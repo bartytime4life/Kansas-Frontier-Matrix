@@ -1,3 +1,0 @@
-RIGHTS_STATE_INVALID	$.rights_state
-SOURCE_ROLE_INVALID	$.source_role
-TAXON_CONCEPT_STATE_INVALID	$.taxon_concept_state

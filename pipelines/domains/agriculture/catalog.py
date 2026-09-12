@@ -1,1 +1,0 @@
-# agriculture :: catalog — greenfield placeholder

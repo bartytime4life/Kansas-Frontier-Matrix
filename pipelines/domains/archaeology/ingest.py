@@ -1,1 +1,0 @@
-# archaeology :: ingest — greenfield placeholder

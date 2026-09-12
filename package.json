@@ -1,40 +1,47 @@
 {
-  "name": "kfm-monorepo",
+  "name": "kansas-frontier-matrix-explorer",
+  "version": "0.1.0",
   "private": true,
-  "version": "0.0.0",
-  "packageManager": "pnpm@11.17.0",
   "engines": {
-    "node": ">=22.13 <23"
+    "node": ">=22.13.0"
   },
-  "description": "Private JavaScript workspace coordinator for Kansas Frontier Matrix.",
-  "license": "UNLICENSED",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/bartytime4life/Kansas-Frontier-Matrix.git"
-  },
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
   "scripts": {
-    "lint": "node -e \"console.error('WORKFLOW_HOLD: root workspace lint is not implemented.'); process.exit(1)\"",
-    "test": "node -e \"console.error('WORKFLOW_HOLD: root workspace tests are not implemented.'); process.exit(1)\"",
-    "build": "node -e \"console.error('WORKFLOW_HOLD: root workspace build is not implemented.'); process.exit(1)\"",
-    "maplibre:perf": "node scripts/maplibre-smoke-perf.mjs",
-    "maplibre:render-diff": "node scripts/build-maplibre-render-diff.mjs",
-    "maplibre:attest": "node scripts/attest-maplibre-perf.mjs",
-    "maplibre:manifest": "node scripts/build-maplibre-perf-release-manifest.mjs",
-    "maplibre:proof": "node scripts/build-maplibre-perf-proof-pack.mjs",
-    "maplibre:govern": "python3 tools/validators/maplibre/validate_perf_governance.py",
-    "maplibre:proof:validate": "python3 tools/validators/maplibre/validate_perf_proof_pack.py artifacts/perf/proof-pack.maplibre-perf.json",
-    "maplibre:failure-bundle": "node scripts/build-maplibre-perf-failure-bundle.mjs",
-    "maplibre:correction": "node scripts/build-maplibre-perf-correction-and-rollback.mjs",
-    "maplibre:perf:full": "npm run maplibre:perf && npm run maplibre:render-diff && npm run maplibre:attest && npm run maplibre:manifest && npm run maplibre:govern && npm run maplibre:proof && npm run maplibre:proof:validate",
-    "maplibre:clean": "rm -rf artifacts/perf"
+    "install:ci": "bash scripts/install-ci.sh",
+    "prepare:maplibre": "node scripts/prepare-maplibre-assets.mjs",
+    "predev": "npm run prepare:maplibre",
+    "dev": "WRANGLER_LOG_PATH=.wrangler/wrangler.log vite",
+    "prebuild": "npm run prepare:maplibre",
+    "build": "bash scripts/build-verified.sh",
+    "start": "WRANGLER_LOG_PATH=.wrangler/wrangler.log vinext start",
+    "test": "npm run build && node --test tests/rendered-html.test.mjs",
+    "lint": "bash scripts/sites-env.sh -- eslint . --ignore-pattern dist --ignore-pattern .next --ignore-pattern public/maplibre",
+    "db:generate": "bash scripts/sites-env.sh -- drizzle-kit generate"
+  },
+  "dependencies": {
+    "drizzle-orm": "0.45.2",
+    "maplibre-gl": "6.6.0",
+    "next": "16.3.3",
+    "react": "19.2.6",
+    "react-dom": "19.2.6"
   },
   "devDependencies": {
-    "pixelmatch": "^7.1.0",
-    "playwright": "^1.63.0",
-    "pngjs": "^7.0.0"
-  }
+    "@cloudflare/vite-plugin": "1.54.2",
+    "@tailwindcss/postcss": "4.2.1",
+    "@types/node": "22.19.19",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "@vitejs/plugin-react": "6.0.2",
+    "@vitejs/plugin-rsc": "0.5.26",
+    "drizzle-kit": "0.31.10",
+    "eslint": "9.39.4",
+    "eslint-config-next": "16.3.3",
+    "react-server-dom-webpack": "19.2.6",
+    "tailwindcss": "4.2.1",
+    "typescript": "5.9.3",
+    "vinext": "0.0.50",
+    "vite": "8.2.2",
+    "wrangler": "4.127.1"
+  },
+  "type": "module",
+  "displayName": "Kansas Frontier Matrix"
 }

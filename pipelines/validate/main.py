@@ -1,1 +1,0 @@
-# validate stage — greenfield placeholder

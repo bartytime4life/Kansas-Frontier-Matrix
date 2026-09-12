@@ -1,4 +1,0 @@
-# connectors/census pyproject — greenfield placeholder
-[project]
-name = "kfm-connector-census"
-version = "0.0.0"

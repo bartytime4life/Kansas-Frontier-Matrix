@@ -1,1 +1,0 @@
-# fauna :: normalize — greenfield placeholder
