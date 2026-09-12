@@ -1,5 +1,7 @@
 import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
+import { readFileSync, writeFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { expect, test } from "playwright/test";
 
 const FIXTURE = {
@@ -25,6 +27,42 @@ const toolVersion = (
     return "UNAVAILABLE";
   }
 };
+
+const lockedMapLibreVersion = (source?: string): string => {
+  const lockfile =
+    source ??
+    readFileSync(resolve(process.cwd(), "../../pnpm-lock.yaml"), "utf8");
+  const lines = lockfile.split(/\r?\n/);
+  const importerStart = lines.findIndex(
+    (line) => line === "  packages/maplibre:",
+  );
+  if (importerStart < 0) return LOCKFILE_VERSION_UNAVAILABLE;
+
+  const importerEnd = lines.findIndex(
+    (line, index) => index > importerStart && /^ {0,2}\S/.test(line),
+  );
+  const importer = lines.slice(
+    importerStart + 1,
+    importerEnd < 0 ? undefined : importerEnd,
+  );
+  const dependencyStart = importer.findIndex(
+    (line) => line === "      maplibre-gl:",
+  );
+  if (dependencyStart < 0) return LOCKFILE_VERSION_UNAVAILABLE;
+
+  const dependencyEnd = importer.findIndex(
+    (line, index) => index > dependencyStart && /^ {0,6}\S/.test(line),
+  );
+  const versionLine = importer
+    .slice(
+      dependencyStart + 1,
+      dependencyEnd < 0 ? undefined : dependencyEnd,
+    )
+    .find((line) => /^        version:\s+\S/.test(line));
+  return (
+    versionLine?.replace(/^        version:\s+/, "").trim() ??
+    LOCKFILE_VERSION_UNAVAILABLE
+  );
 };
 
 test("binds the receipt version to the scoped MapLibre importer", () => {
@@ -167,6 +205,7 @@ test("records one bounded WebGL2 capability and teardown probe", async ({
 
   const receiptBody = JSON.stringify(receipt, null, 2);
   const receiptPath = testInfo.outputPath("maplibre-webgl-probe.receipt.json");
+  writeFileSync(receiptPath, receiptBody, "utf8");
   await testInfo.attach("maplibre-webgl-probe.receipt.json", {
     path: receiptPath,
     contentType: "application/json",
