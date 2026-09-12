@@ -9,7 +9,9 @@
 #   rather than treating any arbitrary command failure as fail-closed.
 #
 # Trigger and trust boundary:
-#   Pull requests, pushes to main, and explicit dispatch. Pull-request content
+#   Pull requests, pushes to main or the exact repair branch, and explicit
+#   dispatch. The repair-branch trigger provides native evidence without a PR
+#   lifecycle transition; no wildcard branch enrollment. Pull-request content
 #   is untrusted. Jobs use a GitHub-hosted runner and read-only repository token.
 #   Network use is limited to installing dependencies declared by the root
 #   Python project. No secret, write scope, OIDC, deployment, release, or
@@ -23,7 +25,7 @@
 #   the reviewed EvidenceBundle invalid fixture plus expected-error sidecar.
 #
 # Independent validation:
-#   All four guardrails and the five downstream validation stages use
+#   All four guardrails, five downstream stages and two authored-receipt checks use
 #   !cancelled() rather than implicit success() gating. One failed diagnostic
 #   must not hide another. No continue-on-error or shell suppression is allowed;
 #   bootstrap failures remain failures, and cancellation may still stop work.
@@ -58,6 +60,7 @@ name: validator-suite
   push:
     branches:
       - main
+      - agent/validator-suite-guardrail-independence-20260911
   workflow_dispatch:
 
 permissions:
@@ -101,6 +104,28 @@ jobs:
       - name: Test validator-suite guardrail attribution
         shell: bash
         run: python -m unittest tests.validators.governance.test_validator_suite_guardrail_attribution --verbose
+
+      # Preserve the original receipt; replay it against its original artifacts.
+      # A passing fixture suite does not validate these two actual receipts.
+      - name: Replay guardrail authoring receipt
+        id: historical_receipt
+        if: ${{ !cancelled() }}
+        shell: bash
+        env:
+          KFM_NO_NETWORK: "1"
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-validator-suite-guardrail-independence-20260911.json --artifact-git-ref d2e1cfd782ec190ee7b125f531845655ec28c1d1
+
+      - name: Validate current guardrail receipt
+        id: current_receipt
+        if: ${{ !cancelled() }}
+        shell: bash
+        env:
+          KFM_NO_NETWORK: "1"
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-validator-suite-native-receipt-20260911.json
 
       - name: Validate canonical validator registry
         if: ${{ !cancelled() }}
@@ -225,13 +250,15 @@ jobs:
             echo "### Aggregate validator suite"
             echo
             echo "- Result: ${{ job.status }}."
+            echo "- Historical authored-receipt replay: ${{ steps.historical_receipt.outcome }}; current authored-receipt binding: ${{ steps.current_receipt.outcome }}."
+            echo "- Receipt integrity and declared review state are separate from authenticated review or approval."
             echo "- Shared-runner command: focused standard-library tests in \`tests/validators/test_jsonschema_runner.py\`."
             echo "- Generated-receipt commands: focused no-network unittest suite plus \`python tools/validators/validate_generated_receipt.py --fixtures\`."
             echo "- Material-change commands: focused no-network unittest suite plus \`python tools/validators/validate_material_change_assessment.py --fixtures\`."
             echo "- Aggregate command: \`make schemas\`."
             echo "- Repository guardrails run as four separately attributable fail-closed steps: \`make validator-registry-check\`, \`make docs-critical-structure\`, \`make workflow-security\`, then \`make repository-topology\`."
             echo "- The critical-document structure sentinel checks only explicit enrolled files for bounded corruption shapes; it does not interpret claims or grant governance authority."
-            echo "- All four guardrails and five downstream validation stages use \`!cancelled()\` so a prior failure does not suppress another check; each failure still contributes to the final job conclusion. Bootstrap failure is not validator success, and cancellation may stop execution."
+            echo "- All four guardrails, five downstream stages and two authored-receipt checks use \`!cancelled()\` so a prior failure does not suppress another check; each failure still contributes to the final job conclusion. Bootstrap failure is not validator success, and cancellation may stop execution."
             echo "- Inherited violations are exact reviewed baselines: new drift and stale baseline entries fail; a pass does not resolve the inherited backlog."
             echo "- Shared JSON Schema runner fixture mode requires sorted, nonempty valid and invalid lanes; expected schema rejection is distinct from harness or polarity failure."
             echo "- The aggregate runner inventory must be non-empty, unique, fixture-mode wired, and resolve to repository validator scripts."
