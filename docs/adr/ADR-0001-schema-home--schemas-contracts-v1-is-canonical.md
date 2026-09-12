@@ -3,7 +3,7 @@ doc_id: kfm://doc/adr-0001-schema-home
 title: "ADR-0001 — Schema Home: schemas/contracts/v1/ is Canonical"
 type: adr
 adr_id: ADR-0001
-version: v1.3
+version: v1.4
 status: proposed
 owners:
   - Docs steward
@@ -14,7 +14,7 @@ reviewers_required:
   - Architecture steward
   - "at least one affected subsystem owner"
 created: 2026-05-10
-updated: 2026-08-13
+updated: 2026-09-12
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
@@ -24,25 +24,26 @@ superseded_by: null
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 695748928f254c2c234b9058bf41cdb23f27e3c6
-  base_tree: 7faf955013a020cbf0bf64f3a013ec68af427b77
-  target_prior_blob: 3c520ea8f2f8bcb3d478329a87d98b135ea335fd
+  base_commit: 11945bf714297e61631dcfbcd66f865840e84f53
+  base_tree: 794d48657b4eb65432ea5f8cdb004d9e8ccf569f
+  target_prior_blob: ed6f258f8d9ea152996570768a31666953e4a809
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
-  adr_readme_blob: b497be1714b88550d2f1eb151bc20a6351e99dec
-  adr_index_blob: 938c5894c36b99e14810918e2c550ab0e92d53b1
+  adr_readme_blob: 27c8f00622afe6cd0c65a1b116cd768dac31bea6
+  adr_index_blob: 0c143676dfd3c1bda16cb44398c5ad5d4a49cf67
   adr_0002_blob: e626d82970932c319a690fc6044727ed114ada6a
-  adr_0029_blob: 3ba5f902ffe20a65a259cb0a7dab07f1725d204b
-  architecture_split_blob: 101b921cf152f75da425ce61a0f00295334e58cb
-  schemas_readme_blob: ce53d0ddb998ddcb8208d0367c90f9c25e31a8ad
+  adr_0029_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
+  architecture_split_blob: e420dce959b493c295af735357ab528c18ff9771
+  schemas_readme_blob: 972d0eaba676c92a57c62756966e7b039d19fb06
   schemas_contracts_v1_readme_blob: bbe931c9f7a5f0132522c0bda4fa5455c050a973
   contracts_readme_blob: e0b7c126e00a8ac6e8890774ed26cf21aef534ba
-  schema_validation_workflow_blob: 0e1562f539323daa401184738a0c490b51e2999b
-  validator_registry_blob: c65c1c2b27b85be4bdc3c42d0555c6e8e44698e2
+  schema_validation_workflow_blob: fb6dea20bc03bb2ddac134b9dbebbcf044d4e246
+  validator_registry_blob: 252baab5012dff5af080d4ae1a492d3b3d236de4
   validator_entrypoint_blob: c308015da780d7b72f56277b521fb0e42317651e
-  validator_orchestrator_blob: 728cf1404839a5b95e03d70d44567863a6f9b6df
-  compatibility_runner_blob: 39e57978b3d3d24769ab56cf5b805d51de18f33f
-  object_family_register_blob: 8673b21ea49cb4a2852595208efdb206ed040690
-  deprecation_register_blob: 1fb7219dcdb7a437e38fa8ca92ba34e29667d3fa
+  validator_orchestrator_blob: ba46a43e5cfccea332c944d552f80b20e3051622
+  compatibility_runner_blob: 4d5b53966eac474ecbb31f78d19517e646bd71df
+  makefile_blob: 670471891242e97d9e40415f94f5980c42645c7d
+  object_family_register_blob: 03bba0769738d29bbc4c9481ba34c6c7b8366941
+  deprecation_register_blob: e67cbfcc9b7b220b1fd82292f2afe19ea458f4ea
   root_registry_blob: 024f668b5f0a9239bafa4f8b09e2afd86300ff8c
 related:
   - docs/adr/README.md
@@ -55,8 +56,10 @@ related:
   - schemas/contracts/v1/README.md
   - contracts/README.md
   - tools/validate_all.py
+  - tools/validators/validate_all.py
   - tools/validators/validator_registry.json
   - tools/validators/_common/run_all.py
+  - Makefile
   - .github/workflows/schema-validation.yml
   - migrations/schema/README.md
   - docs/registers/DRIFT_REGISTER.md
@@ -66,10 +69,10 @@ related:
   - control_plane/root_registry.yaml
 tags: [kfm, adr, governance, schemas, contracts, schema-home, validator-parity, compatibility, migration]
 notes:
-  - "v1.3 reconciles the same-path ADR with accepted Directory Rules v2 and current schema, validator, registry, and topology evidence; it does not accept ADR-0001 or change runtime behavior."
+  - "v1.4 refreshes the same-path ADR against main@11945bf714297e61631dcfbcd66f865840e84f53 and untruncated tree 794d48657b4eb65432ea5f8cdb004d9e8ccf569f; it does not accept ADR-0001 or change runtime behavior."
   - "Accepted ADR-0029 adopts the exact Directory Rules v2 bytes; DIR-AUTHROOT-001 already makes schemas/contracts/v1/<family>/ the default machine-schema route while ADR-0001 remains proposed as the dedicated routing, migration, and enforcement record."
-  - "The validator full profile contains ten checks: eight fixture-backed object-family validators and two repository guardrails."
-  - "The schema registry remains absent; the object-family register now projects six runtime families and remains PROPOSED, partial, navigational, and non-self-authorizing; the deprecation register remains empty."
+  - "The current registry's full profile names 28 validators. The schema-validation workflow and historical make schemas wrapper retain a bounded nine-validator fixture lane; a workflow definition is not a run result."
+  - "The schema registry remains absent. The object-family register names 19 families and remains PROPOSED, partial, navigational, and non-self-authorizing; the deprecation register remains PROPOSED with no entries."
   - "Canonicalization, spec_hash derivation, complete $id grammar, and final schema-family naming remain outside this ADR."
 [/KFM_META_BLOCK_V2] -->
 
@@ -82,7 +85,7 @@ notes:
 [![ADR status: proposed](https://img.shields.io/badge/ADR%20status-proposed-d4a72c?style=flat-square)](#1-status-and-scope)
 [![Placement default: adopted](https://img.shields.io/badge/placement%20default-adopted-1a7f37?style=flat-square)](./ADR-0029-adopt-directory-governance-standard-v2.md)
 [![Configured surface: schemas/contracts/v1](https://img.shields.io/badge/configured%20surface-schemas%2Fcontracts%2Fv1-1f6feb?style=flat-square)](#11-current-repository-evidence-snapshot)
-[![Full profile: 10 checks](https://img.shields.io/badge/full%20profile-10%20checks-8250df?style=flat-square)](../../tools/validators/validator_registry.json)
+[![Full profile: 28 validators](https://img.shields.io/badge/full%20profile-28%20validators-8250df?style=flat-square)](../../tools/validators/validator_registry.json)
 [![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#33-authority-boundary)
 
 > [!IMPORTANT]
@@ -111,27 +114,26 @@ notes:
 
 ### 1.1 Current repository evidence snapshot
 
-The following findings are **CONFIRMED at `main@695748928f254c2c234b9058bf41cdb23f27e3c6`** and untruncated tree `7faf955013a020cbf0bf64f3a013ec68af427b77` unless marked otherwise.
+The following findings are **CONFIRMED at `main@11945bf714297e61631dcfbcd66f865840e84f53`** and untruncated tree `794d48657b4eb65432ea5f8cdb004d9e8ccf569f`, read on 2026-09-12, unless marked otherwise. They describe repository bytes and configuration only; no hosted run result is inferred.
 
 | Surface | Verified state | What it proves—and does not prove |
 |---|---|---|
-| [`docs/adr/INDEX.md`](./INDEX.md) | ADR-0001 is uniquely indexed with effective status `proposed`; ADR-0029 is the only accepted numbered ADR. | Proves inventory and status normalization; does not accept ADR-0001. |
+| [`docs/adr/INDEX.md`](./INDEX.md) | ADR-0001 is uniquely indexed with effective status `proposed`. The index lists ADR-0006, ADR-0007, ADR-0029, and ADR-0038 as `accepted`, and the numbered sequence through ADR-0039. | Proves the indexed lifecycle state and inventory claim; does not accept ADR-0001 or extend any other ADR's scope. |
 | [`ADR-0029`](./ADR-0029-adopt-directory-governance-standard-v2.md) and [Directory Rules](../doctrine/directory-rules.md) | ADR-0029 accepts the exact v2 bytes. Section 9.3 `DIR-AUTHROOT-001` establishes the default `schemas/contracts/v1/<family>/` route, and `DIR-AUTHROOT-002` prevents an independent duplicate under `contracts/`. | Proves adopted placement authority; does not silently change ADR-0001's lifecycle status. |
-| Complete repository tree | 878 tracked `*.schema.json` files: 865 under `schemas/`—855 in `schemas/contracts/v1/` and 10 outside it—plus 3 under `contracts/`, 6 synthetic registry fixtures under `fixtures/`, and 4 tool-local schemas under `tools/validators/`. | Proves exact path inventory at the pinned tree; filename suffix alone does not establish contract-backed authority, canonicality, maturity, consumer closure, or safe deletion. |
-| [`schemas/README.md`](../../schemas/README.md) | `schemas/` is the adopted machine-shape responsibility root; `schemas/contracts/v1/` is the configured v1 validation surface; root-level compatibility lanes remain visible. | Proves current repository guidance and bounded configuration; not ADR acceptance or complete family convergence. |
+| Complete repository tree | 907 tracked `*.schema.json` files: 893 under `schemas/`—883 in `schemas/contracts/v1/` and 10 outside it—plus 3 under `contracts/`, 1 application-local deployment-receipt schema, 6 synthetic registry fixtures, and 4 tool-local schemas. | Proves exact suffix/path inventory at the pinned tree; a filename suffix alone does not establish contract-backed authority, canonicality, maturity, consumer closure, or safe deletion. |
+| [`schemas/README.md`](../../schemas/README.md) | `schemas/` is the adopted machine-shape responsibility root; `schemas/contracts/v1/` is the configured v1 validation surface; root-level compatibility lanes remain explicit. | Proves current repository guidance and bounded configuration; not ADR acceptance or complete family convergence. |
 | [`schemas/contracts/v1/README.md`](../../schemas/contracts/v1/README.md) | The v1 tree remains a mixed-maturity index with detailed families, scaffolds, compatibility lanes, and unresolved naming drift. | Proves the tree is not a single-maturity or fully converged authority surface. |
-| [`contracts/README.md`](../../contracts/README.md) | `contracts/` owns semantic meaning, points machine shape to the versioned schema route, and records three inherited schema-placement violations. | Proves current boundary guidance and known drift; not migration completion. |
-| [`schema-validation.yml`](../../.github/workflows/schema-validation.yml) | The read-only workflow parses schema JSON, meta-validates `*.schema.json`, checks Draft 2020-12 and unique canonical `$id` values, requires 8 nonempty valid/invalid fixture families, runs the full validator profile, and runs schema/contract tests. | Proves command-bearing CI intent; not that this PR head passed. |
-| [`validator_registry.json`](../../tools/validators/validator_registry.json) | The `full` profile contains 10 checks: 8 fixture-backed object-family validators and 2 repository guardrails—workflow security and repository topology. | Proves bounded registered coverage; not complete schema-tree, semantic, policy, or release coverage. |
-| [`run_all.py`](../../tools/validators/_common/run_all.py) | The historical entrypoint delegates to `python tools/validate_all.py --profile full` and preserves the fixture-backed compatibility inventory. | Proves compatibility routing; it is not the canonical validator registry. |
+| [`contracts/README.md`](../../contracts/README.md) and tree inventory | `contracts/` owns semantic meaning; the tree still contains 3 schema-suffixed files there. Its historical reference to 10 full-profile validators is superseded by the current registry's 28 entries. | Proves the boundary and a companion-document count discrepancy; not migration completion or permission to move files. |
+| [`schema-validation.yml`](../../.github/workflows/schema-validation.yml) | The read-only workflow parses schema JSON, meta-validates `*.schema.json`, checks Draft 2020-12 and unique canonical `$id` values, requires nonempty valid/invalid fixture lanes for 9 configured families, validates registry integrity, runs selected DatasetVersion checks, runs the historical `make schemas` lane, validates the MapLibre performance envelope, and runs schema/contract tests. | Proves command-bearing CI intent; not that this revision passed any hosted check. |
+| [`validator_registry.json`](../../tools/validators/validator_registry.json) | The `full` profile currently names 28 validators, including fixture, catalog, governance, pipeline, documentation, workflow-security, and repository-topology lanes. | Proves bounded registered coverage; not complete schema-tree, semantic, policy, or release coverage. |
+| [`Makefile`](../../Makefile) and [`run_all.py`](../../tools/validators/_common/run_all.py) | `make schemas` retains the historical compatibility lane: it invokes the canonical orchestrator with 9 explicit legacy fixture validators. `make validator-full` is the direct all-registered-profile route. | Prevents treating the historical wrapper as evidence that all 28 validators ran. |
 | `docs/registers/SCHEMA_REGISTRY_INDEX.md` | **Absent** at the pinned tree. | A complete authoritative schema registry is not established. |
-| [`object_family_register.yaml`](../../control_plane/object_family_register.yaml) | Projects 6 runtime families and declares itself `PROPOSED`, partial, navigational only, and non-self-authorizing. | Supplies a bounded crosswalk; not a complete schema registry or adoption decision. |
-| [`deprecation_register.yaml`](../../control_plane/deprecation_register.yaml) | Remains `PROPOSED` with `entries: []`. | No compatibility sunset or retirement is closed there. |
+| [`object_family_register.yaml`](../../control_plane/object_family_register.yaml) | Names 19 families (16 milestone trust-object families plus 3 earlier runtime families) and declares itself `PROPOSED`, partial, navigational only, and non-self-authorizing. | Supplies a bounded crosswalk; not a complete schema registry or adoption decision. |
+| [`deprecation_register.yaml`](../../control_plane/deprecation_register.yaml) | Remains `PROPOSED` with no entries. | No compatibility sunset or retirement is closed there. |
 | [`root_registry.yaml`](../../control_plane/root_registry.yaml) | Projects adopted root classes and `schemas/` as the machine-shape root while declaring non-effects. | Machine projection supports navigation and validation; it cannot create or amend authority. |
-| Open PR path claim | No open PR mentioning ADR-0001 or schema home was returned by connector preflight. | Supports a clear one-writer claim for this update; it is not a permanent concurrency guarantee. |
 
 > [!CAUTION]
-> The complete tree confirms 10 machine schemas inside `schemas/` but outside the default versioned route and 3 schema files under `contracts/`. Six synthetic registry-fixture schemas and four tool-local schemas also use the suffix outside `schemas/`; they are not automatically contract-backed authority, but their test/tool roles must remain explicit. Root-level compatibility or transitional lanes include `schemas/atmosphere/`, `schemas/biotopes/`, `schemas/evidence/`, `schemas/governance/`, `schemas/maplibre/`, `schemas/people-dna-land/`, `schemas/policy/`, and `schemas/tests/`. This ADR update promotes, migrates, freezes, or deletes none of them.
+> The tree confirms 10 schema-root files outside the default versioned route and 3 schema-suffixed files under `contracts/`. One application-local deployment-receipt schema, six synthetic registry-fixture schemas, and four tool-local schemas also use the suffix outside `schemas/`; none is automatically contract-backed authority. This ADR update promotes, migrates, freezes, or deletes none of them.
 
 ### 1.2 In scope
 
@@ -194,8 +196,8 @@ Those paths are not equivalent. If more than one tracked location may change the
 The repository has moved beyond a doctrine-only state:
 
 1. Accepted Directory Rules v2 already establish `schemas/` as the machine-shape root and `schemas/contracts/v1/<family>/` as the default machine-schema route.
-2. The configured v1 tree is nonempty and holds 855 of the 865 tracked `*.schema.json` files under `schemas/`; the repository has 878 such files across all responsibility roots.
-3. CI coordinates 8 fixture-backed object-family validators and a 10-check full profile, then runs schema/contract tests.
+2. The configured v1 tree is nonempty and holds 883 of the 893 tracked `*.schema.json` files under `schemas/`; the repository has 907 such files across all responsibility roots.
+3. CI requires 9 configured valid/invalid fixture lanes; the registry's `full` profile names 28 validators, while the historical `make schemas` wrapper deliberately selects 9 legacy fixture validators before schema/contract tests run.
 4. Root READMEs distinguish `contracts/` meaning from `schemas/` shape and identify known compatibility debt.
 5. Ten schemas remain outside the versioned route, three remain under `contracts/`, the schema registry is absent, the object-family projection is partial, and the deprecation register is empty.
 
@@ -540,8 +542,10 @@ The current [`schema-validation`](../../.github/workflows/schema-validation.yml)
 - parses every JSON file under `schemas/`;
 - meta-validates every `*.schema.json` with Draft 2020-12;
 - requires canonical v1 schemas to declare Draft 2020-12 and unique `$id` values;
-- requires nonempty valid and invalid fixture lanes for 8 configured object-family validators;
-- runs `make schemas`, whose compatibility wrapper dispatches the 10-check `full` validator profile;
+- requires nonempty valid and invalid fixture lanes for 9 configured object-family validators;
+- validates the registry and runs selected DatasetVersion checks;
+- runs `make schemas`, whose compatibility wrapper uses the canonical orchestrator with 9 explicit legacy fixture validators rather than every `full`-profile entry;
+- validates the tracked MapLibre performance-envelope fixture lane;
 - runs `python -m pytest -q tests/schemas tests/contracts`;
 - emits job output only, not a ValidationReport, receipt, proof, policy decision, release record, or published artifact.
 
@@ -556,7 +560,7 @@ These checks are bounded machine-shape evidence. They do not prove semantic trut
 | Alternate-path classification | Every tracked noncanonical schema path has a compatibility or migration record. | **ADOPTED DOCTRINE**; complete inventory exists, but artifact-level disposition remains **OPEN** |
 | Divergence check | Mirrors and aliases match canonical content or an approved transform. | **ADOPTED DOCTRINE**; complete automation remains **PROPOSED / NEEDS VERIFICATION** |
 | Contract crosswalk | A schema links to semantic meaning; a contract claiming machine validation links to the reviewed schema. | **PROPOSED** by ADR-0001/ADR-0002 beyond current bounded examples |
-| Registry coverage | Object family, owner, version, home, maturity, fixtures, validator, and migration state are recorded. | **BLOCKED** by absent schema registry and partial six-family object projection |
+| Registry coverage | Object family, owner, version, home, maturity, fixtures, validator, and migration state are recorded. | **BLOCKED** by absent schema registry and partial 19-family object projection |
 | `$id` path grammar | `$id` follows an accepted namespace/path rule. | **DEFERRED** to ADR-0013 or an accepted successor |
 | Consumer compatibility | Producers and consumers pass the migration plan's checks. | Required per migration; complete adoption evidence **NEEDS VERIFICATION** |
 
@@ -587,7 +591,7 @@ ADR-0001 may move from `proposed` to `accepted` only when all required criteria 
 - [ ] The review explicitly reconciles ADR-0001 with accepted ADR-0029 and Directory Rules §9.3 without claiming that ADR-0029 already accepted this record.
 - [ ] All named decision owners and at least one affected subsystem owner provide explicit review evidence.
 - [ ] The current `schemas/` tree is recursively inventoried and alternate paths are classified.
-- [ ] The 10 schemas outside the default versioned route and the 3 schemas under `contracts/` have reviewed classifications, and no new unclassified machine-schema home is introduced.
+- [ ] The 10 schema-root files outside the default versioned route and the 3 schemas under `contracts/` have reviewed classifications; non-schema-root schema-suffixed files are explicitly retained as application, fixture, or tool surfaces or are otherwise classified, and no new unclassified machine-schema home is introduced.
 - [ ] `docs/registers/SCHEMA_REGISTRY_INDEX.md` exists **or** an accepted alternative registry is named and populated.
 - [ ] `control_plane/object_family_register.yaml` contains reviewed schema-home mappings for the acceptance scope.
 - [ ] Drift and deprecation records cover active compatibility paths and retirement windows.
@@ -606,10 +610,10 @@ ADR-0001 may move from `proposed` to `accepted` only when all required criteria 
 |---|---|---|---|
 | `ADR1-V01` | Classification of schemas outside `schemas/contracts/v1/` | Complete pinned tree: 10 files—2 under `schemas/governance/` and 8 under `schemas/maplibre/`. | Classify each as migration source, compatibility alias, generated mirror, deprecated path, external export, or conflict; record consumers and rollback. |
 | `ADR1-V02` | Machine schemas under `contracts/` | Complete pinned tree: `contracts/atmosphere/air-observation.schema.json`, `contracts/domains/habitat/habitat_patch.schema.json`, and `contracts/people-dna-land/land_ownership_assertion.schema.json`. | Freeze new writes, identify consumers, and execute reviewed schema-home migrations with recovery records. |
-| `ADR1-V03` | Canonical schema registry | `docs/registers/SCHEMA_REGISTRY_INDEX.md` is absent; object-family register has 6 proposed runtime entries and is partial and navigational only. | Create or accept one noncompeting schema registry and populate reviewed coverage without turning a projection into authority. |
+| `ADR1-V03` | Canonical schema registry | `docs/registers/SCHEMA_REGISTRY_INDEX.md` is absent; the object-family register names 19 families but remains `PROPOSED`, partial, and navigational only. | Create or accept one noncompeting schema registry and populate reviewed coverage without turning a projection into authority. |
 | `ADR1-V04` | `$id` namespace and path derivation | Presence and uniqueness are checked; namespace forms remain mixed. | Resolve through ADR-0013 or successor and add path-grammar tests. |
 | `ADR1-V05` | Flat-family and alias consolidation | `source/sources`, `map/layers`, transport/trade-routes, and domain aliases remain mixed. | Make per-family migration decisions; do not solve by bulk rename. |
-| `ADR1-V06` | Fixture, test, and validator parity | Current workflow covers 8 fixture-backed families, while the schema tree is much larger. | Produce an applicability-aware schema-to-contract-to-fixture-to-validator-to-test crosswalk and record explicit not-applicable rationales. |
+| `ADR1-V06` | Fixture, test, and validator parity | Current workflow covers 9 configured fixture families, while the full registry names 28 validators and the schema tree is much larger. | Produce an applicability-aware schema-to-contract-to-fixture-to-validator-to-test crosswalk and record explicit not-applicable rationales. |
 | `ADR1-V07` | Steward assignment and independent review | CODEOWNERS routing exists, but accepted steward roles and required independent approval are not proven here. | Record governance ownership and review evidence. |
 | `ADR1-V08` | Current workflow result | Workflow definitions and current-main bytes are verified; the PR-head result does not exist until hosted checks run. | Record required checks and classify any failures against the pinned base. |
 | `ADR1-V09` | Inbound reference closure | Inspected companion documents use the tracked filename; an exhaustive repository and external-consumer scan was not established by the connector. | Run full link/reference validation before any rename, supersession, or tombstone; preserve the tracked path meanwhile. |
@@ -623,8 +627,8 @@ ADR-0001 may move from `proposed` to `accepted` only when all required criteria 
 
 | Document or surface | Relationship | Snapshot status |
 |---|---|---|
-| [`docs/adr/README.md`](./README.md) | ADR lifecycle, authoring, review, and validation contract | Repository-grounded; summary count is stale relative to the canonical index |
-| [`docs/adr/INDEX.md`](./INDEX.md) | Canonical human ADR inventory; records ADR-0001 as `proposed` | Repository-grounded and current through ADR-0034 |
+| [`docs/adr/README.md`](./README.md) | ADR lifecycle, authoring, review, and validation contract | Repository-grounded; its 3-accepted/ADR-0037 inventory summary is stale relative to the canonical index |
+| [`docs/adr/INDEX.md`](./INDEX.md) | Canonical human ADR inventory; records ADR-0001 as `proposed` | Repository-grounded and lists the numbered sequence through ADR-0039 |
 | [`ADR-0002`](./ADR-0002-contracts-vs-schemas-split.md) | Companion proposed division-of-labor and coupling decision | Present; effectively proposed |
 | [`ADR-0029`](./ADR-0029-adopt-directory-governance-standard-v2.md) | Accepts exact Directory Rules v2 bytes and records post-adoption status | Present; accepted |
 | [`Directory Rules`](../doctrine/directory-rules.md) | Adopted placement doctrine; §9.3 `DIR-AUTHROOT-001` states the default schema route | Exact bytes adopted by ADR-0029; embedded pre-adoption label is retained in the pinned artifact |
@@ -632,12 +636,12 @@ ADR-0001 may move from `proposed` to `accepted` only when all required criteria 
 | [`schemas/README.md`](../../schemas/README.md) | Current machine-shape root and compatibility-boundary snapshot | Present; repository-grounded draft aligned to adopted Directory Rules |
 | [`schemas/contracts/v1/README.md`](../../schemas/contracts/v1/README.md) | Current mixed-maturity v1 family index | Present; draft |
 | [`contracts/README.md`](../../contracts/README.md) | Current semantic-contract boundary and known misplaced-schema inventory | Present; repository-grounded draft |
-| [`validator_registry.json`](../../tools/validators/validator_registry.json) | Canonical validator profile registry | Present; 10-check full profile, bounded coverage |
-| [`schema-validation.yml`](../../.github/workflows/schema-validation.yml) | Current command-bearing shape validation workflow | Present; 8 fixture families plus full profile; run result per revision |
+| [`validator_registry.json`](../../tools/validators/validator_registry.json) | Canonical validator profile registry | Present; 28-validator full profile, bounded coverage |
+| [`schema-validation.yml`](../../.github/workflows/schema-validation.yml) | Current command-bearing shape validation workflow | Present; 9 configured fixture families plus selected/legacy validator lanes; run result per revision |
 | [`migrations/schema/README.md`](../../migrations/schema/README.md) | Current schema migration and compatibility contract | Present; repository-grounded draft |
 | [`DRIFT_REGISTER.md`](../registers/DRIFT_REGISTER.md) | Human drift record | Present; schema-home debt not closed |
 | [`VERIFICATION_BACKLOG.md`](../registers/VERIFICATION_BACKLOG.md) | Human verification queue | Present; schema-home debt not closed |
-| [`object_family_register.yaml`](../../control_plane/object_family_register.yaml) | Proposed machine-readable object-family crosswalk | Present; 6 runtime entries, partial and navigational only |
+| [`object_family_register.yaml`](../../control_plane/object_family_register.yaml) | Proposed machine-readable object-family crosswalk | Present; 19 named entries, partial and navigational only |
 | [`deprecation_register.yaml`](../../control_plane/deprecation_register.yaml) | Proposed compatibility retirement register | Present; empty |
 | [`root_registry.yaml`](../../control_plane/root_registry.yaml) | Machine projection of adopted root classes | Present; non-self-authorizing projection |
 | `docs/registers/SCHEMA_REGISTRY_INDEX.md` | Proposed human schema registry named by the prior ADR revision | Absent at snapshot |
@@ -697,6 +701,7 @@ Use the current migration contract rather than creating a parallel migration aut
 
 | Version | Date | Change |
 |---|---|---|
+| `v1.4` | 2026-09-12 | Refreshed current-main evidence: exact schema inventory, ADR-index state, 9-family workflow lane, 28-validator full profile, 19-family navigation projection, and companion-document count discrepancy. Preserved the proposed status and all non-runtime/non-release boundaries. |
 | `v1.3` | 2026-08-13 | Reconciled ADR-0001 with accepted Directory Rules v2 without changing its proposed status; refreshed the complete schema-path inventory, validator profile, object-family projection, migration debt, evidence ledger, acceptance gates, and rollback posture. |
 | `v1.2` | 2026-07-23 | Same-path repository-grounded modernization. Preserved the proposed decision; added pinned evidence, separated configured behavior from ADR authority, repaired migration and validation guidance, documented compatibility debt and adoption blockers, consolidated links, and refreshed GitHub presentation. |
 | `v1.1` | 2026-05-15 | Tightened truth labels, cross-cutting/domain wording, section-number drift, illustrative validator guidance, and acceptance criteria. |
@@ -704,4 +709,4 @@ Use the current migration contract rather than creating a parallel migration aut
 
 ---
 
-**Last updated:** 2026-08-13 · **Decision status:** `proposed` · **Adopted placement default:** Directory Rules §9.3 · **Path:** `docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md` · [Back to top](#top)
+**Last updated:** 2026-09-12 · **Decision status:** `proposed` · **Adopted placement default:** Directory Rules §9.3 · **Path:** `docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md` · [Back to top](#top)
