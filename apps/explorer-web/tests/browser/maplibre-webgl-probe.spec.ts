@@ -29,7 +29,7 @@ const lockedMapLibreVersion = (): string => {
     "utf8",
   );
   const match = lockfile.match(
-    /packages\\/maplibre:\\n(?:.|\\n)*?\\n\\s+maplibre-gl:\\n\\s+specifier: ([^\\n]+)/,
+    /packages\/maplibre:\n(?:.|\n)*?\n\s+maplibre-gl:\n\s+specifier: ([^\n]+)/,
   );
   return match?.[1]?.trim() ?? "LOCKFILE_VERSION_UNAVAILABLE";
 };
