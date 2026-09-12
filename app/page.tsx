@@ -533,6 +533,12 @@ const mapUtilityLabels: Record<MapUtilityView, string> = {
   export: "Export",
   diagnostics: "Diagnostics",
 };
+const QUICK_LIVE_CONTEXT_IDS = [
+  "usgs-streamflow",
+  "usgs-earthquakes",
+  "noaa-hms-smoke",
+  "nws-radar",
+] as const satisfies readonly OfficialContextId[];
 const REPORT_SECTIONS: readonly Readonly<{ id: ReportSection; label: string; detail: string }>[] = Object.freeze([
   Object.freeze({ id: "summary", label: "Summary", detail: "Scope, time, record, and layer totals" }),
   Object.freeze({ id: "findings", label: "Findings", detail: "Deterministic observations from the filtered records" }),
@@ -3025,6 +3031,17 @@ export default function Home() {
     if (isCompact) setTimelineOpen(false);
   }, [dismissMapUtilityWithoutFocus, isCompact]);
 
+  const openLiveContextCatalog = useCallback(() => {
+    openAtlasPanel("layers");
+    announce("Opened live operational context controls");
+    window.setTimeout(() => {
+      document.getElementById("official-context-catalog")?.scrollIntoView({
+        behavior: reducedMotion ? "auto" : "smooth",
+        block: "start",
+      });
+    }, 0);
+  }, [announce, openAtlasPanel, reducedMotion]);
+
   const activateMapUtilityView = useCallback((nextView: MapUtilityView, focusTab = false) => {
     setMapUtilityView(nextView);
     if (nextView === "export") setExportGeneratedAt(new Date().toISOString());
@@ -3064,7 +3081,7 @@ export default function Home() {
       if (event.key.toLowerCase() === "l") {
         event.preventDefault();
         dismissMapUtilityWithoutFocus();
-        setLeftPanelMode("views");
+        setLeftPanelMode("layers");
         setLeftOpen((current) => !current);
         if (isCompact) { setRightOpen(false); setTimelineOpen(false); }
       }
@@ -6750,7 +6767,7 @@ export default function Home() {
               <span data-runtime={runtime.kind}><i /> {runtime.kind === "ready" ? "MAP READY" : runtime.kind === "loading" ? "MAP STARTING" : runtime.kind === "degraded" ? "MAP DEGRADED" : runtime.kind === "unsupported" ? "MAP UNSUPPORTED" : "MAP UNAVAILABLE"}</span>
               <small>{BASEMAPS[basemap].title} · {mapRepresentationLabel}</small>
             </div>
-            <div className="map-command-actions"><Link className="event-entry-link" href="/observatory">Event Observatory ↗</Link><button type="button" onClick={() => { setLeftPanelMode("layers"); announce("Opened layers and official data connections"); }}>Data</button><button type="button" onClick={saveCurrentWorkspace}>Save view</button><button type="button" onClick={() => openPrimaryWorkspace("reports", true)}>Build report</button></div>
+            <div className="map-command-actions"><Link className="event-entry-link" href="/observatory">Event Observatory ↗</Link><button type="button" onClick={() => openAtlasPanel("layers")}>Layers</button><button type="button" onClick={openLiveContextCatalog}>Live data</button><button type="button" onClick={() => openMapUtility("navigate")}>Map controls</button><button type="button" onClick={saveCurrentWorkspace}>Save view</button><button type="button" onClick={() => openPrimaryWorkspace("reports", true)}>Build report</button></div>
           </div>
           <nav className="map-view-mode-strip" aria-label="Map representation">
             <span className="map-view-mode-heading">MAP REPRESENTATION <small>{mapRepresentationLabel}</small></span>
@@ -6758,6 +6775,35 @@ export default function Home() {
             <button type="button" aria-pressed={scenePreset === "elevation-3d"} data-active={scenePreset === "elevation-3d"} onClick={() => activateMapRepresentation("terrain")}><b>Terrain 3D</b><span>{verticalExaggeration.toFixed(1)}×</span></button>
             <button type="button" aria-pressed={projection === "globe"} data-active={projection === "globe"} onClick={() => activateMapRepresentation("globe")}><b>Globe</b><span>◎</span></button>
             <button type="button" aria-pressed={mapUtilityOpen && mapUtilityView === "compare"} data-active={mapUtilityOpen && mapUtilityView === "compare"} onClick={() => mapUtilityOpen && mapUtilityView === "compare" ? closeMapUtility() : activateMapRepresentation("compare")}><b>Compare</b><span>A/B</span></button>
+          </nav>
+          <nav className="map-control-strip" aria-label="Quick map controls">
+            <button className="map-control-launch" type="button" onClick={() => openAtlasPanel("layers")} aria-pressed={leftOpen && leftPanelMode === "layers"}>
+              <span aria-hidden="true">≡</span><strong>Layers</strong><b>{visibleCount}</b>
+            </button>
+            <button className="map-control-launch map-control-launch-live" type="button" onClick={openLiveContextCatalog} aria-pressed={visibleOfficialCount > 0}>
+              <span aria-hidden="true">⌁</span><strong>Live data</strong><b>{visibleOfficialCount}</b>
+            </button>
+            <div className="quick-live-toggle-list" aria-label="Quick live data layer toggles">
+              {QUICK_LIVE_CONTEXT_IDS.map((sourceId) => {
+                const source = OFFICIAL_CONTEXT_BY_ID[sourceId];
+                const heldAtFrame = officialVisibility[sourceId] && !effectiveOfficialVisibility[sourceId];
+                return <button
+                  key={sourceId}
+                  type="button"
+                  aria-pressed={officialVisibility[sourceId]}
+                  data-active={officialVisibility[sourceId]}
+                  data-held={heldAtFrame}
+                  onClick={() => setOfficialContextVisible(sourceId, !officialVisibility[sourceId])}
+                  title={`${officialVisibility[sourceId] ? "Hide" : "Show"} ${source.title}`}
+                >
+                  <i style={{ "--swatch": source.color } as React.CSSProperties} aria-hidden="true" />
+                  <span>{source.shortTitle}</span>
+                </button>;
+              })}
+            </div>
+            <label className="map-basemap-select"><span>Basemap</span><select value={basemap} onChange={(event) => setBasemap(event.target.value as BasemapKey)} aria-label="Choose basemap style">{(Object.keys(BASEMAPS) as BasemapKey[]).map((key) => <option key={key} value={key}>{BASEMAPS[key].title}</option>)}</select></label>
+            <button className="map-control-launch" type="button" onClick={() => openMapUtility("navigate")}><span aria-hidden="true">⌖</span><strong>Controls</strong></button>
+            <button className="map-control-launch" type="button" onClick={() => openMapUtility("measure")}><span aria-hidden="true">⌗</span><strong>Measure</strong></button>
           </nav>
           {scenePreset === "elevation-3d" && <aside className="terrain-scene-passport" data-state={terrainState.toLowerCase()} aria-label="Terrain scene passport">
             <header>
@@ -6861,13 +6907,19 @@ export default function Home() {
               <button type="button" onClick={() => openAtlasPanel("layers")}>Manage</button>
             </header>
             <div className="map-legend-list">
-              {activeLayers.slice(0, 4).map((layer) => <button key={layer.id} type="button" onClick={(event) => inspectLayer(layer, event.currentTarget)} title={`Inspect ${layer.title}`}>
-                <i className={`legend-swatch ${layer.legend[0].shape}`} style={{ "--swatch": layer.legend[0].color } as React.CSSProperties} aria-hidden="true" />
-                <span><strong>{layer.title}</strong><small>{layer.releaseState} · {layer.releaseTime}</small></span>
-              </button>)}
+              {activeLayers.slice(0, 5).map((layer) => <div className="map-legend-row" key={layer.id}>
+                <label className="visibility-switch quick-legend-toggle" title={`Hide ${layer.title}`}>
+                  <input type="checkbox" checked={visibility[layer.id]} aria-label={`Hide ${layer.title}`} onChange={(event) => setVisibility((current) => ({ ...current, [layer.id]: event.target.checked }))} />
+                  <span aria-hidden="true" />
+                </label>
+                <button type="button" onClick={(event) => inspectLayer(layer, event.currentTarget)} title={`Inspect ${layer.title}`}>
+                  <i className={`legend-swatch ${layer.legend[0].shape}`} style={{ "--swatch": layer.legend[0].color } as React.CSSProperties} aria-hidden="true" />
+                  <span><strong>{layer.title}</strong><small>{layer.releaseState} · {layer.releaseTime}</small></span>
+                </button>
+              </div>)}
               {activeLayers.length === 0 && <p>No layers are visible. Open Layer Catalog to choose a starting stack.</p>}
             </div>
-            {activeLayers.length > 4 && <footer>+{activeLayers.length - 4} more in Layer Catalog</footer>}
+            {activeLayers.length > 5 && <footer>+{activeLayers.length - 5} more in Layer Catalog</footer>}
             <p className="map-legend-note">{basemap === "standard" ? "OpenFreeMap vector context · counties, places, roads, rail, water, and labels are display context; KFM overlays remain explicit." : basemap === "imagery" ? "Satellite imagery is display context only · overlays are synthetic or generalized." : basemap === "streets" ? "OpenStreetMap reference only · overlays are synthetic or generalized." : basemap === "topo" ? "USGS The National Map topographic tiles are display context only · KFM evidence remains separate." : "Site-local display style · overlays are synthetic or generalized."}</p>
           </aside>
           <button className="qwen-map-launch" type="button" onClick={qwenOpen ? closeQwenCompanion : openQwenCompanion} aria-expanded={qwenOpen} aria-controls="qwen-map-panel" data-open={qwenOpen}>
@@ -6957,15 +7009,17 @@ export default function Home() {
               <span className="map-tool-group-label">WORKBENCH</span>
               <button type="button" onClick={() => openAtlasPanel("views")} aria-pressed={leftOpen && leftPanelMode === "views"} aria-label="Open Living Atlas views" data-tooltip="Views"><span className="map-tool-glyph" aria-hidden="true">▦</span><span className="map-tool-label">Views</span></button>
               <button type="button" onClick={() => openAtlasPanel("layers")} aria-pressed={leftOpen && leftPanelMode === "layers"} aria-label="Open Layer Catalog" data-tooltip="Layers"><span className="map-tool-glyph" aria-hidden="true">≡</span><span className="map-tool-label">Layers</span></button>
+              <button type="button" onClick={openLiveContextCatalog} aria-pressed={visibleOfficialCount > 0} aria-label="Open live data controls" data-tooltip="Live data"><span className="map-tool-glyph" aria-hidden="true">⌁</span><span className="map-tool-label">Live data</span></button>
               <button type="button" onClick={(event) => mapUtilityOpen && mapUtilityView === "inspect" ? closeMapUtility() : openMapUtility("inspect", event.currentTarget)} aria-expanded={mapUtilityOpen && mapUtilityView === "inspect"} aria-controls="map-utility-panel" aria-label="Open feature inspection" data-tooltip="Inspect"><span className="map-tool-glyph" aria-hidden="true">⌖</span><span className="map-tool-label">Inspect</span></button>
               <button type="button" onClick={(event) => mapUtilityOpen && mapUtilityView === "scene" ? closeMapUtility() : openMapUtility("scene", event.currentTarget)} aria-expanded={mapUtilityOpen && mapUtilityView === "scene"} aria-controls="map-utility-panel" aria-label="Open scene and tile lab" data-tooltip="Scene"><span className="map-tool-glyph" aria-hidden="true">3D</span><span className="map-tool-label">Scene</span></button>
-              <button type="button" onClick={(event) => mapUtilityOpen && mapUtilityView === "places" ? closeMapUtility() : openMapUtility("places", event.currentTarget)} aria-expanded={mapUtilityOpen && mapUtilityView === "places"} aria-controls="map-utility-panel" aria-label="Open saved places and trails" data-tooltip="Places"><span className="map-tool-glyph" aria-hidden="true">P</span><span className="map-tool-label">Places</span></button>
+              <button type="button" onClick={(event) => mapUtilityOpen && mapUtilityView === "measure" ? closeMapUtility() : openMapUtility("measure", event.currentTarget)} aria-expanded={mapUtilityOpen && mapUtilityView === "measure"} aria-controls="map-utility-panel" aria-label="Open measurement tools" data-tooltip="Measure"><span className="map-tool-glyph" aria-hidden="true">⌗</span><span className="map-tool-label">Measure</span></button>
               <button ref={mapUtilityButtonRef} className="map-report-tool" type="button" onClick={(event) => mapUtilityOpen && mapUtilityView === "report" ? closeMapUtility() : openMapUtility("report", event.currentTarget)} aria-expanded={mapUtilityOpen && mapUtilityView === "report"} aria-controls="map-utility-panel" aria-label="Build a custom report" data-tooltip="Report"><span className="map-tool-glyph" aria-hidden="true">＋</span><span className="map-tool-label">Report</span></button>
               <button type="button" onClick={() => setToolsExpanded((current) => !current)} aria-expanded={toolsExpanded} aria-controls="more-map-tools" aria-label="More map tools" data-tooltip="More tools"><span className="map-tool-glyph" aria-hidden="true">•••</span><span className="map-tool-label">More</span></button>
             </div>
             {toolsExpanded && <div className="secondary-tools" id="more-map-tools">
               <button type="button" onClick={(event) => openMapUtility("navigate", event.currentTarget)}><span>⌖</span>Map controls</button>
               <button type="button" onClick={(event) => openMapUtility("places", event.currentTarget)}><span>⌖</span>Places + trails</button>
+              <button type="button" onClick={(event) => openMapUtility("display", event.currentTarget)}><span>◐</span>Display + basemap</button>
               <button type="button" onClick={(event) => openMapUtility("connections", event.currentTarget)}><span>⛓</span>Source connections</button>
               <button type="button" onClick={(event) => openMapUtility("import", event.currentTarget)}><span>⇧</span>Import preview</button>
               <button type="button" onClick={captureAnalysisArea} disabled={locationCameraRedacted}><span>▣</span>{analysisArea ? "Update report area" : "Lock report area"}</button>
