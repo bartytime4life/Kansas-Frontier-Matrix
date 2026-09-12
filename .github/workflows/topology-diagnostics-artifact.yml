@@ -14,42 +14,24 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  diagnose:
-    name: diagnose-topology
+  derive:
+    name: derive-containment-candidate
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
-      - name: Check out the exact failed main revision
+      - name: Check out exact containment head
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: 2e8ecf331461852430388fc329b15fbd8357e37a
+          ref: d86306a23f35295f5ecd66f2a1306d528d26e136
           fetch-depth: 0
           persist-credentials: false
 
-      - name: Set up the same Python major/minor
+      - name: Set up repository Python
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.11"
 
-      - name: Capture bounded topology diagnostics
-        shell: bash
-        env:
-          KFM_NO_NETWORK: "1"
-          KFM_TRUSTED_BASE_REF: 83f15fecfc744c25c190ef4b2960ed637cee9078
-          PYTHONDONTWRITEBYTECODE: "1"
-          PYTHONHASHSEED: "0"
-          PYTHONUNBUFFERED: "1"
-          TZ: UTC
-        run: |
-          set +e
-          python tools/validators/directory_governance/render_repository_topology_diagnostics.py \
-            > "$RUNNER_TEMP/topology-diagnostics.txt" 2>&1
-          status=$?
-          set -e
-          cat "$RUNNER_TEMP/topology-diagnostics.txt"
-          printf '%s\n' "$status" > "$RUNNER_TEMP/topology-exit-code.txt"
-
-      - name: Isolate changed evidence members
+      - name: Derive strict uppercase-evidence shrink only
         shell: bash
         env:
           KFM_NO_NETWORK: "1"
@@ -58,7 +40,7 @@ jobs:
           PYTHONUNBUFFERED: "1"
           TZ: UTC
         run: |
-          python - <<'PY' > "$RUNNER_TEMP/topology-evidence-diff.json"
+          python - <<'PY'
           from __future__ import annotations
 
           import json
@@ -70,110 +52,125 @@ jobs:
           sys.path.insert(0, str(module_root))
           import validate_repository_topology as topology
 
+          baseline_path = topology.DEFAULT_BASELINE
+          baseline_data = json.loads(baseline_path.read_text(encoding="utf-8"))
+          entries = baseline_data.get("entries")
+          if not isinstance(entries, list):
+              raise RuntimeError("baseline entries are unavailable")
+
           findings, tracked_count = topology.scan(root)
-          baseline_data, baseline = topology._load_baseline_bytes(
-              topology.DEFAULT_BASELINE.read_bytes(), label="current"
+          target = next(
+              finding
+              for finding in findings
+              if finding.rule_id == "KFM-TOPO-001"
+              and finding.subject == "path-grammar:uppercase"
           )
 
-          targets = (
-              (
-                  "KFM-TOPO-001",
-                  "path-grammar:uppercase",
-                  "sha256:495f2e5cca0cf2e824fa5a403df9719b5bd40741738db4b49de3ebad401661ed",
-              ),
-              (
-                  "KFM-TOPO-004",
-                  "catalog/",
-                  "sha256:521388927153c91a67ca8cead55af9d688a6064517d109aa556cffca91505006",
-              ),
+          old_fingerprint = "sha256:495f2e5cca0cf2e824fa5a403df9719b5bd40741738db4b49de3ebad401661ed"
+          old_indexes = [
+              index for index, entry in enumerate(entries)
+              if isinstance(entry, dict) and entry.get("fingerprint") == old_fingerprint
+          ]
+          if len(old_indexes) != 1:
+              raise RuntimeError("expected exactly one inherited uppercase baseline entry")
+
+          old_entry = entries[old_indexes[0]]
+          old_members = topology._decode_evidence_members(
+              old_entry.get("evidence_zlib_base64"), old_entry.get("evidence_sha256")
           )
+          new_members = tuple(target.evidence_members)
+          removed = sorted(set(old_members) - set(new_members))
+          added = sorted(set(new_members) - set(old_members))
+          expected_removed = ["docs/KFM_Whole_UI_Governed_AI_Expansion_Report.pdf"]
+          if removed != expected_removed or added:
+              raise RuntimeError(f"unexpected uppercase evidence delta: removed={removed!r} added={added!r}")
+          if len(old_members) != 892 or len(new_members) != 891:
+              raise RuntimeError("uppercase evidence cardinality is not a one-member shrink")
 
-          def baseline_members(entry: object) -> tuple[str, ...]:
-              if not isinstance(entry, dict):
-                  raise RuntimeError("baseline entry is unavailable")
-              decoded = entry.get("evidence_members")
-              if isinstance(decoded, (tuple, list)) and all(
-                  isinstance(value, str) for value in decoded
-              ):
-                  return tuple(decoded)
-              return topology._decode_evidence_members(
-                  entry.get("evidence_zlib_base64"), entry.get("evidence_sha256")
-              )
+          entries[old_indexes[0]] = topology._serialized_baseline_entry(target)
+          entries.sort(key=lambda entry: entry["fingerprint"])
+          candidate = root / "repository_topology_baseline.candidate.json"
+          candidate.write_text(
+              json.dumps(baseline_data, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          baseline_path.write_bytes(candidate.read_bytes())
 
-          def object_map(values: tuple[str, ...]) -> dict[str, str]:
-              result: dict[str, str] = {}
-              for value in values:
-                  path, separator, object_id = value.rpartition("@")
-                  if not separator or not path or not object_id:
-                      raise RuntimeError("content-sensitive evidence member is malformed")
-                  result[path] = object_id
-              return result
-
-          output: dict[str, object] = {
-              "version": "kfm.topology-evidence-diff.v1",
-              "checkout_commit": "2e8ecf331461852430388fc329b15fbd8357e37a",
+          receipt = {
+              "version": "kfm.topology-containment-candidate.v1",
+              "checkout_commit": "d86306a23f35295f5ecd66f2a1306d528d26e136",
+              "trusted_base_commit": "d3f9db88d0d48291ac3810f684eeeb5b9aeca72d",
               "tracked_path_count": tracked_count,
-              "targets": [],
+              "rule_id": target.rule_id,
+              "subject": target.subject,
+              "old_fingerprint": old_fingerprint,
+              "new_fingerprint": target.fingerprint,
+              "old_member_count": len(old_members),
+              "new_member_count": len(new_members),
+              "removed_paths": removed,
+              "added_paths": added,
+              "catalog_paths_restored": [
+                  "catalog/STAC/README.md",
+                  "catalog/domain/README.md",
+                  "catalog/index/README.md",
+                  "catalog/manifest/README.md",
+                  "catalog/proof/README.md",
+                  "catalog/publication/README.md",
+                  "catalog/triplet/README.md",
+              ],
+              "catalog_agriculture_transition_consumed": False,
           }
-          rows: list[dict[str, object]] = []
-          for rule_id, subject, old_fingerprint in targets:
-              current = next(
-                  finding
-                  for finding in findings
-                  if finding.rule_id == rule_id and finding.subject == subject
-              )
-              old = baseline_members(baseline.get(old_fingerprint))
-              new = tuple(current.evidence_members)
-              row: dict[str, object] = {
-                  "rule_id": rule_id,
-                  "subject": subject,
-                  "old_fingerprint": old_fingerprint,
-                  "new_fingerprint": current.fingerprint,
-                  "old_member_count": len(old),
-                  "new_member_count": len(new),
-              }
-              if rule_id == "KFM-TOPO-004":
-                  old_objects = object_map(old)
-                  new_objects = object_map(new)
-                  old_paths = set(old_objects)
-                  new_paths = set(new_objects)
-                  row["added_paths"] = sorted(new_paths - old_paths)
-                  row["removed_paths"] = sorted(old_paths - new_paths)
-                  row["content_changed_paths"] = [
-                      {
-                          "path": path,
-                          "old_object": old_objects[path],
-                          "new_object": new_objects[path],
-                      }
-                      for path in sorted(old_paths & new_paths)
-                      if old_objects[path] != new_objects[path]
-                  ]
-              else:
-                  old_values = set(old)
-                  new_values = set(new)
-                  row["added_paths"] = sorted(new_values - old_values)
-                  row["removed_paths"] = sorted(old_values - new_values)
-              rows.append(row)
-          output["targets"] = rows
-          print(json.dumps(output, indent=2, sort_keys=True))
+          (root / "topology-containment-receipt.json").write_text(
+              json.dumps(receipt, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          print(json.dumps(receipt, indent=2, sort_keys=True))
           PY
-          cat "$RUNNER_TEMP/topology-evidence-diff.json"
 
-      - name: Upload exact diagnostic text
-        if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: topology-diagnostics-2e8ecf331461852430388fc329b15fbd8357e37a-${{ github.run_id }}
-          path: |
-            ${{ runner.temp }}/topology-diagnostics.txt
-            ${{ runner.temp }}/topology-exit-code.txt
-            ${{ runner.temp }}/topology-evidence-diff.json
-          if-no-files-found: error
-          retention-days: 1
+      - name: Validate exact trusted-base transition and remaining hold
+        shell: bash
+        env:
+          KFM_NO_NETWORK: "1"
+          KFM_TRUSTED_BASE_REF: d3f9db88d0d48291ac3810f684eeeb5b9aeca72d
+          PYTHONDONTWRITEBYTECODE: "1"
+          PYTHONHASHSEED: "0"
+          PYTHONUNBUFFERED: "1"
+          TZ: UTC
+        run: |
+          set +e
+          python tools/validators/directory_governance/render_repository_topology_diagnostics.py \
+            > topology-containment-diagnostics.txt 2>&1
+          status=$?
+          set -e
+          cat topology-containment-diagnostics.txt
+          test "$status" -eq 1
+          ! grep -q 'KFM-TOPO-001' topology-containment-diagnostics.txt
+          grep -F 'FAIL_NEW_DRIFT KFM-TOPO-004 subject=catalog/ fingerprint=sha256:0ad45247555960029c34d1222365cbe17a5cabec278bf9f6b8f3e9572ea33e8f' topology-containment-diagnostics.txt
+          grep -F 'STALE_BASELINE KFM-TOPO-004 subject=catalog/ fingerprint=sha256:521388927153c91a67ca8cead55af9d688a6064517d109aa556cffca91505006' topology-containment-diagnostics.txt
+          grep -F 'new_warning_count=1' topology-containment-diagnostics.txt
+          grep -F 'stale_baseline_count=1' topology-containment-diagnostics.txt
+          grep -F 'invariant_failure_count=0' topology-containment-diagnostics.txt
+          grep -F 'baseline_mismatch_count=0' topology-containment-diagnostics.txt
 
-      - name: Preserve validator conclusion
-        if: always()
+      - name: Prove candidate changed only one baseline identity
         shell: bash
         run: |
-          status="$(cat "$RUNNER_TEMP/topology-exit-code.txt")"
-          test "$status" -eq 0
+          git diff --no-index \
+            <(git show d3f9db88d0d48291ac3810f684eeeb5b9aeca72d:tools/validators/directory_governance/repository_topology_baseline.json) \
+            repository_topology_baseline.candidate.json \
+            > topology-baseline.patch || test "$?" -eq 1
+          grep -F 'sha256:495f2e5cca0cf2e824fa5a403df9719b5bd40741738db4b49de3ebad401661ed' topology-baseline.patch
+          grep -F 'docs/KFM_Whole_UI_Governed_AI_Expansion_Report.pdf' topology-containment-receipt.json
+          test "$(grep -c '^[-+]      \"fingerprint\"' topology-baseline.patch)" -eq 2
+
+      - name: Upload bounded candidate and receipt
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: topology-containment-candidate-${{ github.run_id }}
+          path: |
+            repository_topology_baseline.candidate.json
+            topology-containment-receipt.json
+            topology-containment-diagnostics.txt
+            topology-baseline.patch
+          if-no-files-found: error
+          retention-days: 1
