@@ -130,6 +130,23 @@ class RepositoryIssueMutationIntentTests(unittest.TestCase):
         self.assertEqual(mismatch["receipt"]["reason_codes"], ["READBACK_MISMATCH"])
         self.assertFalse(mismatch["receipt"]["applied"])
 
+    def test_readback_label_order_is_semantically_ignored(self) -> None:
+        candidate = validator.build_candidate(self.cases["applied_exact_readback"])
+        candidate["readback"]["target"]["labels"].reverse()
+        candidate["receipt"] = validator.derive_receipt(
+            candidate["evaluated_at"],
+            candidate["intent"],
+            candidate["preflight"],
+            candidate["attempt"],
+            candidate["readback"],
+        )
+        spec_hash, receipt_id = validator._identity(candidate)
+        candidate["spec_hash"] = spec_hash
+        candidate["receipt"]["receipt_id"] = receipt_id
+
+        self.assertEqual(validator.validate_document(candidate).outcome, "PASS")
+        self.assertEqual(candidate["receipt"]["outcome"], "APPLIED")
+
     def test_transport_failure_and_replay_divergence_are_explicit_errors(self) -> None:
         expectations = {
             "attempt_after_denial_error": "ATTEMPT_AFTER_DENIAL",
