@@ -33,6 +33,28 @@ test("event interval rejects ambiguous/future/rollover dates and unbounded windo
   assert.deepEqual(atlas.intervalDays("2024-01-01T00:00:00Z","2024-01-02T00:00:00Z"),["2024-01-01"]);
 });
 
+test("calendar weeks retain all 24 UTC hours when a checked day has gaps", () => {
+  assert.equal(atlas.eventDay("2007-05-05"), "2007-05-05");
+  assert.equal(atlas.eventDay("2007-02-29"), null);
+  assert.deepEqual(atlas.eventWeekDays("2007-05-05"), ["2007-04-29", "2007-04-30", "2007-05-01", "2007-05-02", "2007-05-03", "2007-05-04", "2007-05-05"]);
+  const slots = atlas.eventDayHours("2007-05-05");
+  assert.equal(slots.length, 24);
+  assert.deepEqual(slots.map((slot) => slot.hour), Array.from({ length: 24 }, (_, hour) => hour));
+  assert.equal(slots[0].start, "2007-05-05T00:00:00.000Z");
+  assert.equal(slots.at(-1).end, "2007-05-06T00:00:00.000Z");
+  const empty = atlas.eventHourAvailability({
+    format: "kfm-event-atlas-v1", start: "2007-05-05T00:00:00.000Z", end: "2007-05-06T00:00:00.000Z", retrievedAt: "2026-09-10T00:00:00.000Z",
+    radar: { scans: [], gaps: [], message: "" }, smoke: { data: { type: "FeatureCollection", features: [] }, gaps: [], message: "" }, imagery: { dates: [], message: "" }, evidenceRole: "EXTERNAL_CONTEXT_ONLY",
+  }, [], "2007-05-05");
+  assert.equal(empty.length, 24);
+  assert.equal(empty.every((slot) => slot.supported === false), true);
+  const supported = atlas.eventHourAvailability({
+    ...manifestFixture(), start: "2007-05-05T00:00:00.000Z", end: "2007-05-06T00:00:00.000Z",
+  }, [], "2007-05-05");
+  assert.equal(supported.find((slot) => slot.hour === 2)?.radar, true);
+  assert.equal(supported.find((slot) => slot.hour === 1)?.supported, false);
+});
+
 test("radar admits actual files only, on-grid, in the requested half-open interval and product era", () => {
   const scans=atlas.parseRadarDirectory(listing,"2007-05-05","2007-05-05T02:45:00.000Z","2007-05-05T02:50:00.000Z");
   assert.equal(scans.length,1); assert.equal(scans[0].product,"n0r");

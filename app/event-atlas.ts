@@ -1,6 +1,7 @@
 import type { FeatureCollection, Polygon } from "geojson";
 
 export const EVENT_BOUNDS = [-102.2, 36.8, -94.4, 40.2] as const;
+export const EVENT_EARLIEST_DAY = "1995-01-01";
 export const EVENT_MAX_HOURS = 24;
 export const RADAR_STEP_MS = 300_000;
 export type RadarProduct = "n0r" | "n0q";
@@ -14,6 +15,13 @@ export type EventManifest = {
   imagery: { dates: string[]; message: string };
   evidenceRole: "EXTERNAL_CONTEXT_ONLY";
 };
+export type EventHourSlot = Readonly<{ hour: number; start: string; end: string }>;
+export type EventHourAvailability = EventHourSlot & Readonly<{
+  radar: boolean;
+  smoke: boolean;
+  river: boolean;
+  supported: boolean;
+}>;
 
 export function exactUtc(value: string): string | null {
   if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.000)?Z$/.test(value)) return null;
@@ -23,9 +31,55 @@ export function exactUtc(value: string): string | null {
   return iso.replace(".000Z", "Z") === value.replace(".000Z", "Z") ? iso : null;
 }
 
+/** Accept only a real UTC calendar day.  Date-only values are deliberately
+ * kept separate from local-time parsing so a calendar selection cannot drift
+ * across a daylight-saving transition. */
+export function eventDay(value: string): string | null {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return null;
+  const timestamp = `${value}T00:00:00.000Z`;
+  const ms = Date.parse(timestamp);
+  if (!Number.isFinite(ms) || new Date(ms).toISOString().slice(0, 10) !== value) return null;
+  return value;
+}
+
+export function eventDayStart(value: string): string | null {
+  const day = eventDay(value);
+  return day ? `${day}T00:00:00.000Z` : null;
+}
+
+export function advanceEventDay(value: string, days: number): string | null {
+  const start = eventDayStart(value);
+  if (!start || !Number.isInteger(days)) return null;
+  return new Date(Date.parse(start) + days * 86_400_000).toISOString().slice(0, 10);
+}
+
+/** Sunday-through-Saturday UTC week containing the requested calendar day. */
+export function eventWeekDays(value: string): readonly string[] {
+  const start = eventDayStart(value);
+  if (!start) return Object.freeze([]);
+  const startMs = Date.parse(start);
+  const weekStart = startMs - new Date(startMs).getUTCDay() * 86_400_000;
+  return Object.freeze(Array.from({ length: 7 }, (_, offset) => (
+    new Date(weekStart + offset * 86_400_000).toISOString().slice(0, 10)
+  )));
+}
+
+/** Always returns every hour in a valid UTC day.  A data gap never removes a
+ * slot from the calendar; availability is resolved separately. */
+export function eventDayHours(value: string): readonly EventHourSlot[] {
+  const start = eventDayStart(value);
+  if (!start) return Object.freeze([]);
+  const startMs = Date.parse(start);
+  return Object.freeze(Array.from({ length: EVENT_MAX_HOURS }, (_, hour) => Object.freeze({
+    hour,
+    start: new Date(startMs + hour * 3_600_000).toISOString(),
+    end: new Date(startMs + (hour + 1) * 3_600_000).toISOString(),
+  })));
+}
+
 export function eventInterval(start: string, hours: number, now = Date.now()) {
   const from = exactUtc(start);
-  if (!from || ![1, 6, 24].includes(hours) || Date.parse(from) < Date.parse("1995-01-01T00:00:00Z") || Date.parse(from) > now) throw new Error("Choose a valid UTC start since 1995 and a 1, 6, or 24 hour interval, not in the future.");
+  if (!from || ![1, 6, 24].includes(hours) || Date.parse(from) < Date.parse(`${EVENT_EARLIEST_DAY}T00:00:00Z`) || Date.parse(from) > now) throw new Error("Choose a valid UTC start since 1995 and a 1, 6, or 24 hour interval, not in the future.");
   const end = new Date(Math.min(Date.parse(from) + hours * 3_600_000, now)).toISOString();
   if (Date.parse(end) <= Date.parse(from)) throw new Error("The interval must contain past time.");
   return { start: from, end };
@@ -114,6 +168,41 @@ export function smokeAt(data: SmokeCollection, cursor: string): SmokeCollection 
 export function eventFrames(manifest: EventManifest, observations: readonly { observedAt: string }[] = []): string[] {
   const times = new Set([manifest.start, ...manifest.radar.scans.flatMap((scan) => [scan.time, new Date(Date.parse(scan.time) + RADAR_STEP_MS).toISOString()]), ...manifest.smoke.data.features.flatMap((f) => [f.properties.start, f.properties.end]), ...observations.flatMap((o) => [o.observedAt, new Date(Date.parse(o.observedAt) + 30 * 60_000 + 1000).toISOString()])]);
   return [...times].filter((t) => t >= manifest.start && t < manifest.end).sort();
+}
+
+/**
+ * Resolves one full day's calendar ledger from the exact artifacts already
+ * admitted into an EventManifest.  It is intentionally a coverage view, not
+ * an interpolation: any hour without an overlapping observation stays a gap.
+ */
+export function eventHourAvailability(
+  manifest: Pick<EventManifest, "start" | "end" | "radar" | "smoke">,
+  observations: readonly { observedAt: string; value?: number | null }[] = [],
+  day = manifest.start.slice(0, 10),
+): readonly EventHourAvailability[] {
+  const manifestStart = Date.parse(manifest.start);
+  const manifestEnd = Date.parse(manifest.end);
+  if (!Number.isFinite(manifestStart) || !Number.isFinite(manifestEnd) || manifestEnd <= manifestStart) return Object.freeze([]);
+  return Object.freeze(eventDayHours(day).map((slot) => {
+    const slotStart = Date.parse(slot.start);
+    const slotEnd = Date.parse(slot.end);
+    const intersectsQuery = slotStart < manifestEnd && slotEnd > manifestStart;
+    const radar = intersectsQuery && manifest.radar.scans.some((scan) => {
+      const scanStart = Date.parse(scan.time);
+      return Number.isFinite(scanStart) && scanStart < slotEnd && scanStart + RADAR_STEP_MS > slotStart;
+    });
+    const smoke = intersectsQuery && manifest.smoke.data.features.some((feature) => (
+      feature.properties.startMs < slotEnd && feature.properties.endMs > slotStart
+    ));
+    const river = intersectsQuery && observations.some((observation) => {
+      const observationStart = Date.parse(observation.observedAt);
+      return observation.value !== null
+        && Number.isFinite(observationStart)
+        && observationStart < slotEnd
+        && observationStart + 30 * 60_000 > slotStart;
+    });
+    return Object.freeze({ ...slot, radar, smoke, river, supported: radar || smoke || river });
+  }));
 }
 
 export const GIBS_LAYER = "MODIS_Terra_CorrectedReflectance_TrueColor";

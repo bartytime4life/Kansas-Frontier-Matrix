@@ -6564,7 +6564,7 @@ export default function Home() {
             <button className="icon-close" type="button" onClick={closeLeftPanel} aria-label="Close Explorer navigation">×</button>
           </div>
           <p className="panel-intro">{leftPanelMode === "views" ? "Start from a named question, then inspect the map, time, evidence, and report together." : leftPanelMode === "layers" ? "Choose site-local demonstration layers or optional official context connections; external context never becomes a report or KFM evidence." : leftPanelMode === "places" ? "Save complete, device-local investigations and revisit them as a trail." : "Pause on a site-local chapter, inspect its evidence state, and keep the boundary visible."}</p>
-          <Link className="event-sidebar-link" href="/observatory">Event Observatory · real dated radar, smoke, rivers & life ↗</Link>
+          <Link className="event-sidebar-link" href="/observatory">Event Observatory · 24-hour archive calendar, radar, smoke & rivers ↗</Link>
           <nav className="left-panel-tabs" aria-label="Living Atlas sections">
             <button type="button" aria-current={leftPanelMode === "views" ? "page" : undefined} data-active={leftPanelMode === "views"} onClick={() => setLeftPanelMode("views")}>Views <b>{LIVING_ATLAS_VIEWS.length}</b></button>
             <button type="button" aria-current={leftPanelMode === "layers" ? "page" : undefined} data-active={leftPanelMode === "layers"} onClick={() => setLeftPanelMode("layers")}>Layers <b>{visibleCount}/{LAYER_REGISTRY.length}</b></button>
@@ -6767,7 +6767,7 @@ export default function Home() {
               <span data-runtime={runtime.kind}><i /> {runtime.kind === "ready" ? "MAP READY" : runtime.kind === "loading" ? "MAP STARTING" : runtime.kind === "degraded" ? "MAP DEGRADED" : runtime.kind === "unsupported" ? "MAP UNSUPPORTED" : "MAP UNAVAILABLE"}</span>
               <small>{BASEMAPS[basemap].title} · {mapRepresentationLabel}</small>
             </div>
-            <div className="map-command-actions"><Link className="event-entry-link" href="/observatory">Event Observatory ↗</Link><button type="button" onClick={() => openAtlasPanel("layers")}>Layers</button><button type="button" onClick={openLiveContextCatalog}>Live data</button><button type="button" onClick={() => openMapUtility("navigate")}>Map controls</button><button type="button" onClick={saveCurrentWorkspace}>Save view</button><button type="button" onClick={() => openPrimaryWorkspace("reports", true)}>Build report</button></div>
+            <div className="map-command-actions"><Link className="event-entry-link" href="/observatory">24-hour archive ↗</Link><button type="button" onClick={() => openAtlasPanel("layers")}>Layers</button><button type="button" onClick={openLiveContextCatalog}>Live data</button><button type="button" onClick={() => openMapUtility("navigate")}>Map controls</button><button type="button" onClick={saveCurrentWorkspace}>Save view</button><button type="button" onClick={() => openPrimaryWorkspace("reports", true)}>Build report</button></div>
           </div>
           <nav className="map-view-mode-strip" aria-label="Map representation">
             <span className="map-view-mode-heading">MAP REPRESENTATION <small>{mapRepresentationLabel}</small></span>

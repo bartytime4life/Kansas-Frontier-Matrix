@@ -1,14 +1,29 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import type { Map as GLMap, GeoJSONSource } from "maplibre-gl";
 import { BASEMAPS } from "../map-runtime";
-import { EVENT_BOUNDS, eventFrames, radarAt, smokeAt, type EventManifest } from "../event-atlas";
+import {
+  EVENT_BOUNDS,
+  EVENT_EARLIEST_DAY,
+  EVENT_MAX_HOURS,
+  advanceEventDay,
+  eventDayHours,
+  eventFrames,
+  eventHourAvailability,
+  eventWeekDays,
+  radarAt,
+  smokeAt,
+  type EventManifest,
+} from "../event-atlas";
 import { parseStreamflowBundle, buildStreamflowFrame, buildHydrographSegments, type StreamflowBundle } from "../streamflow";
 
 type TrackId = "radar" | "smoke" | "river" | "geology" | "flora" | "fauna" | "resources";
 type Track = { id: TrackId; name: string; axis: string; detail: string; color: string; source: string };
+type ArchiveDayStatus = "checking" | "available" | "partial" | "empty" | "failed";
+type ArchiveDayLedger = Readonly<{ status: ArchiveDayStatus; supportedHours: readonly number[]; message?: string }>;
+type CalendarCellState = "supported" | "gap" | "checking" | "failed" | "unqueried" | "future";
 const TRACKS: Track[] = [
   { id: "radar", name: "Radar reflectivity", axis: "5-minute mosaic validity", color: "#72ddc0", source: "https://mesonet.agron.iastate.edu/docs/nexrad_composites/", detail: "NOAA/NWS → Iowa State IEM. Mosaic slots, not simultaneous scans; inputs may be 15 minutes old. Blank can mean no echo or missing coverage." },
   { id: "smoke", name: "Smoke footprint", axis: "Satellite-analysis interval", color: "#e7b783", source: "https://www.ospo.noaa.gov/products/land/hms.html", detail: "NOAA HMS polygon Start ≤ cursor < End. Light / medium / heavy / unknown column density. Not surface PM2.5, altitude, or wind-driven transport." },
@@ -29,6 +44,11 @@ const PRESETS = [
 const EMPTY = { type: "FeatureCollection" as const, features: [] };
 const timestamp = (value: string | null) => value ? value.replace("T", " · ").replace(".000Z", " UTC") : "No committed frame";
 const localTimestamp = (value: string | null) => value ? new Intl.DateTimeFormat("en-US", { timeZone: "America/Chicago", dateStyle: "medium", timeStyle: "short" }).format(new Date(value)) + " · Central" : "";
+const dayFormatter = new Intl.DateTimeFormat("en-US", { timeZone: "UTC", weekday: "short", month: "short", day: "numeric" });
+const monthFormatter = new Intl.DateTimeFormat("en-US", { timeZone: "UTC", month: "long", year: "numeric" });
+const calendarDayLabel = (day: string) => dayFormatter.format(new Date(`${day}T00:00:00.000Z`));
+const calendarMonthLabel = (day: string) => monthFormatter.format(new Date(`${day}T00:00:00.000Z`));
+const hourLabel = (hour: number) => `${String(hour).padStart(2, "0")}:00`;
 
 function addRaster(map: GLMap, id: string, tiles: string, maxzoom: number, attribution: string, opacity = 1, tileSize = 256) {
   map.addSource(id, { type: "raster", tiles: [tiles], tileSize, maxzoom, bounds: [...EVENT_BOUNDS], attribution });
@@ -45,14 +65,17 @@ export default function EventObservatory() {
   const [mapReady, setMapReady] = useState(false), [mapMessage, setMapMessage] = useState("Opening the Kansas map…");
   const [start, setStart] = useState("2024-05-19T21:00"), [hours, setHours] = useState(6), [station, setStation] = useState("USGS-06889000");
   const [manifest, setManifest] = useState<EventManifest | null>(null), [river, setRiver] = useState<StreamflowBundle | null>(null), [riverMessage, setRiverMessage] = useState("Not loaded");
-  const [loading, setLoading] = useState(false), [error, setError] = useState(""), [index, setIndex] = useState(0), [committed, setCommitted] = useState<string | null>(null), [buffering, setBuffering] = useState(false), [playing, setPlaying] = useState(false);
+  const [loading, setLoading] = useState(false), [error, setError] = useState(""), [index, setIndex] = useState(0), [cursor, setCursor] = useState<string | null>(null), [committed, setCommitted] = useState<string | null>(null), [buffering, setBuffering] = useState(false), [playing, setPlaying] = useState(false);
   const [speed, setSpeed] = useState(1), [loop, setLoop] = useState(false), [reduced, setReduced] = useState(false);
   const [visible, setVisible] = useState<Record<TrackId, boolean>>(INITIAL), [opacity, setOpacity] = useState<Record<TrackId, number>>(INITIAL_OPACITY), [order, setOrder] = useState<TrackId[]>(TRACKS.map((t) => t.id));
   const [selectedTrack, setSelectedTrack] = useState<TrackId>("radar"), [base, setBase] = useState<"reference" | "satellite">("reference"), [baseDay, setBaseDay] = useState<string | null>(null), [copied, setCopied] = useState(false);
   const [sourceErrors, setSourceErrors] = useState<Record<string, string>>({});
   const [resourceEdition, setResourceEdition] = useState("1984"), [resourceData, setResourceData] = useState<GeoJSON.FeatureCollection | null>(null), [resourceMessage, setResourceMessage] = useState("Not loaded");
+  const [calendarAnchor, setCalendarAnchor] = useState("2024-05-19");
+  const [calendarLedger, setCalendarLedger] = useState<Record<string, ArchiveDayLedger>>({});
+  const [calendarNow] = useState(() => Date.now());
   const frames = useMemo(() => manifest ? eventFrames(manifest, river?.observations) : [], [manifest, river]);
-  const requested = frames[index] ?? null;
+  const requested = cursor ?? frames[index] ?? null;
   const activeRadar = manifest && committed ? radarAt(manifest.radar.scans, committed) : null;
   const activeSmoke = useMemo(() => manifest && committed ? smokeAt(manifest.smoke.data, committed) : EMPTY, [manifest, committed]);
   const riverFrame = useMemo(() => river && committed ? buildStreamflowFrame(river, committed, 30) : null, [river, committed]);
@@ -61,6 +84,10 @@ export default function EventObservatory() {
   const graph = useMemo(() => buildHydrographSegments(series, { width: 520, height: 100, padding: 7, gapMinutes: 30 }), [series]);
   const numbers = series.flatMap((o) => o.value === null ? [] : [o.value]);
   const chosen = TRACKS.find((track) => track.id === selectedTrack)!;
+  const selectedCalendarDay = start.slice(0, 10);
+  const calendarDays = useMemo(() => eventWeekDays(calendarAnchor), [calendarAnchor]);
+  const calendarHours = useMemo(() => eventDayHours(selectedCalendarDay), [selectedCalendarDay]);
+  const calendarToday = useMemo(() => new Date(calendarNow).toISOString().slice(0, 10), [calendarNow]);
 
   const hideEventLayers = useCallback((all = true) => {
     const map = mapRef.current;
@@ -91,6 +118,8 @@ export default function EventObservatory() {
     });
     return () => { disposed = true; media.removeEventListener("change", change); document.removeEventListener("visibilitychange", stop); window.removeEventListener("keydown", key); };
   }, []);
+
+  useEffect(() => { setCalendarAnchor(start.slice(0, 10)); }, [start]);
 
   useEffect(() => {
     let disposed = false;
@@ -147,11 +176,14 @@ export default function EventObservatory() {
     return () => controller.abort();
   }, [visible.resources, resourceEdition]);
 
-  const load = useCallback(async (nextStart = start, nextHours = hours) => {
+  const load = useCallback(async (nextStart = start, nextHours = hours, preferredCursor?: string) => {
+    const calendarDay = nextStart.slice(0, 10);
+    const fullDaySweep = nextHours === EVENT_MAX_HOURS && nextStart === `${calendarDay}T00:00`;
     const token = ++generation.current; ++frameGeneration.current;
     requestRef.current?.abort(); frameRequest.current?.abort();
     const controller = new AbortController(); requestRef.current = controller;
-    setPlaying(false); setLoading(true); setError(""); setCommitted(null); setManifest(null); setRiver(null); setIndex(0); setSourceErrors({}); hideEventLayers();
+    if (fullDaySweep) setCalendarLedger((current) => ({ ...current, [calendarDay]: { status: "checking", supportedHours: [] } }));
+    setPlaying(false); setLoading(true); setError(""); setCommitted(null); setManifest(null); setRiver(null); setIndex(0); setCursor(null); setSourceErrors({}); hideEventLayers();
     sourceFailures.current.clear(); radarSourceTime.current = null;
     const map = mapRef.current;
     if (map?.getLayer("ea-radar")) map.removeLayer("ea-radar");
@@ -173,9 +205,35 @@ export default function EventObservatory() {
       if (token !== generation.current || controller.signal.aborted) return;
       setRiver(bundle); setRiverMessage(message); setManifest(data);
       const sequence = eventFrames(data, bundle?.observations);
-      const linked = new URLSearchParams(window.location.search).get("cursor");
-      setIndex(linked && sequence.includes(linked) ? sequence.indexOf(linked) : 0);
-    } catch (failure) { if (token === generation.current && !controller.signal.aborted) setError(failure instanceof Error ? failure.message : "Archive unavailable"); }
+      const linked = preferredCursor ?? new URLSearchParams(window.location.search).get("cursor");
+      const validCursor = typeof linked === "string"
+        && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?Z$/.test(linked)
+        && Number.isFinite(Date.parse(linked))
+        && linked >= data.start
+        && linked < data.end;
+      const nextCursor = validCursor && linked ? linked : data.start;
+      setCursor(nextCursor);
+      const sequenceIndex = sequence.findIndex((time) => time >= nextCursor);
+      setIndex(sequenceIndex >= 0 ? sequenceIndex : Math.max(0, sequence.length - 1));
+      if (fullDaySweep) {
+        const availability = eventHourAvailability(data, bundle?.observations, calendarDay);
+        const supportedHours = availability.filter((hour) => hour.supported).map((hour) => hour.hour);
+        const sourceIncomplete = data.radar.gaps.length > 0 || data.smoke.gaps.length > 0;
+        const status: ArchiveDayStatus = supportedHours.length
+          ? sourceIncomplete ? "partial" : "available"
+          : sourceIncomplete ? "partial" : "empty";
+        setCalendarLedger((current) => ({ ...current, [calendarDay]: {
+          status,
+          supportedHours,
+          message: sourceIncomplete ? "One or more source archives could not be checked." : undefined,
+        } }));
+      }
+    } catch (failure) {
+      if (token !== generation.current || controller.signal.aborted) return;
+      const message = failure instanceof Error ? failure.message : "Archive unavailable";
+      setError(message);
+      if (fullDaySweep) setCalendarLedger((current) => ({ ...current, [calendarDay]: { status: "failed", supportedHours: [], message } }));
+    }
     finally { if (token === generation.current) setLoading(false); }
   }, [start, hours, station, hideEventLayers]);
 
@@ -277,14 +335,17 @@ export default function EventObservatory() {
   useEffect(() => {
     if (!playing || buffering || loading || !committed || committed !== requested || error) return;
     const timer = window.setTimeout(() => {
-      if (index + 1 < frames.length) setIndex(index + 1);
-      else if (loop) setIndex(0);
+      if (index + 1 < frames.length) { setIndex(index + 1); setCursor(frames[index + 1]); }
+      else if (loop) { setIndex(0); setCursor(frames[0] ?? null); }
       else setPlaying(false);
     }, 1100 / speed);
     return () => window.clearTimeout(timer);
-  }, [playing, buffering, loading, committed, requested, error, index, frames.length, loop, speed]);
+  }, [playing, buffering, loading, committed, requested, error, index, frames, loop, speed]);
 
-  const jump = (next: number) => { setPlaying(false); setIndex(Math.max(0, Math.min(frames.length - 1, next))); };
+  const jump = (next: number) => {
+    const target = Math.max(0, Math.min(frames.length - 1, next));
+    setPlaying(false); setIndex(target); setCursor(frames[target] ?? null);
+  };
   const share = async () => {
     if (!manifest) return;
     const loadedHours = Math.ceil((Date.parse(manifest.end) - Date.parse(manifest.start)) / 3_600_000);
@@ -303,14 +364,85 @@ export default function EventObservatory() {
     if (id === "resources") return resourceMessage;
     return `${committed?.slice(0,4) ?? manifest.start.slice(0,4)} records · coarse hexagons`;
   };
+  const calendarCellState = (day: string, hour: number): CalendarCellState => {
+    const slot = `${day}T${String(hour).padStart(2, "0")}:00:00.000Z`;
+    if (Date.parse(slot) >= calendarNow) return "future";
+    const ledger = calendarLedger[day];
+    if (!ledger) return "unqueried";
+    if (ledger.status === "checking") return "checking";
+    if (ledger.status === "failed") return "failed";
+    return ledger.supportedHours.includes(hour) ? "supported" : "gap";
+  };
+  const calendarStateLabel = (state: CalendarCellState) => ({
+    supported: "confirmed dynamic source support",
+    gap: "checked gap; no confirmed dynamic data",
+    checking: "checking source coverage",
+    failed: "source check failed",
+    unqueried: "not checked yet",
+    future: "not yet elapsed",
+  })[state];
+  const calendarDayStatus = (day: string) => {
+    const ledger = calendarLedger[day];
+    if (!ledger) return day > calendarToday ? "Not yet" : "Not checked";
+    if (ledger.status === "checking") return "Checking…";
+    if (ledger.status === "failed") return "Check failed";
+    if (ledger.status === "empty") return "Checked gap";
+    return `${ledger.supportedHours.length}/24 hours`;
+  };
+  const selectCalendarSlot = (day: string, hour = 0) => {
+    const target = `${day}T${String(hour).padStart(2, "0")}:00:00.000Z`;
+    if (Date.parse(target) >= calendarNow) return;
+    const dayStart = `${day}T00:00`;
+    setPlaying(false); setStart(dayStart); setHours(EVENT_MAX_HOURS); setCalendarAnchor(day);
+    const isLoadedDay = manifest?.start === `${dayStart}:00.000Z` && hours === EVENT_MAX_HOURS && !loading;
+    if (isLoadedDay) {
+      setCursor(target);
+      const matchingFrame = frames.findIndex((time) => time >= target);
+      if (matchingFrame >= 0) setIndex(matchingFrame);
+      return;
+    }
+    void load(dayStart, EVENT_MAX_HOURS, target);
+  };
+  const shiftCalendarWeek = (direction: -1 | 1) => {
+    const next = advanceEventDay(calendarAnchor, direction * 7);
+    if (!next) return;
+    const nextWeek = eventWeekDays(next);
+    if (!nextWeek.some((day) => day >= EVENT_EARLIEST_DAY && day <= calendarToday)) return;
+    setCalendarAnchor(next);
+  };
+  const previousCalendarAnchor = advanceEventDay(calendarAnchor, -7);
+  const nextCalendarAnchor = advanceEventDay(calendarAnchor, 7);
+  const canMoveToPreviousWeek = Boolean(previousCalendarAnchor && eventWeekDays(previousCalendarAnchor).some((day) => day >= EVENT_EARLIEST_DAY));
+  const canMoveToNextWeek = Boolean(nextCalendarAnchor && eventWeekDays(nextCalendarAnchor).some((day) => day <= calendarToday));
 
   return <main className="event-workspace">
     <header className="event-header"><div><Link href="/">← Explorer</Link><span>KANSAS FRONTIER MATRIX</span><h1>Event Observatory</h1></div><p>Real observations. One event clock.<small>External context only · not emergency guidance or KFM evidence</small></p><Link href="/observatory/sources" className="event-source-link">Sources & coverage ↗</Link></header>
+    <section className="event-calendar-sweep" aria-labelledby="event-calendar-title">
+      <header className="event-calendar-heading"><div><span className="event-kicker">24-HOUR ARCHIVE CALENDAR · UTC</span><h2 id="event-calendar-title">Every date stays selectable. Every hour stays visible.</h2><p>Select a day to load its complete 24-hour window. Checked gaps remain in place as gaps—never zeroes, substitutions, or removed time.</p></div><div className="event-calendar-navigation"><button type="button" onClick={() => shiftCalendarWeek(-1)} disabled={!canMoveToPreviousWeek} aria-label="Show previous calendar week">←</button><strong>{calendarDays.length ? `${calendarDayLabel(calendarDays[0])} – ${calendarDayLabel(calendarDays.at(-1)!)}` : calendarMonthLabel(calendarAnchor)}</strong><button type="button" onClick={() => shiftCalendarWeek(1)} disabled={!canMoveToNextWeek} aria-label="Show next calendar week">→</button></div></header>
+      <div className="event-calendar-legend"><span><i data-state="supported" />Confirmed dynamic support</span><span><i data-state="gap" />Checked gap</span><span><i data-state="unqueried" />Not checked</span><span><i data-state="future" />Not yet elapsed</span><small>Archive calendar starts {EVENT_EARLIEST_DAY}; source-specific availability is checked only when that day is loaded.</small></div>
+      <div className="event-calendar-scroll"><div className="event-calendar-grid" role="grid" aria-label="Seven-day, 24-hour UTC archive calendar">
+        <span className="event-calendar-corner" aria-hidden="true">UTC</span>
+        {calendarDays.map((day) => {
+          const outsideArchive = day < EVENT_EARLIEST_DAY || day > calendarToday;
+          return <button key={`day:${day}`} type="button" className="event-calendar-day" data-selected={day === selectedCalendarDay} disabled={outsideArchive} aria-pressed={day === selectedCalendarDay} onClick={() => selectCalendarSlot(day)}><strong>{calendarDayLabel(day)}</strong><small>{day < EVENT_EARLIEST_DAY ? "Before archive" : calendarDayStatus(day)}</small></button>;
+        })}
+        {calendarHours.map((slot) => <Fragment key={`hour:${slot.hour}`}>
+          <span className="event-calendar-hour" aria-hidden="true">{hourLabel(slot.hour)}</span>
+          {calendarDays.map((day) => {
+            const state = calendarCellState(day, slot.hour);
+            const active = requested?.slice(0, 13) === `${day}T${String(slot.hour).padStart(2, "0")}`;
+            const disabled = day < EVENT_EARLIEST_DAY || state === "future";
+            const glyph = state === "supported" ? "●" : state === "gap" ? "—" : state === "checking" ? "…" : state === "failed" ? "!" : state === "future" ? "·" : "?";
+            return <button key={`${day}:${slot.hour}`} type="button" className="event-calendar-cell" role="gridcell" data-state={state} data-selected={active} disabled={disabled} aria-current={active ? "time" : undefined} aria-label={`${calendarDayLabel(day)} ${hourLabel(slot.hour)} UTC: ${calendarStateLabel(state)}. ${disabled ? "Unavailable" : "Select this hour and load the day."}`} title={`${calendarDayLabel(day)} ${hourLabel(slot.hour)} UTC · ${calendarStateLabel(state)}`} onClick={() => selectCalendarSlot(day, slot.hour)}><span aria-hidden="true">{glyph}</span></button>;
+          })}
+        </Fragment>)}
+      </div></div>
+    </section>
     <form className="event-query" onSubmit={(event) => { event.preventDefault(); void load(); }}>
-      <label>Event start · UTC<input type="datetime-local" value={start} min="1995-01-01T00:00" step="300" onChange={(event) => { setPlaying(false); setStart(event.target.value); }} required /></label>
+      <label>Exact start · UTC<input type="datetime-local" value={start} min={`${EVENT_EARLIEST_DAY}T00:00`} max={`${calendarToday}T23:55`} step="300" onChange={(event) => { setPlaying(false); setStart(event.target.value); }} required /></label>
       <label>Window<select value={hours} onChange={(event) => { setPlaying(false); setHours(Number(event.target.value)); }}><option value={1}>1 hour</option><option value={6}>6 hours</option><option value={24}>24 hours</option></select></label>
       <label>USGS station<input value={station} onChange={(event) => { setPlaying(false); setStation(event.target.value); }} pattern="USGS-[0-9]{8,15}" placeholder="USGS-06889000" aria-label="USGS station identifier for historical discharge" /></label>
-      <button className="event-primary" disabled={loading || !mapReady}>{loading ? "Reading archives…" : "Load interval"}</button>
+      <button className="event-primary" disabled={loading || !mapReady}>{loading ? "Reading archives…" : "Load exact interval"}</button>
       <button type="button" onClick={() => { const value = new Date(Date.now() - 3_600_000); value.setUTCMinutes(Math.floor(value.getUTCMinutes()/5)*5,0,0); const s = value.toISOString().slice(0,16); setStart(s); setHours(1); void load(s,1); }}>Recent hour</button>
       <button type="button" onClick={share} disabled={!committed}>{copied ? "Replay link copied" : "Share replay"}</button>
     </form>
@@ -344,7 +476,7 @@ export default function EventObservatory() {
         <div className="event-next"><h3>Source-grounded, not simulated</h3><p>No invented storms, smoke transport, animal paths, or resource deposits. Static and annual layers are pinned context alongside the event clock.</p><Link href="/observatory/sources">Research findings & remaining connections →</Link></div>
       </aside>
     </section>
-    <footer className="event-timeline"><section className="event-transport"><div><span className="event-kicker">SHARED EVENT CLOCK</span><strong>{timestamp(committed)}</strong><small>{buffering ? "Requested frame is still loading" : `${frames.length} observation times / interval boundaries · no interpolation`}</small></div><div className="event-play-buttons"><button type="button" onClick={() => jump(index-1)} disabled={!frames.length || index===0}>←</button><button type="button" className="event-primary" disabled={!frames.length || !mapReady || loading || !!error || reduced} onClick={() => { if (!playing && index === frames.length-1) setIndex(0); setPlaying(!playing); }}>{playing ? "Pause" : "Play"}</button><button type="button" onClick={() => jump(index+1)} disabled={!frames.length || index===frames.length-1}>→</button><label>Speed<select value={speed} onChange={(event) => setSpeed(Number(event.target.value))}><option value={.5}>0.5×</option><option value={1}>1×</option><option value={2}>2×</option></select></label><label><input type="checkbox" checked={loop} onChange={(event) => setLoop(event.target.checked)} /> Loop</label></div></section>
+    <footer className="event-timeline"><section className="event-transport"><div><span className="event-kicker">SHARED EVENT CLOCK</span><strong>{timestamp(committed)}</strong><small>{buffering ? "Requested frame is still loading" : `${frames.length} observation times / interval boundaries · no interpolation`}</small></div><div className="event-play-buttons"><button type="button" onClick={() => jump(index-1)} disabled={!frames.length || index===0}>←</button><button type="button" className="event-primary" disabled={!frames.length || !mapReady || loading || !!error || reduced} onClick={() => { if (!playing && index === frames.length-1) { setIndex(0); setCursor(frames[0] ?? null); } setPlaying(!playing); }}>{playing ? "Pause" : "Play"}</button><button type="button" onClick={() => jump(index+1)} disabled={!frames.length || index===frames.length-1}>→</button><label>Speed<select value={speed} onChange={(event) => setSpeed(Number(event.target.value))}><option value={.5}>0.5×</option><option value={1}>1×</option><option value={2}>2×</option></select></label><label><input type="checkbox" checked={loop} onChange={(event) => setLoop(event.target.checked)} /> Loop</label></div></section>
       <input className="event-scrubber" type="range" min="0" max={Math.max(0,frames.length-1)} value={index} disabled={!frames.length} onChange={(event) => jump(Number(event.target.value))} aria-label="Scrub actual event times" aria-valuetext={requested ?? "No interval loaded"} />
       {manifest && <div className="event-support-tracks" aria-label="Temporal coverage ribbons; dark spans are gaps">{([
         { name: "Radar", color: "#81dec0", intervals: manifest.radar.scans.map((s) => [s.time, new Date(Date.parse(s.time)+300_000).toISOString()]) },
