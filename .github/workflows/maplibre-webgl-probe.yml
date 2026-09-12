@@ -1,0 +1,98 @@
+# Bounded MapLibre browser evidence; no dependency admission or deployment.
+name: maplibre-webgl-probe
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/maplibre-webgl-probe.yml"
+      - "apps/explorer-web/tests/browser/maplibre-webgl-probe.*"
+      - "apps/explorer-web/playwright.config.ts"
+      - "apps/explorer-web/package.json"
+      - "packages/maplibre/**"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: maplibre-webgl-probe-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CI: "true"
+  COREPACK_ENABLE_STRICT: "1"
+  KFM_NO_NETWORK: "1"
+  NODE_VERSION: "22"
+  TZ: UTC
+
+jobs:
+  webgl2-probe:
+    name: MapLibre WebGL2 browser probe
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out exact tested revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          package-manager-cache: false
+
+      - name: Install locked workspace dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          corepack enable
+          pnpm install --frozen-lockfile
+          pnpm exec playwright install --with-deps chromium
+
+      - name: Record browser toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          {
+            echo "## MapLibre WebGL2 probe toolchain"
+            echo
+            echo "- source: \`${GITHUB_SHA}\`"
+            echo "- runner: \`${RUNNER_OS} / ${ImageOS}\`"
+            echo "- node: \`$(node --version)\`"
+            echo "- pnpm: \`$(pnpm --version)\`"
+            echo "- playwright: \`$(pnpm exec playwright --version)\`"
+            echo "- candidate: package-owned maplibre-gl; observed by the browser receipt"
+            echo "- comparison target: MapLibre 6.9 canary is not present or admitted on this branch"
+            echo "- network: external HTTP(S) requests are a test failure"
+            echo "- authority: QA evidence only; no dependency, release, deployment, or publication decision"
+          } >> "${GITHUB_STEP_SUMMARY}"
+
+      - name: Run bounded browser probe
+        shell: bash
+        run: |
+          set -euo pipefail
+          pnpm --filter explorer-web exec playwright test             --config=playwright.config.ts             tests/browser/maplibre-webgl-probe.spec.ts
+
+      - name: Upload review-only browser receipt
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: maplibre-webgl-probe-${{ github.sha }}
+          path: apps/explorer-web/test-results/**/maplibre-webgl-probe.receipt.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Record bounded outcome
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo
+            echo "- outcome: \`see Playwright result and attached receipt\`"
+            echo "- probe matrix effect: only \`webgl2_failure_handling\`; other probes remain \`NOT_RUN\`"
+            echo "- current readiness: \`HOLD / RUNTIME_PROBES_PENDING\`"
+          } >> "${GITHUB_STEP_SUMMARY}"
