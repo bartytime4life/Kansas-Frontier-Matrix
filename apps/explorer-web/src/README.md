@@ -113,7 +113,7 @@ notes:
 
 ## 0. Current evidence snapshot
 
-**Implementation base:** [`main@d25a4c046892aa826ca04da29215f8ae4aae8e51`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/f99736c0cd4b91592cc6e85531129c86f4dcbecb), observed 2026-09-12. The Living Atlas repository catalog/preflight work is present in the pinned source snapshot; the pin does not establish a green build, merge, deployment, release, or publication.
+**Implementation base:** [`main@d25a4c046892aa826ca04da29215f8ae4aae8e51`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/d25a4c046892aa826ca04da29215f8ae4aae8e51), observed 2026-09-12. The Living Atlas repository catalog/preflight work is present in the pinned source snapshot; the pin does not establish a green build, merge, deployment, release, or publication.
 
 | Surface | Confirmed at the pinned source | Limit |
 |---|---|---|
