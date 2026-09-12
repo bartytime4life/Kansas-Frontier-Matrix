@@ -9,7 +9,7 @@ import pytest
 from tools.validators.repository_control import fetch_bounded_issue_comments as helper
 
 ROOT = Path(__file__).resolve().parents[2]
-BINDING_PATH = ROOT / "docs/governance/repository_transition_control_source.md"
+BINDING_PATH = ROOT / "docs/governance/REPOSITORY_TRANSITION_CONTROL_SOURCE.md"
 
 
 class Response:
