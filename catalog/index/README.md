@@ -1,377 +1,417 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/catalog-index-readme
 title: catalog/index/ — Catalog Index Compatibility Redirect
-type: readme
-version: v0.2
-status: draft
-owners: OWNER_TBD — Catalog steward · Data steward · Index steward · Source steward · Evidence steward · Release steward · Schema steward · Policy steward · Docs steward
+type: readme; deprecated-root-descendant; compatibility-redirect
+version: v0.3.0
+status: repository-grounded draft; frozen-root integration hold
+owners: NEEDS VERIFICATION — catalog, data, index, evidence, migration, and release stewards
 created: 2026-06-16
-updated: 2026-07-09
-policy_label: public
+updated: 2026-09-04
+policy_label: public-review; non-authoritative; no-direct-public-data-path
+current_path: catalog/index/README.md
+owning_root: catalog/
+root_class: deprecated
+parent_contract: catalog/README.md
+canonical_target: data/catalog/
+mutation_posture: immutable; frozen_no_writes; redirect_only
+retention: migration_bound
+truth_posture: CONFIRMED pinned repository and adopted authority; PROPOSED README correction; UNKNOWN runtime and external consumers
+review_scope: existing index redirect only; no catalog payload, migration, or authority change
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_commit: 832d15769f142f70b0065c9b8c45a7b3e4cd5c10
+  prior_blob: 3898725a2e3311222020c66099ae4a09f806ea5e
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  root_registry_blob: 024f668b5f0a9239bafa4f8b09e2afd86300ff8c
+  correction_register_blob: b48e8df74a2b9d8c2599ce256ef5156687b98dbf
+  method: full target read; parent and canonical README reads; exact direct-child listings; adopted rules and correction-authority review
 related:
   - ../README.md
-  - ../../data/README.md
   - ../../data/catalog/README.md
-  - ../../data/catalog/stac/README.md
-  - ../../data/catalog/dcat/README.md
-  - ../../data/catalog/prov/README.md
-  - ../../data/triplets/README.md
-  - ../../data/receipts/README.md
-  - ../../data/proofs/README.md
-  - ../../data/published/README.md
-  - ../../data/registry/README.md
-  - ../../release/README.md
-  - ../../schemas/contracts/v1/
-  - ../../contracts/
-  - ../../policy/
   - ../../docs/doctrine/directory-rules.md
-tags: [kfm, catalog, index, compatibility-root, redirect, data-catalog, catalog-index, non-authoritative, drift-fence, no-trust-records, no-public-use]
+  - ../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../docs/adr/ADR-0038-trusted-base-topology-correction-transitions.md
+  - ../../control_plane/root_registry.yaml
+  - ../../control_plane/repository_topology_correction_register.yaml
 notes:
-  - "Refreshes the root-level catalog/index compatibility-redirect fence."
-  - "Root-level catalog/index/ is treated as compatibility and drift-control documentation only, not canonical catalog-index authority."
-  - "Canonical catalog index material belongs under the governed data catalog tree, currently data/catalog/; a dedicated data/catalog/index/ sublane was not found on main during this revision and remains NEEDS VERIFICATION until created or accepted."
-  - "Do not add catalog indexes, lookup tables, search indexes, source indexes, STAC/DCAT/PROV indexes, receipts, proofs, release records, policy rules, schemas, published artifacts, generated search manifests, or producer outputs here without an ADR/migration note."
-  - "Actual current contents beyond this README, historical producers, workflow writes, migration status, canonical sublane acceptance, CI/review enforcement, and ADR disposition remain NEEDS VERIFICATION."
-  - "v0.2 adds current evidence basis, Directory Rules placement basis, canonical data/catalog alignment, explicit data/catalog/index absence on main, minimum safe redirect slice, anti-bypass matrix, no-producer/no-public-use/no-trust-record safeguards, migration/rollback posture, and safe language rules without claiming migration or enforcement maturity."
+  - "This is retained navigation, not an HTTP redirect, runtime service, index producer, or permission to consume internal data."
+  - "The pinned catalog/index subtree contains this README and one empty .gitkeep, with no child directory."
+  - "No direct index child exists under data/catalog at the evidence snapshot; this update does not create one."
+  - "ADR-0038 accepts a Stage 1 mechanism, not this index README transition; the inspected register has only a proposed agriculture entry with null decision bindings."
+  - "Reviewable branch authoring is separate from acceptance and integration; no topology baseline, validator, register, or release control changes."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-<div align="center">
-
 # Catalog Index Compatibility Redirect
 
-`catalog/index/`
+**Looking for governed catalog indexes? Start at [`data/catalog/`](../../data/catalog/README.md).**
 
-**Root-level compatibility and drift-control fence for legacy or accidental catalog-index placement. Canonical KFM catalog indexes belong under the governed `data/catalog/` lifecycle tree, not under this root-level folder.**
-
-![status](https://img.shields.io/badge/status-draft-blue)
-![authority](https://img.shields.io/badge/authority-compatibility-orange)
-![canonical](https://img.shields.io/badge/canonical_home-data%2Fcatalog-blue)
-![sublane](https://img.shields.io/badge/data%2Fcatalog%2Findex-NEEDS__VERIFICATION-yellow)
-![trust](https://img.shields.io/badge/trust__content-forbidden-red)
-![truth](https://img.shields.io/badge/truth-NEEDS__VERIFICATION-yellow)
-
-[Evidence](#0-evidence-basis-for-this-revision) · [Purpose](#1-purpose) · [Canonical home](#2-canonical-home) · [Boundary](#3-authority-boundary) · [Allowed](#5-allowed-contents) · [Forbidden](#6-forbidden-contents) · [Migration](#10-migration-posture) · [Definition of done](#17-definition-of-done)
-
-</div>
-
----
+`catalog/index/` preserves a legacy navigation boundary inside the **deprecated,
+frozen `catalog/` root**. It is not an index service, source registry, canonical
+catalog, or public-data endpoint. The [parent containment contract](../README.md)
+owns the inherited root boundary.
 
 > [!IMPORTANT]
-> **Status:** draft / `NEEDS VERIFICATION`  
-> **Path:** `catalog/index/README.md`  
-> **Responsibility root:** compatibility redirect / drift fence only  
-> **Canonical catalog-index home:** `data/catalog/` unless an accepted sublane such as `data/catalog/index/` is created and verified  
-> **Directory Rules basis:** file location encodes ownership, governance, and lifecycle. Catalog indexes are lifecycle catalog records, so canonical index material belongs under the governed `data/catalog/` tree. Root-level `catalog/index/` is a compatibility redirect only; it must not become a parallel catalog, schema, policy, proof, receipt, release, source-registry, published-artifact, pipeline, package, tool, search, or UI authority.  
-> **Truth posture:** CONFIRMED current GitHub README path / CONFIRMED parent root-level `catalog/README.md` exists and treats `catalog/` as compatibility redirect / CONFIRMED canonical `data/catalog/README.md` exists and treats catalog as CATALOG-stage data including catalog indexes / CONFIRMED `data/catalog/index/README.md` was not found on `main` during this revision / CONFIRMED Directory Rules document exists / PROPOSED root-level `catalog/index/` redirect contract / UNKNOWN actual files beyond README, historical producers, workflow writes, migration status, canonical sublane acceptance, CI/review guard, public-client/index exclusion, and ADR disposition
+> **No new content belongs here.** Preserve the existing redirect and placeholder
+> until their governed correction or retirement is authorized. Do not add index
+> payloads, migration notes, drift files, schemas, receipts, or new placeholders.
 
-> [!CAUTION]
-> Do not make `catalog/index/` a parallel catalog-index authority. KFM catalog indexes, lookup tables, search indexes, collection summaries, domain/source indexes, publication-state indexes, crosswalk indexes, generated index manifests, and public lookup products must live in governed lifecycle homes, especially `data/catalog/` and downstream `data/published/` after release, with receipts, proofs, release records, schemas, contracts, and policy in their own owning roots.
+> [!WARNING]
+> **Frozen-root integration hold.** This README replacement is a reviewable
+> proposal, not an accepted exact transition. A documentation-only change still
+> changes a frozen blob identity. Neither this README nor an unrelated passing
+> check authorizes integration, a baseline refresh, or a correction-register edit.
 
----
+| Boundary | Evidence-bounded position |
+|---|---|
+| Owning root | `catalog/`; adopted class `deprecated` |
+| Canonical destination | `data/catalog/`; catalog projections remain subordinate to evidence and release |
+| Mutation and retention | `immutable`, `frozen_no_writes`, `redirect_only`; migration-bound |
+| Tracked local contents | This README and one zero-byte `.gitkeep`; no child directories |
+| Dedicated `data/catalog/index/` lane | Absent from the pinned direct-child listing; future placement is not decided here |
+| Public exposure | No direct public-data use of this path or internal catalog stores |
+| Stewardship and operational closure | `NEEDS VERIFICATION`; directory presence is not proof of enforcement or retirement readiness |
 
 ## Quick jump
 
-- [0. Evidence basis for this revision](#0-evidence-basis-for-this-revision)
-- [1. Purpose](#1-purpose)
-- [2. Canonical home](#2-canonical-home)
-- [3. Authority boundary](#3-authority-boundary)
-- [4. Default posture](#4-default-posture)
-- [5. Allowed contents](#5-allowed-contents)
-- [6. Forbidden contents](#6-forbidden-contents)
-- [7. Directory shape](#7-directory-shape)
-- [8. Minimum safe redirect slice](#8-minimum-safe-redirect-slice)
-- [9. Diagram](#9-diagram)
-- [10. Migration posture](#10-migration-posture)
-- [11. Runtime and producer anti-bypass matrix](#11-runtime-and-producer-anti-bypass-matrix)
-- [12. Inspection path](#12-inspection-path)
-- [13. Validation expectations](#13-validation-expectations)
-- [14. Safe change pattern](#14-safe-change-pattern)
-- [15. Rollback and correction posture](#15-rollback-and-correction-posture)
-- [16. Safe language rules](#16-safe-language-rules)
-- [17. Definition of done](#17-definition-of-done)
-- [18. Open verification items](#18-open-verification-items)
-
----
+[Evidence](#0-evidence-basis-for-this-revision) · [Purpose](#1-purpose) ·
+[Canonical home](#2-canonical-home) · [Authority](#3-authority-boundary) ·
+[Default posture](#4-default-posture) · [Allowed](#5-allowed-contents) ·
+[Excluded](#6-forbidden-contents) · [Tree](#7-directory-shape) ·
+[Minimum slice](#8-minimum-safe-redirect-slice) · [Diagram](#9-diagram) ·
+[Migration](#10-migration-posture) · [Anti-bypass](#11-runtime-and-producer-anti-bypass-matrix) ·
+[Inspection](#12-inspection-path) · [Validation](#13-validation-expectations) ·
+[Change pattern](#14-safe-change-pattern) · [Rollback](#15-rollback-and-correction-posture) ·
+[Language](#16-safe-language-rules) · [Done](#17-definition-of-done) ·
+[Open verification](#18-open-verification-items)
 
 ## 0. Evidence basis for this revision
 
-This README is a documentation boundary, not migration proof and not catalog enforcement proof. The 2026-07-09 revision updates an existing compatibility README and keeps maturity bounded while aligning root-level `catalog/index/` with the canonical `data/catalog/` catalog-stage lane and Directory Rules placement posture.
+All repository observations below are bounded to
+[`main@832d15769f142f70b0065c9b8c45a7b3e4cd5c10`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/832d15769f142f70b0065c9b8c45a7b3e4cd5c10),
+reviewed on **2026-09-04**. Relative links provide navigation; the immutable commit
+and blob identities bind this review's evidence.
 
-| Evidence item | Status | What it supports | What it does not prove |
-|---|---|---|---|
-| `catalog/index/README.md` exists on `main`. | CONFIRMED | This is an existing README update, not a new path proposal. | It does not prove actual contents beyond the README, historical producers, migration status, CI enforcement, public-client exclusion, or ADR disposition. |
-| `catalog/README.md` exists and treats root-level `catalog/` as a compatibility redirect, not canonical catalog authority. | CONFIRMED document presence and redirect posture | `catalog/index/` should inherit root-level redirect/fence behavior. | It does not prove all root-level catalog drift has been removed. |
-| `data/catalog/README.md` exists and treats `data/catalog/` as CATALOG-stage data with RELEASED ONLY public exposure. It lists catalog indexes as accepted catalog contents. | CONFIRMED lifecycle posture | Canonical catalog index material belongs under the governed data catalog tree. | It does not prove concrete index inventory, validators, receipts, release manifests, or public route behavior. |
-| `data/catalog/index/README.md` was not found on `main` during this revision. | CONFIRMED fetch result from current session | A dedicated `data/catalog/index/` sublane must remain `NEEDS VERIFICATION` until created or accepted. | It does not prove a future sublane is invalid or that no index files exist elsewhere under `data/catalog/`. |
-| `docs/doctrine/directory-rules.md` exists and states that file location encodes ownership, governance, and lifecycle. | CONFIRMED placement doctrine | Root-level `catalog/index/` must remain a compatibility fence; lifecycle catalog records belong under `data/catalog/`. | It does not prove live repo drift has been fully audited. |
+| Evidence | What was confirmed | Limit |
+|---|---|---|
+| Target README and exact `catalog/index/` listing | Prior README blob `3898725a2e3311222020c66099ae4a09f806ea5e`; empty `.gitkeep` blob `e69de29bb2d1d6434b8b29ae775ad8c2e48c5391`; no other children | No claim about ignored, untracked, hosted, cached, or external bytes |
+| [Parent README](../README.md) and [Root Registry](../../control_plane/root_registry.yaml) | `root.catalog` is deprecated, immutable, migration-bound, and targets `data/catalog/` | An entry or README is not proof of universal no-write enforcement |
+| [Canonical catalog README](../../data/catalog/README.md) and its direct-child listing | Catalog discovery/interoperability projections belong under `data/catalog/`; no direct `index/` child exists at this pin | Not a recursive inventory of index objects or a decision about a future sublane |
+| [ADR-0029](../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) and [Directory Rules](../../docs/doctrine/directory-rules.md) | The exact v2 rules bytes are adopted; their retained internal `PROPOSED_FOR_ADOPTION` label does not undo the accepted decision | Later structural changes still need their own applicable authority |
+| [ADR-0038](../../docs/adr/ADR-0038-trusted-base-topology-correction-transitions.md) and [correction register](../../control_plane/repository_topology_correction_register.yaml) | Stage 1 mechanism accepted; the register has only a proposed agriculture transition with null accepted-decision bindings | No entry authorizes this index README replacement; no Stage 2 consumption is established by this review |
 
-[Back to top](#top)
-
----
+**Directory Rules basis:** sections 11–12 assign lifecycle/accountability and
+catalog-projection responsibilities; section 16 supplies the compact inherited
+boundary and verified direct-child tree; sections 17–18 preserve compatibility,
+correction, and rollback controls. ADR-0038 makes frozen-content correction a
+separate exact-transition matter. Placement is not mutation permission.
 
 ## 1. Purpose
 
-`catalog/index/` is a **root-level compatibility redirect** for catalog-index path drift.
+Keep legacy links understandable without creating another catalog-index writer.
+This page explains where readers should go, what must not accumulate here, and
+what evidence a correction or retirement requires.
 
-It exists only to prevent accidental, legacy, generated, copied, or externally imported catalog index material from becoming a parallel authority outside the KFM lifecycle data root.
-
-This folder should not be used for canonical:
-
-- catalog indexes or lookup tables;
-- generated search indexes or search manifests;
-- source indexes, domain indexes, layer indexes, crosswalk indexes, or publication-state indexes;
-- STAC, DCAT, PROV, CatalogMatrix, domain-catalog, or release-catalog indexes;
-- collection summaries or public discovery indexes;
-- receipts, proof records, release records, schemas, policy rules, published artifacts, or producer outputs.
-
-This README does not prove that any catalog index material currently exists here, that migration has been completed, that producer tools avoid this path, that public clients exclude this path, that CI blocks writes here, or that any ADR has finalized long-term retention of this compatibility root.
-
-[Back to top](#top)
-
----
+The word **redirect** describes documentation navigation only. This update
+installs no HTTP redirect, alias resolver, search backend, API route, producer,
+consumer, or data migration.
 
 ## 2. Canonical home
 
-Canonical catalog index material belongs under the governed data catalog tree:
+[`data/catalog/`](../../data/catalog/README.md) owns governed catalog projections,
+including catalog indexes, matrices, quality summaries, and release-linked
+subsets. Index membership and lookup success do not establish source authority,
+EvidenceBundle closure, policy permission, or release state.
 
-```text
-data/catalog/
-```
+The pinned direct-child listing contains `README.md` and the six directories
+`dcat/`, `domain/`, `domains/`, `prov/`, `settlements-infrastructure/`, and `stac/`.
+There is **no direct `index/` child**. This is a presence/absence observation, not
+acceptance of every existing spelling or alias. The canonical README records
+child-role distinctions; this leaf does not resolve their placement drift.
 
-A dedicated index sublane may be used only when accepted and verified:
-
-```text
-data/catalog/index/   # NEEDS VERIFICATION — README not found on main during this revision
-```
-
-The root-level `catalog/index/` directory is a redirect/fence only.
-
-```text
-catalog/index/       # compatibility redirect only; do not add catalog index records here
-data/catalog/        # canonical catalog-stage lifecycle lane
-```
-
-If a future ADR or migration creates `data/catalog/index/`, this README should be updated to cite the accepted target and any migration or producer-configuration evidence.
+Do not create `data/catalog/index/` just to mirror this legacy path. A dedicated
+lane remains **PROPOSED** until its responsibility, owner, existing-family overlap,
+consumers, contract, validation, and applicable placement decision are established.
+Catalog indexes may belong to an existing family; this README mandates no new tree.
 
 ## 3. Authority boundary
 
-`catalog/index/` has **no canonical catalog-index authority**. It may hold only redirect guidance, migration notes, drift logs, or temporary markers while misplaced catalog index material is reviewed and moved into its proper lifecycle home.
+The local scope is `catalog/index/`; its owning responsibility root is `catalog/`,
+not a new “index” root. It inherits the parent's deprecated containment posture.
 
-```text
-WRONG / LEGACY ROOT                  CANONICAL LIFECYCLE HOME              TRUST SUPPORT HOMES
-catalog/index/                  -->  data/catalog/                     -->  data/receipts/
-compatibility fence only             catalog indexes / lookup tables        data/proofs/
-not authoritative                    release-linked catalog indexes         release/
-                                      optional accepted index sublane        data/published/
-```
+**Inputs to this document:** pinned repository evidence, adopted rules, accepted
+ADRs, and reviewed migration/correction evidence. **Outputs:** human navigation,
+exclusions, and explicitly bounded verification work. **Permitted content writer:**
+none by default under the frozen-root posture; a reviewed proposal is not an
+accepted production writer.
 
-A catalog index outside the governed `data/catalog/` tree should be treated as drift until reviewed and migrated.
+This path owns no domain truth, source admission, semantic contract, schema,
+policy, proof, receipt, release decision, public artifact, or operational index.
+The Root Registry is a projection of adopted authority, not a way to grant an
+exception. A note, badge, proposed ADR, or successful GitHub merge cannot create
+that exception either.
 
 ## 4. Default posture
 
-Anything found under root-level `catalog/index/` should be treated as **NEEDS VERIFICATION** and potentially misplaced.
+Preserve the governing lifecycle:
 
-Do not expose, publish, index, cite, search, cache, export, tile, embed, or depend on root-level catalog-index files as canonical records. First confirm source, provenance, rights, sensitivity, schema validity, lifecycle state, receipts, proofs, release state, rollback path, correction path, and producer history.
+```text
+RAW -> WORK/QUARANTINE -> PROCESSED -> CATALOG/TRIPLET -> PUBLISHED
+```
+
+Promotion is a governed transition, not a file move or completed indexing job.
+Public clients use governed APIs and released public-safe artifacts, never this
+compatibility path or direct internal stores.
+
+For a consequential claim, resolve `EvidenceRef -> EvidenceBundle` and preserve
+source role, identity, spatial/temporal scope, rights, sensitivity, validation,
+provenance, integrity, receipts/proofs, policy, review, release, correction, and
+rollback state. A search hit, map selection, tile, graph projection, summary, or AI
+answer remains a carrier, not root truth.
+
+Unclear rights, cultural authority, living-person/DNA data, rare-species or
+archaeological precision, private-land detail, or infrastructure sensitivity
+requires denial, quarantine, redaction, generalization, or staged access as
+applicable. Record transforms and reasons; do not paste protected bytes into a
+public issue, README, receipt, or branch.
 
 ## 5. Allowed contents
 
-| Allowed item | Example | Required posture |
+Only the **already tracked** navigation boundary is present:
+
+| Existing item | Role | Restriction |
 |---|---|---|
-| README / redirect docs | `README.md` | Compatibility fence only |
-| Migration note | `MIGRATION.md` | Temporary and ADR/review-linked |
-| Drift note | `DRIFT.md`, `OPEN-QUESTIONS.md` | Must point to canonical homes and review steps |
-| Placeholder marker | `.gitkeep` | Does not authorize index content |
+| `README.md` | Retained redirect and containment guidance | Any replacement remains subject to frozen-root correction authority |
+| `.gitkeep` | Existing empty placeholder | Preserve in this update; it neither admits content nor justifies further scaffolding |
+
+The earlier suggestions to add `MIGRATION.md`, `DRIFT.md`, `OPEN-QUESTIONS.md`, or
+new placeholders are withdrawn. Keep migration and drift records in their existing
+owning roots and link to them when verified. An unaccepted migration note is not a
+write permit.
 
 ## 6. Forbidden contents
 
-| Forbidden here | Correct home |
+| Do not place here | Governing destination or responsibility |
 |---|---|
-| Catalog indexes, lookup tables, search indexes, collection summaries | `data/catalog/` or an accepted sublane under it |
-| Domain, source, layer, STAC, DCAT, PROV, CatalogMatrix, publication-state, or crosswalk indexes | `data/catalog/` under their proper family lanes |
-| Generated search manifests or public discovery indexes | `data/catalog/` before release, `data/published/` after governed release |
-| Catalog-derived public products | `data/published/` after governed release |
-| Source descriptors, source registry rows, rights rows, sensitivity rows | `data/registry/` or governed registry homes |
-| Receipts, validation reports, redaction/generalization/aggregation receipts | `data/receipts/` |
-| EvidenceBundles, proof packs, attestations | `data/proofs/` |
-| ReleaseManifest, PromotionDecision, RollbackCard, CorrectionNotice, signatures | `release/` |
-| Schemas and machine-shape contracts | `schemas/contracts/v1/` |
-| Human contracts and object-meaning docs | `contracts/` |
-| Policy rules and policy decisions | `policy/` and governed policy-decision homes |
-| Source code, scripts, packages, pipelines, build tools, producers | `apps/`, `packages/`, `tools/`, `scripts/`, `pipelines/`, `pipeline_specs/` |
-| Raw, work, quarantine, processed, catalog, triplet, or published lifecycle data | `data/` lifecycle subtrees |
+| Catalog, lookup, crosswalk, collection, domain, source, layer, STAC/DCAT/PROV, CatalogMatrix, or publication-state index projections | `data/catalog/`, within the verified appropriate family |
+| Source descriptors and source/dataset/layer/rights/sensitivity registry instances | `data/registry/`, under their owning registry family |
+| RAW, WORK, QUARANTINE, or PROCESSED payloads; relationship projections | Their `data/` lifecycle lane; graph projections belong to `data/triplets/` |
+| Process, validation, transform, redaction, or catalog-build receipts | `data/receipts/`; receipts describe execution, not approval |
+| EvidenceBundles and proof-pack support | `data/proofs/`; proof support is not a release decision |
+| Release manifests, promotion/correction/withdrawal decisions, rollback cards, and release signatures | `release/`, under their verified object family |
+| Released discovery indexes, search manifests, maps, tiles, exports, or other public-safe carriers | `data/published/` only after governed release; serving remains governed |
+| Semantic contracts, machine shapes, and policy rules | `contracts/`, `schemas/`, and `policy/`, respectively |
+| Producer code, pipelines, application/runtime code, tools, workflow logic, or configuration | Their existing implementation/configuration responsibility roots, not this data-looking legacy path |
+
+These are responsibility routes, not permission to create files, admit a source,
+run a producer, relocate restricted data, or publish a derivative.
 
 ## 7. Directory shape
 
-Current implementation inventory remains `NEEDS VERIFICATION`.
+**CONFIRMED tracked direct children at the pinned commit:**
 
 ```text
 catalog/index/
-├── README.md                 # compatibility redirect / drift fence
-├── MIGRATION.md              # PROPOSED only if migration is active
-└── DRIFT.md                  # PROPOSED only if misplaced catalog index material is found
+├── .gitkeep                 # existing zero-byte placeholder; no authority
+└── README.md                # retained navigation and containment boundary
 ```
 
-> [!WARNING]
-> Do not treat this suggested shape as repo fact. Verify actual contents before making inventory, producer, enforcement, or migration claims.
+There are no child directories or tracked payload files in this subtree at the
+snapshot. This closes the prior README's local tracked-inventory uncertainty,
+not a repository-wide or external-storage audit.
 
 ## 8. Minimum safe redirect slice
 
-A smallest safe `catalog/index/` state should prove only that the folder prevents drift; it should not contain trust-bearing material.
-
-| Slice item | Minimum requirement | Why it matters |
-|---|---|---|
-| Redirect README | Points to `data/catalog/` as canonical | Prevents parallel authority |
-| No catalog index records | No durable lookup, search, source, domain, STAC/DCAT/PROV, CatalogMatrix, crosswalk, or publication-state index files | Keeps catalog records in lifecycle root |
-| No trust support records | No receipts, proofs, releases, registry rows, policy rules, schemas, contracts, or published artifacts | Preserves responsibility roots |
-| Drift procedure | Explains how to inspect and migrate misplaced indexes | Keeps remediation reversible |
-| Producer guard | Producers, generators, scripts, and CI should not write durable indexes here | Prevents reintroducing drift |
-| Public-use guard | Public clients, search services, map runtimes, exports, and indexes must not read from this path as canonical | Preserves governed access path |
-| Sublane guard | `data/catalog/index/` remains `NEEDS VERIFICATION` until accepted and present | Avoids inventing canonical structure |
-| Verification backlog | Open items stay visible | Prevents documentation from pretending migration/enforcement is complete |
+| Property | Bounded result or remaining gate |
+|---|---|
+| Canonical navigation | Points to the verified `data/catalog/` parent, not an invented index sublane |
+| Local payload exclusion | Confirmed for the pinned two-file tracked subtree only |
+| Inherited frozen boundary | Adopted through ADR-0029; no new files or parallel authority permitted |
+| Producer/public-use exclusion | Required behavior; complete writer, consumer, and runtime verification remains open |
+| Exact correction authority | Not present for this README replacement; integration stays held |
+| Retirement | Requires zero-writer/zero-consumer, migration, correction, and rollback evidence; not performed |
 
 ## 9. Diagram
 
-```mermaid
-flowchart TD
-    wrong["catalog/index/\nroot-level redirect"] --> review["review for catalog-index drift"]
-    review --> classify["classify: index / receipt / proof / release / source / schema / policy / published artifact / producer output"]
-    classify --> canonical["data/catalog/\ncanonical catalog-stage lane"]
-    canonical -. optional .-> sublane["data/catalog/index/\nNEEDS VERIFICATION"]
-    classify --> receipts["data/receipts\nvalidation / transform / catalog-build receipts"]
-    classify --> proofs["data/proofs\nEvidenceBundles / proof packs"]
-    classify --> release["release\npublication decisions"]
-    release --> published["data/published\npublic-safe released artifacts"]
-    canonical --> release
-    wrong -. "must not be public/canonical" .-> published
-    wrong -. "must not be producer target" .-> canonical
+The diagram separates navigation from the governed data path; it is not an
+implemented route map or an automatic migration:
+
+```text
+Documentation navigation:
+  catalog/index/README.md  -->  data/catalog/README.md
+
+Governed data path:
+  processed records  -->  catalog projections  -->  release-approved carriers
+       evidence / policy / review / integrity / correction / rollback gates
+                                                   |
+                                                   v
+                                     governed API or released-artifact delivery
 ```
+
+There is no public-data shortcut from `catalog/index/` to the final delivery step.
 
 ## 10. Migration posture
 
-If catalog index files are found here:
+No migration is performed by this update. If misplaced material is discovered,
+first hold its consumption and classify its actual responsibility. Preserve
+source identity, digests, producer history, evidence, rights/sensitivity, prior
+references, and any exposure evidence without redistributing restricted bytes.
 
-1. Do not publish, cite, index, search, cache, export, tile, or depend on them.
-2. Identify whether they are lookup tables, search indexes, domain/source indexes, STAC/DCAT/PROV indexes, CatalogMatrix records, crosswalks, publication-state indexes, receipts, proofs, release records, source registry rows, schemas, policy records, published-output material, generated previews, temporary build artifacts, or producer outputs.
-3. Determine whether the file is historical drift, generated drift, copied output, unreviewed local work, or an intentional migration marker.
-4. Move or regenerate durable catalog indexes into `data/catalog/` or an accepted, verified sublane under it.
-5. Move receipts, proofs, release records, published artifacts, schemas, contracts, policy, source descriptors, and producer code into their owning roots.
-6. Preserve provenance, source refs, digests, receipts, review notes, producer identity, and rollback path.
-7. Add a drift register, migration note, or correction note if the misplaced material was previously consumed.
-8. Add or update validation checks so producers do not recreate root-level catalog-index drift.
-9. Leave `catalog/index/` as a redirect/fence unless an accepted ADR explicitly changes the authority model.
+Then establish the accepted decision, exact old/new mappings, verified target,
+single-writer cutover, positive and negative validation, correction propagation,
+and rollback or forward-fix path. Regeneration is not permission to discard
+lineage. Any temporary dual-read arrangement must be explicitly authorized and
+must not weaken public or sensitivity controls.
+
+Only retire the legacy path after zero-producer/zero-consumer and migration
+closure. Do not automatically move files, remove `.gitkeep`, delete this README,
+or create an index sublane in response to this guidance.
 
 ## 11. Runtime and producer anti-bypass matrix
 
-| Bypass risk | Required behavior | Review signal |
+| Risk | Required disposition | Evidence needed before claiming closure |
 |---|---|---|
-| Producer writes catalog indexes to `catalog/index/` | Fail review/CI; write to `data/catalog/` or accepted sublane instead | Generator config and output paths checked |
-| Public client reads root-level index | Deny; route through governed catalog/release path | Client/search/index config excludes this path |
-| Root-level index is treated as canonical | Mark as drift and migrate/regenerate | Migration note references canonical target |
-| `data/catalog/index/` is claimed canonical before it exists | Keep `NEEDS VERIFICATION` until path and README are accepted | Current fetch or PR evidence cited |
-| Receipts/proofs/release records stored here | Move to owning roots | Directory review blocks trust support records |
-| Schema/profile file stored here | Move to `schemas/` or standards docs as appropriate | Schema-home review passes |
-| Policy rule stored here | Move to `policy/` | Policy-root review passes |
-| Published artifact stored here | Move to `data/published/` after release gate | Release/publication review passes |
-| Search/cache/export pipeline consumes this path | Deny as canonical; switch to governed catalog/release source | Producer and client config reviewed |
-| Drift file already consumed downstream | Add correction/migration note and rollback path | Correction path is auditable |
-| README claims CI enforcement without run/check evidence | Mark enforcement `NEEDS VERIFICATION` | Current CI evidence cited before pass claims |
+| A generator or CI job writes index objects here | Reject the destination; use the governed owning lane after review | Producer configuration, output-path checks, and negative tests |
+| A public API, map, search, cache, export, or AI feature reads this path as data | Deny the shortcut; use governed release-aware delivery | Consumer inventory and authenticated runtime/access tests |
+| Lookup success is treated as source/evidence/release authority | Resolve evidence and the actual policy/review/release state, or abstain | Claim-level references and finite negative outcomes |
+| A proposed `data/catalog/index/` lane is advertised as implemented | Keep absence and future proposal separate | Exact tree, accepted placement where required, and consumer/validator evidence |
+| A receipt, proof, schema, policy, or release object is added here | Hold and classify; use the existing owning responsibility | Reviewed migration and reference-closure evidence |
+| A same-path README edit is assumed exempt from freezing | Keep integration held until its exact transition is authorized | Trusted-base decision and bindings, plus required validation |
+| Downstream artifacts already consumed misplaced material | Preserve incident history and apply governed correction/invalidation | Correction notices, affected-object inventory, receipts, and rollback proof |
+
+These are requirements, not claims that the current runtime enforces every row.
 
 ## 12. Inspection path
 
-Actual root-level contents, producers, workflow writes, migration status, canonical sublane acceptance, CI/review enforcement, public-client/index exclusion, and current ADR disposition remain `NEEDS VERIFICATION`.
+The following commands are **read-only review aids for a real checkout**. They do
+not admit sources, rebuild indexes, or authorize correction:
 
 ```bash
-find catalog/index -maxdepth 6 -type f | sort
-find data/catalog data/receipts data/proofs data/published data/registry release schemas contracts policy docs tools scripts pipelines pipeline_specs .github/workflows -maxdepth 6 -type f 2>/dev/null | grep -Ei 'catalog|index|lookup|search|collection|summary|crosswalk|CatalogBuildReceipt|CatalogMatrix|ReleaseManifest|EvidenceBundle|RunReceipt|SourceDescriptor|stac|dcat|prov|schema|policy|validator|publish|workflow|migration|drift' | sort
+# Run from the repository root; record the actual checkout identity.
+git rev-parse --verify HEAD
+git ls-tree -r HEAD -- catalog/index/
+git ls-tree HEAD:data/catalog/
+git grep -n -F 'catalog/index/' HEAD -- .
 ```
+
+`git ls-tree` describes tracked Git state, not ignored files or external stores.
+`git grep` returning status 1 means no match; other failures must be investigated.
+A text match is only a candidate reference, and zero matches do not establish
+zero dynamic, deployed, hosted, or external consumers. Classify documentation
+references separately from executable producers and consumers.
 
 ## 13. Validation expectations
 
-Useful validation for this folder should cover:
+For a README correction, verify the complete target, inherited authority,
+tracked inventory, supported destination, metadata, retained anchors, relative
+links, tables, code fences, final newline, and absence of conflict markers or
+sensitive payloads. Compare the exact base and head, not an unpinned working tree.
 
-- no catalog indexes, lookup tables, search indexes, collection summaries, crosswalk indexes, or publication-state indexes are stored here;
-- no STAC, DCAT, PROV, CatalogMatrix, or domain catalog records are stored here;
-- no receipts, proofs, release records, registry records, policy rules, schemas, source code, pipelines, tools, producer outputs, or published artifacts are stored here;
-- any non-README content is tied to an active migration, drift note, or placeholder marker;
-- producer tools, scripts, generated outputs, workflows, indexes, search services, public clients, exports, tile jobs, and map runtimes do not target `catalog/index/` as canonical;
-- links point users to `data/catalog/` and other owning roots;
-- CI or review checks flag root-level `catalog/index/` writes when enforcement exists;
-- CI/pass/enforcement state is not claimed without current evidence.
+For AI-authored work, follow [CONTRIBUTING.md](../../CONTRIBUTING.md) and the
+[existing generated-receipt lane](../../data/receipts/generated/README.md): record
+final artifact hashes, pinned evidence, actual checks and omissions, and pending
+human review. Do not put that receipt under `catalog/index/`.
+
+**Integration is a separate gate.** ADR-0038 states that KFM-TOPO-004 uses
+`path@object_id` for frozen-root evidence. Replacing this README introduces a new
+frozen-content delta even when the path count is unchanged. The inspected
+agriculture-only proposed entry does not authorize it. Do not label this new
+index delta inherited, suppress its finding, refresh a baseline, or claim an
+exception solely because another catalog edit previously merged.
+
+This documentation review is not an executed full topology, producer, runtime,
+release, accessibility, or public-access test. Record exact-head hosted outcomes
+in the PR; distinguish performed, failed, pending, skipped, and unrun checks.
 
 ## 14. Safe change pattern
 
-For changes under `catalog/index/`:
-
-1. Confirm the change is redirect documentation, migration support, drift documentation, or a non-authoritative placeholder only.
-2. Confirm it does not create a parallel catalog-index authority.
-3. Confirm durable catalog indexes are placed under `data/catalog/` or an accepted and verified sublane.
-4. Confirm receipts, proofs, release records, registry records, schemas, contracts, policy rules, published artifacts, and code are placed under their owning roots.
-5. Confirm no public client, search index, map runtime, export job, tile job, story/focus/evidence surface, catalog producer, or cache reads this path as canonical.
-6. Document migration, correction, and rollback if any misplaced material was moved or previously consumed.
-7. Update docs and validation rules when behavior materially changes.
+1. Re-pin the base, governing files, target blob, and current overlap before work.
+2. Limit the proposal to this retained README and directly required provenance.
+3. Preserve the document ID, legacy anchors, inherited freeze, and evidence limits.
+4. Validate candidate bytes and final remote scope; leave `.gitkeep`, registries,
+   topology baselines, validators, policies, and lifecycle payloads unchanged.
+5. Open a draft only through an eligible delivery path. Read back actual GitHub
+   state; body text is not draft-retention enforcement.
+6. Keep ready/merge/integration held until the exact correction and required review
+   are separately authorized. Do not bundle self-authorizing controls into the edit.
 
 ## 15. Rollback and correction posture
 
-If material was added here by mistake, rollback should be small and auditable:
+The pre-update README is available at
+[the pinned source path](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/832d15769f142f70b0065c9b8c45a7b3e4cd5c10/catalog/index/README.md),
+blob `3898725a2e3311222020c66099ae4a09f806ea5e`.
 
-- remove or revert the misplaced file from `catalog/index/`;
-- regenerate or move durable catalog indexes into `data/catalog/` through a governed migration;
-- preserve digest/provenance notes for anything already referenced;
-- add a correction note if public, semi-public, generated downstream, search, export, or cache artifacts consumed the misplaced path;
-- update producer configuration and tests so the drift is not recreated.
+Before integration, retain the proposal unmerged or append a non-force revert on
+the task-owned branch. Preserve its generated receipt as historical provenance;
+do not silently rewrite a receipt to claim it described different bytes.
+
+After integration, a revert is itself a frozen-content transition requiring
+current review and authority. Restoring old bytes also restores their outdated
+permission to add files, so choose an explicitly reviewed correction rather than
+an automatic rollback. Do not restore another incident's damaged catalog blob,
+reset shared history, reopen parallel writers, or undo unrelated work.
 
 ## 16. Safe language rules
 
-Use these terms carefully:
-
-| Phrase | Allowed here? | Safer wording |
-|---|---:|---|
-| "canonical index in `catalog/index/`" | No | "misplaced or legacy catalog index requiring review" |
-| "published from `catalog/index/`" | No | "published only after release via canonical lifecycle path" |
-| "CI blocks this" | Only with current evidence | "CI guard remains NEEDS VERIFICATION" |
-| "migration complete" | Only with migration evidence | "migration status remains NEEDS VERIFICATION" |
-| "safe to consume" | Only after release/access evidence | "do not consume as canonical from this path" |
-| "`data/catalog/index/` exists" | Only with path evidence | "dedicated index sublane remains NEEDS VERIFICATION" |
+| Avoid | Evidence-bounded wording |
+|---|---|
+| “This is the canonical index.” | “This is legacy navigation to governed catalog projections.” |
+| “The entire system contains no index payloads.” | “The pinned `catalog/index/` subtree has only a README and empty placeholder.” |
+| “`data/catalog/index/` is implemented.” | “No direct index child exists at the recorded pin; any future lane remains proposed.” |
+| “CI blocks every unauthorized write.” | “The frozen-root rule is documented; actual runs and server-side coupling require their own evidence.” |
+| “Documentation changes are exempt.” | “A new frozen blob needs its own accepted exact-transition authority.” |
+| “Migration is complete” or “safe to serve.” | “Migration, consumer closure, release, and access remain unverified until their evidence closes.” |
 
 ## 17. Definition of done
 
-- [ ] Owners are confirmed and `OWNER_TBD` is replaced.
-- [ ] Actual root-level `catalog/index/` contents are verified.
-- [ ] Any misplaced catalog index material is migrated, removed, regenerated under `data/catalog/`, or documented as drift.
-- [ ] Canonical catalog index placement under `data/catalog/` or an accepted sublane is documented with evidence.
-- [ ] `data/catalog/index/` existence/absence is verified before being referenced as canonical.
-- [ ] No trust-bearing records live here.
-- [ ] No catalog indexes, STAC/DCAT/PROV/CatalogMatrix records, registry records, receipts, proofs, release records, published artifacts, schemas, contracts, policy rules, source code, producer outputs, or lifecycle data live here.
-- [ ] No public client, search index, map runtime, export job, tile job, catalog producer, story/focus/evidence surface, or cache uses this path as canonical.
-- [ ] CI/review behavior is verified or marked `NEEDS VERIFICATION`.
+**Documentation review scope:**
+
+- [x] Preserve the stable document ID, title, top anchor, and numbered section anchors.
+- [x] Verify the exact tracked local inventory and the canonical parent destination.
+- [x] Replace speculative child files with the actual two-file tree.
+- [x] Explain adopted deprecation and the separate frozen-root integration hold.
+- [x] Preserve lifecycle, evidence, rights/sensitivity, public-access, and rollback boundaries.
+
+**Not completed by this README:**
+
+- [ ] Separately accepted and correctly bound exact transition for this replacement.
+- [ ] Required exact-head validation and authorized human review before integration.
+- [ ] Accountable specialist stewardship and independent review where required.
+- [ ] Complete producer/consumer, external-storage, migration, and retirement proof.
+- [ ] Operational policy/release/correction/rollback closure for any affected data.
 
 ## 18. Open verification items
 
-| Item | Why it matters |
-|---|---|
-| Confirm actual files under root-level `catalog/index/` | Prevents overclaiming or missing drift |
-| Confirm whether any workflow writes here | Required before producer claims |
-| Confirm accepted canonical catalog-index placement | Required before final migration claims |
-| Confirm whether `data/catalog/index/` should exist | Required before sublane creation or references harden |
-| Confirm migration status to `data/catalog/` | Required before canonical-home claims beyond doctrine |
-| Confirm CI/review guard exists | Required before enforcement claims |
-| Confirm public clients/search/export/tile jobs do not consume this path | Required before safety claims |
-| Confirm no trust records are stored here | Required before Directory Rules compliance claims |
-| Confirm ADR status for root-level `catalog/index/` | Required before long-term retention claims |
+| Open item | First affected transition | Evidence required |
+|---|---|---|
+| Exact index README correction authority | Integration | Separately accepted decision and exact trusted-base bindings; not the agriculture entry |
+| Hosted checks and enforcement coupling | Readiness/integration | Exact-head run results and separately verified required-check behavior |
+| Specialist ownership and review separation | Relevant approval | Named accountable reviewers and authenticated review evidence |
+| Dynamic/deployed/external consumers and writers | Migration or retirement | Source/configuration, runtime, deployment, cache, and external-reference inventory |
+| Dedicated canonical index family, if needed | New-lane creation | Responsibility, overlap, owner, contract, consumers, validation, and applicable decision |
+| Correction, invalidation, retention, and rollback drills | Public change or retirement | Governed records and executed evidence, not directory presence |
 
 <details>
 <summary>Appendix A — no-loss preservation note</summary>
 
-The previous README already contained a bounded catalog-index redirect and anti-parallel-authority contract. This revision preserves that contract, refreshes metadata, adds a current evidence-basis section, adds Directory Rules placement posture, records that `data/catalog/index/README.md` was not found on `main`, strengthens canonical `data/catalog/` alignment, minimum safe redirect slice, producer/public-use anti-bypass safeguards, no-trust-record safeguards, migration/rollback guidance, safe language rules, and validation expectations, and keeps implementation/migration/enforcement claims bounded. It does not claim catalog index files, migration work, CI enforcement, producer workflow behavior, public-client exclusion, canonical sublane acceptance, or ADR disposition are implemented.
+The v0.2 redirect, anti-parallel-authority, no-public-data-path, responsibility
+routing, lifecycle, sensitivity, migration, and rollback intent is retained.
+The document ID, H1, top anchor, all numbered H2 headings, Quick jump, and Status
+summary remain available. The unverified local inventory is replaced with exact
+tracked evidence. The old suggestion to create migration/drift files or new
+placeholders is explicitly withdrawn because it conflicts with the adopted
+frozen-root posture. The canonical index sublane remains uncreated; no payload,
+producer, consumer, alias, schema, policy, release, or runtime state is upgraded.
 
 </details>
 
 ## Status summary
 
-`catalog/index/` is a root-level compatibility redirect and catalog-index drift fence. It is not the canonical catalog-index home.
+**Verified navigation; deprecated frozen root; no catalog payloads in the pinned
+local subtree; proposed README correction with integration held.** Use
+[`data/catalog/`](../../data/catalog/README.md) for governed catalog discovery.
+No index service, migration, release, deployment, promotion, or publication is
+established by this page.
 
-Catalog index authority belongs under the governed `data/catalog/` tree; a dedicated `data/catalog/index/` sublane remains `NEEDS VERIFICATION` until accepted and present. Trust-bearing support belongs under `data/receipts/`, `data/proofs/`, and `release/`; released public-safe products belong under `data/published/`.
-
-<p align="right"><a href="#top">Back to top</a></p>
+[Back to top](#top)
