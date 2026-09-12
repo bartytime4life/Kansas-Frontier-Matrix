@@ -106,6 +106,7 @@ export default function SiteRuntimeRepair() {
   const [mode, setMode] = useState<GuidanceMode>("closed");
   const [storyIndex, setStoryIndex] = useState(0);
   const syncQueued = useRef(false);
+  const closeButtonRef = useRef<HTMLButtonElement | null>(null);
 
   useLayoutEffect(() => {
     const originalReplaceState = window.history.replaceState.bind(window.history);
@@ -159,6 +160,7 @@ export default function SiteRuntimeRepair() {
 
   useEffect(() => {
     if (mode === "closed") return;
+    closeButtonRef.current?.focus();
     const closeOnEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") setMode("closed");
     };
@@ -200,7 +202,7 @@ export default function SiteRuntimeRepair() {
                 Explore trust states while the renderer is held
               </h2>
             </div>
-            <button type="button" autoFocus aria-label="Close degraded-runtime guide" onClick={() => setMode("closed")} style={buttonStyle}>×</button>
+            <button ref={closeButtonRef} type="button" aria-label="Close degraded-runtime guide" onClick={() => setMode("closed")} style={buttonStyle}>×</button>
           </header>
           <p style={{ margin: "0 0 14px", lineHeight: 1.5, color: "#d6ded9" }}>
             These actions use existing site-local fixtures and the Evidence Drawer. They do not activate MapLibre, fetch a source, or publish data.

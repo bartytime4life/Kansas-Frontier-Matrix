@@ -96,6 +96,15 @@ export function canonicalizeExplorerUrl(
   if (opacityOverrides.length > 0) next.searchParams.set("o", opacityOverrides.join(","));
   else next.searchParams.delete("o");
 
+  const activeContextIds = (next.searchParams.get("ctx") ?? "").split(",").filter(Boolean);
+  const parsedContextOpacity = parseOpacityPairs(next.searchParams.get("ctxo"));
+  const contextOpacityOverrides = activeContextIds.flatMap((id) => {
+    const value = parsedContextOpacity.get(id);
+    return value === undefined ? [] : [`${id}:${value.toFixed(2)}`];
+  });
+  if (contextOpacityOverrides.length > 0) next.searchParams.set("ctxo", contextOpacityOverrides.join(","));
+  else next.searchParams.delete("ctxo");
+
   if (next.searchParams.get("ws") === "trust") {
     const featureId = next.searchParams.get("f");
     if (featureId === null || !featureExists(featureId)) {

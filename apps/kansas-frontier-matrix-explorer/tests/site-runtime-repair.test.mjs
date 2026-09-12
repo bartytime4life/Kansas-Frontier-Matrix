@@ -22,12 +22,13 @@ test("canonicalizes opacity overrides and fails invalid trust deep links closed"
     { id: "beta", defaultOpacity: 0.4 },
   ];
   const invalid = repair.canonicalizeExplorerUrl(
-    "https://example.invalid/explorer?o=unknown:0.90,alpha:0.50,beta:0.82&ws=trust&f=missing&panel=evidence&drawer=open&focusStage=outcome&focusIntent=explain",
+    "https://example.invalid/explorer?o=unknown:0.90,alpha:0.50,beta:0.82&ctx=census-counties,nws-radar&ctxo=census-counties:0.72,nws-alerts:0.34,nws-radar:0.68&ws=trust&f=missing&panel=evidence&drawer=open&focusStage=outcome&focusIntent=explain",
     layers,
     () => false,
   );
 
   assert.equal(invalid.searchParams.get("o"), "beta:0.82");
+  assert.equal(invalid.searchParams.get("ctxo"), "census-counties:0.72,nws-radar:0.68");
   assert.equal(invalid.searchParams.get("ws"), "explore");
   for (const parameter of ["f", "panel", "drawer", "focusStage", "focusIntent"]) {
     assert.equal(invalid.searchParams.has(parameter), false);
@@ -62,5 +63,6 @@ test("mounts the bounded client repair from the root layout", async () => {
   assert.match(client, /window\.history\.replaceState/);
   assert.match(client, /runtime-degraded-banner/);
   assert.match(client, /aria-label="Open degraded-runtime guide"/);
+  assert.match(client, /closeButtonRef\.current\?\.focus\(\)/);
   assert.match(client, /window\.dispatchEvent\(new PopStateEvent/);
 });
