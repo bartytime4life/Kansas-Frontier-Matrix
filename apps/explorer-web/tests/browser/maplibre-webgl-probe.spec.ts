@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
-import { readFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { expect, test } from "playwright/test";
 
@@ -15,9 +15,12 @@ const FIXTURE = {
 const sha256 = (value: unknown) =>
   createHash("sha256").update(JSON.stringify(value)).digest("hex");
 
-const toolVersion = (command: string): string => {
+const toolVersion = (
+  command: string,
+  arguments_: string[] = ["--version"],
+): string => {
   try {
-    return execFileSync(command, ["--version"], { encoding: "utf8" }).trim();
+    return execFileSync(command, arguments_, { encoding: "utf8" }).trim();
   } catch {
     return "UNAVAILABLE";
   }
@@ -28,29 +31,13 @@ const lockedMapLibreVersion = (): string => {
     resolve(process.cwd(), "../../pnpm-lock.yaml"),
     "utf8",
   );
-  const lines = lockfile.split(/\\r?\\n/);
-  const importerStart = lines.findIndex(
-    (line) => line === "  packages/maplibre:",
-  );
-  if (importerStart < 0) return "LOCKFILE_VERSION_UNAVAILABLE";
 
-  const rendererStart = lines.findIndex(
-    (line, index) =>
-      index > importerStart && line === "      maplibre-gl:",
-  );
-  if (rendererStart < 0) return "LOCKFILE_VERSION_UNAVAILABLE";
-
-  const specifierLine = lines
-    .slice(rendererStart + 1, rendererStart + 4)
-    .find((line) => /^\\s+specifier:\\s+\\S+$/.test(line));
-  return (
-    specifierLine?.replace(/^\\s+specifier:\\s+/, "") ??
-    "LOCKFILE_VERSION_UNAVAILABLE"
   );
 };
 
 test("records one bounded WebGL2 capability and teardown probe", async ({
   page,
+  browser,
 }, testInfo) => {
   const externalRequests: string[] = [];
   page.on("request", (request) => {
@@ -127,9 +114,10 @@ test("records one bounded WebGL2 capability and teardown probe", async ({
       dependency_admission_changed: false,
     },
     browser: {
-      project: testInfo.project.name,
-      engine: "Chromium",
-      playwright: toolVersion("pnpm"),
+      project: testInfo.project.name || "default",
+      engine: browser.browserType().name(),
+      browser_version: browser.version(),
+      playwright: toolVersion("pnpm", ["exec", "playwright", "--version"]),
       node: process.version,
       pnpm: toolVersion("pnpm"),
     },
@@ -150,8 +138,11 @@ test("records one bounded WebGL2 capability and teardown probe", async ({
     },
   };
 
+  const receiptBody = JSON.stringify(receipt, null, 2);
+  const receiptPath = testInfo.outputPath("maplibre-webgl-probe.receipt.json");
+  writeFileSync(receiptPath, receiptBody, "utf8");
   await testInfo.attach("maplibre-webgl-probe.receipt.json", {
-    body: JSON.stringify(receipt, null, 2),
+    path: receiptPath,
     contentType: "application/json",
   });
 
