@@ -15,6 +15,8 @@ const FIXTURE = {
 const sha256 = (value: unknown) =>
   createHash("sha256").update(JSON.stringify(value)).digest("hex");
 
+const LOCKFILE_VERSION_UNAVAILABLE = "LOCKFILE_VERSION_UNAVAILABLE";
+
 const toolVersion = (
   command: string,
   arguments_: string[] = ["--version"],
@@ -26,42 +28,41 @@ const toolVersion = (
   }
 };
 
-const LOCKFILE_VERSION_UNAVAILABLE = "LOCKFILE_VERSION_UNAVAILABLE";
-
-const lockedMapLibreVersion = (lockfile?: string): string => {
-  const lines = (
-    lockfile ??
-    readFileSync(resolve(process.cwd(), "../../pnpm-lock.yaml"), "utf8")
-  ).split(/\r?\n/);
-  const importerIndex = lines.findIndex(
+const lockedMapLibreVersion = (source?: string): string => {
+  const lockfile =
+    source ??
+    readFileSync(resolve(process.cwd(), "../../pnpm-lock.yaml"), "utf8");
+  const lines = lockfile.split(/\r?\n/);
+  const importerStart = lines.findIndex(
     (line) => line === "  packages/maplibre:",
   );
-  if (importerIndex === -1) return LOCKFILE_VERSION_UNAVAILABLE;
+  if (importerStart < 0) return LOCKFILE_VERSION_UNAVAILABLE;
 
-  for (let index = importerIndex + 1; index < lines.length; index += 1) {
-    const line = lines[index];
-    if (/^\S/.test(line) || (line.startsWith("  ") && !line.startsWith("    "))) {
-      break;
-    }
-    if (line !== "      maplibre-gl:") continue;
+  const importerEnd = lines.findIndex(
+    (line, index) => index > importerStart && /^ {0,2}\S/.test(line),
+  );
+  const importer = lines.slice(
+    importerStart + 1,
+    importerEnd < 0 ? undefined : importerEnd,
+  );
+  const dependencyStart = importer.findIndex(
+    (line) => line === "      maplibre-gl:",
+  );
+  if (dependencyStart < 0) return LOCKFILE_VERSION_UNAVAILABLE;
 
-    for (
-      let dependencyIndex = index + 1;
-      dependencyIndex < lines.length;
-      dependencyIndex += 1
-    ) {
-      const dependencyLine = lines[dependencyIndex];
-      if (dependencyLine.length > 0 && !dependencyLine.startsWith("        ")) {
-        break;
-      }
-      const match = dependencyLine.match(/^\s{8}version:\s+(\S+)\s*$/);
-      if (match) return match[1];
-    }
-
-    return LOCKFILE_VERSION_UNAVAILABLE;
-  }
-
-  return LOCKFILE_VERSION_UNAVAILABLE;
+  const dependencyEnd = importer.findIndex(
+    (line, index) => index > dependencyStart && /^ {0,6}\S/.test(line),
+  );
+  const versionLine = importer
+    .slice(
+      dependencyStart + 1,
+      dependencyEnd < 0 ? undefined : dependencyEnd,
+    )
+    .find((line) => /^        version:\s+\S/.test(line));
+  return (
+    versionLine?.replace(/^        version:\s+/, "").trim() ??
+    LOCKFILE_VERSION_UNAVAILABLE
+  );
 };
 
 test("binds the receipt version to the scoped MapLibre importer", () => {
