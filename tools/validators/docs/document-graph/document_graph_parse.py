@@ -208,7 +208,12 @@ def _metadata_values(body: str) -> tuple[dict[str, object], tuple[str, ...]]:
 def _as_sequence(value: object) -> tuple[str, ...]:
     if isinstance(value, list):
         return tuple(str(item).strip() for item in value if str(item).strip())
-    return (value.strip(),) if isinstance(value, str) and value.strip() else ()
+    if not isinstance(value, str):
+        return ()
+    normalized = value.strip()
+    if not normalized or normalized.casefold() in {"null", "~"}:
+        return ()
+    return (normalized,)
 
 
 def parse_metadata(text: str) -> Metadata:
