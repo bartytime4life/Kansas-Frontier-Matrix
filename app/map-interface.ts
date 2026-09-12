@@ -17,10 +17,10 @@ export const MAP_VIEW_PROFILES: readonly MapViewProfile[] = Object.freeze([
   Object.freeze({
     id: "overview",
     title: "Kansas overview",
-    summary: "County starter locators, generalized extent, hydrology, ecology, roads, rail, current temporal fixture, and places.",
-    visibleLayerIds: Object.freeze(["kansas-extent", "county-starter-points", "watershed-context", "water-context", "prairie-context", "atmosphere-observations", "communities", "transport-context"]),
-    year: 2026,
-    basemap: "standard",
+    summary: "Real Census county boundaries and baseline counts, USGS stream observations, and mapped hydrography. Current sources refresh when you open the map.",
+    visibleLayerIds: Object.freeze([]),
+    year: new Date().getUTCFullYear(),
+    basemap: "streets",
     projection: "mercator",
   }),
   Object.freeze({

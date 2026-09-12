@@ -2,7 +2,7 @@ import { env } from "cloudflare:workers";
 import { drizzle } from "drizzle-orm/d1";
 import * as schema from "./schema";
 
-export function getDb() {
+export function getRawDb() {
   const database = env.DB as Parameters<typeof drizzle>[0] | undefined;
   if (!database) {
     throw new Error(
@@ -10,5 +10,9 @@ export function getDb() {
     );
   }
 
-  return drizzle(database, { schema });
+  return database;
+}
+
+export function getDb() {
+  return drizzle(getRawDb(), { schema });
 }

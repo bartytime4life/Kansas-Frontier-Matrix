@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import { BASELINE_STACKS, currentUtcDay } from "./daily-baseline";
+import { SourceQualityRow } from "./source-quality-row";
 import type { Feature, Geometry } from "geojson";
 import type { GeoJSONSource, Map as MapLibreMap, MapSourceDataEvent, Popup, ScaleControl } from "maplibre-gl";
 import {
@@ -1161,8 +1163,9 @@ export default function Home() {
   const [layerDomain, setLayerDomain] = useState<(typeof layerDomains)[number]>("ALL");
   const [globalQuery, setGlobalQuery] = useState("");
   const [expandedLayers, setExpandedLayers] = useState<Set<string>>(new Set());
-  const [year, setYear] = useState<number>(2026);
-  const [previewYear, setPreviewYear] = useState<number>(2026);
+  const [year, setYear] = useState<number>(OFFICIAL_CONTEXT_PRESENT_FRAME);
+  const [previewYear, setPreviewYear] = useState<number>(OFFICIAL_CONTEXT_PRESENT_FRAME);
+  const [baselineDay, setBaselineDay] = useState(currentUtcDay);
   const [mapEvidenceFilter, setMapEvidenceFilter] = useState<RegistryEvidenceFilter>("ALL");
   const [playing, setPlaying] = useState(false);
   const [temporalMode, setTemporalMode] = useState<TemporalSweepMode>("snapshot");
@@ -2699,6 +2702,21 @@ export default function Home() {
     if (map && styleGenerationReadyRef.current) applyOfficialContextState(map, officialContextRuntimeVisibility(next, temporalQueryRef.current.frame, noaaRadarReadyRef.current, noaaRadarFrameTimeRef.current), officialOpacityRef.current, officialPayloadsRef.current);
     announce("Official context hidden; loaded snapshots remain available on this page");
   }, [announce]);
+
+  useEffect(() => {
+    const refresh = () => {
+      const day = currentUtcDay();
+      setBaselineDay(day);
+      if (document.hidden || temporalQueryRef.current.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME) return;
+      for (const source of OFFICIAL_CONTEXT_SOURCES) {
+        if (source.apiPath && officialVisibilityRef.current[source.id]) void refreshOfficialContext(source.id as OfficialContextFeedId);
+      }
+    };
+    const timer = window.setInterval(refresh, 300_000);
+    const visible = () => { if (!document.hidden) refresh(); };
+    document.addEventListener("visibilitychange", visible);
+    return () => { clearInterval(timer); document.removeEventListener("visibilitychange", visible); };
+  }, [refreshOfficialContext]);
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -5077,7 +5095,9 @@ export default function Home() {
   };
 
   const applyViewProfile = (profile: MapViewProfile) => {
-    const nextVisibility = Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, profile.visibleLayerIds.includes(layer.id)]));
+    const baselineSources = BASELINE_STACKS[profile.id];
+    const nextVisibility = Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, baselineSources ? false : profile.visibleLayerIds.includes(layer.id)]));
+    if (baselineSources) for (const source of OFFICIAL_CONTEXT_SOURCES) setOfficialContextVisible(source.id, baselineSources.includes(source.id));
     const nextScenePreset: ScenePresetId = profile.id === "smoke" ? "smoke-context" : profile.id === "elevation" ? "elevation-3d" : profile.projection === "globe" ? "globe-overview" : "overview-2d";
     const nextAtmosphere: AtmospherePreset = profile.id === "smoke" || profile.id === "hazards" || profile.id === "elevation" ? "dusk" : profile.projection === "globe" ? "clear" : "night";
     const nextLightAzimuth = profile.id === "elevation" ? 235 : profile.projection === "globe" ? 225 : 210;
@@ -5094,7 +5114,7 @@ export default function Home() {
     lightAzimuthRef.current = nextLightAzimuth;
     fieldOfViewRef.current = nextFieldOfView;
     setVisibility(nextVisibility);
-    commitTemporalFrame(profile.year);
+    commitTemporalFrame(baselineSources ? OFFICIAL_CONTEXT_PRESENT_FRAME : profile.year);
     setMapEvidenceFilter("ALL");
     setPlaying(false);
     setTemporalMode("snapshot");
@@ -6221,7 +6241,7 @@ export default function Home() {
         <div className="top-context" aria-label="Current map context">
           <span><small>AREA</small><strong>{selectedLabel}</strong></span>
           <span><small>TIME</small><strong>{temporalScopeLabel}</strong></span>
-          <span className="release-indicator" data-selection-state={selected?.properties.evidenceState ?? "DEMONSTRATION"} title="Visible selection posture; not release or publication authority"><i /> {selected ? selectedEvidence?.label.toUpperCase() : "DEMONSTRATION"}</span>
+          <span className="release-indicator" data-selection-state={selected?.properties.evidenceState ?? "SOURCE_DATA"} title="Visible selection posture; not release or publication authority"><i /> {selected ? selectedEvidence?.label.toUpperCase() : visibleCount > 0 ? "EXAMPLES ACTIVE" : `DAILY BASELINE · ${baselineDay}`}</span>
         </div>
         <div className="top-actions">
           <div className="map-context-composer">
@@ -6566,11 +6586,11 @@ export default function Home() {
             <div><p className="panel-kicker">{leftPanelMode === "views" ? "LIVING ATLAS" : leftPanelMode === "layers" ? "LAYER CATALOG" : leftPanelMode === "places" ? "PLACES" : "STORY ATLAS"}</p><h1>{leftPanelMode === "views" ? "Investigate Kansas" : leftPanelMode === "layers" ? "Layer Catalog" : leftPanelMode === "places" ? "Places + trails" : "Guided stories"}</h1></div>
             <button className="icon-close" type="button" onClick={closeLeftPanel} aria-label="Close Explorer navigation">×</button>
           </div>
-          <p className="panel-intro">{leftPanelMode === "views" ? "Start from a named question, then inspect the map, time, evidence, and report together." : leftPanelMode === "layers" ? "Choose site-local demonstration layers or optional official context connections; external context never becomes a report or KFM evidence." : leftPanelMode === "places" ? "Save complete, device-local investigations and revisit them as a trail." : "Pause on a site-local chapter, inspect its evidence state, and keep the boundary visible."}</p>
+          <p className="panel-intro">{leftPanelMode === "views" ? "Start from a named question, then inspect the map, time, evidence, and report together." : leftPanelMode === "layers" ? "Start with real Kansas sources. Adjust each layer here, download its data, or propose an update for review." : leftPanelMode === "places" ? "Save complete, device-local investigations and revisit them as a trail." : "Pause on a site-local chapter, inspect its evidence state, and keep the boundary visible."}</p>
           <Link className="event-sidebar-link" href="/observatory">Event Observatory · 24-hour archive calendar, radar, smoke & rivers ↗</Link>
           <nav className="left-panel-tabs" aria-label="Living Atlas sections">
             <button type="button" aria-current={leftPanelMode === "views" ? "page" : undefined} data-active={leftPanelMode === "views"} onClick={() => setLeftPanelMode("views")}>Views <b>{LIVING_ATLAS_VIEWS.length}</b></button>
-            <button type="button" aria-current={leftPanelMode === "layers" ? "page" : undefined} data-active={leftPanelMode === "layers"} onClick={() => setLeftPanelMode("layers")}>Layers <b>{visibleCount}/{LAYER_REGISTRY.length}</b></button>
+            <button type="button" aria-current={leftPanelMode === "layers" ? "page" : undefined} data-active={leftPanelMode === "layers"} onClick={() => setLeftPanelMode("layers")}>Layers <b>{visibleOfficialCount}/{OFFICIAL_CONTEXT_SOURCES.length}</b></button>
             <button type="button" aria-current={leftPanelMode === "places" ? "page" : undefined} data-active={leftPanelMode === "places"} onClick={() => setLeftPanelMode("places")}>Places <b>{savedWorkspaces.length}</b></button>
             <button type="button" aria-current={leftPanelMode === "stories" ? "page" : undefined} data-active={leftPanelMode === "stories"} onClick={() => setLeftPanelMode("stories")}>Stories <b>1</b></button>
           </nav>
@@ -6586,7 +6606,7 @@ export default function Home() {
                 <dl><div><dt>Scope</dt><dd>{atlasView.scope}</dd></div><div><dt>Time</dt><dd>{atlasView.time}</dd></div><div><dt>Source posture</dt><dd>{atlasView.sourcePosture}</dd></div></dl>
                 <div className="atlas-view-domains" aria-label={`${atlasView.title} domains`}>{atlasView.domains.map((domain) => <span key={domain}>{domain}</span>)}</div>
                 <p className="atlas-view-note">{atlasView.note}</p>
-                <footer><span>{atlasView.report}</span><button type="button" disabled={atlasView.status !== "SITE_DEMO"} onClick={() => applyLivingAtlasView(atlasView)}>{atlasView.status === "SITE_DEMO" ? atlasView.story ? "Start story" : "Open on map" : "Data binding held"}</button></footer>
+                <footer><span>{atlasView.report}</span><button type="button" disabled={atlasView.status === "DESIGN_HOLD"} onClick={() => applyLivingAtlasView(atlasView)}>{atlasView.status !== "DESIGN_HOLD" ? atlasView.story ? "Start story" : "Open on map" : "Data binding held"}</button></footer>
               </article>)}
               {filteredAtlasViews.length === 0 && <div className="catalog-empty"><strong>No matching investigations</strong><p>Try a place, domain, time, or question.</p></div>}
             </div>
@@ -6611,13 +6631,15 @@ export default function Home() {
           <div className="layer-catalog-body" hidden={leftPanelMode !== "layers"}>
           <label className="catalog-search"><span aria-hidden="true">⌕</span><span className="sr-only">Search Layer Catalog</span><input type="search" value={layerQuery} onChange={(event) => setLayerQuery(event.target.value)} placeholder="Filter layers and datasets" /></label>
 
+          <details className="legacy-layer-index"><summary>Legacy examples & diagnostics</summary><p>These older interaction examples are separate from today’s real source baseline.</p>
           <section className="active-layers" aria-labelledby="active-title">
             <div className="section-row"><h2 id="active-title">Active local layers <span>{visibleCount}/{LAYER_REGISTRY.length}</span></h2><div className="active-layer-actions"><button type="button" onClick={() => { setVisibility(defaultVisibility); setOpacity(defaultOpacity); }}>Reset defaults</button><button type="button" onClick={() => setVisibility(Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, false])))}>Hide all</button></div></div>
             <div className="active-chips">{activeLayers.map((layer) => <button key={layer.id} type="button" onClick={() => zoomToLayer(layer)}>{layer.title}<span>↗</span></button>)}</div>
           </section>
 
           <nav className="catalog-section-jump" aria-label="Layer Catalog shortcuts">
-            <a href="#catalog-layer-stack"><span>Layer toggles</span><b>{filteredLayerIds.size} available</b></a>
+            <a href="#catalog-layer-stack"><span>Legacy examples</span><b>Optional controls</b></a>
+            <a href="#official-context-catalog"><span>Real data layers</span><b>{OFFICIAL_CONTEXT_SOURCES.length} connections</b></a>
             <a href="#catalog-domain-index-title"><span>All domains</span><b>{CATEGORY_ORDER.length} layer groups</b></a>
             <a href="#priority-context-title"><span>Priority context</span><b>Earthquake · water · smoke</b></a>
             <a href="#official-context-catalog"><span>All source controls</span><b>{OFFICIAL_CONTEXT_SOURCES.length} connections</b></a>
@@ -6641,6 +6663,7 @@ export default function Home() {
             <p>These are the site-local demonstration layers. Official live context—earthquakes, gauges, smoke, radar, watersheds, and terrain—is kept in the separate source-controls section below.</p>
           </section>
 
+          </details>
           <section className="official-context-catalog" id="official-context-catalog" aria-labelledby="official-context-title">
             <header><div><span>OFFICIAL OPERATIONAL CONTEXT</span><h2 id="official-context-title">Real Kansas source connections</h2><small className="official-context-registry-summary">{SITE_REGISTRY_COUNTS.features} features · {SITE_REGISTRY_COUNTS.connections} connections · {SITE_REGISTRY_COUNTS.actions} actions</small></div><strong>{withheldOfficialCount > 0 ? `${visibleOfficialCount} SELECTED · HELD` : `${visibleOfficialCount}/${OFFICIAL_CONTEXT_SOURCES.length} ON`}</strong></header>
             <p>Live and current official sources may be drawn for orientation. They stay outside KFM admission, reports, exports, and EvidenceBundles.</p>
@@ -6717,6 +6740,7 @@ export default function Home() {
             <div className="catalog-filter-actions"><span>{layerQuery.trim() || layerDomain !== "ALL" || mapEvidenceFilter !== "ALL" ? "Catalog filters are active" : "Showing every local domain"}</span><button type="button" disabled={!layerQuery.trim() && layerDomain === "ALL" && mapEvidenceFilter === "ALL"} onClick={() => { setLayerQuery(""); setLayerDomain("ALL"); updateMapEvidenceFilter("ALL"); }}>Clear filters</button></div>
           </div>
 
+          <details className="legacy-layer-index"><summary>Legacy example layer controls · {visibleCount} on</summary>
           <section className="catalog-layer-stack" id="catalog-layer-stack" aria-labelledby="catalog-layer-stack-title">
             <div className="section-row"><h2 id="catalog-layer-stack-title">Registered layers <span>{filteredLayerIds.size}/{LAYER_REGISTRY.length}</span></h2><div className="catalog-layer-stack-actions"><button type="button" disabled={filteredLayerIds.size === 0} onClick={() => setLayerGroupVisibility(Array.from(filteredLayerIds), true)}>Show all</button><button type="button" disabled={filteredLayerIds.size === 0} onClick={() => setLayerGroupVisibility(Array.from(filteredLayerIds), false)}>Hide all</button></div></div>
             <p>Every site-local layer remains available below. Toggle visibility directly or open a row for opacity, features, zoom, and draw order.</p>
@@ -6752,7 +6776,8 @@ export default function Home() {
             {filteredLayerIds.size === 0 && <div className="catalog-empty"><strong>No layers found</strong><p>Try a domain, dataset, or geometry term.</p></div>}
           </div>
 
-          <div className="panel-footer-actions"><button type="button" onClick={resetExplorer}>Reset map</button><button type="button" onClick={() => { setReportLayerIds(activeLayers.map((layer) => layer.id)); openPrimaryWorkspace("reports", true); }}>Report visible layers</button></div>
+          </details>
+          <div className="panel-footer-actions"><button type="button" onClick={resetExplorer}>Reset map</button><Link href="/data">Propose a dataset</Link></div>
           </div>
         </aside>
 
@@ -6812,12 +6837,15 @@ export default function Home() {
             <button className="map-control-launch" type="button" onClick={() => openMapUtility("navigate")}><span aria-hidden="true">⌖</span><strong>Controls</strong></button>
             <button className="map-control-launch" type="button" onClick={() => { setSourceStatusOpen((open) => !open); setLeftOpen(false); }} aria-expanded={sourceStatusOpen} aria-controls="map-source-status"><strong>Source status</strong></button>
             <button className="map-control-launch" type="button" onClick={() => setInstrumentOpen((open) => !open)} aria-pressed={instrumentOpen}><strong>Charts</strong></button>
+            <a className="map-control-launch" href="/" title={`Open a fresh baseline for ${baselineDay} UTC`}><strong>Today’s baseline</strong></a>
+            <Link className="map-control-launch" href="/data"><strong>Contribute data</strong></Link>
           </nav>
           {sourceStatusOpen && <aside id="map-source-status" className="map-source-status" aria-label="Source status and data quality">
             <header><h2>Sources & data quality</h2><button type="button" onClick={() => setSourceStatusOpen(false)} aria-label="Close source status">×</button></header>
-            <p>Current observations, historical records, and demonstration layers keep their own dates. Missing data stays missing.</p>
+            <p>Today · {baselineDay} UTC. Live observations refresh as providers publish. County counts keep their Census edition, and historical gaps remain visible.</p>
+            <div className="source-quality-actions"><Link href="/data">Propose data for KFM</Link><Link href="/stewards">Steward review desk</Link></div>
             <button type="button" onClick={refreshVisibleOfficialContext} disabled={officialLoadingCount > 0}>Refresh selected sources</button>
-            {OFFICIAL_CONTEXT_SOURCES.map((source) => <details key={source.id}><summary><span>{source.shortTitle}</span><b>{officialVisibility[source.id] && !effectiveOfficialVisibility[source.id] ? "Held at this date" : officialContextStateLabel(officialStates[source.id])}</b></summary><p>{officialErrors[source.id] || officialPayloads[source.id as OfficialContextFeedId]?.limitation || source.boundary}</p><p>{source.freshness}</p><a href={source.sourceUrl} target="_blank" rel="noreferrer">Provider & methodology ↗</a></details>)}
+            {OFFICIAL_CONTEXT_SOURCES.map((source) => <SourceQualityRow key={source.id} source={source} state={officialStates[source.id]} payload={officialPayloads[source.id as OfficialContextFeedId]} error={officialErrors[source.id]} selected={officialVisibility[source.id]} held={officialVisibility[source.id] && !effectiveOfficialVisibility[source.id]} onToggle={(selected) => setOfficialContextVisible(source.id, selected)} />)}
             <Link href="/observatory/sources">Historical coverage & sources ↗</Link>
           {sourceStatusOpen && scenePreset === "elevation-3d" && <aside className="terrain-scene-passport" data-state={terrainState.toLowerCase()} aria-label="Terrain scene passport">
             <header>
@@ -6966,7 +6994,7 @@ export default function Home() {
             </form>
             <footer className="qwen-panel-footer"><p>Qwen is interpretive only. It cannot establish evidence, policy, release, or publication authority.</p><button type="button" onClick={() => void copyQwenPrompt()}>Copy grounded prompt</button></footer>
           </aside>}
-          <div id="map-canvas" ref={mapContainerRef} className="map-canvas" tabIndex={0} role="application" aria-label="Interactive MapLibre map of Kansas demonstration layers. Use arrow keys to pan and plus or minus to zoom; use Map Workbench Inspect or the Layer Catalog for a keyboard feature alternative." />
+          <div id="map-canvas" ref={mapContainerRef} className="map-canvas" tabIndex={0} role="application" aria-label="Interactive map of real Kansas baselines and dated source layers. Use arrow keys to pan and plus or minus to zoom; use Map Workbench Inspect or the Layer Catalog for a keyboard feature alternative." />
           {hoverSummary && <aside className="map-hover-summary" style={{ left: hoverSummary.x, top: hoverSummary.y }} aria-hidden="true">
             <span>{hoverSummary.subtitle}</span><strong>{hoverSummary.title}</strong><small>{hoverSummary.state}</small>
           </aside>}

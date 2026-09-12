@@ -1,15 +1,49 @@
 # Kansas Frontier Matrix Explorer
 
-A map-first spatial evidence demonstration for exploring how Kansas features,
-time, provenance, correction state, access limits, and bounded Focus outcomes
-fit together.
+A map-first Kansas explorer with real provider baselines, dated archive replay,
+source downloads, and private data contribution and steward review workflows.
+
+## Daily baseline and data commons — September 12, 2026
+
+The initial map enables actual Census county boundaries/counts, USGS streamflow,
+and hydrography. Synthetic interaction examples remain explicitly labeled in
+collapsed legacy controls and do not start enabled. The archive defaults to
+today in UTC, selects the latest available frame, and refreshes every five
+minutes while following today. Choosing historical time pauses following.
+All 24 hours remain visible; historical gaps and the older deep-time axis remain.
+Population and housing retain their independent 2010/2020 Census edition.
+
+Sources & data quality includes direct downloads and source-specific update
+links. `/data` accepts authenticated proposals (up to 10 MB per file), stores
+original bytes privately in R2 and metadata in D1, and shows contributor status.
+`/stewards` exposes the review queue only to the server-configured steward
+allowlist. Every decision requires a note and matching version; D1 atomically
+records the decision and audit history. Acceptance means preparation candidate,
+not automatic source admission or publication on the map. Unknown rights or
+non-public sensitivity prevent acceptance.
+
+`KFM_STEWARD_EMAILS` and optional `KFM_STEWARD_USER_IDS` are comma-separated
+Sites runtime settings; never commit their values. The initial allowlist is
+configured through Sites for the verified Site owner. No uploaded files or
+contributor records are included in source control.
+
+The hosted feed failure reported September 12 was an unsupported
+`redirect: "error"` option in Cloudflare Workers. The bounded adapters now use
+`manual` and reject redirect responses, retaining the fixed-provider boundary.
+
+Verification: `node --test tests/data-intake.test.mjs tests/intake-worker.test.mjs`
+checks real D1/R2 emulation, authentication, ownership, CSRF, uploads, download
+integrity, review history, conflicting decisions, and unknown-rights holds.
+
+This checkout is also the exact standalone Site source intended for the GitHub
+mirror branch `agent/kfm-site-source-sync-20260912`. That branch is a Site source
+snapshot, not a merge candidate for the distinct monorepo root. The monorepo's
+package-owned renderer and newer dependency work retain their own history.
 
 ## Current public scope
 
-- Core KFM layers use site-local synthetic or generalized GeoJSON demonstration
-  data. Optional, clearly separated official USGS, NOAA, Census, NWS, and
-  Raspberry Shake layers are external operational context, not admitted KFM
-  evidence.
+- Real USGS, NOAA, Census, NWS, and Raspberry Shake connections provide attributed
+  source context. Legacy synthetic examples are separately labeled and opt-in.
 - The default Kansas Overview may show an attributed OpenStreetMap context basemap; it is display context, not evidence.
 - Nothing in this build is a released operational KFM dataset.
 - Evidence resolution fails closed: missing, stale, restricted, denied, and
@@ -30,10 +64,11 @@ fit together.
   `kansas-frontier-matrix-explorer`, project `appgprj_6aa0b1c41bc08191bfd86003920f1631`.
 - Its canonical host is
   `https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site`; no custom
-  domain was attached when this checkpoint was checked on 2026-09-11.
+  domain was attached when this checkpoint was checked on 2026-09-12.
 - The independently read GitHub checkpoint is
-  `bartytime4life/Kansas-Frontier-Matrix@b44494c1cf0807ed28b606e8a41b255bebdf4ad7`
-  (`main`, merged PR #4468).
+  `bartytime4life/Kansas-Frontier-Matrix@f636df86eb4314b6a0c658bee8b9b11b5a3b99ed`
+  (`main`, merged PR #4522). The Site's older in-app repository briefing is a
+  historical snapshot and separately offers a current-main lookup.
 - The Site and GitHub repository retain separate source histories. This Site’s
   `.openai/hosting.json` is authoritative for its current binding; the GitHub
   child manifest still names legacy project `appgprj_6a870a079c1c8191abb7401ef092a181`
@@ -41,8 +76,8 @@ fit together.
 - No automatic source sync, release, deployment, or publication follows from
   a repository currentness check.
 
-The application runs as a Vinext site with MapLibre GL JS. D1 and
-R2 are intentionally unbound in the current deployment.
+The application runs as a Vinext site with MapLibre GL JS. `DB` and `BUCKET`
+are declared in `.openai/hosting.json` for durable data intake and review.
 
 ## Site capability registry
 

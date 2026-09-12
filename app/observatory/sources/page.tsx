@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { SOURCE_DOWNLOADS } from "../../source-downloads";
+import { OFFICIAL_CONTEXT_SOURCES } from "../../live-context";
 
 const refs = [
   ["Iowa Environmental Mesonet", "NEXRAD composites: construction, history and limitations", "https://mesonet.agron.iastate.edu/docs/nexrad_composites/", "Living documentation; accessed September 10, 2026"],
@@ -32,6 +34,8 @@ export default function SourcesPage() {
     <nav aria-label="Research sections"><a href="#coverage">Coverage</a> · <a href="#time">Time model</a> · <a href="#atmosphere">Radar & smoke</a> · <a href="#earth">Earth & water</a> · <a href="#ecology">Flora & fauna</a> · <a href="#delivery">Delivery boundaries</a> · <a href="#references">References</a></nav>
 
     <h2 id="coverage">Source coverage and implemented carriers</h2>
+    <p>The archive opens on today’s latest available frame and refreshes every five minutes while “Follow today” is active. Choosing a historical date pauses following. Source publication dates and Census editions remain separate.</p>
+    <details className="source-download-directory"><summary>Download source data or propose an update</summary><p>Choose a source’s download or archive. Use <Link href="/data">Data commons</Link> to submit a file with its dates and reuse terms. Assigned stewards use the <Link href="/stewards">review desk</Link>; accepted submissions still require integration before appearing on the map.</p><table><thead><tr><th>Source</th><th>Data</th><th>Update</th></tr></thead><tbody>{OFFICIAL_CONTEXT_SOURCES.map((source) => <tr key={source.id}><td>{source.shortTitle}</td><td><a href={SOURCE_DOWNLOADS[source.id].href} target="_blank" rel="noreferrer">{SOURCE_DOWNLOADS[source.id].label} ↗</a></td><td><Link href={`/data?source=${source.id}`}>Propose data</Link></td></tr>)}<tr><td>NOAA daily weather</td><td><a href="https://www.ncei.noaa.gov/pub/data/ghcn/daily/" target="_blank" rel="noreferrer">GHCN-D station archives ↗</a></td><td><Link href="/data?source=noaa-daily-weather">Propose data</Link></td></tr></tbody></table></details>
     <p>Connections were checked on September 12, 2026. The calendar retains every day from 1800 onward, including gaps; the Explorer’s older deep-time axis remains available. Choose continuous river samples or daily means, discover a station’s earliest record, and step through full 24-hour days. A daily value does not create hourly observations.</p>
     <div className="research-table-wrap"><table><thead><tr><th>Layer</th><th>Temporal support</th><th>Representation</th><th>Important limit</th></tr></thead><tbody>
       <tr><td>NOAA-derived IEM radar</td><td>N0R from 1995; N0Q WMS from February 16, 2011; actual 5-minute artifacts</td><td>Time-bound reflectivity image over Kansas</td><td>Composite validity is not one simultaneous network scan. <Cite n={1} /><Cite n={2} /></td></tr>

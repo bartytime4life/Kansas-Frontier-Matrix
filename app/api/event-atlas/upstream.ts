@@ -5,7 +5,9 @@ export async function boundedFetch(url: string, limit: number) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 18_000);
   try {
-    const response = await fetch(url, { signal: controller.signal, redirect: "error", headers: { "User-Agent": "KansasFrontierMatrixExplorer/1.0" } });
+    // Workers implements manual/follow, but rejects redirect:"error" before I/O.
+    // Manual keeps redirects inside the same fail-closed source boundary.
+    const response = await fetch(url, { signal: controller.signal, redirect: "manual", headers: { "User-Agent": "KansasFrontierMatrixExplorer/1.0" } });
     if (response.status === 204) return { bytes: new Uint8Array(), text: () => "", headers: response.headers };
     if (!response.ok || !response.body) throw new Error(`Source unavailable (HTTP ${response.status}).`);
     if (Number(response.headers.get("content-length")) > limit) throw new Error("Source exceeded the response budget.");

@@ -17,6 +17,7 @@ export type SiteRouteContract = Readonly<{
 
 /** Coding surfaces are ownership and verification pointers, not a duplicate module graph. */
 export const SITE_CODE_SURFACES = Object.freeze([
+  { id: "data-commons", title: "Source downloads and steward intake", role: "Owns authenticated uploads, private file access, versioned review and source download links.", paths: ["app/data", "app/stewards", "app/api/data-submissions", "app/data-intake-server.ts", "app/source-downloads.ts", "db/schema.ts", "drizzle"], handles: ["D1 submission metadata", "R2 private files", "steward allowlist", "review audit history"], verification: ["tests/data-intake.test.mjs", "tests/intake-worker.test.mjs"] },
   {
     id: "map-shell",
     title: "Map shell and interaction surface",
@@ -86,6 +87,9 @@ export const SITE_CODE_SURFACES = Object.freeze([
 export type SiteCodeSurfaceId = (typeof SITE_CODE_SURFACES)[number]["id"];
 
 export const SITE_ROUTE_CONTRACTS = Object.freeze([
+  { id: "data-intake-route", route: "/api/data-submissions", owner: "app/api/data-submissions/route.ts", purpose: "Authenticated bounded uploads and scoped submission lists.", trustBoundary: "No anonymous intake or public candidate reads. Source/rights/sensitivity metadata accompanies immutable uploaded bytes." },
+  { id: "data-review-route", route: "/api/data-submissions/:id", owner: "app/api/data-submissions/[id]/route.ts", purpose: "Private download, detail, and version-checked steward decisions.", trustBoundary: "Contributor ownership or server-authorized steward for reads; steward and matching version for writes. Review never activates a layer." },
+  { id: "source-download-route", route: "/api/source-download", owner: "app/api/source-download/route.ts", purpose: "Download bounded real source snapshots with dates and provenance.", trustBoundary: "Fixed source allowlist, no arbitrary URL and no candidate-data access." },
   {
     id: "explorer-route",
     route: "/",

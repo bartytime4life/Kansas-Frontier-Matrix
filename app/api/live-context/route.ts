@@ -38,7 +38,7 @@ const fetchBoundedJsonValue = async (url: string, timeoutMs: number, init?: Requ
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
   try {
-    const response = await fetch(url, { ...init, cache: "no-store", signal: controller.signal });
+    const response = await fetch(url, { ...init, cache: "no-store", redirect: "manual", signal: controller.signal });
     if (!response.ok) throw new UpstreamError(`Official upstream returned HTTP ${response.status}.`);
     const declaredLength = Number(response.headers.get("content-length") ?? "0");
     if (declaredLength > MAX_RESPONSE_BYTES) throw new UpstreamError("Official upstream response exceeded the bounded adapter limit.");

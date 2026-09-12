@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import "./cloudflare-register.mjs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
@@ -1309,7 +1310,7 @@ test("keeps the complete Layer Catalog reachable in one scroll surface", async (
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
 
-  assert.match(page, /Layers <b>\{visibleCount\}\/\{LAYER_REGISTRY\.length\}<\/b>/);
+  assert.match(page, /Layers <b>\{visibleOfficialCount\}\/\{OFFICIAL_CONTEXT_SOURCES\.length\}<\/b>/);
   assert.match(page, /className="catalog-section-jump"/);
   assert.match(page, /href="#catalog-layer-stack"/);
   assert.match(page, /href="#priority-context-title"/);

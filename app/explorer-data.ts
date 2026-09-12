@@ -1281,6 +1281,7 @@ export const TIME_STEPS = [
   2022,
   2024,
   2026,
+  ...(new Date().getUTCFullYear() > 2026 ? [new Date().getUTCFullYear()] : []),
 ] as const;
 
 export type SearchItem = {

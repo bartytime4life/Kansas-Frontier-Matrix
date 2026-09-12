@@ -18,6 +18,8 @@ export type SiteFeatureRecord = Readonly<{
 
 /** Product features are intentionally separate from provider connections and handlers. */
 export const SITE_FEATURES = Object.freeze([
+  { id: "daily-real-baseline", title: "Daily real-data baseline", domain: "map", status: "ACTIVE_CONTEXT", surface: "Explorer start and Event Observatory", userOutcome: "Open on real county/water sources and today's latest available frame; refresh while following today.", sourceIds: ["census-counties", "usgs-streamflow", "usgs-3dhp-hydrography"], actionIds: ["download-source-data"], codePaths: ["app/daily-baseline.ts", "app/page.tsx", "app/observatory/workspace.tsx"], boundary: "No synthetic layer starts enabled. Explicit historical selections stop automatic following; provider editions, daily summaries and missing hours keep their own meaning." },
+  { id: "data-contribution-review", title: "Data commons and steward desk", domain: "sources", status: "LIVE_UI", surface: "/data and /stewards", userOutcome: "Propose data, download source files, follow submission status and review a durable queue.", sourceIds: [], actionIds: ["submit-source-data", "review-source-data", "download-source-data"], codePaths: ["app/data/workspace.tsx", "app/data-intake-server.ts", "db/schema.ts", "app/api/data-submissions/route.ts"], boundary: "Files remain private to their contributor and assigned stewards. Accepted proposals are not automatically admitted or rendered." },
   {
     id: "map-investigation-shell",
     title: "Map investigation shell",

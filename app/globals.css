@@ -3750,3 +3750,22 @@ body { font-size: 14px; }
   .event-workspace .event-intro p { font-size: 14px; }
   .event-workspace .event-calendar-sweep { left: 10px; width: calc(100vw - 20px); }
 }
+/* Daily provider baselines and a single source-quality drawer. */
+.map-source-status{width:440px;max-width:calc(100vw - 28px)}
+.source-quality-row{padding:16px 0;border-bottom:1px solid #365156}
+.source-quality-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.source-quality-heading label{display:flex;gap:10px;align-items:center;font-size:14px;font-weight:650;cursor:pointer}
+.source-quality-heading input{width:18px;height:18px;accent-color:#9fd2bf;flex-shrink:0}
+.source-quality-heading b{font-size:12px;line-height:1.5;text-align:right;color:#a9d7c8}
+.source-quality-clock{font-size:13px!important;margin:8px 0!important;line-height:1.55!important;color:#a9c1bb!important}
+.source-quality-actions{display:flex;flex-wrap:wrap;gap:8px 16px;margin:12px 0}
+.source-quality-actions a{font-size:14px!important;line-height:1.5;color:#a9dccb;text-underline-offset:3px}
+.source-quality-row details{border:0!important;padding:4px 0!important}
+.source-quality-row details summary{font-size:14px!important;display:list-item!important;cursor:pointer}
+.source-quality-row[data-state=error] .source-quality-heading b,.source-quality-error{color:#f0b4a1!important}
+.source-quality-error{font-size:14px!important;overflow-wrap:anywhere}
+.legacy-layer-index{margin:10px 0 16px;padding:12px;border:1px solid #344d52;border-radius:8px}
+.legacy-layer-index>summary{cursor:pointer;font-size:14px;color:#afc8bf}
+.event-source-actions{display:flex;align-items:center;gap:18px;flex-wrap:wrap;font-size:14px}
+.event-source-actions a{color:#a8d9c6}
+.map-control-strip>a{color:inherit;text-decoration:none;white-space:nowrap;display:flex;align-items:center}

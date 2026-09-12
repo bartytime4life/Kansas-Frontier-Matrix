@@ -275,7 +275,7 @@ const fetchCollection = async (url: URL): Promise<Collection> => {
   try {
     const response = await fetch(url, {
       cache: "no-store",
-      redirect: "error",
+      redirect: "manual",
       signal: controller.signal,
       headers: {
         Accept: "application/geo+json,application/json;q=0.9",
@@ -797,6 +797,7 @@ export async function GET(request: NextRequest) {
       return errorResponse(404, "USGS_STREAMFLOW_STATION_NOT_FOUND", error.message);
     }
     const timeout = error instanceof UsgsUpstreamError && error.timeout;
+    console.error("KFM_STREAMFLOW_SOURCE_FAILED", error instanceof Error ? error.message : "Unknown provider failure");
     return errorResponse(
       timeout ? 504 : 502,
       timeout ? "USGS_STREAMFLOW_TIMEOUT" : "USGS_STREAMFLOW_UNAVAILABLE",

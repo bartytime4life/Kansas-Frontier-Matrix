@@ -1,6 +1,6 @@
 import type { MapViewProfile } from "./map-interface";
 
-export type LivingAtlasViewStatus = "SITE_DEMO" | "DESIGN_HOLD";
+export type LivingAtlasViewStatus = "REAL_BASELINE" | "SITE_DEMO" | "DESIGN_HOLD";
 
 export type LivingAtlasView = Readonly<{
   id: string;
@@ -46,14 +46,14 @@ export const LIVING_ATLAS_VIEWS: readonly LivingAtlasView[] = Object.freeze([
     scope: "Kansas statewide",
     domains: ["places", "water", "movement"],
     display: "2D",
-    time: "2026 site snapshot",
-    sourcePosture: "Site-local generalized context",
+    time: "Today’s observations + pinned Census edition",
+    sourcePosture: "Census county baseline + USGS water sources",
     motion: "Paused; camera only",
     report: "Statewide orientation + report starter",
-    status: "SITE_DEMO",
+    status: "REAL_BASELINE",
     profileId: "overview",
     camera: camera([-98.38, 38.48], 5.45),
-    note: "A calm starting point with county locators, water, communities, atmosphere and a real basemap option.",
+    note: "Opens on all 105 real county boundaries, decennial population/housing counts, stream observations and mapped hydrography. No synthetic overlay starts enabled.",
   }),
   Object.freeze({
     id: "county-atlas",
@@ -62,14 +62,14 @@ export const LIVING_ATLAS_VIEWS: readonly LivingAtlasView[] = Object.freeze([
     scope: "Choose a county; Ellsworth is the pilot focus",
     domains: ["places", "water", "coverage"],
     display: "2D",
-    time: "2025 reference + 2026 fixtures",
-    sourcePosture: "County locators only; not boundaries",
+    time: "2020 Census baseline; 2010 comparison available",
+    sourcePosture: "105 Census county boundaries and counts",
     motion: "Step declared catalog time",
     report: "County dossier + coverage table",
-    status: "SITE_DEMO",
+    status: "REAL_BASELINE",
     profileId: "overview",
     camera: camera([-98.45, 38.56], 8.1),
-    note: "County points open an investigation scope without inventing county boundaries, averages, or conditions.",
+    note: "Click a real county boundary to inspect its population, housing and land/water area. Use the archive for independently dated 2010 and 2020 baseline editions.",
   }),
   Object.freeze({
     id: "terrain-landforms",
@@ -78,14 +78,14 @@ export const LIVING_ATLAS_VIEWS: readonly LivingAtlasView[] = Object.freeze([
     scope: "Kansas landform regions",
     domains: ["geology", "hydrology"],
     display: "Terrain 3D",
-    time: "Pinned display concept",
-    sourcePosture: "External DEM display + synthetic extrusion",
+    time: "Provider-published elevation mosaic",
+    sourcePosture: "USGS 3DEP hillshade and reference terrain",
     motion: "Optional orbit; no data clock",
     report: "Elevation concept + limitations",
-    status: "SITE_DEMO",
+    status: "REAL_BASELINE",
     profileId: "elevation",
     camera: camera([-96.55, 38.55], 7.85, -22, 48),
-    note: "The 3D view requests an external terrain DEM for display and retains a separate synthetic extrusion. Neither is admitted KFM elevation evidence.",
+    note: "Shows actual published elevation-derived terrain context. The layer retains its source limitations and makes no acquisition-date or accuracy claim for an individual pixel.",
   }),
   Object.freeze({
     id: "living-waters",
@@ -95,13 +95,13 @@ export const LIVING_ATLAS_VIEWS: readonly LivingAtlasView[] = Object.freeze([
     domains: ["hydrology", "habitat"],
     display: "2D",
     time: "Exact USGS samples + provider-current GIS",
-    sourcePosture: "Official USGS/NOAA context; not KFM evidence",
+    sourcePosture: "USGS observations, hydrography and NOAA context",
     motion: "Exact gauge frames; gaps break paths",
     report: "Hydrology context + separate source clocks",
-    status: "SITE_DEMO",
+    status: "REAL_BASELINE",
     profileId: "water",
     camera: camera([-96.75, 39.0], 7.35, 12, 42),
-    note: "River Pulse can step bounded USGS Water Data API v1 discharge observations while 3DHP flowlines and WBD watersheds provide distinct orientation. NOAA observations, official forecasts, and National Water Model guidance retain separate roles and times. No gauge value is generalized to a reach or basin, and no raw discharge is converted into flood severity.",
+    note: "Start with real observations and mapped waterways. Explore each station’s declared record span and daily or continuous samples in the archive. No gauge value is generalized to a reach or basin.",
   }),
   Object.freeze({
     id: "weather-window",
@@ -126,14 +126,14 @@ export const LIVING_ATLAS_VIEWS: readonly LivingAtlasView[] = Object.freeze([
     scope: "Kansas plus regional context",
     domains: ["smoke", "fire", "hazards"],
     display: "2D",
-    time: "2022 / 2024 / 2026 steps",
-    sourcePosture: "Synthetic plume envelopes",
+    time: "NOAA analysis intervals and observed radar times",
+    sourcePosture: "NOAA HMS polygons and radar images",
     motion: "Presentation effect; no forecast",
     report: "Smoke context + boundary notes",
-    status: "SITE_DEMO",
+    status: "REAL_BASELINE",
     profileId: "smoke",
     camera: camera([-99.0, 38.7], 6.4, 8, 18),
-    note: "Near-surface, column, satellite and forecast distinctions remain a future data-binding requirement.",
+    note: "Actual smoke footprints and observed radar frames retain their provider times. This layer does not infer smoke movement, surface concentration, or exposure.",
   }),
   Object.freeze({
     id: "air-quality",
@@ -323,5 +323,5 @@ export const LIVING_ATLAS_VIEWS: readonly LivingAtlasView[] = Object.freeze([
 ]);
 
 export const livingAtlasStatusLabel = (status: LivingAtlasViewStatus) => (
-  status === "SITE_DEMO" ? "SITE-LOCAL DEMO" : "DESIGN / DATA HOLD"
+  status === "REAL_BASELINE" ? "REAL SOURCE BASELINE" : status === "SITE_DEMO" ? "LEGACY EXAMPLE" : "DESIGN / DATA HOLD"
 );
