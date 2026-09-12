@@ -148,7 +148,7 @@ The [registry](src/governed_api/routes/registry.py) and [dispatcher](src/governe
 | `GET /bootstrap` | `200 OK` | `ABSTAIN / NOT_IMPLEMENTED` | No runtime configuration or feature flags are supplied. |
 | `GET /layers` | `200 OK` | `ABSTAIN / NOT_IMPLEMENTED` | No layer catalog, geometry, tiles, or manifests are supplied. |
 | `GET /evidence` | `200 OK` | `ABSTAIN / NOT_IMPLEMENTED` | No EvidenceBundle or Evidence Drawer lookup occurs. |
-| Registered GET handler raises or returns an invalid/awaitable value | `500 Internal Server Error` | `ERROR / SAFE_RUNTIME_ERROR` or `ERROR / INVALID_RESPONSE` | Exception details and invalid payload content are not reflected. |
+| Registered GET handler raises, returns `ERROR`, or returns an invalid/awaitable value | `500 Internal Server Error` | Handler-safe `ERROR`, `ERROR / SAFE_RUNTIME_ERROR`, or `ERROR / INVALID_RESPONSE` | Exception details and invalid payload content are not reflected; accepted `ERROR` bodies are never transported as HTTP success. |
 | Non-GET on any registered path | `405 Method Not Allowed` | `ERROR / SAFE_RUNTIME_ERROR` | `id=stub:error:method-not-allowed`. |
 | Any unregistered path | `404 Not Found` | `ERROR / SAFE_RUNTIME_ERROR` | `id=stub:error:route-not-found`. |
 

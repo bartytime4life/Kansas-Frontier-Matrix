@@ -106,6 +106,8 @@ def test_sync_exception_and_invalid_response_fail_closed_without_leaks() -> None
         {**make_abstain_envelope("evidence"), "extra": "not-closed"},
         {**make_abstain_envelope("evidence"), "evidence_refs": [{"secret": "not-validated"}]},
         {**make_abstain_envelope("evidence"), "issued_at": "not-a-date"},
+        {**make_abstain_envelope("evidence"), "issued_at": "2026-W37-6T00:00:00+00:00"},
+        {**make_abstain_envelope("evidence"), "issued_at": "2026-09-12 00:00:00+00:00"},
     ],
 )
 def test_operation_boundary_rejects_non_closed_negative_shapes(invalid_payload: dict) -> None:

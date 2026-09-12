@@ -28,7 +28,11 @@ def app(environ, start_response):
             ROUTES[path],
             environ.get("kfm.correlation_id", "unavailable"),
         )
-        status = "200 OK" if failure_kind is None else "500 Internal Server Error"
+        status = (
+            "500 Internal Server Error"
+            if failure_kind is not None or payload["outcome"] == "ERROR"
+            else "200 OK"
+        )
         return _json_response(start_response, status, payload)
 
     return _json_response(

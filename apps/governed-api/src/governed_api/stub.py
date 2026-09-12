@@ -11,6 +11,11 @@ _SAFE_SPEC_HASH = re.compile(r"^sha256:[a-f0-9]{64}$")
 _SAFE_VERSION = re.compile(r"^[a-z0-9][a-z0-9_.-]{0,63}$")
 _SAFE_REASON_CODE = re.compile(r"^[A-Z][A-Z0-9_]{0,63}$")
 _SAFE_STATE = re.compile(r"^[a-z][a-z0-9_-]{0,63}$")
+_SAFE_ISSUED_AT = re.compile(
+    r"^[0-9]{4}-[0-9]{2}-[0-9]{2}T"
+    r"[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\.[0-9]+)?"
+    r"(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+)
 _NEGATIVE_OUTCOMES = frozenset({"ABSTAIN", "DENY", "ERROR"})
 _NEGATIVE_ENVELOPE_KEYS = frozenset(
     {
@@ -142,7 +147,7 @@ def _has_closed_negative_shape(payload: object) -> bool:
     ):
         return False
     issued_at = payload.get("issued_at")
-    if not isinstance(issued_at, str):
+    if not isinstance(issued_at, str) or not _SAFE_ISSUED_AT.fullmatch(issued_at):
         return False
     try:
         parsed_issued_at = datetime.fromisoformat(issued_at.replace("Z", "+00:00"))

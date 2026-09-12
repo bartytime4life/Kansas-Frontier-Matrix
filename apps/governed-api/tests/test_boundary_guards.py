@@ -5,6 +5,7 @@ from wsgiref.util import setup_testing_defaults
 
 from governed_api.main import app
 from governed_api.routes.registry import ROUTES
+from governed_api.stub import make_fixture_failure_envelope
 from schema_assert import assert_jsonschema_subset
 from tests.policy.boundary_constants import FORBIDDEN_INTERNAL_STORE_PATHS
 
@@ -137,7 +138,7 @@ def test_registered_route_exception_returns_safe_correlated_error(monkeypatch) -
     assert "never-reflect" not in json.dumps(payload)
 
 
-def test_registered_route_invalid_response_fails_closed(monkeypatch) -> None:
+def test_registered_route_invalid_or_error_response_uses_500(monkeypatch) -> None:
     monkeypatch.setitem(ROUTES, "/evidence", lambda: {"outcome": "ANSWER", "payload": "unsupported"})
     status, payload = _call_app(
         "/evidence",
@@ -149,4 +150,16 @@ def test_registered_route_invalid_response_fails_closed(monkeypatch) -> None:
     assert payload["outcome"] == "ERROR"
     assert payload["reason_code"] == "INVALID_RESPONSE"
     assert "payload" not in payload
+    assert_jsonschema_subset(payload, json.loads(SCHEMA_PATH.read_text(encoding="utf-8")))
+
+    monkeypatch.setitem(
+        ROUTES,
+        "/evidence",
+        lambda: make_fixture_failure_envelope("dependency_unavailable", "fixture-handler-error-001"),
+    )
+    status, payload = _call_app("/evidence")
+
+    assert status == "500 Internal Server Error"
+    assert payload["outcome"] == "ERROR"
+    assert payload["reason_code"] == "DEPENDENCY_UNAVAILABLE"
     assert_jsonschema_subset(payload, json.loads(SCHEMA_PATH.read_text(encoding="utf-8")))
