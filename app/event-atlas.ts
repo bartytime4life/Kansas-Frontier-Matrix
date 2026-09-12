@@ -1,7 +1,7 @@
 import type { FeatureCollection, Polygon } from "geojson";
 
 export const EVENT_BOUNDS = [-102.2, 36.8, -94.4, 40.2] as const;
-export const EVENT_EARLIEST_DAY = "1995-01-01";
+export const EVENT_EARLIEST_DAY = "1800-01-01";
 export const EVENT_MAX_HOURS = 24;
 export const RADAR_STEP_MS = 300_000;
 export type RadarProduct = "n0r" | "n0q";
@@ -79,7 +79,7 @@ export function eventDayHours(value: string): readonly EventHourSlot[] {
 
 export function eventInterval(start: string, hours: number, now = Date.now()) {
   const from = exactUtc(start);
-  if (!from || ![1, 6, 24].includes(hours) || Date.parse(from) < Date.parse(`${EVENT_EARLIEST_DAY}T00:00:00Z`) || Date.parse(from) > now) throw new Error("Choose a valid UTC start since 1995 and a 1, 6, or 24 hour interval, not in the future.");
+  if (!from || ![1, 6, 24].includes(hours) || Date.parse(from) < Date.parse(`${EVENT_EARLIEST_DAY}T00:00:00Z`) || Date.parse(from) >= now) throw new Error("Choose a valid UTC start since 1800 and a 1, 6, or 24 hour interval, not in the future.");
   const end = new Date(Math.min(Date.parse(from) + hours * 3_600_000, now)).toISOString();
   if (Date.parse(end) <= Date.parse(from)) throw new Error("The interval must contain past time.");
   return { start: from, end };
@@ -167,6 +167,8 @@ export function smokeAt(data: SmokeCollection, cursor: string): SmokeCollection 
 
 export function eventFrames(manifest: EventManifest, observations: readonly { observedAt: string }[] = []): string[] {
   const times = new Set([manifest.start, ...manifest.radar.scans.flatMap((scan) => [scan.time, new Date(Date.parse(scan.time) + RADAR_STEP_MS).toISOString()]), ...manifest.smoke.data.features.flatMap((f) => [f.properties.start, f.properties.end]), ...observations.flatMap((o) => [o.observedAt, new Date(Date.parse(o.observedAt) + 30 * 60_000 + 1000).toISOString()])]);
+  // Keep every hour navigable even when no provider has a record for it.
+  for (let time = Date.parse(manifest.start); time < Date.parse(manifest.end); time += 3_600_000) times.add(new Date(time).toISOString());
   return [...times].filter((t) => t >= manifest.start && t < manifest.end).sort();
 }
 
@@ -184,8 +186,8 @@ export function eventHourAvailability(
   const manifestEnd = Date.parse(manifest.end);
   if (!Number.isFinite(manifestStart) || !Number.isFinite(manifestEnd) || manifestEnd <= manifestStart) return Object.freeze([]);
   return Object.freeze(eventDayHours(day).map((slot) => {
-    const slotStart = Date.parse(slot.start);
-    const slotEnd = Date.parse(slot.end);
+    const slotStart = Math.max(Date.parse(slot.start), manifestStart);
+    const slotEnd = Math.min(Date.parse(slot.end), manifestEnd);
     const intersectsQuery = slotStart < manifestEnd && slotEnd > manifestStart;
     const radar = intersectsQuery && manifest.radar.scans.some((scan) => {
       const scanStart = Date.parse(scan.time);
@@ -196,7 +198,7 @@ export function eventHourAvailability(
     ));
     const river = intersectsQuery && observations.some((observation) => {
       const observationStart = Date.parse(observation.observedAt);
-      return observation.value !== null
+      return typeof observation.value === "number" && Number.isFinite(observation.value)
         && Number.isFinite(observationStart)
         && observationStart < slotEnd
         && observationStart + 30 * 60_000 > slotStart;

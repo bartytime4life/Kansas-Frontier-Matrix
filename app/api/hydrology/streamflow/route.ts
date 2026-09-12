@@ -36,6 +36,7 @@ type ParsedQuery = Readonly<{
   stationId: string | null;
   stationNumber: string | null;
   archiveEnd: string | null;
+  resolution: "continuous" | "daily";
 }>;
 
 type Collection = Readonly<{
@@ -529,14 +530,16 @@ const singleQueryValue = (request: NextRequest, name: string, required: boolean)
 };
 
 const parseQuery = (request: NextRequest): ParsedQuery => {
-  const allowed = new Set(["mode", "range", "station", "parameter", "end"]);
+  const allowed = new Set(["mode", "range", "station", "parameter", "end", "resolution"]);
   for (const key of request.nextUrl.searchParams.keys()) {
     if (!allowed.has(key)) throw new QueryError("The request contained an unsupported query parameter.");
   }
   const mode = singleQueryValue(request, "mode", true);
   const range = singleQueryValue(request, "range", true);
   const archiveEnd = singleQueryValue(request, "end", false);
-  if (archiveEnd && (!ISO_TIMESTAMP_PATTERN.test(archiveEnd) || !archiveEnd.endsWith("Z") || !Number.isFinite(Date.parse(archiveEnd)) || new Date(archiveEnd).toISOString().replace(".000Z", "Z") !== archiveEnd.replace(".000Z", "Z") || Date.parse(archiveEnd) > Date.now() || Date.parse(archiveEnd) < Date.parse("1900-01-01T00:00:00Z"))) throw new QueryError("end must be an exact past UTC timestamp since 1900.");
+  const resolution = singleQueryValue(request, "resolution", false) ?? (range === "1y" ? "daily" : "continuous");
+  if (resolution !== "continuous" && resolution !== "daily") throw new QueryError("resolution must be continuous or daily.");
+  if (archiveEnd && (!ISO_TIMESTAMP_PATTERN.test(archiveEnd) || !archiveEnd.endsWith("Z") || !Number.isFinite(Date.parse(archiveEnd)) || new Date(archiveEnd).toISOString().replace(".000Z", "Z") !== archiveEnd.replace(".000Z", "Z") || Date.parse(archiveEnd) > Date.now() || Date.parse(archiveEnd) < Date.parse("1800-01-01T00:00:00Z"))) throw new QueryError("end must be an exact past UTC timestamp since 1800.");
   if (mode !== "network" && mode !== "station") throw new QueryError("mode must be network or station.");
   if (range !== "24h" && range !== "7d" && range !== "30d" && range !== "1y") {
     throw new QueryError("range must be 24h, 7d, 30d, or 1y.");
@@ -548,7 +551,8 @@ const parseQuery = (request: NextRequest): ParsedQuery => {
     if (range !== "24h" || parameter && parameter !== "00060" || station !== null || archiveEnd !== null) {
       throw new QueryError("Network mode supports only range=24h and parameter 00060, without a station.");
     }
-    return { mode, range, parameterCode: "00060", stationId: null, stationNumber: null, archiveEnd: null };
+    if (resolution !== "continuous") throw new QueryError("Network mode uses continuous observations.");
+    return { mode, range, parameterCode: "00060", stationId: null, stationNumber: null, archiveEnd: null, resolution };
   }
 
   const stationId = singleQueryValue(request, "station", true);
@@ -563,6 +567,7 @@ const parseQuery = (request: NextRequest): ParsedQuery => {
     stationId,
     stationNumber: match[1],
     archiveEnd,
+    resolution,
   };
 };
 
@@ -699,7 +704,7 @@ const stationBundle = async (query: ParsedQuery, queryStart: string, queryEnd: s
   const stationId = query.stationId as string;
   const stationNumber = query.stationNumber as string;
   const expectedIds = new Set([stationId]);
-  const daily = query.range === "1y";
+  const daily = query.resolution === "daily";
   const statisticId = daily ? "00003" : null;
   const metadataUrl = collectionUrl("stations", {
     limit: "2",
@@ -732,7 +737,7 @@ const stationBundle = async (query: ParsedQuery, queryStart: string, queryEnd: s
   const retrievedAt = new Date().toISOString();
   const limitation = [
     daily
-      ? "The one-year view uses USGS daily values with statistic 00003 (daily mean); it is not a continuous instantaneous series."
+      ? "This view uses USGS daily values with statistic 00003 (daily mean); it does not supply hourly or instantaneous observations."
       : "The selected-station view uses exact USGS continuous samples without interpolation.",
     "Values may be provisional, qualified, delayed, revised, or missing. Stage and discharge are distinct parameters, and this product is not flood guidance.",
     observations.length === 0 ? "No observation was returned for the station and interval; no zero, stale value, or synthetic fallback was substituted." : null,

@@ -14,6 +14,7 @@ export async function GET(request: Request) {
     const imageryDates: string[] = [];
     await Promise.all([
       ...days.map(async (day) => {
+        if (day < "1995-01-01") { radarGaps.push(day); return; }
         try {
           const body = await boundedFetch(radarDirectory(day), 1024 * 1024);
           scans.push(...parseRadarDirectory(body.text(), day, start, end));
@@ -27,6 +28,7 @@ export async function GET(request: Request) {
         } catch { smokeGaps.push(day); }
       }),
       ...days.map(async (day) => {
+        if (day < "2000-02-24") return;
         try {
           const body = await boundedFetch(imageryDomainUrl(day), 32_768);
           if (domainIncludes(body.text(), day)) imageryDates.push(day);

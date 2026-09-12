@@ -733,9 +733,9 @@ const officialContextSummary = (source: OfficialContextId, title: string, proper
   if (source === "census-counties") {
     const population = numberContextProperty(properties, "populationEstimate");
     const estimate = population === null
-      ? "The ACS population estimate was unavailable, so no population value is inferred."
-      : `The 2024 ACS 5-year population estimate is ${Math.round(population).toLocaleString("en-US")}.`;
-    return `${title} is shown from 2026 Census TIGERweb county geometry. ${estimate} Geometry and population use separate vintages and remain external context without a KFM EvidenceBundle.`;
+      ? "The Census population count was unavailable, so no value is inferred."
+      : `The 2020 Census population count is ${Math.round(population).toLocaleString("en-US")}.`;
+    return `${title} is shown from the 2020 Census county baseline. ${estimate} Population, housing, and land/water area remain dated source context. Open the daily archive to compare the 2010 and 2020 editions.`;
   }
   if (source === "usgs-streamflow") {
     const value = stringContextProperty(properties, "displayValue") ?? "not reported";
@@ -784,7 +784,7 @@ const officialContextSummary = (source: OfficialContextId, title: string, proper
 };
 
 const officialContextTime = (source: OfficialContextId, properties: Record<string, unknown>, fallback: string) => {
-  if (source === "census-counties") return "2026 TIGERweb geography · 2024 ACS 5-year population estimate";
+  if (source === "census-counties") return "2020 Census geography, population and housing baseline";
   if (source === "usgs-streamflow" || source === "usgs-earthquakes") return stringContextProperty(properties, "observedAt") ?? fallback;
   if (source === "noaa-nwps-gauges") {
     const observedAt = stringContextProperty(properties, "observedAt");
@@ -1146,10 +1146,12 @@ export default function Home() {
   const [hoverSummary, setHoverSummary] = useState<HoverSummary | null>(null);
   const [primaryWorkspace, setPrimaryWorkspace] = useState<PrimaryWorkspace>("map");
   const [workspaceSnapshot, setWorkspaceSnapshot] = useState<MapSnapshot | null>(null);
-  const [leftOpen, setLeftOpen] = useState(true);
+  const [leftOpen, setLeftOpen] = useState(false);
+  const [sourceStatusOpen, setSourceStatusOpen] = useState(false);
+  const [instrumentOpen, setInstrumentOpen] = useState(false);
   const [leftPanelMode, setLeftPanelMode] = useState<LeftPanelMode>("layers");
   const [rightOpen, setRightOpen] = useState(false);
-  const [timelineOpen, setTimelineOpen] = useState(true);
+  const [timelineOpen, setTimelineOpen] = useState(false);
   const [drawerView, setDrawerView] = useState<DrawerView>("evidence");
   const [focusStage, setFocusStage] = useState<FocusStage>("outcome");
   const [focusIntent, setFocusIntent] = useState<FocusIntentId>("explain");
@@ -1458,7 +1460,7 @@ export default function Home() {
   const noaaRadarAgeMinutes = noaaRadarActiveFrame ? noaaRadarFrameAgeMinutes(noaaRadarActiveFrame, noaaRadarClock) : null;
   const noaaRadarLatestAgeMinutes = noaaRadarLatestFrame ? noaaRadarFrameAgeMinutes(noaaRadarLatestFrame, noaaRadarClock) : null;
   const noaaRadarSelectedAtPresent = officialVisibility["nws-radar"] && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME;
-  const liveDockVisible = streamflowSelectedAtPresent || noaaRadarSelectedAtPresent;
+  const liveDockVisible = instrumentOpen && (streamflowSelectedAtPresent || noaaRadarSelectedAtPresent);
   const showStreamflowDock = streamflowSelectedAtPresent && (liveInstrument === "river" || !noaaRadarSelectedAtPresent);
   const showRadarDock = noaaRadarSelectedAtPresent && (liveInstrument === "radar" || !streamflowSelectedAtPresent);
   const noaaRadarSelectedIsLatest = Boolean(noaaRadarActiveFrame && noaaRadarLatestFrame && noaaRadarActiveFrame === noaaRadarLatestFrame);
@@ -2658,7 +2660,7 @@ export default function Home() {
   }, [announce, setOfficialContextVisible]);
 
   const setOfficialContextOpacity = useCallback((id: OfficialContextId, value: number) => {
-    const next = { ...officialOpacityRef.current, [id]: clamp(value, 0.1, 1) };
+    const next = { ...officialOpacityRef.current, [id]: clamp(value, 0, 1) };
     officialOpacityRef.current = next;
     setOfficialOpacity(next);
     const map = mapRef.current;
@@ -3430,7 +3432,7 @@ export default function Home() {
       const opacityPairs = params.get("o")?.split(",").map((pair) => pair.split(":")) ?? [];
       const restoredOpacity = Object.fromEntries(opacityPairs
         .filter(([id, value]) => knownLayerIds.has(id) && typeof value === "string" && value.trim() !== "" && Number.isFinite(Number(value)))
-        .map(([id, value]) => [id, clamp(Number(value), 0.1, 1)]));
+        .map(([id, value]) => [id, clamp(Number(value), 0, 1)]));
       const nextOpacity = { ...defaultOpacity, ...restoredOpacity };
       opacityRef.current = nextOpacity;
       setOpacity(nextOpacity);
@@ -3444,7 +3446,7 @@ export default function Home() {
       const officialOpacityPairs = params.get("ctxo")?.split(",").map((pair) => pair.split(":")) ?? [];
       const restoredOfficialOpacity = Object.fromEntries(officialOpacityPairs
         .filter(([id, value]) => knownOfficialIds.has(id as OfficialContextId) && typeof value === "string" && value.trim() !== "" && Number.isFinite(Number(value)))
-        .map(([id, value]) => [id, clamp(Number(value), 0.1, 1)]));
+        .map(([id, value]) => [id, clamp(Number(value), 0, 1)]));
       const nextOfficialOpacity = { ...defaultOfficialOpacity, ...restoredOfficialOpacity };
       officialOpacityRef.current = nextOfficialOpacity;
       setOfficialOpacity(nextOfficialOpacity);
@@ -4489,6 +4491,7 @@ export default function Home() {
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key !== "Escape" || repositoryOpen) return;
       if (workspaceDetailsRef.current?.open) workspaceDetailsRef.current.open = false;
+      else if (sourceStatusOpen) { setSourceStatusOpen(false); document.querySelector<HTMLButtonElement>('[aria-controls="map-source-status"]')?.focus(); }
       else if (mapContextOpen) setMapContextOpen(false);
       else if (helpOpen) setHelpOpen(false);
       else if (guidedStartOpen) dismissGuidedStart();
@@ -4510,7 +4513,7 @@ export default function Home() {
     };
     document.addEventListener("keydown", handleEscape);
     return () => document.removeEventListener("keydown", handleEscape);
-  }, [guidedStartOpen, helpOpen, isCompact, mapContextOpen, mapUtilityOpen, repositoryOpen, rightOpen, storyOpen, toolsExpanded, closeMapUtility, closeRightPanel, closeStoryTrail, dismissGuidedStart]);
+  }, [sourceStatusOpen, guidedStartOpen, helpOpen, isCompact, mapContextOpen, mapUtilityOpen, repositoryOpen, rightOpen, storyOpen, toolsExpanded, closeMapUtility, closeRightPanel, closeStoryTrail, dismissGuidedStart]);
 
   const chooseSearchResult = (item: GlobalSearchItem) => {
     setGlobalQuery("");
@@ -5269,7 +5272,7 @@ export default function Home() {
     stopSceneOrbit(false);
     const knownLayerIds = new Set(LAYER_REGISTRY.map((layer) => layer.id));
     const nextVisibility = Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, snapshot.visibility?.[layer.id] === true]));
-    const nextOpacity = Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, clamp(Number(snapshot.opacity?.[layer.id] ?? layer.defaultOpacity), .1, 1)]));
+    const nextOpacity = Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, clamp(Number(snapshot.opacity?.[layer.id] ?? layer.defaultOpacity), 0, 1)]));
     const savedOrder = Array.isArray(snapshot.layerOrder) ? snapshot.layerOrder.filter((id) => knownLayerIds.has(id)) : [];
     const nextOrder = [...savedOrder, ...defaultOrder.filter((id) => !savedOrder.includes(id))];
     const nextYear = KNOWN_TEMPORAL_FRAMES.has(snapshot.year) ? snapshot.year : 2026;
@@ -6645,7 +6648,7 @@ export default function Home() {
               <div><span><small>LOADED FEATURES</small><strong>{officialFeatureCount.toLocaleString("en-US")}</strong></span><span><small>CONNECTIONS</small><strong>{officialReadyCount}/{OFFICIAL_CONTEXT_SOURCES.length} checked</strong></span><span><small>LAST RETRIEVAL</small><strong>{officialLatestRetrievedAt ? new Date(officialLatestRetrievedAt).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) : "Not yet"}</strong></span></div>
               <nav aria-label="Official data actions"><button type="button" disabled={visibleRefreshableOfficialCount === 0 || officialLoadingCount > 0} onClick={refreshVisibleOfficialContext}>{officialLoadingCount > 0 ? "Refreshing…" : "Refresh visible"}</button><button type="button" disabled={visibleOfficialCount === 0} onClick={hideAllOfficialContext}>Hide all</button></nav>
             </div>
-            <section className="priority-context-deck" aria-labelledby="priority-context-title">
+            <details className="source-layer-groups"><summary>Layer groups · earthquakes, water & smoke</summary><section className="priority-context-deck" aria-labelledby="priority-context-title">
               <header>
                 <div><span>PRIORITY CONNECTIONS</span><h3 id="priority-context-title">Earthquakes, water + smoke</h3></div>
                 <small>Toggle a source directly</small>
@@ -6689,14 +6692,15 @@ export default function Home() {
                   </article>;
                 })}
               </div>
-            </section>
+            </section></details>
             <div className="official-context-list">{OFFICIAL_CONTEXT_SOURCES.map((source) => {
               const payload = source.apiPath || source.managedAdapterPath ? officialPayloads[source.id as OfficialContextFeedId] : undefined;
               const state = officialStates[source.id];
               const heldAtFrame = officialVisibility[source.id] && !effectiveOfficialVisibility[source.id];
               return <article key={source.id} className="official-context-row" data-state={state} data-visible={officialVisibility[source.id]} data-held={heldAtFrame}>
                 <div className="official-context-primary"><label className="visibility-switch"><input type="checkbox" checked={officialVisibility[source.id]} aria-label={`${officialVisibility[source.id] ? "Hide" : "Show"} ${source.title}`} onChange={(event) => setOfficialContextVisible(source.id, event.target.checked)} /><span aria-hidden="true" /></label><i style={{ "--swatch": source.color } as React.CSSProperties} /><div><strong>{source.shortTitle}</strong><small>{source.organization}{heldAtFrame ? ` · held until ${formatTimelineStep(OFFICIAL_CONTEXT_PRESENT_FRAME)}` : ""}</small></div><b>{heldAtFrame ? "HELD" : state.toUpperCase()}</b></div>
-                <details><summary>Source, freshness + controls</summary><p>{source.boundary}</p><dl><div><dt>Endpoint</dt><dd>{source.endpointLabel}</dd></div><div><dt>Freshness</dt><dd>{source.id === "nws-radar" && noaaRadarLatestFrame ? formatNoaaRadarLocalTime(noaaRadarLatestFrame) : payload?.upstreamUpdatedAt ? new Date(payload.upstreamUpdatedAt).toLocaleString() : source.freshness}</dd></div><div><dt>Features / frames</dt><dd>{source.id === "nws-radar" ? noaaRadarManifest ? `${noaaRadarManifest.frameCount} OBSERVATIONS` : "NOT LOADED" : payload ? payload.featureCount : source.apiPath || source.managedAdapterPath ? "NOT LOADED" : "RASTER TILES"}</dd></div><div><dt>Temporal support</dt><dd>{OFFICIAL_CONTEXT_TEMPORAL_SUPPORT[source.id].axis.replaceAll("-", " ")} · {OFFICIAL_CONTEXT_TEMPORAL_SUPPORT[source.id].limitation}</dd></div><div><dt>Role</dt><dd>{source.evidenceRole.replaceAll("_", " ")}</dd></div></dl><label className="opacity-control"><span>Opacity <b>{Math.round(officialOpacity[source.id] * 100)}%</b></span><input type="range" min="10" max="100" value={Math.round(officialOpacity[source.id] * 100)} onChange={(event) => setOfficialContextOpacity(source.id, Number(event.target.value) / 100)} /></label>{payload?.limitation && <p className="official-context-warning">{payload.limitation}</p>}{officialErrors[source.id] && <p className="official-context-error">Unavailable: {officialErrors[source.id]}. No fallback inference was used.</p>}<div className="official-context-actions">{source.apiPath && <button type="button" disabled={state === "loading"} onClick={() => void refreshOfficialContext(source.id as OfficialContextFeedId)}>{state === "loading" ? "Refreshing…" : "Refresh"}</button>}{source.id === "usgs-streamflow" && <button type="button" disabled={state === "loading" || heldAtFrame} onClick={() => void refreshStreamflow(streamflowRange, streamflowSelectedStationId)}>{state === "loading" ? "Refreshing…" : "Refresh observations"}</button>}{source.id === "noaa-nwps-gauges" && <button type="button" disabled={state === "loading" || heldAtFrame} onClick={() => void refreshNoaaHydrologyNetwork()}>{state === "loading" ? "Refreshing…" : "Refresh gauge status"}</button>}{source.id === "nws-radar" && <button type="button" disabled={noaaRadarManifestState === "loading"} onClick={() => void refreshNoaaRadarManifest()}>{noaaRadarManifestState === "loading" ? "Loading frames…" : "Refresh frames"}</button>}<a href={source.sourceUrl} target="_blank" rel="noreferrer">Primary source ↗</a><a href={source.serviceUrl} target="_blank" rel="noreferrer">{source.id === "raspberry-shake-stations" ? "Open StationView ↗" : "Provider service ↗"}</a></div></details>
+                <label className="opacity-control"><span>Opacity <b>{Math.round(officialOpacity[source.id] * 100)}%</b></span><input aria-label={`${source.shortTitle} opacity`} type="range" min="0" max="100" value={Math.round(officialOpacity[source.id] * 100)} onChange={(event) => setOfficialContextOpacity(source.id, Number(event.target.value) / 100)} /></label>
+                <div className="official-context-actions"><button type="button" onClick={() => { setSourceStatusOpen(true); setLeftOpen(false); }}>Source details & quality</button>{["usgs-streamflow", "noaa-hms-smoke", "raspberry-shake-stations", "usgs-earthquakes", "nws-radar", "census-counties"].includes(source.id) && <Link href={`/observatory?layers=${({ "usgs-streamflow": "river", "noaa-hms-smoke": "smoke", "raspberry-shake-stations": "shake", "usgs-earthquakes": "earthquakes", "nws-radar": "radar", "census-counties": "counties" } as Record<string,string>)[source.id]},counties`}>Explore dated records ↗</Link>}</div>
               </article>;
             })}</div>
             <footer><code>OFFICIAL SOURCE → FIXED ADAPTER / WMS → MAPLIBRE</code><span>Evidence held at admission, release, and EvidenceBundle gates · <a href="https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3393" target="_blank" rel="noreferrer">governance issue #3393 ↗</a></span></footer>
@@ -6733,6 +6737,7 @@ export default function Home() {
                     <button className="layer-title" type="button" onClick={() => setExpandedLayers((current) => { const next = new Set(current); if (next.has(layer.id)) next.delete(layer.id); else next.add(layer.id); return next; })} aria-expanded={expanded} title={`${expanded ? "Hide" : "Show"} controls for ${layer.title}`}><strong>{layer.title}</strong><small>{noData ? `No ${layer.temporal?.label.toLowerCase()} data for ${temporalScopeLabel}` : `${layer.releaseState} · ${layer.releaseTime}`}</small><em>{expanded ? "Hide controls" : "Controls"} <span aria-hidden="true">{expanded ? "⌃" : "⌄"}</span></em></button>
                     <span className={`trust-badge state-${layer.releaseState.toLowerCase()}`}>{layer.releaseState}</span>
                   </div>
+                  <label className="opacity-control layer-direct-opacity"><span>Opacity <b>{Math.round((opacity[layer.id] ?? layer.defaultOpacity) * 100)}%</b></span><input type="range" min="0" max="100" value={Math.round((opacity[layer.id] ?? layer.defaultOpacity) * 100)} aria-label={`${layer.title} opacity`} onChange={(event) => setOpacity((current) => ({ ...current, [layer.id]: Number(event.target.value) / 100 }))} /></label>
                   {expanded && <div className="layer-detail">
                     <p>{layer.description}</p>
                     <dl><div><dt>Format</dt><dd>{layer.sourceType}</dd></div><div><dt>Scale</dt><dd>{layer.scaleNote}</dd></div><div><dt>Time</dt><dd>{layer.validTimeExtent}</dd></div><div><dt>Freshness</dt><dd>{layer.freshnessState}</dd></div></dl>
@@ -6777,6 +6782,8 @@ export default function Home() {
             <button type="button" aria-pressed={mapUtilityOpen && mapUtilityView === "compare"} data-active={mapUtilityOpen && mapUtilityView === "compare"} onClick={() => mapUtilityOpen && mapUtilityView === "compare" ? closeMapUtility() : activateMapRepresentation("compare")}><b>Compare</b><span>A/B</span></button>
           </nav>
           <nav className="map-control-strip" aria-label="Quick map controls">
+            <button className="map-control-launch" type="button" aria-pressed={timelineOpen} onClick={() => setTimelineOpen((open) => !open)}><strong>Time</strong><b>{formatTimelineStep(year)}</b></button>
+            <Link className="map-control-launch" href="/observatory">Daily archive ↗</Link>
             <button className="map-control-launch" type="button" onClick={() => openAtlasPanel("layers")} aria-pressed={leftOpen && leftPanelMode === "layers"}>
               <span aria-hidden="true">≡</span><strong>Layers</strong><b>{visibleCount}</b>
             </button>
@@ -6803,9 +6810,16 @@ export default function Home() {
             </div>
             <label className="map-basemap-select"><span>Basemap</span><select value={basemap} onChange={(event) => setBasemap(event.target.value as BasemapKey)} aria-label="Choose basemap style">{(Object.keys(BASEMAPS) as BasemapKey[]).map((key) => <option key={key} value={key}>{BASEMAPS[key].title}</option>)}</select></label>
             <button className="map-control-launch" type="button" onClick={() => openMapUtility("navigate")}><span aria-hidden="true">⌖</span><strong>Controls</strong></button>
-            <button className="map-control-launch" type="button" onClick={() => openMapUtility("measure")}><span aria-hidden="true">⌗</span><strong>Measure</strong></button>
+            <button className="map-control-launch" type="button" onClick={() => { setSourceStatusOpen((open) => !open); setLeftOpen(false); }} aria-expanded={sourceStatusOpen} aria-controls="map-source-status"><strong>Source status</strong></button>
+            <button className="map-control-launch" type="button" onClick={() => setInstrumentOpen((open) => !open)} aria-pressed={instrumentOpen}><strong>Charts</strong></button>
           </nav>
-          {scenePreset === "elevation-3d" && <aside className="terrain-scene-passport" data-state={terrainState.toLowerCase()} aria-label="Terrain scene passport">
+          {sourceStatusOpen && <aside id="map-source-status" className="map-source-status" aria-label="Source status and data quality">
+            <header><h2>Sources & data quality</h2><button type="button" onClick={() => setSourceStatusOpen(false)} aria-label="Close source status">×</button></header>
+            <p>Current observations, historical records, and demonstration layers keep their own dates. Missing data stays missing.</p>
+            <button type="button" onClick={refreshVisibleOfficialContext} disabled={officialLoadingCount > 0}>Refresh selected sources</button>
+            {OFFICIAL_CONTEXT_SOURCES.map((source) => <details key={source.id}><summary><span>{source.shortTitle}</span><b>{officialVisibility[source.id] && !effectiveOfficialVisibility[source.id] ? "Held at this date" : officialContextStateLabel(officialStates[source.id])}</b></summary><p>{officialErrors[source.id] || officialPayloads[source.id as OfficialContextFeedId]?.limitation || source.boundary}</p><p>{source.freshness}</p><a href={source.sourceUrl} target="_blank" rel="noreferrer">Provider & methodology ↗</a></details>)}
+            <Link href="/observatory/sources">Historical coverage & sources ↗</Link>
+          {sourceStatusOpen && scenePreset === "elevation-3d" && <aside className="terrain-scene-passport" data-state={terrainState.toLowerCase()} aria-label="Terrain scene passport">
             <header>
               <div><span>TERRAIN SCENE PASSPORT</span><strong>Smoky Hills relief</strong></div>
               <b>{terrainState === "READY" ? "DEM READY" : terrainState === "ERROR" ? "DEM UNAVAILABLE" : "LOADING DEM"}</b>
@@ -6824,11 +6838,33 @@ export default function Home() {
             </div>
             {topographicOverlay && <output className="terrain-cursor-reading" aria-live="polite">{terrainElevationReading ? <><strong>{terrainElevationReading.feet.toFixed(0)} ft</strong><span>{terrainElevationReading.meters.toFixed(0)} m · unexaggerated DEM</span></> : <span>Move over the map to read elevation</span>}</output>}
           </aside>}
-          {streamflowSelectedAtPresent && noaaRadarSelectedAtPresent && <nav className="live-observation-switcher" aria-label="Live observation display">
+          <aside hidden={!sourceStatusOpen} className="map-legend-dock" aria-label="Visible map legend">
+            <header>
+              <div><span>VISIBLE LAYERS</span><strong>{visibleCount} active</strong></div>
+              <button type="button" onClick={() => openAtlasPanel("layers")}>Manage</button>
+            </header>
+            <div className="map-legend-list">
+              {activeLayers.slice(0, 5).map((layer) => <div className="map-legend-row" key={layer.id}>
+                <label className="visibility-switch quick-legend-toggle" title={`Hide ${layer.title}`}>
+                  <input type="checkbox" checked={visibility[layer.id]} aria-label={`Hide ${layer.title}`} onChange={(event) => setVisibility((current) => ({ ...current, [layer.id]: event.target.checked }))} />
+                  <span aria-hidden="true" />
+                </label>
+                <button type="button" onClick={(event) => inspectLayer(layer, event.currentTarget)} title={`Inspect ${layer.title}`}>
+                  <i className={`legend-swatch ${layer.legend[0].shape}`} style={{ "--swatch": layer.legend[0].color } as React.CSSProperties} aria-hidden="true" />
+                  <span><strong>{layer.title}</strong><small>{layer.releaseState} · {layer.releaseTime}</small></span>
+                </button>
+              </div>)}
+              {activeLayers.length === 0 && <p>No layers are visible. Open Layer Catalog to choose a starting stack.</p>}
+            </div>
+            {activeLayers.length > 5 && <footer>+{activeLayers.length - 5} more in Layer Catalog</footer>}
+            <p className="map-legend-note">{basemap === "standard" ? "OpenFreeMap vector context · counties, places, roads, rail, water, and labels are display context; KFM overlays remain explicit." : basemap === "imagery" ? "Satellite imagery is display context only · overlays are synthetic or generalized." : basemap === "streets" ? "OpenStreetMap reference only · overlays are synthetic or generalized." : basemap === "topo" ? "USGS The National Map topographic tiles are display context only · KFM evidence remains separate." : "Site-local display style · overlays are synthetic or generalized."}</p>
+          </aside>
+          </aside>}
+          {instrumentOpen && streamflowSelectedAtPresent && noaaRadarSelectedAtPresent && <nav className="live-observation-switcher" aria-label="Live observation display">
             <button type="button" aria-pressed={liveInstrument === "river"} onClick={() => { setLiveInstrument("river"); setNoaaRadarPlaying(false); }}>River Pulse</button>
             <button type="button" aria-pressed={liveInstrument === "radar"} onClick={() => { setLiveInstrument("radar"); setStreamflowPlaying(false); }}>Radar Loop</button>
           </nav>}
-          {showStreamflowDock && <HydrologyObservatory
+          {instrumentOpen && showStreamflowDock && <HydrologyObservatory
             bundle={streamflowBundle}
             state={streamflowDisplayState}
             error={streamflowError}
@@ -6848,7 +6884,7 @@ export default function Home() {
             onRange={changeStreamflowRange}
             onSelectStation={selectStreamflowStation}
           />}
-          {showRadarDock && <aside
+          {instrumentOpen && showRadarDock && <aside
             className="noaa-radar-loop"
             data-state={noaaRadarDisplayState.toLowerCase().replaceAll(" ", "-")}
             tabIndex={0}
@@ -6901,27 +6937,6 @@ export default function Home() {
             {reducedMotion && <p className="noaa-radar-motion-note">Reduced motion is active. Automatic looping is off; exact-frame stepping remains available.</p>}
             <footer>Situational display only · not an emergency warning service · times remain separate from the atlas year</footer>
           </aside>}
-          <aside className="map-legend-dock" aria-label="Visible map legend">
-            <header>
-              <div><span>VISIBLE LAYERS</span><strong>{visibleCount} active</strong></div>
-              <button type="button" onClick={() => openAtlasPanel("layers")}>Manage</button>
-            </header>
-            <div className="map-legend-list">
-              {activeLayers.slice(0, 5).map((layer) => <div className="map-legend-row" key={layer.id}>
-                <label className="visibility-switch quick-legend-toggle" title={`Hide ${layer.title}`}>
-                  <input type="checkbox" checked={visibility[layer.id]} aria-label={`Hide ${layer.title}`} onChange={(event) => setVisibility((current) => ({ ...current, [layer.id]: event.target.checked }))} />
-                  <span aria-hidden="true" />
-                </label>
-                <button type="button" onClick={(event) => inspectLayer(layer, event.currentTarget)} title={`Inspect ${layer.title}`}>
-                  <i className={`legend-swatch ${layer.legend[0].shape}`} style={{ "--swatch": layer.legend[0].color } as React.CSSProperties} aria-hidden="true" />
-                  <span><strong>{layer.title}</strong><small>{layer.releaseState} · {layer.releaseTime}</small></span>
-                </button>
-              </div>)}
-              {activeLayers.length === 0 && <p>No layers are visible. Open Layer Catalog to choose a starting stack.</p>}
-            </div>
-            {activeLayers.length > 5 && <footer>+{activeLayers.length - 5} more in Layer Catalog</footer>}
-            <p className="map-legend-note">{basemap === "standard" ? "OpenFreeMap vector context · counties, places, roads, rail, water, and labels are display context; KFM overlays remain explicit." : basemap === "imagery" ? "Satellite imagery is display context only · overlays are synthetic or generalized." : basemap === "streets" ? "OpenStreetMap reference only · overlays are synthetic or generalized." : basemap === "topo" ? "USGS The National Map topographic tiles are display context only · KFM evidence remains separate." : "Site-local display style · overlays are synthetic or generalized."}</p>
-          </aside>
           <button className="qwen-map-launch" type="button" onClick={qwenOpen ? closeQwenCompanion : openQwenCompanion} aria-expanded={qwenOpen} aria-controls="qwen-map-panel" data-open={qwenOpen}>
             <span className="qwen-launch-mark" aria-hidden="true">Q</span>
             <span><strong>Ask Qwen</strong><small>About this map view</small></span>

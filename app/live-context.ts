@@ -58,18 +58,18 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
     layerIds: Object.freeze(["external-census-counties-fill", "external-census-counties-line"]),
     interactiveLayerIds: Object.freeze(["external-census-counties-fill"]),
     apiPath: "/api/live-context?feed=census-counties",
-    endpointLabel: "TIGERweb State_County + 2024 ACS 5-year profile",
-    sourceUrl: "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/State_County/MapServer/1",
-    serviceUrl: "https://www.census.gov/programs-surveys/acs/data.html",
-    cadence: "2026 TIGERweb boundary snapshot + 2024 ACS 5-year population estimate",
-    freshness: "2026 geography · 2024 ACS 5-year estimate",
+    endpointLabel: "TIGERweb Census2020 counties · population, housing, land/water area",
+    sourceUrl: "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/tigerWMS_Census2020/MapServer/82",
+    serviceUrl: "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb",
+    cadence: "2020 decennial Census county baseline; 2010 comparison in the archive",
+    freshness: "2020 Census geography, population and housing counts",
     defaultVisibility: true,
     defaultOpacity: 0.72,
     color: "#8fd8d0",
     attribution: "U.S. Census Bureau TIGERweb",
     evidenceRole: "EXTERNAL_CONTEXT_ONLY",
-    boundary: "Official county geometry and a separately dated ACS population estimate are joined by Census GEOID through a fixed, Kansas-only adapter. They are not a KFM release, historical boundary authority, parcel layer, current population count, or claim-bearing EvidenceBundle.",
-    fallback: "If TIGERweb is unavailable, the overlay remains empty. If ACS is unavailable, county geometry remains visible with a PARTIAL state and no inferred population value.",
+    boundary: "Census baseline for all 105 Kansas counties. Geometry, population, housing, and land/water area retain their 2020 edition. It is not present-day population or a reconstruction of older boundaries.",
+    fallback: "If the published Census service is unavailable, the overlay stays unavailable. No county or population count is inferred.",
   }),
   Object.freeze({
     id: "usgs-streamflow",
@@ -402,7 +402,7 @@ export const OFFICIAL_CONTEXT_TEMPORAL_SUPPORT: Readonly<Record<OfficialContextI
   "census-counties": Object.freeze({
     axis: "joined-source-snapshot",
     supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]),
-    limitation: "2026 TIGERweb geometry is joined to a separately dated 2024 ACS estimate; the combined carrier is not a 2024 historical snapshot.",
+    limitation: "Pinned 2020 Census geography and counts. Older event dates do not change this independent baseline edition.",
   }),
   "usgs-streamflow": Object.freeze({
     axis: "provider-observation-history",
@@ -437,7 +437,7 @@ export const OFFICIAL_CONTEXT_TEMPORAL_SUPPORT: Readonly<Record<OfficialContextI
   "usgs-earthquakes": Object.freeze({
     axis: "rolling-retrieval-window",
     supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]),
-    limitation: "Events come from a rolling 30-day request and may be revised; no historical archive query is connected.",
+    limitation: "The Explorer shows a rolling 30-day catalog; select a day in the Event Observatory for the connected historical catalog. Events may be revised.",
   }),
   "noaa-hms-smoke": Object.freeze({
     axis: "rolling-retrieval-window",
@@ -580,9 +580,10 @@ export const applyOfficialContextState = (
     for (const layerId of source.layerIds) {
       if (!map.getLayer(layerId)) continue;
       map.setLayoutProperty(layerId, "visibility", visible);
-      const safeOpacity = Math.max(0.1, Math.min(1, opacity[source.id] ?? source.defaultOpacity));
+      const safeOpacity = Math.max(0, Math.min(1, opacity[source.id] ?? source.defaultOpacity));
       const layer = map.getLayer(layerId);
       if (layer?.type === "circle") map.setPaintProperty(layerId, "circle-opacity", layerId.endsWith("-glow") || layerId.endsWith("-halo") ? safeOpacity * 0.3 : safeOpacity);
+      if (layer?.type === "circle") map.setPaintProperty(layerId, "circle-stroke-opacity", safeOpacity);
       if (layer?.type === "fill") map.setPaintProperty(layerId, "fill-opacity", source.id === "census-counties" ? safeOpacity * 0.08 : safeOpacity);
       if (layer?.type === "line") map.setPaintProperty(layerId, "line-opacity", safeOpacity);
       if (layer?.type === "raster") map.setPaintProperty(layerId, "raster-opacity", safeOpacity);

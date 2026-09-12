@@ -26,7 +26,8 @@ const manifestFixture = () => ({ format: "kfm-event-atlas-v1", start:"2007-05-05
 test("event interval rejects ambiguous/future/rollover dates and unbounded windows", () => {
   assert.equal(atlas.exactUtc("2024-02-29T00:00:00Z"),"2024-02-29T00:00:00.000Z");
   for (const date of ["2023-02-29T00:00:00Z","2024-01-01","2024-01-01T12:00:00+00:00","2024-01-01T24:00:00Z"]) assert.equal(atlas.exactUtc(date),null);
-  assert.throws(() => atlas.eventInterval("1994-01-01T00:00:00Z",6));
+  assert.doesNotThrow(() => atlas.eventInterval("1994-01-01T00:00:00Z",6));
+  assert.throws(() => atlas.eventInterval("1799-01-01T00:00:00Z",6));
   assert.throws(() => atlas.eventInterval("2024-01-01T00:00:00Z",48));
   assert.throws(() => atlas.eventInterval("2099-01-01T00:00:00Z",6));
   assert.deepEqual(atlas.intervalDays("2024-01-01T23:00:00Z","2024-01-02T01:00:00Z"),["2024-01-01","2024-01-02"]);

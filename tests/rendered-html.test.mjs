@@ -58,7 +58,7 @@ test("centers the primary workflow on map-scoped custom reports", async () => {
   assert.match(source, /Report \.html/);
   assert.match(source, /Data \.json/);
   assert.match(source, /setReportLayerIds\(activeLayers\.map/);
-  assert.match(source, /const \[leftOpen, setLeftOpen\] = useState\(true\)/);
+  assert.match(source, /const \[leftOpen, setLeftOpen\] = useState\(false\)/);
   assert.match(source, /const \[leftPanelMode, setLeftPanelMode\] = useState<LeftPanelMode>\("layers"\)/);
   assert.match(source, /const KANSAS_VIEW: ViewState = \{ center: \[-98\.38, 38\.48\], zoom: 5\.45, bearing: 0, pitch: 0 \}/);
   assert.match(source, /const \[scenePreset, setScenePreset\] = useState<ScenePresetId>\("overview-2d"\)/);
@@ -864,9 +864,10 @@ test("connects fourteen bounded official Kansas context sources without admittin
   assert.match(page, /params\.set\("ctxo"/);
   assert.match(page, /zero mapped features[\s\S]*not an all-clear/i);
   assert.match(page, /governance issue #3393/);
-  assert.match(route, /STATE%3D%2720%27/);
-  assert.match(route, /2024\/acs\/acs5\/profile/);
-  assert.match(route, /DP05_0001E/);
+  const countySource = await readFile(new URL("../app/county-baseline.ts", import.meta.url), "utf8");
+  assert.match(route, /countyBaseline\("2020"\)/);
+  assert.match(countySource, /STATE='20'/);
+  assert.match(countySource, /POP100,HU100/);
   assert.match(route, /state_code/);
   assert.match(route, /datetime/);
   assert.match(route, /earthquake\.usgs\.gov\/fdsnws\/event\/1\/query/);
@@ -908,7 +909,7 @@ test("adds bounded exact-time streamflow, NOAA hydrology roles, and a gap-aware 
   assert.match(usgsRoute, /geographicallySpread/);
   assert.match(usgsRoute, /Network mode supports only range=24h and parameter 00060/);
   assert.match(usgsRoute, /const statisticId = daily \? "00003" : null/);
-  assert.match(usgsRoute, /one-year view uses USGS daily values with statistic 00003 \(daily mean\)/i);
+  assert.match(usgsRoute, /view uses USGS daily values with statistic 00003 \(daily mean\)/i);
   assert.doesNotMatch(usgsRoute, /searchParams\.get\("url"\)/);
 
   assert.match(streamflow, /STREAMFLOW_MAX_DISPLAY_FRAMES = 96/);
@@ -1109,7 +1110,7 @@ test("the built official-context adapter joins dated Census population and bound
     upstreamCalls.push(url);
     if (url.includes("tigerweb.geo.census.gov")) return new Response(JSON.stringify({
       type: "FeatureCollection",
-      features: [{ type: "Feature", geometry: { type: "Polygon", coordinates: [[[-98, 38], [-97, 38], [-97, 39], [-98, 39], [-98, 38]]] }, properties: { GEOID: "20053", BASENAME: "Ellsworth", STATE: "20", COUNTY: "053" } }],
+      features: Array.from({ length: 105 }, (_, i) => ({ type: "Feature", geometry: { type: "Polygon", coordinates: [[[-98, 38], [-97, 38], [-97, 39], [-98, 39], [-98, 38]]] }, properties: { GEOID: `20${String(i * 2 + 1).padStart(3, "0")}`, BASENAME: `Fixture county ${i}`, STATE: "20", POP100: 6118, HU100: 2400, AREALAND: 2589988.110336, AREAWATER: 0 } })),
     }), { headers: { "content-type": "application/json" } });
     if (url.includes("api.census.gov")) return new Response(JSON.stringify([
       ["NAME", "DP05_0001E", "state", "county"],
@@ -1128,7 +1129,10 @@ test("the built official-context adapter joins dated Census population and bound
     const countyPayload = await countyResponse.json();
     assert.equal(countyPayload.state, "ready");
     assert.equal(countyPayload.data.features[0].properties.populationEstimate, 6118);
-    assert.equal(countyPayload.data.features[0].properties.populationEstimateYear, 2024);
+    assert.equal(countyPayload.data.features[0].properties.populationEstimateYear, 2020);
+    assert.equal(countyPayload.data.features.length, 105);
+    assert.equal(countyPayload.data.features[0].properties.housingUnits, 2400);
+    assert.equal(upstreamCalls.some((url) => url.includes("api.census.gov")), false);
 
     const earthquakeResponse = await worker.fetch(new Request("http://localhost/api/live-context?feed=usgs-earthquakes"), {}, { waitUntil() {}, passThroughOnException() {} });
     assert.equal(earthquakeResponse.status, 200);

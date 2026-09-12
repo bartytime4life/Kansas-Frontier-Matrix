@@ -1,13 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import type { Feature, FeatureCollection, Geometry, GeoJsonProperties } from "geojson";
-import { EVENT_BOUNDS, intervalDays, parseSmokeKml, smokeUrl } from "../../event-atlas";
+import { EVENT_BOUNDS, eventDay, advanceEventDay, intervalDays, parseSmokeKml, smokeUrl } from "../../event-atlas";
 import { boundedFetch } from "../event-atlas/upstream";
+import { countyBaseline } from "../../county-baseline";
 
 export const dynamic = "force-dynamic";
 
-const CENSUS_URL = "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/State_County/MapServer/1/query?where=STATE%3D%2720%27&outFields=GEOID%2CNAME%2CBASENAME%2CSTATE%2CCOUNTY&returnGeometry=true&outSR=4326&geometryPrecision=5&maxAllowableOffset=0.001&f=geojson";
-const CENSUS_ACS_URL = "https://api.census.gov/data/2024/acs/acs5/profile?get=NAME%2CDP05_0001E&for=county%3A%2A&in=state%3A20";
-const USGS_URL = "https://api.waterdata.usgs.gov/ogcapi/v0/collections/latest-continuous/items";
+const USGS_URL = "https://api.waterdata.usgs.gov/ogcapi/v1/collections/latest-continuous/items";
 const USGS_EARTHQUAKE_URL = "https://earthquake.usgs.gov/fdsnws/event/1/query";
 const NWS_ALERTS_URL = "https://api.weather.gov/alerts/active?area=KS";
 const RASPBERRY_SHAKE_STATION_URL = "https://data.raspberryshake.org/fdsnws/station/1/query";
@@ -93,63 +92,8 @@ const envelope = (
 });
 
 const censusCounties = async () => {
-  const retrievedAt = new Date().toISOString();
-  const payload = await fetchBoundedJson(CENSUS_URL, 25_000);
-  let populationByGeoid = new Map<string, number>();
-  let populationUnavailable = false;
-  try {
-    const rows = await fetchBoundedJsonArray(CENSUS_ACS_URL, 15_000);
-    const header = Array.isArray(rows[0]) ? rows[0].map((value) => String(value)) : [];
-    const populationIndex = header.indexOf("DP05_0001E");
-    const stateIndex = header.indexOf("state");
-    const countyIndex = header.indexOf("county");
-    if (populationIndex < 0 || stateIndex < 0 || countyIndex < 0) throw new UpstreamError("Census ACS response omitted required population join fields.");
-    populationByGeoid = new Map(rows.slice(1).flatMap((candidate) => {
-      if (!Array.isArray(candidate)) return [];
-      const state = asString(candidate[stateIndex]);
-      const county = asString(candidate[countyIndex]);
-      const population = asNumeric(candidate[populationIndex]);
-      return state && county && population !== null && population >= 0 ? [[`${state}${county}`, Math.round(population)] as const] : [];
-    }));
-  } catch {
-    populationUnavailable = true;
-  }
-  const features: Feature<Geometry, GeoJsonProperties>[] = collectionFeatures(payload).flatMap((candidate) => {
-    if (!isRecord(candidate.geometry) || candidate.geometry.type !== "Polygon" && candidate.geometry.type !== "MultiPolygon") return [];
-    const properties = isRecord(candidate.properties) ? candidate.properties : {};
-    const geoid = asString(properties.GEOID);
-    const name = asString(properties.BASENAME) ?? asString(properties.NAME);
-    if (!geoid || !name) return [];
-    const populationEstimate = populationByGeoid.get(geoid) ?? null;
-    return [{
-      type: "Feature" as const,
-      id: geoid,
-      geometry: candidate.geometry as unknown as Geometry,
-      properties: {
-        featureId: `us-census-county-${geoid}`,
-        name,
-        geoid,
-        stateFips: asString(properties.STATE) ?? geoid.slice(0, 2),
-        countyFips: asString(properties.COUNTY) ?? geoid.slice(2),
-        populationEstimate,
-        populationEstimateYear: populationEstimate === null ? null : 2024,
-        populationEstimateProduct: populationEstimate === null ? null : "ACS 5-year DP05_0001E",
-        sourceOrganization: "U.S. Census Bureau",
-        evidenceRole: "EXTERNAL_CONTEXT_ONLY",
-        vintage: "2026",
-        retrievedAt,
-      },
-    }];
-  });
-  return envelope(
-    "census-counties",
-    { type: "FeatureCollection", features },
-    CENSUS_URL,
-    `Kansas-only Census TIGERweb State_County geometry, generalized by the adapter to approximately 0.001 degrees. ${populationUnavailable ? "The ACS population request was unavailable; no population values were inferred. " : `${populationByGeoid.size} county GEOIDs were joined to the 2024 ACS 5-year DP05_0001E population estimate. `}Boundary vintage and population estimate year remain distinct. Current context is not historical boundary authority, a current population count, or KFM evidence.`,
-    retrievedAt,
-    null,
-    populationUnavailable || populationByGeoid.size < features.length,
-  );
+  const baseline = await countyBaseline("2020");
+  return envelope("census-counties", baseline.data, baseline.source, baseline.limitation, baseline.retrievedAt, null, false);
 };
 
 const latestStreamflow = async () => {
@@ -218,13 +162,15 @@ const latestStreamflow = async () => {
   );
 };
 
-const recentEarthquakes = async () => {
+const recentEarthquakes = async (day: string | null = null) => {
   const retrievedAt = new Date().toISOString();
-  const start = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+  const start = day ? `${day}T00:00:00.000Z` : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+  const end = day ? `${advanceEventDay(day, 1)}T00:00:00.000Z` : retrievedAt;
   const url = new URL(USGS_EARTHQUAKE_URL);
   url.searchParams.set("format", "geojson");
   url.searchParams.set("eventtype", "earthquake");
   url.searchParams.set("starttime", start);
+  url.searchParams.set("endtime", end);
   url.searchParams.set("minlatitude", "36.9");
   url.searchParams.set("maxlatitude", "40.1");
   url.searchParams.set("minlongitude", "-102.1");
@@ -246,6 +192,7 @@ const recentEarthquakes = async () => {
     const observedMilliseconds = asNumeric(properties.time);
     if (!eventId || observedMilliseconds === null) return [];
     const observedAt = new Date(observedMilliseconds).toISOString();
+    if (observedAt < start || observedAt >= end) return [];
     if (!newestTimestamp || observedAt > newestTimestamp) newestTimestamp = observedAt;
     const magnitude = asNumeric(properties.mag);
     return [{
@@ -278,7 +225,7 @@ const recentEarthquakes = async () => {
     "usgs-earthquakes",
     { type: "FeatureCollection", features },
     url.toString(),
-    `${features.length} USGS catalog event${features.length === 1 ? "" : "s"} returned for the Kansas bounding window over the past 30 days. Locations, depths, magnitudes, and review status may change. This is not an earthquake alert, hazard forecast, or KFM evidence.`,
+    `${features.length} USGS catalog event${features.length === 1 ? "" : "s"} returned for the Kansas bounding window for ${start} through ${end} (end excluded). Locations, depths, magnitudes, and review status may change. This is not an earthquake alert, hazard forecast, or KFM evidence.`,
     retrievedAt,
     newestTimestamp,
     false,
@@ -357,9 +304,9 @@ const activeNwsAlerts = async () => {
   );
 };
 
-const currentHmsSmoke = async () => {
+const currentHmsSmoke = async (day: string | null = null) => {
   const retrievedAt = new Date().toISOString();
-  const endMs = Date.now();
+  const endMs = day ? Date.parse(`${advanceEventDay(day, 1)}T00:00:00Z`) : Date.now();
   const startMs = endMs - 24 * 60 * 60 * 1000;
   const start = new Date(startMs).toISOString();
   const end = new Date(endMs).toISOString();
@@ -407,7 +354,7 @@ const currentHmsSmoke = async () => {
 
 const normalizedFdsnHeader = (line: string) => line.replace(/^\s*#\s*/, "").split("|").map((value) => value.trim().toLowerCase().replace(/[^a-z0-9]/g, ""));
 
-const raspberryShakeStations = async () => {
+const raspberryShakeStations = async (day: string | null = null) => {
   const retrievedAt = new Date().toISOString();
   const url = new URL(RASPBERRY_SHAKE_STATION_URL);
   url.searchParams.set("net", "AM");
@@ -417,6 +364,8 @@ const raspberryShakeStations = async () => {
   url.searchParams.set("minlon", String(EVENT_BOUNDS[0]));
   url.searchParams.set("maxlon", String(EVENT_BOUNDS[2]));
   url.searchParams.set("format", "text");
+  url.searchParams.set("startbefore", day ? `${advanceEventDay(day, 1)}T00:00:00` : retrievedAt.replace("Z", ""));
+  url.searchParams.set("endafter", day ? `${day}T00:00:00` : retrievedAt.replace("Z", ""));
   const response = await boundedFetch(url.toString(), 2 * 1024 * 1024);
   const lines = response.text().split(/\r?\n/).filter((line) => line.trim() !== "");
   const headerIndex = lines.findIndex((line) => {
@@ -450,7 +399,7 @@ const raspberryShakeStations = async () => {
     }
     validRows += 1;
     if (features.length >= MAX_RASPBERRY_SHAKE_STATIONS) continue;
-    const featureId = `raspberry-shake-${network}-${station}`;
+    const featureId = `raspberry-shake-${network}-${station}-${startIndex >= 0 ? values[startIndex] : features.length}`;
     const elevation = elevationIndex >= 0 ? asNumeric(values[elevationIndex]) : null;
     const startTime = startIndex >= 0 && values[startIndex] ? values[startIndex] : null;
     const endTime = endIndex >= 0 && values[endIndex] ? values[endIndex] : null;
@@ -495,11 +444,13 @@ const cacheSeconds: Record<Feed, number> = { "census-counties": 86_400, "usgs-st
 
 export async function GET(request: NextRequest) {
   const feed = request.nextUrl.searchParams.get("feed");
+  const day = request.nextUrl.searchParams.get("day");
+  if (request.nextUrl.searchParams.has("day") && (!day || !eventDay(day) || day < "1800-01-01" || day > new Date().toISOString().slice(0, 10) || !["usgs-earthquakes", "noaa-hms-smoke", "raspberry-shake-stations"].includes(feed ?? "")) || [...request.nextUrl.searchParams.keys()].some((key) => !["feed", "day"].includes(key) || request.nextUrl.searchParams.getAll(key).length !== 1)) return NextResponse.json({ error: "Choose an exact supported calendar date and source." }, { status: 400 });
   if (feed !== "census-counties" && feed !== "usgs-streamflow" && feed !== "usgs-earthquakes" && feed !== "nws-alerts" && feed !== "noaa-hms-smoke" && feed !== "raspberry-shake-stations") {
     return NextResponse.json({ error: "Unknown live-context feed. The adapter accepts only its fixed allowlist." }, { status: 400, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } });
   }
   try {
-    const result = feed === "census-counties" ? await censusCounties() : feed === "usgs-streamflow" ? await latestStreamflow() : feed === "usgs-earthquakes" ? await recentEarthquakes() : feed === "nws-alerts" ? await activeNwsAlerts() : feed === "noaa-hms-smoke" ? await currentHmsSmoke() : await raspberryShakeStations();
+    const result = feed === "census-counties" ? await censusCounties() : feed === "usgs-streamflow" ? await latestStreamflow() : feed === "usgs-earthquakes" ? await recentEarthquakes(day) : feed === "nws-alerts" ? await activeNwsAlerts() : feed === "noaa-hms-smoke" ? await currentHmsSmoke(day) : await raspberryShakeStations(day);
     return NextResponse.json(result, { headers: { "Cache-Control": `public, max-age=0, s-maxage=${cacheSeconds[feed]}, stale-while-revalidate=${cacheSeconds[feed]}`, "X-KFM-Context-State": result.state, "X-Content-Type-Options": "nosniff" } });
   } catch (error) {
     const timeout = error instanceof UpstreamError && error.timeout;
