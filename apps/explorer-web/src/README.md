@@ -6,15 +6,15 @@ version: v0.5
 status: draft
 owners: OWNER_TBD — Apps steward · UI steward · Map steward · Governed API steward · Policy steward · Docs steward
 created: 2026-06-16
-updated: 2026-09-09
+updated: 2026-09-12
 policy_label: public
 owning_root: apps/
 responsibility: 'Define the Explorer Web source-layout boundary and record current repository-grounded composition, adapters, features, templates, tests, and maturity limits.'
 truth_posture: 'CONFIRMED source inventory and bounded local/fixture-first slices / PROPOSED broader route and integration shape / UNKNOWN fresh execution, deployment, release, and public operation'
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
-  main_commit: f99736c0cd4b91592cc6e85531129c86f4dcbecb
-  main_tree: b21256c6f574b8f289cd806035ca268e012d2393
+  main_commit: d25a4c046892aa826ca04da29215f8ae4aae8e51
+  main_tree: b55ad6f05cb0406f033019faa01af3d2018bf582
   target_prior_blob: a79d96b196d8b95208e209ccd74e51c02e7d146f
   parent_app_readme_blob: bd022e91d998685820f6c3b0965bdffbfd355726
   entrypoint_blob: 787c5182777b7f26d281e7e2851344b504a70d1c
@@ -113,7 +113,7 @@ notes:
 
 ## 0. Current evidence snapshot
 
-**Implementation base:** [`main@f99736c0cd4b91592cc6e85531129c86f4dcbecb`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/f99736c0cd4b91592cc6e85531129c86f4dcbecb), observed 2026-09-09. The Living Atlas repository catalog/preflight work is a draft branch candidate over that immutable base; the pin does not establish a green build, merge, deployment, release, or publication.
+**Implementation base:** [`main@d25a4c046892aa826ca04da29215f8ae4aae8e51`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/f99736c0cd4b91592cc6e85531129c86f4dcbecb), observed 2026-09-12. The Living Atlas repository catalog/preflight work is present in the pinned source snapshot; the pin does not establish a green build, merge, deployment, release, or publication.
 
 | Surface | Confirmed at the pinned source | Limit |
 |---|---|---|
@@ -351,7 +351,7 @@ For source changes under `apps/explorer-web/src/`:
 
 The target file began as an empty placeholder. Earlier README versions correctly established the `src/` boundary but later became stale as `site/`, `adapters/`, `features/`, `viewer_templates/`, and their tests were added.
 
-This revision re-pins the implementation base to main@f99736c0cd4b91592cc6e85531129c86f4dcbecb and records the bounded Living Atlas repository catalog/preflight candidate. It does not promote local code or tests into claims about a production router, live transport, admitted external sources, complete browser readiness, deployment, release, publication, or public operation. It preserves the source-tree identity and records provenance in the required generated receipt.
+This revision re-pins the implementation base to main@d25a4c046892aa826ca04da29215f8ae4aae8e51 and records the bounded Living Atlas repository catalog/preflight candidate. It does not promote local code or tests into claims about a production router, live transport, admitted external sources, complete browser readiness, deployment, release, publication, or public operation. It preserves the source-tree identity and records provenance in the required generated receipt.
 
 </details>
 

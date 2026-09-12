@@ -112,7 +112,7 @@ UNKNOWN IN THIS REVIEW
   deployment, operations, public availability, and release posture
 ```
 
-**Keep snapshot scopes separate.** The [site README](./src/site/README.md) and `catalog.ts` record the code-owned catalog snapshot at `f99736c0cd4b91592cc6e85531129c86f4dcbecb`. That pin identifies inspected source; it does not deploy a Site or establish passing checks. Historical implementation notes inside ADRs are not current-code inventories; their decision status and acceptance scope remain controlling.
+**Keep snapshot scopes separate.** The [site README](./src/site/README.md) and `catalog.ts` record the code-owned catalog snapshot at `d25a4c046892aa826ca04da29215f8ae4aae8e51`. That pin identifies inspected source; it does not deploy a Site or establish passing checks. Historical implementation notes inside ADRs are not current-code inventories; their decision status and acceptance scope remain controlling.
 
 [Back to top](#top)
 
