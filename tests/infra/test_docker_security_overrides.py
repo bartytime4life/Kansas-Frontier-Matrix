@@ -86,5 +86,28 @@ class ExplorerImageSecurityOverrideTests(unittest.TestCase):
         )
 
 
+    def test_review_images_refresh_and_assert_current_os_security_floors(self) -> None:
+        expected_floors = {
+            "libblkid1": "2.41.5-0+deb13u1",
+            "libssl3t64": "3.5.7-1~deb13u2",
+            "gzip": "1.13-1+deb13u1",
+            "libpcre2-8-0": "10.46-1~deb13u2",
+            "libsqlite3-0": "3.46.1-7+deb13u2",
+            "perl-base": "5.40.1-6+deb13u1",
+        }
+        for dockerfile in (DOCKERFILE, DOCKER_ROOT / "Dockerfile.governed-api"):
+            text = dockerfile.read_text(encoding="utf-8")
+            self.assertIn(
+                "apt-get install --yes --no-install-recommends --only-upgrade",
+                text,
+            )
+            for package, version in expected_floors.items():
+                self.assertIn(f"        {package}", text)
+                self.assertIn(
+                    f"$(dpkg-query --show --showformat='${{Version}}' {package})",
+                    text,
+                )
+                self.assertIn(f'"{version}"', text)
+
 if __name__ == "__main__":
     unittest.main()

@@ -31,7 +31,7 @@ complete service or deployment definitions.
 | Control | Explorer review image | Governed API review image |
 |---|---|---|
 | Base identity | `node:22.23.2-trixie-slim` with a committed digest | `python:3.11.15-slim-trixie` with a committed digest |
-| OS package repair | Refreshes the installed `util-linux` and OpenSSL package families | Same bounded package-family refresh |
+| OS package repair | Refreshes fixed packages in the `util-linux`, OpenSSL, gzip, PCRE2, SQLite, and Perl families | Same bounded family refresh |
 | Version floors | Asserts `libblkid1 >= 2.41.5-0+deb13u1` and `libssl3t64 >= 3.5.7-1~deb13u2` | Same assertions |
 | Dependency integrity | Checksum-bound npm `11.19.0` archive plus the committed npm lock | `pip --require-hashes` against the committed requirements lock |
 | Build-time assertions | Verifies exact `tar` runtime dependencies and a loadable extraction API | Fails if the hash-locked Python requirements cannot install |

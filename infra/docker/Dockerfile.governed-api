@@ -3,7 +3,7 @@
 # receipts, proofs, release material, or published artifacts.
 FROM python:3.11.15-slim-trixie@sha256:90744cff8f32887f075c47d747a173ff333e9e98801667af93c357fa9f5e28ff
 
-# The pinned Debian base carries fixed CVEs in the util-linux and OpenSSL package families.
+# The pinned Debian base carries fixed CVEs in the util-linux, OpenSSL, gzip, PCRE2, SQLite, and Perl package families.
 # Upgrade only those families and fail closed if either remains below Debian's fix.
 RUN set -eux; \
     apt-get update; \
@@ -19,7 +19,11 @@ RUN set -eux; \
         mount \
         openssl \
         openssl-provider-legacy \
-        util-linux; \
+        util-linux \
+        gzip \
+        libpcre2-8-0 \
+        libsqlite3-0 \
+        perl-base; \
     dpkg --compare-versions \
         "$(dpkg-query --show --showformat='${Version}' libblkid1)" \
         ge \
@@ -28,6 +32,22 @@ RUN set -eux; \
         "$(dpkg-query --show --showformat='${Version}' libssl3t64)" \
         ge \
         "3.5.7-1~deb13u2"; \
+    dpkg --compare-versions \
+        "$(dpkg-query --show --showformat='${Version}' gzip)" \
+        ge \
+        "1.13-1+deb13u1"; \
+    dpkg --compare-versions \
+        "$(dpkg-query --show --showformat='${Version}' libpcre2-8-0)" \
+        ge \
+        "10.46-1~deb13u2"; \
+    dpkg --compare-versions \
+        "$(dpkg-query --show --showformat='${Version}' libsqlite3-0)" \
+        ge \
+        "3.46.1-7+deb13u2"; \
+    dpkg --compare-versions \
+        "$(dpkg-query --show --showformat='${Version}' perl-base)" \
+        ge \
+        "5.40.1-6+deb13u1"; \
     rm -rf /var/lib/apt/lists/*
 
 COPY governed-api-requirements.lock /tmp/governed-api-requirements.lock
