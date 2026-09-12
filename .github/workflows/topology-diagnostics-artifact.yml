@@ -155,15 +155,78 @@ jobs:
       - name: Prove candidate changed only one baseline identity
         shell: bash
         run: |
-          git diff --no-index \
-            <(git show d3f9db88d0d48291ac3810f684eeeb5b9aeca72d:tools/validators/directory_governance/repository_topology_baseline.json) \
-            repository_topology_baseline.candidate.json \
-            > topology-baseline.patch || test "$?" -eq 1
-          grep -F 'sha256:495f2e5cca0cf2e824fa5a403df9719b5bd40741738db4b49de3ebad401661ed' topology-baseline.patch
-          grep -F 'docs/KFM_Whole_UI_Governed_AI_Expansion_Report.pdf' topology-containment-receipt.json
-          test "$(grep -c '^[-+]      \"fingerprint\"' topology-baseline.patch)" -eq 2
+          git show d3f9db88d0d48291ac3810f684eeeb5b9aeca72d:tools/validators/directory_governance/repository_topology_baseline.json \
+            > repository_topology_baseline.base.json
+          python - <<'PY'
+          from __future__ import annotations
+
+          import difflib
+          import json
+          from pathlib import Path
+
+          base_path = Path("repository_topology_baseline.base.json")
+          candidate_path = Path("repository_topology_baseline.candidate.json")
+          receipt_path = Path("topology-containment-receipt.json")
+
+          base = json.loads(base_path.read_text(encoding="utf-8"))
+          candidate = json.loads(candidate_path.read_text(encoding="utf-8"))
+          receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+
+          base_metadata = {key: value for key, value in base.items() if key != "entries"}
+          candidate_metadata = {key: value for key, value in candidate.items() if key != "entries"}
+          if base_metadata != candidate_metadata:
+              raise RuntimeError("candidate changed baseline metadata")
+
+          base_entries = base.get("entries")
+          candidate_entries = candidate.get("entries")
+          if not isinstance(base_entries, list) or not isinstance(candidate_entries, list):
+              raise RuntimeError("candidate baseline entries are unavailable")
+          if len(base_entries) != len(candidate_entries):
+              raise RuntimeError("candidate changed baseline entry count")
+
+          base_by_fingerprint = {entry["fingerprint"]: entry for entry in base_entries}
+          candidate_by_fingerprint = {entry["fingerprint"]: entry for entry in candidate_entries}
+          old_fingerprint = receipt["old_fingerprint"]
+          new_fingerprint = receipt["new_fingerprint"]
+          removed_fingerprints = set(base_by_fingerprint) - set(candidate_by_fingerprint)
+          added_fingerprints = set(candidate_by_fingerprint) - set(base_by_fingerprint)
+          if removed_fingerprints != {old_fingerprint}:
+              raise RuntimeError(f"unexpected removed fingerprints: {sorted(removed_fingerprints)!r}")
+          if added_fingerprints != {new_fingerprint}:
+              raise RuntimeError(f"unexpected added fingerprints: {sorted(added_fingerprints)!r}")
+
+          for fingerprint in sorted(set(base_by_fingerprint) & set(candidate_by_fingerprint)):
+              if base_by_fingerprint[fingerprint] != candidate_by_fingerprint[fingerprint]:
+                  raise RuntimeError(f"unchanged fingerprint mutated: {fingerprint}")
+
+          new_entry = candidate_by_fingerprint[new_fingerprint]
+          if new_entry.get("rule_id") != "KFM-TOPO-001":
+              raise RuntimeError("replacement is not KFM-TOPO-001")
+          if new_entry.get("subject") != "path-grammar:uppercase":
+              raise RuntimeError("replacement subject is not path-grammar:uppercase")
+          if receipt.get("removed_paths") != ["docs/KFM_Whole_UI_Governed_AI_Expansion_Report.pdf"]:
+              raise RuntimeError("receipt does not describe the strict one-path shrink")
+          if receipt.get("added_paths") != []:
+              raise RuntimeError("receipt contains unexpected additions")
+          if receipt.get("catalog_agriculture_transition_consumed") is not False:
+              raise RuntimeError("candidate consumed the held agriculture transition")
+
+          patch = difflib.unified_diff(
+              base_path.read_text(encoding="utf-8").splitlines(keepends=True),
+              candidate_path.read_text(encoding="utf-8").splitlines(keepends=True),
+              fromfile="repository_topology_baseline.base.json",
+              tofile="repository_topology_baseline.candidate.json",
+          )
+          Path("topology-baseline.patch").write_text("".join(patch), encoding="utf-8")
+          print(json.dumps({
+              "removed_fingerprints": sorted(removed_fingerprints),
+              "added_fingerprints": sorted(added_fingerprints),
+              "unchanged_entry_count": len(base_by_fingerprint) - 1,
+          }, indent=2, sort_keys=True))
+          PY
 
       - name: Upload bounded candidate and receipt
+        if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: topology-containment-candidate-${{ github.run_id }}
