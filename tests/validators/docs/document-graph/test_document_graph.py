@@ -177,6 +177,23 @@ class DocumentGraphTests(unittest.TestCase):
         self.assertEqual(result.outcome, "DOC_GRAPH_FAIL")
         self.assertIn("RELATED_TARGET_MISSING", self._codes(result))
 
+    def test_null_metadata_relationship_is_absent(self) -> None:
+        temporary, root = self._copy_fixture()
+        self.addCleanup(temporary.cleanup)
+        beta = root / "docs" / "domains" / "beta.md"
+        beta.write_text(
+            beta.read_text(encoding="utf-8").replace(
+                "policy_label: public\n",
+                "policy_label: public\nsuperseded_by: null\n",
+            ),
+            encoding="utf-8",
+        )
+
+        result = self._build(root)
+
+        self.assertEqual(result.outcome, "DOC_GRAPH_PASS")
+        self.assertNotIn("RELATED_TARGET_MISSING", self._codes(result))
+
     def test_missing_metadata_document_identity_relationship_fails_closed(self) -> None:
         temporary, root = self._copy_fixture()
         self.addCleanup(temporary.cleanup)
