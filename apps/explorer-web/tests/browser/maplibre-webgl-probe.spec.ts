@@ -28,10 +28,25 @@ const lockedMapLibreVersion = (): string => {
     resolve(process.cwd(), "../../pnpm-lock.yaml"),
     "utf8",
   );
-  const match = lockfile.match(
-    /packages\\/maplibre:\\n(?:.|\\n)*?\\n\\s+maplibre-gl:\\n\\s+specifier: ([^\\n]+)/,
+  const lines = lockfile.split(/\\r?\\n/);
+  const importerStart = lines.findIndex(
+    (line) => line === "  packages/maplibre:",
   );
-  return match?.[1]?.trim() ?? "LOCKFILE_VERSION_UNAVAILABLE";
+  if (importerStart < 0) return "LOCKFILE_VERSION_UNAVAILABLE";
+
+  const rendererStart = lines.findIndex(
+    (line, index) =>
+      index > importerStart && line === "      maplibre-gl:",
+  );
+  if (rendererStart < 0) return "LOCKFILE_VERSION_UNAVAILABLE";
+
+  const specifierLine = lines
+    .slice(rendererStart + 1, rendererStart + 4)
+    .find((line) => /^\\s+specifier:\\s+\\S+$/.test(line));
+  return (
+    specifierLine?.replace(/^\\s+specifier:\\s+/, "") ??
+    "LOCKFILE_VERSION_UNAVAILABLE"
+  );
 };
 
 test("records one bounded WebGL2 capability and teardown probe", async ({
