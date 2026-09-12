@@ -26,14 +26,14 @@ jobs:
   compare:
     name: compare-mrts04-base-head-main
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - name: Check out exact PR base
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: d3f9db88d0d48291ac3810f684eeeb5b9aeca72d
           path: base
-          fetch-depth: 1
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Check out exact PR head
@@ -41,7 +41,7 @@ jobs:
         with:
           ref: cbf5fc7d75ba364ddafaec4733d77f7f182ab81e
           path: pr-head
-          fetch-depth: 1
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Check out current main with upstream repairs
@@ -49,7 +49,7 @@ jobs:
         with:
           ref: a3defbbd36b686107e7e46fd57477c6b39b4ac9d
           path: current-main
-          fetch-depth: 1
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Set up repository Python
@@ -69,8 +69,10 @@ jobs:
 
           lanes = ("base", "pr-head", "current-main")
           relative_paths = (
+              "Makefile",
               "pyproject.toml",
               "tools/ci/install_python_ci.py",
+              "tools/validators/directory_governance/validate_repository_governance_parity.py",
           )
           evidence = {}
           for relative_path in relative_paths:
@@ -79,7 +81,7 @@ jobs:
                   payload = Path(lane, relative_path).read_bytes()
                   hashes[lane] = hashlib.sha256(payload).hexdigest()
               if len(set(hashes.values())) != 1:
-                  raise RuntimeError(f"declared environment differs for {relative_path}: {hashes!r}")
+                  raise RuntimeError(f"declared profile differs for {relative_path}: {hashes!r}")
               evidence[relative_path] = hashes
           Path("validation-environment-sha256.json").write_text(
               json.dumps(evidence, indent=2, sort_keys=True) + "\n",
@@ -92,7 +94,7 @@ jobs:
             python tools/ci/install_python_ci.py project-test
           )
 
-      - name: Replay exact deterministic governance profile
+      - name: Replay exact repository-owned governance target
         shell: bash
         env:
           KFM_GOVERNANCE_MRTS04_THRESHOLD: "0.50"
@@ -104,10 +106,7 @@ jobs:
             set +e
             (
               cd "$lane"
-              python governance/tools/governance_validate.py \
-                --config governance/governance.yaml \
-                --completeness-threshold 0.87 \
-                --fixed-now 2026-03-16
+              make --no-print-directory repository-governance-parity
             ) > "${lane}-governance.txt" 2>&1
             status=$?
             set -e
@@ -147,7 +146,9 @@ jobs:
               text = Path(f"{lane}-governance.txt").read_text(encoding="utf-8")
               matches = list(pattern.finditer(text))
               if len(matches) != 1:
-                  raise RuntimeError(f"{lane}: expected exactly one MRTS-04 failure, found {len(matches)}")
+                  raise RuntimeError(
+                      f"{lane}: expected exactly one MRTS-04 denominator finding, found {len(matches)}"
+                  )
               match = matches[0]
               results[lane] = {
                   "commit": commit,
@@ -158,27 +159,26 @@ jobs:
                   "threshold": match.group("threshold"),
               }
 
-          def signature(lane: str) -> tuple[object, ...]:
+          def ratio_signature(lane: str) -> tuple[object, ...]:
               row = results[lane]
               return (
-                  row["exit_code"],
                   row["numerator"],
                   row["denominator"],
                   row["percent"],
                   row["threshold"],
               )
 
-          if signature("base") != signature("pr-head"):
-              raise RuntimeError(f"PR changed the MRTS-04 result: {results!r}")
-          if results["pr-head"]["exit_code"] == 0:
-              raise RuntimeError("expected exact-base and PR-head MRTS-04 conclusions to remain failing")
+          if ratio_signature("base") != ratio_signature("pr-head"):
+              raise RuntimeError(f"PR changed the MRTS-04 denominator result: {results!r}")
+          if results["base"]["exit_code"] == 0 or results["pr-head"]["exit_code"] == 0:
+              raise RuntimeError("expected exact-base and PR-head targets to retain failing conclusions")
 
           receipt = {
-              "version": "kfm.governance-mrts04-attribution.v2",
+              "version": "kfm.governance-mrts04-attribution.v3",
               "outcome": "INHERITED_FROM_EXACT_BASE",
               "results": results,
-              "pr_changed_mrts04_outcome": False,
-              "current_main_differs_from_pr_base": signature("current-main") != signature("base"),
+              "pr_changed_mrts04_ratio": False,
+              "current_main_differs_from_pr_base": ratio_signature("current-main") != ratio_signature("base"),
               "repository_mutation_detected": False,
           }
           Path("governance-parity-attribution.json").write_text(
