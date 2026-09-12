@@ -15,6 +15,13 @@ NON_FIXTURE_ARGUMENTS: dict[str, tuple[str, ...]] = {
     ),
     "repository-topology": (),
     "workflow-security": (),
+    "critical-doc-structure": (
+        "--repo-root",
+        ".",
+        "--format",
+        "json",
+        "CONTRIBUTING.md",
+    ),
 }
 EXPECTED_TARGET = '\t@echo "TODO: regenerate deterministic fixtures"'
 EXPECTED_ROOT: dict[str, object] = {

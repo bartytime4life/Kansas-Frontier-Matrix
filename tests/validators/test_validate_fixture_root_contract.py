@@ -87,6 +87,13 @@ NON_FIXTURE_ARGUMENTS = {
     ],
     "repository-topology": [],
     "workflow-security": [],
+    "critical-doc-structure": [
+        "--repo-root",
+        ".",
+        "--format",
+        "json",
+        "CONTRIBUTING.md",
+    ],
 }
 
 
