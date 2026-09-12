@@ -17,6 +17,8 @@ created: 2026-05-10
 updated: 2026-09-12
 policy_label: public
 truth_posture: cite-or-abstain
+owning_root: docs/
+responsibility: "Dedicated proposed decision record for schema-home family routing, compatibility classification, migration gates, validation/enforcement, and acceptance evidence."
 responsibility_root: docs/
 current_path: docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
 supersedes: []
