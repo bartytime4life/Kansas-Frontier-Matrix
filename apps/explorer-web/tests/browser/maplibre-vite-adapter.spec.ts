@@ -36,6 +36,29 @@ test("boots the package-owned v6 adapter with local Vite assets and disposes it"
   await expect(mapRoot.locator("canvas")).toHaveCount(0);
 });
 
+test("resizes a map that starts in a hidden container when revealed", async ({
+  page,
+}) => {
+  await page.goto(`${fixture}?hidden=1`);
+
+  const status = page.getByRole("status");
+  await expect(status).toHaveAttribute("data-state", "READY");
+
+  const mapRoot = page.locator("#maplibre-vite-map");
+  await expect(mapRoot).toHaveCSS("display", "none");
+
+  await page.getByRole("button", { name: "Reveal map" }).click();
+  await expect(mapRoot).toHaveCSS("display", "block");
+  await expect(mapRoot.locator("canvas")).toBeVisible();
+
+  const canvasSize = await mapRoot.locator("canvas").evaluate((canvas) => ({
+    width: canvas.width,
+    height: canvas.height,
+  }));
+  expect(canvasSize.width).toBeGreaterThan(0);
+  expect(canvasSize.height).toBeGreaterThan(0);
+});
+
 test("fails closed when WebGL2 initialization is unavailable", async ({ page }) => {
   await page.addInitScript(() => {
     const getContext = HTMLCanvasElement.prototype.getContext;
