@@ -1,6 +1,7 @@
 import type { FeatureCollection } from "geojson";
 import type { GeoJSONSource, LayerSpecification, Map as MapLibreMap, RasterTileSource } from "maplibre-gl";
 import { noaaRadarTileUrl } from "./noaa-radar";
+import { rememberGeoJSON, updateGeoJSON, setVisibleIfChanged, setPaintIfChanged } from "./map-performance";
 
 export type OfficialContextId = "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-3dhp-hydrography" | "usgs-wbd-watersheds" | "noaa-nwm-analysis" | "noaa-nwm-short-range" | "usgs-earthquakes" | "noaa-hms-smoke" | "raspberry-shake-stations" | "usgs-3dep-hillshade" | "usgs-3dep-slope" | "nws-alerts" | "nws-radar";
 export type OfficialContextFeedId = "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-earthquakes" | "nws-alerts" | "noaa-hms-smoke" | "raspberry-shake-stations";
@@ -297,12 +298,12 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
     sourceId: "external-usgs-3dep-hillshade",
     layerIds: Object.freeze(["external-usgs-3dep-hillshade-raster"]),
     interactiveLayerIds: Object.freeze([]),
-    mapUrl: "https://elevation.nationalmap.gov/arcgis/rest/services/3DEPElevation/ImageServer/exportImage?bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&size=256%2C256&format=png32&renderingRule=%7B%22rasterFunction%22%3A%22Hillshade%20Multidirectional%22%7D&f=image",
+    mapUrl: "/api/terrain-tile?kind=hillshade&z={z}&x={x}&y={y}",
     endpointLabel: "elevation.nationalmap.gov · 3DEPElevation",
     sourceUrl: "https://elevation.nationalmap.gov/arcgis/rest/services/3DEPElevation/ImageServer",
     serviceUrl: "https://www.usgs.gov/3d-elevation-program",
     cadence: "USGS seamless service; provider-controlled refresh",
-    freshness: "Current published 3DEP service mosaic",
+    freshness: "Provider-current 3DEP mosaic; validated display tiles cached for up to 6 hours. Acquisition dates vary by work unit.",
     defaultVisibility: false,
     defaultOpacity: 0.46,
     color: "#d7c7a0",
@@ -321,12 +322,12 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
     sourceId: "external-usgs-3dep-slope",
     layerIds: Object.freeze(["external-usgs-3dep-slope-raster"]),
     interactiveLayerIds: Object.freeze([]),
-    mapUrl: "https://elevation.nationalmap.gov/arcgis/rest/services/3DEPElevation/ImageServer/exportImage?bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&size=256%2C256&format=png32&renderingRule=%7B%22rasterFunction%22%3A%22Slope%22%7D&f=image",
+    mapUrl: "/api/terrain-tile?kind=slope&z={z}&x={x}&y={y}",
     endpointLabel: "elevation.nationalmap.gov · 3DEPElevation · Slope raster function",
     sourceUrl: "https://elevation.nationalmap.gov/arcgis/rest/services/3DEPElevation/ImageServer",
     serviceUrl: "https://www.usgs.gov/3d-elevation-program/about-3dep-products-services",
     cadence: "USGS dynamic 3DEP service; provider-controlled refresh",
-    freshness: "Current published 3DEP service mosaic",
+    freshness: "Provider-current 3DEP Slope Map; validated display tiles cached for up to 6 hours. It does not provide numerical slope measurements.",
     defaultVisibility: false,
     defaultOpacity: 0.34,
     color: "#e0a56c",
@@ -488,12 +489,16 @@ export const officialContextVisibilityForFrame = (
 export const defaultOfficialContextVisibility = (): Record<OfficialContextId, boolean> => Object.fromEntries(OFFICIAL_CONTEXT_SOURCES.map((source) => [source.id, source.defaultVisibility])) as Record<OfficialContextId, boolean>;
 export const defaultOfficialContextOpacity = (): Record<OfficialContextId, number> => Object.fromEntries(OFFICIAL_CONTEXT_SOURCES.map((source) => [source.id, source.defaultOpacity])) as Record<OfficialContextId, number>;
 
-const emptyCollection = (): FeatureCollection => ({ type: "FeatureCollection", features: [] });
+const EMPTY_CONTEXT: FeatureCollection = { type: "FeatureCollection", features: [] };
+const emptyCollection = (): FeatureCollection => EMPTY_CONTEXT;
 const firstRegistryLayer = (map: MapLibreMap) => map.getStyle().layers?.find((layer) => layer.id.startsWith("kfm-") && layer.id !== "kfm-background")?.id;
 const ensureGeoJsonSource = (map: MapLibreMap, source: OfficialContextSource, data: FeatureCollection) => {
   const existing = map.getSource(source.sourceId) as GeoJSONSource | undefined;
-  if (existing) existing.setData(data);
-  else map.addSource(source.sourceId, { type: "geojson", data, promoteId: "featureId", attribution: source.attribution });
+  if (existing) updateGeoJSON(existing, data);
+  else {
+    map.addSource(source.sourceId, { type: "geojson", data, promoteId: "featureId", attribution: source.attribution });
+    rememberGeoJSON(map.getSource(source.sourceId) as GeoJSONSource, data);
+  }
 };
 const ensureLayer = (map: MapLibreMap, specification: LayerSpecification, beforeId?: string) => {
   if (!map.getLayer(specification.id)) map.addLayer(specification, beforeId);
@@ -571,23 +576,24 @@ export const applyOfficialContextState = (
   ensureLayer(map, { id: alerts.layerIds[1], type: "line", source: alerts.sourceId, paint: { "line-color": severityColor, "line-width": 2.4, "line-opacity": 0.94 } });
 
   for (const raster of [OFFICIAL_CONTEXT_BY_ID["usgs-3dhp-hydrography"], OFFICIAL_CONTEXT_BY_ID["usgs-wbd-watersheds"], OFFICIAL_CONTEXT_BY_ID["noaa-nwm-analysis"], OFFICIAL_CONTEXT_BY_ID["noaa-nwm-short-range"], OFFICIAL_CONTEXT_BY_ID["usgs-3dep-hillshade"], OFFICIAL_CONTEXT_BY_ID["usgs-3dep-slope"]]) {
-    if (!map.getSource(raster.sourceId)) map.addSource(raster.sourceId, { type: "raster", tiles: [raster.mapUrl!], tileSize: 256, attribution: raster.attribution, minzoom: 3, maxzoom: 16 });
+    // Disabled services should not download tiles during startup or style swaps.
+    if (!visibility[raster.id] && !map.getSource(raster.sourceId)) continue;
+    if (!map.getSource(raster.sourceId)) map.addSource(raster.sourceId, { type: "raster", tiles: [raster.mapUrl!], tileSize: 256, attribution: raster.attribution, bounds: [-104.8, 34.8, -92, 42.2], minzoom: 3, maxzoom: raster.id.startsWith("usgs-3dep-") ? 14 : 16 });
     ensureLayer(map, { id: raster.layerIds[0], type: "raster", source: raster.sourceId, paint: { "raster-opacity": raster.defaultOpacity, "raster-fade-duration": 120 } }, firstRegistryLayer(map));
   }
 
   for (const source of OFFICIAL_CONTEXT_SOURCES) {
-    const visible = visibility[source.id] ? "visible" : "none";
     for (const layerId of source.layerIds) {
       if (!map.getLayer(layerId)) continue;
-      map.setLayoutProperty(layerId, "visibility", visible);
+      setVisibleIfChanged(map, layerId, visibility[source.id]);
       const safeOpacity = Math.max(0, Math.min(1, opacity[source.id] ?? source.defaultOpacity));
       const layer = map.getLayer(layerId);
-      if (layer?.type === "circle") map.setPaintProperty(layerId, "circle-opacity", layerId.endsWith("-glow") || layerId.endsWith("-halo") ? safeOpacity * 0.3 : safeOpacity);
-      if (layer?.type === "circle") map.setPaintProperty(layerId, "circle-stroke-opacity", safeOpacity);
-      if (layer?.type === "fill") map.setPaintProperty(layerId, "fill-opacity", source.id === "census-counties" ? safeOpacity * 0.08 : safeOpacity);
-      if (layer?.type === "line") map.setPaintProperty(layerId, "line-opacity", safeOpacity);
-      if (layer?.type === "raster") map.setPaintProperty(layerId, "raster-opacity", safeOpacity);
-      if (layer?.type === "symbol") map.setPaintProperty(layerId, "text-opacity", safeOpacity);
+      if (layer?.type === "circle") setPaintIfChanged(map, layerId, "circle-opacity", layerId.endsWith("-glow") || layerId.endsWith("-halo") ? safeOpacity * 0.3 : safeOpacity);
+      if (layer?.type === "circle") setPaintIfChanged(map, layerId, "circle-stroke-opacity", safeOpacity);
+      if (layer?.type === "fill") setPaintIfChanged(map, layerId, "fill-opacity", source.id === "census-counties" ? safeOpacity * 0.08 : safeOpacity);
+      if (layer?.type === "line") setPaintIfChanged(map, layerId, "line-opacity", safeOpacity);
+      if (layer?.type === "raster") setPaintIfChanged(map, layerId, "raster-opacity", safeOpacity);
+      if (layer?.type === "symbol") setPaintIfChanged(map, layerId, "text-opacity", safeOpacity);
     }
   }
 };
