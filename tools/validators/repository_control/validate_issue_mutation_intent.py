@@ -239,7 +239,7 @@ def _readback_is_exact(
         if applied
         else before_labels
     )
-    if target["labels"] != expected_labels:
+    if sorted(target["labels"]) != expected_labels:
         return False
     return revision > before_revision if applied else revision == before_revision
 
