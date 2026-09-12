@@ -111,9 +111,19 @@ workflow-security:
 	KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC python -m unittest discover --start-directory tests/validators/governance --pattern 'test_validate_workflow_security.py' --verbose
 	KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC python tools/validators/governance/validate_workflow_security.py --format text
 
+# Independent collection, shared fail-closed outcome. A failing live-index test
+# must not prevent the contextualized ratchet from explaining that same drift.
+# Record every command status; none is waived. The original test assertions,
+# diagnostic implementation and baseline remain unchanged. Cancellation may
+# still terminate the process. Revert this target and its focused test together.
 repository-topology:
-	KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC python -m unittest discover --start-directory tests/validators/directory_governance --pattern 'test_validate_*topology.py' --verbose
-	KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC python tools/validators/directory_governance/render_repository_topology_diagnostics.py
+	@set -u; \
+	contract_status=0; tests_status=0; diagnostics_status=0; \
+	if [ -f tests/ci/test_repository_topology_make_target.py ] && $(KFM_VALIDATION_ENV) python -m unittest discover --start-directory tests/ci --pattern 'test_repository_topology_make_target.py' --verbose; then :; else contract_status=$$?; fi; \
+	if $(KFM_VALIDATION_ENV) python -m unittest discover --start-directory tests/validators/directory_governance --pattern 'test_validate_*topology.py' --verbose; then :; else tests_status=$$?; fi; \
+	if $(KFM_VALIDATION_ENV) python tools/validators/directory_governance/render_repository_topology_diagnostics.py; then :; else diagnostics_status=$$?; fi; \
+	printf 'repository-topology statuses: contract=%s tests=%s diagnostics=%s\n' "$$contract_status" "$$tests_status" "$$diagnostics_status"; \
+	if [ "$$contract_status" -ne 0 ] || [ "$$tests_status" -ne 0 ] || [ "$$diagnostics_status" -ne 0 ]; then exit 1; fi
 
 repository-governance-parity:
 	$(KFM_VALIDATION_ENV) python -m unittest tests.validators.directory_governance.test_validate_repository_governance_parity --verbose
