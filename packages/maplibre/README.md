@@ -63,8 +63,6 @@ notes:
   - "Package release is a software-distribution event, not KFM map/data/claim publication."
 [/KFM_META_BLOCK_V2] -->
 
-> **Current canary note — 2026-09-12:** The verified base is `main@d25a4c046892aa826ca04da29215f8ae4aae8e51`, where `packages/maplibre/package.json` pins `maplibre-gl` `6.7.0`. Branch `agent/maplibre-6-9-canary-20260912` proposes `6.9.0` with lockfile closure and an additive hidden-container browser case. Older `6.6.0` references below describe prior checkpoints and are not current dependency evidence. See [the bounded canary record](../../docs/quality/maplibre-6-9-canary.md).
-
 <a id="top"></a>
 
 # MapLibre Package, Adapter, Distribution, and Compatibility Boundary
