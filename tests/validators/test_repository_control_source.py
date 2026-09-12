@@ -20,7 +20,7 @@ VALIDATOR_PATH = (
     / "tools/validators/repository_control/validate_control_source_availability.py"
 )
 WORKFLOW_PATH = ROOT / ".github/workflows/repository-control.yml"
-BINDING_PATH = ROOT / "docs/governance/REPOSITORY_TRANSITION_CONTROL_SOURCE.md"
+BINDING_PATH = ROOT / "docs/governance/repository_transition_control_source.md"
 EVENT_PATH = (
     ROOT
     / "tests/fixtures/governance/repository_control/pull_request_target_event_ready.json"
