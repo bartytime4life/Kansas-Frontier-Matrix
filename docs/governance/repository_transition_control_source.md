@@ -1,13 +1,15 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/governance/repository-transition-control-source
 title: Repository transition control-source binding
-type: governance binding and enforcement-candidate note
+type: governance-binding-enforcement-candidate-note
 version: v1.3.1
 status: current-main workflow-active advisory; candidate bounded-input hardening; required-status-check not installed
 owner: OWNER_TBD — governance steward and repository-control steward
 created: 2026-09-03
 updated: 2026-09-03
 policy_label: repository-facing; governance; fail-closed; non-authoritative
+owning_root: docs/
+responsibility: "Bind the repository transition control-source identity, bounded capture posture, exact authorization boundary, and rollback limits without creating merge, release, deployment, promotion, or publication authority."
 truth_posture: CONFIRMED current-main #4237 active two-validator workflow / IMPLEMENTED candidate bounded capture / PROPOSED required-check packet
 related:
   - ../../contracts/governance/repository_control_state.md
