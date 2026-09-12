@@ -8,6 +8,9 @@ owners: ["@bartytime4life", "Hydrology steward — NEEDS VERIFICATION", "Source 
 created: 2026-09-12
 updated: 2026-09-12
 policy_label: restricted-review
+owning_root: docs/
+responsibility: "Records one human-selected, review-only Phase 4 product-and-gauge nomination; it does not admit or activate a source, retrieve data, evaluate policy, release, deploy, publish, or create flood-warning authority."
+truth_posture: "proposed; cite-or-abstain; external references are not resolved to an EvidenceBundle and no source response is retrieved"
 related:
   - docs/domains/hydrology/README.md
   - docs/domains/hydrology/BOUNDARY.md
