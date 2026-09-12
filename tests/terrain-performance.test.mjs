@@ -55,6 +55,11 @@ test("render quality caps high-DPI pixel work and respects the browser data-savi
   assert.equal(perf.renderBudget("detail",3).pixelRatio,2);
   assert.equal(perf.renderBudget("auto",3,true).imageRequests,6);
   assert.equal(perf.renderBudget("auto",NaN).pixelRatio,1);
+  const touchBalanced = perf.renderBudget("auto", 3, false, true);
+  assert.equal(touchBalanced.pixelRatio, 1.25);
+  assert.equal(touchBalanced.imageRequests, 7);
+  assert.equal(touchBalanced.tileCache, 64);
+  assert.equal(perf.renderBudget("detail", 3, false, true).pixelRatio, 2);
 });
 test("unchanged GeoJSON frames skip worker uploads but changed observations and replaced sources are updated", () => {
   let uploads=0; const source = { setData: () => uploads++ };

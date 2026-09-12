@@ -573,8 +573,9 @@ const loadConfiguredMapLibre = async () => {
   }));
   const maplibregl = await import("maplibre-gl");
   maplibregl.setWorkerUrl(MAPLIBRE_WORKER_URL);
-  maplibregl.setMaxParallelImageRequests(browserRenderBudget().imageRequests);
-  maplibregl.setWorkerCount(Math.max(1, Math.min(4, Math.floor((navigator.hardwareConcurrency || 4) / 2))));
+  const renderBudget = browserRenderBudget();
+  maplibregl.setMaxParallelImageRequests(renderBudget.imageRequests);
+  maplibregl.setWorkerCount(Math.max(1, Math.min(renderBudget.coarsePointer ? 2 : 4, Math.floor((navigator.hardwareConcurrency || 4) / 2))));
   const version = maplibregl.getVersion();
   if (version !== EXPECTED_MAPLIBRE_VERSION) throw new Error(`Expected MapLibre ${EXPECTED_MAPLIBRE_VERSION}, received ${version}`);
   if (maplibregl.getWorkerUrl() !== MAPLIBRE_WORKER_URL) throw new Error("MapLibre worker configuration did not persist");
@@ -4262,7 +4263,8 @@ export default function Home() {
     if (!map || !styleGenerationReadyRef.current) return;
     let animationFrame = 0;
     let lastFrame = 0;
-    const effectsActive = dynamicEffects && !reducedMotion && renderQuality !== "efficient" && ["water-context", "smoke-context", "fire-context", "hazards-context", "habitat-connectivity", "transport-context", "communities"].some(id => visibility[id]);
+    const touchBalanced = browserRenderBudget(renderQuality).coarsePointer && renderQuality === "auto";
+    const effectsActive = dynamicEffects && !reducedMotion && renderQuality !== "efficient" && !touchBalanced && ["water-context", "smoke-context", "fire-context", "hazards-context", "habitat-connectivity", "transport-context", "communities"].some(id => visibility[id]);
 
     if (!effectsActive) {
       applyDynamicMapEffects(map, 0, opacity, false);
@@ -7564,6 +7566,7 @@ export default function Home() {
 
               {mapUtilityView === "display" && <section id="map-utility-view-display" role="tabpanel" aria-labelledby="map-utility-tab-display" className="map-utility-section">
                 <div className="map-utility-section-heading"><span>DISPLAY</span><h3>Styles, projections + view profiles</h3><p>Style changes preserve registry layers, time, selection eligibility, measurement geometry, camera, and attribution.</p></div>
+                <div className="map-control-group map-render-quality-choice"><header><strong>Rendering quality</strong><span>Balanced adapts to device conditions</span></header><RenderQualityControl value={renderQuality} onChange={chooseRenderQuality} /><p className="map-control-note">Balanced mode uses a lighter default on touch-first devices. Battery saver reduces map work further; High detail remains an explicit choice.</p></div>
                 <div className="map-control-group"><header><strong>Basemap style</strong><span>Display context · not evidence</span></header><div className="map-choice-grid">{(Object.keys(BASEMAPS) as BasemapKey[]).map((key) => <button key={key} type="button" aria-pressed={basemap === key} onClick={() => setBasemap(key)}><strong>{BASEMAPS[key].title}</strong><small>{BASEMAPS[key].note}</small></button>)}</div></div>
                 <div className="map-control-group"><header><strong>Projection</strong><span>Camera display only</span></header><div className="map-choice-grid"><button type="button" aria-pressed={projection === "mercator"} onClick={() => setProjection("mercator")}><strong>Mercator</strong><small>Stable 2D inspection</small></button><button type="button" aria-pressed={projection === "globe"} onClick={() => setProjection("globe")}><strong>Globe</strong><small>MapLibre globe display</small></button></div></div>
                 <div className="map-control-group"><header><strong>View profiles</strong><span>View state only · reversible</span></header><div className="map-profile-list">{MAP_VIEW_PROFILES.map((profile) => <article key={profile.id}><div><strong>{profile.title}</strong><p>{profile.summary}</p><small>{profile.year} · {profile.basemap} · {profile.visibleLayerIds.length} layers</small></div><button type="button" onClick={() => applyViewProfile(profile)}>Apply profile</button></article>)}</div></div>
@@ -7633,13 +7636,13 @@ export default function Home() {
 
           {measurementGeometryMode && <div className="measurement-readout" role="region" aria-label="Active screen measurement"><span>{measurementGeometryMode.toUpperCase()} · {measureMode ? "ACTIVE" : "COMPLETE"}</span><strong aria-live="polite">{measurement}</strong><div><button type="button" onClick={undoMeasurementPoint}>Undo</button><button type="button" onClick={finishMeasurement} disabled={!measureMode}>Finish</button><button type="button" onClick={clearMeasurement}>Clear</button></div></div>}
 
-          <div className="map-mobile-actions">
-            <button type="button" onClick={() => openAtlasPanel("views")}>Views <b>{LIVING_ATLAS_VIEWS.length}</b></button>
+          <nav className="map-mobile-actions" aria-label="Mobile map actions">
             <button type="button" onClick={() => openAtlasPanel("layers")}>Layers <b>{visibleCount}</b></button>
-            <button type="button" onClick={() => { if (selected) { setCurrentWorkspace("trust"); dismissMapUtilityWithoutFocus(); setRightOpen(true); setLeftOpen(false); setTimelineOpen(false); } }} disabled={!selected}>Evidence</button>
+            <button type="button" onClick={openLiveContextCatalog}>Live <b>{visibleOfficialCount}</b></button>
+            <button type="button" onClick={() => { setSourceStatusOpen(true); setLeftOpen(false); setRightOpen(false); setTimelineOpen(false); }}>Sources</button>
             <button type="button" onClick={() => { setCurrentWorkspace("explore"); dismissMapUtilityWithoutFocus(); setTimelineOpen(true); setLeftOpen(false); setRightOpen(false); }}>Time <b>{temporalScopeLabel}</b></button>
-            <button type="button" onClick={() => openPrimaryWorkspace("reports", true)}>Report</button>
-          </div>
+            <button type="button" onClick={() => openMapUtility("display")}>Style</button>
+          </nav>
 
           <div className="screenreader-status sr-only" aria-live="polite">{runtime.message}. Map center {formatCoordinate(view.center[1], "N", "S")}, {formatCoordinate(view.center[0], "E", "W")}. {visibleCount} layers visible. {selected ? `Selected ${selected.properties.title}; evidence state ${selectedEvidence?.label}.` : "No feature selected."}</div>
         </section>

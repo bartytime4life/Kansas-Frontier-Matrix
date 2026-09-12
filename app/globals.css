@@ -3811,3 +3811,116 @@ body { font-size: 14px; }
 .map-view-mode-strip:has(.terrain-quick-controls) .map-view-mode-heading{display:none}
 .data-notices button:focus-visible,.data-notices a:focus-visible,.terrain-quick-controls button:focus-visible,.terrain-quick-controls input:focus-visible,.render-quality-control select:focus-visible{outline:2px solid #f0daaa;outline-offset:3px}
 @media(max-width:760px){.data-notices-panel{top:64px;right:12px}.data-notices-trigger{padding:6px 8px!important;gap:5px}.terrain-quick-panel{top:124px;right:12px}.terrain-quick-controls>button{min-width:108px}.map-view-mode-strip:has(.terrain-quick-controls){max-width:none;overflow-x:auto;transform:none}.render-quality-control>span{display:none}.top-actions{gap:5px}}
+
+/* Touch-first map pass: the map remains visible while every primary action has
+   a reachable, thumb-sized home. These rules are intentionally last so that
+   the compact view wins over the older desktop-oriented map rails. */
+@media (max-width: 760px) {
+  .site-root { min-height: 100svh; }
+  .map-mobile-actions {
+    right: 8px;
+    bottom: calc(8px + env(safe-area-inset-bottom));
+    left: 8px;
+    gap: 6px;
+    padding: 4px;
+    border: 1px solid rgba(115, 199, 210, .28);
+    border-radius: 15px;
+    background: rgba(3, 20, 25, .68);
+    box-shadow: 0 12px 34px rgba(0, 0, 0, .28);
+    backdrop-filter: blur(14px) saturate(1.08);
+  }
+  .map-stage[data-live-dock="true"] .map-mobile-actions { bottom: calc(8px + env(safe-area-inset-bottom)); }
+  .map-mobile-actions button, .map-mobile-actions a {
+    min-width: 0;
+    min-height: 48px;
+    padding: 5px 3px;
+    line-height: 1.08;
+    text-align: center;
+    touch-action: manipulation;
+  }
+  .map-mobile-actions b { display: block; overflow: hidden; font-size: 10px; line-height: 1.15; text-overflow: ellipsis; white-space: nowrap; }
+  .maplibregl-ctrl-bottom-left, .maplibregl-ctrl-bottom-right { bottom: calc(68px + env(safe-area-inset-bottom)); }
+  .measurement-readout { bottom: calc(70px + env(safe-area-inset-bottom)); }
+
+  .map-source-status {
+    z-index: 85;
+    top: auto;
+    right: 0;
+    bottom: calc(var(--status) + env(safe-area-inset-bottom));
+    left: 0;
+    width: auto;
+    max-width: none;
+    max-height: min(78dvh, 680px);
+    padding: 16px 14px calc(20px + env(safe-area-inset-bottom));
+    border-right: 0;
+    border-bottom: 0;
+    border-left: 0;
+    border-radius: 20px 20px 0 0;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+  .map-source-status button, .source-quality-row summary { min-height: 44px; }
+  .map-source-status > header > button { min-width: 44px; padding: 0; }
+  .source-quality-heading label, .source-quality-actions a, .source-quality-row details summary { font-size: 16px !important; }
+  .source-quality-heading input { width: 22px; height: 22px; }
+
+  .data-notices-panel, .terrain-quick-panel {
+    top: auto;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: auto;
+    max-width: none;
+    max-height: min(82dvh, 720px);
+    padding: 16px 14px calc(22px + env(safe-area-inset-bottom));
+    border-right: 0;
+    border-bottom: 0;
+    border-left: 0;
+    border-radius: 20px 20px 0 0;
+    -webkit-overflow-scrolling: touch;
+  }
+  .data-notices-panel { z-index: 170; }
+  .terrain-quick-panel { z-index: 175; }
+  .data-notices-panel header button, .terrain-quick-panel header button, .terrain-quick-panel button { min-height: 44px; }
+  .data-notices-panel a, .data-notices-panel p, .terrain-quick-panel label, .terrain-quick-panel p { font-size: 16px; }
+  .terrain-quick-panel input[type=range] { min-height: 36px; }
+  .terrain-quick-panel select, .render-quality-control select { min-height: 44px; font-size: 16px; }
+  .terrain-look-presets button { min-height: 54px; }
+  .render-quality-control { min-height: 44px; }
+  .map-render-quality-choice .render-quality-control { padding: 0; }
+
+  .event-workspace { min-height: 100svh; }
+  .event-workspace .event-calendar-scroll, .event-workspace .event-query, .event-workspace .event-map-toolbar {
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+  .event-workspace .event-calendar-cell { min-height: 32px; touch-action: manipulation; }
+  .event-workspace .event-calendar-day { min-height: 54px; }
+  .event-workspace .event-calendar-navigation button, .event-workspace .event-map-toolbar button, .event-workspace .event-query button { min-height: 44px; }
+  .event-workspace .event-query input, .event-workspace .event-query select, .event-workspace .event-transport select { min-height: 44px; font-size: 16px; }
+  .event-workspace .event-timeline { padding-bottom: calc(12px + env(safe-area-inset-bottom)); }
+}
+
+@media (max-width: 620px) {
+  /* The thumb dock duplicates the quick rail here; remove the rail instead of
+     making users pan through two stacked rows of controls. */
+  .map-control-strip { display: none; }
+  .map-stage:has(.map-control-strip) .terrain-scene-passport { top: 56px; }
+  .map-view-mode-strip { right: 6px; left: 6px; }
+  .map-view-mode-strip button { min-width: 82px; min-height: 44px; }
+}
+
+@media (max-width: 500px) {
+  .data-notices-trigger { min-width: 42px !important; width: 42px; padding-inline: 0 !important; justify-content: center; }
+  .data-notices-trigger > span:nth-child(2) { display: none; }
+  .map-mobile-actions { right: 5px; bottom: calc(5px + env(safe-area-inset-bottom)); left: 5px; gap: 4px; }
+  .map-stage[data-live-dock="true"] .map-mobile-actions { bottom: calc(5px + env(safe-area-inset-bottom)); }
+  .map-mobile-actions button, .map-mobile-actions a { min-height: 46px; font-size: 11px; }
+  .map-mobile-actions b { font-size: 9px; }
+  .event-workspace .event-calendar-grid { min-width: 536px; }
+}
+
+@media (pointer: coarse) {
+  .map-stage .map-control-strip button, .map-stage .map-control-strip a, .map-stage .map-view-mode-strip button, .map-stage .map-tool-rail > button { touch-action: manipulation; }
+  .opacity-control input[type=range], .map-orientation-controls input[type=range] { min-height: 32px; }
+}
