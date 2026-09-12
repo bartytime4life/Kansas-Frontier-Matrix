@@ -5,12 +5,15 @@ They do not execute the receipt validator or contact GitHub. Native integrity is
 checked separately by the workflow at the actual checkout. The exact writer
 branch is a bounded CI delivery route, not PR-state or publication authority.
 Retire its trigger through a successor receipt, never by rewriting old hashes.
-The #4481/#4479 integration keeps four historical receipts separate from two
-current bindings; native context tests must run, not merely trigger CI.
+The #4485 follow-up keeps six historical receipts separate from one current
+five-artifact binding, including the unchanged merged v2 implementation.
+Native context tests must run, not merely trigger CI. Old hashes are immutable.
 """
 from __future__ import annotations
 
+from copy import deepcopy
 import fnmatch
+import hashlib
 import json
 from pathlib import Path
 import shutil
@@ -36,9 +39,19 @@ SUPERSEDED = (
     PREFIX + "genrec-topology-diagnostic-log-safety-20260911.json",
     PREFIX + "genrec-directory-root-registry-native-ci-20260911.json",
 )
-CURRENT = (
+PREVIOUS_CURRENT = (
     PREFIX + "genrec-topology-execution-context-20260911.json",
     PREFIX + "genrec-directory-root-registry-context-closure-20260911.json",
+)
+V1_ANCESTOR = "f9ef504b977dcb6e9601fa774bd8dad27adcf7a9"
+CURRENT = (PREFIX + "genrec-topology-indexed-context-closure-20260911.json",)
+# Independent complete inventory; do not infer coverage from the receipt itself.
+BOUND_ARTIFACTS = (
+    ".github/workflows/directory-root-registry.yml",
+    "tests/ci/test_directory_root_registry_workflow.py",
+    "tests/validators/directory_governance/test_validate_context_binding_topology.py",
+    "tools/validators/directory_governance/README.md",
+    "tools/validators/directory_governance/render_repository_topology_diagnostics.py",
 )
 HISTORICAL_STEP = "Replay historical root-registry authoring receipt"
 CURRENT_STEP = "Verify current diagnostic and workflow authoring receipts"
@@ -109,7 +122,7 @@ class DirectoryRootRegistryWorkflowTests(unittest.TestCase):
             "tools/ci/python-dependency-lock-migration.json", "pyproject.toml",
             "tests/validators/directory_governance/test_validate_output_security_topology.py",
             "tests/validators/directory_governance/test_validate_context_binding_topology.py",
-            HISTORICAL, REPAIR, *SUPERSEDED, *CURRENT,
+            HISTORICAL, REPAIR, *SUPERSEDED, *PREVIOUS_CURRENT, *CURRENT,
         ]
         for event in ("pull_request", "push"):
             patterns = self.workflow["on"][event]["paths"]
@@ -148,6 +161,8 @@ class DirectoryRootRegistryWorkflowTests(unittest.TestCase):
             [HELPER, REPAIR, "--repo-root", ".", "--artifact-git-ref", REPAIR_ANCESTOR],
             *[[HELPER, path, "--repo-root", ".", "--artifact-git-ref", NATIVE_ANCESTOR]
               for path in SUPERSEDED],
+            *[[HELPER, path, "--repo-root", ".", "--artifact-git-ref", V1_ANCESTOR]
+              for path in PREVIOUS_CURRENT],
         ]), (code, calls))
 
     def test_current_artifacts_never_use_historical_replay(self) -> None:
@@ -155,7 +170,7 @@ class DirectoryRootRegistryWorkflowTests(unittest.TestCase):
         self.assertEqual((0, [[HELPER, p, "--repo-root", "."] for p in CURRENT]), (code, calls))
 
     def test_every_receipt_failure_propagates_and_stops_later_commands(self) -> None:
-        for name, count in ((HISTORICAL_STEP, 4), (CURRENT_STEP, 2)):
+        for name, count in ((HISTORICAL_STEP, 6), (CURRENT_STEP, 1)):
             for fail_at in range(count):
                 with self.subTest(step=name, fail_at=fail_at):
                     code, calls = _run(self.steps[name]["run"], fail_at)
@@ -172,17 +187,64 @@ class DirectoryRootRegistryWorkflowTests(unittest.TestCase):
         self.assertLess(names.index(HISTORICAL_STEP), names.index(CURRENT_STEP))
         self.assertLess(names.index(CURRENT_STEP), names.index("Record trust boundary"))
 
-    def test_current_receipt_binds_the_actual_workflow_and_test_bytes(self) -> None:
-        import hashlib
-        receipt = json.loads((ROOT / CURRENT[1]).read_text(encoding="utf-8"))
-        paths = [".github/workflows/directory-root-registry.yml",
-                 "tests/ci/test_directory_root_registry_workflow.py"]
-        self.assertEqual(paths, receipt["artifact_paths"])
-        self.assertEqual(set(paths), set(receipt["artifact_hashes"]))
-        for path in paths:
+    def _assert_current_binding(self, receipt: dict) -> None:
+        self.assertEqual(list(BOUND_ARTIFACTS), receipt["artifact_paths"])
+        for key in ("artifact_hashes", "truth_labels"):
+            self.assertEqual(set(BOUND_ARTIFACTS), set(receipt[key]))
+        for path in BOUND_ARTIFACTS:
+            digest = receipt["artifact_hashes"][path]
+            self.assertRegex(digest, r"^sha256:[0-9a-f]{64}$")
             self.assertEqual("sha256:" + hashlib.sha256((ROOT / path).read_bytes()).hexdigest(),
-                             receipt["artifact_hashes"][path])
+                             digest)
 
+    def test_current_receipt_binds_the_actual_workflow_and_test_bytes(self) -> None:
+        receipt = json.loads((ROOT / CURRENT[0]).read_text(encoding="utf-8"))
+        self._assert_current_binding(receipt)
+
+    def test_successor_binding_cannot_omit_integrated_artifacts_or_add_extras(self) -> None:
+        receipt = json.loads((ROOT / CURRENT[0]).read_text(encoding="utf-8"))
+        for path in BOUND_ARTIFACTS:
+            reduced = deepcopy(receipt)
+            reduced["artifact_paths"].remove(path)
+            for key in ("artifact_hashes", "truth_labels"):
+                del reduced[key][path]
+            with self.subTest(omitted=path), self.assertRaises(AssertionError):
+                self._assert_current_binding(reduced)
+        extra = deepcopy(receipt)
+        extra["artifact_paths"].append("unexpected.txt")
+        extra["artifact_hashes"]["unexpected.txt"] = "sha256:" + "0" * 64
+        extra["truth_labels"]["unexpected.txt"] = "PROPOSED"
+        with self.assertRaises(AssertionError):
+            self._assert_current_binding(extra)
+
+    def test_successor_binding_rejects_wrong_or_truncated_hashes_for_every_artifact(self) -> None:
+        receipt = json.loads((ROOT / CURRENT[0]).read_text(encoding="utf-8"))
+        for path in BOUND_ARTIFACTS:
+            for digest in ("sha256:" + "0" * 64, receipt["artifact_hashes"][path][:39]):
+                altered = deepcopy(receipt)
+                altered["artifact_hashes"][path] = digest
+                with self.subTest(path=path, digest=digest), self.assertRaises(AssertionError):
+                    self._assert_current_binding(altered)
+
+    def test_successor_truth_label_inventory_matches_the_bound_artifacts(self) -> None:
+        receipt = json.loads((ROOT / CURRENT[0]).read_text(encoding="utf-8"))
+        for path in BOUND_ARTIFACTS:
+            altered = deepcopy(receipt)
+            del altered["truth_labels"][path]
+            with self.subTest(path=path), self.assertRaises(AssertionError):
+                self._assert_current_binding(altered)
+        altered = deepcopy(receipt)
+        altered["truth_labels"]["unexpected.txt"] = "PROPOSED"
+        with self.assertRaises(AssertionError):
+            self._assert_current_binding(altered)
+
+    def test_summary_describes_scope_without_claiming_receipt_success(self) -> None:
+        step = self.steps["Record trust boundary"]
+        self.assertEqual("always()", step["if"])
+        self.assertIn('Result: ${{ job.status }}.', step["run"])
+        self.assertIn("Six immutable ancestor replays plus one current five-artifact successor binding",
+                      step["run"])
+        self.assertNotIn("GENERATED_RECEIPT_VALID", step["run"])
 
     def test_native_diagnostic_module_is_required_before_registry_gates(self) -> None:
         step = self.steps[NATIVE_STEP]
@@ -217,11 +279,13 @@ class DirectoryRootRegistryWorkflowTests(unittest.TestCase):
     def test_historical_and_current_receipt_inventory_is_disjoint_and_complete(self) -> None:
         historical = _run(self.steps[HISTORICAL_STEP]["run"])[1]
         current = _run(self.steps[CURRENT_STEP]["run"])[1]
-        self.assertEqual([HISTORICAL, REPAIR, *SUPERSEDED], [args[1] for args in historical])
+        self.assertEqual([HISTORICAL, REPAIR, *SUPERSEDED, *PREVIOUS_CURRENT],
+                         [args[1] for args in historical])
         self.assertEqual(list(CURRENT), [args[1] for args in current])
         paths = [args[1] for args in historical + current]
-        self.assertEqual(6, len(set(paths)))
-        self.assertFalse(set(SUPERSEDED) & set(CURRENT))
+        self.assertEqual(7, len(paths))
+        self.assertEqual(7, len(set(paths)))
+        self.assertFalse({HISTORICAL, REPAIR, *SUPERSEDED, *PREVIOUS_CURRENT} & set(CURRENT))
         # These explicit expected refs must not drift to a mutable branch or HEAD.
         for args in historical:
             self.assertRegex(args[-1], r"^[0-9a-f]{40}$")
