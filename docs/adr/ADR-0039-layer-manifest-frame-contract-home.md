@@ -20,6 +20,7 @@ updated: 2026-09-12
 policy_label: "public; non-release; fixture-only; no-source-activation"
 truth_posture: "cite-or-abstain"
 responsibility_root: "docs/"
+responsibility: "Record the proposed LayerManifest and LayerFrame contract/schema home and sequencing boundary without authorizing dependent implementation."
 owning_root: "docs/"
 current_path: "docs/adr/ADR-0039-layer-manifest-frame-contract-home.md"
 supersedes: []
