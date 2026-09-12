@@ -31,10 +31,8 @@ const lockedMapLibreVersion = (): string => {
     resolve(process.cwd(), "../../pnpm-lock.yaml"),
     "utf8",
   );
-  const match = lockfile.match(
-    /packages\/maplibre:\n(?:.|\n)*?\n\s+maplibre-gl:\n\s+specifier: ([^\n]+)/,
+
   );
-  return match?.[1]?.trim() ?? "LOCKFILE_VERSION_UNAVAILABLE";
 };
 
 test("records one bounded WebGL2 capability and teardown probe", async ({
