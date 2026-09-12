@@ -15,6 +15,8 @@ const FIXTURE = {
 const sha256 = (value: unknown) =>
   createHash("sha256").update(JSON.stringify(value)).digest("hex");
 
+const LOCKFILE_VERSION_UNAVAILABLE = "LOCKFILE_VERSION_UNAVAILABLE";
+
 const toolVersion = (
   command: string,
   arguments_: string[] = ["--version"],
@@ -26,14 +28,77 @@ const toolVersion = (
   }
 };
 
-const lockedMapLibreVersion = (): string => {
-  const lockfile = readFileSync(
-    resolve(process.cwd(), "../../pnpm-lock.yaml"),
-    "utf8",
+const lockedMapLibreVersion = (source?: string): string => {
+  const lockfile =
+    source ??
+    readFileSync(resolve(process.cwd(), "../../pnpm-lock.yaml"), "utf8");
+  const lines = lockfile.split(/\r?\n/);
+  const importerStart = lines.findIndex(
+    (line) => line === "  packages/maplibre:",
   );
+  if (importerStart < 0) return LOCKFILE_VERSION_UNAVAILABLE;
 
+  const importerEnd = lines.findIndex(
+    (line, index) => index > importerStart && /^ {0,2}\S/.test(line),
+  );
+  const importer = lines.slice(
+    importerStart + 1,
+    importerEnd < 0 ? undefined : importerEnd,
+  );
+  const dependencyStart = importer.findIndex(
+    (line) => line === "      maplibre-gl:",
+  );
+  if (dependencyStart < 0) return LOCKFILE_VERSION_UNAVAILABLE;
+
+  const dependencyEnd = importer.findIndex(
+    (line, index) => index > dependencyStart && /^ {0,6}\S/.test(line),
+  );
+  const versionLine = importer
+    .slice(
+      dependencyStart + 1,
+      dependencyEnd < 0 ? undefined : dependencyEnd,
+    )
+    .find((line) => /^        version:\s+\S/.test(line));
+  return (
+    versionLine?.replace(/^        version:\s+/, "").trim() ??
+    LOCKFILE_VERSION_UNAVAILABLE
   );
 };
+
+test("binds the receipt version to the scoped MapLibre importer", () => {
+  const lockfile = `lockfileVersion: '9.0'
+
+importers:
+  packages/maplibre:
+    dependencies:
+      maplibre-gl:
+        specifier: ^6.9.0
+        version: 6.9.1
+  packages/other:
+    dependencies:
+      maplibre-gl:
+        specifier: latest
+        version: 99.0.0
+`;
+
+  expect(lockedMapLibreVersion(lockfile)).toBe("6.9.1");
+});
+
+test("does not borrow a version from a later importer", () => {
+  const lockfile = `lockfileVersion: '9.0'
+
+importers:
+  packages/maplibre:
+    dependencies: {}
+  packages/other:
+    dependencies:
+      maplibre-gl:
+        specifier: latest
+        version: 99.0.0
+`;
+
+  expect(lockedMapLibreVersion(lockfile)).toBe(LOCKFILE_VERSION_UNAVAILABLE);
+});
 
 test("records one bounded WebGL2 capability and teardown probe", async ({
   page,
