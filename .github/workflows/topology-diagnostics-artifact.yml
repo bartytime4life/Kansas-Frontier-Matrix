@@ -49,14 +49,125 @@ jobs:
           cat "$RUNNER_TEMP/topology-diagnostics.txt"
           printf '%s\n' "$status" > "$RUNNER_TEMP/topology-exit-code.txt"
 
+      - name: Isolate changed evidence members
+        shell: bash
+        env:
+          KFM_NO_NETWORK: "1"
+          PYTHONDONTWRITEBYTECODE: "1"
+          PYTHONHASHSEED: "0"
+          PYTHONUNBUFFERED: "1"
+          TZ: UTC
+        run: |
+          python - <<'PY' > "$RUNNER_TEMP/topology-evidence-diff.json"
+          from __future__ import annotations
+
+          import json
+          import sys
+          from pathlib import Path
+
+          root = Path(".").resolve()
+          module_root = root / "tools/validators/directory_governance"
+          sys.path.insert(0, str(module_root))
+          import validate_repository_topology as topology
+
+          findings, tracked_count = topology.scan(root)
+          baseline_data, baseline = topology._load_baseline_bytes(
+              topology.DEFAULT_BASELINE.read_bytes(), label="current"
+          )
+
+          targets = (
+              (
+                  "KFM-TOPO-001",
+                  "path-grammar:uppercase",
+                  "sha256:495f2e5cca0cf2e824fa5a403df9719b5bd40741738db4b49de3ebad401661ed",
+              ),
+              (
+                  "KFM-TOPO-004",
+                  "catalog/",
+                  "sha256:521388927153c91a67ca8cead55af9d688a6064517d109aa556cffca91505006",
+              ),
+          )
+
+          def baseline_members(entry: object) -> tuple[str, ...]:
+              if not isinstance(entry, dict):
+                  raise RuntimeError("baseline entry is unavailable")
+              decoded = entry.get("evidence_members")
+              if isinstance(decoded, (tuple, list)) and all(
+                  isinstance(value, str) for value in decoded
+              ):
+                  return tuple(decoded)
+              return topology._decode_evidence_members(
+                  entry.get("evidence_zlib_base64"), entry.get("evidence_sha256")
+              )
+
+          def object_map(values: tuple[str, ...]) -> dict[str, str]:
+              result: dict[str, str] = {}
+              for value in values:
+                  path, separator, object_id = value.rpartition("@")
+                  if not separator or not path or not object_id:
+                      raise RuntimeError("content-sensitive evidence member is malformed")
+                  result[path] = object_id
+              return result
+
+          output: dict[str, object] = {
+              "version": "kfm.topology-evidence-diff.v1",
+              "checkout_commit": "2e8ecf331461852430388fc329b15fbd8357e37a",
+              "tracked_path_count": tracked_count,
+              "targets": [],
+          }
+          rows: list[dict[str, object]] = []
+          for rule_id, subject, old_fingerprint in targets:
+              current = next(
+                  finding
+                  for finding in findings
+                  if finding.rule_id == rule_id and finding.subject == subject
+              )
+              old = baseline_members(baseline.get(old_fingerprint))
+              new = tuple(current.evidence_members)
+              row: dict[str, object] = {
+                  "rule_id": rule_id,
+                  "subject": subject,
+                  "old_fingerprint": old_fingerprint,
+                  "new_fingerprint": current.fingerprint,
+                  "old_member_count": len(old),
+                  "new_member_count": len(new),
+              }
+              if rule_id == "KFM-TOPO-004":
+                  old_objects = object_map(old)
+                  new_objects = object_map(new)
+                  old_paths = set(old_objects)
+                  new_paths = set(new_objects)
+                  row["added_paths"] = sorted(new_paths - old_paths)
+                  row["removed_paths"] = sorted(old_paths - new_paths)
+                  row["content_changed_paths"] = [
+                      {
+                          "path": path,
+                          "old_object": old_objects[path],
+                          "new_object": new_objects[path],
+                      }
+                      for path in sorted(old_paths & new_paths)
+                      if old_objects[path] != new_objects[path]
+                  ]
+              else:
+                  old_values = set(old)
+                  new_values = set(new)
+                  row["added_paths"] = sorted(new_values - old_values)
+                  row["removed_paths"] = sorted(old_values - new_values)
+              rows.append(row)
+          output["targets"] = rows
+          print(json.dumps(output, indent=2, sort_keys=True))
+          PY
+          cat "$RUNNER_TEMP/topology-evidence-diff.json"
+
       - name: Upload exact diagnostic text
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: topology-diagnostics-2e8ecf331461852430388fc329b15fbd8357e37a
+          name: topology-diagnostics-2e8ecf331461852430388fc329b15fbd8357e37a-${{ github.run_id }}
           path: |
             ${{ runner.temp }}/topology-diagnostics.txt
             ${{ runner.temp }}/topology-exit-code.txt
+            ${{ runner.temp }}/topology-evidence-diff.json
           if-no-files-found: error
           retention-days: 1
 
