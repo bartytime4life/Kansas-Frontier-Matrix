@@ -2,24 +2,8 @@ import { createViteMapLibreAdapter } from "@kfm/maplibre/vite-adapter";
 
 const status = document.querySelector<HTMLElement>("#runtime-status");
 const disposeButton = document.querySelector<HTMLButtonElement>("#dispose-runtime");
-const mapContainer = document.querySelector<HTMLElement>("#maplibre-vite-map");
-const revealButton = document.querySelector<HTMLButtonElement>("#reveal-map");
-if (
-  status === null ||
-  disposeButton === null ||
-  mapContainer === null ||
-  revealButton === null
-) {
+if (status === null || disposeButton === null) {
   throw new Error("MapLibre Vite adapter fixture controls are missing.");
-}
-
-const startsHidden = new URL(location.href).searchParams.get("hidden") === "1";
-if (startsHidden) {
-  mapContainer.style.display = "none";
-  revealButton.hidden = false;
-  revealButton.addEventListener("click", () => {
-    mapContainer.style.display = "block";
-  });
 }
 
 const runtime = createViteMapLibreAdapter({
