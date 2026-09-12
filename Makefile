@@ -120,7 +120,7 @@ repository-topology:
 	@set -u; \
 	contract_status=0; tests_status=0; diagnostics_status=0; \
 	if [ -f tests/ci/test_repository_topology_make_target.py ] && $(KFM_VALIDATION_ENV) python -m unittest discover --start-directory tests/ci --pattern 'test_repository_topology_make_target.py' --verbose; then :; else contract_status=$$?; fi; \
-	if $(KFM_VALIDATION_ENV) python -m unittest discover --start-directory tests/validators/directory_governance --pattern 'test_validate_*topology.py' --verbose; then :; else tests_status=$$?; fi; \
+	if $(KFM_VALIDATION_ENV) python -m unittest discover --start-directory tests/validators/directory_governance --pattern 'test_validate_*topology*.py' --verbose; then :; else tests_status=$$?; fi; \
 	if $(KFM_VALIDATION_ENV) python tools/validators/directory_governance/render_repository_topology_diagnostics.py; then :; else diagnostics_status=$$?; fi; \
 	printf 'repository-topology statuses: contract=%s tests=%s diagnostics=%s\n' "$$contract_status" "$$tests_status" "$$diagnostics_status"; \
 	if [ "$$contract_status" -ne 0 ] || [ "$$tests_status" -ne 0 ] || [ "$$diagnostics_status" -ne 0 ]; then exit 1; fi

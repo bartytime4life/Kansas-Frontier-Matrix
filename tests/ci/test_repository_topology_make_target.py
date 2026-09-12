@@ -23,7 +23,7 @@ EXPECTED_ARGV = [
      "test_repository_topology_make_target.py", "--verbose"],
     ["-m", "unittest", "discover", "--start-directory",
      "tests/validators/directory_governance", "--pattern",
-     "test_validate_*topology.py", "--verbose"],
+     "test_validate_*topology*.py", "--verbose"],
     ["tools/validators/directory_governance/render_repository_topology_diagnostics.py"],
 ]
 EXPECTED_ENV = {
