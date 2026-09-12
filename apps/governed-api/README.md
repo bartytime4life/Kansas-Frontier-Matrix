@@ -2,11 +2,11 @@
 doc_id: kfm://app/governed-api/readme
 title: Governed API App README
 type: app-readme
-version: v0.3
+version: v0.4
 status: draft; repository-grounded; bounded-scaffold
 owners: OWNER_TBD — Apps steward · API steward · Policy steward · Evidence steward · Release steward · Runtime steward · Docs steward
 created: 2026-06-16
-updated: 2026-09-05
+updated: 2026-09-12
 policy_label: public
 owning_root: apps/
 current_path: apps/governed-api/README.md
@@ -15,7 +15,7 @@ truth_posture: CONFIRMED source and test inventory; PROPOSED broader capabilitie
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: de25f099381cf0cad87884fe5bb35b17d4c1fa04
+  base_commit: c6178080f272c3551cda85ab0e972872dce19d15
   initial_inspection_commit: cbd6d82bad962a58ab62cfb776ee31696b575107
   prior_readme_blob: 4f21150852f133ba919b11f4f8792185fa870dae
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
@@ -36,7 +36,7 @@ related:
   - ../../.github/workflows/api-test.yml
 tags: [kfm, apps, governed-api, wsgi, runtime-response-envelope, finite-outcomes, evidence, policy, release]
 notes:
-  - "Same-path documentation update; no runtime, schema, policy, dependency, or release change."
+  - "v0.4 documents the bounded registered-handler failure guard and deterministic negative-path proof; it adds no route, dependency, policy, release, deployment, or publication change."
   - "Current handlers emit RuntimeResponseEnvelope-shaped ABSTAIN or ERROR scaffolds, not operational evidence or policy decisions."
   - "ADR-0029 is accepted; ADR-0004 remains draft/proposed. Historical ADR implementation snapshots do not override current source."
   - "Execution results belong to exact-head PR/check records; this README does not claim continuously passing CI."
@@ -52,8 +52,8 @@ notes:
 
 | Status axis | Evidence at the pinned base |
 |---|---|
-| Source inventory — **CONFIRMED** | WSGI entrypoint, route registry, envelope builders, six app tests, and command-bearing API workflow exist. |
-| Capability maturity | **Bounded scaffold**: `ABSTAIN` and routing `ERROR` paths; no registered `ANSWER` or policy `DENY` implementation. |
+| Source inventory — **CONFIRMED** | WSGI entrypoint, route registry, envelope builders, app-local tests, and command-bearing API workflow exist. |
+| Capability maturity | **Bounded scaffold**: `ABSTAIN`, routing `ERROR`, and fail-closed registered-handler exception/invalid-output paths; no registered `ANSWER` or policy `DENY` implementation. |
 | Architecture authority | Accepted ADR-0029 governs placement. ADR-0004's trust-membrane decision remains **draft/proposed**, not accepted by this README. |
 | Operational closure | **UNKNOWN / NEEDS VERIFICATION**: live client integration, deployment, operational isolation, evidence/policy/release integration, observability, and rollback rehearsal. |
 | Stewardship | `OWNER_TBD` is retained; named app stewardship and independent review are not inferred from a repository owner. |
@@ -108,7 +108,7 @@ Promotion requires its own evidence, rights, sensitivity, validation, integrity,
 
 Keep this scaffold fail-closed. Missing evidence, policy, rights, sensitivity, review, or release support must not be concealed by a successful HTTP status, synthetic content, or generated language.
 
-In the **current implementation**, abstention means the route is not implemented; it is not an evidence-quality assessment. The 404/405 paths return `ERROR`, not a policy `DENY`. The server does not perform request-schema validation, caller authorization, policy evaluation, evidence resolution, or response-schema validation on each request. These remain graduation work.
+In the **current implementation**, abstention means the route is not implemented; it is not an evidence-quality assessment. The 404/405 paths return `ERROR`, not a policy `DENY`. Registered handlers pass through a bounded closed-negative-envelope guard: synchronous exceptions, awaitable returns, and invalid shapes become safe `ERROR` envelopes. This guard is deliberately narrower than the canonical JSON Schema validator. The server still does not perform request-schema validation, caller authorization, policy evaluation, evidence resolution, or complete response-schema validation on each request. These remain graduation work.
 
 For sensitive exact locations, archaeology, rare species, infrastructure, living-person/DNA information, private land, or unclear cultural/sovereignty authority, preserve denial, quarantine, redaction, generalization, or staged access until the governing controls permit exposure. Adding a route or UI layer must not bypass those controls.
 
@@ -118,6 +118,7 @@ For sensitive exact locations, archaeology, rare species, infrastructure, living
 |---|---|
 | WSGI `PATH_INFO` | Exact lookup in `ROUTES`; absent value defaults to an empty path. |
 | WSGI `REQUEST_METHOD` | Defaults to `GET` if absent; any non-GET method on a registered path is rejected. |
+| WSGI `kfm.correlation_id` | Optional trusted-middleware value used only after strict lowercase-safe sanitization in a failure-envelope identifier; absent or unsafe values become `unavailable`. It is not a public request-header contract. |
 | `GOVERNED_API_ISSUED_AT` | Optional timestamp override for reproducible fixtures; otherwise current UTC time is used. The override is not validated by the builder. |
 | Query string, request body, caller identity, selected feature/time | Not consumed by the current handlers. Supplying parameters does not activate lookup, filtering, authentication, or temporal support. |
 
@@ -147,6 +148,7 @@ The [registry](src/governed_api/routes/registry.py) and [dispatcher](src/governe
 | `GET /bootstrap` | `200 OK` | `ABSTAIN / NOT_IMPLEMENTED` | No runtime configuration or feature flags are supplied. |
 | `GET /layers` | `200 OK` | `ABSTAIN / NOT_IMPLEMENTED` | No layer catalog, geometry, tiles, or manifests are supplied. |
 | `GET /evidence` | `200 OK` | `ABSTAIN / NOT_IMPLEMENTED` | No EvidenceBundle or Evidence Drawer lookup occurs. |
+| Registered GET handler raises, returns `ERROR`, or returns an invalid/awaitable value | `500 Internal Server Error` | Handler-safe `ERROR`, `ERROR / SAFE_RUNTIME_ERROR`, or `ERROR / INVALID_RESPONSE` | Exception details and invalid payload content are not reflected; accepted `ERROR` bodies are never transported as HTTP success. |
 | Non-GET on any registered path | `405 Method Not Allowed` | `ERROR / SAFE_RUNTIME_ERROR` | `id=stub:error:method-not-allowed`. |
 | Any unregistered path | `404 Not Found` | `ERROR / SAFE_RUNTIME_ERROR` | `id=stub:error:route-not-found`. |
 
@@ -160,7 +162,8 @@ Focus, story, compare, export, review, correction, diagnostics, and temporal-que
 Current bounded implementation
 
 WSGI request -> exact route + method dispatch
-                |-- registered GET -> stub builder -> 200 + ABSTAIN
+                |-- registered GET -> handler guard -> 200 + closed negative envelope
+                |                                `-> 500 + safe ERROR on exception/invalid output
                 |-- registered non-GET ------------> 405 + ERROR
                 `-- unknown path ------------------> 404 + ERROR
 
@@ -178,7 +181,7 @@ The [RuntimeResponseEnvelope semantic contract](../../contracts/runtime/runtime_
 | `ANSWER` | Evidence-supported, permitted response with disclosed precision and limitations. | Not emitted. |
 | `ABSTAIN` | Insufficient support or unsupported scope; no fabricated answer. | Emitted only as `NOT_IMPLEMENTED`. |
 | `DENY` | Policy, rights, sensitivity, role, or release decision prevents response. | Not emitted; no policy evaluation is implemented. |
-| `ERROR` | Reliable completion is prevented by a runtime/validation fault. | Safe envelopes for unknown-route and unsupported-method handling only. |
+| `ERROR` | Reliable completion is prevented by a runtime/validation fault. | Safe envelopes for unknown-route, unsupported-method, registered-handler exception, and invalid-output handling. |
 
 The ten unconditional fields are `id`, `spec_hash`, `version`, `issued_at`, `outcome`, `reason_code`, `evidence_refs`, `policy_state`, `freshness`, and `correction_state`. The schema closes additional properties. For `ANSWER`, it additionally requires `precision_actually_used` and at least one top-level evidence reference; non-ANSWER outcomes must omit the precision field.
 
@@ -202,7 +205,7 @@ With the timestamp override in the local example, `GET /layers` returns this sca
 > [!CAUTION]
 > The 64-`a` hash is a fixed placeholder, not a computed integrity or provenance digest. `baseline`, `current`, and `none` are hard-coded scaffold labels, not evaluated policy, source freshness, or correction history. The timestamp describes envelope issuance, not observation time or data validity. Reproducibility requires a fixed timestamp override.
 
-The routing errors contain no reflected request path or `detail` field. This bounded behavior is not a general exception-redaction middleware guarantee. Do not add unsupported citation, release, audit, or payload fields to a closed envelope without a coordinated contract/schema/consumer change.
+The routing errors contain no reflected request path or `detail` field. Registered-handler failures also omit exception text and invalid payload content. This bounded scaffold guard is not a general exception-redaction middleware or complete schema-validation guarantee. Do not add unsupported citation, release, audit, or payload fields to a closed envelope without a coordinated contract/schema/consumer change.
 
 ## 10. API obligations
 
@@ -277,7 +280,8 @@ Dependency installation may contact package indexes; these API tests do not requ
 | Check | What it covers | Evidence limit |
 |---|---|---|
 | [ABSTAIN route test](tests/test_abstain_routes.py) | All registered GET routes, deterministic ten-field payloads, fixed timestamp, empty evidence, and no DecisionEnvelope/precision fields. | One test loops over the route set; not evidence-backed answers. |
-| [Boundary tests](tests/test_boundary_guards.py) | 404/405 safe shapes, three-route inventory, renderer/model import prefixes, and forbidden store-path literals. | Five tests; static string guards are not sandboxing, authorization, or proof against all dynamic access. |
+| [Boundary tests](tests/test_boundary_guards.py) | 404/405 safe shapes, registered-handler exception/invalid-output mapping, three-route inventory, renderer/model import prefixes, and forbidden store-path literals. | Static string guards are not sandboxing, authorization, or proof against all dynamic access. |
+| [Failure-fixture tests](tests/test_api_failure_fixtures.py) | Schema-valid deterministic negative cases, synchronous and asynchronous rejection, timeout/cancellation, invalid output, finite-outcome preservation, no-leak behavior, and WSGI failure mapping. | Fixture/scaffold proof only; no live dependency, endpoint, telemetry, deployment, or human acceptance. |
 | [Schema subset helper](tests/schema_assert.py) | Types, required keys, and closed additional properties. | Does not implement full JSON Schema: `$ref`, formats, patterns, enums, and conditionals are not generally evaluated by this helper. Some values are asserted explicitly by the route tests. |
 | `make governed-api-verify` | App test suite plus tracked-file `git grep` for forbidden renderer/model import lines. | Requires a real Git checkout; not an egress firewall or provider-isolation proof. |
 | `make deny-test` | The five boundary tests with strict pytest options. | The target name does not mean the app emits policy `DENY`. |
@@ -291,11 +295,11 @@ Keep each change dependency-closed and reversible: pin base/target bytes, check 
 
 A new evidence-bearing or public route requires the appropriate contract/schema/policy/consumer changes and tests; a README must not create those promises by itself. Preserve finite outcomes, source roles, spatial/temporal scope, rights/sensitivity controls, evidence references, citation obligations, correction state, and rollback lineage wherever material.
 
-Update affected app/client guidance when behavior changes. This revision changes only this README: route code, contracts, schemas, policy, workflows, dependencies, parent navigation, and historical records remain unchanged. Existing numbered section anchors and `doc_id` are preserved.
+Update affected app/client guidance when behavior changes. This revision pairs the documented registered-handler guard with focused app tests and the existing RuntimeResponseEnvelope contract; schemas, policy, workflows, dependencies, parent navigation, and historical records remain unchanged. Existing numbered section anchors and `doc_id` are preserved.
 
 ## 14. Definition of done
 
-For **this documentation slice**, completion means a source-pinned current inventory, accurate route/envelope examples and commands, resolving navigation, explicit test limits, and a reviewable diff with actual validation evidence. It does not mean the API is production-ready.
+For **this bounded failure slice**, completion means a source-pinned current inventory, safe registered-handler failure mapping, deterministic positive/negative tests, operator-health semantics without endpoint activation, accurate route/envelope guidance, and a reviewable diff with actual validation evidence. It does not mean the API is production-ready.
 
 Before **runtime graduation**, the following remain required:
 
@@ -311,7 +315,7 @@ Before **runtime graduation**, the following remain required:
 | Remaining work | First boundary affected |
 |---|---|
 | Replace synthetic envelope labels through governed implementation, not wording changes | Any claim-bearing response. |
-| Add complete schema validation and request/error handling without widening closed contracts casually | New request/response behavior. |
+| Add complete schema validation and request handling without widening closed contracts casually | New request/response behavior beyond the current negative-envelope guard. |
 | Integrate evidence, policy, rights, sensitivity, and release/correction/rollback services | `ANSWER`, policy `DENY`, or real released-artifact delivery. |
 | Prove client transport, evidence selection, temporal behavior, and finite-state rendering | Live Explorer, Sites, chart, report, or Focus integration. |
 | Verify authentication, resource limits, operational isolation, logging, and safe errors | Public or role-gated exposure. |
@@ -322,10 +326,10 @@ Before **runtime graduation**, the following remain required:
 
 The prior v0.2 README's trust-membrane purpose, lifecycle, finite outcomes, responsibility split, and sensitive/public-access exclusions are retained. Blanket unknown-route/test statements are replaced with the inspected scaffold. Proposed route families remain explicitly proposed, and no historical record is rewritten into proof of current behavior.
 
-Rollback for this documentation-only revision is to restore the prior README blob `4f21150852f133ba919b11f4f8792185fa870dae` through a reviewed revert. No data migration, source activation, schema change, policy rollback, or deployment rollback is needed. Restoration also restores the old documentation limitations; it is not a recommended runtime change.
+Rollback is a reviewed revert of the bounded handler guard, negative-path fixtures/tests, contract clarification, and this README update. No data migration, source activation, schema change, policy rollback, or deployment rollback is needed; the prior registered handlers remain the fallback scaffold.
 
 ## Status summary
 
-**CONFIRMED:** a small local WSGI scaffold with three abstaining GET routes, safe routing errors, proposed schema-paired envelopes, and focused test/CI wiring. **Not established:** a complete governed production API. Continue through bounded, tested, independently reviewed slices without collapsing implementation, evidence, policy, approval, release, and publication.
+**CONFIRMED:** a small local WSGI scaffold with three abstaining GET routes, safe routing and registered-handler errors, proposed schema-paired envelopes, and focused deterministic test/CI wiring. **Not established:** a complete governed production API. Continue through bounded, tested, independently reviewed slices without collapsing implementation, evidence, policy, approval, release, and publication.
 
 [Back to top](#top)

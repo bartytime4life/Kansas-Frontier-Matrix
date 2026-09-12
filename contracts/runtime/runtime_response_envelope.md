@@ -2,11 +2,11 @@
 doc_id: kfm://doc/contracts-runtime-runtime-response-envelope
 title: contracts/runtime/runtime_response_envelope.md — RuntimeResponseEnvelope Contract
 type: contract
-version: v0.4
+version: v0.5
 status: draft; PROPOSED; schema-paired; api-facing-runtime-envelope; trust-membrane
 owners: OWNER_TBD — Runtime steward · API steward · Contracts steward · Schema steward · Policy steward · Evidence steward · Correction steward · Docs steward
 created: NEEDS VERIFICATION — file existed before v0.2 expansion
-updated: 2026-08-14
+updated: 2026-09-12
 policy_label: public; contracts; runtime; runtime-response-envelope; api-facing; finite-outcomes; evidence-refs; precision-disclosure; policy-state; freshness; correction-state; governed-runtime; no-internal-store-bypass
 tags: [kfm, contracts, runtime, runtime-response-envelope, governed-api, trust-membrane, answer, abstain, deny, error, evidence-refs, precision-actually-used, precision-disclosure, policy-state, freshness, correction-state, cite-or-abstain]
 related:
@@ -35,6 +35,7 @@ notes:
   - "The schema has ten unconditional required fields and conditionally requires `precision_actually_used` plus at least one top-level EvidenceRef for `ANSWER`; it forbids precision disclosure for the other three outcomes."
   - "The structured precision semantics are owned by `contracts/runtime/precision_actually_used.md` and are implemented consistently by the schema, fixture, validator, candidate builder, and bounded proof tests."
   - "v0.4 repairs the v0.3 prose omission without changing schema bytes, runtime behavior, provider/model integration, policy, release, deployment, or publication posture."
+  - "v0.5 defines a bounded operator-health interpretation before any endpoint naming; it does not add a health endpoint or change schema bytes."
   - "RuntimeResponseEnvelope is the governed API/client-facing response envelope. It is not raw evidence storage, not canonical lifecycle storage, not policy execution, not model truth, and not release approval."
   - "Rollback target for this correction is prior contract blob SHA `97ff95ba5527968f3db70cd710682176444e4cde`."
 [/KFM_META_BLOCK_V2] -->
@@ -67,7 +68,7 @@ notes:
 
 ## Quick jumps
 
-[Purpose](#purpose) · [Meaning](#meaning) · [Schema-paired field surface](#schema-paired-field-surface) · [Field semantics](#field-semantics) · [Outcome semantics](#outcome-semantics) · [State semantics](#state-semantics) · [Invariants](#invariants) · [Lifecycle role](#lifecycle-role) · [Boundaries](#boundaries) · [Validation expectations](#validation-expectations) · [Fixtures](#fixtures) · [Open questions](#open-questions) · [Rollback](#rollback)
+[Purpose](#purpose) · [Meaning](#meaning) · [Schema-paired field surface](#schema-paired-field-surface) · [Field semantics](#field-semantics) · [Outcome semantics](#outcome-semantics) · [Operator-health interpretation](#operator-health-interpretation) · [State semantics](#state-semantics) · [Invariants](#invariants) · [Lifecycle role](#lifecycle-role) · [Boundaries](#boundaries) · [Validation expectations](#validation-expectations) · [Fixtures](#fixtures) · [Open questions](#open-questions) · [Rollback](#rollback)
 
 ---
 
@@ -260,6 +261,31 @@ This tells clients whether the response lineage is normal, corrected, superseded
 
 ---
 
+## Operator-health interpretation
+
+Request outcome and operator health are related evidence, not aliases. A valid
+`ABSTAIN` or `DENY` proves that the trust membrane produced an intentional
+finite response; it does not prove that every dependency is healthy. An
+`ERROR` proves neither truth nor policy state and must not be converted into an
+answer.
+
+Before any health endpoint is named, a later internal operator projection must
+use only these bounded meanings:
+
+| Operator state | Minimum meaning | Safe evidence boundary |
+|---|---|---|
+| `READY` | The dispatcher can produce a closed finite envelope and all dependencies required for the selected operation passed their explicit preflight. | Exact revision, bounded check identifiers, and non-sensitive reason codes only. |
+| `DEGRADED` | The dispatcher still fails closed, but freshness, timeout, or an unavailable optional dependency prevents the requested answer. | Do not expose source payloads, private paths, credentials, stack traces, or protected geometry. |
+| `UNHEALTHY` | The runtime cannot guarantee a closed response envelope for the selected operation. | Emit a stable safe code and correlation identifier; preserve diagnostics only in an access-controlled operator sink. |
+| `UNKNOWN` | No current measurement proves one of the other states. | Absence of evidence must not be reported as ready. |
+
+This table does not authorize a URL, probe, metric, telemetry sink, deployment,
+or public disclosure. Any later endpoint needs a separate least-privilege
+contract, authentication/exposure decision, deterministic tests, and rollback
+plan.
+
+---
+
 ## State semantics
 
 ### `policy_state`
@@ -386,6 +412,7 @@ CONFIRMED contract/schema/fixture validation surface:
 - `tests/runtime_proof/test_envelope_finite_outcomes.py` checks the closed profile and Focus compatibility alias without network access;
 - `tests/packages/envelopes/test_runtime_response_candidate.py` proves the candidate builder emits the selected representation for `ANSWER` and forbids it for negative outcomes;
 - `tests/contracts/test_runtime_response_contract_alignment.py` checks that this contract documents every top-level schema property, points to the schema-selected precision profile, and preserves the schema's conditional outcome law.
+- `apps/governed-api/tests/test_api_failure_fixtures.py` exercises a deterministic, no-network negative-path adapter for synchronous exceptions, rejected asynchronous work, timeout, cancellation, invalid handler output, intentional `ABSTAIN`/`DENY` preservation, and correlation sanitization.
 
 NEEDS VERIFICATION in runtime and client implementation:
 

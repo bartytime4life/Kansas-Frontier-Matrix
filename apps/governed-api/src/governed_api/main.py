@@ -2,7 +2,7 @@ import json
 from wsgiref.simple_server import make_server
 
 from governed_api.routes.registry import ROUTES
-from governed_api.stub import make_error_envelope
+from governed_api.stub import invoke_sync_fixture_operation, make_error_envelope
 
 
 def _json_response(start_response, status: str, payload: dict):
@@ -24,7 +24,16 @@ def app(environ, start_response):
         )
 
     if method == "GET" and path in ROUTES:
-        return _json_response(start_response, "200 OK", ROUTES[path]())
+        payload, failure_kind = invoke_sync_fixture_operation(
+            ROUTES[path],
+            environ.get("kfm.correlation_id", "unavailable"),
+        )
+        status = (
+            "500 Internal Server Error"
+            if failure_kind is not None or payload["outcome"] == "ERROR"
+            else "200 OK"
+        )
+        return _json_response(start_response, status, payload)
 
     return _json_response(
         start_response,
