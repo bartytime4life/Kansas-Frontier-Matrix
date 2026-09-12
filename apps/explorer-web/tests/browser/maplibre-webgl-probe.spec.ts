@@ -15,9 +15,12 @@ const FIXTURE = {
 const sha256 = (value: unknown) =>
   createHash("sha256").update(JSON.stringify(value)).digest("hex");
 
-const toolVersion = (command: string): string => {
+const toolVersion = (
+  command: string,
+  arguments_: string[] = ["--version"],
+): string => {
   try {
-    return execFileSync(command, ["--version"], { encoding: "utf8" }).trim();
+    return execFileSync(command, arguments_, { encoding: "utf8" }).trim();
   } catch {
     return "UNAVAILABLE";
   }
@@ -36,6 +39,7 @@ const lockedMapLibreVersion = (): string => {
 
 test("records one bounded WebGL2 capability and teardown probe", async ({
   page,
+  browser,
 }, testInfo) => {
   const externalRequests: string[] = [];
   page.on("request", (request) => {
@@ -112,9 +116,10 @@ test("records one bounded WebGL2 capability and teardown probe", async ({
       dependency_admission_changed: false,
     },
     browser: {
-      project: testInfo.project.name,
-      engine: "Chromium",
-      playwright: toolVersion("pnpm"),
+      project: testInfo.project.name || "default",
+      engine: browser.browserType().name(),
+      browser_version: browser.version(),
+      playwright: toolVersion("pnpm", ["exec", "playwright", "--version"]),
       node: process.version,
       pnpm: toolVersion("pnpm"),
     },
