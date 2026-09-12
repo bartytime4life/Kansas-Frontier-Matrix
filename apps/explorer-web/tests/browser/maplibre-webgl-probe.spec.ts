@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
-import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
 import { expect, test } from "playwright/test";
 
 const FIXTURE = {
@@ -150,8 +150,13 @@ test("records one bounded WebGL2 capability and teardown probe", async ({
     },
   };
 
+  const receiptBody = JSON.stringify(receipt, null, 2);
+  const receiptPath = testInfo.outputPath("maplibre-webgl-probe.receipt.json");
+  mkdirSync(dirname(receiptPath), { recursive: true });
+  writeFileSync(receiptPath, receiptBody, "utf8");
+
   await testInfo.attach("maplibre-webgl-probe.receipt.json", {
-    body: JSON.stringify(receipt, null, 2),
+    path: receiptPath,
     contentType: "application/json",
   });
 
