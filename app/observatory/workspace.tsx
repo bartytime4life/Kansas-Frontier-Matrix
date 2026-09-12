@@ -3,6 +3,8 @@
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { currentDayStart, currentUtcDay, latestSafeCursor } from "../daily-baseline";
+import { browserRenderBudget, updateGeoJSON } from "../map-performance";
+import { DataNotices } from "../map-toolbar";
 import type { Map as GLMap, GeoJSONSource } from "maplibre-gl";
 import { BASEMAPS } from "../map-runtime";
 import {
@@ -208,7 +210,8 @@ export default function EventObservatory() {
     import("maplibre-gl").then((gl) => {
       if (disposed || !container.current) return;
       gl.setWorkerUrl("/maplibre/maplibre-gl-worker.mjs");
-      const map = new gl.Map({ container: container.current, style: BASEMAPS.streets.style, center: [-98.35,38.5], zoom: 6, minZoom: 4, maxZoom: 12, maxBounds: [[-104,35],[-92,42]], attributionControl: { compact: true } });
+      const budget = browserRenderBudget(); gl.setMaxParallelImageRequests(budget.imageRequests);
+      const map = new gl.Map({ container: container.current, style: BASEMAPS.streets.style, center: [-98.35,38.5], zoom: 6, minZoom: 4, maxZoom: 12, maxBounds: [[-104,35],[-92,42]], attributionControl: { compact: true }, pixelRatio: budget.pixelRatio, maxTileCacheSize: budget.tileCache, renderWorldCopies: false });
       mapRef.current = map;
       map.addControl(new gl.NavigationControl({ visualizePitch: false }), "top-right");
       map.addControl(new gl.ScaleControl({ unit: "imperial" }), "bottom-left");
@@ -387,9 +390,9 @@ export default function EventObservatory() {
           map.addLayer({ id: "ea-radar", type: "raster", source: "ea-radar-image", layout: { visibility: "none" }, paint: { "raster-opacity": opacity.radar, "raster-fade-duration": 0 } });
           radarSourceTime.current = scan?.time ?? null;
       }
-      (map.getSource("ea-smoke") as GeoJSONSource).setData(smokeAt(manifest.smoke.data, requested));
-      (map.getSource("ea-river-data") as GeoJSONSource).setData(river ? riverAt(river, requested, loadedRiverResolution) : EMPTY);
-      (map.getSource("ea-resource-data") as GeoJSONSource).setData(resourceData ?? EMPTY);
+      updateGeoJSON(map.getSource("ea-smoke") as GeoJSONSource, smokeAt(manifest.smoke.data, requested));
+      updateGeoJSON(map.getSource("ea-river-data") as GeoJSONSource, river ? riverAt(river, requested, loadedRiverResolution) : EMPTY);
+      updateGeoJSON(map.getSource("ea-resource-data") as GeoJSONSource, resourceData ?? EMPTY);
       const day = requested.slice(0,10), year = day.slice(0,4);
       for (const id of ["counties", "weather", "earthquakes", "shake"] as ContextTrack[]) {
         const entry = contextData[id];
@@ -400,7 +403,7 @@ export default function EventObservatory() {
           const epoch = (value: string) => Date.parse(/(Z|[+-]\d{2}:\d{2})$/.test(value) ? value : value + "Z");
           return (!start || epoch(start) <= Date.parse(requested)) && (!end || epoch(end) > Date.parse(requested));
         }) };
-        (map.getSource(`ea-${id}-data`) as GeoJSONSource).setData(data);
+        updateGeoJSON(map.getSource(`ea-${id}-data`) as GeoJSONSource, data);
       }
       for (const kind of ["flora", "fauna"] as const) {
         const id = `ea-${kind}`, marker = `${year}:${kind}`;
@@ -545,7 +548,7 @@ export default function EventObservatory() {
   const canMoveToNextWeek = Boolean(nextCalendarAnchor && eventWeekDays(nextCalendarAnchor).some((day) => day <= calendarToday));
 
   return <main className="event-workspace">
-    <header className="event-header"><div><Link href="/">← Explorer</Link><span>KANSAS FRONTIER MATRIX</span><h1>Event Observatory</h1></div><nav className="event-source-actions"><Link href="/data">Contribute data</Link><Link href="/stewards">Steward desk</Link><Link href="/observatory/sources" className="event-source-link">Sources & coverage ↗</Link></nav></header>
+    <header className="event-header"><div><Link href="/">← Explorer</Link><span>KANSAS FRONTIER MATRIX</span><h1>Event Observatory</h1></div><nav className="event-source-actions"><DataNotices /><Link href="/data">Contribute data</Link><Link href="/stewards">Steward desk</Link><Link href="/observatory/sources" className="event-source-link">Sources & coverage ↗</Link></nav></header>
     <section className="event-calendar-sweep" id="archive-calendar" hidden={!calendarOpen} aria-labelledby="event-calendar-title">
       <div className="event-panel-heading"><strong>Calendar · 24 hours per day</strong><button type="button" onClick={() => setCalendarOpen(false)} aria-label="Close calendar">×</button></div>
       <label className="event-calendar-date">Jump to a date<input type="date" min={EVENT_EARLIEST_DAY} max={calendarToday} value={calendarAnchor} onChange={(event) => { if (eventDayHours(event.target.value).length) setCalendarAnchor(event.target.value); }} /></label>

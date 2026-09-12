@@ -3,6 +3,47 @@
 A map-first Kansas explorer with real provider baselines, dated archive replay,
 source downloads, and private data contribution and steward review workflows.
 
+## Terrain, source recovery, and loading — September 12, 2026
+
+The visible **3D settings** control offers Natural terrain (imagery + 1× relief),
+Topographic relief, and mapped 3D buildings. Scene lighting and vertical scale
+are adjustable without changing scientific time or the map center. Building
+heights come from the provider's mapped attributes; no heights are invented.
+Comparison maps also use a physical 1× default.
+
+**Data & downloads** stays on the top bar in Explorer and Event Observatory.
+It links to original LiDAR/elevation, historical maps, NOAA weather/radar
+archives, and National Water Model files, with source-specific proposal links.
+Selected-source errors have Retry, Hide, and Source data actions. Optional tile
+failures no longer produce a map-wide degradation banner. Full renderer and
+basemap failures still retain their explicit recovery states.
+
+The 3DEP service generates its visualization tiles dynamically. The fixed
+`/api/terrain-tile` adapter requests the advertised Hillshade Multidirectional
+or Slope Map function, coalesces duplicate requests, and caches successful tiles
+for at most six hours. Requests are restricted to Kansas map bounds, zoom 3–14,
+256-pixel PNGs, an 18-second timeout and a 1 MB response limit. The memory cache
+is limited to 64 entries / 8 MB; the platform edge cache is also used when
+available. Errors are not cached as successful or transparent tiles. Retrieval
+timestamps remain attached, and browser cache lifetimes cannot extend the
+six-hour source-age limit. These are display mosaics, not raw LiDAR admission.
+
+Rendering modes are device-local preferences: Balanced caps pixel ratio at
+1.5, Battery saver at 1, and High detail at 2; browser data-saving preferences
+are respected in Balanced mode. Parallel image requests and tile retention
+are bounded. Disabled raster services are created only when selected. Repeated
+opacity changes do not resend unchanged GeoJSON to workers, and unchanged
+archive geometry does not re-upload on every playback frame. Decorative
+effects pause while panning or hidden, and do not run with no relevant layers
+or in Battery saver. Hover sampling is bounded to protect the main UI thread.
+
+Validation: `node --test tests/terrain-performance.test.mjs` covers request
+boundaries, cache coalescing/expiry, retryable failures, pixel budgets, and
+renderer update counts. These checks establish avoided work, not a measured
+browser FPS or universal speedup. Source research:
+[USGS 3DEP service](https://elevation.nationalmap.gov/arcgis/rest/services/3DEPElevation/ImageServer),
+[MapLibre performance guide](https://maplibre.org/maplibre-gl-js/docs/guides/large-data/).
+
 ## Daily baseline and data commons — September 12, 2026
 
 The initial map enables actual Census county boundaries/counts, USGS streamflow,

@@ -1,4 +1,4 @@
-const HOSTS = new Set(["mesonet.agron.iastate.edu", "satepsanone.nesdis.noaa.gov", "gibs.earthdata.nasa.gov", "api.gbif.org", "services.arcgis.com", "tigerweb.geo.census.gov", "tiles.arcgis.com", "data.raspberryshake.org", "api.waterdata.usgs.gov", "www.ncei.noaa.gov"]);
+const HOSTS = new Set(["mesonet.agron.iastate.edu", "satepsanone.nesdis.noaa.gov", "gibs.earthdata.nasa.gov", "api.gbif.org", "services.arcgis.com", "tigerweb.geo.census.gov", "tiles.arcgis.com", "data.raspberryshake.org", "api.waterdata.usgs.gov", "www.ncei.noaa.gov", "elevation.nationalmap.gov"]);
 export async function boundedFetch(url: string, limit: number) {
   const parsed = new URL(url);
   if (parsed.protocol !== "https:" || !HOSTS.has(parsed.hostname) || parsed.username || parsed.password) throw new Error("Non-allowlisted source.");

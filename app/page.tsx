@@ -4,6 +4,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { BASELINE_STACKS, currentUtcDay } from "./daily-baseline";
 import { SourceQualityRow } from "./source-quality-row";
+import { DataNotices, RenderQualityControl, TerrainQuickControls } from "./map-toolbar";
+import { browserRenderBudget, readRenderQuality, QUALITY_STORAGE_KEY, type RenderQuality } from "./map-performance";
 import type { Feature, Geometry } from "geojson";
 import type { GeoJSONSource, Map as MapLibreMap, MapSourceDataEvent, Popup, ScaleControl } from "maplibre-gl";
 import {
@@ -565,12 +567,14 @@ const governedRoutes = new Set<GovernedRoute>(["/bootstrap", "/layers", "/eviden
 
 const loadConfiguredMapLibre = async () => {
   await Promise.all(MAPLIBRE_RUNTIME_ASSET_URLS.map(async (url) => {
-    const response = await fetch(url, { cache: "no-store" });
+    const response = await fetch(url, { method: "HEAD", cache: "force-cache" });
     if (!response.ok) throw new Error(`MapLibre runtime asset unavailable (${response.status})`);
     await response.body?.cancel();
   }));
   const maplibregl = await import("maplibre-gl");
   maplibregl.setWorkerUrl(MAPLIBRE_WORKER_URL);
+  maplibregl.setMaxParallelImageRequests(browserRenderBudget().imageRequests);
+  maplibregl.setWorkerCount(Math.max(1, Math.min(4, Math.floor((navigator.hardwareConcurrency || 4) / 2))));
   const version = maplibregl.getVersion();
   if (version !== EXPECTED_MAPLIBRE_VERSION) throw new Error(`Expected MapLibre ${EXPECTED_MAPLIBRE_VERSION}, received ${version}`);
   if (maplibregl.getWorkerUrl() !== MAPLIBRE_WORKER_URL) throw new Error("MapLibre worker configuration did not persist");
@@ -1001,6 +1005,8 @@ export default function Home() {
   const officialOpacityRef = useRef(defaultOfficialOpacity);
   const officialPayloadsRef = useRef<Partial<Record<OfficialContextFeedId, OfficialContextPayload>>>({});
   const officialRequestsRef = useRef(new Set<OfficialContextFeedId>());
+  const officialRasterFailuresRef = useRef(new Set<OfficialContextId>());
+  const failedTerrainSourceRef = useRef<unknown>(null);
   const noaaRadarRequestRef = useRef<AbortController | null>(null);
   const noaaRadarLastRequestAtRef = useRef(0);
   const noaaRadarReadyRef = useRef(false);
@@ -1143,6 +1149,16 @@ export default function Home() {
     error: null,
   });
   const [styleReady, setStyleReady] = useState(false);
+  const [renderQuality, setRenderQuality] = useState<RenderQuality>("auto");
+  useEffect(() => { setRenderQuality(readRenderQuality()); }, []);
+  useEffect(() => {
+    const map = mapRef.current; if (!map) return;
+    let disposed = false;
+    const apply = () => { const budget = browserRenderBudget(renderQuality); map.setPixelRatio(budget.pixelRatio); void import("maplibre-gl").then(gl => { if (!disposed) gl.setMaxParallelImageRequests(budget.imageRequests); }); };
+    apply(); window.addEventListener("resize", apply);
+    return () => { disposed = true; window.removeEventListener("resize", apply); };
+  }, [renderQuality, styleReady]);
+  const chooseRenderQuality = (value: RenderQuality) => { setRenderQuality(value); try { localStorage.setItem(QUALITY_STORAGE_KEY, value); } catch { /* The current session still uses the selected quality. */ } };
   const [locationCameraRedacted, setLocationCameraRedacted] = useState(false);
   const [selected, setSelected] = useState<SelectedContext | null>(null);
   const [hoverSummary, setHoverSummary] = useState<HoverSummary | null>(null);
@@ -2649,13 +2665,29 @@ export default function Home() {
     if (map && styleGenerationReadyRef.current) {
       try {
         applyOfficialContextState(map, officialContextRuntimeVisibility(next, temporalQueryRef.current.frame, noaaRadarReadyRef.current, noaaRadarFrameTimeRef.current), officialOpacityRef.current, officialPayloadsRef.current);
-        if (!source.apiPath && !source.managedAdapterPath && id !== "nws-radar") setOfficialStates((current) => ({ ...current, [id]: "ready" }));
+        if (visible && !source.apiPath && !source.managedAdapterPath && id !== "nws-radar" && !officialRasterFailuresRef.current.has(id)) setOfficialStates((current) => ({ ...current, [id]: "loading" }));
       } catch (error) {
         setOfficialStates((current) => ({ ...current, [id]: "error" }));
         setOfficialErrors((current) => ({ ...current, [id]: error instanceof Error ? error.message : "Raster context could not be applied." }));
       }
     }
   }, [refreshNoaaHydrologyNetwork, refreshNoaaRadarManifest, refreshOfficialContext, refreshStreamflow, streamflowRange, streamflowSelectedStationId]);
+
+  const retryOfficialLayer = (id: OfficialContextId) => {
+    const source = OFFICIAL_CONTEXT_BY_ID[id];
+    if (source.apiPath) { void refreshOfficialContext(id as OfficialContextFeedId); return; }
+    if (id === "usgs-streamflow") { void refreshStreamflow(streamflowRange, streamflowSelectedStationId); return; }
+    if (id === "noaa-nwps-gauges") { void refreshNoaaHydrologyNetwork(); return; }
+    if (id === "nws-radar") { void refreshNoaaRadarManifest(); return; }
+    const map = mapRef.current;
+    if (!map || !styleGenerationReadyRef.current) return;
+    officialRasterFailuresRef.current.delete(id);
+    setOfficialErrors(current => ({ ...current, [id]: undefined }));
+    setOfficialStates(current => ({ ...current, [id]: "loading" }));
+    if (map.getSource(source.sourceId)) map.refreshTiles(source.sourceId);
+    else setOfficialContextVisible(id, true);
+    announce(`Retrying ${source.shortTitle}`);
+  };
 
   const setPriorityContextGroupVisible = useCallback((sourceIds: readonly OfficialContextId[], visible: boolean) => {
     sourceIds.forEach((sourceId) => setOfficialContextVisible(sourceId, visible));
@@ -3664,7 +3696,9 @@ export default function Home() {
           setRuntime({ kind: "unsupported", message: "WebGL2 is unavailable in this browser. The Layer Catalog and trust metadata remain readable, but the interactive map cannot start." });
           return;
         }
+        webgl2.getExtension("WEBGL_lose_context")?.loseContext();
         const initialView = pendingViewRef.current ?? KANSAS_VIEW;
+        const renderBudget = browserRenderBudget();
         const map = new maplibregl.Map({
           container: mapContainerRef.current,
           style: BASEMAPS[basemapRef.current].style,
@@ -3672,6 +3706,10 @@ export default function Home() {
           zoom: initialView.zoom,
           bearing: initialView.bearing,
           pitch: initialView.pitch,
+          pixelRatio: renderBudget.pixelRatio,
+          maxTileCacheSize: renderBudget.tileCache,
+          maxPitch: 60,
+          renderWorldCopies: false,
           minZoom: 4,
           maxZoom: 16,
           maxBounds: [[-104.8, 34.8], [-92.0, 42.2]],
@@ -3797,7 +3835,11 @@ export default function Home() {
           map.resize();
         });
 
+        let lastHoverSample = -Infinity;
         map.on("mousemove", (event) => {
+          const now = performance.now();
+          if (map.isMoving() || now - lastHoverSample < 80) return;
+          lastHoverSample = now;
           if (scenePresetRef.current === "elevation-3d" && topographicOverlayRef.current) {
             // @ts-expect-error MapLibre runtime accepts the unexaggerated query option; bundled types currently omit it.
             const elevationMeters = map.queryTerrainElevation([event.lngLat.lng, event.lngLat.lat], { exaggerated: false });
@@ -4064,12 +4106,18 @@ export default function Home() {
               setOfficialStates((current) => ({ ...current, "nws-radar": "error" }));
               setOfficialErrors((current) => ({ ...current, "nws-radar": message }));
             }
-            setRuntime({ kind: "degraded", message: `${affectedOfficialContext.shortTitle} is unavailable; other map and evidence paths remain usable. ${message}` });
+            return;
+          }
+          if (affectedOfficialContext) {
+            officialRasterFailuresRef.current.add(affectedOfficialContext.id);
+            setOfficialStates(current => current[affectedOfficialContext.id] === "error" ? current : ({ ...current, [affectedOfficialContext.id]: "error" }));
+            setOfficialErrors(current => current[affectedOfficialContext.id] ? current : ({ ...current, [affectedOfficialContext.id]: message }));
             return;
           }
           runtimeError = message;
           if (sourceId) failedSourceIds.add(sourceId);
           if (sourceId === TERRAIN_SOURCE_ID) {
+            failedTerrainSourceRef.current = map.getSource(TERRAIN_SOURCE_ID);
             setTerrainState("ERROR");
             degradedReason = `Terrain DEM is unavailable; the 2D map remains usable. ${message}`;
             setRuntime({ kind: "degraded", message: degradedReason });
@@ -4080,12 +4128,6 @@ export default function Home() {
             setTopographicOverlay(false);
             setTerrainElevationReading(null);
             announce("Topographic height overlay is unavailable; Terrain 3D remains active");
-            return;
-          }
-          if (affectedOfficialContext) {
-            setOfficialStates((current) => ({ ...current, [affectedOfficialContext.id]: "error" }));
-            setOfficialErrors((current) => ({ ...current, [affectedOfficialContext.id]: message }));
-            setRuntime({ kind: "degraded", message: `${affectedOfficialContext.shortTitle} is unavailable; other map and evidence paths remain usable. ${message}` });
             return;
           }
           if (sourceId === "usgs-topo-context") {
@@ -4103,13 +4145,15 @@ export default function Home() {
           }
         });
         map.on("sourcedata", (event) => {
-          if (event.sourceId === TERRAIN_SOURCE_ID && event.isSourceLoaded) {
+          if (event.sourceId === TERRAIN_SOURCE_ID && event.isSourceLoaded && failedTerrainSourceRef.current !== map.getSource(TERRAIN_SOURCE_ID)) {
             setTerrainState("READY");
+            failedSourceIds.delete(TERRAIN_SOURCE_ID);
+            if (degradedReason?.startsWith("Terrain DEM is unavailable")) { degradedReason = null; runtimeError = null; }
           }
           if (!event.sourceId) return;
           const officialSource = OFFICIAL_CONTEXT_BY_SOURCE_ID[event.sourceId];
-          if (officialSource && officialSource.id !== "nws-radar" && !officialSource.apiPath && !officialSource.managedAdapterPath && event.isSourceLoaded) {
-            setOfficialStates((current) => ({ ...current, [officialSource.id]: "ready" }));
+          if (officialSource && officialSource.id !== "nws-radar" && !officialSource.apiPath && !officialSource.managedAdapterPath && event.isSourceLoaded && !officialRasterFailuresRef.current.has(officialSource.id)) {
+            setOfficialStates(current => current[officialSource.id] === "ready" ? current : ({ ...current, [officialSource.id]: "ready" }));
           }
           const layer = LAYER_REGISTRY.find((candidate) => candidate.sourceId === event.sourceId);
           if (!layer) return;
@@ -4218,7 +4262,7 @@ export default function Home() {
     if (!map || !styleGenerationReadyRef.current) return;
     let animationFrame = 0;
     let lastFrame = 0;
-    const effectsActive = dynamicEffects && !reducedMotion;
+    const effectsActive = dynamicEffects && !reducedMotion && renderQuality !== "efficient" && ["water-context", "smoke-context", "fire-context", "hazards-context", "habitat-connectivity", "transport-context", "communities"].some(id => visibility[id]);
 
     if (!effectsActive) {
       applyDynamicMapEffects(map, 0, opacity, false);
@@ -4226,18 +4270,20 @@ export default function Home() {
     }
 
     const renderEffects = (timestamp: number) => {
-      if (timestamp - lastFrame >= 80 && styleGenerationReadyRef.current) {
+      if (!document.hidden && !map.isMoving() && timestamp - lastFrame >= 80 && styleGenerationReadyRef.current) {
         applyDynamicMapEffects(map, timestamp, opacity, true);
         lastFrame = timestamp;
       }
-      animationFrame = window.requestAnimationFrame(renderEffects);
+      if (!document.hidden) animationFrame = window.requestAnimationFrame(renderEffects);
     };
-    animationFrame = window.requestAnimationFrame(renderEffects);
+    const resume = () => { window.cancelAnimationFrame(animationFrame); if (!document.hidden) animationFrame = window.requestAnimationFrame(renderEffects); };
+    document.addEventListener("visibilitychange", resume); resume();
     return () => {
       window.cancelAnimationFrame(animationFrame);
+      document.removeEventListener("visibilitychange", resume);
       if (styleGenerationReadyRef.current) applyDynamicMapEffects(map, 0, opacity, false);
     };
-  }, [dynamicEffects, opacity, reducedMotion, styleReady]);
+  }, [dynamicEffects, opacity, reducedMotion, renderQuality, styleReady, visibility]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -5043,6 +5089,17 @@ export default function Home() {
     setTerrainState(setTerrainPresentation(map, true, verticalExaggerationRef.current));
     setRuntime({ kind: "loading", message: "Retrying the attributed AWS Terrain Tiles DEM…" });
     announce("Terrain source retry started; the 2D evidence path remains available");
+  };
+
+  const applyTerrainLook = (look: "natural" | "topographic" | "buildings") => {
+    const nextBasemap: BasemapKey = look === "natural" ? "imagery" : look === "topographic" ? "topo" : "standard";
+    topographicOverlayRef.current = false; setTopographicOverlay(false);
+    if (mapRef.current) setTerrainHeightOverlay(mapRef.current, false);
+    structures3DRef.current = look === "buildings"; setStructures3DEnabled(look === "buildings");
+    basemapRef.current = nextBasemap; setBasemap(nextBasemap);
+    activateMapRepresentation("terrain");
+    atmospherePresetRef.current = "clear"; setAtmospherePreset("clear");
+    announce(`${look === "natural" ? "Imagery with physical relief" : look === "topographic" ? "Topographic terrain" : "Provider-height buildings; zoom in where mapped"} selected. Data time and camera center are preserved.`);
   };
 
   const startSceneOrbit = () => {
@@ -6244,6 +6301,7 @@ export default function Home() {
           <span className="release-indicator" data-selection-state={selected?.properties.evidenceState ?? "SOURCE_DATA"} title="Visible selection posture; not release or publication authority"><i /> {selected ? selectedEvidence?.label.toUpperCase() : visibleCount > 0 ? "EXAMPLES ACTIVE" : `DAILY BASELINE · ${baselineDay}`}</span>
         </div>
         <div className="top-actions">
+          <DataNotices issues={OFFICIAL_CONTEXT_SOURCES.filter(source => officialVisibility[source.id] && officialStates[source.id] === "error").map(source => ({ id: source.id, title: source.shortTitle }))} onRetry={retryOfficialLayer} onHide={id => setOfficialContextVisible(id, false)} />
           <div className="map-context-composer">
             <button ref={composerTriggerRef} className="new-from-map-action" type="button" aria-expanded={mapContextOpen} aria-controls="map-context-card" onClick={() => { setMapContextOpen((current) => !current); setHelpOpen(false); }} title="Create from the current map context"><span aria-hidden="true">＋</span><span className="new-from-map-label">Compose</span><span className="new-from-map-caret" aria-hidden="true">⌄</span></button>
             {mapContextOpen && <aside ref={composerRef} id="map-context-card" className="map-context-card" role="dialog" aria-modal="false" aria-labelledby="map-context-title">
@@ -6805,8 +6863,10 @@ export default function Home() {
             <button type="button" aria-pressed={scenePreset === "elevation-3d"} data-active={scenePreset === "elevation-3d"} onClick={() => activateMapRepresentation("terrain")}><b>Terrain 3D</b><span>{verticalExaggeration.toFixed(1)}×</span></button>
             <button type="button" aria-pressed={projection === "globe"} data-active={projection === "globe"} onClick={() => activateMapRepresentation("globe")}><b>Globe</b><span>◎</span></button>
             <button type="button" aria-pressed={mapUtilityOpen && mapUtilityView === "compare"} data-active={mapUtilityOpen && mapUtilityView === "compare"} onClick={() => mapUtilityOpen && mapUtilityView === "compare" ? closeMapUtility() : activateMapRepresentation("compare")}><b>Compare</b><span>A/B</span></button>
+            <TerrainQuickControls active={scenePreset === "elevation-3d"} state={terrainState} exaggeration={verticalExaggeration} lighting={atmospherePreset} azimuth={lightAzimuth} heightOverlay={topographicOverlay} onPreset={applyTerrainLook} onExaggeration={value => { verticalExaggerationRef.current = value; setVerticalExaggeration(value); }} onLighting={value => { atmospherePresetRef.current = value; setAtmospherePreset(value); }} onAzimuth={value => { lightAzimuthRef.current = value; setLightAzimuth(value); }} onHeight={toggleTopographicHeightOverlay} onRetry={retryTerrain} />
           </nav>
           <nav className="map-control-strip" aria-label="Quick map controls">
+            <RenderQualityControl value={renderQuality} onChange={chooseRenderQuality} />
             <button className="map-control-launch" type="button" aria-pressed={timelineOpen} onClick={() => setTimelineOpen((open) => !open)}><strong>Time</strong><b>{formatTimelineStep(year)}</b></button>
             <Link className="map-control-launch" href="/observatory">Daily archive ↗</Link>
             <button className="map-control-launch" type="button" onClick={() => openAtlasPanel("layers")} aria-pressed={leftOpen && leftPanelMode === "layers"}>
@@ -6845,7 +6905,7 @@ export default function Home() {
             <p>Today · {baselineDay} UTC. Live observations refresh as providers publish. County counts keep their Census edition, and historical gaps remain visible.</p>
             <div className="source-quality-actions"><Link href="/data">Propose data for KFM</Link><Link href="/stewards">Steward review desk</Link></div>
             <button type="button" onClick={refreshVisibleOfficialContext} disabled={officialLoadingCount > 0}>Refresh selected sources</button>
-            {OFFICIAL_CONTEXT_SOURCES.map((source) => <SourceQualityRow key={source.id} source={source} state={officialStates[source.id]} payload={officialPayloads[source.id as OfficialContextFeedId]} error={officialErrors[source.id]} selected={officialVisibility[source.id]} held={officialVisibility[source.id] && !effectiveOfficialVisibility[source.id]} onToggle={(selected) => setOfficialContextVisible(source.id, selected)} />)}
+            {OFFICIAL_CONTEXT_SOURCES.map((source) => <SourceQualityRow key={source.id} source={source} state={officialStates[source.id]} payload={officialPayloads[source.id as OfficialContextFeedId]} error={officialErrors[source.id]} selected={officialVisibility[source.id]} held={officialVisibility[source.id] && !effectiveOfficialVisibility[source.id]} onToggle={(selected) => setOfficialContextVisible(source.id, selected)} onRetry={() => retryOfficialLayer(source.id)} />)}
             <Link href="/observatory/sources">Historical coverage & sources ↗</Link>
           {sourceStatusOpen && scenePreset === "elevation-3d" && <aside className="terrain-scene-passport" data-state={terrainState.toLowerCase()} aria-label="Terrain scene passport">
             <header>

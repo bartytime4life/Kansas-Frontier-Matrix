@@ -825,7 +825,9 @@ test("connects fourteen bounded official Kansas context sources without admittin
     fileName,
   }).outputText;
   const radarUrl = `data:text/javascript;base64,${Buffer.from(compile(radarSource, "noaa-radar.ts")).toString("base64")}`;
-  const javascript = compile(registrySource.replace('from "./noaa-radar";', `from "${radarUrl}";`), "live-context.ts");
+  const performanceSource = await readFile(new URL("../app/map-performance.ts", import.meta.url), "utf8");
+  const performanceUrl = `data:text/javascript;base64,${Buffer.from(compile(performanceSource, "map-performance.ts")).toString("base64")}`;
+  const javascript = compile(registrySource.replace('from "./noaa-radar";', `from "${radarUrl}";`).replace('from "./map-performance";', `from "${performanceUrl}";`), "live-context.ts");
   const registry = await import(`data:text/javascript;base64,${Buffer.from(javascript).toString("base64")}`);
 
   assert.deepEqual(registry.OFFICIAL_CONTEXT_SOURCES.map((record) => record.id), [
@@ -856,7 +858,7 @@ test("connects fourteen bounded official Kansas context sources without admittin
   assert.match(registry.OFFICIAL_CONTEXT_BY_ID["noaa-hms-smoke"].boundary, /fire perimeter[\s\S]*surface PM2\.5/i);
   assert.match(registry.OFFICIAL_CONTEXT_BY_ID["raspberry-shake-stations"].serviceUrl, /stationview\.raspberryshake\.org/);
   assert.match(registry.OFFICIAL_CONTEXT_BY_ID["raspberry-shake-stations"].boundary, /not realtime/i);
-  assert.match(registry.OFFICIAL_CONTEXT_BY_ID["usgs-3dep-slope"].mapUrl, /rasterFunction.*Slope/);
+  assert.match(registry.OFFICIAL_CONTEXT_BY_ID["usgs-3dep-slope"].mapUrl, /^\/api\/terrain-tile\?kind=slope&z=\{z\}&x=\{x\}&y=\{y\}$/);
   assert.match(page, /OFFICIAL OPERATIONAL CONTEXT/);
   assert.match(page, /Real Kansas source connections/);
   assert.match(page, /Refresh visible/);

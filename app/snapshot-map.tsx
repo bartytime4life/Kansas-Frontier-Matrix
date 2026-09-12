@@ -6,6 +6,7 @@ import { LAYER_REGISTRY } from "./explorer-data";
 import { applyRegistryState, BASEMAPS, setTerrainPresentation, updateAnalysisAreaSource, updateSelectionSource } from "./map-runtime";
 import { isFeatureAvailableForTemporalQuery, type TemporalSweepQuery } from "./temporal-sweep";
 import type { MapSnapshot } from "./workspace-model";
+import { browserRenderBudget } from "./map-performance";
 
 type Camera = { center: [number, number]; zoom: number; bearing: number; pitch: number };
 
@@ -68,7 +69,7 @@ export default function SnapshotMap({ snapshot, label, syncCamera, onCameraChang
       const query = temporalQueryForSnapshot(state);
       applyRegistryState(map, visible, opacity, query.frame, state.visibleLayers.map((layer) => layer.id), state.evidenceFilter ?? "ALL", query);
       map.setProjection({ type: state.projection });
-      setTerrainPresentation(map, state.representation === "Terrain 3D", 1.35);
+      setTerrainPresentation(map, state.representation === "Terrain 3D", 1);
       updateAnalysisAreaSource(map, state.area.kind === "aoi" ? state.area.bounds : undefined);
       updateSelectionSource(map, selectionForSnapshot(state, query));
     };
@@ -86,7 +87,8 @@ export default function SnapshotMap({ snapshot, label, syncCamera, onCameraChang
         ? { center: [-98.38, 38.48], zoom: 5.4, bearing: 0, pitch: 0 }
         : state.camera as Camera;
       const key = Object.prototype.hasOwnProperty.call(BASEMAPS, state.basemap) ? state.basemap as keyof typeof BASEMAPS : "standard";
-      const map = new lib.Map({ container: container.current, style: BASEMAPS[key].style, ...safeCamera, attributionControl: { compact: true } });
+      const budget = browserRenderBudget();
+      const map = new lib.Map({ container: container.current, style: BASEMAPS[key].style, ...safeCamera, attributionControl: { compact: true }, pixelRatio: budget.pixelRatio, maxTileCacheSize: Math.min(48, budget.tileCache), maxPitch: 60, renderWorldCopies: false });
       mapRef.current = map;
       map.addControl(new lib.NavigationControl(), "top-right");
       map.addControl(new lib.ScaleControl({ maxWidth: 80 }), "bottom-left");
@@ -110,7 +112,7 @@ export default function SnapshotMap({ snapshot, label, syncCamera, onCameraChang
     const query = temporalQueryForSnapshot(snapshot);
     applyRegistryState(map, visible, Object.fromEntries(snapshot.visibleLayers.map((layer) => [layer.id, layer.opacity])), query.frame, snapshot.visibleLayers.map((layer) => layer.id), snapshot.evidenceFilter ?? "ALL", query);
     map.setProjection({ type: snapshot.projection });
-    setTerrainPresentation(map, snapshot.representation === "Terrain 3D", 1.35);
+    setTerrainPresentation(map, snapshot.representation === "Terrain 3D", 1);
     updateAnalysisAreaSource(map, snapshot.area.kind === "aoi" ? snapshot.area.bounds : undefined);
     syncing.current = true;
     if (snapshot.camera.center !== "WITHHELD_BROWSER_LOCATION") map.jumpTo(snapshot.camera as Camera);

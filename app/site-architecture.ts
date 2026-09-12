@@ -90,6 +90,7 @@ export const SITE_ROUTE_CONTRACTS = Object.freeze([
   { id: "data-intake-route", route: "/api/data-submissions", owner: "app/api/data-submissions/route.ts", purpose: "Authenticated bounded uploads and scoped submission lists.", trustBoundary: "No anonymous intake or public candidate reads. Source/rights/sensitivity metadata accompanies immutable uploaded bytes." },
   { id: "data-review-route", route: "/api/data-submissions/:id", owner: "app/api/data-submissions/[id]/route.ts", purpose: "Private download, detail, and version-checked steward decisions.", trustBoundary: "Contributor ownership or server-authorized steward for reads; steward and matching version for writes. Review never activates a layer." },
   { id: "source-download-route", route: "/api/source-download", owner: "app/api/source-download/route.ts", purpose: "Download bounded real source snapshots with dates and provenance.", trustBoundary: "Fixed source allowlist, no arbitrary URL and no candidate-data access." },
+  { id: "terrain-tile-route", route: "/api/terrain-tile", owner: "app/api/terrain-tile/route.ts", purpose: "Cache and coalesce bounded USGS hillshade and slope display tiles.", trustBoundary: "Fixed USGS origin, functions, 256-pixel PNGs, Kansas bounds, zoom 3–14, 18-second timeout and 1 MB response limit. Only successful source tiles are cached, for at most six hours." },
   {
     id: "explorer-route",
     route: "/",

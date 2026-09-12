@@ -262,6 +262,7 @@ export const setTerrainPresentation = (
       });
     }
     if (!map.getLayer(TERRAIN_HILLSHADE_LAYER_ID)) {
+      const overlay = map.getStyle().layers?.find(layer => layer.id !== "kfm-background" && (layer.id.startsWith("kfm-") || layer.id.startsWith("external-") || layer.type === "symbol"))?.id;
       map.addLayer({
         id: TERRAIN_HILLSHADE_LAYER_ID,
         type: "hillshade",
@@ -272,8 +273,10 @@ export const setTerrainPresentation = (
           "hillshade-highlight-color": "#d9d5bd",
           "hillshade-accent-color": "#6d8175",
           "hillshade-illumination-direction": 235,
+          "hillshade-illumination-anchor": "map",
+          "hillshade-exaggeration": 0.35,
         },
-      });
+      }, overlay);
     } else {
       map.setLayoutProperty(TERRAIN_HILLSHADE_LAYER_ID, "visibility", "visible");
     }
@@ -442,7 +445,7 @@ const setPaintIfPresent = (
   property: Parameters<MapLibreMap["setPaintProperty"]>[1],
   value: Parameters<MapLibreMap["setPaintProperty"]>[2],
 ) => {
-  if (map.getLayer(layerId)) map.setPaintProperty(layerId, property, value);
+  if (map.getLayer(layerId) && map.getLayoutProperty(layerId, "visibility") !== "none") map.setPaintProperty(layerId, property, value);
 };
 
 /**
@@ -522,6 +525,10 @@ export const applySceneEnvironment = (map: MapLibreMap, preset: AtmospherePreset
     color: preset === "night" ? "#b9d5d8" : preset === "dusk" ? "#ffd2a2" : "#fff8df",
     intensity: preset === "night" ? 0.42 : preset === "dusk" ? 0.68 : 0.58,
   });
+  if (map.getLayer(TERRAIN_HILLSHADE_LAYER_ID)) {
+    map.setPaintProperty(TERRAIN_HILLSHADE_LAYER_ID, "hillshade-illumination-direction", safeAzimuth);
+    map.setPaintProperty(TERRAIN_HILLSHADE_LAYER_ID, "hillshade-highlight-color", preset === "dusk" ? "#ecd6b5" : "#edf1df");
+  }
 };
 
 export type TileCoordinate = Readonly<{ z: number; x: number; y: number; label: string }>;
