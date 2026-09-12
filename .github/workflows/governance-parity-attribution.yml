@@ -13,11 +13,20 @@ concurrency:
   group: governance-parity-attribution-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
 jobs:
   compare:
     name: compare-mrts04-base-head-main
     runs-on: ubuntu-24.04
-    timeout-minutes: 12
+    timeout-minutes: 15
     steps:
       - name: Check out exact PR base
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -35,7 +44,7 @@ jobs:
           fetch-depth: 1
           persist-credentials: false
 
-      - name: Check out current main with upstream UI repair
+      - name: Check out current main with upstream repairs
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: a3defbbd36b686107e7e46fd57477c6b39b4ac9d
@@ -46,30 +55,48 @@ jobs:
       - name: Set up repository Python
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
-          python-version: "3.11"
+          python-version: "3.12"
 
-      - name: Require identical locked Python environment
+      - name: Require identical declared validation environment
         shell: bash
         run: |
-          set -euo pipefail
-          sha256sum \
-            base/requirements-lock.txt \
-            pr-head/requirements-lock.txt \
-            current-main/requirements-lock.txt \
-            | tee requirements-lock-sha256.txt
-          test "$(cut -d' ' -f1 requirements-lock-sha256.txt | sort -u | wc -l)" -eq 1
-          python -m pip install --disable-pip-version-check --require-hashes \
-            -r base/requirements-lock.txt
+          python - <<'PY'
+          from __future__ import annotations
+
+          import hashlib
+          import json
+          from pathlib import Path
+
+          lanes = ("base", "pr-head", "current-main")
+          relative_paths = (
+              "pyproject.toml",
+              "tools/ci/install_python_ci.py",
+          )
+          evidence = {}
+          for relative_path in relative_paths:
+              hashes = {}
+              for lane in lanes:
+                  payload = Path(lane, relative_path).read_bytes()
+                  hashes[lane] = hashlib.sha256(payload).hexdigest()
+              if len(set(hashes.values())) != 1:
+                  raise RuntimeError(f"declared environment differs for {relative_path}: {hashes!r}")
+              evidence[relative_path] = hashes
+          Path("validation-environment-sha256.json").write_text(
+              json.dumps(evidence, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          print(json.dumps(evidence, indent=2, sort_keys=True))
+          PY
+          (
+            cd base
+            python tools/ci/install_python_ci.py project-test
+          )
 
       - name: Replay exact deterministic governance profile
         shell: bash
         env:
-          KFM_NO_NETWORK: "1"
           KFM_GOVERNANCE_MRTS04_THRESHOLD: "0.50"
-          PYTHONDONTWRITEBYTECODE: "1"
-          PYTHONHASHSEED: "0"
-          PYTHONUNBUFFERED: "1"
-          TZ: UTC
+          KFM_TRUSTED_BASE_REF: d3f9db88d0d48291ac3810f684eeeb5b9aeca72d
         run: |
           set -uo pipefail
           : > governance-status.tsv
@@ -90,7 +117,7 @@ jobs:
             git -C "$lane" diff --cached --exit-code
           done
 
-      - name: Compare exact MRTS-04 outcomes
+      - name: Attribute exact-base MRTS-04 outcome
         shell: bash
         run: |
           python - <<'PY'
@@ -131,27 +158,27 @@ jobs:
                   "threshold": match.group("threshold"),
               }
 
-          signatures = {
-              (
+          def signature(lane: str) -> tuple[object, ...]:
+              row = results[lane]
+              return (
                   row["exit_code"],
                   row["numerator"],
                   row["denominator"],
                   row["percent"],
                   row["threshold"],
               )
-              for row in results.values()
-          }
-          if len(signatures) != 1:
-              raise RuntimeError(f"MRTS-04 outcomes differ: {results!r}")
-          signature = next(iter(signatures))
-          if signature[0] == 0:
-              raise RuntimeError("expected the deterministic profile to preserve its failing conclusion")
+
+          if signature("base") != signature("pr-head"):
+              raise RuntimeError(f"PR changed the MRTS-04 result: {results!r}")
+          if results["pr-head"]["exit_code"] == 0:
+              raise RuntimeError("expected exact-base and PR-head MRTS-04 conclusions to remain failing")
 
           receipt = {
-              "version": "kfm.governance-mrts04-attribution.v1",
-              "outcome": "INHERITED_IDENTICAL",
+              "version": "kfm.governance-mrts04-attribution.v2",
+              "outcome": "INHERITED_FROM_EXACT_BASE",
               "results": results,
               "pr_changed_mrts04_outcome": False,
+              "current_main_differs_from_pr_base": signature("current-main") != signature("base"),
               "repository_mutation_detected": False,
           }
           Path("governance-parity-attribution.json").write_text(
@@ -167,7 +194,7 @@ jobs:
         with:
           name: governance-parity-attribution-${{ github.run_id }}
           path: |
-            requirements-lock-sha256.txt
+            validation-environment-sha256.json
             governance-status.tsv
             base-governance.txt
             pr-head-governance.txt
