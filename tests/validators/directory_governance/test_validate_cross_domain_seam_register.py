@@ -38,6 +38,16 @@ class Tests(unittest.TestCase):
  def test_public_join_and_status_overclaim(self):
   x=load();x['entries'][0]['public_join_allowed']=True;self.assertIn('SCHEMA_INVALID',codes(self.candidate(x)))
   x=load();x['entries'][0]['status']='ACTIVE';self.assertIn('SCHEMA_INVALID',codes(self.candidate(x)))
+ def test_held_seams_never_authorize_release_or_publication(self):
+  current=load()
+  self.assertEqual(current['status'],'PROPOSED')
+  self.assertTrue(all(entry['status']=='HOLD_UNRESOLVED' for entry in current['entries']))
+  result=v.validate(RP,check_repository=False,check_bindings=False)
+  payload=json.loads(v.serialize(RP,result))
+  self.assertEqual(payload['outcome'],'PASS')
+  self.assertTrue(all(value is False for value in payload['authority'].values()))
+  self.assertFalse(payload['authority']['authorizes_release'])
+  self.assertFalse(payload['authority']['publishes'])
  def test_duplicate_and_alias_yaml_denied(self):
   with tempfile.TemporaryDirectory() as d:
    root=Path(d);p=root/'x.yaml';p.write_text('version: v1\nversion: v2\n');self.assertIn('YAML_DUPLICATE_KEY',codes(v.validate(p,repo_root=root,check_repository=False,check_bindings=False)))
