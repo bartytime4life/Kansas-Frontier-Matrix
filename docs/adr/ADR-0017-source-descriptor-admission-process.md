@@ -3,7 +3,7 @@ doc_id: kfm://doc/adr-0017-source-descriptor-admission-process
 title: "ADR-0017 — Source Descriptor Admission Process"
 type: adr
 adr_id: ADR-0017
-version: v1.3
+version: v1.4
 status: proposed
 effective_decision_status: proposed
 owners:
@@ -12,7 +12,7 @@ owners:
   - "NEEDS VERIFICATION — rights and sensitivity review"
   - "NEEDS VERIFICATION — source registry and connector ownership"
 created: 2026-05-09
-updated: 2026-08-14
+updated: 2026-09-13
 policy_label: public
 truth_posture: cite-or-abstain
 owning_root: docs/
@@ -23,8 +23,8 @@ superseded_by: []
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 6a9c4665175edd2c32f2fafae0f3bb0dfb0492df
-  target_prior_blob: 58693830fcdf9746c5494fdd85298529fa5594a9
+  base_commit: c5504696f124fdb9f0dbf5770558d976a9d8ae97
+  target_prior_blob: b5c0ac83be6f00897ee626c46df2bf64f15d82f5
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   source_descriptor_contract_blob: b57ae5ccc042c1423b75c168438800384c9b6713
   source_descriptor_schema_blob: 582e70b834278c3c6ca9a8b31efbe0989c96f0bc
@@ -63,6 +63,7 @@ tags: [kfm, adr, source-descriptor, source-admission, source-activation-decision
 notes:
   - "This same-path evidence refresh does not accept ADR-0017 or activate a source."
   - "Descriptor validity, activation-decision validity, admission, connector activation, policy, evidence closure, release, and publication remain separate decisions."
+  - "v1.4 is a same-path currentness refresh against main@c5504696f124fdb9f0dbf5770558d976a9d8ae97. It retains proposed status, preserves earlier evidence as historical, and adds bounded source readback for descriptor, activation, intake, register, registry, and policy boundaries. No source endpoint, evaluator, connector, registry service, lifecycle write, release, deployment, or publication operation is executed."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -161,6 +162,18 @@ Accepted Directory Rules v2 support this same-path `docs/adr/` update. No respon
 | Live systems | No connector run, registry service, evaluator, lifecycle write, release, or publication surface was exercised |
 
 Merged implementation evidence includes PRs `#2200` for CWD-independent generic validation, `#2221` for descriptor path convergence, and `#1963` for the fixture-first activation profile. A merge proves tracked bytes at a revision; it does not authenticate review, accept this ADR, activate a source, approve rights or sensitivity, execute policy, or publish.
+
+### Bounded v1.4 current readback
+
+This is a repository file-content readback at `main@c5504696f124fdb9f0dbf5770558d976a9d8ae97`, not evidence of source admission, a live source, evaluator execution, connector execution, or release activity.
+
+| Surface | Verified current source posture | Safe conclusion |
+|---|---|---|
+| [SourceDescriptor schema](../../schemas/contracts/v1/source/source_descriptor.schema.json) and [validator](../../tools/validators/validate_source_descriptor.py) | A declared canonical schema and CWD-independent, local-only validator exist; the validator expressly does not fetch, activate, decide rights/sensitivity, promote, or publish. | Candidate shape validation only; not descriptor admission or source activation. |
+| [SourceActivationDecision contract](../../contracts/source/source_activation_decision.md) and [schema](../../schemas/contracts/v1/source/source_activation_decision.schema.json) | Both remain proposed, fixture-first, no-network, and non-operational. | A machine-shaped decision candidate; not an active decision or lifecycle transition. |
+| [SourceIntakeRecord contract](../../contracts/source/source_intake_record.md) and [intake policy boundary](../../policy/intake/README.md) | Source intake remains a separate proposed/inactive watcher-candidate and documentation-only pre-RAW routing boundary. | Intake cannot be collapsed into admission or authorization. |
+| [Source authority register](../../control_plane/source_authority_register.yaml) | `PROPOSED`, projection-only, implementation status `ABSENT`, completeness `empty`, and `entries: []`; explicit non-effects include activation, admission, release, deployment, and publication. | No active source authority inventory or admission is established. |
+| [Source registry README](../../data/registry/sources/README.md), [registry package](../../packages/source-registry/README.md), and [source policy boundary](../../policy/source/README.md) | Registry writer/record maturity is unresolved; package remains a greenfield placeholder; source-policy rule source is explicitly non-enforcing. | Documented and fixture/policy boundaries, not a working registry service or active policy evaluator. |
 
 ## Admission layers
 
@@ -340,7 +353,7 @@ Future implementation waves must record migrations, prior versions, rollback tar
 
 Retained the ADR identity, proposed status, exact operating phrase, descriptor-versus-record distinction, rights/sensitivity/role/cadence/citation/source-head requirements, connector and watcher non-publisher invariant, fail-closed posture, rollback, consequences, alternatives, and open gates.
 
-Corrected stale claims about plural schema authority, validator availability, descriptor path conflict, and absent activation profile. Added current evidence, `SourceIntakeRecord` anti-collapse boundary, admission layers, maturity, implementation sequence, and status-bearing acceptance gates. No implementation or publication behavior changed.
+Corrected stale claims about plural schema authority, validator availability, descriptor path conflict, and absent activation profile. Added a v1.4 bounded current-main readback; it is not source admission, execution, release, deployment, or publication evidence. Added current evidence, `SourceIntakeRecord` anti-collapse boundary, admission layers, maturity, implementation sequence, and status-bearing acceptance gates. No implementation or publication behavior changed.
 
 **Decision remains `proposed`.**
 
