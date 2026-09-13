@@ -3,7 +3,7 @@ doc_id: kfm://doc/adr-0010-deny-by-default-dna-rare-species-archaeology-infrastr
 title: "ADR-0010 — Deny-by-Default for DNA, Rare Species, Archaeology, and Critical Infrastructure"
 type: adr
 adr_id: ADR-0010
-version: v1.3
+version: v1.4
 status: draft
 owners:
   - "NEEDS VERIFICATION — architecture decision owner"
@@ -25,7 +25,7 @@ reviewers_required:
   - Governed API and Explorer Web maintainers
   - Release and rollback steward
 created: 2026-05-11
-updated: 2026-08-14
+updated: 2026-09-13
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
@@ -35,8 +35,8 @@ superseded_by: null
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: f5e082d423f1dbb0753f970a662de4f818c77529
-  target_prior_blob: f9145957bf124e3865f5142a02d414f0f685e6a6
+  base_commit: 27202a0595ecdc6afd6f98b3aedaa236243e07b3
+  target_prior_blob: 1dcc1e5f6a47ef681c05fba158679fc12cf7da27
   adr_index_blob: 938c5894c36b99e14810918e2c550ab0e92d53b1
   adr_0029_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
@@ -91,6 +91,7 @@ notes:
   - "Accepted ADR-0029 now governs placement through Directory Rules v2. This update creates no root, policy lane, schema home, release lane, proof home, or compatibility migration."
   - "Policy documentation and fixture-first control surfaces have matured since v1.2, but the general evaluator, active bundle, sensitive-domain native policy coverage, obligation enforcement, governed consumer integration, and release-significant operation remain unproved."
   - "This ADR governs operation-specific exposure and harmful precision. It does not classify every record in a named domain as secret, and consent, schema validity, file presence, workflow success, or generalized rendering cannot substitute for release authority."
+  - "v1.4 is a same-path currentness refresh against main@27202a0595ecdc6afd6f98b3aedaa236243e07b3. It retains draft/proposed status and adds a bounded current readback for the cross-domain seam projection and release-rollup test boundary; no policy, source, release, deployment, or publication state changes."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -130,7 +131,7 @@ notes:
 | **Tracked path** | `docs/adr/ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md` |
 | **Source metadata** | `draft` |
 | **Effective decision status** | `proposed` — not binding until the record and index carry matching reviewed `accepted` status |
-| **Record edition** | `v1.3` — repository-evidence refresh; decision unchanged |
+| **Record edition** | `v1.4` — currentness refresh; decision unchanged |
 | **Decision class** | Cross-domain sensitivity, harmful-precision, restricted-identity, public-exposure, and fail-closed policy invariant |
 | **Affected lanes** | `people-dna-land`, `fauna`, `flora`, `archaeology`, `settlements-infrastructure`, and any cross-domain composition inheriting these risks |
 | **Current repository posture** | Documentation-rich, fixture-first in bounded profiles, structurally guarded, evaluator-unbound, active-bundle-unaccepted, consumer-unproved, release-unproved |
@@ -168,7 +169,7 @@ This ADR distinguishes doctrine, configured source, machine shape, native policy
 
 ### Current repository evidence
 
-The following findings are pinned to `main@f5e082d423f1dbb0753f970a662de4f818c77529`.
+The historical v1.3 inventory below was pinned to `main@f5e082d423f1dbb0753f970a662de4f818c77529`; it is retained for traceability and must not be read as a rolling claim about current main. The v1.4 bounded readback below is pinned to `main@27202a0595ecdc6afd6f98b3aedaa236243e07b3`.
 
 | Surface | Verified state | What it proves — and does not prove |
 |---|---|---|
@@ -185,6 +186,18 @@ The following findings are pinned to `main@f5e082d423f1dbb0753f970a662de4f818c77
 | [`policy-boundary-guards`](../../.github/workflows/policy-boundary-guards.yml) | Eighteen tests protect selected register, adapter, connector/pipeline, and governed-API boundaries | Proves selected structural behavior; not rights, sensitivity, or release decisions. |
 | Sensitive domain READMEs | Archaeology, Fauna, Flora, People-DNA-Land, and Settlements-Infrastructure each record mixed scaffold maturity and unbound evaluator state | Proves local boundaries and known gaps; not active sensitive-domain enforcement. |
 | Governed API [`main.py`](../../apps/governed-api/src/governed_api/main.py) and [`stub.py`](../../apps/governed-api/src/governed_api/stub.py) | Minimal WSGI router; scaffolded routes return `ABSTAIN` with `NOT_IMPLEMENTED` | Proves finite fail-safe scaffolding; not a policy-backed public service. |
+
+### Bounded current readback (v1.4)
+
+This is a file-content readback, not proof that the listed validators or tests were executed in this revision.
+
+| Surface | Verified state at pinned main | What it establishes — and does not establish |
+|---|---|---|
+| [Cross-domain seam register](../../control_plane/cross_domain_seam_register.yaml) | \`PROPOSED\`, partial, navigational-and-review projection only. Defaults require each participant evidence bundle and the most restrictive sensitivity/policy treatment; publication authority is false. | A documented fail-closed seam posture; not an authorized join, sensitivity reduction, release, or publication. |
+| [Seam-register validator](../../tools/validators/directory_governance/validate_cross_domain_seam_register.py) and [tests](../../tests/validators/directory_governance/test_validate_cross_domain_seam_register.py) | Current source validates the projection and includes an authority-negative test for held seams. | A bounded validator/test definition; not a hosted result, an accepted decision, or enforcement of every derivative surface. |
+| [Operational trust-rollup test](../../tests/validators/test_validate_operational_trust_rollup.py) | Current source includes a fixture test that a \`READY\` summary omits release-candidate and promotion-authority claims. | A narrow non-escalation assertion for a synthetic/read-only rollup; not release authorization, approval, or publication. |
+| [Policy root](../../policy/README.md), [sensitivity boundary](../../policy/sensitivity/README.md), and [policy-runtime boundary](../../packages/policy-runtime/README.md) | Their recorded posture remains draft/mixed-maturity or scaffolded, with the general evaluator and accepted active bundle unestablished. | Continued documentation of holds and boundaries; not an evaluated sensitive-data decision. |
+| [Governed API scaffold](../../apps/governed-api/src/governed_api/stub.py) | The current fixture-only failure translation retains finite \`ABSTAIN\`, \`DENY\`, and \`ERROR\` envelopes. | Fail-safe scaffold behavior; not a policy-backed public endpoint or sensitive-data delivery path. |
 
 ### Domain snapshot
 
@@ -713,13 +726,15 @@ A rollback that merely hides a UI control while protected bytes remain accessibl
 
 - `Pasted text(20260814-150503).txt` — KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0; treated as the implementation task contract, not repository implementation evidence.
 
+- Current repository file-content readback at `main@27202a0595ecdc6afd6f98b3aedaa236243e07b3` on 2026-09-13 — bounded currentness evidence only; no execution, approval, release, deployment, or publication fact inferred.
+
 [Back to top](#top)
 
 ---
 
 ## No-Loss and Change Ledger
 
-| Prior surface | v1.3 disposition |
+| Prior surface | v1.4 disposition |
 |---|---|
 | ADR identity, path, draft status, proposed decision, protected classes, client-side hiding prohibition, finite outcomes, acceptance/enforcement split | **RETAINED** |
 | Prior numbering-collision discussion | **NARROWED** to current confirmed unique identity; historical warning no longer presented as live conflict |
@@ -730,12 +745,15 @@ A rollback that merely hides a UI control while protected bytes remain accessibl
 | Reason and obligation vocabulary | **EXPANDED** from current inactive registry while preserving non-activation |
 | Risk, rollback, open questions, and verification | **EXPANDED** around reconstruction, revocation, cache invalidation, specialist review, and enforcement graduation |
 
+| Current-main and cross-domain readback | **REFRESHED** with an explicitly bounded 2026-09-13 file-content snapshot, which is not execution, acceptance, release, deployment, or publication evidence |
+
 No policy behavior, contract meaning, schema shape, fixture, validator, test, workflow, package, application, data object, release record, deployment, or publication state changes in this documentation slice.
 
 ## Change Log
 
 | Version | Date | Change |
 |---|---|---|
+| `v1.4` | 2026-09-13 | Refreshed the document’s currentness boundary against `main@27202a0595ecdc6afd6f98b3aedaa236243e07b3`. Preserved the v1.3 inventory as historical, added a bounded current readback for the cross-domain seam projection, authority-negative test source, read-only trust-rollup test, policy boundaries, and governed-API negative envelopes. No validator or hosted check was run by this documentation update; the ADR remains draft/proposed and does not authorize a source, policy, release, deployment, or publication. |
 | `v1.3` | 2026-08-14 | Refreshed against current main; adopted Directory Rules placement; current policy/domain/sensitivity/bundle/runtime evidence; explicit maturity ladder; refined protected derivative, finite decision, obligation, reconstruction, acceptance, and rollback contracts. Decision remains proposed. |
 | `v1.2` | 2026-07-23 | Same-path repository-grounded modernization; resolved current ADR identity; separated acceptance from enforcement graduation; documented then-current policy and API scaffolds. |
 | Earlier | 2026-05 to 2026-07 | Initial proposed default-deny decision and subsequent planning refinements. |
