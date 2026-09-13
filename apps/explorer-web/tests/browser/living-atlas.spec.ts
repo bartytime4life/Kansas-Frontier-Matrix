@@ -63,8 +63,13 @@ test("renders every Living Waters fixture scenario as finite non-authoritative s
       entry.state,
     );
     await expect(card.locator(".atlas-fixture-chart span")).toHaveCount(
-      entry.points,
+      entry.points === 0 ? 1 : entry.points,
     );
+    if (entry.points === 0) {
+      await expect(card.locator(".atlas-fixture-chart span")).toContainText(
+        "No observations are rendered for this finite state.",
+      );
+    }
     await expect(card.locator(".atlas-fixture-trust")).toContainText(
       "SITE_LOCAL_DEMO",
     );
