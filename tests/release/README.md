@@ -1,3 +1,47 @@
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/tests-release-readme
+title: tests/release/ — Release-Prerequisite Test Inventory and Authority Boundary
+type: readme; directory-readme; release-test-boundary; executable-inventory
+version: v1.2
+status: repository-grounded; executable; mixed-dependency; no-release-authority
+owner: "@bartytime4life — CONFIRMED CODEOWNERS review route; independent QA, release, and separation-of-duties stewardship remain NEEDS VERIFICATION"
+created: 2026-07-06
+updated: 2026-08-30
+supersedes: v1.1 documentation at the same path; no test, fixture, validator, workflow, release object, or public surface is superseded
+policy_label: public-doc; tests; release-prerequisites; promotion-safety; synthetic; fail-closed; non-authoritative
+current_path: tests/release/README.md
+truth_posture: CONFIRMED fifteen direct modules and 123 source-defined tests at the pinned snapshot / PARTIAL aggregate local execution and cross-family coverage / UNKNOWN required-check status, complete collection count, and independent stewardship
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  repository_id: "1059091169"
+  visibility: public
+  base_ref: main
+  base_commit: 1ea6593ede80d5ce10f561c7eec72135d6ccf806
+  target_prior_blob: 8e4e14eb35dcd2026b7bf0de37ec9751f75a710d
+  direct_modules: 15
+  source_defined_tests: 123
+  count_note: source-defined test functions or methods; parametrization and collection behavior may change collected-case totals
+related:
+  - ../README.md
+  - ../../release/README.md
+  - ../../contracts/release/README.md
+  - ../../schemas/contracts/v1/release/README.md
+  - ../../fixtures/release/README.md
+  - ../../tools/release/README.md
+  - ../../tools/validators/release/README.md
+  - ../../docs/doctrine/directory-rules.md
+  - ../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../Makefile
+  - ../../pyproject.toml
+tags: [kfm, tests, release, promotion, rollback, publication-deny, compatibility, no-network, fail-closed]
+notes:
+  - "v1.2 replaces a stale three-module thin-slice inventory and proposed future tree with the complete direct current-main inventory."
+  - "Every direct module has a workflow binding, but the workflows use different dependency sets and commands; no single canonical full-lane target is established."
+  - "Passing tests and workflows are bounded evidence only and never approve review, promotion, release, deployment, publication, correction, withdrawal, or rollback."
+[/KFM_META_BLOCK_V2] -->
+
+<a id="top"></a>
+
 # `tests/release/` — Release-Prerequisite Test Inventory and Authority Boundary
 
 `tests/release/` contains executable checks for bounded release prerequisites,
