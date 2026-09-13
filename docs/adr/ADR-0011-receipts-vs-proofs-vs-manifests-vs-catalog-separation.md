@@ -3,7 +3,7 @@ doc_id: kfm://doc/adr/0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation
 title: "ADR-0011 — Receipts vs Proofs vs Manifests vs Catalog Separation"
 type: adr
 adr_id: ADR-0011
-version: v1.4
+version: v1.5
 status: proposed
 owners:
   - "NEEDS VERIFICATION — architecture decision owner"
@@ -73,6 +73,26 @@ current_reconciliation:
   catalog_matrix_closure_validator_blob: 2dc376e928a4fffdf4061828d830cc4072dfbdc5
   catalog_matrix_claim_closure_validator_blob: 30f71b796cae41fed503dd2f82b2b0c676e0a206
   release_manifest_validator_blob: 00307dc0d5e2c3867a229076e3702f8111455425
+v1_5_current_reconciliation:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  main_commit: 15fc3a0a4e5b4900ea22d1c21f1d6d61fd7d91ff
+  target_prior_blob: c8d1cf947f5b84df33c29e13ccb088eb7c08ba55
+  adr_index_blob: 0c143676dfd3c1bda16cb44398c5ad5d4a49cf67
+  directory_rules_decision_blob: 4c1ef5f7f812d58fbdde9898acc96bb4c9280b2c
+  root_registry_blob: 024f668b5f0a9239bafa4f8b09e2afd86300ff8c
+  receipts_readme_blob: 041f205dd5e618185fc7c75e95c85872fc9bbf69
+  proofs_readme_blob: 0d8b6e92d3b4b9ff3961d29c53ead497922a31cf
+  catalog_readme_blob: 765dd1be99aa95d4377931344c05751b751243ec
+  published_readme_blob: 8ecb5d2f9737349fb6569efbde36659f398de151
+  release_readme_blob: 60b6a656f8f2b765616bba7223f51c25863c7172
+  release_manifest_singular_readme_blob: 6014cfc0f8394a44167f4226975b74f94f3b2a03
+  release_manifests_plural_readme_blob: c699a527ff11bebad6a874ed1a37aa3a8213b86c
+  artifacts_readme_blob: 72fa1dab7fc98c538527ac15003c54d2bd93e9e7
+  catalog_matrix_closure_validator_blob: 2dc376e928a4fffdf4061828d830cc4072dfbdc5
+  catalog_matrix_claim_closure_validator_blob: 30f71b796cae41fed503dd2f82b2b0c676e0a206
+  release_manifest_validator_blob: 00307dc0d5e2c3867a229076e3702f8111455425
+  release_dry_run_workflow_blob: fd1f848a8834fa06d9334242cbd9df6d90fe5eb5
+
 related:
   - docs/adr/README.md
   - docs/adr/INDEX.md
@@ -113,6 +133,7 @@ notes:
   - "Closed, proposed CatalogMatrix closure and claim-closure profiles plus a dual-profile ReleaseManifest validator now provide bounded no-network evidence. Their PASS outcomes do not resolve references, authenticate review, approve promotion, release, publish, or prove end-to-end closure."
   - "The v1.1 claim that CatalogMatrix is inherently proof-side remains corrected: the catalog descriptor, validator execution/result, durable proof record, and release decision are distinct authorities."
   - "The tracked `artifacts/release/` lane and generated `artifacts/perf/` trust-shaped staging remain open drift; this documentation change performs no migration."
+  - "v1.5 is a same-path currentness refresh against main@15fc3a0a4e5b4900ea22d1c21f1d6d61fd7d91ff. It preserves proposed status and the authority split: current source readbacks retain distinct receipt, proof, catalog, published-carrier, and release-decision boundaries; closure and ReleaseManifest validators remain bounded no-network checks; and the release dry-run workflow remains explicitly non-authorizing. No receipt, proof, manifest, catalog, release, deployment, or publication state changes."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -191,7 +212,7 @@ An accepted ADR without enforcement is doctrine, not proof of runtime or release
 
 ## Evidence Boundary
 
-This v1.4 reconciliation uses current repository bytes at `main@475c410595ec796927c2685b98198104762a0a2f`, the exact Directory Rules v2 bytes adopted by ADR-0029, and the supplied KFM architecture references. The v1.3 snapshot remains historical lineage; current repository evidence determines present implementation maturity, while accepted doctrine governs placement and responsibility boundaries.
+The v1.4 reconciliation remains a historical source snapshot at `main@475c410595ec796927c2685b98198104762a0a2f`. The v1.5 reconciliation below uses current repository bytes at `main@15fc3a0a4e5b4900ea22d1c21f1d6d61fd7d91ff`, the exact Directory Rules v2 bytes adopted by ADR-0029, and the supplied KFM architecture references. Neither snapshot is workflow execution evidence; accepted doctrine governs placement and responsibility boundaries.
 
 | Evidence level | What is established | What is not established |
 |---|---|---|
@@ -605,6 +626,15 @@ Once implemented, validators and release tooling must enforce:
 - **CONFIRMED:** current `data/catalog/README.md` and `release/README.md` retain distinct catalog and release-decision boundaries; neither establishes a production release, publication, or public-serving path.
 - **NEEDS VERIFICATION:** exact-head hosted checks, independent review, authenticated reference resolution, durable proof emission, production profile acceptance, release assembly, correction/rollback execution, and runtime/public-boundary enforcement.
 - **HOLD:** this reconciliation does not activate a profile, move the singular manifest lane, resolve artifact-root drift, or authorize release, deployment, publication, or public use.
+
+### v1.5 current-main reconciliation
+
+- **CONFIRMED:** `INDEX.md` is blob `0c143676dfd3c1bda16cb44398c5ad5d4a49cf67`; it still assigns ADR-0011 source/effective status `proposed`, within a 39-record inventory of four accepted and thirty-five proposed ADRs.
+- **CONFIRMED:** current receipt, proof, catalog, published, and release root READMEs retain separate documented responsibilities. The root registry remains a machine projection only; neither documentation nor a projection creates a receipt, proof, catalog, candidate, release decision, or public artifact.
+- **CONFIRMED:** the CatalogMatrix closure validators (blobs `2dc376e928a4fffdf4061828d830cc4072dfbdc5` and `30f71b796cae41fed503dd2f82b2b0c676e0a206`) and the ReleaseManifest fixture validator (blob `00307dc0d5e2c3867a229076e3702f8111455425`) explicitly limit a `PASS` to local deterministic consistency and deny evidence, policy, review, promotion, release, publication, or public-use authority.
+- **CONFIRMED:** the current release-dry-run workflow source is blob `fd1f848a8834fa06d9334242cbd9df6d90fe5eb5`; it declares synthetic publication-denial/readiness checks and states that it emits no candidate, decision, receipt, proof, manifest, rollback card, signature, release, or published artifact.
+- **NEEDS VERIFICATION:** execution of any listed validator or workflow at this exact head; authenticated reference resolution; durable proof emission; accepted production profile selection; review/approval attribution; release assembly; correction or rollback execution; and runtime/public-boundary enforcement.
+- **HOLD:** this documentation refresh does not accept ADR-0011, resolve manifest-lane or artifacts-root drift, migrate a trust object, activate a profile, or authorize source admission, release, deployment, publication, or public use.
 
 ### Evidence limitations
 
@@ -1027,6 +1057,7 @@ No generated text, badge, diagram, branch, commit, pull request, merge, or workf
 | Version | Date | Change |
 |---|---|---|
 | `v1.4` | 2026-09-13 | Re-pinned current-main evidence for the canonical ADR index, catalog/release root boundaries, and bounded deterministic validators. Preserved `proposed` decision status, singular-manifest migration hold, artifact-root drift, and all non-effects; did not activate profiles, resolve references, release, deploy, publish, or authorize public use. |
+| `v1.5` | 2026-09-13 | Re-pinned the source-only current-main reconciliation for distinct receipt/proof/catalog/published/release boundaries, bounded validators, and the release-dry-run non-authority statement. Preserved `proposed` status, manifest-lane and artifacts-root holds, and all non-effects; did not execute validators or workflows, activate profiles, release, deploy, publish, or authorize public use. |
 | `v1.3` | 2026-08-13 | Reconciled accepted Directory Rules v2 and ADR-0029 placement authority; changed manifest naming from conflicted proposal to canonical plural plus open singular migration; updated CatalogMatrix closure and ClaimEnvelope non-overstatement implementation evidence; updated ReleaseManifest to its dual-profile fixture-first maturity; preserved authority non-effects, `proposed` status, migration holds, and end-to-end release abstention. |
 | `v1.2` | 2026-07-23 | Same-path repository-grounded modernization: confirmed ADR identity; replaced unmounted-repo assumptions; separated five authority families; proposed plural manifest collection and singular compatibility migration; documented thin ReleaseManifest schema and release holds; corrected CatalogMatrix overloading through descriptor/proof split coordinated with ADR-0022; recorded artifacts drift; added maturity, migration, acceptance, risk, rollback, and verification controls; preserved `proposed` status. |
 | `v1.1` | 2026-05-15 | Expanded the receipt/proof/catalog/release separation proposal, canonical-home table, diagram, object inventories, closure rules, validator proposals, migration plan, consequences, rollback, and then-unverified repository questions. |
