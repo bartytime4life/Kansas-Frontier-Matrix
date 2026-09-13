@@ -22,8 +22,18 @@ export function validateReceipt(r) {
   if (r?.mode === "OPERATOR_READBACK" && ["DEPLOYED", "ROLLED_BACK"].includes(r?.outcome)) {
     for (const field of ["previous_version_id", "candidate_version_id", "final_version_id"]) if (!r?.site?.[field]) errors.push(`site.${field} is required for live readback`);
     if (!r?.rollback?.target_version_id) errors.push("rollback.target_version_id is required for live readback");
-    eq(errors, r?.rollback?.operator_restore_confirmed, true, "rollback.operator_restore_confirmed"); eq(errors, r?.authority?.live_transition_performed, true, "authority.live_transition_performed");
+    eq(errors, r?.authority?.live_transition_performed, true, "authority.live_transition_performed");
     for (const name of CHECKS) if (r?.checks?.[name]?.outcome !== "PASS") errors.push(`checks.${name} must PASS for ${r.outcome}`);
+    if (r?.outcome === "DEPLOYED") {
+      eq(errors, r?.site?.final_version_id, r?.site?.candidate_version_id, "site.final_version_id");
+      eq(errors, r?.rollback?.target_version_id, r?.site?.previous_version_id, "rollback.target_version_id");
+      eq(errors, r?.rollback?.operator_restore_confirmed, false, "rollback.operator_restore_confirmed");
+    }
+    if (r?.outcome === "ROLLED_BACK") {
+      eq(errors, r?.site?.final_version_id, r?.site?.previous_version_id, "site.final_version_id");
+      eq(errors, r?.rollback?.target_version_id, r?.site?.previous_version_id, "rollback.target_version_id");
+      eq(errors, r?.rollback?.operator_restore_confirmed, true, "rollback.operator_restore_confirmed");
+    }
   }
   return { outcome: errors.length ? "DENY" : "PASS", errors };
 }
