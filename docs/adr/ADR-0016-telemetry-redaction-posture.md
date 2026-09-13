@@ -3,7 +3,7 @@ doc_id: kfm://doc/adr/0016-telemetry-redaction-posture
 title: "ADR-0016 — Telemetry Redaction Posture"
 type: adr
 adr_id: ADR-0016
-version: v1.3
+version: v1.4
 status: proposed
 owners:
   - "NEEDS VERIFICATION — architecture decision owner"
@@ -24,7 +24,7 @@ reviewers_required:
   - Infrastructure and operations reviewer
   - Governed API and public-surface maintainers
 created: 2026-05-11
-updated: 2026-08-14
+updated: 2026-09-13
 policy_label: public
 truth_posture: cite-or-abstain
 owning_root: docs/
@@ -35,11 +35,11 @@ superseded_by: []
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 6a9c4665175edd2c32f2fafae0f3bb0dfb0492df
-  inspection_origin_commit: f5e082d423f1dbb0753f970a662de4f818c77529
-  continuity_compare: f5e082d423f1dbb0753f970a662de4f818c77529...6a9c4665175edd2c32f2fafae0f3bb0dfb0492df
-  continuity_result: "six changed paths limited to geology assessment, generated receipt, and ADR-0009; no ADR-0016 or telemetry evidence path changed"
-  target_prior_blob: 65a86c95259be2477d09836de972903cfe84afac
+  base_commit: 21dcad05435bc5e5227905ba1747aa616a6f3713
+  inspection_origin_commit: 21dcad05435bc5e5227905ba1747aa616a6f3713
+  continuity_compare: "direct file-content readback at main@21dcad05435bc5e5227905ba1747aa616a6f3713"
+  continuity_result: "this refresh inspected repository files only; it did not execute a telemetry, validator, workflow, collector, export, sink, release, deployment, or publication operation"
+  target_prior_blob: 25fea3f4d66d710d362968bafe7dddc0ee560aec
   adr_index_blob: 938c5894c36b99e14810918e2c550ab0e92d53b1
   telemetry_contract_readme_blob: 7523d7d638f598060661129ed70748b1bb2ad8be
   telemetry_schema_readme_blob: 582ee87f6d9a6a786730b1b47842d82ebb5a1e58
@@ -92,7 +92,8 @@ notes:
   - "ADR-0029 is the only accepted numbered ADR and adopts Directory Rules v2; that decision confirms the responsibility-root split used here without accepting this telemetry decision."
   - "Four closed, synthetic, fixture-only telemetry profiles now have paired contracts, schemas, fixtures, focused validators, tests, and workflow coverage. They remain non-authoritative and do not constitute a general telemetry event, redaction, policy-input, or receipt profile."
   - "The general telemetry-safety validator remains a NotImplementedError placeholder, the three inspected Rego modules remain allow-by-default greenfield stubs, and operational emitter, redactor, sink, receipt, retention, and incident integration remain held or unknown."
-  - "The successful telemetry-policy run at the pinned main SHA proves bounded repository-local profile checks and explicit holds only."
+  - "The successful telemetry-policy run at the previously pinned SHA proves bounded repository-local profile checks and explicit holds only; this v1.4 refresh does not claim a current hosted run."
+  - "v1.4 is a same-path currentness refresh against main@21dcad05435bc5e5227905ba1747aa616a6f3713. It retains `proposed` status and records only direct source readback of telemetry contracts, schemas, receipt documentation, policy stubs, the general validator placeholder, and the bounded workflow. No telemetry, logger, validator, workflow, collector, export, sink, release, deployment, or publication operation was executed."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -784,6 +785,18 @@ Dashboards and alerts are new emissions. Queries, panels, screenshots, CSV expor
 | Operational collectors and sinks | **UNKNOWN** | No deployment, config, dashboard feed, retained artifact, log sample, or runtime evidence was inspected. |
 | CODEOWNERS | **CONFIRMED routing** | Relevant roots route to `@bartytime4life`; routing is not accepted stewardship or independent approval. |
 
+### Bounded v1.4 current readback
+
+This is a repository file-content readback at `main@21dcad05435bc5e5227905ba1747aa616a6f3713`, not proof that telemetry was emitted, redacted, stored, exported, delivered, or enforced.
+
+| Surface | Verified current source posture | Safe conclusion |
+|---|---|---|
+| [Telemetry semantic lane](../../contracts/telemetry/README.md) and [schema lane](../../schemas/contracts/v1/telemetry/README.md) | Both describe draft/proposed, profile-specific shapes and explicitly separate telemetry carriage from truth, runtime maturity, policy authority, and release authority. | Documentation and schema boundaries only; no general operational telemetry event or redaction envelope is established. |
+| [Telemetry receipt lane](../../data/receipts/telemetry/README.md) | The parent README describes an internal, redaction-first process-memory lane and says README presence does not prove emitted receipts, a redactor, sink, validator, CI check, or release integration. | Receipt-lane documentation only; no receipt instance or operational receipt pipeline is evidenced by this readback. |
+| [Telemetry policy lane](../../policy/telemetry/README.md), [raw-evidence](../../policy/ui/no_raw_in_telemetry.rego), [prompt](../../policy/ui/no_prompt_in_telemetry.rego), and [restricted-coordinate](../../policy/telemetry/no_restricted_coords.rego) modules | The policy README identifies one non-enforcing `default deny := false` stub; the three inspected modules remain allow-by-default scaffolds without operative denial rules. | Candidate policy source, not fail-closed runtime redaction or enforcement. |
+| [General safety validator](../../tools/validators/validate_telemetry_safety.py) | The file raises `NotImplementedError("Greenfield placeholder")`. | No general telemetry-safety validation is implemented by this file. |
+| [Telemetry workflow](../../.github/workflows/telemetry-policy.yml) | The workflow declares read-only repository access, repository fixtures, no operational telemetry or secrets, no collector/exporter/sink/dashboard/public-API connection, and says a green result proves repository-local contract checks only. | Bounded CI definition and explicit holds, not proof of a hosted run or operational telemetry enforcement. |
+
 ### Current safe conclusion
 
 KFM now has a meaningful fixture-first telemetry profile lane and current CI evidence for that lane. It still does not prove a fail-closed operational telemetry redaction system. The strongest executable evidence is that bounded profiles pass their declared checks while CI continues to expose the general policy, validator, emitter, receipt, and sink holds.
@@ -1321,7 +1334,7 @@ Rollback MUST NOT restore raw prompt, evidence, coordinate, secret, or payload l
 
 ## No-Loss and Change Ledger
 
-| Prior v1.2 element | v1.3 disposition |
+| Prior v1.2 element | v1.4 disposition |
 |---|---|
 | Telemetry as governed boundary-crossing emission | Preserved |
 | Governed emission distinguished from lifecycle publication | Preserved |
@@ -1400,6 +1413,7 @@ The supplied KFM corpus consistently treats sensitive exposure as policy-governe
 
 | Version | Date | Change |
 |---|---|---|
+| `v1.4` | 2026-09-13 | Same-path currentness refresh against `main@21dcad05435bc5e5227905ba1747aa616a6f3713`. Added a bounded source readback for proposed telemetry contracts and schemas, receipt-lane documentation, allow-by-default policy scaffolds, the general-validator placeholder, and the bounded workflow definition. No telemetry, logger, validator, workflow, collector, export, sink, release, deployment, or publication operation was executed; status remains `proposed`. |
 | `v1.3` | 2026-08-14 | Same-path current-main evidence refresh reconciled through `main@6a9c4665...`: recognized accepted ADR-0029 placement authority; replaced stale schema, fixture, test, and workflow-absence claims with the exact four fixture-only profile families; documented profile validators and hosted workflow success; preserved explicit general-policy, validator, emitter, receipt, sink, retention, and runtime holds; added profile lifecycle and activation guardrails; preserved status `proposed`. |
 | `v1.2` | 2026-07-23 | Same-path repository-grounded modernization: confirmed ADR identity; distinguished governed emission from lifecycle publication; pinned standards, contracts, policy, validator, receipt, workflow, UI, and ownership evidence; documented allow-by-default stubs and explicit holds; strengthened minimization, reconstruction, AI, secret, crash, sink, retention, receipt, incident, fixture, migration, acceptance, and rollback controls; preserved status `proposed`. |
 | `v1.1` | 2026-05-15 | Tightened evidence boundary, schema-home alignment, synthetic examples, redaction profiles, validation, and rollback posture. |
@@ -1407,4 +1421,4 @@ The supplied KFM corpus consistently treats sensitive exposure as policy-governe
 
 ---
 
-**Last updated:** 2026-08-14 · **Decision status:** `proposed` · **Current enforcement:** four fixture-only profiles + explicit operational holds · **Publication:** none · **Path:** `docs/adr/ADR-0016-telemetry-redaction-posture.md` · [Back to top](#top)
+**Last updated:** 2026-09-13 · **Decision status:** `proposed` · **Current enforcement:** four fixture-only profiles + explicit operational holds · **Publication:** none · **Path:** `docs/adr/ADR-0016-telemetry-redaction-posture.md` · [Back to top](#top)
