@@ -2,17 +2,28 @@
 doc_id: kfm://doc/adr-0021
 title: ADR-0021 — Quarantine has structured exit paths
 type: standard
-version: v1.3
+version: v1.4
 status: proposed
 owners:
   - architecture-steward # PROPOSED
   - data-steward # PROPOSED
   - policy-steward # PROPOSED
 created: 2026-05-09
-updated: 2026-08-13
+updated: 2026-09-13
 policy_label: public
 canonical_path: docs/adr/ADR-0021-quarantine-has-structured-exit-paths.md
 path_status: CONFIRMED
+current_reconciliation:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  main_commit: 21dcad05435bc5e5227905ba1747aa616a6f3713
+  adr_index_blob: 0c143676dfd3c1bda16cb44398c5ad5d4a49cf67
+  quarantine_lane_readme_blob: 9b375d795d96b15c06e51ef54770a023cd14454c
+  review_worker_readme_blob: 96359715b6eebbdc1bbbafe8cb5107f76e080fc1
+  review_worker_entrypoint_blob: eaef2862a7c1038590e5afba8224b52de54c5c96
+  lifecycle_validator_readme_blob: aeb023210f2f23fac21c652edb8bbd525c1d09a7
+  promotion_decision_contract_blob: 42295bfc83a621cf125d33aa821912b426f70bd2
+  policy_decision_contract_blob: ebfe97f98263e6309db6d2772cb2c5e548819650
+  posture: proposed five-exit decision; lane and worker boundaries are non-executing; promotion, release, and publication held
 related:
   - docs/adr/INDEX.md
   - docs/doctrine/directory-rules.md
@@ -41,6 +52,7 @@ notes:
   - v1.1 fixed metadata-comment safety, path wording, E3/E5 state-machine ambiguity, and evidence boundaries.
   - v1.2 confirms same-path repository identity, repairs related references, aligns current contract vocabulary, and surfaces implementation conflicts without changing decision status.
   - v1.3 refreshes the evidence snapshot, records the placeholder-only review worker and unresolved object/receipt-family conflicts, and adds explicit acceptance gates without changing decision status.
+  - v1.4 re-pins current-main evidence; the five exits remain proposed and all lifecycle/release/publication actions remain held.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -55,11 +67,11 @@ notes:
 | **ID** | `ADR-0021` |
 | **Source status** | `proposed` |
 | **Effective decision status** | `proposed` — confirmed by the [canonical ADR index](./INDEX.md#numbered-records) |
-| **Version** | `v1.3` |
+| **Version** | `v1.4` |
 | **Created** | 2026-05-09 |
-| **Updated** | 2026-08-13 |
+| **Updated** | 2026-09-13 |
 | **Canonical path** | `docs/adr/ADR-0021-quarantine-has-structured-exit-paths.md` |
-| **Path evidence** | **CONFIRMED** at `main@160938b3f4717b6f2551b3430ab5c08f9b33cecb` and indexed as `ADR-0021` |
+| **Path evidence** | **CONFIRMED** at `main@21dcad05435bc5e5227905ba1747aa616a6f3713` and indexed as `ADR-0021` |
 | **Implementation posture** | **PROPOSED**; no accepted or executable five-exit case schema, validator, policy binding, or worker implementation was verified; the worker lane contains documentation plus a comment-only Python placeholder |
 | **Supersedes / superseded by** | — / — |
 | **Directory Rules relationship** | Does not amend the rules; applies the canonical `docs/adr/` and `data/quarantine/` responsibilities |
@@ -75,9 +87,21 @@ notes:
 
 ---
 
+## Current-main reconciliation — v1.4
+
+This documentation-only checkpoint re-pins ADR-0021 to main@21dcad05435bc5e5227905ba1747aa616a6f3713. The canonical ADR index continues to list it as **proposed**; the five structured exits remain a proposed transition model, not an accepted executable lifecycle contract.
+
+Current reads confirm a repository-grounded draft quarantine-lane boundary and a draft lifecycle-validator routing index. The review-worker lane remains explicitly placeholder-only, and its entrypoint is a single greenfield-placeholder comment. The related PromotionDecision and PolicyDecision contracts remain draft/proposed; they define object-local vocabularies but do not approve or execute a quarantine exit.
+
+**Non-effect:** this update does not admit an artifact, select an exit, write a case record or receipt, mutate lifecycle state, authorize review, promote, release, deploy, publish, correct, withdraw, or roll back data. It preserves the requirement that any future exit be separately accepted, contracted, validated, reviewed, and evidenced.
+
+[Back to top](#top)
+
+---
+
 ## Status and evidence boundary
 
-The modernization baseline is pinned to `main@160938b3f4717b6f2551b3430ab5c08f9b33cecb`. The table separates repository evidence from the future state this ADR proposes.
+The modernization baseline is pinned to `main@21dcad05435bc5e5227905ba1747aa616a6f3713`. The table separates repository evidence from the future state this ADR proposes.
 
 | Surface | CONFIRMED at the pinned base | What remains PROPOSED or NEEDS VERIFICATION |
 | --- | --- | --- |
@@ -391,7 +415,7 @@ After acceptance and schema publication, changing this enum would require a supe
 
 ## 8. Validation and enforcement
 
-This ADR becomes enforceable only when the required artifacts exist and pass. The repository-grounded status below is pinned to `main@160938b3f4717b6f2551b3430ab5c08f9b33cecb`.
+This ADR becomes enforceable only when the required artifacts exist and pass. The repository-grounded status below is pinned to `main@21dcad05435bc5e5227905ba1747aa616a6f3713`.
 
 | Enforcement surface | Required check | Repository-grounded status |
 | --- | --- | --- |
