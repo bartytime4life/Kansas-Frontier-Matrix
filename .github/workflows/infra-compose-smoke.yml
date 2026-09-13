@@ -43,14 +43,15 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Run static Compose boundary tests
+      - name: Run static Docker and Compose boundary tests
         env:
+          KFM_NO_NETWORK: "1"
           PYTHONDONTWRITEBYTECODE: "1"
           PYTHONHASHSEED: "0"
         run: |
           python -m unittest discover \
             --start-directory tests/infra \
-            --pattern 'test_compose_static.py' \
+            --pattern 'test_*.py' \
             --verbose
 
   render-and-build-compose:

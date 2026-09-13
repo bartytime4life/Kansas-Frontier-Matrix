@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 import unittest
 from pathlib import Path
 
@@ -10,6 +11,8 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DOCKER_ROOT = REPO_ROOT / "infra" / "docker"
 DOCKERFILE = DOCKER_ROOT / "Dockerfile.explorer-web"
+GOVERNED_API_DOCKERFILE = DOCKER_ROOT / "Dockerfile.governed-api"
+DOCKERIGNORE = DOCKER_ROOT / ".dockerignore"
 MANIFEST = DOCKER_ROOT / "explorer-web" / "package.json"
 LOCKFILE = DOCKER_ROOT / "explorer-web" / "package-lock.json"
 
@@ -17,6 +20,10 @@ LOCKFILE = DOCKER_ROOT / "explorer-web" / "package-lock.json"
 class ExplorerImageSecurityOverrideTests(unittest.TestCase):
     def setUp(self) -> None:
         self.dockerfile = DOCKERFILE.read_text(encoding="utf-8")
+        self.governed_api_dockerfile = GOVERNED_API_DOCKERFILE.read_text(
+            encoding="utf-8"
+        )
+        self.dockerignore = DOCKERIGNORE.read_text(encoding="utf-8")
         self.manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
         self.lock = json.loads(LOCKFILE.read_text(encoding="utf-8"))
 
@@ -83,6 +90,48 @@ class ExplorerImageSecurityOverrideTests(unittest.TestCase):
         self.assertIn(
             'typeof require(r+"/tar").extract!=="function"',
             self.dockerfile,
+        )
+
+    def test_review_images_upgrade_and_assert_security_floors(self) -> None:
+        package_floors = {
+            "gzip": "1.13-1+deb13u1",
+            "libblkid1": "2.41.5-0+deb13u1",
+            "libpcre2-8-0": "10.46-1~deb13u2",
+            "libsqlite3-0": "3.46.1-7+deb13u2",
+            "libssl3t64": "3.5.7-1~deb13u2",
+            "perl-base": "5.40.1-6+deb13u1",
+        }
+        for dockerfile in (self.dockerfile, self.governed_api_dockerfile):
+            for package, floor in package_floors.items():
+                self.assertRegex(
+                    dockerfile,
+                    rf"(?m)^\s+{re.escape(package)} \\$",
+                )
+                version_query = re.escape(
+                    f'"$(dpkg-query --show --showformat=\'${{Version}}\' {package})"'
+                )
+                self.assertRegex(
+                    dockerfile,
+                    rf"dpkg --compare-versions \\\n\s+{version_query} \\\n\s+ge \\\n\s+\"{re.escape(floor)}\";",
+                )
+
+    def test_dockerignore_is_an_allowlist_for_review_inputs(self) -> None:
+        rules = [
+            line.strip()
+            for line in self.dockerignore.splitlines()
+            if line.strip() and not line.lstrip().startswith("#")
+        ]
+        self.assertEqual(
+            rules,
+            [
+                "*",
+                "!Dockerfile.explorer-web",
+                "!Dockerfile.governed-api",
+                "!governed-api-requirements.lock",
+                "!explorer-web/",
+                "!explorer-web/package.json",
+                "!explorer-web/package-lock.json",
+            ],
         )
 
 
