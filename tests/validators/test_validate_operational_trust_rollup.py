@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import subprocess
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -55,6 +57,27 @@ class OperationalTrustRollupTests(unittest.TestCase):
     def test_spec_hash_replays(self)->None:
         candidate=MODULE.materialize_fixture_case(self.manifest,self.manifest['cases'][0])
         self.assertEqual(candidate['rollup_spec_hash'],MODULE.compute_rollup_hash(candidate))
+
+    def test_ready_rollup_is_read_only_summary_not_release_authorization(self)->None:
+        candidate=MODULE.materialize_fixture_case(self.manifest,self.manifest['cases'][0])
+        with tempfile.TemporaryDirectory() as directory:
+            path=Path(directory)/'ready.json'
+            path.write_text(json.dumps(candidate),encoding='utf-8')
+            completed=subprocess.run(
+                [sys.executable,str(MODULE_PATH),'--input',str(path)],
+                cwd=ROOT,capture_output=True,text=True,check=False,
+            )
+        self.assertEqual(completed.returncode,0,completed.stderr)
+        payload=json.loads(completed.stdout)
+        self.assertEqual(payload,{
+            'outcome':'READY',
+            'codes':[],
+            'summary':{'component_count':8,'status_counts':{
+                'ALLOW':1,'APPROVED':1,'CLOSED':1,'PASS':1,'READY':2,'RESOLVED':1,'VERIFIED':1,
+            }},
+        })
+        self.assertNotIn('release_candidate_ref',completed.stdout)
+        self.assertNotIn('promotion_authority',completed.stdout)
 
 
 if __name__=='__main__':
