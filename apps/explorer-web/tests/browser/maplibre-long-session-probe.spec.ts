@@ -17,6 +17,19 @@ const sha256 = (value: unknown) =>
   createHash("sha256").update(JSON.stringify(value)).digest("hex");
 
 const LOCKFILE_VERSION_UNAVAILABLE = "LOCKFILE_VERSION_UNAVAILABLE";
+const PROBE_RESULT_JSON_INVALID = "PROBE_RESULT_JSON_INVALID";
+const PROBE_RESULT_MISSING = "PROBE_RESULT_MISSING";
+
+const parseProbeResult = (raw: string | undefined) => {
+  if (raw === undefined) {
+    return { result: null, result_parse_error: PROBE_RESULT_MISSING };
+  }
+  try {
+    return { result: JSON.parse(raw), result_parse_error: null };
+  } catch {
+    return { result: null, result_parse_error: PROBE_RESULT_JSON_INVALID };
+  }
+};
 
 const toolVersion = (
   command: string,
@@ -62,6 +75,13 @@ const lockedMapLibreVersion = (): string => {
   );
 };
 
+test("preserves malformed page evidence as a receipt failure", () => {
+  expect(parseProbeResult("{not-json")).toEqual({
+    result: null,
+    result_parse_error: PROBE_RESULT_JSON_INVALID,
+  });
+});
+
 test("repeats the package-owned MapLibre lifecycle and tears down every cycle", async ({
   page,
   browser,
@@ -87,10 +107,22 @@ test("repeats the package-owned MapLibre lifecycle and tears down every cycle", 
 
   const evidence = await page.evaluate(() => {
     const raw = document.body.dataset.probeResult;
+    let result: unknown = null;
+    let resultParseError: string | null = null;
+    if (raw === undefined) {
+      resultParseError = "PROBE_RESULT_MISSING";
+    } else {
+      try {
+        result = JSON.parse(raw);
+      } catch {
+        resultParseError = "PROBE_RESULT_JSON_INVALID";
+      }
+    }
     return {
       fixture_id: document.body.dataset.fixtureId ?? "MISSING",
       status: document.querySelector("#probe-status")?.getAttribute("data-state") ?? "MISSING",
-      result: raw === undefined ? null : JSON.parse(raw),
+      result,
+      result_parse_error: resultParseError,
       user_agent: navigator.userAgent,
       language: navigator.language,
       timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
@@ -102,7 +134,9 @@ test("repeats the package-owned MapLibre lifecycle and tears down every cycle", 
   const receipt = {
     schema_version: "kfm.maplibre.browser-probe.v1",
     outcome:
-      evidence.result?.passed === true && externalRequests.length === 0
+      (evidence.result as { passed?: boolean } | null)?.passed === true &&
+      evidence.result_parse_error === null &&
+      externalRequests.length === 0
         ? "PASS"
         : "FAIL",
     probe: "long_session_teardown",
@@ -148,8 +182,13 @@ test("repeats the package-owned MapLibre lifecycle and tears down every cycle", 
   expect(receipt.outcome).toBe("PASS");
   expect(evidence.fixture_id).toBe(FIXTURE.id);
   expect(evidence.status).toBe("PASS");
-  expect(evidence.result?.cycles).toBe(FIXTURE.cycles);
-  expect(evidence.result?.results).toHaveLength(FIXTURE.cycles);
-  expect(evidence.result?.results.every((result: { passed: boolean }) => result.passed)).toBe(true);
+  const result = evidence.result as {
+    cycles?: number;
+    results?: Array<{ passed: boolean }>;
+  } | null;
+  expect(evidence.result_parse_error).toBeNull();
+  expect(result?.cycles).toBe(FIXTURE.cycles);
+  expect(result?.results).toHaveLength(FIXTURE.cycles);
+  expect(result?.results?.every((entry) => entry.passed)).toBe(true);
   expect(externalRequests).toEqual([]);
 });
