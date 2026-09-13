@@ -446,7 +446,7 @@ const DOMAIN_HOLDS = Object.freeze([
 ] as const);
 
 type PriorityContextGroup = Readonly<{
-  id: "seismic" | "hydrology" | "smoke";
+  id: "seismic" | "hydrology" | "fire-smoke";
   title: string;
   description: string;
   sourceIds: readonly OfficialContextId[];
@@ -466,10 +466,10 @@ const PRIORITY_CONTEXT_GROUPS: readonly PriorityContextGroup[] = Object.freeze([
     sourceIds: Object.freeze(["usgs-streamflow", "noaa-nwps-gauges", "usgs-3dhp-hydrography", "usgs-wbd-watersheds", "noaa-nwm-analysis", "noaa-nwm-short-range"] as const),
   }),
   Object.freeze({
-    id: "smoke",
-    title: "Smoke + weather context",
-    description: "NOAA HMS smoke footprints with NWS alerts and the exact-time NOAA radar loop kept as separate source roles.",
-    sourceIds: Object.freeze(["noaa-hms-smoke", "nws-alerts", "nws-radar"] as const),
+    id: "fire-smoke",
+    title: "Fire + smoke context",
+    description: "NASA FIRMS near-real-time active-fire detections and NOAA HMS smoke footprints, with NWS alerts and exact-time radar kept as separate source roles.",
+    sourceIds: Object.freeze(["nasa-firms-active-fire", "noaa-hms-smoke", "nws-alerts", "nws-radar"] as const),
   }),
 ]);
 
@@ -514,6 +514,12 @@ const officialContextRuntimeVisibility = (
 const defaultOrder = LAYER_REGISTRY.map((layer) => layer.id);
 const interactiveLayerIds = LAYER_REGISTRY.flatMap((layer) => layer.renderers.filter((renderer) => renderer.interactive).map((renderer) => renderer.id));
 const layerDomains = ["ALL", ...Array.from(new Set([...LAYER_REGISTRY.map((layer) => layer.domain), ...DOMAIN_HOLDS.map((hold) => hold.domain)])).sort()] as const;
+const DOMAIN_LIVE_CONTEXT: Readonly<Partial<Record<(typeof layerDomains)[number], readonly OfficialContextId[]>>> = Object.freeze({
+  Fire: Object.freeze(["nasa-firms-active-fire", "noaa-hms-smoke"]),
+  Hydrology: Object.freeze(["usgs-streamflow", "noaa-nwps-gauges", "usgs-3dhp-hydrography", "usgs-wbd-watersheds"]),
+  Geology: Object.freeze(["usgs-earthquakes"]),
+  Atmosphere: Object.freeze(["noaa-hms-smoke"]),
+});
 const catalogCategorySlug = (category: string) => category.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 const drawerViews = ["evidence", "metadata", "lineage", "focus"] as const satisfies readonly DrawerView[];
 const drawerViewLabels: Record<DrawerView, string> = {
@@ -1888,11 +1894,10 @@ export default function Home() {
   const filteredLayerIds = useMemo(() => {
     const query = debouncedLayerQuery.trim().toLowerCase();
     return new Set(LAYER_REGISTRY.filter((layer) => {
-      const matchesDomain = layerDomain === "ALL" || layer.domain === layerDomain;
       const matchesQuery = !query || `${layer.title} ${layer.description} ${layer.category} ${layer.datasetName} ${layer.domain}`.toLowerCase().includes(query);
-      return matchesDomain && matchesQuery;
+      return matchesQuery;
     }).map((layer) => layer.id));
-  }, [debouncedLayerQuery, layerDomain]);
+  }, [debouncedLayerQuery]);
   const searchResults = useMemo<GlobalSearchItem[]>(() => {
     const query = debouncedGlobalQuery.trim().toLowerCase();
     if (!query) return [];
@@ -2693,6 +2698,24 @@ export default function Home() {
   const setPriorityContextGroupVisible = useCallback((sourceIds: readonly OfficialContextId[], visible: boolean) => {
     sourceIds.forEach((sourceId) => setOfficialContextVisible(sourceId, visible));
     announce(`${visible ? "Showing" : "Hiding"} ${sourceIds.length} connected context layers`);
+  }, [announce, setOfficialContextVisible]);
+
+  const applyDomainLens = useCallback((domain: (typeof layerDomains)[number]) => {
+    setLayerDomain(domain);
+    if (domain === "ALL") {
+      announce("Domain lens cleared; the current map layers remain unchanged");
+      return;
+    }
+    const layerIds = LAYER_REGISTRY.filter((layer) => layer.domain === domain).map((layer) => layer.id);
+    setVisibility((current) => {
+      const next = { ...current };
+      layerIds.forEach((id) => { next[id] = true; });
+      visibilityRef.current = next;
+      return next;
+    });
+    (DOMAIN_LIVE_CONTEXT[domain] ?? []).forEach((id) => setOfficialContextVisible(id, true));
+    const liveDetail = (DOMAIN_LIVE_CONTEXT[domain] ?? []).length ? " and matched live context" : "";
+    announce(`${domain} lens added ${layerIds.length} historical layer${layerIds.length === 1 ? "" : "s"}${liveDetail}; other map layers remain available`);
   }, [announce, setOfficialContextVisible]);
 
   const setOfficialContextOpacity = useCallback((id: OfficialContextId, value: number) => {
@@ -4258,7 +4281,7 @@ export default function Home() {
     let animationFrame = 0;
     let lastFrame = 0;
     const touchBalanced = browserRenderBudget(renderQuality).coarsePointer && renderQuality === "auto";
-    const effectsActive = dynamicEffects && !reducedMotion && renderQuality !== "efficient" && !touchBalanced && ["water-context", "smoke-context", "fire-context", "hazards-context", "habitat-connectivity", "transport-context", "communities"].some(id => visibility[id]);
+    const effectsActive = projection !== "globe" && dynamicEffects && !reducedMotion && renderQuality !== "efficient" && !touchBalanced && ["water-context", "smoke-context", "fire-context", "hazards-context", "habitat-connectivity", "transport-context", "communities"].some(id => visibility[id]);
 
     if (!effectsActive) {
       applyDynamicMapEffects(map, 0, opacity, false);
@@ -4279,7 +4302,7 @@ export default function Home() {
       document.removeEventListener("visibilitychange", resume);
       if (styleGenerationReadyRef.current) applyDynamicMapEffects(map, 0, opacity, false);
     };
-  }, [dynamicEffects, opacity, reducedMotion, renderQuality, styleReady, visibility]);
+  }, [dynamicEffects, opacity, projection, reducedMotion, renderQuality, styleReady, visibility]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -4313,8 +4336,12 @@ export default function Home() {
     const map = mapRef.current;
     if (!map || !styleGenerationReadyRef.current) return;
     map.setProjection({ type: projection });
+    // Current WMS overlays are regional Mercator tile carriers. Re-apply their
+    // visibility after a projection change so globe mode cannot retain a
+    // stretched or color-shifted raster from the prior 2D view.
+    applyOfficialContextState(map, effectiveOfficialVisibility, officialOpacity, officialPayloads);
     setMaplibreProbe((current) => ({ ...current, projection }));
-  }, [projection]);
+  }, [effectiveOfficialVisibility, officialOpacity, officialPayloads, projection]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -4989,6 +5016,7 @@ export default function Home() {
         setTerrainHeightOverlay(map, false);
       }
       map.setProjection({ type: nextProjection });
+      applyOfficialContextState(map, effectiveOfficialVisibility, officialOpacityRef.current, officialPayloadsRef.current);
       if (mode === "terrain") {
         setTerrainState(setTerrainPresentation(map, true, 1));
         setTerrainHeightOverlay(map, topographicOverlayRef.current);
@@ -5004,6 +5032,12 @@ export default function Home() {
     setAtmospherePreset(nextAtmosphere);
     setLightAzimuth(lightAzimuthRef.current);
     setFieldOfView(nextFieldOfView);
+    if (mode === "globe" && basemapRef.current !== "standard") {
+      // The alternate basemaps are regional raster carriers. Standard vector
+      // context remains visually stable as the globe zooms out.
+      basemapRef.current = "standard";
+      setBasemap("standard");
+    }
     if (mode === "terrain") {
       setVisibility((current) => {
         const next = { ...current, "elevation-concept": false };
@@ -5159,7 +5193,8 @@ export default function Home() {
     mapRef.current?.stop();
     visibilityRef.current = nextVisibility;
     mapEvidenceFilterRef.current = "ALL";
-    basemapRef.current = profile.basemap;
+    const profileBasemap = profile.projection === "globe" ? "standard" : profile.basemap;
+    basemapRef.current = profileBasemap;
     projectionRef.current = profile.projection;
     scenePresetRef.current = nextScenePreset;
     verticalExaggerationRef.current = 1;
@@ -5171,7 +5206,7 @@ export default function Home() {
     setMapEvidenceFilter("ALL");
     setPlaying(false);
     setTemporalMode("snapshot");
-    setBasemap(profile.basemap);
+    setBasemap(profileBasemap);
     setProjection(profile.projection);
     setScenePreset(nextScenePreset);
     setVerticalExaggeration(1);
@@ -5192,6 +5227,7 @@ export default function Home() {
         setTerrainHeightOverlay(map, topographicOverlayRef.current);
       }
       map.setProjection({ type: profile.projection });
+      applyOfficialContextState(map, officialContextRuntimeVisibility(officialVisibilityRef.current, temporalQueryRef.current.frame, noaaRadarReadyRef.current, noaaRadarFrameTimeRef.current), officialOpacityRef.current, officialPayloadsRef.current);
       applySceneEnvironment(map, nextAtmosphere, nextLightAzimuth);
       map.setVerticalFieldOfView(nextFieldOfView);
       map.triggerRepaint();
@@ -6720,7 +6756,7 @@ export default function Home() {
                 </button>;
               })}
             </div>
-            <p>These are the site-local domain layers. Live operational context—earthquakes, gauges, smoke, radar, watersheds, and terrain—has its own Live data menu and is held outside historical frames.</p>
+            <p>These are the site-local domain layers. A domain lens adds its matching historical layer(s) to the map without hiding the rest of the catalog; where available, it also adds clearly separated live operational context for the present frame.</p>
           </section>
 
           </details>
@@ -6732,9 +6768,9 @@ export default function Home() {
               <div><span><small>LOADED FEATURES</small><strong>{officialFeatureCount.toLocaleString("en-US")}</strong></span><span><small>CONNECTIONS</small><strong>{officialReadyCount}/{OFFICIAL_CONTEXT_SOURCES.length} checked</strong></span><span><small>LAST RETRIEVAL</small><strong>{officialLatestRetrievedAt ? new Date(officialLatestRetrievedAt).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) : "Not yet"}</strong></span></div>
               <nav aria-label="Official data actions"><button type="button" disabled={visibleRefreshableOfficialCount === 0 || officialLoadingCount > 0} onClick={refreshVisibleOfficialContext}>{officialLoadingCount > 0 ? "Refreshing…" : "Refresh visible"}</button><button type="button" disabled={visibleOfficialCount === 0} onClick={hideAllOfficialContext}>Hide all</button></nav>
             </div>
-            <details className="source-layer-groups"><summary>Layer groups · earthquakes, water & smoke</summary><section className="priority-context-deck" aria-labelledby="priority-context-title">
+            <details className="source-layer-groups"><summary>Layer groups · earthquakes, water, fire & smoke</summary><section className="priority-context-deck" aria-labelledby="priority-context-title">
               <header>
-                <div><span>PRIORITY CONNECTIONS</span><h3 id="priority-context-title">Earthquakes, water + smoke</h3></div>
+                <div><span>PRIORITY CONNECTIONS</span><h3 id="priority-context-title">Earthquakes, water, fire + smoke</h3></div>
                 <small>Toggle a source directly</small>
               </header>
               <p className="priority-context-intro">The controls below keep the most actionable map connections visible. Open a source row for opacity, freshness, limits, and provider links.</p>
@@ -6797,9 +6833,10 @@ export default function Home() {
           </section>
 
           <div className="basemap-control">
-            <div className="catalog-filter-grid"><label><span>Basemap style</span><select value={basemap} onChange={(event) => setBasemap(event.target.value as BasemapKey)}>{(Object.keys(BASEMAPS) as BasemapKey[]).map((key) => <option key={key} value={key}>{BASEMAPS[key].title} · {BASEMAPS[key].note}</option>)}</select></label><label><span>Domain filter</span><select value={layerDomain} onChange={(event) => setLayerDomain(event.target.value as (typeof layerDomains)[number])}>{layerDomains.map((domain) => <option key={domain} value={domain}>{domain === "ALL" ? "All domains" : domain}</option>)}</select></label></div>
+            <div className="catalog-filter-grid"><label><span>Basemap style</span><select value={basemap} onChange={(event) => setBasemap(event.target.value as BasemapKey)}>{(Object.keys(BASEMAPS) as BasemapKey[]).map((key) => <option key={key} value={key}>{BASEMAPS[key].title} · {BASEMAPS[key].note}</option>)}</select></label><label><span>Domain lens</span><select value={layerDomain} onChange={(event) => applyDomainLens(event.target.value as (typeof layerDomains)[number])}>{layerDomains.map((domain) => <option key={domain} value={domain}>{domain === "ALL" ? "No domain lens" : domain}</option>)}</select></label></div>
+            <div className="catalog-lens-status" data-active={layerDomain !== "ALL"}><strong>{layerDomain === "ALL" ? "No domain lens selected" : `${layerDomain} lens is on the map`}</strong><span>{layerDomain === "Fire" ? "Historical fire context plus NASA FIRMS active-fire detections and NOAA HMS smoke footprints at the operational-present frame." : layerDomain === "ALL" ? "Choose a domain to add that perspective without filtering the catalog or hiding other layers." : "The lens adds matching layers as an additional perspective; current-source context remains separate and time-bounded."}</span>{layerDomain !== "ALL" && <button type="button" onClick={() => applyDomainLens("ALL")}>Remove lens</button>}</div>
             <div className="catalog-evidence-filter"><label><span>Map evidence filter</span><select value={mapEvidenceFilter} onChange={(event) => updateMapEvidenceFilter(event.target.value as RegistryEvidenceFilter)}><option value="ALL">All evidence states</option>{(Object.keys(evidenceLabels) as EvidenceState[]).map((state) => <option key={state} value={state}>{state.replaceAll("_", " ")}</option>)}</select></label><output>{mapCompatibleFeatureCount} compatible records</output>{mapEvidenceFilter !== "ALL" && <button type="button" onClick={() => updateMapEvidenceFilter("ALL")}>Clear filter</button>}</div>
-            <div className="catalog-filter-actions"><span>{layerQuery.trim() || layerDomain !== "ALL" || mapEvidenceFilter !== "ALL" ? "Catalog filters are active" : "Showing every local domain"}</span><button type="button" disabled={!layerQuery.trim() && layerDomain === "ALL" && mapEvidenceFilter === "ALL"} onClick={() => { setLayerQuery(""); setLayerDomain("ALL"); updateMapEvidenceFilter("ALL"); }}>Clear filters</button></div>
+            <div className="catalog-filter-actions"><span>{layerQuery.trim() || mapEvidenceFilter !== "ALL" ? "Catalog filters are active" : "Showing every local domain"}</span><button type="button" disabled={!layerQuery.trim() && mapEvidenceFilter === "ALL"} onClick={() => { setLayerQuery(""); updateMapEvidenceFilter("ALL"); }}>Clear filters</button></div>
           </div>
 
           <details className="legacy-layer-index"><summary>Legacy example layer controls · {visibleCount} on</summary>
@@ -6835,7 +6872,7 @@ export default function Home() {
               })}</section>;
             })}
             {layerDomain !== "ALL" && DOMAIN_HOLDS.some((hold) => hold.domain === layerDomain) && <section className="catalog-domain-hold" aria-label={`${layerDomain} readiness`}><header><span>{layerDomain}</span><strong>{DOMAIN_HOLDS.find((hold) => hold.domain === layerDomain)?.state}</strong></header><p>{DOMAIN_HOLDS.find((hold) => hold.domain === layerDomain)?.detail}</p><small>Map context, if visible from a basemap, is not an admitted KFM layer. Use the Sources and About surfaces for the current boundary.</small></section>}
-            {filteredLayerIds.size === 0 && <div className="catalog-empty"><strong>No layers found</strong><p>Try a domain, dataset, or geometry term.</p></div>}
+            {filteredLayerIds.size === 0 && <div className="catalog-empty"><strong>No layers found</strong><p>Try a dataset or geometry term.</p></div>}
           </div>
 
           </details>
@@ -7133,7 +7170,7 @@ export default function Home() {
               <button type="button" onClick={captureAnalysisArea} disabled={locationCameraRedacted}><span>▣</span>{analysisArea ? "Update report area" : "Lock report area"}</button>
               <button type="button" onClick={locateUser}><span>⌾</span>My location</button>
               <button type="button" onClick={toggleFullscreen} aria-label="Toggle fullscreen"><span>⛶</span>Fullscreen</button>
-              <button type="button" aria-pressed={projection === "globe"} onClick={() => setProjection((current) => current === "globe" ? "mercator" : "globe")}><span>◎</span>{projection === "globe" ? "2D view" : "Globe"}</button>
+              <button type="button" aria-pressed={projection === "globe"} onClick={() => activateMapRepresentation(projection === "globe" ? "2d" : "globe")}><span>◎</span>{projection === "globe" ? "2D view" : "Globe"}</button>
               <button type="button" aria-pressed={measureMode === "point"} onClick={() => toggleMeasure("point")}><span>·</span>Draw point</button>
               <button type="button" aria-pressed={measureMode === "distance"} onClick={() => toggleMeasure("distance")}><span>↔</span>Draw line</button>
               <button type="button" aria-pressed={measureMode === "area"} onClick={() => toggleMeasure("area")}><span>◇</span>Draw polygon</button>

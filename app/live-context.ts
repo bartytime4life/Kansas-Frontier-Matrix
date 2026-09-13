@@ -3,7 +3,7 @@ import type { GeoJSONSource, LayerSpecification, Map as MapLibreMap, RasterTileS
 import { noaaRadarTileUrl } from "./noaa-radar";
 import { rememberGeoJSON, updateGeoJSON, setVisibleIfChanged, setPaintIfChanged } from "./map-performance";
 
-export type OfficialContextId = "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-3dhp-hydrography" | "usgs-wbd-watersheds" | "noaa-nwm-analysis" | "noaa-nwm-short-range" | "usgs-earthquakes" | "noaa-hms-smoke" | "raspberry-shake-stations" | "usgs-3dep-hillshade" | "usgs-3dep-slope" | "nws-alerts" | "nws-radar";
+export type OfficialContextId = "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-3dhp-hydrography" | "usgs-wbd-watersheds" | "noaa-nwm-analysis" | "noaa-nwm-short-range" | "usgs-earthquakes" | "noaa-hms-smoke" | "nasa-firms-active-fire" | "raspberry-shake-stations" | "usgs-3dep-hillshade" | "usgs-3dep-slope" | "nws-alerts" | "nws-radar";
 export type OfficialContextFeedId = "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-earthquakes" | "nws-alerts" | "noaa-hms-smoke" | "raspberry-shake-stations";
 export type OfficialContextState = "idle" | "loading" | "ready" | "empty" | "partial" | "error";
 
@@ -265,6 +265,30 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
     fallback: "A failed daily publication becomes PARTIAL or ERROR, and an empty intersection remains time-stamped. The Site never substitutes a forecast/model, carries a polygon forward, or treats missing smoke as clear air.",
   }),
   Object.freeze({
+    id: "nasa-firms-active-fire",
+    title: "NASA FIRMS near-real-time active-fire detections",
+    shortTitle: "Active fire detections",
+    organization: "NASA FIRMS · MODIS/VIIRS",
+    domain: "Fire, smoke & hazards",
+    kind: "OPERATIONAL_WMS",
+    sourceId: "external-nasa-firms-active-fire",
+    layerIds: Object.freeze(["external-nasa-firms-active-fire-raster"]),
+    interactiveLayerIds: Object.freeze([]),
+    mapUrl: "https://firms.modaps.eosdis.nasa.gov/mapserver/wms?SERVICE=WMS&REQUEST=GetMap&VERSION=1.3.0&LAYERS=fires_viirs_24&STYLES=&FORMAT=image%2Fpng&TRANSPARENT=TRUE&HEIGHT=256&WIDTH=256&CRS=EPSG%3A3857&BBOX={bbox-epsg-3857}",
+    endpointLabel: "firms.modaps.eosdis.nasa.gov · VIIRS 24-hour active-fire detections",
+    sourceUrl: "https://firms.modaps.eosdis.nasa.gov/",
+    serviceUrl: "https://firms.modaps.eosdis.nasa.gov/mapserver/",
+    cadence: "Near-real-time satellite detections; provider refresh and latency vary by satellite pass and publication",
+    freshness: "Current provider 24-hour detection carrier at tile retrieval time",
+    defaultVisibility: false,
+    defaultOpacity: 0.92,
+    color: "#ff7b35",
+    attribution: "NASA FIRMS · MODIS/VIIRS active-fire detections",
+    evidenceRole: "EXTERNAL_CONTEXT_ONLY",
+    boundary: "This provider-rendered carrier indicates satellite hot-spot detections in its rolling window. A detection is not a mapped perimeter, incident boundary, ignition point, burn severity estimate, evacuation area, response status, or safety guidance. It remains outside KFM evidence, reports, exports, and releases.",
+    fallback: "Unavailable or blank tiles remain transparent. The Site never converts missing detections into no fire, no smoke, containment, or an all-clear.",
+  }),
+  Object.freeze({
     id: "raspberry-shake-stations",
     title: "Raspberry Shake AM station network",
     shortTitle: "Raspberry Shake stations",
@@ -450,6 +474,11 @@ export const OFFICIAL_CONTEXT_TEMPORAL_SUPPORT: Readonly<Record<OfficialContextI
     supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]),
     limitation: "Daily NOAA HMS publications are intersected with a rolling 24-hour window; provider Start/End intervals are retained, but no historical smoke archive or model/transport series is connected.",
   }),
+  "nasa-firms-active-fire": Object.freeze({
+    axis: "rolling-retrieval-window",
+    supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]),
+    limitation: "The provider's rolling near-real-time active-fire carrier is available only at the operational-present atlas frame. It is not an incident history, perimeter archive, or KFM observation.",
+  }),
   "raspberry-shake-stations": Object.freeze({
     axis: "rolling-retrieval-window",
     supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]),
@@ -580,7 +609,7 @@ export const applyOfficialContextState = (
   ensureLayer(map, { id: alerts.layerIds[0], type: "fill", source: alerts.sourceId, paint: { "fill-color": severityColor, "fill-opacity": 0.34 } });
   ensureLayer(map, { id: alerts.layerIds[1], type: "line", source: alerts.sourceId, paint: { "line-color": severityColor, "line-width": 2.4, "line-opacity": 0.94 } });
 
-  for (const raster of [OFFICIAL_CONTEXT_BY_ID["usgs-3dhp-hydrography"], OFFICIAL_CONTEXT_BY_ID["usgs-wbd-watersheds"], OFFICIAL_CONTEXT_BY_ID["noaa-nwm-analysis"], OFFICIAL_CONTEXT_BY_ID["noaa-nwm-short-range"], OFFICIAL_CONTEXT_BY_ID["usgs-3dep-hillshade"], OFFICIAL_CONTEXT_BY_ID["usgs-3dep-slope"]]) {
+  for (const raster of [OFFICIAL_CONTEXT_BY_ID["usgs-3dhp-hydrography"], OFFICIAL_CONTEXT_BY_ID["usgs-wbd-watersheds"], OFFICIAL_CONTEXT_BY_ID["noaa-nwm-analysis"], OFFICIAL_CONTEXT_BY_ID["noaa-nwm-short-range"], OFFICIAL_CONTEXT_BY_ID["nasa-firms-active-fire"], OFFICIAL_CONTEXT_BY_ID["usgs-3dep-hillshade"], OFFICIAL_CONTEXT_BY_ID["usgs-3dep-slope"]]) {
     // Disabled services should not download tiles during startup or style swaps.
     if (!visibility[raster.id] && !map.getSource(raster.sourceId)) continue;
     const terrainDisplay = raster.id === "usgs-3dep-hillshade" || raster.id === "usgs-3dep-slope";
@@ -596,10 +625,14 @@ export const applyOfficialContextState = (
     }, firstRegistryLayer(map));
   }
 
+  const globeView = map.getProjection?.().type === "globe";
   for (const source of OFFICIAL_CONTEXT_SOURCES) {
     for (const layerId of source.layerIds) {
       if (!map.getLayer(layerId)) continue;
-      setVisibleIfChanged(map, layerId, visibility[source.id]);
+      // Regional rasters use a Mercator tile grid. Hiding them in globe mode
+      // prevents stretched imagery and false-looking color fields at global scale.
+      const globeSafeVisibility = source.kind === "OPERATIONAL_WMS" && globeView ? false : visibility[source.id];
+      setVisibleIfChanged(map, layerId, globeSafeVisibility);
       const safeOpacity = Math.max(0, Math.min(1, opacity[source.id] ?? source.defaultOpacity));
       const layer = map.getLayer(layerId);
       if (layer?.type === "circle") setPaintIfChanged(map, layerId, "circle-opacity", layerId.endsWith("-glow") || layerId.endsWith("-halo") ? safeOpacity * 0.3 : safeOpacity);

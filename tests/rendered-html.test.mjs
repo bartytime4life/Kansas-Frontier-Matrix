@@ -161,7 +161,7 @@ test("adds bounded smoke, water, elevation, tile, and scene navigation features"
   assert.match(page, /PRIORITY_CONTEXT_GROUPS/);
   assert.match(page, /Provider heights only/);
   assert.match(page, /role="switch" aria-checked=\{structures3DEnabled\}/);
-  assert.match(page, /Earthquakes, water \+ smoke/);
+  assert.match(page, /Earthquakes, water, fire \+ smoke/);
   assert.match(page, /setPriorityContextGroupVisible/);
   assert.match(page, /priority-context-source/);
   assert.match(css, /\.priority-context-deck/);
@@ -813,7 +813,7 @@ test("keeps every top-level external map carrier in a display-only disclosure re
   assert.match(page, /NO REQUEST FROM CURRENT VIEW/);
 });
 
-test("connects fourteen bounded official Kansas context sources without admitting evidence", async () => {
+test("connects fifteen bounded official Kansas context sources without admitting evidence", async () => {
   const ts = await import("typescript");
   const registrySource = await readFile(new URL("../app/live-context.ts", import.meta.url), "utf8");
   const radarSource = await readFile(new URL("../app/noaa-radar.ts", import.meta.url), "utf8");
@@ -840,6 +840,7 @@ test("connects fourteen bounded official Kansas context sources without admittin
     "noaa-nwm-short-range",
     "usgs-earthquakes",
     "noaa-hms-smoke",
+    "nasa-firms-active-fire",
     "raspberry-shake-stations",
     "usgs-3dep-hillshade",
     "usgs-3dep-slope",
@@ -856,6 +857,8 @@ test("connects fourteen bounded official Kansas context sources without admittin
   assert.match(registry.OFFICIAL_CONTEXT_BY_ID["noaa-nwm-short-range"].boundary, /modeled maximum over a forecast window/i);
   assert.match(registry.OFFICIAL_CONTEXT_BY_ID["noaa-hms-smoke"].apiPath, /feed=noaa-hms-smoke/);
   assert.match(registry.OFFICIAL_CONTEXT_BY_ID["noaa-hms-smoke"].boundary, /fire perimeter[\s\S]*surface PM2\.5/i);
+  assert.match(registry.OFFICIAL_CONTEXT_BY_ID["nasa-firms-active-fire"].mapUrl, /firms\.modaps\.eosdis\.nasa\.gov[\s\S]*fires_viirs_24/);
+  assert.match(registry.OFFICIAL_CONTEXT_BY_ID["nasa-firms-active-fire"].boundary, /not a mapped perimeter/i);
   assert.match(registry.OFFICIAL_CONTEXT_BY_ID["raspberry-shake-stations"].serviceUrl, /stationview\.raspberryshake\.org/);
   assert.match(registry.OFFICIAL_CONTEXT_BY_ID["raspberry-shake-stations"].boundary, /not realtime/i);
   assert.match(registry.OFFICIAL_CONTEXT_BY_ID["usgs-3dep-slope"].mapUrl, /^\/api\/terrain-tile\?kind=slope&z=\{z\}&x=\{x\}&y=\{y\}$/);
