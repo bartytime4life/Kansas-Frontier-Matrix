@@ -3,7 +3,7 @@ doc_id: kfm://doc/adr-0018-promotion-gate-sequence
 title: ADR-0018 — Promotion Gate Sequence
 type: adr
 adr_id: ADR-0018
-version: v1.5
+version: v1.6
 status: proposed
 effective_decision_status: proposed
 owners:
@@ -22,7 +22,7 @@ reviewers_required:
   - Validation and CI stewards
   - Docs steward
 created: 2026-05-09
-updated: 2026-08-14
+updated: 2026-09-13
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
@@ -30,7 +30,7 @@ owning_root: docs/
 responsibility: Record the proposed final promotion-readiness sequence, its finite vocabularies, its object-family boundaries, and the evidence required before a CATALOG/TRIPLET candidate may be considered ready for a separately authorized transition toward PUBLISHED.
 current_path: docs/adr/ADR-0018-promotion-gate-sequence.md
 supersedes: []
-superseded_by: null
+superseded_by: []
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
@@ -53,6 +53,13 @@ evidence_snapshot:
   promotion_decision_validator_blob: ead33d6c5c073f319627ee42d99c5933c0e370d1
   promotion_policy_readme_blob: 79287df1d828010d716ed43d2e24d6dbd610305b
   hosted_promotion_receipt_run: 31654973080
+current_reconciliation:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  main_commit: c5504696f124fdb9f0dbf5770558d976a9d8ae97
+  adr_index_blob: 0c143676dfd3c1bda16cb44398c5ad5d4a49cf67
+  promotion_decision_contract_blob: 42295bfc83a621cf125d33aa821912b426f70bd2
+  release_readme_blob: 60b6a656f8f2b765616bba7223f51c25863c7172
+  posture: proposed; bounded readiness checks only; policy and release execution held
 inspection_boundary: >
   Current-session GitHub reads over the exact target and ADR inventory, accepted
   Directory Rules decision, promotion-gate and PromotionReceipt workflows,
@@ -321,6 +328,17 @@ green end-to-end workflow.
 ---
 
 <a id="context-and-scope"></a>
+
+## v1.6 Current-Main Reconciliation
+
+- **CONFIRMED at `main@c5504696f124fdb9f0dbf5770558d976a9d8ae97`:** ADR-0018 remains `proposed`; its bounded A–G readiness profile and PromotionDecision contract remain separate from lifecycle application.
+- **CONFIRMED:** `release/` remains a documented, fixture-first governance root with operational release held.
+- **HOLD / NEEDS VERIFICATION:** no accepted promotion-policy evaluator, authenticated authority/review registry, live evidence resolver, applied lifecycle transition, release, deployment, or publication is established by this ADR.
+- **NON-EFFECT:** this update does not approve a candidate, apply a transition, release, deploy, publish, correct, withdraw, or roll back an object.
+
+[Back to top](#top)
+
+---
 
 ## Context and scope
 
