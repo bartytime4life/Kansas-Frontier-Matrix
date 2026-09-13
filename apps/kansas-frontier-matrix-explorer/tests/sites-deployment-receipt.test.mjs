@@ -7,4 +7,17 @@ const load = async () => JSON.parse(await readFile(url, "utf8"));
 const mutate = async (fn) => { const r = await load(); fn(r); return r; };
 test("repository rehearsal is valid and mutation-free", async () => assert.deepEqual(validateReceipt(await load()), { outcome: "PASS", errors: [] }));
 for (const [name, fn] of [["wrong project", r => r.site.project_id = "replacement"], ["second Site", r => r.authority.second_site_created = true], ["Vercel mutation", r => r.authority.vercel_mutated = true], ["live rehearsal mutation", r => r.authority.live_transition_performed = true], ["invented deployed result", r => r.outcome = "DEPLOYED"], ["missing digest", r => r.source.artifact_sha256 = ""], ["short revision", r => r.source.revision = "ec203a9"], ["missing evidence", r => r.checks.build.evidence = ""]]) test(`fails closed on ${name}`, async () => assert.equal(validateReceipt(await mutate(fn)).outcome, "DENY"));
-test("live success requires version IDs, restore proof, and smoke passes", async () => { const r = await mutate(x => { x.mode = "OPERATOR_READBACK"; x.outcome = "DEPLOYED"; x.authority.live_transition_performed = true; }); const result = validateReceipt(r); assert.equal(result.outcome, "DENY"); assert.ok(result.errors.some(e => e.includes("previous_version_id"))); assert.ok(result.errors.some(e => e.includes("desktop_smoke"))); assert.ok(result.errors.some(e => e.includes("operator_restore_confirmed"))); });
+const makeLiveReadback = async (outcome) => mutate(r => {
+  r.mode = "OPERATOR_READBACK";
+  r.outcome = outcome;
+  r.authority.live_transition_performed = true;
+  r.site.previous_version_id = "site-version-previous";
+  r.site.candidate_version_id = "site-version-candidate";
+  r.site.final_version_id = outcome === "DEPLOYED" ? r.site.candidate_version_id : r.site.previous_version_id;
+  r.rollback.target_version_id = r.site.previous_version_id;
+  r.rollback.operator_restore_confirmed = outcome === "ROLLED_BACK";
+  for (const check of Object.values(r.checks)) check.outcome = "PASS";
+});
+test("accepts a deployed readback without asserting a completed rollback", async () => assert.deepEqual(validateReceipt(await makeLiveReadback("DEPLOYED")), { outcome: "PASS", errors: [] }));
+test("accepts a rolled-back readback only after restoration is confirmed", async () => assert.deepEqual(validateReceipt(await makeLiveReadback("ROLLED_BACK")), { outcome: "PASS", errors: [] }));
+test("fails closed when terminal state and rollback evidence disagree", async () => { const deployed = await makeLiveReadback("DEPLOYED"); deployed.rollback.operator_restore_confirmed = true; const rolledBack = await makeLiveReadback("ROLLED_BACK"); rolledBack.site.final_version_id = rolledBack.site.candidate_version_id; assert.equal(validateReceipt(deployed).outcome, "DENY"); assert.equal(validateReceipt(rolledBack).outcome, "DENY"); });
