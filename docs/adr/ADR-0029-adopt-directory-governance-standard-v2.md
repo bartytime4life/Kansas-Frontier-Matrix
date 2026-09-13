@@ -2,11 +2,11 @@
 doc_id: kfm://adr/ADR-0029
 title: Adopt Directory Governance Standard v2
 type: adr
-version: v1.3
+version: v1.4
 status: accepted
 owners: ["@bartytime4life"]
 created: 2026-07-26
-updated: 2026-08-14
+updated: 2026-09-13
 policy_label: public
 owning_root: "docs/"
 responsibility: "Record the accepted Directory Rules v2 decision and bounded post-adoption implementation status."
@@ -38,6 +38,7 @@ notes:
   - "v1.1 added the first append-only post-adoption implementation-status record."
   - "v1.2 refreshes that non-normative status record against main@1384c5c06e5cb19bae4ac67be037559fa68edd21. It does not alter the accepted decision, adopted bytes, digest, authority boundary, migration order, or deletion hold."
   - "v1.3 records a reviewed monotonic topology-baseline shrink from 139 to 138 finding groups against main@2879033718ea08e893c53a1e4d9f2b127f810407. It does not alter the accepted decision, adopted bytes, digest, authority boundary, migration order, or deletion hold."
+  - "v1.4 reconciles current-main implementation evidence at main@27202a0595ecdc6afd6f98b3aedaa236243e07b3: the legacy path is now a bounded read-only tombstone and the topology baseline contains 127 inherited finding groups. This post-adoption status refresh does not alter the accepted decision, adopted bytes, digest, canonical path, authority boundary, consumer-closure hold, or physical-deletion hold."
   - "The five original governance projections remain byte-identical to the v1.1 review. A separate twenty-rule repository-topology ratchet, registry entry, Make target, and aggregate workflow are now present; hosted exact-head execution and required-check coupling remain separate evidence."
   - "The canonical ADR index now records ADR-0001 through ADR-0034 as one accepted and 33 proposed records. The docs/adr README and docs/registers/ADR_INDEX.md still summarize 29 proposed records; v1.2 records that drift without changing either source or any ADR status."
 [/KFM_META_BLOCK_V2] -->
@@ -49,15 +50,15 @@ notes:
 Accepted on 2026-07-26 by explicit project-owner ratification, this decision adopts the exact verified UTF-8 bytes of Directory Rules `2.0.0-draft.1` at `docs/doctrine/directory-rules.md`, makes that path the single writable human-readable Directory Rules authority, and starts a controlled compatibility migration for the restored legacy architecture copy. It does not ratify the premature deletion or authorize tombstoning, reference migration, or physical deletion.
 
 > [!NOTE]
-> **v1.3 post-adoption record.** This edition records the topology ratchet's reviewed monotonic shrink after four legacy groups converged and one warning closed. The accepted decision, pinned Directory Rules bytes and digest, authority boundary, migration sequence, physical-deletion hold, and transparent single-owner bootstrap exception are unchanged.
+> **v1.4 post-adoption record.** This edition reconciles the separately delivered legacy-path tombstone and the reviewed 127-entry topology baseline. The accepted decision, pinned Directory Rules bytes and digest, authority boundary, consumer-closure and physical-deletion holds, and transparent single-owner bootstrap exception are unchanged.
 
 | Field | Value |
 |---|---|
 | **ID** | `ADR-0029` |
 | **Status** | `accepted` |
 | **Date** | 2026-07-26 |
-| **Record edition** | `v1.3` — append-only post-adoption topology-convergence refresh; decision unchanged |
-| **Last status review** | 2026-08-14 against `main@2879033718ea08e893c53a1e4d9f2b127f810407` |
+| **Record edition** | `v1.4` — append-only current-main implementation reconciliation; decision unchanged |
+| **Last status review** | 2026-09-13 against `main@27202a0595ecdc6afd6f98b3aedaa236243e07b3` |
 | **Repository review route** | `@bartytime4life` via CODEOWNERS; sole verified named owner and review route |
 | **Decision authority** | `@bartytime4life` — explicit project-owner ratification recorded in issue #1531 and the ratification pull request |
 | **Acceptance evidence** | Explicit owner instruction; exact digest/blob re-verification; restoration of the prematurely deleted legacy body; synchronized source/index transition; transparent single-owner bootstrap exception |
@@ -70,7 +71,7 @@ Accepted on 2026-07-26 by explicit project-owner ratification, this decision ado
 | **Migration required** | yes |
 | **Rollback required** | yes |
 | **Evidence checkpoint** | Ratification base `67f1d7eac9baabd69da997ba569de54c6b7c1d11`; v2 byte-restoration merge `7b75e3bd590cd37321113f8336559060ae4c4358`; premature deletion `4977bca73cb8bc6232f5a48c7768baf6f0a290c6` |
-| **Post-adoption implementation** | `PARTIAL`: machine projections, dedicated validators, and a 20-rule drift ratchet are present; inherited baseline debt, hosted exact-head and required-check evidence, tombstone migration, consumer closure, and physical deletion remain incomplete, unverified, or held |
+| **Post-adoption implementation** | `PARTIAL`: machine projections, dedicated validators, a 20-rule drift ratchet, and a bounded legacy-path tombstone are present; inherited baseline debt, hosted exact-head and required-check evidence, consumer closure, and physical deletion remain incomplete, unverified, or held |
 | **Truth posture** | `CONFIRMED` evidence; `ACCEPTED` decision; independent stewardship remains `NEEDS VERIFICATION` as a follow-up trigger |
 
 > [!IMPORTANT]
@@ -145,6 +146,15 @@ This list describes the scope of the 2026-07-26 ratification change. Later merge
 - **NEEDS VERIFICATION:** hosted exact-head results for this update, strict required-check coupling, branch/ruleset significance, external consumers, complete reference/fragment closure, and orderly reduction of the 139 inherited finding groups before baseline expiry.
 - **DRIFT:** `docs/adr/INDEX.md` records one accepted and 33 proposed numbered ADRs; the ADR landing page and cross-register summary still state 29 proposed records.
 - **HOLD:** architecture-path tombstoning and physical deletion remain outside this update and require their own reviewed migration evidence.
+
+### 1.5 v1.4 current-main evidence boundary
+
+- **CONFIRMED at `main@27202a0595ecdc6afd6f98b3aedaa236243e07b3`:** the adopted doctrine remains blob `fd49a0b83e55cef52c1124281f093e263526898d`; the canonical digest and document ID are unchanged.
+- **CONFIRMED present:** `docs/architecture/directory-rules.md` is now the bounded read-only compatibility tombstone at blob `9f70679c61dba2df46fd85d780f115fee6b59007`; the Path Alias Register projects `body_mode: tombstone`, canonical-only writing, and `consumer_closure: OPEN` / `verification_state: PARTIAL`.
+- **CONFIRMED present:** the deterministic no-network 20-rule repository-topology validator is blob `b7cbbb531d74af88ed79cdf8d153d261bcfaa6a3`; its baseline is blob `8ef341c43205828e6a9293f26370734d88b482bb` with 127 entries and unchanged expiry `2026-11-10`.
+- **DRIFT:** canonical `docs/adr/INDEX.md` now records 4 accepted and 35 proposed numbered ADRs, while the ADR landing page and cross-register still carry older summaries.
+- **NEEDS VERIFICATION:** hosted exact-head execution, strict required-check coupling, current ruleset enforcement, repository and external consumer closure, independent stewardship, and retirement evidence.
+- **HOLD:** the tombstone does not authorize physical deletion; zero-writer, zero-consumer, link-closure, and retirement-receipt evidence remain required.
 
 ## 2. Decision
 
@@ -348,26 +358,26 @@ Machine files project accepted doctrine; they do not accept it, authorize a migr
 - [x] Domain Lane Register projection, schema, validator, tests, and read-only workflow landed in PR #2164 as a bounded extension of responsibility-scope governance.
 - [x] Cross-Domain Seam Register contract, projection, schema, validator, tests, and read-only workflow landed in PR #2187 as a partial, hold-first Context Map.
 - [x] A bounded 20-rule repository-topology ratchet, focused tests, validator-registry entry, root Make targets, and aggregate workflow definition landed in PR #2626 and were hardened through PRs #2723 and #2725.
-- [ ] The active baseline still carries 138 exact inherited finding groups after four legacy groups shrank and the resolved `policy/sources/` warning closed. Baseline growth, mutation, deadline extension, and invariant waivers are denied; orderly remediation before 2026-11-10 remains open.
+- [ ] The active baseline carries 127 exact inherited finding groups. Baseline growth, mutation, deadline extension, and invariant waivers are denied; orderly remediation before 2026-11-10 remains open.
 - [ ] Hosted exact-head execution, strict required-check coupling, branch/ruleset significance, and complete aggregate current-main enforcement remain `NEEDS VERIFICATION` even though the commands and workflow definition are present.
 - [ ] None of these projections closes the Phase 1 tombstone or Phase 2 consumer/reference work.
 
 ## 6A. Post-Adoption Implementation Record
 
-This section is a status ledger, not a new decision. It records repository evidence starting from `main@2879033718ea08e893c53a1e4d9f2b127f810407` on 2026-08-14 and the bounded baseline-convergence increment recorded here. A later implementation change must update this section or supersede it through normal reviewed documentation, but cannot silently amend the accepted Directory Rules digest or ADR decision.
+This section is a status ledger, not a new decision. It records the current-main reconciliation at `main@27202a0595ecdc6afd6f98b3aedaa236243e07b3` on 2026-09-13, while preserving the prior v1.1–v1.3 records as historical checkpoints. A later implementation change must update this section or supersede it through normal reviewed documentation, but cannot silently amend the accepted Directory Rules digest or ADR decision.
 
 | Capability | Current repository evidence | Status | Authority boundary |
 |---|---|---|---|
 | Root Registry | `control_plane/root_registry.yaml`, blob `024f668b5f0a9239bafa4f8b09e2afd86300ff8c`; PR #2136 | `CONFIRMED PRESENT` | `machine_projection_only`; does not create, activate, migrate, retire, or authorize a root |
 | Path Decision Record | `contracts/governance/path_decision_record.md`, blob `c91be4f6c2cf0db9db7c07ef10768a98a5d0c247`; PR #2138 | `CONFIRMED PRESENT` | A validated `PLACE`/`SPLIT`/`MIGRATE`/`MIRROR`/`HOLD`/`DENY` record documents reasoning; it does not execute or authorize the outcome |
-| Path Alias Register | `control_plane/path_alias_register.yaml`, blob `8a6503fb1c7f419e362cf2ced44ace66eff1aa4d`; PR #2149 | `CONFIRMED PRESENT / PARTIAL` | Projects the one accepted legacy-to-canonical mapping; `consumer_closure: OPEN`, zero alias writers, canonical-only writes, no tombstone or deletion authority |
+| Path Alias Register | `control_plane/path_alias_register.yaml`, blob `6ad6840bd47eb8b176d03f9e946c16453fc4caee`; PR #2149 and later tombstone reconciliation | `CONFIRMED PRESENT / PARTIAL` | Projects the one accepted legacy-to-canonical mapping; `consumer_closure: OPEN`, canonical-only writes, and a bounded tombstone; it does not close consumers or authorize deletion |
 | Domain Lane Register | `control_plane/domain_lane_register.yaml`, blob `1bfc6f91cfa713a5e3d51ece011b63b46310734f`; PR #2164 | `CONFIRMED PRESENT / PROPOSED` | Projects 13 documented lanes without creating domains, assigning verified stewards, adopting sensitivity policy, or establishing implementation maturity |
 | Cross-Domain Seam Register | `control_plane/cross_domain_seam_register.yaml`, blob `dc87ea9c2ab11cc10e51cf4e8284c030e7c9ab29`; PR #2187 | `CONFIRMED PRESENT / PROPOSED PARTIAL` | Records five hold-first seams; does not authorize a cross-domain join, mutation, release, or publication |
-| Repository topology ratchet | `validate_repository_topology.py`, blob `e2992453d5d78015035ae6e312d839bfc3a2cbda`; baseline blob `407787fff0c4e1a89dfed9d300ea39885dc92eeb`; PRs #2626, #2723, #2725 | `CONFIRMED PRESENT / 138 BASELINED WARNINGS` | Enforces 20 finite rules and exact drift fingerprints; baseline entries are implementation waivers, not authority, conformance, migration, or deletion approval |
+| Repository topology ratchet | `validate_repository_topology.py`, blob `b7cbbb531d74af88ed79cdf8d153d261bcfaa6a3`; baseline blob `8ef341c43205828e6a9293f26370734d88b482bb` | `CONFIRMED PRESENT / 127 BASELINED WARNINGS` | Enforces 20 finite rules and exact drift fingerprints; baseline entries are implementation waivers, not authority, conformance, migration, or deletion approval |
 | Local and aggregate command wiring | `Makefile`, blob `c5d0aee3de558d76c1e1639bcfd8cf1c71a0d326`; `validator-suite.yml`, blob `dca889a3135b408767ff6cf21b7ce6eedfcc4781` | `CONFIRMED DEFINITION / REQUIRED CHECK NEEDS VERIFICATION` | Defines deterministic local targets and read-only CI execution; a workflow definition or green run does not prove strict ruleset coupling |
-| Legacy architecture body | `docs/architecture/directory-rules.md`, blob `18653c00ba193a4afaa3e07a0924452807fb98ef` | `CONFIRMED STILL PRESENT` | Read-only compatibility body; must not receive independent Directory Rules edits |
-| Tombstone and physical deletion | No accepted tombstone migration or retirement evidence was verified in this status review | `HOLD` | Requires separate migration PR, reference closure, zero writers, zero consumers, link closure, and retirement receipt |
-| ADR inventory parity | Canonical `docs/adr/INDEX.md`, blob `938c5894c36b99e14810918e2c550ab0e92d53b1`, records 1 accepted and 33 proposed; `docs/adr/README.md` and `docs/registers/ADR_INDEX.md` still say 29 proposed | `DRIFT / NEEDS RECONCILIATION` | Summary drift cannot promote, reject, supersede, or otherwise alter any ADR status |
+| Legacy architecture path | `docs/architecture/directory-rules.md`, blob `9f70679c61dba2df46fd85d780f115fee6b59007` | `CONFIRMED TOMBSTONE PRESENT` | Bounded read-only compatibility tombstone; all current interpretation, citation, authoring, amendment, and review use the canonical doctrine path |
+| Physical deletion | No zero-writer, zero-consumer, link-closure, and retirement-receipt evidence was verified in this status review | `HOLD` | The tombstone does not authorize physical deletion or close repository or external consumers |
+| ADR inventory parity | Canonical `docs/adr/INDEX.md`, blob `0c143676dfd3c1bda16cb44398c5ad5d4a49cf67`, records 4 accepted and 35 proposed numbered records; `docs/adr/README.md` still says 3 accepted and 34 proposed, while `docs/registers/ADR_INDEX.md` remains at an older 37-record summary | `DRIFT / NEEDS RECONCILIATION` | Summary drift cannot promote, reject, supersede, or otherwise alter any ADR status |
 | Independent stewardship | No independently verified documentation-governance steward was established in this status review | `NEEDS VERIFICATION` | The transparent single-owner bootstrap exception remains open and is not silently upgraded |
 
 ### 6A.1 Non-effects
@@ -389,11 +399,10 @@ The smallest dependency-ordered follow-ups are:
 
 1. verify exact-head validator/workflow results and strict required-check coupling without weakening inherited holds;
 2. reconcile the stale ADR landing-page and cross-register summary counts without changing any record status;
-3. reduce the 138 exact inherited topology finding groups without baseline growth, mutation, or deadline extension;
-4. produce a current reference-and-fragment inventory for the legacy architecture path;
-5. submit the separate read-only tombstone migration with exact old-blob, anchor mapping, rollback, and consumer evidence;
-6. keep physical deletion held until zero-writer, zero-consumer, link-closure, and retirement-receipt evidence exists;
-7. establish or explicitly defer independent post-bootstrap stewardship review.
+3. reduce the 127 exact inherited topology finding groups without baseline growth, mutation, or deadline extension;
+4. produce a current reference-and-fragment inventory for the legacy architecture path and retain compatibility mappings while closure remains open;
+5. keep physical deletion held until zero-writer, zero-consumer, link-closure, and retirement-receipt evidence exists;
+6. establish or explicitly defer independent post-bootstrap stewardship review.
 
 ## 7. Rollback Plan
 
@@ -431,8 +440,8 @@ The smallest dependency-ordered follow-ups are:
 - Which legacy section anchors require explicit compatibility mapping rather than direct replacement?
 - Which repository-native command, workflow set, and required-check projection constitute the complete current-main Directory Governance enforcement ratchet?
 - Which exact check names are strictly required on `main`, and what evidence proves that the ruleset is current rather than merely that workflow files exist?
-- What reviewed sequence will reduce all 139 inherited topology finding groups before 2026-11-10 without converting the baseline into permanent waiver authority?
-- When will the ADR landing page and cross-register summary be reconciled from 29 to 33 proposed records without changing any source ADR status?
+- What reviewed sequence will reduce all 127 inherited topology finding groups before 2026-11-10 without converting the baseline into permanent waiver authority?
+- When will the ADR landing page and cross-register summaries be reconciled to the canonical 4 accepted / 35 proposed numbered-record inventory without changing any source ADR status?
 - Should the full legacy body be retained indefinitely when external-consumer closure cannot be proven, even after all repository-internal references move?
 
 ## 9. Acceptance Gates
@@ -450,13 +459,13 @@ The smallest dependency-ordered follow-ups are:
 > [!NOTE]
 > The post-adoption implementation record does not retroactively alter these ratification gates. Machine projection and validator presence are implementation evidence, not additional acceptance authority.
 
-### 9.1 v1.3 status-review checks
+### 9.1 v1.4 status-review checks
 
 - [x] The adopted doctrine remains SHA-256 `44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e` and Git blob `fd49a0b83e55cef52c1124281f093e263526898d`.
-- [x] The legacy architecture body remains exact blob `18653c00ba193a4afaa3e07a0924452807fb98ef`; the Path Alias Register remains `OPEN` / `PARTIAL`; no tombstone or deletion is claimed.
-- [x] The Root Registry, `PathDecisionRecord`, Path Alias Register, Domain Lane Register, and Cross-Domain Seam Register remain byte-identical to the v1.1 status review.
-- [x] The 20-rule topology validator, 138-entry implementation-waiver baseline, validator-registry entry, Make targets, focused tests, and aggregate workflow definition are present.
-- [x] Canonical ADR index truth is separated from stale summary prose: ADR-0029 remains the only accepted numbered record; the other 33 remain proposed.
+- [x] The legacy architecture path is a bounded read-only tombstone at blob `9f70679c61dba2df46fd85d780f115fee6b59007`; the Path Alias Register remains `OPEN` / `PARTIAL`, so consumer closure and physical deletion are not claimed.
+- [x] The Root Registry, `PathDecisionRecord`, Domain Lane Register, and Cross-Domain Seam Register remain at their v1.3-recorded blobs; the Path Alias Register is updated to project the tombstone without creating retirement authority.
+- [x] The 20-rule topology validator and 127-entry implementation-waiver baseline are present; no claim is made that the baseline confers conformance, migration, or deletion authority.
+- [x] Canonical ADR index truth is separated from stale summary prose: the canonical index records 4 accepted and 35 proposed numbered ADRs; summary pages remain a separate reconciliation item.
 - [ ] Hosted exact-head results and strict required-check/ruleset coupling are pending review evidence.
 - [ ] Inherited topology-warning closure, independent stewardship, complete consumer/reference closure, tombstoning, and physical deletion remain open or held.
 
@@ -470,5 +479,6 @@ The smallest dependency-ordered follow-ups are:
 | 2026-08-08 | accepted | Added append-only post-adoption implementation-status record; accepted decision and deletion hold unchanged | [#2193](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/2193) |
 | 2026-08-13 | accepted | Refreshed the append-only status ledger for topology-ratchet and ADR-inventory drift; accepted decision and deletion hold unchanged | [#2741](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/2741) |
 | 2026-08-14 | accepted | Recorded monotonic topology-baseline convergence from 139 to 138 warnings; accepted decision and deletion hold unchanged | [#2769](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/2769) |
+| 2026-09-13 | accepted | Reconciled current-main tombstone and 127-entry topology-baseline evidence; accepted decision, consumer-closure hold, and deletion hold unchanged | Pending review |
 
 [Back to top](#top)
