@@ -3,7 +3,7 @@ doc_id: kfm://doc/adr-0022-catalog-matrix-stac-dcat-prov-must-agree
 title: ADR-0022 — Catalog Matrix · STAC + DCAT + PROV Must Agree
 type: adr
 adr_id: ADR-0022
-version: v1.3
+version: v1.4
 status: proposed
 effective_decision_status: proposed
 owners:
@@ -23,7 +23,7 @@ reviewers_required:
   - Policy and validation stewards
   - At least one affected domain steward
 created: 2026-05-09
-updated: 2026-08-13
+updated: 2026-09-13
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
@@ -35,9 +35,9 @@ superseded_by: []
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 160938b3f4717b6f2551b3430ab5c08f9b33cecb
-  base_tree: 0a24e934e17d00b3cf8062bce65a4b59c07d65c1
-  target_prior_blob: 1fba0d90c1bf3992b7df865b4ef774b6a93068d7
+  base_commit: 1673ee1dd0d9b1414c1f478821f492834605de07
+  base_tree: "direct file-content readback at main@1673ee1dd0d9b1414c1f478821f492834605de07"
+  target_prior_blob: b8b91e15cc345b55eb0dcd278f2a731cbfc4407f
   adr_index_blob: 938c5894c36b99e14810918e2c550ab0e92d53b1
   adr_0001_blob: ed6f258f8d9ea152996570768a31666953e4a809
   adr_0011_blob: d67c5c5d4cc70f51ca172651d28aad9a60fa4d41
@@ -119,6 +119,7 @@ notes:
   - "The latest observed main runs for those four workflows failed receipt-integrity validation after their focused tests and fixture replay passed; hosted enforcement therefore remains on hold."
   - "The central validator registry does not include the catalog-closure validators in focused, release-dry-run, or full profiles, and the Makefile catalog target remains a TODO marker."
   - "ADR-0011 and ADR-0022 preserve CatalogMatrix as a catalog descriptor while validation reports/proofs, policy decisions, review records, promotion decisions, and release manifests remain distinct authority families."
+  - "v1.4 is a same-path currentness refresh against main@1673ee1dd0d9b1414c1f478821f492834605de07. It records direct source readback of the broad contract and placeholder schema, the additive closure profile and closed schema, the generic-validator stub, the profile validator, and the workflow definition. No catalog generation, validator execution, workflow run, source admission, promotion, release, deployment, or publication operation was executed."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -446,6 +447,18 @@ The broad shared schema does not enforce this shape. Additive profiles enforce b
 | Domain schemas and stubs | **CONFIRMED 13 domain schemas and 13 tiny validator stubs** | Domain surfaces exist, but convergence on the broad contract and executable shared-core reuse are not proven. |
 | Release closure resolver | **PARTIAL / proposed** | `CatalogClosurePacket` supplies a bounded readiness check but explicitly does not settle persistence, approve promotion, or release. |
 | Catalog/release operation | **UNKNOWN** | No emitted matrix, signed proof, promotion result, public route, or rollback drill was verified here. |
+
+### Bounded v1.4 current readback
+
+This is a repository file-content readback at `main@1673ee1dd0d9b1414c1f478821f492834605de07`, not proof that a catalog was generated, STAC/DCAT/PROV records were emitted, an agreement check ran, a source was admitted, or a candidate was promoted, released, deployed, or published.
+
+| Surface | Verified current source posture | Safe conclusion |
+|---|---|---|
+| [Broad contract](../../contracts/data/catalog_matrix.md) and [broad schema](../../schemas/contracts/v1/data/catalog_matrix.schema.json) | The contract is draft and describes a catalog descriptor; the schema requires only `id`, permits additional properties, and names an absent validator path. | Broad object meaning and placeholder shape only; not enforceable catalog agreement. |
+| [Generic validator](../../tools/validators/validate_catalog_matrix.py) | The top-level file raises `NotImplementedError("Greenfield placeholder")`. | No generic CatalogMatrix validation is implemented by this entrypoint. |
+| [STAC/DCAT/PROV closure profile](../../contracts/data/catalog_matrix_closure_profile.md) and [closed schema](../../schemas/contracts/v1/data/catalog_matrix_closure_profile.schema.json) | The additive proposed profile binds an `artifact_id + digest + release_ref` tuple across three standard-specific records and requires bounded reference fields and profile-local decisions. | Candidate local alignment profile only; it does not establish policy, review, promotion, release, or public-use authority. |
+| [Closure validator](../../tools/validators/validate_catalog_matrix_closure.py) | The no-network validator states that `PASS` proves local schema and tuple alignment only and excludes catalog emission, evidence resolution, policy, review, release, publication, and authorization. | Deterministic local-check definition, not a run result or full-system closure proof. |
+| [Closure workflow](../../.github/workflows/catalog-matrix-closure.yml) | Repository workflow source is a path-scoped CI definition; it does not by itself prove current required-check configuration or hosted execution. | Workflow configuration only; no hosted-run claim is made by this refresh. |
 
 ### Current conflicts
 
@@ -814,10 +827,11 @@ A rollback MUST NOT rewrite STAC, DCAT, PROV, evidence, or release history to hi
 
 ## No-loss change ledger
 
-v1.3 preserves the v1.2 decision and all of its control families while correcting repository-state claims that became stale.
+v1.4 preserves the v1.3 decision and all of its control families while adding a bounded current-source readback without asserting runtime activity.
 
-| v1.2 content family | v1.3 disposition |
+| Prior content family | v1.4 disposition |
 |---|---|
+| v1.3 currentness, proposed status, and authority separation | Preserved; v1.4 adds only a current-main file-content boundary and source readback. |
 | Identity, tracked path, H1, ADR ID, and proposed status | Preserved exactly; edition advanced to v1.3. |
 | Decision scope and acceptance/enforcement separation | Preserved; profile implementation is now named as a third, non-authoritative layer. |
 | STAC/DCAT/PROV agreement rule | Preserved without weakening identity, digest, or release-reference closure. |
@@ -835,6 +849,10 @@ v1.3 preserves the v1.2 decision and all of its control families while correctin
 
 ### Corrected stale assertions
 
+| v1.3 scope | v1.4 disposition |
+|---|---|
+| Currentness statements inferred runtime activity from source presence | Clarified: repository source readback establishes definitions and file contents only, not execution, admission, promotion, release, deployment, or publication. |
+
 | v1.2 assertion | v1.3 evidence-backed correction |
 |---|---|
 | `tools/validators/catalog_closure/` was README-only | The lane now contains executable closure-packet and distribution-mapping validators; two additional executable profile validators exist at top level. |
@@ -843,7 +861,7 @@ v1.3 preserves the v1.2 decision and all of its control families while correctin
 | No resolver-like packet existed | `CatalogClosurePacket` supplies bounded readiness evaluation only; it is not a production resolver or release decision. |
 | Supersession metadata used `null` | Normalized to an empty list without changing the “none” meaning. |
 
-No object was migrated, no schema or validator was activated, no status was promoted, and no release/publication surface was changed by this documentation-only edition.
+No object was migrated, no schema or validator was activated, and no catalog-generation, validator, workflow, source-admission, promotion, release, deployment, or publication operation was executed by this documentation-only edition.
 
 [Back to top](#top)
 
