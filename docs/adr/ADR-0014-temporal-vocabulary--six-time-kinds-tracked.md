@@ -3,7 +3,7 @@ doc_id: kfm://doc/adr/0014-temporal-vocabulary
 adr_id: ADR-0014
 title: "ADR-0014 — Temporal Vocabulary: Six Time Kinds Tracked"
 type: adr
-version: v1.3
+version: v1.4
 status: proposed
 owners:
   - "NEEDS VERIFICATION — architecture decision owner"
@@ -20,7 +20,7 @@ reviewers_required:
   - Governed API and Explorer Web maintainers
   - Policy, validation, migration, and affected-domain reviewers
 created: 2026-05-11
-updated: 2026-08-14
+updated: 2026-09-13
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
@@ -67,6 +67,12 @@ inspection_boundary: >
   surfaces, and CODEOWNERS. No complete clone, exhaustive producer/consumer graph,
   database migration rehearsal, API/UI runtime request, policy evaluation, release,
   correction, rollback drill, deployment, or publication was exercised.
+current_reconciliation:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  main_commit: 475c410595ec796927c2685b98198104762a0a2f
+  adr_index_blob: 0c143676dfd3c1bda16cb44398c5ad5d4a49cf67
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  posture: proposed; conflict retained; no runtime or publication authority
 related:
   - docs/adr/README.md
   - docs/adr/INDEX.md
@@ -239,6 +245,17 @@ This ADR does not choose a winner, rename either family, or authorize migration.
 ---
 
 <a id="2-context"></a>
+
+## 1.5 v1.4 Current-Main Reconciliation
+
+- **CONFIRMED at `main@475c410595ec796927c2685b98198104762a0a2f`:** ADR-0014 remains `proposed`; the canonical ADR index records four accepted and thirty-five proposed numbered records overall.
+- **CONFIRMED:** the accepted Directory Rules bytes and their placement boundary are unchanged.
+- **CONFLICTED / NEEDS VERIFICATION:** the two materially different `TemporalAuthorityEnvelope` contract/schema families remain unresolved. This update neither selects a canonical family nor authorizes translation, migration, or runtime adoption.
+- **HOLD:** no current evidence in this ADR establishes six-kind production schema adoption, public API/UI behavior, source activation, policy/review closure, release, deployment, or publication.
+
+[Back to top](#top)
+
+---
 
 ## 2. Context
 
