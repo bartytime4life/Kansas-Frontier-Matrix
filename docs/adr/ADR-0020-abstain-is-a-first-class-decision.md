@@ -3,7 +3,7 @@ doc_id: kfm://doc/adr-0020-abstain-is-a-first-class-decision
 title: "ADR-0020 — Abstain Is a First-Class Decision"
 type: adr
 adr_id: ADR-0020
-version: v1.3
+version: v1.4
 status: proposed
 effective_decision_status: proposed
 owners:
@@ -22,7 +22,7 @@ reviewers_required:
   - Validation and CI stewards
   - Docs steward
 created: "2026-05-09"
-updated: "2026-08-14"
+updated: "2026-09-13"
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
@@ -31,6 +31,20 @@ responsibility: "Record the proposed first-class ABSTAIN semantics and their sep
 current_path: docs/adr/ADR-0020-abstain-is-a-first-class-decision.md
 supersedes: []
 superseded_by: []
+current_reconciliation:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  main_commit: 21dcad05435bc5e5227905ba1747aa616a6f3713
+  adr_index_blob: 0c143676dfd3c1bda16cb44398c5ad5d4a49cf67
+  runtime_response_contract_blob: ff3dfb3109820f5b511c72f8911bd3be071f2723
+  runtime_response_schema_blob: 8b86e7db8b18b65a56a4e639dfc54e1b2db93155
+  runtime_response_builder_blob: 5dacededc1bda64292259ba39b6387facafbd1e8
+  mock_adapter_blob: 04d37e59b14c9e3b85126cb3380b6221b44e26d1
+  governed_api_stub_blob: baf43e20fb399257ed7724b4111417f07cd8098a
+  runtime_policy_readme_blob: 80b63e7651429903385066b53c7fb41af3cd1298
+  runtime_policy_abstain_blob: 9c66097140933eba5aa7011653da12488035ad99
+  policy_gate_register_blob: bc8185b4762a947c742cf54a7ea4f2bf80670e21
+  finite_envelope_proof_blob: 70ca80226bf06c3b28b59096e3812312a00c03b6
+  posture: proposed; bounded fixtures and scaffolds only; semantic policy, live evidence, release, and publication held
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
@@ -107,6 +121,7 @@ related:
 tags: [kfm, adr, abstain, finite-outcomes, cite-or-abstain, decision-envelope, policy-decision, runtime-response-envelope, evidence-drawer, focus-mode, evidence, policy, trust-membrane, fail-closed]
 notes:
   - "v1.3 is a same-path documentation-only evidence refresh; source and effective decision status remain proposed."
+  - "v1.4 re-pins current-main evidence; source and effective decision status remain proposed, and bounded fixtures/scaffolds remain non-authoritative."
   - "Accepted ADR-0029 and docs/doctrine/directory-rules.md govern this same-path placement under docs/adr/."
   - "RuntimeResponseEnvelope now has a closed four-outcome fixture family, ANSWER-only evidence and precision requirements, a deterministic candidate builder, and substantive no-network proof tests."
   - "MockAdapter proves deterministic selection of prevalidated synthetic envelopes for all four outcomes; it does not decide which outcome is semantically correct."
@@ -143,6 +158,20 @@ notes:
 
 <a id="status"></a>
 
+## v1.4 Current-Main Reconciliation
+
+This documentation-only checkpoint re-pins the record to `main@21dcad05435bc5e5227905ba1747aa616a6f3713`. ADR-0020 remains **proposed** in the canonical ADR inventory; its finite-outcome semantics are not accepted policy or a release decision.
+
+Current repository reads confirm a draft/proposed `RuntimeResponseEnvelope` contract and schema with the closed `ANSWER | ABSTAIN | DENY | ERROR` shape, plus a deterministic local candidate builder, no-I/O MockAdapter, fixture proof, and fixture-only Governed API translation. These are bounded component artifacts: they neither resolve live evidence nor select a semantically correct outcome.
+
+The runtime policy directory still describes proposed, non-evaluated rule stubs, including the missing-evidence module, and the policy-gate register remains proposed, projection-only, implementation-absent, and empty. No accepted policy evaluator, live EvidenceBundle/citation resolver, accountability store, production decision route, release authority, deployment, or publication is established by this record or its referenced fixtures.
+
+**Non-effect:** this update does not approve a decision, activate policy, classify a live request, create a receipt, apply a lifecycle transition, release, deploy, publish, correct, withdraw, or roll back anything.
+
+[Back to top](#top)
+
+---
+
 ## Status
 
 | Field | Current value |
@@ -151,7 +180,7 @@ notes:
 | **Tracked path** | `docs/adr/ADR-0020-abstain-is-a-first-class-decision.md` |
 | **Source metadata** | `proposed` |
 | **Effective decision status** | `proposed` |
-| **Record edition** | `v1.3` — repository-evidence refresh; proposed decision preserved |
+| **Record edition** | `v1.4` — current-main evidence refresh; proposed decision preserved |
 | **Decision class** | Finite outcome semantics, cite-or-abstain behavior, safe explanations, composition, accountability linkage, and client trust-state handling |
 | **Current repository maturity** | Four-outcome shape and bounded synthetic behavior are proved; accepted decision logic, policy execution, live evidence/citation closure, persisted accountability, and production operation are not established |
 | **Implementation effect of this revision** | Documentation only |
@@ -176,7 +205,7 @@ A component can graduate without this ADR being accepted. This ADR could be acce
 
 ## Evidence boundary
 
-This revision is grounded in current repository bytes at `main@103323d7d2916c650e8e9829dd1073ee474d61f0`.
+This revision is grounded in current repository bytes at `main@21dcad05435bc5e5227905ba1747aa616a6f3713`.
 
 ### Truth labels
 
@@ -1052,7 +1081,7 @@ Rollback must never default to `ANSWER`, expose provider/internal diagnostics, s
 
 ## Verification checklist
 
-| Check | Result at `main@103323d7d2916c650e8e9829dd1073ee474d61f0` |
+| Check | Result at `main@21dcad05435bc5e5227905ba1747aa616a6f3713` |
 |---|---|
 | ADR identity, exact path, and index row | **CONFIRMED** |
 | Source and effective decision status | **CONFIRMED proposed** |
@@ -1135,7 +1164,7 @@ Remote file reads and hosted checks can prove tracked shape, deterministic synth
 
 ## Last reviewed
 
-**2026-08-14** — repository-grounded review against `main@103323d7d2916c650e8e9829dd1073ee474d61f0`.
+**2026-09-13** — repository-grounded review against `main@21dcad05435bc5e5227905ba1747aa616a6f3713`.
 
 Review again when:
 

@@ -52,7 +52,7 @@ notes:
   - v1.1 fixed metadata-comment safety, path wording, E3/E5 state-machine ambiguity, and evidence boundaries.
   - v1.2 confirms same-path repository identity, repairs related references, aligns current contract vocabulary, and surfaces implementation conflicts without changing decision status.
   - v1.3 refreshes the evidence snapshot, records the placeholder-only review worker and unresolved object/receipt-family conflicts, and adds explicit acceptance gates without changing decision status.
-  - v1.4 re-pins current-main evidence; the five exits remain proposed and all lifecycle/release/publication actions remain held.
+
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -117,6 +117,17 @@ The modernization baseline is pinned to `main@21dcad05435bc5e5227905ba1747aa616a
 > Current surfaces are related but not identical: the lane README permits governed return, advance, restriction, denial, or continued hold; the runbook clears standard cases to `WORK` and separately describes retirement or escalation; the worker README records a `QuarantineRecord` versus `quarantine_case_record` naming conflict. Until an accepted decision and aligned contract, schema, runbook, policy, validators, fixtures, tests, and review bindings resolve those differences, the five exits are **PROPOSED**, not current executable behavior.
 
 ---
+
+## Bounded v1.4 current readback
+
+This is a repository file-content readback at `main@21dcad05435bc5e5227905ba1747aa616a6f3713`, not evidence that an artifact entered or exited quarantine, that a review occurred, or that a release/correction operation ran.
+
+| Surface | Verified current source posture | Safe conclusion |
+|---|---|---|
+| [QUARANTINE root](../../data/quarantine/README.md) and [handling runbook](../runbooks/QUARANTINE_HANDLING.md) | Quarantine remains a draft fail-closed, no-direct-public-path boundary; the runbook is also draft and retains proposed schema-home language. | Documented hold and handling intent; not an executable exit process or an authoritative case record. |
+| [Quarantine Review Worker](../../apps/workers/src/quarantine_review_worker/README.md) | Current worker-lane README describes a repository-grounded, placeholder-only and inert candidate-review boundary. | No review worker implementation or automated exit authority is established. |
+| [Lifecycle validator index](../../tools/validators/lifecycle/README.md) | Draft routing index describes lifecycle/quarantine/rollback awareness and is explicitly non-authoritative. | Validator routing documentation; not evidence of a five-exit validator or successful transition. |
+| [PromotionDecision](../../contracts/release/promotion_decision.md), [PolicyDecision](../../contracts/policy/policy_decision.md), [CorrectionNotice](../../contracts/correction/correction_notice.md), and [RollbackCard](../../contracts/release/rollback_card.md) | These remain draft/proposed semantic-contract surfaces, with promotion and rollback explicitly fail-closed/non-executing. | Candidate vocabulary for later governed transitions; no approval, correction, rollback, or release effect. |
 
 ## 1. Context
 
@@ -543,6 +554,7 @@ QUARANTINE
 | --- | --- | --- | --- |
 | `v1.1` | 2026-05-15 | Clarified metadata safety, path wording, E3/E5 state-machine intent, and evidence boundaries. | None; remained `proposed`. |
 | `v1.2` | 2026-07-24 | Confirmed same-path repository identity; repaired references and removed the unverified badge strip; aligned current proposed contract vocabularies; removed unsupported EvidenceBundle field claims; recorded runbook and enforcement gaps. | None; remained `proposed`. |
+| `v1.4` | 2026-09-13 | Refreshed the currentness boundary against `main@21dcad05435bc5e5227905ba1747aa616a6f3713`; added bounded source readback for the quarantine root/runbook, placeholder review worker, lifecycle-validator routing index, and proposed promotion/correction/rollback/policy contracts. No case record, review, transition, release, deployment, or publication operation was run. | None; remains `proposed`. |
 | `v1.3` | 2026-08-13 | Refreshed the evidence snapshot; recorded the placeholder-only review worker, case-name and receipt-family conflicts, effective review routing, explicit non-goals, and acceptance gates. | None; remains `proposed`. |
 
 <p align="right"><a href="#top">Back to top</a></p>
