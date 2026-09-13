@@ -39,16 +39,6 @@ evidence_snapshot:
   base_commit: 52a6c7b55fc473c813bde6ec413bcda81259e809
   base_tree: a95e7d66d0606bab8fb44e064fb9673e960e0618
   target_prior_blob: 40b0f47b87d584040803ed76aa6b31f5204b7fca
-current_reconciliation:
-  repository: bartytime4life/Kansas-Frontier-Matrix
-  main_commit: 475c410595ec796927c2685b98198104762a0a2f
-  adr_index_blob: 0c143676dfd3c1bda16cb44398c5ad5d4a49cf67
-  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
-  catalog_readme_blob: 765dd1be99aa95d4377931344c05751b751243ec
-  release_readme_blob: 60b6a656f8f2b765616bba7223f51c25863c7172
-  catalog_matrix_closure_validator_blob: 2dc376e928a4fffdf4061828d830cc4072dfbdc5
-  catalog_matrix_claim_closure_validator_blob: 30f71b796cae41fed503dd2f82b2b0c676e0a206
-  release_manifest_validator_blob: 00307dc0d5e2c3867a229076e3702f8111455425
   adr_index_blob: 938c5894c36b99e14810918e2c550ab0e92d53b1
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   directory_rules_sha256: sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e
@@ -73,6 +63,16 @@ current_reconciliation:
   release_manifest_schema_blob: c76cd9bdddb34cf33c8eb62801269553726c5923
   release_dry_run_workflow_blob: 7caf1d188bd31d11e159190248e5543b1d2fd36f
   adr_0022_blob: 1fba0d90c1bf3992b7df865b4ef774b6a93068d7
+current_reconciliation:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  main_commit: 475c410595ec796927c2685b98198104762a0a2f
+  adr_index_blob: 0c143676dfd3c1bda16cb44398c5ad5d4a49cf67
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  catalog_readme_blob: 765dd1be99aa95d4377931344c05751b751243ec
+  release_readme_blob: 60b6a656f8f2b765616bba7223f51c25863c7172
+  catalog_matrix_closure_validator_blob: 2dc376e928a4fffdf4061828d830cc4072dfbdc5
+  catalog_matrix_claim_closure_validator_blob: 30f71b796cae41fed503dd2f82b2b0c676e0a206
+  release_manifest_validator_blob: 00307dc0d5e2c3867a229076e3702f8111455425
 related:
   - docs/adr/README.md
   - docs/adr/INDEX.md
