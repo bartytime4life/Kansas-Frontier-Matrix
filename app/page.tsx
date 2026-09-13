@@ -252,7 +252,7 @@ type MapLibreRuntimeProbe = {
   error: string | null;
 };
 type DrawerView = "evidence" | "metadata" | "lineage" | "focus";
-type LeftPanelMode = "views" | "layers" | "places" | "stories";
+type LeftPanelMode = "views" | "layers" | "live" | "places" | "stories";
 type MeasureMode = "point" | "distance" | "area" | null;
 type PlaybackSpeed = 0.5 | 1 | 2;
 type NoaaRadarFrameLoadState = "idle" | "loading" | "ready" | "error";
@@ -3085,15 +3085,9 @@ export default function Home() {
   }, [dismissMapUtilityWithoutFocus, isCompact]);
 
   const openLiveContextCatalog = useCallback(() => {
-    openAtlasPanel("layers");
+    openAtlasPanel("live");
     announce("Opened live operational context controls");
-    window.setTimeout(() => {
-      document.getElementById("official-context-catalog")?.scrollIntoView({
-        behavior: reducedMotion ? "auto" : "smooth",
-        block: "start",
-      });
-    }, 0);
-  }, [announce, openAtlasPanel, reducedMotion]);
+  }, [announce, openAtlasPanel]);
 
   const activateMapUtilityView = useCallback((nextView: MapUtilityView, focusTab = false) => {
     setMapUtilityView(nextView);
@@ -6643,14 +6637,15 @@ export default function Home() {
       <main inert={primaryWorkspace !== "map"} className="explorer-shell" data-left={leftOpen} data-right={rightOpen} data-timeline={timelineOpen}>
         <aside ref={leftPanelRef} className="layer-panel" data-panel-mode={leftPanelMode} aria-label="Living Atlas navigation" aria-hidden={!leftOpen} inert={!leftOpen} aria-modal={isCompact && leftOpen || undefined} role={isCompact && leftOpen ? "dialog" : undefined}>
           <div className="panel-heading">
-            <div><p className="panel-kicker">{leftPanelMode === "views" ? "LIVING ATLAS" : leftPanelMode === "layers" ? "LAYER CATALOG" : leftPanelMode === "places" ? "PLACES" : "STORY ATLAS"}</p><h1>{leftPanelMode === "views" ? "Investigate Kansas" : leftPanelMode === "layers" ? "Layer Catalog" : leftPanelMode === "places" ? "Places + trails" : "Guided stories"}</h1></div>
+            <div><p className="panel-kicker">{leftPanelMode === "views" ? "LIVING ATLAS" : leftPanelMode === "live" ? "LIVE LAYER DATA" : leftPanelMode === "layers" ? "DOMAIN LAYERS" : leftPanelMode === "places" ? "PLACES" : "STORY ATLAS"}</p><h1>{leftPanelMode === "views" ? "Investigate Kansas" : leftPanelMode === "live" ? "Live layer data" : leftPanelMode === "layers" ? "Domain layers" : leftPanelMode === "places" ? "Places + trails" : "Guided stories"}</h1></div>
             <button className="icon-close" type="button" onClick={closeLeftPanel} aria-label="Close Explorer navigation">×</button>
           </div>
-          <p className="panel-intro">{leftPanelMode === "views" ? "Start from a named question, then inspect the map, time, evidence, and report together." : leftPanelMode === "layers" ? "Start with real Kansas sources. Adjust each layer here, download its data, or propose an update for review." : leftPanelMode === "places" ? "Save complete, device-local investigations and revisit them as a trail." : "Pause on a site-local chapter, inspect its evidence state, and keep the boundary visible."}</p>
+          <p className="panel-intro">{leftPanelMode === "views" ? "Start from a named question, then inspect the map, time, evidence, and report together." : leftPanelMode === "live" ? "Manage bounded current-source context and see its freshness, availability, and historical-frame hold state." : leftPanelMode === "layers" ? "Browse KFM domain layers against the committed map time frame. A missing frame stays unavailable; it is never carried forward." : leftPanelMode === "places" ? "Save complete, device-local investigations and revisit them as a trail." : "Pause on a site-local chapter, inspect its evidence state, and keep the boundary visible."}</p>
           <Link className="event-sidebar-link" href="/observatory">Event Observatory · 24-hour archive calendar, radar, smoke & rivers ↗</Link>
           <nav className="left-panel-tabs" aria-label="Living Atlas sections">
             <button type="button" aria-current={leftPanelMode === "views" ? "page" : undefined} data-active={leftPanelMode === "views"} onClick={() => setLeftPanelMode("views")}>Views <b>{LIVING_ATLAS_VIEWS.length}</b></button>
-            <button type="button" aria-current={leftPanelMode === "layers" ? "page" : undefined} data-active={leftPanelMode === "layers"} onClick={() => setLeftPanelMode("layers")}>Layers <b>{visibleOfficialCount}/{OFFICIAL_CONTEXT_SOURCES.length}</b></button>
+            <button type="button" aria-current={leftPanelMode === "live" ? "page" : undefined} data-active={leftPanelMode === "live"} onClick={() => setLeftPanelMode("live")}>Live data <b>{visibleOfficialCount}/{OFFICIAL_CONTEXT_SOURCES.length}</b></button>
+            <button type="button" aria-current={leftPanelMode === "layers" ? "page" : undefined} data-active={leftPanelMode === "layers"} onClick={() => setLeftPanelMode("layers")}>Domains <b>{visibleCount}/{LAYER_REGISTRY.length}</b></button>
             <button type="button" aria-current={leftPanelMode === "places" ? "page" : undefined} data-active={leftPanelMode === "places"} onClick={() => setLeftPanelMode("places")}>Places <b>{savedWorkspaces.length}</b></button>
             <button type="button" aria-current={leftPanelMode === "stories" ? "page" : undefined} data-active={leftPanelMode === "stories"} onClick={() => setLeftPanelMode("stories")}>Stories <b>1</b></button>
           </nav>
@@ -6688,8 +6683,15 @@ export default function Home() {
             <div className="story-mode-steps"><span>01 · County locator</span><span>02 · Water context</span><span>03 · Time boundary</span><span>04 · Evidence outcome</span></div>
           </section>
 
-          <div className="layer-catalog-body" hidden={leftPanelMode !== "layers"}>
+          <div className="layer-catalog-body" hidden={leftPanelMode !== "layers" && leftPanelMode !== "live"}>
+          <div hidden={leftPanelMode !== "layers"}>
           <label className="catalog-search"><span aria-hidden="true">⌕</span><span className="sr-only">Search Layer Catalog</span><input type="search" value={layerQuery} onChange={(event) => setLayerQuery(event.target.value)} placeholder="Filter layers and datasets" /></label>
+
+          <section className="catalog-time-anchor" id="catalog-time-anchor" data-historical={year !== OFFICIAL_CONTEXT_PRESENT_FRAME} aria-labelledby="catalog-time-anchor-title">
+            <header><div><span>COMMITTED MAP TIME</span><h2 id="catalog-time-anchor-title">{temporalScopeLabel}</h2></div><button type="button" onClick={() => { setTimelineOpen(true); setLeftOpen(false); setRightOpen(false); dismissMapUtilityWithoutFocus(); announce(`Opened the map timeline at ${temporalScopeLabel}`); }}>Open timeline</button></header>
+            <p>{year === OFFICIAL_CONTEXT_PRESENT_FRAME ? "Domain layers resolve against the current committed map frame. Each layer keeps its own declared time rule and source clock." : "Domain layers resolve only against this historical map frame. Incompatible records stay unavailable; the map does not carry a current or prior record into the selected time."}</p>
+            <dl><div><dt>TIME MODE</dt><dd>{temporalMode.replaceAll("-", " ")}</dd></div><div><dt>LIVE CONTEXT</dt><dd>{withheldOfficialCount > 0 ? `${withheldOfficialCount} selected source${withheldOfficialCount === 1 ? "" : "s"} held` : "Operational present available"}</dd></div></dl>
+          </section>
 
           <details className="legacy-layer-index"><summary>Legacy examples & diagnostics</summary><p>These older interaction examples are separate from today’s real source baseline.</p>
           <section className="active-layers" aria-labelledby="active-title">
@@ -6698,11 +6700,9 @@ export default function Home() {
           </section>
 
           <nav className="catalog-section-jump" aria-label="Layer Catalog shortcuts">
-            <a href="#catalog-layer-stack"><span>Legacy examples</span><b>Optional controls</b></a>
-            <a href="#official-context-catalog"><span>Real data layers</span><b>{OFFICIAL_CONTEXT_SOURCES.length} connections</b></a>
+            <a href="#catalog-time-anchor"><span>Map time frame</span><b>{temporalScopeLabel}</b></a>
             <a href="#catalog-domain-index-title"><span>All domains</span><b>{CATEGORY_ORDER.length} layer groups</b></a>
-            <a href="#priority-context-title"><span>Priority context</span><b>Earthquake · water · smoke</b></a>
-            <a href="#official-context-catalog"><span>All source controls</span><b>{OFFICIAL_CONTEXT_SOURCES.length} connections</b></a>
+            <a href="#catalog-layer-stack"><span>Layer controls</span><b>{visibleCount} active</b></a>
           </nav>
 
           <section className="catalog-domain-index" aria-labelledby="catalog-domain-index-title">
@@ -6720,13 +6720,14 @@ export default function Home() {
                 </button>;
               })}
             </div>
-            <p>These are the site-local demonstration layers. Official live context—earthquakes, gauges, smoke, radar, watersheds, and terrain—is kept in the separate source-controls section below.</p>
+            <p>These are the site-local domain layers. Live operational context—earthquakes, gauges, smoke, radar, watersheds, and terrain—has its own Live data menu and is held outside historical frames.</p>
           </section>
 
           </details>
-          <section className="official-context-catalog" id="official-context-catalog" aria-labelledby="official-context-title">
+          </div>
+          <section className="official-context-catalog" id="official-context-catalog" hidden={leftPanelMode !== "live"} aria-labelledby="official-context-title">
             <header><div><span>OFFICIAL OPERATIONAL CONTEXT</span><h2 id="official-context-title">Real Kansas source connections</h2><small className="official-context-registry-summary">{SITE_REGISTRY_COUNTS.features} features · {SITE_REGISTRY_COUNTS.connections} connections · {SITE_REGISTRY_COUNTS.actions} actions</small></div><strong>{withheldOfficialCount > 0 ? `${visibleOfficialCount} SELECTED · HELD` : `${visibleOfficialCount}/${OFFICIAL_CONTEXT_SOURCES.length} ON`}</strong></header>
-            <p>Live and current official sources may be drawn for orientation. They stay outside KFM admission, reports, exports, and EvidenceBundles.</p>
+            <p>{year === OFFICIAL_CONTEXT_PRESENT_FRAME ? "Live and current official sources may be drawn for orientation. They stay outside KFM admission, reports, exports, and EvidenceBundles." : `The map is committed to ${temporalScopeLabel}; selected current-only sources are held until the operational-present frame instead of being relabeled as historical data.`}</p>
             <div className="official-context-pulse" aria-label="Official data connection status">
               <div><span><small>LOADED FEATURES</small><strong>{officialFeatureCount.toLocaleString("en-US")}</strong></span><span><small>CONNECTIONS</small><strong>{officialReadyCount}/{OFFICIAL_CONTEXT_SOURCES.length} checked</strong></span><span><small>LAST RETRIEVAL</small><strong>{officialLatestRetrievedAt ? new Date(officialLatestRetrievedAt).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) : "Not yet"}</strong></span></div>
               <nav aria-label="Official data actions"><button type="button" disabled={visibleRefreshableOfficialCount === 0 || officialLoadingCount > 0} onClick={refreshVisibleOfficialContext}>{officialLoadingCount > 0 ? "Refreshing…" : "Refresh visible"}</button><button type="button" disabled={visibleOfficialCount === 0} onClick={hideAllOfficialContext}>Hide all</button></nav>
@@ -6789,6 +6790,7 @@ export default function Home() {
             <footer><code>OFFICIAL SOURCE → FIXED ADAPTER / WMS → MAPLIBRE</code><span>Evidence held at admission, release, and EvidenceBundle gates · <a href="https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3393" target="_blank" rel="noreferrer">governance issue #3393 ↗</a></span></footer>
           </section>
 
+          <div hidden={leftPanelMode !== "layers"}>
           <section className="catalog-quick-lenses" aria-labelledby="quick-lenses-title">
             <div className="section-row"><h2 id="quick-lenses-title">Quick lenses</h2><span>Layers + time + style</span></div>
             <div>{MAP_VIEW_PROFILES.map((profile) => <button key={profile.id} type="button" aria-pressed={activeViewProfileId === profile.id} onClick={() => applyViewProfile(profile)}><strong>{profile.title}</strong><small>{profile.visibleLayerIds.length} layers · {profile.year}</small></button>)}</div>
@@ -6814,7 +6816,7 @@ export default function Home() {
               return <section className="catalog-group" key={category} id={`catalog-category-${catalogCategorySlug(category)}`} aria-labelledby={`catalog-category-${catalogCategorySlug(category)}-title`}><header className="catalog-group-heading"><h2 id={`catalog-category-${catalogCategorySlug(category)}-title`}>{category} <span>{layers.length}/{categoryLayers.length}</span></h2><div><button type="button" onClick={() => setLayerGroupVisibility(layers.map((layer) => layer.id), true)}>Show all</button><button type="button" onClick={() => setLayerGroupVisibility(layers.map((layer) => layer.id), false)}>Hide all</button></div></header>{layers.map((layer) => {
                 const noData = Boolean(layer.temporal && !layer.data.features.some((feature) => isFeatureAvailableForTemporalQuery(layer, feature.properties.year, temporalQuery)));
                 const expanded = expandedLayers.has(layer.id);
-                return <article className="layer-row" key={layer.id} data-active={visibility[layer.id]} data-state={sourceStates[layer.id]}>
+                return <article className="layer-row" key={layer.id} data-active={visibility[layer.id]} data-state={sourceStates[layer.id]} data-time-state={noData ? "unavailable" : "available"}>
                   <div className="layer-primary">
                     <label className="visibility-switch"><input type="checkbox" aria-label={`${visibility[layer.id] ? "Hide" : "Show"} ${layer.title}`} checked={visibility[layer.id]} onChange={(event) => setVisibility((current) => ({ ...current, [layer.id]: event.target.checked }))} /><span aria-hidden="true" /></label>
                     <i className={`legend-swatch ${layer.legend[0].shape}`} style={{ "--swatch": layer.legend[0].color } as React.CSSProperties} aria-hidden="true" />
@@ -6839,6 +6841,7 @@ export default function Home() {
           </details>
           <div className="panel-footer-actions"><button type="button" onClick={resetExplorer}>Reset map</button><Link href="/data">Propose a dataset</Link></div>
           </div>
+          </div>
         </aside>
 
         <section className="map-stage" data-live-dock={liveDockVisible} data-radar-loop={showRadarDock} aria-label="Kansas MapLibre Explorer">
@@ -6857,7 +6860,7 @@ export default function Home() {
               <span data-runtime={runtime.kind}><i /> {runtime.kind === "ready" ? "MAP READY" : runtime.kind === "loading" ? "MAP STARTING" : runtime.kind === "degraded" ? "MAP DEGRADED" : runtime.kind === "unsupported" ? "MAP UNSUPPORTED" : "MAP UNAVAILABLE"}</span>
               <small>{BASEMAPS[basemap].title} · {mapRepresentationLabel}</small>
             </div>
-            <div className="map-command-actions"><Link className="event-entry-link" href="/observatory">24-hour archive ↗</Link><button type="button" onClick={() => openAtlasPanel("layers")}>Layers</button><button type="button" onClick={openLiveContextCatalog}>Live data</button><button type="button" onClick={() => openMapUtility("navigate")}>Map controls</button><button type="button" onClick={saveCurrentWorkspace}>Save view</button><button type="button" onClick={() => openPrimaryWorkspace("reports", true)}>Build report</button></div>
+            <div className="map-command-actions"><Link className="event-entry-link" href="/observatory">24-hour archive ↗</Link><button type="button" onClick={() => openAtlasPanel("layers")}>Domains</button><button type="button" onClick={openLiveContextCatalog}>Live data</button><button type="button" onClick={() => openMapUtility("navigate")}>Map controls</button><button type="button" onClick={saveCurrentWorkspace}>Save view</button><button type="button" onClick={() => openPrimaryWorkspace("reports", true)}>Build report</button></div>
           </div>
           <nav className="map-view-mode-strip" aria-label="Map representation">
             <span className="map-view-mode-heading">MAP REPRESENTATION <small>{mapRepresentationLabel}</small></span>
@@ -6872,7 +6875,7 @@ export default function Home() {
             <button className="map-control-launch" type="button" aria-pressed={timelineOpen} onClick={() => setTimelineOpen((open) => !open)}><strong>Time</strong><b>{formatTimelineStep(year)}</b></button>
             <Link className="map-control-launch" href="/observatory">Daily archive ↗</Link>
             <button className="map-control-launch" type="button" onClick={() => openAtlasPanel("layers")} aria-pressed={leftOpen && leftPanelMode === "layers"}>
-              <span aria-hidden="true">≡</span><strong>Layers</strong><b>{visibleCount}</b>
+              <span aria-hidden="true">≡</span><strong>Domains</strong><b>{visibleCount}</b>
             </button>
             <button className="map-control-launch map-control-launch-live" type="button" onClick={openLiveContextCatalog} aria-pressed={visibleOfficialCount > 0}>
               <span aria-hidden="true">⌁</span><strong>Live data</strong><b>{visibleOfficialCount}</b>
@@ -7113,7 +7116,7 @@ export default function Home() {
             <div className="map-tool-group map-tool-group-workbench" aria-label="KFM workbench shortcuts">
               <span className="map-tool-group-label">WORKBENCH</span>
               <button type="button" onClick={() => openAtlasPanel("views")} aria-pressed={leftOpen && leftPanelMode === "views"} aria-label="Open Living Atlas views" data-tooltip="Views"><span className="map-tool-glyph" aria-hidden="true">▦</span><span className="map-tool-label">Views</span></button>
-              <button type="button" onClick={() => openAtlasPanel("layers")} aria-pressed={leftOpen && leftPanelMode === "layers"} aria-label="Open Layer Catalog" data-tooltip="Layers"><span className="map-tool-glyph" aria-hidden="true">≡</span><span className="map-tool-label">Layers</span></button>
+              <button type="button" onClick={() => openAtlasPanel("layers")} aria-pressed={leftOpen && leftPanelMode === "layers"} aria-label="Open domain layers" data-tooltip="Domains"><span className="map-tool-glyph" aria-hidden="true">≡</span><span className="map-tool-label">Domains</span></button>
               <button type="button" onClick={openLiveContextCatalog} aria-pressed={visibleOfficialCount > 0} aria-label="Open live data controls" data-tooltip="Live data"><span className="map-tool-glyph" aria-hidden="true">⌁</span><span className="map-tool-label">Live data</span></button>
               <button type="button" onClick={(event) => mapUtilityOpen && mapUtilityView === "inspect" ? closeMapUtility() : openMapUtility("inspect", event.currentTarget)} aria-expanded={mapUtilityOpen && mapUtilityView === "inspect"} aria-controls="map-utility-panel" aria-label="Open feature inspection" data-tooltip="Inspect"><span className="map-tool-glyph" aria-hidden="true">⌖</span><span className="map-tool-label">Inspect</span></button>
               <button type="button" onClick={(event) => mapUtilityOpen && mapUtilityView === "scene" ? closeMapUtility() : openMapUtility("scene", event.currentTarget)} aria-expanded={mapUtilityOpen && mapUtilityView === "scene"} aria-controls="map-utility-panel" aria-label="Open scene and tile lab" data-tooltip="Scene"><span className="map-tool-glyph" aria-hidden="true">3D</span><span className="map-tool-label">Scene</span></button>
@@ -7637,8 +7640,8 @@ export default function Home() {
           {measurementGeometryMode && <div className="measurement-readout" role="region" aria-label="Active screen measurement"><span>{measurementGeometryMode.toUpperCase()} · {measureMode ? "ACTIVE" : "COMPLETE"}</span><strong aria-live="polite">{measurement}</strong><div><button type="button" onClick={undoMeasurementPoint}>Undo</button><button type="button" onClick={finishMeasurement} disabled={!measureMode}>Finish</button><button type="button" onClick={clearMeasurement}>Clear</button></div></div>}
 
           <nav className="map-mobile-actions" aria-label="Mobile map actions">
-            <button type="button" onClick={() => openAtlasPanel("layers")}>Layers <b>{visibleCount}</b></button>
-            <button type="button" onClick={openLiveContextCatalog}>Live <b>{visibleOfficialCount}</b></button>
+            <button type="button" onClick={() => openAtlasPanel("layers")}>Domains <b>{visibleCount}</b></button>
+            <button type="button" onClick={openLiveContextCatalog}>Live data <b>{visibleOfficialCount}</b></button>
             <button type="button" onClick={() => { setSourceStatusOpen(true); setLeftOpen(false); setRightOpen(false); setTimelineOpen(false); }}>Sources</button>
             <button type="button" onClick={() => { setCurrentWorkspace("explore"); dismissMapUtilityWithoutFocus(); setTimelineOpen(true); setLeftOpen(false); setRightOpen(false); }}>Time <b>{temporalScopeLabel}</b></button>
             <button type="button" onClick={() => openMapUtility("display")}>Style</button>

@@ -1308,18 +1308,26 @@ test("keeps the feature, connection, action, and coding registries aligned", asy
   assert.match(docs, /Held ideas intentionally scaffolded/);
 });
 
-test("keeps the complete Layer Catalog reachable in one scroll surface", async () => {
+test("keeps live data and domain layers in separate, time-aware menus", async () => {
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
 
-  assert.match(page, /Layers <b>\{visibleOfficialCount\}\/\{OFFICIAL_CONTEXT_SOURCES\.length\}<\/b>/);
+  assert.match(page, /type LeftPanelMode = "views" \| "layers" \| "live"/);
+  assert.match(page, /Live data <b>\{visibleOfficialCount\}\/\{OFFICIAL_CONTEXT_SOURCES\.length\}<\/b>/);
+  assert.match(page, /Domains <b>\{visibleCount\}\/\{LAYER_REGISTRY\.length\}<\/b>/);
+  assert.match(page, /openAtlasPanel\("live"\)/);
+  assert.match(page, /hidden=\{leftPanelMode !== "live"\}/);
+  assert.match(page, /id="catalog-time-anchor"/);
+  assert.match(page, /COMMITTED MAP TIME/);
+  assert.match(page, /Incompatible records stay unavailable/);
+  assert.match(page, /data-time-state=\{noData \? "unavailable" : "available"\}/);
   assert.match(page, /className="catalog-section-jump"/);
   assert.match(page, /href="#catalog-layer-stack"/);
-  assert.match(page, /href="#priority-context-title"/);
-  assert.match(page, /Earthquake · water · smoke/);
   assert.match(page, /id="catalog-layer-stack"/);
   assert.match(page, /Registered layers <span>\{filteredLayerIds\.size\}\/\{LAYER_REGISTRY\.length\}<\/span>/);
   assert.match(css, /\.layer-catalog-body \{[^}]*overflow-y: auto/);
+  assert.match(css, /\.left-panel-tabs \{[^}]*grid-template-columns: repeat\(5,/);
+  assert.match(css, /\.catalog-time-anchor/);
   assert.match(css, /\.catalog-groups \{ flex: none; min-height: auto; overflow: visible;/);
   assert.match(css, /\.official-context-catalog \{ flex: none; min-height: 0; overflow: hidden;/);
   assert.match(css, /\.catalog-layer-stack-actions/);

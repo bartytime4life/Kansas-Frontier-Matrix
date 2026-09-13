@@ -389,6 +389,11 @@ export const OFFICIAL_CONTEXT_BY_ID = Object.freeze(Object.fromEntries(OFFICIAL_
 export const OFFICIAL_CONTEXT_BY_SOURCE_ID = Object.freeze(Object.fromEntries(OFFICIAL_CONTEXT_SOURCES.map((source) => [source.sourceId, source])) as Record<string, OfficialContextSource>);
 export const OFFICIAL_CONTEXT_INTERACTIVE_LAYER_IDS = Object.freeze(OFFICIAL_CONTEXT_SOURCES.flatMap((source) => source.interactiveLayerIds));
 export const OFFICIAL_CONTEXT_PRESENT_FRAME = new Date().getUTCFullYear();
+/** Keep dynamic 3DEP image-service requests within the Kansas inspection scale.
+ * The upstream adapter still validates its own broader tile range; this client
+ * cap prevents overview and high-detail camera changes from flooding it. */
+export const TERRAIN_DISPLAY_MIN_ZOOM = 7;
+export const TERRAIN_DISPLAY_MAX_ZOOM = 12;
 
 export type OfficialContextTemporalSupport = Readonly<{
   axis: "joined-source-snapshot" | "rolling-retrieval-window" | "provider-current-mosaic" | "provider-observation-loop" | "provider-observation-history" | "provider-forecast-series";
@@ -578,8 +583,17 @@ export const applyOfficialContextState = (
   for (const raster of [OFFICIAL_CONTEXT_BY_ID["usgs-3dhp-hydrography"], OFFICIAL_CONTEXT_BY_ID["usgs-wbd-watersheds"], OFFICIAL_CONTEXT_BY_ID["noaa-nwm-analysis"], OFFICIAL_CONTEXT_BY_ID["noaa-nwm-short-range"], OFFICIAL_CONTEXT_BY_ID["usgs-3dep-hillshade"], OFFICIAL_CONTEXT_BY_ID["usgs-3dep-slope"]]) {
     // Disabled services should not download tiles during startup or style swaps.
     if (!visibility[raster.id] && !map.getSource(raster.sourceId)) continue;
-    if (!map.getSource(raster.sourceId)) map.addSource(raster.sourceId, { type: "raster", tiles: [raster.mapUrl!], tileSize: 256, attribution: raster.attribution, bounds: [-104.8, 34.8, -92, 42.2], minzoom: 3, maxzoom: raster.id.startsWith("usgs-3dep-") ? 14 : 16 });
-    ensureLayer(map, { id: raster.layerIds[0], type: "raster", source: raster.sourceId, paint: { "raster-opacity": raster.defaultOpacity, "raster-fade-duration": 120 } }, firstRegistryLayer(map));
+    const terrainDisplay = raster.id === "usgs-3dep-hillshade" || raster.id === "usgs-3dep-slope";
+    if (!map.getSource(raster.sourceId)) map.addSource(raster.sourceId, {
+      type: "raster", tiles: [raster.mapUrl!], tileSize: 256, attribution: raster.attribution, bounds: [-104.8, 34.8, -92, 42.2],
+      minzoom: terrainDisplay ? TERRAIN_DISPLAY_MIN_ZOOM : 3,
+      maxzoom: terrainDisplay ? TERRAIN_DISPLAY_MAX_ZOOM : 16,
+    });
+    ensureLayer(map, {
+      id: raster.layerIds[0], type: "raster", source: raster.sourceId,
+      ...(terrainDisplay ? { minzoom: TERRAIN_DISPLAY_MIN_ZOOM } : {}),
+      paint: { "raster-opacity": raster.defaultOpacity, "raster-fade-duration": terrainDisplay ? 0 : 120 },
+    }, firstRegistryLayer(map));
   }
 
   for (const source of OFFICIAL_CONTEXT_SOURCES) {

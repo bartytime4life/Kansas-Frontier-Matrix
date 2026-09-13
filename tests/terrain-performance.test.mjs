@@ -92,5 +92,6 @@ test("opacity changes do not re-upload provider data or create disabled raster s
   context.applyOfficialContextState(map,visibility,{...opacity,"census-counties":0.5},payloads);
   assert.equal(uploads,0);assert.equal(paintWrites,2);
   context.applyOfficialContextState(map,{...visibility,"usgs-3dep-hillshade":true},opacity,payloads);
-  const source=sources.get("external-usgs-3dep-hillshade");assert.equal(source.maxzoom,14);assert.match(source.tiles[0],/^\/api\/terrain-tile\?/);
+  const source=sources.get("external-usgs-3dep-hillshade");assert.equal(source.minzoom,context.TERRAIN_DISPLAY_MIN_ZOOM);assert.equal(source.maxzoom,context.TERRAIN_DISPLAY_MAX_ZOOM);assert.match(source.tiles[0],/^\/api\/terrain-tile\?/);
+  const terrainLayer=layers.get("external-usgs-3dep-hillshade-raster");assert.equal(terrainLayer.minzoom,context.TERRAIN_DISPLAY_MIN_ZOOM);assert.equal(terrainLayer.paint["raster-fade-duration"],0);
 });
