@@ -3,7 +3,7 @@ doc_id: kfm://doc/adr-0023-geo-manifest-signs-every-pmtiles-cog-release
 title: "ADR-0023 — Geo Manifest Signs Every PMTiles and COG Release"
 type: adr
 adr_id: ADR-0023
-version: v1.3
+version: v1.4
 status: proposed
 effective_decision_status: proposed
 owners:
@@ -19,7 +19,7 @@ reviewers_required:
   - Security and signing reviewer
   - Release and rollback steward
 created: 2026-05-09
-updated: 2026-08-14
+updated: 2026-09-13
 policy_label: public
 truth_posture: cite-or-abstain
 owning_root: docs/
@@ -31,11 +31,11 @@ superseded_by: []
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: c9ccb11ded141edbd79763982056a1e6f90b8866
-  inspection_origin_commit: 45a78c4b4b537f9215b2e4dc90106df0aca5300b
-  continuity_compare: 45a78c4b4b537f9215b2e4dc90106df0aca5300b...c9ccb11ded141edbd79763982056a1e6f90b8866
-  continuity_result: "unrelated geology and RuntimeResponseEnvelope work only; no ADR-0023 or inspected geospatial-integrity surface changed"
-  target_prior_blob: d57353d059383860a43fc129c1f39f3173f69119
+  base_commit: e0f2d6314d56a16c99d26a507bea2d153b9547b0
+  inspection_origin_commit: e0f2d6314d56a16c99d26a507bea2d153b9547b0
+  continuity_compare: "direct file-content readback at main@e0f2d6314d56a16c99d26a507bea2d153b9547b0"
+  continuity_result: "this refresh inspected repository files only; it did not execute a manifest, signature, validator, workflow, policy, release, deployment, or publication operation"
+  target_prior_blob: 93576e7419e5723b5d7556cb811dc740dfc40a04
   adr_index_blob: 938c5894c36b99e14810918e2c550ab0e92d53b1
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   adr_0029_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
@@ -110,6 +110,7 @@ notes:
   - "PMTiles has structural header, PMIDX, split-bundle, declared-manifest, RunReceipt-subject, and shape-only PMSIG checks; cryptographic verification and key trust remain explicit HOLD states."
   - "COG has a fixture-only whole-file and explicit byte-range integrity candidate; it does not parse TIFF, prove COG conformance, authenticate signatures, or authorize release."
   - "A default-deny PMTiles policy source and MapReleaseManifest fixture profile exist; evaluator-backed enforcement and a production signed release remain unproved."
+  - "v1.4 is a same-path currentness refresh against main@e0f2d6314d56a16c99d26a507bea2d153b9547b0. It records direct source readback of KFMGeoManifest, PMTiles structural-attestation and policy sources, COG range-integrity candidate sources, and release-manifest definitions. No manifest generation, signature creation or verification, validator execution, workflow run, policy evaluation, promotion, release, deployment, or publication operation was executed."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -223,6 +224,19 @@ A release implementation must name the exact composed profile versions. Passing 
 ---
 
 <a id="proposed-binding-model"></a>
+
+## Bounded v1.4 current readback
+
+This is a repository file-content readback at `main@e0f2d6314d56a16c99d26a507bea2d153b9547b0`, not proof that a manifest was generated, a PMTiles or COG payload was signed, a signature was verified, or any candidate was promoted, released, deployed, or published.
+
+| Surface | Verified current source posture | Safe conclusion |
+|---|---|---|
+| [KFMGeoManifest contract](../../contracts/evidence/kfm_geo_manifest.md), [schema](../../schemas/contracts/v1/evidence/kfm_geo_manifest.schema.json), and [validator](../../tools/validators/evidence/validate_kfm_geo_manifest.py) | Proposed fixture-first profile with closed shape and deterministic local checks; its own sources exclude signing, evidence resolution, policy/review evaluation, release, deployment, and publication authority. | Bounded candidate metadata and local consistency definition, not a signed geospatial release. |
+| [KFMGeoManifest workflow](../../.github/workflows/kfm-geo-manifest-validation.yml) | Read-only, no-network CI definition that declares limited fixture/profile validation and explicitly excludes signing, release, deployment, and publication. | Workflow configuration only; this refresh does not claim a hosted run. |
+| [PMTiles attestation standard](../../docs/standards/pmtiles/PMTILES_ATTESTATION_STANDARD.md) and [workflow](../../.github/workflows/pmtiles-attestation.yml) | Draft structural compatibility checks cover headers, digests, and related shapes; workflow preserves explicit cryptographic and governed-chain holds. | Structural attestation definitions, not cryptographic verification, signer trust, or publication eligibility. |
+| [PMTiles policy source](../../policy/rego/tiles_publish.rego) | A default-deny source exists, but the ADR records evaluator and consumer binding as unproved. | Candidate policy source, not evaluated release enforcement. |
+| [COG integrity contract](../../contracts/evidence/cog_byte_range_integrity_manifest.md) and [validator](../../tools/validators/evidence/validate_cog_byte_range_integrity_manifest.py) | Fixture-only whole-file and byte-range integrity candidate; ADR documents no TIFF/COG conformance, HTTP Range, signature, or release proof. | Local integrity-profile definition only; not a validated or released COG. |
+| [MapReleaseManifest contract](../../contracts/release/map_release_manifest.md) | Models synthetic closure states and explicitly does not authenticate references, mutate state, transition aliases, or publish. | Proposed release-candidate shape, not a release action. |
 
 ## Proposed binding model
 
@@ -580,4 +594,4 @@ Planning material supports the decision direction but does not replace current r
 
 ---
 
-**Last updated:** 2026-08-14 · **Decision:** `proposed` · **Current implementation:** partial integrity proof; cryptographic release enforcement `HOLD` · **Publication:** none · **Path:** `docs/adr/ADR-0023-geo-manifest-signs-every-pmtiles-cog-release.md` · [Back to top](#top)
+**Last updated:** 2026-09-13 · **Decision:** `proposed` · **Current implementation:** partial integrity proof; cryptographic release enforcement `HOLD` · **Publication:** none · **Path:** `docs/adr/ADR-0023-geo-manifest-signs-every-pmtiles-cog-release.md` · [Back to top](#top)
