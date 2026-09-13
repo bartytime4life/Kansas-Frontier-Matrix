@@ -6,6 +6,7 @@ on:
     paths:
       - ".github/workflows/maplibre-webgl-probe.yml"
       - "apps/explorer-web/tests/browser/maplibre-webgl-probe.*"
+      - "apps/explorer-web/tests/browser/maplibre-long-session-probe.*"
       - "apps/explorer-web/playwright.config.ts"
       - "apps/explorer-web/package.json"
       - "packages/maplibre/**"
@@ -29,7 +30,7 @@ env:
 
 jobs:
   webgl2-probe:
-    name: MapLibre WebGL2 browser probe
+    name: MapLibre browser probes
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
@@ -75,14 +76,17 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          pnpm --filter explorer-web exec playwright test             --config=playwright.config.ts             tests/browser/maplibre-webgl-probe.spec.ts
+          pnpm --filter explorer-web exec playwright test \
+            --config=playwright.config.ts \
+            tests/browser/maplibre-webgl-probe.spec.ts \
+            tests/browser/maplibre-long-session-probe.spec.ts
 
       - name: Upload review-only browser receipt
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: maplibre-webgl-probe-${{ github.sha }}
-          path: apps/explorer-web/test-results/**/maplibre-webgl-probe.receipt.json
+          path: apps/explorer-web/test-results/**/maplibre-*.receipt.json
           if-no-files-found: error
           retention-days: 14
 
@@ -93,6 +97,6 @@ jobs:
           {
             echo
             echo "- outcome: \`see Playwright result and attached receipt\`"
-            echo "- probe matrix effect: only \`webgl2_failure_handling\`; other probes remain \`NOT_RUN\`"
+            echo "- probe matrix effect: \`webgl2_failure_handling\` and \`long_session_teardown\` only; other probes remain \`NOT_RUN\`"
             echo "- current readiness: \`HOLD / RUNTIME_PROBES_PENDING\`"
           } >> "${GITHUB_STEP_SUMMARY}"

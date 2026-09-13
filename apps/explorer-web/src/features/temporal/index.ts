@@ -182,6 +182,28 @@ const DATE_ONLY = /^\d{4}-\d{2}-\d{2}$/;
 const MONTH = /^\d{4}-\d{2}$/;
 const YEAR = /^\d{4}$/;
 
+function isRealCalendarValue(
+  profile: "date_only" | "month" | "year",
+  raw: string,
+): boolean {
+  const parts = raw.split("-").map((part) => Number(part));
+  const year = parts[0];
+  if (!Number.isInteger(year) || year < 1 || year > 9999) return false;
+  if (profile === "year") return parts.length === 1;
+  const month = parts[1];
+  if (!Number.isInteger(month) || month < 1 || month > 12) return false;
+  if (profile === "month") return parts.length === 2;
+  const day = parts[2];
+  if (!Number.isInteger(day) || day < 1) return false;
+  // Date.UTC treats years 0–99 as 1900–1999; setUTCFullYear avoids that
+  // legacy coercion while still giving us the platform's Gregorian rules.
+  const candidate = new Date(Date.UTC(2000, month - 1, day));
+  candidate.setUTCFullYear(year);
+  return candidate.getUTCFullYear() === year &&
+    candidate.getUTCMonth() === month - 1 &&
+    candidate.getUTCDate() === day;
+}
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
@@ -333,6 +355,12 @@ export function normalizeTemporalBoundary(
     (profile === "year" && !YEAR.test(raw))
   ) {
     return { status: "ERROR", code: "CALENDAR_SYNTAX_INVALID", profile, raw, normalized: null };
+  }
+  if (
+    (profile === "date_only" || profile === "month" || profile === "year") &&
+    !isRealCalendarValue(profile, raw)
+  ) {
+    return { status: "ERROR", code: "CALENDAR_VALUE_INVALID", profile, raw, normalized: null };
   }
   return { status: "SUPPORTED", code: "CALENDAR_PRESERVED", profile, raw, normalized: null };
 }

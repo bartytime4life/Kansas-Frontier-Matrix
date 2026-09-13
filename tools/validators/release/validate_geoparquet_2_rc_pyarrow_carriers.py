@@ -57,6 +57,20 @@ def _digest(path: Path) -> str:
     return f"sha256:{hashlib.sha256(path.read_bytes()).hexdigest()}"
 
 
+def _regular_file(path: Path) -> bool:
+    """Accept only a regular carrier owned by the probe root.
+
+    The manifest path grammar prevents textual traversal, but a same-name
+    symlink could still redirect validation outside the temporary carrier
+    directory. Treat that carrier as invalid instead of following it.
+    """
+
+    try:
+        return path.is_file() and not path.is_symlink()
+    except OSError:
+        return False
+
+
 def _crs(value: Any) -> str | None:
     if value == "OGC:CRS84":
         return value
@@ -149,8 +163,13 @@ def validate(root: Path, manifest_path: Path) -> Result:
     carriers = manifest["carriers"]
     entries = (carriers["geoparquet_1_1"], carriers["geoparquet_2_rc_geometry"])
     paths = tuple(root / entry["path"] for entry in entries)
-    if not all(path.is_file() for path in paths):
-        return Result("ERROR", tuple(sorted(set([*reasons, "CARRIER_MISSING"]))))
+    if not all(_regular_file(path) for path in paths):
+        reason = (
+            "CARRIER_PATH_INVALID"
+            if any(path.is_symlink() for path in paths)
+            else "CARRIER_MISSING"
+        )
+        return Result("ERROR", tuple(sorted(set([*reasons, reason]))))
 
     try:
         if any(entry["sha256"] != _digest(path) for entry, path in zip(entries, paths)):

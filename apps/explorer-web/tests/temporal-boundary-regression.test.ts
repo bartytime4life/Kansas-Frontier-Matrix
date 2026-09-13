@@ -33,6 +33,22 @@ describe("temporal boundary narrowing regressions", () => {
       .toMatchObject({ status: "ERROR", code: "NORMALIZED_PRECISION_VIOLATION" });
   });
 
+  it.each([
+    ["date_only", "2024-02-30"],
+    ["date_only", "2023-02-29"],
+    ["month", "2024-13"],
+    ["month", "2024-00"],
+    ["year", "0000"],
+  ] as const)("rejects impossible %s value %s", (profile, raw) => {
+    expect(normalizeTemporalBoundary({ profile, raw, normalized: null })).toMatchObject({
+      status: "ERROR",
+      code: "CALENDAR_VALUE_INVALID",
+      profile,
+      raw,
+      normalized: null,
+    });
+  });
+
   it.each(calendarCases)("orders %s windows without null coercion", async (profile, earlier, later) => {
     for (const [start, end] of [[earlier, later], [earlier, earlier]]) {
       await expect(normalizeTemporalQuery(windowState(profile, start, end)))

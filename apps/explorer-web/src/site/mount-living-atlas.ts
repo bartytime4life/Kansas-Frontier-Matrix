@@ -359,6 +359,15 @@ export function mountLivingAtlasWorkspace(
         : []),
     );
   };
+  renderLivingWatersFixture("current");
+  livingWatersFixtureCard.append(
+    livingWatersScenarioLabel,
+    livingWatersSelect,
+    livingWatersStatus,
+    livingWatersMeta,
+    livingWatersTrust,
+    livingWatersChart,
+  );
 
   layersPanel.append(
     layerList,

@@ -89,6 +89,27 @@ class TemporalViewStateValidatorTests(unittest.TestCase):
         self.assertEqual(result.start.profile, "instant")
         self.assertEqual(result.end.profile, "instant")
 
+    def test_calendar_profiles_reject_impossible_values(self) -> None:
+        cases = (
+            ("date_only", "2024-02-30"),
+            ("date_only", "2023-02-29"),
+            ("month", "2024-13"),
+            ("month", "2024-00"),
+            ("year", "0000"),
+        )
+        for profile, raw in cases:
+            with self.subTest(profile=profile, raw=raw):
+                state = self._state()
+                state["selection"] = deepcopy(state["selection"])
+                state["selection"]["start"] = deepcopy(state["selection"]["start"])
+                state["selection"]["start"].update(
+                    {"profile": profile, "raw": raw, "normalized": None}
+                )
+                result = normalize_temporal_query(state)
+                self.assertEqual(result.status, "ERROR")
+                self.assertEqual(result.code, "CALENDAR_VALUE_INVALID")
+                self.assertIsNone(result.query_id)
+
     def test_regular_snapshot_and_reversed_interval_outcomes(self) -> None:
         state = self._state()
         query_result = normalize_temporal_query(state)

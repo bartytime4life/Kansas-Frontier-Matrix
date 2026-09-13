@@ -53,6 +53,15 @@ def _digest(path: Path) -> str:
     return f"sha256:{hashlib.sha256(path.read_bytes()).hexdigest()}"
 
 
+def _regular_file(path: Path) -> bool:
+    """Reject carrier symlinks before digesting or passing them to GDAL."""
+
+    try:
+        return path.is_file() and not path.is_symlink()
+    except OSError:
+        return False
+
+
 def _crs84(value: Any) -> bool:
     if value == "OGC:CRS84":
         return True
@@ -146,6 +155,13 @@ def validate(root: Path, packet_path: Path) -> Result:
 
     source_ref = packet["source_carrier_manifest"]
     source_path = root / source_ref["path"]
+    if not _regular_file(source_path):
+        reason = (
+            "SOURCE_MANIFEST_PATH_INVALID"
+            if source_path.is_symlink()
+            else "SOURCE_MANIFEST_UNAVAILABLE"
+        )
+        return Result("ERROR", tuple(sorted(set([*reasons, reason]))))
     try:
         if source_ref["sha256"] != _digest(source_path):
             reasons.append("SOURCE_MANIFEST_DIGEST_MISMATCH")
@@ -175,6 +191,9 @@ def validate(root: Path, packet_path: Path) -> Result:
             reasons.append("SOURCE_CARRIER_PATH_INVALID")
             continue
         path = root / name
+        if path.is_symlink():
+            reasons.append("SOURCE_CARRIER_PATH_INVALID")
+            continue
         try:
             actual_digest = _digest(path)
         except OSError:

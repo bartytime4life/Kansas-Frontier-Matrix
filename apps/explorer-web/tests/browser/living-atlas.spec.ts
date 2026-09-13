@@ -21,6 +21,69 @@ test("mounts the map-first Living Atlas without external requests", async ({
   expect(externalRequests).toEqual([]);
 });
 
+test("renders every Living Waters fixture scenario as finite non-authoritative state", async ({
+  page,
+}) => {
+  const externalRequests: string[] = [];
+  page.on("request", (request) => {
+    const url = new URL(request.url());
+    if (
+      (url.protocol === "http:" || url.protocol === "https:") &&
+      !["127.0.0.1", "localhost"].includes(url.hostname)
+    ) {
+      externalRequests.push(url.href);
+    }
+  });
+
+  await page.goto("/");
+  const workspace = page.locator('[data-component="living-atlas-workspace"]');
+  await workspace.getByRole("button", { name: "Layers" }).click();
+  const card = workspace.locator(".atlas-fixture-card");
+  await expect(card).toHaveAttribute(
+    "aria-label",
+    "Living Waters synthetic fixture proof",
+  );
+  const scenario = card.getByRole("combobox", {
+    name: "Living Waters fixture scenario",
+  });
+  await expect(scenario).toHaveValue("current");
+
+  const expected = [
+    { id: "current", state: "AVAILABLE", points: 3 },
+    { id: "stale", state: "STALE", points: 3 },
+    { id: "no-results", state: "NO_RESULTS", points: 0 },
+    { id: "unavailable", state: "UNAVAILABLE", points: 0 },
+    { id: "ambiguous-reach", state: "ABSTAIN", points: 0 },
+  ] as const;
+
+  for (const entry of expected) {
+    await scenario.selectOption(entry.id);
+    await expect(card).toHaveAttribute("data-frame-state", entry.state);
+    await expect(card.locator(".atlas-fixture-status")).toContainText(
+      entry.state,
+    );
+    await expect(card.locator(".atlas-fixture-chart span")).toHaveCount(
+      entry.points === 0 ? 1 : entry.points,
+    );
+    if (entry.points === 0) {
+      await expect(card.locator(".atlas-fixture-chart span")).toContainText(
+        "No observations are rendered for this finite state.",
+      );
+    }
+    await expect(card.locator(".atlas-fixture-trust")).toContainText(
+      "SITE_LOCAL_DEMO",
+    );
+    await expect(card.locator(".atlas-fixture-trust")).toContainText(
+      "visible=false",
+    );
+    await expect(card.locator(".atlas-fixture-trust")).toContainText(
+      "rendererBound=false",
+    );
+  }
+
+  expect(externalRequests).toEqual([]);
+});
+
 test("keeps held layers finite and captures only draft map state", async ({
   page,
 }) => {

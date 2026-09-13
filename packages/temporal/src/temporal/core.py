@@ -210,6 +210,8 @@ def normalize_boundary(boundary: Mapping[str, Any]) -> TemporalNormalization:
     pattern = CALENDAR_PATTERNS.get(profile)
     if pattern is not None and not pattern.fullmatch(raw):
         return TemporalNormalization("ERROR", "CALENDAR_SYNTAX_INVALID", profile, raw, None)
+    if pattern is not None and not _calendar_value_is_real(profile, raw):
+        return TemporalNormalization("ERROR", "CALENDAR_VALUE_INVALID", profile, raw, None)
     return TemporalNormalization("SUPPORTED", "CALENDAR_PRESERVED", profile, raw, None)
 
 
@@ -226,6 +228,33 @@ def _calendar_key(profile: str, raw: str) -> tuple[int, ...] | None:
     if profile == "month":
         return (parts[0], parts[1])
     return (parts[0], parts[1], parts[2])
+
+
+def _calendar_value_is_real(profile: str, raw: str) -> bool:
+    """Reject shaped calendar values that do not exist.
+
+    Regex validation protects the wire shape, but values such as ``2024-02-30``
+    or ``2024-13`` would otherwise compare and hash as if they were real
+    boundaries. This stays local and deterministic: it never converts a
+    calendar boundary into an instant or fabricates missing precision.
+    """
+
+    parts = _calendar_key(profile, raw)
+    if parts is None:
+        return False
+    year = parts[0]
+    if year < 1 or year > 9999:
+        return False
+    try:
+        if profile == "year":
+            return True
+        if profile == "month":
+            datetime(year, parts[1], 1)
+            return True
+        datetime(year, parts[1], parts[2])
+    except (IndexError, ValueError):
+        return False
+    return True
 
 
 def _selection_boundary(

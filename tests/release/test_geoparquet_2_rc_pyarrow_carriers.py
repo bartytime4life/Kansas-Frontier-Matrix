@@ -31,6 +31,22 @@ class GeoParquet2RcPyArrowCarrierProbeTests(unittest.TestCase):
         self.assertEqual(result.outcome, "ERROR")
         self.assertIn("CARRIER_DIGEST_MISMATCH", result.reason_codes)
 
+    def test_symlinked_carrier_path_errors_without_following_target(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            generate(root)
+            candidate = root / "synthetic-geoparquet-2.0.0-rc.1.parquet"
+            target = root / "redirected-carrier.parquet"
+            target.write_bytes(candidate.read_bytes())
+            candidate.unlink()
+            try:
+                candidate.symlink_to(target)
+            except OSError:
+                self.skipTest("symlinks unavailable")
+            result = validate(root, root / "manifest.json")
+        self.assertEqual(result.outcome, "ERROR")
+        self.assertIn("CARRIER_PATH_INVALID", result.reason_codes)
+
     def test_governance_claim_errors(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
