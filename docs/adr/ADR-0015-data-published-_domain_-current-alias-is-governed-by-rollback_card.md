@@ -3,7 +3,7 @@ doc_id: kfm://doc/adr/0015-published-current-alias-rollback-card
 title: "ADR-0015 — data/published/<domain>/current alias is governed by RollbackCard"
 type: adr
 adr_id: ADR-0015
-version: v1.3
+version: v1.4
 status: draft
 owners:
   - "NEEDS VERIFICATION — architecture decision owner"
@@ -24,7 +24,7 @@ reviewers_required:
   - Governed API and static-delivery maintainers
   - At least one affected domain or public-surface steward
 created: 2026-05-11
-updated: 2026-08-13
+updated: 2026-09-13
 policy_label: public
 truth_posture: cite-or-abstain
 owning_root: docs/
@@ -63,6 +63,13 @@ evidence_snapshot:
   published_alias_auditor_blob: f3749474a32761b6671952e815180b4764d0df83
   governed_api_readme_blob: 4f21150852f133ba919b11f4f8792185fa870dae
   rollback_runbook_blob: 52703a0426f4b3d5829f8da4c235d6e5097aa40a
+current_reconciliation:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  main_commit: c5504696f124fdb9f0dbf5770558d976a9d8ae97
+  adr_index_blob: 0c143676dfd3c1bda16cb44398c5ad5d4a49cf67
+  rollback_card_contract_blob: c6d3c35c56b064e04c3a2532f4709d938d7b0c1a
+  published_readme_blob: 8ecb5d2f9737349fb6569efbde36659f398de151
+  posture: draft source / proposed effective; fixture-only and non-mutating
 related:
   - docs/adr/README.md
   - docs/adr/INDEX.md
@@ -200,6 +207,17 @@ This revision uses current repository bytes at `main@695748928f254c2c234b9058bf4
 ---
 
 <a id="context"></a>
+
+## v1.4 Current-Main Reconciliation
+
+- **CONFIRMED at `main@c5504696f124fdb9f0dbf5770558d976a9d8ae97`:** ADR-0015 remains source-status `draft` and effective status `proposed`.
+- **CONFIRMED:** the RollbackCard contract remains a proposed, fixture-first, non-executing surface; `data/published/` remains a documented released-carrier boundary, not evidence of an implemented mutable alias.
+- **HOLD / NEEDS VERIFICATION:** no current evidence in this ADR establishes a live alias resolver, atomic mutation, cache invalidation, execution receipt, accountable rollback decision/review, runtime route, deployment, or publication.
+- **NON-EFFECT:** this update neither creates nor mutates an alias, executes rollback, changes release state, invalidates caches, deploys, or publishes.
+
+[Back to top](#top)
+
+---
 
 ## Context
 
@@ -1041,4 +1059,4 @@ The supplied KFM corpus consistently treats correction and rollback as publicati
 
 ---
 
-**Last updated:** 2026-08-13 · **Source metadata:** `draft` · **Effective decision status:** `proposed` · **Current implementation:** alias absent; RollbackCard/alias execution held · **Bounded progress:** closed RollbackCard candidate validation and fixture-only alias preflight · **Publication:** none · **Path:** `docs/adr/ADR-0015-data-published-_domain_-current-alias-is-governed-by-rollback_card.md` · [Back to top](#top)
+**Last updated:** 2026-09-13 · **Source metadata:** `draft` · **Effective decision status:** `proposed` · **Current implementation:** alias absent; RollbackCard/alias execution held · **Bounded progress:** closed RollbackCard candidate validation and fixture-only alias preflight · **Publication:** none · **Path:** `docs/adr/ADR-0015-data-published-_domain_-current-alias-is-governed-by-rollback_card.md` · [Back to top](#top)
