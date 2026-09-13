@@ -3,7 +3,7 @@ doc_id: kfm://doc/adr-0019-ai-adapter-contract-and-finite-envelopes
 title: ADR-0019 — AI Adapter Contract and Finite Envelopes
 type: adr
 adr_id: ADR-0019
-version: v1.3
+version: v1.4
 status: draft
 effective_decision_status: proposed
 owners:
@@ -22,7 +22,7 @@ reviewers_required:
   - Correction and release stewards
   - Docs steward
 created: 2026-05-09
-updated: 2026-08-14
+updated: 2026-09-13
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
@@ -32,8 +32,8 @@ superseded_by: null
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: f8a0466f6bd246dcf69b88e507efca267e6e5b67
-  target_prior_blob: c0bc41cc11b40b1ee87a838a3e80024a2da56c04
+  base_commit: c5504696f124fdb9f0dbf5770558d976a9d8ae97
+  target_prior_blob: 5c45cbaf0aae510638088913757634ea978c9ec3
   adr_index_blob: 938c5894c36b99e14810918e2c550ab0e92d53b1
   adr_0029_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
@@ -131,6 +131,7 @@ notes:
   - "RuntimeResponseEnvelope now has four-outcome fixtures, an ANSWER-only precision profile, a deterministic candidate builder, and bounded proof tests. Contract prose, schema/profile, package documentation, and governed route integration are not fully converged."
   - "AIReceipt has a local validator, but runtime emission, persistence, reference resolution, retention, and correction propagation are not established."
   - "OllamaAdapter.py remains a one-line placeholder; runtime Rego remains non-enforcing scaffold source; the Governed API has no AI-mediated route; mock Focus remains held."
+  - "v1.4 is a same-path currentness refresh against main@c5504696f124fdb9f0dbf5770558d976a9d8ae97. It retains draft/proposed status and adds bounded source readback for the MockAdapter, Ollama placeholder, finite RuntimeResponseEnvelope and AIReceipt validators, runtime policy scaffolds, Focus workflow, and governed API fixture route. No model, provider, evaluator, evidence resolver, release, deployment, or publication operation is executed."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -960,6 +961,18 @@ A model adapter, selector, candidate builder, envelope, receipt, validator, work
 | Production deployment | Unknown | No operational or release claim |
 | Publication | Denied as inference | No AI response is KFM publication |
 
+### Bounded v1.4 current readback
+
+This is a repository file-content readback at `main@c5504696f124fdb9f0dbf5770558d976a9d8ae97`, not proof of model invocation, provider admission, policy evaluation, evidence resolution, receipt emission, release, deployment, or publication.
+
+| Surface | Verified current source posture | Safe conclusion |
+|---|---|---|
+| [Canonical model-adapter lane](../../runtime/model_adapters/README.md), [MockAdapter](../../runtime/model_adapters/MockAdapter.py), and [OllamaAdapter](../../runtime/model_adapters/OllamaAdapter.py) | The canonical lane documents mixed maturity; `MockAdapter` is deterministic and no-I/O over caller-supplied synthetic scenarios, while `OllamaAdapter` remains a one-line placeholder. | Bounded four-outcome component selector, not a semantic adapter contract or live model client. |
+| [Governed API](../../apps/governed-api/src/governed_api/main.py) and [fixture scaffold](../../apps/governed-api/src/governed_api/stub.py) | The WSGI route layer invokes finite fixture operations; the scaffold defines negative `ABSTAIN`, `DENY`, and `ERROR` envelopes. | Finite fail-safe fixture behavior, not adapter invocation, evidence-backed answer delivery, or a public service. |
+| [RuntimeResponseEnvelope contract](../../contracts/runtime/runtime_response_envelope.md), [schema](../../schemas/contracts/v1/runtime/runtime_response_envelope.schema.json), and [validator](../../tools/validators/validate_runtime_response_envelope.py) | All remain proposed; validator states its green result establishes only bounded local checks and no evidence/policy/release/publication authority. | Contract validation boundary, not governed response composition or authorization. |
+| [AIReceipt contract](../../contracts/runtime/ai_receipt.md) and [validator](../../tools/validators/validate_ai_receipt.py) | Proposed shape plus no-network local validator; validator explicitly excludes evidence, policy, model approval, public-answer, promotion, release, and publication authority. | Receipt-shape consistency only; no emitted or persisted AI receipt. |
+| [Runtime policy boundary](../../policy/runtime/README.md) and [Focus mock workflow](../../.github/workflows/focus-mock-test.yml) | Runtime rules remain non-enforcing proposed scaffolds; workflow describes bounded no-network finite-envelope checks and a separate mock-Focus hold. | Existing check definitions and documented holds, not an evaluator-backed AI runtime or hosted execution result. |
+
 ### Material corrections since v1.2
 
 - `MockAdapter.py` is no longer a one-line placeholder; it is a bounded deterministic selector.
@@ -1448,7 +1461,7 @@ Remote repository reads establish exact bytes, source relationships, and declare
 
 ## No-loss and change ledger
 
-| Prior surface | v1.3 disposition |
+| Prior surface | v1.4 disposition |
 |---|---|
 | ADR identity, path, draft/proposed status, no publication effect | **RETAINED** |
 | D1–D8 provider-neutral, orchestration, finite outcomes, mock-first, no-direct-client, no-generated-truth, no-private-reasoning, admission decisions | **RETAINED and sharpened** |
@@ -1469,6 +1482,7 @@ No policy behavior, contract meaning, schema shape, fixture, validator, test, wo
 
 | Version | Date | Change |
 |---|---|---|
+| `v1.4` | 2026-09-13 | Refreshed the currentness boundary against `main@c5504696f124fdb9f0dbf5770558d976a9d8ae97`. Added a bounded source readback for the deterministic MockAdapter, Ollama placeholder, finite governed-API fixture routes, RuntimeResponseEnvelope and AIReceipt validators, runtime policy scaffolds, and Focus workflow. No provider/model/evaluator/evidence/release/deployment/publication operation was executed; the decision remains proposed. |
 | `v1.3` | 2026-08-14 | Refreshed against current main; adopted Directory Rules placement; bounded executable MockAdapter selector; four-outcome fixtures/proofs; RuntimeResponseEnvelope precision profile and candidate builder; AIReceipt validator; runtime Rego scaffold inventory; profile-drift and composition boundaries; updated gates, risks, and rollback. Decision remains proposed. |
 | `v1.2` | 2026-07-24 | Repository-grounded modernization separating adapter output, DecisionEnvelope, RuntimeResponseEnvelope, and AIReceipt; documented placeholder adapters, Governed API ABSTAIN scaffold, mock workflow hold, security, admission, and rollback. |
 | Earlier | 2026-05 to 2026-07 | Initial proposed provider-neutral adapter and finite-envelope decision plus planning refinements. |
