@@ -3,7 +3,7 @@ doc_id: kfm://doc/adr-0013-spec_hash-and-run_id-identity-grammar
 title: "ADR-0013 — spec_hash and run_id Identity Grammar"
 type: adr
 adr_id: ADR-0013
-version: v1.2
+version: v1.3
 status: proposed
 owners:
   - "NEEDS VERIFICATION — architecture decision owner"
@@ -24,7 +24,7 @@ reviewers_required:
   - Security reviewer
   - Docs steward
 created: 2026-05-11
-updated: 2026-08-13
+updated: 2026-09-13
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
@@ -36,9 +36,9 @@ superseded_by: []
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 160938b3f4717b6f2551b3430ab5c08f9b33cecb
+  base_commit: 475c410595ec796927c2685b98198104762a0a2f
   base_tree: 0a24e934e17d00b3cf8062bce65a4b59c07d65c1
-  target_prior_blob: 5268e04b4f483b2936ffe571a2baff12581cf17c
+  target_prior_blob: 9c216990d74cd4cb259a1a6a4e4221bc59e8b166
   adr_index_blob: 938c5894c36b99e14810918e2c550ab0e92d53b1
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   identity_architecture_blob: 5eec8425cdddfd2f6910c9ba8869ad67b0b08d26
@@ -96,6 +96,7 @@ notes:
   - "The RunReceipt validator now performs substantive bounded and Smart Sync semantic checks, but the schema remains permissive and no verified `run:<orchestrator>:<ULID>` generator or enforcement path was found."
   - "The latest observed dedicated spec-hash job passed 13 deterministic tests and fixture validation, then failed generated-receipt integrity with `ARTIFACT_DIGEST_MISMATCH`; current hosted proof is therefore `HOLD`, not green."
   - "Hash equality proves only equality under a declared byte and canonicalization profile. It does not prove truth, authority, admissibility, review, release, or public safety."
+  - "v1.3 is a same-path currentness refresh against main@475c410595ec796927c2685b98198104762a0a2f. It preserves proposed source and effective decision status, retains documented grammar and wire-shape conflicts, and adds bounded readback of hashing, schema, validator, receipt, and workflow surfaces. It does not run validation, accept an identifier grammar, migrate identifiers, emit receipts, or authorize promotion, release, deployment, or publication."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -445,6 +446,18 @@ The diagram combines an implemented hash computation slice with proposed domain,
 | [`packages/identity/pyproject.toml`](../../packages/identity/pyproject.toml) | Remains a `0.0.0` package scaffold | No verified Run-ID generator/parser implementation |
 | [`packages/hashing/README.md`](../../packages/hashing/README.md) | Still describes an earlier scaffold state | Documentation drift; current code and manifest are stronger evidence of executable behavior |
 | [`docs/architecture/identity-and-spec-hash.md`](../architecture/identity-and-spec-hash.md) and [`docs/standards/canonicalization.md`](../standards/canonicalization.md) | Retain candidate-prefixed and earlier implementation narratives | Proposed/stale prose must not override current bytes |
+
+### Bounded v1.3 current readback
+
+This is a repository file-content readback at `main@475c410595ec796927c2685b98198104762a0a2f`, not evidence that any validator, workflow, generator, receipt, or release operation ran.
+
+| Surface | Verified current source posture | Safe conclusion |
+|---|---|---|
+| [Hashing core](../../packages/hashing/src/hashing/core.py) and [spec-hash validator](../../tools/validators/validate_spec_hash.py) | Both state RFC 8785 JCS plus SHA-256 and the bare `sha256:<64 lowercase hex>` grammar; the validator declares no evidence, policy, review, promotion, release, publication, or public-use authority. | Deterministic content-identity implementation and validation boundary; not semantic, source, or release authority. |
+| [GeoJSON profile](../../packages/hashing/src/hashing/geojson.py) | Declares a versioned structural profile and explicitly excludes reprojection, topology repair, ring rotation, line-direction canonicalization, and spatial-equivalence proof. | Profile-specific structural digest only; no spatial truth or topological-equivalence claim. |
+| [spec_hash schema](../../schemas/contracts/v1/common/spec_hash.schema.json) and [RunReceipt schema](../../schemas/contracts/v1/runtime/run_receipt.schema.json) | Both remain `PROPOSED`; the former requires a bare SHA-256 value and the latter permits broad run IDs. | Current machine shapes remain short of accepting or fully enforcing the ADR’s candidate grammar. |
+| [RunReceipt validator](../../tools/validators/validate_run_receipt.py) | Source is deliberately no-network and states that it neither fetches sources nor writes receipts or grants promotion, release, or publication authority. | Bounded receipt-record validation; not receipt generation, lifecycle action, or authority. |
+| [spec-hash workflow](../../.github/workflows/spec-hash.yml) and [spec-hash tests](../../tests/validators/test_validate_spec_hash.py) | Current tracked workflow and deterministic test definitions exist. | Test/workflow definitions, not an exact-head execution result or cross-runtime/interoperability proof. |
 
 [Back to top](#top)
 
@@ -902,6 +915,6 @@ A migration rollback must restore compatible producer and consumer behavior toge
 
 ---
 
-**Last reviewed:** 2026-08-13 · **Doc version:** v1.2 · **Source metadata:** `proposed` · **Effective decision status:** `proposed`
+**Last reviewed:** 2026-09-13 · **Doc version:** v1.3 · **Source metadata:** `proposed` · **Effective decision status:** `proposed` · **Currentness boundary:** bounded file-content readback only; no execution, migration, receipt emission, promotion, release, deployment, or publication established
 
 [Back to top](#top)
