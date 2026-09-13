@@ -3,7 +3,7 @@ doc_id: kfm://doc/adr/0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation
 title: "ADR-0011 — Receipts vs Proofs vs Manifests vs Catalog Separation"
 type: adr
 adr_id: ADR-0011
-version: v1.3
+version: v1.4
 status: proposed
 owners:
   - "NEEDS VERIFICATION — architecture decision owner"
@@ -24,7 +24,7 @@ reviewers_required:
   - Policy and validation stewards
   - Governed API and public-surface maintainers
 created: 2026-05-11
-updated: 2026-08-13
+updated: 2026-09-13
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
@@ -63,6 +63,16 @@ evidence_snapshot:
   release_manifest_schema_blob: c76cd9bdddb34cf33c8eb62801269553726c5923
   release_dry_run_workflow_blob: 7caf1d188bd31d11e159190248e5543b1d2fd36f
   adr_0022_blob: 1fba0d90c1bf3992b7df865b4ef774b6a93068d7
+current_reconciliation:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  main_commit: 475c410595ec796927c2685b98198104762a0a2f
+  adr_index_blob: 0c143676dfd3c1bda16cb44398c5ad5d4a49cf67
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  catalog_readme_blob: 765dd1be99aa95d4377931344c05751b751243ec
+  release_readme_blob: 60b6a656f8f2b765616bba7223f51c25863c7172
+  catalog_matrix_closure_validator_blob: 2dc376e928a4fffdf4061828d830cc4072dfbdc5
+  catalog_matrix_claim_closure_validator_blob: 30f71b796cae41fed503dd2f82b2b0c676e0a206
+  release_manifest_validator_blob: 00307dc0d5e2c3867a229076e3702f8111455425
 related:
   - docs/adr/README.md
   - docs/adr/INDEX.md
@@ -181,7 +191,7 @@ An accepted ADR without enforcement is doctrine, not proof of runtime or release
 
 ## Evidence Boundary
 
-This revision uses current repository bytes at `main@52a6c7b55fc473c813bde6ec413bcda81259e809`, the exact Directory Rules v2 bytes adopted by ADR-0029, and the supplied KFM architecture references. Current repository evidence determines present implementation maturity; accepted doctrine governs placement and responsibility boundaries.
+This v1.4 reconciliation uses current repository bytes at `main@475c410595ec796927c2685b98198104762a0a2f`, the exact Directory Rules v2 bytes adopted by ADR-0029, and the supplied KFM architecture references. The v1.3 snapshot remains historical lineage; current repository evidence determines present implementation maturity, while accepted doctrine governs placement and responsibility boundaries.
 
 | Evidence level | What is established | What is not established |
 |---|---|---|
@@ -576,7 +586,7 @@ Once implemented, validators and release tooling must enforce:
 | Placement authority | Accepted ADR-0029 adopts exact Directory Rules v2 bytes; the active root registry projects `data/` as data-instance authority and `release/` as the append-only release-decision plane | Placement is governed; projections and paths do not create object validity, release, or publication authority |
 | Receipt root | `data/receipts/README.md` documents governed process-memory semantics, exclusions, and child lanes | Receipt activity exists, but payload validity and release integration are not implied |
 | Proof root | `data/proofs/README.md` confirms evidence, citation, validation, proof-pack, review, and selected domain README lanes | Proof topology is present; emitted proof completeness and enforcement remain unproved |
-| Catalog root | `data/catalog/README.md` documents governed discovery/interchange projections and the non-authority boundary | Catalog responsibility is clear; path presence is not operational closure |
+| Catalog root | `data/catalog/README.md`, blob `765dd1be99aa95d4377931344c05751b751243ec`, documents governed discovery/interchange projections and the non-authority boundary | Catalog responsibility is clear; path presence is not operational closure |
 | Published root | `data/published/README.md` confirms child README lanes and public-safe carrier boundary | Child lane presence does not prove released payloads or manifest approval |
 | Release root | `release/README.md` v2.1 records accepted placement, bounded fixture-first release surfaces, and explicit candidate assembly, promotion, rollback, and operational-release holds | Release governance surfaces exist; operational release capability remains held |
 | Manifest lanes | Both physical lanes and their older draft READMEs remain; accepted doctrine names plural canonical and singular compatibility/migration-only | Naming authority is resolved; producer/consumer migration and singular-lane retirement remain open |
@@ -587,6 +597,14 @@ Once implemented, validators and release tooling must enforce:
 | Artifacts root | `artifacts/README.md` explicitly denies trust authority; nonconforming `artifacts/release/` and trust-shaped staging still exist | Compatibility drift is visible and open; filenames there confer no authority |
 | Drift register | Existing register entries retain artifacts and placement migration debt | Migration requires a separate inventoried, reviewed, reversible action |
 | Public trust path | Root doctrine and application boundaries prohibit direct canonical/internal-store reads | Structural boundary exists; complete runtime enforcement is separate |
+
+### v1.4 current-main reconciliation
+
+- **CONFIRMED:** the canonical ADR index is blob `0c143676dfd3c1bda16cb44398c5ad5d4a49cf67` and keeps ADR-0011 `proposed`; it records four accepted and thirty-five proposed numbered ADRs overall.
+- **CONFIRMED:** the catalog closure validator (blob `2dc376e928a4fffdf4061828d830cc4072dfbdc5`), ClaimEnvelope non-overstatement validator (blob `30f71b796cae41fed503dd2f82b2b0c676e0a206`), and ReleaseManifest fixture validator (blob `00307dc0d5e2c3867a229076e3702f8111455425`) remain deterministic, no-network, bounded local checks with explicit non-effects.
+- **CONFIRMED:** current `data/catalog/README.md` and `release/README.md` retain distinct catalog and release-decision boundaries; neither establishes a production release, publication, or public-serving path.
+- **NEEDS VERIFICATION:** exact-head hosted checks, independent review, authenticated reference resolution, durable proof emission, production profile acceptance, release assembly, correction/rollback execution, and runtime/public-boundary enforcement.
+- **HOLD:** this reconciliation does not activate a profile, move the singular manifest lane, resolve artifact-root drift, or authorize release, deployment, publication, or public use.
 
 ### Evidence limitations
 
@@ -852,7 +870,7 @@ No rollback may silently delete historical release, correction, or decision reco
 
 ## Verification Checklist
 
-### Completed for v1.3 authoring
+### Completed for v1.4 authoring
 
 - [x] Read the complete prior ADR.
 - [x] Confirm ADR ID, index row, exact path, and status.
@@ -868,6 +886,7 @@ No rollback may silently delete historical release, correction, or decision reco
 - [x] Search open PRs and branches for overlapping ADR-0011 work.
 - [x] Inspect the supplied implementation manual and repository-structure guidance for lifecycle, placement, and anti-collapse lineage.
 - [x] Preserve `proposed` status and focused ADR-plus-generated-receipt scope.
+- [x] Re-pin the current-main evidence, canonical ADR index, catalog/release root boundaries, and the bounded closure/manifest validators without treating their local outcomes as operational authority.
 
 ### Still open after this documentation update
 
@@ -983,7 +1002,7 @@ No generated text, badge, diagram, branch, commit, pull request, merge, or workf
 
 ## No-Loss and Change Ledger
 
-| Prior v1.2 element | v1.3 disposition |
+| Prior element | v1.4 disposition |
 |---|---|
 | Five-family separation law | Preserved without collapsing process, evidence, discovery, decision, or carrier authority |
 | Receipt, proof, catalog, release, and published meanings | Preserved and repinned to current root contracts |
@@ -997,7 +1016,7 @@ No generated text, badge, diagram, branch, commit, pull request, merge, or workf
 | Migration table | Preserved and updated for adopted manifest naming and profile graduation |
 | Consequences, alternatives, acceptance gates, and risks | Preserved and corrected for current evidence |
 | Rollback | Preserved with exact v1.2 prior blob `40b0f47b87d584040803ed76aa6b31f5204b7fca` |
-| Repository evidence | Repinned to `main@52a6c7b55fc473c813bde6ec413bcda81259e809` and connected current blobs |
+| Repository evidence | v1.3 snapshot preserved as lineage; currentness repinned to `main@475c410595ec796927c2685b98198104762a0a2f` with exact index, catalog/release root, and validator blobs |
 | ADR relationship metadata | Normalized `superseded_by` from scalar `null` to empty ADR list `[]`; decision lineage unchanged |
 | Decision status | Unchanged: `proposed` |
 
@@ -1007,6 +1026,7 @@ No generated text, badge, diagram, branch, commit, pull request, merge, or workf
 
 | Version | Date | Change |
 |---|---|---|
+| `v1.4` | 2026-09-13 | Re-pinned current-main evidence for the canonical ADR index, catalog/release root boundaries, and bounded deterministic validators. Preserved `proposed` decision status, singular-manifest migration hold, artifact-root drift, and all non-effects; did not activate profiles, resolve references, release, deploy, publish, or authorize public use. |
 | `v1.3` | 2026-08-13 | Reconciled accepted Directory Rules v2 and ADR-0029 placement authority; changed manifest naming from conflicted proposal to canonical plural plus open singular migration; updated CatalogMatrix closure and ClaimEnvelope non-overstatement implementation evidence; updated ReleaseManifest to its dual-profile fixture-first maturity; preserved authority non-effects, `proposed` status, migration holds, and end-to-end release abstention. |
 | `v1.2` | 2026-07-23 | Same-path repository-grounded modernization: confirmed ADR identity; replaced unmounted-repo assumptions; separated five authority families; proposed plural manifest collection and singular compatibility migration; documented thin ReleaseManifest schema and release holds; corrected CatalogMatrix overloading through descriptor/proof split coordinated with ADR-0022; recorded artifacts drift; added maturity, migration, acceptance, risk, rollback, and verification controls; preserved `proposed` status. |
 | `v1.1` | 2026-05-15 | Expanded the receipt/proof/catalog/release separation proposal, canonical-home table, diagram, object inventories, closure rules, validator proposals, migration plan, consequences, rollback, and then-unverified repository questions. |
@@ -1014,4 +1034,4 @@ No generated text, badge, diagram, branch, commit, pull request, merge, or workf
 
 ---
 
-**Last updated:** 2026-08-13 · **Decision status:** `proposed` · **Current enforcement:** accepted placement / bounded local profiles / operational release closure held · **Path:** `docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md` · [Back to top](#top)
+**Last updated:** 2026-09-13 · **Decision status:** `proposed` · **Current enforcement:** accepted placement / bounded local profiles / operational release closure held · **Path:** `docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md` · [Back to top](#top)
