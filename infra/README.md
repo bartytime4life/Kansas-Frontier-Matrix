@@ -215,7 +215,7 @@ Accepted Directory Rules v2, adopted through [`ADR-0029`](../docs/adr/ADR-0029-a
 | Directory Rules | **CONFIRMED accepted** through ADR-0029; canonical source blob `fd49a0b…` | `infra/` root responsibility is established; child-lane maturity remains separate. |
 | Standard child lanes | **CONFIRMED** READMEs under `docker`, `compose`, `reverse_proxy`, `vpn`, `firewall`, `systemd`, `kubernetes`, `terraform`, and `hardening` | Guidance exists; implementation and environment adoption vary by lane. |
 | Hardening checklist | **CONFIRMED** [`infra/hardening/CHECKLIST.md`](./hardening/CHECKLIST.md) | Repeatable review questions exist; no completed review or executable aggregate validator is implied. |
-| Docker lane | **CONFIRMED** two payload-free review Dockerfiles plus npm and Python dependency-integrity inputs | Static assertions and exact-main image build/scan jobs pass. No `.dockerignore`, application payload, command, entrypoint, exposed port, health check, runtime behavior, registry custody, release, or deployment is established. |
+| Docker lane | **CONFIRMED** two payload-free review Dockerfiles plus npm and Python dependency-integrity inputs | Static assertions include an allowlisted `.dockerignore` and six OS package floors. Historical exact-main image scans apply only to their prior bytes; a fresh candidate build/scan is pending. No application payload, command, entrypoint, exposed port, health check, runtime behavior, registry custody, release, or deployment is established. |
 | Compose lane | **CONFIRMED** placeholder `docker-compose.yml` with `infra/`-bounded build contexts and loopback-only published ports | Static constraints, Compose rendering, and review-image builds are confirmed; service startup and runtime behavior are not. |
 | Compose static tests | **CONFIRMED** [`tests/infra/test_compose_static.py`](../tests/infra/test_compose_static.py) | Deterministically checks context/Dockerfile resolution, loopback ports, and selected forbidden mounts/escape settings. |
 | Compose hosted workflow | **CONFIRMED** [`.github/workflows/infra-compose-smoke.yml`](../.github/workflows/infra-compose-smoke.yml), read-only, no service start | Exact-main run [`33277502881`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33277502881) succeeded; scope remains bounded to the checked-in Compose placeholder and review-image builds. |
@@ -534,7 +534,7 @@ Routine, reversible templates inside an accepted lane may use normal review when
 | Review type | Same-path repository-grounded Docker evidence reconciliation after focused static checks and exact-main review-image build/scan validation |
 | Repository snapshot | `main@4e714b639861e340b0c35a5360f9ffaecdf1f53c` |
 | Current maturity | Documentation-heavy; hardening checklist, Docker review-image inputs, and Compose placeholder confirmed; bounded Docker static/build/scan and Compose static/render/build validation confirmed; service startup, infra-wide validation, deployability, and environment state unestablished |
-| Next review trigger | Application payload, `.dockerignore`, command/entrypoint/health check, service-start smoke, aggregate infra validator, public route, secret-store integration, applied environment, production change, or `infra/flora/` placement decision |
+| Next review trigger | Application payload, Docker context allowlist, command/entrypoint/health check, service-start smoke, aggregate infra validator, public route, secret-store integration, applied environment, production change, or `infra/flora/` placement decision |
 
 [Back to top](#top)
 
@@ -565,7 +565,7 @@ infra/
 
 | Lane | Intended responsibility | Evidence-bounded maturity |
 |---|---|---|
-| [`docker/`](./docker/) | Image construction and container boundary | README, two payload-free review Dockerfiles, and dependency-integrity inputs; bounded static checks and exact-main builds/scans pass; `.dockerignore`, application payloads, commands, health, runtime, registry, release, and deployment remain unestablished |
+| [`docker/`](./docker/) | Image construction and container boundary | README, two payload-free review Dockerfiles, dependency-integrity inputs, and a constrained `.dockerignore`; bounded static checks pass, while a fresh image build/scan for the changed candidate remains pending; application payloads, commands, health, runtime, registry, release, and deployment remain unestablished |
 | [`compose/`](./compose/) | Local/small-host orchestration | README plus placeholder Compose file; static boundary, render, and build checks pass; service start and runtime remain unestablished |
 | [`reverse_proxy/`](./reverse_proxy/) | Edge routing, TLS/header/CORS posture, route denials | README plus one-line greenfield Caddy placeholder; adoption, parse/reload, denials, and runtime unestablished |
 | [`vpn/`](./vpn/) | Private-access governance | README confirmed; live config intentionally excluded; implementation unestablished |

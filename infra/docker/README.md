@@ -19,20 +19,21 @@ for release, prove runtime behavior, or make an image public-safe.
 | `explorer-web/package.json` | Exact security-overlay versions | Declares `brace-expansion` `5.0.9`, `ip-address` `10.3.1`, and `tar` `7.5.22` only |
 | `explorer-web/package-lock.json` | npm lockfile for the Explorer overlay | Supplies integrity-locked transitive inputs used during the image build |
 | `governed-api-requirements.lock` | Hash-locked Python requirements | Pins `packaging` `26.3`, `wheel` `0.46.3`, and `setuptools` `82.0.1` |
+| `.dockerignore` | Exact build-context allowlist | Excludes every context path except the two Dockerfiles and their declared lock or manifest inputs |
 | `README.md` | Human-maintained lane contract | Describes current repository evidence and its limits |
 
-No `.dockerignore` is present in this directory. Neither Dockerfile currently
-declares an application copy step, `CMD`, `ENTRYPOINT`, `EXPOSE`, or
-`HEALTHCHECK`. Those absences are evidence that these are review images, not
-complete service or deployment definitions.
+The committed `.dockerignore` is a fail-closed allowlist for the payload-free
+review-image inputs. Neither Dockerfile declares an application copy step,
+`CMD`, `ENTRYPOINT`, `EXPOSE`, or `HEALTHCHECK`. Those absences are evidence
+that these are review images, not complete service or deployment definitions.
 
 ## Image assembly controls
 
 | Control | Explorer review image | Governed API review image |
 |---|---|---|
 | Base identity | `node:22.23.2-trixie-slim` with a committed digest | `python:3.11.15-slim-trixie` with a committed digest |
-| OS package repair | Refreshes the installed `util-linux` and OpenSSL package families | Same bounded package-family refresh |
-| Version floors | Asserts `libblkid1 >= 2.41.5-0+deb13u1` and `libssl3t64 >= 3.5.7-1~deb13u2` | Same assertions |
+| OS package repair | Refreshes bounded `gzip`, `util-linux`, PCRE2, SQLite, OpenSSL, and Perl package families | Same bounded package-family refresh |
+| Version floors | Asserts six Debian fix floors, including `gzip >= 1.13-1+deb13u1`, `libpcre2-8-0 >= 10.46-1~deb13u2`, `libsqlite3-0 >= 3.46.1-7+deb13u2`, and `perl-base >= 5.40.1-6+deb13u1` | Same assertions |
 | Dependency integrity | Checksum-bound npm `11.19.0` archive plus the committed npm lock | `pip --require-hashes` against the committed requirements lock |
 | Build-time assertions | Verifies exact `tar` runtime dependencies and a loadable extraction API | Fails if the hash-locked Python requirements cannot install |
 | Final identity | `node` | UID/GID `10001:10001` |
@@ -64,7 +65,8 @@ python -m unittest discover \
 [`test_docker_security_overrides.py`](../../tests/infra/test_docker_security_overrides.py)
 checks the exact Explorer overlay manifest and lock, integrity metadata, the
 checksum-bound npm archive, replacement targets, runtime dependency versions,
-and the extraction API assertion.
+the extraction API assertion, both Dockerfiles' six package floors, and the
+exact build-context allowlist.
 
 [`test_compose_static.py`](../../tests/infra/test_compose_static.py) checks that
 the Compose build contexts and Dockerfiles resolve, published ports are bound to
@@ -85,19 +87,19 @@ configured finding remains. The repository job separately scans tracked files
 for vulnerabilities, misconfigurations, and secrets under its configured
 policy.
 
-The latest successful image-scan evidence inspected for the current Docker bytes is
+The latest successful image-scan evidence for the prior Docker bytes is
 [security run `33270285794`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33270285794)
 at commit `977cd78c127e297317ca0806b2e95b69458b256e`, completed on
 2026-08-29. The Explorer and governed API image jobs succeeded, and their Trivy
-reports listed zero findings at the workflow's configured threshold. Later
-commits through the current base changed other repository files but not the
-Dockerfiles or their lane-specific dependency inputs.
+reports listed zero findings at the workflow's configured threshold. This
+candidate changes both Dockerfiles and the build-context boundary, so a fresh
+exact-head build and scan remain `NOT_RUN` until hosted validation completes.
 
-That result is bounded to the referenced commit, image inputs, scanner version,
-vulnerability database, severity filter, and `ignore-unfixed` setting. It does
-not claim permanent vulnerability absence. The current documentation-only base
-commit does not change the Docker inputs, but any later Docker, lockfile,
-workflow, scanner, or vulnerability-database change requires fresh evidence.
+That historical result is bounded to the referenced commit, image inputs,
+scanner version, vulnerability database, severity filter, and `ignore-unfixed`
+setting. It does not claim permanent vulnerability absence or validate this
+candidate. Any Dockerfile, `.dockerignore`, lockfile, workflow, scanner, or
+vulnerability-database change requires fresh evidence.
 
 ### Build commands
 
@@ -158,6 +160,7 @@ changes:
 
 - base image name or digest;
 - OS package-family scope or fixed-version floor;
+- `.dockerignore` allowlist or another build-context boundary;
 - npm archive checksum, overlay manifest, or lockfile;
 - Python requirements or hashes;
 - build context, copied content, runtime user, port, health check, entrypoint, or
@@ -172,7 +175,7 @@ changes:
 The repository does not yet establish the following for this lane:
 
 - application payloads, startup commands, health checks, or runtime behavior;
-- a `.dockerignore` boundary for the `infra/docker` build context;
+- a fresh exact-head image build and scan for these changed inputs;
 - production image identities, registry custody, tagging, retention, signing,
   provenance, or SBOM generation;
 - runtime secrets, capabilities, mounts, filesystems, networks, ingress, egress,
