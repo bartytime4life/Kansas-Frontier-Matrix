@@ -3,7 +3,7 @@ doc_id: kfm://doc/adr-0010-deny-by-default-dna-rare-species-archaeology-infrastr
 title: "ADR-0010 — Deny-by-Default for DNA, Rare Species, Archaeology, and Critical Infrastructure"
 type: adr
 adr_id: ADR-0010
-version: v1.4
+version: v1.5
 status: draft
 owners:
   - "NEEDS VERIFICATION — architecture decision owner"
@@ -35,12 +35,12 @@ superseded_by: null
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 27202a0595ecdc6afd6f98b3aedaa236243e07b3
-  target_prior_blob: 1dcc1e5f6a47ef681c05fba158679fc12cf7da27
-  adr_index_blob: 938c5894c36b99e14810918e2c550ab0e92d53b1
-  adr_0029_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
+  base_commit: 98d623267b739b31c701bb6db30889975e77d6da
+  target_prior_blob: cd96b0252bc876bee1e2d6ee21b2c0d6feec56ae
+  adr_index_blob: 0c143676dfd3c1bda16cb44398c5ad5d4a49cf67
+  adr_0029_blob: 4c1ef5f7f812d58fbdde9898acc96bb4c9280b2c
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
-  policy_root_readme_blob: 52877f1befd3112f1aec0eb122669d3fdc2634e6
+  policy_root_readme_blob: 105f4f5f10004e85e66ca34cc79b0d45e86c1a35
   domain_policy_readme_blob: 95f5b0a72f854fc476f9ea400c96399e2ab9cc8f
   sensitivity_root_readme_blob: 06197c7a7255264b94fb9dd8d7f73844cfa35682
   policy_bundles_readme_blob: 0a13a9c9beddfa764d47e5dd6a2ea7ef91bf0d53
@@ -50,14 +50,14 @@ evidence_snapshot:
   policy_decision_vocabulary_contract_blob: 51158caefd7b440851fb37489c511a5c710bed2b
   policy_decision_vocabulary_registry_blob: ae68a9f3cf80308f18bd04207ef2c85057750f12
   policy_test_workflow_blob: ac8f125e8a4d3634d86f66836d2aa2c0e3925e75
-  policy_boundary_guards_workflow_blob: 1d7ba1df0f8ed291a15b1d9a44e404ba95d9e35c
+  policy_boundary_guards_workflow_blob: 61445dcac23b5efe670bfd04221c38f479cbad3e
   archaeology_policy_readme_blob: 5b95997ab8c5d29e4b03a8c44960e41322990d1d
   fauna_policy_readme_blob: 2b47d285e15c97f49b076f3ba6d32de517b4525a
   flora_policy_readme_blob: 247fc146131f4e6598af9fd939cf087d92523ed6
-  people_dna_land_policy_readme_blob: 7260394c77d79629895da16d8d680e8d80c56b32
+  people_dna_land_policy_readme_blob: 7936bf58d8d798cd6eb67ff202e9608de56a7b75
   settlements_infrastructure_policy_readme_blob: 792a67caab14d119cf4a21dee1365216bfaefb11
-  governed_api_main_blob: bcc8d3a0ddba4b225e962b594d548819df0cbb71
-  governed_api_stub_blob: 5d7c137d2e78ddfca35a1356a96333ac2e84952b
+  governed_api_main_blob: a0e47e4e7e373f78b5ea31599311b1a275d07e2a
+  governed_api_stub_blob: baf43e20fb399257ed7724b4111417f07cd8098a
 related:
   - docs/adr/README.md
   - docs/adr/INDEX.md
@@ -92,6 +92,7 @@ notes:
   - "Policy documentation and fixture-first control surfaces have matured since v1.2, but the general evaluator, active bundle, sensitive-domain native policy coverage, obligation enforcement, governed consumer integration, and release-significant operation remain unproved."
   - "This ADR governs operation-specific exposure and harmful precision. It does not classify every record in a named domain as secret, and consent, schema validity, file presence, workflow success, or generalized rendering cannot substitute for release authority."
   - "v1.4 is a same-path currentness refresh against main@27202a0595ecdc6afd6f98b3aedaa236243e07b3. It retains draft/proposed status and adds a bounded current readback for the cross-domain seam projection and release-rollup test boundary; no policy, source, release, deployment, or publication state changes."
+  - "v1.5 is a same-path currentness refresh against main@98d623267b739b31c701bb6db30889975e77d6da. It records only bounded source readbacks: the ADR index now has 39 numbered records with ADR-0010 still draft/effectively proposed; the policy root remains evaluator-unbound and bundle-unaccepted; the boundary-guard workflow declares 20 structural tests; People-DNA-Land fixture profiles remain synthetic; the high-risk seam projection remains PROPOSED with publication authority false; and governed API scaffold outcomes remain non-authorizing. No policy, source, release, deployment, or publication state changes."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -131,7 +132,7 @@ notes:
 | **Tracked path** | `docs/adr/ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md` |
 | **Source metadata** | `draft` |
 | **Effective decision status** | `proposed` — not binding until the record and index carry matching reviewed `accepted` status |
-| **Record edition** | `v1.4` — currentness refresh; decision unchanged |
+| **Record edition** | `v1.5` — currentness refresh; decision unchanged |
 | **Decision class** | Cross-domain sensitivity, harmful-precision, restricted-identity, public-exposure, and fail-closed policy invariant |
 | **Affected lanes** | `people-dna-land`, `fauna`, `flora`, `archaeology`, `settlements-infrastructure`, and any cross-domain composition inheriting these risks |
 | **Current repository posture** | Documentation-rich, fixture-first in bounded profiles, structurally guarded, evaluator-unbound, active-bundle-unaccepted, consumer-unproved, release-unproved |
@@ -169,7 +170,21 @@ This ADR distinguishes doctrine, configured source, machine shape, native policy
 
 ### Current repository evidence
 
-The historical v1.3 inventory below was pinned to `main@f5e082d423f1dbb0753f970a662de4f818c77529`; it is retained for traceability and must not be read as a rolling claim about current main. The v1.4 bounded readback below is pinned to `main@27202a0595ecdc6afd6f98b3aedaa236243e07b3`.
+The historical v1.3 inventory below was pinned to `main@f5e082d423f1dbb0753f970a662de4f818c77529`; it is retained for traceability and must not be read as a rolling claim about current main. The v1.4 bounded readback below is pinned to `main@27202a0595ecdc6afd6f98b3aedaa236243e07b3`. The v1.5 source-only readback below is pinned to `main@98d623267b739b31c701bb6db30889975e77d6da`; it does not execute a validator or promote any source status.
+
+### Bounded current source readback (v1.5)
+
+This is a content and identity readback at the pinned main commit, not proof that any workflow, validator, Rego module, API route, policy bundle, or release operation ran.
+
+| Surface | Verified source state at pinned main | What it establishes — and does not establish |
+|---|---|---|
+| [ADR index](./INDEX.md) | The index records `ADR-0001` through `ADR-0039`; `ADR-0010` remains source `draft` and effectively `proposed`. Four records are effective `accepted`: ADR-0006, ADR-0007, ADR-0029, and ADR-0038. | Current ADR status inventory and this record's non-acceptance; not an authorization to change any decision or enforcement state. |
+| [ADR-0029](./ADR-0029-adopt-directory-governance-standard-v2.md) and [Directory Rules](../doctrine/directory-rules.md) | ADR-0029 remains source `accepted`; Directory Rules remains the adopted placement authority for this same-path ADR edit. | The owning root is still `docs/`; not that the policy or any sensitive derivative is authorized. |
+| [Policy root](../../policy/README.md) and [boundary workflow](../../.github/workflows/policy-boundary-guards.yml) | The root describes 40 direct policy lanes, 173 Rego files, one bounded native Rego test, an unbound general evaluator, and an unaccepted active bundle. The workflow source declares four structural modules collecting 20 tests. | Repository-declared maturity and test wiring only; not a passed hosted run, an active evaluator, an accepted bundle, or consumer enforcement. |
+| [People-DNA-Land boundary](../../policy/domains/people-dna-land/README.md) | The lane still describes direct Rego scaffolds and two bounded synthetic consent profiles with 26 no-network tests; it explicitly says those profiles do not execute the direct Rego files. | Synthetic fixture coverage and an explicit public-edge hold; not real consent, identity, genomic, title, or release authority. |
+| [Cross-domain seam register](../../control_plane/cross_domain_seam_register.yaml) | The high-risk seam projection remains `PROPOSED`; its defaults retain `publication_authority: false` and require each participant's release condition. | A fail-closed documentation/projection posture; not a permitted join, sensitivity reduction, release, or publication. |
+| [Governed API scaffold](../../apps/governed-api/src/governed_api/main.py) and [negative envelope](../../apps/governed-api/src/governed_api/stub.py) | The stub continues to expose bounded negative outcomes including `ABSTAIN` and a `NOT_IMPLEMENTED` abstain envelope. | Finite fail-safe scaffold behavior in source; not a policy-backed public service or an allow path. |
+
 
 | Surface | Verified state | What it proves — and does not prove |
 |---|---|---|
