@@ -54,6 +54,11 @@ receipt defined by the app-local handoff. Repository branch work does not deploy
 restore a Site version. GitHub repository-homepage metadata still requires the
 separate settings-only action tracked in [issue #4246](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4246).
 
+The receipt validator keeps terminal states distinct: a `DEPLOYED` readback ends on
+the candidate version and records no completed restoration; a `ROLLED_BACK` readback
+ends on the prior version and requires an explicit restoration confirmation. Neither
+outcome authorizes a release or publication.
+
 The application runs as a single-route Vinext site through the package-owned
 `NullMapRuntime`. TypeScript and Vite resolve the `@kfm/maplibre` facade to the
 accepted workspace package root, following the same renderer-neutral pattern as
