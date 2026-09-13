@@ -3,7 +3,7 @@ doc_id: kfm://doc/adr-0012-connector-outputs-to-data-raw-or-data-quarantine-only
 title: "ADR-0012 — Connector outputs MUST land in data/raw/ or data/quarantine/ only"
 type: adr
 adr_id: ADR-0012
-version: v1.4
+version: v1.5
 status: draft
 owners:
   - "NEEDS VERIFICATION — architecture decision owner"
@@ -24,7 +24,7 @@ reviewers_required:
   - Security reviewer
   - At least one affected domain steward
 created: 2026-05-11
-updated: 2026-08-13
+updated: 2026-09-13
 policy_label: public
 truth_posture: cite-or-abstain
 owning_root: docs/
@@ -34,11 +34,11 @@ current_path: docs/adr/ADR-0012-connector-outputs-to-data-raw-or-data-quarantine
 supersedes: []
 superseded_by: []
 evidence_snapshot:
-  snapshot_status: current_v1.4_repository_evidence
+  snapshot_status: current_v1.5_repository_evidence
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 52a6c7b55fc473c813bde6ec413bcda81259e809
-  target_prior_blob: 2cf9e082d403a5e4294ed0b845e58edc687f0c8b
+  base_commit: 475c410595ec796927c2685b98198104762a0a2f
+  target_prior_blob: a3534bff3331ca2052bc6c5d179f354f021a52e3
   adr_index_blob: 938c5894c36b99e14810918e2c550ab0e92d53b1
   adr_0029_blob: 3ba5f902ffe20a65a259cb0a7dab07f1725d204b
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
@@ -113,6 +113,7 @@ notes:
   - "Current CI runs bounded static path checks, connector-core primitives, injected transport, SourceAdapter and SourceArtifact handoff tests, plus the IngestReceipt validator prerequisite; actual connector-run receipt presence and persistence remain an explicit hold."
   - "The internal connectors-core package provides no concrete live transport, stable public export, arbitrary storage interface, source activation, evidence, policy, release, or publication authority."
   - "The connector-versus-shared-ingest writer handoff remains implementation-level NEEDS VERIFICATION; this ADR governs allowable effects regardless of which reviewed component performs the final write."
+  - "v1.5 is a same-path currentness refresh against main@475c410595ec796927c2685b98198104762a0a2f. It retains the proposed RAW/QUARANTINE-only decision, preserves earlier inventories as historical evidence, and records bounded current readback of connector, RAW, QUARANTINE, receipt, static-scan, SourceAdapter, and artifact-handoff surfaces. No connector code is executed and no source, payload, lifecycle, release, deployment, or publication state changes."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -640,6 +641,18 @@ It must not carry policy approval, evidence closure, release state, or public pe
 | [`IngestReceipt` contract](../../contracts/source/ingest_receipt.md), schema, validator, and tests | Proposed closed shape has a repository validator, valid/invalid fixtures, aggregate-profile registration, and focused CI prerequisite checks | No connector-emitted receipt instance, run correspondence, accepted writer, or governed persistence is established |
 | Live runs and operations | Not established | No claims about active sources, emitted payloads, production consumers, or public delivery |
 
+### Bounded v1.5 current readback
+
+This is a repository file-content readback at `main@475c410595ec796927c2685b98198104762a0a2f`, not evidence that a connector, validator, workflow, or external source was executed.
+
+| Surface | Verified current source posture | Safe conclusion |
+| --- | --- | --- |
+| [Connectors root](../../connectors/README.md) | Declares a source-edge, no-network-by-default, RAW/QUARANTINE/receipt-only, non-publisher boundary. | A documented responsibility boundary; not a runtime proof for every connector. |
+| [RAW](../../data/raw/README.md) and [QUARANTINE](../../data/quarantine/README.md) roots | Both remain draft lifecycle-boundary documents with no direct public path; RAW additionally holds physical-placement/payload enforcement open. | Lifecycle intent and a fail-closed hold are documented; not a source admission, persisted payload, or publication fact. |
+| [Connector gate](../../.github/workflows/connector-gate.yml), [scanner](../../tools/validators/connector_gate/output_paths.py), and [boundary test](../../tests/policy/test_pipeline_connector_non_publisher.py) | Current source describes bounded static recognized-sink checks, selected no-network suites, and explicit non-authority. | Test/workflow definitions exist; no current execution result or comprehensive runtime confinement is implied. |
+| [SourceAdapter](../../packages/connectors-core/src/connectors_core/source_adapter.py) and [artifact handoff](../../packages/connectors-core/src/connectors_core/artifact_handoff.py) | Both explicitly omit storage, admission, lifecycle writes, receipt emission, policy, release, and publication work. | A pure candidate-construction boundary; not a connector writer or a promotion path. |
+| [IngestReceipt contract](../../contracts/source/ingest_receipt.md) and [validator](../../tools/validators/validate_ingest_receipt.py) | The contract remains proposed; validator source is deliberately no-network and validates records and optional local integrity bindings. | Candidate validation can be performed without network access; it does not prove an emitted receipt or governed persistence. |
+
 ### Material corrections from v1.3
 
 - The connector-core package is no longer placeholder-only: bounded no-network primitives, injected transport, `SourceAdapter`, and exact-byte artifact handoff now exist and are tested.
@@ -1133,6 +1146,7 @@ The supplied KFM corpus consistently treats connectors and watchers as non-publi
 
 | Version | Date | Change |
 | --- | --- | --- |
+| `v1.5` | 2026-09-13 | Refreshed the currentness boundary against `main@475c410595ec796927c2685b98198104762a0a2f`. Retained v1.4 evidence as historical and added a bounded source readback for connector, RAW/QUARANTINE, static-scan, `SourceAdapter`, artifact-handoff, and IngestReceipt surfaces. No connector, validator, workflow, or external source was executed; the ADR remains `draft` / effective `proposed` and does not authorize capture, source admission, persistence, promotion, release, deployment, or publication. |
 | `v1.4` | 2026-08-13 | Reconciled accepted placement authority with this still-proposed connector decision; replaced stale connector-core and receipt-validator claims with current no-network primitives, injected transport, `SourceAdapter`, exact-byte `SourceArtifact` handoff, validators, fixtures, and workflow evidence; distinguished prerequisite checks from connector-run receipt presence, governed persistence, runtime confinement, source admission, and publication; changed documentation only. |
 | `v1.3` | 2026-07-29 | Recorded the bounded connector repository-path scanner, deterministic policy cases, two-part workflow canary, and explicit limits without accepting this proposed ADR or changing publication authority. |
 | `v1.2` | 2026-07-23 | Same-path repository-grounded modernization: confirmed ADR identity; pinned current root, schema, contract, workflow, test, and validator evidence; separated payload landing, receipt persistence, and registry authority; surfaced connector/orchestrator writer conflict; documented partial static enforcement and receipt hold; added complete maturity, acceptance, fixture, migration, risk, and rollback models; preserved `draft` / effective `proposed` status. |
@@ -1141,4 +1155,4 @@ The supplied KFM corpus consistently treats connectors and watchers as non-publi
 
 ---
 
-**Last updated:** 2026-08-13 · **Source metadata:** `draft` · **Effective decision status:** `proposed` · **Current enforcement:** bounded static and no-network source-edge prerequisites + connector-run receipt `WORKFLOW_HOLD` · **Publication:** none · **Path:** `docs/adr/ADR-0012-connector-outputs-to-data-raw-or-data-quarantine-only.md` · [Back to top](#top)
+**Last updated:** 2026-09-13 · **Source metadata:** `draft` · **Effective decision status:** `proposed` · **Current enforcement:** bounded static and no-network source-edge prerequisites + connector-run receipt `WORKFLOW_HOLD` · **Publication:** none · **Path:** `docs/adr/ADR-0012-connector-outputs-to-data-raw-or-data-quarantine-only.md` · [Back to top](#top)
