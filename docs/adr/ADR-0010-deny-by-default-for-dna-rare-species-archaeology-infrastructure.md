@@ -186,8 +186,12 @@ This is a content and identity readback at the pinned main commit, not proof tha
 | [Governed API scaffold](../../apps/governed-api/src/governed_api/main.py) and [negative envelope](../../apps/governed-api/src/governed_api/stub.py) | The stub continues to expose bounded negative outcomes including `ABSTAIN` and a `NOT_IMPLEMENTED` abstain envelope. | Finite fail-safe scaffold behavior in source; not a policy-backed public service or an allow path. |
 
 
+### Historical v1.3 inventory (retained)
+
+The following table is retained as a pinned historical inventory; its numerical claims are not current-main claims.
+
 | Surface | Verified state | What it proves — and does not prove |
-|---|---|---|
+|---|---|
 | [`docs/adr/INDEX.md`](./INDEX.md) | 34 numbered records; ADR-0029 accepted; ADR-0010 and 32 other records proposed | Proves identity and status inventory; not acceptance or implementation. |
 | [`ADR-0029`](./ADR-0029-adopt-directory-governance-standard-v2.md) and [Directory Rules](../doctrine/directory-rules.md) | Directory Rules v2 is accepted; `docs/` owns ADRs, `policy/` admissibility, `schemas/` shape, `tests/`/`fixtures/` bounded proof, and `release/` release decisions | Proves placement authority; not policy behavior. |
 | [`policy/README.md`](../../policy/README.md) | Canonical policy root; 173 Rego files; one native Rego test in one bounded inactive profile; multiple inactive profiles; 18-test structural boundary suite | Proves tracked source and bounded checks; not a general evaluator, active bundle, decision receipts, consumer enforcement, or release approval. |
