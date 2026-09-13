@@ -243,6 +243,22 @@ class GeoParquet2RcGdalConsumerProbeTests(unittest.TestCase):
         self.assertEqual(result.outcome, "ERROR")
         self.assertIn("CARRIER_DIGEST_MISMATCH", result.reason_codes)
 
+    def test_symlinked_source_carrier_path_errors(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            packet_path, _ = _write_packet(root)
+            candidate = root / "synthetic-geoparquet-2.0.0-rc.1.parquet"
+            target = root / "redirected-carrier.parquet"
+            target.write_bytes(candidate.read_bytes())
+            candidate.unlink()
+            try:
+                candidate.symlink_to(target)
+            except OSError:
+                self.skipTest("symlinks unavailable")
+            result = validate(root, packet_path)
+        self.assertEqual(result.outcome, "ERROR")
+        self.assertIn("SOURCE_CARRIER_PATH_INVALID", result.reason_codes)
+
     def test_success_with_changed_semantics_fails_validation(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
