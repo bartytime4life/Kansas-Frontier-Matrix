@@ -3,7 +3,7 @@ doc_id: kfm://doc/adr-0025-public-client-never-reads-canonical-internal-stores
 title: ADR-0025 — Public Client Never Reads Canonical or Internal Stores
 type: adr
 adr_id: ADR-0025
-version: v1.2
+version: v1.3
 status: draft
 effective_decision_status: proposed
 owners:
@@ -21,7 +21,7 @@ reviewers_required:
   - Static-delivery or hosting reviewer when released artifacts are exposed
   - At least one affected domain steward
 created: 2026-05-09
-updated: 2026-07-24
+updated: 2026-09-14
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
@@ -33,6 +33,8 @@ evidence_snapshot:
   base_ref: main
   base_commit: 2e4049bf511dcc5c4425a297458bf58627b58299
   target_prior_blob: 47762b9f6fc903c4a70b45de7c3030610082f695
+  v1_3_reconciliation_checkpoint: a11388cdd1b0e263b1c02d9296339d7be54949b3
+  v1_3_target_prior_blob: e63c6b3495e8eaf926497301880c87350129b5db
   adr_index_blob: cf08fae322ac53426f7394d97897fdb942253049
   directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
   adr_0004_blob: 11b86c462d474385befba0fb2115af9885f592af
@@ -96,10 +98,10 @@ related:
   - Makefile
 tags: [kfm, adr, public-client, trust-membrane, governed-api, explorer-web, static-delivery, internal-store, deny-by-default, evidence, release, correction, rollback]
 notes:
-  - "v1.2 is a same-path repository-grounded modernization. It preserves source metadata draft and effective decision status proposed; it does not accept ADR-0025 or prove deployed isolation."
+  - "v1.3 is a same-path repository-grounded reconciliation against main@a11388cdd1b0e263b1c02d9296339d7be54949b3. It preserves source metadata draft and effective decision status proposed; it does not accept ADR-0025 or prove deployed isolation."
   - "ADR-0004 selects the proposed dynamic trust membrane; ADR-0025 defines the proposed public-client information-flow and anti-bypass constraints around that boundary."
-  - "The current Governed API is a three-route WSGI scaffold returning ABSTAIN / NOT_IMPLEMENTED; selected boundary tests exist, but the separate RuntimeResponseEnvelope is not integrated into those routes."
-  - "Explorer Web remains implementation-held: package scripts are TODO, no lockfile is established by the UI workflow, and bounded evidence did not verify a non-empty browser implementation inventory."
+  - "The current Governed API remains a three-route WSGI scaffold, but registered-handler exceptions and invalid negative shapes now fail closed to safe RuntimeResponseEnvelope-shaped ERROR responses; it still does not resolve evidence, evaluate policy, authorize callers, or project released claims."
+  - "Explorer Web now has real Vite/Vitest/Playwright scripts, root pnpm@11.17.0 and pnpm-lock.yaml, and fixture-backed evidence-drawer/map-runtime boundary tests. This confirms bounded source-level implementation, not a deployed browser/network/static-edge isolation claim."
   - "Static data under data/published is a released-carrier responsibility lane, not a public endpoint by path placement; serving and invalidation remain unverified."
 [/KFM_META_BLOCK_V2] -->
 
@@ -111,8 +113,8 @@ notes:
 
 [![Decision: proposed](https://img.shields.io/badge/decision-proposed-d4a72c?style=flat-square)](#status)
 [![ADR ID: confirmed](https://img.shields.io/badge/ADR--0025-confirmed-0969da?style=flat-square)](#current-repository-evidence)
-[![Governed API: scaffold](https://img.shields.io/badge/governed%20API-3%20ABSTAIN%20routes-f59e0b?style=flat-square)](#current-repository-evidence)
-[![Explorer Web: held](https://img.shields.io/badge/explorer%20web-WORKFLOW__HOLD-b42318?style=flat-square)](#current-enforcement-maturity)
+[![Governed API: bounded scaffold](https://img.shields.io/badge/governed%20API-3%20routes%20%2B%20safe%20ERROR-f59e0b?style=flat-square)](#current-repository-evidence)
+[![Explorer Web: partial](https://img.shields.io/badge/explorer%20web-source--level%20PARTIAL-0969da?style=flat-square)](#current-enforcement-maturity)
 [![Static edge: unverified](https://img.shields.io/badge/static%20edge-NEEDS__VERIFICATION-6e7781?style=flat-square)](#current-enforcement-maturity)
 [![Publication effect: none](https://img.shields.io/badge/publication-none-6e7781?style=flat-square)](#authority-and-publication-boundary)
 
@@ -120,7 +122,7 @@ notes:
 > **Identity is confirmed; acceptance is not.** [`docs/adr/INDEX.md`](./INDEX.md) uniquely assigns `ADR-0025` to this exact file. Its source metadata is `draft`, which the index normalizes conservatively to effective status `proposed`. A README, test, route, workflow, pull request, merge, or deployed URL cannot accept the decision.
 
 > [!CAUTION]
-> **The current boundary is partial scaffolding.** The Governed API has three GET routes that return `ABSTAIN / NOT_IMPLEMENTED`; selected tests reject internal-store path literals and forbidden imports. Explorer Web still has TODO-only build/test scripts, and its workflow fails readiness until real scripts, an exact package-manager pin, and a lockfile exist. No current evidence proves browser, network, static-host, CDN, database, search, graph, or model-runtime isolation.
+> **The current boundary is partial, bounded implementation.** The Governed API has three GET routes that return scaffolded `ABSTAIN / NOT_IMPLEMENTED` and converts registered-handler faults or invalid negative shapes to sanitized `ERROR` envelopes. Explorer Web has real Vite/Vitest/Playwright scripts, a pinned root package manager and lockfile, and fixture-backed evidence/map-runtime boundary tests. No current evidence proves deployed browser, network, static-host, CDN, database, search, graph, or model-runtime isolation.
 
 > [!WARNING]
 > **Released placement is not public routing.** `data/published/` owns release-approved public-safe carrier bytes, but the repository path itself is not a public API, filesystem mount, bucket policy, CDN authorization, or release decision. Public exposure requires a governed dynamic projection or an approved static-delivery profile. `data/proofs/`, `data/receipts/`, `data/catalog/`, and `release/` remain internal authority/support stores even when selected public-safe summaries are projected outward.
@@ -140,7 +142,7 @@ notes:
 | **Source metadata** | `draft` |
 | **Effective decision status** | `proposed` |
 | **Decision class** | Public-client information flow, trust membrane, static delivery, network exposure, evidence/release projection, and anti-bypass control |
-| **Current repository posture** | Governed API fail-closed scaffold; selected structural tests; Explorer Web/UI and public edge held or unverified |
+| **Current repository posture** | Governed API bounded negative-envelope scaffold; Explorer Web source-level build/test and fixture boundaries; deployment, static edge, and public-network isolation unverified |
 | **Implementation effect of this revision** | Documentation only |
 | **Release/publication effect** | None |
 | **Supersedes / superseded by** | None / none |
@@ -163,19 +165,19 @@ An accepted ADR without enforcement is doctrine. Conversely, a green path-litera
 
 ## Evidence boundary
 
-This revision is grounded in repository bytes at `main@2e4049bf511dcc5c4425a297458bf58627b58299`.
+This v1.3 reconciliation is grounded in repository bytes at `main@a11388cdd1b0e263b1c02d9296339d7be54949b3`. The earlier v1.2 snapshot remains historical evidence only.
 
 | Evidence surface | CONFIRMED current state | What remains unproved |
 |---|---|---|
 | ADR inventory | ADR-0025 uniquely maps to this file; source `draft`; effective `proposed` | Acceptance |
 | Directory Rules / ADR-0004 | Governed API is the proposed single dynamic trust boundary; no parallel `apps/api/` path at the checked ref | Runtime or deployed enforcement |
 | Governed API app | WSGI scaffold; routes `/bootstrap`, `/layers`, `/evidence` | Auth, policy, evidence resolution, release binding, production routing |
-| Route behavior | Every registered route returns `ABSTAIN`, `NOT_IMPLEMENTED`, empty evidence refs | Any evidence-backed `ANSWER` or client-facing envelope integration |
+| Route behavior | Registered routes return scaffolded `ABSTAIN`; unknown/method/handler-failure/invalid-shape paths return sanitized `ERROR` envelopes | Any evidence-backed `ANSWER`, policy decision, caller authorization, or release binding |
 | API tests | Route manifest, 404/405, forbidden imports, internal-store path-literal checks | Indirect imports, environment-configured stores, outbound network paths, exfiltration |
 | RuntimeResponseEnvelope | Draft contract, closed proposed schema, fixture validator | Governed API integration and accepted state vocabularies |
-| Explorer Web | README/source-layout guidance plus TODO package scripts | Implemented browser routes, API client, fetch/import inventory, runtime tests |
-| Explorer boundary test | Scans discovered JS/TS files for internal path literals and renderer imports | Non-empty browser source inventory and complete network/data-flow analysis |
-| UI workflow | Intentionally fails readiness for placeholder scripts, missing exact package-manager pin, and absent lockfile | Build, tests, bundle contents, browser behavior |
+| Explorer Web | Real Vite build and Vitest/Playwright scripts, pnpm workspace pin/lockfile, Evidence Drawer and map-runtime fixture tests | Deployed public-origin behavior, real API transport, complete bundle/config/worker inventory, and network isolation |
+| Explorer boundary tests | Fixture-backed Evidence Drawer and map-runtime tests fail closed before transport and reject lifecycle-store/model-runtime references in the tested bridge | Complete browser bundle/config/worker/service-worker and deployment data-flow analysis |
+| UI workflow | Requires real scripts, exact pnpm pin, and lockfile before executing Explorer build/test jobs | Current hosted result, bundle contents, browser behavior, and public network isolation |
 | Reverse proxy | Detailed draft deny-by-default guidance | Concrete config, deployment, route map, TLS/CORS/CSP, public-origin behavior |
 | Published data | Canonical released-carrier lane; public readiness deny by default; payloads/consumers/hosting unknown | Any approved static edge, release closure, cache invalidation |
 | Public deny suite | Makefile `deny-test` is a TODO marker | Complete public-boundary policy/runtime proof |
@@ -518,65 +520,37 @@ Literal scans remain useful as a fast negative guard, not as full information-fl
 
 ## Current repository evidence
 
-| Surface | Current verified state | Safe conclusion |
+### v1.3 pinned readback
+
+| Surface | Observed source-level state | Explicit non-proof |
 |---|---|---|
-| ADR-0025 | Exact path; source `draft`; effective `proposed` | Decision not accepted |
-| ADR-0004 | Repository-grounded proposed dynamic membrane decision | Dependency documented; not accepted |
-| `apps/api/` | Exact `apps/api/README.md` path absent at pinned ref; bounded search surfaced no app path | No current parallel app established by inspected evidence |
-| Governed API entry | Minimal WSGI dispatcher with registered GET routes, 404, 405 | Bounded executable scaffold |
-| Route registry | Exactly `/bootstrap`, `/layers`, `/evidence` | Current route manifest only |
-| Route outputs | `ABSTAIN`, `NOT_IMPLEMENTED`, empty evidence refs, zero placeholder hash | Fail-closed scaffold; no claim-bearing answer |
-| Route tests | All registered routes structurally checked against DecisionEnvelope subset | Does not prove RuntimeResponseEnvelope integration |
-| API boundary tests | 404/405, route set, renderer/model import, internal path-literal checks | Selected source boundaries only |
-| Boundary constants | Include RAW, WORK, QUARANTINE, PROCESSED, CATALOG, PUBLISHED, and release path markers | Literal deny vocabulary, not complete flow policy |
-| RuntimeResponseEnvelope | Draft contract, proposed closed schema, executable fixture validator | Shape evidence; route integration unproved |
-| API workflow | Runs smoke and focused ABSTAIN tests with read-only permissions | Command-bearing CI; not deployment/release evidence |
-| Explorer package | Version `0.0.0`; dev/build/test scripts echo `TODO` | No real UI build/test command |
-| Explorer source docs | Candidate source map and explicit implementation uncertainty | Source architecture guidance only |
-| Explorer boundary test | Scans discovered JS/TS files for renderer imports and store literals | Must assert non-empty inventory to avoid vacuous pass |
-| UI workflow | Fails readiness on TODO scripts, missing lockfile, or unpinned package manager | Intentional implementation hold |
-| Makefile | API and boundary targets execute; `deny-test` and `ui-build` are TODO markers | Partial tests, incomplete public deny suite |
-| Reverse-proxy lane | Draft deny-by-default contract | No concrete edge config/deployment verified |
-| Published lane | Canonical released-carrier responsibility; public readiness deny by default | No hosting or public consumer proof |
-| CODEOWNERS | Relevant roots route to one account | Review routing only |
+| ADR inventory | `ADR-0025` remains this file with source `draft` / effective `proposed` | Acceptance, operational authority, or production enforcement |
+| Governed API | Exactly three registered GET routes; route bodies remain negative scaffolds | Evidence resolution, policy evaluation, authorization, release binding, or live data retrieval |
+| API failure guard | Registered-handler exceptions, awaitables, and invalid negative shapes become sanitized closed `ERROR` envelopes; tests assert 404/405 and no internal-detail reflection | Complete request/response validation or every route, dependency, and deployment failure class |
+| API store boundary | Focused tests reject selected lifecycle-store literals and prohibited renderer/model imports in API code | Indirect imports, environment/config store routing, egress, database/search/vector access, or production networking |
+| Explorer Web | Real Vite build and Vitest/Playwright scripts; root pins `pnpm@11.17.0`; `pnpm-lock.yaml` exists | A passing exact-head build, browser execution, live governed transport, or public origin isolation |
+| Explorer boundaries | Evidence Drawer and map-runtime fixtures assert finite `ANSWER`/`ABSTAIN`/`DENY`/`ERROR` handling, withdrawal invalidation, and a tested bridge with no `fetch`, lifecycle-store, renderer, or model-runtime reference | A released dataset, real API response, complete bundle/config/worker scan, or end-to-end public denial proof |
+| Sites Explorer | Renderer-neutral, synthetic/generalized presentation is documented under the existing Sites identity; error fallback is fail closed | Deployed version state, renderer/layer loading, released operational data, or a public-store isolation proof |
+| Static/reverse-proxy lanes | `data/published/` and reverse-proxy documentation retain release-carrier/deny-by-default roles | Applied edge config, headers, CORS, cache, origin, range, DNS, TLS, or static-publication proof |
 
-### Current violations
-
-No direct Explorer Web or public route violation was confirmed from the inspected implementation because a substantive Explorer Web implementation was not verified. This is **not** proof of compliance. An empty or placeholder client cannot demonstrate safe public behavior.
-
-[Back to top](#top)
-
----
-
+The source-level advances tighten the architectural inventory, but they do not relax the ADR’s core rule: ordinary public clients cannot read canonical or internal stores. All public origin, deployed runtime, static-host, model-runtime, and service-inventory conclusions remain **NEEDS VERIFICATION**.
 <a id="current-enforcement-maturity"></a>
 
 ## Current enforcement maturity
 
-| Capability | Current state |
-|---|---|
-| ADR identity/status | `CONFIRMED / proposed` |
-| Governed API route scaffold | Implemented, fail-closed |
-| Governed API auth/policy/evidence/release | Not established |
-| RuntimeResponseEnvelope route integration | Partial / not established |
-| API structural boundary tests | Implemented, bounded |
-| Complete public deny suite | TODO marker |
-| Explorer Web implementation | `WORKFLOW_HOLD` |
-| Explorer non-vacuous fetch/import scan | Not established |
-| Static edge profile | Proposed / unverified |
-| Reverse-proxy configuration | Not verified |
-| CORS/CSP/TLS/public-origin policy | Not verified |
-| Model-runtime private bind | Not verified |
-| Released payload/hosting inventory | Unknown |
-| Public alias correction/rollback | Not established |
-| Deployment and production traffic | Unknown |
-| Observed public-store isolation | Not proved |
+| Boundary layer | Current posture | Why it cannot graduate yet |
+|---|---|---|
+| Repository architecture | **PROPOSED / documented** | ADR-0025 remains draft/effective-proposed |
+| Governed API routes | **PARTIAL / fail-closed scaffold** | No evidence, policy, authorization, release, or real-source projection |
+| API error handling | **BOUNDED source-level proof** | Only tested negative fixtures and WSGI dispatch; no deployed service proof |
+| Explorer Web | **PARTIAL source-level proof** | Build/test scripts and fixture boundaries exist, but current exact-head/browser execution and governed network transport are unverified |
+| Sites Explorer | **PARTIAL presentation boundary** | Existing identity and fail-closed UI fallback do not prove public data, release, or network isolation |
+| Static delivery | **HOLD** | No applied profile, carrier, integrity/release binding, cache/correction proof, or host readback |
+| Reverse proxy / ingress | **HOLD** | Guidance is not configuration or observed routing |
+| External stores and model runtime | **UNKNOWN / NEEDS VERIFICATION** | No complete deployed-service, bind, egress, or credential inventory |
+| Public-client isolation | **HOLD** | No end-to-end public-origin negative test demonstrates denial of every forbidden store class |
 
-**Overall maturity: `SCAFFOLD / HOLD`.** The current repository demonstrates fail-closed route scaffolding and selected static source checks. It does not prove a deployed public trust membrane or static delivery edge.
-
-[Back to top](#top)
-
----
-
+A source-level test is meaningful only for the exact bridge or handler it exercises. It does not demonstrate a hosted public path, authorize static bytes, or substitute for evidence/policy/release closure.
 <a id="proposed-validation-and-negative-tests"></a>
 
 ## Proposed validation and negative tests
@@ -683,7 +657,7 @@ Use small, reversible, dependency-ordered changes.
 1. **Review/accept or revise ADR-0025** without inferring acceptance from code.
 2. **Converge ADR-0004 and ADR-0025 terminology.** One owns dynamic membrane selection; one owns public-client anti-bypass.
 3. **Resolve the client envelope integration.** Define the accepted relationship among DecisionEnvelope, PolicyDecision, and RuntimeResponseEnvelope.
-4. **Make Explorer Web implementation-bearing.** Real package scripts, pinned package manager, lockfile, source inventory, tests, and governed client.
+4. **Extend Explorer Web boundary coverage.** Preserve real package scripts, pinned package manager, lockfile, source inventory, and fixture tests; add an actual governed transport, bundle/config/worker inventories, and deployed browser proof.
 5. **Make boundary scans non-vacuous.** Assert expected source roots/file counts and include generated/deployment artifacts.
 6. **Implement a complete public-boundary deny suite.** Replace the Makefile TODO with deterministic tests and stable reason codes.
 7. **Implement governed API policy/evidence/release projection.** Keep routes fail closed until each dependency closes.
@@ -721,7 +695,7 @@ ADR acceptance requires reviewed agreement on the boundary and its dependencies:
 
 Implementation graduation additionally requires:
 
-- [ ] non-placeholder Explorer build/test scripts and non-empty source inventory;
+- [x] implementation-bearing Explorer build/test scripts, exact package-manager pin, lockfile, and bounded source inventory exist;
 - [ ] accepted client-facing envelope integration;
 - [ ] complete browser/API/static/network deny tests;
 - [ ] real edge and runtime isolation evidence;
@@ -799,7 +773,7 @@ Implementation graduation additionally requires:
 |---|---|---|
 | ADR-0004/ADR-0025 overlap | `NEEDS VERIFICATION` | Accepted responsibility split and cross-links |
 | RuntimeResponseEnvelope integration | `CONFIRMED GAP` | Versioned mapping and route/client tests |
-| Explorer implementation inventory | `HOLD` | Real source, scripts, lockfile, build/test results |
+| Explorer implementation inventory | `PARTIAL` | Preserve source-level scripts/lockfile/tests; add exact-head build/test and deployed browser/transport inventory |
 | Boundary scanner vacuity | `HOLD RISK` | Non-zero inventory and expected-file assertions |
 | Complete public deny suite | `CONFIRMED GAP` | Replace TODO target with policy/runtime proof |
 | `apps/api/` future reappearance | `OPEN` | Explicit internal/deprecated role or successor ADR |
@@ -897,7 +871,7 @@ Do not flip an accepted record back to `proposed`, delete audit history, or crea
 - [x] Source `draft` and effective `proposed` status preserved.
 - [x] Directory Rules and ADR-0004 reviewed.
 - [x] Governed API routes, scaffold behavior, tests, workflow, and envelopes inspected.
-- [x] Explorer Web docs, package placeholder, boundary test, and UI readiness workflow inspected.
+- [x] Explorer Web docs, real package scripts, pnpm pin/lockfile, fixture-backed boundary tests, and UI workflow inspected.
 - [x] Published-lane and reverse-proxy guidance inspected.
 - [x] Dynamic versus static public paths separated.
 - [x] Proof, receipt, catalog, registry, and release stores removed from direct public classification.
@@ -911,7 +885,7 @@ Do not flip an accepted record back to `proposed`, delete audit history, or crea
 ### Future implementation
 
 - [ ] Governed API uses accepted RuntimeResponseEnvelope for public responses.
-- [ ] Explorer Web has a non-empty implementation and typed governed client.
+- [ ] Explorer Web transport is bound to a governed API contract and verified in a deployed browser; fixture-only resolvers remain insufficient.
 - [ ] Browser scans include source, config, bundles, workers, and generated assets.
 - [ ] Complete API deny suite replaces the TODO marker.
 - [ ] Policy/evidence/release projection is enforced before `ANSWER`.
@@ -971,6 +945,7 @@ Do not flip an accepted record back to `proposed`, delete audit history, or crea
 | v1 | 2026-05-09 | Initial proposed ADR codifying the no-direct-public-read trust-membrane invariant. |
 | v1.1 | 2026-05-15 | Clarified static delivery, finite outcomes, deny tests, migration, rollback, and attachment-only evidence boundary. |
 | v1.2 | 2026-07-24 | Re-grounded the ADR in current repository evidence; confirmed ADR identity, three-route fail-closed Governed API scaffold, selected boundary tests, separate RuntimeResponseEnvelope contract/schema, Explorer/UI implementation hold, published-lane and reverse-proxy uncertainty; separated dynamic API from governed static transport; removed proof/receipt/release stores from direct public classification; bounded path scans as partial and potentially vacuous; added client/store classes, deployment controls, negative tests, convergence, acceptance, incident, cache, correction, rollback, and successor-ADR discipline. |
+| v1.3 | 2026-09-14 | Re-pinned source readback; records bounded API safe-error handling and Explorer Web real scripts/lockfile plus fixture-backed Evidence Drawer/map-runtime boundaries. Preserves proposed status and marks hosting, network, static delivery, release, and deployed public isolation unverified. |
 
 ---
 
