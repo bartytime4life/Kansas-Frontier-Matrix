@@ -3,7 +3,7 @@ doc_id: kfm://adr/habitat-schema-home
 title: "ADR Candidate — Habitat Schema Home"
 adr_id: ADR-habitat-schema-home
 type: architecture-decision-record; unassigned-scaffold
-version: v1.1
+version: v1.2
 status: proposed
 effective_decision_status: not-assigned
 owners:
@@ -42,6 +42,26 @@ evidence_snapshot:
     validation or CI execution, source admission, lifecycle-data operation,
     policy evaluation, runtime operation, release, deployment, promotion, or
     publication was performed.
+currentness_reconciliation_2026_09_14:
+  base_commit: f36b3bfffd0bffc628a69caa780a83ac89167e04
+  target_prior_blob: 6b89bbfe9487f1fd5255001b26afdcbdb458f6be
+  adr_index_blob: 0c143676dfd3c1bda16cb44398c5ad5d4a49cf67
+  adr_0001_blob: 5a9fe1d142582589d4b6db8e02064508157731d0
+  adr_0002_blob: 65edd5a13cd5568fe244555c310528469af2bea1
+  adr_0029_blob: 4c1ef5f7f812d58fbdde9898acc96bb4c9280b2c
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  habitat_domain_model_blob: d94aab2a7238953fea9a2e8e18ea98157c5cc063
+  habitat_architecture_blob: 82263ea8f5862401e5aef57ec43f49711d12c998
+  habitat_flat_alias_guardrail_blob: 0d011f06cdb9d1bffb2df57c9f7300d683222302
+  habitat_segmented_schema_index_blob: ab7563e33cd7a70919a68a5452514566fc53dfa4
+  habitat_contract_index_blob: 65b5b259b3ac1887e6bb753f48d83d752ff0875a
+  schema_validation_workflow_blob: fb6dea20bc03bb2ddac134b9dbebbcf044d4e246
+  scope_limit: >
+    Documentation currentness reconciliation only. No ADR number assignment,
+    acceptance, schema or contract selection, creation, move, deletion, alias
+    promotion, migration, validation or CI execution, source admission,
+    lifecycle-data operation, policy evaluation, runtime operation, release,
+    deployment, promotion, or publication was performed.
 related:
   - docs/adr/INDEX.md
   - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
@@ -78,7 +98,8 @@ notes:
 | Repository-wide ADR number | None; this file does not reserve one |
 | Scope | Habitat schema-home question and evidence crosswalk |
 | Decision, migration, or implementation effect | None |
-| This revision | Same-path documentation currentness reconciliation at main@3b3940b52ecf1f7c71e32b298fd76499af116e75 |
+| v1.1 historical reconciliation | `main@3b3940b52ecf1f7c71e32b298fd76499af116e75` |
+| v1.2 currentness checkpoint | `main@f36b3bfffd0bffc628a69caa780a83ac89167e04`; targeted source-level reconciliation only |
 
 The canonical ADR index is controlling for this record’s inventory and assignment posture. It lists this exact filename under **Unassigned scaffolds** and says that such records do not carry a repository-wide number or reserve one.
 
@@ -99,7 +120,7 @@ A source path’s presence, a README statement, a JSON file, or successful parsi
 
 ## Evidence crosswalk
 
-The following targeted source reads establish a documentation conflict and boundary; they do not establish an accepted route or an active schema family.
+The v1.1 source reads below remain historical lineage. The v1.2 checkpoint re-pins the exact inputs in the metadata block; it does not turn a targeted read into a complete schema inventory, migration plan, or runtime result.
 
 | Source | Current source-level signal | Consequence for this candidate |
 | --- | --- | --- |
@@ -135,14 +156,29 @@ Before a later record can select a Habitat schema home, it should at minimum:
 
 Until those conditions are met, the safe posture is **HOLD / NEEDS VERIFICATION**.
 
+## Currentness reconciliation — 2026-09-14
+
+At `main@f36b3bfffd0bffc628a69caa780a83ac89167e04`, the ADR index still classifies this exact filename as a slug-only scaffold with `not-assigned` decision status. ADR-0029 remains the accepted placement baseline; ADR-0001 remains proposed and ADR-0002 remains draft/effectively proposed. The Habitat domain model and architecture still describe the flat-versus-segmented schema-home question as conflicted or unresolved.
+
+The targeted path read distinguishes the flat `schemas/contracts/v1/habitat/` lane as an alias guardrail from the segmented `schemas/contracts/v1/domains/habitat/` draft index. The latter itself keeps concrete schema inventory `NEEDS VERIFICATION`; the Habitat contracts index is draft/proposed. No lane was selected, no semantic equivalence or consumer compatibility was established, and no schema validation or workflow was run. Migration, source admission, policy, runtime, release, deployment, promotion, and publication remain outside this update.
+
 ## Historical lineage and rollback
 
 The prior v1.0 text at this same path presented a proposed segmented-path selection. At the base commit recorded above, that presentation was incompatible with the canonical index’s unassigned status and the Habitat documentation’s explicit conflict. It has therefore been replaced with this bounded candidate; it is not retained as an operative decision.
 
-This documentation-only revision is reversible by reverting its single commit. Any future schema migration requires its own reviewed migration and rollback record; reverting this document must not be interpreted as moving, activating, or restoring schema authority.
+This v1.2 documentation-only reconciliation preserves v1.1 as historical lineage and is reversible by reverting its one commit. Any future schema migration requires its own reviewed migration and rollback record; reverting this document must not be interpreted as moving, activating, or restoring schema authority.
 
 ## Evidence boundary
 
-This v1.1 reconciliation is grounded only in the pinned repository files named in the metadata block at main@3b3940b52ecf1f7c71e32b298fd76499af116e75. It is a targeted documentation read, not a filesystem inventory, schema validation, test/CI result, runtime observation, or release determination.
+The v1.1 reconciliation remains historical at `main@3b3940b52ecf1f7c71e32b298fd76499af116e75`. The v1.2 targeted currentness checkpoint is grounded only in the newly pinned repository inputs at `main@f36b3bfffd0bffc628a69caa780a83ac89167e04`. It is not a filesystem inventory, schema validation, test/CI result, runtime observation, or release determination.
+
+
+## Change history
+
+| Version | Date | Summary |
+| --- | --- | --- |
+| v1.0 | historical | Same-path text presented a segmented-path selection; v1.1 retained it only as non-operative lineage. |
+| v1.1 | 2026-09-14 | Replaced the operative path selection with an unassigned conflict-preserving candidate and currentness boundary. |
+| v1.2 | 2026-09-14 | Re-pinned targeted placement, conflict, alias-guardrail, segmented-index, contract-index, and workflow-definition inputs; retained `HOLD` and all non-effects. |
 
 [Back to top](#top)
