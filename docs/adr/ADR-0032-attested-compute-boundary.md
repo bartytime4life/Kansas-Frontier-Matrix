@@ -3,7 +3,7 @@ doc_id: kfm://doc/adr-0032-attested-compute-boundary
 title: "ADR-0032 — Keep Attested Compute Decision-Gated and Simulation-Only by Default"
 type: adr
 adr_id: ADR-0032
-version: v1.1
+version: v1.2
 status: proposed
 effective_decision_status: proposed
 owners:
@@ -23,7 +23,7 @@ reviewers_required:
   - Validation and CI steward
   - Release, correction, and rollback steward
 created: 2026-08-09
-updated: 2026-08-14
+updated: 2026-09-14
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
@@ -53,6 +53,29 @@ evidence_snapshot:
   implementation_merge: 1bb91ae8de2313dbebfe84fc5d986df64f0d7169
   last_observed_green_run: 31455932316
   latest_observed_profile_run: 31654971857
+  v1_2_reconciliation_commit: 2c1d921717ba972861b249c2030179a310221d9e
+  v1_2_target_prior_blob: 2daefc6e1f8fc99f3624f61860ee6703a6b1dec7
+  v1_2_adr_index_blob: 0c143676dfd3c1bda16cb44398c5ad5d4a49cf67
+  v1_2_adr_0029_blob: 4c1ef5f7f812d58fbdde9898acc96bb4c9280b2c
+  v1_2_directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  v1_2_source_map_blob: 30f3b6aec046cadc0df87e41e028adfe5ceb5855
+  v1_2_assessment_contract_blob: ed4d5046f2eab11b8aec03c6428536fdfc91607a
+  v1_2_assessment_schema_blob: 418de89ae02fed1a5f1a2b0b410054a794c225dc
+  v1_2_assessment_fixture_blob: 3283af5189a38bcc7cdbdb6f846f21f9fd7a6967
+  v1_2_assessment_validator_blob: 6f0299c13971ad7b20e093291647ded66b82abcb
+  v1_2_assessment_tests_blob: 7b4717a6e87add0f7d44148417eceea0b81c45f7
+  v1_2_assessment_workflow_blob: c4a528a7f3146d9b2ff4ebc5e0c3610de06c8a55
+  v1_2_assessment_receipt_blob: 034e6ed79a728f7c04a67ee51c4d6af13d2d7da2
+inspection_boundary: >
+  v1.1 run and receipt outcomes remain historical evidence. v1.2 is grounded in
+  targeted GitHub reads at main@2c1d921717ba972861b249c2030179a310221d9e:
+  this ADR; current ADR inventory, ADR-0029, and Directory Rules bytes; the
+  attested-compute source map; and the assessment contract, closed schema,
+  synthetic fixtures, validator, focused tests, read-only workflow definition,
+  and generated receipt. No validator, fixture replay, test suite, generated-
+  receipt validation, workflow run, external attestation verification, compute,
+  data access, network request, credential use, release, deployment, or
+  publication was exercised or inferred.
 related:
   - docs/adr/README.md
   - docs/adr/INDEX.md
@@ -75,7 +98,8 @@ notes:
   - "v1.1 is a same-path repository-evidence reconciliation. It preserves source and effective status proposed and grants no compute or release authority."
   - "ADR-0029 separately accepted Directory Rules v2, confirming docs/adr/ placement without accepting ADR-0032."
   - "A proposed-inactive assessment packet now implements the bounded routing vocabulary with a closed schema, 18 exact fixtures, deterministic validator, 10 focused tests, read-only CI, and an authoring receipt."
-  - "The latest observed profile run passed functional validation and failed only historical receipt byte closure after PR #2657 changed the workflow installation command."
+  - "v1.1 run and receipt outcomes are retained as historical evidence; v1.2 did not execute or infer any current workflow, test, fixture, or receipt result."
+  - "v1.2 confirms the current decision-only packet and read-only workflow definition at the pinned main snapshot; it preserves proposed status and grants no compute, verification, release, deployment, or publication authority."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -111,9 +135,9 @@ notes:
 |---|---|
 | **ADR ID** | `ADR-0032` — unique in [`INDEX.md`](./INDEX.md) |
 | **Source / effective status** | `proposed` / `proposed` |
-| **Record edition** | `v1.1` — evidence reconciliation; decision unchanged |
+| **Record edition** | `v1.2` — targeted currentness reconciliation; decision unchanged |
 | **Decision class** | Cross-component necessity, trust, privacy, and release boundary |
-| **Current implementation posture** | Proposed-inactive, fixture-only decision profile implemented; no real TEE runtime |
+| **Current implementation posture** | Proposed-inactive, fixture-only decision profile is present at the pinned snapshot; no real TEE runtime was exercised |
 | **Publication effect** | None |
 | **Supersedes / superseded by** | None / none |
 
@@ -123,7 +147,7 @@ ADR acceptance would approve the boundary. Real TEE admission would remain a lat
 
 ## Evidence Boundary
 
-**CONFIRMED at the pinned snapshot:** accepted ADR-0029 governs placement; the ADR index keeps ADR-0032 proposed; PR #2519 added the bounded assessment contract, schema, fixtures, validator, tests, workflow, source map, and receipt. The schema fixes all data, credential, provider/TEE, key, external-verification, compute, release, deployment, and publication effects false.
+**CONFIRMED at the v1.2 pinned snapshot:** accepted ADR-0029 governs placement; the ADR index keeps ADR-0032 proposed; and the source map, bounded assessment contract, schema, fixtures, validator, focused tests, read-only workflow definition, and generated receipt are present at the exact metadata-pinned blobs. The assessment material declares no real or sensitive input, credentials/keys, network or external verification, cloud/TEE selection, compute execution, release, deployment, or publication. This is a targeted source readback, not a re-execution or a current conformance result.
 
 **UNKNOWN:** whether KFM has a real workload whose residual problem cannot be solved by quarantine, access control, transformation, policy, evidence, review, and release controls.
 
@@ -135,7 +159,7 @@ ADR acceptance would approve the boundary. Real TEE admission would remain a lat
 |---|---|
 | Proposed decision identity and placement | **CONFIRMED** |
 | Synthetic declaration contract and closed machine shape | **CONFIRMED present; proposed-inactive** |
-| Deterministic fixture validation | **CONFIRMED bounded implementation** |
+| Deterministic fixture validation | **HISTORICAL bounded implementation; current execution not performed** |
 | External attestation verification | **ABSENT / denied by v1 profile** |
 | Real workload, data, provider, key, verifier, or TEE runtime | **UNKNOWN / not authorized** |
 | Release or public operation | **NONE** |
@@ -172,7 +196,7 @@ These are governance-profile outcomes, not `PolicyDecision`, `RuntimeResponseEnv
 
 `AttestedComputeBoundaryAssessmentCandidate` separates ten responsibility seams: workload identity; input authority; attestation evidence; execution receipt; policy obligations; disclosure review; output transformation; evidence/reviewer decision; release approval; and rollback. Local `RESOLVED` means declaration completeness only—not authentication or approval.
 
-The packet includes a semantic contract, closed Draft 2020-12 schema, 18 exact fixtures, deterministic validator, 10 focused tests, read-only workflow, source map, and generated authoring receipt. It performs no external verification or runtime execution.
+The packet's current source bytes include a semantic contract, closed Draft 2020-12 schema, synthetic fixtures, deterministic validator, focused tests, read-only workflow, source map, and generated authoring receipt. Earlier counts and test/fixture outcomes remain historical; v1.2 does not rerun them. The profile definition performs no external verification or runtime execution.
 
 > [!NOTE]
 > The schema requires ten seams. One companion contract sentence and the workflow summary still say “eight.” This ADR records that wording drift; it does not silently rewrite companion artifacts or their historical receipt.
@@ -181,11 +205,11 @@ The packet includes a semantic contract, closed Draft 2020-12 schema, 18 exact f
 
 ### Workflow Evidence
 
-- Run `31455932316` was fully green after PR #2519 merged.
-- Run `31654971857` again passed compilation, all 10 focused tests, and all 18 exact fixtures.
-- That later run failed only generated-receipt byte replay because PR #2657 changed the workflow dependency-install command without rebinding the historical receipt.
+- Runs `31455932316` and `31654971857` remain historical v1.1 evidence.
+- The historical record says the latter run passed compilation, 10 focused tests, and 18 exact fixtures before generated-receipt byte replay failed after PR #2657 changed the workflow dependency-install command.
+- v1.2 re-read the current workflow definition and receipt bytes but did not execute a workflow, fixture replay, test suite, or generated-receipt validator.
 
-**Classification:** profile logic is not shown failing; current byte-binding closure is `HOLD` until the receipt is legitimately rebound and hosted validation is green.
+**Classification:** current profile and receipt closure are `NEEDS VERIFICATION`; no current green result, receipt rebinding, or executable conformance is claimed.
 
 ---
 
@@ -207,8 +231,8 @@ The owning root remains `docs/adr/` because this file records a human architectu
 |---|---|
 | ADR identity and Directory Rules placement | `PASS` |
 | ADR acceptance and accountable named owners | `HOLD` |
-| Bounded profile shape, fixtures, validator, and tests | `PASS` at observed heads |
-| Generated-receipt exact byte closure | `HOLD` |
+| Bounded profile shape, fixtures, validator, and tests | `SOURCE READBACK`; current execution `NEEDS VERIFICATION` |
+| Generated-receipt exact byte closure | `NEEDS VERIFICATION` (historical mismatch retained) |
 | Real workload necessity and threat model | `UNKNOWN` |
 | Provider, verifier, trust root, key, and external attestation | `DENY` under v1 profile |
 | Real/sensitive input and compute | `DENY` |
@@ -255,7 +279,7 @@ Until then, use `DEFER_REAL_TEE` or `DENY_UNVERIFIED_ATTESTATION`.
 
 ## Migration and Rollback
 
-This update modifies one ADR in place. It changes no status, index row, contract, schema, fixture, validator, workflow, receipt, runtime, data, or release surface.
+This v1.2 update modifies one ADR in place. It changes no decision status, index row, contract, schema, fixture, validator, workflow, receipt, runtime, data, or release surface.
 
 Before merge, close the draft pull request and abandon its branch. After a docs-only merge, revert the documentation commit. The PR #2519 packet is separate and requires its own reviewed revert or supersession. No operational TEE, credential, sensitive-data copy, release, deployment, or public artifact exists to unwind.
 
@@ -297,5 +321,6 @@ No external TEE, cryptographic, privacy, legal, provider, benchmark, or standard
 |---|---|---|---|
 | 2026-08-09 | `v1` / proposed | Initial decision-only boundary | #2408 |
 | 2026-08-14 | `v1.1` / proposed | Reconciles bounded implementation, hosted evidence, receipt and wording drift, gates, risks, verification, and rollback without granting authority | pending |
+| 2026-09-14 | `v1.2` / proposed | Re-pins targeted ADR-0032 currentness at `main@2c1d921717ba972861b249c2030179a310221d9e`, preserves earlier runs as historical, and does not claim current workflow, receipt, or runtime evidence | pending |
 
 [Back to top](#top)
