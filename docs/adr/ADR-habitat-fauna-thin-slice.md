@@ -2,7 +2,7 @@
 doc_id: kfm://doc/adr-habitat-fauna-thin-slice
 title: Habitat × Fauna Thin-Slice Proof Boundary
 type: adr
-version: v1.1
+version: v1.2
 status: draft
 effective_decision_status: proposed
 adr_id: unassigned
@@ -25,7 +25,7 @@ reviewers_required:
   - Governed API and Explorer consumer steward
   - Release, correction, and rollback steward
 created: "NEEDS VERIFICATION — scaffold predates v1.0"
-updated: 2026-08-14
+updated: 2026-09-14
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
@@ -69,6 +69,25 @@ evidence_snapshot:
   exact_main_domain_habitat_run: 31828082799
   exact_main_domain_fauna_run: 31828082805
   latest_dedicated_occurrence_run: 31808444125
+  v1_2_reconciliation_commit: 5021926eef07d41845b37c0b34261e8462d9b144
+  v1_2_target_prior_blob: abe63de366af37cae917e2001fe91a81b5851fdf
+  v1_2_adr_index_blob: 0c143676dfd3c1bda16cb44398c5ad5d4a49cf67
+  v1_2_adr_readme_blob: 27c8f00622afe6cd0c65a1b116cd768dac31bea6
+  v1_2_adr_0029_blob: 4c1ef5f7f812d58fbdde9898acc96bb4c9280b2c
+  v1_2_directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  v1_2_adr_cross_register_blob: c5a056011d6496cb2574cedd7f9e5dadadbbbe1e
+  v1_2_cross_domain_seam_register_blob: dc87ea9c2ab11cc10e51cf4e8284c030e7c9ab29
+  v1_2_inspection_boundary: >
+    Targeted GitHub reads at main@5021926eef07d41845b37c0b34261e8462d9b144
+    covered this scaffold, the canonical ADR inventory and operating contract,
+    accepted ADR-0029, Directory Rules v2, the non-duplicating ADR
+    cross-register, the cross-domain seam-register source, and exact topic
+    preflight. The v1.1 detailed Habitat/Fauna substrate, workflow, fixture,
+    policy, and release-candidate observations remain historical evidence;
+    they were not re-executed or re-asserted as current in v1.2. No number
+    assignment, acceptance, source access, policy evaluation, validation or
+    workflow execution, relation implementation, release, deployment,
+    publication, or repository-setting change was exercised or inferred.
 inspection_boundary: >
   Current-session reads of main, the canonical ADR index, accepted ADR-0029,
   adopted Directory Rules bytes, cross-domain seam registry, current Habitat and
@@ -114,6 +133,7 @@ notes:
   - "Fauna and Habitat now each have bounded executable fixture-first work, but the Habitat × Fauna seam itself remains unimplemented and held."
   - "Hydrology may remain the proposed repository-wide first proof-bearing lane; this record governs only the first bounded Habitat × Fauna cross-domain proof within the ecology lanes."
   - "No standard, contract, schema, policy, fixture, validator, workflow, receipt, data, release, runtime, API, UI, source, or publication behavior changes in this documentation-only revision."
+  - "v1.2 is a targeted source-only currentness reconciliation. It confirms this path remains an unassigned scaffold and does not re-execute or promote the v1.1 substrate/seam evidence."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -158,7 +178,8 @@ notes:
 | **Directory Rules outcome for this revision** | `PLACE` by same-path responsibility; no move, split, alias, or new authority home |
 | **Affected responsibility roots if later implemented** | `control_plane/`, `contracts/`, `schemas/`, `policy/`, `fixtures/`, `tests/`, `tools/`, `pipelines/`, `data/registry/`, `data/receipts/`, `data/proofs/`, `release/`, and governed public clients |
 | **Current implementation effect** | Documentation only |
-| **Current cross-domain maturity** | `L1 / PARTIAL`: independent domain fixture profiles exist; the neutral seam does not |
+| **v1.1 observed cross-domain maturity** | `L1 / PARTIAL`: independent domain fixture profiles existed; the neutral seam did not |
+| **v1.2 currentness determination** | Scaffold identity and `not-assigned` index status confirmed; detailed substrate/seam maturity requires a separately scoped current readback or execution |
 | **Release/publication effect** | None |
 | **Migration required now** | No file move; future relation/schema/test/fixture convergence may require a separately reviewed migration |
 | **Rollback required** | Yes—documentation rollback now; implementation and release rollback before later graduation |
@@ -170,9 +191,9 @@ notes:
 
 The canonical ADR index records:
 
-- 34 numbered records;
-- ADR-0029 as the only accepted numbered record;
-- 33 other numbered records as effectively proposed; and
+- 39 numbered records;
+- ADR-0006, ADR-0007, ADR-0029, and ADR-0038 as accepted records;
+- 35 other numbered records as effectively proposed; and
 - this file as one of 12 unassigned scaffolds with decision status `not-assigned`.
 
 The ADR operating contract requires a permanent record to use a unique `ADR-NNNN` identity with filename, H1, source status, effective status, and canonical index in agreement.
@@ -192,7 +213,14 @@ This revision intentionally preserves the current path and classification becaus
 
 ## Evidence boundary
 
-### CONFIRMED at `main@9d924c665073263f2cbf376d2bf29e7b9f252b06`
+### CONFIRMED for the v1.2 currentness boundary at `main@5021926eef07d41845b37c0b34261e8462d9b144`
+
+- `docs/adr/INDEX.md` still inventories this exact path as a slug-only scaffold with status `not-assigned`; v1.2 does not change that row.
+- This record still declares source status `draft` and effective decision status `proposed`.
+- Accepted ADR-0029 and the current Directory Rules bytes still place architecture-decision history under `docs/adr/`; the same-path update creates no new responsibility root.
+- The v1.2 readback does not execute or freshly verify the detailed Habitat/Fauna substrate, workflow, fixture, relation, policy, proof, candidate, or release claims captured below.
+
+### Historical v1.1 evidence at `main@9d924c665073263f2cbf376d2bf29e7b9f252b06`
 
 #### Governance and placement
 
@@ -671,9 +699,9 @@ RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 
 Promotion is a governed state transition, not a file move, fixture pass, workflow pass, test count, proof receipt, branch merge, map render, or generated summary.
 
-### Non-effects of v1.1
+### Non-effects of v1.2
 
-This v1.1 revision changes only this Markdown file. It does not modify:
+This v1.2 revision changes only this Markdown file. The detailed v1.1 evidence remains historical; this revision does not convert it into current execution or acceptance evidence. It does not modify:
 
 - the ADR index or any ADR status;
 - Directory Rules or its machine projections;
@@ -688,9 +716,11 @@ This v1.1 revision changes only this Markdown file. It does not modify:
 
 <a id="current-repository-evidence"></a>
 
-## Current repository evidence
+## Historical v1.1 repository evidence
 
-| Surface | Current verified state | Safe conclusion |
+The following table records the v1.1 checkpoint. It is retained for provenance and planning, not reasserted as present-tense v1.2 implementation evidence.
+
+| Surface | v1.1 recorded state | Safe conclusion |
 |---|---|---|
 | ADR inventory | This path is a slug-only unassigned scaffold; ADR-0029 is the only accepted numbered ADR | Decision remains proposed |
 | Directory authority | ADR-0029 accepts v2 at `docs/doctrine/directory-rules.md` | Same-path docs update is placement-consistent |
@@ -714,15 +744,15 @@ This v1.1 revision changes only this Markdown file. It does not modify:
 | Public release | No Habitat × Fauna `EvidenceBundle`, promotion, manifest, or public carrier verified | Publication absent |
 
 > [!IMPORTANT]
-> **The safe present-tense conclusion is partial domain substrate plus a documentary seam hold.** The repository proves bounded independent-domain behavior. It does not prove that the Habitat × Fauna relation executes, composes policy/evidence, survives sensitivity review, produces proof, creates a candidate, or reaches public delivery.
+> **The v1.1 safe conclusion was partial domain substrate plus a documentary seam hold.** v1.2 preserves that history but does not claim a fresh current relation, policy, sensitivity, proof, candidate, or public-delivery result.
 
 ---
 
 <a id="current-enforcement-maturity"></a>
 
-## Current enforcement maturity
+## Historical v1.1 enforcement maturity
 
-| Capability | Current status | Graduation evidence required |
+| Capability | v1.1 recorded status | Graduation evidence required |
 |---|---|---|
 | ADR decision | Draft, proposed, unassigned | Numbered/indexed record plus explicit human acceptance |
 | Seam registration | Habitat × Fauna absent from partial register | Reviewed seam entry with no authority inflation |
@@ -1065,9 +1095,9 @@ A relation-schema or test-path migration is not a data release. Any record migra
 
 ### Documentation rollback
 
-Revert the v1.1 commit or restore prior blob `1ec31498ca870bedf161692df90522db27fa782f`.
+Revert the v1.2 commit or restore prior blob `abe63de366af37cae917e2001fe91a81b5851fdf`.
 
-That rollback restores v1.0. It would remove the current evidence reconciliation, maturity ladder, substrate/seam distinction, exact-main workflow evidence, accepted Directory Rules basis, seam-register gap, pair-policy compatibility gap, and revised convergence plan. It would not alter any implementation or public state.
+That rollback restores v1.1. It would remove the current evidence reconciliation, maturity ladder, substrate/seam distinction, exact-main workflow evidence, accepted Directory Rules basis, seam-register gap, pair-policy compatibility gap, and revised convergence plan. It would not alter any implementation or public state.
 
 ### Implementation rollback
 
@@ -1140,7 +1170,8 @@ If this scaffold is numbered, update the filename, H1, metadata, and canonical i
 |---|---|---|---|
 | NEEDS VERIFICATION | Scaffold | Created from a planned-path inventory with generic responsibility-root guidance | None; unassigned proposed scaffold |
 | 2026-07-24 | v1.0 | Replaced scaffold with a repository-grounded proposed decision, ownership rules, proof flow, sensitivity posture, convergence stages, acceptance gates, validation matrix, migration, and rollback | Documentation only; remained unassigned and proposed |
-| 2026-08-14 | v1.1 | Reconciled against current main: adopted Directory Rules authority, canonical scaffold inventory, partial seam register, substantive Fauna occurrence/public-safe/Evidence Drawer profiles, substantive inactive Habitat materiality profile, exact-main domain workflow success-with-holds, unchanged placeholder join/relation/test/proof/candidate seam, pair-policy compatibility gap, L0–L5 maturity ladder, revised convergence/acceptance/validation/risk/rollback guidance, and a no-loss ledger | Documentation only; source status `draft`, effective status `proposed`, unassigned identity, and no publication effect preserved |
+| 2026-08-14 | v1.1 | Reconciled against then-current main: adopted Directory Rules authority, canonical scaffold inventory, partial seam register, substantive Fauna occurrence/public-safe/Evidence Drawer profiles, substantive inactive Habitat materiality profile, exact-main domain workflow success-with-holds, unchanged placeholder join/relation/test/proof/candidate seam, pair-policy compatibility gap, L0–L5 maturity ladder, revised convergence/acceptance/validation/risk/rollback guidance, and a no-loss ledger | Documentation only; source status `draft`, effective status `proposed`, unassigned identity, and no publication effect preserved |
+| 2026-09-14 | v1.2 | Re-pins targeted currentness evidence at `main@5021926eef07d41845b37c0b34261e8462d9b144`, corrects the ADR inventory summary, and reclassifies v1.1 detailed substrate/seam observations as historical unless separately re-read or executed | Documentation only; remains unassigned, `draft` / effective `proposed`, with no implementation, release, deployment, or publication effect |
 
 ---
 
@@ -1172,4 +1203,4 @@ If this scaffold is numbered, update the filename, H1, metadata, and canonical i
 
 ---
 
-<sub>**Decision:** proposed · **ADR ID:** unassigned · **Classification:** PROPOSED scaffold · **Path:** `docs/adr/ADR-habitat-fauna-thin-slice.md` · **Evidence snapshot:** `main@9d924c665073263f2cbf376d2bf29e7b9f252b06` · **Current maturity:** `L1 / PARTIAL` domain substrates, seam `HOLD` · **Publication effect:** none · [Back to top](#top)</sub>
+<sub>**Decision:** proposed · **ADR ID:** unassigned · **Classification:** PROPOSED scaffold · **Path:** `docs/adr/ADR-habitat-fauna-thin-slice.md` · **v1.2 evidence snapshot:** `main@5021926eef07d41845b37c0b34261e8462d9b144` · **Currentness:** identity/status confirmed; detailed maturity needs verification · **Publication effect:** none · [Back to top](#top)</sub>
