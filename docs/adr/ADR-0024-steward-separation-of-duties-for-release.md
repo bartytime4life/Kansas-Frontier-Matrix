@@ -3,7 +3,7 @@ doc_id: kfm://doc/adr-0024-steward-separation-of-duties-for-release
 title: ADR-0024 — Steward Separation of Duties for Release
 type: adr
 adr_id: ADR-0024
-version: v1.3
+version: v1.4
 status: draft
 effective_decision_status: proposed
 owners:
@@ -26,7 +26,7 @@ reviewers_required:
   - Validation and CI steward
   - Security reviewer for actor identity, signatures, trust roots, or repository-control changes
 created: 2026-05-15
-updated: 2026-08-14
+updated: 2026-09-14
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
@@ -35,7 +35,7 @@ responsibility: "Records the proposed release separation-of-duties decision, act
 current_path: docs/adr/ADR-0024-steward-separation-of-duties-for-release.md
 supersedes: []
 superseded_by: []
-evidence_snapshot:
+evidence_snapshot_v1_3_historical:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
   base_commit: c9ccb11ded141edbd79763982056a1e6f90b8866
@@ -66,15 +66,29 @@ evidence_snapshot:
   sensitive_release_review_workflow_blob: cc47e292f20a3a27c97430800f1a0a1c5a8c6a95
   sensitive_release_review_latest_main_run: 31654972404
   release_policy_readme_blob: 8a6a91e18f29f6f961eac88270b385a95b86281e
+evidence_snapshot_v1_4_current_reconciliation:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: cddc2ce879f54675e1e6ca847e696a65c5d1e4d0
+  target_prior_blob: 57d46867c97a1c8d76ccdfbc12fc012bee3bd2ea
+  adr_index_blob: 0c143676dfd3c1bda16cb44398c5ad5d4a49cf67
+  adr_0029_blob: 4c1ef5f7f812d58fbdde9898acc96bb4c9280b2c
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  review_authority_binding_contract_blob: f156e100660e9fd97ca95e90092143a3cd6d62ee
+  sensitive_release_review_closure_contract_blob: 235ca86dd807c6842ca8c861f995371fe7758f64
+  review_authority_binding_workflow_blob: d0dd3ea0900bf5a664bbf3e092735f8889ed6e41
+  sensitive_release_review_closure_workflow_blob: cc47e292f20a3a27c97430800f1a0a1c5a8c6a95
+  release_policy_readme_blob: 8a6a91e18f29f6f961eac88270b385a95b86281e
+  promotion_gate_workflow_blob: 9b567aad17de2a7419a2a0238386745c1cb5c11c
 inspection_boundary: >
-  Current-session GitHub reads of the ADR inventory, accepted Directory Rules decision and bytes,
-  target ADR, CODEOWNERS, active default-branch ruleset, ReviewRecord and StewardshipAssignment
-  semantic/schema surfaces, ReviewAuthorityBinding and SensitiveReleaseReviewClosure contracts,
-  schemas, fixtures, validators, tests, workflows, latest main workflow jobs/logs, and release-policy
-  documentation. Supplied Atlas and Encyclopedia material remains design lineage. No actor was
-  authenticated, no alias or conflict registry was resolved, no accepted stewardship assignment or
-  SoD policy was evaluated, no governed release ReviewRecord was issued, and no promotion, release,
-  correction, rollback, deployment, publication, or public-state mutation was exercised.
+  v1.4 is a documentation-only GitHub readback of the listed source bytes at
+  main@cddc2ce879f54675e1e6ca847e696a65c5d1e4d0. GitHub remains the
+  implementation/lifecycle authority; Google Drive and Notion were consulted only as
+  non-authoritative design and coordination context. No workflow, test, policy
+  evaluation, actor authentication, assignment/alias resolution, approval, promotion,
+  release, correction, rollback, deployment, publication, or public-state mutation
+  was executed.
 source_lineage:
   - KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf — Chapter 24 reviewer/SoD matrix and ADR-S-09 backlog
   - kfm_encyclopedia.pdf — Master Action Matrix separating steward, reviewer, policy admin, release manager, developer, and AI duties
@@ -112,7 +126,8 @@ related:
   - .github/workflows/promotion-gate.yml
 tags: [kfm, adr, governance, release, separation-of-duties, two-person-rule, review, actor-identity, authority-binding, sensitive-release, rights, correction, rollback]
 notes:
-  - "v1.3 is a same-path documentation-only repository reconciliation; it does not accept ADR-0024 or create release authority."
+  - "v1.4 is a same-path documentation-only current-source reconciliation; it does not accept ADR-0024 or create release authority."
+  - "v1.3 is retained as a historical snapshot; its workflow-run observations are not reasserted as v1.4 execution evidence."
   - "ADR-0024 remains source status draft and effective decision status proposed in the canonical ADR index."
   - "ReviewAuthorityBinding and SensitiveReleaseReviewClosure are substantive deterministic no-network fixture profiles, but both declare authority NONE and all mutation/release/publication permissions false."
   - "The latest main runs for both dedicated profiles completed their focused tests successfully and then failed generated-authoring-receipt integrity because recorded artifact digests were stale."
@@ -183,7 +198,15 @@ An accepted ADR without enforcement is doctrine. An executable fixture without a
 
 ## Evidence boundary
 
-This edition is grounded at `main@c9ccb11ded141edbd79763982056a1e6f90b8866`. The target file remained blob `69b4a7228eb4abcc62a35dbbbeeeeddb04ab30d2` at that checkpoint. Repository evidence controls current maturity; the supplied Atlas and Encyclopedia preserve design lineage.
+v1.3 is a historical evidence snapshot grounded at `main@c9ccb11ded141edbd79763982056a1e6f90b8866`. v1.4 is grounded at `main@cddc2ce879f54675e1e6ca847e696a65c5d1e4d0`; its immediately prior target blob is `57d46867c97a1c8d76ccdfbc12fc012bee3bd2ea`. Repository evidence controls current maturity; the supplied Atlas and Encyclopedia preserve design lineage.
+
+### Bounded v1.4 current readback
+
+| Surface | Current source-only conclusion |
+|---|---|
+| ADR index and ADR-0029 / Directory Rules | ADR-0024 remains `draft` / `proposed`; `docs/adr/` remains the accepted human ADR root. |
+| Governance contracts and dedicated workflows | ReviewAuthorityBinding and SensitiveReleaseReviewClosure remain proposed, fixture-only, and no-authority; v1.4 did not execute their workflows. |
+| CODEOWNERS, release policy, and promotion gate | Routing, policy source, and CI boundaries do not create independent approval or release/publication authority. |
 
 ### Maturity ladder
 
@@ -614,7 +637,7 @@ Platform evidence should be joined to the exact governed review packet. KFM must
 | StewardshipAssignment schema | Permissive stub requiring only `id` | Cannot validate current assignments or authority |
 | ReviewAuthorityBinding family | Closed contract/schema/fixtures/validator/tests/workflow | Substantive structural candidate only; `authority: NONE` |
 | SensitiveReleaseReviewClosure family | Closed T3/T4 contract/schema/fixtures/validator/tests/workflow | Substantive structural candidate only; separate release gate still required |
-| Generated authoring receipts | Both latest dedicated main runs report stale digests | Hosted exact-head closure remains red |
+| Generated authoring receipts | v1.3 historically recorded stale-digest results; v1.4 did not execute or re-query runs | No current hosted-closure result is asserted by this documentation readback |
 | CODEOWNERS | One account and explicit non-authority disclaimer | Independent route absent |
 | Default-branch ruleset | PR and thread-resolution mediation; zero approvals required | No platform-enforced independent approval |
 | Release policy | Substantive README; modules explicitly inactive scaffolds | No accepted executable SoD policy or consumer |
@@ -637,7 +660,7 @@ Platform evidence should be joined to the exact governed review packet. KFM must
 | Role and SoD doctrine | Present as draft/design lineage |
 | ReviewAuthorityBinding structure | `SUBSTANTIVE FIXTURE-ONLY CANDIDATE` |
 | T3/T4 sensitive closure structure | `SUBSTANTIVE FIXTURE-ONLY CANDIDATE` |
-| Dedicated hosted receipt integrity | `FAIL / STALE DIGESTS` |
+| Dedicated hosted receipt integrity | `NOT RE-EXECUTED in v1.4`; v1.3 recorded stale-digest results |
 | Operational actor identity/alias resolution | `UNKNOWN / not established` |
 | Accepted StewardshipAssignment schema | `ABSENT`; current schema is permissive scaffold |
 | Governed current assignment registry | `UNKNOWN / not established` |
@@ -880,9 +903,11 @@ Weakening or disabling implemented SoD requires independent review at least as s
 
 ## Verification checklist
 
-### Current v1.3 reconciliation
+### Current v1.4 reconciliation
 
-- [x] Current main and target blob recorded.
+- [x] v1.3 historical checkpoint retained; current main and immediately prior target blob recorded.
+- [x] v1.4 source-only readback kept GitHub as lifecycle authority; Drive and Notion remained non-authoritative context.
+- [x] No workflow, test, policy evaluation, approval, promotion, release, deployment, publication, or public-state mutation was executed.
 - [x] ADR identity, filename, H1, source status, and index row preserved.
 - [x] Accepted ADR-0029 and Directory Rules v2 placement authority verified.
 - [x] ReviewRecord and StewardshipAssignment contract/schema drift inspected.
@@ -969,7 +994,8 @@ Weakening or disabling implemented SoD requires independent review at least as s
 
 | Version | Date | Summary |
 |---|---|---|
-| `v1.3` | 2026-08-14 | Same-path repository reconciliation against `main@c9ccb11d...`: records accepted Directory Rules placement authority; recognizes substantive fixture-only ReviewAuthorityBinding and T3/T4 SensitiveReleaseReviewClosure profiles; records their no-authority boundaries and latest stale-receipt workflow failures; verifies the active default-branch ruleset requires PR mediation but zero approvals; refreshes evidence, maturity, convergence, acceptance, risks, rollback, references, and no-loss ledger; preserves source `draft` and effective `proposed`. |
+| `v1.4` | 2026-09-14 | Same-path current-source reconciliation against `main@cddc2ce8...`: preserves `draft` / `proposed`; pins the index, accepted placement authority, no-authority governance contracts, bounded workflows, CODEOWNERS, release policy, and promotion gate; distinguishes v1.3 workflow observations as historical; asserts no execution, approval, promotion, release, deployment, publication, or public-state effect. |
+| `v1.3` | 2026-08-14 | Same-path repository reconciliation against `main@c9ccb11d...`: records accepted Directory Rules placement authority; recognizes substantive fixture-only ReviewAuthorityBinding and T3/T4 SensitiveReleaseReviewClosure profiles; records their no-authority boundaries and then-observed stale-receipt workflow failures; verifies the then-inspected active default-branch ruleset requires PR mediation but zero approvals; preserves source `draft` and effective `proposed`. |
 | `v1.2` | 2026-08-03 | Added the bounded fixture-only ReviewRecord/SoD candidate evidence while preserving overall M0/HOLD and live identity, policy, governed-record, and release dependencies. |
 | `v1.1` | 2026-07-24 | Re-grounded the ADR in repository evidence; separated design lineage from implementation; replaced string-only identity checks with actor, authority, and subject binding; corrected M0; added emergency containment, convergence, acceptance, finite outcomes, risks, and successor-ADR rollback discipline. |
 | `v1` | 2026-05-15 | Initial draft proposing role vocabulary, separation matrix, M0–M3 maturity, policy/platform enforcement, validation, rollback, and Atlas ADR-S-09 closure. |
@@ -980,7 +1006,7 @@ Weakening or disabling implemented SoD requires independent review at least as s
 
 ## Appendix A — No-loss modernization ledger
 
-| Prior v1.2 material | v1.3 treatment |
+| Prior v1.3 material | v1.4 treatment |
 |---|---|
 | Proposed decision and source/effective status | **Preserved**; status remains `draft` / `proposed` |
 | Acceptance versus implementation separation | **Preserved and sharpened** |
@@ -1002,4 +1028,4 @@ Weakening or disabling implemented SoD requires independent review at least as s
 
 ---
 
-<sub>**Last updated:** 2026-08-14 · **Source metadata:** `draft` · **Effective decision status:** `proposed` · **Fixture evidence:** `PARTIAL / substantive` · **Operational enforcement:** `M0 / HOLD` · **Publication:** none · **Path:** `docs/adr/ADR-0024-steward-separation-of-duties-for-release.md`</sub>
+<sub>**Last updated:** 2026-09-14 · **Source metadata:** `draft` · **Effective decision status:** `proposed` · **Fixture evidence:** `PARTIAL / substantive` · **Operational enforcement:** `M0 / HOLD` · **Publication:** none · **Path:** `docs/adr/ADR-0024-steward-separation-of-duties-for-release.md`</sub>
