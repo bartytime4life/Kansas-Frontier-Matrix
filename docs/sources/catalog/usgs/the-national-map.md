@@ -2,11 +2,11 @@
 doc_id: kfm://doc/docs-sources-catalog-usgs-the-national-map
 title: USGS The National Map (TNM)
 type: product-page
-version: v0.2
+version: v0.3
 status: draft
 owners: <PLACEHOLDER — Docs steward + Source steward for usgs>
 created: 2026-05-20
-updated: 2026-05-23
+updated: 2026-09-14
 policy_label: public
 related:
   - docs/sources/catalog/usgs.md
@@ -27,10 +27,9 @@ related:
   - docs/standards/STAC.md
   - docs/standards/DCAT.md
   - docs/standards/PROV.md
-  - data/registry/sources/usgs/
-  - policy/sources/usgs/
+  - data/registry/sources/
+  - policy/sources/
   - schemas/contracts/v1/source/
-  - schemas/contracts/v1/carrier/
   - connectors/usgs/
 adr_refs:
   - ADR-0001 (schema home)
@@ -41,11 +40,12 @@ adr_refs:
   - <PROPOSED> ADR-S-?? (per-asset role inheritance — formalizing the rule that an asset served via a carrier inherits the role of its originating program, never the carrier itself)
 tags: [kfm, docs, sources, catalog, usgs, tnm, the-national-map, carrier, aggregator, discovery, download, delivery, access-surface]
 notes:
-  - "PROPOSED product-page scaffold filled to v0.2; seventh page in the usgs family folder."
+  - "PROPOSED product-page scaffold filled to v0.3; seventh page in the usgs family folder."
   - "Filename inferred from doc_id slug: usgs-the-national-map.md. Family catalog (docs/sources/catalog/usgs.md §5) uses the short ID 'usgs-tnm'. Reconciliation flagged in Q-3."
-  - "STRUCTURAL UNIQUE: TNM is a carrier/access surface, NOT a content source. It aggregates and delivers other USGS programs' content; it does not own observations, models, or administrative records of its own. The v1.1 family-catalog §5.1 explicitly flagged this product as carrier-vs-product-page UNDECIDED. v0.2 authors this page as the carrier-disposition product page the family-catalog anticipated, with the UNDECIDED disposition surfaced rather than silently resolved (see §2)."
+  - "STRUCTURAL UNIQUE: TNM is a carrier/access surface, NOT a content source. It aggregates and delivers other USGS programs' content; it does not own observations, models, or administrative records of its own. The v1.1 family-catalog §5.1 explicitly flagged this product as carrier-vs-product-page UNDECIDED. v0.3 authors this page as the carrier-disposition product page the family-catalog anticipated, with the UNDECIDED disposition surfaced rather than silently resolved (see §2)."
   - "Source-role: TNM itself does not carry a §24.1.1 enum role for content; it carries `administrative` for its own discovery metadata + delivery receipts. Per-asset served via TNM inherits the role of its originating program (3DEP DEM = modeled; NHDPlus HR geometry = observed; etc.) per the role-inheritance rule formalized in §2.1."
-  - "Cross-references six sibling product pages explicitly: 3DEP, earthquake-catalog, GNIS, NHDPlus HR, NLCD, and Water Data are all reachable through TNM (in varying degrees) and the connector wiring must preserve the upstream-program reference through every TNM-mediated fetch."
+  - "Cross-references six sibling product pages explicitly: 3DEP, earthquake-catalog, GNIS, NHDPlus HR, NLCD, and Water Data are reachable through distinct USGS surfaces; any TNM-mediated fetch must preserve the upstream-program reference."
+  - "2026-09-14 current-source refresh: official USGS evidence confirms one TNMAccess API for downloadable products, a separate web-services surface, and a live dataset-discovery endpoint; no source admission, connector activation, retrieval, release, or publication is implied."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -68,16 +68,16 @@ notes:
 ![sensitivity: T0 default · inherits per-asset](https://img.shields.io/badge/sensitivity-T0%20%C2%B7%20inherits%20per--asset-orange)
 ![last gate: TODO](https://img.shields.io/badge/last%20gate-TODO-lightgrey)
 
-**Status:** `PROPOSED — scaffold filled (carrier disposition)` &nbsp;·&nbsp; **Doc version:** `v0.2` &nbsp;·&nbsp; **Family:** [`usgs`](./README.md) &nbsp;·&nbsp; **Last reviewed:** 2026-05-23
+**Status:** `PROPOSED — scaffold filled (carrier disposition)` &nbsp;·&nbsp; **Doc version:** `v0.3` &nbsp;·&nbsp; **Family:** [`usgs`](./README.md) &nbsp;·&nbsp; **Last reviewed:** 2026-09-14
 
 > [!IMPORTANT]
-> **This page is a pointer twice over.** First, like every product page in this family, descriptor fields live in [`data/registry/sources/usgs/`](../../../../data/registry/sources/usgs/) and policy lives in [`policy/sources/usgs/`](../../../../policy/sources/usgs/) — **do not duplicate descriptor or policy here.** Second, and uniquely for TNM, this page is structurally a **pointer to the per-program product pages** (3DEP, NHDPlus HR, GNIS, NLCD, Water Data, etc.) for everything content-related; TNM-the-carrier owns only its own discovery + delivery surface.
+> **This page is a pointer twice over.** First, machine descriptor and policy authority—if admitted—belongs under [`data/registry/sources/`](../../../../data/registry/sources/) and [`policy/sources/`](../../../../policy/sources/); **do not duplicate that authority here.** Current-main inspection on 2026-09-14 found no `data/registry/sources/usgs/`, `policy/sources/usgs/`, or `schemas/contracts/v1/carrier/` path, so this draft does not imply those artifacts exist or that TNM is admitted or active. Second, and uniquely for TNM, this page points to per-program product pages (3DEP, NHDPlus HR, GNIS, NLCD, Water Data, etc.) for content meaning; TNM owns only discovery and delivery context.
 
 > [!CAUTION]
 > **TNM is not a §24.1.1 content-role source.** TNM does not observe, model, or regulate. An NLCD raster served via TNM **is and remains** a `modeled` MRLC product; a 3DEP DEM served via TNM **is and remains** a `modeled` 3DEP product; a GNIS name record served via TNM **is and remains** an `administrative` GNIS record. The role belongs to the originating program, not to the delivery vehicle. KFM derivatives that cite *"TNM"* as the source-role of a piece of content collapse the carrier into the content and violate the role-inheritance rule formalized in [§2.1](#21-sub-product-source-role-decomposition).
 
 > [!WARNING]
-> **Open structural question.** The v1.1 family-catalog ([`docs/sources/catalog/usgs.md`](../usgs.md) §5.1) explicitly flagged TNM as carrier-vs-product-page **UNDECIDED**: *"recommend treating it as access machinery referenced from product pages rather than a product page of its own."* v0.2 authors this page as the carrier-disposition document the family-catalog anticipated and surfaces the disposition for ADR resolution rather than silently choosing one side. See [§2](#2-product-identity-within-the-family) and Q-1.
+> **Open structural question.** The v1.1 family-catalog ([`docs/sources/catalog/usgs.md`](../usgs.md) §5.1) explicitly flagged TNM as carrier-vs-product-page **UNDECIDED**: *"recommend treating it as access machinery referenced from product pages rather than a product page of its own."* v0.3 authors this page as the carrier-disposition document the family-catalog anticipated and surfaces the disposition for ADR resolution rather than silently choosing one side. See [§2](#2-product-identity-within-the-family) and Q-1.
 
 ---
 
@@ -106,15 +106,23 @@ notes:
 
 This product page describes how KFM treats **USGS The National Map (TNM)** — the U.S. federal geospatial discovery and download platform — as a **carrier surface**: the way KFM reaches and delivers content from multiple USGS programs while preserving each program's authority, source-role, and provenance through the delivery vehicle.
 
-TNM operates as several surfaces:
+TNM operates through distinct access surfaces:
 
-- **TNM Access API / TNM Download API** — programmatic discovery and bulk-download endpoints.
-- **TNM REST services** — feature/service catalog endpoints.
-- **The National Map web application** — interactive browse and download.
-- **Direct download links** — bulk-distribution URLs for staged packages (e.g., 3DEP LAZ tiles, NHDPlus HR HU-4 geodatabases).
+- **[TNMAccess API](https://tnmaccess.nationalmap.gov/api/v1/docs)** — the one API named by the USGS FAQ for programmatic access to downloadable TNM products; the FAQ states that HTTP GET and POST are supported.
+- **[TNM datasets endpoint](https://tnmaccess.nationalmap.gov/api/v1/datasets)** — live JSON discovery metadata describing available datasets, formats, extents, program links, and upstream refresh fields.
+- **[TNM web services](https://apps.nationalmap.gov/services/)** — a separate real-time map-service surface; the USGS data-delivery page lists REST, WCS, WMS, WMTS, and WFS.
+- **[The National Map Downloader](https://apps.nationalmap.gov/downloader/)** and web application — interactive human browse and download.
+- **TNM cloud and staged-product URLs** — file-delivery locations returned or linked by the access surfaces.
 
-> [!NOTE]
-> **EXTERNAL** *(preserved without re-verification this session).* USGS operates TNM as a unified entry point; specific endpoint URLs, file-staging conventions, rate-limit terms, and the precise set of programs accessible via TNM at any given time remain **NEEDS VERIFICATION** until re-fetched in a session with web access. The v1.1 family-catalog entry §5 records TNM's role as *"`aggregator` of program assets (carrier; per-asset role applies)"* with Spatial Foundation as its cross-cutting domain.
+### 1.1 Current official-source snapshot — 2026-09-14
+
+- **CONFIRMED EXTERNAL:** the [USGS FAQ](https://www.usgs.gov/faqs/there-api-accessing-national-map-data), updated 2025-02-24, identifies **one** TNM API—TNMAccess—and says it exposes the products available through the Download Client using HTTP GET and POST.
+- **CONFIRMED EXTERNAL:** the live `/api/v1/datasets` response currently enumerates product families including the National Boundary Dataset, 3DEP elevation products and source data, and 3D Hydrography Program products. These records are discovery metadata, not evidence that every listed asset is current, Kansas-complete, admitted, or suitable for publication.
+- **CONFIRMED EXTERNAL:** the [USGS GIS Data Download page](https://www.usgs.gov/the-national-map-data-delivery/gis-data-download) separates TNMAccess from cloud downloads and web services. KFM therefore must not model a second, distinct “TNM Download API” without new official evidence.
+- **NEEDS VERIFICATION:** route-level request parameters, authentication posture, published rate limits, deprecation signals, per-product rights/attribution, Kansas coverage, file checksums, and individual product currency before connector activation.
+
+> [!IMPORTANT]
+> This snapshot admits no source and performs no dataset retrieval. Any future connector remains internal, no-network-by-default, and constrained by ADR-0012 to a governed RAW or QUARANTINE sink. Public Explorer clients must consume only released KFM artifacts, never TNMAccess or raw TNM web services directly.
 
 > [!IMPORTANT]
 > **TNM does not own the content it serves.** Every asset reachable through TNM originates with a specific USGS program (3DEP, NHDPlus HR, GNIS, NLCD-via-MRLC-distribution, Water Data, geologic maps, etc.) and carries that program's source-role, rights posture, provenance, and per-program editorial history. TNM provides discovery + delivery; the **per-program product pages** in this family own the content meaning. This is the defining structural fact of this page.
@@ -205,10 +213,10 @@ The v1.1 family-catalog ([`docs/sources/catalog/usgs.md`](../usgs.md) §5.1) exp
 
 Two structural options remain open:
 
-- **Option A — TNM as a full product page (this v0.2)**: a carrier-disposition product page documents TNM's own administrative metadata (discovery records + delivery receipts), the per-asset role-inheritance rule, the rate-limit/cadence carrier discipline, and the TNM-aware connector pattern. The per-program product pages remain authoritative for content meaning; this page is the canonical reference for *how* KFM accesses them.
+- **Option A — TNM as a full product page (this v0.3)**: a carrier-disposition product page documents TNM's own administrative metadata (discovery records + delivery receipts), the per-asset role-inheritance rule, the rate-limit/cadence carrier discipline, and the TNM-aware connector pattern. The per-program product pages remain authoritative for content meaning; this page is the canonical reference for *how* KFM accesses them.
 - **Option B — TNM as access machinery only**: this page becomes thin (~5–10 lines pointing at the per-program connectors); TNM-aware concerns (rate limiting, download receipts, role-inheritance preservation) get documented inline on each affected per-program page.
 
-v0.2 implements Option A as the working hypothesis and surfaces the choice for ADR-S-?? (carrier-vs-product-page disposition). The page is deliberately lighter than the content product pages — most sections are short or explicitly "inherited from program" — to model what Option A actually looks like.
+v0.3 implements Option A as the working hypothesis and surfaces the choice for ADR-S-?? (carrier-vs-product-page disposition). The page is deliberately lighter than the content product pages — most sections are short or explicitly "inherited from program" — to model what Option A actually looks like.
 
 </details>
 
@@ -220,7 +228,7 @@ v0.2 implements Option A as the working hypothesis and surfaces the choice for A
 | KFM source-role (own) | **`administrative`** (for its discovery metadata + delivery receipts only — see [§2.1](#21-sub-product-source-role-decomposition)) | **CONFIRMED enum** per Atlas §24.1.1. |
 | KFM source-role (per-asset served via TNM) | **Inherited from the originating program** — never *"TNM"* | **CONFIRMED rule** per Atlas §24.1.2 + ADR-S-?? per-asset role-inheritance. |
 | Domains served | **Spatial Foundation (cross-cutting)** per family-catalog §5 row; effectively cross-domain via per-asset inheritance | **CONFIRMED**. |
-| Primary upstream surfaces | TNM Access API · TNM Download API · TNM REST services · The National Map web app · direct staged-download links | **EXTERNAL — NEEDS VERIFICATION** of current URLs and access patterns. |
+| Primary upstream surfaces | TNMAccess API · datasets endpoint · TNM web services · TNM Downloader/web app · cloud and staged-product links | **CONFIRMED EXTERNAL 2026-09-14** for surface existence; route parameters, auth, rate limits, and per-product use remain **NEEDS VERIFICATION**. |
 | Cardinal evidence objects (carrier-only) | **`TNMResourceRef`** (discovery record · administrative); **`TNMDownloadReceipt`** (delivery receipt · administrative); **`TNMServiceCatalogEntry`** (REST service catalog · administrative) | **PROPOSED** — new carrier-specific object classes. |
 | Geometry | **Inherited from per-asset** (no own geometry beyond service bounding boxes) — see [§8](#8-identity-access-surface-and-geometry) | **CONFIRMED-inherited**. |
 | Cadence | **Editorial / per-asset** — TNM-itself rarely changes; the assets it serves change per their originating programs' schedules | **CONFIRMED**. |
@@ -250,7 +258,7 @@ v0.2 implements Option A as the working hypothesis and surfaces the choice for A
 | **Earthquake event records** (content) | [`usgs-earthquake-catalog.md`](./usgs-earthquake-catalog.md) — content; **earthquake API is NOT TNM-mediated** | TNM does not serve real-time seismic feeds. |
 | **Real-time stream gauge data** (content) | [`usgs-nwis-water.md`](./usgs-nwis-water.md) — content; **Water Data API is NOT TNM-mediated** | TNM does not serve real-time water data; that is `api.waterdata.usgs.gov`. |
 | **A discovery interface** to find what is available across multiple USGS programs | This page (TNM Access API documentation) | — |
-| **A download mechanism** for staged USGS files at scale | This page (TNM Download API documentation) | — |
+| **A download mechanism** for staged USGS files at scale | TNMAccess discovery plus the exact cloud or staged-product URL it returns or references | No separate “TNM Download API” is asserted by the current official FAQ. |
 | **USGS Science Data Catalog** (an aggregator at a different level than TNM) | `<PROPOSED> docs/sources/catalog/usgs/usgs-sdc.md` per family-catalog §5 row `usgs-sdc` — another carrier-vs-product-page UNDECIDED case | — |
 
 > [!NOTE]
@@ -262,10 +270,17 @@ v0.2 implements Option A as the working hypothesis and surfaces the choice for A
 
 ## 3. Source authority
 
-See [`data/registry/sources/usgs/`](../../../../data/registry/sources/usgs/) for the authoritative `SourceDescriptor` for TNM-the-carrier. **Do not duplicate descriptor fields here.** Descriptor canonical schema home is `schemas/contracts/v1/source/source-descriptor.json` per Directory Rules §7.4 / ADR-0001 — **NEEDS VERIFICATION**.
+This page is human source guidance. The canonical machine-descriptor schema is [`schemas/contracts/v1/source/source-descriptor.json`](../../../../schemas/contracts/v1/source/source-descriptor.json), and future admitted instances belong under [`data/registry/sources/`](../../../../data/registry/sources/) through the ADR-0017 admission process.
 
-> [!IMPORTANT]
-> **TNM's `SourceDescriptor` describes the carrier, not the carried content.** Each program reached through TNM has its own `SourceDescriptor` (in `data/registry/sources/usgs/` per its own product page). The TNM descriptor documents the carrier surface — endpoints, rate limits, authentication, deprecation track — and explicitly references the per-program descriptors it delivers.
+> [!WARNING]
+> **Current machine state:** readback at pinned main on 2026-09-14 found no `data/registry/sources/usgs/`, `policy/sources/usgs/`, or `schemas/contracts/v1/carrier/` path. No TNM `SourceDescriptor`, activation decision, carrier schema, source-specific policy bundle, or connector is established by this document. A future descriptor must describe TNM as a carrier and bind each delivered asset to its originating program descriptor.
+
+Official evidence used by this refresh:
+
+- [USGS FAQ — Is there an API for accessing The National Map data?](https://www.usgs.gov/faqs/there-api-accessing-national-map-data)
+- [TNMAccess API documentation](https://tnmaccess.nationalmap.gov/api/v1/docs)
+- [TNMAccess datasets endpoint](https://tnmaccess.nationalmap.gov/api/v1/datasets)
+- [USGS GIS Data Download](https://www.usgs.gov/the-national-map-data-delivery/gis-data-download)
 
 Doctrinal anchors for this product:
 
@@ -343,7 +358,7 @@ Carrier-only collections — small set, scoped to TNM's own administrative recor
 | `policy_digest` | sha256 of policy bundle | `KFM-P22-PROG-0001`. |
 | **TNM-carrier own fields (administrative)** | | |
 | `tnm_resource_id` | USGS-assigned identifier for the TNM-listed resource | **CONFIRMED-required** for discovery records. |
-| `tnm_endpoint_used` | Enum (`access_api`, `download_api`, `rest_service`, `staged_download_link`) | **CONFIRMED-required** for delivery receipts. |
+| `tnm_endpoint_used` | Proposed enum (`access_api`, `web_service`, `cloud_download`, `staged_download_link`) | **PROPOSED** — candidate vocabulary only; no carrier schema exists on current main. |
 | `tnm_endpoint_url` | URL — the specific TNM endpoint used for this session | **CONFIRMED-required**. |
 | `tnm_session_id` | KFM-side session identifier for the delivery | **CONFIRMED-required** for delivery receipts. |
 | `tnm_request_payload_hash` | sha256 of the request payload (query parameters, body) | **PROPOSED-required**. |
@@ -406,11 +421,11 @@ TNM's own time discipline is thin: the carrier itself rarely changes; the assets
 
 | Access surface | Purpose | KFM connector pattern |
 |---|---|---|
-| **TNM Access API** | Programmatic discovery — what assets are available, where, in what format | TNM-aware connectors query discovery first to construct download URLs. |
-| **TNM Download API** | Programmatic download of staged packages | TNM-aware connectors fetch via this endpoint; emit `TNMDownloadReceipt`. |
-| **TNM REST services** | Feature/service catalog — for vector and tile services | Used for direct-feature queries (smaller-scale than bulk downloads). |
-| **TNM web app** | Interactive browse for human users | Not used by KFM connectors; documented for reference. |
-| **Direct staged-download links** | Bulk-distribution URLs for pre-staged packages (often the actual download mechanism beneath the Download API) | TNM-aware connectors follow these links and record the URL in the delivery receipt. |
+| **TNMAccess API** | Official discovery/access API for downloadable products; GET and POST are supported per the USGS FAQ | A future bounded connector may query discovery metadata, then pass any payload only to a governed RAW or QUARANTINE sink. |
+| **TNM datasets endpoint** | JSON inventory of dataset families, formats, extents, links, and upstream refresh fields | Treat as discovery metadata; record retrieval time and preserve upstream fields without converting them into freshness proof. |
+| **TNM web services** | Real-time layer access through REST, WCS, WMS, WMTS, or WFS | Treat as a distinct service carrier. Never make a raw upstream service a public-client dependency. |
+| **TNM Downloader / web app** | Interactive browse and download for human users | Reference-only; not an automated connector surface. |
+| **Cloud and staged-download links** | File delivery for staged products | Record the exact URL, retrieval time, byte count, and digest in a delivery receipt; preserve the originating program identity. |
 
 ### 8.3 No own geometry, no own content
 
@@ -423,7 +438,7 @@ TNM's own time discipline is thin: the carrier itself rarely changes; the assets
 
 ## 9. Rights and sensitivity (pointer)
 
-**Do not restate policy here.** See [`policy/sources/usgs/`](../../../../policy/sources/usgs/) and the family-level summary at [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md). **Most rights and sensitivity concerns for TNM-mediated content belong to the per-program product page**, not here.
+**Do not restate policy here.** The canonical root is [`policy/sources/`](../../../../policy/sources/), but current-main inspection found no USGS-specific policy sublane. The family-level summary remains [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md). **Most rights and sensitivity concerns for TNM-mediated content belong to the per-program product page**, not here.
 
 ### 9.1 T0 default for the carrier itself
 
@@ -507,10 +522,10 @@ TNM's own time discipline is thin: the carrier itself rarely changes; the assets
 | Surface | Path (PROPOSED unless noted) | Status |
 |---|---|---|
 | `SourceDescriptor` semantic + schema | [`contracts/source/`](../../../../contracts/source/) · [`schemas/contracts/v1/source/`](../../../../schemas/contracts/v1/source/) | **PROPOSED** canonical homes per Directory Rules §7.4 / ADR-0001. |
-| `TNMResourceRef` schema (discovery records) | [`schemas/contracts/v1/carrier/`](../../../../schemas/contracts/v1/carrier/) | **PROPOSED** — new carrier-specific object class. |
-| `TNMServiceCatalogEntry` schema | [`schemas/contracts/v1/carrier/`](../../../../schemas/contracts/v1/carrier/) | **PROPOSED**. |
-| `TNMDownloadReceipt` schema | [`schemas/contracts/v1/carrier/`](../../../../schemas/contracts/v1/carrier/) | **PROPOSED**. |
-| `CarrierMediationRef` schema (the carrier-reference fields that attach to every per-asset record) | [`schemas/contracts/v1/carrier/`](../../../../schemas/contracts/v1/carrier/) | **PROPOSED** — shared with any future carrier product page (e.g., `usgs-sdc.md` if authored). |
+| `TNMResourceRef` schema (discovery records) | No admitted path on current main | **PROPOSED** — new carrier-specific object class; placement requires authority. |
+| `TNMServiceCatalogEntry` schema | No admitted path on current main | **PROPOSED** — placement requires authority. |
+| `TNMDownloadReceipt` schema | No admitted path on current main | **PROPOSED** — placement requires authority. |
+| `CarrierMediationRef` schema (the carrier-reference fields that attach to every per-asset record) | No admitted path on current main | **PROPOSED** — shared design candidate; placement requires authority. |
 | `RateLimitGovernorState` schema (shared across TNM-aware connectors) | [`schemas/contracts/v1/governance/`](../../../../schemas/contracts/v1/governance/) | **PROPOSED**. |
 | `EvidenceBundle` / `EvidenceRef` | [`schemas/contracts/v1/evidence/`](../../../../schemas/contracts/v1/evidence/) | **PROPOSED** per `KFM-P26-PROG-0004` / 0005. |
 | `RealityBoundaryNote` | [`schemas/contracts/v1/governance/`](../../../../schemas/contracts/v1/governance/) | **PROPOSED**. |
@@ -561,8 +576,8 @@ TNM's own time discipline is thin: the carrier itself rarely changes; the assets
     "audit_ref": "kfm://audit/<attestation-id>",
     "policy_digest": "<sha256 of policy bundle>",
     "tnm_session_id": "<kfm session id>",
-    "tnm_endpoint_used": "download_api",
-    "tnm_endpoint_url": "<tnm download endpoint URL>",
+    "tnm_endpoint_used": "staged_download_link",
+    "tnm_endpoint_url": "<exact cloud or staged-product URL>",
     "tnm_request_payload_hash": "<sha256 of request body/parameters>",
     "tnm_download_initiation_time": "<ISO timestamp>",
     "tnm_download_completion_time": "<ISO timestamp>",
@@ -617,16 +632,16 @@ TNM's own time discipline is thin: the carrier itself rarely changes; the assets
 
 | # | Question | Class | Suggested resolution |
 |---|---|---|---|
-| Q-1 | **Carrier-vs-product-page disposition.** Per family-catalog §5.1: should TNM have its own product page (this v0.2, Option A) or only be referenced from per-program pages (Option B)? | **OPEN — gating structural** | ADR-S-?? (carrier-vs-product-page disposition). Default per [§2 attribution box](#2-product-identity-within-the-family) = **Option A** (this page) preserves a single canonical reference for carrier-specific concerns (rate limits, deprecation, role-inheritance rule); Option B remains viable if the family decides per-program pages should absorb the rate-limit and role-inheritance documentation inline. |
+| Q-1 | **Carrier-vs-product-page disposition.** Per family-catalog §5.1: should TNM have its own product page (this v0.3, Option A) or only be referenced from per-program pages (Option B)? | **OPEN — gating structural** | ADR-S-?? (carrier-vs-product-page disposition). Default per [§2 attribution box](#2-product-identity-within-the-family) = **Option A** (this page) preserves a single canonical reference for carrier-specific concerns (rate limits, deprecation, role-inheritance rule); Option B remains viable if the family decides per-program pages should absorb the rate-limit and role-inheritance documentation inline. |
 | Q-2 | **Per-asset role-inheritance rule formalization.** The rule that a TNM-delivered asset inherits the originating program's source-role is doctrinally clear but informally documented. Where does it formalize? | **OPEN — gating** | ADR-S-?? (per-asset role inheritance). Default = **formalize in `policy/sources/_carrier_inheritance.md`** with this product page as the canonical example; ADR adds a Validator family. |
 | Q-3 | **Filename reconciliation.** This file's doc_id slug is `usgs-the-national-map`; family-catalog short ID is `usgs-tnm`. | **NEEDS VERIFICATION** | Defer to broader naming ADR. Default = **prefer `usgs-tnm.md`** for brevity; the current filename works but is verbose. |
 | Q-4 | **Per-program connector ownership of TNM-aware fetch.** Should each per-program connector (3DEP, NHDPlus HR, GNIS, NLCD partial, geologic maps) own its TNM-aware fetch logic, or should there be a shared TNM-fetch library? | **PROPOSED — gating implementation** | Default = **shared TNM-fetch library** with per-program connectors invoking it; this matches the §13 shared rate-limit-governor pattern. |
 | Q-5 | **TNM rate-limit policy.** What rate-limit window does KFM enforce against TNM endpoints? | **PROPOSED — gating operational** | Default = **conservative quota with exponential back-off + ADR-S-12 quarantine recovery**; actual quotas tracked in the shared governor's configuration once USGS-published rate-limit terms are verified (Q-7). |
 | Q-6 | **Which USGS programs are TNM-mediated?** §1 Mermaid shows 3DEP / NHDPlus HR / GNIS / NLCD / geologic maps as TNM-served, with earthquakes and Water Data as not-TNM-mediated. | **PROPOSED** | Default = **descriptor-driven** — each program's `SourceDescriptor` records its preferred access path; TNM-mediation is per-program, not blanket. Verified at activation. |
-| Q-7 | **TNM endpoint terms.** Current TNM Access API, Download API, REST service URLs + rate-limit terms + authentication requirements. | **NEEDS VERIFICATION** | Re-fetch before any T0 promotion. |
+| Q-7 | **TNM endpoint terms.** Which route parameters, authentication rules, rate limits, and deprecation signals govern TNMAccess and TNM web services? | **PARTIALLY CONFIRMED / NEEDS VERIFICATION** | The FAQ, API docs URL, datasets endpoint, and web-services categories were re-fetched on 2026-09-14. A separate “TNM Download API” is not supported by that evidence. Route-level terms remain an activation gate. |
 | Q-8 | **Discovery-record cadence.** How often does KFM refresh its discovery index of available TNM assets? | **PROPOSED** | Default = **weekly** for the discovery index (which is independent of any specific per-program ingest cadence); programs maintain their own ingest cadence. |
 | Q-9 | **`via_tnm` flag preservation through transforms.** Does the carrier-mediation flag persist into PROCESSED and PUBLISHED layers, or only at RAW? | **PROPOSED** | Default = **persists through every transform** — Focus Mode and the Evidence Drawer benefit from knowing the delivery vehicle. |
-| Q-10 | **Cross-carrier reconciliation.** When an asset is reachable via both TNM and direct-program endpoint (e.g., 3DEP via TNM Download API AND via direct AWS S3), which is canonical? | **PROPOSED** | Default = **descriptor-driven** — each program's `SourceDescriptor` declares its preferred path; KFM honors. Both delivery vehicles emit receipts so the choice is auditable. |
+| Q-10 | **Cross-carrier reconciliation.** When an asset is reachable through TNMAccess/staged delivery and a direct-program endpoint (for example, 3DEP through TNM and direct AWS S3), which is canonical? | **PROPOSED** | Default = **descriptor-driven** — each program's `SourceDescriptor` declares its preferred path; KFM honors. Both delivery vehicles emit receipts so the choice is auditable. |
 | Q-11 | **STAC namespace pin** (`kfm:` vs `ks-kfm:`). | **OPEN** | Pin at family / catalog level. |
 | Q-12 | **TNM deprecation tracking.** What signals does TNM publish for endpoint deprecation, and how does the deprecation watcher consume them? | **PROPOSED** | Default = **HTTP `Deprecation` and `Sunset` headers per RFC 8594 where TNM emits them**; supplemented by USGS announcements consumed via the broader migration-tracking watcher (analog of the USGS Water Data API migration pattern). |
 | Q-13 | **USGS Science Data Catalog (SDC) relationship.** SDC is another aggregator-level surface per family-catalog §5 row `usgs-sdc`. Does this page cover both, or does SDC get its own carrier page? | **PROPOSED** | Default = **separate carrier product pages** (`<PROPOSED> usgs-sdc.md`); SDC has different scope (research data catalog vs national map) and different access patterns. |
@@ -639,8 +654,8 @@ TNM's own time discipline is thin: the carrier itself rarely changes; the assets
 
 ## 16. Last reviewed
 
-2026-05-23 *(scaffold filled as carrier-disposition product page per family-catalog §5.1 anticipated; product-page polished against doctrine corpus + v1.1 family-catalog entry + six sibling product pages; mounted repo not inspected this session).*
+2026-09-14 *(official USGS FAQ, TNMAccess datasets endpoint, and GIS Data Download page re-fetched; current repository authority and absent machine homes inspected; documentation-only source-candidate refresh).*
 
 ---
 
-> **Doc version:** v0.2 (draft, carrier disposition) &nbsp;·&nbsp; **Family:** [`usgs`](./README.md) &nbsp;·&nbsp; **Catalog root:** [`docs/sources/catalog/`](../README.md) &nbsp;·&nbsp; **Carrier-vs-product disposition:** OPEN (see §2 + Q-1) &nbsp;·&nbsp; [Back to top](#top)
+> **Doc version:** v0.3 (draft, carrier disposition) &nbsp;·&nbsp; **Family:** [`usgs`](./README.md) &nbsp;·&nbsp; **Catalog root:** [`docs/sources/catalog/`](../README.md) &nbsp;·&nbsp; **Carrier-vs-product disposition:** OPEN (see §2 + Q-1) &nbsp;·&nbsp; [Back to top](#top)
