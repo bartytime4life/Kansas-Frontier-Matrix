@@ -2,7 +2,7 @@
 doc_id: kfm://adr-candidate/archaeology-source-roles
 title: "ADR Candidate — Archaeology Source Roles Bind to the Shared SourceDescriptor Vocabulary"
 type: adr
-version: v0.2
+version: v0.3
 status: proposed
 effective_decision_status: not-assigned
 owners:
@@ -14,7 +14,7 @@ owners:
   - "NEEDS VERIFICATION — contract, schema, policy, validation, API/UI, release, correction, and rollback stewards"
 owner_status: "CODEOWNERS routing and accepted decision ownership were not verified as equivalent to domain, cultural, sovereignty, rights, policy, release, or independent-review authority"
 created: 2026-05-20
-updated: 2026-08-14
+updated: 2026-09-14
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
@@ -62,6 +62,37 @@ inspection_boundary: >
   authority system, rights agreement, source endpoint, connector, lifecycle
   payload, EvidenceBundle resolver, policy evaluator, release environment,
   public client, or deployed runtime was exercised.
+currentness_reconciliation_2026_09_14:
+  base_commit: ccd0353e9bbf9d2b7f18040629821aec24d3f925
+  target_prior_blob: 272e97986cbe5148aa4c2683d1ebcec517a52c33
+  adr_index_blob: 0c143676dfd3c1bda16cb44398c5ad5d4a49cf67
+  adr_0029_blob: 4c1ef5f7f812d58fbdde9898acc96bb4c9280b2c
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  archaeology_source_registry_blob: 7f905f43196eda6a063e65964f8054af0c12be10
+  archaeology_sources_blob: bffee469f7d503ea829f49e6465ac4b2ae1e48fc
+  shared_source_roles_doc_blob: c528d517503aca2952164b45701246c5abae751c
+  source_descriptor_contract_blob: b57ae5ccc042c1423b75c168438800384c9b6713
+  source_descriptor_schema_blob: 582e70b834278c3c6ca9a8b31efbe0989c96f0bc
+  source_role_use_contract_blob: 6bc07a551511cc8fca8024625cf962e15f77eed0
+  source_role_use_schema_blob: e9c5b9f90dd3a77a6f1164b56571fa9d697ef193
+  source_role_validator_implementation_blob: 1c1ac6bee24dc819695b53d67a00f08c35cc99ee
+  source_role_validator_core_blob: 84c67aa4be17fa2cd5848b556162dfe53698f2e7
+  source_role_validator_rules_blob: aa94f33d5e91b10f8b17a2ea88e4c337c45a23bc
+  source_role_validator_entrypoint_blob: 01d0707c367a5908a7c867181421d2a21eb9f1c7
+  source_role_validator_test_blob: 580c698e53b5144a0f6061d3f5fbc30942485156
+  transition_contract_blob: 8da34b5bcf95f0b7319f2fa6a30104a63bc7dac3
+  transition_schema_blob: 48c8dfded26ba54840c47c4c6b08a434ffea83ff
+  transition_test_blob: 41b9a389397a8b371b8eaaeaaf62ffc5d4f63a4b
+  archaeology_role_registry_blob: 21c6b6f818d554b2e46748c1a05fa3bb80673e57
+  archaeology_fixture_readme_blob: 34ac7b1f8592fd4bdc3ac6685f8819d215163afa
+  archaeology_validator_blob: 0c6d634ea7298c8a75b68b33265b4aea90371b58
+  archaeology_test_blob: e56380f712b1151e61daa15705535ca56986a55d
+  archaeology_exact_location_sibling_blob: 9f7723dea1ddffa5b1e57140ab9e1af83d6e5203
+  scope_limit: >
+    Documentation evidence reconciliation only. No ADR number assignment, decision
+    acceptance, source admission or activation, source-role registry population,
+    fixture, contract, schema, validator, test, policy, connector, lifecycle,
+    release, deployment, promotion, or publication operation was performed.
 related:
   - docs/adr/README.md
   - docs/adr/INDEX.md
@@ -164,13 +195,20 @@ notes:
 | **Effective decision status** | `not-assigned`; non-binding |
 | **Decision class** | Domain binding to shared source-role vocabulary and anti-collapse semantics |
 | **Directory authority** | Accepted ADR-0029 adopts Directory Rules v2; `docs/adr/` owns the human architectural decision record |
-| **Primary evidence checkpoint** | `main@9d924c665073263f2cbf376d2bf29e7b9f252b06` |
+| **v0.2 historical evidence checkpoint** | `main@9d924c665073263f2cbf376d2bf29e7b9f252b06` |
+| **v0.3 currentness checkpoint** | `main@ccd0353e9bbf9d2b7f18040629821aec24d3f925`; targeted source-level reconciliation only |
 | **Current shared implementation** | Rich `SourceDescriptor` schema plus fixture-first source-role validator and tests |
 | **Current Archaeology implementation** | Extensive draft prose; machine role registry, domain fixture, domain validator, and domain test remain placeholders |
 | **Current decision authority** | Not established |
 | **Effect of this revision** | Documentation only |
 | **Publication effect** | None |
 | **Supersedes / superseded by** | None / none |
+
+### Currentness reconciliation — 2026-09-14
+
+At `main@ccd0353e9bbf9d2b7f18040629821aec24d3f925`, the ADR index still classifies this exact slug-only path as `not-assigned`; ADR-0029 remains accepted and continues to supply the placement baseline. The Archaeology source-register and source-family guides, shared SourceDescriptor contract/schema, role-use packet, transition-assessment packet, and archaeology exact-location sibling are present as targeted source-level surfaces. Their presence does not accept the proposed crosswalk or establish a source role for any record.
+
+The targeted archaeology registry remains a short `PROPOSED` placeholder with no mapping rows. Its fixture README remains placeholder-only; the domain validator still raises `NotImplementedError`, and the domain test remains docstring-only. Shared source-role tooling remains explicitly `PROPOSED_INACTIVE` / fixture-first / no-network; this refresh did not execute it or any test. Accordingly, there is no Archaeology source admission, cultural or sovereignty review, consent/rights outcome, exact-location disposition, policy decision, connector activity, lifecycle write, EvidenceBundle resolution, public consumer, release, deployment, promotion, or publication result.
 
 ### Number assignment, acceptance, implementation, and release are separate
 
@@ -221,10 +259,11 @@ home, proof home, receipt home, or release home changes in this revision.
 
 ## Evidence boundary
 
-This candidate is reconciled to current repository evidence at
-`main@9d924c665073263f2cbf376d2bf29e7b9f252b06`. It does not rely on the
-older scaffold's generic instruction to “fill in” the file, and it does not
-convert the draft Archaeology packet into implementation proof.
+The v0.2 evidence record below remains historical lineage at
+`main@9d924c665073263f2cbf376d2bf29e7b9f252b06`; it does not become new proof merely by being retained.
+
+The v0.3 targeted currentness reconciliation is grounded in repository bytes at
+`main@ccd0353e9bbf9d2b7f18040629821aec24d3f925`. Its exact input pins and documentation-only scope limit appear in the metadata block and Status section. It does not rely on the older scaffold's generic instruction to “fill in” the file, and it does not convert the draft Archaeology packet into implementation proof.
 
 ### Truth labels
 
@@ -854,6 +893,9 @@ the reason a claim is allowed, restricted, abstained, held, or denied.
 
 ## Current implementation maturity
 
+> [!NOTE]
+> The table records the v0.2 inspection as historical evidence. v0.3 re-read only the targeted currentness inputs listed above and does not reassert a complete fresh implementation inventory or execution result.
+
 | Capability | Current result | Interpretation |
 |---|---|---|
 | Target identity and path | **CONFIRMED** | Existing slug-only scaffold at the indexed path |
@@ -1246,3 +1288,4 @@ generic generated wording was replaced by repository-grounded decision content.
 |---|---|---|
 | 2026-05-20 | Generated the initial planned-file scaffold from the Archaeology docs inventory. | `PROPOSED scaffold` |
 | 2026-08-14 | Replaced the generic scaffold body in place with a repository-grounded ADR candidate; preserved unassigned/index posture; reconciled shared and domain vocabularies, current validator evidence, conflicts, acceptance gates, convergence, correction, rollback, and no-loss history. | `PROPOSED / not-assigned` |
+| 2026-09-14 | v0.3 targeted currentness reconciliation at `main@ccd0353e9bbf9d2b7f18040629821aec24d3f925`; re-pinned the unassigned ADR posture, accepted placement baseline, source-role and transition surfaces, archaeology placeholder registry/fixture/validator/test state, and exact-location sibling. Preserved all source-role, cultural/sovereignty, rights, exact-location, activation, policy, release, and publication holds; no execution or lifecycle action. | `PROPOSED / not-assigned` |
