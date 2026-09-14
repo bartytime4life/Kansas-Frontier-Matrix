@@ -17,7 +17,7 @@ KFM should use one closed, versioned Atmosphere/Air `knowledge_character` vocabu
 | --- | --- |
 | **ID** | `ADR-XXXX` — unassigned placeholder |
 | **Decision status** | `proposed` / `not-assigned` |
-| **Date** | 2026-08-14 |
+| **Date** | 2026-09-14 |
 | **Deciders** | NEEDS VERIFICATION |
 | **Affected stewards** | Atmosphere domain, architecture, source, evidence, contracts, schemas, policy, sensitivity, validation, governed API, UI/AI, release, correction, and rollback — assignments NEED VERIFICATION |
 | **Supersedes** | None verified |
@@ -31,6 +31,14 @@ KFM should use one closed, versioned Atmosphere/Air `knowledge_character` vocabu
 
 The tracked path is `docs/adr/ADR-XXXX-atmosphere-knowledge-character-vocabulary.md`. Modernizing this existing scaffold in place preserves its inventory identity and does not reserve an ADR number, accept the decision, or create a parallel authority surface.
 
+### Current repository re-read — 2026-09-14
+
+This documentation-only refresh is pinned to `main@09e4973396ab6ab68de62715d7e787e7f811c35c`. The ADR index still lists this exact path as an explicit `ADR-XXXX` placeholder with `not-assigned` decision status; the candidate therefore remains proposed and unnumbered.
+
+The draft human vocabulary and thin registry index remain separate from the draft Atmosphere and cross-domain semantic contracts. The JSON Schema remains a permissive scaffold, and the registry JSON remains a generated placeholder rather than vocabulary authority. Current validator, focused test, fixture-profile, and workflow bytes retain the bounded synthetic six-character anti-collapse profile; that is partial implementation evidence, not acceptance of the eleven-token vocabulary, source admission, policy activation, evidence resolution, or consumer closure.
+
+No source endpoint, scientific product, policy evaluator, registry service, EvidenceBundle/API resolver, MapLibre or Evidence Drawer surface, Focus Mode/AI runtime, release environment, correction workflow, or deployed client was exercised. The refresh does not alter a token definition, registry projection, schema, policy, fixture, test, source, API, UI, release, deployment, or publication.
+
 ---
 
 ## Evidence boundary
@@ -40,8 +48,8 @@ This revision is grounded in repository evidence at:
 ```text
 repository: bartytime4life/Kansas-Frontier-Matrix
 base ref:   main
-base SHA:   3e1a929a5e23f570b40c56e473b08ef65c3c5673
-prior blob: c101657be0915331693ea1bd8a44a03801bdfbb4
+base SHA:   09e4973396ab6ab68de62715d7e787e7f811c35c
+prior blob: 345ca7b19247f09bc366b9bf6dea16ace69aaab0
 ```
 
 ### Truth labels used here
@@ -719,17 +727,24 @@ Unresolved questions remain visible. They are not permission to use free text, i
 
 | Artifact | Identifier |
 | --- | --- |
-| Base commit | `3e1a929a5e23f570b40c56e473b08ef65c3c5673` |
-| Prior target blob | `c101657be0915331693ea1bd8a44a03801bdfbb4` |
-| ADR index blob | `938c5894c36b99e14810918e2c550ab0e92d53b1` |
-| Accepted ADR-0029 blob | `a4de0d7a96b78da59cfc499d1025e1508afd8dd9` |
+| Base commit | `09e4973396ab6ab68de62715d7e787e7f811c35c` |
+| Prior target blob | `345ca7b19247f09bc366b9bf6dea16ace69aaab0` |
+| ADR index blob | `0c143676dfd3c1bda16cb44398c5ad5d4a49cf67` |
+| Accepted ADR-0029 blob | `4c1ef5f7f812d58fbdde9898acc96bb4c9280b2c` |
 | Adopted Directory Rules blob | `fd49a0b83e55cef52c1124281f093e263526898d` |
+| Human vocabulary explainer blob | `fa98a0a31ce55d0e66cac4b2afb6c1418672f17b` |
+| Human registry-index blob | `9ee8429edb5b54cdfa6c8f52187a0d5cf6d18ee6` |
+| Atmosphere semantic-contract blob | `d38eb867122f5c36d1d8e004b99d856f3ef1f200` |
+| Cross-domain contract blob | `2f9ac1c6c97bc47ae269f30e35b93b0419c21a61` |
 | Knowledge-character schema blob | `9ad7a17e27c349695dd43ce1c48653ae5019f193` |
 | Placeholder registry blob | `4b2067e4f1ba70d4689d56ad36b952ead131864c` |
+| Policy-boundary README blob | `a300dfd5abda1b58a07fd978935dd40ef232ec71` |
 | Fixture validator blob | `6d32922a1f9587df15bcbf040dfe046482fa53cb` |
 | Focused test blob | `9d41a7c782e82e4389b80b85b504b146c5d105b0` |
 | Fixture README blob | `db59492e001b1b59b60595ad95a854555d753700` |
-| Exact-main Atmosphere workflow run | `31825311905` — completed `success` |
+| Atmosphere workflow blob | `69e82f60e4bedef5dd93240b41aa51a25c6cdc0e` |
+| Generated receipt blob | `2401ee8b5f4a20c2501c4559bb9882331ed6bcd9` |
+| Prior historic Atmosphere workflow run | `31825311905` — v0.3 snapshot evidence only; this refresh made no run claim or local execution |
 
 No external source or live Atmosphere endpoint was required for this ADR modernization. The decision concerns KFM's internal vocabulary and governance boundaries; source-specific scientific, legal, rights, method, and operational claims remain separate verification work.
 
@@ -741,6 +756,7 @@ No external source or live Atmosphere endpoint was required for this ADR moderni
 | --- | --- | --- |
 | Before 2026-08-14 | Tracked short `PROPOSED scaffold` sourced from the Atmosphere planned-files register. | None |
 | 2026-08-14 | Replaced scaffold in place with a repository-grounded proposed decision, exact token set, anti-collapse semantics, current implementation maturity, convergence plan, acceptance gates, and rollback. | Remains unassigned and proposed; no implementation, release, or publication effect |
+| 2026-09-14 | Re-pinned this same-path candidate to current main; refreshed human-vocabulary, registry, contract, schema, policy, validator, fixture, workflow, and generated-receipt evidence while preserving partial implementation and all acceptance/operational gaps. | Remains unassigned and proposed; no vocabulary adoption, source admission, policy activation, release, deployment, or publication effect |
 
 ### No-loss reconciliation
 
