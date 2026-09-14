@@ -3,7 +3,7 @@ doc_id: kfm://adr/ADR-0039
 adr_id: ADR-0039
 title: "ADR-0039 — Keep LayerManifest and LayerFrame in the Existing Data Contract/Schema Family"
 type: adr
-version: v1.0
+version: v1.1
 status: proposed
 owners:
   - "@bartytime4life"
@@ -16,7 +16,7 @@ reviewers_required:
   - "Architecture steward"
   - "Affected UI/Map steward"
 created: 2026-09-12
-updated: 2026-09-12
+updated: 2026-09-14
 policy_label: "public; non-release; fixture-only; no-source-activation"
 truth_posture: "cite-or-abstain"
 responsibility_root: "docs/"
@@ -30,6 +30,31 @@ evidence_snapshot:
   base_ref: "main"
   base_commit: "d3f9db88d0d48291ac3810f684eeeb5b9aeca72d"
   base_tree: "a518e85b584b4718a09135dd4708a245f7ec0c93"
+  refresh_2026_09_14:
+    base_ref: "main"
+    base_commit: "40c2bf1ab5f197185b62ce4d0729560f90bcd0f5"
+    base_tree: "52c90c5d88b46e78dc5359b11991be927b11b09e"
+    prior_adr_blob: "0e81520829ab275d6028dd8dc4702062831b6c4c"
+    adr_index_blob: "0c143676dfd3c1bda16cb44398c5ad5d4a49cf67"
+    adr_0029_blob: "4c1ef5f7f812d58fbdde9898acc96bb4c9280b2c"
+    layer_manifest_contract_blob: "234dca70e768ee744f7d78109afc6e0dc745af1b"
+    layer_descriptor_contract_blob: "8822340fbf55b518da45c40ba12eb1073919c7b7"
+    layer_manifest_data_schema_blob: "abca306cb271ed75127a83dd05b73830ba20773b"
+    data_layer_manifest_validator_blob: "577d31795caaf6712132e73189af18d318ac0e8a"
+    layers_schema_index_blob: "a37a1426a1c13a50c2ee854b9935136c96564ab1"
+    layers_manifest_scaffold_blob: "81b6872fa7f9c843adb8432f28aa306ab8d272f6"
+    map_manifest_scaffold_blob: "a28a6b194ce61dfc25667ebe9f095680b099893a"
+    runtime_manifest_pointer_blob: "799c52f6a7938de96598e6ac1cdebf1bb7c20fbe"
+    runtime_manifest_scaffold_blob: "297756e311aee0a351068b553403fe275c2db18e"
+    release_manifest_bridge_blob: "adfad2688b84fac945de610f1afa84139fd42b8f"
+    temporal_frame_model_blob: "21d7d6429d33e619e2df4482bcbbb59aec3cb19e"
+    representation_receipt_contract_blob: "4e4a7e4d1d98c8592a76d0d3127eb90233906614"
+    representation_receipt_schema_blob: "6ed7c07ad22d31b983e2339a101b69d2a1b1adff"
+    maplibre_readme_blob: "3f459b0b0617ee26b0793c5dfc4b2de5412aa612"
+    policy_split_blob: "e420dce959b493c295af735357ab528c18ff9771"
+    limits:
+      - "This documentation refresh re-read repository entry points, direct filename/code-search results, and planning lineage only; it did not execute a validator, test suite, hosted workflow, runtime, deployment, release, or publication check."
+      - "A direct filename search returning no layer_frame result is a bounded source observation, not proof of zero consumers or authorization to create, migrate, or activate a LayerFrame path."
   adr_index_blob: "b911db30622c31867ccc835a4014c8e8fcd13a09"
   adr_0001_blob: "ed6f258f8d9ea152996570768a31666953e4a809"
   adr_0002_blob: "e626d82970932c319a690fc6044727ed114ada6a"
@@ -87,13 +112,29 @@ notes:
 |---|---|
 | ADR status | proposed |
 | Decision owner | @bartytime4life; independent stewardship remains NEEDS VERIFICATION |
-| Evidence baseline | bartytime4life/Kansas-Frontier-Matrix main at d3f9db88d0d48291ac3810f684eeeb5b9aeca72d |
+| Evidence baseline | Initial main at d3f9db88d0d48291ac3810f684eeeb5b9aeca72d; current refresh at 40c2bf1ab5f197185b62ce4d0729560f90bcd0f5 |
 | Decision class | Object-family contract/schema placement and Phase 0/Phase 1 sequencing |
 | In scope | LayerManifest, LayerFrame, frame status, evidence references, render receipts, performance artifacts, compatibility boundaries |
 | Out of scope | Source admission, live transport, runtime loading, MapLibre dependency admission, release, deployment, publication, thresholds, and telemetry |
 | Implementation effect of this proposal | None; this change records a proposal only |
 
 This ADR narrows the unresolved LayerManifest/LayerFrame home question identified by the September 11 Explorer roadmap. It does not accept the broader proposed schema-home or contracts-versus-schemas ADRs.
+
+### Current repository readback — 2026-09-14
+
+This documentation-only refresh re-pins implementation evidence at `main@40c2bf1ab5f197185b62ce4d0729560f90bcd0f5` (tree `52c90c5d88b46e78dc5359b11991be927b11b09e`). It preserves this ADR as `proposed` and does not accept, create, migrate, or activate a contract, schema, fixture, validator, consumer, source, runtime, release, deployment, or publication path.
+
+| Surface | Current readback | Boundary |
+|---|---|---|
+| ADR source and canonical index | ADR blob `0e815208…` remains `proposed`; index blob `0c143676…` retains ADR-0039 as `proposed` | The record remains a reviewable placement proposal, not an effective decision |
+| Canonical LayerManifest candidate | `contracts/data/layer_manifest.md` blob `234dca70…` is v0.3, `draft; proposed-inactive; dual-profile; fixture-only-strict-profile` | The paired data contract remains a bounded, inactive candidate rather than an implementation activation |
+| Paired data schema and validator | `schemas/contracts/v1/data/layer_manifest.schema.json` blob `abca306c…` documents a legacy permissive and closed fixture-only profile; `tools/validators/data/validate_layer_manifest.py` blob `577d3179…` says PASS creates no policy, review, release, publication, signature, registry, or public-use authority | No validation was executed by this refresh; the inspected source is not a release or runtime result |
+| Other LayerManifest lanes | The `layers`, `map`, and `runtime` schema copies inspected are permissive `PROPOSED` scaffolds with empty properties; the runtime contract is a compatibility pointer and the release contract calls itself a compatibility bridge | These observations reinforce the no-parallel-authority boundary; they do not resolve their migration or retirement |
+| LayerFrame source shape | The direct `filename:layer_frame` query returned no file result at this base. The repository does contain `packages/temporal/src/temporal/core.py` blob `21d7d642…`, with renderer-independent `TemporalFrameContext` and `TemporalFrameLayer` types | The temporal model is not a standalone LayerFrame semantic contract or machine schema; the bounded query is not proof of zero consumers or a directive to create one |
+| Receipt, performance, and policy seams | Existing RepresentationReceipt and MapLibre compatibility sources remain under their separate families | This refresh creates no receipt, proof, performance threshold, policy, renderer, or source authority |
+
+The September 11 Explorer roadmap remains planning lineage: it recommends one governed LayerFrame contract and says to resolve the existing LayerManifest handoff before selecting a schema home. It is proposed/documentation-only; GitHub remains implementation authority.
+
 
 ## 2. Context and current evidence
 
@@ -117,6 +158,7 @@ The semantic home is contracts/data/.
 - The existing contracts/data/layer_manifest.md remains the LayerManifest semantic contract.
 - A future LayerFrame contract, if accepted for implementation, belongs beside it as contracts/data/layer_frame.md.
 - LayerFrame is the temporal/renderable companion to LayerManifest. It identifies one frame of a governed layer representation and carries frame-specific temporal, spatial, quality, trust, evidence, and lineage information.
+- The existing `TemporalFrameContext` and `TemporalFrameLayer` implementation types remain a bounded temporal model; they are not, by name or by this ADR, a standalone LayerFrame semantic contract.
 - LayerDescriptor remains a separate renderer-facing semantic contract in contracts/data/layer_descriptor.md.
 - contracts/layers/ remains a pointer/orientation path. It does not become an independently writable semantic home.
 
@@ -236,7 +278,7 @@ Retained only as the pre-decision state. It prevents a truthful Phase 1 contract
 
 ### Costs and residual risks
 
-- LayerFrame does not yet have an implemented contract, schema, fixture, validator, or consumer.
+- LayerFrame does not yet have a standalone semantic contract, machine schema, or fixture validator. The inspected temporal package has bounded `TemporalFrameContext`/`TemporalFrameLayer` implementation types, but this ADR does not equate them with the proposed contract or infer a governed consumer.
 - The existing layers schemas remain visible and may continue to confuse contributors until a later migration/retirement decision.
 - ADR-0001 and ADR-0002 remain broader proposed decisions.
 - Performance authority, thresholds, browser profiles, and artifact retention remain unresolved.
@@ -258,19 +300,24 @@ Decision and dependent implementation are separate transitions.
 
 This proposal changes no existing contract, schema, fixture, validator, runtime, source, release, or data instance. No destructive cleanup is authorized.
 
+This refresh changes this ADR's documentation only. It does not create a `LayerFrame` contract/schema/fixture, modify any existing contract/schema/validator, add a consumer, resolve the scaffold migration question, or change a source, runtime, release, deployment, or publication state.
+
 ## 8. Validation and acceptance
 
 ### 8.1 Proposal checks
 
 | Check | Scope | State |
 |---|---|---|
-| Current main ref readback | Baseline identity | CONFIRMED: d3f9db88d0d48291ac3810f684eeeb5b9aeca72d |
+| Initial main ref readback | Initial baseline identity | CONFIRMED: d3f9db88d0d48291ac3810f684eeeb5b9aeca72d |
+| Current repository re-read | Refresh identity, source placement, and bounded filename/code-search observation | CONFIRMED: 40c2bf1ab5f197185b62ce4d0729560f90bcd0f5; no validator or test executed |
 | ADR index inspection | Number availability and status | CONFIRMED: ADR-0038 is highest numbered record at baseline |
 | Layer contract/schema inventory | Existing pairing and duplicate-path evidence | CONFIRMED |
 | Receipt and proof family inventory | Placement boundary | CONFIRMED |
 | Local ADR validator | This proposal branch | PENDING |
 | Hosted checks | Exact pull-request head | PENDING |
 | Human contract/schema review | Decision acceptance | NOT RUN / REQUIRED |
+
+For this documentation refresh, only the source-entry-point readback and exact text-replacement preflight are recorded. Repository-native, hosted, runtime, deployment, release, and publication validation remain unrun and must not be inferred.
 
 ### 8.2 Acceptance criteria
 
@@ -316,7 +363,7 @@ Unknown high-risk conditions remain HOLD or DENY.
 
 ## 12. Evidence and references
 
-### 12.1 Repository evidence
+### 12.1 Initial repository evidence — 2026-09-12
 
 - [Current main ref](https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/d3f9db88d0d48291ac3810f684eeeb5b9aeca72d)
 - [LayerManifest semantic contract](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/d3f9db88d0d48291ac3810f684eeeb5b9aeca72d/contracts/data/layer_manifest.md)
@@ -328,13 +375,23 @@ Unknown high-risk conditions remain HOLD or DENY.
 - [Receipt process-memory boundary](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/d3f9db88d0d48291ac3810f684eeeb5b9aeca72d/data/receipts/README.md)
 - [Proof and evidence boundary](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/d3f9db88d0d48291ac3810f684eeeb5b9aeca72d/data/proofs/README.md)
 
-### 12.2 Governing decisions
+### 12.2 Current refresh evidence — 2026-09-14
+
+- [Current main ref](https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/40c2bf1ab5f197185b62ce4d0729560f90bcd0f5)
+- [Current LayerManifest contract](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/40c2bf1ab5f197185b62ce4d0729560f90bcd0f5/contracts/data/layer_manifest.md)
+- [Current data LayerManifest schema](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/40c2bf1ab5f197185b62ce4d0729560f90bcd0f5/schemas/contracts/v1/data/layer_manifest.schema.json)
+- [Current fixture-only validator](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/40c2bf1ab5f197185b62ce4d0729560f90bcd0f5/tools/validators/data/validate_layer_manifest.py)
+- [Current temporal frame model](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/40c2bf1ab5f197185b62ce4d0729560f90bcd0f5/packages/temporal/src/temporal/core.py)
+- [Current runtime compatibility pointer](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/40c2bf1ab5f197185b62ce4d0729560f90bcd0f5/contracts/runtime/layer_manifest.md)
+- [Current release compatibility bridge](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/40c2bf1ab5f197185b62ce4d0729560f90bcd0f5/contracts/release/layer_manifest.md)
+
+### 12.3 Governing decisions
 
 - [ADR-0001 — Schema Home](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/d3f9db88d0d48291ac3810f684eeeb5b9aeca72d/docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — proposed
 - [ADR-0002 — Contracts vs Schemas Split](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/d3f9db88d0d48291ac3810f684eeeb5b9aeca72d/docs/adr/ADR-0002-contracts-vs-schemas-split.md) — proposed
 - [ADR-0029 — Directory Governance Standard v2](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/d3f9db88d0d48291ac3810f684eeeb5b9aeca72d/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) — accepted
 
-### 12.3 Planning lineage
+### 12.4 Planning lineage
 
 - [KFM Explorer roadmap in Google Drive](https://docs.google.com/document/d/1L8zsQgam1bdP7uUbX2zxOkTA01enXXu_tlHLKZRPvzQ/edit)
 - [KFM Explorer roadmap in Notion](https://app.notion.com/p/3d8a92021bf68190a68ef071b378162e?pvs=204)
@@ -345,6 +402,7 @@ The roadmap is planning lineage and coordination context. GitHub remains the imp
 
 | Date | Record status | Change | Evidence |
 |---|---|---|---|
+| 2026-09-14 | proposed | Re-pinned repository evidence; distinguished the temporal implementation model from a standalone LayerFrame contract/schema; preserved all non-effects | main at 40c2bf1ab5f197185b62ce4d0729560f90bcd0f5 |
 | 2026-09-12 | proposed | Initial repository-grounded contract/schema-home proposal | Branch from main at d3f9db88d0d48291ac3810f684eeeb5b9aeca72d |
 
 [Back to top](#top)
