@@ -3,7 +3,7 @@ doc_id: kfm://adr/0027
 title: ADR-0027 — County Focus Mode Control Plane
 type: adr
 adr_id: ADR-0027
-version: v0.3
+version: v0.4
 status: proposed
 effective_decision_status: proposed
 owners:
@@ -20,7 +20,7 @@ reviewers_required:
   - Governed API and Explorer Web maintainers
   - At least one county-lane or domain steward
 created: 2026-05-22
-updated: 2026-07-24
+updated: 2026-09-14
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
@@ -40,20 +40,30 @@ evidence_snapshot:
   focus_mode_payload_contract_blob: 7fe687d587cd60dafd6e3fa34306cd58fd125c73
   focus_mode_index_validator_blob: 89391d75680e859dddf3696b9b782369f364c73e
   validate_all_blob: 5f01ac208c46f4ee98750af4fc1032604b670e9b
+  v0_4_reconciliation_commit: 53185428d50a785a0067699590b636b827d488ea
+  v0_4_target_prior_blob: 4dfb29c963cd5662265d3cb97f98be82212d5e08
+  v0_4_legacy_focus_control_readme_blob: 8600c0ac09452b4b03e5f60b94f1eb27c072b5db
+  v0_4_legacy_county_index_blob: 07e9b65cab9c4fd4ae31b61a84fecb06c6cde655
+  v0_4_legacy_county_template_blob: 520922bf756ff5e75f927c5d0dc9cc81e65ca3e0
+  v0_4_focus_mode_payload_contract_blob: 7fe687d587cd60dafd6e3fa34306cd58fd125c73
+  v0_4_focus_mode_index_validator_blob: 89391d75680e859dddf3696b9b782369f364c73e
+  v0_4_validate_all_entrypoint_blob: c308015da780d7b72f56277b521fb0e42317651e
+  v0_4_validator_orchestrator_blob: ba46a43e5cfccea332c944d552f80b20e3051622
   canonical_focus_modes_readme_at_base: absent
   canonical_county_index_at_base: absent
   canonical_county_template_at_base: absent
   focus_mode_payload_schema_at_base: absent
   focus_mode_payload_validator_at_base: absent
 inspection_boundary: >
-  Current-session GitHub reads and bounded repository search covering the ADR inventory,
-  Directory Rules, ADR-0028, the actual singular Focus Mode README, county index and
-  county template, the FocusModePayload semantic contract, the county index validator,
-  the validator orchestrator placeholder, exact absence checks for the canonical plural
-  control-plane files and FocusModePayload schema/payload validator, and open pull-request
-  overlap for this target. No complete clone, validator execution, structural migration,
-  schema or policy execution, governed API Focus request, map render, release manifest,
-  correction, rollback drill, deployment, or KFM publication was exercised.
+  v0.3 historical evidence remains recorded above. v0.4 is grounded in current-session
+  GitHub reads at main@53185428d50a785a0067699590b636b827d488ea: this ADR, the legacy singular Focus Mode README,
+  county index and template, the FocusModePayload semantic contract, the county index
+  validator, the thin tools/validate_all.py entrypoint, and its registry-driven
+  tools/validators/validate_all.py implementation. Exact current-path reads confirmed
+  docs/focus-modes/ and schemas/contracts/v1/focus_mode/ are absent. No complete clone,
+  validator execution, registry-membership or CI inspection, structural migration, schema
+  or policy execution, governed API Focus request, map render, release manifest, correction,
+  rollback drill, deployment, or KFM publication was exercised.
 related:
   - docs/adr/README.md
   - docs/adr/INDEX.md
@@ -80,7 +90,8 @@ notes:
   - "v0.3 is a same-path, repository-grounded modernization. It preserves source and effective status proposed; it does not accept ADR-0027 or authorize migration by itself."
   - "ADR-0027 identity is confirmed by docs/adr/INDEX.md; the original numbering uncertainty is resolved."
   - "Directory Rules names docs/focus-modes/<area>-<scope>/ as canonical, while current Focus materials remain under legacy singular docs/focus-mode/."
-  - "The current six-artifact concept is only partially implemented and internally inconsistent: the semantic contract and index validator exist, but the canonical plural docs, machine schema, payload validator, and working orchestration do not."
+  - "The v0.3 six-artifact assessment is superseded only as to orchestration: the current thin entrypoint delegates to a registry-driven orchestrator, but no Focus validator registration, successful run, or CI coverage was inspected."
+  - "v0.4 exact-path checks still find the canonical plural docs directory and FocusModePayload machine-schema directory absent; legacy singular materials and the index-validator grammar remain incompatible."
   - "No repository path outside this ADR is changed by this revision."
 [/KFM_META_BLOCK_V2] -->
 
@@ -124,7 +135,7 @@ notes:
 | **Decision class** | Cross-root control-plane architecture, canonical lane naming, index/template grammar, validation, migration, release boundary, and rollback |
 | **Current canonical docs pattern** | `docs/focus-modes/<area>-<scope>/` per Directory Rules §6.7 |
 | **Current tracked Focus materials** | Legacy singular `docs/focus-mode/` |
-| **Current repository posture** | Partial scaffolds, incompatible index/validator grammar, missing machine schema and payload validator, placeholder validator orchestration, no verified county release |
+| **Current repository posture** | Partial scaffolds; incompatible legacy index/template and plural-validator grammar; exact-path absence of plural control-plane and schema directories; payload validator absent; registry-driven orchestration unexecuted; no verified county release |
 | **Implementation effect of this revision** | Documentation only |
 | **Release or publication effect** | None |
 | **Supersedes / superseded by** | None / none |
@@ -148,22 +159,22 @@ This one-file revision performs none of those transitions.
 
 ## Evidence boundary
 
-This revision is grounded in repository bytes at `main@22adc4839709349af67f5636b77936990f8289ce`.
+v0.4 is grounded in targeted repository bytes at `main@53185428d50a785a0067699590b636b827d488ea`. The v0.3 snapshot remains historical evidence; v0.4 rechecks only the paths listed in the metadata boundary.
 
 | Evidence surface | CONFIRMED current state | What remains unproved |
 |---|---|---|
 | ADR inventory | ADR-0027 uniquely maps to this exact file; source and effective status are `proposed` | Acceptance or implementation |
 | Directory Rules §6.7 | Canonical docs pattern is `docs/focus-modes/<area>-<scope>/`; Focus Modes are proof slices, not roots or domains | Completed migration or accepted casing reconciliation |
-| Canonical plural README | `docs/focus-modes/README.md` is absent | Future canonical bytes and review |
-| Legacy control-plane README | [`docs/focus-mode/README.md`](../focus-mode/README.md) exists and internally describes the plural lane | Whether it should be migrated, rewritten, or retained temporarily as a mirror |
-| Legacy county index | [`docs/focus-mode/counties/COUNTY_INDEX.md`](../focus-mode/counties/COUNTY_INDEX.md) exists and enumerates 105 counties | Validator compatibility, lane completeness, payload readiness, release |
+| Canonical plural control-plane directory | Exact current-path read of `docs/focus-modes/` returns absent | Future canonical bytes, migration review, and complete-tree proof |
+| Legacy control-plane README | [`docs/focus-mode/README.md`](../focus-mode/README.md) exists as a compatibility lane and still describes unresolved singular/plural placement | Whether it should be migrated, rewritten, or retained temporarily as a mirror |
+| Legacy county index | [`docs/focus-mode/counties/COUNTY_INDEX.md`](../focus-mode/counties/COUNTY_INDEX.md) exists as a 105-county inventory and explicitly records its dormant validator mismatch | Validator compatibility, lane completeness, payload readiness, release |
 | Legacy county template | [`docs/focus-mode/counties/_template/county-build-plan.md`](../focus-mode/counties/_template/county-build-plan.md) exists | Compatibility with current validator and canonical target layout |
 | County plan corpus | Repository search finds numerous plans under `docs/focus-mode/counties/<snake_case>/` with inconsistent filenames | Complete inventory, semantic equivalence, or migration safety |
 | Semantic contract | [`contracts/focus_mode/focus_mode_payload.md`](../../contracts/focus_mode/focus_mode_payload.md) exists | Machine-shape closure and runtime implementation |
 | County index validator | [`tools/validators/validate_focus_mode_index.py`](../../tools/validators/validate_focus_mode_index.py) exists | A successful run against current bytes |
-| Machine schema | `schemas/contracts/v1/focus_mode/focus_mode_payload.schema.json` is absent | Field types, compatibility, negative fixtures |
+| Machine schema directory | Exact current-path read of `schemas/contracts/v1/focus_mode/` returns absent | Field types, compatibility, negative fixtures, and schema placement review |
 | Payload validator | `tools/validators/validate_focus_mode_payload.py` is absent | Executable payload admission |
-| Validator orchestration | [`tools/validate_all.py`](../../tools/validate_all.py) is a placeholder module, not an operational orchestrator | CI discovery and aggregate validation |
+| Validator orchestration | [`tools/validate_all.py`](../../tools/validate_all.py) now delegates to a registry-driven [`tools/validators/validate_all.py`](../../tools/validators/validate_all.py) | Focus-validator registry membership, a successful run, CI discovery, and aggregate validation |
 | Publication evidence | No county `ReleaseManifest`, `PromotionDecision`, correction record, or rollback drill was inspected | Any county Focus Mode release or KFM publication |
 
 ### Evidence exclusions
@@ -338,15 +349,15 @@ The following v0.2 statements are no longer supportable:
 | Gate | Current state | Evidence | Required next proof |
 |---|---|---|---|
 | ADR identity and inventory | **PASS** | Canonical ADR index | Preserve ID/path/status |
-| Canonical docs placement | **FAIL** | Plural README/index/template absent; singular lane present | Reviewed migration or bounded mirror |
+| Canonical docs placement | **FAIL** | Exact current-path read finds `docs/focus-modes/` absent; singular compatibility lane present | Reviewed migration or bounded mirror |
 | County uniqueness | **PARTIAL** | Index enumerates 105 counties and blocks duplicate generation | Machine-checked exact county/lane identity |
 | Registry grammar | **FAIL** | Legacy columns differ from validator contract | One versioned registry schema |
 | Template grammar | **FAIL** | Template and validator describe different parsing models | One authoritative structured block and tests |
 | Semantic contract | **PARTIAL** | `focus_mode_payload.md` exists | Reconcile paths and fields with template |
-| Machine schema | **FAIL** | Schema absent | Versioned schema + fixtures |
+| Machine schema | **FAIL** | Exact current-path read finds `schemas/contracts/v1/focus_mode/` absent | Versioned schema + fixtures |
 | Index validator | **PARTIAL** | Validator exists | Passing run against canonical bytes |
 | Payload validator | **FAIL** | Validator absent | Evidence/policy/release-aware validator |
-| Aggregate orchestration | **FAIL** | `tools/validate_all.py` is a placeholder | Working orchestrator + CI |
+| Aggregate orchestration | **PARTIAL** | Thin entrypoint delegates to a registry-driven orchestrator | Focus registration, successful run, and CI coverage |
 | Public-client trust path | **UNKNOWN** | Not exercised | Governed API integration test |
 | Finite outcomes | **UNKNOWN** | Doctrine and semantic contract only | Runtime tests for all four outcomes |
 | Promotion and release | **NOT RUN** | No inspected release objects | PromotionDecision + ReleaseManifest |
@@ -896,6 +907,7 @@ The following are named as required future surfaces but are not linked because t
 |---|---|---|---|
 | `v0.2` | 2026-05-22 | proposed | Initial six-artifact proposal based on doctrine and an unmounted-repository assumption |
 | `v0.3` | 2026-07-24 | proposed | Same-path repository-grounded modernization: confirms ADR identity, records singular/plural conflict, inventories partial artifacts, separates registry state families, defines convergence and migration gates, strengthens validation, release, correction, and rollback boundaries |
+| `v0.4` | 2026-09-14 | proposed | Same-path currentness reconciliation at `53185428d50a785a0067699590b636b827d488ea`: reconfirms exact-path absence of the plural control-plane and FocusModePayload schema directories; refreshes legacy evidence; corrects orchestration from placeholder to unexecuted registry-driven entrypoint; preserves the implementation hold |
 
 > [!NOTE]
 > This revision deliberately preserves `proposed` status. It improves the record’s evidence and decision precision; it does not create acceptance, implementation, release, or publication authority.
@@ -906,4 +918,4 @@ The following are named as required future surfaces but are not linked because t
 
 > **Doctrine reconciliation invariant.** If this ADR conflicts with Directory Rules, Directory Rules controls placement until an accepted ADR explicitly amends it. Record the conflict; do not silently make repository drift authoritative.
 
-**ADR:** `ADR-0027` · **Version:** `v0.3` · **Effective status:** `proposed` · **Updated:** `2026-07-24` · [Back to top](#top)
+**ADR:** `ADR-0027` · **Version:** `v0.4` · **Effective status:** `proposed` · **Updated:** `2026-09-14` · [Back to top](#top)
