@@ -3,7 +3,7 @@ doc_id: kfm://doc/adr-0035-repository-wide-adr-identity-numbering-domain-indexin
 title: "ADR-0035 — Repository-Wide ADR Identity, Numbering, and Domain Indexing"
 type: adr
 adr_id: ADR-0035
-version: v1.0
+version: v1.1
 status: proposed
 effective_decision_status: proposed
 owners:
@@ -18,7 +18,7 @@ reviewers_required:
   - Directory-governance reviewer
   - Validation and CI steward
 created: 2026-08-14
-updated: 2026-08-14
+updated: 2026-09-14
 policy_label: public
 truth_posture: cite-or-abstain
 owning_root: docs/
@@ -38,6 +38,22 @@ evidence_snapshot:
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   directory_rules_adr_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
   fauna_domain_adr_index_path: docs/domains/fauna/adr/README.md
+  v1_1_reconciliation_commit: 2c1d921717ba972861b249c2030179a310221d9e
+  v1_1_target_prior_blob: d9284faec018135f7e18f6e6cb17abb8bc65ad33
+  v1_1_adr_index_blob: 0c143676dfd3c1bda16cb44398c5ad5d4a49cf67
+  v1_1_adr_readme_blob: 27c8f00622afe6cd0c65a1b116cd768dac31bea6
+  v1_1_adr_cross_register_blob: c5a056011d6496cb2574cedd7f9e5dadadbbbe1e
+  v1_1_adr_0029_blob: 4c1ef5f7f812d58fbdde9898acc96bb4c9280b2c
+  v1_1_directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  v1_1_fauna_domain_adr_index_blob: 28094bf761b2531541e4384ecfd14086208aee36
+  v1_1_inspection_boundary: >
+    Targeted GitHub reads at main@2c1d921717ba972861b249c2030179a310221d9e
+    covered this ADR, the canonical ADR inventory and operating contract, the
+    non-duplicating cross-register, accepted ADR-0029, Directory Rules v2, the
+    Fauna discovery index, the ADR validator, and open-PR/ADR-0035-branch
+    preflight. No ADR acceptance, steward quorum, migration, validator or test
+    execution, merge, release, deployment, publication, or repository-setting
+    change was exercised or inferred.
 inspection_boundary: >
   Current-session GitHub reads covered current main, the canonical ADR operating
   contract and index, the non-duplicating ADR cross-register, accepted ADR-0029,
@@ -65,6 +81,7 @@ notes:
   - "The decision is additive to accepted Directory Rules v2: docs/adr/ remains the decision-record lane, while docs/domains/ remains a human domain-guidance lane."
   - "No existing unassigned scaffold is renamed, deleted, accepted, rejected, or superseded by this documentation-only packet."
   - "Domain-local adr/ directories remain untouched and retain no new authority through this proposal."
+  - "v1.1 is a source-only currentness reconciliation at the pinned main snapshot; it preserves proposed status and does not accept the decision, assign a new number, move a scaffold, or authorize migration, release, deployment, or publication."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -99,14 +116,15 @@ notes:
 
 | Field | Current value |
 | --- | --- |
-| **ADR ID** | `ADR-0035` — unique at the evidence checkpoint |
+| **ADR ID** | `ADR-0035` — unique in the canonical index at the evidence checkpoint |
+| **Record edition** | `v1.1` — targeted currentness reconciliation; decision unchanged |
 | **Tracked path** | `docs/adr/ADR-0035-repository-wide-adr-identity-numbering-and-domain-indexing.md` |
 | **Source metadata** | `proposed` |
 | **Effective decision status** | `proposed` |
 | **Decision class** | Repository-wide architecture-decision identity, numbering, discovery, indexing, migration, and supersession |
 | **Primary responsibility root** | `docs/` — human architecture decision record |
 | **Canonical decision lane** | `docs/adr/` under accepted Directory Rules v2 |
-| **Current numbered inventory after this packet** | 35 records: `ADR-0001` through `ADR-0035` |
+| **Current numbered inventory at v1.1 checkpoint** | 39 records: `ADR-0001` through `ADR-0039` |
 | **Current unassigned scaffold inventory** | 12; unchanged by this packet |
 | **Implementation effect** | Documentation control-plane update only |
 | **Migration effect** | None |
@@ -130,18 +148,18 @@ None of these transitions implies the next. A numbered ADR can remain proposed i
 
 ## Evidence boundary
 
-This record is grounded in current repository evidence at `main@3974da9794fa11bd5355c49243c9193d22b9e81e`.
+The initial v1.0 record is grounded in its metadata-pinned 2026-08-14 snapshot. **CONFIRMED for this v1.1 targeted currentness reconciliation:** the source reads listed in the v1.1 metadata were taken at `main@2c1d921717ba972861b249c2030179a310221d9e`.
 
 | Surface | CONFIRMED observation | Bounded meaning |
 | --- | --- | --- |
-| `docs/adr/INDEX.md` | The canonical inventory contains one contiguous sequence from `ADR-0001` through `ADR-0034`, one accepted decision, 33 proposed decisions, and 12 unassigned scaffolds. | A central inventory already operates; it does not by itself settle domain-local decision placement. |
+| `docs/adr/INDEX.md` | At the v1.1 checkpoint, the canonical inventory contains 39 numbered records, `ADR-0001` through `ADR-0039`, with 4 accepted, 35 proposed, and 12 unassigned scaffolds. Its ADR-0035 row remains source/effective `proposed` / `proposed`. | A central inventory already operates; it does not by itself settle domain-local decision placement or accept this proposal. |
 | `docs/adr/README.md` | The ADR operating contract requires permanent `ADR-NNNN-kebab-case-slug.md` identities, same-change index updates, and conservative status handling. | Current process evidence; individual decisions remain proposed until reviewed. |
 | `docs/registers/ADR_INDEX.md` | The register is intentionally a non-duplicating pointer to `docs/adr/INDEX.md`. | KFM already rejects a second repository-wide ADR row set. |
 | Accepted ADR-0029 | Exact Directory Rules v2 bytes are adopted at `docs/doctrine/directory-rules.md`. | Placement authority is accepted within ADR-0029's scope. |
 | Directory Rules v2 | `docs/adr/` owns architecture decisions and decision history; `docs/domains/` owns human domain guidance. | Supports one canonical decision lane and domain pointer indexes rather than parallel ADR stores. |
 | ADR validator | It enforces unique numbered files, exact index coverage, filename/H1 agreement, source/effective status parity, scaffold separation, and supersession reciprocity. | The current machine gate can enforce the proposed global identity model after acceptance. |
 | Fauna domain ADR index | It explicitly records central-versus-domain placement and domain-numbering questions as unresolved while treating the local file as an index. | Direct evidence of the ambiguity this ADR is designed to settle. |
-| Open PR and branch review | No open pull request or branch matching ADR-0035 or this exact decision topic was found immediately before authoring. | Number collision was not observed at the checkpoint; later concurrency still requires exact-head recheck. |
+| Open PR and ADR-0035 branch preflight | An open ADR-0032 currentness PR was observed; no open PR title or returned ADR-0035 branch matched this exact decision topic. | The v1.1 update does not allocate a number. Exact-head recheck remains required before any later assignment, migration, or acceptance packet. |
 
 ### Truth labels
 
@@ -674,7 +692,7 @@ python tools/validate_all.py
 
 The focused ADR validator must establish:
 
-- unique IDs and exact `ADR-0001` through `ADR-0035` coverage;
+- unique IDs and exact current canonical-index coverage, including `ADR-0001` through `ADR-0039`;
 - filename, H1, source status, effective status, and index agreement;
 - unchanged complete inventory of the twelve unassigned scaffolds;
 - no competing row table in the cross-register;
@@ -736,3 +754,4 @@ Repository bytes establish current inventory and current enforcement surfaces. A
 | Version | Date | Change |
 | --- | --- | --- |
 | v1.0 | 2026-08-14 | Initial proposed ADR defining one repository-wide permanent ADR sequence, central decision storage, pointer-only domain indexes, candidate-ID handling, migration discipline, validation, and rollback. |
+| v1.1 | 2026-09-14 | Re-pins targeted repository evidence at `main@2c1d921717ba972861b249c2030179a310221d9e`, corrects the current ADR inventory from 35 to 39 numbered records, and preserves proposed status and all non-effect boundaries. |
