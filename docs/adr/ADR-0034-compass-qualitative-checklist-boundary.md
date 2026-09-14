@@ -3,7 +3,7 @@ doc_id: kfm://adr/ADR-0034
 title: Keep COMPASS qualitative and subordinate to KFM authority gates
 type: adr
 adr_id: ADR-0034
-version: v1.1
+version: v1.2
 status: proposed
 effective_decision_status: proposed
 owners:
@@ -15,7 +15,7 @@ reviewers_required:
   - Release and correction steward
   - Docs steward
 created: 2026-08-10
-updated: 2026-08-13
+updated: 2026-09-14
 policy_label: public
 truth_posture: cite-or-abstain
 owning_root: docs/
@@ -50,6 +50,35 @@ evidence_snapshot:
   codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
   source_search_index_commit: 695748928f254c2c234b9058bf41cdb23f27e3c6
   source_search_freshness: "The only changes from the indexed search commit to the pinned base are ADR-0006 plus its generated receipt from merged PR #2760 and ADR-0001 from merged PR #2759; all three paths are disjoint from ADR-0034 and its governing evidence."
+  v1_2_reconciliation_commit: 2c1d921717ba972861b249c2030179a310221d9e
+  v1_2_target_prior_blob: b6f4de810bb8fd1e5b4b2727fa4db0731ab12f29
+  v1_2_adr_index_blob: 0c143676dfd3c1bda16cb44398c5ad5d4a49cf67
+  v1_2_adr_0029_blob: 4c1ef5f7f812d58fbdde9898acc96bb4c9280b2c
+  v1_2_directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  v1_2_living_compass_source_map_blob: fb29e351909eb62030a0780edcabde6ee913675e
+  v1_2_whole_system_delta_map_blob: dd724919f928fa18a374d45a3d7b4214743ab9d3
+  v1_2_proof_session_handoff_blob: ffa6c54f83a426f069dc406fdd5d952cce545639
+  v1_2_source_descriptor_blob: b57ae5ccc042c1423b75c168438800384c9b6713
+  v1_2_evidence_bundle_blob: 731c348832add23cddd14e796aa56ce2b9268259
+  v1_2_policy_decision_blob: ebfe97f98263e6309db6d2772cb2c5e548819650
+  v1_2_promotion_decision_blob: 42295bfc83a621cf125d33aa821912b426f70bd2
+  v1_2_release_manifest_blob: ce7dc89ff447d76d974afdd802b85a38538d8f48
+  v1_2_rollback_card_blob: c6d3c35c56b064e04c3a2532f4709d938d7b0c1a
+  v1_2_correction_notice_blob: 4716f2bc6e714ad2ab873d95144417d7855f5beb
+  v1_2_review_record_schema_blob: fe2f2223af46481e7fb19b0baa94f62ce9c6c855
+  v1_2_codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  v1_2_authoring_receipt_blob: 525e499f471825ddb1ad560393de1152e340e8a9
+inspection_boundary: >
+  v1.1's full-tree, search-index, receipt, validation, and review statements
+  remain historical. v1.2 is grounded in targeted GitHub reads at
+  main@2c1d921717ba972861b249c2030179a310221d9e: this ADR; the current
+  index, ADR-0029, and Directory Rules; the Living Compass and whole-system
+  source maps; ProofSessionHandoff; current owner contracts and review schema;
+  CODEOWNERS; and both historical ADR-0034 receipts. No full-tree inventory,
+  private-Drive re-review, score calculation, checklist evaluation, test,
+  validator, receipt validation, workflow run, review, source admission,
+  lifecycle transition, release, deployment, or publication was exercised or
+  inferred.
 related:
   - docs/adr/README.md
   - docs/adr/INDEX.md
@@ -73,6 +102,7 @@ notes:
   - "The COMPASS 0–4 scale and aggregate total remain source lineage only. This proposed decision authorizes neither."
   - "No exact COMPASS score object, threshold, schema, evaluator, workflow, or adopted consumer is established at the pinned repository snapshot."
   - "Generic county-plan references to a compass are map-orientation controls; the proof-session handoff is a separate planning candidate. Neither is a COMPASS scoring implementation."
+  - "v1.2 refreshes targeted currentness only. Its current source readback does not re-run the v1.1 full-tree/search, receipt, validation, workflow, or review evidence and grants no checklist, score, policy, release, deployment, or publication authority."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -102,11 +132,11 @@ notes:
 | **Source metadata** | `proposed` |
 | **Effective decision status** | `proposed` — tracked but not binding |
 | **Created** | 2026-08-10 |
-| **Updated** | 2026-08-13 |
+| **Updated** | 2026-09-14 |
 | **Current tracked path** | `docs/adr/ADR-0034-compass-qualitative-checklist-boundary.md` |
 | **Decision subject** | Optional qualitative planning use of the seven Living Compass COMPASS dimensions |
 | **Source-lineage posture** | Preserved through the governed [Living Compass source map](../intake/exploratory/kfm-living-compass-working-edition-1-0-source-map.md); private provider identity remains omitted |
-| **Current implementation posture** | No accepted COMPASS object, score, threshold, schema, fixture, validator, workflow, evaluator, dashboard, or consumer is established |
+| **Current implementation posture** | Targeted source readback finds no accepted COMPASS score, threshold, evaluator, workflow, dashboard, or consumer; the bounded search is not an exhaustive repository execution or adoption proof |
 | **Accepted placement authority** | [ADR-0029](./ADR-0029-adopt-directory-governance-standard-v2.md) and the adopted [Directory Rules](../doctrine/directory-rules.md) |
 | **Directory Rules trigger** | No new root or responsibility home; this record preserves separation among existing owners |
 | **Migration required now** | No |
@@ -126,7 +156,7 @@ notes:
 
 | Concern | Status | Safe conclusion |
 |---|---|---|
-| ADR inventory | **CONFIRMED** | ADR-0034 is uniquely indexed among 34 numbered records. ADR-0029 alone is accepted; the other 33 remain effectively proposed. |
+| ADR inventory | **CONFIRMED** | ADR-0034 is uniquely indexed among 39 numbered records. ADR-0006, ADR-0007, ADR-0029, and ADR-0038 are accepted; the other 35 remain effectively proposed. |
 | Decision authority | **PROPOSED** | File presence and index registration do not accept this decision. |
 | Living Compass lineage | **CONFIRMED, bounded** | The tracked source map records a complete private-DOCX review and intentionally withholds provider metadata and direct access details. |
 | Source rubric | **CONFIRMED as source proposal** | The source map records seven COMPASS dimensions plus a 0–4 scale and total. That proves proposal lineage, not KFM adoption. |
@@ -207,7 +237,7 @@ The original source map and generated receipt establish historical review lineag
 |---|---|---|
 | [Living Compass source map](../intake/exploratory/kfm-living-compass-working-edition-1-0-source-map.md) | The private DOCX was reviewed; COMPASS, the scale, and risks were reconciled to then-current KFM | Current repository acceptance, implementation, or source correctness |
 | [Original authoring receipt](../../data/receipts/generated/genrec-compass-qualitative-checklist-boundary-20260810.json) | The first ADR/index packet's inputs, hashes, validation claims, and pending-review state | Current ADR byte integrity, human approval, or factual proof |
-| This v1.1 revision | Current repository reconciliation at the pinned base and a stricter qualitative/no-authority contract | Re-review of private source bytes or permission to disclose withheld metadata |
+| This v1.1 revision | Historical repository reconciliation at its pinned base and a stricter qualitative/no-authority contract | Current repository state, re-review of private source bytes, or permission to disclose withheld metadata |
 
 Private provider identity, direct links, timestamps, fingerprints, byte counts, and source bytes remain outside this public ADR. Reviewers should not reconstruct or publish them here.
 
@@ -215,7 +245,7 @@ Private provider identity, direct links, timestamps, fingerprints, byte counts, 
 
 | Surface | Confirmed repository state | Boundary consequence |
 |---|---|---|
-| [ADR index](./INDEX.md) | 34 unique numbered records; ADR-0029 accepted; ADR-0034 effective/source status proposed | Inventory does not grant authority |
+| [ADR index](./INDEX.md) | 39 unique numbered records; ADR-0006, ADR-0007, ADR-0029, and ADR-0038 accepted; ADR-0034 effective/source status proposed | Inventory does not grant authority |
 | [ADR operating contract](./README.md) | ADRs preserve decisions and remain proposed until explicit reviewed transition | This revision cannot self-accept |
 | [ADR-0029](./ADR-0029-adopt-directory-governance-standard-v2.md) / [Directory Rules](../doctrine/directory-rules.md) | Accepted responsibility and placement authority | COMPASS cannot create a parallel responsibility home |
 | [SourceDescriptor](../../contracts/source/source_descriptor.md) | Records source identity, role, rights, sensitivity, access, citation, review, and release posture | “Material evidence” cannot admit or upgrade a source |
@@ -232,17 +262,16 @@ Private provider identity, direct links, timestamps, fingerprints, byte counts, 
 
 #### 1.4.3 Bounded consumer and implementation search
 
-The repository code-search index used for the COMPASS inventory was pinned at `695748928f254c2c234b9058bf41cdb23f27e3c6`. The exact current base is four commits ahead: merged PR #2760 modified ADR-0006 and added its generated receipt, while merged PR #2759 modified ADR-0001. Those three paths are disjoint from ADR-0034 and the governing evidence used here.
+v1.1's code-search inventory and its `695748928f254c2c234b9058bf41cdb23f27e3c6` pin are historical. For v1.2, a targeted current-default-branch search for `ADR-0034` and `COMPASS qualitative` found this ADR, its two historical receipts, the Living Compass and whole-system source maps, and related planning surfaces. It did not establish a new accepted COMPASS score, threshold, evaluator, workflow, dashboard, or consumer.
 
-The bounded result is:
+The targeted result remains:
 
-- the exact planning route `ADOPT_QUALITATIVE_CHECKLIST` occurs only in the Living Compass source map and this ADR;
-- the original generated receipt records the same decision packet;
 - `ProofSessionHandoff` is separate and does not implement the COMPASS dimensions or total;
-- inspected county “compass” references mean a map orientation control;
-- no accepted COMPASS schema, fixture, validator, workflow, evaluator, threshold, dashboard, or production consumer is established.
+- county “compass” references observed in the related inventory are map-orientation controls;
+- the current source map still treats COMPASS as a novel decision candidate to evaluate qualitatively before any scoring;
+- no source readback authorizes a score, threshold, checklist mandate, or canonical-state translation.
 
-This is a repository-grounded absence claim within the pinned tree and search coverage, not proof that no person has ever used the questions informally.
+This is a targeted source-readback conclusion, not an exhaustive absence claim, a current repository execution result, or proof that no person has used the questions informally.
 
 #### 1.4.4 Operational problem
 
@@ -811,7 +840,7 @@ This revision changes documentation and provenance only. It does not:
 - [Generated receipt validator](../../tools/validators/validate_generated_receipt.py)
 - [Generated receipt tests](../../tests/validators/test_validate_generated_receipt.py)
 
-### 5.4 Pinned repository evidence ledger
+### 5.4 Historical v1.1 repository evidence ledger
 
 | Evidence | Identity | Bounded use |
 |---|---|---|
@@ -943,6 +972,7 @@ Record confirmed structural conflicts in the [Drift Register](../registers/DRIFT
 |---|---|---|---|---|
 | 2026-08-10 | v1 | proposed | Initial decision-only crosswalk from the governed Living Compass source and then-current KFM responsibility inventory. | Historical packet; original receipt retained |
 | 2026-08-13 | v1.1 | proposed | Same-path current-state reconciliation; adds pinned evidence, acceptance gates, source/search freshness, AI and sensitivity controls, validation posture, risk register, rollback target, and no-loss traceability without authorizing scoring or implementation. | pending |
+| 2026-09-14 | v1.2 | proposed | Targeted currentness reconciliation at `main@2c1d921717ba972861b249c2030179a310221d9e`; corrects the ADR inventory, preserves v1.1 validation/search/receipt claims as historical, and reaffirms a scoreless, non-compensating, no-authority boundary | pending |
 
 [Back to top](#top)
 
@@ -1013,7 +1043,7 @@ The same English word can appear in several lanes without making their values in
 <details>
 <summary><strong>Appendix D — Evidence boundary</strong></summary>
 
-This revision is grounded in the tracked repository at `main@160938b3f4717b6f2551b3430ab5c08f9b33cecb`, the untruncated tree and blobs recorded above, the governed Living Compass source map, and the original historical receipt. It does not claim:
+v1.1 was grounded in the tracked repository at `main@160938b3f4717b6f2551b3430ab5c08f9b33cecb`, the untruncated tree and blobs recorded above, the governed Living Compass source map, and the original historical receipt. v1.2 instead uses the targeted current source-readback pin in metadata and does not repeat the full-tree or historical validation claim. Neither edition claims:
 
 - direct re-review of the private source bytes during this revision;
 - exhaustive informal use outside tracked repository evidence;
@@ -1029,4 +1059,4 @@ Re-run the Authority Freeze, overlap search, current-owner reconciliation, valid
 
 ---
 
-*Last updated 2026-08-13 · Document version: v1.1 · Source metadata: `proposed` · Effective decision status: `proposed` · COMPASS use: qualitative questions only · Aggregate score: denied · Authority effect: none · [Back to top](#top)*
+*Last updated 2026-09-14 · Document version: v1.2 · Source metadata: `proposed` · Effective decision status: `proposed` · COMPASS use: qualitative questions only · Aggregate score: denied · Authority effect: none · [Back to top](#top)*
