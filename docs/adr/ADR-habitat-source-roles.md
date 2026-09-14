@@ -1,10 +1,13 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://adr/habitat-source-roles
 title: Habitat Source Roles
-adr_id: ADR-habitat-source-roles
+adr_id: unassigned
+scaffold_identity: ADR-habitat-source-roles
 type: architecture-decision-record
-version: v1.0
+version: v1.1
 status: proposed
+effective_decision_status: proposed
+classification: "PROPOSED scaffold; slug-only, unassigned ADR record"
 owners:
   - <habitat-domain-steward>
   - <source-governance-steward>
@@ -12,23 +15,51 @@ reviewers:
   - <policy-steward>
   - <evidence-steward>
 created: 2026-07-24
-updated: 2026-07-24
+updated: 2026-09-14
 policy_label: public
 related:
   - docs/domains/habitat/ARCHITECTURE.md
   - docs/domains/habitat/SOURCE_FAMILIES.md
   - docs/domains/habitat/SOURCE_REGISTRY.md
   - docs/architecture/source-roles.md
+  - docs/architecture/source-role-anti-collapse.md
   - docs/architecture/cross-domain/source-role-anti-collapse.md
+  - schemas/contracts/v1/source/source_descriptor.schema.json
+  - tests/domains/habitat/test_critical_habitat_source_role.py
   - policy/domains/habitat/source_role.rego
   - policy/domains/habitat/source_role_authority.rego
   - tools/validators/domains/habitat/validate_critical_habitat_source_role.py
   - docs/doctrine/directory-rules.md
 tags: [kfm, adr, habitat, source-role, evidence, policy, anti-collapse]
 notes:
-  - "Decision text is evidence-grounded against repository state at commit 2e4049bf511dcc5c4425a297458bf58627b58299."
-  - "Policy and validator files exist but are PROPOSED scaffolds; this ADR does not claim runtime enforcement."
+  - "Currentness refresh v1.1 is evidence-grounded against repository state at commit fff1a37e4e4eba52b795a0fd99572bfb063efc79."
+  - "This record remains slug-only and unassigned in docs/adr/INDEX.md; its effective decision status is PROPOSED."
+  - "Habitat policy files remain PROPOSED deny-by-default scaffolds; the critical-habitat validator and focused tests are fixture-only and do not prove admission, release, publication, or runtime enforcement."
   - "Concrete source-family role assignments remain PROPOSED until admitted SourceDescriptor records are verified."
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: fff1a37e4e4eba52b795a0fd99572bfb063efc79
+  target_prior_blob: ed836f8440051eb7bdca675e4cb4eca1e645171e
+  adr_index_blob: 0c143676dfd3c1bda16cb44398c5ad5d4a49cf67
+  adr_readme_blob: 27c8f00622afe6cd0c65a1b116cd768dac31bea6
+  accepted_adr_0029_blob: 4c1ef5f7f812d58fbdde9898acc96bb4c9280b2c
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  cross_register_blob: c5a056011d6496cb2574cedd7f9e5dadadbbbe1e
+  habitat_architecture_blob: 82263ea8f5862401e5aef57ec43f49711d12c998
+  habitat_source_families_blob: d7e88d9b8d9a532da78c7d2788c843090650e5b3
+  habitat_source_registry_blob: d6a54cd7f5333455de6e6b23f4f9beacda4761c4
+  source_role_architecture_blob: 702515cf920f811305f04598453322b28ba20d48
+  cross_domain_source_role_architecture_blob: 89da72168d6165c744ebb4970ba45c80940ce746
+  source_descriptor_schema_blob: 582e70b834278c3c6ca9a8b31efbe0989c96f0bc
+  habitat_source_role_policy_blob: b91935af6b998d497c6048525ee18ab6047e5a0e
+  habitat_source_role_authority_policy_blob: f98e75b16295f3eca3fc8bc2d5696a09e09a2d3c
+  critical_habitat_source_role_validator_blob: 0e1c859b493f9c485885a1e4ae66ff60bf376a6d
+  critical_habitat_source_role_tests_blob: 3fb512a9812affb8caec9750fc29cd749f82cddf
+  habitat_workflow_blob: 59771c027f688d7028a46c4635c0ec710b34e3ab
+inspection_boundary:
+  - "Repository source reads only; no validators, tests, policy, CI, runtime, release, or publication workflows were executed."
+  - "No source, descriptor, authority, rights record, EvidenceBundle, model receipt, release candidate, or public artifact was admitted, promoted, or published by this refresh."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -41,11 +72,11 @@ notes:
 ![domain](https://img.shields.io/badge/domain-habitat-2ea44f?style=flat-square)
 ![decision](https://img.shields.io/badge/decision-source--role%20preservation-blue?style=flat-square)
 ![policy](https://img.shields.io/badge/policy-scaffold-lightgrey?style=flat-square)
-![validator](https://img.shields.io/badge/validator-placeholder-lightgrey?style=flat-square)
+![validator](https://img.shields.io/badge/validator-fixture--only-lightgrey?style=flat-square)
 ![truth](https://img.shields.io/badge/truth-evidence--bounded-orange?style=flat-square)
 
 > [!IMPORTANT]
-> **Decision maturity is PROPOSED.** Repository evidence confirms that the Habitat architecture, source-family guidance, two Habitat source-role policy paths, and a critical-habitat validator path exist. The policy files currently contain deny-by-default scaffolds only, and the validator is a placeholder module. Therefore this ADR defines the intended decision and acceptance conditions; it does not assert that enforcement is complete.
+> **Decision maturity is PROPOSED and the ADR identity remains unassigned.** Repository evidence confirms Habitat architecture and source-family guidance, proposed deny-by-default policy scaffolds, and a substantive fixture-only critical-habitat validator with focused tests. The fixture checks prove only synthetic separation of regulatory-designation and modeled-suitability lanes; they do not verify source admission, authority, rights, sensitivity, evidence, policy wiring, release, publication, or public-use readiness. This ADR therefore states intended obligations and acceptance conditions, not complete repository enforcement.
 
 ## Contents
 
@@ -70,13 +101,15 @@ notes:
 
 | Field | Value |
 |---|---|
+| ADR identity | **Unassigned** — this is a slug-only scaffold in `docs/adr/INDEX.md`; `ADR-habitat-source-roles` is retained only as the stable path/scaffold identity |
 | Decision status | **PROPOSED** |
 | Scope | Habitat-domain source-role assignment, preservation, and release framing |
 | Owning responsibility root | `docs/adr/` — architecture decision record |
 | Primary domain reference | `docs/domains/habitat/ARCHITECTURE.md` |
-| Enforcement maturity | **PROPOSED / incomplete** |
+| Enforcement maturity | **PROPOSED / incomplete** — fixture-only validation exists; runtime, CI, and release wiring are not asserted |
+| Source-admission state | **No admitted Habitat source descriptor is verified by this ADR refresh** |
 | Publication effect | Fail closed when role, authority, rights, sensitivity, provenance, or required receipts are unresolved |
-| Supersedes | The prior scaffold at this same path |
+| Supersedes | The prior v1.0 scaffold at this same path |
 
 This ADR becomes accepted only after the acceptance criteria in §10 are satisfied and the required owners approve it.
 
@@ -97,9 +130,11 @@ Habitat combines source families that can describe similar places while carrying
 
 Without an explicit role decision, a system can accidentally present modeled suitability as observed habitat, administrative context as regulatory authority, or a regulatory designation as a general ecological observation. This is a source-role collapse defect.
 
-The cross-domain source-role taxonomy currently names seven roles:
+The seven historical guidance labels remain useful for human review:
 
 `observed | regulatory | modeled | aggregate | administrative | candidate | synthetic`
+
+They are **not** the repository's sole current machine vocabulary. The proposed `SourceDescriptor` schema exposes 16 role tokens, while cross-domain transition guidance separately uses a seven-value uppercase profile. No accepted global crosswalk reconciles those vocabularies. This ADR neither selects a canonical vocabulary nor maps between them; an admitted descriptor and its governing contract must control any concrete source decision.
 
 The role belongs to the admitted source or product, not merely to the provider or subject matter. One provider may publish multiple products that require separate descriptors and separate roles.
 
@@ -111,9 +146,9 @@ The Habitat architecture also establishes a key ownership boundary: Habitat does
 
 ## 3. Decision
 
-KFM will apply the following decision for the Habitat domain:
+If this ADR is accepted, KFM will apply the following decision for the Habitat domain. Until then, this is proposed guidance only; no role assignment, descriptor, policy result, release decision, or public representation is created by this document refresh.
 
-1. **Every admitted Habitat source or independently versioned product MUST have one explicit source role.**
+1. **Every admitted Habitat source or independently versioned product MUST have one explicit source role under its verified governing contract.**
 2. **The role MUST be recorded on the admitted `SourceDescriptor` or its verified successor contract.**
 3. **The role MUST remain traceable through every derived artifact, EvidenceBundle, model receipt, catalog record, release candidate, and published derivative that depends on that source.**
 4. **A role MUST NOT be silently changed in place.** A correction creates a new descriptor or corrected version, records the reason, preserves lineage, and identifies affected downstream artifacts.
@@ -130,7 +165,7 @@ The decision preserves the broader KFM invariant that EvidenceBundle outranks ge
 
 ## 4. Habitat role assignments
 
-The assignments below are decision guidance grounded in the current Habitat source-family documents. They remain **PROPOSED at the concrete product level** until verified against admitted descriptors, rights records, and review state.
+The assignments below are proposed decision guidance grounded in current Habitat source-family documents. They are **not admitted source assignments** and remain **PROPOSED at the concrete product level** until verified against admitted descriptors, rights records, review state, and the governing role vocabulary. The role terms retain their historical guidance meaning here; they must not be treated as a silent crosswalk to the current 16-token schema.
 
 | Source family or product | Expected role | Decision rule |
 |---|---|---|
@@ -261,13 +296,16 @@ The following status is verified against repository evidence from this session:
 |---|---|---|
 | `docs/domains/habitat/ARCHITECTURE.md` | **CONFIRMED present** | Defines Habitat scope, non-ownership boundaries, source families, lifecycle, and proposed repository shape. Its implementation claims are explicitly bounded. |
 | `docs/domains/habitat/SOURCE_FAMILIES.md` | **CONFIRMED present** | Provides detailed proposed source-family role guidance and states that admitted descriptors outrank the documentation. |
-| `docs/architecture/source-roles.md` | **CONFIRMED present** | Defines the seven-role taxonomy as doctrine and marks per-source assignments as proposed pending admission. |
+| `docs/architecture/source-role-anti-collapse.md` | **CONFIRMED present** | Documents the current boundary: the former seven-role guidance is not the sole machine vocabulary; `SourceDescriptor` currently has 16 role tokens and the transition profile is a separate seven-value vocabulary. |
+| `docs/architecture/cross-domain/source-role-anti-collapse.md` | **CONFIRMED present** | States that no accepted global crosswalk reconciles the descriptor tokens and transition profile. |
+| `schemas/contracts/v1/source/source_descriptor.schema.json` | **CONFIRMED present; PROPOSED** | Declares a 16-token `source_role` enum and related authority, rights, sensitivity, and provenance shape. Its path/projection assertions are not resolved by this ADR. |
 | `policy/domains/habitat/source_role.rego` | **CONFIRMED present; PROPOSED scaffold** | Contains a generated package and `default allow := false`; no verified role-evaluation rules were found in the file. |
 | `policy/domains/habitat/source_role_authority.rego` | **CONFIRMED present; PROPOSED scaffold** | Contains a generated package and `default allow := false`; no verified authority-evaluation rules were found in the file. |
-| `tools/validators/domains/habitat/validate_critical_habitat_source_role.py` | **CONFIRMED present; placeholder** | Contains only a placeholder module docstring; no executable validation was verified. |
-| Runtime wiring, CI enforcement, fixtures, release resolver | **UNKNOWN / NEEDS VERIFICATION** | Not established strongly enough in this session to claim enforcement. |
+| `tools/validators/domains/habitat/validate_critical_habitat_source_role.py` | **CONFIRMED present; fixture-only executable** | Validates synthetic `PROPOSED_INACTIVE` candidates that keep regulatory critical-habitat and modeled-suitability source/claim lanes separate; a pass expressly denies admission, release, publication, and public-use conclusions. |
+| `tests/domains/habitat/test_critical_habitat_source_role.py` | **CONFIRMED present; not executed in this refresh** | Contains focused positive and negative fixtures for the synthetic lane-separation validator. Presence is not CI or runtime proof. |
+| Runtime wiring, CI enforcement, admitted descriptors, release resolver | **UNKNOWN / NEEDS VERIFICATION** | Not established by source reads in this refresh; no workflow or test execution was performed. |
 
-Therefore, current behavior must not be described as "the repository enforces this ADR." The defensible statement is that repository scaffolds and documentation exist, while complete enforceability remains to be implemented and verified.
+Therefore, current behavior must not be described as "the repository enforces this ADR." The defensible statement is that proposed documentation and policy scaffolds exist alongside a narrow, fixture-only validator/test profile, while complete enforceability remains to be implemented and verified.
 
 [Back to top](#top)
 
@@ -278,16 +316,16 @@ Therefore, current behavior must not be described as "the repository enforces th
 This ADR may move from **PROPOSED** to **ACCEPTED** only when all applicable items are satisfied:
 
 - [ ] Habitat and source-governance owners are assigned and approve the decision.
-- [ ] The canonical `SourceDescriptor` semantic contract and schema are verified and support the seven roles plus required conditional fields.
+- [ ] The canonical `SourceDescriptor` semantic contract and schema are accepted, including either one governing role vocabulary or an explicit, approved crosswalk between descriptor tokens and transition-profile guidance.
 - [ ] Product-level role assignment rules are documented for core Habitat source families.
 - [ ] Regulatory products require an authority reference and fail closed without one.
 - [ ] Modeled products require model identity, provenance, and uncertainty support appropriate to significance.
 - [ ] Aggregate products retain aggregation unit and method.
 - [ ] Candidate and synthetic products cannot be published under observed, regulatory, or administrative framing.
 - [ ] Habitat source-role policy contains executable rules rather than scaffolds.
-- [ ] Critical-habitat source-role validation contains executable checks rather than a placeholder.
-- [ ] Positive, negative, boundary, and regression fixtures exist.
-- [ ] CI or an equivalent governed validation path executes the relevant tests.
+- [ ] The existing fixture-only critical-habitat lane-separation validator is retained or superseded by an approved executable validation scope; its pass conditions remain non-admission and non-release proof.
+- [ ] Positive, negative, boundary, and regression fixtures exist for the approved scope.
+- [ ] CI or an equivalent governed validation path executes the relevant tests and records the applicable scope.
 - [ ] Release candidates include role-aware receipts and fail closed on unresolved role conflicts.
 - [ ] Public API and map surfaces preserve role labels and do not bypass the governed release path.
 - [ ] Correction and rollback procedures identify downstream artifacts affected by a role correction.
@@ -335,7 +373,7 @@ Minimum validation should include:
 
 ### ADR rollback
 
-Because this change is documentation-only, rollback is the reversion of this file to the preceding commit. Reverting the ADR does not automatically remove schemas, policy, validators, descriptors, receipts, or releases created under it; those require their own governed rollback decisions.
+Because this v1.1 change is documentation-only, rollback is a reversion of this file to prior blob `ed836f8440051eb7bdca675e4cb4eca1e645171e` or an equivalent reviewed correction. Reverting the ADR does not automatically remove schemas, policy, validators, descriptors, receipts, or releases created under it; those require their own governed rollback decisions. This refresh creates none of those artifacts.
 
 ### Source-role correction
 
@@ -358,13 +396,14 @@ A role correction must never be implemented by silently editing provenance histo
 
 | ID | Question | Status |
 |---|---|---|
-| HAB-SR-01 | What is the verified canonical schema and contract path for the role-bearing `SourceDescriptor` currently used by executable code? | **NEEDS VERIFICATION** |
-| HAB-SR-02 | Should remotely sensed classification products such as NLCD and NWI be represented as `observed`, `modeled`, or a documented product-specific interpretation under the existing seven-role enum? | **NEEDS DOMAIN REVIEW** |
-| HAB-SR-03 | Which exact Habitat source descriptors have been admitted, reviewed for rights, and assigned roles? | **UNKNOWN** |
-| HAB-SR-04 | Which reason-code registry is canonical for Habitat source-role denial and abstention outcomes? | **NEEDS VERIFICATION** |
-| HAB-SR-05 | Is the Habitat source-role policy wired into promotion and release CI? | **UNKNOWN** |
-| HAB-SR-06 | Which public API and UI fields expose source role and evidence without leaking sensitive source details? | **NEEDS VERIFICATION** |
-| HAB-SR-07 | Who owns final disposition of cross-domain role disagreements involving Habitat, Fauna, Flora, and external regulatory authorities? | **PROPOSED: joint steward review** |
+| HAB-SR-01 | Which accepted contract and canonical path govern the role-bearing `SourceDescriptor` used by executable code, given the present schema projection/path conflict? | **NEEDS VERIFICATION** |
+| HAB-SR-02 | What approved crosswalk, if any, reconciles the proposed 16-token descriptor vocabulary with seven-role historical/transition guidance? | **NEEDS ARCHITECTURE DECISION** |
+| HAB-SR-03 | Should remotely sensed classification products such as NLCD and NWI be represented under the approved product-specific interpretation once the governing vocabulary is accepted? | **NEEDS DOMAIN REVIEW** |
+| HAB-SR-04 | Which exact Habitat source descriptors have been admitted, reviewed for rights, and assigned roles? | **UNKNOWN** |
+| HAB-SR-05 | Which reason-code registry is canonical for Habitat source-role denial and abstention outcomes? | **NEEDS VERIFICATION** |
+| HAB-SR-06 | Is the Habitat source-role policy wired into promotion and release CI? | **UNKNOWN** |
+| HAB-SR-07 | Which public API and UI fields expose source role and evidence without leaking sensitive source details? | **NEEDS VERIFICATION** |
+| HAB-SR-08 | Who owns final disposition of cross-domain role disagreements involving Habitat, Fauna, Flora, and external regulatory authorities? | **PROPOSED: joint steward review** |
 
 [Back to top](#top)
 
@@ -377,9 +416,10 @@ A role correction must never be implemented by silently editing provenance histo
 - This ADR path existed as a short proposed scaffold.
 - `docs/domains/habitat/ARCHITECTURE.md` exists and defines Habitat as a context lane with explicit non-ownership of species truth and regulatory authority.
 - `docs/domains/habitat/SOURCE_FAMILIES.md` exists and documents proposed role assignments for core Habitat source families.
-- `docs/architecture/source-roles.md` exists and documents the seven-role taxonomy while distinguishing confirmed doctrine from proposed concrete assignments.
+- `docs/architecture/source-role-anti-collapse.md` and its cross-domain counterpart exist and document the unresolved boundary between the proposed 16-token `SourceDescriptor` vocabulary and separate seven-role guidance/profile.
+- `schemas/contracts/v1/source/source_descriptor.schema.json` exists as a proposed 16-token source-role schema; this ADR does not resolve its canonical-path/projection assertions.
 - `policy/domains/habitat/source_role.rego` and `policy/domains/habitat/source_role_authority.rego` exist as deny-by-default proposed scaffolds.
-- `tools/validators/domains/habitat/validate_critical_habitat_source_role.py` exists as a placeholder.
+- `tools/validators/domains/habitat/validate_critical_habitat_source_role.py` and its focused test module exist as fixture-only, synthetic lane-separation evidence; neither was executed by this refresh and neither proves admission, release, publication, or public use.
 - `docs/doctrine/directory-rules.md` places ADRs and domain documentation under responsibility-based roots and separates docs, contracts, schemas, policy, tests, data, and release authority.
 
 ### PROPOSED by this ADR
@@ -393,8 +433,20 @@ A role correction must never be implemented by silently editing provenance histo
 - Runtime policy wiring.
 - CI execution and passing tests.
 - Canonical admitted Habitat descriptors and their review state.
+- An accepted role-vocabulary crosswalk, if one is required.
 - Rights status for individual source families.
 - Release manifests and public products currently governed by these rules.
+
+---
+
+## 15. Revision history
+
+| Version | Date | Change | Governance effect |
+|---|---|---|---|
+| v1.0 | 2026-07-24 | Initial proposed scaffold. | No source admission, release, or publication effect. |
+| v1.1 | 2026-09-14 | Currentness-only reconciliation: marks the ADR identity unassigned, distinguishes seven-role guidance from the 16-token proposed descriptor vocabulary, and corrects policy/validator evidence. | No source admission, role assignment, policy activation, CI execution, release, deployment, or publication effect. |
+
+[Back to top](#top)
 
 ---
 
