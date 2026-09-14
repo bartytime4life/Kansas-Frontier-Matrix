@@ -3,7 +3,7 @@ doc_id: kfm://doc/adr-0012-connector-outputs-to-data-raw-or-data-quarantine-only
 title: "ADR-0012 — Connector outputs MUST land in data/raw/ or data/quarantine/ only"
 type: adr
 adr_id: ADR-0012
-version: v1.5
+version: v1.6
 status: draft
 owners:
   - "NEEDS VERIFICATION — architecture decision owner"
@@ -34,7 +34,7 @@ current_path: docs/adr/ADR-0012-connector-outputs-to-data-raw-or-data-quarantine
 supersedes: []
 superseded_by: []
 evidence_snapshot:
-  snapshot_status: current_v1.5_repository_evidence
+  snapshot_status: historical_v1.5_repository_evidence
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
   base_commit: 475c410595ec796927c2685b98198104762a0a2f
@@ -67,6 +67,32 @@ evidence_snapshot:
   source_artifact_schema_blob: f451ccbcd7543896cffb98e6abbca23f61432fa3
   source_artifact_validator_blob: 3d047c1277ba25e627f97c31c8b5d8a81b54c06c
   source_artifact_workflow_blob: 986e76bfe70829957ea6926985cb8bc61626ad0e
+v1_6_current_reconciliation:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  main_commit: cddc2ce879f54675e1e6ca847e696a65c5d1e4d0
+  target_prior_blob: 8a08133c0fe6312c2ee32914a6512580e21b4227
+  adr_index_blob: 0c143676dfd3c1bda16cb44398c5ad5d4a49cf67
+  adr_0029_blob: 4c1ef5f7f812d58fbdde9898acc96bb4c9280b2c
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  connectors_readme_blob: a28336f6c15e0234241a7844e5683a52c2fd5024
+  raw_readme_blob: 560113c00e257725c0a440cb489510af44c13b12
+  quarantine_readme_blob: 9b375d795d96b15c06e51ef54770a023cd14454c
+  ingest_pipeline_readme_blob: baad1b047b146ac87d9b9f3b05b636627e04a632
+  connector_gate_workflow_blob: dd3fd47b44ed5151aaa4ce72032a069f4b848190
+  non_publisher_test_blob: 3e1217f7c461b42caba7c74a9add39a8ceddc354
+  connector_gate_readme_blob: 18b1b0561c9eb7bbcc3bd62bcd6e4ee357dabb2c
+  connector_output_scanner_blob: 5b6b69545159e63e672e7c08dc41b519dd265617
+  source_registry_readme_blob: b5c31c7fb5334da6f74e9a850f50a208efb7c329
+  source_descriptor_schema_blob: 582e70b834278c3c6ca9a8b31efbe0989c96f0bc
+  ingest_receipt_contract_blob: 449420af794a5287e793fb6e1e1b900793ef15fa
+  ingest_receipt_schema_blob: 4e9707bec7da63049c5043562c9470564b77184f
+  ingest_receipt_validator_blob: 7bdf9f993a9f25759c8428a6da03df186d9c0651
+  ingest_receipt_test_blob: b77e945c05da13c5637b44dd2b255c3611f66cec
+  source_artifact_contract_blob: 9f5e2f082fa2a3aaf94c1e9d879b0a0baa797639
+  source_artifact_schema_blob: f451ccbcd7543896cffb98e6abbca23f61432fa3
+  source_artifact_validator_blob: 079bc42e0c5568b7ddd1d78a45b87dd385a4fbe5
+  source_artifact_workflow_blob: 728d053c2fdf7ee94512f7ae1426bc275b09550e
+
 related:
   - docs/adr/README.md
   - docs/adr/INDEX.md
@@ -114,6 +140,7 @@ notes:
   - "The internal connectors-core package provides no concrete live transport, stable public export, arbitrary storage interface, source activation, evidence, policy, release, or publication authority."
   - "The connector-versus-shared-ingest writer handoff remains implementation-level NEEDS VERIFICATION; this ADR governs allowable effects regardless of which reviewed component performs the final write."
   - "v1.5 is a same-path currentness refresh against main@475c410595ec796927c2685b98198104762a0a2f. It retains the proposed RAW/QUARANTINE-only decision, preserves earlier inventories as historical evidence, and records bounded current readback of connector, RAW, QUARANTINE, receipt, static-scan, SourceAdapter, and artifact-handoff surfaces. No connector code is executed and no source, payload, lifecycle, release, deployment, or publication state changes."
+  - "v1.6 is a same-path source-only currentness refresh against main@cddc2ce879f54675e1e6ca847e696a65c5d1e4d0. It preserves the draft/effective-proposed RAW/QUARANTINE-only decision; the separate receipt boundary; non-publisher and no-network source-edge limits; bounded static, validator, and workflow definitions; and the explicit connector-run receipt/persistence hold. No connector, validator, workflow, or external source was executed and no source, payload, lifecycle, release, deployment, or publication state changed."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -180,7 +207,7 @@ An accepted ADR without enforcement is doctrine. A passing test without an accep
 
 ## Evidence Boundary
 
-The v1.4 evidence snapshot pins current repository bytes at `main@52a6c7b55fc473c813bde6ec413bcda81259e809`. It preserves the historical v1.2/v1.3 lineage while replacing stale implementation claims with current inspected source, tests, validators, and workflows. Accepted ADR-0029 and its adopted Directory Rules bytes govern placement; ADR-0012 itself remains proposed.
+The v1.4 and v1.5 evidence snapshots remain historical repository readbacks. The v1.6 source-only reconciliation below is pinned to `main@cddc2ce879f54675e1e6ca847e696a65c5d1e4d0`; it does not prove any connector, validator, workflow, or external source execution. Accepted ADR-0029 and its adopted Directory Rules bytes govern placement; ADR-0012 itself remains proposed.
 
 | Evidence level | What is established | What is not established |
 | --- | --- | --- |
@@ -652,6 +679,19 @@ This is a repository file-content readback at `main@475c410595ec796927c2685b9819
 | [Connector gate](../../.github/workflows/connector-gate.yml), [scanner](../../tools/validators/connector_gate/output_paths.py), and [boundary test](../../tests/policy/test_pipeline_connector_non_publisher.py) | Current source describes bounded static recognized-sink checks, selected no-network suites, and explicit non-authority. | Test/workflow definitions exist; no current execution result or comprehensive runtime confinement is implied. |
 | [SourceAdapter](../../packages/connectors-core/src/connectors_core/source_adapter.py) and [artifact handoff](../../packages/connectors-core/src/connectors_core/artifact_handoff.py) | Both explicitly omit storage, admission, lifecycle writes, receipt emission, policy, release, and publication work. | A pure candidate-construction boundary; not a connector writer or a promotion path. |
 | [IngestReceipt contract](../../contracts/source/ingest_receipt.md) and [validator](../../tools/validators/validate_ingest_receipt.py) | The contract remains proposed; validator source is deliberately no-network and validates records and optional local integrity bindings. | Candidate validation can be performed without network access; it does not prove an emitted receipt or governed persistence. |
+
+### Bounded v1.6 current readback
+
+This is a repository file-content and identity readback at `main@cddc2ce879f54675e1e6ca847e696a65c5d1e4d0`, not evidence that a connector, validator, workflow, or external source ran.
+
+| Surface | Verified source posture at pinned main | Safe conclusion |
+| --- | --- | --- |
+| [ADR index](./INDEX.md) | ADR-0012 remains source `draft` and effectively `proposed` in the 39-record ADR inventory. | Identity and non-acceptance are current; this document change cannot authorize a connector or source. |
+| [Connectors root](../../connectors/README.md) | The declared source-edge boundary remains internal, no-network-by-default, RAW/QUARANTINE/receipt-only, and non-publisher. | A documented responsibility boundary; not proof that every connector is runtime-confined or source-authorized. |
+| [RAW](../../data/raw/README.md) and [QUARANTINE](../../data/quarantine/README.md) | RAW remains a source-first immutable-capture boundary with physical placement/payload enforcement open; QUARANTINE remains a fail-closed hold. | Lifecycle intent is documented; not an admitted or persisted payload, release, or public-use fact. |
+| [Connector gate](../../.github/workflows/connector-gate.yml), [scanner](../../tools/validators/connector_gate/output_paths.py), and [boundary test](../../tests/policy/test_pipeline_connector_non_publisher.py) | Current source retains bounded recognized-sink/static checks, selected no-network suites, and an explicit connector-run receipt hold. | Definitions and selected structural tests exist; no exact-head execution, complete dynamic coverage, or governed persistence is implied. |
+| [SourceAdapter](../../packages/connectors-core/src/connectors_core/source_adapter.py) and [artifact handoff](../../packages/connectors-core/src/connectors_core/artifact_handoff.py) | Both explicitly exclude storage, source admission, lifecycle writes, receipt emission, policy, release, and publication. | Pure candidate construction remains distinct from a connector writer or promotion path. |
+| [IngestReceipt](../../contracts/source/ingest_receipt.md), its [validator](../../tools/validators/validate_ingest_receipt.py), and [SourceArtifact validation workflow](../../.github/workflows/source-artifact-validation.yml) | The receipt contract remains proposed; the validator and fixture-first artifact workflow explicitly limit their no-network checks to local shape/integrity boundaries. | No emitted run receipt, accepted writer, source admission, lifecycle transition, release, or publication authority is established. |
 
 ### Material corrections from v1.3
 
@@ -1146,6 +1186,7 @@ The supplied KFM corpus consistently treats connectors and watchers as non-publi
 
 | Version | Date | Change |
 | --- | --- | --- |
+| `v1.6` | 2026-09-14 | Re-pinned source-only current-main evidence for the connector, RAW/QUARANTINE, static-scan, SourceAdapter/artifact-handoff, IngestReceipt, and fixture-first SourceArtifact boundaries. Preserved `draft` / effective `proposed` status and all connector-run receipt/persistence, admission, lifecycle, release, deployment, and publication holds; no connector, validator, workflow, or source was executed. |
 | `v1.5` | 2026-09-13 | Refreshed the currentness boundary against `main@475c410595ec796927c2685b98198104762a0a2f`. Retained v1.4 evidence as historical and added a bounded source readback for connector, RAW/QUARANTINE, static-scan, `SourceAdapter`, artifact-handoff, and IngestReceipt surfaces. No connector, validator, workflow, or external source was executed; the ADR remains `draft` / effective `proposed` and does not authorize capture, source admission, persistence, promotion, release, deployment, or publication. |
 | `v1.4` | 2026-08-13 | Reconciled accepted placement authority with this still-proposed connector decision; replaced stale connector-core and receipt-validator claims with current no-network primitives, injected transport, `SourceAdapter`, exact-byte `SourceArtifact` handoff, validators, fixtures, and workflow evidence; distinguished prerequisite checks from connector-run receipt presence, governed persistence, runtime confinement, source admission, and publication; changed documentation only. |
 | `v1.3` | 2026-07-29 | Recorded the bounded connector repository-path scanner, deterministic policy cases, two-part workflow canary, and explicit limits without accepting this proposed ADR or changing publication authority. |
