@@ -3,7 +3,7 @@ doc_id: kfm://doc/adr-scaffold-connectors-domain-segment
 title: "ADR-NNNN — Connector Lanes Are Source- and Product-Scoped, Not Domain-Segmented"
 type: adr-scaffold
 adr_id: ADR-NNNN
-version: v1.1
+version: v1.2
 status: not-assigned
 effective_decision_status: not-assigned
 owners:
@@ -22,7 +22,7 @@ reviewers_required:
   - Directory-governance and migration reviewer
   - At least one affected domain steward
 created: 2026-07-22
-updated: 2026-08-14
+updated: 2026-09-14
 policy_label: public
 truth_posture: cite-or-abstain
 owning_root: docs/
@@ -62,6 +62,28 @@ inspection_boundary: >
   exact-main hosted jobs. No live connector, source endpoint, credential, source
   activation, registry service, lifecycle store, production receipt, release packet,
   deployment, public route, correction cascade, or rollback execution was exercised.
+refresh_2026_09_14_base_ref: "main"
+refresh_2026_09_14_base_commit: "975821b73f7027f10ab40483e02b6aa43fd2aa11"
+refresh_2026_09_14_base_tree: "ead6912fdb7807394cc6d4afd272dcf83e6d7bac"
+refresh_2026_09_14_target_prior_blob: "b8f9edeccf0f817b9bab3b2d6546c7a0174ca75c"
+refresh_2026_09_14_adr_index_blob: "0c143676dfd3c1bda16cb44398c5ad5d4a49cf67"
+refresh_2026_09_14_adr_readme_blob: "27c8f00622afe6cd0c65a1b116cd768dac31bea6"
+refresh_2026_09_14_directory_rules_blob: "fd49a0b83e55cef52c1124281f093e263526898d"
+refresh_2026_09_14_adr_0012_blob: "bde144bedb6c2fd77ea738dfdfe4adecc7ca1033"
+refresh_2026_09_14_adr_0017_blob: "c5589160c02a32217c4040cf21ae3b421c1fbde9"
+refresh_2026_09_14_adr_0029_blob: "4c1ef5f7f812d58fbdde9898acc96bb4c9280b2c"
+refresh_2026_09_14_root_registry_blob: "024f668b5f0a9239bafa4f8b09e2afd86300ff8c"
+refresh_2026_09_14_source_authority_register_blob: "32729857bc8eb5001acb37b8ee8e60bcb6e0dc50"
+refresh_2026_09_14_connectors_readme_blob: "a28336f6c15e0234241a7844e5683a52c2fd5024"
+refresh_2026_09_14_domains_readme_blob: "a8a384c6c19a22b393f02188123147a205e276ea"
+refresh_2026_09_14_fauna_readme_blob: "535e59d1de733c6fc717a8e5d3c2cd32d9cdfc46"
+refresh_2026_09_14_geology_readme_blob: "9575bec2c30a5f7a7a227ed4a48d548a00be83d1"
+refresh_2026_09_14_noaa_storm_events_readme_blob: "a47e3eaf0e67c67b2126fd0c6a35249c11b4f1e9"
+refresh_2026_09_14_connectors_core_readme_blob: "0db121b6f378b64bacaf74af57dbfcd40c969d1f"
+refresh_2026_09_14_connector_gate_readme_blob: "18b1b0561c9eb7bbcc3bd62bcd6e4ee357dabb2c"
+refresh_2026_09_14_connector_gate_workflow_blob: "dd3fd47b44ed5151aaa4ce72032a069f4b848190"
+refresh_2026_09_14_connector_gate_run: "34855287877; completed success at exact base; bounded no-network/static checks plus receipt-presence hold"
+refresh_2026_09_14_scope_limit: "Documentation evidence refresh only; no number assigned, no acceptance, no topology migration, no source activation, no local execution, no release, deployment, or publication."
 related:
   - docs/adr/README.md
   - docs/adr/INDEX.md
@@ -153,6 +175,16 @@ The original scaffold combined two questions that current evidence now separates
 
 This file now records only the second question plus the non-effects needed to prevent the scaffold from being mistaken for an accepted migration decision.
 
+### Current repository re-read — 2026-09-14
+
+This documentation-only refresh re-pins the evidence to `main@975821b73f7027f10ab40483e02b6aa43fd2aa11` (tree `ead6912fdb7807394cc6d4afd272dcf83e6d7bac`), without changing the unassigned decision posture. The ADR index still classifies `ADR-NNNN` as an unassigned scaffold: it reserves no number and does not accept the proposed source- and product-scoped connector topology.
+
+The accepted placement baseline remains ADR-0029 and the source-first Directory Rules. The Root Registry continues to identify `connectors/` as canonical, while `connectors/domains/` still describes draft domain-scoped lanes and the fauna, geology, and hyphenated NOAA Storm Events surfaces retain their documented compatibility/conflict posture. The proposed `source_authority_register.yaml` still has no entries and an `ABSENT` implementation/completeness state.
+
+Hosted run `34855287877` completed successfully at this exact base: `connector-output-gate` completed its deterministic no-network/static and focused receipt-validator checks, and `ingest-receipt-presence` completed its explicit presence hold. That bounded result verifies neither source admission nor a topology migration, and it does not prove live credentials, network behavior, lifecycle writes, publication, or release state.
+
+This refresh does **not** assign an ADR number; accept a migration profile; create, move, rename, or delete any connector/alias path; modify connector code, source descriptors, schemas, registry entries, or lifecycle state; activate a source or credential; or release, deploy, or publish anything.
+
 [Back to top](#top)
 
 ---
@@ -161,7 +193,9 @@ This file now records only the second question plus the non-effects needed to pr
 
 ## Evidence boundary
 
-This edition is grounded at `main@b7352aba93f7298bdd5a6ee6fd8de475b05c9e42`. It uses current repository bytes and one exact-head hosted connector-gate run. It does not infer live source or runtime behavior from documentation.
+Initial v1.1 evidence remains pinned to `main@b7352aba93f7298bdd5a6ee6fd8de475b05c9e42`. This v1.2 documentation-only refresh adds a separate current re-read at `main@975821b73f7027f10ab40483e02b6aa43fd2aa11` (tree `ead6912fdb7807394cc6d4afd272dcf83e6d7bac`) and the exact-head hosted connector-gate run `34855287877`; neither snapshot infers live source or runtime behavior from documentation.
+
+The current hosted result is deliberately narrow: `connector-output-gate` completed deterministic no-network/static and focused receipt-validator checks, and `ingest-receipt-presence` completed its explicit hold. It is not evidence that a source is admitted or activated, that a proposed topology has migrated, or that any release/publish path ran.
 
 ### Truth labels
 
@@ -775,6 +809,8 @@ python tools/validators/validate_ingest_receipt.py --fixtures
 
 Those checks validate current bounded behavior, not the proposed topology migration.
 
+The 2026-09-14 refresh performed no local execution. Its current-state claim is limited to the exact-base hosted connector-gate outcome and the repository bytes cited in its metadata; validation of an adopted migration remains future work.
+
 ### Future topology-specific checks
 
 - exact source-ID/path/package/alias crosswalk polarity;
@@ -922,7 +958,8 @@ Planning sources support the source-first and one-capture/multi-domain rationale
 |---|---|---|
 | `v1.0` | 2026-07-24 | Replaced a thin inventory scaffold with a repository-grounded unassigned topology proposal; preserved `ADR-NNNN` and no-number-reservation boundary. |
 | `v1.1` | 2026-08-14 | Separated the accepted source-first Directory Rules baseline from the still-unassigned migration decision; reconciled current Root Registry, connector-root, domain-grouping, fauna/geology compatibility, SourceDescriptor/activation, connectors-core, connector-gate exact-main success, empty authority-register, receipt hold, migration, risk, validation, rollback, and scaffold-retirement evidence. |
+| `v1.2` | 2026-09-14 | Documentation-only re-read at `main@975821b73f7027f10ab40483e02b6aa43fd2aa11`; refreshed source/connector/authority-register evidence and exact-head connector-gate outcome while preserving `ADR-NNNN`, `not-assigned`, no-number-reservation, and no-migration/non-activation boundaries. |
 
 ---
 
-**Last updated:** 2026-08-14 · **Identity:** `ADR-NNNN` / `not-assigned` · **Accepted baseline:** source-first Directory Rules v2 · **Unresolved decision:** topology and migration convergence · **Implementation:** mixed / partial · **Publication:** none · [Back to top](#top)
+**Last updated:** 2026-09-14 · **Identity:** `ADR-NNNN` / `not-assigned` · **Accepted baseline:** source-first Directory Rules v2 · **Unresolved decision:** topology and migration convergence · **Implementation:** mixed / partial · **Publication:** none · [Back to top](#top)
