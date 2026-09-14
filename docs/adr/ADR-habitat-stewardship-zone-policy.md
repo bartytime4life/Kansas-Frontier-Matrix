@@ -2,7 +2,7 @@
 doc_id: kfm://doc/adr-habitat-stewardship-zone-policy
 title: Habitat Stewardship-Zone Policy Boundary
 type: adr
-version: v1.0
+version: v1.1
 status: draft
 effective_decision_status: proposed
 adr_id: unassigned
@@ -22,7 +22,7 @@ reviewers_required:
   - Release, correction, and rollback steward
   - Validation steward
 created: "NEEDS VERIFICATION — scaffold predates this revision"
-updated: 2026-07-24
+updated: 2026-09-14
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
@@ -32,9 +32,9 @@ superseded_by: null
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 2e4049bf511dcc5c4425a297458bf58627b58299
-  target_prior_blob: 7e0f72d384991df420cf993d5c64896985d9f0d2
-  adr_readme_blob: f1b5d34a53b6c717832d587de54989ce8192bcaa
+  base_commit: fff1a37e4e4eba52b795a0fd99572bfb063efc79
+  target_prior_blob: 440b57a0c5fa6a58787451319d952e06d98fd999
+  adr_readme_blob: 27c8f00622afe6cd0c65a1b116cd768dac31bea6
   directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
   habitat_architecture_blob: 82263ea8f5862401e5aef57ec43f49711d12c998
   habitat_canonical_paths_blob: 837aa111f70b8df678b5545c72f92c1fdca73b66
@@ -44,14 +44,20 @@ evidence_snapshot:
   habitat_fixtures_readme_blob: 674c5acf8c2f1739762625e392616ce1034de0e6
   habitat_tests_readme_blob: 4503de9bcb1c92db45012d897d647fb39a9f7172
   stewardship_zone_tests_readme_blob: 1541f49b64cf7bddbc9d805db6623a00d72b74f9
-  docs_control_plane_workflow_blob: 986fe1b4845c51f719bcfeeefe08729517ae543c
+  docs_control_plane_workflow_blob: 18057f8d698e07ef3ad7c3b2eb2567d26c741c9f
+  habitat_source_registry_readme_blob: 5d9c90f88ff7e2e2b0d4f2064bc835589196d8b8
+  release_manifests_readme_blob: c699a527ff11bebad6a874ed1a37aa3a8213b86c
+  currentness_reconciliation: 2026-09-14
 inspection_boundary: >
   Current-session GitHub reads of the target scaffold, ADR operating rules, Directory Rules,
   Habitat architecture and canonical-path guidance, the StewardshipZone semantic contract,
-  paired schema, policy scaffold, Habitat fixture/test indexes, StewardshipZone test-lane
-  documentation, and documentation-control workflow. No accepted ReviewRecord, live source
-  activation, source-rights determination, policy evaluation, executable StewardshipZone test,
-  emitted EvidenceBundle, public-safe projection, ReleaseManifest, correction, rollback,
+  paired schema, policy scaffold, Habitat fixture/test indexes, StewardshipZone test directory,
+  sensitivity placeholder, source-registry and release-manifest directory surfaces, and
+  documentation-control workflow. The current tree contains no StewardshipZone fixture child,
+  the test lane contains only README.md and .gitkeep, the sensitivity lane contains only
+  .gitkeep, and no habitat release-manifests child is present. No accepted ReviewRecord, live
+  source activation, source-rights determination, policy evaluation, executable StewardshipZone
+  test, emitted EvidenceBundle, public-safe projection, ReleaseManifest, correction, rollback,
   governed API response, map render, deployment, or production publication was exercised.
 related:
   - docs/adr/README.md
@@ -75,6 +81,7 @@ notes:
   - "This revision does not assign an ADR number, update the ADR index, accept the decision, implement policy, or publish data."
   - "Assigning a permanent ADR number requires a separately scoped update to docs/adr/INDEX.md and validator closure."
   - "The source metadata remains draft and the effective decision status remains proposed."
+  - "v1.1 refreshes source-currentness only; it does not adopt Directory Rules, resolve the schema-home conflict, or promote any implementation state."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -122,6 +129,21 @@ notes:
 | **Migration required now** | No file move; future schema tightening may require data/fixture migration |
 | **Rollback required** | Yes—documentation rollback now; implementation and release rollback before any later adoption |
 | **Supersedes / superseded by** | None / none |
+
+<a id="currentness-reconciliation"></a>
+
+### Currentness reconciliation — 2026-09-14
+
+This v1.1 checkpoint is pinned to `main@fff1a37e4e4eba52b795a0fd99572bfb063efc79`. It corrects no decision rule and selects no implementation path.
+
+- `docs/adr/README.md` still treats numbered ADRs as proposed unless explicitly accepted; this unassigned slug-only file remains outside the numbered inventory.
+- Habitat architecture and canonical-path guidance still label the schema-home question **CONFLICTED**. This ADR therefore does not select a schema home or authorize a move.
+- The semantic contract is a draft v0.2 document; its paired JSON Schema remains an empty-properties, additional-properties-allowed scaffold, and the Rego file remains only `default allow := false`.
+- The checked `tests/domains/habitat/test_stewardship_zone/` directory contains only `README.md` and `.gitkeep`; there is no executable test module at that path. The direct fixture child `fixtures/domains/habitat/stewardship_zone/` is absent, and `policy/sensitivity/habitat/` contains only `.gitkeep`.
+- The Habitat source-registry parent and generic release-manifest parent exist, but direct `stewardship_zone` source and `release/manifests/habitat/` paths were absent from this snapshot. Their absence is not a source-rights or release determination; it leaves activation and public exposure unproven.
+- The documentation-control workflow can check bounded documentation/index assertions. It does not accept this ADR, evaluate policy, execute StewardshipZone tests, approve a release, or publish a layer.
+
+Accordingly, the operational state remains documentation-only: proposed decision, draft implementation surfaces, no verified source admission, no executable object-specific proof, and no Habitat StewardshipZone release.
 
 <a id="adr-identity-and-index-boundary"></a>
 
@@ -419,13 +441,13 @@ KFM publication requires the governed release objects and gates appropriate to t
 | Semantic contract | Draft, substantive | Reviewed contract version and explicit compatibility posture |
 | Machine schema | Permissive scaffold | Required fields, enums, conditionals, references, valid/invalid fixtures, registry entry |
 | Domain policy | Default-deny scaffold | Finite decision object, reason codes, obligations, tests, OPA/Conftest execution |
-| Sensitivity/geoprivacy policy | Referenced, not verified here | Most-restrictive join rules, transform receipts, reviewer requirements |
-| Fixtures | Parent guidance confirmed | Object-specific valid, invalid, restricted, generalized, stale, corrected, denied, abstained, and error fixtures |
-| Tests | README lane confirmed | Executable no-network tests and observed results |
-| Source activation | Unknown | Reviewed source descriptors, rights/terms, allowed-use and precision posture |
+| Sensitivity/geoprivacy policy | `policy/sensitivity/habitat/` contains only `.gitkeep` in this snapshot | Implement reviewed most-restrictive join rules, transform receipts, and reviewer requirements |
+| Fixtures | Parent guidance confirmed; direct `stewardship_zone/` child absent | Add object-specific valid, invalid, restricted, generalized, stale, corrected, denied, abstained, and error fixtures |
+| Tests | README + `.gitkeep` only; no executable module observed | Add executable no-network tests and record observed results |
+| Source activation | Habitat parent exists; direct `stewardship_zone/` source child absent | Add/review source descriptors, rights/terms, allowed-use, and precision posture |
 | Evidence resolution | Unknown | EvidenceRef/EvidenceBundle fixtures, resolver checks, citation validation |
 | Public-safe projection | Unknown | Transform implementation, digest, attribute allowlist, residual-risk review |
-| Release/correction/rollback | Unknown | Release manifest, promotion decision, correction/withdrawal, rollback drill |
+| Release/correction/rollback | Generic parent exists; `release/manifests/habitat/` child absent | Add a governed release manifest, promotion decision, correction/withdrawal, and rollback drill |
 | API/UI/AI | Unknown | Governed integration tests proving no direct internal-store or exact-geometry exposure |
 
 > [!IMPORTANT]
@@ -698,6 +720,7 @@ The first two commands are repository-documented ADR inventory checks. The Stewa
 |---|---|---|---|
 | Before 2026-07-24 | Scaffold | 18-line placeholder referencing Habitat architecture | None; unassigned proposed scaffold |
 | 2026-07-24 | v1.0 | Same-path, repository-grounded replacement with context boundary, policy matrix, evidence packet, convergence plan, acceptance gates, migration, and rollback | None; remains unassigned and proposed |
+| 2026-09-14 | v1.1 | Source-currentness reconciliation: pins current repository evidence and narrows unverified fixture, test, sensitivity, source, and release surfaces | None; remains unassigned, draft, and proposed |
 
 ---
 
