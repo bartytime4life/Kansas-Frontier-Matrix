@@ -2,12 +2,13 @@
 doc_id: kfm://adr/ADR-0036
 title: Planning Encyclopedia Carrier, Single-Writer, and Scaffold Disposition
 type: adr
-version: v1.0
+version: v1.1
 status: proposed
+effective_decision_status: proposed
 owners:
   - "@bartytime4life via the current CODEOWNERS review route"
 created: 2026-08-14
-updated: 2026-08-14
+updated: 2026-09-14
 policy_label: public
 owning_root: docs/
 responsibility: >-
@@ -15,11 +16,40 @@ responsibility: >-
   generated assembly relationship, and a reversible disposition for overlapping
   encyclopedia scaffolds and compatibility surfaces.
 truth_posture: >-
-  CONFIRMED current repository inventory and adopted Directory Rules evidence /
-  PROPOSED carrier, writer, generation, and migration decision / UNKNOWN source
-  PDF repository carrier, external consumers, independent stewardship, and
+  CONFIRMED targeted current repository and supplied-source readback / PROPOSED
+  carrier, writer, generation, and migration decision / UNKNOWN source-PDF
+  repository carrier, external consumers, independent stewardship, and
   publication effects / NEEDS VERIFICATION acceptance, inbound-reference closure,
-  deterministic assembly tooling, chapter review, and compatibility retirement.
+  deterministic assembly tooling, chapter review, compatibility retirement, and
+  current execution of the listed validation commands.
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 2c1d921717ba972861b249c2030179a310221d9e
+  target_prior_blob: 01cb4829c182ac580da17234963165adbb0b8b80
+  adr_index_blob: 0c143676dfd3c1bda16cb44398c5ad5d4a49cf67
+  adr_0029_blob: 4c1ef5f7f812d58fbdde9898acc96bb4c9280b2c
+  adr_0035_blob: d9284faec018135f7e18f6e6cb17abb8bc65ad33
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  docs_root_readme_blob: 48926c51d952836cc7d4f0ba22a47e0d1a34e4f4
+  encyclopedia_readme_blob: 4988edaf94d067980ac0c1ea0fabf2ba7a1b1530
+  encyclopedia_index_blob: 51ace44010435b776d33bbdefe6998cd5fd4d816
+  encyclopedia_changelog_blob: 543140c5113dad8825ba64cf8517903d0416fb51
+  encyclopedia_assembly_blob: 23ca512eb2b1ec58c020d1991df5bbf670a697ac
+  encyclopedia_chapter_tree: 28b053a9ff7c77d243e4225f9571e168b9dccc9a
+  compatibility_index_blob: 7a2a66a42033f80c291a7176e3ca586ea0576b18
+  doctrine_encyclopedia_blob: 4392fb99d8ad6221beb4ea165092a20673814ac2
+  supplied_source_pdf_sha256: cc899a7a57cbadb5870709be07d9b0dbfd01712cd794d63dc4d640485970419a
+inspection_boundary: >-
+  v1.1 is grounded in targeted GitHub reads at main@2c1d921717ba972861b249c2030179a310221d9e: this ADR;
+  ADR index; accepted ADR-0029; proposed ADR-0035; Directory Rules bytes;
+  docs root README; the direct encyclopedia tree; control documents;
+  chapter-tree listing; compatibility index; and doctrine encyclopedia. The
+  supplied 82-page source PDF was re-hashed and its title and ordered
+  sixteen-section contents were checked. No complete inbound-reference scan,
+  source-PDF rights review, CODEOWNERS review, assembler, generation,
+  validator, workflow, build, release, deployment, promotion, or publication
+  action was performed.
 related:
   - docs/encyclopedia/README.md
   - docs/encyclopedia/INDEX.md
@@ -68,12 +98,12 @@ notes:
 | **ID** | `ADR-0036` |
 | **Status** | `proposed` |
 | **Decision class** | Documentation-lane admission, single-writer selection, generated mirror, and compatibility migration |
-| **Evidence checkpoint** | `main@860fc390ffa303785d3d6c726571265175f6cc0f` |
+| **Evidence checkpoint** | main@2c1d921717ba972861b249c2030179a310221d9e (v1.1 targeted source readback; no assembler, validation, or workflow execution) |
 | **Primary responsibility root** | `docs/` |
 | **Affected surfaces** | `docs/encyclopedia/`, `docs/KFM-encyclopedia.md`, `docs/doctrine/encyclopedia.md` |
 | **Source manuscript** | *Kansas Frontier Matrix Domain and Capability Encyclopedia* v0.1, 82 pages, 2026-05-05 |
 | **Source digest** | `sha256:cc899a7a57cbadb5870709be07d9b0dbfd01712cd794d63dc4d640485970419a` |
-| **Current maturity** | Scaffold and planning indexes; no canonical chapter writer or deterministic assembly |
+| **Current maturity** | Directly inventoried planning scaffold, planning index, and doctrine vocabulary surface; no accepted chapter writer, deterministic assembly, migration, or publication was verified |
 | **Acceptance effect** | None until this ADR and the canonical index transition together through explicit review |
 | **Release/publication effect** | None |
 
@@ -91,9 +121,9 @@ Current repository evidence exposes three encyclopedia-shaped surfaces:
 |---|---|---|
 | `docs/KFM-encyclopedia.md` | Repository-grounded planning index and source-manuscript crosswalk | Root-level compatibility-shaped path; not the full manuscript |
 | `docs/doctrine/encyclopedia.md` | Doctrine vocabulary and concept index | Must remain distinct from planning narrative |
-| `docs/encyclopedia/` | Tracked planning scaffold | No accepted lane classification or single writer |
+| docs/encyclopedia/ | Tracked planning scaffold with seven direct children and 17 listed chapter files | No accepted lane classification, canonical chapter writer, or deterministic assembly |
 
-The scaffold has `README.md`; placeholder `INDEX.md`, `CHANGELOG.md`, and `encyclopedia.md`; sixteen structural chapter placeholders matching the source manuscript; one extra `11-settlements-infrastructure.md` scaffold; and empty `assets/` and `lineage/` sublanes.
+At the v1.1 evidence checkpoint, the immediate tree retains README.md, INDEX.md, CHANGELOG.md, encyclopedia.md, assets/, chapters/, and lineage/. The chapter listing has the ordered 01- through 16- spine and the additional 11-settlements-infrastructure.md scaffold. The direct readback confirms the existing control-document, assembly-target, compatibility-index, and doctrine-vocabulary postures; it does not verify a repository-wide consumer inventory, canonical writer, assembly tool, generated parity, or external consumer.
 
 The source manuscript's ordered structure is:
 
@@ -115,6 +145,18 @@ The source manuscript's ordered structure is:
 16. Appendices and Self-Check
 
 Without a decision, three paths can become competing writers, a generated output can be edited manually, domain stubs can duplicate `docs/domains/`, and compatibility paths can be removed before consumer closure.
+
+[Back to top](#top)
+
+---
+
+## Currentness reconciliation
+
+**CONFIRMED at the v1.1 checkpoint:** the supplied PDF hash remains sha256:cc899a7a57cbadb5870709be07d9b0dbfd01712cd794d63dc4d640485970419a; its title, v0.1/2026-05-05 document control, and sixteen-section order match the lineage recorded by the compatibility index. ADR-0029 remains the accepted placement authority for the human-readable docs/ responsibility root. ADR-0035 remains proposed. The ADR index continues to register ADR-0036 as proposed without accepting its carrier, writer, mirror, or migration decision.
+
+**CONFIRMED only as targeted path presence and document posture:** the immediate planning-scaffold tree, the chapter listing, the reserved assembly target, the compatibility index, and the doctrine encyclopedia are present at the recorded base. Their presence does not establish a canonical writer, a generated output, accepted migration, rights-cleared PDF carrier, review, implementation maturity, or publication state.
+
+**NOT EXECUTED / NEEDS VERIFICATION:** a full inbound-reference inventory; source-PDF rights, provenance, retention, and repository-carrier review; chapter substantive-content review; deterministic assembly and generated-parity proof; validation commands; CODEOWNERS and independent review; and all release, deployment, promotion, and publication controls.
 
 [Back to top](#top)
 
@@ -259,7 +301,7 @@ Before acceptance, confirm:
 - implementation remains a separate post-acceptance change;
 - compatibility and rollback requirements are sufficient.
 
-Repository-native validation should include:
+Repository-native validation should include (not run for this documentation-only v1.1 currentness readback):
 
 ```bash
 python tools/validators/validate_adr_index.py
@@ -320,5 +362,6 @@ No rollback may restore two writable manuscript sources.
 | Version | Date | Change |
 |---|---|---|
 | `v1.0` | 2026-08-14 | Initial proposed carrier, single-writer, generated-mirror, and scaffold-disposition decision. |
+| v1.1 | 2026-09-14 | Same-path currentness reconciliation at main@2c1d921717ba972861b249c2030179a310221d9e; rechecks the supplied source digest, planning-scaffold inventory, adjacent authority surfaces, and ADR index while preserving proposed and non-effect boundaries. |
 
 [Back to top](#top)
