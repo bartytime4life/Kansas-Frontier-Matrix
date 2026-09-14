@@ -3,7 +3,7 @@ doc_id: kfm://doc/adr-0028-state-scale-focus-mode-scope
 title: ADR-0028 — State-scale Focus Mode scope and cross-scale domain-coverage rule
 type: adr
 adr_id: ADR-0028
-version: v0.3
+version: v0.4
 status: proposed
 effective_decision_status: proposed
 owners:
@@ -24,7 +24,7 @@ reviewers_required:
   - Validation and CI steward
   - At least one affected domain steward
 created: 2026-05-23
-updated: 2026-08-14
+updated: 2026-09-14
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
@@ -35,7 +35,7 @@ evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
   base_commit: a59c9005ca3a790846cabdcf1a160222ed73bbe4
-  target_prior_blob: 678ec10d1e921a119de66b5677488f8f2ad4f56a
+  target_prior_blob: d14ea2b4ad57294ab52da643c954a7f83d5e24e9
   adr_index_blob: 938c5894c36b99e14810918e2c550ab0e92d53b1
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   adr_0029_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
@@ -51,25 +51,35 @@ evidence_snapshot:
   domain_lane_machine_register_blob: 1bfc6f91cfa713a5e3d51ece011b63b46310734f
   drift_register_blob: 5c5078b93c467e66f4cc8b86a7a696dbce5ae7e0
   focus_mock_workflow_blob: fbd56c7cda991ff8f3b804cc0c278e62daaa7abf
+  v0_4_reconciliation_commit: 53185428d50a785a0067699590b636b827d488ea
+  v0_4_target_prior_blob: d14ea2b4ad57294ab52da643c954a7f83d5e24e9
+  v0_4_adr_index_blob: 0c143676dfd3c1bda16cb44398c5ad5d4a49cf67
+  v0_4_adr_0029_blob: 4c1ef5f7f812d58fbdde9898acc96bb4c9280b2c
+  v0_4_directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  v0_4_legacy_focus_control_readme_blob: 8600c0ac09452b4b03e5f60b94f1eb27c072b5db
+  v0_4_focus_state_doctrine_readme_blob: d425796ba953f55684b77fe6dcadeff2a86b1f39
+  v0_4_legacy_state_index_blob: 10ad49892773c17d05faeb3ffccbf09dc306bf4b
+  v0_4_legacy_state_template_blob: 18abb7ca5f41eede16bb6cede5409612aad23149
+  v0_4_domain_lane_machine_register_blob: 1bfc6f91cfa713a5e3d51ece011b63b46310734f
+  v0_4_validator_orchestrator_blob: ba46a43e5cfccea332c944d552f80b20e3051622
+  v0_4_validator_registry_blob: 252baab5012dff5af080d4ae1a492d3b3d236de4
   canonical_focus_modes_tree_at_base: absent
   focus_mode_payload_schema_at_base: absent
   layer_registry_entry_schema_at_base: absent
   focus_mode_payload_validator_at_base: absent
   kansas_state_geographic_lane_at_base: absent
 inspection_boundary: >
-  Current-session GitHub reads against the exact main commit covering the ADR index,
-  accepted ADR-0029, the adopted Directory Rules v2 bytes, ADR-0027, this ADR,
-  the singular Focus control-plane tree, the state-vocabulary doctrine tree, the
-  proposed state-scale index and template, the FocusModePayload semantic contract,
-  the county-only Focus index validator, the validator entrypoint and bounded
-  orchestrator, the populated but proposed domain-lane machine projection, the
-  drift register, and the Focus mock workflow. Exact path checks were performed for
-  the plural Focus tree, the FocusModePayload and LayerRegistryEntry schemas, the
-  payload validator, and a Kansas state geographic lane. No complete repository
-  clone, state-scope registry, schema or policy execution, state Focus payload,
-  state EvidenceBundle, live source admission, governed API state request, map
-  render, ReleaseManifest, correction, rollback, deployment, or publication was
-  exercised.
+  v0.3 historical evidence remains recorded above. v0.4 is grounded in targeted
+  GitHub reads at main@53185428d50a785a0067699590b636b827d488ea: this ADR; the current ADR inventory and
+  ADR-0029; adopted Directory Rules bytes; the singular Focus root and complete
+  immediate state-tree listing; current state README, index, and template; the
+  domain-lane machine projection; and the bounded validator orchestrator and
+  registry. Exact current-path reads confirmed docs/focus-modes/ and
+  schemas/contracts/v1/focus_mode/ are absent. No complete clone, state-scope
+  registry, validator execution, CI run, schema or policy execution, state Focus
+  payload, state EvidenceBundle, live source admission, governed API state request,
+  map render, ReleaseManifest, correction, rollback, deployment, or publication
+  was exercised.
 source_lineage:
   - docs/atlases/kfm-domains-v1.1-pass23-32-consolidated-atlas.md
   - docs/registers/DOMAIN_LANE.md
@@ -97,7 +107,8 @@ notes:
   - "Directory Rules v2 requires a stable scope_id and one authority owner, but it does not by itself assign an exact state-scale Focus documentation path."
   - "The tracked docs/focus-mode/state/ tree now mixes a proposed geographic state index/template with cross-cutting finite-outcome, lifecycle, review, payload, and revocation state doctrine."
   - "The 13-entry machine domain-lane projection is now populated but remains PROPOSED and machine_projection_only."
-  - "The validator orchestrator is now real, while the Focus index validator remains county-only and the state payload schema and payload validator remain absent."
+  - "v0.4 confirms the validator registry still has no state Focus validator entry; the existing Focus index validator remains county-only, while the state payload schema and payload validator remain absent."
+  - "v0.4 corrects the inventory claim: current INDEX.md has four accepted ADR records; ADR-0028 remains proposed."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -143,7 +154,7 @@ notes:
 |---|---|
 | **ADR ID** | `ADR-0028` — unique and confirmed in [`INDEX.md`](./INDEX.md) |
 | **Tracked path** | `docs/adr/ADR-0028 — State-scale Focus Mode scope.md` |
-| **Record edition** | `v0.3` |
+| **Record edition** | `v0.4` |
 | **Source metadata** | `proposed` |
 | **Effective decision status** | `proposed` |
 | **Decision class** | Geographic Focus scope identity, exactly-one Kansas cardinality, domain-profile closure, cross-scale evidence rules, state-term disambiguation, release and rollback boundary |
@@ -176,25 +187,25 @@ This same-path revision performs none of those transitions.
 
 ## Evidence boundary
 
-This revision is grounded in repository bytes at `main@a59c9005ca3a790846cabdcf1a160222ed73bbe4`.
+v0.4 is grounded in targeted repository bytes at `main@53185428d50a785a0067699590b636b827d488ea`. The v0.3 snapshot remains historical evidence; v0.4 rechecks only the paths listed in its metadata boundary.
 
 | Evidence surface | CONFIRMED current state | What remains unproved |
 |---|---|---|
-| ADR inventory | ADR-0028 maps to this exact filename and remains effectively `proposed`; ADR-0029 is the only accepted numbered ADR | Acceptance of ADR-0028 |
+| ADR inventory | ADR-0028 maps to this exact filename and remains effectively `proposed`; the current index contains four accepted ADR records, including ADR-0029 | Acceptance of ADR-0028 |
 | ADR-0029 | Accepted; adopts exact Directory Rules v2 bytes and makes `docs/doctrine/directory-rules.md` the writable human authority | Independent state-scope decision |
 | Directory Rules v2 §12.4 | County, corridor, watershed, region, and Focus Mode are composition scopes; a stable `scope_id` is required; scope does not become a root or domain | `state` registration, exact Focus docs path, or geographic lane |
 | Directory Rules v2 placement protocol | Mixed authority returns `SPLIT`; unresolved authority returns `HOLD`; known noncanonical placement may return `MIGRATE` | The reviewed PathDecisionRecord for the current state tree |
 | Singular Focus tree | `docs/focus-mode/` exists with README, county, and state material | Canonical write authority |
 | Plural Focus tree | `docs/focus-modes/` is absent at the exact checked path | Whether a future plural lane should be created |
-| State doctrine tree | `docs/focus-mode/state/README.md` and state-family documents define finite-outcome, lifecycle, review, payload, revocation, and rollback state | Accepted home and separation from geographic state scope |
-| Proposed state-scale index | `STATE_INDEX.md` declares one planned `kansas-state` row and claims a validator relationship | A matching lane or executable state parser |
+| State doctrine tree | Current immediate listing contains the README, index/template, and finite-outcome, lifecycle, map-context, payload, review, and revocation state documents in one legacy compatibility lane | Accepted home and separation from geographic state scope |
+| Proposed state-scale index | `STATE_INDEX.md` remains a non-authoritative planning index for one proposed `kansas-state` composition and explicitly records no geographic lane or state-aware validation chain | A matching lane or executable state parser |
 | Kansas state geographic lane | No `kansas-state` lane appears in the checked state tree; no canonical plural tree exists | Any complete state-scale composition |
 | FocusModePayload contract | Proposed semantic contract exists and remains county-oriented | State semantics, machine closure, runtime conformance |
 | Focus schemas | `schemas/contracts/v1/focus_mode/` is absent at the exact checked path | Machine shape and compatibility |
 | Payload validator | `tools/validators/validate_focus_mode_payload.py` is absent | Payload admission |
 | Focus index validator | Exists, but `VALID_SCOPES` remains `county`, `region`, `corridor`; implementation is county-only and expects a plural tree | State index parsing, cardinality, domain coverage |
 | Domain-lane machine projection | Now contains 13 entries and cites ADR-0029/Directory Rules v2; metadata remains `PROPOSED` and `machine_projection_only` | Adopted domain-set profile and registration authority |
-| Validator orchestration | `tools/validate_all.py` is a real thin entrypoint to a bounded deterministic registry orchestrator | State Focus validator registration and a passing exact-head run |
+| Validator orchestration | `tools/validate_all.py` is a real thin entrypoint to a bounded deterministic registry orchestrator; the current registry has no state Focus validator entry | State Focus validator registration and a passing exact-head run |
 | Focus mock workflow | Proves a deterministic no-network finite-envelope and MockAdapter surface while explicitly stating no accepted mock Focus command exists | State-scale Focus runtime, payload, route, or release |
 | Drift register | Current register does not record the state-term/path collision identified here | Reviewed drift disposition |
 | State release | No state payload, ReleaseManifest, PromotionDecision, correction record, or rollback drill was verified | Any state publication |
@@ -780,7 +791,7 @@ Exact-path absence does not prove no related idea exists elsewhere. It proves th
 | FocusModePayload semantic contract | Present; county-oriented and proposed |
 | FocusModePayload schema | Absent |
 | LayerRegistryEntry schema | Absent |
-| State-aware index validator | Absent |
+| State-aware index validator | Absent; current registry has no state Focus validator entry |
 | Focus payload validator | Absent |
 | Validator orchestration | Present and deterministic |
 | State fixtures/negative tests | Not established |
@@ -1232,7 +1243,7 @@ Restore the prior ADR blob:
 678ec10d1e921a119de66b5677488f8f2ad4f56a
 ```
 
-A transparent revert restores the v0.2 proposed documentation. It does not alter ADR-0029, Directory Rules, Focus files, schemas, validators, data, releases, routes, or public state.
+A transparent revert restores the v0.3 proposed documentation. It does not alter ADR-0029, Directory Rules, Focus files, schemas, validators, data, releases, routes, or public state.
 
 ### If this ADR is later accepted
 
@@ -1350,6 +1361,7 @@ Do not flip an accepted ADR back to `proposed`, delete its evidence trail, remov
 | v0.1 | 2026-05-23 | Initial proposed ADR coupling `-state`, one `kansas-state` lane, 13-domain coverage, no county roll-up, migration, acceptance, and rollback. |
 | v0.2 | 2026-07-24 | Re-grounded the decision against the pre-ADR-0029 repository; surfaced singular/plural drift, unsupported state index, absent state lane/schemas/payload validator, county-only validator, empty machine domain register, and Focus runtime hold; refined domain IDs, coverage dispositions, state/county evidence rules, and migration waves. |
 | v0.3 | 2026-08-14 | Rebased the ADR on current `main` and accepted ADR-0029/Directory Rules v2; removed stale v1.2 path assertions; separated geographic state scope from finite-outcome/lifecycle/review/payload/revocation state; classified the mixed state tree as a required `SPLIT`; recorded the populated-but-proposed 13-entry domain projection, real validator orchestrator, and bounded MockAdapter proof; preserved absent state schemas, payload validator, geographic lane, and release as implementation holds; updated validation, migration, risk, incident, and rollback discipline. |
+| v0.4 | 2026-09-14 | Same-path currentness reconciliation at `main@53185428d50a785a0067699590b636b827d488ea`: refreshes the legacy state-tree/index/template and validator-registry evidence; reconfirms exact-path absence of plural Focus and FocusModePayload schema directories; corrects the ADR inventory from “ADR-0029 only” to four accepted records; preserves ADR-0028 as proposed and implementation on hold. |
 
 ---
 
