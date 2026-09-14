@@ -31,7 +31,7 @@ evidence_snapshot:
   adr_0029_blob: 4c1ef5f7f812d58fbdde9898acc96bb4c9280b2c
   adr_0035_blob: d9284faec018135f7e18f6e6cb17abb8bc65ad33
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
-  docs_root_readme_blob: 48926c51d952836cc7d4f0ba22a47e0d1a34e4f4
+  docs_root_readme_blob: 1f8bac189dac1d01c1185e8b4fb8e25efd11d09f
   encyclopedia_readme_blob: 4988edaf94d067980ac0c1ea0fabf2ba7a1b1530
   encyclopedia_index_blob: 51ace44010435b776d33bbdefe6998cd5fd4d816
   encyclopedia_changelog_blob: 543140c5113dad8825ba64cf8517903d0416fb51
