@@ -2,13 +2,13 @@
 doc_id: kfm://doc/adr-template
 title: ADR Template — Architecture Decision Record
 type: standard; authoring-template; support-document
-version: v2.0
+version: v2.1
 status: draft; repository-grounded; no-decision-authority
 owners:
   - Architecture steward
   - Docs steward
 created: 2026-05-09
-updated: 2026-08-14
+updated: 2026-09-14
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
@@ -31,6 +31,18 @@ evidence_snapshot:
   adr_issue_template_blob: 8fc79fe67bfb84fa9feb287670478a5a374fb068
   docs_control_plane_workflow_blob: ed0d3b50a12931b67cad005cd99433924c829fa3
   codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+currentness_reconciliation_2026_09_14:
+  base_commit: fff1a37e4e4eba52b795a0fd99572bfb063efc79
+  target_prior_blob: 7c5812bceda711d61fab2b361a06a1e3aec4e33b
+  adr_index_blob: 0c143676dfd3c1bda16cb44398c5ad5d4a49cf67
+  adr_readme_blob: 27c8f00622afe6cd0c65a1b116cd768dac31bea6
+  adr_validator_blob: 7c0d82e0a97e6f76690705e5a91509ad874347e2
+  adr_validator_tests_blob: 730f9f87ea4b7d62705529f1f3d52626c53d517c
+  scope_limit: >
+    Targeted support-document currentness reconciliation only. No ADR creation,
+    assignment, acceptance, status transition, index mutation, validation or CI
+    execution, implementation, release, deployment, promotion, publication, or
+    repository-setting change was performed.
 related:
   - docs/adr/README.md
   - docs/adr/INDEX.md
@@ -49,6 +61,7 @@ notes:
   - "v2.0 replaces the pre-adoption v1.1 template with a repository-grounded scaffold aligned to accepted ADR-0029, Directory Rules v2, the canonical ADR index, the ADR validator, and the current issue-intake template."
   - "This support document does not allocate an ADR number, accept a decision, amend Directory Rules, authorize dependent implementation, release, deploy, or publish."
   - "The preserved H1 and numbered outer sections retain the existing template's stable navigation anchors."
+  - "v2.1 re-pins the template to the current canonical ADR index and validator inputs; the template remains a support document with no decision authority."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -70,7 +83,7 @@ notes:
 > **Directory Rules v2 carry an embedded pre-adoption label because ADR-0029 adopted exact bytes.** The accepted authority is the combination of [`ADR-0029`](./ADR-0029-adopt-directory-governance-standard-v2.md) and the pinned bytes at [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md). Do not treat the embedded `PROPOSED_FOR_ADOPTION` string as evidence that ADR-0029 is unaccepted, and do not silently edit the adopted bytes through an ADR proposal.
 
 > [!NOTE]
-> **Current repository snapshot.** At the evidence checkpoint, the canonical index contains 34 numbered records: ADR-0029 is accepted and the other 33 are effectively proposed. It also lists 12 unassigned scaffolds. Those counts are snapshot evidence, not constants to copy into a new ADR.
+> **Current repository snapshot.** At main@fff1a37e4e4eba52b795a0fd99572bfb063efc79, the canonical index contains 39 numbered records: ADR-0006, ADR-0007, ADR-0029, and ADR-0038 are accepted, while the other 35 are effectively proposed. It also lists 12 unassigned scaffolds. These are snapshot evidence, not constants to copy into a new ADR.
 
 **Quick jumps:** [Purpose](#1-purpose) · [When to write one](#2-when-you-need-an-adr) · [Lifecycle](#3-status-lifecycle) · [Naming](#4-naming-and-numbering) · [How to use](#5-how-to-use-this-template) · [The template](#6-the-template) · [Field reference](#7-field-reference) · [Pre-merge checklist](#8-pre-merge-checklist) · [References](#9-related-docs--references) · [Open questions](#10-open-questions--needs-verification)
 
@@ -271,6 +284,8 @@ Assignment is not a cosmetic rename. Preserve useful source lineage and:
 - preserve the prior path through a migration note or redirect only when verified consumers require it;
 - update the canonical index's scaffold and numbered tables together; and
 - keep the decision `proposed` unless a separate reviewed acceptance transition is part of the change.
+
+For a scaffold that remains unassigned, do not apply this numbered template as though it had an ID. Preserve its candidate posture, leave the canonical index row as `not-assigned`, and make no number, status, path, migration, or implementation claim by documentation alone.
 
 ### 4.3 Title and slug guidance
 
