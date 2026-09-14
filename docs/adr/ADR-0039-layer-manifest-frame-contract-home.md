@@ -52,9 +52,8 @@ evidence_snapshot:
     representation_receipt_schema_blob: "6ed7c07ad22d31b983e2339a101b69d2a1b1adff"
     maplibre_readme_blob: "3f459b0b0617ee26b0793c5dfc4b2de5412aa612"
     policy_split_blob: "e420dce959b493c295af735357ab528c18ff9771"
-    limits:
-      - "This documentation refresh re-read repository entry points, direct filename/code-search results, and planning lineage only; it did not execute a validator, test suite, hosted workflow, runtime, deployment, release, or publication check."
-      - "A direct filename search returning no layer_frame result is a bounded source observation, not proof of zero consumers or authorization to create, migrate, or activate a LayerFrame path."
+refresh_2026_09_14_limit: "This documentation refresh re-read repository entry points, direct filename/code-search results, and planning lineage only; it did not execute a validator, test suite, hosted workflow, runtime, deployment, release, or publication check."
+refresh_2026_09_14_filename_observation: "A direct filename search returning no layer_frame result is a bounded source observation, not proof of zero consumers or authorization to create, migrate, or activate a LayerFrame path."
   adr_index_blob: "b911db30622c31867ccc835a4014c8e8fcd13a09"
   adr_0001_blob: "ed6f258f8d9ea152996570768a31666953e4a809"
   adr_0002_blob: "e626d82970932c319a690fc6044727ed114ada6a"
