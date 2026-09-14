@@ -2,24 +2,38 @@
 doc_id: kfm://adr-candidate/archaeology-exact-location-policy
 title: "ADR Candidate — Archaeology Exact-Location Exposure Is Denied by Default"
 type: adr
-version: v0.2
+version: v0.3
 status: proposed
 effective_decision_status: not-assigned
 owners: "NEEDS VERIFICATION — architecture, archaeology, cultural/sovereignty/rights, policy, evidence, and release reviewers"
-updated: 2026-08-20
+updated: 2026-09-14
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
 current_path: docs/adr/ADR-archaeology-exact-location-policy.md
 source_scaffold_origin: docs/domains/archaeology/SOURCE_REGISTRY.md
-evidence_snapshot:
-  repository: bartytime4life/Kansas-Frontier-Matrix
-  base_commit: 18da9e4700f930776340367f4a5c8ffc3dbb5781
-  target_prior_blob: d0d2e8751851423e60a2aa9d1c4010b7655cab62
+evidence_repository: bartytime4life/Kansas-Frontier-Matrix
+evidence_base_commit: ccd0353e9bbf9d2b7f18040629821aec24d3f925
+evidence_target_prior_blob: 9f7723dea1ddffa5b1e57140ab9e1af83d6e5203
+refresh_2026_09_14_base_ref: main
+refresh_2026_09_14_base_commit: ccd0353e9bbf9d2b7f18040629821aec24d3f925
+refresh_2026_09_14_target_prior_blob: 9f7723dea1ddffa5b1e57140ab9e1af83d6e5203
+refresh_2026_09_14_adr_index_blob: 0c143676dfd3c1bda16cb44398c5ad5d4a49cf67
+refresh_2026_09_14_adr_0010_blob: 37c44508638c118a5aa80692436c0dcff36f2660
+refresh_2026_09_14_directory_governance_blob: 4c1ef5f7f812d58fbdde9898acc96bb4c9280b2c
+refresh_2026_09_14_archaeology_policy_readme_blob: 5b95997ab8c5d29e4b03a8c44960e41322990d1d
+refresh_2026_09_14_exact_location_deny_blob: 37e9d0a624be86ba22a9f1dfa94d99df77b953a8
+refresh_2026_09_14_parity_contract_blob: 0740f68300075fc707b221f6ff49a000f4f9a3e9
+refresh_2026_09_14_parity_schema_blob: 3c4beaba469ea39cf93895ec37a6244acc6b91a1
+refresh_2026_09_14_parity_validator_blob: c36b6a235d1b9615db09282d1d166edb6ce95db5
+refresh_2026_09_14_parity_validator_tests_blob: 22d091498ca03aeff97a9f051aef1e6d41f3b9fe
+refresh_2026_09_14_archaeology_generalization_boundary_blob: 013a04b52afec14d4bef4da919f56a96cad23af4
+refresh_2026_09_14_scope_limit: "Documentation evidence refresh only; no number or acceptance, protected payload read, precision threshold or transform parameter, policy activation, access grant, release, deployment, or publication."
 notes:
   - "Unassigned PROPOSED candidate; no ADR number or index-status change."
   - "No public precision threshold or protective transform parameter is adopted or disclosed."
   - "No policy, transform, access grant, release, deployment, or publication effect."
+  - "v0.3 is a same-path evidence refresh pinned to main@ccd0353e9bbf9d2b7f18040629821aec24d3f925; it preserves proposed/not-assigned status and all protective non-effects."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -52,14 +66,20 @@ notes:
 | **Identity** | `not-assigned`; no repository-wide number |
 | **Path** | `docs/adr/ADR-archaeology-exact-location-policy.md` |
 | **Status** | source `proposed`; effective `not-assigned`; non-binding |
-| **Checkpoint** | `main@18da9e4700f930776340367f4a5c8ffc3dbb5781` |
-| **Implementation** | Fixture-only declaration proof exists; policy, evaluator, transform, access, consumers, and release are unproved |
+| **Checkpoint** | `main@ccd0353e9bbf9d2b7f18040629821aec24d3f925` |
+| **Implementation** | Fixture-only declaration proof exists; policy, evaluator, transform, access, consumers, and release remain unproved |
 
 Numbering, acceptance, policy, transform, access, and release remain separate transitions.
 
 Accepted [`ADR-0029`](./ADR-0029-adopt-directory-governance-standard-v2.md) makes [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) the placement authority. This same-path modernization remains under `docs/adr/`; no authority home changes.
 
 This review used public repository content only and did not seek protected coordinates or restricted payloads. External legal, agency, Tribal, cultural, source-terms, and rights-holder research remains separate. Claims use KFM truth labels.
+
+### Current repository re-read — 2026-09-14
+
+This same-path documentation check is pinned to `main@ccd0353e9bbf9d2b7f18040629821aec24d3f925`. The ADR index still lists this file as a slug-only, `not-assigned` scaffold; ADR-0029 remains the accepted placement decision, while ADR-0010 remains draft/effectively proposed rather than enforcement authority. The Archaeology policy README remains draft, evaluator-unbound, and non-release; its exact-location source is a proposed default-false scaffold with no allow rule. The parity contract, schema, validator, and focused tests remain an inactive, synthetic declaration boundary: the fixed test matrix reports 10 `PASS`, 13 `DENY`, and 1 `ERROR`; a pass proves only local declaration consistency, not policy evaluation, transformation, access, release, or publication. The generalization boundary remains draft/non-authoritative, with no implemented generalizer or accepted profile established.
+
+This re-read did not inspect protected records, coordinates, geometry, restricted payloads, transform values, or source credentials; it did not run a policy evaluator, transform, access path, public consumer, or release process. It adopts no public precision threshold or protective parameter and does not assign or accept this ADR, bind policy, grant access, activate a source, or authorize release, deployment, promotion, or publication.
 
 
 ---
@@ -144,7 +164,7 @@ Any unresolved gate returns `HOLD`, `ABSTAIN`, `DENY`, or `ERROR`. Public client
 - **CONFIRMED:** [`INDEX.md`](./INDEX.md) keeps this path unassigned; accepted [`ADR-0029`](./ADR-0029-adopt-directory-governance-standard-v2.md) governs placement.
 - **CONFIRMED:** [`ADR-0010`](./ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md) proposes sensitive-domain default-deny, but does not enforce this candidate.
 - **CONFIRMED:** Archaeology source, sensitivity, and publication docs reject public exact geometry and style-only hiding, but remain draft doctrine.
-- **CONFIRMED:** [`policy/domains/archaeology/`](../../policy/domains/archaeology/README.md) contains scaffolds; the precise-coordinate redaction source has no real rules; no accepted bundle/evaluator/consumer binding is proven.
+- **CONFIRMED:** [`policy/domains/archaeology/`](../../policy/domains/archaeology/README.md) remains a draft, evaluator-unbound, fail-closed scaffolding boundary. The exact-location source is a proposed default-false scaffold with no allow rule; no accepted bundle, evaluator, or consumer binding is proven.
 - **CONFIRMED:** the fixture-only [`SensitiveLocationParityAssessmentCandidate`](../../contracts/governance/sensitive_location_parity_assessment.md) separates exact denial from generalized-with-receipt-candidate. Its no-network validator/tests cover 24 cases: 10 `PASS`, 13 `DENY`, 1 `ERROR`; passing cases carry no geometry members and all authority effects are false.
 - **NEEDS VERIFICATION:** the generalizer, accepted profiles, broad sensitive-geometry enforcement, concrete authority records, public-consumer enforcement, release, correction, and rollback. Deployed behavior is **UNKNOWN**.
 
