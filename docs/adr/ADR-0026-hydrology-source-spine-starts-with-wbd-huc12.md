@@ -3,7 +3,7 @@ doc_id: kfm://doc/adr-0026-hydrology-source-spine-starts-with-wbd-huc12
 title: "ADR-0026 — Hydrology Source Spine Starts with WBD HUC12"
 type: adr
 adr_id: ADR-0026
-version: v1.3
+version: v1.4
 status: draft
 effective_decision_status: proposed
 owners:
@@ -21,7 +21,7 @@ reviewers_required:
   - Pipeline and validation steward
   - Release and rollback steward
 created: 2026-05-09
-updated: 2026-08-14
+updated: 2026-09-14
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
@@ -35,6 +35,8 @@ evidence_snapshot:
   base_ref: main
   base_commit: c9ccb11ded141edbd79763982056a1e6f90b8866
   target_prior_blob: bc0d47a8beb0be6d1ff0b73b2731934cd7520c76
+  v1_4_reconciliation_checkpoint: 266f88ffa5cbd2bdf698da07295db9c51621c9ca
+  v1_4_target_prior_blob: 3dc39c422ddfe18dd1c25008f77c265df6bb9831
   adr_index_blob: 938c5894c36b99e14810918e2c550ab0e92d53b1
   adr_readme_blob: 793015c38f4066c2c23753d4e3dd26bcc890279d
   adr_0029_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
@@ -98,17 +100,18 @@ related:
   - .github/workflows/domain-hydrology.yml
   - data/receipts/generated/genrec-hydrology-wbd-huc12-material-change-20260806.json
   - data/receipts/generated/genrec-hydrology-wbd-huc12-ingest-candidate-20260807.json
+  - data/receipts/generated/genrec-hydrology-wbd-huc12-ingest-candidate-20260830.json
   - docs/registers/DRIFT_REGISTER.md
   - docs/registers/VERIFICATION_BACKLOG.md
 tags: [kfm, adr, hydrology, source-spine, source-registry, wbd, huc12, huc-unit, material-change, ingest-candidate, fixture-first, evidence-first, non-publisher]
 notes:
-  - "v1.3 is a same-path documentation-only repository reconciliation. It preserves source status draft and effective decision status proposed; it does not accept ADR-0026, activate WBD, write lifecycle state, or declare a released source spine."
+  - "v1.4 is a same-path documentation-only reconciliation against main@266f88ffa5cbd2bdf698da07295db9c51621c9ca. It preserves source status draft and effective decision status proposed; it does not accept ADR-0026, activate WBD, write lifecycle state, or declare a released source spine."
   - "ADR-0029 separately accepted the exact pinned Directory Rules v2 bytes. That confirms docs/adr/ as the owning lane but does not accept this decision."
   - "The source-descriptor conflict remains: the Directory-Rules-aligned path is a placeholder while the richer descriptor remains in a legacy path and is referenced by bounded executable profiles."
   - "The generic HUCUnit semantic contract remains substantive, but its paired schema and legacy HUC12 anchor fixture remain permissive or placeholder surfaces."
   - "Repository implementation advanced materially after v1.2: fixture-only material-change assessment and fixture-first ingest-candidate projection now have contracts, schemas, validators/producers, fixtures, tests, workflows, and generated receipts."
   - "Those bounded profiles perform no live WBD request, source activation, lifecycle persistence, EvidenceBundle closure, promotion, release, deployment, or publication."
-  - "At the latest observed WBD workflow head, focused tests passed while both dedicated workflows failed generated-receipt byte closure after workflow dependency-install bytes changed. This is receipt drift, not proof of source or domain failure, and it remains a HOLD until repaired and revalidated."
+  - "Historical receipt-drift runs remain evidence, but current main also contains the ingest-candidate successor receipt dated 2026-08-30. Its own local integrity gate is PASS, while its hosted exact-head and human-review gates are SKIPPED. This reconciliation does not execute either workflow or validator, so current exact-head closure remains NEEDS VERIFICATION."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -121,7 +124,7 @@ notes:
 [![Directory Rules: accepted separately](https://img.shields.io/badge/directory%20rules-accepted%20separately-1a7f37?style=flat-square)](#governing-placement-authority)
 [![Source registry: conflicted](https://img.shields.io/badge/source%20registry-CONFLICTED-b42318?style=flat-square)](#source-descriptor-path-conflict)
 [![Fixture-first source edge: implemented](https://img.shields.io/badge/fixture--first%20source%20edge-PARTIAL-0969da?style=flat-square)](#bounded-executable-source-edge)
-[![Receipt closure: hold](https://img.shields.io/badge/receipt%20closure-HOLD-b42318?style=flat-square)](#workflow-and-receipt-evidence)
+[![Exact-head CI: needs verification](https://img.shields.io/badge/exact--head%20CI-NEEDS%20VERIFICATION-9a6700?style=flat-square)](#workflow-and-receipt-evidence)
 [![Publication: none](https://img.shields.io/badge/publication-none-6e7781?style=flat-square)](#authority-and-publication-boundary)
 
 > [!IMPORTANT]
@@ -153,8 +156,8 @@ notes:
 | **Decision class** | Hydrology lane-internal source ordering and first-source graduation criteria |
 | **Proposed spine head** | USGS WBD HUC12 |
 | **Governing placement authority** | Accepted [`ADR-0029`](./ADR-0029-adopt-directory-governance-standard-v2.md) and its pinned Directory Rules v2 bytes |
-| **Current implementation posture** | Mixed: descriptor authority is conflicted; generic HUCUnit shape remains scaffolded; material-change and ingest-candidate profiles are implemented fixture-first; current generated-receipt closure is stale; shared evidence, catalog, release, and public-operation closure remain held |
-| **Evidence checkpoint** | `main@c9ccb11ded141edbd79763982056a1e6f90b8866`; latest observed dedicated WBD workflow head `3911c519d9bc134c3ab0662fed6577ebd966813b` |
+| **Current implementation posture** | Mixed: descriptor authority is conflicted; generic HUCUnit shape remains scaffolded; material-change and ingest-candidate profiles are implemented fixture-first; receipt lineage exists but exact-head hosted closure was not re-executed for this reconciliation; shared evidence, catalog, release, and public-operation closure remain held |
+| **Evidence checkpoint** | v1.4 repository readback: `main@266f88ffa5cbd2bdf698da07295db9c51621c9ca`; historical dedicated workflow evidence remains recorded at `3911c519d9bc134c3ab0662fed6577ebd966813b` |
 | **Publication effect** | None. This ADR, a schema or test pass, workflow result, receipt, commit, pull request, merge, deployment, or map layer is not KFM publication evidence |
 | **Supersedes / superseded by** | None / none |
 
@@ -263,12 +266,13 @@ This revision distinguishes tracked governance, configured surfaces, bounded exe
 
 | Evidence | Observed result | Interpretation |
 |---|---|---|
-| Ingest-candidate run [`31225777159`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/31225777159) at `0d2d86724a767a8cc15a0518fd5f673fe42043a0` | **SUCCESS** | Confirms the bounded ingest workflow and then-current generated receipt closed on that merge |
-| Material-change run [`31654972120`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/31654972120) at `3911c519d9bc134c3ab0662fed6577ebd966813b` | **FAILURE after 12 focused tests passed** | Generated receipt rejected artifact path 0 with `ARTIFACT_DIGEST_MISMATCH`; current workflow bytes no longer match the stored authoring digest |
-| Ingest-candidate run [`31654972524`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/31654972524) at the same head | **FAILURE after 21 combined tests passed** | Network/write boundary greps passed; generated receipt rejected artifact path 0 with `ARTIFACT_DIGEST_MISMATCH` |
-| Current WBD generated receipts | Tracked but byte-stale against later workflow changes | Receipts preserve authoring lineage but cannot currently serve as exact-byte closure until regenerated through the legitimate producer and revalidated |
+| Ingest-candidate run [`31225777159`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/31225777159) at `0d2d86724a767a8cc15a0518fd5f673fe42043a0` | **SUCCESS** | Historical evidence that the bounded ingest workflow and then-current generated receipt closed on that merge |
+| Material-change run [`31654972120`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/31654972120) at `3911c519d9bc134c3ab0662fed6577ebd966813b` | **FAILURE after 12 focused tests passed** | Historical receipt-drift evidence: the stored authoring receipt rejected changed workflow bytes; it does not show material-change logic failure |
+| Ingest-candidate run [`31654972524`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/31654972524) at the same head | **FAILURE after 21 combined tests passed** | Historical receipt-drift evidence: no-network and no-write checks passed before authoring receipt byte closure failed |
+| Ingest successor receipt [`20260830`](../../data/receipts/generated/genrec-hydrology-wbd-huc12-ingest-candidate-20260830.json) | Local `GENERATED_RECEIPT_INTEGRITY: PASS` declared by the receipt; `HOSTED_EXACT_HEAD_CI` and human review recorded `SKIPPED` | Preserves a current-byte successor record and the immutable `20260807` process-memory receipt; it is not hosted exact-head, independent-review, source-admission, release, or publication evidence |
+| Current v1.4 readback | Repository files were read at `main@266f88ffa5cbd2bdf698da07295db9c51621c9ca`; no validator or workflow executed in this change | Current exact-head runtime status remains **NEEDS VERIFICATION** |
 
-The later failures are not evidence that the material-change logic or ingest-candidate tests failed. They are evidence that trust-bearing generated receipts drifted after workflow bytes changed and that the workflows correctly failed closed. Exact-head closure on current `main` remains **NEEDS VERIFICATION** after repair.
+Historical receipt drift remains material: it showed a fail-closed integrity control rather than a source or domain failure. The successor receipt changes the documentation posture from a blanket “currently stale” assertion to a bounded record of what is present. This ADR does not independently recompute artifact digests, run focused tests, inspect a current hosted run, or infer any later gate. Therefore neither receipt can close source authentication, admission, lifecycle, evidence, catalog, release, correction, rollback, or publication gates.
 
 <a id="authority-and-publication-boundary"></a>
 
@@ -467,9 +471,9 @@ The blue nodes are bounded fixture-first implementation. The red node is unresol
 | Generic HUCUnit machine shape | Schema has empty properties and allows arbitrary fields | **HOLD** |
 | Historical HUC12 anchor fixture | Explicit placeholder | **HOLD** |
 | Material-change semantics and tests | Contract/schema/validator/fixtures exist; 12 focused tests passed in latest observed run | **BOUNDED PASS** |
-| Material-change generated receipt | Latest observed workflow failed `ARTIFACT_DIGEST_MISMATCH` after tests passed | **FAIL / HOLD** |
+| Material-change generated receipt | Historical drift failure is retained; no current exact-head re-execution was performed by this ADR update | **NEEDS VERIFICATION** |
 | Ingest-candidate schemas, producer, fixtures, and tests | Implemented fixture-first; successful hosted run at `0d2d867...`; 21 tests passed in later run | **BOUNDED PASS** |
-| Ingest-candidate generated receipt | Later workflow failed `ARTIFACT_DIGEST_MISMATCH` after tests and boundary checks passed | **FAIL / HOLD** |
+| Ingest-candidate generated receipt | Historical drift is retained; a 20260830 successor declares local integrity PASS while hosted exact-head CI is SKIPPED | **NEEDS VERIFICATION** |
 | Live WBD retrieval and authenticity | Not implemented by the bounded profiles | **NOT IMPLEMENTED** |
 | Source activation and admission | Explicitly denied in current schemas/spec | **HOLD** |
 | RAW / QUARANTINE persistence | Producer declares targets but writes neither | **HOLD** |
@@ -840,7 +844,8 @@ The current repair backlog must additionally validate both generated receipts ag
 - [Material-change workflow](../../.github/workflows/hydrology-wbd-huc12-material-change.yml)
 - [Ingest-candidate workflow](../../.github/workflows/hydrology-wbd-huc12-ingest-candidate.yml)
 - [Material-change generated receipt](../../data/receipts/generated/genrec-hydrology-wbd-huc12-material-change-20260806.json)
-- [Ingest-candidate generated receipt](../../data/receipts/generated/genrec-hydrology-wbd-huc12-ingest-candidate-20260807.json)
+- [Historical ingest-candidate generated receipt](../../data/receipts/generated/genrec-hydrology-wbd-huc12-ingest-candidate-20260807.json)
+- [Current-byte successor ingest-candidate receipt](../../data/receipts/generated/genrec-hydrology-wbd-huc12-ingest-candidate-20260830.json)
 
 ### Hosted run evidence
 
@@ -856,7 +861,7 @@ The current repair backlog must additionally validate both generated receipts ag
 
 ## Appendix A — No-Loss Reconciliation Ledger
 
-| v1.2 content or decision surface | v1.3 disposition |
+| Earlier content or decision surface | v1.3 / v1.4 disposition |
 |---|---|
 | ADR identity, title, created date, tracked path, and proposed status | **RETAINED** |
 | Decision that WBD HUC12 should lead the Hydrology source spine | **RETAINED** |
@@ -874,6 +879,8 @@ The current repair backlog must additionally validate both generated receipts ag
 | Migration and rollback requirements | **RETAINED and decomposed into reversible phases** |
 | Consequences, alternatives, risks, and open questions | **RETAINED, updated, and expanded** |
 | Index update | **NOT REQUIRED** because ID, path, title, source status, effective status, and supersession remain unchanged |
+| Current receipt posture | **REFINED in v1.4** — retains historical drift as historical evidence; records the 20260830 ingest successor receipt and leaves hosted exact-head closure as NEEDS VERIFICATION |
+| v1.4 execution boundary | **ADDED** — repository readback only; no validator, workflow, source, lifecycle, release, deployment, or publication operation was executed |
 
 This ledger records documentation reconciliation only. It is not a migration receipt, source-admission decision, proof object, release manifest, or publication record.
 
