@@ -3,7 +3,7 @@ doc_id: kfm://doc/adr-xxxx-atmosphere-schema-home
 title: ADR-XXXX — Atmosphere Schema Home and Compatibility Convergence
 type: adr
 adr_id: ADR-XXXX
-version: v0.1
+version: v0.2
 status: proposed
 effective_decision_status: not-assigned
 owners:
@@ -21,7 +21,7 @@ reviewers_required:
   - Migration and compatibility steward
   - At least one affected schema consumer owner
 created: 2026-05-19
-updated: 2026-08-14
+updated: 2026-09-14
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
@@ -62,6 +62,34 @@ inspection_boundary: >
   graph, schema registry, generator inventory, migration rehearsal, hosted validation for
   this branch, runtime request, source activation, release, correction, rollback drill,
   deployment, or publication was exercised.
+currentness_reconciliation_2026_09_14:
+  base_commit: ccd0353e9bbf9d2b7f18040629821aec24d3f925
+  target_prior_blob: 34571836b3f5decc131c6f8732ed9f192a5138ae
+  adr_index_blob: 0c143676dfd3c1bda16cb44398c5ad5d4a49cf67
+  adr_0029_blob: 4c1ef5f7f812d58fbdde9898acc96bb4c9280b2c
+  adr_0001_blob: 5a9fe1d142582589d4b6db8e02064508157731d0
+  adr_0002_blob: 65edd5a13cd5568fe244555c310528469af2bea1
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  schemas_root_readme_blob: 972d0eaba676c92a57c62756966e7b039d19fb06
+  atmosphere_target_readme_blob: cad321bf62d7da2a723388d5978e04fbfc694b5b
+  atmosphere_root_compatibility_readme_blob: e7efa6509a726422e7439d52c430c0808478f39c
+  atmosphere_alias_readme_blob: 8ac07d48713ed6689370830e07646ebdcbfa78af
+  air_alias_readme_blob: 6f2504a9054769f343cc33424171ebdb80157576
+  domain_air_compatibility_readme_blob: 5a08947a4f0d7d2b298e2aece2b22ed23e1f366c
+  atmosphere_contract_readme_blob: 2626d011b5d80e6d58870be3eff817d95116ffc7
+  advisory_context_contract_blob: 42e49000819e8777d6c58dd753e77b33049552c0
+  advisory_context_compatibility_blob: 8ae7c47e64314cc8d1eef879b332e7a2a6da3bd1
+  advisory_context_pascal_schema_blob: a53deeaa6814cecf5ff1bc9df7e95c87239dc1e1
+  advisory_context_snake_schema_blob: b7faa2ca8624de3a00cf52d287c4130a9cba2762
+  advisory_context_kebab_schema_blob: 65ea20bb57234cb1426bf52aa5e49f6635eb2629
+  atmosphere_planned_files_blob: 78e445122b4d539c4da1f32dc89f0a44ae99c20f
+  atmosphere_canonical_paths_blob: 97296d516792ad3bc2bc1f18d03e2518e367d28a
+  schema_validation_workflow_blob: fb6dea20bc03bb2ddac134b9dbebbcf044d4e246
+  domain_atmosphere_workflow_blob: 69e82f60e4bedef5dd93240b41aa51a25c6cdc0e
+  scope_limit: >
+    Documentation evidence reconciliation only. No ADR number assignment, acceptance,
+    schema selection, file move, rename, deletion, activation, migration, validator or
+    workflow execution, release, deployment, promotion, or publication was performed.
 source_lineage:
   - docs/domains/atmosphere/MISSING_OR_PLANNED_FILES.md
   - docs/domains/atmosphere/CANONICAL_PATHS.md
@@ -136,7 +164,14 @@ notes:
 | **Migration posture** | `HOLD` pending inventory, authority, consumer, identity, validation, and rollback closure |
 | **Implementation effect of this revision** | Documentation only |
 | **Release or publication effect** | None |
+| **Currentness checkpoint** | `main@ccd0353e9bbf9d2b7f18040629821aec24d3f925`; targeted source-level reconciliation only |
 | **Supersedes / superseded by** | No ADR / no ADR; this edition replaces only the generated scaffold text at the same path |
+
+### Currentness reconciliation — 2026-09-14
+
+At `main@ccd0353e9bbf9d2b7f18040629821aec24d3f925`, the ADR index still classifies this exact `ADR-XXXX` path as an explicit placeholder with `not-assigned`; ADR-0029 remains accepted, while ADR-0001 and ADR-0002 remain proposed/effectively proposed. The proposed Atmosphere schema route, its semantic-contract lane, and the documented `atmosphere`/`air` compatibility lanes are present in source. This confirms source-level presence and governance posture only.
+
+A targeted three-file `AdvisoryContext` check confirms PascalCase, snake_case, and kebab-case schema filenames coexist in the proposed target. Their distinct identities and contract references remain a convergence concern; this revision selects none of them, asserts no semantic equivalence, and preserves the existing migration `HOLD`. The targeted read did not establish a complete recursive inventory, consumer or `$ref` graph, generator registry, validator result, workflow run, build, runtime behavior, source admission, advisory, release, deployment, promotion, or publication outcome.
 
 ### Assignment, acceptance, implementation, and release are separate
 
@@ -157,7 +192,9 @@ This one-file revision performs none of those transitions beyond replacing a sca
 
 ## Evidence boundary
 
-This revision is grounded in repository bytes at `main@3e6759f5fe1e5ec4537e950e0de3f317b4e1ac89`.
+The v0.1 evidence snapshot below remains historical lineage at `main@3e6759f5fe1e5ec4537e950e0de3f317b4e1ac89`.
+
+The v0.2 targeted currentness reconciliation is grounded in repository bytes at `main@ccd0353e9bbf9d2b7f18040629821aec24d3f925`; its exact input pins appear in the metadata block and its limits are stated in the Status section. It refreshes governance and selected duplicate-schema evidence without converting prior v0.1 coverage assertions into a new exhaustive inspection.
 
 | Evidence surface | CONFIRMED current state | What remains unproved |
 |---|---|---|
@@ -1093,7 +1130,7 @@ Do not flip an accepted ADR back to `proposed`, delete its evidence trail, or re
 
 ### Supersession boundary of this edition
 
-This v0.1 edition supersedes only the generated scaffold prose previously stored at this exact path. It does not supersede ADR-0001, ADR-0002, ADR-0029, Directory Rules, an Atmosphere contract, a schema, or another ADR.
+This v0.2 edition preserves v0.1 as historical lineage and adds only a targeted currentness reconciliation at the same path. It supersedes no ADR, Directory Rules, Atmosphere contract, schema, or other authority; it still replaces only the generated scaffold prose previously stored at this exact path.
 
 [Back to top](#top)
 
@@ -1104,6 +1141,8 @@ This v0.1 edition supersedes only the generated scaffold prose previously stored
 ## Verification checklist
 
 ### Current revision
+
+The checked items below record the v0.1 inspection at its original checkpoint. v0.2 does not reassert them as a complete new inspection; its current claims are limited to the dated currentness reconciliation, input pins, and scope limit above.
 
 - [x] Exact target path and prior blob verified.
 - [x] Target creation history verified.
@@ -1189,6 +1228,7 @@ This v0.1 edition supersedes only the generated scaffold prose previously stored
 |---|---|---|
 | scaffold | 2026-05-19 | Generated placeholder created from the Atmosphere missing/planned-files inventory. |
 | v0.1 | 2026-08-14 | Replaced the scaffold in place with a repository-grounded, unassigned ADR candidate; reconciled accepted Directory Rules, ADR-0001/0002 status, configured schema and contract lanes, Atmosphere/Air path drift, mixed filename and `$id` identities, strict profiles, mirrors, permissive scaffolds, bounded workflows, one-writer rules, maturity states, validation, object-by-object migration, correction, rollback, and acceptance gates. |
+| v0.2 | 2026-09-14 | Targeted currentness reconciliation against `main@ccd0353e9bbf9d2b7f18040629821aec24d3f925`; re-pinned the unassigned ADR posture, accepted/proposed governance relationships, present route and compatibility lanes, and three `AdvisoryContext` filename variants. Preserved the convergence `HOLD`; no ADR assignment or acceptance, schema selection, migration, validation/workflow execution, release, deployment, promotion, or publication action. |
 
 ---
 
