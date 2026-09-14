@@ -3,7 +3,7 @@ doc_id: kfm://doc/adr-0030-geology-resource-character-vocabulary
 title: "ADR-0030 — Geology Resource-Character Vocabulary"
 type: adr
 adr_id: ADR-0030
-version: v1.1
+version: v1.2
 status: proposed
 effective_decision_status: proposed
 owners:
@@ -28,7 +28,7 @@ reviewers_required:
   - Validation and CI steward
   - Release and rollback steward
 created: 2026-08-03
-updated: 2026-08-14
+updated: 2026-09-14
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
@@ -41,7 +41,7 @@ evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
   base_commit: a59c9005ca3a790846cabdcf1a160222ed73bbe4
-  target_prior_blob: a4b41973fd27b851f5eca60992cb05a38e37008b
+  target_prior_blob: 7b704c1ed8250d941a8da74a8b50f2a85bd467bc
   adr_index_blob: 938c5894c36b99e14810918e2c550ab0e92d53b1
   adr_0029_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
@@ -64,16 +64,33 @@ evidence_snapshot:
   resource_class_pr: 1926
   adr_origin_pr: 1934
   latest_domain_geology_run: 31823429967
+  v1_2_reconciliation_commit: 95084cbcb280817b4c8dc7dd225544c3c29675b4
+  v1_2_target_prior_blob: 7b704c1ed8250d941a8da74a8b50f2a85bd467bc
+  v1_2_adr_index_blob: 0c143676dfd3c1bda16cb44398c5ad5d4a49cf67
+  v1_2_adr_0029_blob: 4c1ef5f7f812d58fbdde9898acc96bb4c9280b2c
+  v1_2_directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  v1_2_geology_domain_readme_blob: 6b264ae03ba0bea67fa08884b897aefc64024be5
+  v1_2_geology_object_families_blob: bfcd1392c4b2e021a70d74d50428829ed14745eb
+  v1_2_geology_ubiquitous_language_blob: c955dd1fb3365cdaeefd54998a40cb829cc38a82
+  v1_2_geology_source_map_blob: 028ec7c9304dbeff12697c050b3dcafe17eb550b
+  v1_2_resource_class_fixture_blob: 39500fcc3c12393fcc3ebccadab9b0fb0994c753
+  v1_2_resource_class_validator_blob: 821d14c3bdc44f5e7af651c343e24827279e0fd2
+  v1_2_resource_class_test_blob: 55ad09149480f72bd79a714f7df5fe626be19653
+  v1_2_domain_geology_workflow_blob: fd97109cdd581b6b305d87efb7ae82b9585b4662
 inspection_boundary: >
-  Current-session GitHub reads over the exact target, canonical ADR inventory,
-  accepted Directory Rules decision and adopted bytes, three Geology semantic
-  contracts and paired schemas, Geology source-role matrix, resource-class
-  fixtures/validator/tests, production material-change contract, Geology policy
-  boundary, domain workflow, latest hosted Geology run, and the governed source
-  map for the supplied Geology architecture report. No live mineral, resource,
-  reserve, production, permit, model, property, well, borehole, source endpoint,
-  policy evaluator, EvidenceBundle resolver, release environment, public client,
-  or deployed runtime was exercised.
+  v1.1 historical evidence remains recorded above. v1.2 is grounded in targeted
+  GitHub reads at main@95084cbcb280817b4c8dc7dd225544c3c29675b4: this ADR, current ADR inventory and ADR-0029,
+  Directory Rules bytes, the current Geology domain README, object-family and
+  ubiquitous-language references, the governed source map, the three semantic
+  contracts, resource-class fixture profile/validator/tests, Geology policy
+  boundary, and the domain-geology workflow definition. The attached Geology
+  architecture PDF was visually and textually reviewed as a PDF-only, no-repo-edit
+  plan and remains planning lineage only through its governed source map. The
+  exact shared resource_character schema path is absent. No complete clone,
+  validator or CI execution, live mineral, resource, reserve, production, permit,
+  model, property, well, borehole, source endpoint, policy evaluator,
+  EvidenceBundle resolver, release environment, public client, or deployed runtime
+  was exercised.
 related:
   - docs/adr/README.md
   - docs/adr/INDEX.md
@@ -109,7 +126,8 @@ notes:
   - "The seven-token set remains a proposed minimum vocabulary. Current executable resource-class proof is a separate three-token fixture profile, not vocabulary authority."
   - "The three paired Geology schemas remain permissive scaffolds; no shared resource-character schema exists at the evidence checkpoint."
   - "A production material-change profile now exists, but its PRODUCTION_RECORDS dataset role and watcher outcomes do not admit resource_character PRODUCTION."
-  - "The latest domain-geology workflow is green for four bounded no-network profiles while proof and publish jobs retain explicit holds."
+  - "v1.2 rechecks the domain-geology workflow definition, which declares four bounded no-network profiles and explicit proof/publish holds; no current workflow run is asserted."
+  - "The attached PDF remains planning lineage only: its own cover records no mounted Git repository and no repository edits."
   - "No external resource/reserve classification scheme, source, real record, policy bundle, release, deployment, or publication is adopted here."
 [/KFM_META_BLOCK_V2] -->
 
@@ -154,12 +172,12 @@ notes:
 > ADR names them.
 
 > [!NOTE]
-> **Current Geology CI is green but bounded.** The latest inspected
-> `domain-geology` run completed the resource-class, AEM campaign, public-safe
-> geometry, and production material-change checks successfully. Its proof and
-> publish-dry-run jobs intentionally record holds. A green workflow does not
-> establish vocabulary acceptance, live-source truth, policy evaluation,
-> EvidenceBundle closure, resource or reserve validity, or publication.
+> **The Geology workflow definition is bounded; current run status is not asserted.**
+> It declares four no-network fixture profiles and explicit proof/publish holds.
+> The v1.2 readback did not execute or inspect a current workflow run. A workflow
+> definition or historical green run does not establish vocabulary acceptance,
+> live-source truth, policy evaluation, EvidenceBundle closure, resource or
+> reserve validity, or publication.
 
 **Quick navigation:** [Status](#status) · [Evidence boundary](#evidence-boundary) · [Repository evidence](#current-repository-evidence) · [Context](#context) · [Decision](#decision) · [Vocabulary](#vocabulary-semantics) · [Anti-collapse](#anti-collapse-rules) · [Source roles](#source-role-and-object-family-boundaries) · [Evidence](#stewardship-and-evidence-requirements) · [Implementation](#current-implementation-maturity) · [Conflicts](#conflict-and-hold-register) · [Convergence](#implementation-and-convergence-plan) · [Acceptance](#acceptance-gates) · [Consequences](#consequences) · [Alternatives](#alternatives-considered) · [Authority](#authority-and-publication-boundary) · [Rollback](#rollback-and-supersession) · [Verification](#verification-checklist) · [Open work](#open-questions) · [References](#references) · [No-loss ledger](#appendix-a--no-loss-reconciliation-ledger)
 
@@ -180,7 +198,7 @@ notes:
 | **Current executable posture** | Three-token synthetic fixture profile plus separate bounded Geology assessment profiles |
 | **Current schema posture** | Three permissive object schemas; no shared `resource_character` schema |
 | **Current policy posture** | Geology policy source exists as scaffolding; evaluator, bundle, and governed consumer remain unbound |
-| **Evidence checkpoint** | `main@a59c9005ca3a790846cabdcf1a160222ed73bbe4` |
+| **Evidence checkpoint** | `main@95084cbcb280817b4c8dc7dd225544c3c29675b4` (v1.2 targeted readback; v1.1 workflow-run evidence is historical) |
 | **Implementation effect of this revision** | Documentation only |
 | **Publication effect** | None |
 | **Supersedes / superseded by** | None / none |
@@ -231,8 +249,9 @@ schema, policy, source, evidence, receipt, proof, or release authority.
 
 ## Evidence boundary
 
-This revision is grounded in current repository evidence at
-`main@a59c9005ca3a790846cabdcf1a160222ed73bbe4`.
+v1.2 is grounded in targeted repository evidence at
+`main@95084cbcb280817b4c8dc7dd225544c3c29675b4`. The v1.1 snapshot remains historical evidence; v1.2 rechecks
+only the surfaces enumerated in its metadata boundary.
 
 ### Truth labels
 
@@ -288,7 +307,7 @@ This revision does not prove:
 
 | Surface | Current status | Safe conclusion |
 |---|---:|---|
-| ADR identity and index row | **CONFIRMED** | Exact path exists; source and effective status remain `proposed` |
+| ADR identity and index row | **CONFIRMED** | Exact path exists; source and effective status remain `proposed`; the current index contains 39 ADR rows, four accepted |
 | Directory Rules placement | **CONFIRMED accepted through ADR-0029** | Same-path `docs/adr/` placement is governed; no semantic acceptance follows |
 | `MineralOccurrence` contract | **CONFIRMED draft / substantive** | Defines reported presence and explicitly excludes deposit, estimate, reserve, permit, production, and ownership implications |
 | `ResourceDeposit` contract | **CONFIRMED draft / substantive** | Defines a named or delineated body and excludes estimate, reserve, permit, production, ownership, and operation implications |
@@ -303,12 +322,12 @@ This revision does not prove:
 | Production material-change profile | **CONFIRMED separate bounded profile** | Compares production snapshot metadata using `PRODUCTION_RECORDS`; it does not admit the `PRODUCTION` resource character |
 | Geology public-safe geometry profile | **CONFIRMED separate bounded profile** | Tests geometry-declaration safety; it does not classify resource character or authorize exposure |
 | Geology policy lane | **CONFIRMED scaffolding / evaluator unbound** | Intent and defaults exist, but no accepted bundle, evaluator, authenticated decision emitter, or governed consumer is established |
-| Latest `domain-geology` run | **CONFIRMED success with holds** | Four bounded validation profiles ran; proof and publish jobs remained explicit readiness holds |
+| `domain-geology` workflow definition | **CONFIRMED bounded** | Declares four no-network validation profiles and explicit proof/publish holds; current run status was not inspected |
 | Evidence, proof, release, publication | **NOT ESTABLISHED** | No current surface makes this vocabulary a released or public truth authority |
 
-### Material corrections from v0.1
+### v1.2 currentness corrections
 
-- Pins the ADR to the current repository and canonical 34-record ADR index.
+- Pins the ADR to current `main` and the canonical 39-row ADR index (four accepted records).
 - Records ADR-0029 as the accepted placement authority without implying that
   ADR-0030 is accepted.
 - Corrects the change-history reference from “pending” to merged PR #1934.
@@ -316,8 +335,7 @@ This revision does not prove:
   describing it only through its origin PR.
 - Records the newer production material-change and public-safe geometry profiles
   without collapsing either into vocabulary admission.
-- Records the latest successful `domain-geology` run while preserving its proof
-  and publish holds.
+- Replaces the stale “latest green workflow” claim with the current workflow-definition boundary; no v1.2 workflow run was executed or inferred.
 - Confirms that the three paired schemas remain permissive and that the shared
   vocabulary schema is still absent.
 - Records the Geology policy lane as evaluator-unbound rather than implying
@@ -1232,11 +1250,11 @@ Rollback must not:
 | Production material-change profile | **CONFIRMED separate process profile** |
 | Public-safe geometry profile | **CONFIRMED separate assessment profile** |
 | Geology policy evaluator/bundle/consumer | **NOT ESTABLISHED** |
-| Latest `domain-geology` run | **CONFIRMED success with proof/release holds** |
+| `domain-geology` workflow definition | **CONFIRMED bounded; current run not inspected** |
 | Live source or real record validation | **NOT PERFORMED / NOT AUTHORIZED** |
 | EvidenceBundle closure | **NOT ESTABLISHED** |
 | Public API/UI/AI behavior | **NOT ESTABLISHED** |
-| Local documentation source checks for this edit | **PASS in authoring session** |
+| Targeted repository and PDF-lineage readback for this edit | **CONFIRMED** |
 | Hosted exact-head checks | **PENDING after pull-request creation** |
 | Human review | **PENDING** |
 | Release, deployment, publication | **NOT CLAIMED** |
@@ -1369,11 +1387,12 @@ implementation maturity only.
 |---|---|---|---|---|
 | 2026-08-03 | `v0.1` | proposed | Initial minimum vocabulary, stewardship, compatibility, and schema-hardening proposal | [#1934](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/1934) |
 | 2026-08-14 | `v1.1` | proposed | Same-path repository reconciliation against current contracts, schemas, bounded Geology profiles, policy posture, workflow evidence, and accepted Directory Rules; decision status unchanged | pending review |
+| 2026-09-14 | `v1.2` | proposed | Same-path currentness reconciliation against `main@95084cbcb280817b4c8dc7dd225544c3c29675b4`; refreshes Geology domain/source-map and resource-class evidence, confirms the shared schema path remains absent, corrects the ADR-index count, and limits workflow evidence to the definition because no current run was inspected | draft PR pending review |
 
 ## Last reviewed
 
-**2026-08-14** — repository-grounded review against
-`main@a59c9005ca3a790846cabdcf1a160222ed73bbe4`.
+**2026-09-14** — targeted repository and attached-PDF-lineage review against
+`main@95084cbcb280817b4c8dc7dd225544c3c29675b4`.
 
 Review again when:
 
