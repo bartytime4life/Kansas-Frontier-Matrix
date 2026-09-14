@@ -2,7 +2,7 @@
 doc_id: kfm://doc/adr-habitat-modeled-vs-critical
 title: Habitat Modeled Habitat vs Regulatory Critical Habitat
 type: adr
-version: v1.0
+version: v1.1
 status: draft
 effective_decision_status: proposed
 adr_id: unassigned
@@ -21,41 +21,34 @@ reviewers_required:
   - Evidence steward
   - Release, correction, and rollback steward
   - Validation steward
-created: "NEEDS VERIFICATION — scaffold predates this revision"
-updated: 2026-07-24
+created: 2026-07-24
+updated: 2026-09-14
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
+owning_root: docs/
+responsibility: "Propose a docs-owned anti-collapse boundary that keeps modeled Habitat products distinct from regulatory critical-habitat designations; it does not enact source, policy, release, deployment, or publication authority."
 current_path: docs/adr/ADR-habitat-modeled-vs-critical.md
 supersedes: []
 superseded_by: null
-evidence_snapshot:
-  repository: bartytime4life/Kansas-Frontier-Matrix
-  base_ref: main
-  base_commit: 8df9bd2b723c0d4cf88a32d357ea8c70895f1177
-  target_prior_blob: 5c58c35572ec2e058bd63c17513905cb28d2515c
-  adr_readme_blob: f1b5d34a53b6c717832d587de54989ce8192bcaa
-  adr_index_blob: cf08fae322ac53426f7394d97897fdb942253049
-  directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
-  habitat_architecture_blob: 82263ea8f5862401e5aef57ec43f49711d12c998
-  habitat_model_vs_observation_blob: 5e4bd431b97608a90df0b93a66b8d978c04e674b
-  habitat_source_roles_adr_blob: ed836f8440051eb7bdca675e4cb4eca1e645171e
-  suitability_model_contract_blob: 837ddaa382b9e066c68acb5d4d7ecdb2dced99b5
-  suitability_model_schema_blob: eae24fe7004261827aca2ba9adda47a4ff615a69
-  critical_habitat_policy_blob: d8ed9680e0c47146aa11995cb499b3cea8e49f90
-  model_card_policy_blob: 1843b09a5c3a144e647e1496b9056102600b5462
-  source_role_policy_blob: b91935af6b998d497c6048525ee18ab6047e5a0e
-  critical_habitat_validator_blob: 868b21ff84cff7bb6205ae88f9f448598007ce70
-  suitability_model_tests_readme_blob: 202b67b9cc701e7ed7cefaff3c191a4634361228
-inspection_boundary: >
-  Current-session GitHub reads of the target scaffold, ADR operating rules and index,
-  Directory Rules, Habitat architecture, Habitat model-vs-observation doctrine, the adjacent
-  Habitat source-role ADR, SuitabilityModel semantic contract and schema, Habitat source-role
-  and model/critical-habitat policy scaffolds, critical-habitat validator placeholder, and
-  SuitabilityModel test-lane documentation. No admitted regulatory SourceDescriptor, model run,
-  model card, uncertainty artifact, executable policy decision, validator execution, fixture
-  payload, EvidenceBundle, LayerManifest, ReleaseManifest, correction, rollback, governed API
-  response, map render, deployment, or production publication was exercised.
+evidence_base_ref: main
+evidence_base_commit: f36b3bfffd0bffc628a69caa780a83ac89167e04
+evidence_target_prior_blob: 81b348ba3c82e30cc9ab1722e1fcf3c34be50c6f
+evidence_adr_index_blob: 0c143676dfd3c1bda16cb44398c5ad5d4a49cf67
+evidence_adr_0029_blob: 4c1ef5f7f812d58fbdde9898acc96bb4c9280b2c
+evidence_habitat_readme_blob: e0d3ee5be1e3d3e8e748bc39c580345556e89717
+evidence_habitat_model_observation_blob: 5e4bd431b97608a90df0b93a66b8d978c04e674b
+evidence_habitat_source_roles_adr_blob: ed836f8440051eb7bdca675e4cb4eca1e645171e
+evidence_suitability_contract_blob: 837ddaa382b9e066c68acb5d4d7ecdb2dced99b5
+evidence_suitability_schema_blob: eae24fe7004261827aca2ba9adda47a4ff615a69
+evidence_habitat_policy_readme_blob: cf6dd24db1a06cb857806c000500471bbe918ad7
+evidence_critical_modeled_policy_blob: d8ed9680e0c47146aa11995cb499b3cea8e49f90
+evidence_model_card_policy_blob: 1843b09a5c3a144e647e1496b9056102600b5462
+evidence_source_role_policy_blob: b91935af6b998d497c6048525ee18ab6047e5a0e
+evidence_critical_role_validator_blob: 0e1c859b493f9c485885a1e4ae66ff60bf376a6d
+evidence_critical_role_tests_blob: 3fb512a9812affb8caec9750fc29cd749f82cddf
+evidence_critical_role_workflow_blob: 704d911bd976acb65ba6beeadc5eb7df25660f73
+inspection_boundary: "Current-session source-only reads of repository documentation, contract/schema, policy scaffolds, validator, focused tests, and workflow. No live source, model run, regulatory designation, policy evaluation, release, deployment, or public client was exercised."
 related:
   - docs/adr/README.md
   - docs/adr/INDEX.md
@@ -73,15 +66,16 @@ related:
   - policy/domains/habitat/source_role.rego
   - policy/sensitivity/habitat/
   - tests/domains/habitat/test_suitability_model/README.md
+  - tests/domains/habitat/test_critical_habitat_source_role.py
   - tools/validators/domains/habitat/validate_critical_habitat_source_role.py
   - data/registry/sources/habitat/
   - release/manifests/habitat/
 tags: [kfm, adr, habitat, modeled-habitat, critical-habitat, source-role, regulatory, suitability-model, model-card, uncertainty, evidence, policy, release, rollback]
 notes:
-  - "Same-path modernization of an existing unassigned PROPOSED scaffold."
+  - "Same-path currentness refresh of an existing unassigned PROPOSED scaffold."
   - "This revision does not assign an ADR number, update the ADR index, accept the decision, implement policy, or publish data."
-  - "Assigning a permanent ADR number requires a separately scoped update to docs/adr/INDEX.md and validator closure."
   - "The source metadata remains draft and the effective decision status remains proposed."
+  - "The fixture-only source-role guard is bounded anti-collapse evidence only; it does not establish source, regulatory, occurrence, policy, release, or publication authority."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -161,8 +155,9 @@ This revision therefore:
 - `contracts/domains/habitat/SuitabilityModel.md` defines a suitability model as modeled Habitat—not observed land cover, occurrence truth, regulatory critical habitat, HabitatPatch truth, release authority, or a public layer by itself.
 - The snake-case suitability-model schema exists but has no declared properties or required fields and permits additional properties.
 - `critical_habitat_vs_modeled.rego`, `model_card_required.rego`, and `source_role.rego` are default-deny scaffolds only.
-- `validate_critical_habitat_source_role.py` is a placeholder.
-- The SuitabilityModel test-lane README defines the intended invariant and negative paths but does not prove executable tests, fixtures, CI coverage, or pass rates.
+- `validate_critical_habitat_source_role.py` and its focused unittest are executable, deterministic, fixture-only anti-collapse checks for the separate `REGULATORY`/designation-context and `MODELED`/suitability-model lanes. The test data explicitly denies public use, authority creation, policy evaluation, promotion, release, and publication; it does not verify real source descriptors, regulatory designations, model results, or public readiness.
+- The focused no-network workflow runs only when its validator, test, or workflow files change. Its presence does not establish current execution for this documentation-only change, broader policy evaluation, source admission, or release authority.
+- The SuitabilityModel test-lane README still defines a separate intended invariant and negative paths; it does not prove executable SuitabilityModel schema/contract coverage, fixtures, CI pass rates, or a released product.
 
 ### PROPOSED by this ADR
 
@@ -175,7 +170,7 @@ This revision therefore:
 
 - Whether admitted, reviewed `SourceDescriptor` records exist for any critical-habitat designation service or modeled Habitat product.
 - Whether real critical-habitat designations, suitability models, model cards, run receipts, uncertainty surfaces, or public artifacts exist in KFM lifecycle stores.
-- Whether object-specific fixtures or executable negative-path tests exist outside the inspected README surfaces.
+- Whether object-specific fixtures or executable negative-path tests exist beyond the inspected fixture-only critical-habitat source-role guard, including SuitabilityModel schema/contract, authority, model-card, uncertainty, release, correction, and public-consumer coverage.
 - Whether current public API, MapLibre, Evidence Drawer, export, search, story, dashboard, or AI surfaces expose either product class.
 - Whether any human reviewer has accepted this decision.
 
@@ -427,19 +422,18 @@ Public exposure requires the governed source, evidence, policy, review, release,
 
 ## Current repository evidence
 
-| Surface | CONFIRMED state at the evidence snapshot | What it proves | What it does not prove |
+| Surface | CONFIRMED state at the 2026-09-14 source-only re-read | What it proves | What it does not prove |
 |---|---|---|---|
-| Target ADR | 18-line `PROPOSED scaffold` | Planned path/topic existed and is indexed as unassigned | Decision, accepted status, enforcement |
-| Habitat architecture | Separates modeled Habitat and external critical-habitat authority | Domain vocabulary and intended boundary | Executable controls or accepted decision |
-| Model-vs-observation doctrine | Defines role classification, model-card burden, separate UI layers, and collapse denial | Detailed design intent | Current implementation or passing tests |
-| Habitat source-role ADR | Separates modeled and regulatory products; remains proposed | Adjacent decision alignment | Accepted source descriptors or policy execution |
-| SuitabilityModel contract | Substantive modeled-not-regulatory semantics | Object meaning and target obligations | Stable alias, schema enforcement, release |
+| ADR index | This file remains a slug-only scaffold with `not-assigned` identity | Current placement/status inventory | Acceptance, numbering, enforcement, or release |
+| Habitat domain README | Records the seven-role vocabulary, including `regulatory` and `modeled`, and states that modeled habitat is not regulatory critical habitat | Repository doctrine and role distinction | Source admission, legal effect, evaluator binding, or public authorization |
+| Habitat source-role ADR | Remains proposed and describes modeled/regulatory separation | Adjacent decision alignment | Accepted source descriptors or policy execution |
+| SuitabilityModel contracts | PascalCase and lower-case paths remain a conflicted alias pair | Semantic documentation exists; migration remains unresolved | A canonical, accepted, machine-enforced contract |
 | Suitability-model schema | Empty properties, no required fields, `additionalProperties: true` | Scaffold exists | Meaningful machine validation |
-| `critical_habitat_vs_modeled.rego` | `default allow := false` scaffold | Default-deny baseline | Conditions, reasons, obligations, runtime |
-| `model_card_required.rego` | `default allow := false` scaffold | Default-deny baseline | Model-card verification |
-| `source_role.rego` | `default allow := false` scaffold | Default-deny baseline | Role assignment or preservation |
-| Critical-habitat validator | Docstring-only placeholder | Planned validator path | Executable validation |
-| SuitabilityModel tests README | Defines invariant, expected failures, suggested modules, and checklist | Intended test contract | Executable tests, fixtures, CI pass |
+| Habitat policy boundary | Draft, evaluator-unbound, bundle-unaccepted; its relevant Rego modules are default-false scaffolds | Fail-closed default posture and non-operational maturity | Conditions, reasons, obligations, decisions, or runtime enforcement |
+| Critical-habitat source-role validator | Executable synthetic validator fixes separate `REGULATORY`/designation and `MODELED`/suitability pairings and rejects role/claim collapse | Bounded local declaration consistency and fail-closed negative paths | Official authority, source validity, rights, sensitivity, policy, review, release, or publication |
+| Focused test and workflow | Seven unittest cases and a no-network workflow exist; the workflow is path-filtered to its implementation/test files | Current fixture-test and CI design | A run for this ADR-only change, production behavior, or broader Habitat closure |
+| SuitabilityModel test README | Defines invariant, expected failures, suggested modules, and checklist | Intended test contract | Executable SuitabilityModel tests, fixtures, or pass rates |
+| Habitat dashboard specification | Specification-only, runtime-unverified, non-release/non-publication | Intended safe presentation boundary | A deployed dashboard, live source, or public surface |
 
 ---
 
@@ -450,15 +444,15 @@ Public exposure requires the governed source, evidence, policy, review, release,
 | Control | Current maturity | Required next evidence |
 |---|---|---|
 | ADR identity | Unassigned scaffold | Permanent number, filename/H1/index agreement, validator pass |
-| Source-role vocabulary | Proposed across docs/ADR | Reviewed contract/enums and compatibility mapping |
+| Source-role vocabulary | Repository documentation records a seven-role enum; operational authority remains unbound | Reviewed contract/enums, compatibility mapping, and evaluator binding |
 | SuitabilityModel contract | Draft, substantive; alias conflicted | Reviewed canonical contract path/version and migration |
 | SuitabilityModel schema | Permissive scaffold | Required fields, enums, conditionals, refs, fixtures, registry entry |
 | Regulatory-designation schema/contract | NEEDS VERIFICATION | Separate role-explicit contract and schema |
-| Collapse policy | Default-deny scaffold | Finite decision, reason codes, obligations, tests, OPA execution |
-| Model-card policy | Default-deny scaffold | Model-card schema, verifier, publication-blocking fields |
-| Source-role validator | Placeholder | Executable validator with model/regulatory negative paths |
-| Fixtures | Object-specific inventory not verified | Modeled, regulatory, overlap, stale, corrected, missing-support cases |
-| Tests | README lane confirmed | Executable no-network tests and observed results |
+| Collapse policy | Default-false Rego scaffolds in an evaluator-unbound policy boundary | Finite decision, reason codes, obligations, tests, OPA execution |
+| Model-card policy | Default-false scaffold | Model-card schema, verifier, publication-blocking fields |
+| Source-role validator | Deterministic, synthetic critical-habitat/modeled anti-collapse guard | Accepted validator profile, source/model authority validation, and runtime binding |
+| Fixtures | Synthetic candidates are constructed in focused tests; object-specific inventory is not verified | Modeled, regulatory, overlap, stale, corrected, missing-support cases |
+| Tests | Seven focused no-network unittest cases and a path-filtered workflow exist; SuitabilityModel README lane remains unexecuted evidence | Current hosted run result, schema/contract coverage, real products, and release behavior |
 | Source admission | Unknown | Reviewed SourceDescriptors for each product/version |
 | Model/run/uncertainty | Unknown | Model cards, receipts, uncertainty and validation artifacts |
 | Evidence and release | Unknown | EvidenceBundles, manifests, promotion, correction, rollback |
@@ -754,6 +748,7 @@ Rollback does not erase correction history. A later accepted successor must reta
 |---|---|---|---|
 | Before 2026-07-24 | Scaffold | 18-line placeholder referencing Habitat architecture | None; unassigned proposed scaffold |
 | 2026-07-24 | v1.0 | Same-path repository-grounded replacement with anti-collapse decision, role/identity rules, evidence packets, public obligations, convergence, acceptance, migration, and rollback | None; remains unassigned and proposed |
+| 2026-09-14 | v1.1 | Same-path currentness refresh; records the current documented role vocabulary and fixture-only validator/test/workflow while flattening metadata for the repository validator | None; remains unassigned, draft/proposed, and non-operational |
 
 ---
 
