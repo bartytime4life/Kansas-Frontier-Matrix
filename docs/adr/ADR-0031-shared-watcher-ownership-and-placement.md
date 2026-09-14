@@ -2,7 +2,7 @@
 doc_id: kfm://adr/ADR-0031
 title: "ADR-0031 — Shared Watcher Ownership and Placement"
 type: adr
-version: v1.1
+version: v1.2
 status: proposed
 effective_decision_status: proposed
 owners:
@@ -12,7 +12,7 @@ owners:
   - "OWNER_TBD — affected domain stewards"
 owner_status: "CODEOWNERS routes affected paths to @bartytime4life; accepted stewardship, independent review, source activation, and release authority remain unverified"
 created: 2026-08-08
-updated: 2026-08-14
+updated: 2026-09-14
 policy_label: public
 truth_posture: cite-or-abstain
 owning_root: docs/
@@ -29,6 +29,33 @@ evidence_snapshot:
   soil_watcher_spec_blob: e592a06765ce9f2a61aef50ae8f20b2f5d9d6209
   last_green_registry_run: 31263074530
   latest_registry_run: 31654972163
+  v1_2_reconciliation_commit: 0b6e56cf25d15f79cad0b038648a326be4a1169d
+  v1_2_target_prior_blob: a919918cd2658ac76dd9605fa5d5f781fa82202c
+  v1_2_adr_index_blob: 0c143676dfd3c1bda16cb44398c5ad5d4a49cf67
+  v1_2_adr_0029_blob: 4c1ef5f7f812d58fbdde9898acc96bb4c9280b2c
+  v1_2_directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  v1_2_watcher_registry_blob: 75949f122db983ff3ea4e6d72162f7da10c498ea
+  v1_2_soil_watcher_spec_blob: e592a06765ce9f2a61aef50ae8f20b2f5d9d6209
+  v1_2_shared_watchers_readme_blob: 42680e55b6e736f7f447f17cec7e5f71e8f67c08
+  v1_2_flora_watchers_readme_blob: ca41b4fc94582eae81fba4b91f397cf9c63004c7
+  v1_2_watcher_specs_readme_blob: f54aa6a1d3a672aedafdfacc9be59102b04a14c5
+  v1_2_watcher_tools_readme_blob: 9711995283cbccd80b89189c08002088c28d9b07
+  v1_2_watcher_registry_contract_blob: 8e92b67a47161689f54952a14745c1efd443e540
+  v1_2_watcher_registry_schema_blob: 9f144b42be72917fd16c127fcec35b3900453706
+  v1_2_watcher_registry_validator_blob: 448a5bc5631e91bb3f6ddfda30f09d62c8b2c164
+  v1_2_watcher_registry_test_blob: 19a5d9d6654f48a5c7963c59e914858d08574fc1
+  v1_2_watcher_registry_workflow_blob: 50cb6e13f0cfb16909daafed633de6df376b3357
+  v1_2_registry_extension_receipt_blob: 09cba6e791b634b735e2d603bf37250a19d2939b
+inspection_boundary: >
+  v1.1 historical evidence remains recorded above. v1.2 is grounded in targeted
+  GitHub reads at main@0b6e56cf25d15f79cad0b038648a326be4a1169d: this ADR; current ADR inventory and ADR-0029;
+  Directory Rules bytes; immediate shared, Flora-domain, specification, and tools
+  watcher-directory listings; the WatcherRegistry contract/schema/projection/
+  validator/tests/workflow definition; the fixture-only Soil watcher specification;
+  and the historical registry-extension receipt. No complete inventory, validator
+  or workflow execution, generated-receipt validation, source activation, network
+  request, scheduler, lifecycle write, EvidenceBundle resolution, release,
+  notification, deployment, or publication was exercised.
 related:
   - docs/adr/INDEX.md
   - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
@@ -49,7 +76,8 @@ tags: [adr, kfm, pipelines, watchers, watcher-registry, non-publisher, placement
 notes:
   - "Same-path documentation-only reconciliation; ADR-0031 remains proposed and no migration is authorized."
   - "A fixture-first WatcherRegistry packet and inactive Soil watcher specification exist; no shared executable watcher runtime is confirmed."
-  - "Latest focused registry logic passed before generated-receipt validation failed with ARTIFACT_DIGEST_MISMATCH."
+  - "v1.2 preserves the prior run and receipt outcome as historical evidence only; no current workflow run or generated-receipt validation was executed or inferred."
+  - "v1.2 confirms registry-wide non-authority flags are false, and the Soil packet remains FIXTURE_ONLY with network denied and WORK/QUARANTINE-only outputs."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -83,7 +111,7 @@ notes:
 | Source / effective status | `proposed` / `proposed` |
 | Placement authority | Accepted ADR-0029 and its pinned Directory Rules v2 bytes |
 | Repository posture | Registry packet present; inactive Soil packet present; shared executable runtime absent; declarative placement partly conflicted; receipt closure stale |
-| Evidence checkpoint | `main@b7352aba93f7298bdd5a6ee6fd8de475b05c9e42` |
+| Evidence checkpoint | `main@0b6e56cf25d15f79cad0b038648a326be4a1169d` (v1.2 targeted source readback; historical run/receipt evidence retained but not re-executed) |
 | Migration / publication effect | None while proposed |
 
 Acceptance would establish responsibility and migration rules only. It would not activate a source, authorize network or credentials, schedule execution, create RAW state, resolve evidence, approve policy, release an artifact, notify the public, or publish a claim.
@@ -96,13 +124,13 @@ Acceptance would establish responsibility and migration rules only. It would not
 
 KFM has watcher-shaped surfaces under shared pipelines, domain pipelines, declarative specs, tools, contracts, schemas, control-plane registry, tests, workflows, and receipts. Without an explicit ownership rule, documentation, intent, execution, source access, domain semantics, validation, lifecycle writes, and release authority can collapse into one ambiguous “watcher” bucket.
 
-**CONFIRMED:** `pipelines/watchers/` contains documentation but no direct executable at the evidence checkpoint; domain watcher documentation exists; shared and Flora plants placeholders coexist; an inactive shared gate profile and inactive Soil specification exist; the WatcherRegistry contract/schema/projection/validator/tests/workflow exist; registry authority flags are false; focused registry logic passed before receipt validation failed.
+**CONFIRMED:** the current shared watcher root lists a README and a `plants/` directory; the Flora watcher directory lists a README and `.gitkeep`; the watcher-spec lane contains README, plants, Soil, and gate-profile declarations; the tools watcher lane lists a README and `plants_watch/`. The WatcherRegistry contract/schema/projection/validator/tests/workflow exist. The registry is `PROPOSED_INACTIVE` and its top-level governance flags are false. The Soil specification is `FIXTURE_ONLY`, denies network, and declares only WORK/QUARANTINE outputs.
 
 **PROPOSED:** the ownership matrix, shared-admission test, domain-spec migration, duplicate-placeholder retirement, and graduation gates below.
 
 **UNKNOWN:** an accepted shared executable, scheduler, live source activation, production run, watcher-generated EvidenceBundle or release object, independent decision quorum, and unseen external consumers.
 
-**NEEDS VERIFICATION:** the complete watcher inventory, real consumers of the generic gate profile, and whether later bytes repaired the receipt mismatch without a new watcher run.
+**NEEDS VERIFICATION:** the complete watcher inventory, real consumers of the generic gate profile, current receipt closure, and whether any later workflow repaired the historical receipt mismatch.
 
 ---
 
@@ -112,16 +140,16 @@ KFM has watcher-shaped surfaces under shared pipelines, domain pipelines, declar
 
 | Surface | Verified state | Bounded meaning |
 |---|---|---|
-| `pipelines/watchers/` | README plus plants documentation; no direct executable | Candidate shared runtime owner only |
-| `pipelines/domains/flora/watchers/` | Domain README | Supports domain ownership; does not prove execution |
-| `tools/watchers/` | Helper/compatibility documentation | Helpers only; no scheduler or hidden fetch |
+| `pipelines/watchers/` | Immediate listing contains README and `plants/` | Candidate shared runtime owner only; no root executable was inspected |
+| `pipelines/domains/flora/watchers/` | README plus `.gitkeep` | Supports domain ownership; does not prove execution |
+| `tools/watchers/` | Immediate listing contains README and `plants_watch/` | Helpers/compatibility only; no scheduler or hidden fetch was inspected |
 | Shared and Flora plants specs | Separate placeholders | Duplicate concept; canonical owner unresolved |
 | `watcher_gate_profile.v1.json` | `PROPOSED_INACTIVE`, governance false | Shared profile candidate; consumers unproved |
-| `soil_ssurgo_gnatsgo.json` | Fixture-only; network denied; WORK/QUARANTINE outputs | Substantive domain spec in a conflicted shared lane |
-| WatcherRegistry packet | Contract, closed schema, projection, validator, fixtures, tests, workflow | Index and enforceability proof only; not runtime or activation |
-| Registry-extension receipt | Stale against current first artifact bytes | Rebind before current byte closure is claimed |
+| `soil_ssurgo_gnatsgo.json` | `FIXTURE_ONLY`; network denied; WORK/QUARANTINE-only outputs | Substantive domain spec in a conflicted shared lane |
+| WatcherRegistry packet | Contract, closed schema, projection, validator, fixtures, tests, workflow; registry `PROPOSED_INACTIVE` with authority flags false | Index and enforceability proof only; not runtime or activation |
+| Registry-extension receipt | Historical receipt bytes were re-read; v1.2 did not revalidate its artifact hashes | Rebind and validate before current byte closure is claimed |
 
-Run `31263074530` is the last observed green watcher-registry run. Run `31654972163` passed five focused tests plus registry and fixture-polarity validation, then failed generated-receipt validation with `ARTIFACT_DIGEST_MISMATCH`. Current classification is **logic PASS / receipt HOLD**.
+Historical run `31263074530` and run `31654972163` remain recorded as v1.1 evidence. v1.2 did not execute or inspect a current workflow run or generated-receipt validation, so the only current safe conclusion is **registry/spec source readback / receipt closure NEEDS VERIFICATION**.
 
 ---
 
@@ -278,7 +306,7 @@ The attached KFM Repository Build-Out & Markdown Modernization Implementation Ag
 
 ## No-loss reconciliation
 
-v1.1 preserves the original shared-pipeline proposal, domain watcher ownership, shared/domain spec split, helper-only tools boundary, non-publisher law, consequences, alternatives, migration HOLD, rollback, and open questions. It adds the accepted Directory Rules relationship, WatcherRegistry implementation, inactive Soil packet, placement conflicts, logic/receipt distinction, admission and graduation gates, and current migration controls.
+v1.2 preserves the original shared-pipeline proposal, domain watcher ownership, shared/domain spec split, helper-only tools boundary, non-publisher law, consequences, alternatives, migration HOLD, rollback, and open questions. It refreshes current directory, registry, Soil-spec, validator, workflow-definition, and receipt reads; retains historical run outcomes as history; and does not infer receipt closure or execution.
 
 ## Change history
 
@@ -286,3 +314,4 @@ v1.1 preserves the original shared-pipeline proposal, domain watcher ownership, 
 |---|---|---|
 | 2026-08-08 | v1 | Initial proposed watcher ownership and placement decision. |
 | 2026-08-14 | v1.1 | Repository-grounded reconciliation; decision remains proposed. |
+| 2026-09-14 | v1.2 | Same-path currentness reconciliation at `main@0b6e56cf25d15f79cad0b038648a326be4a1169d`; refreshes watcher ownership surfaces, converts run/receipt evidence to historical unless re-executed, and preserves proposed/non-authority status. |
