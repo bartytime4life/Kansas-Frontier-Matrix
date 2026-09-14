@@ -3,7 +3,7 @@ doc_id: kfm://adr/ADR-0037
 adr_id: ADR-0037
 title: "ADR-0037 — Keep EvidenceDrawerPayload authority in the UI family"
 type: adr
-version: v1.0
+version: v1.1
 status: proposed
 owners:
   - "NEEDS VERIFICATION — UI contract steward"
@@ -16,7 +16,7 @@ reviewers_required:
   - Schema steward
   - Migration and compatibility reviewer
 created: 2026-08-26
-updated: 2026-08-26
+updated: 2026-09-14
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
@@ -29,7 +29,7 @@ evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
   base_commit: 0eb7a527cb2157504a5a03a9d024a4127fc5e45c
-  target_prior_blob: null
+  target_prior_blob: 4583d58ce6613d96449c01559485f28cd7a8cca1
   adr_index_blob: 8f90c75e662918f8062c4a9d139b19f268295c55
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   ui_contract_blob: 412a0a86c85c98748ac08e263a94c7eaac760c04
@@ -40,6 +40,23 @@ evidence_snapshot:
   convergence_validator_blob: f72ac15805bccd5f33a068f3c071d96099a20d73
   convergence_tests_blob: 3f8d99e24be679bcaa4994414fac260f75a87370
   convergence_workflow_blob: a7aeedc59f6117a415676b3216552353d7f525ad
+  refresh_2026_09_14:
+    base_ref: main
+    base_commit: 7d9074cb741e43fb98dd8b935e08d3a1a3705c7f
+    prior_adr_blob: 4583d58ce6613d96449c01559485f28cd7a8cca1
+    adr_index_blob: 0c143676dfd3c1bda16cb44398c5ad5d4a49cf67
+    ui_contract_blob: 27767c2bb3e5bb159dd4717ad59ae5a8da93b4dc
+    evidence_contract_blob: 8da00be879a60923fe1af6e3475797f329a65e97
+    ui_schema_blob: 4eefa03cffd7d5b97a24df0daf250bc31f7137ca
+    evidence_schema_blob: 662396d418be3a258c15ab7923a4186184ec2136
+    runtime_schema_blob: 952992e72b89b93e4d8f55eceb85d9cfd9e0299a
+    evidence_drawer_architecture_blob: 58ded003f08a52fd4c890bae9e1c5d84cf617724
+    convergence_validator_blob: a25e85b5cdffa660ee32aafbfca3bfe34c003c54
+    convergence_tests_blob: 2dfd25190bc263514cfc1ef5cd380945a0fdfe69
+    open_pull_requests: 0
+    retained_historical_branch: agent/adr-0037-evidence-drawer-authority-20260826
+    limits:
+      - "This refresh verified repository entry points and coordination state; it did not rerun schema, validator, Explorer, hosted, runtime, deployment, release, or publication checks."
 related:
   - docs/adr/README.md
   - docs/adr/INDEX.md
@@ -82,7 +99,7 @@ notes:
 
 | Field | Current value |
 |---|---|
-| **ADR ID** | `ADR-0037` — proposed addition to [`INDEX.md`](./INDEX.md) |
+| **ADR ID** | `ADR-0037` — proposed record listed in [`INDEX.md`](./INDEX.md) |
 | **Tracked path** | `docs/adr/ADR-0037-evidence-drawer-payload-ui-authority-and-compatibility.md` |
 | **Source metadata** | `proposed` |
 | **Effective decision status** | `proposed` — not binding |
@@ -91,7 +108,7 @@ notes:
 | **Primary responsibility** | UI public-safe projection semantics; schema authority remains a separate machine-shape responsibility |
 | **Required reviewers** | Architecture, docs, UI contract, evidence contract, schema, and migration/compatibility review functions |
 | **Governing authority** | Accepted ADR-0029 and its pinned Directory Rules v2 bytes |
-| **Implementation maturity** | `PARTIAL / CONFLICTED`: one closed executable UI profile; two permissive family anchors; mixed domain projections |
+| **Implementation maturity** | `PARTIAL / CONFLICTED` at the original candidate snapshot; current implementation maturity is not re-decided by this documentation refresh |
 | **Delivery state** | Proposed record; draft-PR ceiling |
 | **Publication effect** | None |
 | **Supersedes** | None |
@@ -106,7 +123,7 @@ notes:
 | Truth posture | `CONFIRMED`, `PROPOSED`, `UNKNOWN`, or `NEEDS VERIFICATION` per claim | Pinned evidence in §2 |
 | Implementation maturity | `PARTIAL / CONFLICTED` | Sixteen schema paths with three incompatible shape postures |
 | KFM lifecycle/release | Not applicable; no payload instances or release objects change | Scope boundary |
-| Hosted validation | `PENDING` until an exact PR head runs | Pull-request checks |
+| Hosted validation | `PENDING` until this refresh's exact PR head runs | Pull-request checks |
 
 ### 1.2 Scope
 
@@ -128,7 +145,24 @@ notes:
 
 ## 2. Evidence boundary
 
-The repository was inspected at `main@0eb7a527cb2157504a5a03a9d024a4127fc5e45c`. The intervening merge after the initial scan changed only `apps/workers/src/correction_worker/README.md`; no Evidence Drawer or ADR control-plane evidence changed. No open pull request or branch named for `ADR-0037` was returned by the connected GitHub searches at the repinned checkpoint.
+### 2.0 Evidence date and refresh discipline
+
+The candidate and conflict inventory below is retained as **historical evidence** from the original proposal checkpoint, `main@0eb7a527cb2157504a5a03a9d024a4127fc5e45c`; it must not be read as a current implementation, consumer, runtime, deployment, or acceptance claim.
+
+This documentation refresh re-pinned repository entry points at `main@7d9074cb741e43fb98dd8b935e08d3a1a3705c7f`. GitHub returned **zero open pull requests** at that preflight. The retained branch `agent/adr-0037-evidence-drawer-authority-20260826` resolves to the same pre-refresh ADR blob as `main`; branch existence is historical repository state, not a review, acceptance, or delivery fact. The refreshed UI contract remains explicitly draft/proposed, while the UI, evidence, and runtime schema blobs named in the refresh ledger remain discoverable. This refresh did not rerun functional validation or determine whether any external consumer exists.
+
+### 2.1 Refresh checkpoint
+
+| Surface | Current readback | What it establishes | Limit |
+|---|---|---|---|
+| GitHub implementation authority | `main@7d9074cb741e43fb98dd8b935e08d3a1a3705c7f` | Exact base for this documentation refresh | Not an ADR acceptance, release, deployment, promotion, or publication fact |
+| Open pull requests | `0` returned by GitHub preflight | No active PR was visible before this refresh | Does not prove the absence of forks, external consumers, or later PR activity |
+| Existing ADR branch | `agent/adr-0037-evidence-drawer-authority-20260826` at the prior ADR blob | A historical branch remains addressable | Not an active review or acceptance record |
+| UI contract | blob `27767c2…`; metadata remains draft/proposed | The UI-family candidate remains an explicitly non-accepted contract | No semantic-sufficiency, runtime, or deployment proof |
+| UI / evidence / runtime schemas | blobs `4eefa03c…` / `662396d4…` / `952992e7…` | The three principal schema entry points remain present | No new consumer or compatibility closure |
+| Convergence validator and tests | blobs `a25e85b5…` / `2dfd2519…` | Current validation entry points were re-read | No local or hosted execution was performed in this refresh |
+
+The table that follows preserves the original proposal evidence and its limits; its `current` wording is scoped to that original checkpoint.
 
 | Evidence surface | Truth label | Current observation | What it proves—and does not prove |
 |---|---|---|---|
@@ -144,7 +178,7 @@ The repository was inspected at `main@0eb7a527cb2157504a5a03a9d024a4127fc5e45c`.
 | Convergence validator/workflow | `CONFIRMED / PARTIAL` | Checks parseability, draft, IDs, and three anchors but intentionally leaves placement `NEEDS_REVIEW` | Provides a migration enforcement seam after acceptance; currently does not prevent permissive duplicates |
 | GitHub milestone issue #3368 | `CONFIRMED` | M02 requests a conflict-and-coverage matrix and one reversible slice | Coordinates work; does not accept this decision |
 
-### 2.1 Current schema conflict matrix
+### 2.2 Original schema conflict matrix (proposal checkpoint)
 
 | Schema class | Count | Current shape | Current disposition |
 |---|---:|---|---|
@@ -427,7 +461,7 @@ Durable coordination remains in [M02 issue #3368](https://github.com/bartytime4l
 
 ## 12. Evidence and references
 
-### 12.1 Repository evidence ledger
+### 12.1 Original repository evidence ledger (proposal checkpoint)
 
 | Evidence | Immutable identity at proposal base | Claim supported | Limit |
 |---|---|---|---|
@@ -438,12 +472,24 @@ Durable coordination remains in [M02 issue #3368](https://github.com/bartytime4l
 | Convergence validator/tests/workflow | blobs `f72ac158…` / `3f8d99e2…` / `a7aeedc5…` | Inventory-only current enforcement | Does not resolve placement |
 | `main` | commit `0eb7a527cb2157504a5a03a9d024a4127fc5e45c` | Complete proposal evidence checkpoint | No production/runtime inspection |
 
-### 12.2 Governing decisions and doctrine
+### 12.2 Refresh ledger — 2026-09-14
+
+| Evidence | Immutable identity at refresh | Claim supported | Limit |
+|---|---|---|---|
+| GitHub `main` | commit `7d9074cb741e43fb98dd8b935e08d3a1a3705c7f` | Exact base for this docs-only change | Not acceptance or a functional-validation result |
+| Prior ADR text | blob `4583d58ce6613d96449c01559485f28cd7a8cca1` | Previous proposal wording and historical branch equivalence | Superseded only as document text by this refresh |
+| ADR index | blob `0c143676dfd3c1bda16cb44398c5ad5d4a49cf67` | ADR-0037 remains indexed as proposed | Index cannot accept the ADR |
+| UI contract | blob `27767c2bb3e5bb159dd4717ad59ae5a8da93b4dc` | UI candidate remains draft/proposed | No field-set approval or runtime proof |
+| UI / evidence / runtime schemas | blobs `4eefa03c…` / `662396d4…` / `952992e7…` | Principal family entry points remain readable | No compatibility migration or external-consumer proof |
+| Validator/tests | blobs `a25e85b5…` / `2dfd2519…` | Current validation entry points were inspected | Checks were not executed by this docs-only refresh |
+| GitHub pull-request preflight | zero open pull requests | No active PR existed before this change | Later state must be re-read |
+
+### 12.3 Governing decisions and doctrine
 
 - [`ADR-0029`](./ADR-0029-adopt-directory-governance-standard-v2.md)
 - [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md), especially `DIR-AUTH-004`, `DIR-SIGNATURE-001`–`004`, `DIR-AUTHROOT-001`–`004`, `DIR-SCOPELANE-004`, `DIR-COMPAT-001`–`003`, and `DIR-MIGRATE-001`–`004`
 
-### 12.3 Current implementation evidence
+### 12.4 Current implementation entry points
 
 - [`contracts/ui/evidence_drawer_payload.md`](../../contracts/ui/evidence_drawer_payload.md)
 - [`contracts/evidence/evidence_drawer_payload.md`](../../contracts/evidence/evidence_drawer_payload.md)
@@ -461,3 +507,4 @@ Durable coordination remains in [M02 issue #3368](https://github.com/bartytime4l
 | Date | Record status | Change | Evidence / PR |
 |---|---|---|---|
 | 2026-08-26 | proposed | Initial M02 authority and compatibility decision packet | Draft PR pending |
+| 2026-09-14 | proposed | Re-pinned documentation evidence, distinguished the original inventory from current entry-point readback, and recorded coordination limits | Docs-only refresh; no acceptance, migration, functional validation, release, deployment, promotion, or publication |
