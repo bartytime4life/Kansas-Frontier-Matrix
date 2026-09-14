@@ -3,7 +3,7 @@ doc_id: kfm://adr/ADR-0033
 title: Keep GeoParquet 1.1 as the default and gate 2.0 evaluation
 type: adr
 adr_id: ADR-0033
-version: v1.1
+version: v1.2
 status: proposed
 effective_decision_status: proposed
 owners:
@@ -23,7 +23,7 @@ reviewers_required:
   - Release, correction, and rollback steward
   - At least one owner of every confirmed production reader, writer, query engine, or public consumer
 created: 2026-08-10
-updated: 2026-08-14
+updated: 2026-09-14
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
@@ -35,26 +35,19 @@ superseded_by: []
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 3e1a929a5e23f570b40c56e473b08ef65c3c5673
-  target_prior_blob: 239acc3978ac67fb71f9acc6a675d28a8a92c55c
-  adr_index_blob: 938c5894c36b99e14810918e2c550ab0e92d53b1
-  adr_0029_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
+  base_commit: 2c1d921717ba972861b249c2030179a310221d9e
+  target_prior_blob: 84435c9c3910aee82be38fea1dcaa73023b624e5
+  adr_index_blob: 0c143676dfd3c1bda16cb44398c5ad5d4a49cf67
+  adr_0029_blob: 4c1ef5f7f812d58fbdde9898acc96bb4c9280b2c
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
-  repository_ruleset_id: 15484585
-  repository_ruleset_name: Protect
-  repository_ruleset_updated_at: 2026-07-29T13:00:55.368-05:00
-  geoparquet_standard_blob: 7320145300e2ab6f414078e8479735ec374711c4
-  geospatial_carrier_contract_blob: 17055a680b83a4f83834735e88aeb0569322845b
-  geospatial_carrier_schema_blob: b6ebec77a6e09c50b89594c4032bd40ec238f6be
-  geospatial_carrier_validator_blob: 63e4cfac4838d0095b7f05fc6a3507ebe180fd8b
-  geospatial_carrier_tests_blob: 49b8ff390aee4b0d3381ec2d087238ce0c725ccc
-  geospatial_carrier_workflow_blob: f5791e0988166dbcdd5d781c690073e8d3b10389
-  geospatial_carrier_latest_main_run: 31654972027
-  stac_mirror_contract_blob: e5b3aabbee5a697d8e72e84f7df769882fdf76d5
-  stac_mirror_workflow_blob: 28bbbf731a1ffb6ba489e9dc0e0b44acb9d6e660
-  stac_mirror_latest_main_run: 31654971667
-  original_authoring_receipt_blob: 9852afaa9cafbba045fbef03456d211c1e5dc250
+  geoparquet_standard_blob: f33838104347e8d7c46785d8170562c66bb8de07
+  compatibility_assessment_blob: 98345edd9f5262a63064b01cac57145eed2fe0e9
+  pyarrow_probe_blob: 5a7a009faeba903284736637edf5be5c2bbf1072
+  gdal_probe_blob: 759546ddbc1fd6e72a2adb1c1801b3b3550cec8c
+  compatibility_workflow_blob: 45e25050a199cd12e777a120f6208ba50318e5fd
+  pyarrow_workflow_blob: b9ffd1d1326f91b2ed7a224545b3ba1d973ec531
+  gdal_workflow_blob: d0c132d7bbc45c46688c7d844ba2ad1f29aa4a0e
   upstream_latest_release: v2.0.0-rc.1
   upstream_rc_commit: 0c7fab74cf1177e2fe61df8eb7fcd1813b73e4aa
   upstream_corrected_1_1_tag: v1.1.0+p1
@@ -65,7 +58,9 @@ inspection_boundary: >
   reference, geospatial-carrier contract/schema/validator/tests/workflow and hosted run,
   STAC mirror contract/workflow and hosted run, the generated v1 authoring receipt, and the
   tracked GeoParquet publication lanes. Official upstream release evidence was rechecked on
-  2026-08-14. No GeoParquet carrier bytes, real production reader/writer/query-engine matrix,
+  2026-09-14. Current main contains a limited, synthetic PyArrow 25.0.0 producer/inspector
+  carrier pair and a one-direction GDAL 3.13.2 consumer probe; this session did not execute either
+  workflow or validate their historical receipts. No real production reader/writer/query-engine matrix,
   benchmark, migration, dual-read window, downstream service inventory, runtime trace,
   release manifest, correction drill, rollback drill, deployment, or public consumption was
   exercised.
@@ -114,7 +109,7 @@ notes:
 [![Decision: proposed](https://img.shields.io/badge/decision-proposed-d4a72c?style=flat-square)](#status)
 [![Declared baseline: 1.1.0](https://img.shields.io/badge/declared%20baseline-1.1.0-0969da?style=flat-square)](#current-repository-evidence)
 [![Upstream: 2.0.0-rc.1](https://img.shields.io/badge/upstream-2.0.0--rc.1-f59e0b?style=flat-square)](#upstream-evidence-checkpoint)
-[![Byte interoperability: absent](https://img.shields.io/badge/byte%20interop-absent-b42318?style=flat-square)](#current-enforcement-maturity)
+[![Byte evidence: limited](https://img.shields.io/badge/byte%20evidence-limited-f59e0b?style=flat-square)](#current-enforcement-maturity)
 [![Operational adoption: hold](https://img.shields.io/badge/adoption-HOLD-b42318?style=flat-square)](#current-enforcement-maturity)
 [![Publication effect: none](https://img.shields.io/badge/publication-none-6e7781?style=flat-square)](#authority-and-non-effects)
 
@@ -122,7 +117,7 @@ notes:
 > **Identity is confirmed; acceptance is not.** [`docs/adr/INDEX.md`](./INDEX.md) uniquely assigns `ADR-0033` to this exact path and records it as `proposed`. Editing, validating, or merging this Markdown does not accept the decision, adopt GeoParquet `1.1.0` as production policy, authorize `2.x` evaluation, or create release authority.
 
 > [!CAUTION]
-> **The current repository proves declarations and synthetic metadata behavior, not GeoParquet-byte compatibility.** The existing carrier profile is `PROPOSED_INACTIVE`, does not open Parquet bytes, and holds `2.x`. The STAC mirror profile also evaluates declared projections without reading carrier bytes. Neither surface proves a writer, reader, query engine, migration, downgrade, correction, or release path.
+> **The existing baseline carrier profile remains declaration-only.** Separate `PROPOSED_INACTIVE` probe packets now generate and inspect two synthetic Parquet carriers under PyArrow `25.0.0`, then exercise one PyArrow-to-GDAL `3.13.2` consumer direction. That limited evidence does not prove a general writer/reader/query-engine matrix, migration, downgrade, correction, release, or production compatibility.
 
 > [!WARNING]
 > **A version string is not an interoperability result.** Upstream `v2.0.0-rc.1` changes the storage foundation to native Parquet `GEOMETRY` and `GEOGRAPHY` logical types and built-in spatial statistics. A declaration-only validator, successful metadata fixture, or tool that recognizes the tag cannot establish semantic preservation across KFM consumers.
@@ -144,12 +139,12 @@ notes:
 | **Tracked path** | `docs/adr/ADR-0033-geoparquet-version-readiness.md` |
 | **Source metadata** | `proposed` |
 | **Effective decision status** | `proposed` |
-| **Record edition** | `v1.1` — evidence reconciliation; decision unchanged |
+| **Record edition** | `v1.2` — current-main evidence reconciliation; decision unchanged |
 | **Decision class** | Cross-component format-version readiness, interoperability, migration, correction, rollback, and release compatibility |
 | **Current proposed route** | `KEEP_1_1` |
 | **Declared repository baseline** | GeoParquet `1.1.0` in a draft standards reference and inactive metadata profile |
 | **Upstream checkpoint** | `v2.0.0-rc.1`; release candidate, not final `2.0.0` |
-| **Current implementation maturity** | `L1 / PARTIAL`: deterministic metadata fixtures exist; byte-level interoperability and production adoption do not |
+| **Current implementation maturity** | `L2 / PARTIAL`: synthetic byte opening exists in one PyArrow lane and one PyArrow-to-GDAL consumer direction; broad interoperability and adoption do not |
 | **Current operational outcome** | `HOLD` for default change or `2.x` production use |
 | **Release/publication effect** | None |
 | **Supersedes / superseded by** | None / none |
@@ -165,7 +160,7 @@ An accepted ADR without implementation would be doctrine. A green fixture or wor
 
 ### Current determination
 
-`KEEP_1_1` is the proposed decision outcome. `DUAL_EVALUATE` is not currently implemented as a governed profile. `ADOPT_LATER` has not met its entry conditions. Unknown or unsupported GeoParquet declarations remain held by the existing metadata preflight.
+`KEEP_1_1` remains the proposed decision outcome. A `PROPOSED_INACTIVE` `DUAL_EVALUATE` assessment now exists, together with a limited synthetic PyArrow carrier probe and a PyArrow-to-GDAL consumer probe. Neither admits a dependency, accepts this ADR, or changes the `1.1.0` default. `ADOPT_LATER` has not met its entry conditions.
 
 [Back to top](#top)
 
@@ -175,7 +170,7 @@ An accepted ADR without implementation would be doctrine. A green fixture or wor
 
 ## Evidence boundary
 
-This edition uses repository bytes at `main@3e1a929a5e23f570b40c56e473b08ef65c3c5673`, the current GitHub ruleset/review-routing evidence, the latest dedicated hosted runs available for the GeoParquet-adjacent candidate profiles, and official upstream release evidence rechecked on 2026-08-14.
+This edition uses repository bytes at `main@2c1d921717ba972861b249c2030179a310221d9e`, current ADR/index and Directory Rules evidence, the declared bounded probe packets and historical receipts, and official upstream release evidence rechecked on 2026-09-14. This documentation-only update does not execute a workflow or treat any historical run as a current result.
 
 ### Evidence layers
 
@@ -183,8 +178,8 @@ This edition uses repository bytes at `main@3e1a929a5e23f570b40c56e473b08ef65c3c
 |---|---|---|---|
 | **L0 — Decision and standards prose** | Declared intent, scope, vocabulary, non-effects | ADR proposed; standards reference draft | Byte behavior, tool support, adoption, release |
 | **L1 — Synthetic declaration profile** | Schema-valid metadata candidates and finite declared outcomes | Carrier and STAC-mirror fixtures/validators exist | Actual Parquet encoding, logical types, statistics, round trip |
-| **L2 — Captured-byte conformance** | A pinned validator opens deterministic synthetic files and checks bytes plus metadata | Absent | Cross-engine interoperability or production use |
-| **L3 — Cross-tool interoperability** | Pinned writers/readers/query engines preserve agreed semantics and negative cases | Absent | Migration of real KFM products or release operation |
+| **L2 — Captured-byte conformance** | A pinned validator opens deterministic synthetic files and checks bytes plus metadata | `PARTIAL`: a PyArrow `25.0.0` producer/inspector opens two synthetic carriers | Broad engine support, production data, or release |
+| **L3 — Cross-tool interoperability** | Pinned writers/readers/query engines preserve agreed semantics and negative cases | `PARTIAL`: one PyArrow `25.0.0` producer → GDAL `3.13.2` consumer direction | Writer diversity, query/pruning, round-trip, downgrade, migration, and release |
 | **L4 — Governed operational adoption** | Accepted decision, complete migration, release/correction/rollback evidence, observed consumers | Absent | Future compatibility without ongoing monitoring |
 
 ### Truth labels
@@ -197,7 +192,7 @@ This edition uses repository bytes at `main@3e1a929a5e23f570b40c56e473b08ef65c3c
 
 ### Explicitly not inspected
 
-No real GeoParquet file, object-store artifact, query log, API payload, downstream notebook, data warehouse, map build, migration output, release manifest, correction notice, rollback card, deployment, or public client was opened or exercised. The tracked `data/published/geoparquet/` lanes contain READMEs and placeholders at the inspected checkpoint, not confirmed release bytes.
+This session did not open a real KFM GeoParquet artifact, object-store artifact, query log, API payload, downstream notebook, data warehouse, map build, migration output, release manifest, correction notice, rollback card, deployment, or public client. Current main does define limited, synthetic carrier bytes for the PyArrow and GDAL probe lanes; those fixtures are not production or published artifacts. The tracked `data/published/geoparquet/` lanes remain release-gated homes, not evidence of released carrier bytes.
 
 [Back to top](#top)
 
@@ -550,13 +545,13 @@ This ADR is necessary but not sufficient for format adoption. It does not replac
 - PromotionDecision, ReleaseManifest, proof, correction, or rollback objects;
 - public-client trust-membrane controls.
 
-This v1.1 revision changes only the ADR text. It does **not**:
+This v1.2 revision changes only the ADR text. It records existing bounded probe evidence without running it. It does **not**:
 
 - accept ADR-0033;
 - change `docs/standards/GEOPARQUET.md`;
 - activate `GeospatialCarrierReadinessCheck` or `STACGeoParquetMirrorAssessment`;
 - add, pin, upgrade, or execute a GeoParquet/Parquet library;
-- create or rewrite Parquet bytes;
+- create, rewrite, or execute the existing synthetic Parquet bytes or probe tools;
 - change source, evidence, policy, catalog, data, runtime, API, UI, or AI behavior;
 - repair or bypass stale authoring receipts;
 - alter CODEOWNERS, rulesets, required reviews, or repository settings;
@@ -572,21 +567,15 @@ This v1.1 revision changes only the ADR text. It does **not**:
 
 | Surface | Current verified state | Safe conclusion |
 |---|---|---|
-| ADR inventory | `ADR-0033` is uniquely indexed at this path with effective status `proposed`. | Identity confirmed; decision not accepted. |
-| Accepted placement authority | ADR-0029 accepts Directory Rules v2 and keeps ADRs under `docs/adr/`. | Same-path modernization is placement-consistent. |
-| [`docs/standards/GEOPARQUET.md`](../standards/GEOPARQUET.md) | Draft standards reference declares GeoParquet `1.1.0` and says `2.0` is not adopted. | Declared baseline only; draft prose is not production proof. |
-| [`GeospatialCarrierReadinessCheck`](../../contracts/release/geospatial_carrier_readiness.md) | `PROPOSED_INACTIVE`, metadata-only profile for COG, MVT, and GeoParquet `1.1.0`; holds `2.x`; opens no carrier bytes. | Useful L1 candidate; cannot establish byte conformance or adoption. |
-| Carrier schema/validator/tests | Closed synthetic shape with deterministic finite cases; current validator emits `GEOPARQUET_VERSION_NOT_ADOPTED` for `2.x`. | Declaration behavior is testable; byte/tool interoperability absent. |
-| Carrier workflow | Latest main run `31654972027` failed overall. Focused tests passed (`14 passed`), all nine exact-polarity cases passed, then generated receipt validation failed with `ARTIFACT_DIGEST_MISMATCH`. | Semantic candidate remains coherent; proof-chain receipt is stale. Green status cannot be claimed. |
-| [`STACGeoParquetMirrorAssessment`](../../contracts/data/stac_geoparquet_mirror_assessment.md) | Separate proposed-inactive synthetic assessment of declared STAC/GeoParquet projection parity. | Catalog projection candidate, not GeoParquet byte validation. |
-| STAC mirror workflow | Latest main run `31654971667` passed focused deterministic tests and failed generated receipt integrity. | Same proof-chain limit; no format or release authority. |
-| Geo manifest validator | Recognizes GeoParquet carrier/media binding. | Manifest/media recognition is not version interoperability. |
-| `data/published/geoparquet/` | Root and atmosphere/flora/geology child lanes contain README and `.gitkeep` placeholders at the inspected revision. | Publication homes exist; no tracked carrier bytes were confirmed in these lanes. |
-| Dependency manifests/locks | Prior bounded inventory recorded no declared `pyarrow`, `geopandas`, `duckdb`, GeoParquet, or Parquet reader/writer dependency. No later related dependency change was found in the inspected delta. | No repository-pinned production reader/writer matrix can be inferred. |
-| Dedicated `DUAL_EVALUATE` profile | No contract/schema/fixture/validator/workflow using that outcome was found in bounded repository search. | Evaluation remains a proposal. |
-| Original ADR authoring receipt | `genrec-geoparquet-version-readiness-20260810.json` binds the v1 ADR and index preimage; human review remains pending. | Historical v1 evidence only; it is not the v1.1 receipt. |
-| CODEOWNERS | All relevant roots route to `@bartytime4life`; file explicitly disclaims stewardship, approval, and SoD proof. | One review route; no accepted role assignments or independent format approver. |
-| Default-branch ruleset | Active `Protect` ruleset requires PR mediation and resolved review threads, but requires zero approvals, no code-owner review, no named reviewers, and no last-push approval. | Platform mediation exists; independent format approval is not enforced. |
+| ADR inventory and placement | `ADR-0033` remains uniquely indexed and effectively `proposed`; ADR-0029 supplies the accepted same-path placement authority. | Identity and location are confirmed; decision acceptance is not. |
+| `docs/standards/GEOPARQUET.md` | Draft reference keeps GeoParquet `1.1.0` as the declared default and treats `2.0.0-rc.1` as a candidate. | No format-default change or production policy is established. |
+| Baseline carrier profile | `GeospatialCarrierReadinessCheck` is `PROPOSED_INACTIVE`, metadata-only, and holds `2.x`. | Useful declaration preflight only. |
+| `DUAL_EVALUATE` assessment | `kfm.geoparquet-2-rc-compatibility-assessment.v2` defines a no-authority, exact-toolchain planning packet for `2.0.0-rc.1`. | It is a structural readiness classifier, not byte or release proof. |
+| PyArrow carrier probe | `kfm.geoparquet-2-rc-pyarrow-carrier-probe.v1` generates and validates two digest-bound synthetic carriers using exact PyArrow `25.0.0`. | Limited L2 producer/inspector evidence; not an ecosystem claim. |
+| GDAL consumer probe | `kfm.geoparquet-2-rc-gdal-consumer-probe.v1` defines PyArrow `25.0.0` producer → pinned GDAL `3.13.2` consumer reads for the same carrier pair. | Limited one-direction L3 evidence; not GDAL production/write, broad CRS, pruning, or matrix proof. |
+| Historical receipts and workflows | Historical receipts and workflows are tracked for the assessment and probes; this session only read their definitions and receipts. | Do not infer a current exact-head pass or a supported runtime/dependency from this ADR refresh. |
+| Published lanes, consumers, and release | Published paths are release-gated; no production consumer inventory, migration packet, correction drill, release, deployment, or public-use evidence was exercised. | `2.x` operational adoption remains `HOLD`. |
+| CODEOWNERS and review controls | Relevant roots route to `@bartytime4life`; no independent format approver or qualified consumer-owner roster was verified. | Review routing is not independent approval or release authority. |
 
 ### Current source-of-truth conflicts and limits
 
@@ -606,26 +595,21 @@ This v1.1 revision changes only the ADR text. It does **not**:
 | Capability | Current state |
 |---|---|
 | ADR identity/status | `CONFIRMED / proposed` |
-| Declared `1.1.0` standard | Draft reference; not independently accepted as production policy |
+| Declared `1.1.0` default | Draft reference; not independently accepted as production policy |
 | `2.x` upstream status | `v2.0.0-rc.1`; release candidate |
-| Metadata shape/profile | `PARTIAL / PROPOSED_INACTIVE` |
-| Deterministic metadata fixtures | Present |
-| Dedicated hosted workflow | Present but latest run red on generated receipt integrity |
-| GeoParquet byte opening | Absent in inspected profile |
-| Native logical-type validation | Absent |
-| Cross-writer/reader/query matrix | Absent |
-| Checked-in evaluation carrier bytes | None confirmed |
-| Production reader/writer dependency | None confirmed |
-| Downstream consumer registry | Absent / `UNKNOWN` |
-| Mixed-version routing | Proposed only |
-| Migration receipts | Absent |
-| Correction/rollback drill | Absent |
-| Independent qualified reviewer capacity | Not established |
-| Required platform approval | Zero approvals required at inspected ruleset |
-| Governed GeoParquet release instance | None confirmed |
+| Metadata-only baseline profile | `PARTIAL / PROPOSED_INACTIVE` |
+| `DUAL_EVALUATE` readiness assessment | Present, `PROPOSED_INACTIVE`, declaration-level only |
+| Synthetic carrier bytes | Limited pair generated/inspected by exact PyArrow `25.0.0` profile |
+| Native logical-type validation | Limited to the synthetic `GEOMETRY` fixture/footer |
+| Cross-tool evidence | One PyArrow `25.0.0` producer → GDAL `3.13.2` consumer direction |
+| Broad reader/writer/query matrix | Absent |
+| Query pruning, `GEOGRAPHY`, projected CRS, downgrade, and rewrite preservation | Absent or explicitly deferred |
+| Production dependency/consumer registry | Not established |
+| Migration, correction, rollback, release, deployment, publication | Not established |
+| Independent qualified review | Not established |
 | `2.x` operational adoption | `HOLD` |
 
-**Overall maturity: `L1 / PARTIAL`, operational outcome `HOLD`.** Candidate metadata work may continue. No current evidence supports a claim of GeoParquet `2.x` readiness, production adoption, migration safety, or public release.
+**Overall maturity: `L2/L3-limited / PARTIAL`, operational outcome `HOLD`.** The bounded synthetic probes correct the earlier “no byte evidence” statement, but they do not establish cross-engine compatibility, migration safety, production use, or public release.
 
 [Back to top](#top)
 
@@ -834,22 +818,22 @@ Disabling validation, deleting original bytes, changing version declarations wit
 
 ## Verification checklist
 
-### Current v1.1 revision
+### Current v1.2 revision
 
 - [x] Current `main` and target blob rechecked before editing.
 - [x] ADR ID, filename, H1, path, and effective `proposed` status preserved.
 - [x] Accepted ADR-0029 and Directory Rules placement authority reviewed.
 - [x] GeoParquet standard, carrier candidate, STAC mirror candidate, manifest validator, publication lanes, receipt, CODEOWNERS, ruleset, and hosted runs inspected.
-- [x] Official upstream release status rechecked on 2026-08-14.
+- [x] Official upstream release status rechecked on 2026-09-14.
 - [x] Declared baseline separated from accepted operational adoption.
-- [x] Declaration-level proof separated from byte-level and cross-tool proof.
+- [x] Declaration-only, limited synthetic byte, one-direction consumer, and broader interoperability proof separated.
 - [x] Current stale-receipt workflow failures recorded without attributing semantic failure.
 - [x] Original receipt retained as historical v1 evidence.
 - [x] Finite outcomes, evidence ladder, dual-evaluation packet, adoption gates, denial boundary, layout boundary, risks, and rollback refreshed.
 - [x] No standard, dependency, schema, contract, validator, fixture, workflow, receipt, data, runtime, release, deployment, or publication change introduced.
 - [ ] Human review completed.
 - [ ] ADR accepted.
-- [ ] Dual evaluation implemented.
+- [x] Proposed-inactive dual-evaluation assessment and bounded synthetic probes are present; acceptance and broad graduation remain open.
 - [ ] Final stable `2.x` evaluated.
 - [ ] Governed adoption observed.
 
@@ -894,7 +878,10 @@ Disabling validation, deleting original bytes, changing version declarations wit
 | [ADR-0020](./ADR-0020-abstain-is-a-first-class-decision.md) | Missing compatibility evidence may hold/abstain rather than guess. |
 | [ADR-0029](./ADR-0029-adopt-directory-governance-standard-v2.md) | Accepted placement authority. |
 | [Directory Rules](../doctrine/directory-rules.md) | Responsibility-root placement and migration discipline. |
-| [GeoParquet standards reference](../standards/GEOPARQUET.md) | Draft declaration of `1.1.0`; not production proof. |
+| [GeoParquet standards reference](../standards/GEOPARQUET.md) | Draft declaration of `1.1.0`; records limited PyArrow/GDAL evidence without production adoption. |
+| [2.0-RC compatibility assessment](../../contracts/release/geoparquet_2_rc_compatibility_assessment.md) | Proposed-inactive `DUAL_EVALUATE` planning packet; no byte or release authority. |
+| [PyArrow carrier probe](../../contracts/release/geoparquet_2_rc_pyarrow_carrier_probe.md) | Two synthetic, digest-bound carriers under PyArrow `25.0.0`; finite `PARTIAL` only. |
+| [GDAL consumer probe](../../contracts/release/geoparquet_2_rc_gdal_consumer_probe.md) | One PyArrow `25.0.0` producer → GDAL `3.13.2` consumer direction; finite `PARTIAL`/`HOLD` only. |
 | [Governed source map](../intake/exploratory/spatiotemporal-modernization-blueprint-source-map.md) | Proposal intake, conflict analysis, and decision lineage. |
 | [Geospatial carrier contract](../../contracts/release/geospatial_carrier_readiness.md) | Metadata-only `1.1.0` candidate; no byte/release authority. |
 | [Carrier schema](../../schemas/contracts/v1/release/geospatial_carrier_readiness.schema.json) | Closed declared-metadata shape. |
@@ -918,7 +905,7 @@ Disabling validation, deleting original bytes, changing version declarations wit
 - [Corrected 1.1 release/tag](https://github.com/opengeospatial/geoparquet/releases/tag/v1.1.0%2Bp1) — corrected stable 1.1 source while metadata version remains `1.1.0`.
 - [Pinned corrected 1.1 specification](https://github.com/opengeospatial/geoparquet/blob/540f6bf547587284e632c47530bc08d9e43bb045/format-specs/geoparquet.md) — `1.1.0` baseline.
 
-External release status and specification details are confirmed only for the pinned revisions and the 2026-08-14 access checkpoint. Later final-release or compatibility claims remain `NEEDS VERIFICATION`.
+External release status and specification details are confirmed only for the pinned revisions and the 2026-09-14 access checkpoint. Later final-release, broad compatibility, or operational-adoption claims remain `NEEDS VERIFICATION`.
 
 [Back to top](#top)
 
@@ -930,6 +917,7 @@ External release status and specification details are confirmed only for the pin
 
 | Version | Date | Summary |
 |---|---|---|
+| `v1.2` | 2026-09-14 | Same-path reconciliation against `main@2c1d921...`: preserves source/effective `proposed` and the `1.1.0` declared default; corrects earlier L1-only claims by recording the proposed-inactive dual-evaluation assessment, the limited two-carrier PyArrow `25.0.0` producer/inspector lane, and the one-direction GDAL `3.13.2` consumer lane; rechecks that upstream `v2.0.0-rc.1` remains the latest release candidate; keeps broader engine coverage, migration, release, deployment, publication, and current-head validation explicitly open. |
 | `v1.1` | 2026-08-14 | Same-path repository reconciliation against `main@3e1a929a...`: preserves source/effective `proposed`; distinguishes the draft declared `1.1.0` baseline from operational adoption; rechecks upstream `v2.0.0-rc.1`; records current candidate contracts, byte-level gaps, publication placeholders, stale authoring-receipt workflow failures, CODEOWNERS/ruleset limits, and historical receipt boundary; adds evidence maturity, a complete dual-evaluation packet, adoption graduation, future reason-code families, convergence plan, acceptance gates, risk ledger, verification checklist, exact rollback target, refreshed references, and a no-loss ledger. |
 | `v1` | 2026-08-10 | Initial proposed version-readiness boundary from governed Drive intake, repository inventory, and pinned GeoParquet release evidence. |
 
@@ -959,4 +947,4 @@ External release status and specification details are confirmed only for the pin
 
 ---
 
-<sub>**Last updated:** 2026-08-14 · **Source/effective status:** `proposed` · **Declared baseline:** GeoParquet `1.1.0` · **Upstream:** `v2.0.0-rc.1` · **Evidence maturity:** `L1 / PARTIAL` · **Operational adoption:** `HOLD` · **Publication:** none · **Path:** `docs/adr/ADR-0033-geoparquet-version-readiness.md`</sub>
+<sub>**Last updated:** 2026-09-14 · **Source/effective status:** `proposed` · **Declared baseline:** GeoParquet `1.1.0` · **Upstream:** `v2.0.0-rc.1` · **Evidence maturity:** `L2/L3-limited / PARTIAL` · **Operational adoption:** `HOLD` · **Publication:** none · **Path:** `docs/adr/ADR-0033-geoparquet-version-readiness.md`</sub>
