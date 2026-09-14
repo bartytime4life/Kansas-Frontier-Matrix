@@ -2,7 +2,7 @@
 doc_id: kfm://doc/adr-candidate/focus-model-adapter-boundary
 title: "ADR Candidate — Focus Mode–Model Adapter Boundary"
 type: adr-candidate
-version: v0.1
+version: v0.2
 status: proposed
 effective_decision_status: not-assigned
 owners:
@@ -21,7 +21,7 @@ reviewers_required:
   - "Contracts, schemas, validation, and CI stewards"
   - "Explorer Web, correction, rollback, release, and docs stewards"
 created: 2026-05-20
-updated: 2026-08-14
+updated: 2026-09-14
 policy_label: public
 owning_root: docs/
 responsibility: "Record the proposed authority boundary between caller-facing Focus Mode orchestration, provider-neutral model adapters, candidate model output, and the final governed runtime envelope without granting model, provider, route, evidence, policy, receipt, release, deployment, or publication authority."
@@ -33,6 +33,43 @@ evidence_commit: 9d924c665073263f2cbf376d2bf29e7b9f252b06
 target_prior_blob: f70bb4f8f0f790590c5382c96b03a5d2ec8abe45
 adr_index_blob: 938c5894c36b99e14810918e2c550ab0e92d53b1
 directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+currentness_reconciliation_2026_09_14:
+  base_commit: d663ce052c3dd67ada6c46b1cf7feca613219fe1
+  target_prior_blob: adcd3e59791d52d36fde8c57336603959206271b
+  adr_index_blob: 0c143676dfd3c1bda16cb44398c5ad5d4a49cf67
+  adr_0008_blob: c11de0a703bfdd696d30e4d35ef0bb599bc44ba4
+  adr_0019_blob: d8d05be67bd077025ca533e3df5b8ea5cdf0a0f8
+  adr_0020_blob: af5bae70d53ea1c46bced76dda9a5f582a23b49f
+  adr_0025_blob: 37abf3a3f11949b942c1c81d424f505ddabc5fc3
+  adr_0027_blob: 563392e5afe155f46aaf6e388270a503f43f748d
+  adr_0028_blob: 3b7931125abaca24d3827c1e44a36e701ab67463
+  adr_0029_blob: 4c1ef5f7f812d58fbdde9898acc96bb4c9280b2c
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  adapter_contract_doc_blob: d38351198939b63a57e583cb404a0daf379fa3a4
+  focus_flow_doc_blob: 6f6d98f4101acfe686d20d31665317240d705f42
+  mock_first_doc_blob: 7d123cab64a6da5dd6a191dd5b42d44418f3da23
+  focus_request_contract_blob: 3ff8fd14a79cd71ab52122aa834bc0e4ef9c4d3d
+  focus_response_contract_blob: 580116adffcffd1a264e10f27120a34bb03ab676
+  runtime_envelope_contract_blob: ff3dfb3109820f5b511c72f8911bd3be071f2723
+  ai_receipt_contract_blob: 1e028525569b6032cd573e71d98df6b961fa70db
+  focus_request_schema_blob: a2f298f014fa299bdec03afbf14ba9937aa95ef8
+  focus_response_schema_blob: fd109e4a3c859115d4ad138e9303cf8c5bdd8873
+  focus_runtime_alias_schema_blob: f83a7256913cfb9585067bf0b2c470e599dc01ea
+  runtime_envelope_schema_blob: 8b86e7db8b18b65a56a4e639dfc54e1b2db93155
+  focus_policy_readme_blob: 35001e958a6b51d2f22004d5e637d72baeab49af
+  runtime_adapter_note_blob: e371e5ca008ecbd0775bea9c2a31ef76131e7575
+  mock_adapter_blob: 04d37e59b14c9e3b85126cb3380b6221b44e26d1
+  ollama_adapter_blob: 1769a719d6a6df53e001abbc4c67ad486ab5c944
+  governed_api_routes_blob: 57c6e4b06553cc444a55eb126d0b8e7f42210837
+  explorer_focus_resolver_blob: 45aa4e7479a8c95138f98cc48c846f39a16aec2d
+  focus_worker_blob: 7715d01fc585b03dedae7bb535591064bd6d055c
+  focus_mock_workflow_blob: fbd56c7cda991ff8f3b804cc0c278e62daaa7abf
+  scope_limit: >
+    Documentation evidence reconciliation only. No ADR number assignment, acceptance,
+    contract or schema selection, model or provider admission, daemon or endpoint access,
+    credential use, policy or evidence evaluation, workflow/test execution, receipt write,
+    API/worker/client runtime operation, release, deployment, promotion, or publication
+    was performed.
 related:
   - docs/adr/README.md
   - docs/adr/INDEX.md
@@ -119,7 +156,14 @@ notes:
 | **Current implementation posture** | Partial client and mock proof surfaces; no verified end-to-end governed Focus/model transaction |
 | **Implementation effect of this revision** | Documentation only |
 | **Release or publication effect** | None |
+| **Currentness checkpoint** | `main@d663ce052c3dd67ada6c46b1cf7feca613219fe1`; targeted source-level reconciliation only |
 | **Supersedes / superseded by** | None / none |
+
+### Currentness reconciliation — 2026-09-14
+
+At `main@d663ce052c3dd67ada6c46b1cf7feca613219fe1`, the canonical ADR index still classifies this exact slug-only path as `not-assigned`; ADR-0029 remains accepted placement authority, while the related Focus and model-adapter decisions remain unaccepted. The target architecture, contract, schema, policy, runtime, client, worker, and workflow surfaces are present as repository bytes. Their presence does not establish a canonical semantic seam, decision acceptance, provider admission, or end-to-end Focus transaction.
+
+The targeted read confirms a deterministic no-I/O `MockAdapter` selector, but `OllamaAdapter.py` and the Focus worker remain greenfield placeholders. Focus request and response schemas identify themselves as proposed scaffolds, and the Focus policy README remains a draft inactive boundary. This refresh did not run a workflow or test, start a local daemon, contact a provider, use a credential, resolve evidence, evaluate policy, validate citations, emit a receipt, invoke a route or worker, or exercise a public client. Provider-backed Focus `ANSWER`, raw streaming, and public release remain `HOLD`.
 
 ### Assignment, acceptance, implementation, provider admission, and release are separate
 
@@ -139,7 +183,9 @@ No transition implies the next. A green mock test, valid envelope, provider resp
 
 ## Evidence boundary
 
-This candidate is grounded in repository bytes inspected at `main@9d924c665073263f2cbf376d2bf29e7b9f252b06`. The prior target blob is `f70bb4f8f0f790590c5382c96b03a5d2ec8abe45`.
+The v0.1 evidence record remains historical lineage at `main@9d924c665073263f2cbf376d2bf29e7b9f252b06`; its earlier target blob was `f70bb4f8f0f790590c5382c96b03a5d2ec8abe45`.
+
+The v0.2 targeted currentness reconciliation is grounded in repository bytes at `main@d663ce052c3dd67ada6c46b1cf7feca613219fe1`. Its exact input pins and scope limit appear in the metadata block and Status section. It refreshes source-level posture without converting v0.1 inspection claims into fresh execution evidence.
 
 ### Truth labels
 
@@ -468,6 +514,9 @@ Directory Rules basis: this candidate remains in `docs/adr/` because it records 
 <a id="current-maturity"></a>
 
 ## Current maturity
+
+> [!NOTE]
+> This table records v0.1 inspection as historical evidence. v0.2 re-read only the targeted currentness inputs named above; it does not reassert a complete new runtime inventory or any execution outcome.
 
 | Capability | Current status | Graduation blocker |
 |---|---|---|
@@ -801,6 +850,16 @@ If the decision is folded into ADR-0019, preserve this scaffold's creation histo
 ---
 
 <a id="appendix-a--no-loss-reconciliation-ledger"></a>
+
+## Change history
+
+| Date | Change | Status |
+|---|---|---|
+| 2026-05-20 | Generated the initial planned-file scaffold from the domain inventory. | `PROPOSED scaffold` |
+| 2026-08-14 | Replaced the scaffold in place with the first repository-grounded Focus/model-adapter ADR candidate; preserved its unassigned posture and separated candidate output from final governed envelopes. | `PROPOSED / not-assigned` |
+| 2026-09-14 | v0.2 targeted currentness reconciliation at `main@d663ce052c3dd67ada6c46b1cf7feca613219fe1`; re-pinned the unassigned status, accepted placement baseline, partial mock/client surfaces, scaffolds/placeholders, and provider/public-release hold. No runtime, model, provider, policy, evidence, receipt, lifecycle, release, deployment, promotion, or publication action. | `PROPOSED / not-assigned` |
+
+---
 
 ## Appendix A — No-loss reconciliation ledger
 
