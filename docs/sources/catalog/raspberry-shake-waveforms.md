@@ -2,8 +2,8 @@
 doc_id: kfm://doc/sources/catalog/raspberry-shake-waveforms
 title: Raspberry Shake waveform preview gate
 type: source-boundary-reference
-version: v1.0.1-draft
-status: draft; preview-merged; follow-up-branch-only; not-released; not-deployed
+version: v1.0.2-draft
+status: draft; preview-merged; registry-record-captured; not-released; not-deployed
 policy_label: public
 responsibility: >
   Freeze the smallest browser-local waveform preview that can be reviewed
@@ -46,6 +46,23 @@ These dispositions reflect the provider's current public materials: the FDSN ser
 
 No statement here grants KFM permission to use, cache, redistribute, commercialize, or integrate the provider service. Written provider permission remains a prerequisite for any broader use class.
 
+## FDSN data-center registry record
+
+The user-supplied registry payload is retained as **source discovery evidence**, not as source admission. A current readback of the [FDSN RASPISHAKE data-center record](https://www.fdsn.org/datacenters/detail/RASPISHAKE/) corroborates the center identity, service roots, citation, and provider-maintained listing. The FDSN page reports that the record was last updated on 2026-07-02. The supplied machine record identifies registry schema version `1.0JS:1` and the following bounded facts:
+
+| Registry field | Supplied value | KFM interpretation |
+|---|---|---|
+| Data center | `RASPISHAKE` — Raspberry Shake Seismic Network | Provider-discovery identity only |
+| Summary | Citizen-scientist earthquake monitoring network; formerly associated with the Public Seismic Network | Descriptive provider metadata; not a KFM claim about coverage or quality |
+| Repository | `archive` — continuous seismic data | Archive role only; no KFM cache, mirror, or redistribution |
+| Station service | `https://data.raspberryshake.org/fdsnws/station/1/` | FDSN service root; not wired into a KFM connector by this document |
+| Dataselect service | `https://data.raspberryshake.org/fdsnws/dataselect/1/` | FDSN service root; no waveform retrieval is activated |
+| Dataset | network `AM`; start `2016-01-01T00:00:00Z`; priority `1` | Supplied registry scope; start bound still requires exact API readback before operational use |
+
+The registry establishes that the provider advertises these service families and dataset scope. It does **not** prove endpoint reachability, completeness, fitness, permission, response correctness, stable station locations, or KFM release authority. The provider's [FDSN manual](https://manual.raspberryshake.org/fdsn.html) remains the current behavior source: StationXML/SC3XML metadata and MiniSEED time series are available, `fdsnws-event` is unsupported, the archive is delayed rather than real-time, and request/window limits apply.
+
+**Disposition: HOLD.** A future integration must independently re-read the machine registry record, pin the observed bytes and time, reconcile provider permission and attribution, define exact query/caching limits, and pass the existing source-admission, evidence, correction, release, and rollback gates.
+
 ## KFM architecture fit
 
 The slice stays inside the existing renderer-neutral local-import boundary:
@@ -73,7 +90,7 @@ Before any future provider integration, require a new record with:
 ## Verification checklist
 
 - `npm run build` and focused waveform tests pass in the repository source context.
-- No changed file contains a Raspberry Shake runtime URL, `fetch(`, proxy handler, cache writer, or source activation call.
+- No application or runtime file changes, and no service root is wired to `fetch(`, a proxy handler, a cache writer, or a source activation call.
 - The UI labels the output `HOLD` or `BLOCK`, never `ANSWER`, `PUBLISHED`, or `LIVE`.
 - The audit omits exact samples and exact geometry-like location data; it carries only the digest and bounded summary.
 - The follow-up correction branch remains unmerged, unreleased, and undeployed until an independent review accepts the gate.
