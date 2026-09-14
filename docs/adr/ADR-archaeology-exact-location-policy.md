@@ -6,10 +6,13 @@ version: v0.3
 status: proposed
 effective_decision_status: not-assigned
 owners: "NEEDS VERIFICATION — architecture, archaeology, cultural/sovereignty/rights, policy, evidence, and release reviewers"
+created: 2026-08-20
 updated: 2026-09-14
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
+owning_root: docs/
+responsibility: "Propose a docs-owned deny-by-default boundary for public and semi-public exact or reconstructive Archaeology location exposure; it does not enact policy, access, transform, release, deployment, or publication authority."
 current_path: docs/adr/ADR-archaeology-exact-location-policy.md
 source_scaffold_origin: docs/domains/archaeology/SOURCE_REGISTRY.md
 evidence_repository: bartytime4life/Kansas-Frontier-Matrix
