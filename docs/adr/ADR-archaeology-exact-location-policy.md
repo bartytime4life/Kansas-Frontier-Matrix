@@ -12,25 +12,23 @@ truth_posture: cite-or-abstain
 responsibility_root: docs/
 current_path: docs/adr/ADR-archaeology-exact-location-policy.md
 source_scaffold_origin: docs/domains/archaeology/SOURCE_REGISTRY.md
-evidence_snapshot:
-  repository: bartytime4life/Kansas-Frontier-Matrix
-  base_commit: ccd0353e9bbf9d2b7f18040629821aec24d3f925
-  target_prior_blob: 9f7723dea1ddffa5b1e57140ab9e1af83d6e5203
-refresh_2026_09_14:
-  base_ref: main
-  base_commit: ccd0353e9bbf9d2b7f18040629821aec24d3f925
-  target_prior_blob: 9f7723dea1ddffa5b1e57140ab9e1af83d6e5203
-  adr_index_blob: 0c143676dfd3c1bda16cb44398c5ad5d4a49cf67
-  adr_0010_blob: 37c44508638c118a5aa80692436c0dcff36f2660
-  directory_governance_blob: 4c1ef5f7f812d58fbdde9898acc96bb4c9280b2c
-  archaeology_policy_readme_blob: 5b95997ab8c5d29e4b03a8c44960e41322990d1d
-  exact_location_deny_blob: 37e9d0a624be86ba22a9f1dfa94d99df77b953a8
-  parity_contract_blob: 0740f68300075fc707b221f6ff49a000f4f9a3e9
-  parity_schema_blob: 3c4beaba469ea39cf93895ec37a6244acc6b91a1
-  parity_validator_blob: c36b6a235d1b9615db09282d1d166edb6ce95db5
-  parity_validator_tests_blob: 22d091498ca03aeff97a9f051aef1e6d41f3b9fe
-  archaeology_generalization_boundary_blob: 013a04b52afec14d4bef4da919f56a96cad23af4
-  scope_limit: "Documentation evidence refresh only; no number or acceptance, protected payload read, precision threshold or transform parameter, policy activation, access grant, release, deployment, or publication."
+evidence_repository: bartytime4life/Kansas-Frontier-Matrix
+evidence_base_commit: ccd0353e9bbf9d2b7f18040629821aec24d3f925
+evidence_target_prior_blob: 9f7723dea1ddffa5b1e57140ab9e1af83d6e5203
+refresh_2026_09_14_base_ref: main
+refresh_2026_09_14_base_commit: ccd0353e9bbf9d2b7f18040629821aec24d3f925
+refresh_2026_09_14_target_prior_blob: 9f7723dea1ddffa5b1e57140ab9e1af83d6e5203
+refresh_2026_09_14_adr_index_blob: 0c143676dfd3c1bda16cb44398c5ad5d4a49cf67
+refresh_2026_09_14_adr_0010_blob: 37c44508638c118a5aa80692436c0dcff36f2660
+refresh_2026_09_14_directory_governance_blob: 4c1ef5f7f812d58fbdde9898acc96bb4c9280b2c
+refresh_2026_09_14_archaeology_policy_readme_blob: 5b95997ab8c5d29e4b03a8c44960e41322990d1d
+refresh_2026_09_14_exact_location_deny_blob: 37e9d0a624be86ba22a9f1dfa94d99df77b953a8
+refresh_2026_09_14_parity_contract_blob: 0740f68300075fc707b221f6ff49a000f4f9a3e9
+refresh_2026_09_14_parity_schema_blob: 3c4beaba469ea39cf93895ec37a6244acc6b91a1
+refresh_2026_09_14_parity_validator_blob: c36b6a235d1b9615db09282d1d166edb6ce95db5
+refresh_2026_09_14_parity_validator_tests_blob: 22d091498ca03aeff97a9f051aef1e6d41f3b9fe
+refresh_2026_09_14_archaeology_generalization_boundary_blob: 013a04b52afec14d4bef4da919f56a96cad23af4
+refresh_2026_09_14_scope_limit: "Documentation evidence refresh only; no number or acceptance, protected payload read, precision threshold or transform parameter, policy activation, access grant, release, deployment, or publication."
 notes:
   - "Unassigned PROPOSED candidate; no ADR number or index-status change."
   - "No public precision threshold or protective transform parameter is adopted or disclosed."
