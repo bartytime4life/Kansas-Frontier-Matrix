@@ -21,7 +21,7 @@ reviewers_required:
   - Evidence steward
   - Release, correction, and rollback steward
   - Validation steward
-created: 2026-07-24
+created: "NEEDS VERIFICATION — scaffold predates this revision"
 updated: 2026-09-14
 policy_label: public
 truth_posture: cite-or-abstain
@@ -75,6 +75,7 @@ notes:
   - "Same-path currentness refresh of an existing unassigned PROPOSED scaffold."
   - "This revision does not assign an ADR number, update the ADR index, accept the decision, implement policy, or publish data."
   - "The source metadata remains draft and the effective decision status remains proposed."
+  - "The original creation date remains NEEDS VERIFICATION; 2026-07-24 identifies the v1.0 modernization revision, not repository-backed file creation provenance."
   - "The fixture-only source-role guard is bounded anti-collapse evidence only; it does not establish source, regulatory, occurrence, policy, release, or publication authority."
 [/KFM_META_BLOCK_V2] -->
 
@@ -156,7 +157,7 @@ This revision therefore:
 - The snake-case suitability-model schema exists but has no declared properties or required fields and permits additional properties.
 - `critical_habitat_vs_modeled.rego`, `model_card_required.rego`, and `source_role.rego` are default-deny scaffolds only.
 - `validate_critical_habitat_source_role.py` and its focused unittest are executable, deterministic, fixture-only anti-collapse checks for the separate `REGULATORY`/designation-context and `MODELED`/suitability-model lanes. The test data explicitly denies public use, authority creation, policy evaluation, promotion, release, and publication; it does not verify real source descriptors, regulatory designations, model results, or public readiness.
-- The focused no-network workflow runs only when its validator, test, or workflow files change. Its presence does not establish current execution for this documentation-only change, broader policy evaluation, source admission, or release authority.
+- The focused no-network workflow’s automatic pull-request trigger is path-filtered to its validator, test, or workflow files; maintainers may also invoke it manually. Its presence does not establish current execution for this documentation-only change, broader policy evaluation, source admission, or release authority.
 - The SuitabilityModel test-lane README still defines a separate intended invariant and negative paths; it does not prove executable SuitabilityModel schema/contract coverage, fixtures, CI pass rates, or a released product.
 
 ### PROPOSED by this ADR
@@ -431,7 +432,7 @@ Public exposure requires the governed source, evidence, policy, review, release,
 | Suitability-model schema | Empty properties, no required fields, `additionalProperties: true` | Scaffold exists | Meaningful machine validation |
 | Habitat policy boundary | Draft, evaluator-unbound, bundle-unaccepted; its relevant Rego modules are default-false scaffolds | Fail-closed default posture and non-operational maturity | Conditions, reasons, obligations, decisions, or runtime enforcement |
 | Critical-habitat source-role validator | Executable synthetic validator fixes separate `REGULATORY`/designation and `MODELED`/suitability pairings and rejects role/claim collapse | Bounded local declaration consistency and fail-closed negative paths | Official authority, source validity, rights, sensitivity, policy, review, release, or publication |
-| Focused test and workflow | Seven unittest cases and a no-network workflow exist; the workflow is path-filtered to its implementation/test files | Current fixture-test and CI design | A run for this ADR-only change, production behavior, or broader Habitat closure |
+| Focused test and workflow | Seven unittest cases and a no-network workflow exist; automatic pull-request runs are path-filtered to its implementation/test files while maintainers may also invoke it manually | Current fixture-test and CI design | A run for this ADR-only change, production behavior, or broader Habitat closure |
 | SuitabilityModel test README | Defines invariant, expected failures, suggested modules, and checklist | Intended test contract | Executable SuitabilityModel tests, fixtures, or pass rates |
 | Habitat dashboard specification | Specification-only, runtime-unverified, non-release/non-publication | Intended safe presentation boundary | A deployed dashboard, live source, or public surface |
 
@@ -452,7 +453,7 @@ Public exposure requires the governed source, evidence, policy, review, release,
 | Model-card policy | Default-false scaffold | Model-card schema, verifier, publication-blocking fields |
 | Source-role validator | Deterministic, synthetic critical-habitat/modeled anti-collapse guard | Accepted validator profile, source/model authority validation, and runtime binding |
 | Fixtures | Synthetic candidates are constructed in focused tests; object-specific inventory is not verified | Modeled, regulatory, overlap, stale, corrected, missing-support cases |
-| Tests | Seven focused no-network unittest cases and a path-filtered workflow exist; SuitabilityModel README lane remains unexecuted evidence | Current hosted run result, schema/contract coverage, real products, and release behavior |
+| Tests | Seven focused no-network unittest cases and a workflow whose automatic pull-request runs are path-filtered (with manual dispatch available) exist; SuitabilityModel README lane remains unexecuted evidence | Current hosted run result, schema/contract coverage, real products, and release behavior |
 | Source admission | Unknown | Reviewed SourceDescriptors for each product/version |
 | Model/run/uncertainty | Unknown | Model cards, receipts, uncertainty and validation artifacts |
 | Evidence and release | Unknown | EvidenceBundles, manifests, promotion, correction, rollback |
