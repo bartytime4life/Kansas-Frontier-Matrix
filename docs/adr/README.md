@@ -2,13 +2,13 @@
 doc_id: kfm://doc/adr-readme
 title: docs/adr — Architecture Decision Records
 type: standard
-version: v1.9
+version: v2.0
 status: draft; repository-grounded
 owners:
   - Architecture steward
   - Docs steward
 created: 2026-05-09
-updated: 2026-08-26
+updated: 2026-09-14
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
@@ -27,25 +27,26 @@ related:
   - .github/workflows/docs-control-plane.yml
 tags: [kfm, governance, adr, decisions, audit, control-plane]
 notes:
-  - "ADR-0037 is newly registered as proposed and records a candidate UI-family authority and compatibility plan for EvidenceDrawerPayload; registration is not acceptance and authorizes no dependent migration."
-  - "ADR-0036 is newly registered as proposed and records a candidate planning-encyclopedia carrier, single-writer, generated-mirror, and scaffold-disposition decision; registration is not acceptance."
-  - "ADR-0035 remains proposed and does not yet make repository-wide numbering or pointer-only domain indexes binding."
-  - "File presence does not accept a decision. ADR-0006, ADR-0007, and ADR-0029 are accepted in their stated scopes; the other 34 numbered ADRs remain proposed."
+  - "v2.0 refreshes this summary against main@53d61809c4c99c65700d63fbcbcf42069ed7f3a4 and canonical index blob 0c143676dfd3c1bda16cb44398c5ad5d4a49cf67."
+  - "ADR-0038 is accepted only for its stated Stage 1 trusted-base correction mechanism; it does not authorize a Stage 2 topology transition."
+  - "ADR-0039 is newly registered as proposed and selects no LayerManifest/LayerFrame migration or implementation."
+  - "ADR-0037, ADR-0036, and ADR-0035 remain proposed; their registration does not accept their candidate decisions."
+  - "File presence does not accept a decision. ADR-0006, ADR-0007, ADR-0029, and ADR-0038 are accepted in their stated scopes; the other 35 numbered ADRs remain proposed."
   - "This README is the operating contract; docs/adr/INDEX.md is the canonical human inventory."
 [/KFM_META_BLOCK_V2] -->
 
 # `docs/adr/` — Architecture Decision Records
 
 [![authority](https://img.shields.io/badge/authority-canonical-1f6feb)](../doctrine/directory-rules.md)
-[![inventory](https://img.shields.io/badge/numbered_ADRs-37-0969da)](./INDEX.md)
-[![decision status](https://img.shields.io/badge/decisions-3_accepted_%7C_34_proposed-1a7f37)](./INDEX.md)
+[![inventory](https://img.shields.io/badge/numbered_ADRs-39-0969da)](./INDEX.md)
+[![decision status](https://img.shields.io/badge/decisions-4_accepted_%7C_35_proposed-1a7f37)](./INDEX.md)
 [![validation](https://img.shields.io/badge/index_coherence-enforced-1a7f37)](../../tools/validators/validate_adr_index.py)
 [![review route](https://img.shields.io/badge/CODEOWNERS-%40bartytime4life-8250df)](../../.github/CODEOWNERS)
 
 Architecture Decision Records preserve why KFM made—or is considering—a consequential architectural choice. They are append-only governance memory: one decision per record, explicit status, evidence, consequences, alternatives, migration impact, validation, correction, and rollback.
 
 > [!IMPORTANT]
-> A tracked ADR is not automatically accepted. ADR-0006, ADR-0007, and ADR-0029 carry matching accepted source/index status in their stated scopes; the other 34 numbered records remain proposed. This summary does not independently promote any decision.
+> A tracked ADR is not automatically accepted. ADR-0006, ADR-0007, ADR-0029, and ADR-0038 carry matching accepted source/index status in their stated scopes; the other 35 numbered records remain proposed. This summary does not independently promote any decision.
 
 **Quick links:** [Verified snapshot](#verified-snapshot) · [Authority](#authority-and-boundaries) · [Inventory](#inventory-contract) · [Lifecycle](#decision-lifecycle) · [ADR triggers](#when-an-adr-is-required) · [Naming](#naming-and-numbering) · [Authoring](#authoring-workflow) · [Validation](#validation) · [Review](#review-and-supersession) · [Open work](#open-governance-work)
 
@@ -53,20 +54,24 @@ Architecture Decision Records preserve why KFM made—or is considering—a cons
 
 ## Verified snapshot
 
-The current inventory snapshot is prepared against `main@0eb7a527cb2157504a5a03a9d024a4127fc5e45c` plus the proposed ADR-0037 packet.
+The current inventory snapshot is prepared against `main@53d61809c4c99c65700d63fbcbcf42069ed7f3a4` and canonical index blob `0c143676dfd3c1bda16cb44398c5ad5d4a49cf67`.
 
 | Surface | Verified state | Meaning |
 |---|---:|---|
-| Direct Markdown files | 53 | Complete direct-child inventory after adding ADR-0037 |
-| Numbered records | 37 | Unique, contiguous IDs `ADR-0001` through `ADR-0037` |
-| Numbered source metadata | 23 `proposed`; 11 `draft`; 3 `accepted` | `draft` normalizes to `proposed`; accepted source and index status agree for three records |
-| Verified accepted decisions | 3 | ADR-0006, ADR-0007, and ADR-0029 carry matching source/index `accepted` status in their stated scopes |
+| Direct Markdown files | 55 | Complete direct-child inventory at the pinned tree |
+| Numbered records | 39 | Unique, contiguous IDs `ADR-0001` through `ADR-0039` |
+| Numbered source metadata | 24 `proposed`; 11 `draft`; 4 `accepted` | `draft` normalizes to `proposed`; accepted source and index status agree for four records |
+| Verified accepted decisions | 4 | ADR-0006, ADR-0007, ADR-0029, and ADR-0038 carry matching source/index `accepted` status in their stated scopes |
 | Explicit `NNNN` / `XXXX` placeholders | 4 | Unassigned scaffolds; not ADR numbers |
 | Slug-only ADR scaffolds | 8 | Unassigned scaffolds; not accepted decision records |
 | Template | 1 | [`ADR-template.md`](./ADR-template.md) |
 | Index and other support documents | 3 | This README, canonical index, and normalized-summary checklist |
 
 The exact numbered records and unassigned scaffolds are listed in the [canonical ADR index](./INDEX.md). The human cross-register at [`docs/registers/ADR_INDEX.md`](../registers/ADR_INDEX.md) points to that inventory without maintaining a competing table.
+
+### Currentness reconciliation — 2026-09-14
+
+This v2.0 summary refreshes only the README's index-derived snapshot, badges, operating notes, and open-work counts. It does not change `docs/adr/INDEX.md`, any ADR status, the validator, review evidence, implementation, release, deployment, promotion, or publication state.
 
 ## Authority and boundaries
 
@@ -164,6 +169,8 @@ Rules:
 - Proposed [`ADR-0035`](./ADR-0035-repository-wide-adr-identity-numbering-and-domain-indexing.md) would make the repository-wide identity and pointer-only domain-index model binding; it remains under review.
 - Proposed [`ADR-0036`](./ADR-0036-planning-encyclopedia-carrier-single-writer-and-scaffold-disposition.md) would admit one planning-encyclopedia lane and one chapter-source/generated-mirror model; it remains under review.
 - Proposed [`ADR-0037`](./ADR-0037-evidence-drawer-payload-ui-authority-and-compatibility.md) would select UI-family authority and retained compatibility projections for `EvidenceDrawerPayload`; it remains under review and authorizes no migration.
+- Accepted [`ADR-0038`](./ADR-0038-trusted-base-topology-correction-transitions.md) is limited to its stated Stage 1 trusted-base correction mechanism; it does not authorize its Stage 2 topology transition.
+- Proposed [`ADR-0039`](./ADR-0039-layer-manifest-frame-contract-home.md) would keep `LayerManifest` and `LayerFrame` in the existing data contract/schema family; it remains under review and authorizes no migration.
 
 Two numbered records use legacy filenames containing spaces and an em dash (`ADR-0007` and `ADR-0028`). Renaming them remains deferred pending inbound-link and history analysis.
 
@@ -214,13 +221,14 @@ The read-only [`docs-control-plane` workflow](../../.github/workflows/docs-contr
 
 ## Open governance work
 
-- Human acceptance review for the remaining 34 proposed numbered ADRs; accepted records retain any explicit later-review triggers in their own scopes.
+- Human acceptance review for the remaining 35 proposed numbered ADRs; accepted records retain any explicit later-review triggers in their own scopes.
 - Metadata normalization for 11 `draft` records without changing conservative `proposed` status.
 - Migration analysis for the two legacy space/em-dash filenames.
 - Disposition of 12 unassigned placeholder or slug-only scaffolds.
 - Acceptance or rejection of ADR-0035 before repository-wide numbering and domain-indexing guidance becomes binding.
 - Acceptance or rejection of ADR-0036 before the encyclopedia scaffold is admitted or populated.
 - Acceptance or rejection of ADR-0037 before any `EvidenceDrawerPayload` authority or compatibility migration.
+- Acceptance or rejection of ADR-0039 before any `LayerManifest` or `LayerFrame` authority, schema-home, or compatibility migration.
 - Review of [`ADR-0011`](./ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md) before `artifacts/release/` migration.
 - Resolution of `OPEN-DR-09-b` and the `artifacts/perf/` placement conflict.
 
