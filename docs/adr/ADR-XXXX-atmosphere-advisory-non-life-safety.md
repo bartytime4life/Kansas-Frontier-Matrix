@@ -3,7 +3,7 @@ doc_id: kfm://doc/adr-candidate/atmosphere-advisory-non-life-safety
 title: "ADR-XXXX — Atmosphere Advisory Context Is Referral-Only and Not for Life Safety"
 type: adr-candidate
 adr_id: ADR-XXXX
-version: v0.3
+version: v0.4
 status: proposed
 effective_decision_status: not-assigned
 owners:
@@ -26,7 +26,7 @@ reviewers_required:
   - Validation and CI steward
   - Release, correction, and rollback steward
 created: 2026-05-19
-updated: 2026-08-14
+updated: 2026-09-14
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
@@ -63,6 +63,34 @@ inspection_boundary: >
   advisory endpoint, policy evaluator, EvidenceBundle resolver, API route,
   MapLibre surface, Focus Mode runtime, notification service, release environment,
   cache, correction workflow, or deployed public client was exercised.
+refresh_2026_09_14_base_ref: "main"
+refresh_2026_09_14_base_commit: "bccc662ce56ea2c27a7e77e002dddb59828abf6c"
+refresh_2026_09_14_target_prior_blob: "d65c5ac04576d48f8f0f2665e144c11a25bce3c6"
+refresh_2026_09_14_adr_index_blob: "0c143676dfd3c1bda16cb44398c5ad5d4a49cf67"
+refresh_2026_09_14_adr_readme_blob: "27c8f00622afe6cd0c65a1b116cd768dac31bea6"
+refresh_2026_09_14_adr_0020_blob: "af5bae70d53ea1c46bced76dda9a5f582a23b49f"
+refresh_2026_09_14_adr_0025_blob: "37abf3a3f11949b942c1c81d424f505ddabc5fc3"
+refresh_2026_09_14_adr_0029_blob: "4c1ef5f7f812d58fbdde9898acc96bb4c9280b2c"
+refresh_2026_09_14_directory_rules_blob: "fd49a0b83e55cef52c1124281f093e263526898d"
+refresh_2026_09_14_planned_files_blob: "78e445122b4d539c4da1f32dc89f0a44ae99c20f"
+refresh_2026_09_14_atmosphere_policy_blob: "53480f8a9e7db4d863ed15cc96c708f0e8d40ef4"
+refresh_2026_09_14_publication_posture_blob: "c06e77d9e046e4da71147b119d05cf45dd0f8b4d"
+refresh_2026_09_14_api_contracts_blob: "d8429021508b54904d9e4c7b88438ac2c21794ee"
+refresh_2026_09_14_map_ui_contracts_blob: "126ed9fdc1efffaed146b4bd06b0d25cb4f9cffc"
+refresh_2026_09_14_life_safety_boundary_blob: "62c06931cd832a1fbaf1d0e909bc80532bebca30"
+refresh_2026_09_14_advisory_contract_blob: "42e49000819e8777d6c58dd753e77b33049552c0"
+refresh_2026_09_14_advisory_pointer_blob: "8ae7c47e64314cc8d1eef879b332e7a2a6da3bd1"
+refresh_2026_09_14_decision_envelope_blob: "e68e33e08bc9e2ea0373ecd07f471d8f8ea24d69"
+refresh_2026_09_14_schema_index_blob: "e7efa6509a726422e7439d52c430c0808478f39c"
+refresh_2026_09_14_schema_pascal_blob: "a53deeaa6814cecf5ff1bc9df7e95c87239dc1e1"
+refresh_2026_09_14_schema_snake_blob: "b7faa2ca8624de3a00cf52d287c4130a9cba2762"
+refresh_2026_09_14_schema_kebab_blob: "65ea20bb57234cb1426bf52aa5e49f6635eb2629"
+refresh_2026_09_14_policy_underscore_blob: "0f46b314048f1b844ebed75fef21b911778bd47d"
+refresh_2026_09_14_policy_kebab_blob: "cf744b1603c9422b8e51bbeb9e497e3f59541063"
+refresh_2026_09_14_fixture_valid_readme_blob: "51a6a477a95b9255486a30920a4677e8d9d4f812"
+refresh_2026_09_14_fixture_invalid_readme_blob: "65c40f6572a8bfcb7bc7d0ce6e27f114e6cedd3a"
+refresh_2026_09_14_test_blob: "8b90232802fb6f67bd7975d08a779023172f7744"
+refresh_2026_09_14_scope_limit: "Documentation evidence refresh only; no ADR number or acceptance, advisory source admission, policy or schema implementation, public alerting, life-safety guidance, release, deployment, or publication."
 related:
   - docs/adr/README.md
   - docs/adr/INDEX.md
@@ -143,7 +171,7 @@ notes:
 | **Decision class** | Cross-component Atmosphere/Hazards trust-boundary and public-surface behavior |
 | **Original scaffold** | 2026-05-19 |
 | **First substantive candidate** | 2026-07-24 |
-| **Current evidence refresh** | 2026-08-14 |
+| **Current evidence refresh** | 2026-09-14 |
 | **Deciders** | `OWNER_TBD` / `NEEDS VERIFICATION` |
 | **Current semantic-contract posture** | Canonical `AdvisoryContext.md` confirmed; lowercase contract is a compatibility pointer |
 | **Current machine-shape posture** | Three conflicting permissive schema scaffolds |
@@ -153,6 +181,16 @@ notes:
 | **Implementation effect of this revision** | Documentation only |
 | **Publication effect** | None |
 | **Supersedes / superseded by** | None / none |
+
+### Current repository re-read — 2026-09-14
+
+This documentation-only re-read is pinned to `main@bccc662ce56ea2c27a7e77e002dddb59828abf6c`. The canonical ADR index still treats `ADR-XXXX` as an explicit unassigned scaffold, so this refresh assigns no number and does not accept the referral-only advisory boundary.
+
+ADR-0029 remains the accepted placement decision. The canonical `AdvisoryContext.md` contract remains a draft semantic authority and the lowercase document a compatibility pointer; the finite decision-envelope contract remains draft. The three PascalCase, snake_case, and kebab-case JSON schema scaffolds are still permissive and conflicted. Both inspected Rego files remain generated default-deny scaffolds, fixture lanes remain documentation-only, and the focused test remains a docstring-only placeholder.
+
+No source endpoint, official advisory product, policy evaluator, EvidenceBundle/API resolver, MapLibre or Evidence Drawer surface, Focus Mode/AI runtime, notification service, correction workflow, cache invalidation, release environment, or deployed client was exercised. This re-read therefore does not prove source authority, currentness, runtime enforcement, public availability, operational readiness, or life-safety suitability.
+
+This refresh does **not** issue or relay emergency instructions; assign a source role; alter policy, schema, fixtures, tests, application code, or public UI; activate a source or notification surface; or release, deploy, or publish an advisory product.
 
 ### Assignment, acceptance, implementation, and release are separate transitions
 
@@ -194,7 +232,9 @@ This same-path update changes no responsibility boundary and creates no parallel
 
 ## Evidence boundary
 
-This revision is grounded in repository evidence at `main@3e1a929a5e23f570b40c56e473b08ef65c3c5673`. The prior target blob is `df346a651b93f6402b35a0fed9a2c539fa6fb13c`.
+Initial v0.3 evidence remains pinned to `main@3e1a929a5e23f570b40c56e473b08ef65c3c5673`. This v0.4 documentation-only refresh separately records current repository bytes at `main@bccc662ce56ea2c27a7e77e002dddb59828abf6c`, with prior target blob `d65c5ac04576d48f8f0f2665e144c11a25bce3c6`.
+
+The current re-read verifies document and scaffold presence only. It does not infer operational enforcement, source authority, rights clearance, evidence closure, current official advisory state, release, deployment, or publication from those bytes.
 
 ### Truth labels
 
@@ -923,6 +963,7 @@ If the decision is later assigned and accepted:
 | 2026-05-19 | Added the planned ADR scaffold from the Atmosphere documentation inventory. | `not-assigned` |
 | 2026-07-24 | Replaced the 11-line scaffold with a same-path, evidence-grounded candidate; preserved `ADR-XXXX` and `not-assigned`; added decision, options, consequences, implementation gates, validation, rollback, conflicts, and open questions. | `proposed / not-assigned` |
 | 2026-08-14 | Added document control, current main/blob evidence, accepted Directory Rules placement, assignment/acceptance/implementation/release separation, corrected canonical-contract status, preserved schema and policy conflicts, expanded public-surface behavior, convergence phases, acceptance gates, risk ledger, verification checklist, and no-loss reconciliation. | `proposed / not-assigned` |
+| 2026-09-14 | Re-pinned the candidate to current main; refreshed advisory, schema, policy, fixture, and test evidence; preserved the explicit placeholder, referral-only, non-life-safety, non-activation, and no-publication boundaries. | `proposed / not-assigned` |
 
 ---
 
