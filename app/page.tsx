@@ -1007,6 +1007,7 @@ export default function Home() {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
   const styleGenerationReadyRef = useRef(false);
+  const mapMutationErrorRef = useRef<string | null>(null);
   const popupRef = useRef<Popup | null>(null);
   const scaleControlRef = useRef<ScaleControl | null>(null);
   const hoveredRef = useRef<{ source: string; id: string | number } | null>(null);
@@ -1165,7 +1166,8 @@ export default function Home() {
       return true;
     } catch (error) {
       const message = error instanceof Error ? error.message : "unknown renderer failure";
-      setMaplibreProbe((current) => ({ ...current, error: message }));
+      mapMutationErrorRef.current = `${operation}: ${message}`;
+      setMaplibreProbe((current) => ({ ...current, error: mapMutationErrorRef.current }));
       setRuntime({ kind: "degraded", message: `${operation} failed; the Explorer shell and data controls remain available. ${message}` });
       return false;
     }
@@ -1179,7 +1181,9 @@ export default function Home() {
     const apply = () => {
       const budget = browserRenderBudget(renderQuality);
       runMapMutation("Rendering-quality update", () => map.setPixelRatio(budget.pixelRatio));
-      void import("maplibre-gl").then(gl => { if (!disposed) runMapMutation("Image-request budget update", () => gl.setMaxParallelImageRequests(budget.imageRequests)); }).catch((error: unknown) => runMapMutation("MapLibre runtime update", () => { throw error; }));
+      void import("maplibre-gl").then(gl => { if (!disposed) runMapMutation("Image-request budget update", () => gl.setMaxParallelImageRequests(budget.imageRequests)); }).catch((error: unknown) => {
+        if (!disposed) runMapMutation("MapLibre runtime update", () => { throw error; });
+      });
     };
     apply(); window.addEventListener("resize", apply);
     return () => { disposed = true; window.removeEventListener("resize", apply); };
@@ -3776,8 +3780,10 @@ export default function Home() {
           setRuntime({ kind: "degraded", message: "The browser paused the map renderer. Data controls remain available while MapLibre restores the canvas." });
         });
         mapCanvas.addEventListener("webglcontextrestored", () => {
-          runMapMutation("Map canvas recovery", () => map.resize());
-          setRuntime({ kind: "loading", message: "Map canvas restored · verifying sources and interactions…" });
+          if (disposed) return;
+          if (runMapMutation("Map canvas recovery", () => map.resize())) {
+            setRuntime({ kind: "loading", message: "Map canvas restored · verifying sources and interactions…" });
+          }
         });
         if (typeof ResizeObserver !== "undefined") {
           resizeObserver = new ResizeObserver((entries) => {
@@ -3837,7 +3843,7 @@ export default function Home() {
             interactionsReady,
             sourcesReady,
             projection: projectionType,
-            error: runtimeError,
+            error: runtimeError ?? mapMutationErrorRef.current,
           } satisfies Partial<MapLibreRuntimeProbe>;
           setSourceStates(nextSourceStates);
           setStyleReady(styleLoaded);
@@ -3845,43 +3851,54 @@ export default function Home() {
           return nextProbe;
         };
 
-        const syncStyle = () => {
+        const syncStyle = (): boolean => {
+          styleGenerationReadyRef.current = false;
+          mapMutationErrorRef.current = null;
+          const synced = runMapMutation("Map style synchronization", () => {
+            hoveredRef.current = null;
+            map.getCanvas().style.cursor = "";
+            applyRegistryState(map, visibilityRef.current, opacityRef.current, yearRef.current, orderRef.current, mapEvidenceFilterRef.current, temporalQueryRef.current);
+            noaaRadarReadyRef.current = Boolean(
+              noaaRadarFrameTimeRef.current
+              && noaaRadarManifestIsFresh(noaaRadarManifestRef.current, Date.now()),
+            );
+            applyOfficialContextState(map, officialContextRuntimeVisibility(officialVisibilityRef.current, temporalQueryRef.current.frame, noaaRadarReadyRef.current, noaaRadarFrameTimeRef.current), officialOpacityRef.current, officialPayloadsRef.current);
+            setElevationExaggeration(map, verticalExaggerationRef.current);
+            map.setProjection({ type: projectionRef.current });
+            applySceneEnvironment(map, atmospherePresetRef.current, lightAzimuthRef.current);
+            map.setVerticalFieldOfView(fieldOfViewRef.current);
+            setTerrainState(setTerrainPresentation(map, scenePresetRef.current === "elevation-3d", verticalExaggerationRef.current));
+            setTerrainHeightOverlay(map, scenePresetRef.current === "elevation-3d" && topographicOverlayRef.current);
+            setStructures3DState(setStructureExtrusions(map, structures3DRef.current));
+            const currentSelection = selectedRef.current;
+            if (currentSelection) {
+              const mismatch = (currentSelection.featureId.startsWith("official-context:") && temporalQueryRef.current.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME)
+                || !isFeatureAvailableForTemporalQuery(currentSelection.layer, currentSelection.properties.year, temporalQueryRef.current);
+              const layerVisible = selectionCarrierIsVisible(currentSelection, visibilityRef.current, officialVisibilityRef.current, temporalQueryRef.current.frame);
+              const filtered = !selectionPassesEvidenceFilter(currentSelection, mapEvidenceFilterRef.current);
+              updateSelectionSource(map, mismatch || !layerVisible || filtered ? null : currentSelection.geometry);
+            }
+            updateMeasurementSource(map, buildMeasurementData(measureCoordinatesRef.current, measurementGeometryModeRef.current));
+            updateAnalysisAreaSource(map, analysisAreaRef.current);
+            updateImportPreviewSource(map, importPreviewVisibleRef.current ? importPreviewRef.current?.featureCollection : null);
+          });
+          if (!synced) return false;
           styleGenerationReadyRef.current = true;
-          hoveredRef.current = null;
-          map.getCanvas().style.cursor = "";
-          applyRegistryState(map, visibilityRef.current, opacityRef.current, yearRef.current, orderRef.current, mapEvidenceFilterRef.current, temporalQueryRef.current);
-          noaaRadarReadyRef.current = Boolean(
-            noaaRadarFrameTimeRef.current
-            && noaaRadarManifestIsFresh(noaaRadarManifestRef.current, Date.now()),
-          );
-          applyOfficialContextState(map, officialContextRuntimeVisibility(officialVisibilityRef.current, temporalQueryRef.current.frame, noaaRadarReadyRef.current, noaaRadarFrameTimeRef.current), officialOpacityRef.current, officialPayloadsRef.current);
-          setElevationExaggeration(map, verticalExaggerationRef.current);
-          map.setProjection({ type: projectionRef.current });
-          applySceneEnvironment(map, atmospherePresetRef.current, lightAzimuthRef.current);
-          map.setVerticalFieldOfView(fieldOfViewRef.current);
-          setTerrainState(setTerrainPresentation(map, scenePresetRef.current === "elevation-3d", verticalExaggerationRef.current));
-          setTerrainHeightOverlay(map, scenePresetRef.current === "elevation-3d" && topographicOverlayRef.current);
-          setStructures3DState(setStructureExtrusions(map, structures3DRef.current));
-          const currentSelection = selectedRef.current;
-          if (currentSelection) {
-            const mismatch = (currentSelection.featureId.startsWith("official-context:") && temporalQueryRef.current.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME)
-              || !isFeatureAvailableForTemporalQuery(currentSelection.layer, currentSelection.properties.year, temporalQueryRef.current);
-            const layerVisible = selectionCarrierIsVisible(currentSelection, visibilityRef.current, officialVisibilityRef.current, temporalQueryRef.current.frame);
-            const filtered = !selectionPassesEvidenceFilter(currentSelection, mapEvidenceFilterRef.current);
-            updateSelectionSource(map, mismatch || !layerVisible || filtered ? null : currentSelection.geometry);
+          if (!runMapMutation("Map runtime proof refresh", () => { refreshMaplibreProbe(); })) {
+            styleGenerationReadyRef.current = false;
+            return false;
           }
-          updateMeasurementSource(map, buildMeasurementData(measureCoordinatesRef.current, measurementGeometryModeRef.current));
-          updateAnalysisAreaSource(map, analysisAreaRef.current);
-          updateImportPreviewSource(map, importPreviewVisibleRef.current ? importPreviewRef.current?.featureCollection : null);
-          refreshMaplibreProbe();
+          return true;
         };
 
         map.on("style.load", syncStyle);
         map.once("load", () => {
-          syncStyle();
-          map.setProjection({ type: projectionRef.current });
+          if (!syncStyle()) return;
+          if (!runMapMutation("Map load finalization", () => {
+            map.setProjection({ type: projectionRef.current });
+            map.resize();
+          })) return;
           setRuntime({ kind: "loading", message: `MapLibre ${version} loaded · verifying local sources and interactions…` });
-          map.resize();
         });
 
         let lastHoverSample = -Infinity;
@@ -4212,19 +4229,23 @@ export default function Home() {
           }));
         });
         map.on("idle", () => {
-          const probe = refreshMaplibreProbe();
-          const ready = probe.styleLoaded
-            && probe.canvasReady
-            && probe.tilesLoaded
-            && probe.sourcesReady === LAYER_REGISTRY.length
-            && probe.interactionsReady
-            && !runtimeError
-            && !degradedReason;
-          if (!ready) {
-            setRuntime({ kind: runtimeError || degradedReason ? "degraded" : "loading", message: runtimeError ? `MapLibre runtime proof is incomplete: ${runtimeError}` : degradedReason ?? "MapLibre is waiting for all admitted local capabilities to settle…" });
-            return;
-          }
-          setRuntime({ kind: "ready", message: `MapLibre ${version} ready · ${LAYER_REGISTRY.length} local sources · interactions proven` });
+          runMapMutation("Map readiness check", () => {
+            const probe = refreshMaplibreProbe();
+            const mutationError = mapMutationErrorRef.current;
+            const ready = probe.styleLoaded
+              && probe.canvasReady
+              && probe.tilesLoaded
+              && probe.sourcesReady === LAYER_REGISTRY.length
+              && probe.interactionsReady
+              && !runtimeError
+              && !degradedReason
+              && !mutationError;
+            if (!ready) {
+              setRuntime({ kind: runtimeError || degradedReason || mutationError ? "degraded" : "loading", message: runtimeError ? `MapLibre runtime proof is incomplete: ${runtimeError}` : degradedReason ?? mutationError ?? "MapLibre is waiting for all admitted local capabilities to settle…" });
+              return;
+            }
+            setRuntime({ kind: "ready", message: `MapLibre ${version} ready · ${LAYER_REGISTRY.length} local sources · interactions proven` });
+          });
         });
       } catch (error) {
         const message = error instanceof Error ? error.message : "unknown failure";
@@ -4316,8 +4337,8 @@ export default function Home() {
     if (!map || !styleGenerationReadyRef.current) return;
     let animationFrame = 0;
     let lastFrame = 0;
-    const touchBalanced = browserRenderBudget(renderQuality).coarsePointer && renderQuality === "auto";
-    const effectsActive = projection !== "globe" && dynamicEffects && !reducedMotion && renderQuality !== "efficient" && !touchBalanced && ["water-context", "smoke-context", "fire-context", "hazards-context", "habitat-connectivity", "transport-context", "communities"].some(id => visibility[id]);
+    const budget = browserRenderBudget(renderQuality);
+    const effectsActive = projection !== "globe" && dynamicEffects && !reducedMotion && !budget.efficient && ["water-context", "smoke-context", "fire-context", "hazards-context", "habitat-connectivity", "transport-context", "communities"].some(id => visibility[id]);
 
     if (!effectsActive) {
       runMapMutation("Map-effect reset", () => applyDynamicMapEffects(map, 0, opacity, false));

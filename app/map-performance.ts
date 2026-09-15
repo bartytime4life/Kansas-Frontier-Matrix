@@ -11,6 +11,7 @@ export function renderBudget(quality: RenderQuality, deviceRatio = 1, saveData =
   // silently downgraded.
   const touchBalanced = quality === "auto" && coarsePointer && !efficient;
   return {
+    efficient,
     pixelRatio: Math.max(1, Math.min(Number.isFinite(deviceRatio) ? deviceRatio : 1, efficient ? 1 : quality === "detail" ? 2 : touchBalanced ? 1.25 : 1.5)),
     imageRequests: efficient ? 6 : quality === "detail" ? 12 : touchBalanced ? 7 : 10,
     tileCache: efficient ? 48 : quality === "detail" ? 112 : touchBalanced ? 64 : 96,

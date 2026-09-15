@@ -57,6 +57,7 @@ test("automatic embedded rendering uses the smallest bounded GPU budget", () => 
   assert.equal(budget.imageRequests, 6);
   assert.equal(budget.tileCache, 48);
   assert.equal(budget.workerCount, 1);
+  assert.equal(budget.efficient, true);
   assert.equal(perf.renderBudget("detail", 3, false, false, true).pixelRatio, 2);
 });
 
@@ -69,8 +70,12 @@ test("route and global error surfaces keep client failures visible", async () =>
   ]);
   assert.match(routeError, /Retry in battery saver/);
   assert.match(globalError, /The Explorer could not finish loading/);
+  assert.match(routeError, /window\.location\.reload/);
+  assert.match(globalError, /window\.location\.reload/);
   assert.doesNotMatch(page, /\.loseContext\(/);
   assert.doesNotMatch(snapshot, /\.loseContext\(/);
+  assert.match(page, /Map style synchronization/);
+  assert.match(page, /mapMutationErrorRef/);
 });
 
 test("embedded shells use parent-relative height and explicit shares stay guarded", async () => {
