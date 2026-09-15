@@ -1,0 +1,1 @@
+SCHEMA_INVALID|/truth_labels/fixtures~1generated_receipt~1artifacts~1minimal.txt|schema constraint failed: enum

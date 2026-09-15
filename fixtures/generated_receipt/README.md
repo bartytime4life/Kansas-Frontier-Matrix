@@ -94,8 +94,16 @@ Do not use this lane for actual receipts, signed envelopes, EvidenceBundles, Sou
 
 ## Verification status
 
-- Payload inventory: one valid JSON candidate, one one-defect invalid JSON candidate, and one bound synthetic artifact.
+- Payload inventory: one valid JSON candidate, three one-defect invalid JSON candidates, and one bound synthetic artifact.
 - Schema alignment: confirmed against `schemas/contracts/v1/receipts/generated_receipt.schema.json`.
 - Consumer alignment: confirmed for the bounded no-network validator, focused `unittest` suite, and `validator-suite` workflow wiring.
 - Integrity posture: SHA-256 is implemented; BLAKE3 fails closed until an explicit dependency decision is made.
 - Remaining non-scope: policy evaluation, evidence/citation resolution, automatic review-state updates, merge enforcement, persistence, release, and publication remain separate or `NEEDS VERIFICATION`.
+
+## Currentness correction regression
+
+`invalid/qualified_truth_label.json` rejects prose in the finite enum;
+`invalid/extra_truth_label_key.json` rejects canonical labels for undeclared artifacts.
+Each has an exact single-finding sidecar consumed by `--fixtures`. The focused tests
+also replay the retained original receipt, verify its unchanged digest, and validate
+the successor while requiring pending review and historical SKIPPED gates to remain.
