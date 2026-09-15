@@ -80,7 +80,8 @@ export default function SnapshotMap({ snapshot, label, syncCamera, onCameraChang
         setStatus("Map unavailable: WebGL2 is not supported here. Scene details and evidence remain available below.");
         return;
       }
-      probe.getExtension("WEBGL_lose_context")?.loseContext();
+      // A detached probe is enough. Forcing WEBGL_lose_context can destabilize
+      // the shared GPU surface in embedded Chromium hosts.
       lib.setWorkerUrl("/maplibre/maplibre-gl-worker.mjs");
       const state = current.current;
       const safeCamera: Camera = state.camera.center === "WITHHELD_BROWSER_LOCATION"

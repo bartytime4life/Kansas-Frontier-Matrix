@@ -1,6 +1,6 @@
 # KFM Explorer Source Ledger, Gap Register, and Traceability
 
-Audit date: 2026-09-11; Site/repository/domain checkpoint refreshed
+Audit date: 2026-09-15; Site/repository/domain checkpoint refreshed
 Target: existing Site `kansas-frontier-matrix-explorer`
 Truth rule: the current mounted Site proves current behavior; Drive documents support doctrine or proposals but do not prove implementation.
 
@@ -8,9 +8,30 @@ Connection checkpoint: the active Site project is
 `appgprj_6aa0b1c41bc08191bfd86003920f1631` with canonical host
 `https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site`; no custom
 domain was attached when checked. GitHub `main` was independently read at
-`b44494c1cf0807ed28b606e8a41b255bebdf4ad7`. The Site and repository remain
+`b18b7276faa3cdad15f2ed34270b6640559bdf27`. The Site and repository remain
 separate source histories, and the repository child manifest still names legacy
 project `appgprj_6a870a079c1c8191abb7401ef092a181`.
+
+## Current repair and missing-data order
+
+The 15 September 2026 blank-after-load report makes shell survival the first
+dependency for every data lane. The production APIs can answer while a client
+frame still fails, so HTTP reachability and rendered-map proof remain separate.
+
+| Priority | Lane | Current evidence | Next dependency-closed step | Completion proof |
+|---|---|---|---|---|
+| P0 | Embedded Explorer shell | Root and data routes returned `200`; the embedded frame then became blank and canceled an in-flight request | Validate stored workspaces before render, stop passive history changes, remove deliberate WebGL context loss, contain renderer mutations, and keep route/global recovery UI | Shell remains visible after corrupt-storage restore, delayed data completion, context loss, and more than one second of embedded runtime |
+| P0 | Connected source rendering | Census, streamflow, radar, NWPS, smoke, alerts, earthquake, station, and terrain endpoints have current or recent bounded responses; API success alone does not prove the canvas | Run one WebGL-capable acceptance covering a GeoJSON source, a raster source, feature selection to Evidence Drawer, and a successful empty refresh | Screenshot plus interaction record tied to the deployed source; `empty`, `partial`, and `error` remain distinct |
+| P1 | KGS surface geology pilot | A KGS carrier and legend path exist; the current main geology layer is generalized demonstration data | Pin the exact KGS GeMS layer/edition, service metadata, units, scale, palette, rights, and generalized context adapter | SourceDescriptor, source-shaped fixture, offline validator, bounded adapter, LayerManifest, correction and rollback receipt |
+| P1 | Soil pilot | SSURGO/SDA and Mesonet are held candidates; no main-map soil evidence is admitted | First build one county of SSURGO map units/components/horizons; then, after separate permission/rate review, build a two-depth Mesonet observation fixture | Static survey and observed station clocks remain separate; schema, QC, rate, rights, missing and stale states pass |
+| P1 | Frontier county-year matrix | The core county-year product is absent as versioned data | Materialize two counties by two years with typed Census/TIGER and selected economic/agricultural inputs | Geography versions, definitions, uncertainty and EvidenceRefs survive API, Drawer, report, correction and rollback |
+| P2 | Historical, atmosphere and ecology slices | HMS/radar are context; historical scans, HRRR/PM2.5 and most ecology layers remain held or generalized | Advance one exact bounded slice per lane only after the P1 carrier pattern is proven | No cross-clock relabeling, sensitive-location leakage, simulated movement, or automatic source admission |
+
+The common intake order is: exact SourceDescriptor → source-shaped fixture →
+offline validation → bounded RAW-only dry run → normalization → EvidenceBundle →
+LayerManifest → policy/rights review → ReleaseManifest decision → correction and
+rollback proof. Discovery or API availability does
+not advance admission, release, deployment, promotion, or publication state.
 
 ## Source ledger
 
@@ -47,13 +68,13 @@ Searches also found duplicate retained artifacts, including two identical Pass 1
 - The Evidence Drawer exposes source role, citation/reference, spatial/temporal scope, freshness, review/release state, rights, generalization, uncertainty, correction, and lineage; the Map Workbench adds explicit preflight before public-safe export.
 - Timeline steps, playback, exact observation time, cumulative historical vintage, availability indicators, and no-data messaging are implemented with site-local fixtures.
 - Search covers layers, datasets, feature names, and stable IDs.
-- URL state preserves camera, visible layers, opacity, time, basemap, projection, layer order, workspace, map-workbench view, selection, Drawer/Focus state, and a restored privacy-redaction marker.
+- Explicit Share links preserve camera, visible layers, opacity, time, basemap, projection, layer order, workspace, map-workbench view, selection, Drawer/Focus state, and a restored privacy-redaction marker. Ordinary embedded map changes leave host-controlled history untouched.
 - Responsive panels become focus-trapped modal sheets on compact layouts; map status has a screen-reader live region; reduced-motion and forced-colors handling exist.
 - Focus Mode is a deterministic site-local adapter with no direct browser-to-model endpoint.
 - Globe projection is available as context. Opt-in Terrain 3D and hillshade use the explicitly disclosed AWS / Mapzen Terrarium carrier with a 2D fallback; the carrier remains display context, not admitted elevation evidence. Swipe comparison remains held because no compatible admitted pair exists.
 - The Sources workbench discloses every browser-requested basemap and terrain carrier from `app/external-context-sources.ts`, including activation, endpoint host, attribution, fallback, and evidence/export boundaries.
 - The optional NOAA nowCOAST/NWS/OAR MRMS CONUS base-reflectivity layer uses a fixed capabilities adapter and exact advertised observation times. It offers bounded recent 30-minute, 1-hour, and 2-hour playback, reports observed cadence/gaps, never interpolates frames, and remains `EXTERNAL_CONTEXT_ONLY`.
-- The official context registry now exposes fourteen source-specific controls. The main map can request a bounded rolling 24-hour NOAA HMS smoke footprint feed, a Kansas-bounded Raspberry Shake AM FDSN station inventory, and USGS 3DEP LiDAR-derived hillshade and slope raster functions. Each source has a visible endpoint, freshness axis, limitation, fallback, opacity control, and historical-frame hold.
+- The official context registry now exposes fifteen source-specific controls, including NASA FIRMS active-fire display context. The main map can request a bounded rolling 24-hour NOAA HMS smoke footprint feed, a Kansas-bounded Raspberry Shake AM FDSN station inventory, and USGS 3DEP LiDAR-derived hillshade and slope raster functions. Each source has a visible endpoint, freshness axis, limitation, fallback, opacity control, and historical-frame hold.
 - NOAA HMS smoke retains provider Start/End intervals and qualitative density; the Site does not animate a polygon as transport or collapse it into surface PM2.5, fire perimeter, plume altitude, health guidance, warning status, or an all-clear.
 - Raspberry Shake integration is station-level and provider-linked: network/station geometry, site metadata, elevation, provider time bounds, FDSN source identity, and a StationView handoff are mapped. The browser does not stream miniSEED, infer waveforms, convert raw counts, or claim realtime/event/alert coverage.
 - USGS 3DEP features now include an optional dynamic slope context layer and an expanded LiDAR/DEM source ledger. Raw point-cloud/work-unit provenance, datum, pulse spacing, accuracy, numeric profile authority, and KFM elevation evidence remain held behind the existing terrain gates.
@@ -188,7 +209,7 @@ Searches also found duplicate retained artifacts, including two identical Pass 1
 
 - Category: Delivery / backend.
 - Sources: `SRC-MAP-OPS` §§10–14; `SRC-MAP-MASTER` PMTiles governance; `SRC-PIPE` §§18–21.
-- Current Site evidence: all ten layers are bounded site-local GeoJSON fixtures; no released remote adapter is claimed.
+- Current Site evidence: twenty-two registry-driven layers remain bounded site-local GeoJSON fixtures; no released remote adapter is claimed.
 - Desired state: manifest-bound, release-linked adapters with range/header, rights, stale, correction, and error proof.
 - Truth label: `UNKNOWN`.
 - Dependencies: governed backend or admitted public artifact, manifest, rights review, cache/correction rules.
@@ -236,8 +257,8 @@ Searches also found duplicate retained artifacts, including two identical Pass 1
 | Desktop Escape path | `SRC-MAP-OPS`, `SRC-MAP-MASTER` | `GAP-P1-004` | UI state only | No trust-state change | `app/page.tsx` | Keyboard browser check | Does not turn desktop side panels into modal dialogs | Remove key handler |
 | Unsupported-browser fail-visible path | `SRC-MAP-OPS`, `SRC-MAP-MASTER` | Reliability acceptance criterion | Capability probe only | `ERROR`; catalog and trust text remain available | `app/page.tsx` | Browser environment without WebGL2 | Interactive map requires WebGL2 | Remove the preflight capability check |
 | Visible advanced-capability gates | `SRC-MAP-OPS`, `SRC-MAP-MASTER` | `GAP-P3-006`, `GAP-P2-007` | External terrain context only; no KFM evidence data added | `CONTEXT ONLY` / unavailable remains visible | `app/page.tsx`, `app/globals.css` | Render/build check | Terrain is display-only; swipe remains held | Remove explanatory gate block |
-| External context source registry | Provider primary references + renderer configuration | `GAP-P1-012` | Four external display carriers; context only | Explicitly excluded from KFM evidence | `app/external-context-sources.ts`, `app/map-runtime.ts`, `app/terrain-sources.ts`, `app/page.tsx`, `app/globals.css` | Registry contract, TypeScript, rendered-shell checks | Runtime availability and provider lineage remain external | Restore endpoint literals and remove disclosure cards |
-| Official Kansas context adapters | Census TIGERweb + 2024 ACS 5-year, USGS Water Data, USGS Earthquake Hazards, NOAA HMS smoke, Raspberry Shake FDSN stations, USGS 3DEP LiDAR-derived terrain, NOAA/NWS alerts, NOAA NWM, and NOAA nowCOAST/NWS/OAR MRMS radar | `GAP-P1-012`, `GAP-P1-013`, `GAP-P2-014` | Fourteen fixed connections; bounded current/rolling context, dated smoke intervals, station metadata, and optional LiDAR-derived slope/hillshade | `EXTERNAL_CONTEXT_ONLY`; excluded from KFM reports, exports, admission, release, and EvidenceBundles | `app/live-context.ts`, `app/api/live-context/route.ts`, `app/event-atlas.ts`, `app/api/event-atlas/upstream.ts`, `app/terrain-sources.ts`, `app/source-intelligence.ts`, `app/noaa-radar.ts`, `app/api/noaa-radar/frames/route.ts`, `app/page.tsx` | Fixed allowlists, bounded response budgets, exact smoke interval parsing, FDSN header/coordinate validation, dynamic raster registry, temporal holds, build/type/rendered-shell checks | Provider cadence, revisions, FDSN latency, station quality, raw-count response, work-unit identity, datum/accuracy, and emergency/life-safety boundaries remain explicit; no smoke, station, raster, model, or alert layer is KFM evidence | Remove the new registry/adapter blocks and retain the prior site-local layers |
+| External context source registry | Provider primary references + renderer configuration | `GAP-P1-012` | Five external display carriers; context only | Explicitly excluded from KFM evidence | `app/external-context-sources.ts`, `app/map-runtime.ts`, `app/terrain-sources.ts`, `app/page.tsx`, `app/globals.css` | Registry contract, TypeScript, rendered-shell checks | Runtime availability and provider lineage remain external | Restore endpoint literals and remove disclosure cards |
+| Official Kansas context adapters | Census TIGERweb 2020 decennial population/housing baseline, USGS Water Data, USGS Earthquake Hazards, NASA FIRMS active fire, NOAA HMS smoke, Raspberry Shake FDSN stations, USGS 3DEP LiDAR-derived terrain, NOAA/NWS alerts, NOAA NWM, and NOAA nowCOAST/NWS/OAR MRMS radar | `GAP-P1-012`, `GAP-P1-013`, `GAP-P2-014` | Fifteen fixed connections; bounded current/rolling context, dated smoke intervals, station metadata, and optional LiDAR-derived slope/hillshade | `EXTERNAL_CONTEXT_ONLY`; excluded from KFM reports, exports, admission, release, and EvidenceBundles | `app/live-context.ts`, `app/api/live-context/route.ts`, `app/event-atlas.ts`, `app/api/event-atlas/upstream.ts`, `app/terrain-sources.ts`, `app/source-intelligence.ts`, `app/noaa-radar.ts`, `app/api/noaa-radar/frames/route.ts`, `app/page.tsx` | Fixed allowlists, bounded response budgets, exact smoke interval parsing, FDSN header/coordinate validation, dynamic raster registry, temporal holds, build/type/rendered-shell checks | Provider cadence, revisions, FDSN latency, station quality, raw-count response, work-unit identity, datum/accuracy, and emergency/life-safety boundaries remain explicit; no smoke, station, raster, model, or alert layer is KFM evidence | Remove the new registry/adapter blocks and retain the prior site-local layers |
 
 ## Remaining boundary
 

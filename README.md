@@ -3,6 +3,30 @@
 A map-first Kansas explorer with real provider baselines, dated archive replay,
 source downloads, and private data contribution and steward review workflows.
 
+## Embedded shell recovery and data path — September 15, 2026
+
+The private Sites panel could render the server shell and then leave only its dark
+page background. The repaired startup validates and bounds device-local workspace
+records before React renders them, removes passive URL rewriting from ordinary map
+changes, and reserves full state serialization for the explicit Share action. It
+also removes deliberate WebGL context loss from main, report, story, and comparison
+maps; applies the smallest automatic GPU/worker budget inside embedded panels; and
+resizes MapLibre when a previously hidden container becomes visible.
+
+Map mutations now fail into a visible degraded state instead of escaping an effect.
+Route and global recovery surfaces keep navigation, data status, and a lighter retry
+available if another client error occurs. The normal test command runs the complete
+test inventory rather than only the rendered-shell file.
+
+The next admitted-data sequence is recorded in
+`docs/KFM_SOURCE_GAP_REGISTER.md`: first complete a WebGL-capable GeoJSON/raster/
+selection/empty-refresh acceptance, then use a pinned generalized KGS GeMS layer as
+the first end-to-end SourceDescriptor → EvidenceBundle → LayerManifest pilot. A
+one-county SSURGO slice, then a separately permissioned two-depth Mesonet slice,
+and a two-county × two-year Frontier Matrix follow that pattern. Policy/rights
+review and a ReleaseManifest decision remain explicit gates; API availability
+remains separate from evidence admission and release.
+
 ## Map connection repair — September 15, 2026
 
 Accepted USGS responses now replace the displayed payload even when no observations
@@ -342,14 +366,14 @@ path; terrain failure returns to the 2D evidence path.
 
 ## Official Kansas context adapters
 
-The Layer Catalog also exposes fourteen fixed, source-specific connections. Search
+The Layer Catalog also exposes fifteen fixed, source-specific connections. Search
 finds these sources directly, the Data action opens their controls, and the
 connection pulse reports loaded feature counts and retrieval time. Browser
 requests cannot supply an arbitrary upstream URL.
 
 | Connection | Default | Added context | Explicit boundary |
 |---|---:|---|---|
-| Census counties + ACS population | On | 2026 TIGERweb geometry joined by GEOID to the 2024 ACS 5-year population estimate | Separate vintages; not a current population count or EvidenceBundle |
+| Census counties + decennial population | On | 2020 TIGERweb geometry with 2020 `POP100` population and `HU100` housing counts | Decennial baseline only; not a current population estimate or EvidenceBundle |
 | USGS River Pulse | On | Bounded Kansas discharge `00060` observations from USGS Water Data API v1, with exact-frame playback and selected-station history | Samples may be provisional, qualified, delayed, revised, missing, or truncated; not flood guidance or an all-stations inventory |
 | NOAA NWPS gauges + forecast | Off | Operational Kansas gauge status plus separately labeled observations and forecasts | NWPS is not a durable general archive or warning-delivery service; flood categories appear only when supplied by NOAA |
 | USGS 3DHP hydrography | On | Provider-rendered flowlines and waterbodies for network orientation | Transitional/current image carrier, not queryable analysis topology; gauge values are never extended along it |
@@ -357,6 +381,7 @@ requests cannot supply an arbitrary upstream URL.
 | NOAA NWM high-flow analysis | Off | Provider-current modeled analysis-guidance snapshot | Not a gauge observation or warning; the map service advertises no selectable historical time axis |
 | NOAA NWM 18-hour outlook | Off | Provider-current maximum modeled high-flow guidance for the next-18-hour window | Not an official RFC forecast or deterministic outcome; the map service advertises no selectable historical time axis |
 | USGS earthquakes | Off | Bounded 30-day Kansas-area event catalog with magnitude and depth | Catalog values can change; not an alert or hazard forecast |
+| NASA FIRMS active fire | Off | Rolling VIIRS 24-hour active-fire detection raster | Near-real-time detection context only; not a fire perimeter, incident status, evacuation product, or all-clear |
 | NOAA HMS smoke footprints | Off | Dated qualitative smoke polygons from the rolling 24-hour provider window | Not surface PM2.5, plume altitude, measured transport, a fire perimeter, warning, health advisory, or all-clear |
 | Raspberry Shake stations | Off | Kansas-bounded FDSN AM station metadata with StationView handoff | Not realtime waveforms, an event catalog, alert, calibrated measurement, or KFM evidence |
 | USGS 3DEP LiDAR hillshade | Off | Dynamic multidirectional hillshade from the current 3DEP elevation mosaic | Rendered relief only; no work-unit, point-cloud, datum, pulse-spacing, or accuracy claim |
@@ -380,9 +405,10 @@ into inferred facts.
   network, validated gauge, and validated NWM reach modes. Observed, official
   forecast, analysis-assimilation, and short-range model records retain distinct
   roles and valid times; sentinel values are normalized to missing.
-- `/api/live-context` remains an allowlisted adapter for six JSON feeds,
-  including the bounded NOAA HMS smoke and Raspberry Shake station connections;
-  River Pulse now uses the dedicated USGS v1 route above. USGS 3DHP, WBD, 3DEP
+- `/api/live-context` remains an allowlisted adapter for five registry-used JSON
+  feeds, including bounded NOAA HMS smoke and Raspberry Shake station connections;
+  a sixth `usgs-streamflow` path remains for compatibility, while River Pulse uses
+  the dedicated USGS v1 route above. USGS 3DHP, WBD, 3DEP
   LiDAR-derived hillshade/slope, and NOAA NWM raster products are requested by
   MapLibre only when selected.
 - `/api/noaa-radar/frames` is a fixed, read-only NOAA nowCOAST capabilities

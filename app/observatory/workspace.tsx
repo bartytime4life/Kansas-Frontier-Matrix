@@ -3,6 +3,7 @@
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { currentDayStart, currentUtcDay, latestSafeCursor } from "../daily-baseline";
+import { replaceExplorerHistory } from "../embed-runtime";
 import { browserRenderBudget, updateGeoJSON } from "../map-performance";
 import { DataNotices } from "../map-toolbar";
 import type { Map as GLMap, GeoJSONSource } from "maplibre-gl";
@@ -550,8 +551,8 @@ export default function EventObservatory() {
     const loadedHours = Math.ceil((Date.parse(manifest.end) - Date.parse(manifest.start)) / 3_600_000);
     const params = new URLSearchParams({ start: manifest.start.slice(0,16), hours: String(loadedHours <= 1 ? 1 : loadedHours <= 6 ? 6 : 24), station: river?.stations[0]?.stationId ?? "", resolution: loadedRiverResolution, county: countyEdition, base, edition: resourceEdition, order: order.join(","), opacity: TRACKS.map((t) => opacity[t.id]).join(","), layers: order.filter((id) => visible[id]).join(","), ...(committed ? { cursor: committed } : {}) });
     const link = `${window.location.origin}/observatory?${params}`;
-    window.history.replaceState(null, "", link);
-    try { await navigator.clipboard.writeText(link); setCopied(true); } catch { setCopied(false); setError("The address bar now contains the replay link. Copy it to share this view."); }
+    const historyUpdated = replaceExplorerHistory(`/observatory?${params}`);
+    try { await navigator.clipboard.writeText(link); setCopied(true); } catch { setCopied(false); setError(historyUpdated ? "The address bar now contains the replay link. Copy it to share this view." : "Clipboard access is unavailable here. Open the Site directly, then use Share again."); }
   };
   const trackStatus = (id: TrackId) => {
     if (!manifest) return "Not loaded";
