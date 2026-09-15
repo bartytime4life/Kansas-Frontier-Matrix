@@ -13,6 +13,8 @@ export const DOWNLOAD_NOTICES = [
   { id: "noaa-daily-weather", title: "Long NOAA weather records", format: "Station files / CSV", detail: "Older station archives and bulk daily records can be downloaded beyond the map’s bounded queries.", href: "https://www.ncei.noaa.gov/pub/data/ghcn/daily/" },
   { id: "nws-radar", title: "Original NOAA radar archives", format: "NEXRAD files", detail: "Original archived scans are separate from the map’s live loop and historical mosaic playback.", href: "https://www.ncei.noaa.gov/products/radar/next-generation-weather-radar" },
   { id: "noaa-nwm-analysis", title: "National Water Model data files", format: "NetCDF", detail: "Download model products for analysis; the live map service supplies a visualization.", href: "https://nomads.ncep.noaa.gov/pub/data/nccf/com/nwm/prod/" },
+  { id: "noaa-storm-events", title: "Tornado, flood, snow & ice history", format: "Annual CSV.gz", detail: "Download NOAA Storm Events details, locations and fatalities. Event narratives and county records still need spatial review before map admission.", href: "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/" },
+  { id: "historical-networks", title: "Historical cities, roads & trade routes", format: "Map editions / shapefiles", detail: "Use dated USGS/Library of Congress map editions for historical interpretation; use TIGER/Line only as a labeled modern or vintage reference.", href: "https://ngmdb.usgs.gov/topoview/" },
 ] as const;
 export type SourceIssue = { id: OfficialContextId; title: string };
 export function DataNotices({ issues = [], onRetry, onHide }: { issues?: SourceIssue[]; onRetry?: (id: OfficialContextId) => void; onHide?: (id: OfficialContextId) => void }) {
@@ -25,7 +27,7 @@ export function DataNotices({ issues = [], onRetry, onHide }: { issues?: SourceI
     const node = root.current; return () => { document.removeEventListener("pointerdown", outside); node?.removeEventListener("keydown", escape); };
   }, [open]);
   return <div className="data-notices" ref={root}>
-    <button className="data-notices-trigger" ref={trigger} type="button" aria-expanded={open} aria-controls="data-notices-panel" onClick={() => setOpen(!open)} data-attention={issues.length > 0}><span aria-hidden="true">↓</span><span>Data & downloads</span><b aria-label={`${issues.length} source issues; ${DOWNLOAD_NOTICES.length} download collections`}>{issues.length || DOWNLOAD_NOTICES.length}</b></button>
+    <button className="data-notices-trigger" ref={trigger} type="button" aria-label="Open data and download notices" aria-expanded={open} aria-controls="data-notices-panel" onClick={() => setOpen(!open)} data-attention={issues.length > 0}><span aria-hidden="true">↓</span><span>Data & downloads</span><b aria-label={`${issues.length} source issues; ${DOWNLOAD_NOTICES.length} download collections`}>{issues.length || DOWNLOAD_NOTICES.length}</b></button>
     <span className="sr-only" role="status">{issues.length > 0 ? `${issues.length} selected source${issues.length === 1 ? " needs" : "s need"} attention. Open Data and downloads for recovery options.` : ""}</span>
     {open && <aside id="data-notices-panel" className="data-notices-panel" aria-label="Data downloads and source notifications">
       <header><div><small>SOURCE NOTICES</small><h2>Data & downloads</h2></div><button type="button" onClick={() => { setOpen(false); trigger.current?.focus(); }} aria-label="Close data notifications">×</button></header>

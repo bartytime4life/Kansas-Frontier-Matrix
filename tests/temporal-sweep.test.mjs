@@ -14,10 +14,10 @@ const compileModuleUrl = async (name, transform = (source) => source) => {
 
 const temporal = await import(await compileModuleUrl("temporal-sweep"));
 const radarModuleUrl = await compileModuleUrl("noaa-radar");
-const official = await import(await compileModuleUrl("live-context", (source) => source.replace(
-  'from "./noaa-radar";',
-  `from "${radarModuleUrl}";`,
-)));
+const performanceModuleUrl = await compileModuleUrl("map-performance");
+const official = await import(await compileModuleUrl("live-context", (source) => source
+  .replace('from "./noaa-radar";', `from "${radarModuleUrl}";`)
+  .replace('from "./map-performance";', `from "${performanceModuleUrl}";`)));
 
 const feature = (fid, title, year) => ({
   type: "Feature",

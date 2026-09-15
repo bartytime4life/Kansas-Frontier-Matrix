@@ -4,16 +4,28 @@ import type { GeoJSONSource, Map as GLMap } from "maplibre-gl";
 export type RenderQuality = "auto" | "efficient" | "detail";
 export const QUALITY_LABELS = { auto: "Balanced", efficient: "Battery saver", detail: "High detail" } as const;
 export const QUALITY_STORAGE_KEY = "kfm-render-quality-v1";
-export function renderBudget(quality: RenderQuality, deviceRatio = 1, saveData = false) {
+export function renderBudget(quality: RenderQuality, deviceRatio = 1, saveData = false, coarsePointer = false) {
   const efficient = quality === "efficient" || quality === "auto" && saveData;
-  return { pixelRatio: Math.max(1, Math.min(Number.isFinite(deviceRatio) ? deviceRatio : 1, efficient ? 1 : quality === "detail" ? 2 : 1.5)), imageRequests: efficient ? 6 : quality === "detail" ? 12 : 10, tileCache: efficient ? 48 : 96 };
+  // "Balanced" is intentionally adaptive: touch-first devices get a smaller
+  // default GPU/tile budget, while an explicit High detail choice is never
+  // silently downgraded.
+  const touchBalanced = quality === "auto" && coarsePointer && !efficient;
+  return {
+    pixelRatio: Math.max(1, Math.min(Number.isFinite(deviceRatio) ? deviceRatio : 1, efficient ? 1 : quality === "detail" ? 2 : touchBalanced ? 1.25 : 1.5)),
+    imageRequests: efficient ? 6 : quality === "detail" ? 12 : touchBalanced ? 7 : 10,
+    tileCache: efficient ? 48 : quality === "detail" ? 112 : touchBalanced ? 64 : 96,
+    coarsePointer,
+  };
 }
 export function readRenderQuality(): RenderQuality {
   try { const value = localStorage.getItem(QUALITY_STORAGE_KEY); return value === "efficient" || value === "detail" ? value : "auto"; } catch { return "auto"; }
 }
 export function browserRenderBudget(quality = readRenderQuality()) {
   const connection = typeof navigator === "undefined" ? undefined : (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
-  return renderBudget(quality, typeof window === "undefined" ? 1 : window.devicePixelRatio, Boolean(connection?.saveData));
+  const coarsePointer = typeof window !== "undefined" && (
+    window.matchMedia?.("(pointer: coarse)").matches || Math.min(window.innerWidth, window.innerHeight) <= 760
+  );
+  return renderBudget(quality, typeof window === "undefined" ? 1 : window.devicePixelRatio, Boolean(connection?.saveData), coarsePointer);
 }
 
 // Source identity changes on style replacement. Weak keys cannot retain an old
