@@ -3,7 +3,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 const EXPECTED = Object.freeze({
-  projectId: "appgprj_6a870a079c1c8191abb7401ef092a181",
+  projectId: "appgprj_6aa0b1c41bc08191bfd86003920f1631",
   slug: "kansas-frontier-matrix-explorer",
   publicUrl: "https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site",
   replacementSha256: "6444f960bee9d2269fbf6854733bc63a59d2dd14c486670a0bfb040fd6136655",
@@ -14,6 +14,7 @@ const files = Object.freeze({
   vercel: new URL("../vercel.json", import.meta.url),
   layout: new URL("../app/layout.tsx", import.meta.url),
   readme: new URL("../README.md", import.meta.url),
+  alignment: new URL("../docs/sites-source-alignment.md", import.meta.url),
   handoff: new URL("../docs/openai-sites-in-place-replacement.md", import.meta.url),
 });
 
@@ -26,10 +27,10 @@ const assertIncludes = (text, value, label) => {
 test("OpenAI Sites identity and public URL remain coherent across app surfaces", async () => {
   const hosting = JSON.parse(await readText(files.hosting));
   const vercel = JSON.parse(await readText(files.vercel));
-  const [layout, readme, handoff] = await Promise.all([
+  const [layout, readme, alignment] = await Promise.all([
     readText(files.layout),
     readText(files.readme),
-    readText(files.handoff),
+    readText(files.alignment),
   ]);
 
   assert.equal(hosting.project_id, EXPECTED.projectId);
@@ -38,16 +39,18 @@ test("OpenAI Sites identity and public URL remain coherent across app surfaces",
   for (const [label, text] of [
     ["layout metadata", layout],
     ["application README", readme],
-    ["replacement handoff", handoff],
+    ["source alignment", alignment],
   ]) {
     assertIncludes(text, EXPECTED.publicUrl, label);
     assertIncludes(text, EXPECTED.slug, label);
   }
 
   assertIncludes(readme, EXPECTED.projectId, "application README");
-  assertIncludes(handoff, EXPECTED.projectId, "replacement handoff");
+  assertIncludes(alignment, EXPECTED.projectId, "source alignment");
   assert.ok(!readme.includes("kansas-frontier-matrix-explorer-web.vercel.app"));
-  assert.ok(!handoff.includes("kansas-frontier-matrix-explorer-web.vercel.app"));
+  assert.ok(!alignment.includes("kansas-frontier-matrix-explorer-web.vercel.app"));
+  assert.equal(hosting.d1, null);
+  assert.equal(hosting.r2, null);
 });
 
 test("replacement handoff pins integrity, validation, rollback, and non-effect evidence", async () => {

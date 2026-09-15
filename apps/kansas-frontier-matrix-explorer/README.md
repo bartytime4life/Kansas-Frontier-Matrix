@@ -6,6 +6,12 @@ fit together.
 
 ## Current public scope
 
+This directory is the monorepo implementation. The working Site is preserved on
+the existing `agent/kfm-site-source-sync-20260912` mirror branch, whose root has
+the standalone Site layout. Do not merge that branch into monorepo `main`. See
+[the exact identity, tree comparison, and migration holds](docs/sites-source-alignment.md).
+
+
 - The renderer-neutral shell exposes site-local synthetic or generalized GeoJSON catalog metadata; renderer source and layer loading remain held.
 - Nothing in this build is a released operational KFM dataset.
 - Evidence resolution fails closed: missing, stale, restricted, denied, and
@@ -33,13 +39,13 @@ TypeScript-transpile regression checks.
 
 | Field | Current boundary |
 |---|---|
-| OpenAI Sites project | `appgprj_6a870a079c1c8191abb7401ef092a181` from [`.openai/hosting.json`](./.openai/hosting.json) |
+| OpenAI Sites project | `appgprj_6aa0b1c41bc08191bfd86003920f1631` from [`.openai/hosting.json`](./.openai/hosting.json) |
 | Existing slug | `kansas-frontier-matrix-explorer` |
 | Existing public URL | <https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site> |
 | Authoritative host | OpenAI Sites/Vinext; [issue #4232](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4232) records the adapter decision |
 | Vercel boundary | [`vercel.json`](./vercel.json) disables automatic Git deployment; Vercel remains non-authoritative for this app |
-| Replacement procedure | [OpenAI Sites in-place replacement handoff](./docs/openai-sites-in-place-replacement.md) |
-| Hosted version state | `NEEDS VERIFICATION` from the Sites version-history and production browser surfaces |
+| Current source and identity | [Sites source alignment](./docs/sites-source-alignment.md); the older replacement handoff is historical |
+| Hosted version snapshot | Version 37 succeeded; source tree equals the existing GitHub Site-source mirror at the 2026-09-15 readback; monorepo runtime parity remains `HOLD` |
 
 The staged 2026-09-03 replacement ZIP is an external, digest-bound Sites execution
 input. It is not the canonical repository source and must not be copied over this
@@ -50,7 +56,7 @@ is closed.
 
 A Sites-enabled operator must save and inspect a new version before deployment,
 retain the immediately preceding Site version as the rollback target, and return the
-receipt defined by the app-local handoff. Repository branch work does not deploy or
+version-2 receipt defined by the [current alignment handoff](./docs/sites-source-alignment.md). Repository branch work does not deploy or
 restore a Site version. GitHub repository-homepage metadata still requires the
 separate settings-only action tracked in [issue #4246](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4246).
 

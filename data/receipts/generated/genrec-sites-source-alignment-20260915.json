@@ -1,0 +1,134 @@
+{
+  "receipt_id": "genrec-sites-source-alignment-20260915",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/kansas-frontier-matrix-explorer/.openai/hosting.json",
+    "apps/kansas-frontier-matrix-explorer/README.md",
+    "apps/kansas-frontier-matrix-explorer/contracts/sites-deployment-receipt-v2.schema.json",
+    "apps/kansas-frontier-matrix-explorer/docs/earth-layer-library-integration.md",
+    "apps/kansas-frontier-matrix-explorer/docs/openai-sites-in-place-replacement.md",
+    "apps/kansas-frontier-matrix-explorer/docs/sites-source-alignment.md",
+    "apps/kansas-frontier-matrix-explorer/docs/sites-v15-official-context-alignment.md",
+    "apps/kansas-frontier-matrix-explorer/fixtures/sites-deployment-receipt/current-project-rehearsal.json",
+    "apps/kansas-frontier-matrix-explorer/scripts/validate-sites-deployment-receipt.mjs",
+    "apps/kansas-frontier-matrix-explorer/scripts/verify-sites-source-alignment.mjs",
+    "apps/kansas-frontier-matrix-explorer/tests/hosting-boundary.test.mjs",
+    "apps/kansas-frontier-matrix-explorer/tests/sites-deployment-receipt-v2.test.mjs",
+    "apps/kansas-frontier-matrix-explorer/tests/sites-source-alignment.test.mjs"
+  ],
+  "artifact_hashes": {
+    "apps/kansas-frontier-matrix-explorer/.openai/hosting.json": "sha256:2d14984c71e52c6fd87d21f830c96a1fe8d7a6dc069e83580e85176d5a293675",
+    "apps/kansas-frontier-matrix-explorer/README.md": "sha256:4a18185087fd8fbd6405c5793f7735459c6feb13b86939793285d61016e02866",
+    "apps/kansas-frontier-matrix-explorer/contracts/sites-deployment-receipt-v2.schema.json": "sha256:6a4a32b4c273b7ded413e7a667197cfe0924bc3bf7009f412cc0fb68ecf030f0",
+    "apps/kansas-frontier-matrix-explorer/docs/earth-layer-library-integration.md": "sha256:86f3859ffa76cbebdd5d01b1296e694f8af6797b17d641b552459cfbe55a4466",
+    "apps/kansas-frontier-matrix-explorer/docs/openai-sites-in-place-replacement.md": "sha256:3ffea291aba3c0bd29735caa48c4e03b9332bef5924cbb6adeddab6d4fb08974",
+    "apps/kansas-frontier-matrix-explorer/docs/sites-source-alignment.md": "sha256:cd73221c92a26911fbdb893531fea0d71f0918a5b491186d1b00e8c639258be4",
+    "apps/kansas-frontier-matrix-explorer/docs/sites-v15-official-context-alignment.md": "sha256:4f0991e0e3b075282f5b9a3d8a8fec45507b6870b6411e52e45ab1504f583f66",
+    "apps/kansas-frontier-matrix-explorer/fixtures/sites-deployment-receipt/current-project-rehearsal.json": "sha256:35017003710a1e2dcc6fda391c66b8fdf6b180d5ad90dbb66cb46fa7368b12b5",
+    "apps/kansas-frontier-matrix-explorer/scripts/validate-sites-deployment-receipt.mjs": "sha256:b2859709f0551fd2e7d6ba10a49e75c56102ba7aa41dcf136e28815357820589",
+    "apps/kansas-frontier-matrix-explorer/scripts/verify-sites-source-alignment.mjs": "sha256:fd9a87894e216ec2ff4da7f9ae59b4ae6a87e6e6717cebe5aa5eecfaa1e8d746",
+    "apps/kansas-frontier-matrix-explorer/tests/hosting-boundary.test.mjs": "sha256:ece1eaa669c18989c0b21ef486a1bd64aa29e40fe981a364aca0b6b178f5d3d9",
+    "apps/kansas-frontier-matrix-explorer/tests/sites-deployment-receipt-v2.test.mjs": "sha256:eea2079b5658d8a77dde07d2fd648ea9995871695b19377a5de5cad0eb6e12e0",
+    "apps/kansas-frontier-matrix-explorer/tests/sites-source-alignment.test.mjs": "sha256:fd27051a3e441c4158e7be56c509b173f83c0ad1e39cf8f2b9d709da9a817e4c"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "UNKNOWN; exact serving model version not exposed"
+  },
+  "prompt_or_contract": "sha256:17c8119d90e5b951cce30811e8a7db4237ba62e2635c39e44c4f5e6d9344a332",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local repository validation",
+      "GitHub connector",
+      "Sites connector",
+      "Google Drive connector",
+      "Notion connector"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/32953ec3b662dba14546e224554c9621b72268de",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/e2f513a7ff118eef0b83b5a403cbdfc8a143b039",
+      "sites:appgprj_6aa0b1c41bc08191bfd86003920f1631~appgver_b643c8272b1c8191992aaedf7c630639"
+    ],
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
+    ]
+  },
+  "truth_labels": {
+    "apps/kansas-frontier-matrix-explorer/.openai/hosting.json": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/README.md": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/contracts/sites-deployment-receipt-v2.schema.json": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/docs/earth-layer-library-integration.md": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/docs/openai-sites-in-place-replacement.md": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/docs/sites-source-alignment.md": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/docs/sites-v15-official-context-alignment.md": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/fixtures/sites-deployment-receipt/current-project-rehearsal.json": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/scripts/validate-sites-deployment-receipt.mjs": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/scripts/verify-sites-source-alignment.mjs": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/tests/hosting-boundary.test.mjs": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/tests/sites-deployment-receipt-v2.test.mjs": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/tests/sites-source-alignment.test.mjs": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "source-mirror-byte-parity",
+      "outcome": "PASS",
+      "reason": "All 129 tracked files have the identical Git tree 5e419bf6079e1fc45037a955e58350e8cd8ffc2a at Sites source 1cdabb970412b9d67270e04205918bb394a8318f and GitHub mirror e2f513a7ff118eef0b83b5a403cbdfc8a143b039; prior mirror parent preserved."
+    },
+    {
+      "gate": "identity-receipt-source-build-boundary-tests",
+      "outcome": "PASS",
+      "reason": "40 native Node tests passed, including complete-tree mismatch, identity mismatch, immutable revisions, historical receipt replay rejection, source-alignment and rollback gates, and preserved build-context checks."
+    },
+    {
+      "gate": "site-source-targeted-tests",
+      "outcome": "PASS",
+      "reason": "Existing locked npm install completed; 19 tests passed for map connections, mobile controls, science events, temporal sweep and terrain/performance boundaries. No runtime source edits were made."
+    },
+    {
+      "gate": "json-schema-fixture-shape",
+      "outcome": "PASS",
+      "reason": "Both historical v1 and current v2 fixture/schema pairs passed Draft 2020-12 validation with date-time checking."
+    },
+    {
+      "gate": "repository-topology-ratchet",
+      "outcome": "FAIL",
+      "reason": "Unchanged inherited result: KFM-TOPO-001 fingerprint ec1d72ef943b952f5b3a12c56a3b28c0c08ddfd904e080d2decd91f60c177e07 and KFM-TOPO-004 fingerprint 71a120ae8ca2b69896266c9ddd52f6d03577ea91fa2de4390b7d57b9ceeb912f; 125 baselined warnings, two stale fingerprints. No baseline or frozen-catalog modification."
+    },
+    {
+      "gate": "new-candidate-build-and-browser-proof",
+      "outcome": "SKIPPED",
+      "reason": "No new Site candidate or runtime change; source parity and targeted tests do not prove browser or release readiness."
+    },
+    {
+      "gate": "hosted-ci-and-independent-review",
+      "outcome": "SKIPPED",
+      "reason": "Incident-quarantined PR path remains VALIDATED_BRANCH_ONLY; no independent approval or required-check settings enforcement claimed."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "current-main",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/32953ec3b662dba14546e224554c9621b72268de"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-15T05:31:25.079128Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "notes": "Authoring receipt for the monorepo identity and source-alignment correction only. The existing standalone Site-source mirror was advanced separately by a non-forced commit preserving its prior parent; its full tree equals the already deployed version 37. The monorepo implementation remains distinct and renderer-neutral. The current owner requested alignment; original project replacement authorization remains UNKNOWN. v1 receipt/schema bytes retained, v2 current-target projection and explicit --current validation added. App responsibility stays in apps/; process receipt in data/. No Site deployment, restoration, binding, audience, source-admission, topology-baseline, release or publication change; no main merge. Revert the app changes as a unit and retain this receipt as historical process evidence."
+}

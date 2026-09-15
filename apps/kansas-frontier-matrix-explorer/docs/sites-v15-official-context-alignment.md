@@ -1,5 +1,10 @@
 # Sites v15 official-context alignment checkpoint
 
+> **Historical checkpoint.** Current Site identity and exact GitHub mirror parity
+> are recorded in [Sites source alignment](sites-source-alignment.md). The old
+> project ID below remains historical evidence, not an alias or a current target.
+> Its version-1 receipt and ZIP must not be reused to deploy the current Site.
+
 Status: **SAVED / NOT DEPLOYED**
 
 This record captures the observed saved-version boundary for ChatGPT Sites project `appgprj_6aa0b1c41bc08191bfd86003920f1631` without asserting that it is the repository-configured deployment target, GitHub source parity, source admission, release, publication, or deployment.

@@ -1,5 +1,10 @@
 # Earth-inspired Layer Library — dormant integration handoff
 
+> **Historical checkpoint.** Current Site identity and exact GitHub mirror parity
+> are recorded in [Sites source alignment](sites-source-alignment.md). The old
+> project ID below remains historical evidence, not an alias or a current target.
+> Its version-1 receipt and ZIP must not be reused to deploy the current Site.
+
 **2026-09-05 — M1 PARTIAL; branch authoring only.**
 This is implementation guidance for the existing application, not a second
 Explorer, a source-admission record, an approved workspace contract or a Site

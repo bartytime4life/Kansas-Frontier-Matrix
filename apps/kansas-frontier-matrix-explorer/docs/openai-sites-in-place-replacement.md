@@ -31,6 +31,11 @@ notes:
 
 # OpenAI Sites In-Place Deployment Handoff
 
+> **Historical checkpoint.** Current Site identity and exact GitHub mirror parity
+> are recorded in [Sites source alignment](sites-source-alignment.md). The old
+> project ID below remains historical evidence, not an alias or a current target.
+> Its version-1 receipt and ZIP must not be reused to deploy the current Site.
+
 > **Status:** `REPOSITORY_HANDOFF_ONLY / HOLD_NO_SITES_MUTATION_SURFACE`
 >
 > Use this procedure only from the **Edit** session of the existing OpenAI Site.

@@ -1,0 +1,69 @@
+{
+  "profile": "kfm.sites.deployment-receipt.v2",
+  "schema_version": "2.0.0",
+  "mode": "REPOSITORY_REHEARSAL",
+  "outcome": "HOLD",
+  "recorded_at": "2026-09-15T00:00:00Z",
+  "site": {
+    "project_id": "appgprj_6aa0b1c41bc08191bfd86003920f1631",
+    "slug": "kansas-frontier-matrix-explorer",
+    "public_url": "https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site",
+    "previous_version_id": null,
+    "candidate_version_id": null,
+    "final_version_id": null
+  },
+  "source": {
+    "repository": "bartytime4life/Kansas-Frontier-Matrix",
+    "revision": "1111111111111111111111111111111111111111",
+    "artifact_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+    "sites_revision": "3333333333333333333333333333333333333333",
+    "source_tree": "4444444444444444444444444444444444444444"
+  },
+  "checks": {
+    "frozen_install": {
+      "outcome": "NOT_RUN",
+      "evidence": "Synthetic shape fixture only. No current candidate was built, tested, or deployed."
+    },
+    "build": {
+      "outcome": "NOT_RUN",
+      "evidence": "Synthetic shape fixture only. No current candidate was built, tested, or deployed."
+    },
+    "tests": {
+      "outcome": "NOT_RUN",
+      "evidence": "Synthetic shape fixture only. No current candidate was built, tested, or deployed."
+    },
+    "lint": {
+      "outcome": "NOT_RUN",
+      "evidence": "Synthetic shape fixture only. No current candidate was built, tested, or deployed."
+    },
+    "desktop_smoke": {
+      "outcome": "NOT_RUN",
+      "evidence": "Synthetic shape fixture only. No current candidate was built, tested, or deployed."
+    },
+    "mobile_smoke": {
+      "outcome": "NOT_RUN",
+      "evidence": "Synthetic shape fixture only. No current candidate was built, tested, or deployed."
+    },
+    "restricted_state": {
+      "outcome": "NOT_RUN",
+      "evidence": "Synthetic shape fixture only. No current candidate was built, tested, or deployed."
+    },
+    "source_alignment": {
+      "outcome": "NOT_RUN",
+      "evidence": "Synthetic placeholder source identities. Replace with exact Site and GitHub mirror commits and complete tree comparison for a real operator readback."
+    }
+  },
+  "rollback": {
+    "target_version_id": null,
+    "procedure": "Restore target_version_id through the existing Site version history, then re-run identity, access, desktop/mobile, restricted-state, and core-flow smoke checks.",
+    "rehearsal_outcome": "NOT_RUN",
+    "operator_restore_confirmed": false
+  },
+  "authority": {
+    "live_transition_performed": false,
+    "second_site_created": false,
+    "vercel_mutated": false,
+    "release_authorized": false,
+    "publication_authorized": false
+  }
+}
