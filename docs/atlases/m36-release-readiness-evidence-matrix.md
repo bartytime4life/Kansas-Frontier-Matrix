@@ -2,24 +2,25 @@
 doc_id: kfm://doc/m36-release-readiness-evidence-matrix
 title: M36 Synthetic Atlas Release-Readiness Evidence Matrix
 type: evidence-index
-version: v0.1
+version: v0.2
 status: proposed; bounded; synthetic-only; partial; hold; non-authoritative; non-release; non-publication
 owner: "@bartytime4life via CODEOWNERS; independent atlas, release, evidence, security, accessibility, operations, and stewardship review NEEDS VERIFICATION"
 created: 2026-09-14
-updated: 2026-09-14
+updated: 2026-09-15
 policy_label: repository-public; documentation; synthetic; cite-or-abstain; release-readiness; no-network; no-authority
 owning_root: docs/
 responsibility: "Index current repository evidence and M01-M35 coordination records for one synthetic atlas candidate, classify explicit readiness gaps, and define a reversible review packet without duplicating milestone evidence or creating release, deployment, promotion, publication, source-admission, or policy authority."
-truth_posture: "CONFIRMED execution-start pin, issue states, Directory Rules placement, fixture bytes, non-authorization regression, and unmatched declared artifact digest / PARTIAL fixture-only identity, geometry, time, reference, policy-context, validation, catalog, correction-field, and rollback-reference coverage / ABSENT candidate-specific atlas data, governed API, Explorer rendering, accessibility acceptance, observability, stewardship, correction and rollback execution, and monitoring / UNKNOWN hosted exact-head results, production parity, external consumers, release authority, deployment state, and publication state"
+truth_posture: "CONFIRMED execution-start pin, issue states, Directory Rules placement, materialized synthetic carrier bytes, manifest and reference digest closure, carrier metadata validation, and non-authorization regression / PARTIAL fixture-only identity, geometry, time, reference, policy-context, validation, catalog, correction-field, and rollback-reference coverage / ABSENT governed API, Explorer rendering, accessibility acceptance, observability, stewardship, correction and rollback execution, and monitoring / UNKNOWN hosted exact-head results, production parity, external consumers, release authority, deployment state, and publication state"
 evidence_repository: bartytime4life/Kansas-Frontier-Matrix
 evidence_base_ref: main
-evidence_base_commit: 5dfe3464e3fb2dbf8513ec9662e9f7ae39b976f1
-evidence_inspected_at: 2026-09-14
+evidence_base_commit: fbd08c2c9f361ea7b2e255923a27e4a549469d42
+evidence_inspected_at: 2026-09-15
 evidence_open_pull_requests: 0
 evidence_issue: 3396
-evidence_candidate_fixture_sha256: 7d257a0ffa19944424b12f5ab1b1ad1fcdfdbb547d04318a0f98e46e3014f5d8
-evidence_promotion_packet_sha256: bd5b2a09368088d64ff7df6d1f8d32b5e67b941c9db74ab39f98566aebae77b1
-evidence_release_manifest_sha256: f4a3859af5c07b6c53a5b54fb69e218a8ff95f6f12ecc962d14a06c17e8604eb
+evidence_candidate_fixture_sha256: 23d166d23be3872ce9e754413e08de53dcea117de070a73146e8799f88cecf12
+evidence_promotion_packet_sha256: aa941c1d36e36052123a36e7a1da6c319f770904b6d31cd315b5a6b090f27f9d
+evidence_release_manifest_sha256: 5138edd2e8f44a4576956790d66fde442a1c86e7c3a4c196c3e7e7b6751f3f39
+evidence_synthetic_carrier_sha256: 8ad3948994680b0e6a85a3eb4c82f69466d0c5c2baf4c15fb4e14e43c1acb26d
 evidence_directory_rules_sha256: 44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e
 evidence_merged_non_authorization_regression: 27202a0595ecdc6afd6f98b3aedaa236243e07b3
 inspection_boundary: "Current-session reads covered issue 3396, M01-M35 issue state and labels, issues 4415 and 4418, the zero-open-PR queue, current main, accepted ADR-0029, the atlas and release README contracts, the selected synthetic fixture family, its focused tests, and a tracked-working-tree SHA-256 scan. No live source, governed API, browser, hosted Site, deployment, release store, signing service, production telemetry, external consumer, or publication endpoint was exercised."
@@ -64,7 +65,7 @@ decision.
 
 | Observation | Current evidence | Classification | Limitation |
 |---|---|---|---|
-| Implementation baseline | `main@5dfe3464e3fb2dbf8513ec9662e9f7ae39b976f1` | `IMPLEMENTED` | Pins repository bytes only; it is not an approved release base. |
+| Implementation baseline | `main@fbd08c2c9f361ea7b2e255923a27e4a549469d42` | `IMPLEMENTED` | Pins repository bytes only; it is not an approved release base. |
 | Open pull requests | Zero at execution start | `IMPLEMENTED` | A zero-length queue does not prove branch, issue, or external-work closure. |
 | M36 coordination | [#3396](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3396) open with `priority: p1`, `needs-review`, `evidence`, `governance`, and `status: proposed` | `PARTIAL` | The issue is coordination evidence, not implementation or approval. |
 | Production-readiness child | [#4415](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4415) open | `PARTIAL` | Dry-run decision work remains non-production and non-authorizing. |
@@ -72,8 +73,8 @@ decision.
 | Readiness-boundary regression | [PR #4532](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4532) merged at `27202a0595ecdc6afd6f98b3aedaa236243e07b3` | `IMPLEMENTED` | Proves bounded output and non-authorization assertions only. |
 | Exact issue-number branch probe | No branch containing `3396` was returned at execution start | `PARTIAL` | Name search is not a proof that no semantically overlapping branch exists. |
 
-The latest merged change at the pin is PR #4588, a root-README-only Science Pack
-north-star update. No direct changed-path overlap with this matrix was found.
+The latest merged change at the pin is PR #4589, the first M36 evidence-matrix
+slice. This revision extends that same bounded fixture and matrix family.
 
 ## Selected synthetic atlas candidate
 
@@ -84,14 +85,19 @@ identity, release identity, catalog identity, or lifecycle record.
 
 | Candidate element | Exact current anchor | Classification | What remains unproved |
 |---|---|---|---|
-| Evaluation input | [`valid/pass.json`](../../fixtures/release/promotion_verification_execution/valid/pass.json), SHA-256 `7d257a0f...f5d8` | `IMPLEMENTED` | Fixture validity does not establish a real atlas candidate. |
-| Promotion packet | [`promotion_packet.json`](../../fixtures/release/promotion_verification_execution/artifacts/promotion_packet.json), SHA-256 `bd5b2a09...77b1` | `IMPLEMENTED` | Its policy, review, catalog, correction, and rollback fields are synthetic declarations. |
-| Release-manifest-shaped fixture | [`release_manifest.json`](../../fixtures/release/promotion_verification_execution/artifacts/release_manifest.json), SHA-256 `f4a3859a...04eb` | `IMPLEMENTED` | It is not an append-only release decision under `release/`. |
-| Declared artifact | `sha256:4214a9de...9238aa` | `ABSENT` | No tracked working-tree file matched this digest at the execution pin. |
+| Evaluation input | [`valid/pass.json`](../../fixtures/release/promotion_verification_execution/valid/pass.json), SHA-256 `23d166d2...cf12` | `IMPLEMENTED` | Fixture validity does not establish a real atlas candidate. |
+| Promotion packet | [`promotion_packet.json`](../../fixtures/release/promotion_verification_execution/artifacts/promotion_packet.json), SHA-256 `aa941c1d...7f9d` | `IMPLEMENTED` | Its policy, review, catalog, correction, and rollback fields are synthetic declarations. |
+| Release-manifest-shaped fixture | [`release_manifest.json`](../../fixtures/release/promotion_verification_execution/artifacts/release_manifest.json), SHA-256 `5138edd2...3f39` | `IMPLEMENTED` | It is not an append-only release decision under `release/`. |
+| Synthetic carrier | [`synthetic_atlas_carrier.geojson`](../../fixtures/release/promotion_verification_execution/artifacts/synthetic_atlas_carrier.geojson), SHA-256 `8ad39489...b26d` | `IMPLEMENTED` | Deterministic fixture-only generalized geometry; it is not observed, surveyed, source-admitted, or production data. |
 | Catalog/provenance references | [STAC](../../fixtures/release/promotion_verification_execution/references/stac.json), [DCAT](../../fixtures/release/promotion_verification_execution/references/dcat.json), and [PROV](../../fixtures/release/promotion_verification_execution/references/prov.json) stubs | `PARTIAL` | Identity-binding stubs are not atlas catalog records, distributions, or served endpoints. |
 | Evidence reference | [`evidence.json`](../../fixtures/release/promotion_verification_execution/references/evidence.json) | `PARTIAL` | A reference stub is not an EvidenceBundle, citation closure, or source authentication. |
 | Rollback reference | [`rollback.json`](../../fixtures/release/promotion_verification_execution/references/rollback.json) | `PARTIAL` | No executable rollback, invalidation, restoration, operator, or readback is established. |
 | Non-authorizing regression | [`test_synthetic_release_closure.py`](../../tests/release/test_synthetic_release_closure.py) and [`test_validate_operational_trust_rollup.py`](../../tests/validators/test_validate_operational_trust_rollup.py) | `IMPLEMENTED` | Test success cannot create authority or production parity. |
+
+This revision closes the prior `ABSENT` byte-carrier gap: the execution plan now
+requires the carrier binding, checks the actual bytes against the embedded and
+standalone manifest, and fails closed when carrier, subject, geometry, time, or
+fixture-governance metadata diverge.
 
 ## M01-M35 evidence reference ledger
 
@@ -149,13 +155,13 @@ later slice must reference. It does not prescribe or authorize implementation.
 
 | Readiness dimension | Current candidate-specific evidence | Outcome | Explicit gap before a later decision | Milestone references |
 |---|---|---|---|---|
-| Data | Fixture declares one Kansas bbox, interval, CRS, and artifact digest; no matching tracked artifact bytes exist. | `PARTIAL` | Materialize one synthetic, public-safe atlas carrier; bind byte digest, schema, data-quality profile, rights, sensitivity, temporal scope, and lifecycle state without entering `data/published/`. | M03, M05, M08, M09, M21, M22, M24, M28, M30 |
+| Data | A materialized GeoJSON fixture binds one generalized Kansas test extent to its manifest digest, RFC 7946 schema reference, synthetic rights/sensitivity labels, time scope, quality assertions, and fixture-only lifecycle. | `PARTIAL` | Replace self-asserted fixture metadata with independently reviewed schema, data-quality, rights, sensitivity, and source-admission evidence before any real candidate exists; do not enter `data/published/` from this slice. | M03, M05, M08, M09, M21, M22, M24, M28, M30 |
 | APIs | No candidate ID occurs in `apps/` or a governed route surface. | `ABSENT` | Add a no-network contract fixture proving finite outcomes, bounded query limits, EvidenceBundle envelope, safe errors, cache semantics, and denial of RAW/WORK/QUARANTINE/candidate access. | M11, M19, M32 |
 | UI | The selected subject occurs only in release-fixture families, not in Explorer code. | `ABSENT` | Prove renderer-neutral selection, map display, Evidence Drawer continuity, time/uncertainty cues, restricted-state denial, state restore, cleanup, and no upload or hidden model call. | M10, M12, M23, M33 |
 | Evidence | One digest-bound `EVIDENCE_BUNDLE` reference stub is present. | `PARTIAL` | Resolve a real synthetic EvidenceBundle fixture with citations, claim bindings, provenance, limitations, stale/corrected/revoked behavior, and cite-or-abstain consumer proof. | M04, M07, M19, M27, M31 |
 | Policy | Fixture context says `public-safe`/`PASS`, and a fixture-only Rego rule reads those declarations. | `PARTIAL` | Bind an accepted policy profile and deterministic evaluation receipt covering rights, license, source role, sensitivity, public precision, obligations, denial, and error without letting the candidate self-assert safety. | M02, M05, M14, M26, M28 |
 | Accessibility | No candidate-specific browser or accessibility result is referenced. | `ABSENT` | Record keyboard, screen-reader naming/announcements, focus continuity, non-color state, zoom/reflow, reduced-motion, target-size, and Evidence Drawer reading-order results at an exact build. | M23, M33 |
-| Quality | Focused fixture tests cover identity binding and non-authorization. | `PARTIAL` | Add candidate-specific schema, data, render, API, UI, negative, deterministic-replay, performance-budget, and long-session results; record all skipped and not-run checks explicitly. | M06, M09, M16, M23, M24, M35 |
+| Quality | Focused fixture tests cover carrier-byte, manifest, subject, geometry, temporal, governance, reference, identity, and non-authorization binding. | `PARTIAL` | Add real-candidate data, render, API, UI, deterministic-replay, performance-budget, and long-session results; record all skipped and not-run checks explicitly. | M06, M09, M16, M23, M24, M35 |
 | Security | Fixture denies network/lifecycle writes and carries an offline fake-Cosign plan. | `PARTIAL` | Prove dependency and secret scans, SBOM, provenance/attestation verification, CSP/worker boundaries, unsafe-path and information-disclosure negatives, critical-asset/sensitivity denial, and current advisory disposition. | M06, M13, M14, M15, M17, M26, M35 |
 | Observability | No candidate-specific logs, metrics, traces, SLOs, alert routing, retention, or production readback exists. | `ABSENT` | Define safe telemetry fields, redaction, trace-to-evidence binding, availability/freshness/integrity SLOs, deterministic incident triggers, owner routing, retention, and a no-production rehearsal. | M20, M34 |
 | Correction | The fixture exposes `supersedes_prior: false` and `notice_ref: null`. | `PARTIAL` | Add a corrected synthetic case that preserves prior bytes and identity, emits a correction reference, enumerates derivatives and consumers, invalidates stale views, and proves replay without publication. | M03, M18, M27, M29, M34 |
@@ -170,12 +176,13 @@ inspection boundary is `NOT_INSPECTED`, not passed.
 
 ## Focused validation and hosted-check expectations
 
-The candidate's existing no-network assertions are replayed without changing
-fixtures or release behavior:
+The candidate's no-network assertions and new carrier closure are replayed
+without changing release behavior:
 
 ```bash
 PYTHONDONTWRITEBYTECODE=1 PYTHONHASHSEED=0 \
   python -m pytest -q \
+  tests/release/test_promotion_verification_execution.py \
   tests/release/test_synthetic_release_closure.py \
   tests/validators/test_validate_operational_trust_rollup.py
 ```

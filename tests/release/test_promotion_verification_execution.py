@@ -1,6 +1,7 @@
 """Tests for bounded promotion verification execution."""
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 import json
 import subprocess
@@ -76,6 +77,41 @@ def test_catalog_subject_mismatch_fails_closed() -> None:
     assert {
         finding["code"] for finding in result["findings"]
     } == {"REFERENCE_ARTIFACT_MISMATCH"}
+
+
+def test_carrier_bytes_are_bound_to_the_manifest() -> None:
+    plan = load("valid", "pass.json")
+    mismatch = FIXTURE_ROOT / "references" / "stac_mismatch.json"
+    plan["carrier"] = {
+        "path": mismatch.relative_to(REPO_ROOT).as_posix(),
+        "sha256": "sha256:" + hashlib.sha256(mismatch.read_bytes()).hexdigest(),
+    }
+    plan["spec_hash"] = MODULE.canonical_hash(plan)
+
+    result = execute(plan)
+
+    assert result["status"] == "DENY"
+    assert result["findings"] == [
+        {
+            "code": "CARRIER_ARTIFACT_MISMATCH",
+            "path": "/carrier/sha256",
+            "status": "DENY",
+        }
+    ]
+
+
+def test_missing_carrier_binding_is_schema_denied() -> None:
+    plan = load("valid", "pass.json")
+    del plan["carrier"]
+    plan["spec_hash"] = MODULE.canonical_hash(plan)
+
+    result = execute(plan)
+
+    assert result["status"] == "DENY"
+    assert any(
+        finding["code"] == "EXECUTION_SCHEMA_INVALID"
+        for finding in result["findings"]
+    )
 
 
 def test_substituted_cosign_binary_is_denied_before_execution() -> None:

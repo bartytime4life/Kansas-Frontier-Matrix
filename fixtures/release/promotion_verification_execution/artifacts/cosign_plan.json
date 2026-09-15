@@ -2,7 +2,7 @@
   "object_type": "CosignAttestationVerificationPlan",
   "schema_version": "1.0.0",
   "profile_id": "kfm.release.cosign-attestation-verification.v1",
-  "plan_id": "cosign-attestation-plan:f4a3859af5c07b6c53a5b54f",
+  "plan_id": "cosign-attestation-plan:5138edd2e8f44a4576956790",
   "security_baseline": {
     "advisory_ids": [
       "CVE-2026-39395",
@@ -19,8 +19,8 @@
     "immutable_source_ref": "fixtures/release/promotion_verification_execution/bin/fake_cosign.py@sha256:fcc15a785c02295bdfa54d216264d0bcf09d2aa9149d3379bc4afe14bc3188c5"
   },
   "subject": {
-    "artifact_ref": "kfm://release-artifact/synthetic-manifest@sha256:f4a3859af5c07b6c53a5b54fb69e218a8ff95f6f12ecc962d14a06c17e8604eb",
-    "digest": "sha256:f4a3859af5c07b6c53a5b54fb69e218a8ff95f6f12ecc962d14a06c17e8604eb",
+    "artifact_ref": "kfm://release-artifact/synthetic-manifest@sha256:5138edd2e8f44a4576956790d66fde442a1c86e7c3a4c196c3e7e7b6751f3f39",
+    "digest": "sha256:5138edd2e8f44a4576956790d66fde442a1c86e7c3a4c196c3e7e7b6751f3f39",
     "media_type": "application/json"
   },
   "predicate": {
@@ -29,9 +29,9 @@
   },
   "bundle": {
     "ref": "fixtures/release/promotion_verification_execution/artifacts/signatures.bundle.json",
-    "digest": "sha256:10d6007df8ece4411f281e8238afe5d80cb973fd7d684b25efc77acd6acab2df",
+    "digest": "sha256:55c395c8749cbc1d7b39a8908cd68a1ee90f2fd0b685b365db9e4934d9f5d376",
     "format": "sigstore-bundle",
-    "subject_digest": "sha256:f4a3859af5c07b6c53a5b54fb69e218a8ff95f6f12ecc962d14a06c17e8604eb",
+    "subject_digest": "sha256:5138edd2e8f44a4576956790d66fde442a1c86e7c3a4c196c3e7e7b6751f3f39",
     "rekor_inclusion_required": true,
     "signed_entry_timestamp_required": true,
     "offline_verification_material_embedded": true
@@ -45,7 +45,7 @@
   "invocation": {
     "command": "verify-blob-attestation",
     "bundle_ref_argument": "fixtures/release/promotion_verification_execution/artifacts/signatures.bundle.json",
-    "subject_digest_argument": "sha256:f4a3859af5c07b6c53a5b54fb69e218a8ff95f6f12ecc962d14a06c17e8604eb",
+    "subject_digest_argument": "sha256:5138edd2e8f44a4576956790d66fde442a1c86e7c3a4c196c3e7e7b6751f3f39",
     "predicate_type_argument": "https://slsa.dev/provenance/v1",
     "explicit_inputs_only": true,
     "implicit_discovery": false,
@@ -74,5 +74,5 @@
     "publication_authorized": false,
     "runtime_result_ref": null
   },
-  "spec_hash": "sha256:ce60601a25bb99d7926ba55e13909a93f038600a1fc686b7f4b1aeb3163b7fd1"
+  "spec_hash": "sha256:126d61df3a4f0e24eb8a04b77fd5ccdb5ef1e191256b3eda2e326f66359fd98c"
 }

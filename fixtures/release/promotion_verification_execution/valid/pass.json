@@ -1,23 +1,27 @@
 {
   "object_type": "PromotionVerificationExecution",
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "execution_id": "promotion-verification:synthetic-kansas-v1",
   "evaluated_at": "2026-04-13T01:00:00Z",
   "promotion_packet": {
     "path": "fixtures/release/promotion_verification_execution/artifacts/promotion_packet.json",
-    "sha256": "sha256:bd5b2a09368088d64ff7df6d1f8d32b5e67b941c9db74ab39f98566aebae77b1"
+    "sha256": "sha256:aa941c1d36e36052123a36e7a1da6c319f770904b6d31cd315b5a6b090f27f9d"
+  },
+  "carrier": {
+    "path": "fixtures/release/promotion_verification_execution/artifacts/synthetic_atlas_carrier.geojson",
+    "sha256": "sha256:8ad3948994680b0e6a85a3eb4c82f69466d0c5c2baf4c15fb4e14e43c1acb26d"
   },
   "cosign_plan": {
     "path": "fixtures/release/promotion_verification_execution/artifacts/cosign_plan.json",
-    "sha256": "sha256:29090c2484fca06bbcbc70a606e07587f29f97118433a92039f877b2ced0672a"
+    "sha256": "sha256:b159e9a6411662c871ec80cfa496f5fc66663667342b6c19a9dcd507a5edc845"
   },
   "subject": {
     "path": "fixtures/release/promotion_verification_execution/artifacts/release_manifest.json",
-    "sha256": "sha256:f4a3859af5c07b6c53a5b54fb69e218a8ff95f6f12ecc962d14a06c17e8604eb"
+    "sha256": "sha256:5138edd2e8f44a4576956790d66fde442a1c86e7c3a4c196c3e7e7b6751f3f39"
   },
   "bundle": {
     "path": "fixtures/release/promotion_verification_execution/artifacts/signatures.bundle.json",
-    "sha256": "sha256:10d6007df8ece4411f281e8238afe5d80cb973fd7d684b25efc77acd6acab2df"
+    "sha256": "sha256:55c395c8749cbc1d7b39a8908cd68a1ee90f2fd0b685b365db9e4934d9f5d376"
   },
   "policy": {
     "directory": "fixtures/release/promotion_verification_execution/policy",
@@ -34,31 +38,31 @@
       "kind": "EVIDENCE_BUNDLE",
       "ref_id": "evidence:synthetic:promotion-proof:v1",
       "path": "fixtures/release/promotion_verification_execution/references/evidence.json",
-      "sha256": "sha256:962db9f0f09442363affdc4e5c04fd95e3cb2f0f1fd33d73c5a38c4d7bcff9db"
+      "sha256": "sha256:79aa8c518fe95922cc3c29567a5edf067a866a5b0036eb0133a930b73a2748f6"
     },
     {
       "kind": "STAC",
       "ref_id": "catalog:synthetic:promotion-proof:stac:v1",
       "path": "fixtures/release/promotion_verification_execution/references/stac.json",
-      "sha256": "sha256:170f3a83109f62f90331c320f489ab27f459e29085e79b9a9e1d7ba0e224b759"
+      "sha256": "sha256:fcf38fd9c14780648c02da2684e0c910454f602478922881cf7a95aa923012e6"
     },
     {
       "kind": "DCAT",
       "ref_id": "catalog:synthetic:promotion-proof:dcat:v1",
       "path": "fixtures/release/promotion_verification_execution/references/dcat.json",
-      "sha256": "sha256:0dbf3671b3f89cf69ecc28c8b70e79a2263123b42fbe6cc396b4b1b06b49cdda"
+      "sha256": "sha256:4dfa3373484fc64a4bfe35326cdc0bd40f547c5b4b1d1cc7219f40f17e2bc225"
     },
     {
       "kind": "PROV",
       "ref_id": "catalog:synthetic:promotion-proof:prov:v1",
       "path": "fixtures/release/promotion_verification_execution/references/prov.json",
-      "sha256": "sha256:3bc6598116415c92a5770185bb2350904f392f8e2e9ff8f2ddf08b58b5a38993"
+      "sha256": "sha256:bb10e75fa10be295f3c6806744799202107645c56e3ee8ac5d5d74c5bf866231"
     },
     {
       "kind": "ROLLBACK",
       "ref_id": "rollback:synthetic:promotion-proof:v1",
       "path": "fixtures/release/promotion_verification_execution/references/rollback.json",
-      "sha256": "sha256:9ea06d3df0c7e12eb5165eff8b797b47e755f7f2e6356db5cf72e9c029f1df29"
+      "sha256": "sha256:4b9d5b7bd54b958dbd43b27292e6654896713ffac7daa32b524e23abbdbf5449"
     }
   ],
   "governance": {
@@ -70,5 +74,5 @@
     "deployment_authorized": false,
     "publication_authorized": false
   },
-  "spec_hash": "sha256:4fea304de1168bb315cac86ee980648d6f0374360be7ce9bef977ea98d3998b8"
+  "spec_hash": "sha256:b2207bf8811c80f6be5aafd9665f641f665c3fcac217c5cbabb8ea72f27756f6"
 }

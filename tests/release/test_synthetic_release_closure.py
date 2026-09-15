@@ -6,11 +6,11 @@ rollback, and readiness-decision evidence bound to one synthetic artifact.
 """
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 
 from tools.release.release_dry_run import build_report
-
 
 ROOT = Path(__file__).resolve().parents[2]
 FIXTURE_ROOT = ROOT / "fixtures/release/promotion_verification_execution"
@@ -29,6 +29,12 @@ def test_synthetic_catalog_and_rollback_references_share_the_manifest_identity()
     manifest = load("artifacts/release_manifest.json")
     expected_spec_hash = manifest["spec_hash"]
     expected_artifact_digests = manifest["artifact_digests"]
+    carrier_binding = packet["carrier"]
+    assert isinstance(carrier_binding, dict)
+    carrier_path = ROOT / carrier_binding["path"]
+    carrier_digest = "sha256:" + hashlib.sha256(carrier_path.read_bytes()).hexdigest()
+    assert carrier_binding["sha256"] == carrier_digest
+    assert carrier_digest in expected_artifact_digests
 
     references = packet["references"]
     assert isinstance(references, list)
