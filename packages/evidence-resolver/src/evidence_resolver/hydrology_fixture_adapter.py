@@ -11,9 +11,11 @@ persistence, release, deployment, or publication behavior is provided here.
 
 from __future__ import annotations
 
+from contextlib import ExitStack
 from dataclasses import dataclass
 import hashlib
 import json
+import os
 from pathlib import Path, PurePosixPath
 import re
 import stat
@@ -57,6 +59,10 @@ _MANIFEST_FIELDS = frozenset(
 )
 _BUNDLE_ID = re.compile(r"^[a-z][a-z0-9_:.-]*$")
 _DIGEST = re.compile(r"^sha256:[a-f0-9]{64}$")
+_HAS_DESCRIPTOR_READ = (
+    os.open in os.supports_dir_fd
+    and all(hasattr(os, name) for name in ("O_NOFOLLOW", "O_DIRECTORY", "O_NONBLOCK"))
+)
 
 
 class FixtureAdapterError(ValueError):
@@ -175,10 +181,40 @@ def _read_repository_file(
     try:
         if not resolved_target.is_file():
             _raise(unreadable_code, checks)
-        if resolved_target.stat().st_size > MAX_INPUT_BYTES:
-            _raise(f"{unreadable_code}-too-large", checks)
-        with resolved_target.open("rb") as handle:
-            payload = handle.read(MAX_INPUT_BYTES + 1)
+        if not _HAS_DESCRIPTOR_READ:
+            _raise("fixture-adapter/descriptor-read-unsupported", checks)
+        # The path checks above provide stable diagnostics, not read authority.
+        # Anchor each component to an already-open directory; never reopen a
+        # checked pathname, which could now name a symlink or special file.
+        with ExitStack() as descriptors:
+            directory_flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
+            directory_fd = os.open(repository_root, directory_flags)
+            descriptors.callback(os.close, directory_fd)
+            for component in relative_path.parts[:-1]:
+                directory_fd = os.open(
+                    component, directory_flags, dir_fd=directory_fd
+                )
+                descriptors.callback(os.close, directory_fd)
+            file_fd = os.open(
+                relative_path.name,
+                os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK,
+                dir_fd=directory_fd,
+            )
+            descriptors.callback(os.close, file_fd)
+            opened = os.fstat(file_fd)
+            if not stat.S_ISREG(opened.st_mode):
+                _raise(unreadable_code, checks)
+            if opened.st_size > MAX_INPUT_BYTES:
+                _raise(f"{unreadable_code}-too-large", checks)
+            chunks: list[bytes] = []
+            remaining = MAX_INPUT_BYTES + 1
+            while remaining:
+                chunk = os.read(file_fd, remaining)
+                if not chunk:
+                    break
+                chunks.append(chunk)
+                remaining -= len(chunk)
+            payload = b"".join(chunks)
     except FixtureAdapterError:
         raise
     except OSError:

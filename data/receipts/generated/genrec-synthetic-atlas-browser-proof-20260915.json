@@ -1,0 +1,140 @@
+{
+  "receipt_id": "genrec-synthetic-atlas-browser-proof-20260915",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "packages/maplibre/src/maplibre-adapter.ts",
+    "packages/maplibre/tests/maplibre-adapter.test.ts",
+    "packages/maplibre/src/README.md",
+    "apps/explorer-web/tests/browser/map-evidence-drawer.fixture.ts",
+    "apps/explorer-web/tests/browser/synthetic-atlas-evidence.fixture.ts",
+    "apps/explorer-web/tests/browser/synthetic-atlas-map.fixture.ts",
+    "apps/explorer-web/tests/browser/synthetic-atlas-map.spec.ts",
+    "apps/explorer-web/tests/synthetic-atlas-evidence.test.ts",
+    "fixtures/contracts/v1/evidence/evidence_bundle/valid/valid_3.json"
+  ],
+  "artifact_hashes": {
+    "packages/maplibre/src/maplibre-adapter.ts": "sha256:44aff97843baa4f54aed0f53493936b48f44b121f790df7ffe4293d62f9f69c2",
+    "packages/maplibre/tests/maplibre-adapter.test.ts": "sha256:d1d06223d8c88096e162c00ec72b317576b669b8a760b718f8a88a84376ee970",
+    "packages/maplibre/src/README.md": "sha256:b984ba9d0e33ee69ca686d839e0a0f7aacc320a7cabbf33b5cb29f9178b87f39",
+    "apps/explorer-web/tests/browser/map-evidence-drawer.fixture.ts": "sha256:5626e0beddcac2b7fc57f9c6542948bf59ac732d02aa75df86555cf9082868bd",
+    "apps/explorer-web/tests/browser/synthetic-atlas-evidence.fixture.ts": "sha256:85431a4474804310ba012ab0c4273559246225b28546a01e755addfbb71fb66d",
+    "apps/explorer-web/tests/browser/synthetic-atlas-map.fixture.ts": "sha256:d8e2e6f3fc078a713a20400d49a384b782ec0d6fe9a680eef3e96d0883d34daf",
+    "apps/explorer-web/tests/browser/synthetic-atlas-map.spec.ts": "sha256:e0a5f8dc72f7eeaa7e528e26a0758ac477e3bb94e2dc98a5fc2b208580009e13",
+    "apps/explorer-web/tests/synthetic-atlas-evidence.test.ts": "sha256:3a4798e8a76c7a70780f1221e368f723b1fb21f9c7239a6a135e8b871e984367",
+    "fixtures/contracts/v1/evidence/evidence_bundle/valid/valid_3.json": "sha256:b84c2869e16f6c4050f1a5736fad57fd6fa3a9fb65bde5f4c709b0a8487c530f"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "UNKNOWN; exact serving model version not exposed"
+  },
+  "prompt_or_contract": "sha256:8664fef66ce1b44d7d35d790fc4fb12037c3d64531f2885ee7d8cd90b61bd475",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local repository validation",
+      "GitHub connector",
+      "Sites connector",
+      "Google Drive connector",
+      "Notion connector"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/b18b7276faa3cdad15f2ed34270b6640559bdf27",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/11ed1059e91bfaf0ab2adf793b3fa5bb4706f30f"
+    ],
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:8ad3948994680b0e6a85a3eb4c82f69466d0c5c2baf4c15fb4e14e43c1acb26d"
+    ]
+  },
+  "truth_labels": {
+    "packages/maplibre/src/maplibre-adapter.ts": "PROPOSED",
+    "packages/maplibre/tests/maplibre-adapter.test.ts": "PROPOSED",
+    "packages/maplibre/src/README.md": "PROPOSED",
+    "apps/explorer-web/tests/browser/map-evidence-drawer.fixture.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/synthetic-atlas-evidence.fixture.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/synthetic-atlas-map.fixture.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/synthetic-atlas-map.spec.ts": "PROPOSED",
+    "apps/explorer-web/tests/synthetic-atlas-evidence.test.ts": "PROPOSED",
+    "fixtures/contracts/v1/evidence/evidence_bundle/valid/valid_3.json": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "node22-package-unit",
+      "outcome": "PASS",
+      "reason": "Node 22.23.2 native pnpm --filter @kfm/maplibre test passes 120 tests across five files. Eight new regression cases cover source-local numeric renderer addresses, shared source/layers, original identity and caller geometry preservation, unbound-ID collision and string coercion denial, single-Feature projection, and ID-dependent styling/filter rejection. Renderer tests remain mocked."
+    },
+    {
+      "gate": "digest-bound-atlas-unit",
+      "outcome": "PASS",
+      "reason": "Node 22.23.2 pnpm --filter explorer-web exec vitest run tests/synthetic-atlas-evidence.test.ts passes 11 tests. Exact source-byte pins, oversize/byte-drift denial, carrier and full fixture-bundle binding, finite evidence outcomes, selected-evidence subset denial and no fetch in the helper are exercised."
+    },
+    {
+      "gate": "explicit-evidence-bundle-schema",
+      "outcome": "PASS",
+      "reason": "tools/validators/validate_evidence_bundle.py fixtures/contracts/v1/evidence/evidence_bundle/valid/valid_3.json explicitly validates this new fixture instance against the existing EvidenceBundle schema; no schema or policy change."
+    },
+    {
+      "gate": "targeted-strict-typescript",
+      "outcome": "PASS",
+      "reason": "Node 22.23.2 strict noEmit TypeScript 7.0.2 compile with temporary config extending Explorer config and explicitly including the new Atlas helper, map fixture, browser spec, unit test and package adapter tests passes after final runtime invalidation guard. Native app config remains unchanged."
+    },
+    {
+      "gate": "local-real-browser-composition",
+      "outcome": "PASS",
+      "reason": "Playwright 1.63.0 with Chromium 153.0.8010.0 and actual WebGL2 passes 20/20 tests,0 skipped,0 flaky on 2026-09-15T18:25:32.189Z: four new synthetic Atlas tests plus 16 existing MapLibre/evidence tests. Real hit testing resolves pinned evidence; canvas/camera persistence, repeated selection, background denial, four negative outcomes, teardown, local worker, keyboard text/evidence parity, focus entry/return, reduced motion and 200% text are checked. Atlas browser routes abort any non-local-origin request and assert none occurred. This is local module/worker traffic, not a claim of zero browser transport or full accessibility acceptance."
+    },
+    {
+      "gate": "node22-production-build",
+      "outcome": "PASS",
+      "reason": "Native Explorer tsc --noEmit -p tsconfig.json and Vite production build complete under Node 22.23.2 with scoped frozen dependencies. Browser-only fixtures remain outside production src composition; no Site build/deployment was performed."
+    },
+    {
+      "gate": "renderer-boundary-and-package-exports",
+      "outcome": "PASS",
+      "reason": "Six Python tests pass for Explorer adapter import boundary and package exports after the numeric renderer projection repair."
+    },
+    {
+      "gate": "readme-metadata",
+      "outcome": "PASS",
+      "reason": "Native present-profile metadata validation passes for packages/maplibre/src/README.md; historical broader readiness and dependency statements remain scoped as dated history."
+    },
+    {
+      "gate": "automated-semantic-review",
+      "outcome": "PASS",
+      "reason": "Separate agent semantic review found no remaining blocker in the validated-before-normalization design, strict numeric/source/layer lookup, all-feature collision handling, ID-dependent-style denial or preserved original selection identity. This is automated review, not independent human acceptance."
+    },
+    {
+      "gate": "hosted-independent-and-operational-acceptance",
+      "outcome": "SKIPPED",
+      "reason": "No exact-final-head hosted CI or independent human acceptance at authoring. Live governed API transport, canonical Drawer payload adoption, real policy/review/release admission, full WCAG/performance/rollback acceptance and production Site integration remain HOLD. #4024 containment and Stage 1B/Stage 2 boundaries unchanged."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-main",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/b18b7276faa3cdad15f2ed34270b6640559bdf27"
+    },
+    {
+      "id": "prior-map-selection-checkpoint",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/11ed1059e91bfaf0ab2adf793b3fa5bb4706f30f"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-15T18:27:06.064070Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "notes": "Bounded synthetic Atlas browser follow-up on prior branch commit 11ed1059e91bfaf0ab2adf793b3fa5bb4706f30f, based on main b18b7276faa3cdad15f2ed34270b6640559bdf27. Original genrec-map-fixture-selection-convergence-20260915.json is immutable historical evidence whose artifact hashes bind 11ed1059. Actual browser query returned numeric ID 0 for the original string-ID polygon; adapter now validates every authored binding first, assigns unique numeric addresses only in its private renderer style clone, and emits original copied KFM selection. Caller promoteId/generateId/clustering and ID-dependent source/layer expressions fail closed. No raw renderer properties authorize evidence. The unchanged carrier is overlay:synthetic-kansas-promotion-proof with feature synthetic-kansas-test-extent and evidence:synthetic:promotion-proof:v1; carrier SHA256 remains 8ad3948994680b0e6a85a3eb4c82f69466d0c5c2baf4c15fb4e14e43c1acb26d. Existing-schema EvidenceBundle adds a fixture-only geometry/identity claim and descriptive transforms; simulated admission/review/release flags confer no actual authority. Default app composition remains unchanged. No dependency/lockfile, schema, policy, registry, frozen catalog, main, PR lifecycle, repository setting, Site source/runtime/storage, release, deployment, promotion or publication change. No private database/object rows exported. Rollback is a focused revert of this follow-up, retaining receipts; restoring the prior optional seam also restores its documented string-ID hit-testing limitation. Human review pending; inherited repository-wide validator failures remain outside this slice."
+}

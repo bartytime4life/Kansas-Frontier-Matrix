@@ -6,6 +6,7 @@ import {
   MAP_RUNTIME_PORT_PROFILE,
   MAP_RUNTIME_TRUST_STATE_REASONS,
   MapRuntimePortError,
+  freezeMapFeatureSelection,
   freezeMapRuntimeCamera,
   type MapFeatureSelection,
   type MapRuntimeCamera,
@@ -21,6 +22,8 @@ import { DEFAULT_MAP_RUNTIME_CAMERA } from "./null-map-runtime";
 const CONTAINER_ID = /^[A-Za-z][A-Za-z0-9._:-]{0,127}$/;
 export const DEFAULT_MAPLIBRE_INITIALIZATION_DEADLINE_MS = 10_000;
 const MAX_MAPLIBRE_INITIALIZATION_DEADLINE_MS = 60_000;
+const MAX_FIXTURE_SELECTIONS = 64;
+const MAX_FIXTURE_QUERY_HITS = 128;
 
 function createEmptyStyle() {
   return { version: 8 as const, sources: {}, layers: [] };
@@ -75,6 +78,88 @@ function cloneSafeInlineStyle(
   return cloned as StyleSpecification;
 }
 
+type FixtureSelectionBinding = Readonly<{
+  selection: MapFeatureSelection;
+  sourceId: string;
+  rendererFeatureId: number;
+}>;
+
+function dependsOnFeatureId(value: unknown): boolean {
+  if (value === "$id") return true;
+  if (Array.isArray(value)) {
+    return value[0] === "id" || value.some(dependsOnFeatureId);
+  }
+  return typeof value === "object" && value !== null &&
+    Object.values(value).some(dependsOnFeatureId);
+}
+
+function fixtureSelectionBindings(
+  selections: readonly MapFeatureSelection[] | undefined,
+  style: StyleSpecification,
+): readonly FixtureSelectionBinding[] {
+  if (selections === undefined) return Object.freeze([]);
+  const invalid = (): never => {
+    throw new MapRuntimePortError(
+      "MAP_RUNTIME_SELECTION_INVALID",
+      "Map runtime fixture selections are invalid.",
+    );
+  };
+  if (!Array.isArray(selections) || selections.length > MAX_FIXTURE_SELECTIONS) {
+    return invalid();
+  }
+  const keys = new Set<string>();
+  const ids = new Set<string>();
+  const rendererSources = new Map<string, { id?: string | number }[]>();
+  // Resolve every binding against the original IDs before changing the
+  // package-owned clone. Several layers can share the same inline source.
+  const bindings = selections.map((input) => {
+    const selection = freezeMapFeatureSelection(input);
+    const key = JSON.stringify([selection.layerId, selection.featureId]);
+    if (keys.has(key) || ids.has(selection.selectionId)) return invalid();
+    keys.add(key);
+    ids.add(selection.selectionId);
+    const layers = style.layers.filter((layer) => layer.id === selection.layerId);
+    if (layers.length !== 1 || !("source" in layers[0])) return invalid();
+    const sourceId = layers[0].source;
+    if (typeof sourceId !== "string" || !Object.hasOwn(style.sources, sourceId)) {
+      return invalid();
+    }
+    const source = style.sources[sourceId];
+    if (source.type !== "geojson" || typeof source.data !== "object" || source.data === null) {
+      return invalid();
+    }
+    // MapLibre can replace GeoJSON IDs from properties, enumeration or
+    // clustering. Those identities are not the literal reviewed fixture IDs.
+    if (source.promoteId !== undefined || source.generateId || source.cluster) return invalid();
+    const features = source.data.type === "FeatureCollection"
+      ? source.data.features
+      : source.data.type === "Feature" ? [source.data] : [];
+    const matches = features.filter((feature: { id?: string | number; properties?: Record<string, unknown> | null }) =>
+      feature.id === selection.featureId,
+    );
+    if (matches.length !== 1 || matches[0].properties?.fixture !== true) return invalid();
+    rendererSources.set(sourceId, features);
+    return Object.freeze({ selection, sourceId, rendererFeatureId: features.indexOf(matches[0]) });
+  });
+  // GeoJSON tiling does not retain arbitrary string IDs. Use unique numeric
+  // addresses only inside the cloned renderer projection, including unbound
+  // features so none can alias an approved binding. Original KFM identities
+  // and evidence references stay in the immutable binding, never properties.
+  for (const [sourceId, features] of rendererSources) {
+    // ID-dependent styling/filtering would change meaning after projection.
+    // Keep that unsupported input fail-closed, including unbound sibling
+    // layers that share this source.
+    const source = style.sources[sourceId];
+    if (source.type !== "geojson" || dependsOnFeatureId(source.filter)) return invalid();
+    for (const layer of style.layers) {
+      if (!("source" in layer) || layer.source !== sourceId) continue;
+      if (dependsOnFeatureId(["filter" in layer ? layer.filter : undefined, layer.paint, layer.layout])) return invalid();
+    }
+    features.forEach((feature, index) => { feature.id = index; });
+  }
+  return Object.freeze(bindings);
+}
+
 function supportsWebGL2(): boolean {
   if (typeof document === "undefined") return false;
   try {
@@ -99,6 +184,13 @@ export type MapLibreAdapterOptions = Readonly<{
    * locators fail closed before renderer acquisition.
    */
   style?: StyleSpecification;
+  /**
+   * Optional pre-reviewed synthetic fixture bindings (at most 64). Each must
+   * match one inline GeoJSON feature with properties.fixture === true.
+   * This is identity translation, not policy, evidence or release admission.
+   * Evidence references come only from these copied KFM-owned values.
+   */
+  fixtureSelections?: readonly MapFeatureSelection[];
 }>;
 
 function camerasEqual(left: MapRuntimeCamera, right: MapRuntimeCamera): boolean {
@@ -127,6 +219,7 @@ export class MapLibreAdapter implements MapRuntimePort {
   private readonly interactive: boolean;
   private readonly initializationDeadlineMs: number;
   private readonly style: StyleSpecification;
+  private readonly fixtureBindings: readonly FixtureSelectionBinding[];
   private state: MapRuntimeState = "IDLE";
   private camera: MapRuntimeCamera = DEFAULT_MAP_RUNTIME_CAMERA;
   private selection: MapFeatureSelection | null = null;
@@ -150,6 +243,7 @@ export class MapLibreAdapter implements MapRuntimePort {
     this.containerId = options.containerId;
     this.interactive = options.interactive ?? true;
     this.style = cloneSafeInlineStyle(options.style);
+    this.fixtureBindings = fixtureSelectionBindings(options.fixtureSelections, this.style);
     const initializationDeadlineMs =
       options.initializationDeadlineMs ??
       DEFAULT_MAPLIBRE_INITIALIZATION_DEADLINE_MS;
@@ -199,6 +293,7 @@ export class MapLibreAdapter implements MapRuntimePort {
     }
 
     try {
+      if (this.map !== null) this.clearRenderer();
       const map = new MapLibreMap({
         container: this.containerId,
         style: this.style,
@@ -254,6 +349,41 @@ export class MapLibreAdapter implements MapRuntimePort {
         }
       });
       this.rendererUnsubscribers.add(moveSubscription.unsubscribe);
+
+      if (this.fixtureBindings.length > 0) {
+        const layers = [...new Set(this.fixtureBindings.map(({ selection }) => selection.layerId))];
+        const clickSubscription = map.on("click", (event) => {
+          if (this.state !== "READY" || this.map !== map) return;
+          try {
+            const features = map.queryRenderedFeatures(event.point, { layers });
+            if (features.length > MAX_FIXTURE_QUERY_HITS) return;
+            let matched: MapFeatureSelection | null = null;
+            for (const feature of features) {
+              const binding = this.fixtureBindings.find((candidate) =>
+                candidate.selection.layerId === feature.layer.id &&
+                candidate.rendererFeatureId === feature.id &&
+                candidate.sourceId === feature.source,
+              );
+              // Unknown or ambiguous hits must not fall through to a supported
+              // feature. Renderer properties never supply evidence references.
+              if (binding === undefined || (matched !== null && matched !== binding.selection)) return;
+              matched = binding.selection;
+            }
+            if (matched === null) return;
+            this.selection = matched;
+            this.notifySnapshot();
+            for (const listener of [...this.selectionListeners]) {
+              if (this.state !== "READY" || this.map !== map || this.selection !== matched) break;
+              listener(matched);
+            }
+          } catch {
+            if (!this.isDisposed()) {
+              try { this.failRuntime(); } catch { /* Listener failure stays finite. */ }
+            }
+          }
+        });
+        this.rendererUnsubscribers.add(clickSubscription.unsubscribe);
+      }
 
       const errorSubscription = map.on("error", () => {
         if (this.state === "INITIALIZING") {

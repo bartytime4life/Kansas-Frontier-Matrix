@@ -1,0 +1,124 @@
+{
+  "receipt_id": "genrec-governed-api-negative-transport-20260915",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/explorer-web/src/adapters/governed_api_negative_adapter.ts",
+    "apps/explorer-web/tests/governed-api-negative-adapter.test.ts",
+    "apps/explorer-web/tests/browser/synthetic-atlas-map.fixture.ts",
+    "apps/explorer-web/tests/browser/governed-api-negative.api.ts",
+    "apps/explorer-web/tests/browser/governed-api.vite.config.ts",
+    "apps/explorer-web/playwright.api.config.ts",
+    "apps/explorer-web/src/adapters/README.md"
+  ],
+  "artifact_hashes": {
+    "apps/explorer-web/src/adapters/governed_api_negative_adapter.ts": "sha256:125c3f5d935f01872f138aebf55573793ef2de217a008d97eab49e9164ec1081",
+    "apps/explorer-web/tests/governed-api-negative-adapter.test.ts": "sha256:fc9d17d5cca335f1f19f93db5538507cc43b71fd4956091e0b12e12eec536cf0",
+    "apps/explorer-web/tests/browser/synthetic-atlas-map.fixture.ts": "sha256:dff1f03b089903357229468c023cacbff353755596edd5083addd88567a5c880",
+    "apps/explorer-web/tests/browser/governed-api-negative.api.ts": "sha256:1746d71dd037915a8b4fc2983cfbb61783fc1828b0d1c74619af1bf0a62a13b5",
+    "apps/explorer-web/tests/browser/governed-api.vite.config.ts": "sha256:6e15e963c7c8a464e217a9a2265790d60453d7bc010618814a3de38ab8d26545",
+    "apps/explorer-web/playwright.api.config.ts": "sha256:83a8bddf4a58e37100192475f45d43b31f12c65e56f88e47b5c345688353f796",
+    "apps/explorer-web/src/adapters/README.md": "sha256:7444087fa5468534a7d94e6188c6771fb7acf59e0cdcefc643f8403fc240bca4"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "UNKNOWN; exact serving model version not exposed"
+  },
+  "prompt_or_contract": "sha256:8664fef66ce1b44d7d35d790fc4fb12037c3d64531f2885ee7d8cd90b61bd475",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local repository validation",
+      "GitHub connector",
+      "Sites connector",
+      "Google Drive connector",
+      "Notion connector"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/b18b7276faa3cdad15f2ed34270b6640559bdf27",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/4957b662a9f5980aa7c8a8e8571571e77c2265fb"
+    ],
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:8ad3948994680b0e6a85a3eb4c82f69466d0c5c2baf4c15fb4e14e43c1acb26d"
+    ]
+  },
+  "truth_labels": {
+    "apps/explorer-web/src/adapters/governed_api_negative_adapter.ts": "PROPOSED",
+    "apps/explorer-web/tests/governed-api-negative-adapter.test.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/synthetic-atlas-map.fixture.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/governed-api-negative.api.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/governed-api.vite.config.ts": "PROPOSED",
+    "apps/explorer-web/playwright.api.config.ts": "PROPOSED",
+    "apps/explorer-web/src/adapters/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "negative-api-client-unit",
+      "outcome": "PASS",
+      "reason": "81 focused Vitest cases pass on Node22.23.2: fixed same-origin endpoint, negative-only closed10field grammar, duplicate/extra/nested JSON denial, UTF8/calendar/status checks, emptyrefs,16KiB/256chunks/5second limits, redirects/credentials/cache controls, stalled fetch/read/cancel and late ignored-abort handling."
+    },
+    {
+      "gate": "actual-wsgi-browser-integration",
+      "outcome": "PASS",
+      "reason": "Four Playwright tests pass at2026-09-15T18:51:03.606Z using Chromium153.0.8010.0, actual loopback WSGI and test-only Vite proxy. HTTP200ABSTAIN reaches existing Drawer; realHTTP405 bytes use test-only method injection, not fabricated response content. Late actual responses cannot overwrite newer scenario or reopen disposed view; canvas/camera persist. Existing negative Drawer safe copy stays fixed; fixture notice states unresolved API limit. No nonlocal browser requests."
+    },
+    {
+      "gate": "existing-browser-regression",
+      "outcome": "PASS",
+      "reason": "20 existing Atlas/map/Drawer browser tests pass at2026-09-15T18:52:04.403Z,0skipped/unexpected/flaky. Positive Atlas scenario remains local synthetic evidence; default browser lane launches no API."
+    },
+    {
+      "gate": "native-api-negative-boundary",
+      "outcome": "PASS",
+      "reason": "26 existing apps/governed-api/tests pass; Python WSGI source, negative guard and route registry unchanged."
+    },
+    {
+      "gate": "strict-types-and-production-build",
+      "outcome": "PASS",
+      "reason": "Targeted strict TypeScript includes new adapter/unit/API browser/config and changed fixture. Native Explorer production tsc+Vite8.3.0 build passes onNode22.23.2, retaining chunk-size warning. No production component imports client; no production proxy added; scoped frozen install keeps lockfile unchanged."
+    },
+    {
+      "gate": "readme-metadata-local-links",
+      "outcome": "PASS",
+      "reason": "Native present-profile metadata and local Markdown link validation pass for changed adapter README. No registry or baseline weakened."
+    },
+    {
+      "gate": "independent-automated-review",
+      "outcome": "PASS",
+      "reason": "Separate agent read-only review found no actionable defects in response grammar/bounds/cancellation, same-origin isolation, finite empty-evidence projections, stale/disposal handling and test-only API composition. This is automated review, not human acceptance."
+    },
+    {
+      "gate": "hosted-human-operational-acceptance",
+      "outcome": "SKIPPED",
+      "reason": "Parent4957 all-event GitHub Actions query returned0runs. Final-head hosted evidence and human acceptance remain unproved at authoring. API candidate lookup, positive evidence service, canonical Drawer schema adoption, real policy/release/correction/rollback decisions and live Site integration remain HOLD."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-main",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/b18b7276faa3cdad15f2ed34270b6640559bdf27"
+    },
+    {
+      "id": "prior-map-browser-proof",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/4957b662a9f5980aa7c8a8e8571571e77c2265fb"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-15T18:54:14.593021Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "notes": "Bounded branch-only successor to4957b662. One optional Explorer-owned GET /evidence client sends no feature/candidate/evidence IDs because existing API ignores such input. This is availability transport, not selected evidence resolution. Every output is ABSTAIN/DENY/ERROR with empty evidence/citations/history; unexpected ANSWER fails closed. Test-only proxy and API composition use the existing browser fixture, no new app. Original Atlas carrier, full bundle and prior receipts remain unchanged. Prior browser receipt hashes replay at4957, original map receipt at11ed. Main, API guard/routes, schemas, policy, registry, dependency/lockfile, frozen catalog, PR lifecycle, settings, Site identity/source/access/storage, source admission, release, deployment, promotion and publication unchanged. Focused revert restores prior map-only fixture; no deployed state is changed or restored. Human review pending; inherited topology/registry issues do not become acceptance."
+}

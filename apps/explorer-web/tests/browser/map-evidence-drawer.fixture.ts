@@ -211,7 +211,14 @@ const cases: readonly MapEvidenceFixtureCase[] = Object.freeze([
 const root = document.querySelector<HTMLElement>("#fixture-root");
 if (root === null) throw new Error("Map evidence fixture root is missing.");
 
-mountMapFeatureEvidenceFixture(root, cases, async (selection) => {
+if (new URLSearchParams(window.location.search).get("runtime") === "atlas") {
+  const { mountSyntheticAtlasMap } = await import("./synthetic-atlas-map.fixture");
+  try {
+    await mountSyntheticAtlasMap(root);
+  } catch {
+    root.textContent = "ERROR / SYNTHETIC_FIXTURE_INTEGRITY_FAILED";
+  }
+} else mountMapFeatureEvidenceFixture(root, cases, async (selection) => {
   await Promise.resolve();
   switch (selection.selectionId) {
     case "selection:citation-unresolved":

@@ -51,6 +51,14 @@ fixture packet:
 - feeds only a verified candidate into `core.py`, then immediately applies the
   existing runtime projection.
 
+Path checks are followed by descriptor-relative, no-follow opens for every
+relative component. The opened descriptor must be a regular file; nonblocking
+open prevents a FIFO swap from waiting for a writer. Reads are byte-bounded
+even if the file grows, and descriptors close on every exit. Unsupported
+platforms return `fixture-adapter/descriptor-read-unsupported`, not a weaker
+fallback. See the [package boundary](../../README.md#descriptor-bound-fixture-reads)
+for the trusted-root and filesystem limitations.
+
 The selected fixture uses a synthetic `kfm://` EvidenceRef so the existing
 mandatory verification-history subject binding can be satisfied exactly. The
 manifest binds the resulting checked-in bytes; this is not a universal content

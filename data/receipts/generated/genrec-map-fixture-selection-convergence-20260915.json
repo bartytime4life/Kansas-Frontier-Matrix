@@ -1,0 +1,100 @@
+{
+  "receipt_id": "genrec-map-fixture-selection-convergence-20260915",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "packages/maplibre/src/maplibre-adapter.ts",
+    "packages/maplibre/tests/maplibre-adapter.test.ts",
+    "packages/maplibre/src/README.md"
+  ],
+  "artifact_hashes": {
+    "packages/maplibre/src/maplibre-adapter.ts": "sha256:71f66473165771542b7a5a0087fb5d2b8b5ef17c163ed1a56c13ccd8c486dbb2",
+    "packages/maplibre/tests/maplibre-adapter.test.ts": "sha256:77bd23660deb19e7c19095d01864f541c2ef7456fd5d0752189b994b7d6727ae",
+    "packages/maplibre/src/README.md": "sha256:38868d2a367495ed742136043fa49e3892b84d4f75211b7f5af19c78d963c3f1"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "UNKNOWN; exact serving model version not exposed"
+  },
+  "prompt_or_contract": "sha256:8664fef66ce1b44d7d35d790fc4fb12037c3d64531f2885ee7d8cd90b61bd475",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local repository validation",
+      "GitHub connector",
+      "Sites connector",
+      "Google Drive connector",
+      "Notion connector"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/b18b7276faa3cdad15f2ed34270b6640559bdf27"
+    ],
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
+    ]
+  },
+  "truth_labels": {
+    "packages/maplibre/src/maplibre-adapter.ts": "PROPOSED",
+    "packages/maplibre/tests/maplibre-adapter.test.ts": "PROPOSED",
+    "packages/maplibre/src/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "package-adapter-deadline-worker-tests",
+      "outcome": "PASS",
+      "reason": "46 Vitest5.0.0 tests pass with fake renderer. Trusted synthetic binding, unknown/ambiguous/excess hits, no raw-property evidence, immutable copied refs, camera/renderer preservation, disposal, finite errors, and promoteId/generated-ID/clustering denial exercised. No source transport added; fetch denial spy covers selected unit path."
+    },
+    {
+      "gate": "targeted-strict-typescript",
+      "outcome": "PASS",
+      "reason": "TypeScript7.0.2 targeted strict noEmit compile of adapter passes with Vite CSS types, MapLibre6.9.0 declarations. This is not full app compilation."
+    },
+    {
+      "gate": "renderer-boundary-and-package-exports",
+      "outcome": "PASS",
+      "reason": "Six Python boundary/export tests pass; accepted package-only renderer acquisition remains intact."
+    },
+    {
+      "gate": "changed-readme-and-diff",
+      "outcome": "PASS",
+      "reason": "Native present-profile metadata and local link checks pass; git diff --check passes."
+    },
+    {
+      "gate": "automated-peer-review",
+      "outcome": "PASS",
+      "reason": "Independent agent review identified promoteId identity substitution; repaired with adversarial source tests. No remaining concrete blockers reported. This is not human approval."
+    },
+    {
+      "gate": "browser-evidence-api-and-supported-runtime-acceptance",
+      "outcome": "SKIPPED",
+      "reason": "Node24.19.0 exercised; supported Node22 not installed. No actual renderer/WebGL/worker/network/browser test, app binding, API/EvidenceBundle/Drawer integration, accessibility acceptance, production build or deployment. Full map data chain remains HOLD."
+    },
+    {
+      "gate": "hosted-independent-review",
+      "outcome": "SKIPPED",
+      "reason": "Branch-only under #4024; no hosted exact-head CI or independent human acceptance available at authoring."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-main",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/b18b7276faa3cdad15f2ed34270b6640559bdf27"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-15T17:41:27.629009Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "notes": "Bounded optional fixture-selection transport within existing packages/maplibre adapter and selection profile under accepted ADR-0006/0007 and Directory Rules ADR-0029. No new semantic contract/schema/policy/method, no app changes, no dependencies or lockfiles changed. At most64 reviewed bindings and128 queried hits; inline GeoJSON literal IDs and fixture marker required, not rights or release approval. Default binding option absent means no click-selection listener. Evidence comes only from copied KFM binding, never raw renderer properties. Scope is synthetic mapping seam, not the complete Atlas candidate chain or production map repair. No main merge, PR lifecycle, setting, Site/source, database/object-row export, release, deployment, promotion or publication action. Correction/recovery: focused follow-up or revert the optional binding and tests as unit, retain generated receipt. Human review pending; topology and document-registry inherited failures unchanged."
+}

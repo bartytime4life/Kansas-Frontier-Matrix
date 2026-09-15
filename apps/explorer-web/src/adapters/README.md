@@ -2,15 +2,15 @@
 doc_id: kfm://app/explorer-web/src/adapters/readme
 title: Explorer Web Adapters README
 type: app-readme
-version: v0.4
+version: v0.5
 status: draft
 owners: OWNER_TBD — Apps steward · UI steward · Map steward · Governed API steward · Policy steward · Docs steward
 created: 2026-06-16
-updated: 2026-09-10
+updated: 2026-09-15
 policy_label: public
 owning_root: apps/
 responsibility: define Explorer Web app-local adapter boundaries and record verified bounded adapter implementations
-truth_posture: CONFIRMED bounded repository adapters and tests / PROPOSED broader integration families / UNKNOWN live transport and deployment behavior
+truth_posture: CONFIRMED bounded repository adapters and tests / PROPOSED broader integration families / UNKNOWN production transport and deployment behavior
 related:
   - ../README.md
   - ../../README.md
@@ -37,7 +37,7 @@ notes:
   - "GovernedClient.ts now implements one closed, fixture-only Evidence Drawer projection parser with bounded fields, HTTPS citation checks, finite-outcome invariants, and no network behavior."
   - "planning-scenario-projection.ts implements one closed, synthetic fixture-only planning-scenario display parser with reference closure, finite negative outcomes, and false authority flags."
   - "acs-population-context-adapter.ts implements bounded, transport-free, external-context fixture reconciliation without evidence, report, export, source-admission, release, or publication authority."
-  - "Live governed API transport, canonical schema binding, renderer wrappers, runtime wiring, and deployment behavior remain NEEDS VERIFICATION."
+  - "One negative-only same-origin API transport is implemented; candidate resolution, production routing, canonical schema binding and deployment remain NEEDS VERIFICATION."
   - "Adapters may translate between Explorer Web UI code and governed API envelopes, renderer ports, evidence payloads, layer manifests, export requests, and diagnostics; they must not become source truth, policy authority, release authority, lifecycle storage, schema/contract authority, direct model surface, or renderer authority."
   - "Claim-bearing UI state must come from governed API envelopes, released or bounded-safe layer artifacts, EvidenceBundle-derived payloads, and finite states; adapters must not directly read RAW/WORK/QUARANTINE/PROCESSED/CATALOG/TRIPLET/PUBLISHED data roots or canonical/internal stores."
 [/KFM_META_BLOCK_V2] -->
@@ -70,7 +70,7 @@ notes:
 > **Owners:** `OWNER_TBD` — Apps steward · UI steward · Map steward · Governed API steward · Policy steward · Docs steward  
 > **Path:** `apps/explorer-web/src/adapters/README.md`  
 > **Responsibility root:** `apps/` — deployable application surfaces  
-> **Truth posture:** CONFIRMED README path, `GovernedClient.ts` fixture-only Evidence Drawer parser, synthetic fixtures, app-local tests, and no-network/no-lifecycle-store structural guard / PROPOSED broader adapter-boundary contract / UNKNOWN live client transport, canonical schema binding, renderer wrappers, runtime wiring, and deployment behavior
+> **Truth posture:** CONFIRMED README path, `GovernedClient.ts` fixture-only Evidence Drawer parser, synthetic fixtures, app-local tests, and no-network/no-lifecycle-store structural guard / PROPOSED broader adapter-boundary contract / UNKNOWN production client routing, candidate resolution, canonical schema binding and deployment behavior
 
 > [!CAUTION]
 > Adapter code must not bypass the trust membrane. It may translate governed API envelopes, renderer ports, evidence payloads, layer manifests, and export requests into UI-friendly shapes, but it must not directly read lifecycle data roots, canonical/internal stores, raw renderer internals as truth, direct model output, or local source files as user-facing claims.
@@ -112,7 +112,7 @@ Adapters should isolate integration details so route and component code can rema
 - export requests into governed export payloads;
 - diagnostics and telemetry into safe, non-secret UI diagnostics.
 
-Bounded Evidence Drawer, planning-scenario, and ACS population fixture parsers are implemented. Live transport and broader runtime binding remain unproved.
+Bounded Evidence Drawer, planning-scenario, and ACS population fixture parsers are implemented. A negative-only API transport can now report the existing scaffold's availability in the Drawer. Candidate evidence resolution and production routing remain unproved.
 
 [Back to top](#top)
 
@@ -122,7 +122,7 @@ Bounded Evidence Drawer, planning-scenario, and ACS population fixture parsers a
 
 | Surface | Status | What it proves | What it does **not** prove |
 |---|---|---|---|
-| `apps/explorer-web/src/adapters/README.md` | **CONFIRMED README** | This README exists and has been updated to v0.4. | Live transport, renderer wrappers, broader runtime wiring, or deployment behavior. |
+| `apps/explorer-web/src/adapters/README.md` | **CONFIRMED README** | This README exists and has been updated to v0.5. | Live transport, renderer wrappers, broader runtime wiring, or deployment behavior. |
 | `apps/explorer-web/src/README.md` | **CONFIRMED parent source README** | Parent source tree defines Explorer Web source as map-first implementation boundary and denies direct lifecycle/canonical/model reads. | That routes, adapters, renderer wiring, or tests are implemented. |
 | `apps/explorer-web/README.md` | **CONFIRMED parent app README** | Parent app lane defines Explorer Web as map-first public/semi-public shell that must read through governed API and avoid direct lifecycle/canonical/internal store reads. | That app routes, clients, adapters, tests, or deployment exist. |
 | `apps/explorer-web/src/adapters/GovernedClient.ts` | **CONFIRMED bounded executable** | Validates one closed, fixture-only public-safe Evidence Drawer projection and enforces finite outcome combinations without network access. | Live governed API transport, canonical schema acceptance, policy execution, citation validation, or production readiness. |
@@ -132,11 +132,51 @@ Bounded Evidence Drawer, planning-scenario, and ACS population fixture parsers a
 | `apps/explorer-web/src/adapters/acs-population-context-adapter.ts` | **CONFIRMED bounded executable** | Reconciles one archive-content-pinned ACS fixture, rejects non-`AVAILABLE` status, duplicate GEOIDs, vintage drift, and unsafe integer values, and emits context-only population fields. It does not establish a Sites project or saved-version identity. | Live Census transport, evidence authority, reporting/export eligibility, source admission, release, or publication. |
 | `apps/explorer-web/tests/acs-population-context.test.ts` | **CONFIRMED bounded tests** | Covers exact-vintage reconciliation, unknown status, complete duplicate rejection, safe integers, no-authority flags, and no network/storage mutation path. | Hosted replay, browser rendering, or production data availability. |
 | Uploaded adapter Markdown | **CONFIRMED source text for this update** | Provided the base adapter-boundary contract updated here. | Does not prove live implementation. |
-| Live transport and broader runtime binding | **NEEDS VERIFICATION** | Checkable by import-boundary tests, fixtures, package scripts, governed API evidence, and runtime evidence. | Not claimed by this README. |
+| [`governed_api_negative_adapter.ts`](governed_api_negative_adapter.ts) | **CONFIRMED bounded implementation** | Fixed same-origin `/evidence` request, bounded negative-envelope validation and empty-evidence Drawer projection. | Candidate lookup, an `ANSWER`, policy/release authority, production routing or deployment. |
+| Production routing and broader runtime binding | **NEEDS VERIFICATION** | Requires API, deployment and acceptance evidence beyond the explicit local integration lane. | Not claimed by this README. |
 
 [Back to top](#top)
 
 ---
+
+### Negative API availability transport
+
+`fetchGovernedApiNegativeProjection({ signal })` is an optional app-local client.
+It requests only the literal same-origin `/evidence` path, with no selection
+query, configurable endpoint, credentials, cache or redirect following. The
+current Python API ignores selection input and still returns
+`ABSTAIN / NOT_IMPLEMENTED`; this client does not imply that the server received,
+validated or resolved an Atlas candidate.
+
+A closed negative RuntimeResponseEnvelope is translated into the existing
+Drawer projection. `NOT_IMPLEMENTED` becomes `ABSTAIN / MISSING_EVIDENCE` with an
+explicit availability limitation. Invalid, unexpected positive, oversized,
+redirected, timed-out or incompatible responses fail closed. No response text,
+remote identifier, current evidence, citation or history is copied into the
+negative display. Cancellation is bounded, and late results cannot reopen a
+superseded or disposed fixture view.
+
+The API route registry, WSGI negative-handler guard, canonical schemas and
+production Vite/Sites configuration are unchanged. No production component
+imports this transport. The existing synthetic Atlas browser page exposes its
+API scenario only with `api=1`; its positive evidence scenario remains a visibly
+labeled local simulation. The separate test configuration starts the actual
+loopback WSGI app and a test-only Vite proxy. It adds no deployable application.
+
+From `apps/explorer-web/`, using the workspace-supported Node version and an
+installed Playwright browser:
+
+```bash
+pnpm exec vitest run tests/governed-api-negative-adapter.test.ts
+pnpm exec playwright test --config=playwright.api.config.ts
+```
+
+The integration lane checks actual HTTP 200 abstention, real WSGI HTTP 405 error
+bytes after test-only method injection, stale-response suppression, disposal,
+and persistent canvas/camera. Unit tests cover malformed and bounded transport
+failures. These are local proof commands, not hosted, human, full accessibility,
+Site, correction/rollback or production acceptance. The earlier browser receipt
+remains historical at commit `4957b662`; a new receipt binds this follow-up.
 
 ## 3. Repo fit
 

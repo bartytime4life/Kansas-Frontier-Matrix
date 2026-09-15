@@ -1,0 +1,39 @@
+{
+  "bundle_id": "evidence:synthetic:promotion-proof:v1",
+  "claim_scope": "Fixture-only geometry and identity of overlay:synthetic-kansas-promotion-proof. No observed environmental claim, source admission, actual review, release, deployment, or publication is established.",
+  "evidence_refs": [
+    {
+      "ref": "overlay:synthetic-kansas-promotion-proof",
+      "kind": "artifact",
+      "bundle_ref": "evidence:synthetic:promotion-proof:v1"
+    }
+  ],
+  "source_records": [
+    "fixtures/release/promotion_verification_execution/artifacts/synthetic_atlas_carrier.geojson",
+    "fixtures/release/promotion_verification_execution/references/evidence.json"
+  ],
+  "citations": [
+    "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/11ed1059e91bfaf0ab2adf793b3fa5bb4706f30f/fixtures/release/promotion_verification_execution/artifacts/synthetic_atlas_carrier.geojson"
+  ],
+  "rights": {
+    "license": "SYNTHETIC_FIXTURE: repository-authored deterministic test geometry; fixture-use basis only, no operational source licence asserted"
+  },
+  "sensitivity": {
+    "level": "public",
+    "reason": "PUBLIC_SYNTHETIC generalized-test-extent; no surveyed or sensitive real-world locations",
+    "applied_at": "2026-04-13T00:00:00Z"
+  },
+  "transforms": [
+    "Original carrier bytes are unchanged and SHA-256 pinned.",
+    "The browser-only GeoJSON projection copies the original feature ID and polygon coordinates, adds properties.fixture=true from the verified fixture_only marker, and omits top-level carrier metadata from the style while retaining it in the fixture packet.",
+    "The package-owned renderer clone assigns source-local numeric feature addresses to survive GeoJSON tiling. Only the copied original KFM feature identity and evidence references leave the adapter; renderer addresses confer no admission or evidence authority.",
+    "Existing closed LayerManifest and Evidence Drawer fixtures simulate released review state only; the original carrier lifecycle remains FIXTURE."
+  ],
+  "checksums": {
+    "carrier": "sha256:8ad3948994680b0e6a85a3eb4c82f69466d0c5c2baf4c15fb4e14e43c1acb26d",
+    "promotion_evidence_reference": "sha256:79aa8c518fe95922cc3c29567a5edf067a866a5b0036eb0133a930b73a2748f6"
+  },
+  "spec_hash": {
+    "value": "sha256:f51b3ac7cdb4c7fa7ca479391845090528db8a53884f4afe2d61b95591e72411"
+  }
+}
