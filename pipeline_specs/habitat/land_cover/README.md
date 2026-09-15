@@ -70,13 +70,12 @@ Prohibited here:
 - Exposure: public configuration metadata; no payloads or sensitive joins.
 - Mutation: threshold, unit, analysis unit, combination rule, schema, or hash changes require fixture-backed review.
 - Retention: version-control history and explicit profile-version / supersession lineage.
-- The retained `.gitkeep` is a zero-byte topology marker with no profile or execution authority.
+- The directory is retained by its admitted profile and boundary contract; it does not need a path-retention marker.
 
 ## Current direct-child map
 
 ```text
 pipeline_specs/habitat/land_cover/
-├── .gitkeep                        # Topology marker; no authority
 ├── README.md                       # This boundary contract
 └── materiality_profile.v1.json     # Inactive schema-specific profile
 ```
