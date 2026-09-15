@@ -5,8 +5,7 @@
   "source_path": "docs/brand/logo/wordmark/kfm-wordmark.svg",
   "derivative_paths": [
     "docs/brand/logo/wordmark/derivatives/kfm-wordmark-light.svg",
-    "docs/brand/logo/wordmark/derivatives/kfm-wordmark-dark.svg",
-    "docs/brand/logo/wordmark/derivatives/kfm-wordmark-512.png"
+    "docs/brand/logo/wordmark/derivatives/kfm-wordmark-dark.svg"
   ],
   "review_state": "draft",
   "release_state": "unreleased"

@@ -20,7 +20,6 @@ evidence_snapshot:
   prior_blob: 1ab41e00cb77c0bb34e2169a13261486f5b9c7dd
   inventory_method: complete recursive Git tree plus exact GitHub connector reads, target history, exact-target pull-request search, planned-branch lookup, and bounded consumer/workflow inspection
   direct_lane_files_confirmed:
-    - policy/decision/.gitkeep
     - policy/decision/README.md
     - policy/decision/reviewer_roles.v1.json
     - policy/decision/vocabulary.v1.json
@@ -150,7 +149,6 @@ This README is a governance and implementation boundary. It is not executable po
 | [`README.md`](./README.md) | Human-readable directory contract | Explains the lane, current evidence, proposed operating model, and trust boundaries. | Prose cannot activate or evaluate policy. |
 | [`vocabulary.v1.json`](vocabulary.v1.json) | Machine-readable candidate registry | Nine reason codes and eight obligation codes for fixture-only coherence checks. | `PROPOSED_INACTIVE`; all governance flags are `false`. |
 | [`reviewer_roles.v1.json`](reviewer_roles.v1.json) | Machine-readable candidate registry | Five stable classes for review routing vocabulary. | Assigns no people, records no approval, and grants no authority. |
-| `.gitkeep` | Empty path-retention marker | Preserves directory existence in Git history. | No semantic or policy meaning. |
 
 No direct child is an evaluator, active bundle, emitted decision, receipt, approval, release record, or public carrier.
 

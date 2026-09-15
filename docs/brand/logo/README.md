@@ -6,7 +6,7 @@ version: v1
 status: draft
 owners: [TODO: brand-steward, docs-steward]
 created: 2026-05-15
-updated: 2026-05-15
+updated: 2026-09-15
 policy_label: public
 related:
   - docs/brand/README.md
@@ -19,7 +19,7 @@ related:
 tags: [kfm, brand, logo, identity, design-tokens, accessibility, governance]
 notes:
   - Compatibility-root tension with packages/ui/ — see §3 and §13.
-  - All implementation paths PROPOSED; repository not mounted in this session.
+  - Repository inventory verified on 2026-09-15; planned derivatives remain PROPOSED until generated and reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # logo — KFM Brand Mark and Identity Assets
@@ -31,9 +31,9 @@ notes:
 [![Authority: canonical-or-compatibility](https://img.shields.io/badge/authority-canonical%20vs%20compatibility-lightgrey)](#authority-level-and-the-packagesui-question)
 [![License: TODO](https://img.shields.io/badge/license-TODO-lightgrey)](#license-rights--attribution)
 [![Build: TODO](https://img.shields.io/badge/build-TODO-lightgrey)](#validation)
-[![Last reviewed: 2026-05-15](https://img.shields.io/badge/reviewed-2026--05--15-blue)](#last-reviewed)
+[![Last reviewed: 2026-09-15](https://img.shields.io/badge/reviewed-2026--09--15-blue)](#last-reviewed)
 
-**Status:** draft &nbsp;·&nbsp; **Owners:** [TODO: brand-steward, docs-steward] &nbsp;·&nbsp; **Last updated:** 2026-05-15
+**Status:** draft &nbsp;·&nbsp; **Owners:** [TODO: brand-steward, docs-steward] &nbsp;·&nbsp; **Last updated:** 2026-09-15
 
 ---
 
@@ -130,14 +130,16 @@ Directory Rules permit a brand home at `docs/brand/` **only if** brand assets do
 
 ## 4. Status
 
-**PROPOSED.** No `docs/brand/logo/` directory was verified in the mounted workspace this session. All paths, file names, ADR references, owner handles, and badge targets in this README are PROPOSED until checked against the live repository.
+The directory and the admitted source assets below were verified in the repository on 2026-09-15. Planned derivative names, unaccepted ADRs, owner handles, runtime copies, and release claims remain PROPOSED until separately evidenced.
 
 | Aspect | Truth label |
 |---|---|
 | Directory Rules §6.1 reference to `docs/brand/` | CONFIRMED (Directory Rules) |
 | Compatibility-root behavior of `styles/` | CONFIRMED (Directory Rules §8.1) |
-| This folder exists in the mounted repo | UNKNOWN (no repo mounted) |
-| Sub-tree layout below | PROPOSED |
+| This folder exists in the mounted repo | CONFIRMED |
+| Source SVGs, tokens, and the non-empty print wordmark | CONFIRMED files; still draft/unreleased |
+| Raster, favicon, mark-print, and regression derivatives | NOT ADMITTED; zero-byte placeholders removed 2026-09-15 |
+| Sub-tree layout below | PROPOSED target; not a claim that every path exists |
 | `packages/ui/` exists and consumes from here | UNKNOWN |
 | ADR pinning the brand home | NEEDS VERIFICATION |
 | WCAG / accessibility thresholds | EXTERNAL (general guidance only — see §17) |
@@ -186,7 +188,7 @@ Accepted file types and object families (PROPOSED):
 ## 7. Directory tree (PROPOSED)
 
 > [!NOTE]
-> The tree below is a **PROPOSED** layout aligned to Directory Rules §6.1 and §15. It has not been verified against a mounted repository. Names with `<>` are placeholders. Any deviation from this tree requires updating §10 (`LogoAssetManifest`) and the ADR referenced in §21.
+> The tree below is a **PROPOSED target layout** aligned to Directory Rules §6.1 and §15. It is not a current inventory. Planned files are not retained as zero-byte placeholders; add them only when a usable, reviewed asset exists. Any admitted deviation requires updating §10 (`LogoAssetManifest`) and the ADR referenced in §21.
 
 ```text
 docs/brand/logo/
@@ -245,7 +247,7 @@ docs/brand/logo/
 
 ## 8. Asset inventory and roles
 
-**PROPOSED.** The table below names the canonical role of each asset family. Names and pixel sizes are illustrative defaults; the binding values live in the `LogoAssetManifest` sidecars (§10).
+**PROPOSED.** The table below names the intended role of each asset family. Names and pixel sizes are illustrative defaults; manifests list only admitted, non-empty files. As of 2026-09-15, no favicon, raster derivative, mark-print PDF, or regression baseline is admitted.
 
 | Asset family | Role | Source format | Derivatives | Min size | Notes |
 |---|---|---|---|---|---|
@@ -491,7 +493,7 @@ A rebrand is a publication-significant change. It requires (a) an ADR, (b) a new
 <details>
 <summary><strong>Where does the favicon actually live at runtime?</strong></summary>
 
-The **descriptive source** is `docs/brand/logo/favicon/`. The **runtime path** (e.g., `apps/explorer-web/public/favicon.ico`) is filled by a build step that copies from here. The runtime path is **not** a parallel authority — it is a generated mirror.
+No favicon source or derivative is currently admitted here. A future descriptive source may live under `docs/brand/logo/favicon/` after review; a runtime copy may then be generated into the owning application. Do not create empty files merely to reserve either path.
 
 </details>
 
@@ -568,8 +570,8 @@ For the same reason map styles do: a screenshot, social card, or partner kit is 
 
 ## Last reviewed
 
-**2026-05-15** — initial draft. **NEEDS VERIFICATION:** repository not mounted in this session; every path, owner handle, ADR reference, and badge target above is PROPOSED until checked against the live repo.
+**2026-09-15** — repository inventory verified; zero-byte asset placeholders removed and manifests reconciled to non-empty files. Planned derivatives, owner assignments, unaccepted ADRs, runtime-copy behavior, and release state still require separate evidence.
 
 ---
 
-<sub>Related: [`docs/brand/README.md`](../README.md) · [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) · [`packages/ui/README.md`](../../../packages/ui/README.md) &nbsp;·&nbsp; **Last updated:** 2026-05-15 &nbsp;·&nbsp; [⬆ Back to top](#logo--kfm-brand-mark-and-identity-assets)</sub>
+<sub>Related: [`docs/brand/README.md`](../README.md) · [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) · [`packages/ui/README.md`](../../../packages/ui/README.md) &nbsp;·&nbsp; **Last updated:** 2026-09-15 &nbsp;·&nbsp; [⬆ Back to top](#logo--kfm-brand-mark-and-identity-assets)</sub>
