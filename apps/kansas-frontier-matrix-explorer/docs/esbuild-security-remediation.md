@@ -2,15 +2,34 @@
 doc_id: kfm://doc/explorer/esbuild-security-remediation
 title: Explorer esbuild remediation regression guard
 type: app-maintenance-note
-version: 0.3.0
+version: 0.4.0
 status: draft repair; independent review pending
 owning_root: apps/
 responsibility: regression coverage for the merged esbuild dependency remediation
 truth_posture: cite-or-abstain; candidate validation is not advisory closure
-updated: 2026-09-10
+updated: 2026-09-15
 [/KFM_META_BLOCK_V2] -->
 
 # esbuild remediation regression guard
+
+## September 15 Workerd build-script policy alignment
+
+The lockfile now resolves `workerd@1.20260911.1`, while the reviewed workspace
+policy stopped at `1.20260903.1`. Exact-head runs for merged PR #4593 therefore
+failed frozen installation with `ERR_PNPM_IGNORED_BUILDS` before Explorer build,
+test, or keyboard-navigation steps began.
+
+This bounded follow-up records `"workerd@1.20260911.1": false` beside the two
+earlier exact-version decisions. `false` explicitly denies the package install
+script; it does not approve execution, introduce a wildcard, relax the frozen
+lock, or regenerate dependency resolution. The byte-for-byte policy guard and
+negative mutation cases now cover all three Workerd versions.
+
+Acceptance requires the frozen workspace install, the static security guard,
+Explorer build/test, accessibility, and hosted security lanes at the exact
+candidate head. A local run on an unsupported Node major is diagnostic only.
+Rollback removes the new exact-version denial and its matching test/document
+record together; doing so restores the known install hold.
 
 ## September 10 dependency-audit repair
 
@@ -107,8 +126,8 @@ upstream replacement follow-up.
   present in their package-manager-specific authority locations and resolve
   to `0.25.12`.
 - The six original version-specific `allowBuilds` decisions plus the September 8
-  exact-version Workerd denial are compared byte-for-byte; no approval is added
-  and no denial is spoofed or removed.
+  and September 15 exact-version Workerd denials are compared byte-for-byte; no
+  approval is added and no denial is spoofed or removed.
 - Runtime probes resolve the actual loader edge, transform synthetic
   TypeScript, check the loopback development server's cross-origin response
   headers, and generate synthetic Drizzle SQL without a database.
