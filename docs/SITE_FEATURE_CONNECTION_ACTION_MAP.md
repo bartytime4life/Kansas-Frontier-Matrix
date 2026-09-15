@@ -22,7 +22,7 @@ data, KFM evidence, policy, release, or deployment.
 |---|---|---|---|
 | Earthquakes + seismic context | `earthquake-seismic-context`, `priority-context-deck` | `usgs-earthquakes`, `raspberry-shake-stations` | toggle, refresh, opacity, provider source |
 | Hydrology + water systems | `hydrology-river-pulse`, `priority-context-deck` | USGS streamflow, NWPS, 3DHP, WBD, NWM analysis, NWM short-range | range, exact observation, refresh, toggle, opacity |
-| Smoke + weather | `smoke-weather-context`, `date-bound-observatory`, `priority-context-deck` | HMS smoke, NWS alerts, NOAA radar | exact frame, radar manifest refresh/playback, toggle, opacity |
+| Smoke + weather | `smoke-weather-context`, `date-bound-observatory`, `priority-context-deck` | NASA FIRMS active fire, HMS smoke, NWS alerts, NOAA radar | exact frame, radar manifest refresh/playback, toggle, opacity |
 | LiDAR + terrain | `lidar-terrain-context`, `held-lidar-lineage` | 3DEP hillshade, 3DEP slope | toggle, opacity, provider source, intake draft |
 | Reports + decisions | `evidence-drawer-and-trust`, `report-story-workspaces`, `bounded-focus-mode` | none; context remains excluded or explicitly labeled | inspect, Focus, local save, report, intake |
 
@@ -46,7 +46,7 @@ data, KFM evidence, policy, release, or deployment.
 | System | Authority in this alignment | What is synchronized |
 |---|---|---|
 | Sites | Current runtime and saved Site source | Registry files, UI wiring, tests, and saved version |
-| GitHub | Repository implementation and architecture authority | Documentation-only traceability record against `main@b44494c` after PR #4468 |
+| GitHub | Repository implementation and architecture authority | Documentation-only traceability record against `main@b18b7276faa3cdad15f2ed34270b6640559bdf27` |
 | Google Drive | Design/reference and handoff record | Current Site checkpoint, registry file map, validation result, and next gates |
 | Notion | Coordination and knowledge capture | Current checkpoint, implementation boundaries, and follow-up ownership |
 
@@ -63,7 +63,7 @@ repository `main`, activate held integrations, merge a PR, or deploy the Site.
 - No custom domain was attached when checked on 2026-09-11. The canonical
   `chatgpt.site` host is the only domain currently represented here.
 - The current independently read repository checkpoint is
-  `bartytime4life/Kansas-Frontier-Matrix@b44494c` on `main`, merged by PR #4468.
+  `bartytime4life/Kansas-Frontier-Matrix@b18b7276faa3cdad15f2ed34270b6640559bdf27` on `main`.
 - The Site checkout’s `.openai/hosting.json` is authoritative for this Site.
   The repository child manifest still points at legacy project
   `appgprj_6a870a079c1c8191abb7401ef092a181`; that mismatch is surfaced as

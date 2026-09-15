@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Map as MapLibreMap } from "maplibre-gl";
 import { LAYER_REGISTRY } from "./explorer-data";
 import { applyRegistryState, BASEMAPS, setTerrainPresentation, updateAnalysisAreaSource, updateSelectionSource } from "./map-runtime";
@@ -47,6 +47,16 @@ export default function SnapshotMap({ snapshot, label, syncCamera, onCameraChang
   const onMove = useRef(onCameraChange);
   const syncing = useRef(false);
   const [status, setStatus] = useState("Loading map context…");
+  const containMapMutation = useCallback((operation: string, mutation: () => void): boolean => {
+    try {
+      mutation();
+      return true;
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "unknown renderer failure";
+      setStatus(`${operation} is unavailable. Scene details and evidence remain readable. ${message}`);
+      return false;
+    }
+  }, []);
 
   useEffect(() => {
     current.current = snapshot;
@@ -60,7 +70,7 @@ export default function SnapshotMap({ snapshot, label, syncCamera, onCameraChang
     if (!container.current) return;
     let disposed = false;
     let observer: ResizeObserver | undefined;
-    const apply = () => {
+    const apply = (): boolean => containMapMutation("Snapshot map update", () => {
       const map = mapRef.current;
       if (!map?.isStyleLoaded()) return;
       const state = current.current;
@@ -72,7 +82,7 @@ export default function SnapshotMap({ snapshot, label, syncCamera, onCameraChang
       setTerrainPresentation(map, state.representation === "Terrain 3D", 1);
       updateAnalysisAreaSource(map, state.area.kind === "aoi" ? state.area.bounds : undefined);
       updateSelectionSource(map, selectionForSnapshot(state, query));
-    };
+    });
     import("maplibre-gl").then((lib) => {
       if (disposed || !container.current) return;
       const probe = document.createElement("canvas").getContext("webgl2");
@@ -80,7 +90,8 @@ export default function SnapshotMap({ snapshot, label, syncCamera, onCameraChang
         setStatus("Map unavailable: WebGL2 is not supported here. Scene details and evidence remain available below.");
         return;
       }
-      probe.getExtension("WEBGL_lose_context")?.loseContext();
+      // A detached probe is enough. Forcing WEBGL_lose_context can destabilize
+      // the shared GPU surface in embedded Chromium hosts.
       lib.setWorkerUrl("/maplibre/maplibre-gl-worker.mjs");
       const state = current.current;
       const safeCamera: Camera = state.camera.center === "WITHHELD_BROWSER_LOCATION"
@@ -92,40 +103,46 @@ export default function SnapshotMap({ snapshot, label, syncCamera, onCameraChang
       mapRef.current = map;
       map.addControl(new lib.NavigationControl(), "top-right");
       map.addControl(new lib.ScaleControl({ maxWidth: 80 }), "bottom-left");
-      map.on("load", () => { apply(); setStatus("Display context · bounded layers · no admission effect"); });
+      map.on("load", () => { if (apply()) setStatus("Display context · bounded layers · no admission effect"); });
       map.on("style.load", apply);
       map.on("move", () => {
         if (syncing.current) return;
         onMove.current?.({ center: map.getCenter().toArray(), zoom: map.getZoom(), bearing: map.getBearing(), pitch: map.getPitch() });
       });
       map.on("error", () => setStatus("Some map context is unavailable. Consult the scene details and evidence; no replacement claim is inferred."));
-      observer = new ResizeObserver(() => map.resize());
+      observer = new ResizeObserver(() => { containMapMutation("Snapshot map resize", () => map.resize()); });
       observer.observe(container.current);
     }).catch(() => { if (!disposed) setStatus("Map adapter unavailable. Scene details and evidence remain readable."); });
     return () => { disposed = true; observer?.disconnect(); mapRef.current?.remove(); mapRef.current = null; };
-  }, []);
+  }, [containMapMutation]);
 
   useEffect(() => {
     const map = mapRef.current;
     if (!map?.isStyleLoaded()) return;
-    const visible = Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, snapshot.visibleLayers.some((item) => item.id === layer.id)]));
-    const query = temporalQueryForSnapshot(snapshot);
-    applyRegistryState(map, visible, Object.fromEntries(snapshot.visibleLayers.map((layer) => [layer.id, layer.opacity])), query.frame, snapshot.visibleLayers.map((layer) => layer.id), snapshot.evidenceFilter ?? "ALL", query);
-    map.setProjection({ type: snapshot.projection });
-    setTerrainPresentation(map, snapshot.representation === "Terrain 3D", 1);
-    updateAnalysisAreaSource(map, snapshot.area.kind === "aoi" ? snapshot.area.bounds : undefined);
-    syncing.current = true;
-    if (snapshot.camera.center !== "WITHHELD_BROWSER_LOCATION") map.jumpTo(snapshot.camera as Camera);
-    syncing.current = false;
-    updateSelectionSource(map, selectionForSnapshot(snapshot, query));
-  }, [snapshot]);
+    containMapMutation("Snapshot scene update", () => {
+      const visible = Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, snapshot.visibleLayers.some((item) => item.id === layer.id)]));
+      const query = temporalQueryForSnapshot(snapshot);
+      applyRegistryState(map, visible, Object.fromEntries(snapshot.visibleLayers.map((layer) => [layer.id, layer.opacity])), query.frame, snapshot.visibleLayers.map((layer) => layer.id), snapshot.evidenceFilter ?? "ALL", query);
+      map.setProjection({ type: snapshot.projection });
+      setTerrainPresentation(map, snapshot.representation === "Terrain 3D", 1);
+      updateAnalysisAreaSource(map, snapshot.area.kind === "aoi" ? snapshot.area.bounds : undefined);
+      syncing.current = true;
+      try {
+        if (snapshot.camera.center !== "WITHHELD_BROWSER_LOCATION") map.jumpTo(snapshot.camera as Camera);
+      } finally {
+        syncing.current = false;
+      }
+      updateSelectionSource(map, selectionForSnapshot(snapshot, query));
+    });
+  }, [containMapMutation, snapshot]);
 
   useEffect(() => {
     if (!syncCamera || !mapRef.current) return;
-    syncing.current = true;
-    mapRef.current.jumpTo(syncCamera);
-    syncing.current = false;
-  }, [syncCamera]);
+    containMapMutation("Comparison camera update", () => {
+      syncing.current = true;
+      try { mapRef.current?.jumpTo(syncCamera); } finally { syncing.current = false; }
+    });
+  }, [containMapMutation, syncCamera]);
 
   return <figure className="snapshot-map-renderer" aria-label={label}>
     <div ref={container} className="snapshot-map-canvas" />

@@ -26,6 +26,7 @@ const hasNoItems = (items: readonly unknown[]): boolean => items.length === 0;
 export const validateSiteRegistry = (): SiteRegistryValidation => {
   const errors: string[] = [];
   const connectionIds = new Set(SITE_CONNECTIONS.map((connection) => connection.id));
+  const referencedConnectionIds = new Set(SITE_FEATURES.flatMap((feature) => feature.sourceIds));
   const actionIds = new Set(SITE_ACTIONS.map((action) => action.id));
 
   for (const id of duplicateIds(SITE_FEATURES.map((feature) => feature.id))) errors.push(`duplicate feature id: ${id}`);
@@ -40,6 +41,7 @@ export const validateSiteRegistry = (): SiteRegistryValidation => {
     if (hasNoItems(feature.codePaths)) errors.push(`feature ${feature.id} has no code path`);
   }
   for (const connection of SITE_CONNECTIONS) {
+    if (!referencedConnectionIds.has(connection.id)) errors.push(`connection has no feature trace: ${connection.id}`);
     for (const actionId of connection.actionIds) if (!actionIds.has(actionId)) errors.push(`connection ${connection.id} references unknown action: ${actionId}`);
     if (hasNoItems(connection.codePaths)) errors.push(`connection ${connection.id} has no code path`);
   }
