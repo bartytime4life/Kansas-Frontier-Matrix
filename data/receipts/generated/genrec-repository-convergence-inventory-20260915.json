@@ -1,0 +1,115 @@
+{
+  "receipt_id": "genrec-repository-convergence-inventory-20260915",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tools/generators/build_repository_convergence_inventory.py",
+    "tests/generators/test_build_repository_convergence_inventory.py",
+    "tools/generators/README.md",
+    "docs/architecture/document-convergence-plan.md"
+  ],
+  "artifact_hashes": {
+    "tools/generators/build_repository_convergence_inventory.py": "sha256:545be2b9163d3f3c009b6697904b6c0092a9c4fa37d5c31c97a4cbf0decc2c7d",
+    "tests/generators/test_build_repository_convergence_inventory.py": "sha256:7a43b9c8ac82fc0f6b55e6dd5c71520c68fd88b5f3b51d5f64d48127bc433bf3",
+    "tools/generators/README.md": "sha256:f5f79c1ae00dad765da64528e3b0f4c0006dc4bcc9dc8f210a8395c98f9589fe",
+    "docs/architecture/document-convergence-plan.md": "sha256:e1b1a146b720a1bfccd6c96dc43675df2a030c58c3c4c05631e251d99ba8b1be"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "UNKNOWN; exact serving model version not exposed"
+  },
+  "prompt_or_contract": "sha256:8664fef66ce1b44d7d35d790fc4fb12037c3d64531f2885ee7d8cd90b61bd475",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local repository validation",
+      "GitHub connector",
+      "Sites connector",
+      "Google Drive connector",
+      "Notion connector"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/b18b7276faa3cdad15f2ed34270b6640559bdf27",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/5ac5a0aeb0e6e10b0f05f7bb409833bad148db2f"
+    ],
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:f39433232deb0b16d2acb6bd343d6957545b9b66ecd0d58a4c52e2998f93e0fa"
+    ]
+  },
+  "truth_labels": {
+    "tools/generators/build_repository_convergence_inventory.py": "PROPOSED",
+    "tests/generators/test_build_repository_convergence_inventory.py": "PROPOSED",
+    "tools/generators/README.md": "PROPOSED",
+    "docs/architecture/document-convergence-plan.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "generator-synthetic-git-tests",
+      "outcome": "PASS",
+      "reason": "13 focused tests pass. Immutable commit, dirty/deleted worktree, symlink, full blob identity, root ambiguity, duplicates, exact first-parent history, safe external output including nested --repo, and deterministic reports exercised."
+    },
+    {
+      "gate": "full-immutable-base-inventory",
+      "outcome": "PASS",
+      "reason": "14690 tracked paths and 4944 Markdown files; all full blob SHA256 values; 41187 first-parent commits cover last-touch for all paths. 57 exact / 58 normalized hash clusters. Every path HOLD, deletion_authorized=0. Reports generated privately outside Git; external manifest SHA256 f39433232deb0b16d2acb6bd343d6957545b9b66ecd0d58a4c52e2998f93e0fa."
+    },
+    {
+      "gate": "root-registry",
+      "outcome": "PASS",
+      "reason": "Repository-native root-registry validation passes with adopted doctrine bytes unchanged."
+    },
+    {
+      "gate": "automated-peer-review",
+      "outcome": "PASS",
+      "reason": "Separate automated review identified nested-repo output escape; corrected and regression-probed. No additional material findings in bounded review. Not human acceptance."
+    },
+    {
+      "gate": "semantic-consumer-rights-retirement-review",
+      "outcome": "SKIPPED",
+      "reason": "Structural and normalized-text heuristics do not prove semantic unique-content preservation, complete dynamic/external consumer closure, per-file rights, canonicality or deletion authority."
+    },
+    {
+      "gate": "hosted-independent-acceptance",
+      "outcome": "SKIPPED",
+      "reason": "No hosted exact-head workflow evidence or independent human acceptance available at authoring; #4024 PR lifecycle boundary preserved."
+    },
+    {
+      "gate": "scoped-document-links",
+      "outcome": "PASS",
+      "reason": "Two edited Markdown files: 47 local targets pass. Both metadata blocks individually valid; external links unverified."
+    },
+    {
+      "gate": "registry-backed-metadata",
+      "outcome": "FAIL",
+      "reason": "Seven inherited registry parser failures reproduce from base; no registry edit. Individual changed metadata blocks valid. Does not imply docs-control aggregate pass."
+    },
+    {
+      "gate": "trusted-base-topology-ratchet",
+      "outcome": "FAIL",
+      "reason": "Same two inherited groups KFM-TOPO-001 and KFM-TOPO-004; zero invariant findings, 125 baselined warnings, two stale baseline fingerprints. No root/baseline/catalog changes."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-main",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/b18b7276faa3cdad15f2ed34270b6640559bdf27"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-15T17:37:34.042272Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "notes": "Small repository-tooling review unit. Owning roots per ADR-0029: tools/generators deterministic inventory; tests/generators synthetic-Git regression; existing docs/architecture/document-convergence-plan human currentness/ledger; data/receipts/generated process accountability. No new roots, schema/contract/policy homes, CI writer, published inventory, source admission, raw payload export, topology edits, baseline changes or file deletion. No merge/PR lifecycle/settings/Site/release/deploy/promote/publication action. All classifications HOLD pending evidence. Last-touch is not last meaningful change. Dynamic/external references, semantic similarity, secret scan and per-file owner acceptance remain open. Reports exclude source payload bodies but contain repository metadata, retain privately. Git reader disables lazy fetch and protocols. Historical 102-file architecture ledger preserved. Rollback generator/tests/docs by a focused follow-up or revert; preserve this authoring receipt and generate new hash-bound report for any corrected base. Independent human review pending."
+}

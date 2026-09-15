@@ -282,6 +282,48 @@ Generated outputs should include placeholders where owner, reviewer, source-righ
 
 ## Validation
 
+### Immutable repository convergence review
+
+[`build_repository_convergence_inventory.py`](build_repository_convergence_inventory.py)
+derives a private review inventory from a full immutable Git commit ID. This
+tool belongs to the existing `tools/` responsibility root and generator lane
+under Directory Rules §7.1 and ADR-0029. It reads Git objects without replacing
+them, fetching missing objects, following symlinks, or importing repository code.
+Its output is a derived report, not a second root registry or deletion decision.
+
+```bash
+python tools/generators/build_repository_convergence_inventory.py \
+  --repo . --commit FULL_COMMIT_ID
+python tools/generators/build_repository_convergence_inventory.py \
+  --repo . --commit FULL_COMMIT_ID --output /absolute/new-review-directory
+python -m unittest tests.generators.test_build_repository_convergence_inventory -v
+```
+
+The first command is a dry run that prints summary JSON. The second writes JSON,
+path CSV, a Markdown summary and a final digest manifest into a **new** private
+directory outside the checkout and Git metadata. Existing output paths and
+symlink ancestors are refused; a failed write may leave a partial directory
+without the final `manifest.json`. No concurrent hostile ancestor-replacement
+protection is claimed. Output removal is the caller's ordinary scratch cleanup;
+the generator itself does not delete files. Git must support `--no-lazy-fetch`.
+
+Every tracked path remains `HOLD`; registered root responsibility, owner,
+exposure, mutation and retention are inherited metadata, not per-file acceptance.
+All blob bytes are hashed and independently checked against Git blob identity.
+Markdown metadata, links, anchors, literal consumers, imports, hex pins, section
+hashes, exact/normalized duplicates and heading structure are review aids.
+Commands are recorded by source line and digest; external URLs omit credentials
+and query strings. Reports contain no complete source payload bodies and remain
+internal review material pending sensitivity and rights review.
+
+Defaults examine at most 5,000 first-parent commits and 2,000,000 bytes of text
+per blob; `--history-limit` and `--text-limit` expose bounded adjustments. Unknown
+history remains null and “last meaningful change” remains unknown. Dynamic or
+external consumers, semantic unique knowledge, rights, secret scanning,
+CODEOWNERS glob resolution and hosted review remain unverified. Similarity and
+zero observed literal references never authorize removal. The report changes no
+source admission, lifecycle, release, deployment, promotion or publication state.
+
 The first useful proof surface should be fixture-backed and side-effect safe.
 
 Recommended structure:

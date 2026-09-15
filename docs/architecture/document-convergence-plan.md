@@ -2,13 +2,13 @@
 doc_id: kfm://doc/architecture-document-convergence-plan
 title: KFM Architecture Documentation Convergence Plan
 type: architecture-convergence-plan
-version: v0.2
+version: v0.3
 status: draft; repository-grounded; non-authoritative; no-moves
 owners:
   - "@bartytime4life — CODEOWNERS review route"
   - "NEEDS VERIFICATION — architecture and documentation stewardship"
 created: 2026-08-18
-updated: 2026-08-20
+updated: 2026-09-15
 policy_label: public
 owning_root: docs/
 current_path: docs/architecture/document-convergence-plan.md
@@ -49,6 +49,70 @@ notes:
 
 > [!NOTE]
 > **Post-baseline status (2026-08-20).** Merged PRs [#3149](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/3149), [#3150](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/3150), and [#3151](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/3151) retired the flat Governed AI, Governed API, and Map Master entrypoints. Their rows and the 102-document census below remain the commit-pinned Wave 0 lineage; current navigation resolves to the corresponding folder READMEs. No other disposition is advanced by this note.
+
+## Repository-wide convergence checkpoint — 2026-09-15
+
+**CONFIRMED structural census / HOLD semantic disposition and deletion.** This
+checkpoint supplements the dated 102-document Wave 0 ledger below; its rows,
+counts, status snapshots and historical completion notes remain scoped to their
+original revisions. It does not refresh or accept those historical proposals.
+
+The [immutable-tree inventory generator](../../tools/generators/build_repository_convergence_inventory.py)
+inspected `main@b18b7276faa3cdad15f2ed34270b6640559bdf27`, tree
+`8265b7a9afef5a515be12b53a47768d7acf3ddf7`: **14,690 tracked paths, 4,944 Markdown
+documents, 57 exact-byte duplicate clusters, and 58 normalized-text clusters**.
+The 41,187-commit first-parent traversal found a last-touch commit for every path;
+last touch is not last meaningful change or acceptance. Full blob hashes are
+computed; text inspection is bounded at 2 MB per file. There are 237,057 heuristic
+reference occurrences and 15,151 object-family/path pairs, not that many verified
+consumers or distinct object authorities.
+
+The full private review attachment includes `paths.csv`, `paths.json`,
+`markdown.json`, `references.json`, `duplicates.json`, `no_loss_ledger.json`,
+`roots.json`, `packages.json`, `codeowners.json`, `object_families.json`,
+`pin_candidates.json`, `anomalies.json`, summary and digest manifest. The generated
+manifest SHA-256 is `sha256:f39433232deb0b16d2acb6bd343d6957545b9b66ecd0d58a4c52e2998f93e0fa`. The reports are generated outside Git to avoid storing
+large repeated repository snapshots or creating a second writable registry.
+[The authoring receipt](../../data/receipts/generated/genrec-repository-convergence-inventory-20260915.json)
+binds the generator, focused tests, README and this checkpoint.
+
+Reproduce using a fresh output directory outside the checkout:
+
+```bash
+python tools/generators/build_repository_convergence_inventory.py --repo /absolute/kfm-checkout --commit b18b7276faa3cdad15f2ed34270b6640559bdf27 --history-limit 50000 --output /absolute/new-review-directory
+```
+
+Every scanned path receives exactly one conservative `HOLD` classification.
+Root ownership, exposure, retention and mutability are inherited registry
+projections, not individual rights decisions or proof of current consumers.
+Normalized section hashes measure repeated bytes, not unique knowledge. No path
+has been proven removable. Human no-loss review, complete producer/consumer and
+external-link closure, meaningful-history review, and authority disposition remain
+open. Empty package markers, negative fixtures, required local READMEs, doctrine,
+receipt history and frozen compatibility paths must not be deleted by hash rule.
+
+The inspected target keeps existing responsibility roots. Durable inspection logic
+belongs in `tools/generators/`, its synthetic-Git behavioral tests in
+`tests/generators/`, human convergence guidance in this existing `docs/architecture/`
+page, and generated-work accountability in `data/receipts/generated/` under accepted
+ADR-0029. `docs/reports/` does not admit new generated writers; `catalog/` stays
+immutable. No root, baseline, correction binding, or proposed ADR is activated.
+
+The separate [existing Site alignment branch](https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/5ac5a0aeb0e6e10b0f05f7bb409833bad148db2f)
+records current v40 source and owner-only identity while preserving v37 history.
+The existing standalone mirror already matches v40's complete tree. Retain both
+Explorer application roles and the accepted package renderer boundary; do not
+merge a standalone Site tree into monorepo root or copy live DB/R2 bindings into
+a monorepo app that does not own their intake behavior.
+
+No-loss result in this slice: **zero removals, moves or source-data promotions**.
+A focused README pointer eliminates a repeated live-version assertion in the
+separate alignment slice. Ordinary Markdown consolidation remains a reviewed next
+wave, using this inventory rather than treating similarity as authority.
+Rollback the tooling/checkpoint by a focused follow-up or revert; retain process
+receipts and regenerate attachments for any corrected base. #4024 PR-path
+containment, #4228 Stage 1B HOLD/Stage 2 unauthorized, independent acceptance,
+release, deployment and publication boundaries remain intact.
 
 ## Status and bounded result
 
