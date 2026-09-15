@@ -36,9 +36,10 @@ the existing esbuild, Sharp, and fflate overrides.
 Acceptance requires the frozen workspace install, standalone `npm ci`, both
 runtime security probes, Explorer build/test, accessibility, and hosted
 security lanes at the exact candidate head. A local run on an unsupported Node
-major is diagnostic only. Rollback restores the prior standalone lock and
-removes the new exact-version denial with its matching test/document record;
-doing so restores both known install failures.
+major is diagnostic only. Reverting this standalone-lock follow-up restores
+only the prior npm lock and this note, recreating the `npm ci` mismatch. It
+must not remove the Workerd denial or its tests from merged PR #4594; doing so
+would separately restore the workspace `ERR_PNPM_IGNORED_BUILDS` failure.
 
 ## September 10 dependency-audit repair
 
