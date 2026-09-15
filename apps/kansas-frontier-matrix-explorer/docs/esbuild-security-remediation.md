@@ -12,7 +12,7 @@ updated: 2026-09-15
 
 # esbuild remediation regression guard
 
-## September 15 Workerd build-script policy alignment
+## September 15 Workerd and standalone-lock alignment
 
 The lockfile now resolves `workerd@1.20260911.1`, while the reviewed workspace
 policy stopped at `1.20260903.1`. Exact-head runs for merged PR #4593 therefore
@@ -25,11 +25,21 @@ script; it does not approve execution, introduce a wildcard, relax the frozen
 lock, or regenerate dependency resolution. The byte-for-byte policy guard and
 negative mutation cases now cover all three Workerd versions.
 
-Acceptance requires the frozen workspace install, the static security guard,
-Explorer build/test, accessibility, and hosted security lanes at the exact
-candidate head. A local run on an unsupported Node major is diagnostic only.
-Rollback removes the new exact-version denial and its matching test/document
-record together; doing so restores the known install hold.
+The first exact-head run proved the pnpm repair, then the sibling npm job
+failed before its runtime probe because the standalone `package-lock.json`
+still described the prior manifest graph. The lock is regenerated from the
+existing exact `package.json` without changing manifest versions. This brings
+the standalone Next, React, scheduler, PostCSS, Cloudflare, and Workerd
+resolutions back into agreement with the declared application and preserves
+the existing esbuild, Sharp, and fflate overrides.
+
+Acceptance requires the frozen workspace install, standalone `npm ci`, both
+runtime security probes, Explorer build/test, accessibility, and hosted
+security lanes at the exact candidate head. A local run on an unsupported Node
+major is diagnostic only. Reverting this standalone-lock follow-up restores
+only the prior npm lock and this note, recreating the `npm ci` mismatch. It
+must not remove the Workerd denial or its tests from merged PR #4594; doing so
+would separately restore the workspace `ERR_PNPM_IGNORED_BUILDS` failure.
 
 ## September 10 dependency-audit repair
 
