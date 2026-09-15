@@ -3,6 +3,48 @@
 A map-first Kansas explorer with real provider baselines, dated archive replay,
 source downloads, and private data contribution and steward review workflows.
 
+## Map connection repair — September 15, 2026
+
+Accepted USGS responses now replace the displayed payload even when no observations
+remain, so old gauges cannot survive a successful empty refresh. Selected USGS and
+NOAA water layers request data immediately when returning to Present; an in-flight
+request is retained and hidden tabs do not start periodic water refreshes. The
+initial loader no longer cancels a concurrent managed-water request.
+
+Official GeoJSON requests have a 30-second browser timeout and cancel on unmount.
+JSON and radar XML are streamed through byte limits rather than buffered before
+checking their size. Qwen and repository-status requests use Workers-supported
+manual redirects and reject redirect responses. No model endpoint is configured or
+invoked by these checks. The Present label keeps source-specific clocks, and the
+legend distinguishes domain layers from selected official context sources.
+
+The pre-change private v38 endpoints returned all 105 Census counties, a partial
+bounded USGS network of 72 gauges / 6,605 observations, 222 NOAA gauges, 105 radar
+timestamps, seven smoke features, 16 Raspberry Shake station records, 22 mapped
+alert geometries, and an explicit empty earthquake result. These are dated API
+readbacks, not complete source coverage, map-render proof, life-safety evidence, or
+admission of released KFM data. Counts change as providers update.
+
+Browser QA verified timeline commit, historical holds, immediate NOAA loading on
+return to Present, and source status / retry controls. The cloud test browser has
+no WebGL2 and preview upstream requests fail; rendered 2D/3D/globe and actual
+click-to-evidence acceptance remain unproved there. Authenticated read-only checks
+of the deployed Site are recorded separately from that preview limitation.
+
+Regression coverage includes populated → empty → populated streamflow geometry,
+bounded streaming, and rejected model redirects. The existing suites retain
+intake/authentication, temporal, map-connection, export, terrain, and snapshot checks.
+No dependency, data-admission, sharing, D1/R2, monorepo main, PR lifecycle, or release
+boundary changes are part of this repair. Waveforms, admitted LiDAR lineage,
+release-scoped PMTiles/offline, and governed live-model activation remain held.
+
+Placement reuses this standalone Site's `app/`, `tests/`, and `README.md` homes under
+the established Directory Rules / ADR-0029 responsibility boundary. It creates no
+parallel canonical contract or policy authority. Rollback candidate: previous v38
+source `b6aaa23e11dbc412bc9ed9e178fd788b290361d2`, archive
+`sha256:fc3ccb1598112c99dc4c6c31f2111b9b41addaecac3c1493b8e7136f2efbf367`.
+A rollback requires a same-Site deployment and fresh readback; no rollback was run.
+
 ## Terrain, source recovery, and loading — September 12, 2026
 
 The visible **3D settings** control offers Natural terrain (imagery + 1× relief),

@@ -259,3 +259,24 @@ test("selected station series is canonical and hydrograph paths break at nulls a
     { ...selected[0], stationId: "USGS-06864000" },
   ], { width: 300, height: 100, gapMinutes: 20 }), /one selected station/i);
 });
+
+
+test("accepted empty streamflow refresh replaces old map geometry and later data recovers", () => {
+  const bundle = streamflow.parseStreamflowBundle(payload());
+  const time = "2026-09-10T12:15:00.000Z";
+  const frame = streamflow.buildStreamflowFrame(bundle, time, 30);
+  let mapped = streamflow.streamflowContextPayload(bundle, frame, time, "USGS-06864500");
+  assert.equal(mapped.featureCount, 1);
+  assert.equal(mapped.data.features[0].properties.selected, true);
+  const empty = streamflow.parseStreamflowBundle(payload({ state: "empty", stations: [], observations: [] }));
+  mapped = streamflow.streamflowContextPayload(empty, null, null, null);
+  assert.equal(mapped.state, "empty");
+  assert.equal(mapped.featureCount, 0);
+  assert.deepEqual(mapped.data, { type: "FeatureCollection", features: [] });
+  assert.equal(mapped.upstreamUpdatedAt, null);
+  mapped = streamflow.streamflowContextPayload(bundle, frame, time, null);
+  assert.equal(mapped.featureCount, 1);
+  assert.equal(mapped.data.features[0].properties.value, 120);
+  assert.equal(mapped.data.features[0].properties.selected, false);
+  assert.equal(mapped.source, bundle.source);
+});

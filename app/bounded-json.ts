@@ -1,7 +1,7 @@
 /** Read a JSON stream without first buffering an unbounded request or response. */
 export class JsonLimitError extends Error {}
 
-export async function readBoundedJson(message: Request | Response, maxBytes: number): Promise<unknown> {
+export async function readBoundedText(message: Request | Response, maxBytes: number): Promise<string> {
   const declared = Number(message.headers.get("content-length"));
   if (Number.isFinite(declared) && declared > maxBytes) {
     void message.body?.cancel().catch(() => undefined);
@@ -20,11 +20,15 @@ export async function readBoundedJson(message: Request | Response, maxBytes: num
       if (bytes > maxBytes) throw new JsonLimitError("JSON byte limit exceeded.");
       text += decoder.decode(chunk.value, { stream: true });
     }
-    return JSON.parse(text + decoder.decode()) as unknown;
+    return text + decoder.decode();
   } catch (error) {
     void reader.cancel().catch(() => undefined);
     throw error;
   } finally {
     reader.releaseLock();
   }
+}
+
+export async function readBoundedJson(message: Request | Response, maxBytes: number): Promise<unknown> {
+  return JSON.parse(await readBoundedText(message, maxBytes)) as unknown;
 }

@@ -76,7 +76,7 @@ export async function POST(request: Request) {
   try {
     const upstream = await fetch(target, {
       method: "POST",
-      redirect: "error",
+      redirect: "manual",
       cache: "no-store",
       headers: {
         "content-type": "application/json",

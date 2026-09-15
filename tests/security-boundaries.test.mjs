@@ -77,8 +77,16 @@ test("Qwen configuration, redirects, upstream errors and replies remain bounded"
     assert.equal(failure.status, 502);
     assert.doesNotMatch(await failure.text(), /PRIVATE_UPSTREAM_DETAIL/);
     assert.equal(captured.url, "https://model.test/api/chat");
-    assert.equal(captured.options.redirect, "error");
+    assert.equal(captured.options.redirect, "manual");
     assert.equal(captured.options.cache, "no-store");
+    let redirects = 0;
+    globalThis.fetch = async (_url, options) => {
+      redirects++;
+      assert.equal(options.redirect, "manual");
+      return new Response(null, { status: 302, headers: { location: "https://unapproved.test" } });
+    };
+    assert.equal((await POST(request({ question: "x" }))).status, 502);
+    assert.equal(redirects, 1);
     globalThis.fetch = async () => Response.json({ message: { content: "x".repeat(65 * 1024) } });
     assert.equal((await POST(request({ question: "x" }))).status, 502);
     globalThis.fetch = async () => Response.json({ message: { content: "Bounded fixture answer" } });
