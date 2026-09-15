@@ -2,13 +2,13 @@
 doc_id: kfm://doc/docs-atlases-readme
 title: docs/atlases/ — Curated Atlas Documentation Lane
 type: directory-readme
-version: v0.3
+version: v0.4
 status: draft; repository-grounded; adopted-placement-target; proposed-canonical-collection; mixed-lineage; root-carrier-linked; naming-conflicted; non-release; non-publication
 owners:
   - "@bartytime4life"
 owner_status: "@bartytime4life is the confirmed CODEOWNERS review route; an independent docs steward, atlas editor, domain-review roster, and final artifact custodian remain NEEDS VERIFICATION"
 created: 2026-07-16
-updated: 2026-08-31
+updated: 2026-09-14
 policy_label: repository-public
 current_path: docs/atlases/README.md
 owning_root: docs/
@@ -17,22 +17,22 @@ truth_posture: "CONFIRMED current repository tree, adopted Directory Rules place
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 5d835798e09a4dd14735779cb44206a8a3e8b2d3
-  reviewed_at: 2026-08-31
-  target_prior_blob: 5dd756497b9eb20b4ffa55cd2cfadcd77ee2f3b4
-  atlases_tree: 4cb1fc3690535c86a31f1e763a47e6029fc9f184
+  base_commit: 5dfe3464e3fb2dbf8513ec9662e9f7ae39b976f1
+  reviewed_at: 2026-09-14
+  target_prior_blob: 47c1d0efc8475288b7b8c9b319704cf08e7f292e
+  atlases_tree: 0bee65fac5d916f71c562ca718699e9a7d1ce321
   legacy_atlas_tree: 04256dc68be7ce8bdb57664a996050256891b383
   docs_root_blob: 1f8bac189dac1d01c1185e8b4fb8e25efd11d09f
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
-  adr_0029_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
+  adr_0029_blob: 4c1ef5f7f812d58fbdde9898acc96bb4c9280b2c
   codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
-  docs_build_workflow_blob: 7816e07d66774d2e2b3b80b66d5d3349a1393861
-  link_check_workflow_blob: 7b6c675d879a36d685b19b18fde401fca1bdd00e
+  docs_build_workflow_blob: b336e66848039e96887935a4c773aefda734f260
+  link_check_workflow_blob: 12859c364e48786a43b04c93595892559ac83c30
   meta_block_workflow_blob: 732879cd8a5aca71ef3c570a0c34c4c389f20e8a
   document_graph_workflow_blob: 636749f75621bf773ac558286789dadb41c47c35
   stale_scan_workflow_blob: 5a94d7c353c4c18c0bcb9a0df45c81a3916f747a
 inventory_snapshot:
-  direct_markdown_files_including_readme: 13
+  direct_markdown_files_including_readme: 14
   direct_child_directories: 3
   direct_pdf_files: 0
 related:
@@ -46,6 +46,7 @@ related:
   - docs/atlases/master-atlas-v1.1/README.md
   - docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf/README.md
   - docs/atlases/pass-10/README.md
+  - docs/atlases/m36-release-readiness-evidence-matrix.md
   - control_plane/document_registry.yaml
   - .github/CODEOWNERS
   - .github/workflows/docs-build.yml
@@ -67,7 +68,8 @@ notes:
   - "v0.2 is a same-path documentation-only reconciliation. It does not select a canonical atlas carrier, migrate the singular legacy lane, resolve the PDF-path collision, render an atlas, or authorize release or publication."
   - "v0.3 adds a resolving reader route to the existing full-text source-derived carrier at the docs/ root while keeping its move, rename, and canonical-carrier status unresolved."
   - "Accepted ADR-0029 adopts the exact Directory Rules v2 bytes, which name docs/atlases/ as the proposed canonical collection; individual files and any migration remain governed by their own status, source, edition, review, and decision evidence."
-  - "The current direct tree contains twelve atlas/reference Markdown files plus this README, three child directories, and no direct PDF file."
+  - "The candidate direct tree contains thirteen atlas/reference Markdown files plus this README, three child directories, and no direct PDF file."
+  - "v0.4 indexes the bounded M36 synthetic release-readiness evidence matrix; the matrix creates no release, deployment, promotion, or publication authority."
   - "The PDF-suffixed entry is a directory, not a PDF artifact, and therefore blocks the identically named proposed PDF file path until a separate reviewed migration resolves it."
 [/KFM_META_BLOCK_V2] -->
 
@@ -153,7 +155,7 @@ the placement contract in place without deciding migration or carrier identity.
 | Field | Confirmed state at the evidence snapshot |
 |---|---|
 | Atlas collection placement | `docs/atlases/` is named by adopted Directory Rules v2 as the proposed canonical collection |
-| Direct tree | Twelve content/reference Markdown files, this README, and three child directories |
+| Direct tree | Thirteen content/reference Markdown files, this README, and three child directories |
 | Direct PDF artifacts | None |
 | Atlas carrier posture | Mixed: substantive carriers, navigation carriers, pointer-only files, working extracts, and downstream integration packets |
 | Naming posture | `CONFLICTED` — several carriers cover overlapping scope under different filename grammars |
@@ -223,6 +225,7 @@ scope, or override the status declared inside a child artifact.
 | Entry | Current role | Must not become |
 |---|---|---|
 | [`maplibre-master.md`](./maplibre-master.md) | MapLibre/renderer atlas reference | Renderer decision, package pin, runtime proof, or release authority |
+| [`m36-release-readiness-evidence-matrix.md`](./m36-release-readiness-evidence-matrix.md) | Bounded synthetic-candidate evidence index and explicit gap matrix for M36 | Milestone closure evidence, policy, release decision, deployment plan, promotion record, or publication authority |
 | [`pipeline-gate-reference.md`](./pipeline-gate-reference.md) | Human pipeline-gate reference | Executable gate, policy source, or PromotionDecision |
 | [`receipt-catalog.md`](./receipt-catalog.md) | Human receipt taxonomy and crosswalk | Receipt schema, emitted receipt, proof, or release record |
 | [`sensitivity-tier-reference.md`](./sensitivity-tier-reference.md) | Human sensitivity-tier reference | Active policy bundle or permission decision |
