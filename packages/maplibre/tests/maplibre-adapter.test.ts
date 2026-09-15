@@ -6,7 +6,10 @@ type RendererInstance = {
   options: Record<string, unknown>;
   removed: boolean;
   jumpToCalls: Record<string, unknown>[];
-  emit: (type: string) => void;
+  emit: (type: string, event?: unknown) => void;
+  queryCalls: number;
+  renderedFeatures: unknown[];
+  queryError: boolean;
   setObservedCamera: (camera: {
     longitude: number;
     latitude: number;
@@ -28,6 +31,9 @@ vi.mock("maplibre-gl", () => ({
     readonly options: Record<string, unknown>;
     readonly jumpToCalls: Record<string, unknown>[] = [];
     removed = false;
+    queryCalls = 0;
+    renderedFeatures: unknown[] = [];
+    queryError = false;
     private readonly handlers = new globalThis.Map<
       string,
       Set<RendererHandler>
@@ -61,10 +67,16 @@ vi.mock("maplibre-gl", () => ({
       return { unsubscribe: () => listeners.delete(handler) };
     }
 
-    emit(type: string): void {
+    emit(type: string, event?: unknown): void {
       for (const handler of [...(this.handlers.get(type) ?? [])]) {
-        handler({ type, error: { message: "synthetic renderer error" } });
+        handler(event ?? { type, point: { x: 10, y: 20 }, error: { message: "synthetic renderer error" } });
       }
+    }
+
+    queryRenderedFeatures(): unknown[] {
+      this.queryCalls += 1;
+      if (this.queryError) throw new Error("synthetic query failure");
+      return this.renderedFeatures;
     }
 
     getCenter(): { lng: number; lat: number } {
@@ -108,9 +120,51 @@ vi.mock("maplibre-gl", () => ({
 
 import {
   MAP_RUNTIME_PORT_PROFILE,
+  MAP_FEATURE_SELECTION_PROFILE,
   MapRuntimePortError,
 } from "../src/index";
 import { createMapLibreAdapter } from "../src/maplibre-adapter";
+
+function fixtureSelection(featureId = "feature:fixture:kansas-001") {
+  return {
+    profile: MAP_FEATURE_SELECTION_PROFILE,
+    selectionId: `selection:${featureId}`,
+    layerId: "layer:fixture:kansas",
+    featureId,
+    evidenceRefs: ["kfm:evidence:synthetic:flow-001"],
+    historyEvidenceRefs: ["kfm:evidence:synthetic:flow-000"],
+  };
+}
+
+function fixtureStyle() {
+  return {
+    version: 8 as const,
+    sources: {
+      "source:fixture:kansas": {
+        type: "geojson" as const,
+        data: {
+          type: "FeatureCollection" as const,
+          features: ["feature:fixture:kansas-001", "feature:fixture:kansas-002"].map((id) => ({
+            type: "Feature" as const,
+            id,
+            properties: { fixture: true },
+            geometry: { type: "Point" as const, coordinates: [-98.5, 38.5] },
+          })),
+        },
+      },
+    },
+    layers: [{ id: "layer:fixture:kansas", type: "circle" as const, source: "source:fixture:kansas" }],
+  };
+}
+
+function renderedFixture(featureId = "feature:fixture:kansas-001") {
+  return {
+    id: featureId,
+    layer: { id: "layer:fixture:kansas" },
+    source: "source:fixture:kansas",
+    properties: { evidence_refs: ["UNTRUSTED_RENDERER_PROPERTY"], fixture: true },
+  };
+}
 
 describe("package-owned MapLibreAdapter", () => {
   beforeEach(() => {
@@ -450,5 +504,191 @@ describe("package-owned MapLibreAdapter", () => {
       state: "DISPOSED",
       reason: "MAP_RUNTIME_DISPOSED",
     });
+  });
+
+  it("keeps selection disabled unless explicit fixture bindings are supplied", async () => {
+    const runtime = createMapLibreAdapter({ containerId: "fixture-map", style: fixtureStyle() });
+    const consume = vi.fn();
+    runtime.subscribeSelection(consume);
+    const pending = runtime.initialize();
+    const map = renderer.instances[0];
+    map.renderedFeatures = [renderedFixture()];
+    map.emit("load");
+    await pending;
+    map.emit("click");
+    expect(map.queryCalls).toBe(0);
+    expect(consume).not.toHaveBeenCalled();
+    expect(runtime.getSnapshot().selection).toBeNull();
+    runtime.dispose();
+  });
+
+  it("emits copied fixture identity without trusting renderer properties or replacing the map", async () => {
+    const requested = fixtureSelection();
+    const expected = structuredClone(requested);
+    const runtime = createMapLibreAdapter({
+      containerId: "fixture-map", style: fixtureStyle(), fixtureSelections: [requested],
+    });
+    requested.evidenceRefs.push("kfm:evidence:synthetic:post-construction-mutation");
+    const noNetwork = vi.fn(() => { throw new Error("network forbidden"); });
+    vi.stubGlobal("fetch", noNetwork);
+    const consume = vi.fn();
+    runtime.subscribeSelection(consume);
+    const pending = runtime.initialize();
+    const map = renderer.instances[0];
+    map.renderedFeatures = [renderedFixture(), renderedFixture()];
+    map.emit("click");
+    expect(map.queryCalls).toBe(0);
+    map.emit("load");
+    await pending;
+    const camera = runtime.getSnapshot().camera;
+    map.emit("click");
+    expect(consume).toHaveBeenCalledExactlyOnceWith(expected);
+    expect(runtime.getSnapshot()).toMatchObject({ state: "READY", selection: expected, camera });
+    expect(Object.isFrozen(runtime.getSnapshot().selection?.evidenceRefs)).toBe(true);
+    expect(JSON.stringify(runtime.getSnapshot())).not.toContain("UNTRUSTED_RENDERER_PROPERTY");
+    expect(renderer.instances).toHaveLength(1);
+    expect(map.removed).toBe(false);
+    expect(map.jumpToCalls).toEqual([]);
+    expect(noNetwork).not.toHaveBeenCalled();
+    runtime.dispose();
+  });
+
+  it.each(["unknown-id", "unknown-layer", "unknown-source", "ambiguous", "empty", "excessive"])(
+    "does not emit selection for %s hits", async (kind) => {
+      const runtime = createMapLibreAdapter({
+        containerId: "fixture-map", style: fixtureStyle(),
+        fixtureSelections: [fixtureSelection(), fixtureSelection("feature:fixture:kansas-002")],
+      });
+      const consume = vi.fn();
+      runtime.subscribeSelection(consume);
+      const pending = runtime.initialize();
+      const map = renderer.instances[0];
+      map.emit("load");
+      await pending;
+      map.renderedFeatures = kind === "empty" ? [] : kind === "excessive"
+        ? Array.from({ length: 129 }, () => renderedFixture()) : kind === "ambiguous"
+        ? [renderedFixture(), renderedFixture("feature:fixture:kansas-002")]
+        : [{ ...renderedFixture(), ...(kind === "unknown-id" ? { id: "feature:unknown" }
+          : kind === "unknown-layer" ? { layer: { id: "layer:unknown" } }
+            : { source: "source:unknown" }) }];
+      map.emit("click");
+      expect(consume).not.toHaveBeenCalled();
+      expect(runtime.getSnapshot()).toMatchObject({ state: "READY", selection: null });
+      expect(map.removed).toBe(false);
+      runtime.dispose();
+    },
+  );
+
+  it.each(["unsafe-reference", "duplicate-binding", "duplicate-selection-id", "duplicate-feature-id", "missing-layer", "missing-feature", "not-synthetic", "too-many"])(
+    "rejects %s bindings before renderer acquisition", (kind) => {
+      const style = fixtureStyle();
+      const selections = [fixtureSelection()];
+      if (kind === "unsafe-reference") selections[0].evidenceRefs = [" unsafe "];
+      if (kind === "duplicate-binding") selections.push(fixtureSelection());
+      if (kind === "duplicate-selection-id") selections.push({ ...fixtureSelection("feature:fixture:kansas-002"), selectionId: selections[0].selectionId });
+      if (kind === "duplicate-feature-id") style.sources["source:fixture:kansas"].data.features.push(structuredClone(style.sources["source:fixture:kansas"].data.features[0]));
+      if (kind === "missing-layer") selections[0].layerId = "layer:missing";
+      if (kind === "missing-feature") selections[0].featureId = "feature:missing";
+      if (kind === "not-synthetic") style.sources["source:fixture:kansas"].data.features[0].properties.fixture = false;
+      if (kind === "too-many") selections.push(...Array.from({ length: 64 }, () => fixtureSelection()));
+      expect(() => createMapLibreAdapter({ containerId: "fixture-map", style, fixtureSelections: selections }))
+        .toThrow(expect.objectContaining({ code: "MAP_RUNTIME_SELECTION_INVALID" }));
+      expect(renderer.instances).toHaveLength(0);
+    },
+  );
+
+  it.each([
+    { promoteId: "alias" },
+    { promoteId: { "source:fixture:kansas": "alias" } },
+    { generateId: true },
+    { cluster: true },
+  ])("rejects renderer identity transforms before acquisition (%j)", (transform) => {
+    const style = fixtureStyle();
+    Object.assign(style.sources["source:fixture:kansas"], transform);
+    // With promoteId, this different non-fixture feature could otherwise
+    // acquire the reviewed feature's ID from its arbitrary alias property.
+    Object.assign(style.sources["source:fixture:kansas"].data.features[1].properties, {
+      fixture: false, alias: fixtureSelection().featureId,
+    });
+    expect(() => createMapLibreAdapter({ containerId: "fixture-map", style, fixtureSelections: [fixtureSelection()] }))
+      .toThrow(expect.objectContaining({ code: "MAP_RUNTIME_SELECTION_INVALID" }));
+    expect(renderer.instances).toHaveLength(0);
+  });
+
+  it("removes click handlers on disposal and honors selection unsubscribe", async () => {
+    const runtime = createMapLibreAdapter({ containerId: "fixture-map", style: fixtureStyle(), fixtureSelections: [fixtureSelection()] });
+    const consume = vi.fn();
+    const unsubscribe = runtime.subscribeSelection(consume);
+    const pending = runtime.initialize();
+    const map = renderer.instances[0];
+    map.renderedFeatures = [renderedFixture()];
+    map.emit("load");
+    await pending;
+    unsubscribe();
+    unsubscribe();
+    map.emit("click");
+    expect(consume).not.toHaveBeenCalled();
+    expect(map.queryCalls).toBe(1);
+    runtime.dispose();
+    runtime.dispose();
+    map.emit("click");
+    expect(map.queryCalls).toBe(1);
+    expect(runtime.getSnapshot()).toMatchObject({ state: "DISPOSED", selection: null });
+  });
+
+  it("stops further delivery when a selection listener disposes synchronously", async () => {
+    const runtime = createMapLibreAdapter({ containerId: "fixture-map", style: fixtureStyle(), fixtureSelections: [fixtureSelection()] });
+    const later = vi.fn();
+    runtime.subscribeSelection(() => runtime.dispose());
+    runtime.subscribeSelection(later);
+    const pending = runtime.initialize();
+    const map = renderer.instances[0];
+    map.renderedFeatures = [renderedFixture()];
+    map.emit("load");
+    await pending;
+    map.emit("click");
+    expect(later).not.toHaveBeenCalled();
+    expect(runtime.getSnapshot()).toMatchObject({ state: "DISPOSED", selection: null });
+  });
+
+  it("does not deliver selection after a snapshot listener disposes synchronously", async () => {
+    const runtime = createMapLibreAdapter({ containerId: "fixture-map", style: fixtureStyle(), fixtureSelections: [fixtureSelection()] });
+    runtime.subscribeSnapshot((snapshot) => { if (snapshot.selection !== null) runtime.dispose(); });
+    const consume = vi.fn();
+    runtime.subscribeSelection(consume);
+    const pending = runtime.initialize();
+    const map = renderer.instances[0];
+    map.renderedFeatures = [renderedFixture()];
+    map.emit("load");
+    await pending;
+    map.emit("click");
+    expect(consume).not.toHaveBeenCalled();
+    expect(runtime.getSnapshot()).toMatchObject({ state: "DISPOSED", selection: null });
+  });
+
+  it("keeps query failures finite and preserves the mounted renderer", async () => {
+    const runtime = createMapLibreAdapter({ containerId: "fixture-map", style: fixtureStyle(), fixtureSelections: [fixtureSelection()] });
+    const consume = vi.fn();
+    runtime.subscribeSelection(consume);
+    const pending = runtime.initialize();
+    const map = renderer.instances[0];
+    map.emit("load");
+    await pending;
+    map.queryError = true;
+    expect(() => map.emit("click")).not.toThrow();
+    expect(runtime.getSnapshot()).toMatchObject({ state: "ERROR", reason: "MAP_RUNTIME_ERROR", selection: null });
+    expect(consume).not.toHaveBeenCalled();
+    expect(map.removed).toBe(false);
+    const retry = runtime.initialize();
+    expect(map.removed).toBe(true);
+    const replacement = renderer.instances[1];
+    replacement.renderedFeatures = [renderedFixture()];
+    replacement.emit("load");
+    await retry;
+    map.emit("click");
+    expect(map.queryCalls).toBe(1);
+    replacement.emit("click");
+    expect(consume).toHaveBeenCalledExactlyOnceWith(fixtureSelection());
+    runtime.dispose();
   });
 });

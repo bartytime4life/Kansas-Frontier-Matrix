@@ -2,11 +2,11 @@
 doc_id: kfm://doc/packages-maplibre-src-readme
 title: packages/maplibre/src/ — MapLibre Source Envelope and Renderer-Adapter Placement Boundary
 type: readme
-version: v1.6
+version: v1.7
 status: draft
 owners: OWNER_TBD — Package steward · MapLibre adapter steward · Map-runtime steward · UI steward · Governed API steward · Contract steward · Schema steward · Policy steward · Security steward · Privacy/sensitivity reviewer · Dependency steward · Validation steward · Release steward · CI steward · Docs steward
 created: 2026-08-23
-updated: 2026-09-08
+updated: 2026-09-15
 policy_label: "public-doctrine; package-source-boundary; maplibre; renderer-adapter; exact-dependency-admitted; vite-worker-configured; legacy-cdn-harness-retired; initial-adapter-implemented; null-runtime-implemented; browser-readiness-hold; private-npm-package; accepted-single-importer; renderer-downstream; effect-boundary-explicit; fail-closed; no-truth-authority; no-publication-authority; rollback-aware"
 current_path: packages/maplibre/src/README.md
 owning_root: packages/
@@ -51,7 +51,7 @@ related:
 tags: [kfm, packages, maplibre, src, typescript, renderer-adapter, map-runtime-port, source-descriptor, layer-descriptor, style-manifest, release-manifest, evidence-ref, negative-state, protocol-admission, pmtiles, cog, performance, import-boundary, privacy, migration, rollback]
 notes:
   - "This v1.5 checkpoint records retirement of the nonconforming live-CDN performance harness while preserving the finite performance HOLD."
-  - "MapLibreAdapter owns only empty-style construction, camera synchronization, finite failures, and teardown; sources, layers, selections, plugins, protocols, and external styles remain out of scope."
+  - "The September 15 fixture-selection checkpoint below supersedes the initial empty-style/no-selection implementation statements for its bounded scope; broader historical dependency and readiness statements are not revalidated by that checkpoint."
   - "The change does not claim browser readiness, authorize package publication, or affect release, deployment, promotion, source activation, or map/data publication."
   - "The renderer may consume only governed, released, public-safe artifacts. Descriptor validity and visual rendering are not truth, evidence closure, policy approval, or release approval."
   - "Effectful renderer operations must be isolated from pure descriptor compilation; a blanket no-network claim is not credible for an implemented browser renderer and must be replaced by explicit admitted-effect rules."
@@ -122,6 +122,44 @@ The package root governs package metadata and distribution. This `src/` README g
 <a id="status-and-evidence"></a>
 
 ## Status and evidence
+
+### Synthetic fixture selection checkpoint
+
+This branch extends [the existing adapter](maplibre-adapter.ts), based on
+`main@b18b7276faa3cdad15f2ed34270b6640559bdf27`, with optional
+`fixtureSelections`. The existing [KFM selection profile](map-runtime-port.ts)
+and accepted ADR-0006 package boundary own the input and event seam. No new
+port method, renderer import boundary, semantic schema or policy is introduced.
+
+Supply at most 64 pre-reviewed `MapFeatureSelection` values. Each must match
+exactly one style layer, its inline GeoJSON source and one feature ID marked
+`properties.fixture: true`; duplicate keys or selection IDs and invalid KFM
+identities fail before renderer construction. The marker declares synthetic
+fixture intent; it is not a rights, sensitivity, policy or release decision.
+Bindings are copied and frozen when the adapter is constructed. Sources using
+`promoteId`, generated IDs or clustering are rejected because their rendered
+IDs do not preserve the reviewed literal GeoJSON feature identity.
+
+Clicks query only bound layers and accept at most 128 hits. One unambiguous
+bound identity emits the copied KFM selection through `subscribeSelection`.
+Repeated hits for that identity emit once. Unknown, empty, excessive or
+ambiguous hits emit nothing and preserve the existing selection. Evidence
+references come from the supplied binding, never renderer feature properties.
+No coordinates, raw renderer events or raw feature properties cross the port.
+
+The optional path defaults to disabled. Selection preserves the renderer and
+camera; renderer-query or callback failures produce the existing finite
+`ERROR` state, and disposal removes the click subscription. Existing inline
+resource rejection remains in force. An explicit retry after `ERROR` removes
+the previous renderer and subscriptions before constructing its replacement. The
+[package adapter tests](../tests/maplibre-adapter.test.ts) use a fake renderer;
+their result does not establish browser hit testing, accessibility, API or
+Evidence Drawer integration, source admission, deployment or publication.
+
+Rollback removes the optional binding implementation and tests together.
+Existing callers omit the option and require no migration. The older status
+table below remains dated history outside this bounded checkpoint; consult
+the current package manifest for its dependency declaration.
 
 | Surface | Status | Safe conclusion |
 |---|---:|---|
