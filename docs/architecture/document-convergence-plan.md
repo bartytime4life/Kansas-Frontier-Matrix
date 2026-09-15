@@ -69,7 +69,7 @@ consumers or distinct object authorities.
 
 The full private review attachment includes `paths.csv`, `paths.json`,
 `markdown.json`, `references.json`, `duplicates.json`, `no_loss_ledger.json`,
-`roots.json`, `packages.json`, `codeowners.json`, `object_families.json`,
+`roots.json`, `packages.json`, `codeowners_rules.json`, `object_families.json`,
 `pin_candidates.json`, `anomalies.json`, summary and digest manifest. The generated
 manifest SHA-256 is `sha256:f39433232deb0b16d2acb6bd343d6957545b9b66ecd0d58a4c52e2998f93e0fa`. The reports are generated outside Git to avoid storing
 large repeated repository snapshots or creating a second writable registry.

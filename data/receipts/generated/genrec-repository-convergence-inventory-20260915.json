@@ -11,7 +11,7 @@
     "tools/generators/build_repository_convergence_inventory.py": "sha256:545be2b9163d3f3c009b6697904b6c0092a9c4fa37d5c31c97a4cbf0decc2c7d",
     "tests/generators/test_build_repository_convergence_inventory.py": "sha256:7a43b9c8ac82fc0f6b55e6dd5c71520c68fd88b5f3b51d5f64d48127bc433bf3",
     "tools/generators/README.md": "sha256:f5f79c1ae00dad765da64528e3b0f4c0006dc4bcc9dc8f210a8395c98f9589fe",
-    "docs/architecture/document-convergence-plan.md": "sha256:e1b1a146b720a1bfccd6c96dc43675df2a030c58c3c4c05631e251d99ba8b1be"
+    "docs/architecture/document-convergence-plan.md": "sha256:46aea7838f05535456d68d4efca4810a5e8be6411ed24c3f2745ab9695d4c095"
   },
   "model_identity": {
     "provider": "OpenAI",
