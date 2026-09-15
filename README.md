@@ -519,10 +519,14 @@ Scripts that need writable project-scoped home, npm, XDG, and temporary paths us
 - `vite.config.ts` simulates declared bindings for local development
 - `db/index.ts` reads the D1 binding from the Cloudflare Worker environment
 - `db/schema.ts` starts intentionally empty
-- `examples/d1/` contains an optional D1 example surface
 - `drizzle.config.ts` supports local migration generation when needed
 - `docs/KFM_SOURCE_GAP_REGISTER.md` records implemented, context-only, and held
   source boundaries; it is not a release ledger
+
+Generated TypeScript build state, prepared MapLibre assets, and platform build
+output are ignored. The tracked source tree contains only the Explorer's active
+application, runtime, migration, documentation, and verification surfaces; the
+unused starter D1 example and starter icon assets are intentionally absent.
 
 ## Workspace Auth Headers
 
