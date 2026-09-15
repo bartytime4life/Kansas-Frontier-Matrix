@@ -465,5 +465,81 @@ class GeneratedReceiptValidatorTests(unittest.TestCase):
         )
 
 
+class CurrentnessReceiptCorrectionTests(unittest.TestCase):
+    """Preserve the historical defect while admitting its bounded successor."""
+
+    original = REPO_ROOT / (
+        "data/receipts/generated/"
+        "genrec-contract-object-map-currentness-20260906.json"
+    )
+    successor = REPO_ROOT / (
+        "data/receipts/generated/"
+        "genrec-contract-object-map-currentness-correction-20260915.json"
+    )
+
+    def test_original_bytes_and_enum_rejections_remain(self) -> None:
+        self.assertEqual(
+            hashlib.sha256(self.original.read_bytes()).hexdigest(),
+            "e08b94cefd47efd9886f5647da449d52c59ca1fe23f1d20609d38b95e682a666",
+        )
+        result = validate_receipt(self.original, repo_root=REPO_ROOT)
+        self.assertFalse(result.ok)
+        self.assertEqual(len(result.findings), 4)
+        self.assertTrue(all(
+            finding.code == "SCHEMA_INVALID"
+            and finding.detail == "schema constraint failed: enum"
+            for finding in result.findings
+        ))
+
+    def test_canonical_values_alone_still_reject_extra_keys(self) -> None:
+        receipt = json.loads(self.original.read_text())
+        receipt["truth_labels"] = {
+            path: value.split(";", 1)[0].split(" ", 1)[0]
+            for path, value in receipt["truth_labels"].items()
+        }
+        with tempfile.TemporaryDirectory() as directory:
+            candidate = Path(directory) / "receipt.json"
+            candidate.write_text(json.dumps(receipt))
+            result = validate_receipt(candidate, repo_root=REPO_ROOT)
+        self.assertEqual(result.findings, (Finding(
+            "TRUTH_LABEL_KEYS_MISMATCH", "/truth_labels",
+            "truth label keys must exactly match artifact_paths",
+        ),))
+
+    def test_successor_integrity_does_not_supply_review(self) -> None:
+        result = validate_receipt(self.successor, repo_root=REPO_ROOT)
+        self.assertTrue(result.ok, result.findings)
+        self.assertTrue(result.integrity_checked)
+        self.assertEqual(result.artifact_count, 1)
+        self.assertEqual(result.review_state, "pending")
+        self.assertFalse(result.review_claim_present)
+        denied = validate_receipt(
+            self.successor, repo_root=REPO_ROOT, require_review_claim=True,
+        )
+        self.assertFalse(denied.ok)
+
+    def test_successor_preserves_historical_scope_and_provenance(self) -> None:
+        old = json.loads(self.original.read_text())
+        new = json.loads(self.successor.read_text())
+        for key in (
+            "artifact_paths", "artifact_hashes", "model_identity",
+            "prompt_or_contract", "parameters", "validation_gates",
+            "human_review", "override_record", "citations", "policy_decisions",
+        ):
+            with self.subTest(field=key):
+                self.assertEqual(old[key], new[key])
+        self.assertEqual(new["truth_labels"], {"contracts/OBJECT_MAP.md": "PROPOSED"})
+        self.assertIn(
+            "sha256:" + hashlib.sha256(self.original.read_bytes()).hexdigest(),
+            new["inputs"]["evidence_hashes"],
+        )
+        self.assertIn(old["created_at"], new["notes"])
+        for qualification in old["truth_labels"].values():
+            self.assertIn(qualification, new["notes"])
+        self.assertEqual(
+            new["inputs"]["evidence_refs"][:-1], old["inputs"]["evidence_refs"],
+        )
+
+
 if __name__ == "__main__":
     unittest.main()

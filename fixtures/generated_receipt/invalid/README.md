@@ -64,7 +64,7 @@ notes:
   <img alt="Object: GENERATED_RECEIPT" src="https://img.shields.io/badge/object-GENERATED__RECEIPT-6f42c1">
   <img alt="Schema: concrete" src="https://img.shields.io/badge/schema-concrete-success">
   <img alt="Policy: fail closed" src="https://img.shields.io/badge/policy-fail__closed-critical">
-  <img alt="Inventory: one negative fixture" src="https://img.shields.io/badge/indexed__inventory-one__fixture-success">
+  <img alt="Inventory: three negative fixtures" src="https://img.shields.io/badge/indexed__inventory-three__fixtures-success">
   <img alt="Authority: fixture only" src="https://img.shields.io/badge/authority-fixture__only-red">
 </p>
 
@@ -84,7 +84,7 @@ notes:
 | **Machine-shape authority** | `schemas/contracts/v1/receipts/generated_receipt.schema.json` |
 | **AI-builder policy surface** | `policy/ai_builder/operating_contract.rego` |
 | **Emitted instance home** | `data/receipts/generated/` |
-| **Direct indexed inventory** | This README plus `missing_contract_version.json` |
+| **Direct indexed inventory** | This README, three JSON payloads, and their exact expected-error sidecars |
 | **Network posture** | No network required for fixture validation |
 | **Public-surface posture** | Denied; invalid fixtures and generated receipts are not public truth |
 | **Last reviewed** | 2026-07-21 |
@@ -129,7 +129,7 @@ This lane may show what KFM expects a validator or policy gate to reject. It doe
 | Surface | Status | Evidence-bounded interpretation |
 |---|---|---|
 | Target README | **CONFIRMED** | Existing file fetched at the recorded base. |
-| Direct indexed payload inventory | **One JSON fixture** | `missing_contract_version.json` omits only the required `contract_version` field. |
+| Direct indexed payload inventory | **Three JSON fixtures** | Missing contract version, qualified truth label, and extra truth-label key; each has one expected finding. |
 | Generated-receipt schema | **CONFIRMED file / PROPOSED schema** | Concrete closed schema with required fields and nested constraints. |
 | AI-builder Rego policy | **CONFIRMED stub / PROPOSED enforcement** | Selected deny rules exist; CI invocation and complete input assembly remain unverified. |
 | Emitted generated-receipt instances | **CONFIRMED lane** | `data/receipts/generated/` contains repository-committed process-memory records; this fixture lane is not that store. |
@@ -582,3 +582,12 @@ A richer structured expected-result record remains `PROPOSED` until a separately
 | Proposed ADR-0011 | CONFIRMED file / proposed decision | Receipt/proof/catalog/publication separation rationale. | Accepted authority. |
 
 [Back to top](#top)
+
+## 2026-09-15 finite-label regressions
+
+- `qualified_truth_label.json`: `SCHEMA_INVALID` for prose inside a truth-label enum.
+- `extra_truth_label_key.json`: `TRUTH_LABEL_KEYS_MISMATCH` after canonical values expose an undeclared artifact key.
+
+These synthetic examples retain the failure shapes of the historical currentness
+receipt without copying an actual receipt into the fixture lane. Each sidecar names
+one exact finding. `validate_generated_receipt.py --fixtures` consumes both.

@@ -1,0 +1,111 @@
+{
+  "receipt_id": "genrec-receipt-currentness-repair-20260915",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/contract-object-map-lifecycle.yml",
+    "data/receipts/generated/genrec-contract-object-map-currentness-correction-20260915.json",
+    "fixtures/generated_receipt/README.md",
+    "fixtures/generated_receipt/invalid/README.md",
+    "fixtures/generated_receipt/invalid/extra_truth_label_key.expected_error.txt",
+    "fixtures/generated_receipt/invalid/extra_truth_label_key.json",
+    "fixtures/generated_receipt/invalid/qualified_truth_label.expected_error.txt",
+    "fixtures/generated_receipt/invalid/qualified_truth_label.json",
+    "tests/validators/test_validate_generated_receipt.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/contract-object-map-lifecycle.yml": "sha256:f086707bb391e548e7bdc99d576fbbfb067d79fac82712c601885717e0e374fd",
+    "data/receipts/generated/genrec-contract-object-map-currentness-correction-20260915.json": "sha256:a15be51e5d5d8dfa47d848208395bab6b4bad0276e9acacda0b992f6a2e3ed72",
+    "fixtures/generated_receipt/README.md": "sha256:2074f08a712dfe8831a6a02a0f0a4aad758a9c94e06fe2b8bdc74891cfa9c1d5",
+    "fixtures/generated_receipt/invalid/README.md": "sha256:4ec8c828051958b50a3c3523ed1223ef7633a8fd9e53228cc07f70630eeb2e17",
+    "fixtures/generated_receipt/invalid/extra_truth_label_key.expected_error.txt": "sha256:9d5c1cd16799cd4320bcc2d1f8806da7a87f17d5362e7ccb4374ba4bab5e899f",
+    "fixtures/generated_receipt/invalid/extra_truth_label_key.json": "sha256:6b8d944f948ba7e0e4c58715e553bf5c6e041ca20f61a9e5a27a9aec5be19141",
+    "fixtures/generated_receipt/invalid/qualified_truth_label.expected_error.txt": "sha256:187f85297e0a39035168559b7fba1f64b951c1e2e94338461466e36c018dfb0e",
+    "fixtures/generated_receipt/invalid/qualified_truth_label.json": "sha256:a83ed5e002930779f78a59d7615bd11988bd56964886e6fac2bfe6e9f664c6a3",
+    "tests/validators/test_validate_generated_receipt.py": "sha256:5d958146dc11118678a157329b32af66c95b1e7fe6060b0c25e6f60944d9ed10"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "UNKNOWN; exact serving model version not exposed"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local repository validation",
+      "GitHub connector",
+      "Google Drive connector",
+      "Notion connector"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/32953ec3b662dba14546e224554c9621b72268de",
+      "repo:data/receipts/generated/genrec-contract-object-map-currentness-20260906.json"
+    ],
+    "evidence_hashes": [
+      "sha256:e08b94cefd47efd9886f5647da449d52c59ca1fe23f1d20609d38b95e682a666",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/contract-object-map-lifecycle.yml": "PROPOSED",
+    "data/receipts/generated/genrec-contract-object-map-currentness-correction-20260915.json": "PROPOSED",
+    "fixtures/generated_receipt/README.md": "PROPOSED",
+    "fixtures/generated_receipt/invalid/README.md": "PROPOSED",
+    "fixtures/generated_receipt/invalid/extra_truth_label_key.expected_error.txt": "PROPOSED",
+    "fixtures/generated_receipt/invalid/extra_truth_label_key.json": "PROPOSED",
+    "fixtures/generated_receipt/invalid/qualified_truth_label.expected_error.txt": "PROPOSED",
+    "fixtures/generated_receipt/invalid/qualified_truth_label.json": "PROPOSED",
+    "tests/validators/test_validate_generated_receipt.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-receipt-lifecycle-api-tests",
+      "outcome": "PASS",
+      "reason": "49 tests and 10 subtests passed on local Python 3.12; includes original-byte rejection, normalized-value key rejection, successor integrity and pending-review denial."
+    },
+    {
+      "gate": "fixture-polarity",
+      "outcome": "PASS",
+      "reason": "One valid and three single-defect invalid fixtures match exact outcomes."
+    },
+    {
+      "gate": "adjacent-metadata-object-map-object-family",
+      "outcome": "PASS",
+      "reason": "Existing lifecycle, object-family and required metadata validators passed."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "No PR delivery through the incident-quarantined path; branch-only handoff."
+    },
+    {
+      "gate": "independent-human-review",
+      "outcome": "SKIPPED",
+      "reason": "No independent approval obtained."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "current-main",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/32953ec3b662dba14546e224554c9621b72268de"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-15T04:39:27.108764Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "notes": "Authoring record for this correction packet only, distinct from the historical successor projection. Original receipt and artifact bytes, schema, validator, topology baseline, frozen catalog and hosting metadata are unchanged. Owning roots per accepted ADR-0029: data/ for process records, fixtures/ for synthetic negative inputs, tests/ for checking behavior, .github/ for CI wiring. Proposed rollback reverts workflow/test/fixture integration as a unit and preserves both correction records as history; the original invalid receipt remains invalid. No review, merge, release, deployment, promotion, publication, source admission or topology-stage authority."
+}
