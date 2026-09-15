@@ -1,8 +1,31 @@
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/runbooks/explorer-web-local-development
+title: Explorer Web local development
+type: runbook
+version: v1.1
+status: draft; repository-grounded; dependency-policy-aligned
+owners:
+  - "@bartytime4life — verified GitHub review route"
+created: 2026-09-06
+updated: 2026-09-15
+policy_label: repository-facing
+owning_root: docs/
+responsibility: "Describe the supported locked-install, local-development, and focused-validation path for the repository-local Explorer Web workspace without granting deployment, source-admission, release, or publication authority."
+truth_posture: "CONFIRMED repository configuration / candidate exact-head validation / NEEDS VERIFICATION hosted and human acceptance; cite-or-abstain"
+related:
+  - apps/explorer-web/README.md
+  - pnpm-workspace.yaml
+  - pnpm-lock.yaml
+  - .github/workflows/ui-build.yml
+  - .github/workflows/accessibility.yml
+  - apps/kansas-frontier-matrix-explorer/docs/esbuild-security-remediation.md
+[/KFM_META_BLOCK_V2] -->
+
 # Explorer Web local development
 
-**Status:** CONFIRMED for the repository-local Explorer Web workspace at `apps/explorer-web/`; `HOLD` for any dependency build script not explicitly allowed by the committed version-specific policy; live API integration, deployment, release, and publication remain outside this runbook.
+**Status:** CONFIRMED for the repository-local Explorer Web workspace at `apps/explorer-web/`; candidate-aligned for the current exact-version Workerd denial; `HOLD` for any dependency build script not explicitly decided by the committed version-specific policy. Live API integration, deployment, release, and publication remain outside this runbook.
 
-Use this runbook to inspect the locked JavaScript workspace, identify the current installation hold, and—only after that hold is resolved—start the local Explorer Web development server and run the checks that directly cover the app. Run all commands from the repository root unless a step says otherwise.
+Use this runbook to inspect the locked JavaScript workspace, verify the current installation policy, start the local Explorer Web development server only after a successful locked install, and run the checks that directly cover the app. Run all commands from the repository root unless a step says otherwise.
 
 > [!IMPORTANT]
 > The local app is a repository-grounded, fixture-first development surface. Starting it does not activate sources, contact a model runtime, establish a live governed API path, deploy the app, or publish KFM data. Rendered maps, fixtures, tests, and generated prose are not evidence authority.
@@ -26,8 +49,8 @@ The reported Node version must satisfy `>=22.13 <23`. Run pnpm from inside the r
 
 ## Install the locked workspace
 
-> [!WARNING]
-> **Current repository checkpoint: `HOLD` for denied build scripts.** At current `main@df5743efe6885e38c84835bc4a81978a5705b8b5` (verified 2026-09-06), the workspace carries a version-specific `allowBuilds` policy. The current lockfile resolves `@esbuild-kit/core-utils@3.3.2` to `esbuild@0.25.12`; the Vite/webpack graph resolves `esbuild@0.28.2`. The lockfile no longer contains `esbuild@0.18.20`, although the policy keeps an explicit denial for that version. The policy allows `esbuild@0.28.2` and denies `esbuild@0.25.12`, `esbuild@0.28.1`, `esbuild@0.18.20`, `unrs-resolver@1.12.2`, and `workerd@1.20260828.1`. An `ERR_PNPM_IGNORED_BUILDS` result therefore means the reported package/version is outside the approved set, not that no policy exists. Keep the install and dependent checks at `HOLD`; route the exact package/version through dependency and supply-chain review. Do not run interactive `pnpm approve-builds`, add a broad allowlist, use `--ignore-scripts`, or relax the workflow merely to bypass the hold.
+> [!IMPORTANT]
+> **Current dependency-policy checkpoint:** merged `main@44678e3d1a95670d8c0e8100269b4e2d729f6e13` resolves `workerd@1.20260911.1`, but its policy still stops at `1.20260903.1`; this candidate adds an explicit `false` decision for the current version. That value denies the install script while allowing pnpm to verify that every discovered build script has a reviewed disposition. It does not approve Workerd execution. Keep any future unlisted package/version at `HOLD`; do not run interactive `pnpm approve-builds`, add a wildcard, use `--ignore-scripts`, or relax the workflow to bypass the gate.
 
 > The source of truth is [`pnpm-workspace.yaml`](../../pnpm-workspace.yaml); version-specific decisions must remain synchronized with the lockfile and review record.
 
@@ -39,7 +62,7 @@ This command may use the package registry. It is the repository's diagnostic loc
 
 ## Start Explorer Web
 
-This section is unavailable while the locked-install hold above remains active. A previously populated `node_modules/` directory is not proof that the current lockfile and build-script policy were installed successfully.
+Continue only after the locked install succeeds under a supported Node 22 runtime. A previously populated `node_modules/` directory is not proof that the current lockfile and build-script policy were installed successfully.
 
 ```bash
 pnpm --filter explorer-web dev
@@ -75,7 +98,7 @@ Do not use root `pnpm build`, `pnpm test`, or `pnpm lint` as Explorer validation
 |---|---|---|
 | Corepack or pnpm selects another version | Root `package.json` still declares `pnpm@11.17.0` | Re-enable Corepack from the repository root; do not edit the pin merely to bypass the mismatch. |
 | Install wants to rewrite `pnpm-lock.yaml` | Manifest and lockfile are out of sync | Stop. Reconcile the dependency change in its own reviewed change rather than using an unlocked install. |
-| Install reports `ERR_PNPM_IGNORED_BUILDS` | The reported package/version is denied by the committed version-specific `allowBuilds` policy | Keep install and dependent checks at `HOLD`. Route the exact package/version through dependency and supply-chain review; do not approve scripts interactively or weaken the locked install. |
+| Install reports `ERR_PNPM_IGNORED_BUILDS` | The reported package/version has no exact decision in the committed version-specific `allowBuilds` policy | Keep install and dependent checks at `HOLD`. Route that exact package/version through dependency and supply-chain review; do not approve scripts interactively or weaken the locked install. |
 | Vite cannot start | The printed port is already occupied | Stop the conflicting local process or use an explicit local-only port for manual development. Browser tests still require free port `4173`. |
 | Browser tests cannot launch | Local Chromium is absent or an explicit executable is invalid | Install Playwright Chromium, or set `KFM_CHROMIUM_EXECUTABLE` to a verified local executable. Do not commit machine-specific paths. |
 | Tests pass but a trust-bearing state looks wrong | Fixture, adapter, and finite-outcome inputs may disagree | Treat the UI as a consumer. Correct the owning contract, fixture, policy, evidence, or release artifact through its own reviewed path; do not make the UI invent authority. |
