@@ -3,8 +3,9 @@ import { type MapRuntimePort } from "@kfm/maplibre";
 import { mountEvidenceDrawer, type EvidenceDrawerController } from "../../src/features/evidence_drawer";
 import { bindMapRuntimeEvidence, resolveMapRuntimeSelectionEvidence, type MapRuntimeEvidenceBinding, type MapRuntimeEvidenceUpdate } from "../../src/features/map_runtime/runtime-evidence-binding";
 import { fixtureProjectionForScenario, loadSyntheticAtlasFixture, type SyntheticAtlasScenario } from "./synthetic-atlas-evidence.fixture";
+import { fetchGovernedApiNegativeProjection } from "../../src/adapters/governed_api_negative_adapter";
 
-/** Browser-only composition: literal pinned geometry, simulated trust, no loader. */
+/** Browser-only composition; API availability is opt-in and grants no evidence. */
 export async function mountSyntheticAtlasMap(host: HTMLElement): Promise<void> {
   host.textContent = "Verifying synthetic Kansas fixture…";
   const packet = await loadSyntheticAtlasFixture();
@@ -14,6 +15,7 @@ export async function mountSyntheticAtlasMap(host: HTMLElement): Promise<void> {
   const heading = document.createElement("h2");
   heading.textContent = "Synthetic Kansas map to evidence proof";
   const notice = document.createElement("p");
+  notice.dataset.component = "atlas-fixture-notice";
   notice.textContent = "Repository-authored synthetic geometry. Trust and release fields are simulated fixture values; this proof grants no source, policy, release or publication authority.";
   const legend = document.createElement("p");
   legend.dataset.component = "atlas-legend";
@@ -38,7 +40,10 @@ export async function mountSyntheticAtlasMap(host: HTMLElement): Promise<void> {
   scenarioLabel.textContent = "Synthetic evidence state ";
   const scenarioSelect = document.createElement("select");
   scenarioSelect.dataset.component = "atlas-scenario";
-  const scenarios = ["available", "no-results", "stale", "deny", "error"] as const;
+  const apiEnabled = new URL(window.location.href).searchParams.get("api") === "1";
+  type Scenario = SyntheticAtlasScenario | "api-unavailable";
+  const scenarios: readonly Scenario[] = ["available", "no-results", "stale", "deny", "error", ...(apiEnabled ? ["api-unavailable" as const] : [])];
+  if (apiEnabled) notice.textContent += " The current API does not yet resolve selected evidence. The API-availability scenario makes one same-origin request to the existing /evidence scaffold; it does not submit the selected feature.";
   for (const scenario of scenarios) {
     const option = document.createElement("option");
     option.value = scenario;
@@ -72,7 +77,8 @@ export async function mountSyntheticAtlasMap(host: HTMLElement): Promise<void> {
     fixtureSelections: [packet.selection],
     initializationDeadlineMs: 15_000,
   });
-  let scenario: SyntheticAtlasScenario = "available";
+  let scenario: Scenario = "available";
+  let apiRequest: AbortController | null = null;
   let drawer: EvidenceDrawerController | null = null;
   let binding: MapRuntimeEvidenceBinding | null = null;
   let destroyed = false;
@@ -88,6 +94,7 @@ export async function mountSyntheticAtlasMap(host: HTMLElement): Promise<void> {
     runtimeStatus.textContent = `Map runtime: ${snapshot.state}`;
     textSelector.disabled = snapshot.state !== "READY";
     if (snapshot.state !== "READY") {
+      apiRequest?.abort();
       textRequestVersion += 1;
       drawer?.destroy();
       drawer = null;
@@ -99,6 +106,15 @@ export async function mountSyntheticAtlasMap(host: HTMLElement): Promise<void> {
     region.dataset.selectionCount = String(++selections);
   });
   async function resolveFixtureProjection() {
+    apiRequest?.abort();
+    apiRequest = null;
+    if (scenario === "api-unavailable") {
+      drawer?.destroy();
+      drawer = null;
+      status.textContent = "ABSTAIN / API_AVAILABILITY_PENDING";
+      apiRequest = new AbortController();
+      return fetchGovernedApiNegativeProjection({ signal: apiRequest.signal });
+    }
     if (scenario === "error") throw new Error("SYNTHETIC_ATLAS_RESOLVER_CANARY");
     return fixtureProjectionForScenario(packet, scenario);
   }
@@ -135,7 +151,9 @@ export async function mountSyntheticAtlasMap(host: HTMLElement): Promise<void> {
     if (destroyed) return;
     const value = scenarioSelect.value;
     if (!scenarios.some((item) => item === value)) return;
-    scenario = value as SyntheticAtlasScenario;
+    scenario = value as Scenario;
+    apiRequest?.abort();
+    apiRequest = null;
     textRequestVersion += 1;
     binding?.destroy();
     drawer?.destroy();
@@ -146,6 +164,8 @@ export async function mountSyntheticAtlasMap(host: HTMLElement): Promise<void> {
   function destroy(): void {
     if (destroyed) return;
     destroyed = true;
+    apiRequest?.abort();
+    apiRequest = null;
     textRequestVersion += 1;
     binding?.destroy();
     drawer?.destroy();
