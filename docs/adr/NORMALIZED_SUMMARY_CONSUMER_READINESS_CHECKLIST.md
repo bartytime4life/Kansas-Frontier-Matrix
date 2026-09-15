@@ -2,14 +2,14 @@
 doc_id: kfm://doc/normalized-summary-consumer-readiness-checklist
 title: "Normalized Summary Consumer Readiness Checklist"
 type: checklist
-version: v1.2
+version: v1.3
 status: draft; repository-grounded; validation-guidance-only
 owners:
   - "NEEDS VERIFICATION — doctrine-preflight steward"
   - "NEEDS VERIFICATION — normalized-summary consumer owners"
   - "NEEDS VERIFICATION — docs steward"
 created: 2026-05-13
-updated: 2026-09-14
+updated: 2026-09-15
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
@@ -34,7 +34,8 @@ evidence_readiness_tests_blob: 27c805aa16e3010c17efc1872a19ebac018da0be
 evidence_consistency_tests_blob: 652a53e014b22325bb72a16287aa971b35344e53
 evidence_preflight_runbook_blob: 65978a535b38b1dbc7a314decb0aa699e51ed608
 evidence_maintenance_readme_blob: bd4ef697d7118074be44d00e6e77a8a311afe5f4
-inspection_boundary: "Current-session source-only GitHub reads of the checklist, ADR guidance/index, readiness registry/checker, preflight emitter, regression wrapper, schema, consistency validator, focused tests, runbook, and maintenance guidance. No preflight, test, validator, workflow, external consumer, deployment, release, or publication action was executed or inspected."
+inspection_boundary: "The evidence_base and blob pins describe the historical v1.2 source-only inspection. The v1.3 follow-up below separately records a three-path validator/test/documentation repair and local validation against its named base; no external consumer or hosted acceptance is inferred."
+followup_base_commit: b6bdc3c13d03cf1050e03c06496796822b6421b1
 
 related:
   - docs/adr/INDEX.md
@@ -54,6 +55,7 @@ notes:
   - "This file is an ADR support document, not an ADR, acceptance record, release decision, or cutover authorization."
   - "v1.1 preserves the original checklist intent while reconciling it with the current emitter, schema, validators, registry, tests, and known evidence gaps."
   - "v1.2 pins a source-only currentness re-read; it neither reruns the preflight/test bundle nor changes consumer, cutover, release, or publication behavior."
+  - "v1.3 closes strict normalized-map presence and key-set validation in the existing validator. Full schema validation, artifact-byte verification, consumer acceptance, and default cutover remain separate."
   - "The machine registry currently records two internal consumers as validated; exhaustive in-repository and external-consumer coverage remains unverified."
 [/KFM_META_BLOCK_V2] -->
 
@@ -84,7 +86,7 @@ Use this checklist before representing any parser, workflow, operator tool, dash
 |---|---|
 | **Document role** | ADR support document and human migration checklist |
 | **Decision authority** | None; [`INDEX.md`](./INDEX.md) classifies this file as “Validation guidance only” |
-| **Record edition** | `v1.1` — same-path repository-evidence reconciliation |
+| **Record edition** | `v1.3` — normalized-map structural validation follow-up |
 | **Current emitter default** | Compatibility output; normalized-only emission requires `--emit-normalized-only` |
 | **Normalized-only implementation** | Present as an optional emitter mode, consistency-validator mode, fixture/test path, and shadow check |
 | **Machine readiness registry** | Two recorded internal consumers; both carry `status: validated` in the tracked registry |
@@ -103,7 +105,36 @@ The original file was created by commit `621a34eff9edf9c22c38ff4ec42ee0017ff09ba
 
 ## Evidence Boundary
 
-The observations below are pinned to `main@53d61809c4c99c65700d63fbcbcf42069ed7f3a4`. They describe tracked repository bytes, not a production deployment, fresh execution result, exhaustive consumer inventory, or a readiness/cutover authorization.
+### v1.3 structural validation follow-up
+
+Against base `main@b6bdc3c13d03cf1050e03c06496796822b6421b1`, strict
+normalized-only validation accepted `{}`, missing maps, null/list maps, and
+empty maps. The existing validator now requires both maps to be objects with
+exactly `check_receipt`, `provenance_sync_receipt`, and `presence_output` keys.
+An explicit nullable `presence_output` remains valid; omission does not.
+Non-object summaries and malformed compatibility maps produce finite validation
+errors rather than an attribute exception. Compatibility parity, historical
+map-absence semantics, and rejection of all six legacy fields in strict mode
+remain unchanged.
+
+Local validation on Python 3.12.14: **62 tests passed** across the five focused
+modules listed in [Validation](#validation), including **48 consistency cases**;
+the separate summary-schema fixture validator passed. The new CLI regressions
+require exit 1 and a JSON `fail` response for missing structure. The emitter
+continues to pass in both compatibility and optional normalized-only modes.
+
+This is a structural prerequisite, not full summary-schema or value validation,
+digest replay, artifact existence, external consumer readiness, independent
+acceptance, or hosted proof. The canonical schema and emitter are unchanged.
+Default normalized-only cutover remains **HOLD**. ADR-0029 and Directory Rules
+place the same-path implementation under `tools/`, executable proof under
+`tests/`, and this human guidance under `docs/`; no new home or migration is
+created. Abandon the unmerged branch to roll back this proposal; a later revert
+would restore the demonstrated false-pass gap and must be reviewed explicitly.
+
+### Preserved v1.2 source inspection
+
+The observations below are historical and pinned to `main@53d61809c4c99c65700d63fbcbcf42069ed7f3a4`. They describe tracked repository bytes at that checkpoint; the v1.3 follow-up above supersedes only the missing-map and consistency-test observations. They do not establish production deployment, exhaustive consumer inventory, or readiness/cutover authorization.
 
 | Surface | CONFIRMED repository observation | Limit |
 |---|---|---|
@@ -380,9 +411,10 @@ python -m pytest \
   -q --strict-config --strict-markers
 ```
 
-### Direct assertions not supplied by the current normalized-only consistency mode
+### Structural assertions and remaining consumer checks
 
-Add consumer-specific checks equivalent to:
+Strict normalized-only consistency now enforces the following structural checks.
+Consumers that parse independently still need equivalent checks:
 
 ```python
 paths = summary.get("artifact_paths")
@@ -398,7 +430,9 @@ assert set(paths) == {
 assert set(digests) == set(paths)
 ```
 
-Then test path/digest pairing and actual digest replay. Do not interpret the example as a repository patch or a substitute for the consumer’s own language/runtime tests.
+Then validate values against the canonical schema, test path/digest pairing,
+and replay actual digests. The consistency validator does not perform those
+checks or substitute for the consumer's own language/runtime tests.
 
 ### Full regression bundle
 
@@ -593,6 +627,7 @@ Before merge, close the draft pull request or restore blob `6831437391b1c8ff0f23
 | 2026-05-13 | Initial | Added a concise seven-check consumer-readiness list before normalized-only default cutover. | Validation guidance only |
 | 2026-08-14 | `v1.1` | Reconciled current emitter, schema, validators, registry, tests, shadow validation, machine statuses, known gaps, cutover gates, evidence packet, failure handling, and rollback. | None; default cutover remains on `HOLD` |
 | 2026-09-14 | `v1.2` | Re-pinned repository evidence; recorded the current two-entry registry, three readiness tests, five consistency tests, strict wrapper composition, and the unresolved normalized-map-presence gap; removed the missing next-move reference. | None; default cutover remains on `HOLD`; no preflight, test, workflow, consumer, release, or publication action occurred. |
+| 2026-09-15 | `v1.3` | Reproduced and repaired missing/non-object maps and incorrect key sets in strict consistency validation; added negative and CLI proof while preserving historical evidence. | Bounded validator repair only; default cutover and independent/hosted acceptance remain on `HOLD`. |
 
 ### No-loss reconciliation
 
@@ -606,6 +641,9 @@ The original requirements remain explicit:
 - rollback re-enables compatibility output; and
 - each consumer attaches owner, tests, UTC date, CI/test evidence, and follow-ups.
 
-These editions add the missing evidence boundary, direct map-presence assertions, digest replay, inventory discipline, status vocabulary, negative tests, cutover gates, correction behavior, and known validator/schema limitations without changing runtime behavior.
+The documentation preserves the evidence boundary, digest-replay obligations,
+inventory discipline, status vocabulary, cutover gates, correction behavior, and
+known schema limits. The v1.3 companion validator repair adds structural checks;
+it does not change production runtime or cutover authority.
 
 [Back to top](#top)
