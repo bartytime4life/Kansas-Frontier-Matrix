@@ -1,3 +1,5 @@
+import { readBoundedJson } from "../../bounded-json";
+
 export const dynamic = "force-dynamic";
 
 const REPOSITORY = "bartytime4life/Kansas-Frontier-Matrix";
@@ -29,14 +31,6 @@ let cachedStatus: CachedRepositoryStatus | null = null;
 const isRecord = (value: unknown): value is JsonRecord => Boolean(value) && typeof value === "object" && !Array.isArray(value);
 const asString = (value: unknown) => typeof value === "string" ? value : null;
 
-const readBoundedJson = async (response: Response): Promise<unknown> => {
-  const declaredLength = Number(response.headers.get("content-length") ?? "0");
-  if (declaredLength > MAX_RESPONSE_BYTES) throw new Error("GitHub response exceeded the bounded adapter limit.");
-  const body = await response.arrayBuffer();
-  if (body.byteLength > MAX_RESPONSE_BYTES) throw new Error("GitHub response exceeded the bounded adapter limit.");
-  return JSON.parse(new TextDecoder().decode(body)) as unknown;
-};
-
 export async function GET() {
   if (cachedStatus && cachedStatus.expiresAt > Date.now()) {
     return Response.json(cachedStatus.payload, {
@@ -50,6 +44,7 @@ export async function GET() {
   try {
     const response = await fetch(BRANCH_URL, {
       cache: "no-store",
+      redirect: "error",
       headers: {
         accept: "application/vnd.github+json",
         "user-agent": "KansasFrontierMatrixExplorer/1.0",
@@ -59,7 +54,7 @@ export async function GET() {
     });
     if (!response.ok) throw new Error(`GitHub returned HTTP ${response.status}.`);
 
-    const parsed = await readBoundedJson(response);
+    const parsed = await readBoundedJson(response, MAX_RESPONSE_BYTES);
     const commit = isRecord(parsed) && isRecord(parsed.commit) ? parsed.commit : null;
     if (!commit) throw new Error("GitHub omitted main commit metadata.");
     const sha = asString(commit.sha);

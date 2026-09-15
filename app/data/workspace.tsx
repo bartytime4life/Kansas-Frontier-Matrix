@@ -5,25 +5,32 @@ import { DATA_SOURCES, MAX_UPLOAD_BYTES, REVIEW_LABELS, UPLOAD_EXTENSIONS, type 
 import styles from "./workspace.module.css";
 
 type Detail = { submission: Submission; reviews: Review[]; canReview: boolean };
-export default function DataWorkspace({ mode, name, steward }: { mode: "submit" | "review"; name: string; steward: boolean }) {
+export default function DataWorkspace({ mode, name, steward, initialSourceId = "general" }: { initialSourceId?: string; mode: "submit" | "review"; name: string; steward: boolean }) {
   const [items, setItems] = useState<Submission[]>([]), [nextCursor, setNextCursor] = useState<string | null>(null);
   const [message, setMessage] = useState(""), [listError, setListError] = useState("");
   const [busy, setBusy] = useState(false), [loading, setLoading] = useState(true), [detailLoading, setDetailLoading] = useState(false);
   const [detail, setDetail] = useState<Detail | null>(null), [decision, setDecision] = useState<ReviewState>("under_review"), [note, setNote] = useState("");
-  const [filter, setFilter] = useState("all"), [sourceId, setSourceId] = useState("general"), [fileName, setFileName] = useState("");
-  const formRef = useRef<HTMLFormElement>(null), requestId = useRef(0);
-  const loadList = useCallback(async (before?: string) => {
-    setLoading(true); setListError("");
-    try {
-      const params = new URLSearchParams({ scope: mode === "review" ? "review" : "mine" }); if (before) params.set("before", before);
-      const response = await fetch(`/api/data-submissions?${params}`, { cache: "no-store" }); const body = await response.json();
+  const [filter, setFilter] = useState("all"), [sourceId, setSourceId] = useState(() => DATA_SOURCES.some((source) => source.id === initialSourceId) ? initialSourceId : "general"), [fileName, setFileName] = useState("");
+  const formRef = useRef<HTMLFormElement>(null), requestId = useRef(0), listRequestId = useRef(0);
+  const loadList = useCallback((before?: string, signal?: AbortSignal) => {
+    const generation = ++listRequestId.current;
+    const params = new URLSearchParams({ scope: mode === "review" ? "review" : "mine" });
+    if (before) params.set("before", before);
+    return fetch(`/api/data-submissions?${params}`, { cache: "no-store", signal }).then(async (response) => {
+      const body = await response.json();
       if (!response.ok) throw new Error(body.error ?? "Submissions could not be loaded.");
-      setItems((previous) => before ? [...previous, ...body.items] : body.items); setNextCursor(body.nextCursor);
-    } catch (error) { setListError((error as Error).message); }
-    finally { setLoading(false); }
+      if (signal?.aborted || generation !== listRequestId.current) return;
+      setListError("");
+      setItems((previous) => before ? [...previous, ...body.items] : body.items);
+      setNextCursor(body.nextCursor);
+    }).catch((error) => {
+      if (!signal?.aborted && generation === listRequestId.current) setListError(error instanceof Error ? error.message : "Submissions could not be loaded.");
+    }).finally(() => {
+      if (!signal?.aborted && generation === listRequestId.current) setLoading(false);
+    });
   }, [mode]);
-  useEffect(() => { void loadList(); }, [loadList]);
-  useEffect(() => { const source = new URLSearchParams(window.location.search).get("source"); if (source && DATA_SOURCES.some((s) => s.id === source)) setSourceId(source); }, []);
+  useEffect(() => { const controller = new AbortController(); void loadList(undefined, controller.signal); return () => controller.abort(); }, [loadList]);
+  const refreshList = (before?: string) => { setLoading(true); setListError(""); return loadList(before); };
   const openDetail = async (id: string) => {
     const generation = ++requestId.current; setDetailLoading(true); setDetail(null); setMessage(""); setNote(""); setDecision("under_review");
     try { const response = await fetch(`/api/data-submissions/${id}`, { cache: "no-store" }); const body = await response.json(); if (!response.ok) throw new Error(body.error); if (generation === requestId.current) { setDetail(body); setDecision(body.submission.status === "under_review" ? "changes_requested" : "under_review"); } }
@@ -34,13 +41,13 @@ export default function DataWorkspace({ mode, name, steward }: { mode: "submit" 
     event.preventDefault(); setBusy(true); setMessage("");
     const form = event.currentTarget; const data = new FormData(form); const file = data.get("file");
     if (!(file instanceof File) || !file.size || file.size > MAX_UPLOAD_BYTES) { setMessage("Choose a file no larger than 10 MB."); setBusy(false); return; }
-    try { const response = await fetch("/api/data-submissions", { method: "POST", body: data }); const body = await response.json(); if (!response.ok) throw new Error(body.error); form.reset(); setSourceId("general"); setFileName(""); await loadList(); await openDetail(body.id); setMessage("Submission received. Your file is stored for steward review."); }
+    try { const response = await fetch("/api/data-submissions", { method: "POST", body: data }); const body = await response.json(); if (!response.ok) throw new Error(body.error); form.reset(); setSourceId("general"); setFileName(""); await refreshList(); await openDetail(body.id); setMessage("Submission received. Your file is stored for steward review."); }
     catch (error) { setMessage((error as Error).message || "The upload could not be saved. Your form has been kept."); }
     finally { setBusy(false); }
   };
   const review = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault(); if (!detail) return; setBusy(true); setMessage("");
-    try { const response = await fetch(`/api/data-submissions/${detail.submission.id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ status: decision, note, version: detail.submission.version }) }); const body = await response.json(); if (!response.ok) throw new Error(body.error); await openDetail(detail.submission.id); await loadList(); setMessage("Review recorded. The contributor can see your decision and note."); }
+    try { const response = await fetch(`/api/data-submissions/${detail.submission.id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ status: decision, note, version: detail.submission.version }) }); const body = await response.json(); if (!response.ok) throw new Error(body.error); await openDetail(detail.submission.id); await refreshList(); setMessage("Review recorded. The contributor can see your decision and note."); }
     catch (error) { setMessage((error as Error).message); }
     finally { setBusy(false); }
   };
@@ -64,12 +71,12 @@ export default function DataWorkspace({ mode, name, steward }: { mode: "submit" 
           <button className={styles.primary} disabled={busy} type="submit">{busy ? "Saving submission…" : "Submit for review"}</button>
         </form>
       </section>}
-      <section className={styles.card}><div className={styles.sectionHeading}><h2>{mode === "review" ? "Review queue" : "Your submissions"}</h2><button onClick={() => void loadList()} disabled={loading}>Refresh</button></div>
+      <section className={styles.card}><div className={styles.sectionHeading}><h2>{mode === "review" ? "Review queue" : "Your submissions"}</h2><button onClick={() => void refreshList()} disabled={loading}>Refresh</button></div>
         <label className={styles.filter}>Status<select value={filter} onChange={(e) => setFilter(e.target.value)}><option value="all">All statuses</option>{Object.entries(REVIEW_LABELS).map(([value,label]) => <option key={value} value={value}>{label}</option>)}</select></label>
         {listError && <p role="alert">{listError}</p>}{loading && !items.length && <p role="status">Loading submissions…</p>}
         {!loading && !listError && !rows.length && <div className={styles.empty}><strong>{items.length ? "No submissions with this status" : "No submissions yet"}</strong><p>{mode === "review" ? "New proposals will arrive here with their file, source details, and review history." : "Your saved proposals and steward feedback will appear here."}</p></div>}
         <ul className={styles.items}>{rows.map((item) => <li key={item.id}><button onClick={() => void openDetail(item.id)} aria-pressed={detail?.submission.id === item.id}><span className={styles.badge} data-state={item.status}>{REVIEW_LABELS[item.status]}</span><strong>{item.title}</strong><span>{DATA_SOURCES.find((s) => s.id === item.sourceId)?.title} · {new Date(item.createdAt).toLocaleDateString()}</span><small>{item.fileName} · {(item.fileBytes / 1024).toFixed(0)} KB{mode === "review" && ` · ${item.ownerName}`}</small></button></li>)}</ul>
-        {nextCursor && <button disabled={loading} onClick={() => void loadList(nextCursor)}>Load older submissions</button>}
+        {nextCursor && <button disabled={loading} onClick={() => void refreshList(nextCursor)}>Load older submissions</button>}
       </section>
       {(detail || detailLoading) && <section className={`${styles.card} ${styles.detail}`} aria-label="Submission details"><div className={styles.sectionHeading}><h2>Submission details</h2><button onClick={() => { ++requestId.current; setDetail(null); setDetailLoading(false); }}>Close</button></div>
         {detailLoading ? <p role="status">Loading details…</p> : detail && <><span className={styles.badge} data-state={detail.submission.status}>{REVIEW_LABELS[detail.submission.status]}</span><h3>{detail.submission.title}</h3><p className={styles.prewrap}>{detail.submission.description}</p><dl className={styles.metadata}>

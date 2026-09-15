@@ -5,10 +5,10 @@ export const dynamic = "force-dynamic";
 export default async function DataPage({ searchParams }: { searchParams: Promise<{ source?: string }> }) {
   const params = await searchParams;
   const source = typeof params.source === "string" ? params.source : "";
-  return <SignedInData returnTo={source ? `/data?source=${encodeURIComponent(source)}` : "/data"} />;
+  return <SignedInData initialSourceId={source} returnTo={source ? `/data?source=${encodeURIComponent(source)}` : "/data"} />;
 }
-async function SignedInData({ returnTo }: { returnTo: string }) {
+async function SignedInData({ returnTo, initialSourceId }: { returnTo: string; initialSourceId: string }) {
   await requireChatGPTUser(returnTo);
   const user = await intakeUser();
-  return <DataWorkspace mode="submit" name={user.name} steward={user.steward} />;
+  return <DataWorkspace initialSourceId={initialSourceId} mode="submit" name={user.name} steward={user.steward} />;
 }

@@ -1,20 +1,10 @@
 import type { Metadata } from "next";
-import { headers } from "next/headers";
+import { SITE_IDENTITY } from "./site-identity";
 import "./globals.css";
 
-const fallbackBase = new URL("https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site");
-
 export async function generateMetadata(): Promise<Metadata> {
-  const requestHeaders = await headers();
-  const host = requestHeaders.get("x-forwarded-host")?.split(",")[0]?.trim() ?? requestHeaders.get("host")?.trim();
-  const forwardedProtocol = requestHeaders.get("x-forwarded-proto")?.split(",")[0]?.trim();
-  const protocol = forwardedProtocol === "http" || forwardedProtocol === "https"
-    ? forwardedProtocol
-    : host?.startsWith("localhost") || host?.startsWith("127.0.0.1") ? "http" : "https";
-  let metadataBase = fallbackBase;
-  if (host) {
-    try { metadataBase = new URL(`${protocol}://${host}`); } catch { /* Use the deployed canonical host. */ }
-  }
+  // Canonical metadata is deployment identity, never caller-controlled routing input.
+  const metadataBase = new URL(SITE_IDENTITY.canonicalUrl);
   const socialImage = new URL("/og-guided.png", metadataBase).toString();
 
   return {

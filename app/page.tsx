@@ -515,10 +515,10 @@ const defaultOrder = LAYER_REGISTRY.map((layer) => layer.id);
 const interactiveLayerIds = LAYER_REGISTRY.flatMap((layer) => layer.renderers.filter((renderer) => renderer.interactive).map((renderer) => renderer.id));
 const layerDomains = ["ALL", ...Array.from(new Set([...LAYER_REGISTRY.map((layer) => layer.domain), ...DOMAIN_HOLDS.map((hold) => hold.domain)])).sort()] as const;
 const DOMAIN_LIVE_CONTEXT: Readonly<Partial<Record<(typeof layerDomains)[number], readonly OfficialContextId[]>>> = Object.freeze({
-  Fire: Object.freeze(["nasa-firms-active-fire", "noaa-hms-smoke"]),
-  Hydrology: Object.freeze(["usgs-streamflow", "noaa-nwps-gauges", "usgs-3dhp-hydrography", "usgs-wbd-watersheds"]),
-  Geology: Object.freeze(["usgs-earthquakes"]),
-  Atmosphere: Object.freeze(["noaa-hms-smoke"]),
+  Fire: Object.freeze(["nasa-firms-active-fire", "noaa-hms-smoke"] as const),
+  Hydrology: Object.freeze(["usgs-streamflow", "noaa-nwps-gauges", "usgs-3dhp-hydrography", "usgs-wbd-watersheds"] as const),
+  Geology: Object.freeze(["usgs-earthquakes"] as const),
+  Atmosphere: Object.freeze(["noaa-hms-smoke"] as const),
 });
 const catalogCategorySlug = (category: string) => category.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 const drawerViews = ["evidence", "metadata", "lineage", "focus"] as const satisfies readonly DrawerView[];
@@ -6814,7 +6814,6 @@ export default function Home() {
               </div>
             </section></details>
             <div className="official-context-list">{OFFICIAL_CONTEXT_SOURCES.map((source) => {
-              const payload = source.apiPath || source.managedAdapterPath ? officialPayloads[source.id as OfficialContextFeedId] : undefined;
               const state = officialStates[source.id];
               const heldAtFrame = officialVisibility[source.id] && !effectiveOfficialVisibility[source.id];
               return <article key={source.id} className="official-context-row" data-state={state} data-visible={officialVisibility[source.id]} data-held={heldAtFrame}>
@@ -6939,7 +6938,7 @@ export default function Home() {
             <button className="map-control-launch" type="button" onClick={() => openMapUtility("navigate")}><span aria-hidden="true">⌖</span><strong>Controls</strong></button>
             <button className="map-control-launch" type="button" onClick={() => { setSourceStatusOpen((open) => !open); setLeftOpen(false); }} aria-expanded={sourceStatusOpen} aria-controls="map-source-status"><strong>Source status</strong></button>
             <button className="map-control-launch" type="button" onClick={() => setInstrumentOpen((open) => !open)} aria-pressed={instrumentOpen}><strong>Charts</strong></button>
-            <a className="map-control-launch" href="/" title={`Open a fresh baseline for ${baselineDay} UTC`}><strong>Today’s baseline</strong></a>
+            <button className="map-control-launch" type="button" onClick={() => window.location.assign("/")} title={`Open a fresh baseline for ${baselineDay} UTC`}><strong>Today’s baseline</strong></button>
             <Link className="map-control-launch" href="/data"><strong>Contribute data</strong></Link>
           </nav>
           {sourceStatusOpen && <aside id="map-source-status" className="map-source-status" aria-label="Source status and data quality">
