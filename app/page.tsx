@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import { readBoundedJson } from "./bounded-json";
 import { BASELINE_STACKS, currentUtcDay } from "./daily-baseline";
 import { SourceQualityRow } from "./source-quality-row";
 import { DataNotices, RenderQualityControl, TerrainQuickControls } from "./map-toolbar";
@@ -187,6 +188,7 @@ import {
 } from "./noaa-radar";
 import {
   buildStreamflowFrame,
+  streamflowContextPayload,
   normalizeUsgsStationId,
   parseStreamflowBundle,
   streamflowDisplayFrames,
@@ -930,7 +932,7 @@ const timelineEraLabel = (value: number) => {
   if (value < 1541) return "Early human record capacity";
   if (value < 1854) return "Early historical capacity";
   if (value < 2000) return "Historical record";
-  if (value === 2026) return "Present operational window · 9 Sep 2026";
+  if (value === 2026) return "Present operational window · source-specific clocks";
   return "Modern record";
 };
 
@@ -1011,7 +1013,7 @@ export default function Home() {
   const officialVisibilityRef = useRef(defaultOfficialVisibility);
   const officialOpacityRef = useRef(defaultOfficialOpacity);
   const officialPayloadsRef = useRef<Partial<Record<OfficialContextFeedId, OfficialContextPayload>>>({});
-  const officialRequestsRef = useRef(new Set<OfficialContextFeedId>());
+  const officialRequestsRef = useRef(new Map<OfficialContextFeedId, AbortController>());
   const officialRasterFailuresRef = useRef(new Set<OfficialContextId>());
   const failedTerrainSourceRef = useRef<unknown>(null);
   const noaaRadarRequestRef = useRef<AbortController | null>(null);
@@ -1345,6 +1347,8 @@ export default function Home() {
 
   useEffect(() => () => {
     if (placeTourTimerRef.current !== null) window.clearTimeout(placeTourTimerRef.current);
+    for (const controller of officialRequestsRef.current.values()) controller.abort();
+    officialRequestsRef.current.clear();
     noaaRadarRequestRef.current?.abort();
     noaaRadarFrameLoadCleanupRef.current?.();
     streamflowRequestRef.current?.abort();
@@ -1476,6 +1480,7 @@ export default function Home() {
     ? "stale"
     : streamflowState;
   const streamflowSelectedAtPresent = officialVisibility["usgs-streamflow"] && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME;
+  const noaaHydrologySelectedAtPresent = officialVisibility["noaa-nwps-gauges"] && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME;
   const noaaRadarLoopFrames = useMemo(
     () => selectNoaaRadarLoopFrames(noaaRadarManifest?.frames ?? [], noaaRadarLoopSpan, NOAA_RADAR_MAX_LOOP_FRAMES),
     [noaaRadarLoopSpan, noaaRadarManifest?.frames],
@@ -2496,6 +2501,7 @@ export default function Home() {
       const response = await fetch(NOAA_HYDROLOGY_NETWORK_API_PATH, { cache: "no-store", headers: { Accept: "application/json" }, signal: controller.signal });
       const candidate = await response.json() as unknown;
       if (!response.ok) throw new Error(`NOAA hydrology adapter returned HTTP ${response.status}.`);
+      if (controller.signal.aborted || noaaHydrologyRequestRef.current !== controller) return;
       const network = parseNoaaGaugeNetwork(candidate);
       const data = noaaGaugeNetworkGeoJson(network);
       const payload: OfficialContextPayload = {
@@ -2525,29 +2531,8 @@ export default function Home() {
   }, [announce]);
 
   useEffect(() => {
-    if (!streamflowBundle || !streamflowFrame || !streamflowFrameTime) return;
-    const data = {
-      type: "FeatureCollection" as const,
-      features: streamflowFrame.features.map((feature) => ({
-        ...feature,
-        properties: {
-          ...feature.properties,
-          selected: feature.properties.stationId === streamflowSelectedStationId,
-          retrievedAt: streamflowBundle.retrievedAt,
-        },
-      })),
-    };
-    const payload: OfficialContextPayload = {
-      feed: "usgs-streamflow",
-      state: streamflowBundle.state,
-      retrievedAt: streamflowBundle.retrievedAt,
-      upstreamUpdatedAt: streamflowFrameTime,
-      featureCount: data.features.length,
-      data,
-      source: streamflowBundle.source,
-      limitation: streamflowBundle.limitation,
-      truncated: streamflowBundle.truncated,
-    };
+    if (!streamflowBundle) return;
+    const payload = streamflowContextPayload(streamflowBundle, streamflowFrame, streamflowFrameTime, streamflowSelectedStationId);
     officialPayloadsRef.current = { ...officialPayloadsRef.current, "usgs-streamflow": payload };
     setOfficialPayloads(officialPayloadsRef.current);
   }, [streamflowBundle, streamflowFrame, streamflowFrameTime, streamflowSelectedStationId]);
@@ -2618,16 +2603,19 @@ export default function Home() {
   const refreshOfficialContext = useCallback(async (feed: OfficialContextFeedId) => {
     if (officialRequestsRef.current.has(feed)) return;
     const source = OFFICIAL_CONTEXT_BY_ID[feed];
-    officialRequestsRef.current.add(feed);
+    const controller = new AbortController();
+    const timer = window.setTimeout(() => controller.abort(new Error("Source request timed out. Try again.")), 30_000);
+    officialRequestsRef.current.set(feed, controller);
     setOfficialStates((current) => ({ ...current, [feed]: "loading" }));
     setOfficialErrors((current) => ({ ...current, [feed]: undefined }));
     try {
-      const response = await fetch(source.apiPath!, { cache: "no-store", headers: { Accept: "application/json" } });
-      const candidate = await response.json() as Partial<OfficialContextPayload> & { error?: string };
+      const response = await fetch(source.apiPath!, { cache: "no-store", signal: controller.signal, headers: { Accept: "application/json" } });
+      const candidate = await readBoundedJson(response, 8 * 1024 * 1024) as Partial<OfficialContextPayload> & { error?: string };
       const validState = candidate.state === "ready" || candidate.state === "empty" || candidate.state === "partial";
       if (!response.ok || candidate.feed !== feed || !validState || typeof candidate.featureCount !== "number" || !candidate.data || candidate.data.type !== "FeatureCollection" || !Array.isArray(candidate.data.features)) {
         throw new Error(candidate.error ?? `Fixed source adapter returned HTTP ${response.status}.`);
       }
+      if (officialRequestsRef.current.get(feed) !== controller) return;
       const payload = candidate as OfficialContextPayload;
       officialPayloadsRef.current = { ...officialPayloadsRef.current, [feed]: payload };
       setOfficialPayloads(officialPayloadsRef.current);
@@ -2638,12 +2626,14 @@ export default function Home() {
         ? `${source.shortTitle}: zero mapped features at ${new Date(payload.retrievedAt).toLocaleTimeString()}—not an all-clear`
         : `${source.shortTitle}: ${payload.featureCount} official context features refreshed`);
     } catch (error) {
+      if (officialRequestsRef.current.get(feed) !== controller) return;
       const message = error instanceof Error ? error.message : "Official context request failed.";
       setOfficialStates((current) => ({ ...current, [feed]: "error" }));
       setOfficialErrors((current) => ({ ...current, [feed]: message }));
       announce(`${source.shortTitle} unavailable; no fallback inference was used`);
     } finally {
-      officialRequestsRef.current.delete(feed);
+      window.clearTimeout(timer);
+      if (officialRequestsRef.current.get(feed) === controller) officialRequestsRef.current.delete(feed);
     }
   }, [announce]);
 
@@ -2779,11 +2769,9 @@ export default function Home() {
       for (const source of OFFICIAL_CONTEXT_SOURCES) {
         if (source.apiPath && officialVisibilityRef.current[source.id]) void refreshOfficialContext(source.id as OfficialContextFeedId);
       }
-      if (officialVisibilityRef.current["usgs-streamflow"] && !streamflowRequestRef.current && !streamflowBundleRef.current) void refreshStreamflow("24h", null, true);
-      if (officialVisibilityRef.current["noaa-nwps-gauges"]) void refreshNoaaHydrologyNetwork(true);
     }, 40);
     return () => window.clearTimeout(timer);
-  }, [refreshNoaaHydrologyNetwork, refreshOfficialContext, refreshStreamflow]);
+  }, [refreshOfficialContext]);
 
   const dismissMapUtilityWithoutFocus = useCallback(() => {
     mapUtilityReturnRef.current = null;
@@ -4443,17 +4431,23 @@ export default function Home() {
       setStreamflowPlaying(false);
       return;
     }
-    const timer = window.setInterval(() => {
-      void refreshStreamflow(streamflowRange, streamflowSelectedStationId, true);
-    }, 300_000);
+    const refresh = () => {
+      if (!document.hidden && !streamflowRequestRef.current) void refreshStreamflow(streamflowRange, streamflowSelectedStationId, true);
+    };
+    refresh();
+    const timer = window.setInterval(refresh, 300_000);
     return () => window.clearInterval(timer);
   }, [refreshStreamflow, streamflowRange, streamflowSelectedAtPresent, streamflowSelectedStationId]);
 
   useEffect(() => {
-    if (!officialVisibility["noaa-nwps-gauges"] || temporalQuery.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME) return;
-    const timer = window.setInterval(() => { void refreshNoaaHydrologyNetwork(true); }, 300_000);
+    if (!noaaHydrologySelectedAtPresent) return;
+    const refresh = () => {
+      if (!document.hidden && !noaaHydrologyRequestRef.current) void refreshNoaaHydrologyNetwork(true);
+    };
+    refresh();
+    const timer = window.setInterval(refresh, 300_000);
     return () => window.clearInterval(timer);
-  }, [officialVisibility, refreshNoaaHydrologyNetwork, temporalQuery.frame]);
+  }, [noaaHydrologySelectedAtPresent, refreshNoaaHydrologyNetwork]);
 
   useEffect(() => {
     if (!streamflowPlaying || !streamflowSelectedAtPresent || reducedMotion || streamflowFrames.length < 2 || safeStreamflowFrameIndex < 0) return;
@@ -6969,7 +6963,7 @@ export default function Home() {
           </aside>}
           <aside hidden={!sourceStatusOpen} className="map-legend-dock" aria-label="Visible map legend">
             <header>
-              <div><span>VISIBLE LAYERS</span><strong>{visibleCount} active</strong></div>
+              <div><span>VISIBLE LAYERS</span><strong>{visibleCount} domain layers · {visibleOfficialCount} context sources</strong></div>
               <button type="button" onClick={() => openAtlasPanel("layers")}>Manage</button>
             </header>
             <div className="map-legend-list">
@@ -6983,7 +6977,7 @@ export default function Home() {
                   <span><strong>{layer.title}</strong><small>{layer.releaseState} · {layer.releaseTime}</small></span>
                 </button>
               </div>)}
-              {activeLayers.length === 0 && <p>No layers are visible. Open Layer Catalog to choose a starting stack.</p>}
+              {activeLayers.length === 0 && <p>{visibleOfficialCount ? `${visibleOfficialCount} official context sources selected; connection states and record counts appear above.` : "No layers selected. Open Layer Catalog to choose a starting stack."}</p>}
             </div>
             {activeLayers.length > 5 && <footer>+{activeLayers.length - 5} more in Layer Catalog</footer>}
             <p className="map-legend-note">{basemap === "standard" ? "OpenFreeMap vector context · counties, places, roads, rail, water, and labels are display context; KFM overlays remain explicit." : basemap === "imagery" ? "Satellite imagery is display context only · overlays are synthetic or generalized." : basemap === "streets" ? "OpenStreetMap reference only · overlays are synthetic or generalized." : basemap === "topo" ? "USGS The National Map topographic tiles are display context only · KFM evidence remains separate." : "Site-local display style · overlays are synthetic or generalized."}</p>

@@ -1,3 +1,4 @@
+import { readBoundedJson } from "../../bounded-json";
 import { NextRequest, NextResponse } from "next/server";
 import type { Feature, FeatureCollection, Geometry, GeoJsonProperties } from "geojson";
 import { EVENT_BOUNDS, eventDay, advanceEventDay, intervalDays, parseSmokeKml, smokeUrl } from "../../event-atlas";
@@ -40,11 +41,7 @@ const fetchBoundedJsonValue = async (url: string, timeoutMs: number, init?: Requ
   try {
     const response = await fetch(url, { ...init, cache: "no-store", redirect: "manual", signal: controller.signal });
     if (!response.ok) throw new UpstreamError(`Official upstream returned HTTP ${response.status}.`);
-    const declaredLength = Number(response.headers.get("content-length") ?? "0");
-    if (declaredLength > MAX_RESPONSE_BYTES) throw new UpstreamError("Official upstream response exceeded the bounded adapter limit.");
-    const body = await response.arrayBuffer();
-    if (body.byteLength > MAX_RESPONSE_BYTES) throw new UpstreamError("Official upstream response exceeded the bounded adapter limit.");
-    return JSON.parse(new TextDecoder().decode(body)) as unknown;
+    return await readBoundedJson(response, MAX_RESPONSE_BYTES);
   } catch (error) {
     if (error instanceof UpstreamError) throw error;
     if (error instanceof Error && error.name === "AbortError") throw new UpstreamError("Official upstream request timed out.", true);

@@ -1,3 +1,4 @@
+import { readBoundedText } from "../../../bounded-json";
 import { NextResponse } from "next/server";
 import {
   buildNoaaRadarManifest,
@@ -22,17 +23,14 @@ const fetchCapabilities = async (): Promise<string> => {
   try {
     const response = await fetch(NOAA_RADAR_CAPABILITIES_URL, {
       cache: "no-store",
+      redirect: "manual",
       signal: controller.signal,
       headers: { Accept: "application/xml,text/xml;q=0.9", "User-Agent": NOAA_USER_AGENT },
     });
     if (!response.ok) throw new RadarUpstreamError(`NOAA nowCOAST returned HTTP ${response.status}.`);
     const contentType = response.headers.get("content-type")?.toLowerCase() ?? "";
     if (!contentType.includes("xml")) throw new RadarUpstreamError("NOAA radar capabilities returned an unexpected media type.");
-    const declaredLength = Number(response.headers.get("content-length") ?? "0");
-    if (declaredLength > MAX_CAPABILITIES_BYTES) throw new RadarUpstreamError("NOAA radar capabilities exceeded the bounded adapter limit.");
-    const body = await response.arrayBuffer();
-    if (body.byteLength > MAX_CAPABILITIES_BYTES) throw new RadarUpstreamError("NOAA radar capabilities exceeded the bounded adapter limit.");
-    const xml = new TextDecoder().decode(body);
+    const xml = await readBoundedText(response, MAX_CAPABILITIES_BYTES);
     if (!xml.includes("WMS_Capabilities") || !xml.includes("conus_base_reflectivity_mosaic")) {
       throw new RadarUpstreamError("NOAA radar capabilities did not match the fixed WMS contract.");
     }

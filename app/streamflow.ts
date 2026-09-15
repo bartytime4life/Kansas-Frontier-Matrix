@@ -1,4 +1,5 @@
 import type { Feature, FeatureCollection, Point } from "geojson";
+import type { OfficialContextPayload } from "./live-context";
 
 export const STREAMFLOW_BUNDLE_FORMAT = "kfm-usgs-streamflow-v1";
 export const STREAMFLOW_FEED = "usgs-streamflow";
@@ -119,6 +120,35 @@ export type StreamflowFrameProperties = Readonly<{
 }>;
 
 export type StreamflowFrame = FeatureCollection<Point, StreamflowFrameProperties>;
+
+/** Each accepted response replaces the map payload, including an empty result. */
+export const streamflowContextPayload = (
+  bundle: StreamflowBundle,
+  frame: StreamflowFrame | null,
+  frameTime: string | null,
+  selectedStationId: string | null,
+): OfficialContextPayload => {
+  const features = frame && frameTime ? frame.features.map((feature) => ({
+    ...feature,
+    properties: {
+      ...feature.properties,
+      selected: feature.properties.stationId === selectedStationId,
+      retrievedAt: bundle.retrievedAt,
+    },
+  })) : [];
+  return {
+    feed: STREAMFLOW_FEED,
+    state: bundle.state,
+    retrievedAt: bundle.retrievedAt,
+    upstreamUpdatedAt: frame && frameTime ? frameTime : null,
+    featureCount: features.length,
+    data: { type: "FeatureCollection", features },
+    source: bundle.source,
+    limitation: bundle.limitation,
+    truncated: bundle.truncated,
+  };
+};
+
 
 export type HydrographSegment = Readonly<{
   path: string;

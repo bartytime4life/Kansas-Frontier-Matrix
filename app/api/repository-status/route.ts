@@ -44,7 +44,7 @@ export async function GET() {
   try {
     const response = await fetch(BRANCH_URL, {
       cache: "no-store",
-      redirect: "error",
+      redirect: "manual",
       headers: {
         accept: "application/vnd.github+json",
         "user-agent": "KansasFrontierMatrixExplorer/1.0",
