@@ -157,7 +157,7 @@ function fixtureStyle() {
   };
 }
 
-function renderedFixture(featureId = "feature:fixture:kansas-001") {
+function renderedFixture(featureId = 0) {
   return {
     id: featureId,
     layer: { id: "layer:fixture:kansas" },
@@ -553,6 +553,94 @@ describe("package-owned MapLibreAdapter", () => {
     runtime.dispose();
   });
 
+  it("projects shared-source string IDs once while preserving caller geometry and original selections", async () => {
+    const style = fixtureStyle();
+    const original = structuredClone(style);
+    const first = fixtureSelection();
+    const second = { ...fixtureSelection("feature:fixture:kansas-002"), layerId: "layer:fixture:second" };
+    style.layers.push({ ...style.layers[0], id: second.layerId });
+    original.layers.push({ ...original.layers[0], id: second.layerId });
+    const runtime = createMapLibreAdapter({ containerId: "fixture-map", style, fixtureSelections: [first, second] });
+    const consume = vi.fn();
+    runtime.subscribeSelection(consume);
+    const pending = runtime.initialize();
+    const map = renderer.instances[0];
+    const projected = map.options.style as ReturnType<typeof fixtureStyle>;
+    expect(style).toEqual(original);
+    expect(projected.sources["source:fixture:kansas"].data.features.map((feature) => feature.id)).toEqual([0, 1]);
+    expect(projected.sources["source:fixture:kansas"].data.features.map((feature) => feature.geometry))
+      .toEqual(original.sources["source:fixture:kansas"].data.features.map((feature) => feature.geometry));
+    map.emit("load");
+    await pending;
+    map.renderedFeatures = [renderedFixture(0)];
+    map.emit("click");
+    map.renderedFeatures = [{ ...renderedFixture(1), layer: { id: second.layerId } }];
+    map.emit("click");
+    expect(consume.mock.calls).toEqual([[first], [second]]);
+    runtime.dispose();
+  });
+
+  it("cannot alias an unbound numeric-ID feature to a reviewed string-ID feature", async () => {
+    const style = fixtureStyle();
+    Object.assign(style.sources["source:fixture:kansas"].data.features[1], {
+      id: 0, properties: { fixture: false, id: fixtureSelection().featureId },
+    });
+    const runtime = createMapLibreAdapter({ containerId: "fixture-map", style, fixtureSelections: [fixtureSelection()] });
+    const consume = vi.fn();
+    runtime.subscribeSelection(consume);
+    const pending = runtime.initialize();
+    const map = renderer.instances[0];
+    map.emit("load");
+    await pending;
+    // The unbound feature is rendered as index 1 even though its authored ID
+    // was the bound feature's projected address 0.
+    map.renderedFeatures = [renderedFixture(1)];
+    map.emit("click");
+    map.renderedFeatures = [{ ...renderedFixture(), id: "0" }];
+    map.emit("click");
+    expect(consume).not.toHaveBeenCalled();
+    map.renderedFeatures = [renderedFixture(0)];
+    map.emit("click");
+    expect(consume).toHaveBeenCalledExactlyOnceWith(fixtureSelection());
+    runtime.dispose();
+  });
+
+  it("maps a single GeoJSON Feature without altering the authored ID", async () => {
+    const style = fixtureStyle();
+    const feature = style.sources["source:fixture:kansas"].data.features[0];
+    const singleFeatureStyle = {
+      ...style,
+      sources: { "source:fixture:kansas": { type: "geojson" as const, data: feature } },
+    };
+    const runtime = createMapLibreAdapter({ containerId: "fixture-map", style: singleFeatureStyle, fixtureSelections: [fixtureSelection()] });
+    const consume = vi.fn();
+    runtime.subscribeSelection(consume);
+    const pending = runtime.initialize();
+    const map = renderer.instances[0];
+    map.emit("load");
+    await pending;
+    map.renderedFeatures = [renderedFixture(0)];
+    map.emit("click");
+    expect(feature.id).toBe(fixtureSelection().featureId);
+    expect(consume).toHaveBeenCalledExactlyOnceWith(fixtureSelection());
+    runtime.dispose();
+  });
+
+  it.each(["filter-expression", "legacy-filter", "paint-expression", "sibling-layer", "source-filter"])(
+    "rejects ID-dependent %s before renderer acquisition", (kind) => {
+      const style = fixtureStyle();
+      const filter = ["==", ["id"], fixtureSelection().featureId];
+      if (kind === "filter-expression") Object.assign(style.layers[0], { filter });
+      if (kind === "legacy-filter") Object.assign(style.layers[0], { filter: ["==", "$id", fixtureSelection().featureId] });
+      if (kind === "paint-expression") Object.assign(style.layers[0], { paint: { "circle-radius": ["case", filter, 10, 2] } });
+      if (kind === "sibling-layer") style.layers.push({ ...style.layers[0], id: "unbound-sibling", ...{ filter } });
+      if (kind === "source-filter") Object.assign(style.sources["source:fixture:kansas"], { filter });
+      expect(() => createMapLibreAdapter({ containerId: "fixture-map", style, fixtureSelections: [fixtureSelection()] }))
+        .toThrow(expect.objectContaining({ code: "MAP_RUNTIME_SELECTION_INVALID" }));
+      expect(renderer.instances).toHaveLength(0);
+    },
+  );
+
   it.each(["unknown-id", "unknown-layer", "unknown-source", "ambiguous", "empty", "excessive"])(
     "does not emit selection for %s hits", async (kind) => {
       const runtime = createMapLibreAdapter({
@@ -567,7 +655,7 @@ describe("package-owned MapLibreAdapter", () => {
       await pending;
       map.renderedFeatures = kind === "empty" ? [] : kind === "excessive"
         ? Array.from({ length: 129 }, () => renderedFixture()) : kind === "ambiguous"
-        ? [renderedFixture(), renderedFixture("feature:fixture:kansas-002")]
+        ? [renderedFixture(), renderedFixture(1)]
         : [{ ...renderedFixture(), ...(kind === "unknown-id" ? { id: "feature:unknown" }
           : kind === "unknown-layer" ? { layer: { id: "layer:unknown" } }
             : { source: "source:unknown" }) }];

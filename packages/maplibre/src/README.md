@@ -2,7 +2,7 @@
 doc_id: kfm://doc/packages-maplibre-src-readme
 title: packages/maplibre/src/ — MapLibre Source Envelope and Renderer-Adapter Placement Boundary
 type: readme
-version: v1.7
+version: v1.8
 status: draft
 owners: OWNER_TBD — Package steward · MapLibre adapter steward · Map-runtime steward · UI steward · Governed API steward · Contract steward · Schema steward · Policy steward · Security steward · Privacy/sensitivity reviewer · Dependency steward · Validation steward · Release steward · CI steward · Docs steward
 created: 2026-08-23
@@ -140,6 +140,15 @@ Bindings are copied and frozen when the adapter is constructed. Sources using
 `promoteId`, generated IDs or clustering are rejected because their rendered
 IDs do not preserve the reviewed literal GeoJSON feature identity.
 
+After validating every authored binding, the adapter assigns source-local
+numeric addresses to **all** features in each bound source's private cloned
+style. This avoids the string-ID loss observed in actual MapLibre GeoJSON
+tiling and prevents an unbound feature's original numeric ID from colliding
+with an approved binding. Sources are normalized once even when shared by
+several layers. ID-dependent source filters, layer filters, paint and layout
+are rejected because address projection would change their meaning. The
+caller-owned style, geometry and emitted KFM feature identity remain unchanged.
+
 Clicks query only bound layers and accept at most 128 hits. One unambiguous
 bound identity emits the copied KFM selection through `subscribeSelection`.
 Repeated hits for that identity emit once. Unknown, empty, excessive or
@@ -154,7 +163,29 @@ resource rejection remains in force. An explicit retry after `ERROR` removes
 the previous renderer and subscriptions before constructing its replacement. The
 [package adapter tests](../tests/maplibre-adapter.test.ts) use a fake renderer;
 their result does not establish browser hit testing, accessibility, API or
-Evidence Drawer integration, source admission, deployment or publication.
+Evidence Drawer integration, source admission, deployment or publication. The
+separate browser fixture below exercises a bounded local composition.
+
+The [synthetic Atlas browser fixture](../../../apps/explorer-web/tests/browser/synthetic-atlas-map.fixture.ts)
+uses the unchanged, digest-pinned Kansas carrier and promotion reference plus
+an [existing-schema fixture EvidenceBundle](../../../fixtures/contracts/v1/evidence/evidence_bundle/valid/valid_3.json).
+Its admission, review, freshness and release values are explicitly simulated
+test inputs; the original carrier remains `FIXTURE`. The real canvas passes
+only the existing KFM selection through the app's admission and evidence-subset
+guards to the Evidence Drawer. The keyboard text selector uses that same
+immutable selection, admission gate and resolver; it does not emit a renderer
+event. Negative scenarios cover no results, stale evidence, policy denial and
+resolver error, with no supported references or claims exposed. Browser
+requests outside the local fixture origin are aborted and treated as failures.
+
+The [browser specification](../../../apps/explorer-web/tests/browser/synthetic-atlas-map.spec.ts)
+also checks camera/canvas preservation, repeated selection, disposal, local
+worker use, keyboard focus entry and return, reduced motion and 200% text.
+These checks do not establish a live API, canonical Drawer payload adoption,
+production accessibility, governed release acceptance or Site integration.
+Exact execution results are recorded in the
+[generated browser follow-up receipt](../../../data/receipts/generated/genrec-synthetic-atlas-browser-proof-20260915.json);
+the original selection receipt remains the historical `11ed1059` checkpoint.
 
 Rollback removes the optional binding implementation and tests together.
 Existing callers omit the option and require no migration. The older status

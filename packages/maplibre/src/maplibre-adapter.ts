@@ -81,7 +81,17 @@ function cloneSafeInlineStyle(
 type FixtureSelectionBinding = Readonly<{
   selection: MapFeatureSelection;
   sourceId: string;
+  rendererFeatureId: number;
 }>;
+
+function dependsOnFeatureId(value: unknown): boolean {
+  if (value === "$id") return true;
+  if (Array.isArray(value)) {
+    return value[0] === "id" || value.some(dependsOnFeatureId);
+  }
+  return typeof value === "object" && value !== null &&
+    Object.values(value).some(dependsOnFeatureId);
+}
 
 function fixtureSelectionBindings(
   selections: readonly MapFeatureSelection[] | undefined,
@@ -99,7 +109,10 @@ function fixtureSelectionBindings(
   }
   const keys = new Set<string>();
   const ids = new Set<string>();
-  return Object.freeze(selections.map((input) => {
+  const rendererSources = new Map<string, { id?: string | number }[]>();
+  // Resolve every binding against the original IDs before changing the
+  // package-owned clone. Several layers can share the same inline source.
+  const bindings = selections.map((input) => {
     const selection = freezeMapFeatureSelection(input);
     const key = JSON.stringify([selection.layerId, selection.featureId]);
     if (keys.has(key) || ids.has(selection.selectionId)) return invalid();
@@ -125,8 +138,26 @@ function fixtureSelectionBindings(
       feature.id === selection.featureId,
     );
     if (matches.length !== 1 || matches[0].properties?.fixture !== true) return invalid();
-    return Object.freeze({ selection, sourceId });
-  }));
+    rendererSources.set(sourceId, features);
+    return Object.freeze({ selection, sourceId, rendererFeatureId: features.indexOf(matches[0]) });
+  });
+  // GeoJSON tiling does not retain arbitrary string IDs. Use unique numeric
+  // addresses only inside the cloned renderer projection, including unbound
+  // features so none can alias an approved binding. Original KFM identities
+  // and evidence references stay in the immutable binding, never properties.
+  for (const [sourceId, features] of rendererSources) {
+    // ID-dependent styling/filtering would change meaning after projection.
+    // Keep that unsupported input fail-closed, including unbound sibling
+    // layers that share this source.
+    const source = style.sources[sourceId];
+    if (source.type !== "geojson" || dependsOnFeatureId(source.filter)) return invalid();
+    for (const layer of style.layers) {
+      if (!("source" in layer) || layer.source !== sourceId) continue;
+      if (dependsOnFeatureId(["filter" in layer ? layer.filter : undefined, layer.paint, layer.layout])) return invalid();
+    }
+    features.forEach((feature, index) => { feature.id = index; });
+  }
+  return Object.freeze(bindings);
 }
 
 function supportsWebGL2(): boolean {
@@ -330,7 +361,7 @@ export class MapLibreAdapter implements MapRuntimePort {
             for (const feature of features) {
               const binding = this.fixtureBindings.find((candidate) =>
                 candidate.selection.layerId === feature.layer.id &&
-                candidate.selection.featureId === feature.id &&
+                candidate.rendererFeatureId === feature.id &&
                 candidate.sourceId === feature.source,
               );
               // Unknown or ambiguous hits must not fall through to a supported
