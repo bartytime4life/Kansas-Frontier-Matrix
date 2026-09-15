@@ -45,7 +45,7 @@ TypeScript-transpile regression checks.
 | Authoritative host | OpenAI Sites/Vinext; [issue #4232](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4232) records the adapter decision |
 | Vercel boundary | [`vercel.json`](./vercel.json) disables automatic Git deployment; Vercel remains non-authoritative for this app |
 | Current source and identity | [Sites source alignment](./docs/sites-source-alignment.md); the older replacement handoff is historical |
-| Hosted version snapshot | Version 37 succeeded; source tree equals the existing GitHub Site-source mirror at the 2026-09-15 readback; monorepo runtime parity remains `HOLD` |
+| Hosted version and source evidence | [Current readback and historical checkpoints](./docs/sites-source-alignment.md#current-v40-readback); monorepo runtime parity remains `HOLD` |
 
 The staged 2026-09-03 replacement ZIP is an external, digest-bound Sites execution
 input. It is not the canonical repository source and must not be copied over this
@@ -71,8 +71,9 @@ accepted workspace package root, following the same renderer-neutral pattern as
 `explorer-web`; the child manifest acquires no renderer or internal package by
 an external or `file:` dependency. Styles, sources, layers, workers, hit
 testing, and screen measurement remain held pending a dependency-closed
-consumer migration. D1 and R2 are intentionally unbound in the current
-deployment.
+consumer migration. D1 and R2 are intentionally unbound in this monorepo
+manifest. The existing Site has separate live bindings documented in the
+[source-alignment readback](./docs/sites-source-alignment.md#current-v40-readback).
 
 ## Prerequisites
 

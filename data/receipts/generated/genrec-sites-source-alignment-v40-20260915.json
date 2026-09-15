@@ -1,0 +1,100 @@
+{
+  "receipt_id": "genrec-sites-source-alignment-v40-20260915",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/kansas-frontier-matrix-explorer/README.md",
+    "apps/kansas-frontier-matrix-explorer/docs/sites-source-alignment.md"
+  ],
+  "artifact_hashes": {
+    "apps/kansas-frontier-matrix-explorer/README.md": "sha256:e72be99b11fdb441f9cd07511748d94902e636cf812d1beaa5f048da945dbd6f",
+    "apps/kansas-frontier-matrix-explorer/docs/sites-source-alignment.md": "sha256:2f07fd9fe6f915deb455ee53c6473cae0b839af9bf4b6f733573cefac0ce6160"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "UNKNOWN; exact serving model version not exposed"
+  },
+  "prompt_or_contract": "sha256:8664fef66ce1b44d7d35d790fc4fb12037c3d64531f2885ee7d8cd90b61bd475",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local repository validation",
+      "GitHub connector",
+      "Sites connector",
+      "Google Drive connector",
+      "Notion connector"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/b18b7276faa3cdad15f2ed34270b6640559bdf27",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/c4e5ebe54cba9d7ca9bbee108b442bdf68763f58",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/c7858acabfca7b184cd0dc89fa784cce3c57e27c",
+      "sites:appgprj_6aa0b1c41bc08191bfd86003920f1631~appgver_3d935d1123408191bf9743d174a9b7b9"
+    ],
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
+    ]
+  },
+  "truth_labels": {
+    "apps/kansas-frontier-matrix-explorer/README.md": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/docs/sites-source-alignment.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "source-mirror-complete-tree-parity",
+      "outcome": "PASS",
+      "reason": "Native immutable-tree checker compares Sites a4181a42a0a7c02f8e7d837242025f13cbf9a861 and existing mirror c4e5ebe54cba9d7ca9bbee108b442bdf68763f58: identical tree 57af63be95a0322dac06b9872df82e5e790d48f9, 136 files, current project. Mirror already exact; no mirror write."
+    },
+    {
+      "gate": "identity-source-receipt-build-wrapper-tests",
+      "outcome": "PASS",
+      "reason": "40 Node native tests passed under Node 24.19.0. This is outside declared Node 22 engine range; supported-runtime acceptance remains unproved."
+    },
+    {
+      "gate": "archive-byte-parity",
+      "outcome": "SKIPPED",
+      "reason": "Sites reports TAR content identity sha256:f57ec9072b284170d8afc03378ecc0f74d2d7cb54b4514ccbe688f9816d46b29, 61 files and 11192320 bytes. Local candidate compressed and expanded byte hashes differ. Matching counts/size do not prove equivalence; independent archive verification remains open."
+    },
+    {
+      "gate": "production-build-browser-rollback-review",
+      "outcome": "SKIPPED",
+      "reason": "No new candidate, production browser exercise, restored version, installed supported Node 22 build, hosted exact-head CI or independent review claimed. #4024 remains branch-only."
+    },
+    {
+      "gate": "site-v40-resilience-and-map-connection-tests",
+      "outcome": "PASS",
+      "reason": "11 existing tests passed: corrupted saved workspaces, iframe history guard, constrained rendering, visible error surfaces, parent-relative layout, source traceability, missing values and county baseline. Node 24.19.0; code-level regression only, not production browser proof."
+    },
+    {
+      "gate": "scoped-links-and-stale-scan",
+      "outcome": "PASS",
+      "reason": "Native local link/anchor checker passes two changed documents; advisory stale scanner returns zero findings. External links classified, not fetched by this scanner."
+    },
+    {
+      "gate": "registry-backed-document-metadata-and-graph",
+      "outcome": "FAIL",
+      "reason": "Metadata command reports 7 registry parser failures and document-graph exits 2 ERROR. Identical failures reproduce on untouched main b18b7276; registry blob unmodified. Separate PyYAML/schema/ADR-index checks pass. Do not label docs suite green."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-main",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/b18b7276faa3cdad15f2ed34270b6640559bdf27"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-15T17:28:25.730147Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "notes": "Currentness refresh of existing alignment branch c7858ac, merged with current main b18b7276 without conflicts before this edit. Preserve original v37 generated receipt byte-for-byte as historical. Current source parity confirmed; archive identity is platform-reported, not independent local byte parity. Current v40 and prior v39 deployment succeeded as read back, restoration untested. Monorepo hosting ID was already corrected on this branch; d1/r2 remain null while live source declares DB/BUCKET. Zero runtime rows, object payloads, secrets or new source admission copied. README points to one current status source; historical v37 section retained. Responsibility: apps/ local identity handoff and data/ generated authoring accountability, per ADR-0029. No main push, PR lifecycle, Site mutation, deployment, release, promotion, publication, settings, topology baseline or frozen catalog modification. Roll back new currentness via follow-up/revert while retaining generated process receipts. Original project replacement authorization UNKNOWN. Independent review pending."
+}

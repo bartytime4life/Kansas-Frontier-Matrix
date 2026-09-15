@@ -1,6 +1,71 @@
 # Current Site identity and source alignment
 
-**2026-09-15 UTC — Site mirror aligned; monorepo integration held.**
+## Current v40 readback
+
+**CONFIRMED at 2026-09-15T17:26:23.271Z; source parity only.** This section supersedes
+older present-tense version, mirror, base, archive and recovery-candidate claims.
+The v37 checkpoint below and its original generated receipt remain historical.
+
+| Surface | Observed identity |
+|---|---|
+| Canonical monorepo base / tree | `b18b7276faa3cdad15f2ed34270b6640559bdf27` / `8265b7a9afef5a515be12b53a47768d7acf3ddf7` |
+| Existing project / audience | `appgprj_6aa0b1c41bc08191bfd86003920f1631`; custom owner-only, access revision 1 |
+| Slug / URL | `kansas-frontier-matrix-explorer` / <https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site> |
+| Saved version | `40`; `appgprj_6aa0b1c41bc08191bfd86003920f1631~appgver_3d935d1123408191bf9743d174a9b7b9` |
+| Sites source | `a4181a42a0a7c02f8e7d837242025f13cbf9a861` |
+| Existing mirror | `agent/kfm-site-source-sync-20260912` at `c4e5ebe54cba9d7ca9bbee108b442bdf68763f58` |
+| Equal complete source tree | `57af63be95a0322dac06b9872df82e5e790d48f9`; 136 tracked files |
+| Saved archive, platform readback | TAR; 61 files; 11,192,320 bytes; `sha256:f57ec9072b284170d8afc03378ecc0f74d2d7cb54b4514ccbe688f9816d46b29` |
+| Deployment readback | `appgdep_6aa9777b19a88191bc0865342215577e`; succeeded at `2026-09-15T16:52:19.838857Z`; environment revision 1 |
+| Immediately prior saved version | `39`; `appgprj_6aa0b1c41bc08191bfd86003920f1631~appgver_876c0d8d8ed48191b6872f6d1028f6ea` |
+| Prior source / archive | `a498d70ea71f4dca68fe15698fb1d582659626bb`; `sha256:2c16720de9b848ece16f6ca008c40c201ae9a1024ca943c1c00f7c06e49de110`; 57 files, 11,161,600 bytes |
+| Prior deployment | `appgdep_6aa96e6103588191bfbe9dbc69cfe629`; succeeded at `2026-09-15T16:13:12.454404Z` |
+| Storage readback | D1 `DB`, tables `data_submissions` and `data_submission_reviews`; source declares R2 `BUCKET`; no rows or objects exported |
+
+The existing mirror already matches v40; this convergence run makes no mirror
+write. Its parent chain retains v39 `3d83dcaf5920bb97e849145f9e04a25bf9a87d6a`
+and v38 `3ce5730c619c0d6ad12da46ab519f807a2bee855`. The immutable-tree checker
+passes for all 136 paths. Source files and deployment-package files are distinct
+inventories. The archive digest above is **platform-reported**, not an independently
+verified TAR-byte hash. A local candidate has matching expanded size/file count
+but different byte hashes; archive equivalence remains **NEEDS VERIFICATION**.
+Version 39 is an available recovery candidate, not proof of rehearsed restoration.
+
+Against the pinned monorepo app's 93 tracked files, 52 relative paths are shared:
+21 identical and 31 different; 84 are Site-only and 41 monorepo-only. Whole-tree
+replacement would discard monorepo-only safeguards. Retain the two existing
+application boundaries and accepted package renderer seam. ADR-0005's proposed
+canonical-shell choice is not accepted by this comparison. Identity correction
+keeps monorepo D1/R2 null; it does not activate the Site's intake implementation.
+Source-controlled examples, context metadata and schema/migrations require
+separate rights, sensitivity, lifecycle and consumer disposition before import.
+
+Repeat source comparison from this application directory:
+
+```bash
+node scripts/verify-sites-source-alignment.mjs /absolute/site-checkout a4181a42a0a7c02f8e7d837242025f13cbf9a861 /absolute/mirror-checkout c4e5ebe54cba9d7ca9bbee108b442bdf68763f58
+```
+
+The current run passes 40 focused source-parity, identity, receipt and build-wrapper
+checks under Node 24.19.0. This runtime is outside the repository's declared Node
+22 range; supported-runtime build/browser acceptance remains open. No production
+build or browser proof is inferred. Ruleset 15484585 still has no required-status-
+check rule, and no open PR was returned. #4024 remains branch-only; #4228 Stage 1B
+HOLD, Stage 2 unauthorized, #3366 and #3396 acceptance remain open.
+
+The fresh authoring receipt is
+[`genrec-sites-source-alignment-v40-20260915.json`](../../../data/receipts/generated/genrec-sites-source-alignment-v40-20260915.json).
+Correction is a new versioned commit on the existing alignment branch. The original
+v37 receipt is unchanged; its claims must be assessed against its historical
+artifact revision, not current working files. No Site version, audience, binding,
+source, deployment, repository main, PR lifecycle, release, promotion or publication
+was changed by this refresh.
+
+## Historical v37 checkpoint
+
+Everything below records the earlier v37 execution scope, not current Site state.
+
+**Historical 2026-09-15 UTC — Site mirror aligned; monorepo integration held.**
 
 The owner asked to align the existing Site and GitHub repository. This change
 records the observed current Site as this application's target, advances the
