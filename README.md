@@ -355,8 +355,60 @@ into inferred facts.
   deploy a version, or publish the Site.
 - `/api/qwen` remains unavailable until a server-reachable endpoint is
   configured. No hosted Qwen variables are currently required for the map.
-- D1 and R2 remain unbound; reports, stories, places, and investigation
-  workspaces are device-local drafts.
+- The hosting manifest declares existing D1 `DB` and R2 `BUCKET` bindings for
+  the intake capability. Reports, stories, places, and investigation workspaces
+  remain device-local drafts; those bindings do not make them server-persisted.
+
+## Security and progress checkpoint — 15 September 2026
+
+The repository briefing is pinned to `main@32953ec3b662dba14546e224554c9621b72268de`.
+It distinguishes the merged Atlas carrier and ADR repair from the existing
+receipt/alignment branches, open milestone acceptance, missing strict merge-check
+enforcement, and the next same-candidate evidence/API/Explorer/recovery goal.
+Older feature cards retain their historical source links. The supplied Atlas
+seed cards and MapLibre/pipeline manuals are planning inputs, not runtime proof.
+
+The Qwen route rejects non-object JSON, unknown request keys, malformed context,
+questions longer than 1200 characters, cross-origin requests and non-JSON content.
+It bounds actual streamed request bytes at 32 KiB and upstream JSON at 64 KiB,
+disables redirects, and withholds upstream error details. Owner-configured model
+URLs must use HTTPS, or HTTP on local loopback, without URL credentials, query
+strings or fragments. The existing 25-second upstream timeout remains. This is
+transport hardening, not evidence resolution, model-registry admission, a global
+rate limit or a verified Qwen/Focus transaction. No hosted model setting is
+changed; tests use mocked responses only. Repository status responses now enforce
+their 512 KiB limit while streaming, rather than after buffering the entire body.
+Canonical social metadata uses the registered Site origin, not forwarded headers.
+
+The UI repair supplies the missing NASA FIRMS source handoff, preserves domain ID
+literal types, initializes the contribution source from server-validated routing
+input, discards superseded/aborted submission-list responses, and keeps calendar
+updates with the actions that change dates. Context loading messages are keyed
+by the requested date so an earlier response is not shown as the current status.
+Existing imagery/unused-variable lint warnings and full-baseline reload guidance
+remain visible; they are not waived or reported as errors.
+
+React, React DOM and RSC are pinned to 19.2.8 for
+[GHSA-wx67-qw84-cm4g](https://github.com/advisories/GHSA-wx67-qw84-cm4g).
+Scoped dependency overrides install patched bytes: `vinext -> image-size@2.0.4`,
+`miniflare -> sharp@0.35.4`, and `@esbuild-kit/core-utils -> esbuild@0.25.12`
+([esbuild advisory](https://github.com/advisories/GHSA-67mh-4wv8-2f99)). The latter
+crosses an esbuild minor boundary and requires the Drizzle generation smoke.
+Other vulnerable transitive packages are updated within their existing ranges.
+These are package replacements, not audit suppressions. Revisit overrides when
+upstream dependency ranges incorporate these fixes. Retain the existing Vinext,
+Cloudflare plugin, Wrangler, Drizzle and MapLibre direct versions.
+
+Placement follows the established standalone Site source surface: runtime helpers
+under `app/`, regression tests under `tests/`, and this operational explanation in
+`README.md`. Its existing GitHub source mirror is not the monorepo root. ADR-0029
+and the adopted Directory Rules keep app implementation separate from canonical
+contracts, policy and lifecycle proofs. No parallel authority root is introduced.
+
+Rollback is a coherent source/dependency revert to the prior v37 source
+`1cdabb970412b9d67270e04205918bb394a8318f`, followed by rebuilding and an authorized
+same-Site deployment. The older archive is a recovery candidate, not a rehearsed
+rollback, and restoring it would reintroduce the addressed security findings.
 
 ## Prerequisites
 

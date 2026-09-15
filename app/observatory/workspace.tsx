@@ -93,7 +93,7 @@ export default function EventObservatory() {
   const [selectedTrack, setSelectedTrack] = useState<TrackId>("radar"), [base, setBase] = useState<"reference" | "satellite">("reference"), [baseDay, setBaseDay] = useState<string | null>(null), [copied, setCopied] = useState(false);
   const [sourceErrors, setSourceErrors] = useState<Record<string, string>>({});
   const [contextData, setContextData] = useState<Partial<Record<ContextTrack, ContextRecord>>>({});
-  const [contextMessages, setContextMessages] = useState<Partial<Record<ContextTrack, string>>>({});
+  const [contextMessages, setContextMessages] = useState<Partial<Record<ContextTrack, { date: string; message: string }>>>({});
   const [countyEdition, setCountyEdition] = useState("2020");
   const [inspectedFeature, setInspectedFeature] = useState<{ track: TrackId; properties: Record<string, unknown> } | null>(null);
   const [riverResolution, setRiverResolution] = useState<"continuous" | "daily">("continuous");
@@ -107,6 +107,13 @@ export default function EventObservatory() {
   const [calendarAnchor, setCalendarAnchor] = useState(currentUtcDay);
   const [calendarLedger, setCalendarLedger] = useState<Record<string, ArchiveDayLedger>>({});
   const [calendarNow, setCalendarNow] = useState(() => Date.now());
+  const updateStart = useCallback((value: string) => {
+    setStart(value);
+    if (eventDayHours(value.slice(0, 10)).length) setCalendarAnchor(value.slice(0, 10));
+  }, []);
+  const updateStation = useCallback((value: string) => {
+    setStation(value); setRiverCoverage(null); setCoverageMessage(""); setCalendarLedger({});
+  }, []);
   const frames = useMemo(() => {
     if (!manifest) return [];
     const earthquakeTimes = contextData.earthquakes?.date === manifest.start.slice(0, 10)
@@ -179,10 +186,10 @@ export default function EventObservatory() {
     queueMicrotask(() => {
       if (disposed) return;
       const p = new URLSearchParams(window.location.search);
-      if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(p.get("start") ?? "")) { setStart(p.get("start")!); setCalendarAnchor(p.get("start")!.slice(0,10)); followTodayRef.current = false; setFollowToday(false); }
+      if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(p.get("start") ?? "")) { updateStart(p.get("start")!); setCalendarAnchor(p.get("start")!.slice(0,10)); followTodayRef.current = false; setFollowToday(false); }
       if ([1,6,24].includes(Number(p.get("hours")))) setHours(Number(p.get("hours")));
-      if (/^USGS-\d{8,15}$/.test(p.get("station") ?? "")) setStation(p.get("station")!);
-      if (p.has("station") && p.get("station") === "") setStation("");
+      if (/^USGS-\d{8,15}$/.test(p.get("station") ?? "")) updateStation(p.get("station")!);
+      if (p.has("station") && p.get("station") === "") updateStation("");
       if (p.has("layers")) { const ids = p.get("layers")!.split(","); setVisible(Object.fromEntries(TRACKS.map((t) => [t.id, ids.includes(t.id)])) as Record<TrackId,boolean>); }
       if (p.get("base") === "satellite") setBase("satellite");
       if (p.get("resolution") === "daily") setRiverResolution("daily");
@@ -192,9 +199,8 @@ export default function EventObservatory() {
       if (p.has("opacity")) { const values = p.get("opacity")!.split(",").map(Number); if (values.length === TRACKS.length && values.every((v) => Number.isFinite(v) && v >= 0 && v <= 1)) setOpacity(Object.fromEntries(TRACKS.map((t,i) => [t.id,values[i]])) as Record<TrackId,number>); }
     });
     return () => { disposed = true; media.removeEventListener("change", change); document.removeEventListener("visibilitychange", stop); window.removeEventListener("keydown", key); };
-  }, []);
+  }, [updateStart, updateStation]);
 
-  useEffect(() => { if (eventDayHours(start.slice(0, 10)).length) setCalendarAnchor(start.slice(0, 10)); }, [start]);
   useEffect(() => { const id = requestAnimationFrame(() => mapRef.current?.resize()); return () => cancelAnimationFrame(id); }, [layersOpen, detailsOpen, chartsOpen, scienceOpen]);
   useEffect(() => {
     scienceProbeActiveRef.current = scienceProbeActive;
@@ -220,7 +226,6 @@ export default function EventObservatory() {
 
   useEffect(() => {
     const controller = new AbortController();
-    setRiverCoverage(null); setCoverageMessage(""); setCalendarLedger({});
     if (!/^USGS-\d{8,15}$/.test(station)) return () => controller.abort();
     const timer = window.setTimeout(async () => {
       setCoverageMessage("Checking station record…");
@@ -241,7 +246,6 @@ export default function EventObservatory() {
       const date = id === "counties" ? countyEdition : day;
       if (!visible[id] || !date || contextData[id]?.date === date) continue;
       const path = id === "counties" ? `/api/event-atlas/counties?edition=${date}` : id === "weather" ? `/api/event-atlas/weather?day=${date}` : `/api/live-context?feed=${id === "shake" ? "raspberry-shake-stations" : "usgs-earthquakes"}&day=${date}`;
-      setContextMessages((current) => ({ ...current, [id]: "Loading source records…" }));
       void fetch(path, { signal: controller.signal }).then(async (response) => {
         const data = await response.json();
         if (!response.ok || data.data?.type !== "FeatureCollection" || !Array.isArray(data.data.features)) throw new Error(data.message ?? data.error ?? "Source response unavailable");
@@ -249,8 +253,8 @@ export default function EventObservatory() {
         sourceFailures.current.delete(`ea-${id}-data`);
         const message = data.limitation ?? data.message ?? `${data.data.features.length} records loaded`;
         setContextData((current) => ({ ...current, [id]: { data: data.data, date, message, source: data.source } }));
-        setContextMessages((current) => ({ ...current, [id]: `${data.data.features.length} records · ${date}` }));
-      }).catch((error) => { if (!controller.signal.aborted) setContextMessages((current) => ({ ...current, [id]: `Unavailable: ${error.message}` })); });
+        setContextMessages((current) => ({ ...current, [id]: { date, message: `${data.data.features.length} records · ${date}` } }));
+      }).catch((error) => { if (!controller.signal.aborted) setContextMessages((current) => ({ ...current, [id]: { date, message: `Unavailable: ${error.message}` } })); });
     }
     return () => controller.abort();
     // Cached records are keyed by their provider date, not by playback position.
@@ -397,10 +401,10 @@ export default function EventObservatory() {
   }, [start, hours, station, riverResolution, hideEventLayers]);
 
   const loadToday = useCallback(() => {
-    const today = currentDayStart(); setStart(today); setCalendarAnchor(today.slice(0,10)); setHours(24);
+    const today = currentDayStart(); updateStart(today); setCalendarAnchor(today.slice(0,10)); setHours(24);
     setFollowToday(true); followTodayRef.current = true;
     void load(today, 24, latestSafeCursor(), riverResolution, true);
-  }, [load, riverResolution]);
+  }, [load, riverResolution, updateStart]);
 
   useEffect(() => {
     if (!mapReady || initialLoad.current) return;
@@ -449,7 +453,7 @@ export default function EventObservatory() {
           if (map.getSource("ea-radar-image")) map.removeSource("ea-radar-image");
           sourceFailures.current.delete("ea-radar-image");
           map.addSource("ea-radar-image", { type: "image", url: imageUrl, coordinates: [[EVENT_BOUNDS[0], EVENT_BOUNDS[3]], [EVENT_BOUNDS[2], EVENT_BOUNDS[3]], [EVENT_BOUNDS[2], EVENT_BOUNDS[1]], [EVENT_BOUNDS[0], EVENT_BOUNDS[1]]] });
-          map.addLayer({ id: "ea-radar", type: "raster", source: "ea-radar-image", layout: { visibility: "none" }, paint: { "raster-opacity": opacity.radar, "raster-fade-duration": 0 } });
+          map.addLayer({ id: "ea-radar", type: "raster", source: "ea-radar-image", layout: { visibility: "none" }, paint: { "raster-opacity": opacityRef.current.radar, "raster-fade-duration": 0 } });
           radarSourceTime.current = scan?.time ?? null;
       }
       updateGeoJSON(map.getSource("ea-smoke") as GeoJSONSource, smokeAt(manifest.smoke.data, requested));
@@ -554,7 +558,11 @@ export default function EventObservatory() {
     if (sourceErrors[`ea-${id}`]) return "SOURCE TILES PARTIAL / FAILED";
     if (id === "radar") return activeRadar ? `${activeRadar.product.toUpperCase()} · ${activeRadar.time.slice(11,16)} UTC` : "Gap · no supported mosaic";
     if (id === "smoke") return `${activeSmoke.features.length} supported polygons${manifest.smoke.gaps.length ? " · partial archive" : ""}`;
-    if (["counties", "weather", "earthquakes", "shake"].includes(id)) return contextMessages[id as ContextTrack] ?? "Enable to load source records";
+    if (["counties", "weather", "earthquakes", "shake"].includes(id)) {
+      const date = id === "counties" ? countyEdition : (requested ?? manifest.start).slice(0, 10);
+      const status = contextMessages[id as ContextTrack];
+      return status?.date === date ? status.message : visible[id] ? "Loading source records…" : "Enable to load source records";
+    }
     if (id === "river") return gauge && !gauge.missing ? `${gauge.displayValue}${loadedRiverResolution === "daily" ? " · daily mean" : ""}` : river ? "Gap · no supported sample at cursor" : riverMessage;
     if (id === "geology") return "Static geology · edition not confirmed";
     if (id === "resources") return resourceMessage;
@@ -589,7 +597,7 @@ export default function EventObservatory() {
     const target = `${day}T${String(hour).padStart(2, "0")}:00:00.000Z`;
     if (Date.parse(target) >= calendarNow) return;
     const dayStart = `${day}T00:00`;
-    setPlaying(false); setStart(dayStart); setHours(EVENT_MAX_HOURS); setCalendarAnchor(day);
+    setPlaying(false); updateStart(dayStart); setHours(EVENT_MAX_HOURS); setCalendarAnchor(day);
     const isLoadedDay = manifest?.start === `${dayStart}:00.000Z` && hours === EVENT_MAX_HOURS && !loading && riverResolution === loadedRiverResolution && (!station || river?.stations[0]?.stationId === station);
     if (isLoadedDay) {
       setCursor(target);
@@ -647,15 +655,15 @@ export default function EventObservatory() {
       </div></div>
     </section>
     <form className="event-query" onSubmit={(event) => { event.preventDefault(); void load(); }}>
-      <label>Exact start · UTC<input type="datetime-local" value={start} min={`${EVENT_EARLIEST_DAY}T00:00`} max={`${calendarToday}T23:55`} step="300" onChange={(event) => { followTodayRef.current = false; setFollowToday(false); setPlaying(false); setStart(event.target.value); }} required /></label>
+      <label>Exact start · UTC<input type="datetime-local" value={start} min={`${EVENT_EARLIEST_DAY}T00:00`} max={`${calendarToday}T23:55`} step="300" onChange={(event) => { followTodayRef.current = false; setFollowToday(false); setPlaying(false); updateStart(event.target.value); }} required /></label>
       <label>Window<select value={hours} onChange={(event) => { setPlaying(false); setHours(Number(event.target.value)); }}><option value={1}>1 hour</option><option value={6}>6 hours</option><option value={24}>24 hours</option></select></label>
-      <label>USGS station<input value={station} onChange={(event) => { setPlaying(false); setStation(event.target.value); }} pattern="USGS-[0-9]{8,15}" placeholder="USGS-06889000" aria-label="USGS station identifier for historical discharge" /></label>
+      <label>USGS station<input value={station} onChange={(event) => { setPlaying(false); updateStation(event.target.value); }} pattern="USGS-[0-9]{8,15}" placeholder="USGS-06889000" aria-label="USGS station identifier for historical discharge" /></label>
       <label>River records<select value={riverResolution} onChange={(event) => { setPlaying(false); setRiverResolution(event.target.value as typeof riverResolution); setCalendarLedger({}); }}><option value="continuous">Continuous samples</option><option value="daily">Daily means · older archive</option></select></label>
       <button className="event-primary" disabled={loading || !mapReady}>{loading ? "Reading archives…" : "Load exact interval"}</button>
-      <button type="button" onClick={() => { const value = new Date(Date.now() - 3_600_000); value.setUTCMinutes(Math.floor(value.getUTCMinutes()/5)*5,0,0); const s = value.toISOString().slice(0,16); setStart(s); setHours(1); void load(s,1); }}>Recent hour</button>
+      <button type="button" onClick={() => { const value = new Date(Date.now() - 3_600_000); value.setUTCMinutes(Math.floor(value.getUTCMinutes()/5)*5,0,0); const s = value.toISOString().slice(0,16); updateStart(s); setHours(1); void load(s,1); }}>Recent hour</button>
       <button type="button" onClick={share} disabled={!committed}>{copied ? "Replay link copied" : "Share replay"}</button>
     </form>
-    <div className="event-record-range"><span>{riverCoverage ? `${riverResolution === "daily" ? "Daily means" : "Continuous"}: ${riverCoverage[riverResolution]?.start.slice(0,10) ?? "no declared record"} → ${riverCoverage[riverResolution]?.end.slice(0,10) ?? "—"}${riverCoverage.partial ? " · partial metadata" : ""}` : coverageMessage || "Choose a station to discover its record"}</span><button type="button" disabled={!riverCoverage?.daily || loading} onClick={() => { const day = riverCoverage?.daily?.start.slice(0,10); if (!day) return; setRiverResolution("daily"); setStart(`${day}T00:00`); setHours(24); void load(`${day}T00:00`,24,undefined,"daily"); }}>Oldest daily record</button><button type="button" disabled={!riverCoverage?.continuous || loading} onClick={() => { const day = riverCoverage?.continuous?.start.slice(0,10); if (!day) return; setRiverResolution("continuous"); setStart(`${day}T00:00`); setHours(24); void load(`${day}T00:00`,24,undefined,"continuous"); }}>Oldest continuous</button><button type="button" disabled={loading} onClick={loadToday}>{followToday ? "Following today · refreshes every 5 min" : "Follow today / latest"}</button></div>
+    <div className="event-record-range"><span>{riverCoverage ? `${riverResolution === "daily" ? "Daily means" : "Continuous"}: ${riverCoverage[riverResolution]?.start.slice(0,10) ?? "no declared record"} → ${riverCoverage[riverResolution]?.end.slice(0,10) ?? "—"}${riverCoverage.partial ? " · partial metadata" : ""}` : coverageMessage || "Choose a station to discover its record"}</span><button type="button" disabled={!riverCoverage?.daily || loading} onClick={() => { const day = riverCoverage?.daily?.start.slice(0,10); if (!day) return; setRiverResolution("daily"); updateStart(`${day}T00:00`); setHours(24); void load(`${day}T00:00`,24,undefined,"daily"); }}>Oldest daily record</button><button type="button" disabled={!riverCoverage?.continuous || loading} onClick={() => { const day = riverCoverage?.continuous?.start.slice(0,10); if (!day) return; setRiverResolution("continuous"); updateStart(`${day}T00:00`); setHours(24); void load(`${day}T00:00`,24,undefined,"continuous"); }}>Oldest continuous</button><button type="button" disabled={loading} onClick={loadToday}>{followToday ? "Following today · refreshes every 5 min" : "Follow today / latest"}</button></div>
     <nav className="event-map-toolbar" aria-label="Map panels"><button type="button" aria-expanded={layersOpen} onClick={() => { setLayersOpen(!layersOpen); setDetailsOpen(false); setCalendarOpen(false); setScienceOpen(false); finishScienceProbe(); }}>Layers · {Object.values(visible).filter(Boolean).length}</button><button type="button" aria-expanded={calendarOpen} aria-controls="archive-calendar" onClick={() => { setCalendarOpen(!calendarOpen); setLayersOpen(false); setDetailsOpen(false); setScienceOpen(false); finishScienceProbe(); }}>Calendar</button><button type="button" onClick={() => { const day = advanceEventDay(selectedCalendarDay, -1); if (day && day >= EVENT_EARLIEST_DAY) selectCalendarSlot(day); }} disabled={selectedCalendarDay <= EVENT_EARLIEST_DAY}>← Day</button><button type="button" onClick={() => selectCalendarSlot(selectedCalendarDay)}>Load full 24 hours</button><button type="button" onClick={() => { const day = advanceEventDay(selectedCalendarDay, 1); if (day && day <= calendarToday) selectCalendarSlot(day); }} disabled={selectedCalendarDay >= calendarToday}>Day →</button><button type="button" aria-expanded={scienceOpen} aria-controls="science-lab" onClick={() => { setScienceOpen(!scienceOpen); setLayersOpen(false); setDetailsOpen(false); setCalendarOpen(false); finishScienceProbe(); }}>Science lab · {SCIENCE_EVENTS.length}</button><span /><button type="button" aria-expanded={chartsOpen} onClick={() => { setChartsOpen(!chartsOpen); setScienceOpen(false); }}>Timeline lanes</button><button type="button" aria-expanded={detailsOpen} onClick={() => { setDetailsOpen(!detailsOpen); setLayersOpen(false); setCalendarOpen(false); setScienceOpen(false); finishScienceProbe(); }}>Sources & quality</button></nav>
     <section className="event-body" data-layers-open={layersOpen} data-details-open={detailsOpen}>
       <aside className="event-mixer" hidden={!layersOpen} aria-label="Animation layer mixer"><div className="event-panel-heading"><strong>Layers & opacity</strong><button type="button" onClick={() => setLayersOpen(false)} aria-label="Close layers">×</button></div><div className="event-section-heading"><span>LAYER MIXER</span><small>Top row draws on top</small></div>
@@ -674,7 +682,7 @@ export default function EventObservatory() {
         <div className="event-map-caption"><span>{base === "satellite" ? baseDay ? `NASA MODIS · acquisition day ${baseDay}${sourceErrors["ea-satellite"] ? " · tiles partial / failed" : ""}` : "No confirmed imagery for this date" : mapMessage}</span><strong>{committed ? timestamp(committed) : "Choose an interval to begin"}</strong><small>{localTimestamp(committed)}</small></div>
         {(loading || buffering) && <div className="event-buffer" role="status">{loading ? "Reading dated source records…" : `Buffering ${requested?.slice(11,19)} UTC · temporal pixels withheld`}</div>}
         {error && <div className="event-error" role="alert">{error}{manifest && <button type="button" onClick={() => { setVisible((current) => ({ ...current, radar: false })); setError(""); }}>Continue without radar</button>}</div>}
-        {!manifest && !loading && <div className="event-intro"><span>THE PAST, IN MOTION</span><h2>Layer an event.<br />See what changed.</h2><p>Choose a date or start with a Kansas archive window. Every layer states the time it actually represents.</p>{PRESETS.map((preset) => <button key={preset.start} type="button" disabled={!mapReady} onClick={() => { setStart(preset.start); setHours(preset.hours); void load(preset.start,preset.hours); }}>{preset.label} <span>↗</span></button>)}</div>}
+        {!manifest && !loading && <div className="event-intro"><span>THE PAST, IN MOTION</span><h2>Layer an event.<br />See what changed.</h2><p>Choose a date or start with a Kansas archive window. Every layer states the time it actually represents.</p>{PRESETS.map((preset) => <button key={preset.start} type="button" disabled={!mapReady} onClick={() => { updateStart(preset.start); setHours(preset.hours); void load(preset.start,preset.hours); }}>{preset.label} <span>↗</span></button>)}</div>}
         <div className="event-map-legend"><span><i style={{background:"#70e0ef"}} />Discharge radius: log-scaled · color: sample trend</span><span><i style={{background:"#dca261"}} />HMS: light → medium → heavy · gray unknown</span><span>Radar colors: source reflectivity · <a href="https://mesonet.agron.iastate.edu/docs/nexrad_composites/" target="_blank" rel="noreferrer">product legend ↗</a></span></div>
         {(scienceProbeActive || scienceProbePoints.length > 0) && <aside className="event-science-probe-readout" role="status" aria-live="polite"><span>DISTANCE / BEARING · {scienceProbePoints.length}/2 POINTS</span><strong>{probeMeasurement ? `${probeMeasurement.miles.toFixed(2)} mi · ${probeMeasurement.kilometers.toFixed(2)} km · ${probeMeasurement.bearing.toFixed(0)}° ${compassPoint(probeMeasurement.bearing)}` : scienceProbeActive ? "Click two map locations" : "Probe paused"}</strong><small>Great-circle screen measurement · approximate, not survey or evidence. A third click starts a new line.</small><div>{scienceProbeActive ? <button type="button" onClick={finishScienceProbe}>Done</button> : <button type="button" onClick={beginScienceProbe}>Edit</button>}<button type="button" onClick={clearScienceProbe}>Clear</button></div></aside>}
       </section>

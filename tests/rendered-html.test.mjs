@@ -10,7 +10,7 @@ test("renders the map-first Kansas explorer shell", async () => {
 
   const response = await worker.fetch(
     new Request("http://localhost/", {
-      headers: { accept: "text/html" },
+      headers: { accept: "text/html", "x-forwarded-host": "untrusted.example", "x-forwarded-proto": "http" },
     }),
     {
       ASSETS: {
@@ -29,13 +29,15 @@ test("renders the map-first Kansas explorer shell", async () => {
     /^text\/html\b/i,
   );
   const html = await response.text();
+  assert.match(html, /https:\/\/kansas-frontier-matrix-explorer\.blackbart-55\.chatgpt\.site\/og-guided\.png/);
+  assert.doesNotMatch(html, /untrusted\.example/);
   assert.match(html, /Kansas Frontier Matrix Explorer/i);
   assert.match(html, /Layer Catalog/i);
   assert.match(html, /MapLibre/i);
   assert.match(html, /Build report/i);
   assert.match(html, /bounded demonstration data/i);
   assert.match(html, /Repository briefing/i);
-  assert.match(html, /main@(?:<!-- -->)?b44494c/i);
+  assert.match(html, /main@(?:<!-- -->)?32953ec/i);
   assert.match(html, /Scenario review/i);
   assert.match(html, /Runtime lab/i);
   assert.match(html, /Source observatory/i);
@@ -480,11 +482,12 @@ test("adds a complete county starter slice and scoped temporal catalog compariso
   assert.match(css, /\.temporal-compare-lab/);
 });
 
-test("uses a site-specific social card and request-host metadata", async () => {
+test("uses the existing social card with canonical registered-origin metadata", async () => {
   const layout = await readFile(new URL("../app/layout.tsx", import.meta.url), "utf8");
   const socialCard = await readFile(new URL("../public/og-guided.png", import.meta.url));
 
-  assert.match(layout, /x-forwarded-host/);
+  assert.doesNotMatch(layout, /x-forwarded-host/);
+  assert.match(layout, /SITE_IDENTITY\.canonicalUrl/);
   assert.match(layout, /new URL\("\/og-guided\.png", metadataBase\)/);
   assert.match(layout, /real MapLibre Kansas vector context/);
   assert.ok(socialCard.byteLength > 100_000);
@@ -609,7 +612,7 @@ test("keeps repository updates pinned and boundary-labeled", async () => {
   const updates = await readFile(new URL("../app/repository-updates.ts", import.meta.url), "utf8");
   const identity = await readFile(new URL("../app/site-identity.ts", import.meta.url), "utf8");
 
-  assert.match(identity, /b44494c1cf0807ed28b606e8a41b255bebdf4ad7/);
+  assert.match(identity, /32953ec3b662dba14546e224554c9621b72268de/);
   assert.match(updates, /SITE_IDENTITY\.repositoryCommit/);
   assert.match(updates, /separate source histories/);
   assert.match(updates, /Local geodata inspection now fails closed on malformed or stale input/);

@@ -32,34 +32,107 @@ export const REPOSITORY_SNAPSHOT = Object.freeze({
   ref: SITE_IDENTITY.repositoryRef,
   commit: SITE_IDENTITY.repositoryCommit,
   shortCommit: SITE_IDENTITY.repositoryCommit.slice(0, 7),
-  inspectedAt: "11 Sep 2026 · live GitHub readback",
+  inspectedAt: "15 Sep 2026 · GitHub and Sites readback",
   counts: Object.freeze({
     knowledgeDomains: 13,
     explorerFeatureFamilies: 38,
     mapFunctions: 20,
     countyPlanningLanes: 105,
-    repositoryUpdates: 18,
+    get repositoryUpdates() { return REPOSITORY_UPDATES.length; },
     transitionBoundaries: 4,
     readinessGates: 7,
   }),
 });
 
-const repoAtSnapshot = `https://github.com/${REPOSITORY_SNAPSHOT.repository}/blob/${REPOSITORY_SNAPSHOT.commit}`;
+// Earlier cards retain their inspected source links; a new main pin cannot upgrade their proof.
+const repoAtSnapshot = `https://github.com/${REPOSITORY_SNAPSHOT.repository}/blob/b44494c1cf0807ed28b606e8a41b255bebdf4ad7`;
 
 export const REPOSITORY_UPDATES: readonly RepositoryUpdate[] = Object.freeze([
   Object.freeze({
     id: "current-main-live-readback",
     area: "Repository control plane",
-    title: "Current main includes the latest packaging integration guardrails",
+    title: "Main includes the synthetic Atlas carrier and repaired ADR index",
     state: "NEEDS VERIFICATION",
     maturity: "PARTIAL",
-    date: "11 Sep 2026",
+    date: "15 Sep 2026",
     summary:
-      "Live GitHub readback pins main at b44494c, the merge of PR #4468 for metadata-only root Python distribution verification and integration guardrails. The 23-commit delta from the prior Site checkpoint touches packaging, CI, and hydrology test paths; no map UI files changed. The Site still performs a separate read-only current-main check when its repository briefing opens.",
+      "Main is pinned to 32953ec3, the merge of PR #4590. The M36 synthetic Atlas carrier and ADR index repair are present. Exact-main workflow readback found 53 successful runs, two failures (validator-suite and contract-object-map-lifecycle), and one skipped APIsec run. The Site also offers a separate read-only current-main lookup.",
     boundary:
       "The GitHub repository and this Site retain separate source histories. A successful currentness check does not synchronize code, prove tree equivalence, admit data, approve a review, deploy a version, or authorize publication.",
     sourceLabel: "Exact current main commit",
     sourceUrl: `https://github.com/${REPOSITORY_SNAPSHOT.repository}/commit/${REPOSITORY_SNAPSHOT.commit}`,
+  }),
+  Object.freeze({
+    "id": "receipt-repair-held",
+    "area": "Validation and security",
+    "title": "Receipt repair is preserved on its existing branch",
+    "state": "CORRECTED",
+    "maturity": "PARTIAL",
+    "summary": "The successor receipt preserves the historical defect and fail-closed validation. Its repair branch is 8d6992f; main still targets the historical failing receipt.",
+    "boundary": "Next goal: review and integrate that existing repair through the permitted delivery path. Hosted branch acceptance and independent review remain open; #3366 is not complete.",
+    "sourceLabel": "Existing receipt repair",
+    "sourceUrl": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/8d6992f1ed7acf9f753e43c194a3d910581c2732",
+    "date": "15 Sep 2026"
+  }),
+  Object.freeze({
+    "id": "site-source-integration",
+    "area": "Site and repository",
+    "title": "Source history is mirrored; application integration remains held",
+    "state": "BOUNDED PROOF",
+    "maturity": "PARTIAL",
+    "summary": "The v37 Site source tree exactly matched the existing GitHub source mirror at e2f513a. The separate c7858ac branch prepares monorepo identity and parity checks. Main still has the legacy project ID.",
+    "boundary": "Next goal: carry reviewed Site changes through the existing mirror and reconcile capabilities, build inputs and recovery proof. A standalone mirror is not a monorepo merge candidate.",
+    "sourceLabel": "Existing alignment branch",
+    "sourceUrl": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/c7858acabfca7b184cd0dc89fa784cce3c57e27c",
+    "date": "15 Sep 2026"
+  }),
+  Object.freeze({
+    "id": "trust-spine-deadline",
+    "area": "Milestone acceptance",
+    "title": "Five trust-spine items retain named acceptance holds",
+    "state": "NEEDS VERIFICATION",
+    "maturity": "PARTIAL",
+    "summary": "Milestone 1 remains due September 17 at 7 p.m. America/Chicago (September 18 at 00:00 UTC). Issues #3359, #3360, #3361, #3363 and #3364 remain open under the recorded named HOLD disposition.",
+    "boundary": "Next goal: obtain current conformance and independent acceptance for each item. Topology Stage 1B remains HOLD and Stage 2 UNAUTHORIZED; successful fixture tests do not close milestones.",
+    "sourceLabel": "Trust-spine deadline",
+    "sourceUrl": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/milestone/1",
+    "date": "15 Sep 2026"
+  }),
+  Object.freeze({
+    "id": "merge-gate-enforcement",
+    "area": "Repository control",
+    "title": "Strict merge-check enforcement remains unproved",
+    "state": "NEEDS VERIFICATION",
+    "maturity": "PARTIAL",
+    "summary": "Ruleset 15484585 is active but has no required_status_checks rule. The authorize-ready-and-merge addition is prepared; incident #4024 remains open.",
+    "boundary": "Next goal: complete fresh owner authorization, enforcement readback and the separate canary decision. This Site cannot change rulesets, PR lifecycle or merge authority.",
+    "sourceLabel": "Repository control incident",
+    "sourceUrl": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024",
+    "date": "15 Sep 2026"
+  }),
+  Object.freeze({
+    "id": "atlas-evidence-goal",
+    "area": "Next product goal",
+    "title": "Connect one synthetic Atlas candidate through evidence and recovery",
+    "state": "NEEDS VERIFICATION",
+    "maturity": "PARTIAL",
+    "summary": "Keep atlas-candidate:synthetic-kansas-proof-v1 as the shared subject across the existing M36 matrix, EvidenceBundle, finite API response, map and text selection, Evidence Drawer and recovery rehearsal. All 13 readiness dimensions retain their recorded PARTIAL or ABSENT state.",
+    "boundary": "Next goal: close one evidence/API gap with zero-network fixtures, then prove Explorer identity and correction/rollback. Keep proof fixtures outside deployable assets; hydrology expansion follows this closure.",
+    "sourceLabel": "M36 evidence matrix and next gap",
+    "sourceUrl": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3396",
+    "date": "15 Sep 2026"
+  }),
+  Object.freeze({
+    "id": "science-pack-next-goal",
+    "area": "Science Pack goals",
+    "title": "Build inspectable investigations from the accepted evidence boundary",
+    "state": "NEEDS VERIFICATION",
+    "maturity": "DOCUMENTED",
+    "summary": "The proposed Science Pack north star supports reproducible place-and-time investigations. The supplied Atlas cards and MapLibre/pipeline manuals guide claim-level provenance, uncertainty, external-context separation and correction; they do not prove implementation.",
+    "boundary": "Next goal after the Atlas proof: choose one rights-cleared, public-safe investigation. Record CRS, units, temporal support, method, uncertainty and rollback before broader 3D, geostatistics or AI interpretation.",
+    "sourceLabel": "Proposed Science Pack README",
+    "sourceUrl": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/32953ec3b662dba14546e224554c9621b72268de/README.md",
+    "date": "15 Sep 2026"
   }),
   Object.freeze({
     id: "local-import-review-hardening",
@@ -69,7 +142,7 @@ export const REPOSITORY_UPDATES: readonly RepositoryUpdate[] = Object.freeze([
     maturity: "IMPLEMENTED",
     date: "31 Aug 2026",
     summary:
-      "Current main integrates the review-hardened local KML and GeoJSON inspector: geometry-type-specific validation, coordinate-range checks, bounded recursion, iterative large-file bounds, inert KML fragment parsing, and inspection-generation tokens that discard stale asynchronous reads.",
+      "The earlier inspected snapshot integrates the review-hardened local KML and GeoJSON inspector: geometry-type-specific validation, coordinate-range checks, bounded recursion, iterative large-file bounds, inert KML fragment parsing, and inspection-generation tokens that discard stale asynchronous reads.",
     boundary:
       "Files remain browser-local and unadmitted. Exact imported bounds are withheld from copied audits and location-derived camera state is redacted from URLs and saved workspaces. A successful preview is not source admission, evidence, policy approval, release, deployment, or publication.",
     sourceLabel: "Review-hardened local geodata inspector",
@@ -83,7 +156,7 @@ export const REPOSITORY_UPDATES: readonly RepositoryUpdate[] = Object.freeze([
     maturity: "IMPLEMENTED",
     date: "30 Aug 2026",
     summary:
-      "Current main adds one 2025 U.S. Census Gazetteer representative internal point for each Kansas county, with stable GEOIDs and registry metadata for search, selection, evidence inspection, report scoping, and future governed county slices.",
+      "The earlier inspected snapshot adds one 2025 U.S. Census Gazetteer representative internal point for each Kansas county, with stable GEOIDs and registry metadata for search, selection, evidence inspection, report scoping, and future governed county slices.",
     boundary:
       "These are public reference locators, not county boundaries, centroids, county seats, parcels, conditions, protected geometry, jurisdictional determinations, source admission, or a KFM data release.",
     sourceLabel: "County starter slice",
@@ -112,7 +185,7 @@ export const REPOSITORY_UPDATES: readonly RepositoryUpdate[] = Object.freeze([
     maturity: "PARTIAL",
     date: "29 Aug 2026",
     summary:
-      "Current main adds a fixture-only, text-first planning-scenario review with a held ABSTAIN state, explicit horizon and uncertainty, equity questions, participation and evidence references, limitations, and fixed negative-state copy.",
+      "The earlier inspected snapshot adds a fixture-only, text-first planning-scenario review with a held ABSTAIN state, explicit horizon and uncertainty, equity questions, participation and evidence references, limitations, and fixed negative-state copy.",
     boundary:
       "The repository feature is not mounted on a production route and performs no transport, scenario computation, policy evaluation, preference aggregation, lifecycle write, recommendation, release, or publication action. This Site replays only the public synthetic fixture and negative states.",
     sourceLabel: "Planning scenario review",
@@ -142,7 +215,7 @@ export const REPOSITORY_UPDATES: readonly RepositoryUpdate[] = Object.freeze([
     maturity: "IMPLEMENTED",
     date: "23 Aug 2026",
     summary:
-      "Current main registers Explore, Knowledge, Features, and Trust as public-safe, non-privileged workspace destinations backed by the repository feature catalog.",
+      "The earlier inspected snapshot registers Explore, Knowledge, Features, and Trust as public-safe, non-privileged workspace destinations backed by the repository feature catalog.",
     boundary:
       "The registry is navigation metadata only. It creates no privileged route, policy decision, review authority, source activation, release, deployment, or publication power.",
     sourceLabel: "Public workspace registry",
@@ -170,7 +243,7 @@ export const REPOSITORY_UPDATES: readonly RepositoryUpdate[] = Object.freeze([
     maturity: "PARTIAL",
     date: "22 Aug 2026",
     summary:
-      "Current main normalizes the consent-pattern document metadata to the standard type while preserving the Focus boundary between a browser-session show/hide choice and any consent grant, credential, status, withdrawal, or policy authority.",
+      "The earlier inspected snapshot normalizes the consent-pattern document metadata to the standard type while preserving the Focus boundary between a browser-session show/hide choice and any consent grant, credential, status, withdrawal, or policy authority.",
     boundary:
       "The repository proves a strict fixture-first consent-card projection, not operational consent issuance, verification, policy composition, withdrawal propagation, release, or publication.",
     sourceLabel: "Focus consent boundary",
