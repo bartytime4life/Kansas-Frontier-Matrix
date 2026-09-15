@@ -8,11 +8,14 @@ owners: [TODO: brand-steward, docs-steward]
 created: 2026-05-15
 updated: 2026-09-15
 policy_label: public
+owning_root: docs/
+responsibility: "Document the repository-grounded KFM logo asset inventory, usage constraints, derivative policy, and runtime handoff without claiming release or brand-governance authority."
+truth_posture: "CONFIRMED repository inventory / PROPOSED derivative and governance guidance / UNKNOWN rights and downstream adoption; cite-or-abstain"
 related:
   - docs/brand/README.md
-  - docs/brand/wordmark/README.md
-  - docs/brand/voice/README.md
-  - docs/brand/colors/README.md
+  - docs/brand/logo/wordmark.svg
+  - docs/brand/voice-and-tone.md
+  - docs/brand/visual-language.md
   - packages/ui/README.md
   - docs/standards/PMTILES.md
   - docs/adr/README.md
@@ -511,9 +514,9 @@ For the same reason map styles do: a screenshot, social card, or partner kit is 
 ## 20. Related folders & docs
 
 - [`docs/brand/README.md`](../README.md) — brand parent index (PROPOSED)
-- [`docs/brand/wordmark/README.md`](../wordmark/README.md) — wordmark family (PROPOSED)
-- [`docs/brand/voice/README.md`](../voice/README.md) — voice and tone (PROPOSED)
-- [`docs/brand/colors/README.md`](../colors/README.md) — full color system (PROPOSED)
+- [`docs/brand/logo/wordmark.svg`](wordmark.svg) — admitted wordmark source asset
+- [`docs/brand/voice-and-tone.md`](../voice-and-tone.md) — voice and tone guidance
+- [`docs/brand/visual-language.md`](../visual-language.md) — visual language and color guidance
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — what may cross the public boundary (PROPOSED path)
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — §6.1, §8, §13, §14 govern brand placement (CONFIRMED reference)
 - [`docs/standards/PMTILES.md`](../../standards/PMTILES.md) — sibling standards-doc pattern (existing per Andy's roll-out)
