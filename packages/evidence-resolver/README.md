@@ -92,6 +92,31 @@ process use around the adapter success path.
 
 ## Open verification items
 
+### Descriptor-bound fixture reads
+
+The internal Hydrology adapter opens each fixed relative path component through
+an already-open directory descriptor with `O_NOFOLLOW`. It checks the opened
+file with `fstat`, accepts regular files only, opens nonblocking to avoid a FIFO
+swap hanging the reader, and reads at most the byte limit plus one detection
+byte. All descriptors close on success or failure. Earlier pathname checks
+provide diagnostics only; they no longer authorize reopening a checked path.
+
+This closes reproduced file and parent-directory symlink swaps between path
+validation and opening. The configured repository root remains trusted; this
+is not a sandbox against a hostile filesystem administrator, hard-link or
+mount substitution, or a deadline guarantee for slow regular-file storage.
+Platforms without descriptor-relative open and the required flags return a
+finite internal `ERROR`; there is no pathname fallback. Linux is exercised by
+the focused regressions; other platform behavior remains unverified.
+
+This is a prerequisite hardening slice, not Atlas lookup implementation. The
+allowlist, manifest, payload digest, resolver contracts, public negative-only
+API, correction checks, and non-renderable runtime posture are unchanged.
+Rollback is a joint revert of adapter, tests, and these boundary notes; it
+reintroduces the reproduced read race and requires explicit review.
+
+### Remaining authority gaps
+
 The following remain held: permanent named ownership; accepted public resolver
 input/result contracts; a public `ANSWER`; canonical claim-scope representation;
 authoritative production registry, correction, successor, withdrawal, review,

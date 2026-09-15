@@ -7,6 +7,7 @@ import ast
 import copy
 import hashlib
 import json
+import os
 from pathlib import Path
 import shutil
 import socket
@@ -349,6 +350,42 @@ class HydrologyFixtureAdapterTests(unittest.TestCase):
         )
         self.assertFailsClosed(path_input)
 
+    def test_bundle_swap_after_path_checks_cannot_follow_symlink(self) -> None:
+        root = self._isolated_repository()
+        fixture = root / BUNDLE_RELATIVE
+        outside = root / "outside.json"
+        shutil.copy2(fixture, outside)
+        original_is_file = Path.is_file
+
+        def swap_after_check(path: Path) -> bool:
+            result = original_is_file(path)
+            if path == fixture:
+                fixture.unlink()
+                fixture.symlink_to(outside)
+            return result
+
+        with mock.patch.object(Path, "is_file", swap_after_check):
+            failed = adapter.resolve_hydrology_fixture("hb1", _request())
+        self.assertFailsClosed(failed)
+
+    def test_parent_swap_after_path_checks_cannot_follow_symlink(self) -> None:
+        root = self._isolated_repository()
+        fixture = root / BUNDLE_RELATIVE
+        parent = fixture.parent
+        moved = root / "moved-valid"
+        original_is_file = Path.is_file
+
+        def swap_after_check(path: Path) -> bool:
+            result = original_is_file(path)
+            if path == fixture:
+                parent.rename(moved)
+                parent.symlink_to(moved, target_is_directory=True)
+            return result
+
+        with mock.patch.object(Path, "is_file", swap_after_check):
+            failed = adapter.resolve_hydrology_fixture("hb1", _request())
+        self.assertFailsClosed(failed)
+
     def test_execution_has_no_network_process_or_model_dependency(self) -> None:
         with mock.patch.object(
             socket, "create_connection", side_effect=AssertionError("network denied")
@@ -378,9 +415,11 @@ class HydrologyFixtureAdapterTests(unittest.TestCase):
             {
                 "__future__",
                 "core",
+                "contextlib",
                 "dataclasses",
                 "hashlib",
                 "json",
+                "os",
                 "pathlib",
                 "re",
                 "runtime_projection",
@@ -390,6 +429,104 @@ class HydrologyFixtureAdapterTests(unittest.TestCase):
         )
         self.assertNotIn("openai", source.lower())
         self.assertNotIn("ollama", source.lower())
+
+    def test_special_file_swap_is_rejected_without_reading(self) -> None:
+        for relative in (MANIFEST_RELATIVE, BUNDLE_RELATIVE):
+            with self.subTest(relative=relative):
+                root = self._isolated_repository()
+                target = root / relative
+                original_is_file = Path.is_file
+                original_read = os.read
+                reads = []
+
+                def swap_after_check(path: Path) -> bool:
+                    result = original_is_file(path)
+                    if path == target:
+                        path.unlink()
+                        os.mkfifo(path)
+                    return result
+
+                def record_read(fd: int, size: int) -> bytes:
+                    self.assertTrue(adapter.stat.S_ISREG(os.fstat(fd).st_mode))
+                    reads.append(fd)
+                    return original_read(fd, size)
+
+                with mock.patch.object(Path, "is_file", swap_after_check), \
+                        mock.patch.object(os, "read", record_read):
+                    failed = adapter.resolve_hydrology_fixture("hb1", _request())
+                self.assertFailsClosed(failed)
+                self.assertEqual("ERROR", failed.candidate.status)
+                if relative == MANIFEST_RELATIVE:
+                    self.assertEqual([], reads)
+
+    def test_descriptor_cleanup_on_success_and_read_failure(self) -> None:
+        for fail_read in (False, True):
+            with self.subTest(fail_read=fail_read):
+                opened = []
+                original_open = os.open
+                original_read = os.read
+
+                def record_open(*args, **kwargs):
+                    fd = original_open(*args, **kwargs)
+                    opened.append(fd)
+                    return fd
+
+                def read(fd: int, size: int) -> bytes:
+                    if fail_read:
+                        raise OSError("protected-io-sentinel")
+                    return original_read(fd, size)
+
+                with mock.patch.object(os, "open", record_open), \
+                        mock.patch.object(os, "read", read):
+                    result = adapter.resolve_hydrology_fixture("hb1", _request())
+                self.assertTrue(opened)
+                for fd in opened:
+                    with self.assertRaises(OSError):
+                        os.fstat(fd)
+                if fail_read:
+                    self.assertFailsClosed(result)
+                    self.assertNotIn("protected-io-sentinel", result_json(result.candidate))
+                else:
+                    self.assertEqual("RESOLVED", result.candidate.status)
+
+    def test_short_reads_do_not_truncate_a_valid_bundle(self) -> None:
+        original_read = os.read
+        with mock.patch.object(
+            os, "read", side_effect=lambda fd, size: original_read(fd, min(size, 7))
+        ):
+            result = adapter.resolve_hydrology_fixture("hb1", _request())
+        self.assertEqual("RESOLVED", result.candidate.status)
+
+    def test_unsupported_descriptor_platform_fails_closed(self) -> None:
+        with mock.patch.object(adapter, "_HAS_DESCRIPTOR_READ", False), \
+                mock.patch.object(os, "open", side_effect=AssertionError("no fallback")):
+            result = adapter.resolve_hydrology_fixture("hb1", _request())
+        self.assertFailsClosed(result)
+        self.assertEqual(
+            ["fixture-adapter/descriptor-read-unsupported"],
+            [issue.code for issue in result.candidate.issues],
+        )
+
+    def test_opened_file_growth_remains_byte_bounded(self) -> None:
+        root = self._isolated_repository()
+        target = root / BUNDLE_RELATIVE
+        target_inode = target.stat().st_ino
+        original_fstat = os.fstat
+
+        def grow_after_fstat(fd: int):
+            result = original_fstat(fd)
+            if result.st_ino == target_inode:
+                with target.open("ab") as handle:
+                    handle.write(b" " * adapter.MAX_INPUT_BYTES)
+            return result
+
+        with mock.patch.object(os, "fstat", grow_after_fstat):
+            result = adapter.resolve_hydrology_fixture("hb1", _request())
+        self.assertFailsClosed(result)
+        self.assertEqual(
+            ["fixture-adapter/bundle-unreadable-too-large"],
+            [issue.code for issue in result.candidate.issues],
+        )
 
     def test_hydrology_alias_remains_the_closed_shared_schema_alias(self) -> None:
         shared = json.loads(

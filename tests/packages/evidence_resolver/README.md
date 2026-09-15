@@ -46,6 +46,15 @@ absolute/traversal/outside-root/non-allowlisted paths, symlinks, caller-bundle
 injection, no negative fall-through, and active denial of network, URL, and
 process access. Static imports exclude model clients.
 
+Descriptor-read regressions reproduce file and parent-directory symlink swaps
+after path checks, reject FIFO swaps for both manifest and bundle before any
+special-file read, verify descriptor cleanup after success and I/O failure,
+preserve short-read completeness, reject unsupported platform fallback, and
+enforce byte bounds when a file grows after `fstat`. The two symlink-swap tests
+failed against parent `8b1d76530512ea66ce3e27916458ebbecd75f46b` with an incorrect
+`RESOLVED` result before the fix. These are internal synthetic Linux tests,
+not proof of production storage, Atlas lookup, review, release, or publication.
+
 The timestamp boundary regressions reject overflowing numeric UTC offsets before
 Python can normalize them. They exercise direct candidates, every existing policy
 posture, and the manifest adapter after a matching test-only digest, while
