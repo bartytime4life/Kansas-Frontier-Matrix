@@ -2,13 +2,14 @@
 from __future__ import annotations
 
 import json
+from collections.abc import Iterable, Mapping, Sequence
 from pathlib import Path
-from typing import Any, Iterable, Mapping, Sequence
+from typing import Any
 
 from .common import (
+    STATUS_RANK,
     Finding,
     ProcessResult,
-    STATUS_RANK,
     canonical_hash,
     read_json,
     resolve,
@@ -21,6 +22,56 @@ from .common import (
 )
 
 REQUIRED_KINDS = {"EVIDENCE_BUNDLE", "STAC", "DCAT", "PROV", "ROLLBACK"}
+
+
+def _check_carrier(
+    path: Path,
+    packet: Mapping[str, Any],
+) -> list[Finding]:
+    carrier, parse_findings = read_json(path)
+    if parse_findings or not isinstance(carrier, dict):
+        return [Finding("CARRIER_JSON_INVALID", "/carrier", "DENY")]
+
+    findings: list[Finding] = []
+    manifest = packet.get("release_manifest", {})
+    artifact_digests = (
+        manifest.get("artifact_digests", []) if isinstance(manifest, dict) else []
+    )
+    if sha_file(path) not in artifact_digests:
+        findings.append(Finding("CARRIER_ARTIFACT_MISMATCH", "/carrier/sha256", "DENY"))
+        return findings
+
+    raw_metadata = carrier.get("kfm", {})
+    metadata = raw_metadata if isinstance(raw_metadata, dict) else {}
+    features = carrier.get("features")
+    geometry = packet.get("geometry", {})
+    temporal = packet.get("temporal", {})
+    if carrier.get("type") != "FeatureCollection" or not isinstance(features, list):
+        findings.append(Finding("CARRIER_CONTRACT_INVALID", "/carrier", "DENY"))
+    if not isinstance(raw_metadata, dict) or metadata.get("candidate_id") != packet.get("candidate_id"):
+        findings.append(Finding("CARRIER_SUBJECT_MISMATCH", "/carrier/kfm/candidate_id", "DENY"))
+    if not isinstance(geometry, dict) or carrier.get("bbox") != geometry.get("bbox"):
+        findings.append(Finding("CARRIER_GEOMETRY_MISMATCH", "/carrier/bbox", "DENY"))
+    if not isinstance(temporal, dict) or metadata.get("temporal") != temporal:
+        findings.append(Finding("CARRIER_TEMPORAL_MISMATCH", "/carrier/kfm/temporal", "DENY"))
+
+    quality = metadata.get("quality", {})
+    governance_checks = (
+        metadata.get("schema_ref") == "https://www.rfc-editor.org/rfc/rfc7946",
+        metadata.get("truth_posture") == "SYNTHETIC",
+        metadata.get("fixture_only") is True,
+        metadata.get("lifecycle_state") == "FIXTURE",
+        metadata.get("policy_label") == "public",
+        metadata.get("rights", {}).get("status") == "SYNTHETIC_FIXTURE",
+        metadata.get("sensitivity", {}).get("classification") == "PUBLIC_SYNTHETIC",
+        isinstance(quality, dict),
+        quality.get("geometry_valid") is True if isinstance(quality, dict) else False,
+        quality.get("deterministic") is True if isinstance(quality, dict) else False,
+        quality.get("feature_count") == len(features) if isinstance(features, list) else False,
+    )
+    if not all(governance_checks):
+        findings.append(Finding("CARRIER_GOVERNANCE_INVALID", "/carrier/kfm", "DENY"))
+    return findings
 
 
 def _packet_ids(packet: Mapping[str, Any], kind: str) -> set[str]:
@@ -153,7 +204,7 @@ def execute(
         return result_payload(plan, findings)
 
     files: dict[str, Path] = {}
-    for key in ("promotion_packet", "cosign_plan", "subject", "bundle"):
+    for key in ("promotion_packet", "carrier", "cosign_plan", "subject", "bundle"):
         resolved, problem = resolve(repo_root, plan[key]["path"])
         if problem:
             findings.append(Finding(problem.code, f"/{key}", problem.status))
@@ -174,6 +225,15 @@ def execute(
     if findings:
         return result_payload(plan, findings)
     assert isinstance(packet, dict) and isinstance(cosign, dict)
+
+    subject_manifest, manifest_findings = read_json(files["subject"])
+    if manifest_findings or not isinstance(subject_manifest, dict):
+        findings.append(Finding("SUBJECT_MANIFEST_INVALID", "/subject", "DENY"))
+    elif subject_manifest != packet.get("release_manifest"):
+        findings.append(Finding("SUBJECT_MANIFEST_MISMATCH", "/subject", "DENY"))
+    findings.extend(_check_carrier(files["carrier"], packet))
+    if findings:
+        return result_payload(plan, findings)
 
     promotion = run_validator(repo_root, promotion_validator, files["promotion_packet"], deny_code="PROMOTION_GATE_BLOCKED", error_code="PROMOTION_GATE_RESULT_INVALID")
     plan_check = run_validator(repo_root, cosign_plan_validator, files["cosign_plan"], deny_code="COSIGN_PLAN_BLOCKED", error_code="COSIGN_PLAN_RESULT_INVALID")

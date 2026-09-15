@@ -11,6 +11,7 @@
     "execution_id",
     "evaluated_at",
     "promotion_packet",
+    "carrier",
     "cosign_plan",
     "subject",
     "bundle",
@@ -21,13 +22,14 @@
   ],
   "properties": {
     "object_type": {"const": "PromotionVerificationExecution"},
-    "schema_version": {"const": "1.0.0"},
+    "schema_version": {"const": "1.1.0"},
     "execution_id": {
       "type": "string",
       "pattern": "^promotion-verification:[a-z0-9][a-z0-9._:-]{7,179}$"
     },
     "evaluated_at": {"type": "string", "format": "date-time"},
     "promotion_packet": {"$ref": "#/$defs/fileBinding"},
+    "carrier": {"$ref": "#/$defs/fileBinding"},
     "cosign_plan": {"$ref": "#/$defs/fileBinding"},
     "subject": {"$ref": "#/$defs/fileBinding"},
     "bundle": {"$ref": "#/$defs/fileBinding"},

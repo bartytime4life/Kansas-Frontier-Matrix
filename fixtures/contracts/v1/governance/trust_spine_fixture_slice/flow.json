@@ -165,7 +165,7 @@
   "dry_run": {
     "promotion_verification_plan": {
       "path": "fixtures/release/promotion_verification_execution/valid/pass.json",
-      "sha256": "sha256:7d257a0ffa19944424b12f5ab1b1ad1fcdfdbb547d04318a0f98e46e3014f5d8"
+      "sha256": "sha256:23d166d23be3872ce9e754413e08de53dcea117de070a73146e8799f88cecf12"
     },
     "publication_deny_tool": {
       "path": "tools/release/release_dry_run.py",

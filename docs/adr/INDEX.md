@@ -8,7 +8,7 @@ owners:
   - Architecture steward
   - Docs steward
 created: 2026-07-22
-updated: 2026-09-03
+updated: 2026-09-15
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
@@ -16,7 +16,7 @@ owning_root: docs/
 responsibility: canonical human ADR file inventory and decision-status crosswalk without independent acceptance or implementation authority
 canonical_for: human ADR file inventory and decision-status crosswalk
 numbered_records: 39
-unassigned_scaffolds: 12
+unassigned_scaffolds: 11
 related:
   - docs/adr/README.md
   - docs/adr/ADR-template.md
@@ -38,7 +38,7 @@ notes:
 
 [![numbered records](https://img.shields.io/badge/numbered_records-39-0969da)](#numbered-records)
 [![effective status](https://img.shields.io/badge/effective_status-4_accepted_%7C_35_proposed-1a7f37)](#status-interpretation)
-[![scaffolds](https://img.shields.io/badge/unassigned_scaffolds-12-6e7781)](#unassigned-scaffolds)
+[![scaffolds](https://img.shields.io/badge/unassigned_scaffolds-11-6e7781)](#unassigned-scaffolds)
 [![coherence](https://img.shields.io/badge/coherence-machine_checked-1a7f37)](../../tools/validators/validate_adr_index.py)
 
 This file is the canonical human inventory for direct ADR records and unassigned ADR scaffolds under `docs/adr/`. It records what exists and how each record is classified; it cannot accept or promote a decision independently.
@@ -120,7 +120,6 @@ These files are tracked but do not carry assigned repository-wide ADR numbers. T
 | [`ADR-focus-model-adapter-boundary.md`](./ADR-focus-model-adapter-boundary.md) | slug-only scaffold | `not-assigned` |
 | [`ADR-habitat-fauna-thin-slice.md`](./ADR-habitat-fauna-thin-slice.md) | slug-only scaffold | `not-assigned` |
 | [`ADR-habitat-modeled-vs-critical.md`](./ADR-habitat-modeled-vs-critical.md) | slug-only scaffold | `not-assigned` |
-| [`ADR-habitat-schema-home.md`](./ADR-habitat-schema-home.md) | slug-only scaffold | `not-assigned` |
 | [`ADR-habitat-source-roles.md`](./ADR-habitat-source-roles.md) | slug-only scaffold | `not-assigned` |
 | [`ADR-habitat-stewardship-zone-policy.md`](./ADR-habitat-stewardship-zone-policy.md) | slug-only scaffold | `not-assigned` |
 <!-- ADR_SCAFFOLD_TABLE_END -->
