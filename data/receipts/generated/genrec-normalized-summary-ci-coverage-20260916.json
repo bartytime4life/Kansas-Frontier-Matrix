@@ -1,0 +1,94 @@
+{
+  "receipt_id": "genrec-normalized-summary-ci-coverage-20260916",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/promotion-gate.yml",
+    "Makefile",
+    "tests/ci/README.md",
+    "tests/ci/test_normalized_summary_workflow.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/promotion-gate.yml": "sha256:8b36459d156477f4f7bb32015ccdc6a26505623a70f97d82bbeee7b9f2937c89",
+    "Makefile": "sha256:a49a449aa2ae2644e2a03e2a9178e048b1370398d23e296b24bfc842c904f4e1",
+    "tests/ci/README.md": "sha256:da3670a86717442cdd1b9c43348e970105dfaa30b3f254d116a7284a235a34b0",
+    "tests/ci/test_normalized_summary_workflow.py": "sha256:31c8f0edd27a4386f49a8b3ddcaa89eff551a6e87118032d17011f7403378f95"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "UNKNOWN: exact model version not exposed"
+  },
+  "prompt_or_contract": "sha256:32cbc8cd0c374b6245235a1169afa21076507a3f2cdd06dfa2711bfb9ad003ff",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local-shell",
+      "GitHub-connector"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/fd03c91c88a06fc7d4e097775ec62ede6d3b498c",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4596",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3366",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/promotion-gate.yml": "CONFIRMED",
+    "Makefile": "CONFIRMED",
+    "tests/ci/README.md": "CONFIRMED",
+    "tests/ci/test_normalized_summary_workflow.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "normalized-summary-check",
+      "outcome": "PASS",
+      "reason": "make normalized-summary-check: schema fixture polarity OK; 67 tests passed, including 5 CI shell/scheduling assertions. Shell failure codes 1 and 7 propagated; summary rendered literal backticks."
+    },
+    {
+      "gate": "workflow-security",
+      "outcome": "PASS",
+      "reason": "make workflow-security: 28 tests; all 490 workflows pass, no new drift or invariant violations."
+    },
+    {
+      "gate": "repository-topology",
+      "outcome": "FAIL",
+      "reason": "Existing catalog KFM-TOPO-004 fingerprint 71a120ae8ca2b69896266c9ddd52f6d03577ea91fa2de4390b7d57b9ceeb912f remains: 1 new drift, 124 baselined warnings, 1 stale entry; context UNCHANGED. No baseline/catalog changes."
+    },
+    {
+      "gate": "hosted checks and independent review",
+      "outcome": "SKIPPED",
+      "reason": "NOT_RUN hosted; independent acceptance pending. VALIDATED_BRANCH_ONLY under current #4024 containment; no PR lifecycle action."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "placement-authority",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/fd03c91c88a06fc7d4e097775ec62ede6d3b498c/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-16T21:33:00Z",
+  "emitter": "Codex bounded authorship receipt",
+  "links": {
+    "pr_number": null,
+    "adr_link": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/fd03c91c88a06fc7d4e097775ec62ede6d3b498c/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Branch-only correction. No default cutover, schema/policy/registry mutation, merge, release, deployment, publication or Site change. Local tests do not establish independent review or OS-level network isolation. Abandon before integration or use a reviewed revert after separately authorized integration. Existing receipts remain historical."
+}
