@@ -6,16 +6,39 @@ import json
 from pathlib import Path
 
 
-def validate(summary: dict, require_normalized_only: bool = False) -> list[str]:
-    errors: list[str] = []
-    paths = summary.get("artifact_paths") or {}
-    digests = summary.get("artifact_digests") or {}
+def validate(summary: object, require_normalized_only: bool = False) -> list[str]:
+    """Check map structure and compatibility, not artifact bytes or readiness."""
+    if not isinstance(summary, dict):
+        return ["summary must be an object"]
 
+    errors: list[str] = []
     pairs = [
         ("check_receipt", "check_receipt", "check_receipt_sha256"),
         ("provenance_sync_receipt", "provenance_sync_receipt", "provenance_sync_receipt_sha256"),
         ("presence_output", "presence_output", "presence_output_sha256"),
     ]
+    expected_keys = {map_key for map_key, _, _ in pairs}
+    for name in ("artifact_paths", "artifact_digests"):
+        value = summary.get(name)
+        # Historical compatibility summaries may omit the normalized maps.
+        if not require_normalized_only and value is None:
+            continue
+        if not isinstance(value, dict):
+            errors.append(f"{name} must be an object")
+            continue
+        if require_normalized_only:
+            missing = expected_keys - value.keys()
+            unexpected = value.keys() - expected_keys
+            if missing:
+                errors.append(f"{name} missing keys: " + ",".join(sorted(missing)))
+            if unexpected:
+                errors.append(f"{name} unexpected keys: " + ",".join(sorted(unexpected)))
+
+    if errors:
+        return errors
+
+    paths = summary.get("artifact_paths") or {}
+    digests = summary.get("artifact_digests") or {}
     for map_key, path_key, digest_key in pairs:
         if require_normalized_only:
             continue
