@@ -867,9 +867,13 @@ input[type="range"] { accent-color: var(--gold); }
 .runtime-overlay button { margin-top: 12px; border: 1px solid var(--line-strong); border-radius: 9px; background: var(--gold); color: #102022; padding: 9px 15px; font-weight: 850; }
 .runtime-spinner { width: 34px; height: 34px; border: 3px solid var(--line-strong); border-top-color: var(--gold); border-radius: 50%; animation: spin .8s linear infinite; }
 .runtime-overlay.error .runtime-spinner, .runtime-overlay.unsupported .runtime-spinner { border-top-color: var(--red); animation: none; }
-.runtime-degraded-banner { position: absolute; z-index: 17; top: 58px; left: 50%; display: grid; gap: 3px; width: min(560px, calc(100% - 150px)); transform: translateX(-50%); border: 1px solid rgba(255,155,136,.35); border-radius: 10px; background: rgba(38,20,19,.92); padding: 9px 12px; text-align: center; box-shadow: 0 12px 35px rgba(0,0,0,.25); }
+.runtime-degraded-banner { position: absolute; z-index: 17; top: 116px; left: 72px; display: grid; gap: 3px; width: min(460px, calc(100% - 144px)); pointer-events: none; border: 1px solid rgba(255,155,136,.35); border-radius: 10px; background: rgba(38,20,19,.92); padding: 9px 12px; text-align: left; box-shadow: 0 12px 35px rgba(0,0,0,.25); }
 .runtime-degraded-banner strong { color: var(--red); font-size: 12px; text-transform: uppercase; letter-spacing: .08em; }
 .runtime-degraded-banner span { overflow: hidden; color: var(--muted); font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
+
+@media (max-width: 760px) {
+  .runtime-degraded-banner { top: 108px; left: 62px; width: calc(100% - 124px); }
+}
 @keyframes spin { to { transform: rotate(360deg); } }
 .no-time-data { position: absolute; z-index: 13; top: 58px; left: 50%; display: grid; gap: 3px; max-width: 440px; transform: translateX(-50%); border: 1px solid rgba(224,186,109,.35); border-radius: 10px; background: rgba(20,31,27,.92); padding: 9px 12px; text-align: center; }
 .no-time-data strong { color: var(--gold-soft); font-size: 12px; }

@@ -89,6 +89,16 @@ test("embedded shells use parent-relative height and explicit shares stay guarde
   assert.match(observatory, /replaceExplorerHistory/);
 });
 
+test("partial map degradation stays clear of the primary map controls", async () => {
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  const banner = css.match(/\.runtime-degraded-banner\s*\{([^}]+)\}/)?.[1] ?? "";
+  assert.match(banner, /top:\s*116px/);
+  assert.match(banner, /left:\s*72px/);
+  assert.match(banner, /width:\s*min\(460px, calc\(100% - 144px\)\)/);
+  assert.match(banner, /pointer-events:\s*none/);
+  assert.doesNotMatch(banner, /translateX/);
+});
+
 test("every official connection has feature-level traceability", () => {
   assert.equal(registry.SITE_REGISTRY_COUNTS.connections, 15);
   assert.deepEqual(registry.SITE_REGISTRY_VALIDATION, { ok: true, errors: [] });
