@@ -1,0 +1,106 @@
+{
+  "receipt_id": "genrec-western-kansas-registry-ci-20260916",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/western-kansas-observation-assessment.yml",
+    "contracts/domains/hydrology/western_kansas_observation_assessment.md",
+    "fixtures/domains/hydrology/western_kansas_observation_assessment/cases.json",
+    "tools/validators/evidence/validate_western_kansas_observation_assessment.py",
+    "tests/validators/test_western_kansas_observation_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/western-kansas-observation-assessment.yml": "sha256:9a46a2b49240dd6c04cf017ca3273674a34a71d9931a596743f6cc1049bdddbd",
+    "contracts/domains/hydrology/western_kansas_observation_assessment.md": "sha256:a644a11c87a3cedfaea7b0301b649e5abf72efea3d52b794591b6c7609b4717c",
+    "fixtures/domains/hydrology/western_kansas_observation_assessment/cases.json": "sha256:4a67a5dd445ef5d3473a3353d2a20bd207acde9f8baf27f8ae7bd0c4e80ae4cf",
+    "tools/validators/evidence/validate_western_kansas_observation_assessment.py": "sha256:3f42064b8b5c76b25a100501fb68984124d919d33aa8adf7c6ce9c5830684748",
+    "tests/validators/test_western_kansas_observation_assessment.py": "sha256:89b781f8a190ffcec183f587ba673cc599ddfd70652923f7ab6182723410ccf6"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "UNKNOWN: exact runtime model build not exposed"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "local_shell",
+      "apply_patch",
+      "GitHub read-only"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:576a579b41fe0420d2106c5e96a2a779d22f4d4921d53773e13ab4ed9bb1e2d2"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/63a504d36577e47893644024607cb75510984d10/.github/workflows/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/63a504d36577e47893644024607cb75510984d10/data/receipts/generated/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/63a504d36577e47893644024607cb75510984d10/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/63a504d36577e47893644024607cb75510984d10/data/receipts/generated/genrec-issue-2899-invalid-timestamp-boundary-20260906.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/63a504d36577e47893644024607cb75510984d10",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/2899"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/western-kansas-observation-assessment.yml": "CONFIRMED",
+    "contracts/domains/hydrology/western_kansas_observation_assessment.md": "CONFIRMED",
+    "fixtures/domains/hydrology/western_kansas_observation_assessment/cases.json": "CONFIRMED",
+    "tools/validators/evidence/validate_western_kansas_observation_assessment.py": "CONFIRMED",
+    "tests/validators/test_western_kansas_observation_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused workflow command",
+      "outcome": "PASS",
+      "reason": "15 tests and9subtests passed on final workflow/test bytes; includes corrected registry-selection regression module."
+    },
+    {
+      "gate": "synthetic polarity",
+      "outcome": "PASS",
+      "reason": "16 cases match exact finite outcomes; ABSTAIN/ERROR cases are expected negative evidence, not live-source success."
+    },
+    {
+      "gate": "selected workflow security",
+      "outcome": "PASS",
+      "reason": "20 rules;1 selected workflow;0 findings; permissions, action pins and non-publisher boundary retained."
+    },
+    {
+      "gate": "hosted exact-head and human review",
+      "outcome": "SKIPPED",
+      "reason": "NOT_RUN; branch-only delivery under4024. No hosted or accountable independent acceptance is asserted."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "workflow-owner-readme",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/63a504d36577e47893644024607cb75510984d10/.github/workflows/README.md"
+    },
+    {
+      "id": "historical-receipt-lineage",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/63a504d36577e47893644024607cb75510984d10/data/receipts/generated/genrec-issue-2899-invalid-timestamp-boundary-20260906.json"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-16T05:07:23.976611Z",
+  "emitter": "Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Successor current-byte integrity binding for genrec-issue-2899-invalid-timestamp-boundary-20260906; historical receipt remains byte-identical. Only the workflow is newly authored in this successor: four unchanged contract/fixture/validator/semantic-test artifacts retain integrity coverage, not a claim of new authorship or acceptance. Prior registry-selection repair receipt remains independently invoked. Adds existing registry regression suite and narrow dependency triggers; read-only permission, existing events, check name, toolchain, timeout, failure propagation and no-network/no-publisher posture retained. No scheduler, source admission, settings, PR, ready, merge, lifecycle, Site, release, deployment, promotion or publication transition. Parent issue2899 remains open; rights/source matrix and hosted/independent acceptance unresolved. Rollback: abandon successor or reviewed revert of successor workflow and this receipt; parent63a504d36577e47893644024607cb75510984d10 retains test repair. ADR-0029 is placement authority only."
+}

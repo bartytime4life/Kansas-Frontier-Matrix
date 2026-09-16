@@ -9,8 +9,14 @@ name: western-kansas-observation-assessment
       - "fixtures/domains/hydrology/western_kansas_observation_assessment/**"
       - "tools/validators/evidence/validate_western_kansas_observation_assessment.py"
       - "tests/validators/test_western_kansas_observation_assessment.py"
+      - "tests/validators/test_western_kansas_observation_assessment_registry.py"
+      - "tools/validators/validate_all.py"
+      - "tools/validators/validator_registry.json"
+      - "tools/validators/_common/run_all.py"
       - "data/receipts/generated/genrec-western-kansas-observation-assessment-current-binding-20260815.json"
       - "data/receipts/generated/genrec-issue-2899-invalid-timestamp-boundary-20260906.json"
+      - "data/receipts/generated/genrec-western-kansas-registry-selection-20260916.json"
+      - "data/receipts/generated/genrec-western-kansas-registry-ci-20260916.json"
   push:
     branches: [main]
     paths:
@@ -20,8 +26,14 @@ name: western-kansas-observation-assessment
       - "fixtures/domains/hydrology/western_kansas_observation_assessment/**"
       - "tools/validators/evidence/validate_western_kansas_observation_assessment.py"
       - "tests/validators/test_western_kansas_observation_assessment.py"
+      - "tests/validators/test_western_kansas_observation_assessment_registry.py"
+      - "tools/validators/validate_all.py"
+      - "tools/validators/validator_registry.json"
+      - "tools/validators/_common/run_all.py"
       - "data/receipts/generated/genrec-western-kansas-observation-assessment-current-binding-20260815.json"
       - "data/receipts/generated/genrec-issue-2899-invalid-timestamp-boundary-20260906.json"
+      - "data/receipts/generated/genrec-western-kansas-registry-selection-20260916.json"
+      - "data/receipts/generated/genrec-western-kansas-registry-ci-20260916.json"
   workflow_dispatch:
 
 permissions:
@@ -56,14 +68,21 @@ jobs:
           cache-dependency-path: pyproject.toml
       - name: Install declared test dependencies
         run: python tools/ci/install_python_ci.py project-test
-      - name: Run focused tests
-        run: python -m pytest -q tests/validators/test_western_kansas_observation_assessment.py
+      - name: Run focused assessment and registry-selection tests
+        run: >-
+          python -m pytest -q
+          tests/validators/test_western_kansas_observation_assessment.py
+          tests/validators/test_western_kansas_observation_assessment_registry.py
       - name: Run exact synthetic case polarity
         run: python tools/validators/evidence/validate_western_kansas_observation_assessment.py --cases
       - name: Verify generated authoring receipt integrity
         run: |
+          # Retain historical receipts; check the current workflow successor.
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-issue-2899-invalid-timestamp-boundary-20260906.json \
+            data/receipts/generated/genrec-western-kansas-registry-ci-20260916.json \
+            --repo-root .
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-western-kansas-registry-selection-20260916.json \
             --repo-root .
       - name: Record trust boundary
         if: always()
