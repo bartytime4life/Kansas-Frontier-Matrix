@@ -2,7 +2,8 @@
 """Capture repository-control issue comments through strict resource bounds.
 
 The helper reads one GitHub API page at a time, rejects oversized or structurally
-unsafe pages before they can become control input, and writes only one of two
+unsafe pages before they can become control input, rejects HTTP redirects before
+constructing another authenticated request, and writes only one of two
 local source states: ``AVAILABLE`` with a complete bounded page array, or
 ``UNAVAILABLE`` with an empty comments array. The downstream trusted-base source
 validator remains responsible for the blocking classification.
@@ -21,7 +22,7 @@ from pathlib import Path
 from typing import Any, Callable, Sequence
 from urllib.error import HTTPError, URLError
 from urllib.parse import quote
-from urllib.request import Request, urlopen
+from urllib.request import HTTPRedirectHandler, Request, build_opener
 
 PER_PAGE = 100
 MAX_PAGES = 100
@@ -43,6 +44,19 @@ class CaptureError(ValueError):
     def __init__(self, reason_code: str) -> None:
         super().__init__(reason_code)
         self.reason_code = reason_code
+
+
+class _RejectRedirects(HTTPRedirectHandler):
+    """Keep authenticated capture on the explicitly configured API request."""
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        # Do not construct a second request, copy credentials, or log Location.
+        # A moved endpoint requires a separately reviewed configuration change.
+        raise CaptureError("CONTROL_SOURCE_REDIRECT_DENIED")
+
+
+def _open_without_redirects(request: Request, *, timeout: int) -> Any:
+    return build_opener(_RejectRedirects()).open(request, timeout=timeout)
 
 
 @dataclass(frozen=True)
@@ -281,7 +295,7 @@ def fetch_bounded_pages(
     control_issue: int,
     token: str,
     api_url: str = "https://api.github.com",
-    opener: Callable[..., Any] = urlopen,
+    opener: Callable[..., Any] = _open_without_redirects,
     per_page: int = PER_PAGE,
     max_pages: int = MAX_PAGES,
     max_page_bytes: int = MAX_PAGE_BYTES,
@@ -407,7 +421,7 @@ def capture_to_files(
     comments_output: Path,
     status_output: Path,
     api_url: str = "https://api.github.com",
-    opener: Callable[..., Any] = urlopen,
+    opener: Callable[..., Any] = _open_without_redirects,
     per_page: int = PER_PAGE,
     max_pages: int = MAX_PAGES,
     max_page_bytes: int = MAX_PAGE_BYTES,
