@@ -12,6 +12,7 @@ KFM_VALIDATION_ENV := KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=
 VALIDATOR_ORCHESTRATOR := python tools/validate_all.py
 
 .PHONY: help validate test schemas validators validator-list validator-full validator-focused validator-release-profile validator-changed-area validator-registry-check docs-critical-structure workflow-security repository-topology repository-governance-parity repository-guardrails trust-spine-baseline program-baseline control-plane-registry-packet trust-spine-fixture-slice ci-conformance-report policy fixtures release-dry-run proof-slice catalog publish-check evidence-resolver evidence-resolver-deny hazards-validate deny-test ui-build api-run governed-api-dev governed-api-smoke governed-api-verify boundary-guards boundary-guards-ci maplibre-perf maplibre-govern maplibre-proof maplibre-clean
+.PHONY: atlas-review-tests atlas-review
 
 help:
 	@echo "KFM repository targets"
@@ -44,6 +45,8 @@ help:
 	@echo "  release-dry-run       Prove five synthetic publication-denial paths"
 	@echo "  evidence-resolver     Run the bounded internal evidence candidate profile"
 	@echo "  evidence-resolver-deny Run its fail-closed negative fixture suite"
+	@echo "  atlas-review-tests    Replay the synthetic Atlas/resolver/API boundary checks"
+	@echo "  atlas-review          Run Atlas checks and its receipt gate; no acceptance claim"
 	@echo
 	@echo "Registry-driven validator profiles (finite checker outcomes only):"
 	@echo "  validators            Alias of validator-full"
@@ -199,6 +202,17 @@ evidence-resolver:
 evidence-resolver-deny:
 	KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC python tools/validators/evidence_resolver/validate_candidate.py --fixtures fixtures/packages/evidence_resolver/v1alpha1 --negative-only
 	KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC python -m unittest discover -s tests/packages/evidence_resolver -p 'test_*.py' -q
+
+# Opt-in local review of the proposed Atlas profile. Keep the native receipt
+# failure visible; passing synthetic tests is not independent acceptance.
+atlas-review-tests:
+	$(KFM_VALIDATION_ENV) PYTHONPATH=apps/governed-api/src python -m pytest -q tests/packages/evidence_resolver tests/schemas/test_verification_state_history.py tests/schemas/test_atlas_verification_profile.py apps/governed-api/tests tests/policy/test_explorer_web_adapter_boundary.py
+	$(KFM_VALIDATION_ENV) python tools/validators/validate_verification_state_history.py --fixtures
+	$(KFM_VALIDATION_ENV) python tools/validators/evidence_resolver/validate_candidate.py --fixtures fixtures/packages/evidence_resolver/v1alpha1
+
+atlas-review: atlas-review-tests
+	$(KFM_VALIDATION_ENV) python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-atlas-review-command-20260916.json --repo-root .
+	$(KFM_VALIDATION_ENV) python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-atlas-verification-profile-20260916.json --repo-root .
 
 deny-test:
 	PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC PYTHONPATH=apps/governed-api/src python -m pytest -q --strict-config --strict-markers apps/governed-api/tests/test_boundary_guards.py

@@ -1,0 +1,84 @@
+{
+  "contract_version": "3.0.0",
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "UNKNOWN; exact serving model version not exposed"
+  },
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local repository validation",
+      "GitHub connector",
+      "Sites connector",
+      "Google Drive connector",
+      "Notion connector"
+    ]
+  },
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "receipt_id": "genrec-atlas-review-command-20260916",
+  "artifact_paths": [
+    "Makefile",
+    "tools/validators/evidence_resolver/README.md"
+  ],
+  "artifact_hashes": {
+    "Makefile": "sha256:6a8b32c02a50316e7a333514fdab5a9732f23658e8671b983ac5a5b4ee0ae466",
+    "tools/validators/evidence_resolver/README.md": "sha256:ae2bddcac53816c29aec5ad42962d62a05964dd4f8e8b3dc7fd903f772963a64"
+  },
+  "prompt_or_contract": "sha256:0e1f237e400977b714c2a42d22cc6b66ccb677875edeab1d7fb3ebc71d8d52f2",
+  "inputs": {
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/6ad557c2f12d802d379ebcce5987a71440049993",
+      "github://bartytime4life/Kansas-Frontier-Matrix/issues/3381",
+      "github://bartytime4life/Kansas-Frontier-Matrix/issues/4024"
+    ],
+    "evidence_hashes": [
+      "sha256:d1d3031c4bfa1b41868e945a418d74bfa90c22c339ee8b006130290320ebf786"
+    ]
+  },
+  "truth_labels": {
+    "Makefile": "PROPOSED",
+    "tools/validators/evidence_resolver/README.md": "PROPOSED"
+  },
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "profile-review-parent",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/6ad557c2f12d802d379ebcce5987a71440049993"
+    }
+  ],
+  "created_at": "2026-09-16T01:38:38.889270Z",
+  "validation_gates": [
+    {
+      "gate": "technical-replay",
+      "outcome": "PASS",
+      "reason": "make atlas-review runs one pytest invocation with137 tests and417 subtests passing, then all13 verification-history fixtures and21 complete candidate fixtures passing with zero mismatches. The suite replays resolver/lookup/history/profile and native API/Explorer boundary checks."
+    },
+    {
+      "gate": "profile-receipt",
+      "outcome": "FAIL",
+      "reason": "The existing profile receipt remains unchanged and returns GENERATED_RECEIPT_INVALID/POLICY_DECISION_REQUIRED. The native validator exits1 and GNU Make exits2. The command neither suppresses this failure nor supplies an unrelated or synthetic policy reference. Technical PASS does not clear receipt or contract acceptance."
+    },
+    {
+      "gate": "documentation-and-scope",
+      "outcome": "PASS",
+      "reason": "One owning README passes two local link checks; the external GitHub issue target is separately read through the connector, not by the link checker. Whitespace checks pass. Only the Make convenience targets, owning validator README and this receipt are added/changed; all17 profile-parent paths and all app, schema, policy, fixture, runtime and dependency bytes are preserved."
+    },
+    {
+      "gate": "hosted-and-independent-acceptance",
+      "outcome": "SKIPPED",
+      "reason": "No applicable newly recorded policy decision or independent review was identified in the bounded GitHub/Notion/Drive evidence search. PolicyDecision semantics remain PROPOSED_INACTIVE/non-evaluator. Hosted checks, existing topology acceptance, same-subject server records, positive API/browser proof and operational recovery remain open. No milestone closure is claimed."
+    }
+  ],
+  "notes": "Three-path command-only follow-up to6ad557c2f12d802d379ebcce5987a71440049993. atlas-review-tests runs technical replay only; atlas-review additionally validates this command receipt then the still-held profile receipt. Native nonzero statuses remain failures; no expected-error whitelist or acceptance override is introduced. The environment uses declared repository test dependencies and no new dependency or hosted workflow. Existing receipt hash bindings remain intact. GitHub is implementation authority, Notion/Drive coordination only. Main and owner-private Sitev41 remain unchanged; #4024 PR containment and #4228 Stage1B HOLD/Stage2 UNAUTHORIZED remain. This authorship receipt does not accept its dependency. Rollback removes the convenience targets and their documentation together."
+}
