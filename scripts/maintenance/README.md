@@ -158,6 +158,13 @@ Checked options include `--registry`, `--provenance-registry`, `--artifacts-dir`
 
 ### Strict and test wrappers
 
+The normalized-summary readiness checker requires at least one enrolled consumer
+in both ordinary and `--require-all-validated` modes. An empty list, empty block,
+comment-only block, or null inventory returns structured `result: fail`,
+`consumer_count: 0`, and exit 1. A vacuously all-validated inventory is not readiness.
+Populated registries retain the existing required-field, duplicate, status, and
+strict-mode checks; this does not establish independent consumer acceptance.
+
 `enforce_doctrine_preflight_gates.sh` must remain a thin wrapper that exposes its strict flags, inputs, output paths, and underlying exit code.
 
 `run_doctrine_artifact_test_suite.sh` uses `set -euo pipefail`, creates and cleans a normalized-only temporary summary, runs source validators and readiness checks, and invokes a bounded policy/source pytest set. This proves intended coverage, not a current pass result.
