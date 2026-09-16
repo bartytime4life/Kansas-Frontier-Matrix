@@ -4,9 +4,14 @@ import io
 import json
 import subprocess
 import sys
+from email.message import Message
 from http.client import IncompleteRead
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
+from urllib.request import BaseHandler, build_opener
+from urllib.response import addinfourl
+
+import pytest
 
 from tools.validators.repository_control import fetch_bounded_issue_comments as helper
 
@@ -81,6 +86,92 @@ def test_bounded_capture_reads_complete_pages_and_writes_exact_status(
         "control_issue": 4024,
         "status": "AVAILABLE",
     }
+
+
+def install_transport(monkeypatch: pytest.MonkeyPatch, *, code: int, target: str):
+    """Exercise the real urllib opener stack with no socket or live credential."""
+    requests = []
+
+    class SyntheticTransport(BaseHandler):
+        handler_order = 100
+
+        def https_open(self, request):
+            requests.append(request)
+            headers = Message()
+            if code != 200:
+                headers["Location"] = target
+            response = addinfourl(io.BytesIO(b"[]"), headers, request.full_url, code)
+            response.msg = "synthetic response"
+            return response
+
+        http_open = https_open
+
+    monkeypatch.setattr(
+        helper,
+        "build_opener",
+        lambda *handlers: build_opener(SyntheticTransport(), *handlers),
+    )
+    return requests
+
+
+@pytest.mark.parametrize("code", [301, 302, 303, 307, 308])
+@pytest.mark.parametrize(
+    "target",
+    [
+        "https://api.github.com/redirect-test",
+        "https://redirect.invalid/redirect-test",
+        "http://redirect.invalid/redirect-test",
+    ],
+)
+def test_default_transport_refuses_redirect_before_second_request(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, code: int, target: str
+) -> None:
+    requests = install_transport(monkeypatch, code=code, target=target)
+    comments_path = tmp_path / "comments.json"
+    status_path = tmp_path / "status.json"
+    # A denial must replace prior successful capture bytes, not leave them usable.
+    comments_path.write_text('[{"id": 1}]\n', encoding="utf-8")
+    status_path.write_text('{"status":"AVAILABLE"}\n', encoding="utf-8")
+
+    result = helper.capture_to_files(
+        repository="bartytime4life/Kansas-Frontier-Matrix",
+        control_issue=4024,
+        token="synthetic-credential-not-secret",
+        comments_output=comments_path,
+        status_output=status_path,
+    )
+
+    assert len(requests) == 1
+    assert requests[0].full_url.startswith("https://api.github.com/repos/")
+    assert requests[0].get_method() == "GET"
+    assert requests[0].get_header("Authorization") == (
+        "Bearer synthetic-credential-not-secret"
+    )
+    assert result.status == "UNAVAILABLE"
+    assert result.reason_code == "CONTROL_SOURCE_REDIRECT_DENIED"
+    assert comments_path.read_text(encoding="utf-8") == "[]\n"
+    assert json.loads(status_path.read_text(encoding="utf-8"))["status"] == "UNAVAILABLE"
+    serialized = json.dumps(result.as_dict()) + status_path.read_text(encoding="utf-8")
+    assert "synthetic-credential-not-secret" not in serialized
+    assert target not in serialized
+
+
+def test_default_transport_preserves_direct_success(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    requests = install_transport(monkeypatch, code=200, target="")
+    result = helper.capture_to_files(
+        repository="bartytime4life/Kansas-Frontier-Matrix",
+        control_issue=4024,
+        token="synthetic-credential-not-secret",
+        comments_output=tmp_path / "comments.json",
+        status_output=tmp_path / "status.json",
+    )
+
+    assert len(requests) == 1
+    assert result.status == "AVAILABLE"
+    assert result.reason_code == "CONTROL_SOURCE_CAPTURE_BOUNDED"
+    assert result.transferred_bytes == 2
 
 
 def test_sentinel_page_rejects_more_than_the_admitted_page_count(
