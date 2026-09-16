@@ -33,13 +33,21 @@ TypeScript-transpile regression checks.
 
 | Field | Current boundary |
 |---|---|
-| OpenAI Sites project | `appgprj_6a870a079c1c8191abb7401ef092a181` from [`.openai/hosting.json`](./.openai/hosting.json) |
+| Repository-configured Sites project | `appgprj_6a870a079c1c8191abb7401ef092a181` from [`.openai/hosting.json`](./.openai/hosting.json); the project returned `NOT_FOUND` in the 2026-09-16 Sites readback, so repository-driven deployment remains blocked |
+| Observed live Sites project | `appgprj_6aa0b1c41bc08191bfd86003920f1631`; saved version 42, source `9501e4201fae1104aca2054b67f6576ef5f1be67`, deployment `appgdep_6aaa027c3a608191a0c10c5a6e4ba869` reported `succeeded`, owner-private |
 | Existing slug | `kansas-frontier-matrix-explorer` |
-| Existing public URL | <https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site> |
+| Existing production URL | <https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site> |
 | Authoritative host | OpenAI Sites/Vinext; [issue #4232](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4232) records the adapter decision |
+| Repository app posture | Renderer-neutral `NullMapRuntime`; not source-parity evidence for the separately versioned live Site |
 | Vercel boundary | [`vercel.json`](./vercel.json) disables automatic Git deployment; Vercel remains non-authoritative for this app |
 | Replacement procedure | [OpenAI Sites in-place replacement handoff](./docs/openai-sites-in-place-replacement.md) |
-| Hosted version state | `NEEDS VERIFICATION` from the Sites version-history and production browser surfaces |
+| Acceptance state | `HOLD`: archive/source parity, authenticated browser smoke, and demonstrated production recovery remain unverified |
+
+The two project IDs are not aliases. This documentation correction does not retarget
+the repository manifest or deploy the Site. Before any target reconciliation, compare
+the source trees, D1/R2 binding posture, and dependency sets (including repository
+MapLibre GL JS `6.9.0` versus live-Site `6.6.0`), then validate one exact candidate
+with the versioned rollback path retained.
 
 The staged 2026-09-03 replacement ZIP is an external, digest-bound Sites execution
 input. It is not the canonical repository source and must not be copied over this
