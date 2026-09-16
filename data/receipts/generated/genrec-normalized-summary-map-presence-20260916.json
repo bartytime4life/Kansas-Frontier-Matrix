@@ -1,0 +1,120 @@
+{
+  "receipt_id": "genrec-normalized-summary-map-presence-20260916",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/adr/NORMALIZED_SUMMARY_CONSUMER_READINESS_CHECKLIST.md",
+    "tests/policy/test_preflight_summary_consistency.py",
+    "tools/validators/source/validate_doctrine_preflight_summary_consistency.py"
+  ],
+  "artifact_hashes": {
+    "docs/adr/NORMALIZED_SUMMARY_CONSUMER_READINESS_CHECKLIST.md": "sha256:ea9c91e1366a08b414be22c0f283db2013f99bba273dcd3b9c81123437ab4b14",
+    "tests/policy/test_preflight_summary_consistency.py": "sha256:6d85a86ba79203e84d7b572d4033c0dab740321f605c430c765c81911f243dc3",
+    "tools/validators/source/validate_doctrine_preflight_summary_consistency.py": "sha256:a0b360bc3e104e5d8e8468686ec8747354f5f6eab4ace66aa1193893072ccfcc"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "UNKNOWN: original artifact generator not recorded",
+    "version": "UNKNOWN: original artifact generator version not recorded"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local-shell",
+      "GitHub-read-only"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:c04df72139330593ce9302170389da99a60e1c7ac13f571358e15dc51d81798e",
+      "sha256:425e998e5584a7e400e99c963aba019b33ff685f9fa26b5b474d8758a3160b2a"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/b6bdc3c13d03cf1050e03c06496796822b6421b1",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/93084d9b9f5205df7ffcddb9ce5e00a2dbb820b1",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4596",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b6bdc3c13d03cf1050e03c06496796822b6421b1/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b6bdc3c13d03cf1050e03c06496796822b6421b1/data/receipts/generated/README.md"
+    ]
+  },
+  "truth_labels": {
+    "docs/adr/NORMALIZED_SUMMARY_CONSUMER_READINESS_CHECKLIST.md": "CONFIRMED",
+    "tests/policy/test_preflight_summary_consistency.py": "CONFIRMED",
+    "tools/validators/source/validate_doctrine_preflight_summary_consistency.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused normalized-summary regression suite",
+      "outcome": "PASS",
+      "reason": "Python 3.12.14, pytest 9.1.1, jsonschema 4.26.0: 62 passed across five modules; includes 48 consistency cases. Command: python -m pytest tests/policy/test_preflight_summary_consistency.py tests/policy/test_normalized_summary_consumer_readiness.py tests/policy/test_run_doctrine_artifact_preflight.py tests/policy/test_preflight_summary_schema_contract.py tests/source/test_doctrine_artifact_preflight_summary_schema.py -q --strict-config --strict-markers"
+    },
+    {
+      "gate": "summary schema fixture polarity",
+      "outcome": "PASS",
+      "reason": "python tools/validators/source/validate_doctrine_artifact_preflight_summary.py --fixtures returned OK."
+    },
+    {
+      "gate": "repository schema and contract baseline",
+      "outcome": "PASS",
+      "reason": "make validate completed on unchanged candidate artifact bytes: schema runner succeeded; tests/schemas tests/contracts reported 498 passed and 53 subtests passed."
+    },
+    {
+      "gate": "strict missing-map false-pass reproduction",
+      "outcome": "PASS",
+      "reason": "On base, empty summary, empty maps, and null/list maps returned no errors; on candidate all produce finite errors. This confirms EXPECTED_NEGATIVE behavior, not acceptance of invalid inputs."
+    },
+    {
+      "gate": "repository topology",
+      "outcome": "FAIL",
+      "reason": "Inherited FAIL_INVARIANT on both base and candidate: 124 baselined warnings, 1 catalog new-drift finding, 1 stale fingerprint, 0 counted invariant findings. Finding arrays identical SHA256 9ad1e7288e879ba1327e16a3c1944f646167c82434f2e1a67072d5a22a2076b8. Baseline unchanged."
+    },
+    {
+      "gate": "documentation structure and local path checks",
+      "outcome": "PASS",
+      "reason": "Readiness checklist: one H1, twelve code-fence markers, final newline, no missing repository-relative link targets; git diff --check passed."
+    },
+    {
+      "gate": "exact-head hosted evidence",
+      "outcome": "SKIPPED",
+      "reason": "NOT_RUN: GitHub all-event workflow run query for original candidate returned total_count 0; PR creation remains blocked by #4024. This new receipt does not create hosted evidence."
+    },
+    {
+      "gate": "independent human review and integration",
+      "outcome": "SKIPPED",
+      "reason": "BLOCKED: no independent acceptance or eligible integration demonstrated. human_review remains pending; issue must remain open."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "accepted-placement-doctrine",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b6bdc3c13d03cf1050e03c06496796822b6421b1/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "candidate-validator-bytes",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/93084d9b9f5205df7ffcddb9ce5e00a2dbb820b1/tools/validators/source/validate_doctrine_preflight_summary_consistency.py"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-16T03:56:56Z",
+  "emitter": "Codex current-session artifact-integrity and validation receipt emission; exact emitter model/version not exposed",
+  "links": {
+    "pr_number": null,
+    "adr_link": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b6bdc3c13d03cf1050e03c06496796822b6421b1/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Pre-integration receipt follow-up for already delivered unmerged candidate 93084d9b9f5205df7ffcddb9ce5e00a2dbb820b1, on main base b6bdc3c13d03cf1050e03c06496796822b6421b1. No existing tracked generated receipt covered these three paths. This receipt records freshly inspected bytes and observed validation; it cannot reconstruct unknown historical generator identity, original parameters, or prompt. The contract hash identifies the current governing contract consulted by this emitter. CONFIRMED labels cover bounded implementation and validation only, not consumer readiness or acceptance. Schema permits PASS/FAIL/SKIPPED only; SKIPPED reasons retain NOT_RUN/BLOCKED semantics. This receipt excludes its own bytes to avoid a recursive hash; Git commit/tree bind the receipt. No code/test/doc, schema, default mode, registry, topology baseline, catalog, Site, settings, PR lifecycle, source admission, release, deployment, promotion, or publication changes. Abandon the successor to return to original candidate; separately authorized revert of the implementation reintroduces the demonstrated false-pass gap. #4024 VALIDATED_BRANCH_ONLY remains."
+}
