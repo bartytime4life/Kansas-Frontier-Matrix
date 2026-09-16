@@ -2,15 +2,15 @@
 doc_id: kfm://doc/governance/repository-transition-control-source
 title: Repository transition control-source binding
 type: governance-binding-enforcement-candidate-note
-version: v1.3.1
-status: current-main workflow-active advisory; candidate bounded-input hardening; required-status-check not installed
+version: v1.3.2
+status: current-main workflow-active advisory; integrated bounded-input hardening; required-status-check not installed
 owner: OWNER_TBD — governance steward and repository-control steward
 created: 2026-09-03
-updated: 2026-09-03
+updated: 2026-09-16
 policy_label: repository-facing; governance; fail-closed; non-authoritative
 owning_root: docs/
 responsibility: "Bind the repository transition control-source identity, bounded capture posture, exact authorization boundary, and rollback limits without creating merge, release, deployment, promotion, or publication authority."
-truth_posture: CONFIRMED current-main #4237 active two-validator workflow / IMPLEMENTED candidate bounded capture / PROPOSED required-check packet
+truth_posture: CONFIRMED main@b6bdc3c13d03cf1050e03c06496796822b6421b1 three-helper workflow and integrated bounded capture / PROPOSED required-check packet
 related:
   - ../../contracts/governance/repository_control_state.md
   - ../../tools/validators/repository_control/fetch_bounded_issue_comments.py
@@ -46,22 +46,20 @@ authorization format, or make a workflow result sovereign authority.
 
 ## Current implementation state
 
-PR #4237 integrated the live-source workflow baseline into protected
-`main@bd942b45493fa5f80e946ecfb3e810e413787394` on 2026-09-03. The workflow is
-therefore **workflow-active** and reads issue #4024 from trusted-base code.
+**CONFIRMED repository bytes:** at
+[`main@b6bdc3c13d03cf1050e03c06496796822b6421b1`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/b6bdc3c13d03cf1050e03c06496796822b6421b1),
+[the workflow](../../.github/workflows/repository-control.yml) reads issue
+#4024 through three trusted-base helpers. Bounded capture is integrated main
+behavior, not a pending candidate. The workflow blob is
+`7d4e1dd250a1114898599ccedc14b99ff0577523`.
 
-The current protected-main workflow still uses two trusted-base validators and
-an inline `gh api --paginate --slurp` comment-capture step. That current base is
-active but advisory; it does not contain the candidate bounded capture helper.
+Historical lineage: PR #4237 integrated the live-source workflow baseline into
+`main@bd942b45493fa5f80e946ecfb3e810e413787394` on 2026-09-03.
+Commit [`bdc4919450`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/bdc49194502d5b18964bd1badb3401f03bb429cf)
+later routed source reads through bounded capture. The earlier two-validator,
+inline `gh api --paginate --slurp` description is historical only.
 
-This candidate adds a third trusted-base capture helper,
-`fetch_bounded_issue_comments.py`, and replaces the inline capture step with
-explicit transport, parser, structure, pagination, and serialization ceilings.
-The candidate code and this note are not current-main behavior until separately
-reviewed and integrated.
-
-If the candidate bytes are integrated, the control will use three trusted-base
-helpers:
+The current workflow uses:
 
 1. `fetch_bounded_issue_comments.py` captures the source page by page under
    strict transport, parser, structure, and serialization ceilings.
@@ -71,7 +69,7 @@ helpers:
    comments against the exact pull request, base, head, actor, decision, and
    expiry.
 
-All three candidate helpers are fetched from the exact pull-request base SHA.
+All three helpers are fetched from the exact pull-request base SHA.
 The workflow never checks out or executes pull-request-head code and has
 read-only `contents`, `issues`, and `pull-requests` permissions.
 
@@ -113,13 +111,15 @@ not preventive merge containment.
 - Raw response bodies, comments, numeric tokens, and transport exceptions are
   not copied into bounded decision output.
 
-## Candidate bounded source capture
+<a id="candidate-bounded-source-capture"></a>
 
-If the candidate bytes are integrated, the capture helper will request at most
-100 records per page and admit at most 100 pages. A bounded sentinel page is
+## Bounded source capture
+
+The integrated capture helper requests at most
+100 records per page and admits at most 100 pages. A bounded sentinel page is
 used when page 100 is full so the source is never silently truncated.
 
-The candidate's fixed limits are:
+The fixed limits are:
 
 - 8 MiB of transferred input per page;
 - 16 MiB of aggregate transferred and reserialized input;
@@ -148,7 +148,7 @@ which emits the nonzero blocking classification.
 
 ## Pull-request lifecycle behavior
 
-The current and candidate workflows listen to `opened`, `reopened`,
+The current workflow listens to `opened`, `reopened`,
 `synchronize`, `ready_for_review`, `converted_to_draft`, `edited`, `labeled`,
 and `unlabeled`.
 
@@ -178,8 +178,8 @@ That is why an advisory failure can occur after a merge without preventing it.
 
 ## Proposed server-side enforcement packet
 
-After the bounded-capture candidate is independently reviewed and integrated,
-the smallest candidate addition is:
+After fresh exact-main validation and independent review of the integrated
+control and its enforcement scope, the smallest candidate addition is:
 
 ```json
 {
@@ -203,27 +203,27 @@ deployment, promotion, publication, or source-state change.
 
 ## Remaining proof order
 
-1. Obtain focused and hosted exact-head validation plus a new separate review of
-   the bounded-capture candidate.
-2. Integrate the bounded-capture implementation only through a separately
-   authorized, capability-separated path.
-3. Re-read the integrated helper, workflow, check-run name, and GitHub Actions
-   App identity on exact current main.
-4. Run a fresh draft event and verify the active workflow emits
+1. Obtain fresh focused and hosted exact-head validation plus separate review
+   of the integrated control; presence on main does not prove acceptance.
+2. Re-read the exact current helper/workflow bytes, check-run name, GitHub
+   Actions App identity, ruleset revision, and protected branch coverage.
+3. Through a separately authorized settings operation, add the reviewed strict
+   required-status-check rule without weakening existing protections; read back
+   the applied settings before any canary.
+4. Obtain a separate owner decision for a genuinely capability-separated
+   canary path. The implicated creator/observer path remains quarantined at
+   `VALIDATED_BRANCH_ONLY` until independent containment is proven.
+5. In that separately authorized path, verify a fresh draft event emits
    `PULL_REQUEST_IS_DRAFT`, not skipped success.
-5. Through a separately authorized settings operation, add the reviewed strict
-   required-status-check rule without weakening existing protections.
-6. Use a genuinely capability-separated operator for negative and positive
-   canaries.
-7. Prove born-ready and later-ready requests cannot merge without an exact
+6. Prove born-ready and later-ready requests cannot merge without an exact
    current record.
-8. Prove stale, edited, malformed, duplicate-key, wrong-base, wrong-head,
+7. Prove stale, edited, malformed, duplicate-key, wrong-base, wrong-head,
    wrong-issue, non-owner, expired, unavailable, oversized, and incomplete
    source states remain blocked.
-9. Advance the head and prove strict currentness requires a fresh record and
+8. Advance the head and prove strict currentness requires a fresh record and
    rerun.
-10. Record platform rejection before merge; a check that starts after merge is
-    not prevention evidence.
+9. Record platform rejection before merge; a check that starts after merge is
+   not prevention evidence.
 
 ## Explicit residual limits
 
@@ -254,9 +254,11 @@ Historical records retain the issue identity and bytes they actually observed.
 Do not rewrite receipts merely because the live control source moved from
 deleted issue #1675 to issue #4024.
 
-Before integration, abandon the candidate branch. After integration, rollback
-is a focused forward restoration of the previously reviewed helper/workflow
-bytes. If a required-check rule is later installed, remove or replace that rule
+Before integration of this documentation correction, abandon its branch. A
+later correction can restore the prior documentation with a reviewed revert;
+that does not roll back the integrated control. Control rollback is separately
+a focused forward restoration of previously reviewed helper/workflow bytes.
+If a required-check rule is later installed, remove or replace that rule
 through a separately authorized settings operation before reverting or renaming
 its workflow, so the protected branch is not deadlocked.
 

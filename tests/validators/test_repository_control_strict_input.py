@@ -198,17 +198,17 @@ def test_strict_serializer_rejects_non_finite_values(value: float) -> None:
     assert caught.value.reason_code == "CONTROL_SOURCE_SERIALIZATION_INVALID"
 
 
-def test_binding_note_distinguishes_current_main_from_candidate_hardening() -> None:
+def test_binding_note_distinguishes_integrated_control_from_enforcement_proposal() -> None:
     binding = BINDING_PATH.read_text(encoding="utf-8")
     lowered = binding.lower()
 
     assert "current-main workflow-active advisory" in lowered
-    assert "candidate bounded-input hardening" in lowered
+    assert "integrated bounded-input hardening" in lowered
     assert "pr #4237" in lowered
-    assert "current protected-main workflow still uses two trusted-base validators" in lowered
-    assert "candidate adds a third trusted-base capture helper" in lowered
+    assert "#4024 through three trusted-base helpers" in lowered
+    assert "bounded capture is integrated main" in lowered
     assert "fetch_bounded_issue_comments.py" in binding
-    assert "if the candidate bytes are integrated" in lowered
+    assert "if the candidate bytes are integrated" not in lowered
     assert "16 mib" in lowered
     assert "1,000,000 json nodes" in lowered
     assert "allow_nan=false" in lowered

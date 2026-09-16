@@ -1,0 +1,107 @@
+{
+  "receipt_id": "genrec-repository-control-doc-currentness-20260916",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "contracts/governance/repository_control_state.md",
+    "docs/governance/repository_transition_control_source.md",
+    "tests/validators/test_repository_control_strict_input.py"
+  ],
+  "artifact_hashes": {
+    "contracts/governance/repository_control_state.md": "sha256:8fd7cf36b6b8d116c6533f2a56f7dd5d5add5af88f16d0438b434421b45c6bfc",
+    "docs/governance/repository_transition_control_source.md": "sha256:13be0584948ea8bec98a113d3d0309be3a03bc985706269f6c58219076ac1cfa",
+    "tests/validators/test_repository_control_strict_input.py": "sha256:66f133077f2e7f6dff1a8b32315fe7b250855febb69a70af3143db3ac8fd0b62"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "not exposed by execution interface"
+  },
+  "prompt_or_contract": "sha256:c04df72139330593ce9302170389da99a60e1c7ac13f571358e15dc51d81798e",
+  "parameters": {
+    "seed": null,
+    "temperature": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b6bdc3c13d03cf1050e03c06496796822b6421b1/.github/workflows/repository-control.yml",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b6bdc3c13d03cf1050e03c06496796822b6421b1/CONTRIBUTING.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b6bdc3c13d03cf1050e03c06496796822b6421b1/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b6bdc3c13d03cf1050e03c06496796822b6421b1/docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    "contracts/governance/repository_control_state.md": "CONFIRMED",
+    "docs/governance/repository_transition_control_source.md": "CONFIRMED",
+    "tests/validators/test_repository_control_strict_input.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused repository-control pytest suites",
+      "outcome": "PASS",
+      "reason": "51 passed; source, input bounds, strict input, transition authorization. Existing documentation guard updated; all negative input cases retained."
+    },
+    {
+      "gate": "Markdown structure and relative links; operative source alignment; adopted doctrine digest",
+      "outcome": "PASS",
+      "reason": "Two changed Markdown files checked locally; no runtime or hosted acceptance inferred."
+    },
+    {
+      "gate": "git diff --check",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated receipt schema and final artifact hashes",
+      "outcome": "PASS",
+      "reason": "Native validate_generated_receipt.py reports GENERATED_RECEIPT_VALID artifacts=3 integrity=bound review=pending review_claim=absent."
+    },
+    {
+      "gate": "repository topology with trusted base b6bdc3c13d03cf1050e03c06496796822b6421b1",
+      "outcome": "FAIL",
+      "reason": "Inherited unchanged failure: KFM-TOPO-004 catalog/, fingerprint sha256:71a120ae8ca2b69896266c9ddd52f6d03577ea91fa2de4390b7d57b9ceeb912f. Exact findings equal current-main replay: 124 baselined warnings and one new-drift finding; no introduced findings, catalog or baseline edits."
+    },
+    {
+      "gate": "hosted and independent acceptance",
+      "outcome": "SKIPPED",
+      "reason": "NOT_RUN: local branch only under #4024 VALIDATED_BRANCH_ONLY; human review pending."
+    },
+    {
+      "gate": "full repository and pre-commit all-files",
+      "outcome": "SKIPPED",
+      "reason": "NOT_RUN: documentation correction and existing documentation guard; focused checks proportional to four-path scope."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pinned-repository-evidence-1",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b6bdc3c13d03cf1050e03c06496796822b6421b1/.github/workflows/repository-control.yml"
+    },
+    {
+      "id": "pinned-repository-evidence-2",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b6bdc3c13d03cf1050e03c06496796822b6421b1/CONTRIBUTING.md"
+    },
+    {
+      "id": "pinned-repository-evidence-3",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b6bdc3c13d03cf1050e03c06496796822b6421b1/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "pinned-repository-evidence-4",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b6bdc3c13d03cf1050e03c06496796822b6421b1/docs/doctrine/directory-rules.md"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": []
+  },
+  "created_at": "2026-09-16T03:57:38.683946Z",
+  "emitter": "Codex repository-control documentation repair agent",
+  "links": {
+    "pr_number": null,
+    "adr_link": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b6bdc3c13d03cf1050e03c06496796822b6421b1/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Same-path currentness correction plus existing documentation-regression guard. contracts/ owns semantic guidance, docs/ human coordination, tests/ executable assertions, data/receipts/generated/ process memory. Historical #1675 fixtures and receipts retained. No helper, workflow, ruleset, policy, catalog, Site, runtime, release or publication changes. Before integration abandon branch; after authorized integration reviewed focused revert. No material prompt-injection instructions adopted. Receipt records provenance only; independent review and #4024 containment remain open."
+}

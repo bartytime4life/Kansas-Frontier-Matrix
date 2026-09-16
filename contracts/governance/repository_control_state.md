@@ -99,15 +99,15 @@ An accepted record must match:
 
 The trusted-base workflow rejects draft PRs, edited comments, duplicate or unknown JSON fields, stale or overlong records, and base/head mismatches. Comment bodies are treated as untrusted bounded data and are never executed or echoed.
 
-Post each authorization as a new comment on issue #1675 after the PR base and head are frozen. Do not edit it; post a replacement for any correction or new head. This synthetic example shows the exact marker and shape:
+Post each authorization as a new comment on issue #4024 after the PR base and head are frozen. Deleted issue #1675 remains historical receipt and fixture lineage only, as recorded in the [control-source binding note](../../docs/governance/repository_transition_control_source.md). Do not edit it; post a replacement for any correction or new head. This synthetic example shows the exact marker and shape:
 
 ```html
 <!-- KFM_REPOSITORY_TRANSITION_AUTHORIZATION_V1
-{"schema_version":"1.0.0","authorization_id":"kfm-rta-pr-9001-head-222222222222","repository":"bartytime4life/Kansas-Frontier-Matrix","control_issue":1675,"pr_number":9001,"base_sha":"1111111111111111111111111111111111111111","head_sha":"2222222222222222222222222222222222222222","authorizing_actor":"bartytime4life","decision":"ALLOW_READY_AND_MERGE","expires_at":"2026-07-30T22:00:00Z","reason":"Synthetic exact-head transition example.","evidence_refs":["fixture://repository-control/pr/9001/head/222222222222"]}
+{"schema_version":"1.0.0","authorization_id":"kfm-rta-pr-9001-head-222222222222","repository":"bartytime4life/Kansas-Frontier-Matrix","control_issue":4024,"pr_number":9001,"base_sha":"1111111111111111111111111111111111111111","head_sha":"2222222222222222222222222222222222222222","authorizing_actor":"bartytime4life","decision":"ALLOW_READY_AND_MERGE","expires_at":"2026-07-30T22:00:00Z","reason":"Synthetic exact-head transition example.","evidence_refs":["fixture://repository-control/pr/9001/head/222222222222"]}
 -->
 ```
 
-Keep the PR draft until that separate transition decision exists, then mark it ready to trigger the check. If an already-ready PR needs reevaluation, an `edited`, `labeled`, or `unlabeled` PR event can request a new run; none of those events supplies authority without a matching unedited #1675 record.
+Keep the PR draft until that separate transition decision exists, then mark it ready to trigger the check. If an already-ready PR needs reevaluation, an `edited`, `labeled`, or `unlabeled` PR event can request a new run; none of those events supplies authority without a matching unedited #4024 record.
 
 The expiry and unedited-comment condition are evaluated at workflow run time. GitHub does not automatically turn an already-recorded successful check into a failure when the timestamp later passes or the issue comment is later edited or deleted. Therefore the record is an exact-head point-in-time transition decision, not a continuously enforced time lease or immutable ledger: post it only when the ready-and-merge transition is actually intended, preserve it, and request a fresh run before relying on it after expiry or any comment mutation. A later head or base change invalidates the exact binding and causes a new run to hold.
 
