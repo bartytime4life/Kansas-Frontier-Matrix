@@ -42,5 +42,7 @@ it does not copy or rewrite those payloads. Paths, exact-byte SHA-256 digests,
 subject, feature and time bounds must equal the code-owned lookup contract.
 This byte-digest profile is distinct from Hydrology's parsed-object digest.
 Only internal `FOUND` lookup is demonstrated; the original `overlay:` subject
-cannot satisfy the current verification-history `kfm://` grammar. No alias,
+cannot satisfy the legacy verification-history `kfm://` grammar. The separately
+proposed Atlas history profile remains subject to review; this lookup loads no
+history and retains `atlas-lookup/verification-profile-review-required`. No alias,
 verification record, policy, review, release or public answer is created.

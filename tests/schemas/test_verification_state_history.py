@@ -31,12 +31,18 @@ class VerificationStateHistoryTests(unittest.TestCase):
         )
 
     def test_fixture_polarity_and_exact_negative_codes(self) -> None:
-        self.assertEqual(len(self.valid_files), 2)
+        self.assertEqual(len(self.valid_files), 3)
         for path in self.valid_files:
             with self.subTest(path=path.name):
                 self.assertEqual(validate_history_file(path), [])
 
         expected_codes = {
+            "invalid_atlas_profile_version.json": {
+                "VERIFICATION_HISTORY_SCHEMA_INVALID"
+            },
+            "invalid_atlas_profile_subject.json": {
+                "VERIFICATION_HISTORY_SCHEMA_INVALID"
+            },
             "invalid_missing_correction_ref.json": {
                 "VERIFICATION_HISTORY_SCHEMA_INVALID"
             },

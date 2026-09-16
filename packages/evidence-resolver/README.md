@@ -135,15 +135,20 @@ are cross-bound. `FOUND` returns an immutable internal packet; serialized
 diagnostics omit bytes and paths and always deny render/answer authority.
 
 **Resolution remains HOLD.** The unmodified Atlas bundle member is
-`overlay:synthetic-kansas-promotion-proof`, but the existing verification-history
-schema/parser admits only `kfm://` subjects and the candidate evaluator requires
-an exact subject match. Replacing the subject with an alias would violate that
-binding. Tests exercise both failures against the real parser/evaluator. This
-lookup preserves the subject and exposes
-`atlas-lookup/verification-subject-profile-incompatible`; it neither fabricates
-history nor weakens the shared schema. A reviewed contract-compatible subject
-binding is the next prerequisite before candidate evaluation, followed by
-explicit policy, review, release, citation and same-subject correction checks.
+`overlay:synthetic-kansas-promotion-proof`. The legacy verification-history
+profile admits only `kfm://` subjects, and an alias fails exact EvidenceRef
+binding. The proposed `1.1.0` /
+`kfm://profile/verification-state-replay/atlas-fixture/v1alpha1` pair admits only
+that literal synthetic subject, without changing legacy v1 or supporting-ref
+grammar. See the [semantic review contract](../../contracts/evidence/verification_state_history.md#explicit-subject-profiles).
+Its synthetic tests can reach internal `RESOLVED`, which remains non-renderable
+`CONTINUE_GOVERNED_CHECKS`, using test-supplied context only.
+
+The fixed lookup does not select the proposed profile, load a history or call
+the evaluator. It now exposes `atlas-lookup/verification-profile-review-required`.
+Independent contract review and server-owned verification/policy/review/release/
+citation/correction context remain prerequisites to operational integration.
+The new test history is not a verification judgment or approval record.
 
 Both existing Make targets discover the Atlas tests. No API, Explorer, Site,
 production store, cache or model consumer imports this module. This internal

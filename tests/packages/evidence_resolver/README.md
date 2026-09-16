@@ -71,8 +71,11 @@ FIFO replacement, descriptor cleanup, short reads, file growth and unsupported
 platform denial. Matching test-only digests cannot bypass subject, feature,
 scope-hash or time checks. Network, URL, DNS and process calls are denied during
 lookup. The actual shared verification parser/evaluator demonstrates why
-`overlay:` fails the history grammar and a `kfm://` alias fails exact subject
-binding. `FOUND` is lookup-only and keeps resolution on HOLD.
+`overlay:` fails the legacy history grammar and a `kfm://` alias fails exact
+subject binding. `FOUND` is lookup-only and keeps resolution on review HOLD.
+The separate [Atlas profile tests](../../schemas/test_atlas_verification_profile.py)
+prove the proposed opt-in history shape, parity and replay using synthetic
+context. They do not remove the lookup HOLD or connect a public consumer.
 
 ```bash
 KFM_NO_NETWORK=1 python -m unittest discover -s tests/packages/evidence_resolver \

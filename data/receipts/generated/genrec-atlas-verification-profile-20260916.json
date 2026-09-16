@@ -1,0 +1,149 @@
+{
+  "contract_version": "3.0.0",
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "UNKNOWN; exact serving model version not exposed"
+  },
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local repository validation",
+      "GitHub connector",
+      "Sites connector",
+      "Google Drive connector",
+      "Notion connector"
+    ]
+  },
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "receipt_id": "genrec-atlas-verification-profile-20260916",
+  "artifact_paths": [
+    "contracts/evidence/verification_state_history.md",
+    "fixtures/contracts/v1/evidence/verification_state_history/README.md",
+    "fixtures/contracts/v1/evidence/verification_state_history/invalid/invalid_atlas_profile_subject.json",
+    "fixtures/contracts/v1/evidence/verification_state_history/invalid/invalid_atlas_profile_version.json",
+    "fixtures/contracts/v1/evidence/verification_state_history/valid/valid_atlas_fixture_profile.json",
+    "fixtures/packages/evidence_resolver/v1alpha1/README.md",
+    "packages/evidence-resolver/README.md",
+    "packages/evidence-resolver/src/evidence_resolver/README.md",
+    "packages/evidence-resolver/src/evidence_resolver/atlas_fixture_lookup.py",
+    "packages/evidence-resolver/src/evidence_resolver/verification_history.py",
+    "schemas/contracts/v1/evidence/verification_state_history.schema.json",
+    "tests/packages/evidence_resolver/README.md",
+    "tests/packages/evidence_resolver/test_atlas_fixture_lookup.py",
+    "tests/schemas/README.md",
+    "tests/schemas/test_atlas_verification_profile.py",
+    "tests/schemas/test_verification_state_history.py"
+  ],
+  "artifact_hashes": {
+    "contracts/evidence/verification_state_history.md": "sha256:18e8c6f0cccf025a1d1802b09cf25cc0de516c40847f3a9bc8fabc4a5c9f6199",
+    "fixtures/contracts/v1/evidence/verification_state_history/README.md": "sha256:af2ebedd2a080c6d607fab3d8121ed1209de0ae733fce139dcb32a894dde95f3",
+    "fixtures/contracts/v1/evidence/verification_state_history/invalid/invalid_atlas_profile_subject.json": "sha256:9e5e10d713b716da833f5760463ff63d8aa1e9cf1e966984b9fc35470f2b1adb",
+    "fixtures/contracts/v1/evidence/verification_state_history/invalid/invalid_atlas_profile_version.json": "sha256:6dc684f9d99367a0eedf95028368cf67b932b5574a0e26f4d4e9dc45e1d42d55",
+    "fixtures/contracts/v1/evidence/verification_state_history/valid/valid_atlas_fixture_profile.json": "sha256:a157e3227efe27877e6af51b0ac8805233e6be7ac4498a21e1a42875810d4a8a",
+    "fixtures/packages/evidence_resolver/v1alpha1/README.md": "sha256:aa800b3d3a2f6fe26251455cf4efe072d75090db966b971a812da58f440ccb38",
+    "packages/evidence-resolver/README.md": "sha256:f3dd61ed7725a567adeabca667031d7dd4711889c4e0548c19090f508b801f08",
+    "packages/evidence-resolver/src/evidence_resolver/README.md": "sha256:d553a510a4fc58958b04d7eb0758edf6895521cf61a10006948e66ef444c30d0",
+    "packages/evidence-resolver/src/evidence_resolver/atlas_fixture_lookup.py": "sha256:72ab09d8a204f6cd099f35f96524930099402091deedafb27237be3983a2cc7a",
+    "packages/evidence-resolver/src/evidence_resolver/verification_history.py": "sha256:bc576c0e5a235931a81b6ed8b0d03f4c6d56ed38b231296bab2779e31a855c36",
+    "schemas/contracts/v1/evidence/verification_state_history.schema.json": "sha256:3d610c89bd2daf4f0a1fe9e7235ef380a77c5afdaf52ab77c374c3516de8af14",
+    "tests/packages/evidence_resolver/README.md": "sha256:5c22d89fca99659eb4b28bfc7ab24e9e5e6b9772d61eb7d684c8365a8cf4fad0",
+    "tests/packages/evidence_resolver/test_atlas_fixture_lookup.py": "sha256:de2d6889edad2c45024e9b8b0c9320e9746016073d4d3cd4c72d62a5259ee31f",
+    "tests/schemas/README.md": "sha256:08b9d9345598a05a5e565109cce33bb311c5ffd3f9ea5cf63f36ca3c81930ff1",
+    "tests/schemas/test_atlas_verification_profile.py": "sha256:1c8c9fab74a62f8446ff35683e30ae07edacde1ff3636cd2297f444b7e159921",
+    "tests/schemas/test_verification_state_history.py": "sha256:7abfae99dce9e1ea7d3900b1d92a33c0423303bc709f57285a75c300af875d33"
+  },
+  "prompt_or_contract": "sha256:9927cdcd68e0f5dce5cad5e09cbe065cd318caded7e263beccab8c8a65299fdc",
+  "inputs": {
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/b6bdc3c13d03cf1050e03c06496796822b6421b1",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/1093621ab18d1a4843a4783c40a4eb8fda7b1479",
+      "github://bartytime4life/Kansas-Frontier-Matrix/issues/3381",
+      "github://bartytime4life/Kansas-Frontier-Matrix/issues/3400"
+    ],
+    "evidence_hashes": [
+      "sha256:8ad3948994680b0e6a85a3eb4c82f69466d0c5c2baf4c15fb4e14e43c1acb26d",
+      "sha256:79aa8c518fe95922cc3c29567a5edf067a866a5b0036eb0133a930b73a2748f6",
+      "sha256:b84c2869e16f6c4050f1a5736fad57fd6fa3a9fb65bde5f4c709b0a8487c530f"
+    ]
+  },
+  "truth_labels": {
+    "contracts/evidence/verification_state_history.md": "PROPOSED",
+    "fixtures/contracts/v1/evidence/verification_state_history/README.md": "PROPOSED",
+    "fixtures/contracts/v1/evidence/verification_state_history/invalid/invalid_atlas_profile_subject.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/verification_state_history/invalid/invalid_atlas_profile_version.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/verification_state_history/valid/valid_atlas_fixture_profile.json": "PROPOSED",
+    "fixtures/packages/evidence_resolver/v1alpha1/README.md": "PROPOSED",
+    "packages/evidence-resolver/README.md": "PROPOSED",
+    "packages/evidence-resolver/src/evidence_resolver/README.md": "PROPOSED",
+    "packages/evidence-resolver/src/evidence_resolver/atlas_fixture_lookup.py": "PROPOSED",
+    "packages/evidence-resolver/src/evidence_resolver/verification_history.py": "PROPOSED",
+    "schemas/contracts/v1/evidence/verification_state_history.schema.json": "PROPOSED",
+    "tests/packages/evidence_resolver/README.md": "PROPOSED",
+    "tests/packages/evidence_resolver/test_atlas_fixture_lookup.py": "PROPOSED",
+    "tests/schemas/README.md": "PROPOSED",
+    "tests/schemas/test_atlas_verification_profile.py": "PROPOSED",
+    "tests/schemas/test_verification_state_history.py": "PROPOSED"
+  },
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "fixed-lookup-parent",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/1093621ab18d1a4843a4783c40a4eb8fda7b1479"
+    }
+  ],
+  "created_at": "2026-09-16T01:24:35.715660Z",
+  "validation_gates": [
+    {
+      "gate": "profile-schema-parser-replay-candidate",
+      "outcome": "PASS",
+      "reason": "37 tests and175 subtests pass across test_verification_state_history.py, test_atlas_verification_profile.py and test_atlas_fixture_lookup.py. The10 new profile tests cover closed version/profile/subject pairs, literal identity and collisions, supporting-reference grammar, hash binding, bitemporal correction/revocation/reverification/supersession, original-bundle candidate closure, policy/currentness denial, missing history and zero network/process calls. Internal RESOLVED still projects to non-authoritative/non-renderable CONTINUE_GOVERNED_CHECKS."
+    },
+    {
+      "gate": "canonical-fixtures-and-schema",
+      "outcome": "PASS",
+      "reason": "Native verification-history fixture CLI passes all13 cases:3 positive histories and10 expected negatives. Draft2020-12 meta-schema and canonical schema ID pass. The two existing valid and eight existing invalid fixture bytes are preserved."
+    },
+    {
+      "gate": "resolver-regression",
+      "outcome": "PASS",
+      "reason": "Both make evidence-resolver and make evidence-resolver-deny pass89 tests per target, plus21 full and19 negative candidate fixture cases. Event/replay/hash implementations, resolver core and Hydrology code are preserved; only the explicit history profile shape and lookup HOLD reason change."
+    },
+    {
+      "gate": "public-boundary",
+      "outcome": "PASS",
+      "reason": "Native governed API plus Explorer adapter boundary pytest passes28 tests. No app, public API guard/route, Explorer/browser configuration, policy, lockfile or production lookup consumer changes. The fixed Atlas lookup does not read the new history or select its profile."
+    },
+    {
+      "gate": "artifact-documentation-integrity",
+      "outcome": "PASS",
+      "reason": "Original Atlas carrier/reference/full bundle and fixed manifest, all10 historical history JSON fixtures and previous receipts are preserved from1093621. Seven changed Markdown files pass62 local link checks; whitespace checks pass. The new synthetic history and basis refs are test-only inventions, not accepted verification or policy/review/release records."
+    },
+    {
+      "gate": "topology",
+      "outcome": "FAIL",
+      "reason": "Native FAIL_INVARIANT remains:124 baselined warnings,one existing catalog new-drift finding,one stale baseline fingerprint andzero counted invariant findings. Baseline, findings and counts equal main b6bdc3c. No baseline expansion."
+    },
+    {
+      "gate": "independent-contract-and-operational-acceptance",
+      "outcome": "SKIPPED",
+      "reason": "The1.1.0 Atlas fixture profile is PROPOSED and opt-in; independent contract review remains pending. Lookup retains atlas-lookup/verification-profile-review-required. Server-owned same-subject verification/policy/review/release/citation/correction records, positive real API/browser transport, hosted final-head checks and operational recovery/acceptance remain open. No operational history is issued and no milestone is closed."
+    },
+    {
+      "gate": "generated-receipt-policy-reference",
+      "outcome": "FAIL",
+      "reason": "Native generated receipt validation returns POLICY_DECISION_REQUIRED because the candidate changes schemas/contracts/v1/. No applicable PolicyDecision record for this profile was found in the consulted evidence. policy_decisions remains empty; an unrelated ADR or synthetic fixture is not substituted. Artifact hashes are bound, but the receipt is not validated and the candidate is not ready for acceptance."
+    }
+  ],
+  "notes": "One17-path review candidate depends on fixed-lookup parent1093621ab18d1a4843a4783c40a4eb8fda7b1479. Existing1.0.0/v1 kfm:// subjects remain unchanged; only the explicit1.1.0/atlas-fixture/v1alpha1 pair accepts the exact original synthetic Atlas subject. No aliasing, generic overlay namespace expansion, migration, schema relocation or new registry. Roll back the candidate as a unit; unsupported1.1.0 records must fail closed instead of being coerced to1.0.0. Historical receipt bindings stay historical. Main and owner-private Sitev41 are unchanged. VALIDATED_BRANCH_ONLY under #4024; Stage1B HOLD and Stage2 UNAUTHORIZED persist. Receipt-policy reference HOLD is explicit: review must supply an applicable policy-decision reference before receipt acceptance. Branch delivery does not clear this failure."
+}

@@ -2,11 +2,11 @@
 doc_id: kfm://doc/tests-schemas-readme
 title: tests/schemas/ — Executable schema conformance and anti-collapse tests
 type: README; directory-readme; schema-test-lane; executable-inventory
-version: v0.5
+version: v0.6
 status: draft; repository-grounded; executable-partial; workflow-bound; no-network-by-default; non-authoritative
 owner: "@bartytime4life — CONFIRMED CODEOWNERS review route; schema, contract, fixture, QA, security, and release stewardship remain NEEDS VERIFICATION"
 created: 2026-07-07
-updated: 2026-08-30
+updated: 2026-09-16
 supersedes: v0.4 documentation at the same path
 policy_label: repository-facing; tests; schemas; contracts; fixtures; anti-collapse; no-network; fail-closed
 current_path: tests/schemas/README.md
@@ -52,6 +52,17 @@ notes:
 > decisions.
 
 ## Purpose and audience
+
+The bounded Atlas follow-up adds
+[`test_atlas_verification_profile.py`](./test_atlas_verification_profile.py):
+closed version/profile/subject pairs, schema/parser parity, literal identity,
+unchanged event-reference grammar, bitemporal withdrawal and restoration,
+candidate denial/currentness and non-renderable runtime projection. It uses
+synthetic review fixtures only and does not connect the fixed lookup to a
+public consumer. Run it together with
+[`test_verification_state_history.py`](./test_verification_state_history.py).
+The inventory counts and evidence snapshot below describe the earlier pinned
+survey; this bounded addition does not claim a new repository-wide inventory.
 
 Use this README to locate the direct tests, choose a focused command, understand
 what each module checks, interpret failures, and identify the difference between

@@ -1,0 +1,83 @@
+{
+  "schema_version": "1.0.0",
+  "history_id": "kfm:verification-history:synthetic:atlas-profile-review",
+  "subject_ref": "overlay:synthetic-kansas-promotion-proof",
+  "profile_id": "kfm://profile/verification-state-replay/atlas-fixture/v1alpha1",
+  "events": [
+    {
+      "event_id": "evt:atlas-review-1",
+      "event_type": "VERIFIED",
+      "state": "ACTIVE",
+      "effective_at": "2026-04-13T00:00:00Z",
+      "recorded_at": "2026-04-13T00:00:00Z",
+      "reason_code": "SYNTHETIC_PROFILE_REVIEW_ONLY",
+      "basis_refs": [
+        "kfm://synthetic/atlas-profile-review/basis-1"
+      ]
+    },
+    {
+      "event_id": "evt:atlas-review-2",
+      "event_type": "REVOKED",
+      "state": "REVOKED",
+      "effective_at": "2026-04-13T00:10:00Z",
+      "recorded_at": "2026-04-13T00:20:00Z",
+      "reason_code": "SYNTHETIC_PROFILE_REVIEW_ONLY",
+      "basis_refs": [
+        "kfm://synthetic/atlas-profile-review/basis-2"
+      ],
+      "relates_to_event_id": "evt:atlas-review-1",
+      "revocation_ref": "kfm://synthetic/atlas-profile-review/revocation_ref-2"
+    },
+    {
+      "event_id": "evt:atlas-review-3",
+      "event_type": "REVERIFIED",
+      "state": "ACTIVE",
+      "effective_at": "2026-04-13T00:30:00Z",
+      "recorded_at": "2026-04-13T00:40:00Z",
+      "reason_code": "SYNTHETIC_PROFILE_REVIEW_ONLY",
+      "basis_refs": [
+        "kfm://synthetic/atlas-profile-review/basis-3"
+      ],
+      "relates_to_event_id": "evt:atlas-review-2"
+    },
+    {
+      "event_id": "evt:atlas-review-4",
+      "event_type": "CORRECTED",
+      "state": "CORRECTED",
+      "effective_at": "2026-04-13T00:45:00Z",
+      "recorded_at": "2026-04-13T00:50:00Z",
+      "reason_code": "SYNTHETIC_PROFILE_REVIEW_ONLY",
+      "basis_refs": [
+        "kfm://synthetic/atlas-profile-review/basis-4"
+      ],
+      "relates_to_event_id": "evt:atlas-review-3",
+      "correction_ref": "kfm://synthetic/atlas-profile-review/correction_ref-4"
+    },
+    {
+      "event_id": "evt:atlas-review-5",
+      "event_type": "REVERIFIED",
+      "state": "ACTIVE",
+      "effective_at": "2026-04-13T00:55:00Z",
+      "recorded_at": "2026-04-13T01:00:00Z",
+      "reason_code": "SYNTHETIC_PROFILE_REVIEW_ONLY",
+      "basis_refs": [
+        "kfm://synthetic/atlas-profile-review/basis-5"
+      ],
+      "relates_to_event_id": "evt:atlas-review-4"
+    },
+    {
+      "event_id": "evt:atlas-review-6",
+      "event_type": "SUPERSEDED",
+      "state": "SUPERSEDED",
+      "effective_at": "2026-04-13T01:00:00Z",
+      "recorded_at": "2026-04-13T01:05:00Z",
+      "reason_code": "SYNTHETIC_PROFILE_REVIEW_ONLY",
+      "basis_refs": [
+        "kfm://synthetic/atlas-profile-review/basis-6"
+      ],
+      "relates_to_event_id": "evt:atlas-review-5",
+      "replacement_ref": "kfm://synthetic/atlas-profile-review/replacement_ref-6"
+    }
+  ],
+  "spec_hash": "sha256:619cd5bbff1814f39080761d79b921480ec2b177ee951cc6ea68d69eca946376"
+}

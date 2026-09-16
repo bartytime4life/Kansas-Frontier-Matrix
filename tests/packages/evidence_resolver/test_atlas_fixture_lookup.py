@@ -60,7 +60,7 @@ class AtlasFixtureLookupTests(unittest.TestCase):
             raw = getattr(packet, role + "_bytes")
             self.assertEqual((REPO_ROOT / path).read_bytes(), raw)
             self.assertEqual(digest, "sha256:" + hashlib.sha256(raw).hexdigest())
-        self.assertEqual("atlas-lookup/verification-subject-profile-incompatible",
+        self.assertEqual("atlas-lookup/verification-profile-review-required",
                          result.as_dict()["resolution_hold"])
         self.assertFalse(result.as_dict()["authoritative"])
         self.assertFalse(result.as_dict()["renderable"])

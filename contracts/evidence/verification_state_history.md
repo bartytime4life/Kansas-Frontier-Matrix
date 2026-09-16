@@ -2,11 +2,11 @@
 doc_id: kfm://contract/evidence/verification-state-history
 title: VerificationStateHistory Contract
 type: contract
-version: v0.1.0
+version: v0.2.0
 status: draft; PROPOSED; bounded-profile
 owners: OWNER_TBD - Evidence steward; Correction steward; Contract steward; Schema steward; Validation steward
 created: 2026-08-02
-updated: 2026-08-02
+updated: 2026-09-16
 policy_label: public; evidence; bitemporal; correction-aware; replayable; synthetic-fixtures; no-network; not-release-authority
 related:
   - ./README.md
@@ -57,12 +57,61 @@ A correction can therefore be effective before it is recorded while remaining in
 
 | Field | Meaning |
 |---|---|
-| `schema_version` | Closed profile version; v1 is `1.0.0`. |
+| `schema_version` | Closed profile version; legacy is `1.0.0`, proposed synthetic Atlas is `1.1.0`. |
 | `history_id` | Stable identity for this history document. |
 | `subject_ref` | The one subject whose verification state is replayed. |
 | `profile_id` | Fixed replay profile identity. |
 | `spec_hash` | SHA-256 of canonical JSON after removing `spec_hash`. |
 | `events` | One bounded append-ordered transition chain. |
+
+## Explicit subject profiles
+
+The schema and standard-library parser admit exactly these combinations:
+
+| `schema_version` | `profile_id` | `subject_ref` |
+|---|---|---|
+| `1.0.0` | `kfm://profile/verification-state-replay/v1` | Existing `kfm://` grammar, unchanged. |
+| `1.1.0` | `kfm://profile/verification-state-replay/atlas-fixture/v1alpha1` | Literal `overlay:synthetic-kansas-promotion-proof` only. |
+
+The second combination is **PROPOSED / SYNTHETIC FIXTURE REVIEW ONLY**. Its
+implementation allows a compatibility proposal to be tested; it does not record
+an accepted verification judgment. Version/profile mixing, unknown versions,
+other `overlay:` subjects, case changes, URI encoding, whitespace, aliases and
+normalization are rejected. Existing v1 histories continue to reject `overlay:`.
+All event IDs, supporting references, correction/replacement/revocation
+references, event limits, hashes, ordering and replay rules remain unchanged.
+
+The literal subject is already the original synthetic Atlas carrier's candidate
+identity and the full EvidenceBundle's member reference. This profile preserves
+those bytes and exact EvidenceRef equality. It does not create a general alias
+registry or widen the shared `kfm_ref` definition. The opaque Atlas lookup
+selector, EvidenceBundle ID and verification-history subject remain distinct.
+
+The [synthetic profile fixture](../../fixtures/contracts/v1/evidence/verification_state_history/valid/valid_atlas_fixture_profile.json)
+contains invented, visibly synthetic events and basis references solely to test
+replay. It is not operational evidence, a review decision, a signed verification
+record, or authority to render the Atlas. The fixed lookup does not load this
+history, select this profile, construct a candidate request or evaluate policy.
+Its diagnostic remains a HOLD, now named
+`atlas-lookup/verification-profile-review-required`.
+
+Review acceptance must confirm this closed profile/version pair, original byte
+and identity preservation, schema/parser parity, negative collision cases,
+unchanged v1 semantics, same-subject correction/revocation replay and the absence
+of public-answer authority. The [profile tests](../../tests/schemas/test_atlas_verification_profile.py)
+exercise the original bundle through the pure candidate evaluator using only
+test-supplied context. Internal `RESOLVED` still projects to non-renderable
+`CONTINUE_GOVERNED_CHECKS`; it does not establish server-owned policy, rights,
+review, release, citation or correction context.
+
+After independent contract review, the next implementation boundary is the
+server-owned selection and integrity binding of those records to the same
+subject, with missing/stale/revoked cases failing closed, followed by positive
+real API/browser and operational recovery proof. Passing the profile tests does
+not satisfy those later gates. No new policy outcome, source admission or
+production history store is introduced here.
+
+## Event shape
 
 Each event contains:
 
@@ -155,6 +204,7 @@ This contract does not:
 ```bash
 KFM_NO_NETWORK=1 python tools/validators/validate_verification_state_history.py --fixtures
 KFM_NO_NETWORK=1 python -m pytest -q tests/schemas/test_verification_state_history.py
+KFM_NO_NETWORK=1 python -m pytest -q tests/schemas/test_atlas_verification_profile.py
 ```
 
 Expected coverage includes active, corrected, reverified, superseded, revoked, late-recorded, and unknown-history replay plus schema, hash, chain, transition, ordering, timestamp, parser-bound, CLI, and no-network failures.
@@ -167,5 +217,14 @@ implementation with this validator. Rollback is a normal revert of the
 resolver integration and shared helper; the contract, schema, and original
 history fixtures may remain independently. Historical evidence, release,
 correction, and published state are unaffected.
+
+The proposed `1.1.0` profile is opt-in, not a migration or default upgrade.
+The canonical schema home and existing validator entrypoint stay the same;
+there is no new registry or parallel schema. Legacy histories and the original
+Atlas carrier, reference and bundle are preserved. The profile has no production
+consumer and no operational history is issued. Reverting its schema/parser,
+synthetic fixtures, tests and documentation returns to the legacy-only behavior.
+Do not coerce a `1.1.0` record into `1.0.0` on rollback: unsupported profiles must
+fail closed, and any previously retained record remains historical.
 
 [Back to top](#top)

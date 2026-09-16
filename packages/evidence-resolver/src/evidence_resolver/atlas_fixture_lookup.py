@@ -42,7 +42,7 @@ _ARTIFACTS = (
     ("bundle", "fixtures/contracts/v1/evidence/evidence_bundle/valid/valid_3.json",
      "sha256:b84c2869e16f6c4050f1a5736fad57fd6fa3a9fb65bde5f4c709b0a8487c530f"),
 )
-_HOLD = "atlas-lookup/verification-subject-profile-incompatible"
+_HOLD = "atlas-lookup/verification-profile-review-required"
 
 
 @dataclass(frozen=True)
@@ -144,8 +144,9 @@ def lookup_atlas_fixture(candidate_id: str) -> AtlasFixtureLookup:
 
     Unknown syntactically valid IDs return NOT_FOUND without filesystem reads.
     Every failure discards packet data. Successful lookup still has a mandatory
-    verification-subject HOLD: overlay: identity cannot satisfy the current
-    kfm://-only verification-history profile without an explicit contract change.
+    verification-profile HOLD: the legacy profile excludes overlay: identity;
+    the proposed Atlas fixture profile needs review and server-owned context.
+    This lookup never selects a history profile or constructs verification.
     """
     checks: list[str] = []
     if (

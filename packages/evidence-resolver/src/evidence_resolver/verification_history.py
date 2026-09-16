@@ -21,6 +21,9 @@ _HISTORY_ID = re.compile(
     r"^kfm:verification-history:[a-z0-9][a-z0-9._:-]{0,127}$"
 )
 _KFM_REF = re.compile(r"^kfm://[A-Za-z0-9._~:/-]+$")
+LEGACY_PROFILE = "kfm://profile/verification-state-replay/v1"
+ATLAS_FIXTURE_PROFILE = "kfm://profile/verification-state-replay/atlas-fixture/v1alpha1"
+ATLAS_FIXTURE_SUBJECT = "overlay:synthetic-kansas-promotion-proof"
 _EVENT_ID = re.compile(r"^evt:[a-z0-9][a-z0-9._-]{0,63}$")
 _REASON_CODE = re.compile(r"^[A-Z][A-Z0-9_]{2,63}$")
 _TIMESTAMP = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$")
@@ -132,7 +135,7 @@ def _shape_finding(path: str) -> HistoryFinding:
 
 
 def validate_history_shape(candidate: object) -> tuple[HistoryFinding, ...]:
-    """Mirror the closed v1 JSON shape for standard-library consumers."""
+    """Mirror the closed legacy and proposed synthetic Atlas JSON profiles."""
 
     if not isinstance(candidate, Mapping):
         return (_shape_finding("$"),)
@@ -141,7 +144,8 @@ def validate_history_shape(candidate: object) -> tuple[HistoryFinding, ...]:
     )
     if set(candidate) != required:
         return (_shape_finding("$"),)
-    if candidate["schema_version"] != "1.0.0":
+    version = candidate["schema_version"]
+    if version not in ("1.0.0", "1.1.0"):
         return (_shape_finding("$.schema_version"),)
     history_id = candidate["history_id"]
     if not isinstance(history_id, str) or not _HISTORY_ID.fullmatch(history_id):
@@ -150,10 +154,15 @@ def validate_history_shape(candidate: object) -> tuple[HistoryFinding, ...]:
     if (
         not isinstance(subject_ref, str)
         or not 7 <= len(subject_ref) <= 256
-        or not _KFM_REF.fullmatch(subject_ref)
+        or (
+            not _KFM_REF.fullmatch(subject_ref)
+            if version == "1.0.0"
+            else subject_ref != ATLAS_FIXTURE_SUBJECT
+        )
     ):
         return (_shape_finding("$.subject_ref"),)
-    if candidate["profile_id"] != "kfm://profile/verification-state-replay/v1":
+    expected_profile = LEGACY_PROFILE if version == "1.0.0" else ATLAS_FIXTURE_PROFILE
+    if candidate["profile_id"] != expected_profile:
         return (_shape_finding("$.profile_id"),)
     spec_hash = candidate["spec_hash"]
     if not isinstance(spec_hash, str) or not _DIGEST.fullmatch(spec_hash):

@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://schemas.kfm.local/contracts/v1/evidence/verification_state_history.schema.json",
   "title": "verification_state_history",
-  "description": "Bounded PROPOSED bitemporal verification-state history profile.",
+  "description": "Bounded PROPOSED bitemporal verification-state history profiles: legacy v1 and opt-in synthetic Atlas fixture review.",
   "x-kfm": {
     "contract_doc": "contracts/evidence/verification_state_history.md",
     "fixtures_root": "fixtures/contracts/v1/evidence/verification_state_history/",
@@ -13,17 +13,25 @@
   "type": "object",
   "properties": {
     "schema_version": {
-      "const": "1.0.0"
+      "enum": [
+        "1.0.0",
+        "1.1.0"
+      ]
     },
     "history_id": {
       "type": "string",
       "pattern": "^kfm:verification-history:[a-z0-9][a-z0-9._:-]{0,127}$"
     },
     "subject_ref": {
-      "$ref": "#/$defs/kfm_ref"
+      "type": "string",
+      "minLength": 7,
+      "maxLength": 256
     },
     "profile_id": {
-      "const": "kfm://profile/verification-state-replay/v1"
+      "enum": [
+        "kfm://profile/verification-state-replay/v1",
+        "kfm://profile/verification-state-replay/atlas-fixture/v1alpha1"
+      ]
     },
     "spec_hash": {
       "type": "string",
@@ -323,5 +331,33 @@
         }
       ]
     }
-  }
+  },
+  "oneOf": [
+    {
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0"
+        },
+        "profile_id": {
+          "const": "kfm://profile/verification-state-replay/v1"
+        },
+        "subject_ref": {
+          "$ref": "#/$defs/kfm_ref"
+        }
+      }
+    },
+    {
+      "properties": {
+        "schema_version": {
+          "const": "1.1.0"
+        },
+        "profile_id": {
+          "const": "kfm://profile/verification-state-replay/atlas-fixture/v1alpha1"
+        },
+        "subject_ref": {
+          "const": "overlay:synthetic-kansas-promotion-proof"
+        }
+      }
+    }
+  ]
 }

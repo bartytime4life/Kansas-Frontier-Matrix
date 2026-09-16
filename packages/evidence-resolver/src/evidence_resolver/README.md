@@ -27,7 +27,8 @@ packages/evidence-resolver/src/evidence_resolver/
   `EvidenceBundle` field shapes used by this profile;
 - exact bundle-reference, lookup-ID, and member-reference comparisons;
 - closed `VerificationStateHistory` shape and semantic validation shared with
-  its repository validator;
+  its repository validator, including the separate proposed synthetic Atlas
+  version/profile pair while retaining the legacy v1 subject grammar;
 - bitemporal replay, exact EvidenceRef-subject binding, and fail-closed
   corrected, superseded, revoked, unknown, and inconsistent-history outcomes;
 - explicit caller-supplied current-head, canonical policy-outcome projection,
@@ -91,11 +92,11 @@ those fields prevent accidental omission but do not establish their semantics.
 
 The separate Atlas lookup takes only one opaque candidate selector. It returns
 `FOUND`, `NOT_FOUND` or `ERROR`; `FOUND` holds immutable bytes of the three
-already-pinned fixture artifacts and still carries a verification-subject HOLD.
+already-pinned fixture artifacts and still carries a verification-profile review HOLD.
 It reuses the internal descriptor reader from `hydrology_fixture_adapter.py`
 without invoking that adapter's lookup or changing its allowlist. The full
 [package boundary](../../README.md#fixed-synthetic-atlas-lookup) defines the
-byte limits, exact-identity checks and incompatible verification-history subject.
+byte limits, exact-identity checks and proposed verification-profile review gate.
 This lookup does not construct or normalize the candidate request below.
 
 The caller supplies one closed object containing `profile`, `evidence_ref`,
