@@ -2,7 +2,7 @@
 doc_id: kfm://doc/normalized-summary-consumer-readiness-checklist
 title: "Normalized Summary Consumer Readiness Checklist"
 type: checklist
-version: v1.4
+version: v1.5
 status: draft; repository-grounded; validation-guidance-only
 owners:
   - "NEEDS VERIFICATION — doctrine-preflight steward"
@@ -36,7 +36,7 @@ evidence_preflight_runbook_blob: 65978a535b38b1dbc7a314decb0aa699e51ed608
 evidence_maintenance_readme_blob: bd4ef697d7118074be44d00e6e77a8a311afe5f4
 inspection_boundary: "The evidence_base and blob pins describe the historical v1.2 source-only inspection. The v1.3 follow-up below separately records a three-path validator/test/documentation repair and local validation against its named base; no external consumer or hosted acceptance is inferred."
 followup_base_commit: b6bdc3c13d03cf1050e03c06496796822b6421b1
-currentness_base_commit: 280600f87157b830c7621fb4b6fc3788b42d95cb
+currentness_base_commit: fd03c91c88a06fc7d4e097775ec62ede6d3b498c
 
 related:
   - docs/adr/INDEX.md
@@ -58,6 +58,7 @@ notes:
   - "v1.2 pins a source-only currentness re-read; it neither reruns the preflight/test bundle nor changes consumer, cutover, release, or publication behavior."
   - "v1.3 closes strict normalized-map presence and key-set validation in the existing validator. Full schema validation, artifact-byte verification, consumer acceptance, and default cutover remain separate."
   - "v1.4 removes residual statements that predated the v1.3 validator repair; it changes documentation only and grants no acceptance or cutover authority."
+  - "v1.5 corrects the remaining repository-native-validation checklist item missed by v1.4; it changes documentation only and grants no acceptance or cutover authority."
   - "The machine registry currently records two internal consumers as validated; exhaustive in-repository and external-consumer coverage remains unverified."
 [/KFM_META_BLOCK_V2] -->
 
@@ -88,7 +89,7 @@ Use this checklist before representing any parser, workflow, operator tool, dash
 |---|---|
 | **Document role** | ADR support document and human migration checklist |
 | **Decision authority** | None; [`INDEX.md`](./INDEX.md) classifies this file as “Validation guidance only” |
-| **Record edition** | `v1.4` — post-merge currentness correction |
+| **Record edition** | `v1.5` — post-merge forward correction |
 | **Current emitter default** | Compatibility output; normalized-only emission requires `--emit-normalized-only` |
 | **Normalized-only implementation** | Present as an optional emitter mode, consistency-validator mode, fixture/test path, and shadow check |
 | **Machine readiness registry** | Two recorded internal consumers; both carry `status: validated` in the tracked registry |
@@ -354,7 +355,7 @@ A consumer may be recorded as `validated` only after every applicable item below
 - [ ] Normalized-only summary is emitted with `--emit-normalized-only`.
 - [ ] Summary passes the Draft 2020-12 schema validator.
 - [ ] Summary passes `validate_doctrine_preflight_summary_consistency.py --require-normalized-only`.
-- [ ] Consumer tests independently verify map presence because the current consistency validator does not.
+- [ ] Consumer tests independently prove fail-closed handling for missing maps and missing or unexpected keys; the consistency validator's structural enforcement does not prove consumer behavior.
 - [ ] Readiness registry passes its structural checker.
 - [ ] Readiness registry passes `--require-all-validated` only after all known consumers are complete.
 - [ ] Focused consumer tests pass at the exact reviewed revision.
@@ -631,6 +632,7 @@ Before integration, abandon the documentation branch. After integration, revert 
 | 2026-09-14 | `v1.2` | Re-pinned repository evidence; recorded the current two-entry registry, three readiness tests, five consistency tests, strict wrapper composition, and the unresolved normalized-map-presence gap; removed the missing next-move reference. | None; default cutover remains on `HOLD`; no preflight, test, workflow, consumer, release, or publication action occurred. |
 | 2026-09-15 | `v1.3` | Reproduced and repaired missing/non-object maps and incorrect key sets in strict consistency validation; added negative and CLI proof while preserving historical evidence. | Bounded validator repair only; default cutover and independent/hosted acceptance remain on `HOLD`. |
 | 2026-09-16 | `v1.4` | Corrected residual caution, evidence-table, rollback, and backlog text that still described the pre-v1.3 false-pass gap after the validator repair merged. | Documentation currentness only; emitter, validator, schema, consumers, registry, cutover, release, and publication are unchanged. |
+| 2026-09-16 | `v1.5` | Corrected the remaining repository-native-validation checklist item after v1.4 merged with the obsolete claim that strict consistency validation did not enforce map presence. | Documentation currentness only; emitter, validator, schema, tests, consumers, registry, cutover, release, and publication are unchanged. |
 
 ### No-loss reconciliation
 
