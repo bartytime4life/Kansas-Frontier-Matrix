@@ -208,12 +208,16 @@ make release-dry-run
 
 It starts from the existing synthetic complete promotion packet and proves five
 negative paths: missing evidence, policy denial, artifact-integrity mismatch,
-non-public-safe rights/sensitivity posture, and absent review. Each case must
-remain `BLOCKED`; the report explicitly records that no candidate, decision,
-authority, network use, or publication was created.
+non-public-safe rights/sensitivity posture, and absent review. It also runs the
+fixture-only shared-identity proof that binds the carrier, manifest,
+EvidenceBundle, STAC, DCAT, PROV, and rollback references to one synthetic
+subject. Each denial case must remain `BLOCKED`; the report explicitly records
+that no candidate, decision, authority, network use, or publication was
+created.
 
 The command emits deterministic JSON to stdout and runs
-`tests/release/test_publication_deny_dry_run.py`. It writes no report file and
+`tests/release/test_publication_deny_dry_run.py` plus
+`tests/release/test_synthetic_release_closure.py`. It writes no report file and
 does not accept caller-controlled candidate content.
 
 [Back to top](#top)

@@ -144,7 +144,8 @@ The following repository targets are confirmed:
 # ReviewRecord and promotion-gate fixtures and tests.
 make publish-check
 
-# Five synthetic publication-denial paths and their focused test module.
+# Five synthetic publication-denial paths plus the shared synthetic
+# catalog/provenance/rollback identity-closure proof.
 make release-dry-run
 ```
 
@@ -188,7 +189,7 @@ branch protection.
 | [`promotion-gate.yml`](../../.github/workflows/promotion-gate.yml) | PromotionDecision shape, promotion gate, and ReviewRecord |
 | [`promotion-receipt.yml`](../../.github/workflows/promotion-receipt.yml) | Promotion receipt |
 | [`promotion-verification-execution.yml`](../../.github/workflows/promotion-verification-execution.yml) | Verification execution, Cosign plan, and promotion gate |
-| [`release-dry-run.yml`](../../.github/workflows/release-dry-run.yml) | Publication deny, PromotionDecision shape, promotion gate, ReviewRecord, and synthetic rollback references |
+| [`release-dry-run.yml`](../../.github/workflows/release-dry-run.yml) | Publication deny; shared synthetic catalog/provenance/rollback identity closure; PromotionDecision shape; promotion gate; ReviewRecord; and synthetic rollback references |
 | [`rollback-drill.yml`](../../.github/workflows/rollback-drill.yml) | Synthetic rollback rehearsal |
 | [`signed-bundle-timestamp-evidence.yml`](../../.github/workflows/signed-bundle-timestamp-evidence.yml) | Signed-bundle timestamp evidence |
 | [`tile-delivery-strategy-assessment.yml`](../../.github/workflows/tile-delivery-strategy-assessment.yml) | Tile-delivery strategy assessment |

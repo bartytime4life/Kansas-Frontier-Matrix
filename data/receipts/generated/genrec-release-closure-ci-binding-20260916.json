@@ -1,0 +1,128 @@
+{
+  "receipt_id": "genrec-release-closure-ci-binding-20260916",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/release-dry-run.yml",
+    "Makefile",
+    "release/README.md",
+    "tests/release/README.md",
+    "tools/release/README.md"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/release-dry-run.yml": "sha256:40a35910cc3fde3c1897f623b9be5147092ca14257fe157449cdeee218dad60d",
+    "Makefile": "sha256:662676d97ef4d976baed466ab0bc3e6fd2c8714edf9e23bf156cb575a7dd50f5",
+    "release/README.md": "sha256:611e2a97bb04f321cd46dd602fc23c8747dba50f7ea75cc94c287fb1199ae656",
+    "tests/release/README.md": "sha256:81884c8dd3936f5e1c73de687faeeda6378f2cf07070e982ef8369ddcdf9f604",
+    "tools/release/README.md": "sha256:deb01368dd1aee34b5754fe02aedbeea445f0dace9c7351b46ad4a1c79b4c30f"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "unknown"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local-shell",
+      "GitHub-read-only"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:c778036b62bf8e619fea4466b22d24ef67ee869cab06d3d80d8a4f1c223bda9f",
+      "sha256:c04df72139330593ce9302170389da99a60e1c7ac13f571358e15dc51d81798e"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/280600f87157b830c7621fb4b6fc3788b42d95cb",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3366",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4415",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/280600f87157b830c7621fb4b6fc3788b42d95cb/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/280600f87157b830c7621fb4b6fc3788b42d95cb/data/receipts/generated/README.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/release-dry-run.yml": "PROPOSED",
+    "Makefile": "PROPOSED",
+    "release/README.md": "PROPOSED",
+    "tests/release/README.md": "PROPOSED",
+    "tools/release/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "bounded release dry-run and shared identity closure",
+      "outcome": "PASS",
+      "reason": "Python 3.12.14: make release-dry-run produced five finite BLOCKED denial cases, four unittest cases passed, and two pytest identity-closure cases passed with zero skips under the declared no-network environment."
+    },
+    {
+      "gate": "focused release regression",
+      "outcome": "PASS",
+      "reason": "python -m pytest -q -p no:cacheprovider tests/release/test_publication_deny_dry_run.py tests/release/test_synthetic_release_closure.py --strict-config --strict-markers reported 6 passed and 5 subtests passed."
+    },
+    {
+      "gate": "workflow security and YAML structure",
+      "outcome": "PASS",
+      "reason": "Duplicate-key YAML parsing confirmed read-only contents permission and the intended pull_request, main push and manual triggers. make workflow-security reported 490 workflows, zero invariants, zero new drift, zero baselined warnings and zero stale entries; its 28 tests passed."
+    },
+    {
+      "gate": "repository validation",
+      "outcome": "PASS",
+      "reason": "make validate completed: all selected aggregate validators passed and tests/schemas plus tests/contracts reported 498 passed and 53 subtests passed. Validator-orchestrator regression reported 13 tests passed."
+    },
+    {
+      "gate": "documentation links and diff hygiene",
+      "outcome": "PASS",
+      "reason": "Local-only link checker passed for three changed README files with 124 local targets; 11 external badge targets remained explicitly unrequested. git diff --check passed."
+    },
+    {
+      "gate": "repository topology",
+      "outcome": "FAIL",
+      "reason": "Inherited FAIL_INVARIANT: 124 baselined warnings, one catalog new-drift fingerprint and one stale catalog fingerprint. The native test lane also retains a local Git 2.43.0 --no-lazy-fetch incompatibility. No topology baseline or catalog bytes changed."
+    },
+    {
+      "gate": "exact-head hosted evidence",
+      "outcome": "SKIPPED",
+      "reason": "NOT_RUN: this receipt precedes remote branch publication; no exact-head hosted workflow result exists yet."
+    },
+    {
+      "gate": "independent human review and integration",
+      "outcome": "SKIPPED",
+      "reason": "BLOCKED: no independent acceptance or eligible integration has occurred; issue #4024 retains VALIDATED_BRANCH_ONLY containment."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "accepted-placement-doctrine",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/280600f87157b830c7621fb4b6fc3788b42d95cb/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "existing-release-closure-proof",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/280600f87157b830c7621fb4b6fc3788b42d95cb/tests/release/test_synthetic_release_closure.py"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-16T18:04:22Z",
+  "emitter": "OpenAI Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Bounded CI-entrypoint correction for the already-existing synthetic release-closure tests. The proposed workflow remains read-only, no-network after dependency installation, and non-authorizing. This receipt excludes its own bytes to avoid a recursive hash; the future Git commit/tree binds it. Hosted checks, independent review, PR eligibility, integration and repaired-main verification remain open. No contract, schema, policy, fixture, source, catalog, topology baseline, Site, settings, scheduler, release, deployment, promotion or publication state changes. Abandon the branch before integration or revert its exact commit afterward."
+}

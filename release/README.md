@@ -75,7 +75,7 @@ notes:
   - "The first twelve H2 sections implement the adopted Directory Rules v2 §16.2 ROOT_FULL contract in exact order."
   - "The direct-child map is pinned to release tree 210ccf37b9f90986590a3e0995a0eeda7f758042 and describes direct children only."
   - "ReleaseManifest, RollbackCard, ReleaseAliasVerification, PromotionDecision, promotion-gate, and Pass 12 policy surfaces are bounded candidate or fixture-first implementation; none creates release authority."
-  - "make publish-check is bounded fixture validation; make release-dry-run remains a TODO-only marker."
+  - "make publish-check and make release-dry-run are bounded fixture validation; neither creates release authority."
   - "The three direct-child Rego files are existing placement drift because canonical policy source belongs under policy/; this README records but does not migrate them."
   - "This revision changes this README and its generated provenance receipt only."
   - "No release, promotion, rollback execution, publication, deployment, source activation, settings change, or ADR transition is performed by this document."
@@ -183,7 +183,7 @@ No second release-decision root, receipt home, proof home, policy home, or publi
 | `RollbackCard` | **CONFIRMED proposed fixture-first candidate profile** | Closed schema, bounded validator, valid/invalid fixtures, and readiness checks exist; two root JSON cards remain documentation placeholders and no rollback is executed. |
 | Release alias verification | **CONFIRMED fixture-only preflight / `PROPOSED_INACTIVE`** | Deterministic checks cover declared initial bind, advance, correction, and rollback cases; no live alias is resolved or mutated. |
 | Review records | **HOLD** | Parent guidance exists; accountable authenticated review records were not established from the inspected release lane. |
-| Candidate assembly | **WORKFLOW_SKIPPED_EXPLICIT / HOLD** | `make release-dry-run` and `tools/release/release_dry_run.py` remain explicit placeholders. |
+| Candidate assembly | **BOUNDED_SYNTHETIC_DRY_RUN / HOLD** | `make release-dry-run` exercises five no-write denial paths and a shared synthetic identity-closure proof. It does not assemble a real candidate. |
 | Promotion execution | **WORKFLOW_SKIPPED_EXPLICIT / HOLD** | No accepted evaluator turns a reviewed candidate into release state. |
 | Rollback execution | **WORKFLOW_SKIPPED_EXPLICIT / HOLD** | The apply helper remains a placeholder; no target mutation, invalidation, or rollback receipt is executed. |
 | Human review enforcement | **NEEDS VERIFICATION** | CODEOWNERS, rulesets, required checks, reviewer authority, and separation of duties were not proved as a complete control. |
@@ -367,7 +367,7 @@ Validation must distinguish source correctness, candidate shape, readiness inspe
 | Surface | What it proves now | What it does not prove |
 |---|---|---|
 | `make validate` | Runs configured aggregate schema validators and schema/contract tests. | Complete release assembly, authenticated review, policy execution, state transition, rollback, or publication. |
-| `make release-dry-run` | Prints the explicit candidate-assembly TODO marker. | Candidate assembly or dry-run execution. |
+| `make release-dry-run` | Exercises five synthetic publication-denial paths and the shared fixture-only catalog/provenance/rollback identity-closure proof. | Real candidate assembly, authenticated review, release decision, state transition, rollback execution, or publication. |
 | `make publish-check` | Runs bounded review-record and promotion-gate validators/tests with no network. | A live candidate, external evidence resolution, actor authentication, policy decision, release state, or publication. |
 | `release-dry-run` workflow | Confirms candidate-lane hold, dual-profile `ReleaseManifest`, fixture counts, bounded promotion-gate checks, and rollback-card readiness. | Candidate or manifest creation, release decision, rollback execution, or publication. |
 | `promotion-gate` workflow | Exercises bounded fixture semantics and keeps missing operational prerequisites fail-closed. | Authenticated evidence, reviewers, signatures, live policy, or a release transition. |
@@ -612,7 +612,8 @@ PRE_RAW -> RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLETS
 Current bounded behavior:
 
 - confirms that `release/candidates/` contains no candidate packet payload;
-- confirms `tools/release/release_dry_run.py` and `make release-dry-run` remain placeholders;
+- runs `tools/release/release_dry_run.py` through `make release-dry-run` and proves five synthetic no-write denial paths;
+- proves that fixture-only catalog, EvidenceBundle, STAC, DCAT, PROV, rollback, carrier, and manifest references retain one synthetic subject identity;
 - verifies the dual-profile ReleaseManifest metadata, four valid fixture groups, and seventeen invalid groups;
 - runs bounded promotion-gate checks;
 - validates RollbackCard fixture readiness.
