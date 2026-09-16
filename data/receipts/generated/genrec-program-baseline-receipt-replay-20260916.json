@@ -1,0 +1,137 @@
+{
+  "receipt_id": "genrec-program-baseline-receipt-replay-20260916",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "Makefile",
+    "tests/validators/test_validate_program_baseline.py"
+  ],
+  "artifact_hashes": {
+    "Makefile": "sha256:af2ed7f3cf613cfd1c77bfce7d81fefa41d2f02852167690ea00f32c7d374ce1",
+    "tests/validators/test_validate_program_baseline.py": "sha256:fc9f3e6d538094c129ba3ade5ea2c8ca1b242be25c0da15c765495540789ecdb"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "UNKNOWN: exact model version not exposed"
+  },
+  "prompt_or_contract": "sha256:ad1931f4c452e37b31e526b3b89ece8892e98c66008a6898ff9c2bdc5a1f963f",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local-shell",
+      "GitHub-connector"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/8bedf94766dd91ae38119c54e00e00b1cf3713d3",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/35156233943",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/ef20b28ec56417e52ba39629b71eaa8242559980",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024"
+    ]
+  },
+  "truth_labels": {
+    "Makefile": "PROPOSED",
+    "tests/validators/test_validate_program_baseline.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-program-baseline",
+      "outcome": "FAIL",
+      "reason": "Current main push run 35156233943 failed GENERATED_RECEIPT_INVALID with code ARTIFACT_DIGEST_MISMATCH at /artifact_paths/1 while replaying genrec-program-baseline-m01-20260822.json against later mutable worktree bytes."
+    },
+    {
+      "gate": "historical-receipt-authoring-tree-replay",
+      "outcome": "PASS",
+      "reason": "validate_generated_receipt.py accepted the unchanged historical receipt and all nine governed artifacts when artifact bytes were resolved from exact authoring commit ef20b28ec56417e52ba39629b71eaa8242559980."
+    },
+    {
+      "gate": "program-baseline-focused-unittest",
+      "outcome": "PASS",
+      "reason": "Eleven deterministic no-network tests passed, including the regression assertion that the Make target pins the historical receipt to its exact authoring tree."
+    },
+    {
+      "gate": "program-baseline-fixture-profile",
+      "outcome": "PASS",
+      "reason": "The positive fixture passed and all six reviewed negative fixtures were rejected with their expected finite finding codes."
+    },
+    {
+      "gate": "program-baseline-make-target",
+      "outcome": "PASS",
+      "reason": "make program-baseline completed successfully on the candidate bytes, including focused tests, fixture polarity, canonical baseline validation, and historical generated-receipt validation."
+    },
+    {
+      "gate": "static-diff-integrity",
+      "outcome": "PASS",
+      "reason": "git diff --check completed successfully on the candidate bytes."
+    },
+    {
+      "gate": "generated-receipt-integrity",
+      "outcome": "PASS",
+      "reason": "validate_generated_receipt.py accepted the final receipt with two artifact digests bound and human review pending."
+    },
+    {
+      "gate": "current-main-topology-and-governance",
+      "outcome": "FAIL",
+      "reason": "Inherited current-main failures remain in validator-suite run 35156234236 and repository-governance-parity run 35156234147. This bounded repair does not alter catalog bytes or the frozen topology baseline."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "NOT_RUN until a branch head exists; a local pass does not establish hosted acceptance."
+    },
+    {
+      "gate": "independent-review",
+      "outcome": "SKIPPED",
+      "reason": "BLOCKED pending independent review; this receipt grants no readiness, merge, release, deployment, publication, or policy authority."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "current-main",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/8bedf94766dd91ae38119c54e00e00b1cf3713d3"
+    },
+    {
+      "id": "failing-main-program-baseline",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/35156233943"
+    },
+    {
+      "id": "historical-receipt-authoring-tree",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/ef20b28ec56417e52ba39629b71eaa8242559980"
+    },
+    {
+      "id": "placement-authority",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8bedf94766dd91ae38119c54e00e00b1cf3713d3/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "delivery-control-incident",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-16T23:53:06Z",
+  "emitter": "Codex bounded authorship receipt",
+  "links": {
+    "pr_number": null,
+    "adr_link": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8bedf94766dd91ae38119c54e00e00b1cf3713d3/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Bounded current-main CI repair. The historical receipt and its governed artifacts remain unchanged; the Make target now resolves those bytes from the exact authoring commit. No catalog/topology baseline, policy, registry, source, data, dependency, workflow, settings, release, deployment, publication, scheduler, access, or Site state is changed. Local validation does not establish hosted acceptance or independent review. Rollback before integration is branch abandonment; after separately authorized integration, revert the focused commit or forward-correct the single Make target while preserving receipt history. VALIDATED_BRANCH_ONLY under the unresolved #4024 containment incident."
+}

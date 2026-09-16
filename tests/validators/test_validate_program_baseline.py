@@ -22,6 +22,16 @@ from tools.validators.control_plane.validate_program_baseline import (
 
 
 class ProgramBaselineValidatorTests(unittest.TestCase):
+    def test_make_target_replays_receipt_from_exact_authoring_tree(self) -> None:
+        makefile = (REPO_ROOT / "Makefile").read_text(encoding="utf-8")
+        self.assertIn(
+            "python tools/validators/validate_generated_receipt.py "
+            "data/receipts/generated/genrec-program-baseline-m01-20260822.json "
+            "--repo-root . --artifact-git-ref "
+            "ef20b28ec56417e52ba39629b71eaa8242559980",
+            makefile,
+        )
+
     def test_schema_is_valid_draft_2020_12(self) -> None:
         schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
         Draft202012Validator.check_schema(schema)
