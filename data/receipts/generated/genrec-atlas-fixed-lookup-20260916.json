@@ -1,0 +1,117 @@
+{
+  "contract_version": "3.0.0",
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "UNKNOWN; exact serving model version not exposed"
+  },
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local repository validation",
+      "GitHub connector",
+      "Sites connector",
+      "Google Drive connector",
+      "Notion connector"
+    ]
+  },
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "receipt_id": "genrec-atlas-fixed-lookup-20260916",
+  "artifact_paths": [
+    "fixtures/packages/evidence_resolver/v1alpha1/README.md",
+    "fixtures/packages/evidence_resolver/v1alpha1/repository/atlas_bundle_manifest.json",
+    "packages/evidence-resolver/README.md",
+    "packages/evidence-resolver/src/evidence_resolver/README.md",
+    "packages/evidence-resolver/src/evidence_resolver/atlas_fixture_lookup.py",
+    "tests/packages/evidence_resolver/README.md",
+    "tests/packages/evidence_resolver/test_atlas_fixture_lookup.py"
+  ],
+  "artifact_hashes": {
+    "fixtures/packages/evidence_resolver/v1alpha1/README.md": "sha256:90d35c412628041b9f4a00c4e14c80e414fd7268b3d9a0431bde9013f30e0236",
+    "fixtures/packages/evidence_resolver/v1alpha1/repository/atlas_bundle_manifest.json": "sha256:97016836d7f5f2fefd7399319fe3958bf50ebf3c0f6efcee48bc5758a26d5ae8",
+    "packages/evidence-resolver/README.md": "sha256:206596876c3d1281eaff95938fa72c0128f99d19a249e8c4879408e685dcdbe2",
+    "packages/evidence-resolver/src/evidence_resolver/README.md": "sha256:7b89f6d69e925cadd16c1a2bb7f9ed7136785b5432fc840fa01a2e75a9d446e9",
+    "packages/evidence-resolver/src/evidence_resolver/atlas_fixture_lookup.py": "sha256:367fecadbd1eaf2190b86890a4203fb652cc699dd8cf1590af1d9bc6b2f3e102",
+    "tests/packages/evidence_resolver/README.md": "sha256:7e79341a1a1f806d4ac09dc6b2e2939c84721fbc9adc9a6a06d48a958ed68cd0",
+    "tests/packages/evidence_resolver/test_atlas_fixture_lookup.py": "sha256:769566516dde8b78a57a726d07e078b42a4e9f84b43ba1fc9d56307172ae18f7"
+  },
+  "prompt_or_contract": "sha256:948d2c9420ec13f2987461ab48e7dad92dda1a3a2423594796be5b422a78a040",
+  "inputs": {
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/b6bdc3c13d03cf1050e03c06496796822b6421b1",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/f69a21a14ce3df54d91c78adb2fb62e72dc345c1",
+      "github://bartytime4life/Kansas-Frontier-Matrix/issues/3381",
+      "github://bartytime4life/Kansas-Frontier-Matrix/issues/3400"
+    ],
+    "evidence_hashes": [
+      "sha256:8ad3948994680b0e6a85a3eb4c82f69466d0c5c2baf4c15fb4e14e43c1acb26d",
+      "sha256:79aa8c518fe95922cc3c29567a5edf067a866a5b0036eb0133a930b73a2748f6",
+      "sha256:b84c2869e16f6c4050f1a5736fad57fd6fa3a9fb65bde5f4c709b0a8487c530f"
+    ]
+  },
+  "truth_labels": {
+    "fixtures/packages/evidence_resolver/v1alpha1/README.md": "PROPOSED",
+    "fixtures/packages/evidence_resolver/v1alpha1/repository/atlas_bundle_manifest.json": "PROPOSED",
+    "packages/evidence-resolver/README.md": "PROPOSED",
+    "packages/evidence-resolver/src/evidence_resolver/README.md": "PROPOSED",
+    "packages/evidence-resolver/src/evidence_resolver/atlas_fixture_lookup.py": "PROPOSED",
+    "tests/packages/evidence_resolver/README.md": "PROPOSED",
+    "tests/packages/evidence_resolver/test_atlas_fixture_lookup.py": "PROPOSED"
+  },
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "integration-parent",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/f69a21a14ce3df54d91c78adb2fb62e72dc345c1"
+    }
+  ],
+  "created_at": "2026-09-16T00:25:30.695749Z",
+  "validation_gates": [
+    {
+      "gate": "fixed-lookup-adversarial-tests",
+      "outcome": "PASS",
+      "reason": "Focused pytest:17 tests and55 subtests pass. Exercises immutable original byte binding, malformed and stale selectors with no I/O, closed manifest, digest and identity tampering, malformed/bounded JSON, symlink and FIFO swaps, growth, short reads, descriptor cleanup, unsupported flags and blocked network/process calls. FOUND remains non-authoritative/non-renderable with mandatory resolution HOLD."
+    },
+    {
+      "gate": "resolver-and-negative-fixtures",
+      "outcome": "PASS",
+      "reason": "Both make evidence-resolver and make evidence-resolver-deny pass:89 package tests per target;21 full candidate fixtures and19 negative candidate cases. Existing72 tests unchanged. KFM_NO_NETWORK=1."
+    },
+    {
+      "gate": "public-api-boundary",
+      "outcome": "PASS",
+      "reason": "Native API plus Explorer adapter boundary pytest passes28 tests. No API or Explorer consumer imports the new lookup; routes, public guards and browser configuration are unchanged."
+    },
+    {
+      "gate": "verification-subject-contract",
+      "outcome": "FAIL",
+      "reason": "Existing Atlas subject overlay:synthetic-kansas-promotion-proof is incompatible with the kfm://-only VerificationStateHistory subject grammar. Real parser returns ERROR; a kfm:// alias fails exact EvidenceRef identity matching and returns UNRESOLVED. No history, alias, policy, review or release decision is invented. Lookup deliberately stops before candidate evaluation."
+    },
+    {
+      "gate": "artifact-and-documentation-integrity",
+      "outcome": "PASS",
+      "reason": "Original Atlas carrier, reference and full bundle, existing Hydrology implementation/manifest, resolver core, verification parser, schemas, policy, apps, lockfile and historical receipts are byte-preserved from f69a21a. Four owning README link checks pass26 local targets. Diff whitespace checks pass."
+    },
+    {
+      "gate": "topology",
+      "outcome": "FAIL",
+      "reason": "Native FAIL_INVARIANT remains with124 baselined warnings,one catalog new-drift finding,one stale baseline fingerprint andzero counted invariant findings. Findings, baseline and counts equal current-main b6bdc3c; only tracked-path count differs. No baseline expansion."
+    },
+    {
+      "gate": "hosted-independent-operational-acceptance",
+      "outcome": "SKIPPED",
+      "reason": "Hosted final-head checks and independent human review remain open. Branch-only delivery under #4024. Prior integration browser/build evidence belongs to f69a21a and is not relabeled as final-head execution. Sites remains owner-private v41; no deployment, source admission, candidate RESOLVED, public ANSWER, correction/rollback execution, release or milestone closure is claimed."
+    }
+  ],
+  "notes": "Authorship and local validation only; human review pending. One commit depends on explorer integration parent f69a21a14ce3df54d91c78adb2fb62e72dc345c1. The opaque selector resolves only three fixed repository documents through the existing descriptor-safe bounded reader, with code-owned paths/digests and closed identity/time binding. Hydrology stays separate. The next slice must establish an independently reviewed contract-compatible subject binding before candidate evaluation, then same-subject policy/review/release/citation/correction context and withdrawal/rollback, positive API/browser evidence and Sites acceptance. Revert this eight-path follow-up independently; preserve the descriptor repair in the parent. Historical receipt hash bindings remain historical. Main, settings, Stage1B HOLD and Stage2 UNAUTHORIZED remain unchanged."
+}

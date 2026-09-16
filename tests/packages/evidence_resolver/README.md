@@ -20,6 +20,7 @@ Tests for the internal
 ```text
 tests/packages/evidence_resolver/
 ├── README.md
+├── test_atlas_fixture_lookup.py        # fixed bytes, safe lookup, subject HOLD
 ├── test_cli.py                         # command and fixture inventory
 ├── test_core.py                        # candidate bounds and finite outcomes
 ├── test_hydrology_fixture_adapter.py   # lookup, digest, paths, and no-I/O proof
@@ -59,6 +60,24 @@ The timestamp boundary regressions reject overflowing numeric UTC offsets before
 Python can normalize them. They exercise direct candidates, every existing policy
 posture, and the manifest adapter after a matching test-only digest, while
 preserving valid timestamp forms and non-authoritative runtime behavior.
+
+## Atlas lookup proof
+
+`test_atlas_fixture_lookup.py` exercises the actual fixed manifest and three
+original artifact files. It checks immutable byte binding, deterministic safe
+diagnostics, selector rejection before I/O, manifest/path/digest tampering,
+malformed/oversized JSON, missing files, static and post-check symlink swaps,
+FIFO replacement, descriptor cleanup, short reads, file growth and unsupported
+platform denial. Matching test-only digests cannot bypass subject, feature,
+scope-hash or time checks. Network, URL, DNS and process calls are denied during
+lookup. The actual shared verification parser/evaluator demonstrates why
+`overlay:` fails the history grammar and a `kfm://` alias fails exact subject
+binding. `FOUND` is lookup-only and keeps resolution on HOLD.
+
+```bash
+KFM_NO_NETWORK=1 python -m unittest discover -s tests/packages/evidence_resolver \
+  -p 'test_atlas_fixture_lookup.py' -v
+```
 
 ## Verification replay query regression
 

@@ -34,3 +34,13 @@ digest profile. Candidate-suite discovery is restricted to `valid/` and
 `invalid/`; it cannot interpret this manifest as a resolver request. The
 manifest is not an evidence registry, catalog, proof store, policy record,
 source registry, release record, or production authority.
+
+`repository/atlas_bundle_manifest.json` is a separate, closed lookup manifest
+for `atlas-candidate:synthetic-kansas-proof-v1`. It references the original
+synthetic carrier, promotion-reference fixture and full Atlas EvidenceBundle;
+it does not copy or rewrite those payloads. Paths, exact-byte SHA-256 digests,
+subject, feature and time bounds must equal the code-owned lookup contract.
+This byte-digest profile is distinct from Hydrology's parsed-object digest.
+Only internal `FOUND` lookup is demonstrated; the original `overlay:` subject
+cannot satisfy the current verification-history `kfm://` grammar. No alias,
+verification record, policy, review, release or public answer is created.

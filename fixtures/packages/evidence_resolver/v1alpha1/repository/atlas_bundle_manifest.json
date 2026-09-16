@@ -1,0 +1,25 @@
+{
+  "adapter_profile": "kfm/synthetic-atlas-fixture-lookup/v1alpha1",
+  "candidate_id": "atlas-candidate:synthetic-kansas-proof-v1",
+  "subject_ref": "overlay:synthetic-kansas-promotion-proof",
+  "evidence_ref": "evidence:synthetic:promotion-proof:v1",
+  "feature_id": "synthetic-kansas-test-extent",
+  "temporal": {
+    "start": "2026-04-13T00:00:00Z",
+    "end": "2026-04-13T01:00:00Z"
+  },
+  "artifacts": {
+    "carrier": {
+      "path": "fixtures/release/promotion_verification_execution/artifacts/synthetic_atlas_carrier.geojson",
+      "sha256": "sha256:8ad3948994680b0e6a85a3eb4c82f69466d0c5c2baf4c15fb4e14e43c1acb26d"
+    },
+    "reference": {
+      "path": "fixtures/release/promotion_verification_execution/references/evidence.json",
+      "sha256": "sha256:79aa8c518fe95922cc3c29567a5edf067a866a5b0036eb0133a930b73a2748f6"
+    },
+    "bundle": {
+      "path": "fixtures/contracts/v1/evidence/evidence_bundle/valid/valid_3.json",
+      "sha256": "sha256:b84c2869e16f6c4050f1a5736fad57fd6fa3a9fb65bde5f4c709b0a8487c530f"
+    }
+  }
+}

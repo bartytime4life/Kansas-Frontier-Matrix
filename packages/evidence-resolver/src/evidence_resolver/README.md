@@ -11,6 +11,7 @@ packages/evidence-resolver/src/evidence_resolver/
 ├── README.md
 ├── __init__.py             # intentionally empty; no supported public exports
 ├── core.py                 # pure bounded candidate evaluation
+├── atlas_fixture_lookup.py # fixed Atlas byte/identity lookup; resolution HOLD
 ├── hydrology_fixture_adapter.py # fixed internal manifest lookup and digest gate
 ├── runtime_projection.py   # conservative internal next-step projection
 └── verification_history.py # shared standard-library validation and replay
@@ -87,6 +88,15 @@ citations, rights, sensitivity, policy, or evidence truth. Shape checks for
 those fields prevent accidental omission but do not establish their semantics.
 
 ## Input and output posture
+
+The separate Atlas lookup takes only one opaque candidate selector. It returns
+`FOUND`, `NOT_FOUND` or `ERROR`; `FOUND` holds immutable bytes of the three
+already-pinned fixture artifacts and still carries a verification-subject HOLD.
+It reuses the internal descriptor reader from `hydrology_fixture_adapter.py`
+without invoking that adapter's lookup or changing its allowlist. The full
+[package boundary](../../README.md#fixed-synthetic-atlas-lookup) defines the
+byte limits, exact-identity checks and incompatible verification-history subject.
+This lookup does not construct or normalize the candidate request below.
 
 The caller supplies one closed object containing `profile`, `evidence_ref`,
 `bundle_candidate`, `lookup_context`, `verification_history`, and

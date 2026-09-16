@@ -5,20 +5,21 @@ lane inherited from [`packages/`](../README.md). Its implemented behavior is
 the internal, non-authoritative
 `kfm/evidence-ref-bundle-candidate/v1alpha1` check plus one issue-scoped,
 read-only Hydrology fixture adapter for the first #2975 lookup-and-integrity
-packet.
+packet, plus a separate fixed synthetic Atlas packet lookup. Atlas lookup
+binds original bytes and identities; it does not run candidate resolution.
 
 ## Boundary contract
 
 | Field | Current boundary |
 |---|---|
-| Purpose | Evaluate one explicit candidate deterministically; for #2975 only, resolve stable ID `hb1` through one closed manifest to one synthetic Hydrology fixture before using that existing evaluator. |
-| Scope IDs | `kfm/evidence-ref-bundle-candidate/v1alpha1`; `kfm/hydrology-evidence-bundle-fixture-adapter/v1alpha1`; local digest profile `kfm/evidence-bundle-fixture-digest/v1alpha1`. |
+| Purpose | Evaluate one explicit candidate deterministically; resolve the fixed #2975 Hydrology fixture before evaluation; separately bind the existing synthetic Atlas packet without resolving or renaming its subject. |
+| Scope IDs | `kfm/evidence-ref-bundle-candidate/v1alpha1`; `kfm/hydrology-evidence-bundle-fixture-adapter/v1alpha1`; `kfm/synthetic-atlas-fixture-lookup/v1alpha1`; Hydrology parsed-object digest profile `kfm/evidence-bundle-fixture-digest/v1alpha1`. |
 | Local owner | `@bartytime4life` is provisional accountable maintainer for the first #2975 packet only; package-wide `OWNER_TBD` and independent human review remain pending. |
-| Belongs | Pure standard-library checks, bounded parsing, one fixed read-only fixture manifest, complete-object local digest verification, stable internal issue codes, and non-authoritative result carriers. |
+| Belongs | Pure standard-library checks, bounded parsing, fixed read-only fixture manifests, complete-object or exact-byte digest verification under their separate profiles, stable internal issue codes, and non-authoritative result carriers. |
 | Prohibited | Caller paths, directory scanning, environment-selected paths, network or production-store access, registry/catalog/proof lookup, claim-scope inference, source admission, evidence creation, model invocation, policy evaluation, review/release decisions, public outcomes, deployment, or publication. |
-| Inputs | Current proposed `EvidenceRef`, `EvidenceBundle`, and `VerificationStateHistory` shapes plus explicit lookup and bitemporal as-of snapshots; the fixture adapter accepts a stable `bundle_id`, never a path or caller-supplied bundle. |
+| Inputs | Candidate evaluation uses current proposed `EvidenceRef`, `EvidenceBundle`, and `VerificationStateHistory` shapes plus explicit context. Hydrology lookup accepts a stable `bundle_id`; Atlas lookup accepts only its fixed candidate selector. Neither lookup accepts a caller path or bundle. |
 | Policy projection | Caller supplies `policy_outcome` using the current proposed `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR` vocabulary plus a decision reference; the package does not evaluate policy. |
-| Output | Internal `RESOLVED`, `UNRESOLVED`, `DENIED`, or `ERROR` candidate result with `authoritative: false`. |
+| Output | Candidate evaluation: `RESOLVED`, `UNRESOLVED`, `DENIED`, or `ERROR`. Atlas lookup only: `FOUND`, `NOT_FOUND`, or `ERROR`. Neither surface grants authority; Atlas `FOUND` is not candidate `RESOLVED`. |
 | Exposure | Internal alpha only; `__init__.py` remains empty and no public package API or production consumer is declared. |
 | Mutation/retention | None. Core evaluation is pure; the adapter performs bounded reads only and retains no input or result. |
 | Runtime dependencies | Python standard library only. Core evaluation has no filesystem dependency; the adapter can read only its fixed manifest, the allowlisted fixture, and no network, environment, clock, secret, model, socket, or service. |
@@ -114,6 +115,41 @@ allowlist, manifest, payload digest, resolver contracts, public negative-only
 API, correction checks, and non-renderable runtime posture are unchanged.
 Rollback is a joint revert of adapter, tests, and these boundary notes; it
 reintroduces the reproduced read race and requires explicit review.
+
+### Fixed synthetic Atlas lookup
+
+[`atlas_fixture_lookup.py`](src/evidence_resolver/atlas_fixture_lookup.py)
+accepts only the opaque selector `atlas-candidate:synthetic-kansas-proof-v1`.
+The closed [Atlas manifest](../../fixtures/packages/evidence_resolver/v1alpha1/repository/atlas_bundle_manifest.json)
+binds the existing carrier, promotion-reference fixture and full EvidenceBundle
+to code-owned paths and exact SHA-256 byte pins. Manifest edits alone cannot
+expand the allowlist. No caller path, bundle, policy, review or release state is
+accepted; unknown selectors return `NOT_FOUND` before any filesystem read.
+
+The lookup reuses the repaired package-internal descriptor reader, without
+changing Hydrology's `hb1` manifest or digest. Each of four reads is bounded by
+the reader's 128 KiB plus one detection byte; the Atlas parser admits at most
+32 KiB per document. Complete captured bytes are hashed before parsing, then
+candidate/subject/evidence/feature identity, scope hash and exact fixture time
+are cross-bound. `FOUND` returns an immutable internal packet; serialized
+diagnostics omit bytes and paths and always deny render/answer authority.
+
+**Resolution remains HOLD.** The unmodified Atlas bundle member is
+`overlay:synthetic-kansas-promotion-proof`, but the existing verification-history
+schema/parser admits only `kfm://` subjects and the candidate evaluator requires
+an exact subject match. Replacing the subject with an alias would violate that
+binding. Tests exercise both failures against the real parser/evaluator. This
+lookup preserves the subject and exposes
+`atlas-lookup/verification-subject-profile-incompatible`; it neither fabricates
+history nor weakens the shared schema. A reviewed contract-compatible subject
+binding is the next prerequisite before candidate evaluation, followed by
+explicit policy, review, release, citation and same-subject correction checks.
+
+Both existing Make targets discover the Atlas tests. No API, Explorer, Site,
+production store, cache or model consumer imports this module. This internal
+fixture profile is not a public contract, source admission or promotion. Revert
+the Atlas module, manifest, tests and documentation together; keep the separate
+descriptor-read security repair. No live state needs rollback.
 
 ### Remaining authority gaps
 
