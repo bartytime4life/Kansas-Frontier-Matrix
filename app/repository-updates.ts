@@ -32,7 +32,7 @@ export const REPOSITORY_SNAPSHOT = Object.freeze({
   ref: SITE_IDENTITY.repositoryRef,
   commit: SITE_IDENTITY.repositoryCommit,
   shortCommit: SITE_IDENTITY.repositoryCommit.slice(0, 7),
-  inspectedAt: "15 Sep 2026 · GitHub and Sites readback",
+  inspectedAt: "16 Sep 2026 · GitHub and Sites readback",
   counts: Object.freeze({
     knowledgeDomains: 13,
     explorerFeatureFamilies: 38,
@@ -51,12 +51,12 @@ export const REPOSITORY_UPDATES: readonly RepositoryUpdate[] = Object.freeze([
   Object.freeze({
     id: "current-main-live-readback",
     area: "Repository control plane",
-    title: "Main includes the synthetic Atlas carrier and repaired ADR index",
+    title: "Main includes normalized-summary readiness hardening",
     state: "NEEDS VERIFICATION",
     maturity: "PARTIAL",
-    date: "15 Sep 2026",
+    date: "16 Sep 2026",
     summary:
-      "Main is pinned to 32953ec3, the merge of PR #4590. The M36 synthetic Atlas carrier and ADR index repair are present. Exact-main workflow readback found 53 successful runs, two failures (validator-suite and contract-object-map-lifecycle), and one skipped APIsec run. The Site also offers a separate read-only current-main lookup.",
+      "Main is pinned to 8bedf947, the merge of PR #4607 immediately after PR #4608. The promotion gate now exercises normalized-summary regressions and the validator rejects empty readiness inventories. Zero open pull requests were returned at this readback. The Site also offers a separate read-only current-main lookup.",
     boundary:
       "The GitHub repository and this Site retain separate source histories. A successful currentness check does not synchronize code, prove tree equivalence, admit data, approve a review, deploy a version, or authorize publication.",
     sourceLabel: "Exact current main commit",
@@ -77,14 +77,14 @@ export const REPOSITORY_UPDATES: readonly RepositoryUpdate[] = Object.freeze([
   Object.freeze({
     "id": "site-source-integration",
     "area": "Site and repository",
-    "title": "Source history is mirrored; application integration remains held",
+    "title": "Live Site identity is confirmed; repository retargeting remains held",
     "state": "BOUNDED PROOF",
     "maturity": "PARTIAL",
-    "summary": "The v37 Site source tree exactly matched the existing GitHub source mirror at e2f513a. The separate c7858ac branch prepares monorepo identity and parity checks. Main still has the legacy project ID.",
-    "boundary": "Next goal: carry reviewed Site changes through the existing mirror and reconcile capabilities, build inputs and recovery proof. A standalone mirror is not a monorepo merge candidate.",
-    "sourceLabel": "Existing alignment branch",
-    "sourceUrl": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/c7858acabfca7b184cd0dc89fa784cce3c57e27c",
-    "date": "15 Sep 2026"
+    "summary": "Sites readback confirms owner-private v42 on project appgprj_6aa0b1c41bc08191bfd86003920f1631 with a succeeded provider deployment. Repository main still names appgprj_6a870a079c1c8191abb7401ef092a181, which returned NOT_FOUND. A branch-only documentation correction records the mismatch without retargeting deployment.",
+    "boundary": "Next goal: independently reconcile source trees, D1/R2 bindings, MapLibre and framework versions, archive parity, authenticated browser behavior, and rollback before changing the repository target. A documentation branch is not deployment authority.",
+    "sourceLabel": "Branch-only identity-drift correction",
+    "sourceUrl": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/81ddf8c6f343d0b5b25bdaa9f81b847b930a245f",
+    "date": "16 Sep 2026"
   }),
   Object.freeze({
     "id": "trust-spine-deadline",
@@ -330,16 +330,16 @@ export const REPOSITORY_UPDATES: readonly RepositoryUpdate[] = Object.freeze([
   Object.freeze({
     id: "maplibre-boundary",
     area: "Map runtime",
-    title: "The renderer seam is accepted; its neutral port is a verified slice",
-    state: "ACCEPTED",
+    title: "The renderer seam is accepted; dependency versions are not aligned",
+    state: "NEEDS VERIFICATION",
     maturity: "PARTIAL",
     date: "28 Aug 2026",
     summary:
-      "ADR-0006 and ADR-0007 bind KFM browser rendering to packages/maplibre. Current main records exact maplibre-gl 6.6.0 lock closure, a package-owned lifecycle and camera adapter, the Vite worker seam, deterministic positive and fail-closed tests, and a bounded real-browser fixture.",
+      "ADR-0006 and ADR-0007 bind KFM browser rendering to packages/maplibre. Current repository main pins maplibre-gl 6.9.0, while this separately versioned Site still runs 6.6.0 with same-origin worker assets. The version difference is explicit compatibility work, not silent conformance.",
     boundary:
       "The repository still holds Explorer production activation, broader browser readiness, governed performance execution, source and layer admission, PMTiles, terrain, long-session evidence, release, deployment, and publication. This Site remains a separate synthetic demonstration and is not KFM runtime-readiness evidence.",
     sourceLabel: "MapRuntimePort implementation",
-    sourceUrl: `${repoAtSnapshot}/packages/maplibre/README.md`,
+    sourceUrl: `https://github.com/${REPOSITORY_SNAPSHOT.repository}/blob/${REPOSITORY_SNAPSHOT.commit}/packages/maplibre/package.json`,
   }),
   Object.freeze({
     id: "geoparquet-crs",

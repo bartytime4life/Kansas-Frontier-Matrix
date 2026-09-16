@@ -37,7 +37,7 @@ test("renders the map-first Kansas explorer shell", async () => {
   assert.match(html, /Build report/i);
   assert.match(html, /bounded demonstration data/i);
   assert.match(html, /Repository briefing/i);
-  assert.match(html, /main@(?:<!-- -->)?32953ec/i);
+  assert.match(html, /main@(?:<!-- -->)?8bedf94/i);
   assert.match(html, /Scenario review/i);
   assert.match(html, /Runtime lab/i);
   assert.match(html, /Source observatory/i);
@@ -612,13 +612,13 @@ test("keeps repository updates pinned and boundary-labeled", async () => {
   const updates = await readFile(new URL("../app/repository-updates.ts", import.meta.url), "utf8");
   const identity = await readFile(new URL("../app/site-identity.ts", import.meta.url), "utf8");
 
-  assert.match(identity, /32953ec3b662dba14546e224554c9621b72268de/);
+  assert.match(identity, /8bedf94766dd91ae38119c54e00e00b1cf3713d3/);
   assert.match(updates, /SITE_IDENTITY\.repositoryCommit/);
   assert.match(updates, /separate source histories/);
   assert.match(updates, /Local geodata inspection now fails closed on malformed or stale input/);
   assert.match(updates, /All 105 Kansas counties now have public locator starters/);
   assert.match(updates, /Time A \/ Time B comparison preserves report scope/);
-  assert.match(updates, /exact maplibre-gl 6\.6\.0 lock closure/);
+  assert.match(updates, /repository main pins maplibre-gl 6\.9\.0/);
   assert.match(updates, /521 commits after the prior Site evidence pin/);
   assert.match(updates, /Planning scenarios now have a strict review projection/);
   assert.match(updates, /Accessibility guidance now separates targets from proof/);
@@ -733,7 +733,7 @@ test("keeps the MapLibre Workbench complete, bounded, and responsive", async () 
   assert.match(source, /VISIBLE LAYERS/);
   assert.match(mapInterface, /Renderer architecture[\s\S]*ACCEPTED/);
   assert.match(mapInterface, /MapRuntimePort \+ Null runtime[\s\S]*VERIFIED SLICE/);
-  assert.match(mapInterface, /Dependency admission[\s\S]*EXACT 6\.6\.0/);
+  assert.match(mapInterface, /Dependency compatibility[\s\S]*SITE 6\.6\.0 \/ REPO 6\.9\.0/);
   assert.match(mapInterface, /Concrete MapLibre adapter[\s\S]*VERIFIED SLICE/);
   assert.match(mapInterface, /Browser readiness[\s\S]*BOUNDED FIXTURE/);
   assert.match(explorerData, /"fill-outline-color": \["case", \["boolean", \["feature-state", "hover"\]/);

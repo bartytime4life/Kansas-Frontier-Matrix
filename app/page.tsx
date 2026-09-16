@@ -6485,7 +6485,7 @@ export default function Home() {
               <div data-state="warning">
                 <span>REPOSITORY IDENTITY</span>
                 <strong>{SITE_IDENTITY.sourceRelation.replaceAll("_", " ")}</strong>
-                <small>GitHub child manifest still names {SITE_IDENTITY.repositoryManifestProjectId}; this Site binding is authoritative.</small>
+                <small>{SITE_IDENTITY.repositoryManifestStatus.replaceAll("_", " ")} · {SITE_IDENTITY.repositoryManifestProjectId}; this Site binding is authoritative.</small>
               </div>
             </div>
             <div className="repository-connection" data-state={repositoryConnection.state} role="status" aria-live="polite">

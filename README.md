@@ -171,15 +171,18 @@ package-owned renderer and newer dependency work retain their own history.
   `kansas-frontier-matrix-explorer`, project `appgprj_6aa0b1c41bc08191bfd86003920f1631`.
 - Its canonical host is
   `https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site`; no custom
-  domain was attached when this checkpoint was checked on 2026-09-12.
+  domain was attached when this checkpoint was checked on 2026-09-16.
 - The independently read GitHub checkpoint is
-  `bartytime4life/Kansas-Frontier-Matrix@f636df86eb4314b6a0c658bee8b9b11b5a3b99ed`
-  (`main`, merged PR #4522). The Site's older in-app repository briefing is a
-  historical snapshot and separately offers a current-main lookup.
+  `bartytime4life/Kansas-Frontier-Matrix@8bedf94766dd91ae38119c54e00e00b1cf3713d3`
+  (`main`, merged PR #4607 immediately after PR #4608). The Site also offers a
+  separate read-only current-main lookup.
 - The Site and GitHub repository retain separate source histories. This Site’s
   `.openai/hosting.json` is authoritative for its current binding; the GitHub
   child manifest still names legacy project `appgprj_6a870a079c1c8191abb7401ef092a181`
-  and is not used by this Site.
+  and is not used by this Site; that project returned `NOT_FOUND` in the Sites
+  readback.
+- The repository MapLibre package pins `6.9.0`; this Site runs `6.6.0`. That
+  difference remains an explicit compatibility hold, not an inferred upgrade.
 - No automatic source sync, release, deployment, or publication follows from
   a repository currentness check.
 
@@ -427,12 +430,12 @@ into inferred facts.
   the intake capability. Reports, stories, places, and investigation workspaces
   remain device-local drafts; those bindings do not make them server-persisted.
 
-## Security and progress checkpoint — 15 September 2026
+## Security and progress checkpoint — 16 September 2026
 
-The repository briefing is pinned to `main@32953ec3b662dba14546e224554c9621b72268de`.
-It distinguishes the merged Atlas carrier and ADR repair from the existing
-receipt/alignment branches, open milestone acceptance, missing strict merge-check
-enforcement, and the next same-candidate evidence/API/Explorer/recovery goal.
+The repository briefing is pinned to `main@8bedf94766dd91ae38119c54e00e00b1cf3713d3`.
+It distinguishes the merged normalized-summary validation and CI coverage from
+open milestone acceptance, missing strict merge-check enforcement, the unresolved
+Sites target mismatch, and the next same-candidate evidence/API/Explorer/recovery goal.
 Older feature cards retain their historical source links. The supplied Atlas
 seed cards and MapLibre/pipeline manuals are planning inputs, not runtime proof.
 
