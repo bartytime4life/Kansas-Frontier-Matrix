@@ -6,7 +6,7 @@ version: v0.1.0
 status: proposed; inactive; fixture-only; no-network; non-activating
 owners: OWNER_TBD — Source steward · Rights reviewer · Policy steward · Contracts steward
 created: 2026-08-09
-updated: 2026-08-09
+updated: 2026-09-16
 policy_label: internal; source; rights; currentness; review-required
 related:
   - ./source_descriptor.md
@@ -46,6 +46,18 @@ Known restrictions may still be `CURRENT`; currentness is not permission. Downst
 Semantic meaning belongs in `contracts/source/`; machine shape in `schemas/contracts/v1/source/`; synthetic review records in `fixtures/contracts/v1/source/`; validation in `tools/validators/source/`; tests in `tests/validators/`; read-only CI in `.github/workflows/`; source adaptation notes in `docs/intake/exploratory/`; and generated authoring provenance in `data/receipts/generated/`.
 
 ## Validation
+
+The fixture-only CLI accepts a JSON object from a local regular file. Its input
+reader retains the symlink/non-file checks and enforces a 4 MiB byte budget on
+the read itself, before UTF-8 decoding or JSON parsing. Duplicate keys and
+non-finite numbers retain their specific findings; malformed UTF-8/JSON,
+parser recursion-limit failures, and interpreter integer-digit-limit failures return
+`RIGHTS_JSON_INVALID`. Input failures emit the finite `ERROR` envelope and exit
+code 2 without echoing payload content.
+
+These are local parsing limits, not source rights verification or a race-safe
+filesystem sandbox. Existing schema, assessment semantics, identities, and
+activation/publication non-effects are unchanged.
 
 ```bash
 python -m unittest tests.validators.test_validate_source_rights_currentness_assessment -v

@@ -103,8 +103,13 @@ def _read(path: Path) -> tuple[dict[str, Any] | None, tuple[Finding, ...]]:
             return None, (Finding("RIGHTS_INPUT_NOT_FILE", "/"),)
         if path.stat().st_size > MAX_BYTES:
             return None, (Finding("RIGHTS_INPUT_TOO_LARGE", "/"),)
+        # Metadata is only an early rejection: enforce the budget on bytes read.
+        with path.open("rb") as stream:
+            payload = stream.read(MAX_BYTES + 1)
+        if len(payload) > MAX_BYTES:
+            return None, (Finding("RIGHTS_INPUT_TOO_LARGE", "/"),)
         value = json.loads(
-            path.read_text(encoding="utf-8"),
+            payload.decode("utf-8"),
             object_pairs_hook=_unique,
             parse_constant=_reject,
             parse_float=_finite_float,
@@ -113,7 +118,8 @@ def _read(path: Path) -> tuple[dict[str, Any] | None, tuple[Finding, ...]]:
         return None, (Finding("RIGHTS_JSON_DUPLICATE_KEY", "/"),)
     except NonFiniteNumberError:
         return None, (Finding("RIGHTS_JSON_NONFINITE_NUMBER", "/"),)
-    except (OSError, UnicodeError, json.JSONDecodeError, RecursionError):
+    except (OSError, ValueError, RecursionError):
+        # ValueError also covers UTF-8, JSON syntax, and integer digit limits.
         return None, (Finding("RIGHTS_JSON_INVALID", "/"),)
     if not isinstance(value, dict):
         return None, (Finding("RIGHTS_ROOT_NOT_OBJECT", "/"),)
