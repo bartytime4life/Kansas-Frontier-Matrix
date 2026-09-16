@@ -11,6 +11,13 @@
 KFM_VALIDATION_ENV := KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC
 VALIDATOR_ORCHESTRATOR := python tools/validate_all.py
 
+.PHONY: normalized-summary-check
+
+# Bounded doctrine summary regressions; no cutover or readiness authority.
+normalized-summary-check:
+	$(KFM_VALIDATION_ENV) python tools/validators/source/validate_doctrine_artifact_preflight_summary.py --fixtures
+	$(KFM_VALIDATION_ENV) python -m pytest -q -p no:cacheprovider --strict-config --strict-markers tests/policy/test_preflight_summary_consistency.py tests/policy/test_normalized_summary_consumer_readiness.py tests/policy/test_run_doctrine_artifact_preflight.py tests/policy/test_preflight_summary_schema_contract.py tests/source/test_doctrine_artifact_preflight_summary_schema.py tests/ci/test_normalized_summary_workflow.py
+
 .PHONY: help validate test schemas validators validator-list validator-full validator-focused validator-release-profile validator-changed-area validator-registry-check docs-critical-structure workflow-security repository-topology repository-governance-parity repository-guardrails trust-spine-baseline program-baseline control-plane-registry-packet trust-spine-fixture-slice ci-conformance-report policy fixtures release-dry-run proof-slice catalog publish-check evidence-resolver evidence-resolver-deny hazards-validate deny-test ui-build api-run governed-api-dev governed-api-smoke governed-api-verify boundary-guards boundary-guards-ci maplibre-perf maplibre-govern maplibre-proof maplibre-clean
 
 help:
@@ -20,6 +27,7 @@ help:
 	@echo "  validate              Run aggregate schema validators and schema/contract tests"
 	@echo "  schemas               Run configured aggregate validators against fixtures"
 	@echo "  test                  Run repository schema and contract tests"
+	@echo "  normalized-summary-check Test summary structure, compatibility and CI failure propagation"
 	@echo "  docs-critical-structure Test and run the critical-document structure sentinel"
 	@echo "  workflow-security     Test and run the 20-rule workflow-security ratchet"
 	@echo "  repository-topology  Test and run the 20-rule directory-topology ratchet"

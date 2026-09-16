@@ -104,6 +104,24 @@ jobs:
             echo "- Result: ${{ job.status }}. No doctrine artifact, admission descriptor, receipt, release decision, or publication authority was created."
           } >> "$GITHUB_STEP_SUMMARY"
 
+      - name: Test normalized-summary structure and compatibility
+        if: ${{ !cancelled() }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          make normalized-summary-check
+
+      - name: Record normalized-summary coverage boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo '### Normalized-summary regression coverage'
+            echo '- Command: `make normalized-summary-check`.'
+            echo '- Covers required map structure, legacy compatibility, emitter/schema contracts, consumer-readiness checks, and CI failure propagation.'
+            echo '- A pass does not authorize normalized-only default cutover, consumer acceptance, promotion, release, deployment, or publication.'
+          } >> "$GITHUB_STEP_SUMMARY"
+
   doctrine-artifact-schema:
     name: doctrine-artifact-schema
     runs-on: ubuntu-latest
