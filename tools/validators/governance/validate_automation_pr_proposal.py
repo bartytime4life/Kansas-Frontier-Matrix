@@ -57,7 +57,12 @@ def validate(payload: Any) -> dict[str, Any]:
         reasons.add("INVALID_TITLE")
 
     changed = payload.get("changed_paths")
-    if not isinstance(changed, list) or not (1 <= len(changed) <= 8) or len(changed) != len(set(changed or [])):
+    if (
+        not isinstance(changed, list)
+        or not (1 <= len(changed) <= 8)
+        or not all(isinstance(path, str) for path in changed)
+        or len(changed) != len(set(changed))
+    ):
         reasons.add("INVALID_CHANGED_PATHS")
         changed_set: set[str] = set()
     else:
@@ -92,13 +97,15 @@ def validate(payload: Any) -> dict[str, Any]:
         reasons.add("MISSING_RECEIPT_REF")
 
     policy = payload.get("policy_outcome")
-    if policy not in {"PASS", "HOLD", "DENY", "ERROR"}:
+    if not isinstance(policy, str) or policy not in {"PASS", "HOLD", "DENY", "ERROR"}:
         reasons.add("INVALID_POLICY_OUTCOME")
     policy_reasons = payload.get("policy_reasons")
-    if not isinstance(policy_reasons, list) or len(policy_reasons) > 16 or len(policy_reasons) != len(set(policy_reasons or [])):
+    if not isinstance(policy_reasons, list) or len(policy_reasons) > 16:
         reasons.add("INVALID_POLICY_REASONS")
     elif not all(isinstance(item, str) and REASON.fullmatch(item) for item in policy_reasons):
         reasons.add("INVALID_POLICY_REASON")
+    elif len(policy_reasons) != len(set(policy_reasons)):
+        reasons.add("INVALID_POLICY_REASONS")
     if policy != "PASS" and isinstance(policy_reasons, list) and not policy_reasons:
         reasons.add("MISSING_POLICY_REASON")
 
