@@ -52,12 +52,16 @@ class WesternKansasObservationAssessmentRegistryTests(unittest.TestCase):
             VALIDATOR_ID,
             self.registry.profiles["release-dry-run"],
         )
-        for path in REPRESENTATIVE_PATHS:
-            with self.subTest(path=path):
-                self.assertIn(path, spec.path_globs)
+        # Coverage is asserted through changed-area selection below because
+        # path_globs may contain a fixture-family glob instead of literal files.
 
     def test_changed_area_selects_the_validator_for_its_owned_surface(self) -> None:
-        for path in REPRESENTATIVE_PATHS:
+        paths = (
+            *REPRESENTATIVE_PATHS,
+            "fixtures/domains/hydrology/"
+            "western_kansas_observation_assessment/nested/candidate.json",
+        )
+        for path in paths:
             with self.subTest(path=path):
                 selected, mode = orchestrator.select_validators(
                     self.registry,
@@ -66,6 +70,23 @@ class WesternKansasObservationAssessmentRegistryTests(unittest.TestCase):
                 )
                 self.assertEqual(mode, "changed-area")
                 self.assertIn(
+                    VALIDATOR_ID,
+                    {item.validator_id for item in selected},
+                )
+
+    def test_changed_area_does_not_select_unrelated_fixture_families(self) -> None:
+        for path in (
+            "fixtures/domains/hydrology/unrelated/cases.json",
+            "fixtures/domains/hydrology/western_kansas_observation_assessment_extra/cases.json",
+        ):
+            with self.subTest(path=path):
+                selected, mode = orchestrator.select_validators(
+                    self.registry,
+                    profile="changed-area",
+                    changed_paths=(path,),
+                )
+                self.assertEqual(mode, "changed-area")
+                self.assertNotIn(
                     VALIDATOR_ID,
                     {item.validator_id for item in selected},
                 )
