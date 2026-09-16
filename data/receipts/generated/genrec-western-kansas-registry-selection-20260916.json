@@ -1,0 +1,86 @@
+{
+  "receipt_id": "genrec-western-kansas-registry-selection-20260916",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tests/validators/test_western_kansas_observation_assessment_registry.py"
+  ],
+  "artifact_hashes": {
+    "tests/validators/test_western_kansas_observation_assessment_registry.py": "sha256:ebf67dd275f6b18bf26bd6817ddae2aff3d19d386ae3127fdd810a022fb29a5b"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "UNKNOWN: exact runtime model build not exposed"
+  },
+  "prompt_or_contract": "sha256:c04df72139330593ce9302170389da99a60e1c7ac13f571358e15dc51d81798e",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "local_shell",
+      "apply_patch",
+      "GitHub read-only"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:4386e5b42d3a6b885f8dd9006b4d0aeada56cbf547b5cfc94ec7bbd19b2b295e",
+      "sha256:8b23d75477fbad06ec25717be6e84d5330a05c9752726f171ce73a3bed771611"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/b6bdc3c13d03cf1050e03c06496796822b6421b1",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/2899",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b6bdc3c13d03cf1050e03c06496796822b6421b1/tools/validators/validate_all.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b6bdc3c13d03cf1050e03c06496796822b6421b1/tests/validators/README.md"
+    ]
+  },
+  "truth_labels": {
+    "tests/validators/test_western_kansas_observation_assessment_registry.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "main baseline registry and source synthetic tests",
+      "outcome": "FAIL",
+      "reason": "Inherited baseline assertion compares literal fixture filename with family glob; combined source/maplibre suite 39 PASS,11subtests PASS,1FAIL. No source behavior failure attributed."
+    },
+    {
+      "gate": "focused registry and semantic tests",
+      "outcome": "PASS",
+      "reason": "15tests and9subtests pass on final test bytes; explicit changed-area selection preserves each owned path and nested fixture; unrelated and lookalike sibling families remain unselected."
+    },
+    {
+      "gate": "full repository, hosted CI, independent review",
+      "outcome": "SKIPPED",
+      "reason": "Test-only bounded change; proportional orchestrator and profile checks in handoff. Hosted/independent review not performed; branch-only containment under4024."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "directory-rules",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b6bdc3c13d03cf1050e03c06496796822b6421b1/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "selection-contract",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b6bdc3c13d03cf1050e03c06496796822b6421b1/tools/validators/validate_all.py"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-16T04:01:12.348623Z",
+  "emitter": "Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Two-path test/provenance slice only. Tests retain full-profile-only membership and exact case orchestration while exercising glob coverage through actual changed-area selection. Added negative unrelated-family coverage; no production validator, registry, fixture, schema, contract, policy, source or public runtime change. Documentation is this receipt and PR handoff; no behavior documentation changes are needed because runtime behavior is unchanged. Do not imply issue2899 completion, source admission, activation, scheduler, settings, PR creation, readiness, merge, release, deployment, promotion or publication. Rollback: abandon local branch or reviewed revert of this bounded commit. Human review remains pending."
+}

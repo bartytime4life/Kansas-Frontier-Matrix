@@ -1,0 +1,110 @@
+{
+  "receipt_id": "genrec-western-kansas-registry-repin-20260916",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/western-kansas-observation-assessment.yml",
+    "data/receipts/generated/genrec-western-kansas-registry-ci-20260916.json",
+    "data/receipts/generated/genrec-western-kansas-registry-selection-20260916.json",
+    "tests/validators/test_western_kansas_observation_assessment_registry.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/western-kansas-observation-assessment.yml": "sha256:9a46a2b49240dd6c04cf017ca3273674a34a71d9931a596743f6cc1049bdddbd",
+    "data/receipts/generated/genrec-western-kansas-registry-ci-20260916.json": "sha256:b17bb94c571b06cf318ca1a85e8d52c2886bc8fcccc897511d56f694816d21fc",
+    "data/receipts/generated/genrec-western-kansas-registry-selection-20260916.json": "sha256:ce883b42e3585b0cb0909634691f6c0dc412145fd051b0ce90bfdcf91fe5e8e4",
+    "tests/validators/test_western_kansas_observation_assessment_registry.py": "sha256:ebf67dd275f6b18bf26bd6817ddae2aff3d19d386ae3127fdd810a022fb29a5b"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "unknown"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local-shell",
+      "GitHub-read-only"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:c778036b62bf8e619fea4466b22d24ef67ee869cab06d3d80d8a4f1c223bda9f",
+      "sha256:8b23d75477fbad06ec25717be6e84d5330a05c9752726f171ce73a3bed771611"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/280600f87157b830c7621fb4b6fc3788b42d95cb",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/63a504d36577e47893644024607cb75510984d10",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/833f42ded442ddc0ed896fea9d61dadefcaac7b9",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/2899",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3384",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/western-kansas-observation-assessment.yml": "PROPOSED",
+    "data/receipts/generated/genrec-western-kansas-registry-ci-20260916.json": "CONFIRMED",
+    "data/receipts/generated/genrec-western-kansas-registry-selection-20260916.json": "CONFIRMED",
+    "tests/validators/test_western_kansas_observation_assessment_registry.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused observation and registry selection",
+      "outcome": "PASS",
+      "reason": "Python 3.12.14: 15 tests and 9 subtests passed for the assessment and changed-area registry selection; 16 synthetic cases matched exact OBSERVED, DERIVED, CONFLICT, STALE, ABSTAIN and ERROR polarities."
+    },
+    {
+      "gate": "receipt integrity",
+      "outcome": "PASS",
+      "reason": "Both retained original-branch receipts validated against byte-identical artifacts after replay onto current main."
+    },
+    {
+      "gate": "workflow security",
+      "outcome": "PASS",
+      "reason": "make workflow-security reported 490 workflows, zero invariants, zero new drift, zero baselined warnings and zero stale entries; 28 workflow-security tests passed."
+    },
+    {
+      "gate": "exact-head hosted evidence",
+      "outcome": "SKIPPED",
+      "reason": "NOT_RUN: the current-main successor was not yet published when this receipt was emitted."
+    },
+    {
+      "gate": "independent source/evidence review and live source admission",
+      "outcome": "SKIPPED",
+      "reason": "BLOCKED: no independent acceptance or live-source authority/rights decision was supplied. The test and workflow correction cannot complete issue #2899."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "accepted-placement-doctrine",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/280600f87157b830c7621fb4b6fc3788b42d95cb/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "validator-selection-contract",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/280600f87157b830c7621fb4b6fc3788b42d95cb/tools/validators/validate_all.py"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-16T18:09:26Z",
+  "emitter": "OpenAI Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Current-main replay of the two existing bounded #2899 test/CI commits. Original receipt bytes and their historical references are preserved; this successor records the new base without rewriting them. The production validator, source-family assessment, contracts, schemas, fixtures, policies, source admission, rights, cadence, runtime and public behavior are unchanged. Hosted proof, independent review and full issue acceptance remain open. No Site, settings, source activation, scheduler, release, deployment, promotion or publication transition. Abandon the branch before integration or revert the successor commits after an authorized integration."
+}
