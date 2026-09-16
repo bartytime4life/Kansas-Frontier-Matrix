@@ -2,18 +2,18 @@
 doc_id: kfm://doc/registers/object-family
 title: Object Family Register
 type: standard
-version: v1.2
+version: v1.3
 status: proposed; doctrine-navigation-retained; machine-catalog-reconciled; non-authoritative
 owners: docs-steward, domain-stewards
 created: 2026-05-12
-updated: 2026-08-25
+updated: 2026-09-16
 policy_label: public
 owning_root: docs/
 responsibility: provide a human-facing navigational register for object families while keeping semantic shape policy evidence lifecycle release correction rollback deployment and publication authority in their owning roots
 truth_posture: CONFIRMED inherited doctrine navigation accepted Directory Rules and existing EvidenceRef schema-validation coverage / PROPOSED MRTS-03 machine-catalog reconciliation and repository-surface classifications / UNKNOWN accountable field-level owners deployed consumers and production behavior / NEEDS VERIFICATION human review hosted exact-head results and resolution of recorded candidate conflicts
 related: [docs/registers/AUTHORITY_LADDER.md, docs/registers/DRIFT_REGISTER.md, docs/registers/VERIFICATION_BACKLOG.md, control_plane/object_family_register.yaml, contracts/OBJECT_MAP.md, schemas/contracts/v1/governance/object_family_register.schema.json, tools/validators/control_plane/validate_object_family_register.py, docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf/README.md]
 tags: [kfm, register, object-family, doctrine, navigation]
-notes: [Navigational register only. EvidenceBundle and source dossiers remain authoritative. Adding, removing, or renaming an object family requires an ADR per Directory Rules §2.4.]
+notes: [Navigational register only. EvidenceBundle and source dossiers remain authoritative. Adding, removing, or renaming an object family requires an ADR per Directory Rules §2.4., "v1.3 corrects only the CorrectionNotice surface inventory against main b6bdc3c13d03cf1050e03c06496796822b6421b1; no family status or authority changes."]
 [/KFM_META_BLOCK_V2] -->
 
 # Object Family Register
@@ -25,11 +25,11 @@ notes: [Navigational register only. EvidenceBundle and source dossiers remain au
   <img alt="Type: register" src="https://img.shields.io/badge/type-register-6f42c1">
   <img alt="Authority: navigational" src="https://img.shields.io/badge/authority-navigational-lightgrey">
   <img alt="Policy label: public" src="https://img.shields.io/badge/policy-public-2ea44f">
-  <img alt="Updated: 2026-08-25" src="https://img.shields.io/badge/updated-2026--08--25-informational">
+  <img alt="Updated: 2026-09-16" src="https://img.shields.io/badge/updated-2026--09--16-informational">
   <img alt="License: TODO" src="https://img.shields.io/badge/license-TODO-lightgrey">
 </p>
 
-**Status:** proposed · **Owners:** docs-steward · domain-stewards · **Last updated:** 2026-08-25
+**Status:** proposed · **Owners:** docs-steward · domain-stewards · **Last updated:** 2026-09-16
 
 ---
 
@@ -139,7 +139,7 @@ Each machine entry records contract and schema candidates, policy dependencies, 
 | Required family | Projection state | Material unresolved condition |
 | --- | --- | --- |
 | `AIReceipt` | `CONFLICTED` | `ai/` and `runtime/` schema candidates coexist. |
-| `CorrectionNotice` | `CONFLICTED` | Four schema candidates coexist; focused fixtures, tests, and workflow are absent. |
+| `CorrectionNotice` | `CONFLICTED` | Four schema candidates coexist; focused fixtures, validator, and tests exist, while a dedicated family workflow remains absent. |
 | `EvidenceBundle` | `CONFLICTED` | Three hyphen/underscore/suffix schema candidates coexist. |
 | `EvidenceRef` | `IMPLEMENTED` | Contract, schema, fixtures, validator, test, and the existing `schema-validation` workflow form a structural shape-validation chain. Target existence, admissibility, EvidenceBundle closure, deployed consumers, and publication remain outside that proof. |
 | `LayerManifest` | `CONFLICTED` | Data, map, release, runtime, and plural-layer candidates overlap. |

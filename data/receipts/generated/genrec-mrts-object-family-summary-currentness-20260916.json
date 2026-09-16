@@ -1,0 +1,81 @@
+{
+  "receipt_id": "genrec-mrts-object-family-summary-currentness-20260916",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/registers/OBJECT_FAMILY.md"
+  ],
+  "artifact_hashes": {
+    "docs/registers/OBJECT_FAMILY.md": "sha256:33d01b126e93621a870118e4496b91fd33b79f5f3c28b099ea4d56a85d1933b7"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "UNKNOWN"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub read-only evidence",
+      "repository readback",
+      "Python validation",
+      "SHA-256 artifact binding"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3360",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b6bdc3c13d03cf1050e03c06496796822b6421b1/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b6bdc3c13d03cf1050e03c06496796822b6421b1/docs/doctrine/directory-rules.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b6bdc3c13d03cf1050e03c06496796822b6421b1/control_plane/object_family_register.yaml",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b6bdc3c13d03cf1050e03c06496796822b6421b1/docs/registers/OBJECT_FAMILY.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b6bdc3c13d03cf1050e03c06496796822b6421b1/docs/registers/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b6bdc3c13d03cf1050e03c06496796822b6421b1/data/receipts/generated/README.md"
+    ]
+  },
+  "truth_labels": {
+    "docs/registers/OBJECT_FAMILY.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "object-family-local-profile",
+      "outcome": "PASS",
+      "reason": "Current navigational register, 16 focused tests with 279 subtests, and one positive/seven exact negative fixture matches passed on the unchanged register, schema, validator and tests at main b6bdc3c13d03cf1050e03c06496796822b6421b1 and the candidate worktree."
+    },
+    {
+      "gate": "bounded-documentation-metadata-and-local-links",
+      "outcome": "PASS",
+      "reason": "One metadata block passes with zero warnings;38 local Markdown targets resolve; headings and anchors are preserved."
+    },
+    {
+      "gate": "exact-head-hosted-and-accountable-acceptance",
+      "outcome": "SKIPPED",
+      "reason": "NOT_RUN: no hosted workflow or accountable human acceptance is claimed. This branch remains VALIDATED_BRANCH_ONLY under issue4024."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-catalog",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b6bdc3c13d03cf1050e03c06496796822b6421b1/control_plane/object_family_register.yaml"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-16T04:47:51.639963Z",
+  "emitter": "openai/codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b6bdc3c13d03cf1050e03c06496796822b6421b1/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Corrects a stale human navigational statement that CorrectionNotice fixtures and tests are absent: the current catalog lists fixtures/correction/correction_notice, tools/validators/validate_correction_notice.py and tests/validators/test_validate_correction_notice.py. Four schema candidates remain unresolved, implementation remains CONFLICTED, and a dedicated workflow remains absent. EvidenceRef identity remains PARTIAL even though structural implementation is IMPLEMENTED; the already-accurate workflow summary is unchanged. Historical receipts remain immutable. This correction creates no canonical selection, review acceptance, evidence authority, lifecycle transition, settings, release, deployment or publication. Abandon the branch before integration, or after separately authorized integration use a focused inverse commit preserving historical receipts."
+}
