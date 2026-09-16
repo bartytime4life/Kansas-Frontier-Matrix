@@ -1,11 +1,11 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://contract/governance/repository-control-state
 title: RepositoryControlState semantic contract
-version: v0.4.0
+version: v0.4.1
 status: proposed
 owner: OWNER_TBD — governance steward and repository-control steward
 created: 2026-07-26
-updated: 2026-07-30
+updated: 2026-09-16
 policy_label: repository-facing; governance; fail-closed; non-authoritative
 related:
   - ../../docs/doctrine/directory-rules.md
@@ -113,7 +113,7 @@ The expiry and unedited-comment condition are evaluated at workflow run time. Gi
 
 This control closes an auditability gap, not an identity-separation gap. An owner login observed on a GitHub comment establishes the authenticated account identity exposed by the API. It does **not** establish whether a human browser, OAuth token, GitHub App, PAT, or another client initiated the action. If an app acts through the same owner identity, this record cannot distinguish it from the human owner. Security-log evidence, app/token restriction, and future Model A independent review remain separate controls.
 
-The workflow check name is `repository-control / authorize-ready-and-merge`. It is advisory until GitHub ruleset `15484585` separately requires that exact check with strict/up-to-date behavior. A workflow file cannot make itself required, and this contract does not authorize a ruleset mutation.
+The workflow display name is `repository-control`. Its emitted check context is exactly `authorize-ready-and-merge`, produced by GitHub Actions integration `15368`; the workflow display name is not part of the required-status-check context. The check is advisory until GitHub ruleset `15484585` separately requires that exact context with strict/up-to-date behavior. A workflow file cannot make itself required, and this contract does not authorize a ruleset mutation.
 
 ## Failure behavior
 

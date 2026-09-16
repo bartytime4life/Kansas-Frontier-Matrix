@@ -1,0 +1,92 @@
+{
+  "receipt_id": "genrec-repository-control-check-context-20260916",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "contracts/governance/repository_control_state.md"
+  ],
+  "artifact_hashes": {
+    "contracts/governance/repository_control_state.md": "sha256:719e3df4330e1f597afb2fa8a12e426f9036564ad06a3a616fc080b43a628cc7"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "not exposed by execution interface"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b6bdc3c13d03cf1050e03c06496796822b6421b1/.github/workflows/repository-control.yml",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/35031800985/job/104591758930",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/3ea1f272c6d704433f4dcb4e95f2d54c0410a32b/contracts/governance/repository_control_state.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b6bdc3c13d03cf1050e03c06496796822b6421b1/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    "contracts/governance/repository_control_state.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused existing repository-control suites",
+      "outcome": "PASS",
+      "reason": "51 passed, zero skipped. Source, input bounds, strict input, and transition-authorization suites unchanged and executed on final authored contract bytes."
+    },
+    {
+      "gate": "workflow and live emitted check identity cross-check",
+      "outcome": "PASS",
+      "reason": "Exact trusted-base workflow display name repository-control; job/check context authorize-ready-and-merge. Live GitHub check104591758930 reports same context and App15368. No compound workflow/check context is instructed."
+    },
+    {
+      "gate": "Markdown structure, relative links, final newline",
+      "outcome": "PASS",
+      "reason": "Changed contract retains one H1, balanced fences/comments, resolving local links, final newline."
+    },
+    {
+      "gate": "hosted exact-final-head and independent accountable acceptance",
+      "outcome": "SKIPPED",
+      "reason": "NOT_RUN: branch-only authoring under #4024. AI technical review is not accountable acceptance."
+    },
+    {
+      "gate": "settings operation and negative canary",
+      "outcome": "SKIPPED",
+      "reason": "BLOCKED: no distinct owner authorization or independently proven containment. No operation attempted."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "check-context-evidence-1",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b6bdc3c13d03cf1050e03c06496796822b6421b1/.github/workflows/repository-control.yml"
+    },
+    {
+      "id": "check-context-evidence-2",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/35031800985/job/104591758930"
+    },
+    {
+      "id": "check-context-evidence-3",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/3ea1f272c6d704433f4dcb4e95f2d54c0410a32b/contracts/governance/repository_control_state.md"
+    },
+    {
+      "id": "check-context-evidence-4",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b6bdc3c13d03cf1050e03c06496796822b6421b1/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": []
+  },
+  "created_at": "2026-09-16T05:06:46.119644Z",
+  "emitter": "Codex repository-control check-context correction",
+  "links": {
+    "pr_number": null,
+    "adr_link": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b6bdc3c13d03cf1050e03c06496796822b6421b1/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Successor of branch parent 3ea1f272c6d704433f4dcb4e95f2d54c0410a32b. Corrects only the emitted required-status-check context identity and documentation edition; no workflow, validator, policy, ruleset, authorization or lifecycle semantics changed. Preserve genrec-repository-control-doc-currentness-20260916.json bytes; replay that historical receipt with --artifact-git-ref 3ea1f272c6d704433f4dcb4e95f2d54c0410a32b because the contract has a new byte identity. New receipt covers only this successor's authored contract bytes. #4024 remains open, required-check absent, and delivery VALIDATED_BRANCH_ONLY. Before integration abandon successor; after separate authorized integration reviewed focused revert. No merge, ready, settings, canary, release, Site, deployment, source admission or publication."
+}
