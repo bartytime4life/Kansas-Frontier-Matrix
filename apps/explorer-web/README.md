@@ -2,11 +2,11 @@
 doc_id: kfm://app/explorer-web/readme
 title: Explorer Web App README
 type: app-readme
-version: v0.9
+version: v0.10
 status: draft
 owners: OWNER_TBD — Apps steward · UI steward · Map steward · Governed API steward · Policy steward · Accessibility steward · Docs steward
 created: 2026-06-16
-updated: 2026-09-10
+updated: 2026-09-16
 policy_label: public
 owning_root: apps/
 responsibility: "Orient maintainers to the existing Explorer Web application, its actual composition, package boundaries, local commands, validation, and remaining graduation gates."
@@ -39,6 +39,7 @@ related:
   - ../../.github/workflows/ui-build.yml
 tags: [kfm, apps, explorer-web, map-first, governed-ui, evidence-drawer, focus-mode, temporal, finite-outcomes, fail-closed]
 notes:
+  - "v0.10 adds a repository-owned integration replay command and strict fixture type configuration over main@b6bdc3c13d03cf1050e03c06496796822b6421b1 with the byte-preserved 3b4a15d4 dependency chain. Earlier source snapshots remain historical; this does not establish hosted or independent acceptance."
   - "v0.7 corrects the obsolete renderer-dependency absence claim: the package pins maplibre-gl 6.6.0 and owns a concrete adapter and Vite worker wrapper; the normal Explorer composition still uses NullMapRuntime."
   - "v0.8 records the first Living Atlas composition candidate: a network-free package-owned MapLibre canvas, typed 18-view and 24-layer registries, source observatory, deep-time preview/commit, evidence inspection, finite Focus outcomes, and draft-only report/story capture."
   - "Source inspection and test definitions are not fresh build, browser, hosted-CI, dependency-admission, deployment, release, or publication proof."
@@ -330,6 +331,47 @@ pnpm --filter explorer-web test:browser
 After browser provisioning, `pnpm --filter explorer-web test` runs both suites. Browser installation may download binaries; missing Linux system libraries require separate environment preparation using the [official Playwright browser instructions](https://playwright.dev/docs/browsers). They are not an app-code regression by themselves.
 
 The [Playwright configuration](./playwright.config.ts) starts its own loopback Vite server on **4173**, uses `--strictPort`, and disables server reuse. Local tests use Chromium; `CI=true` selects the installed Chrome channel. The existing `KFM_CHROMIUM_EXECUTABLE` override also adds `--no-sandbox`; it is not the normal setup recommendation or evidence of production browser security. Do not set it merely to silence a failed prerequisite.
+
+### Replay the bounded integration candidate
+
+After the same frozen install and browser provisioning, with Python 3 available
+as `python3` and loopback ports **4173 and 4174** free, run from the repository root:
+
+```bash
+pnpm --filter explorer-web test:integration
+```
+
+This command fails at the first failing phase and runs, in order:
+
+1. Strict type checking of the Atlas/API fixture seam using
+   [`tsconfig.integration.json`](./tsconfig.integration.json).
+2. Shared MapLibre package unit tests.
+3. Explorer unit tests and the normal browser suite.
+4. The separate [`playwright.api.config.ts`](./playwright.api.config.ts) lane,
+   which starts the real local WSGI API and a test-only Vite proxy, then stops
+   both servers when the suite exits. Existing servers are never reused.
+
+`pnpm --filter explorer-web test:browser:api` replays only the last phase;
+`pnpm --filter explorer-web typecheck:integration` checks the fixture types alone.
+These are explicit integration commands: the existing `test`, production build,
+and hosted workflow keep their established scope. No runtime dependency,
+lockfile, production proxy, or Site configuration changes are required.
+
+The API lane proves actual negative availability responses, including clearing
+earlier synthetic evidence and preventing late delivery after a newer selection
+or disposal. Its fixed `GET /evidence` sends no candidate/evidence identifiers;
+the server still returns `ABSTAIN / NOT_IMPLEMENTED`. Positive Atlas cases are
+synthetic fixture inputs, not server-owned resolution or review/release approval.
+The Hydrology resolver remains a separate internal fixture adapter; replay it
+with `make evidence-resolver evidence-resolver-deny` from a Python environment
+containing the repository's test requirements. This does not connect Hydrology
+to the Atlas candidate.
+
+Record the final commit and actual results for each replay. Hosted checks,
+independent review, same-candidate server lookup, correction/rollback, and live
+Site/archive acceptance remain separate gates under #4418, #3381 and #3400.
+Reverting these command/configuration additions removes the replay convenience;
+it must not be used to discard the underlying resolver read-race repair.
 
 ### Inspect current implementation
 

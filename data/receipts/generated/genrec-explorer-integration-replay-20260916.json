@@ -1,0 +1,177 @@
+{
+  "contract_version": "3.0.0",
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "UNKNOWN; exact serving model version not exposed"
+  },
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local repository validation",
+      "GitHub connector",
+      "Sites connector",
+      "Google Drive connector",
+      "Notion connector"
+    ]
+  },
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "receipt_id": "genrec-explorer-integration-replay-20260916",
+  "artifact_paths": [
+    "apps/explorer-web/README.md",
+    "apps/explorer-web/package.json",
+    "apps/explorer-web/playwright.api.config.ts",
+    "apps/explorer-web/src/adapters/README.md",
+    "apps/explorer-web/src/adapters/governed_api_negative_adapter.ts",
+    "apps/explorer-web/tests/browser/governed-api-negative.api.ts",
+    "apps/explorer-web/tests/browser/governed-api.vite.config.ts",
+    "apps/explorer-web/tests/browser/map-evidence-drawer.fixture.ts",
+    "apps/explorer-web/tests/browser/synthetic-atlas-evidence.fixture.ts",
+    "apps/explorer-web/tests/browser/synthetic-atlas-map.fixture.ts",
+    "apps/explorer-web/tests/browser/synthetic-atlas-map.spec.ts",
+    "apps/explorer-web/tests/governed-api-negative-adapter.test.ts",
+    "apps/explorer-web/tests/synthetic-atlas-evidence.test.ts",
+    "apps/explorer-web/tsconfig.integration.json",
+    "data/receipts/generated/genrec-governed-api-negative-transport-20260915.json",
+    "data/receipts/generated/genrec-map-fixture-selection-convergence-20260915.json",
+    "data/receipts/generated/genrec-synthetic-atlas-browser-proof-20260915.json",
+    "fixtures/contracts/v1/evidence/evidence_bundle/valid/valid_3.json",
+    "packages/evidence-resolver/README.md",
+    "packages/evidence-resolver/src/evidence_resolver/README.md",
+    "packages/evidence-resolver/src/evidence_resolver/hydrology_fixture_adapter.py",
+    "packages/maplibre/src/README.md",
+    "packages/maplibre/src/maplibre-adapter.ts",
+    "packages/maplibre/tests/maplibre-adapter.test.ts",
+    "tests/packages/evidence_resolver/README.md",
+    "tests/packages/evidence_resolver/test_hydrology_fixture_adapter.py"
+  ],
+  "artifact_hashes": {
+    "apps/explorer-web/README.md": "sha256:fa83d64362a90d7a223802e70a69f7ce497ed318276b81c3a1795df3d548b083",
+    "apps/explorer-web/package.json": "sha256:5d96bc74ffd74bf733bdf64fdc999acb2d4c430bc00b5ad25add15ca6ffe1145",
+    "apps/explorer-web/playwright.api.config.ts": "sha256:83a8bddf4a58e37100192475f45d43b31f12c65e56f88e47b5c345688353f796",
+    "apps/explorer-web/src/adapters/README.md": "sha256:7444087fa5468534a7d94e6188c6771fb7acf59e0cdcefc643f8403fc240bca4",
+    "apps/explorer-web/src/adapters/governed_api_negative_adapter.ts": "sha256:125c3f5d935f01872f138aebf55573793ef2de217a008d97eab49e9164ec1081",
+    "apps/explorer-web/tests/browser/governed-api-negative.api.ts": "sha256:1746d71dd037915a8b4fc2983cfbb61783fc1828b0d1c74619af1bf0a62a13b5",
+    "apps/explorer-web/tests/browser/governed-api.vite.config.ts": "sha256:6e15e963c7c8a464e217a9a2265790d60453d7bc010618814a3de38ab8d26545",
+    "apps/explorer-web/tests/browser/map-evidence-drawer.fixture.ts": "sha256:5626e0beddcac2b7fc57f9c6542948bf59ac732d02aa75df86555cf9082868bd",
+    "apps/explorer-web/tests/browser/synthetic-atlas-evidence.fixture.ts": "sha256:85431a4474804310ba012ab0c4273559246225b28546a01e755addfbb71fb66d",
+    "apps/explorer-web/tests/browser/synthetic-atlas-map.fixture.ts": "sha256:dff1f03b089903357229468c023cacbff353755596edd5083addd88567a5c880",
+    "apps/explorer-web/tests/browser/synthetic-atlas-map.spec.ts": "sha256:e0a5f8dc72f7eeaa7e528e26a0758ac477e3bb94e2dc98a5fc2b208580009e13",
+    "apps/explorer-web/tests/governed-api-negative-adapter.test.ts": "sha256:fc9d17d5cca335f1f19f93db5538507cc43b71fd4956091e0b12e12eec536cf0",
+    "apps/explorer-web/tests/synthetic-atlas-evidence.test.ts": "sha256:3a4798e8a76c7a70780f1221e368f723b1fb21f9c7239a6a135e8b871e984367",
+    "apps/explorer-web/tsconfig.integration.json": "sha256:114829f766f32501b245d40cf7f3ce5bca6399ae154ff49eb42d914c177b9950",
+    "data/receipts/generated/genrec-governed-api-negative-transport-20260915.json": "sha256:11f5de195362856474064e10cc8e4163cdc124404dcdd902eaa964bedad4787e",
+    "data/receipts/generated/genrec-map-fixture-selection-convergence-20260915.json": "sha256:7ecc1f164c64a3dcbd3e83d52f0d4bae0abd316233ba8327d17339256e516081",
+    "data/receipts/generated/genrec-synthetic-atlas-browser-proof-20260915.json": "sha256:537be2694a797580b8a0e752fe5bdc4ca11733f825033aecd20064df4673048f",
+    "fixtures/contracts/v1/evidence/evidence_bundle/valid/valid_3.json": "sha256:b84c2869e16f6c4050f1a5736fad57fd6fa3a9fb65bde5f4c709b0a8487c530f",
+    "packages/evidence-resolver/README.md": "sha256:56a1d6341978e99c8c6daa07399408c9b51cf64a83a6595d5e9cb19b39bae73d",
+    "packages/evidence-resolver/src/evidence_resolver/README.md": "sha256:bcf3d93f6691ac2d3bab8bb6b7e2f7f4abd3191ed14219e0d64a90a4163fde67",
+    "packages/evidence-resolver/src/evidence_resolver/hydrology_fixture_adapter.py": "sha256:dbc19f38bf2972b056b8bbad9977edac406569753338affaef5c45714854e49f",
+    "packages/maplibre/src/README.md": "sha256:b984ba9d0e33ee69ca686d839e0a0f7aacc320a7cabbf33b5cb29f9178b87f39",
+    "packages/maplibre/src/maplibre-adapter.ts": "sha256:44aff97843baa4f54aed0f53493936b48f44b121f790df7ffe4293d62f9f69c2",
+    "packages/maplibre/tests/maplibre-adapter.test.ts": "sha256:d1d06223d8c88096e162c00ec72b317576b669b8a760b718f8a88a84376ee970",
+    "tests/packages/evidence_resolver/README.md": "sha256:1e981316acf36d3e68450573638137df9afe51ee87eba33cde71c135a68c3d4d",
+    "tests/packages/evidence_resolver/test_hydrology_fixture_adapter.py": "sha256:b8cce8f4ec922935613bb3552dc3b6b08153ad76ab60f21f21e5b4595fde36a5"
+  },
+  "prompt_or_contract": "sha256:e9f5cfb1b090fa59632be5bb299e5e89465abdf63a34cd15a83fd409c2a38994",
+  "inputs": {
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/b6bdc3c13d03cf1050e03c06496796822b6421b1",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/3b4a15d41dcede5068a135b5a0399ef869da5f87",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/3685a8e79af20be71d259ace8c4e78a57ef29efa"
+    ],
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:8ad3948994680b0e6a85a3eb4c82f69466d0c5c2baf4c15fb4e14e43c1acb26d"
+    ]
+  },
+  "truth_labels": {
+    "apps/explorer-web/README.md": "PROPOSED",
+    "apps/explorer-web/package.json": "PROPOSED",
+    "apps/explorer-web/playwright.api.config.ts": "PROPOSED",
+    "apps/explorer-web/src/adapters/README.md": "PROPOSED",
+    "apps/explorer-web/src/adapters/governed_api_negative_adapter.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/governed-api-negative.api.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/governed-api.vite.config.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/map-evidence-drawer.fixture.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/synthetic-atlas-evidence.fixture.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/synthetic-atlas-map.fixture.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/synthetic-atlas-map.spec.ts": "PROPOSED",
+    "apps/explorer-web/tests/governed-api-negative-adapter.test.ts": "PROPOSED",
+    "apps/explorer-web/tests/synthetic-atlas-evidence.test.ts": "PROPOSED",
+    "apps/explorer-web/tsconfig.integration.json": "PROPOSED",
+    "data/receipts/generated/genrec-governed-api-negative-transport-20260915.json": "PROPOSED",
+    "data/receipts/generated/genrec-map-fixture-selection-convergence-20260915.json": "PROPOSED",
+    "data/receipts/generated/genrec-synthetic-atlas-browser-proof-20260915.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/evidence_bundle/valid/valid_3.json": "PROPOSED",
+    "packages/evidence-resolver/README.md": "PROPOSED",
+    "packages/evidence-resolver/src/evidence_resolver/README.md": "PROPOSED",
+    "packages/evidence-resolver/src/evidence_resolver/hydrology_fixture_adapter.py": "PROPOSED",
+    "packages/maplibre/src/README.md": "PROPOSED",
+    "packages/maplibre/src/maplibre-adapter.ts": "PROPOSED",
+    "packages/maplibre/tests/maplibre-adapter.test.ts": "PROPOSED",
+    "tests/packages/evidence_resolver/README.md": "PROPOSED",
+    "tests/packages/evidence_resolver/test_hydrology_fixture_adapter.py": "PROPOSED"
+  },
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-main",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/b6bdc3c13d03cf1050e03c06496796822b6421b1"
+    }
+  ],
+  "created_at": "2026-09-16T00:02:20.445370Z",
+  "validation_gates": [
+    {
+      "gate": "repository-integration-command",
+      "outcome": "PASS",
+      "reason": "pnpm --filter explorer-web test:integration exits 0 on Node22.23.2/pnpm11.17.0: strict fixture types,120 MapLibre unit tests,740 Explorer unit tests,152 normal Chromium browser tests and4 actual WSGI/API browser tests. No skipped/unexpected/flaky result reported. Packaged Chromium153.0.8010.0 with software WebGL2; not a full device/accessibility/security certification."
+    },
+    {
+      "gate": "resolver-and-public-api-boundaries",
+      "outcome": "PASS",
+      "reason": "Both native make evidence-resolver and evidence-resolver-deny targets pass:72 package tests per target,21 full candidate fixtures,19 negative candidate fixtures. Separate native API and Explorer boundary pytest invocation passes28tests. Hydrology remains independent from Atlas."
+    },
+    {
+      "gate": "build-and-lock",
+      "outcome": "PASS",
+      "reason": "Scoped frozen install succeeds without dependency/lockfile changes. Native Explorer production build passes; its four output files equal the prior map candidate build. Existing chunk-size warning remains."
+    },
+    {
+      "gate": "history-and-integrity",
+      "outcome": "PASS",
+      "reason": "All23 prerequisite paths match 3b4a15d4 bytes. Original carrier, full bundle, prior receipts, production API guard/routes and production Vite config are preserved. Negative transport receipt validates seven bound artifacts with review pending; earlier map/browser receipts retain their historical pins."
+    },
+    {
+      "gate": "documentation-and-diff",
+      "outcome": "PASS",
+      "reason": "Local README link check passes63local targets; metadata has zero failures and the same9 unsupported-nesting warnings as main. Diff whitespace checks pass."
+    },
+    {
+      "gate": "topology",
+      "outcome": "FAIL",
+      "reason": "Native FAIL_INVARIANT remains:124 baselined warnings,one catalog new-drift finding,one stale baseline fingerprint,zero counted invariant findings. Candidate findings are identical to current-main baseline; no baseline expansion."
+    },
+    {
+      "gate": "browser-environment-recovery",
+      "outcome": "PASS",
+      "reason": "Initial browser run failed before launch because saved binary was truncated (152314880bytes). Standard browser download failed. Fresh decompression of the existing package restored209022176bytes, confirmed Chromium/WebGL2, and the full repository integration command then passed. No repository dependency or test assertion weakened."
+    },
+    {
+      "gate": "hosted-independent-operational-acceptance",
+      "outcome": "SKIPPED",
+      "reason": "Hosted final-head checks and independent human acceptance remain open. PR creation stays contained under #4024. No Site mutation or positive server-owned Atlas lookup, source admission, policy/review/release decision, correction/rollback execution or milestone closure is claimed."
+    }
+  ],
+  "notes": "This is an authorship/revalidation receipt, not approval or release evidence. The first23 paths are byte-preserving reconciliation of the prior four-commit dependency chain; only app package commands, tsconfig.integration.json and the owning app README are newly authored. All prior receipts remain historical and unchanged. The new explicit integration command is opt-in; existing hosted workflow scope is unchanged. Revert the four-path command/config/README/receipt follow-up independently; do not discard the descriptor-read security repair. Main, Sitev41/access/source, settings, Stage1B HOLD and Stage2 UNAUTHORIZED remain unchanged."
+}

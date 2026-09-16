@@ -11,7 +11,10 @@
     "build": "tsc --noEmit -p tsconfig.json && vite build",
     "test": "pnpm run test:unit && pnpm run test:browser",
     "test:unit": "vitest run tests/*.test.ts",
-    "test:browser": "playwright test --config=playwright.config.ts"
+    "test:browser": "playwright test --config=playwright.config.ts",
+    "typecheck:integration": "tsc --noEmit -p tsconfig.integration.json",
+    "test:browser:api": "playwright test --config=playwright.api.config.ts",
+    "test:integration": "pnpm run typecheck:integration && pnpm --filter @kfm/maplibre test && pnpm run test && pnpm run test:browser:api"
   },
   "dependencies": {
     "@kfm/maplibre": "workspace:*"

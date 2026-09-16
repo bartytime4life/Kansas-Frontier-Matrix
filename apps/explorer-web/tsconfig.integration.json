@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "types": ["vite/client", "node"]
+  },
+  "include": [
+    "src/adapters/governed_api_negative_adapter.ts",
+    "tests/governed-api-negative-adapter.test.ts",
+    "tests/synthetic-atlas-evidence.test.ts",
+    "tests/browser/synthetic-atlas-evidence.fixture.ts",
+    "tests/browser/synthetic-atlas-map.fixture.ts",
+    "tests/browser/synthetic-atlas-map.spec.ts",
+    "tests/browser/governed-api-negative.api.ts",
+    "tests/browser/governed-api.vite.config.ts",
+    "playwright.api.config.ts"
+  ]
+}
