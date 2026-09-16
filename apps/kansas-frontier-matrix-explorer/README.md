@@ -34,7 +34,7 @@ TypeScript-transpile regression checks.
 | Field | Current boundary |
 |---|---|
 | Repository-configured Sites project | `appgprj_6a870a079c1c8191abb7401ef092a181` from [`.openai/hosting.json`](./.openai/hosting.json); the project returned `NOT_FOUND` in the 2026-09-16 Sites readback, so repository-driven deployment remains blocked |
-| Observed live Sites project | `appgprj_6aa0b1c41bc08191bfd86003920f1631`; saved version 42, source `9501e4201fae1104aca2054b67f6576ef5f1be67`, deployment `appgdep_6aaa027c3a608191a0c10c5a6e4ba869` reported `succeeded`, owner-private |
+| Observed live Sites project | `appgprj_6aa0b1c41bc08191bfd86003920f1631`; owner-private version 43, source `c1283723ad9892a41edf01d8e02f52e398aad92f`, archive `sha256:e47632ec4e2e49464a3c3b77f488b417ed924ae3dd876934ac65deced67173b7`, deployment `appgdep_6aab19d77d6c8191b0eb3476f7f9660e` reported `succeeded` |
 | Existing slug | `kansas-frontier-matrix-explorer` |
 | Existing production URL | <https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site> |
 | Authoritative host | OpenAI Sites/Vinext; [issue #4232](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4232) records the adapter decision |
