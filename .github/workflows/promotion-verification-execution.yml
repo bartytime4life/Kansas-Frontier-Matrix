@@ -10,6 +10,10 @@ name: promotion-verification-execution
       - "tools/validators/promotion_gate/execute_promotion_verification.py"
       - "tools/validators/promotion_gate/execution/**"
       - "fixtures/release/promotion_verification_execution/**"
+      - "Makefile"
+      - "pyproject.toml"
+      - "tools/release/release_dry_run.py"
+      - "tests/release/test_synthetic_release_closure.py"
       - "tests/release/test_promotion_verification_execution.py"
       - "data/receipts/generated/genrec-promotion-verification-execution-*.json"
   push:
@@ -21,6 +25,10 @@ name: promotion-verification-execution
       - "tools/validators/promotion_gate/execute_promotion_verification.py"
       - "tools/validators/promotion_gate/execution/**"
       - "fixtures/release/promotion_verification_execution/**"
+      - "Makefile"
+      - "pyproject.toml"
+      - "tools/release/release_dry_run.py"
+      - "tests/release/test_synthetic_release_closure.py"
       - "tests/release/test_promotion_verification_execution.py"
       - "data/receipts/generated/genrec-promotion-verification-execution-*.json"
   workflow_dispatch:
@@ -93,6 +101,11 @@ jobs:
           }, value
           PY
 
+      - name: Run canonical synthetic release closure target
+        run: |
+          set -euo pipefail
+          make synthetic-release-closure
+
       - name: Run focused deterministic tests
         run: |
           set -euo pipefail
@@ -116,6 +129,6 @@ jobs:
             echo "### Fixture-first promotion verification execution"
             echo
             echo "- Result: ${{ job.status }}."
-            echo "- Executed: current A–G readiness validator, current Cosign-plan validator, digest-bound fixture Cosign adapter, digest-bound fixture Conftest adapter, and local EvidenceBundle/STAC/DCAT/PROV/rollback closure."
+            echo "- Executed: current A–G readiness validator, current Cosign-plan validator, digest-bound fixture Cosign adapter, digest-bound fixture Conftest adapter, the canonical `make synthetic-release-closure` regression, and local EvidenceBundle/STAC/DCAT/PROV/rollback closure."
             echo "- Boundary: fake tools prove adapter behavior only; no production cryptography, live policy service, promotion, release, deployment, publication, or repository-setting change."
           } >> "$GITHUB_STEP_SUMMARY"
