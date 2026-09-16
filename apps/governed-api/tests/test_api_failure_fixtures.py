@@ -5,6 +5,8 @@ from pathlib import Path
 
 import pytest
 
+from governed_api.main import app
+from governed_api.routes.registry import ROUTES
 from governed_api.stub import (
     invoke_fixture_operation,
     invoke_sync_fixture_operation,
@@ -146,3 +148,67 @@ def test_intentional_negative_outcomes_survive_operation_boundary() -> None:
 
     assert abstain == (abstain_payload, None)
     assert deny == (deny_payload, None)
+
+
+@pytest.mark.parametrize("outcome", [[], {}, None, True, 1, 1.0])
+def test_malformed_json_outcomes_fail_closed_in_sync_async_and_wsgi(outcome, monkeypatch) -> None:
+    invalid = {**make_abstain_envelope("evidence"), "outcome": outcome}
+    schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
+
+    async def malformed_async() -> dict:
+        return invalid
+
+    for payload, failure_kind in (
+        invoke_sync_fixture_operation(lambda: invalid, "fixture-malformed-001"),
+        asyncio.run(invoke_fixture_operation(malformed_async, "fixture-malformed-001")),
+    ):
+        assert failure_kind == "invalid_response"
+        assert payload["outcome"] == "ERROR"
+        assert payload["reason_code"] == "INVALID_RESPONSE"
+        assert payload["evidence_refs"] == []
+        assert_jsonschema_subset(payload, schema)
+
+    monkeypatch.setitem(ROUTES, "/evidence", lambda: invalid)
+    response = {}
+
+    def start_response(status, headers):
+        response["status"] = status
+        response["headers"] = dict(headers)
+
+    body = b"".join(app({"PATH_INFO": "/evidence", "REQUEST_METHOD": "GET"}, start_response))
+    payload = json.loads(body)
+    assert response["status"] == "500 Internal Server Error"
+    assert response["headers"]["Content-Type"] == "application/json"
+    assert int(response["headers"]["Content-Length"]) == len(body)
+    assert payload["reason_code"] == "INVALID_RESPONSE"
+    assert_jsonschema_subset(payload, schema)
+
+
+def test_provider_defined_object_behavior_cannot_cross_json_guard() -> None:
+    class UnsafeMapping(dict):
+        def get(self, *args):
+            raise AssertionError("provider mapping behavior must not run")
+
+    class UnsafeString(str):
+        def __hash__(self):
+            raise AssertionError("provider hash behavior must not run")
+
+    class UnsafeList(list):
+        def __eq__(self, other):
+            raise AssertionError("provider equality behavior must not run")
+
+    valid = make_abstain_envelope("evidence")
+    for invalid in (
+        UnsafeMapping(valid),
+        {**valid, "outcome": UnsafeString("ABSTAIN")},
+        {**valid, "evidence_refs": UnsafeList()},
+    ):
+        payload, failure_kind = invoke_sync_fixture_operation(lambda: invalid, "fixture-object-001")
+        assert failure_kind == "invalid_response"
+        assert payload["reason_code"] == "INVALID_RESPONSE"
+
+
+@pytest.mark.parametrize("outcome", ["ABSTAIN", "DENY", "ERROR"])
+def test_plain_negative_json_envelopes_remain_unchanged(outcome) -> None:
+    expected = {**make_abstain_envelope("evidence"), "outcome": outcome}
+    assert invoke_sync_fixture_operation(lambda: expected, "fixture-negative-001") == (expected, None)

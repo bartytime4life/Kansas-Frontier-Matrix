@@ -125,7 +125,16 @@ def _has_closed_negative_shape(payload: object) -> bool:
     authority for the complete RuntimeResponseEnvelope shape.
     """
 
-    if not isinstance(payload, dict) or set(payload) != _NEGATIVE_ENVELOPE_KEYS:
+    # Only plain JSON values may reach the response serializer. In particular,
+    # reject unhashable outcome values before set membership and do not invoke
+    # provider-defined equality, mapping, or string-subclass behavior here.
+    if type(payload) is not dict or len(payload) != len(_NEGATIVE_ENVELOPE_KEYS):
+        return False
+    if any(type(key) is not str for key in payload) or set(payload) != _NEGATIVE_ENVELOPE_KEYS:
+        return False
+    if any(type(payload[key]) is not str for key in _NEGATIVE_ENVELOPE_KEYS - {"evidence_refs"}):
+        return False
+    if type(payload["evidence_refs"]) is not list or payload["evidence_refs"]:
         return False
     if payload.get("outcome") not in _NEGATIVE_OUTCOMES:
         return False
