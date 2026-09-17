@@ -25,7 +25,8 @@ LIST_ROW_RE = re.compile(
     r"^-\s+\[`([^`]+/)`\]\(\./([^/]+)/README\.md\)\s*$"
 )
 TABLE_ROW_RE = re.compile(
-    r"^\|\s*\[`([^`]+/)`\]\(\./([^/]+)/README\.md\)\s*\|.*\|\s*$"
+    r"^\|\s*\[`([^`]+/)`\]\(\./([^/]+)/README\.md\)\s*"
+    r"\|\s*\[`([^`]+)`\]\(([^)]+)\)\s*\|\s*$"
 )
 CONFLICT_BOUNDARY_RE = re.compile(r"^(?:<{7,}|>{7,})(?: .*)?$")
 
@@ -67,16 +68,29 @@ def _read_redirect_rows(readme_path: Path) -> tuple[list[str], list[str]]:
         stripped = line.strip()
         if stripped.startswith("- ["):
             match = LIST_ROW_RE.match(stripped)
+            if match is None:
+                invalid_rows.append(stripped)
+                continue
+            lane, linked_lane = match.groups()
+            if lane.rstrip("/") != linked_lane:
+                invalid_rows.append(stripped)
+                continue
         elif stripped.startswith("| ["):
             match = TABLE_ROW_RE.match(stripped)
+            if match is None:
+                invalid_rows.append(stripped)
+                continue
+            lane, linked_lane, canonical_text, canonical_href = match.groups()
+            if lane.rstrip("/") != linked_lane:
+                invalid_rows.append(stripped)
+                continue
+            expected_canonical = f"data/catalog/domain/{linked_lane}/"
+            if canonical_text != expected_canonical or not canonical_href.endswith(
+                expected_canonical
+            ):
+                invalid_rows.append(stripped)
+                continue
         else:
-            continue
-        if match is None:
-            invalid_rows.append(stripped)
-            continue
-        lane, linked_lane = match.groups()
-        if lane.rstrip("/") != linked_lane:
-            invalid_rows.append(stripped)
             continue
         lanes.append(lane)
     if not lanes and not invalid_rows:

@@ -122,6 +122,24 @@ class CatalogDomainCompatibilityRedirectTests(unittest.TestCase):
             self.assertEqual("FAIL", report["outcome"])
             self.assertEqual(1, len(report["invalid_redirect_rows"]))
 
+    def test_mismatched_canonical_column_fails_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            compat, canonical = _write_layout(
+                Path(tmp),
+                actual=["agriculture"],
+                indexed=["agriculture"],
+                row_overrides={
+                    "agriculture": (
+                        "| [`agriculture/`](./agriculture/README.md) | "
+                        "[`data/catalog/domain/fauna/`]"
+                        "(../../data/catalog/domain/fauna/) |"
+                    ),
+                },
+            )
+            report = validate_catalog_domain_compatibility_redirect(compat, canonical)
+            self.assertEqual("FAIL", report["outcome"])
+            self.assertEqual(1, len(report["invalid_redirect_rows"]))
+
     def test_table_header_and_separator_rows_are_ignored(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             compat, canonical = _write_layout(
