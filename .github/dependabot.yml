@@ -1,11 +1,19 @@
 # Kansas Frontier Matrix Dependabot configuration
-# Version: v1.4
-# Updated: 2026-08-28
+# Version: v1.5
+# Updated: 2026-09-17
 #
 # Authority boundary:
 # - Dependabot proposes dependency changes through pull requests.
 # - It does not approve, merge, release, publish, change policy, or establish
 #   that an update is compatible, secure, rights-cleared, or production-ready.
+# - Automatic rebases are disabled for every update lane. This keeps an exact
+#   reviewed head from being rewritten by Dependabot after review; stale or
+#   conflicting proposals require an explicit current-base refresh and review.
+# - This is prospective: GitHub documents that pull requests opened before the
+#   setting changes may continue to rebase for up to 30 days.
+# - Dependabot pull requests are still proposals and may be opened ready for
+#   review. This file cannot make them drafts and does not resolve issue #4024;
+#   repository controls remain the authority for ready and merge transitions.
 # - Security updates stay on the default branch because no target-branch is set.
 # - Group rules and cooldowns below apply only to version updates. Security
 #   updates are not delayed by cooldown; their grouping is controlled
@@ -55,6 +63,7 @@ updates:
       semver-minor-days: 7
       semver-patch-days: 3
     open-pull-requests-limit: 6
+    rebase-strategy: "disabled"
     assignees:
       - "bartytime4life"
     labels:
@@ -100,6 +109,7 @@ updates:
       semver-minor-days: 7
       semver-patch-days: 3
     open-pull-requests-limit: 4
+    rebase-strategy: "disabled"
     assignees:
       - "bartytime4life"
     labels:
@@ -145,6 +155,7 @@ updates:
       semver-minor-days: 7
       semver-patch-days: 3
     open-pull-requests-limit: 2
+    rebase-strategy: "disabled"
     assignees:
       - "bartytime4life"
     labels:
@@ -181,6 +192,7 @@ updates:
     cooldown:
       default-days: 3
     open-pull-requests-limit: 2
+    rebase-strategy: "disabled"
     assignees:
       - "bartytime4life"
     labels:
@@ -207,6 +219,7 @@ updates:
       semver-minor-days: 7
       semver-patch-days: 3
     open-pull-requests-limit: 3
+    rebase-strategy: "disabled"
     assignees:
       - "bartytime4life"
     labels:
@@ -240,6 +253,7 @@ updates:
     cooldown:
       default-days: 7
     open-pull-requests-limit: 2
+    rebase-strategy: "disabled"
     assignees:
       - "bartytime4life"
     labels:
