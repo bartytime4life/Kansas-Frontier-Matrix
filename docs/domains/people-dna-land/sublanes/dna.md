@@ -8,19 +8,23 @@ owners: <people-dna-land domain steward — TODO>, <source steward — TODO>, <s
 created: 2026-05-18
 updated: 2026-06-06
 policy_label: restricted
+owning_root: docs/
+responsibility: Define governance, sensitivity, consent, and publication posture for DNA, genomic, and DNA-derived assertions within the People/DNA/Land domain without activating a source, connector, consent decision, release, or publication.
+truth_posture: PROPOSED sublane structure and standards crosswalk / NEEDS VERIFICATION against a mounted repository and a ratified sublane-folder convention
 related:
-  # NEEDS VERIFICATION — every path below is PROPOSED until checked against a mounted repo
-  - docs/domains/people-dna-land/README.md                  # parent domain lane landing
-  - docs/domains/people-dna-land/sublanes/README.md         # sublanes index (PROPOSED layer)
-  - docs/domains/people-dna-land/sublanes/people/README.md  # PROPOSED sibling sublane
-  - docs/domains/people-dna-land/sublanes/land/README.md    # PROPOSED sibling sublane
-  - directory-rules.md                                       # placement authority (repo root)
-  - ai-build-operating-contract.md                           # operating law (CONTRACT_VERSION 3.0.0)
+  # NEEDS VERIFICATION — this block's parser does not support trailing inline
+  # comments on list items; keep each entry a bare path.
+  - docs/domains/people-dna-land/README.md
+  - docs/domains/people-dna-land/sublanes/README.md
+  - docs/domains/people-dna-land/sublanes/people/README.md
+  - docs/domains/people-dna-land/sublanes/land.md
+  - docs/doctrine/directory-rules.md
+  - docs/doctrine/ai-build-operating-contract.md
   - docs/standards/PROV.md
   - docs/standards/ISO-19115.md
-  - docs/policy/living_persons_geoprivacy.md                 # PROPOSED, cited C6-06
-  - docs/standards/DP_BUDGETS.md                             # PROPOSED, cited C6-05
-  - docs/standards/CONSENT_TOKENS.md                         # PROPOSED, cited C6-07
+  - docs/policy/living_persons_geoprivacy.md
+  - docs/standards/DP_BUDGETS.md
+  - docs/standards/CONSENT_TOKENS.md
 tags: [kfm, domain, people-dna-land, dna, genomics, sensitivity, consent, policy]
 notes:
   # CONTRACT_VERSION = "3.0.0"
@@ -528,17 +532,17 @@ Sources: Atlas Ch. 16 §F; KFM-IDX-POL-003; DOM-PEOPLE.
 
 - [`docs/domains/people-dna-land/README.md`](../../README.md) — parent domain lane landing *(NEEDS VERIFICATION)*
 - [`docs/domains/people-dna-land/sublanes/README.md`](../README.md) — sublanes index *(PROPOSED layer)*
-- [`docs/domains/people-dna-land/sublanes/people/README.md`](../people/README.md) — PROPOSED sibling sublane
-- [`docs/domains/people-dna-land/sublanes/land/README.md`](../land/README.md) — PROPOSED sibling sublane
+- [`docs/domains/people-dna-land/sublanes/people/README.md`](people/README.md) — sibling sublane
+- [`docs/domains/people-dna-land/sublanes/land.md`](land.md) — sibling sublane *(PROPOSED `land/README.md` split not yet created)*
 - [`directory-rules.md`](../../../doctrine/directory-rules.md) — directory placement law (§3, §12, §2.4, §18 OPEN-DR-02)
 - [`ai-build-operating-contract.md`](../../../doctrine/ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`)
-- [`docs/standards/PROV.md`](../../../../standards/PROV.md) — provenance crosswalk
-- [`docs/standards/ISO-19115.md`](../../../../standards/ISO-19115.md) — metadata crosswalk
-- [`docs/standards/CONSENT_TOKENS.md`](../../../../standards/CONSENT_TOKENS.md) — PROPOSED consent-token standard profile
-- [`docs/standards/DP_BUDGETS.md`](../../../../standards/DP_BUDGETS.md) — PROPOSED DP budgets profile
-- [`docs/standards/DUO_PROFILE.md`](../../../../standards/DUO_PROFILE.md) — PROPOSED GA4GH DUO profile
-- [`docs/policy/living_persons_geoprivacy.md`](../../../../policy/living_persons_geoprivacy.md) — PROPOSED policy doc
-- [`docs/runbooks/people-dna-land/revocation.md`](../../../../runbooks/people-dna-land/revocation.md) — PROPOSED runbook
+- [`docs/standards/PROV.md`](../../../standards/PROV.md) — provenance crosswalk
+- [`docs/standards/ISO-19115.md`](../../../standards/ISO-19115.md) — metadata crosswalk
+- [`docs/standards/CONSENT_TOKENS.md`](../../../standards/CONSENT_TOKENS.md) — PROPOSED consent-token standard profile
+- [`docs/standards/DP_BUDGETS.md`](../../../standards/DP_BUDGETS.md) — PROPOSED DP budgets profile
+- [`docs/standards/DUO_PROFILE.md`](../../../standards/DUO_PROFILE.md) — PROPOSED GA4GH DUO profile
+- [`docs/policy/living_persons_geoprivacy.md`](../../../policy/living_persons_geoprivacy.md) — PROPOSED policy doc
+- [`docs/runbooks/people-dna-land/revocation.md`](../../../runbooks/people-dna-land/revocation.md) — PROPOSED runbook
 - `docs/adr/ADR-0001-schema-home.md` — canonical schema home *(TODO — verify path)*
 
 > [!TIP]

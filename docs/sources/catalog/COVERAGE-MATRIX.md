@@ -73,7 +73,7 @@ The cell value is **documentation-state**, not implementation-state. A `document
 
 | Concern | Where authority lives | Status |
 |---|---|---|
-| Family list (connector lane) | [`directory-rules.md` §7.3](../../doctrine/directory-rules.md#73-connectors--source-specific-fetch-and-admission) | **CONFIRMED — 9 families** |
+| Family list (connector lane) | [`directory-rules.md` §7.2](../../doctrine/directory-rules.md#72-canonical-responsibility-table) | **CONFIRMED — 9 families** |
 | Domain spine (doctrine) | KFM Domains Atlas v1.1 §2.1 (15-domain spine) | **CONFIRMED doctrine** |
 | Domain projection lanes | [`data/catalog/domain/`](../../../data/catalog/domain/) (subdirectories) | **CONFIRMED prior-session enumeration 2026-05-20**; NEEDS VERIFICATION this session |
 | Per-product page placement convention | `docs/sources/catalog/<family>/<PRODUCT>.md` | **PROPOSED** *(sibling-link presence verified in prior Claude Code session)* |

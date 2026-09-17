@@ -318,7 +318,7 @@ MapLibre runtime              map.getFeatureState({ source, sourceLayer, id: <hu
 - [`docs/sources/catalog/NAMING.md`](./NAMING.md) — path and filename casing *(PROPOSED)*
 - [`docs/sources/catalog/OPEN-QUESTIONS.md`](./OPEN-QUESTIONS.md) — cross-cutting open questions *(PROPOSED)*
 - [`data/registry/sources/`](../../../data/registry/sources/) — **authoritative source descriptors**
-- [`docs/standards/STAC.md`](../../../standards/STAC.md) — KFM-STAC profile *(PROPOSED — informally `STAC_KFM_PROFILE.md` per Pass-10 C4-01)*
+- [`docs/standards/STAC.md`](../../standards/STAC.md) — KFM-STAC profile *(PROPOSED — informally `STAC_KFM_PROFILE.md` per Pass-10 C4-01)*
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement authority *(§7.3 family list; §6.1.a `docs/standards/` placement)*
 - [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — drift entries
 - [`docs/adr/`](../../adr/) — ADRs *(active ledger needed to resolve OPEN-DSC-17)*
