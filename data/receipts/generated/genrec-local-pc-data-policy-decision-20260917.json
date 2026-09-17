@@ -1,0 +1,101 @@
+{
+  "receipt_id": "genrec-local-pc-data-policy-decision-20260917",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "contracts/source/local_data_manifest.md",
+    "schemas/contracts/v1/source/local_data_manifest.schema.json"
+  ],
+  "artifact_hashes": {
+    "contracts/source/local_data_manifest.md": "sha256:3d988b70486124f7f55fbfd0cf7a69f8470ff5989a84bccc9ea02f23aec02857",
+    "schemas/contracts/v1/source/local_data_manifest.schema.json": "sha256:0f08e21698ff786b4da1cd110791a79accc6d080d865a21269c08c6b697fcf59"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "not-exposed"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub",
+      "repository inspection"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "agent/local-pc-data-store-20260917@a313dee96290d559b4383686f21309dfaed23213",
+      "data/receipts/generated/genrec-local-pc-data-store-20260917.json@d975084836f57152e872e307be6593604d22f11f",
+      "data/receipts/generated/genrec-local-data-batch-review-20260917.json@a313dee96290d559b4383686f21309dfaed23213",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4613",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    "contracts/source/local_data_manifest.md": "PROPOSED",
+    "schemas/contracts/v1/source/local_data_manifest.schema.json": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "exact candidate focused validation",
+      "outcome": "PASS",
+      "reason": "Candidate a313dee96290d559b4383686f21309dfaed23213 records 91 focused tests plus 16 subtests passing."
+    },
+    {
+      "gate": "exact candidate hosted CI",
+      "outcome": "PASS",
+      "reason": "Hosted CI reported successful for exact candidate a313dee96290d559b4383686f21309dfaed23213."
+    },
+    {
+      "gate": "applicable policy authority",
+      "outcome": "PASS",
+      "reason": "Repository owner decision #4613 accepts the exact schema digest and candidate for quarantine-only use with explicit obligations and non-authority boundaries."
+    },
+    {
+      "gate": "historical receipt replay",
+      "outcome": "FAIL",
+      "reason": "The immutable initial receipt at d975084836f57152e872e307be6593604d22f11f truthfully retains its original POLICY_DECISION_REQUIRED result; this successor supplies later authority without rewriting history."
+    },
+    {
+      "gate": "independent human artifact review",
+      "outcome": "SKIPPED",
+      "reason": "Owner policy acceptance is not asserted as independent implementation review."
+    },
+    {
+      "gate": "native PC, provider acquisition, source admission, live map, release, deployment and publication",
+      "outcome": "SKIPPED",
+      "reason": "Outside the bounded quarantine-only policy decision and not authorized by issue #4613."
+    }
+  ],
+  "policy_decisions": [
+    "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4613"
+  ],
+  "citations": [
+    {
+      "id": "local-data-quarantine-owner-decision",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4613"
+    },
+    {
+      "id": "directory-rules-adoption",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@a313dee96290d559b4383686f21309dfaed23213"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-17T03:09:41Z",
+  "emitter": "Codex local-data policy-decision handoff",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "APPEND_ONLY_SUCCESSOR. Binds owner policy decision #4613 to the exact candidate and schema digest for private offline QUARANTINE capture only. Does not alter the historical receipt, approve implementation review, authorize source admission or activation, permit lifecycle promotion, change PR or merge authority, or grant release, deployment, Site, map or publication authority. Material schema or contract changes require a new authenticated decision."
+}
