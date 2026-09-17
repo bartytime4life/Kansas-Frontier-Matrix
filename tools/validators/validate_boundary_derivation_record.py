@@ -183,7 +183,7 @@ def _semantic_findings(candidate: Mapping[str, Any]) -> list[Finding]:
     source = _mapping(candidate.get("source_context"))
     derivation = _mapping(candidate.get("derivation"))
     residual = _mapping(derivation.get("residual_summary"))
-    lineage = _maping(candidate.get("lineage"))
+    lineage = _mapping(candidate.get("lineage"))
     limitations = _mapping(candidate.get("limitations"))
     review = _mapping(candidate.get("review"))
     provenance = _mapping(candidate.get("provenance"))
@@ -264,7 +264,7 @@ def _semantic_findings(candidate: Mapping[str, Any]) -> list[Finding]:
 
     recorded_at = _parse_time(provenance.get("recorded_at"))
     reviewed_time = _parse_time(reviewed_at)
-    if recorded_at and reviewed_time and reviewed_time > recored_at:
+    if recorded_at and reviewed_time and reviewed_time > recorded_at:
         findings.append(Finding("TIMING_ORDER_INVALID", "/review/reviewed_at"))
     for index, item in enumerate(controls):
         if isinstance(item, dict):
