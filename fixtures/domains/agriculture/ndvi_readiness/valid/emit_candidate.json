@@ -49,7 +49,7 @@
     {
       "source": "HRRR-Smoke",
       "source_role": "forecast",
-      "spec_hash": "sha256:ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "spec_hash": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
       "evidence_ref": "evidence:hrrr-20260402T12Z",
       "receipt_state": "RESOLVED"
     },
