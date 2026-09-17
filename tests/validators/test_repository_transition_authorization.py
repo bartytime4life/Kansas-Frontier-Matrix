@@ -11,8 +11,12 @@ from jsonschema import Draft202012Validator, FormatChecker
 
 from tools.validators.repository_control.validate_transition_authorization import (
     MARKER,
+    RECORD_KEYS,
+    RESULT_KEYS,
+    Result,
     append_github_step_summary,
     evaluate,
+    render_result,
 )
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -204,10 +208,46 @@ def test_unknown_or_duplicate_fields_fail_closed() -> None:
     assert result.reason_code == "MATCHING_AUTHORIZATION_INVALID"
 
 
-def test_runtime_shape_rejects_short_id_and_non_rfc3339_expiry() -> None:
+def test_missing_or_null_required_record_fields_fail_closed() -> None:
+    for field in RECORD_KEYS:
+        for replacement in ("missing", "null"):
+            comments = load(COMMENTS_PATH)
+            value_record = record(comments)
+            if replacement == "missing":
+                del value_record[field]
+            else:
+                value_record[field] = None
+            replace_record(comments, value_record)
+
+            result = run(load(EVENT_PATH), comments)
+
+            assert (result.outcome_class, result.reason_code, result.exit_code) == (
+                "REGRESSION",
+                "MATCHING_AUTHORIZATION_INVALID",
+                1,
+            )
+
+
+def test_null_comment_id_fails_closed() -> None:
+    comments = load(COMMENTS_PATH)
+    comments[0][0]["id"] = None
+
+    result = run(load(EVENT_PATH), comments)
+
+    assert (result.outcome_class, result.reason_code, result.exit_code) == (
+        "REGRESSION",
+        "MATCHING_AUTHORIZATION_INVALID",
+        1,
+    )
+
+
+def test_runtime_shape_rejects_values_outside_authorization_schema() -> None:
     cases = (
         ("authorization_id", "x"),
         ("expires_at", "2026-07-30T22:00:00"),
+        ("expires_at", "2026-07-30 22:00:00Z"),
+        ("repository", "not-a-repository"),
+        ("authorizing_actor", "-invalid-login"),
     )
     for field, value in cases:
         comments = load(COMMENTS_PATH)
@@ -307,6 +347,29 @@ def test_cli_exit_and_output_are_bounded(tmp_path: Path) -> None:
     assert "Synthetic exact-head transition fixture" not in completed.stdout
 
 
+def test_partial_pass_result_becomes_complete_blocking_regression() -> None:
+    safe_result, rendered = render_result(
+        Result(
+            "PASS",
+            "TRANSITION_AUTHORIZED",
+            "This incomplete result must not pass.",
+            pr_number=9001,
+            head_sha="2" * 40,
+        )
+    )
+
+    output = json.loads(rendered)
+    assert set(output) == RESULT_KEYS
+    assert (safe_result.outcome_class, safe_result.reason_code, safe_result.exit_code) == (
+        "REGRESSION",
+        "RESULT_SERIALIZATION_INVALID",
+        1,
+    )
+    assert output["authorization_id"] is None
+    assert output["comment_id"] is None
+    assert output["expires_at"] is None
+
+
 def test_cli_missing_authorization_remains_blocking(tmp_path: Path) -> None:
     comments_path = tmp_path / "comments.json"
     comments_path.write_text("[]\n", encoding="utf-8")
@@ -337,8 +400,13 @@ def test_cli_missing_authorization_remains_blocking(tmp_path: Path) -> None:
     )
     assert completed.returncode == 3
     output = json.loads(completed.stdout)
+    assert set(output) == RESULT_KEYS
     assert output["outcome_class"] == "EXPECTED_READINESS_HOLD"
     assert output["reason_code"] == "TRANSITION_AUTHORIZATION_MISSING"
+    assert output["authorization_id"] is None
+    assert output["comment_id"] is None
+    assert output["expires_at"] is None
+    assert completed.stdout.endswith("\n")
 
     summary = summary_path.read_text(encoding="utf-8")
     assert "Outcome class: `EXPECTED_READINESS_HOLD`" in summary

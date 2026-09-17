@@ -202,13 +202,14 @@ def test_binding_note_distinguishes_current_main_from_candidate_hardening() -> N
     binding = BINDING_PATH.read_text(encoding="utf-8")
     lowered = binding.lower()
 
-    assert "current-main workflow-active advisory" in lowered
-    assert "candidate bounded-input hardening" in lowered
+    assert "current-main bounded-capture workflow active" in lowered
+    assert "candidate authorization-output hardening" in lowered
     assert "pr #4237" in lowered
-    assert "current protected-main workflow still uses two trusted-base validators" in lowered
-    assert "candidate adds a third trusted-base capture helper" in lowered
+    assert "uses three trusted-base helpers" in lowered
+    assert "current candidate changes only the final transition validator" in lowered
     assert "fetch_bounded_issue_comments.py" in binding
-    assert "if the candidate bytes are integrated" in lowered
+    assert "classification output contract" in lowered
+    assert "result_serialization_invalid" in lowered
     assert "16 mib" in lowered
     assert "1,000,000 json nodes" in lowered
     assert "allow_nan=false" in lowered
