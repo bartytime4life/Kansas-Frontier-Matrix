@@ -13,6 +13,7 @@ name: csv-geojson-preflight
       - "tests/ingest/csv_geojson_preflight/**"
       - "docs/intake/exploratory/new-ideas-3-11-26-csv-geojson-preflight-source-map.md"
       - "data/receipts/generated/genrec-csv-geojson-preflight-20260806.json"
+      - "data/receipts/generated/genrec-csv-geojson-input-hardening-20260916.json"
   push:
     branches:
       - main
@@ -25,6 +26,7 @@ name: csv-geojson-preflight
       - "tests/ingest/csv_geojson_preflight/**"
       - "docs/intake/exploratory/new-ideas-3-11-26-csv-geojson-preflight-source-map.md"
       - "data/receipts/generated/genrec-csv-geojson-preflight-20260806.json"
+      - "data/receipts/generated/genrec-csv-geojson-input-hardening-20260916.json"
   workflow_dispatch:
 
 permissions:
@@ -98,7 +100,7 @@ jobs:
       - name: Validate generated authoring receipt integrity
         run: |
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-csv-geojson-preflight-20260806.json
+            data/receipts/generated/genrec-csv-geojson-input-hardening-20260916.json
 
       - name: Record trust boundary
         if: always()

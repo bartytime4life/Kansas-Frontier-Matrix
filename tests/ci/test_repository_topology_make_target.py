@@ -24,6 +24,8 @@ EXPECTED_ARGV = [
     ["-m", "unittest", "discover", "--start-directory",
      "tests/validators/directory_governance", "--pattern",
      "test_validate_*topology*.py", "--verbose"],
+    ["-m", "pytest", "-q", "-p", "no:cacheprovider",
+     "tests/validators/directory_governance/test_validate_repository_topology_correction_register.py"],
     ["tools/validators/directory_governance/render_repository_topology_diagnostics.py"],
 ]
 EXPECTED_ENV = {
@@ -59,7 +61,7 @@ class RepositoryTopologyMakeTargetTests(unittest.TestCase):
         cls.makefile = (REPO_ROOT / "Makefile").read_bytes()
 
     def run_target(
-        self, statuses: tuple[int, int, int], *, shell: str = "/bin/sh",
+        self, statuses: tuple[int, int, int, int], *, shell: str = "/bin/sh",
         shell_flags: str = "-c", makefile: bytes | None = None,
         missing_contract: bool = False,
     ) -> tuple[subprocess.CompletedProcess[str], list[dict[str, object]]]:
@@ -98,56 +100,56 @@ class RepositoryTopologyMakeTargetTests(unittest.TestCase):
             return result, records
 
     def assert_contract(
-        self, statuses: tuple[int, int, int], **options: object,
+        self, statuses: tuple[int, int, int, int], **options: object,
     ) -> None:
         result, calls = self.run_target(statuses, **options)
         self.assertEqual(EXPECTED_ARGV, [call["argv"] for call in calls])
         for call in calls:
             self.assertEqual(EXPECTED_ENV, call["env"])
-        self.assertEqual(0 if statuses == (0, 0, 0) else 2, result.returncode,
+        self.assertEqual(0 if statuses == (0, 0, 0, 0) else 2, result.returncode,
                          result.stdout + result.stderr)
-        self.assertIn("repository-topology statuses: contract=%d tests=%d diagnostics=%d" % statuses,
+        self.assertIn("repository-topology statuses: contract=%d tests=%d register=%d diagnostics=%d" % statuses,
                       result.stdout)
-        for index in range(3):
+        for index in range(4):
             self.assertIn("test-substitute lane=" + str(index), result.stdout)
             self.assertIn("test-substitute stderr=" + str(index), result.stderr)
 
-    def test_all_eight_pass_failure_combinations(self) -> None:
-        for statuses in itertools.product((0, 1), repeat=3):
+    def test_all_sixteen_pass_failure_combinations(self) -> None:
+        for statuses in itertools.product((0, 1), repeat=4):
             with self.subTest(statuses=statuses):
                 self.assert_contract(statuses)
 
     def test_nonstandard_failure_codes_are_not_accepted(self) -> None:
-        for index, status in itertools.product(range(3), (2, 7, 126, 127, 130, 143)):
-            statuses = tuple(status if lane == index else 0 for lane in range(3))
+        for index, status in itertools.product(range(4), (2, 7, 126, 127, 130, 143)):
+            statuses = tuple(status if lane == index else 0 for lane in range(4))
             with self.subTest(statuses=statuses):
                 self.assert_contract(statuses)
 
     def test_errexit_does_not_prevent_independent_collection(self) -> None:
-        for statuses in ((1, 0, 0), (0, 1, 0), (1, 1, 1)):
+        for statuses in ((1, 0, 0, 0), (0, 1, 0, 0), (1, 1, 1, 1)):
             with self.subTest(statuses=statuses):
                 self.assert_contract(statuses, shell_flags="-ec")
 
     def test_bash_has_the_same_failure_boundary(self) -> None:
         bash = shutil.which("bash")
         self.assertIsNotNone(bash, "Bash is required by the hosted CI contract")
-        for statuses in ((0, 0, 0), (1, 0, 0), (0, 1, 0), (0, 0, 1)):
+        for statuses in ((0, 0, 0, 0), (1, 0, 0, 0), (0, 1, 0, 0), (0, 0, 1, 0), (0, 0, 0, 1)):
             with self.subTest(statuses=statuses):
                 self.assert_contract(statuses, shell=bash, shell_flags="-euc")
 
     def test_missing_contract_module_is_failure_not_empty_success(self) -> None:
-        result, calls = self.run_target((0, 0, 0), missing_contract=True)
+        result, calls = self.run_target((0, 0, 0, 0), missing_contract=True)
         self.assertEqual(2, result.returncode)
         self.assertEqual(EXPECTED_ARGV[1:], [call["argv"] for call in calls])
-        self.assertIn("contract=1 tests=0 diagnostics=0", result.stdout)
+        self.assertIn("contract=1 tests=0 register=0 diagnostics=0", result.stdout)
 
     def test_original_fail_fast_target_is_discriminated(self) -> None:
         prefix = " ".join(name + "=" + value for name, value in EXPECTED_ENV.items()).encode()
         original = b"repository-topology:\n\t" + prefix + b" python " + b" ".join(
             argument.encode() if "*" not in argument else ("'" + argument + "'").encode()
             for argument in EXPECTED_ARGV[1]
-        ) + b"\n\t" + prefix + b" python " + EXPECTED_ARGV[2][0].encode() + b"\n"
-        result, calls = self.run_target((0, 1, 0), makefile=original)
+        ) + b"\n\t" + prefix + b" python " + EXPECTED_ARGV[3][0].encode() + b"\n"
+        result, calls = self.run_target((0, 1, 0, 0), makefile=original)
         self.assertEqual(2, result.returncode)
         self.assertEqual([EXPECTED_ARGV[1]], [call["argv"] for call in calls])
         self.assertNotIn("test-substitute lane=2", result.stdout)

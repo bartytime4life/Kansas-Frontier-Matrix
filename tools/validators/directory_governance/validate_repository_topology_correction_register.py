@@ -46,11 +46,16 @@ def validate(register_path: Path = DEFAULT_REGISTER, schema_path: Path = DEFAULT
         schema = _load_json(schema_path)
         jsonschema.Draft202012Validator.check_schema(schema)
         validator = jsonschema.Draft202012Validator(schema, format_checker=jsonschema.FormatChecker())
-        for error in sorted(validator.iter_errors(register), key=lambda item: list(item.absolute_path)):
+        for error in sorted(validator.iter_errors(register), key=lambda item: tuple(str(part) for part in item.absolute_path)):
             location = ".".join(str(part) for part in error.absolute_path) or "<root>"
             errors.append(f"schema:{location}:{error.message}")
     except (OSError, ValueError, json.JSONDecodeError, yaml.YAMLError, jsonschema.SchemaError) as exc:
         return [f"load:{exc}"]
+
+    # Semantic checks rely on schema-proven types. Invalid YAML values must
+    # produce a finite validation failure, not reach iteration or set lookup.
+    if errors:
+        return sorted(set(errors))
 
     entries = register.get("entries", [])
     ids: set[str] = set()
@@ -67,6 +72,15 @@ def validate(register_path: Path = DEFAULT_REGISTER, schema_path: Path = DEFAULT
         to_state = entry.get("to", {})
         delta = entry.get("exact_delta", {})
         if isinstance(from_state, dict) and isinstance(to_state, dict) and isinstance(delta, dict):
+            path = entry["path"]
+            if delta["removed"] != [f"{path}@{from_state['blob']}"]:
+                errors.append(f"entry[{index}]:removed member must bind path and from.blob")
+            if delta["added"] != [f"{path}@{to_state['blob']}"]:
+                errors.append(f"entry[{index}]:added member must bind path and to.blob")
+            if from_state["blob"] == to_state["blob"]:
+                errors.append(f"entry[{index}]:correction requires distinct source and target blobs")
+            if from_state["fingerprint"] == to_state["fingerprint"]:
+                errors.append(f"entry[{index}]:correction requires distinct source and target fingerprints")
             old_count = from_state.get("member_count")
             new_count = to_state.get("member_count")
             unchanged = delta.get("unchanged_member_count")

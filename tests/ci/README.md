@@ -47,6 +47,20 @@ re-execute or re-audit the other modules summarized below.
 
 ## Run locally
 
+### Normalized-summary CI coverage
+
+`make normalized-summary-check` runs the existing five-module summary regression
+slice, its schema fixtures, and
+[`test_normalized_summary_workflow.py`](test_normalized_summary_workflow.py).
+The existing `promotion-gate` workflow invokes this target in
+`doctrine-artifact-prereq` with `!cancelled()` so a prior diagnostic failure does
+not hide these checks. The shell tests exercise success/failure propagation and
+literal Markdown rendering; they do not emulate GitHub or prove hosted execution.
+Trigger coverage includes every pull request and push to main without path filters.
+Passing tests do not authorize consumer cutover, review, promotion, or publication.
+
+### Existing test commands
+
 Use Python 3.11 or later from the repository root. The project test extra
 provides `pytest`; the root dependencies include PyYAML for the accessibility
 workflow parser.

@@ -31,6 +31,12 @@ notes:
 
 # OpenAI Sites In-Place Deployment Handoff
 
+> **Historical checkpoint — not a current execution procedure.** The project ID,
+> ZIP, digest, and version-1 receipt below describe the 2026-09-03 handoff. They
+> must not be replayed against the active Site. See [Current Site identity and
+> source-alignment hold](sites-source-alignment.md) for the current target and
+> unresolved proof. The historical and current project IDs are not aliases.
+
 > **Status:** `REPOSITORY_HANDOFF_ONLY / HOLD_NO_SITES_MUTATION_SURFACE`
 >
 > Use this procedure only from the **Edit** session of the existing OpenAI Site.

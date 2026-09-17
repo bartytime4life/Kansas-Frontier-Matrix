@@ -1,0 +1,154 @@
+{
+  "receipt_id": "genrec-csv-geojson-input-hardening-20260916",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/csv-geojson-preflight.yml",
+    "contracts/source/csv_geojson_normalization_candidate.md",
+    "docs/intake/exploratory/new-ideas-3-11-26-csv-geojson-preflight-source-map.md",
+    "fixtures/ingest/csv_geojson_preflight/README.md",
+    "fixtures/ingest/csv_geojson_preflight/invalid_coordinate.csv",
+    "fixtures/ingest/csv_geojson_preflight/invalid_duplicate_id.csv",
+    "fixtures/ingest/csv_geojson_preflight/invalid_formula.csv",
+    "fixtures/ingest/csv_geojson_preflight/profile.json",
+    "fixtures/ingest/csv_geojson_preflight/valid.csv",
+    "schemas/contracts/v1/source/csv_geojson_normalization_candidate.schema.json",
+    "tests/ingest/csv_geojson_preflight/test_preflight.py",
+    "tools/ingest/csv_geojson_preflight/README.md",
+    "tools/ingest/csv_geojson_preflight/preflight.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/csv-geojson-preflight.yml": "sha256:8cfe00d282ce41c72b79ff2e54f181d0f2aa09f86faf0cc57304fff39a273831",
+    "contracts/source/csv_geojson_normalization_candidate.md": "sha256:55405cdcb496063c8ad072aec1f345a25a22cfd5be01b17ba706804c7cc9f4da",
+    "docs/intake/exploratory/new-ideas-3-11-26-csv-geojson-preflight-source-map.md": "sha256:f63cf8779ecda358536196810fa1647c87c84b7581252182b262e28a102917d6",
+    "fixtures/ingest/csv_geojson_preflight/README.md": "sha256:9d024a97928c37cd7d438a095e7556d7f16178db6be1ad887c5f7952fd3a8422",
+    "fixtures/ingest/csv_geojson_preflight/invalid_coordinate.csv": "sha256:bb87112f532d2870d72dad0e9d438ee0a86002dd222d2ceb9ceab20619478589",
+    "fixtures/ingest/csv_geojson_preflight/invalid_duplicate_id.csv": "sha256:742c94cedbeb3a9571ce8c12d62f82f18b574be490835ed8e38d586eeff43be1",
+    "fixtures/ingest/csv_geojson_preflight/invalid_formula.csv": "sha256:d7dec8812cb0cf9b8bcee290648e06d72a5482b3a1c2e4cbad88d2ad5e7bde2c",
+    "fixtures/ingest/csv_geojson_preflight/profile.json": "sha256:c6a985a1073087a5006250176f61beff3e0b94da235def96b8f109fff942c766",
+    "fixtures/ingest/csv_geojson_preflight/valid.csv": "sha256:029c737f673c0f0a88970dfd75797bad57dd2f178a37cc2b48080c8353e1a807",
+    "schemas/contracts/v1/source/csv_geojson_normalization_candidate.schema.json": "sha256:65776e6faaf6b02d26415a5a8355cb04160c41647cefac33ab5c5c27752e1bd5",
+    "tests/ingest/csv_geojson_preflight/test_preflight.py": "sha256:c74663ada8b3b355161fd18e1cfe92e8a2bb85a450b38ed482a1961a0a6915d6",
+    "tools/ingest/csv_geojson_preflight/README.md": "sha256:d746452088cd87ceecd097c1c3fefb906ed1b1e34fc22f9c13dec8017b51e21a",
+    "tools/ingest/csv_geojson_preflight/preflight.py": "sha256:8c0d57c2d4f3ce498c6df493fe0b2146e2caa2df8462f819a49fcec0bfddfa9c"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "unknown"
+  },
+  "prompt_or_contract": "sha256:55405cdcb496063c8ad072aec1f345a25a22cfd5be01b17ba706804c7cc9f4da",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub read-only evidence inspection",
+      "local Python validation",
+      "local focused branch authoring"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [],
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@5bbfae05970acd4357a08135ff340284585039f4",
+      "repo:docs/doctrine/directory-rules.md@5bbfae05970acd4357a08135ff340284585039f4",
+      "repo:contracts/source/csv_geojson_normalization_candidate.md@5bbfae05970acd4357a08135ff340284585039f4",
+      "repo:tools/ingest/README.md@5bbfae05970acd4357a08135ff340284585039f4",
+      "repo:tests/ingest/README.md@5bbfae05970acd4357a08135ff340284585039f4",
+      "repo:data/receipts/generated/README.md@5bbfae05970acd4357a08135ff340284585039f4",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3393"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/csv-geojson-preflight.yml": "CONFIRMED",
+    "contracts/source/csv_geojson_normalization_candidate.md": "PROPOSED",
+    "docs/intake/exploratory/new-ideas-3-11-26-csv-geojson-preflight-source-map.md": "PROPOSED",
+    "fixtures/ingest/csv_geojson_preflight/README.md": "PROPOSED",
+    "fixtures/ingest/csv_geojson_preflight/invalid_coordinate.csv": "CONFIRMED",
+    "fixtures/ingest/csv_geojson_preflight/invalid_duplicate_id.csv": "CONFIRMED",
+    "fixtures/ingest/csv_geojson_preflight/invalid_formula.csv": "CONFIRMED",
+    "fixtures/ingest/csv_geojson_preflight/profile.json": "CONFIRMED",
+    "fixtures/ingest/csv_geojson_preflight/valid.csv": "CONFIRMED",
+    "schemas/contracts/v1/source/csv_geojson_normalization_candidate.schema.json": "CONFIRMED",
+    "tests/ingest/csv_geojson_preflight/test_preflight.py": "CONFIRMED",
+    "tools/ingest/csv_geojson_preflight/README.md": "PROPOSED",
+    "tools/ingest/csv_geojson_preflight/preflight.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-csv-suite-19-tests",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "csv-and-generated-receipt-regression-47-tests",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "python-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "synthetic-pc-demo-three-points-schema-valid",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "workflow-security-20-rules-zero-findings",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "historical-receipt-13-subjects-at-42640307562af07649e44d085d7b2a8f363b3f97",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head",
+      "outcome": "SKIPPED",
+      "reason": "NOT_RUN; no eligible independently contained PR delivery path has been established; #4024 remains separate."
+    },
+    {
+      "gate": "accountable-independent-review",
+      "outcome": "SKIPPED",
+      "reason": "BLOCKED; independent accountable reviewer identity/acceptance not established."
+    },
+    {
+      "gate": "full-repository-validation",
+      "outcome": "SKIPPED",
+      "reason": "NOT_RUN; proportional tests cover the five-path input boundary repair."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "source-preflight-contract",
+      "validated": true,
+      "evidence_ref": "repo:contracts/source/csv_geojson_normalization_candidate.md@5bbfae05970acd4357a08135ff340284585039f4"
+    },
+    {
+      "id": "directory-adoption",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@5bbfae05970acd4357a08135ff340284585039f4"
+    },
+    {
+      "id": "existing-ingest-lane",
+      "validated": true,
+      "evidence_ref": "repo:tools/ingest/README.md@5bbfae05970acd4357a08135ff340284585039f4"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-16T15:37:26Z",
+  "emitter": "OpenAI Codex via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Append-only successor to genrec-csv-geojson-preflight-20260806. Retains all 13 integrity subjects at final current bytes; no subject removed. Historical receipt is unchanged and passes at original ancestor42640307562af07649e44d085d7b2a8f363b3f97. Its workflow digest already differs on base5bbfae05970acd4357a08135ff340284585039f4 due inherited CI dependency migration; that failure is not introduced by this branch. Seven new regression cases fail against the base implementation and pass after direct CSV byte-limit enforcement, strict integer profile fields and finite malformed-data-row quarantine. Only bundled synthetic fixtures are used; no actual source data, network, activation, lifecycle write, evidence/policy acceptance, release, deployment or publication. GeneratedReceipt gate outcomes use schema PASS/FAIL/SKIPPED; explicit NOT_RUN/BLOCKED reasons are retained above. Rollback by branch abandonment or focused inverse commit after separately authorized integration; preserve historical receipts."
+}

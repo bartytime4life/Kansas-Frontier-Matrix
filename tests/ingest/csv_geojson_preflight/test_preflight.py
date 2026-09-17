@@ -222,3 +222,65 @@ def test_static_boundary_has_no_network_lifecycle_or_release_clients():
         "usgs.gov",
     )
     assert all(token not in source for token in forbidden)
+
+
+def test_direct_normalization_rejects_oversized_bytes_before_csv_parsing():
+    profile = preflight.load_profile(FIXTURES / "profile.json")
+    raw_csv = b"x" * (preflight.MAX_CSV_BYTES + 1)
+    with patch.object(preflight.csv, "reader", side_effect=AssertionError("must not parse")):
+        with pytest.raises(preflight.PreflightError) as captured:
+            preflight.normalize_csv(profile, raw_csv)
+    assert captured.value.reason_code == "INPUT_TOO_LARGE"
+
+
+def test_direct_and_file_normalization_share_inclusive_byte_limit(tmp_path, monkeypatch):
+    raw_csv = (FIXTURES / "valid.csv").read_bytes()
+    monkeypatch.setattr(preflight, "MAX_CSV_BYTES", len(raw_csv))
+    profile = preflight.load_profile(FIXTURES / "profile.json")
+    assert preflight.normalize_csv(profile, raw_csv) == candidate()
+    oversized = tmp_path / "oversized.csv"
+    oversized.write_bytes(raw_csv + b"\n")
+    for invoke in (
+        lambda: preflight.normalize_csv(profile, oversized.read_bytes()),
+        lambda: preflight.normalize_files(FIXTURES / "profile.json", oversized),
+    ):
+        with pytest.raises(preflight.PreflightError) as captured:
+            invoke()
+        assert captured.value.reason_code == "INPUT_TOO_LARGE"
+
+
+@pytest.mark.parametrize(
+    "field,value,reason_code",
+    [
+        ("coordinate_precision", False, "COORDINATE_PRECISION_INVALID"),
+        ("coordinate_precision", True, "COORDINATE_PRECISION_INVALID"),
+        ("max_rows", True, "ROW_LIMIT_INVALID"),
+    ],
+)
+def test_profile_boolean_is_not_an_integer_budget(field, value, reason_code):
+    raw = json.loads((FIXTURES / "profile.json").read_text(encoding="utf-8"))
+    raw[field] = value
+    with pytest.raises(preflight.PreflightError) as captured:
+        preflight.Profile.from_mapping(raw)
+    assert captured.value.reason_code == reason_code
+
+
+@pytest.mark.parametrize("bad_row", ['fixture-secret,"unterminated', 'fixture-secret,"0"x,0,a,b'])
+def test_malformed_data_row_quarantines_without_output_or_values(tmp_path, capsys, bad_row):
+    raw_csv = (FIXTURES / "valid.csv").read_bytes().splitlines(keepends=True)[0] + bad_row.encode()
+    csv_path = tmp_path / "malformed.csv"
+    csv_path.write_bytes(raw_csv)
+    output = tmp_path / "candidate.json"
+    profile = preflight.load_profile(FIXTURES / "profile.json")
+    with pytest.raises(preflight.PreflightError) as captured:
+        preflight.normalize_csv(profile, raw_csv)
+    assert captured.value.reason_code == "CSV_PARSE_ERROR"
+    result = preflight.main([
+        "--profile", str(FIXTURES / "profile.json"),
+        "--csv", str(csv_path), "--output", str(output),
+    ])
+    assert result == 2
+    report = capsys.readouterr()
+    assert json.loads(report.out)["reason_code"] == "CSV_PARSE_ERROR"
+    assert "fixture-secret" not in report.out + report.err
+    assert not output.exists()

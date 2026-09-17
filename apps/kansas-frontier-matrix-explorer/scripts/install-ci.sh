@@ -33,7 +33,7 @@ if [[ "${HOME}" != "${expected_home}" ]]; then
   echo "Expected HOME=${expected_home}, got HOME=${HOME}." >&2
   exit 78
 fi
-actual_cache="$(npm config get cache)"
+actual_cache="$(npm config get cache --workspaces=false)"
 if [[ "${actual_cache}" != "${expected_cache}" ]]; then
   echo "Expected npm cache ${expected_cache}, got ${actual_cache}." >&2
   exit 78
@@ -103,7 +103,7 @@ locked_tarball="${locked_vinext[0]}"
 locked_integrity="${locked_vinext[1]}"
 
 if [[ "${use_seeded_cache}" == "0" ]]; then
-  registry="$(npm config get registry)"
+  registry="$(npm config get registry --workspaces=false)"
   preflight_url="$({ node --input-type=module - "${locked_tarball}" "${registry}" <<'NODE'
 const locked = new URL(process.argv[2]);
 const registry = new URL(process.argv[3]);
@@ -158,7 +158,7 @@ echo "[sites] running exactly one bounded npm ci"
 export NPM_CONFIG_MAXSOCKETS=1
 export NPM_CONFIG_FETCH_RETRIES=0
 export NPM_CONFIG_FETCH_TIMEOUT=30000
-npm_ci_args=(ci --cache "${expected_cache}")
+npm_ci_args=(ci --cache "${expected_cache}" --workspaces=false)
 if [[ "${use_seeded_cache}" == "1" ]]; then
   npm_ci_args+=(--prefer-offline)
 fi

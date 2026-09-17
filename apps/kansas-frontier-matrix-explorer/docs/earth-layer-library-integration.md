@@ -29,10 +29,12 @@ workflows, hosting configuration, source/data activation or existing snapshots.
 The production entrypoint therefore does not expose the new Library yet.
 The browser test is not a deployed app and must never be published as one.
 
-The current source declares the existing Site project
+At this historical branch checkpoint, the source declared Site project
 `appgprj_6a870a079c1c8191abb7401ef092a181` and slug
-`kansas-frontier-matrix-explorer`. Saved/deployed versions and live source equality
-were not verified through a Sites tool. No Site version was saved or deployed.
+`kansas-frontier-matrix-explorer`. That ID is not the current repository target;
+see [the current identity and source-alignment hold](sites-source-alignment.md).
+Saved/deployed versions and live source equality were not verified through a
+Sites tool. No Site version was saved or deployed by this branch work.
 
 ## Behavior and important limits
 

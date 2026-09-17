@@ -2,11 +2,11 @@
 doc_id: kfm://app/governed-api/readme
 title: Governed API App README
 type: app-readme
-version: v0.4
+version: v0.4.1
 status: draft; repository-grounded; bounded-scaffold
 owners: OWNER_TBD — Apps steward · API steward · Policy steward · Evidence steward · Release steward · Runtime steward · Docs steward
 created: 2026-06-16
-updated: 2026-09-12
+updated: 2026-09-16
 policy_label: public
 owning_root: apps/
 current_path: apps/governed-api/README.md
@@ -36,6 +36,7 @@ related:
   - ../../.github/workflows/api-test.yml
 tags: [kfm, apps, governed-api, wsgi, runtime-response-envelope, finite-outcomes, evidence, policy, release]
 notes:
+  - "v0.4.1 records plain-JSON negative-envelope type checks before membership and serialization; schema, route, authority, and deployment boundaries are unchanged."
   - "v0.4 documents the bounded registered-handler failure guard and deterministic negative-path proof; it adds no route, dependency, policy, release, deployment, or publication change."
   - "Current handlers emit RuntimeResponseEnvelope-shaped ABSTAIN or ERROR scaffolds, not operational evidence or policy decisions."
   - "ADR-0029 is accepted; ADR-0004 remains draft/proposed. Historical ADR implementation snapshots do not override current source."
@@ -108,7 +109,7 @@ Promotion requires its own evidence, rights, sensitivity, validation, integrity,
 
 Keep this scaffold fail-closed. Missing evidence, policy, rights, sensitivity, review, or release support must not be concealed by a successful HTTP status, synthetic content, or generated language.
 
-In the **current implementation**, abstention means the route is not implemented; it is not an evidence-quality assessment. The 404/405 paths return `ERROR`, not a policy `DENY`. Registered handlers pass through a bounded closed-negative-envelope guard: synchronous exceptions, awaitable returns, and invalid shapes become safe `ERROR` envelopes. This guard is deliberately narrower than the canonical JSON Schema validator. The server still does not perform request-schema validation, caller authorization, policy evaluation, evidence resolution, or complete response-schema validation on each request. These remain graduation work.
+In the **current implementation**, abstention means the route is not implemented; it is not an evidence-quality assessment. The 404/405 paths return `ERROR`, not a policy `DENY`. Registered handlers pass through a closed-negative-envelope guard: synchronous exceptions, awaitable returns, and invalid shapes become safe `ERROR` envelopes. Plain JSON value types are checked before outcome membership, regular expressions, and response serialization, so malformed list/object outcomes cannot escape as validation exceptions. Intentional valid `ABSTAIN`, `DENY`, and `ERROR` values retain their meanings. This guard is deliberately narrower than the canonical JSON Schema validator; it is not a total response-byte or execution-time limit. The server still does not perform request-schema validation, caller authorization, policy evaluation, evidence resolution, or complete response-schema validation on each request. These remain graduation work.
 
 For sensitive exact locations, archaeology, rare species, infrastructure, living-person/DNA information, private land, or unclear cultural/sovereignty authority, preserve denial, quarantine, redaction, generalization, or staged access until the governing controls permit exposure. Adding a route or UI layer must not bypass those controls.
 

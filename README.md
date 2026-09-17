@@ -2,11 +2,11 @@
 doc_id: kfm://doc/root-readme
 title: Kansas Frontier Matrix — Project Home
 type: repository-readme
-version: v3.1.0
+version: v3.2.0
 status: repository-grounded draft
 owners: ["@bartytime4life"]
 created: 2026-05-11
-updated: 2026-09-14
+updated: 2026-09-17
 policy_label: public
 current_path: README.md
 owning_root: repository-root
@@ -26,9 +26,11 @@ related:
   - CONTRIBUTING.md
   - SECURITY.md
   - .github/README.md
+  - docs/runbooks/local-pc-data-store.md
 notes:
+  - "Local-PC setup and packaging guidance updated against main@91aeee1ca163bcb3f007577a541a825f60dcddc2 plus this change; the earlier product maturity snapshot below is historical."
   - "Adds a visitor-first project orientation while preserving the governed root README identity."
-  - "Current implementation claims are bounded to the exact GitHub snapshot recorded above."
+  - "The product maturity snapshot remains bounded to the earlier exact GitHub snapshot recorded above; local-PC changes use the separate checkpoint in these notes."
   - "The public Explorer address is linked as a project entry point; hosted availability and version state remain separately verifiable runtime claims."
   - "The Science Pack section is an explicitly proposed north-star profile; it does not claim installation, source admission, model validity, release, deployment, or publication."
 [/KFM_META_BLOCK_V2] -->
@@ -275,6 +277,27 @@ Directory placement is part of the trust model. Read the adopted [Directory Rule
 
 ## Run locally
 
+### Download and prepare a local data store
+
+On Ubuntu, download a Git checkout so later source updates remain separate from your data:
+
+```bash
+mkdir -p "$HOME/Projects"
+git clone https://github.com/bartytime4life/Kansas-Frontier-Matrix.git "$HOME/Projects/Kansas-Frontier-Matrix"
+cd "$HOME/Projects/Kansas-Frontier-Matrix"
+python3 tools/local_data/doctor.py
+export KFM_DATA_ROOT="$HOME/KFM-data"
+python3 tools/local_data/manage.py init
+```
+
+If you already have a checkout, start with `cd` instead of cloning again. An extracted GitHub source ZIP also supports the Python local-data tools; Git is optional for that path. Python `>=3.11` is required. The doctor checks the interpreter and essential source paths, locates optional tools without executing them, and emits JSON. Its `PASS` covers those prerequisites only; application integration and JavaScript compatibility remain separately checked.
+
+Follow the [local PC data-store runbook](docs/runbooks/local-pc-data-store.md) to inventory downloaded maps, pictures, and other files, plan and perform offline synchronization, verify stored bytes, maintain backups, and prepare bounded backfill. Keep the data root outside the Git checkout. Intake remains quarantined until source, rights, sensitivity, validation, and release requirements are satisfied; initializing storage does not make layers visible on the map.
+
+The local-data tools use the Python standard library and need no package installation. The root Python package supplies dependency metadata; it does not bundle the applications, data store, or datasets. The current Compose images are security-review placeholders without application payloads and are not a complete local deployment.
+
+### Choose an application development lane
+
 The repository pins Node `>=22.13 <23` and `pnpm@11.17.0` for its private JavaScript workspace. Use the lane that matches what you are inspecting.
 
 ### Explorer Web workbench
@@ -305,17 +328,19 @@ The project’s Sites identity, replacement, version, and rollback boundaries ar
 
 ### Python and repository validators
 
-The Python project declares Python `>=3.11`. The package manifest is still a scaffold that points Hatch at `src/kfm`, while `src/` is not currently a physical root in the verified tree. Treat packaging and release claims as a known edge until that drift is separately resolved.
+The Python project declares Python `>=3.11`. Its root distribution intentionally contains metadata only; repository commands run from the checkout. The committed dependency installer uses hash-locked third-party dependencies and installs the local metadata package without dependency resolution or build isolation:
 
 ```bash
 python3 -m venv .venv
 . .venv/bin/activate
-python -m pip install -e ".[test]"
+python tools/ci/install_python_ci.py project-test
 make validate
 git diff --check
 ```
 
 `make validate` is the repository-native aggregate validator entry point. Run the narrowest relevant target for the changed area and report its exact scope.
+
+`make governed-api-dev` starts the current fixture API at `http://127.0.0.1:8000`. The module does not read `KFM_API_BIND` or `KFM_API_PORT`, and the repository commands do not automatically load `.env`. Export settings explicitly for the consumer that supports them; see [`.env.example`](.env.example).
 
 ## Validation
 

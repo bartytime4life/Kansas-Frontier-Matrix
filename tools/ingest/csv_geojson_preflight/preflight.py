@@ -20,7 +20,7 @@ import sys
 from dataclasses import dataclass
 from decimal import Decimal, InvalidOperation, ROUND_HALF_EVEN
 from pathlib import Path
-from typing import Any, Mapping, Sequence
+from typing import Any, Iterator, Mapping, Sequence
 
 from hashing import compute_spec_hash
 
@@ -109,13 +109,13 @@ class Profile:
         longitude_field = _field_name(raw["longitude_field"], "/profile/longitude_field")
         property_fields = _field_name_list(raw["property_fields"], "/profile/property_fields")
         expected_headers = _field_name_list(raw["expected_headers"], "/profile/expected_headers")
-        if not isinstance(raw["coordinate_precision"], int) or not 0 <= raw["coordinate_precision"] <= 8:
+        if type(raw["coordinate_precision"]) is not int or not 0 <= raw["coordinate_precision"] <= 8:
             raise PreflightError(
                 "COORDINATE_PRECISION_INVALID",
                 "/profile/coordinate_precision",
                 "coordinate precision must be an integer within 0..8",
             )
-        if not isinstance(raw["max_rows"], int) or not 1 <= raw["max_rows"] <= 10_000:
+        if type(raw["max_rows"]) is not int or not 1 <= raw["max_rows"] <= 10_000:
             raise PreflightError(
                 "ROW_LIMIT_INVALID",
                 "/profile/max_rows",
@@ -306,7 +306,16 @@ def _feature_identity(profile: Profile, row_id: str) -> str:
     return "kfm:csv-feature:sha256:" + hashlib.sha256(subject).hexdigest()
 
 
+def _data_rows(reader: Iterator[list[str]]) -> Iterator[list[str]]:
+    try:
+        yield from reader
+    except csv.Error as exc:
+        raise PreflightError("CSV_PARSE_ERROR", "/csv", "CSV data row could not be parsed") from exc
+
+
 def normalize_csv(profile: Profile, raw_csv: bytes) -> dict[str, object]:
+    if len(raw_csv) > MAX_CSV_BYTES:
+        raise PreflightError("INPUT_TOO_LARGE", "/csv", "input exceeds the configured byte limit")
     if not raw_csv:
         raise PreflightError("CSV_EMPTY", "/csv", "CSV input is empty")
     if raw_csv.startswith(b"\xef\xbb\xbf"):
@@ -331,7 +340,7 @@ def normalize_csv(profile: Profile, raw_csv: bytes) -> dict[str, object]:
     features: list[tuple[str, dict[str, object]]] = []
     seen_ids: set[str] = set()
     row_count = 0
-    for line_number, row in enumerate(reader, start=2):
+    for line_number, row in enumerate(_data_rows(reader), start=2):
         row_count += 1
         if row_count > profile.max_rows:
             raise PreflightError("CSV_ROW_LIMIT_EXCEEDED", "/csv", "CSV exceeds profile row limit")

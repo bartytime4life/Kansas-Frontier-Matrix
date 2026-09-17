@@ -60,13 +60,13 @@ test("existing ignores are unchanged", async () => {
 
 test("compiler and lint dependencies stay pinned; lint command is not weakened", () => {
   const manifest = JSON.parse(readFileSync(join(app, "package.json"), "utf8"));
-  assert.equal(manifest.devDependencies.eslint, "10.9.1");
-  assert.equal(manifest.devDependencies["eslint-config-next"], "16.3.3");
+  assert.equal(manifest.devDependencies.eslint, "10.10.0");
+  assert.equal(manifest.devDependencies["eslint-config-next"], "16.3.5");
   assert.equal(manifest.devDependencies["@typescript/native"], "npm:typescript@7.0.2");
   assert.equal(manifest.scripts.lint, "bash scripts/sites-env.sh -- eslint . --ignore-pattern dist --ignore-pattern .next --ignore-pattern public/maplibre");
   assert.equal(manifest.scripts.test, "npm run build && node --test tests/*.test.mjs");
   assert.equal(manifest.scripts.posttest, "npm run test:lint");
-  assert.equal(ESLint.version, "10.9.1");
+  assert.equal(ESLint.version, "10.10.0");
 });
 
 const good = 'export default function Example() { return <div>Public synthetic fixture</div>; }';

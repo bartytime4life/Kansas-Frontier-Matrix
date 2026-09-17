@@ -1,0 +1,135 @@
+{
+  "receipt_id": "genrec-sites-identity-reconciliation-20260917",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/kansas-frontier-matrix-explorer/.openai/hosting.json",
+    "apps/kansas-frontier-matrix-explorer/README.md",
+    "apps/kansas-frontier-matrix-explorer/docs/earth-layer-library-integration.md",
+    "apps/kansas-frontier-matrix-explorer/docs/openai-sites-in-place-replacement.md",
+    "apps/kansas-frontier-matrix-explorer/docs/sites-source-alignment.md",
+    "apps/kansas-frontier-matrix-explorer/docs/sites-v15-official-context-alignment.md",
+    "apps/kansas-frontier-matrix-explorer/tests/hosting-boundary.test.mjs",
+    "apps/kansas-frontier-matrix-explorer/tests/sites-deployment-receipt.test.mjs"
+  ],
+  "artifact_hashes": {
+    "apps/kansas-frontier-matrix-explorer/.openai/hosting.json": "sha256:2d14984c71e52c6fd87d21f830c96a1fe8d7a6dc069e83580e85176d5a293675",
+    "apps/kansas-frontier-matrix-explorer/README.md": "sha256:b2bb7e311d8beaa4cba101006a0573b1d171bd3b637fbac7c8b182f6314c69ef",
+    "apps/kansas-frontier-matrix-explorer/docs/earth-layer-library-integration.md": "sha256:06d0490eb8a1bd63841cafbe800c26c5c8fc60bbf18f654e96edd332c01be4ed",
+    "apps/kansas-frontier-matrix-explorer/docs/openai-sites-in-place-replacement.md": "sha256:d0915f7a2fa2226b787849bfcb72e9bcb632e0e485a4b89e7b59607042092902",
+    "apps/kansas-frontier-matrix-explorer/docs/sites-source-alignment.md": "sha256:f0fb0afa947e4fd938ec110230051097f43e746818da52f600bd35d792b7e7c9",
+    "apps/kansas-frontier-matrix-explorer/docs/sites-v15-official-context-alignment.md": "sha256:993b3cc3a138b8ea377765781bb95ebb0328f64d487649ffb635a8446296cf08",
+    "apps/kansas-frontier-matrix-explorer/tests/hosting-boundary.test.mjs": "sha256:019c42e9b985c00f8e9adfced585ab9610532482a57f47251ecb2139e998604f",
+    "apps/kansas-frontier-matrix-explorer/tests/sites-deployment-receipt.test.mjs": "sha256:682ef1aafecd4e5c9a05e1ff9f36186399eec56a7a4901587c2fd5e22c1a4274"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "UNKNOWN; exact serving model version not exposed"
+  },
+  "prompt_or_contract": "sha256:6c79996f5694582e82da79f51e71dbc5267602d8849482ba555eeddbf0e7c54d",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local repository validation",
+      "GitHub connector",
+      "Sites connector read-only evidence supplied by the orchestrator"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/65e7070fcf77525ee8a61c2764d0f3dedb5f520d",
+      "github://bartytime4life/Kansas-Frontier-Matrix/issues/4418",
+      "sites:appgprj_6aa0b1c41bc08191bfd86003920f1631~appgver_62df758dd2e0819197329087b6c2fe57",
+      "sites:appgprj_6aa0b1c41bc08191bfd86003920f1631~appgver_4660be183b408191b21df3cc99bd9cd7"
+    ]
+  },
+  "truth_labels": {
+    "apps/kansas-frontier-matrix-explorer/.openai/hosting.json": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/README.md": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/docs/earth-layer-library-integration.md": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/docs/openai-sites-in-place-replacement.md": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/docs/sites-source-alignment.md": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/docs/sites-v15-official-context-alignment.md": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/tests/hosting-boundary.test.mjs": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/tests/sites-deployment-receipt.test.mjs": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "generated-receipt-schema-and-artifact-integrity",
+      "outcome": "PASS",
+      "reason": "The repository validator returned GENERATED_RECEIPT_VALID for 8 exact SHA-256-bound artifacts with human review pending and no review claim."
+    },
+    {
+      "gate": "focused-hosting-boundary-and-historical-receipt-tests",
+      "outcome": "PASS",
+      "reason": "25 Node tests passed for the hosting boundary, both Vercel deployment-denial configs, build-input boundaries, and historical v1 receipt behavior, including denial of active-project replay through v1."
+    },
+    {
+      "gate": "historical-v1-receipt-cli-validation",
+      "outcome": "PASS",
+      "reason": "The repository rehearsal fixture returned PASS under the unchanged historical v1 validator. This proves only retained v1 shape and semantics, not current-project eligibility."
+    },
+    {
+      "gate": "repository-diff-check",
+      "outcome": "PASS",
+      "reason": "git diff --check completed without findings after the final artifact bytes were hashed."
+    },
+    {
+      "gate": "v45-source-equivalence",
+      "outcome": "SKIPPED",
+      "reason": "HOLD / NOT_RUN: no v45 GitHub mirror commit or complete-tree comparison was established. The Sites source commit and monorepo are not asserted equivalent."
+    },
+    {
+      "gate": "production-browser-acceptance",
+      "outcome": "SKIPPED",
+      "reason": "HOLD / NOT_RUN: authenticated desktop/mobile, WebGL, selection and Drawer, accessibility, and restricted-state checks were not run against v45."
+    },
+    {
+      "gate": "same-site-recovery-rehearsal",
+      "outcome": "SKIPPED",
+      "reason": "HOLD / NOT_RUN: v44 is recorded only as the immediate recovery candidate; no restoration or post-restore verification was performed."
+    },
+    {
+      "gate": "site-deployment-by-repository-branch",
+      "outcome": "SKIPPED",
+      "reason": "NOT_RUN: this repository branch did not save, deploy, restore, or otherwise mutate the Site. The v45 deployment record was pre-existing read-only evidence."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "current-main",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/65e7070fcf77525ee8a61c2764d0f3dedb5f520d"
+    },
+    {
+      "id": "deployment-reliability-tracker",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/issues/4418"
+    },
+    {
+      "id": "active-site-v45-readback",
+      "validated": true,
+      "evidence_ref": "sites:appgprj_6aa0b1c41bc08191bfd86003920f1631~appgver_62df758dd2e0819197329087b6c2fe57"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "repo://docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@65e7070fcf77525ee8a61c2764d0f3dedb5f520d"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-17T02:15:04Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "notes": "Draft-PR authorship receipt for active Site target metadata and bounded v45/v44 readback documentation. The version-1 schema, fixture, validator, replacement ZIP, and handoff remain historical and keep their old project binding. The repository manifest retains null D1/R2 bindings and does not describe or alter the active Site's hosted DB/BUCKET bindings. Both Vercel git.deploymentEnabled=false kill switches remain unchanged. Source equivalence, browser acceptance, and recovery remain HOLD/NOT_RUN. No GitHub remote write, Site deployment, Site restoration, access change, binding change, source admission, release, publication, or standalone-mirror merge occurred. Human review remains pending."
+}

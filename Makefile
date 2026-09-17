@@ -11,6 +11,21 @@
 KFM_VALIDATION_ENV := KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC
 VALIDATOR_ORCHESTRATOR := python tools/validate_all.py
 
+.PHONY: normalized-summary-check
+
+.PHONY: local-data-check local-data-doctor
+
+local-data-check:
+	$(KFM_VALIDATION_ENV) python -m pytest -q -p no:cacheprovider --strict-config --strict-markers tests/local_data
+
+local-data-doctor:
+	python3 tools/local_data/doctor.py
+
+# Bounded doctrine summary regressions; no cutover or readiness authority.
+normalized-summary-check:
+	$(KFM_VALIDATION_ENV) python tools/validators/source/validate_doctrine_artifact_preflight_summary.py --fixtures
+	$(KFM_VALIDATION_ENV) python -m pytest -q -p no:cacheprovider --strict-config --strict-markers tests/policy/test_preflight_summary_consistency.py tests/policy/test_normalized_summary_consumer_readiness.py tests/policy/test_run_doctrine_artifact_preflight.py tests/policy/test_preflight_summary_schema_contract.py tests/source/test_doctrine_artifact_preflight_summary_schema.py tests/ci/test_normalized_summary_workflow.py
+
 .PHONY: help validate test schemas validators validator-list validator-full validator-focused validator-release-profile validator-changed-area validator-registry-check docs-critical-structure workflow-security repository-topology repository-governance-parity repository-guardrails trust-spine-baseline program-baseline control-plane-registry-packet trust-spine-fixture-slice ci-conformance-report policy fixtures release-dry-run synthetic-release-closure proof-slice catalog publish-check evidence-resolver evidence-resolver-deny hazards-validate deny-test ui-build api-run governed-api-dev governed-api-smoke governed-api-verify boundary-guards boundary-guards-ci maplibre-perf maplibre-govern maplibre-proof maplibre-clean
 
 help:
@@ -20,6 +35,9 @@ help:
 	@echo "  validate              Run aggregate schema validators and schema/contract tests"
 	@echo "  schemas               Run configured aggregate validators against fixtures"
 	@echo "  test                  Run repository schema and contract tests"
+	@echo "  normalized-summary-check Test summary structure, compatibility and CI failure propagation"
+	@echo "  local-data-doctor     Inspect local-PC prerequisites without installing or starting services"
+	@echo "  local-data-check      Test offline local-data capture, safety, and recovery"
 	@echo "  docs-critical-structure Test and run the critical-document structure sentinel"
 	@echo "  workflow-security     Test and run the 20-rule workflow-security ratchet"
 	@echo "  repository-topology  Test and run the 20-rule directory-topology ratchet"
@@ -42,7 +60,7 @@ help:
 	@echo "  maplibre-proof        Build and validate the MapLibre performance ProofPack"
 	@echo "  publish-check         Run bounded promotion-gate fixtures and tests"
 	@echo "  release-dry-run       Prove five synthetic publication-denial paths"
-	@echo "  synthetic-release-closure Run the bounded synthetic release closure regression"
+	@echo "  synthetic-release-closure Run bounded synthetic identity and denial regressions"
 	@echo "  evidence-resolver     Run the bounded internal evidence candidate profile"
 	@echo "  evidence-resolver-deny Run its fail-closed negative fixture suite"
 	@echo
@@ -119,12 +137,13 @@ workflow-security:
 # still terminate the process. Revert this target and its focused test together.
 repository-topology:
 	@set -u; \
-	contract_status=0; tests_status=0; diagnostics_status=0; \
+	contract_status=0; tests_status=0; register_status=0; diagnostics_status=0; \
 	if [ -f tests/ci/test_repository_topology_make_target.py ] && $(KFM_VALIDATION_ENV) python -m unittest discover --start-directory tests/ci --pattern 'test_repository_topology_make_target.py' --verbose; then :; else contract_status=$$?; fi; \
 	if $(KFM_VALIDATION_ENV) python -m unittest discover --start-directory tests/validators/directory_governance --pattern 'test_validate_*topology*.py' --verbose; then :; else tests_status=$$?; fi; \
+	if $(KFM_VALIDATION_ENV) python -m pytest -q -p no:cacheprovider tests/validators/directory_governance/test_validate_repository_topology_correction_register.py; then :; else register_status=$$?; fi; \
 	if $(KFM_VALIDATION_ENV) python tools/validators/directory_governance/render_repository_topology_diagnostics.py; then :; else diagnostics_status=$$?; fi; \
-	printf 'repository-topology statuses: contract=%s tests=%s diagnostics=%s\n' "$$contract_status" "$$tests_status" "$$diagnostics_status"; \
-	if [ "$$contract_status" -ne 0 ] || [ "$$tests_status" -ne 0 ] || [ "$$diagnostics_status" -ne 0 ]; then exit 1; fi
+	printf 'repository-topology statuses: contract=%s tests=%s register=%s diagnostics=%s\n' "$$contract_status" "$$tests_status" "$$register_status" "$$diagnostics_status"; \
+	if [ "$$contract_status" -ne 0 ] || [ "$$tests_status" -ne 0 ] || [ "$$register_status" -ne 0 ] || [ "$$diagnostics_status" -ne 0 ]; then exit 1; fi
 
 repository-governance-parity:
 	$(KFM_VALIDATION_ENV) python -m unittest tests.validators.directory_governance.test_validate_repository_governance_parity --verbose
@@ -187,8 +206,7 @@ release-dry-run:
 	KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC python tools/release/release_dry_run.py
 	KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC python -m unittest -q tests.release.test_publication_deny_dry_run
 
-# Fixture-only regression lane; this never assembles, releases, deploys, publishes,
-# or changes lifecycle state.
+# Fixture-only: no candidate assembly, lifecycle transition, or publication.
 synthetic-release-closure:
 	$(KFM_VALIDATION_ENV) python -m pytest -q --strict-config --strict-markers tests/release/test_synthetic_release_closure.py
 

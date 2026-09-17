@@ -2,15 +2,15 @@
 doc_id: kfm://doc/governance/repository-transition-control-source
 title: Repository transition control-source binding
 type: governance-binding-enforcement-candidate-note
-version: v1.3.1
-status: current-main workflow-active advisory; candidate bounded-input hardening; required-status-check not installed
+version: v1.3.2
+status: current-main bounded-capture workflow active; candidate authorization-output hardening; required-status-check not installed
 owner: OWNER_TBD — governance steward and repository-control steward
 created: 2026-09-03
-updated: 2026-09-03
+updated: 2026-09-17
 policy_label: repository-facing; governance; fail-closed; non-authoritative
 owning_root: docs/
 responsibility: "Bind the repository transition control-source identity, bounded capture posture, exact authorization boundary, and rollback limits without creating merge, release, deployment, promotion, or publication authority."
-truth_posture: CONFIRMED current-main #4237 active two-validator workflow / IMPLEMENTED candidate bounded capture / PROPOSED required-check packet
+truth_posture: CONFIRMED current-main trusted-base workflow / IMPLEMENTED candidate authorization-output hardening / PROPOSED required-check packet
 related:
   - ../../contracts/governance/repository_control_state.md
   - ../../tools/validators/repository_control/fetch_bounded_issue_comments.py
@@ -46,22 +46,9 @@ authorization format, or make a workflow result sovereign authority.
 
 ## Current implementation state
 
-PR #4237 integrated the live-source workflow baseline into protected
-`main@bd942b45493fa5f80e946ecfb3e810e413787394` on 2026-09-03. The workflow is
-therefore **workflow-active** and reads issue #4024 from trusted-base code.
-
-The current protected-main workflow still uses two trusted-base validators and
-an inline `gh api --paginate --slurp` comment-capture step. That current base is
-active but advisory; it does not contain the candidate bounded capture helper.
-
-This candidate adds a third trusted-base capture helper,
-`fetch_bounded_issue_comments.py`, and replaces the inline capture step with
-explicit transport, parser, structure, pagination, and serialization ceilings.
-The candidate code and this note are not current-main behavior until separately
-reviewed and integrated.
-
-If the candidate bytes are integrated, the control will use three trusted-base
-helpers:
+PR #4237 integrated the live-source workflow baseline on 2026-09-03. At the
+inspected `main@65e7070fcf77525ee8a61c2764d0f3dedb5f520d`, the workflow is active,
+reads issue #4024, and uses three trusted-base helpers:
 
 1. `fetch_bounded_issue_comments.py` captures the source page by page under
    strict transport, parser, structure, and serialization ceilings.
@@ -71,9 +58,14 @@ helpers:
    comments against the exact pull request, base, head, actor, decision, and
    expiry.
 
-All three candidate helpers are fetched from the exact pull-request base SHA.
+All three helpers are fetched from the exact pull-request base SHA.
 The workflow never checks out or executes pull-request-head code and has
 read-only `contents`, `issues`, and `pull-requests` permissions.
+
+The current candidate changes only the final transition validator: it validates
+candidate records before binding and validates its bounded classification
+object before emitting it. Those bytes are not current-main behavior until
+separately reviewed and integrated.
 
 The check remains advisory. Ruleset `15484585`, named `Protect`, still has no
 `required_status_checks` rule. A passing or failing
@@ -113,13 +105,13 @@ not preventive merge containment.
 - Raw response bodies, comments, numeric tokens, and transport exceptions are
   not copied into bounded decision output.
 
-## Candidate bounded source capture
+## Bounded source capture
 
-If the candidate bytes are integrated, the capture helper will request at most
-100 records per page and admit at most 100 pages. A bounded sentinel page is
-used when page 100 is full so the source is never silently truncated.
+The active capture helper requests at most 100 records per page and admits at
+most 100 pages. A bounded sentinel page is used when page 100 is full so the
+source is never silently truncated.
 
-The candidate's fixed limits are:
+Its fixed limits are:
 
 - 8 MiB of transferred input per page;
 - 16 MiB of aggregate transferred and reserialized input;
@@ -148,9 +140,8 @@ which emits the nonzero blocking classification.
 
 ## Pull-request lifecycle behavior
 
-The current and candidate workflows listen to `opened`, `reopened`,
-`synchronize`, `ready_for_review`, `converted_to_draft`, `edited`, `labeled`,
-and `unlabeled`.
+The workflow listens to `opened`, `reopened`, `synchronize`,
+`ready_for_review`, `converted_to_draft`, `edited`, `labeled`, and `unlabeled`.
 
 The authorization job runs for draft and non-draft pull requests:
 
@@ -164,6 +155,23 @@ The authorization job runs for draft and non-draft pull requests:
 The job must not use a draft-state `if` predicate. GitHub treats a skipped job
 as successful for required-check evaluation. Leaving a skipped-success result
 on a draft head would reopen the ready-to-merge race.
+
+## Classification output contract
+
+The transition validator builds and validates one complete bounded JSON object
+before writing it to standard output. A `PASS / TRANSITION_AUTHORIZED` object
+must include a positive pull-request number, exact head SHA, valid authorization
+ID, positive GitHub comment ID, and RFC 3339 expiry. A partial or internally
+invalid pass is replaced with
+`REGRESSION / RESULT_SERIALIZATION_INVALID / exit 1` before output.
+
+Non-pass classifications deliberately retain the same complete key set while
+using JSON `null` for authorization ID, comment ID, and expiry. Those nulls mean
+that no authorization was accepted; they are not an accepted partial record.
+Missing or null fields inside a candidate authorization record remain invalid,
+and malformed owner-marker records remain fail-closed. This output contract
+does not change the authority boundary or make a check result merge, release,
+deployment, promotion, or publication authority.
 
 ## Exact platform snapshot
 
@@ -204,8 +212,8 @@ deployment, promotion, publication, or source-state change.
 ## Remaining proof order
 
 1. Obtain focused and hosted exact-head validation plus a new separate review of
-   the bounded-capture candidate.
-2. Integrate the bounded-capture implementation only through a separately
+   the authorization-output-hardening candidate.
+2. Integrate the output hardening only through a separately
    authorized, capability-separated path.
 3. Re-read the integrated helper, workflow, check-run name, and GitHub Actions
    App identity on exact current main.

@@ -4,7 +4,7 @@ title: configs/examples/ — Commit-Safe Configuration Examples Boundary
 type: readme
 version: v0.3
 prior_version: v0.2
-status: draft; repository-grounded; README-only; non-authoritative; no-live-binding
+status: draft; repository-grounded; synthetic-local-data-example; non-authoritative
 owners: "NEEDS VERIFICATION — configuration, security, consumer, validation, developer-experience, and documentation stewardship"
 review_route: "@bartytime4life via /configs/ CODEOWNERS; routing is not independent approval"
 created: 2026-06-16
@@ -49,7 +49,7 @@ related:
   - ../../docs/security/SECRETS.md
 notes:
   - "v0.3 replaces the July named-probe inventory with an exact tracked-tree observation and retains the document identity and section headings."
-  - "No configuration example payload or loader is introduced. Snippets are illustrative, not accepted KFM fields or consumer interfaces."
+  - "The historical v0.3 inventory below predates the local-data manifest example. Current consumer binding is documented in the Local data example section."
   - "Hook configuration is source evidence, not proof of execution, complete secret detection, or required-check enforcement."
   - "The former docs/runbooks/SECRET_LEAK_RUNBOOK.md reference returned Not Found at the pinned base; SECURITY.md is the verified public disclosure entrypoint, with private-channel availability still unverified."
   - "The README and its separate generated-work receipt are the only intended changed artifacts; generation does not approve either artifact."
@@ -61,10 +61,22 @@ notes:
 
 **Explain a configuration without turning it on.** `configs/examples/` is the
 shared configuration-example lane beneath [`configs/`](../README.md). It currently
-contains this README only: no example payload, child directory, or verified
-consumer binding.
+contains this README and a synthetic local-data manifest. The bounded consumer
+is documented below; the historical snapshot remains dated evidence.
 
-**Status:** draft v0.3 · **Owning root:** `configs/` · **Operational use:** not established
+**Status:** draft with bounded local-data example · **Owning root:** `configs/`
+
+## Local data example
+
+[`local-data-manifest.json`](local-data-manifest.json) is consumed explicitly by
+`python3 tools/local_data/manage.py plan --manifest ... --downloads ...`.
+It binds only the synthetic bytes in
+[`fixtures/source/local_data/`](../../fixtures/source/local_data/). It selects no
+provider data, contains no credentials, and does not run automatically.
+Use the [runbook](../../docs/runbooks/local-pc-data-store.md) and
+[manifest contract](../../contracts/source/local_data_manifest.md). Keep real
+workstation manifests in ignored `configs/local/` or private external storage.
+Validate this example and consumer together with `make local-data-check`.
 
 [Inventory](#status) · [Lane distinctions](#configuration-lane-distinctions) ·
 [Example contract](#proposed-example-file-contract) · [Placeholders](#placeholder-and-secret-handling) ·

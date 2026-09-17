@@ -1,10 +1,20 @@
 # Sites v15 official-context alignment checkpoint
 
+> **Historical checkpoint.** This saved/not-deployed v15 observation is retained
+> as lineage. It is not current source, deployment, mirror-parity, browser, or
+> recovery evidence. See [Current Site identity and source-alignment
+> hold](sites-source-alignment.md).
+
 Status: **SAVED / NOT DEPLOYED**
 
 This record captures the observed saved-version boundary for ChatGPT Sites project `appgprj_6aa0b1c41bc08191bfd86003920f1631` without asserting that it is the repository-configured deployment target, GitHub source parity, source admission, release, publication, or deployment.
 
-> **Identity conflict — deployment held.** The saved v15 observation is associated with `appgprj_6aa0b1c41bc08191bfd86003920f1631`, while the repository hosting manifest, deployment receipt contract, validator, and app documentation pin `appgprj_6a870a079c1c8191abb7401ef092a181`. The two IDs are not treated as aliases. Deployment and rollback claims remain blocked until an authorized operator resolves the target identity and records the decision.
+> **Historical identity conflict.** At this v15 checkpoint, the saved observation
+> was associated with `appgprj_6aa0b1c41bc08191bfd86003920f1631`, while the
+> repository hosting manifest and v1 receipt artifacts pinned
+> `appgprj_6a870a079c1c8191abb7401ef092a181`. The two IDs are not aliases. The
+> repository target metadata was reconciled on 2026-09-17, but this v15 record
+> remains historical and proves no current deployment or rollback claim.
 
 ## Observed saved-version checkpoint
 

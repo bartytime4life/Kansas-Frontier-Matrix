@@ -1,0 +1,93 @@
+{
+  "receipt_id": "genrec-topology-register-shape-hardening-20260916",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "Makefile",
+    "tests/ci/test_repository_topology_make_target.py",
+    "tools/validators/directory_governance/validate_repository_topology_correction_register.py",
+    "tests/validators/directory_governance/test_validate_repository_topology_correction_register.py"
+  ],
+  "artifact_hashes": {
+    "Makefile": "sha256:14ffcefadaecd54ed0929a094f4a61f4401f2d6f10fb1514e0bb42cb247a99a3",
+    "tests/ci/test_repository_topology_make_target.py": "sha256:b7e2f8d83b4718cd4707b6e12c240907f80fa9e86efe8e154f576106570e0343",
+    "tools/validators/directory_governance/validate_repository_topology_correction_register.py": "sha256:98d33bc28a441feb52d7fc569a4d67d55c2302bb121a90ab289dc2e62fffa032",
+    "tests/validators/directory_governance/test_validate_repository_topology_correction_register.py": "sha256:9bee483a9b7641d2dc6c14152c54583a8922393259479c5f57506e8ca377bef6"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "UNKNOWN: deployment revision not exposed"
+  },
+  "prompt_or_contract": "sha256:74dfcde263a6e07d7ceeeb00f54264b30c96f4c9187ee9bf644332fa197745b9",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "container"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5bbfae05970acd4357a08135ff340284585039f4/Makefile",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5bbfae05970acd4357a08135ff340284585039f4/tests/ci/test_repository_topology_make_target.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5bbfae05970acd4357a08135ff340284585039f4/tools/validators/directory_governance/validate_repository_topology_correction_register.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5bbfae05970acd4357a08135ff340284585039f4/tests/validators/directory_governance/test_validate_repository_topology_correction_register.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5bbfae05970acd4357a08135ff340284585039f4/docs/doctrine/directory-rules.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5bbfae05970acd4357a08135ff340284585039f4/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4228"
+    ]
+  },
+  "truth_labels": {
+    "Makefile": "PROPOSED",
+    "tests/ci/test_repository_topology_make_target.py": "PROPOSED",
+    "tools/validators/directory_governance/validate_repository_topology_correction_register.py": "PROPOSED",
+    "tests/validators/directory_governance/test_validate_repository_topology_correction_register.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "register-focused",
+      "outcome": "PASS",
+      "reason": "29 pytest tests, zero skipped."
+    },
+    {
+      "gate": "make-four-lane-fail-closed",
+      "outcome": "PASS",
+      "reason": "6 unittest tests exercise all16 combinations and every nonstandard failure code across four lanes, missing contract and shell errexit."
+    },
+    {
+      "gate": "native-topology",
+      "outcome": "FAIL",
+      "reason": "Unchanged 124baselined warnings,1new frozen-catalog drift,1stale baseline. Native unittest2failures and1error: catalog assertions and fixture subprocess /usr/bin/git2.43.0 lacks --no-lazy-fetch (normal PATH git2.51.1); reproduced at exactbase. New pytest lane29PASS. No baseline refresh."
+    },
+    {
+      "gate": "hosted-and-accountable-review",
+      "outcome": "SKIPPED",
+      "reason": "NOT_RUN hosted; accountable review pending. Independent AI technical source review is separate."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "directory-rules",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5bbfae05970acd4357a08135ff340284585039f4/docs/doctrine/directory-rules.md"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-16T15:46:52.278151Z",
+  "emitter": "Codex topology inert-validator hardening",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Inert Stage1 shape validation and existing Make coverage only. Schema errors return before semantics; exact removed/added members bind declared replacement and reject no-op. Make retains all old lanes and adds pytest with independent status propagation. Does not bind or consume a correction register, accept Stage1B, authorize Stage2, refresh topology baseline or change frozen catalog. Existing responsibility roots under ADR0029; no paths moved or parallel authorities. Human review pending. Abandon branch before integration; after separately authorized integration prefer forward correction, preserving receipt history. No settings, scheduler, source admission, PR, ready/merge, release, deployment or publication effect."
+}

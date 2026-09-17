@@ -1,0 +1,22 @@
+{
+  "schema_version": "1",
+  "items": [
+    {
+      "source_id": "local-example",
+      "dataset_id": "sample-document",
+      "domain": "cross-domain",
+      "version": "example-v1",
+      "relative_path": "sample.txt",
+      "source_uri": "file-ref:kfm-synthetic-local-example",
+      "media_type": "text/plain",
+      "rights": {
+        "license_id": null,
+        "redistribution": "unknown"
+      },
+      "sensitivity": "unknown",
+      "sha256": "4015764aceca92154d13ea36238272a7471d2e43fc6f0ef392c0b0ca159fc166",
+      "size_bytes": 24,
+      "captured_at": "2026-09-17T00:00:00Z"
+    }
+  ]
+}

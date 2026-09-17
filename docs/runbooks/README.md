@@ -215,6 +215,7 @@ docs/runbooks/
 ├── hazards/
 ├── hydrology/
 ├── hydrology_VALIDATION.md
+├── local-pc-data-store.md
 ├── mrts-06-ci-conformance-handoff.md
 ├── people-dna-land/
 ├── pipeline-resilience.md
@@ -236,6 +237,9 @@ docs/runbooks/
 ---
 
 ## Start here
+
+For workstation download, external storage paths, offline file synchronization,
+backfill preparation, and recovery, use [Prepare a local PC and maintain its data store](local-pc-data-store.md).
 
 | Need | Current entry point | Boundary |
 |---|---|---|

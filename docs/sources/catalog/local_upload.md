@@ -1,34 +1,53 @@
-# Local Upload (manual ingest path)
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/sources/local-upload
+title: Local upload: downloaded files and private captures
+type: source-guide
+version: v0.1
+status: proposed; branch-review; quarantine-only
+owners: ["@bartytime4life"]
+created: 2026-09-17
+updated: 2026-09-17
+policy_label: public-documentation
+owning_root: docs/
+truth_posture: implementation and tests are branch evidence; independent acceptance pending
+notes: ["Directory Rules ADR-0029 applies. No source admission, release, deployment, or publication authority."]
+[/KFM_META_BLOCK_V2] -->
 
-> Umbrella entry for the `local_upload` source family.
+# Local upload: downloaded files and private captures
 
-Status: **stub** (placeholder generated from `SKELETON_MAP.md`).
+KFM can preserve explicitly selected local maps, images, documents, and archives
+in a private QUARANTINE store using the
+[local-PC data workflow](../../runbooks/local-pc-data-store.md).
+The operator previews changes, verifies exact size and SHA-256, copies bounded
+regular files, retains capture metadata and process receipts, and reuses verified
+objects on later runs. It never extracts archives, fetches a remote URI, or
+publishes a file.
 
-## What this page is
+## Implementation and source identity
 
-This file is the top-level catalog umbrella for the `local_upload` source family.
-It links to the source descriptor(s), connector, and per-product catalog entries.
+- Operator and storage inspection: [`tools/local_data/`](../../../tools/local_data/).
+- Local capture helper: [`connectors/local_upload/src/local_upload/fetch.py`](../../../connectors/local_upload/src/local_upload/fetch.py).
+- Input meaning: [`Local data manifest`](../../../contracts/source/local_data_manifest.md).
+- Machine shape: [`local_data_manifest.schema.json`](../../../schemas/contracts/v1/source/local_data_manifest.schema.json).
+- Canonical registered source identities: [`data/registry/sources/`](../../../data/registry/sources/).
 
-## Where the canonical material lives
+The prior page claimed `data/registry/sources/local_upload.yaml` existed. No such
+file exists at the reviewed base. A local upload is a transport path, not a
+blanket authoritative source. Preserve each provider's identity and rights;
+uploading a photograph or downloading a ZIP does not register or activate that
+source. The colocated connector descriptor remains a historical, nonconforming
+placeholder and is not consumed by the capture tool.
 
-- Source descriptors: `data/registry/sources/local_upload.yaml` (per-product descriptors under each domain register)
-- Connector: `connectors/local_upload/`
-- Per-product catalog entries: [`local_upload/`](./local_upload/)
-- Standards: `docs/standards/STAC.md`, `docs/standards/DCAT.md`, `docs/standards/PROV.md`
-- Rights & sensitivity: `docs/sources/RIGHTS_GUIDANCE.md`, `docs/sources/catalog/RIGHTS-AND-SENSITIVITY-MAP.md`
+## Review boundary
 
-## Authority
+All captures remain quarantined, including files whose manifest says `public`
+or redistribution `allowed`. Unknown rights and sensitivity remain unknown.
+The operator does not implement the connector admission gate. Source admission,
+normalization, spatial/temporal validation, EvidenceBundle closure, policy,
+release, and map delivery remain separate reviewed operations.
 
-This umbrella is documentation-only and does **not** carry promotion authority.
-Admission of a source for ingest is governed by:
-
-1. A signed `data/registry/sources/<source>.yaml` descriptor.
-2. `policy/source/descriptor_required_before_ingest.rego`.
-3. The promotion gate in `release/promotion_decisions/`.
-
-See `docs/sources/ADMISSION_PROCESS.md` and `docs/sources/SOURCE_DESCRIPTOR_STANDARD.md`.
-
-## Next steps
-
-Replace this stub with a full source-family page using the template at
-`docs/sources/catalog/_template/SOURCE_FAMILY_TEMPLATE.md`.
+Follow [source admission guidance](../ADMISSION_PROCESS.md) and the accepted
+[Directory Rules](../../doctrine/directory-rules.md). Bulk bytes and private
+manifests belong on the operator's external disk, not in Git or the Site's
+public assets. Synchronization preserves old captures; retention and legal-hold
+decisions remain with the operator.

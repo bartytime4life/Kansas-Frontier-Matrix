@@ -36,7 +36,7 @@ related:
 tags: [kfm, tests, release, promotion, rollback, publication-deny, compatibility, no-network, fail-closed]
 notes:
   - "v1.2 replaces a stale three-module thin-slice inventory and proposed future tree with the complete direct current-main inventory."
-  - "Every direct module has a workflow binding, but the workflows use different dependency sets and commands; no single canonical full-lane target is established."
+  - "The historical inventory records per-module workflow bindings; the synthetic closure entry now has a canonical Make target. No exhaustive current-directory or required-check claim is made."
   - "Passing tests and workflows are bounded evidence only and never approve review, promotion, release, deployment, publication, correction, withdrawal, or rollback."
 [/KFM_META_BLOCK_V2] -->
 
@@ -146,6 +146,9 @@ make publish-check
 
 # Five synthetic publication-denial paths and their focused test module.
 make release-dry-run
+
+# Shared synthetic catalog/provenance/rollback identity and denial regression.
+make synthetic-release-closure
 ```
 
 Focused modules can be run with the runner used by their workflow, for example:
@@ -173,8 +176,14 @@ failure as an assertion failure.
 
 ## Workflow bindings
 
-Every direct module is named by at least one current workflow definition.
-Bindings are still bounded: a path filter can skip a workflow, a command can
+The synthetic closure module is invoked through `make synthetic-release-closure`
+by the existing `promotion-verification-execution` workflow. Its pull-request
+and main-push path filters cover the target, test, fixtures, release helper,
+and imported promotion/review validation helpers. The workflow summary records
+coverage without rerunning the command during summary rendering.
+
+The table below retains the previously inventoried bindings; it is not an
+exhaustive current-directory coverage claim. A path filter can skip a workflow, a command can
 name only selected modules, and a workflow definition does not prove required
 branch protection.
 
@@ -187,7 +196,7 @@ branch protection.
 | [`geospatial-carrier-readiness.yml`](../../.github/workflows/geospatial-carrier-readiness.yml) | Geospatial carrier readiness |
 | [`promotion-gate.yml`](../../.github/workflows/promotion-gate.yml) | PromotionDecision shape, promotion gate, and ReviewRecord |
 | [`promotion-receipt.yml`](../../.github/workflows/promotion-receipt.yml) | Promotion receipt |
-| [`promotion-verification-execution.yml`](../../.github/workflows/promotion-verification-execution.yml) | Verification execution, Cosign plan, and promotion gate |
+| [`promotion-verification-execution.yml`](../../.github/workflows/promotion-verification-execution.yml) | Verification execution, Cosign plan, promotion gate, and synthetic release closure via its Make target |
 | [`release-dry-run.yml`](../../.github/workflows/release-dry-run.yml) | Publication deny, PromotionDecision shape, promotion gate, ReviewRecord, and synthetic rollback references |
 | [`rollback-drill.yml`](../../.github/workflows/rollback-drill.yml) | Synthetic rollback rehearsal |
 | [`signed-bundle-timestamp-evidence.yml`](../../.github/workflows/signed-bundle-timestamp-evidence.yml) | Signed-bundle timestamp evidence |
