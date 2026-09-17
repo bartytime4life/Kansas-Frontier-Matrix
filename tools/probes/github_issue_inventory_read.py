@@ -9,12 +9,31 @@ from __future__ import annotations
 import argparse, hashlib, json, os, sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from typing import Any, Callable
 from urllib.error import HTTPError, URLError
-from urllib.request import Request, urlopen
+from urllib.request import HTTPRedirectHandler, Request, build_opener
 
 API = "https://api.github.com"
 PROFILE = "PROPOSED_INACTIVE"
 VERSION = "1.0.0"
+
+
+class _RejectRedirects(HTTPRedirectHandler):
+    """Keep the authenticated probe on the explicitly requested API host.
+
+    The default urllib opener follows redirects transparently, re-issuing the
+    request (including the bearer token) against whatever host the response's
+    ``Location`` names. That would leak the credential to an untrusted host
+    and let an attacker-controlled response masquerade as GitHub. Refuse
+    instead of following.
+    """
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        raise URLError("github-issue-inventory-read: redirect denied")
+
+
+def _open_without_redirects(request: Request, *, timeout: int) -> Any:
+    return build_opener(_RejectRedirects()).open(request, timeout=timeout)
 
 
 def _canon(value):
@@ -92,20 +111,20 @@ def freshness(record, now):
     return "STALE" if now > _parse(record["stale_at"]) else record["outcome"]
 
 
-def _get_json(path, token):
+def _get_json(path, token, opener: Callable[..., Any] = _open_without_redirects):
     req = Request(API + path, headers={"Accept": "application/vnd.github+json", "Authorization": f"Bearer {token}", "User-Agent": "kfm-read-only-probe", "X-GitHub-Api-Version": "2022-11-28"}, method="GET")
-    with urlopen(req, timeout=15) as response:
+    with opener(req, timeout=15) as response:
         return json.loads(response.read().decode("utf-8")), {k.lower(): v for k, v in response.headers.items()}
 
 
-def read_live(repository, issue_ids, token, now):
-    repo, repo_headers = _get_json(f"/repos/{repository}", token)
+def read_live(repository, issue_ids, token, now, opener: Callable[..., Any] = _open_without_redirects):
+    repo, repo_headers = _get_json(f"/repos/{repository}", token, opener)
     branch = repo["default_branch"]
-    ref, ref_headers = _get_json(f"/repos/{repository}/git/ref/heads/{branch}", token)
+    ref, ref_headers = _get_json(f"/repos/{repository}/git/ref/heads/{branch}", token, opener)
     issues, headers = [], dict(repo_headers)
     headers.update(ref_headers)
     for number in issue_ids:
-        issue, issue_headers = _get_json(f"/repos/{repository}/issues/{number}", token)
+        issue, issue_headers = _get_json(f"/repos/{repository}/issues/{number}", token, opener)
         issues.append(issue)
         headers.update(issue_headers)
     return build_record(repository=repository, repo_payload=repo, ref_payload=ref, issue_payloads=issues, headers=headers, requested_issue_ids=issue_ids, retrieved_at=now)
