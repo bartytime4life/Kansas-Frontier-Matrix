@@ -1,0 +1,78 @@
+# Continuous validation of the repository's native app, distinct from live Sites.
+name: native-explorer-check
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/native-explorer-check.yml"
+      - "apps/kansas-frontier-matrix-explorer/**"
+      - "packages/**"
+      - "tests/ui/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+      - "Makefile"
+  push:
+    branches: [main, agent/pipeline-ci-completion-20260917]
+    paths:
+      - ".github/workflows/native-explorer-check.yml"
+      - "apps/kansas-frontier-matrix-explorer/**"
+      - "packages/**"
+      - "tests/ui/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+      - "Makefile"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: native-explorer-check-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CI: "true"
+  DO_NOT_TRACK: "1"
+  CLOUDFLARE_SEND_METRICS: "false"
+  WRANGLER_SEND_METRICS: "false"
+
+jobs:
+  native-explorer:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - name: Check out the complete repository source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Use the declared Node major
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: "22"
+          package-manager-cache: false
+      - name: Install the unchanged frozen workspace
+        run: |
+          set -euo pipefail
+          corepack enable
+          pnpm install --frozen-lockfile
+      - name: Build and test the native Explorer mirror
+        run: make native-explorer-check
+      - name: Verify dependency inputs were not rewritten
+        if: always()
+        run: |
+          git diff --exit-code -- package.json pnpm-workspace.yaml pnpm-lock.yaml \
+            apps/kansas-frontier-matrix-explorer/package.json \
+            apps/kansas-frontier-matrix-explorer/package-lock.json
+      - name: Describe repository and hosted evidence separately
+        if: always()
+        env:
+          RESULT: ${{ job.status }}
+        run: |
+          {
+            echo "### Native Explorer repository checks: ${RESULT}"
+            echo "Scope: native app build and tests in the complete locked workspace; skipped steps are not passing evidence."
+            echo "No build archive is uploaded, no Sites version is saved, and no deployment or source-equivalence claim is made."
+            echo "Live Sites identity, authenticated WebGL acceptance and production rollback require their own evidence."
+          } >> "$GITHUB_STEP_SUMMARY"

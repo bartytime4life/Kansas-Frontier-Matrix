@@ -25,6 +25,7 @@ class InstallPythonCiTests(unittest.TestCase):
                 "all-local-test",
                 "audit-tool",
                 "connectors-core",
+                "geo-transforms",
                 "geoparquet-pyarrow-25",
                 "project-runtime",
                 "project-test",
@@ -72,6 +73,17 @@ class InstallPythonCiTests(unittest.TestCase):
             REPO_ROOT / "tools/ci/geoparquet-pyarrow-25.lock"
         ).read_text(encoding="utf-8")
         self.assertIn("pyarrow==25.0.0", geoparquet_lock.lower())
+
+    def test_geo_profile_matches_declared_optional_transform_dependency(self) -> None:
+        import tomllib
+
+        metadata = tomllib.loads((REPO_ROOT / "packages/geo/pyproject.toml").read_text())
+        lock = (REPO_ROOT / "tools/ci/python-geo.lock").read_text()
+        for requirement in metadata["project"]["optional-dependencies"]["transforms"]:
+            self.assertIn(requirement + " \\", lock)
+        self.assertIn("certifi==", lock)
+        # No implicit project installation or dependency resolution is needed.
+        self.assertEqual(1, len(module.build_commands("geo-transforms")))
 
     def test_migration_manifest_is_finite_and_exact(self) -> None:
         manifest, entries = module.load_workflow_migration_manifest(REPO_ROOT)
