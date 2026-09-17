@@ -551,8 +551,8 @@ CARE gates **what can publish**, to whom, on what terms:
 - [`../people/README.md`](../people/README.md) — People sublane: PersonCanonical, identity resolution *(PROPOSED)*
 - [`../dna/README.md`](../dna/README.md) — DNA sublane: DNAMatchEvidence, DNASegment, restricted access *(PROPOSED)*
 - [`../land/README.md`](../land/README.md) — Land sublane: deeds, titles, parcels, chain-of-title *(PROPOSED)*
-- [`directory-rules.md`](../../../../../directory-rules.md) — placement law (§3, §12, §2.4, §18 OPEN-DR-02)
-- [`ai-build-operating-contract.md`](../../../../../ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`)
+- [`directory-rules.md`](../../../doctrine/directory-rules.md) — placement law (§3, §12, §2.4, §18 OPEN-DR-02)
+- [`ai-build-operating-contract.md`](../../../doctrine/ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`)
 - [`docs/standards/PROV.md`](../../../../standards/PROV.md) — provenance vocabulary profile
 - [`docs/standards/ISO-19115.md`](../../../../standards/ISO-19115.md) — metadata profile
 - `docs/runbooks/people-dna-land/` — operational procedures *(per-source refresh runbooks PROPOSED; subfolder convention per §18 OPEN-DR-02)*

@@ -75,7 +75,7 @@ Per the **MDP — Metadata, Profiles, Crosswalks (ISO 19115, DCAT, STAC, PROV)**
 | External standards profiles (STAC, DCAT, PROV, ISO 19115, …) | [`docs/standards/<STANDARD>.md`](../../../standards/) | **CONFIRMED root** *(directory-rules.md §6.1.a: "`docs/standards/` is the canonical home for external standards profiles that KFM conforms to or crosswalks against")* |
 | KFM-STAC profile (project-specific governed profile) | `docs/standards/STAC.md` (informally `STAC_KFM_PROFILE.md` per Pass-10 C4-01 expansion direction) | **PROPOSED** — Pass-10 C4-01 / KFM-P31-PROG-0004 (KFM-STAC profile contract files) |
 | Catalog profile contract files (machine-readable) | *(home TBD — likely `schemas/contracts/v1/catalog/` or alongside the STAC profile)* | **PROPOSED** — KFM-P31-PROG-0004 |
-| Source descriptor schema | [`schemas/contracts/v1/source/`](../../../../schemas/contracts/v1/source/) | **PROPOSED** *(per ADR-0001; NEEDS VERIFICATION against mounted repo)* |
+| Source descriptor schema | [`schemas/contracts/v1/source/`](../../../schemas/contracts/v1/source/) | **PROPOSED** *(per ADR-0001; NEEDS VERIFICATION against mounted repo)* |
 | Crosswalk authoring template | [`_template/CROSSWALK_TEMPLATE.md`](./_template/CROSSWALK_TEMPLATE.md) | **PROPOSED** scaffold (sibling pointer) |
 | Drift register (placement conflicts) | [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) | **CONFIRMED root** *(directory-rules.md §2.5)* |
 
@@ -88,7 +88,7 @@ Per the **MDP — Metadata, Profiles, Crosswalks (ISO 19115, DCAT, STAC, PROV)**
 
 ## Crosswalk register
 
-> Field-level mappings must be confirmed against [`schemas/contracts/v1/source/`](../../../../schemas/contracts/v1/source/) and against the KFM-STAC profile contract files (Pass-10 C4-01 / KFM-P31-PROG-0004) before any crosswalk leaves scaffold status.
+> Field-level mappings must be confirmed against [`schemas/contracts/v1/source/`](../../../schemas/contracts/v1/source/) and against the KFM-STAC profile contract files (Pass-10 C4-01 / KFM-P31-PROG-0004) before any crosswalk leaves scaffold status.
 
 | # | Crosswalk | Purpose | Atlas anchor | Authoring state | Document |
 |---|---|---|---|---|---|

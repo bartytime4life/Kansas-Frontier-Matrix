@@ -44,7 +44,7 @@ notes:
 ![updated](https://img.shields.io/badge/updated-2026--06--06-lightgrey)
 
 **Status:** draft · **Owners:** _People/DNA/Land stewards_ — `TODO` · **Last updated:** 2026-06-06
-**`CONTRACT_VERSION = "3.0.0"`** — governed by [`ai-build-operating-contract.md`](../../../../../ai-build-operating-contract.md) and [`directory-rules.md`](../../../../../directory-rules.md).
+**`CONTRACT_VERSION = "3.0.0"`** — governed by [`ai-build-operating-contract.md`](../../../doctrine/ai-build-operating-contract.md) and [`directory-rules.md`](../../../doctrine/directory-rules.md).
 
 > [!IMPORTANT]
 > **Default posture: DENY.** Living-person and DNA-derived outputs are denied or restricted by default. Raw kit/vendor identifiers and raw genotype data **never** cross the publication boundary; only consent-scoped, redacted, or differentially-private aggregates may be released, and every release is reversible through revocation, embargo, and tombstone. [CONFIRMED — DOM-PEOPLE §I; ENCY; Pass 10 C6 / C9-03]
@@ -530,8 +530,8 @@ Sources: Atlas Ch. 16 §F; KFM-IDX-POL-003; DOM-PEOPLE.
 - [`docs/domains/people-dna-land/sublanes/README.md`](../README.md) — sublanes index *(PROPOSED layer)*
 - [`docs/domains/people-dna-land/sublanes/people/README.md`](../people/README.md) — PROPOSED sibling sublane
 - [`docs/domains/people-dna-land/sublanes/land/README.md`](../land/README.md) — PROPOSED sibling sublane
-- [`directory-rules.md`](../../../../../directory-rules.md) — directory placement law (§3, §12, §2.4, §18 OPEN-DR-02)
-- [`ai-build-operating-contract.md`](../../../../../ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`)
+- [`directory-rules.md`](../../../doctrine/directory-rules.md) — directory placement law (§3, §12, §2.4, §18 OPEN-DR-02)
+- [`ai-build-operating-contract.md`](../../../doctrine/ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`)
 - [`docs/standards/PROV.md`](../../../../standards/PROV.md) — provenance crosswalk
 - [`docs/standards/ISO-19115.md`](../../../../standards/ISO-19115.md) — metadata crosswalk
 - [`docs/standards/CONSENT_TOKENS.md`](../../../../standards/CONSENT_TOKENS.md) — PROPOSED consent-token standard profile
