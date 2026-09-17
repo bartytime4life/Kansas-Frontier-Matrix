@@ -6,6 +6,12 @@ fit together.
 
 ## Current public scope
 
+This directory is the monorepo implementation. The working Site is preserved in
+a standalone-root source history, while this application retains the monorepo
+layout and package boundaries. Do not merge a standalone Site mirror into
+monorepo `main`. See the [current identity and source-alignment
+hold](docs/sites-source-alignment.md).
+
 - The renderer-neutral shell exposes site-local synthetic or generalized GeoJSON catalog metadata; renderer source and layer loading remain held.
 - Nothing in this build is a released operational KFM dataset.
 - Evidence resolution fails closed: missing, stale, restricted, denied, and
@@ -33,13 +39,13 @@ TypeScript-transpile regression checks.
 
 | Field | Current boundary |
 |---|---|
-| OpenAI Sites project | `appgprj_6a870a079c1c8191abb7401ef092a181` from [`.openai/hosting.json`](./.openai/hosting.json) |
+| OpenAI Sites project | `appgprj_6aa0b1c41bc08191bfd86003920f1631` from [`.openai/hosting.json`](./.openai/hosting.json) |
 | Existing slug | `kansas-frontier-matrix-explorer` |
 | Existing public URL | <https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site> |
 | Authoritative host | OpenAI Sites/Vinext; [issue #4232](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4232) records the adapter decision |
 | Vercel boundary | [`vercel.json`](./vercel.json) disables automatic Git deployment; Vercel remains non-authoritative for this app |
-| Replacement procedure | [OpenAI Sites in-place replacement handoff](./docs/openai-sites-in-place-replacement.md) |
-| Hosted version state | `NEEDS VERIFICATION` from the Sites version-history and production browser surfaces |
+| Current evidence | [Identity and source-alignment hold](./docs/sites-source-alignment.md); the older replacement handoff and v1 receipt are historical |
+| Hosted version state | The 2026-09-17 Sites readback records a successful v45 deployment, but v45 mirror equality, production-browser acceptance, and recovery remain `HOLD` |
 
 The staged 2026-09-03 replacement ZIP is an external, digest-bound Sites execution
 input. It is not the canonical repository source and must not be copied over this
@@ -48,16 +54,18 @@ Repository integration continues through the accepted package-owned renderer sea
 this app remains renderer-neutral until that separate dependency and validation path
 is closed.
 
-A Sites-enabled operator must save and inspect a new version before deployment,
-retain the immediately preceding Site version as the rollback target, and return the
-receipt defined by the app-local handoff. Repository branch work does not deploy or
-restore a Site version. GitHub repository-homepage metadata still requires the
-separate settings-only action tracked in [issue #4246](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4246).
+A Sites-enabled operator must verify the active project and exact candidate source,
+save and inspect a new version before deployment, retain the immediately preceding
+Site version as the rollback target, and return current-project evidence. The
+historical v1 receipt and 2026-09-03 replacement ZIP are not current execution
+inputs. Repository branch work does not deploy or restore a Site version. The
+repository homepage already points to the existing Sites URL.
 
-The receipt validator keeps terminal states distinct: a `DEPLOYED` readback ends on
-the candidate version and records no completed restoration; a `ROLLED_BACK` readback
-ends on the prior version and requires an explicit restoration confirmation. Neither
-outcome authorizes a release or publication.
+The checked-in v1 receipt schema, fixture, validator, and replacement handoff retain
+the historical project binding as lineage. They must not validate a current-project
+operation. A current deployment stays held until an exact current-project receipt
+contract and source-equivalence proof are reviewed. Neither repository metadata nor
+a Sites deployment record authorizes a release or publication.
 
 The application runs as a single-route Vinext site through the package-owned
 `NullMapRuntime`. TypeScript and Vite resolve the `@kfm/maplibre` facade to the
@@ -65,8 +73,9 @@ accepted workspace package root, following the same renderer-neutral pattern as
 `explorer-web`; the child manifest acquires no renderer or internal package by
 an external or `file:` dependency. Styles, sources, layers, workers, hit
 testing, and screen measurement remain held pending a dependency-closed
-consumer migration. D1 and R2 are intentionally unbound in the current
-deployment.
+consumer migration. D1 and R2 are intentionally unbound in this monorepo
+hosting manifest; that does not describe or modify the active Site's hosted
+bindings.
 
 ## Prerequisites
 
