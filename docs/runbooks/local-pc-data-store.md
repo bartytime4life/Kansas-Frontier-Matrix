@@ -2,7 +2,7 @@
 doc_id: kfm://doc/runbooks/local-pc-data-store
 title: Prepare a local PC and maintain its data store
 type: runbook
-version: v0.1
+version: v0.2
 status: proposed; branch-review; quarantine-only
 owners: ["@bartytime4life"]
 created: 2026-09-17
@@ -110,24 +110,63 @@ manifest from an explicitly selected local file. The command computes size and
 SHA-256, records the supplied source/dataset/version/reference/media metadata,
 and leaves rights and sensitivity unknown. Save its JSON in ignored
 `configs/local/` or another private location. Review those assertions before
-capture. For several files, combine their item objects into one manifest with
-`schema_version: "1"`; do not use a directory glob as an implicit import list.
+capture. Select every file explicitly; do not use a directory glob as an
+implicit import list.
 
 For example, replace the names below with one real downloaded file and its
 provider reference. The output file must be a new private manifest:
 
 ```bash
-python3 tools/local_data/manage.py describe \
-  --downloads "$HOME/Downloads/KFM" --file "maps/county-map.tif" \
-  --source-id my-provider --dataset-id county-map --domain geology \
-  --version capture-v1 --source-uri "file-ref:provider-download-record" \
-  --media-type image/tiff > configs/local/county-map-v1.json
+if (
+  umask 077
+  set -C
+  python3 tools/local_data/manage.py describe \
+    --downloads "$HOME/Downloads/KFM" --file "maps/county-map.tif" \
+    --source-id my-provider --dataset-id county-map --domain geology \
+    --version capture-v1 --source-uri "file-ref:provider-download-record" \
+    --media-type image/tiff > configs/local/county-map-v1.json
+); then
+  printf 'Manifest saved; review it before capture.\n'
+else
+  printf 'Manifest creation failed; do not use the output.\n' >&2
+fi
 ```
 
 Without `--captured-at`, `describe` records its current execution time. Supply
 the original download time explicitly when known. Check the command's exit
-status; error JSON is not a usable manifest. A shell redirection writes the
-selected output file even when the command fails, so keep older manifests intact.
+status; error output is not a usable manifest. The example checks the status,
+uses private permissions, and refuses to overwrite an existing output file.
+A shell redirection may still leave an empty or incomplete new file on failure;
+inspect it and select a new output path before retrying. Keep older manifests intact.
+
+For several explicitly described files, use `combine` with two or more repeated
+`--manifest` options. It validates every input and the combined manifest, then
+writes canonical JSON to standard output. It does not silently deduplicate
+conflicting or repeated item identities. All inputs must describe paths relative
+to the same downloads root; separate roots require separate capture batches.
+The aggregate input limit is 4 MiB, and the resulting manifest must also fit the
+normal item, file-size, and batch-size limits.
+
+After separately creating and reviewing the second manifest in this example:
+
+```bash
+if (
+  umask 077
+  set -C
+  python3 tools/local_data/manage.py combine \
+    --manifest configs/local/county-map-v1.json \
+    --manifest configs/local/site-photo-v1.json \
+    > configs/local/my-downloads.json
+); then
+  printf 'Combined manifest saved; review it before plan and sync.\n'
+else
+  printf 'Combine failed; do not use the output.\n' >&2
+fi
+```
+
+Use a new private output path and proceed only after the command succeeds.
+`combine` reads manifest metadata; the later `plan` and `sync` check the selected
+downloaded bytes against those declarations.
 
 The [manifest contract](../../contracts/source/local_data_manifest.md) explains
 every field. Keep stable provider and dataset IDs. Keep license/rights evidence
@@ -161,7 +200,8 @@ FAT/exFAT removable drive can be used as the active store.
 1. Retain each reviewed manifest and its canonical stored snapshot. Record a new
    `version` when bytes or capture metadata change. Reusing a bound version/file
    identity with changed declarations is rejected.
-2. Preview the new manifest. Synchronization reuses valid content hashes and
+2. Compare the previous and candidate manifests, then preview the candidate.
+   Synchronization reuses valid content hashes and
    preserves old versions. An upstream file disappearing never deletes local
    history. Existing corrupt objects are reported and never silently overwritten.
 3. Sync, verify, and retain the process receipts. An interrupted batch can leave
@@ -175,6 +215,30 @@ FAT/exFAT removable drive can be used as the active store.
    quarantine store or imply a published version exists.
 5. Re-download and compare revised provider artifacts explicitly. There is no
    implicit remote monitoring, deletion, source activation, or scheduling.
+
+Before `plan` or `sync`, inspect the metadata comparison:
+
+```bash
+python3 tools/local_data/manage.py compare \
+  --previous configs/local/my-downloads.json \
+  --manifest configs/local/my-downloads-v2.json
+```
+
+`compare` reports added, omitted, changed, and unchanged entries. It compares
+declared SHA-256 and size alongside capture metadata; it does not rehash download
+or store bytes. Changes to declarations under the same version are flagged as
+`version_conflict`; resolve them with a new version and repeat the comparison.
+An omitted entry is an inventory difference, never a deletion instruction.
+Compare one snapshot from each acquisition: multiple versions of the same
+source/dataset/path within either input are ambiguous and rejected. Keep the
+full retained version history separately.
+
+Check the comparison's exit status and inspect its report before continuing.
+`COMPARED` and exit zero mean the comparison completed, even when its report
+contains version conflicts; they do not establish that synchronization is ready.
+Then run the earlier `plan`, `sync`, and `verify` commands with
+`configs/local/my-downloads-v2.json`. Their byte checks remain necessary even
+when the metadata comparison reports no change.
 
 Update code separately from bytes. On a clean checkout of the accepted branch,
 `git pull --ff-only` preserves history and refuses divergent source updates.
@@ -230,3 +294,34 @@ operators in `tools/`, source capture in `connectors/`, examples in `configs/`,
 meaning in `contracts/`, shape in `schemas/`, tests/fixtures in their own roots,
 and this guide in `docs/runbooks/`. Physical disk separation preserves logical
 lifecycle ownership; it creates no new registry or release authority.
+
+## Proposed policy decision handoff — PENDING
+
+The [initial implementation receipt](../../data/receipts/generated/genrec-local-pc-data-store-20260917.json)
+records `POLICY_DECISION_REQUIRED` for
+`schemas/contracts/v1/source/local_data_manifest.schema.json`. A passing local
+data test or a nonempty reference string does not establish policy acceptance.
+ADR-0029 supplies placement authority; it does not evaluate this capture policy.
+
+The owner or authorized policy decision must bind the exact candidate revision
+and schema digest to a bounded disposition covering:
+
+- The manifest contract and operator-selected capture of already downloaded files
+  into private, source-first quarantine; unknown rights and sensitivity stay unknown.
+- Immutable version bindings, finite acquisition limits, explicit metadata
+  comparison, and preservation of omitted files and prior versions.
+- The supporting test results, remaining acceptance gaps, reviewer authority,
+  obligations, and rollback that retains already captured data.
+- The boundary that this disposition grants no source admission, automated
+  provider retrieval, lifecycle promotion, map exposure, release, or publication.
+
+Record the actual disposition and its durable evidence reference when it exists;
+do not guess a decision ID, approver, timestamp, or favorable outcome. Reference
+an applicable authenticated decision in a subsequent receipt without rewriting
+the historical claim that review was pending. Until then, policy acceptance and
+human review remain **PENDING**, while branch-level implementation and validation
+can continue within their existing scope.
+
+See the [generated-receipt contract's validation gates](../doctrine/ai-build-operating-contract.md),
+the [PolicyDecision semantics](../../contracts/policy/policy_decision.md), and the
+[AI Builder Policy authority boundary](../../policy/ai_builder/README.md).

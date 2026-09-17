@@ -27,7 +27,10 @@ python3 -m pytest -q tests/local_data
 Coverage includes manifest shape, explicit-file selection, checksums, resource
 limits, path/symlink rejection, storage corruption, interruption and retry,
 no-overwrite commit, immutable capture revisions, multi-source backup restore,
-read-only doctor output and independent boundary regressions. Tests do not prove
+read-only doctor output and independent boundary regressions. Manifest-operation
+tests cover bounded batch combination, conflicts, deterministic update reports,
+ambiguous-version denial, omitted-history preservation and metadata-only reads.
+Tests do not prove
 network acquisition, source admission, map rendering integration or native
 Windows ACL/crash behavior. The operator tools use the Python standard library;
 these tests additionally use the repository's declared test dependencies.

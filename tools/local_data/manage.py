@@ -57,8 +57,12 @@ def reject_number(_value: str) -> None:
     raise ValueError("JSON_NONFINITE_OR_FLOAT")
 
 
+def parse_json(content: bytes) -> object:
+    return json.loads(content, object_pairs_hook=unique_object, parse_constant=reject_number, parse_float=reject_number)
+
+
 def load_json(path: Path, limit: int = MAX_MANIFEST_BYTES) -> object:
-    return json.loads(read_regular(path, limit), object_pairs_hook=unique_object, parse_constant=reject_number, parse_float=reject_number)
+    return parse_json(read_regular(path, limit))
 
 
 def safe_text(value: object, limit: int) -> bool:
@@ -470,6 +474,63 @@ def describe_file(args: argparse.Namespace) -> dict:
     return validate_manifest({"schema_version": "1", "items": [item]}, args)
 
 
+def check_limits(args: argparse.Namespace) -> None:
+    if not 1 <= args.max_items <= MAX_ITEMS or not 1 <= args.max_file_bytes <= MAX_FILE_BYTES or not 1 <= args.max_total_bytes <= MAX_TOTAL_BYTES:
+        raise ValueError("LIMIT_CONFIGURATION_INVALID")
+
+
+def combine_manifests(args: argparse.Namespace) -> dict:
+    """Combine explicit declarations without opening payloads or selecting winners."""
+    check_limits(args)
+    if not 2 <= len(args.manifest) <= MAX_ITEMS:
+        raise ValueError("MANIFEST_INPUT_COUNT_INVALID")
+    items = []
+    remaining = MAX_MANIFEST_BYTES
+    for path in args.manifest:
+        if remaining <= 0:
+            raise ValueError("METADATA_BYTE_LIMIT")
+        content = read_regular(path, remaining)
+        remaining -= len(content)
+        manifest = validate_manifest(parse_json(content), args)
+        if len(items) + len(manifest["items"]) > args.max_items:
+            raise ValueError("MANIFEST_ITEM_LIMIT")
+        items.extend(manifest["items"])
+    return validate_manifest({"schema_version": "1", "items": items}, args)
+
+
+def comparison_index(manifest: dict) -> dict[tuple[str, str, str], dict]:
+    result = {}
+    for item in manifest["items"]:
+        key = (item["source_id"], item["dataset_id"], item["relative_path"])
+        if key in result:
+            raise ValueError("AMBIGUOUS_COMPARISON_VERSION")
+        result[key] = item
+    return result
+
+
+def compare_manifests(args: argparse.Namespace) -> dict:
+    """Compare two declared snapshots; omissions never authorize deletion."""
+    check_limits(args)
+    previous = validate_manifest(load_json(args.previous), args)
+    proposed = validate_manifest(load_json(args.manifest), args)
+    before, after = comparison_index(previous), comparison_index(proposed)
+    counts = {name: 0 for name in ("added", "omitted", "changed", "unchanged", "version_conflicts")}
+    changes = []
+    for key in sorted(before.keys() | after.keys()):
+        old, new = before.get(key), after.get(key)
+        changed_fields = sorted(field for field in ITEM_FIELDS if old[field] != new[field]) if old and new else []
+        status = "ADDED" if old is None else "OMITTED" if new is None else "CHANGED" if changed_fields else "UNCHANGED"
+        conflict = bool(changed_fields and old["version"] == new["version"])
+        payload_changed = any(old[field] != new[field] for field in ("sha256", "size_bytes")) if old and new else None
+        counts[status.lower()] += 1
+        counts["version_conflicts"] += int(conflict)
+        changes.append({"source_id": key[0], "dataset_id": key[1], "relative_path": key[2], "status": status,
+                        "previous_version": old["version"] if old else None, "proposed_version": new["version"] if new else None,
+                        "changed_fields": changed_fields, "payload_changed": payload_changed, "version_conflict": conflict})
+    return {"outcome": "COMPARED", "previous_run_id": run_id(previous), "proposed_run_id": run_id(proposed),
+            "counts": counts, "changes": changes, "writes": False, "deletions": False, "byte_verification": False}
+
+
 def parser() -> argparse.ArgumentParser:
     result = argparse.ArgumentParser(description=__doc__)
     commands = result.add_subparsers(dest="command", required=True)
@@ -491,6 +552,16 @@ def parser() -> argparse.ArgumentParser:
     describe.add_argument("--captured-at")
     describe.add_argument("--max-file-bytes", type=bounded_int, default=DEFAULT_FILE_BYTES)
     describe.set_defaults(max_items=MAX_ITEMS, max_total_bytes=MAX_TOTAL_BYTES)
+    for command in ("combine", "compare"):
+        child = commands.add_parser(command, help="Read explicit manifests only; no payload, store, or network access.")
+        if command == "combine":
+            child.add_argument("--manifest", required=True, action="append", type=Path)
+        else:
+            child.add_argument("--previous", required=True, type=Path)
+            child.add_argument("--manifest", required=True, type=Path)
+        child.add_argument("--max-items", type=bounded_int, default=MAX_ITEMS)
+        child.add_argument("--max-file-bytes", type=bounded_int, default=DEFAULT_FILE_BYTES)
+        child.add_argument("--max-total-bytes", type=bounded_int, default=DEFAULT_TOTAL_BYTES)
     return result
 
 
@@ -500,36 +571,48 @@ def main(argv: list[str] | None = None) -> int:
         if args.command == "describe":
             print(canonical(describe_file(args)).decode("utf-8"), end="")
             return 0
-        root = external_root(args.root)
-        if args.command == "init":
-            result = init_store(root)
+        if args.command == "combine":
+            print(canonical(combine_manifests(args)).decode("utf-8"), end="")
+            return 0
+        if args.command == "compare":
+            result = compare_manifests(args)
         else:
-            if not 1 <= args.max_items <= MAX_ITEMS or not 1 <= args.max_file_bytes <= MAX_FILE_BYTES or not 1 <= args.max_total_bytes <= MAX_TOTAL_BYTES or not 0 <= args.min_free_bytes <= MAX_TOTAL_BYTES:
-                raise ValueError("LIMIT_CONFIGURATION_INVALID")
-            manifest = validate_manifest(load_json(args.manifest), args)
-            if args.command == "verify":
-                if not initialized(root):
-                    raise ValueError("STORE_NOT_INITIALIZED_RUN_INIT")
-                objects = inspect_objects(root, manifest, None, args)
-                check_snapshots(root, manifest, required=True)
-                result = {"outcome": "VERIFIED", "run_id": run_id(manifest), "items": len(objects), "lifecycle": "QUARANTINE"}
-            else:
-                downloads = downloads_root(args.downloads, root)
-                if args.command == "sync":
-                    result = sync_store(root, manifest, downloads, args)
-                else:
-                    ready = initialized(root)
-                    objects = inspect_objects(root, manifest, downloads, args)
-                    missing = check_snapshots(root, manifest)
-                    budget = disk_budget(root, objects, manifest, args.min_free_bytes)
-                    result = {"outcome": "PLANNED", "run_id": run_id(manifest), "store_initialized": ready, "required_free_bytes": budget, "missing_metadata": missing, "objects": objects, "writes": False}
+            result = run_store_command(args)
     except (OSError, UnicodeError, ValueError, RecursionError) as error:
         code = str(error) if isinstance(error, ValueError) and re.fullmatch(r"[A-Z_]+", str(error)) else "LOCAL_IO_OR_INPUT_ERROR"
-        print(json.dumps({"outcome": "DENY", "code": code, "authority": AUTHORITY}, sort_keys=True), file=sys.stderr if args.command == "describe" else sys.stdout)
+        print(json.dumps({"outcome": "DENY", "code": code, "authority": AUTHORITY}, sort_keys=True), file=sys.stderr if args.command in {"describe", "combine", "compare"} else sys.stdout)
         return 1
     result["authority"] = AUTHORITY
     print(json.dumps(result, sort_keys=True))
     return 0
+
+
+def run_store_command(args: argparse.Namespace) -> dict:
+    root = external_root(args.root)
+    if args.command == "init":
+        result = init_store(root)
+    else:
+        check_limits(args)
+        if not 0 <= args.min_free_bytes <= MAX_TOTAL_BYTES:
+            raise ValueError("LIMIT_CONFIGURATION_INVALID")
+        manifest = validate_manifest(load_json(args.manifest), args)
+        if args.command == "verify":
+            if not initialized(root):
+                raise ValueError("STORE_NOT_INITIALIZED_RUN_INIT")
+            objects = inspect_objects(root, manifest, None, args)
+            check_snapshots(root, manifest, required=True)
+            result = {"outcome": "VERIFIED", "run_id": run_id(manifest), "items": len(objects), "lifecycle": "QUARANTINE"}
+        else:
+            downloads = downloads_root(args.downloads, root)
+            if args.command == "sync":
+                result = sync_store(root, manifest, downloads, args)
+            else:
+                ready = initialized(root)
+                objects = inspect_objects(root, manifest, downloads, args)
+                missing = check_snapshots(root, manifest)
+                budget = disk_budget(root, objects, manifest, args.min_free_bytes)
+                result = {"outcome": "PLANNED", "run_id": run_id(manifest), "store_initialized": ready, "required_free_bytes": budget, "missing_metadata": missing, "objects": objects, "writes": False}
+    return result
 
 
 if __name__ == "__main__":

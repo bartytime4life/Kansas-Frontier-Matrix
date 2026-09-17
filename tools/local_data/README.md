@@ -66,8 +66,55 @@ with unknown rights and sensitivity. `captured_at` defaults to the current UTC
 time; `--captured-at` accepts an explicit whole-second UTC timestamp. This is
 local capture time, not provider publication or observation time. The media type
 defaults to `application/octet-stream` and remains a declaration, not validation.
-`describe` errors go to stderr with a nonzero exit status; other commands return
-their status JSON on stdout. Check the exit status before using redirected output.
+`describe`, `combine`, and `compare` errors go to stderr with a nonzero exit
+status and no stdout. Other commands return status JSON on stdout. Check the
+exit status before using redirected output; shell redirection can create an
+empty output file even on failure.
+
+## Prepare batches and review updates
+
+Combine two or more explicitly selected manifests without hand-editing JSON:
+
+```bash
+python3 tools/local_data/manage.py combine \
+  --manifest configs/local/maps.json --manifest configs/local/photos.json \
+  > configs/local/batch-new.json
+```
+
+Use a new private output file. Every input path remains relative to the same
+downloads directory; combining does not relocate or discover files. The command
+preserves rights, sensitivity, source references and capture metadata exactly.
+Duplicates, conflicting paths or object sizes, and exceeded limits are rejected;
+there is no silent deduplication or choice of a winning declaration. Input order
+does not affect canonical output. Run `plan` on the result before `sync`.
+
+For a later update or historical backfill, compare two selected snapshots:
+
+```bash
+python3 tools/local_data/manage.py compare \
+  --previous configs/local/batch-old.json --manifest configs/local/batch-new.json
+```
+
+The report matches source ID, dataset ID and exact relative path across versions.
+It lists added, omitted, changed and unchanged declarations, sorted changed field
+names, and whether declared digest or size changed. A version-only change is
+still a changed declaration. Any changed declaration reusing the same version is
+flagged `version_conflict`; `sync` remains responsible for checking actual stored
+bindings. Multiple versions for one logical file in either input are ambiguous
+and rejected: compare one selected snapshot at a time. A renamed path appears
+as an omission and an addition; no rename or latest-version inference occurs.
+
+An omission never deletes retained history. `COMPARED` and exit zero mean only
+that comparison succeeded, even when conflicts are present. Both commands read
+metadata only, require no store, ignore `KFM_DATA_ROOT`, and never inspect payloads
+or make network requests. `compare` reports `byte_verification: false`; use
+`plan` or `verify` for byte-integrity checks. Reports contain source metadata and
+should remain private like manifests.
+
+Both commands enforce the usual item/file/total declaration limits. `combine`
+accepts 2–1,000 explicit inputs with a shared 4 MiB input-byte budget and a 4 MiB
+canonical output limit. `compare` accepts exactly two manifests of at most 4 MiB
+each. No recurring job or remote provider polling is configured.
 
 ## Storage and identity
 
