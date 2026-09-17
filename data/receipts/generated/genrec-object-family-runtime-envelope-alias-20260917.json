@@ -1,0 +1,121 @@
+{
+  "receipt_id": "genrec-object-family-runtime-envelope-alias-20260917",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/object-family-register.yml",
+    "control_plane/README.md",
+    "control_plane/object_family_register.yaml",
+    "docs/registers/OBJECT_FAMILY.md",
+    "tests/validators/test_validate_object_family_register.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/object-family-register.yml": "sha256:806b3379ab53ac428bf2193303d167b472a0a88bf175a37293c3be8427e3f141",
+    "control_plane/README.md": "sha256:04cd81a958ed05db798b0e4bae5ad8b500702c281ea45e9d4fd858eb42096e2b",
+    "control_plane/object_family_register.yaml": "sha256:e802ef6e021aa6d5b70e5b653572f96cf5f689ea5d9b67531fd67065e501254d",
+    "docs/registers/OBJECT_FAMILY.md": "sha256:5b1846a9bfd604e584255d29c169e25f790096625274c2d3f4f37de8a8bcba81",
+    "tests/validators/test_validate_object_family_register.py": "sha256:70572fab28e878bb75162ba8697417e4ef5136223a604f27b16f14a23c6ae7e1"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT"
+  },
+  "prompt_or_contract": "sha256:ab7c816b811433529ad430f65c3277e917e57248a35f67b60a2d927a179bd274",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository evidence inspection",
+      "deterministic Python validation",
+      "SHA-256 artifact binding"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/e1b64e62b92543d6b9c23f5f99c5e1b0c23908cc",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3360",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/e1b64e62b92543d6b9c23f5f99c5e1b0c23908cc/contracts/runtime/runtime_response_envelope.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/e1b64e62b92543d6b9c23f5f99c5e1b0c23908cc/schemas/contracts/v1/focus/runtime_response_envelope.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/e1b64e62b92543d6b9c23f5f99c5e1b0c23908cc/schemas/contracts/v1/runtime/runtime_response_envelope.schema.json"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/object-family-register.yml": "PROPOSED",
+    "control_plane/README.md": "PROPOSED",
+    "control_plane/object_family_register.yaml": "PROPOSED",
+    "docs/registers/OBJECT_FAMILY.md": "PROPOSED",
+    "tests/validators/test_validate_object_family_register.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "declared-alias-relationship",
+      "outcome": "PASS",
+      "reason": "The Focus schema declares compatibility-alias, names the runtime schema as canonical_schema, and resolves to the runtime schema identifier through $ref."
+    },
+    {
+      "gate": "object-family-register",
+      "outcome": "PASS",
+      "reason": "Sixteen focused tests and 278 subtests pass; the current register and all reviewed positive/negative fixtures produce their expected finite outcomes."
+    },
+    {
+      "gate": "runtime-response-envelope",
+      "outcome": "PASS",
+      "reason": "Eight validator tests plus six standard-library runtime-proof tests pass with no network access."
+    },
+    {
+      "gate": "artifact-integrity",
+      "outcome": "PASS",
+      "reason": "This successor receipt binds the five changed workflow, register, documentation, and test artifacts by SHA-256."
+    },
+    {
+      "gate": "repository-topology",
+      "outcome": "SKIPPED",
+      "reason": "The change is outside frozen catalog/ and does not update the topology baseline; repository-wide topology remains a separately tracked inherited hold."
+    },
+    {
+      "gate": "hosted-exact-head-validation",
+      "outcome": "SKIPPED",
+      "reason": "The remote branch head does not exist until this candidate is published; hosted evidence must be recorded from that exact head."
+    },
+    {
+      "gate": "independent-review",
+      "outcome": "SKIPPED",
+      "reason": "Accountable semantic acceptance and independent review remain pending."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "mrts-03-coordination",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3360"
+    },
+    {
+      "id": "focus-compatibility-alias",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/e1b64e62b92543d6b9c23f5f99c5e1b0c23908cc/schemas/contracts/v1/focus/runtime_response_envelope.schema.json"
+    },
+    {
+      "id": "runtime-response-schema",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/e1b64e62b92543d6b9c23f5f99c5e1b0c23908cc/schemas/contracts/v1/runtime/runtime_response_envelope.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-17T06:05:57Z",
+  "emitter": "openai/codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Branch-only navigational reconciliation. It records an already implemented compatibility alias, reduces the declared unresolved-family count from eleven to ten, and keeps RuntimeResponseEnvelope PARTIAL pending accountable semantic acceptance, a dedicated workflow, and deployed-consumer inspection. It creates no object-family authority, API route, source activation, lifecycle transition, release, deployment, promotion, publication, or frozen catalog/baseline change. Roll back by reverting this scoped packet or forward-fix the same paths while preserving this receipt."
+}
