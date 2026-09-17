@@ -37,7 +37,7 @@ test("renders the map-first Kansas explorer shell", async () => {
   assert.match(html, /Build report/i);
   assert.match(html, /bounded demonstration data/i);
   assert.match(html, /Repository briefing/i);
-  assert.match(html, /main@(?:<!-- -->)?8bedf94/i);
+  assert.match(html, /main@(?:<!-- -->)?91aeee1/i);
   assert.match(html, /Scenario review/i);
   assert.match(html, /Runtime lab/i);
   assert.match(html, /Source observatory/i);
@@ -612,7 +612,7 @@ test("keeps repository updates pinned and boundary-labeled", async () => {
   const updates = await readFile(new URL("../app/repository-updates.ts", import.meta.url), "utf8");
   const identity = await readFile(new URL("../app/site-identity.ts", import.meta.url), "utf8");
 
-  assert.match(identity, /8bedf94766dd91ae38119c54e00e00b1cf3713d3/);
+  assert.match(identity, /91aeee1ca163bcb3f007577a541a825f60dcddc2/);
   assert.match(updates, /SITE_IDENTITY\.repositoryCommit/);
   assert.match(updates, /separate source histories/);
   assert.match(updates, /Local geodata inspection now fails closed on malformed or stale input/);

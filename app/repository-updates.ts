@@ -32,7 +32,7 @@ export const REPOSITORY_SNAPSHOT = Object.freeze({
   ref: SITE_IDENTITY.repositoryRef,
   commit: SITE_IDENTITY.repositoryCommit,
   shortCommit: SITE_IDENTITY.repositoryCommit.slice(0, 7),
-  inspectedAt: "16 Sep 2026 · GitHub and Sites readback",
+  inspectedAt: "17 Sep 2026 · GitHub and Sites readback",
   counts: Object.freeze({
     knowledgeDomains: 13,
     explorerFeatureFamilies: 38,
@@ -51,12 +51,12 @@ export const REPOSITORY_UPDATES: readonly RepositoryUpdate[] = Object.freeze([
   Object.freeze({
     id: "current-main-live-readback",
     area: "Repository control plane",
-    title: "Main includes normalized-summary readiness hardening",
+    title: "Main includes GitHub API redirect hardening",
     state: "NEEDS VERIFICATION",
     maturity: "PARTIAL",
-    date: "16 Sep 2026",
+    date: "17 Sep 2026",
     summary:
-      "Main is pinned to 8bedf947, the merge of PR #4607 immediately after PR #4608. The promotion gate now exercises normalized-summary regressions and the validator rejects empty readiness inventories. Zero open pull requests were returned at this readback. The Site also offers a separate read-only current-main lookup.",
+      "Main is pinned to 91aeee1, the merge of PR #4609. The repository API probe now rejects HTTP redirects before a token-bearing follow-up can occur. Zero open pull requests were returned at this readback. The Site also offers a separate read-only current-main lookup.",
     boundary:
       "The GitHub repository and this Site retain separate source histories. A successful currentness check does not synchronize code, prove tree equivalence, admit data, approve a review, deploy a version, or authorize publication.",
     sourceLabel: "Exact current main commit",
@@ -80,11 +80,11 @@ export const REPOSITORY_UPDATES: readonly RepositoryUpdate[] = Object.freeze([
     "title": "Live Site identity is confirmed; repository retargeting remains held",
     "state": "BOUNDED PROOF",
     "maturity": "PARTIAL",
-    "summary": "Sites readback confirms owner-private v42 on project appgprj_6aa0b1c41bc08191bfd86003920f1631 with a succeeded provider deployment. Repository main still names appgprj_6a870a079c1c8191abb7401ef092a181, which returned NOT_FOUND. A branch-only documentation correction records the mismatch without retargeting deployment.",
-    "boundary": "Next goal: independently reconcile source trees, D1/R2 bindings, MapLibre and framework versions, archive parity, authenticated browser behavior, and rollback before changing the repository target. A documentation branch is not deployment authority.",
-    "sourceLabel": "Branch-only identity-drift correction",
-    "sourceUrl": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/81ddf8c6f343d0b5b25bdaa9f81b847b930a245f",
-    "date": "16 Sep 2026"
+    "summary": "A 17 September pre-change Sites readback confirmed owner-private v44 on project appgprj_6aa0b1c41bc08191bfd86003920f1631 with a succeeded provider deployment. The saved-version history remains the current deployment authority; this source records that dated checkpoint instead of presenting a mutable version number as perpetual current state. Repository main still names legacy project appgprj_6a870a079c1c8191abb7401ef092a181, which returned NOT_FOUND.",
+    "boundary": "Next goal: independently reconcile source trees, D1/R2 bindings, MapLibre and framework versions, archive parity, authenticated browser behavior, and rollback before changing the repository target. Repository metadata is not deployment authority.",
+    "sourceLabel": "Repository manifest at pinned main",
+    "sourceUrl": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/91aeee1ca163bcb3f007577a541a825f60dcddc2/apps/kansas-frontier-matrix-explorer/.openai/hosting.json",
+    "date": "17 Sep 2026"
   }),
   Object.freeze({
     "id": "trust-spine-deadline",

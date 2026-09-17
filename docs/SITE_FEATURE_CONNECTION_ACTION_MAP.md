@@ -46,7 +46,7 @@ data, KFM evidence, policy, release, or deployment.
 | System | Authority in this alignment | What is synchronized |
 |---|---|---|
 | Sites | Current runtime and saved Site source | Registry files, UI wiring, tests, and saved version |
-| GitHub | Repository implementation and architecture authority | Documentation-only traceability record against `main@8bedf94766dd91ae38119c54e00e00b1cf3713d3` |
+| GitHub | Repository implementation and architecture authority | Documentation-only traceability record against `main@91aeee1ca163bcb3f007577a541a825f60dcddc2` |
 | Google Drive | Design/reference and handoff record | Current Site checkpoint, registry file map, validation result, and next gates |
 | Notion | Coordination and knowledge capture | Current checkpoint, implementation boundaries, and follow-up ownership |
 
@@ -60,10 +60,10 @@ repository `main`, activate held integrations, merge a PR, or deploy the Site.
 - The active Sites project is `appgprj_6aa0b1c41bc08191bfd86003920f1631`,
   with slug `kansas-frontier-matrix-explorer` and canonical host
   `https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site`.
-- No custom domain was attached when checked on 2026-09-16. The canonical
+- No custom domain was attached when checked on 2026-09-17. The canonical
   `chatgpt.site` host is the only domain currently represented here.
 - The current independently read repository checkpoint is
-  `bartytime4life/Kansas-Frontier-Matrix@8bedf94766dd91ae38119c54e00e00b1cf3713d3` on `main`.
+  `bartytime4life/Kansas-Frontier-Matrix@91aeee1ca163bcb3f007577a541a825f60dcddc2` on `main`.
 - The Site checkout’s `.openai/hosting.json` is authoritative for this Site.
   The repository child manifest still points at legacy project
   `appgprj_6a870a079c1c8191abb7401ef092a181`; that mismatch is surfaced as

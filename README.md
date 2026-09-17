@@ -171,10 +171,10 @@ package-owned renderer and newer dependency work retain their own history.
   `kansas-frontier-matrix-explorer`, project `appgprj_6aa0b1c41bc08191bfd86003920f1631`.
 - Its canonical host is
   `https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site`; no custom
-  domain was attached when this checkpoint was checked on 2026-09-16.
+  domain was attached when this checkpoint was checked on 2026-09-17.
 - The independently read GitHub checkpoint is
-  `bartytime4life/Kansas-Frontier-Matrix@8bedf94766dd91ae38119c54e00e00b1cf3713d3`
-  (`main`, merged PR #4607 immediately after PR #4608). The Site also offers a
+  `bartytime4life/Kansas-Frontier-Matrix@91aeee1ca163bcb3f007577a541a825f60dcddc2`
+  (`main`, merged PR #4609). The Site also offers a
   separate read-only current-main lookup.
 - The Site and GitHub repository retain separate source histories. This Site’s
   `.openai/hosting.json` is authoritative for its current binding; the GitHub
@@ -430,10 +430,10 @@ into inferred facts.
   the intake capability. Reports, stories, places, and investigation workspaces
   remain device-local drafts; those bindings do not make them server-persisted.
 
-## Security and progress checkpoint — 16 September 2026
+## Security and progress checkpoint — 17 September 2026
 
-The repository briefing is pinned to `main@8bedf94766dd91ae38119c54e00e00b1cf3713d3`.
-It distinguishes the merged normalized-summary validation and CI coverage from
+The repository briefing is pinned to `main@91aeee1ca163bcb3f007577a541a825f60dcddc2`.
+It distinguishes the merged GitHub API redirect hardening from
 open milestone acceptance, missing strict merge-check enforcement, the unresolved
 Sites target mismatch, and the next same-candidate evidence/API/Explorer/recovery goal.
 Older feature cards retain their historical source links. The supplied Atlas
@@ -476,10 +476,11 @@ under `app/`, regression tests under `tests/`, and this operational explanation 
 and the adopted Directory Rules keep app implementation separate from canonical
 contracts, policy and lifecycle proofs. No parallel authority root is introduced.
 
-Rollback is a coherent source/dependency revert to the prior v37 source
-`1cdabb970412b9d67270e04205918bb394a8318f`, followed by rebuilding and an authorized
-same-Site deployment. The older archive is a recovery candidate, not a rehearsed
-rollback, and restoring it would reintroduce the addressed security findings.
+Rollback for this maintenance deployment is a coherent restoration of the
+pre-change v44 source `b893683c33ef1a85d75f88db58e27e361c7e01a0`, archive
+`sha256:0653b89744b7ff44fa08570dcf75055b80d6c5449322cff655a550eb6043c637`,
+followed by a fresh same-Site readback. The saved version is a recovery candidate,
+not a rehearsed rollback; no restoration is claimed here.
 
 ## Prerequisites
 
