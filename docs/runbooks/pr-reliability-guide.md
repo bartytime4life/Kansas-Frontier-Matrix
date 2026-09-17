@@ -87,7 +87,7 @@ Classify failures before changing the PR:
 At the 2026-08-30 repository checkpoint used to draft this guide, recent PRs repeatedly showed two non-change-specific failure classes:
 
 1. `accessibility` and `ui-build` can stop during locked pnpm workspace installation with `ERR_PNPM_IGNORED_BUILDS` before the downstream Explorer build/tests or keyboard smoke run.
-2. Vercel preview can fail because the account exceeds its daily deployment limit.
+2. An external preview can fail because its account exceeds a daily deployment limit.
 
 These are **not permanent classifications**. Re-check the exact base and exact PR head. Do not label a future occurrence `INHERITED` merely because the job name or error looks familiar.
 

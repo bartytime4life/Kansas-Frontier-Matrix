@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { usePathname } from "next/navigation";
 
 type WorkflowAction =
   | "scope"
@@ -131,7 +130,7 @@ const detailForStep = (step: WorkflowAction, snapshot: ExplorerSnapshot) => {
 };
 
 export default function OperationalSpine() {
-  const pathname = usePathname();
+  const pathname = typeof window === "undefined" ? "/" : window.location.pathname;
   const [snapshot, setSnapshot] = useState<ExplorerSnapshot>(DEFAULT_SNAPSHOT);
   const [currentAction, setCurrentAction] = useState<WorkflowAction>("scope");
   const [announcement, setAnnouncement] = useState("Analysis workflow ready");

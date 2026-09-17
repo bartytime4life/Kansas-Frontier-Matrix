@@ -2,36 +2,50 @@
   "receipt_id": "genrec-hosting-provider-removal-20260917",
   "contract_version": "3.0.0",
   "artifact_paths": [
-    "apps/kansas-frontier-matrix-explorer/.gitignore",
-    "apps/kansas-frontier-matrix-explorer/README.md",
-    "apps/kansas-frontier-matrix-explorer/contracts/sites-deployment-receipt.schema.json",
-    "apps/kansas-frontier-matrix-explorer/docs/build-source-context.md",
-    "apps/kansas-frontier-matrix-explorer/docs/openai-sites-in-place-replacement.md",
-    "apps/kansas-frontier-matrix-explorer/docs/sites-source-alignment.md",
-    "apps/kansas-frontier-matrix-explorer/fixtures/sites-deployment-receipt/repository-rehearsal.json",
-    "apps/kansas-frontier-matrix-explorer/scripts/validate-sites-deployment-receipt.mjs",
+    "apps/kansas-frontier-matrix-explorer/app/about/page.tsx",
+    "apps/kansas-frontier-matrix-explorer/app/operational-spine.tsx",
+    "apps/kansas-frontier-matrix-explorer/app/page.tsx",
+    "apps/kansas-frontier-matrix-explorer/eslint.config.mjs",
+    "apps/kansas-frontier-matrix-explorer/index.html",
+    "apps/kansas-frontier-matrix-explorer/main.tsx",
+    "apps/kansas-frontier-matrix-explorer/package-lock.json",
+    "apps/kansas-frontier-matrix-explorer/package.json",
+    "apps/kansas-frontier-matrix-explorer/scripts/build-verified.sh",
+    "apps/kansas-frontier-matrix-explorer/scripts/install-ci.sh",
     "apps/kansas-frontier-matrix-explorer/tests/build-verified.test.mjs",
     "apps/kansas-frontier-matrix-explorer/tests/hosting-boundary.test.mjs",
-    "apps/kansas-frontier-matrix-explorer/tests/sites-deployment-receipt.test.mjs",
-    "data/receipts/generated/genrec-openai-sites-replacement-handoff-20260904.json",
-    "data/receipts/generated/genrec-root-readme-polish-20260904-v2.json",
-    "data/receipts/generated/genrec-sites-identity-reconciliation-20260917.json"
+    "apps/kansas-frontier-matrix-explorer/tests/operational-spine.test.mjs",
+    "apps/kansas-frontier-matrix-explorer/tests/rendered-html.test.mjs",
+    "apps/kansas-frontier-matrix-explorer/tests/site-runtime-repair.test.mjs",
+    "apps/kansas-frontier-matrix-explorer/tsconfig.json",
+    "apps/kansas-frontier-matrix-explorer/vite.config.ts",
+    "apps/kansas-frontier-matrix-explorer/worker/index.ts",
+    "docs/runbooks/pr-reliability-guide.md",
+    "pnpm-lock.yaml",
+    "tests/ui/test_explorer_lint_compat.mjs"
   ],
   "artifact_hashes": {
-    "apps/kansas-frontier-matrix-explorer/.gitignore": "sha256:b4b31be3346ddca28de2925ab35a150993022e5fe331966feccc8372abc6dd35",
-    "apps/kansas-frontier-matrix-explorer/README.md": "sha256:0b441cbacfa0a43a385fcc27c92c7bdb115ecefac25ccd6dd2c0edee1a66d52c",
-    "apps/kansas-frontier-matrix-explorer/contracts/sites-deployment-receipt.schema.json": "sha256:b5d6d8cf48f74005de6df08763bfae2ee23fd6ba70ae374eb4533f3f3e4769eb",
-    "apps/kansas-frontier-matrix-explorer/docs/build-source-context.md": "sha256:25c31cd803af5db54588e51e225970be9da03e867637242e3612b7ad1082e7c1",
-    "apps/kansas-frontier-matrix-explorer/docs/openai-sites-in-place-replacement.md": "sha256:b111abaa8f5cd4518a6766772ee806ebc663bc2d2f8e176960f67699805664ae",
-    "apps/kansas-frontier-matrix-explorer/docs/sites-source-alignment.md": "sha256:2a2c03ee7b67b8f2a7661e7967767b5d5f2df3b0a558b97d5f4b7db6a438dfca",
-    "apps/kansas-frontier-matrix-explorer/fixtures/sites-deployment-receipt/repository-rehearsal.json": "sha256:8d30ab1a906e42a21181213bf6022b219cb886dee7af43aafb9907b20a9ac273",
-    "apps/kansas-frontier-matrix-explorer/scripts/validate-sites-deployment-receipt.mjs": "sha256:33c0044f311d51e055d14188132a9d1c73d6b0760cbb35dfd06e1e5958d3bc39",
-    "apps/kansas-frontier-matrix-explorer/tests/build-verified.test.mjs": "sha256:9436edd855763d2b80892f9be6f5206575308273feade83385dd7f71cb6d0f20",
-    "apps/kansas-frontier-matrix-explorer/tests/hosting-boundary.test.mjs": "sha256:38f3caffe0fe996667b42ee85ef7682ff9c57b4b566f359774795ca2e9e7449b",
-    "apps/kansas-frontier-matrix-explorer/tests/sites-deployment-receipt.test.mjs": "sha256:bbdc429e2f1eb45ec5eb305d204093de3fe6edcb3503b89b7a5887772935f43b",
-    "data/receipts/generated/genrec-openai-sites-replacement-handoff-20260904.json": "sha256:4d6c56cf99fd7167a8c36e5cebd85071be42df292e9805c80876eace5312219f",
-    "data/receipts/generated/genrec-root-readme-polish-20260904-v2.json": "sha256:50022d6cc34f41535ff93d6215320eb6b6c5faf555bd41bdc8cfd591e37bd63d",
-    "data/receipts/generated/genrec-sites-identity-reconciliation-20260917.json": "sha256:f0d5ef8b750e95af660d6339153a8ecd522160525b23b1169c5c798f0a487519"
+    "apps/kansas-frontier-matrix-explorer/app/about/page.tsx": "sha256:0f135ed26a6ec298a9115d984a7d388596f0e3fa4361f00604bd08c7fb9c0387",
+    "apps/kansas-frontier-matrix-explorer/app/operational-spine.tsx": "sha256:7dcdb4fbcc1823601f345e8da603c24d4c11a14765fd0423547e113c43a24d92",
+    "apps/kansas-frontier-matrix-explorer/app/page.tsx": "sha256:b5f5ef457ec2272b84d99a9c2c7e749474336bdd6a9b94a3befb4ebdc41fb534",
+    "apps/kansas-frontier-matrix-explorer/eslint.config.mjs": "sha256:4a2c7cc909db001934fd6f04312f367b5abfc32fa0aedc1f21ea3d680b8f4e91",
+    "apps/kansas-frontier-matrix-explorer/index.html": "sha256:6039db6cfbcd7ce2f3c8b410525345b0ad2c14e754b11db0ed288f9ed5a200c8",
+    "apps/kansas-frontier-matrix-explorer/main.tsx": "sha256:b23a6c8823d22c05e1eb732add81c1866f219ed0804d9ce9a17842e4cf702fde",
+    "apps/kansas-frontier-matrix-explorer/package-lock.json": "sha256:b50caded9182b2c1a9244c97cae607340af61fa8faa1479e736fc3064a7970ff",
+    "apps/kansas-frontier-matrix-explorer/package.json": "sha256:d60763b5dd1a121524878796762b2ab0b27f0ea6a44b77b2fbf4813c793a8eb6",
+    "apps/kansas-frontier-matrix-explorer/scripts/build-verified.sh": "sha256:5bc35ef58bf6930edb07d4a1ab0bbc07328bf834436c8166eaa2a7727622e0b6",
+    "apps/kansas-frontier-matrix-explorer/scripts/install-ci.sh": "sha256:c3da398460fff8e2af8ec4153732a3efaad5c02668afbfe401f2b176ce580008",
+    "apps/kansas-frontier-matrix-explorer/tests/build-verified.test.mjs": "sha256:b55fce3042c004594d58add31513149f07df4fd811dfd3c2ca73e5367ca9015e",
+    "apps/kansas-frontier-matrix-explorer/tests/hosting-boundary.test.mjs": "sha256:4fea7d7dd5b0a97910554206411e54eb863b3194d42a5d88481c88c561948595",
+    "apps/kansas-frontier-matrix-explorer/tests/operational-spine.test.mjs": "sha256:6b241c72b33c633486f73ed1f1fd54d5b2e623869e7edd6944fcf9d6be9cc594",
+    "apps/kansas-frontier-matrix-explorer/tests/rendered-html.test.mjs": "sha256:9920802deffb51cfd86d3a667503392260f6e6a0762cf94831b736ae90fb4fe9",
+    "apps/kansas-frontier-matrix-explorer/tests/site-runtime-repair.test.mjs": "sha256:2a284b14a6bcd6171456efb8edbc9e8b069f8ccc4919dc7fb2bb7c2f1c0ee238",
+    "apps/kansas-frontier-matrix-explorer/tsconfig.json": "sha256:0c4c0f5ce95bdcb5b88e71ffeb4dab9e17d74b8c9b4069676c5eef5e0a31e2e1",
+    "apps/kansas-frontier-matrix-explorer/vite.config.ts": "sha256:8b44abd6542ba6dd77b72804eca21cce35aad4778af175b398b852240c8016bf",
+    "apps/kansas-frontier-matrix-explorer/worker/index.ts": "sha256:9c78120df2fc2a6a07e93be542dd348fc9538f34251f8d41318fc338fa78d80c",
+    "docs/runbooks/pr-reliability-guide.md": "sha256:85252fd3533872328c529ae24f419a807233fbcecd4d17573290d493817516ee",
+    "pnpm-lock.yaml": "sha256:d617b3dcd8958a35d2730f662eb6f961f532d31e2ece83850ba2131ce6f0fa19",
+    "tests/ui/test_explorer_lint_compat.mjs": "sha256:f83ff38b8ebef24588e7f00f7da975998d5505968d711ce237b58466df733f54"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -59,46 +73,43 @@
     ]
   },
   "truth_labels": {
-    "apps/kansas-frontier-matrix-explorer/.gitignore": "PROPOSED",
-    "apps/kansas-frontier-matrix-explorer/README.md": "PROPOSED",
-    "apps/kansas-frontier-matrix-explorer/contracts/sites-deployment-receipt.schema.json": "PROPOSED",
-    "apps/kansas-frontier-matrix-explorer/docs/build-source-context.md": "PROPOSED",
-    "apps/kansas-frontier-matrix-explorer/docs/openai-sites-in-place-replacement.md": "PROPOSED",
-    "apps/kansas-frontier-matrix-explorer/docs/sites-source-alignment.md": "PROPOSED",
-    "apps/kansas-frontier-matrix-explorer/fixtures/sites-deployment-receipt/repository-rehearsal.json": "PROPOSED",
-    "apps/kansas-frontier-matrix-explorer/scripts/validate-sites-deployment-receipt.mjs": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/app/about/page.tsx": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/app/operational-spine.tsx": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/app/page.tsx": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/eslint.config.mjs": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/index.html": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/main.tsx": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/package-lock.json": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/package.json": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/scripts/build-verified.sh": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/scripts/install-ci.sh": "PROPOSED",
     "apps/kansas-frontier-matrix-explorer/tests/build-verified.test.mjs": "PROPOSED",
     "apps/kansas-frontier-matrix-explorer/tests/hosting-boundary.test.mjs": "PROPOSED",
-    "apps/kansas-frontier-matrix-explorer/tests/sites-deployment-receipt.test.mjs": "PROPOSED",
-    "data/receipts/generated/genrec-openai-sites-replacement-handoff-20260904.json": "PROPOSED",
-    "data/receipts/generated/genrec-root-readme-polish-20260904-v2.json": "PROPOSED",
-    "data/receipts/generated/genrec-sites-identity-reconciliation-20260917.json": "PROPOSED"
+    "apps/kansas-frontier-matrix-explorer/tests/operational-spine.test.mjs": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/tests/rendered-html.test.mjs": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/tests/site-runtime-repair.test.mjs": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/tsconfig.json": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/vite.config.ts": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/worker/index.ts": "PROPOSED",
+    "docs/runbooks/pr-reliability-guide.md": "PROPOSED",
+    "pnpm-lock.yaml": "PROPOSED",
+    "tests/ui/test_explorer_lint_compat.mjs": "PROPOSED"
   },
   "validation_gates": [
     {
-      "gate": "focused-repository-tests",
+      "gate": "explorer-build-and-tests",
       "outcome": "PASS",
-      "reason": "Twenty-three focused Node tests passed after removal of the obsolete deployment-configuration control family."
+      "reason": "The direct React/Vite migration built successfully; 152 application tests passed, two obsolete database-tool tests were skipped, and five lint-contract tests passed."
     },
     {
-      "gate": "historical-receipt-cli-validation",
+      "gate": "vendor-scoped-reference-scan",
       "outcome": "PASS",
-      "reason": "The repository rehearsal fixture returned PASS after removal of the obsolete authority field."
-    },
-    {
-      "gate": "site-build-and-tests",
-      "outcome": "PASS",
-      "reason": "The standalone Site built successfully and its 104 Node tests passed after source cleanup."
+      "reason": "A case-insensitive repository scan excluding installed dependencies returned zero matches."
     },
     {
       "gate": "repository-diff-check",
       "outcome": "PASS",
       "reason": "The repository diff passed whitespace validation."
-    },
-    {
-      "gate": "upstream-lock-integrity",
-      "outcome": "PASS",
-      "reason": "Generated lockfiles were preserved because the Sites framework currently requires one vendor-scoped upstream rendering package and the database toolchain declares one optional peer. Removing those lock entries would corrupt reproducible installation."
     },
     {
       "gate": "independent-human-review",
@@ -134,5 +145,5 @@
   "override_record": null,
   "created_at": "2026-09-17T06:22:37Z",
   "emitter": "OpenAI Codex via ChatGPT Work",
-  "notes": "Removes two obsolete alternate-host deployment configuration files and their active tests, documentation references, receipt field, fixture value, ignore rule, and authored coordination references. Generated dependency lockfiles remain byte-preserved because their vendor-scoped package identifiers are required by upstream Vinext and database-tool metadata. No source activation, access change, merge, release, or publication is authorized."
+  "notes": "Replaces the framework dependency that introduced the vendor-scoped image package with direct React/Vite, removes unused database ORM scaffolding that introduced the optional vendor-scoped database peer, regenerates both lockfiles, and updates affected tests and documentation. Deleted framework, database, configuration, and compatibility files are represented by the reviewed Git diff. No merge, source activation, access change, release, or publication is authorized."
 }
