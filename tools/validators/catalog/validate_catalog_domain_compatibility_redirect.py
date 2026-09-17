@@ -21,8 +21,11 @@ SECTION_TITLE = "Current bounded inventory"
 SECTION_HEADER = f"## {SECTION_TITLE}"
 ATX_H2_RE = re.compile(r"^ {0,3}##(?:[ \t]+(?P<title>.*?)[ \t]*|[ \t]*)$")
 CLOSING_HASH_RE = re.compile(r"[ \t]+#+[ \t]*$")
-ROW_RE = re.compile(
+LIST_ROW_RE = re.compile(
     r"^-\s+\[`([^`]+/)`\]\(\./([^/]+)/README\.md\)\s*$"
+)
+TABLE_ROW_RE = re.compile(
+    r"^\|\s*\[`([^`]+/)`\]\(\./([^/]+)/README\.md\)\s*\|.*\|\s*$"
 )
 CONFLICT_BOUNDARY_RE = re.compile(r"^(?:<{7,}|>{7,})(?: .*)?$")
 
@@ -62,9 +65,12 @@ def _read_redirect_rows(readme_path: Path) -> tuple[list[str], list[str]]:
     invalid_rows: list[str] = []
     for line in section_lines:
         stripped = line.strip()
-        if not stripped.startswith("- ["):
+        if stripped.startswith("- ["):
+            match = LIST_ROW_RE.match(stripped)
+        elif stripped.startswith("| ["):
+            match = TABLE_ROW_RE.match(stripped)
+        else:
             continue
-        match = ROW_RE.match(stripped)
         if match is None:
             invalid_rows.append(stripped)
             continue
