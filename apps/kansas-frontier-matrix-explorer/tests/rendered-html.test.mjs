@@ -1,46 +1,28 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { readFile, readdir } from "node:fs/promises";
 import test from "node:test";
 
 test("renders the map-first Kansas explorer shell", async () => {
-  const workerUrl = new URL("../dist/server/index.js", import.meta.url);
-  workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}`);
-  const { default: worker } = await import(workerUrl.href);
+  const html = await readFile(new URL("../dist/client/index.html", import.meta.url), "utf8");
+  const assetsUrl = new URL("../dist/client/assets/", import.meta.url);
+  const scriptName = (await readdir(assetsUrl)).find((name) => name.endsWith(".js"));
+  assert.ok(scriptName, "Vite must emit a client JavaScript bundle");
+  const bundle = await readFile(new URL(scriptName, assetsUrl), "utf8");
 
-  const response = await worker.fetch(
-    new Request("http://localhost/", {
-      headers: { accept: "text/html" },
-    }),
-    {
-      ASSETS: {
-        fetch: async () => new Response("Not found", { status: 404 }),
-      },
-    },
-    {
-      waitUntil() {},
-      passThroughOnException() {},
-    },
-  );
-
-  assert.equal(response.status, 200);
-  assert.match(
-    response.headers.get("content-type") ?? "",
-    /^text\/html\b/i,
-  );
-  const html = await response.text();
   assert.match(html, /Kansas Frontier Matrix Explorer/i);
-  assert.match(html, /Layer Catalog/i);
-  assert.match(html, /MapLibre/i);
-  assert.match(html, /Build report/i);
-  assert.match(html, /synthetic and generalized demonstration layers/i);
-  assert.match(html, /Repository briefing/i);
-  assert.match(html, /main@(?:<!-- -->)?5d83579/i);
-  assert.match(html, /Scenario review/i);
-  assert.match(html, /Runtime lab/i);
-  assert.match(html, /Source observatory/i);
-  assert.match(html, /Transition inspector/i);
-  assert.match(html, /Readiness gates/i);
-  assert.match(html, /county inventory is useful but snapshot-sensitive/i);
+  for (const text of [
+    "Layer Catalog",
+    "MapLibre",
+    "Build report",
+    "synthetic and generalized demonstration layers",
+    "Repository briefing",
+    "Scenario review",
+    "Runtime lab",
+    "Source observatory",
+    "Transition inspector",
+    "Readiness gates",
+    "county inventory is useful but snapshot-sensitive",
+  ]) assert.match(bundle, new RegExp(text, "i"));
 });
 
 test("centers the primary workflow on map-scoped custom reports", async () => {
@@ -437,12 +419,11 @@ test("builds an explicit Time A and Time B catalog-availability comparison", asy
 });
 
 test("uses a site-specific social card and request-host metadata", async () => {
-  const layout = await readFile(new URL("../app/layout.tsx", import.meta.url), "utf8");
+  const shell = await readFile(new URL("../index.html", import.meta.url), "utf8");
   const socialCard = await readFile(new URL("../public/og-guided.png", import.meta.url));
 
-  assert.match(layout, /x-forwarded-host/);
-  assert.match(layout, /new URL\("\/og-guided\.png", metadataBase\)/);
-  assert.match(layout, /Synthetic and generalized demonstration data only/);
+  assert.match(shell, /kansas-frontier-matrix-explorer\.blackbart-55\.chatgpt\.site\/og-guided\.png/);
+  assert.match(shell, /Synthetic and generalized demonstration data only/);
   assert.ok(socialCard.byteLength > 100_000);
 });
 
@@ -868,6 +849,6 @@ test("keeps the complete function inventory three-axis and runtime seam fail clo
   assert.match(page, /Function and interface navigator/);
   assert.match(page, /record\.action === "OPEN_TIMELINE"/);
   assert.match(page, /All 38 repository feature families/);
-  assert.match(page, /<Link className="about-action" href="\/about">About<\/Link>/);
+  assert.match(page, /<a className="about-action" href="\/about">About<\/a>/);
   assert.match(page, /id="repository-tab-functions"[\s\S]*setRepositoryView\("functions"\)[\s\S]*<span>Functions<\/span>/);
 });

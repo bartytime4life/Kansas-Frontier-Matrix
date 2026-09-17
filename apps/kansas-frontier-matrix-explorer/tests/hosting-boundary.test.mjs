@@ -18,7 +18,7 @@ const EXPECTED = Object.freeze({
 
 const files = Object.freeze({
   hosting: new URL("../.openai/hosting.json", import.meta.url),
-  layout: new URL("../app/layout.tsx", import.meta.url),
+  shell: new URL("../index.html", import.meta.url),
   readme: new URL("../README.md", import.meta.url),
   alignment: new URL("../docs/sites-source-alignment.md", import.meta.url),
   handoff: new URL("../docs/openai-sites-in-place-replacement.md", import.meta.url),
@@ -32,8 +32,8 @@ const assertIncludes = (text, value, label) => {
 
 test("OpenAI Sites identity and public URL remain coherent across app surfaces", async () => {
   const hosting = JSON.parse(await readText(files.hosting));
-  const [layout, readme, alignment] = await Promise.all([
-    readText(files.layout),
+  const [shell, readme, alignment] = await Promise.all([
+    readText(files.shell),
     readText(files.readme),
     readText(files.alignment),
   ]);
@@ -43,7 +43,7 @@ test("OpenAI Sites identity and public URL remain coherent across app surfaces",
   assert.equal(hosting.r2, null);
 
   for (const [label, text] of [
-    ["layout metadata", layout],
+    ["application shell metadata", shell],
     ["application README", readme],
     ["source-alignment hold", alignment],
   ]) {
