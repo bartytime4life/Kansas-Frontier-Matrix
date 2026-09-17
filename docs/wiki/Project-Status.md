@@ -2,16 +2,16 @@
 KFM_WIKI_SOURCE
 page_id: Project-Status
 title: Project Status
-version: v0.2.0
+version: v0.2.1
 status: PROPOSED wiki source; review required
 created: 2026-08-07
-updated: 2026-08-15
+updated: 2026-09-17
 authority: orientation-only; current repository evidence, adopted KFM authority, and owning responsibility roots outrank this page
 source_path: docs/wiki/Project-Status.md
 owning_root: docs/
 responsibility: evidence-bounded reader snapshot of repository, validation, runtime, release, deployment, and native-wiki maturity
-evidence_snapshot: main@09a04dffa385a29f8b1b32562a89c025b1eed37a
-prior_blob: 4b7ac87e42902bb28e0531ba5491ac7477fb26bb
+evidence_snapshot: main@dbc60ae78be37133e791ed6d1b3fba267d9ecfe2
+prior_blob: 6b26366071a4086f57687569685d4da9c09456b5
 publication_effect: none until separately synchronized to the native GitHub Wiki; no KFM data publication effect
 -->
 
@@ -25,18 +25,39 @@ publication_effect: none until separately synchronized to the native GitHub Wiki
 
 <p align="center"><strong>An evidence-pinned view of what KFM currently contains, what has bounded executable proof, what remains held, and what has not been established.</strong></p>
 
-[![Checkpoint](https://img.shields.io/badge/checkpoint-09a04dffa385-0969da?style=flat-square)](#evidence-checkpoint)
+[![Checkpoint](https://img.shields.io/badge/checkpoint-dbc60ae78be3-0969da?style=flat-square)](#current-reconciliation)
 [![Posture](https://img.shields.io/badge/maturity-mixed-f59e0b?style=flat-square)](#status-by-responsibility-plane)
-[![Exact-head CI](https://img.shields.io/badge/exact--head%20CI-41%20success%20%7C%202%20failure%20%7C%201%20skipped-d4a72c?style=flat-square)](#exact-head-validation-snapshot)
+[![Exact-head CI](https://img.shields.io/badge/exact--head%20CI-NEEDS%20RECHECK-6e7781?style=flat-square)](#current-reconciliation)
 [![Operational release](https://img.shields.io/badge/operational%20release-held-b42318?style=flat-square)](#release-publication-and-deployment)
-[![Deployment](https://img.shields.io/badge/current%20deployment-UNKNOWN-6e7781?style=flat-square)](#release-publication-and-deployment)
+[![Deployment](https://img.shields.io/badge/Sites%20v45-owner--private-f59e0b?style=flat-square)](#current-reconciliation)
 [![Native wiki](https://img.shields.io/badge/native%20wiki-NEEDS%20VERIFICATION-6e7781?style=flat-square)](#native-github-wiki)
 
 > [!IMPORTANT]
-> **This page is a snapshot, not a live dashboard and not an authority surface.** It was reconciled against `main@09a04dffa385a29f8b1b32562a89c025b1eed37a` on 2026-08-15. Re-check current `main`, open pull requests, workflow runs, release records, deployment status, emitted artifacts, and native-wiki readback before acting on any status.
+> **This page is a snapshot, not a live dashboard and not an authority surface.** The current reconciliation overlay was checked against `main@dbc60ae78be37133e791ed6d1b3fba267d9ecfe2` on 2026-09-17. The detailed August checkpoint below remains historical evidence unless the overlay explicitly supersedes it. Re-check current `main`, open pull requests, workflow runs, release records, Sites version history, emitted artifacts, and native-wiki readback before acting on any status.
 
 > [!CAUTION]
 > **Presence, validation, integration, release, deployment, and publication are different states.** A path, schema, fixture, test, workflow, receipt, pull request, merge, GitHub deployment record, badge, or wiki update does not by itself prove an operational service or KFM publication.
+
+## Current reconciliation
+
+This overlay records the newest bounded coordination truth without converting repository integration into broader authority.
+
+| Surface | Current bounded result | Preserved boundary |
+|---|---|---|
+| Repository checkpoint | [`main@dbc60ae78be37133e791ed6d1b3fba267d9ecfe2`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/dbc60ae78be37133e791ed6d1b3fba267d9ecfe2) | Repository state is implementation evidence, not release, deployment, or publication authority |
+| Sites reconciliation | [PR #4611](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4611) is closed and merged as [`cc1a30beea1c83e0e0f2232c7f854825866b565a`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/cc1a30beea1c83e0e0f2232c7f854825866b565a) | The merge does not prove Site-source tree equivalence, production-browser/WebGL acceptance, recovery rehearsal, release, or publication |
+| Local data store | [PR #4614](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4614) is closed and merged as [`dbc60ae78be37133e791ed6d1b3fba267d9ecfe2`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/dbc60ae78be37133e791ed6d1b3fba267d9ecfe2) | Integration does not authorize retrieval, source admission or activation, scheduling, promotion beyond `QUARANTINE`, public serving, release, deployment, or publication |
+| Policy authority | [Issue #4613](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4613) applies only to the exact private, offline, operator-selected quarantine schema and contract | The initial receipt remains historical with its original `POLICY_DECISION_REQUIRED` result; later authority is append-only and prospective |
+| Sites runtime | Owner-private Sites v45 is the coordination record; Sites version history remains deployment authority | GitHub merge state alone does not prove runtime health, source parity, public access, or rollback readiness |
+| Remaining holds | Source equivalence, accountable review, exact-head hosted validation, native-PC and native-Windows acceptance, provider acquisition, downstream source review, live-map integration, release closure, deployment, publication, and inherited `KFM-TOPO-004` remain separate | No hold is cleared merely because a pull request merged |
+| Native GitHub Wiki | This source change is reviewable in `docs/wiki/` | Native-wiki synchronization and readback remain a separate explicit public-documentation mutation |
+
+> [!IMPORTANT]
+> The merge facts above supersede older claims that PR #4611 was draft and unmerged or that the local-data work had no pull request or merge. Older sections remain historical snapshots of what was true when recorded.
+
+[Back to top](#top)
+
+---
 
 **Quick navigation:** [Checkpoint](#evidence-checkpoint) · [At a glance](#snapshot-at-a-glance) · [How to read status](#how-to-read-this-status) · [Responsibility planes](#status-by-responsibility-plane) · [CI](#exact-head-validation-snapshot) · [UI and API](#bounded-user-facing-and-api-baseline) · [Domains and lifecycle](#domains-evidence-and-lifecycle) · [Release and deployment](#release-publication-and-deployment) · [Native wiki](#native-github-wiki) · [Verification priorities](#highest-value-verification-priorities) · [Verify directly](#where-to-verify) · [Correction](#maintenance-and-correction)
 
