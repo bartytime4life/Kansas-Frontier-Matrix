@@ -20,6 +20,8 @@ name: promotion-verification-execution
       - "tests/release/test_synthetic_release_closure.py"
       - "tests/release/test_promotion_verification_execution.py"
       - "data/receipts/generated/genrec-promotion-verification-execution-*.json"
+      - "data/receipts/generated/genrec-synthetic-release-closure-ci-*.json"
+      - "tests/release/README.md"
   push:
     branches: [main]
     paths:
@@ -39,6 +41,8 @@ name: promotion-verification-execution
       - "tests/release/test_synthetic_release_closure.py"
       - "tests/release/test_promotion_verification_execution.py"
       - "data/receipts/generated/genrec-promotion-verification-execution-*.json"
+      - "data/receipts/generated/genrec-synthetic-release-closure-ci-*.json"
+      - "tests/release/README.md"
   workflow_dispatch:
 
 permissions:
@@ -123,11 +127,11 @@ jobs:
             tests/release/test_promotion_gate.py \
             -q --strict-config --strict-markers
 
-      - name: Validate generated authoring receipt
+      - name: Validate current generated receipt and preserved artifact coverage
         run: |
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-promotion-verification-execution-20260807.json \
+            data/receipts/generated/genrec-synthetic-release-closure-ci-20260917.json \
             --repo-root .
 
       - name: Record trust boundary

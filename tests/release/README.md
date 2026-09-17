@@ -182,6 +182,14 @@ and main-push path filters cover the target, test, fixtures, release helper,
 and imported promotion/review validation helpers. The workflow summary records
 coverage without rerunning the command during summary rendering.
 
+Current artifact integrity is checked against
+`genrec-synthetic-release-closure-ci-20260917.json`: its 29 bindings cover every
+artifact in the historical promotion-verification receipt, plus this README and
+the Makefile. The historical `genrec-promotion-verification-execution-20260807.json`
+is preserved unchanged; its workflow digest is stale even on the pinned base
+`dbc60ae78be37133e791ed6d1b3fba267d9ecfe2`. The successor checks current bytes without
+rewriting historical evidence or removing any previously checked artifact.
+
 The table below retains the previously inventoried bindings; it is not an
 exhaustive current-directory coverage claim. A path filter can skip a workflow, a command can
 name only selected modules, and a workflow definition does not prove required

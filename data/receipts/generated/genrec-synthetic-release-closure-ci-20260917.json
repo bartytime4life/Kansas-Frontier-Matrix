@@ -4,12 +4,64 @@
   "artifact_paths": [
     ".github/workflows/promotion-verification-execution.yml",
     "Makefile",
-    "tests/release/README.md"
+    "contracts/release/promotion_verification_execution.md",
+    "fixtures/release/promotion_verification_execution/artifacts/cosign_plan.json",
+    "fixtures/release/promotion_verification_execution/artifacts/promotion_packet.json",
+    "fixtures/release/promotion_verification_execution/artifacts/release_manifest.json",
+    "fixtures/release/promotion_verification_execution/artifacts/signatures.bundle.json",
+    "fixtures/release/promotion_verification_execution/artifacts/synthetic_atlas_carrier.geojson",
+    "fixtures/release/promotion_verification_execution/bin/fake_conftest.py",
+    "fixtures/release/promotion_verification_execution/bin/fake_cosign.py",
+    "fixtures/release/promotion_verification_execution/bin/fake_cosign_plan_validator.py",
+    "fixtures/release/promotion_verification_execution/bin/fake_promotion_validator.py",
+    "fixtures/release/promotion_verification_execution/invalid/deny_catalog_mismatch.json",
+    "fixtures/release/promotion_verification_execution/policy/promotion.rego",
+    "fixtures/release/promotion_verification_execution/references/dcat.json",
+    "fixtures/release/promotion_verification_execution/references/evidence.json",
+    "fixtures/release/promotion_verification_execution/references/prov.json",
+    "fixtures/release/promotion_verification_execution/references/rollback.json",
+    "fixtures/release/promotion_verification_execution/references/stac.json",
+    "fixtures/release/promotion_verification_execution/references/stac_mismatch.json",
+    "fixtures/release/promotion_verification_execution/valid/pass.json",
+    "schemas/contracts/v1/release/promotion_verification_execution.schema.json",
+    "schemas/contracts/v1/release/promotion_verification_execution_result.schema.json",
+    "tests/release/README.md",
+    "tests/release/test_promotion_verification_execution.py",
+    "tools/validators/promotion_gate/execute_promotion_verification.py",
+    "tools/validators/promotion_gate/execution/__init__.py",
+    "tools/validators/promotion_gate/execution/common.py",
+    "tools/validators/promotion_gate/execution/engine.py"
   ],
   "artifact_hashes": {
-    ".github/workflows/promotion-verification-execution.yml": "sha256:c86e76cb0727f6164d0207b73b75103c5c6cb6832be15a12514dd430a4d2bece",
+    ".github/workflows/promotion-verification-execution.yml": "sha256:4d3bd6129246a8f5c309054da1c6d8f9e1304c53cca0dac384ec545e0bc3a320",
     "Makefile": "sha256:2ddbef4492c4b175b8024ca4bd53ad0423416745c034e63477313b4d21286ae0",
-    "tests/release/README.md": "sha256:ed66782e3f795ab564344847c897b166397a08b2941718f3f7a6d689d6577ea0"
+    "contracts/release/promotion_verification_execution.md": "sha256:53d00b1c6a4802f12ff612b9ff805894d36ecd9a03bab1728aa19cc8dd1988f1",
+    "fixtures/release/promotion_verification_execution/artifacts/cosign_plan.json": "sha256:b159e9a6411662c871ec80cfa496f5fc66663667342b6c19a9dcd507a5edc845",
+    "fixtures/release/promotion_verification_execution/artifacts/promotion_packet.json": "sha256:aa941c1d36e36052123a36e7a1da6c319f770904b6d31cd315b5a6b090f27f9d",
+    "fixtures/release/promotion_verification_execution/artifacts/release_manifest.json": "sha256:5138edd2e8f44a4576956790d66fde442a1c86e7c3a4c196c3e7e7b6751f3f39",
+    "fixtures/release/promotion_verification_execution/artifacts/signatures.bundle.json": "sha256:55c395c8749cbc1d7b39a8908cd68a1ee90f2fd0b685b365db9e4934d9f5d376",
+    "fixtures/release/promotion_verification_execution/artifacts/synthetic_atlas_carrier.geojson": "sha256:8ad3948994680b0e6a85a3eb4c82f69466d0c5c2baf4c15fb4e14e43c1acb26d",
+    "fixtures/release/promotion_verification_execution/bin/fake_conftest.py": "sha256:3fafa5c5ebbfa8e4c029be14d52b34980670c1cab0612ba706346fd20e249303",
+    "fixtures/release/promotion_verification_execution/bin/fake_cosign.py": "sha256:fcc15a785c02295bdfa54d216264d0bcf09d2aa9149d3379bc4afe14bc3188c5",
+    "fixtures/release/promotion_verification_execution/bin/fake_cosign_plan_validator.py": "sha256:1c80f0ebe261e1b3e69c9d1402746a422b9d0280c4c12cd5b0a8a38996371bc5",
+    "fixtures/release/promotion_verification_execution/bin/fake_promotion_validator.py": "sha256:a1d5d832f30c9723d12b75681e4f04b659c05dc9687abb7d1717d7066a2220ae",
+    "fixtures/release/promotion_verification_execution/invalid/deny_catalog_mismatch.json": "sha256:2ac1d0e6ec53f5f9130af3875da3b65af454ef29ed679ab14cf244990a879b33",
+    "fixtures/release/promotion_verification_execution/policy/promotion.rego": "sha256:d6ca89b42739768cf98f0cdd258c9eea802ab626ae498e5392bf9d9db6c9c5a3",
+    "fixtures/release/promotion_verification_execution/references/dcat.json": "sha256:4dfa3373484fc64a4bfe35326cdc0bd40f547c5b4b1d1cc7219f40f17e2bc225",
+    "fixtures/release/promotion_verification_execution/references/evidence.json": "sha256:79aa8c518fe95922cc3c29567a5edf067a866a5b0036eb0133a930b73a2748f6",
+    "fixtures/release/promotion_verification_execution/references/prov.json": "sha256:bb10e75fa10be295f3c6806744799202107645c56e3ee8ac5d5d74c5bf866231",
+    "fixtures/release/promotion_verification_execution/references/rollback.json": "sha256:4b9d5b7bd54b958dbd43b27292e6654896713ffac7daa32b524e23abbdbf5449",
+    "fixtures/release/promotion_verification_execution/references/stac.json": "sha256:fcf38fd9c14780648c02da2684e0c910454f602478922881cf7a95aa923012e6",
+    "fixtures/release/promotion_verification_execution/references/stac_mismatch.json": "sha256:28e65ded881deb74bd2363fb0f8f760b46ec00552c64304d728fb9948f52656b",
+    "fixtures/release/promotion_verification_execution/valid/pass.json": "sha256:23d166d23be3872ce9e754413e08de53dcea117de070a73146e8799f88cecf12",
+    "schemas/contracts/v1/release/promotion_verification_execution.schema.json": "sha256:3de19404f5fde25970d99745040d2be745b5fd87ccca9444653b3677ebbffc5c",
+    "schemas/contracts/v1/release/promotion_verification_execution_result.schema.json": "sha256:a90fa1720411c9d4376d5e7f39bdb9580c25d6eeb631e13f837b01e5b5c97c8a",
+    "tests/release/README.md": "sha256:a99b3dffd85656f88ef6b7ceedc0ef21235869b3f4fdae3b0280b933e0b23ca1",
+    "tests/release/test_promotion_verification_execution.py": "sha256:eacf4f0b7e542567377e3a091e6dd57ceb7d1294130d565380ab2738dd15d4b4",
+    "tools/validators/promotion_gate/execute_promotion_verification.py": "sha256:bb72755bfea32d7c84aba70dadf6b2ac97466973a5546d92671e01b18d99731d",
+    "tools/validators/promotion_gate/execution/__init__.py": "sha256:b178883d6f3ab3f2dbf5a9d432b8be2804c96470e015018047957c8206f30be8",
+    "tools/validators/promotion_gate/execution/common.py": "sha256:5097a2a3ee806b74cf33ab7db0b305d46fce6d2756ae65aeb7eb4e9c2dccd368",
+    "tools/validators/promotion_gate/execution/engine.py": "sha256:17a5a7c5f5f84a338b3722341cc67ac5473b4e2f1d67cc6e392c2ec030a387cb"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -38,13 +90,43 @@
       "origin/agent/synthetic-release-closure-ci-20260916@c2a40110a4ae4ef9134927eacacc592f68aadda1",
       "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4597",
       "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3366",
-      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4415"
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4415",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/35182241027/job/105076699092",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024#issuecomment-5708670675",
+      "data/receipts/generated/genrec-promotion-verification-execution-20260807.json@dbc60ae78be37133e791ed6d1b3fba267d9ecfe2",
+      "main@e1b64e62b92543d6b9c23f5f99c5e1b0c23908cc"
     ]
   },
   "truth_labels": {
     ".github/workflows/promotion-verification-execution.yml": "CONFIRMED",
     "Makefile": "CONFIRMED",
-    "tests/release/README.md": "CONFIRMED"
+    "contracts/release/promotion_verification_execution.md": "CONFIRMED",
+    "fixtures/release/promotion_verification_execution/artifacts/cosign_plan.json": "CONFIRMED",
+    "fixtures/release/promotion_verification_execution/artifacts/promotion_packet.json": "CONFIRMED",
+    "fixtures/release/promotion_verification_execution/artifacts/release_manifest.json": "CONFIRMED",
+    "fixtures/release/promotion_verification_execution/artifacts/signatures.bundle.json": "CONFIRMED",
+    "fixtures/release/promotion_verification_execution/artifacts/synthetic_atlas_carrier.geojson": "CONFIRMED",
+    "fixtures/release/promotion_verification_execution/bin/fake_conftest.py": "CONFIRMED",
+    "fixtures/release/promotion_verification_execution/bin/fake_cosign.py": "CONFIRMED",
+    "fixtures/release/promotion_verification_execution/bin/fake_cosign_plan_validator.py": "CONFIRMED",
+    "fixtures/release/promotion_verification_execution/bin/fake_promotion_validator.py": "CONFIRMED",
+    "fixtures/release/promotion_verification_execution/invalid/deny_catalog_mismatch.json": "CONFIRMED",
+    "fixtures/release/promotion_verification_execution/policy/promotion.rego": "CONFIRMED",
+    "fixtures/release/promotion_verification_execution/references/dcat.json": "CONFIRMED",
+    "fixtures/release/promotion_verification_execution/references/evidence.json": "CONFIRMED",
+    "fixtures/release/promotion_verification_execution/references/prov.json": "CONFIRMED",
+    "fixtures/release/promotion_verification_execution/references/rollback.json": "CONFIRMED",
+    "fixtures/release/promotion_verification_execution/references/stac.json": "CONFIRMED",
+    "fixtures/release/promotion_verification_execution/references/stac_mismatch.json": "CONFIRMED",
+    "fixtures/release/promotion_verification_execution/valid/pass.json": "CONFIRMED",
+    "schemas/contracts/v1/release/promotion_verification_execution.schema.json": "CONFIRMED",
+    "schemas/contracts/v1/release/promotion_verification_execution_result.schema.json": "CONFIRMED",
+    "tests/release/README.md": "CONFIRMED",
+    "tests/release/test_promotion_verification_execution.py": "CONFIRMED",
+    "tools/validators/promotion_gate/execute_promotion_verification.py": "CONFIRMED",
+    "tools/validators/promotion_gate/execution/__init__.py": "CONFIRMED",
+    "tools/validators/promotion_gate/execution/common.py": "CONFIRMED",
+    "tools/validators/promotion_gate/execution/engine.py": "CONFIRMED"
   },
   "validation_gates": [
     {
@@ -63,9 +145,9 @@
       "reason": "YAML parses, both event path filters and canonical invocation are bound; rendering a failure summary preserves the literal command and performs no make invocation."
     },
     {
-      "gate": "hosted candidate CI and independent review",
+      "gate": "successor hosted CI and independent review",
       "outcome": "SKIPPED",
-      "reason": "Pending at authoring; no independent or human approval asserted."
+      "reason": "Initial head 1faf6c97 passed the canonical 2 tests and adjacent hosted 36 tests/40 subtests, then failed on the old receipt workflow digest. The same stale digest reproduces on main@dbc60ae. Successor validation is local only because PR 4616 was closed unmerged after repeated unexpected ready transitions; no independent or human approval asserted."
     },
     {
       "gate": "release, live source, Site runtime, operator acceptance",
@@ -76,9 +158,21 @@
       "gate": "base/candidate topology comparison",
       "outcome": "FAIL",
       "reason": "Both base and candidate emit identical 125 findings: 124 baselined warnings, one frozen catalog drift and one stale fingerprint, zero new invariant findings. Aggregate reports FAIL_INVARIANT. No baseline or catalog changes; inherited HOLD retained."
+    },
+    {
+      "gate": "current receipt coverage",
+      "outcome": "PASS",
+      "reason": "All 27 historical artifact paths remain bound at current bytes, plus Makefile and tests/release/README.md (29 total). Historical receipt file remains unchanged. Existing schema and policy files are bound dependencies, not newly authored or accepted policy."
+    },
+    {
+      "gate": "successor workflow replay and negative integrity",
+      "outcome": "PASS",
+      "reason": "Executed the exact workflow prerequisite, adapter, canonical target, focused tests, and current receipt commands locally: 2 closure tests plus 36 adjacent tests/40 subtests, and all 29 artifact bindings pass. A one-byte workflow mutation is rejected and original bytes restored. Workflow-security scanner reports zero findings across 491 workflows."
     }
   ],
-  "policy_decisions": [],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
   "citations": [
     {
       "id": "directory-rules-adoption",
@@ -95,9 +189,9 @@
   "created_at": "2026-09-17T04:25:54.350299+00:00",
   "emitter": "Codex bounded KFM validation advancement",
   "links": {
-    "pr_number": null,
+    "pr_number": 4616,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Branch and draft review only. No ready, merge, settings, policy acceptance, source activation, lifecycle promotion, release, deployment, publication, issue closure or milestone closure authority. Historical reports and receipts preserved; new receipt excludes itself to avoid circularity. Rollback: inverse the bounded code/test/workflow/documentation changes, preserving historical receipts and pending review."
+  "notes": "VALIDATED_BRANCH_ONLY after the lifecycle events recorded in issue 4024, comment 5708670675. Authored paths are the workflow, Makefile and tests/release/README.md; unchanged dependencies are included to preserve all 27 historical integrity checks in this 29-artifact successor snapshot. The historical receipt is preserved byte-for-byte and is superseded only as the current workflow integrity input; its original claims are not rewritten. No ready, merge, settings, policy acceptance, source activation, lifecycle promotion, release, deployment, publication, issue closure or milestone closure authority. Existing Directory Rules adoption reference is retained from the historical receipt; no new schema or policy is introduced. Human review remains pending. The receipt excludes itself to avoid circularity. Rollback: inverse the bounded workflow/Makefile/documentation changes while preserving receipt history."
 }
