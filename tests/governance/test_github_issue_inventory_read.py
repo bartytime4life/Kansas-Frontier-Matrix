@@ -1,8 +1,13 @@
 import importlib.util
+import io
 import json
 import unittest
 from datetime import datetime, timedelta, timezone
+from email.message import Message
 from pathlib import Path
+from urllib.error import URLError
+from urllib.request import BaseHandler, build_opener
+from urllib.response import addinfourl
 
 from jsonschema import Draft202012Validator, FormatChecker
 
@@ -59,6 +64,57 @@ class GitHubIssueInventoryReadTests(unittest.TestCase):
         second = self.build()
         self.assertEqual(first["receipt_id"], second["receipt_id"])
         self.assertEqual(first["response_digest"], second["response_digest"])
+
+
+class GitHubIssueInventoryReadRedirectTests(unittest.TestCase):
+    """The live probe must never follow a redirect with its bearer token."""
+
+    def install_transport(self, *, code, target):
+        requests = []
+
+        class SyntheticTransport(BaseHandler):
+            handler_order = 100
+
+            def https_open(self, request):
+                requests.append(request)
+                headers = Message()
+                if code != 200:
+                    headers["Location"] = target
+                response = addinfourl(io.BytesIO(b"{}"), headers, request.full_url, code)
+                response.msg = "synthetic response"
+                return response
+
+            http_open = https_open
+
+        return requests, SyntheticTransport()
+
+    def test_get_json_denies_redirect_before_second_request(self):
+        requests, transport = self.install_transport(
+            code=302, target="https://redirect.invalid/repos/bartytime4life/Kansas-Frontier-Matrix"
+        )
+
+        def opener(request, *, timeout):
+            return build_opener(transport, mod._RejectRedirects()).open(request, timeout=timeout)
+
+        with self.assertRaises(URLError):
+            mod._get_json("/repos/bartytime4life/Kansas-Frontier-Matrix", "synthetic-credential-not-secret", opener)
+
+        self.assertEqual(len(requests), 1)
+        self.assertEqual(requests[0].get_header("Authorization"), "Bearer synthetic-credential-not-secret")
+
+    def test_read_live_denies_redirect_and_does_not_call_build_record(self):
+        requests, transport = self.install_transport(
+            code=301, target="https://redirect.invalid/repos/bartytime4life/Kansas-Frontier-Matrix"
+        )
+
+        def opener(request, *, timeout):
+            return build_opener(transport, mod._RejectRedirects()).open(request, timeout=timeout)
+
+        now = datetime(2026, 8, 8, tzinfo=timezone.utc)
+        with self.assertRaises(URLError):
+            mod.read_live("bartytime4life/Kansas-Frontier-Matrix", [1647], "synthetic-credential-not-secret", now, opener)
+
+        self.assertEqual(len(requests), 1)
 
 
 if __name__ == "__main__":
