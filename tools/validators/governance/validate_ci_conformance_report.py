@@ -93,7 +93,8 @@ def _read_json(path: Path) -> tuple[dict[str, Any] | None, list[Finding], bytes 
     try:
         if path.is_symlink() or not path.is_file():
             return None, [Finding("INPUT_NOT_REGULAR", "/", "regular file required")], None
-        raw = path.read_bytes()
+        with path.open("rb") as handle:
+            raw = handle.read(MAX_JSON_BYTES + 1)
         if len(raw) > MAX_JSON_BYTES:
             return None, [Finding("INPUT_TOO_LARGE", "/", "input exceeds 4 MiB")], None
         value = json.loads(
@@ -198,7 +199,7 @@ def _git_blob(ref: str, path: str) -> bytes | None:
             capture_output=True,
             timeout=SUBPROCESS_TIMEOUT_SECONDS,
         )
-    except (OSError, subprocess.TimeoutExpired):
+    except (OSError, ValueError, subprocess.TimeoutExpired):
         return None
     if result.returncode != 0 or len(result.stdout) > MAX_GIT_BLOB_BYTES:
         return None
@@ -216,7 +217,7 @@ def _git_commit_exists(ref: object) -> bool:
             capture_output=True,
             timeout=SUBPROCESS_TIMEOUT_SECONDS,
         )
-    except (OSError, subprocess.TimeoutExpired):
+    except (OSError, ValueError, subprocess.TimeoutExpired):
         return False
     return result.returncode == 0
 
@@ -247,6 +248,10 @@ def _id_order_findings(value: Mapping[str, Any]) -> list[Finding]:
             continue
         key = "code" if name.startswith("failures/") else "id"
         ids = [item.get(key) for item in items if isinstance(item, dict)]
+        # Schema findings already reject malformed identifiers. Do not hash or
+        # compare arbitrary JSON values while reporting those findings.
+        if any(not isinstance(identifier, str) for identifier in ids):
+            continue
         if len(ids) != len(set(ids)):
             findings.append(Finding("IDS_NOT_UNIQUE", f"/{name}", "identifiers must be unique"))
         if ids != sorted(ids):
@@ -319,6 +324,8 @@ def _check_findings(value: Mapping[str, Any]) -> list[Finding]:
         state = check.get("execution_state")
         outcome = check.get("outcome")
         command = check.get("command")
+        if not isinstance(state, str) or not isinstance(outcome, str):
+            continue
         if state in allowed and outcome not in allowed[state]:
             findings.append(
                 Finding(
@@ -419,7 +426,10 @@ def _status_finding(value: Mapping[str, Any]) -> list[Finding]:
     check_values = [item for item in checks if isinstance(item, dict)] if isinstance(checks, list) else []
     introduced = failures.get("introduced") if isinstance(failures, dict) else []
     has_introduced = isinstance(introduced, list) and any(
-        isinstance(item, dict) and item.get("count", 0) > 0 for item in introduced
+        isinstance(item, dict)
+        and isinstance(item.get("count"), int)
+        and item["count"] > 0
+        for item in introduced
     )
     if has_introduced or any(item.get("outcome") == "FAIL" for item in check_values):
         expected = "NONCONFORMANT"
@@ -464,12 +474,17 @@ def validate_report(
     findings.extend(_closure_findings(value))
     findings.extend(_status_finding(value))
     findings.extend(_authority_findings(value))
-    expected_digest = report_digest(value)
+    try:
+        expected_digest = report_digest(value)
+        canonical = canonical_bytes(value) if check_canonical and raw is not None else None
+    except (UnicodeError, ValueError, RecursionError):
+        findings.append(Finding("JSON_INVALID", "/", "safe JSON object required"))
+        return tuple(sorted(set(findings)))
     if value.get("report_digest") != expected_digest:
         findings.append(Finding("REPORT_DIGEST_MISMATCH", "/report_digest", "report digest mismatch"))
     if value.get("sha256") != expected_digest:
         findings.append(Finding("PROVENANCE_DIGEST_MISMATCH", "/sha256", "provenance digest mismatch"))
-    if check_canonical and raw is not None and raw != canonical_bytes(value):
+    if canonical is not None and raw != canonical:
         findings.append(Finding("SERIALIZATION_NOT_CANONICAL", "/", "canonical pretty JSON required"))
     return tuple(sorted(set(findings)))
 
@@ -566,12 +581,20 @@ def main(argv: Sequence[str] | None = None) -> int:
         sys.stdout.buffer.write(canonical_bytes(value))
         return 0
     if args.format == "json":
+        status = value.get("status") if isinstance(value, dict) else None
+        closure = value.get("closure") if isinstance(value, dict) else None
+        closure_state = closure.get("state") if isinstance(closure, dict) else None
+        # Invalid input never becomes free-form output or an exception here.
+        if not isinstance(status, str) or status not in {"CONFORMANT", "NONCONFORMANT", "BLOCKED"}:
+            status = None
+        if not isinstance(closure_state, str) or closure_state not in {"BLOCKED", "READY", "CLOSED"}:
+            closure_state = None
         print(
             json.dumps(
                 {
                     "validation": "PASS" if not findings else "FAIL",
-                    "status": value.get("status") if value else None,
-                    "closure": value.get("closure", {}).get("state") if value else None,
+                    "status": status,
+                    "closure": closure_state,
                     "authority_created": False,
                     "findings": [finding.__dict__ for finding in sorted(findings)],
                 },

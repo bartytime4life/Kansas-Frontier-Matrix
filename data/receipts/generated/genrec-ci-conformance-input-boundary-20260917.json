@@ -1,0 +1,101 @@
+{
+  "receipt_id": "genrec-ci-conformance-input-boundary-20260917",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/ci-conformance-report.yml",
+    "docs/runbooks/mrts-06-ci-conformance-handoff.md",
+    "tests/validators/governance/test_validate_ci_conformance_report.py",
+    "tools/validators/governance/validate_ci_conformance_report.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/ci-conformance-report.yml": "sha256:44bb006b515757f4dff6e998b7383f68dc90f73d5b1fbae23b8fbc359f89f40b",
+    "docs/runbooks/mrts-06-ci-conformance-handoff.md": "sha256:4644174f835b86f17f3600b37f99d21d83d4008cf6debb4fe2e74ad17f5cf310",
+    "tests/validators/governance/test_validate_ci_conformance_report.py": "sha256:7cd8b3fcb75403309fa48d7805e4c34a0676636b111e5b8fdd06ef9b82b63fa3",
+    "tools/validators/governance/validate_ci_conformance_report.py": "sha256:6610557f897f07adef1b465ce8f19fafba00b04cf86bf62b9f8036d0f1463a9d"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "not-exposed"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "local repository inspection",
+      "GitHub",
+      "Google Drive",
+      "Notion",
+      "Sites readback",
+      "local tests"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "main@dbc60ae78be37133e791ed6d1b3fba267d9ecfe2",
+      "docs/doctrine/directory-rules.md",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3364",
+      "main@e1b64e62b92543d6b9c23f5f99c5e1b0c23908cc",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/86b8d117586cf215cdf8c7308515ee0f93c1f952",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024#issuecomment-5708670675"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/ci-conformance-report.yml": "CONFIRMED",
+    "docs/runbooks/mrts-06-ci-conformance-handoff.md": "CONFIRMED",
+    "tests/validators/governance/test_validate_ci_conformance_report.py": "CONFIRMED",
+    "tools/validators/governance/validate_ci_conformance_report.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "malformed input regressions",
+      "outcome": "PASS",
+      "reason": "19 tests and 18 subtests; four new CLI cases reject NUL Git arguments and unpaired Unicode surrogates with finite JSON, no traceback and no authority. Both failure classes reproduced before correction."
+    },
+    {
+      "gate": "complete conformance profile",
+      "outcome": "PASS",
+      "reason": "28 generated-receipt tests and 19 conformance tests; exact fixture polarity, canonical render, historical report and historical receipt replay pass. Historical closure remains BLOCKED."
+    },
+    {
+      "gate": "workflow security",
+      "outcome": "PASS",
+      "reason": "491 workflows scanned with zero invariant findings, new drift, baselined warnings or stale entries."
+    },
+    {
+      "gate": "final hosted and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Branch-only follow-up; prior head hosted success is historical. No new PR or dispatch; human review pending."
+    },
+    {
+      "gate": "broader topology and operational acceptance",
+      "outcome": "SKIPPED",
+      "reason": "Not rerun for this bounded follow-up. Previously recorded inherited topology failure and #4228 restrictions remain; no catalog/baseline or Site changes."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "directory-rules-adoption",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@dbc60ae78be37133e791ed6d1b3fba267d9ecfe2"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-17T05:02:36.252811+00:00",
+  "emitter": "Codex bounded KFM validation advancement",
+  "links": {
+    "pr_number": 4617,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Branch-only successor to genrec-ci-conformance-input-safety-20260917. Historical receipt and canonical report bytes remain unchanged. Four artifact bindings cover the validator, regression tests, adjacent runbook and workflow. No new schema or policy; no approval, ready, merge, settings, source activation, release, deployment, publication or milestone closure. Rollback is a reviewed inverse of these bounded changes while preserving historical receipts; reverting restores the reproduced malformed-input failures."
+}
