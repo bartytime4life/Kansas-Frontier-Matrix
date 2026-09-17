@@ -463,12 +463,14 @@ React, React DOM and RSC are pinned to 19.2.8 for
 [GHSA-wx67-qw84-cm4g](https://github.com/advisories/GHSA-wx67-qw84-cm4g).
 Scoped dependency overrides install patched bytes: `vinext -> image-size@2.0.4`,
 `miniflare -> sharp@0.35.4`, and `@esbuild-kit/core-utils -> esbuild@0.25.12`
-([esbuild advisory](https://github.com/advisories/GHSA-67mh-4wv8-2f99)). The latter
-crosses an esbuild minor boundary and requires the Drizzle generation smoke.
+([esbuild advisory](https://github.com/advisories/GHSA-67mh-4wv8-2f99)).
 Other vulnerable transitive packages are updated within their existing ranges.
 These are package replacements, not audit suppressions. Revisit overrides when
-upstream dependency ranges incorporate these fixes. Retain the existing Vinext,
-Cloudflare plugin, Wrangler, Drizzle and MapLibre direct versions.
+upstream dependency ranges incorporate these fixes. The Site uses a checked-in
+runtime tarball that removes an unused social-image generator dependency while
+retaining the existing Worker runtime. D1 queries use the platform binding
+directly; migrations remain plain SQL. Retain the existing Cloudflare plugin,
+Wrangler and MapLibre direct versions.
 
 Placement follows the established standalone Site source surface: runtime helpers
 under `app/`, regression tests under `tests/`, and this operational explanation in
@@ -522,8 +524,7 @@ Scripts that need writable project-scoped home, npm, XDG, and temporary paths us
 - `.openai/hosting.json` declares optional Sites D1 and R2 bindings
 - `vite.config.ts` simulates declared bindings for local development
 - `db/index.ts` reads the D1 binding from the Cloudflare Worker environment
-- `db/schema.ts` starts intentionally empty
-- `drizzle.config.ts` supports local migration generation when needed
+- `drizzle/*.sql` contains the ordered D1 migrations applied by the Site lifecycle
 - `docs/KFM_SOURCE_GAP_REGISTER.md` records implemented, context-only, and held
   source boundaries; it is not a release ledger
 
@@ -597,7 +598,6 @@ actions tied to the current ChatGPT user. Leave public content anonymous.
 - `npm run build`: build the deployable Sites artifact
 - `npm run start`: start the built Vinext application
 - `npm test`: build the deployable artifact and run the complete `tests/*.test.mjs` inventory
-- `npm run db:generate`: generate Drizzle migrations after schema changes
 
 Use build commands for targeted diagnosis after a remote failure, not as part of the normal checkpoint path.
 
@@ -606,7 +606,6 @@ The timeout defaults can be overridden for a controlled canary with `SITES_INSTA
 ## Learn More
 
 - [vinext Documentation](https://github.com/cloudflare/vinext)
-- [Drizzle D1 Guide](https://orm.drizzle.team/docs/get-started/d1-new)
 
 ## Current map-to-draft work
 

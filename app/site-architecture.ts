@@ -17,7 +17,7 @@ export type SiteRouteContract = Readonly<{
 
 /** Coding surfaces are ownership and verification pointers, not a duplicate module graph. */
 export const SITE_CODE_SURFACES = Object.freeze([
-  { id: "data-commons", title: "Source downloads and steward intake", role: "Owns authenticated uploads, private file access, versioned review and source download links.", paths: ["app/data", "app/stewards", "app/api/data-submissions", "app/data-intake-server.ts", "app/source-downloads.ts", "db/schema.ts", "drizzle"], handles: ["D1 submission metadata", "R2 private files", "steward allowlist", "review audit history"], verification: ["tests/data-intake.test.mjs", "tests/intake-worker.test.mjs"] },
+  { id: "data-commons", title: "Source downloads and steward intake", role: "Owns authenticated uploads, private file access, versioned review and source download links.", paths: ["app/data", "app/stewards", "app/api/data-submissions", "app/data-intake-server.ts", "app/source-downloads.ts", "db/index.ts", "drizzle"], handles: ["D1 submission metadata", "R2 private files", "steward allowlist", "review audit history"], verification: ["tests/data-intake.test.mjs", "tests/intake-worker.test.mjs"] },
   {
     id: "map-shell",
     title: "Map shell and interaction surface",

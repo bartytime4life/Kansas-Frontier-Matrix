@@ -15,10 +15,6 @@ command -v timeout || {
   echo "install-ci.sh requires GNU timeout." >&2
   exit 69
 }
-command -v curl || {
-  echo "install-ci.sh requires curl for the locked-tarball preflight." >&2
-  exit 69
-}
 command -v sha256sum || {
   echo "install-ci.sh requires sha256sum for cache and install verification." >&2
   exit 69
@@ -102,7 +98,18 @@ fi
 locked_tarball="${locked_vinext[0]}"
 locked_integrity="${locked_vinext[1]}"
 
-if [[ "${use_seeded_cache}" == "0" ]]; then
+if [[ "${use_seeded_cache}" == "0" && "${locked_tarball}" == file:* ]]; then
+  preflight_tarball="${SITES_PROJECT_ROOT}/${locked_tarball#file:}"
+  [[ -f "${preflight_tarball}" ]] || {
+    echo "The locked local runtime tarball is missing: ${preflight_tarball}" >&2
+    exit 66
+  }
+  echo "[sites] verifying locked local runtime tarball integrity"
+elif [[ "${use_seeded_cache}" == "0" ]]; then
+  command -v curl || {
+    echo "install-ci.sh requires curl for the locked-tarball preflight." >&2
+    exit 69
+  }
   registry="$(npm config get registry)"
   preflight_url="$({ node --input-type=module - "${locked_tarball}" "${registry}" <<'NODE'
 const locked = new URL(process.argv[2]);
@@ -135,7 +142,10 @@ NODE
     --output "${preflight_tarball}" \
     "${preflight_url}"
 
-  echo "[sites] verifying locked vinext tarball integrity"
+  echo "[sites] verifying locked runtime tarball integrity"
+fi
+
+if [[ "${use_seeded_cache}" == "0" ]]; then
   node --input-type=module - "${preflight_tarball}" "${locked_integrity}" <<'NODE'
 import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
@@ -151,7 +161,7 @@ if (actual !== expected) {
   throw new Error(`vinext tarball integrity mismatch for ${algorithm}`);
 }
 NODE
-  echo "[sites] network and integrity preflight passed"
+  echo "[sites] runtime package integrity preflight passed"
 fi
 
 echo "[sites] running exactly one bounded npm ci"
