@@ -53,12 +53,12 @@ test("redacts private coordinates from assistive status text", async () => {
   assert.doesNotMatch(redacted, /38\.3666|97\.7836/);
 });
 
-test("mounts the bounded client repair from the root layout", async () => {
-  const layout = await readFile(new URL("../app/layout.tsx", import.meta.url), "utf8");
+test("mounts the bounded client repair from the Vite entry", async () => {
+  const entry = await readFile(new URL("../main.tsx", import.meta.url), "utf8");
   const client = await readFile(new URL("../app/site-runtime-repair-client.tsx", import.meta.url), "utf8");
 
-  assert.match(layout, /import SiteRuntimeRepair from "\.\/site-runtime-repair-client"/);
-  assert.match(layout, /<SiteRuntimeRepair \/>/);
+  assert.match(entry, /import SiteRuntimeRepair from "\.\/app\/site-runtime-repair-client"/);
+  assert.match(entry, /<SiteRuntimeRepair \/>/);
   assert.match(client, /new MutationObserver\(scheduleSync\)/);
   assert.match(client, /window\.history\.replaceState/);
   assert.match(client, /runtime-degraded-banner/);

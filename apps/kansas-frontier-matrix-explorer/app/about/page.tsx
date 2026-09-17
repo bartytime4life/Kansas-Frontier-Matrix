@@ -1,11 +1,4 @@
-import type { Metadata } from "next";
-import Link from "next/link";
 import { REPOSITORY_SNAPSHOT } from "../repository-updates";
-
-export const metadata: Metadata = {
-  title: "About · Kansas Frontier Matrix Explorer",
-  description: "How to use the Kansas Frontier Matrix map, evidence states, custom reports, and public-safe demonstration boundaries.",
-};
 
 const evidenceStates = [
   ["ANSWER", "A visible record has a matching demonstration evidence reference for its bounded claim."],
@@ -26,7 +19,7 @@ export default function AboutPage() {
         <span className="mark" aria-hidden="true">KFM</span>
         <span><strong>Kansas Frontier Matrix</strong><small>Explorer guide + boundaries</small></span>
       </div>
-      <Link href="/">Open the map</Link>
+      <a href="/">Open the map</a>
     </nav>
 
     <main className="about-content">
@@ -76,7 +69,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="about-final-action"><div><h2>Ready to work with the map?</h2><p>Open the Explorer, frame your question spatially, and build a custom report from the data in view.</p></div><Link href="/">Open map + report builder</Link></section>
+      <section className="about-final-action"><div><h2>Ready to work with the map?</h2><p>Open the Explorer, frame your question spatially, and build a custom report from the data in view.</p></div><a href="/">Open map + report builder</a></section>
     </main>
   </div>;
 }

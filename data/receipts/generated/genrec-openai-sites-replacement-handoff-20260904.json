@@ -44,7 +44,6 @@
       "repo:apps/kansas-frontier-matrix-explorer/.openai/hosting.json@7c5d4125c277536258be6345e366efae59dbe5d6",
       "repo:apps/kansas-frontier-matrix-explorer/README.md@7c5d4125c277536258be6345e366efae59dbe5d6",
       "repo:apps/kansas-frontier-matrix-explorer/app/layout.tsx@7c5d4125c277536258be6345e366efae59dbe5d6",
-      "repo:apps/kansas-frontier-matrix-explorer/vercel.json@7c5d4125c277536258be6345e366efae59dbe5d6",
       "repo:issue/4232",
       "repo:pull/4235",
       "repo:issue/4246",
@@ -92,7 +91,7 @@
     {
       "gate": "hosting-boundary-test",
       "outcome": "PASS",
-      "reason": "node --check and node --test passed 2/2 focused tests covering exact Sites project identity, slug/URL consistency, Vercel Git-deployment suspension, package digest, required commands, rollback fields, restricted-negative language, and non-effects."
+      "reason": "At creation, node --check and node --test passed 2/2 focused tests covering exact Sites project identity, slug/URL consistency, the then-current alternate-host deployment boundary, package digest, required commands, rollback fields, restricted-negative language, and non-effects."
     },
     {
       "gate": "markdown-structure-and-links",
@@ -150,7 +149,7 @@
       "evidence_ref": "repo:issue/4232"
     },
     {
-      "id": "vercel-non-authoritative-configuration",
+      "id": "historical-alternate-host-configuration",
       "validated": true,
       "evidence_ref": "repo:pull/4235"
     },
@@ -183,5 +182,5 @@
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Adds an app-local, digest-bound Sites replacement handoff and static host-boundary test. It does not copy the standalone package into the repository, admit MapLibre acquisition, mutate OpenAI Sites or Vercel, change repository settings, admit a source, release, promote, or publish KFM knowledge."
+  "notes": "Adds an app-local, digest-bound Sites replacement handoff and static host-boundary test. It does not copy the standalone package into the repository, admit MapLibre acquisition, mutate OpenAI Sites, change repository settings, admit a source, release, promote, or publish KFM knowledge."
 }
