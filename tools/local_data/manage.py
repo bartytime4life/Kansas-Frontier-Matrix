@@ -18,8 +18,8 @@ from pathlib import Path, PurePosixPath
 from urllib.parse import urlsplit
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(REPO_ROOT / "connectors/local_upload/src"))
-from local_upload.fetch import (  # noqa: E402
+sys.path.insert(0, str(REPO_ROOT))
+from tools.local_data.file_io import (  # noqa: E402
     capture_file, check_directory, fsync_directory, hash_regular, read_regular, write_new,
 )
 

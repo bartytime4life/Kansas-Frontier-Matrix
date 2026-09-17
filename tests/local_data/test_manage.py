@@ -15,7 +15,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 from tools.local_data import manage
-from local_upload.fetch import capture_file
+from tools.local_data.file_io import capture_file
 
 
 class LocalDataTests(unittest.TestCase):

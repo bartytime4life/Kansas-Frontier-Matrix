@@ -52,6 +52,27 @@ def write_manifest(path, items):
     return path
 
 
+def test_source_archive_cli_captures_without_connector_packages(batch):
+    base, downloads, items, paths = batch
+    source = base / "source-archive"
+    local_tools = source / "tools/local_data"
+    local_tools.mkdir(parents=True)
+    for name in ("manage.py", "file_io.py"):
+        shutil.copyfile(manage.REPO_ROOT / "tools/local_data" / name, local_tools / name)
+    root = base / "archive-store"
+    command = [sys.executable, "-I", str(local_tools / "manage.py")]
+    for arguments, outcome in (
+        (["init", "--root", str(root)], "INITIALIZED"),
+        (["sync", "--root", str(root), "--manifest", str(paths[0]),
+          "--downloads", str(downloads), "--min-free-bytes", "0"], "SYNCED"),
+        (["verify", "--root", str(root), "--manifest", str(paths[0])], "VERIFIED"),
+    ):
+        result = subprocess.run(command + arguments, cwd=base, capture_output=True, text=True)
+        assert result.returncode == 0, result.stderr + result.stdout
+        assert json.loads(result.stdout)["outcome"] == outcome
+    assert manage.payload_path(root, items[0]).read_bytes() == (downloads / items[0]["relative_path"]).read_bytes()
+
+
 def invoke(capsys, argv):
     code = manage.main([str(value) for value in argv])
     output = capsys.readouterr()
