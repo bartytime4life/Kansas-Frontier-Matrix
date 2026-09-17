@@ -24,7 +24,7 @@ REQUIRED_FILES = (
     "docs/doctrine/directory-rules.md",
     "tools/local_data/doctor.py",
     "tools/local_data/manage.py",
-    "connectors/local_upload/src/local_upload/fetch.py",
+    "tools/local_data/file_io.py",
     "configs/examples/local-data-manifest.json",
 )
 OPTIONAL_TOOLS = (

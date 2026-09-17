@@ -16,8 +16,8 @@ truth_posture: Branch-local deterministic tests; production and native-host acce
 # Local PC readiness and data capture tests
 
 This existing `tests/` responsibility root owns executable regressions for
-`tools/local_data/` and the bounded local-byte capture helper in
-`connectors/local_upload/`. Tests use temporary external stores and synthetic
+`tools/local_data/`, including its bounded local-byte capture helper
+`file_io.py`. Tests use temporary external stores and synthetic
 opaque payloads; nothing is downloaded or promoted.
 
 ```bash

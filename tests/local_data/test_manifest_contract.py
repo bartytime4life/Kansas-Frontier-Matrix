@@ -60,5 +60,5 @@ def test_readme_source_download_instructions_have_real_entrypoints():
     # Source ZIPs must contain the entrypoints and example, not just wheel metadata.
     for name in ("tools/local_data/doctor.py", "tools/local_data/manage.py",
                  "docs/runbooks/local-pc-data-store.md",
-                 "connectors/local_upload/src/local_upload/fetch.py"):
+                 "tools/local_data/file_io.py"):
         assert (ROOT / name).is_file(), name
