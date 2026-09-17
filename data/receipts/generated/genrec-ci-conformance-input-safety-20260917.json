@@ -1,0 +1,95 @@
+{
+  "receipt_id": "genrec-ci-conformance-input-safety-20260917",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/runbooks/mrts-06-ci-conformance-handoff.md",
+    "tests/validators/governance/test_validate_ci_conformance_report.py",
+    "tools/validators/governance/validate_ci_conformance_report.py"
+  ],
+  "artifact_hashes": {
+    "docs/runbooks/mrts-06-ci-conformance-handoff.md": "sha256:48e4976112522a52254d4c8ac49b1a98c513414c414ce2e9578c7bb5d8e2de87",
+    "tests/validators/governance/test_validate_ci_conformance_report.py": "sha256:cdd7c45065552f58139f868769bdd12142bbaa5df3e0632156d0f440319f39e0",
+    "tools/validators/governance/validate_ci_conformance_report.py": "sha256:1b5e969c06474f96f0967ecf5d2780e1a1b3a624c13ede402940ac97853ac4fd"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "not-exposed"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "local repository inspection",
+      "GitHub",
+      "Google Drive",
+      "Notion",
+      "Sites readback",
+      "local tests"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "main@dbc60ae78be37133e791ed6d1b3fba267d9ecfe2",
+      "docs/doctrine/directory-rules.md",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3364"
+    ]
+  },
+  "truth_labels": {
+    "docs/runbooks/mrts-06-ci-conformance-handoff.md": "CONFIRMED",
+    "tests/validators/governance/test_validate_ci_conformance_report.py": "CONFIRMED",
+    "tools/validators/governance/validate_ci_conformance_report.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "conformance input regression suite",
+      "outcome": "PASS",
+      "reason": "18 tests and 14 malformed-input subtests pass; includes exact byte boundary, bounded oversized read, finite CLI failures, digest replay, and unchanged authority flags."
+    },
+    {
+      "gate": "conformance fixture matrix",
+      "outcome": "PASS",
+      "reason": "Existing exact negative polarity and canonical historical report validation pass; report status and closure remain BLOCKED."
+    },
+    {
+      "gate": "hosted candidate CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Pending at authoring; no independent or human approval asserted."
+    },
+    {
+      "gate": "release, live source, Site runtime, operator acceptance",
+      "outcome": "SKIPPED",
+      "reason": "Outside this bounded validation correction; no operational maturity inferred."
+    },
+    {
+      "gate": "base/candidate topology comparison",
+      "outcome": "FAIL",
+      "reason": "Both base and candidate emit identical 125 findings: 124 baselined warnings, one frozen catalog drift and one stale fingerprint, zero new invariant findings. Aggregate reports FAIL_INVARIANT. No baseline or catalog changes; inherited HOLD retained."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "directory-rules-adoption",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@dbc60ae78be37133e791ed6d1b3fba267d9ecfe2"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-17T04:25:54.350755+00:00",
+  "emitter": "Codex bounded KFM validation advancement",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Branch and draft review only. No ready, merge, settings, policy acceptance, source activation, lifecycle promotion, release, deployment, publication, issue closure or milestone closure authority. Historical reports and receipts preserved; new receipt excludes itself to avoid circularity. Rollback: inverse the bounded code/test/workflow/documentation changes, preserving historical receipts and pending review."
+}

@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 import copy
+import io
 import json
 import subprocess
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 from tools.validators.governance import validate_ci_conformance_report as module
 
@@ -117,6 +119,75 @@ class CIConformanceReportTests(unittest.TestCase):
             value, findings, _raw = module._read_json(path)
         self.assertIsNone(value)
         self.assertEqual([item.code for item in findings], ["JSON_DUPLICATE_KEY"])
+
+    def test_oversized_report_read_stops_at_the_byte_limit(self) -> None:
+        class CountingStream(io.BytesIO):
+            consumed = 0
+
+            def read(self, size=-1):
+                result = super().read(size)
+                self.consumed += len(result)
+                return result
+
+        stream = CountingStream(b" " * (module.MAX_JSON_BYTES * 2))
+        with mock.patch.object(Path, "open", return_value=stream):
+            value, findings, raw = module._read_json(module.REPORT_PATH)
+        self.assertIsNone(value)
+        self.assertIsNone(raw)
+        self.assertEqual([item.code for item in findings], ["INPUT_TOO_LARGE"])
+        self.assertLessEqual(stream.consumed, module.MAX_JSON_BYTES + 1)
+
+    def test_report_at_exact_byte_limit_remains_readable(self) -> None:
+        raw = b'{"padding":"' + b"x" * (module.MAX_JSON_BYTES - 14) + b'"}'
+        self.assertEqual(len(raw), module.MAX_JSON_BYTES)
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "limit.json"
+            path.write_bytes(raw)
+            value, findings, observed = module._read_json(path)
+        self.assertIsNotNone(value)
+        self.assertEqual(findings, [])
+        self.assertEqual(observed, raw)
+
+    def test_malformed_report_cli_returns_finite_failure_without_echoing_input(self) -> None:
+        marker = "PRIVATE_INPUT_SENTINEL"
+        cases = [
+            ("/closure", None),
+            ("/closure", [marker]),
+            ("/closure/state", {marker: True}),
+            ("/status", {marker: True}),
+            ("/status", marker),
+            ("/checks/0/id", {marker: True}),
+            ("/checks/0/id", [marker]),
+            ("/checks/0/id", None),
+            ("/checks/0/id", 1),
+            ("/checks/0/execution_state", {marker: True}),
+            ("/checks/0/outcome", [marker]),
+            ("/failures/introduced", [{"code": "invalid", "count": marker}]),
+            ("/failures/introduced", [{"code": "invalid", "count": {marker: True}}]),
+            ("/authority_refs/0/id", {marker: True}),
+        ]
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "invalid.json"
+            for pointer, bad in cases:
+                with self.subTest(pointer=pointer, bad_type=type(bad).__name__):
+                    candidate = copy.deepcopy(self.report)
+                    module.apply_mutations(candidate, [{"op": "set", "path": pointer, "value": bad}])
+                    digest = module.report_digest(candidate)
+                    candidate["report_digest"] = candidate["sha256"] = digest
+                    path.write_bytes(module.canonical_bytes(candidate))
+                    result = subprocess.run(
+                        [module.sys.executable, str(Path(module.__file__)), str(path), "--format", "json"],
+                        cwd=module.REPO_ROOT, capture_output=True, text=True, timeout=30,
+                    )
+                    self.assertEqual(result.returncode, 1, result.stderr + result.stdout)
+                    self.assertEqual(result.stderr, "")
+                    payload = json.loads(result.stdout)
+                    self.assertEqual(payload["validation"], "FAIL")
+                    self.assertFalse(payload["authority_created"])
+                    self.assertIn("SCHEMA_MISMATCH", {finding["code"] for finding in payload["findings"]})
+                    self.assertNotIn(marker, result.stdout)
+                    self.assertIn(payload["status"], [None, "CONFORMANT", "NONCONFORMANT", "BLOCKED"])
+                    self.assertIn(payload["closure"], [None, "BLOCKED", "READY", "CLOSED"])
 
     def test_noncanonical_serialization_is_rejected(self) -> None:
         raw = json.dumps(self.report, separators=(",", ":")).encode("utf-8")

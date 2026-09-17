@@ -83,6 +83,13 @@ request, or AI author.
 
 ## Inputs
 
+The report reader consumes at most 4 MiB plus one overflow-detection byte.
+Malformed report fields produce a nonzero result and a structured JSON
+`validation=FAIL` response when `--format json` is selected. Invalid status
+or closure values are reported as `null`; input payloads are not copied into
+those summary fields. Schema failures remain failures, and valid historical
+reports retain their original digest, closure state, and authority boundary.
+
 - exact merged base or selected final checkpoint;
 - adopted Directory Rules and accepted ADR-0029 bytes;
 - root, object-family, and validator registry versions and digests;
