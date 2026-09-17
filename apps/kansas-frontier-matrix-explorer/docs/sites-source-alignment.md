@@ -52,9 +52,8 @@ also remains in force.
 
 The repository hosting manifest now selects the active Site project. Its `d1`
 and `r2` values remain `null` because this monorepo application does not own or
-describe the hosted Site's live bindings. Both checked-in Vercel configurations
-continue to set `git.deploymentEnabled` to `false`; Vercel remains
-non-authoritative.
+describe the hosted Site's live bindings. No alternate-host deployment
+configuration is retained in the application or connector source.
 
 Changing repository metadata does not mutate a Site, deploy a version, alter an
 audience, or prove a source mirror. This reconciliation does not authorize deployment,
@@ -82,5 +81,5 @@ evidence.
 5. Exercise and record same-Site recovery before clearing the recovery hold.
 
 Until all five items close, the safe outcome is `HOLD`. A future correction must
-preserve the historical records and Vercel kill switches; it must not create a
-second Site or force-push the standalone mirror.
+preserve the historical records and source-separation controls; it must not
+create a second Site or force-push the standalone mirror.

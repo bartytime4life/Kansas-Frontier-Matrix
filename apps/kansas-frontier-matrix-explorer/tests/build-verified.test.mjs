@@ -183,23 +183,3 @@ test("the minimum source-input gate follows the existing TypeScript and Vite ali
   assert.match(vite, /find:\s*"@kfm\/maplibre"/);
   assert.match(vite, /new URL\("\.\.\/\.\.\/packages\/maplibre\/src\/index\.ts",\s*import\.meta\.url\)/);
 });
-
-test("non-authoritative Vercel projects disable automatic Git deployments", async () => {
-  const expected = {
-    $schema: "https://openapi.vercel.sh/vercel.json",
-    git: { deploymentEnabled: false },
-  };
-  const configs = [
-    ["Explorer", new URL("../vercel.json", import.meta.url)],
-    ["USGS connector", new URL("../../../connectors/usgs/vercel.json", import.meta.url)],
-  ];
-
-  for (const [label, configUrl] of configs) {
-    const actual = JSON.parse(await readFile(configUrl, "utf8"));
-    assert.deepEqual(
-      actual,
-      expected,
-      `${label} Vercel config must suspend Git deployment without adding an unadmitted adapter`,
-    );
-  }
-});

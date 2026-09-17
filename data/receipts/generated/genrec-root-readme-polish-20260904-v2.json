@@ -129,5 +129,5 @@
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "AI-authored docs-only update on branch docs/readme-user-facing-polish-20260904-v2. The README is a public orientation surface, not a truth, policy, review, release, deployment, promotion, publication, or source-admission authority. Notion and Google Drive were used as coordination/lineage inputs only; current GitHub bytes control implementation claims. No settings, Site, Vercel, source, lifecycle, release, deployment, or publication mutation occurred."
+  "notes": "AI-authored docs-only update on branch docs/readme-user-facing-polish-20260904-v2. The README is a public orientation surface, not a truth, policy, review, release, deployment, promotion, publication, or source-admission authority. Notion and Google Drive were used as coordination/lineage inputs only; current GitHub bytes control implementation claims. No settings, Site, source, lifecycle, release, deployment, or publication mutation occurred."
 }

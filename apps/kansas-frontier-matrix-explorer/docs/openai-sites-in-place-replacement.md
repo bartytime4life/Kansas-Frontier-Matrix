@@ -11,13 +11,12 @@ updated: 2026-09-07
 policy_label: public; fixture-only; no protected precision
 current_path: apps/kansas-frontier-matrix-explorer/docs/openai-sites-in-place-replacement.md
 owning_root: apps/
-responsibility: "Describe the bounded, reversible operator procedure for replacing the existing OpenAI Sites version of this application in place without creating repository, Vercel, source-admission, release, or KFM-publication effects."
+responsibility: "Describe the bounded, reversible operator procedure for replacing the existing OpenAI Sites version of this application in place without creating repository, source-admission, release, or KFM-publication effects."
 truth_posture: cite-or-abstain
 repository_checkpoint: 1408e45b4ba43c77e3ebab25078d4b9f9e3752fa
 related:
   - ../README.md
   - ../.openai/hosting.json
-  - ../vercel.json
   - ../tests/hosting-boundary.test.mjs
   - ../../../docs/doctrine/directory-rules.md
   - ../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
@@ -54,7 +53,7 @@ app-local handoff.
 The normative receipt shape is
 [`../contracts/sites-deployment-receipt.schema.json`](../contracts/sites-deployment-receipt.schema.json).
 The fixture and validator prove that a repository rehearsal cannot claim a live
-transition, invent Site version IDs, create a second Site, mutate Vercel, or
+transition, invent Site version IDs, create a second Site, or
 authorize release/publication. They do not prove a live Site build or smoke test.
 
 ## Goal
@@ -117,7 +116,7 @@ Return `HOLD` without deployment when any of the following is true:
 - an existing Site URL or access setting would change;
 - restricted archaeology fixture data appears in rendered, persisted, exported,
   telemetry, analytics, or shared state;
-- the operation would require GitHub, Vercel, source, policy, release, or
+- the operation would require GitHub, source, policy, release, or
   publication mutation; or
 - rollback cannot restore the immediately preceding version.
 
@@ -287,7 +286,6 @@ and the exact Git commit from which those bytes were built.
   "non_effects": {
     "github_mutated_by_site_execution": false,
     "repository_settings_mutated": false,
-    "vercel_mutated": false,
     "source_admission_changed": false,
     "kfm_release_or_publication_authority_created": false
   },
@@ -313,8 +311,8 @@ verify the original public URL, access behavior, desktop/mobile composition, and
 critical interaction path. Preserve both the failed candidate receipt and rollback
 evidence.
 
-A Site rollback does not rewrite Git history, change repository source, alter
-Vercel configuration, reverse source admission, change KFM Lifecycle state, or
+A Site rollback does not rewrite Git history, change repository source, reverse
+source admission, change KFM Lifecycle state, or
 withdraw a KFM knowledge release.
 
 ## Hard non-effects
@@ -322,7 +320,6 @@ withdraw a KFM knowledge release.
 This procedure must not:
 
 - create a GitHub branch, commit, pull request, merge, release, tag, or settings change;
-- change a Vercel project, preset, deployment, domain, environment, or Git integration;
 - add a repository MapLibre dependency or copy the package's CDN acquisition path;
 - bind D1 or R2;
 - admit a source or read RAW, WORK, QUARANTINE, PROCESSED, candidate,
@@ -337,9 +334,6 @@ This procedure must not:
 - Owner-level restore capability must be demonstrated before mutation.
 - Runtime compatibility and all preview/production checks remain unproved until
   executed against the exact candidate version.
-- GitHub repository homepage metadata still points at a non-authoritative host;
-  [issue #4246](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4246)
-  holds that settings-only transition pending explicit authorization and readback.
 
 ### Issue #4418 repository boundary
 
