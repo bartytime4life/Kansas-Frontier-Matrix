@@ -525,6 +525,10 @@ const DOMAIN_LIVE_CONTEXT: Readonly<Partial<Record<(typeof layerDomains)[number]
   Atmosphere: Object.freeze(["noaa-hms-smoke"] as const),
 });
 const catalogCategorySlug = (category: string) => category.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+const FOCUSABLE_SELECTOR = "button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), summary, a[href], [tabindex]:not([tabindex='-1'])";
+const visibleFocusableElements = (container: HTMLElement) => Array.from(container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)).filter((element) =>
+  element.tabIndex >= 0 && !element.closest("[hidden], [inert]") && element.getClientRects().length > 0
+);
 const drawerViews = ["evidence", "metadata", "lineage", "focus"] as const satisfies readonly DrawerView[];
 const drawerViewLabels: Record<DrawerView, string> = {
   evidence: "Evidence",
@@ -1080,6 +1084,7 @@ export default function Home() {
   const mapUtilityButtonRef = useRef<HTMLButtonElement>(null);
   const globalSearchInputRef = useRef<HTMLInputElement>(null);
   const mapUtilityPanelRef = useRef<HTMLElement>(null);
+  const legacyLayerControlsRef = useRef<HTMLDetailsElement>(null);
   const mapUtilityReturnRef = useRef<HTMLElement | null>(null);
   const mapUtilityTabRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const drawerTabRefs = useRef<Array<HTMLButtonElement | null>>([]);
@@ -1205,6 +1210,7 @@ export default function Home() {
   const [focusIntent, setFocusIntent] = useState<FocusIntentId>("explain");
   const [pendingFocusAction, setPendingFocusAction] = useState<FocusActionProposal | null>(null);
   const [layerQuery, setLayerQuery] = useState("");
+  const [pendingCatalogTarget, setPendingCatalogTarget] = useState<string | null>(null);
   const [atlasViewQuery, setAtlasViewQuery] = useState("");
   const [layerDomain, setLayerDomain] = useState<(typeof layerDomains)[number]>("ALL");
   const [globalQuery, setGlobalQuery] = useState("");
@@ -3108,7 +3114,10 @@ export default function Home() {
       setRightOpen(false);
       setTimelineOpen(false);
     }
-    window.setTimeout(() => mapUtilityPanelRef.current?.querySelector<HTMLElement>("button:not([disabled])")?.focus(), 0);
+    window.setTimeout(() => {
+      const panel = mapUtilityPanelRef.current;
+      if (panel) visibleFocusableElements(panel)[0]?.focus();
+    }, 0);
   }, [isCompact]);
 
   const openAtlasPanel = useCallback((mode: LeftPanelMode) => {
@@ -3120,6 +3129,22 @@ export default function Home() {
     dismissMapUtilityWithoutFocus();
     if (isCompact) setTimelineOpen(false);
   }, [dismissMapUtilityWithoutFocus, isCompact]);
+
+  const revealLegacyLayerControls = useCallback((targetId: string) => {
+    if (legacyLayerControlsRef.current) legacyLayerControlsRef.current.open = true;
+    setPendingCatalogTarget(targetId);
+  }, []);
+
+  useEffect(() => {
+    if (!pendingCatalogTarget || debouncedLayerQuery.trim()) return;
+    const frame = window.requestAnimationFrame(() => {
+      const target = document.getElementById(pendingCatalogTarget);
+      target?.focus({ preventScroll: true });
+      target?.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
+      setPendingCatalogTarget(null);
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [debouncedLayerQuery, pendingCatalogTarget, reducedMotion]);
 
   const openLiveContextCatalog = useCallback(() => {
     openAtlasPanel("live");
@@ -3246,8 +3271,9 @@ export default function Home() {
     setLeftOpen(false);
     setTimelineOpen(false);
     selectStoredFeature(step.layerId, step.featureId);
+    if (isCompact) setRightOpen(false);
     announce(`Story step ${nextIndex + 1} of ${KFM_STORY_TRAIL.length}: ${step.eyebrow}`);
-  }, [announce, commitTemporalFrame, selectStoredFeature]);
+  }, [announce, commitTemporalFrame, isCompact, selectStoredFeature]);
 
   const startStoryTrail = useCallback(() => {
     setMapContextOpen(false);
@@ -4548,7 +4574,7 @@ export default function Home() {
     if (!mapContextOpen) return;
     const panel = composerRef.current;
     if (!panel) return;
-    const controls = () => Array.from(panel.querySelectorAll<HTMLElement>("button:not([disabled]), a[href], input, select"));
+    const controls = () => visibleFocusableElements(panel);
     controls()[0]?.focus();
     const onKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") { event.preventDefault(); event.stopPropagation(); setMapContextOpen(false); composerTriggerRef.current?.focus(); }
@@ -4591,7 +4617,7 @@ export default function Home() {
     if (!repositoryOpen) return;
     const panel = repositoryPanelRef.current;
     if (!panel) return;
-    const focusable = () => Array.from(panel.querySelectorAll<HTMLElement>("button:not([disabled]), input:not([disabled]), select:not([disabled]), a[href], [tabindex='0']"));
+    const focusable = () => visibleFocusableElements(panel);
     focusable()[0]?.focus();
     const handleKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -4615,7 +4641,7 @@ export default function Home() {
     if (!isCompact) return;
     const openPanel = mapUtilityOpen ? mapUtilityPanelRef.current : rightOpen ? rightPanelRef.current : leftOpen ? leftPanelRef.current : timelineOpen ? timelineRef.current : null;
     if (!openPanel) return;
-    const focusable = () => Array.from(openPanel.querySelectorAll<HTMLElement>("button:not([disabled]), input:not([disabled]), select:not([disabled]), a[href], [tabindex='0']")).filter((element) => !element.hasAttribute("hidden"));
+    const focusable = () => visibleFocusableElements(openPanel);
     const items = focusable();
     items[0]?.focus();
     const handleKey = (event: KeyboardEvent) => {
@@ -6795,11 +6821,12 @@ export default function Home() {
             <div className="section-row"><h2 id="active-title">Active local layers <span>{visibleCount}/{LAYER_REGISTRY.length}</span></h2><div className="active-layer-actions"><button type="button" onClick={() => { setVisibility(defaultVisibility); setOpacity(defaultOpacity); }}>Reset defaults</button><button type="button" onClick={() => setVisibility(Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, false])))}>Hide all</button></div></div>
             <div className="active-chips">{activeLayers.map((layer) => <button key={layer.id} type="button" onClick={() => zoomToLayer(layer)}>{layer.title}<span>↗</span></button>)}</div>
           </section>
+          </details>
 
           <nav className="catalog-section-jump" aria-label="Layer Catalog shortcuts">
             <a href="#catalog-time-anchor"><span>Map time frame</span><b>{temporalScopeLabel}</b></a>
             <a href="#catalog-domain-index-title"><span>All domains</span><b>{CATEGORY_ORDER.length} layer groups</b></a>
-            <a href="#catalog-layer-stack"><span>Layer controls</span><b>{visibleCount} active</b></a>
+            <a href="#catalog-layer-stack" onClick={() => revealLegacyLayerControls("catalog-layer-stack")}><span>Layer controls</span><b>{visibleCount} active</b></a>
           </nav>
 
           <section className="catalog-domain-index" aria-labelledby="catalog-domain-index-title">
@@ -6811,8 +6838,8 @@ export default function Home() {
                 return <button key={category} type="button" data-active={activeCategoryCount > 0} onClick={() => {
                   setLayerDomain("ALL");
                   setLayerQuery("");
-                  window.requestAnimationFrame(() => document.getElementById(`catalog-category-${catalogCategorySlug(category)}`)?.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" }));
-                }} aria-label={`Show ${category}: ${activeCategoryCount} of ${categoryLayers.length} active`}>
+                  revealLegacyLayerControls(`catalog-category-${catalogCategorySlug(category)}`);
+                }} aria-label={`Open ${category} controls: ${activeCategoryCount} of ${categoryLayers.length} active`}>
                   <strong>{category}</strong><small>{activeCategoryCount}/{categoryLayers.length} active</small>
                 </button>;
               })}
@@ -6820,7 +6847,6 @@ export default function Home() {
             <p>These are the site-local domain layers. A domain lens adds its matching historical layer(s) to the map without hiding the rest of the catalog; where available, it also adds clearly separated live operational context for the present frame.</p>
           </section>
 
-          </details>
           </div>
           <section className="official-context-catalog" id="official-context-catalog" hidden={leftPanelMode !== "live"} aria-labelledby="official-context-title">
             <header><div><span>OFFICIAL OPERATIONAL CONTEXT</span><h2 id="official-context-title">Real Kansas source connections</h2><small className="official-context-registry-summary">{SITE_REGISTRY_COUNTS.features} features · {SITE_REGISTRY_COUNTS.connections} connections · {SITE_REGISTRY_COUNTS.actions} actions</small></div><strong>{withheldOfficialCount > 0 ? `${visibleOfficialCount} SELECTED · HELD` : `${visibleOfficialCount}/${OFFICIAL_CONTEXT_SOURCES.length} ON`}</strong></header>
@@ -6899,8 +6925,8 @@ export default function Home() {
             <div className="catalog-filter-actions"><span>{layerQuery.trim() || mapEvidenceFilter !== "ALL" ? "Catalog filters are active" : "Showing every local domain"}</span><button type="button" disabled={!layerQuery.trim() && mapEvidenceFilter === "ALL"} onClick={() => { setLayerQuery(""); updateMapEvidenceFilter("ALL"); }}>Clear filters</button></div>
           </div>
 
-          <details className="legacy-layer-index"><summary>Legacy example layer controls · {visibleCount} on</summary>
-          <section className="catalog-layer-stack" id="catalog-layer-stack" aria-labelledby="catalog-layer-stack-title">
+          <details ref={legacyLayerControlsRef} id="legacy-layer-controls" className="legacy-layer-index"><summary>Legacy example layer controls · {visibleCount} on</summary>
+          <section className="catalog-layer-stack" id="catalog-layer-stack" tabIndex={-1} aria-labelledby="catalog-layer-stack-title">
             <div className="section-row"><h2 id="catalog-layer-stack-title">Registered layers <span>{filteredLayerIds.size}/{LAYER_REGISTRY.length}</span></h2><div className="catalog-layer-stack-actions"><button type="button" disabled={filteredLayerIds.size === 0} onClick={() => setLayerGroupVisibility(Array.from(filteredLayerIds), true)}>Show all</button><button type="button" disabled={filteredLayerIds.size === 0} onClick={() => setLayerGroupVisibility(Array.from(filteredLayerIds), false)}>Hide all</button></div></div>
             <p>Every site-local layer remains available below. Toggle visibility directly or open a row for opacity, features, zoom, and draw order.</p>
           </section>
@@ -6910,7 +6936,7 @@ export default function Home() {
               const categoryLayers = LAYER_REGISTRY.filter((layer) => layer.category === category);
               const layers = layerOrder.map((id) => LAYER_REGISTRY.find((layer) => layer.id === id)).filter((layer): layer is LayerRecord => Boolean(layer && layer.category === category && filteredLayerIds.has(layer.id)));
               if (!layers.length) return null;
-              return <section className="catalog-group" key={category} id={`catalog-category-${catalogCategorySlug(category)}`} aria-labelledby={`catalog-category-${catalogCategorySlug(category)}-title`}><header className="catalog-group-heading"><h2 id={`catalog-category-${catalogCategorySlug(category)}-title`}>{category} <span>{layers.length}/{categoryLayers.length}</span></h2><div><button type="button" onClick={() => setLayerGroupVisibility(layers.map((layer) => layer.id), true)}>Show all</button><button type="button" onClick={() => setLayerGroupVisibility(layers.map((layer) => layer.id), false)}>Hide all</button></div></header>{layers.map((layer) => {
+              return <section className="catalog-group" key={category} id={`catalog-category-${catalogCategorySlug(category)}`} tabIndex={-1} aria-labelledby={`catalog-category-${catalogCategorySlug(category)}-title`}><header className="catalog-group-heading"><h2 id={`catalog-category-${catalogCategorySlug(category)}-title`}>{category} <span>{layers.length}/{categoryLayers.length}</span></h2><div><button type="button" onClick={() => setLayerGroupVisibility(layers.map((layer) => layer.id), true)}>Show all</button><button type="button" onClick={() => setLayerGroupVisibility(layers.map((layer) => layer.id), false)}>Hide all</button></div></header>{layers.map((layer) => {
                 const noData = Boolean(layer.temporal && !layer.data.features.some((feature) => isFeatureAvailableForTemporalQuery(layer, feature.properties.year, temporalQuery)));
                 const expanded = expandedLayers.has(layer.id);
                 return <article className="layer-row" key={layer.id} data-active={visibility[layer.id]} data-state={sourceStates[layer.id]} data-time-state={noData ? "unavailable" : "available"}>

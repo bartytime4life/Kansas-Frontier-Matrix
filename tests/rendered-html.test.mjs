@@ -1330,6 +1330,17 @@ test("keeps live data and domain layers in separate, time-aware menus", async ()
   assert.match(page, /className="catalog-section-jump"/);
   assert.match(page, /href="#catalog-layer-stack"/);
   assert.match(page, /id="catalog-layer-stack"/);
+  const legacyExamplesStart = page.indexOf('<details className="legacy-layer-index"><summary>Legacy examples & diagnostics</summary>');
+  const legacyExamplesEnd = page.indexOf("</details>", legacyExamplesStart);
+  const domainIndexStart = page.indexOf('<section className="catalog-domain-index"');
+  assert.ok(legacyExamplesStart >= 0 && legacyExamplesEnd > legacyExamplesStart);
+  assert.ok(domainIndexStart > legacyExamplesEnd, "the domain index must remain visible outside the closed legacy examples disclosure");
+  assert.match(page, /const revealLegacyLayerControls = useCallback/);
+  assert.match(page, /legacyLayerControlsRef\.current\.open = true/);
+  assert.match(page, /revealLegacyLayerControls\("catalog-layer-stack"\)/);
+  assert.match(page, /revealLegacyLayerControls\(`catalog-category-\$\{catalogCategorySlug\(category\)\}`\)/);
+  assert.match(page, /aria-label=\{`Open \$\{category\} controls:/);
+  assert.match(page, /ref=\{legacyLayerControlsRef\} id="legacy-layer-controls"/);
   assert.match(page, /Registered layers <span>\{filteredLayerIds\.size\}\/\{LAYER_REGISTRY\.length\}<\/span>/);
   assert.match(css, /\.layer-catalog-body \{[^}]*overflow-y: auto/);
   assert.match(css, /\.left-panel-tabs \{[^}]*grid-template-columns: repeat\(5,/);

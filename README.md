@@ -595,7 +595,7 @@ actions tied to the current ChatGPT user. Leave public content anonymous.
 - `npm run dev`: start the Vite/Vinext development server
 - `npm run build`: build the deployable Sites artifact
 - `npm run start`: start the built Vinext application
-- `npm test`: build and verify the rendered development-preview metadata
+- `npm test`: build the deployable artifact and run the complete `tests/*.test.mjs` inventory
 - `npm run db:generate`: generate Drizzle migrations after schema changes
 
 Use build commands for targeted diagnosis after a remote failure, not as part of the normal checkpoint path.

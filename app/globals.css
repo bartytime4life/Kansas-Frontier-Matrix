@@ -4060,3 +4060,13 @@ body { font-size: 14px; }
   .event-science-card > footer { align-items: stretch; flex-direction: column; }
   .event-science-card > footer a { min-height: 36px; display: flex; align-items: center; }
 }
+
+/* Keep every Map Workbench view as the same reachable bottom sheet after all
+   desktop and view-specific width rules have been applied. */
+@media (max-width: 760px) {
+  .map-utility-panel[data-view] {
+    inset: auto 0 0;
+    width: 100%;
+    height: min(86dvh, 820px, 100%);
+  }
+}
