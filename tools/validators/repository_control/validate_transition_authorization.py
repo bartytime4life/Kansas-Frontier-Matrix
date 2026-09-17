@@ -37,9 +37,11 @@ AUTHORITY_BOUNDARY = (
     "ruleset evidence, release authority, or publication authority."
 )
 RFC3339_PATTERN = re.compile(
-    r"^[0-9]{4}-[0-9]{2}-[0-9]{2}[Tt ][0-9]{2}:[0-9]{2}:[0-9]{2}"
+    r"^[0-9]{4}-[0-9]{2}-[0-9]{2}[Tt][0-9]{2}:[0-9]{2}:[0-9]{2}"
     r"(?:\.[0-9]+)?(?:[Zz]|[+-][0-9]{2}:[0-9]{2})$"
 )
+REPOSITORY_PATTERN = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$")
+GITHUB_LOGIN_PATTERN = re.compile(r"^[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})$")
 
 RECORD_KEYS = {
     "schema_version",
@@ -54,6 +56,17 @@ RECORD_KEYS = {
     "expires_at",
     "reason",
     "evidence_refs",
+}
+RESULT_KEYS = {
+    "outcome_class",
+    "reason_code",
+    "summary",
+    "pr_number",
+    "head_sha",
+    "authorization_id",
+    "comment_id",
+    "expires_at",
+    "authority_boundary",
 }
 
 
@@ -177,6 +190,18 @@ def _nonempty_string(value: Any, *, maximum: int) -> bool:
     return isinstance(value, str) and 0 < len(value) <= maximum
 
 
+def _authorization_id(value: Any) -> bool:
+    return (
+        _nonempty_string(value, maximum=192)
+        and len(value) >= 3
+        and value[0].isalnum()
+        and all(
+            character in "abcdefghijklmnopqrstuvwxyz0123456789._:-"
+            for character in value
+        )
+    )
+
+
 def _flatten_comments(value: Any) -> list[dict[str, Any]]:
     if not isinstance(value, list):
         raise InputError("comments input must be an array or an array of pages")
@@ -236,8 +261,11 @@ def _event_fields(
     head = pull_request.get("head")
     draft = pull_request.get("draft")
     state = pull_request.get("state")
-    if not _nonempty_string(repository_name, maximum=255):
-        raise InputError("repository.full_name must be a non-empty string")
+    if (
+        not isinstance(repository_name, str)
+        or REPOSITORY_PATTERN.fullmatch(repository_name) is None
+    ):
+        raise InputError("repository.full_name must match the repository schema")
     if not isinstance(number, int) or isinstance(number, bool) or number <= 0:
         raise InputError("pull_request.number must be a positive integer")
     if not isinstance(base, dict) or not isinstance(head, dict):
@@ -267,18 +295,15 @@ def _record_errors(record: dict[str, Any]) -> list[str]:
         return errors
     if record["schema_version"] != "1.0.0":
         errors.append("schema_version must be 1.0.0")
+    if not _authorization_id(record["authorization_id"]):
+        errors.append(
+            "authorization_id must contain 3 to 192 supported characters"
+        )
     if (
-        not _nonempty_string(record["authorization_id"], maximum=192)
-        or len(record["authorization_id"]) < 3
+        not isinstance(record["repository"], str)
+        or REPOSITORY_PATTERN.fullmatch(record["repository"]) is None
     ):
-        errors.append("authorization_id must contain 3 to 192 characters")
-    elif not record["authorization_id"][0].isalnum() or any(
-        character not in "abcdefghijklmnopqrstuvwxyz0123456789._:-"
-        for character in record["authorization_id"]
-    ):
-        errors.append("authorization_id has unsupported characters")
-    if not _nonempty_string(record["repository"], maximum=255):
-        errors.append("repository must be a bounded non-empty string")
+        errors.append("repository must match the repository schema")
     if (
         not isinstance(record["control_issue"], int)
         or isinstance(record["control_issue"], bool)
@@ -293,8 +318,11 @@ def _record_errors(record: dict[str, Any]) -> list[str]:
         errors.append("pr_number must be a positive integer")
     if not _sha(record["base_sha"]) or not _sha(record["head_sha"]):
         errors.append("base_sha and head_sha must be lowercase 40-character SHAs")
-    if not _nonempty_string(record["authorizing_actor"], maximum=39):
-        errors.append("authorizing_actor must be a bounded non-empty string")
+    if (
+        not isinstance(record["authorizing_actor"], str)
+        or GITHUB_LOGIN_PATTERN.fullmatch(record["authorizing_actor"]) is None
+    ):
+        errors.append("authorizing_actor must match the GitHub login schema")
     if record["decision"] != "ALLOW_READY_AND_MERGE":
         errors.append("decision must be ALLOW_READY_AND_MERGE")
     try:
@@ -312,6 +340,117 @@ def _record_errors(record: dict[str, Any]) -> list[str]:
     ):
         errors.append("evidence_refs must be unique bounded non-empty strings")
     return errors
+
+
+def validate_transition_record(record: Any) -> dict[str, Any]:
+    """Return one complete authorization record or reject it fail closed."""
+
+    if not isinstance(record, dict):
+        raise InputError("authorization record must be a JSON object")
+    errors = _record_errors(record)
+    if errors:
+        # The detailed field values originate in an untrusted comment and are
+        # intentionally not copied into the public classification output.
+        raise InputError("authorization record does not match the required schema")
+    return record
+
+
+def _result_errors(value: Any) -> list[str]:
+    """Validate the bounded classification before any bytes reach stdout."""
+
+    if not isinstance(value, dict):
+        return ["result root must be an object"]
+    errors: list[str] = []
+    missing = sorted(RESULT_KEYS - set(value))
+    extra = sorted(set(value) - RESULT_KEYS)
+    if missing:
+        errors.append("result has missing keys")
+    if extra:
+        errors.append("result has unsupported keys")
+    if errors:
+        return errors
+
+    outcome_class = value["outcome_class"]
+    if outcome_class not in {
+        "PASS",
+        "NOT_APPLICABLE",
+        "EXPECTED_READINESS_HOLD",
+        "REGRESSION",
+    }:
+        errors.append("result outcome_class is unsupported")
+    if not _nonempty_string(value["reason_code"], maximum=128):
+        errors.append("result reason_code is invalid")
+    if not _nonempty_string(value["summary"], maximum=1_024):
+        errors.append("result summary is invalid")
+    if value["authority_boundary"] != AUTHORITY_BOUNDARY:
+        errors.append("result authority boundary is invalid")
+
+    pr_number = value["pr_number"]
+    if pr_number is not None and (
+        not isinstance(pr_number, int) or isinstance(pr_number, bool) or pr_number <= 0
+    ):
+        errors.append("result pr_number is invalid")
+    head_sha = value["head_sha"]
+    if head_sha is not None and not _sha(head_sha):
+        errors.append("result head_sha is invalid")
+
+    authorization_id = value["authorization_id"]
+    comment_id = value["comment_id"]
+    expires_at = value["expires_at"]
+    authorization_fields_present = any(
+        item is not None for item in (authorization_id, comment_id, expires_at)
+    )
+    authorization_fields_complete = (
+        _authorization_id(authorization_id)
+        and isinstance(comment_id, int)
+        and not isinstance(comment_id, bool)
+        and comment_id > 0
+    )
+    if authorization_fields_complete:
+        try:
+            _time(expires_at, "result.expires_at")
+        except InputError:
+            authorization_fields_complete = False
+
+    if outcome_class == "PASS":
+        if value["reason_code"] != "TRANSITION_AUTHORIZED":
+            errors.append("PASS result reason is invalid")
+        if pr_number is None or head_sha is None or not authorization_fields_complete:
+            errors.append("PASS result is missing exact authorization fields")
+    elif authorization_fields_present:
+        errors.append("non-PASS result contains partial authorization fields")
+    return errors
+
+
+def render_result(result: Result) -> tuple[Result, str]:
+    """Build a complete JSON object and replace unsafe output with a regression."""
+
+    try:
+        value = result.as_dict()
+        errors = _result_errors(value)
+        if errors:
+            raise InputError("validator result failed its output contract")
+        rendered = json.dumps(
+            value,
+            ensure_ascii=True,
+            allow_nan=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        )
+    except (InputError, TypeError, ValueError, RecursionError):
+        result = Result(
+            "REGRESSION",
+            "RESULT_SERIALIZATION_INVALID",
+            "The validator could not emit a complete result; the transition remains blocked.",
+        )
+        rendered = json.dumps(
+            result.as_dict(),
+            ensure_ascii=True,
+            allow_nan=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        )
+    return result, rendered
 
 
 def evaluate(
@@ -376,6 +515,12 @@ def evaluate(
             continue
         if record is None:
             continue
+        try:
+            record = validate_transition_record(record)
+        except InputError:
+            matching_seen = True
+            invalid_record_seen = True
+            continue
         if (
             record.get("repository") != repository
             or record.get("control_issue") != control_issue
@@ -383,10 +528,6 @@ def evaluate(
         ):
             continue
         matching_seen = True
-        errors = _record_errors(record)
-        if errors:
-            invalid_record_seen = True
-            continue
         if record["authorizing_actor"] != login:
             invalid_record_seen = True
             continue
@@ -488,7 +629,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             default_branch=args.default_branch,
             now=now,
         )
-    print(json.dumps(result.as_dict(), sort_keys=True, separators=(",", ":")))
+    result, rendered = render_result(result)
+    sys.stdout.write(rendered + "\n")
     if args.github_step_summary is not None:
         try:
             append_github_step_summary(args.github_step_summary, result)
