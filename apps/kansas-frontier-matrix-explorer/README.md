@@ -43,7 +43,6 @@ TypeScript-transpile regression checks.
 | Existing slug | `kansas-frontier-matrix-explorer` |
 | Existing public URL | <https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site> |
 | Authoritative host | OpenAI Sites/Vinext; [issue #4232](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4232) records the adapter decision |
-| Vercel boundary | [`vercel.json`](./vercel.json) disables automatic Git deployment; Vercel remains non-authoritative for this app |
 | Current evidence | [Identity and source-alignment hold](./docs/sites-source-alignment.md); the older replacement handoff and v1 receipt are historical |
 | Hosted version state | The 2026-09-17 Sites readback records a successful v45 deployment, but v45 mirror equality, production-browser acceptance, and recovery remain `HOLD` |
 

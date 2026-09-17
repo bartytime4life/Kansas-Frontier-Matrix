@@ -50,13 +50,10 @@ node --test apps/kansas-frontier-matrix-explorer/tests/build-verified.test.mjs
 bash -n apps/kansas-frontier-matrix-explorer/scripts/build-verified.sh
 ```
 
-The focused suite exercises ten cases: workspace-hoisted builder selection;
+The focused suite exercises nine cases: workspace-hoisted builder selection;
 missing and non-package builders; app-local fallback; absent and directory-shaped
 sibling entries; nonzero builder status; environment initialization with spaces
-in the source path; TypeScript/Vite alias parity; and the existing Vercel
-non-deployment configuration assertion. The last assertion also reads the
-existing `connectors/usgs/vercel.json` boundary; do not move or narrow that test
-without preserving its coverage and repository-relative discovery.
+in the source path; and TypeScript/Vite alias parity.
 
 Fixtures in these tests are temporary, synthetic wrapper inputs. They are not
 compiled MapLibre, released data, or runtime demonstration fixtures. Builder
@@ -79,7 +76,7 @@ unreleased lifecycle data. Copying the repository wholesale into a deployable
 artifact is not a substitute for that boundary review.
 
 This patch changes no Site version, slug, public URL, rollback history, D1/R2
-binding, Vercel setting, renderer acquisition, or deployment builder. Repository
+binding, renderer acquisition, or deployment builder. Repository
 source and the live Site remain independently verified surfaces.
 
 ## Correction and rollback

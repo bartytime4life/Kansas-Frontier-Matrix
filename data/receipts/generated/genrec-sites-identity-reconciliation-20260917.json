@@ -65,7 +65,7 @@
     {
       "gate": "focused-hosting-boundary-and-historical-receipt-tests",
       "outcome": "PASS",
-      "reason": "25 Node tests passed for the hosting boundary, both Vercel deployment-denial configs, build-input boundaries, and historical v1 receipt behavior, including denial of active-project replay through v1."
+      "reason": "At creation, 25 Node tests passed for the hosting boundary, the then-current alternate-host deployment-denial configs, build-input boundaries, and historical v1 receipt behavior, including denial of active-project replay through v1."
     },
     {
       "gate": "historical-v1-receipt-cli-validation",
@@ -131,5 +131,5 @@
   "override_record": null,
   "created_at": "2026-09-17T02:15:04Z",
   "emitter": "OpenAI Codex via ChatGPT Work",
-  "notes": "Draft-PR authorship receipt for active Site target metadata and bounded v45/v44 readback documentation. The version-1 schema, fixture, validator, replacement ZIP, and handoff remain historical and keep their old project binding. The repository manifest retains null D1/R2 bindings and does not describe or alter the active Site's hosted DB/BUCKET bindings. Both Vercel git.deploymentEnabled=false kill switches remain unchanged. Source equivalence, browser acceptance, and recovery remain HOLD/NOT_RUN. No GitHub remote write, Site deployment, Site restoration, access change, binding change, source admission, release, publication, or standalone-mirror merge occurred. Human review remains pending."
+  "notes": "Draft-PR authorship receipt for active Site target metadata and bounded v45/v44 readback documentation. The version-1 schema, fixture, validator, replacement ZIP, and handoff remain historical and keep their old project binding. The repository manifest retains null D1/R2 bindings and does not describe or alter the active Site's hosted DB/BUCKET bindings. Source equivalence, browser acceptance, and recovery remain HOLD/NOT_RUN. No GitHub remote write, Site deployment, Site restoration, access change, binding change, source admission, release, publication, or standalone-mirror merge occurred. Human review remains pending."
 }

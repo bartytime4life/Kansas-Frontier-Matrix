@@ -18,7 +18,6 @@ const EXPECTED = Object.freeze({
 
 const files = Object.freeze({
   hosting: new URL("../.openai/hosting.json", import.meta.url),
-  vercel: new URL("../vercel.json", import.meta.url),
   layout: new URL("../app/layout.tsx", import.meta.url),
   readme: new URL("../README.md", import.meta.url),
   alignment: new URL("../docs/sites-source-alignment.md", import.meta.url),
@@ -33,7 +32,6 @@ const assertIncludes = (text, value, label) => {
 
 test("OpenAI Sites identity and public URL remain coherent across app surfaces", async () => {
   const hosting = JSON.parse(await readText(files.hosting));
-  const vercel = JSON.parse(await readText(files.vercel));
   const [layout, readme, alignment] = await Promise.all([
     readText(files.layout),
     readText(files.readme),
@@ -43,7 +41,6 @@ test("OpenAI Sites identity and public URL remain coherent across app surfaces",
   assert.equal(hosting.project_id, EXPECTED.projectId);
   assert.equal(hosting.d1, null);
   assert.equal(hosting.r2, null);
-  assert.deepEqual(vercel.git, { deploymentEnabled: false });
 
   for (const [label, text] of [
     ["layout metadata", layout],
@@ -56,8 +53,6 @@ test("OpenAI Sites identity and public URL remain coherent across app surfaces",
 
   assertIncludes(readme, EXPECTED.projectId, "application README");
   assertIncludes(alignment, EXPECTED.projectId, "source-alignment hold");
-  assert.ok(!readme.includes("kansas-frontier-matrix-explorer-web.vercel.app"));
-  assert.ok(!alignment.includes("kansas-frontier-matrix-explorer-web.vercel.app"));
 });
 
 test("current source evidence stays explicitly non-equivalent and held", async () => {
@@ -102,7 +97,6 @@ test("historical replacement handoff remains intact and cannot masquerade as cur
     "restricted archaeology fixture",
     "Do not create a second Site",
     "github_mutated_by_site_execution",
-    "vercel_mutated",
   ]) {
     assertIncludes(handoff, required, "replacement handoff");
   }

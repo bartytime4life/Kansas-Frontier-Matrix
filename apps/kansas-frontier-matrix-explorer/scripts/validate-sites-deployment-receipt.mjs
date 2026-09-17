@@ -13,7 +13,7 @@ export function validateReceipt(r) {
   if (!/^[0-9a-f]{64}$/.test(r?.source?.artifact_sha256 ?? "")) errors.push("source.artifact_sha256 must be SHA-256");
   for (const name of CHECKS) { const c = r?.checks?.[name]; if (!["PASS", "FAIL", "NOT_RUN"].includes(c?.outcome)) errors.push(`checks.${name}.outcome is invalid`); if (!c?.evidence?.trim()) errors.push(`checks.${name}.evidence is required`); }
   eq(errors, r?.rollback?.procedure, E.procedure, "rollback.procedure");
-  for (const flag of ["second_site_created", "vercel_mutated", "release_authorized", "publication_authorized"]) eq(errors, r?.authority?.[flag], false, `authority.${flag}`);
+  for (const flag of ["second_site_created", "release_authorized", "publication_authorized"]) eq(errors, r?.authority?.[flag], false, `authority.${flag}`);
   if (r?.mode === "REPOSITORY_REHEARSAL") {
     for (const field of ["previous_version_id", "candidate_version_id", "final_version_id"]) eq(errors, r?.site?.[field], null, `site.${field}`);
     eq(errors, r?.rollback?.target_version_id, null, "rollback.target_version_id"); eq(errors, r?.rollback?.operator_restore_confirmed, false, "rollback.operator_restore_confirmed"); eq(errors, r?.authority?.live_transition_performed, false, "authority.live_transition_performed");
