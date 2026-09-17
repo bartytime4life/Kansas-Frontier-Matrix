@@ -189,6 +189,34 @@ class CIConformanceReportTests(unittest.TestCase):
                     self.assertIn(payload["status"], [None, "CONFORMANT", "NONCONFORMANT", "BLOCKED"])
                     self.assertIn(payload["closure"], [None, "BLOCKED", "READY", "CLOSED"])
 
+    def test_cli_rejects_invalid_git_arguments_and_unicode_without_tracebacks(self) -> None:
+        cases = [
+            ("/repository/base_sha", "private\x00ref", "BASE_SHA_UNRESOLVED"),
+            ("/authority_refs/0/path", "private\x00path", "REF_UNAVAILABLE"),
+            ("/repository/base_sha", "\ud800", "JSON_INVALID"),
+            ("/authority_refs/0/path", "\udfff", "JSON_INVALID"),
+        ]
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "invalid.json"
+            for pointer, bad, code in cases:
+                with self.subTest(pointer=pointer, code=code):
+                    candidate = copy.deepcopy(self.report)
+                    module.apply_mutations(candidate, [{"op": "set", "path": pointer, "value": bad}])
+                    # Escaped JSON can decode to strings unsuitable for Git argv
+                    # or UTF-8 canonicalization; do not pre-canonicalize the case.
+                    path.write_text(json.dumps(candidate), encoding="utf-8")
+                    result = subprocess.run(
+                        [module.sys.executable, str(Path(module.__file__)), str(path), "--format", "json"],
+                        cwd=module.REPO_ROOT, capture_output=True, text=True, timeout=30,
+                    )
+                    self.assertEqual(result.returncode, 1)
+                    self.assertEqual(result.stderr, "")
+                    payload = json.loads(result.stdout)
+                    self.assertEqual(payload["validation"], "FAIL")
+                    self.assertFalse(payload["authority_created"])
+                    self.assertIn(code, {finding["code"] for finding in payload["findings"]})
+                    self.assertNotIn("private", result.stdout)
+
     def test_noncanonical_serialization_is_rejected(self) -> None:
         raw = json.dumps(self.report, separators=(",", ":")).encode("utf-8")
         codes = {

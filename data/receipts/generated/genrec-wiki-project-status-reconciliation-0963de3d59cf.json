@@ -1,0 +1,130 @@
+{
+  "artifact_hashes": {
+    "docs/wiki/Project-Status.md": "sha256:0963de3d59cf502440d9f590caa55f66d191a8e271e2c888af0f884532753b8d"
+  },
+  "artifact_paths": [
+    "docs/wiki/Project-Status.md"
+  ],
+  "citations": [
+    {
+      "id": "KFM-wiki-project-status-base",
+      "validated": true,
+      "evidence_ref": "repo:docs/wiki/Project-Status.md@dbc60ae78be37133e791ed6d1b3fba267d9ecfe2"
+    },
+    {
+      "id": "KFM-wiki-source-contract",
+      "validated": true,
+      "evidence_ref": "repo:docs/wiki/README.md@dbc60ae78be37133e791ed6d1b3fba267d9ecfe2"
+    },
+    {
+      "id": "KFM-wiki-maintenance",
+      "validated": true,
+      "evidence_ref": "repo:docs/wiki/Wiki-Maintenance.md@dbc60ae78be37133e791ed6d1b3fba267d9ecfe2"
+    },
+    {
+      "id": "KFM-sites-reconciliation-merge",
+      "validated": true,
+      "evidence_ref": "github:pull/4611:merged:cc1a30beea1c83e0e0f2232c7f854825866b565a"
+    },
+    {
+      "id": "KFM-local-data-merge",
+      "validated": true,
+      "evidence_ref": "github:pull/4614:merged:dbc60ae78be37133e791ed6d1b3fba267d9ecfe2"
+    },
+    {
+      "id": "KFM-local-data-policy",
+      "validated": true,
+      "evidence_ref": "github:issue/4613"
+    },
+    {
+      "id": "KFM-wiki-reconciliation-pr",
+      "validated": true,
+      "evidence_ref": "github:pull/4615"
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-09-17T04:29:07Z",
+  "emitter": "OpenAI Codex via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:docs/wiki/Project-Status.md@dbc60ae78be37133e791ed6d1b3fba267d9ecfe2",
+      "repo:docs/wiki/README.md@dbc60ae78be37133e791ed6d1b3fba267d9ecfe2",
+      "repo:docs/wiki/Wiki-Maintenance.md@dbc60ae78be37133e791ed6d1b3fba267d9ecfe2",
+      "github:pull/4611:merged:cc1a30beea1c83e0e0f2232c7f854825866b565a",
+      "github:pull/4614:merged:dbc60ae78be37133e791ed6d1b3fba267d9ecfe2",
+      "github:issue/4613",
+      "github:pull/4615",
+      "user-request:sha256:ea538e96615e726a2429e807f82a09d90071bcb68e93e0a86b6331565a2c907b"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": 4615
+  },
+  "model_identity": {
+    "model": "GPT-5 (Codex)",
+    "provider": "OpenAI",
+    "version": "2026-09-17"
+  },
+  "notes": "Authoring provenance for the same-path currentness correction to docs/wiki/Project-Status.md. The change records PR #4611 and PR #4614 as merged, preserves issue #4613 as quarantine-only policy authority, retains the prior August status body as historical evidence, and keeps native-wiki synchronization, source activation, release, deployment, publication, review, acceptance, recovery, and KFM-TOPO-004 boundaries separate. No native-wiki push, Site mutation, source activation, release, deployment, publication, repository setting, or governance transition was performed.",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:ea538e96615e726a2429e807f82a09d90071bcb68e93e0a86b6331565a2c907b",
+  "receipt_id": "genrec-wiki-project-status-reconciliation-0963de3d59cf",
+  "truth_labels": {
+    "docs/wiki/Project-Status.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "same-path-page-identity",
+      "outcome": "PASS",
+      "reason": "The existing Project-Status path, page ID, title, orientation-only role, and native-wiki non-effect boundary were preserved."
+    },
+    {
+      "gate": "merge-truth-reconciliation",
+      "outcome": "PASS",
+      "reason": "The overlay records PR #4611 and PR #4614 as merged with the GitHub-reported merge commit SHAs and direct links."
+    },
+    {
+      "gate": "authority-boundary-preservation",
+      "outcome": "PASS",
+      "reason": "Repository integration is kept distinct from Site deployment authority, source activation, review, acceptance, release, deployment, publication, and rollback."
+    },
+    {
+      "gate": "historical-lineage-preservation",
+      "outcome": "PASS",
+      "reason": "The August checkpoint remains in place as historical evidence, while a new top overlay explicitly supersedes only the stale merge-state claims."
+    },
+    {
+      "gate": "generated-receipt-local-shape-and-hash",
+      "outcome": "PASS",
+      "reason": "The receipt is SHA-256-bound to the exact updated Project-Status.md bytes and records the reviewable source-only scope."
+    },
+    {
+      "gate": "hosted-feature-branch-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks must be observed on the exact branch head after this receipt commit."
+    },
+    {
+      "gate": "native-wiki-readback",
+      "outcome": "SKIPPED",
+      "reason": "Native-wiki synchronization is a separate explicit public-documentation mutation and was not performed."
+    }
+  ]
+}

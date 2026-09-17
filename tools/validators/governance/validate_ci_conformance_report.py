@@ -199,7 +199,7 @@ def _git_blob(ref: str, path: str) -> bytes | None:
             capture_output=True,
             timeout=SUBPROCESS_TIMEOUT_SECONDS,
         )
-    except (OSError, subprocess.TimeoutExpired):
+    except (OSError, ValueError, subprocess.TimeoutExpired):
         return None
     if result.returncode != 0 or len(result.stdout) > MAX_GIT_BLOB_BYTES:
         return None
@@ -217,7 +217,7 @@ def _git_commit_exists(ref: object) -> bool:
             capture_output=True,
             timeout=SUBPROCESS_TIMEOUT_SECONDS,
         )
-    except (OSError, subprocess.TimeoutExpired):
+    except (OSError, ValueError, subprocess.TimeoutExpired):
         return False
     return result.returncode == 0
 
@@ -474,12 +474,17 @@ def validate_report(
     findings.extend(_closure_findings(value))
     findings.extend(_status_finding(value))
     findings.extend(_authority_findings(value))
-    expected_digest = report_digest(value)
+    try:
+        expected_digest = report_digest(value)
+        canonical = canonical_bytes(value) if check_canonical and raw is not None else None
+    except (UnicodeError, ValueError, RecursionError):
+        findings.append(Finding("JSON_INVALID", "/", "safe JSON object required"))
+        return tuple(sorted(set(findings)))
     if value.get("report_digest") != expected_digest:
         findings.append(Finding("REPORT_DIGEST_MISMATCH", "/report_digest", "report digest mismatch"))
     if value.get("sha256") != expected_digest:
         findings.append(Finding("PROVENANCE_DIGEST_MISMATCH", "/sha256", "provenance digest mismatch"))
-    if check_canonical and raw is not None and raw != canonical_bytes(value):
+    if canonical is not None and raw != canonical:
         findings.append(Finding("SERIALIZATION_NOT_CANONICAL", "/", "canonical pretty JSON required"))
     return tuple(sorted(set(findings)))
 

@@ -11,6 +11,7 @@ name: ci-conformance-report
       - "control_plane/object_family_register.yaml"
       - "control_plane/root_registry.yaml"
       - "data/receipts/generated/genrec-ci-conformance-report-*.json"
+      - "data/receipts/generated/genrec-ci-conformance-input-*.json"
       - "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
       - "docs/doctrine/directory-rules.md"
       - "docs/runbooks/mrts-06-ci-conformance-handoff.md"
@@ -32,6 +33,7 @@ name: ci-conformance-report
       - "artifacts/qa/validation/milestone-1/**"
       - "contracts/governance/ci_conformance_report.md"
       - "data/receipts/generated/genrec-ci-conformance-report-*.json"
+      - "data/receipts/generated/genrec-ci-conformance-input-*.json"
       - "docs/runbooks/mrts-06-ci-conformance-handoff.md"
       - "fixtures/contracts/v1/governance/ci_conformance_report/**"
       - "schemas/contracts/v1/governance/ci_conformance_report.schema.json"
@@ -82,6 +84,12 @@ jobs:
 
       - name: Validate deterministic MRTS-06 report and receipt
         run: make ci-conformance-report
+
+      - name: Validate current input-boundary repair receipt
+        run: |
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-ci-conformance-input-boundary-20260917.json \
+            --repo-root .
 
       - name: Record bounded result and non-authority boundary
         if: always()
