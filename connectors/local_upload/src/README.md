@@ -59,6 +59,19 @@ notes:
 
 # Local Upload Greenfield Source Layout Boundary
 
+## Local quarantine capture implementation — current branch
+
+`fetch.py` now supplies bounded regular-file reads, streaming SHA-256 capture,
+private directory creation, and atomic no-overwrite writes for
+[`tools/local_data/manage.py`](../../../tools/local_data/manage.py). It performs no
+network access, extraction, source admission, or publication. `admit.py` remains
+unimplemented; the non-authoritative descriptor now records unknown sensitivity.
+The [local-PC runbook](../../../docs/runbooks/local-pc-data-store.md) and
+[`tests/local_data/`](../../../tests/local_data/) describe and check this slice.
+The pinned scaffold observations below are historical; this section supersedes
+their present-tense claims about `fetch.py`, sensitivity, and available tests.
+
+
 > Repository-grounded boundary for `connectors/local_upload/src/`. The layout contains one `local_upload` Python namespace and verified placeholder files, but no supported connector behavior. It organizes future package code only; it is not a source registry, policy engine, lifecycle store, upload service, evidence authority, release plane, or public surface.
 
 **Document lifecycle:** `draft v0.2`  

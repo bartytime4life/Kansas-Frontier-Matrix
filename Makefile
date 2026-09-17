@@ -13,6 +13,14 @@ VALIDATOR_ORCHESTRATOR := python tools/validate_all.py
 
 .PHONY: normalized-summary-check
 
+.PHONY: local-data-check local-data-doctor
+
+local-data-check:
+	$(KFM_VALIDATION_ENV) python -m pytest -q -p no:cacheprovider --strict-config --strict-markers tests/local_data
+
+local-data-doctor:
+	python3 tools/local_data/doctor.py
+
 # Bounded doctrine summary regressions; no cutover or readiness authority.
 normalized-summary-check:
 	$(KFM_VALIDATION_ENV) python tools/validators/source/validate_doctrine_artifact_preflight_summary.py --fixtures
@@ -28,6 +36,8 @@ help:
 	@echo "  schemas               Run configured aggregate validators against fixtures"
 	@echo "  test                  Run repository schema and contract tests"
 	@echo "  normalized-summary-check Test summary structure, compatibility and CI failure propagation"
+	@echo "  local-data-doctor     Inspect local-PC prerequisites without installing or starting services"
+	@echo "  local-data-check      Test offline local-data capture, safety, and recovery"
 	@echo "  docs-critical-structure Test and run the critical-document structure sentinel"
 	@echo "  workflow-security     Test and run the 20-rule workflow-security ratchet"
 	@echo "  repository-topology  Test and run the 20-rule directory-topology ratchet"

@@ -1,0 +1,66 @@
+# Offline workstation capture checks. No source activation or production writes.
+name: local-data-store
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/local-data-store.yml"
+      - "tools/local_data/**"
+      - "connectors/local_upload/**"
+      - "tests/local_data/**"
+      - "schemas/contracts/v1/source/local_data_manifest.schema.json"
+      - "schemas/contracts/v1/source/ingest_receipt.schema.json"
+      - "contracts/source/local_data_manifest.md"
+      - "configs/examples/local-data-manifest.json"
+      - "fixtures/source/local_data/**"
+      - "docs/runbooks/local-pc-data-store.md"
+      - "Makefile"
+      - "pyproject.toml"
+  push:
+    branches:
+      - main
+      - agent/local-pc-data-store-20260917
+    paths:
+      - ".github/workflows/local-data-store.yml"
+      - "tools/local_data/**"
+      - "connectors/local_upload/**"
+      - "tests/local_data/**"
+      - "schemas/contracts/v1/source/local_data_manifest.schema.json"
+      - "schemas/contracts/v1/source/ingest_receipt.schema.json"
+      - "contracts/source/local_data_manifest.md"
+      - "configs/examples/local-data-manifest.json"
+      - "fixtures/source/local_data/**"
+      - "docs/runbooks/local-pc-data-store.md"
+      - "Makefile"
+      - "pyproject.toml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: local-data-store-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  local-data-check:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      KFM_NO_NETWORK: "1"
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONHASHSEED: "0"
+      TZ: UTC
+    steps:
+      - name: Check out source without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+      - name: Install declared test dependencies
+        run: python tools/ci/install_python_ci.py project-test
+      - name: Check local capture and operator contracts without network
+        run: make local-data-check

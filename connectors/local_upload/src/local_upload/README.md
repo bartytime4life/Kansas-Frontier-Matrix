@@ -61,6 +61,19 @@ notes:
 
 # Local Upload Greenfield Package and Trust-Edge Boundary
 
+## Local quarantine capture implementation — current branch
+
+`fetch.py` now supplies bounded regular-file reads, streaming SHA-256 capture,
+private directory creation, and atomic no-overwrite writes for
+[`tools/local_data/manage.py`](../../../../tools/local_data/manage.py). It performs no
+network access, extraction, source admission, or publication. `admit.py` remains
+unimplemented; the non-authoritative descriptor now records unknown sensitivity.
+The [local-PC runbook](../../../../docs/runbooks/local-pc-data-store.md) and
+[`tests/local_data/`](../../../../tests/local_data/) describe and check this slice.
+The pinned scaffold observations below are historical; this section supersedes
+their present-tense claims about `fetch.py`, sensitivity, and available tests.
+
+
 > Repository-grounded boundary for `connectors/local_upload/src/local_upload/`. The namespace exists, but the inspected package is a non-operational `0.0.0` scaffold at KFM's highest-uncertainty intake edge. It does not currently fetch, inspect, scan, parse, admit, quarantine, persist, or publish an uploaded file.
 
 **Document lifecycle:** `draft v0.2`  
