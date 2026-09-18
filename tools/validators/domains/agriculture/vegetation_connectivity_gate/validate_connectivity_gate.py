@@ -12,10 +12,14 @@ from itertools import islice
 from pathlib import Path
 from typing import Any, Iterable, Mapping, Sequence
 
+REPO_ROOT = Path(__file__).resolve().parents[5]
+HASHING_SRC = REPO_ROOT / "packages/hashing/src"
+if str(HASHING_SRC) not in sys.path:
+    sys.path.insert(0, str(HASHING_SRC))
+
 from hashing import compute_spec_hash
 from jsonschema import Draft202012Validator, FormatChecker
 
-REPO_ROOT = Path(__file__).resolve().parents[5]
 SCHEMA_PATH = REPO_ROOT / "schemas/contracts/v1/domains/agriculture/vegetation_connectivity_gate.schema.json"
 FIXTURE_PATH = REPO_ROOT / "fixtures/domains/agriculture/vegetation_connectivity_gate/cases.json"
 MAX_JSON_BYTES = 2 * 1024 * 1024

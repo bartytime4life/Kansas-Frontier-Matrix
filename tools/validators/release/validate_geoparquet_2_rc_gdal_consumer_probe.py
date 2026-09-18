@@ -6,11 +6,16 @@ import argparse
 import hashlib
 import json
 import re
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
 from jsonschema import Draft202012Validator
+
+ROOT = Path(__file__).resolve().parents[3]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 from tools.experiments.geoparquet.run_gdal_3_13_2_consumer_probe import (
     COORDINATES,
@@ -26,7 +31,6 @@ from tools.experiments.geoparquet.run_gdal_3_13_2_consumer_probe import (
     SOURCE_PROFILE,
 )
 
-ROOT = Path(__file__).resolve().parents[3]
 SCHEMA = ROOT / "schemas/contracts/v1/release/geoparquet_2_rc_gdal_consumer_probe.schema.json"
 ALLOWED_ERROR_REASONS = {
     "GDAL_IMAGE_UNAVAILABLE",

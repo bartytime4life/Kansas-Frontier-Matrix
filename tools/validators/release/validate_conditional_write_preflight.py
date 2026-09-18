@@ -5,10 +5,14 @@ review, promotion, release, publication, or public-use authority is created.
 """
 from __future__ import annotations
 
-import argparse
-import json
+import argparse, json, sys
 from pathlib import Path
 from typing import Any, Mapping, Sequence
+
+REPO_ROOT = Path(__file__).resolve().parents[3]
+for p in (REPO_ROOT, REPO_ROOT / "packages/hashing/src"):
+    if str(p) not in sys.path:
+        sys.path.insert(0, str(p))
 
 from hashing import CanonicalizationFailure, JsonInputError, compute_spec_hash, load_json_file
 from tools.validators.release._conditional_write_preflight_model import (

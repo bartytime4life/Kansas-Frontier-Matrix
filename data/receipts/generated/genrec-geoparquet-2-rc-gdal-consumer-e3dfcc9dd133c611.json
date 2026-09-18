@@ -13,9 +13,9 @@
     ".github/workflows/geoparquet-2-rc-gdal-consumer-probe.yml": "sha256:e93619358c657375fbc1a5a6031e2c959801f692318ee8f71d498fbdd743c39c",
     "contracts/release/geoparquet_2_rc_gdal_consumer_probe.md": "sha256:a79efd3886904606b06cd12e5c1462d5fa041a8b7049fdaf91662bc8bcfe05e1",
     "schemas/contracts/v1/release/geoparquet_2_rc_gdal_consumer_probe.schema.json": "sha256:59d45d56f7968c690948bf8e8aca6b88d2ab5893410cf1a6394058e4d6e2d70b",
-    "tests/release/test_geoparquet_2_rc_gdal_consumer_probe.py": "sha256:f35260cd6c0cdd5aafaab5a84f6fb2a74efda5490c47ac2c3c4daf6c1c723c83",
+    "tests/release/test_geoparquet_2_rc_gdal_consumer_probe.py": "sha256:87151fe4a8e76684d84b4dd7d144dd5e4a51d8b2a7b352d382d5b39f6ce6573e",
     "tools/experiments/geoparquet/run_gdal_3_13_2_consumer_probe.py": "sha256:b409341473822aafea47f7f9fabab532320c6d9215763e5ffb146b98f24fd6b4",
-    "tools/validators/release/validate_geoparquet_2_rc_gdal_consumer_probe.py": "sha256:8202d20b1412cab297b9de8b931e6d3c0edb660ac6048cb76f0f02f7febbf36e"
+    "tools/validators/release/validate_geoparquet_2_rc_gdal_consumer_probe.py": "sha256:aa528e8a57c7c2174d860a6888aed6ab7c4ffea1be4e2f8c6abc5aa6b5507472"
   },
   "model_identity": {
     "provider": "OpenAI",

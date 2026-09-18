@@ -121,7 +121,7 @@ A drift entry is an index record. It must carry enough references for a steward 
 ## Current reconciliation
 
 **Readback date:** 2026-09-06 UTC  
-**Implementation authority:** [main@1e69410cfd871e1ec004eedcd23f845eff435137](https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/1e69410cfd871e1ec004eedcd23f845137)  
+**Implementation authority:** [main@1e69410cfd871e1ec004eedcd23f845eff435137](https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/1e69410cfd871e1ec004eedcd23f845eff435137)  
 **Scope:** profile currentness and drift indexing only. This snapshot does not admit a YAML instance, change a ruleset, resolve an incident, or promote a register.
 
 | Observed surface | Current evidence | Bounded interpretation |
@@ -232,6 +232,8 @@ PROPOSED until schema/validator is verified:
 
 Rollback is required if this file becomes the canonical human narrative register, a policy decision engine, a schema home, a proof store, a release approval record, a source registry, or a way to claim remediation without evidence.
 
-Rollback target for this v0.2 currentness update: restore the pre-update profile blob 2c472bd2552b758d365a8e9311aaa19ff4d5d7b9 through a reviewed forward revert.\n\nRollback target for the original scaffold expansion remains: previous scaffold blob SHA 3a4892947bbadf0ae6fa92f20537d1442318ab8c.
+Rollback target for this v0.2 currentness update: restore the pre-update profile blob 2c472bd2552b758d365a8e9311aaa19ff4d5d7b9 through a reviewed forward revert.
+
+Rollback target for the original scaffold expansion remains: previous scaffold blob SHA 3a4892947bbadf0ae6fa92f20537d1442318ab8c.
 
 <p align="right"><a href="#top">Back to top</a></p>
