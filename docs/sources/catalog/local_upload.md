@@ -26,7 +26,7 @@ publishes a file.
 ## Implementation and source identity
 
 - Operator and storage inspection: [`tools/local_data/`](../../../tools/local_data/).
-- Local capture helper: [`connectors/local_upload/src/local_upload/fetch.py`](../../../connectors/local_upload/src/local_upload/fetch.py).
+- Local capture helper: [`tools/local_data/file_io.py`](../../../tools/local_data/file_io.py).
 - Input meaning: [`Local data manifest`](../../../contracts/source/local_data_manifest.md).
 - Machine shape: [`local_data_manifest.schema.json`](../../../schemas/contracts/v1/source/local_data_manifest.schema.json).
 - Canonical registered source identities: [`data/registry/sources/`](../../../data/registry/sources/).

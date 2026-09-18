@@ -2,7 +2,7 @@
 doc_id: kfm://doc/fixtures-readme
 title: fixtures/ — Canonical Reusable Fixture Root
 type: readme; root-readme; canonical-fixtures-root; reusable-test-fixture-boundary
-version: v0.2.2
+version: v0.2.3
 status: repository-grounded draft; aligned to adopted Directory Rules v2; non-authoritative
 created: NEEDS VERIFICATION
 updated: 2026-08-23
@@ -15,7 +15,7 @@ readme_profile: ROOT_FULL
 policy_label: public-review; synthetic-public-safe-only; no-network-default; no-authority; cite-or-abstain
 truth_posture: >
   CONFIRMED the existing same-path canonical fixture root, adopted Directory Rules v2
-  through ADR-0029, root.fixtures machine projection, current 30-direct-child tree,
+  through ADR-0029, root.fixtures machine projection, current 31-direct-child tree,
   23-validator aggregate profile, generated-receipt fixture lane, no-network
   validation posture, CODEOWNERS route, and make fixtures readiness-marker behavior at
   head@76bc1ffef374f14e0123f2e0817e8cab0c3727f5 / PROPOSED the fixture admission
@@ -53,6 +53,7 @@ related:
   - ../data/receipts/generated/README.md
 tags: [kfm, fixtures, root-readme, synthetic, deterministic, valid, invalid, golden, denied, abstain, hold, error, correction, rollback, no-network, public-safe]
 notes:
+  - "v0.2.3 adds the already-present source/ direct child (introduced by the local-data source-admission fixtures) to the exact root map and advances the reviewed count from 30 to 31; no child is moved, reclassified, promoted, or published."
   - "v0.2.2 adds the already-present correction/ direct child to the exact root map and advances the reviewed count from 29 to 30; no child is moved, reclassified, promoted, or published."
   - "v0.2.1 reconciles the direct-child inventory after governance/ and policy/ were present but omitted from the prior map; no child is moved, reclassified, promoted, or published."
   - "The first twelve H2 sections implement the adopted Directory Rules v2 ROOT_FULL order."
@@ -83,7 +84,7 @@ notes:
 | Repository exposure | `public`; payloads must therefore be synthetic and public-safe |
 | Mutation / retention | `versioned` / `repository_lifetime` |
 | Validation profile | `synthetic_public_safe_only` |
-| Direct-child snapshot | `README.md` plus 30 directories at `head@76bc1ff…` |
+| Direct-child snapshot | `README.md` plus 31 directories at `head@76bc1ff…` |
 | Normal public-client use | **DENY** — repository fixtures are not governed runtime data |
 | Release or publication effect | None |
 
@@ -143,7 +144,7 @@ The current machine projection and [CODEOWNERS](../.github/CODEOWNERS) route thi
 | Placement authority | **CONFIRMED** | Directory Rules v2 adopted through ADR-0029 |
 | Root projection | **CONFIRMED** | `root.fixtures` is present in the root registry |
 | Same-path README role | **CONFIRMED** | Existing root README modernized in place |
-| Direct-child inventory | **CONFIRMED** | 30 direct-child directories at the pinned tree |
+| Direct-child inventory | **CONFIRMED** | 31 direct-child directories at the pinned tree |
 | Reusable fixture role | **CONFIRMED** | Root registry and current validator consumers |
 | All child contracts current | **NEEDS VERIFICATION** | Child README depth and freshness are mixed |
 | Complete recursive payload inventory | **UNKNOWN** | No claim of every nested file or consumer |
@@ -490,6 +491,7 @@ fixtures/
 ├── review/                       # Review-record fixture families.
 ├── runtime/                      # Runtime-envelope and adapter fixtures.
 ├── slim/                         # Compact fixture subsets.
+├── source/                       # Source-admission fixture families.
 ├── synthetic/                    # General synthetic compatibility lane.
 ├── ui/                           # UI trust-state fixture families.
 └── valid/                        # Cross-cutting valid cases.
