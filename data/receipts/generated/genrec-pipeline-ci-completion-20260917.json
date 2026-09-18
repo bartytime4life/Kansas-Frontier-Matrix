@@ -1,0 +1,143 @@
+{
+  "receipt_id": "genrec-pipeline-ci-completion-20260917",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/hydrology-wbd-huc12-ingest-candidate.yml",
+    ".github/workflows/local-data-store.yml",
+    ".github/workflows/native-explorer-check.yml",
+    ".github/workflows/offline-pipeline-check.yml",
+    ".github/workflows/pipeline-spec-declarations.yml",
+    ".github/workflows/soil-mesonet-fixture-normalizer.yml",
+    ".github/workflows/soil-mesonet-station-health.yml",
+    "Makefile",
+    "tests/ci/test_install_python_ci.py",
+    "tools/ci/README.md",
+    "tools/ci/install_python_ci.py",
+    "tools/ci/python-geo.lock"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/hydrology-wbd-huc12-ingest-candidate.yml": "sha256:73d1e6e6e71b3b0e876267b4b91968fb0d97b1652006e5d2e238da5abba57a41",
+    ".github/workflows/local-data-store.yml": "sha256:eca3de66ba316fb7dcfffe4dc36ceb4c63ded265cffa57901a7122590001c69b",
+    ".github/workflows/native-explorer-check.yml": "sha256:8b80c946ec8f14f9a7a337b57922b18cc20351d6779f240cf9e77725b46a32ca",
+    ".github/workflows/offline-pipeline-check.yml": "sha256:17dbd30fd2d0167ac8c3c470a1327b41a170c1667ff82dd0574cfad86a6a00fa",
+    ".github/workflows/pipeline-spec-declarations.yml": "sha256:b6cb4dda982a0a596a24c64f9327e455a59e2c2b28f62763ee8b8713c8501d42",
+    ".github/workflows/soil-mesonet-fixture-normalizer.yml": "sha256:ac017abb619c9305ec2cbc1a2a625f7759ba41507e0df2d937d45c2b9a15a4fb",
+    ".github/workflows/soil-mesonet-station-health.yml": "sha256:a565187ef73b354b10c7429762742ed437249b3215c6dbb7e88e65fe72baa63b",
+    "Makefile": "sha256:2619b812b00a6e86ed3e0f91fd02255b7dd07b206507c3033cd2986d8d72a28f",
+    "tests/ci/test_install_python_ci.py": "sha256:a816bb28244250b78942b9a86291f99ec4f29d76ce9137e80dc6e671ff7b52bf",
+    "tools/ci/README.md": "sha256:c1e77e8c6707b19962822644a359908c191ad255064eebab8dd0323874ae021b",
+    "tools/ci/install_python_ci.py": "sha256:e02a94f14d9a9e44390cd9392184939ac7fb447bd060cb6cc9c7ac2c5b50089c",
+    "tools/ci/python-geo.lock": "sha256:d55c5a7245fbfeaad089422b0381b53d345b5ee7069e060a15331e3c1b5701d0"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "not-exposed"
+  },
+  "prompt_or_contract": "sha256:7e1e46908b275bfe9e6b9e9c1e2726a332d1613035a26be4acd43c8f8e8662ac",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "repository inspection",
+      "GitHub",
+      "Sites readback",
+      "Google Drive",
+      "Notion",
+      "local validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "main@a9fe94fe98ffde1ea7671e0875c55856e95d923b",
+      "docs/doctrine/directory-rules.md",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/rules/15484585"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/hydrology-wbd-huc12-ingest-candidate.yml": "CONFIRMED",
+    ".github/workflows/local-data-store.yml": "CONFIRMED",
+    ".github/workflows/native-explorer-check.yml": "CONFIRMED",
+    ".github/workflows/offline-pipeline-check.yml": "CONFIRMED",
+    ".github/workflows/pipeline-spec-declarations.yml": "CONFIRMED",
+    ".github/workflows/soil-mesonet-fixture-normalizer.yml": "CONFIRMED",
+    ".github/workflows/soil-mesonet-station-health.yml": "CONFIRMED",
+    "Makefile": "CONFIRMED",
+    "tests/ci/test_install_python_ci.py": "CONFIRMED",
+    "tools/ci/README.md": "CONFIRMED",
+    "tools/ci/install_python_ci.py": "CONFIRMED",
+    "tools/ci/python-geo.lock": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "offline synthetic pipelines",
+      "outcome": "PASS",
+      "reason": "make offline-pipeline-check: 170 tests, zero skips, Python 3.12.14, pyproj 3.7.2, Python startup egress guard and PROJ_NETWORK=OFF. Initial 20 missing-dependency failures were resolved by the exact geo-transforms profile; no production geometry claim."
+    },
+    {
+      "gate": "local-data regression",
+      "outcome": "PASS",
+      "reason": "make local-data-check: 91 tests and 16 subtests with the injected Python egress guard."
+    },
+    {
+      "gate": "inactive declarations and WBD materiality",
+      "outcome": "PASS",
+      "reason": "26 tests and 2 subtests; inactive-declaration corpus 110 records and 4 polarity fixtures pass. No declaration is activated."
+    },
+    {
+      "gate": "CI installer and workflow-security regressions",
+      "outcome": "PASS",
+      "reason": "47 tests and 91 subtests. Two initial ancestry-test failures were local shallow-checkout preconditions and passed after full history was fetched; no assertion was weakened."
+    },
+    {
+      "gate": "native Explorer repository mirror",
+      "outcome": "PASS",
+      "reason": "Node 22.22.0, pnpm 11.17.0 frozen workspace install and build succeed. Application tests 156 PASS / 2 opt-in SKIPPED; lint-compatibility tests 26 PASS. Skips are legacy esbuild runtime and Drizzle SQL-generation probes. No hosted WebGL, deployment or live-Site parity proof."
+    },
+    {
+      "gate": "workflow security",
+      "outcome": "PASS",
+      "reason": "493 workflows; zero invariant findings, new drift, baselined warnings or stale entries."
+    },
+    {
+      "gate": "historical receipts",
+      "outcome": "PASS",
+      "reason": "Three unchanged receipt files validate 1, 7 and 2 artifacts against exact ancestors 41d4a885a2a01667bb9846c0fb937b856379afb8, 22a78f782f8333801a8c00920e5e1d97c93ef85b, aa7928b36f2a34f10eb087a0dbf15f176aa3fbe8. Changed workflows fetch full history and use those pins; this successor binds current bytes."
+    },
+    {
+      "gate": "repository topology",
+      "outcome": "FAIL",
+      "reason": "Inherited and unchanged: 125 findings (124 baselined warnings, one KFM-TOPO-004 frozen-catalog drift) and one stale fingerprint. Base and candidate findings and baseline objects are identical. No catalog or topology baseline changed."
+    },
+    {
+      "gate": "hosted matrix and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Not run at authoring. Python 3.11 matrix and hosted native build are not claimed. Human review pending; #4024 keeps the PR delivery path held."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "directory-rules-adoption",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@a9fe94fe98ffde1ea7671e0875c55856e95d923b"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-17T13:47:30.164620+00:00",
+  "emitter": "Codex bounded KFM pipeline CI completion",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "VALIDATED_BRANCH_ONLY. Base a9fe94fe98ffde1ea7671e0875c55856e95d923b. Two new CI entry points plus five existing workflow repairs; optional geometry wheel lock/profile; Make parity; bounded Python test egress guard; historical receipts preserved. Native app source and dependency locks unchanged. Live Sites readback remains v46; repository mirror validation does not establish live-source equivalence. Existing release-closure and conformance branches were identified and not duplicated. User-authorized authoring does not authorize readiness, merge, settings, scheduler activation, provider retrieval, source admission, lifecycle promotion, release, deployment, public serving or publication. Independent human review and #4024 containment remain open. Paths follow ADR-0029 responsibility roots. Rollback: abandon this unmerged branch; after separately authorized integration revert this increment as a unit and preserve receipt history. Receipt excludes itself to avoid circular hashing."
+}

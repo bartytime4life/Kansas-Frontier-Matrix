@@ -1,0 +1,78 @@
+{
+  "receipt_id": "genrec-pipeline-ci-migration-replay-20260918",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/python-dependency-lock.yml"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/python-dependency-lock.yml": "sha256:034461f36d4f3e429845dde8772cb27f8298b78df78042a0f792a817743e8251"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "not-exposed"
+  },
+  "prompt_or_contract": "sha256:ba7067ca7c92a0fe778b4893ab8b8d198820a0b1feaf83c8496ba96c3c97ab9d",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "repository inspection",
+      "GitHub",
+      "Sites readback",
+      "Google Drive",
+      "Notion",
+      "local validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "e584126e44bd542a88217604d796cd5bff6ff875",
+      "8343b10391e6199078e6286fd4e93f807a8930a8",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/35304142765"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/python-dependency-lock.yml": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "historical migration replay",
+      "outcome": "PASS",
+      "reason": "Exact pinned ledger commit 8343b103 is an ancestor of the candidate; verify-workflows passes against its unchanged workflow bytes. Current main has 24 later-byte mismatches and candidate has 27; these are not relabeled migration evidence."
+    },
+    {
+      "gate": "current installer and profile invariants",
+      "outcome": "PASS",
+      "reason": "19 installer tests pass, including current workflow profile parsing, prohibited direct installs, hash enforcement and declared geometry dependency binding."
+    },
+    {
+      "gate": "hosted matrix and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Pending at authoring; no authorization or deployment acceptance asserted."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "directory-rules-adoption",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@a9fe94fe98ffde1ea7671e0875c55856e95d923b"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-18T03:48:16.328508+00:00",
+  "emitter": "Codex KFM pipeline finalization",
+  "links": {
+    "pr_number": 4626,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Follow-up on draft PR #4626. Corrects runtime-probe applicability after removal of Drizzle, without changing security floor, lock policy, dependency declarations, network behavior, or governing authorization controls. Unlike checking installation alone, declaration or installation keeps the requested probe active so broken declared installations fail. Related overlap #4625 identified; no other PR state changed. Original receipts and accepted evidence remain historical. No merge, settings, source activation, release or deployment. Rollback: revert this isolated test correction and retain receipt history."
+}

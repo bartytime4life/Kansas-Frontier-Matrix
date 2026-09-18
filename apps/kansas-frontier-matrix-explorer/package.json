@@ -8,12 +8,13 @@
   "scripts": {
     "install:ci": "bash scripts/install-ci.sh",
     "dev": "WRANGLER_LOG_PATH=.wrangler/wrangler.log vite",
-    "build": "bash scripts/build-verified.sh",
+    "build": "npm run typecheck && bash scripts/build-verified.sh",
     "start": "WRANGLER_LOG_PATH=.wrangler/wrangler.log vite preview --host 0.0.0.0",
     "test": "npm run build && node --test tests/*.test.mjs",
     "posttest": "npm run test:lint",
     "test:lint": "node --test ../../tests/ui/test_explorer_lint_compat.mjs",
-    "lint": "bash scripts/sites-env.sh -- eslint . --ignore-pattern dist --ignore-pattern public/maplibre"
+    "lint": "bash scripts/sites-env.sh -- eslint . --ignore-pattern dist --ignore-pattern public/maplibre",
+    "typecheck": "tsc --noEmit --incremental false"
   },
   "dependencies": {
     "react": "19.3.0",

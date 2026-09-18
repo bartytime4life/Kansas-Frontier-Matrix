@@ -23,14 +23,12 @@ hold](docs/sites-source-alignment.md).
 
 ## Safe UI failure fallback
 
-The root Next/Vinext route now owns a fail-closed error boundary at
-[`app/error.tsx`](app/error.tsx). Unexpected rendering failures stop the view
-before it can present an unsupported result, expose only the stable code
-`KFM-UI-UNEXPECTED-ERROR` plus a sanitized correlation digest when available,
-and offer retry/reset and return actions. Raw error messages, stack traces, and
-internal paths are never rendered or logged. This is the first bounded UI slice
-tracked by [issue #4416](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4416);
-it does not add telemetry, a health endpoint, or deployment authority.
+The reusable fail-closed component at [`app/error.tsx`](app/error.tsx) exposes
+only the stable code `KFM-UI-UNEXPECTED-ERROR` and a sanitized correlation digest.
+The Vite entrypoint does not automatically mount file-based route boundaries.
+Runtime error-boundary composition and browser acceptance therefore remain open
+under [issue #4416](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4416).
+Source tests do not prove that this component catches errors in the running app.
 
 Run `node --test tests/error-boundary.test.mjs` for the focused source and
 TypeScript-transpile regression checks.
@@ -42,7 +40,7 @@ TypeScript-transpile regression checks.
 | OpenAI Sites project | `appgprj_6aa0b1c41bc08191bfd86003920f1631` from [`.openai/hosting.json`](./.openai/hosting.json) |
 | Existing slug | `kansas-frontier-matrix-explorer` |
 | Existing public URL | <https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site> |
-| Authoritative host | OpenAI Sites/Vinext; [issue #4232](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4232) records the adapter decision |
+| Authoritative host | OpenAI Sites; [issue #4232](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4232) records the adapter decision |
 | Current evidence | [Identity and source-alignment hold](./docs/sites-source-alignment.md); the older replacement handoff and v1 receipt are historical |
 | Hosted version state | The 2026-09-17 Sites readback records a successful v45 deployment, but v45 mirror equality, production-browser acceptance, and recovery remain `HOLD` |
 
@@ -66,7 +64,8 @@ operation. A current deployment stays held until an exact current-project receip
 contract and source-equivalence proof are reviewed. Neither repository metadata nor
 a Sites deployment record authorizes a release or publication.
 
-The application runs as a single-route Vinext site through the package-owned
+The repository application uses Vite and React, with `/` and `/about` selected
+in `main.tsx`, through the package-owned
 `NullMapRuntime`. TypeScript and Vite resolve the `@kfm/maplibre` facade to the
 accepted workspace package root, following the same renderer-neutral pattern as
 `explorer-web`; the child manifest acquires no renderer or internal package by
@@ -87,78 +86,28 @@ The Sites lifecycle CLI runs the locked dependency install before returning this
 
 This project does not use `wrangler.jsonc`.
 
-`install:ci` is intentionally a single, non-retrying `npm ci`. It refuses a concurrent install for the same project, consumes a matching image-seeded npm cache with `--prefer-offline` while retaining registry fallback for a missing cache object, otherwise downloads and verifies the complete vinext tarball recorded in `package-lock.json`, limits npm to one socket, and terminates a stalled install. `build` applies a short timeout. These helpers target Linux and use GNU `timeout`; they are not native macOS scripts.
+`install:ci` is intentionally a single, non-retrying `npm ci`. It refuses a concurrent install for the same project, consumes a matching image-seeded npm cache with `--prefer-offline` while retaining registry fallback for a missing cache object, otherwise uses the registry, limits npm to one socket, and terminates a stalled install. `build` first requires a strict TypeScript no-emit pass, then applies a short timeout to Vite. These helpers target Linux and use GNU `timeout`; they are not native macOS scripts.
 
 Scripts that need writable project-scoped home, npm, XDG, and temporary paths use `scripts/sites-env.sh`. The `dev` and `start` scripts honor the caller's runtime environment and keep Wrangler logs inside the checkout. The generated `.sites-runtime/` directory is disposable and ignored by Git.
 
 ## Implementation shape
 
-- edit site code under `app/`
-- `app/chatgpt-auth.ts` provides optional dispatch-owned ChatGPT sign-in helpers
-- `.openai/hosting.json` declares optional Sites D1 and R2 bindings
-- `vite.config.ts` simulates declared bindings for local development
-- `db/index.ts` reads the D1 binding from the Cloudflare Worker environment
-- `db/schema.ts` starts intentionally empty
-- `examples/d1/` contains an optional D1 example surface
-- `drizzle.config.ts` supports local migration generation when needed
+- `main.tsx` composes the React client and selects the Explorer or About view.
+- `app/` contains the Explorer UI, local fixtures, and finite evidence behavior.
+- `vite.config.ts` builds the client and Worker and resolves the sibling map package.
+- `.openai/hosting.json` preserves the existing Sites identity; D1/R2 are unbound here.
+- `worker/index.ts` serves the built assets. The removed database, Drizzle, and
+  Next-specific authentication helpers are not available in this application.
+- The remaining orphan D1 notes example was removed because its database module,
+  schema, and dependency had already been removed. No live database was changed.
 
-## Workspace Auth Headers
+## Authentication boundary
 
-OpenAI workspace sites can read the current user's email from
-`oai-authenticated-user-email`.
-
-SIWC-authenticated workspace sites may also receive
-`oai-authenticated-user-full-name` when the user's SIWC profile has a non-empty
-`name` claim. The full-name value is percent-encoded UTF-8 and is accompanied by
-`oai-authenticated-user-full-name-encoding: percent-encoded-utf-8`.
-
-Treat the full name as optional and fall back to email when it is absent:
-
-```tsx
-import { headers } from "next/headers";
-
-export default async function Home() {
-  const requestHeaders = await headers();
-  const email = requestHeaders.get("oai-authenticated-user-email");
-  const encodedFullName = requestHeaders.get("oai-authenticated-user-full-name");
-  const fullName =
-    encodedFullName &&
-    requestHeaders.get("oai-authenticated-user-full-name-encoding") ===
-      "percent-encoded-utf-8"
-      ? decodeURIComponent(encodedFullName)
-      : null;
-
-  const displayName = fullName ?? email;
-  // ...
-}
-```
-
-## Optional Dispatch-Owned ChatGPT Sign-In
-
-Import the ready-to-use helpers from `app/chatgpt-auth.ts` when the site needs
-optional or required ChatGPT sign-in:
-
-- Use `getChatGPTUser()` for optional signed-in UI.
-- Use `requireChatGPTUser(returnTo)` for server-rendered pages that should send
-  anonymous visitors through Sign in with ChatGPT.
-- Use `chatGPTSignInPath(returnTo)` and `chatGPTSignOutPath(returnTo)` for
-  browser links or actions.
-- Pass a same-origin relative `returnTo` path for the destination after sign-in
-  or sign-out. The helper validates and safely encodes it.
-- Mark protected pages with `export const dynamic = "force-dynamic"` because
-  they depend on per-request identity headers.
-
-Dispatch owns `/signin-with-chatgpt`, `/signout-with-chatgpt`, `/callback`, the
-OAuth cookies, and identity header injection. Do not implement app routes for
-those reserved paths. Routes that do not import and call the helper remain
-anonymous-compatible.
-
-SIWC establishes identity only; it does not prove workspace membership. Use the
-Sites hosting platform's access policy controls for workspace-wide restrictions,
-or enforce explicit server-side membership or allowlist checks.
-
-Use SIWC for account pages, user-specific dashboards, saved records, and write
-actions tied to the current ChatGPT user. Leave public content anonymous.
+The client does not implement server request-header access or ChatGPT sign-in
+helpers. Do not treat browser state as authenticated identity or import removed
+server helpers. Hosted audience and authentication behavior require independent
+verification against the existing Sites deployment; repository checks do not
+change those controls.
 
 ## Browser-local waveform preview
 
@@ -169,12 +118,12 @@ The preview is deliberately `UNADMITTED_BROWSER_PREVIEW`: no provider URL, FDSN 
 ## Diagnostic Commands
 
 - `npm run install:ci`: perform the one bounded lockfile install
-- `npm run dev`: start the Vite/Vinext development server
-- `npm run build`: build the deployable Sites artifact
-- `npm run start`: start the built Vinext application
-- `npm test`: build and verify the rendered development-preview metadata
+- `npm run dev`: start the Vite development server
+- `npm run build`: require TypeScript no-emit success, then build the Vite artifact
+- `npm run start`: preview the built Vite application
+- `npm test`: type-check, build, and run the repository app and lint-compatibility tests
 - `node --test tests/hosting-boundary.test.mjs`: verify Sites identity, replacement handoff, and host non-effects
-- `npm run db:generate`: generate Drizzle migrations after schema changes
+- `npm run typecheck`: check all included TypeScript without emitting files
 
 Use build commands for targeted diagnosis after a remote failure, not as part of the normal checkpoint path.
 
@@ -182,5 +131,4 @@ The timeout defaults can be overridden for a controlled canary with `SITES_INSTA
 
 ## Learn More
 
-- [vinext Documentation](https://github.com/cloudflare/vinext)
-- [Drizzle D1 Guide](https://orm.drizzle.team/docs/get-started/d1-new)
+- [Vite guide](https://vite.dev/guide/)
