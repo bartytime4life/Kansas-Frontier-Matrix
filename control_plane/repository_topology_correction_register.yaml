@@ -44,3 +44,294 @@ entries:
     retirement:
       reuse: forbidden
       condition: baseline-has-to-fingerprint-and-no-pending-consumer
+
+  # DRAFT / PROPOSED — not reviewed, not accepted, not consumable.
+  # Chains sequentially from the KFM-TOPO-004-CORR-4228-01 "to" fingerprint
+  # (post-agriculture state). Each entry's "from" equals the previous
+  # entry's "to"; order was chosen only to produce a valid, verifiable
+  # chain and may be re-sequenced by the reviewing decision. Every
+  # fingerprint below was computed directly from live Git blob IDs, not
+  # invented. decision_ref intentionally has no accepted ADR yet: these
+  # transitions are outside ADR-0038's stated scope (issue #4228 covers
+  # only the agriculture path). PR #4512 attempted to resolve this drift
+  # by reverting these seven paths to their pre-redirect blobs instead of
+  # registering the redirect text, and was itself reverted (PR #4514)
+  # after a review objection that the restored (old) text "reintroduced
+  # forbidden frozen-root write guidance." These entries instead propose
+  # accepting the current, post-#4514 redirect text as the registered
+  # target — the opposite direction from #4512 — per owner instruction.
+  # A real accepted decision record (see decision_ref.path, not yet
+  # written) is required before Stage 1B binding.
+
+  - correction_id: KFM-TOPO-004-CORR-4512-01
+    status: proposed
+    consume_once: true
+    rule_id: KFM-TOPO-004
+    subject: catalog/
+    path: catalog/STAC/README.md
+    from:
+      fingerprint: sha256:0ad45247555960029c34d1222365cbe17a5cabec278bf9f6b8f3e9572ea33e8f
+      blob: 198a970db9e71b2dc7f5cdbf171b14c0f9a878ce
+      member_count: 43
+    to:
+      fingerprint: sha256:5517e475f22d4f7e5b54d88d728edda389a106a903cf769ac3c98eaeb08c6c4b
+      blob: c2e327dafbabec3cd6cc185f690fbcf4f227ca11
+      member_count: 43
+    exact_delta:
+      removed:
+        - catalog/STAC/README.md@198a970db9e71b2dc7f5cdbf171b14c0f9a878ce
+      added:
+        - catalog/STAC/README.md@c2e327dafbabec3cd6cc185f690fbcf4f227ca11
+      unchanged_member_count: 42
+      require_equal_path_set: true
+    decision_ref:
+      path: docs/adr/ADR-0039-catalog-redirect-metadata-corrections.md
+      blob: null
+      accepted_commit: null
+    evidence_refs:
+      - https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4512
+      - https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4514
+      - https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024
+      - main@df1a97097f2a4604d31f12a54434efc878af550c
+    reason_code: catalog-redirect-metadata-refresh-post-4514
+    rollback:
+      mode: revoke-acceptance-and-fail-closed
+      prohibited_automatic_restore_blob: 198a970db9e71b2dc7f5cdbf171b14c0f9a878ce
+      content_change_requires_new_transition: true
+    retirement:
+      reuse: forbidden
+      condition: baseline-has-to-fingerprint-and-no-pending-consumer
+
+  - correction_id: KFM-TOPO-004-CORR-4512-02
+    status: proposed
+    consume_once: true
+    rule_id: KFM-TOPO-004
+    subject: catalog/
+    path: catalog/domain/README.md
+    from:
+      fingerprint: sha256:5517e475f22d4f7e5b54d88d728edda389a106a903cf769ac3c98eaeb08c6c4b
+      blob: fd4826b2b5e54672796b840d2664b5947d4054ec
+      member_count: 43
+    to:
+      fingerprint: sha256:dbac8e3f55a2810c36941d3339d2280be26db59eaf4ca05fbc56ab108eb3b254
+      blob: ad9e2406a75746d96b0f8494a2fc0696cfc583c7
+      member_count: 43
+    exact_delta:
+      removed:
+        - catalog/domain/README.md@fd4826b2b5e54672796b840d2664b5947d4054ec
+      added:
+        - catalog/domain/README.md@ad9e2406a75746d96b0f8494a2fc0696cfc583c7
+      unchanged_member_count: 42
+      require_equal_path_set: true
+    decision_ref:
+      path: docs/adr/ADR-0039-catalog-redirect-metadata-corrections.md
+      blob: null
+      accepted_commit: null
+    evidence_refs:
+      - https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4512
+      - https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4514
+      - https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024
+      - main@df1a97097f2a4604d31f12a54434efc878af550c
+    reason_code: catalog-redirect-metadata-refresh-post-4514
+    rollback:
+      mode: revoke-acceptance-and-fail-closed
+      prohibited_automatic_restore_blob: fd4826b2b5e54672796b840d2664b5947d4054ec
+      content_change_requires_new_transition: true
+    retirement:
+      reuse: forbidden
+      condition: baseline-has-to-fingerprint-and-no-pending-consumer
+
+  - correction_id: KFM-TOPO-004-CORR-4512-03
+    status: proposed
+    consume_once: true
+    rule_id: KFM-TOPO-004
+    subject: catalog/
+    path: catalog/index/README.md
+    from:
+      fingerprint: sha256:dbac8e3f55a2810c36941d3339d2280be26db59eaf4ca05fbc56ab108eb3b254
+      blob: 3898725a2e3311222020c66099ae4a09f806ea5e
+      member_count: 43
+    to:
+      fingerprint: sha256:29e61905ff2fe83760e03d79c6049feea9a8e774564220b6b79e88c4d460ff08
+      blob: 11cb956e56189ed1c618d577158df2b280d21d91
+      member_count: 43
+    exact_delta:
+      removed:
+        - catalog/index/README.md@3898725a2e3311222020c66099ae4a09f806ea5e
+      added:
+        - catalog/index/README.md@11cb956e56189ed1c618d577158df2b280d21d91
+      unchanged_member_count: 42
+      require_equal_path_set: true
+    decision_ref:
+      path: docs/adr/ADR-0039-catalog-redirect-metadata-corrections.md
+      blob: null
+      accepted_commit: null
+    evidence_refs:
+      - https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4512
+      - https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4514
+      - https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024
+      - main@df1a97097f2a4604d31f12a54434efc878af550c
+    reason_code: catalog-redirect-metadata-refresh-post-4514
+    rollback:
+      mode: revoke-acceptance-and-fail-closed
+      prohibited_automatic_restore_blob: 3898725a2e3311222020c66099ae4a09f806ea5e
+      content_change_requires_new_transition: true
+    retirement:
+      reuse: forbidden
+      condition: baseline-has-to-fingerprint-and-no-pending-consumer
+
+  - correction_id: KFM-TOPO-004-CORR-4512-04
+    status: proposed
+    consume_once: true
+    rule_id: KFM-TOPO-004
+    subject: catalog/
+    path: catalog/manifest/README.md
+    from:
+      fingerprint: sha256:29e61905ff2fe83760e03d79c6049feea9a8e774564220b6b79e88c4d460ff08
+      blob: 9fe630fe18decc275d26ad99c5c7e2ac215d18ca
+      member_count: 43
+    to:
+      fingerprint: sha256:98b86686c2a90d6772cf6d6e23c4b7da2bdb31e2c62b4030c02cf7adf7cb0a7a
+      blob: b4493e247b626eab4db94ba7c030ad5dd67ce785
+      member_count: 43
+    exact_delta:
+      removed:
+        - catalog/manifest/README.md@9fe630fe18decc275d26ad99c5c7e2ac215d18ca
+      added:
+        - catalog/manifest/README.md@b4493e247b626eab4db94ba7c030ad5dd67ce785
+      unchanged_member_count: 42
+      require_equal_path_set: true
+    decision_ref:
+      path: docs/adr/ADR-0039-catalog-redirect-metadata-corrections.md
+      blob: null
+      accepted_commit: null
+    evidence_refs:
+      - https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4512
+      - https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4514
+      - https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024
+      - main@df1a97097f2a4604d31f12a54434efc878af550c
+    reason_code: catalog-redirect-metadata-refresh-post-4514
+    rollback:
+      mode: revoke-acceptance-and-fail-closed
+      prohibited_automatic_restore_blob: 9fe630fe18decc275d26ad99c5c7e2ac215d18ca
+      content_change_requires_new_transition: true
+    retirement:
+      reuse: forbidden
+      condition: baseline-has-to-fingerprint-and-no-pending-consumer
+
+  - correction_id: KFM-TOPO-004-CORR-4512-05
+    status: proposed
+    consume_once: true
+    rule_id: KFM-TOPO-004
+    subject: catalog/
+    path: catalog/proof/README.md
+    from:
+      fingerprint: sha256:98b86686c2a90d6772cf6d6e23c4b7da2bdb31e2c62b4030c02cf7adf7cb0a7a
+      blob: 2e602944895f26229f41db2b17a603a4be4fafc1
+      member_count: 43
+    to:
+      fingerprint: sha256:87f34fdc7b2a9b9e1d3e83942f213815943671fd6d736300626925aed371f9a3
+      blob: 0d82fcc28cf149e5160b38915612dca767306a43
+      member_count: 43
+    exact_delta:
+      removed:
+        - catalog/proof/README.md@2e602944895f26229f41db2b17a603a4be4fafc1
+      added:
+        - catalog/proof/README.md@0d82fcc28cf149e5160b38915612dca767306a43
+      unchanged_member_count: 42
+      require_equal_path_set: true
+    decision_ref:
+      path: docs/adr/ADR-0039-catalog-redirect-metadata-corrections.md
+      blob: null
+      accepted_commit: null
+    evidence_refs:
+      - https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4512
+      - https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4514
+      - https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024
+      - main@df1a97097f2a4604d31f12a54434efc878af550c
+    reason_code: catalog-redirect-metadata-refresh-post-4514
+    rollback:
+      mode: revoke-acceptance-and-fail-closed
+      prohibited_automatic_restore_blob: 2e602944895f26229f41db2b17a603a4be4fafc1
+      content_change_requires_new_transition: true
+    retirement:
+      reuse: forbidden
+      condition: baseline-has-to-fingerprint-and-no-pending-consumer
+
+  - correction_id: KFM-TOPO-004-CORR-4512-06
+    status: proposed
+    consume_once: true
+    rule_id: KFM-TOPO-004
+    subject: catalog/
+    path: catalog/publication/README.md
+    from:
+      fingerprint: sha256:87f34fdc7b2a9b9e1d3e83942f213815943671fd6d736300626925aed371f9a3
+      blob: 7f37e6efab211e63eb3ae237adda8551dd640afd
+      member_count: 43
+    to:
+      fingerprint: sha256:622be3445da9747dd3f7758583cf5b2024359f95a4cb12e4c2098f5a65f3a93e
+      blob: d30392e9b27af050048d595077a4c71456b8be1b
+      member_count: 43
+    exact_delta:
+      removed:
+        - catalog/publication/README.md@7f37e6efab211e63eb3ae237adda8551dd640afd
+      added:
+        - catalog/publication/README.md@d30392e9b27af050048d595077a4c71456b8be1b
+      unchanged_member_count: 42
+      require_equal_path_set: true
+    decision_ref:
+      path: docs/adr/ADR-0039-catalog-redirect-metadata-corrections.md
+      blob: null
+      accepted_commit: null
+    evidence_refs:
+      - https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4512
+      - https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4514
+      - https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024
+      - main@df1a97097f2a4604d31f12a54434efc878af550c
+    reason_code: catalog-redirect-metadata-refresh-post-4514
+    rollback:
+      mode: revoke-acceptance-and-fail-closed
+      prohibited_automatic_restore_blob: 7f37e6efab211e63eb3ae237adda8551dd640afd
+      content_change_requires_new_transition: true
+    retirement:
+      reuse: forbidden
+      condition: baseline-has-to-fingerprint-and-no-pending-consumer
+
+  - correction_id: KFM-TOPO-004-CORR-4512-07
+    status: proposed
+    consume_once: true
+    rule_id: KFM-TOPO-004
+    subject: catalog/
+    path: catalog/triplet/README.md
+    from:
+      fingerprint: sha256:622be3445da9747dd3f7758583cf5b2024359f95a4cb12e4c2098f5a65f3a93e
+      blob: 270725cc2e907a4f94d928f7c71759f4b6becd0b
+      member_count: 43
+    to:
+      fingerprint: sha256:71a120ae8ca2b69896266c9ddd52f6d03577ea91fa2de4390b7d57b9ceeb912f
+      blob: 2bd84c5a9142d3f7a63e8ae1c2cc9296043afc4b
+      member_count: 43
+    exact_delta:
+      removed:
+        - catalog/triplet/README.md@270725cc2e907a4f94d928f7c71759f4b6becd0b
+      added:
+        - catalog/triplet/README.md@2bd84c5a9142d3f7a63e8ae1c2cc9296043afc4b
+      unchanged_member_count: 42
+      require_equal_path_set: true
+    decision_ref:
+      path: docs/adr/ADR-0039-catalog-redirect-metadata-corrections.md
+      blob: null
+      accepted_commit: null
+    evidence_refs:
+      - https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4512
+      - https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4514
+      - https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024
+      - main@df1a97097f2a4604d31f12a54434efc878af550c
+    reason_code: catalog-redirect-metadata-refresh-post-4514
+    rollback:
+      mode: revoke-acceptance-and-fail-closed
+      prohibited_automatic_restore_blob: 270725cc2e907a4f94d928f7c71759f4b6becd0b
+      content_change_requires_new_transition: true
+    retirement:
+      reuse: forbidden
+      condition: baseline-has-to-fingerprint-and-no-pending-consumer
