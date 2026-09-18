@@ -14,7 +14,7 @@
   ],
   "artifact_hashes": {
     ".github/workflows/program-baseline.yml": "sha256:970bdab7555e9fb33c5a3825e78f09e1f1df67fe8ae3a1e31356d04941896684",
-    "Makefile": "sha256:78fd64363e5252c1a8bb8b9f13c299e9ecafb1414dbd8ab224557d23e8ec1a4d",
+    "Makefile": "sha256:2619b812b00a6e86ed3e0f91fd02255b7dd07b206507c3033cd2986d8d72a28f",
     "contracts/governance/program_baseline.md": "sha256:a22d3509ac0e9bc9706311f7d86a98a4275a126c5da3a8dfebf004e44e169d0d",
     "control_plane/README.md": "sha256:67a5ee0c96d9a8dfa210b7d6bc73de5bc5beb2068863f1c36c7063577dd620e2",
     "control_plane/program_baseline.json": "sha256:7715f9ccde98f23db6f9e59b478c4e83aaabaf11989b384da006ac072b17805e",

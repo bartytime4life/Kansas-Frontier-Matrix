@@ -83,7 +83,7 @@ notes:
 | Repository exposure | `public`; payloads must therefore be synthetic and public-safe |
 | Mutation / retention | `versioned` / `repository_lifetime` |
 | Validation profile | `synthetic_public_safe_only` |
-| Direct-child snapshot | `README.md` plus 30 directories at `head@76bc1ff…` |
+| Direct-child snapshot | `README.md` plus 31 directories at `head@f6ef5553…` |
 | Normal public-client use | **DENY** — repository fixtures are not governed runtime data |
 | Release or publication effect | None |
 
@@ -458,7 +458,7 @@ Changing the root class, creating a parallel fixture authority, moving lifecycle
 
 ## Direct-child directory map
 
-The following map is verified from tree `f06f74cad9ca9db3ae33e1b53818f0ddae1d0aef` at the pinned head before this README-only reconciliation. It shows direct children only; each child README owns deeper detail.
+The following map is verified from tree `cd72c3a3e2f83954b22ae6fa257a7b892f5d329e` at the pinned head before this README-only reconciliation. It shows direct children only; each child README owns deeper detail.
 
 ```text
 fixtures/
@@ -490,6 +490,7 @@ fixtures/
 ├── review/                       # Review-record fixture families.
 ├── runtime/                      # Runtime-envelope and adapter fixtures.
 ├── slim/                         # Compact fixture subsets.
+├── source/                       # Local-data capture and offline-sync example fixtures.
 ├── synthetic/                    # General synthetic compatibility lane.
 ├── ui/                           # UI trust-state fixture families.
 └── valid/                        # Cross-cutting valid cases.
