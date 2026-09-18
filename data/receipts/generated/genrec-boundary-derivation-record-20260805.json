@@ -24,7 +24,7 @@
     "tools/validators/validate_boundary_derivation_record.py"
   ],
   "artifact_hashes": {
-    ".github/workflows/boundary-derivation-record.yml": "sha256:a6ae18b4f438f9edabb782596f0c88db4ca2d2a88b7cde58198299124e3547f5",
+    ".github/workflows/boundary-derivation-record.yml": "sha256:15ccdf4fd18b6bff27365017c5359594c69923c86991f23bc7b460cbd84a0a0e",
     "contracts/spatial-foundation/README.md": "sha256:28980534ca2376666f8d524afe28f7a109fc70adca2db98ccc142dba6e38a4c5",
     "contracts/spatial-foundation/boundary_derivation_record.md": "sha256:62cf7f9e1a3099484262984f391438985879681cafaab1609431f3829e12e4a3",
     "fixtures/contracts/v1/spatial-foundation/boundary_derivation_record/README.md": "sha256:b88a325a0d210bf1a8486322c240f47e753811a54cf4d6ecada2c7116f8522af",
@@ -43,7 +43,7 @@
     "schemas/contracts/v1/spatial-foundation/README.md": "sha256:a920095bc546d4d166053e46ab6ca03d9e5537bc1b41da272db74a89a0095dcf",
     "schemas/contracts/v1/spatial-foundation/boundary_derivation_record.schema.json": "sha256:8fc1db3efbe094d35e6783e4f6b424eae71c3efdaf98b80309ba91729d490e32",
     "tests/validators/test_validate_boundary_derivation_record.py": "sha256:15cf9696b2dce8cfa4331df513337c787a38ba7904eff2a57787b061916ad480",
-    "tools/validators/validate_boundary_derivation_record.py": "sha256:cc2adb7cefb9aaabf9eb68814384356c21d32600107980a645ba11cf7a513977"
+    "tools/validators/validate_boundary_derivation_record.py": "sha256:be24dfc331e55a2643a114248dee49c4311389447e0756312e3d6514438c027d"
   },
   "model_identity": {
     "provider": "OpenAI",

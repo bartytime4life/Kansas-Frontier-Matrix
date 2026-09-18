@@ -14,6 +14,7 @@ import argparse
 import copy
 import ipaddress
 import json
+import sys
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from datetime import datetime
@@ -23,6 +24,10 @@ from urllib.parse import urlsplit
 
 from jsonschema import Draft202012Validator, FormatChecker
 
+REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
 from tools.validators.validate_source_event_envelope import (
     Finding,
     _expected_event_id,
@@ -30,8 +35,6 @@ from tools.validators.validate_source_event_envelope import (
     compute_spec_hash,
     validate_document as validate_base_document,
 )
-
-REPO_ROOT = Path(__file__).resolve().parents[2]
 SCHEMA_PATH = (
     REPO_ROOT
     / "schemas"

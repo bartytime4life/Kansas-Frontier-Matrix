@@ -2,12 +2,12 @@
 doc_id: kfm://adr/0038
 title: Trusted-Base Exact Transitions for Frozen-Topology Corrections
 type: architecture-decision-record
-version: v1.2
+version: v1.3
 status: accepted
 effective_decision_status: accepted
 owners: ["@bartytime4life"]
 created: 2026-09-02
-updated: 2026-09-14
+updated: 2026-09-17
 accepted_on: 2026-09-03
 policy_label: public; governance; fail-closed
 truth_posture: "ACCEPTED Stage 1 decision / PROPOSED exact register binding / no Stage 2 consumption"
@@ -79,6 +79,99 @@ This docs-only refresh re-pinned GitHub implementation evidence at `main@7d9074c
 | Topology validator | blob `b7cbbb53…`; no register or correction-ID consumption symbol was found in the source re-read | No Stage 2 trusted-base consumption is established by the inspected implementation | Source inspection is not a test, deployment, or topology-green result |
 
 The GitHub preflight also found one open pull request, [#4566](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4566), scoped to ADR-0037 only; no branch matching ADR-0038 was present. Those delivery observations are coordination facts only and create no transition authority.
+
+## Proposed exact-version disposition — 2026-09-17
+
+**PROPOSED; owner acceptance and independent review are pending.** The accepted
+Stage 1 decision above still covers only the original Agriculture correction.
+This section supplies a concrete decision candidate for the eight replacements
+currently responsible for the topology failure on PR #4622. Preparing this
+proposal does not accept these versions or extend the existing decision.
+
+### Decision requested
+
+Accept the eight exact README replacements below as one bounded containment
+correction set, preserving the existing 43-path frozen catalog inventory and
+its other 35 blobs. The proposed target is the already tracked catalog state at
+`main@eaff4f86e1f6b4398bbfc95c06df66e4a2f7364a`; no additional catalog edit is
+included. Acceptance would extend the permitted correction scope beyond the
+single Agriculture replacement in the original Stage 1 decision. Each row
+requires an explicit accept/reject/hold disposition; accepting only a subset
+requires a new aggregate fingerprint and separately reviewed proposal.
+
+| Catalog member | Frozen baseline blob | Proposed accepted blob |
+| --- | --- | --- |
+| [`catalog/STAC/README.md`](../../catalog/STAC/README.md) | `198a970db9e71b2dc7f5cdbf171b14c0f9a878ce` | `c2e327dafbabec3cd6cc185f690fbcf4f227ca11` |
+| [`catalog/domain/README.md`](../../catalog/domain/README.md) | `fd4826b2b5e54672796b840d2664b5947d4054ec` | `ad9e2406a75746d96b0f8494a2fc0696cfc583c7` |
+| [`catalog/domain/agriculture/README.md`](../../catalog/domain/agriculture/README.md) | `bf1a333573c6d068fbb0b695356346003842aceb` | `4be1711bfa011636ac1c5cd13e7c98e5002ff9c0` |
+| [`catalog/index/README.md`](../../catalog/index/README.md) | `3898725a2e3311222020c66099ae4a09f806ea5e` | `11cb956e56189ed1c618d577158df2b280d21d91` |
+| [`catalog/manifest/README.md`](../../catalog/manifest/README.md) | `9fe630fe18decc275d26ad99c5c7e2ac215d18ca` | `b4493e247b626eab4db94ba7c030ad5dd67ce785` |
+| [`catalog/proof/README.md`](../../catalog/proof/README.md) | `2e602944895f26229f41db2b17a603a4be4fafc1` | `0d82fcc28cf149e5160b38915612dca767306a43` |
+| [`catalog/publication/README.md`](../../catalog/publication/README.md) | `7f37e6efab211e63eb3ae237adda8551dd640afd` | `d30392e9b27af050048d595077a4c71456b8be1b` |
+| [`catalog/triplet/README.md`](../../catalog/triplet/README.md) | `270725cc2e907a4f94d928f7c71759f4b6becd0b` | `2bd84c5a9142d3f7a63e8ae1c2cc9296043afc4b` |
+
+### Exact evidence boundary
+
+- Repository base: `eaff4f86e1f6b4398bbfc95c06df66e4a2f7364a`.
+- Baseline file Git blob: `b01cb6ec58d5ae306e8afd7858c5fcc70a03d9ec`.
+- Baseline file SHA-256: `91eb4e7caf8c00f995bfe9cb7d639a6631ccda724bee234ec266ec718a576868`.
+- Rule and subject: `KFM-TOPO-004`, `catalog/`.
+- Source fingerprint: `sha256:521388927153c91a67ca8cead55af9d688a6064517d109aa556cffca91505006`.
+- Source evidence SHA-256: `sha256:8241bb4f1da8abfa669d201fda804f875922ea27338e15af47bf5362edf0525b`.
+- Target fingerprint: `sha256:71a120ae8ca2b69896266c9ddd52f6d03577ea91fa2de4390b7d57b9ceeb912f`.
+- Target evidence SHA-256: `sha256:304b679f591315a09c358d2aa286d5ed9f2910679d8f6ed39790b2c7f6811e9c`.
+- Cardinality: 43 members before and after; eight replacements; 35 unchanged;
+  zero path additions or removals.
+
+The source member set is the decoded `evidence_zlib_base64` value of the exact
+`catalog/` entry in the pinned baseline file. Substituting only the eight rows
+above reconstructs the proposed target; any ninth edit, changed path, or altered
+blob must fail. The baseline's generic implementation-waiver role is unchanged.
+
+The Agriculture source blob contains merge-conflict damage. Automatic recovery
+must not restore it. The other seven replacements are separate containment
+README revisions; the existing Agriculture-only register cannot authorize them.
+The proposal requests retention of the current exact bytes, not retroactive
+approval of prior PR transitions or endorsement of every statement as runtime
+fact. Content review of all eight versions remains part of the owner decision.
+
+### Review and implementation sequence
+
+1. Review the eight exact old/new blobs and record the owner disposition plus
+   directory-governance/control review. A draft PR or merge event alone is not
+   acceptance. Record any independent-review limitation explicitly.
+2. In a separate acceptance transition, record the accepted source/index state
+   and exact eight-member scope. Preserve the original Stage 1 decision history.
+3. From a later trusted base containing that acceptance, bind the complete
+   correction set to the accepted decision blob and known commit. The existing
+   singleton projection is insufficient; its schema/contract representation
+   must be reviewed for exact-set coverage before it becomes consumable.
+4. In a later implementation PR, consume only a byte-identical trusted-base
+   binding and perform the bounded baseline transition. Add positive coverage
+   for this exact set and negatives for absent/current-only/mutated bindings,
+   wrong base/head/digest/path, partial sets, ninth edits, new/deleted paths,
+   non-accepted or ambiguous records, and replay. No network is required for
+   the deterministic validator.
+
+Repository-control readiness authorization remains separate and bound to the
+actual PR base/head. This proposal leaves the current correction register,
+contracts, schemas, topology validator, topology baseline, and catalog files
+unchanged. The live topology check is expected to remain nonzero until the
+subsequent accepted binding and consumer are implemented.
+
+### Reproduction and rollback
+
+The reported [validator-suite job](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/35262897229/job/105342754023)
+failed at `make repository-topology`: one new `catalog/` finding, one stale
+baseline entry, 124 baselined warnings and zero invariant findings. Direct local
+replay of `validate_repository_topology.py` reproduced the same fingerprint.
+[Issue #4228](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4228)
+records the unresolved exact-delta acceptance and trusted-base dependency.
+
+Rollback of this proposal removes this section and restores its prior metadata;
+no catalog bytes or machine authority need rollback. After any future acceptance,
+revocation must restore denial rather than copy historical content back. Later
+content corrections require their own exact reviewed transition.
 
 ## Context
 
