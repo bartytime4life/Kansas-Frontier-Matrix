@@ -3,17 +3,17 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 test("adds one persistent map-to-report operational spine without replacing Explorer state", async () => {
-  const [layout, spine, transformation, explorer] = await Promise.all([
-    readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
+  const [entry, spine, transformation, explorer] = await Promise.all([
+    readFile(new URL("../main.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/operational-spine.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/transformation.css", import.meta.url), "utf8"),
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
   ]);
 
-  assert.match(layout, /import "\.\/transformation\.css"/);
-  assert.match(layout, /<OperationalSpine \/>/);
+  assert.match(entry, /import "\.\/app\/transformation\.css"/);
+  assert.match(entry, /<OperationalSpine \/>/);
   assert.match(spine, /data-kfm-enhancement="operational-spine-v1"/);
-  assert.match(spine, /usePathname/);
+  assert.match(spine, /window\.location\.pathname/);
   assert.match(spine, /pathname !== "\/"/);
   assert.match(spine, /"scope"[\s\S]*"layers"[\s\S]*"time"[\s\S]*"measure"[\s\S]*"inspect"[\s\S]*"evidence"[\s\S]*"report"[\s\S]*"share"/);
   assert.match(spine, /\.map-mobile-actions button/);

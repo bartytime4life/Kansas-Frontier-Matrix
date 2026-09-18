@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
-import Link from "next/link";
 import SiteLayerLibrary from "./site-layer-library";
 import { createRequestedLayerStore } from "./site-requested-layer-state";
 import { INSPECTED_DEMO_IDS } from "./site-layer-library-metadata";
@@ -3014,7 +3013,7 @@ export default function Home() {
         </div>
         <div className="top-actions">
           <button className="share-action" type="button" onClick={shareView} aria-label="Share current map view" title="Share current view">↗</button>
-          <Link className="about-action" href="/about">About</Link>
+          <a className="about-action" href="/about">About</a>
         </div>
         {helpOpen && <aside className="map-guide" role="dialog" aria-modal="false" aria-label="Map guide">
           <button className="icon-close" type="button" onClick={() => setHelpOpen(false)} aria-label="Close map guide">×</button>
@@ -3837,7 +3836,7 @@ export default function Home() {
             <button type="button" onClick={() => { if (selected) { setCurrentWorkspace("trust"); dismissMapUtilityWithoutFocus(); setRightOpen(true); setLeftOpen(false); setTimelineOpen(false); } }} disabled={!selected}>Evidence</button>
             <button type="button" onClick={(event) => openMapUtility("report", event.currentTarget)}>Report</button>
             <button type="button" onClick={() => { setCurrentWorkspace("explore"); dismissMapUtilityWithoutFocus(); setTimelineOpen(true); setLeftOpen(false); setRightOpen(false); }}>Time <b>{formatTimelineStep(year)}</b></button>
-            <Link href="/about">About</Link>
+            <a href="/about">About</a>
           </div>
 
           <div className="screenreader-status sr-only" aria-live="polite">{runtime.message}. Map center {formatCoordinate(view.center[1], "N", "S")}, {formatCoordinate(view.center[0], "E", "W")}. {visibleCount} layers visible. {selected ? `Selected ${selected.properties.title}; evidence state ${selectedEvidence?.label}.` : "No feature selected."}</div>
