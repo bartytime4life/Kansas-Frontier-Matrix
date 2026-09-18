@@ -11,7 +11,7 @@
     "tools/validators/domains/agriculture/ndvi_readiness/validate_ndvi_readiness.py"
   ],
   "artifact_hashes": {
-    ".github/workflows/agriculture-ndvi-readiness.yml": "sha256:860bc8133b7e2081c5d0c5c7a4d065866651db2b6d5db14d1ae010b36b2768a2",
+    ".github/workflows/agriculture-ndvi-readiness.yml": "sha256:edc56fd848562d4c691cfb68fa7495037f017401644d45995214d8a51154661b",
     "contracts/domains/agriculture/ndvi_readiness.md": "sha256:95225c7f4533a9ddc13e7e32bee0312004b4068ef2695cfc2b1c5848904b7192",
     "fixtures/domains/agriculture/ndvi_readiness/valid/emit_candidate.json": "sha256:18ca54160b17a0779a92bc9a38eb62c197a63fea6fc1ca9a98a3830281bb070a",
     "schemas/contracts/v1/domains/agriculture/ndvi_readiness.schema.json": "sha256:32604c224a389fd0166cad6cf1eedc410ad043e2aed71e7fe2ab3956008933f8",

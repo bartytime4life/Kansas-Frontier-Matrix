@@ -8,7 +8,22 @@ import pytest
 from tools.validators._common.jsonschema_runner import load_validator
 
 ROOT = Path(__file__).resolve().parents[2]
-FAMILIES = ["evidence", "runtime", "common", "policy", "source", "governance", "release"]
+FAMILIES = ["evidence", "runtime", "common", "policy", "source", "governance", "release", "receipts"]
+
+# Fixtures named invalid_*.json but that are schema-valid by design: the
+# violation is a cross-field semantic rule enforced by that schema's own
+# dedicated validator/test suite, not by JSON Schema structural validation.
+# Mirrors the SEMANTIC_ONLY_INVALID_FIXTURES convention used elsewhere in the
+# repository (e.g. tests/schemas/test_gmd3_aem_survey_contracts.py).
+SCHEMA_VALID_INVALID_FIXTURES = {
+    ("receipts", "artifact_delta_receipt", "invalid_approval_unverified_attestation.json"),
+    ("receipts", "artifact_delta_receipt", "invalid_digest_mismatch.json"),
+    ("receipts", "artifact_delta_receipt", "invalid_no_effect.json"),
+    ("receipts", "artifact_delta_receipt", "invalid_rollback_missing_target.json"),
+    ("receipts", "representation_receipt", "invalid_self_supersession.json"),
+    ("receipts", "representation_receipt", "invalid_synthetic_missing_reality_note.json"),
+    ("receipts", "representation_receipt", "invalid_zero_digest.json"),
+}
 
 
 def _schema_cases():
@@ -112,6 +127,8 @@ def test_contract_fixtures(family, name, schema_path, fixture_dir):
         assert not errors, f"{family}/{name} valid fixture failed: {valid_fp}"
 
     for invalid_fp in sorted((fixture_dir / "invalid").glob("invalid_*.json")):
+        if (family, name, invalid_fp.name) in SCHEMA_VALID_INVALID_FIXTURES:
+            continue
         errors = list(
             validator.iter_errors(json.loads(invalid_fp.read_text(encoding="utf-8")))
         )

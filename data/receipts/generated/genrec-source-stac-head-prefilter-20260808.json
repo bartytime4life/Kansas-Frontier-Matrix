@@ -11,13 +11,13 @@
     "tools/validators/validate_stac_asset_head_prefilter.py"
   ],
   "artifact_hashes": {
-    ".github/workflows/source-stac-head-prefilter.yml": "sha256:37ec490db6b69f4dd087d58211ff1b0b838f2647b9e5b54e1594f01a48c58a05",
+    ".github/workflows/source-stac-head-prefilter.yml": "sha256:a9606c74c8657537ec7645a4dc8eb33defb92563c15ac6250d5152ee232ff024",
     "contracts/source/stac_asset_head_prefilter.md": "sha256:ebdf4e63b3fd6382ed2f2fc385e1c6b5f36c1de64dd694f55a470fda39976543",
     "docs/intake/exploratory/pass-32-stac-head-prefilter-source-map.md": "sha256:316a33f9208da0637d7708dfe33fe1513b386ebdf6b142ffa4ec8d5e374f4133",
     "fixtures/contracts/v1/source/stac_asset_head_prefilter/cases.json": "sha256:d15c685744ab4d0e2cfbc1d908d376c5224e23b6d3c4de005a1aaeb7bf2ba604",
     "schemas/contracts/v1/source/stac_asset_head_prefilter.schema.json": "sha256:3129f2f4fe84cf88ee2e31aab7bfa177c99e262227af724540d3a41414e32792",
     "tests/validators/test_validate_stac_asset_head_prefilter.py": "sha256:b5eaf0b8c2c85525e4b9d71a78f74fd4f47cc7ec0b419555715f7a1082eceb79",
-    "tools/validators/validate_stac_asset_head_prefilter.py": "sha256:3e070405f23d49e18f91422eae66c6050879a774903427d0f639dff10cbf4bdf"
+    "tools/validators/validate_stac_asset_head_prefilter.py": "sha256:9ed99842e467bc299d5e08e8e4c23c6324d332a811448925ee3234f63776c4c3"
   },
   "model_identity": {
     "provider": "OpenAI",

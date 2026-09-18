@@ -72,10 +72,10 @@ Per the **MDP — Metadata, Profiles, Crosswalks (ISO 19115, DCAT, STAC, PROV)**
 
 | Concern | Where authority lives | Status |
 |---|---|---|
-| External standards profiles (STAC, DCAT, PROV, ISO 19115, …) | [`docs/standards/<STANDARD>.md`](../../../standards/) | **CONFIRMED root** *(directory-rules.md §6.1.a: "`docs/standards/` is the canonical home for external standards profiles that KFM conforms to or crosswalks against")* |
+| External standards profiles (STAC, DCAT, PROV, ISO 19115, …) | [`docs/standards/<STANDARD>.md`](../../standards/) | **CONFIRMED root** *(directory-rules.md §6.1.a: "`docs/standards/` is the canonical home for external standards profiles that KFM conforms to or crosswalks against")* |
 | KFM-STAC profile (project-specific governed profile) | `docs/standards/STAC.md` (informally `STAC_KFM_PROFILE.md` per Pass-10 C4-01 expansion direction) | **PROPOSED** — Pass-10 C4-01 / KFM-P31-PROG-0004 (KFM-STAC profile contract files) |
 | Catalog profile contract files (machine-readable) | *(home TBD — likely `schemas/contracts/v1/catalog/` or alongside the STAC profile)* | **PROPOSED** — KFM-P31-PROG-0004 |
-| Source descriptor schema | [`schemas/contracts/v1/source/`](../../../../schemas/contracts/v1/source/) | **PROPOSED** *(per ADR-0001; NEEDS VERIFICATION against mounted repo)* |
+| Source descriptor schema | [`schemas/contracts/v1/source/`](../../../schemas/contracts/v1/source/) | **PROPOSED** *(per ADR-0001; NEEDS VERIFICATION against mounted repo)* |
 | Crosswalk authoring template | [`_template/CROSSWALK_TEMPLATE.md`](./_template/CROSSWALK_TEMPLATE.md) | **PROPOSED** scaffold (sibling pointer) |
 | Drift register (placement conflicts) | [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) | **CONFIRMED root** *(directory-rules.md §2.5)* |
 
@@ -88,13 +88,13 @@ Per the **MDP — Metadata, Profiles, Crosswalks (ISO 19115, DCAT, STAC, PROV)**
 
 ## Crosswalk register
 
-> Field-level mappings must be confirmed against [`schemas/contracts/v1/source/`](../../../../schemas/contracts/v1/source/) and against the KFM-STAC profile contract files (Pass-10 C4-01 / KFM-P31-PROG-0004) before any crosswalk leaves scaffold status.
+> Field-level mappings must be confirmed against [`schemas/contracts/v1/source/`](../../../schemas/contracts/v1/source/) and against the KFM-STAC profile contract files (Pass-10 C4-01 / KFM-P31-PROG-0004) before any crosswalk leaves scaffold status.
 
 | # | Crosswalk | Purpose | Atlas anchor | Authoring state | Document |
 |---|---|---|---|---|---|
 | 1 | **STAC × DCAT** | Map KFM-STAC Items and Collections to DCAT Datasets and Distributions (checksums, byteSize, mediaType, table schema conformity, versions, PROV links). | KFM-P14-IDEA-0002 (harvest surface); KFM-P14-PROG-0008 (STAC → DCAT JSON-LD emitter); Pass-10 C4-05 | **PROPOSED — not yet authored** | [`_template/CROSSWALK_TEMPLATE.md`](./_template/CROSSWALK_TEMPLATE.md) |
 | 2 | **STAC × DwC (Darwin Core)** | Map STAC Items with `properties.taxon` to Darwin Core occurrence terms (`scientific_name`, `common_name`, `kbs_id`, `kdwp_status`, `sensitivity_rank`); also DwC `Event` and `MeasurementOrFact` rows. | KFM-P13-PROG-0026 (DwC → STAC table + DCAT mapper); Pass-10 C4-03 (CONFIRMED hybrid pattern: DwC terms nested under `properties.taxon`) | **PROPOSED — not yet authored** | [`_template/CROSSWALK_TEMPLATE.md`](./_template/CROSSWALK_TEMPLATE.md) |
-| 3 | **STAC × ISO 19115** | Map KFM-STAC to ISO 19115 geographic metadata (responsible party, lineage, data quality, spatial representation). | Atlas MDP category (ISO 19115, DCAT, STAC, PROV); [`docs/standards/ISO-19115.md`](../../../standards/ISO-19115.md) (PROPOSED standards profile already authored as a sibling) | **PROPOSED — not yet authored** | [`_template/CROSSWALK_TEMPLATE.md`](./_template/CROSSWALK_TEMPLATE.md) |
+| 3 | **STAC × ISO 19115** | Map KFM-STAC to ISO 19115 geographic metadata (responsible party, lineage, data quality, spatial representation). | Atlas MDP category (ISO 19115, DCAT, STAC, PROV); [`docs/standards/ISO-19115.md`](../../standards/ISO-19115.md) (PROPOSED standards profile already authored as a sibling) | **PROPOSED — not yet authored** | [`_template/CROSSWALK_TEMPLATE.md`](./_template/CROSSWALK_TEMPLATE.md) |
 | 4 | **STAC × PROV-O** | Map `kfm:provenance` fields (`spec_hash`, `evidence_bundle_ref`, `run_record_ref`, `audit_ref`, `policy_digest`) to W3C PROV-O entities (`Activity`, `Entity`, `Agent`) and PAV. | Pass-10 C4-01, C8-03; KFM-P10-PROG-0003 (PROV-O → Neo4j lineage); KFM-P27-PROG-0016 (STAC PROV time-series writer) | **PROPOSED — not yet authored** | [`_template/CROSSWALK_TEMPLATE.md`](./_template/CROSSWALK_TEMPLATE.md) |
 | 5 | **STAC × CIDOC-CRM** | Map cultural-heritage STAC entries (archaeology, historical photography, oral history) to CIDOC-CRM classes (`E5 Event`, `E7 Activity`, `E21 Person`, `E53 Place`, `E55 Type`, `E74 Group`). | Pass-10 C8-01; intersects PROV-O via the PROV-O ↔ E13 demarcation question | **PROPOSED — not yet authored** | [`_template/CROSSWALK_TEMPLATE.md`](./_template/CROSSWALK_TEMPLATE.md) |
 
@@ -241,12 +241,12 @@ When an author flips a row from `PROPOSED — not yet authored` to `draft`, the 
 - [`docs/sources/catalog/INDEX.md`](./INDEX.md) — family index *(PROPOSED)*
 - [`docs/sources/catalog/CARE-COMPLIANCE.md`](./CARE-COMPLIANCE.md) — CARE field surfacing rules *(PROPOSED)*
 - [`docs/sources/catalog/_template/CROSSWALK_TEMPLATE.md`](./_template/CROSSWALK_TEMPLATE.md) — authoring template *(PROPOSED)*
-- [`docs/standards/STAC.md`](../../../standards/STAC.md) — KFM-STAC profile *(PROPOSED — informally `STAC_KFM_PROFILE.md` per Pass-10 C4-01)*
-- [`docs/standards/DCAT.md`](../../../standards/DCAT.md) — DCAT profile *(PROPOSED)*
-- [`docs/standards/PROV.md`](../../../standards/PROV.md) — PROV-O / PAV profile *(see OPEN-DR-01 re. `PROV.md` vs `PROVENANCE.md`)*
-- [`docs/standards/ISO-19115.md`](../../../standards/ISO-19115.md) — ISO 19115 geographic metadata crosswalk profile
-- [`docs/standards/OGC-API-TILES.md`](../../../standards/OGC-API-TILES.md) — OGC API Tiles profile
-- [`docs/standards/PMTILES.md`](../../../standards/PMTILES.md) — PMTiles governance profile
+- [`docs/standards/STAC.md`](../../standards/STAC.md) — KFM-STAC profile *(PROPOSED — informally `STAC_KFM_PROFILE.md` per Pass-10 C4-01)*
+- [`docs/standards/DCAT.md`](../../standards/DCAT.md) — DCAT profile *(PROPOSED)*
+- [`docs/standards/PROV.md`](../../standards/PROV.md) — PROV-O / PAV profile *(see OPEN-DR-01 re. `PROV.md` vs `PROVENANCE.md`)*
+- [`docs/standards/ISO-19115.md`](../../standards/ISO-19115.md) — ISO 19115 geographic metadata crosswalk profile
+- [`docs/standards/OGC-API-TILES.md`](../../standards/OGC-API-TILES.md) — OGC API Tiles profile
+- [`docs/standards/PMTILES.md`](../../standards/PMTILES.md) — PMTiles governance profile
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement authority *(§6.1.a `docs/standards/` placement contract)*
 - [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — drift entries (OPEN-DSC-06)
 - [`docs/adr/`](../../adr/) — ADRs resolving drift / open questions

@@ -22,6 +22,11 @@ from decimal import Decimal, InvalidOperation, ROUND_HALF_EVEN
 from pathlib import Path
 from typing import Any, Iterator, Mapping, Sequence
 
+REPO_ROOT = Path(__file__).resolve().parents[3]
+HASHING_SRC = REPO_ROOT / "packages/hashing/src"
+if str(HASHING_SRC) not in sys.path:
+    sys.path.insert(0, str(HASHING_SRC))
+
 from hashing import compute_spec_hash
 
 MAX_PROFILE_BYTES = 128_000

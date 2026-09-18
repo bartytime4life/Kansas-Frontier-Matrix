@@ -29,7 +29,7 @@
     "schemas/contracts/v1/source/csv_geojson_normalization_candidate.schema.json": "sha256:65776e6faaf6b02d26415a5a8355cb04160c41647cefac33ab5c5c27752e1bd5",
     "tests/ingest/csv_geojson_preflight/test_preflight.py": "sha256:c74663ada8b3b355161fd18e1cfe92e8a2bb85a450b38ed482a1961a0a6915d6",
     "tools/ingest/csv_geojson_preflight/README.md": "sha256:d746452088cd87ceecd097c1c3fefb906ed1b1e34fc22f9c13dec8017b51e21a",
-    "tools/ingest/csv_geojson_preflight/preflight.py": "sha256:8c0d57c2d4f3ce498c6df493fe0b2146e2caa2df8462f819a49fcec0bfddfa9c"
+    "tools/ingest/csv_geojson_preflight/preflight.py": "sha256:24abbaa889de6d3578b43bd88a04fab7608fbee2b7a4be8aafc73c4515131532"
   },
   "model_identity": {
     "provider": "OpenAI",

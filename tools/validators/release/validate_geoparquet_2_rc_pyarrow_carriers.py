@@ -6,6 +6,7 @@ import argparse
 import hashlib
 import json
 import struct
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Mapping, Sequence
@@ -14,9 +15,12 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 from jsonschema import Draft202012Validator
 
+ROOT = Path(__file__).resolve().parents[3]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
 from tools.experiments.geoparquet.generate_pyarrow_25_carriers import GeoArrowWkbType
 
-ROOT = Path(__file__).resolve().parents[3]
 SCHEMA = ROOT / "schemas/contracts/v1/release/geoparquet_2_rc_pyarrow_carrier_probe.schema.json"
 PROFILE = "kfm.geoparquet-2-rc-pyarrow-carrier-probe.v1"
 WHEEL = "sha256:5d1dbf24e151042f2fa3c129563f65d66674128868496fb008c4272b16bdf778"

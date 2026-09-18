@@ -80,6 +80,87 @@ class CatalogDomainCompatibilityRedirectTests(unittest.TestCase):
             self.assertTrue(report["canonical_only_children_allowed"])
             self.assertFalse(report["authority_created"])
 
+    def test_table_row_inventory_passes(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            compat, canonical = _write_layout(
+                Path(tmp),
+                actual=["agriculture", "fauna"],
+                indexed=["agriculture", "fauna"],
+                row_overrides={
+                    "agriculture": (
+                        "| [`agriculture/`](./agriculture/README.md) | "
+                        "[`data/catalog/domain/agriculture/`]"
+                        "(../../data/catalog/domain/agriculture/) |"
+                    ),
+                    "fauna": (
+                        "| [`fauna/`](./fauna/README.md) | "
+                        "[`data/catalog/domain/fauna/`]"
+                        "(../../data/catalog/domain/fauna/) |"
+                    ),
+                },
+            )
+            report = validate_catalog_domain_compatibility_redirect(compat, canonical)
+            self.assertEqual("PASS", report["outcome"])
+            self.assertEqual([], report["invalid_redirect_rows"])
+            self.assertEqual(["agriculture/", "fauna/"], report["indexed_redirect_children"])
+
+    def test_mismatched_table_row_link_fails_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            compat, canonical = _write_layout(
+                Path(tmp),
+                actual=["agriculture"],
+                indexed=["agriculture"],
+                row_overrides={
+                    "agriculture": (
+                        "| [`agriculture/`](./fauna/README.md) | "
+                        "[`data/catalog/domain/agriculture/`]"
+                        "(../../data/catalog/domain/agriculture/) |"
+                    ),
+                },
+            )
+            report = validate_catalog_domain_compatibility_redirect(compat, canonical)
+            self.assertEqual("FAIL", report["outcome"])
+            self.assertEqual(1, len(report["invalid_redirect_rows"]))
+
+    def test_mismatched_canonical_column_fails_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            compat, canonical = _write_layout(
+                Path(tmp),
+                actual=["agriculture"],
+                indexed=["agriculture"],
+                row_overrides={
+                    "agriculture": (
+                        "| [`agriculture/`](./agriculture/README.md) | "
+                        "[`data/catalog/domain/fauna/`]"
+                        "(../../data/catalog/domain/fauna/) |"
+                    ),
+                },
+            )
+            report = validate_catalog_domain_compatibility_redirect(compat, canonical)
+            self.assertEqual("FAIL", report["outcome"])
+            self.assertEqual(1, len(report["invalid_redirect_rows"]))
+
+    def test_table_header_and_separator_rows_are_ignored(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            compat, canonical = _write_layout(
+                Path(tmp),
+                actual=["agriculture"],
+                indexed=["agriculture"],
+                row_overrides={
+                    "agriculture": (
+                        "| Retained legacy redirect | Existing canonical counterpart directory |\n"
+                        "|---|---|\n"
+                        "| [`agriculture/`](./agriculture/README.md) | "
+                        "[`data/catalog/domain/agriculture/`]"
+                        "(../../data/catalog/domain/agriculture/) |"
+                    ),
+                },
+            )
+            report = validate_catalog_domain_compatibility_redirect(compat, canonical)
+            self.assertEqual("PASS", report["outcome"])
+            self.assertEqual([], report["invalid_redirect_rows"])
+            self.assertEqual(["agriculture/"], report["indexed_redirect_children"])
+
     def test_unindexed_redirect_child_fails_closed(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             compat, canonical = _write_layout(
