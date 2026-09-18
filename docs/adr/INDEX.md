@@ -38,14 +38,14 @@ notes:
 # Architecture Decision Record Index
 
 [![numbered records](https://img.shields.io/badge/numbered_records-40-0969da)](#numbered-records)
-[![effective status](https://img.shields.io/badge/effective_status-4_accepted_%7C_36_proposed-1a7f37)](#status-interpretation)
+[![effective status](https://img.shields.io/badge/effective_status-5_accepted_%7C_35_proposed-1a7f37)](#status-interpretation)
 [![scaffolds](https://img.shields.io/badge/unassigned_scaffolds-11-6e7781)](#unassigned-scaffolds)
 [![coherence](https://img.shields.io/badge/coherence-machine_checked-1a7f37)](../../tools/validators/validate_adr_index.py)
 
 This file is the canonical human inventory for direct ADR records and unassigned ADR scaffolds under `docs/adr/`. It records what exists and how each record is classified; it cannot accept or promote a decision independently.
 
 > [!IMPORTANT]
-> ADR-0006, ADR-0007, ADR-0029, and ADR-0038 have effective status `accepted`. The other 36 numbered records remain `proposed`; no numbered record is `superseded` or `rejected`. ADR-0006 and ADR-0007 accept architecture only—their status does not admit `maplibre-gl`, prove implementation or browser readiness, or authorize release, deployment, or publication. ADR-0038 accepts only the trusted-base correction mechanism; its machine register remains inert until a later exact-binding transition, and Stage 2 remains separate.
+> ADR-0006, ADR-0007, ADR-0029, ADR-0038, and ADR-0040 have effective status `accepted`. The other 35 numbered records remain `proposed`; no numbered record is `superseded` or `rejected`. ADR-0006 and ADR-0007 accept architecture only—their status does not admit `maplibre-gl`, prove implementation or browser readiness, or authorize release, deployment, or publication. ADR-0038 accepts only the trusted-base correction mechanism. ADR-0040 accepts only seven exact target catalog redirect-document blobs; every register entry remains proposed and unbound, Stage 1B remains held, and Stage 2 remains unauthorized.
 
 ## Status interpretation
 
@@ -59,7 +59,7 @@ This file is the canonical human inventory for direct ADR records and unassigned
 
 ## Numbered records
 
-The numbered sequence is complete and unique from `ADR-0001` through `ADR-0040`. ADR-0006, ADR-0007, ADR-0029, and ADR-0038 are `accepted`; all other numbered records remain effectively `proposed`.
+The numbered sequence is complete and unique from `ADR-0001` through `ADR-0040`. ADR-0006, ADR-0007, ADR-0029, ADR-0038, and ADR-0040 are `accepted`; all other numbered records remain effectively `proposed`.
 
 <!-- ADR_INDEX_TABLE_START -->
 | ID | Record | Effective status | Source metadata | Supersedes | Superseded by |
@@ -103,7 +103,7 @@ The numbered sequence is complete and unique from `ADR-0001` through `ADR-0040`.
 | `ADR-0037` | [Keep `EvidenceDrawerPayload` authority in the UI family](./ADR-0037-evidence-drawer-payload-ui-authority-and-compatibility.md) | `proposed` | `proposed` | — | — |
 | `ADR-0038` | [Trusted-Base Exact Transitions for Frozen-Topology Corrections](./ADR-0038-trusted-base-topology-correction-transitions.md) | `accepted` | `accepted` | — | — |
 | `ADR-0039` | [Keep LayerManifest and LayerFrame in the Existing Data Contract/Schema Family](./ADR-0039-layer-manifest-frame-contract-home.md) | `proposed` | `proposed` | — | — |
-| `ADR-0040` | [Exact Catalog Redirect Metadata Corrections](./ADR-0040-catalog-redirect-metadata-corrections.md) | `proposed` | `proposed` | — | — |
+| `ADR-0040` | [Exact Catalog Redirect Metadata Corrections](./ADR-0040-catalog-redirect-metadata-corrections.md) | `accepted` | `accepted` | — | — |
 <!-- ADR_INDEX_TABLE_END -->
 
 ## Unassigned scaffolds

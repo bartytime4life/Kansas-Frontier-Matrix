@@ -2,7 +2,7 @@
 doc_id: kfm://doc/adr-readme
 title: docs/adr — Architecture Decision Records
 type: standard
-version: v2.1
+version: v2.2
 status: draft; repository-grounded
 owners:
   - Architecture steward
@@ -27,12 +27,12 @@ related:
   - .github/workflows/docs-control-plane.yml
 tags: [kfm, governance, adr, decisions, audit, control-plane]
 notes:
-  - "v2.1 restores the displaced ADR-0039 record and registers the catalog redirect correction proposal as ADR-0040 without accepting either decision."
+  - "v2.2 records the explicit bounded owner acceptance of ADR-0040 while preserving proposed, unbound register entries, the Stage 1B hold, and Stage 2 prohibition."
   - "ADR-0038 is accepted only for its stated Stage 1 trusted-base correction mechanism; it does not authorize a Stage 2 topology transition."
   - "ADR-0039 is newly registered as proposed and selects no LayerManifest/LayerFrame migration or implementation."
-  - "ADR-0040 is proposed; its registration does not accept target blobs, bind or consume corrections, or authorize a topology-baseline transition."
+  - "ADR-0040 accepts only seven exact catalog redirect-document target blobs; it does not bind or consume corrections or authorize a topology-baseline transition."
   - "ADR-0037, ADR-0036, and ADR-0035 remain proposed; their registration does not accept their candidate decisions."
-  - "File presence does not accept a decision. ADR-0006, ADR-0007, ADR-0029, and ADR-0038 are accepted in their stated scopes; the other 36 numbered ADRs remain proposed."
+  - "File presence does not accept a decision. ADR-0006, ADR-0007, ADR-0029, ADR-0038, and ADR-0040 are accepted in their stated scopes; the other 35 numbered ADRs remain proposed."
   - "This README is the operating contract; docs/adr/INDEX.md is the canonical human inventory."
 [/KFM_META_BLOCK_V2] -->
 
@@ -40,14 +40,14 @@ notes:
 
 [![authority](https://img.shields.io/badge/authority-canonical-1f6feb)](../doctrine/directory-rules.md)
 [![inventory](https://img.shields.io/badge/numbered_ADRs-40-0969da)](./INDEX.md)
-[![decision status](https://img.shields.io/badge/decisions-4_accepted_%7C_36_proposed-1a7f37)](./INDEX.md)
+[![decision status](https://img.shields.io/badge/decisions-5_accepted_%7C_35_proposed-1a7f37)](./INDEX.md)
 [![validation](https://img.shields.io/badge/index_coherence-enforced-1a7f37)](../../tools/validators/validate_adr_index.py)
 [![review route](https://img.shields.io/badge/CODEOWNERS-%40bartytime4life-8250df)](../../.github/CODEOWNERS)
 
 Architecture Decision Records preserve why KFM made—or is considering—a consequential architectural choice. They are append-only governance memory: one decision per record, explicit status, evidence, consequences, alternatives, migration impact, validation, correction, and rollback.
 
 > [!IMPORTANT]
-> A tracked ADR is not automatically accepted. ADR-0006, ADR-0007, ADR-0029, and ADR-0038 carry matching accepted source/index status in their stated scopes; the other 36 numbered records remain proposed. This summary does not independently promote any decision.
+> A tracked ADR is not automatically accepted. ADR-0006, ADR-0007, ADR-0029, ADR-0038, and ADR-0040 carry matching accepted source/index status in their stated scopes; the other 35 numbered records remain proposed. This summary does not independently promote any decision.
 
 **Quick links:** [Verified snapshot](#verified-snapshot) · [Authority](#authority-and-boundaries) · [Inventory](#inventory-contract) · [Lifecycle](#decision-lifecycle) · [ADR triggers](#when-an-adr-is-required) · [Naming](#naming-and-numbering) · [Authoring](#authoring-workflow) · [Validation](#validation) · [Review](#review-and-supersession) · [Open work](#open-governance-work)
 
@@ -55,14 +55,14 @@ Architecture Decision Records preserve why KFM made—or is considering—a cons
 
 ## Verified snapshot
 
-The current inventory snapshot is prepared against `main@95f3d9469c28b062e4b5193b4e27b94abb158f71` plus this proposed ADR identity repair.
+The current inventory snapshot is prepared against `main@2894c58426491f21265c0918a937db074aef033b` plus this bounded ADR-0040 acceptance transition.
 
 | Surface | Verified state | Meaning |
 |---|---:|---|
 | Direct Markdown files | 56 | Complete direct-child inventory in the proposed tree |
 | Numbered records | 40 | Unique, contiguous IDs `ADR-0001` through `ADR-0040` |
-| Numbered source metadata | 25 `proposed`; 11 `draft`; 4 `accepted` | `draft` normalizes to `proposed`; accepted source and index status agree for four records |
-| Verified accepted decisions | 4 | ADR-0006, ADR-0007, ADR-0029, and ADR-0038 carry matching source/index `accepted` status in their stated scopes |
+| Numbered source metadata | 24 `proposed`; 11 `draft`; 5 `accepted` | `draft` normalizes to `proposed`; accepted source and index status agree for five records |
+| Verified accepted decisions | 5 | ADR-0006, ADR-0007, ADR-0029, ADR-0038, and ADR-0040 carry matching source/index `accepted` status in their stated scopes |
 | Explicit `NNNN` / `XXXX` placeholders | 4 | Unassigned scaffolds; not ADR numbers |
 | Slug-only ADR scaffolds | 8 | Unassigned scaffolds; not accepted decision records |
 | Template | 1 | [`ADR-template.md`](./ADR-template.md) |
@@ -172,7 +172,7 @@ Rules:
 - Proposed [`ADR-0037`](./ADR-0037-evidence-drawer-payload-ui-authority-and-compatibility.md) would select UI-family authority and retained compatibility projections for `EvidenceDrawerPayload`; it remains under review and authorizes no migration.
 - Accepted [`ADR-0038`](./ADR-0038-trusted-base-topology-correction-transitions.md) is limited to its stated Stage 1 trusted-base correction mechanism; it does not authorize its Stage 2 topology transition.
 - Proposed [`ADR-0039`](./ADR-0039-layer-manifest-frame-contract-home.md) would keep `LayerManifest` and `LayerFrame` in the existing data contract/schema family; it remains under review and authorizes no migration.
-- Proposed [`ADR-0040`](./ADR-0040-catalog-redirect-metadata-corrections.md) would accept seven exact catalog redirect-document target blobs while keeping register binding and topology-baseline transition on hold; it remains under owner review and creates no transition authority.
+- Accepted [`ADR-0040`](./ADR-0040-catalog-redirect-metadata-corrections.md) selects seven exact catalog redirect-document target blobs while keeping every register entry proposed and unbound, Stage 1B held, and Stage 2 unauthorized.
 
 Two numbered records use legacy filenames containing spaces and an em dash (`ADR-0007` and `ADR-0028`). Renaming them remains deferred pending inbound-link and history analysis.
 
@@ -223,7 +223,7 @@ The read-only [`docs-control-plane` workflow](../../.github/workflows/docs-contr
 
 ## Open governance work
 
-- Human acceptance review for the remaining 36 proposed numbered ADRs; accepted records retain any explicit later-review triggers in their own scopes.
+- Human acceptance review for the remaining 35 proposed numbered ADRs; accepted records retain any explicit later-review triggers in their own scopes.
 - Metadata normalization for 11 `draft` records without changing conservative `proposed` status.
 - Migration analysis for the two legacy space/em-dash filenames.
 - Disposition of 12 unassigned placeholder or slug-only scaffolds.
@@ -231,7 +231,7 @@ The read-only [`docs-control-plane` workflow](../../.github/workflows/docs-contr
 - Acceptance or rejection of ADR-0036 before the encyclopedia scaffold is admitted or populated.
 - Acceptance or rejection of ADR-0037 before any `EvidenceDrawerPayload` authority or compatibility migration.
 - Acceptance or rejection of ADR-0039 before any `LayerManifest` or `LayerFrame` authority, schema-home, or compatibility migration.
-- Acceptance or rejection of ADR-0040 before its catalog target blobs can become decision authority; machine binding and topology-baseline transition remain separate later stages.
+- Separate review of ADR-0040 Stage 1B batch semantics before any machine binding; topology-baseline transition remains a later unauthorized Stage 2.
 - Review of [`ADR-0011`](./ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md) before `artifacts/release/` migration.
 - Resolution of `OPEN-DR-09-b` and the `artifacts/perf/` placement conflict.
 
