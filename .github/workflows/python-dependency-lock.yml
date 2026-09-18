@@ -18,6 +18,8 @@ name: python-dependency-lock
       - "tools/ci/python-dependency-lock-migration.json"
       - "tools/ci/python-audit.lock"
       - "tools/ci/python-test.lock"
+      - "tools/ci/python-geo.lock"
+      - "data/receipts/generated/genrec-pipeline-ci-migration-replay-20260918.json"
       - "tools/validators/validate_generated_receipt.py"
   push:
     branches:
@@ -35,6 +37,8 @@ name: python-dependency-lock
       - "tools/ci/python-dependency-lock-migration.json"
       - "tools/ci/python-audit.lock"
       - "tools/ci/python-test.lock"
+      - "tools/ci/python-geo.lock"
+      - "data/receipts/generated/genrec-pipeline-ci-migration-replay-20260918.json"
       - "tools/validators/validate_generated_receipt.py"
   workflow_dispatch:
 
@@ -46,7 +50,10 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  KFM_MIGRATION_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+  # The manifest records the completed migration, not all later workflow edits.
+  # Current profiles, installer invariants and environment are checked separately.
+  KFM_MIGRATION_HEAD: 8343b10391e6199078e6286fd4e93f807a8930a8
+  KFM_CURRENT_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
   PIP_DISABLE_PIP_VERSION_CHECK: "1"
   PIP_NO_INPUT: "1"
   PYTHONDONTWRITEBYTECODE: "1"
@@ -87,6 +94,16 @@ jobs:
       - name: Verify installer invariants and environment consistency
         run: |
           python -m unittest tests/ci/test_install_python_ci.py -v
-          python tools/ci/install_python_ci.py verify-workflows
           python -m pip check
           python -m py_compile tools/ci/install_python_ci.py
+
+      - name: Replay the immutable dependency migration
+        run: |
+          git merge-base --is-ancestor "$KFM_MIGRATION_HEAD" "$KFM_CURRENT_HEAD"
+          python tools/ci/install_python_ci.py verify-workflows
+
+      - name: Validate the current workflow correction receipt
+        run: |
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-pipeline-ci-migration-replay-20260918.json \
+            --repo-root .
