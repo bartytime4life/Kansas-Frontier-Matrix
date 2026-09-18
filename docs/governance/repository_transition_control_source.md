@@ -2,11 +2,11 @@
 doc_id: kfm://doc/governance/repository-transition-control-source
 title: Repository transition control-source binding
 type: governance-binding-enforcement-candidate-note
-version: v1.3.2
+version: v1.3.3
 status: current-main bounded-capture workflow active; candidate authorization-output hardening; required-status-check not installed
 owner: OWNER_TBD — governance steward and repository-control steward
 created: 2026-09-03
-updated: 2026-09-17
+updated: 2026-09-18
 policy_label: repository-facing; governance; fail-closed; non-authoritative
 owning_root: docs/
 responsibility: "Bind the repository transition control-source identity, bounded capture posture, exact authorization boundary, and rollback limits without creating merge, release, deployment, promotion, or publication authority."
@@ -25,6 +25,8 @@ related:
   - https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4234
   - https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4235
   - https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4237
+  - https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4622
+  - https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/35269626722/job/105365375610
   - https://github.com/bartytime4life/Kansas-Frontier-Matrix/rules/15484585
 [/KFM_META_BLOCK_V2] -->
 
@@ -91,6 +93,24 @@ These incidents do not identify whether the initiating path was a browser, CLI,
 PAT, OAuth client, connector, or another owner-authenticated session. They do
 prove that body warnings, draft creation, and asynchronous advisory checks are
 not preventive merge containment.
+
+### Advisory authorization hold followed by merge — PR #4622
+
+PR #4622 reached exact head
+`84fa0984b7becd0c2d394fb536746f960cc23997`. Its
+[`repository-control / authorize-ready-and-merge`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/35269626722/job/105365375610)
+job completed with
+`EXPECTED_READINESS_HOLD / TRANSITION_AUTHORIZATION_MISSING`: no current,
+unedited owner transition record matched PR #4622 and that head. GitHub then
+records the owner account as the merge actor at `2026-09-18T20:01:34Z`, with
+merge commit `d0479dc293e2ab79fe94698e471d3cfe6b4017de`.
+
+This is a confirmed terminal divergence between the advisory authorization
+hold and GitHub merge state. It confirms the known ruleset enforcement gap; it
+does not establish the initiating client, infer intent, supply retroactive
+transition authority, or establish that the separate validator-suite failure
+was acceptable. Remediation remains the separately authorized server-side
+required-check change and canary sequence described below.
 
 ## Live-source rules
 
