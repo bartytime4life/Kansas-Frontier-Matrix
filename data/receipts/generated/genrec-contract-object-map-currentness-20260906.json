@@ -39,10 +39,7 @@
     ]
   },
   "truth_labels": {
-    "contracts/OBJECT_MAP.md": "PROPOSED; bounded maintainer crosswalk; not authority",
-    "main@9683ac6cbe385938dbeb66c9f61d82f8de770423": "CONFIRMED repository checkpoint",
-    "control_plane/object_family_register.yaml": "PROPOSED; navigational index only",
-    "governed-api route registry": "CONFIRMED path registration; finite ABSTAIN stubs only"
+    "contracts/OBJECT_MAP.md": "PROPOSED"
   },
   "validation_gates": [
     {
@@ -109,5 +106,5 @@
   "override_record": null,
   "created_at": "2026-09-06T16:06:43.208Z",
   "emitter": "OpenAI GPT-5 via ChatGPT GitHub connector",
-  "notes": "Generated for one AI-authored documentation artifact. It records provenance and bounded checks only; it is not factual proof, policy permission, human approval, release authority, deployment evidence, publication authority, or public-use authorization. Hosted checks and human review remain pending."
+  "notes": "Generated for one AI-authored documentation artifact. It records provenance and bounded checks only; it is not factual proof, policy permission, human approval, release authority, deployment evidence, publication authority, or public-use authorization. Hosted checks and human review remain pending. Supporting context reviewed but outside this receipt's tracked artifact_paths: main@9683ac6cbe385938dbeb66c9f61d82f8de770423 is a CONFIRMED repository checkpoint; control_plane/object_family_register.yaml is PROPOSED as a navigational index only; the governed-api route registry is CONFIRMED as path registration with finite ABSTAIN stubs only."
 }

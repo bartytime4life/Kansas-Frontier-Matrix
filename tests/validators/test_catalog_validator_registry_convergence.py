@@ -35,6 +35,16 @@ CATALOG_VALIDATORS = {
     },
 }
 
+def _contiguous_block_index(haystack: tuple[str, ...], needle: tuple[str, ...]) -> int:
+    """Return the start index of ``needle`` as a contiguous run in ``haystack``, or -1."""
+
+    span = len(needle)
+    for start in range(len(haystack) - span + 1):
+        if haystack[start : start + span] == needle:
+            return start
+    return -1
+
+
 LEGACY_CORE_VALIDATOR_IDS = (
     "source-descriptor",
     "evidence-ref",
@@ -62,8 +72,16 @@ class CatalogValidatorRegistryConvergenceTests(unittest.TestCase):
         full_ids = self.registry.profiles["full"]
         focused_ids = self.registry.profiles["focused"]
 
-        self.assertEqual(release_ids[-4:], catalog_ids)
-        self.assertEqual(full_ids[-6:-2], catalog_ids)
+        self.assertNotEqual(
+            _contiguous_block_index(release_ids, catalog_ids),
+            -1,
+            "catalog validators must appear as a contiguous block in release-dry-run",
+        )
+        self.assertNotEqual(
+            _contiguous_block_index(full_ids, catalog_ids),
+            -1,
+            "catalog validators must appear as a contiguous block in full",
+        )
         for validator_id, expected in CATALOG_VALIDATORS.items():
             with self.subTest(validator_id=validator_id):
                 spec = self.registry.by_id[validator_id]

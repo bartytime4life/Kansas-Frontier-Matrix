@@ -12,14 +12,14 @@
     "tools/validators/governance/validate_k_anonymity_assessment.py"
   ],
   "artifact_hashes": {
-    ".github/workflows/k-anonymity-assessment.yml": "sha256:aade085e364e0b45134e84a0a747bcfeb36cff7c26fba7a0b8f1e28cd20dc561",
+    ".github/workflows/k-anonymity-assessment.yml": "sha256:f78edfeb050f3c960d9829f8add9b47cfe22392331572a68a980efa1744c0d8e",
     "contracts/governance/k_anonymity_assessment.md": "sha256:8b01ccb94366099a82e4832242bba5d80c05da4bb73b85db6632e758189a6755",
     "docs/intake/exploratory/pass-2-k-anonymity-assessment-source-map.md": "sha256:4756ac4ecd2426ca2e35736d512f4cbba754d905023c14addc515441a1023d66",
     "fixtures/contracts/v1/governance/k_anonymity_assessment/cases.json": "sha256:b72146365ab66f1e828c147b9df7387ee74f299edd33f3eabbf099be8f351500",
     "schemas/contracts/v1/governance/k_anonymity_assessment.schema.json": "sha256:4eab8f6b590bc134961dfeaabed23f8749a3a7fa58cac8acccedff8d4b96d107",
     "tests/validators/governance/test_validate_k_anonymity_assessment.py": "sha256:be9fea8754d044b38e170af29f4022c8169840aac04e6bd5fbe41177c9ad2b64",
     "tools/validators/governance/k_anonymity_assessment_core.py": "sha256:7733103fc7f58a6bc1fe11ef66154db889979bebead8d6e04912099203896784",
-    "tools/validators/governance/validate_k_anonymity_assessment.py": "sha256:54e30693e85d57a831b9d29c82c926efa9be4bbf8cba40ba24e337082c6e1ee5"
+    "tools/validators/governance/validate_k_anonymity_assessment.py": "sha256:147be35f4f513405205570fd0a71cc199651ecf5c1815d49efb026ece64e5a11"
   },
   "model_identity": {
     "provider": "OpenAI",
