@@ -16,7 +16,17 @@ const root = path.resolve(app, '../..');
 const fixed = '0.25.12';
 const read = (p) => readFile(p, 'utf8');
 const json = async (p) => JSON.parse(await read(p));
-const runtime = process.env.KFM_ESBUILD_RUNTIME_PROBE === '1';
+const runtimeProbeRequested = process.env.KFM_ESBUILD_RUNTIME_PROBE === '1';
+const appManifest = await json(path.join(app, 'package.json'));
+// Removed toolchains are not runtime-probe targets. A declared-but-missing
+// installation must still enter the probe and fail, never become a green skip.
+const legacyLoaderDeclared = ['dependencies', 'devDependencies', 'optionalDependencies']
+  .some((group) => Object.hasOwn(appManifest[group] ?? {}, 'drizzle-kit'));
+const legacyLoaderInstalled = existsSync(path.join(app, 'node_modules/drizzle-kit'));
+const runtime = runtimeProbeRequested && (legacyLoaderDeclared || legacyLoaderInstalled);
+const runtimeSkipReason = !runtimeProbeRequested
+  ? 'set KFM_ESBUILD_RUNTIME_PROBE=1 to run this synthetic loopback probe'
+  : 'not applicable: drizzle-kit is neither declared nor installed in this app';
 // Standalone Sites exports do not carry the monorepo's root lock. CI explicitly
 // requires workspace checks before testing the separately copied npm app.
 const inWorkspace = process.env.KFM_ESBUILD_REQUIRE_WORKSPACE === '1'
@@ -159,7 +169,7 @@ test('workspace guard rejects missing or broadened workerd decisions', () => {
 });
 
 test('resolved legacy loader uses the patched esbuild; cross-origin reads are not granted',
-  { skip: !runtime, timeout: 20000 }, async () => {
+  { skip: runtime ? false : runtimeSkipReason, timeout: 20000 }, async () => {
     const kit = createRequire(path.join(realpathSync(path.join(app, 'node_modules/drizzle-kit')), 'package.json'));
     const loader = createRequire(kit.resolve('@esbuild-kit/esm-loader'));
     const core = createRequire(loader.resolve('@esbuild-kit/core-utils'));
@@ -189,7 +199,7 @@ test('resolved legacy loader uses the patched esbuild; cross-origin reads are no
   });
 
 test('Drizzle still generates SQL from synthetic TypeScript without a database',
-  { skip: !runtime, timeout: 45000 }, async () => {
+  { skip: runtime ? false : runtimeSkipReason, timeout: 45000 }, async () => {
     const dir = await mkdtemp(path.join(app, '.kfm-esbuild-probe-'));
     try {
       await writeFile(path.join(dir, 'schema.ts'), "import { sqliteTable, text } from 'drizzle-orm/sqlite-core';\nexport const probe = sqliteTable('kfm_security_probe', { id: text('id').primaryKey() });\n");

@@ -1,0 +1,84 @@
+{
+  "receipt_id": "genrec-pipeline-ci-probe-applicability-20260918",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/kansas-frontier-matrix-explorer/tests/esbuild-security.test.mjs"
+  ],
+  "artifact_hashes": {
+    "apps/kansas-frontier-matrix-explorer/tests/esbuild-security.test.mjs": "sha256:8a4e0a51565e49e72f88be8703b81f92559aa6da711f396906f8898dbd575a4f"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "not-exposed"
+  },
+  "prompt_or_contract": "sha256:ba7067ca7c92a0fe778b4893ab8b8d198820a0b1feaf83c8496ba96c3c97ab9d",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "repository inspection",
+      "GitHub",
+      "Sites readback",
+      "Google Drive",
+      "Notion",
+      "local validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "4e7b1a8b04e0570b25644aa7e7e75caca9f66a8c",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4626",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4625",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/35303906074"
+    ]
+  },
+  "truth_labels": {
+    "apps/kansas-frontier-matrix-explorer/tests/esbuild-security.test.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "requested legacy probes after toolchain removal",
+      "outcome": "PASS",
+      "reason": "With KFM_ESBUILD_REQUIRE_WORKSPACE=1 and KFM_ESBUILD_RUNTIME_PROBE=1, nine static/security tests pass and two absent legacy-toolchain probes are explicitly NOT APPLICABLE. Before correction these two probes fail ENOENT because drizzle-kit was removed by main."
+    },
+    {
+      "gate": "declared-but-missing toolchain remains fatal",
+      "outcome": "PASS",
+      "reason": "Three temporary CLI fixtures declare drizzle-kit separately under dependencies, devDependencies, and optionalDependencies while omitting installation. Both requested runtime probes fail for all three cases, rather than skipping."
+    },
+    {
+      "gate": "native Explorer regression",
+      "outcome": "PASS",
+      "reason": "make native-explorer-check: strict TypeScript, Vite build, 152 app tests and 5 lint-compatibility tests pass; two optional runtime probes are explicitly skipped."
+    },
+    {
+      "gate": "hosted current follow-up and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Pending at authoring. Prior PR-head Python matrix, native Explorer, declarations, WBD, local-data and Mesonet normalizer hosted checks passed; prior esbuild-security failure is the reproduced defect corrected here."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "directory-rules-adoption",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@a9fe94fe98ffde1ea7671e0875c55856e95d923b"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-18T03:40:48.831632+00:00",
+  "emitter": "Codex KFM pipeline finalization",
+  "links": {
+    "pr_number": 4626,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Follow-up on draft PR #4626. Corrects runtime-probe applicability after removal of Drizzle, without changing security floor, lock policy, dependency declarations, network behavior, or governing authorization controls. Unlike checking installation alone, declaration or installation keeps the requested probe active so broken declared installations fail. Related overlap #4625 identified; no other PR state changed. Original receipts and accepted evidence remain historical. No merge, settings, source activation, release or deployment. Rollback: revert this isolated test correction and retain receipt history."
+}
