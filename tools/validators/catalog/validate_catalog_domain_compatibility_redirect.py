@@ -16,7 +16,7 @@ except ModuleNotFoundError as exc:
         raise
     from _markdown_inventory import visible_line_spans as _visible_line_spans
 
-PROFILE = "kfm.catalog-domain-compatibility-redirect.v7"
+PROFILE = "kfm.catalog-domain-compatibility-redirect.v8"
 SECTION_TITLE = "Current bounded inventory"
 SECTION_HEADER = f"## {SECTION_TITLE}"
 ATX_H2_RE = re.compile(r"^ {0,3}##(?:[ \t]+(?P<title>.*?)[ \t]*|[ \t]*)$")
@@ -43,7 +43,26 @@ def _h2_spans(text: str) -> list[tuple[int, int, str]]:
     return headings
 
 
-def _read_redirect_rows(readme_path: Path) -> tuple[list[str], list[str]]:
+def _canonical_href_matches(
+    readme_path: Path,
+    canonical_root: Path,
+    linked_lane: str,
+    canonical_href: str,
+) -> bool:
+    href_path = Path(canonical_href)
+    if href_path.is_absolute():
+        return False
+    try:
+        resolved_href = (readme_path.parent / href_path).resolve()
+        expected_target = (canonical_root / linked_lane).resolve()
+    except (OSError, RuntimeError, ValueError):
+        return False
+    return resolved_href == expected_target
+
+
+def _read_redirect_rows(
+    readme_path: Path, canonical_root: Path
+) -> tuple[list[str], list[str]]:
     text = readme_path.read_text(encoding="utf-8")
     headings = _h2_spans(text)
     section_matches = [heading for heading in headings if heading[2] == SECTION_TITLE]
@@ -85,8 +104,11 @@ def _read_redirect_rows(readme_path: Path) -> tuple[list[str], list[str]]:
                 invalid_rows.append(stripped)
                 continue
             expected_canonical = f"data/catalog/domain/{linked_lane}/"
-            if canonical_text != expected_canonical or not canonical_href.endswith(
-                expected_canonical
+            if canonical_text != expected_canonical or not _canonical_href_matches(
+                readme_path,
+                canonical_root,
+                linked_lane,
+                canonical_href,
             ):
                 invalid_rows.append(stripped)
                 continue
@@ -138,7 +160,7 @@ def validate_catalog_domain_compatibility_redirect(
     canonical_root = canonical_root.resolve()
     readme_path = (readme_path or compatibility_root / "README.md").resolve()
 
-    indexed, invalid_redirect_rows = _read_redirect_rows(readme_path)
+    indexed, invalid_redirect_rows = _read_redirect_rows(readme_path, canonical_root)
     actual = _direct_children(compatibility_root)
     unexpected_root_files = _unexpected_root_files(compatibility_root)
     counts = Counter(indexed)

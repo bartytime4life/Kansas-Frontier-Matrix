@@ -140,6 +140,42 @@ class CatalogDomainCompatibilityRedirectTests(unittest.TestCase):
             self.assertEqual("FAIL", report["outcome"])
             self.assertEqual(1, len(report["invalid_redirect_rows"]))
 
+    def test_canonical_href_with_extra_parent_traversal_fails_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            compat, canonical = _write_layout(
+                Path(tmp),
+                actual=["agriculture"],
+                indexed=["agriculture"],
+                row_overrides={
+                    "agriculture": (
+                        "| [`agriculture/`](./agriculture/README.md) | "
+                        "[`data/catalog/domain/agriculture/`]"
+                        "(../../../data/catalog/domain/agriculture/) |"
+                    ),
+                },
+            )
+            report = validate_catalog_domain_compatibility_redirect(compat, canonical)
+            self.assertEqual("FAIL", report["outcome"])
+            self.assertEqual(1, len(report["invalid_redirect_rows"]))
+
+    def test_external_canonical_href_fails_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            compat, canonical = _write_layout(
+                Path(tmp),
+                actual=["agriculture"],
+                indexed=["agriculture"],
+                row_overrides={
+                    "agriculture": (
+                        "| [`agriculture/`](./agriculture/README.md) | "
+                        "[`data/catalog/domain/agriculture/`]"
+                        "(https://unrelated.example/data/catalog/domain/agriculture/) |"
+                    ),
+                },
+            )
+            report = validate_catalog_domain_compatibility_redirect(compat, canonical)
+            self.assertEqual("FAIL", report["outcome"])
+            self.assertEqual(1, len(report["invalid_redirect_rows"]))
+
     def test_table_header_and_separator_rows_are_ignored(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             compat, canonical = _write_layout(
@@ -492,7 +528,7 @@ class CatalogDomainCompatibilityRedirectTests(unittest.TestCase):
             self.assertEqual(outputs[0], outputs[1])
             report = json.loads(outputs[0])
             self.assertEqual(
-                "kfm.catalog-domain-compatibility-redirect.v7",
+                "kfm.catalog-domain-compatibility-redirect.v8",
                 report["profile"],
             )
 
