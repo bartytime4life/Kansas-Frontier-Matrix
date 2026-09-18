@@ -82,10 +82,12 @@ class CatalogMarkdownInventoryTests(unittest.TestCase):
 
     def test_backtick_fence_info_rejects_backticks_with_stable_offset(self) -> None:
         text = "visible\n```language`variant\nhidden\n```\n"
+        newline = "\n"
+        offset = len(f"visible{newline}")
 
         with self.assertRaisesRegex(
             ValueError,
-            rf"^backtick fence info contains backtick at offset {len('visible\n')}$",
+            rf"^backtick fence info contains backtick at offset {offset}$",
         ):
             visible_line_spans(text)
 
@@ -122,10 +124,12 @@ class CatalogMarkdownInventoryTests(unittest.TestCase):
 
     def test_unterminated_html_comment_fails_closed_with_stable_offset(self) -> None:
         text = "visible\n<!-- hidden inventory\n| hidden |\n"
+        newline = "\n"
+        offset = len(f"visible{newline}")
 
         with self.assertRaisesRegex(
             ValueError,
-            rf"^unterminated Markdown HTML comment at offset {len('visible\n')}$",
+            rf"^unterminated Markdown HTML comment at offset {offset}$",
         ):
             visible_line_spans(text)
 
