@@ -1,3 +1,37 @@
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://adr/0041
+title: Proportional Handling of Inherited Repository Holds
+type: architecture-decision-record
+version: v1.0-draft
+status: proposed
+effective_decision_status: proposed
+owners: ["@bartytime4life"]
+created: 2026-09-18
+updated: 2026-09-18
+policy_label: public; governance; fail-closed
+truth_posture: cite-or-abstain
+owning_root: docs/
+responsibility_root: docs/
+current_path: docs/adr/ADR-0041-proportional-handling-of-inherited-repository-holds.md
+responsibility: "Propose a deterministic, non-authorizing classification for unchanged inherited repository holds without weakening changed-area validation, topology authority, release, or publication controls."
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  source_commit: 97be53c4bafe44bb78e6df6b29e0273350d75744
+  source_blob: 3e7030ebc9e8949a4b59dd791ce5a1c46f75a700
+  source_path: "docs/adr/ADR-0041 — Proportional handling of inherited repository holds"
+  source_path_had_markdown_extension: false
+related:
+  - ADR-0038-trusted-base-topology-correction-transitions.md
+  - ADR-0040-catalog-redirect-metadata-corrections.md
+  - ../../tools/validators/directory_governance/validate_repository_topology.py
+  - ../../tools/validators/directory_governance/repository_topology_baseline.json
+tags: [kfm, governance, topology, inherited-hold, changed-area, fail-closed]
+notes:
+  - "PR #4632 added the proposal without a Markdown extension, metadata block, or canonical-index entry; this transition normalizes its identity without accepting the decision."
+  - "The proposal cannot classify PRs that modify the held subject or any governing validator, baseline, register, schema, contract, workflow, authority document, or decision record."
+  - "No implementation, required-check change, merge authority, release, deployment, promotion, publication, or repository-setting change is authorized."
+[/KFM_META_BLOCK_V2] -->
+
 # ADR-0041 — Proportional handling of inherited repository holds
 
 **Status:** PROPOSED  
