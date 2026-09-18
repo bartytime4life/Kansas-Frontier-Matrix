@@ -61,12 +61,14 @@ notes:
 
 ## Local quarantine capture implementation — current branch
 
-`fetch.py` now supplies bounded regular-file reads, streaming SHA-256 capture,
-private directory creation, and atomic no-overwrite writes for
-[`tools/local_data/manage.py`](../../../tools/local_data/manage.py). It performs no
-network access, extraction, source admission, or publication. `admit.py` remains
-unimplemented; the non-authoritative descriptor now records unknown sensitivity.
-The [local-PC runbook](../../../docs/runbooks/local-pc-data-store.md) and
+[`tools/local_data/file_io.py`](../../../tools/local_data/file_io.py) now
+supplies bounded regular-file reads, streaming SHA-256 capture, private
+directory creation, and atomic no-overwrite writes for
+[`tools/local_data/manage.py`](../../../tools/local_data/manage.py). `fetch.py`
+in this package performs no filesystem writes or source admission; it is an
+unimplemented boundary stub. `admit.py` remains unimplemented; the
+non-authoritative descriptor now records unknown sensitivity. The
+[local-PC runbook](../../../docs/runbooks/local-pc-data-store.md) and
 [`tests/local_data/`](../../../tests/local_data/) describe and check this slice.
 The pinned scaffold observations below are historical; this section supersedes
 their present-tense claims about `fetch.py`, sensitivity, and available tests.
