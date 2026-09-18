@@ -15,7 +15,7 @@
     "tools/validators/validate_web_delta_profile.py"
   ],
   "artifact_hashes": {
-    ".github/workflows/source-web-delta-profile.yml": "sha256:44c7bf11e284406be9197db9a074d9209d4d3a55f7a731ddd7d78bd230d160e0",
+    ".github/workflows/source-web-delta-profile.yml": "sha256:1d37a07c21a165c401977019de93158e143130a35159b39b34a43efc1afc1209",
     "contracts/source/web_delta_profile.md": "sha256:56773dc9f88e79a9473cf770d93006f39d06b4d77cd79464586a124b88da1c02",
     "docs/intake/exploratory/new-ideas-12-29-25-web-delta-source-map.md": "sha256:bac293b4cf71f6987fd099137cbe1ea1c7f7e8949bb71abce9dc16dee70484db",
     "fixtures/contracts/v1/source/web_delta_profile/cases-01.json": "sha256:652e50699170b3a872f9e76bae48b0d387fb050ff08e02278ed3024dbe5e18f0",
@@ -24,8 +24,8 @@
     "fixtures/contracts/v1/source/web_delta_profile/identity-corrections.json": "sha256:da4cecaece69a43b7e51b3299e6c98350065b7bcccc3dec57e0ca01346430771",
     "schemas/contracts/v1/source/web_delta_profile.schema.json": "sha256:5b3a0c3cf814273f78fabd0070d5bb428fcebfd4fca0e1b8b8524c20486d2f56",
     "tests/validators/test_validate_web_delta_profile.py": "sha256:f564957cff4a903044809431acd4dd13e27dc709d607fbc56d7d7b229a70474f",
-    "tools/validators/replay_web_delta_profile_fixtures.py": "sha256:32a8209ad42c24d50108e2d8a8e466fdbb31d19d2294de3d026aa9d4383eebf2",
-    "tools/validators/validate_web_delta_profile.py": "sha256:fc96f70da5bca668133fb873552fe8571ae63b62c079f5f49155b52fbc687883"
+    "tools/validators/replay_web_delta_profile_fixtures.py": "sha256:cd45d36db0b1671e28beeaf7b0269183547b3ed4c15b4b922c6e88c1e36f9cf3",
+    "tools/validators/validate_web_delta_profile.py": "sha256:d86f24e1e7a630ad612be8defcd416e0102fb456ffd0387a21e67f5f8c75d97e"
   },
   "model_identity": {
     "provider": "OpenAI",

@@ -17,11 +17,11 @@
     "tools/validators/release/validate_conditional_write_attempt_receipt.py"
   ],
   "artifact_hashes": {
-    ".github/workflows/conditional-write-attempt-receipt.yml": "sha256:f9a8028b33615d348d28eea4eb6854a704bb1420113c1d5d8bea686c88a7248f",
+    ".github/workflows/conditional-write-attempt-receipt.yml": "sha256:52fcd9ed1c9c0c4953620c428ff433692c7ac4ae28a2c7518fdf428bb48a0606",
     "contracts/release/conditional_write_attempt_receipt.md": "sha256:2652e69eb464fdc58cb3a48e71143e842864e34ece5ac53fb71a84ff8d34ea71",
     "docs/intake/exploratory/new-ideas-3-11-26-conditional-write-attempt-receipt-source-map.md": "sha256:cce439af6fdc5fcf245b7e72d32983ee863d3815dc8dc7128c35634bf7cfa88b",
     "fixtures/contracts/v1/release/conditional_write_attempt_receipt/README.md": "sha256:ce172a4311c388b683c0950d738722041f492b09fe5e481c02564845790a9a36",
-    "fixtures/contracts/v1/release/conditional_write_attempt_receipt/cases.json": "sha256:b695974e58a78b2dcf2f1d66847a30aa3be7b3a9c30dca9460d3f0a4d609cfa3",
+    "fixtures/contracts/v1/release/conditional_write_attempt_receipt/cases.json": "sha256:9329dec74321e3084b7f1c3cef4560a30f0af3006392fbb2b504730f21845583",
     "fixtures/contracts/v1/release/conditional_write_attempt_receipt/invalid/invalid_authority_overreach.expected_error.txt": "sha256:69556030fa36b793f16ad9c5d602bd1ebef581f35b67667b4ac31eb21f269c09",
     "fixtures/contracts/v1/release/conditional_write_attempt_receipt/invalid/invalid_authority_overreach.json": "sha256:ec1bc4612e42a8ae0d12a8809f9022a1a6f18e86d58fbb06af48c05fd5fd4439",
     "fixtures/contracts/v1/release/conditional_write_attempt_receipt/valid/valid_applied.json": "sha256:140e10d5c79777b7af25c72c7febbdb085a1778b206d86332b3b6a963bcf8984",

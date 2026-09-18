@@ -8,10 +8,10 @@
     "tools/source_artifacts/README.md"
   ],
   "artifact_hashes": {
-    "tools/source_artifacts/content_addressed_store.py": "sha256:04eb205d9a14d8ad85c14038a0bfb265f755eefb02afdf3e412673d9c438cd43",
-    "tools/validators/validate_source_artifact.py": "sha256:4de824363f7796e27b49b23ad6387b82d0ac9de374403482745b7573c4fb873f",
-    "tests/validators/test_validate_source_artifact.py": "sha256:9f7dc2a6b70829aeab88febe28c3bf8656d0645b080d031e08e0479e333bdea4",
-    "tools/source_artifacts/README.md": "sha256:3e956ae3cfd91d0095b947ae4cbc5c7c2dfb52c8d55297851faef6db88e12927"
+    "tools/source_artifacts/content_addressed_store.py": "sha256:96b19fe64597092d00fa975724669d314a4c00bfa9dcd1ae18bc30a1f898760b",
+    "tools/validators/validate_source_artifact.py": "sha256:8d09508fa5d95ab7f1267dd0858c3235f383dc83e1d115e40b612ff5ce920250",
+    "tests/validators/test_validate_source_artifact.py": "sha256:40ff0a1064693df1b6d08122e8b4cee6653095a17d89c38c2f89fdaff78e45ff",
+    "tools/source_artifacts/README.md": "sha256:8de4b185434b0f79144ec101b019e35031071a6210870cc8bcf9758893a32ea2"
   },
   "model_identity": {
     "provider": "OpenAI",

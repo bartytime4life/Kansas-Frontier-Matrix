@@ -73,9 +73,9 @@ The cell value is **documentation-state**, not implementation-state. A `document
 
 | Concern | Where authority lives | Status |
 |---|---|---|
-| Family list (connector lane) | [`directory-rules.md` §7.3](../../doctrine/directory-rules.md#73-connectors--source-specific-fetch-and-admission) | **CONFIRMED — 9 families** |
+| Family list (connector lane) | [`directory-rules.md` §7.2](../../doctrine/directory-rules.md#72-canonical-responsibility-table) | **CONFIRMED — 9 families** |
 | Domain spine (doctrine) | KFM Domains Atlas v1.1 §2.1 (15-domain spine) | **CONFIRMED doctrine** |
-| Domain projection lanes | [`data/catalog/domain/`](../../../../data/catalog/domain/) (subdirectories) | **CONFIRMED prior-session enumeration 2026-05-20**; NEEDS VERIFICATION this session |
+| Domain projection lanes | [`data/catalog/domain/`](../../../data/catalog/domain/) (subdirectories) | **CONFIRMED prior-session enumeration 2026-05-20**; NEEDS VERIFICATION this session |
 | Per-product page placement convention | `docs/sources/catalog/<family>/<PRODUCT>.md` | **PROPOSED** *(sibling-link presence verified in prior Claude Code session)* |
 | Drift register | [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) | **CONFIRMED root** *(directory-rules.md §2.5)* |
 
@@ -106,7 +106,7 @@ Source families per `directory-rules.md` §7.3:
 
 ### Domain axis (15 observed, drift-flagged)
 
-Domain rows are the subdirectories enumerated under [`data/catalog/domain/`](../../../../data/catalog/domain/) as of 2026-05-20 (prior-session enumeration). The KFM Domains Atlas v1.1 §2.1 spine names **15 canonical domains**:
+Domain rows are the subdirectories enumerated under [`data/catalog/domain/`](../../../data/catalog/domain/) as of 2026-05-20 (prior-session enumeration). The KFM Domains Atlas v1.1 §2.1 spine names **15 canonical domains**:
 
 | # | Atlas canonical | Atlas dossier short-name | Observed `data/catalog/domain/` row | Status |
 |---|---|---|---|---|
@@ -300,7 +300,7 @@ flowchart LR
 - [`docs/sources/catalog/INDEX.md`](./INDEX.md) — family index *(PROPOSED)*
 - [`docs/sources/catalog/RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) — per-family rights summary *(PROPOSED)*
 - [`docs/sources/catalog/CARE-COMPLIANCE.md`](./CARE-COMPLIANCE.md) — CARE field surfacing rules *(PROPOSED)*
-- [`data/catalog/domain/`](../../../../data/catalog/domain/) — domain-projection subdirectories (domain-axis source)
+- [`data/catalog/domain/`](../../../data/catalog/domain/) — domain-projection subdirectories (domain-axis source)
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement authority (family-axis source: §7.3)
 - [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — drift entries (DRIFT-CM-01..04)
 - [`docs/adr/`](../../adr/) — ADRs resolving drift entries
