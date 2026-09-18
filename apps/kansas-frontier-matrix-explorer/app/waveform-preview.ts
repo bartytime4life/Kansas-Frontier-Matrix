@@ -418,8 +418,6 @@ const digestHex = async (bytes: ArrayBuffer) => {
   return Array.from(new Uint8Array(digest), (value) => value.toString(16).padStart(2, "0")).join("");
 };
 
-const statusDetail = (state: WaveformGateState, detail: string) => state + " — " + detail;
-
 export const buildLocalWaveformPreview = async (input: Readonly<{
   waveformFileName: string;
   stationXmlFileName: string;
