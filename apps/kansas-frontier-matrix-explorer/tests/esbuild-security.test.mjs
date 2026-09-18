@@ -17,14 +17,16 @@ const fixed = '0.25.12';
 const read = (p) => readFile(p, 'utf8');
 const json = async (p) => JSON.parse(await read(p));
 const runtimeProbeRequested = process.env.KFM_ESBUILD_RUNTIME_PROBE === '1';
-// The legacy @esbuild-kit loader chain this probe exercises was only reachable
-// through drizzle-kit. Skip cleanly (not ENOENT) once an app no longer depends
-// on it, rather than asserting a vulnerable-resolution path that can't exist.
-const drizzleKitPresent = existsSync(path.join(app, 'node_modules/drizzle-kit'));
-const runtime = runtimeProbeRequested && drizzleKitPresent;
+const appManifest = await json(path.join(app, 'package.json'));
+// Removed toolchains are not runtime-probe targets. A declared-but-missing
+// installation must still enter the probe and fail, never become a green skip.
+const legacyLoaderDeclared = ['dependencies', 'devDependencies', 'optionalDependencies']
+  .some((group) => Object.hasOwn(appManifest[group] ?? {}, 'drizzle-kit'));
+const legacyLoaderInstalled = existsSync(path.join(app, 'node_modules/drizzle-kit'));
+const runtime = runtimeProbeRequested && (legacyLoaderDeclared || legacyLoaderInstalled);
 const runtimeSkipReason = !runtimeProbeRequested
   ? 'set KFM_ESBUILD_RUNTIME_PROBE=1 to run this synthetic loopback probe'
-  : 'drizzle-kit is not an app dependency; the legacy @esbuild-kit loader chain it probed is absent';
+  : 'not applicable: drizzle-kit is neither declared nor installed in this app';
 // Standalone Sites exports do not carry the monorepo's root lock. CI explicitly
 // requires workspace checks before testing the separately copied npm app.
 const inWorkspace = process.env.KFM_ESBUILD_REQUIRE_WORKSPACE === '1'

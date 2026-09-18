@@ -2,7 +2,7 @@
 doc_id: kfm://doc/tools-ci-readme
 title: CI Tools README
 type: tool-readme
-version: v0.3
+version: v0.4
 status: draft; ci-tooling-lane; verified-dependency-bootstrap; bounded-python-no-network-startup-guard; mixed-implementation-status
 owners:
   - OWNER_TBD - Tooling steward
@@ -10,7 +10,7 @@ owners:
   - OWNER_TBD - QA steward
   - OWNER_TBD - Governance steward
 created: 2026-07-07
-updated: 2026-08-28
+updated: 2026-09-17
 policy_label: public-doc; tools; ci; qa; reviewer-summary; no-network-default; workflow-support
 owning_root: tools/
 responsibility: Long-lived CI support helpers for deterministic dependency bootstrap, bounded process controls, and reviewer-readable signals; never workflow, policy, test, proof, or release authority.
@@ -167,6 +167,77 @@ python -m pytest -q -p no:cacheprovider \
 ```
 
 Default operation should be deterministic, local, and no-network. Workflow-specific live checks must be explicit, gated, and reviewed.
+
+---
+
+## Pipeline and native Explorer CI entry points
+
+The repository has two additional local-parity targets. These exercise existing
+implementation and emit test diagnostics; they do not run live acquisition or
+advance a lifecycle state.
+
+| Target | Scope | Continuous workflow |
+|---|---|---|
+| `make offline-pipeline-check` | Synthetic KanPlan capture, geometry conversion, evidence resolution, refresh and rollback checks; WBD HUC12 candidates; Mesonet normalization and station health; the people/DNA/land assessment adapter; Python egress-denial proof | [offline-pipeline-check](../../.github/workflows/offline-pipeline-check.yml), Python 3.11 and 3.12 |
+| `make native-explorer-check` | Build and existing Node/lint-compatibility tests for `apps/kansas-frontier-matrix-explorer` using the complete repository workspace | [native-explorer-check](../../.github/workflows/native-explorer-check.yml), Node 22 |
+
+Prepare the pipeline dependencies before enabling the test-process network guard:
+
+```bash
+python tools/ci/install_python_ci.py project-test
+python tools/ci/install_python_ci.py geo-transforms
+make offline-pipeline-check
+```
+
+The finite `geo-transforms` profile uses `python-geo.lock`: the optional
+`pyproj==3.7.2` declared by `packages/geo/pyproject.toml`, plus hash-pinned certifi.
+Wheel hashes cover Python 3.11/3.12; CI requires binary distributions. This adds
+an optional test dependency without changing the root runtime dependency set.
+The Make target injects the existing Python startup guard and sets
+`PROJ_NETWORK=OFF` to prevent native PROJ grid downloads. This is bounded
+process-level protection, not a host firewall or proof of all native-code egress.
+
+For the native app, use Node 22 and the root's exact package-manager pin:
+
+```bash
+corepack enable
+pnpm install --frozen-lockfile
+make native-explorer-check
+```
+
+The native workflow is continuous PR/main validation of the repository mirror.
+The historical `earth-layer-library-app-validation` workflow keeps its pinned
+comparison role. The separate `ui-build` workflow still owns `apps/explorer-web`.
+Neither is relabeled as proof of the live Sites source. Build products remain
+on the ephemeral runner and are not uploaded or deployed. The two new workflows
+also admit the single authoring branch for hosted evidence while #4024 holds PR
+delivery; no scheduler, required-check setting, or PR-state mutation is added.
+
+The existing local-data, inactive-spec, WBD-ingest, Mesonet-normalizer and
+Mesonet-health workflows now react to their Python bootstrap/lock and shared
+validator changes. Test processes explicitly inject the existing Python egress
+guard, after dependency installation. Cached Python dependencies bind to the test lock where
+caching is used. Existing check names and failure behavior remain intact. The three existing
+workflow-bound authoring receipts replay their exact historical ancestor bytes
+with a full-history checkout; their JSON is not rewritten. The new offline
+workflow separately checks the current change receipt and its artifact hashes.
+Path-filtered jobs are scoped checks; a filtered/skipped workflow is not passing
+validation evidence. Repository-wide CI and independent acceptance remain
+separate. See [GitHub workflow filtering](https://docs.github.com/en/actions/writing-workflows/workflow-syntax-for-github-actions#onpushpull_requestpull_request_targetpathspaths-ignore)
+and [PROJ network settings](https://pyproj4.github.io/pyproj/stable/api/network.html).
+
+Directory Rules basis: accepted [ADR-0029](../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md)
+places platform orchestration in `.github/`, shared bootstrap tools in `tools/`,
+conformance tests in `tests/`, and repository-wide commands in `Makefile`.
+Generated authorship receipts remain under `data/receipts/generated/`; JUnit
+files are temporary CI diagnostics, not release or proof authority.
+
+Rollback before integration is branch abandonment. After authorized integration,
+revert this bounded workflow/Make/bootstrap change together; preserve historical
+receipts. Do not remove a later required check without its own control review.
+No source registration, provider retrieval, real-data transformation, policy
+decision, release, deployment, public serving, or hosted WebGL acceptance follows
+from a green result.
 
 ---
 

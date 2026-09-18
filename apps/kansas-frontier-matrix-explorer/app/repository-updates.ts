@@ -246,7 +246,7 @@ export const REPOSITORY_UPDATES: readonly RepositoryUpdate[] = Object.freeze([
     maturity: "PARTIAL",
     date: "28 Aug 2026",
     summary:
-      "ADR-0006 and ADR-0007 bind KFM browser rendering to packages/maplibre. Current main records exact maplibre-gl 6.6.0 lock closure, a package-owned lifecycle and camera adapter, the Vite worker seam, deterministic positive and fail-closed tests, and a bounded real-browser fixture.",
+      "ADR-0006 and ADR-0007 bind KFM browser rendering to packages/maplibre. Current main records exact maplibre-gl 6.9.0 lock closure, a package-owned lifecycle and camera adapter, the Vite worker seam, deterministic positive and fail-closed tests, and a bounded real-browser fixture.",
     boundary:
       "The repository still holds Explorer production activation, broader browser readiness, governed performance execution, source and layer admission, PMTiles, terrain, long-session evidence, release, deployment, and publication. This Site remains a separate synthetic demonstration and is not KFM runtime-readiness evidence.",
     sourceLabel: "MapRuntimePort implementation",

@@ -4,6 +4,8 @@ name: local-data-store
 "on":
   pull_request:
     paths:
+      - "tools/ci/**"
+      - "tools/validators/_common/**"
       - ".github/workflows/local-data-store.yml"
       - "tools/local_data/**"
       - "connectors/local_upload/**"
@@ -21,6 +23,8 @@ name: local-data-store
       - main
       - agent/local-pc-data-store-20260917
     paths:
+      - "tools/ci/**"
+      - "tools/validators/_common/**"
       - ".github/workflows/local-data-store.yml"
       - "tools/local_data/**"
       - "connectors/local_upload/**"
