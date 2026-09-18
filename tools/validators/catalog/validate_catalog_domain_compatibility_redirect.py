@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 from collections import Counter
 from pathlib import Path
@@ -16,7 +17,7 @@ except ModuleNotFoundError as exc:
         raise
     from _markdown_inventory import visible_line_spans as _visible_line_spans
 
-PROFILE = "kfm.catalog-domain-compatibility-redirect.v8"
+PROFILE = "kfm.catalog-domain-compatibility-redirect.v9"
 SECTION_TITLE = "Current bounded inventory"
 SECTION_HEADER = f"## {SECTION_TITLE}"
 ATX_H2_RE = re.compile(r"^ {0,3}##(?:[ \t]+(?P<title>.*?)[ \t]*|[ \t]*)$")
@@ -53,11 +54,13 @@ def _canonical_href_matches(
     if href_path.is_absolute():
         return False
     try:
-        resolved_href = (readme_path.parent / href_path).resolve()
-        expected_target = (canonical_root / linked_lane).resolve()
+        expected_target = canonical_root / linked_lane
+        expected_href = Path(
+            os.path.relpath(expected_target, start=readme_path.parent)
+        ).as_posix()
     except (OSError, RuntimeError, ValueError):
         return False
-    return resolved_href == expected_target
+    return canonical_href == f"{expected_href.rstrip('/')}/"
 
 
 def _read_redirect_rows(

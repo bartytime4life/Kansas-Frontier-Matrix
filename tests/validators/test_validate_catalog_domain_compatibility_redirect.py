@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import io
 import json
+import os
 import tempfile
 import unittest
 from contextlib import redirect_stdout
@@ -173,6 +174,30 @@ class CatalogDomainCompatibilityRedirectTests(unittest.TestCase):
                 },
             )
             report = validate_catalog_domain_compatibility_redirect(compat, canonical)
+            self.assertEqual("FAIL", report["outcome"])
+            self.assertEqual(1, len(report["invalid_redirect_rows"]))
+
+    @unittest.skipUnless(hasattr(os, "symlink"), "requires symlinks")
+    def test_symlink_alias_canonical_href_fails_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            compat, canonical = _write_layout(
+                Path(tmp),
+                actual=["agriculture"],
+                indexed=["agriculture"],
+                row_overrides={
+                    "agriculture": (
+                        "| [`agriculture/`](./agriculture/README.md) | "
+                        "[`data/catalog/domain/agriculture/`]"
+                        "(./.target/) |"
+                    ),
+                },
+            )
+            (compat / ".target").symlink_to(
+                canonical / "agriculture", target_is_directory=True
+            )
+
+            report = validate_catalog_domain_compatibility_redirect(compat, canonical)
+
             self.assertEqual("FAIL", report["outcome"])
             self.assertEqual(1, len(report["invalid_redirect_rows"]))
 
@@ -528,7 +553,7 @@ class CatalogDomainCompatibilityRedirectTests(unittest.TestCase):
             self.assertEqual(outputs[0], outputs[1])
             report = json.loads(outputs[0])
             self.assertEqual(
-                "kfm.catalog-domain-compatibility-redirect.v8",
+                "kfm.catalog-domain-compatibility-redirect.v9",
                 report["profile"],
             )
 
