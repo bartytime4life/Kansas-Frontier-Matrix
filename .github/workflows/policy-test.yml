@@ -348,7 +348,7 @@ jobs:
 
           harness_text = common_harness.read_text(encoding="utf-8")
           for marker in (
-              'FAMILIES = ["evidence", "runtime", "common", "policy", "source", "governance", "release"]',
+              'FAMILIES = ["evidence", "runtime", "common", "policy", "source", "governance", "release", "receipts"]',
               "def _schema_cases():",
               '@pytest.mark.parametrize("family,name,schema_path,fixture_dir", _schema_cases())',
           ):

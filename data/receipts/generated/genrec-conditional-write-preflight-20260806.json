@@ -16,18 +16,18 @@
     "tools/validators/release/validate_conditional_write_preflight.py"
   ],
   "artifact_hashes": {
-    ".github/workflows/conditional-write-preflight.yml": "sha256:ee7f20a20145cd9aaec1eaaeac056f8bc9167c5df3b59f699b7632a429443625",
+    ".github/workflows/conditional-write-preflight.yml": "sha256:fb20f659becf3df24131f6926f3a3f29b94d6ba86b1cbb067a4f4eb77dc7e717",
     "contracts/release/conditional_write_preflight.md": "sha256:6e22dff1e8e07440aa70cac60da30c6348633ea938d6cacd38c7d7c92534f28a",
     "docs/intake/exploratory/new-ideas-3-11-26-conditional-write-preflight-source-map.md": "sha256:49620a5a9e5147919d6fac0f3421f7400c2067f117389da242cc804207517041",
     "fixtures/contracts/v1/release/conditional_write_preflight/README.md": "sha256:762467300fc4acec3402af71f364096691cb32f5bcb1c2bd11e830ba59cfc42a",
-    "fixtures/contracts/v1/release/conditional_write_preflight/cases.json": "sha256:636cef605199802722fbb2b35a80acc3555fa0a27baf05b12628df43258a69ca",
+    "fixtures/contracts/v1/release/conditional_write_preflight/cases.json": "sha256:14aeff530c3fffd1e33796073a89ed18c1e99089f0fcbece0559cf45ebb97002",
     "fixtures/contracts/v1/release/conditional_write_preflight/valid/valid_propose_write.json": "sha256:100904076a389825de510d45d4191af894aea672d21ecfe0108c25369f236607",
     "fixtures/contracts/v1/release/conditional_write_preflight/invalid/invalid_authority_overreach.json": "sha256:f786a6cf4990e1835ed3355db6edd6a0aa6daccd93c3796ed455e1f5e1b255c6",
     "fixtures/contracts/v1/release/conditional_write_preflight/invalid/invalid_authority_overreach.expected_error.txt": "sha256:a1905e7caf8933953270afc90731a0a1e8a1e19e8417bb180a91ba1e019938f4",
     "schemas/contracts/v1/release/conditional_write_preflight.schema.json": "sha256:a966f096a1091cb7da30fc3b0a62816c9925e1152df8dc4c5f55bd35959430f3",
     "tests/validators/release/test_validate_conditional_write_preflight.py": "sha256:8e5291b92cc7ea51ce4d5c258a7a6ed3802e33c512e899461cd8a6f765f9c0d7",
     "tools/validators/release/_conditional_write_preflight_model.py": "sha256:9ae9745d0a1b7d7298cb2cf59a0c073ff7d4b5fe55f6aa60cbfaa9c8a6c6e0a2",
-    "tools/validators/release/validate_conditional_write_preflight.py": "sha256:efe2e66f29e67613a7e8589082a36c1d1b97107c3a2442ca6506117ebe857321"
+    "tools/validators/release/validate_conditional_write_preflight.py": "sha256:10800ee21bed65779c0af52985692b823823f1f19d43f4abef812f28d21e5e58"
   },
   "model_identity": {
     "provider": "OpenAI",

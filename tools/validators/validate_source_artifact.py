@@ -11,11 +11,16 @@ import argparse
 import hashlib
 import json
 import re
+import sys
 import tempfile
 from collections.abc import Mapping, Sequence
 from datetime import datetime
 from pathlib import Path
 from urllib.parse import urlsplit
+
+REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 
 from tools.validators._source_artifact import (
     DuplicateKeyError,
@@ -34,7 +39,6 @@ from tools.validators._source_artifact import (
     strings,
 )
 
-REPO_ROOT = Path(__file__).resolve().parents[2]
 SCHEMA_PATH = REPO_ROOT / "schemas/contracts/v1/source/source_artifact.schema.json"
 FIXTURE_ROOT = REPO_ROOT / "fixtures/contracts/v1/source/source_artifact"
 _ZERO_DIGEST = "sha256:" + ("0" * 64)

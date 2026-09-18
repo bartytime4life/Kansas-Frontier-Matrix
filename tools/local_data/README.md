@@ -21,12 +21,14 @@ store. They do not download, interpret, extract, normalize, activate, promote,
 publish, or serve data. See the [local-PC runbook](../../docs/runbooks/local-pc-data-store.md)
 for the complete setup and update sequence.
 
-`tools/` owns the operator interface and checks. The existing
-`connectors/local_upload/src/local_upload/fetch.py` owns bounded local-byte
-capture. Placement follows accepted [ADR-0029](../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md)
-and [Directory Rules](../../docs/doctrine/directory-rules.md), especially
-DIR-EXEC-007, DIR-STORAGE-001 and source-first DIR-SOURCE-001. This helper does
-not implement the connector's still-unimplemented source-admission gate.
+`tools/` owns the operator interface, checks, and bounded local-byte capture in
+[`file_io.py`](file_io.py). These helpers prepare caller-owned external stores,
+including empty lifecycle directories, so they belong with the operator tool
+rather than the connector output lane. Placement follows accepted
+[ADR-0029](../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) and
+[Directory Rules](../../docs/doctrine/directory-rules.md), especially DIR-EXEC-007,
+DIR-STORAGE-001 and source-first DIR-SOURCE-001. The local-upload connector
+remains unimplemented; its DIR-PLACE-003 output allowlist is unchanged.
 
 ## Commands
 

@@ -10,10 +10,10 @@
   ],
   "artifact_hashes": {
     ".github/workflows/geoparquet-2-rc-pyarrow-carrier-probe.yml": "sha256:b1b8d048fc9c76c3524e845da342fda0c23b7dac6247129cada31a938c91b709",
-    "tools/ci/install_python_ci.py": "sha256:72f6983a46b7bf53c62919b82d9625c09f94599fb594e700b9397773b4702a7c",
+    "tools/ci/install_python_ci.py": "sha256:5f56cd97247a48e4b7f3edc0898274c7ad46fe6a145be592421676033572b222",
     "tools/ci/geoparquet-pyarrow-25.lock": "sha256:3448392e420d16cfbfdf233f714b30e0452ae818147fbdb4faf760065eec41b1",
-    "tests/ci/test_install_python_ci.py": "sha256:fad96f8ae49b3f98eb4544af083a02f3cdb453cf229130661a9b854e898a73fd",
-    "tools/validators/release/validate_geoparquet_2_rc_pyarrow_carriers.py": "sha256:f5fcfd609559330e84e1aa49b3ddd47328d58051b9a2ef871f64d9031ed76c8c"
+    "tests/ci/test_install_python_ci.py": "sha256:7204f67a3fa398c2c8ec3ed110b90bb22a685e765623cea1437f5ccbdcce633d",
+    "tools/validators/release/validate_geoparquet_2_rc_pyarrow_carriers.py": "sha256:e0e6aed9b3c3c5ec2e24e7e435ac0254069fc74e577893f0aa7de8fcaea1b21d"
   },
   "model_identity": {
     "provider": "OpenAI",

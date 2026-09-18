@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import fnmatch
 import importlib.util
 import sys
 import unittest
@@ -54,7 +55,13 @@ class WesternKansasObservationAssessmentRegistryTests(unittest.TestCase):
         )
         for path in REPRESENTATIVE_PATHS:
             with self.subTest(path=path):
-                self.assertIn(path, spec.path_globs)
+                self.assertTrue(
+                    any(
+                        fnmatch.fnmatchcase(path, glob)
+                        for glob in spec.path_globs
+                    ),
+                    f"{path!r} is not covered by any path_globs entry",
+                )
 
     def test_changed_area_selects_the_validator_for_its_owned_surface(self) -> None:
         for path in REPRESENTATIVE_PATHS:

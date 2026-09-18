@@ -82,7 +82,7 @@ This index answers two questions:
 | Per-product page | `docs/sources/catalog/<family>/<PRODUCT>.md` | **PROPOSED — convention** *(OPEN-CM-05)* |
 | Cross-cutting open questions | [`docs/sources/catalog/OPEN-QUESTIONS.md`](./OPEN-QUESTIONS.md) | **PROPOSED** |
 | Drift entries (out-of-§7.3 families) | [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) | **CONFIRMED root** *(directory-rules.md §2.5)* |
-| Connector lane (where actual ingest code lives) | [`connectors/`](../../../../connectors/) | **CONFIRMED root** *(directory-rules.md §7.3)* |
+| Connector lane (where actual ingest code lives) | [`connectors/`](../../../connectors/) | **CONFIRMED root** *(directory-rules.md §7.3)* |
 
 > [!CAUTION]
 > Adding a family folder under `docs/sources/catalog/` does **not** admit that family to the doctrinal axis. The 22 additional folders below are documentation drafts; an ADR amending `directory-rules.md` §7.3 (or a migration removing the additional folders) is the **only** way to reconcile.
@@ -97,15 +97,15 @@ The nine families enumerated in [`directory-rules.md`](../../doctrine/directory-
 
 | # | Family | Status | Family page | Product pages | Connector lane |
 |---|---|---|---|---|---|
-| 1 | `usgs` | draft | [`usgs/README.md`](./usgs/README.md) | 10 | [`connectors/usgs/`](../../../../connectors/usgs/) |
-| 2 | `fema` | draft | [`fema/README.md`](./fema/README.md) | 5 | [`connectors/fema/`](../../../../connectors/fema/) |
-| 3 | `noaa` | draft | [`noaa/README.md`](./noaa/README.md) | 8 | [`connectors/noaa/`](../../../../connectors/noaa/) |
-| 4 | `nrcs` | draft | [`nrcs/README.md`](./nrcs/README.md) | 6 | [`connectors/nrcs/`](../../../../connectors/nrcs/) |
-| 5 | `kansas` | draft | [`kansas/README.md`](./kansas/README.md) | 13 | [`connectors/kansas/`](../../../../connectors/kansas/) |
-| 6 | `gbif` | draft | [`gbif/README.md`](./gbif/README.md) | 4 | [`connectors/gbif/`](../../../../connectors/gbif/) |
-| 7 | `inaturalist` | draft | [`inaturalist/README.md`](./inaturalist/README.md) | 1 | [`connectors/inaturalist/`](../../../../connectors/inaturalist/) |
-| 8 | `census` | draft | [`census/README.md`](./census/README.md) | 5 | [`connectors/census/`](../../../../connectors/census/) |
-| 9 | `local_upload` | draft | [`local_upload/README.md`](./local_upload/README.md) | 1 | [`connectors/local_upload/`](../../../../connectors/local_upload/) |
+| 1 | `usgs` | draft | [`usgs/README.md`](./usgs/README.md) | 10 | [`connectors/usgs/`](../../../connectors/usgs/) |
+| 2 | `fema` | draft | [`fema/README.md`](./fema/README.md) | 5 | [`connectors/fema/`](../../../connectors/fema/) |
+| 3 | `noaa` | draft | [`noaa/README.md`](./noaa/README.md) | 8 | [`connectors/noaa/`](../../../connectors/noaa/) |
+| 4 | `nrcs` | draft | [`nrcs/README.md`](./nrcs/README.md) | 6 | [`connectors/nrcs/`](../../../connectors/nrcs/) |
+| 5 | `kansas` | draft | [`kansas/README.md`](./kansas/README.md) | 13 | [`connectors/kansas/`](../../../connectors/kansas/) |
+| 6 | `gbif` | draft | [`gbif/README.md`](./gbif/README.md) | 4 | [`connectors/gbif/`](../../../connectors/gbif/) |
+| 7 | `inaturalist` | draft | [`inaturalist/README.md`](./inaturalist/README.md) | 1 | [`connectors/inaturalist/`](../../../connectors/inaturalist/) |
+| 8 | `census` | draft | [`census/README.md`](./census/README.md) | 5 | [`connectors/census/`](../../../connectors/census/) |
+| 9 | `local_upload` | draft | [`local_upload/README.md`](./local_upload/README.md) | 1 | [`connectors/local_upload/`](../../../connectors/local_upload/) |
 
 **§7.3 subtotal: 53 product pages across 9 families** *(prior-session count; NEEDS VERIFICATION this session)*.
 
@@ -324,7 +324,7 @@ flowchart LR
 - [`docs/sources/catalog/GLOSSARY.md`](./GLOSSARY.md) — term meanings
 - [`docs/sources/catalog/CROSSWALKS.md`](./CROSSWALKS.md) — cross-format mappings register
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement authority *(§7.3 family list; §2.4 ADR-required changes; §2.5 do not silently conform; §8.3 compatibility roots)*
-- [`connectors/`](../../../../connectors/) — canonical connector root
+- [`connectors/`](../../../connectors/) — canonical connector root
 - [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — drift entries (DRIFT-IDX-01..03)
 - [`docs/adr/`](../../adr/) — ADRs resolving drift entries
 
