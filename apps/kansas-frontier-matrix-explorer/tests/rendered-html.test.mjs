@@ -517,7 +517,7 @@ test("keeps repository updates pinned and boundary-labeled", async () => {
   assert.match(updates, /Local geodata inspection now fails closed on malformed or stale input/);
   assert.match(updates, /All 105 Kansas counties now have public locator starters/);
   assert.match(updates, /Time A \/ Time B comparison preserves report scope/);
-  assert.match(updates, /exact maplibre-gl 6\.6\.0 lock closure/);
+  assert.match(updates, /exact maplibre-gl 6\.9\.0 lock closure/);
   assert.match(updates, /521 commits after the prior Site evidence pin/);
   assert.match(updates, /Planning scenarios now have a strict review projection/);
   assert.match(updates, /Accessibility guidance now separates targets from proof/);
@@ -638,7 +638,7 @@ test("keeps the renderer-neutral Workbench complete, bounded, and fail closed", 
   assert.match(source, /ACTIVE LAYERS AVAILABLE/);
   assert.match(mapInterface, /Renderer architecture[\s\S]*ACCEPTED/);
   assert.match(mapInterface, /MapRuntimePort \+ Null runtime[\s\S]*VERIFIED SLICE/);
-  assert.match(mapInterface, /Dependency admission[\s\S]*EXACT 6\.6\.0/);
+  assert.match(mapInterface, /Dependency admission[\s\S]*EXACT 6\.9\.0/);
   assert.match(mapInterface, /Concrete MapLibre adapter[\s\S]*VERIFIED SLICE/);
   assert.match(mapInterface, /Sites renderer consumer[\s\S]*NULL RUNTIME \/ HOLD/);
   assert.match(mapInterface, /Browser readiness[\s\S]*HOLD/);

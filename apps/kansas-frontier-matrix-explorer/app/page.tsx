@@ -164,7 +164,7 @@ type SelectedContext = {
 };
 
 const KANSAS_VIEW: ViewState = { center: [-98.38, 38.48], zoom: 5.45, bearing: 0, pitch: 0 };
-const EXPECTED_MAPLIBRE_VERSION = "6.6.0";
+const EXPECTED_MAPLIBRE_VERSION = "6.9.0";
 const MAP_RUNTIME_CONSUMER_HOLD = "DIRECT_CONSUMER_MIGRATION_HOLD";
 const SUPPORTED_CONTEXT_BOUNDS = Object.freeze({ west: -104.8, south: 34.8, east: -92, north: 42.2 });
 const defaultVisibility = Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, layer.defaultVisibility]));
@@ -2602,7 +2602,7 @@ export default function Home() {
       issued_at: issuedAt.toISOString(),
       expires_at: new Date(issuedAt.getTime() + 15 * 60 * 1000).toISOString(),
       context_is_evidence: false,
-      renderer: { family: "NullMapRuntime", package_candidate: "6.6.0", consumer_state: MAP_RUNTIME_CONSUMER_HOLD, repository_runtime_proven: false },
+      renderer: { family: "NullMapRuntime", package_candidate: EXPECTED_MAPLIBRE_VERSION, consumer_state: MAP_RUNTIME_CONSUMER_HOLD, repository_runtime_proven: false },
       camera: locationDerivedViewRef.current
         ? { center: "WITHHELD_BROWSER_LOCATION", zoom: "WITHHELD", bearing: "WITHHELD", pitch: "WITHHELD", projection }
         : { center: view.center, zoom: view.zoom, bearing: view.bearing, pitch: view.pitch, projection },
@@ -2656,7 +2656,7 @@ export default function Home() {
       repository_boundary: {
         snapshot: REPOSITORY_SNAPSHOT.commit,
         architecture: "ACCEPTED",
-        dependency: "EXACT_6.6.0",
+        dependency: `EXACT_${EXPECTED_MAPLIBRE_VERSION}`,
         runtime: "BOUNDED_PACKAGE_OWNED_ADAPTER_SLICE",
         broader_production_activation: "HOLD",
       },
