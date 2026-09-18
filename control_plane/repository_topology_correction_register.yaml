@@ -51,17 +51,21 @@ entries:
   # entry's "to"; order was chosen only to produce a valid, verifiable
   # chain and may be re-sequenced by the reviewing decision. Every
   # fingerprint below was computed directly from live Git blob IDs, not
-  # invented. decision_ref intentionally has no accepted ADR yet: these
-  # transitions are outside ADR-0038's stated scope (issue #4228 covers
-  # only the agriculture path). PR #4512 attempted to resolve this drift
-  # by reverting these seven paths to their pre-redirect blobs instead of
-  # registering the redirect text, and was itself reverted (PR #4514)
-  # after a review objection that the restored (old) text "reintroduced
-  # forbidden frozen-root write guidance." These entries instead propose
-  # accepting the current, post-#4514 redirect text as the registered
-  # target — the opposite direction from #4512 — per owner instruction.
-  # A real accepted decision record (see decision_ref.path, not yet
-  # written) is required before Stage 1B binding.
+  # invented. PR #4512 attempted to resolve this drift by reverting these
+  # seven paths to their pre-redirect blobs instead of registering the
+  # redirect text, and was itself reverted (PR #4514) after a review
+  # objection that the restored (old) text "reintroduced forbidden
+  # frozen-root write guidance." These entries instead propose accepting
+  # the current, post-#4514 redirect text as the registered target — the
+  # opposite direction from #4512 — per owner instruction. decision_ref
+  # now points at ADR-0039 (Exact Catalog Redirect Metadata Corrections),
+  # which specifies this exact seven-entry target content, recommends
+  # HOLD on Stage 1B binding pending a chosen atomic-batch or
+  # ordered-chain representation, and keeps Stage 2 unauthorized. ADR-0039
+  # is itself still PROPOSED — explicit owner acceptance per its "Owner
+  # decision block" is pending — so these entries remain non-consumable
+  # until that acceptance and a later Stage 1B binding pass record an
+  # exact accepted blob and commit.
 
   - correction_id: KFM-TOPO-004-CORR-4512-01
     status: proposed
@@ -85,7 +89,7 @@ entries:
       unchanged_member_count: 42
       require_equal_path_set: true
     decision_ref:
-      path: docs/adr/ADR-0039-catalog-redirect-metadata-corrections.md
+      path: docs/adr/ADR-0039-exact-catalog-redirect-metadata-corrections.md
       blob: null
       accepted_commit: null
     evidence_refs:
@@ -124,7 +128,7 @@ entries:
       unchanged_member_count: 42
       require_equal_path_set: true
     decision_ref:
-      path: docs/adr/ADR-0039-catalog-redirect-metadata-corrections.md
+      path: docs/adr/ADR-0039-exact-catalog-redirect-metadata-corrections.md
       blob: null
       accepted_commit: null
     evidence_refs:
@@ -163,7 +167,7 @@ entries:
       unchanged_member_count: 42
       require_equal_path_set: true
     decision_ref:
-      path: docs/adr/ADR-0039-catalog-redirect-metadata-corrections.md
+      path: docs/adr/ADR-0039-exact-catalog-redirect-metadata-corrections.md
       blob: null
       accepted_commit: null
     evidence_refs:
@@ -202,7 +206,7 @@ entries:
       unchanged_member_count: 42
       require_equal_path_set: true
     decision_ref:
-      path: docs/adr/ADR-0039-catalog-redirect-metadata-corrections.md
+      path: docs/adr/ADR-0039-exact-catalog-redirect-metadata-corrections.md
       blob: null
       accepted_commit: null
     evidence_refs:
@@ -241,7 +245,7 @@ entries:
       unchanged_member_count: 42
       require_equal_path_set: true
     decision_ref:
-      path: docs/adr/ADR-0039-catalog-redirect-metadata-corrections.md
+      path: docs/adr/ADR-0039-exact-catalog-redirect-metadata-corrections.md
       blob: null
       accepted_commit: null
     evidence_refs:
@@ -280,7 +284,7 @@ entries:
       unchanged_member_count: 42
       require_equal_path_set: true
     decision_ref:
-      path: docs/adr/ADR-0039-catalog-redirect-metadata-corrections.md
+      path: docs/adr/ADR-0039-exact-catalog-redirect-metadata-corrections.md
       blob: null
       accepted_commit: null
     evidence_refs:
@@ -319,7 +323,7 @@ entries:
       unchanged_member_count: 42
       require_equal_path_set: true
     decision_ref:
-      path: docs/adr/ADR-0039-catalog-redirect-metadata-corrections.md
+      path: docs/adr/ADR-0039-exact-catalog-redirect-metadata-corrections.md
       blob: null
       accepted_commit: null
     evidence_refs:

@@ -12,7 +12,7 @@ policy_label: public; governance; fail-closed
 truth_posture: "PROPOSED exact target-content acceptance / Stage 1B HOLD / Stage 2 unauthorized"
 owning_root: docs/
 responsibility_root: docs/
-current_path: docs/adr/
+current_path: docs/adr/ADR-0039-exact-catalog-redirect-metadata-corrections.md
 responsibility: "Record the owner disposition for seven exact catalog redirect-document corrections without binding the correction register, consuming a transition, changing the topology baseline, or authorizing integration."
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix

@@ -29,7 +29,7 @@ tags: [kfm, governance, adr, decisions, audit, control-plane]
 notes:
   - "v2.0 refreshes this summary against main@53d61809c4c99c65700d63fbcbcf42069ed7f3a4 and canonical index blob 0c143676dfd3c1bda16cb44398c5ad5d4a49cf67."
   - "ADR-0038 is accepted only for its stated Stage 1 trusted-base correction mechanism; it does not authorize a Stage 2 topology transition."
-  - "ADR-0039 is newly registered as proposed and selects no LayerManifest/LayerFrame migration or implementation."
+  - "ADR-0039 was repurposed 2026-09-18 from its original LayerManifest/LayerFrame contract-home proposal (content superseded, recoverable from Git history) to record the proposed exact catalog redirect-metadata corrections for KFM-TOPO-004; it remains proposed and selects no Stage 1B or Stage 2 topology consumption."
   - "ADR-0037, ADR-0036, and ADR-0035 remain proposed; their registration does not accept their candidate decisions."
   - "File presence does not accept a decision. ADR-0006, ADR-0007, ADR-0029, and ADR-0038 are accepted in their stated scopes; the other 35 numbered ADRs remain proposed."
   - "This README is the operating contract; docs/adr/INDEX.md is the canonical human inventory."
@@ -170,7 +170,7 @@ Rules:
 - Proposed [`ADR-0036`](./ADR-0036-planning-encyclopedia-carrier-single-writer-and-scaffold-disposition.md) would admit one planning-encyclopedia lane and one chapter-source/generated-mirror model; it remains under review.
 - Proposed [`ADR-0037`](./ADR-0037-evidence-drawer-payload-ui-authority-and-compatibility.md) would select UI-family authority and retained compatibility projections for `EvidenceDrawerPayload`; it remains under review and authorizes no migration.
 - Accepted [`ADR-0038`](./ADR-0038-trusted-base-topology-correction-transitions.md) is limited to its stated Stage 1 trusted-base correction mechanism; it does not authorize its Stage 2 topology transition.
-- Proposed [`ADR-0039`](./ADR-0039-layer-manifest-frame-contract-home.md) would keep `LayerManifest` and `LayerFrame` in the existing data contract/schema family; it remains under review and authorizes no migration.
+- Proposed [`ADR-0039`](./ADR-0039-exact-catalog-redirect-metadata-corrections.md) would accept the exact target content of seven catalog redirect-document corrections (KFM-TOPO-004) while holding every correction-register entry proposed/unbound; it remains under review and authorizes no Stage 1B binding or Stage 2 topology-baseline consumption. Its original LayerManifest/LayerFrame contract-home proposal was superseded at this number; that content remains recoverable from Git history.
 
 Two numbered records use legacy filenames containing spaces and an em dash (`ADR-0007` and `ADR-0028`). Renaming them remains deferred pending inbound-link and history analysis.
 
@@ -228,7 +228,7 @@ The read-only [`docs-control-plane` workflow](../../.github/workflows/docs-contr
 - Acceptance or rejection of ADR-0035 before repository-wide numbering and domain-indexing guidance becomes binding.
 - Acceptance or rejection of ADR-0036 before the encyclopedia scaffold is admitted or populated.
 - Acceptance or rejection of ADR-0037 before any `EvidenceDrawerPayload` authority or compatibility migration.
-- Acceptance or rejection of ADR-0039 before any `LayerManifest` or `LayerFrame` authority, schema-home, or compatibility migration.
+- Acceptance or rejection of ADR-0039 before any Stage 1B correction-register binding or Stage 2 topology-baseline consumption for the seven catalog redirect-document corrections.
 - Review of [`ADR-0011`](./ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md) before `artifacts/release/` migration.
 - Resolution of `OPEN-DR-09-b` and the `artifacts/perf/` placement conflict.
 

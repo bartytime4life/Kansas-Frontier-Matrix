@@ -101,7 +101,7 @@ The numbered sequence is complete and unique from `ADR-0001` through `ADR-0039`.
 | `ADR-0036` | [Planning Encyclopedia Carrier, Single-Writer, and Scaffold Disposition](./ADR-0036-planning-encyclopedia-carrier-single-writer-and-scaffold-disposition.md) | `proposed` | `proposed` | — | — |
 | `ADR-0037` | [Keep `EvidenceDrawerPayload` authority in the UI family](./ADR-0037-evidence-drawer-payload-ui-authority-and-compatibility.md) | `proposed` | `proposed` | — | — |
 | `ADR-0038` | [Trusted-Base Exact Transitions for Frozen-Topology Corrections](./ADR-0038-trusted-base-topology-correction-transitions.md) | `accepted` | `accepted` | — | — |
-| `ADR-0039` | [Keep LayerManifest and LayerFrame in the Existing Data Contract/Schema Family](./ADR-0039-layer-manifest-frame-contract-home.md) | `proposed` | `proposed` | — | — |
+| `ADR-0039` | [Exact Catalog Redirect Metadata Corrections](./ADR-0039-exact-catalog-redirect-metadata-corrections.md) | `proposed` | `proposed` | — | — |
 <!-- ADR_INDEX_TABLE_END -->
 
 ## Unassigned scaffolds
