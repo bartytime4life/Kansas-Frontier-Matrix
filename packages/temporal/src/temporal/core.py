@@ -145,9 +145,11 @@ def compute_query_id(state: Mapping[str, Any]) -> str:
 
 def _utc_string(value: datetime) -> str:
     result = value.astimezone(timezone.utc).isoformat(timespec="microseconds")
+    if result.endswith("+00:00"):
+        result = result[: -len("+00:00")]
     if "." in result:
         result = result.rstrip("0").rstrip(".")
-    return result.replace("+00:00", "Z")
+    return result + "Z"
 
 
 def _parse_aware(raw: str) -> tuple[datetime | None, bool]:
