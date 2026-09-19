@@ -2,20 +2,20 @@
 doc_id: kfm://doc/adr-index
 title: Architecture Decision Record Index
 type: register-index
-version: v1.14
+version: v1.15
 status: draft; repository-grounded
 owners:
   - Architecture steward
   - Docs steward
 created: 2026-07-22
-updated: 2026-09-15
+updated: 2026-09-18
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
 owning_root: docs/
 responsibility: canonical human ADR file inventory and decision-status crosswalk without independent acceptance or implementation authority
 canonical_for: human ADR file inventory and decision-status crosswalk
-numbered_records: 40
+numbered_records: 41
 unassigned_scaffolds: 11
 related:
   - docs/adr/README.md
@@ -29,7 +29,8 @@ notes:
   - "ADR-0029 remains accepted as the Directory Governance Standard v2 decision."
   - "ADR-0038 transitions to accepted under the project-owner decision in issue #4228 comment 5518331532; this accepts the Stage 1 mechanism only, leaves the machine register inert pending exact trusted-main binding, and authorizes no Stage 2 topology transition."
   - "ADR-0037 is registered as proposed and selects a candidate UI-family authority and compatibility plan for EvidenceDrawerPayload; registration is not acceptance and authorizes no dependent migration."
-  - "ADR-0040 is registered as proposed for exact catalog redirect metadata corrections; registration does not accept its target content, bind a correction, consume a transition, or authorize a topology-baseline change."
+  - "ADR-0040 is accepted only for seven exact catalog redirect-document target blobs; every correction-register entry remains proposed and unbound, Stage 1B remains held, and Stage 2 remains unauthorized."
+  - "ADR-0041 is registered as proposed after its source path was normalized; registration does not accept or implement inherited-hold classification or change check behavior."
   - "ADR-0036 is registered as proposed; index registration does not accept the planning-encyclopedia carrier, single-writer, generated-mirror, or migration decision."
   - "ADR-0035 remains proposed; registration assigns inventory identity only and does not accept repository-wide numbering or domain-indexing guidance."
   - "Effective status never outranks source-record status or human review."
@@ -37,15 +38,15 @@ notes:
 
 # Architecture Decision Record Index
 
-[![numbered records](https://img.shields.io/badge/numbered_records-40-0969da)](#numbered-records)
-[![effective status](https://img.shields.io/badge/effective_status-4_accepted_%7C_36_proposed-1a7f37)](#status-interpretation)
+[![numbered records](https://img.shields.io/badge/numbered_records-41-0969da)](#numbered-records)
+[![effective status](https://img.shields.io/badge/effective_status-5_accepted_%7C_36_proposed-1a7f37)](#status-interpretation)
 [![scaffolds](https://img.shields.io/badge/unassigned_scaffolds-11-6e7781)](#unassigned-scaffolds)
 [![coherence](https://img.shields.io/badge/coherence-machine_checked-1a7f37)](../../tools/validators/validate_adr_index.py)
 
 This file is the canonical human inventory for direct ADR records and unassigned ADR scaffolds under `docs/adr/`. It records what exists and how each record is classified; it cannot accept or promote a decision independently.
 
 > [!IMPORTANT]
-> ADR-0006, ADR-0007, ADR-0029, and ADR-0038 have effective status `accepted`. The other 36 numbered records remain `proposed`; no numbered record is `superseded` or `rejected`. ADR-0006 and ADR-0007 accept architecture only—their status does not admit `maplibre-gl`, prove implementation or browser readiness, or authorize release, deployment, or publication. ADR-0038 accepts only the trusted-base correction mechanism; its machine register remains inert until a later exact-binding transition, and Stage 2 remains separate.
+> ADR-0006, ADR-0007, ADR-0029, ADR-0038, and ADR-0040 have effective status `accepted`. The other 36 numbered records remain `proposed`; no numbered record is `superseded` or `rejected`. ADR-0006 and ADR-0007 accept architecture only—their status does not admit `maplibre-gl`, prove implementation or browser readiness, or authorize release, deployment, or publication. ADR-0038 accepts only the trusted-base correction mechanism. ADR-0040 accepts only seven exact target catalog redirect-document blobs; every register entry remains proposed and unbound, Stage 1B remains held, and Stage 2 remains unauthorized. ADR-0041 remains a proposal and changes no check behavior.
 
 ## Status interpretation
 
@@ -59,7 +60,7 @@ This file is the canonical human inventory for direct ADR records and unassigned
 
 ## Numbered records
 
-The numbered sequence is complete and unique from `ADR-0001` through `ADR-0040`. ADR-0006, ADR-0007, ADR-0029, and ADR-0038 are `accepted`; all other numbered records remain effectively `proposed`.
+The numbered sequence is complete and unique from `ADR-0001` through `ADR-0041`. ADR-0006, ADR-0007, ADR-0029, ADR-0038, and ADR-0040 are `accepted`; all other numbered records remain effectively `proposed`.
 
 <!-- ADR_INDEX_TABLE_START -->
 | ID | Record | Effective status | Source metadata | Supersedes | Superseded by |
@@ -103,7 +104,8 @@ The numbered sequence is complete and unique from `ADR-0001` through `ADR-0040`.
 | `ADR-0037` | [Keep `EvidenceDrawerPayload` authority in the UI family](./ADR-0037-evidence-drawer-payload-ui-authority-and-compatibility.md) | `proposed` | `proposed` | — | — |
 | `ADR-0038` | [Trusted-Base Exact Transitions for Frozen-Topology Corrections](./ADR-0038-trusted-base-topology-correction-transitions.md) | `accepted` | `accepted` | — | — |
 | `ADR-0039` | [Keep LayerManifest and LayerFrame in the Existing Data Contract/Schema Family](./ADR-0039-layer-manifest-frame-contract-home.md) | `proposed` | `proposed` | — | — |
-| `ADR-0040` | [Exact Catalog Redirect Metadata Corrections](./ADR-0040-catalog-redirect-metadata-corrections.md) | `proposed` | `proposed` | — | — |
+| `ADR-0040` | [Exact Catalog Redirect Metadata Corrections](./ADR-0040-catalog-redirect-metadata-corrections.md) | `accepted` | `accepted` | — | — |
+| `ADR-0041` | [Proportional Handling of Inherited Repository Holds](./ADR-0041-proportional-handling-of-inherited-repository-holds.md) | `proposed` | `proposed` | — | — |
 <!-- ADR_INDEX_TABLE_END -->
 
 ## Unassigned scaffolds

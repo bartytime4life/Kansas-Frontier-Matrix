@@ -2,20 +2,30 @@
 doc_id: kfm://adr/0040
 title: Exact Catalog Redirect Metadata Corrections
 type: architecture-decision-record
-version: v1.0-draft
-status: proposed
-effective_decision_status: proposed-owner-review
+version: v1.1
+status: accepted
+effective_decision_status: accepted-target-content-stage1b-hold
 owners: ["@bartytime4life"]
 created: 2026-09-18
 updated: 2026-09-18
+accepted_on: 2026-09-18
 policy_label: public; governance; fail-closed
-truth_posture: "PROPOSED exact target-content acceptance / Stage 1B HOLD / Stage 2 unauthorized"
+truth_posture: "ACCEPTED exact target-content decision / Stage 1B HOLD / Stage 2 unauthorized"
 owning_root: docs/
 responsibility_root: docs/
 current_path: docs/adr/ADR-0040-catalog-redirect-metadata-corrections.md
 responsibility: "Record the owner disposition for seven exact catalog redirect-document corrections without binding the correction register, consuming a transition, changing the topology baseline, or authorizing integration."
+decision_evidence:
+  issue: 4228
+  comment_id: 5736885489
+  disposition: "ACCEPT EXACT SEVEN TARGET BLOBS / KEEP REGISTER PROPOSED AND UNBOUND / STAGE 1B HOLD / STAGE 2 UNAUTHORIZED"
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
+  acceptance_transition_base: 2894c58426491f21265c0918a937db074aef033b
+  prior_adr_blob: b426f0d2fd12c77c1f4a7641f332d72f99d84cc1
+  prior_index_blob: 4ef29e25f62fface2ea7bc3b761f0e9a8527c752
+  prior_readme_blob: 484ab3d0e5890b0796612e37ec7119217f54caa0
+  inert_register_blob: 03710671df37ade3f8af60d57a6e46a03a3acfdb
   pull_request: 4627
   pull_request_head: a7469a14267764fa2dbf279bba3951a38d0b7dda
   pull_request_base: eaff4f86e1f6b4398bbfc95c06df66e4a2f7364a
@@ -24,7 +34,7 @@ evidence_snapshot:
   topology_baseline_blob: b01cb6ec58d5ae306e8afd7858c5fcc70a03d9ec
   baseline_catalog_fingerprint: sha256:521388927153c91a67ca8cead55af9d688a6064517d109aa556cffca91505006
   accepted_agriculture_target_fingerprint: sha256:0ad45247555960029c34d1222365cbe17a5cabec278bf9f6b8f3e9572ea33e8f
-  proposed_final_catalog_fingerprint: sha256:71a120ae8ca2b69896266c9ddd52f6d03577ea91fa2de4390b7d57b9ceeb912f
+  accepted_final_catalog_fingerprint: sha256:71a120ae8ca2b69896266c9ddd52f6d03577ea91fa2de4390b7d57b9ceeb912f
   catalog_member_count: 43
   pr_changed_paths: 16
   pr_commits_ahead: 7
@@ -39,13 +49,14 @@ related:
   - ../../tools/validators/directory_governance/validate_repository_topology.py
   - https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024
   - https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4228
+  - https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4228#issuecomment-5736885489
   - https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4512
   - https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4514
   - https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4627
 tags: [kfm, governance, topology, catalog, redirect, correction, fail-closed]
 notes:
-  - "This draft records the smallest evidence-backed owner decision surface for the seven exact target blobs."
-  - "Until the owner explicitly accepts this record through the repository authority process, its effective status remains proposed."
+  - "The project-owner decision in issue #4228 comment 5736885489 accepts only the seven exact target blobs and preserves every later hold."
+  - "This source-and-index transition records that bounded acceptance; it does not infer acceptance from PR #4631 or its merge."
   - "Even after acceptance, all seven machine-register entries remain proposed and unbound; this record does not perform Stage 1B."
   - "The current v1 register contract does not define an atomic multi-entry batch or validate cross-entry chain continuity."
   - "PR #4627 is not accepted as the integration vehicle because its live scope is broader than the register-only proposal and its lifecycle state conflicts with its draft-only description."
@@ -55,7 +66,7 @@ notes:
 
 Status
 
-Proposed for explicit owner decision.
+Accepted for the seven exact target catalog redirect-document blobs only.
 
 Recommended disposition:
 
@@ -66,7 +77,7 @@ Recommended disposition:
 * PR #4627 readiness, approval, and merge: NOT AUTHORIZED;
 * automatic restoration of the seven prior blobs: REJECT.
 
-This record becomes an accepted owner decision only through an explicit owner action recorded in the repository authority process. Drafting, committing, reviewing, or merging this text must not be treated as implicit acceptance.
+The explicit project-owner decision is recorded in [issue #4228 comment 5736885489](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4228#issuecomment-5736885489). This source-and-index transition records that decision without treating drafting, committing, reviewing, or merging as implicit acceptance.
 
 Decision summary
 
@@ -165,7 +176,7 @@ Acceptance of these exact target blobs does not validate every historical statem
 
 Decision
 
-Subject to explicit owner acceptance of this ADR, KFM adopts the following disposition.
+Under the explicit owner acceptance recorded in issue #4228 comment 5736885489, KFM adopts the following disposition.
 
 1. Accept the exact target content
 
@@ -240,7 +251,7 @@ Rejected. Mergeability, green checks, review comments, branch contents, ready st
 
 Consequences
 
-The desired corrected redirect content is no longer an open owner-preference question once this ADR is explicitly accepted. The remaining work becomes a narrower machine-representation and trusted-base proof problem.
+The desired corrected redirect content is no longer an open owner-preference question. The remaining work is a narrower machine-representation and trusted-base proof problem.
 
 KFM-TOPO-004 remains red for the catalog fingerprint until an authorized later Stage 2 change. That failure is expected fail-closed evidence, not a reason to weaken the validator or silently replace the baseline.
 
@@ -273,11 +284,11 @@ This ADR does not:
 * approve, ready, merge, close, rebase, or otherwise mutate PR #4627;
 * close or relax issue #4024;
 * advance issue #4228 beyond STAGE 1A ACCEPTED / STAGE 1B HOLD / STAGE 2 UNAUTHORIZED; or
-* treat AI generation, schema validity, CI, mergeability, comments, or repository history as owner acceptance.
+* treat AI generation, schema validity, CI, mergeability, non-owner comments, or repository history as owner acceptance.
 
 Owner decision block
 
-The owner may adopt this ADR only with an explicit decision equivalent to:
+The owner adopted this ADR through the following explicit decision recorded in issue #4228 comment 5736885489:
 
 I accept ADR-0040 for the seven exact target catalog redirect-document blobs
 listed in this record. Keep every correction-register entry proposed and
@@ -286,4 +297,4 @@ unauthorized. This decision does not approve, ready, or merge PR #4627; change
 the topology baseline; consume a transition; restore an older blob; or alter
 the #4024 and #4228 boundaries.
 
-Until that owner decision is recorded and this exact ADR is accepted through a trusted repository transition, this document remains proposed.
+This source-and-index transition records that bounded decision. Every correction-register entry remains proposed and unbound, Stage 1B remains under `CATALOG_MULTI_ENTRY_BINDING_HOLD`, and Stage 2 remains unauthorized.
