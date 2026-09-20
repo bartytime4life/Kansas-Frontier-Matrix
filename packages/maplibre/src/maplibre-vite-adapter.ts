@@ -7,7 +7,13 @@ import {
   type MapLibreAdapterOptions,
 } from "./maplibre-adapter";
 
-export type { MapLibreSafeStyle } from "./maplibre-adapter";
+export type {
+  MapLibreRenderedFeatureCandidate,
+  MapLibreRenderedFeatureProperty,
+  MapLibreRenderedPoint,
+  MapLibreSafeStyle,
+  MapLibreSelectionProjection,
+} from "./maplibre-adapter";
 
 let workerConfigured = false;
 
