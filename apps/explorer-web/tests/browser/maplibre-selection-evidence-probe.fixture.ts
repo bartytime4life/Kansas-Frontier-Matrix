@@ -76,8 +76,16 @@ const runtime = createViteMapLibreAdapter({
                 trust_state: "SYNTHETIC",
               },
               geometry: {
-                type: "Point",
-                coordinates: [-98.4842, 38.4988],
+                type: "Polygon",
+                coordinates: [
+                  [
+                    [-110, 30],
+                    [-90, 30],
+                    [-90, 45],
+                    [-110, 45],
+                    [-110, 30],
+                  ],
+                ],
               },
             },
           ],
@@ -92,13 +100,12 @@ const runtime = createViteMapLibreAdapter({
       },
       {
         id: RENDER_LAYER_ID,
-        type: "circle",
+        type: "fill",
         source: RENDER_SOURCE_ID,
         paint: {
-          "circle-color": "#4fd1c5",
-          "circle-radius": 24,
-          "circle-stroke-color": "#ffffff",
-          "circle-stroke-width": 3,
+          "fill-color": "#4fd1c5",
+          "fill-opacity": 0.35,
+          "fill-outline-color": "#ffffff",
         },
       },
     ],
