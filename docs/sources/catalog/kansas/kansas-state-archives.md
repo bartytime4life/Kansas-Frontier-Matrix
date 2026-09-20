@@ -2,11 +2,11 @@
 doc_id: kfm://doc/docs-sources-catalog-kansas-kansas-state-archives
 title: Kansas State Archives — Source-Family Brief
 type: standard
-version: v0.2
+version: v0.3
 status: draft
 owners: <TODO: source steward + archives domain liaison>
 created: 2026-05-13
-updated: 2026-05-21
+updated: 2026-09-20
 policy_label: public
 related:
   - docs/sources/catalog/kansas/README.md
@@ -72,6 +72,16 @@ notes:
 [/KFM_META_BLOCK_V2] -->
 
 # Kansas State Archives — Source-Family Brief
+
+## Current intake restriction — 2026-09-20
+
+**MANUAL_ONLY / NEEDS_SCRAPING_AGREEMENT / AUTOMATED_INTAKE_HELD.** The owner-selected restriction applies to Kansas State Archives proper and archive-collection discovery represented by this umbrella profile. Use human browsing and individually selected records only. Do not schedule pulls, crawl browse pages, bulk-download records or media, or treat Archive-It availability as collection or redistribution permission.
+
+Before any automated acquisition, obtain and record a written scraping or data-access agreement covering allowed collections and fields, endpoints, rates, quotas, identification, caching, redistribution, attribution, retention, withdrawal, and correction. Then separately review a State Archives-specific `SourceDescriptor`, stable identifiers, collection- and item-level rights, provenance, cultural and archaeological sensitivity, negative fixtures, EvidenceBundle linkage, and release. **Public bulk API availability is NOT VERIFIED.**
+
+Kansas State Archives proper (`SRC-CAND-KS-STATE-ARCHIVES`) and Kansas Memory (`SRC-CAND-KSMEM`) share an institutional steward but retain distinct candidate IDs, descriptors, access mechanics, rights decisions, and provenance chains. The matching Kansas Memory restriction is recorded in [`./kansas-memory.md`](./kansas-memory.md); neither record authorizes automation for the other. KHRI and other KSHS surfaces retain their own per-surface admission decisions.
+
+No scheduler, scraper, adapter, source admission, lifecycle promotion, release, or publication is authorized by this documentation update. Rollback requires an explicit revised intake decision and must retain this restriction as decision history.
 
 > Source-family doctrine and admission posture for the **Kansas State Historical Society (KSHS)** archival surfaces — the Kansas State Archives proper, **Kansas Memory**, the **Kansas Historic Resources Inventory (KHRI)**, and adjacent KSHS publication surfaces — as a **Kansas-first** authority for the KFM evidence chain.
 
