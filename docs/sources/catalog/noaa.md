@@ -925,3 +925,37 @@ If any term is missing, the record is not publishable.
 This profile is intentionally conservative. It does not reduce the value of NOAA data. It protects KFM from making legal, regulatory, emergency, engineering, insurance, access, operational, ecological, cultural, private-loss, or public-safety claims that the source does not support.
 
 NOAA data should enter KFM as evidence-bearing source material, not as sovereign runtime truth. KFM outputs must remain governed, cited, reviewable, time-aware, reversible, safety-gated, and policy-safe.
+## 1991–2020 U.S. Climate Normals — AWS intake candidate
+
+**Checkpoint: 2026-09-20. Status: CANDIDATE; not source activation or climate-layer release.**
+
+The [AWS registry](https://registry.opendata.aws/noaa-climate-normals/) identifies the public bucket `s3://noaa-normals-pds/` in `us-east-1`, accessible without an AWS account. [NCEI product documentation](https://www.ncei.noaa.gov/products/land-based-station/us-climate-normals) describes station CSV bulk downloads and the 1991–2020 normal period, with v1.0.1 corrections to 23 sites in 2023. These statements establish discovery and product context; they do not establish the revision of any particular S3 object.
+
+### Bounded first slice
+
+PROPOSED: Kansas monthly station temperature and precipitation normals for 1991–2020. Keep annual, daily, hourly, supplemental 2006–2020, prior normals, and gridded products separate. Select Kansas using the pinned station inventory and reviewed geography rules, not station-name matching. Station normals are long-term statistics, not current observations, forecasts, or county-wide measurements.
+
+Prefer immutable, receipt-backed bulk pulls over county-page scraping. Cloud-hosted does not mean COG, GeoParquet, or another cloud-optimized encoding. The bucket listing was not retrievable through this session's web tool; exact prefixes, keys, schema, completeness, object bytes, and mirror parity remain NEEDS VERIFICATION. CDO access is a separate route: verify dataset IDs, supported normal period, authentication, quotas, and paging before claiming equivalent 1991–2020 coverage or enabling fallback.
+
+### Acquisition and validation contract — PROPOSED
+
+- Reuse the existing source-contract home after checking the executable schema and registry. This profile is human guidance, not a machine SourceDescriptor or activation record.
+- Pin product, edition/revision, normal period, station inventory, exact object keys, retrieval time, upstream Last-Modified/ETag and VersionId when available, byte length, and computed SHA-256. ETag alone is not a content digest.
+- Bound list pages, object count, per-object and aggregate bytes, timeout, retries, and concurrency. Follow S3 continuation tokens to completion; repeated tokens, exhaustion, partial downloads, or changing objects must produce an incomplete/HOLD receipt, never a complete inventory.
+- Preserve source units, scaling, precision, station coordinates and documented datum, quality/completeness flags, missing sentinels, and nulls. Never convert missing precipitation into zero. Reject duplicate station/period/variable keys, wrong periods, invalid coordinates, unexpected schema, nonfinite values, and unexplained unit changes.
+- Preserve raw bytes through RAW -> WORK/QUARANTINE -> PROCESSED -> CATALOG/TRIPLET -> PUBLISHED. Pin deterministic transformation and selection versions; retain both prior and corrected artifacts with supersession and rollback lineage.
+- Validate an explicitly identified small station fixture and negative cases: wrong baseline, missing value, unit mismatch, duplicate key, truncated list/download, changed object, and absent rights/release references. Parser and end-to-end tests remain NOT_RUN.
+
+### Rights, sensitivity, and presentation
+
+The AWS entry permits public reuse, requests NOAA attribution, prohibits implied NOAA endorsement, and requires modified products not be represented as unaltered NOAA data. Preserve this source statement and retrieval evidence in the intake review; it is not automatic KFM rights acceptance.
+
+Review station-location precision and joins before release; do not enrich with private contributor, property-owner, or sensitive-facility identities. Show points initially. Interpolation or county aggregation needs its own method, uncertainty, provenance, and review.
+
+The Explorer candidate uses `SRC-CAND-NOAA-NORMALS-1991-2020` and intentionally has no live layer/feature binding. Future release must supply EvidenceRef -> EvidenceBundle, source and artifact identities, period, variable, units, QC/missingness, correction status, attribution, policy/review/release references, and tested rollback. Public clients consume governed released carriers only.
+
+### Placement, validation, and recovery
+
+Owning root: `docs/`, existing NOAA human source profile, under Directory Rules v2 §9.1 as adopted by ADR-0029. No new root, schema home, frozen catalog mutation, or topology-baseline change. The application candidate belongs in the existing Explorer source-discovery module; it does not create a competing source authority.
+
+External documentation checked; object acquisition, executable descriptor, parser/schema binding, Kansas fixture, independent review, source admission, and climate-layer release remain open. Revert the candidate and this section to withdraw discovery guidance; preserve any later acquisition receipts rather than deleting evidence.
