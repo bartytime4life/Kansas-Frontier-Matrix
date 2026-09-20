@@ -10,6 +10,7 @@ import {
 export type {
   MapLibreRenderedFeatureCandidate,
   MapLibreRenderedFeatureProperty,
+  MapLibreRenderedPoint,
   MapLibreSafeStyle,
   MapLibreSelectionProjection,
 } from "./maplibre-adapter";

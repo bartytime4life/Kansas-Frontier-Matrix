@@ -56,6 +56,11 @@ export type MapLibreRenderedFeatureCandidate = Readonly<{
   properties: Readonly<Record<string, MapLibreRenderedFeatureProperty>>;
 }>;
 
+export type MapLibreRenderedPoint = Readonly<{
+  x: number;
+  y: number;
+}>;
+
 export type MapLibreSelectionProjection = Readonly<{
   /** Reviewed renderer layer IDs eligible for bounded selection queries. */
   layerIds: readonly string[];
@@ -362,46 +367,7 @@ export class MapLibreAdapter implements MapRuntimePort {
       if (this.selectionProjection !== null) {
         const clickSubscription = map.on("click", (event) => {
           if (this.state !== "READY") return;
-          try {
-            const features = map.queryRenderedFeatures(event.point, {
-              layers: [...this.selectionProjection!.layerIds],
-            });
-            const feature = features[0];
-            if (feature === undefined) return;
-            const properties = sanitizeFeatureProperties(feature.properties);
-            const featureId = feature.id;
-            if (
-              properties === null ||
-              (featureId !== undefined &&
-                typeof featureId !== "string" &&
-                typeof featureId !== "number") ||
-              typeof feature.layer.id !== "string" ||
-              typeof feature.source !== "string" ||
-              (feature.sourceLayer !== undefined &&
-                typeof feature.sourceLayer !== "string")
-            ) {
-              this.failSelection();
-              return;
-            }
-            const candidate: MapLibreRenderedFeatureCandidate = Object.freeze({
-              featureId: featureId ?? null,
-              layerId: feature.layer.id,
-              sourceId: feature.source,
-              sourceLayer: feature.sourceLayer ?? null,
-              properties,
-            });
-            const projected = this.selectionProjection!.project(candidate);
-            if (!isMapFeatureSelection(projected)) {
-              this.failSelection();
-              return;
-            }
-            const selection = freezeMapFeatureSelection(projected);
-            this.selection = selection;
-            this.notifySnapshot();
-            for (const listener of [...this.selectionListeners]) listener(selection);
-          } catch {
-            this.failSelection();
-          }
+          this.projectRenderedSelection(map, [event.point.x, event.point.y]);
         });
         this.rendererUnsubscribers.add(clickSubscription.unsubscribe);
       }
@@ -442,6 +408,33 @@ export class MapLibreAdapter implements MapRuntimePort {
     });
     this.camera = frozen;
     return this.notifySnapshot();
+  }
+
+  /**
+   * Query one rendered CSS-pixel point through the configured bounded
+   * projection. This concrete-adapter operation exposes no MapLibre value and
+   * does not widen the renderer-neutral MapRuntimePort.
+   */
+  selectAtPoint(point: MapLibreRenderedPoint): MapRuntimeSnapshot {
+    this.assertReady();
+    if (
+      this.selectionProjection === null ||
+      typeof point !== "object" ||
+      point === null ||
+      !Number.isFinite(point.x) ||
+      !Number.isFinite(point.y) ||
+      point.x < 0 ||
+      point.y < 0 ||
+      point.x > 1_000_000 ||
+      point.y > 1_000_000
+    ) {
+      throw new MapRuntimePortError(
+        "MAP_RUNTIME_SELECTION_INVALID",
+        "Map runtime rendered selection point is invalid.",
+      );
+    }
+    this.projectRenderedSelection(this.map!, [point.x, point.y]);
+    return this.getSnapshot();
   }
 
   subscribeSnapshot(listener: MapRuntimeSnapshotListener): () => void {
@@ -501,6 +494,52 @@ export class MapLibreAdapter implements MapRuntimePort {
       bearing: map.getBearing(),
       pitch: map.getPitch(),
     });
+  }
+
+  private projectRenderedSelection(
+    map: MapLibreMap,
+    point: [number, number],
+  ): void {
+    try {
+      const features = map.queryRenderedFeatures(point, {
+        layers: [...this.selectionProjection!.layerIds],
+      });
+      const feature = features[0];
+      if (feature === undefined) return;
+      const properties = sanitizeFeatureProperties(feature.properties);
+      const featureId = feature.id;
+      if (
+        properties === null ||
+        (featureId !== undefined &&
+          typeof featureId !== "string" &&
+          typeof featureId !== "number") ||
+        typeof feature.layer.id !== "string" ||
+        typeof feature.source !== "string" ||
+        (feature.sourceLayer !== undefined &&
+          typeof feature.sourceLayer !== "string")
+      ) {
+        this.failSelection();
+        return;
+      }
+      const candidate: MapLibreRenderedFeatureCandidate = Object.freeze({
+        featureId: featureId ?? null,
+        layerId: feature.layer.id,
+        sourceId: feature.source,
+        sourceLayer: feature.sourceLayer ?? null,
+        properties,
+      });
+      const projected = this.selectionProjection!.project(candidate);
+      if (!isMapFeatureSelection(projected)) {
+        this.failSelection();
+        return;
+      }
+      const selection = freezeMapFeatureSelection(projected);
+      this.selection = selection;
+      this.notifySnapshot();
+      for (const listener of [...this.selectionListeners]) listener(selection);
+    } catch {
+      this.failSelection();
+    }
   }
 
   private failInitialization(): void {

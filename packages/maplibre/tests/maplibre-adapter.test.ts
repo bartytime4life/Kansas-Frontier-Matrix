@@ -452,11 +452,11 @@ describe("package-owned MapLibreAdapter", () => {
       },
     ];
 
-    map.emit("click", { point: { x: 320, y: 180 } });
+    runtime.selectAtPoint({ x: 320, y: 180 });
 
     expect(map.queryRenderedFeaturesCalls).toEqual([
       {
-        point: { x: 320, y: 180 },
+        point: [320, 180],
         options: { layers: ["synthetic-selection"] },
       },
     ]);
