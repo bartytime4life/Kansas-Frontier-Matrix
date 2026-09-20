@@ -5,8 +5,9 @@ They do not execute the receipt validator or contact GitHub. Native integrity is
 checked separately by the workflow at the actual checkout. The exact writer
 branch is a bounded CI delivery route, not PR-state or publication authority.
 Retire its trigger through a successor receipt, never by rewriting old hashes.
-The #4485 follow-up keeps six historical receipts separate from one current
-five-artifact binding, including the unchanged merged v2 implementation.
+The #4485 follow-up and its Git-compatible successor keep seven historical
+receipts separate from one current five-artifact binding, including the
+unchanged merged v2 implementation.
 Native context tests must run, not merely trigger CI. Old hashes are immutable.
 """
 from __future__ import annotations
@@ -44,7 +45,9 @@ PREVIOUS_CURRENT = (
     PREFIX + "genrec-directory-root-registry-context-closure-20260911.json",
 )
 V1_ANCESTOR = "f9ef504b977dcb6e9601fa774bd8dad27adcf7a9"
-CURRENT = (PREFIX + "genrec-topology-indexed-context-closure-20260911.json",)
+INDEXED_CONTEXT = PREFIX + "genrec-topology-indexed-context-closure-20260911.json"
+INDEXED_CONTEXT_ANCESTOR = "c388e1063927abfb266eb1a8db518f5f277f6e78"
+CURRENT = (PREFIX + "genrec-topology-no-lazy-fetch-context-closure-20260920.json",)
 # Independent complete inventory; do not infer coverage from the receipt itself.
 BOUND_ARTIFACTS = (
     ".github/workflows/directory-root-registry.yml",
@@ -163,6 +166,8 @@ class DirectoryRootRegistryWorkflowTests(unittest.TestCase):
               for path in SUPERSEDED],
             *[[HELPER, path, "--repo-root", ".", "--artifact-git-ref", V1_ANCESTOR]
               for path in PREVIOUS_CURRENT],
+            [HELPER, INDEXED_CONTEXT, "--repo-root", ".", "--artifact-git-ref",
+             INDEXED_CONTEXT_ANCESTOR],
         ]), (code, calls))
 
     def test_current_artifacts_never_use_historical_replay(self) -> None:
@@ -170,7 +175,7 @@ class DirectoryRootRegistryWorkflowTests(unittest.TestCase):
         self.assertEqual((0, [[HELPER, p, "--repo-root", "."] for p in CURRENT]), (code, calls))
 
     def test_every_receipt_failure_propagates_and_stops_later_commands(self) -> None:
-        for name, count in ((HISTORICAL_STEP, 6), (CURRENT_STEP, 1)):
+        for name, count in ((HISTORICAL_STEP, 7), (CURRENT_STEP, 1)):
             for fail_at in range(count):
                 with self.subTest(step=name, fail_at=fail_at):
                     code, calls = _run(self.steps[name]["run"], fail_at)
@@ -242,7 +247,7 @@ class DirectoryRootRegistryWorkflowTests(unittest.TestCase):
         step = self.steps["Record trust boundary"]
         self.assertEqual("always()", step["if"])
         self.assertIn('Result: ${{ job.status }}.', step["run"])
-        self.assertIn("Six immutable ancestor replays plus one current five-artifact successor binding",
+        self.assertIn("Seven immutable ancestor replays plus one current five-artifact successor binding",
                       step["run"])
         self.assertNotIn("GENERATED_RECEIPT_VALID", step["run"])
 
@@ -279,13 +284,14 @@ class DirectoryRootRegistryWorkflowTests(unittest.TestCase):
     def test_historical_and_current_receipt_inventory_is_disjoint_and_complete(self) -> None:
         historical = _run(self.steps[HISTORICAL_STEP]["run"])[1]
         current = _run(self.steps[CURRENT_STEP]["run"])[1]
-        self.assertEqual([HISTORICAL, REPAIR, *SUPERSEDED, *PREVIOUS_CURRENT],
+        self.assertEqual([HISTORICAL, REPAIR, *SUPERSEDED, *PREVIOUS_CURRENT, INDEXED_CONTEXT],
                          [args[1] for args in historical])
         self.assertEqual(list(CURRENT), [args[1] for args in current])
         paths = [args[1] for args in historical + current]
-        self.assertEqual(7, len(paths))
-        self.assertEqual(7, len(set(paths)))
-        self.assertFalse({HISTORICAL, REPAIR, *SUPERSEDED, *PREVIOUS_CURRENT} & set(CURRENT))
+        self.assertEqual(8, len(paths))
+        self.assertEqual(8, len(set(paths)))
+        self.assertFalse({HISTORICAL, REPAIR, *SUPERSEDED, *PREVIOUS_CURRENT,
+                          INDEXED_CONTEXT} & set(CURRENT))
         # These explicit expected refs must not drift to a mutable branch or HEAD.
         for args in historical:
             self.assertRegex(args[-1], r"^[0-9a-f]{40}$")
