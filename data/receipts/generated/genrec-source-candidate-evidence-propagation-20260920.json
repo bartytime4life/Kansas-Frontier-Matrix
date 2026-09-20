@@ -1,0 +1,71 @@
+{
+  "receipt_id": "genrec-source-candidate-evidence-propagation-20260920",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/kansas-frontier-matrix-explorer/app/page.tsx",
+    "apps/kansas-frontier-matrix-explorer/tests/kansas-geoportal-source.test.mjs"
+  ],
+  "artifact_hashes": {
+    "apps/kansas-frontier-matrix-explorer/app/page.tsx": "sha256:acb59e00cb7b384cadc121ac94d0b2e3683acad6e6e8be01cc5dbb5a6f1041bc",
+    "apps/kansas-frontier-matrix-explorer/tests/kansas-geoportal-source.test.mjs": "sha256:5d146d117cfdc772e3ab5b5e496883ba982c00284f885ca4e566b90be47833a3"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "runtime revision not exposed"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "tools_enabled": [
+      "repository inspection",
+      "GitHub review evidence",
+      "focused Node regression"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "git:969f53b092952989945ac774d85b8eb95f203d25",
+      "pull-request:4635#discussion_r4056055497"
+    ]
+  },
+  "truth_labels": {
+    "apps/kansas-frontier-matrix-explorer/app/page.tsx": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/tests/kansas-geoportal-source.test.mjs": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused source candidate evidence regression",
+      "outcome": "PASS",
+      "reason": "Test requires the official portal URL and checked-at date in both display and copied intake draft."
+    },
+    {
+      "gate": "Explorer build and full unit suite",
+      "outcome": "PASS",
+      "reason": "TypeScript and production build passed; 154 of 156 unit tests passed with 2 declared skips; 5 of 5 lint compatibility tests passed."
+    },
+    {
+      "gate": "hosted exact-head CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Pending branch publication and review."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "PR 4635 review finding r4056055497",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4635#discussion_r4056055497"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-09-20T04:40:24.155Z",
+  "emitter": "Codex",
+  "links": {
+    "pr_number": null
+  },
+  "notes": "This patch prevents source locator and freshness evidence from being discarded by the Source Observatory UI and clipboard handoff. It does not admit or release a source. Model runtime revision is not exposed."
+}

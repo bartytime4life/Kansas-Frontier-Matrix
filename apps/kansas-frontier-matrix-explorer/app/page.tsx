@@ -2692,6 +2692,8 @@ export default function Home() {
         cadence: source.cadence,
         sourceRole: source.sourceRole,
         dataModes: source.dataModes,
+        officialPortal: source.sourceUrl ?? null,
+        portalCheckedAt: source.checkedAt ?? null,
       },
       proposedValue: source.value,
       cannotProve: source.cannotProve,
@@ -3236,10 +3238,10 @@ export default function Home() {
                 <div className="source-candidate-grid">
                   {filteredSourceCandidates.map((source) => <article key={source.id} className="source-candidate-card">
                     <header><span>{source.domain}</span><strong>DISCOVERED · NO PUBLIC EFFECT</strong></header>
-                    <h4>{source.title}</h4><p className="source-organization">{source.organization} · {source.cadence}</p>
+                    <h4>{source.title}</h4><p className="source-organization">{source.organization} · {source.cadence}{source.checkedAt && <> · official portal checked <time dateTime={source.checkedAt}>{source.checkedAt}</time></>}</p>
                     <dl><div><dt>Source role</dt><dd>{source.sourceRole}</dd></div><div><dt>Candidate value</dt><dd>{source.value}</dd></div><div><dt>Cannot prove</dt><dd>{source.cannotProve}</dd></div><div><dt>Next gate</dt><dd>{source.nextGate}</dd></div></dl>
                     <div className="source-modes">{source.dataModes.map((mode) => <span key={mode}>{mode}</span>)}</div>
-                    <footer><button type="button" onClick={() => copySourceIntakeDraft(source)}>Copy bounded intake draft</button>{source.layerId && source.featureId && <button type="button" onClick={() => { setRepositoryOpen(false); selectStoredFeature(source.layerId!, source.featureId!); }}>Inspect local analogue</button>}</footer>
+                    <footer>{source.sourceUrl && <a href={source.sourceUrl} target="_blank" rel="noreferrer">Open official source ↗</a>}<button type="button" onClick={() => copySourceIntakeDraft(source)}>Copy bounded intake draft</button>{source.layerId && source.featureId && <button type="button" onClick={() => { setRepositoryOpen(false); selectStoredFeature(source.layerId!, source.featureId!); }}>Inspect local analogue</button>}</footer>
                   </article>)}
                 </div>
                 {filteredSourceCandidates.length === 0 && <div className="repository-empty"><strong>No matching source candidates</strong><p>Clear the search or choose another domain.</p></div>}
