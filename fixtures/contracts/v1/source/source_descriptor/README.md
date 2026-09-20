@@ -2,11 +2,11 @@
 doc_id: kfm://fixture/contracts/v1/source/source-descriptor/readme
 title: source_descriptor fixtures README
 type: fixture-readme
-version: v0.2.0
+version: v0.3.0
 status: draft
 owners: TODO(owner): source steward; TODO(owner): schema steward; TODO(owner): fixture steward; TODO(owner): validator steward; TODO(owner): rights steward; TODO(owner): sensitivity steward; TODO(owner): docs steward
 created: NEEDS VERIFICATION - blank file existed before 2026-07-01 expansion
-updated: 2026-08-03
+updated: 2026-09-20
 policy_label: public-review
 related:
   - valid/README.md
@@ -31,7 +31,7 @@ notes:
   - "This directory is the observed contract fixture family for `source_descriptor`."
   - "Current fixture coverage includes two valid SourceDescriptor examples and one invalid missing-required-field example."
   - "The KU News GMD 3 AEM announcement example is document-specific, candidate-only, restricted, connector-disabled, review-pending, and not released; it is not source-registry or campaign/product authority."
-  - "The paired schema currently declares `fixtures_root` as `tests/fixtures/sources/source_descriptor/`; this README documents the requested and observed `fixtures/contracts/v1/source/source_descriptor/` path, so fixture-root reconciliation remains NEEDS VERIFICATION."
+  - "Both SourceDescriptor schemas declare `fixtures_root` as `fixtures/contracts/v1/source/source_descriptor/`, and the direct entrypoint test binds that metadata to the executable fixture root."
   - "The new announcement candidate passed its paired SourceDescriptor schema and bounded AEM semantic validator; repository-wide pytest/common-fixture, source-admission, source-registry, rights/sensitivity, release, and hosted CI checks remain unrun locally."
 [/KFM_META_BLOCK_V2] -->
 
@@ -60,7 +60,7 @@ Fixture family for the KFM `source_descriptor` source contract schema.
   <img alt="Family: source" src="https://img.shields.io/badge/family-source-blue">
   <img alt="Contract: source_descriptor" src="https://img.shields.io/badge/contract-source__descriptor-purple">
   <img alt="Authority: fixture only" src="https://img.shields.io/badge/authority-fixture%20only-critical">
-  <img alt="Root mismatch: needs verification" src="https://img.shields.io/badge/fixture__root-NEEDS%20VERIFICATION-orange">
+  <img alt="Fixture root: aligned" src="https://img.shields.io/badge/fixture__root-ALIGNED-1a7f37">
 </p>
 
 **Path:** `fixtures/contracts/v1/source/source_descriptor/README.md`  
@@ -162,7 +162,7 @@ Confirmed schema facts:
 | Schema status | `PROPOSED` |
 
 > [!NOTE]
-> The schema currently declares `fixtures_root` as `tests/fixtures/sources/source_descriptor/`, while this README documents `fixtures/contracts/v1/source/source_descriptor/` because that is the requested and observed fixture path. Reconciliation of fixture-root conventions remains **NEEDS VERIFICATION**.
+> Both schema entrypoints now declare `fixtures/contracts/v1/source/source_descriptor/`, and the direct validator-entrypoint suite proves that metadata resolves to the same fixture directory used at runtime. This alignment is shape evidence only; it does not admit a source.
 
 ---
 
@@ -261,7 +261,7 @@ Before changing this fixture family:
 | Invalid lane | CONFIRMED | `invalid/README.md`, `invalid/invalid_1.json`, and `invalid_1.expected_error.txt` exist. |
 | Schema | CONFIRMED | `source_descriptor.schema.json` defines the rich required field surface, source-id pattern, controlled vocabularies, conditional rules, registry/policy/validator metadata, and closed additional-property posture. |
 | Contract | CONFIRMED | `contracts/source/source_descriptor.md` defines semantic meaning and separates SourceDescriptor from source truth, evidence sufficiency, policy approval, release approval, and bypass authority. |
-| Fixture-root convention | NEEDS VERIFICATION | Schema `x-kfm.fixtures_root` points to `tests/fixtures/sources/source_descriptor/`, while the observed/requested path is under `fixtures/contracts/v1/source/source_descriptor/`. |
+| Fixture-root convention | PASS — ALIGNED | Both schemas and both executable entrypoints resolve `fixtures/contracts/v1/source/source_descriptor/`; a direct test fails if the implementation metadata diverges from the runtime fixture root. |
 | Test execution | PARTIAL | The new candidate fixture passed the paired SourceDescriptor schema and the bounded AEM semantic suite. The repository-wide pytest/common fixture harness, source registry checks, rights/sensitivity policy checks, source admission checks, release checks, and hosted CI remain unrun locally. |
 
 ---

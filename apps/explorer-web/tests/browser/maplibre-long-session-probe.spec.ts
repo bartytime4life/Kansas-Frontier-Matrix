@@ -144,7 +144,7 @@ test("repeats the package-owned MapLibre lifecycle and tears down every cycle", 
     candidate: {
       package: "maplibre-gl",
       resolved_lockfile_version: lockedMapLibreVersion(),
-      comparison_target: "6.9.0-canary-not-present-on-current-main",
+      comparison_target: "6.9.0-exact-candidate",
       dependency_admission_changed: false,
     },
     browser: {

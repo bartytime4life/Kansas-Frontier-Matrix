@@ -203,7 +203,7 @@ schemas/contracts/v1/source/source_descriptor.schema.json
 
 The plural path is a compatibility alias only. Both validators use the same executable fixture family, and direct tests prove equivalent polarity and working-directory independence. This is implementation convergence, not ADR acceptance.
 
-The rich schema still carries historical fixture metadata naming `tests/fixtures/sources/source_descriptor/`, while executable validation uses `fixtures/contracts/v1/source/source_descriptor/`. That drift remains a bounded hold and must not create a second fixture authority.
+The rich implementation schema and bounded alias both name `fixtures/contracts/v1/source/source_descriptor/`, matching the repository-anchored validator entrypoints. A direct test binds the implementation metadata to that executable root so a later path drift fails closed. This alignment closes only the fixture-root currentness gap; it does not create source or activation authority.
 
 <a id="source-activation-decision"></a>
 
@@ -274,7 +274,7 @@ The repository is at bounded validation and fixture-first decision-profile matur
 
 ## Implementation sequence
 
-1. Reconcile stale fixture metadata without creating another fixture home.
+1. Keep the now-aligned fixture metadata and executable root under direct parity test.
 2. Accept and version descriptor and activation meaning and shape separately from ADR status.
 3. Define immutable authority records versus machine indexes and append-only lineage.
 4. Implement fail-closed source/intake/rights/sensitivity/access policy with native tests.
@@ -295,7 +295,7 @@ Each wave must be independently reviewable and reversible. Live source activatio
 | ADR identity/index and Directory placement | **PASS — implementation evidence** |
 | Rich descriptor shape and compatibility alias | **PASS — proposed implementation** |
 | Both validators CWD-independent; fixture polarity agrees | **PASS — implementation evidence** |
-| Rich-schema fixture metadata matches executable root | **HOLD** |
+| Rich-schema fixture metadata matches executable root | **PASS — implementation evidence** |
 | Activation contract/schema/routes/negative cases | **PASS — fixture-first proposed implementation** |
 | Owners, authenticated independent review, accepted authority store | **OPEN** |
 | Deterministic authority lookup and supported registry API | **OPEN** |

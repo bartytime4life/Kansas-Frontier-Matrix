@@ -3,8 +3,8 @@
     {
       "name": "hold_pending_kfm_runtime_probes",
       "candidate": {
-        "profile": "kfm-maplibre-v6-6-readiness-v4",
-        "upstream_tag_commit": "407a8ce9e379c16066b13c3a6729e404b69743c6",
+        "profile": "kfm-maplibre-v6-9-readiness-v5",
+        "upstream_tag_commit": "f985318d1fa7e01d8b7e32a719aaf91efcb348d4",
         "selected_version": null,
         "module_mode": "module",
         "typescript_target": "ES2022",
@@ -36,8 +36,8 @@
     {
       "name": "hold_superseded_v6_candidate",
       "candidate": {
-        "profile": "kfm-maplibre-v6-6-readiness-v4",
-        "upstream_tag_commit": "407a8ce9e379c16066b13c3a6729e404b69743c6",
+        "profile": "kfm-maplibre-v6-9-readiness-v5",
+        "upstream_tag_commit": "f985318d1fa7e01d8b7e32a719aaf91efcb348d4",
         "selected_version": "6.4.0",
         "module_mode": "module",
         "typescript_target": "ES2022",
@@ -67,11 +67,11 @@
       }
     },
     {
-      "name": "ready_exact_6_6_candidate",
+      "name": "ready_exact_6_9_candidate",
       "candidate": {
-        "profile": "kfm-maplibre-v6-6-readiness-v4",
-        "upstream_tag_commit": "407a8ce9e379c16066b13c3a6729e404b69743c6",
-        "selected_version": "6.6.0",
+        "profile": "kfm-maplibre-v6-9-readiness-v5",
+        "upstream_tag_commit": "f985318d1fa7e01d8b7e32a719aaf91efcb348d4",
+        "selected_version": "6.9.0",
         "module_mode": "module",
         "typescript_target": "ES2022",
         "internal_transform_access": false,
@@ -104,8 +104,8 @@
     {
       "name": "invalid_declared_ready",
       "candidate": {
-        "profile": "kfm-maplibre-v6-6-readiness-v4",
-        "upstream_tag_commit": "407a8ce9e379c16066b13c3a6729e404b69743c6",
+        "profile": "kfm-maplibre-v6-9-readiness-v5",
+        "upstream_tag_commit": "f985318d1fa7e01d8b7e32a719aaf91efcb348d4",
         "selected_version": null,
         "module_mode": "module",
         "typescript_target": "ES2022",
@@ -142,9 +142,9 @@
     {
       "name": "invalid_governance",
       "candidate": {
-        "profile": "kfm-maplibre-v6-6-readiness-v4",
-        "upstream_tag_commit": "407a8ce9e379c16066b13c3a6729e404b69743c6",
-        "selected_version": "6.6.0",
+        "profile": "kfm-maplibre-v6-9-readiness-v5",
+        "upstream_tag_commit": "f985318d1fa7e01d8b7e32a719aaf91efcb348d4",
+        "selected_version": "6.9.0",
         "module_mode": "module",
         "typescript_target": "ES2022",
         "internal_transform_access": false,
@@ -178,9 +178,9 @@
     {
       "name": "invalid_import_boundary",
       "candidate": {
-        "profile": "kfm-maplibre-v6-6-readiness-v4",
-        "upstream_tag_commit": "407a8ce9e379c16066b13c3a6729e404b69743c6",
-        "selected_version": "6.6.0",
+        "profile": "kfm-maplibre-v6-9-readiness-v5",
+        "upstream_tag_commit": "f985318d1fa7e01d8b7e32a719aaf91efcb348d4",
+        "selected_version": "6.9.0",
         "module_mode": "module",
         "typescript_target": "ES2022",
         "internal_transform_access": false,
@@ -216,9 +216,9 @@
     {
       "name": "invalid_tile_churn_probe_failure",
       "candidate": {
-        "profile": "kfm-maplibre-v6-6-readiness-v4",
-        "upstream_tag_commit": "407a8ce9e379c16066b13c3a6729e404b69743c6",
-        "selected_version": "6.6.0",
+        "profile": "kfm-maplibre-v6-9-readiness-v5",
+        "upstream_tag_commit": "f985318d1fa7e01d8b7e32a719aaf91efcb348d4",
+        "selected_version": "6.9.0",
         "module_mode": "module",
         "typescript_target": "ES2022",
         "internal_transform_access": false,
@@ -252,9 +252,9 @@
     {
       "name": "invalid_upstream_tag_commit",
       "candidate": {
-        "profile": "kfm-maplibre-v6-6-readiness-v4",
+        "profile": "kfm-maplibre-v6-9-readiness-v5",
         "upstream_tag_commit": "4529c6e451f0e5607ef42ad0ed81aa76a14a0f43",
-        "selected_version": "6.6.0",
+        "selected_version": "6.9.0",
         "module_mode": "module",
         "typescript_target": "ES2022",
         "internal_transform_access": false,

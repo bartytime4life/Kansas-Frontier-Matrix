@@ -55,9 +55,9 @@ def test_tracked_projection_is_a_v2_observed_base_held_checkpoint() -> None:
     state = load(STATE_PATH)
     assert state["schema_version"] == "2.0.0"
     assert state["base"]["current_main_sha"] == (
-        "0b7257653abd355a041a80e6f4e5f83da3f80720"
+        "c0a6449c377e839e5b03c67f726829dc625a8c3a"
     )
-    assert state["base"]["observed_at"] == "2026-07-29T18:10:20Z"
+    assert state["base"]["observed_at"] == "2026-08-03T16:39:56Z"
     assert state["base"]["open_pull_requests"] == []
     assert state["projection_status"] == "CONFIRMED"
     assert state["claim"]["state"] == "HELD"

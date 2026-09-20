@@ -97,10 +97,11 @@ records its Git blob ID, byte count and SHA-256. Blob framing is independently
 rehashed against the index ID before the entry is included. Missing, duplicate,
 unmerged, non-regular, oversized or mismatched objects make context unavailable;
 Git replacement bytes do not silently inherit the requested original identity.
-The new blob reads pass `--no-lazy-fetch`; missing promisor objects are not
-retrieved for context. Git must support that option for v2 context to be
-available. There is no retry with lazy fetching enabled; the native validator
-still retains its pre-existing behavior and exit status.
+The new blob reads set `GIT_NO_LAZY_FETCH=1`; missing promisor objects are not
+retrieved for context. This remains compatible with Git runners that do not
+expose a global `--no-lazy-fetch` CLI option. There is no retry with lazy
+fetching enabled; the native validator still retains its pre-existing behavior
+and exit status.
 No governance text, alias inventory or source path is added to the log payload.
 
 This follows the scanner's indexed-input boundary: an unstaged edit is not the
