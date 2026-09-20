@@ -80,10 +80,14 @@ vi.mock("maplibre-gl", () => ({
     }
 
     queryRenderedFeatures(
-      point: unknown,
-      options: Record<string, unknown>,
+      pointOrOptions: unknown,
+      maybeOptions?: Record<string, unknown>,
     ): Array<Record<string, unknown>> {
-      this.queryRenderedFeaturesCalls.push({ point, options });
+      this.queryRenderedFeaturesCalls.push({
+        point: maybeOptions === undefined ? null : pointOrOptions,
+        options:
+          maybeOptions ?? (pointOrOptions as Record<string, unknown>),
+      });
       return this.renderedFeatures;
     }
 
@@ -452,11 +456,11 @@ describe("package-owned MapLibreAdapter", () => {
       },
     ];
 
-    runtime.selectAtPoint({ x: 320, y: 180 });
+    runtime.selectFirstRenderedFeature();
 
     expect(map.queryRenderedFeaturesCalls).toEqual([
       {
-        point: [320, 180],
+        point: null,
         options: { layers: ["synthetic-selection"] },
       },
     ]);

@@ -10,7 +10,7 @@ const FIXTURE = {
   source: "inline-geojson",
   rendered_layer: "synthetic-selection",
   selection_id: "selection:maplibre:flow-001",
-  selection_trigger: "explicit-bounded-point-query",
+  selection_trigger: "explicit-bounded-viewport-query",
   viewport: { width: 640, height: 360 },
   device_scale_factor: 1,
   network: "deny-external-http-https",
@@ -87,7 +87,7 @@ test("selects an inline GeoJSON feature and opens its governed Evidence Drawer",
   await expect(canvas).toBeVisible();
 
   const selectRenderedFeature = page.getByRole("button", {
-    name: "Select rendered feature at map center",
+    name: "Select first rendered feature",
   });
   await expect
     .poll(

@@ -437,6 +437,19 @@ export class MapLibreAdapter implements MapRuntimePort {
     return this.getSnapshot();
   }
 
+  /** Select the first rendered hit from the configured layer allowlist. */
+  selectFirstRenderedFeature(): MapRuntimeSnapshot {
+    this.assertReady();
+    if (this.selectionProjection === null) {
+      throw new MapRuntimePortError(
+        "MAP_RUNTIME_SELECTION_INVALID",
+        "Map runtime selection projection is unavailable.",
+      );
+    }
+    this.projectRenderedSelection(this.map!, null);
+    return this.getSnapshot();
+  }
+
   subscribeSnapshot(listener: MapRuntimeSnapshotListener): () => void {
     this.assertNotDisposed();
     if (typeof listener !== "function") {
@@ -498,12 +511,14 @@ export class MapLibreAdapter implements MapRuntimePort {
 
   private projectRenderedSelection(
     map: MapLibreMap,
-    point: [number, number],
+    point: [number, number] | null,
   ): void {
     try {
-      const features = map.queryRenderedFeatures(point, {
-        layers: [...this.selectionProjection!.layerIds],
-      });
+      const query = { layers: [...this.selectionProjection!.layerIds] };
+      const features =
+        point === null
+          ? map.queryRenderedFeatures(query)
+          : map.queryRenderedFeatures(point, query);
       const feature = features[0];
       if (feature === undefined) return;
       const properties = sanitizeFeatureProperties(feature.properties);

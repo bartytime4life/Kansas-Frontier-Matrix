@@ -21,8 +21,8 @@ const HISTORY_EVIDENCE = "kfm:evidence:synthetic:flow-000";
 
 const runtimeStatus = document.querySelector<HTMLElement>("#runtime-status");
 const evidenceStatus = document.querySelector<HTMLElement>("#evidence-status");
-const selectMapCenter = document.querySelector<HTMLButtonElement>(
-  "#select-map-center",
+const selectRenderedFeature = document.querySelector<HTMLButtonElement>(
+  "#select-rendered-feature",
 );
 const drawerHost = document.querySelector<HTMLElement>(
   "#evidence-drawer-host",
@@ -30,7 +30,7 @@ const drawerHost = document.querySelector<HTMLElement>(
 if (
   runtimeStatus === null ||
   evidenceStatus === null ||
-  selectMapCenter === null ||
+  selectRenderedFeature === null ||
   drawerHost === null
 ) {
   throw new Error("MapLibre selection probe controls are missing.");
@@ -131,8 +131,8 @@ runtime.subscribeSnapshot((snapshot) => {
     `State ${snapshot.state}; reason ${snapshot.reason ?? "NONE"}`;
 });
 
-selectMapCenter.addEventListener("click", () => {
-  runtime.selectAtPoint({ x: 320, y: 180 });
+selectRenderedFeature.addEventListener("click", () => {
+  runtime.selectFirstRenderedFeature();
 });
 
 const binding = bindMapRuntimeEvidence(
