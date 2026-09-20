@@ -6,7 +6,9 @@ import {
   MAP_RUNTIME_PORT_PROFILE,
   MAP_RUNTIME_TRUST_STATE_REASONS,
   MapRuntimePortError,
+  freezeMapFeatureSelection,
   freezeMapRuntimeCamera,
+  isMapFeatureSelection,
   type MapFeatureSelection,
   type MapRuntimeCamera,
   type MapRuntimePort,
@@ -19,6 +21,11 @@ import {
 import { DEFAULT_MAP_RUNTIME_CAMERA } from "./null-map-runtime";
 
 const CONTAINER_ID = /^[A-Za-z][A-Za-z0-9._:-]{0,127}$/;
+const STYLE_LAYER_ID = /^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/;
+const FEATURE_PROPERTY_KEY = /^[A-Za-z_][A-Za-z0-9_.:-]{0,127}$/;
+const MAX_SELECTION_LAYERS = 16;
+const MAX_FEATURE_PROPERTIES = 32;
+const MAX_FEATURE_PROPERTY_STRING_LENGTH = 512;
 export const DEFAULT_MAPLIBRE_INITIALIZATION_DEADLINE_MS = 10_000;
 const MAX_MAPLIBRE_INITIALIZATION_DEADLINE_MS = 60_000;
 
@@ -27,6 +34,34 @@ function createEmptyStyle() {
 }
 
 export type MapLibreSafeStyle = StyleSpecification;
+
+export type MapLibreRenderedFeatureProperty =
+  | string
+  | number
+  | boolean
+  | null;
+
+/**
+ * Renderer-neutral, bounded projection of one MapLibre rendered-feature hit.
+ *
+ * No MapLibre class, event, geometry, style object, or method crosses this
+ * boundary. Properties are limited to finite JSON scalars and remain request
+ * scope only; they are never evidence or release authority.
+ */
+export type MapLibreRenderedFeatureCandidate = Readonly<{
+  featureId: string | number | null;
+  layerId: string;
+  sourceId: string;
+  sourceLayer: string | null;
+  properties: Readonly<Record<string, MapLibreRenderedFeatureProperty>>;
+}>;
+
+export type MapLibreSelectionProjection = Readonly<{
+  /** Reviewed renderer layer IDs eligible for bounded selection queries. */
+  layerIds: readonly string[];
+  /** Project a sanitized renderer hit into the strict KFM selection contract. */
+  project: (candidate: MapLibreRenderedFeatureCandidate) => unknown;
+}>;
 
 const STYLE_RESOURCE_KEYS = new Set([
   "data",
@@ -99,7 +134,72 @@ export type MapLibreAdapterOptions = Readonly<{
    * locators fail closed before renderer acquisition.
    */
   style?: StyleSpecification;
+  /**
+   * Optional bounded rendered-feature selection projection. The adapter emits
+   * only selections that pass the renderer-neutral KFM validator.
+   */
+  selectionProjection?: MapLibreSelectionProjection;
 }>;
+
+function cloneSelectionProjection(
+  projection: MapLibreSelectionProjection | undefined,
+): MapLibreSelectionProjection | null {
+  if (projection === undefined) return null;
+  const layerIds = projection.layerIds;
+  if (
+    !Array.isArray(layerIds) ||
+    layerIds.length === 0 ||
+    layerIds.length > MAX_SELECTION_LAYERS ||
+    !layerIds.every((layerId) =>
+      typeof layerId === "string" && STYLE_LAYER_ID.test(layerId)
+    ) ||
+    new Set(layerIds).size !== layerIds.length ||
+    typeof projection.project !== "function"
+  ) {
+    throw new MapRuntimePortError(
+      "MAP_RUNTIME_SELECTION_INVALID",
+      "Map runtime selection projection is invalid.",
+    );
+  }
+  return Object.freeze({
+    layerIds: Object.freeze([...layerIds]),
+    project: projection.project,
+  });
+}
+
+function sanitizeFeatureProperties(
+  input: unknown,
+): Readonly<Record<string, MapLibreRenderedFeatureProperty>> | null {
+  if (typeof input !== "object" || input === null || Array.isArray(input)) {
+    return null;
+  }
+  const entries = Object.entries(input);
+  if (entries.length > MAX_FEATURE_PROPERTIES) return null;
+  const properties = Object.create(null) as Record<
+    string,
+    MapLibreRenderedFeatureProperty
+  >;
+  for (const [key, value] of entries) {
+    if (!FEATURE_PROPERTY_KEY.test(key)) return null;
+    if (
+      value !== null &&
+      typeof value !== "string" &&
+      typeof value !== "number" &&
+      typeof value !== "boolean"
+    ) {
+      return null;
+    }
+    if (typeof value === "number" && !Number.isFinite(value)) return null;
+    if (
+      typeof value === "string" &&
+      value.length > MAX_FEATURE_PROPERTY_STRING_LENGTH
+    ) {
+      return null;
+    }
+    properties[key] = value;
+  }
+  return Object.freeze(properties);
+}
 
 function camerasEqual(left: MapRuntimeCamera, right: MapRuntimeCamera): boolean {
   return (
@@ -127,6 +227,7 @@ export class MapLibreAdapter implements MapRuntimePort {
   private readonly interactive: boolean;
   private readonly initializationDeadlineMs: number;
   private readonly style: StyleSpecification;
+  private readonly selectionProjection: MapLibreSelectionProjection | null;
   private state: MapRuntimeState = "IDLE";
   private camera: MapRuntimeCamera = DEFAULT_MAP_RUNTIME_CAMERA;
   private selection: MapFeatureSelection | null = null;
@@ -150,6 +251,9 @@ export class MapLibreAdapter implements MapRuntimePort {
     this.containerId = options.containerId;
     this.interactive = options.interactive ?? true;
     this.style = cloneSafeInlineStyle(options.style);
+    this.selectionProjection = cloneSelectionProjection(
+      options.selectionProjection,
+    );
     const initializationDeadlineMs =
       options.initializationDeadlineMs ??
       DEFAULT_MAPLIBRE_INITIALIZATION_DEADLINE_MS;
@@ -254,6 +358,53 @@ export class MapLibreAdapter implements MapRuntimePort {
         }
       });
       this.rendererUnsubscribers.add(moveSubscription.unsubscribe);
+
+      if (this.selectionProjection !== null) {
+        const clickSubscription = map.on("click", (event) => {
+          if (this.state !== "READY") return;
+          try {
+            const features = map.queryRenderedFeatures(event.point, {
+              layers: [...this.selectionProjection!.layerIds],
+            });
+            const feature = features[0];
+            if (feature === undefined) return;
+            const properties = sanitizeFeatureProperties(feature.properties);
+            const featureId = feature.id;
+            if (
+              properties === null ||
+              (featureId !== undefined &&
+                typeof featureId !== "string" &&
+                typeof featureId !== "number") ||
+              typeof feature.layer.id !== "string" ||
+              typeof feature.source !== "string" ||
+              (feature.sourceLayer !== undefined &&
+                typeof feature.sourceLayer !== "string")
+            ) {
+              this.failSelection();
+              return;
+            }
+            const candidate: MapLibreRenderedFeatureCandidate = Object.freeze({
+              featureId: featureId ?? null,
+              layerId: feature.layer.id,
+              sourceId: feature.source,
+              sourceLayer: feature.sourceLayer ?? null,
+              properties,
+            });
+            const projected = this.selectionProjection!.project(candidate);
+            if (!isMapFeatureSelection(projected)) {
+              this.failSelection();
+              return;
+            }
+            const selection = freezeMapFeatureSelection(projected);
+            this.selection = selection;
+            this.notifySnapshot();
+            for (const listener of [...this.selectionListeners]) listener(selection);
+          } catch {
+            this.failSelection();
+          }
+        });
+        this.rendererUnsubscribers.add(clickSubscription.unsubscribe);
+      }
 
       const errorSubscription = map.on("error", () => {
         if (this.state === "INITIALIZING") {
@@ -377,6 +528,13 @@ export class MapLibreAdapter implements MapRuntimePort {
     this.selection = null;
     this.state = "ERROR";
     this.reason = MAP_RUNTIME_TRUST_STATE_REASONS.ERROR;
+    this.notifySnapshot();
+  }
+
+  private failSelection(): void {
+    this.selection = null;
+    this.state = "ERROR";
+    this.reason = "MAP_RUNTIME_SELECTION_INVALID";
     this.notifySnapshot();
   }
 

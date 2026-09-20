@@ -6,7 +6,12 @@ type RendererInstance = {
   options: Record<string, unknown>;
   removed: boolean;
   jumpToCalls: Record<string, unknown>[];
-  emit: (type: string) => void;
+  queryRenderedFeaturesCalls: Array<{
+    point: unknown;
+    options: Record<string, unknown>;
+  }>;
+  renderedFeatures: Array<Record<string, unknown>>;
+  emit: (type: string, event?: unknown) => void;
   setObservedCamera: (camera: {
     longitude: number;
     latitude: number;
@@ -27,6 +32,11 @@ vi.mock("maplibre-gl", () => ({
   Map: class FakeMap {
     readonly options: Record<string, unknown>;
     readonly jumpToCalls: Record<string, unknown>[] = [];
+    readonly queryRenderedFeaturesCalls: Array<{
+      point: unknown;
+      options: Record<string, unknown>;
+    }> = [];
+    renderedFeatures: Array<Record<string, unknown>> = [];
     removed = false;
     private readonly handlers = new globalThis.Map<
       string,
@@ -61,10 +71,20 @@ vi.mock("maplibre-gl", () => ({
       return { unsubscribe: () => listeners.delete(handler) };
     }
 
-    emit(type: string): void {
+    emit(type: string, event?: unknown): void {
       for (const handler of [...(this.handlers.get(type) ?? [])]) {
-        handler({ type, error: { message: "synthetic renderer error" } });
+        handler(
+          event ?? { type, error: { message: "synthetic renderer error" } },
+        );
       }
+    }
+
+    queryRenderedFeatures(
+      point: unknown,
+      options: Record<string, unknown>,
+    ): Array<Record<string, unknown>> {
+      this.queryRenderedFeaturesCalls.push({ point, options });
+      return this.renderedFeatures;
     }
 
     getCenter(): { lng: number; lat: number } {
@@ -381,6 +401,119 @@ describe("package-owned MapLibreAdapter", () => {
       "selection",
       "state",
     ]);
+  });
+
+  it("projects one rendered-feature hit into a validated runtime selection", async () => {
+    const runtime = createMapLibreAdapter({
+      containerId: "safe-map",
+      style: {
+        version: 8,
+        sources: {
+          fixture: {
+            type: "geojson",
+            data: {
+              type: "FeatureCollection",
+              features: [],
+            },
+          },
+        },
+        layers: [
+          {
+            id: "synthetic-selection",
+            type: "circle",
+            source: "fixture",
+          },
+        ],
+      },
+      selectionProjection: {
+        layerIds: ["synthetic-selection"],
+        project: (candidate) => ({
+          profile: "kfm.explorer.map-feature-selection.v1",
+          selectionId: `selection:${candidate.properties.selection_key}`,
+          layerId: "layer:released:synthetic-streamflow",
+          featureId: `feature:${candidate.featureId}`,
+          evidenceRefs: ["kfm:evidence:synthetic:flow-001"],
+          historyEvidenceRefs: ["kfm:evidence:synthetic:flow-000"],
+        }),
+      },
+    });
+    const selectionListener = vi.fn();
+    runtime.subscribeSelection(selectionListener);
+    const pending = runtime.initialize();
+    const map = renderer.instances[0];
+    map.emit("load");
+    await pending;
+    map.renderedFeatures = [
+      {
+        id: 7,
+        layer: { id: "synthetic-selection" },
+        source: "fixture",
+        properties: { selection_key: "flow-001", count: 1, current: true },
+      },
+    ];
+
+    map.emit("click", { point: { x: 320, y: 180 } });
+
+    expect(map.queryRenderedFeaturesCalls).toEqual([
+      {
+        point: { x: 320, y: 180 },
+        options: { layers: ["synthetic-selection"] },
+      },
+    ]);
+    expect(selectionListener).toHaveBeenCalledTimes(1);
+    expect(selectionListener.mock.calls[0]?.[0]).toEqual({
+      profile: "kfm.explorer.map-feature-selection.v1",
+      selectionId: "selection:flow-001",
+      layerId: "layer:released:synthetic-streamflow",
+      featureId: "feature:7",
+      evidenceRefs: ["kfm:evidence:synthetic:flow-001"],
+      historyEvidenceRefs: ["kfm:evidence:synthetic:flow-000"],
+    });
+    expect(Object.isFrozen(selectionListener.mock.calls[0]?.[0])).toBe(true);
+    expect(runtime.getSnapshot()).toMatchObject({
+      state: "READY",
+      reason: null,
+      selection: { selectionId: "selection:flow-001" },
+    });
+  });
+
+  it("ignores empty hit results and fails closed on an invalid selection projection", async () => {
+    const runtime = createMapLibreAdapter({
+      containerId: "safe-map",
+      selectionProjection: {
+        layerIds: ["synthetic-selection"],
+        project: () => ({ invalid: true }),
+      },
+    });
+    const selectionListener = vi.fn();
+    runtime.subscribeSelection(selectionListener);
+    const pending = runtime.initialize();
+    const map = renderer.instances[0];
+    map.emit("load");
+    await pending;
+
+    map.emit("click", { point: { x: 1, y: 2 } });
+    expect(runtime.getSnapshot()).toMatchObject({
+      state: "READY",
+      selection: null,
+    });
+
+    map.renderedFeatures = [
+      {
+        id: "unsafe",
+        layer: { id: "synthetic-selection" },
+        source: "fixture",
+        properties: { selection_key: "unsafe" },
+      },
+    ];
+    map.emit("click", { point: { x: 3, y: 4 } });
+
+    expect(selectionListener).not.toHaveBeenCalled();
+    expect(runtime.getSnapshot()).toMatchObject({
+      state: "ERROR",
+      reason: "MAP_RUNTIME_SELECTION_INVALID",
+      selection: null,
+    });
   });
 
   it("rejects an in-flight initialization when disposed", async () => {

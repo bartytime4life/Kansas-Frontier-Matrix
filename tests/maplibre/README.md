@@ -270,9 +270,11 @@ deployment, and publication.
 
 ## Open gaps
 
-- **HOLD:** The required runtime probe matrix is incomplete, including broader
-  CSP, PMTiles/vector loading, terrain/DEM, tile churn, Evidence Drawer selection
-  stability, accessibility, long-session behavior, and headless parity.
+- **HOLD:** The required runtime probe matrix remains incomplete. The bounded
+  same-candidate browser slice covers inline GeoJSON rendered-feature querying
+  and Evidence Drawer selection stability only; broader CSP, PMTiles/vector
+  loading, terrain/DEM, tile churn, accessibility, visual-diff, and headless
+  parity remain pending.
 - **HOLD:** Governed performance and visual-diff fixtures, accepted thresholds,
   deterministic baselines, failure bundles, and artifact homes are not closed.
 - **HOLD:** Seven trust-output performance schemas and the aggregate governance

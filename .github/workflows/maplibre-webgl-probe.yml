@@ -7,6 +7,7 @@ on:
       - ".github/workflows/maplibre-webgl-probe.yml"
       - "apps/explorer-web/tests/browser/maplibre-webgl-probe.*"
       - "apps/explorer-web/tests/browser/maplibre-long-session-probe.*"
+      - "apps/explorer-web/tests/browser/maplibre-selection-evidence-probe.*"
       - "apps/explorer-web/playwright.config.ts"
       - "apps/explorer-web/package.json"
       - "packages/maplibre/**"
@@ -79,7 +80,8 @@ jobs:
           pnpm --filter explorer-web exec playwright test \
             --config=playwright.config.ts \
             tests/browser/maplibre-webgl-probe.spec.ts \
-            tests/browser/maplibre-long-session-probe.spec.ts
+            tests/browser/maplibre-long-session-probe.spec.ts \
+            tests/browser/maplibre-selection-evidence-probe.spec.ts
 
       - name: Upload review-only browser receipt
         if: always()
@@ -97,6 +99,8 @@ jobs:
           {
             echo
             echo "- outcome: \`see Playwright result and attached receipt\`"
-            echo "- probe matrix effect: \`webgl2_failure_handling\` and \`long_session_teardown\` only; other probes remain \`NOT_RUN\`"
+            echo "- probe matrix effect: \`webgl2_failure_handling\`, \`long_session_teardown\`, \`query_rendered_features\`, and \`evidence_drawer_selection_stability\` only; remaining probes stay \`NOT_RUN\`"
+            echo "- same-candidate path: exact MapLibre 6.9.0 inline GeoJSON render -> bounded rendered-feature query -> renderer-neutral selection -> layer admission -> Evidence Drawer"
+            echo "- retained holds: worker CSP, visual pixel diff, image-source reclamation, tile churn, PMTiles/vector loading, terrain/DEM, and headless parity"
             echo "- current readiness: \`HOLD / RUNTIME_PROBES_PENDING\`"
           } >> "${GITHUB_STEP_SUMMARY}"
