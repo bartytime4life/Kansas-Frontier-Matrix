@@ -99,8 +99,9 @@ jobs:
           {
             echo
             echo "- outcome: \`see Playwright result and attached receipt\`"
-            echo "- probe matrix effect: \`webgl2_failure_handling\`, \`long_session_teardown\`, \`query_rendered_features\`, and \`evidence_drawer_selection_stability\` only; remaining probes stay \`NOT_RUN\`"
+            echo "- formal readiness-matrix effect: \`webgl2_failure_handling\`, \`query_rendered_features\`, and \`evidence_drawer_selection_stability\` only; the other nine formal probes stay \`NOT_RUN\`"
+            echo "- supporting lifecycle evidence: \`long_session_teardown\` (outside the formal 12-probe readiness list)"
             echo "- same-candidate path: exact MapLibre 6.9.0 inline GeoJSON render -> bounded rendered-feature query -> renderer-neutral selection -> layer admission -> Evidence Drawer"
-            echo "- retained holds: worker CSP, visual pixel diff, image-source reclamation, tile churn, PMTiles/vector loading, terrain/DEM, and headless parity"
+            echo "- retained formal NOT_RUN probes: worker CSP, style-spec v25, GeoJSON setData, visual pixel diff, image-source reclamation, tile churn, PMTiles/vector loading, terrain/DEM, and headless parity"
             echo "- current readiness: \`HOLD / RUNTIME_PROBES_PENDING\`"
           } >> "${GITHUB_STEP_SUMMARY}"
