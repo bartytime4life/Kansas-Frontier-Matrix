@@ -1,1 +1,61 @@
-cat: /tmp/kfm-status-receipt.json: No such file or directory
+{
+  "receipt_id": "genrec-runtime-status-browser-race-20260920",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/explorer-web/tests/browser/living-atlas-runtime-status.spec.ts"
+  ],
+  "artifact_hashes": {
+    "apps/explorer-web/tests/browser/living-atlas-runtime-status.spec.ts": "sha256:d0becadce1496c1f9ea346cf8bf3bb53e73aa662408724a8a901b7d3a1e373c7"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "not exposed"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {},
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/35487455061/job/106016337826",
+      "git:c5585933bae30308c2c7dd8c18ad1c2c47f6ce97"
+    ]
+  },
+  "truth_labels": {
+    "apps/explorer-web/tests/browser/living-atlas-runtime-status.spec.ts": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "runtime status unit tests",
+      "outcome": "PASS",
+      "reason": "4 passed; Node 24.19.0 outside declared Node 22 range"
+    },
+    {
+      "gate": "TypeScript noEmit",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "git diff --check",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "browser execution",
+      "outcome": "SKIPPED",
+      "reason": "Local Chromium download timed out; hosted Node 22 browser validation pending"
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "failed-browser-job",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/35487455061/job/106016337826"
+    }
+  ],
+  "human_review": {
+    "state": "pending"
+  },
+  "override_record": null,
+  "created_at": "2026-09-20T04:10:54.931Z",
+  "emitter": "Codex",
+  "notes": "Test-only repair; real guard with controlled status producer. Mounted held guidance retained. No production behavior, topology, owner authorization, merge, release or deployment change. Existing apps test path and data/receipts/generated lane per CONTRIBUTING and Directory Rules/ADR-0029."
+}
