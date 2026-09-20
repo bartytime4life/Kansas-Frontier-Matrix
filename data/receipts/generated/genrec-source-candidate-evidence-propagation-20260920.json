@@ -65,7 +65,7 @@
   "created_at": "2026-09-20T04:40:24.155Z",
   "emitter": "Codex",
   "links": {
-    "pr_number": null
+    "pr_number": 4639
   },
   "notes": "This patch prevents source locator and freshness evidence from being discarded by the Source Observatory UI and clipboard handoff. It does not admit or release a source. Model runtime revision is not exposed."
 }
