@@ -618,7 +618,7 @@ test("keeps repository updates pinned and boundary-labeled", async () => {
   assert.match(updates, /Local geodata inspection now fails closed on malformed or stale input/);
   assert.match(updates, /All 105 Kansas counties now have public locator starters/);
   assert.match(updates, /Time A \/ Time B comparison preserves report scope/);
-  assert.match(updates, /repository main pins maplibre-gl 6\.9\.0/);
+  assert.match(updates, /repository main and this separately versioned Site now pin maplibre-gl 6\.9\.0/);
   assert.match(updates, /521 commits after the prior Site evidence pin/);
   assert.match(updates, /Planning scenarios now have a strict review projection/);
   assert.match(updates, /Accessibility guidance now separates targets from proof/);
@@ -706,7 +706,7 @@ test("keeps the MapLibre Workbench complete, bounded, and responsive", async () 
   assert.match(source, /copyMapCenter/);
   assert.match(source, /fitIndexedFeatures/);
   assert.match(source, /SUPPORTED_CONTEXT_BOUNDS/);
-  assert.match(source, /site_package: "6\.6\.0"/);
+  assert.match(source, /site_package: "6\.9\.0"/);
   assert.match(source, /setWorkerUrl\(MAPLIBRE_WORKER_URL\)/);
   assert.match(source, /getWorkerUrl\(\) !== MAPLIBRE_WORKER_URL/);
   assert.match(source, /getVersion\(\)/);
@@ -733,7 +733,7 @@ test("keeps the MapLibre Workbench complete, bounded, and responsive", async () 
   assert.match(source, /VISIBLE LAYERS/);
   assert.match(mapInterface, /Renderer architecture[\s\S]*ACCEPTED/);
   assert.match(mapInterface, /MapRuntimePort \+ Null runtime[\s\S]*VERIFIED SLICE/);
-  assert.match(mapInterface, /Dependency compatibility[\s\S]*SITE 6\.6\.0 \/ REPO 6\.9\.0/);
+  assert.match(mapInterface, /Dependency compatibility[\s\S]*SITE 6\.9\.0 \/ REPO 6\.9\.0/);
   assert.match(mapInterface, /Concrete MapLibre adapter[\s\S]*VERIFIED SLICE/);
   assert.match(mapInterface, /Browser readiness[\s\S]*BOUNDED FIXTURE/);
   assert.match(explorerData, /"fill-outline-color": \["case", \["boolean", \["feature-state", "hover"\]/);

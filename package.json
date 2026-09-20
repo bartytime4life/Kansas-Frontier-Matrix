@@ -17,7 +17,7 @@
     "lint": "bash scripts/sites-env.sh -- eslint . --ignore-pattern dist --ignore-pattern .next --ignore-pattern public/maplibre"
   },
   "dependencies": {
-    "maplibre-gl": "6.6.0",
+    "maplibre-gl": "6.9.0",
     "next": "16.3.3",
     "react": "19.2.8",
     "react-dom": "19.2.8"

@@ -335,7 +335,7 @@ export const REPOSITORY_UPDATES: readonly RepositoryUpdate[] = Object.freeze([
     maturity: "PARTIAL",
     date: "28 Aug 2026",
     summary:
-      "ADR-0006 and ADR-0007 bind KFM browser rendering to packages/maplibre. Current repository main pins maplibre-gl 6.9.0, while this separately versioned Site still runs 6.6.0 with same-origin worker assets. The version difference is explicit compatibility work, not silent conformance.",
+      "ADR-0006 and ADR-0007 bind KFM browser rendering to packages/maplibre. Current repository main and this separately versioned Site now pin maplibre-gl 6.9.0 with same-origin worker assets. Version alignment is implementation evidence, not dependency admission or broad runtime conformance.",
     boundary:
       "The repository still holds Explorer production activation, broader browser readiness, governed performance execution, source and layer admission, PMTiles, terrain, long-session evidence, release, deployment, and publication. This Site remains a separate synthetic demonstration and is not KFM runtime-readiness evidence.",
     sourceLabel: "MapRuntimePort implementation",

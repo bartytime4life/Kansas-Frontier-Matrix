@@ -494,7 +494,7 @@ const STRUCTURE_FOCUS_PRESETS = Object.freeze([
   Object.freeze({ id: "topeka", label: "Focus Topeka", center: [-95.689, 39.0473] as [number, number], bearing: 28 }),
   Object.freeze({ id: "ellsworth", label: "Focus Ellsworth", center: [-98.2306, 38.7306] as [number, number], bearing: -18 }),
 ] as const);
-const EXPECTED_MAPLIBRE_VERSION = "6.6.0";
+const EXPECTED_MAPLIBRE_VERSION = "6.9.0";
 const MAPLIBRE_WORKER_URL = "/maplibre/maplibre-gl-worker.mjs";
 const MAPLIBRE_RUNTIME_ASSET_URLS = [MAPLIBRE_WORKER_URL, "/maplibre/maplibre-gl-shared.mjs"] as const;
 const SUPPORTED_CONTEXT_BOUNDS = Object.freeze({ west: -104.8, south: 34.8, east: -92, north: 42.2 });
@@ -5970,7 +5970,7 @@ export default function Home() {
       issued_at: issuedAt.toISOString(),
       expires_at: new Date(issuedAt.getTime() + 15 * 60 * 1000).toISOString(),
       context_is_evidence: false,
-      renderer: { family: "MapLibre GL JS", site_package: "6.6.0", repository_runtime_proven: false },
+      renderer: { family: "MapLibre GL JS", site_package: "6.9.0", repository_runtime_proven: false },
       camera: locationDerivedViewRef.current
         ? { center: "WITHHELD_BROWSER_LOCATION", zoom: "WITHHELD", bearing: "WITHHELD", pitch: "WITHHELD", projection }
         : { center: view.center, zoom: view.zoom, bearing: view.bearing, pitch: view.pitch, projection },
@@ -6026,7 +6026,7 @@ export default function Home() {
       repository_boundary: {
         snapshot: REPOSITORY_SNAPSHOT.commit,
         architecture: "ACCEPTED",
-        dependency: "EXACT_6.6.0",
+        dependency: "EXACT_6.9.0",
         runtime: "BOUNDED_PACKAGE_OWNED_ADAPTER_SLICE",
         broader_production_activation: "HOLD",
       },
