@@ -6731,7 +6731,7 @@ export default function Home() {
                 <div className="source-candidate-grid">
                   {filteredSourceCandidates.map((source) => <article key={source.id} className="source-candidate-card" data-admission={SOURCE_ADMISSION_BY_ID[source.id] ?? "candidate"}>
                     <header><span>{source.domain}</span><strong>{(SOURCE_ADMISSION_BY_ID[source.id] ?? "candidate").replaceAll("-", " ").toUpperCase()} · NO PUBLIC EFFECT</strong></header>
-                    <h4>{source.title}</h4><p className="source-organization">{source.organization} · {source.cadence} · official portal checked <time dateTime={source.checkedAt}>8 Sep 2026</time></p>
+                    <h4>{source.title}</h4><p className="source-organization">{source.organization} · {source.cadence} · official portal checked <time dateTime={source.checkedAt}>{source.checkedAt}</time></p>
                     <dl><div><dt>Source role</dt><dd>{source.sourceRole}</dd></div><div><dt>Candidate value</dt><dd>{source.value}</dd></div><div><dt>Cannot prove</dt><dd>{source.cannotProve}</dd></div><div><dt>Next gate</dt><dd>{source.nextGate}</dd></div></dl>
                     <div className="source-modes">{source.dataModes.map((mode) => <span key={mode}>{mode}</span>)}</div>
                     <footer><a href={source.sourceUrl} target="_blank" rel="noreferrer">Open official source ↗</a><button type="button" onClick={() => copySourceIntakeDraft(source)}>Copy bounded intake draft</button>{source.layerId && source.featureId && <button type="button" onClick={() => { setRepositoryOpen(false); selectStoredFeature(source.layerId!, source.featureId!); }}>Inspect local analogue</button>}</footer>
