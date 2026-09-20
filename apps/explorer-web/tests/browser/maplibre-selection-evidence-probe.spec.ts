@@ -202,7 +202,7 @@ test("selects an inline GeoJSON feature and opens its governed Evidence Drawer",
 
   expect(receipt.outcome).toBe("PASS");
   expect(JSON.parse(pageEvidence.rendered_candidate)).toMatchObject({
-    featureId: "flow-001",
+    featureId: 1,
     layerId: FIXTURE.rendered_layer,
     sourceId: "synthetic-selection-source",
     properties: { fixture_key: "flow-001" },

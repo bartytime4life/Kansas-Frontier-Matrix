@@ -43,7 +43,7 @@ function projectSelection(
   if (
     candidate.layerId !== RENDER_LAYER_ID ||
     candidate.sourceId !== RENDER_SOURCE_ID ||
-    candidate.featureId !== "flow-001" ||
+    candidate.featureId !== 1 ||
     candidate.properties.fixture_key !== "flow-001"
   ) {
     return null;
@@ -78,7 +78,7 @@ const runtime = createViteMapLibreAdapter({
           features: [
             {
               type: "Feature",
-              id: "flow-001",
+              id: 1,
               properties: {
                 fixture_key: "flow-001",
                 trust_state: "SYNTHETIC",
