@@ -39,6 +39,19 @@ notes:
 
 # `source_descriptor` fixtures
 
+## DASC item intake additions — 2026-09-20
+
+Four additional schema-valid, disabled and unreleased examples:
+[HUC12](valid/valid_dasc_huc12.json), [streams](valid/valid_dasc_streams.json),
+[PLSS](valid/valid_dasc_plss.json), and [rejected parcels](valid/valid_dasc_parcels_rejected.json).
+The parcel example records REJECTED_SCOPE, not acceptance. The selected
+[metadata profiles](dasc_item_profiles.json) are noncanonical test vectors,
+not source payloads, production acquisition configurations, or registry entries.
+Current item review and remaining gates are documented in the
+[DASC catalog page](../../../../../docs/sources/catalog/kansas/dasc-geoportal.md).
+The existing entrypoint tests validate field identities, geography and denial
+mutations. They do not prove complete pagination or production consumer behavior.
+
 Fixture family for the KFM `source_descriptor` source contract schema.
 
 <p>
