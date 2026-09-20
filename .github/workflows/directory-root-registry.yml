@@ -29,6 +29,7 @@ name: directory-root-registry
       - "tests/validators/directory_governance/test_validate_context_binding_topology.py"
       - "data/receipts/generated/genrec-topology-execution-context-20260911.json"
       - "data/receipts/generated/genrec-topology-indexed-context-closure-20260911.json"
+      - "data/receipts/generated/genrec-topology-no-lazy-fetch-context-closure-20260920.json"
   push:
     # Exact writer-branch validation while PR delivery is held under #4024.
     # Retire this extra branch filter with a successor binding after handoff.
@@ -55,6 +56,7 @@ name: directory-root-registry
       - "tests/validators/directory_governance/test_validate_context_binding_topology.py"
       - "data/receipts/generated/genrec-topology-execution-context-20260911.json"
       - "data/receipts/generated/genrec-topology-indexed-context-closure-20260911.json"
+      - "data/receipts/generated/genrec-topology-no-lazy-fetch-context-closure-20260920.json"
   workflow_dispatch:
 
 permissions:
@@ -187,6 +189,13 @@ jobs:
             --repo-root . \
             --artifact-git-ref f9ef504b977dcb6e9601fa774bd8dad27adcf7a9
 
+          # Preserve the indexed-context integration binding at its authored
+          # commit after this successor changes three of its five artifacts.
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-topology-indexed-context-closure-20260911.json \
+            --repo-root . \
+            --artifact-git-ref c388e1063927abfb266eb1a8db518f5f277f6e78
+
       # One successor binds all five integrated current artifacts: v2 renderer,
       # context tests, README, workflow and workflow tests. No historical override.
       # A historical pass alone must never replace candidate-byte integrity.
@@ -194,7 +203,7 @@ jobs:
         run: |
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-topology-indexed-context-closure-20260911.json \
+            data/receipts/generated/genrec-topology-no-lazy-fetch-context-closure-20260920.json \
             --repo-root .
 
       - name: Verify tracked worktree stayed unchanged
@@ -209,7 +218,7 @@ jobs:
             echo "### Directory root registry"
             echo
             echo "- Result: ${{ job.status }}."
-            echo "- Receipt scope: Six immutable ancestor replays plus one current five-artifact successor binding; execution result is reported above and no receipt is review approval."
+            echo "- Receipt scope: Seven immutable ancestor replays plus one current five-artifact successor binding; execution result is reported above and no receipt is review approval."
             echo "- Scope: schema, adopted-doctrine digest binding, root-class invariants, canonical ordering, and top-level root coverage."
             echo "- Boundary: projection-only; no root creation, activation, write authorization, migration, release, deployment, promotion, or publication."
           } >> "$GITHUB_STEP_SUMMARY"
