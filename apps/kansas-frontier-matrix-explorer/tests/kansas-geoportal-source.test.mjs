@@ -8,7 +8,8 @@ test("registers Kansas Geoportal as a bounded live source candidate", () => {
   assert.match(sources, /SRC-CAND-KS-DASC/);
   assert.match(sources, /Kansas Geoportal \(DASC\) live ArcGIS catalog/);
   assert.ok(sources.includes('sourceUrl: "https://hub.kansasgis.org/"'));
-  assert.match(sources, /one SourceDescriptor per selected ArcGIS item/);
+  assert.match(sources, /Item-specific descriptor fixtures/);
+  assert.match(sources, /REJECTED_SCOPE because its extent is outside Kansas/);
   assert.match(sources, /Parcel-owner and infrastructure-sensitive fields remain deny-by-default/);
   assert.match(sources, /sourceCount: 12/);
 });
