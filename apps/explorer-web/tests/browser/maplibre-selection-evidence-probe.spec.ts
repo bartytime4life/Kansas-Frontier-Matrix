@@ -82,9 +82,10 @@ test("selects an inline GeoJSON feature and opens its governed Evidence Drawer",
     "READY",
   );
   const map = page.locator("#maplibre-selection-map");
-  await expect(map.locator("canvas")).toBeVisible();
+  const canvas = map.locator("canvas");
+  await expect(canvas).toBeVisible();
 
-  await map.click({ position: { x: 320, y: 180 } });
+  await canvas.click({ position: { x: 320, y: 180 } });
 
   await expect(page.locator("#evidence-status")).toHaveText(
     "ANSWER / SUPPORTED",
