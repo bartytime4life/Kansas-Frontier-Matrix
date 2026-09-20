@@ -38,6 +38,7 @@ export const SOURCE_ADMISSION_STATES: readonly (SourceAdmissionState | "ALL")[] 
 ]);
 
 export const SOURCE_ADMISSION_BY_ID: Readonly<Record<string, SourceAdmissionState>> = Object.freeze({
+  "SRC-CAND-NOAA-NORMALS-1991-2020": "candidate",
   "SRC-CAND-USGS-HYDRO": "candidate",
   "SRC-CAND-FEMA-NFHL": "context-only",
   "SRC-CAND-NOAA": "held",
@@ -69,7 +70,7 @@ export type SourceGap = Readonly<{
 export const CORPUS_SNAPSHOT = Object.freeze({
   inspectedAt: "2026-09-08",
   sourceCount: 12,
-  candidateCount: 17,
+  candidateCount: 18,
   gapCount: 10,
   rule: "Drive references inform doctrine and proposals; current repository and runtime evidence decide implementation claims.",
 });
@@ -186,6 +187,7 @@ export const CORPUS_SOURCES: readonly CorpusSource[] = Object.freeze([
 ]);
 
 export const SOURCE_CANDIDATES: readonly SourceCandidate[] = Object.freeze([
+  Object.freeze({"id":"SRC-CAND-NOAA-NORMALS-1991-2020","title":"U.S. Climate Normals · 1991–2020","organization":"NOAA / NCEI","domain":"Atmosphere","cadence":"Decadal baseline; corrections between editions","sourceRole":"Official station climatology; long-term baseline context","dataModes":["Public S3","Station CSV"],"value":"Kansas station temperature and precipitation averages for the 1991–2020 baseline. Public AWS bucket: s3://noaa-normals-pds/ (us-east-1; no AWS account required).","cannotProve":"Not current weather, a forecast, a county-wide measurement, or a released KFM climate layer. Cloud hosting does not establish COG or other cloud-optimized encoding. Station values must not be presented as continuous statewide coverage.","nextGate":"Pin exact monthly 1991–2020 object keys and product revision; review station inventory, units, quality flags, missing values, Kansas selection, rights and sensitivity; validate bounded downloads and correction receipts, then EvidenceBundle and release review. CDO period and endpoint parity remain unverified.","sourceUrl":"https://registry.opendata.aws/noaa-climate-normals/","checkedAt":"2026-09-20"}),
   Object.freeze({ id: "SRC-CAND-USGS-HYDRO", title: "WBD / NWIS hydrology family", organization: "U.S. Geological Survey", domain: "Hydrology", cadence: "Versioned + continuous", sourceRole: "Governing context + observation", dataModes: ["Vector", "API", "Time series"], value: "Watersheds, stream context, gauges, and time-aware observations for a bounded proof lane.", cannotProve: "A rendered flowline is not current flow, flood risk, water quality, or a regulatory boundary.", nextGate: "Verify exact product versions, provisional-data rules, rights, identifiers, and geometry generalization.", sourceUrl: "https://waterdata.usgs.gov/nwis", checkedAt: "2026-09-08", layerId: "water-context", featureId: "water-smoky-hill" }),
   Object.freeze({ id: "SRC-CAND-FEMA-NFHL", title: "National Flood Hazard Layer", organization: "FEMA", domain: "Hazards", cadence: "Periodic", sourceRole: "Regulatory context", dataModes: ["Vector", "Services"], value: "Versioned flood-hazard context with explicit regulatory character.", cannotProve: "It is not a live flood observation, emergency warning, engineering determination, or property-specific advice.", nextGate: "Resolve service/version identity, effective dates, attribution, update cadence, and public carrier design.", sourceUrl: "https://www.fema.gov/flood-maps/national-flood-hazard-layer", checkedAt: "2026-09-08" }),
   Object.freeze({ id: "SRC-CAND-NOAA", title: "Weather, climate, and alert source family", organization: "NOAA / National Weather Service", domain: "Atmosphere", cadence: "Event + continuous + periodic", sourceRole: "Operational + observational", dataModes: ["API", "Grid", "Time series"], value: "Freshness-aware observations and official-source routing for atmospheric context.", cannotProve: "KFM must not become an emergency alert service or reinterpret stale operational products as current guidance.", nextGate: "Separate observations, models, climate products, and official alerts; define expiry and life-safety boundaries.", sourceUrl: "https://www.weather.gov/documentation/services-web-api", checkedAt: "2026-09-08", layerId: "atmosphere-observations", featureId: "atmo-topeka-2026" }),
