@@ -1,0 +1,123 @@
+{
+  "receipt_id": "genrec-directory-root-registry-git-lazy-fetch-compatibility-20260920",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/directory-root-registry.yml",
+    "tests/ci/test_directory_root_registry_workflow.py",
+    "tests/validators/directory_governance/test_validate_context_binding_topology.py",
+    "tools/validators/directory_governance/README.md",
+    "tools/validators/directory_governance/render_repository_topology_diagnostics.py",
+    "tools/validators/directory_governance/validate_repository_topology.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/directory-root-registry.yml": "sha256:2812eed0c39c2c433fce0b66b8a983ac853c320c00c38a9bec78bf0a9cd858b0",
+    "tests/ci/test_directory_root_registry_workflow.py": "sha256:eda8b775f3d59f9b25aeb0cfe8543c6fd30100ff809ffee7e84166e39acff289",
+    "tests/validators/directory_governance/test_validate_context_binding_topology.py": "sha256:ffdb188f3ef0b1484695fd40dda9471cbb3b4f07600635bb518a1f1b51a248d5",
+    "tools/validators/directory_governance/README.md": "sha256:27da5bcc874dfe3d220b4e174124de01b9cf4682a1e60ba8a72b497f7761b051",
+    "tools/validators/directory_governance/render_repository_topology_diagnostics.py": "sha256:74990fa3edc4a27d9cd629ef3350bf00fcbbb866fc809e540f116635282ab62f",
+    "tools/validators/directory_governance/validate_repository_topology.py": "sha256:480feaefa32a6458a263b90811dfdfe4faedb30c07724d8ce7233dc8fa813d2e"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "UNKNOWN; runtime build identifier unavailable"
+  },
+  "prompt_or_contract": "sha256:dd06c1a5ceac45c97e031730cb5a9f73fac1138edc7d169496274d99e930ad1a",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub",
+      "container"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:2812eed0c39c2c433fce0b66b8a983ac853c320c00c38a9bec78bf0a9cd858b0",
+      "sha256:eda8b775f3d59f9b25aeb0cfe8543c6fd30100ff809ffee7e84166e39acff289",
+      "sha256:ffdb188f3ef0b1484695fd40dda9471cbb3b4f07600635bb518a1f1b51a248d5",
+      "sha256:27da5bcc874dfe3d220b4e174124de01b9cf4682a1e60ba8a72b497f7761b051",
+      "sha256:74990fa3edc4a27d9cd629ef3350bf00fcbbb866fc809e540f116635282ab62f",
+      "sha256:480feaefa32a6458a263b90811dfdfe4faedb30c07724d8ce7233dc8fa813d2e"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/ae08cfa21c96fd666fef7800e75431bbb8fb5a5a",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4640",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4228",
+      "data/receipts/generated/genrec-topology-indexed-context-closure-20260911.json"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/directory-root-registry.yml": "CONFIRMED",
+    "tests/ci/test_directory_root_registry_workflow.py": "CONFIRMED",
+    "tests/validators/directory_governance/test_validate_context_binding_topology.py": "CONFIRMED",
+    "tools/validators/directory_governance/README.md": "CONFIRMED",
+    "tools/validators/directory_governance/render_repository_topology_diagnostics.py": "CONFIRMED",
+    "tools/validators/directory_governance/validate_repository_topology.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "portable-no-lazy-fetch-control",
+      "outcome": "PASS",
+      "reason": "The renderer requests no-lazy-fetch through GIT_NO_LAZY_FETCH=1, and the focused regression proves that object-read failure is not retried without the control."
+    },
+    {
+      "gate": "topology-context-regression-suite",
+      "outcome": "PASS",
+      "reason": "All 31 deterministic context-binding tests pass in disposable Git repositories."
+    },
+    {
+      "gate": "repository-topology-current-state",
+      "outcome": "FAIL",
+      "reason": "The full topology command reaches the preserved KFM-TOPO-004 catalog hold: one changed live fingerprint and one stale baseline fingerprint. No baseline entry is added, removed, or consumed."
+    },
+    {
+      "gate": "generated-receipt-schema-and-artifact-integrity",
+      "outcome": "PASS",
+      "reason": "The current receipt validates against the generated-receipt schema and binds the exact six current artifact digests."
+    },
+    {
+      "gate": "hosted-exact-head-rerun",
+      "outcome": "SKIPPED",
+      "reason": "The successor receipt is emitted before the amended PR head is pushed; hosted results must be read from that exact later head."
+    },
+    {
+      "gate": "independent-review-and-topology-authority",
+      "outcome": "SKIPPED",
+      "reason": "Independent review and the authorized Stage 1B or Stage 2 transition have not occurred."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pre-change-main",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/ae08cfa21c96fd666fef7800e75431bbb8fb5a5a"
+    },
+    {
+      "id": "topology-governance-hold",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4228"
+    },
+    {
+      "id": "prior-current-receipt",
+      "validated": true,
+      "evidence_ref": "data/receipts/generated/genrec-topology-indexed-context-closure-20260911.json"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-20T06:57:55Z",
+  "emitter": "Codex topology Git compatibility continuation",
+  "links": {
+    "pr_number": 4640,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": "KFM-TOPO-004 catalog/ remains held"
+  },
+  "notes": "This successor preserves the 2026-09-11 indexed-context receipt at exact pre-change main ae08cfa21c96fd666fef7800e75431bbb8fb5a5a and binds the current portable implementation without rewriting historical process memory. The new environment control changes only Git lazy-fetch suppression; it does not retry an unsafe read, consume a topology baseline, authorize catalog restructuring, accept an ADR, activate a source, or authorize merge, release, deployment, promotion, or publication."
+}

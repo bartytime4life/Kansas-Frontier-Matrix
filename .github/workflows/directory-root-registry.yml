@@ -187,14 +187,22 @@ jobs:
             --repo-root . \
             --artifact-git-ref f9ef504b977dcb6e9601fa774bd8dad27adcf7a9
 
-      # One successor binds all five integrated current artifacts: v2 renderer,
-      # context tests, README, workflow and workflow tests. No historical override.
+          # PR #4640 replaces the indexed-context implementation's unsupported
+          # global Git option. Preserve its prior current-byte receipt at the
+          # exact pre-change main revision instead of rewriting process memory.
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-topology-indexed-context-closure-20260911.json \
+            --repo-root . \
+            --artifact-git-ref ae08cfa21c96fd666fef7800e75431bbb8fb5a5a
+
+      # One successor binds all six current artifacts: the topology validator,
+      # renderer, context tests, README, workflow and workflow tests.
       # A historical pass alone must never replace candidate-byte integrity.
       - name: Verify current diagnostic and workflow authoring receipts
         run: |
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-topology-indexed-context-closure-20260911.json \
+            data/receipts/generated/genrec-directory-root-registry-git-lazy-fetch-compatibility-20260920.json \
             --repo-root .
 
       - name: Verify tracked worktree stayed unchanged
@@ -209,7 +217,7 @@ jobs:
             echo "### Directory root registry"
             echo
             echo "- Result: ${{ job.status }}."
-            echo "- Receipt scope: Six immutable ancestor replays plus one current five-artifact successor binding; execution result is reported above and no receipt is review approval."
+            echo "- Receipt scope: Seven immutable ancestor replays plus one current six-artifact successor binding; execution result is reported above and no receipt is review approval."
             echo "- Scope: schema, adopted-doctrine digest binding, root-class invariants, canonical ordering, and top-level root coverage."
             echo "- Boundary: projection-only; no root creation, activation, write authorization, migration, release, deployment, promotion, or publication."
           } >> "$GITHUB_STEP_SUMMARY"
