@@ -56,8 +56,8 @@ def write_repo(
     )
 
 
-class MapLibreV66ReadinessTests(unittest.TestCase):
-    def test_ready_repository_accepts_exact_package_owned_6_6_candidate(self) -> None:
+class MapLibreV69ReadinessTests(unittest.TestCase):
+    def test_ready_repository_accepts_exact_package_owned_6_9_candidate(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
             write_repo(root)
@@ -134,7 +134,7 @@ class MapLibreV66ReadinessTests(unittest.TestCase):
     def test_floating_version_is_hold(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
-            write_repo(root, version="^6.6.0")
+            write_repo(root, version="^6.9.0")
             result = scan_repository(root)
             self.assertIn("MAPLIBRE_VERSION_NOT_EXACT", result.reasons)
 

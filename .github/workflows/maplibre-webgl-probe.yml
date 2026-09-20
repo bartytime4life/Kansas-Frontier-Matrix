@@ -67,7 +67,7 @@ jobs:
             echo "- pnpm: \`$(pnpm --version)\`"
             echo "- playwright: \`$(pnpm exec playwright --version)\`"
             echo "- candidate: package-owned maplibre-gl; observed by the browser receipt"
-            echo "- comparison target: MapLibre 6.9 canary is not present or admitted on this branch"
+            echo "- comparison target: exact MapLibre 6.9.0 package candidate"
             echo "- network: external HTTP(S) requests are a test failure"
             echo "- authority: QA evidence only; no dependency, release, deployment, or publication decision"
           } >> "${GITHUB_STEP_SUMMARY}"

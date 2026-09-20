@@ -2,15 +2,15 @@
 doc_id: kfm://doc/governance/repository-transition-control-source
 title: Repository transition control-source binding
 type: governance-binding-enforcement-candidate-note
-version: v1.3.3
-status: current-main bounded-capture workflow active; candidate authorization-output hardening; required-status-check not installed
+version: v1.4.0
+status: current-main bounded-capture workflow active; authorization-output hardening integrated; exact required-status-check installed; independent canaries pending
 owner: OWNER_TBD — governance steward and repository-control steward
 created: 2026-09-03
-updated: 2026-09-18
+updated: 2026-09-20
 policy_label: repository-facing; governance; fail-closed; non-authoritative
 owning_root: docs/
 responsibility: "Bind the repository transition control-source identity, bounded capture posture, exact authorization boundary, and rollback limits without creating merge, release, deployment, promotion, or publication authority."
-truth_posture: CONFIRMED current-main trusted-base workflow / IMPLEMENTED candidate authorization-output hardening / PROPOSED required-check packet
+truth_posture: CONFIRMED current-main trusted-base workflow and exact strict required-check readback / HOLD independent negative and positive canary proof
 related:
   - ../../contracts/governance/repository_control_state.md
   - ../../tools/validators/repository_control/fetch_bounded_issue_comments.py
@@ -64,15 +64,14 @@ All three helpers are fetched from the exact pull-request base SHA.
 The workflow never checks out or executes pull-request-head code and has
 read-only `contents`, `issues`, and `pull-requests` permissions.
 
-The current candidate changes only the final transition validator: it validates
-candidate records before binding and validates its bounded classification
-object before emitting it. Those bytes are not current-main behavior until
-separately reviewed and integrated.
+The authorization-output hardening is integrated. The final transition
+validator validates candidate records before binding and validates its bounded
+classification object before emitting it.
 
-The check remains advisory. Ruleset `15484585`, named `Protect`, still has no
-`required_status_checks` rule. A passing or failing
-`authorize-ready-and-merge` result is not presently a server-side merge
-prerequisite.
+Ruleset `15484585`, named `Protect`, now requires the exact
+`authorize-ready-and-merge` GitHub Actions check with strict currentness enabled
+and enforcement on branch creation. This is direct settings readback, not proof
+of the still-pending capability-separated negative and positive canaries.
 
 ## Incident entry paths
 
@@ -105,12 +104,11 @@ unedited owner transition record matched PR #4622 and that head. GitHub then
 records the owner account as the merge actor at `2026-09-18T20:01:34Z`, with
 merge commit `d0479dc293e2ab79fe94698e471d3cfe6b4017de`.
 
-This is a confirmed terminal divergence between the advisory authorization
-hold and GitHub merge state. It confirms the known ruleset enforcement gap; it
-does not establish the initiating client, infer intent, supply retroactive
-transition authority, or establish that the separate validator-suite failure
-was acceptable. Remediation remains the separately authorized server-side
-required-check change and canary sequence described below.
+This is a confirmed historical terminal divergence between the authorization
+hold and GitHub merge state. The strict required-check rule is now present, but
+the historical event does not establish the initiating client, infer intent,
+supply retroactive transition authority, or prove the repaired configuration.
+Capability-separated negative and positive canaries remain required.
 
 ## Live-source rules
 
@@ -199,15 +197,18 @@ Ruleset `15484585` is active for the default branch. Its observed rules are:
 
 - deletion protection;
 - non-fast-forward protection; and
-- pull-request use with unresolved-thread resolution.
+- pull-request use with unresolved-thread resolution; and
+- exact `authorize-ready-and-merge` required-status-check enforcement through
+  GitHub Actions integration `15368`, with strict currentness enabled and
+  `do_not_enforce_on_create=false`.
 
-It requires zero approving reviews and contains no required-status-check rule.
-That is why an advisory failure can occur after a merge without preventing it.
+It requires zero approving reviews and retains an always-bypass actor. The
+required-check configuration is confirmed; bypass-resistant behavior and the
+full rejection path remain unproven until independent canaries complete.
 
-## Proposed server-side enforcement packet
+## Observed server-side enforcement packet
 
-After the bounded-capture candidate is independently reviewed and integrated,
-the smallest candidate addition is:
+The active ruleset readback contains:
 
 ```json
 {
@@ -225,33 +226,27 @@ the smallest candidate addition is:
 }
 ```
 
-This packet is **proposed and not applied**. This document does not authorize a ruleset.
-It also does not authorize branch-protection, permission, bypass, approval, ready, merge, release,
+This packet is **observed as applied**. The observation does not authorize
+branch protection, permission, bypass, approval, ready, merge, release,
 deployment, promotion, publication, or source-state change.
 
 ## Remaining proof order
 
-1. Obtain focused and hosted exact-head validation plus a new separate review of
-   the authorization-output-hardening candidate.
-2. Integrate the output hardening only through a separately
-   authorized, capability-separated path.
-3. Re-read the integrated helper, workflow, check-run name, and GitHub Actions
+1. Re-read the integrated helper, workflow, check-run name, and GitHub Actions
    App identity on exact current main.
-4. Run a fresh draft event and verify the active workflow emits
+2. Run a fresh draft event and verify the active workflow emits
    `PULL_REQUEST_IS_DRAFT`, not skipped success.
-5. Through a separately authorized settings operation, add the reviewed strict
-   required-status-check rule without weakening existing protections.
-6. Use a genuinely capability-separated operator for negative and positive
+3. Use a genuinely capability-separated operator for negative and positive
    canaries.
-7. Prove born-ready and later-ready requests cannot merge without an exact
+4. Prove born-ready and later-ready requests cannot merge without an exact
    current record.
-8. Prove stale, edited, malformed, duplicate-key, wrong-base, wrong-head,
+5. Prove stale, edited, malformed, duplicate-key, wrong-base, wrong-head,
    wrong-issue, non-owner, expired, unavailable, oversized, and incomplete
    source states remain blocked.
-9. Advance the head and prove strict currentness requires a fresh record and
+6. Advance the head and prove strict currentness requires a fresh record and
    rerun.
-10. Record platform rejection before merge; a check that starts after merge is
-    not prevention evidence.
+7. Record platform rejection before merge; a check that starts after merge is
+   not prevention evidence.
 
 ## Explicit residual limits
 
@@ -271,8 +266,8 @@ separate obligations.
 ## Enforcement boundary
 
 Repairing the source lookup and bounding capture prevent silent retrieval and
-resource-exhaustion failure modes. Requiring the check would make its current
-outcome a server-side merge prerequisite. Neither action creates independent
+resource-exhaustion failure modes. The required check makes its current outcome
+a server-side merge prerequisite for non-bypassed paths. Neither action creates independent
 review, resolves client attribution, or grants source admission, Stage 1B,
 Stage 2, release, deployment, promotion, or publication authority.
 

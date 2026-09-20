@@ -232,13 +232,17 @@ def _context_index_inputs(root: Path, index: bytes) -> dict[str, object]:
 
     result: dict[str, object] = {}
     for label, oid in sorted(selected.items()):
-        size_raw = topology._git(root, "--no-lazy-fetch", "cat-file", "-s", oid).strip()
+        size_raw = topology._git(
+            root, "cat-file", "-s", oid, no_lazy_fetch=True
+        ).strip()
         if re.fullmatch(rb"[0-9]{1,10}", size_raw) is None:
             raise ValueError("invalid indexed context size")
         size = int(size_raw)
         if size > CONTEXT_MAX_BYTES:
             raise ValueError("indexed context input too large")
-        data = topology._git(root, "--no-lazy-fetch", "cat-file", "blob", oid)
+        data = topology._git(
+            root, "cat-file", "blob", oid, no_lazy_fetch=True
+        )
         if len(data) != size or len(data) > CONTEXT_MAX_BYTES:
             raise ValueError("unstable indexed context input")
         algorithm = "sha1" if len(oid) == 40 else "sha256"

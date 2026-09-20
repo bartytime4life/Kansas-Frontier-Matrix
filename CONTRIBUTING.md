@@ -15,8 +15,8 @@ This guide explains how to contribute code, documentation, schemas, policies, fi
 | Truth posture | Cite-or-abstain; report truth posture and capability maturity separately for material capability claims |
 | Review route | Focused branch and draft pull request when the delivery path is eligible |
 | Verified review-routing file | [`.github/CODEOWNERS`](.github/CODEOWNERS) |
-| GitHub protection snapshot | Ruleset `15484585` (`Protect`) is active on the default branch; pull requests and review-thread resolution are required, approving-review count is `0`, and no required-status-check rule is configured (read-only observation) |
-| Review-routing limitation | `CODEOWNERS` routes `@bartytime4life`; independent review, approval requirements, and required-status-check enforcement remain **NEEDS VERIFICATION** |
+| GitHub protection snapshot | Ruleset `15484585` (`Protect`) is active on the default branch; pull requests, review-thread resolution, and the exact `authorize-ready-and-merge` GitHub Actions check are required; strict currentness is enabled and enforcement on branch creation is not waived (read-only observation) |
+| Review-routing limitation | `CODEOWNERS` routes `@bartytime4life`; required-check configuration is confirmed, while independent negative/positive canaries and bypass-resistant enforcement remain **NEEDS VERIFICATION** |
 | Local validation surface | [`Makefile`](Makefile), [`pyproject.toml`](pyproject.toml), [`.pre-commit-config.yaml`](.pre-commit-config.yaml), [`package.json`](package.json), and targeted package or subsystem commands |
 | Implementation limit | A documented rule, planned path, stub workflow, or passing check is not automatically proof of runtime behavior or release authority |
 

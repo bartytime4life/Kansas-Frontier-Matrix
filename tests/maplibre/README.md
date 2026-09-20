@@ -11,7 +11,7 @@ updated: 2026-09-08
 current_path: tests/maplibre/README.md
 owning_root: tests/
 responsibility: index executable MapLibre boundary, configuration, readiness, and held-runtime tests without creating release or publication authority
-truth_posture: CONFIRMED seven direct Python test modules, 92 source-defined tests, a closed and fixture-tested performance-envelope machine contract, a package-owned exact MapLibre GL JS 6.6.0 dependency, accepted renderer-boundary ADRs, deterministic no-network workflow coverage, and retired legacy CDN harness / HOLD browser performance, visual-diff, proof, release, deployment, and publication claims / UNKNOWN required-check status, production parity, complete consumer migration, accountable stewardship, and operational rollback
+truth_posture: CONFIRMED seven direct Python test modules, 92 source-defined tests, a closed and fixture-tested performance-envelope machine contract, a package-owned exact MapLibre GL JS 6.9.0 dependency, accepted renderer-boundary ADRs, deterministic no-network workflow coverage, and retired legacy CDN harness / HOLD browser performance, visual-diff, proof, release, deployment, and publication claims / UNKNOWN required-check status, production parity, complete consumer migration, accountable stewardship, and operational rollback
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
@@ -44,7 +44,7 @@ release eligibility, or publication safety.
 The current repository state is intentionally split:
 
 - the renderer family and package-owned acquisition seam are accepted;
-- `packages/maplibre/` owns exact `maplibre-gl` `6.6.0` dependency closure;
+- `packages/maplibre/` owns exact `maplibre-gl` `6.9.0` dependency closure;
 - structural and fixture-only checks are executable without network access; and
 - runtime performance, render comparison, proof, release, and publication remain
   on explicit `HOLD`.
@@ -149,7 +149,7 @@ python tools/validators/maplibre/validate_v6_readiness.py --scan-root .
 
 The fixture pack contains three valid and five invalid cases under
 [`fixtures/maplibre/v6_readiness/cases.json`](../../fixtures/maplibre/v6_readiness/cases.json).
-The current-repository scan is expected to emit `HOLD`, target version `6.6.0`,
+The current-repository scan is expected to emit `HOLD`, target version `6.9.0`,
 and reason `RUNTIME_PROBES_PENDING`.
 
 ### Performance-hold checks
@@ -182,7 +182,7 @@ hold surfaces, not complete performance validation commands.
 | --- | --- | --- | --- |
 | [`maplibre-acquisition-inventory.yml`](../../.github/workflows/maplibre-acquisition-inventory.yml) | `tests/maplibre/**`; bounded app, package, runtime, script, example, and public surfaces; root `package.json`; acquisition/performance workflows; ADR-0006/0007; and validator | All 49 acquisition tests plus current-repository summary scan | Structural inventory only; no browser or runtime proof |
 | [`maplibre-source-metadata.yml`](../../.github/workflows/maplibre-source-metadata.yml) | Source-metadata workflow, validator, focused test module, synthetic fixtures, and generated receipt pattern | Nine focused tests, exact fixture outcomes and reason codes, and Python/JSON syntax checks | Local projection only; no remote retrieval, source admission, rights decision, or EvidenceBundle closure |
-| [`briefing-implementation-campaign.yml`](../../.github/workflows/briefing-implementation-campaign.yml) | Readiness validator, its test module, fixture pack, and retained receipts | All 16 readiness tests, fixture polarity, current 6.6.0 `HOLD`, and historical receipt replay | Shared campaign; does not run the other MapLibre modules |
+| [`briefing-implementation-campaign.yml`](../../.github/workflows/briefing-implementation-campaign.yml) | Readiness validator, its test module, fixture pack, and retained receipts | All 16 readiness tests, fixture polarity, current 6.9.0 `HOLD`, and historical receipt replay | Shared campaign; does not run the other MapLibre modules |
 | [`maplibre-perf-governance.yml`](../../.github/workflows/maplibre-perf-governance.yml) | This whole directory plus package, app, config, schema, script, validator, fixture, and workflow surfaces | Syntax checks, nine deterministic tests, exact lock/dependency checks, held-assumption inspection, and step summary | Installs no dependencies or browser; uploads no artifact; ends in explicit runtime/performance hold |
 | [`schema-validation.yml`](../../.github/workflows/schema-validation.yml) | All pull requests and pushes to `main` | Validates the tracked envelope, both fixture polarities, focused contract tests, and repository schema meta-shape | Machine conformance only; no browser, benchmark, policy, release, or publication outcome |
 

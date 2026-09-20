@@ -290,7 +290,7 @@ def _is_app_text_path(path: str) -> bool:
     )
 
 
-def _git(repo_root: Path, *args: str) -> bytes:
+def _git(repo_root: Path, *args: str, no_lazy_fetch: bool = False) -> bytes:
     env = os.environ.copy()
     env.update(
         {
@@ -301,6 +301,12 @@ def _git(repo_root: Path, *args: str) -> bytes:
             "LC_ALL": "C",
         }
     )
+    if no_lazy_fetch:
+        # The environment control is supported by Git versions that do not
+        # expose the newer global ``--no-lazy-fetch`` command-line option.
+        # Keep promisor-object retrieval disabled without making diagnostic
+        # context depend on one runner's Git CLI surface.
+        env["GIT_NO_LAZY_FETCH"] = "1"
     try:
         result = subprocess.run(
             ["git", *args],

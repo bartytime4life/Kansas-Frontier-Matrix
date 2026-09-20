@@ -134,6 +134,14 @@ def test_declared_schema_is_a_bounded_alias() -> None:
     )
 
 
+def test_implementation_schema_fixture_root_matches_executable_root() -> None:
+    schema = json.loads(IMPLEMENTATION_SCHEMA.read_text(encoding="utf-8"))
+    declared = schema["x-kfm"]["fixtures_root"]
+    assert declared.endswith("/")
+    assert (ROOT / declared).resolve() == FIXTURE_ROOT.resolve()
+    assert FIXTURE_ROOT.is_dir()
+
+
 def test_declared_and_implementation_schemas_have_identical_fixture_polarity() -> None:
     valid = _fixtures("valid")
     invalid = _fixtures("invalid")

@@ -33,10 +33,12 @@ GOVERNANCE_INPUTS = {
 }
 
 
-def local_git(root: Path, *args: str) -> bytes:
+def local_git(root: Path, *args: str, no_lazy_fetch: bool = False) -> bytes:
     env = os.environ.copy()
     env.update(GIT_CONFIG_GLOBAL=os.devnull, GIT_CONFIG_NOSYSTEM="1",
                GIT_TERMINAL_PROMPT="0", GIT_OPTIONAL_LOCKS="0", LC_ALL="C")
+    if no_lazy_fetch:
+        env["GIT_NO_LAZY_FETCH"] = "1"
     return subprocess.run(["git", *args], cwd=root, env=env, check=True,
                           capture_output=True, timeout=10).stdout
 
@@ -59,9 +61,12 @@ import os
 import subprocess
 DEFAULT_BASELINE = Path(__file__).with_name("repository_topology_baseline.json")
 TopologyError = ValueError
-def _git(root, *args):
+def _git(root, *args, no_lazy_fetch=False):
+    env = os.environ.copy()
+    if no_lazy_fetch:
+        env["GIT_NO_LAZY_FETCH"] = "1"
     return subprocess.run(["git", *args], cwd=root, capture_output=True,
-                          check=True, timeout=10).stdout
+                          check=True, timeout=10, env=env).stdout
 def scan(root):
     if os.environ.get("FIXTURE_MUTATE") == "1":
         DEFAULT_BASELINE.write_bytes(b'{"changed": true}')
@@ -319,18 +324,19 @@ class ContextBindingTests(unittest.TestCase):
     def test_blob_reads_disable_lazy_fetch_and_never_retry_without_it(self):
         with mock.patch.object(DOUBLE, "_git", wraps=local_git) as call:
             self.context()
-        reads = [c.args[1:] for c in call.call_args_list if "cat-file" in c.args]
+        reads = [c for c in call.call_args_list if "cat-file" in c.args]
         self.assertEqual(8, len(reads))
-        self.assertTrue(all(args[:2] == ("--no-lazy-fetch", "cat-file") for args in reads))
-        def missing(root, *args):
+        self.assertTrue(all(c.args[1] == "cat-file" for c in reads))
+        self.assertTrue(all(c.kwargs == {"no_lazy_fetch": True} for c in reads))
+        def missing(root, *args, no_lazy_fetch=False):
             if "cat-file" in args:
                 raise ValueError("PRIVATE_MISSING_OBJECT")
-            return local_git(root, *args)
+            return local_git(root, *args, no_lazy_fetch=no_lazy_fetch)
         with mock.patch.object(DOUBLE, "_git", side_effect=missing) as call:
             self.assertIsNone(DIAGNOSTICS._context_record(self.root, self.baseline))
-        reads = [c.args[1:] for c in call.call_args_list if "cat-file" in c.args]
+        reads = [c for c in call.call_args_list if "cat-file" in c.args]
         self.assertEqual(1, len(reads))
-        self.assertEqual("--no-lazy-fetch", reads[0][0])
+        self.assertEqual({"no_lazy_fetch": True}, reads[0].kwargs)
 
     def test_blob_size_budget_rejects_before_payload_read(self):
         index = local_git(self.root, "ls-files", "-s", "-z")
@@ -339,17 +345,18 @@ class ContextBindingTests(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     DIAGNOSTICS._context_index_inputs(self.root, index)
                 self.assertEqual(1, call.call_count)
-                self.assertEqual(("--no-lazy-fetch", "cat-file", "-s"), call.call_args.args[1:4])
+                self.assertEqual(("cat-file", "-s"), call.call_args.args[1:3])
+                self.assertEqual({"no_lazy_fetch": True}, call.call_args.kwargs)
 
     def test_mismatched_blob_bytes_or_length_cannot_form_a_context(self):
         for relative in GOVERNANCE_INPUTS.values():
             oid = local_git(self.root, "rev-parse", ":" + relative).decode().strip()
             original = local_git(self.root, "cat-file", "blob", oid)
             for tampered in (b"X" + original[1:], original + b"extra", original[:-1]):
-                def git(root, *args):
-                    if args == ("--no-lazy-fetch", "cat-file", "blob", oid):
+                def git(root, *args, no_lazy_fetch=False):
+                    if args == ("cat-file", "blob", oid) and no_lazy_fetch:
                         return tampered
-                    return local_git(root, *args)
+                    return local_git(root, *args, no_lazy_fetch=no_lazy_fetch)
                 with self.subTest(relative=relative, length=len(tampered)), mock.patch.object(DOUBLE, "_git", side_effect=git):
                     self.assertIsNone(DIAGNOSTICS._context_record(self.root, self.baseline))
                     code, output = self.framed(1)
@@ -398,7 +405,8 @@ class ContextBindingTests(unittest.TestCase):
         oid = hashlib.sha256(b"blob 0\0").hexdigest()
         index = b"".join(b"100644 " + oid.encode() + b" 0\t" + p.encode() + b"\0"
                          for p in GOVERNANCE_INPUTS.values())
-        def git(_root, *args):
+        def git(_root, *args, no_lazy_fetch=False):
+            self.assertTrue(no_lazy_fetch)
             self.assertEqual(oid, args[-1])
             return b"0\n" if args[-2] == "-s" else raw
         with mock.patch.object(DOUBLE, "_git", side_effect=git):

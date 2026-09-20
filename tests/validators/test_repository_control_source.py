@@ -248,5 +248,5 @@ def test_binding_note_names_selected_source_without_rewriting_history() -> None:
     assert '"integration_id": 15368' in binding
     assert '"strict_required_status_checks_policy": true' in binding
     assert "skipped-success" in binding
-    assert "proposed and not applied" in binding
-    assert "does not authorize a ruleset" in binding
+    assert "observed as applied" in binding
+    assert "does not authorize" in binding
