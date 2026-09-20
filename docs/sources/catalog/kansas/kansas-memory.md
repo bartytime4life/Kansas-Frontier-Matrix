@@ -64,6 +64,21 @@ notes:
 
 # Kansas Memory — Source Family
 
+## Current intake restriction — 2026-09-20
+
+**MANUAL_ONLY / NEEDS_SCRAPING_AGREEMENT / AUTOMATED_INTAKE_HELD.** Owner-selected restriction applies to Kansas Memory and Kansas Historical Society State Archives collections, including Archive-It discovery. It supersedes any interpretation of the historical access-modality discussion below as authorization to automate.
+
+Use human browsing and individually selected references only, subject to item-level rights, attribution, provenance and sensitivity review. Do not schedule pulls, crawl browse pages, bulk-download media, or treat Archive-It availability as collection or redistribution permission.
+
+User-supplied discovery reference: https://www.kansashistory.gov/p/online-collections/18942 . This page timed out during verification. **Public bulk API: NOT VERIFIED.** The user's description of browse pages and an Archive-It crawl is recorded as intake context, not independently verified endpoint inventory.
+
+Before automated acquisition, obtain and record a written scraping/data-access agreement covering allowed collections and fields, endpoints, rates, quotas, identification, caching, redistribution, attribution, retention, withdrawal and correction. Then separately review a bounded adapter, negative fixtures, item-specific rights and sensitive cultural/archaeological locations, EvidenceBundle linkage and release. An API discovered later does not lift this owner-selected restriction automatically.
+
+The existing Explorer source candidate retains its identity and historical local analogue; the analogue is not newly acquired archive material. No scheduler or scraper is created. This is a source-discovery restriction, not a claim that every external or repository automation has been audited or disabled.
+
+Placement: existing human source profile under docs/, consistent with adopted ADR-0029 and Directory Rules v2 §9.1; no parallel registry/schema home. Rollback requires an explicit revised intake decision; retain this restriction as history when superseded.
+
+
 > Source-family record for the **Kansas State Historical Society's Kansas Memory** digital collection — the largest single source for digitized Kansas historical materials in the KFM Archives Stack (`C10-07`), anchored by Pass-10 `C7-10` as the canonical record for Kansas Historical Quarterly indexes and Kansas Memory items.
 
 <!-- Badges: placeholders permitted per presentation standard; targets unverified -->
