@@ -86,9 +86,18 @@ test("selects an inline GeoJSON feature and opens its governed Evidence Drawer",
   const canvas = map.locator("canvas");
   await expect(canvas).toBeVisible();
 
-  await page
-    .getByRole("button", { name: "Select rendered feature at map center" })
-    .click();
+  const selectRenderedFeature = page.getByRole("button", {
+    name: "Select rendered feature at map center",
+  });
+  await expect
+    .poll(
+      async () => {
+        await selectRenderedFeature.click();
+        return page.locator("body").getAttribute("data-selection-id");
+      },
+      { timeout: 5_000 },
+    )
+    .toBe(FIXTURE.selection_id);
 
   await expect(page.locator("#evidence-status")).toHaveText(
     "ANSWER / SUPPORTED",
