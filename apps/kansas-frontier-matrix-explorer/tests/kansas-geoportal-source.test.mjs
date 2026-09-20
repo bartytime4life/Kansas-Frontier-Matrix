@@ -7,7 +7,7 @@ const sources = readFileSync(new URL("../app/source-intelligence.ts", import.met
 test("registers Kansas Geoportal as a bounded live source candidate", () => {
   assert.match(sources, /SRC-CAND-KS-DASC/);
   assert.match(sources, /Kansas Geoportal \(DASC\) live ArcGIS catalog/);
-  assert.match(sources, /https:\/\/hub\.kansasgis\.org\//);
+  assert.ok(sources.includes('sourceUrl: "https://hub.kansasgis.org/"'));
   assert.match(sources, /one SourceDescriptor per selected ArcGIS item/);
   assert.match(sources, /Parcel-owner and infrastructure-sensitive fields remain deny-by-default/);
   assert.match(sources, /sourceCount: 12/);
