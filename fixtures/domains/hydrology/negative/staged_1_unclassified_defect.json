@@ -1,0 +1,8 @@
+{
+  "fixture_id": "hyd-negative-staged-001",
+  "object_type": "FlowObservationClaim",
+  "record_ref": "kfm://fixture/synthetic/hydrology/negative-staged-001",
+  "expected_outcome": "DENY",
+  "staging_note": "Negative case being drafted; exact defect family and child-lane placement not yet finalized.",
+  "fixture_posture": "synthetic; invalid; staged/unclassified negative case"
+}

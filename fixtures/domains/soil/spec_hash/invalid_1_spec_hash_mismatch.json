@@ -1,0 +1,7 @@
+{
+  "fixture_id": "soil-spec-hash-invalid-001",
+  "id": "soil-spec-hash-fixture:001",
+  "content": {"map_unit_symbol": "101A", "source_native_id": "MUKEY-TEST-001"},
+  "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+  "fixture_posture": "synthetic; invalid; spec_hash mismatch"
+}

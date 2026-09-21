@@ -1,0 +1,16 @@
+{
+  "fixture_id": "soil-ssurgo-mapunit-golden-001-expected",
+  "outcome": "ANSWER",
+  "returned_object": {
+    "id": "soil-map-unit:7f8a1fa441002a00faf4d843",
+    "map_unit_symbol": "101A",
+    "map_unit_name": "Synthetic map unit",
+    "source_native_id": "MUKEY-TEST-001",
+    "geometry_posture": "SOURCE_POLYGON",
+    "public_geometry_rule": "GENERALIZED_ONLY",
+    "public_use_allowed": false,
+    "release_state": "UNRELEASED"
+  },
+  "fixture_posture": "synthetic; golden-expected",
+  "notes": "Stable expected output for map_unit_lookup.input.json, paired with the valid_static case in ../../soil_map_unit/cases.json."
+}

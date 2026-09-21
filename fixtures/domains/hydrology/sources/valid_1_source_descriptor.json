@@ -1,0 +1,13 @@
+{
+  "fixture_id": "hyd-sources-valid-001",
+  "object_type": "SourceDescriptor",
+  "source_id": "kfm://fixture/synthetic/hydrology/source-001",
+  "source_family": "synthetic_gauge_network",
+  "source_role": "observed",
+  "access_posture": "open",
+  "cadence_posture": "periodic",
+  "rights_state": "fixture_only",
+  "sensitivity_state": "public_safe_fixture",
+  "activation_state": "fixture_only",
+  "fixture_posture": "synthetic; valid; source-registry example"
+}

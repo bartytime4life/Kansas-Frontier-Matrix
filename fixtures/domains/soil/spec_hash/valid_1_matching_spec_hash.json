@@ -1,0 +1,7 @@
+{
+  "fixture_id": "soil-spec-hash-valid-001",
+  "id": "soil-spec-hash-fixture:001",
+  "content": {"map_unit_symbol": "101A", "source_native_id": "MUKEY-TEST-001"},
+  "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000sc",
+  "fixture_posture": "synthetic; valid; matching spec_hash"
+}

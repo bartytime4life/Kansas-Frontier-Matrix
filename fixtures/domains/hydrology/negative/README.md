@@ -123,7 +123,7 @@ Do not use this lane for real records, source exports, lifecycle data, actual Ev
 ## Verification status
 
 - Target README: replaced blank placeholder content.
-- Negative fixture payload inventory: no payload files verified under this parent during this update.
+- Negative fixture payload inventory: `staged_1_unclassified_defect.json` added — a negative case staged for later classification into a specific invalid/ child lane.
 - Invalid lane relationship: PARTIALLY VERIFIED against `fixtures/domains/hydrology/invalid/README.md`.
 - Golden fixture alignment: PARTIALLY VERIFIED against `fixtures/domains/hydrology/golden/README.md`.
 - Decision-envelope fixture alignment: PARTIALLY VERIFIED against `fixtures/domains/hydrology/decision_envelope/README.md` and child lanes.

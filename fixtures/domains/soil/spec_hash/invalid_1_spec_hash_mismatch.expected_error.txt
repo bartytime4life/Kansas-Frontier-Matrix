@@ -1,0 +1,5 @@
+ERROR: spec_hash validation failed
+reason_code: SPEC_HASH_MISMATCH
+field: spec_hash
+detail: spec_hash does not match the digest of the canonicalized content
+field; the object cannot be trusted as unmodified since it was hashed.

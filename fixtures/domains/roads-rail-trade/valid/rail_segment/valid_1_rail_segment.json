@@ -1,0 +1,14 @@
+{
+  "fixture_id": "rrt-rail-segment-valid-001",
+  "object_type": "RailSegment",
+  "id": "kfm://fixture/synthetic/roads-rail-trade/rail-segment-001",
+  "source_role": "authority",
+  "source_ref": "fixture://source/roads-rail-trade/synthetic-rail-segment",
+  "evidence_refs": ["fixture://evidence/roads-rail-trade/rail-segment-001"],
+  "geometry_ref": "geometry:fixture:public-safe-rail-segment-001",
+  "public_geometry_posture": "generalized",
+  "operator_ref": "fixture://operator/roads-rail-trade/synthetic-class1",
+  "rights_status": "public_domain",
+  "release_posture": "candidate",
+  "fixture_posture": "synthetic; valid; rail_segment example"
+}

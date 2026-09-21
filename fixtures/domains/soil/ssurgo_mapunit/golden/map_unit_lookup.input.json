@@ -1,0 +1,6 @@
+{
+  "fixture_id": "soil-ssurgo-mapunit-golden-001-input",
+  "request_type": "SoilMapUnitLookupRequest",
+  "id": "soil-map-unit:7f8a1fa441002a00faf4d843",
+  "fixture_posture": "synthetic; golden-input"
+}

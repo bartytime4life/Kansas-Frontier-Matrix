@@ -1,0 +1,6 @@
+{
+  "fixture_id": "soil-smap-golden-001-input",
+  "request_type": "SoilMoistureObservationLookupRequest",
+  "observation_id": "soil-moisture:be4da95c2211800990b09f03",
+  "fixture_posture": "synthetic; golden-input"
+}

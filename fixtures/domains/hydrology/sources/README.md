@@ -115,7 +115,7 @@ Do not use this lane for real source records, real source exports, real SourceDe
 ## Verification status
 
 - Target README: replaced blank placeholder content.
-- Fixture payload inventory: no payload files verified in this directory during this update.
+- Fixture payload inventory: `valid_1_source_descriptor.json` added — a synthetic open-access, periodic-cadence gauge-network SourceDescriptor.
 - Parent Hydrology fixture README: present but still a greenfield stub during this update.
 - Hydrology source-registry alignment: PARTIALLY VERIFIED against `data/registry/hydrology/sources/README.md` and `docs/domains/hydrology/SOURCE_REGISTRY.md`.
 - Hydrology source-role alignment: PARTIALLY VERIFIED against `docs/domains/hydrology/SOURCE_ROLE_MATRIX.md`.

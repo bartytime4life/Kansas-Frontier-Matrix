@@ -1,0 +1,23 @@
+{
+  "fixture_id": "soil-smap-golden-001-expected",
+  "outcome": "ANSWER",
+  "returned_object": {
+    "observation_id": "soil-moisture:be4da95c2211800990b09f03",
+    "support_type": "satellite_soil_moisture_grid",
+    "measurement": {
+      "measurement_type": "VOLUMETRIC_WATER_CONTENT",
+      "normalized_value": 0.19,
+      "normalized_unit": "m3_m3"
+    },
+    "subject": {
+      "public_geometry_rule": "GENERALIZED_GRID",
+      "resolution_m": 9000
+    },
+    "governance": {
+      "public_use_allowed": false,
+      "release_authorized": false
+    }
+  },
+  "fixture_posture": "synthetic; golden-expected",
+  "notes": "Stable expected output for satellite_grid_cell_lookup.input.json, paired with ../../soil_moisture_observation/valid/answer_satellite_surface.json."
+}
