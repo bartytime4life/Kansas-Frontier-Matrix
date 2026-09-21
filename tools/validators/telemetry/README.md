@@ -2,13 +2,13 @@
 doc_id: kfm://doc/tools-validators-telemetry-readme
 title: Telemetry Validators
 type: README
-version: v0.2.0
+version: v0.3.0
 status: draft; bounded-executable; local-only; no-network; non-authoritative
 owners:
   - TODO-validation-steward
   - TODO-observability-steward
 created: 2026-08-07
-updated: 2026-08-11
+updated: 2026-09-21
 policy_label: repository-facing; tools; validators; telemetry
 owning_root: tools/
 responsibility: validate bounded telemetry profile shape identity binding arithmetic uncertainty and finite decision semantics without contacting external systems or granting operational authority
@@ -38,6 +38,13 @@ This lane validates admitted local telemetry projection profiles. It is downstre
 | `validate_openlineage_run_event_projection.py` | `kfm.telemetry.openlineage-run-event-projection.v1` | `PASS`, `DENY`, `ERROR` |
 | `validate_remote_sensing_lineage_activity.py` | `kfm.telemetry.remote-sensing-lineage-activity.v1` | `PASS`, `DENY`, `ERROR` |
 | `validate_map_build_sustainability.py` | `kfm.telemetry.map-build-sustainability.fixture.v1` | `PASS`, `ABSTAIN`, `DENY`, `ERROR` |
+
+`check_fixture_keys.py` is a separate fixture-only guard for the four admitted
+profile trees. It rejects named prompt and coordinate keys regardless of case,
+duplicate JSON keys, nonfinite numbers, unreadable or oversized JSON, and
+symlinked files. Findings contain file paths and object positions, not values or
+field names. It does not classify string contents, indirect location inference,
+runtime events, or policy decisions.
 
 The lineage validators check:
 
@@ -79,6 +86,9 @@ python tools/validators/telemetry/validate_map_build_sustainability.py \
 
 python tools/validators/telemetry/validate_map_build_sustainability.py \
   --candidate /path/to/candidate.json
+
+python tools/validators/telemetry/check_fixture_keys.py prompts
+python tools/validators/telemetry/check_fixture_keys.py coordinates
 ```
 
 `PASS` and safe `ABSTAIN` exit `0`; `DENY` and `ERROR` exit `1`.

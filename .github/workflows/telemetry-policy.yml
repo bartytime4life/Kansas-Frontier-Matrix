@@ -96,6 +96,10 @@ jobs:
             --verbose
           python tools/validators/telemetry/validate_map_build_sustainability.py \
             --fixtures
+          python -m unittest discover \
+            --start-directory tests/validators/telemetry \
+            --pattern 'test_fixture_key_safety.py' \
+            --verbose
           python - <<'PY'
           from pathlib import Path
           import json
@@ -407,9 +411,9 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          python tools/validators/telemetry/check_fixture_keys.py prompts
           python - <<'PY'
           from pathlib import Path
-          import json
 
           telemetry_fixture_root = Path("fixtures/contracts/v1/telemetry")
           required = [
@@ -444,34 +448,6 @@ jobs:
           assert "Status: PROPOSED greenfield stub. No real rules yet." in policy
           assert "package kfm.no_prompt_in_telemetry" in policy
           assert "default deny := false" in policy
-
-          forbidden = {
-              "prompt",
-              "prompts",
-              "messages",
-              "input_text",
-              "inputText",
-              "output_text",
-              "outputText",
-              "chain_of_thought",
-              "chainOfThought",
-              "reasoning_content",
-              "reasoningContent",
-          }
-
-          def walk(value, path="/"):
-              if isinstance(value, dict):
-                  for key, child in value.items():
-                      assert key not in forbidden, (
-                          f"prompt-bearing key is forbidden: {path}{key}"
-                      )
-                      walk(child, f"{path}{key}/")
-              elif isinstance(value, list):
-                  for index, child in enumerate(value):
-                      walk(child, f"{path}{index}/")
-
-          for path in sorted(telemetry_fixture_root.rglob("*.json")):
-              walk(json.loads(path.read_text(encoding="utf-8")))
 
           contract = Path("contracts/telemetry/README.md").read_text(
               encoding="utf-8"
@@ -530,9 +506,9 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          python tools/validators/telemetry/check_fixture_keys.py coordinates
           python - <<'PY'
           from pathlib import Path
-          import json
 
           telemetry_fixture_root = Path("fixtures/contracts/v1/telemetry")
           required = [
@@ -567,31 +543,6 @@ jobs:
           assert "Status: PROPOSED greenfield stub. No real rules yet." in policy
           assert "package kfm.no_restricted_coords" in policy
           assert "default deny := false" in policy
-
-          forbidden = {
-              "lat",
-              "lon",
-              "latitude",
-              "longitude",
-              "coordinates",
-              "geometry",
-              "bbox",
-              "wkt",
-          }
-
-          def walk(value, path="/"):
-              if isinstance(value, dict):
-                  for key, child in value.items():
-                      assert key not in forbidden, (
-                          f"coordinate-bearing key is forbidden: {path}{key}"
-                      )
-                      walk(child, f"{path}{key}/")
-              elif isinstance(value, list):
-                  for index, child in enumerate(value):
-                      walk(child, f"{path}{index}/")
-
-          for path in sorted(telemetry_fixture_root.rglob("*.json")):
-              walk(json.loads(path.read_text(encoding="utf-8")))
 
           contract = Path("contracts/telemetry/README.md").read_text(
               encoding="utf-8"

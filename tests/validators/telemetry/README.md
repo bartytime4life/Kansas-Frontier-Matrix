@@ -2,13 +2,13 @@
 doc_id: kfm://doc/tests-validators-telemetry-readme
 title: Telemetry Validator Tests
 type: README
-version: v0.2.0
+version: v0.3.0
 status: draft; executable-proof; synthetic; no-network; non-authoritative
 owners:
   - TODO-validation-steward
   - TODO-observability-steward
 created: 2026-08-07
-updated: 2026-08-11
+updated: 2026-09-21
 policy_label: repository-facing; tests; telemetry; no-network
 owning_root: tests/
 responsibility: provide executable synthetic proof for telemetry contracts schemas validators finite outcomes deterministic behavior and workflow safety without representing runtime measurement export release or publication
@@ -60,6 +60,11 @@ The map-build sustainability suite additionally covers:
 - deterministic CLI bytes and non-mutation; and
 - read-only, immutable-pinned, no-export workflow posture.
 
+`test_fixture_key_safety.py` exercises the shared fixture-only prompt and
+coordinate key guard against the admitted profiles and negative JSON with
+case-varied nested keys, duplicate keys, and nonfinite numbers. It checks that
+findings do not echo a field name or value from the negative candidate.
+
 ## Run
 
 ```bash
@@ -76,6 +81,11 @@ python -m unittest discover \
 python -m unittest discover \
   --start-directory tests/validators/telemetry \
   --pattern 'test_map_build_sustainability.py' \
+  --verbose
+
+python -m unittest discover \
+  --start-directory tests/validators/telemetry \
+  --pattern 'test_fixture_key_safety.py' \
   --verbose
 ```
 
