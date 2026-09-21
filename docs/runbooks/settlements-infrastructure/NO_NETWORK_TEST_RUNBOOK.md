@@ -54,7 +54,7 @@ related:
   - ../../../schemas/contracts/v1/evidence/evidence_bundle.schema.json
   - ../../../fixtures/contracts/v1/evidence/evidence_bundle/
   - ../../../tools/validators/validate_settlements_infrastructure_evidence_bundle_projection.py
-  - ../../../tests/validators/domains/settlements-infrastructure/test_evidence_bundle_schema_convergence.py
+  - ../../../tests/validators/domains/settlements-infrastructure/test_settlements_infrastructure_evidence_bundle_schema_convergence.py
   - ../../../tools/ci/kfm_no_network/README.md
 notes:
   - "v1.0.0 replaces proposal-era domain-wide commands with the exact bounded EvidenceBundle convergence commands on current main."
@@ -126,7 +126,7 @@ This document explains those authorities. It does not replace or amend them.
 | Shared schema | `schemas/contracts/v1/evidence/evidence_bundle.schema.json` | Closed draft object shape requires ten top-level fields | Claim truth, source authority, rights correctness, sensitivity correctness, or evidence closure |
 | Shared fixtures | `valid/valid_1.json`, `valid/valid_2.json`, and `invalid/invalid_1.json` through `invalid/invalid_3.json` under the shared EvidenceBundle fixture root | Two examples are accepted; three controls are rejected for a missing `bundle_id`, an undeclared `extra_field`, and a nonconforming `bundle_id` | Settlements/Infrastructure source, geometry, facility, operator, network, or dependency coverage |
 | Validator wrapper | `validate_settlements_infrastructure_evidence_bundle_projection.py` | Runs the shared JSON Schema harness against the domain projection | Domain policy, evidence resolution, proof production, or release decision |
-| Focused tests | Three tests in `test_evidence_bundle_schema_convergence.py` | Projection delegation, shared required fields, and positive/negative fixture behavior are checked | A substantive Settlements/Infrastructure domain suite |
+| Focused tests | Three tests in `test_settlements_infrastructure_evidence_bundle_schema_convergence.py` | Projection delegation, shared required fields, and positive/negative fixture behavior are checked | A substantive Settlements/Infrastructure domain suite |
 | Shared guard | `tools/ci/kfm_no_network/sitecustomize.py` and its README | Opt-in startup denial for named Python IPv4/IPv6 connection, send, resolver, and URL-open paths | Operating-system, runner-wide, container, namespace, dependency-install, non-Python, or arbitrary private-API isolation |
 | Convergence workflow | `.github/workflows/settlements-infrastructure-evidence-bundle-convergence.yml` | Compiles the focused files, runs three tests, and replays all five shared fixtures with deterministic environment values | Shared startup-guard injection or runner-wide no-egress enforcement |
 | Domain readiness workflow | `.github/workflows/domain-settlements-infrastructure.yml` | Checks current paths, parses tracked JSON, classifies placeholders, and records proof and release holds | Semantic domain validation, proof, release dry run, or publication readiness |
@@ -203,7 +203,7 @@ reviewed.
    fixtures/contracts/v1/evidence/evidence_bundle/invalid/invalid_2.json
    fixtures/contracts/v1/evidence/evidence_bundle/invalid/invalid_3.json
    tools/validators/validate_settlements_infrastructure_evidence_bundle_projection.py
-   tests/validators/domains/settlements-infrastructure/test_evidence_bundle_schema_convergence.py
+   tests/validators/domains/settlements-infrastructure/test_settlements_infrastructure_evidence_bundle_schema_convergence.py
    tools/ci/kfm_no_network/sitecustomize.py
    ```
 
@@ -276,7 +276,7 @@ subprocess, shell command, dependency installer, host process, or runner path.
 ```bash
 python -m unittest discover \
   --start-directory tests/validators/domains/settlements-infrastructure \
-  --pattern 'test_evidence_bundle_schema_convergence.py' \
+  --pattern 'test_settlements_infrastructure_evidence_bundle_schema_convergence.py' \
   --verbose
 ```
 
@@ -545,7 +545,7 @@ Do not restore v0.1's proposal-era implementation claims as current truth.
 - [Shared EvidenceBundle schema](../../../schemas/contracts/v1/evidence/evidence_bundle.schema.json)
 - [Shared EvidenceBundle fixtures](../../../fixtures/contracts/v1/evidence/evidence_bundle/)
 - [Projection validator](../../../tools/validators/validate_settlements_infrastructure_evidence_bundle_projection.py)
-- [Focused convergence tests](../../../tests/validators/domains/settlements-infrastructure/test_evidence_bundle_schema_convergence.py)
+- [Focused convergence tests](../../../tests/validators/domains/settlements-infrastructure/test_settlements_infrastructure_evidence_bundle_schema_convergence.py)
 - [Shared Python startup guard](../../../tools/ci/kfm_no_network/README.md)
 - [EvidenceBundle convergence workflow](../../../.github/workflows/settlements-infrastructure-evidence-bundle-convergence.yml)
 - [Domain readiness workflow](../../../.github/workflows/domain-settlements-infrastructure.yml)

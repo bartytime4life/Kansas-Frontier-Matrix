@@ -25,7 +25,7 @@ related:
   - ../../../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../../../../../packages/schema-registry/IMPLEMENTATION.md
   - ../../../../../fixtures/packages/schema-registry/
-  - ../../../../../tests/packages/schema_registry/test_core.py
+  - ../../../../../tests/packages/schema_registry/test_schema_registry_core.py
   - ../../../../../.github/workflows/schema-registry-package.yml
   - ../../../../../tools/validators/validator_registry.json
 [/KFM_META_BLOCK_V2] -->
@@ -51,7 +51,7 @@ fixtures, policy rule, proof, receipt, or release artifact.
 | Understand the fixture profiles | [Parent fixture boundary](../README.md) | Human documentation only |
 | Inspect package mechanics | [`packages/schema-registry/`](../../../../../packages/schema-registry/README.md) | Partial, read-only local registry helper |
 | Inspect synthetic inputs | [`fixtures/packages/schema-registry/`](../../../../../fixtures/packages/schema-registry/) | Canonical reusable fixtures for this package |
-| Inspect executable expectations | [`test_core.py`](../../../../../tests/packages/schema_registry/test_core.py) | Nine bounded package and CLI tests |
+| Inspect executable expectations | [`test_schema_registry_core.py`](../../../../../tests/packages/schema_registry/test_schema_registry_core.py) | Nine bounded package and CLI tests |
 | Inspect hosted orchestration | [`schema-registry-package.yml`](../../../../../.github/workflows/schema-registry-package.yml) | Dedicated package workflow |
 | Inspect generated authoring lineage | [Package authoring receipt](../../../../../data/receipts/generated/genrec-schema-registry-package-20260809.json) | Byte-bound authoring receipt; not runtime proof or approval |
 | Inspect the general validator orchestrator | [Validator runbook](../../../../runbooks/VALIDATOR_ORCHESTRATOR.md) and [registry](../../../../../tools/validators/validator_registry.json) | Separate registered-validator system |
