@@ -1,0 +1,12 @@
+{
+  "id": "resp-top-valid-001",
+  "spec_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb2",
+  "version": "v1",
+  "issued_at": "2026-09-21T00:00:00Z",
+  "outcome": "ABSTAIN",
+  "reason_code": "EVIDENCE_INSUFFICIENT",
+  "evidence_refs": [],
+  "policy_state": "baseline",
+  "freshness": "unknown",
+  "correction_state": "none"
+}

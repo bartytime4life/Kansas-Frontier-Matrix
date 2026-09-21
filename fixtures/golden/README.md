@@ -157,6 +157,7 @@ Golden fixtures do not enter, shortcut, or substitute for this lifecycle.
 - **PROPOSED:** this top-level lane is a last-resort cross-cutting parent, not the default home for new golden cases.
 - **UNKNOWN:** exhaustive payload inventory, generated or ignored files, external stores, active consumers, current pass rates, required checks, and promotion dependency.
 - **NEEDS VERIFICATION:** whether this lane should remain README-only or admit narrowly scoped cross-cutting cases.
+- **PARTIALLY POPULATED (this revision):** `runtime_response_envelope_answer.input.json` / `.expected.json` added — a genuinely cross-cutting `RuntimeResponseEnvelope` (`ANSWER` outcome) request/response golden pair, schema-validated against `schemas/contracts/v1/runtime/runtime_response_envelope.schema.json`. No consumer is wired to it yet; this does not resolve the "should this lane admit payloads" open question above, it documents one concrete case for that decision.
 
 ### Maturity matrix
 

@@ -1,0 +1,46 @@
+{
+  "id": "resp-top-golden-001",
+  "spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1",
+  "version": "v1",
+  "issued_at": "2026-09-21T00:00:00Z",
+  "outcome": "ANSWER",
+  "reason_code": "EVIDENCE_SUPPORTED",
+  "evidence_refs": [
+    {
+      "ref": "kfm://evidence/synthetic/fixtures-golden-001",
+      "kind": "record"
+    }
+  ],
+  "policy_state": "baseline",
+  "freshness": "current",
+  "correction_state": "none",
+  "precision_actually_used": {
+    "spatial": {
+      "representation": "aggregate",
+      "resolution": "county",
+      "accuracy": "generalized",
+      "generalization_applied": true
+    },
+    "temporal": {
+      "granularity": "day",
+      "observation_interval": {
+        "start": "2026-09-20T00:00:00Z",
+        "end": "2026-09-21T00:00:00Z"
+      },
+      "freshness_class": "current"
+    },
+    "attribute": {
+      "measure": "synthetic_cross_cutting_measure",
+      "unit": "dimensionless",
+      "significant_precision": 2,
+      "classification_granularity": null
+    },
+    "evidence_refs": [
+      {
+        "ref": "kfm://evidence/synthetic/fixtures-golden-001",
+        "kind": "record"
+      }
+    ],
+    "transform_receipt_refs": []
+  }
+}

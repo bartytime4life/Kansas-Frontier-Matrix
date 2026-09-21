@@ -1,0 +1,12 @@
+{
+  "id": "resp-top-invalid-001",
+  "spec_hash": "sha256:ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc3",
+  "version": "v1",
+  "issued_at": "2026-09-21T00:00:00Z",
+  "outcome": "ANSWER",
+  "reason_code": "EVIDENCE_SUPPORTED",
+  "evidence_refs": [],
+  "policy_state": "baseline",
+  "freshness": "current",
+  "correction_state": "none"
+}

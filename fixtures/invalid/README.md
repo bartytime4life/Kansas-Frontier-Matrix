@@ -164,7 +164,7 @@ Evidence snapshot for this revision: `main@91a2df5aa12c0a060167bc8b79716caf0f04e
 | Target README baseline | **CONFIRMED** | `fixtures/invalid/README.md` was read at the pinned commit; baseline blob `4cf897379d49eceb2b14a69d3ce1a1c13ed19aa9`. |
 | Placement under `fixtures/` | **CONFIRMED** | Aligned with `docs/architecture/directory-rules.md`, `fixtures/README.md`, and `tests/fixtures/README.md` at the pinned commit. |
 | Related lanes in the navigation table | **CONFIRMED / NARROWED** | Each linked README was read at the pinned commit; the table is intentionally not an exhaustive domain inventory. |
-| Direct child and payload inventory | **NEEDS VERIFICATION** | This README was verified directly; the available connector did not provide an authoritative recursive directory listing. No claim of payload absence is made. |
+| Direct child and payload inventory | **PARTIALLY POPULATED** | `invalid_1_runtime_response_envelope_missing_precision.json` / `.expected_error.txt` added — a `RuntimeResponseEnvelope` claiming `ANSWER` with no `precision_actually_used` and an empty `evidence_refs`, confirmed to fail `schemas/contracts/v1/runtime/runtime_response_envelope.schema.json` via the repository's own resolver/validator stack. |
 | Contract, schema, policy, validator, test, runtime, renderer, governed-API, UI, replay, correction, rollback, release, and CI wiring | **NEEDS VERIFICATION** | No complete consumer-to-fixture trace was established by this documentation-only revision. |
 | Repository-native tests and validators | **NOT RUN** | Pull-request checks are reported separately from this README and do not establish publication authority. |
 

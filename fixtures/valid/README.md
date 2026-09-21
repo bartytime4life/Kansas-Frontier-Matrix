@@ -96,7 +96,7 @@ Do not use this lane for real source records, live upstream payloads, lifecycle 
 ## Verification status
 
 - Target README: replaced one-line stub content.
-- Fixture payload inventory: no payload files verified under this top-level valid lane during this update.
+- Fixture payload inventory: `valid_1_runtime_response_envelope.json` added — a schema-valid `RuntimeResponseEnvelope` (`ABSTAIN` outcome), validated against `schemas/contracts/v1/runtime/runtime_response_envelope.schema.json` with the repository's own `tools/validators/_common/local_resolver.py` registry.
 - Exact child-lane inventory under `fixtures/valid/`: NOT VERIFIED during this update.
 - Root fixture alignment: PARTIALLY VERIFIED against `fixtures/README.md`.
 - Invalid sibling alignment: PARTIALLY VERIFIED against `fixtures/invalid/README.md`.

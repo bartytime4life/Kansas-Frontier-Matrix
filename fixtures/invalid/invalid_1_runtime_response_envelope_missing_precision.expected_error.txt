@@ -1,0 +1,7 @@
+ERROR: schema validation failed
+schema: schemas/contracts/v1/runtime/runtime_response_envelope.schema.json
+findings:
+  - (root): "precision_actually_used" is a required property when outcome == "ANSWER"
+  - evidence_refs: must be non-empty when outcome == "ANSWER"
+detail: an ANSWER outcome must disclose the precision actually used and cite
+at least one evidence_ref; this fixture claims ANSWER with neither.

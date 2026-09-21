@@ -1,0 +1,29 @@
+{
+  "fixture_id": "eco-cross-domain-valid-001",
+  "object_type": "CrossDomainReferenceCase",
+  "scenario": "habitat_suitability_under_drought_declaration",
+  "cross_domain_refs": {
+    "habitat": {
+      "object_family": "HabitatPatch",
+      "ref": "kfm://fixture/synthetic/habitat/patch-001",
+      "role": "owner"
+    },
+    "hazards": {
+      "object_family": "DroughtDeclaration",
+      "ref": "decl:synthetic:2026-09-01:watch",
+      "role": "citation_only"
+    }
+  },
+  "source_role_state": "preserved",
+  "evidence_refs": [
+    "fixture://evidence/ecology/cross-domain-001"
+  ],
+  "governance": {
+    "rights_state": "fixture_only",
+    "sensitivity_state": "public_safe_fixture",
+    "release_state": "not_released"
+  },
+  "outcome": "ANSWER",
+  "fixture_posture": "synthetic; valid; cross-domain (Habitat citing Hazards, citation-only)",
+  "notes": "Habitat owns HabitatPatch identity; the Hazards DroughtDeclaration is referenced as citation-only context and must not be treated as Habitat truth. This fixture exists only while its cross-domain nature is essential; a stable single-domain case belongs in the owning domain's fixture lane."
+}

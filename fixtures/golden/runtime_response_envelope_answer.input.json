@@ -1,0 +1,10 @@
+{
+  "fixture_id": "top-golden-001-input",
+  "request_type": "RuntimeResponseEnvelopeRequest",
+  "request_ref": "kfm://fixture/synthetic/runtime/request-001",
+  "requested_precision": {
+    "spatial": "county",
+    "temporal": "day"
+  },
+  "fixture_posture": "synthetic; golden-input; cross-cutting"
+}

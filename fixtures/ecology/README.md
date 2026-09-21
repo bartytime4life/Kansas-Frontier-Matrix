@@ -359,7 +359,7 @@ A future change requires an ADR or explicit architecture decision when it would:
 | Habitat, Flora, and Fauna fixture relationships | **PASS** | Their directory READMEs were inspected at the pinned base. |
 | Review route | **PASS** | `.github/CODEOWNERS` routes `/fixtures/` to `@bartytime4life`. |
 | Current child inventory under `fixtures/ecology/` | **UNKNOWN** | Complete directory listing was not available through the selected connector operations. |
-| Current payload inventory | **UNKNOWN** | No payload file is asserted by this README. |
+| Current payload inventory | **PARTIALLY POPULATED** | `valid_1_habitat_drought_cross_reference.json` added — a Habitat `HabitatPatch` citing a Hazards `DroughtDeclaration` as citation-only context, exercising the Habitat/Hazards ownership and source-role boundary. |
 | Current consumer and validator alignment | **NEEDS VERIFICATION** | No executable ecology consumer was confirmed on the inspected base. |
 | Repository-wide validator command | **FAIL as an executable claim** | `tools/validate_all.py` is a placeholder; no command is documented here. |
 | CI, workflow-run, and branch-protection enforcement | **NOT RUN / UNKNOWN** | No current run or repository-settings evidence was used. |

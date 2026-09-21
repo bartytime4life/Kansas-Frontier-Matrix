@@ -134,6 +134,7 @@ The following inventory is intentionally bounded. Exact file reads confirmed the
 
 | Lane | Confirmed posture | Routing rule |
 |---|---|---|
+| `valid_1_generalized_renderer_case.json` (this directory, added in this revision) | A synthetic, invented-geometry `RendererFeatureExample` following the Minimum scenario contract above. | Genuinely cross-cutting placeholder case; route to a domain lane once an owner and consumer are established. |
 | [`settlement/`](./settlement/README.md) | Existing shared public-safe settlement child. Its README distinguishes the singular fixture name from the working `settlements-infrastructure` domain slug. | Use for the bounded shared examples described by the child README; prefer the domain lane once ownership and consumers are established. |
 | [`../domains/`](../domains/README.md) | Existing domain-owned fixture parent. | Prefer for stable reusable fixtures with a clear domain owner or sensitivity context. |
 | [`../archaeology-public-safe/`](../archaeology-public-safe/README.md) | Existing top-level Archaeology compatibility lane, not a child of this directory. | Do not duplicate it here. Follow its freeze, sensitivity, and migration guidance. |

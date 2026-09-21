@@ -1,0 +1,23 @@
+{
+  "scenario_id": "pubsafe-top-valid-001",
+  "classification": "synthetic; public-safe; valid",
+  "purpose": "Exercise a renderer/governed-API example whose geometry is invented and whose attributes have no sensitive real-world referent.",
+  "object_domain_owner": "NEEDS VERIFICATION - genuinely cross-cutting renderer smoke case, not yet routed to a single domain lane",
+  "public_safe_rationale": "All identifiers and coordinates are synthetic placeholders invented for this fixture; the grid-cell reference resolves to no real Kansas location.",
+  "geometry_posture": "invented; generalized_grid_cell",
+  "rights_and_sensitivity_posture": "fixture_only; no reviewer clearance implied by synthetic status",
+  "object_type": "RendererFeatureExample",
+  "feature_ref": "kfm://fixture/synthetic/public-safe/feature-001",
+  "generalized_location": {
+    "kind": "generalized_grid_cell",
+    "grid_cell_ref": "kfm://fixture/synthetic-grid/public-safe/cell-001"
+  },
+  "evidence_refs": ["fixture://evidence/public-safe/feature-001"],
+  "outcome": "ANSWER",
+  "governance": {
+    "rights_state": "fixture_only",
+    "sensitivity_state": "public_safe_fixture",
+    "release_state": "not_released"
+  },
+  "fixture_posture": "synthetic; valid; public-safe renderer example"
+}
