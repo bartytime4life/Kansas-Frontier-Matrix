@@ -1,0 +1,29 @@
+{
+  "record_type": "fauna_stale_source_scenario",
+  "fixture_id": "fixture:fauna:stale-source:beyond-freshness-window-001",
+  "fixture_only": true,
+  "reality_boundary": "synthetic-test-fixture",
+  "network_access": "forbidden",
+  "taxon_ref": "fixture:taxon:fauna:synthetic-stale-001",
+  "source_descriptor_ref": "fixture:source:fauna:synthetic-stale-001",
+  "source_role": "synthetic",
+  "freshness": {
+    "source_updated_at": "2024-01-01T00:00:00Z",
+    "evaluated_at": "2026-09-21T00:00:00Z",
+    "max_age_days": 365,
+    "state": "SOURCE_STALE"
+  },
+  "expected_outcome": "ABSTAIN",
+  "expected_reason_code": "SOURCE_STALE_BEYOND_FRESHNESS_WINDOW",
+  "governance": {
+    "evidence_state": "fixture-only",
+    "policy_state": "not-evaluated-fixture",
+    "review_state": "fixture-only",
+    "release_state": "not-released",
+    "correction_state": "fixture-only"
+  },
+  "public_caveats": [
+    "Synthetic stale-source scenario; source_updated_at is far outside the freshness window.",
+    "No real taxon, occurrence, or source record is represented."
+  ]
+}

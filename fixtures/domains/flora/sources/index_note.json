@@ -1,0 +1,9 @@
+{
+  "fixture_id": "fixture:flora:sources:index-001",
+  "record_type": "flora_source_family_index_fixture",
+  "fixture_only": true,
+  "child_lanes": [
+    "plants"
+  ],
+  "notes": "Coordinator index for toy Flora source-family fixture lanes; see plants/ for the USDA PLANTS-style child lane."
+}

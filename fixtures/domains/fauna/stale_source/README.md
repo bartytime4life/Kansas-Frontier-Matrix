@@ -96,6 +96,6 @@ Do not use this lane for:
 ## Verification status
 
 - Target README: populated from empty placeholder content.
-- Payload inventory: NEEDS VERIFICATION.
+- Payload inventory: `stale_1_abstain_beyond_freshness_window.json` added — a source-stale scenario beyond its freshness window, expected to `ABSTAIN`.
 - Freshness-policy alignment: NEEDS VERIFICATION against `policy/domains/fauna/`, source descriptors, and any source-refresh runbooks once those are authoritative.
 - Tests and validators: NOT RUN.

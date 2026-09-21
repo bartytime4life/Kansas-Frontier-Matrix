@@ -102,7 +102,7 @@ Do not use this lane for real source data, real upstream payloads, lifecycle dat
 ## Verification status
 
 - Target README: populated from empty placeholder content.
-- Fixture payload inventory: no payloads verified in this directory during this update.
+- Fixture payload inventory: `valid_1_community_polygon.json` added — a synthetic modeled tallgrass-prairie community polygon example.
 - Contract alignment: PARTIALLY VERIFIED against `contracts/domains/flora/vegetation_community.md`.
 - Schema alignment: NEEDS VERIFICATION because the paired schema is present but remains a permissive `PROPOSED` scaffold.
 - Flora fixture backlog alignment: PARTIALLY VERIFIED against the Flora missing/planned-files register.

@@ -80,7 +80,7 @@ Do not use this lane for real source payloads, live upstream responses, credenti
 ## Verification status
 
 - Target README: populated from empty placeholder content.
-- Fixture payload inventory: no payloads verified in this directory during this update.
+- Fixture payload inventory: `valid_1_no_op_watcher_run.json` added — a synthetic no-op watcher run with no checksum or taxonomy change.
 - Watcher spec alignment: PARTIALLY VERIFIED against the two PROPOSED plants-drift watcher spec placeholders.
 - Watcher doctrine alignment: PARTIALLY VERIFIED against `pipelines/watchers/plants/README.md` and the Flora file-system plan watcher section.
 - Consumer alignment: NEEDS VERIFICATION against watcher dry-runs, validators, governed-API tests, Evidence Drawer tests, Focus Mode tests, and policy checks.

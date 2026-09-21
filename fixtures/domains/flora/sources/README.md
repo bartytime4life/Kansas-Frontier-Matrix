@@ -102,7 +102,7 @@ Do not use this lane for real upstream source payloads, live endpoint samples, c
 
 - Target README: populated from empty placeholder content.
 - Child lane inventory: `plants/README.md` verified as present during this update; other child lanes were not inventoried as present.
-- Fixture payload inventory: no payloads verified in this directory during this update.
+- Fixture payload inventory: `index_note.json` added — a coordinator index noting the `plants/` child lane (see its own row).
 - Fixture boundary alignment: PARTIALLY VERIFIED against `fixtures/README.md`, `fixtures/domains/flora/source_descriptors/README.md`, and `fixtures/domains/flora/sources/plants/README.md`.
 - Consumer alignment: NEEDS VERIFICATION against source-admission checks, source-role checks, taxonomy/crosswalk checks, watcher dry-runs, governed-API tests, Evidence Drawer tests, Focus Mode tests, schema checks, and policy checks.
 - Tests and validators: NOT RUN.

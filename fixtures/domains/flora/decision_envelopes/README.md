@@ -101,7 +101,7 @@ Do not use this lane for:
 ## Verification status
 
 - Target README: populated from empty placeholder content.
-- Fixture payload inventory: no payloads verified in this directory during this update.
+- Fixture payload inventory: `valid_1_answer_envelope.json` added — a synthetic `ANSWER`-outcome decision envelope. Placed at this plural path per the requested directory name; the singular-vs-plural `decision_envelope.schema.json` naming question noted below is unresolved and unaffected by adding this fixture.
 - Schema naming alignment: NEEDS VERIFICATION because the repository has a PROPOSED `decision_envelope.schema.json` pointing at singular `fixtures/domains/flora/decision_envelope/`, while this requested path is plural.
 - Runtime envelope alignment: NEEDS VERIFICATION against accepted runtime contracts and any ADR resolving `DecisionEnvelope` / `RuntimeResponseEnvelope` / `FloraDecisionEnvelope` naming.
 - Tests and validators: NOT RUN.

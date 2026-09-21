@@ -96,7 +96,7 @@ Do not use this lane for real source data, lifecycle data, release artifacts, pr
 ## Verification status
 
 - Target README: populated from empty placeholder content.
-- Fixture payload inventory: no payloads verified in this directory during this update.
+- Fixture payload inventory: `valid_1_accepted_name.json` added — a synthetic accepted species-rank name example.
 - Contract alignment: PARTIALLY VERIFIED against `contracts/domains/flora/plant_taxon.md`.
 - Schema alignment: NEEDS VERIFICATION because the paired schema is present but remains a permissive `PROPOSED` scaffold.
 - Consumer alignment: NEEDS VERIFICATION against validators, taxonomy resolver checks, crosswalk checks, governed-API tests, Evidence Drawer tests, Focus Mode tests, and policy checks.

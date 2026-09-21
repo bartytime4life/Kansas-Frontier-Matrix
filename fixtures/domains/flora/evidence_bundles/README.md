@@ -102,7 +102,7 @@ Do not use this lane for:
 ## Verification status
 
 - Target README: populated from empty placeholder content.
-- Fixture payload inventory: no payloads verified in this directory during this update.
+- Fixture payload inventory: `valid_1_evidence_bundle_shaped.json` added — a synthetic EvidenceBundle-shaped fixture with a closed fixture-only citation set.
 - Schema naming alignment: NEEDS VERIFICATION because the repository has a PROPOSED `evidence_bundle.schema.json` pointing at singular `fixtures/domains/flora/evidence_bundle/`, while this requested path is plural.
 - Catalog-closure alignment: NEEDS VERIFICATION against Flora catalog-closure tests, evidence resolver tests, Evidence Drawer tests, Focus Mode tests, and schema contracts.
 - Tests and validators: NOT RUN.

@@ -92,7 +92,7 @@ Do not use this lane for real source records, real upstream payloads, live endpo
 ## Verification status
 
 - Target README: populated from empty placeholder content.
-- Fixture payload inventory: no payloads verified in this directory during this update.
+- Fixture payload inventory: `valid_1_source_family.json` added — a synthetic open-access, periodic-cadence source descriptor.
 - Flora fixture backlog alignment: PARTIALLY VERIFIED against the Flora missing/planned-files register.
 - Registry alignment: PARTIALLY VERIFIED against `data/registry/sources/flora/README.md`.
 - Consumer alignment: NEEDS VERIFICATION against source-admission checks, source-role checks, watcher dry-runs, governed-API tests, Evidence Drawer tests, Focus Mode tests, schema checks, and policy checks.

@@ -1,0 +1,13 @@
+{
+  "fixture_id": "flora-golden-001-expected",
+  "outcome": "ANSWER",
+  "returned_object": {
+    "record_id": "fixture:flora:occurrence:001",
+    "occurrence_state": "candidate",
+    "sensitivity": {
+      "state": "public_safe_fixture"
+    }
+  },
+  "fixture_posture": "synthetic; golden-expected",
+  "notes": "Stable expected output paired with ../flora_occurrence/valid_1_occurrence_candidate.json."
+}

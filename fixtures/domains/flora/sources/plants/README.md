@@ -94,7 +94,7 @@ Do not use this lane for real USDA PLANTS payloads, live endpoint samples, crede
 ## Verification status
 
 - Target README: populated from empty placeholder content.
-- Fixture payload inventory: no payloads verified in this directory during this update.
+- Fixture payload inventory: `valid_1_plants_source_snapshot.json` added — a synthetic USDA PLANTS-style source snapshot.
 - PLANTS registry alignment: PARTIALLY VERIFIED against the proposed `data/registry/sources/flora/usda_plants.yaml` placeholder.
 - Catalog alignment: PARTIALLY VERIFIED against `docs/sources/catalog/usda/usda-plants.md`.
 - Fixture boundary alignment: PARTIALLY VERIFIED against `fixtures/README.md` and `fixtures/domains/flora/source_descriptors/README.md`.

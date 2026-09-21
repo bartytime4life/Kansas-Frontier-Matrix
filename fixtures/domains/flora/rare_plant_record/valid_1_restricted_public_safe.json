@@ -1,0 +1,27 @@
+{
+  "record_id": "fixture:flora:rare-plant:001",
+  "record_type": "RarePlantRecord_fixture",
+  "fixture_only": true,
+  "network_access": "forbidden",
+  "taxon_ref": "fixture:taxon:flora:synthetic-common-001",
+  "source_descriptor_ref": "fixture:source:flora:synthetic-001",
+  "source_role": "synthetic",
+  "rights_state": "fixture_only",
+  "evidence_refs": [
+    "fixture:evidence:flora:001"
+  ],
+  "governance": {
+    "evidence_state": "fixture_only",
+    "policy_state": "not_evaluated_fixture",
+    "review_state": "fixture_only",
+    "release_state": "not_released",
+    "promotion_eligible": false,
+    "geoprivacy_state": "withheld-transform-fixture"
+  },
+  "public_caveats": [
+    "synthetic restricted rare-plant example",
+    "exact precision withheld"
+  ],
+  "restriction_state": "restricted",
+  "public_derivative_state": "generalized_fixture"
+}

@@ -103,7 +103,7 @@ Do not use this lane for real source data, real upstream payloads, credentials, 
 ## Verification status
 
 - Target README: populated from empty placeholder content.
-- Fixture payload inventory: no payloads verified in this directory during this update.
+- Fixture payload inventory: `valid_1_generic_synthetic_example.json` added — a generic toy Flora example with no object-family-specific fields.
 - Root fixture alignment: PARTIALLY VERIFIED against `fixtures/README.md`.
 - Sibling fixture alignment: PARTIALLY VERIFIED against populated Flora `golden/` and `invalid/` READMEs.
 - Consumer alignment: NEEDS VERIFICATION against validators, renderer checks, governed-API tests, Evidence Drawer tests, Focus Mode tests, schema checks, and policy checks.

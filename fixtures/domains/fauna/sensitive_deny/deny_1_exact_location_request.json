@@ -1,0 +1,26 @@
+{
+  "record_type": "fauna_sensitive_deny_scenario",
+  "fixture_id": "fixture:fauna:sensitive-deny:exact-location-request-001",
+  "fixture_only": true,
+  "reality_boundary": "synthetic-test-fixture",
+  "network_access": "forbidden",
+  "request_type": "TaxonOccurrenceDetailRequest",
+  "taxon_ref": "fixture:taxon:fauna:synthetic-sensitive-deny-001",
+  "requested_precision": "EXACT",
+  "source_role": "synthetic",
+  "rights_state": "fixture-only",
+  "expected_outcome": "DENY",
+  "expected_reason_code": "SENSITIVE_TAXON_EXACT_LOCATION_DENIED",
+  "governance": {
+    "evidence_state": "fixture-only",
+    "policy_state": "not-evaluated-fixture",
+    "geoprivacy_state": "restricted-fixture",
+    "review_state": "fixture-only",
+    "release_state": "not-released",
+    "promotion_state": "not-eligible"
+  },
+  "public_caveats": [
+    "Synthetic denial scenario for a sensitive-taxon exact-location request.",
+    "No real taxon, occurrence, or location is represented."
+  ]
+}

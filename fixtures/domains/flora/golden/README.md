@@ -92,7 +92,7 @@ Do not use this lane for:
 ## Verification status
 
 - Target README: populated from empty placeholder content.
-- Fixture payload inventory: no payloads verified in this directory during this update.
+- Fixture payload inventory: `occurrence_lookup.input.json` / `.expected.json` added — a stable request/response pair for `../flora_occurrence/valid_1_occurrence_candidate.json`.
 - Flora fixture backlog alignment: PARTIALLY VERIFIED against the Flora missing/planned-files register, which calls for golden, valid, and invalid sample data with no live data and no live network.
 - Consumer alignment: NEEDS VERIFICATION against validators, renderer checks, governed-API tests, Evidence Drawer tests, Focus Mode tests, schema checks, and policy checks.
 - Tests and validators: NOT RUN.

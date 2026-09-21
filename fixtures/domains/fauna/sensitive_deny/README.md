@@ -91,6 +91,6 @@ Do not use this lane for:
 ## Verification status
 
 - Target README: populated from empty placeholder content.
-- Payload inventory: NEEDS VERIFICATION.
+- Payload inventory: `deny_1_exact_location_request.json` added — a sensitive-taxon exact-location request expected to `DENY`.
 - Policy-rule alignment: NEEDS VERIFICATION against `policy/sensitivity/fauna/` once the scaffold is replaced by authoritative content.
 - Tests and validators: NOT RUN.

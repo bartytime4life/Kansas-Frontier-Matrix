@@ -1,0 +1,6 @@
+{
+  "fixture_id": "flora-golden-001-input",
+  "request_type": "FloraOccurrenceLookupRequest",
+  "record_id": "fixture:flora:occurrence:001",
+  "fixture_posture": "synthetic; golden-input"
+}

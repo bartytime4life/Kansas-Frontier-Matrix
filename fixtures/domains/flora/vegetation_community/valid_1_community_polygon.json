@@ -1,0 +1,26 @@
+{
+  "record_id": "fixture:flora:vegetation-community:001",
+  "record_type": "VegetationCommunity_fixture",
+  "fixture_only": true,
+  "network_access": "forbidden",
+  "taxon_ref": "fixture:taxon:flora:synthetic-common-001",
+  "source_descriptor_ref": "fixture:source:flora:synthetic-001",
+  "source_role": "synthetic",
+  "rights_state": "fixture_only",
+  "evidence_refs": [
+    "fixture:evidence:flora:001"
+  ],
+  "governance": {
+    "evidence_state": "fixture_only",
+    "policy_state": "not_evaluated_fixture",
+    "review_state": "fixture_only",
+    "release_state": "not_released",
+    "promotion_eligible": false
+  },
+  "public_caveats": [
+    "synthetic community polygon",
+    "not a real vegetation-community record"
+  ],
+  "community_label": "synthetic_tallgrass_prairie",
+  "classification_method": "modeled"
+}
