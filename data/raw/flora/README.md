@@ -2,11 +2,11 @@
 doc_id: kfm://data/raw/flora/readme
 title: data/raw/flora/ — Flora RAW Compatibility and Reference Hold
 type: data-lifecycle-domain-readme
-version: v0.1.0
+version: v0.1.1
 status: repository-grounded; compatibility-and-reference boundary; payload-empty; source-first-placement-unresolved; live-ingest-hold; no-direct-public-path; non-release; non-publication
 owner: NEEDS VERIFICATION — repository review routing does not establish Flora source, rights, sensitivity, storage, operations, evidence, release, or publication authority
 created: 2026-08-28
-updated: 2026-08-28
+updated: 2026-09-21
 current_path: data/raw/flora/README.md
 owning_root: data/
 policy_label: restricted-review; raw; flora; compatibility-projection; immutable-reference; source-first; live-ingest-hold; rare-plant-sensitive; non-public
@@ -59,12 +59,13 @@ lane. Rule DIR-SOURCE-001 requires source-first capture identity so one capture 
 support several domains without duplicated RAW bytes. This domain path therefore
 cannot establish a physical capture home for cross-domain providers.
 
-The parent [RAW boundary](../README.md) describes RAW responsibility but currently
-shows a domain-first operating example. That example conflicts with the accepted
-source-first identity rule and cannot authorize duplicated captures here. Until a
-reviewed source-first physical placement and migration decision exists, this lane
-is compatibility/reference-only. RAW placement does not decide admissibility,
-normalize records, resolve taxonomy, prove botanical truth, or publish data.
+The parent [RAW boundary](../README.md) now uses a source-first operating
+contract and leaves exact physical placement and domain-lane migration on hold.
+The external local-data tool's offline QUARANTINE capture does not select a RAW
+home or authorize live Flora retrieval. Until a reviewed source-first physical
+placement and migration decision exists, this lane is compatibility/reference-only.
+RAW placement does not decide admissibility, normalize records, resolve taxonomy,
+prove botanical truth, or publish data.
 
 Current source status must be determined from the canonical
 [Flora source-registry lane](../../registry/sources/flora/README.md), its accepted
@@ -234,6 +235,7 @@ withdraw evidence, reverse a lifecycle transition, or roll back a release.
 
 | Version | Date | Change | Runtime effect |
 |---|---|---|---|
+| v0.1.1 | 2026-09-21 | Reconciled the parent RAW operating-contract pointer with the corrected source-first parent and bounded external local-data capture. | None; documentation only. |
 | v0.1.0 | 2026-08-28 | Replaced the greenfield stub with a source-first-safe compatibility/reference hold; prohibited domain-scoped copies of cross-domain source captures. | None; documentation only. |
 
 [Back to top](#top)

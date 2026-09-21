@@ -1,12 +1,13 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://data/raw/readme
 title: data/raw/ — Immutable Source Capture
-type: README; data-parent-contract; canonical-lane; authority-boundary
-version: v0.2.1
-prior_version: v0.2.0
+type: data-lifecycle-readme
+version: v0.2.2
+prior_version: v0.2.1
 status: repository-grounded draft; source-first identity required; physical placement and payload/runtime enforcement unverified
 owners: NEEDS VERIFICATION — source and data stewards
-updated: 2026-08-28
+created: 2025-09-17
+updated: 2026-09-21
 supersedes: prior README at the same path; no payload, lifecycle, release, runtime, or publication state
 prepared_under_prompt: KFM Markdown Engineering, Modernization & GitHub Documentation Implementation Agent v5.0.0
 policy_label: "restricted-review; no-direct-public-path; release-gated"
@@ -39,6 +40,7 @@ reconciliation_snapshot:
   adr_0029_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
   scope: "Same-path correction of the RAW operating contract and domain-lane interpretation only; no path, payload, writer, descriptor, lifecycle object, runtime, or public state changes."
 notes:
+  - "The 2026-09-21 readback distinguishes the external local-data QUARANTINE capture from this repository's held RAW placement; it does not admit a source or select a physical RAW home."
   - "The first twelve H2 sections follow Directory Rules section 15 exactly."
   - "Markdown-only parent-lane convergence; no payload or operational state changed."
   - "v0.2.1 removes a domain-first physical-path prescription that conflicted with accepted DIR-SOURCE-001. Exact source-first physical placement and legacy child-lane disposition remain HOLD."
@@ -87,6 +89,12 @@ Accepted Directory Rules rule `DIR-SOURCE-001` governs capture identity: one sou
 | Recursive payload inventory | `UNKNOWN` |
 | Active writers/consumers | `UNKNOWN` |
 | Public readiness | `DENY BY DEFAULT` |
+
+### Current local capture boundary
+
+At `main@32ab26478b7186bd1a0983951c1a4fbf5adf33aa` (2026-09-21), [`tools/local_data/`](../../tools/local_data/README.md) provides `doctor`, `init`, `plan`, `sync`, and `verify` for explicitly selected files already on an operator's computer. Its store is private and **outside** the Git checkout. `init` prepares empty lifecycle destinations there, including `data/raw/`; `sync` writes source-first objects and immutable bindings under the external `data/quarantine/<source>/` and process receipts under external `data/receipts/`. It does not write this tracked `data/raw/` tree, activate the `local_upload` connector, or promote captured bytes into RAW.
+
+The [local-PC runbook](../../docs/runbooks/local-pc-data-store.md) supplies a synthetic exercise and backup/readback procedure. Local capture identity and integrity are useful prerequisites, but its source URI, domain label, and receipt do not settle source admission, rights, sensitivity, evidence, release, or a future physical RAW placement. Keep the source-first placement and domain-lane migration **HOLD** until their separate decision and writer contracts exist.
 
 ## What belongs here
 
@@ -226,6 +234,12 @@ Unknowns narrow claims and block higher-risk transitions; they do not invite pla
 | Payload, move, deletion, redirect, migration, or public-state change | None |
 
 ### Change history
+
+#### v0.2.2 — 2026-09-21
+
+- linked the implemented offline local-data workflow and its external QUARANTINE/receipt write boundaries;
+- clarified that prepared external RAW directories and local capture receipts do not resolve this tracked RAW lane's placement hold;
+- changed documentation only.
 
 #### v0.2.1 — 2026-08-28
 

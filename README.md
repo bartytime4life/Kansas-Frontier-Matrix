@@ -2,11 +2,11 @@
 doc_id: kfm://doc/root-readme
 title: Kansas Frontier Matrix — Project Home
 type: repository-readme
-version: v3.2.0
+version: v3.2.1
 status: repository-grounded draft
 owners: ["@bartytime4life"]
 created: 2026-05-11
-updated: 2026-09-17
+updated: 2026-09-21
 policy_label: public
 current_path: README.md
 owning_root: repository-root
@@ -28,6 +28,7 @@ related:
   - .github/README.md
   - docs/runbooks/local-pc-data-store.md
 notes:
+  - "The 2026-09-21 working-path readback below is bounded to main@32ab26478b7186bd1a0983951c1a4fbf5adf33aa and the named repository files; it does not replace the historical product maturity snapshot."
   - "Local-PC setup and packaging guidance updated against main@91aeee1ca163bcb3f007577a541a825f60dcddc2 plus this change; the earlier product maturity snapshot below is historical."
   - "Adds a visitor-first project orientation while preserving the governed root README identity."
   - "The product maturity snapshot remains bounded to the earlier exact GitHub snapshot recorded above; local-PC changes use the separate checkpoint in these notes."
@@ -63,7 +64,7 @@ notes:
 > [!NOTE]
 > KFM is an active build. The repository contains real applications, contracts, schemas, policy, validators, fixtures, tests, and workflows. Some production-facing transitions—live renderer admission, live governed transport, release, deployment, and publication—remain explicitly held or unknown.
 
-**New here?** Start with [Why KFM](#why-kfm), [Explore](#start-here), [The KFM experience](#the-kfm-experience), [the Science Pack north star](#a-finished-kfm-with-a-science-pack), or [Current posture](#current-posture). Contributors can jump to [Run locally](#run-locally), [Validation](#validation), and [Contributing](#contributing).
+**New here?** Start with [Why KFM](#why-kfm), [Explore](#start-here), [The KFM experience](#the-kfm-experience), [the Science Pack north star](#a-finished-kfm-with-a-science-pack), or [Current posture](#current-posture). Contributors can jump to [the working path](#a-working-path-through-the-repository), [Run locally](#run-locally), [Validation](#validation), and [Contributing](#contributing).
 
 ## Why KFM
 
@@ -92,6 +93,18 @@ KFM’s public value is not a larger pile of layers. It is a more trustworthy pa
 | **Make a change safely** | [`CONTRIBUTING.md`](CONTRIBUTING.md), [`Directory Rules`](docs/doctrine/directory-rules.md), and the README nearest the path you will touch. |
 | **Understand evidence and public boundaries** | [`Trust Membrane`](docs/doctrine/trust-membrane.md), [`Truth Posture`](docs/doctrine/truth-posture.md), [`Lifecycle Law`](docs/doctrine/lifecycle-law.md), and [`SECURITY.md`](SECURITY.md). |
 | **Find the machine side** | [`contracts/`](contracts/), [`schemas/`](schemas/), [`policy/`](policy/), [`data/`](data/), [`pipelines/`](pipelines/), [`runtime/`](runtime/), and [`tools/`](tools/). |
+
+## A working path through the repository
+
+This source-level readback is for `main@32ab26478b7186bd1a0983951c1a4fbf5adf33aa` on 2026-09-21. It identifies useful implemented entry points; it is not a hosted runtime or current CI result. The [maturity table](#current-posture) below remains a separately pinned historical review.
+
+| Goal | Start here | What the repository currently establishes |
+|---|---|---|
+| Explore a place and inspect its limits | [Explorer site source](apps/kansas-frontier-matrix-explorer/README.md) or the [local Explorer Web workbench](apps/explorer-web/README.md) | Application and synthetic/fixture surfaces exist. A site address or successful local build does not establish the hosted version, live source data, or a released layer. |
+| Preserve files you already downloaded | [Local PC runbook](docs/runbooks/local-pc-data-store.md) and [`tools/local_data/`](tools/local_data/README.md) | `doctor`, `init`, `plan`, `sync`, and `verify` support a bounded offline workflow. `sync` captures selected bytes into a private, external, source-first **QUARANTINE** store and writes process receipts; it does not populate this repository's [`data/raw/`](data/raw/README.md) lane or admit a source. |
+| Check a change | [`Makefile`](Makefile), [validator profiles](tools/validators/README.md), and [contribution guide](CONTRIBUTING.md) | Focused commands and fixtures cover declared boundaries. Some targets are `TODO` markers; topology correction and repository-control readiness require their own governed evidence. |
+
+For a concrete first local exercise, use the [committed 24-byte synthetic capture](docs/runbooks/local-pc-data-store.md#try-one-small-synthetic-capture) after initializing a private `KFM_DATA_ROOT` outside the checkout. Its receipt proves a bounded local capture, not evidence closure, promotion, release, or publication. For a new source or public claim, begin with the [source and lifecycle rules](docs/doctrine/lifecycle-law.md) and [trust membrane](docs/doctrine/trust-membrane.md).
 
 ## The KFM experience
 
