@@ -1,0 +1,10 @@
+{
+  "fixture_id": "haz-invalid-temporal-role-swap-001",
+  "object_type": "HazardClaim",
+  "hazard_ref": "kfm://fixture/synthetic/hazards/temporal-001",
+  "event_time": "2026-08-01T00:00:00Z",
+  "issue_time": "2026-07-15T00:00:00Z",
+  "retrieval_time": "2026-08-01T00:00:00Z",
+  "displayed_as": "issue_time",
+  "fixture_posture": "synthetic; invalid; temporal-role-swap"
+}

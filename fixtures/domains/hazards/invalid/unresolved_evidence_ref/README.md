@@ -121,7 +121,7 @@ Do not use this lane for real records, source exports, lifecycle data, EvidenceB
 ## Verification status
 
 - Target README: replaced one-character placeholder content.
-- Fixture payload inventory: no payload files verified in this directory during this update.
+- Fixture payload inventory: `invalid_1_unresolved_evidence_ref.json` / `.expected_error.txt` added — a claim citing an `evidence_ref` with `evidence_resolution_status: unresolved`.
 - Governed API cite-or-abstain alignment: PARTIALLY VERIFIED against `docs/architecture/governed-api/README.md`.
 - Evidence Drawer projection alignment: PARTIALLY VERIFIED against `contracts/evidence/evidence_drawer_payload.md`.
 - Hazards feature-resolver fixture alignment: PARTIALLY VERIFIED against `fixtures/domains/hazards/feature_resolver/README.md`.

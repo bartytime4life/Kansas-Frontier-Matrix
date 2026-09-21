@@ -1,0 +1,22 @@
+{
+  "fixture_id": "haz-layer-manifest-valid-001",
+  "object_type": "LayerManifest",
+  "layer_id": "kfm://fixture/synthetic/hazards/layer-001",
+  "artifact_ref": "kfm://fixture/synthetic/hazards/artifact-001",
+  "source_ref": "kfm://fixture/synthetic/hazards/source-001",
+  "source_role": "administrative",
+  "style_ref": "kfm://fixture/synthetic/hazards/style-001",
+  "time_extent": {
+    "start": "2026-01-01T00:00:00Z",
+    "end": "2026-12-31T00:00:00Z"
+  },
+  "evidence_refs": [
+    "kfm://evidence/synthetic/hazards/layer-manifest-001"
+  ],
+  "policy_state": "fixture_only",
+  "stale_state": "current",
+  "public_safe": true,
+  "disclaimer_ref": "kfm://fixture/synthetic/hazards/disclaimer-002",
+  "outcome": "ANSWER",
+  "fixture_posture": "synthetic; valid; layer-manifest resolver example"
+}

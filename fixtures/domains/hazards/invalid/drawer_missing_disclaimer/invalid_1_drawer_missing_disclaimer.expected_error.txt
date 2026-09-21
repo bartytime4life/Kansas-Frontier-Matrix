@@ -1,0 +1,4 @@
+ERROR: drawer payload validation failed
+reason_code: MISSING_PUBLIC_DISCLAIMER
+field: public_disclaimer_ref
+detail: public_disclaimer_ref is required and must not be null; a drawer payload without its public-facing boundary/disclaimer state must not render as a valid public drawer.

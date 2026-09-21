@@ -141,7 +141,7 @@ Do not use this lane for real records, source exports, lifecycle data, EvidenceB
 
 - Target README: populated documentation; current lane remains documentation-only.
 - Parent Hazards fixture README: CONFIRMED populated navigation and boundary index.
-- Fixture payload inventory: CONFIRMED no payloads; this directory contains only README and `.gitkeep`.
+- Fixture payload inventory: `valid_1_focus_response.json` added — a synthetic Focus Mode ANSWER response with a passed citation check.
 - Hazards Focus Mode API alignment: PARTIALLY VERIFIED against `docs/domains/hazards/API_CONTRACTS.md`.
 - Hazards trust-membrane alignment: PARTIALLY VERIFIED against `docs/architecture/hazards-trust-membrane.md`.
 - Hazards feature-resolver fixture alignment: PARTIALLY VERIFIED against `fixtures/domains/hazards/feature_resolver/README.md`.

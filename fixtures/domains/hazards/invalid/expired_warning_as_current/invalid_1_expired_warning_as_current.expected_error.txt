@@ -1,0 +1,4 @@
+DENY
+reason_code: EXPIRED_CONTEXT_PRESENTED_AS_CURRENT
+fields: expires_at, evaluated_at, presented_state
+detail: expires_at (2026-01-01) is before evaluated_at (2026-09-21), so presented_state must not be "current"; expired WarningContext/AdvisoryContext must fail closed rather than render as a valid current public state.

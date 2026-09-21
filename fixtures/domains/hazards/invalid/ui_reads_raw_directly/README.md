@@ -119,7 +119,7 @@ Do not use this lane for real records, source exports, lifecycle data, EvidenceB
 ## Verification status
 
 - Target README: replaced one-character placeholder content.
-- Fixture payload inventory: no payload files verified in this directory during this update.
+- Fixture payload inventory: `invalid_1_ui_reads_raw_directly.json` / `.expected_error.txt` added — a map-layer attempt to read `data/raw/` directly instead of a governed API.
 - Governed API alignment: PARTIALLY VERIFIED against `docs/architecture/governed-api/README.md`.
 - Hazards trust-membrane alignment: PARTIALLY VERIFIED against `docs/architecture/hazards-trust-membrane.md`.
 - Hazards feature-resolver fixture alignment: PARTIALLY VERIFIED against `fixtures/domains/hazards/feature_resolver/README.md`.

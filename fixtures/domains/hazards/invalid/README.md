@@ -112,7 +112,7 @@ Do not use this lane for real records, source exports, lifecycle data, EvidenceB
 
 - Target README: replaced one-character placeholder content.
 - Child README inventory: PARTIALLY VERIFIED against populated invalid child READMEs fetched during this update.
-- Fixture payload inventory: no payload files verified under this parent during this update.
+- Fixture payload inventory: each of the 8 named child lanes below now has an `invalid_1_<name>.json` / `.expected_error.txt` pair; see their own rows.
 - Hazards drawer invalid alignment: PARTIALLY VERIFIED against `drawer_missing_disclaimer/README.md`.
 - Hazards freshness invalid alignment: PARTIALLY VERIFIED against `expired_warning_as_current/README.md`.
 - Hazards Focus invalid alignment: PARTIALLY VERIFIED against `focus_mode_as_alert/README.md`.

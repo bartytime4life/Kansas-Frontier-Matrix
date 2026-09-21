@@ -112,7 +112,7 @@ Do not use this lane for real records, source exports, lifecycle data, EvidenceB
 ## Verification status
 
 - Target README: replaced one-character placeholder content.
-- Fixture payload inventory: no payload files verified in this directory during this update.
+- Fixture payload inventory: `invalid_1_temporal_role_swap.json` / `.expected_error.txt` added — an issue_time displayed as though it were event_time.
 - Hazards source-role matrix alignment: PARTIALLY VERIFIED against `docs/domains/hazards/SOURCE_ROLE_MATRIX.md`.
 - Hazards identity fixture alignment: PARTIALLY VERIFIED against `fixtures/domains/hazards/identity/README.md`.
 - Hazards feature-resolver fixture alignment: PARTIALLY VERIFIED against `fixtures/domains/hazards/feature_resolver/README.md`.

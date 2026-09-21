@@ -116,7 +116,7 @@ Do not use this lane for real records, source exports, lifecycle data, EvidenceB
 ## Verification status
 
 - Target README: replaced one-character placeholder content.
-- Fixture payload inventory: no payload files verified in this directory during this update.
+- Fixture payload inventory: `valid_1_layer_manifest.json` added — a synthetic current, public-safe LayerManifest resolver ANSWER.
 - Hazards layer descriptor alignment: PARTIALLY VERIFIED against `contracts/domains/hazards/domain_layer_descriptor.md`.
 - Cross-cutting LayerManifest alignment: PARTIALLY VERIFIED against `contracts/data/layer_manifest.md`.
 - Hazards API layer-manifest alignment: PARTIALLY VERIFIED against `docs/domains/hazards/API_CONTRACTS.md`.

@@ -1,0 +1,8 @@
+{
+  "fixture_id": "haz-invalid-ui-reads-raw-directly-001",
+  "object_type": "UIDataAccessAttempt",
+  "surface": "map_layer",
+  "attempted_source": "data/raw/hazards/synthetic-feed.json",
+  "governed_api_used": false,
+  "fixture_posture": "synthetic; invalid; ui-reads-raw-directly"
+}

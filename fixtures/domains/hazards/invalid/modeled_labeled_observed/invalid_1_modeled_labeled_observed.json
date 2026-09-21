@@ -1,0 +1,8 @@
+{
+  "fixture_id": "haz-invalid-modeled-labeled-observed-001",
+  "object_type": "HazardClaim",
+  "source_character": "modeled",
+  "displayed_source_role": "observed",
+  "hazard_ref": "kfm://fixture/synthetic/hazards/modeled-001",
+  "fixture_posture": "synthetic; invalid; modeled-labeled-observed"
+}

@@ -1,0 +1,13 @@
+{
+  "fixture_id": "haz-identity-valid-001",
+  "object_type": "DomainFeatureIdentity",
+  "id": "kfm://fixture/synthetic/hazards/identity-001",
+  "object_family": "DroughtDeclaration",
+  "source_role": "administrative",
+  "geography_version_ref": "kfm://fixture/synthetic/hazards/geography-version-001",
+  "normalized_digest": "sha256:0000000000000000000000000000000000000000000000000000000000ha",
+  "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000hb",
+  "correction_ref": null,
+  "rollback_ref": null,
+  "fixture_posture": "synthetic; valid; identity example"
+}

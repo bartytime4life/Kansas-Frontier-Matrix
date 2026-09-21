@@ -1,0 +1,9 @@
+{
+  "fixture_id": "haz-invalid-expired-warning-as-current-001",
+  "object_type": "WarningContext",
+  "warning_id": "kfm://fixture/synthetic/hazards/warning-001",
+  "expires_at": "2026-01-01T00:00:00Z",
+  "evaluated_at": "2026-09-21T00:00:00Z",
+  "presented_state": "current",
+  "fixture_posture": "synthetic; invalid; expired-warning-as-current"
+}

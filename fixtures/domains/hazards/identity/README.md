@@ -114,7 +114,7 @@ Do not use this lane for real records, source exports, lifecycle data, EvidenceB
 
 - Target README: replaced one-character placeholder content.
 - Parent Hazards fixture README: present but still a greenfield stub during this update.
-- Fixture payload inventory: no payload files verified in this directory during this update.
+- Fixture payload inventory: `valid_1_hazard_identity.json` added — a synthetic DroughtDeclaration DomainFeatureIdentity example.
 - Domain feature identity contract alignment: PARTIALLY VERIFIED against `contracts/domains/hazards/domain_feature_identity.md`.
 - Hazards feature-resolver fixture alignment: PARTIALLY VERIFIED against `fixtures/domains/hazards/feature_resolver/README.md`.
 - Hazards drawer fixture alignment: PARTIALLY VERIFIED against `fixtures/domains/hazards/drawer/README.md`.

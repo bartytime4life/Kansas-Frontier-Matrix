@@ -1,0 +1,4 @@
+DENY
+reason_code: SOURCE_ROLE_COLLAPSE_MODELED_AS_OBSERVED
+fields: source_character, displayed_source_role
+detail: source_character="modeled" cannot be displayed with displayed_source_role="observed"; modeled/derived/aggregate context must never collapse into an observed-evidence claim.

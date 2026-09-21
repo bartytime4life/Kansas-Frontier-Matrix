@@ -1,0 +1,8 @@
+{
+  "fixture_id": "haz-invalid-unresolved-evidence-ref-001",
+  "object_type": "HazardClaim",
+  "hazard_ref": "kfm://fixture/synthetic/hazards/unresolved-evidence-001",
+  "evidence_ref": "kfm://evidence/synthetic/hazards/does-not-resolve-001",
+  "evidence_resolution_status": "unresolved",
+  "fixture_posture": "synthetic; invalid; unresolved-evidence-ref"
+}

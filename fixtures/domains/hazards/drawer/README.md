@@ -171,7 +171,7 @@ Do not use this lane for real records, source exports, lifecycle data, EvidenceB
 
 - Target README: populated documentation; current lane remains documentation-only.
 - Parent Hazards fixture README: CONFIRMED populated navigation and boundary index.
-- Fixture payload inventory: CONFIRMED no payloads; this directory contains only README and `.gitkeep`.
+- Fixture payload inventory: `valid_1_drawer_payload.json` added — a synthetic EvidenceDrawerPayload with a resolved citation and bound public disclaimer.
 - Evidence Drawer contract alignment: PARTIALLY VERIFIED against `contracts/evidence/evidence_drawer_payload.md`.
 - Hazards decision-envelope alignment: PARTIALLY VERIFIED against `contracts/domains/hazards/hazards_decision_envelope.md`.
 - Hazards UI alignment: PARTIALLY VERIFIED against `docs/domains/hazards/MAP_UI_CONTRACTS.md`.

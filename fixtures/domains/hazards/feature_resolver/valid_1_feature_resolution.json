@@ -1,0 +1,17 @@
+{
+  "fixture_id": "haz-feature-resolver-valid-001",
+  "object_type": "HazardsDecisionEnvelope",
+  "feature_request": {
+    "layer_feature_ref": "kfm://fixture/synthetic/hazards/layer-feature-001",
+    "canonical_feature_ref": "kfm://fixture/synthetic/hazards/feature-001"
+  },
+  "temporal_scope": {
+    "observed_at": "2026-09-21T00:00:00Z"
+  },
+  "outcome": "ANSWER",
+  "source_role_state": "observed",
+  "evidence_state": "resolved",
+  "policy_state": "fixture_only",
+  "release_state": "not_released",
+  "fixture_posture": "synthetic; valid; feature-resolver example"
+}

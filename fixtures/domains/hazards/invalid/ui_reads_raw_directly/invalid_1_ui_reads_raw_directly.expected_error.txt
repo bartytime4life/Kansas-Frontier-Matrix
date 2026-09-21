@@ -1,0 +1,4 @@
+DENY
+reason_code: DIRECT_INTERNAL_STORE_READ
+fields: attempted_source, governed_api_used
+detail: attempted_source points into data/raw/ and governed_api_used is false; a UI, drawer, Focus Mode, map layer, export, or client helper must consume only governed API envelopes, never RAW/WORK/QUARANTINE/PROCESSED/unpublished catalog/triplet/proof/object/graph/vector-index/model-runtime material directly.

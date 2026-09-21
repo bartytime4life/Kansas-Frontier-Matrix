@@ -1,0 +1,8 @@
+{
+  "fixture_id": "haz-negative-staged-001",
+  "object_type": "HazardClaim",
+  "hazard_ref": "kfm://fixture/synthetic/hazards/negative-staged-001",
+  "expected_outcome": "DENY",
+  "staging_note": "Negative case being drafted; exact defect family and child-lane placement (e.g. temporal_role_swap vs unresolved_evidence_ref) not yet finalized.",
+  "fixture_posture": "synthetic; invalid; staged/unclassified negative case"
+}

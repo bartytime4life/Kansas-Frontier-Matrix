@@ -1,0 +1,4 @@
+DENY
+reason_code: FOCUS_MODE_NOT_ALERT_AUTHORITY
+field: requested_authority
+detail: Focus Mode is not an emergency-alert or current-action authority; a request for requested_authority="alert" must return DENY/ABSTAIN, never a normal ANSWER.

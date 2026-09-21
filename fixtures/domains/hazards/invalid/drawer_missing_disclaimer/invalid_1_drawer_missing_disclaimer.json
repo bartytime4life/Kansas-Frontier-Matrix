@@ -1,0 +1,7 @@
+{
+  "fixture_id": "haz-invalid-drawer-missing-disclaimer-001",
+  "object_type": "EvidenceDrawerPayload",
+  "hazard_ref": "kfm://fixture/synthetic/hazards/drawer-001",
+  "public_disclaimer_ref": null,
+  "fixture_posture": "synthetic; invalid; drawer-missing-disclaimer"
+}

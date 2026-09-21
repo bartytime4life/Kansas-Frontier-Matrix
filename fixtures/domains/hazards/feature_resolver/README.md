@@ -106,7 +106,7 @@ Do not use this lane for real records, source exports, lifecycle data, EvidenceB
 
 - Target README: replaced one-character placeholder content.
 - Parent Hazards fixture README: present but still a greenfield stub during this update.
-- Fixture payload inventory: no payload files verified in this directory during this update.
+- Fixture payload inventory: `valid_1_feature_resolution.json` added — a synthetic HazardsDecisionEnvelope ANSWER outcome for a resolved feature.
 - Hazards decision-envelope alignment: PARTIALLY VERIFIED against `contracts/domains/hazards/hazards_decision_envelope.md`.
 - Hazards API-contract alignment: PARTIALLY VERIFIED against `docs/domains/hazards/API_CONTRACTS.md`.
 - Hazards drawer fixture alignment: PARTIALLY VERIFIED against `fixtures/domains/hazards/drawer/README.md`.

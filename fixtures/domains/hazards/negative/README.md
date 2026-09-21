@@ -119,7 +119,7 @@ Do not use this lane for real records, source exports, lifecycle data, EvidenceB
 ## Verification status
 
 - Target README: replaced one-character placeholder content.
-- Negative fixture payload inventory: no payload files verified under this parent during this update.
+- Negative fixture payload inventory: `staged_1_unclassified_defect.json` added — a negative case staged for later classification into a specific invalid/ child lane.
 - Invalid lane relationship: PARTIALLY VERIFIED against `fixtures/domains/hazards/invalid/README.md`.
 - Hazards layer-manifest fixture alignment: PARTIALLY VERIFIED against `fixtures/domains/hazards/layer_manifest/README.md`.
 - Hazards golden fixture alignment: PARTIALLY VERIFIED against `fixtures/domains/hazards/golden/README.md`.

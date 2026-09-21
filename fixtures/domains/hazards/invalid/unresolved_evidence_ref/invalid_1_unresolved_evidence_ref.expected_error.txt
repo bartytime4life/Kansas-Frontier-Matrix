@@ -1,0 +1,4 @@
+ABSTAIN
+reason_code: EVIDENCE_REF_UNRESOLVED
+field: evidence_ref
+detail: evidence_ref does not resolve to an EvidenceBundle or other required evidence-support object (evidence_resolution_status="unresolved"); a claim, feature-resolver output, drawer payload, Focus Mode response, layer descriptor, release candidate, or export payload must abstain rather than assert the claim.

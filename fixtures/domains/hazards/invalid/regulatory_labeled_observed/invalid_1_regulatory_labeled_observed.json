@@ -1,0 +1,8 @@
+{
+  "fixture_id": "haz-invalid-regulatory-labeled-observed-001",
+  "object_type": "HazardClaim",
+  "source_character": "regulatory",
+  "displayed_source_role": "observed",
+  "hazard_ref": "kfm://fixture/synthetic/hazards/regulatory-001",
+  "fixture_posture": "synthetic; invalid; regulatory-labeled-observed"
+}

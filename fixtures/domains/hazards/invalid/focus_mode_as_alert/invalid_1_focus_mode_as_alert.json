@@ -1,0 +1,8 @@
+{
+  "fixture_id": "haz-invalid-focus-mode-as-alert-001",
+  "object_type": "FocusModeRequest",
+  "request_kind": "current_action_guidance",
+  "hazard_ref": "kfm://fixture/synthetic/hazards/focus-001",
+  "requested_authority": "alert",
+  "fixture_posture": "synthetic; invalid; focus-mode-as-alert"
+}

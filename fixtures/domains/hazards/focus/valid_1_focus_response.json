@@ -1,0 +1,14 @@
+{
+  "fixture_id": "haz-focus-valid-001",
+  "object_type": "FocusModeResponseEnvelope",
+  "request_kind": "informational_summary",
+  "map_context_ref": "kfm://fixture/synthetic/hazards/map-context-001",
+  "evidence_refs": [
+    "kfm://evidence/synthetic/hazards/focus-001"
+  ],
+  "citation_check_state": "passed",
+  "outcome": "ANSWER",
+  "policy_state": "fixture_only",
+  "release_state": "not_released",
+  "fixture_posture": "synthetic; valid; Focus Mode response example"
+}

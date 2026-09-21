@@ -103,7 +103,7 @@ Do not use this lane for real records, source exports, lifecycle data, EvidenceB
 ## Verification status
 
 - Target README: replaced one-character placeholder content.
-- Fixture payload inventory: no payload files verified in this directory during this update.
+- Fixture payload inventory: `invalid_1_expired_warning_as_current.json` / `.expected_error.txt` added — a WarningContext with `expires_at` before `evaluated_at` but `presented_state: current`.
 - Hazards API freshness alignment: PARTIALLY VERIFIED against `docs/domains/hazards/API_CONTRACTS.md`.
 - Hazards map/UI freshness alignment: PARTIALLY VERIFIED against `docs/domains/hazards/MAP_UI_CONTRACTS.md`.
 - Hazards drawer fixture alignment: PARTIALLY VERIFIED against `fixtures/domains/hazards/drawer/README.md`.

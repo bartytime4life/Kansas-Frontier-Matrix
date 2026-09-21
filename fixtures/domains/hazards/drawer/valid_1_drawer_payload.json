@@ -1,0 +1,13 @@
+{
+  "fixture_id": "haz-drawer-valid-001",
+  "object_type": "EvidenceDrawerPayload",
+  "hazard_ref": "kfm://fixture/synthetic/hazards/drawer-valid-001",
+  "source_summary": "Synthetic Kansas Water Office drought proclamation (fixture only).",
+  "citation_state": "resolved",
+  "freshness_state": "current",
+  "policy_state": "fixture_only",
+  "release_state": "not_released",
+  "not_for_life_safety": true,
+  "public_disclaimer_ref": "kfm://fixture/synthetic/hazards/disclaimer-001",
+  "fixture_posture": "synthetic; valid; drawer payload example"
+}

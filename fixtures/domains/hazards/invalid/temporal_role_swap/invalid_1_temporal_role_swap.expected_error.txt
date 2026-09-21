@@ -1,0 +1,4 @@
+ERROR: temporal role validation failed
+reason_code: TEMPORAL_ROLE_SWAP
+field: displayed_as
+detail: event_time, issue_time, and retrieval_time carry distinct meanings and must not be swapped; displaying issue_time (2026-07-15) as though it were event_time or retrieval_time misrepresents when the hazard occurred versus when it was issued or retrieved.

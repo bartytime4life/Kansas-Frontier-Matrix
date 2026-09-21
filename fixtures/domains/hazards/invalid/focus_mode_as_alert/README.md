@@ -96,7 +96,7 @@ Do not use this lane for real records, source exports, lifecycle data, EvidenceB
 ## Verification status
 
 - Target README: replaced one-character placeholder content.
-- Fixture payload inventory: no payload files verified in this directory during this update.
+- Fixture payload inventory: `invalid_1_focus_mode_as_alert.json` / `.expected_error.txt` added — a Focus Mode request with `requested_authority: alert`.
 - Hazards Focus Mode API alignment: PARTIALLY VERIFIED against `docs/domains/hazards/API_CONTRACTS.md`.
 - Hazards map/UI Focus alignment: PARTIALLY VERIFIED against `docs/domains/hazards/MAP_UI_CONTRACTS.md`.
 - Hazards Focus fixture alignment: PARTIALLY VERIFIED against `fixtures/domains/hazards/focus/README.md`.
