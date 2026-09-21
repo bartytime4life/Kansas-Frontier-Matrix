@@ -269,6 +269,13 @@
       "subject": "release/manifests/hazards-r0003.yaml"
     },
     {
+      "evidence_sha256": "sha256:8241bb4f1da8abfa669d201fda804f875922ea27338e15af47bf5362edf0525b",
+      "evidence_zlib_base64": "eNqtlsuOG0cMRfNDY1exWA/ubDheZpPkB1h8zAjWSIOWBMT5+tCxY7XVXkUDaCMJffpW8fKSwmfeHx/f/v7x/a+/fXzzrO8QSx+W0a1jT55JHZJNF6KMrNmKAjemX+Tbo3/8+f7D2zePu/Mns5d31kgNaE7QrA0LzjGB2HqvrEPAcEgtlH98/Pr6TIOpJ51kPQdEulfR6Tm+ZZTkxKMPse/P6/GZd4cVwRUHtAmzWsXWoVObA5NCazgrYVdMFU1uCfy47OSyP18WW9HizVxKqb1I09SGz5lmo1pqK9hSKgOBxeaGtsgT2zF++byilVwTFx02la2wzTpwiqGn7KlbGeCiMnlDOz8fTy9PFtL+/01vWVdhqcAAcZ6ZSLhBD4yK5oaUZtY0mimBb67d+XLg+zV9xazk2Ei1Noiadfry5oTmIhVGac6jzMRIVdqGsz8uryHnX8xVDiHPFOYz1UTxiE2bgxJCNU3SCXIPv2q/5Tx+M8Ddgh43TtIJRkw5VxzdzXuuShNTL92ZUqvRNdUEb0lPPHdnPt8v6T/QVdIIFYaSM4+hBWHkUZuIeg1TV61OA3IrsiX9zYueXkPSV9BVUgdM7Do7ZuygqLVYwhLxRrWmHLFWssrY9NvTZ11eqXRX1Mreg2skaWriBSRlRIgbIqMiVTIWjcsD2Nr7xY4ve3vQAz/s+aArYhUcOcIkK9bo32nRtiG1jjghpfi3U48U3NhhObKeHhbe7R/OC+s6EjgLT6E4a3KLnCNrmSv26n1WHxGlwTWHW+TJzue9PdvhfHrYHXzh03m5yE2s5u5pAE4m0KluuX2ZMzQ7T/ZIxGo5xZFoAz/u9utjQxnOMPqEFsk6J0dBJFstHslfSxcUBvfvmN1B7a87ivr1+VWgDxrxIgYrJWcASJCktUQBQU7kIzXjes3NZz7s3E73NOB3xCqg3FqJMuWhJgK9xrRjjSiv0i3mE0Q65CFXn78sx6OvAGAtAWHceHWI3CUPK8UMzZ1bKowzZhS75BvAYnvjkz3I/ni63DWcfs5bd3Ki4mlGaXWEtclTScwlS1RfzMRRkCj9HPhawtZrRsyDHiOhFdCUIToWaUJPYlp8ZBNgDgNcF4OXy9zv4svueLhHzoqyuh0v3ZrF/IacQ5LNWC6gdFblUWvWL10cQfgj5vS0bveYY5aGe+wgg7hUyFFxnmhE5LP01nMAeYOIdNtPlk/3HmqNWq2jmaPMZIhtFAMpPXLcS2ypM3kPw0az/xBs91d8W+sSdbTRPOI5YhBjynVvyacPG8ixW5ZRwOu11udlF0G97tBwRuRE9GYkc2d0wthqhnfpudfothmZLZq2iHk56N7umY63pHV8OoZXJXbPEp8yo8EkfNRrnDDCnafWWP/qP2x6yKA=",
+      "fingerprint": "sha256:521388927153c91a67ca8cead55af9d688a6064517d109aa556cffca91505006",
+      "rule_id": "KFM-TOPO-004",
+      "subject": "catalog/"
+    },
+    {
       "evidence_sha256": "sha256:32555f7828d78ee8b3bf6d5e057d02ab20bebdcd8b6a8ba1b33d58da5979eea2",
       "evidence_zlib_base64": "eNoryc/PKdYvS8zJTEksyS8q1s9ITMosSSzRTUsszUtkKMEhHQ+WBgDltBft",
       "fingerprint": "sha256:53db4a14b2f3af963d5ff4248f076103149bac0dff3617b80832fe6256d49622",
@@ -393,13 +400,6 @@
       "fingerprint": "sha256:711feb0503128bb4debb3fba518819783cd6ea4262373db7168248e71db97224",
       "rule_id": "KFM-TOPO-011",
       "subject": "release/manifests/hazards-r0002.yaml"
-    },
-    {
-      "evidence_sha256": "sha256:304b679f591315a09c358d2aa286d5ed9f2910679d8f6ed39790b2c7f6811e9c",
-      "evidence_zlib_base64": "eNqtlsmOG0cMhvNCE9fCWnizkfiYS5IX4DojWCMNWhIQ5+nDiR2rrfYpGkCAoKW+/lkkf1LoTPvj47vfP3749bePPz/re4A6pmVwGzCSZ1QvydgFMQNptqqFOuFP8vXoH39++OXdz4+78yezl/fWUa0gc9GsHSrw5IJkYzTSKcVgSquYvz9+fXz8o5ah5ExsUkW7SJ7NOyZncfBShlC+ntfjM+0OKwIpWoHUabQBXbFz8gkIVFxSxy4ubVYZtwR6XHZy2Z8vi62vgy2PnNkp5dxrJ8nSRHO1ITitpVTcUdKGtsgT2TG++byi1dwSVZ3GSlbJuE1gMfCUPQ2rMzSqMG1o5+fj6eXJQtr/v+kt6yos1TKLOHFGFOplBEYjzA6YOGua3RSL2y3M6XKg+zV9wazk2Eyt9VJ6H/j65ATmIq3M2p1m5USATfqGsz8ubyHnX8xVThQPJ5BkqgnjiLHxxASlmSYZWPLgkLkpqcevBXC3oMdNJSkXQ8KcG8zh5iM3RYY06nDC1FsUaTOBW9IT8e5M5/sl/Qe6SpqhwkBypjm1QpnRt9G96i2KumlznCVaSLakv2nR01tI+gK6ShphBOTKAzKMoqCtWoIa9oatpRy2VrPK3PTb02dd3ih1V9SqvCe1cNIUXlSLpAxQ4obQsIa3ZKgal1fKtrxf7Piytwc90MOeDroiNoGZw0yyQov+ZYu2DaltRoSY4teBgydsymE5kp4eFtrtH84L6doSKAuxYMSa3FKdaD1Tg9F8cPPJ7ZVrXm6RJzuf9/Zsh/PpYXfwhU7n5SI3tpqHp1mACYuyuuX+OmeQB3FYv1iznCIk3MCPu/067FKnU5mDSw9nZaZIiGRr1fsorQ4BCd/3b5jdQe2vO5L65fwqjiyMrVvrOS5Is8S7thHdOCMeLjNpyboCPNNh53a6pwG/Ia4yGABrTL3BvXQjBmWMyx2SaqLoPe1DbMz2jfGyHI++rkh9HT1Spnj0hrXcE0fKc8RVVGj0UWOiQr0BLLY3OtmD7I+ny13D6ce8dScnrJ44UqszShv9NTSqOTRHbBargQBi+jHwrYStBMXzUtyv9Vo05RIdC8hlJDGtPrNJIaKEfAVdeL+LD7vj4R45K8pqGtRUMQZCCCBPsZRAVCG2NAaBjAytB9fyjZjT07rdY45Zmu5RCBOptpKdYiEAQ0TnGiWQ6yDaIMLd9kzy6d6g1qjV/pUp0owG0GdUuNQRPu41ttRY6waE61n7ztjuz/g21zXyaLN72HN0OcSUG95jH/VpEwiS1lmLt+v1npddGPW6QwvrBGkxsaFEgQzq1SZZlK8IFuwxlcgFtgi+HHRv90zHW9LaPmOhnlli96zxqhwNJtZttIgwzJ1YW6x/7R8fHsjg",
-      "fingerprint": "sha256:71a120ae8ca2b69896266c9ddd52f6d03577ea91fa2de4390b7d57b9ceeb912f",
-      "rule_id": "KFM-TOPO-004",
-      "subject": "catalog/"
     },
     {
       "evidence_sha256": "sha256:33abc0a306d4007bd5970d10cabc2b929e1e5e0d31976a780bc311b47555b70c",
