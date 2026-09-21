@@ -3,9 +3,9 @@ doc_id: kfm://doc/examples/viewer-styles/readme
 title: examples/viewer_styles/ — Viewer Style and Trust-State Examples
 type: readme; nested-example-lane; non-authoritative-demonstration-boundary
 version: v0.3.0
-status: repository-grounded currentness refresh; README_ONLY; non-authoritative; validation-bounded; do-not-publish
+status: repository-grounded static walkthrough; non-authoritative; validation-bounded; do-not-publish
 owners: NEEDS VERIFICATION — examples steward and listed specialist reviewers
-updated: 2026-09-06
+updated: 2026-09-21
 supersedes: v0.2.0 at the same path; prior blob be6be36f96576cfeec9c053eec87108dd5a00f94
 prepared_under_prompt: KFM Repository Documentation Currentness Implementation Agent
 policy_label: public-review; synthetic-first; fail-closed; cite-or-abstain; correction-aware
@@ -27,8 +27,8 @@ evidence_snapshot:
   root_registry_entry: root.examples; current registry projection read, not authority creation
   inventory_method: current-main GitHub contents read plus bounded linked-file and authority review
 notes:
-  - "This is a Markdown-only currentness refresh; it adds no style payload, fixture, test, schema, policy, proof, receipt, route, release, or publication state."
-  - "The current direct-child read returned README.md only. That bounded result is not a claim about ignored, external, or future artifacts."
+  - "The 2026-09-21 update adds one static synthetic trust-state walkthrough; it adds no production style, fixture, test, schema, policy, proof, receipt, route, release, or publication state."
+  - "The 2026-09-06 pinned direct-child read returned README.md only; the 2026-09-21 checkout contains one walkthrough as well."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -37,7 +37,7 @@ notes:
 
 > One-line purpose. Explain how MapLibre style fragments, legends, color ramps, feature states, trust badges, negative states, and accessibility cues can teach a viewer interaction without becoming evidence, policy, geoprivacy, runtime, release, or publication authority.
 
-[![Status: README only](https://img.shields.io/badge/status-README__ONLY-f59e0b?style=flat-square)](#status)
+[![Status: static walkthrough](https://img.shields.io/badge/status-STATIC__WALKTHROUGH-f59e0b?style=flat-square)](#status)
 [![Authority: example only](https://img.shields.io/badge/authority-example%20only-b42318?style=flat-square)](#authority-level)
 [![Publication: denied](https://img.shields.io/badge/publication-denied-b42318?style=flat-square)](#what-does-not-belong-here)
 [![Truth: cite or abstain](https://img.shields.io/badge/truth-cite%20or%20abstain-1a7f37?style=flat-square)](#validation)
@@ -62,7 +62,7 @@ This lane is useful for small, synthetic demonstrations of:
 - reduced-motion, keyboard, contrast, text-label, and other accessibility considerations;
 - the boundary between an illustrative style and an operational style manifest.
 
-The current subtree contains this README only. It is therefore a documentation contract, not an executable or payload-bearing example.
+The current subtree contains this README and a static synthetic trust-state walkthrough. It remains a documentation example without an executable style or runtime.
 
 <a id="authority-level"></a>
 
@@ -90,14 +90,14 @@ Operational meaning remains owned by the relevant contracts/, schemas/, policy/,
 |---|---|
 | Path | examples/viewer_styles/README.md |
 | Placement | CONFIRMED — existing child of the canonical examples/ responsibility root |
-| Maturity | README_ONLY — the current direct-child inventory contains no style fragment, manifest, fixture, test, or executable child |
+| Maturity | STATIC_WALKTHROUGH — one teaching file; no production style, manifest, fixture, test, or executable child |
 | Prior target blob | be6be36f96576cfeec9c053eec87108dd5a00f94 |
 | Current-main evidence pin | main@61368f63707df32d3f796a29028e66e715d083c9 |
 | Runtime / executable entrypoint | NOT ESTABLISHED |
 | Public/release readiness | DENY BY PLACEMENT for treating this lane as a released or authoritative surface |
 | Ownership / stewardship | NEEDS VERIFICATION — documentation ownership and independent specialist review are not established here |
 
-README_ONLY is intentionally narrower than STATIC_WALKTHROUGH. A future child payload may graduate only after it has an explicit objective, synthetic or transformed inputs, expected finite outcome, operational-home reference, validation boundary, and correction trigger.
+The prior README_ONLY stage was narrower than STATIC_WALKTHROUGH. The added teaching file names its objective, synthetic input, expected outcome, operational home, validation boundary, and correction trigger; any runnable or production style still requires separate graduation.
 
 <a id="what-belongs-here"></a>
 
@@ -250,9 +250,10 @@ ANSWER requires support appropriate to the scenario. Missing, stale, conflicting
 
 | Path | Bounded contents | Maturity | Boundary |
 |---|---|---|---|
-| examples/viewer_styles/README.md | This README | README_ONLY | Documentation and teaching boundary only; no style payload, fixture, test, runtime, evidence, policy, release, or publication authority |
+| examples/viewer_styles/README.md | This README | STATIC_WALKTHROUGH | Documentation boundary; no style, fixture, test, runtime, evidence, policy, release, or publication authority |
+| [stale_layer_trust_state.walkthrough.md](stale_layer_trust_state.walkthrough.md) | Synthetic stale-state presentation | STATIC_WALKTHROUGH | No production style or governed decision |
 
-The current GitHub directory read returned one direct child, README.md. That result is evidence for this pinned repository view only; it is not evidence about ignored files, external files, future additions, or deployed consumers.
+The 2026-09-06 pinned GitHub read returned one direct child, README.md. The 2026-09-21 recursive checkout inventory contains that README and `stale_layer_trust_state.walkthrough.md`; neither proves deployed consumers.
 
 <a id="open-verification-register"></a>
 

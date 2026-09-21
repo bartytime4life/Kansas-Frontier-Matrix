@@ -11,7 +11,7 @@ current_path: examples/README.md
 policy_label: public-review; synthetic-first; fail-closed; no-public-authority; cite-or-abstain
 truth_posture: >
   CONFIRMED same-path canonical examples root, adopted Directory Rules v2.0.0 through
-  ADR-0029, DIR-ROOT-EXAMPLES, nine direct child lanes, nine child READMEs, eight
+  ADR-0029, DIR-ROOT-EXAMPLES, nine direct child lanes, nine child READMEs, nine
   current-checkout substantive example artifacts, no placeholder files, validator-backed briefing examples,
   bounded changed-Markdown link checking, and explicit documentation/accessibility holds at
   main@0ab94b49111fad3801f3ab3da4afb6433cc14d23 / PROPOSED the maturity vocabulary
@@ -86,7 +86,7 @@ This update stays at the existing tracked path, changes no ownership or lifecycl
 | Finding | Result |
 |---|---|
 | Placement | `CONFIRMED` — adopted Directory Rules v2.0.0 and `DIR-ROOT-EXAMPLES`. |
-| Inventory | `CONFIRMED BOUNDED` — nine lanes, nine child READMEs, eight substantive artifacts, no `.gitkeep` placeholders. |
+| Inventory | `CONFIRMED BOUNDED` — nine lanes, nine child READMEs, nine substantive artifacts, no `.gitkeep` placeholders. |
 | Validation | `MIXED` — briefing examples have deterministic validators; changed Markdown has a bounded local link check. |
 | Documentation build | `WORKFLOW_HOLD` — no accepted generator or preview-publication handoff. |
 | Accessibility | `WORKFLOW_HOLD` — axe and keyboard-navigation checks are not executed. |
@@ -200,7 +200,7 @@ Directory Rules v2.0.0 is adopted through [ADR-0029](../docs/adr/ADR-0029-adopt-
 | [`settlements-infrastructure/`](settlements-infrastructure/README.md) | README | `README_ONLY` | Naming conflict and sensitive infrastructure remain unresolved outside examples |
 | [`source_intake/`](source_intake/README.md) | README + [`usgs_nwis_walkthrough.md`](source_intake/usgs_nwis_walkthrough.md) | `STATIC_WALKTHROUGH` | No source admission, connector execution, RAW capture, or receipt emission |
 | [`story_decks/`](story_decks/README.md) | README + [`kansas_drought_2012.md`](story_decks/kansas_drought_2012.md) | `STATIC_WALKTHROUGH` | Story runtime, payload, evidence, and release remain elsewhere |
-| [`viewer_styles/`](viewer_styles/README.md) | README | `README_ONLY` | Styling is not evidence, policy, sensitivity transformation, or release |
+| [`viewer_styles/`](viewer_styles/README.md) | README + [`stale_layer_trust_state.walkthrough.md`](viewer_styles/stale_layer_trust_state.walkthrough.md) | `STATIC_WALKTHROUGH` | Styling is not evidence, policy, sensitivity transformation, or release |
 
 The briefing records are [`gmd_action_plan_inventory_2026_07_29.json`](briefing_integration/gmd_action_plan_inventory_2026_07_29.json) and [`hays_water_local_consult_2026_07_29.json`](briefing_integration/hays_water_local_consult_2026_07_29.json). Both declare `DUPLICATE`, propose issue `#1647` as the existing bounded work target, set repository mutation and public use false, and deny source activation, proof construction, release, deployment, and publication. Fixture-backed routing is not live GitHub-state verification or mutation authority.
 
