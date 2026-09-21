@@ -11,8 +11,8 @@ current_path: examples/README.md
 policy_label: public-review; synthetic-first; fail-closed; no-public-authority; cite-or-abstain
 truth_posture: >
   CONFIRMED same-path canonical examples root, adopted Directory Rules v2.0.0 through
-  ADR-0029, DIR-ROOT-EXAMPLES, nine direct child lanes, nine child READMEs, seven
-  current-checkout substantive example artifacts, two placeholder files, validator-backed briefing examples,
+  ADR-0029, DIR-ROOT-EXAMPLES, nine direct child lanes, nine child READMEs, eight
+  current-checkout substantive example artifacts, no placeholder files, validator-backed briefing examples,
   bounded changed-Markdown link checking, and explicit documentation/accessibility holds at
   main@0ab94b49111fad3801f3ab3da4afb6433cc14d23 / PROPOSED the maturity vocabulary
   and root admission checklist below / UNKNOWN runtime parity, deployed consumers, third-party
@@ -35,7 +35,7 @@ related:
   - ../.github/workflows/accessibility.yml
 notes:
   - Markdown-only same-path modernization; no operational object or authority state changes.
-  - The 2026-09-21 update adds two static synthetic walkthroughs under existing lanes; no fixture, test, proof, receipt, release, or public runtime state changes.
+  - The 2026-09-21 sweep adds static synthetic walkthroughs under existing lanes; no fixture, test, proof, receipt, release, or public runtime state changes.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -86,7 +86,7 @@ This update stays at the existing tracked path, changes no ownership or lifecycl
 | Finding | Result |
 |---|---|
 | Placement | `CONFIRMED` — adopted Directory Rules v2.0.0 and `DIR-ROOT-EXAMPLES`. |
-| Inventory | `CONFIRMED BOUNDED` — nine lanes, nine child READMEs, seven substantive artifacts, two `.gitkeep` placeholders. |
+| Inventory | `CONFIRMED BOUNDED` — nine lanes, nine child READMEs, eight substantive artifacts, no `.gitkeep` placeholders. |
 | Validation | `MIXED` — briefing examples have deterministic validators; changed Markdown has a bounded local link check. |
 | Documentation build | `WORKFLOW_HOLD` — no accepted generator or preview-publication handoff. |
 | Accessibility | `WORKFLOW_HOLD` — axe and keyboard-navigation checks are not executed. |
@@ -195,9 +195,9 @@ Directory Rules v2.0.0 is adopted through [ADR-0029](../docs/adr/ADR-0029-adopt-
 | [`briefing_integration/`](briefing_integration/README.md) | README + two JSON records | `VALIDATOR_BACKED_EXAMPLE` | Local discovery/routing only; no issue mutation, source activation, release, or public use |
 | [`evidence_bundles/`](evidence_bundles/README.md) | README + [`unresolved_evidence_ref.walkthrough.md`](evidence_bundles/unresolved_evidence_ref.walkthrough.md) | `STATIC_WALKTHROUGH` | Proof authority remains under `data/proofs/` |
 | [`focus_flows/`](focus_flows/README.md) | README + [`hydrology_huc12_question.md`](focus_flows/hydrology_huc12_question.md) | `STATIC_WALKTHROUGH` | Governed API/evidence/AI runtime remains authoritative |
-| [`habitat/`](habitat/README.md) | README + `.gitkeep` | `README_ONLY` | Domain, policy, lifecycle, and release remain elsewhere |
+| [`habitat/`](habitat/README.md) | README + [`suitability_not_occurrence.walkthrough.md`](habitat/suitability_not_occurrence.walkthrough.md) | `STATIC_WALKTHROUGH` | Domain, policy, lifecycle, and release remain elsewhere |
 | [`ingest_receipts/`](ingest_receipts/README.md) | README + [`unresolved_rights_quarantine.walkthrough.md`](ingest_receipts/unresolved_rights_quarantine.walkthrough.md) | `STATIC_WALKTHROUGH` | Emitted receipts remain under `data/receipts/` |
-| [`settlements-infrastructure/`](settlements-infrastructure/README.md) | README + `.gitkeep` | `README_ONLY` | Naming conflict and sensitive infrastructure remain unresolved outside examples |
+| [`settlements-infrastructure/`](settlements-infrastructure/README.md) | README | `README_ONLY` | Naming conflict and sensitive infrastructure remain unresolved outside examples |
 | [`source_intake/`](source_intake/README.md) | README + [`usgs_nwis_walkthrough.md`](source_intake/usgs_nwis_walkthrough.md) | `STATIC_WALKTHROUGH` | No source admission, connector execution, RAW capture, or receipt emission |
 | [`story_decks/`](story_decks/README.md) | README + [`kansas_drought_2012.md`](story_decks/kansas_drought_2012.md) | `STATIC_WALKTHROUGH` | Story runtime, payload, evidence, and release remain elsewhere |
 | [`viewer_styles/`](viewer_styles/README.md) | README | `README_ONLY` | Styling is not evidence, policy, sensitivity transformation, or release |

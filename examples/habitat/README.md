@@ -5,7 +5,7 @@ type: readme; nested-example-lane; non-authoritative-demonstration-boundary
 version: v0.2.0
 status: repository-grounded draft; STATIC_WALKTHROUGH; non-authoritative; validation-bounded; do-not-publish
 owners: NEEDS VERIFICATION — examples steward and listed specialist reviewers
-updated: 2026-07-24
+updated: 2026-09-21
 supersedes: v0.1.x content at the same path; no operational object, runtime behavior, release, or publication state
 prepared_under_prompt: KFM Markdown Engineering, Modernization & GitHub Documentation Implementation Agent v5.0.0
 policy_label: public-review; synthetic-first; fail-closed; cite-or-abstain; correction-aware
@@ -25,7 +25,7 @@ evidence_snapshot:
   inventory_method: complete target read plus bounded linked-file evidence; no example execution or runtime inspection
 notes:
   - "The first twelve H2 sections follow Directory Rules section 15 exactly."
-  - "This change is Markdown only and does not create a fixture, test, schema, policy, proof, receipt, route, release, or publication state."
+  - "The 2026-09-21 update adds one static synthetic walkthrough; it creates no fixture, test, schema, policy, proof, receipt, route, release, or publication state."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -64,7 +64,7 @@ Operational meaning remains owned by the relevant `docs/`, `contracts/`, `schema
 | Version | `v0.2.0` |
 | Maturity | `STATIC_WALKTHROUGH` |
 | Prior blob | `44057b2bc13f31545fb033e3e1584e675f1853ea` |
-| Recursive payload inventory | `UNKNOWN` beyond the bounded inventory below |
+| Recursive payload inventory | `CONFIRMED` — README and `suitability_not_occurrence.walkthrough.md` in this checkout |
 | Executable entrypoint / observed run | `NOT ESTABLISHED` |
 | Public/release readiness | `DENY BY PLACEMENT` |
 
@@ -167,7 +167,7 @@ correction_trigger: "<contract, policy, source, runtime, or release change>"
 
 ## Current bounded inventory
 
-The bounded subtree contains this README only.
+The recursive subtree contains this README and [`suitability_not_occurrence.walkthrough.md`](suitability_not_occurrence.walkthrough.md), a synthetic Habitat/Fauna boundary walkthrough with expected `ABSTAIN`.
 
 Omission is not evidence of absence, retirement, or permission to create speculative children.
 
