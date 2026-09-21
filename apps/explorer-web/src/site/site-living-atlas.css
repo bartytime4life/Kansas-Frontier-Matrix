@@ -8,6 +8,11 @@
 .living-atlas button:hover { border-color: var(--river); color: var(--ink); }
 .living-atlas button[aria-pressed="true"], .living-atlas .atlas-primary-action { border-color: rgb(218 182 109 / 50%); background: rgb(218 182 109 / 14%); color: var(--prairie-soft); }
 .atlas-search { width: 100%; min-height: 2.55rem; border: 1px solid var(--line); border-radius: .7rem; background: #071517; color: var(--ink); padding: .55rem .75rem; }
+.atlas-start-guide { display: flex; align-items: center; justify-content: space-between; gap: 1rem; border-bottom: 1px solid var(--line); background: rgb(218 182 109 / 7%); padding: .65rem 1rem; }
+.atlas-start-guide[hidden] { display: none; }
+.atlas-start-guide strong { color: var(--prairie-soft); }
+.atlas-start-guide p { margin: .2rem 0 0; color: var(--muted); font-size: .82rem; line-height: 1.45; }
+.atlas-start-guide button { flex: none; }
 .atlas-mode-panel--map { display: grid; grid-template-columns: minmax(14rem, 19rem) minmax(24rem, 1fr) minmax(17rem, 22rem); grid-template-rows: minmax(34rem, 62vh) auto; }
 .atlas-left-rail, .atlas-evidence-drawer { min-width: 0; overflow: auto; background: var(--surface); }
 .atlas-left-rail { border-right: 1px solid var(--line); }
@@ -19,6 +24,10 @@
 .atlas-view-button { display: grid; justify-items: start; width: 100%; text-align: left; }
 .atlas-view-button small, .atlas-layer-row small, .atlas-source-card small, .atlas-draft-card small, .atlas-connection-card small, .atlas-tool-card small { color: var(--muted); }
 .atlas-view-button[data-status="DESIGN_DATA_HOLD"] small { color: var(--caution); }
+.atlas-held-views { margin-top: .9rem; border-top: 1px solid var(--line); padding-top: .7rem; }
+.atlas-held-views summary { color: var(--prairie-soft); cursor: pointer; font-weight: 760; }
+.atlas-held-views > p { font-size: .75rem; }
+.atlas-held-views .atlas-view-list { padding-top: .35rem; }
 .atlas-layer-row { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: .55rem; border: 1px solid var(--line); border-radius: .7rem; padding: .55rem; }
 .atlas-layer-row div { display: grid; gap: .12rem; min-width: 0; }
 .atlas-layer-row strong { font-size: .82rem; }
@@ -43,6 +52,12 @@
 .atlas-interaction-bar { position: absolute; z-index: 5; top: .65rem; right: .65rem; flex-wrap: wrap; justify-content: flex-end; border: 1px solid var(--line); border-radius: .78rem; padding: .3rem; background: rgb(7 21 23 / 88%); backdrop-filter: blur(12px); }
 .atlas-interaction-bar button { min-height: 2.1rem; }
 .atlas-interaction-bar button[data-tool-state="HELD"] { border-style: dashed; color: var(--caution); }
+.atlas-held-tools summary { min-height: 2.1rem; border: 1px solid var(--line); border-radius: .65rem; padding: .4rem .65rem; color: var(--caution); cursor: pointer; list-style-position: inside; }
+.atlas-held-tools summary:focus-visible { outline: 2px solid var(--river); outline-offset: 2px; }
+.atlas-held-tool-list { position: absolute; top: calc(100% + .35rem); right: 0; display: grid; width: min(23rem, calc(100vw - 1.3rem)); gap: .55rem; border: 1px solid var(--line-strong); border-radius: .75rem; background: #102729; padding: .7rem; box-shadow: 0 12px 35px rgb(0 0 0 / 40%); }
+.atlas-held-tool-item { display: grid; gap: .15rem; }
+.atlas-held-tool-item button { justify-self: start; }
+.atlas-held-tool-item p { margin: 0; color: var(--muted); font-size: .72rem; line-height: 1.4; }
 .atlas-map-notice { position: absolute; z-index: 5; right: .65rem; bottom: .65rem; display: grid; max-width: 28rem; gap: .2rem; border: 1px solid var(--line-strong); border-radius: .8rem; background: rgb(7 21 23 / 90%); padding: .65rem .75rem; color: var(--muted); font-size: .72rem; backdrop-filter: blur(12px); }
 .atlas-map-notice strong { color: var(--prairie-soft); }
 .atlas-runtime-state { margin: .2rem 0 0; color: var(--river); font-weight: 750; }
@@ -93,6 +108,7 @@
 @media (max-width: 760px) {
   .atlas-section-shell { width: 100%; }
   .living-atlas { border-inline: 0; border-radius: 0; }
+  .atlas-start-guide { align-items: flex-start; flex-direction: column; }
   .atlas-mode-nav { order: 3; grid-column: 1 / -1; }
   .atlas-mode-panel--map { grid-template-columns: 1fr; grid-template-rows: auto minmax(31rem, 68vh) auto auto; }
   .atlas-left-rail { max-height: 20rem; border-right: 0; border-bottom: 1px solid var(--line); }
@@ -101,4 +117,5 @@
   .atlas-timeline-actions { justify-items: stretch; }
   .atlas-playback-controls { justify-content: space-between; }
   .atlas-interaction-bar { top: 3.6rem; left: .65rem; right: auto; justify-content: flex-start; }
+  .atlas-held-tool-list { right: auto; left: 0; }
 }

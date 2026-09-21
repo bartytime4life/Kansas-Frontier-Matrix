@@ -22,6 +22,12 @@ The composition:
 
 The retained illustrative map is a fixed browser composition, not an HTML template. It creates SVG nodes in the SVG namespace, sets attributes individually, and assigns visible labels through text content. Keep dynamic trust-bearing material out of this helper; evidence and state continue through typed, text-first projections. This legacy laboratory does not establish a governed data path.
 
+## First-use workbench path
+
+The local workbench now starts with a synthetic-scope guide and a keyboard-focusable route into the layer catalog. Seven bounded demo views remain visible; eleven design/data holds, three held map tools, and the older trust-state laboratory sit behind native disclosures. Held tool explanations remain visible inside their disclosure. Search opens the held-view disclosure when a held view matches. The Evidence Drawer and committed-time controls retain their existing finite outcomes. These presentation changes do not affect the separate Sites source or hosted v45.
+
+The 2026-09-21 local production build measured a 1,243.21 kB main JavaScript asset (338.25 kB gzip) and a 506.72 kB MapLibre worker. That is a build artifact measurement, not a loading-performance claim. Browser checks use desktop and 390 px viewports, exercise the first-use path and disclosure, and verify no horizontal document overflow at the narrow width. Roll back this UI slice by reverting its workbench composition, styles, browser tests, and this note together.
+
 ## Unified Workspace UI-01 bounded slice
 
 The first Unified Workspace implementation slice is intentionally public, no-network, and composition-owned:

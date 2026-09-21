@@ -95,6 +95,7 @@ test("keeps every composed Evidence Drawer DOM identity unique and correctly lin
   page,
 }) => {
   await page.goto("/");
+  await page.getByText("Open synthetic trust-state laboratory").click();
 
   await page
     .getByRole("button", { name: "Supported synthetic streamflow", exact: true })

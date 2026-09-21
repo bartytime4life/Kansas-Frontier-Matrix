@@ -6,6 +6,7 @@ test("keeps held-tool guidance above late readiness chatter in the mounted works
   await page.goto("/");
   const workspace = page.locator('[data-component="living-atlas-workspace"]');
   const status = workspace.locator('.atlas-runtime-state[role="status"]');
+  await workspace.getByText("3 held tools").click();
   const heldMeasure = workspace.locator(".atlas-interaction-bar").getByRole(
     "button",
     {

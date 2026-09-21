@@ -4,6 +4,7 @@ test("preserves the illustrative map semantics after DOM-safe construction", asy
   page,
 }) => {
   await page.goto("/");
+  await page.getByText("Open synthetic trust-state laboratory").click();
 
   const artwork = page.locator("figure.map-artwork");
   await expect(artwork).toBeVisible();

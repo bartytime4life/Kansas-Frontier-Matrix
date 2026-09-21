@@ -316,8 +316,11 @@ export function mountExplorerSite(root: HTMLElement): ExplorerSiteController {
   const livingAtlasHost = el(document, "div");
   livingAtlasHost.dataset.component = "living-atlas-host";
   mapSection.append(livingAtlasHost);
-  const legacyProof = el(document, "section", "legacy-map-proof");
-  legacyProof.append(heading(document, "Trust-state laboratory", "The mature finite-outcome proofs remain directly inspectable", "Below the bounded MapLibre composition, these renderer-neutral fixtures preserve supported, missing, denied, mismatched, stale, withdrawn, and error behavior."));
+  const legacyProof = el(document, "details", "legacy-map-proof");
+  legacyProof.append(
+    text(document, "summary", "Open synthetic trust-state laboratory"),
+    heading(document, "Trust-state laboratory", "Exercise finite outcomes", "These renderer-neutral fixtures exercise supported, missing, denied, mismatched, stale, withdrawn, and error behavior. They cannot admit sources or release evidence."),
+  );
   const mapGrid = el(document, "div", "map-grid");
   const mapCard = el(document, "div", "map-card card");
   const mapToolbar = el(document, "div", "map-toolbar");

@@ -4,6 +4,7 @@ test("mounts finite renderer-neutral runtime status in the normal map workspace"
   page,
 }) => {
   await page.goto("/");
+  await page.getByText("Open synthetic trust-state laboratory").click();
 
   const host = page.locator(
     '[data-component="explorer-map-runtime-status-host"]',

@@ -264,6 +264,15 @@ export function mountLivingAtlasWorkspace(
   search.setAttribute("aria-label", "Search Living Atlas catalog");
   topbar.append(identity, modeNav, search, button(document, "New from map", "composer:open", "atlas-primary-action"));
 
+  const startGuide = el(document, "section", "atlas-start-guide");
+  startGuide.setAttribute("aria-label", "Start exploring this synthetic atlas");
+  const startCopy = el(document, "div");
+  startCopy.append(
+    text(document, "strong", "Start with a bounded demonstration"),
+    text(document, "p", "Choose a demo view, inspect a layer in the Evidence Drawer, then apply a time. Map shapes are synthetic or generalized; live source admission is held."),
+  );
+  startGuide.append(startCopy, button(document, "Inspect a demo layer", "start:inspect", "atlas-primary-action"));
+
   const mapMode = el(document, "div", "atlas-mode-panel atlas-mode-panel--map");
   mapMode.dataset.atlasMode = "map";
   const leftRail = el(document, "aside", "atlas-left-rail");
@@ -278,17 +287,30 @@ export function mountLivingAtlasWorkspace(
 
   const viewsPanel = el(document, "div", "atlas-rail-panel");
   viewsPanel.dataset.railPanel = "views";
-  viewsPanel.append(text(document, "h2", "18 default views"));
+  const demoViews = ATLAS_VIEWS.filter((view) => view.status === "SITE_LOCAL_DEMO");
+  const heldViews = ATLAS_VIEWS.filter((view) => view.status === "DESIGN_DATA_HOLD");
+  viewsPanel.append(
+    text(document, "h2", `${demoViews.length} bounded demo views`),
+    text(document, "p", "These views exercise the interface with synthetic or generalized material.", "atlas-muted"),
+  );
   const viewList = el(document, "div", "atlas-view-list");
+  const heldViewList = el(document, "div", "atlas-view-list");
   ATLAS_VIEWS.forEach((view) => {
     const node = button(document, view.name, `view:${view.id}`, "atlas-view-button");
     node.dataset.searchText = `${view.name} ${view.question}`.toLowerCase();
     node.dataset.status = view.status;
     node.setAttribute("aria-pressed", String(view.id === snapshot.activeViewId));
     node.append(text(document, "small", view.status === "SITE_LOCAL_DEMO" ? "Bounded demo" : "Data hold"));
-    viewList.append(node);
+    if (view.status === "SITE_LOCAL_DEMO") viewList.append(node);
+    else heldViewList.append(node);
   });
-  viewsPanel.append(viewList);
+  const heldViewsDisclosure = el(document, "details", "atlas-held-views");
+  heldViewsDisclosure.append(
+    text(document, "summary", `${heldViews.length} views awaiting data admission`),
+    text(document, "p", "You can inspect each design and its hold reason. Selecting one cannot load missing source data or grant access.", "atlas-muted"),
+  );
+  heldViewsDisclosure.append(heldViewList);
+  viewsPanel.append(viewList, heldViewsDisclosure);
 
   const layersPanel = el(document, "div", "atlas-rail-panel");
   layersPanel.dataset.railPanel = "layers";
@@ -484,14 +506,24 @@ export function mountLivingAtlasWorkspace(
   });
   const interactionBar = el(document, "div", "atlas-interaction-bar");
   interactionBar.setAttribute("aria-label", "Map interaction tools");
+  const heldTools = MAP_INTERACTION_TOOLS.filter((tool) => tool.state === "HELD");
+  const heldToolsDisclosure = el(document, "details", "atlas-held-tools");
+  heldToolsDisclosure.append(text(document, "summary", `${heldTools.length} held tools`));
+  const heldToolList = el(document, "div", "atlas-held-tool-list");
   MAP_INTERACTION_TOOLS.forEach((tool) => {
     const label = tool.state === "HELD" ? `${tool.name} · HELD` : tool.name;
     const node = button(document, label, `interaction:${tool.id}`);
     node.dataset.toolState = tool.state;
     node.setAttribute("aria-pressed", String(tool.id === "select"));
     node.title = tool.statusReason;
-    interactionBar.append(node);
+    if (tool.state === "HELD") {
+      const item = el(document, "div", "atlas-held-tool-item");
+      item.append(node, text(document, "p", tool.statusReason));
+      heldToolList.append(item);
+    } else interactionBar.append(node);
   });
+  heldToolsDisclosure.append(heldToolList);
+  interactionBar.append(heldToolsDisclosure);
   const mapCanvas = el(document, "div", "atlas-map-canvas");
   mapCanvas.id = "kfm-living-atlas-map";
   const mapNotice = el(document, "div", "atlas-map-notice");
@@ -841,7 +873,7 @@ export function mountLivingAtlasWorkspace(
     button(document, "Close", "composer:close"),
   );
 
-  workspace.append(topbar, mapMode, reportsMode, storiesMode, composer);
+  workspace.append(topbar, startGuide, mapMode, reportsMode, storiesMode, composer);
   host.replaceChildren(workspace);
 
   const layerMatchesCommittedTime = (layerId: string): boolean => {
@@ -919,7 +951,7 @@ export function mountLivingAtlasWorkspace(
       });
       runtimeState.textContent = `HELD · ${view.statusReason}`;
       renderEvidence(selectedLayerId);
-      viewList.querySelectorAll<HTMLButtonElement>("button").forEach((node) => {
+      viewsPanel.querySelectorAll<HTMLButtonElement>(".atlas-view-button").forEach((node) => {
         node.setAttribute(
           "aria-pressed",
           String(node.dataset.atlasAction === `view:${view.id}`),
@@ -954,7 +986,7 @@ export function mountLivingAtlasWorkspace(
     timeInput.value = String(Math.max(0, DISPLAY_TIMES.findIndex((entry) => entry.id === previewTimeId)));
     timeLabel.textContent = findTemporalExtent(previewTimeId)?.label ?? "Unknown time";
     resetPlaybackForTime(previewTimeId);
-    viewList.querySelectorAll<HTMLButtonElement>("button").forEach((node) => node.setAttribute("aria-pressed", String(node.dataset.atlasAction === `view:${view.id}`)));
+    viewsPanel.querySelectorAll<HTMLButtonElement>(".atlas-view-button").forEach((node) => node.setAttribute("aria-pressed", String(node.dataset.atlasAction === `view:${view.id}`)));
     representationBar.querySelectorAll<HTMLButtonElement>("button").forEach((node) => node.setAttribute("aria-pressed", String(node.dataset.atlasAction === `representation:${usableRepresentation}`)));
     refreshLayerControls();
     renderEvidence(null);
@@ -1012,6 +1044,7 @@ export function mountLivingAtlasWorkspace(
   };
 
   const activateMode = (mode: string): void => {
+    startGuide.hidden = mode !== "map";
     workspace.querySelectorAll<HTMLElement>("[data-atlas-mode]").forEach((panel) => {
       panel.hidden = panel.dataset.atlasMode !== mode;
     });
@@ -1069,7 +1102,11 @@ export function mountLivingAtlasWorkspace(
     if (!target) return;
     const action = target.dataset.atlasAction ?? "";
     if (action.startsWith("mode:")) activateMode(action.slice(5));
-    else if (action.startsWith("rail:")) {
+    else if (action === "start:inspect") {
+      activateMode("map");
+      activateRail("layers");
+      layerList.querySelector<HTMLButtonElement>(".atlas-layer-row button")?.focus();
+    } else if (action.startsWith("rail:")) {
       activateRail(action.slice(5));
     } else if (action.startsWith("view:")) activateView(action.slice(5));
     else if (action.startsWith("inspect:")) {
@@ -1194,6 +1231,9 @@ export function mountLivingAtlasWorkspace(
     workspace.querySelectorAll<HTMLElement>("[data-search-text]").forEach((node) => {
       node.hidden = query.length > 0 && !(node.dataset.searchText ?? "").includes(query);
     });
+    if (query.length > 0 && heldViewList.querySelector("[data-search-text]:not([hidden])")) {
+      heldViewsDisclosure.open = true;
+    }
     if (query.length === 0) return;
 
     const currentPanel = Array.from(

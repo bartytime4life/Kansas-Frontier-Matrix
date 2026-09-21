@@ -15,10 +15,50 @@ test("mounts the map-first Living Atlas without external requests", async ({
   const workspace = page.locator('[data-component="living-atlas-workspace"]');
   await expect(workspace).toBeVisible();
   await expect(workspace.getByRole("heading", { name: "Kansas Living Atlas" })).toBeVisible();
-  await expect(workspace.locator(".atlas-view-list > button")).toHaveCount(18);
+  await expect(workspace.locator('[data-rail-panel="views"] > .atlas-view-list > button')).toHaveCount(7);
+  await expect(workspace.locator(".atlas-held-views .atlas-view-button")).toHaveCount(11);
   await expect(workspace.locator("#kfm-living-atlas-map canvas")).toHaveCount(1);
   await expect(workspace.getByRole("status").filter({ hasText: "Renderer" })).toContainText("READY");
   expect(externalRequests).toEqual([]);
+});
+
+test("guides first use and keeps held views behind an accessible disclosure", async ({ page }) => {
+  await page.goto("/");
+  const workspace = page.locator('[data-component="living-atlas-workspace"]');
+  const guide = workspace.getByRole("region", { name: "Start exploring this synthetic atlas" });
+  await expect(guide).toContainText("synthetic or generalized");
+  await expect(guide).toContainText("live source admission is held");
+
+  const held = workspace.locator(".atlas-held-views");
+  await expect(held).not.toHaveAttribute("open");
+  await expect(workspace.getByRole("button", { name: /Terrain & Landforms/ })).toBeHidden();
+  await guide.getByRole("button", { name: "Inspect a demo layer" }).click();
+  await expect(workspace.getByRole("heading", { name: "Layer catalog" })).toBeVisible();
+  await expect(workspace.locator(".atlas-layer-row button").first()).toBeFocused();
+  await page.keyboard.press("Enter");
+  await expect(workspace.getByRole("complementary", { name: "Evidence Drawer" }))
+    .toContainText("Generalized Kansas extent");
+  await expect(workspace.getByRole("complementary", { name: "Evidence Drawer" }))
+    .toContainText("Source and time");
+
+  await workspace.getByRole("button", { name: "Views" }).click();
+  await workspace.getByRole("searchbox", { name: "Search Living Atlas catalog" }).fill("Terrain & Landforms");
+  await expect(held).toHaveAttribute("open");
+  await workspace.getByRole("button", { name: /Terrain & Landforms/ }).click();
+  await expect(workspace.getByRole("status").filter({ hasText: "HELD" })).toBeVisible();
+});
+
+test("narrow first-use path has no horizontal overflow and preserves the text alternative", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+  const workspace = page.locator('[data-component="living-atlas-workspace"]');
+  await expect(workspace.getByRole("region", { name: "Start exploring this synthetic atlas" })).toBeVisible();
+  await expect(workspace.getByRole("button", { name: "Inspect a demo layer" })).toBeVisible();
+  await workspace.getByRole("button", { name: "Inspect a demo layer" }).click();
+  await workspace.locator(".atlas-layer-row button").first().click();
+  await expect(workspace.getByRole("complementary", { name: "Evidence Drawer" })).toBeVisible();
+  const overflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
+  expect(overflow).toBe(false);
 });
 
 test("renders every Living Waters fixture scenario as finite non-authoritative state", async ({
@@ -243,6 +283,7 @@ test("keeps held-view evidence, Focus, and report snapshots aligned", async ({
   );
 
   await workspace.getByRole("button", { name: "Views" }).click();
+  await workspace.getByText("11 views awaiting data admission").click();
   await workspace.getByRole("button", { name: /Archaeology & Cultural Landscapes/ }).click();
   await expect(workspace.getByRole("complementary", { name: "Evidence Drawer" })).toContainText(
     "DENY · PROTECTED_SPATIAL_DETAIL",
@@ -353,6 +394,12 @@ test("connects Living Atlas tools to the repository feature catalog", async ({
 }) => {
   await page.goto("/");
   const workspace = page.locator('[data-component="living-atlas-workspace"]');
+
+  const heldTools = workspace.locator(".atlas-held-tools");
+  await expect(heldTools).not.toHaveAttribute("open");
+  await workspace.getByText("3 held tools").click();
+  await expect(heldTools).toHaveAttribute("open");
+  await expect(heldTools).toContainText("Measurement, projection, units, uncertainty, and export contracts are not bound.");
 
   const heldMeasure = workspace.locator(".atlas-interaction-bar").getByRole("button", {
     name: "Measure · HELD",
