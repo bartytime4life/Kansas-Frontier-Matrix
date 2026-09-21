@@ -7,7 +7,7 @@ on:
       - 'schemas/contracts/v1/domains/roads-rail-trade/evidence_bundle.schema.json'
       - 'fixtures/contracts/v1/evidence/evidence_bundle/**'
       - 'tools/validators/validate_roads_rail_trade_evidence_bundle_projection.py'
-      - 'tests/validators/domains/roads-rail-trade/test_evidence_bundle_schema_convergence.py'
+      - 'tests/validators/domains/roads-rail-trade/test_roads_rail_trade_evidence_bundle_schema_convergence.py'
       - '.github/workflows/roads-rail-trade-evidence-bundle-convergence.yml'
   workflow_dispatch:
 
@@ -36,12 +36,12 @@ jobs:
         run: >-
           python -m py_compile
           tools/validators/validate_roads_rail_trade_evidence_bundle_projection.py
-          tests/validators/domains/roads-rail-trade/test_evidence_bundle_schema_convergence.py
+          tests/validators/domains/roads-rail-trade/test_roads_rail_trade_evidence_bundle_schema_convergence.py
       - name: Run deterministic convergence tests
         run: >-
           python -m unittest discover
           --start-directory tests/validators/domains/roads-rail-trade
-          --pattern 'test_evidence_bundle_schema_convergence.py'
+          --pattern 'test_roads_rail_trade_evidence_bundle_schema_convergence.py'
           --verbose
       - name: Validate shared fixtures through the Roads/Rail/Trade projection
         run: python tools/validators/validate_roads_rail_trade_evidence_bundle_projection.py --fixtures
