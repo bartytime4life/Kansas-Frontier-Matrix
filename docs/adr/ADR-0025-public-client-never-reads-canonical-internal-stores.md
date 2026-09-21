@@ -25,6 +25,8 @@ updated: 2026-09-14
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
+owning_root: docs/
+responsibility: "Record the proposed rule that public clients never read canonical or internal stores directly."
 current_path: docs/adr/ADR-0025-public-client-never-reads-canonical-internal-stores.md
 supersedes: []
 superseded_by: null

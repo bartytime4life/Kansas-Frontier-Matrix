@@ -24,6 +24,8 @@ updated: 2026-09-14
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
+owning_root: docs/
+responsibility: "Record the proposed County Focus Mode control-plane decision."
 current_path: docs/adr/ADR-0027-county-focus-mode-control-plane.md
 supersedes: []
 superseded_by: null

@@ -11,6 +11,9 @@ owners:
 created: 2026-05-09
 updated: 2026-09-13
 policy_label: public
+owning_root: docs/
+responsibility: "Record the proposed structured quarantine exit-path decision."
+truth_posture: cite-or-abstain
 canonical_path: docs/adr/ADR-0021-quarantine-has-structured-exit-paths.md
 path_status: CONFIRMED
 current_reconciliation:

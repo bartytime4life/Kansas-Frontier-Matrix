@@ -10,6 +10,8 @@ created: 2026-05-24
 updated: 2026-08-19
 policy_label: public; architecture; cross-domain; composition; cite-or-abstain; non-release; non-publication
 responsibility_root: docs/
+owning_root: docs/
+responsibility: "Explain cross-cutting compositional units and how they compose across domain lanes without becoming contract, schema, policy, or release authority."
 canonical_relationship: same-path architecture reference; no sibling authority created
 truth_posture: >-
   CONFIRMED accepted Directory Rules v2, current repository paths, proposed

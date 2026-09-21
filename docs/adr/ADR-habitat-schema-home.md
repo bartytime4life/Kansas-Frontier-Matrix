@@ -2,7 +2,8 @@
 doc_id: kfm://adr/habitat-schema-home
 title: "ADR Candidate — Habitat Schema Home"
 adr_id: ADR-habitat-schema-home
-type: architecture-decision-record; unassigned-scaffold
+type: adr
+subtype: unassigned-scaffold
 version: v1.2
 status: proposed
 effective_decision_status: not-assigned
@@ -19,6 +20,7 @@ updated: 2026-09-14
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
+owning_root: docs/
 current_path: docs/adr/ADR-habitat-schema-home.md
 responsibility: "Preserve the unresolved Habitat schema-home question and its evidence crosswalk without selecting a path, assigning an ADR number, accepting a decision, creating a schema or migration authority, or changing runtime, data, release, or publication state."
 supersedes: []

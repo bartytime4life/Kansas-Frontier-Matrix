@@ -12,6 +12,8 @@ updated: 2026-08-01
 policy_label: public; planning-reference; cite-or-abstain; no-sensitive-detail
 current_path: docs/KFM-encyclopedia.md
 owning_root: docs/
+responsibility: "Index KFM domain and capability planning vocabulary and terminology for human readers without creating contract, schema, policy, release, or publication authority."
+truth_posture: cite-or-abstain
 canonical_relationship: same-path planning reference; distinct from and subordinate to docs/doctrine/encyclopedia.md
 source_edition: Kansas Frontier Matrix Domain and Capability Encyclopedia v0.1 PDF-ready master planning manuscript, 2026-05-05
 source_artifact:

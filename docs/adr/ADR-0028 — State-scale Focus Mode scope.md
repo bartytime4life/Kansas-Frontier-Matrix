@@ -28,6 +28,8 @@ updated: 2026-09-14
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
+owning_root: docs/
+responsibility: "Record the proposed state-scale Focus Mode scope and cross-scale domain-coverage rule."
 current_path: "docs/adr/ADR-0028 — State-scale Focus Mode scope.md"
 supersedes: []
 superseded_by: null

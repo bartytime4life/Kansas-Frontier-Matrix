@@ -21,7 +21,8 @@ reviewers_required:
   - Evidence steward
   - Release, correction, and rollback steward
   - Validation steward
-created: "NEEDS VERIFICATION — scaffold predates this revision"
+created: 2026-07-24
+created_note: "2026-07-24 identifies the v1.0 same-path modernization revision, not repository-backed file creation provenance; see the notes list below."
 updated: 2026-09-14
 policy_label: public
 truth_posture: cite-or-abstain

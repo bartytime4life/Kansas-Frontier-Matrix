@@ -17,6 +17,9 @@ reviewers:
 created: 2026-07-24
 updated: 2026-09-14
 policy_label: public
+owning_root: docs/
+responsibility: "Preserve the unresolved Habitat source-role assignment question as an unassigned scaffold without admitting a source or accepting a decision."
+truth_posture: cite-or-abstain
 related:
   - docs/domains/habitat/ARCHITECTURE.md
   - docs/domains/habitat/SOURCE_FAMILIES.md

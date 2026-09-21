@@ -26,6 +26,8 @@ updated: 2026-09-13
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
+owning_root: docs/
+responsibility: "Record the proposed AI adapter contract and finite-envelope decision."
 current_path: docs/adr/ADR-0019-ai-adapter-contract-and-finite-envelopes.md
 supersedes: []
 superseded_by: null

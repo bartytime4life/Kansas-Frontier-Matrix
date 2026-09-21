@@ -29,6 +29,8 @@ updated: 2026-09-13
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
+owning_root: docs/
+responsibility: "Record the proposed deny-by-default posture for DNA, rare-species, archaeology, and critical-infrastructure material."
 current_path: docs/adr/ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md
 supersedes: []
 superseded_by: null

@@ -21,11 +21,14 @@ reviewers_required:
   - Evidence steward
   - Release, correction, and rollback steward
   - Validation steward
-created: "NEEDS VERIFICATION — scaffold predates this revision"
+created: 2026-07-24
+created_note: "2026-07-24 identifies the v1.0 same-path modernization revision, not repository-backed file creation provenance; the original scaffold creation date remains NEEDS VERIFICATION and is outside this shallow-clone repository's available Git history"
 updated: 2026-09-14
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
+owning_root: docs/
+responsibility: "Record the proposed Habitat stewardship-zone policy boundary decision."
 current_path: docs/adr/ADR-habitat-stewardship-zone-policy.md
 supersedes: []
 superseded_by: null

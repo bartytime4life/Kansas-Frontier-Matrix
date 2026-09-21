@@ -3,12 +3,12 @@ doc_id: kfm://doc/doctrine/readme
 title: docs/doctrine/ — Doctrine Landing Page
 type: readme
 subtype: directory-landing-page
-version: v0.8
-prior_version: v0.7
+version: v0.9
+prior_version: v0.8
 status: active; repository-grounded; documentation-only; non-authoritative
 owner: "NEEDS VERIFICATION — CODEOWNERS routes /docs/doctrine/ to @bartytime4life; no accepted doctrine-steward assignment, required independent review rule, or release authority was verified"
 created: 2026-05-18
-updated: 2026-08-28
+updated: 2026-09-21
 policy_label: public
 current_path: docs/doctrine/README.md
 owning_root: docs/
@@ -21,22 +21,22 @@ canonical_relationship: same-path update; no sibling authority, alias, move, or 
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: ba8856e1fc2bf930e9b44df1cfbf4f3dc369d084
-  target_prior_blob: b5b420be9a658d3a9bd9601188da20117c92f071
+  base_commit: bb6f357a968235246623205250cf70bb27a8a422
+  target_prior_blob: c2aee9bcb97ecb9a66be7497382605a0debda37a
   doctrine_tree: 2bc2475df04f5086dad1e425fe077ffd8dce4946
   parent_docs_readme_blob: 1f8bac189dac1d01c1185e8b4fb8e25efd11d09f
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
-  adr_index_blob: dad651854ba7d37a3b29008dc8a90c0589caa030
-  adr_0029_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
+  adr_index_blob: a937b4c5a81e0b36b44a2fc14d7df046db388fe2
+  adr_0029_blob: 4c1ef5f7f812d58fbdde9898acc96bb4c9280b2c
   codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
   document_registry_blob: 9129f2f271f11516249b0d27b0a470082677fba4
   doctrine_required_registry_blob: 1215fadf99c39978bfa6a669c888396a7ef3e277
-  docs_build_workflow_blob: 7816e07d66774d2e2b3b80b66d5d3349a1393861
-  link_check_workflow_blob: 7b6c675d879a36d685b19b18fde401fca1bdd00e
+  docs_build_workflow_blob: b336e66848039e96887935a4c773aefda734f260
+  link_check_workflow_blob: 12859c364e48786a43b04c93595892559ac83c30
   docs_meta_block_workflow_blob: 732879cd8a5aca71ef3c570a0c34c4c389f20e8a
   docs_document_graph_workflow_blob: 636749f75621bf773ac558286789dadb41c47c35
   docs_stale_scan_workflow_blob: 5a94d7c353c4c18c0bcb9a0df45c81a3916f747a
-  docs_control_plane_workflow_blob: ed0d3b50a12931b67cad005cd99433924c829fa3
+  docs_control_plane_workflow_blob: 18057f8d698e07ef3ad7c3b2eb2567d26c741c9f
 related:
   - docs/README.md
   - docs/doctrine/directory-rules.md
@@ -61,11 +61,12 @@ related:
   - docs/registers/VERIFICATION_BACKLOG.md
   - control_plane/document_registry.yaml
 notes:
-  - "v0.8 refreshes the exact repository checkpoint and reconciles this landing page to the canonical 37-record ADR inventory and three accepted numbered decisions."
+  - "v0.9 refreshes the exact repository checkpoint and reconciles this landing page to the canonical 41-record ADR inventory and five accepted numbered decisions."
   - "The doctrine directory contains seventeen files total: this README plus sixteen content paths; the sixteen content paths resolve to fifteen unique blobs because truth-posture.md and trust-membrane.md are byte-identical."
   - "ADR-0029 adopts the exact Directory Rules v2 bytes even though the adopted file's preserved internal document-control block still says PROPOSED_FOR_ADOPTION."
-  - "The canonical ADR index contains thirty-seven numbered records and twelve unassigned scaffolds; ADR-0006, ADR-0007, and ADR-0029 are accepted and the other thirty-four numbered records remain proposed."
+  - "The canonical ADR index contains forty-one numbered records and eleven unassigned scaffolds, confirmed by `tools/validators/validate_adr_index.py`; ADR-0006, ADR-0007, ADR-0029, ADR-0038, and ADR-0040 are accepted and the other thirty-six numbered records remain proposed. ADR-0038 accepts only the trusted-base correction mechanism (issue #4228 remains Stage 1B HOLD); ADR-0040 accepts only seven exact catalog redirect-document target blobs."
   - "This update records, but does not resolve, duplicate identity, filename drift, proposed-home mismatch, missing-reference targets, incomplete registry coverage, or stewardship gaps."
+  - "v0.9 does not resolve DOC-DOC-001, DOC-DOC-002, or DOC-DOC-003; per this page's own change-discipline table, a filename/identity conflict requires a naming migration or reviewed alias, not a same-path landing-page edit."
   - "The repository has bounded metadata, link, graph, freshness, and ADR/control-plane QA; docs-build and preview publication remain explicit holds."
   - "No doctrine meaning, ADR status, contract, schema, policy, source, lifecycle state, runtime behavior, release, deployment, or publication changes in this landing-page update."
 [/KFM_META_BLOCK_V2] -->
@@ -81,11 +82,11 @@ notes:
 [![Directory Rules: adopted bytes](https://img.shields.io/badge/Directory%20Rules-adopted%20bytes-1a7f37?style=flat-square)](../adr/ADR-0029-adopt-directory-governance-standard-v2.md)
 [![Doctrine paths: 16](https://img.shields.io/badge/doctrine%20content%20paths-16-0969da?style=flat-square)](#documents-in-this-folder)
 [![Unique content blobs: 15](https://img.shields.io/badge/unique%20content%20blobs-15-d29922?style=flat-square)](#conflict-and-hold-register)
-[![ADRs: 3 accepted · 34 proposed](https://img.shields.io/badge/ADRs-3%20accepted%20%C2%B7%2034%20proposed-1a7f37?style=flat-square)](../adr/INDEX.md)
-[![Unassigned ADR scaffolds: 12](https://img.shields.io/badge/ADR%20scaffolds-12-6e7781?style=flat-square)](../adr/INDEX.md#unassigned-scaffolds)
+[![ADRs: 5 accepted · 36 proposed](https://img.shields.io/badge/ADRs-5%20accepted%20%C2%B7%2036%20proposed-1a7f37?style=flat-square)](../adr/INDEX.md)
+[![Unassigned ADR scaffolds: 11](https://img.shields.io/badge/ADR%20scaffolds-11-6e7781?style=flat-square)](../adr/INDEX.md#unassigned-scaffolds)
 [![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#authority-level)
-[![Evidence snapshot: main@ba8856e](https://img.shields.io/badge/evidence-main%40ba8856e-8250df?style=flat-square)](#status)
-[![Reviewed: 2026-08-28](https://img.shields.io/badge/reviewed-2026--08--28-0969da?style=flat-square)](#last-reviewed)
+[![Evidence snapshot: main@bb6f357a](https://img.shields.io/badge/evidence-main%40bb6f357a-8250df?style=flat-square)](#status)
+[![Reviewed: 2026-09-21](https://img.shields.io/badge/reviewed-2026--09--21-0969da?style=flat-square)](#last-reviewed)
 
 > [!IMPORTANT]
 > **This README orients; it does not decide.** Doctrine states KFM-wide rules. Accepted ADRs amend decisions only within their stated scope. Contracts define meaning, schemas define machine shape, policy decides admissibility, tests and fixtures provide bounded evidence, `data/` owns lifecycle and accountability records, and `release/` owns release decisions. A badge, diagram, commit, pull request, index row, workflow result, or polished page is not proof of adoption, implementation, review, release, deployment, or publication.
@@ -163,7 +164,7 @@ The other doctrine-content paths currently self-declare `draft`. Presence, a tit
 
 ### Current repository snapshot
 
-| Surface | Finding at `main@ba8856e1fc2bf930e9b44df1cfbf4f3dc369d084` | Safe conclusion |
+| Surface | Finding at `main@bb6f357a968235246623205250cf70bb27a8a422` | Safe conclusion |
 |---|---|---|
 | This README | **CONFIRMED present**, prior blob `b5b420be9a658d3a9bd9601188da20117c92f071` | Same-path v0.8 documentation update |
 | Doctrine direct-child tree | **CONFIRMED 17 files total** | This README plus 16 doctrine-content paths |
@@ -176,8 +177,8 @@ The other doctrine-content paths currently self-declare `draft`. Presence, a tit
 | `trust-posture.md` | **CONFIRMED absent at the snapshot** | Existing references require correction, aliasing, or migration review |
 | `docs/architecture/maplibre-3d.md` | **CONFIRMED absent at the snapshot** | Existing references are unresolved; accepted ADR-0007 establishes architecture only and does not create this file |
 | CODEOWNERS | **CONFIRMED** `/docs/doctrine/ @bartytime4life` | GitHub review routing exists; stewardship, independent review, and release authority remain separate |
-| ADR index | **CONFIRMED** 37 numbered records and 12 unassigned scaffolds | ADR-0006, ADR-0007, and ADR-0029 are accepted; the other 34 numbered records remain proposed |
-| ADR-0029 post-adoption notes | **STALE inventory sentence** mentions ADR-0034 as the current end | Decision remains accepted; canonical index now extends through ADR-0037 |
+| ADR index | **CONFIRMED** 41 numbered records and 11 unassigned scaffolds, per `tools/validators/validate_adr_index.py` | ADR-0006, ADR-0007, ADR-0029, ADR-0038, and ADR-0040 are accepted; the other 36 numbered records remain proposed |
+| ADR-0029 post-adoption notes | **STALE inventory sentence** mentions ADR-0034 as the current end | Decision remains accepted; canonical index now extends through ADR-0041, and two further numbered records (ADR-0038, ADR-0040) have since been accepted independently of ADR-0029 |
 | Machine document registry | **CONFIRMED narrow PROPOSED scaffold** | It is not a complete doctrine inventory and creates no authority |
 | Documentation QA | **CONFIRMED bounded workflows** for metadata, local links, document graph, stale scan, and ADR/control-plane coherence | Passing checks remain QA, not doctrine, review, release, or publication |
 | Documentation build and preview | **Explicit HOLD** | No accepted generator, deterministic build command, preview artifact, hosting target, or publication handoff |
@@ -370,9 +371,11 @@ Repository-native hosted checks remain **PENDING** until the draft pull request 
 | [`ADR-0007`](<../adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md>) | MapLibre GL JS as sole browser-side renderer | `accepted` |
 | [`ADR-0029`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) | Exact Directory Governance Standard v2 adoption and controlled compatibility migration | `accepted` |
 | [`ADR-0035`](../adr/ADR-0035-repository-wide-adr-identity-numbering-and-domain-indexing.md) | Repository-wide ADR identity, numbering, and domain indexing | `proposed` |
-| [`ADR index`](../adr/INDEX.md) | 37 numbered records and 12 unassigned scaffolds | 3 `accepted`; 34 `proposed` |
+| [`ADR-0038`](../adr/ADR-0038-trusted-base-topology-correction-transitions.md) | Trusted-base exact transitions for frozen-topology corrections | `accepted` — Stage 1 mechanism only; issue [#4228](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4228) records Stage 1B as HOLD and Stage 2 as unauthorized |
+| [`ADR-0040`](../adr/ADR-0040-catalog-redirect-metadata-corrections.md) | Exact catalog redirect metadata corrections | `accepted` — bounded to seven exact target catalog redirect-document blobs; every correction-register entry remains proposed and unbound |
+| [`ADR index`](../adr/INDEX.md) | 41 numbered records and 11 unassigned scaffolds | 5 `accepted`; 36 `proposed` |
 
-The canonical ADR index, not this README, owns the current inventory. An index row cannot accept a decision. ADR-0029's v1.3 notes contain an older sentence ending the inventory at ADR-0034; that is documentation drift inside the post-adoption record, not evidence that ADR-0035 through ADR-0037 are absent or that any ADR changed status.
+The canonical ADR index, not this README, owns the current inventory. An index row cannot accept a decision. ADR-0029's own v1.4 post-adoption notes contain an older sentence ending the inventory at ADR-0034; that is documentation drift inside the post-adoption record, not evidence that ADR-0035 through ADR-0041 are absent or that any ADR changed status. ADR-0038 and ADR-0040 became accepted after this page's v0.8 edition and are independent decisions; neither one amends ADR-0029.
 
 [Back to top](#top)
 
@@ -380,12 +383,13 @@ The canonical ADR index, not this README, owns the current inventory. An index r
 
 ## Last reviewed
 
-**2026-08-28** — v0.8 reconciled the doctrine landing page to `main@ba8856e1fc2bf930e9b44df1cfbf4f3dc369d084`.
+**2026-09-21** — v0.9 reconciled the doctrine landing page to `main@bb6f357a968235246623205250cf70bb27a8a422`.
 
 Re-review when an event- or risk-based trigger applies under [`directory-rules.md` §16.5](./directory-rules.md#165-review-triggers), including a direct-child addition/removal, doctrine-status transition, accepted ADR that amends doctrine, identity or duplicate-content change, path migration, material workflow change, sensitive-domain rule change, or a new public consumer.
 
 | Edition | Date | Change |
 |---|---|---|
+| **v0.9** | 2026-09-21 | Refreshed the exact repository checkpoint and reconciled the ADR inventory to 41 numbered records, 5 accepted decisions (ADR-0006, ADR-0007, ADR-0029, ADR-0038, ADR-0040), 36 proposed decisions, and 11 unassigned scaffolds, cross-checked against `tools/validators/validate_adr_index.py`. Added ADR-0038 and ADR-0040 rows and their bounded acceptance scope. **No doctrine changed.** |
 | **v0.8** | 2026-08-28 | Refreshed the exact repository checkpoint and reconciled the ADR inventory to 37 numbered records, 3 accepted decisions, 34 proposed decisions, and 12 unassigned scaffolds. Updated the MapLibre decision posture without claiming that ADR acceptance creates the absent `maplibre-3d` page or proves runtime readiness. **No doctrine changed.** |
 | **v0.7** | 2026-08-14 | Replaced stale counts and snapshot claims; inventoried every current direct child; distinguished adopted Directory Rules bytes from preserved embedded status; added map, time, policy, sensitivity, retention, corrections, and AI doctrine paths; documented current duplicate, role, and filename conflicts; reconciled current documentation QA; added a reading order, conflict register, no-loss ledger, and rollback boundary. **No doctrine changed.** |
 | **v0.6** | 2026-08-12 | Corrected the stale claim that `link-check` was held; preserved the separate `docs-build` hold. **No doctrine changed.** |
@@ -466,7 +470,7 @@ Do not use `truth-posture.md` or `ai-build-operating-contract.md` as independent
 flowchart TD
     README["docs/doctrine/README.md<br/>orientation + inventory + conflict disclosure"]
 
-    ADR["docs/adr/INDEX.md<br/>37 numbered records<br/>ADR-0006 / ADR-0007 / ADR-0029 accepted"]
+    ADR["docs/adr/INDEX.md<br/>41 numbered records<br/>ADR-0006 / ADR-0007 / ADR-0029 / ADR-0038 / ADR-0040 accepted"]
     DIR["directory-rules.md<br/>exact adopted bytes"]
     DRAFT["other doctrine-content paths<br/>self-declared draft"]
     HOLD["identity / naming / role conflicts<br/>HOLD until governed resolution"]
@@ -513,7 +517,7 @@ The diagram is a responsibility map, not runtime proof. The doctrine documents c
 | `DOC-DOC-006` | `ai-as-assistant.md` identity | Current path exists; metadata proposes `ai-as-assistant-not-authority.md` | Treat current tracked path as repository fact; proposed home creates no move | Naming/identity review |
 | `DOC-DOC-007` | Doctrine encyclopedia relationship | `docs/doctrine/encyclopedia.md` and `docs/encyclopedia/` serve different declared roles, but maintenance precedence is not machine-enforced | Preserve distinction and avoid silent content copying | Authority and maintenance decision |
 | `DOC-DOC-008` | Machine document registry | Registry contains one pointer and a three-item required-artifact projection | Do not treat it as exhaustive or authoritative doctrine inventory | Registry build-out with accepted source mapping |
-| `DOC-DOC-009` | ADR count in ADR-0029 notes | v1.3 note ends at ADR-0034; canonical index now includes ADR-0035 through ADR-0037 | Use canonical index for inventory; decision status unchanged | Bounded documentation correction |
+| `DOC-DOC-009` | ADR count in ADR-0029 notes | ADR-0029's own v1.4 post-adoption note ends at ADR-0034 (1 accepted, 33 proposed); canonical index now includes ADR-0035 through ADR-0041 (5 accepted, 36 proposed, 11 scaffolds) | Use canonical index for inventory; decision status unchanged | Bounded documentation correction; ADR-0029 itself still needs its own v1.5 append-only refresh |
 | `DOC-DOC-010` | Ownership and independent review | CODEOWNERS names one verified route; doctrine files contain placeholder role names | Do not represent placeholders as assigned owners or approvals | Stewardship assignment and repository-rule verification |
 | `DOC-DOC-011` | Documentation generation | `docs-build` and preview jobs explicitly hold | Do not claim generated-site, preview, hosting, or publication readiness | Accepted generator and preview contract |
 
@@ -553,6 +557,21 @@ Prefer the smallest useful, reversible delta. Presentation must project evidence
 | Related roots and key ADRs | Retained and updated |
 | Open questions | Preserved, deduplicated, and converted into an explicit conflict/hold register |
 | Publication and non-effects boundary | Retained and expanded |
+| Prior version history | Retained |
+
+### No-loss ledger for v0.8 → v0.9
+
+| v0.8 concern | v0.9 treatment |
+|---|---|
+| Reader orientation and non-authoritative role | Retained unchanged |
+| Accepted Directory Rules boundary | Retained unchanged |
+| Truth-posture duplicate warning (`DOC-DOC-001`) | Retained; not resolved by this edition |
+| AI operating-contract role conflict (`DOC-DOC-002`) | Retained; not resolved by this edition |
+| Corrections filename conflict (`DOC-DOC-003`) | Retained; not resolved by this edition per this page's own change-discipline table |
+| ADR inventory counts and badges | Corrected from 37 numbered/3 accepted/12 scaffolds to 41 numbered/5 accepted/11 scaffolds, cross-checked against `tools/validators/validate_adr_index.py` |
+| ADRs table | Added `ADR-0038` and `ADR-0040` rows with their bounded acceptance scope |
+| Evidence snapshot blobs | Refreshed to current `main` for the ADR index, ADR-0029, `link-check.yml`, `docs-build.yml`, and `docs-control-plane.yml` |
+| Conflict and hold register | Retained; `DOC-DOC-009` updated with the current ADR count gap |
 | Prior version history | Retained |
 
 [Back to top](#top)

@@ -11,6 +11,7 @@ policy_label: public
 authority_class: synthesis / architecture reference; NOT canonical doctrine
 requested_path: docs/Master_MapLibre_Components-Functions-Features_v2.1_FULL.md
 owning_root: docs/
+responsibility: "Explain MapLibre map architecture, components, functions, and features to humans as a compatibility/full reference alongside the canonical docs/architecture/maplibre-master.md register, without defining machine schema, policy, release state, or runtime code."
 directory_rules_basis: docs/ owns human-readable architecture, doctrine, reports, and implementation references. This file explains MapLibre architecture to humans and does not define machine schema, policy, release state, or runtime code.
 truth_posture: cite-or-abstain with explicit truth labels
 repository_checkpoint: main@b5a91a33b6c900033364fe924a74a907745a6d2d
@@ -78,7 +79,7 @@ notes:
   - "2026-09-04 currentness pass: the requested compatibility/full reference is present under docs/; the canonical current architecture register is docs/architecture/maplibre-master.md. This file is not a parallel authority."
   - "Current-main evidence is bounded: package manifest/lock, source modules, tests/fixtures/validators, and app aliases are recorded; command output, hosted runtime, source admission, release, deployment, and publication remain separate gates."
   - "Drive source packets and Notion work items are lineage/coordination inputs. GitHub current main is the implementation authority."
-] -->
+[/KFM_META_BLOCK_V2] -->
 
 # Master MapLibre Components, Functions, and Features
 

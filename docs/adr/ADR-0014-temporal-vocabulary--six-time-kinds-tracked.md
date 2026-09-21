@@ -24,6 +24,8 @@ updated: 2026-09-13
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
+owning_root: docs/
+responsibility: "Record the proposed six-time-kind temporal vocabulary decision."
 current_path: docs/adr/ADR-0014-temporal-vocabulary--six-time-kinds-tracked.md
 supersedes: []
 superseded_by: null
