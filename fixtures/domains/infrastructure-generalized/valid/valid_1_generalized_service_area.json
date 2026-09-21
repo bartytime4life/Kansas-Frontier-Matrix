@@ -1,0 +1,16 @@
+{
+  "fixture_id": "infra-gen-valid-001",
+  "fixture_posture": "synthetic; public-safe; valid; generalized",
+  "object_family": "ServiceArea",
+  "id": "kfm://fixture/synthetic/settlements-infrastructure/service-area-001",
+  "version": "v0",
+  "sensitivity_tier": "T1",
+  "public_geometry_policy": "AGGREGATE_FOOTPRINT_ONLY",
+  "support_geometry_ref": "kfm://fixture/synthetic-grid/infra-gen/service-area-cell-007",
+  "source_id": "kfm://source/synthetic/infra-gen-001",
+  "source_role": "aggregate",
+  "operator_ref": "kfm://fixture/synthetic/settlements-infrastructure/operator-001",
+  "evidence_ref": "kfm://evidence/synthetic/infra-gen-001",
+  "release_manifest_ref": null,
+  "notes": "Wholly synthetic aggregate service-area footprint; no facility-level or exact-node detail is present."
+}

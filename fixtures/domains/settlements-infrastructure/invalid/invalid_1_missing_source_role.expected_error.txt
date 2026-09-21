@@ -1,0 +1,12 @@
+TARGET (not yet enforced by the current PROPOSED schema stub):
+ERROR: identity validation failed
+reason_code: MISSING_SOURCE_ROLE
+field: source_role
+detail: source_role is identity-significant per domain_feature_identity.md
+invariant 4 ("Source role is identity-significant") and must not be null;
+regulatory, observed, modeled, aggregate, administrative, candidate, and
+synthetic source roles must not collapse into an unset value.
+
+CURRENT: this fixture passes today's permissive schema stub (only "id" is
+required). It is kept to document the target gap for the settlements-
+infrastructure schema/validator steward.

@@ -1,0 +1,17 @@
+{
+  "fixture_id": "infra-gen-valid-002",
+  "fixture_posture": "synthetic; public-safe; valid; generalized",
+  "object_family": "InfrastructureAsset",
+  "id": "kfm://fixture/synthetic/settlements-infrastructure/asset-001",
+  "version": "v0",
+  "sensitivity_tier": "T1",
+  "sensitivity_transform": "GENERALIZED_FOOTPRINT",
+  "public_geometry_policy": "COARSE_GRID_CELL_ONLY",
+  "support_geometry_ref": "kfm://fixture/synthetic-grid/infra-gen/asset-cell-014",
+  "source_id": "kfm://source/synthetic/infra-gen-002",
+  "source_role": "regulatory",
+  "redaction_receipt_ref": "kfm://fixture/synthetic/redaction-receipt/infra-gen-002",
+  "review_ref": "kfm://fixture/synthetic/review-record/infra-gen-002",
+  "evidence_ref": "kfm://evidence/synthetic/infra-gen-002",
+  "notes": "Critical-asset detail and condition/vulnerability fields are intentionally absent; this fixture models only the T4-to-T1 generalized-footprint transform outcome."
+}

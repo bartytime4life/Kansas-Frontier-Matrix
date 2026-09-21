@@ -1,0 +1,9 @@
+{
+  "fixture_id": "infra-gen-invalid-001-expected",
+  "fixture_posture": "synthetic; public-safe; invalid; no-leak-expected",
+  "outcome": "DENY",
+  "reason_code": "T4_DETAIL_NOT_PUBLIC_SAFE",
+  "reason_summary": "exact_geometry, condition_observation, and dependency_edges are T4 fields and cannot be exposed at requested_tier T0.",
+  "returned_fields": [],
+  "notes": "Expected response contains no exact geometry, condition/vulnerability detail, or dependency-edge information."
+}

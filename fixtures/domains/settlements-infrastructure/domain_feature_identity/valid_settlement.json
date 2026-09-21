@@ -1,0 +1,29 @@
+{
+  "id": "kfm://fixture/synthetic/settlements-infrastructure/settlement-ghosttown-001",
+  "version": "v0",
+  "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000a1",
+  "object_family": "Settlement",
+  "feature_role": "historic_place",
+  "source_id": "kfm://source/synthetic/settlements-infrastructure-001",
+  "source_role": "historical",
+  "source_native_id": "synthetic-plat-001",
+  "normalized_name_key": "fictional_forks_ks",
+  "support_geometry_ref": "kfm://fixture/synthetic-grid/settlements-infrastructure/settlement-cell-003",
+  "sensitivity_tier": "T1",
+  "public_geometry_policy": "GENERALIZED_POINT_ONLY",
+  "temporal_scope": {
+    "valid_time_start": "1875-01-01",
+    "valid_time_end": "1903-01-01",
+    "source_time": "1880-06-15",
+    "retrieval_time": "2026-01-01T00:00:00Z"
+  },
+  "source_record_digest": "sha256:0000000000000000000000000000000000000000000000000000000000b2",
+  "normalized_digest": "sha256:0000000000000000000000000000000000000000000000000000000000c3",
+  "evidence_ref": "kfm://evidence/synthetic/settlements-infrastructure-001",
+  "policy_decision_ref": null,
+  "review_ref": null,
+  "release_manifest_ref": null,
+  "correction_ref": null,
+  "rollback_ref": null,
+  "fixture_posture": "synthetic; valid; identity-envelope"
+}

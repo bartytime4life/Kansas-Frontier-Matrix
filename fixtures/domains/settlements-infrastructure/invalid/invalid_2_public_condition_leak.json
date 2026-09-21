@@ -1,0 +1,9 @@
+{
+  "id": "kfm://fixture/synthetic/settlements-infrastructure/asset-condition-leak-001",
+  "version": "v0",
+  "object_family": "InfrastructureAsset",
+  "feature_role": "asset",
+  "sensitivity_tier": "T0",
+  "condition_observation": "placeholder-only; no real condition or vulnerability content",
+  "fixture_posture": "synthetic; invalid; public-tier-condition-leak-attempt"
+}

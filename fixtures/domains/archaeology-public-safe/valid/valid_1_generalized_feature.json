@@ -1,0 +1,19 @@
+{
+  "fixture_id": "arc-public-safe-valid-001",
+  "fixture_posture": "synthetic; public-safe; valid; generalized",
+  "object_type": "PublicSafeGeneralizedFeature",
+  "truth_state": "CANDIDATE",
+  "sensitivity_class": "GENERALIZED",
+  "spatial_precision_class": "GENERALIZED_GRID_CELL",
+  "generalization_method": "SYNTHETIC_GRID_CELL",
+  "grid_cell_ref": "kfm://fixture/synthetic-grid/arc-public-safe/cell-014",
+  "source_refs": [
+    "kfm://source/synthetic/archaeology-public-safe-001"
+  ],
+  "evidence_refs": [
+    "kfm://evidence/synthetic/archaeology-public-safe-001"
+  ],
+  "review_state": "NEEDS_REVIEW",
+  "lifecycle_state": "WORK",
+  "notes": "Wholly synthetic fixture; no exact or reverse-engineerable geometry is present."
+}

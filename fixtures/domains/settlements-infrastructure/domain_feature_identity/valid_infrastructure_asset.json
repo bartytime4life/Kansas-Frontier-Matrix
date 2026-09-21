@@ -1,0 +1,27 @@
+{
+  "id": "kfm://fixture/synthetic/settlements-infrastructure/asset-001",
+  "version": "v0",
+  "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000d4",
+  "object_family": "InfrastructureAsset",
+  "feature_role": "asset",
+  "source_id": "kfm://source/synthetic/infra-gen-002",
+  "source_role": "regulatory",
+  "source_native_id": "synthetic-asset-inspection-001",
+  "normalized_name_key": null,
+  "support_geometry_ref": "kfm://fixture/synthetic-grid/infra-gen/asset-cell-014",
+  "sensitivity_tier": "T1",
+  "public_geometry_policy": "COARSE_GRID_CELL_ONLY",
+  "temporal_scope": {
+    "observed_time": "2025-05-01T00:00:00Z",
+    "retrieval_time": "2026-01-01T00:00:00Z"
+  },
+  "source_record_digest": "sha256:0000000000000000000000000000000000000000000000000000000000e5",
+  "normalized_digest": "sha256:0000000000000000000000000000000000000000000000000000000000f6",
+  "evidence_ref": "kfm://evidence/synthetic/infra-gen-002",
+  "policy_decision_ref": "kfm://fixture/synthetic/review-record/infra-gen-002",
+  "review_ref": "kfm://fixture/synthetic/review-record/infra-gen-002",
+  "release_manifest_ref": null,
+  "correction_ref": null,
+  "rollback_ref": null,
+  "fixture_posture": "synthetic; valid; identity-envelope; generalized-footprint-only"
+}

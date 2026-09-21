@@ -1,0 +1,12 @@
+{
+  "fixture_id": "si-restricted-001",
+  "fixture_posture": "synthetic; restricted; deny-by-default; T4",
+  "request_type": "DependencyEdgeRequest",
+  "source_asset_ref": "kfm://fixture/synthetic/settlements-infrastructure/asset-001",
+  "target_asset_ref": "kfm://fixture/synthetic/settlements-infrastructure/asset-002",
+  "requested_tier": "T0",
+  "expected_outcome": "DENY",
+  "expected_reason_code": "T4_DEPENDENCY_NOT_PUBLIC_SAFE",
+  "expected_returned_fields": [],
+  "notes": "Full dependency edges with a sensitive endpoint default to T4 and never resolve to T0/T1; only a coarse aggregate/coarse-graph summary may reach T1 under a RedactionReceipt and ReviewRecord."
+}
