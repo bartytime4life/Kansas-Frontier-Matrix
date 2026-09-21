@@ -197,7 +197,7 @@ Before adding or changing fixtures here:
 |---|---:|---|
 | Target README | CONFIRMED UPDATED | This path existed as a blank file before this update. |
 | Existing sibling lane | CONFIRMED | `fixtures/archaeology-public-safe/README.md` exists and defines a public-safe runtime fixture lane. |
-| Payload inventory | NEEDS VERIFICATION | No payload files under this target lane were fetched or validated during this update. |
+| Payload inventory | PARTIALLY POPULATED | `valid/` and `invalid/` child lanes were added following the [Expected layout](#expected-layout) above; see [`valid/README.md`](valid/README.md) and [`invalid/README.md`](invalid/README.md). No renderer/runtime manifest lane has been added yet. |
 | Placement | CONFIRMED PATH / NEEDS STEWARD REVIEW | The requested path exists; relationship to the existing root-level fixture lane should be settled by maintainers if both carry payloads. |
 | Sensitive-domain posture | CONFIRMED DOC / RUNTIME UNKNOWN | Archaeology publication and policy docs require deny-by-default and reviewed redaction/generalization for public surfaces; runtime enforcement was not tested. |
 | Test execution | NOT RUN | No validators, sensitivity checks, cultural-review checks, policy checks, release checks, no-leak checks, or CI were run during this README update. |

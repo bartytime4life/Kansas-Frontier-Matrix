@@ -1,0 +1,4 @@
+ERROR: release precheck failed
+reason_code: MISSING_REVIEW_RECORD
+field: review_ref
+detail: review_ref is required and must not be null before a release-precheck payload may proceed.

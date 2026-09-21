@@ -1,0 +1,4 @@
+ERROR: release precheck failed
+reason_code: MISSING_AGGREGATION_RECEIPT
+field: aggregation_receipt_ref
+detail: a ConditionObservation claiming T1 public-safe exposure requires a non-null AggregationReceipt (aggregation/temporal-bucket/status-only transform) before it may proceed. No transform may promote raw condition/vulnerability detail directly to T0/T1.

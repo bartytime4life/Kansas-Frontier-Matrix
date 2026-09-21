@@ -1,0 +1,11 @@
+{
+  "fixture_id": "arc-public-safe-invalid-001-input",
+  "fixture_posture": "synthetic; public-safe; invalid; no-leak-request",
+  "request_type": "FeatureDetailRequest",
+  "candidate_feature_id": "arc-candidate-public-safe-synthetic-002",
+  "requested_precision": "EXACT",
+  "requested_fields": [
+    "exact_coordinates",
+    "site_boundary_geometry"
+  ]
+}
