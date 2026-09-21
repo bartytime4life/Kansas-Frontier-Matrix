@@ -42,7 +42,7 @@ TypeScript-transpile regression checks.
 | Existing public URL | <https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site> |
 | Authoritative host | OpenAI Sites; [issue #4232](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4232) records the adapter decision |
 | Current evidence | [Identity and source-alignment hold](./docs/sites-source-alignment.md); the older replacement handoff and v1 receipt are historical |
-| Hosted version state | The 2026-09-17 Sites readback records a successful v45 deployment, but v45 mirror equality, production-browser acceptance, and recovery remain `HOLD` |
+| Hosted version state | The 2026-09-21 Sites readback records a successful v53 deployment, but v53 mirror equality, production-browser acceptance, and recovery remain `HOLD` |
 
 The staged 2026-09-03 replacement ZIP is an external, digest-bound Sites execution
 input. It is not the canonical repository source and must not be copied over this

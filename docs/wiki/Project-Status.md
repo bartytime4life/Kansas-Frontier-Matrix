@@ -2,15 +2,16 @@
 KFM_WIKI_SOURCE
 page_id: Project-Status
 title: Project Status
-version: v0.2.1
+version: v0.2.2
 status: PROPOSED wiki source; review required
 created: 2026-08-07
-updated: 2026-09-17
+updated: 2026-09-21
 authority: orientation-only; current repository evidence, adopted KFM authority, and owning responsibility roots outrank this page
 source_path: docs/wiki/Project-Status.md
 owning_root: docs/
 responsibility: evidence-bounded reader snapshot of repository, validation, runtime, release, deployment, and native-wiki maturity
 evidence_snapshot: main@dbc60ae78be37133e791ed6d1b3fba267d9ecfe2
+sites_readback: 2026-09-21; existing project v53; source-tree equivalence and hosted acceptance held
 prior_blob: 6b26366071a4086f57687569685d4da9c09456b5
 publication_effect: none until separately synchronized to the native GitHub Wiki; no KFM data publication effect
 -->
@@ -29,11 +30,11 @@ publication_effect: none until separately synchronized to the native GitHub Wiki
 [![Posture](https://img.shields.io/badge/maturity-mixed-f59e0b?style=flat-square)](#status-by-responsibility-plane)
 [![Exact-head CI](https://img.shields.io/badge/exact--head%20CI-NEEDS%20RECHECK-6e7781?style=flat-square)](#current-reconciliation)
 [![Operational release](https://img.shields.io/badge/operational%20release-held-b42318?style=flat-square)](#release-publication-and-deployment)
-[![Deployment](https://img.shields.io/badge/Sites%20v45-owner--private-f59e0b?style=flat-square)](#current-reconciliation)
+[![Deployment](https://img.shields.io/badge/Sites%20v53-custom%20access-f59e0b?style=flat-square)](#current-reconciliation)
 [![Native wiki](https://img.shields.io/badge/native%20wiki-NEEDS%20VERIFICATION-6e7781?style=flat-square)](#native-github-wiki)
 
 > [!IMPORTANT]
-> **This page is a snapshot, not a live dashboard and not an authority surface.** The current reconciliation overlay was checked against `main@dbc60ae78be37133e791ed6d1b3fba267d9ecfe2` on 2026-09-17. The detailed August checkpoint below remains historical evidence unless the overlay explicitly supersedes it. Re-check current `main`, open pull requests, workflow runs, release records, Sites version history, emitted artifacts, and native-wiki readback before acting on any status.
+> **This page is a snapshot, not a live dashboard and not an authority surface.** The repository reconciliation overlay was checked against `main@dbc60ae78be37133e791ed6d1b3fba267d9ecfe2` on 2026-09-17. A separate read-only Sites check on 2026-09-21 supersedes only the Site version and access observation. The detailed August checkpoint below remains historical evidence unless the overlay explicitly supersedes it. Re-check current `main`, open pull requests, workflow runs, release records, Sites version history, emitted artifacts, and native-wiki readback before acting on any status.
 
 > [!CAUTION]
 > **Presence, validation, integration, release, deployment, and publication are different states.** A path, schema, fixture, test, workflow, receipt, pull request, merge, GitHub deployment record, badge, or wiki update does not by itself prove an operational service or KFM publication.
@@ -48,7 +49,7 @@ This overlay records the newest bounded coordination truth without converting re
 | Sites reconciliation | [PR #4611](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4611) is closed and merged as [`cc1a30beea1c83e0e0f2232c7f854825866b565a`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/cc1a30beea1c83e0e0f2232c7f854825866b565a) | The merge does not prove Site-source tree equivalence, production-browser/WebGL acceptance, recovery rehearsal, release, or publication |
 | Local data store | [PR #4614](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4614) is closed and merged as [`dbc60ae78be37133e791ed6d1b3fba267d9ecfe2`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/dbc60ae78be37133e791ed6d1b3fba267d9ecfe2) | Integration does not authorize retrieval, source admission or activation, scheduling, promotion beyond `QUARANTINE`, public serving, release, deployment, or publication |
 | Policy authority | [Issue #4613](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4613) applies only to the exact private, offline, operator-selected quarantine schema and contract | The initial receipt remains historical with its original `POLICY_DECISION_REQUIRED` result; later authority is append-only and prospective |
-| Sites runtime | Owner-private Sites v45 is the coordination record; Sites version history remains deployment authority | GitHub merge state alone does not prove runtime health, source parity, public access, or rollback readiness |
+| Sites runtime | The existing project reports saved/deployed v53, source `22ac19960c2f72f11f5e4e9b87c7e12f62074d6e`, successful deployment, and custom access revision 1 on 2026-09-21; the v45 readback is historical | A platform deployment status does not prove runtime health, source-tree parity, hosted browser acceptance, public access, or rollback readiness |
 | Remaining holds | Source equivalence, accountable review, exact-head hosted validation, native-PC and native-Windows acceptance, provider acquisition, downstream source review, live-map integration, release closure, deployment, publication, and inherited `KFM-TOPO-004` remain separate | No hold is cleared merely because a pull request merged |
 | Native GitHub Wiki | This source change is reviewable in `docs/wiki/` | Native-wiki synchronization and readback remain a separate explicit public-documentation mutation |
 

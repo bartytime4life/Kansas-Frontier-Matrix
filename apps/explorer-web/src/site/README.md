@@ -24,7 +24,7 @@ The retained illustrative map is a fixed browser composition, not an HTML templa
 
 ## First-use workbench path
 
-The local workbench now starts with a synthetic-scope guide and a keyboard-focusable route into the layer catalog. Seven bounded demo views remain visible; eleven design/data holds, three held map tools, and the older trust-state laboratory sit behind native disclosures. Held tool explanations remain visible inside their disclosure. Search opens the held-view disclosure when a held view matches. The Evidence Drawer and committed-time controls retain their existing finite outcomes. These presentation changes do not affect the separate Sites source or hosted v45.
+The local workbench now starts with a synthetic-scope guide and a keyboard-focusable route into the layer catalog. Seven bounded demo views remain visible; eleven design/data holds, three held map tools, and the older trust-state laboratory sit behind native disclosures. Held tool explanations remain visible inside their disclosure. Search opens the held-view disclosure when a held view matches. The Evidence Drawer and committed-time controls retain their existing finite outcomes. These presentation changes do not affect the separate Sites source or its hosted version.
 
 The 2026-09-21 local production build measured a 1,243.21 kB main JavaScript asset (338.25 kB gzip) and a 506.72 kB MapLibre worker. That is a build artifact measurement, not a loading-performance claim. Browser checks use desktop and 390 px viewports, exercise the first-use path and disclosure, and verify no horizontal document overflow at the narrow width. Roll back this UI slice by reverting its workbench composition, styles, browser tests, and this note together.
 
