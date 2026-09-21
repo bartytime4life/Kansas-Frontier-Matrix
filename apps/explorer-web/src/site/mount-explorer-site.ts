@@ -416,7 +416,7 @@ export function mountExplorerSite(root: HTMLElement): ExplorerSiteController {
 
   const features = el(document, "section", "section-shell");
   features.id = "features";
-  features.append(heading(document, "Repository features", "All current Explorer feature families in one catalog", "Search and filter the repository-grounded inventory. Maturity labels distinguish verified slices, fixture-first work, documentation, and held runtime admission."));
+  features.append(heading(document, "Repository features", "Explorer feature families in the pinned snapshot", "Search and filter this dated repository catalog. Maturity labels distinguish verified slices, fixture-first work, documentation, and held runtime admission."));
   const filters = el(document, "form", "feature-filters");
   filters.setAttribute("role", "search");
   const search = el(document, "input");

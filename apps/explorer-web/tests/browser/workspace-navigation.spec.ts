@@ -21,6 +21,8 @@ test("mounts the public workspace registry over the compatible anchor navigation
   await expect(links.nth(2)).toHaveAttribute("href", "#features");
   await expect(links.nth(3)).toHaveAttribute("href", "#trust");
   await expect(navigation.getByRole("link", { name: /admin|review/i })).toHaveCount(0);
+  await expect(page.getByRole("heading", { name: "Explorer feature families in the pinned snapshot" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "main@d25a4c046892" })).toBeVisible();
 
   await navigation.getByRole("link", { name: "Trust" }).click();
   await expect(page).toHaveURL(/#trust$/);
