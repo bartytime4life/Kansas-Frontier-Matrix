@@ -1,15 +1,13 @@
 import {
   createNullMapRuntime,
+  MAP_FEATURE_SELECTION_PROFILE,
   type MapRuntimeTrustState,
 } from "@kfm/maplibre";
 import { resolveBaselineShell } from "../features/shell";
-import {
-  MAP_FEATURE_SELECTION_PROFILE,
-  mountMapFeatureEvidenceFixture,
-  mountMapRuntimeTrustStatus,
-  type MapEvidenceFixtureCase,
-  type MapEvidenceFixtureController,
-  type MapRuntimeTrustStatusController,
+import type {
+  MapEvidenceFixtureCase,
+  MapEvidenceFixtureController,
+  MapRuntimeTrustStatusController,
 } from "../features/map_runtime";
 import {
   CURRENT_MAPLIBRE_READINESS,
@@ -289,6 +287,8 @@ export function mountExplorerSite(root: HTMLElement): ExplorerSiteController {
   const baseline = resolveBaselineShell();
   const cleanup: Array<() => void> = [];
   const mapRuntime = createNullMapRuntime();
+  let destroyed = false;
+  let mapProofLoad: Promise<void> | null = null;
   let mapFixture: MapEvidenceFixtureController | null = null;
   let mapRuntimeStatus: MapRuntimeTrustStatusController | null = null;
   let livingAtlas: LivingAtlasController | null = null;
@@ -329,6 +329,13 @@ export function mountExplorerSite(root: HTMLElement): ExplorerSiteController {
   const runtime = el(document, "aside", "runtime-card card");
   const runtimeStatusHost = el(document, "div", "runtime-status-host");
   runtimeStatusHost.dataset.component = "explorer-map-runtime-status-host";
+  const setLabLoadStatus = (message: string): void => {
+    const status = text(document, "p", message);
+    status.setAttribute("role", "status");
+    status.setAttribute("aria-live", "polite");
+    runtimeStatusHost.replaceChildren(status);
+  };
+  setLabLoadStatus("Open the laboratory to load its finite runtime status.");
   const runtimeControls = el(document, "div", "runtime-controls");
   runtimeControls.setAttribute("aria-label", "Synthetic map runtime controls");
   const runtimeActions: readonly Readonly<{
@@ -344,6 +351,7 @@ export function mountExplorerSite(root: HTMLElement): ExplorerSiteController {
     const button = el(document, "button");
     button.type = "button";
     button.textContent = action.label;
+    button.disabled = true;
     const handleRuntimeAction = (): void => {
       if (action.state === null) {
         void mapRuntime.initialize();
@@ -376,13 +384,29 @@ export function mountExplorerSite(root: HTMLElement): ExplorerSiteController {
   legacyProof.append(lab);
   mapSection.append(legacyProof);
   main.append(mapSection);
-  mapFixture = mountMapFeatureEvidenceFixture(fixtureHost, mapCases, async (selection) => {
-    await Promise.resolve();
-    if (selection.selectionId === "selection:restricted") return restrictedProjection;
-    if (selection.selectionId === "selection:error") throw new Error("Synthetic governed resolver failure");
-    return SUPPORTED_SYNTHETIC_STREAMFLOW_PROJECTION;
-  });
-  mapRuntimeStatus = mountMapRuntimeTrustStatus(runtimeStatusHost, mapRuntime);
+  const loadLegacyProof = (): void => {
+    if (!legacyProof.open || mapProofLoad !== null) return;
+    setLabLoadStatus("Loading fixture-only runtime status…");
+    mapProofLoad = import("../features/map_runtime").then((module) => {
+      if (destroyed) return;
+      mapFixture = module.mountMapFeatureEvidenceFixture(fixtureHost, mapCases, async (selection) => {
+        await Promise.resolve();
+        if (selection.selectionId === "selection:restricted") return restrictedProjection;
+        if (selection.selectionId === "selection:error") throw new Error("Synthetic governed resolver failure");
+        return SUPPORTED_SYNTHETIC_STREAMFLOW_PROJECTION;
+      });
+      mapRuntimeStatus = module.mountMapRuntimeTrustStatus(runtimeStatusHost, mapRuntime);
+      runtimeControls.querySelectorAll<HTMLButtonElement>("button").forEach((button) => {
+        button.disabled = false;
+      });
+    }).catch(() => {
+      if (destroyed) return;
+      mapProofLoad = null;
+      setLabLoadStatus("ERROR · Laboratory could not load. Reload the page to retry.");
+    });
+  };
+  legacyProof.addEventListener("toggle", loadLegacyProof);
+  cleanup.push(() => legacyProof.removeEventListener("toggle", loadLegacyProof));
 
   const knowledge = el(document, "section", "section-shell");
   knowledge.id = "knowledge";
@@ -473,6 +497,7 @@ export function mountExplorerSite(root: HTMLElement): ExplorerSiteController {
 
   return Object.freeze({
     destroy: () => {
+      destroyed = true;
       cleanup.forEach((fn) => fn());
       livingAtlas?.destroy();
       livingAtlas = null;

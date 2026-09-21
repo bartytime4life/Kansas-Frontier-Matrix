@@ -4,11 +4,12 @@ test("mounts finite renderer-neutral runtime status in the normal map workspace"
   page,
 }) => {
   await page.goto("/");
-  await page.getByText("Open synthetic trust-state laboratory").click();
-
   const host = page.locator(
     '[data-component="explorer-map-runtime-status-host"]',
   );
+  await expect(host).toHaveText("Open the laboratory to load its finite runtime status.");
+  await expect(page.locator(".legacy-map-proof .selection-lab__fixture")).toBeEmpty();
+  await page.getByText("Open synthetic trust-state laboratory").click();
   await expect(host).toBeVisible();
   await expect(
     host.getByRole("status", { name: "Map runtime status: idle" }),
@@ -22,6 +23,7 @@ test("mounts finite renderer-neutral runtime status in the normal map workspace"
   });
   await expect(ready).toContainText("StateREADY");
   await expect(ready).toContainText("Candidate selectionELIGIBLE");
+  await expect(page.getByRole("button", { name: "Mark synthetic runtime stale" })).toBeEnabled();
 
   await page
     .getByRole("button", { name: "Mark synthetic runtime stale" })
@@ -66,4 +68,24 @@ test("mounts finite renderer-neutral runtime status in the normal map workspace"
   await expect(rendererGate).toContainText(
     "READY does not establish MapLibre readiness",
   );
+});
+
+test("keeps a failed laboratory import finite and recovers after reload", async ({ page }) => {
+  let blocked = 0;
+  await page.route(/\/src\/features\/map_runtime\/index\.tsx(?:\?|$)/, (route) => {
+    blocked += 1;
+    return route.abort();
+  });
+  await page.goto("/");
+  await page.getByText("Open synthetic trust-state laboratory").click();
+  const host = page.locator('[data-component="explorer-map-runtime-status-host"]');
+  await expect(host.getByRole("status")).toHaveText("ERROR · Laboratory could not load. Reload the page to retry.");
+  expect(blocked).toBeGreaterThan(0);
+  await expect(page.locator(".legacy-map-proof .selection-lab__fixture")).toBeEmpty();
+  await expect(page.getByRole("button", { name: "Mark synthetic runtime stale" })).toBeDisabled();
+
+  await page.unroute(/\/src\/features\/map_runtime\/index\.tsx(?:\?|$)/);
+  await page.reload();
+  await page.getByText("Open synthetic trust-state laboratory").click();
+  await expect(host.getByRole("status", { name: "Map runtime status: idle" })).toBeVisible();
 });
