@@ -5,6 +5,7 @@ from dataclasses import FrozenInstanceError
 from datetime import datetime, timedelta, timezone
 import hashlib
 import importlib
+import importlib.util
 from pathlib import Path
 import socket
 import sys
@@ -278,13 +279,23 @@ def test_import_is_side_effect_free_and_module_has_no_effect_clients(tmp_path, m
     monkeypatch.chdir(tmp_path)
     before = list(tmp_path.iterdir())
     boom = AssertionError("ambient network")
+    # Load an independent copy of the module rather than importlib.reload(),
+    # which mutates connectors_core.source_adapter's shared classes in place
+    # (e.g. ParseOutcome, ParseResult) and breaks isinstance checks in any
+    # other already-imported code holding a pre-reload class reference.
+    spec = importlib.util.spec_from_file_location(
+        "connectors_core.source_adapter",
+        adapter_module.__file__,
+    )
+    assert spec and spec.loader
+    probe = importlib.util.module_from_spec(spec)
     with (
         patch.object(socket.socket, "connect", side_effect=boom),
         patch.object(socket.socket, "connect_ex", side_effect=boom),
         patch.object(socket, "create_connection", side_effect=boom),
         patch.object(socket, "getaddrinfo", side_effect=boom),
     ):
-        assert importlib.reload(adapter_module) is adapter_module
+        spec.loader.exec_module(probe)
     assert list(tmp_path.iterdir()) == before
 
     source = Path(adapter_module.__file__).read_text(encoding="utf-8")

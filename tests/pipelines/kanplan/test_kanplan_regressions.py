@@ -2,8 +2,9 @@
 import ast
 import copy
 import dataclasses
-import importlib
+import importlib.util
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -16,8 +17,13 @@ from connectors.kansas.kanplan import (
 from packages.geo.src.geo.esri_polyline import GeometryError, polyline_to_geojson
 from test_kanplan_capture import setup_capture, run, Altered
 
-pipeline = importlib.import_module("pipelines.normalize.roads-rail-trade.kanplan_state_system")
 ROOT = Path(__file__).resolve().parents[3]
+MODULE_PATH = ROOT / "pipelines/normalize/roads-rail-trade/kanplan_state_system.py"
+_SPEC = importlib.util.spec_from_file_location("kfm_kanplan_state_system", MODULE_PATH)
+assert _SPEC and _SPEC.loader
+pipeline = importlib.util.module_from_spec(_SPEC)
+sys.modules[_SPEC.name] = pipeline
+_SPEC.loader.exec_module(pipeline)
 
 
 @pytest.mark.parametrize("surface", ["features", "raw", "metadata", "hash", "count", "scope", "trace"])
@@ -182,12 +188,12 @@ def test_http_has_no_activation_switch(url):
 
 
 def test_cli_rejects_option_abbreviations_and_in_repository_output(tmp_path):
-    module = "pipelines.normalize.roads-rail-trade.kanplan_state_system"
+    env = {**os.environ, "PYTHONPATH": str(ROOT)}
     output = tmp_path / "not-created"
-    result = subprocess.run([sys.executable, "-m", module, "--fixture", str(output)],
-                            cwd=ROOT, capture_output=True, text=True)
+    result = subprocess.run([sys.executable, str(MODULE_PATH), "--fixture", str(output)],
+                            cwd=ROOT, capture_output=True, text=True, env=env)
     assert result.returncode != 0 and not output.exists()
-    result = subprocess.run([sys.executable, "-m", module, "--fixture-output", str(ROOT / "tests/pipelines/kanplan/should-not-be-created")],
-                            cwd=ROOT, capture_output=True, text=True)
+    result = subprocess.run([sys.executable, str(MODULE_PATH), "--fixture-output", str(ROOT / "tests/pipelines/kanplan/should-not-be-created")],
+                            cwd=ROOT, capture_output=True, text=True, env=env)
     assert result.returncode != 0 and "OUTPUT_MUST_BE_OUTSIDE_REPOSITORY" in result.stderr
     assert not (ROOT / "tests/pipelines/kanplan/should-not-be-created").exists()

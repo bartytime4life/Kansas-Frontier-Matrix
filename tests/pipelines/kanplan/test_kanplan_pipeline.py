@@ -1,12 +1,24 @@
 import copy
 import dataclasses
+import importlib.util
 import json
 import math
+import sys
+from pathlib import Path
+
 import pytest
 from connectors.kansas.kanplan import CaptureError, content_hash, SyntheticTransport
 from packages.geo.src.geo.esri_polyline import GeometryError, polyline_to_geojson, intersects_bbox
-import importlib
-pipeline = importlib.import_module("pipelines.normalize.roads-rail-trade.kanplan_state_system")
+
+REPO_ROOT = Path(__file__).resolve().parents[3]
+_SPEC = importlib.util.spec_from_file_location(
+    "kfm_kanplan_state_system",
+    REPO_ROOT / "pipelines/normalize/roads-rail-trade/kanplan_state_system.py",
+)
+assert _SPEC and _SPEC.loader
+pipeline = importlib.util.module_from_spec(_SPEC)
+sys.modules[_SPEC.name] = pipeline
+_SPEC.loader.exec_module(pipeline)
 compile_fixture = pipeline.compile_fixture
 validate_candidate = pipeline.validate_candidate
 resolve_fixture = pipeline.resolve_fixture

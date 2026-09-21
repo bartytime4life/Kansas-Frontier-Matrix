@@ -1,7 +1,9 @@
 import copy
 import dataclasses
 import importlib
+import importlib.util
 import json
+import sys
 import pytest
 from connectors.kansas.kanplan import (CaptureProfile, CaptureError, Limits, SyntheticTransport, collect,
                            metadata_fingerprint, normalized_bytes, decode, DormantReadOnlyHTTP)
@@ -28,9 +30,16 @@ def run(p, t, limits=Limits(chunk_size=1)):
 
 
 def test_imports_do_not_access_network():
-    for name in ['connectors.kansas.kanplan', 'packages.geo.src.geo.esri_polyline',
-                 'pipelines.normalize.roads-rail-trade.kanplan_state_system']:
+    for name in ['connectors.kansas.kanplan', 'packages.geo.src.geo.esri_polyline']:
         importlib.import_module(name)
+    spec = importlib.util.spec_from_file_location(
+        "kfm_kanplan_state_system_import_check",
+        ROOT / "pipelines/normalize/roads-rail-trade/kanplan_state_system.py",
+    )
+    assert spec and spec.loader
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
 
 
 def test_count_ids_and_chunks_reconcile_native_bytes():
