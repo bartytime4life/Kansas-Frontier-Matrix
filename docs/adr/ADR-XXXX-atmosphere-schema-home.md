@@ -25,6 +25,8 @@ updated: 2026-09-14
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
+owning_root: docs/
+responsibility: "Record the proposed Atmosphere schema-home and compatibility-convergence decision."
 current_path: docs/adr/ADR-XXXX-atmosphere-schema-home.md
 supersedes: []
 superseded_by: null

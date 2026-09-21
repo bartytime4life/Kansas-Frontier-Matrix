@@ -1,7 +1,8 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/architecture-cross-domain-multi-domain-placement
 title: Multi-Domain File Placement
-type: architecture; placement reference; cross-domain seam guidance
+type: architecture
+subtype: cross-domain-placement-reference
 version: v0.2.0
 prior_version: v0.1
 status: draft; repository-grounded; explanatory; accepted-placement-aware; non-authoritative; non-publisher

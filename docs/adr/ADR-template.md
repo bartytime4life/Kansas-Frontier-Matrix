@@ -1,7 +1,8 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/adr-template
 title: ADR Template — Architecture Decision Record
-type: standard; authoring-template; support-document
+type: standard
+subtype: authoring-template-support-document
 version: v2.1
 status: draft; repository-grounded; no-decision-authority
 owners:

@@ -24,7 +24,8 @@ reviewers_required:
   - Validation and CI steward
   - Governed API and Explorer consumer steward
   - Release, correction, and rollback steward
-created: "NEEDS VERIFICATION — scaffold predates v1.0"
+created: 2026-07-24
+created_note: "2026-07-24 identifies the v1.0 same-path modernization revision, not repository-backed file creation provenance; the original scaffold creation date remains NEEDS VERIFICATION and is outside this shallow-clone repository's available Git history"
 updated: 2026-09-14
 policy_label: public
 truth_posture: cite-or-abstain

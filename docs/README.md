@@ -7,7 +7,8 @@ version: v1.0
 status: active
 owners:
   - "@bartytime4life"
-created: "NEEDS VERIFICATION — root README predates this modernization"
+created: 2026-08-08
+created_note: "2026-08-08 identifies the same-path root-README modernization revision recorded under Evidence review and triggers below, not the file's original repository-backed creation provenance, which predates this modernization and is outside this shallow-clone repository's available Git history."
 updated: 2026-08-08
 policy_label: repository-facing
 owning_root: docs/
