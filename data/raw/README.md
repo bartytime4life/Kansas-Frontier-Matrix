@@ -83,7 +83,7 @@ Accepted Directory Rules rule `DIR-SOURCE-001` governs capture identity: one sou
 | Field | Bounded result |
 |---|---|
 | Path | `data/raw/` |
-| Version | `v0.2.1` |
+| Version | `v0.2.2` |
 | Prior blob | `771a4684341622aa684a3724f0c1a95b900f7335` |
 | Evidence base | Original v0.2.0 snapshot retained in metadata; source-first reconciliation at `main@8739edbfecabbde6367a2084740b6c94f07a0425` |
 | Recursive payload inventory | `UNKNOWN` |
