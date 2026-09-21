@@ -212,7 +212,7 @@ Before adding or changing Archaeology site fixtures:
 | Item | Status | Notes |
 |---|---:|---|
 | Target README | CONFIRMED UPDATED | This path existed as a blank file before this update. |
-| Direct payload inventory | NEEDS VERIFICATION | Repo search did not surface confirmed payload files in this directory during this update. |
+| Direct payload inventory | PARTIALLY POPULATED | `valid_1_site_shaped_withheld.json` added — `truth_state: CANDIDATE`, sensitivity and spatial precision both `WITHHELD`, no coordinates present. |
 | ArchaeologicalSite contract | CONFIRMED DOC / VALIDATOR UNKNOWN | Contract exists and defines object meaning but does not authorize publication, policy approval, or access to restricted detail. |
 | CandidateFeature contract | CONFIRMED DOC / VALIDATOR UNKNOWN | Contract exists and preserves candidate-vs-confirmed boundary. |
 | Sensitive-domain posture | CONFIRMED DOC / RUNTIME UNKNOWN | Archaeology object-family and policy docs require exact-detail exposure to fail closed unless reviewed policy paths allow bounded outputs. |

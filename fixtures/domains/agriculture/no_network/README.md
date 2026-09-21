@@ -174,7 +174,7 @@ Before adding or changing no-network Agriculture fixtures:
 |---|---:|---|
 | Target README | CONFIRMED UPDATED | This path existed as a blank file before this update. |
 | Observed child README | CONFIRMED | `nass/README.md` exists and documents deterministic offline NASS fixtures. |
-| Broader no-network payload inventory | NEEDS VERIFICATION | Repo search did not surface additional confirmed no-network fixture payloads during this update. |
+| Broader no-network payload inventory | PARTIALLY POPULATED | `offline_smoke_case.input.json` added at this parent level; `nass/valid_1.input.json` added in the child lane (see its own row above). |
 | No-network behavior | NEEDS VERIFICATION / NOT RUN | No test was executed to confirm network isolation. |
 | Placement | CONFIRMED PATH / PROPOSED LANE REALIZATION | The requested path exists; Agriculture path doctrine includes `fixtures/domains/agriculture/` but marks Agriculture-specific lanes as proposed until verified. |
 | Test execution | NOT RUN | No validators, pytest, source admission checks, catalog checks, policy checks, release checks, no-network checks, or CI were run during this README update. |

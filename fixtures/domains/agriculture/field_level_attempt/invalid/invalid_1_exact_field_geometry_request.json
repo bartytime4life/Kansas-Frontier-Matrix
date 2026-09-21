@@ -1,0 +1,9 @@
+{
+  "fixture_id": "ag-field-attempt-invalid-001",
+  "request_type": "AgricultureFieldDetailRequest",
+  "field_ref": "kfm://fixture/synthetic/agriculture/field-001",
+  "requested_precision": "EXACT_PARCEL",
+  "requested_fields": ["exact_field_geometry", "operator_identity", "row_level_yield"],
+  "aggregation_receipt_ref": null,
+  "fixture_posture": "synthetic; invalid; field-level-exact-exposure-attempt"
+}

@@ -1,0 +1,14 @@
+{
+  "fixture_id": "arc-site-valid-001",
+  "object_type": "ArchaeologicalSite",
+  "truth_state": "CANDIDATE",
+  "site_id": "kfm://fixture/synthetic/archaeology/site-001",
+  "sensitivity_class": "WITHHELD",
+  "spatial_precision_class": "WITHHELD",
+  "source_refs": ["kfm://source/synthetic/archaeology-site-001"],
+  "evidence_refs": ["kfm://evidence/synthetic/archaeology-site-001"],
+  "review_state": "NEEDS_REVIEW",
+  "lifecycle_state": "WORK",
+  "fixture_posture": "synthetic; valid; site-shaped; withheld-precision",
+  "notes": "Synthetic site-shaped fixture only; truth_state remains CANDIDATE, no exact or reverse-engineerable geometry is present, and this does not prove a site exists."
+}

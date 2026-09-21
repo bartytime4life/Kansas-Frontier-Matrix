@@ -1,0 +1,5 @@
+ERROR: AirObservation validation failed
+reason_code: MISSING_MEASUREMENT_UNIT
+field: measurement.unit
+detail: measurement.unit is required and must not be null; a numeric value
+without an explicit unit cannot be safely compared, aggregated, or rendered.

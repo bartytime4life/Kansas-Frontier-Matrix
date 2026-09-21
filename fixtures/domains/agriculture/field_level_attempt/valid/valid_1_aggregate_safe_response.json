@@ -1,0 +1,10 @@
+{
+  "fixture_id": "ag-field-attempt-valid-001",
+  "request_type": "AgricultureFieldDetailRequest",
+  "field_ref": "kfm://fixture/synthetic/agriculture/field-001",
+  "requested_precision": "AGGREGATE_PUBLIC_SAFE",
+  "returned_fields": ["county_cropland_class"],
+  "aggregation_receipt_ref": "kfm://fixture/synthetic/agriculture/aggregation-receipt-001",
+  "fixture_posture": "synthetic; valid; aggregate-safe-response",
+  "notes": "Same request family as ../invalid/invalid_1_exact_field_geometry_request.json, but transformed to county-level aggregate with a bound aggregation receipt."
+}

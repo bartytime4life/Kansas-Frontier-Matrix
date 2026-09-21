@@ -1,0 +1,12 @@
+{
+  "fixture_id": "ag-no-network-nass-valid-001",
+  "object_family": "NassQuickStatsRecord",
+  "commodity": "synthetic_commodity",
+  "statisticcat_desc": "AREA PLANTED",
+  "spatial_support": {"kind": "county", "county_fips": "99999", "generalized": true},
+  "temporal_scope": {"year": 2025, "reference_period": "YEAR"},
+  "value": {"amount": 42000, "unit": "ACRES"},
+  "network_status": "no_network_required",
+  "evidence_refs": ["fixture://evidence/agriculture/no-network/nass/valid-001"],
+  "fixture_posture": "synthetic; valid; offline NASS-shaped input"
+}

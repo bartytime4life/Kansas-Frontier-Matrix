@@ -1,0 +1,12 @@
+{
+  "fixture_id": "ag-release-invalid-001",
+  "object_type": "ReleasePrecheckPayload",
+  "domain": "agriculture",
+  "candidate_ref": "kfm://fixture/synthetic/agriculture/release-candidate-001",
+  "evidence_refs": ["fixture://evidence/agriculture/release/candidate-001"],
+  "review_ref": null,
+  "rollback_ref": "kfm://fixture/synthetic/agriculture/rollback-001",
+  "rights_state": "fixture_only",
+  "sensitivity_state": "public_safe_fixture",
+  "fixture_posture": "synthetic; invalid; release-precheck"
+}

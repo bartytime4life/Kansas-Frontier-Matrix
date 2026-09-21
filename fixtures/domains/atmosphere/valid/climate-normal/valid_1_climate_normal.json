@@ -1,0 +1,38 @@
+{
+  "_fixture_meta": {
+    "fixture_label": "valid_domain_climate_normal_001",
+    "network_status": "no_network_required",
+    "sensitive_data": false,
+    "expected_outcome": "PASS",
+    "notes": "Synthetic ClimateNormal fixture for the atmosphere valid/climate-normal/ lane."
+  },
+  "object_type": "ClimateNormal",
+  "schema_version": "1.0.0",
+  "id": "climate-normal:synthetic:domain-valid-001",
+  "source_role": "observed",
+  "source_descriptor_ref": "fixture://source/atmosphere/synthetic-domain-valid",
+  "source_resolution_status": "bound",
+  "spatial_support": {
+    "kind": "generalized_county",
+    "county_fips": "99999"
+  },
+  "temporal_scope": {
+    "observed_at": "2026-09-21T12:00:00Z",
+    "retrieved_at": "2026-09-21T12:05:00Z"
+  },
+  "evidence_refs": [
+    "fixture://evidence/atmosphere/climate-normal/domain-valid-001"
+  ],
+  "evidence_resolution_status": "bound",
+  "rights_status": "cleared_open",
+  "sensitivity": "public",
+  "release_posture": "not_released",
+  "limitations": [
+    "synthetic_fixture_only",
+    "not_life_safety_guidance"
+  ],
+  "parameter": "temperature",
+  "normal_period": "1991-2020",
+  "value": 14.8,
+  "unit": "degC"
+}

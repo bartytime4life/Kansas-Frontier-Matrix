@@ -185,7 +185,7 @@ Before adding or changing Agriculture release fixtures:
 | Item | Status | Notes |
 |---|---:|---|
 | Target README | CONFIRMED UPDATED | This path existed as a blank file before this update. |
-| Direct release payload inventory | NEEDS VERIFICATION | Repo search did not surface confirmed release fixture payload files in this directory during this update. |
+| Direct release payload inventory | PARTIALLY POPULATED | `invalid_1_missing_review.json` (+ `.expected_error.txt`) added — a release-precheck payload with evidence and rollback refs present but `review_ref: null`. |
 | Placement | CONFIRMED PATH / PROPOSED LANE REALIZATION | The requested path exists; Agriculture path doctrine includes `fixtures/domains/agriculture/` but marks Agriculture-specific lanes as proposed until verified. |
 | Release authority | NOT AUTHORIZED BY THIS README | This README does not approve release, publication, signing, rollback, or public rendering. |
 | Test execution | NOT RUN | No validators, pytest, policy checks, release checks, signing checks, catalog checks, or CI were run during this README update. |

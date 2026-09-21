@@ -183,7 +183,7 @@ Before adding or changing SSURGO fixtures:
 | Item | Status | Notes |
 |---|---:|---|
 | Target README | CONFIRMED UPDATED | This path existed as a blank file before this update. |
-| Direct fixture payload inventory | NEEDS VERIFICATION | No `valid/`, `invalid/`, input, expected, or snapshot payload files were fetched for this lane during this update. |
+| Direct fixture payload inventory | PARTIALLY POPULATED | `valid_1.input.json` added — a synthetic MUKEY-to-suitability join example. |
 | SSURGO product basis | CONFIRMED DOC / PROPOSED PRODUCT PAGE | The SSURGO source catalog page documents SSURGO as Soil-domain source-of-record context and separates source descriptor authority from docs. |
 | Agriculture source-role basis | CONFIRMED DOC | Agriculture source docs admit SSURGO/SDA and gSSURGO while preserving observed/aggregate source-role distinctions. |
 | Placement | CONFIRMED PATH / PROPOSED LANE REALIZATION | The requested path exists; Agriculture path doctrine includes `fixtures/domains/agriculture/` but marks Agriculture-specific lanes as proposed until verified. |

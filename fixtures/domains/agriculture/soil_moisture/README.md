@@ -183,7 +183,7 @@ Before adding or changing soil-moisture fixtures:
 | Item | Status | Notes |
 |---|---:|---|
 | Target README | CONFIRMED UPDATED | This path existed as a blank file before this update. |
-| Direct fixture payload inventory | NEEDS VERIFICATION | No `valid/`, `invalid/`, input, expected, or snapshot payload files were fetched for this lane during this update. |
+| Direct fixture payload inventory | PARTIALLY POPULATED | `valid_1.input.json` added — a synthetic generalized-county volumetric water content observation. |
 | Source-role basis | CONFIRMED DOC | Agriculture source docs identify station soil-moisture sources and SMAP modeled soil-moisture context with distinct roles. |
 | SCAN product context | CONFIRMED DOC / PROPOSED PRODUCT PAGE | SCAN is documented as observed station readings with watcher candidate signals and Agriculture as a secondary context domain. |
 | Placement | CONFIRMED PATH / PROPOSED LANE REALIZATION | The requested path exists; Agriculture path doctrine includes `fixtures/domains/agriculture/` but marks Agriculture-specific lanes as proposed until verified. |

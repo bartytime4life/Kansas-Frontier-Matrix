@@ -1,0 +1,27 @@
+{
+  "fixture_id": "ag-hls-vi-valid-001",
+  "object_family": "VegetationIndexObservation",
+  "index": "NDVI",
+  "spatial_support": {
+    "kind": "generalized_county",
+    "county_fips": "99999"
+  },
+  "temporal_scope": {
+    "observed_at": "2026-07-15T00:00:00Z",
+    "retrieved_at": "2026-07-16T00:00:00Z"
+  },
+  "measurement": {
+    "value": 0.62,
+    "unit": "dimensionless",
+    "band_source": "HLS",
+    "aggregation": "county_mean"
+  },
+  "evidence_refs": ["fixture://evidence/agriculture/hls-vi/valid-001"],
+  "aggregation_receipt_ref": "kfm://fixture/synthetic/agriculture/aggregation-receipt-hls-vi-001",
+  "governance": {
+    "rights_state": "fixture_only",
+    "sensitivity_state": "public_safe_fixture",
+    "release_state": "not_released"
+  },
+  "fixture_posture": "synthetic; valid; NEEDS VERIFICATION shape pending confirmed hls_vi contract/schema/validator"
+}

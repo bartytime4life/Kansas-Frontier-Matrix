@@ -195,7 +195,7 @@ Before adding or changing no-network NASS fixtures:
 | Item | Status | Notes |
 |---|---:|---|
 | Target README | CONFIRMED UPDATED | This path existed as a blank file before this update. |
-| Direct payload inventory | NEEDS VERIFICATION | Repo search did not surface confirmed payload files in this directory during this update. |
+| Direct payload inventory | PARTIALLY POPULATED | `valid_1.input.json` added — a synthetic offline NASS QuickStats-shaped input. |
 | No-network behavior | NEEDS VERIFICATION / NOT RUN | No test was executed to confirm network isolation. |
 | QuickStats source-role basis | CONFIRMED DOC | The sibling fixture README and source catalog page document QuickStats as aggregate source-role data with anti-collapse constraints. |
 | Placement | CONFIRMED PATH / PROPOSED LANE REALIZATION | The requested path exists; Agriculture path doctrine includes `fixtures/domains/agriculture/` but marks Agriculture-specific lanes as proposed until verified. |

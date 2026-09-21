@@ -1,0 +1,12 @@
+{
+  "fixture_id": "ag-no-network-valid-001",
+  "object_family": "AgricultureOfflineParserCase",
+  "scenario": "deterministic_offline_parse",
+  "input_shape": {
+    "county_fips": "99999",
+    "year": 2026,
+    "commodity": "synthetic_commodity"
+  },
+  "network_status": "no_network_required",
+  "fixture_posture": "synthetic; valid; parent-lane offline smoke case"
+}

@@ -170,7 +170,7 @@ Before adding or changing `hls_vi` fixtures:
 |---|---:|---|
 | Target README | CONFIRMED UPDATED | This path existed as a blank file before this update. |
 | Direct `hls_vi` contract/schema/validator evidence | NEEDS VERIFICATION | Repo search did not return a confirmed `hls_vi` contract, schema, validator, or payload. |
-| Direct fixture payload inventory | NEEDS VERIFICATION | No `valid/`, `invalid/`, input, expected, or snapshot payload files were fetched for this lane during this update. |
+| Direct fixture payload inventory | PARTIALLY POPULATED | `valid_1.input.json` added — a synthetic county-aggregate NDVI example, explicitly marked NEEDS VERIFICATION pending a confirmed `hls_vi` contract/schema/validator since none was found at this update. |
 | Placement | CONFIRMED PATH / PROPOSED LANE REALIZATION | The requested path exists; Agriculture path doctrine includes `fixtures/domains/agriculture/` but marks Agriculture-specific lanes as proposed until verified. |
 | Agriculture stress context | CONFIRMED DOC / IMPLEMENTATION PROPOSED | Agriculture cross-lane docs identify vegetation-stress products and source-role discipline as relevant Agriculture context, but this does not confirm `hls_vi` implementation. |
 | Test execution | NOT RUN | No validators, pytest, policy checks, catalog checks, release checks, or CI were run during this README update. |

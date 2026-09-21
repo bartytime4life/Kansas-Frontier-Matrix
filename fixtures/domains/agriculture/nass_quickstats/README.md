@@ -181,7 +181,7 @@ Before adding or changing NASS QuickStats fixtures:
 | Item | Status | Notes |
 |---|---:|---|
 | Target README | CONFIRMED UPDATED | This path existed as a blank file before this update. |
-| Direct fixture payload inventory | NEEDS VERIFICATION | No `valid/`, `invalid/`, input, expected, or snapshot payload files were fetched for this lane during this update. |
+| Direct fixture payload inventory | PARTIALLY POPULATED | `valid_1.input.json` added — a synthetic county-level `NassQuickStatsRecord` aggregate. |
 | QuickStats source-role basis | CONFIRMED DOC | The source catalog page documents QuickStats as aggregate data and identifies anti-collapse constraints. |
 | Placement | CONFIRMED PATH / PROPOSED LANE REALIZATION | The requested path exists; Agriculture path doctrine includes `fixtures/domains/agriculture/` but marks Agriculture-specific lanes as proposed until verified. |
 | Test execution | NOT RUN | No validators, pytest, source admission checks, catalog checks, policy checks, release checks, or CI were run during this README update. |

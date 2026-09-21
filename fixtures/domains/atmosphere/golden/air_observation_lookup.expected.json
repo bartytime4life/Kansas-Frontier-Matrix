@@ -1,0 +1,17 @@
+{
+  "fixture_id": "atm-golden-001-expected",
+  "outcome": "ANSWER",
+  "returned_object": {
+    "object_type": "AirObservation",
+    "id": "air-observation:synthetic:domain-valid-001",
+    "measurement": {
+      "parameter": "synthetic_air_parameter",
+      "value": 12.5,
+      "unit": "fixture-unit"
+    },
+    "sensitivity": "public",
+    "release_posture": "not_released"
+  },
+  "fixture_posture": "synthetic; golden-expected",
+  "notes": "Stable expected output for air_observation_lookup.input.json, paired with ../valid/air-observation/valid_1_air_observation.json."
+}

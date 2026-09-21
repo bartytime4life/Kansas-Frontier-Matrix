@@ -1,0 +1,21 @@
+{
+  "fixture_id": "ag-ssurgo-valid-001",
+  "object_family": "SsurgoMapUnitJoin",
+  "mukey": "999999",
+  "spatial_support": {
+    "kind": "generalized_county",
+    "county_fips": "99999"
+  },
+  "suitability": {
+    "crop_suitability_class": "MODERATE",
+    "method": "synthetic_soil_crop_suitability"
+  },
+  "source_descriptor_ref": "fixture://sources/agriculture/synthetic-ssurgo",
+  "evidence_refs": ["fixture://evidence/agriculture/ssurgo/valid-001"],
+  "governance": {
+    "rights_state": "fixture_only",
+    "sensitivity_state": "public_safe_fixture",
+    "release_state": "not_released"
+  },
+  "fixture_posture": "synthetic; valid; MUKEY join example"
+}

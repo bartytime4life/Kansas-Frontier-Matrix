@@ -27,5 +27,5 @@ Maintenance notes:
 Verification status:
 
 - Target README: updated from a blank file.
-- Payload inventory: NEEDS VERIFICATION.
+- Payload inventory: `air_observation_lookup.input.json` / `.expected.json` added — a synthetic `AirObservation` lookup request/response golden pair, paired with `../valid/air-observation/valid_1_air_observation.json`.
 - Tests and validators: NOT RUN.

@@ -1,0 +1,5 @@
+ERROR: AirStation validation failed
+reason_code: MISSING_NETWORK_REFERENCE
+field: network_ref
+detail: network_ref is required and must not be null; an AirStation cannot
+be admitted without a resolvable owning-network identity.

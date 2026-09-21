@@ -44,5 +44,5 @@ Examples may include:
 ## Verification status
 
 - Target README: updated from placeholder content.
-- Payload inventory: NEEDS VERIFICATION.
+- Payload inventory: `invalid_1_missing_unit.json` / `.expected_error.txt` added — an `AirObservation` with `measurement.unit: null`.
 - Tests and validators: NOT RUN.

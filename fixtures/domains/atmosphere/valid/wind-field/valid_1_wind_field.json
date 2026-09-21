@@ -1,0 +1,41 @@
+{
+  "_fixture_meta": {
+    "fixture_label": "valid_domain_wind_field_001",
+    "network_status": "no_network_required",
+    "sensitive_data": false,
+    "expected_outcome": "PASS",
+    "notes": "Synthetic WindField fixture for the atmosphere valid/wind-field/ lane."
+  },
+  "object_type": "WindField",
+  "schema_version": "1.0.0",
+  "id": "wind-field:synthetic:domain-valid-001",
+  "source_role": "observed",
+  "source_descriptor_ref": "fixture://source/atmosphere/synthetic-domain-valid",
+  "source_resolution_status": "bound",
+  "spatial_support": {
+    "kind": "generalized_county",
+    "county_fips": "99999"
+  },
+  "temporal_scope": {
+    "observed_at": "2026-09-21T12:00:00Z",
+    "retrieved_at": "2026-09-21T12:05:00Z"
+  },
+  "evidence_refs": [
+    "fixture://evidence/atmosphere/wind-field/domain-valid-001"
+  ],
+  "evidence_resolution_status": "bound",
+  "rights_status": "cleared_open",
+  "sensitivity": "public",
+  "release_posture": "not_released",
+  "limitations": [
+    "synthetic_fixture_only",
+    "not_life_safety_guidance"
+  ],
+  "measurement": {
+    "speed": 5.8,
+    "speed_unit": "m/s",
+    "direction_deg": 210,
+    "gust_speed": 9.2
+  },
+  "knowledge_character": "MODELED_FORECAST"
+}

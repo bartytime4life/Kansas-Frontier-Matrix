@@ -159,7 +159,7 @@ Before adding or changing field-level attempt fixtures:
 | Item | Status | Notes |
 |---|---:|---|
 | Target README | CONFIRMED UPDATED | This path existed as a blank file before this update. |
-| Direct fixture payload inventory | NEEDS VERIFICATION | No `valid/` or `invalid/` payload files were fetched for this lane during this update. |
+| Direct fixture payload inventory | PARTIALLY POPULATED | `invalid/invalid_1_exact_field_geometry_request.json` (+ `.expected_error.txt`) and `valid/valid_1_aggregate_safe_response.json` added — the same request denied at exact precision and allowed once transformed to a county aggregate with a bound receipt. |
 | Placement | CONFIRMED PATH / PROPOSED LANE REALIZATION | The requested path exists; Agriculture path doctrine includes `fixtures/domains/agriculture/` but marks Agriculture-specific lanes as proposed until verified. |
 | Policy posture | CONFIRMED DOC / RUNTIME UNKNOWN | Agriculture policy README states exact exposure must fail closed unless a reviewed policy path allows a transformed output; runtime enforcement was not tested. |
 | Test execution | NOT RUN | No validators, pytest, policy checks, source admission checks, release checks, or CI were run during this README update. |

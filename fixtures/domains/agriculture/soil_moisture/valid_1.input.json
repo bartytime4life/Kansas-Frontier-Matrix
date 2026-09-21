@@ -1,0 +1,27 @@
+{
+  "fixture_id": "ag-soil-moisture-valid-001",
+  "object_family": "AgricultureSoilMoistureObservation",
+  "spatial_support": {
+    "kind": "generalized_county",
+    "county_fips": "99999"
+  },
+  "depth_interval_cm": {"top": 0, "bottom": 10},
+  "temporal_scope": {
+    "observed_at": "2026-07-15T00:00:00Z",
+    "retrieved_at": "2026-07-15T06:00:00Z"
+  },
+  "measurement": {
+    "property": "volumetric_water_content",
+    "value": 0.21,
+    "unit": "m3/m3",
+    "qa_state": "reviewed"
+  },
+  "source_descriptor_ref": "fixture://sources/agriculture/synthetic-soil-moisture",
+  "evidence_refs": ["fixture://evidence/agriculture/soil-moisture/valid-001"],
+  "governance": {
+    "rights_state": "fixture_only",
+    "sensitivity_state": "public_safe_fixture",
+    "release_state": "not_released"
+  },
+  "fixture_posture": "synthetic; valid; stress/suitability-helper example"
+}

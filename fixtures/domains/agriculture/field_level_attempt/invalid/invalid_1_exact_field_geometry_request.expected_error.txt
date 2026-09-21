@@ -1,0 +1,8 @@
+DENY
+reason_code: FIELD_LEVEL_EXPOSURE_NOT_PUBLIC_SAFE
+fields: requested_precision, requested_fields, aggregation_receipt_ref
+detail: exact_field_geometry, operator_identity, and row_level_yield are
+field/operator/parcel-adjacent and must not be returned at EXACT_PARCEL
+precision without an explicit reviewed policy path. aggregation_receipt_ref
+is null, so no transformed, aggregated, or redacted output may be
+substituted; the request fails closed.

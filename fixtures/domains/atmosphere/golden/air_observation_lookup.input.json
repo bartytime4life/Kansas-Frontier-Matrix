@@ -1,0 +1,6 @@
+{
+  "fixture_id": "atm-golden-001-input",
+  "request_type": "AirObservationLookupRequest",
+  "id": "air-observation:synthetic:domain-valid-001",
+  "fixture_posture": "synthetic; golden-input"
+}

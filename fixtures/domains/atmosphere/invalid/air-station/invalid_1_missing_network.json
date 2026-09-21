@@ -1,0 +1,20 @@
+{
+  "_fixture_meta": {
+    "fixture_label": "invalid_air_station_missing_network",
+    "network_status": "no_network_required",
+    "sensitive_data": false,
+    "expected_outcome": "FAIL",
+    "notes": "Synthetic AirStation missing its network reference."
+  },
+  "object_type": "AirStation",
+  "schema_version": "1.0.0",
+  "id": "air-station:synthetic:domain-invalid-001",
+  "network_ref": null,
+  "siting_context": "generalized_county",
+  "operational_status": "active",
+  "source_descriptor_ref": "fixture://source/atmosphere/observed-network",
+  "evidence_refs": ["fixture://evidence/atmosphere/air-station/domain-invalid-001"],
+  "rights_status": "cleared_open",
+  "sensitivity": "public",
+  "release_posture": "not_released"
+}

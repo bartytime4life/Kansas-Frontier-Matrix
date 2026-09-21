@@ -1,0 +1,27 @@
+{
+  "fixture_id": "ag-nass-quickstats-valid-001",
+  "object_family": "NassQuickStatsRecord",
+  "commodity": "synthetic_commodity",
+  "statisticcat_desc": "AREA PLANTED",
+  "spatial_support": {
+    "kind": "county",
+    "county_fips": "99999",
+    "generalized": true
+  },
+  "temporal_scope": {
+    "year": 2025,
+    "reference_period": "YEAR"
+  },
+  "value": {
+    "amount": 42000,
+    "unit": "ACRES"
+  },
+  "source_descriptor_ref": "fixture://sources/agriculture/synthetic-nass-quickstats",
+  "evidence_refs": ["fixture://evidence/agriculture/nass-quickstats/valid-001"],
+  "governance": {
+    "rights_state": "fixture_only",
+    "sensitivity_state": "public_safe_fixture",
+    "release_state": "not_released"
+  },
+  "fixture_posture": "synthetic; valid; aggregate-statistics-only"
+}
