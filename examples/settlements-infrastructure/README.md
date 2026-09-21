@@ -6,7 +6,7 @@ version: v0.2.0
 status: draft
 owners: NEEDS VERIFICATION - examples, settlements/infrastructure, settlement identity, infrastructure sensitivity, evidence, policy, release, and docs stewardship; default GitHub review route is @bartytime4life
 created: NEEDS VERIFICATION - one-character placeholder existed before 2026-06-30 expansion
-updated: 2026-07-24
+updated: 2026-09-21
 prepared_under_prompt: KFM Markdown Modernization & GitHub Documentation Implementation Agent v4.0.0
 review_packet_id: kfm-md-examples-settlements-infrastructure-20260724
 truth_posture: >
@@ -32,6 +32,7 @@ notes:
   - "Examples must not become settlement truth, municipal-status certification, infrastructure condition truth, operator/dependency disclosure, proof authority, receipt authority, catalog closure, policy authority, release authority, public artifact authority, or direct AI output authority by placement."
   - "Public runtime outcomes are ANSWER, ABSTAIN, DENY, or ERROR; HOLD and QUARANTINE remain separate review or lifecycle states."
   - "README presence does not prove example files, schemas, validators, fixtures, CI checks, source descriptors, proof objects, receipts, governed API route behavior, public layer payloads, or release readiness."
+  - "The 2026-09-21 update adds one static synthetic identity walkthrough; it does not resolve path variance or create operational authority."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -41,12 +42,13 @@ notes:
 Illustrative examples for teaching how KFM reviewers should handle settlement identity, municipality/census-place context, historic place context, public-safe infrastructure context, source-role separation, sensitive joins, EvidenceBundle support, and finite public outcomes without creating operational authority.
 
 [![Document status: draft](https://img.shields.io/badge/document-draft-d4a72c?style=flat-square)](#status-notes)
-[![Maturity: README only](https://img.shields.io/badge/maturity-README--only-0969da?style=flat-square)](#current-maturity)
+[![Maturity: static walkthrough](https://img.shields.io/badge/maturity-STATIC--WALKTHROUGH-0969da?style=flat-square)](#current-maturity)
 [![Authority: non-authoritative](https://img.shields.io/badge/authority-non--authoritative-b42318?style=flat-square)](#path-posture)
 [![Truth posture: cite or abstain](https://img.shields.io/badge/truth-cite--or--abstain-1f883d?style=flat-square)](../../docs/doctrine/truth-posture.md)
 [![Sensitivity: fail closed](https://img.shields.io/badge/sensitivity-fail--closed-b42318?style=flat-square)](#guardrails)
 
-**Status:** draft / `README_ONLY` / example-lane guidance  
+**Status:** draft / `STATIC_WALKTHROUGH` / example-lane guidance
+
 **Stewardship:** `NEEDS VERIFICATION` - examples, settlements/infrastructure, identity, sensitivity, evidence, policy, release, and docs responsibilities  
 **GitHub review route:** default [CODEOWNERS](../../.github/CODEOWNERS) route `@bartytime4life`; routing is not stewardship, approval, release authority, or proof of review  
 **Path:** `examples/settlements-infrastructure/README.md`  
@@ -230,19 +232,19 @@ Illustrative JSON should include a visible marker like this:
 
 ## Current maturity
 
-At the pinned base, this README is the only lane content directly inspected. A bounded exact-path GitHub search surfaced this README and a generated receipt reference, but did not establish child example payloads or an executable entrypoint. The lane is therefore `README_ONLY`, not runnable or structure-validated.
+At the pinned historical base, only this README was directly inspected. The 2026-09-21 recursive checkout inventory contains this README and [`census_place_not_municipality.walkthrough.md`](census_place_not_municipality.walkthrough.md). The lane is now `STATIC_WALKTHROUGH`, without an executable entrypoint or structure-validation claim.
 
 The parent [`examples/` contract](../README.md) defines the maturity vocabulary used here:
 
 | Maturity state | Current result | Evidence boundary |
 |---|---:|---|
 | `README_ONLY` | `CONFIRMED` | This complete README exists at the pinned target blob. |
-| `STATIC_WALKTHROUGH` | `UNKNOWN` | No child walkthrough was directly read; bounded search is not an exhaustive tree proof. |
+| `STATIC_WALKTHROUGH` | `CONFIRMED` | One synthetic identity walkthrough is present in this checkout; its JSON snippet parses and its relative links resolve. |
 | `STRUCTURE_VALIDATED` | `NEEDS VERIFICATION` | No accepted examples schema, validator result, or examples-specific check was verified. |
 | `RUNNABLE_LOCAL` | `UNKNOWN` | No accepted entrypoint, dependency closure, deterministic run, or smoke result was verified. |
 | `FIXTURE_MIRRORED` | `NEEDS VERIFICATION` | Test and fixture README lanes exist, but example-to-fixture parity and drift checks were not verified. |
 
-A badge, README, generated receipt, test-lane README, or fixture stub does not raise this maturity.
+The static walkthrough raises this lane only to the documented teaching maturity. A badge, README, generated receipt, test-lane README, or fixture stub cannot establish validation, execution, or public authority.
 
 ---
 
@@ -412,9 +414,9 @@ The current [CODEOWNERS](../../.github/CODEOWNERS) file routes this path through
 | Catalog lane | CONFIRMED README | `data/catalog/domain/settlements-infrastructure/README.md` defines CATALOG-stage records as release-gated and not truth/public by placement. |
 | Settlement proof/receipt sublanes | CONFIRMED README | `data/proofs/settlement/` and `data/receipts/settlement/` exist as singular settlement sublane support while naming remains unresolved. |
 | Published layer lane | CONFIRMED README | `data/published/layers/settlements-infrastructure/README.md` defines released public-safe layer artifacts and preserves slug variance. |
-| Directly inspected lane content | CONFIRMED | The complete README was read; no child example payload was directly read. |
-| Exhaustive child payload inventory | UNKNOWN | Bounded search is not a recursive tree, LFS, generated, hosted, or consumer inventory. |
-| Current lane maturity | CONFIRMED | `README_ONLY`; no higher maturity was established. |
+| Directly inspected lane content | CONFIRMED at this checkout | The README and `census_place_not_municipality.walkthrough.md` were read recursively. |
+| Recursive child payload inventory | CONFIRMED at this checkout | One static walkthrough; ignored, generated, hosted, and external consumers remain UNKNOWN. |
+| Current lane maturity | CONFIRMED | `STATIC_WALKTHROUGH`; no runnable or runtime parity claim. |
 | Runtime outcome vocabulary | CONFIRMED | The current DecisionEnvelope contract uses `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`; `HOLD` and `QUARANTINE` are separate states. |
 | GitHub review route | CONFIRMED | Default CODEOWNERS route is `@bartytime4life`; stewardship and independent review remain `NEEDS VERIFICATION`. |
 | Documentation workflow checks | CONFIRMED | Docs build, link check, and accessibility are explicit readiness holds, not validation passes. |
