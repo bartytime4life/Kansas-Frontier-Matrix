@@ -3,7 +3,7 @@ from __future__ import annotations
 import ast
 import re
 from dataclasses import dataclass
-from pathlib import Path, PurePosixPath
+from pathlib import Path
 from typing import Any, Iterable, Mapping, Sequence
 
 from stale_scan_core import Finding, StaleScanError
@@ -204,31 +204,12 @@ def scalar(metadata: Mapping[str, Any], *keys: str) -> str | None:
     return None
 
 
-def list_values(metadata: Mapping[str, Any], *keys: str) -> tuple[str, ...]:
-    for key in keys:
-        value = metadata.get(key)
-        if value is None:
-            continue
-        if isinstance(value, list):
-            return tuple(str(item).strip() for item in value if str(item).strip())
-        text = str(value).strip()
-        if not text:
-            return ()
-        return tuple(item.strip() for item in text.split(";") if item.strip())
-    return ()
-
-
 def owner_text(metadata: Mapping[str, Any]) -> str | None:
     return scalar(metadata, "owner", "owners")
 
 
 def owner_is_placeholder(value: str | None) -> bool:
     return bool(value and PLACEHOLDER_PATTERN.search(value))
-
-
-def root_segment(path: str) -> str:
-    parts = PurePosixPath(path).parts
-    return parts[0] if len(parts) > 1 else "."
 
 
 def temporal_marker_values(metadata: Mapping[str, Any]) -> tuple[tuple[str, str], ...]:
