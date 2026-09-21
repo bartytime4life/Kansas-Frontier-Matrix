@@ -25,7 +25,7 @@ related:
   - ../../../../fixtures/README.md
   - ../../../../fixtures/packages/schema-registry/
   - ../../../../packages/schema-registry/IMPLEMENTATION.md
-  - ../../../../tests/packages/schema_registry/test_core.py
+  - ../../../../tests/packages/schema_registry/test_schema_registry_core.py
   - validator/README.md
 [/KFM_META_BLOCK_V2] -->
 
@@ -51,7 +51,7 @@ is not a fixture, schema, validator, test, policy, registry, or release authorit
 | Store reusable synthetic fixture payloads | [`fixtures/`](../../../../fixtures/README.md) | Canonical reusable fixture root |
 | Inspect this package's fixture profiles | [`fixtures/packages/schema-registry/`](../../../../fixtures/packages/schema-registry/) | Synthetic package inputs; not governed runtime data |
 | Inspect the consumer implementation | [`packages/schema-registry/`](../../../../packages/schema-registry/README.md) | Partial, read-only local registry helper |
-| Inspect executable expectations | [`test_core.py`](../../../../tests/packages/schema_registry/test_core.py) | Bounded regression evidence |
+| Inspect executable expectations | [`test_schema_registry_core.py`](../../../../tests/packages/schema_registry/test_schema_registry_core.py) | Bounded regression evidence |
 | Define canonical machine shape | [`schemas/`](../../../../schemas/README.md) | Schema authority where declared |
 | Implement or register validators | [`tools/validators/`](../../../../tools/validators/README.md) | Executable checks and registry mechanics |
 | Decide normative outcomes | [`policy/`](../../../../policy/README.md) | Policy authority |

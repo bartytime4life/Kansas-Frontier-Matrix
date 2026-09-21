@@ -7,7 +7,7 @@ on:
       - 'schemas/contracts/v1/domains/people-dna-land/evidence_bundle.schema.json'
       - 'fixtures/contracts/v1/evidence/evidence_bundle/**'
       - 'tools/validators/validate_people_dna_land_evidence_bundle_projection.py'
-      - 'tests/validators/domains/people-dna-land/test_evidence_bundle_schema_convergence.py'
+      - 'tests/validators/domains/people-dna-land/test_people_dna_land_evidence_bundle_schema_convergence.py'
       - '.github/workflows/people-dna-land-evidence-bundle-convergence.yml'
   workflow_dispatch:
 
@@ -36,12 +36,12 @@ jobs:
         run: >-
           python -m py_compile
           tools/validators/validate_people_dna_land_evidence_bundle_projection.py
-          tests/validators/domains/people-dna-land/test_evidence_bundle_schema_convergence.py
+          tests/validators/domains/people-dna-land/test_people_dna_land_evidence_bundle_schema_convergence.py
       - name: Run deterministic convergence tests
         run: >-
           python -m unittest discover
           --start-directory tests/validators/domains/people-dna-land
-          --pattern 'test_evidence_bundle_schema_convergence.py'
+          --pattern 'test_people_dna_land_evidence_bundle_schema_convergence.py'
           --verbose
       - name: Validate shared fixtures through the People/DNA/Land projection
         run: python tools/validators/validate_people_dna_land_evidence_bundle_projection.py --fixtures

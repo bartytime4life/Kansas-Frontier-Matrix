@@ -8,7 +8,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from _support import (
+from meta_block_support import (
     DocsMetaBlockTestCase, FIXTURE_ROOT, VALIDATOR_PATH, meta_block,
 )
 

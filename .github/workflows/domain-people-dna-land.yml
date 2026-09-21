@@ -90,7 +90,7 @@ jobs:
             "tests/validators/domains/people-dna-land/test_domain_catalog_matrix_validator_entrypoint.py"
             "tests/validators/domains/people-dna-land/test_domain_evidence_bundle_validator_entrypoint.py"
             "tests/validators/domains/people-dna-land/test_domain_schema_validator.py"
-            "tests/validators/domains/people-dna-land/test_evidence_bundle_schema_convergence.py"
+            "tests/validators/domains/people-dna-land/test_people_dna_land_evidence_bundle_schema_convergence.py"
             "tests/validators/test_screen_living_persons.py"
             "tools/validators/domains/people-dna-land/README.md"
             "tools/validators/domains/people-dna-land/validate_consent_overlay.py"
@@ -266,7 +266,7 @@ jobs:
             tests/validators/domains/people-dna-land/test_domain_catalog_matrix_validator_entrypoint.py \
             tests/validators/domains/people-dna-land/test_domain_evidence_bundle_validator_entrypoint.py \
             tests/validators/domains/people-dna-land/test_domain_schema_validator.py \
-            tests/validators/domains/people-dna-land/test_evidence_bundle_schema_convergence.py \
+            tests/validators/domains/people-dna-land/test_people_dna_land_evidence_bundle_schema_convergence.py \
             tests/validators/test_screen_living_persons.py
 
           python tools/validators/domains/people-dna-land/validate_schema.py
