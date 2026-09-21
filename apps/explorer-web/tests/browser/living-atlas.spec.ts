@@ -216,6 +216,73 @@ test("preserves timeless selection and evidence across committed time changes", 
   expect(draft?.includedEvidenceRefs).toEqual(draft?.snapshot.evidenceRefs);
 });
 
+test("shows a fixture correction chain without citing its superseded reference and restores the prior display", async ({ page }) => {
+  await page.goto("/");
+  const workspace = page.locator('[data-component="living-atlas-workspace"]');
+  await workspace.getByRole("button", { name: "Layers" }).click();
+  const drawer = workspace.getByRole("complementary", { name: "Evidence Drawer" });
+  await workspace.locator(".atlas-layer-row", { hasText: "County locator starter points" })
+    .getByRole("button", { name: "Inspect" }).click();
+  await expect(drawer).toContainText("kfm:evidence:site-local:county-locators");
+
+  const open = workspace.getByRole("button", { name: "Inspect synthetic correction history" });
+  await open.focus();
+  await page.keyboard.press("Enter");
+  await expect(drawer.getByRole("heading", { name: "Synthetic streamflow observation" })).toBeFocused();
+  await expect(drawer).toContainText("kfm:evidence:synthetic:flow-001");
+  await expect(drawer).toContainText("kfm:evidence:synthetic:flow-000 · SUPERSEDED");
+  await expect(drawer).toContainText("cannot support a current claim");
+  await expect(drawer.getByRole("link")).toHaveCount(0);
+  await expect(workspace.locator(".atlas-correction-context")).toContainText("map time remains Modern records");
+
+  await workspace.getByRole("button", { name: "New from map" }).click();
+  await workspace.getByRole("button", { name: "Create report draft" }).click();
+  const draft = await page.evaluate(() => {
+    const raw = window.localStorage.getItem("kfm.explorer.report-drafts.v2");
+    return raw === null ? null : (JSON.parse(raw) as Array<{
+      snapshot: { selectedLayerId: string | null; evidenceRefs: string[] };
+      includedEvidenceRefs: string[];
+    }>)[0];
+  });
+  expect(draft?.snapshot.selectedLayerId).toBeNull();
+  expect(draft?.snapshot.evidenceRefs).toEqual([]);
+  expect(draft?.includedEvidenceRefs).toEqual([]);
+  await workspace.getByRole("button", { name: "Map", exact: true }).click();
+
+  const close = drawer.getByRole("button", { name: "Return to prior display" });
+  await close.focus();
+  await page.keyboard.press("Enter");
+  await expect(open).toBeFocused();
+  await expect(drawer).toContainText("County locator starter points");
+  await expect(drawer).not.toContainText("kfm:evidence:synthetic:flow-000");
+  await expect(workspace.locator(".atlas-correction-context")).toHaveText("No correction example open.");
+});
+
+test("time commit clears correction display and held views suppress registered references", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+  const workspace = page.locator('[data-component="living-atlas-workspace"]');
+  const drawer = workspace.getByRole("complementary", { name: "Evidence Drawer" });
+  await workspace.getByRole("button", { name: "Layers" }).click();
+  await workspace.getByRole("button", { name: "Inspect synthetic correction history" }).click();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth)).toBe(false);
+  await workspace.getByRole("slider", { name: "Preview atlas time" }).fill("10");
+  await expect(drawer).toContainText("Synthetic streamflow observation");
+  await workspace.getByRole("button", { name: "Apply time" }).click();
+  await expect(drawer).toContainText("Inspect before interpretation");
+  await expect(workspace.locator(".atlas-correction-context")).toHaveText("No correction example open.");
+
+  await workspace.getByRole("button", { name: "Views" }).click();
+  await workspace.getByText("11 views awaiting data admission").click();
+  await workspace.getByRole("button", { name: /Weather Window/ }).click();
+  await workspace.getByRole("button", { name: "Layers" }).click();
+  await workspace.locator(".atlas-layer-row", { hasText: "Generalized Kansas extent" })
+    .getByRole("button", { name: "Inspect" }).click();
+  await expect(drawer).toContainText("ABSTAIN · VIEW_DATA_HELD");
+  await expect(drawer).toContainText("None eligible");
+  await expect(drawer).not.toContainText("kfm:evidence:site-local:kansas-frame");
+});
+
 test("recovers from malformed persisted draft collections", async ({ page }) => {
   await page.addInitScript(() => {
     window.localStorage.setItem("kfm.explorer.report-drafts.v2", JSON.stringify([{

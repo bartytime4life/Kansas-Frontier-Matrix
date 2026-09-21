@@ -1,5 +1,6 @@
 import type { MapRuntimePort } from "@kfm/maplibre";
 import { createViteMapLibreAdapter } from "@kfm/maplibre/vite-adapter";
+import { parseEvidenceDrawerProjection } from "../adapters/GovernedClient";
 import {
   ATLAS_WORKBENCH_TOOLS,
   ATLAS_VIEWS,
@@ -45,6 +46,7 @@ import {
 import { repositoryUrl } from "./catalog";
 import { KANSAS_COUNTY_REFERENCE_CANDIDATE } from "./reference-geography-source-registry";
 import livingWatersFixturePacket from "../../../../fixtures/contracts/v1/domains/hydrology/living_waters_fixture_packet/valid/first_proof.json";
+import correctedEvidenceFixture from "../../../../fixtures/ui/evidence_drawer_payload/valid/answer-corrected.json";
 
 export type LivingAtlasController = Readonly<{ destroy: () => void }>;
 
@@ -55,6 +57,7 @@ const DISPLAY_TIME_IDS = Object.freeze(DISPLAY_TIMES.map((entry) => entry.id));
 const PLAYBACK_INTERVAL_MS = 1_200;
 
 const LIVING_WATERS_FIXTURE_PACKET: LivingWatersFixturePacket = livingWatersFixturePacket;
+const CORRECTED_EVIDENCE_FIXTURE = parseEvidenceDrawerProjection(correctedEvidenceFixture);
 
 function el<K extends keyof HTMLElementTagNameMap>(
   document: Document,
@@ -228,6 +231,8 @@ export function mountLivingAtlasWorkspace(
   let runtime: MapRuntimePort | null = null;
   let unsubscribeRuntime: (() => void) | null = null;
   let runtimeGeneration = 0;
+  let correctionDemoActive = false;
+  let correctionDemoPreviousLayerId: string | null = null;
   let reports = [
     ...readDrafts<ReportDraft>(
       "kfm.explorer.report-drafts.v2",
@@ -394,6 +399,7 @@ export function mountLivingAtlasWorkspace(
   layersPanel.append(
     layerList,
     livingWatersFixtureCard,
+    button(document, "Inspect synthetic correction history", "correction:open"),
     text(document, "h3", "Repository layer candidates", "atlas-section-label"),
   );
   const connectionList = el(document, "div", "atlas-connection-list");
@@ -539,7 +545,11 @@ export function mountLivingAtlasWorkspace(
 
   const evidence = el(document, "aside", "atlas-evidence-drawer");
   evidence.setAttribute("aria-label", "Evidence Drawer");
+  const correctionContext = text(document, "small", "No correction example open.", "atlas-correction-context");
+  correctionContext.setAttribute("role", "status");
+  correctionContext.setAttribute("aria-live", "polite");
   const renderEvidence = (layerId: string | null): void => {
+    correctionContext.textContent = "No correction example open.";
     if (layerId === null) {
       evidence.replaceChildren(
         text(document, "p", "Evidence Drawer", "eyebrow"),
@@ -570,10 +580,47 @@ export function mountLivingAtlasWorkspace(
       text(document, "h3", "Source and time"),
       text(document, "p", `${source.title} · ${source.admissionState} · ${claim.temporalScope}`),
       text(document, "h3", "Evidence references"),
-      text(document, "p", claim.evidenceRefs.length > 0 ? claim.evidenceRefs.join(", ") : "None eligible"),
+      text(document, "p", policy.evidenceRefs.length > 0 ? policy.evidenceRefs.join(", ") : "None eligible"),
       button(document, "Ask Focus for bounded next steps", "focus:run", "atlas-primary-action"),
       button(document, "Exercise deterministic error", "focus:error"),
     );
+  };
+  const renderCorrectionDemo = (): void => {
+    if (!CORRECTED_EVIDENCE_FIXTURE.ok ||
+      CORRECTED_EVIDENCE_FIXTURE.payload.outcome !== "ANSWER" ||
+      CORRECTED_EVIDENCE_FIXTURE.payload.history.corrections.length !== 1) {
+      correctionContext.textContent = "Correction fixture unavailable; no claim or reference is eligible.";
+      const title = text(document, "h2", "Correction fixture unavailable");
+      title.tabIndex = -1;
+      evidence.replaceChildren(
+        text(document, "p", "Evidence Drawer", "eyebrow"),
+        title,
+        text(document, "p", "ERROR · INVALID_FIXTURE", "atlas-outcome atlas-outcome--error"),
+        button(document, "Return to prior display", "correction:close"),
+      );
+      title.focus();
+      return;
+    }
+    const fixture = CORRECTED_EVIDENCE_FIXTURE.payload;
+    const correction = fixture.history.corrections[0]!;
+    const title = text(document, "h2", fixture.title);
+    title.tabIndex = -1;
+    correctionContext.textContent = `Fixture correction recorded ${correction.recordedAt}; map time remains ${findTemporalExtent(snapshot.committedTimeId)?.label ?? "unknown"}. The prior reference is historical only.`;
+    evidence.replaceChildren(
+      text(document, "p", "Evidence Drawer · fixture-only correction example", "eyebrow"),
+      title,
+      text(document, "p", "FIXTURE ONLY · no map evidence or real source admission or release", "atlas-outcome"),
+      text(document, "p", fixture.summary),
+      text(document, "h3", "Active fixture reference"),
+      text(document, "p", correction.activeEvidenceRef),
+      text(document, "h3", "Correction history"),
+      text(document, "p", `${correction.priorEvidenceRef} · SUPERSEDED · ${correction.recordedAt} · cannot support a current claim`),
+      text(document, "h3", "Time context"),
+      text(document, "p", "The correction date records a fixture transition. It is not an observation time or the committed map time."),
+      text(document, "p", "No citation link or evidence reference from this example is added to a map snapshot or draft."),
+      button(document, "Return to prior display", "correction:close"),
+    );
+    title.focus();
   };
   renderEvidence(null);
 
@@ -650,6 +697,7 @@ export function mountLivingAtlasWorkspace(
     timeLabel,
     timeDetail,
     playbackStatus,
+    correctionContext,
   );
   const timeInput = el(document, "input");
   timeInput.type = "range";
@@ -929,6 +977,8 @@ export function mountLivingAtlasWorkspace(
   const activateView = (viewId: string): void => {
     const view = findAtlasView(viewId);
     if (view === null) return;
+    correctionDemoActive = false;
+    correctionDemoPreviousLayerId = null;
     if (view.status === "DESIGN_DATA_HOLD") {
       const candidateLayerId = view.layerIds[0] ?? null;
       const candidateDecision = evaluateFocusSelection(
@@ -1106,10 +1156,38 @@ export function mountLivingAtlasWorkspace(
       activateMode("map");
       activateRail("layers");
       layerList.querySelector<HTMLButtonElement>(".atlas-layer-row button")?.focus();
+    } else if (action === "correction:open") {
+      if (!correctionDemoActive) {
+        correctionDemoPreviousLayerId = snapshot.selectedLayerId;
+      }
+      correctionDemoActive = true;
+      snapshot = cloneSnapshot(snapshot, {
+        selectedLayerId: null,
+        evidenceRefs: Object.freeze([]),
+      });
+      renderCorrectionDemo();
+    } else if (action === "correction:close") {
+      if (!correctionDemoActive) return;
+      correctionDemoActive = false;
+      const previousLayerId = correctionDemoPreviousLayerId;
+      correctionDemoPreviousLayerId = null;
+      const decision = evaluateFocusSelection(previousLayerId, false, snapshot.activeViewId);
+      const restoredLayerId = previousLayerId !== null &&
+        (decision.outcome === "DENY" || layerMatchesCommittedTime(previousLayerId))
+        ? previousLayerId
+        : null;
+      snapshot = cloneSnapshot(snapshot, {
+        selectedLayerId: restoredLayerId,
+        evidenceRefs: restoredLayerId === null ? Object.freeze([]) : decision.evidenceRefs,
+      });
+      renderEvidence(restoredLayerId);
+      workspace.querySelector<HTMLButtonElement>('[data-atlas-action="correction:open"]')?.focus();
     } else if (action.startsWith("rail:")) {
       activateRail(action.slice(5));
     } else if (action.startsWith("view:")) activateView(action.slice(5));
     else if (action.startsWith("inspect:")) {
+      correctionDemoActive = false;
+      correctionDemoPreviousLayerId = null;
       const layerId = action.slice(8);
       const decision = evaluateFocusSelection(
         layerId,
@@ -1131,12 +1209,18 @@ export function mountLivingAtlasWorkspace(
       });
       renderEvidence(layerId);
     } else if (action.startsWith("connection:")) {
+      correctionDemoActive = false;
+      correctionDemoPreviousLayerId = null;
+      correctionContext.textContent = "No correction example open.";
       snapshot = cloneSnapshot(snapshot, {
         selectedLayerId: null,
         evidenceRefs: Object.freeze([]),
       });
       renderConnection(action.slice("connection:".length));
     } else if (action.startsWith("reference-geography:")) {
+      correctionDemoActive = false;
+      correctionDemoPreviousLayerId = null;
+      correctionContext.textContent = "No correction example open.";
       snapshot = cloneSnapshot(snapshot, {
         selectedLayerId: null,
         evidenceRefs: Object.freeze([]),
@@ -1174,6 +1258,8 @@ export function mountLivingAtlasWorkspace(
       dispatchPlayback({ type: "STEP", delta: 1 });
     } else if (action === "time:commit") {
       dispatchPlayback({ type: "PAUSE", reason: "USER" });
+      correctionDemoActive = false;
+      correctionDemoPreviousLayerId = null;
       snapshot = commitSnapshotTime(snapshot, previewTimeId);
       timeDetail.textContent = `Committed to map snapshot · ${new Date(snapshot.capturedAt).toLocaleTimeString()}`;
       refreshLayerControls();

@@ -28,6 +28,8 @@ The local workbench now starts with a synthetic-scope guide and a keyboard-focus
 
 The 2026-09-21 local production build measured a 1,243.21 kB main JavaScript asset (338.25 kB gzip) and a 506.72 kB MapLibre worker. That is a build artifact measurement, not a loading-performance claim. Browser checks use desktop and 390 px viewports, exercise the first-use path and disclosure, and verify no horizontal document overflow at the narrow width. Roll back this UI slice by reverting its workbench composition, styles, browser tests, and this note together.
 
+The Layers catalog also opens the existing [corrected synthetic Evidence Drawer fixture](../../../../fixtures/ui/evidence_drawer_payload/valid/answer-corrected.json) in a local correction example. The drawer labels its active and superseded fixture references, while the Time Banner distinguishes the fixture correction date from committed map time. Opening the example clears map selection and eligible references; report drafts therefore capture none from it. Returning restores the prior selection only if it remains compatible with committed time. Applying a new time closes the example. The ordinary drawer now displays only references returned by the active finite policy decision, so a held view cannot display its layer's registered references as eligible citations. This is a browser fixture demonstration, not a real correction or source release.
+
 ## Unified Workspace UI-01 bounded slice
 
 The first Unified Workspace implementation slice is intentionally public, no-network, and composition-owned:
