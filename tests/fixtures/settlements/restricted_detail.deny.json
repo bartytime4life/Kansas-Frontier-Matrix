@@ -1,0 +1,12 @@
+{
+  "fixture_id": "settlements-fixture-restricted-detail-deny",
+  "expected_outcome": "DENY",
+  "network": "disabled",
+  "uses_real_source_data": false,
+  "authorizes_publication": false,
+  "settlement_ref": "settlement:synthetic:restricted-detail-example",
+  "requested_detail": "exact_facility_geometry",
+  "expected_reason_codes": [
+    "T4_DETAIL_NOT_PUBLIC_SAFE"
+  ]
+}

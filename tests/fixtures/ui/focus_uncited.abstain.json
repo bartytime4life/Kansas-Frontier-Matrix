@@ -1,0 +1,10 @@
+{
+  "fixture_id": "ui-fixture-focus-uncited-abstain",
+  "expected_outcome": "ABSTAIN",
+  "network": "disabled",
+  "uses_real_source_data": false,
+  "focus_request_ref": "example.invalid/focus/root-uncited",
+  "expected_reason_codes": [
+    "CITATION_UNRESOLVED"
+  ]
+}

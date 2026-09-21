@@ -320,6 +320,7 @@ Changes to this lane should be small, inspectable, and reversible.
 
 - Target README: replaced placeholder content.
 - Exact path search: no direct repo search hit for `tests/fixtures/layers/` beyond this placeholder during authoring; this lane is therefore documented as PROPOSED test-local fixture posture.
+- Fixture payload inventory: the full "Suggested layout" above is now populated (10 fixture files plus `expected_reason_codes.json`), each following the "Minimal layer fixture manifest" shape and "Expected fixture families" table above. No executable consumer reads them yet.
 - Test-root alignment: verified against `tests/README.md` for tests as enforceability proof, optional `tests/fixtures/` split, five-fixture rule, forbidden boundaries, sensitive-fixture safeguards, and deterministic no-network default.
 - MapReleaseManifest alignment: verified against `contracts/release/map_release_manifest.md` for map-publication envelope semantics, artifact refs/digests, evidence, rights, sensitivity, policy, attestations, correction lineage, rollback, lifecycle role, validation expectations, and exclusions.
 - Layer Catalog alignment: verified against `apps/explorer-web/src/features/layer_catalog/README.md` for governed API-only catalog state, trust badges, finite layer states, sensitive-layer handling, exclusions, accessibility posture, and forbidden RAW/WORK/QUARANTINE/internal-store access.

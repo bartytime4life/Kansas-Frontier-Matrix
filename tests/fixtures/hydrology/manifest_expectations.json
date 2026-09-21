@@ -1,0 +1,33 @@
+{
+  "cases": [
+    {
+      "fixture_manifest_id": "hydrology-compat-fixture-public-safe-example",
+      "domain": "hydrology",
+      "fixture_family": "compatibility_wrapper",
+      "canonical_fixture_ref": "fixtures/domains/hydrology/decision_envelope/valid/example-fixture.json",
+      "expected_outcome": "PASS",
+      "source_role": "synthetic",
+      "evidence_ref": "evidence:synthetic:hydrology:compat:example",
+      "policy_decision_ref": "policy:synthetic:hydrology:allow-public-safe-example",
+      "network": "disabled",
+      "uses_real_source_data": false,
+      "authorizes_publication": false
+    },
+    {
+      "fixture_manifest_id": "hydrology-compat-fixture-deny-nfhl-as-observed-inundation",
+      "domain": "hydrology",
+      "fixture_family": "source_role_collapse_denial",
+      "source_role": "regulatory_context",
+      "attempted_claim_type": "observed_inundation",
+      "expected_outcome": "DENY",
+      "expected_reason_codes": [
+        "SOURCE_ROLE_COLLAPSE_BLOCKED",
+        "NFHL_IS_REGULATORY_CONTEXT_NOT_OBSERVED_INUNDATION"
+      ],
+      "network": "disabled",
+      "uses_real_source_data": false,
+      "authorizes_publication": false
+    }
+  ],
+  "fixture_posture": "synthetic; manifest_expectations per the Suggested layout in README.md; no executable consumer yet"
+}

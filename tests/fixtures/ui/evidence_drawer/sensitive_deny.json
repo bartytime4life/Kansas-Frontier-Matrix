@@ -1,0 +1,10 @@
+{
+  "fixture_id": "ui-drawer-sensitive-deny",
+  "expected_outcome": "DENY",
+  "network": "disabled",
+  "uses_real_source_data": false,
+  "drawer_ref": "example.invalid/drawer/sensitive-deny",
+  "expected_reason_codes": [
+    "SENSITIVE_DETAIL_NOT_PUBLIC_SAFE"
+  ]
+}

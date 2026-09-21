@@ -1,0 +1,9 @@
+{
+  "fixture_id": "si-fixture-correction-visible-valid",
+  "expected_outcome": "PASS",
+  "network": "disabled",
+  "uses_real_source_data": false,
+  "authorizes_publication": false,
+  "settlement_ref": "settlement:synthetic:settlements-infrastructure:correction-visible-example",
+  "correction_ref": "correction:synthetic:settlements-infrastructure:correction-visible-example"
+}

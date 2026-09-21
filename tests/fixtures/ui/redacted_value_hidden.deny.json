@@ -1,0 +1,9 @@
+{
+  "fixture_id": "ui-fixture-redacted-value-hidden",
+  "expected_outcome": "DENY",
+  "network": "disabled",
+  "uses_real_source_data": false,
+  "field_ref": "example.invalid/field/redacted",
+  "state": "redacted",
+  "label_text": "Redacted (text label)"
+}

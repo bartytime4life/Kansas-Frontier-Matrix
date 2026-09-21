@@ -1,0 +1,15 @@
+{
+  "fixture_manifest_id": "layers-fixture-layer-catalog-item-denied",
+  "fixture_family": "layer_catalog_item_denied",
+  "expected_outcome": "DENY",
+  "network": "disabled",
+  "uses_real_source_data": false,
+  "uses_real_artifacts": false,
+  "authorizes_publication": false,
+  "layer_catalog_item_ref": "layer:synthetic:catalog-item:denied-example",
+  "expected_reason_codes": [
+    "POLICY_DENY"
+  ],
+  "policy_decision_ref": "policy:synthetic:layers:deny-catalog-item-example",
+  "visible_state": "denied_unavailable"
+}

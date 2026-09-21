@@ -1,0 +1,9 @@
+{
+  "fixture_id": "settlements-fixture-rollback-required-valid",
+  "expected_outcome": "PASS",
+  "network": "disabled",
+  "uses_real_source_data": false,
+  "authorizes_publication": false,
+  "settlement_ref": "settlement:synthetic:rollback-required-example",
+  "rollback_ref": "rollback:synthetic:settlements:rollback-required-example"
+}

@@ -1,0 +1,12 @@
+{
+  "fixture_id": "ui-drawer-answer-missing-evidence",
+  "expected_outcome": "ABSTAIN",
+  "network": "disabled",
+  "uses_real_source_data": false,
+  "drawer_ref": "example.invalid/drawer/answer-missing-evidence",
+  "claimed_outcome": "ANSWER",
+  "evidence_refs": [],
+  "expected_reason_codes": [
+    "ANSWER_WITHOUT_EVIDENCE_REJECTED"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "fixture_id": "ui-drawer-stale-abstain",
+  "expected_outcome": "ABSTAIN",
+  "network": "disabled",
+  "uses_real_source_data": false,
+  "drawer_ref": "example.invalid/drawer/stale-abstain",
+  "freshness_state": "stale",
+  "expected_reason_codes": [
+    "SOURCE_STALE_BEYOND_FRESHNESS_WINDOW"
+  ]
+}

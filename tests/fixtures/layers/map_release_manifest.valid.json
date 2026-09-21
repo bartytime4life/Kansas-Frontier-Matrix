@@ -1,0 +1,18 @@
+{
+  "fixture_manifest_id": "layers-fixture-map-release-manifest-valid",
+  "fixture_family": "map_release_manifest_valid",
+  "expected_outcome": "PASS",
+  "network": "disabled",
+  "uses_real_source_data": false,
+  "uses_real_artifacts": false,
+  "authorizes_publication": false,
+  "release_ref": "release:synthetic:map:release-valid-example",
+  "layer_manifest_refs": [
+    "layer:synthetic:manifest:valid-example"
+  ],
+  "rights_state": "cleared_open",
+  "sensitivity_state": "public_safe_fixture",
+  "attestation_ref": "attestation:synthetic:map:release-valid-example",
+  "correction_ref": null,
+  "rollback_ref": "rollback:synthetic:map:release-valid-example"
+}

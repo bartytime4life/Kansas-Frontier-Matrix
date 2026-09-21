@@ -1,0 +1,11 @@
+{
+  "fixture_id": "ui-fixture-direct-store-access-forbidden",
+  "expected_outcome": "DENY",
+  "network": "disabled",
+  "uses_real_source_data": false,
+  "attempted_source": "data/raw/example-invalid.json",
+  "governed_api_used": false,
+  "expected_reason_codes": [
+    "DIRECT_INTERNAL_STORE_READ"
+  ]
+}

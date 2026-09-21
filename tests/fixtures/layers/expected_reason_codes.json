@@ -1,0 +1,25 @@
+{
+  "layer_catalog_item_valid": [],
+  "layer_catalog_item_denied": [
+    "POLICY_DENY"
+  ],
+  "layer_manifest_valid": [],
+  "layer_manifest_missing_evidence": [
+    "EVIDENCE_REF_UNRESOLVED"
+  ],
+  "layer_manifest_unknown_rights": [
+    "RIGHTS_STATE_UNKNOWN"
+  ],
+  "layer_manifest_sensitive_exact_geometry": [
+    "SENSITIVE_EXACT_GEOMETRY_BLOCKED",
+    "STYLE_ONLY_HIDING_FORBIDDEN"
+  ],
+  "map_release_manifest_valid": [],
+  "map_release_manifest_missing_rollback": [
+    "MISSING_ROLLBACK_TARGET"
+  ],
+  "tile_artifact_digest_missing": [
+    "ARTIFACT_DIGEST_MISSING"
+  ],
+  "layer_catalog_a11y_state": []
+}

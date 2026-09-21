@@ -1,0 +1,14 @@
+{
+  "fixture_manifest_id": "layers-fixture-tile-artifact-digest-missing",
+  "fixture_family": "tile_artifact_digest_missing",
+  "expected_outcome": "ERROR",
+  "network": "disabled",
+  "uses_real_source_data": false,
+  "uses_real_artifacts": false,
+  "authorizes_publication": false,
+  "artifact_ref": "tile:synthetic:artifact:digest-missing-example",
+  "expected_reason_codes": [
+    "ARTIFACT_DIGEST_MISSING"
+  ],
+  "digest": null
+}

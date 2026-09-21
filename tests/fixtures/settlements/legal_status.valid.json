@@ -1,0 +1,11 @@
+{
+  "fixture_id": "settlements-fixture-legal-status-valid",
+  "expected_outcome": "PASS",
+  "network": "disabled",
+  "uses_real_source_data": false,
+  "authorizes_publication": false,
+  "object_family": "Municipality",
+  "settlement_ref": "settlement:synthetic:legal-status-example",
+  "legal_status_ref": "legal-status:synthetic:incorporated",
+  "role": "legal_municipality"
+}

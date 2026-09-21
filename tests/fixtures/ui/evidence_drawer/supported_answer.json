@@ -1,0 +1,11 @@
+{
+  "fixture_id": "ui-drawer-supported-answer",
+  "expected_outcome": "ANSWER",
+  "network": "disabled",
+  "uses_real_source_data": false,
+  "drawer_ref": "example.invalid/drawer/supported-answer",
+  "evidence_refs": [
+    "example.invalid/evidence/supported-answer"
+  ],
+  "citation_state": "resolved"
+}

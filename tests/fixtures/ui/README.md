@@ -222,7 +222,7 @@ Default runs should be deterministic, local, no-network, public-safe, and finite
 | Target README path | CONFIRMED; placeholder replaced. |
 | UI contract boundary | CONFIRMED as semantic-contract lane, not implementation authority. |
 | UI package boundary | CONFIRMED as shared component package, not truth source. |
-| Fixture payload inventory | NEEDS VERIFICATION. |
+| Fixture payload inventory | PARTIALLY POPULATED — `evidence_drawer/` now holds the six cases named in "Current executable inventory" above (they were previously described but not present), and the root "Suggested layout" is fully populated (10 files). No executable consumer reads them yet. |
 | Consumer tests | NEEDS VERIFICATION. |
 | Schema bindings | NEEDS VERIFICATION. |
 | App/component wiring | NEEDS VERIFICATION. |

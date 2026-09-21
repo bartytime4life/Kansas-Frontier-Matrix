@@ -1,0 +1,15 @@
+{
+  "fixture_manifest_id": "layers-fixture-sensitive-exact-geometry-deny",
+  "fixture_family": "layer_manifest_sensitive_exact_geometry",
+  "expected_outcome": "DENY",
+  "network": "disabled",
+  "uses_real_source_data": false,
+  "uses_real_artifacts": false,
+  "authorizes_publication": false,
+  "expected_reason_codes": [
+    "SENSITIVE_EXACT_GEOMETRY_BLOCKED",
+    "STYLE_ONLY_HIDING_FORBIDDEN"
+  ],
+  "layer_manifest_ref": "layer:synthetic:manifest:sensitive-exact-denied",
+  "policy_decision_ref": "policy:synthetic:layers:deny-sensitive-exact-geometry"
+}

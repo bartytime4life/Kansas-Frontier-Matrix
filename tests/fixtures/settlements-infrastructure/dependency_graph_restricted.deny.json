@@ -1,0 +1,12 @@
+{
+  "fixture_id": "si-fixture-dependency-graph-restricted-deny",
+  "expected_outcome": "DENY",
+  "network": "disabled",
+  "uses_real_source_data": false,
+  "authorizes_publication": false,
+  "object_family": "Dependency",
+  "dependency_ref": "dependency:synthetic:settlements-infrastructure:restricted-example",
+  "expected_reason_codes": [
+    "T4_DEPENDENCY_NOT_PUBLIC_SAFE"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "fixture_id": "si-fixture-missing-evidence-abstain",
+  "expected_outcome": "ABSTAIN",
+  "network": "disabled",
+  "uses_real_source_data": false,
+  "authorizes_publication": false,
+  "settlement_ref": "settlement:synthetic:missing-evidence-example",
+  "evidence_refs": [],
+  "expected_reason_codes": [
+    "EVIDENCE_REF_UNRESOLVED"
+  ]
+}

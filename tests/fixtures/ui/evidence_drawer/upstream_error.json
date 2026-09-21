@@ -1,0 +1,10 @@
+{
+  "fixture_id": "ui-drawer-upstream-error",
+  "expected_outcome": "ERROR",
+  "network": "disabled",
+  "uses_real_source_data": false,
+  "drawer_ref": "example.invalid/drawer/upstream-error",
+  "expected_reason_codes": [
+    "UPSTREAM_UNAVAILABLE"
+  ]
+}

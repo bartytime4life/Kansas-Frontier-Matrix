@@ -1,0 +1,7 @@
+{
+  "fixture_id": "ui-fixture-rollback-visible",
+  "expected_outcome": "PASS",
+  "network": "disabled",
+  "uses_real_source_data": false,
+  "rollback_ref": "example.invalid/rollback/root-visible"
+}

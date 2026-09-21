@@ -1,0 +1,11 @@
+{
+  "fixture_id": "si-fixture-generalized-footprint-valid",
+  "expected_outcome": "PASS",
+  "network": "disabled",
+  "uses_real_source_data": false,
+  "authorizes_publication": false,
+  "object_family": "InfrastructureAsset",
+  "asset_ref": "asset:synthetic:settlements-infrastructure:generalized-footprint-example",
+  "public_geometry_policy": "COARSE_GRID_CELL_ONLY",
+  "sensitivity_transform": "GENERALIZED_FOOTPRINT"
+}

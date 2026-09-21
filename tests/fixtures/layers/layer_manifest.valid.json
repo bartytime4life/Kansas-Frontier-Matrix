@@ -1,0 +1,16 @@
+{
+  "fixture_manifest_id": "layers-fixture-layer-manifest-valid",
+  "fixture_family": "layer_manifest_valid",
+  "expected_outcome": "PASS",
+  "network": "disabled",
+  "uses_real_source_data": false,
+  "uses_real_artifacts": false,
+  "authorizes_publication": false,
+  "layer_manifest_ref": "layer:synthetic:manifest:valid-example",
+  "release_ref": "release:synthetic:map:valid-example",
+  "evidence_refs": [
+    "evidence:synthetic:layer:valid-example"
+  ],
+  "rights_state": "cleared_open",
+  "sensitivity_state": "public_safe_fixture"
+}

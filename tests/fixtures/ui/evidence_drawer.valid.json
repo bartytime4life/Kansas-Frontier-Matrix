@@ -1,0 +1,11 @@
+{
+  "fixture_id": "ui-fixture-evidence-drawer-valid",
+  "expected_outcome": "ANSWER",
+  "network": "disabled",
+  "uses_real_source_data": false,
+  "drawer_ref": "example.invalid/drawer/root-valid",
+  "evidence_refs": [
+    "example.invalid/evidence/root-valid"
+  ],
+  "citation_state": "resolved"
+}

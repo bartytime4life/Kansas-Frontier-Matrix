@@ -1,0 +1,17 @@
+{
+  "fixture_manifest_id": "layers-fixture-layer-catalog-item-valid",
+  "fixture_family": "layer_catalog_item_valid",
+  "expected_outcome": "PASS",
+  "network": "disabled",
+  "uses_real_source_data": false,
+  "uses_real_artifacts": false,
+  "authorizes_publication": false,
+  "layer_catalog_item_ref": "layer:synthetic:catalog-item:public-safe-example",
+  "layer_manifest_ref": "layer:synthetic:manifest:public-safe-example",
+  "evidence_refs": [
+    "evidence:synthetic:layer:public-safe-example"
+  ],
+  "policy_decision_ref": "policy:synthetic:layers:allow-public-safe-example",
+  "release_ref": "release:synthetic:map:public-safe-example",
+  "rollback_ref": "rollback:synthetic:map:public-safe-example"
+}

@@ -1,0 +1,13 @@
+{
+  "fixture_manifest_id": "layers-fixture-layer-catalog-a11y-state",
+  "fixture_family": "layer_catalog_a11y_state",
+  "expected_outcome": "PASS",
+  "network": "disabled",
+  "uses_real_source_data": false,
+  "uses_real_artifacts": false,
+  "authorizes_publication": false,
+  "layer_catalog_item_ref": "layer:synthetic:catalog-item:a11y-example",
+  "trust_badge_label": "Released (text label, not color-only)",
+  "legend_uses_color_only": false,
+  "disabled_state_label": "Unavailable (text label, not color-only)"
+}

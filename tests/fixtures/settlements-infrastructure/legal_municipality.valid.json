@@ -1,0 +1,13 @@
+{
+  "fixture_id": "si-fixture-legal-municipality-valid",
+  "expected_outcome": "PASS",
+  "network": "disabled",
+  "uses_real_source_data": false,
+  "authorizes_publication": false,
+  "object_family": "Municipality",
+  "settlement_ref": "settlement:synthetic:legal-municipality-example",
+  "evidence_refs": [
+    "evidence:synthetic:settlements-infrastructure:legal-municipality-example"
+  ],
+  "release_ref": "release:synthetic:settlements-infrastructure:legal-municipality-example"
+}

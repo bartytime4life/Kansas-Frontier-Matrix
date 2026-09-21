@@ -1,0 +1,9 @@
+{
+  "fixture_id": "ui-fixture-trust-badges-accessible",
+  "expected_outcome": "PASS",
+  "network": "disabled",
+  "uses_real_source_data": false,
+  "badge_ref": "example.invalid/badge/accessible",
+  "uses_color_only": false,
+  "assistive_label": "Released (text label)"
+}

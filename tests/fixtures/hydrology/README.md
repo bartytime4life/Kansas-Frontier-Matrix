@@ -311,7 +311,7 @@ Changes to this lane should be small, inspectable, and reversible.
 - Target README: replaced placeholder content.
 - Child README inventory: no child READMEs under `tests/fixtures/hydrology/` were verified during this update.
 - Canonical Hydrology fixture root: verified as present and README-backed during authoring.
-- Fixture payload inventory: not exhaustively verified in this update.
+- Fixture payload inventory: `manifest_expectations.json` added at the root per the "Suggested layout" and "Minimal fixture manifest" sections above. The `runtime/`, `source_role/`, `temporal/`, and `policy/` child lanes remain README-only; the layout note says additional files there are PROPOSED until an executable test or verification-backlog row justifies them.
 - Test-root alignment: verified against `tests/README.md` for tests as enforceability proof, optional `tests/fixtures/` split, five-fixture rule, forbidden boundaries, sensitive-fixture safeguards, and deterministic no-network default.
 - Hydrology fixture-root alignment: verified against `fixtures/domains/hydrology/README.md` for decision-envelope, evidence-bundle, run-receipt, sources, valid, invalid, negative, golden, accepted-material, exclusion, and shared-design posture.
 - Contract/schema alignment: NEEDS VERIFICATION against Hydrology domain schemas, runtime envelope schemas, EvidenceBundle schemas, RunReceipt schemas, SourceDescriptor schemas, and policy bundles.

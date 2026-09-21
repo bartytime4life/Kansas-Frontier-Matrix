@@ -1,0 +1,8 @@
+{
+  "fixture_id": "ui-fixture-evidence-drawer-missing-support",
+  "expected_outcome": "ABSTAIN",
+  "network": "disabled",
+  "uses_real_source_data": false,
+  "drawer_ref": "example.invalid/drawer/root-missing-support",
+  "evidence_refs": []
+}

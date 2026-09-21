@@ -1,0 +1,12 @@
+{
+  "fixture_id": "si-fixture-condition-observation-temporal-valid",
+  "expected_outcome": "PASS",
+  "network": "disabled",
+  "uses_real_source_data": false,
+  "authorizes_publication": false,
+  "object_family": "ConditionObservation",
+  "observation_ref": "observation:synthetic:settlements-infrastructure:condition-example",
+  "observed_at": "2026-09-01T00:00:00Z",
+  "freshness_state": "current",
+  "release_posture": "not_released"
+}

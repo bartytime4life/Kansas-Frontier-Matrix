@@ -1,0 +1,16 @@
+{
+  "fixture_manifest_id": "layers-fixture-layer-manifest-missing-evidence",
+  "fixture_family": "layer_manifest_missing_evidence",
+  "expected_outcome": "ABSTAIN",
+  "network": "disabled",
+  "uses_real_source_data": false,
+  "uses_real_artifacts": false,
+  "authorizes_publication": false,
+  "layer_manifest_ref": "layer:synthetic:manifest:missing-evidence-example",
+  "expected_reason_codes": [
+    "EVIDENCE_REF_UNRESOLVED"
+  ],
+  "evidence_refs": [
+    "evidence:synthetic:layer:does-not-resolve-example"
+  ]
+}

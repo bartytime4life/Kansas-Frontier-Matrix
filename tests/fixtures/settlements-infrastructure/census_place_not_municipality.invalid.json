@@ -1,0 +1,13 @@
+{
+  "fixture_id": "si-fixture-census-place-not-municipality",
+  "expected_outcome": "ABSTAIN",
+  "network": "disabled",
+  "uses_real_source_data": false,
+  "authorizes_publication": false,
+  "object_family": "CensusPlace",
+  "settlement_ref": "settlement:synthetic:census-place-example",
+  "expected_reason_codes": [
+    "CENSUS_STATISTICAL_IDENTITY_NOT_LEGAL_STATUS"
+  ],
+  "known_defect": "A CensusPlace is a statistical identity and must not become legal-municipality truth."
+}

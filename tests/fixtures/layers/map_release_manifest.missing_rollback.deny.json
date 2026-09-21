@@ -1,0 +1,14 @@
+{
+  "fixture_manifest_id": "layers-fixture-map-release-manifest-missing-rollback",
+  "fixture_family": "map_release_manifest_missing_rollback",
+  "expected_outcome": "DENY",
+  "network": "disabled",
+  "uses_real_source_data": false,
+  "uses_real_artifacts": false,
+  "authorizes_publication": false,
+  "release_ref": "release:synthetic:map:release-missing-rollback-example",
+  "expected_reason_codes": [
+    "MISSING_ROLLBACK_TARGET"
+  ],
+  "rollback_ref": null
+}

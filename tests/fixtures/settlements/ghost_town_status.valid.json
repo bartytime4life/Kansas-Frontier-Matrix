@@ -1,0 +1,11 @@
+{
+  "fixture_id": "settlements-fixture-ghost-town-status-valid",
+  "expected_outcome": "PASS",
+  "network": "disabled",
+  "uses_real_source_data": false,
+  "authorizes_publication": false,
+  "object_family": "GhostTown",
+  "settlement_ref": "settlement:synthetic:ghost-town-example",
+  "role": "historic_place",
+  "public_geometry_policy": "GENERALIZED_POINT_ONLY"
+}

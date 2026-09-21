@@ -1,0 +1,11 @@
+{
+  "fixture_id": "ui-fixture-policy-denied-banner",
+  "expected_outcome": "DENY",
+  "network": "disabled",
+  "uses_real_source_data": false,
+  "banner_ref": "example.invalid/banner/policy-denied",
+  "expected_reason_codes": [
+    "POLICY_DENY"
+  ],
+  "leaks_restricted_detail": false
+}

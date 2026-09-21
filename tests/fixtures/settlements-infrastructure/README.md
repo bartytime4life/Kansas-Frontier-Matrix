@@ -222,7 +222,7 @@ Default runs should be deterministic, local, no-network, public-safe, and finite
 | Target README path | CONFIRMED; placeholder replaced. |
 | Canonical domain segment | CONFIRMED as `settlements-infrastructure`. |
 | Compatibility sibling `settlements/` | CONFIRMED and documented as compatibility-only. |
-| Fixture payload inventory | NEEDS VERIFICATION. |
+| Fixture payload inventory | PARTIALLY POPULATED — the full "Suggested layout" above is now populated (10 fixture files). No executable consumer reads them yet. |
 | Consumer tests | NEEDS VERIFICATION. |
 | Schema bindings | NEEDS VERIFICATION. |
 | Policy/runtime wiring | NEEDS VERIFICATION. |

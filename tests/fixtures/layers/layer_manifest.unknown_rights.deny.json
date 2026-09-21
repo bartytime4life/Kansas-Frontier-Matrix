@@ -1,0 +1,14 @@
+{
+  "fixture_manifest_id": "layers-fixture-layer-manifest-unknown-rights",
+  "fixture_family": "layer_manifest_unknown_rights",
+  "expected_outcome": "DENY",
+  "network": "disabled",
+  "uses_real_source_data": false,
+  "uses_real_artifacts": false,
+  "authorizes_publication": false,
+  "layer_manifest_ref": "layer:synthetic:manifest:unknown-rights-example",
+  "expected_reason_codes": [
+    "RIGHTS_STATE_UNKNOWN"
+  ],
+  "rights_state": "unknown"
+}

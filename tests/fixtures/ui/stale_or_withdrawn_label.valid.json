@@ -1,0 +1,9 @@
+{
+  "fixture_id": "ui-fixture-stale-or-withdrawn-label",
+  "expected_outcome": "PASS",
+  "network": "disabled",
+  "uses_real_source_data": false,
+  "label_ref": "example.invalid/label/stale-withdrawn",
+  "state": "withdrawn",
+  "label_text": "Withdrawn (text label)"
+}

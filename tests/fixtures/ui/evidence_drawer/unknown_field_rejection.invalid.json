@@ -1,0 +1,11 @@
+{
+  "fixture_id": "ui-drawer-unknown-field-rejection",
+  "expected_outcome": "ERROR",
+  "network": "disabled",
+  "uses_real_source_data": false,
+  "drawer_ref": "example.invalid/drawer/unknown-field-rejection",
+  "unexpected_field": "not_part_of_the_contract",
+  "expected_reason_codes": [
+    "UNKNOWN_FIELD_REJECTED"
+  ]
+}
