@@ -1,0 +1,15 @@
+{
+  "fixture_id": "rrt-golden-001-expected",
+  "outcome": "ANSWER",
+  "returned_object": {
+    "object_type": "CorridorRoute",
+    "id": "route:fixture:domain-valid-route-a",
+    "route_type": "historic",
+    "claim_status": "candidate",
+    "public_geometry_posture": "generalized",
+    "rights_status": "public_domain",
+    "release_posture": "candidate"
+  },
+  "fixture_posture": "synthetic; golden-expected",
+  "notes": "Stable expected output for corridor_route_lookup.input.json, paired with ../valid/valid_1_corridor_route.json. claim_status remains candidate; this is not a released or publication-ready route."
+}

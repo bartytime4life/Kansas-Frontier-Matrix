@@ -160,7 +160,7 @@ Before adding or changing Agriculture golden fixtures:
 | Item | Status | Notes |
 |---|---:|---|
 | Target README | CONFIRMED UPDATED | This path existed as a blank file before this update. |
-| Direct golden payload inventory | NEEDS VERIFICATION | No golden payload files were fetched for this lane during this update. |
+| Direct golden payload inventory | PARTIALLY POPULATED | `county_cropland_class.input.json` / `.expected.json` added: a synthetic public-safe `CropObservation` map-feature request/response golden pair. |
 | Placement | CONFIRMED PATH / PROPOSED LANE REALIZATION | The requested path exists; Agriculture path doctrine includes `fixtures/domains/agriculture/` but marks Agriculture-specific lanes as proposed until verified. |
 | Sibling fixture lane | CONFIRMED | `../catalog/README.md` exists and defines Agriculture catalog fixtures as fixture-only, not catalog authority. |
 | Test execution | NOT RUN | No validators, pytest, policy checks, catalog checks, release checks, or CI were run during this README update. |

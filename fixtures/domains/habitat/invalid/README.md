@@ -109,7 +109,7 @@ Do not use this lane for real Habitat records, real source exports, live upstrea
 
 - Target README: populated from empty placeholder content.
 - Parent habitat fixture README: present but still a greenfield stub during this update.
-- Fixture payload inventory: no payloads verified in this directory during this update.
+- Fixture payload inventory: `invalid_1_patch_missing_evidence.json` / `.expected_error.txt` added — a `HabitatPatch` claiming `promotion_eligible: true` with an empty `evidence_refs` array.
 - Golden fixture alignment: PARTIALLY VERIFIED against `fixtures/domains/habitat/golden/README.md`.
 - Ecoregions fixture alignment: PARTIALLY VERIFIED against `fixtures/domains/habitat/ecoregions/README.md` from the prior verified fetch in this session.
 - Habitat × Fauna fixture alignment: PARTIALLY VERIFIED against `fixtures/domains/habitat/habitat_fauna_thin_slice/README.md` from the prior verified fetch in this session.

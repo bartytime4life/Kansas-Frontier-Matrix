@@ -112,7 +112,7 @@ Do not use this lane for real Hydrology records, real source exports, live upstr
 ## Verification status
 
 - Target README: replaced blank placeholder content.
-- Fixture payload inventory: no payloads verified in this directory during this update.
+- Fixture payload inventory: `flow_observation_lookup.input.json` / `.expected.json` added — a synthetic `FlowObservation` lookup request/response golden pair, paired with `../public_safe_flow/valid/public_safe_flow.json`.
 - Decision-envelope fixture alignment: PARTIALLY VERIFIED against `fixtures/domains/hydrology/decision_envelope/README.md` and child lanes.
 - EvidenceBundle fixture alignment: PARTIALLY VERIFIED against `fixtures/domains/hydrology/evidence_bundle/README.md` and child lanes.
 - Habitat golden fixture precedent: PARTIALLY VERIFIED against `fixtures/domains/habitat/golden/README.md` for expected-output-lane structure only.

@@ -203,7 +203,7 @@ Before adding or changing Archaeology golden fixtures:
 | Item | Status | Notes |
 |---|---:|---|
 | Target README | CONFIRMED UPDATED | This path existed as a blank file before this update. |
-| Direct golden payload inventory | NEEDS VERIFICATION | Repo search did not surface confirmed golden payload files in this directory during this update. |
+| Direct golden payload inventory | PARTIALLY POPULATED | `exact_location_request.input.json` / `.expected.json` added: a no-leak-request golden pair for a `CandidateFeature` exact-precision request, expected to `DENY` with no coordinates returned. |
 | Public-safe sibling posture | CONFIRMED DOC | The public-safe domain fixture README defines public-safe, synthetic/generalized, fixture-only posture and exact-location denial. |
 | Sensitive-domain posture | CONFIRMED DOC / RUNTIME UNKNOWN | Archaeology policy docs require exact-location and culturally sensitive material to fail closed unless reviewed policy paths allow bounded outputs. |
 | Test execution | NOT RUN | No validators, pytest, cultural-review checks, sensitivity checks, policy checks, release checks, no-leak checks, or CI were run during this README update. |

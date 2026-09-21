@@ -97,7 +97,7 @@ Do not use this lane for real records, source exports, lifecycle data, EvidenceB
 
 - Target README: replaced one-character placeholder content.
 - Parent Hazards fixture README: present but still a greenfield stub during this update.
-- Fixture payload inventory: no payload files verified in this directory during this update.
+- Fixture payload inventory: `drought_declaration_lookup.input.json` / `.expected.json` added — a synthetic `DroughtDeclaration` lookup request/response golden pair, paired with `../valid/valid_1_drought_declaration.json`.
 - Feature-resolver fixture alignment: PARTIALLY VERIFIED against `fixtures/domains/hazards/feature_resolver/README.md`.
 - Drawer fixture alignment: PARTIALLY VERIFIED against `fixtures/domains/hazards/drawer/README.md`.
 - Focus fixture alignment: PARTIALLY VERIFIED against `fixtures/domains/hazards/focus/README.md`.

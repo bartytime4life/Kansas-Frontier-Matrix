@@ -1,0 +1,10 @@
+{
+  "fixture_id": "geo-golden-001-input",
+  "request_type": "ResourceClassRequest",
+  "object_family": "MineralOccurrence",
+  "requested_spatial_support": {
+    "kind": "generalized_county",
+    "county_fips": "99999"
+  },
+  "fixture_posture": "synthetic; golden-input"
+}

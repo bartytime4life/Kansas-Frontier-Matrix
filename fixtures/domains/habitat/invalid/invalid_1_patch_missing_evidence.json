@@ -1,0 +1,26 @@
+{
+  "fixture_id": "fixture:habitat:domain-invalid:patch-missing-evidence-001",
+  "object_family": "HabitatPatch",
+  "patch_id": "kfm://fixture/synthetic/habitat/patch-invalid-001",
+  "ecoregion_ref": "kfm://fixture/synthetic/habitat/ecoregion-flint-hills-synthetic",
+  "land_cover_class": "GRASSLAND",
+  "spatial_support": {
+    "kind": "generalized_grid_cell",
+    "grid_cell_ref": "kfm://fixture/synthetic-grid/habitat/patch-cell-022"
+  },
+  "area_ha": 900.0,
+  "connectivity": {
+    "connectivity_score": 0.48,
+    "adjacent_patch_refs": []
+  },
+  "evidence_refs": [],
+  "governance": {
+    "rights_state": "fixture_only",
+    "sensitivity_state": "public_safe_fixture",
+    "review_state": "fixture_only",
+    "release_state": "not_released",
+    "promotion_eligible": true
+  },
+  "fixture_posture": "synthetic; invalid; missing-evidence-with-promotion-claim",
+  "known_defect": "evidence_refs is an empty array while promotion_eligible is true; a HabitatPatch cannot be promotion-eligible without at least one resolvable evidence reference."
+}

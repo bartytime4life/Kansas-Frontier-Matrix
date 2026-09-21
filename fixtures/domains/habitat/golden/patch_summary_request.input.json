@@ -1,0 +1,6 @@
+{
+  "fixture_id": "hab-golden-001-input",
+  "request_type": "HabitatPatchSummaryRequest",
+  "patch_id": "kfm://fixture/synthetic/habitat/patch-001",
+  "fixture_posture": "synthetic; golden-input"
+}

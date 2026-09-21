@@ -1,0 +1,12 @@
+{
+  "fixture_id": "ag-golden-001-input",
+  "request_type": "MapFeatureRequest",
+  "domain": "agriculture",
+  "object_family": "CropObservation",
+  "requested_support": {
+    "kind": "COUNTY",
+    "key": "US-KS-99999"
+  },
+  "requested_precision_class": "AGGREGATE_PUBLIC_SAFE",
+  "fixture_posture": "synthetic; golden-input"
+}

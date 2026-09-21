@@ -1,0 +1,11 @@
+{
+  "fixture_id": "arc-golden-001-input",
+  "request_type": "FeatureDetailRequest",
+  "candidate_feature_id": "arc-candidate-synthetic-domain-valid-001",
+  "requested_precision": "EXACT",
+  "requested_fields": [
+    "exact_coordinates",
+    "site_boundary_geometry"
+  ],
+  "fixture_posture": "synthetic; golden-input; no-leak-request"
+}

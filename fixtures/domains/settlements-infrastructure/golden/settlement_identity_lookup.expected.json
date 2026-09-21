@@ -1,0 +1,14 @@
+{
+  "id": "kfm://fixture/synthetic/settlements-infrastructure/settlement-ghosttown-001",
+  "fixture_id": "si-golden-001-expected",
+  "outcome": "ANSWER",
+  "returned_object": {
+    "object_family": "Settlement",
+    "feature_role": "historic_place",
+    "normalized_name_key": "fictional_forks_ks",
+    "sensitivity_tier": "T1",
+    "public_geometry_policy": "GENERALIZED_POINT_ONLY"
+  },
+  "fixture_posture": "synthetic; golden-expected",
+  "notes": "Stable expected output for settlement_identity_lookup.input.json, paired with ../valid/valid_1_settlement.json and ../domain_feature_identity/valid_settlement.json."
+}

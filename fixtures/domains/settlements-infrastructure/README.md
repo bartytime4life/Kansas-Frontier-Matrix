@@ -21,7 +21,7 @@ decisions, review approvals, release manifests, or published artifacts.
 | [`valid/`](valid/README.md) | **Populated** | Small positive object-family examples. |
 | [`invalid/`](invalid/README.md) | **Populated** | Safe negative examples with expected errors. |
 | [`restricted/`](restricted/README.md) | **Populated** | Synthetic T4 deny-by-default examples; contains no sensitive detail. |
-| `golden/` | Greenfield placeholder | Stable expected-output lane; not yet populated. |
+| [`golden/`](golden/README.md) | **Populated** | Stable expected-output pair for the `Settlement` identity lookup. |
 | `identity/` | Greenfield placeholder | Reserved; superseded in intent by `domain_feature_identity/` above. |
 | `infrastructure/` | Greenfield placeholder | Reserved for infrastructure-side object-family fixtures beyond identity. |
 

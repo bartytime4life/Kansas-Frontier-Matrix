@@ -1,0 +1,9 @@
+{
+  "fixture_id": "arc-golden-001-expected",
+  "outcome": "DENY",
+  "reason_code": "EXACT_PRECISION_NOT_PUBLIC_SAFE",
+  "reason_summary": "Requested precision class EXACT is not permitted for a public-safe response to a CandidateFeature request.",
+  "returned_fields": [],
+  "fixture_posture": "synthetic; golden-expected; no-leak-response",
+  "notes": "Stable expected output for exact_location_request.input.json; contains no coordinates or boundary geometry."
+}

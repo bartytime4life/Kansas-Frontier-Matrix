@@ -1,0 +1,6 @@
+{
+  "fixture_id": "soil-golden-001-input",
+  "request_type": "SoilObservationLookupRequest",
+  "record_id": "soil-fixture-0001",
+  "fixture_posture": "synthetic; golden-input"
+}

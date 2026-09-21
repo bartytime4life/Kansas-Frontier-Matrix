@@ -186,7 +186,7 @@ Before adding or changing Agriculture valid fixtures:
 | Item | Status | Notes |
 |---|---:|---|
 | Target README | CONFIRMED UPDATED | This path existed as a blank file before this update. |
-| Direct valid payload inventory | NEEDS VERIFICATION | Repo search did not surface confirmed valid payload files in this directory during this update. |
+| Direct valid payload inventory | PARTIALLY POPULATED | `valid_1.json` added: a synthetic public-safe `CropObservation` map-feature example using the `kfm.domains.agriculture.public-safe-map-feature.v1` profile already used under `public_safe_map_feature/`. |
 | Sibling invalid lane | CONFIRMED | `../invalid/README.md` exists and documents negative fixture posture. |
 | Placement | CONFIRMED PATH / PROPOSED LANE REALIZATION | The requested path exists; Agriculture path doctrine includes `fixtures/domains/agriculture/` but marks Agriculture-specific lanes as proposed until verified. |
 | Lifecycle boundary | CONFIRMED DOC | Agriculture lifecycle guidance separates fixtures from governed lifecycle state and public release. |

@@ -1,0 +1,36 @@
+{
+  "profile": "kfm.domains.agriculture.public-safe-map-feature.v1",
+  "status": "PROPOSED_INACTIVE",
+  "object_type": "AgricultureMapFeatureCandidate",
+  "version": "1.0.0",
+  "id": "ag-map-feature:domaininvalid000000000001",
+  "spec_hash": "sha256:domaininvalid0000000000000000000000000000000000000000000001",
+  "domain": "agriculture",
+  "object_family": "CropObservation",
+  "semantic_role": "OBSERVED_AGGREGATE",
+  "support": {
+    "kind": "PARCEL",
+    "key": "synthetic-parcel-001",
+    "generalized": false,
+    "precision_class": "EXACT"
+  },
+  "sensitivity": {
+    "exact_field_geometry": true,
+    "operator_identity": true,
+    "parcel_owner_join": false,
+    "private_address": false,
+    "sensitive_infrastructure": false,
+    "proprietary_value": false,
+    "transform_parameters": false
+  },
+  "release": {
+    "state": "UNRELEASED_CANDIDATE",
+    "policy_evaluated": false,
+    "review_approved": false,
+    "release_authorized": false,
+    "public_use_allowed": true,
+    "published": false
+  },
+  "fixture_posture": "synthetic; invalid; public-use-with-sensitive-flags",
+  "known_defect": "public_use_allowed is true while exact_field_geometry and operator_identity sensitivity flags are also true, and support.precision_class is EXACT rather than an aggregate/generalized class. A public-safe map feature must never combine public_use_allowed with exact parcel-level geometry or operator identity."
+}

@@ -1,0 +1,8 @@
+ERROR: resource-class validation failed
+reason_code: OBSERVATION_CHARACTER_MISMATCH
+fields: object_family, resource_character
+detail: object_family=MineralOccurrence (a reported presence claim) cannot
+carry resource_character=RESOURCE_DEPOSIT. A confirmed deposit requires
+economic-viability and reserve-classification evidence that a mere
+occurrence claim does not carry; the resource_character enum must match the
+object_family's evidentiary weight (occurrence < estimate < deposit/reserve).

@@ -1,0 +1,32 @@
+{
+  "_fixture_meta": {
+    "fixture_label": "valid_domain_root_synthetic_drought_declaration",
+    "network_status": "no_network_required",
+    "sensitive_data": false,
+    "source_id": "src:synthetic-domain-valid",
+    "notes": "Synthetic fixture for the hazards domain-level valid/ root lane, following the same DroughtDeclaration shape already established under ../drought_declaration/valid/."
+  },
+  "object_type": "DroughtDeclaration",
+  "schema_version": "v1",
+  "declaration_id": "decl:synthetic:2026-09-01:watch",
+  "issuing_authority": "Synthetic Water Authority",
+  "legal_instrument_ref": "kfm://fixture/synthetic/hazards/instrument/domain-valid-001",
+  "legal_instrument_resolution_status": "bound",
+  "effective_at": "2026-09-01T00:00:00Z",
+  "rescinded_at": null,
+  "retrieved_at": "2026-09-21T00:00:00Z",
+  "source_ref": "src:synthetic-domain-valid",
+  "source_resolution_status": "bound",
+  "county_scope": {
+    "all_105_counties": false,
+    "county_refs": ["US-KS-99999"],
+    "county_scope_resolution_status": "bound"
+  },
+  "declaration_stage_vocabulary": "kansas_kwo_2016",
+  "declaration_stage": "watch",
+  "predecessor_ref": null,
+  "successor_ref": null,
+  "correction_of": null,
+  "review_state": "needs_review",
+  "release_posture": "not_released"
+}

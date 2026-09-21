@@ -1,0 +1,29 @@
+{
+  "fixture_id": "fixture:habitat:domain-valid:patch-001",
+  "object_family": "HabitatPatch",
+  "patch_id": "kfm://fixture/synthetic/habitat/patch-001",
+  "ecoregion_ref": "kfm://fixture/synthetic/habitat/ecoregion-flint-hills-synthetic",
+  "land_cover_class": "GRASSLAND",
+  "spatial_support": {
+    "kind": "generalized_grid_cell",
+    "grid_cell_ref": "kfm://fixture/synthetic-grid/habitat/patch-cell-021"
+  },
+  "area_ha": 1250.0,
+  "connectivity": {
+    "connectivity_score": 0.62,
+    "adjacent_patch_refs": [
+      "kfm://fixture/synthetic/habitat/patch-002"
+    ]
+  },
+  "evidence_refs": [
+    "kfm://evidence/synthetic/habitat/patch-001"
+  ],
+  "governance": {
+    "rights_state": "fixture_only",
+    "sensitivity_state": "public_safe_fixture",
+    "review_state": "fixture_only",
+    "release_state": "not_released",
+    "promotion_eligible": false
+  },
+  "fixture_posture": "synthetic; valid; domain-level positive case"
+}

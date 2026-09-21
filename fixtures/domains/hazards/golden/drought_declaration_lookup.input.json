@@ -1,0 +1,6 @@
+{
+  "fixture_id": "haz-golden-001-input",
+  "request_type": "DroughtDeclarationLookupRequest",
+  "declaration_id": "decl:synthetic:2026-09-01:watch",
+  "fixture_posture": "synthetic; golden-input"
+}

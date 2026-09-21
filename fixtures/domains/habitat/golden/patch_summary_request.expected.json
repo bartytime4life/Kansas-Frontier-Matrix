@@ -1,0 +1,19 @@
+{
+  "fixture_id": "hab-golden-001-expected",
+  "outcome": "ANSWER",
+  "returned_object": {
+    "object_family": "HabitatPatch",
+    "patch_id": "kfm://fixture/synthetic/habitat/patch-001",
+    "land_cover_class": "GRASSLAND",
+    "area_ha": 1250.0,
+    "connectivity": {
+      "connectivity_score": 0.62
+    },
+    "governance": {
+      "release_state": "not_released",
+      "promotion_eligible": false
+    }
+  },
+  "fixture_posture": "synthetic; golden-expected",
+  "notes": "Stable expected output for patch_summary_request.input.json, paired with ../valid/valid_1_habitat_patch.json."
+}

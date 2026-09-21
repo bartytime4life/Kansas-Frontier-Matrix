@@ -165,7 +165,7 @@ Before adding or changing Agriculture invalid fixtures:
 | Item | Status | Notes |
 |---|---:|---|
 | Target README | CONFIRMED UPDATED | This path existed as a blank file before this update. |
-| Direct invalid payload inventory | NEEDS VERIFICATION | Repo search did not surface confirmed invalid payload files in this directory during this update. |
+| Direct invalid payload inventory | PARTIALLY POPULATED | `invalid_1.json` / `.expected_error.txt` added: a `CropObservation` that marks `public_use_allowed: true` while also carrying exact parcel geometry and operator-identity sensitivity flags. |
 | Placement | CONFIRMED PATH / PROPOSED LANE REALIZATION | The requested path exists; Agriculture path doctrine includes `fixtures/domains/agriculture/` but marks Agriculture-specific lanes as proposed until verified. |
 | Policy posture | CONFIRMED DOC / RUNTIME UNKNOWN | Agriculture policy and lifecycle docs support fail-closed exact exposure and aggregate-safe public posture; runtime enforcement was not tested. |
 | Test execution | NOT RUN | No validators, pytest, policy checks, source admission checks, catalog checks, release checks, or CI were run during this README update. |

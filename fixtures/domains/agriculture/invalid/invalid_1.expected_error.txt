@@ -1,0 +1,8 @@
+ERROR: public-safe map feature validation failed
+reason_code: EXACT_SENSITIVE_GEOMETRY_MARKED_PUBLIC
+fields: support.precision_class, sensitivity.exact_field_geometry, sensitivity.operator_identity, release.public_use_allowed
+detail: A CropObservation with sensitivity.exact_field_geometry=true or
+sensitivity.operator_identity=true must never also set
+release.public_use_allowed=true or support.precision_class=EXACT. Public-safe
+map features require support.generalized=true and an aggregate precision
+class (e.g. AGGREGATE_PUBLIC_SAFE) before public_use_allowed may be true.

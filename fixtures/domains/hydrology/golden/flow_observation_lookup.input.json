@@ -1,0 +1,6 @@
+{
+  "fixture_id": "hyd-golden-001-input",
+  "request_type": "FlowObservationLookupRequest",
+  "record_id": "fixture:hydrology:flow:99999:20260802T120000Z",
+  "fixture_posture": "synthetic; golden-input"
+}

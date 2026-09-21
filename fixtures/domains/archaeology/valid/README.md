@@ -6,6 +6,10 @@ Status: draft / fixture lane.
 
 This directory is for small positive fixture examples used by bounded tests or documentation examples. These files are examples only and are not authoritative project records.
 
+| File | Scenario | Expected outcome |
+|---|---|---|
+| `valid_1_candidate_generalized.json` | Synthetic `CandidateFeature` with withheld spatial precision, same shape family as `../synthetic_candidate_feature/valid.json`. | Passes candidate-shape checks; `truth_state` stays `CANDIDATE`. |
+
 Related fixture lanes:
 
 - `../golden/README.md`

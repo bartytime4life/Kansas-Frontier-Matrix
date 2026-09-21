@@ -1,0 +1,23 @@
+{
+  "fixture_id": "soil-golden-001-expected",
+  "outcome": "ANSWER",
+  "returned_object": {
+    "record_id": "soil-fixture-0001",
+    "support_type": "station_observation",
+    "spatial_support": {
+      "kind": "generalized_county",
+      "county_fips": "99999"
+    },
+    "measurement": {
+      "property": "volumetric_water_content",
+      "value": 0.24,
+      "unit": "m3/m3"
+    },
+    "governance": {
+      "release_state": "not_released",
+      "promotion_eligible": false
+    }
+  },
+  "fixture_posture": "synthetic; golden-expected",
+  "notes": "Stable expected output for soil_observation_lookup.input.json, paired with ../valid/public_safe_observation.json."
+}

@@ -93,7 +93,7 @@ Do not use this lane for real Habitat records, real source exports, live upstrea
 
 - Target README: populated from empty placeholder content.
 - Parent habitat fixture README: present but still a greenfield stub during this update.
-- Fixture payload inventory: no payloads verified in this directory during this update.
+- Fixture payload inventory: `patch_summary_request.input.json` / `.expected.json` added — a synthetic `HabitatPatch` summary request/response golden pair, paired with `../valid/valid_1_habitat_patch.json`.
 - Sibling input alignment: PARTIALLY VERIFIED against `fixtures/domains/habitat/ecoregions/README.md`.
 - Root fixture alignment: PARTIALLY VERIFIED against `fixtures/README.md`.
 - Consumer alignment: NEEDS VERIFICATION against validators, renderer checks, topology checks, hierarchy checks, context-join checks, governed-API tests, Evidence Drawer tests, Focus Mode tests, pipeline dry-runs, schema checks, and policy checks.

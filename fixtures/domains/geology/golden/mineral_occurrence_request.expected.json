@@ -1,0 +1,19 @@
+{
+  "fixture_id": "geo-golden-001-expected",
+  "outcome": "ANSWER",
+  "returned_object": {
+    "object_family": "MineralOccurrence",
+    "resource_character": "MINERAL_OCCURRENCE",
+    "spatial_support": {
+      "kind": "generalized_county",
+      "county_fips": "99999"
+    },
+    "governance": {
+      "rights_state": "fixture_only",
+      "release_state": "not_released",
+      "promotion_eligible": false
+    }
+  },
+  "fixture_posture": "synthetic; golden-expected",
+  "notes": "Stable expected output for mineral_occurrence_request.input.json; resource_character remains MINERAL_OCCURRENCE, never upgraded to deposit/reserve/estimate without separate evidence."
+}

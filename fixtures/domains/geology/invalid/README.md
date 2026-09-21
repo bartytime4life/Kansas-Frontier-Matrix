@@ -92,7 +92,7 @@ Do not use this lane for real geology records, real source exports, live upstrea
 ## Verification status
 
 - Target README: populated from empty placeholder content.
-- Fixture payload inventory: no payloads verified in this directory during this update.
+- Fixture payload inventory: `invalid_1.json` / `.expected_error.txt` added — a `MineralOccurrence` object incorrectly claiming `resource_character: RESOURCE_DEPOSIT`.
 - Sibling fixture alignment: PARTIALLY VERIFIED against `fixtures/domains/geology/golden/README.md` and `fixtures/domains/geology/cross_sections/README.md`.
 - Geology fixture-home alignment: PARTIALLY VERIFIED against the Geology file-system plan.
 - Root fixture alignment: PARTIALLY VERIFIED against `fixtures/README.md`.

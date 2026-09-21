@@ -1,0 +1,6 @@
+{
+  "id": "kfm://fixture/synthetic/settlements-infrastructure/settlement-ghosttown-001",
+  "fixture_id": "si-golden-001-input",
+  "request_type": "DomainFeatureIdentityLookupRequest",
+  "fixture_posture": "synthetic; golden-input"
+}

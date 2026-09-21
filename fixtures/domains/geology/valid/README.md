@@ -108,7 +108,7 @@ Do not use this lane for real geology records, real source exports, live upstrea
 ## Verification status
 
 - Target README: populated from empty placeholder content.
-- Fixture payload inventory: no payloads verified in this directory during this update.
+- Fixture payload inventory: `valid_1.json` added — a synthetic `MineralOccurrence` example using the `kfm-geology-resource-class-fixture-v1` profile already established under `../resource_class/`.
 - Golden/invalid alignment: PARTIALLY VERIFIED against `fixtures/domains/geology/golden/README.md` and `fixtures/domains/geology/invalid/README.md`.
 - No-network runbook alignment: PARTIALLY VERIFIED against `docs/runbooks/geology/NO_NETWORK_TEST_RUNBOOK.md`.
 - Root fixture alignment: PARTIALLY VERIFIED against `fixtures/README.md`.

@@ -121,7 +121,7 @@ Do not use this lane for real records, source exports, lifecycle data, EvidenceB
 ## Verification status
 
 - Target README: replaced one-character placeholder content.
-- Valid fixture payload inventory: no payload files verified under this parent during this update.
+- Valid fixture payload inventory: `valid_1_drought_declaration.json` added at the domain-root level — a synthetic `DroughtDeclaration` using the same shape already established under `../drought_declaration/valid/`.
 - Hazards golden fixture alignment: PARTIALLY VERIFIED against `fixtures/domains/hazards/golden/README.md`.
 - Hazards feature-resolver fixture alignment: PARTIALLY VERIFIED against `fixtures/domains/hazards/feature_resolver/README.md`.
 - Hazards drawer fixture alignment: PARTIALLY VERIFIED against `fixtures/domains/hazards/drawer/README.md`.

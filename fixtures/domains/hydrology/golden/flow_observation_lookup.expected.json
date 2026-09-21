@@ -1,0 +1,24 @@
+{
+  "fixture_id": "hyd-golden-001-expected",
+  "outcome": "ANSWER",
+  "returned_object": {
+    "object_family": "FlowObservation",
+    "spatial_support": {
+      "kind": "generalized_county",
+      "county_fips": "99999"
+    },
+    "measurement": {
+      "parameter_code": "00060",
+      "value": 125.0,
+      "unit": "ft3/s",
+      "qualifier": "synthetic",
+      "provisional_status": "provisional"
+    },
+    "governance": {
+      "release_state": "not_released",
+      "promotion_eligible": false
+    }
+  },
+  "fixture_posture": "synthetic; golden-expected",
+  "notes": "Stable expected output for flow_observation_lookup.input.json, paired with ../public_safe_flow/valid/public_safe_flow.json. Not a flood warning or life-safety guidance."
+}

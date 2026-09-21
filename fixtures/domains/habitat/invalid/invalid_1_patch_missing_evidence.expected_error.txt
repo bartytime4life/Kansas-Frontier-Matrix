@@ -1,0 +1,7 @@
+ERROR: habitat patch validation failed
+reason_code: PROMOTION_ELIGIBLE_WITHOUT_EVIDENCE
+fields: evidence_refs, governance.promotion_eligible
+detail: governance.promotion_eligible=true requires at least one resolvable
+entry in evidence_refs. An empty evidence_refs array must force
+promotion_eligible=false; evidence support cannot be implied from patch
+geometry, connectivity, or land-cover class alone.

@@ -86,7 +86,7 @@ Do not use this lane for real geology records, real source exports, live upstrea
 ## Verification status
 
 - Target README: populated from empty placeholder content.
-- Fixture payload inventory: no payloads verified in this directory during this update.
+- Fixture payload inventory: `mineral_occurrence_request.input.json` / `.expected.json` added — a synthetic `MineralOccurrence` request/response golden pair.
 - Sibling input alignment: PARTIALLY VERIFIED against `fixtures/domains/geology/cross_sections/README.md`.
 - Geology fixture-home alignment: PARTIALLY VERIFIED against the Geology file-system plan.
 - Root fixture alignment: PARTIALLY VERIFIED against `fixtures/README.md`.

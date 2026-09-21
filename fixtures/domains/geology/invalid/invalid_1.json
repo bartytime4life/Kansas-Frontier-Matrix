@@ -1,0 +1,31 @@
+{
+  "fixture_id": "fixture:geology:domain-invalid:occurrence-as-deposit-001",
+  "profile_id": "kfm-geology-resource-class-fixture-v1",
+  "object_family": "MineralOccurrence",
+  "resource_character": "RESOURCE_DEPOSIT",
+  "source_role": "observed",
+  "source_descriptor_ref": "fixture://sources/geology/synthetic-domain-invalid-001",
+  "evidence_refs": [
+    "fixture://evidence/geology/domain-invalid/occurrence-as-deposit-001"
+  ],
+  "claim": {
+    "kind": "reported_presence",
+    "commodity": "synthetic_commodity",
+    "intended_use": "deposit_context"
+  },
+  "spatial_support": {
+    "kind": "generalized_county",
+    "county_fips": "99999"
+  },
+  "governance": {
+    "rights_state": "fixture_only",
+    "sensitivity_state": "public_safe_fixture",
+    "review_state": "fixture_only",
+    "release_state": "not_released",
+    "promotion_eligible": false,
+    "rollback_state": "fixture_only"
+  },
+  "limitations": [
+    "synthetic_fixture_only"
+  ]
+}

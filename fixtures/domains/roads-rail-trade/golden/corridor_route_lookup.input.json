@@ -1,0 +1,6 @@
+{
+  "fixture_id": "rrt-golden-001-input",
+  "request_type": "CorridorRouteLookupRequest",
+  "id": "route:fixture:domain-valid-route-a",
+  "fixture_posture": "synthetic; golden-input"
+}

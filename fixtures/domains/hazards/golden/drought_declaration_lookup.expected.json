@@ -1,0 +1,18 @@
+{
+  "fixture_id": "haz-golden-001-expected",
+  "outcome": "ANSWER",
+  "returned_object": {
+    "object_type": "DroughtDeclaration",
+    "declaration_id": "decl:synthetic:2026-09-01:watch",
+    "issuing_authority": "Synthetic Water Authority",
+    "declaration_stage": "watch",
+    "declaration_stage_vocabulary": "kansas_kwo_2016",
+    "county_scope": {
+      "all_105_counties": false,
+      "county_refs": ["US-KS-99999"]
+    },
+    "release_posture": "not_released"
+  },
+  "fixture_posture": "synthetic; golden-expected",
+  "notes": "Stable expected output for drought_declaration_lookup.input.json, paired with ../valid/valid_1_drought_declaration.json. declaration_stage is legal authority and must never be derived from a USDM D0-D4 category (anti-collapse rule shared with ../drought_declaration/)."
+}

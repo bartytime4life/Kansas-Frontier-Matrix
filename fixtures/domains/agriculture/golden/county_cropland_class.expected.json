@@ -1,0 +1,26 @@
+{
+  "fixture_id": "ag-golden-001-expected",
+  "outcome": "ANSWER",
+  "returned_object": {
+    "object_family": "CropObservation",
+    "support": {
+      "kind": "COUNTY",
+      "key": "US-KS-99999",
+      "generalized": true,
+      "precision_class": "AGGREGATE_PUBLIC_SAFE"
+    },
+    "indicator": {
+      "key": "cropland_class",
+      "value_role": "OBSERVED",
+      "value": "GRAIN"
+    },
+    "rights_state": "SYNTHETIC_ONLY",
+    "release": {
+      "release_authorized": false,
+      "public_use_allowed": false,
+      "published": false
+    }
+  },
+  "fixture_posture": "synthetic; golden-expected",
+  "notes": "Stable expected output for county_cropland_class.input.json; no exact field geometry, operator identity, or parcel-owner join is present."
+}
