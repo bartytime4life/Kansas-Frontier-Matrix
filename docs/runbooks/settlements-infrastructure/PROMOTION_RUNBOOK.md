@@ -61,7 +61,7 @@ related:
   - ../../../schemas/contracts/v1/evidence/evidence_bundle.schema.json
   - ../../../fixtures/contracts/v1/evidence/evidence_bundle/
   - ../../../tools/validators/validate_settlements_infrastructure_evidence_bundle_projection.py
-  - ../../../tests/validators/domains/settlements-infrastructure/test_evidence_bundle_schema_convergence.py
+  - ../../../tests/validators/domains/settlements-infrastructure/test_settlements_infrastructure_evidence_bundle_schema_convergence.py
   - ../../../tests/domains/settlements-infrastructure/README.md
   - ../../../tools/validators/domains/settlements-infrastructure/README.md
   - ../../../policy/domains/settlements-infrastructure/README.md
@@ -528,7 +528,7 @@ profile commands are:
 ```bash
 python -m unittest discover \
   --start-directory tests/validators/domains/settlements-infrastructure \
-  --pattern 'test_evidence_bundle_schema_convergence.py' \
+  --pattern 'test_settlements_infrastructure_evidence_bundle_schema_convergence.py' \
   --verbose
 python tools/validators/validate_settlements_infrastructure_evidence_bundle_projection.py --fixtures
 ```
@@ -784,7 +784,7 @@ Any future real-candidate preflight must fail closed for at least:
 - [Shared EvidenceBundle schema](../../../schemas/contracts/v1/evidence/evidence_bundle.schema.json)
 - [Shared EvidenceBundle fixtures](../../../fixtures/contracts/v1/evidence/evidence_bundle/README.md)
 - [Projection validator](../../../tools/validators/validate_settlements_infrastructure_evidence_bundle_projection.py)
-- [Focused convergence tests](../../../tests/validators/domains/settlements-infrastructure/test_evidence_bundle_schema_convergence.py)
+- [Focused convergence tests](../../../tests/validators/domains/settlements-infrastructure/test_settlements_infrastructure_evidence_bundle_schema_convergence.py)
 - [Domain test boundary](../../../tests/domains/settlements-infrastructure/README.md)
 - [Domain validator boundary](../../../tools/validators/domains/settlements-infrastructure/README.md)
 - [Domain policy boundary](../../../policy/domains/settlements-infrastructure/README.md)

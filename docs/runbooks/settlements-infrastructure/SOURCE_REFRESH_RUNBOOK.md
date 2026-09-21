@@ -80,7 +80,7 @@ related:
   - ../../../tests/schemas/test_common_contracts.py
   - ../../../schemas/contracts/v1/domains/settlements-infrastructure/evidence_bundle.schema.json
   - ../../../tools/validators/validate_settlements_infrastructure_evidence_bundle_projection.py
-  - ../../../tests/validators/domains/settlements-infrastructure/test_evidence_bundle_schema_convergence.py
+  - ../../../tests/validators/domains/settlements-infrastructure/test_settlements_infrastructure_evidence_bundle_schema_convergence.py
 notes:
   - "This revision replaces unverified live-refresh instructions with a current repository readiness procedure."
   - "The available SourceDescriptor and EvidenceBundle profiles are synthetic and fixture-bound; they do not admit, activate, retrieve, transform, promote, release, deploy, or publish a source."
@@ -332,7 +332,7 @@ repository commands are:
 ```bash
 python -m unittest discover \
   --start-directory tests/validators/domains/settlements-infrastructure \
-  --pattern 'test_evidence_bundle_schema_convergence.py' \
+  --pattern 'test_settlements_infrastructure_evidence_bundle_schema_convergence.py' \
   --verbose
 
 python \
@@ -536,7 +536,7 @@ operational rollback.
 - [SourceDescriptor workflow](../../../.github/workflows/source-descriptor-validate.yml)
 - [EvidenceBundle projection schema](../../../schemas/contracts/v1/domains/settlements-infrastructure/evidence_bundle.schema.json)
 - [Projection validator](../../../tools/validators/validate_settlements_infrastructure_evidence_bundle_projection.py)
-- [Projection tests](../../../tests/validators/domains/settlements-infrastructure/test_evidence_bundle_schema_convergence.py)
+- [Projection tests](../../../tests/validators/domains/settlements-infrastructure/test_settlements_infrastructure_evidence_bundle_schema_convergence.py)
 - [Projection workflow](../../../.github/workflows/settlements-infrastructure-evidence-bundle-convergence.yml)
 
 [Back to top](#top)

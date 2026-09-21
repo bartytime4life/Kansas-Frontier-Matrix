@@ -64,7 +64,7 @@ related:
   - ../../../fixtures/domains/people-dna-land/README.md
   - ../../../fixtures/contracts/v1/domains/people-dna-land/historical_person_place_event_resolution/README.md
   - ../../../tests/domains/people-dna-land/README.md
-  - ../../../tests/validators/domains/people-dna-land/test_evidence_bundle_schema_convergence.py
+  - ../../../tests/validators/domains/people-dna-land/test_people_dna_land_evidence_bundle_schema_convergence.py
   - ../../../tests/validators/test_validate_historical_person_place_event_resolution.py
   - ../../../tools/validators/domains/people-dna-land/README.md
   - ../../../tools/validators/validate_historical_person_place_event_resolution.py
@@ -310,7 +310,7 @@ the shared fixtures as expected.
 ```bash
 python -m py_compile \
   tools/validators/validate_people_dna_land_evidence_bundle_projection.py \
-  tests/validators/domains/people-dna-land/test_evidence_bundle_schema_convergence.py
+  tests/validators/domains/people-dna-land/test_people_dna_land_evidence_bundle_schema_convergence.py
 
 python -m unittest discover \
   --start-directory tests/validators/domains/people-dna-land \
