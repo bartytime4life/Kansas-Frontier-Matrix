@@ -114,7 +114,7 @@ Do not use this lane for real Habitat records, real Fauna records, live upstream
 ## Verification status
 
 - Target README: populated from empty placeholder content.
-- Fixture payload inventory: no payload files verified in this directory during this update.
+- Fixture payload inventory: `valid_1_domain_boundary_case.json` added — a synthetic Habitat/Fauna domain-boundary case with a closed fixture-only EvidenceBundle reference.
 - Proof-pipeline alignment: PARTIALLY VERIFIED against `pipelines/proofs/habitat_fauna_thin_slice/README.md`.
 - Habitat file-system alignment: PARTIALLY VERIFIED against `docs/domains/habitat/FILE_SYSTEM_PLAN.md`.
 - Sibling fixture alignment: PARTIALLY VERIFIED against `fixtures/domains/habitat/golden/README.md` and `fixtures/domains/habitat/ecoregions/README.md`.

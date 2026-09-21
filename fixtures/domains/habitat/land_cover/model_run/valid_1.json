@@ -1,0 +1,23 @@
+{
+  "fixture_id": "fixture:habitat:land-cover-model-run:001",
+  "object_family": "LandCoverModelRun",
+  "evidence_refs": [
+    "fixture://evidence/habitat/001"
+  ],
+  "spatial_support": {
+    "kind": "generalized_grid_cell",
+    "grid_cell_ref": "kfm://fixture/synthetic-grid/habitat/cell-030"
+  },
+  "governance": {
+    "rights_state": "fixture_only",
+    "sensitivity_state": "public_safe_fixture",
+    "release_state": "not_released",
+    "promotion_eligible": false
+  },
+  "limitations": [
+    "synthetic_fixture_only"
+  ],
+  "run_id": "fixture:run:habitat:land-cover-001",
+  "input_digest": "sha256:0000000000000000000000000000000000000000000000000000000000aa",
+  "config_digest": "sha256:0000000000000000000000000000000000000000000000000000000000bb"
+}

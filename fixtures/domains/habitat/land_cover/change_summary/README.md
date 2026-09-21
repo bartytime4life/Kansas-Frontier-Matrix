@@ -113,7 +113,7 @@ Do not use this lane for real Habitat records, real source exports, live upstrea
 ## Verification status
 
 - Target README: populated from empty placeholder content.
-- Fixture payload inventory: no payload files verified in this directory during this update.
+- Fixture payload inventory: `valid_1.json` added — a synthetic non-material 2020-to-2025 change summary.
 - Contract alignment: PARTIALLY VERIFIED against `contracts/domains/habitat/land_cover/change_summary.md`.
 - Land-cover sublane alignment: PARTIALLY VERIFIED against `docs/domains/habitat/sublanes/land_cover.md`.
 - Schema alignment: NEEDS VERIFICATION because the contract reports the paired schema is still a permissive scaffold.

@@ -1,0 +1,24 @@
+{
+  "fixture_id": "fixture:habitat:land-cover-change-summary:001",
+  "object_family": "LandCoverChangeSummary",
+  "evidence_refs": [
+    "fixture://evidence/habitat/001"
+  ],
+  "spatial_support": {
+    "kind": "generalized_grid_cell",
+    "grid_cell_ref": "kfm://fixture/synthetic-grid/habitat/cell-030"
+  },
+  "governance": {
+    "rights_state": "fixture_only",
+    "sensitivity_state": "public_safe_fixture",
+    "release_state": "not_released",
+    "promotion_eligible": false
+  },
+  "limitations": [
+    "synthetic_fixture_only"
+  ],
+  "baseline_year": 2020,
+  "candidate_year": 2025,
+  "reclassification_fraction": 0.02,
+  "material": false
+}

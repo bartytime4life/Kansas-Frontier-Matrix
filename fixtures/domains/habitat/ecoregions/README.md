@@ -103,7 +103,7 @@ Do not use this lane for real ecoregion source records, live upstream fetch resu
 
 - Target README: populated from empty placeholder content.
 - Parent habitat fixture README: present but still a greenfield stub during this update.
-- Fixture payload inventory: no payload files verified in this directory during this update.
+- Fixture payload inventory: `valid_1_ecoregion_snapshot.json` added — a synthetic L3 EcoregionSnapshot with a toy context-join reference.
 - Habitat ecoregion doctrine alignment: PARTIALLY VERIFIED against `docs/domains/habitat/sublanes/ecoregions.md`.
 - Habitat ecoregion contract alignment: PARTIALLY VERIFIED against `contracts/domains/habitat/ecoregions/README.md`.
 - Habitat ecoregion pipeline alignment: PARTIALLY VERIFIED against `pipelines/domains/habitat/ecoregions/README.md`.

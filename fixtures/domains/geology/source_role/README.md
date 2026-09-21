@@ -105,7 +105,7 @@ Do not use this lane for real source records, real source exports, live upstream
 ## Verification status
 
 - Target README: populated from empty placeholder content.
-- Fixture payload inventory: no payloads verified in this directory during this update.
+- Fixture payload inventory: `valid_1_source_role.json` added — a synthetic observed SourceDescriptor role example with explicit not-authoritative-for scope.
 - Source-role doctrine alignment: PARTIALLY VERIFIED against `docs/architecture/source-role-anti-collapse.md`.
 - Geology source-registry alignment: PARTIALLY VERIFIED against `docs/domains/geology/SOURCE_REGISTRY.md`.
 - Geology fixture-home alignment: PARTIALLY VERIFIED against the Geology missing/planned-files register.

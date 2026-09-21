@@ -1,0 +1,25 @@
+{
+  "fixture_id": "fixture:habitat:land-cover-observation:001",
+  "object_family": "LandCoverObservation",
+  "evidence_refs": [
+    "fixture://evidence/habitat/001"
+  ],
+  "spatial_support": {
+    "kind": "generalized_grid_cell",
+    "grid_cell_ref": "kfm://fixture/synthetic-grid/habitat/cell-030"
+  },
+  "governance": {
+    "rights_state": "fixture_only",
+    "sensitivity_state": "public_safe_fixture",
+    "release_state": "not_released",
+    "promotion_eligible": false
+  },
+  "limitations": [
+    "synthetic_fixture_only"
+  ],
+  "class_label": "GRASSLAND",
+  "source_vintage": "2025",
+  "temporal_scope": {
+    "observed_at": "2025-07-01T00:00:00Z"
+  }
+}

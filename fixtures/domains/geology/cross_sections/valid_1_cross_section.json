@@ -1,0 +1,27 @@
+{
+  "fixture_id": "fixture:geology:cross-section:001",
+  "profile_id": "kfm-geology-domain-fixture-v1",
+  "object_family": "CrossSection",
+  "source_role": "observed",
+  "source_descriptor_ref": "fixture://sources/geology/001",
+  "evidence_refs": [
+    "fixture://evidence/geology/001"
+  ],
+  "spatial_support": {
+    "kind": "generalized_county",
+    "county_fips": "99999"
+  },
+  "governance": {
+    "rights_state": "fixture_only",
+    "sensitivity_state": "public_safe_fixture",
+    "review_state": "fixture_only",
+    "release_state": "not_released",
+    "promotion_eligible": false
+  },
+  "limitations": [
+    "synthetic_fixture_only"
+  ],
+  "section_trace_ref": "fixture://geometry/geology/cross-section-trace-001",
+  "uncertainty_band": "moderate",
+  "interpretive_state": "candidate"
+}

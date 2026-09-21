@@ -111,7 +111,7 @@ Do not use this lane for real geology records, real source exports, live upstrea
 
 - Target README: populated from empty placeholder content.
 - Child lane inventory: `surficial/README.md` verified as present during this update; no other child sublane README was verified as present.
-- Fixture payload inventory: no payloads verified in this directory during this update.
+- Fixture payload inventory: `index_note.json` added — a coordinator index noting the `surficial/` child lane (see its own row).
 - Sublane convention alignment: PARTIALLY VERIFIED against `docs/domains/geology/sublanes/surficial.md`, but still ADR-sensitive / NEEDS VERIFICATION.
 - Root fixture alignment: PARTIALLY VERIFIED against `fixtures/README.md`.
 - Parent geology fixture README: present but still a greenfield stub during this update.

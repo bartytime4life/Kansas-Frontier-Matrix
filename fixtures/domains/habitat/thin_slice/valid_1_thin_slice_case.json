@@ -1,0 +1,11 @@
+{
+  "fixture_id": "fixture:habitat:thin-slice:001",
+  "object_family": "HabitatThinSliceCase",
+  "patch_id": "kfm://fixture/synthetic/habitat/thin-slice-patch-001",
+  "evidence_refs": ["fixture://evidence/habitat/thin-slice-001"],
+  "governance": {
+    "rights_state": "fixture_only",
+    "release_state": "not_released"
+  },
+  "fixture_posture": "synthetic; valid; minimal end-to-end dry-run case"
+}

@@ -102,7 +102,7 @@ Do not use this lane for real source data, real well records, real private-well 
 
 - Target README: populated from empty placeholder content.
 - Parent geology fixture README: present but still a greenfield stub during this update.
-- Fixture payload inventory: no payloads verified in this directory during this update.
+- Fixture payload inventory: `valid_1_cross_section.json` added — a synthetic candidate CrossSection with a moderate uncertainty band.
 - Contract alignment: PARTIALLY VERIFIED against `contracts/domains/geology/CrossSection.md`.
 - Schema alignment: NEEDS VERIFICATION because the exact paired schema path was not confirmed in the CrossSection contract evidence.
 - Pipeline alignment: PARTIALLY VERIFIED against `pipelines/domains/geology/cross_sections/README.md`.

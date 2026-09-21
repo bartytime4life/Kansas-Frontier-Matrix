@@ -1,0 +1,15 @@
+{
+  "fixture_id": "fixture:habitat:patch-lane:valid-001",
+  "object_family": "HabitatPatch",
+  "patch_id": "kfm://fixture/synthetic/habitat/patch-lane-001",
+  "land_cover_class": "GRASSLAND",
+  "area_ha": 780.0,
+  "evidence_refs": ["fixture://evidence/habitat/patch-lane-001"],
+  "governance": {
+    "rights_state": "fixture_only",
+    "sensitivity_state": "public_safe_fixture",
+    "release_state": "not_released",
+    "promotion_eligible": false
+  },
+  "fixture_posture": "synthetic; valid; patch/valid lane example"
+}

@@ -1,0 +1,23 @@
+{
+  "fixture_id": "fixture:habitat:land-cover-layer-manifest:001",
+  "object_family": "LandCoverLayerManifest",
+  "evidence_refs": [
+    "fixture://evidence/habitat/001"
+  ],
+  "spatial_support": {
+    "kind": "generalized_grid_cell",
+    "grid_cell_ref": "kfm://fixture/synthetic-grid/habitat/cell-030"
+  },
+  "governance": {
+    "rights_state": "fixture_only",
+    "sensitivity_state": "public_safe_fixture",
+    "release_state": "not_released",
+    "promotion_eligible": false
+  },
+  "limitations": [
+    "synthetic_fixture_only"
+  ],
+  "layer_version_ref": "fixture://layer-manifest/habitat/land-cover-001",
+  "artifact_pointer": "fixture://artifact/habitat/land-cover-001",
+  "freshness_state": "current"
+}

@@ -107,7 +107,7 @@ Do not use this lane for real records, source exports, lifecycle data, EvidenceB
 ## Verification status
 
 - Target README: populated from empty placeholder content.
-- Fixture payload inventory: no payload files verified in this directory during this update.
+- Fixture payload inventory: `valid_1.json` added — a synthetic model run with toy input/config digests.
 - ModelRunReceipt contract alignment: PARTIALLY VERIFIED against `contracts/domains/habitat/land_cover/model_run_receipt.md`.
 - Land-cover sublane alignment: PARTIALLY VERIFIED against `docs/domains/habitat/sublanes/land_cover.md`.
 - Schema alignment: NEEDS VERIFICATION because the contract reports the expected paired schema was not found.

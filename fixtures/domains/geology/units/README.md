@@ -114,7 +114,7 @@ Do not use this lane for real geology records, real source exports, live upstrea
 ## Verification status
 
 - Target README: populated from empty placeholder content.
-- Fixture payload inventory: no payloads verified in this directory during this update.
+- Fixture payload inventory: `valid_1_geologic_unit.json` added — a synthetic GeologicUnit with toy legend-row, age-reference, and boundary-version links.
 - GeologicUnit contract alignment: PARTIALLY VERIFIED against `contracts/domains/geology/GeologicUnit.md`.
 - Schema alignment: NEEDS VERIFICATION because the GeologicUnit contract reports the exact paired schema path was not confirmed in-session.
 - Geology file-system alignment: PARTIALLY VERIFIED against `docs/domains/geology/FILE_SYSTEM_PLAN.md`.

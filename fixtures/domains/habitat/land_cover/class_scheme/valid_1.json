@@ -1,0 +1,26 @@
+{
+  "fixture_id": "fixture:habitat:land-cover-class-scheme:001",
+  "object_family": "LandCoverClassScheme",
+  "evidence_refs": [
+    "fixture://evidence/habitat/001"
+  ],
+  "spatial_support": {
+    "kind": "generalized_grid_cell",
+    "grid_cell_ref": "kfm://fixture/synthetic-grid/habitat/cell-030"
+  },
+  "governance": {
+    "rights_state": "fixture_only",
+    "sensitivity_state": "public_safe_fixture",
+    "release_state": "not_released",
+    "promotion_eligible": false
+  },
+  "limitations": [
+    "synthetic_fixture_only"
+  ],
+  "scheme_id": "fixture:scheme:habitat:synthetic-nlcd-like",
+  "classes": [
+    "GRASSLAND",
+    "CROPLAND",
+    "WATER"
+  ]
+}

@@ -109,7 +109,7 @@ Do not use this lane for real records, source exports, lifecycle data, EvidenceB
 ## Verification status
 
 - Target README: replaced one-character placeholder content.
-- Fixture payload inventory: no payload files verified in this directory during this update.
+- Fixture payload inventory: `valid_1.json` added — a synthetic accuracy/confidence/nodata example.
 - UncertaintySurface contract alignment: PARTIALLY VERIFIED against `contracts/domains/habitat/land_cover/uncertainty.md`.
 - Processed uncertainty lane alignment: PARTIALLY VERIFIED against `data/processed/habitat/land_cover/uncertainty/README.md`.
 - Land-cover sublane alignment: PARTIALLY VERIFIED against `docs/domains/habitat/sublanes/land_cover.md`.

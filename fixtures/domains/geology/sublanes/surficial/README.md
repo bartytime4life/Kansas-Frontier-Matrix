@@ -106,7 +106,7 @@ Do not use this lane for real geology records, real source exports, live upstrea
 
 - Target README: populated from empty placeholder content.
 - Parent geology fixture README: present but still a greenfield stub during this update.
-- Fixture payload inventory: no payloads verified in this directory during this update.
+- Fixture payload inventory: `valid_1_surficial_unit.json` added — a synthetic SurficialUnit with toy parent-material and hydrostratigraphic context.
 - Surficial doctrine alignment: PARTIALLY VERIFIED against `docs/domains/geology/sublanes/surficial.md`.
 - Sublane path convention: NEEDS VERIFICATION / ADR-sensitive because the surficial doctrine marks `sublanes/` as PROPOSED.
 - Root fixture alignment: PARTIALLY VERIFIED against `fixtures/README.md`.

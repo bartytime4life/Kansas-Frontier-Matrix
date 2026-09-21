@@ -1,0 +1,23 @@
+{
+  "fixture_id": "fixture:habitat:land-cover-uncertainty:001",
+  "object_family": "LandCoverUncertainty",
+  "evidence_refs": [
+    "fixture://evidence/habitat/001"
+  ],
+  "spatial_support": {
+    "kind": "generalized_grid_cell",
+    "grid_cell_ref": "kfm://fixture/synthetic-grid/habitat/cell-030"
+  },
+  "governance": {
+    "rights_state": "fixture_only",
+    "sensitivity_state": "public_safe_fixture",
+    "release_state": "not_released",
+    "promotion_eligible": false
+  },
+  "limitations": [
+    "synthetic_fixture_only"
+  ],
+  "accuracy": 0.83,
+  "confidence": "moderate",
+  "nodata_fraction": 0.01
+}

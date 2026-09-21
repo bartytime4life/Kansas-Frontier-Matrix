@@ -104,7 +104,7 @@ Do not use this lane for real geology records, real source exports, live upstrea
 
 - Target README: populated from empty placeholder content.
 - Parent geology fixture README: present but still a greenfield stub during this update.
-- Fixture payload inventory: no payloads verified in this directory during this update.
+- Fixture payload inventory: `valid_1_map_context_envelope.json` added — a synthetic public-safe generalized MapContextEnvelope.
 - Map/UI contract alignment: PARTIALLY VERIFIED against `docs/domains/geology/MAP_UI_CONTRACTS.md`.
 - Geology fixture-home alignment: PARTIALLY VERIFIED against the Geology missing/planned-files register.
 - Root fixture alignment: PARTIALLY VERIFIED against `fixtures/README.md`.

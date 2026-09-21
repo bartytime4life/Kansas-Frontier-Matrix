@@ -108,7 +108,7 @@ Do not use this lane for real records, source exports, lifecycle data, EvidenceB
 ## Verification status
 
 - Target README: replaced one-character placeholder content.
-- Fixture payload inventory: no payload files verified in this directory during this update.
+- Fixture payload inventory: `valid_1.json` added — a synthetic no-op watcher run.
 - Watcher doctrine alignment: PARTIALLY VERIFIED against `docs/domains/habitat/sublanes/land_cover.md`.
 - Source-activation alignment: PARTIALLY VERIFIED against `docs/domains/habitat/sublanes/land_cover.md`.
 - Sibling fixture alignment: PARTIALLY VERIFIED against populated `observation/`, `change_summary/`, `model_run/`, `uncertainty/`, and `layer_manifest/` READMEs.

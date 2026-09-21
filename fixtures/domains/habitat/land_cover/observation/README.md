@@ -107,7 +107,7 @@ Do not use this lane for real records, source exports, lifecycle data, EvidenceB
 ## Verification status
 
 - Target README: replaced one-character placeholder content.
-- Fixture payload inventory: no payload files verified in this directory during this update.
+- Fixture payload inventory: `valid_1.json` added — a synthetic GRASSLAND observation for 2025 vintage.
 - LandCoverObservation contract alignment: PARTIALLY VERIFIED against `contracts/domains/habitat/land_cover/observation.md`.
 - Land-cover sublane alignment: PARTIALLY VERIFIED against `docs/domains/habitat/sublanes/land_cover.md`.
 - Schema alignment: NEEDS VERIFICATION because the contract reports the paired schema is still a permissive scaffold.

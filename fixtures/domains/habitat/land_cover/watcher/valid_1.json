@@ -1,0 +1,23 @@
+{
+  "fixture_id": "fixture:habitat:land-cover-watcher:001",
+  "object_family": "LandCoverWatcherRun",
+  "evidence_refs": [
+    "fixture://evidence/habitat/001"
+  ],
+  "spatial_support": {
+    "kind": "generalized_grid_cell",
+    "grid_cell_ref": "kfm://fixture/synthetic-grid/habitat/cell-030"
+  },
+  "governance": {
+    "rights_state": "fixture_only",
+    "sensitivity_state": "public_safe_fixture",
+    "release_state": "not_released",
+    "promotion_eligible": false
+  },
+  "limitations": [
+    "synthetic_fixture_only"
+  ],
+  "drift_kind": "no_op",
+  "class_histogram_changed": false,
+  "checkpoint_ref": "fixture://checkpoint/habitat/land-cover-001"
+}

@@ -1,0 +1,9 @@
+{
+  "fixture_id": "fixture:geology:sublanes:index-001",
+  "object_family": "SublaneIndex",
+  "child_lanes": [
+    "surficial"
+  ],
+  "notes": "Coordinator index for toy Geology sublane fixture lanes; see surficial/ for the populated child lane.",
+  "fixture_posture": "synthetic; index-only"
+}

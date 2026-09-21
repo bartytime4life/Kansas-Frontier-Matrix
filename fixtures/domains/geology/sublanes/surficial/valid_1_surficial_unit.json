@@ -1,0 +1,26 @@
+{
+  "fixture_id": "fixture:geology:surficial:001",
+  "profile_id": "kfm-geology-domain-fixture-v1",
+  "object_family": "SurficialUnit",
+  "source_role": "observed",
+  "source_descriptor_ref": "fixture://sources/geology/001",
+  "evidence_refs": [
+    "fixture://evidence/geology/001"
+  ],
+  "spatial_support": {
+    "kind": "generalized_county",
+    "county_fips": "99999"
+  },
+  "governance": {
+    "rights_state": "fixture_only",
+    "sensitivity_state": "public_safe_fixture",
+    "review_state": "fixture_only",
+    "release_state": "not_released",
+    "promotion_eligible": false
+  },
+  "limitations": [
+    "synthetic_fixture_only"
+  ],
+  "parent_material_context": "synthetic_loess",
+  "hydrostratigraphic_context": "synthetic_unconfined"
+}

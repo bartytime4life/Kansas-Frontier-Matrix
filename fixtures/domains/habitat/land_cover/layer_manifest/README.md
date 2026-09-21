@@ -101,7 +101,7 @@ Do not use this lane for real records, source exports, lifecycle data, EvidenceB
 ## Verification status
 
 - Target README: populated from empty placeholder content.
-- Fixture payload inventory: no payload files verified in this directory during this update.
+- Fixture payload inventory: `valid_1.json` added — a synthetic current-freshness layer manifest.
 - Generic LayerManifest contract alignment: PARTIALLY VERIFIED against `contracts/data/layer_manifest.md`.
 - Habitat layer-descriptor alignment: PARTIALLY VERIFIED against `contracts/domains/habitat/domain_layer_descriptor.md`.
 - Habitat layer-registry alignment: PARTIALLY VERIFIED against `data/registry/layers/habitat/README.md`.

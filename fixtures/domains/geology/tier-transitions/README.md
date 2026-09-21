@@ -109,7 +109,7 @@ Do not use this lane for real geology records, real source exports, live upstrea
 ## Verification status
 
 - Target README: populated from empty placeholder content.
-- Fixture payload inventory: no payloads verified in this directory during this update.
+- Fixture payload inventory: `valid_1_generalized_to_public_safe.json` added — a synthetic restricted-to-public-safe tier transition requiring a ReviewRecord and RedactionReceipt.
 - Geology sensitivity/tier alignment: PARTIALLY VERIFIED against `docs/domains/geology/ARCHITECTURE.md`.
 - Cross-cutting sensitivity alignment: PARTIALLY VERIFIED against `docs/doctrine/sensitivity.md`.
 - Root fixture alignment: PARTIALLY VERIFIED against `fixtures/README.md`.

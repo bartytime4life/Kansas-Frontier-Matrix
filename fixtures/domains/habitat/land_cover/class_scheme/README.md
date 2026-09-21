@@ -117,7 +117,7 @@ Do not use this lane for real Habitat records, real source exports, live upstrea
 ## Verification status
 
 - Target README: populated from empty placeholder content.
-- Fixture payload inventory: no payload files verified in this directory during this update.
+- Fixture payload inventory: `valid_1.json` added — a synthetic NLCD-like class scheme with three toy classes.
 - Contract alignment: PARTIALLY VERIFIED against `contracts/domains/habitat/land_cover/class_scheme.md`.
 - Land-cover sublane alignment: PARTIALLY VERIFIED against `docs/domains/habitat/sublanes/land_cover.md`.
 - Schema alignment: NEEDS VERIFICATION because the contract reports the paired schema is still a permissive scaffold.
