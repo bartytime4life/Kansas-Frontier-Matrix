@@ -3,10 +3,10 @@ doc_id: kfm://doc/fixtures-public-safe-settlement-readme
 title: fixtures/public_safe/settlement/README.md — Public-safe Settlement Fixtures
 version: v0.2.0
 type: readme; fixture-sublane; public-safe; synthetic; settlements-infrastructure-context
-status: draft; CONFIRMED path; public-safe fixture guidance; implementation NEEDS VERIFICATION
+status: draft; CONFIRMED path and focused fixture consumer; public runtime implementation NEEDS VERIFICATION
 owners: OWNER_TBD — Fixture steward · Settlements/Infrastructure steward · Evidence steward · Policy steward · Sensitivity reviewer · UI steward · Docs steward
 created: NEEDS VERIFICATION — placeholder lineage predates this revision
-updated: 2026-07-22
+updated: 2026-09-21
 policy_label: public-doc; fixtures; public-safe; synthetic; settlement; release-gated
 tags: [kfm, fixtures, public-safe, synthetic, settlement, municipality, CensusPlace, Townsite, GhostTown, Fort, Mission, ReservationCommunity, evidence, sensitivity, rollback]
 related:
@@ -24,7 +24,7 @@ notes:
   - "Evidence snapshot: repository main at commit 459b41d7ec91240742d8b2d3e5d9eb4dbd248df7 (2026-07-22)."
   - "The singular directory name `settlement` is a CONFIRMED shared public-safe fixture child, not a declaration of the canonical domain slug."
   - "The working domain slug is `settlements-infrastructure`; the singular schema lane is explicitly a draft compatibility index."
-  - "This revision documents fixture posture only; it creates no payloads, schemas, validators, consumers, policy decisions, releases, or public routes."
+  - "The 2026-07-22 documentation revision created no payloads or consumers; the 2026-09-21 update adds one synthetic payload and a focused validator-test consumer without public runtime or release effect."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -38,7 +38,8 @@ notes:
 **Owning parent:** `fixtures/public_safe/`  
 **Domain context:** Settlements/Infrastructure; the working domain slug is `settlements-infrastructure`  
 **Exposure posture:** synthetic and public-safe by construction; never a public-data or release lane  
-**Implementation posture:** README paths are CONFIRMED; payload inventory, consumers, validators, and CI coverage are NEEDS VERIFICATION  
+**Implementation posture:** one synthetic payload and one focused validator test are CONFIRMED; public runtime behavior remains NEEDS VERIFICATION
+
 **Evidence snapshot:** `main@459b41d7ec91240742d8b2d3e5d9eb4dbd248df7`
 
 **Quick jumps:** [Purpose](#purpose) · [Fixture lane posture](#fixture-lane-posture) · [Placement basis](#placement-basis) · [Relationship to Settlements/Infrastructure governance](#relationship-to-settlementsinfrastructure-governance) · [Accepted material](#accepted-material) · [Exclusions](#exclusions) · [Shared fixture design rules](#shared-fixture-design-rules) · [Expected public-safe settlement fixture families](#expected-public-safe-settlement-fixture-families) · [Packaging pattern](#packaging-pattern) · [Maintenance notes](#maintenance-notes) · [Verification status](#verification-status) · [Rollback](#rollback)
@@ -206,7 +207,9 @@ A generation note or generated-work receipt may document how a fixture was autho
 
 ## Verification status
 
-Evidence was read at `main@459b41d7ec91240742d8b2d3e5d9eb4dbd248df7`.
+**Fixture payload inventory (recursive, 2026-09-21):** [`valid_1_unreleased_settlement.json`](valid_1_unreleased_settlement.json) is a synthetic `PlaceIdentityProfile` with toy unresolved refs, hidden geometry, and no policy or release reference. It passes the proposed strict schema and validator. `ABSTAIN` is the illustrative evidence-resolution outcome because the toy ref does not resolve; missing release independently bars publication. The focused consumer is [`test_validate_place_identity.py`](../../../tests/validators/test_validate_place_identity.py); no public runtime outcome is claimed.
+
+Historical documentation evidence was read at `main@459b41d7ec91240742d8b2d3e5d9eb4dbd248df7`; the payload inventory and focused test result above are from this 2026-09-21 branch update.
 
 | Check | Result | Evidence / limit |
 |---|---|---|
@@ -216,9 +219,9 @@ Evidence was read at `main@459b41d7ec91240742d8b2d3e5d9eb4dbd248df7`.
 | Domain fixture lane | CONFIRMED greenfield stub | `fixtures/domains/settlements-infrastructure/README.md` exists but does not establish mature consumers or contracts. |
 | Test-local fixture lane | CONFIRMED | `tests/fixtures/README.md` exists as a separate responsibility lane. |
 | Working domain slug and singular-path conflict | CONFIRMED draft doctrine | Canonical-path and schema indexes prefer `settlements-infrastructure`; the singular schema path is a compatibility index. |
-| Place-identity semantics | CONFIRMED proposed contract | Object families and release/evidence posture are documented; schema remains missing. |
-| Payload inventory | NOT ESTABLISHED | A bounded repository review did not establish child payload files. This is not proof that none exist. |
-| Consumers, validators, renderer checks, API checks, UI checks, and CI coverage | NEEDS VERIFICATION | No implementation claim is made by this README update. |
+| Place-identity semantics | CONFIRMED proposed contract and strict schema | Object families and release/evidence posture are documented; schema validation does not establish real-world or public authority. |
+| Payload inventory | CONFIRMED at this checkout | The recursive subtree has this README and `valid_1_unreleased_settlement.json` only. |
+| Consumers, validators, renderer checks, API checks, UI checks, and CI coverage | PARTIAL | `tests/validators/test_validate_place_identity.py` loads this file and checks schema, semantic, and non-release posture; renderer, API, UI, and public runtime behavior remain NEEDS VERIFICATION. |
 | Runtime policy and sensitivity enforcement | NEEDS VERIFICATION | Draft registers describe posture; enforcement was not established. |
 
 For this README revision:
@@ -226,7 +229,7 @@ For this README revision:
 - [x] Corrected the stale claim that the parent public-safe README was missing.
 - [x] Distinguished the shared singular fixture child from the working `settlements-infrastructure` domain slug.
 - [x] Preserved source, evidence, policy, proof, release, and publication boundaries.
-- [x] Added no fixture payload, schema, validator, contract, policy decision, runtime behavior, or public route.
+- [x] Added one synthetic fixture and a focused test consumer; no schema, validator implementation, contract, policy decision, runtime behavior, or public route changed.
 
 Before adding or promoting payloads:
 

@@ -14,6 +14,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 VALIDATOR_PATH = REPO_ROOT / "tools/validators/validate_place_identity.py"
 SCHEMA_PATH = REPO_ROOT / "schemas/contracts/v1/domains/settlements-infrastructure/place-identity.schema.json"
 FIXTURE_PROFILE_PATH = REPO_ROOT / "fixtures/contracts/v1/domains/settlements-infrastructure/place_identity/fixture_profile.json"
+PUBLIC_SAFE_SETTLEMENT_PATH = REPO_ROOT / "fixtures/public_safe/settlement/valid_1_unreleased_settlement.json"
 
 SPEC = importlib.util.spec_from_file_location("place_identity_validator_under_test", VALIDATOR_PATH)
 assert SPEC is not None and SPEC.loader is not None
@@ -43,6 +44,23 @@ class PlaceIdentityValidatorTests(unittest.TestCase):
             with self.subTest(name=name):
                 candidate = MODULE.materialize_fixture(profile["base"], case["patch"])
                 self.assertTrue(MODULE.validate(candidate).ok)
+
+    def test_public_safe_settlement_fixture_is_valid_but_unreleased(self) -> None:
+        candidate, findings = MODULE._read(PUBLIC_SAFE_SETTLEMENT_PATH)
+        self.assertEqual(findings, [])
+        self.assertIsNotNone(candidate)
+        assert candidate is not None
+        self.assertTrue(MODULE.validate(candidate).ok)
+        self.assertTrue(candidate["id"].startswith("kfm://fixture/synthetic/"))
+        self.assertEqual(candidate["identity_family"], "Settlement")
+        self.assertFalse(candidate["legal_status_claimed"])
+        self.assertFalse(candidate["census_status_claimed"])
+        self.assertTrue(candidate["source_ref"].startswith("fixture://"))
+        self.assertTrue(all(ref.startswith("fixture://") for ref in candidate["evidence_refs"]))
+        self.assertEqual(candidate["public_geometry_rule"], "hidden")
+        self.assertEqual(candidate["sensitivity_label"], "review-only")
+        self.assertIsNone(candidate["policy_decision_ref"])
+        self.assertIsNone(candidate["release_manifest_ref"])
 
     def test_invalid_fixture_vectors_match_exact_reviewed_codes(self) -> None:
         profile = _profile()

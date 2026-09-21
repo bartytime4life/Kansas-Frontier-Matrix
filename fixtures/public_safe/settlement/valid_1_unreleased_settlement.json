@@ -1,0 +1,38 @@
+{
+  "object_type": "PlaceIdentityProfile",
+  "schema_version": "0.1.0",
+  "id": "kfm://fixture/synthetic/public-safe/settlement-001",
+  "spec_hash": "sha256:930b7a5fed3b08eb69592cbae8c87d34f77601da644d3a2982ecf05f22fa4fd3",
+  "domain": "settlements-infrastructure",
+  "identity_family": "Settlement",
+  "display_name": "Synthetic Settlement Alpha",
+  "normalized_name_key": "synthetic_settlement_alpha",
+  "source_ref": "fixture://source/synthetic/settlement-001",
+  "source_role": "synthetic-illustration",
+  "source_native_id": "fixture-only-settlement-001",
+  "evidence_refs": [
+    "fixture://evidence/synthetic/settlement-001"
+  ],
+  "valid_time": {
+    "start": null,
+    "end": null
+  },
+  "legal_status_claimed": false,
+  "census_status_claimed": false,
+  "public_geometry_rule": "hidden",
+  "sensitivity_label": "review-only",
+  "policy_decision_ref": null,
+  "release_manifest_ref": null,
+  "rollback_ref": null,
+  "separation": {
+    "identity_family_is_explicit": true,
+    "municipality_and_census_place_not_collapsed": true,
+    "source_role_preserved": true,
+    "release_not_inferred": true
+  },
+  "limitations": [
+    "Synthetic fixture only; no real place, source, or evidence is represented.",
+    "Toy source and evidence references are unresolved; no public answer is supported.",
+    "Schema validity is not policy approval, release, or publication."
+  ]
+}

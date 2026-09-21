@@ -3,10 +3,10 @@ doc_id: kfm://doc/fixtures-public-safe-readme
 title: fixtures/public_safe/ — Public-safe Fixture Parent Lane
 version: v0.2.0
 type: readme; fixture-parent; public-safe; synthetic; cross-cutting
-status: draft; CONFIRMED path; documentation-and-runtime-example lane; payload and consumer maturity NEEDS VERIFICATION
+status: draft; CONFIRMED path; one child fixture has a focused test consumer; public runtime maturity NEEDS VERIFICATION
 owners: OWNER_TBD — Fixture steward · Test/QA steward · Evidence steward · Policy steward · Sensitivity reviewer · Rights reviewer · UI steward · Docs steward
 created: NEEDS VERIFICATION — README predates this revision
-updated: 2026-07-22
+updated: 2026-09-21
 policy_label: public-doc; fixtures; public-safe; synthetic-only; non-authoritative; release-gated
 owning_root: fixtures/
 current_path: fixtures/public_safe/README.md
@@ -32,7 +32,7 @@ related:
   - ../../CONTRIBUTING.md
 tags: [kfm, fixtures, public-safe, synthetic, deterministic, generalized, evidence, sensitivity, rights, finite-outcomes, correction, rollback]
 notes:
-  - "This revision documents the parent lane only. It creates no fixture payload, contract, schema, policy decision, validator, test, consumer, release, or public route."
+  - "The earlier parent-lane documentation revision created no payload; the 2026-09-21 update records one synthetic settlement child fixture and its test consumer, without contract, schema, policy, release, or public route changes."
   - "Public-safe describes reviewed fixture construction and exposure posture; it does not establish real-world truth, policy approval, or release authority."
   - "The bounded repository review confirmed the settlement child and an adjacent Archaeology compatibility lane but did not establish a complete directory or payload inventory."
 [/KFM_META_BLOCK_V2] -->
@@ -135,7 +135,7 @@ The following inventory is intentionally bounded. Exact file reads confirmed the
 | Lane | Confirmed posture | Routing rule |
 |---|---|---|
 | `valid_1_generalized_renderer_case.json` (this directory, added in this revision) | A synthetic, invented-geometry `RendererFeatureExample` following the Minimum scenario contract above. | Genuinely cross-cutting placeholder case; route to a domain lane once an owner and consumer are established. |
-| [`settlement/`](./settlement/README.md) | Existing shared public-safe settlement child. Its README distinguishes the singular fixture name from the working `settlements-infrastructure` domain slug. | Use for the bounded shared examples described by the child README; prefer the domain lane once ownership and consumers are established. |
+| [`settlement/`](./settlement/README.md) | Shared public-safe settlement child with one synthetic, unreleased `PlaceIdentityProfile` consumed by a focused validator test. Its README distinguishes the singular fixture name from the working `settlements-infrastructure` domain slug. | Use for the bounded shared example described by the child README; prefer the domain lane once ownership and consumers are established. |
 | [`../domains/`](../domains/README.md) | Existing domain-owned fixture parent. | Prefer for stable reusable fixtures with a clear domain owner or sensitivity context. |
 | [`../archaeology-public-safe/`](../archaeology-public-safe/README.md) | Existing top-level Archaeology compatibility lane, not a child of this directory. | Do not duplicate it here. Follow its freeze, sensitivity, and migration guidance. |
 | [`../../tests/fixtures/`](../../tests/fixtures/README.md) | Existing test-local fixture parent with a documented split from root `fixtures/`. | Use only for inputs owned by a particular test area. |
