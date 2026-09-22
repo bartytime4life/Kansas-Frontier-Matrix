@@ -1,0 +1,37 @@
+{
+  "schema_version": "kfm.authority-index/v1",
+  "repository": "bartytime4life/Kansas-Frontier-Matrix",
+  "observed_at": "2026-09-22T04:00:00Z",
+  "records": [
+    {
+      "record_id": "github-main",
+      "location": "github",
+      "resource_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/main",
+      "role": "implementation",
+      "status": "CURRENT",
+      "implementation_authority": true,
+      "currentness_pointer": "git:refs/heads/main",
+      "notes": "GitHub source and reviewed repository controls determine implementation state; merge does not imply release or publication."
+    },
+    {
+      "record_id": "kfm-system-chronicle",
+      "location": "google-drive",
+      "resource_ref": "google-drive:1fBOUDqrcsHaPJiEfM5HmtJL7fBMKFr-rgoN2ge_uVrI",
+      "role": "coordination",
+      "status": "CURRENT",
+      "implementation_authority": false,
+      "currentness_pointer": "github-main",
+      "notes": "Coordination record; repository head, checks, reviews, and ruleset readback take precedence for implementation currentness."
+    },
+    {
+      "record_id": "explorer-site",
+      "location": "site",
+      "resource_ref": "https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site/",
+      "role": "runtime-observation",
+      "status": "CURRENT",
+      "implementation_authority": false,
+      "currentness_pointer": "github-main",
+      "notes": "Hosted runtime observations do not admit repository sources, grant release authority, or replace exact-source equivalence evidence."
+    }
+  ]
+}

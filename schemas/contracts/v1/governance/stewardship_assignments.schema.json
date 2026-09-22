@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/governance/stewardship_assignments.schema.json",
+  "title": "KFM stewardship assignments",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "repository", "observed_at", "assignments"],
+  "properties": {
+    "schema_version": {"const": "kfm.stewardship-assignments/v1"},
+    "repository": {"const": "bartytime4life/Kansas-Frontier-Matrix"},
+    "observed_at": {"type": "string", "format": "date-time", "pattern": "Z$"},
+    "assignments": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "assignment_id",
+          "scope",
+          "role",
+          "status",
+          "assignee",
+          "granted_authorities",
+          "denied_authorities",
+          "effective_at",
+          "review_due",
+          "evidence_refs"
+        ],
+        "properties": {
+          "assignment_id": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9._-]+$"
+          },
+          "scope": {"type": "string", "minLength": 1},
+          "role": {"type": "string", "minLength": 1},
+          "status": {"enum": ["ASSIGNED", "UNASSIGNED", "HELD"]},
+          "assignee": {"type": ["string", "null"], "minLength": 1},
+          "granted_authorities": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "maintain_docs",
+                "maintain_code",
+                "review_evidence",
+                "review_policy",
+                "review_release_candidate"
+              ]
+            },
+            "uniqueItems": true
+          },
+          "denied_authorities": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "source_admission",
+                "merge",
+                "release",
+                "deployment",
+                "publication",
+                "host_control"
+              ]
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          "effective_at": {"type": ["string", "null"], "format": "date-time"},
+          "review_due": {"type": "string", "format": "date-time"},
+          "evidence_refs": {
+            "type": "array",
+            "items": {"type": "string", "minLength": 1},
+            "minItems": 1,
+            "uniqueItems": true
+          }
+        }
+      }
+    }
+  }
+}
