@@ -59,6 +59,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          fetch-depth: 0
       - name: Set up Python
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
@@ -77,11 +78,12 @@ jobs:
         env:
           PYTEST_ADDOPTS: --junitxml=${{ runner.temp }}/offline-pipelines.xml
         run: make offline-pipeline-check
-      - name: Validate the current authoring receipt
+      - name: Replay the historical authoring receipt at its authored revision
         run: |
           python tools/validators/validate_generated_receipt.py \
             data/receipts/generated/genrec-pipeline-ci-completion-20260917.json \
-            --repo-root .
+            --repo-root . \
+            --artifact-git-ref d0c4e9a5108c7b0d82372a43f785ae10eeed6895
       - name: Retain test diagnostics only
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
