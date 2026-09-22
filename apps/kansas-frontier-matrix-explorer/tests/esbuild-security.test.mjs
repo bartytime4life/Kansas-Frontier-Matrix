@@ -51,6 +51,7 @@ allowBuilds:
   "workerd@1.20260828.1": false
   "workerd@1.20260903.1": false
   "workerd@1.20260911.1": false
+  "workerd@1.20260918.1": false
 `;
 
 function assertWorkspacePolicy(workspace) {
@@ -152,7 +153,7 @@ test('workspace guard rejects additive approvals and spoofed denials', () => {
 });
 
 test('workspace guard rejects missing or broadened workerd decisions', () => {
-  for (const version of ['1.20260828.1', '1.20260903.1', '1.20260911.1']) {
+  for (const version of ['1.20260828.1', '1.20260903.1', '1.20260911.1', '1.20260918.1']) {
     const denied = `  "workerd@${version}": false\n`;
     assert.ok(reviewedWorkspace.includes(denied));
     const mutations = [

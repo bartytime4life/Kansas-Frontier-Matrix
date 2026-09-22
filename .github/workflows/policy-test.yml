@@ -46,6 +46,7 @@ jobs:
           set -euo pipefail
           python - <<'PY'
           from pathlib import Path
+          import json
           import re
           import tomllib
 
@@ -61,6 +62,8 @@ jobs:
           ]
           required = [
               Path("Makefile"),
+              Path("control_plane/readiness/lanes.json"),
+              Path("tools/readiness/run_lane.py"),
               Path("policy/README.md"),
               Path("policy/bundles/README.md"),
               Path("policy/fixtures/README.md"),
@@ -184,14 +187,33 @@ jobs:
               f"{[p.as_posix() for p in unexpected_validator_payloads]}"
           )
 
+          readiness = json.loads(
+              Path("control_plane/readiness/lanes.json").read_text(encoding="utf-8")
+          )
+          policy_lanes = [lane for lane in readiness["lanes"] if lane["id"] == "policy"]
+          assert len(policy_lanes) == 1, "policy readiness lane must be unique"
+          policy_lane = policy_lanes[0]
+          assert policy_lane["status"] == "IMPLEMENTED", (
+              "policy readiness lane is no longer the reviewed bounded implementation"
+          )
+          assert policy_lane["command"] == [
+              "opa",
+              "test",
+              "policy/rego/release_gate_v1.rego",
+              "policy/rego/release_gate_v1_test.rego",
+              "-v",
+          ], "policy readiness lane command changed; review the bounded Rego scope"
+          assert policy_lane["hold_reason"] is None
+          assert "repository-wide evaluator" in policy_lane["authority_boundary"]
+
           makefile = Path("Makefile").read_text(encoding="utf-8")
           target = re.search(r"(?m)^policy:\n(?P<body>(?:\t[^\n]*\n)+)", makefile)
           assert target, "Makefile policy target is missing"
           assert target.group("body").splitlines() == [
-              '\t@echo "TODO: opa test policy/ -v"'
+              '\t$(KFM_VALIDATION_ENV) python tools/readiness/run_lane.py policy'
           ], (
-              "Makefile policy target has changed; invoke and verify the accepted command "
-              "instead of leaving this readiness hold green"
+              "Makefile policy target must execute the reviewed repository-owned "
+              "bounded readiness lane"
           )
 
           forbidden_candidates = [
