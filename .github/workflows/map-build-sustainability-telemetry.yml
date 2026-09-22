@@ -13,6 +13,7 @@ name: map-build-sustainability-telemetry
       - "tools/validators/telemetry/validate_map_build_sustainability.py"
       - "tools/validators/telemetry/README.md"
       - "tests/validators/telemetry/test_map_build_sustainability.py"
+      - "tests/validators/telemetry/test_map_build_input_safety.py"
       - "tests/validators/telemetry/README.md"
       - "docs/intake/exploratory/pass-18-map-build-sustainability-source-map.md"
       - "docs/dashboards/observability/energy-carbon-footprint.md"
@@ -29,6 +30,8 @@ name: map-build-sustainability-telemetry
       - "tools/validators/telemetry/validate_map_build_sustainability.py"
       - "tools/validators/telemetry/README.md"
       - "tests/validators/telemetry/test_map_build_sustainability.py"
+      - "tests/validators/telemetry/test_map_build_input_safety.py"
+      - "tests/validators/telemetry/test_map_build_input_safety.py"
       - "tests/validators/telemetry/README.md"
       - "docs/intake/exploratory/pass-18-map-build-sustainability-source-map.md"
       - "docs/dashboards/observability/energy-carbon-footprint.md"
@@ -61,6 +64,8 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          # Required only to replay the unchanged historical receipt below.
+          fetch-depth: 0
 
       - name: Set up repository Python
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
@@ -79,17 +84,20 @@ jobs:
           set -euo pipefail
           python -m unittest discover \
             --start-directory tests/validators/telemetry \
-            --pattern 'test_map_build_sustainability.py' \
+            --pattern 'test_map_build*.py' \
             --verbose
           python tools/validators/telemetry/validate_map_build_sustainability.py \
             --fixtures
 
-      - name: Validate current stable-packet authoring receipt integrity
+      # Historical evidence is not a current-candidate byte binding.
+      # Current implementation behavior is checked by the unit/fixture step above.
+      - name: Replay historical stable-packet receipt at its authoring commit
         run: |
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
             data/receipts/generated/genrec-map-build-sustainability-telemetry-stable-20260811.json \
-            --repo-root .
+            --repo-root . \
+            --artifact-git-ref 25a58f324e6ada808714aecdf9e745d139e1b3bc
 
       - name: Record trust boundary
         if: always()
@@ -98,6 +106,8 @@ jobs:
             echo "### Map-build sustainability telemetry fixture profile"
             echo
             echo "- Result: ${{ job.status }}."
+            echo "- Current-candidate checks: profile tests, bounded-input regressions, and exact fixture replay."
+            echo "- Receipt scope: unchanged historical authoring evidence at 25a58f324e6ada808714aecdf9e745d139e1b3bc; not current-head acceptance."
             echo "- Scope: synthetic map-build binding, decimal energy/carbon estimates, explicit method/factor versions, uncertainty, arithmetic consistency, safe abstention, and exact fixture polarity."
             echo "- Boundary: PASS does not measure a build, contact a provider, establish mapped environmental truth, select a methodology, set a threshold, decide policy/review/release, deploy, publish, or authorize public use."
           } >> "$GITHUB_STEP_SUMMARY"
