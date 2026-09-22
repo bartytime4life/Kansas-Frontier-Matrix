@@ -2,13 +2,13 @@
 doc_id: kfm://doc/tools-validators-telemetry-readme
 title: Telemetry Validators
 type: README
-version: v0.2.0
+version: v0.2.1
 status: draft; bounded-executable; local-only; no-network; non-authoritative
 owners:
   - TODO-validation-steward
   - TODO-observability-steward
 created: 2026-08-07
-updated: 2026-08-11
+updated: 2026-09-22
 policy_label: repository-facing; tools; validators; telemetry
 owning_root: tools/
 responsibility: validate bounded telemetry profile shape identity binding arithmetic uncertainty and finite decision semantics without contacting external systems or granting operational authority
@@ -61,6 +61,33 @@ The map-build sustainability validator checks:
 - energy-to-carbon arithmetic within declared rounding tolerance capped at `0.001 gCO2e` for fixture consistency;
 - consistent safe abstention when measurement or factor evidence is unavailable; and
 - exact non-effects, including no measurement, provider call, threshold, release decision, or mapped-truth claim.
+
+## Map-build input safety boundary
+
+The map-build validator accepts at most `1,048,576` input bytes. It opens one
+regular-file descriptor with no-follow and nonblocking flags, reads at most the
+limit plus one sentinel byte, and compares descriptor/path identity, mode, size,
+and modification/change timestamps before accepting the decoded JSON. Symlinks,
+non-regular files, observed replacement or modification, invalid UTF-8, and
+oversized inputs return `ERROR / JSON_INPUT_INVALID`; candidate contents and
+filesystem paths are not echoed by the CLI. Platforms without `O_NOFOLLOW` and
+`O_NONBLOCK` fail closed rather than silently using a weaker reader.
+
+Fixture outcomes, finding-code lists, and `candidate_from` references are typed
+before set membership, sorting, or dictionary lookup. Malformed fixture metadata
+returns `ERROR / FIXTURE_SUITE_INVALID` instead of an uncaught `TypeError`. The
+existing eleven-case `PASS` / `ABSTAIN` / `DENY` semantics and schema are unchanged.
+
+This is not a filesystem sandbox or an atomic snapshot: parent-directory
+ownership, malicious privileged writers, and changes outside the observed read
+remain outside the proof. It does not implement the general telemetry-safety
+placeholder, accept the Rego stubs, enable an emitter/sink, or release the
+operational telemetry HOLD.
+
+The dedicated workflow runs current profile and input-boundary tests separately
+from the unchanged August 11 authoring receipt, which is replayed against its
+exact authoring commit `25a58f324e6ada808714aecdf9e745d139e1b3bc`. Historical
+receipt success is not current-head conformance or independent security review.
 
 ## Run
 

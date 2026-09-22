@@ -12,7 +12,9 @@ import argparse
 import copy
 import json
 import math
+import os
 import re
+import stat
 from dataclasses import dataclass
 from datetime import datetime
 from decimal import Decimal, InvalidOperation, localcontext
@@ -98,13 +100,52 @@ def _contains_surrogate(value: object, active: set[int] | None = None) -> bool:
         active.remove(identity)
 
 
+def _file_signature(value: os.stat_result) -> tuple[int, ...]:
+    return (
+        value.st_dev,
+        value.st_ino,
+        value.st_mode,
+        value.st_size,
+        value.st_mtime_ns,
+        value.st_ctime_ns,
+    )
+
+
 def _read_bounded(path: Path) -> str:
+    """Read one bounded regular-file descriptor, refusing observable changes.
+
+    This is local input admission, not a sandbox or a filesystem snapshot.
+    Parent-directory ownership and concurrent privileged writers remain outside
+    this boundary. Platforms without no-follow/nonblocking opens fail closed.
+    """
     try:
-        if path.is_symlink() or not path.is_file():
+        if not hasattr(os, "O_NOFOLLOW") or not hasattr(os, "O_NONBLOCK"):
+            raise InputError("safe file admission is unavailable")
+        before = path.lstat()
+        if not stat.S_ISREG(before.st_mode):
             raise InputError("input is not a regular file")
-        if path.stat().st_size > MAX_JSON_BYTES:
+        if before.st_size > MAX_JSON_BYTES:
             raise InputError("input exceeds byte limit")
-        return path.read_text(encoding="utf-8")
+        descriptor = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+        try:
+            opened = os.fstat(descriptor)
+            if _file_signature(opened) != _file_signature(before):
+                raise InputError("input changed before reading")
+            # Never reopen the path or perform an unbounded read after a stat.
+            # closefd=False leaves descriptor cleanup to the enclosing finally.
+            with open(descriptor, "rb", closefd=False) as stream:
+                payload = stream.read(MAX_JSON_BYTES + 1)
+            if len(payload) > MAX_JSON_BYTES:
+                raise InputError("input exceeds byte limit")
+            if (
+                len(payload) != opened.st_size
+                or _file_signature(os.fstat(descriptor)) != _file_signature(opened)
+                or _file_signature(path.lstat()) != _file_signature(opened)
+            ):
+                raise InputError("input changed while reading")
+        finally:
+            os.close(descriptor)
+        return payload.decode("utf-8")
     except (OSError, UnicodeError) as exc:
         raise InputError("input cannot be read safely") from exc
 
@@ -288,10 +329,11 @@ def _materialize_cases(entries: object) -> list[dict[str, Any]]:
         if (
             not isinstance(expected, dict)
             or set(expected) != {"outcome", "finding_codes"}
-            or expected.get("outcome") not in OUTCOMES
+            or not isinstance(expected.get("outcome"), str)
+            or expected["outcome"] not in OUTCOMES
             or not isinstance(expected.get("finding_codes"), list)
-            or expected["finding_codes"] != sorted(set(expected["finding_codes"]))
             or any(not isinstance(code, str) for code in expected["finding_codes"])
+            or expected["finding_codes"] != sorted(set(expected["finding_codes"]))
         ):
             raise InputError("fixture expected result is invalid")
 
@@ -304,7 +346,10 @@ def _materialize_cases(entries: object) -> list[dict[str, Any]]:
         else:
             if set(entry) != {"case_id", "candidate_from", "patch", "expected"}:
                 raise InputError("derived fixture entry is invalid")
-            source = by_id.get(entry.get("candidate_from"))
+            source_id = entry.get("candidate_from")
+            if not isinstance(source_id, str):
+                raise InputError("derived fixture source is invalid")
+            source = by_id.get(source_id)
             patch = entry.get("patch")
             if source is None or not isinstance(patch, dict) or not patch:
                 raise InputError("derived fixture source or patch is invalid")
