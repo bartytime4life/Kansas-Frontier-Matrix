@@ -31,7 +31,6 @@ name: map-build-sustainability-telemetry
       - "tools/validators/telemetry/README.md"
       - "tests/validators/telemetry/test_map_build_sustainability.py"
       - "tests/validators/telemetry/test_map_build_input_safety.py"
-      - "tests/validators/telemetry/test_map_build_input_safety.py"
       - "tests/validators/telemetry/README.md"
       - "docs/intake/exploratory/pass-18-map-build-sustainability-source-map.md"
       - "docs/dashboards/observability/energy-carbon-footprint.md"
