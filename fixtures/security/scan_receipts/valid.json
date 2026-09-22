@@ -1,0 +1,33 @@
+{
+  "schema_version": "kfm.security-scan-receipt/v1",
+  "repository": "bartytime4life/Kansas-Frontier-Matrix",
+  "subject_commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "scanner": {
+    "name": "example-scanner",
+    "version": "1.0.0",
+    "rules_digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+  },
+  "scan": {
+    "started_at": "2026-09-22T04:00:00Z",
+    "finished_at": "2026-09-22T04:02:00Z",
+    "completeness": "complete"
+  },
+  "findings": {
+    "critical": 0,
+    "high": 0,
+    "medium": 1,
+    "low": 0,
+    "informational": 2
+  },
+  "suppressions": [],
+  "raw_result": {
+    "artifact_ref": "github-actions://runs/123/artifacts/456",
+    "artifact_digest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+  },
+  "authentication": "github_actions",
+  "authority": {
+    "merge_authority": false,
+    "independent_acceptance": false,
+    "release_authority": false
+  }
+}
