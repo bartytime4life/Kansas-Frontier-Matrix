@@ -2,13 +2,13 @@
 doc_id: kfm://doc/tests-validators-telemetry-readme
 title: Telemetry Validator Tests
 type: README
-version: v0.2.0
+version: v0.2.1
 status: draft; executable-proof; synthetic; no-network; non-authoritative
 owners:
   - TODO-validation-steward
   - TODO-observability-steward
 created: 2026-08-07
-updated: 2026-08-11
+updated: 2026-09-22
 policy_label: repository-facing; tests; telemetry; no-network
 owning_root: tests/
 responsibility: provide executable synthetic proof for telemetry contracts schemas validators finite outcomes deterministic behavior and workflow safety without representing runtime measurement export release or publication
@@ -60,6 +60,15 @@ The map-build sustainability suite additionally covers:
 - deterministic CLI bytes and non-mutation; and
 - read-only, immutable-pinned, no-export workflow posture.
 
+The separate `test_map_build_input_safety.py` suite covers malformed outcome,
+finding-code, and source-reference types; exact and over-limit UTF-8 byte
+boundaries; invalid files and symlinks; controlled growth, modification, and
+replacement races; descriptor cleanup; deterministic non-echoing CLI errors;
+and the workflow's current-test versus historical-receipt separation. These
+synthetic probes establish the named input checks, not a filesystem sandbox or
+independent security acceptance. Safe file opens require `O_NOFOLLOW` and
+`O_NONBLOCK`; unsupported platforms fail closed.
+
 ## Run
 
 ```bash
@@ -75,7 +84,7 @@ python -m unittest discover \
 
 python -m unittest discover \
   --start-directory tests/validators/telemetry \
-  --pattern 'test_map_build_sustainability.py' \
+  --pattern 'test_map_build*.py' \
   --verbose
 ```
 
