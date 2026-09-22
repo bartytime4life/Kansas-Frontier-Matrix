@@ -1,10 +1,8 @@
 # KFM repository orchestration surface.
 #
-# Implemented targets below invoke repository-owned commands. Readiness-marker
-# targets print TODO output and are intentionally non-enforcing; their zero exit
-# status is not validation evidence. Several CI workflows inspect those marker
-# bodies to detect when an implementation has landed and must be wired through
-# a separately reviewed change.
+# Implemented targets below invoke repository-owned commands. Bounded readiness
+# targets delegate to the reviewed readiness registry. A named HOLD exits 3 and
+# must not be cited as validation, release, deployment, or publication evidence.
 
 .DEFAULT_GOAL := help
 
@@ -92,11 +90,11 @@ help:
 	@echo "  api-run               Start the governed API locally (alias of governed-api-dev)"
 	@echo "  governed-api-dev      Start the governed API module directly"
 	@echo
-	@echo "Readiness markers (print TODO; do not enforce readiness):"
-	@echo "  policy                Policy-engine test lane"
-	@echo "  fixtures              Deterministic fixture regeneration"
-	@echo "  proof-slice           Hydrology proof-slice pipeline"
-	@echo "  catalog               Catalog record builder"
+	@echo "Bounded readiness lanes (HOLD exits 3):"
+	@echo "  policy                Run only the accepted Pass 12 Rego source/test pair"
+	@echo "  fixtures              Report fixture-regeneration implementation HOLD"
+	@echo "  proof-slice           Report Hydrology proof-producer implementation HOLD"
+	@echo "  catalog               Report catalog-builder implementation HOLD"
 	@echo
 	@echo "Cleanup targets:"
 	@echo "  maplibre-clean        Remove artifacts/perf"
@@ -203,19 +201,19 @@ hazards-validate:
 	KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC python -m unittest discover --start-directory tests/domains/hazards --pattern 'test_validate_usdm_materiality.py' --verbose
 	KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC python tools/validators/domains/hazards/validate_usdm_materiality.py --fixtures
 
-# Readiness markers preserve exact TODO bodies consumed by repository workflows.
-# They are discovery surfaces only and must not be cited as executable proof.
+# Bounded readiness lanes. Policy executes only the accepted Pass 12 pair.
+# Unimplemented producers return a named HOLD with exit status 3.
 policy:
-	@echo "TODO: opa test policy/ -v"
+	$(KFM_VALIDATION_ENV) python tools/readiness/run_lane.py policy
 
 fixtures:
-	@echo "TODO: regenerate deterministic fixtures"
+	$(KFM_VALIDATION_ENV) python tools/readiness/run_lane.py fixtures
 
 proof-slice:
-	@echo "TODO: pipelines/hydrology proof slice"
+	$(KFM_VALIDATION_ENV) python tools/readiness/run_lane.py proof-slice
 
 catalog:
-	@echo "TODO: tools/catalog_builders build catalog records from validated processed outputs"
+	$(KFM_VALIDATION_ENV) python tools/readiness/run_lane.py catalog
 
 release-dry-run:
 	KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC python tools/release/release_dry_run.py
