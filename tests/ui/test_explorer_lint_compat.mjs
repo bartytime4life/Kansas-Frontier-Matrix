@@ -20,11 +20,11 @@ test("TypeScript and TSX use the declared parser", async () => {
 
 test("compiler and lint dependencies stay pinned", () => {
   const manifest = JSON.parse(readFileSync(join(app, "package.json"), "utf8"));
-  assert.equal(manifest.devDependencies.eslint, "10.10.0");
+  assert.equal(manifest.devDependencies.eslint, "10.11.0");
   assert.equal(manifest.devDependencies["typescript-eslint"], "8.70.0");
   assert.equal(manifest.devDependencies["@typescript/native"], "npm:typescript@7.0.2");
   assert.equal(manifest.scripts.lint, "bash scripts/sites-env.sh -- eslint . --ignore-pattern dist --ignore-pattern public/maplibre");
-  assert.equal(ESLint.version, "10.10.0");
+  assert.equal(ESLint.version, "10.11.0");
 });
 
 test("valid React source lints without fatal errors", async () => {
