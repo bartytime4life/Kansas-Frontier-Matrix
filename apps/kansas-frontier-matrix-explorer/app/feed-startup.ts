@@ -31,7 +31,8 @@ export type StartupDecision = Readonly<{
 }>;
 const codes = new Set(["ROUTE_MISSING", "AUTH_REQUIRED", "TIMEOUT", "NETWORK_ERROR",
   "INVALID_RESPONSE", "UPSTREAM_ERROR", "INVALID_LIVE_RESULT",
-  "API_NOT_CONFIGURED", "RATE_LIMITED", "UNEXPECTED_MEDIA_TYPE"]);
+  "API_NOT_CONFIGURED", "RATE_LIMITED", "UNEXPECTED_MEDIA_TYPE",
+  "PAYLOAD_UNVERIFIED", "RENDER_UNVERIFIED"]);
 const time = (value: string | null): number => {
   if (typeof value !== "string" || !/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}Z$/.test(value)) return NaN;
   const n = Date.parse(value);
@@ -49,6 +50,7 @@ const structurallyEligible = (a: Artifact | undefined, now: number): a is Artifa
     && a.freshnessAnchor === null && a.validUntil === null;
   if (!["observation", "forecast", "model", "reference"].includes(a.dataRole)) return false;
   if (!Number.isFinite(time(a.retrievedAt)) || time(a.retrievedAt) > now) return false;
+  if (["observation", "reference"].includes(a.dataRole) && time(a.dataTime) > time(a.retrievedAt)) return false;
   if (a.kind === "historical") return time(a.dataTime) <= now;
   const anchor = time(a.freshnessAnchor), expiry = time(a.validUntil);
   return (a.kind === "live" || a.kind === "snapshot")

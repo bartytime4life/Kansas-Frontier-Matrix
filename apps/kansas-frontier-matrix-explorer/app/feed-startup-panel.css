@@ -1,0 +1,35 @@
+.kfm-feed-trigger { cursor: pointer; }
+.kfm-feed-dialog {
+  box-sizing: border-box; width: min(800px, calc(100vw - 24px)); max-width: calc(100vw - 24px);
+  max-height: calc(100dvh - 32px); overflow: auto; padding: 20px;
+  background: #14221f; color: #f5f3ea; border: 1px solid #b9d6cc; border-radius: 12px;
+  font: 16px/1.5 system-ui, sans-serif;
+}
+.kfm-feed-dialog::backdrop { background: rgb(0 0 0 / 65%); }
+.kfm-feed-dialog *, .kfm-feed-dialog *::before, .kfm-feed-dialog *::after { box-sizing: border-box; }
+.kfm-feed-dialog header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: start; gap: 16px; }
+.kfm-feed-dialog h2 { margin: 0; font-size: 1.35rem; }
+.kfm-feed-dialog h3 { font-size: 1rem; }
+.kfm-feed-dialog p { overflow-wrap: anywhere; }
+.kfm-feed-dialog button, .kfm-feed-dialog select {
+  min-height: 44px; padding: 8px 12px; font: inherit; border: 1px solid #b9d6cc;
+  border-radius: 6px; color: inherit; background: #243b34;
+}
+.kfm-feed-dialog button:disabled { opacity: .65; }
+.kfm-feed-dialog :focus-visible { outline: 3px solid #f1c66b; outline-offset: 3px; }
+.kfm-feed-boundary, .kfm-feed-preview { padding: 12px; border: 1px solid #f1c66b; border-radius: 6px; }
+.kfm-feed-controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.kfm-feed-controls label { display: grid; gap: 6px; }
+.kfm-feed-controls select { width: 100%; min-width: 0; }
+.kfm-feed-status { font-weight: 700; }
+.kfm-feed-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+.kfm-feed-table-wrap { overflow: auto; margin-top: 16px; }
+.kfm-feed-dialog table { border-collapse: collapse; width: 100%; font-size: .85rem; }
+.kfm-feed-dialog caption { text-align: left; font-weight: 700; margin-bottom: 8px; }
+.kfm-feed-dialog th, .kfm-feed-dialog td { text-align: left; padding: 8px; border-bottom: 1px solid #526f65; overflow-wrap: anywhere; }
+.kfm-feed-dialog [hidden] { display: none !important; }
+@media (max-width: 560px) {
+  .kfm-feed-dialog { padding: 14px; }
+  .kfm-feed-controls { grid-template-columns: 1fr; }
+  .kfm-feed-dialog table { table-layout: fixed; }
+}

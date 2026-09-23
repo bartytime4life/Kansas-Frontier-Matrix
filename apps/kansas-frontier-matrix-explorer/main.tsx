@@ -4,6 +4,7 @@ import ExplorerPage from "./app/page";
 import AboutPage from "./app/about/page";
 import OperationalSpine from "./app/operational-spine";
 import SiteRuntimeRepair from "./app/site-runtime-repair-client";
+import FeedStartupPanel from "./app/feed-startup-panel";
 import "./app/globals.css";
 import "./app/transformation.css";
 import "../../packages/ui/src/layer-library.css";
@@ -17,5 +18,6 @@ createRoot(document.getElementById("root")!).render(
     {!isAbout && <OperationalSpine />}
     <SiteRuntimeRepair />
     {isAbout ? <AboutPage /> : <ExplorerPage />}
+    {!isAbout && <FeedStartupPanel />}
   </StrictMode>,
 );

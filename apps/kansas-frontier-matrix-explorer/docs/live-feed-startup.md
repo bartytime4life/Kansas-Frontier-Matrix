@@ -2,209 +2,213 @@
 doc_id: kfm://doc/explorer/live-feed-startup
 title: Live-feed runtime diagnostics and starter-data selection
 type: note
-version: v0.1.0
-status: proposed; branch-only; hosted-integration-held
+version: v0.2.0
+status: proposed; validated-branch-only; hosted-integration-held
 owners: ["@bartytime4life"]
 created: 2026-09-23
 updated: 2026-09-23
 policy_label: public; synthetic-fixture; no-source-admission; no-release
-responsibility: Explain the repository Worker API-boundary repair, bounded connection probe, synthetic baseline, and held active-Site integration.
+responsibility: Document the repository startup inspector, bounded connection diagnostics, cancellation, synthetic provenance, and held hosted integration.
 owning_root: apps/
 current_path: apps/kansas-frontier-matrix-explorer/docs/live-feed-startup.md
-truth_posture: CONFIRMED local implementation and tests; NEEDS VERIFICATION current Site connections and integration
+truth_posture: CONFIRMED bounded repository code and fixtures; NEEDS VERIFICATION full React and hosted acceptance
 evidence_repository: bartytime4life/Kansas-Frontier-Matrix
-evidence_base_commit: 21eee8dab4637da4771267078fe963f6525b045f
+evidence_base_commit: 9dcdaec2cacbbf9880bd613b546a7314a2673ac5
 [/KFM_META_BLOCK_V2] -->
 
 # Live-feed runtime diagnostics and starter-data selection
 
-**REPOSITORY WORKER REPAIR + RUNNABLE DIAGNOSTIC / STARTER SELECTOR NOT MOUNTED IN THE SITE.**
+**PHASE 2 IMPLEMENTED ON A PRESERVED BRANCH / NO SUCCESSOR PR / SITE UNCHANGED.**
 
-This change does not claim that the user's deployed Explorer has been repaired.
-The active Site editor and authenticated application were not accessible in the
-execution session. No latest provider observations or historical payloads were
-retrieved or certified. The supplied baseline is invented demo geometry, not
-latest real data relabeled as synthetic.
+This version replaces repeated currentness prose with one active implementation
+boundary. The complete [v0.1.0 checkpoint](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/2ac6f209ea269e6df18331c9d53daf18039b8abf/apps/kansas-frontier-matrix-explorer/docs/live-feed-startup.md)
+is retained as immutable lineage, including its 15-source inventory and original
+94-test scope. Nothing here admits a source or changes the active hosted Site.
 
-## Confirmed problem and repair
+## Delivery currentness
 
-At the pinned base, [`worker/index.ts`](../worker/index.ts) serves static assets
-and sends an extensionless missing GET to `index.html`. This includes missing
-`/api/...` routes. The app [README](../README.md) describes a renderer-neutral
-repository shell, not the separately hosted standalone Site's feed adapters.
-Returning an HTML shell is not a functioning feed API, even when HTTP is 200.
+[PR #4675](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4675)
+was created as a draft at `2ac6f209ea269e6df18331c9d53daf18039b8abf`.
+During phase-2 authoring it advanced through a separately initiated test-only
+autofix to `4e33d1a0bee88ba2a2bddca4e9d7b7d65c744889` and merged at
+2026-09-23T03:55:05Z as `9dcdaec2cacbbf9880bd613b546a7314a2673ac5`.
+This session issued neither ready nor merge. The
+[final-head authorization job](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/35816100035/job/107037829152)
+failed with `EXPECTED_READINESS_HOLD / TRANSITION_AUTHORIZATION_MISSING`.
+The initiating client is not identified by owner-account attribution.
 
-The Worker now rejects the unimplemented API namespace before static-asset
-fallback, returning HTTP 503, JSON `KFM_API_NOT_CONFIGURED`, `no-store`, and
-`nosniff`. HEAD has no body; error responses never echo query values. Ordinary
-page fallback, real assets and non-GET page behavior remain unchanged. Invalid
-path escapes receive a finite HTTP 400 response. No live API route is added.
+The successor is based on that merged main and preserves the autofix exactly.
+It remains `VALIDATED_BRANCH_ONLY` under #4024 rather than opening another
+same-path PR through the unproved delivery mechanism. No automatic revert,
+retroactive authorization, ruleset change or bypass occurred. The existing
+#4228 Stage 1A accepted / Stage 1B HOLD / Stage 2 unauthorized boundaries remain.
 
-The [source-alignment record](sites-source-alignment.md) explicitly separates the
-standalone Site from this monorepo app. Its version-45 checkpoint is historical,
-not a fresh Site readback. The standalone mirror inspected here is
-`c4e5ebe54cba9d7ca9bbee108b442bdf68763f58` (v40 lineage), not asserted current.
-That mirror's `app/live-context.ts` contains present-frame gating and a 3DEP
-client display range of zoom 7 through 12. These explain possible intentional
-withholding; they do not prove the cause of the current screenshot.
+## Repository is not hosted Site parity
 
-The merged [USGS decoder candidate](usgs-earthquake-response-candidate.md) is
-still documented without a live caller. Merged implementation is not hosted
-wiring, and successful radar metadata is not successful radar-image rendering.
+The repository [Worker](../worker/index.ts) has no live-feed API router. PR #4675
+makes that explicit: unimplemented `/api/...` requests return HTTP 503 JSON
+`KFM_API_NOT_CONFIGURED`, not an HTML SPA shell. That is a diagnostic repair,
+not a new live adapter.
 
-## Connection inventory and executable probe
+The [source-alignment record](sites-source-alignment.md) separates this
+renderer-neutral repository app from the standalone hosted Explorer. Its v45
+checkpoint is historical. The v40 mirror
+`c4e5ebe54cba9d7ca9bbee108b442bdf68763f58` is also historical; it supplies this
+probe's reference inventory, not current Site configuration. Its present-frame
+and 3DEP zoom 7–12 gates are possible withholding explanations, not a verified
+cause of the user's current display problems. Native Sites editing was not
+available in this session. No real latest-data or historical snapshot was acquired.
 
-[`probe-context-connections.mjs`](../scripts/probe-context-connections.mjs) has
-15 logical entries derived from the historical mirror's `app/site-connections.ts`,
-`app/live-context.ts`, and `app/terrain-tiles.ts`. This diagnostic allowlist is
-not a new SourceDescriptor registry, source admission, or currentness assertion.
+## Phase 2: mounted inspector
 
-| Logical connection | Bounded diagnostic | Remaining proof |
-|---|---|---|
-| Census counties | Same-origin JSON route | Edition, schema, geometry, render |
-| USGS streamflow | Same-origin JSON adapter | Qualified observations, gaps, selected-station history |
-| NOAA NWPS gauges | Same-origin JSON adapter | Observation/forecast/model role and valid time |
-| USGS 3DHP | Not requested by probe | External raster, browser policy, actual render |
-| USGS WBD | Not requested by probe | External raster, vintage, actual render |
-| NOAA NWM analysis | Not requested by probe | Model role, image time and render |
-| NOAA NWM short-range | Not requested by probe | Forecast role, image time and render |
-| USGS earthquakes | Same-origin JSON route | Full event validation, current query coverage, valid empty |
-| NOAA HMS smoke | Same-origin JSON route | Publication gaps versus scoped absence, schema and render |
-| NASA FIRMS | Not requested by probe | External raster, observation coverage and render |
-| Raspberry Shake stations | Same-origin JSON route | Station metadata only; no waveform operation |
-| USGS 3DEP hillshade | One fixed Kansas PNG tile | Full image decode, map source, zoom, opacity and render |
-| USGS 3DEP slope | One fixed Kansas PNG tile | Full image decode, map source, zoom, opacity and render |
-| NWS alerts | Same-origin JSON route | Scope, zone expansion, current alert validation |
-| NOAA radar | Same-origin frame-manifest route | Advertised time, chosen frame image and actual render |
+[`main.tsx`](../main.tsx) composes
+[`FeedStartupPanel`](../app/feed-startup-panel.tsx) beside the existing Explorer.
+Its effect adds **Data startup · preview** to the existing report ribbon and
+removes that isolated child on cleanup. About does not mount the inspector.
+The existing `app/page.tsx` is unchanged, avoiding the parallel seismic
+Import-utility work. No map recreation, history patch, layer/time/camera change,
+Evidence Drawer selection, geolocation or persistent storage is introduced.
 
-There are ten GET probes, at most two concurrent, an eight-second request/body
-deadline and a four-MiB response cap. The two terrain requests use a fixed Kansas
-tile, not the operator's location. There is no retry loop, scheduler, provider URL
-argument, arbitrary proxy, credential argument, or response-body export. Importing
-the module performs no requests. Execution requires an explicit existing-Site or
-loopback origin. Redirects are not followed. No source or private data is logged.
+The [DOM surface](../app/feed-startup-surface.mjs) provides an explicitly opened
+native dialog, close/Escape handling and focus return, a connection selector,
+Auto/Live/History/Demo policy preview, separate synthetic geometry descriptions,
+and a 15-row diagnostic table. These are **inspector controls**, not replacements
+for the main map's live-feed controls or totals. Live and History never silently
+become a different mode. History and Demo do not initiate present-day probes.
 
-From the repository root, for an already running local preview:
+The [demo loader](../app/feed-startup-demo.mjs) hashes the exact shipped UTF-8
+fixture before use, with a fixed expected digest rather than a digest supplied
+by an untrusted payload. Wrong bytes, including whitespace drift, are refused.
+The immutable result contains one invented point and one invented polygon, no
+observed hazard or measurement values, a fixed scenario time and no retrieval
+time. Its source remains `synthetic:starter`; it is never official feed data.
+
+## Request and snapshot currentness
+
+The [request session](../app/feed-startup-session.mjs) adds generation binding,
+AbortController cancellation, finite overall deadlines, immutable captured scope,
+late-result rejection, disposal and clearing of renderer proof on refresh. A
+reader queued before a change to denied is never invoked. An A→B→A selection
+cannot accept the first A's late response merely because its scope matches again.
+Non-cooperating readers still settle on cancellation/deadline. Disposal removes
+retained display artifacts. No automatic polling or persistent cache is added.
+
+The [selector](../app/feed-startup.ts) prefers a valid current result, then an
+eligible same-source/product/AOI/time snapshot, then the separate demo in Auto.
+Valid empty and partial results remain intact; empty is not an all-clear. Stale
+snapshots retain original times and stale labels. Off, held, restricted, denied,
+unsupported-time and unsupported-zoom states cannot be bypassed by fallback.
+
+Snapshot metadata is bounded to 32 entries, opaque scope keys, finite counts,
+canonical UTC timestamps, original role and digest shape. The caller must
+validate actual bytes, recompute and verify their digest, bind their scope, and
+verify rights, sensitivity and display permission. `validation` and
+`displayAllowed` are caller attestations, not independent proof from this helper.
+Do not deserialize upstream data directly into the interface. It is not a source
+parser, security boundary or publication authority.
+
+Freshness anchors are source-specific: observations, forecast/model issue time,
+reference updates or verified query-coverage time. Sparse/empty earthquake
+results do not use the latest event time as a universal freshness clock. Future
+observation/reference times after retrieval are refused; future forecast valid
+times retain their forecast role. `validUntil` belongs to reviewed source policy.
+
+`liveAvailable` means an eligible fresh complete result, including valid empty.
+`renderedLive` additionally requires nonempty data and the exact current artifact,
+scope and rendered state. A toggle, HTTP 200, snapshot or synthetic preview does
+not prove a rendered live layer. The mounted inspector accepts no real Artifact
+from transport-only diagnostics, so those diagnostics cannot increase these counts.
+
+## Connection diagnostics
+
+The [browser-safe probe](../app/context-connection-probe.mjs) is shared with the
+[Node CLI](../scripts/probe-context-connections.mjs). Its historical inventory is:
+Census counties, USGS streamflow, NOAA NWPS, USGS 3DHP, USGS WBD, NOAA NWM
+analysis and short-range guidance, USGS earthquakes, NOAA HMS smoke, NASA FIRMS,
+Raspberry Shake station metadata, USGS 3DEP hillshade and slope, NWS alerts, and
+NOAA radar frames. The five external raster entries remain `NOT_PROBED_RENDERER`.
+The radar request checks frame metadata, not the actual displayed radar image.
+
+There are at most ten GETs, two concurrent, with an eight-second request/body
+deadline and four-MiB response cap. Terrain uses one fixed Kansas tile per kind,
+not user coordinates. Cancellation stops the remaining queue. Import/mount does
+not fetch. The browser supplies its own origin; the module permits the existing
+HTTPS Site, loopback previews, or the browser's own HTTPS preview origin. Node
+cannot use that browser-only allowance. Arbitrary remote origins, credentials,
+paths, queries and fragments in origin arguments are refused. Redirects are not
+followed; response bodies and credentials are never exported.
+
+Transport outcomes remain distinct from scientific/source correctness:
+`API_NOT_CONFIGURED`, `ROUTE_MISSING`, `AUTH_REQUIRED`, timeout, rate limiting,
+wrong media, malformed JSON/UTF-8 and body limits. A JSON response remains
+`JSON_RECEIVED_SCHEMA_UNVERIFIED`; a PNG header remains
+`PNG_HEADER_ONLY_RENDER_UNPROVED`. HTTP 204 is unvalidated; do not apply the
+USGS-only no-data decoder to every source. The inspector projects unqualified
+transport as `PAYLOAD_UNVERIFIED`, unprobed imagery as `RENDER_UNVERIFIED`, and
+retains the original failure alongside a separately labeled demo.
+
+From a complete checkout, target an already running local preview explicitly:
 
 ```bash
 node apps/kansas-frontier-matrix-explorer/scripts/probe-context-connections.mjs \
   --origin http://127.0.0.1:5173
 ```
 
-An authorized operator can explicitly target the existing Site origin:
+The existing Site origin can be supplied instead. Node does not inherit the
+browser's login session; do not paste cookies/tokens into the command. A sign-in
+redirect is not evidence that USGS or NOAA is down.
 
-```bash
-node apps/kansas-frontier-matrix-explorer/scripts/probe-context-connections.mjs \
-  --origin https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site
-```
+## Validation and limits
 
-**Node does not inherit the browser's sign-in session.** A sign-in redirect,
-401/403, HTML response, or network failure is not proof that a public provider is
-down. Do not paste browser cookies or tokens into this command. Authenticated
-browser tracing is a separate acceptance action. The native Sites editor was
-not available in this run; the Site URL fetch did not yield application content.
-
-The report distinguishes `API_NOT_CONFIGURED`, `ROUTE_MISSING`, `AUTH_REQUIRED`,
-redirects, rate limits, timeout, invalid media/JSON, and bounded-body failure.
-`JSON_RECEIVED_SCHEMA_UNVERIFIED` is not payload correctness or freshness.
-`PNG_HEADER_ONLY_RENDER_UNPROVED` is not a decoded or displayed image.
-An app-level HTTP 204 is unvalidated: the USGS-only 204 decoder must not be
-applied to every provider. All report rows retain false validation, freshness,
-and rendering proof flags. The five external raster entries remain not probed.
-
-## Starter-data selection
-
-[`resolveFeedStartup`](../app/feed-startup.ts) is a pure, no-I/O presentation
-selector. The [bundled demo](../fixtures/feed-startup.synthetic.json) contains one
-invented point and one invented polygon. It has fixed identity, a fixed synthetic
-scenario timestamp, no retrieval date, and no hazard or measurement values.
-It is not terrain elevation, a fire/smoke perimeter, an earthquake or streamflow.
-
-For **Auto** with no explicit user direction: a valid current response takes
-precedence, otherwise use an eligible same-scope snapshot, otherwise the separate
-synthetic demonstration. A stale snapshot stays `STALE_SNAPSHOT`; never reset its
-source timestamp to retrieval time. Explicit Live or History requests do not
-silently become a different date, source, snapshot, or demo. A successful valid
-empty result wins over populated fallback data and is not an all-clear. Partial
-responses remain partial. Held/restricted/denied, off, unsupported-time and
-unsupported-zoom states never gain data through fallback.
-
-Snapshot metadata is bounded to 32 entries, source/product/AOI/time scope keys,
-finite counts, canonical UTC timestamps, original role and digest shape. The
-caller must actually validate the bytes, recompute and verify the digest, verify
-public display permission and rights, and bind the canonical scope. The supplied
-`validation` and `displayAllowed` fields are caller attestations, not independent
-proof from this selector. Do not deserialize an upstream object directly into
-this interface or use this function as a publication or security authority.
-
-`freshnessAnchor` is source-specific: an observation time, model/forecast issue
-time, reference-edition update, or validated query-coverage time as appropriate.
-For sparse or empty earthquake results it is not simply the most recent event's
-time. Forecast valid time can be future; its forecast role must remain visible.
-`validUntil` must be established by the reviewed source policy, not a universal
-TTL. Preserve coverage intervals and per-feature observation times in the payload.
-
-`liveAvailable` means an eligible, fresh, complete current result, including valid
-empty. `renderedLive` additionally requires a nonempty result and matching artifact
-and scope renderer evidence plus an explicit rendered state. A later renderer
-error or context loss cannot be masked by a retained artifact ID. An enabled toggle, response, snapshot or demo does
-not increment that rendered-live count. The original finite connection failure
-and loading phase remain visible while Auto shows fallback data.
-
-## Integration still required
-
-The Worker repair is in an existing runtime entrypoint. The CLI is executable.
-**The starter selector and demo are not imported into `app/page.tsx` or deployed
-Site code in this change.** Their cross-layer consumer is the new test suite.
-
-Before mounting them in the user's existing Explorer:
-
-1. Read back the exact active Site source and environment; reconcile its complete
-   standalone mirror without merging its root layout over the monorepo. Preserve
-   the current project, slug, audience and saved predecessor.
-2. Bind each real loader's validated artifact to its canonical request generation,
-   source/product/AOI/time scope and explicit user direction. Abort superseded
-   requests and ignore late results. This synchronous selector does not implement
-   asynchronous generation control, provider validation or persistent caching.
-3. Render the demo in a separate conspicuously labeled synthetic layer and legend,
-   never in official hazard layers. Keep the connection failure visible, preserve
-   camera and user-selected history, and allow dismissal. Do not store demo bytes
-   in a real-data cache or mix them into evidence, exports or operational totals.
-4. Admit eligible real snapshot bytes only after their separate rights, validation,
-   sensitivity and provenance checks. No real snapshot has been supplied here.
-5. Bind map source/tile/image events to the same artifact/frame and selection key.
-   Verify each toggle-to-request-to-payload-to-render path, selection/Evidence
-   Drawer, timeline, no-data/error behavior, actual WebGL and same-Site recovery.
-
-## Local evidence and delivery limits
-
-Local execution on Node 22.16.0: **94 tests pass, zero skipped**. Tests exercise
-startup selection, timeout including stalled body cancellation, bounded reads,
-auth/media failures, concurrency, real Worker-to-probe responses and the
-Worker-to-probe-to-starter negative integration with synthetic provenance intact.
-The initial 13-test Worker suite against the exact original Worker had ten
-failures and three passes; the corrected boundary and integration now pass.
-
-Reproduce without installing dependencies:
+- **PASS: 135 focused offline Node tests**, zero failures/skips: original 94 plus
+  41 cancellation, generation, integrity, input and source-composition tests.
+  Replayed with the merged test-only autofix preserved byte-for-byte.
+- **PASS: 14 offline DOM fixture checks** in Chromium 144.0.7559.96: in-memory
+  Worker→probe→session→DOM, explicit modes, late results, Escape/focus, corrupt
+  fixture, disposal/remount, 320px layout and 200% text. A narrow-screen header
+  overflow at 200% text was corrected and the fixtures rerun.
+- **PASS: focused strict TypeScript 5.8.3** for selector/Worker and JavaScript
+  syntax checks. This is not the repository-pinned complete React/TypeScript build.
+- **BLOCKED_ENVIRONMENT:** local HTTP browser navigation returned
+  `ERR_BLOCKED_BY_ADMINISTRATOR`. No browser-policy setting changed. DOM checks
+  used an offline document, fixed test-origin seam, in-memory Worker response
+  and Python-backed SHA-256 seam. They prove neither actual HTTP nor browser
+  WebCrypto availability, full React mounting, authenticated Site behavior,
+  WebGL, deployment or recovery.
 
 ```bash
 node --test \
   apps/kansas-frontier-matrix-explorer/tests/feed-startup.test.mjs \
+  apps/kansas-frontier-matrix-explorer/tests/feed-startup-session.test.mjs \
   apps/kansas-frontier-matrix-explorer/tests/probe-context-connections.test.mjs \
   apps/kansas-frontier-matrix-explorer/tests/worker-api-boundary.test.mjs
 ```
 
-Node's built-in stripping executes the two TypeScript modules; it is not itself
-a type check. A separate focused strict check passed with locally available
-TypeScript 5.8.3, ES2022/DOM, ESNext and bundler resolution. This is **not** the
-repository's pinned TypeScript 6.0.2 toolchain or a complete app build. The existing
-`tests/*.test.mjs` package glob includes these tests after its build prerequisite.
-Full pinned-toolchain build, repository validators, hosted CI, independent review,
-provider calls, authenticated Site browser acceptance and deployment are NOT_RUN.
+Node type stripping executes the selector in tests; it is not type checking.
+Local validation used a byte-verified partial source tree because GitHub DNS/clone
+access failed. No complete checkout or pinned dependency install is claimed locally.
+The existing native Explorer workflow includes `*.test.mjs` and has no PR
+base-branch filter, but it does not automatically run on this ordinary branch.
+Success for either prior #4675 head is not successor-head CI proof. Full pinned
+build, repository validators and independent/hosted acceptance remain NOT_RUN
+for this branch unless a later exact-head record establishes them.
 
-Delivery remains branch-only while the implicated delivery path's #4024
-containment is unproved. No PR, ready transition, merge, rule change, topology or
-baseline rewrite, source admission, release, publication, or Site save/deployment
-is authorized by this note. #4228 Stage 1A accepted / Stage 1B HOLD / Stage 2
-unauthorized boundaries remain separate. Discard the unaccepted branch to abandon
-this candidate; any later integrated rollback is a separately reviewed inverse.
+## Placement, remaining integration and rollback
+
+Root ownership is `apps/`: app-local presentation, diagnostics, tests and
+behavior-linked documentation under adopted ADR-0029 and the existing Explorer
+lane. This is not a parallel source registry, contract, policy, schema, release,
+proof or lifecycle-data authority. Original v0.1.0 detail remains in the immutable
+link above rather than being repeated as current status.
+
+Next proof is exact active-Site source/mirror reconciliation, a proven eligible
+delivery path, source-specific validated and rights-cleared real snapshots,
+genuine loader/render currentness, full app/browser testing and same-Site
+recovery. Preserve the existing Site identity, audience and saved predecessor.
+No real data, live source, model, release or deployment was activated here.
+
+Abandon this branch to decline the candidate. A later integrated rollback uses a
+reviewed inverse removing its main composition/new modules and restoring the
+prior CLI/helper, preserving PR #4675's independent Worker repair, test autofix,
+and evidence history. No same-path successor PR, automatic revert, retroactive
+transition authorization, release, publication or Site deployment is performed.
