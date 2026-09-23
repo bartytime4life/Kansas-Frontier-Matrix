@@ -48,6 +48,26 @@ WebGL behavior, selection and Drawer flows, accessibility, restricted-state
 checks, and a recovery exercise are not recorded for v45, so `ACCEPTANCE_HOLD`
 also remains in force.
 
+## Supplemental local preview observation — 2026-09-23 UTC
+
+A separate standalone Site preview checkout at `d326735fca01d8e25275ae423106b882a79395bc`
+showed a visible map with a partial-degradation banner. An isolated local branch,
+`codex/map-runtime-health-isolated-20260923`, reached `bfa635039dfc8c86b6f2d4361129d36fdab74a1b`
+after correcting two reads of MapLibre's implicit default Mercator projection,
+avoiding `isSourceLoaded()` where its missing tile manager can emit an error,
+and adding finite, redacted runtime and style-step diagnostics. The same patch
+was applied to the active local preview without replacing its unrelated edits.
+
+Sixteen focused local Node tests passed; changed-file lint had no errors.
+The full TypeScript check still reported four errors in data-submission routes
+and `vite.config.ts`, outside the changed map files. After refresh, the user
+reported that the degradation banner was gone. The browser was not independently
+inspected by this review. This observation applies to the local preview only:
+its checkout had no GitHub remote, no full-tree comparison with the hosted Site
+or monorepo was made, and no Site version was deployed. It does not change the
+source-equivalence, acceptance, rights, admission, release, publication, or
+rollback holds above.
+
 ## Repository target boundary
 
 The repository hosting manifest now selects the active Site project. Its `d1`
