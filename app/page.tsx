@@ -163,6 +163,7 @@ import {
   OFFICIAL_CONTEXT_PRESENT_FRAME,
   OFFICIAL_CONTEXT_SOURCES,
   OFFICIAL_CONTEXT_TEMPORAL_SUPPORT,
+  TERRAIN_DISPLAY_MIN_ZOOM,
   noaaRadarObservationTimeIsApplied,
   officialContextVisibilityForFrame,
   setNoaaRadarObservationTime,
@@ -912,6 +913,7 @@ const formatTimelineStep = (value: number) => {
   if (value === -11_700) return "11.7 ka BP";
   if (value < 0) return `${Math.abs(value).toLocaleString("en-US")} BCE`;
   if (value < 1000) return `${value} CE`;
+  if (value <= 9999) return String(value);
   return value.toLocaleString("en-US");
 };
 
@@ -6888,7 +6890,7 @@ export default function Home() {
                           title={`${officialVisibility[sourceId] ? "Hide" : "Show"} ${source.title}`}
                         >
                           <i aria-hidden="true" />
-                          <span><strong>{source.shortTitle}</strong><small>{heldAtFrame ? "HELD" : officialContextStateLabel(state)}</small></span>
+                          <span><strong>{source.shortTitle}</strong><small>{!officialVisibility[sourceId] ? "OFF" : heldAtFrame ? "HELD" : officialContextStateLabel(state)}</small></span>
                         </button>;
                       })}
                     </div>
@@ -6903,10 +6905,11 @@ export default function Home() {
             <div className="official-context-list">{OFFICIAL_CONTEXT_SOURCES.map((source) => {
               const state = officialStates[source.id];
               const heldAtFrame = officialVisibility[source.id] && !effectiveOfficialVisibility[source.id];
+              const needsCloserView = officialVisibility[source.id] && !heldAtFrame && state !== "error" && view.zoom < TERRAIN_DISPLAY_MIN_ZOOM && (source.id === "usgs-3dep-hillshade" || source.id === "usgs-3dep-slope");
               return <article key={source.id} className="official-context-row" data-state={state} data-visible={officialVisibility[source.id]} data-held={heldAtFrame}>
-                <div className="official-context-primary"><label className="visibility-switch"><input type="checkbox" checked={officialVisibility[source.id]} aria-label={`${officialVisibility[source.id] ? "Hide" : "Show"} ${source.title}`} onChange={(event) => setOfficialContextVisible(source.id, event.target.checked)} /><span aria-hidden="true" /></label><i style={{ "--swatch": source.color } as React.CSSProperties} /><div><strong>{source.shortTitle}</strong><small>{source.organization}{heldAtFrame ? ` · held until ${formatTimelineStep(OFFICIAL_CONTEXT_PRESENT_FRAME)}` : ""}</small></div><b>{heldAtFrame ? "HELD" : state.toUpperCase()}</b></div>
+                <div className="official-context-primary"><label className="visibility-switch"><input type="checkbox" checked={officialVisibility[source.id]} aria-label={`${officialVisibility[source.id] ? "Hide" : "Show"} ${source.title}`} onChange={(event) => setOfficialContextVisible(source.id, event.target.checked)} /><span aria-hidden="true" /></label><i style={{ "--swatch": source.color } as React.CSSProperties} /><div><strong>{source.shortTitle}</strong><small>{source.organization}{heldAtFrame ? ` · held until ${formatTimelineStep(OFFICIAL_CONTEXT_PRESENT_FRAME)}` : needsCloserView ? ` · view at zoom ${TERRAIN_DISPLAY_MIN_ZOOM}+` : source.id === "census-counties" && officialVisibility[source.id] && state === "ready" ? " · select a county for its 2020 population" : ""}</small></div><b>{!officialVisibility[source.id] ? "OFF" : heldAtFrame ? "HELD" : needsCloserView ? "ZOOM IN" : state.toUpperCase()}</b></div>
                 <label className="opacity-control"><span>Opacity <b>{Math.round(officialOpacity[source.id] * 100)}%</b></span><input aria-label={`${source.shortTitle} opacity`} type="range" min="0" max="100" value={Math.round(officialOpacity[source.id] * 100)} onChange={(event) => setOfficialContextOpacity(source.id, Number(event.target.value) / 100)} /></label>
-                <div className="official-context-actions"><button type="button" onClick={() => { setSourceStatusOpen(true); setLeftOpen(false); }}>Source details & quality</button>{["usgs-streamflow", "noaa-hms-smoke", "raspberry-shake-stations", "usgs-earthquakes", "nws-radar", "census-counties"].includes(source.id) && <Link href={`/observatory?layers=${({ "usgs-streamflow": "river", "noaa-hms-smoke": "smoke", "raspberry-shake-stations": "shake", "usgs-earthquakes": "earthquakes", "nws-radar": "radar", "census-counties": "counties" } as Record<string,string>)[source.id]},counties`}>Explore dated records ↗</Link>}</div>
+                <div className="official-context-actions"><button type="button" onClick={() => { setSourceStatusOpen(true); setLeftOpen(false); }}>Source details & quality</button>{needsCloserView && <button type="button" onClick={() => { mapRef.current?.easeTo({ zoom: TERRAIN_DISPLAY_MIN_ZOOM + 0.25, duration: motionDuration(600) }); announce(`${source.shortTitle}: zoomed in to its display range`); }}>Zoom to view</button>}{["usgs-streamflow", "noaa-hms-smoke", "raspberry-shake-stations", "usgs-earthquakes", "nws-radar", "census-counties"].includes(source.id) && <Link href={`/observatory?layers=${({ "usgs-streamflow": "river", "noaa-hms-smoke": "smoke", "raspberry-shake-stations": "shake", "usgs-earthquakes": "earthquakes", "nws-radar": "radar", "census-counties": "counties" } as Record<string,string>)[source.id]},counties`}>Explore dated records ↗</Link>}</div>
               </article>;
             })}</div>
             <footer><code>OFFICIAL SOURCE → FIXED ADAPTER / WMS → MAPLIBRE</code><span>Evidence held at admission, release, and EvidenceBundle gates · <a href="https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3393" target="_blank" rel="noreferrer">governance issue #3393 ↗</a></span></footer>

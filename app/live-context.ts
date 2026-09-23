@@ -547,7 +547,7 @@ export const applyOfficialContextState = (
   const county = OFFICIAL_CONTEXT_BY_ID["census-counties"];
   ensureGeoJsonSource(map, county, payloads["census-counties"]?.data ?? emptyCollection());
   ensureLayer(map, { id: county.layerIds[0], type: "fill", source: county.sourceId, paint: { "fill-color": county.color, "fill-opacity": 0.05 } });
-  ensureLayer(map, { id: county.layerIds[1], type: "line", source: county.sourceId, paint: { "line-color": county.color, "line-width": ["interpolate", ["linear"], ["zoom"], 4, 0.7, 10, 2.1], "line-opacity": 0.72 } });
+  ensureLayer(map, { id: county.layerIds[1], type: "line", source: county.sourceId, paint: { "line-color": county.color, "line-width": ["interpolate", ["linear"], ["zoom"], 4, 1.15, 10, 2.5], "line-opacity": 0.72 } });
 
   const streamflow = OFFICIAL_CONTEXT_BY_ID["usgs-streamflow"];
   ensureGeoJsonSource(map, streamflow, payloads["usgs-streamflow"]?.data ?? emptyCollection());
@@ -637,7 +637,7 @@ export const applyOfficialContextState = (
       const layer = map.getLayer(layerId);
       if (layer?.type === "circle") setPaintIfChanged(map, layerId, "circle-opacity", layerId.endsWith("-glow") || layerId.endsWith("-halo") ? safeOpacity * 0.3 : safeOpacity);
       if (layer?.type === "circle") setPaintIfChanged(map, layerId, "circle-stroke-opacity", safeOpacity);
-      if (layer?.type === "fill") setPaintIfChanged(map, layerId, "fill-opacity", source.id === "census-counties" ? safeOpacity * 0.08 : safeOpacity);
+      if (layer?.type === "fill") setPaintIfChanged(map, layerId, "fill-opacity", source.id === "census-counties" ? safeOpacity * 0.18 : safeOpacity);
       if (layer?.type === "line") setPaintIfChanged(map, layerId, "line-opacity", safeOpacity);
       if (layer?.type === "raster") setPaintIfChanged(map, layerId, "raster-opacity", safeOpacity);
       if (layer?.type === "symbol") setPaintIfChanged(map, layerId, "text-opacity", safeOpacity);
